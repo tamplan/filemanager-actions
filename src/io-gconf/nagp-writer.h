@@ -48,11 +48,15 @@ guint    nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAO
 
 /* NAIFactoryProvider interface
  */
-guint    nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
+guint    nagp_writer_write_start( const NAIFactoryProvider *writer, void *writer_data,
+									const NAIFactoryObject *object,
+									GSList **messages  );
+
+guint    nagp_writer_write_data ( const NAIFactoryProvider *provider, void *writer_data,
 									const NAIFactoryObject *object, const NADataBoxed *boxed,
 									GSList **messages );
 
-guint    nagp_writer_write_done( const NAIFactoryProvider *writer, void *writer_data,
+guint    nagp_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data,
 									const NAIFactoryObject *object,
 									GSList **messages  );
 

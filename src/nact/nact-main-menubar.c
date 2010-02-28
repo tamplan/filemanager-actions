@@ -952,12 +952,13 @@ nact_main_menubar_save_items( NactMainWindow *window )
 
 	/* recursively save the modified items
 	 * check is useless here if item was not modified, but not very costly
-	 * above all, it is cheaper to check the status here, than to check
+	 * above all, it is less costly to check the status here, than to check
 	 * recursively each and every modified item
 	 */
 	for( it = items ; it ; it = it->next ){
 		save_item( window, updater, NA_OBJECT_ITEM( it->data ));
 		na_object_check_status( it->data );
+		na_object_dump( it->data );
 	}
 	g_list_free( items );
 
@@ -1010,13 +1011,7 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 			g_debug( "%s: origin=%p", thisfn, ( void * ) origin );
 
 			if( origin ){
-				if( NA_IS_OBJECT_ACTION( item )){
-					subitems = na_object_get_items( origin );
-					na_object_unref_items( subitems );
-				}
-
-				na_factory_object_copy(
-						NA_IFACTORY_OBJECT( origin ), NA_IFACTORY_OBJECT( item ));
+				na_object_copy( origin, item, NA_IS_OBJECT_ACTION( item ));
 
 			} else {
 				dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
@@ -1060,7 +1055,7 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 			}
 #endif
 
-			nact_iactions_list_bis_removed_modified( NACT_IACTIONS_LIST( window ), item );
+			nact_iactions_list_bis_remove_modified( NACT_IACTIONS_LIST( window ), item );
 
 			provider_after = na_object_get_provider( item );
 			if( provider_after != provider_before ){

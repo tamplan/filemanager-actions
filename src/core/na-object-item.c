@@ -67,8 +67,11 @@ static void   instance_init( GTypeInstance *instance, gpointer klass );
 static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
+static void   object_copy( NAObject*target, const NAObject *source, gboolean recursive );
+
 static gchar *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
+static void   copy_children( NAObjectItem *target, const NAObjectItem *source );
 static void   rebuild_children_slist( NAObjectItem *item );
 
 GType
@@ -126,7 +129,7 @@ class_init( NAObjectItemClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = NULL;
-	naobject_class->copy = NULL;
+	naobject_class->copy = object_copy;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = NULL;
 
@@ -197,6 +200,21 @@ instance_finalize( GObject *object )
 	}
 }
 
+static void
+object_copy( NAObject *target, const NAObject *source, gboolean recursive )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( target ));
+	g_return_if_fail( NA_IS_OBJECT_ITEM( source ));
+
+	if( !NA_OBJECT_ITEM( target )->private->dispose_has_run &&
+		!NA_OBJECT_ITEM( source )->private->dispose_has_run ){
+
+		if( recursive ){
+			copy_children( NA_OBJECT_ITEM( target ), NA_OBJECT_ITEM( source ));
+		}
+	}
+}
+
 /*
  * new_parent is not relevant when allocating a new UUID for an action
  * or a menu ; it may safely be left as NULL though there is no gain to
@@ -228,47 +246,6 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
 	}
 
 	return( new_uuid );
-}
-
-/**
- * na_object_item_copy:
- * @item: the target #NAObjectItem instance.
- * @source: the source #NAObjectItem instance.
- * @recursive: whether the children should be recursively copied.
- *
- * Copies data from @source to @item.
- *
- * This function participates to the #na_iduplicable_duplicate() stack,
- * and is triggered after all copyable elementary data (in #NAIFactoryObject
- * sense) have already been copied themselves.
- */
-void
-na_object_item_copy( NAObjectItem *item, const NAObjectItem *source )
-{
-	static const gchar *thisfn = "na_object_item_copy";
-	GList *tgt_children, *src_children, *ic;
-	NAObject *dup;
-
-	tgt_children = na_object_get_items( item );
-	g_debug( "%s: tgt_children=%p (count=%d)", thisfn, ( void * ) tgt_children, g_list_length( tgt_children ));
-	if( tgt_children ){
-
-		g_warning( "%s: target %s has already %d children",
-				thisfn, G_OBJECT_TYPE_NAME( item ), g_list_length( tgt_children ));
-		na_object_unref_items( tgt_children );
-		tgt_children = NULL;
-	}
-
-	src_children = na_object_get_items( source );
-	for( ic = src_children ; ic ; ic = ic->next ){
-
-		dup = ( NAObject * ) na_object_duplicate( ic->data );
-		na_object_set_parent( dup, item );
-		tgt_children = g_list_prepend( tgt_children, dup );
-	}
-
-	tgt_children = g_list_reverse( tgt_children );
-	na_object_set_items( item, tgt_children );
 }
 
 /**
@@ -316,6 +293,14 @@ na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b )
 			if( !equal ){
 				g_debug( "%s: %p (%s) not equal as g_list_length not equal",
 						thisfn, ( void * ) b, G_OBJECT_TYPE_NAME( b ));
+				g_debug( "a=%p children_count=%u", ( void * ) a, g_list_length( a_children ));
+				for( it = a_children ; it ; it = it->next ){
+					g_debug( "a_child=%p", ( void * ) it->data );
+				}
+				g_debug( "b=%p children_count=%u", ( void * ) b, g_list_length( b_children ));
+				for( it = b_children ; it ; it = it->next ){
+					g_debug( "b_child=%p", ( void * ) it->data );
+				}
 			}
 		}
 
@@ -576,7 +561,12 @@ na_object_item_remove_item( NAObjectItem *item, const NAObjectId *object )
 	if( !item->private->dispose_has_run ){
 
 		children = na_object_get_items( item );
+
 		if( children ){
+			g_debug( "na_object_item_remove_item: removing %p (%s) from %p (%s)",
+					( void * ) object, G_OBJECT_TYPE_NAME( object ),
+					( void * ) item, G_OBJECT_TYPE_NAME( item ));
+
 			children = g_list_remove( children, ( gconstpointer ) object );
 			na_object_set_items( item, children );
 		}
@@ -698,6 +688,33 @@ na_object_item_factory_write_start( NAObjectItem *item )
 }
 
 static void
+copy_children( NAObjectItem *target, const NAObjectItem *source )
+{
+	static const gchar *thisfn = "na_object_item_copy_children";
+	GList *tgt_children, *src_children, *ic;
+	NAObject *dup;
+
+	tgt_children = na_object_get_items( target );
+	g_debug( "%s: tgt_children=%p (count=%d)", thisfn, ( void * ) tgt_children, g_list_length( tgt_children ));
+
+	if( tgt_children ){
+		na_object_unref_items( tgt_children );
+		tgt_children = NULL;
+	}
+
+	src_children = na_object_get_items( source );
+	for( ic = src_children ; ic ; ic = ic->next ){
+
+		dup = ( NAObject * ) na_object_duplicate( ic->data );
+		na_object_set_parent( dup, target );
+		tgt_children = g_list_prepend( tgt_children, dup );
+	}
+
+	tgt_children = g_list_reverse( tgt_children );
+	na_object_set_items( target, tgt_children );
+}
+
+static void
 rebuild_children_slist( NAObjectItem *item )
 {
 	GSList *slist;
@@ -718,7 +735,6 @@ rebuild_children_slist( NAObjectItem *item )
 
 		na_object_set_items_slist( item, slist );
 
-		na_core_utils_slist_dump( slist );
 		na_core_utils_slist_free( slist );
 	}
 }

@@ -337,12 +337,9 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
 
-		na_object_dump( item );
-
 		ret = na_updater_write_item( updater, item, &messages );
 
 		g_debug( "nact_window_save_item: ret=%d", ret );
-		na_object_dump( item );
 
 		if( messages ){
 			base_window_error_dlg(

@@ -332,9 +332,6 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		basenames_widget = get_basenames_entry( instance );
 		basenames = profile ? na_object_get_basenames( profile ) : NULL;
 		basenames_text = profile ? na_core_utils_slist_to_text( basenames ) : g_strdup( "" );
-		if( !basenames_text ){
-			basenames_text = g_strdup( "" );
-		}
 		gtk_entry_set_text( GTK_ENTRY( basenames_widget ), basenames_text );
 		g_free( basenames_text );
 		na_core_utils_slist_free( basenames );
@@ -350,9 +347,6 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		mimetypes_widget = get_mimetypes_entry( instance );
 		mimetypes = profile ? na_object_get_mimetypes( profile ) : NULL;
 		mimetypes_text = profile ? na_core_utils_slist_to_text( mimetypes ) : g_strdup( "" );
-		if( !mimetypes_text ){
-			mimetypes_text = g_strdup( "" );
-		}
 		gtk_entry_set_text( GTK_ENTRY( mimetypes_widget ), mimetypes_text );
 		g_free( mimetypes_text );
 		na_core_utils_slist_free( mimetypes );

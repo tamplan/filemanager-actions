@@ -77,7 +77,6 @@ enum {
 
 GType       na_object_item_get_type( void );
 
-void        na_object_item_copy     ( NAObjectItem *item, const NAObjectItem *source );
 gboolean    na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b );
 
 NAObjectId *na_object_item_get_item    ( const NAObjectItem *item, const gchar *id );

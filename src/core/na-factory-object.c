@@ -265,6 +265,8 @@ na_factory_object_set_defaults( NAIFactoryObject *object )
 
 	if( ifactory_object_initialized && !ifactory_object_finalized ){
 
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 		groups = v_get_groups( object );
 		if( !groups ){
 			g_warning( "%s: no NADataGroup found for %s", thisfn, G_OBJECT_TYPE_NAME( object ));
@@ -349,9 +351,16 @@ na_factory_object_move_boxed( NAIFactoryObject *target, const NAIFactoryObject *
 void
 na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
 {
+	static const gchar *thisfn = "na_factory_object_copy";
 	GList *src_list, *isrc;
 
-	free_data_boxed_list( target );
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( target ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( source ));
+
+	g_debug( "%s: target=%p (%s), source=%p (%s)",
+			thisfn,
+			( void * ) target, G_OBJECT_TYPE_NAME( target ),
+			( void * ) source, G_OBJECT_TYPE_NAME( source ));
 
 	src_list = g_object_get_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA );
 
@@ -359,11 +368,14 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 
 		NADataBoxed *src_boxed = NA_DATA_BOXED( isrc->data );
 		NADataDef *def = na_data_boxed_get_data_def( src_boxed );
-		if( def->copyable ){
 
-			NADataBoxed *tgt_boxed = na_data_boxed_new( def );
+		if( def->copyable ){
+			NADataBoxed *tgt_boxed = data_boxed_from_name( target, def->name );
+			if( !tgt_boxed ){
+				tgt_boxed = na_data_boxed_new( def );
+				attach_boxed_to_object( target, tgt_boxed );
+			}
 			na_data_boxed_set_from_boxed( tgt_boxed, src_boxed );
-			attach_boxed_to_object( target, tgt_boxed );
 		}
 	}
 
@@ -681,7 +693,7 @@ write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIt
 	}
 
 	/* iter while code is ok */
-	return( iter->code == NA_IIO_PROVIDER_CODE_OK );
+	return( iter->code != NA_IIO_PROVIDER_CODE_OK );
 }
 
 /**

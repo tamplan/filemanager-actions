@@ -81,6 +81,7 @@ typedef struct {
 	 * copy:
 	 * @target: the #NAObject-derived object which will receive data.
 	 * @source: the #NAObject-derived object which will provide data.
+	 * @recursive: whether children should be recursively copied.
 	 *
 	 * Copies data and properties from @source to @target.
 	 *
@@ -90,7 +91,7 @@ typedef struct {
 	 * base class up to the most-derived one. Each class has so only to
 	 * take care of dumping its own data.
 	 */
-	void     ( *copy )     ( NAObject *target, const NAObject *source );
+	void     ( *copy )     ( NAObject *target, const NAObject *source, gboolean recursive );
 
 	/**
 	 * are_equal:
@@ -142,6 +143,8 @@ void      na_object_object_reset_origin   ( NAObject *object, const NAObject *or
 
 NAObject *na_object_object_ref  ( NAObject *object );
 void      na_object_object_unref( NAObject *object );
+
+void      na_object_object_copy      ( NAObject *target, const NAObject *source, gboolean recursive );
 
 void      na_object_object_dump      ( const NAObject *object );
 void      na_object_object_dump_norec( const NAObject *object );

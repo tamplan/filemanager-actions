@@ -165,3 +165,5 @@
 - segfaults on reload
 
 - check adding/removing profile on desktop/gconf/xml import/export
+
+- shouldn't be able to copy an action into an action !

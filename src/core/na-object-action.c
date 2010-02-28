@@ -71,18 +71,17 @@ static NAObjectItemClass *st_parent_class = NULL;
 static GType        register_type( void );
 static void         class_init( NAObjectActionClass *klass );
 static void         instance_init( GTypeInstance *instance, gpointer klass );
-static void         instance_constructed( GObject *object );
 static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
+static void         object_copy( NAObject *target, const NAObject *source, gboolean recursive );
 static gboolean     object_is_valid( const NAObject *object );
 
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static void         ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source );
 static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
@@ -138,10 +137,6 @@ register_type( void )
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
-#if 0
-	na_factory_object_register_type( type, action_id_groups );
-#endif
-
 	return( type );
 }
 
@@ -157,7 +152,6 @@ class_init( NAObjectActionClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
-	object_class->constructed = instance_constructed;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
 	object_class->dispose = instance_dispose;
@@ -165,7 +159,7 @@ class_init( NAObjectActionClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = NULL;
-	naobject_class->copy = NULL;
+	naobject_class->copy = object_copy;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = object_is_valid;
 
@@ -188,27 +182,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_OBJECT_ACTION( instance );
 
 	self->private = g_new0( NAObjectActionPrivate, 1 );
-}
-
-static void
-instance_constructed( GObject *object )
-{
-	static const gchar *thisfn = "na_object_action_instance_constructed";
-	NAObjectAction *self;
-
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-	g_return_if_fail( NA_IS_OBJECT_ACTION( object ));
-	self = NA_OBJECT_ACTION( object );
-
-	if( !self->private->dispose_has_run ){
-
-		na_factory_object_set_defaults( NA_IFACTORY_OBJECT( object ));
-
-		/* chain up to the parent class */
-		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
-			G_OBJECT_CLASS( st_parent_class )->constructed( object );
-		}
-	}
 }
 
 static void
@@ -278,6 +251,19 @@ instance_finalize( GObject *object )
 	}
 }
 
+static void
+object_copy( NAObject *target, const NAObject *source, gboolean recursive )
+{
+	g_return_if_fail( NA_IS_OBJECT_ACTION( target ));
+	g_return_if_fail( NA_IS_OBJECT_ACTION( source ));
+
+	if( !NA_OBJECT_ACTION( target )->private->dispose_has_run &&
+		!NA_OBJECT_ACTION( source )->private->dispose_has_run ){
+
+		na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
+	}
+}
+
 static gboolean
 object_is_valid( const NAObject *object )
 {
@@ -295,7 +281,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
-	iface->copy = ifactory_object_copy;
+	iface->copy = NULL;
 	iface->are_equal = ifactory_object_are_equal;
 	iface->is_valid = ifactory_object_is_valid;
 	iface->read_start = NULL;
@@ -314,12 +300,6 @@ static NADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( action_data_groups );
-}
-
-static void
-ifactory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
-{
-	na_object_item_copy( NA_OBJECT_ITEM( target ), NA_OBJECT_ITEM( source ));
 }
 
 static gboolean
@@ -365,6 +345,8 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 	} else {
 		g_object_unref( parms.profile );
 	}
+
+	na_factory_object_set_defaults( instance );
 }
 
 static guint
@@ -511,7 +493,6 @@ na_object_action_new_with_profile( void )
 	NAObjectProfile *profile;
 
 	action = na_object_action_new();
-
 	profile = na_object_profile_new();
 	na_object_action_attach_profile( action, profile );
 
@@ -536,6 +517,7 @@ na_object_action_new_with_defaults( void )
 	na_object_set_new_id( action, NULL );
 	na_object_set_label( action, NEW_NAUTILUS_ACTION );
 	na_object_set_toolbar_label( action, NEW_NAUTILUS_ACTION );
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( action ));
 
 	profile = na_object_profile_new_with_defaults();
 	na_object_action_attach_profile( action, profile );
