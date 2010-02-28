@@ -1194,7 +1194,7 @@ msgstr "Unbekanntes Element %s gefunden in Zeile %d, während %s erwartet wurde.
 #, c-format
 msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
 msgstr ""
-"Unbekannter Typ %s gefunden in Zeile %s, während Aktion oder Menü erwartet "
+"Unbekannter Typ %s gefunden in Zeile %d, während Aktion oder Menü erwartet "
 "wurde."
 
 #: ../src/io-xml/naxml-reader.c:155
