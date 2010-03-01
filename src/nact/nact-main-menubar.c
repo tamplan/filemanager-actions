@@ -777,25 +777,25 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	paste_into_enabled &= !is_clipboard_empty;
 	paste_into_enabled &= count_selected <= 1;
 	if( mis->clipboard_profiles ){
-		paste_enabled &= count_selected == 1;
-		if( paste_enabled ){
+		paste_into_enabled &= count_selected == 1;
+		if( paste_into_enabled ){
 			selected_action = NA_OBJECT( selected_items->data );
-			paste_enabled &= NA_IS_OBJECT_ACTION( selected_action );
-			paste_enabled &= nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( selected_action ), NULL );
+			paste_into_enabled &= NA_IS_OBJECT_ACTION( selected_action );
+			paste_into_enabled &= nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( selected_action ), NULL );
 		}
 	} else {
-		paste_enabled &= has_writable_providers;
+		paste_into_enabled &= has_writable_providers;
 		if( count_selected ){
 			selected_item = NA_OBJECT( selected_items->data );
-			paste_enabled &= NA_IS_OBJECT_MENU( selected_item );
-			if( paste_enabled ){
+			paste_into_enabled &= NA_IS_OBJECT_MENU( selected_item );
+			if( paste_into_enabled ){
 				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
-				paste_enabled &= parent_item
+				paste_into_enabled &= parent_item
 						? nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( parent_item ), NULL )
 						: is_level_zero_writable;
 			}
 		} else {
-			paste_enabled &= is_level_zero_writable;
+			paste_into_enabled &= is_level_zero_writable;
 		}
 	}
 	nact_main_menubar_enable_item( window, "PasteIntoItem", paste_into_enabled );

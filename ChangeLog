@@ -1,5 +1,8 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar.c (on_update_sensitivities):
+	Only paste a NAObjectItem into a menu.
+
 	* src/nact/nact-main-menubar-help.c:
 	* src/nact/nact-main-menubar-help.h: New files.
 
