@@ -79,7 +79,7 @@ struct NAXMLReaderPrivate {
 	/* data provided by the caller
 	 */
 	NAIImporter      *importer;
-	NAIImporterParms *parms;
+	NAIImporterUriParms *parms;
 
 	/* data dynamically set during the import operation
 	 */
@@ -308,14 +308,14 @@ reader_new( void )
 /**
  * naxml_reader_import_uri:
  * @instance: the #NAIImporter provider.
- * @parms: a #NAIImporterParms structure.
+ * @parms: a #NAIImporterUriParms structure.
  *
  * Imports an item.
  *
  * Returns: the import operation code.
  */
 guint
-naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterParms *parms )
+naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterUriParms *parms )
 {
 	static const gchar *thisfn = "naxml_reader_import_from_uri";
 	NAXMLReader *reader;
@@ -329,19 +329,19 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterParms *par
 	reader->private->importer = ( NAIImporter * ) instance;
 	reader->private->parms = parms;
 
-	parms->item = NULL;
+	parms->imported = NULL;
 
 	code = reader_parse_xmldoc( reader );
 
 	if( code == IMPORTER_CODE_OK ){
-		g_assert( NA_IS_OBJECT_ITEM( reader->private->parms->item ));
+		g_assert( NA_IS_OBJECT_ITEM( reader->private->parms->imported ));
 		code = manage_import_mode( reader );
 	}
 
 	if( code != IMPORTER_CODE_OK ){
-		if( reader->private->parms->item ){
-			g_object_unref( reader->private->parms->item );
-			reader->private->parms->item = NULL;
+		if( reader->private->parms->imported ){
+			g_object_unref( reader->private->parms->imported );
+			reader->private->parms->imported = NULL;
 		}
 	}
 
@@ -554,7 +554,7 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 	if( code == IMPORTER_CODE_OK ){
 
 		if( !reader->private->type_found ){
-			reader->private->parms->item = NA_OBJECT_ITEM( na_object_action_new());
+			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_action_new());
 		}
 	}
 
@@ -562,12 +562,12 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 	 */
 	if( code == IMPORTER_CODE_OK ){
 
-		na_object_set_id( reader->private->parms->item, reader->private->item_id );
+		na_object_set_id( reader->private->parms->imported, reader->private->item_id );
 
 		na_ifactory_provider_read_item(
 				NA_IFACTORY_PROVIDER( reader->private->importer ),
 				reader,
-				NA_IFACTORY_OBJECT( reader->private->parms->item ),
+				NA_IFACTORY_OBJECT( reader->private->parms->imported ),
 				&reader->private->parms->messages );
 	}
 
@@ -760,11 +760,11 @@ read_done_object_action( NAXMLReader *reader, NAObjectAction *action )
 	GSList *order, *ip;
 	gchar *profile_id;
 
-	if( !na_object_get_items_count( reader->private->parms->item )){
+	if( !na_object_get_items_count( reader->private->parms->imported )){
 
 		/* first attach potential ordered profiles
 		 */
-		order = na_object_get_items_slist( reader->private->parms->item );
+		order = na_object_get_items_slist( reader->private->parms->imported );
 		for( ip = order ; ip ; ip = ip->next ){
 			read_done_load_profile( reader, ( const gchar * ) ip->data );
 		}
@@ -788,7 +788,7 @@ read_done_object_action( NAXMLReader *reader, NAObjectAction *action )
 static void
 read_done_object_profile( NAXMLReader *reader, NAObjectProfile *profile )
 {
-	na_object_attach_profile( reader->private->parms->item, profile );
+	na_object_attach_profile( reader->private->parms->imported, profile );
 }
 
 /*
@@ -818,7 +818,7 @@ read_done_get_next_profile_id( NAXMLReader *reader )
 			profile_id = g_path_get_basename( name );
 			g_free( name );
 
-			if( na_object_get_item( reader->private->parms->item, profile_id )){
+			if( na_object_get_item( reader->private->parms->imported, profile_id )){
 				g_free( profile_id );
 				profile_id = NULL;
 			}
@@ -970,10 +970,10 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 		gchar *type = get_value_from_child_node( iter->parent, NAXML_KEY_SCHEMA_NODE_DEFAULT );
 
 		if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
-			reader->private->parms->item = NA_OBJECT_ITEM( na_object_action_new());
+			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_action_new());
 
 		} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
-			reader->private->parms->item = NA_OBJECT_ITEM( na_object_menu_new());
+			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_menu_new());
 
 		} else {
 			add_message( reader, ERR_NODE_UNKNOWN_TYPE, type, iter->line );
@@ -1094,10 +1094,10 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
 		gchar *type = get_value_from_child_child_node( key_node->parent, NAXML_KEY_DUMP_NODE_VALUE, NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING );
 
 		if( !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
-			reader->private->parms->item = NA_OBJECT_ITEM( na_object_action_new());
+			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_action_new());
 
 		} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
-			reader->private->parms->item = NA_OBJECT_ITEM( na_object_menu_new());
+			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_menu_new());
 
 		} else {
 			add_message( reader, ERR_NODE_UNKNOWN_TYPE, type, key_node->line );
@@ -1304,7 +1304,7 @@ manage_import_mode( NAXMLReader *reader )
 
 	if( reader->private->parms->check_fn ){
 		exists = ( *reader->private->parms->check_fn )
-						( reader->private->parms->item, reader->private->parms->check_fn_data );
+						( reader->private->parms->imported, reader->private->parms->check_fn_data );
 	}
 
 	if( exists ){
@@ -1331,7 +1331,7 @@ manage_import_mode( NAXMLReader *reader )
 
 			case IMPORTER_MODE_NO_IMPORT:
 			default:
-				id = na_object_get_id( reader->private->parms->item );
+				id = na_object_get_id( reader->private->parms->imported );
 				add_message( reader, ERR_ITEM_ID_ALREADY_EXISTS, id );
 				if( reader->private->parms->mode == IMPORTER_MODE_ASK ){
 					add_message( reader, "%s", _( "Import was canceled due to user request." ));
@@ -1368,14 +1368,14 @@ renumber_label_item( NAXMLReader *reader )
 {
 	gchar *label, *tmp;
 
-	na_object_set_new_id( reader->private->parms->item, NULL );
+	na_object_set_new_id( reader->private->parms->imported, NULL );
 
-	label = na_object_get_label( reader->private->parms->item );
+	label = na_object_get_label( reader->private->parms->imported );
 
 	/* i18n: the action has been renumbered during import operation */
 	tmp = g_strdup_printf( "%s %s", label, _( "(renumbered)" ));
 
-	na_object_set_label( reader->private->parms->item, tmp );
+	na_object_set_label( reader->private->parms->imported, tmp );
 
 	g_free( tmp );
 	g_free( label );

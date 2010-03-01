@@ -40,12 +40,12 @@ extern gboolean iimporter_finalized;		/* defined in na-iimporter.c */
 /**
  * na_importer_import:
  * @pivot: the #NAPivot pivot for this application.
- * @parms: a #NAIImporterParms structure.
+ * @parms: a #NAIImporterUriParms structure.
  *
  * Returns: the import operation code.
  */
 guint
-na_importer_import_from_uri( const NAPivot *pivot, NAIImporterParms *parms )
+na_importer_import_from_uri( const NAPivot *pivot, NAIImporterUriParms *parms )
 {
 	static const gchar *thisfn = "na_importer_import_from_uri";
 	GList *modules, *im;

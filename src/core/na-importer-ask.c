@@ -54,7 +54,7 @@ struct NAImporterAskPrivate {
 	gboolean          dispose_has_run;
 	GtkBuilder       *builder;
 	GtkWindow        *toplevel;
-	NAIImporterParms *parms;
+	NAIImporterUriParms *parms;
 	NAObjectItem     *existing;
 	guint             mode;
 	GConfClient      *gconf;
@@ -218,7 +218,7 @@ import_ask_new()
 /**
  * na_importer_ask_user:
  * @importer: this #NAIImporter instance.
- * @parms: a #NAIImporterParms structure.
+ * @parms: a #NAIImporterUriParms structure.
  * @existing: the #NAObjectItem-derived already existing object.
  *
  * Ask the user for what to do when an imported item has the same ID
@@ -230,7 +230,7 @@ import_ask_new()
  * becomes his preference import mode.
  */
 guint
-na_importer_ask_user( const NAIImporterParms *parms, const NAObjectItem *existing )
+na_importer_ask_user( const NAIImporterUriParms *parms, const NAObjectItem *existing )
 {
 	static const gchar *thisfn = "na_importer_ask_user";
 	NAImporterAsk *dialog;
@@ -246,7 +246,7 @@ na_importer_ask_user( const NAIImporterParms *parms, const NAObjectItem *existin
 
 	if( dialog->private->toplevel ){
 
-		dialog->private->parms = ( NAIImporterParms * ) parms;
+		dialog->private->parms = ( NAIImporterUriParms * ) parms;
 		dialog->private->existing = ( NAObjectItem * ) existing;
 		dialog->private->mode = na_iprefs_get_import_mode( dialog->private->gconf, IPREFS_IMPORT_ASK_LAST_MODE );
 
@@ -283,10 +283,10 @@ init_dialog( NAImporterAsk *editor )
 
 	g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
 
-	imported_label = na_object_get_label( editor->private->parms->item );
+	imported_label = na_object_get_label( editor->private->parms->imported );
 	existing_label = na_object_get_label( editor->private->existing );
 
-	if( NA_IS_OBJECT_ACTION( editor->private->parms->item )){
+	if( NA_IS_OBJECT_ACTION( editor->private->parms->imported )){
 		/* i18n: The action <action_label> imported from <file> has the same id than <existing_label> */
 		label = g_strdup_printf(
 				_( "The action \"%s\" imported from \"%s\" has the same identifiant than the already existing \"%s\"." ),

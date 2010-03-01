@@ -1,5 +1,19 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iimporter.h:
+	* src/core/na-iimporter.c:
+	* src/core/na-importer-ask.c:
+	* src/core/na-importer-ask.h:
+	* src/core/na-importer.c:
+	* src/core/na-importer.h:
+	* src/io-xml/naxml-reader.c:
+	* src/io-xml/naxml-reader.h:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/test/test-reader.c:
+	NAIImporterParms structure is renamed as NAIImporterUriParms.
+	'item' member of this same structure is renamed as imported.
+
 	* src/io-gconf/nagp-reader.c:
 	* src/io-gconf/nagp-writer.c:
 	* src/io-gconf/nagp-writer.h: Cleanup the code.

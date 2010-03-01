@@ -141,7 +141,7 @@ iimporter_get_version( const NAIImporter *instance )
 /**
  * na_iimporter_ask_user:
  * @importer: this #NAIImporter instance.
- * @parms: a #NAIImporterParms structure.
+ * @parms: a #NAIImporterUriParms structure.
  * @existing: the #NAObjectItem-derived already existing object.
  *
  * Ask the user for what to do when an imported item has the same ID
@@ -150,7 +150,7 @@ iimporter_get_version( const NAIImporter *instance )
  * Returns: the definitive import mode.
  */
 guint
-na_iimporter_ask_user( const NAIImporter *importer, const NAIImporterParms *parms, const NAObjectItem *existing )
+na_iimporter_ask_user( const NAIImporter *importer, const NAIImporterUriParms *parms, const NAObjectItem *existing )
 {
 	guint mode;
 

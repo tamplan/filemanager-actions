@@ -64,7 +64,7 @@ static void             exit_with_usage( void );
 int
 main( int argc, char **argv )
 {
-	NAIImporterParms parms;
+	NAIImporterUriParms parms;
 
 	g_type_init();
 
@@ -76,7 +76,7 @@ main( int argc, char **argv )
 	parms.version = 1;
 	parms.uri = uri;
 	parms.mode = IMPORTER_MODE_ASK;
-	parms.item = NULL;
+	parms.imported = NULL;
 	parms.check_fn = NULL;
 	parms.check_fn_data = NULL;
 	parms.messages = NULL;
@@ -85,9 +85,9 @@ main( int argc, char **argv )
 
 	g_print( "%s: return code from import is %u.\n", g_get_prgname(), code );
 
-	if( parms.item ){
-		na_object_dump( parms.item );
-		g_object_unref( parms.item );
+	if( parms.imported ){
+		na_object_dump( parms.imported );
+		g_object_unref( parms.imported );
 	}
 
 	na_core_utils_slist_dump( parms.messages );

@@ -676,7 +676,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	guint mode;
 	NactApplication *application;
 	NAUpdater *updater;
-	NAIImporterParms parms;
+	NAIImporterUriParms parms;
 	guint code;
 	ImportCheck check_str;
 
@@ -707,7 +707,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		parms.mode = mode;
 		parms.window = base_window_get_toplevel( base_application_get_main_window( BASE_APPLICATION( application )));
 		parms.messages = NULL;
-		parms.item = NULL;
+		parms.imported = NULL;
 		parms.check_fn = ( NAIImporterCheckFn ) &check_for_existance;
 		parms.check_fn_data = &check_str;
 
@@ -715,7 +715,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 		str = g_new0( ImportUriStruct, 1 );
 		str->uri = g_strdup( parms.uri );
-		str->item = parms.item;
+		str->item = parms.imported;
 		str->msg = na_core_utils_slist_duplicate( parms.messages );
 		na_core_utils_slist_free( parms.messages );
 

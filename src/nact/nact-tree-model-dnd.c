@@ -755,7 +755,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	NactMainWindow *main_window;
 	GtkTreePath *new_dest;
 	GList *object_list;
-	NAIImporterParms parms;
+	NAIImporterUriParms parms;
 	guint code;
 	GConfClient *gconf;
 
@@ -781,7 +781,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		parms.uri = ( gchar * ) is->data;
 		parms.mode = import_mode;
 		parms.messages = NULL;
-		parms.item = NULL;
+		parms.imported = NULL;
 		parms.check_fn = NULL;
 		parms.check_fn_data = NULL;
 
@@ -796,11 +796,11 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 			na_core_utils_slist_free( parms.messages );
 		}
 
-		if( parms.item ){
-			g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms.item ), FALSE );
-			object_list = g_list_prepend( object_list, parms.item );
-			na_object_check_status( parms.item );
-			na_object_dump( parms.item );
+		if( parms.imported ){
+			g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms.imported ), FALSE );
+			object_list = g_list_prepend( object_list, parms.imported );
+			na_object_check_status( parms.imported );
+			na_object_dump( parms.imported );
 			drop_done = TRUE;
 		}
 	}

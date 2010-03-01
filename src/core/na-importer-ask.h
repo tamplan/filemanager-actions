@@ -70,7 +70,7 @@ typedef struct {
 
 GType na_importer_ask_get_type( void );
 
-guint na_importer_ask_user( const NAIImporterParms *parms, const NAObjectItem *existing );
+guint na_importer_ask_user( const NAIImporterUriParms *parms, const NAObjectItem *existing );
 
 G_END_DECLS
 
