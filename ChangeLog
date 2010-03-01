@@ -1,5 +1,13 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-import.c
+	(check_for_existance): Directly use the main window.
+
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
+	Adapt to use na_importer_import_from_list() function.
+	Display messages in a dialog box.
+	Split the selection data on a '\r\n' separator.
+
 	* src/api/na-iimporter.h (NAIImporterListParms): New structure.
 
 	* src/core/na-importer.c:

@@ -121,13 +121,14 @@ static const gchar *st_refuse_action_menu = N_( "Unable to drop an action or a m
 static const gchar *st_parent_not_writable = N_( "Unable to drop here as parent is not writable" );
 static const gchar *st_level_zero_not_writable = N_( "Unable to drop here as level zero is not writable" );
 
-static gboolean     drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
-static GtkTreePath *drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction **parent );
-static void         drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest );
-static gboolean     drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
-static char        *get_xds_atom_value( GdkDragContext *context );
-static gboolean     is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path );
-static guint        target_atom_to_id( GdkAtom atom );
+static gboolean      drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
+static GtkTreePath  *drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction **parent );
+static void          drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest );
+static gboolean      drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
+static NAObjectItem *is_dropped_already_exists( const NAObjectItem *importing, const NactMainWindow *window );
+static char         *get_xds_atom_value( GdkDragContext *context );
+static gboolean      is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path );
+static guint         target_atom_to_id( GdkAtom atom );
 
 /**
  * nact_tree_model_dnd_idrag_dest_drag_data_received:
@@ -747,72 +748,95 @@ static gboolean
 drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
 {
 	/*static const gchar *thisfn = "nact_tree_model_drop_uri_list";*/
-	gboolean drop_done = FALSE;
-	GSList *uri_list, *is;
+	gboolean drop_done;
+	GtkTreePath *new_dest;
 	NactApplication *application;
 	NAUpdater *updater;
-	guint import_mode;
 	NactMainWindow *main_window;
-	GtkTreePath *new_dest;
-	GList *object_list;
-	NAIImporterUriParms parms;
-	guint code;
+	NAIImporterListParms parms;
 	GConfClient *gconf;
+	GList *it;
+
+	drop_done = FALSE;
+	model->private->drag_has_profiles = FALSE;
+	new_dest = drop_inside_adjust_dest( model, dest, NULL );
+
+	if( !new_dest ){
+		return( drop_done );
+	}
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	updater = nact_application_get_updater( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
-	model->private->drag_has_profiles = FALSE;
-	new_dest = drop_inside_adjust_dest( model, dest, NULL );
-	if( !new_dest ){
-		return( drop_done );
-	}
+	parms.version = 1;
+	g_debug( "%s", ( const gchar * ) selection_data->data );
+	parms.uris = g_slist_reverse( na_core_utils_slist_from_split(( const gchar * ) selection_data->data, "\r\n" ));
 
-	uri_list = g_slist_reverse( na_core_utils_slist_from_split(( const gchar * ) selection_data->data, "\n" ));
 	gconf = gconf_client_get_default();
-	import_mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
+	parms.mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
 	g_object_unref( gconf );
-	object_list = NULL;
 
-	for( is = uri_list ; is ; is = is->next ){
+	parms.window = base_window_get_toplevel( BASE_WINDOW( main_window ));
+	parms.imported = NULL;
+	parms.check_fn = ( NAIImporterCheckFn ) is_dropped_already_exists;
+	parms.check_fn_data = main_window;
+	parms.messages = NULL;
 
-		parms.version = 1;
-		parms.uri = ( gchar * ) is->data;
-		parms.mode = import_mode;
-		parms.messages = NULL;
-		parms.imported = NULL;
-		parms.check_fn = NULL;
-		parms.check_fn_data = NULL;
+	na_importer_import_from_list( NA_PIVOT( updater ), &parms );
 
-		code = na_importer_import_from_uri( NA_PIVOT( updater ), &parms );
-
-		if( parms.messages ){
-			main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
-			nact_main_statusbar_display_with_timeout(
-					main_window,
-					TREE_MODEL_STATUSBAR_CONTEXT,
-					parms.messages->data );
-			na_core_utils_slist_free( parms.messages );
-		}
-
-		if( parms.imported ){
-			g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms.imported ), FALSE );
-			object_list = g_list_prepend( object_list, parms.imported );
-			na_object_check_status( parms.imported );
-			na_object_dump( parms.imported );
-			drop_done = TRUE;
-		}
+	/* display first message in status bar
+	 */
+	if( parms.messages ){
+		nact_main_statusbar_display_with_timeout(
+				main_window,
+				TREE_MODEL_STATUSBAR_CONTEXT,
+				parms.messages->data );
 	}
 
-	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
-	na_object_unref_items( object_list );
+	/* if there is more than one message, display them in a dialog box
+	 */
+	if( parms.messages && g_slist_length( parms.messages ) >= 2 ){
+		GtkMessageDialog *dialog = GTK_MESSAGE_DIALOG( gtk_message_dialog_new(
+				parms.window,
+				GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE,
+				"%s", _( "Some messages have occurred during drop operation." )));
+		GString *str = g_string_new( "" );
+		GSList *im;
+		for( im = parms.messages ; im ; im = im->next ){
+			g_string_append_printf( str, "%s\n", ( const gchar * ) im->data );
+		}
+		gtk_message_dialog_format_secondary_markup( dialog, "%s", str->str );
+		g_string_free( str, TRUE );
+	}
+
+	/* check status of newly imported items, and insert them in the list view
+	 */
+	for( it = parms.imported ; it ; it = it->next ){
+		na_object_check_status( it->data );
+		na_object_dump( it->data );
+		drop_done = TRUE;
+	}
+
+	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), parms.imported, new_dest );
+	nact_tree_model_dump( model );
 
 	gtk_tree_path_free( new_dest );
-	nact_tree_model_dump( model );
-	na_core_utils_slist_free( uri_list );
+	na_object_unref_items( parms.imported );
+	na_core_utils_slist_free( parms.uris );
+	na_core_utils_slist_free( parms.messages );
 
 	return( drop_done );
+}
+
+static NAObjectItem *
+is_dropped_already_exists( const NAObjectItem *importing, const NactMainWindow *window )
+{
+	gchar *id = na_object_get_id( importing );
+	NAObjectItem *exists = nact_main_window_get_item( window, id );
+	g_free( id );
+
+	return( exists );
 }
 
 /*

@@ -78,8 +78,8 @@ typedef struct {
 /* a structure to check for existance of imported items
  */
 typedef struct {
-	NactAssistantImport *assistant;
-	GList               *imported;
+	NactMainWindow *window;
+	GList          *imported;
 }
 	ImportCheck;
 
@@ -693,7 +693,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( wnd )));
 	updater = nact_application_get_updater( application );
 	imported_items = NULL;
-	check_str.assistant = window;
+	check_str.window = NACT_MAIN_WINDOW( mainwnd );
 	check_str.imported = imported_items;
 
 	/* import actions
@@ -708,7 +708,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		parms.window = base_window_get_toplevel( base_application_get_main_window( BASE_APPLICATION( application )));
 		parms.messages = NULL;
 		parms.imported = NULL;
-		parms.check_fn = ( NAIImporterCheckFn ) &check_for_existance;
+		parms.check_fn = ( NAIImporterCheckFn ) check_for_existance;
 		parms.check_fn_data = &check_str;
 
 		code = na_importer_import_from_uri( NA_PIVOT( updater ), &parms );
@@ -741,33 +741,28 @@ static NAObjectItem *
 check_for_existance( const NAObjectItem *item, ImportCheck *check )
 {
 	NAObjectItem *exists;
-	NactApplication *application;
-	NactMainWindow *main_window;
 	GList *ip;
 
 	exists = NULL;
-	gchar *current_id = na_object_get_id( item );
-	g_debug( "nact_assistant_import_check_for_existance: current_id=%s", current_id );
+	gchar *importing_id = na_object_get_id( item );
+	g_debug( "nact_assistant_import_check_for_existance: item=%p (%s), importing_id=%s",
+			( void * ) item, G_OBJECT_TYPE_NAME( item ), importing_id );
 
-	/* is the imported item already in the current importation list ?
+	/* is the importing item already in the current importation list ?
 	 */
 	for( ip = check->imported ; ip && !exists ; ip = ip->next ){
 		gchar *id = na_object_get_id( ip->data );
-		if( !strcmp( current_id, id )){
+		if( !strcmp( importing_id, id )){
 			exists = NA_OBJECT_ITEM( ip->data );
 		}
 		g_free( id );
 	}
 
-	/* else, is it in the main window list ?
-	 */
 	if( !exists ){
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( check->assistant )));
-		main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
-		exists = nact_main_window_get_item( main_window, current_id );
+		exists = nact_main_window_get_item( check->window, importing_id );
 	}
 
-	g_free( current_id );
+	g_free( importing_id );
 
 	return( exists );
 }
