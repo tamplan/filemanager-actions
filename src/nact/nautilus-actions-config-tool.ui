@@ -230,7 +230,7 @@
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkEntry" id="ActionIconLabelEntry">
+                                          <object class="GtkEntry" id="ActionToolbarLabelEntry">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="tooltip_text" translatable="yes">Label of the icon item in the Nautilus toolbar.</property>
@@ -246,12 +246,12 @@
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="ActionIconLabelLabel">
+                                          <object class="GtkLabel" id="ActionToolbarLabelLabel">
                                             <property name="visible">True</property>
                                             <property name="xalign">1</property>
                                             <property name="label" translatable="yes">_Toolbar label :</property>
                                             <property name="use_underline">True</property>
-                                            <property name="mnemonic_widget">ActionIconLabelEntry</property>
+                                            <property name="mnemonic_widget">ActionToolbarLabelEntry</property>
                                           </object>
                                           <packing>
                                             <property name="top_attach">2</property>
@@ -2115,7 +2115,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
       <widget name="ActionTooltipLabel"/>
       <widget name="ActionIdLabel"/>
       <widget name="ActionMenuLabelLabel"/>
-      <widget name="ActionIconLabelLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
     </widgets>
   </object>
 </interface>
