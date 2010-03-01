@@ -301,7 +301,7 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 				folder = get_xds_atom_value( context );
 				dest_folder = g_path_get_dirname( folder );
 				g_free( folder );
-				is_writable = na_core_utils_dir_is_writable_path( dest_folder );
+				is_writable = na_core_utils_dir_is_writable_uri( dest_folder );
 				gtk_selection_data_set( selection_data, selection_data->target, 8, ( guchar * )( is_writable ? "S" : "F" ), 1 );
 				if( is_writable ){
 					nact_clipboard_dnd_set( model->private->clipboard, info, rows, dest_folder, TRUE );
