@@ -1,5 +1,11 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-reader.c (read_done_item):
+	Only action needs to setup the parent pointer.
+
+	* src/io-gconf/nagp-writer.c (nagp_writer_write_data):
+	Only writes non-empty values.
+
 	* src/core/na-object.c (na_object_object_reset_origin):
 	No more check for the value of object origin before resetting it.
 

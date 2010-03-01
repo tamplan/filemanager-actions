@@ -249,8 +249,8 @@ read_done_item( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderDa
 	GConfEntry *gconf_entry;
 	const gchar *key;
 
-	data->parent = item;
-
+	/* check for writability of this item
+	 */
 	entries = na_gconf_utils_get_entries( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
 
 	writable = TRUE;
@@ -272,6 +272,7 @@ read_done_action( const NAIFactoryProvider *provider, NAObjectAction *action, Re
 	GSList *ip;
 	gchar *profile_path;
 
+	data->parent = NA_OBJECT_ITEM( action );
 	order = na_object_get_items_slist( action );
 	list_profiles = na_gconf_utils_get_subdirs( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
 
