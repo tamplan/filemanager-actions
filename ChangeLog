@@ -1,5 +1,16 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object.c (na_object_object_reset_origin):
+	No more check for the value of object origin before resetting it.
+
+	* src/core/na-object-item.c
+	(na_object_item_remove_item): Improve debug message.
+	(copy_children): Refuse to copy when target already has	children.
+
+	* src/nact/nact-main-menubar.c
+	(nact_main_menubar_save_items): Do not re-dump all the items hierarchy.
+	(save_item): Remove old children after having created the new ones.
+
 	* src/core/na-object-action.c (ifactory_object_read_done):
 	Force toolbar label to be the same that action one if flag is set to true.
 

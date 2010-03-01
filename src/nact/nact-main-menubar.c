@@ -958,7 +958,6 @@ nact_main_menubar_save_items( NactMainWindow *window )
 	for( it = items ; it ; it = it->next ){
 		save_item( window, updater, NA_OBJECT_ITEM( it->data ));
 		na_object_check_status( it->data );
-		na_object_dump( it->data );
 	}
 	g_list_free( items );
 
@@ -1011,7 +1010,16 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 			g_debug( "%s: origin=%p", thisfn, ( void * ) origin );
 
 			if( origin ){
+				subitems = NULL;
+				if( NA_IS_OBJECT_ACTION( item )){
+					subitems = na_object_get_items( origin );
+					na_object_set_items( origin, NULL );
+				}
 				na_object_copy( origin, item, NA_IS_OBJECT_ACTION( item ));
+				na_object_reset_origin( item, origin );
+				if( subitems ){
+					na_object_unref_items( subitems );
+				}
 
 			} else {
 				dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));

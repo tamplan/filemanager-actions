@@ -568,6 +568,7 @@ na_object_item_remove_item( NAObjectItem *item, const NAObjectId *object )
 					( void * ) item, G_OBJECT_TYPE_NAME( item ));
 
 			children = g_list_remove( children, ( gconstpointer ) object );
+			g_debug( "na_object_item_remove_item: after: children=%p, count=%u", ( void * ) children, g_list_length( children ));
 			na_object_set_items( item, children );
 		}
 	}
@@ -695,11 +696,10 @@ copy_children( NAObjectItem *target, const NAObjectItem *source )
 	NAObject *dup;
 
 	tgt_children = na_object_get_items( target );
-	g_debug( "%s: tgt_children=%p (count=%d)", thisfn, ( void * ) tgt_children, g_list_length( tgt_children ));
-
 	if( tgt_children ){
-		na_object_unref_items( tgt_children );
-		tgt_children = NULL;
+		g_warning( "%s: target_children=%p (count=%d)",
+				thisfn, ( void * ) tgt_children, g_list_length( tgt_children ));
+		g_return_if_fail( tgt_children == NULL );
 	}
 
 	src_children = na_object_get_items( source );

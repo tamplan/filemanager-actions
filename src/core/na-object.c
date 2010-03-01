@@ -638,7 +638,6 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 {
 	GList *origin_children, *iorig;
 	GList *object_children, *iobj;
-	NAObject *orig_object;
 
 	g_return_if_fail( NA_IS_OBJECT( origin ));
 	g_return_if_fail( NA_IS_OBJECT( object ));
@@ -647,14 +646,11 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 
 		origin_children = na_object_get_items( origin );
 		object_children = na_object_get_items( object );
+
 		for( iorig = origin_children, iobj = object_children ; iorig && iobj ; iorig = iorig->next, iobj = iobj->next ){
-			orig_object = ( NAObject * ) na_object_get_origin( iorig->data );
-			g_return_if_fail( orig_object == iobj->data );
 			na_object_reset_origin( iobj->data, iorig->data );
 		}
 
-		orig_object = ( NAObject * ) na_object_get_origin( origin );
-		g_return_if_fail( orig_object == object );
 		na_iduplicable_set_origin( NA_IDUPLICABLE( object ), NA_IDUPLICABLE( origin ));
 		na_iduplicable_set_origin( NA_IDUPLICABLE( origin ), NULL );
 	}
