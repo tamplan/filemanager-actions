@@ -89,6 +89,7 @@ static void          on_target_toolbar_toggled( GtkToggleButton *button, NactIAc
 static void          on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance );
 static void          toolbar_same_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item );
 
+static void          setup_toolbar_label( NactIActionTab *instance, NAObjectItem *item, const gchar *label );
 static void          on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance );
 static void          toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item );
 
@@ -286,7 +287,7 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 				"toggled",
 				G_CALLBACK( on_toolbar_same_label_toggled ));
 
-		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
+		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( label_widget ),
@@ -481,8 +482,8 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		toolbar_same_label_set_sensitive( instance, item );
 		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
-		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
-		label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_get_toolbar_label( NA_OBJECT_ACTION( item )) : g_strdup( "" );
+		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
+		label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_get_toolbar_label( item ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		g_free( label );
 		toolbar_label_set_sensitive( instance, item );
@@ -671,7 +672,6 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 {
 	NAObjectItem *edited;
 	const gchar *label;
-	gboolean toolbar_same_label;
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -684,10 +684,7 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 		check_for_label( instance, entry, label );
 
 		if( NA_IS_OBJECT_ACTION( edited )){
-			toolbar_same_label = na_object_is_toolbar_same_label( NA_OBJECT_ACTION( edited ));
-			if( toolbar_same_label ){
-				na_object_set_toolbar_label( NA_OBJECT_ACTION( edited ), label );
-			}
+			setup_toolbar_label( instance, edited, label );
 		}
 
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, TRUE );
@@ -769,7 +766,7 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 				na_object_set_toolbar_same_label( NA_OBJECT_ACTION( edited ), same_label );
 				if( same_label ){
 					label = na_object_get_label( edited );
-					label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
+					label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
 					gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 					g_free( label );
 				}
@@ -797,6 +794,22 @@ toolbar_same_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item )
 	toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
 	target_toolbar = item && NA_IS_OBJECT_ACTION( item ) ? na_object_is_target_toolbar( NA_OBJECT_ACTION( item )) : FALSE;
 	gtk_widget_set_sensitive( GTK_WIDGET( toggle ), target_toolbar && !readonly );
+}
+
+/*
+ * setup the label of the toolbar according to the toolbar_same_label flag
+ */
+static void
+setup_toolbar_label( NactIActionTab *instance, NAObjectItem *item, const gchar *label )
+{
+	GtkWidget *label_widget;
+
+	if( item && NA_IS_OBJECT_ACTION( item )){
+		if( na_object_is_toolbar_same_label( item )){
+			label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
+			gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
+		}
+	}
 }
 
 static void
@@ -828,7 +841,7 @@ toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item )
 
 	is_action = item && NA_IS_OBJECT_ACTION( item );
 	same_label = is_action ? na_object_is_toolbar_same_label( NA_OBJECT_ACTION( item )) : FALSE;
-	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconLabelEntry" );
+	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
 	gtk_widget_set_sensitive( label_widget, is_action && !same_label );
 }
 

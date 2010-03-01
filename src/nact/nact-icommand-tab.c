@@ -542,7 +542,6 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 				NULL );
 
 		if( edited ){
-
 			na_object_set_parameters( edited, gtk_entry_get_text( entry ));
 			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 			update_example_label( instance, edited );
@@ -669,6 +668,7 @@ parse_parameters( NactICommandTab *instance )
 	gboolean is_file, is_dir;
 	gboolean accept_multiple;
 	GSList *scheme_list;
+	guint iter_inc;
 
 	const gchar *command = gtk_entry_get_text( GTK_ENTRY( get_path_entry( instance )));
 	const gchar *param_template = gtk_entry_get_text( GTK_ENTRY( get_parameters_entry( instance )));
@@ -742,6 +742,7 @@ parse_parameters( NactICommandTab *instance )
 
 	while(( iter = g_strstr_len( iter, strlen( iter ), "%" ))){
 		tmp_string = g_string_append_len( tmp_string, old_iter, strlen( old_iter ) - strlen( iter ));
+		iter_inc = 1;
 		switch( iter[1] ){
 
 			case 'd': /* base dir of the (first) selected file(s)/folder(s) */
@@ -789,9 +790,13 @@ parse_parameters( NactICommandTab *instance )
 			case '%': /* a percent sign */
 				tmp_string = g_string_append_c( tmp_string, '%' );
 				break;
+
+			default:
+				iter_inc = 1;
+				break;
 		}
-		iter+=2; /* skip the % sign and the character after. */
-		old_iter = iter; /* store the new start of the string */
+		iter += iter_inc;				/* skip the % sign and the character after. */
+		old_iter = iter;				/* store the new start of the string */
 	}
 	tmp_string = g_string_append_len( tmp_string, old_iter, strlen( old_iter ));
 
