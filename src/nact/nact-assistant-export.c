@@ -708,11 +708,15 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	NactAssistantExport *window;
 	GList *actions, *ia;
 	ExportStruct *str;
+	NactApplication *application;
+	NAUpdater *updater;
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( wnd ));
 	window = NACT_ASSISTANT_EXPORT( wnd );
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
 	actions = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 
 	g_assert( window->private->uri && strlen( window->private->uri ));
@@ -732,7 +736,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		}
 
 		if( str->format != IPREFS_EXPORT_NO_EXPORT ){
-			str->fname = na_exporter_to_file( str->item, window->private->uri, str->format, &str->msg );
+			str->fname = na_exporter_to_file( NA_PIVOT( updater ), str->item, window->private->uri, str->format, &str->msg );
 		}
 	}
 

@@ -534,6 +534,8 @@ static gchar *
 export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported )
 {
 	GList *subitems, *isub;
+	NactApplication *application;
+	NAUpdater *updater;
 	NAObjectAction *action;
 	gint index;
 	GString *data;
@@ -564,6 +566,9 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 		action = NA_OBJECT_ACTION( na_object_get_parent( object ));
 	}
 
+	application = NACT_APPLICATION( base_window_get_application( clipboard->private->window ));
+	updater = nact_application_get_updater( application );
+
 	index = g_list_index( *exported, ( gconstpointer ) action );
 	if( index == -1 ){
 
@@ -577,11 +582,11 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 		if( format != IPREFS_EXPORT_NO_EXPORT ){
 
 			if( dest_folder ){
-				fname = na_exporter_to_file( NA_OBJECT_ITEM( action), dest_folder, format, &msg );
+				fname = na_exporter_to_file( NA_PIVOT( updater ), NA_OBJECT_ITEM( action), dest_folder, format, &msg );
 				g_free( fname );
 
 			} else {
-				buffer = na_exporter_to_buffer( NA_OBJECT_ITEM( action ), format, NULL );
+				buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), format, NULL );
 			}
 		}
 	}

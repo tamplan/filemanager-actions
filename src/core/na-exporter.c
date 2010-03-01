@@ -32,7 +32,7 @@
 #include <config.h>
 #endif
 
-#include <api/na-iexporter.h>
+#include <glib/gi18n.h>
 
 #include "na-exporter.h"
 #include "na-export-format.h"
@@ -41,6 +41,8 @@ extern gboolean iexporter_initialized;
 extern gboolean iexporter_finalized;
 
 static const NAIExporterFormat *exporter_get_formats( const NAIExporter *exporter );
+static gchar                   *exporter_get_name( const NAIExporter *exporter );
+static NAIExporter             *find_exporter_for_format( const NAPivot *pivot, GQuark format );
 
 /**
  * na_exporter_get_formats:
@@ -49,6 +51,8 @@ static const NAIExporterFormat *exporter_get_formats( const NAIExporter *exporte
  * Returns: a list of #NAExportFormat objects, each of them addressing an
  * available export format, i.e. a format provided by a module which
  * implement the #NAIExporter interface.
+ *
+ * The returned list should later be na_exporter_free_formats() by the caller.
  */
 GList *
 na_exporter_get_formats( const NAPivot *pivot )
@@ -80,20 +84,6 @@ na_exporter_get_formats( const NAPivot *pivot )
 	return( formats );
 }
 
-static const NAIExporterFormat *
-exporter_get_formats( const NAIExporter *exporter )
-{
-	const NAIExporterFormat *str;
-
-	str = NULL;
-
-	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
-		str = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
-	}
-
-	return( str );
-}
-
 /**
  * na_exporter_free_formats:
  * @formats: a list of available export formats, as returned by
@@ -110,32 +100,68 @@ na_exporter_free_formats( GList *formats )
 
 /**
  * na_exporter_to_file:
+ * @pivot: the #NAPivot pivot for the running application.
  * @item: a #NAObjectItem-derived object.
- * @uri: the target URI.
+ * @folder: the URI of the target folder.
  * @format: the #GQuark target format.
  * @messages: a pointer to a #GSList list of strings; the provider
  *  may append messages to this list, but shouldn't reinitialize it.
  *
  * Exports the specified @item to the target @uri in the required @format.
  *
- * Returns: the URI of the exportered file, as a newly allocated string which
+ * Returns: the URI of the exported file, as a newly allocated string which
  * should be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-na_exporter_to_file( const NAObjectItem *item, const gchar *uri, GQuark format, GSList **messages )
+na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar *folder, GQuark format, GSList **messages )
 {
-	gchar *fname;
+	gchar *export_uri;
+	NAIExporterFileParms parms;
+	NAIExporter *exporter;
+	gchar *msg;
+	gchar *name;
 
-	fname = NULL;
+	export_uri = NULL;
 
 	if( iexporter_initialized && !iexporter_finalized ){
+
+		exporter = find_exporter_for_format( pivot, format );
+
+		if( exporter ){
+			parms.version = 1;
+			parms.exported = ( NAObjectItem * ) item;
+			parms.folder = ( gchar * ) folder;
+			parms.format = format;
+			parms.basename = NULL;
+			parms.messages = *messages;
+
+			if( NA_IEXPORTER_GET_INTERFACE( exporter )->to_file ){
+				NA_IEXPORTER_GET_INTERFACE( exporter )->to_file( exporter, &parms );
+
+				if( parms.basename ){
+					export_uri = g_strdup_printf( "%s%s%s", folder, G_DIR_SEPARATOR_S, parms.basename );
+				}
+
+			} else {
+				name = exporter_get_name( exporter );
+				msg = g_strdup_printf( _( "NAIExporter %s doesn't implement 'to_file' interface." ), name );
+				*messages = g_slist_append( *messages, msg );
+				g_free( name );
+			}
+
+		} else {
+			msg = g_strdup_printf(
+					_( "No NAIExporter implementation found for %s format." ), g_quark_to_string( format ));
+			*messages = g_slist_append( *messages, msg );
+		}
 	}
 
-	return( fname );
+	return( export_uri );
 }
 
 /**
  * na_exporter_to_buffer:
+ * @pivot: the #NAPivot pivot for the running application.
  * @item: a #NAObjectItem-derived object.
  * @format: the #GQuark target format.
  * @messages: a pointer to a #GSList list of strings; the provider
@@ -147,14 +173,96 @@ na_exporter_to_file( const NAObjectItem *item, const gchar *uri, GQuark format, 
  * be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-na_exporter_to_buffer( const NAObjectItem *item, GQuark format, GSList **messages )
+na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark format, GSList **messages )
 {
 	gchar *buffer;
+	NAIExporterBufferParms parms;
+	NAIExporter *exporter;
+	gchar *name;
+	gchar *msg;
 
 	buffer = NULL;
 
 	if( iexporter_initialized && !iexporter_finalized ){
+
+		exporter = find_exporter_for_format( pivot, format );
+
+		if( exporter ){
+			parms.version = 1;
+			parms.exported = ( NAObjectItem * ) item;
+			parms.format = format;
+			parms.buffer = NULL;
+			parms.messages = *messages;
+
+			if( NA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer ){
+				NA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer( exporter, &parms );
+
+				if( parms.buffer ){
+					buffer = parms.buffer;
+				}
+
+			} else {
+				name = exporter_get_name( exporter );
+				msg = g_strdup_printf( _( "NAIExporter %s doesn't implement 'to_buffer' interface." ), name );
+				*messages = g_slist_append( *messages, msg );
+				g_free( name );
+			}
+
+		} else {
+			msg = g_strdup_printf(
+					_( "No NAIExporter implementation found for %s format." ), g_quark_to_string( format ));
+			*messages = g_slist_append( *messages, msg );
+		}
 	}
 
 	return( buffer );
+}
+
+static const NAIExporterFormat *
+exporter_get_formats( const NAIExporter *exporter )
+{
+	const NAIExporterFormat *str;
+
+	str = NULL;
+
+	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
+		str = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
+	}
+
+	return( str );
+}
+
+static gchar *
+exporter_get_name( const NAIExporter *exporter )
+{
+	gchar *name;
+
+	name = NULL;
+
+	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_name ){
+		name = NA_IEXPORTER_GET_INTERFACE( exporter )->get_name( exporter );
+	}
+
+	return( name );
+}
+
+static NAIExporter *
+find_exporter_for_format( const NAPivot *pivot, GQuark format )
+{
+	NAIExporter *exporter;
+	GList *formats, *ifmt;
+
+	exporter = NULL;
+	formats = na_exporter_get_formats( pivot );
+
+	for( ifmt = formats ; ifmt && !exporter ; ifmt = ifmt->next ){
+
+		if( na_export_format_get_quark( NA_EXPORT_FORMAT( ifmt->data )) == format ){
+			exporter = na_export_format_get_exporter( NA_EXPORT_FORMAT( ifmt->data ));
+		}
+	}
+
+	na_exporter_free_formats( formats );
+
+	return( exporter );
 }

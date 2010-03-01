@@ -1,4 +1,5 @@
 data/nautilus-actions.schemas.in
+src/core/na-exporter.c
 src/core/na-iabout.c
 src/core/na-importer-ask.c
 src/core/na-importer-ask.ui

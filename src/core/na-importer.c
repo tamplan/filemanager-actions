@@ -70,8 +70,8 @@ na_importer_import_from_uri( const NAPivot *pivot, NAIImporterUriParms *parms )
 
 		for( im = modules ; im && code == IMPORTER_CODE_NOT_WILLING_TO ; im = im->next ){
 
-			if( NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( im->data ))->import_from_uri ){
-				code = NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( im->data ))->import_from_uri( NA_IIMPORTER( im->data ), parms );
+			if( NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( im->data ))->from_uri ){
+				code = NA_IIMPORTER_GET_INTERFACE( NA_IIMPORTER( im->data ))->from_uri( NA_IIMPORTER( im->data ), parms );
 			}
 		}
 

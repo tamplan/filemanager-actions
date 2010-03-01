@@ -73,6 +73,7 @@ gchar          *na_export_format_get_id         ( const NAExportFormat *format )
 gchar          *na_export_format_get_ask_label  ( const NAExportFormat *format );
 gchar          *na_export_format_get_label      ( const NAExportFormat *format );
 gchar          *na_export_format_get_description( const NAExportFormat *format );
+NAIExporter    *na_export_format_get_exporter   ( const NAExportFormat *format );
 
 G_END_DECLS
 

@@ -52,11 +52,14 @@ G_BEGIN_DECLS
 
 typedef struct NAIExporter                 NAIExporter;
 typedef struct NAIExporterFileParms        NAIExporterFileParms;
+typedef struct NAIExporterBufferParms      NAIExporterBufferParms;
 
 typedef struct NAIExporterInterfacePrivate NAIExporterInterfacePrivate;
 
 /* When listing available export formats, the instance returns a GList
- * of these structures
+ * of these structures.
+ * This structure must be implemented by each #NAIExporter implementation
+ * (see e.g. io-xml/naxml-provider.c)
  */
 typedef struct {
 	gchar *format;					/* format identifier (ascii) */
@@ -78,7 +81,16 @@ typedef struct {
 	 *
 	 * Defaults to 1.
 	 */
-	guint                 ( *get_version )( const NAIExporter *instance );
+	guint                     ( *get_version )( const NAIExporter *instance );
+
+	/**
+	 * get_name:
+	 * @instance: this #NAIExporter instance.
+	 *
+	 * Returns: the name to be displayed for this instance, as a
+	 * newly allocated string which should be g_free() by the caller.
+	 */
+	gchar *                   ( *get_name )   ( const NAIExporter *instance );
 
 	/**
 	 * get_formats:
@@ -102,32 +114,27 @@ typedef struct {
 	/**
 	 * to_file:
 	 * @instance: this #NAIExporter instance.
-	 * @item: a #NAObjectItem-derived object.
-	 * @uri: the target directory URI.
-	 * @format: the target format.
-	 * @fname: the place where allocate a new string to store the output
-	 * filename URI.
+	 * @parms: a #NAIExporterFileParms structure.
 	 *
-	 * Exports the specified @item to the target @uri in the required
-	 * @format.
+	 * Exports the specified 'exported' to the target 'folder' in the required
+	 * 'format'.
 	 *
 	 * Returns: the status of the operation.
 	 */
-	guint                 ( *to_file )    ( const NAIExporter *instance, const NAObjectItem *item, const gchar *uri, const gchar *format, gchar **fname );
+	guint                     ( *to_file )    ( const NAIExporter *instance, NAIExporterFileParms *parms );
 
 	/**
 	 * to_buffer:
 	 * @instance: this #NAIExporter instance.
-	 * @item: a #NAObjectItem-derived object.
-	 * @format: the target format.
-	 * @buffer: the place where allocate a new buffer to store the output.
+	 * @parms: a #NAIExporterFileParms structure.
 	 *
-	 * Exports the specified @item to the target @buffer in the required
-	 * @format.
+	 * Exports the specified 'exported' to a newly allocated 'buffer' in
+	 * the required 'format'. The allocated 'buffer' should be g_free()
+	 * by the caller.
 	 *
 	 * Returns: the status of the operation.
 	 */
-	guint                 ( *to_buffer )  ( const NAIExporter *instance, const NAObjectItem *item, const gchar *format, gchar **buffer );
+	guint                     ( *to_buffer )  ( const NAIExporter *instance, NAIExporterBufferParms *parms );
 }
 	NAIExporterInterface;
 
@@ -146,12 +153,25 @@ enum {
  * ... when exporting to a file
  */
 struct NAIExporterFileParms {
-	guint              version;			/* i 1: version of this structure */
-	NAObjectItem      *exported;		/* i 1: exported NAObjectItem-derived object */
-	gchar             *folder;			/* i 1: URI of the target folder */
-	GQuark             format;			/* i 1: export format as a GQuark */
-	gchar             *basename;		/*  o1: basename of the exported file */
-	GSList            *messages;		/* io1: a #GSList list of localized strings;
+	guint         version;				/* i 1: version of this structure */
+	NAObjectItem *exported;				/* i 1: exported NAObjectItem-derived object */
+	gchar        *folder;				/* i 1: URI of the target folder */
+	GQuark        format;				/* i 1: export format as a GQuark */
+	gchar        *basename;				/*  o1: basename of the exported file */
+	GSList       *messages;				/* io1: a #GSList list of localized strings;
+										 *       the provider may append messages to this list,
+										 *       but shouldn't reinitialize it. */
+};
+
+/* parameters via a structure
+ * ... when exporting to a buffer
+ */
+struct NAIExporterBufferParms {
+	guint         version;				/* i 1: version of this structure */
+	NAObjectItem *exported;				/* i 1: exported NAObjectItem-derived object */
+	GQuark        format;				/* i 1: export format as a GQuark */
+	gchar        *buffer;				/*  o1: buffer which contains the exported object */
+	GSList       *messages;				/* io1: a #GSList list of localized strings;
 										 *       the provider may append messages to this list,
 										 *       but shouldn't reinitialize it. */
 };

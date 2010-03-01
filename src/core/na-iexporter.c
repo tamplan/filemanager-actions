@@ -43,12 +43,11 @@ struct NAIExporterInterfacePrivate {
 gboolean iexporter_initialized = FALSE;
 gboolean iexporter_finalized   = FALSE;
 
-static GType                register_type( void );
-static void                 interface_base_init( NAIExporterInterface *klass );
-static void                 interface_base_finalize( NAIExporterInterface *klass );
+static GType register_type( void );
+static void  interface_base_init( NAIExporterInterface *klass );
+static void  interface_base_finalize( NAIExporterInterface *klass );
 
-static guint                iexporter_get_version( const NAIExporter *instance );
-static const NAIExporterFormat *iexporter_get_formats( const NAIExporter *instance );
+static guint iexporter_get_version( const NAIExporter *instance );
 
 /**
  * na_iexporter_get_type:
@@ -111,7 +110,8 @@ interface_base_init( NAIExporterInterface *klass )
 		klass->private = g_new0( NAIExporterInterfacePrivate, 1 );
 
 		klass->get_version = iexporter_get_version;
-		klass->get_formats = iexporter_get_formats;
+		klass->get_name = NULL;
+		klass->get_formats = NULL;
 		klass->to_file = NULL;
 		klass->to_buffer = NULL;
 
@@ -138,10 +138,4 @@ static guint
 iexporter_get_version( const NAIExporter *instance )
 {
 	return( 1 );
-}
-
-static const NAIExporterFormat *
-iexporter_get_formats( const NAIExporter *instance )
-{
-	return( NULL );
 }

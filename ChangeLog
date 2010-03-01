@@ -1,5 +1,21 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in: Add src/core/na-exporter.c file.
+
+	* src/api/na-iexporter.h: Refactor NAIExporter interface.
+
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h
+	(na_export_format_get_exporter): New function.
+
+	* src/core/na-exporter.c:
+	* src/core/na-exporter.h:
+	* src/core/na-iexporter.c:
+	* src/core/na-importer.c:
+	* src/io-xml/naxml-provider.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-clipboard.c: Updated accordingly.
+
 	* src/api/na-iexporter.h:
 	* src/core/na-export-format.c:
 	* src/core/na-export-format.h:
