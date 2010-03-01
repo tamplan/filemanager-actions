@@ -1,3 +1,7 @@
+2009-03-01 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-object-api.h: Fix minor typo.
+
 2009-02-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/io-desktop/nadp-desktop-file.c

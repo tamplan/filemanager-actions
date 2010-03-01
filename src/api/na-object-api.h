@@ -61,7 +61,6 @@ G_BEGIN_DECLS
 #define na_object_is_modified( obj )					na_iduplicable_is_modified( NA_IDUPLICABLE( obj ))
 
 #define na_object_set_origin( obj, origin )				na_iduplicable_set_origin( NA_IDUPLICABLE( obj ), ( NAIDuplicable * )( origin ))
-
 #define na_object_reset_origin( obj, origin )			na_object_object_reset_origin( NA_OBJECT( obj ), ( NAObject * )( origin ))
 
 /* NAObject
