@@ -1,5 +1,8 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar-tools.c:
+	* src/nact/nact-main-menubar-tools.h: New files.
+
 	* src/nact/nact-main-menubar-maintainer.c:
 	* src/nact/nact-main-menubar-maintainer.h: New files.
 

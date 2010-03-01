@@ -45,6 +45,29 @@
 
 G_BEGIN_DECLS
 
+/* this structure is updated each time the user interacts in the
+ * interface ; it is then used to update action sensitivities
+ */
+typedef struct {
+	gint     selected_menus;
+	gint     selected_actions;
+	gint     selected_profiles;
+	gint     clipboard_menus;
+	gint     clipboard_actions;
+	gint     clipboard_profiles;
+	gint     list_menus;
+	gint     list_actions;
+	gint     list_profiles;
+	gboolean is_modified;
+	gboolean have_exportables;
+	gboolean treeview_has_focus;
+	gboolean level_zero_order_changed;
+	gulong   popup_handler;
+}
+	MenubarIndicatorsStruct;
+
+#define MENUBAR_PROP_INDICATORS			"nact-menubar-indicators"
+
 void     nact_main_menubar_runtime_init( NactMainWindow *window );
 void     nact_main_menubar_dispose( NactMainWindow *window );
 gboolean nact_main_menubar_is_pasted_object_relabeled( NAObject *object, NAPivot *pivot );

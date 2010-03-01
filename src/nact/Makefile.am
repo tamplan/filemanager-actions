@@ -110,6 +110,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-main-menubar-help.h							\
 	nact-main-menubar-maintainer.c						\
 	nact-main-menubar-maintainer.h						\
+	nact-main-menubar-tools.c							\
+	nact-main-menubar-tools.h							\
 	nact-main-statusbar.c								\
 	nact-main-statusbar.h								\
 	nact-main-tab.c										\

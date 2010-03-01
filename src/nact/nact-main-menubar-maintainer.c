@@ -49,10 +49,6 @@
 void
 nact_main_menubar_maintainer_on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 {
-	/* TODO: help temporarily disabled */
-	nact_main_menubar_enable_item( window, "HelpItem", FALSE );
-
-	/* about always enabled */
 }
 
 /**

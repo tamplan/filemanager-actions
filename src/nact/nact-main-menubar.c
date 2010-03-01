@@ -37,14 +37,11 @@
 #include <api/na-object-api.h>
 
 #include <core/na-factory-object.h>
-#include <core/na-iabout.h>
 #include <core/na-iprefs.h>
 #include <core/na-ipivot-consumer.h>
 #include <core/na-io-provider.h>
 
 #include "nact-application.h"
-#include "nact-assistant-export.h"
-#include "nact-assistant-import.h"
 #include "nact-preferences-editor.h"
 #include "nact-iactions-list.h"
 #include "nact-clipboard.h"
@@ -52,6 +49,7 @@
 #include "nact-main-toolbar.h"
 #include "nact-main-tab.h"
 #include "nact-main-menubar.h"
+#include "nact-main-menubar-tools.h"
 #include "nact-main-menubar-maintainer.h"
 #include "nact-main-menubar-help.h"
 
@@ -84,29 +82,6 @@ enum {
 #ifndef GTK_HAS_ACTIVATABLE
 #define MENUBAR_PROP_ITEM_ACTION			"nact-menubar-item-action"
 #endif
-
-/* this structure is updated each time the user interacts in the
- * interface ; it is then used to update action sensitivities
- */
-typedef struct {
-	gint     selected_menus;
-	gint     selected_actions;
-	gint     selected_profiles;
-	gint     clipboard_menus;
-	gint     clipboard_actions;
-	gint     clipboard_profiles;
-	gint     list_menus;
-	gint     list_actions;
-	gint     list_profiles;
-	gboolean is_modified;
-	gboolean have_exportables;
-	gboolean treeview_has_focus;
-	gboolean level_zero_order_changed;
-	gulong   popup_handler;
-}
-	MenubarIndicatorsStruct;
-
-#define MENUBAR_PROP_INDICATORS			"nact-menubar-indicators"
 
 static void     on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles );
 static void     on_iactions_list_selection_changed( NactMainWindow *window, GList *selected );
@@ -141,9 +116,6 @@ static void     on_view_edit_toolbar_activated( GtkToggleAction *action, NactMai
 static void     on_view_tools_toolbar_activated( GtkToggleAction *action, NactMainWindow *window );
 static void     on_view_help_toolbar_activated( GtkToggleAction *action, NactMainWindow *window );
 static void     on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, int toolbar_id );
-
-static void     on_import_activated( GtkAction *action, NactMainWindow *window );
-static void     on_export_activated( GtkAction *action, NactMainWindow *window );
 
 static gboolean on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
 static void     on_destroy_callback( gpointer data );
@@ -223,14 +195,16 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the Collapse all item */
 				N_( "Entirely collapse the items hierarchy" ),
 				G_CALLBACK( on_collapse_all_activated ) },
+
 		{ "ImportItem" , GTK_STOCK_CONVERT, N_( "_Import assistant..." ), "",
 				/* i18n: tooltip displayed in the status bar when selecting the Import item */
 				N_( "Import one or more actions from external (XML) files into your configuration" ),
-				G_CALLBACK( on_import_activated ) },
+				G_CALLBACK( nact_main_menubar_tools_on_import ) },
 		{ "ExportItem", NULL, N_( "E_xport assistant..." ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Export item */
 				N_( "Export one or more actions from your configuration to external XML files" ),
-				G_CALLBACK( on_export_activated ) },
+				G_CALLBACK( nact_main_menubar_tools_on_export ) },
+
 		{ "DumpSelectionItem", NULL, N_( "_Dump the selection" ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Dump selection item */
 				N_( "Recursively dump selected items" ),
@@ -247,6 +221,7 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the DumpClipboard item */
 				N_( "Dump the content of the clipboard object" ),
 				G_CALLBACK( nact_main_menubar_maintainer_on_dump_clipboard ) },
+
 		{ "HelpItem" , GTK_STOCK_HELP, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Help item */
 				N_( "Display help about this program" ),
@@ -817,12 +792,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	nact_main_menubar_enable_item( window, "ExpandAllItem", count_list > 0 );
 	nact_main_menubar_enable_item( window, "CollapseAllItem", count_list > 0 );
 
-	/* import item enabled if at least one writable provider */
-	nact_main_menubar_enable_item( window, "ImportItem", has_writable_providers );
-
-	/* export item enabled if IActionsList store contains actions */
-	nact_main_menubar_enable_item( window, "ExportItem", mis->have_exportables );
-
+	nact_main_menubar_tools_on_update_sensitivities( window, user_data );
 	nact_main_menubar_maintainer_on_update_sensitivities( window, user_data );
 	nact_main_menubar_help_on_update_sensitivities( window, user_data );
 
@@ -1437,18 +1407,6 @@ on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, int 
 	ui_manager = ( GtkUIManager * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_UI_MANAGER );
 
 	nact_main_toolbar_activate( window, toolbar_id, ui_manager, is_active );
-}
-
-static void
-on_import_activated( GtkAction *gtk_action, NactMainWindow *window )
-{
-	nact_assistant_import_run( BASE_WINDOW( window ));
-}
-
-static void
-on_export_activated( GtkAction *gtk_action, NactMainWindow *window )
-{
-	nact_assistant_export_run( BASE_WINDOW( window ));
 }
 
 /**
