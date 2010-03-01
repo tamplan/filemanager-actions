@@ -1,5 +1,8 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-action.c (ifactory_object_read_done):
+	Force toolbar label to be the same that action one if flag is set to true.
+
 	* src/api/na-object-api.h: Fix minor typo.
 
 2009-02-28 Pierre Wieser <pwieser@trychlos.org>

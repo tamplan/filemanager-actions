@@ -321,6 +321,7 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 {
 	IterForObsoletedParms parms;
 	GList *ibox;
+	gchar *label;
 
 	g_debug( "na_object_action_ifactory_object_read_done: instance=%p", ( void * ) instance );
 
@@ -346,7 +347,17 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 		g_object_unref( parms.profile );
 	}
 
+	/* set action defaults
+	 */
 	na_factory_object_set_defaults( instance );
+
+	/* if toolbar-same-label is true, then ensure that this is actually true
+	 */
+	if( na_object_is_toolbar_same_label( instance )){
+		label = na_object_get_label( instance );
+		na_object_set_toolbar_label( instance, label );
+		g_free( label );
+	}
 }
 
 static guint
