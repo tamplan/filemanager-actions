@@ -53,7 +53,7 @@ struct NAXMLProviderPrivate {
 	gboolean dispose_has_run;
 };
 
-static NAExporterStr st_formats[] = {
+static NAIExporterFormat st_formats[] = {
 
 	/* GCONF_SCHEMA_V1: a schema with owner, short and long descriptions;
 	 * each action has its own schema addressed by the id
@@ -104,7 +104,7 @@ static guint                iimporter_get_version( const NAIImporter *importer )
 
 static void                 iexporter_iface_init( NAIExporterInterface *iface );
 static guint                iexporter_get_version( const NAIExporter *exporter );
-static const NAExporterStr *iexporter_get_formats( const NAIExporter *exporter );
+static const NAIExporterFormat *iexporter_get_formats( const NAIExporter *exporter );
 
 static void                 ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
 static guint                ifactory_provider_get_version( const NAIFactoryProvider *factory );
@@ -267,7 +267,7 @@ iexporter_get_version( const NAIExporter *exporter )
 	return( 1 );
 }
 
-static const NAExporterStr *
+static const NAIExporterFormat *
 iexporter_get_formats( const NAIExporter *exporter )
 {
 	return( st_formats );

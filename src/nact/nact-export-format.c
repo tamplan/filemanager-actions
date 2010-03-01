@@ -58,7 +58,7 @@ typedef struct {
 }
 	NactExportFormatStr;
 
-static const NAExporterStr ask_str = { NULL, ASKME_LABEL, ASKME_LABEL, ASKME_DESCRIPTION };
+static const NAIExporterFormat ask_str = { NULL, ASKME_LABEL, ASKME_LABEL, ASKME_DESCRIPTION };
 
 static void draw_in_vbox( const NAExportFormat *format, GtkWidget *vbox, guint mode, gint id );
 static void select_default_iter( GtkWidget *widget, NactExportFormatStr *str );

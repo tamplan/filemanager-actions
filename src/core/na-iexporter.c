@@ -48,7 +48,7 @@ static void                 interface_base_init( NAIExporterInterface *klass );
 static void                 interface_base_finalize( NAIExporterInterface *klass );
 
 static guint                iexporter_get_version( const NAIExporter *instance );
-static const NAExporterStr *iexporter_get_formats( const NAIExporter *instance );
+static const NAIExporterFormat *iexporter_get_formats( const NAIExporter *instance );
 
 /**
  * na_iexporter_get_type:
@@ -140,7 +140,7 @@ iexporter_get_version( const NAIExporter *instance )
 	return( 1 );
 }
 
-static const NAExporterStr *
+static const NAIExporterFormat *
 iexporter_get_formats( const NAIExporter *instance )
 {
 	return( NULL );

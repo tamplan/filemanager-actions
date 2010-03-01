@@ -45,7 +45,7 @@ struct NAExportFormatClassPrivate {
 struct NAExportFormatPrivate {
 	gboolean       dispose_has_run;
 	GQuark         id;
-	NAExporterStr *str;
+	NAIExporterFormat *str;
 	NAIExporter   *exporter;
 };
 
@@ -168,20 +168,20 @@ instance_finalize( GObject *object )
 
 /**
  * na_export_format_new:
- * @str: a #NAExporterStr which describes an export format.
+ * @str: a #NAIExporterFormat which describes an export format.
  * @exporter: the #NAIExporter which provides this export format.
  *
  * Returns: a newly allocated #NAExportFormat object.
  */
 NAExportFormat *
-na_export_format_new( const NAExporterStr *str, const NAIExporter *exporter )
+na_export_format_new( const NAIExporterFormat *str, const NAIExporter *exporter )
 {
 	NAExportFormat *format;
 
 	format = g_object_new( NA_EXPORT_FORMAT_TYPE, NULL );
 
 	format->private->id = g_quark_from_string( str->format );
-	format->private->str = ( NAExporterStr * ) str;
+	format->private->str = ( NAIExporterFormat * ) str;
 	format->private->exporter = ( NAIExporter * ) exporter;
 
 	return( format );

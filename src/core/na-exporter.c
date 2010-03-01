@@ -40,7 +40,7 @@
 extern gboolean iexporter_initialized;
 extern gboolean iexporter_finalized;
 
-static const NAExporterStr *exporter_get_formats( const NAIExporter *exporter );
+static const NAIExporterFormat *exporter_get_formats( const NAIExporter *exporter );
 
 /**
  * na_exporter_get_formats:
@@ -55,7 +55,7 @@ na_exporter_get_formats( const NAPivot *pivot )
 {
 	GList *iexporters, *imod;
 	GList *formats;
-	const NAExporterStr *str;
+	const NAIExporterFormat *str;
 	NAExportFormat *format;
 
 	formats = NULL;
@@ -80,10 +80,10 @@ na_exporter_get_formats( const NAPivot *pivot )
 	return( formats );
 }
 
-static const NAExporterStr *
+static const NAIExporterFormat *
 exporter_get_formats( const NAIExporter *exporter )
 {
-	const NAExporterStr *str;
+	const NAIExporterFormat *str;
 
 	str = NULL;
 

@@ -1,5 +1,14 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iexporter.h:
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h:
+	* src/core/na-exporter.c:
+	* src/core/na-iexporter.c:
+	* src/io-xml/naxml-provider.c:
+	* src/nact/nact-export-format.c:
+	NAExporterStr structure is renamed as NAIExporterFormat.
+
 	* src/api/na-iimporter.h (from_uri):
 	Rename the API function to be consistant with NAIExporter interface.
 

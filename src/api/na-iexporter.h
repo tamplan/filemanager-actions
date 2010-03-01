@@ -51,6 +51,7 @@ G_BEGIN_DECLS
 #define NA_IEXPORTER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IEXPORTER_TYPE, NAIExporterInterface ))
 
 typedef struct NAIExporter                 NAIExporter;
+typedef struct NAIExporterFileParms        NAIExporterFileParms;
 
 typedef struct NAIExporterInterfacePrivate NAIExporterInterfacePrivate;
 
@@ -63,7 +64,7 @@ typedef struct {
 	gchar *wnd_label;				/* short label to be displayed in the UI (UTF-8 locale) */
 	gchar *description;				/* full description of the format (UTF-8 locale) */
 }
-	NAExporterStr;
+	NAIExporterFormat;
 
 typedef struct {
 	GTypeInterface             parent;
@@ -83,7 +84,7 @@ typedef struct {
 	 * get_formats:
 	 * @instance: this #NAIExporter instance.
 	 *
-	 * Returns: a list of #NAExporterStr structures which describe the
+	 * Returns: a list of #NAIExporterFormat structures which describe the
 	 * formats supported by @instance.
 	 *
 	 * Defaults to %NULL (no format at all).
@@ -96,7 +97,7 @@ typedef struct {
 	 * export format, and so need a new format id, please contact the
 	 * maintainers (see #nautilus-actions.doap).
 	 */
-	const NAExporterStr * ( *get_formats )( const NAIExporter *instance );
+	const NAIExporterFormat * ( *get_formats )( const NAIExporter *instance );
 
 	/**
 	 * to_file:
@@ -130,8 +131,6 @@ typedef struct {
 }
 	NAIExporterInterface;
 
-GType na_iexporter_get_type( void );
-
 /* The reasons for which an item may not have been exported
  */
 enum {
@@ -142,6 +141,22 @@ enum {
 	NA_IEXPORTER_CODE_UNABLE_TO_WRITE,
 	NA_IEXPORTER_CODE_ERROR,
 };
+
+/* parameters via a structure
+ * ... when exporting to a file
+ */
+struct NAIExporterFileParms {
+	guint              version;			/* i 1: version of this structure */
+	NAObjectItem      *exported;		/* i 1: exported NAObjectItem-derived object */
+	gchar             *folder;			/* i 1: URI of the target folder */
+	GQuark             format;			/* i 1: export format as a GQuark */
+	gchar             *basename;		/*  o1: basename of the exported file */
+	GSList            *messages;		/* io1: a #GSList list of localized strings;
+										 *       the provider may append messages to this list,
+										 *       but shouldn't reinitialize it. */
+};
+
+GType na_iexporter_get_type( void );
 
 G_END_DECLS
 
