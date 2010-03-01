@@ -28,52 +28,28 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <core/na-iabout.h>
-
-#include "nact-main-menubar.h"
-#include "nact-main-menubar-help.h"
+#ifndef __NACT_MAIN_MENUBAR_MAINTAINER_H__
+#define __NACT_MAIN_MENUBAR_MAINTAINER_H__
 
 /**
- * nact_main_menubar_help_on_update_sensitivities:
- * @window: the #NactMainWindow main application window.
- * @user_data: user data ?
- *
- * Update sensitivities on the Help menu.
+ * SECTION: nact_main_menubar
+ * @short_description: Main menubar Maintainer menu management.
+ * @include: nact/nact-main-menubar-maintainer.h
  */
-void
-nact_main_menubar_help_on_update_sensitivities( NactMainWindow *window, gpointer user_data )
-{
-	/* TODO: help temporarily disabled */
-	nact_main_menubar_enable_item( window, "HelpItem", FALSE );
 
-	/* about always enabled */
-}
+#include <gtk/gtk.h>
 
-/**
- * nact_main_menubar_help_on_help:
- * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
- *
- * Triggers the "Help/Help" item.
- */
-void
-nact_main_menubar_help_on_help( GtkAction *action, NactMainWindow *window )
-{
-}
+#include "nact-main-window.h"
 
-/**
- * nact_main_menubar_help_on_about:
- * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
- *
- * Triggers the "Help/About" item.
- */
-void
-nact_main_menubar_help_on_about( GtkAction *action, NactMainWindow *window )
-{
-	na_iabout_display( NA_IABOUT( window ));
-}
+G_BEGIN_DECLS
+
+void nact_main_menubar_maintainer_on_update_sensitivities( NactMainWindow *window, gpointer user_data );
+
+void nact_main_menubar_maintainer_on_dump_selection       ( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_maintainer_on_list_modified_items  ( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_maintainer_on_dump_clipboard       ( GtkAction *action, NactMainWindow *window );
+
+G_END_DECLS
+
+#endif /* __NACT_NACT_MENUBAR_MAINTAINER_H__ */

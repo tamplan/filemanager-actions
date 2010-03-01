@@ -45,8 +45,8 @@ G_BEGIN_DECLS
 
 void nact_main_menubar_help_on_update_sensitivities( NactMainWindow *window, gpointer user_data );
 
-void nact_main_menubar_help_on_help( GtkAction *gtk_action, NactMainWindow *window );
-void nact_main_menubar_help_on_about( GtkAction *gtk_action, NactMainWindow *window );
+void nact_main_menubar_help_on_help ( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_help_on_about( GtkAction *action, NactMainWindow *window );
 
 G_END_DECLS
 

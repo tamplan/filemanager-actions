@@ -52,6 +52,7 @@
 #include "nact-main-toolbar.h"
 #include "nact-main-tab.h"
 #include "nact-main-menubar.h"
+#include "nact-main-menubar-maintainer.h"
 #include "nact-main-menubar-help.h"
 
 #define MENUBAR_PROP_STATUS_CONTEXT			"nact-menubar-status-context"
@@ -144,11 +145,6 @@ static void     on_view_toolbar_activated( GtkToggleAction *action, NactMainWind
 static void     on_import_activated( GtkAction *action, NactMainWindow *window );
 static void     on_export_activated( GtkAction *action, NactMainWindow *window );
 
-static void     on_dump_selection_activated( GtkAction *action, NactMainWindow *window );
-static void     on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window );
-static void     on_list_modified_items_activated( GtkAction *action, NactMainWindow *window );
-static void     on_dump_clipboard_activated( GtkAction *action, NactMainWindow *window );
-
 static gboolean on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
 static void     on_destroy_callback( gpointer data );
 static void     on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window );
@@ -238,19 +234,19 @@ static const GtkActionEntry entries[] = {
 		{ "DumpSelectionItem", NULL, N_( "_Dump the selection" ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Dump selection item */
 				N_( "Recursively dump selected items" ),
-				G_CALLBACK( on_dump_selection_activated ) },
+				G_CALLBACK( nact_main_menubar_maintainer_on_dump_selection ) },
 		{ "BriefTreeStoreDumpItem", NULL, N_( "_Brief tree store dump" ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item */
 				N_( "Briefly dump the tree store" ),
-				G_CALLBACK( on_brief_tree_store_dump_activated ) },
+				G_CALLBACK( nact_main_menubar_maintainer_on_brief_tree_store_dump ) },
 		{ "ListModifiedItems", NULL, N_( "_List modified items" ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item */
 				N_( "List the modified items" ),
-				G_CALLBACK( on_list_modified_items_activated ) },
+				G_CALLBACK( nact_main_menubar_maintainer_on_list_modified_items ) },
 		{ "DumpClipboard", NULL, N_( "_Dump the clipboard" ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the DumpClipboard item */
 				N_( "Dump the content of the clipboard object" ),
-				G_CALLBACK( on_dump_clipboard_activated ) },
+				G_CALLBACK( nact_main_menubar_maintainer_on_dump_clipboard ) },
 		{ "HelpItem" , GTK_STOCK_HELP, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Help item */
 				N_( "Display help about this program" ),
@@ -827,6 +823,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	/* export item enabled if IActionsList store contains actions */
 	nact_main_menubar_enable_item( window, "ExportItem", mis->have_exportables );
 
+	nact_main_menubar_maintainer_on_update_sensitivities( window, user_data );
 	nact_main_menubar_help_on_update_sensitivities( window, user_data );
 
 	na_object_unref_selected_items( selected_items );
@@ -1452,37 +1449,6 @@ static void
 on_export_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	nact_assistant_export_run( BASE_WINDOW( window ));
-}
-
-static void
-on_dump_selection_activated( GtkAction *action, NactMainWindow *window )
-{
-	GList *items, *it;
-
-	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
-	for( it = items ; it ; it = it->next ){
-		na_object_dump( it->data );
-	}
-
-	na_object_unref_selected_items( items );
-}
-
-static void
-on_brief_tree_store_dump_activated( GtkAction *action, NactMainWindow *window )
-{
-	nact_iactions_list_brief_tree_dump( NACT_IACTIONS_LIST( window ));
-}
-
-static void
-on_list_modified_items_activated( GtkAction *action, NactMainWindow *window )
-{
-	nact_iactions_list_bis_list_modified_items( NACT_IACTIONS_LIST( window ));
-}
-
-static void
-on_dump_clipboard_activated( GtkAction *action, NactMainWindow *window )
-{
-	nact_clipboard_dump( nact_main_window_get_clipboard( window ));
 }
 
 /**
