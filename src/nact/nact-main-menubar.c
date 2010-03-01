@@ -981,7 +981,6 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 	NAObjectItem *dup_pivot;
 	GList *subitems, *it;
 	NAObjectItem *parent;
-	gchar *parent_id;
 	gint pos;
 	NAIOProvider *provider_before;
 	NAIOProvider *provider_after;
@@ -1006,9 +1005,17 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 				na_object_reset_last_allocated( item );
 			}
 
+			/* now that the NAObjectItem has been (non recursively) saved,
+			 * we have to update NAPivot so that the next na_object_check_status()
+			 * will show us that this treeview item is no more modified
+			 */
 			origin = ( NAObjectItem * ) na_object_get_origin( item );
 			g_debug( "%s: origin=%p", thisfn, ( void * ) origin );
 
+#if 0
+			/* if the item already existed,
+			 * then copy the treeview item to the pivot one
+			 */
 			if( origin ){
 				subitems = NULL;
 				if( NA_IS_OBJECT_ACTION( item )){
@@ -1021,6 +1028,10 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 					na_object_unref_items( subitems );
 				}
 
+			/* this is a new item
+			 * get the actual parent and position from the treeview
+			 * and insert accordingly in the pivot tree
+			 */
 			} else {
 				dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
 				na_object_reset_origin( item, dup_pivot );
@@ -1035,6 +1046,32 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 
 				na_updater_insert_item( updater, dup_pivot, parent_id, pos );
 			}
+#endif
+
+			parent = NULL;
+			pos = -1;
+
+			if( origin ){
+				parent = na_object_get_parent( origin );
+				if( parent ){
+					pos = na_object_get_position( parent, origin );
+				}
+				g_object_unref( origin );
+			}
+
+			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
+			na_object_reset_origin( item, dup_pivot );
+			na_object_set_parent( dup_pivot, parent );
+			if( parent ){
+				if( pos == -1 ){
+					na_object_append_item( parent, dup_pivot );
+				} else {
+					na_object_insert_at( parent, dup_pivot, pos );
+				}
+			} else {
+				na_updater_append_item( updater, dup_pivot );
+			}
+
 #if 0
 			parent = NULL;
 			pos = -1;

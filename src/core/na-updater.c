@@ -186,6 +186,29 @@ na_updater_new( void )
 }
 
 /**
+ * na_updater_append_item:
+ * @updater: this #NAUpdater object.
+ * @item: a #NAObjectItem-derived object to be appended to the tree.
+ *
+ * Append a new item at the end of the global tree.
+ */
+void
+na_updater_append_item( NAUpdater *updater, NAObjectItem *item )
+{
+	GList *tree;
+
+	g_return_if_fail( NA_IS_UPDATER( updater ));
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !updater->private->dispose_has_run ){
+
+		g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+		tree = g_list_append( tree, item );
+		g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, tree, NULL );
+	}
+}
+
+/**
  * na_updater_insert_item:
  * @updater: this #NAUpdater object.
  * @item: a #NAObjectItem-derived object to be inserted in the tree.
@@ -217,7 +240,7 @@ na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *par
 
 		} else {
 			tree = g_list_append( tree, item );
-			g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+			g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, tree, NULL );
 		}
 	}
 }

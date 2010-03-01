@@ -1,5 +1,10 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-updater.c:
+	* src/core/na-updater.h (na_updater_append_item): New function.
+
+	* src/nact/nact-main-menubar.c (save_item): Fix save machinery.
+
 	* src/nact/nact-assistant-import.c
 	(check_for_existance): Directly use the main window.
 
