@@ -54,6 +54,7 @@ G_BEGIN_DECLS
 
 typedef struct NAIImporter                 NAIImporter;
 typedef struct NAIImporterUriParms         NAIImporterUriParms;
+typedef struct NAIImporterListParms        NAIImporterListParms;
 
 typedef struct NAIImporterInterfacePrivate NAIImporterInterfacePrivate;
 
@@ -113,9 +114,10 @@ enum {
  * same id than the currently being imported one, or %NULL if the
  * imported id will be unique
  */
-typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void *fn_data );
+typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, const void *fn_data );
 
 /* parameters via a structure
+ * ... when importing a single uri
  */
 struct NAIImporterUriParms {
 	guint              version;			/* i 1: version of this structure */
@@ -124,6 +126,21 @@ struct NAIImporterUriParms {
 	GtkWindow         *window;			/* i 1: a window which will act as a parent of the ask dialog */
 	NAObjectItem      *imported;		/*  o1: eventually imported NAObjectItem-derived object */
 	NAIImporterCheckFn check_fn;		/* i 1: a function to check the existance of the imported item */
+	void              *check_fn_data;	/* i 1: data function */
+	GSList            *messages;		/* io1: a #GSList list of localized strings;
+										 *       the provider may append messages to this list,
+										 *       but shouldn't reinitialize it. */
+};
+
+/* ... when importing a list of uris
+ */
+struct NAIImporterListParms {
+	guint              version;			/* i 1: version of this structure */
+	GSList            *uris;			/* i 1: list of uris of the files to be imported */
+	guint              mode;			/* i 1: import mode */
+	GtkWindow         *window;			/* i 1: a window which will act as a parent of the ask dialog */
+	GList             *imported;		/*  o1: list of eventually imported NAObjectItem-derived objects */
+	NAIImporterCheckFn check_fn;		/* i 1: a function to check the existance of each imported item */
 	void              *check_fn_data;	/* i 1: data function */
 	GSList            *messages;		/* io1: a #GSList list of localized strings;
 										 *       the provider may append messages to this list,

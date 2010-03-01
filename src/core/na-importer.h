@@ -44,7 +44,9 @@
 
 G_BEGIN_DECLS
 
-guint na_importer_import_from_uri( const NAPivot *pivot, NAIImporterUriParms *parms );
+guint na_importer_import_from_uri ( const NAPivot *pivot, NAIImporterUriParms *parms );
+
+guint na_importer_import_from_list( const NAPivot *pivot, NAIImporterListParms *parms );
 
 G_END_DECLS
 
