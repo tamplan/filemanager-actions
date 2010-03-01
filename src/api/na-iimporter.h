@@ -70,7 +70,7 @@ typedef struct {
 	 *
 	 * Defaults to 1.
 	 */
-	guint ( *get_version )    ( const NAIImporter *instance );
+	guint ( *get_version )( const NAIImporter *instance );
 
 	/**
 	 * import_from_uri:
@@ -81,7 +81,7 @@ typedef struct {
 	 *
 	 * Returns: the return code of the operation.
 	 */
-	guint ( *import_from_uri )( const NAIImporter *instance, NAIImporterUriParms *parms );
+	guint ( *from_uri )   ( const NAIImporter *instance, NAIImporterUriParms *parms );
 }
 	NAIImporterInterface;
 

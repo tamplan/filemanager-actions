@@ -1,5 +1,11 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iimporter.h (from_uri):
+	Rename the API function to be consistant with NAIExporter interface.
+
+	* src/core/na-iimporter.c:
+	* src/io-xml/naxml-provider.c: Updated accordingly.
+
 	* src/nact/nact-tree-model-dnd.c
 	(nact_tree_model_dnd_imulti_drag_source_drag_data_get):
 	Target folder is an URI.

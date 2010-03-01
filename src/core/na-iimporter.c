@@ -112,6 +112,7 @@ interface_base_init( NAIImporterInterface *klass )
 		klass->private = g_new0( NAIImporterInterfacePrivate, 1 );
 
 		klass->get_version = iimporter_get_version;
+		klass->from_uri = NULL;
 
 		iimporter_initialized = TRUE;
 	}
