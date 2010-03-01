@@ -52,17 +52,17 @@ typedef struct {
 }
 	ReaderData;
 
-static NAObjectItem  *read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages );
+static NAObjectItem *read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages );
 
-static NADataBoxed   *read_data_item_properties( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *reader_data, const NADataDef *def );
-static NADataBoxed   *read_data_profile_properties( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *reader_data, const NADataDef *def );
-static void           read_done_item( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
-static void           read_done_action( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
-static void           read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
-static void           read_done_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
+static NADataBoxed  *read_data_item_properties( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *reader_data, const NADataDef *def );
+static NADataBoxed  *read_data_profile_properties( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *reader_data, const NADataDef *def );
+static void          read_done_item( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
+static void          read_done_action( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
+static void          read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
+static void          read_done_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
 
-static NADataBoxed   *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
-static gboolean       is_key_writable( NagpGConfProvider *gconf, const gchar *key );
+static NADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
+static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 
 /*
  * nagp_iio_provider_read_items:

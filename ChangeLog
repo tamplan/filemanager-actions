@@ -1,5 +1,9 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-reader.c:
+	* src/io-gconf/nagp-writer.c:
+	* src/io-gconf/nagp-writer.h: Cleanup the code.
+
 	* src/nact/nact-iaction-tab.c (setup_toolbar_label):
 	Immediately update the toolbar label when it is the same that those
 	of the action.

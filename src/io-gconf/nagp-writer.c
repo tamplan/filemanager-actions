@@ -51,17 +51,6 @@ typedef struct {
 }
 	WriterData;
 
-#if 0
-static gboolean write_item_action( NagpGConfProvider *gconf, const NAObjectAction *action, GSList **message );
-static gboolean write_item_menu( NagpGConfProvider *gconf, const NAObjectMenu *menu, GSList **message );
-static gboolean write_object_item( NagpGConfProvider *gconf, const NAObjectItem *item, GSList **message );
-static gboolean write_str( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **message );
-static gboolean write_bool( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **message );
-static gboolean write_list( NagpGConfProvider *gconf, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **message );
-
-static gboolean remove_key( NagpGConfProvider *provider, const gchar *uuid, const gchar *key, GSList **messages );
-#endif
-
 /*
  * API function: should only be called through NAIIOProvider interface
  */
@@ -153,113 +142,12 @@ nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 		na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), data, NA_IFACTORY_OBJECT( item ), messages );
 
 		g_free( data );
-#if 0
-		if( NA_IS_OBJECT_ACTION( item )){
-			if( !write_item_action( self, NA_OBJECT_ACTION( item ), messages )){
-				return( NA_IIO_PROVIDER_CODE_WRITE_ERROR );
-			}
-		}
-
-		if( NA_IS_OBJECT_MENU( item )){
-			if( !write_item_menu( self, NA_OBJECT_MENU( item ), messages )){
-				return( NA_IIO_PROVIDER_CODE_WRITE_ERROR );
-			}
-		}
-#endif
 	}
 
 	gconf_client_suggest_sync( self->private->gconf, NULL );
 
 	return( ret );
 }
-
-#if 0
-static gboolean
-write_item_action( NagpGConfProvider *provider, const NAObjectAction *action, GSList **messages )
-{
-	gchar *uuid, *name;
-	gboolean ret;
-	GList *profiles, *ip;
-	NAObjectProfile *profile;
-
-	uuid = na_object_get_id( action );
-
-	ret =
-		write_object_item( provider, NA_OBJECT_ITEM( action ), messages ) &&
-		write_str( provider, uuid, NULL, NAGP_ENTRY_VERSION, na_object_get_version( action ), messages ) &&
-		write_bool( provider, uuid, NULL, NAGP_ENTRY_TARGET_SELECTION, na_object_is_target_selection( action ), messages ) &&
-		write_bool( provider, uuid, NULL, NAGP_ENTRY_TARGET_BACKGROUND, na_object_is_target_background( action ), messages ) &&
-		write_bool( provider, uuid, NULL, NAGP_ENTRY_TARGET_TOOLBAR, na_object_is_target_toolbar( action ), messages ) &&
-		write_str( provider, uuid, NULL, NAGP_ENTRY_TOOLBAR_LABEL, na_object_get_toolbar_label( action ), messages ) &&
-		write_str( provider, uuid, NULL, NAGP_ENTRY_TYPE, g_strdup( NAGP_VALUE_TYPE_ACTION ), messages );
-
-	/* key was used between 2.29.1 and 2.29.4, but is removed since 2.29.5 */
-	remove_key( provider, uuid, NAGP_ENTRY_TOOLBAR_SAME_LABEL, messages );
-
-	profiles = na_object_get_items( action );
-
-	for( ip = profiles ; ip && ret ; ip = ip->next ){
-
-		profile = NA_OBJECT_PROFILE( ip->data );
-		name = na_object_get_id( profile );
-
-		ret =
-			write_str( provider, uuid, name, NAGP_ENTRY_PROFILE_LABEL, na_object_get_label( profile ), messages ) &&
-			write_str( provider, uuid, name, NAGP_ENTRY_PATH, na_object_get_path( profile ), messages ) &&
-			write_str( provider, uuid, name, NAGP_ENTRY_PARAMETERS, na_object_get_parameters( profile ), messages ) &&
-			write_list( provider, uuid, name, NAGP_ENTRY_BASENAMES, na_object_get_basenames( profile ), messages ) &&
-			write_bool( provider, uuid, name, NAGP_ENTRY_MATCHCASE, na_object_is_matchcase( profile ), messages ) &&
-			write_list( provider, uuid, name, NAGP_ENTRY_MIMETYPES, na_object_get_mimetypes( profile ), messages ) &&
-			write_bool( provider, uuid, name, NAGP_ENTRY_ISFILE, na_object_is_file( profile ), messages ) &&
-			write_bool( provider, uuid, name, NAGP_ENTRY_ISDIR, na_object_is_dir( profile ), messages ) &&
-			write_bool( provider, uuid, name, NAGP_ENTRY_MULTIPLE, na_object_is_multiple( profile ), messages ) &&
-			write_list( provider, uuid, name, NAGP_ENTRY_SCHEMES, na_object_get_schemes( profile ), messages ) &&
-			write_list( provider, uuid, name, NAGP_ENTRY_FOLDERS, na_object_get_folders( profile ), messages );
-
-		g_free( name );
-	}
-
-	g_free( uuid );
-
-	return( ret );
-}
-
-static gboolean
-write_item_menu( NagpGConfProvider *provider, const NAObjectMenu *menu, GSList **messages )
-{
-	gboolean ret;
-	gchar *uuid;
-
-	uuid = na_object_get_id( menu );
-
-	ret =
-		write_object_item( provider, NA_OBJECT_ITEM( menu ), messages ) &&
-		write_str( provider, uuid, NULL, NAGP_ENTRY_TYPE, g_strdup( NAGP_VALUE_TYPE_MENU ), messages );
-
-	g_free( uuid );
-
-	return( ret );
-}
-
-static gboolean
-write_object_item( NagpGConfProvider *provider, const NAObjectItem *item, GSList **messages )
-{
-	gchar *uuid;
-	gboolean ret;
-
-	uuid = na_object_get_id( NA_OBJECT( item ));
-
-	ret =
-		write_str( provider, uuid, NULL, NAGP_ENTRY_LABEL, na_object_get_label( NA_OBJECT( item )), messages ) &&
-		write_str( provider, uuid, NULL, NAGP_ENTRY_TOOLTIP, na_object_get_tooltip( item ), messages ) &&
-		write_str( provider, uuid, NULL, NAGP_ENTRY_ICON, na_object_get_icon( item ), messages ) &&
-		write_bool( provider, uuid, NULL, NAGP_ENTRY_ENABLED, na_object_is_enabled( item ), messages ) &&
-		write_list( provider, uuid, NULL, NAGP_ENTRY_ITEMS_LIST, na_object_build_items_slist( item ), messages );
-
-	g_free( uuid );
-	return( ret );
-}
-#endif
 
 /*
  * also delete the schema which may be directly attached to this action
@@ -499,108 +387,5 @@ nagp_writer_write_done( const NAIFactoryProvider *writer, void *writer_data,
 		}
 	}
 
-	gconf_client_suggest_sync( NAGP_GCONF_PROVIDER( writer )->private->gconf, NULL );
-
 	return( code );
 }
-
-#if 0
-static gboolean
-write_str( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gchar *value, GSList **messages )
-{
-	gchar *path;
-	gboolean ret;
-	gchar *msg;
-
-	if( name && strlen( name )){
-		path = g_strdup_printf( "%s/%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, name, key );
-	} else {
-		path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, key );
-	}
-
-	msg = NULL;
-	ret = na_gconf_utils_write_string( provider->private->gconf, path, value, &msg );
-	if( msg ){
-		*messages = g_slist_append( *messages, g_strdup( msg ));
-		g_free( msg );
-	}
-
-	g_free( value );
-	g_free( path );
-
-	return( ret );
-}
-
-static gboolean
-write_bool( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, gboolean value, GSList **messages )
-{
-	gboolean ret;
-	gchar *path;
-	gchar *msg;
-
-	if( name && strlen( name )){
-		path = g_strdup_printf( "%s/%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, name, key );
-	} else {
-		path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, key );
-	}
-
-	msg = NULL;
-	ret = na_gconf_utils_write_bool( provider->private->gconf, path, value, &msg );
-	if( msg ){
-		*messages = g_slist_append( *messages, g_strdup( msg ));
-		g_free( msg );
-	}
-
-	g_free( path );
-
-	return( ret );
-}
-
-static gboolean
-write_list( NagpGConfProvider *provider, const gchar *uuid, const gchar *name, const gchar *key, GSList *value, GSList **messages )
-{
-	gboolean ret;
-	gchar *path;
-	gchar *msg;
-
-	if( name && strlen( name )){
-		path = g_strdup_printf( "%s/%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, name, key );
-	} else {
-		path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, key );
-	}
-
-	msg = NULL;
-	ret = na_gconf_utils_write_string_list( provider->private->gconf, path, value, &msg );
-	if( msg ){
-		*messages = g_slist_append( *messages, g_strdup( msg ));
-		g_free( msg );
-	}
-
-	na_core_utils_slist_free( value );
-	g_free( path );
-
-	return( ret );
-}
-
-static gboolean
-remove_key( NagpGConfProvider *provider, const gchar *uuid, const gchar *key, GSList **messages )
-{
-	gboolean ret;
-	gchar *path;
-	gchar *msg;
-
-	path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, uuid, key );
-	msg = NULL;
-
-	ret = na_gconf_utils_remove_entry( provider->private->gconf, path, &msg );
-
-	if( msg ){
-		*messages = g_slist_append( *messages, g_strdup( msg ));
-		g_free( msg );
-	}
-
-	g_free( path );
-
-	return( ret );
-}
-#endif
