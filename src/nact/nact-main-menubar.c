@@ -52,6 +52,7 @@
 #include "nact-main-toolbar.h"
 #include "nact-main-tab.h"
 #include "nact-main-menubar.h"
+#include "nact-main-menubar-help.h"
 
 #define MENUBAR_PROP_STATUS_CONTEXT			"nact-menubar-status-context"
 #define MENUBAR_PROP_MAIN_STATUS_CONTEXT	"nact-menubar-main-status-context"
@@ -148,10 +149,6 @@ static void     on_brief_tree_store_dump_activated( GtkAction *action, NactMainW
 static void     on_list_modified_items_activated( GtkAction *action, NactMainWindow *window );
 static void     on_dump_clipboard_activated( GtkAction *action, NactMainWindow *window );
 
-static void     on_help_activated( GtkAction *action, NactMainWindow *window );
-static void     on_about_activated( GtkAction *action, NactMainWindow *window );
-
-static void     enable_item( NactMainWindow *window, const gchar *name, gboolean enabled );
 static gboolean on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
 static void     on_destroy_callback( gpointer data );
 static void     on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window );
@@ -257,11 +254,11 @@ static const GtkActionEntry entries[] = {
 		{ "HelpItem" , GTK_STOCK_HELP, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Help item */
 				N_( "Display help about this program" ),
-				G_CALLBACK( on_help_activated ) },
+				G_CALLBACK( nact_main_menubar_help_on_help ) },
 		{ "AboutItem", GTK_STOCK_ABOUT, NULL, NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the About item */
 				N_( "Display informations about this program" ),
-				G_CALLBACK( on_about_activated ) },
+				G_CALLBACK( nact_main_menubar_help_on_about ) },
 };
 
 static const GtkToggleActionEntry toolbar_entries[] = {
@@ -515,7 +512,7 @@ on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions
 	mis->have_exportables = ( mis->list_actions > 0 );
 
 	/* i18n: note the space at the beginning of the sentence */
-	status = g_strdup_printf( _( " %d menus, %d actions, %d profiles are currently displayed" ), menus, actions, profiles );
+	status = g_strdup_printf( _( " %d menus, %d actions, %d profiles are currently loaded" ), menus, actions, profiles );
 	nact_main_statusbar_display_status( window, MENUBAR_PROP_MAIN_STATUS_CONTEXT, status );
 	g_free( status );
 
@@ -654,8 +651,8 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	 * we must have at least one writable provider
 	 */
 	new_item_enabled = is_first_parent_writable && has_writable_providers;
-	enable_item( window, "NewMenuItem", new_item_enabled );
-	enable_item( window, "NewActionItem", new_item_enabled );
+	nact_main_menubar_enable_item( window, "NewMenuItem", new_item_enabled );
+	nact_main_menubar_enable_item( window, "NewActionItem", new_item_enabled );
 
 	/* new profile enabled if selection is relative to only one writable action
 	 * i.e. contains profile(s) of the same action, or only contains one action
@@ -687,7 +684,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 			}
 		}
 	}
-	enable_item( window, "NewProfileItem",
+	nact_main_menubar_enable_item( window, "NewProfileItem",
 			new_profile_enabled &&
 			selected_action != NULL &&
 			nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( selected_action ), NULL ));
@@ -695,7 +692,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	/* save enabled if at least one item has been modified
 	 * or level-zero has been resorted and is writable
 	 */
-	enable_item( window, "SaveItem",
+	nact_main_menubar_enable_item( window, "SaveItem",
 			has_modified_items || ( mis->level_zero_order_changed && is_level_zero_writable ));
 
 	/* quit always enabled */
@@ -719,12 +716,12 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 		}
 	}
 	cut_enabled &= are_parents_writable;
-	enable_item( window, "CutItem", cut_enabled );
+	nact_main_menubar_enable_item( window, "CutItem", cut_enabled );
 
 	/* copy only requires a non-empty selection */
 	copy_enabled = mis->treeview_has_focus || mis->popup_handler;
 	copy_enabled &= count_selected > 0;
-	enable_item( window, "CopyItem", copy_enabled );
+	nact_main_menubar_enable_item( window, "CopyItem", copy_enabled );
 
 	/* paste enabled if
 	 * - clipboard is not empty
@@ -764,7 +761,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 			paste_enabled &= is_level_zero_writable;
 		}
 	}
-	enable_item( window, "PasteItem", paste_enabled );
+	nact_main_menubar_enable_item( window, "PasteItem", paste_enabled );
 
 	/* paste into enabled if
 	 * - clipboard is not empty
@@ -801,7 +798,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 			paste_enabled &= is_level_zero_writable;
 		}
 	}
-	enable_item( window, "PasteIntoItem", paste_into_enabled );
+	nact_main_menubar_enable_item( window, "PasteIntoItem", paste_into_enabled );
 
 	/* duplicate items will be duplicated besides each one
 	 * selection must be non-empty
@@ -809,11 +806,11 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	 * -> so this is the same than cut
 	 */
 	duplicate_enabled = cut_enabled;
-	enable_item( window, "DuplicateItem", duplicate_enabled );
+	nact_main_menubar_enable_item( window, "DuplicateItem", duplicate_enabled );
 
 	/* delete is same that cut */
 	delete_enabled = cut_enabled;
-	enable_item( window, "DeleteItem", delete_enabled );
+	nact_main_menubar_enable_item( window, "DeleteItem", delete_enabled );
 
 	/* reload items always enabled */
 
@@ -821,19 +818,16 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	/* expand all/collapse all requires at least one item in the list */
 	count_list = mis->list_menus + mis->list_actions + mis->list_profiles;
-	enable_item( window, "ExpandAllItem", count_list > 0 );
-	enable_item( window, "CollapseAllItem", count_list > 0 );
+	nact_main_menubar_enable_item( window, "ExpandAllItem", count_list > 0 );
+	nact_main_menubar_enable_item( window, "CollapseAllItem", count_list > 0 );
 
 	/* import item enabled if at least one writable provider */
-	enable_item( window, "ImportItem", has_writable_providers );
+	nact_main_menubar_enable_item( window, "ImportItem", has_writable_providers );
 
 	/* export item enabled if IActionsList store contains actions */
-	enable_item( window, "ExportItem", mis->have_exportables );
+	nact_main_menubar_enable_item( window, "ExportItem", mis->have_exportables );
 
-	/* TODO: help temporarily disabled */
-	enable_item( window, "HelpItem", FALSE );
-
-	/* about always enabled */
+	nact_main_menubar_help_on_update_sensitivities( window, user_data );
 
 	na_object_unref_selected_items( selected_items );
 }
@@ -1491,19 +1485,16 @@ on_dump_clipboard_activated( GtkAction *action, NactMainWindow *window )
 	nact_clipboard_dump( nact_main_window_get_clipboard( window ));
 }
 
-static void
-on_help_activated( GtkAction *gtk_action, NactMainWindow *window )
-{
-}
-
-static void
-on_about_activated( GtkAction *gtk_action, NactMainWindow *window )
-{
-	na_iabout_display( NA_IABOUT( window ));
-}
-
-static void
-enable_item( NactMainWindow *window, const gchar *name, gboolean enabled )
+/**
+ * nact_main_menubar_enable_item:
+ * @window: the #NactMainWindow main application window.
+ * @name: the name of the item in a menu.
+ * @enabled: whether this item should be enabled or not.
+ *
+ * Enable/disable an item in an menu.
+ */
+void
+nact_main_menubar_enable_item( NactMainWindow *window, const gchar *name, gboolean enabled )
 {
 	GtkActionGroup *group;
 	GtkAction *action;

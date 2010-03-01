@@ -28,31 +28,26 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_MENUBAR_H__
-#define __NACT_MAIN_MENUBAR_H__
+#ifndef __NACT_MAIN_MENUBAR_HELP_H__
+#define __NACT_MAIN_MENUBAR_HELP_H__
 
 /**
  * SECTION: nact_main_menubar
- * @short_description: Main menubar management.
- * @include: nact/nact-main-menubar.h
+ * @short_description: Main menubar Help menu management.
+ * @include: nact/nact-main-menubar-help.h
  */
 
-#include <api/na-object.h>
-
-#include <core/na-pivot.h>
+#include <gtk/gtk.h>
 
 #include "nact-main-window.h"
 
 G_BEGIN_DECLS
 
-void     nact_main_menubar_runtime_init( NactMainWindow *window );
-void     nact_main_menubar_dispose( NactMainWindow *window );
-gboolean nact_main_menubar_is_pasted_object_relabeled( NAObject *object, NAPivot *pivot );
-void     nact_main_menubar_open_popup( NactMainWindow *window, GdkEventButton *event );
-void     nact_main_menubar_save_items( NactMainWindow *window );
+void nact_main_menubar_help_on_update_sensitivities( NactMainWindow *window, gpointer user_data );
 
-void     nact_main_menubar_enable_item( NactMainWindow *window, const gchar *name, gboolean enabled );
+void nact_main_menubar_help_on_help( GtkAction *gtk_action, NactMainWindow *window );
+void nact_main_menubar_help_on_about( GtkAction *gtk_action, NactMainWindow *window );
 
 G_END_DECLS
 
-#endif /* __NACT_NACT_MENUBAR_H__ */
+#endif /* __NACT_NACT_MENUBAR_HELP_H__ */

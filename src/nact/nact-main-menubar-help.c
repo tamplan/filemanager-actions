@@ -28,31 +28,52 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_MENUBAR_H__
-#define __NACT_MAIN_MENUBAR_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <core/na-iabout.h>
+
+#include "nact-main-menubar.h"
+#include "nact-main-menubar-help.h"
 
 /**
- * SECTION: nact_main_menubar
- * @short_description: Main menubar management.
- * @include: nact/nact-main-menubar.h
+ * nact_main_menubar_help_on_update_sensitivities:
+ * @window: the #NactMainWindow main application window.
+ * @user_data: user data ?
+ *
+ * Update sensitivities on the Help menu.
  */
+void
+nact_main_menubar_help_on_update_sensitivities( NactMainWindow *window, gpointer user_data )
+{
+	/* TODO: help temporarily disabled */
+	nact_main_menubar_enable_item( window, "HelpItem", FALSE );
 
-#include <api/na-object.h>
+	/* about always enabled */
+}
 
-#include <core/na-pivot.h>
+/**
+ * nact_main_menubar_help_on_help:
+ * @action: the #GtkAction of the item.
+ * @window: the #NactMainWindow main application window.
+ *
+ * Triggers the Help item.
+ */
+void
+nact_main_menubar_help_on_help( GtkAction *action, NactMainWindow *window )
+{
+}
 
-#include "nact-main-window.h"
-
-G_BEGIN_DECLS
-
-void     nact_main_menubar_runtime_init( NactMainWindow *window );
-void     nact_main_menubar_dispose( NactMainWindow *window );
-gboolean nact_main_menubar_is_pasted_object_relabeled( NAObject *object, NAPivot *pivot );
-void     nact_main_menubar_open_popup( NactMainWindow *window, GdkEventButton *event );
-void     nact_main_menubar_save_items( NactMainWindow *window );
-
-void     nact_main_menubar_enable_item( NactMainWindow *window, const gchar *name, gboolean enabled );
-
-G_END_DECLS
-
-#endif /* __NACT_NACT_MENUBAR_H__ */
+/**
+ * nact_main_menubar_help_on_about:
+ * @action: the #GtkAction of the item.
+ * @window: the #NactMainWindow main application window.
+ *
+ * Triggers the About item.
+ */
+void
+nact_main_menubar_help_on_about( GtkAction *action, NactMainWindow *window )
+{
+	na_iabout_display( NA_IABOUT( window ));
+}

@@ -162,10 +162,4 @@
   but path is defined as string in this same spec
   and icon may be a path -> so what to do with this ?
 
-- segfaults on reload
-
-- check adding/removing profile on desktop/gconf/xml import/export
-
 - shouldn't be able to copy an action into an action !
-
-- na_object_reset_last_allocated ??

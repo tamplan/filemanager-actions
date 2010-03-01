@@ -1,5 +1,12 @@
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar-help.c:
+	* src/nact/nact-main-menubar-help.h: New files.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-menubar.h: Updated accordingly.
+
 	* src/core/na-updater.c:
 	* src/core/na-updater.h (na_updater_append_item): New function.
 
