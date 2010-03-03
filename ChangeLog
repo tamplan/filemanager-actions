@@ -1,5 +1,12 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-module.c (add_module_type):
+	* src/io-desktop/nadp-reader.c (na_ifactory_provider_read_item):
+	* src/io-desktop/nadp-writer.c (nadp_iio_provider_write_item):
+	* src/nact/nact-export-format.c (draw_in_vbox):
+	Add a weak_notify() local function in order to be able to trace
+	the dispose of attached objects.
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c
 	(na_core_utils_str_remove_char): New function.

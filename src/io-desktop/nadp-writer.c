@@ -45,6 +45,8 @@
 
 static guint write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages );
 
+static void  desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
+
 /*
  * This is implementation of NAIIOProvider::is_willing_to_write method
  */
@@ -191,7 +193,7 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 		if( dir_ok ){
 			ndf = nadp_desktop_file_new_for_write( path );
 			na_object_set_provider_data( item, ndf );
-			g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
+			g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) desktop_weak_notify, ndf );
 			g_free( path );
 		}
 	}
@@ -293,4 +295,16 @@ nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	}
 
 	return( ret );
+}
+
+static void
+desktop_weak_notify( NadpDesktopFile *ndf, GObject *item )
+{
+	static const gchar *thisfn = "nadp_writer_desktop_weak_notify";
+
+	g_debug( "%s: ndf=%p (%s), item=%p (%s)",
+			thisfn, ( void * ) ndf, G_OBJECT_TYPE_NAME( ndf ),
+			( void * ) item, G_OBJECT_TYPE_NAME( item ));
+
+	g_object_unref( ndf );
 }

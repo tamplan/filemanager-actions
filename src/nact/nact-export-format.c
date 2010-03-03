@@ -49,6 +49,7 @@
 static const NAIExporterFormat st_ask_str = { "Ask", ASKME_LABEL, ASKME_DESCRIPTION };
 
 static void draw_in_vbox( const NAExportFormat *format, GtkWidget *vbox, guint mode, gint id );
+static void format_weak_notify( NAExportFormat *format, GObject *vbox );
 static void select_default_iter( GtkWidget *widget, void *quark_ptr );
 static void get_selected_iter( GtkWidget *widget, NAExportFormat **format );
 
@@ -173,11 +174,22 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode, gi
 
 	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_BUTTON, button );
 	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_OBJECT, g_object_ref(( gpointer ) format ));
-	g_object_weak_ref( G_OBJECT( vbox ), ( GWeakNotify ) g_object_unref, ( gpointer ) format );
+	g_object_weak_ref( G_OBJECT( vbox ), ( GWeakNotify ) format_weak_notify, ( gpointer ) format );
 
 	g_free( markup );
 	g_free( label );
 	g_free( description );
+}
+
+static void
+format_weak_notify( NAExportFormat *format, GObject *vbox )
+{
+	static const gchar *thisfn = "nact_export_format_weak_notify";
+
+	g_debug( "%s: format=%p (%s), vbox=%p",
+			thisfn, ( void * ) format, G_OBJECT_TYPE_NAME( format ), ( void * ) vbox );
+
+	g_object_unref( format );
 }
 
 /**

@@ -393,9 +393,7 @@ add_module_type( NAModule *module, GType type )
 	object = g_object_new( type, NULL );
 	g_debug( "na_module_add_module_type: allocating object=%p (%s)", ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	g_object_weak_ref( object,
-			( GWeakNotify ) object_weak_notify,
-			module );
+	g_object_weak_ref( object, ( GWeakNotify ) object_weak_notify, module );
 
 	module->private->objects = g_list_prepend( module->private->objects, object );
 }

@@ -50,19 +50,13 @@ typedef struct {
 }
 	DesktopPath;
 
-static GList          *get_list_of_desktop_paths( const NadpDesktopProvider *provider, GSList **mesages );
-static void            get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
-static gboolean        is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id );
-static GList          *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
+static GList            *get_list_of_desktop_paths( const NadpDesktopProvider *provider, GSList **mesages );
+static void              get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
+static gboolean          is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id );
+static GList            *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
 static NAIFactoryObject *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
-#if 0
-static void            read_menu_from_desktop_file( const NadpDesktopProvider *provider, NAObjectMenu *menu, NadpDesktopFile *ndf, GSList **messages );
-static void            read_action_from_desktop_file( const NadpDesktopProvider *provider, NAObjectAction *action, NadpDesktopFile *ndf, GSList **messages );
-static void            read_item_properties_from_ndf( const NadpDesktopProvider *provider, NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages );
-static void            append_profile( NAObjectAction *action, NadpDesktopFile *ndf, const gchar *profile_id, GSList **messages );
-static void            exec_to_path_parameters( const gchar *command, gchar **path, gchar **parameters );
-#endif
-static void            free_desktop_paths( GList *paths );
+static void              desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
+static void              free_desktop_paths( GList *paths );
 
 /*
  * Returns an unordered list of NAIFactoryObject-derived objects
@@ -273,7 +267,7 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
 		na_ifactory_provider_read_item( NA_IFACTORY_PROVIDER( provider ), reader_data, item, messages );
 
 		na_object_set_provider_data( item, ndf );
-		g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
+		g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) desktop_weak_notify, ndf );
 
 		g_free( reader_data );
 	}
@@ -281,231 +275,17 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
 	return( item );
 }
 
-#if 0
 static void
-read_menu_from_desktop_file( const NadpDesktopProvider *provider, NAObjectMenu *menu, NadpDesktopFile *ndf, GSList **messages )
+desktop_weak_notify( NadpDesktopFile *ndf, GObject *item )
 {
-	GSList *items_list;
+	static const gchar *thisfn = "nadp_reader_desktop_weak_notify";
 
-	read_item_properties_from_ndf( provider, NA_OBJECT_ITEM( menu ), ndf, messages );
+	g_debug( "%s: ndf=%p (%s), item=%p (%s)",
+			thisfn, ( void * ) ndf, G_OBJECT_TYPE_NAME( ndf ),
+			( void * ) item, G_OBJECT_TYPE_NAME( item ));
 
-	items_list = nadp_desktop_file_get_items_list( ndf );
-	na_object_item_set_items_string_list( NA_OBJECT_ITEM( menu ), items_list );
-	nadp_utils_gslist_free( items_list );
+	g_object_unref( ndf );
 }
-
-static void
-read_action_from_desktop_file( const NadpDesktopProvider *provider, NAObjectAction *action, NadpDesktopFile *ndf, GSList **messages )
-{
-	gboolean target_context;
-	gboolean target_toolbar;
-	gchar *action_label;
-	gchar *toolbar_label;
-	gboolean same_label;
-	GSList *profiles_list, *ip;
-	GSList *group_list;
-	NAObjectProfile *profile;
-
-	read_item_properties_from_ndf( provider, NA_OBJECT_ITEM( action ), ndf, messages );
-
-	target_context = nadp_desktop_file_get_target_context( ndf );
-	na_object_action_set_target_selection( action, target_context );
-
-	target_toolbar = nadp_desktop_file_get_target_toolbar( ndf );
-	na_object_action_set_target_toolbar( action, target_toolbar );
-
-	action_label = na_object_get_label( action );
-	toolbar_label = nadp_desktop_file_get_toolbar_label( ndf );
-	same_label = FALSE;
-	if( !toolbar_label || !g_utf8_strlen( toolbar_label, -1 ) || !g_utf8_collate( toolbar_label, action_label )){
-		same_label = TRUE;
-		g_free( toolbar_label );
-		toolbar_label = g_strdup( action_label );
-	}
-	na_object_action_toolbar_set_label( action, toolbar_label );
-	na_object_action_toolbar_set_same_label( action, same_label );
-	g_free( toolbar_label );
-	g_free( action_label );
-
-	profiles_list = nadp_desktop_file_get_profiles_list( ndf );
-	na_object_item_set_items_string_list( NA_OBJECT_ITEM( action ), profiles_list );
-
-	/* trying to load all profiles found in .desktop files
-	 * starting with those correctly recorded in profiles_list
-	 * appending those not listed in the 'Profiles' entry
-	 */
-	group_list = nadp_desktop_file_get_profile_group_list( ndf );
-	if( group_list && g_slist_length( group_list )){
-
-		/* read profiles in the specified order
-		 */
-		for( ip = profiles_list ; ip ; ip = ip->next ){
-			append_profile( action, ndf, ( const gchar * ) ip->data, messages );
-			group_list = nadp_utils_gslist_remove_from( group_list, ( const gchar * ) ip->data );
-		}
-
-		/* append other profiles
-		 * but this may be an inconvenient for the runtime plugin ?
-		 */
-		for( ip = group_list ; ip ; ip = ip->next ){
-			append_profile( action, ndf, ( const gchar * ) ip->data, messages );
-		}
-	}
-	nadp_utils_gslist_free( group_list );
-	nadp_utils_gslist_free( profiles_list );
-
-	/* have at least one profile */
-	if( !na_object_get_items_count( action )){
-		profile = na_object_profile_new();
-		na_object_action_attach_profile( action, profile );
-	}
-}
-
-static void
-read_item_properties_from_ndf( const NadpDesktopProvider *provider, NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages )
-{
-	static const gchar *thisfn = "nadp_read_read_item_properties_from_ndf";
-	gchar *id;
-	gchar *label;
-	gchar *tooltip;
-	gchar *icon;
-	gboolean enabled;
-	gboolean writable;
-
-	na_object_set_provider_data( item, ndf );
-	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) g_object_unref, ndf );
-
-	id = nadp_desktop_file_get_id2( ndf );
-	na_object_set_id( item, id );
-
-	label = nadp_desktop_file_get_name( ndf );
-	if( !label || !g_utf8_strlen( label, -1 )){
-		g_warning( "%s: id=%s, label not found or empty", thisfn, id );
-		g_free( label );
-		label = g_strdup( "" );
-	}
-	na_object_set_label( item, label );
-	g_free( label );
-
-	tooltip = nadp_desktop_file_get_tooltip( ndf );
-	na_object_set_tooltip( item, tooltip );
-	g_free( tooltip );
-
-	icon = nadp_desktop_file_get_icon( ndf );
-	na_object_set_icon( item, icon );
-	g_free( icon );
-
-	/*description = nadp_desktop_file_get_description( ndf );
-	na_object_set_description( item, description );
-	g_free( description );*/
-
-	/*shortcut = nadp_desktop_file_get_shortcut( ndf );
-	na_object_set_shortcut( item, shortcut );
-	g_free( shortcut );*/
-
-	enabled = nadp_desktop_file_get_enabled( ndf );
-	na_object_set_enabled( item, enabled );
-
-	writable = nadp_iio_provider_is_writable( NA_IIO_PROVIDER( provider ), item );
-	na_object_set_readonly( item, !writable );
-
-	g_free( id );
-}
-
-static void
-append_profile( NAObjectAction *action, NadpDesktopFile *ndf, const gchar *profile_id, GSList **messages )
-{
-	NAObjectProfile *profile;
-	gchar *name;
-	gchar *exec, *path, *parameters;
-	GSList *basenames, *mimetypes, *schemes, *folders;
-	gboolean matchcase;
-	gboolean isfile, isdir;
-	gboolean multiple;
-
-	profile = na_object_profile_new();
-	na_object_set_id( profile, profile_id );
-
-	name = nadp_desktop_file_get_profile_name( ndf, profile_id );
-	na_object_set_label( profile, name );
-	g_free( name );
-
-	exec = nadp_desktop_file_get_profile_exec( ndf, profile_id );
-	exec_to_path_parameters( exec, &path, &parameters );
-	na_object_profile_set_path( profile, path );
-	na_object_profile_set_parameters( profile, parameters );
-	g_free( parameters );
-	g_free( path );
-	g_free( exec );
-
-	basenames = nadp_desktop_file_get_basenames( ndf, profile_id );
-	na_object_profile_set_basenames( profile, basenames );
-	nadp_utils_gslist_free( basenames );
-
-	matchcase = nadp_desktop_file_get_matchcase( ndf, profile_id );
-	na_object_profile_set_matchcase( profile, matchcase );
-
-	mimetypes = nadp_desktop_file_get_mimetypes( ndf, profile_id );
-	na_object_profile_set_mimetypes( profile, mimetypes );
-	nadp_utils_gslist_free( mimetypes );
-
-	schemes = nadp_desktop_file_get_schemes( ndf, profile_id );
-	na_object_profile_set_schemes( profile, schemes );
-	nadp_utils_gslist_free( schemes );
-
-	folders = nadp_desktop_file_get_folders( ndf, profile_id );
-	na_object_profile_set_folders( profile, folders );
-	nadp_utils_gslist_free( folders );
-
-	isfile = TRUE;
-	isdir = TRUE;
-	na_object_profile_set_isfiledir( profile, isfile, isdir );
-
-	multiple = TRUE;
-	na_object_profile_set_multiple( profile, multiple );
-
-	na_object_action_attach_profile( action, profile );
-}
-
-/*
- * suppose here that command is only one word,
- * also 'normalize' space characters (bad, but temporary!)
- */
-static void
-exec_to_path_parameters( const gchar *command, gchar **path, gchar **parameters )
-{
-	gchar **tokens, **iter;
-	gchar *tmp;
-	gchar *source = g_strdup( command );
-	GString *string;
-
-	tmp = g_strstrip( source );
-	if( tmp && g_utf8_strlen( tmp, -1 )){
-
-		tokens = g_strsplit_set( tmp, " ", -1 );
-		*path = g_strdup( *tokens );
-
-		iter = tokens;
-		iter++;
-		string = g_string_new( "" );
-		while( *iter ){
-			if( !string->len ){
-				string = g_string_append( string, " " );
-			}
-			string = g_string_append( string, g_strstrip( *iter ));
-			iter++;
-		}
-		*parameters = g_string_free( string, FALSE );
-		g_strfreev( tokens );
-
-	} else {
-		*path = g_strdup( "" );
-		*parameters = g_strdup( "" );
-	}
-
-	g_free( source );
-}
-#endif
 
 static void
 free_desktop_paths( GList *paths )
