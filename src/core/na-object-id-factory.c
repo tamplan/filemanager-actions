@@ -38,8 +38,13 @@
 
 NADataDef data_def_id [] = {
 
+	/* this data is marked non readable / non writable as it has to be readen
+	 * written specifically when serializing / unserializing items
+	 */
 	{ NAFO_DATA_ID,
 				FALSE,
+				FALSE,
+				TRUE,
 				"NAObjectId identifiant",
 				"Internal identifiant of the NAObjectId object. " \
 				"Historically a UUID used as a GConf directory (thus ASCII, case insensitive), " \
@@ -50,11 +55,14 @@ NADataDef data_def_id [] = {
 				TRUE,
 				TRUE,
 				FALSE,
-				NULL,
-				FALSE },
+				NULL },
 
+	/* dynamic data, so not readable / not writable
+	 */
 	{ NAFO_DATA_PARENT,
 				FALSE,
+				FALSE,
+				TRUE,
 				"NAObjectId Parent",
 				"The NAObjectItem which is the parent of this object.",
 				NAFD_TYPE_POINTER,
@@ -63,8 +71,7 @@ NADataDef data_def_id [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				NULL,
-				FALSE },
+				NULL },
 
 	{ NULL },
 };

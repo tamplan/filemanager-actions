@@ -52,11 +52,20 @@ typedef struct {
 										 * must be globally unique
 										 * must also be an invariant as it is known from plugin extensions */
 
-	gboolean  serializable;				/* whether the data is serializable
-										 * if FALSE, then no attempt will be made to read/write it
-										 * and the data will must be set dynamically
-										 * when a data has been set serializable once, it remains so
+	gboolean  readable;					/* whether the data should be read on unserialization ops.
+										 * if FALSE, then no attempt will be made to read it
+										 * and the data will has to be set dynamically
+										 * when a data has been written once (see below), and unless
+										 * special cases (see e.g. type), it should remain readable
 										 * even if it has becomen obsolete (for backward compatibility) */
+
+	gboolean  writable;					/* whether the data is to be written on serialization ops.
+										 * if FALSE, then no attempt will be made to write it
+										 * mainly set to FALSE to dynamically set variables and
+										 * obsoleted ones */
+
+	gboolean  has_property;				/* whether a property should be set for this variable ?
+										 * set to FALSE for obsolete variables */
 
 	gchar    *short_label;				/* short descriptive name
 										 * used in GParamSpec and in schemas */
@@ -85,10 +94,6 @@ typedef struct {
 										 * when serializing or exporting */
 
 	gchar    *gconf_entry;				/* same entry is also used for GConf-based XML docs */
-
-	gboolean  obsoleted;				/* whether this data has been obsoleted ?
-										 * if TRUE, then no property will be defined for it
-										 * and the data will not be written when serializing */
 }
 	NADataDef;
 

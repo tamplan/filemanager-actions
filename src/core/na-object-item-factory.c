@@ -40,27 +40,34 @@
 
 NADataDef data_def_item [] = {
 
-	/* this data is marked as 'non-serializable'
-	 * this means it will not be automatically readen/written or imported/exported
-	 * the corresponding NADataBoxed is created at read_start() time
+	/* this data is marked as non readable as it has to be readen specifically
+	 * in order to be able to create the corresponding NAObjectItem-derived object
+	 * it is nonetheless marked writable
 	 */
 	{ NAFO_DATA_TYPE,
 				FALSE,
+				TRUE,
+				TRUE,
 				N_( "Type of the item" ),
 				N_( "Defines if the item is an action or a menu. Possible values are :\n" \
 					"- 'Action',\n" \
 					"- 'Menu'.\n" \
 					"The value is case sensitive and must not be localized." ),
-				NAFD_TYPE_LOCALE_STRING,
-				NULL,
+				NAFD_TYPE_STRING,
+				"Action",
 				TRUE,
 				FALSE,
 				FALSE,
 				FALSE,
-				"type",
-				FALSE },
+				"type" },
 
+	/* this data is common between actions and menus
+	 * so default value is directly set in na_object_action_new_with_defaults()
+	 * and na_object_menu_new_with_defaults()
+	 */
 	{ NAFO_DATA_LABEL,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Label of the context menu item" ),
 				N_( "The label of the menu item that will appear in the file manager context " \
@@ -72,10 +79,11 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				TRUE,
-				"label",
-				FALSE },
+				"label" },
 
 	{ NAFO_DATA_TOOLTIP,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Tooltip of the context menu item" ),
 				N_( "The tooltip of the menu item that will appear in the file manager " \
@@ -87,10 +95,11 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				TRUE,
-				"tooltip",
-				FALSE },
+				"tooltip" },
 
 	{ NAFO_DATA_ICON,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Icon of the context menu item" ),
 				N_( "The icon of the menu item that will appear next to the label " \
@@ -103,10 +112,11 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				TRUE,
-				"icon",
-				FALSE },
+				"icon" },
 
 	{ NAFO_DATA_DESCRIPTION,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Description relative to the item" ),
 				N_( "Some text which explains the goal of the menu or the action.\n" \
@@ -117,11 +127,14 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				TRUE,
-				"description",
-				FALSE },
+				"description" },
 
+	/* dynamic data, so not readable / not writable
+	 */
 	{ NAFO_DATA_SUBITEMS,
 				FALSE,			/* not serializable */
+				FALSE,
+				TRUE,
 				"Subitems",
 				"List of subitems objects",
 				NAFD_TYPE_POINTER,
@@ -130,10 +143,14 @@ NADataDef data_def_item [] = {
 				FALSE,			/* not comparable */
 				FALSE,			/* not mandatory */
 				FALSE,			/* not localized */
-				NULL,
-				FALSE },
+				NULL },
 
+	/* list of subitems as a string list
+	 * dynamically rebuilt on write_start()
+	 */
 	{ NAFO_DATA_SUBITEMS_SLIST,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "List of subitem ids" ),
 				N_( "Ordered list of the IDs of the subitems. This may be actions or menus " \
@@ -146,10 +163,11 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				"items",
-				FALSE },
+				"items" },
 
 	{ NAFO_DATA_ENABLED,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Whether the action or the menu is enabled" ),
 				N_( "If the or the menu action is disabled, it will never appear in the " \
@@ -160,11 +178,15 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"enabled",
-				FALSE },
+				"enabled" },
 
+	/* dynamic data, so non readable / non writable
+	 * must be set by the NAIIOProvider when reading the item
+	 */
 	{ NAFO_DATA_READONLY,
 				FALSE,
+				FALSE,
+				TRUE,
 				"Read-only",
 				"Is the item only readable ? " \
 				"This is an intrinsic property, dynamically set when the item is unserialized. " \
@@ -178,11 +200,14 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				NULL,
-				FALSE },
+				NULL },
 
+	/* dynamic data, so non readable / non writable
+	 */
 	{ NAFO_DATA_PROVIDER,
 				FALSE,
+				FALSE,
+				TRUE,
 				"I/O provider",
 				"A pointer to the NAIOProvider object.",
 				NAFD_TYPE_POINTER,
@@ -191,11 +216,15 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				NULL,
-				FALSE },
+				NULL },
 
+	/* dynamic data, so non readable / non writable
+	 * is left at the NAIIOProvider disposition
+	 */
 	{ NAFO_DATA_PROVIDER_DATA,
 				FALSE,
+				FALSE,
+				TRUE,
 				"I/O provider data",
 				"A pointer to some NAIOProvider specific data.",
 				NAFD_TYPE_POINTER,
@@ -204,8 +233,7 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				NULL,
-				FALSE },
+				NULL },
 
 	{ NULL },
 };

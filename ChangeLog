@@ -1,5 +1,17 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	Review the rationales, replacing serializable+obsoleted by
+	readable+writable flags in NADataDef structure.
+
+	* src/api/na-data-def.h:
+	* src/core/na-factory-object.c:
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-profile-factory.c:
+	* src/io-desktop/nadp-desktop-provider.c: Updated accordingly.
+
 	* src/plugin-tracker/na-tracker-dbus.c (instance_dispose):
 	Release selected items in instance_dispose() rather than in
 	instance_finalize() which caused a FPE in Nautilus terminaison.

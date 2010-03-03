@@ -388,10 +388,14 @@ check_for_obsoleted_iter( const NAIFactoryObject *object, NADataBoxed *boxed, It
 {
 	NADataDef *action_def = na_data_boxed_get_data_def( boxed );
 
-	if( action_def->obsoleted ){
+	/* if property is obsoleted in an action
+	 */
+	if( action_def->readable && !action_def->writable ){
 		NADataDef *profile_def = na_factory_object_get_data_def( NA_IFACTORY_OBJECT( parms->profile ), action_def->name );
 
-		if( profile_def && !profile_def->obsoleted ){
+		/* but the property exists in the profile
+		 */
+		if( profile_def && profile_def->readable && profile_def->writable){
 			g_debug( "na_object_action_check_for_obsoleted_iter: " \
 					 "boxed=%p (%s) marked to be moved from action body to profile",
 							 ( void * ) boxed, action_def->name );

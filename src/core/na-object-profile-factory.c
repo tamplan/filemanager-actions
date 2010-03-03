@@ -44,6 +44,8 @@ static NADataDef data_def_profile [] = {
 
 	{ NAFO_DATA_DESCNAME,
 				TRUE,
+				TRUE,
+				TRUE,
 				N_( "Name of the profile" ),
 				N_( "May be used as a description for the function of the profile.\n" \
 					"If not set, it defaults to an auto-generated name." ),
@@ -53,10 +55,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				TRUE,
-				"desc-name",
-				FALSE },
+				"desc-name" },
 
 	{ NAFO_DATA_PATH,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Path of the command" ),
 				N_( "The path of the command to be executed when the user select the menu item " \
@@ -67,10 +70,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				TRUE,
 				FALSE,
-				"path",
-				FALSE },
+				"path" },
 
 	{ NAFO_DATA_PARAMETERS,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Parameters of the command" ),
 										/* too long string for iso c: 665 (max=509) */
@@ -95,10 +99,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"parameters",
-				FALSE },
+				"parameters" },
 
 	{ NAFO_DATA_BASENAMES,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "List of pattern to match the selected file(s)/folder(s)" ),
 				N_( "A list of strings with joker '*' or '?' to be matched against the name(s) " \
@@ -113,10 +118,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"basenames",
-				FALSE },
+				"basenames", },
 
 	{ NAFO_DATA_MATCHCASE,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Whether the specified basenames are case sensitive" ),
 				N_( "Must be set to 'true' if the filename patterns are case sensitive, to 'false' " \
@@ -131,10 +137,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"matchcase",
-				FALSE },
+				"matchcase" },
 
 	{ NAFO_DATA_MIMETYPES,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "List of patterns to match the mimetypes of the selected file(s)/folder(s)" ),
 				N_( "A list of strings with joker '*' to be matched against the mimetypes of the " \
@@ -148,10 +155,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"mimetypes",
-				FALSE },
+				"mimetypes" },
 
 	{ NAFO_DATA_ISFILE,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Whether the profile applies to files" ),
 				N_( "Set to 'true' if the selection can have files, to 'false' otherwise.\n" \
@@ -169,10 +177,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"isfile",
-				FALSE },
+				"isfile" },
 
 	{ NAFO_DATA_ISDIR,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Whether the profile applies to folders" ),
 				N_( "Set to 'true' if the selection can have folders, to 'false' otherwise.\n" \
@@ -190,10 +199,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"isdir",
-				FALSE },
+				"isdir" },
 
 	{ NAFO_DATA_MULTIPLE,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "Whether the selection may be multiple" ),
 				N_( "If you need more than one files or folders to be selected, set this " \
@@ -206,10 +216,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"accept-multiple-files",
-				FALSE },
+				"accept-multiple-files" },
 
 	{ NAFO_DATA_SCHEMES,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "List of schemes" ),
 										/* too long string for iso c: 510 (max=509) */
@@ -234,10 +245,11 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"schemes",
-				FALSE },
+				"schemes" },
 
 	{ NAFO_DATA_FOLDERS,
+				TRUE,
+				TRUE,
 				TRUE,
 				N_( "List of folders" ),
 				N_( "Defines the list of valid paths to be matched against the current folder.\n " \
@@ -250,8 +262,7 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"folders",
-				FALSE },
+				"folders" },
 
 	{ NULL },
 };

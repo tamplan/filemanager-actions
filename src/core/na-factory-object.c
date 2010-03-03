@@ -47,6 +47,13 @@
 
 typedef gboolean ( *NADataDefIterFunc )( NADataDef *def, void *user_data );
 
+enum {
+	DATA_DEF_ITER_SET_PROPERTIES = 1,
+	DATA_DEF_ITER_SET_DEFAULTS,
+	DATA_DEF_ITER_IS_VALID,
+	DATA_DEF_ITER_READ_ITEM,
+};
+
 /* while iterating on read item
  */
 typedef struct {
@@ -102,7 +109,7 @@ static guint        v_write_done( NAIFactoryObject *serializable, const NAIFacto
 
 static void         attach_boxed_to_object( NAIFactoryObject *object, NADataBoxed *boxed );
 static void         free_data_boxed_list( NAIFactoryObject *object );
-static void         iter_on_data_defs( const NADataGroup *idgroups, gboolean serializable_only, NADataDefIterFunc pfn, void *user_data );
+static void         iter_on_data_defs( const NADataGroup *idgroups, guint mode, NADataDefIterFunc pfn, void *user_data );
 
 /**
  * na_factory_object_define_properties:
@@ -125,7 +132,7 @@ na_factory_object_define_properties( GObjectClass *class, const NADataGroup *gro
 
 		/* define class properties
 		 */
-		iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) define_class_properties_iter, class );
+		iter_on_data_defs( groups, DATA_DEF_ITER_SET_PROPERTIES, ( NADataDefIterFunc ) define_class_properties_iter, class );
 	}
 }
 
@@ -140,15 +147,13 @@ define_class_properties_iter( const NADataDef *def, GObjectClass *class )
 
 	stop = FALSE;
 
-	if( !def->obsoleted ){
-		spec = na_data_boxed_get_param_spec( def );
+	spec = na_data_boxed_get_param_spec( def );
 
-		if( spec ){
-			g_object_class_install_property( class, g_quark_from_string( def->name ), spec );
+	if( spec ){
+		g_object_class_install_property( class, g_quark_from_string( def->name ), spec );
 
-		} else {
-			g_warning( "%s: type=%d: unable to get a spec", thisfn, def->type );
-		}
+	} else {
+		g_warning( "%s: type=%d: unable to get a spec", thisfn, def->type );
 	}
 
 	return( stop );
@@ -272,7 +277,7 @@ na_factory_object_set_defaults( NAIFactoryObject *object )
 			iter_data = g_new0( NafoDefaultIter, 1 );
 			iter_data->object = object;
 
-			iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) set_defaults_iter, iter_data );
+			iter_on_data_defs( groups, DATA_DEF_ITER_SET_DEFAULTS, ( NADataDefIterFunc ) set_defaults_iter, iter_data );
 
 			g_free( iter_data );
 		}
@@ -285,21 +290,17 @@ set_defaults_iter( NADataDef *def, NafoDefaultIter *data )
 	NADataBoxed *boxed;
 	gboolean is_null;
 
-	if( !def->obsoleted ){
-		if( def->default_value ){
-			is_null = TRUE;
-			boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
-			if( boxed ){
-				is_null = ( na_data_boxed_get_as_void( boxed ) == NULL );
-			}
-			if( is_null ){
-				if( !boxed ){
-					boxed = na_data_boxed_new( def );
-					attach_boxed_to_object( data->object, boxed );
-				}
-				na_data_boxed_set_from_string( boxed, def->default_value );
-			}
+	is_null = TRUE;
+	boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
+	if( boxed ){
+		is_null = ( na_data_boxed_get_as_void( boxed ) == NULL );
+	}
+	if( is_null ){
+		if( !boxed ){
+			boxed = na_data_boxed_new( def );
+			attach_boxed_to_object( data->object, boxed );
 		}
+		na_data_boxed_set_from_string( boxed, def->default_value );
 	}
 
 	/* do not stop */
@@ -472,7 +473,7 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 
 	groups = v_get_groups( object );
 	if( groups ){
-		iter_on_data_defs( groups, FALSE, ( NADataDefIterFunc ) is_valid_mandatory_iter, &iter_data );
+		iter_on_data_defs( groups, DATA_DEF_ITER_IS_VALID, ( NADataDefIterFunc ) is_valid_mandatory_iter, &iter_data );
 	}
 	is_valid = iter_data.is_valid;
 
@@ -492,7 +493,7 @@ is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data )
 {
 	NADataBoxed *boxed;
 
-	if( def->mandatory && !def->obsoleted ){
+	if( def->mandatory ){
 		boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
 		if( !boxed ){
 			g_debug( "na_factory_object_is_valid_mandatory_iter: invalid %s: mandatory but not set", def->name );
@@ -585,7 +586,7 @@ na_factory_object_read_item( NAIFactoryObject *serializable, const NAIFactoryPro
 			iter->reader_data = reader_data;
 			iter->messages = messages;
 
-			iter_on_data_defs( groups, TRUE, ( NADataDefIterFunc ) read_data_iter, iter );
+			iter_on_data_defs( groups, DATA_DEF_ITER_READ_ITEM, ( NADataDefIterFunc ) read_data_iter, iter );
 
 			g_free( iter );
 
@@ -685,7 +686,7 @@ write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIt
 {
 	NADataDef *def = na_data_boxed_get_data_def( boxed );
 
-	if( def->serializable && !def->obsoleted ){
+	if( def->writable ){
 		iter->code = na_factory_provider_write_data( iter->writer, iter->writer_data, object, boxed, iter->messages );
 	}
 
@@ -930,8 +931,9 @@ free_data_boxed_list( NAIFactoryObject *object )
  * the iter function must return TRUE to stops the enumeration
  */
 static void
-iter_on_data_defs( const NADataGroup *groups, gboolean serializable_only, NADataDefIterFunc pfn, void *user_data )
+iter_on_data_defs( const NADataGroup *groups, guint mode, NADataDefIterFunc pfn, void *user_data )
 {
+	static const gchar *thisfn = "na_factory_object_iter_on_data_defs";
 	NADataDef *def;
 	gboolean stop;
 
@@ -947,8 +949,31 @@ iter_on_data_defs( const NADataGroup *groups, gboolean serializable_only, NAData
 				/*g_debug( "serializable_only=%s, def->serializable=%s",
 						serializable_only ? "True":"False", def->serializable ? "True":"False" );*/
 
-				if( !serializable_only || def->serializable ){
-					stop = ( *pfn )( def, user_data );
+				switch( mode ){
+					case DATA_DEF_ITER_SET_PROPERTIES:
+						if( def->has_property ){
+							stop = ( *pfn )( def, user_data );
+						}
+						break;
+
+					case DATA_DEF_ITER_SET_DEFAULTS:
+						if( def->default_value ){
+							stop = ( *pfn )( def, user_data );
+						}
+						break;
+
+					case DATA_DEF_ITER_IS_VALID:
+						stop = ( *pfn )( def, user_data );
+						break;
+
+					case DATA_DEF_ITER_READ_ITEM:
+						if( def->readable ){
+							stop = ( *pfn )( def, user_data );
+						}
+						break;
+
+					default:
+						g_warning( "%s: unknown mode=%d", thisfn, mode );
 				}
 
 				def++;

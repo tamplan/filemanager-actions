@@ -300,7 +300,6 @@ ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
-	g_return_val_if_fail( def->serializable, NULL );
 
 	boxed = NULL;
 
