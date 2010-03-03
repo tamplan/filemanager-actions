@@ -76,6 +76,7 @@ gboolean na_core_utils_dir_is_writable_uri( const gchar *uri );
 /* file management
  */
 gboolean na_core_utils_file_delete( const gchar *path );
+gboolean na_core_utils_file_exists( const gchar *path );
 
 /* miscellaneous
  */

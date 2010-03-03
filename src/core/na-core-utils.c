@@ -584,6 +584,27 @@ na_core_utils_file_delete( const gchar *path )
 }
 
 /**
+ * na_core_utils_file_exists:
+ * @fname: a file full filename.
+ *
+ * Returns: %TRUE if the specified file exists, %FALSE else.
+ *
+ * Race condition: cf. na_core_utils_dir_is_writable() comment.
+ */
+gboolean
+na_core_utils_file_exists( const gchar *fname )
+{
+	GFile *file;
+	gboolean exists;
+
+	file = g_file_new_for_path( fname );
+	exists = g_file_query_exists( file, NULL );
+	g_object_unref( file );
+
+	return( exists );
+}
+
+/**
  * na_core_utils_print_version:
  *
  * Print a version message on the console

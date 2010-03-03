@@ -1,5 +1,11 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_file_exists):
+	New function.
+
+	* src/io-xml/naxml-writer.c: Export to file.
+
 	* po/POTFILES.in: Updated.
 
 	* src/api/na-data-types.h

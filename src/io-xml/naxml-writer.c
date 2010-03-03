@@ -36,6 +36,7 @@
 #include <libxml/tree.h>
 #include <string.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-data-types.h>
 #include <api/na-object-api.h>
 #include <api/na-ifactory-provider.h>
@@ -110,6 +111,8 @@ static void            write_data_dump( NAXMLWriter *writer, const NAObjectId *o
 
 static xmlDocPtr       build_xml_doc( NAXMLWriter *writer );
 static ExportFormatFn *find_export_format_fn( GQuark format );
+static gchar          *get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format );
+static void            output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg );
 static guint           writer_to_buffer( NAXMLWriter *writer );
 
 static ExportFormatFn st_export_format_fn[] = {
@@ -275,6 +278,7 @@ naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferPar
 		writer->private->messages = parms->messages;
 		writer->private->fn_str = find_export_format_fn( parms->format );
 		writer->private->action = NULL;
+		writer->private->buffer = NULL;
 
 		if( !writer->private->fn_str ){
 			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
@@ -305,6 +309,7 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *
 {
 	static const gchar *thisfn = "naxml_writer_export_to_file";
 	NAXMLWriter *writer;
+	gchar *filename;
 	guint code;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
@@ -317,6 +322,33 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *
 
 	if( code == NA_IEXPORTER_CODE_OK ){
 		writer = NAXML_WRITER( g_object_new( NAXML_WRITER_TYPE, NULL ));
+
+		writer->private->provider = ( NAIExporter * ) instance;
+		writer->private->exported = parms->exported;
+		writer->private->messages = parms->messages;
+		writer->private->fn_str = find_export_format_fn( parms->format );
+		writer->private->action = NULL;
+		writer->private->buffer = NULL;
+
+		if( !writer->private->fn_str ){
+			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
+
+		} else {
+			code = writer_to_buffer( writer );
+
+			if( code == NA_IEXPORTER_CODE_OK ){
+				filename = get_output_fname( parms->exported, parms->folder, parms->format );
+
+				if( filename ){
+					parms->basename = g_path_get_basename( filename );
+					output_xml_to_file(
+							writer->private->buffer, filename, parms->messages ? &writer->private->messages : NULL );
+					g_free( filename );
+				}
+			}
+
+			g_free( writer->private->buffer );
+		}
 
 		g_object_unref( writer );
 	}
@@ -589,6 +621,147 @@ find_export_format_fn( GQuark format )
 	return( found );
 }
 
+/*
+ * get_output_fname:
+ * @item: the #NAObjectItme-derived object to be exported.
+ * @folder: the path of the directoy where to write the output XML file.
+ * @format: the export format.
+ *
+ * Returns: a filename suitable for writing the output XML.
+ *
+ * As we don't want overwrite already existing files, the candidate
+ * filename is incremented until we find an available filename.
+ *
+ * The returned string should be g_free() by the caller.
+ *
+ * Note that this function is always subject to race condition, as it
+ * is possible, though unlikely, that the given file be created
+ * between our test of inexistance and the actual write.
+ */
+static gchar *
+get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format )
+{
+	static const gchar *thisfn = "naxml_writer_get_output_fname";
+	gchar *item_id;
+	gchar *canonical_fname = NULL;
+	gchar *canonical_ext = NULL;
+	gchar *candidate_fname;
+	gint counter;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
+	g_return_val_if_fail( folder, NULL );
+	g_return_val_if_fail( strlen( folder ), NULL );
+
+	item_id = na_object_get_id( item );
+
+	if( format == g_quark_from_string( NAXML_FORMAT_GCONF_SCHEMA_V1 )){
+		canonical_fname = g_strdup_printf( "config_%s", item_id );
+		canonical_ext = g_strdup( "schemas" );
+
+	} else if( format == g_quark_from_string( NAXML_FORMAT_GCONF_SCHEMA_V2 )){
+		canonical_fname = g_strdup_printf( "config-%s", item_id );
+		canonical_ext = g_strdup( "schema" );
+
+	} else if( format == g_quark_from_string( NAXML_FORMAT_GCONF_ENTRY )){
+		canonical_fname = g_strdup_printf( "%s-%s", NA_IS_OBJECT_ACTION( item ) ? "action" : "menu", item_id );
+		canonical_ext = g_strdup( "xml" );
+
+	} else {
+		g_warning( "%s: unknown format: %s", thisfn, g_quark_to_string( format ));
+	}
+
+	g_free( item_id );
+	g_return_val_if_fail( canonical_fname, NULL );
+
+	candidate_fname = g_strdup_printf( "%s/%s.%s", folder, canonical_fname, canonical_ext );
+
+	if( !na_core_utils_file_exists( candidate_fname )){
+		g_free( canonical_fname );
+		g_free( canonical_ext );
+		return( candidate_fname );
+	}
+
+	for( counter = 0 ; ; ++counter ){
+		g_free( candidate_fname );
+		candidate_fname = g_strdup_printf( "%s/%s_%d.%s", folder, canonical_fname, counter, canonical_ext );
+		if( !na_core_utils_file_exists( candidate_fname )){
+			break;
+		}
+	}
+
+	g_free( canonical_fname );
+	g_free( canonical_ext );
+
+	return( candidate_fname );
+}
+
+/**
+ * output_xml_to_file:
+ * @xml: the xml buffer.
+ * @filename: the full path of the output filename.
+ * @msg: a GSList to append messages.
+ *
+ * Exports an item to the given filename.
+ */
+void
+output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg )
+{
+	static const gchar *thisfn = "naxml_writer_output_xml_to_file";
+	GFile *file;
+	GFileOutputStream *stream;
+	GError *error = NULL;
+	gchar *errmsg;
+
+	g_return_if_fail( xml );
+	g_return_if_fail( filename && g_utf8_strlen( filename, -1 ));
+
+	file = g_file_new_for_path( filename );
+
+	stream = g_file_replace( file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &error );
+	if( error ){
+		errmsg = g_strdup_printf( "%s: g_file_replace: %s", thisfn, error->message );
+		g_warning( "%s", errmsg );
+		if( msg ){
+			*msg = g_slist_append( *msg, errmsg );
+		}
+		g_error_free( error );
+		if( stream ){
+			g_object_unref( stream );
+		}
+		g_object_unref( file );
+		return;
+	}
+
+	g_output_stream_write( G_OUTPUT_STREAM( stream ), xml, g_utf8_strlen( xml, -1 ), NULL, &error );
+	if( error ){
+		errmsg = g_strdup_printf( "%s: g_output_stream_write: %s", thisfn, error->message );
+		g_warning( "%s", errmsg );
+		if( msg ){
+			*msg = g_slist_append( *msg, errmsg );
+		}
+		g_error_free( error );
+		g_object_unref( stream );
+		g_object_unref( file );
+		return;
+	}
+
+	g_output_stream_close( G_OUTPUT_STREAM( stream ), NULL, &error );
+	if( error ){
+		errmsg = g_strdup_printf( "%s: g_output_stream_close: %s", thisfn, error->message );
+		g_warning( "%s", errmsg );
+		if( msg ){
+			*msg = g_slist_append( *msg, errmsg );
+		}
+		g_error_free( error );
+		g_object_unref( stream );
+		g_object_unref( file );
+		return;
+	}
+
+	g_object_unref( stream );
+	g_object_unref( file );
+}
+
 static guint
 writer_to_buffer( NAXMLWriter *writer )
 {
@@ -775,80 +948,6 @@ na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint fo
 }
 
 /**
- * na_xml_writer_get_output_fname:
- * @action: the #NAObjectAction to be exported.
- * @folder: the uri of the directoy where to write the output XML file.
- * @format: the export format.
- *
- * Returns: a filename suitable for writing the output XML.
- *
- * As we don't want overwrite already existing files, the candidate
- * filename is incremented until we find an available filename.
- *
- * The returned string should be g_free() by the caller.
- *
- * Note that this function is always subject to race condition, as it
- * is possible, though very unlikely, that the given file be created
- * between our test of inexistance and the actual write.
- */
-gchar *
-na_xml_writer_get_output_fname( const NAObjectAction *action, const gchar *folder, gint format )
-{
-	gchar *uuid;
-	gchar *canonical_fname = NULL;
-	gchar *canonical_ext = NULL;
-	gchar *candidate_fname;
-	gint counter;
-
-	g_return_val_if_fail( action, NULL );
-	g_return_val_if_fail( folder, NULL );
-	g_return_val_if_fail( strlen( folder ), NULL );
-
-	uuid = na_object_get_id( action );
-
-	switch( format ){
-		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V1:
-			canonical_fname = g_strdup_printf( "config_%s", uuid );
-			canonical_ext = g_strdup( "schemas" );
-			break;
-
-		case IPREFS_EXPORT_FORMAT_GCONF_SCHEMA_V2:
-			canonical_fname = g_strdup_printf( "config-%s", uuid );
-			canonical_ext = g_strdup( "schema" );
-			break;
-
-		case IPREFS_EXPORT_FORMAT_GCONF_ENTRY:
-			canonical_fname = g_strdup_printf( "action-%s", uuid );
-			canonical_ext = g_strdup( "xml" );
-			break;
-	}
-
-	g_free( uuid );
-	g_return_val_if_fail( canonical_fname, NULL );
-
-	candidate_fname = g_strdup_printf( "%s/%s.%s", folder, canonical_fname, canonical_ext );
-
-	if( !na_utils_exist_file( candidate_fname )){
-		g_free( canonical_fname );
-		g_free( canonical_ext );
-		return( candidate_fname );
-	}
-
-	for( counter = 0 ; ; ++counter ){
-		g_free( candidate_fname );
-		candidate_fname = g_strdup_printf( "%s/%s_%d.%s", folder, canonical_fname, counter, canonical_ext );
-		if( !na_utils_exist_file( candidate_fname )){
-			break;
-		}
-	}
-
-	g_free( canonical_fname );
-	g_free( canonical_ext );
-
-	return( candidate_fname );
-}
-
-/**
  * na_xml_writer_get_xml_buffer:
  * @action: the #NAObjectAction to be exported.
  * @format: the export format.
@@ -899,66 +998,6 @@ na_xml_writer_get_xml_buffer( const NAObjectAction *action, gint format )
 	g_object_unref( writer );
 
 	return( buffer );
-}
-
-/**
- * na_xml_writer_output_xml:
- * @action: the #NAObjectAction to be exported.
- * @filename: the uri of the output filename
- *
- * Exports an action to the given filename.
- */
-void
-na_xml_writer_output_xml( const gchar *xml, const gchar *filename, GSList **msg )
-{
-	static const gchar *thisfn = "na_xml_writer_output_xml";
-	GFile *file;
-	GFileOutputStream *stream;
-	GError *error = NULL;
-	gchar *errmsg;
-
-	g_return_if_fail( xml );
-	g_return_if_fail( filename && g_utf8_strlen( filename, -1 ));
-
-	file = g_file_new_for_uri( filename );
-
-	stream = g_file_replace( file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &error );
-	if( error ){
-		errmsg = g_strdup_printf( "%s: g_file_replace: %s", thisfn, error->message );
-		g_warning( "%s", errmsg );
-		*msg = g_slist_append( *msg, errmsg );
-		g_error_free( error );
-		if( stream ){
-			g_object_unref( stream );
-		}
-		g_object_unref( file );
-		return;
-	}
-
-	g_output_stream_write( G_OUTPUT_STREAM( stream ), xml, g_utf8_strlen( xml, -1 ), NULL, &error );
-	if( error ){
-		errmsg = g_strdup_printf( "%s: g_output_stream_write: %s", thisfn, error->message );
-		g_warning( "%s", errmsg );
-		*msg = g_slist_append( *msg, errmsg );
-		g_error_free( error );
-		g_object_unref( stream );
-		g_object_unref( file );
-		return;
-	}
-
-	g_output_stream_close( G_OUTPUT_STREAM( stream ), NULL, &error );
-	if( error ){
-		errmsg = g_strdup_printf( "%s: g_output_stream_close: %s", thisfn, error->message );
-		g_warning( "%s", errmsg );
-		*msg = g_slist_append( *msg, errmsg );
-		g_error_free( error );
-		g_object_unref( stream );
-		g_object_unref( file );
-		return;
-	}
-
-	g_object_unref( stream );
-	g_object_unref( file );
 }
 
 static xmlDocPtr
