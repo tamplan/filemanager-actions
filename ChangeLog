@@ -1,5 +1,8 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.c (assist_prepare_confirm):
+	Optimize the build of the displayed text.
+
 	* src/nact/nact-assistant-export.c (on_all_widgets_showed):
 	Select and expand the first row of the list.
 

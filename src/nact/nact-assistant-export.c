@@ -658,10 +658,11 @@ static void
 assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
 {
 	static const gchar *thisfn = "nact_assistant_export_prepare_confirm";
-	gchar *text, *tmp, *text2;
+	GString *text;
+	gchar *label_item;
 	gchar *label11, *label12;
 	gchar *label21, *label22;
-	GList *actions, *ia;
+	GList *items, *it;
 	NAExportFormat *format;
 	GtkLabel *confirm_label;
 
@@ -669,29 +670,22 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
 	/* i18n: this is the title of the confirm page of the export assistant */
-	text = g_strdup( _( "About to export selected items:" ));
-	tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
-	g_free( text );
-	text = tmp;
+	text = g_string_new( "" );
+	g_string_printf( text, "<b>%s</b>\n\n", _( "About to export selected items:" ));
 
-	actions = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
-
-	for( ia = actions ; ia ; ia = ia->next ){
-		tmp = g_strdup_printf( "%s\t%s\n", text, na_object_get_label( ia->data ));
-		g_free( text );
-		text = tmp;
+	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
+	for( it = items ; it ; it = it->next ){
+		label_item = na_object_get_label( it->data );
+		g_string_append_printf( text, "\t%s\n", label_item );
+		g_free( label_item );
 	}
-
-	na_object_unref_selected_items( actions );
+	na_object_unref_selected_items( items );
 
 	g_assert( window->private->uri && strlen( window->private->uri ));
 
 	/* i18n: all exported actions go to one destination folder */
-	text2 = g_strdup( _( "Into the destination folder:" ));
-	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n\t%s", text, text2, window->private->uri );
-	g_free( text2 );
-	g_free( text );
-	text = tmp;
+	g_string_append_printf( text,
+			"\n\n<b>%s</b>\n\n\t%s", _( "Into the destination folder:" ), window->private->uri );
 
 	label11 = NULL;
 	label21 = NULL;
@@ -701,17 +695,15 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	nact_iprefs_set_export_format( BASE_WINDOW( window ), IPREFS_EXPORT_FORMAT, na_export_format_get_quark( format ));
 	label12 = na_core_utils_str_remove_char( label11, "_" );
 	label22 = na_core_utils_str_add_prefix( "\t", label21 );
-	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label12, label22 );
+	g_string_append_printf( text, "\n\n<b>%s</b>\n\n%s", label12, label22 );
 	g_free( label22 );
 	g_free( label21 );
 	g_free( label12 );
 	g_free( label11 );
-	g_free( text );
-	text = tmp;
 
 	confirm_label = GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AssistantExportConfirmLabel" ));
-	gtk_label_set_markup( confirm_label, text );
-	g_free( text );
+	gtk_label_set_markup( confirm_label, text->str );
+	g_string_free( text, TRUE );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
@@ -748,8 +740,10 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		str->item = NA_OBJECT_ITEM( na_object_get_origin( NA_IDUPLICABLE( ia->data )));
 
 		str->format = nact_iprefs_get_export_format( BASE_WINDOW( wnd ), IPREFS_EXPORT_FORMAT );
+
 		if( str->format == IPREFS_EXPORT_FORMAT_ASK ){
 			str->format = nact_export_ask_user( BASE_WINDOW( wnd ), str->item );
+
 			if( str->format == IPREFS_EXPORT_NO_EXPORT ){
 				str->msg = g_slist_append( NULL, g_strdup( _( "Export canceled due to user action." )));
 			}
