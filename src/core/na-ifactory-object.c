@@ -236,6 +236,42 @@ na_ifactory_object_get_data_def_from_gconf_key( const NAIFactoryObject *object, 
 #endif
 
 /**
+ * na_ifactory_object_get_data_boxed:
+ * @object: a #NAIFactoryObject object.
+ * @name: the name of the elementary data we are searching for.
+ *
+ * Returns: The #NADataBoxed object which contains the specified data,
+ * or %NULL.
+ *
+ * The returned #NADataBoxed is owned by #NAIFactoryObject @object, and
+ * should not be released by the caller.
+ */
+NADataBoxed *
+na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *name )
+{
+	GList *list, *ip;
+
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+
+	if( ifactory_object_initialized && !ifactory_object_finalized ){
+
+		list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
+		/*g_debug( "list=%p (count=%u)", ( void * ) list, g_list_length( list ));*/
+
+		for( ip = list ; ip ; ip = ip->next ){
+			NADataBoxed *boxed = NA_DATA_BOXED( ip->data );
+			NADataDef *def = na_data_boxed_get_data_def( boxed );
+
+			if( !strcmp( def->name, name )){
+				return( boxed );
+			}
+		}
+	}
+
+	return( NULL );
+}
+
+/**
  * na_ifactory_object_get_as_void:
  * @object: this #NAIFactoryObject instance.
  * @name: the elementary data whose value is to be got.

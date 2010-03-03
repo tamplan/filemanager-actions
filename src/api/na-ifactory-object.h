@@ -49,6 +49,7 @@
  */
 
 #include "na-data-def.h"
+#include "na-data-boxed.h"
 #include "na-ifactory-provider-provider.h"
 
 G_BEGIN_DECLS
@@ -172,11 +173,13 @@ typedef struct {
 }
 	NAIFactoryObjectInterface;
 
-GType      na_ifactory_object_get_type( void );
+GType        na_ifactory_object_get_type( void );
 
-void      *na_ifactory_object_get_as_void  ( const NAIFactoryObject *object, const gchar *name );
+NADataBoxed *na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *name );
 
-void       na_ifactory_object_set_from_void( NAIFactoryObject *object, const gchar *name, const void *data );
+void        *na_ifactory_object_get_as_void   ( const NAIFactoryObject *object, const gchar *name );
+
+void         na_ifactory_object_set_from_void ( NAIFactoryObject *object, const gchar *name, const void *data );
 
 #if 0
 void        na_ifactory_object_set_from_string( NAIFactoryObject *object, guint data_id, const gchar *data );

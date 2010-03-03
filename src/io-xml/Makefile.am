@@ -41,12 +41,13 @@ libna_io_xml_la_SOURCES = \
 	naxml-provider.h									\
 	naxml-keys.c										\
 	naxml-keys.h										\
+	naxml-formats.c										\
+	naxml-formats.h										\
 	naxml-reader.c										\
 	naxml-reader.h										\
+	naxml-writer.c										\
+	naxml-writer.h										\
 	$(NULL)
-
-#na-xml-writer.c										
-#na-xml-writer.h										
 
 libna_io_xml_la_LIBADD = \
 	$(top_builddir)/src/core/libna-core.la				\

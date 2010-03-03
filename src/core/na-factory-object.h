@@ -46,6 +46,8 @@ G_BEGIN_DECLS
 
 typedef gboolean ( *NAFactoryObjectIterBoxedFn )( const NAIFactoryObject *object, NADataBoxed *boxed, void *data );
 
+#define NA_IFACTORY_OBJECT_PROP_DATA			"na-ifactory-object-prop-data"
+
 void         na_factory_object_define_properties( GObjectClass *class, const NADataGroup *groups );
 NADataDef   *na_factory_object_get_data_def     ( const NAIFactoryObject *object, const gchar *name );
 NADataGroup *na_factory_object_get_data_groups  ( const NAIFactoryObject *object );

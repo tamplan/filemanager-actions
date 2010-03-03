@@ -381,14 +381,20 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
 gchar *
 nact_clipboard_dnd_get_text( NactClipboard *clipboard, GList *rows )
 {
+	static const gchar *thisfn = "nact_clipboard_dnd_get_text";
 	gchar *buffer;
 
 	g_return_val_if_fail( NACT_IS_CLIPBOARD( clipboard ), NULL );
 
+	g_debug( "%s: clipboard=%p, rows=%p (count=%u)",
+			thisfn, ( void * ) clipboard, ( void * ) rows, g_list_length( rows ));
+
 	buffer = NULL;
 
 	if( !clipboard->private->dispose_has_run ){
+
 		buffer = export_rows( clipboard, rows, NULL );
+		g_debug( "%s: returning buffer=%p (length=%lu)", thisfn, ( void * ) buffer, g_utf8_strlen( buffer, -1 ));
 	}
 
 	return( buffer );
@@ -413,15 +419,18 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 	if( !clipboard->private->dispose_has_run ){
 
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, NACT_CLIPBOARD_NACT_ATOM );
-		if( selection ){
+		g_debug( "%s: selection=%p", thisfn, ( void * ) selection );
 
+		if( selection ){
 			data = ( NactClipboardDndData * ) selection->data;
 			g_debug( "%s: data=%p (NactClipboardDndData)", thisfn, ( void * ) data );
+
 			if( data->target == NACT_XCHANGE_FORMAT_XDS ){
 				export_rows( clipboard, data->rows, data->folder );
 			}
+
+			gtk_selection_data_free( selection );
 		}
-		gtk_selection_data_free( selection );
 	}
 }
 
@@ -436,6 +445,8 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 void
 nact_clipboard_dnd_clear( NactClipboard *clipboard )
 {
+	g_debug( "nact_clipboard_dnd_clear: clipboard=%p", ( void * ) clipboard );
+
 	gtk_clipboard_clear( clipboard->private->dnd );
 }
 
@@ -542,11 +553,12 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	gchar *buffer;
 	GQuark format;
 	gchar *fname;
-	GSList *msg;
+	GSList *msgs;
+
+	data = g_string_new( "" );
 
 	if( NA_IS_OBJECT_MENU( object )){
 		subitems = na_object_get_items( object );
-		data = g_string_new( "" );
 
 		for( isub = subitems ; isub ; isub = isub->next ){
 			buffer = export_row_object( clipboard, isub->data, dest_folder, exported );
@@ -555,12 +567,9 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 				g_free( buffer );
 			}
 		}
-
-		return( g_string_free( data, FALSE ));
 	}
 
-	msg = NULL;
-	buffer = NULL;
+	msgs = NULL;
 	action = ( NAObjectAction * ) object;
 	if( NA_IS_OBJECT_PROFILE( object )){
 		action = NA_OBJECT_ACTION( na_object_get_parent( object ));
@@ -582,16 +591,20 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 		if( format != IPREFS_EXPORT_NO_EXPORT ){
 
 			if( dest_folder ){
-				fname = na_exporter_to_file( NA_PIVOT( updater ), NA_OBJECT_ITEM( action), dest_folder, format, &msg );
+				fname = na_exporter_to_file( NA_PIVOT( updater ), NA_OBJECT_ITEM( action), dest_folder, format, &msgs );
 				g_free( fname );
 
 			} else {
-				buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), format, NULL );
+				buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), format, &msgs );
+				if( buffer && strlen( buffer )){
+					data = g_string_append( data, buffer );
+					g_free( buffer );
+				}
 			}
 		}
 	}
 
-	return( buffer );
+	return( g_string_free( data, FALSE ));
 }
 
 /**

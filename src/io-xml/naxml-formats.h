@@ -28,27 +28,15 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_EXPORTER_H__
-#define __CORE_NA_EXPORTER_H__
-
-/**
- * SECTION: na_iexporter
- * @short_description: #NAIExporter internal functions.
- * @include: core/na-exporter.h
- */
-
-#include <api/na-object-api.h>
-
-#include <core/na-pivot.h>
+#ifndef __NAXML_FORMATS_H__
+#define __NAXML_FORMATS_H__
 
 G_BEGIN_DECLS
 
-GList *na_exporter_get_formats ( const NAPivot *pivot );
-void   na_exporter_free_formats( GList *formats );
-
-gchar *na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark format, GSList **messages );
-gchar *na_exporter_to_file  ( const NAPivot *pivot, const NAObjectItem *item, const gchar *uri, GQuark format, GSList **messages );
+#define NAXML_FORMAT_GCONF_SCHEMA_V1			"GConfSchemaV1"
+#define NAXML_FORMAT_GCONF_SCHEMA_V2			"GConfSchemaV2"
+#define NAXML_FORMAT_GCONF_ENTRY				"GConfEntry"
 
 G_END_DECLS
 
-#endif /* __CORE_NA_EXPORTER_H__ */
+#endif /* __NAXML_FORMATS_H__ */

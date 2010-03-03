@@ -1,3 +1,62 @@
+2009-03-03 Pierre Wieser <pwieser@trychlos.org>
+
+	* po/POTFILES.in: Updated.
+
+	* src/api/na-data-types.h
+	(na_data_types_get_gconf_dump_key): New function.
+
+	* src/core/na-data-types.c: New file.
+
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/api/na-ifactory-object-data.h:
+	* src/core/na-object-item-factory.c:
+	(NAFO_DATA_TYPE): New elementary data.
+
+	* src/core/na-ifactory-object.c:
+	* src/api/na-ifactory-object.h
+	(na_ifactory_object_get_data_boxed): New function.
+
+	* src/core/na-core-utils.c (na_core_utils_dir_is_writable_uri):
+	Give a better name to the parameter.
+
+	* src/core/na-exporter.c:
+	* src/core/na-exporter.h (na_exporter_to_buffer, na_exporter_to_file):
+	Reorder of functions in the files.
+
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h:
+	Now use the new na_ifactory_object_get_data_boxed() function.
+
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-profile-factory.c:
+	* src/io-xml/naxml-keys.h:
+	Move the schema descriptions to data factory.
+
+	* src/core/na-object-action.c:
+	* src/core/na-object-menu.c:
+	(ifactory_object_read_start): Allocate the 'type' data boxed.
+
+	* src/io-gconf/nagp-keys.h: Fix the path of the schemas.
+
+	* src/io-xml/naxml-formats.c:
+	* src/io-xml/naxml-formats.h: New files.
+
+	* src/io-xml/Makefile.am: Updated accordingly.
+
+	* src/io-xml/naxml-provider.c: Implement NAXMLWriter calls.
+
+	* src/io-xml/naxml-writer.c:
+	* src/io-xml/naxml-writer.h: Export to buffer.
+
+	* src/nact/nact-clipboard.c
+	(nact_clipboard_dnd_drag_end): Fix gtk_selection_data_free() call.
+	(export_row_object): Also exports menus.
+
+	* src/nact/nact-tree-model-dnd.c
+	(nact_tree_model_dnd_imulti_drag_source_drag_data_get):
+	Fix and parse the returned URI to get the path of the target folder.
+
 2009-03-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* po/POTFILES.in: Add src/core/na-exporter.c file.

@@ -32,14 +32,13 @@
 #include <config.h>
 #endif
 
-#include <glib/gi18n.h>
-
 #include <api/na-ifactory-provider.h>
 #include <api/na-iexporter.h>
 #include <api/na-iimporter.h>
 
 #include "naxml-provider.h"
 #include "naxml-reader.h"
+#include "naxml-writer.h"
 
 /* private class data
  */
@@ -53,43 +52,7 @@ struct NAXMLProviderPrivate {
 	gboolean dispose_has_run;
 };
 
-static NAIExporterFormat st_formats[] = {
-
-	/* GCONF_SCHEMA_V1: a schema with owner, short and long descriptions;
-	 * each action has its own schema addressed by the id
-	 * (historical format up to v1.10.x serie)
-	 */
-	{ "GConfSchemaV1",
-			N_( "Export as a full GConf schema (v_1) file" ),
-			N_( "Export as a GConf schema file with full key descriptions" ),
-			N_( "This used to be the historical export format. " \
-				"The exported file may later be imported via :\n" \
-				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
-				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
-
-	/* GCONF_SCHEMA_V2: the lightest schema still compatible with gconftool-2 --install-schema-file
-	 * (no owner, no short nor long descriptions) - introduced in v 1.11
-	 */
-	{ "GConfSchemaV2",
-			N_( "Export as a light GConf _schema (v2) file" ),
-			N_( "Export as a light GConf schema file" ),
-			N_( "The exported file may later be imported via :\n" \
-				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
-				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
-
-	/* GCONF_ENTRY: not a schema, but a dump of the GConf entry
-	 * introduced in v 1.11
-	 */
-	{ "GConfEntry",
-			N_( "Export as a GConf _entry file" ),
-			N_( "Export as a GConf entry file" ),
-			N_( "This should be the preferred format for newly exported actions.\n" \
-				"The exported file may later be imported via :\n" \
-				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
-				"- or via the gconftool-2 --load command-line tool." ) },
-
-	{ NULL, NULL, NULL }
-};
+extern NAIExporterFormat naxml_formats[];
 
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
@@ -259,8 +222,8 @@ iexporter_iface_init( NAIExporterInterface *iface )
 	iface->get_version = iexporter_get_version;
 	iface->get_name = iexporter_get_name;
 	iface->get_formats = iexporter_get_formats;
-	iface->to_file = NULL;
-	iface->to_buffer = NULL;
+	iface->to_file = naxml_writer_export_to_file;
+	iface->to_buffer = naxml_writer_export_to_buffer;
 }
 
 static guint
@@ -272,13 +235,13 @@ iexporter_get_version( const NAIExporter *exporter )
 static gchar *
 iexporter_get_name( const NAIExporter *exporter )
 {
-	return( g_strdup( "NAXML Provider" ));
+	return( g_strdup( "NAXML Exporter" ));
 }
 
 static const NAIExporterFormat *
 iexporter_get_formats( const NAIExporter *exporter )
 {
-	return( st_formats );
+	return( naxml_formats );
 }
 
 static void
@@ -292,9 +255,9 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 	iface->read_start = naxml_reader_read_start;
 	iface->read_data = naxml_reader_read_data;
 	iface->read_done = naxml_reader_read_done;
-	iface->write_start = NULL;
-	iface->write_data = NULL;
-	iface->write_done = NULL;
+	iface->write_start = naxml_writer_write_start;
+	iface->write_data = naxml_writer_write_data;
+	iface->write_done = naxml_writer_write_done;
 }
 
 static guint

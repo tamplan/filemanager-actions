@@ -161,3 +161,5 @@
 - icon: is defined as localestring in desktop entry spec
   but path is defined as string in this same spec
   and icon may be a path -> so what to do with this ?
+
+- get_xds_atom_value: test on 64bit platform, then remove debug stuff

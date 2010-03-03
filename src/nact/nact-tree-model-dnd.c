@@ -40,6 +40,7 @@
 #include <api/na-object-api.h>
 
 #include <core/na-iprefs.h>
+#include <core/na-gnome-vfs-uri.h>
 #include <core/na-importer.h>
 
 #include "nact-application.h"
@@ -273,6 +274,7 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 	gchar *dest_folder, *folder;
 	gboolean is_writable;
 	gboolean copy_data;
+	NAGnomeVFSURI *vfs;
 
 	atom_name = gdk_atom_name( selection_data->target );
 	g_debug( "%s: drag_source=%p, context=%p, action=%d, selection_data=%p, rows=%p, atom=%s",
@@ -298,10 +300,20 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 				break;
 
 			case NACT_XCHANGE_FORMAT_XDS:
+				/* get the dest default filename as an uri
+				 * e.g. file:///home/pierre/data/eclipse/nautilus-actions/trash/xds.txt
+				 */
 				folder = get_xds_atom_value( context );
-				dest_folder = g_path_get_dirname( folder );
+				/* get the dest folder as a path
+				 */
+				vfs = g_new0( NAGnomeVFSURI, 1 );
+				na_gnome_vfs_uri_parse( vfs, folder );
+				dest_folder = g_path_get_dirname( vfs->path );
+				na_gnome_vfs_uri_free( vfs );
 				g_free( folder );
-				is_writable = na_core_utils_dir_is_writable_uri( dest_folder );
+				/* check that target folder is writable
+				 */
+				is_writable = na_core_utils_dir_is_writable_path( dest_folder );
 				gtk_selection_data_set( selection_data, selection_data->target, 8, ( guchar * )( is_writable ? "S" : "F" ), 1 );
 				if( is_writable ){
 					nact_clipboard_dnd_set( model->private->clipboard, info, rows, dest_folder, TRUE );
@@ -940,22 +952,45 @@ on_drag_drop( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint 
  * Author: Christian Neumair
  * Copyright: 2005 Free Software Foundation, Inc
  * License: GPL
+ *
+ * On a 32-bits system:
+ * get_xds_atom_value: actual_length=63, actual_length=15
+ * get_xds_atom_value: ret=file:///home/pierre/data/eclipse/nautilus-actions/trash/xds.txt0x8299
+ * get_xds_atom_value: dup=file:///home/pierre/data/eclipse/nautilus-actions/trash/xds.txt
+ * get_xds_atom_value: ret=file:///home/pi
  */
 static char *
 get_xds_atom_value( GdkDragContext *context )
 {
-	char *ret;
+	gchar *ret;
+	gint actual_length;
 
-	g_return_val_if_fail (context != NULL, NULL);
-	g_return_val_if_fail (context->source_window != NULL, NULL);
+	g_return_val_if_fail( context != NULL, NULL );
+	g_return_val_if_fail( context->source_window != NULL, NULL );
 
-	gdk_property_get (context->source_window,
-						XDS_ATOM, TEXT_ATOM,
-						0, MAX_XDS_ATOM_VAL_LEN,
-						FALSE, NULL, NULL, NULL,
-						(unsigned char **) &ret);
+	gdk_property_get( context->source_window,		/* a GdkWindow */
+						XDS_ATOM, 					/* the property to retrieve */
+						TEXT_ATOM,					/* the desired property type */
+						0, 							/* offset (in 4 bytes chunks) */
+						MAX_XDS_ATOM_VAL_LEN,		/* max length (in 4 bytes chunks) */
+						FALSE, 						/* whether to delete the property */
+						NULL, 						/* actual property type */
+						NULL, 						/* actual format */
+						&actual_length,				/* actual length (in 4 bytes chunks) */
+						( guchar ** ) &ret );		/* data pointer */
 
-	return ret;
+	g_debug( "get_xds_atom_value: actual_length=%d, actual_length=%d", actual_length, actual_length/sizeof( glong ));
+	g_debug( "get_xds_atom_value: ret=%s", ret );
+
+	gchar *dup = g_strdup( ret );
+	dup[actual_length] = '\0';
+	g_debug( "get_xds_atom_value: dup=%s", dup );
+
+	ret[actual_length/sizeof( glong )] = '\0';
+	g_debug( "get_xds_atom_value: ret=%s", ret );
+	g_free( ret );
+
+	return( dup );
 }
 
 /*

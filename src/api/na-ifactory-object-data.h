@@ -46,6 +46,7 @@ G_BEGIN_DECLS
 #define NAFO_DATA_PARENT					"na-factory-data-parent"
 
 #define NA_FACTORY_OBJECT_ITEM_GROUP		"na-factory-group-item"
+#define NAFO_DATA_TYPE						"na-factory-data-type"
 #define NAFO_DATA_LABEL						"na-factory-data-label"
 #define NAFO_DATA_TOOLTIP					"na-factory-data-tooltip"
 #define NAFO_DATA_ICON						"na-factory-data-icon"

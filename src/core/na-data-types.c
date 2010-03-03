@@ -28,27 +28,49 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_EXPORTER_H__
-#define __CORE_NA_EXPORTER_H__
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <api/na-data-types.h>
+
+typedef struct {
+	guint  type;
+	gchar *gconf_dump_key;
+}
+	FactoryType;
+
+static FactoryType st_factory_type[] = {
+		{ NAFD_TYPE_STRING,        "string" },
+		{ NAFD_TYPE_LOCALE_STRING, "string" },
+		{ NAFD_TYPE_BOOLEAN,       "bool" },
+		{ NAFD_TYPE_STRING_LIST,   "list" },
+		{ NAFD_TYPE_POINTER,        NULL },
+		{ NAFD_TYPE_UINT,          "int" },
+		{ 0 }
+};
 
 /**
- * SECTION: na_iexporter
- * @short_description: #NAIExporter internal functions.
- * @include: core/na-exporter.h
+ * na_data_types_get_gconf_dump_key:
+ * @type: the FactoryData type.
+ *
+ * Returns: the GConf key suitable for this type.
+ *
+ * The returned key is owned by FactoryData, and should not be released
+ * by the caller.
  */
+const gchar *
+na_data_types_get_gconf_dump_key( guint type )
+{
+	FactoryType *str;
 
-#include <api/na-object-api.h>
+	str = st_factory_type;
+	while( str->type ){
+		if( str->type == type ){
+			return( str->gconf_dump_key );
+		}
+		str++;
+	}
 
-#include <core/na-pivot.h>
-
-G_BEGIN_DECLS
-
-GList *na_exporter_get_formats ( const NAPivot *pivot );
-void   na_exporter_free_formats( GList *formats );
-
-gchar *na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark format, GSList **messages );
-gchar *na_exporter_to_file  ( const NAPivot *pivot, const NAObjectItem *item, const gchar *uri, GQuark format, GSList **messages );
-
-G_END_DECLS
-
-#endif /* __CORE_NA_EXPORTER_H__ */
+	return( NULL );
+}

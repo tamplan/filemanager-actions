@@ -28,32 +28,30 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NA_COMMON_XML_WRITER_H__
-#define __NA_COMMON_XML_WRITER_H__
+#ifndef __NAXML_WRITER_H__
+#define __NAXML_WRITER_H__
 
 /**
- * SECTION: na_xml_writer
+ * SECTION: naxml_writer
  * @short_description: #NAXMLWriter class definition.
- * @include: common/na-xml-writer.h
+ * @include: io-xml/naxml-writer.h
  *
- * This class exports Nautilus Actions as XML files.
- *
- * This class is embedded in libnact library as it is used by
- * nautilus-actions-new utility.
+ * This class exports Nautilus-Actions actions and menus as XML files.
  */
 
-#include <private/na-object-action-class.h>
+#include <api/na-data-boxed.h>
+#include <api/na-iexporter.h>
 
 G_BEGIN_DECLS
 
-#define NA_XML_WRITER_TYPE					( na_xml_writer_get_type())
-#define NA_XML_WRITER( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_XML_WRITER_TYPE, NAXMLWriter ))
-#define NA_XML_WRITER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_XML_WRITER_TYPE, NAXMLWriterClass ))
-#define NA_IS_XML_WRITER( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_XML_WRITER_TYPE ))
-#define NA_IS_XML_WRITER_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_XML_WRITER_TYPE ))
-#define NA_XML_WRITER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_XML_WRITER_TYPE, NAXMLWriterClass ))
+#define NAXML_WRITER_TYPE					( naxml_writer_get_type())
+#define NAXML_WRITER( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NAXML_WRITER_TYPE, NAXMLWriter ))
+#define NAXML_WRITER_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NAXML_WRITER_TYPE, NAXMLWriterClass ))
+#define NAXML_IS_WRITER( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NAXML_WRITER_TYPE ))
+#define NAXML_IS_WRITER_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAXML_WRITER_TYPE ))
+#define NAXML_WRITER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAXML_WRITER_TYPE, NAXMLWriterClass ))
 
-typedef struct NAXMLWriterPrivate NAXMLWriterPrivate;
+typedef struct NAXMLWriterPrivate      NAXMLWriterPrivate;
 
 typedef struct {
 	GObject             parent;
@@ -69,13 +67,22 @@ typedef struct {
 }
 	NAXMLWriterClass;
 
-GType  na_xml_writer_get_type( void );
+GType  naxml_writer_get_type( void );
 
+guint  naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParms *parms );
+guint  naxml_writer_export_to_file  ( const NAIExporter *instance, NAIExporterFileParms *parms );
+
+guint  naxml_writer_write_start( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
+guint  naxml_writer_write_data ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages );
+guint  naxml_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
+
+#if 0
 gchar *na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint format, GSList **msg );
 gchar *na_xml_writer_get_output_fname( const NAObjectAction *action, const gchar *folder, gint format );
 gchar *na_xml_writer_get_xml_buffer( const NAObjectAction *action, gint format );
 void   na_xml_writer_output_xml( const gchar *xml, const gchar *filename, GSList **msg );
+#endif
 
 G_END_DECLS
 
-#endif /* __NA_COMMON_XML_WRITER_H__ */
+#endif /* __NAXML_WRITER_H__ */

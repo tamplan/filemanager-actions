@@ -82,8 +82,6 @@ typedef struct {
 }
 	NafoDefaultIter;
 
-#define NA_IFACTORY_OBJECT_PROP_DATA				"na-ifactory-object-prop-data"
-
 extern gboolean                   ifactory_object_initialized;
 extern gboolean                   ifactory_object_finalized;
 
@@ -103,7 +101,6 @@ static guint        v_write_start( NAIFactoryObject *serializable, const NAIFact
 static guint        v_write_done( NAIFactoryObject *serializable, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
 static void         attach_boxed_to_object( NAIFactoryObject *object, NADataBoxed *boxed );
-static NADataBoxed *data_boxed_from_name( const NAIFactoryObject *object, const gchar *name );
 static void         free_data_boxed_list( NAIFactoryObject *object );
 static void         iter_on_data_defs( const NADataGroup *idgroups, gboolean serializable_only, NADataDefIterFunc pfn, void *user_data );
 
@@ -291,7 +288,7 @@ set_defaults_iter( NADataDef *def, NafoDefaultIter *data )
 	if( !def->obsoleted ){
 		if( def->default_value ){
 			is_null = TRUE;
-			boxed = data_boxed_from_name( data->object, def->name );
+			boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
 			if( boxed ){
 				is_null = ( na_data_boxed_get_as_void( boxed ) == NULL );
 			}
@@ -370,7 +367,7 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 		NADataDef *def = na_data_boxed_get_data_def( src_boxed );
 
 		if( def->copyable ){
-			NADataBoxed *tgt_boxed = data_boxed_from_name( target, def->name );
+			NADataBoxed *tgt_boxed = na_ifactory_object_get_data_boxed( target, def->name );
 			if( !tgt_boxed ){
 				tgt_boxed = na_data_boxed_new( def );
 				attach_boxed_to_object( target, tgt_boxed );
@@ -408,7 +405,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 		NADataDef *a_def = na_data_boxed_get_data_def( a_boxed );
 		if( a_def->comparable ){
 
-			NADataBoxed *b_boxed = data_boxed_from_name( b, a_def->name );
+			NADataBoxed *b_boxed = na_ifactory_object_get_data_boxed( b, a_def->name );
 			if( b_boxed ){
 				are_equal = na_data_boxed_are_equal( a_boxed, b_boxed );
 				if( !are_equal ){
@@ -428,7 +425,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 		NADataDef *b_def = na_data_boxed_get_data_def( b_boxed );
 		if( b_def->comparable ){
 
-			NADataBoxed *a_boxed = data_boxed_from_name( a, b_def->name );
+			NADataBoxed *a_boxed = na_ifactory_object_get_data_boxed( a, b_def->name );
 			if( a_boxed ){
 				are_equal = na_data_boxed_are_equal( a_boxed, b_boxed );
 				if( !are_equal ){
@@ -496,7 +493,7 @@ is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data )
 	NADataBoxed *boxed;
 
 	if( def->mandatory && !def->obsoleted ){
-		boxed = data_boxed_from_name( data->object, def->name );
+		boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
 		if( !boxed ){
 			g_debug( "na_factory_object_is_valid_mandatory_iter: invalid %s: mandatory but not set", def->name );
 			data->is_valid = FALSE;
@@ -611,7 +608,7 @@ read_data_iter( NADataDef *def, NafoReadIter *iter )
 	NADataBoxed *boxed = na_factory_provider_read_data( iter->reader, iter->reader_data, iter->object, def, iter->messages );
 
 	if( boxed ){
-		NADataBoxed *exist = data_boxed_from_name( iter->object, def->name );
+		NADataBoxed *exist = na_ifactory_object_get_data_boxed( iter->object, def->name );
 
 		if( exist ){
 			na_data_boxed_set_from_boxed( exist, boxed );
@@ -717,7 +714,7 @@ na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *nam
 
 	g_value_unset( value );
 
-	boxed = data_boxed_from_name( object, name );
+	boxed = na_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
 		na_data_boxed_get_as_value( boxed, value );
 	}
@@ -745,7 +742,7 @@ na_factory_object_get_as_void( const NAIFactoryObject *object, const gchar *name
 
 	value = NULL;
 
-	boxed = data_boxed_from_name( object, name );
+	boxed = na_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
 		value = na_data_boxed_get_as_void( boxed );
 	}
@@ -769,7 +766,7 @@ na_factory_object_set_from_value( NAIFactoryObject *object, const gchar *name, c
 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-	NADataBoxed *boxed = data_boxed_from_name( object, name );
+	NADataBoxed *boxed = na_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
 		na_data_boxed_set_from_value( boxed, value );
 
@@ -801,7 +798,7 @@ na_factory_object_set_from_void( NAIFactoryObject *object, const gchar *name, co
 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-	NADataBoxed *boxed = data_boxed_from_name( object, name );
+	NADataBoxed *boxed = na_ifactory_object_get_data_boxed( object, name );
 	if( boxed ){
 		na_data_boxed_set_from_void( boxed, data );
 
@@ -914,26 +911,6 @@ attach_boxed_to_object( NAIFactoryObject *object, NADataBoxed *boxed )
 	GList *list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 	list = g_list_prepend( list, boxed );
 	g_object_set_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA, list );
-}
-
-static NADataBoxed *
-data_boxed_from_name( const NAIFactoryObject *object, const gchar *name )
-{
-	GList *list, *ip;
-
-	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
-	/*g_debug( "list=%p (count=%u)", ( void * ) list, g_list_length( list ));*/
-
-	for( ip = list ; ip ; ip = ip->next ){
-		NADataBoxed *boxed = NA_DATA_BOXED( ip->data );
-		NADataDef *def = na_data_boxed_get_data_def( boxed );
-
-		if( !strcmp( def->name, name )){
-			return( boxed );
-		}
-	}
-
-	return( NULL );
 }
 
 static void

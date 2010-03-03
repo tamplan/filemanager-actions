@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include <api/na-ifactory-object-data.h>
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
@@ -43,8 +45,9 @@ static NADataDef data_def_action [] = {
 
 	{ NAFO_DATA_VERSION,
 				TRUE,
-				"Action version",
-				"Version of the action",
+				N_( "Version of the format" ),
+				N_( "The version of the configuration format that will be used to manage " \
+					"backward compatibility." ),
 				NAFD_TYPE_STRING,
 				"2.0",
 				TRUE,
@@ -56,8 +59,10 @@ static NADataDef data_def_action [] = {
 
 	{ NAFO_DATA_TARGET_SELECTION,
 				TRUE,
-				"Target a selection context menu",
-				"Does the action target the context menu when there is some selection ?",
+				N_( "Targets the context menu" ),
+				N_( "Whether the action of the menu targets the selection file manager " \
+					"context menus.\n" \
+					"This used to be the historical behavior."),
 				NAFD_TYPE_BOOLEAN,
 				"true",
 				TRUE,
@@ -82,10 +87,9 @@ static NADataDef data_def_action [] = {
 
 	{ NAFO_DATA_TARGET_TOOLBAR,
 				TRUE,
-				"Target the toolbar",
-				"Does the action target the toolbar ? " \
-				"Only an action may target the toolbar as Nautilus, as of 2.28, " \
-				"doesn't support menus in toolbar.",
+				N_( "Targets the toolbar" ),
+				N_( "Whether the action is candidate to be displayed in file manager toolbar.\n" \
+					"Note, that as of Nautilus 2.26, menus can not be candidate to toolbar display." ),
 				NAFD_TYPE_BOOLEAN,
 				"false",
 				TRUE,
@@ -97,9 +101,10 @@ static NADataDef data_def_action [] = {
 
 	{ NAFO_DATA_TOOLBAR_LABEL,
 				TRUE,
-				"Toolbar label",
-				"Label of the action in the toolbar. " \
-				"Defaults to main label if empty or not set.",
+				N_( "Label of the toolbar item" ),
+				N_( "The label displayed besides of the icon in the file manager toolbar.\n" \
+					"Note that actual display may depend of your own Desktop Environment preferences.\n" \
+					"Defaults to label of the context menu when not set or empty."),
 				NAFD_TYPE_LOCALE_STRING,
 				"",
 				TRUE,

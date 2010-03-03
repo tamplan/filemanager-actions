@@ -522,7 +522,7 @@ na_core_utils_dir_is_writable_uri( const gchar *uri )
 }
 
 static gboolean
-info_dir_is_writable( GFile *file, const gchar *path )
+info_dir_is_writable( GFile *file, const gchar *path_or_uri )
 {
 	static const gchar *thisfn = "na_core_utils_info_dir_is_writable";
 	GError *error = NULL;
@@ -542,14 +542,14 @@ info_dir_is_writable( GFile *file, const gchar *path )
 
 	type = g_file_info_get_file_type( info );
 	if( type != G_FILE_TYPE_DIRECTORY ){
-		g_debug( "%s: %s is not a directory", thisfn, path );
+		g_debug( "%s: %s is not a directory", thisfn, path_or_uri );
 		g_object_unref( info );
 		return( FALSE );
 	}
 
 	writable = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE );
 	if( !writable ){
-		g_debug( "%s: %s is not writable", thisfn, path );
+		g_debug( "%s: %s is not writable", thisfn, path_or_uri );
 	}
 
 	g_object_unref( info );

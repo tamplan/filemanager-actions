@@ -32,7 +32,7 @@
 #define __NAGP_GCONF_PROVIDER_KEYS_H__
 
 #define NAGP_CONFIGURATIONS_PATH		"/apps/nautilus-actions/configurations"
-#define NAGP_SCHEMAS_PATH				"/schemas/apps/nautilus-actions"
+#define NAGP_SCHEMAS_PATH				"/schemas/apps/nautilus-actions/configurations"
 
 #define NAGP_ENTRY_TYPE					"type"
 #define NAGP_VALUE_TYPE_MENU			"Menu"

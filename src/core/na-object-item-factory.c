@@ -32,17 +32,40 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include <api/na-ifactory-object-data.h>
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
 
 NADataDef data_def_item [] = {
 
+	/* this data is marked as 'non-serializable'
+	 * this means it will not be automatically readen/written or imported/exported
+	 * the corresponding NADataBoxed is created at read_start() time
+	 */
+	{ NAFO_DATA_TYPE,
+				FALSE,
+				N_( "Type of the item" ),
+				N_( "Defines if the item is an action or a menu. Possible values are :\n" \
+					"- 'Action',\n" \
+					"- 'Menu'.\n" \
+					"The value is case sensitive and must not be localized." ),
+				NAFD_TYPE_LOCALE_STRING,
+				NULL,
+				TRUE,
+				FALSE,
+				FALSE,
+				FALSE,
+				"type",
+				FALSE },
+
 	{ NAFO_DATA_LABEL,
 				TRUE,
-				"NAObjectItem label",
-				"Main label of the NAObjectItem object. " \
-				"Serves as a default for the toolbar label of an action.",
+				N_( "Label of the context menu item" ),
+				N_( "The label of the menu item that will appear in the file manager context " \
+					"menu when the selection matches the appearance condition settings.\n" \
+					"It is also used as a default for the toolbar label of an action." ),
 				NAFD_TYPE_LOCALE_STRING,
 				"",
 				TRUE,
@@ -54,8 +77,10 @@ NADataDef data_def_item [] = {
 
 	{ NAFO_DATA_TOOLTIP,
 				TRUE,
-				"Item tooltip",
-				"Tooltip associated to the item in the context menu or in the toolbar.",
+				N_( "Tooltip of the context menu item" ),
+				N_( "The tooltip of the menu item that will appear in the file manager " \
+					"statusbar when the user points to the file manager context menu item " \
+					"with his/her mouse." ),
 				NAFD_TYPE_LOCALE_STRING,
 				"",
 				TRUE,
@@ -67,9 +92,11 @@ NADataDef data_def_item [] = {
 
 	{ NAFO_DATA_ICON,
 				TRUE,
-				"Icon name",
-				"Icon displayed in the context menu and in the toolbar. " \
-				"May be the name of a themed icon, or the full path to any appropriate image.",
+				N_( "Icon of the context menu item" ),
+				N_( "The icon of the menu item that will appear next to the label " \
+					"in the file manager context menu when the selection matches the appearance " \
+					"conditions settings.\n" \
+					"May be the localized name of a themed icon, or a full path to any appropriate image." ),
 				NAFD_TYPE_LOCALE_STRING,
 				"",
 				TRUE,
@@ -81,9 +108,9 @@ NADataDef data_def_item [] = {
 
 	{ NAFO_DATA_DESCRIPTION,
 				TRUE,
-				"Description",
-				"Some text which explains the goal of the menu or the action. " \
-				"Will be used, e.g. when displaying available items on a web site.",
+				N_( "Description relative to the item" ),
+				N_( "Some text which explains the goal of the menu or the action.\n" \
+					"May be used, e.g. when displaying available items on a web site." ),
 				NAFD_TYPE_LOCALE_STRING,
 				"",
 				TRUE,
@@ -108,9 +135,11 @@ NADataDef data_def_item [] = {
 
 	{ NAFO_DATA_SUBITEMS_SLIST,
 				TRUE,
-				"Subitems",
-				"List of subitems ids, " \
-				"as readen from corresponding entry from the storage subsystem.",
+				N_( "List of subitem ids" ),
+				N_( "Ordered list of the IDs of the subitems. This may be actions or menus " \
+					"if the item is a menu, or profiles if the item is an action.\n" \
+					"If this list doesn't exist or is empty for an action or a menu, " \
+					"subitems are attached in the order of the read operations." ),
 				NAFD_TYPE_STRING_LIST,
 				NULL,
 				FALSE,
@@ -122,10 +151,9 @@ NADataDef data_def_item [] = {
 
 	{ NAFO_DATA_ENABLED,
 				TRUE,
-				"Enabled",
-				"Is the item enabled ? " \
-				"When FALSE, the item will never be candidate to the context menu," \
-				"nor to the toolbar.",
+				N_( "Whether the action or the menu is enabled" ),
+				N_( "If the or the menu action is disabled, it will never appear in the " \
+					"file manager context menu." ),
 				NAFD_TYPE_BOOLEAN,
 				"true",
 				TRUE,
