@@ -39,6 +39,7 @@
 
 #include <gtk/gtk.h>
 
+#include <core/na-export-format.h>
 #include <core/na-pivot.h>
 
 G_BEGIN_DECLS
@@ -66,12 +67,9 @@ enum {
 	EXPORT_FORMAT_DISPLAY_PREFERENCES,
 };
 
-void   nact_export_format_display( const NAPivot *pivot, GtkWidget *container, guint mode );
-void   nact_export_format_select( const GtkWidget *container, GQuark format );
-GQuark nact_export_format_get_selected( const GtkWidget *container );
-
-gchar *nact_export_format_get_label      ( const GtkWidget *container, GQuark format );
-gchar *nact_export_format_get_description( const GtkWidget *container, GQuark format );
+void            nact_export_format_init_display( const NAPivot *pivot, GtkWidget *container, guint mode );
+void            nact_export_format_select( const GtkWidget *container, GQuark format );
+NAExportFormat *nact_export_format_get_selected( const GtkWidget *container );
 
 G_END_DECLS
 

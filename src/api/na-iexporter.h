@@ -59,18 +59,18 @@ typedef struct NAIExporterInterfacePrivate NAIExporterInterfacePrivate;
 /* When listing available export formats, the instance returns a GList
  * of these structures.
  * This structure must be implemented by each #NAIExporter implementation
- * (see e.g. io-xml/naxml-provider.c)
+ * (see e.g. io-xml/naxml-formats.c)
  */
 typedef struct {
 	gchar *format;					/* format identifier (ascii) */
-	gchar *dlg_label;				/* label to be displayed in the NactExportAsk dialog (UTF-8 locale) */
-	gchar *wnd_label;				/* short label to be displayed in the UI (UTF-8 locale) */
-	gchar *description;				/* full description of the format (UTF-8 locale) */
+	gchar *label;					/* short label to be displayed in dialog (UTF-8 localized) */
+	gchar *description;				/* full description of the format (UTF-8 localized)
+									 * mainly used in the export assistant */
 }
 	NAIExporterFormat;
 
 typedef struct {
-	GTypeInterface             parent;
+	GTypeInterface               parent;
 	NAIExporterInterfacePrivate *private;
 
 	/**

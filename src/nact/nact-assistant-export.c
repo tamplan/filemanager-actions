@@ -127,7 +127,7 @@ static void            on_folder_selection_changed( GtkFileChooser *chooser, gpo
 
 static void            assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant );
-static GQuark          get_export_format( NactAssistantExport *window );
+static NAExportFormat *get_export_format( NactAssistantExport *window );
 
 static void            assist_initial_load_confirm( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_confirm( NactAssistantExport *window, GtkAssistant *assistant );
@@ -564,7 +564,7 @@ assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
 	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
-	nact_export_format_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_ASSISTANT );
+	nact_export_format_init_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_ASSISTANT );
 }
 
 static void
@@ -582,11 +582,11 @@ assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant
 	gtk_assistant_set_page_complete( assistant, content, TRUE );
 }
 
-static GQuark
+static NAExportFormat *
 get_export_format( NactAssistantExport *window )
 {
 	GtkWidget *container;
-	GQuark format;
+	NAExportFormat *format;
 
 	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
 	format = nact_export_format_get_selected( container );
@@ -640,17 +640,18 @@ static void
 assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
 {
 	static const gchar *thisfn = "nact_assistant_export_prepare_confirm";
-	GtkWidget *container;
 	gchar *text, *tmp, *text2;
-	gchar *label1, *label2, *label3;
+	gchar *label11, *label12;
+	gchar *label21, *label22;
 	GList *actions, *ia;
-	gint format;
+	NAExportFormat *format;
+	GtkLabel *confirm_label;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
 	/* i18n: this is the title of the confirm page of the export assistant */
-	text = g_strdup( _( "About to export selected actions:" ));
+	text = g_strdup( _( "About to export selected items:" ));
 	tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
 	g_free( text );
 	text = tmp;
@@ -674,23 +675,24 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	g_free( text );
 	text = tmp;
 
-	label1 = NULL;
-	label2 = NULL;
+	label11 = NULL;
+	label21 = NULL;
 	format = get_export_format( window );
-	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
-	label1 = nact_export_format_get_label( container, format );
-	label2 = nact_export_format_get_description( container, format );
-	nact_iprefs_set_export_format( BASE_WINDOW( window ), IPREFS_EXPORT_FORMAT, format );
-
-	label3 = na_core_utils_str_add_prefix( "\t", label2 );
-	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label1, label3 );
-	g_free( label3 );
-	g_free( label2 );
-	g_free( label1 );
+	label11 = na_export_format_get_label( format );
+	label21 = na_export_format_get_description( format );
+	nact_iprefs_set_export_format( BASE_WINDOW( window ), IPREFS_EXPORT_FORMAT, na_export_format_get_quark( format ));
+	label12 = na_core_utils_str_remove_char( label11, "_" );
+	label22 = na_core_utils_str_add_prefix( "\t", label21 );
+	tmp = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label12, label22 );
+	g_free( label22 );
+	g_free( label21 );
+	g_free( label12 );
+	g_free( label11 );
 	g_free( text );
 	text = tmp;
 
-	gtk_label_set_markup( GTK_LABEL( page ), text );
+	confirm_label = GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AssistantExportConfirmLabel" ));
+	gtk_label_set_markup( confirm_label, text );
 	g_free( text );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
@@ -753,6 +755,7 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 	gchar *label;
 	GSList *is;
 	gint errors;
+	GtkLabel *summary_label;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -804,7 +807,8 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 		text = tmp;
 	}
 
-	gtk_label_set_markup( GTK_LABEL( page ), text );
+	summary_label = GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AssistantExportSummaryLabel" ));
+	gtk_label_set_markup( summary_label, text );
 	g_free( text );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );

@@ -45,10 +45,9 @@ NAIExporterFormat naxml_formats[] = {
 	 * (historical format up to v1.10.x serie)
 	 */
 	{ NAXML_FORMAT_GCONF_SCHEMA_V1,
-			N_( "Export as a full GConf schema (v_1) file" ),
-			N_( "Export as a GConf schema file with full key descriptions" ),
-			N_( "This used to be the historical export format. " \
-				"The exported file may later be imported via :\n" \
+			N_( "Export as a _full GConf schema file" ),
+			N_( "This used to be the historical export format.\n" \
+				"The exported schema file may later be imported via :\n" \
 				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
 
@@ -56,9 +55,12 @@ NAIExporterFormat naxml_formats[] = {
 	 * (no owner, no short nor long descriptions) - introduced in v 1.11
 	 */
 	{ NAXML_FORMAT_GCONF_SCHEMA_V2,
-			N_( "Export as a light GConf _schema (v2) file" ),
-			N_( "Export as a light GConf schema file" ),
-			N_( "The exported file may later be imported via :\n" \
+			N_( "Export as a _light GConf schema (v2) file" ),
+			N_( "This format has been introduced in v 1.11 serie.\n" \
+				"This is the lightest schema still compatible with GConf command-line tools,\n" \
+				"while keeping backward compatibility with older Nautilus Actions Configuration " \
+				"Tool versions.\n"
+				"The exported schema file may later be imported via :\n" \
 				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
 
@@ -66,12 +68,15 @@ NAIExporterFormat naxml_formats[] = {
 	 * introduced in v 1.11
 	 */
 	{ NAXML_FORMAT_GCONF_ENTRY,
-			N_( "Export as a GConf _entry file" ),
-			N_( "Export as a GConf entry file" ),
-			N_( "This should be the preferred format for newly exported actions.\n" \
-				"The exported file may later be imported via :\n" \
-				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
+			N_( "Export as a GConf _dump file" ),
+			N_( "This format has been introduced in v 1.11 serie, " \
+				"and should be the preferred format for newly exported items.\n" \
+				"It is not backward compatible with previous Nautilus Actions " \
+				"Configuration Tool versions,\n" \
+				"though it may still be imported via standard GConf command-line tools.\n" \
+				"The exported dump file may later be imported via :\n" \
+				"- Import assistant of a compatible Nautilus Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --load command-line tool." ) },
 
-	{ NULL, NULL, NULL }
+	{ NULL }
 };

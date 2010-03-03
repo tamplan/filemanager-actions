@@ -1269,6 +1269,7 @@ setup_builder( BaseWindow *window )
 	BaseApplication *application;
 	gchar *fname;
 	GError *error = NULL;
+	gchar *msg;
 
 	if( window->private->has_own_builder ){
 		window->private->builder = base_builder_new();
@@ -1279,11 +1280,15 @@ setup_builder( BaseWindow *window )
 	}
 
 	fname = v_get_ui_filename( window );
+
 	if( fname && strlen( fname )){
 		if( !base_builder_add_from_file( window->private->builder, fname, &error )){
-			g_warning( "%s: unable to load %s UI XML definition: %s", thisfn, fname, error->message );
+			msg = g_strdup_printf( _( "Unable to load %s UI XML definition: %s" ), fname, error->message );
+			base_window_error_dlg( window, GTK_MESSAGE_WARNING, thisfn, msg );
+			g_free( msg );
 			g_error_free( error );
 		}
+
 		g_free( fname );
 	}
 }
@@ -1294,6 +1299,7 @@ base_window_error_dlg( const BaseWindow *window, GtkMessageType type, const gcha
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
+
 		base_application_error_dlg( window->private->application, type, primary, secondary );
 	}
 }

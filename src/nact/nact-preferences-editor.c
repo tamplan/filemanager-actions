@@ -285,7 +285,7 @@ on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
 	container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-	nact_export_format_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_PREFERENCES );
+	nact_export_format_init_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_PREFERENCES );
 
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
 	nact_schemes_list_create_model( listview, FALSE );
@@ -475,7 +475,7 @@ save_preferences( NactPreferencesEditor *editor )
 	gboolean relabel;
 	guint import_mode;
 	GtkWidget *container;
-	GQuark export_format;
+	NAExportFormat *export_format;
 	gboolean esc_quit, esc_confirm;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
@@ -553,7 +553,8 @@ save_preferences( NactPreferencesEditor *editor )
 	 */
 	container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 	export_format = nact_export_format_get_selected( container );
-	nact_iprefs_set_export_format( BASE_WINDOW( editor ), IPREFS_EXPORT_FORMAT, export_format );
+	nact_iprefs_set_export_format(
+			BASE_WINDOW( editor ), IPREFS_EXPORT_FORMAT, na_export_format_get_quark( export_format ));
 
 	/* fifth tab: list of default schemes
 	 */

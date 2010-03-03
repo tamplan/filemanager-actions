@@ -40,43 +40,31 @@
 #include "nact-iprefs.h"
 #include "nact-export-format.h"
 
-#define EXPORT_FORMAT_PROP_QUARK_ID		"nact-export-format-prop-quark-id"
+#define EXPORT_FORMAT_PROP_OBJECT		"nact-export-format-prop-object"
 #define EXPORT_FORMAT_PROP_BUTTON		"nact-export-format-prop-button"
-#define EXPORT_FORMAT_PROP_LABEL		"nact-export-format-prop-label"
-#define EXPORT_FORMAT_PROP_DESCRIPTION	"nact-export-format-prop-description"
 
-#define ASKME_LABEL						N_( "Ask me" )
-#define ASKME_DESCRIPTION				N_( "You will be asked each time an item is about to be exported." )
+#define ASKME_LABEL						N_( "_Ask me" )
+#define ASKME_DESCRIPTION				N_( "You will be asked for the format to choose each time an item is about to be exported." )
 
-/* structure used when iterating on container's children
- */
-typedef struct {
-	GQuark   format;
-	gboolean found;
-	gchar   *label;
-	gchar   *prop;
-}
-	NactExportFormatStr;
-
-static const NAIExporterFormat ask_str = { NULL, ASKME_LABEL, ASKME_LABEL, ASKME_DESCRIPTION };
+static const NAIExporterFormat st_ask_str = { "Ask", ASKME_LABEL, ASKME_DESCRIPTION };
 
 static void draw_in_vbox( const NAExportFormat *format, GtkWidget *vbox, guint mode, gint id );
-static void select_default_iter( GtkWidget *widget, NactExportFormatStr *str );
-static void get_selected_iter( GtkWidget *widget, NactExportFormatStr *str );
-static void get_label_iter( GtkWidget *widget, NactExportFormatStr *str );
+static void select_default_iter( GtkWidget *widget, void *quark_ptr );
+static void get_selected_iter( GtkWidget *widget, NAExportFormat **format );
 
 /**
- * nact_export_format_display:
+ * nact_export_format_init_display:
  * @pivot: the #NAPivot instance.
  * @vbox: the #GtkVBox in which the display must be drawn.
  * @mode: the type of the display.
  *
- * Displays the available export formats in the VBox
+ * Displays the available export formats in the VBox.
+ * Should only be called once per dialog box instance.
  */
 void
-nact_export_format_display( const NAPivot *pivot, GtkWidget *vbox, guint mode )
+nact_export_format_init_display( const NAPivot *pivot, GtkWidget *vbox, guint mode )
 {
-	static const gchar *thisfn = "nact_export_format_display";
+	static const gchar *thisfn = "nact_export_format_init_display";
 	GList *formats, *ifmt;
 	NAExportFormat *format;
 
@@ -92,11 +80,15 @@ nact_export_format_display( const NAPivot *pivot, GtkWidget *vbox, guint mode )
 
 		case EXPORT_FORMAT_DISPLAY_PREFERENCES:
 		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
-			format = na_export_format_new( &ask_str, NULL );
+			format = na_export_format_new( &st_ask_str, NULL );
 			draw_in_vbox( format, vbox, mode, IPREFS_EXPORT_FORMAT_ASK );
 			g_object_unref( format );
 			break;
 
+		/* this is the mode to be used when we are about to export an item
+		 * and the user preference is 'Ask me'; obviously, we don't propose
+		 * here to ask him another time :)
+		 */
 		case EXPORT_FORMAT_DISPLAY_ASK:
 			break;
 
@@ -108,9 +100,7 @@ nact_export_format_display( const NAPivot *pivot, GtkWidget *vbox, guint mode )
 /*
  * container
  *  +- vbox
- *  |   +- hbox
- *  |   |   +- radio button
- *  |   |   +- label
+ *  |   +- radio button
  *  |   +- hbox
  *  |   |   +- description
  */
@@ -120,21 +110,17 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode, gi
 	static GtkRadioButton *first_button = NULL;
 	GtkVBox *vbox;
 	gchar *description;
-	GtkHBox *hbox1, *hbox2;
+	GtkHBox *hbox;
 	GtkRadioButton *button;
 	guint size, spacing;
-	GtkLabel *radio_label;
 	gchar *markup, *label;
 	GtkLabel *desc_label;
-	GQuark quark_id;
 
 	vbox = GTK_VBOX( gtk_vbox_new( FALSE, 0 ));
 	gtk_box_pack_start( GTK_BOX( container ), GTK_WIDGET( vbox ), FALSE, TRUE, 0 );
 	description = na_export_format_get_description( format );
 	g_object_set( G_OBJECT( vbox ), "tooltip-text", description, NULL );
-
-	hbox1 = GTK_HBOX( gtk_hbox_new( FALSE, 0 ));
-	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox1 ), FALSE, TRUE, 0 );
+	g_object_set( G_OBJECT( vbox ), "spacing", 6, NULL );
 
 	button = GTK_RADIO_BUTTON( gtk_radio_button_new( NULL ));
 	if( first_button ){
@@ -142,51 +128,54 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode, gi
 	} else {
 		first_button = button;
 	}
-	gtk_box_pack_start( GTK_BOX( hbox1 ), GTK_WIDGET( button ), FALSE, TRUE, 0 );
+	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, TRUE, 0 );
 
-	radio_label = GTK_LABEL( gtk_label_new( NULL ));
 	label = NULL;
 	markup = NULL;
 	switch( mode ){
 
 		case EXPORT_FORMAT_DISPLAY_ASK:
 		case EXPORT_FORMAT_DISPLAY_PREFERENCES:
-			label = na_export_format_get_ask_label( format );
-			markup = g_markup_printf_escaped( "%s", label );
-			break;
-
 		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
 			label = na_export_format_get_label( format );
-			markup = g_markup_printf_escaped( "<b>%s</b>", label );
+			markup = g_markup_printf_escaped( "%s", label );
+			gtk_button_set_label( GTK_BUTTON( button ), label );
+			g_object_set( G_OBJECT( button ), "use_underline", TRUE, NULL );
 			break;
+
+		/* this work fine, but it appears that this is not consistant with import assistant */
+		/*case EXPORT_FORMAT_DISPLAY_ASSISTANT:
+			radio_label = GTK_LABEL( gtk_label_new( NULL ));
+			label = na_export_format_get_label( format );
+			markup = g_markup_printf_escaped( "<b>%s</b>", label );
+			gtk_label_set_markup( radio_label, markup );
+			gtk_container_add( GTK_CONTAINER( button ), GTK_WIDGET( radio_label ));
+			break;*/
 	}
-	if( markup ){
-		gtk_label_set_markup( radio_label, markup );
-		g_free( markup );
-	}
-	gtk_box_pack_start( GTK_BOX( hbox1 ), GTK_WIDGET( radio_label ), FALSE, TRUE, 0 );
 
 	desc_label = NULL;
 	switch( mode ){
 
 		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
+			hbox = GTK_HBOX( gtk_hbox_new( TRUE, 0 ));
+			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), FALSE, TRUE, 0 );
+
 			gtk_widget_style_get( GTK_WIDGET( button ), "indicator-size", &size, NULL );
 			gtk_widget_style_get( GTK_WIDGET( button ), "indicator-spacing", &spacing, NULL );
 			size += 2*spacing;
-			hbox2 = GTK_HBOX( gtk_hbox_new( TRUE, 0 ));
-			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox2 ), FALSE, TRUE, 0 );
+
 			desc_label = GTK_LABEL( gtk_label_new( description ));
 			g_object_set( G_OBJECT( desc_label ), "xpad", size, NULL );
-			gtk_box_pack_start( GTK_BOX( hbox2 ), GTK_WIDGET( desc_label ), TRUE, TRUE, 4 );
+			g_object_set( G_OBJECT( desc_label ), "xalign", 0, NULL );
+			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( desc_label ), TRUE, TRUE, 4 );
 			break;
 	}
 
-	quark_id = ( id == -1 ) ? na_export_format_get_quark( format ) : id;
-	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_QUARK_ID, GUINT_TO_POINTER( quark_id ));
 	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_BUTTON, button );
-	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_LABEL, radio_label );
-	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_DESCRIPTION, desc_label );
+	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_OBJECT, g_object_ref(( gpointer ) format ));
+	g_object_weak_ref( G_OBJECT( vbox ), ( GWeakNotify ) g_object_unref, ( gpointer ) format );
 
+	g_free( markup );
 	g_free( label );
 	g_free( description );
 }
@@ -201,30 +190,25 @@ draw_in_vbox( const NAExportFormat *format, GtkWidget *container, guint mode, gi
 void
 nact_export_format_select( const GtkWidget *container, GQuark format )
 {
-	NactExportFormatStr *str;
+	void *quark_ptr;
 
-	str = g_new0( NactExportFormatStr, 1 );
-	str->format = format;
-	str->found = FALSE;
-
-	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) select_default_iter, str );
-
-	g_free( str );
+	quark_ptr = GUINT_TO_POINTER( format );
+	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) select_default_iter, quark_ptr );
 }
 
 static void
-select_default_iter( GtkWidget *widget, NactExportFormatStr *str )
+select_default_iter( GtkWidget *widget, void *quark_ptr )
 {
-	GQuark format;
+	NAExportFormat *format;
+	GQuark format_quark;
 	GtkRadioButton *button;
 
-	if( !str->found ){
-		format = ( GQuark ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( widget ), EXPORT_FORMAT_PROP_QUARK_ID ));
-		if( format == str->format ){
-			str->found = TRUE;
-			button = GTK_RADIO_BUTTON( g_object_get_data( G_OBJECT( widget ), EXPORT_FORMAT_PROP_BUTTON ));
-			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
-		}
+	format_quark = ( GQuark ) GPOINTER_TO_UINT( quark_ptr );
+	format = NA_EXPORT_FORMAT( g_object_get_data( G_OBJECT( widget ), EXPORT_FORMAT_PROP_OBJECT ));
+
+	if( na_export_format_get_quark( format ) == format_quark ){
+		button = GTK_RADIO_BUTTON( g_object_get_data( G_OBJECT( widget ), EXPORT_FORMAT_PROP_BUTTON ));
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 	}
 }
 
@@ -232,119 +216,32 @@ select_default_iter( GtkWidget *widget, NactExportFormatStr *str )
  * nact_export_format_get_selected:
  * @container: the #GtkVBox in which the display has been drawn.
  *
- * Returns: the currently selected value, as a #GQuark.
+ * Returns: the currently selected value, as a #NAExportFormat object.
+ *
+ * The returned #NAExportFormat is owned by #NactExportFormat, and
+ * should not be released by the caller.
  */
-GQuark
+NAExportFormat *
 nact_export_format_get_selected( const GtkWidget *container )
 {
-	GQuark format;
-	NactExportFormatStr *str;
+	NAExportFormat *format;
 
-	format = 0;
-
-	str = g_new0( NactExportFormatStr, 1 );
-	str->format = 0;
-	str->found = FALSE;
-
-	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) get_selected_iter, str );
-
-	if( str->found ){
-		format = str->format;
-	}
-
-	g_free( str );
+	format = NULL;
+	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) get_selected_iter, &format );
+	g_debug( "nact_export_format_get_selected: format=%p", ( void * ) format );
 
 	return( format );
 }
 
 static void
-get_selected_iter( GtkWidget *widget, NactExportFormatStr *str )
+get_selected_iter( GtkWidget *widget, NAExportFormat **format )
 {
 	GtkRadioButton *button;
 
-	if( !str->found ){
+	if( !( *format  )){
 		button = GTK_RADIO_BUTTON( g_object_get_data( G_OBJECT( widget ), EXPORT_FORMAT_PROP_BUTTON ));
 		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-			str->found = TRUE;
-			str->format = ( GQuark ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( widget ), EXPORT_FORMAT_PROP_QUARK_ID ));
-		}
-	}
-}
-
-/**
- * nact_export_format_get_label:
- * @format: the #GQuark selected format.
- *
- * Returns: the label of the @format, as a newly allocated string which
- * should be g_free() by the caller.
- */
-gchar *
-nact_export_format_get_label( const GtkWidget *container, GQuark format )
-{
-	gchar *label;
-	NactExportFormatStr *str;
-
-	label = NULL;
-
-	str = g_new0( NactExportFormatStr, 1 );
-	str->format = format;
-	str->found = FALSE;
-	str->prop = EXPORT_FORMAT_PROP_LABEL;
-
-	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) get_label_iter, str );
-
-	if( str->found ){
-		label = str->label;
-	}
-
-	g_free( str );
-
-	return( label );
-}
-
-/**
- * nact_export_format_get_description:
- * @format: the #GQuark selected format.
- *
- * Returns: the description of the @format, as a newly allocated string which
- * should be g_free() by the caller.
- */
-gchar *
-nact_export_format_get_description( const GtkWidget *container, GQuark format )
-{
-	gchar *label;
-	NactExportFormatStr *str;
-
-	label = NULL;
-
-	str = g_new0( NactExportFormatStr, 1 );
-	str->format = format;
-	str->found = FALSE;
-	str->prop = EXPORT_FORMAT_PROP_DESCRIPTION;
-
-	gtk_container_foreach( GTK_CONTAINER( container ), ( GtkCallback ) get_label_iter, str );
-
-	if( str->found ){
-		label = str->label;
-	}
-
-	g_free( str );
-
-	return( label );
-}
-
-static void
-get_label_iter( GtkWidget *widget, NactExportFormatStr *str )
-{
-	GQuark format;
-	GtkLabel *gtk_label;
-
-	if( !str->found ){
-		format = ( GQuark ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( widget ), EXPORT_FORMAT_PROP_QUARK_ID ));
-		if( format == str->format ){
-			str->found = TRUE;
-			gtk_label = GTK_LABEL( g_object_get_data( G_OBJECT( widget ), str->prop ));
-			str->label = g_strdup( gtk_label_get_text( gtk_label ));
+			*format = NA_EXPORT_FORMAT( g_object_get_data( G_OBJECT( widget ), EXPORT_FORMAT_PROP_OBJECT ));
 		}
 	}
 }

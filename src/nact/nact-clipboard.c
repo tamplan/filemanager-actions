@@ -38,6 +38,7 @@
 #include <api/na-object-api.h>
 
 #include <core/na-exporter.h>
+#include <core/na-export-format.h>
 
 #include "nact-application.h"
 #include "nact-iprefs.h"

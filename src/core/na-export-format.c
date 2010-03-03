@@ -235,30 +235,6 @@ na_export_format_get_id( const NAExportFormat *format )
 }
 
 /**
- * na_export_format_get_ask_label:
- * @format: this #NAExportFormat object.
- *
- * Returns: the UTF-8 localizable label of the format, as a newly
- * allocated string which should be g_free() by the caller.
- */
-gchar *
-na_export_format_get_ask_label( const NAExportFormat *format )
-{
-	gchar *label;
-
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), NULL );
-
-	label = NULL;
-
-	if( !format->private->dispose_has_run ){
-
-		label = g_strdup( format->private->str->dlg_label );
-	}
-
-	return( label );
-}
-
-/**
  * na_export_format_get_label:
  * @format: this #NAExportFormat object.
  *
@@ -276,7 +252,7 @@ na_export_format_get_label( const NAExportFormat *format )
 
 	if( !format->private->dispose_has_run ){
 
-		label = g_strdup( format->private->str->wnd_label );
+		label = g_strdup( format->private->str->label );
 	}
 
 	return( label );

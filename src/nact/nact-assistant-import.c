@@ -554,6 +554,7 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	gchar *text, *tmp;
 	GtkWidget *chooser;
 	GSList *uris, *is;
+	GtkLabel *confirm_label;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -577,7 +578,8 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	g_free( text );
 	text = tmp;
 
-	gtk_label_set_markup( GTK_LABEL( page ), text );
+	confirm_label = GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AssistantImportConfirmLabel" ));
+	gtk_label_set_markup( confirm_label, text );
 	g_free( text );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
@@ -625,22 +627,22 @@ add_import_mode( NactAssistantImport *window, const gchar *text )
 
 	switch( mode ){
 		case IMPORTER_MODE_NO_IMPORT:
-			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ))));
+			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ))), "_" );
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "NoImportLabel"))));
 			break;
 
 		case IMPORTER_MODE_RENUMBER:
-			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ))));
+			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ))), "_" );
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "RenumberLabel"))));
 			break;
 
 		case IMPORTER_MODE_OVERRIDE:
-			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ))));
+			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ))), "_" );
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "OverrideLabel"))));
 			break;
 
 		case IMPORTER_MODE_ASK:
-			label1 = g_strdup( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ))));
+			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ))), "_" );
 			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AskLabel"))));
 			break;
 
@@ -777,6 +779,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	ImportUriStruct *str;
 	GFile *file;
 	guint mode;
+	GtkLabel *summary_label;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -835,8 +838,8 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		text = tmp;
 	}
 
-	/*g_debug( "%s: text='%s'", thisfn, text );*/
-	gtk_label_set_markup( GTK_LABEL( page ), text );
+	summary_label = GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AssistantImportSummaryLabel" ));
+	gtk_label_set_markup( summary_label, text );
 	g_free( text );
 
 	mode = get_import_mode( window );

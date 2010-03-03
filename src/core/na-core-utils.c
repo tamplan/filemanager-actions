@@ -116,6 +116,47 @@ na_core_utils_str_get_first_word( const gchar *string )
 }
 
 /**
+ * na_core_utils_str_remove_char:
+ * @string: source string.
+ * @to_remove: the character to remove.
+ *
+ * Returns: a newly allocated string, which is a copy of the source @string,
+ * minus all the found occurrences of the given @to_remove char.
+ *
+ * The returned string should be g_free() by the caller.
+ */
+gchar *
+na_core_utils_str_remove_char( const gchar *string, const gchar *to_remove )
+{
+	static const gchar *thisfn = "na_core_utils_str_remove_char";
+	gchar *removed;
+	GRegex *regex;
+	GError *error;
+
+	removed = g_strdup( string );
+
+	if( g_utf8_validate( string, -1, NULL )){
+
+		error = NULL;
+		regex = g_regex_new( to_remove, 0, 0, &error );
+		if( error ){
+			g_warning( "%s [g_regex_new] %s", thisfn, error->message );
+			g_error_free( error );
+
+		} else {
+			g_free( removed );
+			removed = g_regex_replace_literal( regex, string, -1, 0, "", 0, &error );
+			if( error ){
+				g_warning( "%s [g_regex_replace_literal] %s", thisfn, error->message );
+				g_error_free( error );
+			}
+		}
+	}
+
+	return( removed );
+}
+
+/**
  * na_core_utils_str_remove_suffix:
  * @string: source string.
  * @suffix: suffix to be removed from @string.

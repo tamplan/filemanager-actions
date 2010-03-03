@@ -163,3 +163,9 @@
   and icon may be a path -> so what to do with this ?
 
 - get_xds_atom_value: test on 64bit platform, then remove debug stuff
+
+- add a trace on g_object_weak_ref
+
+- on export assistant, select and expand first row
+
+- on export assistant, display subitems of selected menus

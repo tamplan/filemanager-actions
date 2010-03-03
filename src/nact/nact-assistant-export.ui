@@ -10,12 +10,6 @@
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
     <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
       <object class="GtkLabel" id="label20">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of exporting actions.</property>
@@ -94,10 +88,10 @@ to extend a selection.</property>
         <child>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
             <property name="visible">True</property>
-            <property name="use_preview_label">False</property>
             <property name="local_only">False</property>
             <property name="preview_widget_active">False</property>
             <property name="action">select-folder</property>
+            <property name="use_preview_label">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -115,52 +109,43 @@ to extend a selection.</property>
         <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
-          <placeholder/>
-        </child>
-        <child>
-          <object class="GtkVBox" id="AssistantExportFormatVBox">
+          <object class="GtkVBox" id="vbox2">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
+            <property name="spacing">10</property>
             <child>
-              <object class="GtkRadioButton" id="ExportAskButton">
-                <property name="label" translatable="yes">Ask me</property>
+              <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">You will be asked each time an action is about to be exported.</property>
                 <property name="xalign">0</property>
-                <property name="draw_indicator">True</property>
-                <property name="group">ExportSchemaV1Button</property>
+                <property name="ypad">10</property>
+                <property name="label" translatable="yes">&lt;b&gt;Which format should I use when exporting these items ?&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
               </object>
               <packing>
+                <property name="expand">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkHBox" id="hbox1">
+              <object class="GtkVBox" id="AssistantExportFormatVBox">
                 <property name="visible">True</property>
-                <child>
-                  <object class="GtkLabel" id="ExportAskLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="xpad">16</property>
-                    <property name="label" translatable="yes">You will be asked each time an action is about to be exported.</property>
-                  </object>
-                  <packing>
-                    <property name="padding">4</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
+                <property name="orientation">vertical</property>
+                <property name="spacing">10</property>
               </object>
               <packing>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="position">1</property>
+            <property name="position">0</property>
           </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
       <packing>
@@ -168,27 +153,61 @@ to extend a selection.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="label3">
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox3">
         <property name="visible">True</property>
-        <property name="use_markup">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="AssistantExportConfirmLabel">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="xpad">20</property>
+            <property name="use_markup">True</property>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
       </object>
       <packing>
         <property name="page_type">confirm</property>
-        <property name="title">Summary</property>
+        <property name="title" translatable="yes">Summary</property>
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="label4">
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox4">
         <property name="visible">True</property>
-        <property name="use_markup">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="AssistantExportSummaryLabel">
+            <property name="visible">True</property>
+            <property name="use_markup">True</property>
+            <property name="xalign">0</property>
+            <property name="xpad">20</property>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
       </object>
       <packing>
         <property name="page_type">summary</property>
-        <property name="title">Export is done</property>
+        <property name="title" translatable="yes">Export is done</property>
       </packing>
     </child>
   </object>
-  <object class="GtkDialog" id="AssistantExportAsk">
+  <object class="GtkDialog" id="ExportAskDialog">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Exporting an action</property>
     <property name="type_hint">dialog</property>

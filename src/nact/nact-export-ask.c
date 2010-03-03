@@ -76,7 +76,7 @@ static void     on_base_runtime_init_dialog( NactExportAsk *editor, gpointer use
 static void     on_base_all_widgets_showed( NactExportAsk *editor, gpointer user_data );
 static void     on_cancel_clicked( GtkButton *button, NactExportAsk *editor );
 static void     on_ok_clicked( GtkButton *button, NactExportAsk *editor );
-static GQuark   get_format( NactExportAsk *editor );
+static GQuark   get_export_format( NactExportAsk *editor );
 static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 GType
@@ -281,7 +281,7 @@ base_get_iprefs_window_id( const BaseWindow *window )
 static gchar *
 base_get_dialog_name( const BaseWindow *window )
 {
-	return( g_strdup( "ExportAsk" ));
+	return( g_strdup( "ExportAskDialog" ));
 }
 
 static gchar *
@@ -304,7 +304,7 @@ on_base_initial_load_dialog( NactExportAsk *editor, gpointer user_data )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
 	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-	nact_export_format_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_ASK );
+	nact_export_format_init_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_ASK );
 }
 
 static void
@@ -372,23 +372,25 @@ on_ok_clicked( GtkButton *button, NactExportAsk *editor )
 }
 
 static GQuark
-get_format( NactExportAsk *editor )
+get_export_format( NactExportAsk *editor )
 {
 	GtkWidget *container;
-	GQuark export_format;
+	NAExportFormat *format;
+	GQuark format_quark;
 	GtkWidget *button;
 	gboolean keep;
 
 	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-	export_format = nact_export_format_get_selected( container );
+	format = nact_export_format_get_selected( container );
+	format_quark = na_export_format_get_quark( format );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	if( keep ){
-		nact_iprefs_set_export_format( BASE_WINDOW( editor ), IPREFS_EXPORT_FORMAT, export_format );
+		nact_iprefs_set_export_format( BASE_WINDOW( editor ), IPREFS_EXPORT_FORMAT, format_quark );
 	}
 
-	return( export_format );
+	return( format_quark );
 }
 
 static gboolean
@@ -412,7 +414,7 @@ base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 			break;
 
 		case GTK_RESPONSE_OK:
-			editor->private->format = get_format( editor );
+			editor->private->format = get_export_format( editor );
 			return( TRUE );
 			break;
 	}

@@ -1,6 +1,40 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c
+	(na_core_utils_str_remove_char): New function.
+
+	* src/api/na-iexporter.h:
+	Onlu reference one short label in NAIExporterFormat structure.
+
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h:
+	* src/io-xml/naxml-formats.c: Updated accordingly.
+
+	* src/nact/base-window.c (setup_builder):
+	Display a dialog error when unable to load a XML definition.
+
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-export.ui:
+	* src/nact/nact-assistant-import.c:
+	Adjust the display to be more funny.
+
+	* src/nact/nact-clipboard.c:
+	Add na-export-format.h include file.
+
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-export-format.c:
+	* src/nact/nact-export-format.h:
+	Reference the NAExportFormat object instead of each and every label.
+
+	* src/nact/nact-iprefs.h:
+	Remove IPREFS_EXPORT_FORMAT_ASK definition.
+
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Use (renamed) nact_export_format_init_display() function.
+
+	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c (na_core_utils_file_exists):
 	New function.
 
