@@ -162,6 +162,8 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
+		self->private->selected = free_selected( self->private->selected );
+
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
@@ -178,8 +180,6 @@ instance_finalize( GObject *object )
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_TRACKER_DBUS( object ));
 	self = NA_TRACKER_DBUS( object );
-
-	self->private->selected = free_selected( self->private->selected );
 
 	g_free( self->private );
 

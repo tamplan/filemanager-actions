@@ -1,5 +1,9 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-tracker/na-tracker-dbus.c (instance_dispose):
+	Release selected items in instance_dispose() rather than in
+	instance_finalize() which caused a FPE in Nautilus terminaison.
+
 	* src/api/na-ifactory-object.h:
 	* src/core/na-ifactory-object.c:
 	* src/core/na-iio-provider.c:
