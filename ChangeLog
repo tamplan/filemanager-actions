@@ -1,5 +1,8 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.c (on_all_widgets_showed):
+	Select and expand the first row of the list.
+
 	* src/core/na-module.c (add_module_type):
 	* src/io-desktop/nadp-reader.c (na_ifactory_provider_read_item):
 	* src/io-desktop/nadp-writer.c (nadp_iio_provider_write_item):
