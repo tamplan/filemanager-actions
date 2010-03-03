@@ -168,52 +168,6 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 		g_debug( "%s: instance=%p, listview=%p", thisfn, ( void * ) instance, ( void * ) listview );
 		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
 
-#if 0
-		column = gtk_tree_view_get_column( listview, SCHEMES_CHECKBOX_COLUMN );
-		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( renderers->data ),
-				"toggled",
-				G_CALLBACK( on_scheme_selection_toggled ));
-
-		column = gtk_tree_view_get_column( listview, SCHEMES_KEYWORD_COLUMN );
-		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( renderers->data ),
-				"edited",
-				G_CALLBACK( on_scheme_keyword_edited ));
-
-		column = gtk_tree_view_get_column( listview, SCHEMES_DESC_COLUMN );
-		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( renderers->data ),
-				"edited",
-				G_CALLBACK( on_scheme_desc_edited ));
-
-		add_button = get_add_button( instance );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( add_button ),
-				"clicked",
-				G_CALLBACK( on_add_scheme_clicked ));
-
-		remove_button = get_remove_button( instance );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( remove_button ),
-				"clicked",
-				G_CALLBACK( on_remove_scheme_clicked ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( gtk_tree_view_get_selection( listview )),
-				"changed",
-				G_CALLBACK( on_scheme_list_selection_changed ));
-#endif
-
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),

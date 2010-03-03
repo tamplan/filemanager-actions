@@ -89,38 +89,6 @@ gchar           *nadp_desktop_file_get_string       ( const NadpDesktopFile *ndf
 GSList          *nadp_desktop_file_get_string_list  ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, const gchar *default_value );
 guint            nadp_desktop_file_get_uint         ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, guint default_value );
 
-/* ... */
-
-#if 0
-
-/*gchar           *nadp_desktop_file_get_file_type         ( const NadpDesktopFile *ndf );*/
-gchar           *nadp_desktop_file_get_id2                ( const NadpDesktopFile *ndf );
-gchar           *nadp_desktop_file_get_name              ( const NadpDesktopFile *ndf );
-gchar           *nadp_desktop_file_get_tooltip           ( const NadpDesktopFile *ndf );
-gchar           *nadp_desktop_file_get_icon              ( const NadpDesktopFile *ndf );
-gboolean         nadp_desktop_file_get_enabled           ( const NadpDesktopFile *ndf );
-GSList          *nadp_desktop_file_get_items_list        ( const NadpDesktopFile *ndf );
-gboolean         nadp_desktop_file_get_target_context    ( const NadpDesktopFile *ndf );
-gboolean         nadp_desktop_file_get_target_toolbar    ( const NadpDesktopFile *ndf );
-gchar           *nadp_desktop_file_get_toolbar_label     ( const NadpDesktopFile *ndf );
-GSList          *nadp_desktop_file_get_profiles_list     ( const NadpDesktopFile *ndf );
-GSList          *nadp_desktop_file_get_profile_group_list( const NadpDesktopFile *ndf );
-
-gchar           *nadp_desktop_file_get_profile_name      ( const NadpDesktopFile *ndf, const gchar *profile_id );
-gchar           *nadp_desktop_file_get_profile_exec      ( const NadpDesktopFile *ndf, const gchar *profile_id );
-GSList          *nadp_desktop_file_get_basenames         ( const NadpDesktopFile *ndf, const gchar *profile_id );
-gboolean         nadp_desktop_file_get_matchcase         ( const NadpDesktopFile *ndf, const gchar *profile_id );
-GSList          *nadp_desktop_file_get_mimetypes         ( const NadpDesktopFile *ndf, const gchar *profile_id );
-GSList          *nadp_desktop_file_get_schemes           ( const NadpDesktopFile *ndf, const gchar *profile_id );
-GSList          *nadp_desktop_file_get_folders           ( const NadpDesktopFile *ndf, const gchar *profile_id );
-
-void             nadp_desktop_file_set_label( NadpDesktopFile *ndf, const gchar *label );
-void             nadp_desktop_file_set_tooltip( NadpDesktopFile *ndf, const gchar *tooltip );
-void             nadp_desktop_file_set_icon( NadpDesktopFile *ndf, const gchar *icon );
-void             nadp_desktop_file_set_enabled( NadpDesktopFile *ndf, gboolean enabled );
-
-#endif
-
 G_END_DECLS
 
 #endif /* __NADP_DESKTOP_FILE_H__ */

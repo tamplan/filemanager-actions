@@ -44,11 +44,8 @@ struct NAIFactoryObjectInterfacePrivate {
 	void *empty;					/* so that gcc -pedantic is happy */
 };
 
-gboolean                   ifactory_object_initialized = FALSE;
-gboolean                   ifactory_object_finalized   = FALSE;
-#if 0
-NAIFactoryObjectInterface *ifactory_object_klass       = NULL;
-#endif
+gboolean ifactory_object_initialized = FALSE;
+gboolean ifactory_object_finalized   = FALSE;
 
 static GType register_type( void );
 static void  interface_base_init( NAIFactoryObjectInterface *klass );
@@ -119,10 +116,6 @@ interface_base_init( NAIFactoryObjectInterface *klass )
 		klass->write_start = NULL;
 		klass->write_done = NULL;
 
-#if 0
-		ifactory_object_klass = klass;
-#endif
-
 		ifactory_object_initialized = TRUE;
 	}
 }
@@ -131,23 +124,12 @@ static void
 interface_base_finalize( NAIFactoryObjectInterface *klass )
 {
 	static const gchar *thisfn = "na_ifactory_object_interface_base_finalize";
-#if 0
-	GList *ip;
-#endif
 
 	if( ifactory_object_initialized && !ifactory_object_finalized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		ifactory_object_finalized = TRUE;
-
-#if 0
-		for( ip = klass->private->registered ; ip ; ip = ip->next ){
-			NADataImplement *known = ( NADataImplement * ) ip->data;
-			g_free( known );
-		}
-		g_list_free( klass->private->registered );
-#endif
 
 		g_free( klass->private );
 	}
@@ -158,82 +140,6 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
 {
 	return( 1 );
 }
-
-#if 0
-/**
- * na_ifactory_object_get_data_def_from_name:
- * @object: a #NAIFactoryObject object.
- * @name: the name of the elementary we are searching for.
- *
- * Returns: The #NADataDef structure which defines this @name for this @object,
- * or %NULL.
- */
-NADataDef *
-na_ifactory_object_get_data_def_from_name( const NAIFactoryObject *object, const gchar *name )
-{
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
-
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
-
-		NADataGroup *groups = na_factory_object_get_data_groups( object );
-		while( groups->group ){
-
-			NADataDef *def = groups->def;
-			if( def ){
-				while( def->name ){
-
-					if( !strcmp( def->name, name )){
-						return( def );
-					}
-
-					def++;
-				}
-			}
-
-			groups++;
-		}
-	}
-
-	return( NULL );
-}
-
-/**
- * na_ifactory_object_get_data_def_from_gconf_key:
- * @object: a #NAIFactoryObject object.
- * @entry: the name of the GConf entry we are searching for.
- *
- * Returns: the #NADataDef structure which defines this GConf @entry,
- * or %NULL if not found.
- */
-NADataDef *
-na_ifactory_object_get_data_def_from_gconf_key( const NAIFactoryObject *object, const gchar *entry )
-{
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
-
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
-
-		NADataGroup *groups = na_factory_object_get_data_groups( object );
-		while( groups->group ){
-
-			NADataDef *def = groups->def;
-			if( def ){
-				while( def->name ){
-
-					if( def->gconf_entry && !strcmp( def->gconf_entry, entry )){
-						return( def );
-					}
-
-					def++;
-				}
-			}
-
-			groups++;
-		}
-	}
-
-	return( NULL );
-}
-#endif
 
 /**
  * na_ifactory_object_get_data_boxed:
@@ -290,24 +196,6 @@ na_ifactory_object_get_as_void( const NAIFactoryObject *object, const gchar *nam
 
 	return( na_factory_object_get_as_void( object, name ));
 }
-
-#if 0
-/**
- * na_ifactory_object_set_from_string:
- * @object: this #NAIFactoryObject instance.
- * @data_id: the elementary data whose value is to be set.
- * @data: the value to set.
- *
- * Set the elementary data with the given value.
- */
-void
-na_ifactory_object_set_from_string( NAIFactoryObject *object, guint data_id, const gchar *data )
-{
-	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
-
-	na_factory_object_set_from_string( object, data_id, data );
-}
-#endif
 
 /**
  * na_ifactory_object_set_from_void:

@@ -181,15 +181,6 @@ void        *na_ifactory_object_get_as_void   ( const NAIFactoryObject *object, 
 
 void         na_ifactory_object_set_from_void ( NAIFactoryObject *object, const gchar *name, const void *data );
 
-#if 0
-void        na_ifactory_object_set_from_string( NAIFactoryObject *object, guint data_id, const gchar *data );
-#endif
-
-#if 0
-NADataDef *na_ifactory_object_get_data_def_from_name     ( const NAIFactoryObject *object, const gchar *name );
-NADataDef *na_ifactory_object_get_data_def_from_gconf_key( const NAIFactoryObject *object, const gchar *entry );
-#endif
-
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__ */

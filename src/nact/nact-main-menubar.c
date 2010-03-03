@@ -973,42 +973,6 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 			origin = ( NAObjectItem * ) na_object_get_origin( item );
 			g_debug( "%s: origin=%p", thisfn, ( void * ) origin );
 
-#if 0
-			/* if the item already existed,
-			 * then copy the treeview item to the pivot one
-			 */
-			if( origin ){
-				subitems = NULL;
-				if( NA_IS_OBJECT_ACTION( item )){
-					subitems = na_object_get_items( origin );
-					na_object_set_items( origin, NULL );
-				}
-				na_object_copy( origin, item, NA_IS_OBJECT_ACTION( item ));
-				na_object_reset_origin( item, origin );
-				if( subitems ){
-					na_object_unref_items( subitems );
-				}
-
-			/* this is a new item
-			 * get the actual parent and position from the treeview
-			 * and insert accordingly in the pivot tree
-			 */
-			} else {
-				dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
-				na_object_reset_origin( item, dup_pivot );
-
-				pos = -1;
-				parent_id = NULL;
-				parent = na_object_get_parent( item );
-				if( parent ){
-					parent_id = na_object_get_id( parent );
-					pos = na_object_get_position( parent, item );
-				}
-
-				na_updater_insert_item( updater, dup_pivot, parent_id, pos );
-			}
-#endif
-
 			parent = NULL;
 			pos = -1;
 
@@ -1032,34 +996,6 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 			} else {
 				na_updater_append_item( updater, dup_pivot );
 			}
-
-#if 0
-			parent = NULL;
-			pos = -1;
-
-			if( origin ){
-				parent = na_object_get_parent( origin );
-				if( parent ){
-					pos = na_object_get_position( parent, origin );
-					na_object_remove_item( parent, origin );
-				} else {
-					na_updater_remove_item( updater, NA_OBJECT( origin ));
-				}
-			}
-
-			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
-			na_object_reset_origin( item, dup_pivot );
-			na_object_set_parent( dup_pivot, parent );
-			if( parent ){
-				if( pos == -1 ){
-					na_object_append_item( parent, dup_pivot );
-				} else {
-					na_object_insert_at( parent, dup_pivot, pos );
-				}
-			} else {
-				na_updater_add_item( updater, dup_pivot );
-			}
-#endif
 
 			nact_iactions_list_bis_remove_modified( NACT_IACTIONS_LIST( window ), item );
 

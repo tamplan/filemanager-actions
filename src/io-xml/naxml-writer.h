@@ -76,13 +76,6 @@ guint  naxml_writer_write_start( const NAIFactoryProvider *writer, void *writer_
 guint  naxml_writer_write_data ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages );
 guint  naxml_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 
-#if 0
-gchar *na_xml_writer_export( const NAObjectAction *action, const gchar *folder, gint format, GSList **msg );
-gchar *na_xml_writer_get_output_fname( const NAObjectAction *action, const gchar *folder, gint format );
-gchar *na_xml_writer_get_xml_buffer( const NAObjectAction *action, gint format );
-void   na_xml_writer_output_xml( const gchar *xml, const gchar *filename, GSList **msg );
-#endif
-
 G_END_DECLS
 
 #endif /* __NAXML_WRITER_H__ */

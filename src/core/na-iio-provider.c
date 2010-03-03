@@ -112,14 +112,6 @@ interface_base_init( NAIIOProviderInterface *klass )
 {
 	static const gchar *thisfn = "na_iio_provider_interface_base_init";
 
-#if 0
-	g_debug( "%s: st_initialized=%s, st_finalized=%s, klass%p (%s)",
-			thisfn,
-			st_initialized ? "True":"False",
-			st_finalized ? "True":"False",
-			( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
-#endif
-
 	if( !st_initialized ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));

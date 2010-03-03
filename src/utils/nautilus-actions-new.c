@@ -44,10 +44,6 @@
 
 #include <core/na-io-provider.h>
 #include <core/na-updater.h>
-#if 0
-#include <core/na-xml-names.h>
-#include <core/na-xml-writer.h>
-#endif
 
 #include "console-utils.h"
 

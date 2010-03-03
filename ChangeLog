@@ -1,5 +1,16 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-ifactory-object.h:
+	* src/core/na-ifactory-object.c:
+	* src/core/na-iio-provider.c:
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h:
+	* src/io-xml/naxml-writer.c:
+	* src/io-xml/naxml-writer.h:
+	* src/nact/nact-iadvanced-tab.c:
+	* src/nact/nact-main-menubar.c:
+	* src/utils/nautilus-actions-new.c: Cleanup the code.
+
 	* src/nact/nact-assistant-export.c (assist_prepare_confirm):
 	Optimize the build of the displayed text.
 
