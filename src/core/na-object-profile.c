@@ -38,6 +38,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-iconditions.h>
 #include <api/na-iio-provider.h>
 #include <api/na-ifactory-object.h>
 #include <api/na-object-api.h>
@@ -82,6 +83,8 @@ static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
+
+static void         iconditions_iface_init( NAIConditionsInterface *iface );
 
 static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
@@ -137,6 +140,12 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo iconditions_iface_info = {
+		( GInterfaceInitFunc ) iconditions_iface_init,
+		NULL,
+		NULL
+	};
+
 	static const GInterfaceInfo ifactory_object_iface_info = {
 		( GInterfaceInitFunc ) ifactory_object_iface_init,
 		NULL,
@@ -146,6 +155,8 @@ register_type( void )
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( NA_OBJECT_ID_TYPE, "NAObjectProfile", &info, 0 );
+
+	g_type_add_interface_static( type, NA_ICONDITIONS_TYPE, &iconditions_iface_info );
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
@@ -293,7 +304,7 @@ object_is_valid( const NAObject *object )
 static void
 ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 {
-	static const gchar *thisfn = "na_object_menu_ifactory_object_iface_init";
+	static const gchar *thisfn = "na_object_profile_ifactory_object_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
@@ -343,6 +354,14 @@ static guint
 ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
+static void
+iconditions_iface_init( NAIConditionsInterface *iface )
+{
+	static const gchar *thisfn = "na_object_profile_iconditions_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static gboolean

@@ -44,6 +44,7 @@ G_BEGIN_DECLS
 #define NA_FACTORY_OBJECT_ID_GROUP			"na-factory-group-id"
 #define NAFO_DATA_ID						"na-factory-data-id"
 #define NAFO_DATA_PARENT					"na-factory-data-parent"
+#define NAFO_DATA_CONDITIONS				"na-factory-data-conditions"
 
 #define NA_FACTORY_OBJECT_ITEM_GROUP		"na-factory-group-item"
 #define NAFO_DATA_TYPE						"na-factory-data-type"
@@ -75,6 +76,8 @@ G_BEGIN_DECLS
 #define NAFO_DATA_DESCNAME					"na-factory-data-descname"
 #define NAFO_DATA_PATH						"na-factory-data-path"
 #define NAFO_DATA_PARAMETERS				"na-factory-data-parameters"
+
+#define NA_FACTORY_OBJECT_CONDITIONS_GROUP	"na-factory-group-conditions"
 #define NAFO_DATA_BASENAMES					"na-factory-data-basenames"
 #define NAFO_DATA_MATCHCASE					"na-factory-data-matchcase"
 #define NAFO_DATA_MIMETYPES					"na-factory-data-mimetypes"
@@ -83,8 +86,6 @@ G_BEGIN_DECLS
 #define NAFO_DATA_MULTIPLE					"na-factory-data-multiple"
 #define NAFO_DATA_SCHEMES					"na-factory-data-schemes"
 #define NAFO_DATA_FOLDERS					"na-factory-data-folders"
-
-#define NA_FACTORY_OBJECT_CONDITIONS_GROUP	"na-factory-group-conditions"
 
 G_END_DECLS
 

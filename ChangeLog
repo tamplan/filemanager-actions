@@ -1,5 +1,24 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	Define the NAIConditions interface, to be implemented by actions,
+	profiles and menus (for now, only profiles).
+
+	* src/api/na-iconditions.h:
+	* src/core/na-iconditions.c:
+	* src/core/na-iconditions-factory.c: New files.
+
+	* src/api/Makefile.am:
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/api/na-ifactory-object-data.h:
+	Define the NA_FACTORY_CONDITIONS_GROUP data group.
+
+	* src/core/na-object-profile-factory.c:
+	Use new data_def_conditions.
+
+	* src/core/na-object-profile.c (register_type):
+	Implement the new NAIConditions interface.
+
 	Review the rationales, replacing serializable+obsoleted by
 	readable+writable flags in NADataDef structure.
 
