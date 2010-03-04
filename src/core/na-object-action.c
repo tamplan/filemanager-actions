@@ -629,21 +629,19 @@ na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profil
  * Returns: %TRUE if the @action may be candidate for this @target.
  */
 gboolean
-na_object_action_is_candidate( const NAObjectAction *action, gint target )
+na_object_action_is_candidate( const NAObjectAction *action, guint target )
 {
 	gboolean is_candidate = FALSE;
 
-#if 0
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), is_candidate );
 
 	if( !action->private->dispose_has_run ){
 
 		is_candidate =
-			( action->private->target_selection && target == ITEM_TARGET_SELECTION ) ||
-			( action->private->target_background && target == ITEM_TARGET_BACKGROUND ) ||
-			( action->private->target_toolbar && target == ITEM_TARGET_TOOLBAR );
+			( na_object_is_target_selection( action ) && target == ITEM_TARGET_SELECTION ) ||
+			( na_object_is_target_background( action ) && target == ITEM_TARGET_BACKGROUND ) ||
+			( na_object_is_target_toolbar( action ) && target == ITEM_TARGET_TOOLBAR );
 	}
-#endif
 
 	return( is_candidate );
 }

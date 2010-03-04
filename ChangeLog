@@ -1,5 +1,24 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename the NAIConditions interface to NAIContextConditions
+	(hopefully, there will be a NAIContextParameters some day :)).
+
+	* src/core/na-iconditions-factory.c:
+	Renamed as src/core/na-icontext-conditions-factory.c.
+
+	* src/core/na-iconditions.c:
+	Renamed as src/core/na-icontext-conditions.c.
+
+	* src/api/na-iconditions.h:
+	Renamed as src/core/na-icontext-conditions.h.
+
+	* src/api/Makefile.am:
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/core/na-object-profile.c:
+	* src/plugin-menu/nautilus-actions.c:
+	Use new na_icontext_conditions_is_candidate() function.
+
 	Define the NAIConditions interface, to be implemented by actions,
 	profiles and menus (for now, only profiles).
 

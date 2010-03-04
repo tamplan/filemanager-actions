@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_ICONDITIONS_H__
-#define __NAUTILUS_ACTIONS_API_NA_ICONDITIONS_H__
+#ifndef __CORE_NA_ICONTEXT_CONDITIONS_H__
+#define __CORE_NA_ICONTEXT_CONDITIONS_H__
 
 /**
- * SECTION: na_iconditions
- * @short_description: #NAIConditions interface definition.
- * @include: nautilus-actions/na-iconditions.h
+ * SECTION: na_icontext_conditions
+ * @short_description: #NAIContextConditions interface definition.
+ * @include: core/na-icontext_conditions.h
  *
  * This interface is implemented by all #NAObject-derived objects
  * which must met some conditions in order to be displayed in the
@@ -45,27 +45,29 @@
  * data group.
  */
 
-#include "na-object.h"
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define NA_ICONDITIONS_TYPE							( na_iobject_conditions_get_type())
-#define NA_ICONDITIONS( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_ICONDITIONS_TYPE, NAIConditions ))
-#define NA_IS_ICONDITIONS( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_ICONDITIONS_TYPE ))
-#define NA_ICONDITIONS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_ICONDITIONS_TYPE, NAIConditionsInterface ))
+#define NA_ICONTEXT_CONDITIONS_TYPE							( na_icontext_conditions_get_type())
+#define NA_ICONTEXT_CONDITIONS( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_ICONTEXT_CONDITIONS_TYPE, NAIContextConditions ))
+#define NA_IS_ICONTEXT_CONDITIONS( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_ICONTEXT_CONDITIONS_TYPE ))
+#define NA_ICONTEXT_CONDITIONS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_ICONTEXT_CONDITIONS_TYPE, NAIContextConditionsInterface ))
 
-typedef struct NAIConditions                 NAIConditions;
+typedef struct NAIContextConditions                 NAIContextConditions;
 
-typedef struct NAIConditionsInterfacePrivate NAIConditionsInterfacePrivate;
+typedef struct NAIContextConditionsInterfacePrivate NAIContextConditionsInterfacePrivate;
 
 typedef struct {
-	GTypeInterface                 parent;
-	NAIConditionsInterfacePrivate *private;
+	GTypeInterface                        parent;
+	NAIContextConditionsInterfacePrivate *private;
 }
-	NAIConditionsInterface;
+	NAIContextConditionsInterface;
 
-GType na_iconditions_get_type( void );
+GType    na_icontext_conditions_get_type( void );
+
+gboolean na_icontext_conditions_is_candidate( const NAIContextConditions *object, guint target, GList *selection );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_ICONDITIONS_H__ */
+#endif /* __CORE_NA_ICONTEXT_CONDITIONS_H__ */

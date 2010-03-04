@@ -38,11 +38,11 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-iconditions.h>
 #include <api/na-iio-provider.h>
 #include <api/na-ifactory-object.h>
 #include <api/na-object-api.h>
 
+#include "na-icontext-conditions.h"
 #include "na-factory-provider.h"
 #include "na-factory-object.h"
 #include "na-dbus-tracker.h"
@@ -84,7 +84,7 @@ static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static void         iconditions_iface_init( NAIConditionsInterface *iface );
+static void         icontext_conditions_iface_init( NAIContextConditionsInterface *iface );
 
 static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
@@ -96,11 +96,7 @@ static gboolean     is_valid_folders( const NAObjectProfile *profile );
 
 static gchar       *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
-static gboolean     is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
-static gboolean     is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
-static gboolean     is_current_folder_inside( const NAObjectProfile *profile, NautilusFileInfo *current_folder );
 static gboolean     is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus );
-
 static gchar       *parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gboolean from_nautilus );
 static gboolean     tracked_is_directory( void *iter, gboolean from_nautilus );
 static gchar       *tracked_to_basename( void *iter, gboolean from_nautilus );
@@ -140,8 +136,8 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo iconditions_iface_info = {
-		( GInterfaceInitFunc ) iconditions_iface_init,
+	static const GInterfaceInfo icontext_conditions_iface_info = {
+		( GInterfaceInitFunc ) icontext_conditions_iface_init,
 		NULL,
 		NULL
 	};
@@ -156,7 +152,7 @@ register_type( void )
 
 	type = g_type_register_static( NA_OBJECT_ID_TYPE, "NAObjectProfile", &info, 0 );
 
-	g_type_add_interface_static( type, NA_ICONDITIONS_TYPE, &iconditions_iface_info );
+	g_type_add_interface_static( type, NA_ICONTEXT_CONDITIONS_TYPE, &icontext_conditions_iface_info );
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
@@ -357,9 +353,9 @@ ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider
 }
 
 static void
-iconditions_iface_init( NAIConditionsInterface *iface )
+icontext_conditions_iface_init( NAIContextConditionsInterface *iface )
 {
-	static const gchar *thisfn = "na_object_profile_iconditions_iface_init";
+	static const gchar *thisfn = "na_object_profile_icontext_conditions_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
@@ -630,55 +626,6 @@ na_object_profile_replace_folder( NAObjectProfile *profile, const gchar *old, co
 }
 
 /**
- * na_object_profile_is_candidate:
- * @profile: the #NAObjectProfile to be checked.
- * @target: the current target.
- * @files: the currently selected items, as provided by Nautilus.
- *
- * Determines if the given profile is candidate to be displayed in the
- * Nautilus context menu, regarding the list of currently selected
- * items.
- *
- * Returns: %TRUE if this profile succeeds to all tests and is so a
- * valid candidate to be displayed in Nautilus context menu, %FALSE
- * else.
- *
- * This method could have been left outside of the #NAObjectProfile
- * class, as it is only called by the plugin. Nonetheless, it is much
- * more easier to code here (because we don't need all get methods, nor
- * free the parameters after).
- */
-gboolean
-na_object_profile_is_candidate( const NAObjectProfile *profile, gint target, GList *files )
-{
-	gboolean is_candidate;
-
-	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
-
-	if( !na_object_is_valid( profile )){
-		return( FALSE );
-	}
-
-	is_candidate = FALSE;
-
-	switch( target ){
-		case ITEM_TARGET_BACKGROUND:
-			is_candidate = is_target_background_candidate( profile, ( NautilusFileInfo * ) files->data );
-			break;
-
-		case ITEM_TARGET_TOOLBAR:
-			is_candidate = is_target_toolbar_candidate( profile, ( NautilusFileInfo * ) files->data );
-			break;
-
-		case ITEM_TARGET_SELECTION:
-		default:
-			is_candidate = is_target_selection_candidate( profile, files, TRUE );
-	}
-
-	return( is_candidate );
-}
-
-/**
  * na_object_profile_is_candidate_for_tracked:
  * @profile: the #NAObjectProfile to be checked.
  * @files: the currently selected items, as a list of uris.
@@ -712,56 +659,6 @@ na_object_profile_is_candidate_for_tracked( const NAObjectProfile *profile, GLis
 }
 
 static gboolean
-is_target_background_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder )
-{
-	gboolean is_candidate;
-
-	is_candidate = is_current_folder_inside( profile, current_folder );
-
-	return( is_candidate );
-}
-
-static gboolean
-is_target_toolbar_candidate( const NAObjectProfile *profile, NautilusFileInfo *current_folder )
-{
-	gboolean is_candidate;
-
-	is_candidate = is_current_folder_inside( profile, current_folder );
-
-	return( is_candidate );
-}
-
-static gboolean
-is_current_folder_inside( const NAObjectProfile *profile, NautilusFileInfo *current_folder )
-{
-	gboolean is_inside;
-	GSList *folders, *ifold;
-	const gchar *path;
-	gchar *current_folder_uri;
-
-	is_inside = FALSE;
-	current_folder_uri = nautilus_file_info_get_uri( current_folder );
-	folders = na_object_get_folders( profile );
-
-	for( ifold = folders ; ifold && !is_inside ; ifold = ifold->next ){
-		path = ( const gchar * ) ifold->data;
-		if( path && g_utf8_strlen( path, -1 )){
-			if( !strcmp( path, "*" )){
-				is_inside = TRUE;
-			} else {
-				is_inside = g_str_has_prefix( current_folder_uri, path );
-				g_debug( "na_object_profile_is_current_folder_inside: current_folder_uri=%s, path=%s, is_inside=%s", current_folder_uri, path, is_inside ? "True":"False" );
-			}
-		}
-	}
-
-	na_core_utils_slist_free( folders );
-	g_free( current_folder_uri );
-
-	return( is_inside );
-}
-
-static gboolean
 is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus )
 {
 	gboolean retv = FALSE;
@@ -786,12 +683,6 @@ is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gbo
 	gboolean basename_match_ok = FALSE;
 	gboolean mimetype_match_ok = FALSE;
 	gchar *tmp_pattern, *tmp_filename, *tmp_filename2, *tmp_mimetype, *tmp_mimetype2;
-
-	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
-
-	if( profile->private->dispose_has_run ){
-		return( FALSE );
-	}
 
 	basenames = na_object_get_basenames( profile );
 	matchcase = na_object_is_matchcase( profile );

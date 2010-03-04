@@ -44,6 +44,7 @@
 
 #include <core/na-pivot.h>
 #include <core/na-iabout.h>
+#include <core/na-icontext-conditions.h>
 #include <core/na-iprefs.h>
 #include <core/na-ipivot-consumer.h>
 
@@ -81,16 +82,18 @@ static void              ipivot_consumer_display_about_changed( NAIPivotConsumer
 static void              ipivot_consumer_display_order_changed( NAIPivotConsumer *instance, gint order_mode );
 
 static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static GList            *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
+static GList            *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
+static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 
-static GList            *get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
-static GList            *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
-static GList            *get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
-static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *files );
-static NAObjectProfile  *is_action_candidate( NautilusActions *plugin, NAObjectAction *action, gint target, GList *files );
-static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, gint target, GList *files );
+static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files );
+static NAObjectProfile  *is_action_candidate( NautilusActions *plugin, NAObjectAction *action, guint target, GList *files );
+static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, guint target, GList *files );
 static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems );
 static NautilusMenuItem *create_menu_item( NAObjectItem *item );
 static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
+static void              weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item );
+static void              destroy_notify_file_list( GList *list);
 
 static void              execute_action( NautilusMenuItem *item, NAObjectProfile *profile );
 
@@ -374,9 +377,9 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_file_items = get_file_items;
-	iface->get_background_items = get_background_items;
-	iface->get_toolbar_items = get_toolbar_items;
+	iface->get_file_items = menu_provider_get_file_items;
+	iface->get_background_items = menu_provider_get_background_items;
+	iface->get_toolbar_items = menu_provider_get_toolbar_items;
 }
 
 /*
@@ -393,13 +396,15 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
  * - or when there is only one selected directory
  */
 static GList *
-get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
+menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
 {
-	static const gchar *thisfn = "nautilus_actions_get_background_items";
+	static const gchar *thisfn = "nautilus_actions_menu_provider_get_background_items";
 	GList *nautilus_menus_list = NULL;
 	gchar *uri;
 	GList *files;
 	GList *pivot_tree;
+	gboolean add_about;
+	gboolean root_menu;
 
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
 
@@ -409,9 +414,23 @@ get_background_items( NautilusMenuProvider *provider, GtkWidget *window, Nautilu
 		g_free( uri );
 
 		files = g_list_prepend( NULL, current_folder );
+
 		pivot_tree = na_pivot_get_items( NAUTILUS_ACTIONS( provider )->private->pivot );
+
 		nautilus_menus_list = build_nautilus_menus(
 				NAUTILUS_ACTIONS( provider ), pivot_tree, ITEM_TARGET_BACKGROUND, files );
+
+		root_menu = na_iprefs_read_bool( NA_IPREFS( NAUTILUS_ACTIONS( provider )->private->pivot ), IPREFS_CREATE_ROOT_MENU, FALSE );
+		if( root_menu ){
+			nautilus_menus_list = create_root_menu( NAUTILUS_ACTIONS( provider ), nautilus_menus_list );
+		}
+
+		add_about = na_iprefs_read_bool( NA_IPREFS( NAUTILUS_ACTIONS( provider )->private->pivot ), IPREFS_ADD_ABOUT_ITEM, TRUE );
+		/*g_debug( "%s: add_about=%s", thisfn, add_about ? "True":"False" );*/
+		if( add_about ){
+			nautilus_menus_list = add_about_item( NAUTILUS_ACTIONS( provider ), nautilus_menus_list );
+		}
+
 		g_list_free( files );
 	}
 
@@ -425,9 +444,9 @@ get_background_items( NautilusMenuProvider *provider, GtkWidget *window, Nautilu
  * b) in contextual menu while the selection stays unchanged
  */
 static GList *
-get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
+menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
-	static const gchar *thisfn = "nautilus_actions_get_file_items";
+	static const gchar *thisfn = "nautilus_actions_menu_provider_get_file_items";
 	GList *nautilus_menus_list = NULL;
 	NautilusActions *self;
 	GList *pivot_tree;
@@ -478,9 +497,9 @@ get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files 
  * get_background_items ; also, only actions (not menus) are displayed
  */
 static GList *
-get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
+menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
 {
-	static const gchar *thisfn = "nautilus_actions_get_toolbar_items";
+	static const gchar *thisfn = "nautilus_actions_menu_provider_get_toolbar_items";
 	GList *nautilus_menus_list = NULL;
 	gchar *uri;
 	GList *files;
@@ -494,9 +513,12 @@ get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFi
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
 
 		files = g_list_prepend( NULL, current_folder );
+
 		pivot_tree = na_pivot_get_items( NAUTILUS_ACTIONS( provider )->private->pivot );
+
 		nautilus_menus_list = build_nautilus_menus(
 				NAUTILUS_ACTIONS( provider ), pivot_tree, ITEM_TARGET_TOOLBAR, files );
+
 		g_list_free( files );
 	}
 
@@ -507,7 +529,7 @@ get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFi
  * when building a menu for the toolbar, do not use menus hierarchy
  */
 static GList *
-build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *files )
+build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_build_file_selection_menus";
 	GList *menus_list = NULL;
@@ -525,6 +547,9 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *
 
 		g_return_val_if_fail( NA_IS_OBJECT_ITEM( it->data ), NULL );
 
+		/* check this here as a security though NAPivot should only have
+		 * loaded valid and enabled items
+		 */
 		if( !na_object_is_enabled( it->data ) ||
 			!na_object_is_valid( it->data )){
 
@@ -536,14 +561,18 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *
 				continue;
 		}
 
+		/* recursively build sub-menus
+		 */
 		if( NA_IS_OBJECT_MENU( it->data )){
 			subitems = na_object_get_items( it->data );
 			submenu = build_nautilus_menus( plugin, subitems, target, files );
 			/*g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));*/
+
 			if( submenu ){
 				if( target != ITEM_TARGET_TOOLBAR ){
 					item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu );
 					menus_list = g_list_append( menus_list, item );
+
 				} else {
 					menus_list = g_list_concat( menus_list, submenu );
 				}
@@ -567,7 +596,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, gint target, GList *
  * could also be a NAObjectAction method - but this is not used elsewhere
  */
 static NAObjectProfile *
-is_action_candidate( NautilusActions *plugin, NAObjectAction *action, gint target, GList *files )
+is_action_candidate( NautilusActions *plugin, NAObjectAction *action, guint target, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_is_action_candidate";
 	NAObjectProfile *candidate = NULL;
@@ -578,15 +607,14 @@ is_action_candidate( NautilusActions *plugin, NAObjectAction *action, gint targe
 	if( na_object_action_is_candidate( action, target )){
 
 		action_label = na_object_get_label( action );
-
 		profiles = na_object_get_items( action );
+
 		for( ip = profiles ; ip && !candidate ; ip = ip->next ){
-
 			NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
-			if( na_object_profile_is_candidate( profile, target, files )){
 
+			if( na_icontext_conditions_is_candidate( NA_ICONTEXT_CONDITIONS( profile ), target, files )){
 				profile_label = na_object_get_label( profile );
-				g_debug( "%s: selecting %s - %s", thisfn, action_label, profile_label );
+				g_debug( "%s: selecting %s (%s)", thisfn, action_label, profile_label );
 				g_free( profile_label );
 
 				candidate = profile;
@@ -600,7 +628,7 @@ is_action_candidate( NautilusActions *plugin, NAObjectAction *action, gint targe
 }
 
 static NautilusMenuItem *
-create_item_from_profile( NAObjectProfile *profile, gint target, GList *files )
+create_item_from_profile( NAObjectProfile *profile, guint target, GList *files )
 {
 	NautilusMenuItem *item;
 	NAObjectAction *action;
@@ -611,24 +639,52 @@ create_item_from_profile( NAObjectProfile *profile, gint target, GList *files )
 	item = create_menu_item( NA_OBJECT_ITEM( action ));
 
 	dup4menu = NA_OBJECT_PROFILE( na_object_duplicate( profile ));
+	g_debug( "nautilus_actions_create_item_from_profile: creating profile=%p", ( void * ) dup4menu );
 
-	g_signal_connect_data( item,
+	/* closure is only called when signal is disconnected
+	 * potentially only at the end of the session if Nautilus paints the desktop !
+	 */
+	/*g_signal_connect_data( item,
 				"activate",
 				G_CALLBACK( execute_action ),
 				dup4menu,
 				( GClosureNotify ) g_object_unref,
-				0 );
+				0 );*/
+
+	/* rather attach a weak ref on the Nautilus menu item: our duplicated
+	 * profile will so be disposed during the session
+	 */
+	g_signal_connect( item,
+				"activate",
+				G_CALLBACK( execute_action ),
+				dup4menu );
+	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_profile, dup4menu );
 
 	g_object_set_data_full( G_OBJECT( item ),
 			"nautilus-actions-files",
 			nautilus_file_info_list_copy( files ),
-			( GDestroyNotify ) nautilus_file_info_list_free );
+			( GDestroyNotify ) destroy_notify_file_list );
 
 	g_object_set_data( G_OBJECT( item ),
 			"nautilus-actions-target",
-			GINT_TO_POINTER( target ));
+			GUINT_TO_POINTER( target ));
 
 	return( item );
+}
+
+static void
+weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item )
+{
+	g_debug( "nautilus_actions_weak_notify_profile: profile=%p (ref_count=%d)",
+			( void * ) profile, G_OBJECT( profile )->ref_count );
+	g_object_unref( profile );
+}
+
+static void
+destroy_notify_file_list( GList *list)
+{
+	g_debug( "nautilus_actions_destroy_notify_file_list" );
+	nautilus_file_info_list_free( list );
 }
 
 /*
@@ -694,12 +750,12 @@ execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 	GList *files;
 	GString *cmd;
 	gchar *param, *path;
-	gint target;
+	guint target;
 
 	g_debug( "%s: item=%p, profile=%p", thisfn, ( void * ) item, ( void * ) profile );
 
 	files = ( GList * ) g_object_get_data( G_OBJECT( item ), "nautilus-actions-files" );
-	target = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ), "nautilus-actions-target" ));
+	target = GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( item ), "nautilus-actions-target" ));
 
 	path = na_object_get_path( profile );
 	cmd = g_string_new( path );
