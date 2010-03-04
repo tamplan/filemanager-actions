@@ -1,3 +1,9 @@
+2009-03-04 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-object-action.c (instance_init):
+	* src/core/na-object-menu.c (instance_init):
+	Rather create the 'Type' box here than in read_start().
+
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/Makefile.am:

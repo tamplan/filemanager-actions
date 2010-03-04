@@ -173,6 +173,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_OBJECT_MENU( instance );
 
 	self->private = g_new0( NAObjectMenuPrivate, 1 );
+
+	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( instance ), NAFO_DATA_TYPE, ( void * ) "Menu" );
 }
 
 static void
@@ -310,9 +312,6 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 static void
 ifactory_object_read_start( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	/* create the 'type' data box to be available later when writing/exporting
-	 */
-	na_ifactory_object_set_from_void( instance, NAFO_DATA_TYPE, ( void * ) "Menu" );
 }
 
 static void
