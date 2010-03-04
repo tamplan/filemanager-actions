@@ -483,7 +483,7 @@ on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions
 	mis->have_exportables = ( mis->list_actions > 0 );
 
 	/* i18n: note the space at the beginning of the sentence */
-	status = g_strdup_printf( _( " %d menus, %d actions, %d profiles are currently loaded" ), menus, actions, profiles );
+	status = g_strdup_printf( _( " %d menu(s), %d action(s), %d profile(s) are currently loaded" ), menus, actions, profiles );
 	nact_main_statusbar_display_status( window, MENUBAR_PROP_MAIN_STATUS_CONTEXT, status );
 	g_free( status );
 
