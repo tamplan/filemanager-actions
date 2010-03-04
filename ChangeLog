@@ -1,5 +1,7 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in: Updated.
+
 	Rename the NAIConditions interface to NAIContextConditions
 	(hopefully, there will be a NAIContextParameters some day :)).
 
