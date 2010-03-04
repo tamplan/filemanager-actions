@@ -113,6 +113,3 @@ pkgdata_DATA = \
 EXTRA_DIST = \
 	$(pkgdata_DATA)										\
 	$(NULL)
-
-uninstall-hook:
-	-\rm -fr $(DESTDIR)$(pkgdatadir)

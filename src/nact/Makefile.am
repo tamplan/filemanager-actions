@@ -178,6 +178,3 @@ EXTRA_DIST = \
 	$(pkgdata_DATA)										\
 	nact-marshal.list									\
 	$(NULL)
-
-uninstall-hook:
-	-\rm -fr $(DESTDIR)$(pkgdatadir)

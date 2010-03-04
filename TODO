@@ -160,3 +160,7 @@
 - get_xds_atom_value: test on 64bit platform, then remove debug stuff
 
 - try to restore hierarchy on import
+
+- use NADataDef to automatically generate schemas
+  in data/nautilus-actions.schemas.in
+  and in src/utils/nautilus-actions-schemas

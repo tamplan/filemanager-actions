@@ -1,5 +1,8 @@
 2009-03-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/Makefile.am:
+	* src/nact/Makefile.am: Fix make distcheck.
+
 	* po/POTFILES.in: Updated.
 
 	Rename the NAIConditions interface to NAIContextConditions
