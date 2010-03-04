@@ -658,6 +658,7 @@ create_item_from_profile( NAObjectProfile *profile, guint target, GList *files )
 				"activate",
 				G_CALLBACK( execute_action ),
 				dup4menu );
+
 	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_profile, dup4menu );
 
 	g_object_set_data_full( G_OBJECT( item ),
