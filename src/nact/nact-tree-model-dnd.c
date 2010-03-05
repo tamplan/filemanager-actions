@@ -979,7 +979,7 @@ get_xds_atom_value( GdkDragContext *context )
 						&actual_length,				/* actual length (in 4 bytes chunks) */
 						( guchar ** ) &ret );		/* data pointer */
 
-	g_debug( "get_xds_atom_value: actual_length=%d, actual_length=%d", actual_length, actual_length/sizeof( glong ));
+	g_debug( "get_xds_atom_value: actual_length=%d, actual_length=%lu", actual_length, ( gulong ) actual_length/sizeof( glong ));
 	g_debug( "get_xds_atom_value: ret=%s", ret );
 
 	gchar *dup = g_strdup( ret );

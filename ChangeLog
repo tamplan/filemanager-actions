@@ -9,6 +9,9 @@
 	* src/nact/nact-main-menubar.c (on_delete_activated):
 	Do not delete a tree if at least one item is not writable.
 
+	* src/nact/nact-tree-model-dnd.c (get_xds_atom_value):
+	Fix 64 bits value.
+
 	* src/plugin-menu/nautilus-actions.c
 	(create_item_from_menu): Add a trace on weak notify.
 
