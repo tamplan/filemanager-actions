@@ -94,6 +94,7 @@ static NautilusMenuItem *create_menu_item( NAObjectItem *item );
 static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
 static void              weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item );
 static void              destroy_notify_file_list( GList *list);
+static void              weak_notify_menu( NAObjectMenu *menu, NautilusMenuItem *item );
 
 static void              execute_action( NautilusMenuItem *item, NAObjectProfile *profile );
 
@@ -639,7 +640,7 @@ create_item_from_profile( NAObjectProfile *profile, guint target, GList *files )
 	item = create_menu_item( NA_OBJECT_ITEM( action ));
 
 	dup4menu = NA_OBJECT_PROFILE( na_object_duplicate( profile ));
-	g_debug( "nautilus_actions_create_item_from_profile: creating profile=%p", ( void * ) dup4menu );
+	/*g_debug( "nautilus_actions_create_item_from_profile: creating profile=%p", ( void * ) dup4menu );*/
 
 	/* closure is only called when signal is disconnected
 	 * potentially only at the end of the session if Nautilus paints the desktop !
@@ -699,6 +700,8 @@ create_item_from_menu( NAObjectMenu *menu, GList *subitems )
 	NautilusMenuItem *item;
 
 	item = create_menu_item( NA_OBJECT_ITEM( menu ));
+	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_menu, menu );
+
 	attach_submenu_to_item( item, subitems );
 	nautilus_menu_item_list_free( subitems );
 
@@ -706,14 +709,22 @@ create_item_from_menu( NAObjectMenu *menu, GList *subitems )
 	return( item );
 }
 
+static void
+weak_notify_menu( NAObjectMenu *menu, NautilusMenuItem *item )
+{
+	g_debug( "nautilus_actions_weak_notify_menu: menu=%p (ref_count=%d)",
+			( void * ) menu, G_OBJECT( menu )->ref_count );
+	/*g_object_unref( menu );*/
+}
+
 static NautilusMenuItem *
 create_menu_item( NAObjectItem *item )
 {
 	NautilusMenuItem *menu_item;
-	gchar *uuid, *name, *label, *tooltip, *icon;
+	gchar *id, *name, *label, *tooltip, *icon;
 
-	uuid = na_object_get_id( item );
-	name = g_strdup_printf( "%s-%s-%s", PACKAGE, G_OBJECT_TYPE_NAME( item ), uuid );
+	id = na_object_get_id( item );
+	name = g_strdup_printf( "%s-%s-%s", PACKAGE, G_OBJECT_TYPE_NAME( item ), id );
 	label = na_object_get_label( item );
 	/*g_debug( "nautilus_actions_create_menu_item: %s - %s", name, label );*/
 	tooltip = na_object_get_tooltip( item );
@@ -725,7 +736,7 @@ create_menu_item( NAObjectItem *item )
  	g_free( tooltip );
  	g_free( label );
  	g_free( name );
- 	g_free( uuid );
+ 	g_free( id );
 
 	return( menu_item );
 }

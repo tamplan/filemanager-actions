@@ -9,6 +9,9 @@
 	* src/nact/nact-main-menubar.c (on_delete_activated):
 	Do not delete a tree if at least one item is not writable.
 
+	* src/plugin-menu/nautilus-actions.c
+	(create_item_from_menu): Add a trace on weak notify.
+
 2009-03-04 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-object-action.c (instance_init):
