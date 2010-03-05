@@ -117,18 +117,23 @@ GtkTargetEntry tree_model_dnd_dest_formats[] = {
 
 guint tree_model_dnd_dest_formats_count = G_N_ELEMENTS( tree_model_dnd_dest_formats );
 
-static const gchar *st_refuse_profile = N_( "Unable to drop a profile here" );
-static const gchar *st_refuse_action_menu = N_( "Unable to drop an action or a menu here" );
+static const gchar *st_refuse_drop_profile = N_( "Unable to drop a profile here" );
+static const gchar *st_refuse_drop_item = N_( "Unable to drop an action or a menu here" );
 static const gchar *st_parent_not_writable = N_( "Unable to drop here as parent is not writable" );
 static const gchar *st_level_zero_not_writable = N_( "Unable to drop here as level zero is not writable" );
 
 static gboolean      drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
+static gboolean      is_drop_possible( NactTreeModel *model, GtkTreePath *dest, NAObjectItem **parent );
+static gboolean      is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainWindow *window, NAObjectItem **parent );
+static gboolean      is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWindow *window, NAObjectItem **parent );
+#if 0
 static GtkTreePath  *drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction **parent );
+#endif
 static void          drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest );
 static gboolean      drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
 static NAObjectItem *is_dropped_already_exists( const NAObjectItem *importing, const NactMainWindow *window );
 static char         *get_xds_atom_value( GdkDragContext *context );
-static gboolean      is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path );
+static gboolean      is_parent_accept_new_childs( NactApplication *application, NactMainWindow *window, NAObjectItem *parent );
 static guint         target_atom_to_id( GdkAtom atom );
 
 /**
@@ -503,12 +508,11 @@ nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, Bas
 static gboolean
 drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
 {
-	static const gchar *thisfn = "nact_tree_model_inside_drag_and_drop";
-	gboolean drop_done;
+	static const gchar *thisfn = "nact_tree_model_dnd_inside_drag_and_drop";
 	NactApplication *application;
 	NAUpdater *updater;
 	NactMainWindow *main_window;
-	NAObjectAction *parent;
+	NAObjectItem *parent;
 	gboolean copy_data;
 	GList *rows;
 	GtkTreePath *new_dest;
@@ -529,66 +533,217 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	 * 	with profiles: only valid dest is inside an action
 	 *  without profile: only valid dest is outside (besides of) an action
 	 */
-	drop_done = FALSE;
 	parent = NULL;
 	rows = nact_clipboard_dnd_get_data( model->private->clipboard, &copy_data );
-	new_dest = drop_inside_adjust_dest( model, dest, &parent );
 
-	if( new_dest && !copy_data ){
+	if( !is_drop_possible( model, dest, &parent )){
+		return( FALSE );
+	}
+
+	new_dest = gtk_tree_path_copy( dest );
+	if( !copy_data ){
 		drop_inside_move_dest( model, rows, &new_dest );
 	}
 
-	if( new_dest ){
-		g_debug( "%s: rows has %d items, copy_data=%s", thisfn, g_list_length( rows ), copy_data ? "True":"False" );
-		object_list = NULL;
-		for( it = rows ; it ; it = it->next ){
-			path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
-			if( path ){
-				if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path )){
-					gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &current, -1 );
-					g_object_unref( current );
+	g_debug( "%s: rows has %d items, copy_data=%s", thisfn, g_list_length( rows ), copy_data ? "True":"False" );
+	object_list = NULL;
+	for( it = rows ; it ; it = it->next ){
+		path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
+		if( path ){
+			if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path )){
+				gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &current, -1 );
+				g_object_unref( current );
 
-					if( copy_data ){
-						inserted = ( NAObject * ) na_object_duplicate( current );
-						na_object_set_origin( inserted, NULL );
-						na_object_check_status( inserted );
+				if( copy_data ){
+					inserted = ( NAObject * ) na_object_duplicate( current );
+					na_object_set_origin( inserted, NULL );
+					na_object_check_status( inserted );
 
-					} else {
-						inserted = na_object_ref( current );
-						deletable = g_list_prepend( NULL, inserted );
-						nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( main_window ), deletable );
-						g_list_free( deletable );
-					}
-
-					relabel = nact_main_menubar_is_pasted_object_relabeled( inserted, NA_PIVOT( updater ));
-					na_object_prepare_for_paste( inserted, relabel, copy_data, parent );
-					object_list = g_list_prepend( object_list, inserted );
-					g_debug( "%s: dropped=%s", thisfn, na_object_get_label( inserted ));
+				} else {
+					inserted = na_object_ref( current );
+					deletable = g_list_prepend( NULL, inserted );
+					nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( main_window ), deletable );
+					g_list_free( deletable );
 				}
-				gtk_tree_path_free( path );
+
+				relabel = nact_main_menubar_is_pasted_object_relabeled( inserted, NA_PIVOT( updater ));
+				na_object_prepare_for_paste( inserted, relabel, copy_data, parent );
+				object_list = g_list_prepend( object_list, inserted );
+				g_debug( "%s: dropped=%s", thisfn, na_object_get_label( inserted ));
 			}
+			gtk_tree_path_free( path );
 		}
-		object_list = g_list_reverse( object_list );
-
-		nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
-
-		if( !copy_data && gtk_tree_path_get_depth( new_dest ) == 1 ){
-			g_signal_emit_by_name( main_window, MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
-		}
-
-		g_list_foreach( object_list, ( GFunc ) na_object_object_unref, NULL );
-		g_list_free( object_list );
-		gtk_tree_path_free( new_dest );
-
-		drop_done = TRUE;
 	}
+	object_list = g_list_reverse( object_list );
+
+	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
+
+	if( !copy_data && gtk_tree_path_get_depth( new_dest ) == 1 ){
+		g_signal_emit_by_name( main_window, MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
+	}
+
+	g_list_foreach( object_list, ( GFunc ) na_object_object_unref, NULL );
+	g_list_free( object_list );
+	gtk_tree_path_free( new_dest );
 
 	g_list_foreach( rows, ( GFunc ) gtk_tree_row_reference_free, NULL );
 	g_list_free( rows );
 
-	return( drop_done );
+	return( TRUE );
 }
 
+/*
+ * is a drop possible at given dest ?
+ *
+ * the only case where we would be led to have to modify the dest if
+ * we'd want be able to drop a profile into another profile, accepting
+ * it, actually dropping the profile just before the target
+ *
+ * -> it appears both clearer for the user interface and easyer from a
+ *    code point of view to just refuse to drop a profile into a profile
+ *
+ * so this function is just to check if a drop is possible at the given
+ * dest
+ */
+static gboolean
+is_drop_possible( NactTreeModel *model, GtkTreePath *dest, NAObjectItem **parent )
+{
+	gboolean drop_ok;
+	NactApplication *application;
+	NactMainWindow *main_window;
+	GtkTreeIter iter;
+	NAObjectItem *parent_dest;
+
+	drop_ok = FALSE;
+	parent_dest = NULL;
+	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
+	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
+
+	/* if we can have an iter on given dest, then the dest already exists
+	 * so dropped items should be of the same type that already existing
+	 */
+	if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, dest )){
+		drop_ok = is_drop_possible_before_iter( model, &iter, main_window, &parent_dest );
+
+	/* inserting at the end of the list
+	 * parent_dest is NULL
+	 */
+	} else if( gtk_tree_path_get_depth( dest ) == 1 ){
+
+		if( model->private->drag_has_profiles ){
+			nact_main_statusbar_display_with_timeout(
+						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_profile );
+
+		} else {
+			drop_ok = TRUE;
+		}
+
+	/* we cannot have an iter on the dest: this means that we try to
+	 * insert items into not-opened dest (an empty menu or an action with
+	 * zero or one profile) : check what is the parent
+	 */
+	} else {
+		drop_ok = is_drop_possible_into_dest( model, dest, main_window, &parent_dest );
+	}
+
+	if( drop_ok ){
+		drop_ok = is_parent_accept_new_childs( application, main_window, parent_dest );
+	}
+
+	if( drop_ok && parent ){
+		*parent = parent_dest;
+	}
+
+	return( drop_ok );
+}
+
+static gboolean
+is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainWindow *window, NAObjectItem **parent )
+{
+	static const gchar *thisfn = "nact_tree_model_dnd_is_drop_possible_before_iter";
+	gboolean drop_ok;
+	NAObject *object;
+
+	drop_ok = FALSE;
+	*parent = NULL;
+
+	gtk_tree_model_get( GTK_TREE_MODEL( model ), iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+	g_object_unref( object );
+	g_debug( "%s: current object at dest is %s", thisfn, G_OBJECT_TYPE_NAME( object ));
+
+	if( model->private->drag_has_profiles ){
+
+		if( NA_IS_OBJECT_PROFILE( object )){
+			drop_ok = TRUE;
+			*parent = na_object_get_parent( object );
+
+		} else {
+			/* unable to drop a profile here */
+			nact_main_statusbar_display_with_timeout(
+					window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_profile );
+		}
+
+	} else if( NA_IS_OBJECT_ITEM( object )){
+			drop_ok = TRUE;
+			*parent = na_object_get_parent( object );
+
+	} else {
+		/* unable to drop an action or a menu here */
+		nact_main_statusbar_display_with_timeout(
+				window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_item );
+	}
+
+	return( drop_ok );
+}
+
+static gboolean
+is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWindow *window, NAObjectItem **parent )
+{
+	static const gchar *thisfn = "nact_tree_model_dnd_is_drop_possible_into_dest";
+	gboolean drop_ok;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	NAObject *object;
+
+	drop_ok = FALSE;
+	*parent = NULL;
+
+	path = gtk_tree_path_copy( dest );
+
+	if( gtk_tree_path_up( path )){
+		if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path )){
+			gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+			g_object_unref( object );
+			g_debug( "%s: current object at parent dest is %s", thisfn, G_OBJECT_TYPE_NAME( object ));
+
+			if( model->private->drag_has_profiles ){
+
+				if( NA_IS_OBJECT_ACTION( object )){
+					drop_ok = TRUE;
+					*parent = NA_OBJECT_ITEM( object );
+
+				} else {
+					nact_main_statusbar_display_with_timeout(
+							window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_profile );
+				}
+
+			} else if( NA_IS_OBJECT_MENU( object )){
+					drop_ok = TRUE;
+					*parent = na_object_get_parent( object );
+
+			} else {
+				nact_main_statusbar_display_with_timeout(
+						window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_item );
+			}
+		}
+	}
+
+	gtk_tree_path_free( path );
+
+	return( drop_ok );
+}
+
+#if 0
 /*
  * is a drop possible at given dest ?
  * may slightly adjust the dest to drop profile inside an action
@@ -596,7 +751,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 static GtkTreePath *
 drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction **parent )
 {
-	static const gchar *thisfn = "nact_tree_model_drop_inside_adjust_dest";
+	static const gchar *thisfn = "nact_tree_model_dnd_drop_inside_adjust_dest";
 	GtkTreePath *new_dest;
 	gboolean drop_ok;
 	NactApplication *application;
@@ -704,6 +859,7 @@ drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction
 
 	return( new_dest );
 }
+#endif
 
 static void
 drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest )
@@ -753,15 +909,14 @@ drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest )
  * Returns: %TRUE if the specified rows were successfully inserted at
  * the given dest, %FALSE else.
  *
- * URI format only involves actions
+ * URI format only involves actions or menus
  *  so ony valid dest in outside (besides of) an action
  */
 static gboolean
 drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
 {
-	/*static const gchar *thisfn = "nact_tree_model_drop_uri_list";*/
+	static const gchar *thisfn = "nact_tree_model_dnd_drop_uri_list";
 	gboolean drop_done;
-	GtkTreePath *new_dest;
 	NactApplication *application;
 	NAUpdater *updater;
 	NactMainWindow *main_window;
@@ -769,12 +924,16 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	GConfClient *gconf;
 	GList *it;
 
+	gchar *dest_str = gtk_tree_path_to_string( dest );
+	g_debug( "%s: model=%p, dest=%p (%s), selection_data=%p",
+			thisfn, ( void * ) model, ( void * ) dest, dest_str, ( void * ) selection_data );
+	g_free( dest_str );
+
 	drop_done = FALSE;
 	model->private->drag_has_profiles = FALSE;
-	new_dest = drop_inside_adjust_dest( model, dest, NULL );
 
-	if( !new_dest ){
-		return( drop_done );
+	if( !is_drop_possible( model, dest, NULL )){
+		return( FALSE );
 	}
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
@@ -830,10 +989,9 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		drop_done = TRUE;
 	}
 
-	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), parms.imported, new_dest );
+	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), parms.imported, dest );
 	nact_tree_model_dump( model );
 
-	gtk_tree_path_free( new_dest );
 	na_object_unref_items( parms.imported );
 	na_core_utils_slist_free( parms.uris );
 	na_core_utils_slist_free( parms.messages );
@@ -991,51 +1149,35 @@ get_xds_atom_value( GdkDragContext *context )
  * to register the new child
  */
 static gboolean
-is_parent_accept_new_childs( NactTreeModel *model, GtkTreePath *path )
+is_parent_accept_new_childs( NactApplication *application, NactMainWindow *window, NAObjectItem *parent )
 {
 	gboolean accept_ok;
-	GtkTreePath *parent_path;
-	GtkTreeIter iter;
-	NAObjectItem *parent_item;
-	NactApplication *application;
 	NAUpdater *updater;
-	NactMainWindow *main_window;
 
 	accept_ok = FALSE;
-	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	updater = nact_application_get_updater( application );
-	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
 	/* inserting as a level zero item
 	 * ensure that level zero is writable
 	 */
-	if( gtk_tree_path_get_depth( path ) == 1 ){
+	if( parent == NULL ){
 
 		if( na_pivot_is_level_zero_writable( NA_PIVOT( updater ))){
 			accept_ok = TRUE;
 
 		} else {
 			nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_level_zero_not_writable );
+						window, TREE_MODEL_STATUSBAR_CONTEXT, st_level_zero_not_writable );
 		}
 
 	/* see if the parent is writable
 	 */
-	} else {
-		parent_path = gtk_tree_path_copy( path );
-		if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, parent_path )){
-			gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &parent_item, -1 );
-			if( na_updater_is_item_writable( updater, parent_item, NULL )){
-				accept_ok = TRUE;
-			}
-			g_object_unref( parent_item );
-		}
-		gtk_tree_path_free( parent_path );
+	} else if( na_updater_is_item_writable( updater, parent, NULL )){
+		accept_ok = TRUE;
 
-		if( !accept_ok ){
+	} else {
 			nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_parent_not_writable );
-		}
+						window, TREE_MODEL_STATUSBAR_CONTEXT, st_parent_not_writable );
 	}
 
 	return( accept_ok );

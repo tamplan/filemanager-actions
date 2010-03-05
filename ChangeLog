@@ -1,5 +1,10 @@
 2009-03-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* nact/nact-tree-model-dnd.c (drop_inside):
+	Split to three functions to better readibility.
+	Fix drop inside an empty menu.
+	Fix drop into a non writable parent.
+
 	* src/api/na-iio-provider.h: Add a comment.
 
 	* src/core/na-io-provider.c:
