@@ -1,5 +1,8 @@
 2009-03-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-export-ask.c (on_base_runtime_init_dialog):
+	Set more clear label, whether the item be a label or an action.
+
 	* src/nact/nact-tree-model-dnd.c (get_xds_atom_value):
 	Remove debug traces after validation both on 32 and 64 bits systems.
 

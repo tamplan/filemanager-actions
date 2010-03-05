@@ -321,8 +321,13 @@ on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data )
 
 	item_label = na_object_get_label( editor->private->item );
 
-	/* i18n: The item <label> is about to be exported */
-	label = g_strdup_printf( _( "The item \"%s\" is about to be exported." ), item_label );
+	if( NA_IS_OBJECT_ACTION( editor->private->item )){
+		/* i18n: The action <label> is about to be exported */
+		label = g_strdup_printf( _( "The action \"%s\" is about to be exported." ), item_label );
+	} else {
+		/* i18n: The menu <label> is about to be exported */
+		label = g_strdup_printf( _( "The menu \"%s\" is about to be exported." ), item_label );
+	}
 
 	widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportAskLabel1" );
 	gtk_label_set_text( GTK_LABEL( widget ), label );
