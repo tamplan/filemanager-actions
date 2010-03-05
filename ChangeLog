@@ -1,3 +1,14 @@
+2009-03-05 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c
+	(na_core_utils_slist_join_at_end): New function.
+
+	* src/api/na-iio-provider.h: Fix typo in comment.
+
+	* src/nact/nact-main-menubar.c (on_delete_activated):
+	Do not delete a tree if at least one item is not writable.
+
 2009-03-04 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-object-action.c (instance_init):

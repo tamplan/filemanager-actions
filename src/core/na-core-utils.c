@@ -287,6 +287,28 @@ na_core_utils_slist_from_array( const gchar **str_array )
 }
 
 /**
+ * na_core_utils_slist_join_at_end:
+ * @slist: the string list to join.
+ * @link: the string used to join each element.
+ *
+ * Returns: a newly allocated string which should be g_free() by the caller.
+ */
+gchar *
+na_core_utils_slist_join_at_end( GSList *slist, const gchar *link )
+{
+	GSList *is;
+	GString *str;
+
+	str = g_string_new( "" );
+
+	for( is = slist ; is ; is = is->next ){
+		g_string_append_printf( str, "%s%s", ( const gchar * ) is->data, link );
+	}
+
+	return( g_string_free( str, FALSE ));
+}
+
+/**
  * na_core_utils_slist_remove_ascii:
  * @list: the GSList to be updated.
  * @text: string to remove.

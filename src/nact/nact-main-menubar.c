@@ -35,6 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <api/na-object-api.h>
+#include <api/na-core-utils.h>
 
 #include <core/na-factory-object.h>
 #include <core/na-iprefs.h>
@@ -105,6 +106,9 @@ static void     on_paste_into_activated( GtkAction *action, NactMainWindow *wind
 static GList   *prepare_for_paste( NactMainWindow *window );
 static void     on_duplicate_activated( GtkAction *action, NactMainWindow *window );
 static void     on_delete_activated( GtkAction *action, NactMainWindow *window );
+static GList   *get_deletables( NAUpdater *updater, GList *tree, GSList **not_deletable );
+static GSList  *get_deletables_rec( NAUpdater *updater, GList *tree );
+static gchar   *add_non_deletable_msg( const NAObjectItem *item, gint reason );
 static void     update_clipboard_counters( NactMainWindow *window );
 static void     on_reload_activated( GtkAction *action, NactMainWindow *window );
 static void     on_preferences_activated( GtkAction *action, NactMainWindow *window );
@@ -779,7 +783,10 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	duplicate_enabled = cut_enabled;
 	nact_main_menubar_enable_item( window, "DuplicateItem", duplicate_enabled );
 
-	/* delete is same that cut */
+	/* delete is same that cut
+	 * but items themselves must be writable (because physically deleted)
+	 * this will be checked on delete activated
+	 */
 	delete_enabled = cut_enabled;
 	nact_main_menubar_enable_item( window, "DeleteItem", delete_enabled );
 
@@ -1235,29 +1242,128 @@ on_duplicate_activated( GtkAction *gtk_action, NactMainWindow *window )
  * - (main) add selected items to main list of deleted,
  *          moving newref from list_from_tree to main_list_of_deleted
  * - (tree) select next row (if any, or previous if any, or none)
+ *
+ * note that we get from selection a list of trees, but we don't have
+ * yet ensured that each element of this tree is actually deletable
+ * each branch of this list must be recursively deletable in order
+ * this branch itself be deleted
  */
 static void
 on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_delete_activated";
+	NactApplication *application;
+	NAUpdater *updater;
 	GList *items;
-	GList *it;
+	GList *to_delete;
+	GSList *non_deletables;
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
 	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
-	for( it = items ; it ; it = it->next ){
-		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
-	}
-	nact_main_window_move_to_deleted( window, items );
-	nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), items );
 
-	/* do not unref selected items as the list has been concatenated
-	 * to main_deleted
-	 */
-	/*g_list_free( items );*/
+	non_deletables = NULL;
+	to_delete = get_deletables( updater, items, &non_deletables );
+
+	if( non_deletables ){
+		gchar *second = na_core_utils_slist_join_at_end( non_deletables, "\n" );
+		base_window_error_dlg(
+				BASE_WINDOW( window ),
+				GTK_MESSAGE_INFO,
+				_( "Not all items have been deleted as following ones are not modifiable:" ),
+				second );
+		g_free( second );
+		na_core_utils_slist_free( non_deletables );
+	}
+
+	if( to_delete ){
+		nact_main_window_move_to_deleted( window, to_delete );
+		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete );
+	}
+
+	na_object_unref_selected_items( items );
+}
+
+static GList *
+get_deletables( NAUpdater *updater, GList *selected, GSList **non_deletables )
+{
+	GList *to_delete;
+	GList *it;
+	GList *subitems;
+	GSList *sub_deletables;
+	gint reason;
+
+	to_delete = NULL;
+	for( it = selected ; it ; it = it->next ){
+
+		if( !na_updater_is_item_writable( updater, NA_OBJECT_ITEM( it->data ), &reason )){
+			*non_deletables = g_slist_prepend(
+					*non_deletables, add_non_deletable_msg( NA_OBJECT_ITEM( it->data ), reason ));
+			continue;
+		}
+
+		if( NA_IS_OBJECT_MENU( it->data )){
+			subitems = na_object_get_items( it->data );
+			sub_deletables = get_deletables_rec( updater, subitems );
+
+			if( sub_deletables ){
+				*non_deletables = g_slist_concat( *non_deletables, sub_deletables );
+				continue;
+			}
+		}
+
+		to_delete = g_list_prepend( to_delete, it->data );
+	}
+
+	return( to_delete );
+}
+
+static GSList *
+get_deletables_rec( NAUpdater *updater, GList *tree )
+{
+	GSList *msgs;
+	GList *it;
+	GList *subitems;
+	gint reason;
+
+	msgs = NULL;
+	for( it = tree ; it ; it = it->next ){
+
+		if( !na_updater_is_item_writable( updater, NA_OBJECT_ITEM( it->data ), &reason )){
+			msgs = g_slist_prepend(
+					msgs, add_non_deletable_msg( NA_OBJECT_ITEM( it->data ), reason ));
+			continue;
+		}
+
+		if( NA_IS_OBJECT_MENU( it->data )){
+			subitems = na_object_get_items( it->data );
+			msgs = g_slist_concat( msgs, get_deletables_rec( updater, subitems ));
+		}
+	}
+
+	return( msgs );
+}
+
+static gchar *
+add_non_deletable_msg( const NAObjectItem *item, gint reason )
+{
+	gchar *msg;
+	gchar *label;
+	gchar *reason_str;
+
+	label = na_object_get_label( item );
+	reason_str = na_io_provider_get_readonly_tooltip( reason );
+
+	msg = g_strdup_printf( "%s: %s", label, reason_str );
+
+	g_free( reason_str );
+	g_free( label );
+
+	return( msg );
 }
 
 /*

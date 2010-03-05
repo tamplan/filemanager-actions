@@ -170,3 +170,5 @@
 - dnd to inside of a menu, by dropping while on the menu itself
   if menu is at path 3, we get a dest of 3:0 which means first child of parent at path 3
   if menu is new (never has been written), dnd says that parent is not writable ????
+
+- implement delete_rec in nact_main_menubar
