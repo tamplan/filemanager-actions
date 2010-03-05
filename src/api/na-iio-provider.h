@@ -208,7 +208,7 @@ void  na_iio_provider_item_changed ( const NAIIOProvider *instance, const gchar 
 
 /* The reasons for which an item may not be writable
  * adding a new status here should imply also adding a new tooltip
- * in #na_io_provider_get_tooltip().
+ * in #na_io_provider_get_readonly_tooltip().
  */
 enum {
 	NA_IIO_PROVIDER_STATUS_UNDETERMINED = 0,
