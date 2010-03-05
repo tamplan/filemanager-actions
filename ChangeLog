@@ -1,5 +1,14 @@
 2009-03-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iio-provider.h: Add a comment.
+
+	* src/core/na-io-provider.c:
+	* src/core/na-io-provider.h (na_io_provider_get_return_code_label):
+	New function.
+
+	* src/nact/nact-window.c (nact_window_save_item):
+	Better error message.
+
 	* src/nact/nact-export-ask.c (on_base_runtime_init_dialog):
 	Set more clear label, whether the item be a label or an action.
 

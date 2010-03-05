@@ -326,6 +326,7 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 	NAUpdater *updater;
 	GSList *messages = NULL;
 	guint ret;
+	gchar *msgerr;
 
 	g_debug( "%s: window=%p, item=%p (%s)", thisfn,
 			( void * ) window, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
@@ -338,16 +339,25 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 		updater = nact_application_get_updater( application );
 
 		ret = na_updater_write_item( updater, item, &messages );
-
 		g_debug( "nact_window_save_item: ret=%d", ret );
 
+		msgerr = NULL;
+
 		if( messages ){
+			msgerr = na_core_utils_slist_join_at_end( messages, "\n" );
+			na_core_utils_slist_free( messages );
+
+		} else if( ret != NA_IIO_PROVIDER_CODE_OK ){
+			msgerr = na_io_provider_get_return_code_label( ret );
+		}
+
+		if( msgerr ){
 			base_window_error_dlg(
 					BASE_WINDOW( window ),
 					GTK_MESSAGE_WARNING,
 					_( "An error has occured when trying to save the item" ),
-					( const gchar * ) messages->data );
-			na_core_utils_slist_free( messages );
+					msgerr );
+			g_free( msgerr );
 		}
 
 		save_ok = ( ret == NA_IIO_PROVIDER_CODE_OK );

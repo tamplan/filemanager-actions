@@ -1275,14 +1275,65 @@ na_io_provider_get_readonly_tooltip( guint reason )
 			tooltip = g_strdup( _( "The whole configuration has been locked down by an administrator." ));
 			break;
 
+		/* item is writable, so tooltip is empty */
 		case 0:
 			tooltip = g_strdup( "" );
 			break;
 
 		default:
-			tooltip = g_strdup_printf( _( "Item is not writable for an unknown reason (%d)" ), reason );
+			tooltip = g_strdup_printf( _( "Item is not writable for an unknown reason (%d).\n" \
+					"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org." ), reason );
 			break;
 	}
 
 	return( tooltip );
+}
+
+/**
+ * na_io_provider_get_return_code_label:
+ * @code: the return code of an operation.
+ *
+ * Returns: the associated label, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+na_io_provider_get_return_code_label( guint code )
+{
+	gchar *label;
+
+	label = NULL;
+
+	switch( code ){
+		case NA_IIO_PROVIDER_CODE_OK:
+			label = g_strdup( _( "OK." ));
+			break;
+
+		case NA_IIO_PROVIDER_CODE_PROGRAM_ERROR:
+			label = g_strdup( _( "Program flow error.\n" \
+					"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org." ));
+			break;
+
+		case NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:
+			label = g_strdup( _( "The I/O provider is not willing to do that." ));
+			break;
+
+		case NA_IIO_PROVIDER_CODE_WRITE_ERROR:
+			label = g_strdup( _( "Write error in I/O provider." ));
+			break;
+
+		case NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR:
+			label = g_strdup( _( "Unable to delete GConf schemas." ));
+			break;
+
+		case NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:
+			label = g_strdup( _( "Unable to delete configuration." ));
+			break;
+
+		default:
+			label = g_strdup_printf( _( "Unknow return code (%d).\n" \
+					"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org." ), code );
+			break;
+	}
+
+	return( label );
 }

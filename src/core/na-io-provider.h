@@ -102,6 +102,7 @@ guint          na_io_provider_write_item ( const NAIOProvider *provider, const N
 guint          na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
 
 gchar         *na_io_provider_get_readonly_tooltip( guint reason );
+gchar         *na_io_provider_get_return_code_label( guint code );
 
 G_END_DECLS
 

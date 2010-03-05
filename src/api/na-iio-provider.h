@@ -224,6 +224,8 @@ enum {
 };
 
 /* return code of operations
+ * adding a new code here should imply also adding a new label
+ * in #na_io_provider_get_return_code_label().
  */
 enum {
 	NA_IIO_PROVIDER_CODE_OK = 0,
