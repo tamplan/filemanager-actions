@@ -1,5 +1,8 @@
 2009-03-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-model-dnd.c (get_xds_atom_value):
+	Remove debug traces after validation both on 32 and 64 bits systems.
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c
 	(na_core_utils_slist_join_at_end): New function.

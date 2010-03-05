@@ -958,6 +958,8 @@ on_drag_drop( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint 
  * get_xds_atom_value: ret=file:///home/pierre/data/eclipse/nautilus-actions/trash/xds.txt0x8299
  * get_xds_atom_value: dup=file:///home/pierre/data/eclipse/nautilus-actions/trash/xds.txt
  * get_xds_atom_value: ret=file:///home/pi
+ *
+ * idem on a 64bits system.
  */
 static char *
 get_xds_atom_value( GdkDragContext *context )
@@ -979,18 +981,9 @@ get_xds_atom_value( GdkDragContext *context )
 						&actual_length,				/* actual length (in 4 bytes chunks) */
 						( guchar ** ) &ret );		/* data pointer */
 
-	g_debug( "get_xds_atom_value: actual_length=%d, actual_length=%lu", actual_length, ( gulong ) actual_length/sizeof( glong ));
-	g_debug( "get_xds_atom_value: ret=%s", ret );
+	ret[actual_length] = '\0';
 
-	gchar *dup = g_strdup( ret );
-	dup[actual_length] = '\0';
-	g_debug( "get_xds_atom_value: dup=%s", dup );
-
-	ret[actual_length/sizeof( glong )] = '\0';
-	g_debug( "get_xds_atom_value: ret=%s", ret );
-	g_free( ret );
-
-	return( dup );
+	return( ret );
 }
 
 /*

@@ -157,18 +157,12 @@
   but path is defined as string in this same spec
   and icon may be a path -> so what to do with this ?
 
-- get_xds_atom_value: test on 64bit platform, then remove debug stuff
-
 - try to restore hierarchy on import
 
 - use NADataDef to automatically generate schemas
   in data/nautilus-actions.schemas.in
   and in src/utils/nautilus-actions-schemas
 
-- should not be able to delete read-only items
-
 - dnd to inside of a menu, by dropping while on the menu itself
   if menu is at path 3, we get a dest of 3:0 which means first child of parent at path 3
   if menu is new (never has been written), dnd says that parent is not writable ????
-
-- implement delete_rec in nact_main_menubar
