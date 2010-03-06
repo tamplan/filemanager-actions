@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_IBACKGROUND_TAB_H__
-#define __NACT_IBACKGROUND_TAB_H__
+#ifndef __NACT_IFOLDERS_TAB_H__
+#define __NACT_IFOLDERS_TAB_H__
 
 /**
- * SECTION: nact_ibackground_tab
- * @short_description: #NactIBackgroundTab interface declaration.
- * @include: nact/nact-ibackground-tab.h
+ * SECTION: nact_ifolders_tab
+ * @short_description: #NactIFoldersTab interface declaration.
+ * @include: nact/nact-ifolders-tab.h
  *
  * This interface implements all the widgets which are relevant for
  * items which are applied to backgrounds.
@@ -44,28 +44,28 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IBACKGROUND_TAB_TYPE						( nact_ibackground_tab_get_type())
-#define NACT_IBACKGROUND_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IBACKGROUND_TAB_TYPE, NactIBackgroundTab ))
-#define NACT_IS_IBACKGROUND_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IBACKGROUND_TAB_TYPE ))
-#define NACT_IBACKGROUND_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IBACKGROUND_TAB_TYPE, NactIBackgroundTabInterface ))
+#define NACT_IFOLDERS_TAB_TYPE						( nact_ifolders_tab_get_type())
+#define NACT_IFOLDERS_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IFOLDERS_TAB_TYPE, NactIFoldersTab ))
+#define NACT_IS_IFOLDERS_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IFOLDERS_TAB_TYPE ))
+#define NACT_IFOLDERS_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IFOLDERS_TAB_TYPE, NactIFoldersTabInterface ))
 
-typedef struct NactIBackgroundTab NactIBackgroundTab;
+typedef struct NactIFoldersTab NactIFoldersTab;
 
-typedef struct NactIBackgroundTabInterfacePrivate NactIBackgroundTabInterfacePrivate;
+typedef struct NactIFoldersTabInterfacePrivate NactIFoldersTabInterfacePrivate;
 
 typedef struct {
 	GTypeInterface                      parent;
-	NactIBackgroundTabInterfacePrivate *private;
+	NactIFoldersTabInterfacePrivate *private;
 }
-	NactIBackgroundTabInterface;
+	NactIFoldersTabInterface;
 
-GType    nact_ibackground_tab_get_type( void );
+GType    nact_ifolders_tab_get_type( void );
 
-void     nact_ibackground_tab_initial_load_toplevel( NactIBackgroundTab *instance );
-void     nact_ibackground_tab_runtime_init_toplevel( NactIBackgroundTab *instance );
-void     nact_ibackground_tab_all_widgets_showed( NactIBackgroundTab *instance );
-void     nact_ibackground_tab_dispose( NactIBackgroundTab *instance );
+void     nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance );
+void     nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance );
+void     nact_ifolders_tab_all_widgets_showed( NactIFoldersTab *instance );
+void     nact_ifolders_tab_dispose( NactIFoldersTab *instance );
 
 G_END_DECLS
 
-#endif /* __NACT_IBACKGROUND_TAB_H__ */
+#endif /* __NACT_IFOLDERS_TAB_H__ */

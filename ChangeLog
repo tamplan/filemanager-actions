@@ -1,5 +1,14 @@
 2009-03-05 Pierre Wieser <pwieser@trychlos.org>
 
+	Refactor NactIBackgroundTab class as NactIFoldersTab.
+
+	* src/nact/nact-ibackground-tab.c:
+	* src/nact/nact-ibackground-tab.h: Renamed as nact-ifolders-tab.{c,h}.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.c: Updated accordingly.
+
 	Remove the 'target background' indicator which was introduced in 2.29.1.
 
 	* src/core/na-object-action-factory.c:

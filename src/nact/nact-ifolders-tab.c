@@ -47,55 +47,55 @@
 #include "nact-iprefs.h"
 #include "nact-application.h"
 #include "nact-main-tab.h"
-#include "nact-ibackground-tab.h"
+#include "nact-ifolders-tab.h"
 
 /* private interface data
  */
-struct NactIBackgroundTabInterfacePrivate {
+struct NactIFoldersTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* column ordering
  */
 enum {
-	BACKGROUND_URI_COLUMN = 0,
-	BACKGROUND_N_COLUMN
+	FOLDERS_URI_COLUMN = 0,
+	FOLDERS_N_COLUMN
 };
 
-#define IPREFS_BACKGROUND_DIALOG		"ibackground-chooser"
-#define IPREFS_BACKGROUND_URI			"ibackground-uri"
+#define IPREFS_FOLDERS_DIALOG		"ifolders-chooser"
+#define IPREFS_FOLDERS_URI			"ifolders-uri"
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 static gboolean st_on_selection_change = FALSE;
 
 static GType        register_type( void );
-static void         interface_base_init( NactIBackgroundTabInterface *klass );
-static void         interface_base_finalize( NactIBackgroundTabInterface *klass );
+static void         interface_base_init( NactIFoldersTabInterface *klass );
+static void         interface_base_finalize( NactIFoldersTabInterface *klass );
 
-static void         on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_selected );
-static void         on_tab_updatable_enable_tab( NactIBackgroundTab *instance, NAObjectItem *item );
-static gboolean     tab_set_sensitive( NactIBackgroundTab *instance );
+static void         on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_selected );
+static void         on_tab_updatable_enable_tab( NactIFoldersTab *instance, NAObjectItem *item );
+static gboolean     tab_set_sensitive( NactIFoldersTab *instance );
 
-static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIBackgroundTab *instance );
-static void         inline_edition( NactIBackgroundTab *instance );
-static void         insert_new_row( NactIBackgroundTab *instance );
-static void         delete_row( NactIBackgroundTab *instance );
+static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIFoldersTab *instance );
+static void         inline_edition( NactIFoldersTab *instance );
+static void         insert_new_row( NactIFoldersTab *instance );
+static void         delete_row( NactIFoldersTab *instance );
 
-static void         add_row( NactIBackgroundTab *instance, GtkTreeView *listview, const gchar *uri );
-static void         add_uri_to_folders( NactIBackgroundTab *instance, const gchar *uri );
-static GtkTreeView *get_folders_treeview( NactIBackgroundTab *instance );
-static void         on_folder_uri_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIBackgroundTab *instance );
-static void         on_folders_selection_changed( GtkTreeSelection *selection, NactIBackgroundTab *instance );
-static void         on_add_folder_clicked( GtkButton *button, NactIBackgroundTab *instance );
-static void         on_remove_folder_clicked( GtkButton *button, NactIBackgroundTab *instance );
-static void         remove_uri_from_folders( NactIBackgroundTab *instance, const gchar *uri );
-static void         reset_folders( NactIBackgroundTab *instance );
-static void         setup_folders( NactIBackgroundTab *instance );
-static void         treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, const gchar *text, gint column, gchar **old_text );
+static void         add_row( NactIFoldersTab *instance, GtkTreeView *listview, const gchar *uri );
+static void         add_uri_to_folders( NactIFoldersTab *instance, const gchar *uri );
+static GtkTreeView *get_folders_treeview( NactIFoldersTab *instance );
+static void         on_folder_uri_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIFoldersTab *instance );
+static void         on_folders_selection_changed( GtkTreeSelection *selection, NactIFoldersTab *instance );
+static void         on_add_folder_clicked( GtkButton *button, NactIFoldersTab *instance );
+static void         on_remove_folder_clicked( GtkButton *button, NactIFoldersTab *instance );
+static void         remove_uri_from_folders( NactIFoldersTab *instance, const gchar *uri );
+static void         reset_folders( NactIFoldersTab *instance );
+static void         setup_folders( NactIFoldersTab *instance );
+static void         treeview_cell_edited( NactIFoldersTab *instance, const gchar *path_string, const gchar *text, gint column, gchar **old_text );
 
 GType
-nact_ibackground_tab_get_type( void )
+nact_ifolders_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -109,11 +109,11 @@ nact_ibackground_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_register_type";
+	static const gchar *thisfn = "nact_ifolders_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactIBackgroundTabInterface ),
+		sizeof( NactIFoldersTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -126,7 +126,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactIBackgroundTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "NactIFoldersTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, BASE_WINDOW_TYPE );
 
@@ -134,24 +134,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIBackgroundTabInterface *klass )
+interface_base_init( NactIFoldersTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_interface_base_init";
+	static const gchar *thisfn = "nact_ifolders_tab_interface_base_init";
 
 	if( !st_initialized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactIBackgroundTabInterfacePrivate, 1 );
+		klass->private = g_new0( NactIFoldersTabInterfacePrivate, 1 );
 
 		st_initialized = TRUE;
 	}
 }
 
 static void
-interface_base_finalize( NactIBackgroundTabInterface *klass )
+interface_base_finalize( NactIFoldersTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_interface_base_finalize";
+	static const gchar *thisfn = "nact_ifolders_tab_interface_base_finalize";
 
 	if( st_initialized && !st_finalized ){
 
@@ -164,9 +164,9 @@ interface_base_finalize( NactIBackgroundTabInterface *klass )
 }
 
 void
-nact_ibackground_tab_initial_load_toplevel( NactIBackgroundTab *instance )
+nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_initial_load_toplevel";
+	static const gchar *thisfn = "nact_ifolders_tab_initial_load_toplevel";
 	GtkTreeView *listview;
 	GtkListStore *model;
 	GtkTreeViewColumn *column;
@@ -174,12 +174,12 @@ nact_ibackground_tab_initial_load_toplevel( NactIBackgroundTab *instance )
 	GtkTreeSelection *selection;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_IBACKGROUND_TAB( instance ));
+	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
-		model = gtk_list_store_new( BACKGROUND_N_COLUMN, G_TYPE_STRING );
-		gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), BACKGROUND_URI_COLUMN, GTK_SORT_ASCENDING );
+		model = gtk_list_store_new( FOLDERS_N_COLUMN, G_TYPE_STRING );
+		gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), FOLDERS_URI_COLUMN, GTK_SORT_ASCENDING );
 		listview = get_folders_treeview( instance );
 		gtk_tree_view_set_model( listview, GTK_TREE_MODEL( model ));
 		g_object_unref( model );
@@ -188,7 +188,7 @@ nact_ibackground_tab_initial_load_toplevel( NactIBackgroundTab *instance )
 		column = gtk_tree_view_column_new_with_attributes(
 				"folder-uri",
 				text_cell,
-				"text", BACKGROUND_URI_COLUMN,
+				"text", FOLDERS_URI_COLUMN,
 				NULL );
 		gtk_tree_view_append_column( listview, column );
 
@@ -200,16 +200,16 @@ nact_ibackground_tab_initial_load_toplevel( NactIBackgroundTab *instance )
 }
 
 void
-nact_ibackground_tab_runtime_init_toplevel( NactIBackgroundTab *instance )
+nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_runtime_init_toplevel";
+	static const gchar *thisfn = "nact_ifolders_tab_runtime_init_toplevel";
 	GtkTreeView *listview;
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	GtkWidget *add_button, *remove_button;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_IBACKGROUND_TAB( instance ));
+	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
@@ -226,7 +226,7 @@ nact_ibackground_tab_runtime_init_toplevel( NactIBackgroundTab *instance )
 				G_CALLBACK( on_tab_updatable_enable_tab ));
 
 		listview = get_folders_treeview( instance );
-		column = gtk_tree_view_get_column( listview, BACKGROUND_URI_COLUMN );
+		column = gtk_tree_view_get_column( listview, FOLDERS_URI_COLUMN );
 		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
@@ -263,24 +263,24 @@ nact_ibackground_tab_runtime_init_toplevel( NactIBackgroundTab *instance )
 }
 
 void
-nact_ibackground_tab_all_widgets_showed( NactIBackgroundTab *instance )
+nact_ifolders_tab_all_widgets_showed( NactIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_all_widgets_showed";
+	static const gchar *thisfn = "nact_ifolders_tab_all_widgets_showed";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_IBACKGROUND_TAB( instance ));
+	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 	}
 }
 
 void
-nact_ibackground_tab_dispose( NactIBackgroundTab *instance )
+nact_ifolders_tab_dispose( NactIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_dispose";
+	static const gchar *thisfn = "nact_ifolders_tab_dispose";
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_IBACKGROUND_TAB( instance ));
+	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
@@ -289,9 +289,9 @@ nact_ibackground_tab_dispose( NactIBackgroundTab *instance )
 }
 
 static void
-on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_selected )
+on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_selected )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_on_tab_updatable_selection_changed";
+	static const gchar *thisfn = "nact_ifolders_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	NAObjectProfile *profile;
 	gboolean enable_tab;
@@ -301,7 +301,7 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 	GtkWidget *widget;
 
 	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
-	g_return_if_fail( NACT_IS_IBACKGROUND_TAB( instance ));
+	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
@@ -326,7 +326,7 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 
 		treeview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" ));
 		gtk_widget_set_sensitive( GTK_WIDGET( treeview ), profile != NULL );
-		column = gtk_tree_view_get_column( treeview, BACKGROUND_URI_COLUMN );
+		column = gtk_tree_view_get_column( treeview, FOLDERS_URI_COLUMN );
 		nact_gtk_utils_set_editable( GTK_OBJECT( column ), editable );
 
 		widget = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" );
@@ -342,21 +342,21 @@ on_tab_updatable_selection_changed( NactIBackgroundTab *instance, gint count_sel
 }
 
 static void
-on_tab_updatable_enable_tab( NactIBackgroundTab *instance, NAObjectItem *item )
+on_tab_updatable_enable_tab( NactIFoldersTab *instance, NAObjectItem *item )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_on_tab_updatable_enable_tab";
+	static const gchar *thisfn = "nact_ifolders_tab_on_tab_updatable_enable_tab";
 
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
-		g_return_if_fail( NACT_IS_IBACKGROUND_TAB( instance ));
+		g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
 		tab_set_sensitive( instance );
 	}
 }
 
 static gboolean
-tab_set_sensitive( NactIBackgroundTab *instance )
+tab_set_sensitive( NactIFoldersTab *instance )
 {
 	NAObjectAction *action;
 	NAObjectProfile *profile;
@@ -370,13 +370,13 @@ tab_set_sensitive( NactIBackgroundTab *instance )
 
 	enable_tab = ( profile != NULL );
 
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_BACKGROUND, enable_tab );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS, enable_tab );
 
 	return( enable_tab );
 }
 
 static gboolean
-on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIBackgroundTab *instance )
+on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIFoldersTab *instance )
 {
 	gboolean stop;
 	gboolean editable;
@@ -410,7 +410,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIBackgroundTab 
 }
 
 static void
-inline_edition( NactIBackgroundTab *instance )
+inline_edition( NactIFoldersTab *instance )
 {
 	GtkTreeView *listview;
 	GtkTreeSelection *selection;
@@ -424,7 +424,7 @@ inline_edition( NactIBackgroundTab *instance )
 
 	if( g_list_length( listrows ) == 1 ){
 		path = ( GtkTreePath * ) listrows->data;
-		column = gtk_tree_view_get_column( listview, BACKGROUND_URI_COLUMN );
+		column = gtk_tree_view_get_column( listview, FOLDERS_URI_COLUMN );
 		gtk_tree_view_set_cursor( listview, path, column, TRUE );
 	}
 
@@ -437,7 +437,7 @@ inline_edition( NactIBackgroundTab *instance )
  * before currently selected item...
  */
 static void
-insert_new_row( NactIBackgroundTab *instance )
+insert_new_row( NactIFoldersTab *instance )
 {
 	GtkTreeView *listview;
 	GtkTreeModel *model;
@@ -450,17 +450,17 @@ insert_new_row( NactIBackgroundTab *instance )
 	model = gtk_tree_view_get_model( listview );
 
 	gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
-	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, BACKGROUND_URI_COLUMN, uri, -1 );
+	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, FOLDERS_URI_COLUMN, uri, -1 );
 	add_uri_to_folders( instance, uri );
 
 	path = gtk_tree_model_get_path( model, &iter );
-	column = gtk_tree_view_get_column( listview, BACKGROUND_URI_COLUMN );
+	column = gtk_tree_view_get_column( listview, FOLDERS_URI_COLUMN );
 	gtk_tree_view_set_cursor( listview, path, column, TRUE );
 	gtk_tree_path_free( path );
 }
 
 static void
-delete_row( NactIBackgroundTab *instance )
+delete_row( NactIFoldersTab *instance )
 {
 	GtkTreeView *listview;
 	GtkTreeModel *model;
@@ -478,7 +478,7 @@ delete_row( NactIBackgroundTab *instance )
 	if( g_list_length( rows ) == 1 ){
 		path = ( GtkTreePath * ) rows->data;
 		gtk_tree_model_get_iter( model, &iter, path );
-		gtk_tree_model_get( model, &iter, BACKGROUND_URI_COLUMN, &uri, -1 );
+		gtk_tree_model_get( model, &iter, FOLDERS_URI_COLUMN, &uri, -1 );
 
 		gtk_list_store_remove( GTK_LIST_STORE( model ), &iter );
 		remove_uri_from_folders( instance, uri );
@@ -496,7 +496,7 @@ delete_row( NactIBackgroundTab *instance )
 }
 
 static void
-add_row( NactIBackgroundTab *instance, GtkTreeView *listview, const gchar *uri )
+add_row( NactIFoldersTab *instance, GtkTreeView *listview, const gchar *uri )
 {
 	GtkTreeModel *model;
 	GtkTreeIter row;
@@ -510,12 +510,12 @@ add_row( NactIBackgroundTab *instance, GtkTreeView *listview, const gchar *uri )
 	gtk_list_store_set(
 			GTK_LIST_STORE( model ),
 			&row,
-			BACKGROUND_URI_COLUMN, uri,
+			FOLDERS_URI_COLUMN, uri,
 			-1 );
 }
 
 static void
-add_uri_to_folders( NactIBackgroundTab *instance, const gchar *uri )
+add_uri_to_folders( NactIFoldersTab *instance, const gchar *uri )
 {
 	NAObjectAction *action;
 	NAObjectProfile *edited;
@@ -536,7 +536,7 @@ add_uri_to_folders( NactIBackgroundTab *instance, const gchar *uri )
 }
 
 static GtkTreeView *
-get_folders_treeview( NactIBackgroundTab *instance )
+get_folders_treeview( NactIFoldersTab *instance )
 {
 	GtkWidget *treeview;
 
@@ -547,7 +547,7 @@ get_folders_treeview( NactIBackgroundTab *instance )
 }
 
 static void
-on_add_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
+on_add_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 {
 	GtkWidget *dialog;
 	GtkWindow *toplevel;
@@ -573,9 +573,9 @@ on_add_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
 	updater = nact_application_get_updater( application );
 
-	base_iprefs_position_named_window( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_BACKGROUND_DIALOG );
+	base_iprefs_position_named_window( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
 
-	uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_BACKGROUND_URI, "x-nautilus-desktop:///" );
+	uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDERS_URI, "x-nautilus-desktop:///" );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_uri( GTK_FILE_CHOOSER( dialog ), uri );
 	}
@@ -583,25 +583,25 @@ on_add_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		uri = gtk_file_chooser_get_uri( GTK_FILE_CHOOSER( dialog ));
-		nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_BACKGROUND_URI, uri );
+		nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_FOLDERS_URI, uri );
 		add_row( instance, listview, uri );
 		add_uri_to_folders( instance, uri );
 		g_free( uri );
 	}
 
-	base_iprefs_save_named_window_position( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_BACKGROUND_DIALOG );
+	base_iprefs_save_named_window_position( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
 
 	gtk_widget_destroy( dialog );
 }
 
 static void
-on_folder_uri_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIBackgroundTab *instance )
+on_folder_uri_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIFoldersTab *instance )
 {
-	treeview_cell_edited( instance, path, text, BACKGROUND_URI_COLUMN, NULL );
+	treeview_cell_edited( instance, path, text, FOLDERS_URI_COLUMN, NULL );
 }
 
 static void
-on_folders_selection_changed( GtkTreeSelection *selection, NactIBackgroundTab *instance )
+on_folders_selection_changed( GtkTreeSelection *selection, NactIFoldersTab *instance )
 {
 	gboolean editable;
 	GtkWidget *button;
@@ -619,13 +619,13 @@ on_folders_selection_changed( GtkTreeSelection *selection, NactIBackgroundTab *i
 }
 
 static void
-on_remove_folder_clicked( GtkButton *button, NactIBackgroundTab *instance )
+on_remove_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 {
 	delete_row( instance );
 }
 
 static void
-remove_uri_from_folders( NactIBackgroundTab *instance, const gchar *uri )
+remove_uri_from_folders( NactIFoldersTab *instance, const gchar *uri )
 {
 	NAObjectProfile *edited;
 	GSList *folders;
@@ -645,7 +645,7 @@ remove_uri_from_folders( NactIBackgroundTab *instance, const gchar *uri )
 }
 
 static void
-reset_folders( NactIBackgroundTab *instance )
+reset_folders( NactIFoldersTab *instance )
 {
 	GtkTreeView *listview;
 	GtkTreeModel *model;
@@ -656,7 +656,7 @@ reset_folders( NactIBackgroundTab *instance )
 }
 
 static void
-setup_folders( NactIBackgroundTab *instance )
+setup_folders( NactIFoldersTab *instance )
 {
 	NAObjectProfile *edited;
 	GSList *folders, *is;
@@ -679,9 +679,9 @@ setup_folders( NactIBackgroundTab *instance )
 }
 
 static void
-treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, const gchar *text, gint column, gchar **old_text )
+treeview_cell_edited( NactIFoldersTab *instance, const gchar *path_string, const gchar *text, gint column, gchar **old_text )
 {
-	static const gchar *thisfn = "nact_ibackground_tab_treeview_cell_edited";
+	static const gchar *thisfn = "nact_ifolders_tab_treeview_cell_edited";
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -699,7 +699,7 @@ treeview_cell_edited( NactIBackgroundTab *instance, const gchar *path_string, co
 	gtk_tree_model_get_iter( model, &iter, path );
 	gtk_tree_path_free( path );
 
-	gtk_tree_model_get( model, &iter, BACKGROUND_URI_COLUMN, &previous_text, -1 );
+	gtk_tree_model_get( model, &iter, FOLDERS_URI_COLUMN, &previous_text, -1 );
 
 	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, column, text, -1 );
 
