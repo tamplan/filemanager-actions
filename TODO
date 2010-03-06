@@ -162,3 +162,8 @@
 - use NADataDef to automatically generate schemas
   in data/nautilus-actions.schemas.in
   and in src/utils/nautilus-actions-schemas
+
+- before next release
+  as it is probable that desktop files will not be ready
+  -> join path and parameters
+  -> remove target background

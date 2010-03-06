@@ -1,5 +1,9 @@
 2009-03-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-model-dnd.c: Cleanup the code.
+
+2009-03-05 Pierre Wieser <pwieser@trychlos.org>
+
 	* nact/nact-tree-model-dnd.c (drop_inside):
 	Split to three functions to better readibility.
 	Fix drop inside an empty menu.

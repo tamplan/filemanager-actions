@@ -126,9 +126,6 @@ static gboolean      drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSe
 static gboolean      is_drop_possible( NactTreeModel *model, GtkTreePath *dest, NAObjectItem **parent );
 static gboolean      is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainWindow *window, NAObjectItem **parent );
 static gboolean      is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWindow *window, NAObjectItem **parent );
-#if 0
-static GtkTreePath  *drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction **parent );
-#endif
 static void          drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest );
 static gboolean      drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
 static NAObjectItem *is_dropped_already_exists( const NAObjectItem *importing, const NactMainWindow *window );
@@ -742,124 +739,6 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWin
 
 	return( drop_ok );
 }
-
-#if 0
-/*
- * is a drop possible at given dest ?
- * may slightly adjust the dest to drop profile inside an action
- */
-static GtkTreePath *
-drop_inside_adjust_dest( NactTreeModel *model, GtkTreePath *dest, NAObjectAction **parent )
-{
-	static const gchar *thisfn = "nact_tree_model_dnd_drop_inside_adjust_dest";
-	GtkTreePath *new_dest;
-	gboolean drop_ok;
-	NactApplication *application;
-	NactMainWindow *main_window;
-	GtkTreeIter iter;
-	NAObject *current;
-	GtkTreePath *path;
-
-	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
-	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
-
-	new_dest = gtk_tree_path_copy( dest );
-	drop_ok = FALSE;
-
-	/* if we can have an iter on given dest, then the dest already exists
-	 * so dropped items should be of the same type that already existing
-	 */
-	if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, new_dest )){
-		gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &current, -1 );
-		g_object_unref( current );
-		g_debug( "%s: current object at dest is %s", thisfn, G_OBJECT_TYPE_NAME( current ));
-
-		if( model->private->drag_has_profiles ){
-			if( NA_IS_OBJECT_PROFILE( current )){
-				drop_ok = TRUE;
-				if( parent ){
-					*parent = NA_OBJECT_ACTION( na_object_get_parent( current ));
-				}
-			} else {
-				nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_profile );
-			}
-
-		} else {
-			if( NA_IS_OBJECT_ITEM( current )){
-				drop_ok = TRUE;
-			} else {
-				nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_action_menu );
-			}
-		}
-
-	/* inserting at the end of the list
-	 */
-	} else if( gtk_tree_path_get_depth( dest ) == 1 ){
-		if( model->private->drag_has_profiles ){
-			nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_profile );
-		} else {
-			drop_ok = TRUE;
-		}
-
-	/* we cannot have an iter on the dest: this means that we try to
-	 * insert items into the dest : check what is the parent
-	 */
-	} else {
-		path = gtk_tree_path_copy( dest );
-		if( gtk_tree_path_up( path )){
-			if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path )){
-				gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &current, -1 );
-				g_object_unref( current );
-				g_debug( "%s: current object at parent dest is %s", thisfn, G_OBJECT_TYPE_NAME( current ));
-
-				if( model->private->drag_has_profiles ){
-					if( NA_IS_OBJECT_ACTION( current )){
-						drop_ok = TRUE;
-						if( parent ){
-							*parent = NA_OBJECT_ACTION( current );
-						}
-
-					} else if( NA_IS_OBJECT_PROFILE( current )){
-						gtk_tree_path_free( new_dest );
-						new_dest = gtk_tree_path_copy( path );
-						drop_ok = TRUE;
-						if( parent ){
-							*parent = NA_OBJECT_ACTION( na_object_get_parent( current ));
-						}
-
-					} else {
-						nact_main_statusbar_display_with_timeout(
-								main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_profile );
-					}
-
-				} else {
-					if( NA_IS_OBJECT_MENU( current )){
-						drop_ok = TRUE;
-					} else {
-						nact_main_statusbar_display_with_timeout(
-								main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_action_menu );
-					}
-				}
-			}
-		}
-		gtk_tree_path_free( path );
-	}
-
-	if( drop_ok && !is_parent_accept_new_childs( model, new_dest )){
-		drop_ok = FALSE;
-	}
-
-	if( !drop_ok ){
-		gtk_tree_path_free( new_dest );
-		new_dest = NULL;
-	}
-
-	return( new_dest );
-}
-#endif
 
 static void
 drop_inside_move_dest( NactTreeModel *model, GList *rows, GtkTreePath **dest )
