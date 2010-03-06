@@ -34,6 +34,7 @@
 
 #include <glib/gi18n.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
@@ -53,18 +54,11 @@ struct NAObjectActionPrivate {
 	gboolean dispose_has_run;
 };
 
-/* while iterating when searching for obsoleted boxed
- */
-typedef struct {
-	NAObjectProfile *profile;
-	GList           *moved;
-}
-	IterForObsoletedParms;
-
 /* i18n: default label for a new action */
 #define NEW_NAUTILUS_ACTION				N_( "New Nautilus action" )
 
-extern NADataGroup action_data_groups [];		/* defined in na-item-action-factory.c */
+extern NADataGroup action_data_groups [];		/* defined in na-object-action-factory.c */
+extern NADataDef   data_def_action_v1 [];		/* defined in na-object-action-factory.c */
 
 static NAObjectItemClass *st_parent_class = NULL;
 
@@ -89,7 +83,8 @@ static void         ifactory_object_read_done( NAIFactoryObject *instance, const
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static gboolean     check_for_obsoleted_iter( const NAIFactoryObject *object, NADataBoxed *boxed, IterForObsoletedParms *parms );
+static void         convert_pre_v2_action( NAIFactoryObject *instance );
+static void         deals_with_toolbar_label( NAIFactoryObject *instance );
 
 static gboolean     object_object_is_valid( const NAObjectAction *action );
 static gboolean     is_valid_label( const NAObjectAction *action );
@@ -324,48 +319,28 @@ ifactory_object_read_start( NAIFactoryObject *instance, const NAIFactoryProvider
 {
 }
 
+/*
+ * at this time, we don't yet have readen the profiles as this will be
+ * done in ifactory_provider_read_done - we so just be able to deal with
+ * action-specific properties (not check for profiles consistency)
+ */
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	IterForObsoletedParms parms;
-	GList *ibox;
-	gchar *label;
-
 	g_debug( "na_object_action_ifactory_object_read_done: instance=%p", ( void * ) instance );
 
-	/* do we have a pre-v2 action ?
-	 *  i.e. an action without profile, with some data in its body
-	 *  -> do we have read some obsoleted data which are now in the profile
+	/* may attach a new profile if we detect a pre-v2 action
 	 */
-	parms.profile = na_object_profile_new();
-	parms.moved = NULL;
+	convert_pre_v2_action( instance );
 
-	na_factory_object_iter_on_boxed( instance, ( NAFactoryObjectIterBoxedFn ) check_for_obsoleted_iter, &parms );
+	/* deals with obsoleted data, i.e. data which may have been written in the past
+	 * but are no long written by now
+	 */
+	deals_with_toolbar_label( instance );
 
-	if( parms.moved ){
-		na_object_set_id( parms.profile, "profile-pre-v2" );
-		na_object_set_label( parms.profile, _( "Profile automatically created from pre-v2 action" ));
-		na_object_attach_profile( instance, parms.profile );
-
-		for( ibox = parms.moved ; ibox ; ibox = ibox->next ){
-			na_factory_object_move_boxed( NA_IFACTORY_OBJECT( parms.profile ), instance, NA_DATA_BOXED( ibox->data ));
-		}
-
-	} else {
-		g_object_unref( parms.profile );
-	}
-
-	/* set action defaults
+	/* last, set other action defaults
 	 */
 	na_factory_object_set_defaults( instance );
-
-	/* if toolbar-same-label is true, then ensure that this is actually true
-	 */
-	if( na_object_is_toolbar_same_label( instance )){
-		label = na_object_get_label( instance );
-		na_object_set_toolbar_label( instance, label );
-		g_free( label );
-	}
 }
 
 static guint
@@ -379,30 +354,115 @@ ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvide
 static guint
 ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	return( NA_IIO_PROVIDER_CODE_OK );
-}
+	static const gchar *thisfn = "na_object_action_ifactory_object_write_done";
+	guint code;
+	GSList *children_slist, *ic;
+	NAObjectProfile *profile;
 
-static gboolean
-check_for_obsoleted_iter( const NAIFactoryObject *object, NADataBoxed *boxed, IterForObsoletedParms *parms )
-{
-	NADataDef *action_def = na_data_boxed_get_data_def( boxed );
+	code = NA_IIO_PROVIDER_CODE_OK;
 
-	/* if property is obsoleted in an action
-	 */
-	if( action_def->readable && !action_def->writable ){
-		NADataDef *profile_def = na_factory_object_get_data_def( NA_IFACTORY_OBJECT( parms->profile ), action_def->name );
+	if( NA_IS_OBJECT_ACTION( instance )){
+		children_slist = na_object_get_items_slist( instance );
 
-		/* but the property exists in the profile
-		 */
-		if( profile_def && profile_def->readable && profile_def->writable){
-			g_debug( "na_object_action_check_for_obsoleted_iter: " \
-					 "boxed=%p (%s) marked to be moved from action body to profile",
-							 ( void * ) boxed, action_def->name );
-			parms->moved =g_list_prepend( parms->moved, boxed );
+		for( ic = children_slist ; ic && code == NA_IIO_PROVIDER_CODE_OK ; ic = ic->next ){
+			profile = NA_OBJECT_PROFILE( na_object_get_item( instance, ic->data ));
+
+			if( profile ){
+				code = na_ifactory_provider_write_item( writer, writer_data, NA_IFACTORY_OBJECT( profile ), messages );
+
+			} else {
+				g_warning( "%s: profile not found: %s", thisfn, ( const gchar * ) ic->data );
+			}
 		}
 	}
 
-	return( FALSE );
+	return( code );
+}
+
+/*
+ * do we have a pre-v2 action ?
+ *  it may be identified by an version = "1.x"
+ *  or by any data found in data_def_action_v1 (defined in na-object-action-factory.c)
+ *  -> move obsoleted data to a new profile
+ */
+static void
+convert_pre_v2_action( NAIFactoryObject *instance )
+{
+	gboolean is_pre_v2;
+	GList *to_move;
+	NADataDef *def;
+	NADataBoxed *boxed;
+	gchar *version;
+	GList *ibox;
+	NAObjectProfile *profile;
+
+	is_pre_v2 = FALSE;
+	to_move = NULL;
+
+	def = data_def_action_v1;
+	while( def->name ){
+		boxed = na_ifactory_object_get_data_boxed( instance , def->name );
+		if( boxed ){
+			g_debug( "na_object_action_convert_pre_v2_action: " \
+					 "boxed=%p (%s) marked to be moved from action body to profile",
+							 ( void * ) boxed, def->name );
+			to_move =g_list_prepend( to_move, boxed );
+		}
+		def++;
+	}
+
+	if( to_move ){
+		is_pre_v2 = TRUE;
+
+	} else {
+		version = na_object_get_version( instance );
+		if( version && strlen( version ) && atoi( version ) < 2 ){
+			is_pre_v2 = TRUE;
+		}
+		g_free( version );
+	}
+
+	if( is_pre_v2 ){
+		profile = na_object_profile_new();
+		na_object_set_id( profile, "profile-pre-v2" );
+		na_object_set_label( profile, _( "Profile automatically created from pre-v2 action" ));
+		na_object_attach_profile( instance, profile );
+
+		if( to_move ){
+			for( ibox = to_move ; ibox ; ibox = ibox->next ){
+				na_factory_object_move_boxed(
+						NA_IFACTORY_OBJECT( profile ), instance, NA_DATA_BOXED( ibox->data ));
+			}
+		}
+
+		na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
+	}
+}
+
+/*
+ * if toolbar-same-label is true, then ensure that this is actually true
+ */
+static void
+deals_with_toolbar_label( NAIFactoryObject *instance )
+{
+	gchar *toolbar_label;
+	gchar *action_label;
+	gboolean same_label;
+
+	toolbar_label = na_object_get_toolbar_label( instance );
+	action_label = na_object_get_label( instance );
+
+	if( !toolbar_label || !g_utf8_strlen( toolbar_label, -1 )){
+		na_object_set_toolbar_label( instance, action_label );
+		na_object_set_toolbar_same_label( instance, TRUE );
+
+	} else {
+		same_label = ( g_utf8_collate( action_label, toolbar_label ) == 0 );
+		na_object_set_toolbar_same_label( instance, same_label );
+	}
+
+	g_free( action_label );
+	g_free( toolbar_label );
 }
 
 static gboolean

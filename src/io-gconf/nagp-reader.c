@@ -54,12 +54,10 @@ typedef struct {
 
 static NAObjectItem *read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages );
 
-static NADataBoxed  *read_data_item_properties( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *reader_data, const NADataDef *def );
-static NADataBoxed  *read_data_profile_properties( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *reader_data, const NADataDef *def );
-static void          read_done_item( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
-static void          read_done_action( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
+static void          read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
+static void          read_done_action_load_profiles_from_list( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
 static void          read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
-static void          read_done_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
+static void          read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
 
 static NADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
 static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key );
@@ -186,29 +184,10 @@ nagp_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, co
 		return( NULL );
 	}
 
-	boxed = NULL;
-
-	if( NA_IS_OBJECT_ITEM( object )){
-		boxed = read_data_item_properties( provider, NA_OBJECT_ITEM( object ), ( ReaderData * ) reader_data, def );
-	}
-
-	if( NA_IS_OBJECT_PROFILE( object )){
-		boxed = read_data_profile_properties( provider, NA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, def );
-	}
+	boxed = get_boxed_from_path(
+			NAGP_GCONF_PROVIDER( provider ), (( ReaderData * ) reader_data )->path, reader_data, def );
 
 	return( boxed );
-}
-
-static NADataBoxed *
-read_data_item_properties( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *reader_data, const NADataDef *def )
-{
-	return( get_boxed_from_path( NAGP_GCONF_PROVIDER( provider ), reader_data->path, reader_data, def ));
-}
-
-static NADataBoxed *
-read_data_profile_properties( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *reader_data, const NADataDef *def )
-{
-	return( get_boxed_from_path( NAGP_GCONF_PROVIDER( provider ), reader_data->path, reader_data, def ));
 }
 
 void
@@ -227,22 +206,22 @@ nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, co
 			( void * ) messages );
 
 	if( NA_IS_OBJECT_ITEM( object )){
-		read_done_item( provider, NA_OBJECT_ITEM( object ), ( ReaderData * ) reader_data, messages );
+		read_done_item_is_writable( provider, NA_OBJECT_ITEM( object ), ( ReaderData * ) reader_data, messages );
 	}
 
 	if( NA_IS_OBJECT_ACTION( object )){
-		read_done_action( provider, NA_OBJECT_ACTION( object ), ( ReaderData * ) reader_data, messages );
+		read_done_action_load_profiles_from_list( provider, NA_OBJECT_ACTION( object ), ( ReaderData * ) reader_data, messages );
 	}
 
 	if( NA_IS_OBJECT_PROFILE( object )){
-		read_done_profile( provider, NA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, messages );
+		read_done_profile_attach_profile( provider, NA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, messages );
 	}
 
 	g_debug( "quitting nagp_read_done for %s at %p", G_OBJECT_TYPE_NAME( object ), ( void * ) object );
 }
 
 static void
-read_done_item( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages )
+read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages )
 {
 	GSList *entries, *ie;
 	gboolean writable;
@@ -265,7 +244,7 @@ read_done_item( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderDa
 }
 
 static void
-read_done_action( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages )
+read_done_action_load_profiles_from_list( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages )
 {
 	GSList *order;
 	GSList *list_profiles;
@@ -321,7 +300,7 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 }
 
 static void
-read_done_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages )
+read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages )
 {
 	na_object_attach_profile( data->parent, profile );
 }

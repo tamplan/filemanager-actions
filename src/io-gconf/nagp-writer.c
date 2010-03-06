@@ -46,11 +46,6 @@
 #include "nagp-writer.h"
 #include "nagp-keys.h"
 
-typedef struct {
-	gchar *parent_id;
-}
-	WriterData;
-
 /*
  * API function: should only be called through NAIIOProvider interface
  */
@@ -113,7 +108,6 @@ nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_write_item";
 	NagpGConfProvider *self;
 	guint ret;
-	WriterData *data;
 
 	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
 			thisfn,
@@ -136,12 +130,7 @@ nagp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 	ret = nagp_iio_provider_delete_item( provider, item, messages );
 
 	if( ret == NA_IIO_PROVIDER_CODE_OK ){
-
-		data = g_new0( WriterData, 1 );
-
-		na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), data, NA_IFACTORY_OBJECT( item ), messages );
-
-		g_free( data );
+		na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( provider ), NULL, NA_IFACTORY_OBJECT( item ), messages );
 	}
 
 	gconf_client_suggest_sync( self->private->gconf, NULL );
@@ -218,38 +207,7 @@ guint
 nagp_writer_write_start( const NAIFactoryProvider *writer, void *writer_data,
 							const NAIFactoryObject *object, GSList **messages  )
 {
-	guint code;
-	gchar *id, *parent_path, *path;
-	gchar *msg;
-
-	code = NA_IIO_PROVIDER_CODE_OK;
-
-	if( NA_IS_OBJECT_ITEM( object )){
-		g_return_val_if_fail(
-				(( WriterData * ) writer_data )->parent_id == NULL,
-				NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
-
-		id = na_object_get_id( object );
-		parent_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, id );
-		path = gconf_concat_dir_and_key( parent_path, NAGP_ENTRY_TYPE );
-
-		msg = NULL;
-		na_gconf_utils_write_string(
-				NAGP_GCONF_PROVIDER( writer )->private->gconf,
-				path,
-				NA_IS_OBJECT_ACTION( object ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU,
-				&msg );
-		if( msg ){
-			*messages = g_slist_append( *messages, msg );
-			code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
-		}
-
-		g_free( path );
-		g_free( parent_path );
-		g_free( id );
-	}
-
-	return( code );
+	return( NA_IIO_PROVIDER_CODE_OK );
 }
 
 guint
@@ -260,8 +218,8 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 	static const gchar *thisfn = "nagp_writer_write_data";
 	guint code;
 	NADataDef *def;
-	gchar *id;
-	gchar *parent_path, *dir_path, *path;
+	gchar *this_id;
+	gchar *this_path, *path;
 	gchar *msg;
 	gchar *str_value;
 	gboolean bool_value;
@@ -275,16 +233,21 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 	code = NA_IIO_PROVIDER_CODE_OK;
 	def = na_data_boxed_get_data_def( boxed );
 
-	id = na_object_get_id( object );
+	if( NA_IS_OBJECT_PROFILE( object )){
+		NAObjectItem *parent = NA_OBJECT_ITEM( na_object_get_parent( object ));
+		gchar *parent_id = na_object_get_id( parent );
+		gchar *id = na_object_get_id( object );
+		this_id = gconf_concat_dir_and_key( parent_id, id );
+		g_free( id );
+		g_free( parent_id );
 
-	parent_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH,
-			(( WriterData * ) writer_data )->parent_id ?
-					(( WriterData * ) writer_data )->parent_id : id );
+	} else {
+		this_id = na_object_get_id( object );
 
-	dir_path = (( WriterData * ) writer_data )->parent_id ?
-					gconf_concat_dir_and_key( parent_path, id ) : g_strdup( parent_path );
+	}
 
-	path = gconf_concat_dir_and_key( dir_path, def->gconf_entry );
+	this_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, this_id );
+	path = gconf_concat_dir_and_key( this_path, def->gconf_entry );
 
 	gconf = NAGP_GCONF_PROVIDER( provider )->private->gconf;
 
@@ -353,8 +316,8 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 	g_free( msg );
 	g_free( path );
-	g_free( parent_path );
-	g_free( id );
+	g_free( this_path );
+	g_free( this_id );
 
 	return( code );
 }
@@ -364,28 +327,5 @@ nagp_writer_write_done( const NAIFactoryProvider *writer, void *writer_data,
 									const NAIFactoryObject *object,
 									GSList **messages  )
 {
-	guint code;
-	GSList *children_slist, *ic;
-	WriterData *data;
-	NAObjectProfile *profile;
-
-	code = NA_IIO_PROVIDER_CODE_OK;
-
-	if( NA_IS_OBJECT_ACTION( object )){
-		children_slist = na_object_get_items_slist( object );
-
-		for( ic = children_slist ; ic && code == NA_IIO_PROVIDER_CODE_OK ; ic = ic->next ){
-			data = g_new0( WriterData, 1 );
-			data->parent_id = na_object_get_id( object );
-
-			profile = NA_OBJECT_PROFILE( na_object_get_item( object, ic->data ));
-
-			code = na_ifactory_provider_write_item( writer, data, NA_IFACTORY_OBJECT( profile ), messages );
-
-			g_free( data->parent_id );
-			g_free( data );
-		}
-	}
-
-	return( code );
+	return( NA_IIO_PROVIDER_CODE_OK );
 }

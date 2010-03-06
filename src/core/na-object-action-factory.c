@@ -162,7 +162,7 @@ static NADataDef data_def_action [] = {
  * these are obsoleted since 1.9 (which was a non-official version)
  * readable but non writable, no default
  */
-static NADataDef data_def_obsoleted_action [] = {
+NADataDef data_def_action_v1 [] = {
 
 	{ NAFO_DATA_PATH,
 				TRUE,
@@ -297,7 +297,7 @@ NADataGroup action_data_groups [] = {
 	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
 	{ NA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
 	{ NA_FACTORY_OBJECT_ACTION_GROUP,     data_def_action },
-	{ NA_FACTORY_OBSOLETED_ACTION_GROUP,  data_def_obsoleted_action },
+	{ NA_FACTORY_OBSOLETED_ACTION_GROUP,  data_def_action_v1 },
 	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, NULL },
 	{ NULL }
 };
