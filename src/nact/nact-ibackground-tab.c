@@ -368,8 +368,7 @@ tab_set_sensitive( NactIBackgroundTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
-	enable_tab = ( profile != NULL &&
-			( na_object_is_target_background( action ) || na_object_is_target_toolbar( action )));
+	enable_tab = ( profile != NULL );
 
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_BACKGROUND, enable_tab );
 

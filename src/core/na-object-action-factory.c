@@ -74,16 +74,26 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				"target-selection" },
 
+	/* this data has been introduced in 2.29.1 and has been left up to 2.29.4
+	 * it has been removed starting with 2.29.5
+	 * it is no more used anywhere
+	 * it is so no more readable (it doesn't take anymore any useful information)
+	 * nor writable (obsolete)
+	 *
+	 * we now consider that folders condition is to be met when the target is
+	 * is only one folder, whether this is a selected item, or the current
+	 * folder when there is no selection
+	 */
 	{ NAFO_DATA_TARGET_BACKGROUND,
 				TRUE,
-				TRUE,
-				TRUE,
+				FALSE,
+				FALSE,
 				"Target the folder context menu",
 				"Does the action target the context menu when there is no selection ?",
 				NAFD_TYPE_BOOLEAN,
-				"false",
-				TRUE,
-				TRUE,
+				"true",
+				FALSE,
+				FALSE,
 				FALSE,
 				FALSE,
 				"target-background" },
