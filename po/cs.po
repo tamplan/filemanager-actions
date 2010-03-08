@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
 "POT-Creation-Date: 2010-03-06 09:47+0000\n"
-"PO-Revision-Date: 2010-03-07 12:25+0100\n"
+"PO-Revision-Date: 2010-03-07 21:18+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1101,38 +1101,36 @@ msgid ""
 "Item is not writable for an unknown reason (%d).\n"
 "Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
 msgstr ""
+"Položka není z nějakého neznámého důvodu zapisovatelná (%d).\n"
+"Věnujte prosím chvíli času nahlášení chyby na http://bugzilla.gnome.org."
 
 #: ../src/core/na-io-provider.c:1308
 msgid "OK."
-msgstr ""
+msgstr "OK."
 
 #: ../src/core/na-io-provider.c:1312
 msgid ""
 "Program flow error.\n"
 "Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
 msgstr ""
+"Chyba běhu programu.\n"
+"Věnujte prosím chvíli času nahlášení chyby na http://bugzilla.gnome.org."
 
 #: ../src/core/na-io-provider.c:1317
-#, fuzzy
-#| msgid "I/O provider is not willing to write."
 msgid "The I/O provider is not willing to do that."
-msgstr "Zprostředkovatel V/V nedovoluje zápis."
+msgstr "Zprostředkovatel V/V toto neumožňuje."
 
 #: ../src/core/na-io-provider.c:1321
-#, fuzzy
-#| msgid "No writable I/O provider found."
 msgid "Write error in I/O provider."
-msgstr "Nebyl nalezen žádný zprostředkovatel zapisovatelného V/V."
+msgstr "Chyba zápisu ve zprostředkovateli V/V."
 
 #: ../src/core/na-io-provider.c:1325
 msgid "Unable to delete GConf schemas."
-msgstr ""
+msgstr "Nelze smazat schémata GConf."
 
 #: ../src/core/na-io-provider.c:1329
-#, fuzzy
-#| msgid "Unable to set the default icon for the application."
 msgid "Unable to delete configuration."
-msgstr "Nelze nastavit výchozí ikonu pro aplikaci."
+msgstr "Nelze smazat nastavení."
 
 #: ../src/core/na-io-provider.c:1333
 #, c-format
@@ -1140,6 +1138,8 @@ msgid ""
 "Unknow return code (%d).\n"
 "Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
 msgstr ""
+"Neznámý návratový kód (%d).\n"
+"Věnujte prosím chvíli času nahlášení chyby na http://bugzilla.gnome.org."
 
 #. i18n: default label for a new action
 #: ../src/core/na-object-action.c:65
@@ -1704,17 +1704,15 @@ msgstr "Nastavení Akcí Nautilus"
 
 #. i18n: The action <label> is about to be exported
 #: ../src/nact/nact-export-ask.c:326
-#, fuzzy, c-format
-#| msgid "The item \"%s\" is about to be exported."
+#, c-format
 msgid "The action \"%s\" is about to be exported."
-msgstr "Má být exportována položka „%s“."
+msgstr "Má být exportována akce „%s“."
 
 #. i18n: The menu <label> is about to be exported
 #: ../src/nact/nact-export-ask.c:329
-#, fuzzy, c-format
-#| msgid "The item \"%s\" is about to be exported."
+#, c-format
 msgid "The menu \"%s\" is about to be exported."
-msgstr "Má být exportována položka „%s“."
+msgstr "Má být exportována nabídka „%s“."
 
 #: ../src/nact/nact-export-format.c:46
 msgid "_Ask me"
@@ -2065,8 +2063,7 @@ msgstr "Zobrazit lištu nástrojů Nápověda"
 
 #. i18n: note the space at the beginning of the sentence
 #: ../src/nact/nact-main-menubar.c:490
-#, fuzzy, c-format
-#| msgid " %d menus, %d actions, %d profiles are currently loaded"
+#, c-format
 msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
 msgstr "Nyní je načteno %d nabídek, %d akcí, %d profilů"
 
@@ -2077,6 +2074,7 @@ msgstr "Nový profil"
 #: ../src/nact/nact-main-menubar.c:1277
 msgid "Not all items have been deleted as following ones are not modifiable:"
 msgstr ""
+"Nebyly vymazány všechny položky, protože následující z nich nelze upravovat:"
 
 #: ../src/nact/nact-main-window.c:1305
 msgid ""
