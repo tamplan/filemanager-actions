@@ -1,5 +1,8 @@
 2009-03-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-writer.c (nagp_writer_write_data):
+	Replace gconf_concat_dir_and_key by g_strdup_printf.
+
 	* src/core/na-ifactory-provider.c (na_ifactory_provider_write_item):
 	Add a debug trace when entering in the function.
 

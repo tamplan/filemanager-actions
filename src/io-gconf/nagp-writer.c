@@ -237,7 +237,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 		NAObjectItem *parent = NA_OBJECT_ITEM( na_object_get_parent( object ));
 		gchar *parent_id = na_object_get_id( parent );
 		gchar *id = na_object_get_id( object );
-		this_id = gconf_concat_dir_and_key( parent_id, id );
+		this_id = g_strdup_printf( "%s/%s", parent_id, id );
 		g_free( id );
 		g_free( parent_id );
 
