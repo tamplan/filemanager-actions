@@ -1,5 +1,8 @@
 2009-03-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-ifactory-provider.c (na_ifactory_provider_write_item):
+	Add a debug trace when entering in the function.
+
 	* src/api/na-icontext-conditions.h: Renamed as na-icontextual.h.
 	* src/core/na-icontext-conditions.c: Renamed as na-icontextual.c.
 	* src/core/na-icontext-conditions-factory.c:
