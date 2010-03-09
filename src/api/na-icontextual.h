@@ -28,17 +28,17 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_ICONTEXT_CONDITIONS_H__
-#define __NAUTILUS_ACTIONS_API_NA_ICONTEXT_CONDITIONS_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_ICONTEXTUAL_H__
+#define __NAUTILUS_ACTIONS_API_NA_ICONTEXTUAL_H__
 
 /**
- * SECTION: na_icontext_conditions
- * @short_description: #NAIContextConditions interface definition.
- * @include: nautilus-actions/na-icontext_conditions.h
+ * SECTION: na_icontextual
+ * @short_description: #NAIContextual interface definition.
+ * @include: nautilus-actions/na-icontextual.h
  *
  * This interface is implemented by all #NAObject-derived objects
- * which must met some conditions in order to be displayed in the
- * Nautilus context menu.
+ * whose the display in the Nautilus context menu is subject to some
+ * conditions.
  *
  * Implementors, typically actions, profiles and menus, host the required
  * data as #NADataBoxed in a dedicated NA_FACTORY_CONDITIONS_GROUP
@@ -49,22 +49,22 @@
 
 G_BEGIN_DECLS
 
-#define NA_ICONTEXT_CONDITIONS_TYPE							( na_icontext_conditions_get_type())
-#define NA_ICONTEXT_CONDITIONS( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_ICONTEXT_CONDITIONS_TYPE, NAIContextConditions ))
-#define NA_IS_ICONTEXT_CONDITIONS( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_ICONTEXT_CONDITIONS_TYPE ))
-#define NA_ICONTEXT_CONDITIONS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_ICONTEXT_CONDITIONS_TYPE, NAIContextConditionsInterface ))
+#define NA_ICONTEXTUAL_TYPE							( na_icontextual_get_type())
+#define NA_ICONTEXTUAL( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_ICONTEXTUAL_TYPE, NAIContextual ))
+#define NA_IS_ICONTEXTUAL( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_ICONTEXTUAL_TYPE ))
+#define NA_ICONTEXTUAL_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_ICONTEXTUAL_TYPE, NAIContextualInterface ))
 
-typedef struct NAIContextConditions                 NAIContextConditions;
+typedef struct NAIContextual                 NAIContextual;
 
-typedef struct NAIContextConditionsInterfacePrivate NAIContextConditionsInterfacePrivate;
+typedef struct NAIContextualInterfacePrivate NAIContextualInterfacePrivate;
 
 typedef struct {
-	GTypeInterface                        parent;
-	NAIContextConditionsInterfacePrivate *private;
+	GTypeInterface                 parent;
+	NAIContextualInterfacePrivate *private;
 
 	/**
 	 * is_candidate:
-	 * @object: this #NAIContextConditions object.
+	 * @object: this #NAIContextual object.
 	 * @target: the initial target which triggered this function's stack.
 	 *  This target is defined in na-object-item.h.
 	 * @selection: the current selection as a #GList of #NautilusFileInfo.
@@ -72,23 +72,23 @@ typedef struct {
 	 * Returns: %TRUE if the @object may be a potential candidate, %FALSE
 	 * else.
 	 *
-	 * The #NAIContextConditions implementor may take advantage of this
+	 * The #NAIContextual implementor may take advantage of this
 	 * virtual function to check for its own specific data. Only if the
 	 * implementor does return %TRUE (or just doesn't implement this
 	 * virtual), the conditions themselves will be checked.
 	 */
-	gboolean ( *is_candidate )( NAIContextConditions *object, guint target, GList *selection );
+	gboolean ( *is_candidate )( NAIContextual *object, guint target, GList *selection );
 }
-	NAIContextConditionsInterface;
+	NAIContextualInterface;
 
-GType    na_icontext_conditions_get_type( void );
+GType    na_icontextual_get_type( void );
 
-gboolean na_icontext_conditions_is_candidate( const NAIContextConditions *object, guint target, GList *selection );
-gboolean na_icontext_conditions_is_valid    ( const NAIContextConditions *object );
+gboolean na_icontextual_is_candidate( const NAIContextual *object, guint target, GList *selection );
+gboolean na_icontextual_is_valid    ( const NAIContextual *object );
 
-void     na_icontext_conditions_set_scheme    ( NAIContextConditions *object, const gchar *scheme, gboolean selected );
-void     na_icontext_conditions_replace_folder( NAIContextConditions *object, const gchar *old, const gchar *new );
+void     na_icontextual_set_scheme    ( NAIContextual *object, const gchar *scheme, gboolean selected );
+void     na_icontextual_replace_folder( NAIContextual *object, const gchar *old, const gchar *new );
 
 G_END_DECLS
 
-#endif /* __NAUTILUS_ACTIONS_API_NA_ICONTEXT_CONDITIONS_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_ICONTEXTUAL_H__ */

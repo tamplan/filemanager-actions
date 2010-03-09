@@ -59,8 +59,8 @@ libna_core_la_SOURCES = \
 	na-gtk-utils.h										\
 	na-iabout.c											\
 	na-iabout.h											\
-	na-icontext-conditions.c							\
-	na-icontext-conditions-factory.c					\
+	na-icontextual.c									\
+	na-icontextual-factory.c							\
 	na-iduplicable.c									\
 	na-iexporter.c										\
 	na-ifactory-object.c								\

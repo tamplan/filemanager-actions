@@ -91,7 +91,7 @@ static guint        ifactory_object_write_done( NAIFactoryObject *instance, cons
 
 static void         set_target_background( NAObjectProfile *profile );
 
-static void         icontext_conditions_iface_init( NAIContextConditionsInterface *iface );
+static void         icontext_conditions_iface_init( NAIContextualInterface *iface );
 
 static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
@@ -154,7 +154,7 @@ register_type( void )
 
 	type = g_type_register_static( NA_OBJECT_ID_TYPE, "NAObjectProfile", &info, 0 );
 
-	g_type_add_interface_static( type, NA_ICONTEXT_CONDITIONS_TYPE, &icontext_conditions_iface_info );
+	g_type_add_interface_static( type, NA_ICONTEXTUAL_TYPE, &icontext_conditions_iface_info );
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
@@ -397,7 +397,7 @@ ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider
 }
 
 static void
-icontext_conditions_iface_init( NAIContextConditionsInterface *iface )
+icontext_conditions_iface_init( NAIContextualInterface *iface )
 {
 	static const gchar *thisfn = "na_object_profile_icontext_conditions_iface_init";
 
@@ -415,7 +415,7 @@ profile_is_valid( const NAObjectProfile *profile )
 
 		is_valid = \
 				is_valid_path_parameters( profile ) &&
-				na_icontext_conditions_is_valid( NA_ICONTEXT_CONDITIONS( profile ));
+				na_icontextual_is_valid( NA_ICONTEXTUAL( profile ));
 	}
 
 	return( is_valid );

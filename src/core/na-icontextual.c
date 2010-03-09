@@ -45,7 +45,7 @@
 
 /* private interface data
  */
-struct NAIContextConditionsInterfacePrivate {
+struct NAIContextualInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -53,30 +53,30 @@ static gboolean st_initialized = FALSE;
 static gboolean st_finalized   = FALSE;
 
 static GType    register_type( void );
-static void     interface_base_init( NAIContextConditionsInterface *klass );
-static void     interface_base_finalize( NAIContextConditionsInterface *klass );
+static void     interface_base_init( NAIContextualInterface *klass );
+static void     interface_base_finalize( NAIContextualInterface *klass );
 
-static gboolean v_is_candidate( NAIContextConditions *object, guint target, GList *selection );
+static gboolean v_is_candidate( NAIContextual *object, guint target, GList *selection );
 
-static gboolean is_target_background_candidate( const NAIContextConditions *object, NASelectedInfo *current_folder );
-static gboolean is_target_toolbar_candidate( const NAIContextConditions *object, NASelectedInfo *current_folder );
-static gboolean is_current_folder_inside( const NAIContextConditions *object, NASelectedInfo *current_folder );
-static gboolean is_target_selection_candidate( const NAIContextConditions *object, GList *files );
-static gboolean is_valid_basenames( const NAIContextConditions *object );
-static gboolean is_valid_mimetypes( const NAIContextConditions *object );
-static gboolean is_valid_isfiledir( const NAIContextConditions *object );
-static gboolean is_valid_schemes( const NAIContextConditions *object );
-static gboolean is_valid_folders( const NAIContextConditions *object );
+static gboolean is_target_background_candidate( const NAIContextual *object, NASelectedInfo *current_folder );
+static gboolean is_target_toolbar_candidate( const NAIContextual *object, NASelectedInfo *current_folder );
+static gboolean is_current_folder_inside( const NAIContextual *object, NASelectedInfo *current_folder );
+static gboolean is_target_selection_candidate( const NAIContextual *object, GList *files );
+static gboolean is_valid_basenames( const NAIContextual *object );
+static gboolean is_valid_mimetypes( const NAIContextual *object );
+static gboolean is_valid_isfiledir( const NAIContextual *object );
+static gboolean is_valid_schemes( const NAIContextual *object );
+static gboolean is_valid_folders( const NAIContextual *object );
 
 static gboolean validate_schemes( GSList *object_schemes, NASelectedInfo *iter );
 
 /**
- * na_icontext_conditions_get_type:
+ * na_icontextual_get_type:
  *
  * Returns: the #GType type of this interface.
  */
 GType
-na_icontext_conditions_get_type( void )
+na_icontextual_get_type( void )
 {
 	static GType type = 0;
 
@@ -88,18 +88,18 @@ na_icontext_conditions_get_type( void )
 }
 
 /*
- * na_icontext_conditions_register_type:
+ * na_icontextual_register_type:
  *
  * Registers this interface.
  */
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "na_icontext_conditions_register_type";
+	static const gchar *thisfn = "na_icontextual_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NAIContextConditionsInterface ),
+		sizeof( NAIContextualInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -112,7 +112,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NAIContextConditions", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "NAIContextual", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
@@ -120,24 +120,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIContextConditionsInterface *klass )
+interface_base_init( NAIContextualInterface *klass )
 {
-	static const gchar *thisfn = "na_icontext_conditions_interface_base_init";
+	static const gchar *thisfn = "na_icontextual_interface_base_init";
 
 	if( !st_initialized ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
-		klass->private = g_new0( NAIContextConditionsInterfacePrivate, 1 );
+		klass->private = g_new0( NAIContextualInterfacePrivate, 1 );
 
 		st_initialized = TRUE;
 	}
 }
 
 static void
-interface_base_finalize( NAIContextConditionsInterface *klass )
+interface_base_finalize( NAIContextualInterface *klass )
 {
-	static const gchar *thisfn = "na_icontext_conditions_interface_base_finalize";
+	static const gchar *thisfn = "na_icontextual_interface_base_finalize";
 
 	if( st_initialized && !st_finalized ){
 
@@ -150,8 +150,8 @@ interface_base_finalize( NAIContextConditionsInterface *klass )
 }
 
 /**
- * na_icontext_conditions_is_candidate:
- * @object: a #NAIContextConditions to be checked.
+ * na_icontextual_is_candidate:
+ * @object: a #NAIContextual to be checked.
  * @target: the current target.
  * @files: the currently selected items, as provided by Nautilus.
  *
@@ -164,13 +164,13 @@ interface_base_finalize( NAIContextConditionsInterface *klass )
  * else.
  */
 gboolean
-na_icontext_conditions_is_candidate( const NAIContextConditions *object, guint target, GList *files )
+na_icontextual_is_candidate( const NAIContextual *object, guint target, GList *files )
 {
 	gboolean is_candidate;
 
-	g_return_val_if_fail( NA_IS_ICONTEXT_CONDITIONS( object ), FALSE );
+	g_return_val_if_fail( NA_IS_ICONTEXTUAL( object ), FALSE );
 
-	is_candidate = v_is_candidate( NA_ICONTEXT_CONDITIONS( object ), target, files );
+	is_candidate = v_is_candidate( NA_ICONTEXTUAL( object ), target, files );
 
 	switch( target ){
 		case ITEM_TARGET_BACKGROUND:
@@ -190,23 +190,23 @@ na_icontext_conditions_is_candidate( const NAIContextConditions *object, guint t
 }
 
 /**
- * na_icontext_conditions_is_valid:
+ * na_icontextual_is_valid:
  * @profile: the #NAObjectProfile to be checked.
  *
  * Returns: %TRUE if this profile is valid, %FALSE else.
  *
  * This function is part of NAIDuplicable::check_status() and is called
- * by NAIDuplicable objects which also implement NAIContextConditions
+ * by NAIDuplicable objects which also implement NAIContextual
  * interface. It so doesn't make sense of asking the object for its
  * validity status as it has already been checked before calling the
  * function.
  */
 gboolean
-na_icontext_conditions_is_valid( const NAIContextConditions *object )
+na_icontextual_is_valid( const NAIContextual *object )
 {
 	gboolean is_valid;
 
-	g_return_val_if_fail( NA_IS_ICONTEXT_CONDITIONS( object ), FALSE );
+	g_return_val_if_fail( NA_IS_ICONTEXTUAL( object ), FALSE );
 
 	is_valid =
 		is_valid_basenames( object ) &&
@@ -219,21 +219,21 @@ na_icontext_conditions_is_valid( const NAIContextConditions *object )
 }
 
 /**
- * na_icontext_conditions_set_scheme:
- * @profile: the #NAIContextConditions to be updated.
+ * na_icontextual_set_scheme:
+ * @profile: the #NAIContextual to be updated.
  * @scheme: name of the scheme.
  * @selected: whether this scheme is candidate to this profile.
  *
  * Sets the status of a scheme relative to this profile.
  */
 void
-na_icontext_conditions_set_scheme( NAIContextConditions *profile, const gchar *scheme, gboolean selected )
+na_icontextual_set_scheme( NAIContextual *profile, const gchar *scheme, gboolean selected )
 {
-	/*static const gchar *thisfn = "na_icontext_conditions_set_scheme";*/
+	/*static const gchar *thisfn = "na_icontextual_set_scheme";*/
 	gboolean exist;
 	GSList *schemes;
 
-	g_return_if_fail( NA_IS_ICONTEXT_CONDITIONS( profile ));
+	g_return_if_fail( NA_IS_ICONTEXTUAL( profile ));
 
 	schemes = na_object_get_schemes( profile );
 	exist = na_core_utils_slist_find( schemes, scheme );
@@ -250,19 +250,19 @@ na_icontext_conditions_set_scheme( NAIContextConditions *profile, const gchar *s
 }
 
 /**
- * na_icontext_conditions_replace_folder:
- * @profile: the #NAIContextConditions to be updated.
+ * na_icontextual_replace_folder:
+ * @profile: the #NAIContextual to be updated.
  * @old: the old uri.
  * @new: the new uri.
  *
  * Replaces the @old URI by the @new one.
  */
 void
-na_icontext_conditions_replace_folder( NAIContextConditions *profile, const gchar *old, const gchar *new )
+na_icontextual_replace_folder( NAIContextual *profile, const gchar *old, const gchar *new )
 {
 	GSList *folders;
 
-	g_return_if_fail( NA_IS_ICONTEXT_CONDITIONS( profile ));
+	g_return_if_fail( NA_IS_ICONTEXTUAL( profile ));
 
 	folders = na_object_get_folders( profile );
 	folders = na_core_utils_slist_remove_utf8( folders, old );
@@ -272,21 +272,21 @@ na_icontext_conditions_replace_folder( NAIContextConditions *profile, const gcha
 }
 
 static gboolean
-v_is_candidate( NAIContextConditions *object, guint target, GList *selection )
+v_is_candidate( NAIContextual *object, guint target, GList *selection )
 {
 	gboolean is_candidate;
 
 	is_candidate = TRUE;
 
-	if( NA_ICONTEXT_CONDITIONS_GET_INTERFACE( object )->is_candidate ){
-		is_candidate = NA_ICONTEXT_CONDITIONS_GET_INTERFACE( object )->is_candidate( object, target, selection );
+	if( NA_ICONTEXTUAL_GET_INTERFACE( object )->is_candidate ){
+		is_candidate = NA_ICONTEXTUAL_GET_INTERFACE( object )->is_candidate( object, target, selection );
 	}
 
 	return( is_candidate );
 }
 
 static gboolean
-is_target_background_candidate( const NAIContextConditions *object, NASelectedInfo *current_folder )
+is_target_background_candidate( const NAIContextual *object, NASelectedInfo *current_folder )
 {
 	gboolean is_candidate;
 
@@ -296,7 +296,7 @@ is_target_background_candidate( const NAIContextConditions *object, NASelectedIn
 }
 
 static gboolean
-is_target_toolbar_candidate( const NAIContextConditions *object, NASelectedInfo *current_folder )
+is_target_toolbar_candidate( const NAIContextual *object, NASelectedInfo *current_folder )
 {
 	gboolean is_candidate;
 
@@ -306,7 +306,7 @@ is_target_toolbar_candidate( const NAIContextConditions *object, NASelectedInfo 
 }
 
 static gboolean
-is_current_folder_inside( const NAIContextConditions *object, NASelectedInfo *current_folder )
+is_current_folder_inside( const NAIContextual *object, NASelectedInfo *current_folder )
 {
 	gboolean is_inside;
 	GSList *folders, *ifold;
@@ -336,7 +336,7 @@ is_current_folder_inside( const NAIContextConditions *object, NASelectedInfo *cu
 }
 
 static gboolean
-is_target_selection_candidate( const NAIContextConditions *object, GList *files )
+is_target_selection_candidate( const NAIContextual *object, GList *files )
 {
 	gboolean retv = FALSE;
 	GSList *basenames, *mimetypes, *schemes;
@@ -530,7 +530,7 @@ is_target_selection_candidate( const NAIContextConditions *object, GList *files 
 }
 
 static gboolean
-is_valid_basenames( const NAIContextConditions *object )
+is_valid_basenames( const NAIContextual *object )
 {
 	gboolean valid;
 	GSList *basenames;
@@ -547,7 +547,7 @@ is_valid_basenames( const NAIContextConditions *object )
 }
 
 static gboolean
-is_valid_mimetypes( const NAIContextConditions *object )
+is_valid_mimetypes( const NAIContextual *object )
 {
 	gboolean valid;
 	GSList *mimetypes;
@@ -564,7 +564,7 @@ is_valid_mimetypes( const NAIContextConditions *object )
 }
 
 static gboolean
-is_valid_isfiledir( const NAIContextConditions *object )
+is_valid_isfiledir( const NAIContextual *object )
 {
 	gboolean valid;
 	gboolean isfile, isdir;
@@ -582,7 +582,7 @@ is_valid_isfiledir( const NAIContextConditions *object )
 }
 
 static gboolean
-is_valid_schemes( const NAIContextConditions *object )
+is_valid_schemes( const NAIContextual *object )
 {
 	gboolean valid;
 	GSList *schemes;
@@ -599,7 +599,7 @@ is_valid_schemes( const NAIContextConditions *object )
 }
 
 static gboolean
-is_valid_folders( const NAIContextConditions *object )
+is_valid_folders( const NAIContextual *object )
 {
 	gboolean valid;
 	GSList *folders;

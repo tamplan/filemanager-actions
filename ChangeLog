@@ -1,9 +1,22 @@
-2009-03-05 Pierre Wieser <pwieser@trychlos.org>
+2009-03-09 Pierre Wieser <pwieser@trychlos.org>
 
-	* src/core/na-selected-info.c:
-	* src/core/na-selected-info.h: New files.
+	* src/api/na-icontext-conditions.h: Renamed as na-icontextual.h.
+	* src/core/na-icontext-conditions.c: Renamed as na-icontextual.c.
+	* src/core/na-icontext-conditions-factory.c:
+	Renamed as na-icontextual-factory.c.
 
-	* src/core/Makefile.am: Updated accordingly.
+	* po/POTFILES.in:
+	* src/api/Makefile.am:
+	* src/api/na-icontextual.h:
+	* src/api/na-object-api.h:
+	* src/core/Makefile.am:
+	* src/core/na-icontextual.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-profile.c:
+	* src/plugin-menu/nautilus-actions.c:
+	* src/utils/nautilus-actions-run.c: Updated accordingly.
+
+2009-03-09 Pierre Wieser <pwieser@trychlos.org>
 
 	Refactor NactIBackgroundTab class as NactIFoldersTab.
 

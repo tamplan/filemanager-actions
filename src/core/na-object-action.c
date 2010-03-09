@@ -688,7 +688,7 @@ na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profil
  *
  * Returns: %TRUE if the @action may be candidate for this @target.
  *
- * Note that this public function will become NAIContextConditions::is_candidate
+ * Note that this public function will become NAIContextual::is_candidate
  * when NAObjectAction will implement the interface.
  */
 gboolean
