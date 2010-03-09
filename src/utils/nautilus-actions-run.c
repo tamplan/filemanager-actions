@@ -42,6 +42,7 @@
 
 #include <core/na-dbus-tracker.h>
 #include <core/na-pivot.h>
+#include <core/na-selected-info.h>
 
 #include <plugin-tracker/na-tracker.h>
 #include <plugin-tracker/na-tracker-dbus.h>
@@ -73,6 +74,7 @@ static GOptionContext  *init_options( void );
 static NAObjectAction  *get_action( const gchar *id );
 static GList           *targets_from_selection( void );
 static GList           *targets_from_commandline( void );
+static GList           *get_selection_from_strv( const gchar **strv );
 static NAObjectProfile *get_profile_for_targets( NAObjectAction *action, GList *targets );
 static void             execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets );
 static void             dump_targets( GList *targets );
@@ -146,7 +148,12 @@ main( int argc, char** argv )
 	dump_targets( targets );
 
 	if( g_list_length( targets ) == 0 ){
-		g_print( "No current selection. Nothing to do. Exiting...\n" );
+		g_print( "No current selection. Nothing to do. Exiting.\n" );
+		exit( status );
+	}
+
+	if( !na_object_action_is_candidate( action, ITEM_TARGET_SELECTION, targets )){
+		g_printerr( _( "Action %s is not a valid candidate. Exiting.\n" ), id );
 		exit( status );
 	}
 
@@ -244,22 +251,20 @@ get_action( const gchar *id )
 
 /*
  * the DBus.Tracker.Status interface returns a list of strings
- * each item has two slots in this list:
- * - uri
- * - mimetype
+ * where each item is the URI of a selected item.
+ *
+ * We return to the caller a GList of NautilusFileInfo
  */
 static GList *
 targets_from_selection( void )
 {
 	static const gchar *thisfn = "nautilus_actions_run_targets_from_selection";
 	GList *selection;
-	NATrackedItem *tracked;
 	DBusGConnection *connection;
 	DBusGProxy *proxy;
 	GError *error;
-	gchar **paths, **iter;
+	gchar **paths;
 
-	selection = NULL;
 	error = NULL;
 	proxy = NULL;
 	paths = NULL;
@@ -297,17 +302,9 @@ targets_from_selection( void )
 	}
 	g_debug( "%s: function call is ok", thisfn );
 
-	iter = paths;
-	while( *iter ){
-		tracked = g_new0( NATrackedItem, 1 );
-		tracked->uri = g_strdup( *iter );
-		iter++;
-		tracked->mimetype = g_strdup( *iter );
-		iter++;
-		selection = g_list_prepend( selection, tracked );
-	}
+	selection = get_selection_from_strv(( const gchar ** ) paths );
+
 	g_strfreev( paths );
-	selection = g_list_reverse( selection );
 
 	/* TODO: unref proxy */
 	dbus_g_connection_unref( connection );
@@ -317,30 +314,38 @@ targets_from_selection( void )
 
 /*
  * get targets from command-line
+ *
+ * We return to the caller a GList of NautilusFileInfo
  */
 static GList *
 targets_from_commandline( void )
 {
 	static const gchar *thisfn = "nautilus_actions_run_targets_from_commandline";
 	GList *targets;
-	NATrackedItem *tracked;
-	gchar **iter;
 
 	g_debug( "%s", thisfn );
 
-	targets = NULL;
-	iter = targets_array;
-
-	while( *iter ){
-		tracked = g_new0( NATrackedItem, 1 );
-		tracked->uri = g_strdup( *iter );
-		iter++;
-		targets = g_list_prepend( targets, tracked );
-	}
-
-	targets = g_list_reverse( targets );
+	targets = get_selection_from_strv(( const gchar ** ) targets_array );
 
 	return( targets );
+}
+
+static GList *
+get_selection_from_strv( const gchar **strv )
+{
+	GList *list;
+	gchar **iter;
+
+	list = NULL;
+	iter = ( gchar ** ) strv;
+
+	while( *iter ){
+		NASelectedInfo *nsi = na_selected_info_create_for_uri( *iter );
+		list = g_list_prepend( list, nsi );
+		iter++;
+	}
+
+	return( g_list_reverse( list ));
 }
 
 /*
@@ -350,16 +355,15 @@ static NAObjectProfile *
 get_profile_for_targets( NAObjectAction *action, GList *targets )
 {
 	/*static const gchar *thisfn = "nautilus_actions_run_get_profile_for_targets";*/
-	NAObjectProfile *candidate;
 	GList *profiles, *ip;
+	NAObjectProfile *candidate;
 
 	candidate = NULL;
 	profiles = na_object_get_items( action );
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 
-		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
-		if( na_object_profile_is_candidate_for_tracked( profile, targets )){
-			candidate = profile;
+		if( na_icontext_conditions_is_candidate( NA_ICONTEXT_CONDITIONS( ip->data ), ITEM_TARGET_SELECTION, targets )){
+			candidate = NA_OBJECT_PROFILE( ip->data );
 		}
 	}
 
@@ -376,7 +380,7 @@ execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets
 	path = na_object_get_path( profile );
 	cmd = g_string_new( path );
 
-	param = na_object_profile_parse_parameters_for_tracked( profile, targets );
+	param = na_object_profile_parse_parameters( profile, ITEM_TARGET_SELECTION, targets );
 
 	if( param != NULL ){
 		g_string_append_printf( cmd, " %s", param );
@@ -396,12 +400,16 @@ execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets
 static void
 dump_targets( GList *targets )
 {
-	NATrackedItem *tracked;
 	GList *it;
+	gchar *uri, *mimetype;
 
 	for( it = targets ; it ; it = it->next ){
-		tracked = ( NATrackedItem * ) it->data;
-		g_print( "%s\t[%s]\n", tracked->uri, tracked->mimetype );
+		NASelectedInfo *nsi = NA_SELECTED_INFO( it->data );
+		uri = na_selected_info_get_uri( nsi );
+		mimetype = na_selected_info_get_mime_type( nsi );
+		g_print( "%s\t[%s]\n", uri, mimetype );
+		g_free( mimetype );
+		g_free( uri );
 	}
 }
 
@@ -411,16 +419,7 @@ dump_targets( GList *targets )
 static void
 free_targets( GList *targets )
 {
-	NATrackedItem *tracked;
-	GList *it;
-
-	for( it = targets ; it ; it = it->next ){
-		tracked = ( NATrackedItem * ) it->data;
-		g_free( tracked->uri );
-		g_free( tracked->mimetype );
-		g_free( tracked );
-	}
-
+	g_list_foreach( targets, ( GFunc ) g_object_unref, NULL );
 	g_list_free( targets );
 }
 

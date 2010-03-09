@@ -42,10 +42,10 @@
 #include <api/na-ifactory-object.h>
 #include <api/na-object-api.h>
 
-#include "na-icontext-conditions.h"
 #include "na-factory-provider.h"
 #include "na-factory-object.h"
 #include "na-dbus-tracker.h"
+#include "na-selected-info.h"
 #include "na-gnome-vfs-uri.h"
 
 /* private class data
@@ -58,6 +58,11 @@ struct NAObjectProfileClassPrivate {
  */
 struct NAObjectProfilePrivate {
 	gboolean dispose_has_run;
+
+	/* dynamic data set when reading from I/O providers (see read_done())
+	 * may also be a NADataBoxed, left as private variable as an exercise
+	 */
+	gboolean target_background;
 };
 
 #define PROFILE_NAME_PREFIX					"profile-"
@@ -84,27 +89,24 @@ static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
+static void         set_target_background( NAObjectProfile *profile );
+
 static void         icontext_conditions_iface_init( NAIContextConditionsInterface *iface );
 
 static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
-static gboolean     is_valid_basenames( const NAObjectProfile *profile );
-static gboolean     is_valid_mimetypes( const NAObjectProfile *profile );
-static gboolean     is_valid_isfiledir( const NAObjectProfile *profile );
-static gboolean     is_valid_schemes( const NAObjectProfile *profile );
-static gboolean     is_valid_folders( const NAObjectProfile *profile );
 
 static gchar       *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
-static gboolean     is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus );
+#if 0
 static gchar       *parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gboolean from_nautilus );
+static gboolean     is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus );
 static gboolean     tracked_is_directory( void *iter, gboolean from_nautilus );
 static gchar       *tracked_to_basename( void *iter, gboolean from_nautilus );
-static GFile       *tracked_to_location( void *iter, gboolean from_nautilus );
 static gchar       *tracked_to_mimetype( void *iter, gboolean from_nautilus );
 static gchar       *tracked_to_scheme( void *iter, gboolean from_nautilus );
-static gchar       *tracked_to_uri( void *iter, gboolean from_nautilus );
 static int          validate_schemes( GSList *schemes2test, void *iter, gboolean from_nautilus );
+#endif
 
 GType
 na_object_profile_get_type( void )
@@ -343,7 +345,49 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
+	set_target_background( NA_OBJECT_PROFILE( instance ));
+
 	na_factory_object_set_defaults( instance );
+}
+
+/*
+ * set the target_background dynamic flag as a private data
+ *
+ * a profile is candidate for display on background callback, if:
+ * - it doesn't target files, but only dirs
+ * - it doesn't require a multiple selection
+ * - basenames are set as default
+ *
+ * as of actions v2, this means:
+ * - ifile is false
+ * - isdir is true
+ * - basenames = '*'
+ * - mimetypes = '*'
+ *
+ * note that, though the conditions may be modified in NACT user
+ * interface, they will be reloaded, and so this flag recomputed, when
+ * the pivot reloads its tree after a save; and, as this flag is only
+ * needed in the plugins, then we only need to compute at read_done()
+ * time.
+ */
+static void
+set_target_background( NAObjectProfile *profile )
+{
+	GSList *basenames = na_object_get_basenames( profile );
+	GSList *mimetypes = na_object_get_mimetypes( profile );
+
+	profile->private->target_background = \
+			!na_object_is_file( profile ) && \
+			na_object_is_dir( profile ) && \
+			( basenames == NULL ||
+					( g_slist_length( basenames ) == 1 &&
+							strcmp(( const char * ) basenames->data, "*" ) == 0 )) && \
+			( mimetypes == NULL ||
+					( g_slist_length( mimetypes ) == 1 &&
+							strcmp(( const char * ) mimetypes->data, "*" ) == 0 ));
+
+	na_core_utils_slist_free( basenames );
+	na_core_utils_slist_free( mimetypes );
 }
 
 static guint
@@ -364,31 +408,14 @@ static gboolean
 profile_is_valid( const NAObjectProfile *profile )
 {
 	gboolean is_valid;
-	NAObjectItem *parent;
 
 	is_valid = FALSE;
 
 	if( !profile->private->dispose_has_run ){
 
-		is_valid = TRUE;
-		parent = na_object_get_parent( profile );
-
-		if( is_valid && na_object_is_target_background( parent )){
-			is_valid =
-					is_valid_path_parameters( profile ) &&
-					is_valid_folders( profile );
-		}
-
-		if( is_valid ){
-			if( na_object_is_target_selection( parent ) || na_object_is_target_toolbar( parent )){
-				is_valid =
-					is_valid_path_parameters( profile ) &&
-					is_valid_basenames( profile ) &&
-					is_valid_mimetypes( profile ) &&
-					is_valid_isfiledir( profile ) &&
-					is_valid_schemes( profile );
-			}
-		}
+		is_valid = \
+				is_valid_path_parameters( profile ) &&
+				na_icontext_conditions_is_valid( NA_ICONTEXT_CONDITIONS( profile ));
 	}
 
 	return( is_valid );
@@ -419,92 +446,6 @@ is_valid_path_parameters( const NAObjectProfile *profile )
 
 	if( !valid ){
 		na_object_debug_invalid( profile, "command" );
-	}
-
-	return( valid );
-}
-
-static gboolean
-is_valid_basenames( const NAObjectProfile *profile )
-{
-	gboolean valid;
-	GSList *basenames;
-
-	basenames = na_object_get_basenames( profile );
-	valid = basenames && g_slist_length( basenames ) > 0;
-	na_core_utils_slist_free( basenames );
-
-	if( !valid ){
-		na_object_debug_invalid( profile, "basenames" );
-	}
-
-	return( valid );
-}
-
-static gboolean
-is_valid_mimetypes( const NAObjectProfile *profile )
-{
-	gboolean valid;
-	GSList *mimetypes;
-
-	mimetypes = na_object_get_mimetypes( profile );
-	valid = mimetypes && g_slist_length( mimetypes ) > 0;
-	na_core_utils_slist_free( mimetypes );
-
-	if( !valid ){
-		na_object_debug_invalid( profile, "mimetypes" );
-	}
-
-	return( valid );
-}
-
-static gboolean
-is_valid_isfiledir( const NAObjectProfile *profile )
-{
-	gboolean valid;
-	gboolean isfile, isdir;
-
-	isfile = na_object_is_file( profile );
-	isdir = na_object_is_dir( profile );
-
-	valid = isfile || isdir;
-
-	if( !valid ){
-		na_object_debug_invalid( profile, "isfiledir" );
-	}
-
-	return( valid );
-}
-
-static gboolean
-is_valid_schemes( const NAObjectProfile *profile )
-{
-	gboolean valid;
-	GSList *schemes;
-
-	schemes = na_object_get_schemes( profile );
-	valid = schemes && g_slist_length( schemes ) > 0;
-	na_core_utils_slist_free( schemes );
-
-	if( !valid ){
-		na_object_debug_invalid( profile, "schemes" );
-	}
-
-	return( valid );
-}
-
-static gboolean
-is_valid_folders( const NAObjectProfile *profile )
-{
-	gboolean valid;
-	GSList *folders;
-
-	folders = na_object_get_folders( profile );
-	valid = folders && g_slist_length( folders ) > 0;
-	na_core_utils_slist_free( folders );
-
-	if( !valid ){
-		na_object_debug_invalid( profile, "folders" );
 	}
 
 	return( valid );
@@ -567,97 +508,30 @@ na_object_profile_new_with_defaults( void )
 }
 
 /**
- * na_object_profile_set_scheme:
- * @profile: the #NAObjectProfile to be updated.
- * @scheme: name of the scheme.
- * @selected: whether this scheme is candidate to this profile.
- *
- * Sets the status of a scheme relative to this profile.
- */
-void
-na_object_profile_set_scheme( NAObjectProfile *profile, const gchar *scheme, gboolean selected )
-{
-	/*static const gchar *thisfn = "na_object_profile_set_scheme";*/
-	gboolean exist;
-	GSList *schemes;
-
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-
-	if( !profile->private->dispose_has_run ){
-
-		schemes = na_object_get_schemes( profile );
-		exist = na_core_utils_slist_find( schemes, scheme );
-		/*g_debug( "%s: scheme=%s exist=%s", thisfn, scheme, exist ? "True":"False" );*/
-
-		if( selected && !exist ){
-			schemes = g_slist_prepend( schemes, g_strdup( scheme ));
-		}
-		if( !selected && exist ){
-			schemes = na_core_utils_slist_remove_ascii( schemes, scheme );
-		}
-		na_object_set_schemes( profile, schemes );
-		na_core_utils_slist_free( schemes );
-	}
-}
-
-/**
- * na_object_profile_replace_folder:
- * @profile: the #NAObjectProfile to be updated.
- * @old: the old uri.
- * @new: the new uri.
- *
- * Replaces the @old URI by the @new one.
- */
-void
-na_object_profile_replace_folder( NAObjectProfile *profile, const gchar *old, const gchar *new )
-{
-	GSList *folders;
-
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
-
-	if( !profile->private->dispose_has_run ){
-
-		folders = na_object_get_folders( profile );
-		folders = na_core_utils_slist_remove_utf8( folders, old );
-		folders = g_slist_append( folders, ( gpointer ) g_strdup( new ));
-		na_object_set_folders( profile, folders );
-		na_core_utils_slist_free( folders );
-	}
-}
-
-/**
- * na_object_profile_is_candidate_for_tracked:
+ * na_object_profile_is_target_background:
  * @profile: the #NAObjectProfile to be checked.
- * @files: the currently selected items, as a list of uris.
  *
- * Determines if the given profile is candidate to be displayed in the
- * Nautilus context menu, regarding the list of currently selected
- * items.
- *
- * Returns: %TRUE if this profile succeeds to all tests and is so a
- * valid candidate to be displayed in Nautilus context menu, %FALSE
- * else.
- *
- * The case where we only have URIs for target files is when we have
- * got this list through the org.nautilus_actions.DBus service (or
- * another equivalent) - typically for use in a command-line tool.
+ * Returns: %TRUE if this profile may be candidate when displaying
+ * background actions, %FALSE else.
  */
 gboolean
-na_object_profile_is_candidate_for_tracked( const NAObjectProfile *profile, GList *tracked_items )
+na_object_profile_is_target_background( const NAObjectProfile *profile )
 {
 	gboolean is_candidate;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( profile ), FALSE );
 
-	if( !na_object_is_valid( profile )){
-		return( FALSE );
-	}
+	is_candidate = FALSE;
 
-	is_candidate = is_target_selection_candidate( profile, tracked_items, FALSE );
+	if( !profile->private->dispose_has_run ){
+
+		is_candidate = profile->private->target_background;
+	}
 
 	return( is_candidate );
 }
 
+#if 0
 static gboolean
 is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus )
 {
@@ -851,13 +725,14 @@ is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gbo
 
 	return retv;
 }
+#endif
 
 /**
  * Expands the parameters path, in function of the found tokens.
  *
  * @profile: the selected profile.
  * @target: the current target.
- * @files: the list of currently selected items, as provided by Nautilus.
+ * @files: the list of currently selected #NASelectedInfo items.
  *
  * Valid parameters are :
  *
@@ -874,33 +749,12 @@ is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gbo
  * %% : a percent sign
  *
  * Adding a parameter requires updating of :
- * - nautilus-actions/private/na-action-profile.c:na_object_profile_parse_parameters()
- * - nautilus-actions/runtime/na-xml-names.h
+ * - nautilus-actions/core/na-object-profile.c::na_object_profile_parse_parameters()
  * - nautilus-actions/nact/nact-icommand-tab.c:parse_parameters()
  * - nautilus-actions/nact/nautilus-actions-config-tool.ui:LegendDialog
  */
 gchar *
 na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target, GList* files )
-{
-	return( parse_parameters( profile, target, files, TRUE ));
-}
-
-/**
- * na_object_profile_parse_parameters_for_tracked:
- * @profile: the selected profile.
- * @tracked_items: current selection.
- */
-gchar *
-na_object_profile_parse_parameters_for_tracked( const NAObjectProfile *profile, GList *tracked_items )
-{
-	return( parse_parameters( profile, ITEM_TARGET_SELECTION, tracked_items, FALSE ));
-}
-
-/*
- * Expands the parameters path, in function of the found tokens.
- */
-static gchar *
-parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gboolean from_nautilus )
 {
 	gchar *parsed = NULL;
 	GString *string;
@@ -933,8 +787,8 @@ parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gbo
 
 	for( ifi = files ; ifi ; ifi = ifi->next ){
 
-		iuri = tracked_to_uri( ifi->data, from_nautilus );
-		iloc = tracked_to_location( ifi->data, from_nautilus );
+		iuri = na_selected_info_get_uri( NA_SELECTED_INFO( ifi->data ));
+		iloc = na_selected_info_get_location( NA_SELECTED_INFO( ifi->data ));
 		ipath = g_file_get_path( iloc );
 		ibname = g_file_get_basename( iloc );
 
@@ -1074,6 +928,7 @@ parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gbo
 	return( parsed );
 }
 
+#if 0
 static gboolean
 tracked_is_directory( void *iter, gboolean from_nautilus )
 {
@@ -1110,20 +965,6 @@ tracked_to_basename( void *iter, gboolean from_nautilus )
 	}
 
 	return( bname );
-}
-
-static GFile *
-tracked_to_location( void *iter, gboolean from_nautilus )
-{
-	GFile *file;
-
-	if( from_nautilus ){
-		file = nautilus_file_info_get_location(( NautilusFileInfo * ) iter );
-	} else {
-		file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
-	}
-
-	return( file );
 }
 
 static gchar *
@@ -1176,20 +1017,6 @@ tracked_to_scheme( void *iter, gboolean from_nautilus )
 	return( scheme );
 }
 
-static gchar *
-tracked_to_uri( void *iter, gboolean from_nautilus )
-{
-	gchar *uri;
-
-	if( from_nautilus ){
-		uri = nautilus_file_info_get_uri(( NautilusFileInfo * ) iter );
-	} else {
-		uri = g_strdup((( NATrackedItem * ) iter )->uri );
-	}
-
-	return( uri );
-}
-
 static int
 validate_schemes( GSList* schemes2test, void* tracked_iter, gboolean from_nautilus )
 {
@@ -1214,3 +1041,4 @@ validate_schemes( GSList* schemes2test, void* tracked_iter, gboolean from_nautil
 
 	return retv;
 }
+#endif

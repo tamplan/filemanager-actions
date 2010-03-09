@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_ICONTEXT_CONDITIONS_H__
-#define __CORE_NA_ICONTEXT_CONDITIONS_H__
+#ifndef __NAUTILUS_ACTIONS_API_NA_ICONTEXT_CONDITIONS_H__
+#define __NAUTILUS_ACTIONS_API_NA_ICONTEXT_CONDITIONS_H__
 
 /**
  * SECTION: na_icontext_conditions
  * @short_description: #NAIContextConditions interface definition.
- * @include: core/na-icontext_conditions.h
+ * @include: nautilus-actions/na-icontext_conditions.h
  *
  * This interface is implemented by all #NAObject-derived objects
  * which must met some conditions in order to be displayed in the
@@ -61,13 +61,34 @@ typedef struct NAIContextConditionsInterfacePrivate NAIContextConditionsInterfac
 typedef struct {
 	GTypeInterface                        parent;
 	NAIContextConditionsInterfacePrivate *private;
+
+	/**
+	 * is_candidate:
+	 * @object: this #NAIContextConditions object.
+	 * @target: the initial target which triggered this function's stack.
+	 *  This target is defined in na-object-item.h.
+	 * @selection: the current selection as a #GList of #NautilusFileInfo.
+	 *
+	 * Returns: %TRUE if the @object may be a potential candidate, %FALSE
+	 * else.
+	 *
+	 * The #NAIContextConditions implementor may take advantage of this
+	 * virtual function to check for its own specific data. Only if the
+	 * implementor does return %TRUE (or just doesn't implement this
+	 * virtual), the conditions themselves will be checked.
+	 */
+	gboolean ( *is_candidate )( NAIContextConditions *object, guint target, GList *selection );
 }
 	NAIContextConditionsInterface;
 
 GType    na_icontext_conditions_get_type( void );
 
 gboolean na_icontext_conditions_is_candidate( const NAIContextConditions *object, guint target, GList *selection );
+gboolean na_icontext_conditions_is_valid    ( const NAIContextConditions *object );
+
+void     na_icontext_conditions_set_scheme    ( NAIContextConditions *object, const gchar *scheme, gboolean selected );
+void     na_icontext_conditions_replace_folder( NAIContextConditions *object, const gchar *old, const gchar *new );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_ICONTEXT_CONDITIONS_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_ICONTEXT_CONDITIONS_H__ */

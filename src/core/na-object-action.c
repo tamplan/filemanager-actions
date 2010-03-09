@@ -485,7 +485,7 @@ object_object_is_valid( const NAObjectAction *action )
 		}
 
 		if( is_valid ){
-			if( na_object_is_target_selection( action ) || na_object_is_target_background( action )){
+			if( na_object_is_target_selection( action )){
 				is_valid = is_valid_label( action );
 			}
 		}
@@ -684,11 +684,15 @@ na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profil
  * na_object_action_is_candidate:
  * @action: the #NAObjectAction to be tested.
  * @target: the current target.
+ * @selection: the current Nautilus selection.
  *
  * Returns: %TRUE if the @action may be candidate for this @target.
+ *
+ * Note that this public function will become NAIContextConditions::is_candidate
+ * when NAObjectAction will implement the interface.
  */
 gboolean
-na_object_action_is_candidate( const NAObjectAction *action, guint target )
+na_object_action_is_candidate( const NAObjectAction *action, guint target, GList *selection )
 {
 	gboolean is_candidate = FALSE;
 
@@ -698,7 +702,6 @@ na_object_action_is_candidate( const NAObjectAction *action, guint target )
 
 		is_candidate =
 			( na_object_is_target_selection( action ) && target == ITEM_TARGET_SELECTION ) ||
-			( na_object_is_target_background( action ) && target == ITEM_TARGET_BACKGROUND ) ||
 			( na_object_is_target_toolbar( action ) && target == ITEM_TARGET_TOOLBAR );
 	}
 

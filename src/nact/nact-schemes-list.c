@@ -678,7 +678,7 @@ on_active_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *win
 						TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 						NULL );
 				if( edited ){
-					na_object_profile_set_scheme( edited, scheme, !state );
+					na_object_set_scheme( edited, scheme, !state );
 					g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 				}
 			}
@@ -827,7 +827,7 @@ delete_row( BaseWindow *window )
 						TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 						NULL );
 				if( edited ){
-					na_object_profile_set_scheme( edited, scheme, FALSE );
+					na_object_set_scheme( edited, scheme, FALSE );
 					g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 				}
 			}

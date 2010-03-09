@@ -44,6 +44,7 @@
 #include "na-ifactory-object.h"
 #include "na-ifactory-object-data.h"
 #include "na-iduplicable.h"
+#include "na-icontext-conditions.h"
 #include "na-object-action.h"
 #include "na-object-profile.h"
 #include "na-object-menu.h"
@@ -129,7 +130,6 @@ G_BEGIN_DECLS
  */
 #define na_object_get_version( obj )					(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_VERSION ))
 #define na_object_is_target_selection( obj )			(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_SELECTION )))
-#define na_object_is_target_background( obj )			(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_BACKGROUND )))
 #define na_object_is_target_toolbar( obj )				(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_TOOLBAR )))
 #define na_object_get_toolbar_label( obj )				(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLBAR_LABEL ))
 #define na_object_is_toolbar_same_label( obj )			(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLBAR_SAME_LABEL )))
@@ -137,7 +137,6 @@ G_BEGIN_DECLS
 
 #define na_object_set_version( obj, version )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_VERSION, ( const void * )( version ))
 #define na_object_set_target_selection( obj, target )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_SELECTION, ( const void * ) GUINT_TO_POINTER( target ))
-#define na_object_set_target_background( obj, target )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_BACKGROUND, ( const void * ) GUINT_TO_POINTER( target ))
 #define na_object_set_target_toolbar( obj, target )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_TOOLBAR, ( const void * ) GUINT_TO_POINTER( target ))
 #define na_object_set_toolbar_label( obj, label )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLBAR_LABEL, ( const void * )( label ))
 #define na_object_set_toolbar_same_label( obj, same )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLBAR_SAME_LABEL, ( const void * ) GUINT_TO_POINTER( same ))
@@ -158,6 +157,7 @@ G_BEGIN_DECLS
 #define na_object_is_multiple( obj )					(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MULTIPLE )))
 #define na_object_get_schemes( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SCHEMES ))
 #define na_object_get_folders( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_FOLDERS ))
+#define na_object_is_target_background( obj )			na_object_profile_is_target_background( NA_OBJECT_PROFILE( obj ))
 
 #define na_object_set_path( obj, path )					na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PATH, ( const void * )( path ))
 #define na_object_set_parameters( obj, parms )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PARAMETERS, ( const void * )( parms ))
@@ -170,8 +170,10 @@ G_BEGIN_DECLS
 #define na_object_set_schemes( obj, schemes )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SCHEMES, ( const void * )( schemes ))
 #define na_object_set_folders( obj, folders )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_FOLDERS, ( const void * )( folders ))
 
-#define na_object_set_scheme( obj, scheme, add )		na_object_profile_set_scheme( NA_OBJECT_PROFILE( obj ), ( const gchar * )( scheme ), ( add ))
-#define na_object_replace_folder( obj, old, new )		na_object_profile_replace_folder( NA_OBJECT_PROFILE( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
+/* NAIContextConditions
+ */
+#define na_object_set_scheme( obj, scheme, add )		na_icontext_conditions_set_scheme( NA_ICONTEXT_CONDITIONS( obj ), ( const gchar * )( scheme ), ( add ))
+#define na_object_replace_folder( obj, old, new )		na_icontext_conditions_replace_folder( NA_ICONTEXT_CONDITIONS( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
 
 G_END_DECLS
 

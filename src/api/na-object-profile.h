@@ -72,14 +72,9 @@ GType            na_object_profile_get_type( void );
 NAObjectProfile *na_object_profile_new( void );
 NAObjectProfile *na_object_profile_new_with_defaults( void );
 
-void             na_object_profile_set_scheme    ( NAObjectProfile *profile, const gchar *scheme, gboolean selected );
-void             na_object_profile_replace_folder( NAObjectProfile *profile, const gchar *old, const gchar *new );
+gboolean         na_object_profile_is_target_background( const NAObjectProfile *profile );
 
-gboolean         na_object_profile_is_candidate                ( const NAObjectProfile *profile, gint target, GList *files );
-gboolean         na_object_profile_is_candidate_for_tracked    ( const NAObjectProfile *profile, GList *tracked );
-
-gchar           *na_object_profile_parse_parameters            ( const NAObjectProfile *profile, gint target, GList *files );
-gchar           *na_object_profile_parse_parameters_for_tracked( const NAObjectProfile *profile, GList *tracked );
+gchar           *na_object_profile_parse_parameters    ( const NAObjectProfile *profile, gint target, GList *selected );
 
 G_END_DECLS
 

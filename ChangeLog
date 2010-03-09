@@ -1,5 +1,10 @@
 2009-03-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-selected-info.c:
+	* src/core/na-selected-info.h: New files.
+
+	* src/core/Makefile.am: Updated accordingly.
+
 	Refactor NactIBackgroundTab class as NactIFoldersTab.
 
 	* src/nact/nact-ibackground-tab.c:

@@ -60,7 +60,6 @@ libna_core_la_SOURCES = \
 	na-iabout.c											\
 	na-iabout.h											\
 	na-icontext-conditions.c							\
-	na-icontext-conditions.h							\
 	na-icontext-conditions-factory.c					\
 	na-iduplicable.c									\
 	na-iexporter.c										\
@@ -93,6 +92,8 @@ libna_core_la_SOURCES = \
 	na-object-menu-factory.c							\
 	na-pivot.c											\
 	na-pivot.h											\
+	na-selected-info.c									\
+	na-selected-info.h									\
 	na-updater.c										\
 	na-updater.h										\
 	$(NULL)

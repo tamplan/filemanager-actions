@@ -53,7 +53,6 @@ static gchar     *icon             = "";
 static gboolean   enabled          = FALSE;
 static gboolean   disabled         = FALSE;
 static gboolean   target_selection = FALSE;
-static gboolean   target_folders   = FALSE;
 static gboolean   target_toolbar   = FALSE;
 static gchar     *label_toolbar    = "";
 static gchar     *command          = "";
@@ -84,8 +83,6 @@ static GOptionEntry entries[] = {
 			N_( "Set it if the action should be disabled at creation" ), NULL },
 	{ "target-selection"     , 'S', 0, G_OPTION_ARG_NONE        , &target_selection,
 			N_( "Set it if the action should be displayed in selection menus" ), NULL },
-	{ "target-folders"       , 'F', 0, G_OPTION_ARG_NONE        , &target_folders,
-			N_( "Set it if the action should be displayed in folders menus" ), NULL },
 	{ "target-toolbar"       , 'O', 0, G_OPTION_ARG_NONE        , &target_toolbar,
 			N_( "Set it if the action should be displayed in toolbar" ), NULL },
 	{ "label-toolbar"        , 'L', 0, G_OPTION_ARG_STRING      , &label_toolbar,
@@ -296,7 +293,6 @@ get_action_from_cmdline( void )
 	na_object_set_icon( action, icon );
 	na_object_set_enabled( action, enabled );
 	na_object_set_target_selection( action, target_selection );
-	na_object_set_target_background( action, target_folders );
 	na_object_set_target_toolbar( action, target_toolbar );
 
 	if( target_toolbar ){

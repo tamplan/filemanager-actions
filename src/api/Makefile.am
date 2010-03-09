@@ -44,6 +44,7 @@ api_include_HEADERS = \
 	na-data-types.h										\
 	na-gconf-monitor.h									\
 	na-gconf-utils.h									\
+	na-icontext-conditions.h							\
 	na-iduplicable.h									\
 	na-ifactory-object.h								\
 	na-ifactory-object-data.h							\

@@ -709,7 +709,7 @@ treeview_cell_edited( NactIFoldersTab *instance, const gchar *path_string, const
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
 			NULL );
 
-	na_object_profile_replace_folder( edited, previous_text, text );
+	na_object_replace_folder( edited, previous_text, text );
 
 	if( old_text ){
 		*old_text = g_strdup( previous_text );

@@ -39,9 +39,9 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
-#include "na-icontext-conditions.h"
 #include "na-dbus-tracker.h"
 #include "na-gnome-vfs-uri.h"
+#include "na-selected-info.h"
 
 /* private interface data
  */
@@ -56,16 +56,19 @@ static GType    register_type( void );
 static void     interface_base_init( NAIContextConditionsInterface *klass );
 static void     interface_base_finalize( NAIContextConditionsInterface *klass );
 
-static gboolean is_target_background_candidate( const NAIContextConditions *profile, NautilusFileInfo *current_folder );
-static gboolean is_target_toolbar_candidate( const NAIContextConditions *profile, NautilusFileInfo *current_folder );
-static gboolean is_current_folder_inside( const NAIContextConditions *profile, NautilusFileInfo *current_folder );
-static gboolean is_target_selection_candidate( const NAIContextConditions *profile, GList *files, gboolean from_nautilus );
+static gboolean v_is_candidate( NAIContextConditions *object, guint target, GList *selection );
 
-static gboolean tracked_is_directory( void *iter, gboolean from_nautilus );
-static gchar   *tracked_to_basename( void *iter, gboolean from_nautilus );
-static gchar   *tracked_to_mimetype( void *iter, gboolean from_nautilus );
-static gchar   *tracked_to_scheme( void *iter, gboolean from_nautilus );
-static int      validate_schemes( GSList *schemes2test, void *iter, gboolean from_nautilus );
+static gboolean is_target_background_candidate( const NAIContextConditions *object, NASelectedInfo *current_folder );
+static gboolean is_target_toolbar_candidate( const NAIContextConditions *object, NASelectedInfo *current_folder );
+static gboolean is_current_folder_inside( const NAIContextConditions *object, NASelectedInfo *current_folder );
+static gboolean is_target_selection_candidate( const NAIContextConditions *object, GList *files );
+static gboolean is_valid_basenames( const NAIContextConditions *object );
+static gboolean is_valid_mimetypes( const NAIContextConditions *object );
+static gboolean is_valid_isfiledir( const NAIContextConditions *object );
+static gboolean is_valid_schemes( const NAIContextConditions *object );
+static gboolean is_valid_folders( const NAIContextConditions *object );
+
+static gboolean validate_schemes( GSList *object_schemes, NASelectedInfo *iter );
 
 /**
  * na_icontext_conditions_get_type:
@@ -147,23 +150,18 @@ interface_base_finalize( NAIContextConditionsInterface *klass )
 }
 
 /**
- * na_object_profile_is_candidate:
- * @profile: the #NAObjectProfile to be checked.
+ * na_icontext_conditions_is_candidate:
+ * @object: a #NAIContextConditions to be checked.
  * @target: the current target.
  * @files: the currently selected items, as provided by Nautilus.
  *
- * Determines if the given profile is candidate to be displayed in the
- * Nautilus context menu, regarding the list of currently selected
+ * Determines if the given object may be candidate to be displayed in
+ * the Nautilus context menu, depending of the list of currently selected
  * items.
  *
- * Returns: %TRUE if this profile succeeds to all tests and is so a
+ * Returns: %TRUE if this object succeeds to all tests and is so a
  * valid candidate to be displayed in Nautilus context menu, %FALSE
  * else.
- *
- * This method could have been left outside of the #NAObjectProfile
- * class, as it is only called by the plugin. Nonetheless, it is much
- * more easier to code here (because we don't need all get methods, nor
- * free the parameters after).
  */
 gboolean
 na_icontext_conditions_is_candidate( const NAIContextConditions *object, guint target, GList *files )
@@ -172,31 +170,123 @@ na_icontext_conditions_is_candidate( const NAIContextConditions *object, guint t
 
 	g_return_val_if_fail( NA_IS_ICONTEXT_CONDITIONS( object ), FALSE );
 
-	if( !na_object_is_valid( object )){
-		return( FALSE );
-	}
-
-	is_candidate = FALSE;
+	is_candidate = v_is_candidate( NA_ICONTEXT_CONDITIONS( object ), target, files );
 
 	switch( target ){
 		case ITEM_TARGET_BACKGROUND:
-			is_candidate = is_target_background_candidate( object, ( NautilusFileInfo * ) files->data );
+			is_candidate = is_target_background_candidate( object, ( NASelectedInfo * ) files->data );
 			break;
 
 		case ITEM_TARGET_TOOLBAR:
-			is_candidate = is_target_toolbar_candidate( object, ( NautilusFileInfo * ) files->data );
+			is_candidate = is_target_toolbar_candidate( object, ( NASelectedInfo * ) files->data );
 			break;
 
 		case ITEM_TARGET_SELECTION:
 		default:
-			is_candidate = is_target_selection_candidate( object, files, TRUE );
+			is_candidate = is_target_selection_candidate( object, files );
+	}
+
+	return( is_candidate );
+}
+
+/**
+ * na_icontext_conditions_is_valid:
+ * @profile: the #NAObjectProfile to be checked.
+ *
+ * Returns: %TRUE if this profile is valid, %FALSE else.
+ *
+ * This function is part of NAIDuplicable::check_status() and is called
+ * by NAIDuplicable objects which also implement NAIContextConditions
+ * interface. It so doesn't make sense of asking the object for its
+ * validity status as it has already been checked before calling the
+ * function.
+ */
+gboolean
+na_icontext_conditions_is_valid( const NAIContextConditions *object )
+{
+	gboolean is_valid;
+
+	g_return_val_if_fail( NA_IS_ICONTEXT_CONDITIONS( object ), FALSE );
+
+	is_valid =
+		is_valid_basenames( object ) &&
+		is_valid_mimetypes( object ) &&
+		is_valid_isfiledir( object ) &&
+		is_valid_schemes( object ) &&
+		is_valid_folders( object );
+
+	return( is_valid );
+}
+
+/**
+ * na_icontext_conditions_set_scheme:
+ * @profile: the #NAIContextConditions to be updated.
+ * @scheme: name of the scheme.
+ * @selected: whether this scheme is candidate to this profile.
+ *
+ * Sets the status of a scheme relative to this profile.
+ */
+void
+na_icontext_conditions_set_scheme( NAIContextConditions *profile, const gchar *scheme, gboolean selected )
+{
+	/*static const gchar *thisfn = "na_icontext_conditions_set_scheme";*/
+	gboolean exist;
+	GSList *schemes;
+
+	g_return_if_fail( NA_IS_ICONTEXT_CONDITIONS( profile ));
+
+	schemes = na_object_get_schemes( profile );
+	exist = na_core_utils_slist_find( schemes, scheme );
+	/*g_debug( "%s: scheme=%s exist=%s", thisfn, scheme, exist ? "True":"False" );*/
+
+	if( selected && !exist ){
+		schemes = g_slist_prepend( schemes, g_strdup( scheme ));
+	}
+	if( !selected && exist ){
+		schemes = na_core_utils_slist_remove_ascii( schemes, scheme );
+	}
+	na_object_set_schemes( profile, schemes );
+	na_core_utils_slist_free( schemes );
+}
+
+/**
+ * na_icontext_conditions_replace_folder:
+ * @profile: the #NAIContextConditions to be updated.
+ * @old: the old uri.
+ * @new: the new uri.
+ *
+ * Replaces the @old URI by the @new one.
+ */
+void
+na_icontext_conditions_replace_folder( NAIContextConditions *profile, const gchar *old, const gchar *new )
+{
+	GSList *folders;
+
+	g_return_if_fail( NA_IS_ICONTEXT_CONDITIONS( profile ));
+
+	folders = na_object_get_folders( profile );
+	folders = na_core_utils_slist_remove_utf8( folders, old );
+	folders = g_slist_append( folders, ( gpointer ) g_strdup( new ));
+	na_object_set_folders( profile, folders );
+	na_core_utils_slist_free( folders );
+}
+
+static gboolean
+v_is_candidate( NAIContextConditions *object, guint target, GList *selection )
+{
+	gboolean is_candidate;
+
+	is_candidate = TRUE;
+
+	if( NA_ICONTEXT_CONDITIONS_GET_INTERFACE( object )->is_candidate ){
+		is_candidate = NA_ICONTEXT_CONDITIONS_GET_INTERFACE( object )->is_candidate( object, target, selection );
 	}
 
 	return( is_candidate );
 }
 
 static gboolean
-is_target_background_candidate( const NAIContextConditions *object, NautilusFileInfo *current_folder )
+is_target_background_candidate( const NAIContextConditions *object, NASelectedInfo *current_folder )
 {
 	gboolean is_candidate;
 
@@ -206,7 +296,7 @@ is_target_background_candidate( const NAIContextConditions *object, NautilusFile
 }
 
 static gboolean
-is_target_toolbar_candidate( const NAIContextConditions *object, NautilusFileInfo *current_folder )
+is_target_toolbar_candidate( const NAIContextConditions *object, NASelectedInfo *current_folder )
 {
 	gboolean is_candidate;
 
@@ -216,7 +306,7 @@ is_target_toolbar_candidate( const NAIContextConditions *object, NautilusFileInf
 }
 
 static gboolean
-is_current_folder_inside( const NAIContextConditions *object, NautilusFileInfo *current_folder )
+is_current_folder_inside( const NAIContextConditions *object, NASelectedInfo *current_folder )
 {
 	gboolean is_inside;
 	GSList *folders, *ifold;
@@ -224,7 +314,7 @@ is_current_folder_inside( const NAIContextConditions *object, NautilusFileInfo *
 	gchar *current_folder_uri;
 
 	is_inside = FALSE;
-	current_folder_uri = nautilus_file_info_get_uri( current_folder );
+	current_folder_uri = na_selected_info_get_uri( current_folder );
 	folders = na_object_get_folders( object );
 
 	for( ifold = folders ; ifold && !is_inside ; ifold = ifold->next ){
@@ -246,7 +336,7 @@ is_current_folder_inside( const NAIContextConditions *object, NautilusFileInfo *
 }
 
 static gboolean
-is_target_selection_candidate( const NAIContextConditions *object, GList *files, gboolean from_nautilus )
+is_target_selection_candidate( const NAIContextConditions *object, GList *files )
 {
 	gboolean retv = FALSE;
 	GSList *basenames, *mimetypes, *schemes;
@@ -320,12 +410,12 @@ is_target_selection_candidate( const NAIContextConditions *object, GList *files,
 		}
 	}
 
-	for( iter1 = files; iter1; iter1 = iter1->next ){
+	for( iter1 = files ; iter1 ; iter1 = iter1->next ){
 
-		tmp_filename = tracked_to_basename( iter1->data, from_nautilus );
+		tmp_filename = na_selected_info_get_name( NA_SELECTED_INFO( iter1->data ));
 
 		if( tmp_filename ){
-			tmp_mimetype = tracked_to_mimetype( iter1->data, from_nautilus );
+			tmp_mimetype = na_selected_info_get_mime_type( NA_SELECTED_INFO( iter1->data ));
 
 			if( !matchcase ){
 				/* --> if case-insensitive asked, lower all the string
@@ -342,13 +432,13 @@ is_target_selection_candidate( const NAIContextConditions *object, GList *files,
 			g_free( tmp_mimetype );
 			tmp_mimetype = tmp_mimetype2;
 
-			if( tracked_is_directory( iter1->data, from_nautilus )){
+			if( na_selected_info_is_directory( NA_SELECTED_INFO( iter ))){
 				dir_count++;
 			} else {
 				file_count++;
 			}
 
-			scheme_ok_count += validate_schemes( schemes, iter1->data, from_nautilus );
+			scheme_ok_count += validate_schemes( schemes, NA_SELECTED_INFO( iter1->data ));
 
 			if( !test_basename ){ /* if it is already ok, skip the test to improve performance */
 				basename_match_ok = FALSE;
@@ -440,114 +530,109 @@ is_target_selection_candidate( const NAIContextConditions *object, GList *files,
 }
 
 static gboolean
-tracked_is_directory( void *iter, gboolean from_nautilus )
+is_valid_basenames( const NAIContextConditions *object )
 {
-	gboolean is_dir;
-	GFile *file;
-	GFileType type;
+	gboolean valid;
+	GSList *basenames;
 
-	if( from_nautilus ){
-		is_dir = nautilus_file_info_is_directory(( NautilusFileInfo * ) iter );
+	basenames = na_object_get_basenames( object );
+	valid = basenames && g_slist_length( basenames ) > 0;
+	na_core_utils_slist_free( basenames );
 
-	} else {
-		file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
-		type = g_file_query_file_type( file, G_FILE_QUERY_INFO_NONE, NULL );
-		is_dir = ( type == G_FILE_TYPE_DIRECTORY );
-		g_object_unref( file );
+	if( !valid ){
+		na_object_debug_invalid( object, "basenames" );
 	}
 
-	return( is_dir );
+	return( valid );
 }
 
-static gchar *
-tracked_to_basename( void *iter, gboolean from_nautilus )
+static gboolean
+is_valid_mimetypes( const NAIContextConditions *object )
 {
-	gchar *bname;
-	GFile *file;
+	gboolean valid;
+	GSList *mimetypes;
 
-	if( from_nautilus ){
-		bname = nautilus_file_info_get_name(( NautilusFileInfo * ) iter );
+	mimetypes = na_object_get_mimetypes( object );
+	valid = mimetypes && g_slist_length( mimetypes ) > 0;
+	na_core_utils_slist_free( mimetypes );
 
-	} else {
-		file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
-		bname = g_file_get_basename( file );
-		g_object_unref( file );
+	if( !valid ){
+		na_object_debug_invalid( object, "mimetypes" );
 	}
 
-	return( bname );
+	return( valid );
 }
 
-static gchar *
-tracked_to_mimetype( void *iter, gboolean from_nautilus )
+static gboolean
+is_valid_isfiledir( const NAIContextConditions *object )
 {
-	gchar *type;
-	NATrackedItem *tracked;
-	GFile *file;
-	GFileInfo *info;
+	gboolean valid;
+	gboolean isfile, isdir;
 
-	type = NULL;
-	if( from_nautilus ){
-		type = nautilus_file_info_get_mime_type(( NautilusFileInfo * ) iter );
+	isfile = na_object_is_file( object );
+	isdir = na_object_is_dir( object );
 
-	} else {
-		tracked = ( NATrackedItem * ) iter;
-		if( tracked->mimetype ){
-			type = g_strdup( tracked->mimetype );
+	valid = isfile || isdir;
 
-		} else {
-			file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
-			info = g_file_query_info( file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, G_FILE_QUERY_INFO_NONE, NULL, NULL );
-			if( info ){
-				type = g_strdup( g_file_info_get_content_type( info ));
-				g_object_unref( info );
-			}
-			g_object_unref( file );
-		}
+	if( !valid ){
+		na_object_debug_invalid( object, "isfiledir" );
 	}
 
-	return( type );
+	return( valid );
 }
 
-static gchar *
-tracked_to_scheme( void *iter, gboolean from_nautilus )
+static gboolean
+is_valid_schemes( const NAIContextConditions *object )
 {
-	gchar *scheme;
-	NAGnomeVFSURI *vfs;
+	gboolean valid;
+	GSList *schemes;
 
-	if( from_nautilus ){
-		scheme = nautilus_file_info_get_uri_scheme(( NautilusFileInfo * ) iter );
+	schemes = na_object_get_schemes( object );
+	valid = schemes && g_slist_length( schemes ) > 0;
+	na_core_utils_slist_free( schemes );
 
-	} else {
-		vfs = g_new0( NAGnomeVFSURI, 1 );
-		na_gnome_vfs_uri_parse( vfs, (( NATrackedItem * ) iter )->uri );
-		scheme = g_strdup( vfs->scheme );
-		na_gnome_vfs_uri_free( vfs );
+	if( !valid ){
+		na_object_debug_invalid( object, "schemes" );
 	}
 
-	return( scheme );
+	return( valid );
 }
 
-static int
-validate_schemes( GSList* schemes2test, void* tracked_iter, gboolean from_nautilus )
+static gboolean
+is_valid_folders( const NAIContextConditions *object )
 {
-	int retv = 0;
+	gboolean valid;
+	GSList *folders;
+
+	folders = na_object_get_folders( object );
+	valid = folders && g_slist_length( folders ) > 0;
+	na_core_utils_slist_free( folders );
+
+	if( !valid ){
+		na_object_debug_invalid( object, "folders" );
+	}
+
+	return( valid );
+}
+
+static gboolean
+validate_schemes( GSList *object_schemes, NASelectedInfo *nfi )
+{
+	gboolean is_ok;
 	GSList* iter;
-	gboolean found = FALSE;
 	gchar *scheme;
 
-	iter = schemes2test;
-	while( iter && !found ){
+	is_ok = FALSE;
 
-		scheme = tracked_to_scheme( tracked_iter, from_nautilus );
+	for( iter = object_schemes ; iter && !is_ok ; iter = iter->next ){
+		scheme = na_selected_info_get_uri_scheme( nfi );
 
 		if( g_ascii_strncasecmp( scheme, ( gchar * ) iter->data, strlen(( gchar * ) iter->data )) == 0 ){
-			found = TRUE;
-			retv = 1;
+			is_ok = TRUE;
 		}
 
 		g_free( scheme );
-		iter = iter->next;
 	}
 
-	return retv;
+	return( is_ok );
 }
