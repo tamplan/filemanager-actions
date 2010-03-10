@@ -44,7 +44,6 @@
 
 #include "na-factory-provider.h"
 #include "na-factory-object.h"
-#include "na-dbus-tracker.h"
 #include "na-selected-info.h"
 #include "na-gnome-vfs-uri.h"
 
@@ -90,16 +89,6 @@ static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
 
 static gchar       *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
-
-#if 0
-static gchar       *parse_parameters( const NAObjectProfile *profile, gint target, GList* files, gboolean from_nautilus );
-static gboolean     is_target_selection_candidate( const NAObjectProfile *profile, GList *files, gboolean from_nautilus );
-static gboolean     tracked_is_directory( void *iter, gboolean from_nautilus );
-static gchar       *tracked_to_basename( void *iter, gboolean from_nautilus );
-static gchar       *tracked_to_mimetype( void *iter, gboolean from_nautilus );
-static gchar       *tracked_to_scheme( void *iter, gboolean from_nautilus );
-static int          validate_schemes( GSList *schemes2test, void *iter, gboolean from_nautilus );
-#endif
 
 GType
 na_object_profile_get_type( void )
@@ -658,118 +647,3 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target,
 	parsed = g_string_free( string, FALSE );
 	return( parsed );
 }
-
-#if 0
-static gboolean
-tracked_is_directory( void *iter, gboolean from_nautilus )
-{
-	gboolean is_dir;
-	GFile *file;
-	GFileType type;
-
-	if( from_nautilus ){
-		is_dir = nautilus_file_info_is_directory(( NautilusFileInfo * ) iter );
-
-	} else {
-		file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
-		type = g_file_query_file_type( file, G_FILE_QUERY_INFO_NONE, NULL );
-		is_dir = ( type == G_FILE_TYPE_DIRECTORY );
-		g_object_unref( file );
-	}
-
-	return( is_dir );
-}
-
-static gchar *
-tracked_to_basename( void *iter, gboolean from_nautilus )
-{
-	gchar *bname;
-	GFile *file;
-
-	if( from_nautilus ){
-		bname = nautilus_file_info_get_name(( NautilusFileInfo * ) iter );
-
-	} else {
-		file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
-		bname = g_file_get_basename( file );
-		g_object_unref( file );
-	}
-
-	return( bname );
-}
-
-static gchar *
-tracked_to_mimetype( void *iter, gboolean from_nautilus )
-{
-	gchar *type;
-	NATrackedItem *tracked;
-	GFile *file;
-	GFileInfo *info;
-
-	type = NULL;
-	if( from_nautilus ){
-		type = nautilus_file_info_get_mime_type(( NautilusFileInfo * ) iter );
-
-	} else {
-		tracked = ( NATrackedItem * ) iter;
-		if( tracked->mimetype ){
-			type = g_strdup( tracked->mimetype );
-
-		} else {
-			file = g_file_new_for_uri((( NATrackedItem * ) iter )->uri );
-			info = g_file_query_info( file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, G_FILE_QUERY_INFO_NONE, NULL, NULL );
-			if( info ){
-				type = g_strdup( g_file_info_get_content_type( info ));
-				g_object_unref( info );
-			}
-			g_object_unref( file );
-		}
-	}
-
-	return( type );
-}
-
-static gchar *
-tracked_to_scheme( void *iter, gboolean from_nautilus )
-{
-	gchar *scheme;
-	NAGnomeVFSURI *vfs;
-
-	if( from_nautilus ){
-		scheme = nautilus_file_info_get_uri_scheme(( NautilusFileInfo * ) iter );
-
-	} else {
-		vfs = g_new0( NAGnomeVFSURI, 1 );
-		na_gnome_vfs_uri_parse( vfs, (( NATrackedItem * ) iter )->uri );
-		scheme = g_strdup( vfs->scheme );
-		na_gnome_vfs_uri_free( vfs );
-	}
-
-	return( scheme );
-}
-
-static int
-validate_schemes( GSList* schemes2test, void* tracked_iter, gboolean from_nautilus )
-{
-	int retv = 0;
-	GSList* iter;
-	gboolean found = FALSE;
-	gchar *scheme;
-
-	iter = schemes2test;
-	while( iter && !found ){
-
-		scheme = tracked_to_scheme( tracked_iter, from_nautilus );
-
-		if( g_ascii_strncasecmp( scheme, ( gchar * ) iter->data, strlen(( gchar * ) iter->data )) == 0 ){
-			found = TRUE;
-			retv = 1;
-		}
-
-		g_free( scheme );
-		iter = iter->next;
-	}
-
-	return retv;
-}
-#endif

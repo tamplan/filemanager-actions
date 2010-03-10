@@ -39,7 +39,6 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
-#include "na-dbus-tracker.h"
 #include "na-gnome-vfs-uri.h"
 #include "na-selected-info.h"
 

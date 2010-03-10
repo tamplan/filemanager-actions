@@ -1,5 +1,15 @@
 2009-03-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-dbus-tracker.h: Remove no more used file.
+
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/core/na-icontextual.c:
+	* src/core/na-object-profile.c:
+	* src/plugin-tracker/na-tracker-dbus.c:
+	* src/utils/nautilus-actions-run.c:
+	Remove all references to NATrackedItem obsolete class.
+
 	* src/api/na-ifactory-object-data.h:
 	Rename v1 action data group to NA_FACTORY_ACTION_V1_GROUP.
 

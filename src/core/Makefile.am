@@ -42,7 +42,6 @@ libna_core_la_SOURCES = \
 	na-core-utils.c										\
 	na-data-boxed.c										\
 	na-data-types.c										\
-	na-dbus-tracker.h									\
 	na-exporter.c										\
 	na-exporter.h										\
 	na-export-format.c									\

@@ -41,8 +41,6 @@
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
-#include <core/na-dbus-tracker.h>
-
 #include "na-tracker-dbus.h"
 #include "na-tracker-dbus-glue.h"
 

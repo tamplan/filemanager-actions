@@ -39,8 +39,8 @@
 
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
+#include <api/na-dbus.h>
 
-#include <core/na-dbus-tracker.h>
 #include <core/na-pivot.h>
 #include <core/na-selected-info.h>
 
