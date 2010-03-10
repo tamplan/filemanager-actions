@@ -74,24 +74,13 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/configurations/target_background</key>
-      <owner>nautilus-actions</owner>
-      <type>bool</type>
-      <locale name="C">
-        <short>Targets background</short>
-        <long>Whether the action of menu targets the background Nautilus menus.</long>
-      </locale>
-      <default>false</default>
-    </schema>
-
-    <schema>
       <key>/schemas/apps/nautilus-actions/configurations/target_toolbar</key>
       <owner>nautilus-actions</owner>
       <type>bool</type>
       <locale name="C">
         <short>Targets toolbar</short>
         <long>Whether the action is candidate to be displayed in Nautilus toolbar.
-Note, that as of Nautilus -2.26, menus can not be candidate to toolbar display.</long>
+Note, that as of Nautilus 2.26, menus can not be candidate to toolbar display.</long>
       </locale>
       <default>false</default>
     </schema>
@@ -293,7 +282,7 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
       <list_type>string</list_type>
       <locale name="C">
         <short>The list of URIs on which the Background item applies</short>
-        <long>Defines the list of valid URIs to be matched against the current folder. This is only used when targeting background or toolbar. All folders 'under' the specified URI are considered valid.</long>
+        <long>Defines the list of valid URIs to be matched against the current folder. All folders 'under' the specified URI are considered valid.</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -362,24 +351,24 @@ Possible values are:
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/ibackground-chooser</key>
+      <key>/schemas/apps/nautilus-actions/preferences/ifolder-chooser</key>
       <owner>nautilus-actions</owner>
       <type>list</type>
       <list_type>int</list_type>
       <locale name="C">
         <short>Position and size of the URI chooser window</short>
-        <long>Position and size of the URI  chooser window in the Background tab ; default is set by the window manager.</long>
+        <long>Position and size of the URI  chooser window in the Folders tab ; default is set by the window manager.</long>
       </locale>
       <default>[]</default>
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/ibackground-uri</key>
+      <key>/schemas/apps/nautilus-actions/preferences/ifolder-uri</key>
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">
         <short>Last selected folder</short>
-        <long>Last folder selected when browsing for an URI in the Background tab.</long>
+        <long>Last folder selected when browsing for an URI in the Folders tab.</long>
       </locale>
       <default>/bin</default>
     </schema>
