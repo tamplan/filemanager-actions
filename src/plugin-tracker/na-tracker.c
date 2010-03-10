@@ -61,13 +61,14 @@ static GObjectClass *st_parent_class = NULL;
 static GType         st_module_type = 0;
 
 static void           class_init( NATrackerClass *klass );
-static void           menu_provider_iface_init( NautilusMenuProviderIface *iface );
 static void           instance_init( GTypeInstance *instance, gpointer klass );
 static NATrackerDBus *initialize_dbus_connection( void );
 static void           instance_dispose( GObject *object );
 static void           instance_finalize( GObject *object );
 
-static GList         *get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
+static void           menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static GList         *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder );
+static GList         *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
 
 GType
 na_tracker_get_type( void )
@@ -122,18 +123,6 @@ class_init( NATrackerClass *klass )
 	gobject_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NATrackerClassPrivate, 1 );
-}
-
-static void
-menu_provider_iface_init( NautilusMenuProviderIface *iface )
-{
-	static const gchar *thisfn = "na_tracker_menu_provider_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_file_items = get_file_items;
-	iface->get_background_items = NULL;
-	iface->get_toolbar_items = NULL;
 }
 
 static void
@@ -261,6 +250,43 @@ instance_finalize( GObject *object )
 	}
 }
 
+static void
+menu_provider_iface_init( NautilusMenuProviderIface *iface )
+{
+	static const gchar *thisfn = "na_tracker_menu_provider_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_background_items = menu_provider_get_background_items;
+	iface->get_file_items = menu_provider_get_file_items;
+	iface->get_toolbar_items = NULL;
+}
+
+static GList *
+menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder )
+{
+	static const gchar *thisfn = "na_tracker_menu_provider_get_background_items";
+	NATracker *self;
+	gchar *uri;
+	GList *selected;
+
+	uri = nautilus_file_info_get_uri( folder );
+	g_debug( "%s: provider=%p, window=%p, folder=%s", thisfn, ( void * ) provider, ( void * ) window, uri );
+	g_free( uri );
+
+	g_return_val_if_fail( NA_IS_TRACKER( provider ), NULL );
+	self = NA_TRACKER( provider );
+
+	if( !self->private->dispose_has_run && self->private->tracker ){
+
+		selected = g_list_prepend( NULL, folder );
+		na_tracker_dbus_set_uris( self->private->tracker, selected );
+		g_list_free( selected );
+	}
+
+	return( NULL );
+}
+
 /*
  * this function is called each time the selection changed
  * menus items are available :
@@ -268,9 +294,9 @@ instance_finalize( GObject *object )
  * b) in contextual menu while the selection stays unchanged
  */
 static GList *
-get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
+menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
-	static const gchar *thisfn = "na_tracker_get_file_items";
+	static const gchar *thisfn = "na_tracker_menu_provider_get_file_items";
 	NATracker *self;
 
 	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",

@@ -1,5 +1,9 @@
 2009-03-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-tracker/na-tracker.c
+	(menu_provider_get_background_items):
+	Implement Nautilus get_background_items() interface.
+
 	* data/nautilus-actions.schemas.in:
 	Remove 'target-background' entry description.
 
