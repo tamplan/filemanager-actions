@@ -72,9 +72,7 @@ GType            na_object_profile_get_type( void );
 NAObjectProfile *na_object_profile_new( void );
 NAObjectProfile *na_object_profile_new_with_defaults( void );
 
-gboolean         na_object_profile_is_target_background( const NAObjectProfile *profile );
-
-gchar           *na_object_profile_parse_parameters    ( const NAObjectProfile *profile, gint target, GList *selected );
+gchar           *na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target, GList *selected );
 
 G_END_DECLS
 

@@ -3,6 +3,13 @@
 	* data/nautilus-actions.schemas.in:
 	Remove 'target-background' entry description.
 
+	* src/api/na-object-api.h
+	(na_object_is_target_background): Removed macro.
+
+	* src/api/na-object-profile.h
+	* src/core/na-object-profile.c
+	(na_object_profile_is_target_background): Removed function.
+
 2009-03-09 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/io-gconf/nagp-writer.c (nagp_writer_write_data):
