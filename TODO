@@ -51,9 +51,6 @@
 
 - undo manager (at least Ctrl-Z)
 
-- ui preferences: create root menu for background items
-- ui preferences: add about item for background items
-
 - have a single place where a schema is written
   (see src/utils/nautilus-actions-schemas.c)
   more: have a single place where the schema is _described_
@@ -62,9 +59,6 @@
 - IActionTab: check_label has became useless since validity is global
   to the action - remove, or extend to each field which can led to
   unvalidity
-
-- data factory: put together each property of each elementary data (id, label, etc.)
-  along with their methods
 
 - export: add a overwrite page: what to do if file already exists ?
 
@@ -84,23 +78,9 @@
 
 - nact: new action assistant
 
-- desktop provider: fix default toolbar label
-
 - DBus service: list current I/O providers
 
 - DBus service: import/export an action or a menu
-
-- replace na_object_action_set/get_target_selection/background by target_context
-  reunion of TargetSelection and TargetFolder
-  as TargetFolder is just a special case of TargetSelection
-  !! This suppose that we implement the SelectionCount condition
-  > add special case 'x-nautilus-desktop:///' as a special folder
-  > remove GConf entry
-  > remove importing
-  > remove exporting
-  > remove in n-a-c-t
-  > remove in n-a-n
-  > remove in action class
 
 - optim: what about between base_builder_instance_init and
   base_application_v_initialize_default_icon ?
