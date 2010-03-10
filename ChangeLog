@@ -1,5 +1,13 @@
 2009-03-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-io-provider.c (build_hierarchy):
+	Attach the child item to its parent.
+
+	* src/core/na-object-id.c (instance_dispose):
+	* src/core/na-object-item.c (instance_dispose):
+	* src/core/na-object.c (instance_dispose):
+	Add debug messages.
+
 	* src/core/na-dbus-tracker.h: Remove no more used file.
 
 	* src/core/Makefile.am: Updated accordingly.

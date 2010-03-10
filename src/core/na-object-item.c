@@ -173,6 +173,7 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		children = na_object_get_items( self );
+		g_debug( "%s: children=%p (count=%d)", thisfn, ( void * ) children, g_list_length( children ));
 		na_object_set_items( self, NULL );
 		na_object_unref_items( children );
 

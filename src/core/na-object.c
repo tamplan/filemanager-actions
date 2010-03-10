@@ -205,9 +205,12 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
+	static const gchar *thisfn = "na_object_instance_finalize";
 	NAObject *self;
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	self = NA_OBJECT( object );
 
