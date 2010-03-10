@@ -80,12 +80,11 @@ static NADataDef data_def_action [] = {
 	 * it is so no more readable (it doesn't take anymore any useful information)
 	 * nor writable (obsolete)
 	 *
-	 * we now consider that folders condition is to be met when the target is
-	 * is only one folder, whether this is a selected item, or the current
-	 * folder when there is no selection
+	 * we now consider that the folders condition is to be met every time
+	 * a selection contains folders
 	 */
 	{ NAFO_DATA_TARGET_BACKGROUND,
-				TRUE,
+				FALSE,
 				FALSE,
 				FALSE,
 				"Target the folder context menu",
@@ -307,7 +306,7 @@ NADataGroup action_data_groups [] = {
 	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
 	{ NA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
 	{ NA_FACTORY_OBJECT_ACTION_GROUP,     data_def_action },
-	{ NA_FACTORY_OBSOLETED_ACTION_GROUP,  data_def_action_v1 },
+	{ NA_FACTORY_ACTION_V1_GROUP,         data_def_action_v1 },
 	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, NULL },
 	{ NULL }
 };

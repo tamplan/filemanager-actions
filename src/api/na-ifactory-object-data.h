@@ -68,7 +68,7 @@ G_BEGIN_DECLS
 #define NAFO_DATA_TOOLBAR_SAME_LABEL		"na-factory-data-toolbar-same-label"
 #define NAFO_DATA_LAST_ALLOCATED			"na-factory-data-last-allocated"
 
-#define NA_FACTORY_OBSOLETED_ACTION_GROUP	"na-factory-group-action-obsoleted"
+#define NA_FACTORY_ACTION_V1_GROUP			"na-factory-group-action-v1"
 
 #define NA_FACTORY_OBJECT_MENU_GROUP		"na-factory-group-menu"
 

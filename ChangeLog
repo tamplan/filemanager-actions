@@ -1,5 +1,11 @@
 2009-03-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-ifactory-object-data.h:
+	Rename v1 action data group to NA_FACTORY_ACTION_V1_GROUP.
+
+	* src/core/na-object-action-factory.c:
+	No more try to read obsolete NAFO_DATA_TARGET_BACKGROUND data.
+
 	* src/plugin-tracker/na-tracker.c
 	(menu_provider_get_background_items):
 	Implement Nautilus get_background_items() interface.
