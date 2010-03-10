@@ -1,5 +1,8 @@
 2009-03-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/nautilus-actions-new.c:
+	Define a structure to host NADataDef argument definitions.
+
 	* src/api/na-data-def.h:
 	Add parameters to be able to manage command-line arguments.
 
