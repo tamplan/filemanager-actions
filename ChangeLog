@@ -1,5 +1,14 @@
 2009-03-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-def.h:
+	Add parameters to be able to manage command-line arguments.
+
+	* src/core/na-icontextual-factory.c:
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-id-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-profile-factory.c: Updated accordingly.
+
 	* src/core/na-io-provider.c (build_hierarchy):
 	Attach the child item to its parent.
 

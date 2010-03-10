@@ -47,53 +47,69 @@ G_BEGIN_DECLS
  * this structure
  */
 typedef struct {
-	gchar    *name;						/* both the id and the canonical name
+	gchar     *name;					/* both the id and the canonical name
 										 * used when getting/setting properties
 										 * must be globally unique
 										 * must also be an invariant as it is known from plugin extensions */
 
-	gboolean  readable;					/* whether the data should be read on unserialization ops.
+	gboolean   readable;				/* whether the data should be read on unserialization ops.
 										 * if FALSE, then no attempt will be made to read it
 										 * and the data will has to be set dynamically
 										 * when a data has been written once (see below), and unless
 										 * special cases (see e.g. type), it should remain readable
 										 * even if it has becomen obsolete (for backward compatibility) */
 
-	gboolean  writable;					/* whether the data is to be written on serialization ops.
+	gboolean   writable;				/* whether the data is to be written on serialization ops.
 										 * if FALSE, then no attempt will be made to write it
 										 * mainly set to FALSE to dynamically set variables and
 										 * obsoleted ones */
 
-	gboolean  has_property;				/* whether a property should be set for this variable ?
+	gboolean   has_property;			/* whether a property should be set for this variable ?
 										 * set to FALSE for obsolete variables */
 
-	gchar    *short_label;				/* short descriptive name
+	gchar     *short_label;				/* short descriptive name
 										 * used in GParamSpec and in schemas */
 
-	gchar    *long_label;				/* long, if not complete, description
+	gchar     *long_label;				/* long, if not complete, description
 										 * used in GParamSpec and in schemas */
 
-	guint     type;						/* the elementary NAFD_TYPE_xxx data type */
+	guint      type;					/* the elementary NAFD_TYPE_xxx data type */
 
-	gchar    *default_value;			/* the default to assign when creating a new object
+	gchar     *default_value;			/* the default to assign when creating a new object
 										 * this default is also displayed in command-line help
 										 * of nautilus-actions-new utility */
 
-	gboolean  copyable;					/* whether this data should be automatically copied when
+	gboolean   copyable;				/* whether this data should be automatically copied when
 										 * we are duplicating an object to another
 										 * in all cases, the implementation is always triggered
 										 * by the copy() interface method */
 
-	gboolean  comparable;				/* whether this data should be compared when we
+	gboolean   comparable;				/* whether this data should be compared when we
 										 * are testing two objects for equality */
 
-	gboolean  mandatory;				/* whether this data must be not null and not empty
+	gboolean   mandatory;				/* whether this data must be not null and not empty
 										 * when we are testing for validity of an object */
 
-	gboolean  localizable;				/* whether this is a localizable data
+	gboolean   localizable;				/* whether this is a localizable data
 										 * when serializing or exporting */
 
-	gchar    *gconf_entry;				/* same entry is also used for GConf-based XML docs */
+	gchar     *gconf_entry;				/* same entry is also used for GConf-based XML docs */
+
+	/* some parameters to be used when the variable is to be entered via a
+	 * command-line program (e.g. see nautilus-actions-new).
+	 */
+	gchar      option_short;			/* the short version of a command-line parameter */
+
+	gchar     *option_long;				/* the long version of the same command-line parameter */
+
+	gint       option_flags;			/* GOptionFlags for the command-line parameter */
+
+	GOptionArg option_arg;				/* the type of the option */
+
+	gchar     *option_label;			/* the description for the variable
+										 * defaults to short_label if NULL */
+
+	gchar     *option_arg_label;		/* the description for the argument */
 }
 	NADataDef;
 

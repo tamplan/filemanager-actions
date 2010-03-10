@@ -59,7 +59,13 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				"type" },
+				"type",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
 
 	/* this data is common between actions and menus
 	 * so default value is directly set in na_object_action_new_with_defaults()
@@ -79,7 +85,13 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				TRUE,
-				"label" },
+				"label",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
 
 	{ NAFO_DATA_TOOLTIP,
 				TRUE,
@@ -95,7 +107,13 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				TRUE,
-				"tooltip" },
+				"tooltip",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
 
 	{ NAFO_DATA_ICON,
 				TRUE,
@@ -112,7 +130,13 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				TRUE,
-				"icon" },
+				"icon",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
 
 	{ NAFO_DATA_DESCRIPTION,
 				TRUE,
@@ -127,7 +151,13 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				TRUE,
-				"description" },
+				"description",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
 
 	/* dynamic data, so not readable / not writable
 	 */
@@ -143,6 +173,12 @@ NADataDef data_def_item [] = {
 				FALSE,			/* not comparable */
 				FALSE,			/* not mandatory */
 				FALSE,			/* not localized */
+				NULL,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
 				NULL },
 
 	/* list of subitems as a string list
@@ -163,7 +199,13 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
-				"items" },
+				"items",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
 
 	{ NAFO_DATA_ENABLED,
 				TRUE,
@@ -178,7 +220,13 @@ NADataDef data_def_item [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				"enabled" },
+				"enabled",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
 
 	/* dynamic data, so non readable / non writable
 	 * must be set by the NAIIOProvider when reading the item
@@ -200,6 +248,12 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
+				NULL,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
 				NULL },
 
 	/* dynamic data, so non readable / non writable
@@ -216,6 +270,12 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
+				NULL,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
 				NULL },
 
 	/* dynamic data, so non readable / non writable
@@ -233,6 +293,12 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				FALSE,
+				NULL,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
 				NULL },
 
 	{ NULL },

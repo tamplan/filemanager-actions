@@ -55,6 +55,12 @@ NADataDef data_def_id [] = {
 				TRUE,
 				TRUE,
 				FALSE,
+				NULL,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
 				NULL },
 
 	/* dynamic data, so not readable / not writable
@@ -71,6 +77,12 @@ NADataDef data_def_id [] = {
 				FALSE,
 				FALSE,
 				FALSE,
+				NULL,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
 				NULL },
 
 	{ NULL },
