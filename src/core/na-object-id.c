@@ -162,7 +162,7 @@ instance_dispose( GObject *object )
 
 		parent = na_object_get_parent( object );
 		g_debug( "%s: parent=%p (%s)",
-				thisfn, ( void * ) parent, parent ? G_OBJECT_TYPE_NAME( parent ) : "(n/a)" );
+				thisfn, ( void * ) parent, parent ? G_OBJECT_TYPE_NAME( parent ) : "n/a" );
 		if( parent ){
 			na_object_remove_item( parent, object );
 			na_object_set_parent( object, NULL );
