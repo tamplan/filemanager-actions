@@ -117,49 +117,6 @@ static GOptionEntry st_added_entries[] = {
 	{ NULL }
 };
 
-#if 0
-static GOptionEntry entries[] = {
-
-	{ "label"                , 'l', 0, G_OPTION_ARG_STRING      , &label,
-			N_( "The label of the menu item (mandatory)" ), N_( "<STRING>" ) },
-	{ "tooltip"              , 't', 0, G_OPTION_ARG_STRING      , &tooltip,
-			N_( "The tooltip of the menu item" ), N_( "<STRING>" ) },
-	{ "icon"                 , 'i', 0, G_OPTION_ARG_STRING      , &icon,
-			N_( "The icon of the menu item (filename or themed icon)" ), N_( "<PATH|NAME>" ) },
-	{ "enabled"              , 'e', 0, G_OPTION_ARG_NONE        , &enabled,
-			N_( "Set it if the action should be enabled [default]" ), NULL },
-	{ "disabled"             , 'a', 0, G_OPTION_ARG_NONE        , &disabled,
-			N_( "Set it if the action should be disabled at creation" ), NULL },
-	{ "target-selection"     , 'S', 0, G_OPTION_ARG_NONE        , &target_selection,
-			N_( "Set it if the action should be displayed in selection menus" ), NULL },
-	{ "target-toolbar"       , 'O', 0, G_OPTION_ARG_NONE        , &target_toolbar,
-			N_( "Set it if the action should be displayed in toolbar" ), NULL },
-	{ "label-toolbar"        , 'L', 0, G_OPTION_ARG_STRING      , &label_toolbar,
-			N_( "The label of the action item in the toolbar" ), N_( "<STRING>" ) },
-	{ "command"              , 'c', 0, G_OPTION_ARG_FILENAME    , &command,
-			N_( "The path of the command" ), N_( "<PATH>" ) },
-	{ "parameters"           , 'p', 0, G_OPTION_ARG_STRING      , &parameters,
-			N_( "The parameters of the command" ), N_( "<PARAMETERS>" ) },
-	{ "match"                , 'm', 0, G_OPTION_ARG_STRING_ARRAY, &basenames_array,
-			N_( "A pattern to match selected items against. May include wildcards (* or ?). You must set one option for each pattern you need" ), N_( "<EXPR>" ) },
-	{ "match-case"           , 'C', 0, G_OPTION_ARG_NONE        , &matchcase,
-			N_( "Set it if the previous patterns are case sensitive" ), NULL },
-	{ "mimetypes"            , 'T', 0, G_OPTION_ARG_STRING_ARRAY, &mimetypes_array,
-			N_( "A pattern to match selected items mimetype against. May include wildcards (* or ?). You must set one option for each pattern you need" ), N_( "<EXPR>" ) },
-	{ "accept-files"         , 'f', 0, G_OPTION_ARG_NONE        , &isfile,
-			N_( "Set it if the selection must only contain files" ), NULL },
-	{ "accept-dirs"          , 'd', 0, G_OPTION_ARG_NONE        , &isdir,
-			N_( "Set it if the selection must only contain folders. Specify both '--accept-files' and '--accept-dirs' options if selection can contain both types of items" ), NULL },
-	{ "accept-multiple-files", 'M', 0, G_OPTION_ARG_NONE        , &accept_multiple,
-			N_( "Set it if the selection can have several items" ), NULL },
-	{ "scheme"               , 's', 0, G_OPTION_ARG_STRING_ARRAY, &schemes_array,
-			N_( "A valid GIO scheme where the selected files should be located. You must set one option for each scheme you need" ), N_( "<SCHEME>" ) },
-	{ "folder"               , 'U', 0, G_OPTION_ARG_STRING_ARRAY, &folders_array,
-			N_( "The URI of a directory for which folders or toolbar action will be displayed. You must set one option for each folder you need" ), N_( "<URI>" ) },
-	{ NULL }
-};
-#endif
-
 static GOptionEntry output_entries[] = {
 
 	{ "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE        , &output_gconf,
@@ -230,6 +187,25 @@ main( int argc, char** argv )
 		errors += 1;
 	} else if( !disabled ){
 		enabled = TRUE;
+	}
+
+	if( target_selection && nocontext ){
+		g_printerr( _( "Error: '--context' and '--nocontext' options cannot both be specified.\n" ));
+		errors += 1;
+	} else if( !nocontext ){
+		target_selection = TRUE;
+	}
+
+	if( target_toolbar && notoolbar ){
+		g_printerr( _( "Error: '--toolbar' and '--notoolbar' options cannot both be specified.\n" ));
+		errors += 1;
+	}
+
+	if( matchcase && nocase ){
+		g_printerr( _( "Error: '--match-case' and '--nocase' options cannot both be specified.\n" ));
+		errors += 1;
+	} else if( !nocase ){
+		matchcase = TRUE;
 	}
 
 	if( output_gconf && output_dir ){
