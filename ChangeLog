@@ -1,3 +1,12 @@
+2009-03-15 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-icontextual-factory.c:
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-profile-factory.c:
+	* src/utils/nautilus-actions-new.c:
+	Update data definitions to handle command-line arguments.
+
 2009-03-10 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/utils/nautilus-actions-new.c:

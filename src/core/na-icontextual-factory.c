@@ -44,7 +44,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "List of pattern to match the selected file(s)/folder(s)" ),
+				N_( "List of patterns to be matched against the selected file(s)/folder(s)" ),
 				N_( "A list of strings with joker '*' or '?' to be matched against the name(s) " \
 					"of the selected file(s)/folder(s). Each selected items must match at least " \
 					"one of the filename patterns for the action or the menu be candidate to " \
@@ -58,18 +58,20 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"basenames",
+				'b',
+				"basename",
 				0,
-				NULL,
-				0,
-				0,
-				NULL,
-				NULL },
+				G_OPTION_ARG_STRING_ARRAY,
+				N_( "A pattern to be matched against basenames of selected file(s)/folder(s). " \
+					"May include wildcards (* or ?). " \
+					"You must set one option for each pattern you need" ),
+				N_( "<EXPR>" ) },
 
 	{ NAFO_DATA_MATCHCASE,
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "Whether the specified basenames are case sensitive" ),
+				N_( "Whether the specified basenames are case sensitive (default)" ),
 				N_( "Must be set to 'true' if the filename patterns are case sensitive, to 'false' " \
 					"otherwise. E.g., if you need to match a filename in a case-sensitive manner, " \
 					"set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', " \
@@ -83,10 +85,10 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"matchcase",
+				'c',
+				"case",
 				0,
-				NULL,
-				0,
-				0,
+				G_OPTION_ARG_NONE,
 				NULL,
 				NULL },
 
@@ -94,7 +96,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "List of patterns to match the mimetypes of the selected file(s)/folder(s)" ),
+				N_( "List of patterns to be matched against the mimetypes of the selected file(s)/folder(s)" ),
 				N_( "A list of strings with joker '*' to be matched against the mimetypes of the " \
 					"selected file(s)/folder(s). Each selected items must match at least one of " \
 					"the mimetype patterns for the action to appear.\n" \
@@ -107,12 +109,14 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"mimetypes",
+				'm',
+				"mimetype",
 				0,
-				NULL,
-				0,
-				0,
-				NULL,
-				NULL },
+				G_OPTION_ARG_STRING_ARRAY,
+				N_( "A pattern to be matched against mimetypes of selected file(s)/folder(s). " \
+					"May include wildcards (* or ?). " \
+					"You must set one option for each pattern you need" ),
+				N_( "<EXPR>" ) },
 
 	{ NAFO_DATA_ISFILE,
 				TRUE,
@@ -135,10 +139,10 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"isfile",
+				'f',
+				"accept-files",
 				0,
-				NULL,
-				0,
-				0,
+				G_OPTION_ARG_NONE,
 				NULL,
 				NULL },
 
@@ -163,10 +167,10 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"isdir",
+				'd',
+				"accept-dirs",
 				0,
-				NULL,
-				0,
-				0,
+				G_OPTION_ARG_NONE,
 				NULL,
 				NULL },
 
@@ -186,10 +190,10 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"accept-multiple-files",
+				'u',
+				"accept-multiple",
 				0,
-				NULL,
-				0,
-				0,
+				G_OPTION_ARG_NONE,
 				NULL,
 				NULL },
 
@@ -197,7 +201,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "List of schemes" ),
+				N_( "List of schemes to be matched against those of selected file(s)/folder(s)" ),
 										/* too long string for iso c: 510 (max=509) */
 				N_( "Defines the list of valid schemes to be matched against the selected " \
 					"items. The scheme is the protocol used to access the files. The " \
@@ -221,12 +225,13 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"schemes",
+				's',
+				"scheme",
 				0,
-				NULL,
-				0,
-				0,
-				NULL,
-				NULL },
+				G_OPTION_ARG_STRING,
+				N_( "A valid GIO scheme where the selected file(s)/folder(s) should be located. " \
+					"You must set one option for each scheme you need" ),
+				N_( "<STRING>" ) },
 
 	{ NAFO_DATA_FOLDERS,
 				TRUE,
@@ -244,12 +249,13 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"folders",
+				'd',
+				"folder",
 				0,
-				NULL,
-				0,
-				0,
-				NULL,
-				NULL },
+				G_OPTION_ARG_STRING,
+				N_( "The path of a directory for which folders or toolbar action will be displayed. " \
+					"You must set one option for each folder you need" ),
+				N_( "<PATH>" ) },
 
 	{ NULL },
 };

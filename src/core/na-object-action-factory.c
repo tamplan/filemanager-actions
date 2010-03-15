@@ -68,10 +68,11 @@ static NADataDef data_def_action [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "Targets the context menu" ),
+				N_( "Targets the context menu (default)" ),
 				N_( "Whether the action of the menu targets the selection file manager " \
 					"context menus.\n" \
-					"This used to be the historical behavior."),
+					"This used to be the historical behavior.\n" \
+					"Defaults to TRUE." ),
 				NAFD_TYPE_BOOLEAN,
 				"true",
 				TRUE,
@@ -79,10 +80,10 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				FALSE,
 				"target-selection",
+				'c',
+				"context",
 				0,
-				NULL,
-				0,
-				0,
+				G_OPTION_ARG_NONE,
 				NULL,
 				NULL },
 
@@ -129,10 +130,10 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				FALSE,
 				"target-toolbar",
+				'o',
+				"toolbar",
 				0,
-				NULL,
-				0,
-				0,
+				G_OPTION_ARG_NONE,
 				NULL,
 				NULL },
 
@@ -151,12 +152,12 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				TRUE,
 				"toolbar-label",
+				'L',
+				"toolbar-label",
 				0,
+				G_OPTION_ARG_STRING,
 				NULL,
-				0,
-				0,
-				NULL,
-				NULL },
+				N_( "<STRING>" ) },
 
 	/* this data has been introduced in 2.29.1 and has been left up to 2.29.4
 	 * it has been removed starting with 2.29.5
