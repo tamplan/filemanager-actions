@@ -388,16 +388,6 @@ naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data,
 	if( NA_IS_OBJECT_ITEM( object )){
 
 		na_object_dump( object );
-
-		boxed = na_ifactory_object_get_data_boxed( object, NAFO_DATA_TYPE );
-
-		if( boxed ){
-			writer = NAXML_WRITER( writer_data );
-			( *writer->private->fn_str->write_data_fn )( writer, NA_OBJECT_ID( object ), boxed );
-
-		} else {
-			g_warning( "%s: unable to get %s databox", thisfn, NAFO_DATA_TYPE );
-		}
 	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );

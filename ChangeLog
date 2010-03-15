@@ -1,5 +1,8 @@
 2009-03-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/naxml-writer.c (naxml_writer_write_start):
+	No need to explicitely write item type as the data is marked writable.
+
 	* src/utils/nautilus-actions-new.c:
 	Cleanup old command-line code.
 	Check for incompatibility between boolean arguments.
