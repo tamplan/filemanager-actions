@@ -78,7 +78,7 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				FALSE,
 				"path",
-				'c',
+				'x',
 				"command",
 				0,
 				G_OPTION_ARG_FILENAME,

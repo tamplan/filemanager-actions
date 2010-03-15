@@ -48,8 +48,10 @@
 #include "console-utils.h"
 
 typedef struct {
-	gchar *name;
-	void  *arg_data;
+	NADataGroup *group;
+	gchar       *group_name;
+	gchar       *data_name;
+	void        *arg_data;
 }
 	ArgFromDataDef;
 
@@ -59,12 +61,15 @@ static gchar     *icon             = "";
 static gboolean   enabled          = FALSE;
 static gboolean   disabled         = FALSE;
 static gboolean   target_selection = FALSE;
+static gboolean   nocontext        = FALSE;
 static gboolean   target_toolbar   = FALSE;
+static gboolean   notoolbar        = FALSE;
 static gchar     *label_toolbar    = "";
 static gchar     *command          = "";
 static gchar     *parameters       = "";
 static gchar    **basenames_array  = NULL;
 static gboolean   matchcase        = FALSE;
+static gboolean   nocase           = FALSE;
 static gchar    **mimetypes_array  = NULL;
 static gboolean   isfile           = FALSE;
 static gboolean   isdir            = FALSE;
@@ -75,27 +80,44 @@ static gchar     *output_dir       = NULL;
 static gboolean   output_gconf     = FALSE;
 static gboolean   version          = FALSE;
 
+extern NADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
+extern NADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
+
 static const ArgFromDataDef st_arg_from_data_def[] = {
-		{ NAFO_DATA_LABEL,            &label },
-		{ NAFO_DATA_TOOLTIP,          &tooltip },
-		{ NAFO_DATA_ICON,             &icon },
-		{ NAFO_DATA_ENABLED,          &enabled },
-		{ NAFO_DATA_TARGET_SELECTION, &target_selection },
-		{ NAFO_DATA_TARGET_TOOLBAR,   &target_toolbar },
-		{ NAFO_DATA_TOOLBAR_LABEL,    &label_toolbar },
-		{ NAFO_DATA_PATH,             &command },
-		{ NAFO_DATA_PARAMETERS,       &parameters },
-		{ NAFO_DATA_BASENAMES,        &basenames_array },
-		{ NAFO_DATA_MATCHCASE,        &matchcase },
-		{ NAFO_DATA_MIMETYPES,        &mimetypes_array },
-		{ NAFO_DATA_ISFILE,           &isfile },
-		{ NAFO_DATA_ISDIR,            &isdir },
-		{ NAFO_DATA_MULTIPLE,         &accept_multiple },
-		{ NAFO_DATA_SCHEMES,          &schemes_array },
-		{ NAFO_DATA_FOLDERS,          &folders_array },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_LABEL,            &label },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_TOOLTIP,          &tooltip },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ICON,             &icon },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ENABLED,          &enabled },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_SELECTION, &target_selection },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_TOOLBAR,   &target_toolbar },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TOOLBAR_LABEL,    &label_toolbar },
+		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PATH,             &command },
+		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PARAMETERS,       &parameters },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_BASENAMES,        &basenames_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MATCHCASE,        &matchcase },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MIMETYPES,        &mimetypes_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISFILE,           &isfile },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISDIR,            &isdir },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MULTIPLE,         &accept_multiple },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SCHEMES,          &schemes_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_FOLDERS,          &folders_array },
 		{ NULL }
 };
 
+static GOptionEntry st_added_entries[] = {
+
+	{ "disabled"             , 'E', 0, G_OPTION_ARG_NONE        , &disabled,
+			N_( "Set it if the item should be disabled at creation" ), NULL },
+	{ "nocontext"            , 'C', 0, G_OPTION_ARG_NONE        , &nocontext,
+			N_( "Set it if the item doesn't target the context menu" ), NULL },
+	{ "notoolbar"            , 'O', 0, G_OPTION_ARG_NONE        , &notoolbar,
+			N_( "Set it if the item doesn't target the toolbar" ), NULL },
+	{ "nocase"               , 'A', 0, G_OPTION_ARG_NONE        , &nocase,
+			N_( "Set it if the basename patterns are case insensitive" ), NULL },
+	{ NULL }
+};
+
+#if 0
 static GOptionEntry entries[] = {
 
 	{ "label"                , 'l', 0, G_OPTION_ARG_STRING      , &label,
@@ -136,6 +158,7 @@ static GOptionEntry entries[] = {
 			N_( "The URI of a directory for which folders or toolbar action will be displayed. You must set one option for each folder you need" ), N_( "<URI>" ) },
 	{ NULL }
 };
+#endif
 
 static GOptionEntry output_entries[] = {
 
@@ -153,6 +176,7 @@ static GOptionEntry misc_entries[] = {
 	{ NULL }
 };
 
+static GOptionEntry   *build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds );
 static GOptionContext *init_options( void );
 static NAObjectAction *get_action_from_cmdline( void );
 static gboolean        write_to_gconf( NAObjectAction *action, GSList **msg );
@@ -250,6 +274,50 @@ main( int argc, char** argv )
 	exit( status );
 }
 
+static GOptionEntry *
+build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds )
+{
+	static const gchar *thisfn = "nautilus_actions_new_build_option_entries";
+	GOptionEntry *entries;
+	GOptionEntry *ient;
+	const GOptionEntry *iadd;
+	const ArgFromDataDef *idef;
+	const NADataDef *data_def;
+
+	entries = g_new0( GOptionEntry, 1+nbdefs+nbadds );
+	ient = entries;
+
+	idef = defs;
+	while( idef->group ){
+		data_def = na_data_def_get_data_def( idef->group, idef->group_name, idef->data_name );
+
+		if( data_def ){
+			ient->long_name = data_def->option_long;
+			ient->short_name = data_def->option_short;
+			ient->flags = data_def->option_flags;
+			ient->arg = data_def->option_arg;
+			ient->arg_data = idef->arg_data;
+			ient->description = data_def->option_label ? data_def->option_label : data_def->short_label;
+			ient->arg_description = data_def->option_arg_label;
+
+		} else {
+			g_warning( "%s: group=%s, name=%s: unable to find NADataDef structure", thisfn, idef->group_name, idef->data_name );
+		}
+
+		idef++;
+		ient++;
+	}
+
+	iadd = adds;
+	while( iadd->long_name ){
+		memcpy( ient, iadd, sizeof( GOptionEntry ));
+		iadd++;
+		ient++;
+	}
+
+	return( entries );
+}
+
 /*
  * init options context
  */
@@ -260,11 +328,14 @@ init_options( void )
 	gchar* description;
 	GOptionGroup *output_group;
 	GOptionGroup *misc_group;
+	GOptionEntry *entries;
 
 	context = g_option_context_new( _( "Define a new action.\n\n"
 			"  The created action defaults to be written to stdout.\n"
 			"  It can also be written to an output folder, in a file later suitable for an import in NACT.\n"
 			"  Or you may choose to directly write the action into your GConf configuration." ));
+
+	entries = build_option_entries( st_arg_from_data_def, G_N_ELEMENTS( st_arg_from_data_def ), st_added_entries, G_N_ELEMENTS( st_added_entries ) );
 
 #ifdef ENABLE_NLS
 	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
@@ -283,6 +354,7 @@ init_options( void )
 
 	g_option_context_set_description( context, description );
 
+	/* g_free( entries ); */
 	g_free( description );
 
 	output_group = g_option_group_new(

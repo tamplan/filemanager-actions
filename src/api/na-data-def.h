@@ -124,6 +124,8 @@ typedef struct {
 }
 	NADataGroup;
 
+const NADataDef *na_data_def_get_data_def( const NADataGroup *group, const gchar *group_name, const gchar *name );
+
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_DEF_H__ */

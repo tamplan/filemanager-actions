@@ -41,6 +41,7 @@ AM_CPPFLAGS += \
 libna_core_la_SOURCES = \
 	na-core-utils.c										\
 	na-data-boxed.c										\
+	na-data-def.c										\
 	na-data-types.c										\
 	na-exporter.c										\
 	na-exporter.h										\

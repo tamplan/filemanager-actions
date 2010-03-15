@@ -85,8 +85,8 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"matchcase",
-				'c',
-				"case",
+				'a',
+				"match-case",
 				0,
 				G_OPTION_ARG_NONE,
 				NULL,
@@ -249,11 +249,11 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				"folders",
-				'd',
+				'r',
 				"folder",
 				0,
 				G_OPTION_ARG_STRING,
-				N_( "The path of a directory for which folders or toolbar action will be displayed. " \
+				N_( "The path of a directory for which the item will be displayed. " \
 					"You must set one option for each folder you need" ),
 				N_( "<PATH>" ) },
 
