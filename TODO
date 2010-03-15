@@ -146,3 +146,16 @@
 - before next release
   as it is probable that desktop files will not be ready
   -> join path and parameters
+
+- note that iprefs ibackground-* has been renamed as ifolders-*
+
+- in GConf, for v3, have conditions in a subfolder
+  configurations/
+    uuid/
+       properties/
+       conditions/
+       profiles/
+          profile-un/
+            properties/
+            conditions/
+            command/
