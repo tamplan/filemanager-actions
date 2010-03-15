@@ -354,7 +354,7 @@ init_options( void )
 
 	g_option_context_set_description( context, description );
 
-	/* g_free( entries ); */
+	g_free( entries );
 	g_free( description );
 
 	output_group = g_option_group_new(
