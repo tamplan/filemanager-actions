@@ -1,23 +1,24 @@
 # French translations for nautilus-actions package
-# Copyright (C) 2005-2009 The Free Software Foundation, Inc.
+# Copyright (C) 2005-2010 The Free Software Foundation, Inc.
 # This file is distributed under the same license as the nautilus-actions package.
 #
 # Frederic Ruaudel <grumz@grumz.net>, 2005.
 # Christophe Bliard <christophe.bliard@trux.info>, 2006.
 # Laurent Richard <laurent.richard@ael.be>, 2006.
 # Damien Durand <splinux@fedoraproject.org>, 2006.
-# Claude Paroz <claude@2xlibre.net>, 2006-2009.
+# Claude Paroz <claude@2xlibre.net>, 2006-2010.
 # Stéphane Raimbault <stephane.raimbault@gmail.com>, 2007, 2009.
 # Laurent Coudeur <laurentc@iol.ie>, 2009.
-# Bruno Brouard <annoa.b@gmail.com>, 2009.
+# Bruno Brouard <annoa.b@gmail.com>, 2009-2010.
+# Cédric Felizard <cedric.felizard@gmail.com>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions fr\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2009-12-22 22:37+0000\n"
-"PO-Revision-Date: 2009-12-28 21:08+0100\n"
+"POT-Creation-Date: 2010-03-06 09:47+0000\n"
+"PO-Revision-Date: 2010-03-15 22:49+0100\n"
 "Last-Translator: Bruno Brouard <annoa.b@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +27,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../data/nautilus-actions.schemas.in.h:1
-#: ../nautilus-actions/runtime/na-xml-names.h:144
 msgid ""
 "'true' if the filename patterns have to be case sensitive, 'false' otherwise"
 msgstr ""
@@ -34,28 +34,23 @@ msgstr ""
 "casse, « false » (faux) sinon"
 
 #: ../data/nautilus-actions.schemas.in.h:2
-#: ../nautilus-actions/runtime/na-xml-names.h:153
 msgid "'true' if the selection can have files, 'false' otherwise"
 msgstr "« vrai » si la sélection peut contenir des fichiers, « faux » sinon"
 
 #: ../data/nautilus-actions.schemas.in.h:3
-#: ../nautilus-actions/runtime/na-xml-names.h:160
 msgid "'true' if the selection can have folders, 'false' otherwise"
 msgstr "« vrai » si la sélection peut contenir des dossiers, « faux » sinon"
 
 #: ../data/nautilus-actions.schemas.in.h:4
-#: ../nautilus-actions/runtime/na-xml-names.h:167
 msgid "'true' if the selection can have several items, 'false' otherwise"
 msgstr ""
 "« vrai » si la sélection peut contenir plusieurs éléments, « faux » sinon"
 
 #: ../data/nautilus-actions.schemas.in.h:5
-#: ../nautilus-actions/runtime/na-xml-names.h:120
 msgid "A description name of the profile"
 msgstr "Un nom descriptif du profil"
 
 #: ../data/nautilus-actions.schemas.in.h:6
-#: ../nautilus-actions/runtime/na-xml-names.h:149
 msgid ""
 "A list of strings with joker '*' or '?' to match the mimetypes of the "
 "selected file(s). Each selected items must match at least one of the "
@@ -68,7 +63,6 @@ msgstr ""
 "pour que l'action apparaisse. Cela ne s'applique qu'à une sélection."
 
 #: ../data/nautilus-actions.schemas.in.h:7
-#: ../nautilus-actions/runtime/na-xml-names.h:140
 msgid ""
 "A list of strings with joker '*' or '?' to match the name of the selected "
 "file(s)/folder(s). Each selected items must match at least one of the "
@@ -89,9 +83,9 @@ msgstr "Ajouter un élément « À propos » au menu contextuel de Nautilus"
 msgid "Ask for a confirmation when quitting by Esc"
 msgstr "Demander confirmation avant de quitter en utilisant la touche Échap"
 
-#. i18n: name of the default profile when creating an action
+#. i18n: label for the default profile
 #: ../data/nautilus-actions.schemas.in.h:10
-#: ../nautilus-actions/private/na-object-action.c:409
+#: ../src/core/na-object-profile.c:563
 msgid "Default profile"
 msgstr "Profil par défaut"
 
@@ -105,7 +99,7 @@ msgid ""
 "\", - \"Menu\". The value is case sensitive and must not be localized."
 msgstr ""
 "Définit si l'élément est une action ou un menu. Les valeurs possibles sont : "
-"- « Action », - « Menu ». La valeur est sensible à la casse et ne doit pas "
+"- « Action », - « Menu ». La valeur est sensible à la casse et ne doit pas "
 "être adaptée à votre langue."
 
 #: ../data/nautilus-actions.schemas.in.h:13
@@ -157,6 +151,10 @@ msgid "Display Tools toolbar"
 msgstr "Afficher la barre d'outils Outils"
 
 #: ../data/nautilus-actions.schemas.in.h:19
+msgid "I/O providers Write priority"
+msgstr "Priorité d'écriture des fournisseurs d'entrées/sorties"
+
+#: ../data/nautilus-actions.schemas.in.h:20
 msgid ""
 "If TRUE, a confirmation will be requested when quitting an assistant by "
 "hitting the Esc key."
@@ -164,7 +162,7 @@ msgstr ""
 "Si vrai (TRUE), une confirmation sera demandée si un assistant est quitté en "
 "utilisant la touche Échap."
 
-#: ../data/nautilus-actions.schemas.in.h:20
+#: ../data/nautilus-actions.schemas.in.h:21
 msgid ""
 "If TRUE, and if the user has defined a single root menu for its actions, "
 "then an 'About Nautilus Actions' will be displayed at end of the first "
@@ -174,12 +172,12 @@ msgstr ""
 "actions, un élément « À propos des actions Nautilus » est affiché au bas du "
 "premier sous-menu."
 
-#: ../data/nautilus-actions.schemas.in.h:21
+#: ../data/nautilus-actions.schemas.in.h:22
 msgid "If TRUE, assistant may be closed by hitting the Esc key."
 msgstr ""
 "Si vrai (TRUE), l'assistant peut être quitté en utilisant la touche Échap."
 
-#: ../data/nautilus-actions.schemas.in.h:22
+#: ../data/nautilus-actions.schemas.in.h:23
 msgid ""
 "If TRUE, then a 'Nautilus Actions' item will be defined in the Nautilus "
 "context menu, and will a root menu of all available actions."
@@ -188,16 +186,14 @@ msgstr ""
 "contextuel de Nautilus et sera le menu racine de toutes les actions "
 "disponibles."
 
-#: ../data/nautilus-actions.schemas.in.h:23
-#: ../nautilus-actions/runtime/na-xml-names.h:93
+#: ../data/nautilus-actions.schemas.in.h:24
 msgid ""
 "If the action is disabled, it will never appear in the Nautilus context menu."
 msgstr ""
 "Si l'action est désactivée, elle n'apparaît jamais dans le menu contextuel "
 "de Nautilus."
 
-#: ../data/nautilus-actions.schemas.in.h:24
-#: ../nautilus-actions/runtime/na-xml-names.h:168
+#: ../data/nautilus-actions.schemas.in.h:25
 msgid ""
 "If you need one or more files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set 'false'. This only applies "
@@ -208,8 +204,7 @@ msgstr ""
 "fichier ou dossier, positionnez-la à « false » (faux). Cela ne s'applique "
 "qu'à une sélection."
 
-#: ../data/nautilus-actions.schemas.in.h:25
-#: ../nautilus-actions/runtime/na-xml-names.h:145
+#: ../data/nautilus-actions.schemas.in.h:26
 msgid ""
 "If you need to match a filename in a case-sensitive manner, set this key to "
 "'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
@@ -220,49 +215,48 @@ msgstr ""
 "que « *.jpg » puisse aussi correspondre à « photo.JPG », positionnez-la à "
 "« false » (faux). Cela ne s'applique qu'à une sélection."
 
-#: ../data/nautilus-actions.schemas.in.h:26
+#: ../data/nautilus-actions.schemas.in.h:27
 msgid "Import mode"
 msgstr "Mode d'importation"
 
-#: ../data/nautilus-actions.schemas.in.h:27
-#: ../nautilus-actions/runtime/na-xml-names.h:116
+#: ../data/nautilus-actions.schemas.in.h:28
 msgid "Label of the item in the toolbar"
 msgstr "Étiquette de l'élément dans la barre d'outils"
 
-#: ../data/nautilus-actions.schemas.in.h:28
+#: ../data/nautilus-actions.schemas.in.h:29
 msgid "Last folder selected when browsing for a command in the Command tab."
 msgstr ""
 "Dernier dossier sélectionné lors de la recherche d'une commande dans "
 "l'onglet Commande."
 
-#: ../data/nautilus-actions.schemas.in.h:29
+#: ../data/nautilus-actions.schemas.in.h:30
 msgid "Last folder selected when browsing for an URI in the Background tab."
 msgstr ""
 "Dernier dossier sélectionné lors de la recherche d'un URI dans l'onglet "
 "Arrière-plan."
 
-#: ../data/nautilus-actions.schemas.in.h:30
+#: ../data/nautilus-actions.schemas.in.h:31
 msgid ""
 "Last folder selected when choosing a folder from where import new actions."
 msgstr ""
 "Dernier dossier sélectionné lors du choix d'un dossier d'importation de "
 "nouvelles actions."
 
-#: ../data/nautilus-actions.schemas.in.h:31
+#: ../data/nautilus-actions.schemas.in.h:32
 msgid ""
 "Last folder selected when choosing a folder where to export the actions."
 msgstr ""
 "Dernier dossier sélectionné lors du choix d'un dossier d'exportation "
 "d'actions."
 
-#: ../data/nautilus-actions.schemas.in.h:32
+#: ../data/nautilus-actions.schemas.in.h:33
 msgid "Last import mode choosen by the user"
 msgstr "Dernier mode d'importation choisi par l'utilisateur"
 
-#: ../data/nautilus-actions.schemas.in.h:33
+#: ../data/nautilus-actions.schemas.in.h:34
 msgid ""
 "Last import mode choosen by the user when he is asked for in import mode. "
-"Possible values are : - \"NoImport\": do not import an action whose UUID "
+"Possible values are: - \"NoImport\": do not import an action whose UUID "
 "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
 "already exists, - \"Override\": override the existing action with the "
 "imported one."
@@ -273,7 +267,7 @@ msgstr ""
 "l'UUID de l'action importée existe déjà), - « Override » (écrase l'action "
 "existante par celle qui est importée)."
 
-#: ../data/nautilus-actions.schemas.in.h:34
+#: ../data/nautilus-actions.schemas.in.h:35
 msgid ""
 "Last import mode choosen in the Import assistant. Possible values are : - "
 "\"NoImport\": do not import an action whose UUID already exists, - \"Renumber"
@@ -287,24 +281,28 @@ msgstr ""
 "l'action importée existe déjà), - « Override » (écraser l'action existante "
 "par celle qui est importée), « Ask » (demander à chaque fois à l'utilisateur)."
 
-#: ../data/nautilus-actions.schemas.in.h:35
+#: ../data/nautilus-actions.schemas.in.h:36
 msgid "Last selected folder"
 msgstr "Dernier dossier sélectionné"
 
-#: ../data/nautilus-actions.schemas.in.h:36
+#: ../data/nautilus-actions.schemas.in.h:37
+msgid "List of default schemes"
+msgstr "Liste des protocoles par défaut"
+
+#: ../data/nautilus-actions.schemas.in.h:38
 msgid "List of items at first level of the hierarchy"
 msgstr "Liste d'éléments au premier niveau de la hiérarchie"
 
-#: ../data/nautilus-actions.schemas.in.h:37
-#: ../nautilus-actions/runtime/na-xml-names.h:95
+#: ../data/nautilus-actions.schemas.in.h:39
+#: ../src/core/na-object-item-factory.c:155
 msgid "List of subitem ids"
 msgstr "Liste des numéros des sous-éléments"
 
-#: ../data/nautilus-actions.schemas.in.h:38
+#: ../data/nautilus-actions.schemas.in.h:40
 msgid "Main pane position"
 msgstr "Position principale du panneau"
 
-#: ../data/nautilus-actions.schemas.in.h:39
+#: ../data/nautilus-actions.schemas.in.h:41
 msgid ""
 "Ordered list of the IDs of the subitems. This may be actions or menus if the "
 "item is a menu, or profiles if the item is an action. If this list doesn't "
@@ -316,34 +314,34 @@ msgstr ""
 "est une action. Si cette liste n'existe pas ou est vide pour une action, les "
 "profils trouvés sont chargés dans l'ordre des opérations de lecture."
 
-#: ../data/nautilus-actions.schemas.in.h:40
+#: ../data/nautilus-actions.schemas.in.h:42
 msgid "Position and size of the Legend dialog"
 msgstr "Position et taille de la boîte de dialogue Légende"
 
-#: ../data/nautilus-actions.schemas.in.h:41
+#: ../data/nautilus-actions.schemas.in.h:43
 msgid ""
 "Position and size of the Legend dialog ; default is set by the UI manager."
 msgstr ""
 "Position et taille de la boîte de dialogue Légende ; la valeur par défaut "
 "est définie par le gestionnaire de fenêtres."
 
-#: ../data/nautilus-actions.schemas.in.h:42
+#: ../data/nautilus-actions.schemas.in.h:44
 msgid "Position and size of the URI chooser window"
 msgstr "Position et taille de la fenêtre de sélection d'URI"
 
-#: ../data/nautilus-actions.schemas.in.h:43
+#: ../data/nautilus-actions.schemas.in.h:45
 msgid ""
 "Position and size of the URI chooser window in the Background tab ; default "
 "is set by the window manager."
 msgstr ""
 "Position et taille de la fenêtre de sélection d'URI dans l'onglet Arrière-"
-"plan ; la valeur par défaut est définie par le gestionnaire de fenêtres"
+"plan ; la valeur par défaut est définie par le gestionnaire de fenêtres."
 
-#: ../data/nautilus-actions.schemas.in.h:44
+#: ../data/nautilus-actions.schemas.in.h:46
 msgid "Position and size of the command chooser window"
 msgstr "Position et taille de la fenêtre de sélection de commande"
 
-#: ../data/nautilus-actions.schemas.in.h:45
+#: ../data/nautilus-actions.schemas.in.h:47
 msgid ""
 "Position and size of the command chooser window in the Command tab ; default "
 "is set by the window manager."
@@ -351,11 +349,11 @@ msgstr ""
 "Position et taille de la fenêtre de sélection de commande dans l'onglet "
 "Commande ; la valeur par défaut est définie par le gestionnaire de fenêtres."
 
-#: ../data/nautilus-actions.schemas.in.h:46
+#: ../data/nautilus-actions.schemas.in.h:48
 msgid "Position and size of the export assistant window"
 msgstr "Position et taille de la fenêtre de l'assistant d'exportation"
 
-#: ../data/nautilus-actions.schemas.in.h:47
+#: ../data/nautilus-actions.schemas.in.h:49
 msgid ""
 "Position and size of the export assistant window ; default is set by the "
 "window manager."
@@ -363,11 +361,11 @@ msgstr ""
 "Position et taille de la fenêtre de l'assistant d'exportation ; la valeur "
 "par défaut est définie par le gestionnaire de fenêtres."
 
-#: ../data/nautilus-actions.schemas.in.h:48
+#: ../data/nautilus-actions.schemas.in.h:50
 msgid "Position and size of the import assistant window"
 msgstr "Position et taille de la fenêtre de l'assistant d'importation"
 
-#: ../data/nautilus-actions.schemas.in.h:49
+#: ../data/nautilus-actions.schemas.in.h:51
 msgid ""
 "Position and size of the import assistant window ; default is set by the "
 "window manager."
@@ -375,13 +373,13 @@ msgstr ""
 "Position et taille de la fenêtre de l'assistant d'importation ; la valeur "
 "par défaut est définie par le gestionnaire de fenêtres."
 
-#: ../data/nautilus-actions.schemas.in.h:50
+#: ../data/nautilus-actions.schemas.in.h:52
 msgid "Position and size of the interaction dialog at import time"
 msgstr ""
 "Position et taille de la boîte de dialogue d'interaction au moment de "
 "l'importation"
 
-#: ../data/nautilus-actions.schemas.in.h:51
+#: ../data/nautilus-actions.schemas.in.h:53
 msgid ""
 "Position and size of the interaction dialog at import time ; default is set "
 "by the window manager."
@@ -390,22 +388,22 @@ msgstr ""
 "l'importation ; la valeur par défaut est définie par le gestionnaire de "
 "fenêtres."
 
-#: ../data/nautilus-actions.schemas.in.h:52
+#: ../data/nautilus-actions.schemas.in.h:54
 msgid "Position and size of the main window"
 msgstr "Position et taille de la fenêtre principale"
 
-#: ../data/nautilus-actions.schemas.in.h:53
+#: ../data/nautilus-actions.schemas.in.h:55
 msgid ""
 "Position and size of the main window ; default is set by the window manager."
 msgstr ""
 "Position et taille de la fenêtre principale ; la valeur par défaut est "
 "définie par le gestionnaire de fenêtres."
 
-#: ../data/nautilus-actions.schemas.in.h:54
+#: ../data/nautilus-actions.schemas.in.h:56
 msgid "Position and size of the preferences dialog"
 msgstr "Position et taille de la boîte de dialogue des préférences"
 
-#: ../data/nautilus-actions.schemas.in.h:55
+#: ../data/nautilus-actions.schemas.in.h:57
 msgid ""
 "Position and size of the preferences dialog ; default is set by the window "
 "manager."
@@ -413,27 +411,27 @@ msgstr ""
 "Position et taille de la boîte de dialogue des préférences ; la valeur par "
 "défaut est définie par le gestionnaire de fenêtres."
 
-#: ../data/nautilus-actions.schemas.in.h:56
+#: ../data/nautilus-actions.schemas.in.h:58
+msgid "Preferred export format"
+msgstr "Format d'exportation préféré"
+
+#: ../data/nautilus-actions.schemas.in.h:59
 msgid "Sort mode"
 msgstr "Mode de tri"
 
-#: ../data/nautilus-actions.schemas.in.h:57
-#: ../nautilus-actions/runtime/na-xml-names.h:107
+#: ../data/nautilus-actions.schemas.in.h:60
 msgid "Targets background"
 msgstr "Cible l'arrière-plan"
 
-#: ../data/nautilus-actions.schemas.in.h:58
-#: ../nautilus-actions/runtime/na-xml-names.h:104
+#: ../data/nautilus-actions.schemas.in.h:61
 msgid "Targets selection"
 msgstr "Cible la sélection"
 
-#: ../data/nautilus-actions.schemas.in.h:59
-#: ../nautilus-actions/runtime/na-xml-names.h:109
+#: ../data/nautilus-actions.schemas.in.h:62
 msgid "Targets toolbar"
 msgstr "Cible la barre d'outils"
 
-#: ../data/nautilus-actions.schemas.in.h:60
-#: ../nautilus-actions/runtime/na-xml-names.h:121
+#: ../data/nautilus-actions.schemas.in.h:63
 msgid ""
 "The field is here to give the user a human readable name for a profile in "
 "the NACT interface. If not set there will be a default auto generated string "
@@ -444,13 +442,11 @@ msgstr ""
 "n'est pas défini, une chaîne auto-générée sera utilisée pour le nom par "
 "défaut."
 
-#: ../data/nautilus-actions.schemas.in.h:61
-#: ../nautilus-actions/runtime/na-xml-names.h:88
+#: ../data/nautilus-actions.schemas.in.h:64
 msgid "The icon of the menu item"
 msgstr "L'icône de l'élément de menu"
 
-#: ../data/nautilus-actions.schemas.in.h:62
-#: ../nautilus-actions/runtime/na-xml-names.h:89
+#: ../data/nautilus-actions.schemas.in.h:65
 msgid ""
 "The icon of the menu item that will appear next to the label in the Nautilus "
 "popup menu when the selection matches the appearance conditions settings."
@@ -459,23 +455,21 @@ msgstr ""
 "contextuel de Nautilus quand la sélection correspond aux paramétrages des "
 "conditions d'affichage."
 
-#: ../data/nautilus-actions.schemas.in.h:63
+#: ../data/nautilus-actions.schemas.in.h:66
 msgid ""
-"The label displayed besides of the icon in the Nautilus toolbar. Note that "
-"actual display may depend of your own Gnome preferences."
+"The label displayed besides of the icon in the Nautilus toolbar. An empty "
+"label here defaults to the item label. Note that actual display (only icon, "
+"only label or both) may depend of your own Gnome preferences."
 msgstr ""
 "L'étiquette affichée à côté de l'icône dans la barre d'outils de Nautilus. "
-"Remarquez que l'affichage réel dépend de vos propres préférences GNOME."
+"Si vide, l'étiquette de l'élément sera utilisée. Remarquez que l'affichage "
+"réel (icône, étiquette ou les deux) dépend de vos propres préférences GNOME."
 
-#. GConf schema descriptions
-#.
-#: ../data/nautilus-actions.schemas.in.h:64
-#: ../nautilus-actions/runtime/na-xml-names.h:81
+#: ../data/nautilus-actions.schemas.in.h:67
 msgid "The label of the menu item"
 msgstr "L'étiquette de l'élément de menu"
 
-#: ../data/nautilus-actions.schemas.in.h:65
-#: ../nautilus-actions/runtime/na-xml-names.h:82
+#: ../data/nautilus-actions.schemas.in.h:68
 msgid ""
 "The label of the menu item that will appear in the Nautilus popup menu when "
 "the selection matches the appearance condition settings."
@@ -483,37 +477,50 @@ msgstr ""
 "L'étiquette de l'élément apparaissant dans le menu contextuel de Nautilus "
 "quand la sélection correspond aux paramétrages des conditions d'affichage."
 
-#: ../data/nautilus-actions.schemas.in.h:66
-#: ../nautilus-actions/runtime/na-xml-names.h:181
+#: ../data/nautilus-actions.schemas.in.h:69
 msgid "The list of URIs on which the Background item applies"
 msgstr "La liste des URI sur lesquels l'élément Arrière-plan s'applique"
 
-#: ../data/nautilus-actions.schemas.in.h:67
-#: ../nautilus-actions/runtime/na-xml-names.h:139
+#: ../data/nautilus-actions.schemas.in.h:70
 msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgstr ""
 "La liste des motifs de correspondance des fichiers/dossiers sélectionnés"
 
-#: ../data/nautilus-actions.schemas.in.h:68
-#: ../nautilus-actions/runtime/na-xml-names.h:148
+#: ../data/nautilus-actions.schemas.in.h:71
 msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgstr ""
 "La liste des motifs de correspondance des types MIME des fichiers "
 "sélectionnés"
 
-#: ../data/nautilus-actions.schemas.in.h:69
-#: ../nautilus-actions/runtime/na-xml-names.h:171
+#: ../data/nautilus-actions.schemas.in.h:72
+msgid ""
+"The list of schemes proposed by default on each new profile. A default "
+"default list is harcoded in nautilus-actions-config-tool, which may be "
+"updated by the user."
+msgstr ""
+"La liste des protocoles proposés par défaut pour chaque nouveau profil. Une "
+"liste par défaut est pré-enregistrée dans nautilus-actions-config-tool, elle "
+"peut être mise à jour par l'utilisateur."
+
+#: ../data/nautilus-actions.schemas.in.h:73
 msgid "The list of schemes where the selected files should be located"
 msgstr ""
 "La liste des protocoles où les fichiers sélectionnés devraient être situés"
 
-#: ../data/nautilus-actions.schemas.in.h:70
-#: ../nautilus-actions/runtime/na-xml-names.h:127
-#: ../nautilus-actions/utils/nautilus-actions-new.c:99
+#: ../data/nautilus-actions.schemas.in.h:74
+msgid ""
+"The order in which I/O providers are tested when we need to write a new item "
+"down to a storage subsystem."
+msgstr ""
+"L'ordre dans lequel les fournisseurs d'entrées/sorties sont testés quand il "
+"est nécessaire d'écrire un nouvel élément vers un sous-système de stockage."
+
+#: ../data/nautilus-actions.schemas.in.h:75
+#: ../src/utils/nautilus-actions-new.c:96
 msgid "The parameters of the command"
 msgstr "Les paramètres de la commande"
 
-#: ../data/nautilus-actions.schemas.in.h:72
+#: ../data/nautilus-actions.schemas.in.h:77
 #, no-c-format
 msgid ""
 "The parameters of the command to start when the user selects the menu item "
@@ -539,14 +546,12 @@ msgstr ""
 "protocole de l'URI, %u : URI, %U : nom d'utilisateur de l'URI, %% : signe "
 "pourcentage."
 
-#: ../data/nautilus-actions.schemas.in.h:73
-#: ../nautilus-actions/runtime/na-xml-names.h:124
-#: ../nautilus-actions/utils/nautilus-actions-new.c:97
+#: ../data/nautilus-actions.schemas.in.h:78
+#: ../src/utils/nautilus-actions-new.c:94
 msgid "The path of the command"
 msgstr "Le chemin de la commande"
 
-#: ../data/nautilus-actions.schemas.in.h:74
-#: ../nautilus-actions/runtime/na-xml-names.h:125
+#: ../data/nautilus-actions.schemas.in.h:79
 msgid ""
 "The path of the command to start when the user select the menu item in the "
 "Nautilus popup menu."
@@ -554,14 +559,12 @@ msgstr ""
 "Le chemin de la commande à lancer lorsque l'utilisateur sélectionne "
 "l'élément dans le menu contextuel de Nautilus."
 
-#: ../data/nautilus-actions.schemas.in.h:75
-#: ../nautilus-actions/runtime/na-xml-names.h:84
-#: ../nautilus-actions/utils/nautilus-actions-new.c:81
+#: ../data/nautilus-actions.schemas.in.h:80
+#: ../src/utils/nautilus-actions-new.c:78
 msgid "The tooltip of the menu item"
 msgstr "L'infobulle de l'élément de menu"
 
-#: ../data/nautilus-actions.schemas.in.h:76
-#: ../nautilus-actions/runtime/na-xml-names.h:85
+#: ../data/nautilus-actions.schemas.in.h:81
 msgid ""
 "The tooltip of the menu item that will appear in the Nautilus statusbar when "
 "the user points to the Nautilus popup menu item with his/her mouse."
@@ -569,13 +572,12 @@ msgstr ""
 "L'infobulle de l'élément apparaissant dans la barre d'état de Nautilus quand "
 "l'utilisateur pointe sa souris sur l'élément du menu contextuel de Nautilus."
 
-#: ../data/nautilus-actions.schemas.in.h:77
-#: ../nautilus-actions/runtime/na-xml-names.h:185
+#: ../data/nautilus-actions.schemas.in.h:82
 msgid "The version of the configuration format"
 msgstr "La version du format de configuration"
 
-#: ../data/nautilus-actions.schemas.in.h:78
-#: ../nautilus-actions/runtime/na-xml-names.h:186
+#: ../data/nautilus-actions.schemas.in.h:83
+#: ../src/core/na-object-action-factory.c:51
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility."
@@ -583,7 +585,53 @@ msgstr ""
 "La version du format de configuration qui sera utilisé pour gérer la "
 "compatibilité avec les versions antérieures."
 
-#: ../data/nautilus-actions.schemas.in.h:79
+#: ../data/nautilus-actions.schemas.in.h:84
+msgid ""
+"The whole configuration must be understood here as the global set and order "
+"of menus and actions. When this configuration is locked, then the user is no "
+"more able to modify nor create or delete any menu or action. All items are "
+"read-only. As the order of items is also locked, the level zero itself "
+"cannot be modified, and the user is unable to reorder the items."
+msgstr ""
+"Par configuration complète, il faut comprendre l'ensemble global et l'ordre "
+"des menus et des actions. Lorsque cette configuration est bloquée, "
+"l'utilisateur n'est plus en mesure de modifier, ni de créer ou de supprimer "
+"un menu ou une action. Tous les paramètres sont en lecture seule. Comme "
+"l'ordre des paramètres est également verrouillé, le niveau zéro lui-même ne "
+"peut être modifié, et l'utilisateur n'est pas en mesure de réorganiser les "
+"éléments."
+
+#: ../data/nautilus-actions.schemas.in.h:85
+msgid ""
+"This is the preferred export format, used as a default when exporting items, "
+"or dropping them outside of the application. Possible values are: - "
+"\"GConfSchemaV1\": this used to be the historical export format. The "
+"exported file may later be imported via Import assistant of the Nautilus "
+"Actions Configuration Tool, or via the gconftool-2 --import-schema-file "
+"command-line tool. - \"GConfSchemaV2\": a lighter while still compatible "
+"schema. The exported file may later be imported via Import assistant of the "
+"Nautilus Actions Configuration Tool, or via the gconftool-2 --import-schema-"
+"file command-line tool. - \"GConfEntry\": this should be the preferred "
+"format for newly exported actions. The exported file may later be imported "
+"via Import assistant of the Nautilus Actions Configuration Tool, or via the "
+"gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
+"runtime for the format he wishes use."
+msgstr ""
+"Il s'agit du format d'exportation privilégié, utilisé par défaut lors de "
+"l'exportation d'éléments. Les valeurs possibles sont : - « GConfSchemaV1 » : "
+"format d'exportation historique. Le fichier exporté peut ensuite être "
+"importé via l'assistant importation de l'outil de configuration des actions "
+"de Nautilus, ou avec la commande gconftool-2 --import-schema-file. - "
+"« GConfSchemaV2 » : un format plus léger mais toujours compatible. Le fichier "
+"exporté peut ensuite être importé via l'assistant importation de l'outil de "
+"configuration des actions de Nautilus, ou avec la commande gconftool-2 --"
+"import-schema-file. - « GConfEntry » : format recommandé pour les nouvelles "
+"actions exportés. Le fichier exporté peut ensuite être importé via "
+"l'assistant importation de l'outil de configuration des actions de Nautilus, "
+"ou avec la commande gconftool-2 --load. - « Ask » : l'utilisateur choisi le "
+"format qu'il souhaite utiliser au moment de l'exportation."
+
+#: ../data/nautilus-actions.schemas.in.h:86
 msgid ""
 "This preference indicates the preferred sort mode. Possible values are : - "
 "\"AscendingOrder\": the actions are maintained in ascending alphabetical "
@@ -598,7 +646,7 @@ msgstr ""
 "« ManualOrder » (l'utilisateur peut ordonner librement les actions dans "
 "l'outil de configuration des actions Nautilus)."
 
-#: ../data/nautilus-actions.schemas.in.h:80
+#: ../data/nautilus-actions.schemas.in.h:87
 msgid ""
 "This setting is tied in with the 'isdir' setting. The valid combinations "
 "are : - isfile=TRUE and isdir=FALSE: the selection may hold only files - "
@@ -615,7 +663,7 @@ msgstr ""
 "isdir=FAUX : combinaison non valide (votre configuration ne s'affichera "
 "jamais). Cela ne s'applique qu'à une sélection."
 
-#: ../data/nautilus-actions.schemas.in.h:81
+#: ../data/nautilus-actions.schemas.in.h:88
 msgid ""
 "This setting is tied in with the 'isfile' setting. The valid combinations "
 "are : - isfile=TRUE and isdir=FALSE: the selection may hold only files - "
@@ -632,12 +680,12 @@ msgstr ""
 "isfile=FAUX et isdir=FAUX : combinaison non valide (votre configuration ne "
 "s'affichera jamais). Cela ne s'applique qu'à une sélection."
 
-#: ../data/nautilus-actions.schemas.in.h:82
-#: ../nautilus-actions/runtime/na-xml-names.h:100
+#: ../data/nautilus-actions.schemas.in.h:89
+#: ../src/core/na-object-item-factory.c:51
 msgid "Type of the item"
 msgstr "Le type de l'élément"
 
-#: ../data/nautilus-actions.schemas.in.h:83
+#: ../data/nautilus-actions.schemas.in.h:90
 msgid ""
 "UUID of the items at the first level of the hierarchy. If this key is not "
 "found or empty, then all found items are considered as a flat list."
@@ -645,60 +693,76 @@ msgstr ""
 "UUID des éléments au premier niveau de la hiérarchie. Si cette clé est "
 "absente ou vide, tous les éléments trouvés sont affichés dans un seul niveau."
 
-#: ../data/nautilus-actions.schemas.in.h:84
+#: ../data/nautilus-actions.schemas.in.h:91
 msgid ""
-"When set to true (most probably as a mandatory key), this prevents all items "
-"readen from GConf to being modified in NACT."
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, readen from .desktop files to being modified in "
+"NACT."
 msgstr ""
 "Lorsque cette clé est définie à « true » (vrai), généralement sous forme de "
-"clé obligatoire, tous les éléments lus à partir de GConf ne peuvent pas être "
-"modifiés dans l'outil de configuration des actions Nautilus."
+"clé obligatoire, tous les éléments, menus et actions lus à partir de "
+"fichiers .desktop ne peuvent pas être modifiés dans l'outil de configuration "
+"des actions de Nautilus."
 
-#: ../data/nautilus-actions.schemas.in.h:85
+#: ../data/nautilus-actions.schemas.in.h:92
+msgid ""
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, readen from GConf to being modified in NACT."
+msgstr ""
+"Lorsque cette clé est définie à « true » (vrai), généralement sous forme de "
+"clé obligatoire, tous les éléments, menus et actions lus à partir de GConf "
+"ne peuvent pas être modifiés dans l'outil de configuration des actions de "
+"Nautilus."
+
+#: ../data/nautilus-actions.schemas.in.h:93
 msgid "Whether actions should be relabeled when pasted or duplicated"
 msgstr ""
 "Indique si les actions doivent être renommées lorsqu'elles sont collées ou "
 "dupliquées"
 
-#: ../data/nautilus-actions.schemas.in.h:86
+#: ../data/nautilus-actions.schemas.in.h:94
 msgid "Whether actions should be relabeled when pasted or duplicated."
 msgstr ""
 "Indique si les actions doivent être renommées lorsqu'elles sont collées ou "
 "dupliquées."
 
-#: ../data/nautilus-actions.schemas.in.h:87
+#: ../data/nautilus-actions.schemas.in.h:95
 msgid "Whether menus should be relabeled when pasted or duplicated"
 msgstr ""
 "Indique si les menus doivent être renommés lorsqu'ils sont collés ou "
 "dupliqués"
 
-#: ../data/nautilus-actions.schemas.in.h:88
+#: ../data/nautilus-actions.schemas.in.h:96
 msgid "Whether menus should be relabeled when pasted or duplicated."
 msgstr ""
 "Indique si les menus doivent être renommés lorsqu'ils sont collés ou "
 "dupliqués."
 
-#: ../data/nautilus-actions.schemas.in.h:89
+#: ../data/nautilus-actions.schemas.in.h:97
 msgid "Whether profiles should be relabeled when pasted or duplicated"
 msgstr ""
 "Indique si les profils doivent être renommés lorsqu'ils sont collés ou "
 "dupliqués"
 
-#: ../data/nautilus-actions.schemas.in.h:90
+#: ../data/nautilus-actions.schemas.in.h:98
 msgid "Whether profiles should be relabeled when pasted or duplicated."
 msgstr ""
 "Indique si les profils doivent être renommés lorsqu'ils sont collés ou "
 "dupliqués."
 
-#: ../data/nautilus-actions.schemas.in.h:91
+#: ../data/nautilus-actions.schemas.in.h:99
+msgid "Whether the Desktop I/O provider is locked"
+msgstr "Indique si le fournisseur d'entrées/sorties du bureau est verrouillé"
+
+#: ../data/nautilus-actions.schemas.in.h:100
 msgid "Whether the Esc key should close the assistants"
 msgstr "Indique si la touche Échap peut servir pour fermer les assistants"
 
-#: ../data/nautilus-actions.schemas.in.h:92
+#: ../data/nautilus-actions.schemas.in.h:101
 msgid "Whether the GConf I/O provider is locked"
 msgstr "Indique si le fournisseur d'entrées/sorties GConf est verrouillé"
 
-#: ../data/nautilus-actions.schemas.in.h:93
+#: ../data/nautilus-actions.schemas.in.h:102
 msgid ""
 "Whether the action is candidate to be displayed in Nautilus toolbar. Note, "
 "that as of Nautilus -2.26, menus can not be candidate to toolbar display."
@@ -707,20 +771,17 @@ msgstr ""
 "de Nautilus. Notez que depuis Nautilus -2.26, les menus ne peuvent être "
 "affichés dans la barre d'outils."
 
-#: ../data/nautilus-actions.schemas.in.h:94
-#: ../nautilus-actions/runtime/na-xml-names.h:92
+#: ../data/nautilus-actions.schemas.in.h:103
 msgid "Whether the action is enabled"
 msgstr "Indique si l'action est activée"
 
-#: ../data/nautilus-actions.schemas.in.h:95
-#: ../nautilus-actions/runtime/na-xml-names.h:108
+#: ../data/nautilus-actions.schemas.in.h:104
 msgid "Whether the action of menu targets the background Nautilus menus."
 msgstr ""
 "Indique si l'action du menu s'applique aux menus de l'arrière-plan de "
 "Nautilus."
 
-#: ../data/nautilus-actions.schemas.in.h:96
-#: ../nautilus-actions/runtime/na-xml-names.h:105
+#: ../data/nautilus-actions.schemas.in.h:105
 msgid ""
 "Whether the action of menu targets the selection Nautilus menus. This is the "
 "historical behavior."
@@ -728,859 +789,55 @@ msgstr ""
 "Indique si l'action du menu s'applique aux menus des sélections de Nautilus. "
 "Il s'agit du comportement historique."
 
-#: ../data/nautilus-actions.schemas.in.h:97
-#: ../nautilus-actions/runtime/na-xml-names.h:114
-msgid ""
-"Whether the label displayed in the Nautilus toolbar besides of the icon is "
-"the same that the main item label."
-msgstr ""
-"Indique si l'étiquette affichée à côté de l'icône dans la barre d'outils de "
-"Nautilus est la même que l'étiquette de l'élément principal."
+#: ../data/nautilus-actions.schemas.in.h:106
+msgid "Whether the whole configuration is locked"
+msgstr "Indique si toute la configuration est verrouillée"
 
-#: ../data/nautilus-actions.schemas.in.h:98
-#: ../nautilus-actions/runtime/na-xml-names.h:113
-msgid "Whether the labels are the sames"
-msgstr "Indique si les étiquettes sont les mêmes"
-
-#: ../data/nautilus-actions.schemas.in.h:99
+#: ../data/nautilus-actions.schemas.in.h:107
 msgid "Whether to display or not the Edit toolbar in the main window."
 msgstr ""
 "Indique s'il faut afficher la barre d'outils Édition dans la fenêtre "
 "principale."
 
-#: ../data/nautilus-actions.schemas.in.h:100
+#: ../data/nautilus-actions.schemas.in.h:108
 msgid "Whether to display or not the File toolbar in the main window."
 msgstr ""
 "Indique s'il faut afficher la barre d'outils Fichier dans la fenêtre "
 "principale."
 
-#: ../data/nautilus-actions.schemas.in.h:101
+#: ../data/nautilus-actions.schemas.in.h:109
 msgid "Whether to display or not the Help toolbar in the main window."
 msgstr ""
-"Indique s'il faut afficher la barre d'outils Aide dans la fenêtre "
-"principale."
+"Indique s'il faut afficher la barre d'outils Aide dans la fenêtre principale."
 
-#: ../data/nautilus-actions.schemas.in.h:102
+#: ../data/nautilus-actions.schemas.in.h:110
 msgid "Whether to display or not the Tools toolbar in the main window."
 msgstr ""
 "Indique s'il faut afficher la barre d'outils Outils dans la fenêtre "
 "principale."
 
-#: ../data/nautilus-actions.schemas.in.h:103
+#: ../data/nautilus-actions.schemas.in.h:111
 msgid "Width of the main window pane ; default is set by the UI manager."
 msgstr ""
 "Largeur du panneau de la fenêtre principale ; défini par défaut par le "
 "gestionnaire de fenêtres."
 
-#: ../nautilus-actions/io-provider-desktop/nadp-desktop-provider.c:200
-msgid "Nautilus-Actions Desktop I/O Provider"
-msgstr "Fournisseur d'entrées/sorties Desktop pour Nautilus-Actions"
-
-#: ../nautilus-actions/io-provider-gconf/nagp-gconf-provider.c:214
-msgid "Nautilus-Actions GConf I/O Provider"
-msgstr "Fournisseur d'entrées/sorties GConf pour Nautilus-Actions"
-
-#: ../nautilus-actions/nact/base-application.c:1291
-msgid "Unable to initialize the internationalization environment."
-msgstr "Impossible d'initialiser l'environnement d'internationalisation."
-
-#: ../nautilus-actions/nact/base-application.c:1300
-msgid "Unable to initialize the Gtk+ user interface."
-msgstr "Impossible d'initialiser l'interface utilisateur Gtk+."
-
-#: ../nautilus-actions/nact/base-application.c:1309
-msgid "Another instance of the application is already running."
-msgstr "Une autre instance de l'application est déjà en cours d'exécution."
-
-#: ../nautilus-actions/nact/base-application.c:1318
-msgid "No filename provided for the UI XML definition."
-msgstr "Aucun nom de fichier fourni pour la définition XML de l'interface."
-
-#. i18n: Unable to load the XML definition from <filename>
-#: ../nautilus-actions/nact/base-application.c:1328
+#: ../src/core/na-exporter.c:157
 #, c-format
-msgid "Unable to load the XML definition from %s."
-msgstr "Impossible de charger la définition XML à partir de %s."
+msgid "NAIExporter %s doesn't implement 'to_buffer' interface."
+msgstr "NAIExporter %s n'implémente pas l'interface « to_buffer »."
 
-#: ../nautilus-actions/nact/base-application.c:1341
-msgid "Unable to set the default icon for the application."
-msgstr "Impossible de définir l'icône par défaut pour l'application."
-
-#: ../nautilus-actions/nact/base-application.c:1350
-msgid "Unable to get the main window of the application."
-msgstr "Impossible d'obtenir la fenêtre principale de l'application."
-
-#: ../nautilus-actions/nact/base-assistant.c:576
-msgid "Are you sure you want to quit this assistant ?"
-msgstr "Voulez-vous vraiment quitter cet assistant ?"
-
-#: ../nautilus-actions/nact/base-window.c:1178
+#: ../src/core/na-exporter.c:164 ../src/core/na-exporter.c:237
 #, c-format
-msgid "Unable to load %s XML definition."
-msgstr "Impossible de charger la définition XML de %s."
+msgid "No NAIExporter implementation found for %s format."
+msgstr "Aucune implémentation NAIExporter trouvée pour le format %s."
 
-#: ../nautilus-actions/nact/egg-desktop-file.c:165
+#: ../src/core/na-exporter.c:230
 #, c-format
-msgid "File is not a valid .desktop file"
-msgstr "Le fichier n'est pas un fichier .desktop valide"
+msgid "NAIExporter %s doesn't implement 'to_file' interface."
+msgstr "NAIExporter %s n'implémente pas l'interface « to_file »."
 
-#: ../nautilus-actions/nact/egg-desktop-file.c:188
-#, c-format
-msgid "Unrecognized desktop file Version '%s'"
-msgstr "Version de fichier .desktop « %s » non reconnue"
-
-#: ../nautilus-actions/nact/egg-desktop-file.c:958
-#, c-format
-msgid "Starting %s"
-msgstr "Démarrage de %s"
-
-#: ../nautilus-actions/nact/egg-desktop-file.c:1100
-#, c-format
-msgid "Application does not accept documents on command line"
-msgstr "Le programme n'accepte pas de documents en ligne de commande"
-
-#: ../nautilus-actions/nact/egg-desktop-file.c:1168
-#, c-format
-msgid "Unrecognized launch option: %d"
-msgstr "Option de lancement non reconnue : %d"
-
-#: ../nautilus-actions/nact/egg-desktop-file.c:1373
-#, c-format
-msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
-"Impossible de transmettre des URI de document vers une entrée de bureau "
-"« Type=Link »"
-
-#: ../nautilus-actions/nact/egg-desktop-file.c:1394
-#, c-format
-msgid "Not a launchable item"
-msgstr "Cet élément ne peut être exécuté"
-
-#: ../nautilus-actions/nact/egg-sm-client.c:239
-msgid "Disable connection to session manager"
-msgstr "Désactiver la connexion vers le gestionnaire de session"
-
-#: ../nautilus-actions/nact/egg-sm-client.c:242
-msgid "Specify file containing saved configuration"
-msgstr "Indiquer le fichier contenant la configuration enregistrée"
-
-#: ../nautilus-actions/nact/egg-sm-client.c:242
-msgid "FILE"
-msgstr "FICHIER"
-
-#: ../nautilus-actions/nact/egg-sm-client.c:245
-msgid "Specify session management ID"
-msgstr "Indiquer l'identificateur de gestion de session"
-
-#: ../nautilus-actions/nact/egg-sm-client.c:245
-msgid "ID"
-msgstr "ID"
-
-#: ../nautilus-actions/nact/egg-sm-client.c:267
-msgid "Session management options:"
-msgstr "Options de la gestion de session :"
-
-#: ../nautilus-actions/nact/egg-sm-client.c:268
-msgid "Show session management options"
-msgstr "Affiche les options de la gestion de session"
-
-#: ../nautilus-actions/nact/nact-application.c:73
-msgid "Set it to run multiple instances of the program [unique]"
-msgstr ""
-"À paramétrer pour pouvoir lancer plusieurs instances du programme [unique]"
-
-#: ../nautilus-actions/nact/nact-application.c:75
-msgid "Output the version number, and exit gracefully [no]"
-msgstr "Affiche le numéro de version puis quitte proprement [no]"
-
-#: ../nautilus-actions/nact/nact-application.c:351
-msgid ""
-"Another instance of Nautilus Actions Configuration Tool is already running."
-msgstr ""
-"Une autre instance de l'outil de configuration des actions de Nautilus est "
-"déjà en cours d'exécution."
-
-#. i18n: another instance is already running: second line of error message
-#: ../nautilus-actions/nact/nact-application.c:353
-msgid "Please switch back to it."
-msgstr "Basculez vers celle-ci."
-
-#. static const gchar *thisfn = "nact_application_appli_get_application_name";
-#. g_debug( "%s: application=%p", thisfn, ( void * ) application );
-#. i18n: this is the application name, used in window title
-#: ../nautilus-actions/nact/nact-application.c:414
-msgid "Nautilus Actions Configuration Tool"
-msgstr "Outil de configuration des actions de Nautilus"
-
-#. i18n: this is the title of the confirm page of the export assistant
-#: ../nautilus-actions/nact/nact-assistant-export.c:719
-msgid "About to export selected actions:"
-msgstr "Prêt à exporter les actions sélectionnées :"
-
-#. i18n: all exported actions go to one destination folder
-#: ../nautilus-actions/nact/nact-assistant-export.c:737
-msgid "Into the destination folder:"
-msgstr "Dans le dossier de destination :"
-
-#: ../nautilus-actions/nact/nact-assistant-export.c:823
-msgid "Export canceled due to user action."
-msgstr "L'exportation a été annulée par l'utilisateur."
-
-#. i18n: result of the export assistant
-#: ../nautilus-actions/nact/nact-assistant-export.c:850
-msgid "Selected actions have been proceeded :"
-msgstr "Les actions sélectionnées ont été traitées :"
-
-#. i18n: action as been successfully exported to <filename>
-#: ../nautilus-actions/nact/nact-assistant-export.c:868
-msgid "Successfully exported as"
-msgstr "Exportation réussie dans"
-
-#: ../nautilus-actions/nact/nact-assistant-export.c:891
-msgid "You may not have write permissions on selected folder."
-msgstr ""
-"Il se peut que vous n'ayez pas les permissions d'écriture dans le dossier "
-"sélectionné."
-
-#. i18n: The action <action_label> is about to be exported
-#: ../nautilus-actions/nact/nact-assistant-export-ask.c:312
-#, c-format
-msgid "The action \"%s\" is about to be exported."
-msgstr "L'action « %s » est sur le point d'être exportée."
-
-#. i18n: the title of the confirm page of the import assistant
-#: ../nautilus-actions/nact/nact-assistant-import.c:557
-msgid "About to import selected files:"
-msgstr "Prêt à importer les fichiers sélectionnés :"
-
-#. i18n: result of the import assistant
-#: ../nautilus-actions/nact/nact-assistant-import.c:736
-msgid "Selected files have been proceeded :"
-msgstr "Les fichiers sélectionnés ont été traités :"
-
-#. i18n: indicate that the file has been successfully imported
-#: ../nautilus-actions/nact/nact-assistant-import.c:754
-msgid "Import OK"
-msgstr "L'importation a réussi"
-
-#. i18n: this is the globally unique identifier and the label of the newly imported action
-#: ../nautilus-actions/nact/nact-assistant-import.c:760
-#, c-format
-msgid "UUID: %s\t%s"
-msgstr "UUID : %s\t%s"
-
-#. i18n: indicate that the file was not iported
-#: ../nautilus-actions/nact/nact-assistant-import.c:771
-msgid "Not imported"
-msgstr "Non importé"
-
-#: ../nautilus-actions/nact/nact-assistant-import-ask.c:306
-#, c-format
-msgid ""
-"The action \"%s\" imported from \"%s\" has the same identifiant than the "
-"already existing \"%s\"."
-msgstr ""
-"L'action « %s » importée de « %s » possède le même identifiant que l'action "
-"existante « %s »."
-
-#: ../nautilus-actions/nact/nact.desktop.in.h:1
-msgid "Add items to the Nautilus popup menu"
-msgstr "Ajoute des entrées au menu contextuel de Nautilus"
-
-#: ../nautilus-actions/nact/nact.desktop.in.h:2
-msgid "Nautilus Actions Configuration"
-msgstr "Configuration des actions de Nautilus"
-
-#. i18n: header of the 'label' column in the treeview
-#: ../nautilus-actions/nact/nact-iactions-list.c:373
-msgid "Label"
-msgstr "Étiquette"
-
-#: ../nautilus-actions/nact/nact-iaction-tab.c:516
-msgid "<b>Menu properties</b>"
-msgstr "<b>Propriétés du menu</b>"
-
-#: ../nautilus-actions/nact/nact-iaction-tab.c:518
-msgid "<b>Action properties</b>"
-msgstr "<b>Propriétés de l'action</b>"
-
-#: ../nautilus-actions/nact/nact-iaction-tab.c:669
-msgid "Caution: a label is mandatory for the action or the menu."
-msgstr ""
-"Attention : une étiquette est obligatoire pour cette action ou ce menu."
-
-#. i18n notes: when no icon is selected in the drop-down list
-#: ../nautilus-actions/nact/nact-iaction-tab.c:874
-msgid "None"
-msgstr "Aucune"
-
-#: ../nautilus-actions/nact/nact-iaction-tab.c:932
-msgid "Choosing an icon"
-msgstr "Choisir une icône"
-
-#. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:611
-msgid "new-scheme"
-msgstr "nouveau-protocole"
-
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:612
-msgid "New scheme description"
-msgstr "Description du nouveau protocole"
-
-#. i18n notes : description of 'file' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:728
-msgid "Local files"
-msgstr "Fichiers locaux"
-
-#. i18n notes : description of 'sftp' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:730
-msgid "SSH files"
-msgstr "Fichiers SSH"
-
-#. i18n notes : description of 'smb' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:732
-msgid "Windows files"
-msgstr "Fichiers Windows"
-
-#. i18n notes : description of 'ftp' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:734
-msgid "FTP files"
-msgstr "Fichiers FTP"
-
-#. i18n notes : description of 'dav' scheme
-#: ../nautilus-actions/nact/nact-iadvanced-tab.c:736
-msgid "WebDAV files"
-msgstr "Fichiers WebDAV"
-
-#. i18n: title of the FileChoose dialog when selecting an URI which
-#. * will be compare to Nautilus 'current_folder'
-#.
-#: ../nautilus-actions/nact/nact-ibackground-tab.c:569
-msgid "Select a folder"
-msgstr "Sélectionner un dossier"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:418
-msgid "Caution: a label is mandatory for the profile."
-msgstr "Attention : une étiquette est obligatoire pour ce profil."
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:576
-msgid "Choosing a command"
-msgstr "Choisir une commande"
-
-#. i18n notes: example strings for the command preview
-#: ../nautilus-actions/nact/nact-icommand-tab.c:655
-msgid "/path/to"
-msgstr "/chemin/vers"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:656
-msgid "file1.txt"
-msgstr "fichier1.txt"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:656
-msgid "file2.txt"
-msgstr "fichier2.txt"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:657
-msgid " folder1"
-msgstr " dossier1"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:657
-msgid "folder2"
-msgstr "dossier2"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:658
-msgid " file1.txt"
-msgstr " fichier1.txt"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:658
-msgid "folder1"
-msgstr "dossier1"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:660
-msgid "test.example.net"
-msgstr "test.exemple.fr"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:661
-msgid "file.txt"
-msgstr "fichier.txt"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:662
-msgid "folder"
-msgstr "dossier"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:663
-msgid "8080"
-msgstr "8080"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:667
-msgid "file:///path/to/file1.text"
-msgstr "file:///chemin/vers/fichier1.text"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:668
-msgid "file:///path/to/file2.text"
-msgstr "file:///chemin/vers/fichier2.text"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:669
-msgid "file:///path/to/a/dir"
-msgstr "file:///chemin/vers/un/dossier"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:670
-msgid "file:///path/to/another/dir"
-msgstr "file:///chemin/vers/un/autre/dossier"
-
-#: ../nautilus-actions/nact/nact-icommand-tab.c:843
-msgid "e.g.,"
-msgstr "par ex.,"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:166
-#: ../nautilus-actions/nact/nact-main-menubar.c:270
-msgid "_File"
-msgstr "_Fichier"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:167
-#: ../nautilus-actions/nact/nact-main-menubar.c:274
-msgid "_Edit"
-msgstr "É_dition"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:168
-msgid "_View"
-msgstr "_Affichage"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:169
-msgid "_Toolbars"
-msgstr "_Barre d'outils"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:170
-#: ../nautilus-actions/nact/nact-main-menubar.c:278
-msgid "_Tools"
-msgstr "_Outils"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:171
-msgid "_Maintainer"
-msgstr "_Mainteneur"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:172
-#: ../nautilus-actions/nact/nact-main-menubar.c:282
-msgid "_Help"
-msgstr "Aid_e"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:174
-msgid "New _menu"
-msgstr "Nouveau _menu"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:176
-msgid "Insert a new menu at the current position"
-msgstr "Insère un nouveau menu à la position actuelle"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:178
-msgid "_New action"
-msgstr "_Nouvelle action"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'New action' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:180
-msgid "Define a new action"
-msgstr "Définit une nouvelle action"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:182
-msgid "New _profile"
-msgstr "Nouveau _profil"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:184
-msgid "Define a new profile attached to the current action"
-msgstr "Définit un nouveau profil lié à l'action actuelle"
-
-#. i18n: tooltip displayed in the status bar when selecting 'Save' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:188
-msgid ""
-"Record all the modified actions. Invalid actions will be silently ignored"
-msgstr ""
-"Enregistre toutes les actions modifiées. Les actions non valides sont "
-"ignorées sans avertissement."
-
-#. i18n: tooltip displayed in the status bar when selecting 'Quit' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:192
-msgid "Quit the application"
-msgstr "Quitte l'application"
-
-#. i18n: tooltip displayed in the status bar when selecting the Cut item
-#: ../nautilus-actions/nact/nact-main-menubar.c:196
-msgid "Cut the selected item(s) to the clipboard"
-msgstr "Coupe les éléments sélectionnés vers le presse-papiers"
-
-#. i18n: tooltip displayed in the status bar when selecting the Copy item
-#: ../nautilus-actions/nact/nact-main-menubar.c:200
-msgid "Copy the selected item(s) to the clipboard"
-msgstr "Copie les éléments sélectionnés vers le presse-papiers"
-
-#. i18n: tooltip displayed in the status bar when selecting the Paste item
-#: ../nautilus-actions/nact/nact-main-menubar.c:204
-msgid "Insert the content of the clipboard just before the current position"
-msgstr "Insère le contenu du presse-papiers juste avant la position actuelle"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:206
-msgid "Paste _into"
-msgstr "Coller _dans"
-
-#. i18n: tooltip displayed in the status bar when selecting the Paste Into item
-#: ../nautilus-actions/nact/nact-main-menubar.c:208
-msgid "Insert the content of the clipboard as first child of the current item"
-msgstr ""
-"Insère le contenu du presse-papiers comme premier fils de l'élément actuel"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:210
-msgid "D_uplicate"
-msgstr "D_upliquer"
-
-#. i18n: tooltip displayed in the status bar when selecting the Duplicate item
-#: ../nautilus-actions/nact/nact-main-menubar.c:212
-msgid "Duplicate the selected item(s)"
-msgstr "Duplique les éléments sélectionnés"
-
-#. i18n: tooltip displayed in the status bar when selecting the Delete item
-#: ../nautilus-actions/nact/nact-main-menubar.c:216
-msgid "Delete the selected item(s)"
-msgstr "Supprime les éléments sélectionnés"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:218
-msgid "_Reload the items"
-msgstr "_Recharger les éléments"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:220
-msgid ""
-"Cancel your current modifications and reload the initial list of menus and "
-"actions"
-msgstr ""
-"Annule les modifications effectuées et recharge la liste initiale des menus et "
-"des actions"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:224
-msgid "Edit your preferences"
-msgstr "Modifie vos préférences"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:226
-msgid "_Expand all"
-msgstr "Tout _développer"
-
-#. i18n: tooltip displayed in the status bar when selecting the Expand all item
-#: ../nautilus-actions/nact/nact-main-menubar.c:228
-msgid "Entirely expand the items hierarchy"
-msgstr "Développe entièrement la hiérarchie des éléments"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:230
-msgid "_Collapse all"
-msgstr "Tout _réduire"
-
-#. i18n: tooltip displayed in the status bar when selecting the Collapse all item
-#: ../nautilus-actions/nact/nact-main-menubar.c:232
-msgid "Entirely collapse the items hierarchy"
-msgstr "Réduit entièrement la hiérarchie des éléments"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:234
-msgid "_Import assistant..."
-msgstr "Assistant d'_importation..."
-
-#. i18n: tooltip displayed in the status bar when selecting the Import item
-#: ../nautilus-actions/nact/nact-main-menubar.c:236
-msgid ""
-"Import one or more actions from external (XML) files into your configuration"
-msgstr ""
-"Importe une ou plusieurs actions dans votre configuration à partir de "
-"fichiers (XML) externes"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:238
-msgid "E_xport assistant..."
-msgstr "Assistant d'_exportation..."
-
-#. i18n: tooltip displayed in the status bar when selecting the Export item
-#: ../nautilus-actions/nact/nact-main-menubar.c:240
-msgid ""
-"Export one or more actions from your configuration to external XML files"
-msgstr ""
-"Exporte une ou plusieurs actions de votre configuration vers des fichiers "
-"XML externes"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:242
-msgid "_Dump the selection"
-msgstr "Ex_porte la sélection"
-
-#. i18n: tooltip displayed in the status bar when selecting the Dump selection item
-#: ../nautilus-actions/nact/nact-main-menubar.c:244
-msgid "Recursively dump selected items"
-msgstr "Exporte récursivement les éléments sélectionnés"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:246
-msgid "_Brief tree store dump"
-msgstr "Exporter _brièvement le stockage de l'arborescence"
-
-#. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
-#: ../nautilus-actions/nact/nact-main-menubar.c:248
-msgid "Briefly dump the tree store"
-msgstr "Exporte brièvement le stockage de l'arborescence"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:250
-msgid "_List modified items"
-msgstr "_Afficher les éléments modifiés"
-
-#. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
-#: ../nautilus-actions/nact/nact-main-menubar.c:252
-msgid "List the modified items"
-msgstr "Affiche les éléments modifiés"
-
-#: ../nautilus-actions/nact/nact-main-menubar.c:254
-msgid "_Dump the clipboard"
-msgstr "Ex_porte le presse-papiers"
-
-#. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
-#: ../nautilus-actions/nact/nact-main-menubar.c:256
-msgid "Dump the content of the clipboard object"
-msgstr "Exporte le contenu de l'objet presse-papiers"
-
-#. i18n: tooltip displayed in the status bar when selecting the Help item
-#: ../nautilus-actions/nact/nact-main-menubar.c:260
-msgid "Display help about this program"
-msgstr "Affiche de l'aide à propos de ce programme"
-
-#. i18n: tooltip displayed in the status bar when selecting the About item
-#: ../nautilus-actions/nact/nact-main-menubar.c:264
-msgid "Display informations about this program"
-msgstr "Affiche des informations au sujet de ce programme"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:272
-msgid "Display the File toolbar"
-msgstr "Affiche la barre d'outils Fichier"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:276
-msgid "Display the Edit toolbar"
-msgstr "Affiche la barre d'outils Édition"
-
-#. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:280
-msgid "Display the Tools toolbar"
-msgstr "Affiche la barre d'outils Outils"
-
-#. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
-#: ../nautilus-actions/nact/nact-main-menubar.c:284
-msgid "Display the Help toolbar"
-msgstr "Affiche la barre d'outils Aide"
-
-#. i18n: note the space at the beginning of the sentence
-#: ../nautilus-actions/nact/nact-main-menubar.c:522
-#, c-format
-msgid " %d menus, %d actions, %d profiles are currently displayed"
-msgstr " %d menus, %d actions, %d profils sont actuellement affichés"
-
-#: ../nautilus-actions/nact/nact-main-statusbar.c:188
-msgid "I/O Provider is locked down."
-msgstr "Le fournisseur d'entrées/sorties est verrouillé."
-
-#: ../nautilus-actions/nact/nact-main-statusbar.c:189
-msgid "Item is read-only."
-msgstr "L'élément est en lecture seule."
-
-#: ../nautilus-actions/nact/nact-main-window.c:1297
-msgid ""
-"Reloading a fresh list of actions requires that you give up with your "
-"current modifications."
-msgstr ""
-"Si vous rechargez une nouvelle liste d'actions, toutes les modifications "
-"effectuées seront perdues."
-
-#: ../nautilus-actions/nact/nact-main-window.c:1300
-msgid "Do you really want to do this ?"
-msgstr "Voulez-vous vraiment faire cela ?"
-
-#: ../nautilus-actions/nact/nact-main-window.c:1323
-msgid ""
-"One or more actions have been modified in the filesystem.\n"
-"You could keep to work with your current list of actions, or you may want to "
-"reload a fresh one."
-msgstr ""
-"Une ou plusieurs actions ont été modifiées sur le système de fichiers.\n"
-"Vous pouvez soit continuer de travailler sur la liste actuelle des actions, "
-"soit recharger une liste actualisée."
-
-#: ../nautilus-actions/nact/nact-main-window.c:1330
-msgid ""
-"Note that reloading a fresh list of actions requires that you give up with "
-"your current modifications."
-msgstr ""
-"Si vous rechargez une nouvelle liste d'actions, toutes les modifications "
-"effectuées seront perdues."
-
-#: ../nautilus-actions/nact/nact-main-window.c:1336
-msgid "Do you want to reload a fresh list of actions ?"
-msgstr "Souhaitez-vous recharger une liste d'actions actualisée ?"
-
-#: ../nautilus-actions/nact/nact-window.c:307
-msgid "An error has occured when trying to save the item"
-msgstr "Une erreur est survenue lors de l'enregistrement de cet élément"
-
-#: ../nautilus-actions/nact/nact-window.c:352
-msgid "An error has occured when trying to delete the item"
-msgstr "Une erreur est survenue lors de la suppression de cet élément"
-
-#: ../nautilus-actions/nact/nact-window.c:409
-#, c-format
-msgid "Some items have been modified."
-msgstr "Certains éléments ont été modifiés."
-
-#: ../nautilus-actions/nact/nact-window.c:410
-msgid "Are you sure you want to quit without saving them ?"
-msgstr "Voulez-vous vraiment quitter sans les enregistrer ?"
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:124
-#, c-format
-msgid "Unable to parse XML file: %s."
-msgstr "Impossible d'analyser le fichier XML : %s."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:125
-#, c-format
-msgid ""
-"Invalid XML root element: waited for '%s' or '%s', found '%s' at line %d."
-msgstr ""
-"Élément XML racine non valide : « %s » ou « %s » était attendu, mais « %s » est "
-"apparu à la ligne %d."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:126
-#, c-format
-msgid "Waited for '%s' node, found (ignored) '%s' at line %d."
-msgstr ""
-"Le nœud « %s » était attendu, mais « %s » est apparu (ignoré) à la ligne %d."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:127
-#, c-format
-msgid "Unexpected (ignored) '%s' node found at line %d."
-msgstr "Nœud « %s » inattendu (et ignoré) à la ligne %d."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:128
-#, c-format
-msgid "Schema is ignored at line %d."
-msgstr "Le schéma de la ligne %d a été ignoré."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:129
-#, c-format
-msgid "Unexpected '%s' node found at line %d."
-msgstr "Nœud « %s » inattendu à la ligne %d."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:130
-#, c-format
-msgid "Unexpected '%s' entry found at line %d."
-msgstr "Élément « %s » inattendu à la ligne %d."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:131
-#, c-format
-msgid "Mandatory node '%s' not found."
-msgstr "Le nœud obligatoire « %s » n'a pas été trouvé."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:132
-msgid "No value found."
-msgstr "Aucune valeur trouvée."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:133
-#, c-format
-msgid "Invalid UUID: waited for %s, found %s at line %d."
-msgstr ""
-"UUID non valide : %s était attendu, mais %s a été trouvé à la ligne %d."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:134
-#, c-format
-msgid "Invalid content: waited for %s prefix, found %s at line %d."
-msgstr ""
-"Contenu non valide : le préfixe %s était attendu, mais %s a été trouvé à la "
-"ligne %d."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:135
-#, c-format
-msgid "Invalid UUID %s found at line %d."
-msgstr "L'UUID %s n'est pas valide à la ligne %d."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:136
-#, c-format
-msgid "Already existing action (UUID: %s)."
-msgstr "Action déjà existante (UUID : %s)."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:137
-#, c-format
-msgid "Value '%s' already set: new value ignored at line %d."
-msgstr "Valeur « %s » déjà définie : nouvelle valeur ignorée à la ligne %d."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:138
-msgid "UUID not found."
-msgstr "UUID introuvable."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:139
-msgid "Action label not found."
-msgstr "Étiquette d'action introuvable."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:1348
-msgid "Action was renumbered due to user request."
-msgstr "L'action a été renumérotée à la suite d'une demande de l'utilisateur."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:1355
-msgid "Existing action was overriden due to user request."
-msgstr ""
-"L'action existante a été écrasée à la suite d'une demande de l'utilisateur."
-
-#: ../nautilus-actions/nact/nact-xml-reader.c:1364
-msgid "Import was canceled due to user request."
-msgstr "L'importation a été annulée à la suite d'une demande de l'utilisateur."
-
-#. i18n: the action has been renumbered during import operation
-#: ../nautilus-actions/nact/nact-xml-reader.c:1414
-msgid "(renumbered)"
-msgstr "(renumérotée)"
-
-#. i18n: label of an automagic root submenu
-#. i18n: title of the About dialog box, when seen from Nautilus file manager
-#: ../nautilus-actions/plugin/nautilus-actions.c:645
-#: ../nautilus-actions/plugin/nautilus-actions.c:717
-msgid "Nautilus Actions"
-msgstr "Actions Nautilus"
-
-#. i18n: tooltip of an automagic root submenu
-#: ../nautilus-actions/plugin/nautilus-actions.c:647
-msgid ""
-"A submenu which embeds the currently available Nautilus Actions extensions"
-msgstr ""
-"Un sous-menu contenant les extensions actions Nautilus actuellement "
-"disponibles"
-
-#: ../nautilus-actions/plugin/nautilus-actions.c:694
-msgid "About Nautilus Actions"
-msgstr "À propos des actions Nautilus"
-
-#: ../nautilus-actions/plugin/nautilus-actions.c:695
-msgid "Display information about Nautilus Actions"
-msgstr "Affiche des informations au sujet des actions Nautilus"
-
-#. i18n: default label for a newly created action
-#: ../nautilus-actions/private/na-object-action-fn.h:58
-msgid "New Nautilus action"
-msgstr "Nouvelle action Nautilus"
-
-#. i18n: copied items have a label as 'Copy of original label'
-#: ../nautilus-actions/private/na-object-id.c:576
-#, c-format
-msgid "Copy of %s"
-msgstr "Copie de %s"
-
-#. i18n: default label for a newly created menu
-#: ../nautilus-actions/private/na-object-menu-fn.h:47
-msgid "New Nautilus menu"
-msgstr "Nouveau menu Nautilus"
-
-#. i18n: default label for a newly created profile
-#: ../nautilus-actions/private/na-object-profile-fn.h:54
-msgid "New profile"
-msgstr "Nouveau profil"
-
-#: ../nautilus-actions/runtime/na-iabout.c:178
+#: ../src/core/na-iabout.c:176
 msgid ""
 "Nautilus Actions Configuration Tool is free software; you can redistribute "
 "it and/or modify it under the terms of the GNU General Public License as "
@@ -1593,7 +850,7 @@ msgstr ""
 "soit la version 2 de la Licence, ou (à votre discrétion) une version "
 "ultérieure quelconque."
 
-#: ../nautilus-actions/runtime/na-iabout.c:182
+#: ../src/core/na-iabout.c:180
 msgid ""
 "Nautilus Actions Configuration Tool is distributed in the hope that it will "
 "be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
@@ -1605,7 +862,7 @@ msgstr ""
 "implicite de COMMERCIABILITÉ ou DE CONFORMITÉ À UNE UTILISATION "
 "PARTICULIÈRE. Voir la Licence Publique Générale GNU pour plus de détails."
 
-#: ../nautilus-actions/runtime/na-iabout.c:186
+#: ../src/core/na-iabout.c:184
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "Nautilus Actions Configuration Tool ; if not, write to the Free Software "
@@ -1616,12 +873,12 @@ msgstr ""
 "avec ce programme ; si ce n'est pas le cas, écrivez à la Free Software "
 "Foundation Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
-#: ../nautilus-actions/runtime/na-iabout.c:208
+#: ../src/core/na-iabout.c:206
 msgid "A graphical interface to create and edit your Nautilus actions."
 msgstr ""
 "Une interface graphique pour créer et modifier les actions de Nautilus."
 
-#: ../nautilus-actions/runtime/na-iabout.c:214
+#: ../src/core/na-iabout.c:212
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
 msgstr ""
 "Frederic Ruaudel <grumz@grumz.net>\n"
@@ -1634,33 +891,385 @@ msgstr ""
 "Laurent Coudeur <laurentc@iol.ie>\n"
 "Bruno Brouard <annoa.b@gmail.com>."
 
-#: ../nautilus-actions/runtime/na-iabout.c:255
+#: ../src/core/na-iabout.c:253
 #, c-format
 msgid ""
 "Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
 "Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 
-#: ../nautilus-actions/runtime/na-xml-names.h:96
+#: ../src/core/na-icontext-conditions-factory.c:47
+msgid "List of pattern to match the selected file(s)/folder(s)"
+msgstr "Liste des motifs de correspondance des fichiers/dossiers sélectionnés"
+
+#: ../src/core/na-icontext-conditions-factory.c:48
 msgid ""
-"Ordered list of the IDs of the subitems. This may be actions or menus if the "
-"item is a menu, or profiles if the item is an action.\n"
-"If this list doesn't exist or is empty for an action, we load the found "
-"profiles in the order of the read operations."
+"A list of strings with joker '*' or '?' to be matched against the name(s) of "
+"the selected file(s)/folder(s). Each selected items must match at least one "
+"of the filename patterns for the action or the menu be candidate to "
+"display.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*'."
 msgstr ""
-"Liste ordonnée des identificateurs des sous-éléments. Ils peuvent être des "
-"actions ou des menus si l'élément est un menu ou des profils si l'élément "
-"est une action.\n"
-"Si cette liste n'existe pas ou est vide pour une action, les profils trouvés "
-"sont chargés dans l'ordre des opérations de lecture."
+"Une liste de chaînes de caractères pouvant contenir les jokers « * » ou « ? » "
+"à comparer au(x) nom(s) du ou des fichiers/dossiers sélectionnés. Tous les "
+"éléments sélectionnés doivent correspondre au moins à l'un des motifs de nom "
+"de fichiers pour que l'action ou le menu puisse apparaître.\n"
+"Cela ne s'applique évidemment que lorsqu'il y a une sélection.\n"
+"Valeur par défaut « * »."
 
-#: ../nautilus-actions/runtime/na-xml-names.h:101
+#: ../src/core/na-icontext-conditions-factory.c:66
+msgid "Whether the specified basenames are case sensitive"
+msgstr ""
+"Indique si les noms spécifiés sans leurs chemins sont sensibles à la casse"
+
+#: ../src/core/na-icontext-conditions-factory.c:67
+msgid ""
+"Must be set to 'true' if the filename patterns are case sensitive, to "
+"'false' otherwise. E.g., if you need to match a filename in a case-sensitive "
+"manner, set this key to 'true'. If you also want, for example '*.jpg' to "
+"match 'photo.JPG', then set 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
+msgstr ""
+"Doit être définie à « true » (vrai) si les motifs de nom de fichier sont "
+"sensibles à la casse, sinon à « false » (faux). Si vous avez besoin de faire "
+"correspondre un nom de fichier en respectant la casse, positionnez cette clé "
+"à « true ». Si, par exemple, vous voulez que « *.jpg » corresponde à « photo."
+"JPG », positionnez-la à « false ».\n"
+"Cela ne s'applique évidemment que lorsqu'il y a une sélection.\n"
+"Valeur par défaut « true »."
+
+#: ../src/core/na-icontext-conditions-factory.c:85
+msgid ""
+"List of patterns to match the mimetypes of the selected file(s)/folder(s)"
+msgstr ""
+"Liste des motifs de correspondance des types MIME du ou des fichiers ou "
+"dossiers sélectionnés"
+
+#: ../src/core/na-icontext-conditions-factory.c:86
+msgid ""
+"A list of strings with joker '*' to be matched against the mimetypes of the "
+"selected file(s)/folder(s). Each selected items must match at least one of "
+"the mimetype patterns for the action to appear.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*/*'."
+msgstr ""
+"Une liste de chaînes de caractères pouvant contenir les jokers « * » ou « ? » "
+"à comparer aux types MIME du ou des fichiers/dossiers sélectionnés. Tous les "
+"éléments sélectionnés doivent correspondre au moins à l'un des motifs de "
+"types MIME pour que l'action apparaisse.\n"
+"Cela ne s'applique évidemment que lorsqu'il y a une sélection.\n"
+"Valeur par défaut « */* »."
+
+#: ../src/core/na-icontext-conditions-factory.c:103
+msgid "Whether the profile applies to files"
+msgstr "Indique si le profil s'applique aux fichiers"
+
+#: ../src/core/na-icontext-conditions-factory.c:104
+msgid ""
+"Set to 'true' if the selection can have files, to 'false' otherwise.\n"
+"This setting is tied in with the 'isdir' setting. The valid combinations "
+"are: \n"
+"isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
+"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
+"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
+msgstr ""
+"Défini à « true » (vrai) si la sélection peut contenir des fichiers, à "
+"« false » (faux) sinon.\n"
+"Ce paramètre est lié au paramètre « isdir ». Voici les combinaisons "
+"possibles :\n"
+"\n"
+"isfile=VRAI et isdir=FAUX : la sélection ne peut contenir que des "
+"fichiers ;\n"
+"isfile=FAUX et isdir=VRAI : la sélection ne peut contenir que des "
+"dossiers ;\n"
+"isfile=VRAI et isdir=VRAI : la sélection peut contenir à la fois des "
+"fichiers et des dossiers ;\n"
+"isfile=FAUX et isdir=FAUX : combinaison invalide (votre configuration ne "
+"s'affichera jamais).\n"
+"Cela ne s'applique évidemment que lorsqu'il y a une sélection.\n"
+"Valeur par défaut « true »."
+
+#: ../src/core/na-icontext-conditions-factory.c:125
+msgid "Whether the profile applies to folders"
+msgstr "Indique si le profil s'applique aux dossiers"
+
+#: ../src/core/na-icontext-conditions-factory.c:126
+msgid ""
+"Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
+"This setting is tied in with the 'isfile' setting. The valid combinations "
+"are: \n"
+"isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
+"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
+"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
+msgstr ""
+"Défini à « true » (vrai) si la sélection peut contenir des fichiers, à "
+"« false » (faux) sinon.\n"
+"Ce paramètre est lié au paramètre « isfile ». Voici les combinaisons "
+"possibles :\n"
+"\n"
+"isfile=VRAI et isdir=FAUX : la sélection ne peut contenir que des "
+"fichiers ;\n"
+"isfile=FAUX et isdir=VRAI : la sélection ne peut contenir que des "
+"dossiers ;\n"
+"isfile=VRAI et isdir=VRAI : la sélection peut contenir à la fois des "
+"fichiers et des dossiers ;\n"
+"isfile=FAUX et isdir=FAUX : combinaison invalide (votre configuration ne "
+"s'affichera jamais).\n"
+"Cela ne s'applique évidemment que lorsqu'il y a une sélection.\n"
+"Valeur par défaut « false »."
+
+#: ../src/core/na-icontext-conditions-factory.c:147
+msgid "Whether the selection may be multiple"
+msgstr "Indique si la sélection peut être multiple"
+
+#: ../src/core/na-icontext-conditions-factory.c:148
+msgid ""
+"If you need more than one files or folders to be selected, set this key to "
+"'true'. If you want just one file or folder, set it to 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
+msgstr ""
+"Si vous avez besoin de sélectionner plus d'un fichier ou dossier, "
+"positionnez cette clé à « true » (vrai). Si vous désirez qu'un seul fichier "
+"ou dossier, positionnez-la à « false » (faux).\n"
+"Cela ne s'applique évidemment que lorsqu'il y a une sélection.\n"
+"Valeur par défaut « false »."
+
+#: ../src/core/na-icontext-conditions-factory.c:164
+msgid "List of schemes"
+msgstr "Liste des protocoles"
+
+#. too long string for iso c: 510 (max=509)
+#: ../src/core/na-icontext-conditions-factory.c:166
+msgid ""
+"Defines the list of valid schemes to be matched against the selected items. "
+"The scheme is the protocol used to access the files. The keyword to use is "
+"the one used in the URI by the file manager.\n"
+"Examples of valid URI include:\n"
+"- file:///tmp/foo.txt\n"
+"- sftp:///root@test.example.net/tmp/foo.txt\n"
+"The most common schemes are:\n"
+"'file': local files\n"
+"'sftp': files accessed via SSH\n"
+"'ftp': files accessed via FTP\n"
+"'smb': files accessed via Samba (Windows share)\n"
+"'dav': files accessed via WebDAV.\n"
+"All schemes used by your favorite file manager may be used here.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'file'."
+msgstr ""
+"Définit la liste des protocoles valides à faire correspondre aux éléments "
+"sélectionnés. Les protocoles sont utilisés pour accéder aux fichiers. "
+"Le mot-clé à utiliser est celui utilisé dans l'URI par le gestionnaire de "
+"fichiers.\n"
+"Exemples d'URI valides :\n"
+"file:///tmp/foo.txt\n"
+"sftp:///root@test.example.net/tmp/foo.txt\n"
+"Les protocoles les plus courants sont :\n"
+"« file » pour les fichiers locaux ;\n"
+"« sftp » pour les fichiers accédés via SSH ;\n"
+"« ftp » pour les fichiers accédés via FTP ;\n"
+"« smb » pour les fichiers accédés via Samba (partage Windows) ;\n"
+"« dav » pour les fichiers accédés via WebDAV.\n"
+"Tous les protocoles utilisés par votre gestionnaire de fichiers préféré "
+"peuvent être utilisés ici.\n"
+"Cela ne s'applique évidemment que lorsqu'il y a une sélection.\n"
+"Valeur par défaut « file »."
+
+#: ../src/core/na-icontext-conditions-factory.c:193
+msgid "List of folders"
+msgstr "Liste des dossiers"
+
+#: ../src/core/na-icontext-conditions-factory.c:194
+msgid ""
+"Defines the list of valid paths to be matched against the current folder.\n"
+" All folders 'under' the specified path are considered valid.\n"
+"This is only used when there is no selection.\n"
+"Defaults to '/'."
+msgstr ""
+"Définit la liste des chemins valides à faire correspondre au dossier "
+"actuel.\n"
+"Tous les dossiers « sous » le chemin spécifié sont considérés comme valides.\n"
+"Ceci n'est utilisé que lorsqu'il n'y a rien de sélectionné.\n"
+"Valeur par défaut « / »."
+
+#: ../src/core/na-importer-ask.c:292
+#, c-format
+msgid ""
+"The action \"%s\" imported from \"%s\" has the same identifiant than the "
+"already existing \"%s\"."
+msgstr ""
+"L'action « %s » importée de « %s » possède le même identifiant que l'action "
+"existante « %s »."
+
+#: ../src/core/na-importer-ask.c:298
+#, c-format
+msgid ""
+"The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+"already existing \"%s\"."
+msgstr ""
+"Le menu « %s » importé de « %s » possède le même identifiant que le menu « %s » "
+"existant."
+
+#: ../src/core/na-io-provider.c:1251
+msgid "Item is read-only."
+msgstr "L'élément est en lecture seule."
+
+#: ../src/core/na-io-provider.c:1255
+msgid "I/O provider is not willing to write."
+msgstr "Le fournisseur d'entrées/sorties n'est pas prêt à écrire."
+
+#: ../src/core/na-io-provider.c:1259
+msgid "No writable I/O provider found."
+msgstr "Aucun fournisseur d'entrées/sorties modifiable trouvé."
+
+#: ../src/core/na-io-provider.c:1263
+msgid "I/O provider has been locked down by an administrator."
+msgstr ""
+"Le fournisseur d'entrées/sorties a été verrouillé par un administrateur."
+
+#: ../src/core/na-io-provider.c:1267
+msgid "I/O provider has been locked down by the user."
+msgstr "Le fournisseur d'entrées/sorties a été verrouillé par l'utilisateur."
+
+#: ../src/core/na-io-provider.c:1271
+msgid "I/O provider implementation lacks of required API."
+msgstr "Le fournisseur d'entrées/sorties n'a pas l'API nécessaire."
+
+#: ../src/core/na-io-provider.c:1275
+msgid "The whole configuration has been locked down by an administrator."
+msgstr "Toute la configuration a été verrouillée par un administrateur."
+
+#: ../src/core/na-io-provider.c:1284
+#, c-format
+msgid ""
+"Item is not writable for an unknown reason (%d).\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+msgstr ""
+"L'élément n'est pas accessible en écriture pour une raison inconnue (%d).\n"
+"Veuillez remplir un rapport d'anomalie sur http://bugzilla.gnome.org."
+
+#: ../src/core/na-io-provider.c:1308
+msgid "OK."
+msgstr "Valider."
+
+#: ../src/core/na-io-provider.c:1312
+msgid ""
+"Program flow error.\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+msgstr ""
+"Erreur de déroulement du programme (program flow).\n"
+"Veuillez remplir un rapport d'anomalie sur http://bugzilla.gnome.org."
+
+#: ../src/core/na-io-provider.c:1317
+msgid "The I/O provider is not willing to do that."
+msgstr "Le fournisseur d'entrées/sorties n'est pas prêt à faire cela."
+
+#: ../src/core/na-io-provider.c:1321
+msgid "Write error in I/O provider."
+msgstr "Erreur d'écriture dans le fournisseur d'entrées/sorties."
+
+#: ../src/core/na-io-provider.c:1325
+msgid "Unable to delete GConf schemas."
+msgstr "Impossible de supprimer les schémas de GConf."
+
+#: ../src/core/na-io-provider.c:1329
+msgid "Unable to delete configuration."
+msgstr "Impossible de supprimer la configuration."
+
+#: ../src/core/na-io-provider.c:1333
+#, c-format
+msgid ""
+"Unknow return code (%d).\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+msgstr ""
+"Code retourné inconnu (%d).\n"
+"Veuillez remplir un rapport d'anomalie sur http://bugzilla.gnome.org."
+
+#. i18n: default label for a new action
+#: ../src/core/na-object-action.c:65
+msgid "New Nautilus action"
+msgstr "Nouvelle action Nautilus"
+
+#: ../src/core/na-object-action.c:347
+msgid "Profile automatically created from pre-v2 action"
+msgstr ""
+"Profil créé automatiquement à partir d'une action antérieure à la version v2"
+
+#: ../src/core/na-object-action-factory.c:50
+msgid "Version of the format"
+msgstr "Version du format"
+
+#: ../src/core/na-object-action-factory.c:65
+msgid "Targets the context menu"
+msgstr "Cible le menu contextuel"
+
+#: ../src/core/na-object-action-factory.c:66
+msgid ""
+"Whether the action of the menu targets the selection file manager context "
+"menus.\n"
+"This used to be the historical behavior."
+msgstr ""
+"Indique si l'action du menu s'applique aux menus contextuels de la sélection "
+"du gestionnaire de fichiers.\n"
+" Il s'agissait du comportement historique."
+
+#: ../src/core/na-object-action-factory.c:95
+msgid "Targets the toolbar"
+msgstr "Cible la barre d'outils"
+
+#: ../src/core/na-object-action-factory.c:96
+msgid ""
+"Whether the action is candidate to be displayed in file manager toolbar.\n"
+"Note, that as of Nautilus 2.26, menus can not be candidate to toolbar "
+"display."
+msgstr ""
+"Indique s'il est possible que l'action soit affichée dans la barre d'outils "
+"du gestionnaire de fichiers.\n"
+"Notez que depuis Nautilus 2.26, les menus ne peuvent être affichés dans la "
+"barre d'outils."
+
+#: ../src/core/na-object-action-factory.c:110
+msgid "Label of the toolbar item"
+msgstr "Étiquette de l'élément de la barre d'outils"
+
+#: ../src/core/na-object-action-factory.c:111
+msgid ""
+"The label displayed besides of the icon in the file manager toolbar.\n"
+"Note that actual display may depend of your own Desktop Environment "
+"preferences.\n"
+"Defaults to label of the context menu when not set or empty."
+msgstr ""
+"L'étiquette affichée à côté de l'icône dans la barre d'outils du "
+"gestionnaire de fichiers.\n"
+"Remarquez que l'affichage réel dépend de vos propres préférences "
+"d'environnement de bureau.\n"
+"Prend par défaut la valeur de l'étiquette du menu contextuel si elle n'est "
+"pas définie ou si elle est vide."
+
+#. i18n: copied items have a label as 'Copy of original label'
+#: ../src/core/na-object-id.c:338
+#, c-format
+msgid "Copy of %s"
+msgstr "Copie de %s"
+
+#: ../src/core/na-object-item-factory.c:52
 msgid ""
 "Defines if the item is an action or a menu. Possible values are :\n"
-"- \"Action\",\n"
-"- \"Menu\".\n"
+"- 'Action',\n"
+"- 'Menu'.\n"
 "The value is case sensitive and must not be localized."
 msgstr ""
 "Définit si l'élément est une action ou un menu. Les valeurs possibles "
@@ -1669,36 +1278,135 @@ msgstr ""
 "- « Menu ».\n"
 "La valeur est sensible à la casse et ne doit pas être adaptée à votre langue."
 
-#: ../nautilus-actions/runtime/na-xml-names.h:110
+#: ../src/core/na-object-item-factory.c:72
+msgid "Label of the context menu item"
+msgstr "Étiquette de l'élément du menu contextuel"
+
+#: ../src/core/na-object-item-factory.c:73
 msgid ""
-"Whether the action is candidate to be displayed in Nautilus toolbar.\n"
-"Note, that as of Nautilus -2.26, menus can not be candidate to toolbar "
-"display."
+"The label of the menu item that will appear in the file manager context menu "
+"when the selection matches the appearance condition settings.\n"
+"It is also used as a default for the toolbar label of an action."
 msgstr ""
-"Indique s'il est possible que l'action soit affichée dans la barre d'outils "
-"de Nautilus.\n"
-"Notez que depuis Nautilus 2.26, les menus ne peuvent être affichés dans la "
+"L'étiquette de l'élément apparaissant dans le menu contextuel du "
+"gestionnaire de fichiers quand la sélection correspond aux paramétrages des "
+"conditions d'affichage.\n"
+"Elle est aussi utilisée par défaut comme étiquette de la barre d'outils pour "
+"une action."
+
+#: ../src/core/na-object-item-factory.c:88
+msgid "Tooltip of the context menu item"
+msgstr "Infobulle de l'élément du menu contextuel"
+
+#: ../src/core/na-object-item-factory.c:89
+msgid ""
+"The tooltip of the menu item that will appear in the file manager statusbar "
+"when the user points to the file manager context menu item with his/her "
+"mouse."
+msgstr ""
+"L'infobulle de l'élément de menu apparaissant dans la barre d'état du "
+"gestionnaire de fichiers quand l'utilisateur pointe sa souris sur l'élément "
+"du menu contextuel du gestionnaire de fichiers."
+
+#: ../src/core/na-object-item-factory.c:104
+msgid "Icon of the context menu item"
+msgstr "Icône de l'élément du menu contextuel"
+
+#: ../src/core/na-object-item-factory.c:105
+msgid ""
+"The icon of the menu item that will appear next to the label in the file "
+"manager context menu when the selection matches the appearance conditions "
+"settings.\n"
+"May be the localized name of a themed icon, or a full path to any "
+"appropriate image."
+msgstr ""
+"L'icône de l'élément de menu qui apparaît à côté de l'étiquette dans le menu "
+"contextuel du gestionnaire de fichiers quand la sélection correspond aux "
+"paramétrages des conditions d'affichage.\n"
+"Elle peut être le nom adapté à votre langue d'une icône de thème ou un "
+"chemin complet vers n'importe quelle image adéquate."
+
+#: ../src/core/na-object-item-factory.c:121
+msgid "Description relative to the item"
+msgstr "Description relative à l'élément"
+
+#: ../src/core/na-object-item-factory.c:122
+msgid ""
+"Some text which explains the goal of the menu or the action.\n"
+"May be used, e.g. when displaying available items on a web site."
+msgstr ""
+"Un texte qui explique l'objectif du menu ou de l'action.\n"
+"Cela peut être utilisé, par ex. pour afficher les éléments disponibles sur "
+"un site Web."
+
+#: ../src/core/na-object-item-factory.c:156
+msgid ""
+"Ordered list of the IDs of the subitems. This may be actions or menus if the "
+"item is a menu, or profiles if the item is an action.\n"
+"If this list doesn't exist or is empty for an action or a menu, subitems are "
+"attached in the order of the read operations."
+msgstr ""
+"Liste ordonnée des identificateurs des sous-éléments. Ils peuvent être des "
+"actions ou des menus si l'élément est un menu ou des profils si l'élément "
+"est une action.\n"
+"Si cette liste n'existe pas ou est vide pour une action ou un menu, les sous-"
+"éléments sont attachés dans l'ordre des opérations de lecture."
+
+#: ../src/core/na-object-item-factory.c:172
+msgid "Whether the action or the menu is enabled"
+msgstr "Indique si l'action ou le menu est activé"
+
+#: ../src/core/na-object-item-factory.c:173
+msgid ""
+"If the or the menu action is disabled, it will never appear in the file "
+"manager context menu."
+msgstr ""
+"Si l'action ou le menu est désactivé, il n'apparaît jamais dans le menu "
+"contextuel du gestionnaire de fichiers."
+
+#. i18n: default label for a new menu
+#: ../src/core/na-object-menu.c:58
+msgid "New Nautilus menu"
+msgstr "Nouveau menu Nautilus"
+
+#: ../src/core/na-object-profile-factory.c:50
+msgid "Name of the profile"
+msgstr "Nom du profil"
+
+#: ../src/core/na-object-profile-factory.c:51
+msgid ""
+"May be used as a description for the function of the profile.\n"
+"If not set, it defaults to an auto-generated name."
+msgstr ""
+"Peut être utilisé comme descriptif de la fonction du profil.\n"
+"S'il n'est pas défini, la valeur par défaut est un nom auto-généré."
+
+#: ../src/core/na-object-profile-factory.c:65
+msgid "Path of the command"
+msgstr "Chemin de la commande"
+
+#: ../src/core/na-object-profile-factory.c:66
+msgid ""
+"The path of the command to be executed when the user select the menu item in "
+"the file manager context menu or in the toolbar."
+msgstr ""
+"Le chemin de la commande à lancer lorsque l'utilisateur sélectionne "
+"l'élément dans le menu contextuel du gestionnaire de fichiers ou dans la "
 "barre d'outils."
 
-#: ../nautilus-actions/runtime/na-xml-names.h:117
-msgid ""
-"The label displayed besides of the icon in the Nautilus toolbar.\n"
-"Note that actual display may depend of your own Gnome preferences."
-msgstr ""
-"L'étiquette affichée à côté de l'icône dans la barre d'outils de Nautilus.\n"
-"Remarquez que l'affichage réel dépend de vos propres préférences GNOME."
+#: ../src/core/na-object-profile-factory.c:80
+msgid "Parameters of the command"
+msgstr "Paramètres de la commande"
 
 #. too long string for iso c: 665 (max=509)
-#: ../nautilus-actions/runtime/na-xml-names.h:129
+#: ../src/core/na-object-profile-factory.c:82
 msgid ""
-"The parameters of the command to start when the user selects the menu item "
-"in the Nautilus popup menu.\n"
-"\n"
-"The parameters can contain some special tokens which are replaced by "
-"Nautilus information before starting the command:\n"
-"\n"
+"The parameters of the command to be executed when the user selects the menu "
+"item in the file manager context menu or in the toolbar.\n"
+"The parameters may contain some special tokens which are replaced by the "
+"informations provided by the file manager before starting the command:\n"
 "%d: base folder of the selected file(s)\n"
-"%f: the name of the selected file or the first one if many are selected\n"
+"%f: the name of the selected file or the first one if several are selected\n"
 "%h: hostname of the URI\n"
 "%m: space-separated list of the basenames of the selected file(s)/folder(s)\n"
 "%M: space-separated list of the selected file(s)/folder(s), with their full "
@@ -1711,11 +1419,11 @@ msgid ""
 "%%: a percent sign."
 msgstr ""
 "Les paramètres de la commande à lancer quand l'utilisateur sélectionne "
-"l'élément dans le menu contextuel de Nautilus.\n"
-"\n"
+"l'élément dans le menu contextuel du gestionnaire de fichiers ou dans la "
+"barre d'outils.\n"
 "Les paramètres peuvent contenir des options spéciales qui seront remplacées "
-"par des informations de Nautilus au lancement de la commande :\n"
-"\n"
+"par des informations du gestionnaire de fichiers au lancement de la "
+"commande :\n"
 "%d : dossier de base des fichiers sélectionnés\n"
 "%f : nom du fichier sélectionné ou nom du premier fichier si plusieurs "
 "fichiers sont sélectionnés\n"
@@ -1729,167 +1437,998 @@ msgstr ""
 "%s : protocole de l'URI\n"
 "%u : URI\n"
 "%U : nom d'utilisateur de l'URI\n"
-"%% : signe pourcentage."
+"%% : le signe pourcentage."
 
-#: ../nautilus-actions/runtime/na-xml-names.h:154
-msgid ""
-"This setting is tied in with the 'isdir' setting. The valid combinations "
-"are:\n"
-"\n"
-"isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
-"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
-"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-"configuration will never appear). This only applies when targeting selection."
-msgstr ""
-"Ce paramètre est lié au paramètre « isdir ». Voici les combinaisons "
-"possibles :\n"
-"\n"
-"isfile=VRAI et isdir=FAUX : la sélection ne peut contenir que des "
-"fichiers ;\n"
-"isfile=FAUX et isdir=VRAI : la sélection ne peut contenir que des "
-"dossiers ;\n"
-"isfile=VRAI et isdir=VRAI : la sélection peut contenir à la fois des "
-"fichiers et des dossiers ;\n"
-"isfile=FAUX et isdir=FAUX : combinaison invalide (votre configuration ne "
-"s'affichera jamais). Cela ne s'applique qu'à une sélection."
+#: ../src/io-desktop/nadp-desktop-provider.c:220
+msgid "Nautilus-Actions Desktop I/O Provider"
+msgstr "Fournisseur d'entrées/sorties Desktop pour Nautilus-Actions"
 
-#: ../nautilus-actions/runtime/na-xml-names.h:161
-msgid ""
-"This setting is tied in with the 'isfile' setting. The valid combinations "
-"are:\n"
-"\n"
-"isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
-"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
-"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
-"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-"configuration will never appear). This only applies when targeting selection."
-msgstr ""
-"Ce paramètre est lié au paramètre « isfile ». Voici les combinaisons "
-"possibles :\n"
-"\n"
-"isfile=VRAI et isdir=FAUX : la sélection ne peut contenir que des "
-"fichiers ;\n"
-"isfile=FAUX et isdir=VRAI : la sélection ne peut contenir que des "
-"dossiers ;\n"
-"isfile=VRAI et isdir=VRAI : la sélection peut contenir à la fois des "
-"fichiers et des dossiers ;\n"
-"isfile=FAUX et isdir=FAUX : combinaison invalide (votre configuration ne "
-"s'affichera jamais). Cela ne s'applique qu'à une sélection."
+#: ../src/io-gconf/nagp-gconf-provider.c:228
+msgid "Nautilus-Actions GConf I/O Provider"
+msgstr "Fournisseur d'entrées/sorties GConf pour Nautilus-Actions"
 
-#. too long string for iso c: 510 (max=509)
-#: ../nautilus-actions/runtime/na-xml-names.h:173
-msgid ""
-"Defines the list of valid schemes to be matched against the selected items. "
-"The scheme is the protocol used to access the files. The keyword to use is "
-"the one used in the URI.\n"
-"\n"
-"Examples of valid URI include:\n"
-"file:///tmp/foo.txt\n"
-"sftp:///root@test.example.net/tmp/foo.txt\n"
-"\n"
-"The most common schemes are:\n"
-"\n"
-"'file': local files\n"
-"'sftp': files accessed via SSH\n"
-"'ftp': files accessed via FTP\n"
-"'smb': files accessed via Samba (Windows share)\n"
-"'dav': files accessed via WebDAV\n"
-"\n"
-"All schemes used by Nautilus can be used here.\n"
-"This only applies when targeting selection."
-msgstr ""
-"Définit la liste des protocoles valides à faire correspondre aux éléments "
-"sélectionnés. Les protocoles sont utilisés pour accéder aux fichiers. Le mot-"
-"clé à utiliser est celui utilisé dans l'URI.\n"
-"\n"
-"Exemples d'URI valides :\n"
-"file:///tmp/foo.txt\n"
-"sftp:///root@test.example.net/tmp/foo.txt\n"
-"\n"
-"Les protocoles les plus courants sont :\n"
-"\n"
-"« file » pour les fichiers locaux ;\n"
-"« sftp » pour les fichiers accédés via SSH ;\n"
-"« ftp » pour les fichiers accédés via FTP ;\n"
-"« smb » pour les fichiers accédés via Samba (partage Windows) ;\n"
-"« dav » pour les fichiers accédés via WebDAV.\n"
-"\n"
-"Tous les protocoles utilisés par Nautilus peuvent être utilisés ici.\n"
-"Cela ne s'applique qu'à une sélection."
-
-#: ../nautilus-actions/runtime/na-xml-names.h:182
-msgid ""
-"Defines the list of valid URIs to be matched against the current folder.\n"
-" This is only used when targeting background or toolbar. All folders 'under' "
-"the specified URI are considered valid."
-msgstr ""
-"Définit la liste des URI valides à faire correspondre au dossier actuel.\n"
-"Cela ne s'applique qu'à l'arrière-plan ou à la barre d'outils. Tous les "
-"dossiers « sous » l'URI spécifié sont considérés comme valide."
-
-#: ../nautilus-actions/test/test-parse-uris.c:57
+#: ../src/io-xml/naxml-reader.c:147
 #, c-format
-msgid ""
-"URIs parsing test.\n"
-"\n"
-msgstr ""
-"Test d'analyse d'URI.\n"
-"\n"
+msgid "Item ID %s already exists."
+msgstr "L'ID de l'élément %s existe déjà."
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:79
+#: ../src/io-xml/naxml-reader.c:148
+msgid "Item ID not found."
+msgstr "ID de l'élément introuvable."
+
+#: ../src/io-xml/naxml-reader.c:149
+#, c-format
+msgid "Unwaited key path %s while importing a menu."
+msgstr "Chemin de clé %s inattendu au cours de l'importation d'un menu."
+
+#: ../src/io-xml/naxml-reader.c:150
+#, c-format
+msgid "Element %s at line %d already found, ignored."
+msgstr "Élément %s de la ligne %d déjà trouvé et ignoré."
+
+#: ../src/io-xml/naxml-reader.c:151
+#, c-format
+msgid "Invalid item ID: waited for %s, found %s at line %d."
+msgstr ""
+"ID de l'élément non valide : %s était attendu, mais %s a été trouvé à la "
+"ligne %d."
+
+#: ../src/io-xml/naxml-reader.c:152
+#, c-format
+msgid "Unknown element %s found at line %d while waiting for %s."
+msgstr ""
+"L'élément inconnu %s a été trouvé à la ligne %d alors que %s était attendu."
+
+#. i18n: do not translate keywords 'Action' nor 'Menu'
+#: ../src/io-xml/naxml-reader.c:154
+#, c-format
+msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
+msgstr ""
+"Le type inconnu %s a été trouvé à la ligne %d alors qu'une action ou un menu "
+"était attendu."
+
+#: ../src/io-xml/naxml-reader.c:155
+#, c-format
+msgid "Invalid XML root element %s found at line %d while waiting for %s."
+msgstr ""
+"L'élément XML racine %s non valide a été trouvé à la ligne %d alors que %s "
+"était attendu."
+
+#: ../src/io-xml/naxml-reader.c:156
+#, c-format
+msgid "Unable to parse XML file: %s."
+msgstr "Impossible d'analyser le fichier XML : %s."
+
+#: ../src/io-xml/naxml-reader.c:157
+#, c-format
+msgid "Node %s at line %d has not been dealt with."
+msgstr "Le nœud %s de la ligne %d n'a pas été traité."
+
+#: ../src/io-xml/naxml-reader.c:1322
+msgid "Item was renumbered due to user request."
+msgstr "L'élément a été renuméroté à la suite d'une demande de l'utilisateur."
+
+#: ../src/io-xml/naxml-reader.c:1328
+msgid "Existing item was overriden due to user request."
+msgstr "L'élément existant a été écrasé à la demande de l'utilisateur."
+
+#: ../src/io-xml/naxml-reader.c:1337
+msgid "Import was canceled due to user request."
+msgstr "L'importation a été annulée à la suite d'une demande de l'utilisateur."
+
+#. i18n: the action has been renumbered during import operation
+#: ../src/io-xml/naxml-reader.c:1376
+msgid "(renumbered)"
+msgstr "(renumérotée)"
+
+#: ../src/io-xml/naxml-formats.c:48
+msgid "Export as a _full GConf schema file"
+msgstr "Exporter en _fichier de schéma GConf complet"
+
+#: ../src/io-xml/naxml-formats.c:49
+msgid ""
+"This used to be the historical export format.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+"C'est l'ancien format d'exportation.\n"
+" Le fichier de schéma exporté peut ensuite être importé via :\n"
+"- L'assistant d'importation de l'outil de configuration des actions de "
+"Nautilus,\n"
+"- ou par la commande gconftool-2 --import-schema-file."
+
+#: ../src/io-xml/naxml-formats.c:58
+msgid "Export as a _light GConf schema (v2) file"
+msgstr "Exporter en fic_hier de schéma GConf (v2) réduit"
+
+#: ../src/io-xml/naxml-formats.c:59
+msgid ""
+"This format has been introduced in v 1.11 serie.\n"
+"This is the lightest schema still compatible with GConf command-line tools,\n"
+"while keeping backward compatibility with older Nautilus Actions "
+"Configuration Tool versions.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+"Ce format a été introduit dans la série v 1.11.\n"
+"Il s'agit du schéma le plus léger toujours compatible avec les outils en "
+"ligne de commande GConf,\n"
+"tout en conservant une compatibilité arrière avec les versions plus "
+"anciennes de l'outil de configuration des actions de Nautilus.\n"
+"Le fichier de schéma exporté peut ensuite être importé via :\n"
+"- L'assistant d'importation de l'outil de configuration des actions de "
+"Nautilus,\n"
+"- ou par la commande gconftool-2 --import-schema-file."
+
+#: ../src/io-xml/naxml-formats.c:71
+msgid "Export as a GConf _dump file"
+msgstr "_Exporter en fichier de sauvegarde GConf"
+
+#: ../src/io-xml/naxml-formats.c:72
+msgid ""
+"This format has been introduced in v 1.11 serie, and should be the preferred "
+"format for newly exported items.\n"
+"It is not backward compatible with previous Nautilus Actions Configuration "
+"Tool versions,\n"
+"though it may still be imported via standard GConf command-line tools.\n"
+"The exported dump file may later be imported via :\n"
+"- Import assistant of a compatible Nautilus Actions Configuration Tool,\n"
+"- or via the gconftool-2 --load command-line tool."
+msgstr ""
+"Ce format a été introduit dans la série v 1.11 et devrait être le format "
+"recommandé pour les nouvelles actions exportées.\n"
+"Il ne garantit pas une compatibilité arrière avec les versions précédentes "
+"de l'outil de configuration des actions de Nautilus,\n"
+"bien qu'il puisse toujours être importé via les outils en ligne de commande "
+"standards GConf.\n"
+"Le fichier de sauvegarde exporté peut ensuite être importé via :\n"
+"- L'assistant d'importation de l'outil de configuration des actions de "
+"Nautilus,\n"
+"- ou par la commande gconftool-2 --load."
+
+#: ../src/nact/base-application.c:1292
+msgid "Unable to initialize the internationalization environment."
+msgstr "Impossible d'initialiser l'environnement d'internationalisation."
+
+#: ../src/nact/base-application.c:1301
+msgid "Unable to initialize the Gtk+ user interface."
+msgstr "Impossible d'initialiser l'interface utilisateur Gtk+."
+
+#: ../src/nact/base-application.c:1310
+msgid "Another instance of the application is already running."
+msgstr "Une autre instance de l'application est déjà en cours d'exécution."
+
+#: ../src/nact/base-application.c:1319
+msgid "No filename provided for the UI XML definition."
+msgstr "Aucun nom de fichier fourni pour la définition XML de l'interface."
+
+#. i18n: Unable to load the XML definition from <filename>
+#: ../src/nact/base-application.c:1329
+#, c-format
+msgid "Unable to load the XML definition from %s."
+msgstr "Impossible de charger la définition XML à partir de %s."
+
+#: ../src/nact/base-application.c:1342
+msgid "Unable to set the default icon for the application."
+msgstr "Impossible de définir l'icône par défaut pour l'application."
+
+#: ../src/nact/base-application.c:1351
+msgid "Unable to get the main window of the application."
+msgstr "Impossible d'obtenir la fenêtre principale de l'application."
+
+#: ../src/nact/base-assistant.c:577
+msgid "Are you sure you want to quit this assistant ?"
+msgstr "Voulez-vous vraiment quitter cet assistant ?"
+
+#: ../src/nact/base-window.c:1200
+#, c-format
+msgid "Unable to load %s XML definition."
+msgstr "Impossible de charger la définition XML de %s."
+
+#: ../src/nact/base-window.c:1286
+#, c-format
+msgid "Unable to load %s UI XML definition: %s"
+msgstr "Impossible de charger la définition XML de l'UI %s : %s"
+
+#: ../src/nact/egg-desktop-file.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "Le fichier n'est pas un fichier .desktop valide"
+
+#: ../src/nact/egg-desktop-file.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "Version de fichier .desktop « %s » non reconnue"
+
+#: ../src/nact/egg-desktop-file.c:958
+#, c-format
+msgid "Starting %s"
+msgstr "Démarrage de %s"
+
+#: ../src/nact/egg-desktop-file.c:1100
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "Le programme n'accepte pas de documents en ligne de commande"
+
+#: ../src/nact/egg-desktop-file.c:1168
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "Option de lancement non reconnue : %d"
+
+#: ../src/nact/egg-desktop-file.c:1373
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr ""
+"Impossible de transmettre des URI de document vers une entrée de bureau "
+"« Type=Link »"
+
+#: ../src/nact/egg-desktop-file.c:1394
+#, c-format
+msgid "Not a launchable item"
+msgstr "Cet élément ne peut être exécuté"
+
+#: ../src/nact/egg-sm-client.c:239
+msgid "Disable connection to session manager"
+msgstr "Désactiver la connexion vers le gestionnaire de session"
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "Specify file containing saved configuration"
+msgstr "Indiquer le fichier contenant la configuration enregistrée"
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "FILE"
+msgstr "FICHIER"
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "Specify session management ID"
+msgstr "Indiquer l'identificateur de gestion de session"
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "ID"
+msgstr "ID"
+
+#: ../src/nact/egg-sm-client.c:267
+msgid "Session management options:"
+msgstr "Options de la gestion de session :"
+
+#: ../src/nact/egg-sm-client.c:268
+msgid "Show session management options"
+msgstr "Affiche les options de la gestion de session"
+
+#: ../src/nact/nact-application.c:72
+msgid "Set it to run multiple instances of the program [unique]"
+msgstr ""
+"À paramétrer pour pouvoir lancer plusieurs instances du programme [unique]"
+
+#: ../src/nact/nact-application.c:74
+msgid "Output the version number, and exit gracefully [no]"
+msgstr "Affiche le numéro de version puis quitte proprement [no]"
+
+#: ../src/nact/nact-application.c:353
+msgid ""
+"Another instance of Nautilus Actions Configuration Tool is already running."
+msgstr ""
+"Une autre instance de l'outil de configuration des actions de Nautilus est "
+"déjà en cours d'exécution."
+
+#. i18n: another instance is already running: second line of error message
+#: ../src/nact/nact-application.c:355
+msgid "Please switch back to it."
+msgstr "Basculez vers celle-ci."
+
+#. static const gchar *thisfn = "nact_application_appli_get_application_name";
+#. g_debug( "%s: application=%p", thisfn, ( void * ) application );
+#. i18n: this is the application name, used in window title
+#: ../src/nact/nact-application.c:413
+msgid "Nautilus Actions Configuration Tool"
+msgstr "Outil de configuration des actions de Nautilus"
+
+#: ../src/nact/nact-assistant-export.c:674
+msgid "About to export selected items:"
+msgstr "Prêt à exporter les éléments sélectionnés :"
+
+#: ../src/nact/nact-assistant-export.c:688
+msgid "Into the destination folder:"
+msgstr "Dans le dossier de destination :"
+
+#: ../src/nact/nact-assistant-export.c:748
+msgid "Export canceled due to user action."
+msgstr "L'exportation a été annulée par l'utilisateur."
+
+#. i18n: result of the export assistant
+#: ../src/nact/nact-assistant-export.c:776
+msgid "Selected actions have been proceeded :"
+msgstr "Les actions sélectionnées ont été traitées :"
+
+#. i18n: action as been successfully exported to <filename>
+#: ../src/nact/nact-assistant-export.c:794
+msgid "Successfully exported as"
+msgstr "Exportation réussie dans"
+
+#: ../src/nact/nact-assistant-export.c:817
+msgid "You may not have write permissions on selected folder."
+msgstr ""
+"Il se peut que vous n'ayez pas les permissions d'écriture dans le dossier "
+"sélectionné."
+
+#. i18n: the title of the confirm page of the import assistant
+#: ../src/nact/nact-assistant-import.c:563
+msgid "About to import selected files:"
+msgstr "Prêt à importer les fichiers sélectionnés :"
+
+#. i18n: result of the import assistant
+#: ../src/nact/nact-assistant-import.c:788
+msgid "Selected files have been proceeded :"
+msgstr "Les fichiers sélectionnés ont été traités :"
+
+#. i18n: indicate that the file has been successfully imported
+#: ../src/nact/nact-assistant-import.c:806
+msgid "Import OK"
+msgstr "L'importation a réussi"
+
+#. i18n: this is the globally unique identifier and the label of the newly imported action
+#: ../src/nact/nact-assistant-import.c:812
+#, c-format
+msgid "UUID: %s\t%s"
+msgstr "UUID : %s\t%s"
+
+#. i18n: indicate that the file was not iported
+#: ../src/nact/nact-assistant-import.c:823
+msgid "Not imported"
+msgstr "Non importé"
+
+#: ../src/nact/nact.desktop.in.h:1
+msgid "Add items to the Nautilus popup menu"
+msgstr "Ajoute des entrées au menu contextuel de Nautilus"
+
+#: ../src/nact/nact.desktop.in.h:2
+msgid "Nautilus Actions Configuration"
+msgstr "Configuration des actions de Nautilus"
+
+#. i18n: The action <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:326
+#, c-format
+msgid "The action \"%s\" is about to be exported."
+msgstr "L'action « %s » est sur le point d'être exportée."
+
+#. i18n: The menu <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:329
+#, c-format
+msgid "The menu \"%s\" is about to be exported."
+msgstr "Le menu « %s » est sur le point d'être exporté."
+
+#: ../src/nact/nact-export-format.c:46
+msgid "_Ask me"
+msgstr "Me dem_ander"
+
+#: ../src/nact/nact-export-format.c:47
+msgid ""
+"You will be asked for the format to choose each time an item is about to be "
+"exported."
+msgstr ""
+"Le format vous sera demandé à chaque fois qu'un élément est sur le point "
+"d'être exporté."
+
+#: ../src/nact/nact-iaction-tab.c:515
+msgid "Menu"
+msgstr "Menu"
+
+#: ../src/nact/nact-iaction-tab.c:516
+msgid "<b>Menu properties</b>"
+msgstr "<b>Propriétés du menu</b>"
+
+#: ../src/nact/nact-iaction-tab.c:518
+msgid "Action"
+msgstr "Action"
+
+#: ../src/nact/nact-iaction-tab.c:519
+msgid "<b>Action properties</b>"
+msgstr "<b>Propriétés de l'action</b>"
+
+#: ../src/nact/nact-iaction-tab.c:663
+msgid "Caution: a label is mandatory for the action or the menu."
+msgstr ""
+"Attention : une étiquette est obligatoire pour cette action ou ce menu."
+
+#. i18n notes: when no icon is selected in the drop-down list
+#: ../src/nact/nact-iaction-tab.c:880
+msgid "None"
+msgstr "Aucune"
+
+#: ../src/nact/nact-iaction-tab.c:938
+msgid "Choosing an icon"
+msgstr "Choisir une icône"
+
+#. i18n: title of the FileChoose dialog when selecting an URI which
+#. * will be compare to Nautilus 'current_folder'
+#.
+#: ../src/nact/nact-ibackground-tab.c:567
+msgid "Select a folder"
+msgstr "Sélectionner un dossier"
+
+#: ../src/nact/nact-icommand-tab.c:413
+msgid "Caution: a label is mandatory for the profile."
+msgstr "Attention : une étiquette est obligatoire pour ce profil."
+
+#: ../src/nact/nact-icommand-tab.c:570
+msgid "Choosing a command"
+msgstr "Choisir une commande"
+
+#. i18n notes: example strings for the command preview
+#: ../src/nact/nact-icommand-tab.c:649
+msgid "/path/to"
+msgstr "/chemin/vers"
+
+#: ../src/nact/nact-icommand-tab.c:650
+msgid "file1.txt"
+msgstr "fichier1.txt"
+
+#: ../src/nact/nact-icommand-tab.c:650
+msgid "file2.txt"
+msgstr "fichier2.txt"
+
+#: ../src/nact/nact-icommand-tab.c:651
+msgid " folder1"
+msgstr " dossier1"
+
+#: ../src/nact/nact-icommand-tab.c:651
+msgid "folder2"
+msgstr "dossier2"
+
+#: ../src/nact/nact-icommand-tab.c:652
+msgid " file1.txt"
+msgstr " fichier1.txt"
+
+#: ../src/nact/nact-icommand-tab.c:652
+msgid "folder1"
+msgstr "dossier1"
+
+#: ../src/nact/nact-icommand-tab.c:654
+msgid "test.example.net"
+msgstr "test.exemple.fr"
+
+#: ../src/nact/nact-icommand-tab.c:655
+msgid "file.txt"
+msgstr "fichier.txt"
+
+#: ../src/nact/nact-icommand-tab.c:656
+msgid "folder"
+msgstr "dossier"
+
+#: ../src/nact/nact-icommand-tab.c:657
+msgid "8080"
+msgstr "8080"
+
+#: ../src/nact/nact-icommand-tab.c:661
+msgid "file:///path/to/file1.text"
+msgstr "file:///chemin/vers/fichier1.text"
+
+#: ../src/nact/nact-icommand-tab.c:662
+msgid "file:///path/to/file2.text"
+msgstr "file:///chemin/vers/fichier2.text"
+
+#: ../src/nact/nact-icommand-tab.c:663
+msgid "file:///path/to/a/dir"
+msgstr "file:///chemin/vers/un/dossier"
+
+#: ../src/nact/nact-icommand-tab.c:664
+msgid "file:///path/to/another/dir"
+msgstr "file:///chemin/vers/un/autre/dossier"
+
+#: ../src/nact/nact-icommand-tab.c:843
+msgid "e.g.,"
+msgstr "par ex.,"
+
+#: ../src/nact/nact-main-menubar.c:134 ../src/nact/nact-main-menubar.c:241
+msgid "_File"
+msgstr "_Fichier"
+
+#: ../src/nact/nact-main-menubar.c:135 ../src/nact/nact-main-menubar.c:245
+msgid "_Edit"
+msgstr "É_dition"
+
+#: ../src/nact/nact-main-menubar.c:136
+msgid "_View"
+msgstr "_Affichage"
+
+#: ../src/nact/nact-main-menubar.c:137
+msgid "_Toolbars"
+msgstr "_Barre d'outils"
+
+#: ../src/nact/nact-main-menubar.c:138 ../src/nact/nact-main-menubar.c:249
+msgid "_Tools"
+msgstr "_Outils"
+
+#: ../src/nact/nact-main-menubar.c:139
+msgid "_Maintainer"
+msgstr "_Mainteneur"
+
+#: ../src/nact/nact-main-menubar.c:140 ../src/nact/nact-main-menubar.c:253
+msgid "_Help"
+msgstr "Aid_e"
+
+#: ../src/nact/nact-main-menubar.c:142
+msgid "New _menu"
+msgstr "Nouveau _menu"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
+#: ../src/nact/nact-main-menubar.c:144
+msgid "Insert a new menu at the current position"
+msgstr "Insère un nouveau menu à la position actuelle"
+
+#: ../src/nact/nact-main-menubar.c:146
+msgid "_New action"
+msgstr "_Nouvelle action"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New action' item
+#: ../src/nact/nact-main-menubar.c:148
+msgid "Define a new action"
+msgstr "Définit une nouvelle action"
+
+#: ../src/nact/nact-main-menubar.c:150
+msgid "New _profile"
+msgstr "Nouveau _profil"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
+#: ../src/nact/nact-main-menubar.c:152
+msgid "Define a new profile attached to the current action"
+msgstr "Définit un nouveau profil lié à l'action actuelle"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Save' item
+#: ../src/nact/nact-main-menubar.c:156
+msgid ""
+"Record all the modified actions. Invalid actions will be silently ignored"
+msgstr ""
+"Enregistre toutes les actions modifiées. Les actions non valides sont "
+"ignorées sans avertissement."
+
+#. i18n: tooltip displayed in the status bar when selecting 'Quit' item
+#: ../src/nact/nact-main-menubar.c:160
+msgid "Quit the application"
+msgstr "Quitte l'application"
+
+#. i18n: tooltip displayed in the status bar when selecting the Cut item
+#: ../src/nact/nact-main-menubar.c:164
+msgid "Cut the selected item(s) to the clipboard"
+msgstr "Coupe les éléments sélectionnés vers le presse-papiers"
+
+#. i18n: tooltip displayed in the status bar when selecting the Copy item
+#: ../src/nact/nact-main-menubar.c:168
+msgid "Copy the selected item(s) to the clipboard"
+msgstr "Copie les éléments sélectionnés vers le presse-papiers"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste item
+#: ../src/nact/nact-main-menubar.c:172
+msgid "Insert the content of the clipboard just before the current position"
+msgstr "Insère le contenu du presse-papiers juste avant la position actuelle"
+
+#: ../src/nact/nact-main-menubar.c:174
+msgid "Paste _into"
+msgstr "Coller _dans"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste Into item
+#: ../src/nact/nact-main-menubar.c:176
+msgid "Insert the content of the clipboard as first child of the current item"
+msgstr ""
+"Insère le contenu du presse-papiers comme premier fils de l'élément actuel"
+
+#: ../src/nact/nact-main-menubar.c:178
+msgid "D_uplicate"
+msgstr "D_upliquer"
+
+#. i18n: tooltip displayed in the status bar when selecting the Duplicate item
+#: ../src/nact/nact-main-menubar.c:180
+msgid "Duplicate the selected item(s)"
+msgstr "Duplique les éléments sélectionnés"
+
+#. i18n: tooltip displayed in the status bar when selecting the Delete item
+#: ../src/nact/nact-main-menubar.c:184
+msgid "Delete the selected item(s)"
+msgstr "Supprime les éléments sélectionnés"
+
+#: ../src/nact/nact-main-menubar.c:186
+msgid "_Reload the items"
+msgstr "_Recharger les éléments"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
+#: ../src/nact/nact-main-menubar.c:188
+msgid ""
+"Cancel your current modifications and reload the initial list of menus and "
+"actions"
+msgstr ""
+"Annule les modifications effectuées et recharge la liste initiale des menus "
+"et des actions"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
+#: ../src/nact/nact-main-menubar.c:192
+msgid "Edit your preferences"
+msgstr "Modifie vos préférences"
+
+#: ../src/nact/nact-main-menubar.c:194
+msgid "_Expand all"
+msgstr "Tout _développer"
+
+#. i18n: tooltip displayed in the status bar when selecting the Expand all item
+#: ../src/nact/nact-main-menubar.c:196
+msgid "Entirely expand the items hierarchy"
+msgstr "Développe entièrement la hiérarchie des éléments"
+
+#: ../src/nact/nact-main-menubar.c:198
+msgid "_Collapse all"
+msgstr "Tout _réduire"
+
+#. i18n: tooltip displayed in the status bar when selecting the Collapse all item
+#: ../src/nact/nact-main-menubar.c:200
+msgid "Entirely collapse the items hierarchy"
+msgstr "Réduit entièrement la hiérarchie des éléments"
+
+#: ../src/nact/nact-main-menubar.c:203
+msgid "_Import assistant..."
+msgstr "Assistant d'_importation..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Import item
+#: ../src/nact/nact-main-menubar.c:205
+msgid ""
+"Import one or more actions from external (XML) files into your configuration"
+msgstr ""
+"Importe une ou plusieurs actions dans votre configuration à partir de "
+"fichiers (XML) externes"
+
+#: ../src/nact/nact-main-menubar.c:207
+msgid "E_xport assistant..."
+msgstr "Assistant d'_exportation..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Export item
+#: ../src/nact/nact-main-menubar.c:209
+msgid ""
+"Export one or more actions from your configuration to external XML files"
+msgstr ""
+"Exporte une ou plusieurs actions de votre configuration vers des fichiers "
+"XML externes"
+
+#: ../src/nact/nact-main-menubar.c:212
+msgid "_Dump the selection"
+msgstr "Ex_porte la sélection"
+
+#. i18n: tooltip displayed in the status bar when selecting the Dump selection item
+#: ../src/nact/nact-main-menubar.c:214
+msgid "Recursively dump selected items"
+msgstr "Exporte récursivement les éléments sélectionnés"
+
+#: ../src/nact/nact-main-menubar.c:216
+msgid "_Brief tree store dump"
+msgstr "Exporter _brièvement le stockage de l'arborescence"
+
+#. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
+#: ../src/nact/nact-main-menubar.c:218
+msgid "Briefly dump the tree store"
+msgstr "Exporte brièvement le stockage de l'arborescence"
+
+#: ../src/nact/nact-main-menubar.c:220
+msgid "_List modified items"
+msgstr "_Afficher les éléments modifiés"
+
+#. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
+#: ../src/nact/nact-main-menubar.c:222
+msgid "List the modified items"
+msgstr "Affiche les éléments modifiés"
+
+#: ../src/nact/nact-main-menubar.c:224
+msgid "_Dump the clipboard"
+msgstr "Ex_porte le presse-papiers"
+
+#. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
+#: ../src/nact/nact-main-menubar.c:226
+msgid "Dump the content of the clipboard object"
+msgstr "Exporte le contenu de l'objet presse-papiers"
+
+#. i18n: tooltip displayed in the status bar when selecting the Help item
+#: ../src/nact/nact-main-menubar.c:231
+msgid "Display help about this program"
+msgstr "Affiche de l'aide à propos de ce programme"
+
+#. i18n: tooltip displayed in the status bar when selecting the About item
+#: ../src/nact/nact-main-menubar.c:235
+msgid "Display informations about this program"
+msgstr "Affiche des informations au sujet de ce programme"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
+#: ../src/nact/nact-main-menubar.c:243
+msgid "Display the File toolbar"
+msgstr "Affiche la barre d'outils Fichier"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
+#: ../src/nact/nact-main-menubar.c:247
+msgid "Display the Edit toolbar"
+msgstr "Affiche la barre d'outils Édition"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
+#: ../src/nact/nact-main-menubar.c:251
+msgid "Display the Tools toolbar"
+msgstr "Affiche la barre d'outils Outils"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
+#: ../src/nact/nact-main-menubar.c:255
+msgid "Display the Help toolbar"
+msgstr "Affiche la barre d'outils Aide"
+
+#. i18n: note the space at the beginning of the sentence
+#: ../src/nact/nact-main-menubar.c:490
+#, c-format
+msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
+msgstr " %d menu(s), %d action(s), %d profil(s) sont actuellement chargés"
+
+#: ../src/nact/nact-main-menubar.c:858
+msgid "New profile"
+msgstr "Nouveau profil"
+
+#: ../src/nact/nact-main-menubar.c:1277
+msgid "Not all items have been deleted as following ones are not modifiable:"
+msgstr ""
+"Tous les éléments n'ont pas été supprimés car les éléments suivants ne sont "
+"pas modifiables :"
+
+#: ../src/nact/nact-main-window.c:1305
+msgid ""
+"Reloading a fresh list of actions requires that you give up with your "
+"current modifications."
+msgstr ""
+"Si vous rechargez une nouvelle liste d'actions, toutes les modifications "
+"effectuées seront perdues."
+
+#: ../src/nact/nact-main-window.c:1308
+msgid "Do you really want to do this ?"
+msgstr "Voulez-vous vraiment faire cela ?"
+
+#: ../src/nact/nact-main-window.c:1331
+msgid ""
+"One or more actions have been modified in the filesystem.\n"
+"You could keep to work with your current list of actions, or you may want to "
+"reload a fresh one."
+msgstr ""
+"Une ou plusieurs actions ont été modifiées sur le système de fichiers.\n"
+"Vous pouvez soit continuer de travailler sur la liste actuelle des actions, "
+"soit recharger une liste actualisée."
+
+#: ../src/nact/nact-main-window.c:1338
+msgid ""
+"Note that reloading a fresh list of actions requires that you give up with "
+"your current modifications."
+msgstr ""
+"Si vous rechargez une nouvelle liste d'actions, toutes les modifications "
+"effectuées seront perdues."
+
+#: ../src/nact/nact-main-window.c:1344
+msgid "Do you want to reload a fresh list of actions ?"
+msgstr "Souhaitez-vous recharger une liste d'actions actualisée ?"
+
+#: ../src/nact/nact-providers-list.c:117
+msgid "To be read"
+msgstr "À lire"
+
+#: ../src/nact/nact-providers-list.c:125
+msgid "Writable"
+msgstr "Modifiable"
+
+#: ../src/nact/nact-providers-list.c:133
+msgid "I/O Provider"
+msgstr "Fournisseur d'entrées/sorties"
+
+#. i18n: default name when the I/O providers doesn't provide one
+#: ../src/nact/nact-providers-list.c:210
+msgid "no name"
+msgstr "sans nom"
+
+#. i18n: name displayed when the corresponding I/O provider is unavailable at runtime
+#: ../src/nact/nact-providers-list.c:214
+msgid "unavailable I/O provider"
+msgstr "fournisseur d'entrées/sorties indisponible"
+
+#. i18n notes : description of 'file' scheme
+#: ../src/nact/nact-schemes-list.c:244
+msgid "Local files"
+msgstr "Fichiers locaux"
+
+#. i18n notes : description of 'sftp' scheme
+#: ../src/nact/nact-schemes-list.c:246
+msgid "SSH files"
+msgstr "Fichiers SSH"
+
+#. i18n notes : description of 'smb' scheme
+#: ../src/nact/nact-schemes-list.c:248
+msgid "Windows files"
+msgstr "Fichiers Windows"
+
+#. i18n notes : description of 'ftp' scheme
+#: ../src/nact/nact-schemes-list.c:250
+msgid "FTP files"
+msgstr "Fichiers FTP"
+
+#. i18n notes : description of 'dav' scheme
+#: ../src/nact/nact-schemes-list.c:252
+msgid "WebDAV files"
+msgstr "Fichiers WebDAV"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../src/nact/nact-schemes-list.c:784
+msgid "new-scheme"
+msgstr "nouveau-protocole"
+
+#: ../src/nact/nact-schemes-list.c:785
+msgid "New scheme description"
+msgstr "Description du nouveau protocole"
+
+#: ../src/nact/nact-tree-model-dnd.c:120
+msgid "Unable to drop a profile here"
+msgstr "Impossible de déposer un profil ici"
+
+#: ../src/nact/nact-tree-model-dnd.c:121
+msgid "Unable to drop an action or a menu here"
+msgstr "Impossible de déposer une action ou un menu ici"
+
+#: ../src/nact/nact-tree-model-dnd.c:122
+msgid "Unable to drop here as parent is not writable"
+msgstr "Impossible de déposer ici car le parent n'est pas modifiable"
+
+#: ../src/nact/nact-tree-model-dnd.c:123
+msgid "Unable to drop here as level zero is not writable"
+msgstr "Impossible de déposer ici car le niveau zéro n'est pas modifiable"
+
+#: ../src/nact/nact-tree-model-dnd.c:974
+msgid "Some messages have occurred during drop operation."
+msgstr "Des messages sont survenus pendant le dépôt."
+
+#: ../src/nact/nact-window.c:358
+msgid "An error has occured when trying to save the item"
+msgstr "Une erreur est survenue lors de l'enregistrement de cet élément"
+
+#: ../src/nact/nact-window.c:404
+msgid "An error has occured when trying to delete the item"
+msgstr "Une erreur est survenue lors de la suppression de cet élément"
+
+#: ../src/nact/nact-window.c:461
+#, c-format
+msgid "Some items have been modified."
+msgstr "Certains éléments ont été modifiés."
+
+#: ../src/nact/nact-window.c:462
+msgid "Are you sure you want to quit without saving them ?"
+msgstr "Voulez-vous vraiment quitter sans les enregistrer ?"
+
+#. i18n: title of the About dialog box, when seen from Nautilus file manager
+#. i18n: label of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:294
+#: ../src/plugin-menu/nautilus-actions.c:810
+msgid "Nautilus Actions"
+msgstr "Actions Nautilus"
+
+#. i18n: tooltip of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:812
+msgid ""
+"A submenu which embeds the currently available Nautilus Actions extensions"
+msgstr ""
+"Un sous-menu contenant les extensions actions Nautilus actuellement "
+"disponibles"
+
+#: ../src/plugin-menu/nautilus-actions.c:859
+msgid "About Nautilus Actions"
+msgstr "À propos des actions Nautilus"
+
+#: ../src/plugin-menu/nautilus-actions.c:860
+msgid "Display information about Nautilus Actions"
+msgstr "Affiche des informations au sujet des actions Nautilus"
+
+#: ../src/test/test-reader.c:49
+msgid "The URI of the file to be imported"
+msgstr "L'URI du fichier à importer"
+
+#: ../src/test/test-reader.c:49 ../src/utils/nautilus-actions-new.c:112
+#: ../src/utils/nautilus-actions-new.c:121
+#: ../src/utils/nautilus-actions-run.c:61
+msgid "<URI>"
+msgstr "<URI>"
+
+#: ../src/test/test-reader.c:56 ../src/utils/nautilus-actions-new.c:128
+#: ../src/utils/nautilus-actions-run.c:68
+#: ../src/utils/nautilus-actions-schemas.c:67
+msgid "Output the version number"
+msgstr "Affiche le numéro de version"
+
+#: ../src/test/test-reader.c:106
+msgid "Import a file."
+msgstr "Importer un fichier."
+
+#: ../src/test/test-reader.c:120 ../src/utils/nautilus-actions-new.c:257
+#: ../src/utils/nautilus-actions-run.c:190
+#: ../src/utils/nautilus-actions-schemas.c:168
+msgid ""
+"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
+"mail to <maintainer@nautilus-actions.org>.\n"
+msgstr ""
+"Les rapports d'anomalie peuvent être soumis à http://bugzilla.gnome.org. "
+"Vous pouvez aussi écrire directement à <maintainer@nautilus-actions.org>.\n"
+
+#: ../src/test/test-reader.c:128 ../src/utils/nautilus-actions-new.c:270
+#: ../src/utils/nautilus-actions-run.c:198
+#: ../src/utils/nautilus-actions-schemas.c:176
+msgid "Miscellaneous options"
+msgstr "Options diverses"
+
+#: ../src/test/test-reader.c:149 ../src/utils/nautilus-actions-new.c:163
+#: ../src/utils/nautilus-actions-run.c:109
+#: ../src/utils/nautilus-actions-schemas.c:100
+#, c-format
+msgid "Syntax error: %s\n"
+msgstr "Erreur de syntaxe : %s\n"
+
+#: ../src/test/test-reader.c:164
+#, c-format
+msgid "Error: uri is mandatory.\n"
+msgstr "Erreur : un URI est obligatoire.\n"
+
+#: ../src/test/test-reader.c:176 ../src/utils/nautilus-actions-new.c:390
+#: ../src/utils/nautilus-actions-run.c:433
+#: ../src/utils/nautilus-actions-schemas.c:284
+#, c-format
+msgid "Try %s --help for usage.\n"
+msgstr "Essayez %s --help pour obtenir les options d'utilisation.\n"
+
+#: ../src/utils/nautilus-actions-new.c:76
 msgid "The label of the menu item (mandatory)"
 msgstr "Étiquette de l'élément de menu (obligatoire)"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:79
-#: ../nautilus-actions/utils/nautilus-actions-new.c:81
-#: ../nautilus-actions/utils/nautilus-actions-new.c:95
+#: ../src/utils/nautilus-actions-new.c:76
+#: ../src/utils/nautilus-actions-new.c:78
+#: ../src/utils/nautilus-actions-new.c:92
+#: ../src/utils/nautilus-actions-run.c:59
 msgid "<STRING>"
 msgstr "<CHAÎNE>"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:83
+#: ../src/utils/nautilus-actions-new.c:80
 msgid "The icon of the menu item (filename or themed icon)"
 msgstr "L'icône de l'élément de menu (nom du fichier ou icône d'un thème)"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:83
+#: ../src/utils/nautilus-actions-new.c:80
 msgid "<PATH|NAME>"
 msgstr "<CHEMIN|NOM>"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:85
+#: ../src/utils/nautilus-actions-new.c:82
 msgid "Set it if the action should be enabled [default]"
 msgstr "À paramétrer si l'action doit être activée [par défaut]"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:87
+#: ../src/utils/nautilus-actions-new.c:84
 msgid "Set it if the action should be disabled at creation"
 msgstr "À paramétrer si l'action doit être désactivée à sa création"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:89
+#: ../src/utils/nautilus-actions-new.c:86
 msgid "Set it if the action should be displayed in selection menus"
 msgstr ""
 "À paramétrer si l'action doit être affichée dans les menus des sélections"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:91
+#: ../src/utils/nautilus-actions-new.c:88
 msgid "Set it if the action should be displayed in folders menus"
 msgstr ""
 "À paramétrer si l'action doit être affichée dans les menus des dossiers"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:93
+#: ../src/utils/nautilus-actions-new.c:90
 msgid "Set it if the action should be displayed in toolbar"
 msgstr "À paramétrer si l'action doit être affichée dans la barre d'outils"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:95
+#: ../src/utils/nautilus-actions-new.c:92
 msgid "The label of the action item in the toolbar"
 msgstr "L'étiquette de l'élément action dans la barre d'outils"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:97
+#: ../src/utils/nautilus-actions-new.c:94
 msgid "<PATH>"
 msgstr "<CHEMIN>"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:99
+#: ../src/utils/nautilus-actions-new.c:96
 msgid "<PARAMETERS>"
 msgstr "<PARAMÈTRES>"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:101
+#: ../src/utils/nautilus-actions-new.c:98
 msgid ""
 "A pattern to match selected items against. May include wildcards (* or ?). "
 "You must set one option for each pattern you need"
@@ -1898,16 +2437,16 @@ msgstr ""
 "jokers (* ou ?). Vous devez définir une option pour chaque motif dont vous "
 "avez besoin."
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:101
-#: ../nautilus-actions/utils/nautilus-actions-new.c:105
+#: ../src/utils/nautilus-actions-new.c:98
+#: ../src/utils/nautilus-actions-new.c:102
 msgid "<EXPR>"
 msgstr "<EXPR>"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:103
+#: ../src/utils/nautilus-actions-new.c:100
 msgid "Set it if the previous patterns are case sensitive"
 msgstr "À paramétrer si les motifs précédents sont sensibles à la casse"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:105
+#: ../src/utils/nautilus-actions-new.c:102
 msgid ""
 "A pattern to match selected items mimetype against. May include wildcards (* "
 "or ?). You must set one option for each pattern you need"
@@ -1916,11 +2455,11 @@ msgstr ""
 "pouvant inclure les jokers (* ou ?). Vous devez définir une option pour "
 "chaque motif dont vous avez besoin."
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:107
+#: ../src/utils/nautilus-actions-new.c:104
 msgid "Set it if the selection must only contain files"
 msgstr "À paramétrer si la sélection ne doit contenir que des fichiers"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:109
+#: ../src/utils/nautilus-actions-new.c:106
 msgid ""
 "Set it if the selection must only contain folders. Specify both '--accept-"
 "files' and '--accept-dirs' options if selection can contain both types of "
@@ -1930,11 +2469,11 @@ msgstr ""
 "la fois les options « --accept-files » et « --accept-dirs » si la sélection "
 "peut contenir les deux types d'objets."
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:111
+#: ../src/utils/nautilus-actions-new.c:108
 msgid "Set it if the selection can have several items"
 msgstr "À paramétrer si la sélection peut contenir plusieurs éléments"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:113
+#: ../src/utils/nautilus-actions-new.c:110
 msgid ""
 "A valid GIO scheme where the selected files should be located. You must set "
 "one option for each scheme you need"
@@ -1942,11 +2481,11 @@ msgstr ""
 "Un protocole GIO valide permettant d'atteindre les fichiers sélectionnés. "
 "Vous devez définir une option pour chaque protocole dont vous avez besoin."
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:113
+#: ../src/utils/nautilus-actions-new.c:110
 msgid "<SCHEME>"
 msgstr "<PROTOCOLE>"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:115
+#: ../src/utils/nautilus-actions-new.c:112
 msgid ""
 "The URI of a directory for which folders or toolbar action will be "
 "displayed. You must set one option for each folder you need"
@@ -1955,16 +2494,11 @@ msgstr ""
 "d'outils est affichée. Vous devez paramétrer une option pour chaque dossier "
 "souhaité."
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:115
-#: ../nautilus-actions/utils/nautilus-actions-new.c:124
-msgid "<URI>"
-msgstr "<URI>"
-
-#: ../nautilus-actions/utils/nautilus-actions-new.c:122
+#: ../src/utils/nautilus-actions-new.c:119
 msgid "Store the newly created action as a GConf configuration"
 msgstr "Enregistrer la nouvelle action dans la configuration GConf"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:124
+#: ../src/utils/nautilus-actions-new.c:121
 msgid ""
 "The URI of the folder where to write the new action as a GConf dump output "
 "[default: stdout]"
@@ -1972,42 +2506,31 @@ msgstr ""
 "L'URI du dossier dans lequel écrire la nouvelle action comme sortie brute "
 "GConf [par défaut : stdout]"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:131
-#: ../nautilus-actions/utils/nautilus-actions-schemas.c:64
-msgid "Output the version number"
-msgstr "Affiche le numéro de version"
-
-#: ../nautilus-actions/utils/nautilus-actions-new.c:166
-#: ../nautilus-actions/utils/nautilus-actions-schemas.c:97
-#, c-format
-msgid "Syntax error: %s\n"
-msgstr "Erreur de syntaxe : %s\n"
-
-#: ../nautilus-actions/utils/nautilus-actions-new.c:179
+#: ../src/utils/nautilus-actions-new.c:176
 #, c-format
 msgid "Error: an action label is mandatory.\n"
 msgstr "Erreur : une étiquette d'action est obligatoire.\n"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:184
+#: ../src/utils/nautilus-actions-new.c:181
 #, c-format
 msgid "Error: '--enabled' and '--disabled' options cannot both be specified.\n"
 msgstr ""
 "Erreur : les options « --enabled » et « --disabled » ne peuvent être utilisées "
 "en même temps.\n"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:191
+#: ../src/utils/nautilus-actions-new.c:188
 #, c-format
 msgid "Error: only one output option may be specified.\n"
 msgstr "Erreur : une seule option de sortie doit être indiquée.\n"
 
 #. i18n: Action <action_label> written to...
-#: ../nautilus-actions/utils/nautilus-actions-new.c:204
+#: ../src/utils/nautilus-actions-new.c:201
 #, c-format
 msgid "Action '%s' succesfully written to GConf configuration.\n"
 msgstr "L'action « %s » a été écrite avec succès dans la configuration GConf.\n"
 
 #. i18n: Action <action_label> written to <output_filename>...
-#: ../nautilus-actions/utils/nautilus-actions-new.c:211
+#: ../src/utils/nautilus-actions-new.c:209
 #, c-format
 msgid ""
 "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n"
@@ -2015,7 +2538,7 @@ msgstr ""
 "L'action « %s » a été écrite avec succès dans %s et elle est prête à être "
 "importée dans l'outil de configuration des actions de Nautilus.\n"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:241
+#: ../src/utils/nautilus-actions-new.c:240
 msgid ""
 "Define a new action.\n"
 "\n"
@@ -2034,40 +2557,71 @@ msgstr ""
 "  Vous pouvez aussi choisir d'écrire directement l'action dans votre "
 "configuration GConf."
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:258
-#: ../nautilus-actions/utils/nautilus-actions-schemas.c:165
-msgid ""
-"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
-"mail to <maintainer@nautilus-actions.org>.\n"
-msgstr ""
-"Les rapports d'anomalie peuvent être soumis à http://bugzilla.gnome.org. "
-"Vous pouvez aussi écrire directement à <maintainer@nautilus-actions.org>.\n"
-
-#: ../nautilus-actions/utils/nautilus-actions-new.c:266
+#: ../src/utils/nautilus-actions-new.c:265
 msgid "Output of the program"
 msgstr "Sortie du programme"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:266
+#: ../src/utils/nautilus-actions-new.c:265
 msgid "Choose where the program creates the action"
 msgstr "Choisit où le programme crée l'action"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:271
-#: ../nautilus-actions/utils/nautilus-actions-schemas.c:173
-msgid "Miscellaneous options"
-msgstr "Options diverses"
+#: ../src/utils/nautilus-actions-run.c:59
+msgid "The internal identifiant of the action to be launched"
+msgstr "L'identifiant interne de l'action qui doit être lancée"
 
-#: ../nautilus-actions/utils/nautilus-actions-new.c:399
-#: ../nautilus-actions/utils/nautilus-actions-schemas.c:280
+#: ../src/utils/nautilus-actions-run.c:61
+msgid ""
+"A target, file or folder, for the action. More than one options may be "
+"specified"
+msgstr ""
+"Une cible, fichier ou répertoire, pour l'action. Plusieurs options peuvent "
+"être spécifiées."
+
+#: ../src/utils/nautilus-actions-run.c:124
 #, c-format
-msgid "Try %s --help for usage.\n"
-msgstr "Essayez %s --help pour obtenir les options d'utilisation.\n"
+msgid "Error: action id is mandatory.\n"
+msgstr "Erreur : un identifiant d'action est obligatoire.\n"
+
+#: ../src/utils/nautilus-actions-run.c:176
+msgid "Execute an action on the specified target."
+msgstr "Exécuter une action sur la cible spécifiée."
+
+#: ../src/utils/nautilus-actions-run.c:223
+#, c-format
+msgid "Error: action '%s' doesn't exist.\n"
+msgstr "Erreur : l'action « %s » n'existe pas.\n"
+
+#: ../src/utils/nautilus-actions-run.c:228
+#, c-format
+msgid "Error: action '%s' is disabled.\n"
+msgstr "Erreur : l'action « %s » est désactivée.\n"
+
+#: ../src/utils/nautilus-actions-run.c:236
+#, c-format
+msgid "Error: action '%s' is not valid.\n"
+msgstr "Erreur : l'action « %s » n'est pas valide.\n"
+
+#: ../src/utils/nautilus-actions-run.c:271
+#, c-format
+msgid "Error: unable to get a connection to session DBus: %s"
+msgstr "Erreur : impossible de se connecter à la session DBus : %s"
+
+#: ../src/utils/nautilus-actions-run.c:282
+#, c-format
+msgid "Error: unable to get a proxy on %s service"
+msgstr "Erreur : impossible d'obtenir un serveur mandataire pour le service %s"
+
+#: ../src/utils/nautilus-actions-run.c:292
+#, c-format
+msgid "Error on GetSelectedPaths call: %s"
+msgstr "Erreur lors de l'appel à GetSelectedPaths : %s"
 
 #. { "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE    , &output_gconf   , N_("Writes the Nautilus Actions schema in GConf"), NULL },
 #. { "output-filename"      , 'o', 0, G_OPTION_ARG_FILENAME, &output_fname   , N_("The file where to write the GConf schema ('-' for stdout)"), N_("FILENAME") },
-#: ../nautilus-actions/utils/nautilus-actions-schemas.c:57
+#: ../src/utils/nautilus-actions-schemas.c:60
 msgid "Output the schema on stdout"
 msgstr "Afficher le schéma sur stdout"
 
-#: ../nautilus-actions/utils/nautilus-actions-schemas.c:148
+#: ../src/utils/nautilus-actions-schemas.c:151
 msgid "Output the Nautilus Actions GConf schema on stdout."
-msgstr "Affiche le schéma GConf des actions Nautilus sur stdout"
+msgstr "Affiche le schéma GConf des actions Nautilus sur stdout."
