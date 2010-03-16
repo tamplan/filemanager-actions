@@ -1,7 +1,8 @@
 2009-03-16 Pierre Wieser <pwieser@trychlos.org>
 
-	* src/utils/nautilus-actions-new.c (output_to_stdout):
-	Output the new action to stdout.
+	* src/utils/nautilus-actions-new.c
+	(output_to_stdout): Output the new action to stdout.
+	(output_to_gconf): Output the new action to GConf.
 
 	* src/io-xml/naxml-writer.c (naxml_writer_write_start):
 	Add attribute to list node, thus fixing writing of action.

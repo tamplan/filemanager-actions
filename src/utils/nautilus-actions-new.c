@@ -140,8 +140,8 @@ static GOptionEntry misc_entries[] = {
 static GOptionEntry   *build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds );
 static GOptionContext *init_options( void );
 static NAObjectAction *get_action_from_cmdline( void );
+static gboolean        output_to_gconf( NAObjectAction *action, GSList **msg );
 static gboolean        output_to_stdout( const NAObjectAction *action, GSList **msgs );
-static gboolean        write_to_gconf( NAObjectAction *action, GSList **msg );
 static void            exit_with_usage( void );
 
 int
@@ -229,7 +229,7 @@ main( int argc, char** argv )
 	action = get_action_from_cmdline();
 
 	if( output_gconf ){
-		if( write_to_gconf( action, &msg )){
+		if( output_to_gconf( action, &msg )){
 			/* i18n: Action <action_label> written to...*/
 			g_print( _( "Action '%s' succesfully written to GConf configuration.\n" ), label );
 		}
@@ -457,6 +457,38 @@ get_action_from_cmdline( void )
 	return( action );
 }
 
+/*
+ * initialize GConf as an I/O provider
+ * then writes the action
+ */
+static gboolean
+output_to_gconf( NAObjectAction *action, GSList **msgs )
+{
+	NAUpdater *updater;
+	GList *providers;
+	NAIOProvider *provider;
+	guint ret;
+	gboolean code;
+
+	updater = na_updater_new();
+	providers = na_io_provider_get_providers_list( NA_PIVOT( updater ));
+	provider = na_io_provider_find_provider_by_id( providers, "na-gconf" );
+
+	if( provider ){
+		na_object_set_provider( action, provider );
+		ret = na_updater_write_item( updater, NA_OBJECT_ITEM( action ), msgs );
+		code = ( ret == NA_IIO_PROVIDER_CODE_OK );
+
+	} else {
+		*msgs = g_slist_append( *msgs, _( "Unable to find 'na-gconf' provider." ));
+		code = FALSE;
+	}
+
+	g_object_unref( updater );
+
+	return( code );
+}
+
 static gboolean
 output_to_stdout( const NAObjectAction *action, GSList **msgs )
 {
@@ -478,25 +510,6 @@ output_to_stdout( const NAObjectAction *action, GSList **msgs )
 	g_object_unref( updater );
 
 	return( ret );
-}
-
-/*
- * initialize GConf as an I/O provider
- * then writes the action
- */
-static gboolean
-write_to_gconf( NAObjectAction *action, GSList **msg )
-{
-	NAUpdater *updater;
-	guint ret;
-
-	updater = na_updater_new();
-
-	ret = na_updater_write_item( updater, NA_OBJECT_ITEM( action ), msg );
-
-	g_object_unref( updater );
-
-	return( ret == NA_IIO_PROVIDER_CODE_OK );
 }
 
 /*
