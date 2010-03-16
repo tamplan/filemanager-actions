@@ -1,3 +1,8 @@
+2009-03-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/io-xml/naxml-writer.c (naxml_writer_write_start):
+	Add attribute to list node, thus fixing writing of action.
+
 2009-03-15 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/io-xml/naxml-writer.c (naxml_writer_write_start):

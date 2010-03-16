@@ -70,21 +70,13 @@ struct NAXMLWriterPrivate {
 	ExportFormatFn  *fn_str;
 	gchar           *buffer;
 
-	/* the list node is parent of all entry nodes
-	 * it is set in build_xml_doc() to be used as a parent in each
-	 * entry node
-	 */
+	xmlNodePtr       root_node;
 	xmlNodePtr       list_node;
 
 	/* nodes created in write_data_schema_v2(), used in write_data_schema_v1()
 	 */
 	xmlNodePtr       schema_node;
 	xmlNodePtr       locale_node;
-
-	/* when exporting a profile
-	 * it is set in write_done when exporting a profile
-	 */
-	NAObjectAction  *action;
 };
 
 /* the association between an export format and the functions
@@ -93,6 +85,7 @@ struct ExportFormatFn {
 	gchar  *format;
 	gchar  *root_node;
 	gchar  *list_node;
+	void ( *write_list_attribs_fn )( NAXMLWriter *, const NAObjectItem * );
 	gchar  *element_node;
 	void ( *write_data_fn )( NAXMLWriter *, const NAObjectId *, const NADataBoxed * );
 };
@@ -107,6 +100,7 @@ static void            instance_finalize( GObject *object );
 
 static void            write_data_schema_v1( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed );
 static void            write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed );
+static void            write_list_attribs_dump( NAXMLWriter *writer, const NAObjectItem *object );
 static void            write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed );
 
 static xmlDocPtr       build_xml_doc( NAXMLWriter *writer );
@@ -120,18 +114,21 @@ static ExportFormatFn st_export_format_fn[] = {
 	{ NAXML_FORMAT_GCONF_SCHEMA_V1,
 					NAXML_KEY_SCHEMA_ROOT,
 					NAXML_KEY_SCHEMA_LIST,
+					NULL,
 					NAXML_KEY_SCHEMA_NODE,
 					write_data_schema_v1 },
 
 	{ NAXML_FORMAT_GCONF_SCHEMA_V2,
 					NAXML_KEY_SCHEMA_ROOT,
 					NAXML_KEY_SCHEMA_LIST,
+					NULL,
 					NAXML_KEY_SCHEMA_NODE,
 					write_data_schema_v2 },
 
 	{ NAXML_FORMAT_GCONF_ENTRY,
 					NAXML_KEY_DUMP_ROOT,
 					NAXML_KEY_DUMP_LIST,
+					write_list_attribs_dump,
 					NAXML_KEY_DUMP_NODE,
 					write_data_dump },
 
@@ -277,7 +274,6 @@ naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferPar
 		writer->private->exported = parms->exported;
 		writer->private->messages = parms->messages;
 		writer->private->fn_str = find_export_format_fn( parms->format );
-		writer->private->action = NULL;
 		writer->private->buffer = NULL;
 
 		if( !writer->private->fn_str ){
@@ -327,7 +323,6 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *
 		writer->private->exported = parms->exported;
 		writer->private->messages = parms->messages;
 		writer->private->fn_str = find_export_format_fn( parms->format );
-		writer->private->action = NULL;
 		writer->private->buffer = NULL;
 
 		if( !writer->private->fn_str ){
@@ -360,14 +355,10 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *
 static xmlDocPtr
 build_xml_doc( NAXMLWriter *writer )
 {
-	xmlNodePtr root_node;
-
 	writer->private->doc = xmlNewDoc( BAD_CAST( "1.0" ));
 
-	root_node = xmlNewNode( NULL, BAD_CAST( writer->private->fn_str->root_node ));
-	xmlDocSetRootElement( writer->private->doc, root_node );
-
-	writer->private->list_node = xmlNewChild( root_node, NULL, BAD_CAST( writer->private->fn_str->list_node ), NULL );
+	writer->private->root_node = xmlNewNode( NULL, BAD_CAST( writer->private->fn_str->root_node ));
+	xmlDocSetRootElement( writer->private->doc, writer->private->root_node );
 
 	na_ifactory_provider_write_item(
 			NA_IFACTORY_PROVIDER( writer->private->provider ),
@@ -381,13 +372,20 @@ build_xml_doc( NAXMLWriter *writer )
 guint
 naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object, GSList **messages  )
 {
-	static const gchar *thisfn = "naxml_writer_write_start";
-	NADataBoxed *boxed;
 	NAXMLWriter *writer;
 
-	if( NA_IS_OBJECT_ITEM( object )){
+	g_debug( "naxml_writer_write_start: object=%p (%s)", ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
+	if( NA_IS_OBJECT_ITEM( object )){
 		na_object_dump( object );
+
+		writer = NAXML_WRITER( writer_data );
+
+		writer->private->list_node = xmlNewChild( writer->private->root_node, NULL, BAD_CAST( writer->private->fn_str->list_node ), NULL );
+
+		if( writer->private->fn_str->write_list_attribs_fn ){
+			( *writer->private->fn_str->write_list_attribs_fn )( writer, NA_OBJECT_ITEM( object ));
+		}
 	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );
@@ -396,13 +394,11 @@ naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data,
 guint
 naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages )
 {
-	guint code;
 	NAXMLWriter *writer;
 
 	/*NADataDef *def = na_data_boxed_get_data_def( boxed );
 	g_debug( "naxml_writer_write_data: def=%s", def->name );*/
 
-	code = NA_IIO_PROVIDER_CODE_OK;
 	writer = NAXML_WRITER( writer_data );
 
 	writer->private->schema_node = NULL;
@@ -410,25 +406,12 @@ naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, 
 
 	( *writer->private->fn_str->write_data_fn )( writer, NA_OBJECT_ID( object ), boxed );
 
-	return( code );
+	return( NA_IIO_PROVIDER_CODE_OK );
 }
 
 guint
 naxml_writer_write_done( const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object, GSList **messages  )
 {
-	GList *children, *ic;
-
-	if( NA_IS_OBJECT_ACTION( object )){
-
-		NAXMLWriter *writer = NAXML_WRITER( writer_data );
-		writer->private->action = NA_OBJECT_ACTION( object );
-		children = na_object_get_items( object );
-
-		for( ic = children ; ic ; ic = ic->next ){
-			na_ifactory_provider_write_item( provider, writer, ( NAIFactoryObject * ) ic->data, messages );
-		}
-	}
-
 	return( NA_IIO_PROVIDER_CODE_OK );
 }
 
@@ -488,8 +471,9 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 
 	object_id = na_object_get_id( object );
 
-	if( writer->private->action ){
-		gchar *id = na_object_get_id( writer->private->action );
+	if( NA_IS_OBJECT_PROFILE( object )){
+		NAObjectItem *action = na_object_get_parent( object );
+		gchar *id = na_object_get_id( action );
 		gchar *tmp = g_strdup_printf( "%s/%s", id, object_id );
 		g_free( id );
 		g_free( object_id );
@@ -526,6 +510,20 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 }
 
 static void
+write_list_attribs_dump( NAXMLWriter *writer, const NAObjectItem *object )
+{
+	gchar *id;
+	gchar *path;
+
+	id = na_object_get_id( object );
+	path = g_build_path( "/", NAGP_CONFIGURATIONS_PATH, id, NULL );
+	xmlNewProp( writer->private->list_node, BAD_CAST( NAXML_KEY_DUMP_LIST_PARM_BASE ), BAD_CAST( path ));
+
+	g_free( path );
+	g_free( id );
+}
+
+static void
 write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed )
 {
 	xmlNodePtr entry_node;
@@ -540,13 +538,11 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxe
 	value_str = NULL;
 	def = na_data_boxed_get_data_def( boxed );
 
-	/* do no export empty values, but for string list
+	/* do no export empty values
 	 */
-	if( def->type != NAFD_TYPE_STRING_LIST ){
-		value_str = na_data_boxed_get_as_string( boxed );
-		if( !value_str || !strlen( value_str )){
-			return;
-		}
+	value_str = na_data_boxed_get_as_string( boxed );
+	if( !value_str || !strlen( value_str )){
+		return;
 	}
 
 	/* boolean value must be lowercase
@@ -559,7 +555,7 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxe
 
 	entry_node = xmlNewChild( writer->private->list_node, NULL, BAD_CAST( writer->private->fn_str->element_node ), NULL );
 
-	if( writer->private->action ){
+	if( NA_IS_OBJECT_PROFILE( object )){
 		gchar *id = na_object_get_id( object );
 		entry = g_strdup_printf( "%s/%s", id, def->gconf_entry );
 		g_free( id );
