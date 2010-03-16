@@ -34,16 +34,20 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <glib/gprintf.h>
 #include <stdlib.h>
 
 #include <api/na-core-utils.h>
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
+#include <core/na-io-provider.h>
+#include <core/na-exporter.h>
+#include <core/na-updater.h>
+
 #include <io-gconf/nagp-keys.h>
 
-#include <core/na-io-provider.h>
-#include <core/na-updater.h>
+#include <io-xml/naxml-formats.h>
 
 #include "console-utils.h"
 
@@ -136,6 +140,7 @@ static GOptionEntry misc_entries[] = {
 static GOptionEntry   *build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds );
 static GOptionContext *init_options( void );
 static NAObjectAction *get_action_from_cmdline( void );
+static gboolean        output_to_stdout( const NAObjectAction *action, GSList **msgs );
 static gboolean        write_to_gconf( NAObjectAction *action, GSList **msg );
 static void            exit_with_usage( void );
 
@@ -211,6 +216,10 @@ main( int argc, char** argv )
 	if( output_gconf && output_dir ){
 		g_printerr( _( "Error: only one output option may be specified.\n" ));
 		errors += 1;
+
+	} else if( output_dir ){
+		/* TODO: check that dir exists or may be created
+		 * check that it is writable */
 	}
 
 	if( errors ){
@@ -225,6 +234,12 @@ main( int argc, char** argv )
 			g_print( _( "Action '%s' succesfully written to GConf configuration.\n" ), label );
 		}
 
+	} else if( output_dir ){
+		;
+	} else {
+		output_to_stdout( action, &msg );
+	}
+
 #if 0
 	} else {
 		gchar *output_fname = na_xml_writer_export( action, output_dir, IPREFS_EXPORT_FORMAT_GCONF_ENTRY, &msg );
@@ -233,8 +248,8 @@ main( int argc, char** argv )
 			g_print( _( "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n" ), label, output_fname );
 			g_free( output_fname );
 		}
-#endif
 	}
+#endif
 
 	if( msg ){
 		for( im = msg ; im ; im = im->next ){
@@ -359,28 +374,29 @@ get_action_from_cmdline( void )
 	GSList *mimetypes;
 	GSList *schemes;
 	GSList *folders;
+	gboolean toolbar_same_label;
 
 	action = na_object_action_new_with_defaults();
 	profile = NA_OBJECT_PROFILE(( GList * ) na_object_get_items( action )->data );
 
 	na_object_set_label( action, label );
-	na_object_set_tooltip( action, tooltip );
-	na_object_set_icon( action, icon );
+	if( tooltip && g_utf8_strlen( tooltip, -1 )){
+		na_object_set_tooltip( action, tooltip );
+	}
+	if( icon && g_utf8_strlen( icon, -1 )){
+		na_object_set_icon( action, icon );
+	}
 	na_object_set_enabled( action, enabled );
 	na_object_set_target_selection( action, target_selection );
 	na_object_set_target_toolbar( action, target_toolbar );
 
-	if( target_toolbar ){
-		if( label_toolbar && g_utf8_strlen( label_toolbar, -1 )){
-			na_object_set_toolbar_same_label( action, FALSE );
-			na_object_set_toolbar_label( action, label_toolbar );
-		} else {
-			na_object_set_toolbar_same_label( action, TRUE );
-			na_object_set_toolbar_label( action, label );
-		}
-	} else {
-		na_object_set_toolbar_label( action, "" );
+	toolbar_same_label = FALSE;
+	if( !label_toolbar || !g_utf8_strlen( label_toolbar, -1 )){
+		label_toolbar = g_strdup( label );
+		toolbar_same_label = TRUE;
 	}
+	na_object_set_toolbar_same_label( action, toolbar_same_label );
+	na_object_set_toolbar_label( action, label_toolbar );
 
 	na_object_set_path( profile, command );
 	na_object_set_parameters( profile, parameters );
@@ -391,8 +407,10 @@ get_action_from_cmdline( void )
 		basenames = g_slist_append( basenames, g_strdup( basenames_array[i] ));
 		i++;
 	}
-	na_object_set_basenames( profile, basenames );
-	na_core_utils_slist_free( basenames );
+	if( basenames && g_slist_length( basenames )){
+		na_object_set_basenames( profile, basenames );
+		na_core_utils_slist_free( basenames );
+	}
 
 	na_object_set_matchcase( profile, matchcase );
 
@@ -402,8 +420,10 @@ get_action_from_cmdline( void )
 		mimetypes = g_slist_append( mimetypes, g_strdup( mimetypes_array[i] ));
 		i++;
 	}
-	na_object_set_mimetypes( profile, mimetypes );
-	na_core_utils_slist_free( mimetypes );
+	if( mimetypes && g_slist_length( mimetypes )){
+		na_object_set_mimetypes( profile, mimetypes );
+		na_core_utils_slist_free( mimetypes );
+	}
 
 	if( !isfile && !isdir ){
 		isfile = TRUE;
@@ -418,8 +438,10 @@ get_action_from_cmdline( void )
 		schemes = g_slist_append( schemes, g_strdup( schemes_array[i] ));
 		i++;
 	}
-	na_object_set_schemes( profile, schemes );
-	na_core_utils_slist_free( schemes );
+	if( schemes && g_slist_length( schemes )){
+		na_object_set_schemes( profile, schemes );
+		na_core_utils_slist_free( schemes );
+	}
 
 	i = 0;
 	folders = NULL;
@@ -427,10 +449,35 @@ get_action_from_cmdline( void )
 		folders = g_slist_append( folders, g_strdup( folders_array[i] ));
 		i++;
 	}
-	na_object_set_folders( profile, folders );
-	na_core_utils_slist_free( folders );
+	if( folders && g_slist_length( folders )){
+		na_object_set_folders( profile, folders );
+		na_core_utils_slist_free( folders );
+	}
 
 	return( action );
+}
+
+static gboolean
+output_to_stdout( const NAObjectAction *action, GSList **msgs )
+{
+	gboolean ret;
+	NAUpdater *updater;
+	GQuark format;
+	gchar *buffer;
+
+	updater = na_updater_new();
+	format = g_quark_from_string( NAXML_FORMAT_GCONF_ENTRY );
+	buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), format, msgs );
+	ret = ( buffer != NULL );
+
+	if( buffer ){
+		g_printf( "%s", buffer );
+	}
+
+	g_free( buffer );
+	g_object_unref( updater );
+
+	return( ret );
 }
 
 /*
