@@ -131,7 +131,7 @@
 	Basenames
 	Schemes
 
-- profile path and parameters should be set together as only one variable
+- profile path and parameters should be set together as only one variable ?
 
 - icon: is defined as localestring in desktop entry spec
   but path is defined as string in this same spec
@@ -143,15 +143,9 @@
   in data/nautilus-actions.schemas.in
   and in src/utils/nautilus-actions-schemas
 
-- before next release
-  as it is probable that desktop files will not be ready
-  -> join path and parameters
-
-- note that iprefs ibackground-* has been renamed as ifolders-*
-
 - in GConf, for v3, have conditions in a subfolder
   configurations/
-    uuid/
+    id/
        properties/
        conditions/
        profiles/
@@ -159,5 +153,3 @@
             properties/
             conditions/
             command/
-
-- see output to stdout: all data are written without profile name
