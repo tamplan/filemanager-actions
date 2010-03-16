@@ -598,7 +598,9 @@ info_dir_is_writable( GFile *file, const gchar *path_or_uri )
 			G_FILE_QUERY_INFO_NONE, NULL, &error );
 
 	if( error ){
-		g_warning( "%s: g_file_query_info error: %s", thisfn, error->message );
+		if( error->code != G_IO_ERROR_NOT_FOUND ){
+			g_warning( "%s: g_file_query_info error: %s", thisfn, error->message );
+		}
 		g_error_free( error );
 		return( FALSE );
 	}

@@ -1,5 +1,8 @@
 2009-03-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-core-utils.c (info_dir_is_writable):
+	Do not emit a warning on 'no such file or directory' error.
+
 	* src/utils/nautilus-actions-new.c
 	(output_to_stdout): Output the new action to stdout.
 	(output_to_gconf): Output the new action to GConf.
