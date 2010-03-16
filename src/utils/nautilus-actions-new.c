@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <errno.h>
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
@@ -126,7 +127,7 @@ static GOptionEntry output_entries[] = {
 	{ "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE        , &output_gconf,
 			N_( "Store the newly created action as a GConf configuration" ), NULL },
 	{ "output-dir"           , 'o', 0, G_OPTION_ARG_FILENAME    , &output_dir,
-			N_( "The URI of the folder where to write the new action as a GConf dump output [default: stdout]" ), N_( "<URI>" ) },
+			N_( "The path of the folder where to write the new action as a GConf dump output [default: stdout]" ), N_( "<PATH>" ) },
 	{ NULL }
 };
 
@@ -140,7 +141,8 @@ static GOptionEntry misc_entries[] = {
 static GOptionEntry   *build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds );
 static GOptionContext *init_options( void );
 static NAObjectAction *get_action_from_cmdline( void );
-static gboolean        output_to_gconf( NAObjectAction *action, GSList **msg );
+static gboolean        output_to_dir( NAObjectAction *action, gchar *dir, GSList **msgs );
+static gboolean        output_to_gconf( NAObjectAction *action, GSList **msgs );
 static gboolean        output_to_stdout( const NAObjectAction *action, GSList **msgs );
 static void            exit_with_usage( void );
 
@@ -216,10 +218,6 @@ main( int argc, char** argv )
 	if( output_gconf && output_dir ){
 		g_printerr( _( "Error: only one output option may be specified.\n" ));
 		errors += 1;
-
-	} else if( output_dir ){
-		/* TODO: check that dir exists or may be created
-		 * check that it is writable */
 	}
 
 	if( errors ){
@@ -235,21 +233,11 @@ main( int argc, char** argv )
 		}
 
 	} else if( output_dir ){
-		;
+		output_to_dir( action, output_dir, &msg );
+
 	} else {
 		output_to_stdout( action, &msg );
 	}
-
-#if 0
-	} else {
-		gchar *output_fname = na_xml_writer_export( action, output_dir, IPREFS_EXPORT_FORMAT_GCONF_ENTRY, &msg );
-		if( output_fname ){
-			/* i18n: Action <action_label> written to <output_filename>...*/
-			g_print( _( "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n" ), label, output_fname );
-			g_free( output_fname );
-		}
-	}
-#endif
 
 	if( msg ){
 		for( im = msg ; im ; im = im->next ){
@@ -457,6 +445,48 @@ get_action_from_cmdline( void )
 	return( action );
 }
 
+static gboolean
+output_to_dir( NAObjectAction *action, gchar *dir, GSList **msgs )
+{
+	gboolean code;
+	gboolean writable_dir;
+	gchar *msg;
+	NAUpdater *updater;
+	GQuark format;
+	gchar *fname;
+
+	code = FALSE;
+	writable_dir = FALSE;
+
+	if( na_core_utils_dir_is_writable_path( dir )){
+		writable_dir = TRUE;
+
+	} else if( g_mkdir_with_parents( dir, 0700 )){
+		/* i18n: unable to create <output_dir> dir: <strerror_message> */
+		msg = g_strdup_printf( _( "Error: unable to create %s dir: %s" ), dir, g_strerror( errno ));
+		*msgs = g_slist_append( *msgs, msg );
+
+	} else {
+		writable_dir = na_core_utils_dir_is_writable_path( dir );
+	}
+
+	if( writable_dir ){
+		updater = na_updater_new();
+		format = g_quark_from_string( NAXML_FORMAT_GCONF_ENTRY );
+		fname = na_exporter_to_file( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), dir, format, msgs );
+
+		if( fname ){
+			/* i18n: Action <action_label> written to <output_filename>...*/
+			g_print( _( "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n" ), label, fname );
+			g_free( fname );
+		}
+
+		g_object_unref( updater );
+	}
+
+	return( code );
+}
+
 /*
  * initialize GConf as an I/O provider
  * then writes the action
@@ -480,7 +510,7 @@ output_to_gconf( NAObjectAction *action, GSList **msgs )
 		code = ( ret == NA_IIO_PROVIDER_CODE_OK );
 
 	} else {
-		*msgs = g_slist_append( *msgs, _( "Unable to find 'na-gconf' provider." ));
+		*msgs = g_slist_append( *msgs, _( "Error: unable to find 'na-gconf' provider." ));
 		code = FALSE;
 	}
 
@@ -504,9 +534,9 @@ output_to_stdout( const NAObjectAction *action, GSList **msgs )
 
 	if( buffer ){
 		g_printf( "%s", buffer );
+		g_free( buffer );
 	}
 
-	g_free( buffer );
 	g_object_unref( updater );
 
 	return( ret );
