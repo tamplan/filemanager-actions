@@ -159,3 +159,5 @@
             properties/
             conditions/
             command/
+
+- see output to stdout: all data are written without profile name
