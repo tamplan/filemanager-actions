@@ -29,12 +29,12 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = \
-	data								\
 	doc									\
 	m4									\
 	icons								\
 	src									\
 	po									\
+	data								\
 	$(NULL)
 
 # a foo directory so that make distcheck has a vpath which is prefixed
