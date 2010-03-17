@@ -7,3 +7,4 @@ _Comment=Add items to the Nautilus popup menu
 Exec=nautilus-actions-config-tool
 Icon=nautilus-actions
 Categories=Application;FileManager;DesktopSettings;Settings;AdvancedSettings;
+StartupNotify=true

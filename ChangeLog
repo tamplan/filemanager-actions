@@ -1,5 +1,7 @@
 2009-03-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact.desktop.in: Add StartupNotify=true.
+
 	* src/nact/nact-main-window.c (reload):
 	Free the deleted list before filling the tree.
 
