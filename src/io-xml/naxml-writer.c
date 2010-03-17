@@ -453,9 +453,9 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 	def = na_data_boxed_get_data_def( boxed );
 	value_str = na_data_boxed_get_as_string( boxed );
 
-	/* do no export empty values, but for string list
+	/* do no export empty values
 	 */
-	if( !value_str || !strlen( value_str )){
+	if( !na_data_boxed_is_set( boxed )){
 		return;
 	}
 
@@ -540,10 +540,11 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxe
 
 	/* do no export empty values
 	 */
-	value_str = na_data_boxed_get_as_string( boxed );
-	if( !value_str || !strlen( value_str )){
+	if( !na_data_boxed_is_set( boxed )){
 		return;
 	}
+
+	value_str = na_data_boxed_get_as_string( boxed );
 
 	/* boolean value must be lowercase
 	 */

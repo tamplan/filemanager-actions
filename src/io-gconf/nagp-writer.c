@@ -231,93 +231,90 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 	msg = NULL;
 	code = NA_IIO_PROVIDER_CODE_OK;
-	def = na_data_boxed_get_data_def( boxed );
 
-	if( NA_IS_OBJECT_PROFILE( object )){
-		NAObjectItem *parent = NA_OBJECT_ITEM( na_object_get_parent( object ));
-		gchar *parent_id = na_object_get_id( parent );
-		gchar *id = na_object_get_id( object );
-		this_id = g_strdup_printf( "%s/%s", parent_id, id );
-		g_free( id );
-		g_free( parent_id );
+	if( na_data_boxed_is_set( boxed )){
+		def = na_data_boxed_get_data_def( boxed );
 
-	} else {
-		this_id = na_object_get_id( object );
+		if( NA_IS_OBJECT_PROFILE( object )){
+			NAObjectItem *parent = NA_OBJECT_ITEM( na_object_get_parent( object ));
+			gchar *parent_id = na_object_get_id( parent );
+			gchar *id = na_object_get_id( object );
+			this_id = g_strdup_printf( "%s/%s", parent_id, id );
+			g_free( id );
+			g_free( parent_id );
 
-	}
+		} else {
+			this_id = na_object_get_id( object );
 
-	this_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, this_id );
-	path = gconf_concat_dir_and_key( this_path, def->gconf_entry );
+		}
 
-	gconf = NAGP_GCONF_PROVIDER( provider )->private->gconf;
+		this_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, this_id );
+		path = gconf_concat_dir_and_key( this_path, def->gconf_entry );
 
-	switch( def->type ){
+		gconf = NAGP_GCONF_PROVIDER( provider )->private->gconf;
 
-		case NAFD_TYPE_STRING:
-			str_value = na_data_boxed_get_as_string( boxed );
-			if( str_value && strlen( str_value )){
+		switch( def->type ){
+
+			case NAFD_TYPE_STRING:
+				str_value = na_data_boxed_get_as_string( boxed );
 				na_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
 					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
 				}
-			}
-			g_free( str_value );
-			break;
+				g_free( str_value );
+				break;
 
-		case NAFD_TYPE_LOCALE_STRING:
-			str_value = na_data_boxed_get_as_string( boxed );
-			if( str_value && g_utf8_strlen( str_value, -1 )){
+			case NAFD_TYPE_LOCALE_STRING:
+				str_value = na_data_boxed_get_as_string( boxed );
 				na_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
 					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
 				}
-			}
-			g_free( str_value );
-			break;
+				g_free( str_value );
+				break;
 
-		case NAFD_TYPE_BOOLEAN:
-			bool_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
-			na_gconf_utils_write_bool( gconf, path, bool_value, &msg );
-			if( msg ){
-				*messages = g_slist_append( *messages, msg );
-				code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
-			}
-			break;
+			case NAFD_TYPE_BOOLEAN:
+				bool_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
+				na_gconf_utils_write_bool( gconf, path, bool_value, &msg );
+				if( msg ){
+					*messages = g_slist_append( *messages, msg );
+					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
+				}
+				break;
 
-		case NAFD_TYPE_STRING_LIST:
-			slist_value = ( GSList * ) na_data_boxed_get_as_void( boxed );
-			if( slist_value && g_slist_length( slist_value )){
+			case NAFD_TYPE_STRING_LIST:
+				slist_value = ( GSList * ) na_data_boxed_get_as_void( boxed );
 				na_gconf_utils_write_string_list( gconf, path, slist_value, &msg );
 				if( msg ){
 					*messages = g_slist_append( *messages, msg );
 					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
 				}
-			}
-			na_core_utils_slist_free( slist_value );
-			break;
+				na_core_utils_slist_free( slist_value );
+				break;
 
-		case NAFD_TYPE_UINT:
-			uint_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
-			na_gconf_utils_write_int( gconf, path, uint_value, &msg );
-			if( msg ){
-				*messages = g_slist_append( *messages, msg );
-				code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
-			}
-			break;
+			case NAFD_TYPE_UINT:
+				uint_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
+				na_gconf_utils_write_int( gconf, path, uint_value, &msg );
+				if( msg ){
+					*messages = g_slist_append( *messages, msg );
+					code = NA_IIO_PROVIDER_CODE_WRITE_ERROR;
+				}
+				break;
 
-		default:
-			g_warning( "%s: unknown type=%u for %s", thisfn, def->type, def->name );
-			code = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+			default:
+				g_warning( "%s: unknown type=%u for %s", thisfn, def->type, def->name );
+				code = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+		}
+
+		/*g_debug( "%s: gconf=%p, code=%u, path=%s", thisfn, ( void * ) gconf, code, path );*/
+
+		g_free( msg );
+		g_free( path );
+		g_free( this_path );
+		g_free( this_id );
 	}
-
-	/*g_debug( "%s: gconf=%p, code=%u, path=%s", thisfn, ( void * ) gconf, code, path );*/
-
-	g_free( msg );
-	g_free( path );
-	g_free( this_path );
-	g_free( this_id );
 
 	return( code );
 }
