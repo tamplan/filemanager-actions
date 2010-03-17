@@ -1,5 +1,8 @@
 2009-03-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-boxed.h:
+	* src/core/na-data-boxed.c (na_data_boxed_is_set): New function.
+
 	* data/nautilus-actions.schemas.in:
 	Fix typo.
 	Add io-providers/read-at-startup and io-providers/writable keys.
