@@ -21,9 +21,9 @@ fi
 
 if [ "${2}" = "" ]; then
 	display_ok=1
-elif [ "${2}" = "false" ]; then
+elif [ "${2}" = "display_ok=false" ]; then
 	display_ok=0
-elif [ "${2}" != "true" ]; then
+elif [ "${2}" != "display_ok=true" ]; then
 	usage
 	exit 1
 fi
@@ -105,7 +105,7 @@ echo -n "Extracting and formatting relevant lines from ${1}"
 count100=0
 count500=0
 total=0
-grep -En 'instance_init|instance_dispose' ${1} | grep -v "quitting main window" | while read line; do
+grep -En 'instance_init|instance_dispose' ${1} | grep -vE 'quitting main window|parent=|children=|tree=|deleted=' | while read line; do
 	let total+=1
 	let count100+=1
 	if [ ${count100} -ge 100 ]; then
