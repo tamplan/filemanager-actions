@@ -52,7 +52,7 @@ NADataDef data_def_conditions [] = {
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to '*'." ),
 				NAFD_TYPE_STRING_LIST,
-				"*",
+				"[*]",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -101,9 +101,9 @@ NADataDef data_def_conditions [] = {
 					"selected file(s)/folder(s). Each selected items must match at least one of " \
 					"the mimetype patterns for the action to appear.\n" \
 					"This obviously only applies when there is a selection.\n" \
-					"Defaults to '*/*'." ),
+					"Defaults to '*'." ),
 				NAFD_TYPE_STRING_LIST,
-				"*",
+				"[*]",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -219,7 +219,7 @@ NADataDef data_def_conditions [] = {
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to 'file'." ),
 				NAFD_TYPE_STRING_LIST,
-				"file",
+				"[file]",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -243,7 +243,7 @@ NADataDef data_def_conditions [] = {
 					"This is only used when there is no selection.\n" \
 					"Defaults to '/'." ),
 				NAFD_TYPE_STRING_LIST,
-				"/",
+				"[/]",
 				TRUE,
 				TRUE,
 				FALSE,
