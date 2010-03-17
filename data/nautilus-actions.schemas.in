@@ -351,29 +351,6 @@ Possible values are:
     </schema>
 
     <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/ifolder-chooser</key>
-      <owner>nautilus-actions</owner>
-      <type>list</type>
-      <list_type>int</list_type>
-      <locale name="C">
-        <short>Position and size of the URI chooser window</short>
-        <long>Position and size of the URI  chooser window in the Folders tab ; default is set by the window manager.</long>
-      </locale>
-      <default>[]</default>
-    </schema>
-
-    <schema>
-      <key>/schemas/apps/nautilus-actions/preferences/ifolder-uri</key>
-      <owner>nautilus-actions</owner>
-      <type>string</type>
-      <locale name="C">
-        <short>Last selected folder</short>
-        <long>Last folder selected when browsing for an URI in the Folders tab.</long>
-      </locale>
-      <default>/bin</default>
-    </schema>
-
-    <schema>
       <key>/schemas/apps/nautilus-actions/preferences/icommand-command-chooser</key>
       <owner>nautilus-actions</owner>
       <type>list</type>
@@ -406,6 +383,29 @@ Possible values are:
         <long>Position and size of the Legend dialog ; default is set by the UI manager.</long>
       </locale>
       <default>[]</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/ifolders-chooser</key>
+      <owner>nautilus-actions</owner>
+      <type>list</type>
+      <list_type>int</list_type>
+      <locale name="C">
+        <short>Position and size of the URI chooser window</short>
+        <long>Position and size of the URI  chooser window in the Folders tab ; default is set by the window manager.</long>
+      </locale>
+      <default>[]</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/ifolders-uri</key>
+      <owner>nautilus-actions</owner>
+      <type>string</type>
+      <locale name="C">
+        <short>Last selected folder</short>
+        <long>Last folder selected when browsing for an URI in the Folders tab.</long>
+      </locale>
+      <default>/bin</default>
     </schema>
 
     <schema>
