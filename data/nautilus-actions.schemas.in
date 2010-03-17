@@ -287,6 +287,34 @@ All schemes used by Nautilus can be used here. This only applies when targeting 
       <default>[]</default>
     </schema>
 
+    <!-- schemas for io-providers -->
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/io-providers/read-at-startup</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether this I/O provider should be read at startup</short>
+        <long>When set to false, this prevents this whole I/O provider to be read at startup.
+Actual key is /apps/nautilus-actions/io-providers/<provider_id>/read-at-startup.
+This is a user preference.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/io-providers/writable</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether this I/O provider is writable</short>
+        <long>When set to false, this prevents all items readen from this I/O provider from being updated in NACT.
+Actual key is /apps/nautilus-actions/io-providers/<provider_id>/writable.
+This is a user preference.</long>
+      </locale>
+      <default>true</default>
+    </schema>
+
     <!-- schemas for preferences -->
 
     <schema>

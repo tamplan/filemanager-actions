@@ -1,6 +1,8 @@
 2009-03-17 Pierre Wieser <pwieser@trychlos.org>
 
-	* data/nautilus-actions.schemas.in: Fix typo.
+	* data/nautilus-actions.schemas.in:
+	Fix typo.
+	Add io-providers/read-at-startup and io-providers/writable keys.
 
 	* src/nact/nact.desktop.in: Add StartupNotify=true.
 
