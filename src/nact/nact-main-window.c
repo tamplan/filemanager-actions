@@ -698,7 +698,7 @@ instance_dispose( GObject *window )
 		base_iprefs_set_int( BASE_WINDOW( window ), "main-paned", pos );
 
 		for( it = self->private->deleted ; it ; it = it->next ){
-			g_debug( "nact_main_window_instance_dispose: %p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+			g_debug( "nact_main_window_instance_dispose: deleted=%p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
 		}
 		na_object_unref_items( self->private->deleted );
 
@@ -1397,14 +1397,14 @@ reload( NactMainWindow *window )
 		window->private->edited_profile = NULL;
 		window->private->selected_row = NULL;
 
+		na_object_unref_items( window->private->deleted );
+		window->private->deleted = NULL;
+
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
 		na_pivot_load_items( NA_PIVOT( updater ));
 		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( NA_PIVOT( updater )));
 		nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
-
-		na_object_unref_items( window->private->deleted );
-		window->private->deleted = NULL;
 	}
 }
 

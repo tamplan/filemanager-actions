@@ -1,5 +1,8 @@
 2009-03-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c (reload):
+	Free the deleted list before filling the tree.
+
 	* src/nact/nact-main-menubar.c
 	(on_cut_activated): Do not cut not deletable items.
 	(get_deletables): Add a ref on items to delete.
