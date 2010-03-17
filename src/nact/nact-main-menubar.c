@@ -1041,24 +1041,44 @@ static void
 on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_cut_activated";
+	NactApplication *application;
+	NAUpdater *updater;
 	GList *items;
 	NactClipboard *clipboard;
+	GList *to_delete;
+	GSList *non_deletables;
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
 	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
-	nact_main_window_move_to_deleted( window, items );
-	clipboard = nact_main_window_get_clipboard( window );
-	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_CUT );
-	update_clipboard_counters( window );
-	nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), items );
 
-	/* do not unref selected items as the list has been concatenated
-	 * to main_deleted
-	 */
-	/*g_list_free( items );*/
+	non_deletables = NULL;
+	to_delete = get_deletables( updater, items, &non_deletables );
+
+	if( non_deletables ){
+		gchar *second = na_core_utils_slist_join_at_end( non_deletables, "\n" );
+		base_window_error_dlg(
+				BASE_WINDOW( window ),
+				GTK_MESSAGE_INFO,
+				_( "Not all items have been cut as following ones are not modifiable:" ),
+				second );
+		g_free( second );
+		na_core_utils_slist_free( non_deletables );
+	}
+
+	if( to_delete ){
+		nact_main_window_move_to_deleted( window, to_delete );
+		clipboard = nact_main_window_get_clipboard( window );
+		nact_clipboard_primary_set( clipboard, to_delete, CLIPBOARD_MODE_CUT );
+		update_clipboard_counters( window );
+		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete );
+	}
+
+	na_object_unref_selected_items( items );
 }
 
 /*
@@ -1316,7 +1336,7 @@ get_deletables( NAUpdater *updater, GList *selected, GSList **non_deletables )
 			}
 		}
 
-		to_delete = g_list_prepend( to_delete, it->data );
+		to_delete = g_list_prepend( to_delete, na_object_ref( it->data ));
 	}
 
 	return( to_delete );

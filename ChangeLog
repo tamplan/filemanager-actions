@@ -1,5 +1,9 @@
 2009-03-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar.c
+	(on_cut_activated): Do not cut not deletable items.
+	(get_deletables): Add a ref on items to delete.
+
 	* src/test/init-dispose-diff.sh:
 	Do not take into account some debug messages.
 
