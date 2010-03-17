@@ -122,7 +122,7 @@ static NADataDef data_def_action [] = {
 				TRUE,
 				N_( "Targets the toolbar" ),
 				N_( "Whether the action is candidate to be displayed in file manager toolbar.\n" \
-					"Note, that as of Nautilus 2.26, menus can not be candidate to toolbar display." ),
+					"Note, that as of Nautilus 2.26, menus cannot be candidate to toolbar display." ),
 				NAFD_TYPE_BOOLEAN,
 				"false",
 				TRUE,

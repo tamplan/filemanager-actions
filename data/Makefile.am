@@ -26,9 +26,15 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-schemas_in_files = nautilus-actions.schemas.in
+schemas_in_files = \
+	nautilus-actions-prefs.schemas.in					\
+	nautilus-actions-confs.schemas.in					\
+	$(NULL)
 
 schemas_files = $(schemas_in_files:.schemas.in=.schemas)
+
+nautilus-actions-confs.schemas.in:
+	$(top_srcdir)/src/utils/nautilus-actions-schemas -s > $@
 
 schemasdir = $(pkgdatadir)
 
@@ -43,7 +49,7 @@ NA_INSTALL_SCHEMAS = no
 endif
 
 EXTRA_DIST = \
-	$(schemas_in_files)					\
+	$(schemas_in_files)									\
 	$(NULL)
 
 install-data-hook:

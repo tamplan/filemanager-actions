@@ -51,11 +51,6 @@
 
 - undo manager (at least Ctrl-Z)
 
-- have a single place where a schema is written
-  (see src/utils/nautilus-actions-schemas.c)
-  more: have a single place where the schema is _described_
-  so that we may generalize export, import, new, etc.
-
 - IActionTab: check_label has became useless since validity is global
   to the action - remove, or extend to each field which can led to
   unvalidity

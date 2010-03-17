@@ -240,7 +240,7 @@ NADataDef data_def_conditions [] = {
 				N_( "List of folders" ),
 				N_( "Defines the list of valid paths to be matched against the current folder.\n " \
 					"All folders 'under' the specified path are considered valid.\n" \
-					"This is only used when there is no selection.\n" \
+					"This is only used when there is no selection, or the selection only contains directories.\n" \
 					"Defaults to '/'." ),
 				NAFD_TYPE_STRING_LIST,
 				"[/]",
@@ -253,7 +253,7 @@ NADataDef data_def_conditions [] = {
 				"folder",
 				0,
 				G_OPTION_ARG_STRING,
-				N_( "The path of a directory for which the item will be displayed. " \
+				N_( "The path of a (parent) directory for which the item will be displayed. " \
 					"You must set one option for each folder you need" ),
 				N_( "<PATH>" ) },
 

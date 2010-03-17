@@ -32,45 +32,69 @@
 #include <config.h>
 #endif
 
-#include <gconf/gconf.h>
-#include <gconf/gconf-client.h>
 #include <glib.h>
 #include <glib/gi18n.h>
+#include <glib/gprintf.h>
+#include <libxml/tree.h>
 #include <stdlib.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-data-types.h>
+#include <api/na-ifactory-object-data.h>
 
-#include <core/na-iprefs.h>
-#if 0
-#include <core/na-xml-names.h>
-#include <core/na-xml-writer.h>
-#endif
+#include <io-gconf/nagp-keys.h>
+
+#include <io-xml/naxml-keys.h>
 
 #include "console-utils.h"
 
-/*static gchar     *output_fname = NULL;
-static gboolean   output_gconf = FALSE;*/
+typedef struct {
+	NADataGroup *group;
+	gchar       *group_name;
+	gchar       *data_name;
+}
+	SchemaFromDataDef;
+
+extern NADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
+extern NADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
+
+static const SchemaFromDataDef st_schema_from_data_def[] = {
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_LABEL },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_TOOLTIP },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ICON },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ENABLED },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_SELECTION },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_TOOLBAR },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TOOLBAR_LABEL },
+		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PATH },
+		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PARAMETERS },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_BASENAMES },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MATCHCASE },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MIMETYPES },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISFILE },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISDIR },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MULTIPLE },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SCHEMES },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_FOLDERS },
+		{ NULL }
+};
+
 static gboolean   output_stdout = FALSE;
 static gboolean   version       = FALSE;
 
 static GOptionEntry entries[] = {
-
-	/*{ "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE    , &output_gconf   , N_("Writes the Nautilus Actions schema in GConf"), NULL },
-	{ "output-filename"      , 'o', 0, G_OPTION_ARG_FILENAME, &output_fname   , N_("The file where to write the GConf schema ('-' for stdout)"), N_("FILENAME") },*/
-	{ "stdout", 's', 0, G_OPTION_ARG_NONE, &output_stdout, N_("Output the schema on stdout"), NULL },
+	{ "stdout" , 's', 0, G_OPTION_ARG_NONE, &output_stdout, N_("Output the schema on stdout"), NULL },
 	{ NULL }
 };
 
 static GOptionEntry misc_entries[] = {
-
-	{ "version"              , 'v', 0, G_OPTION_ARG_NONE        , &version,
-			N_("Output the version number"), NULL },
+	{ "version", 'v', 0, G_OPTION_ARG_NONE, &version, N_("Output the version number"), NULL },
 	{ NULL }
 };
 
 static GOptionContext *init_options( void );
-/*static gboolean        write_to_gconf( gchar **msg );
-static gboolean        write_schema( GConfClient *gconf, const gchar *prefix, GConfValueType type, const gchar *entry, const gchar *dshort, const gchar *dlong, const gchar *default_value, gchar **msg );*/
+static int             output_to_stdout( GSList **msgs );
+static void            attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const NADataDef *data_def );
 static void            exit_with_usage( void );
 
 int
@@ -80,7 +104,7 @@ main( int argc, char** argv )
 	GOptionContext *context;
 	gchar *help;
 	GError *error = NULL;
-	GSList *msg = NULL;
+	GSList *msgs = NULL;
 	GSList *im;
 
 	g_type_init();
@@ -107,29 +131,15 @@ main( int argc, char** argv )
 		exit( status );
 	}
 
-	/*if( output_gconf && output_fname ){
-		g_printerr( _( "Error: only one output option may be specified." ));
-		exit_with_usage();
-	}*/
+	if( output_stdout ){
+		status = output_to_stdout( &msgs );
+	}
 
-	/*if( output_gconf ){
-		if( write_to_gconf( &msg )){
-			g_print( _( "Nautilus Actions schema succesfully written to GConf.\n" ));
-		}
-
-	} else {
-		na_xml_writer_export( NULL, NULL, IPREFS_EXPORT_FORMAT_GCONF_SCHEMA, &msg );
-		if( !msg ){
-			g_print( _( "Nautilus Actions schema succesfully written to %s.\n" ), output_fname );
-			g_free( output_fname );
-		}*/
-	/*}*/
-
-	if( msg ){
-		for( im = msg ; im ; im = im->next ){
+	if( msgs ){
+		for( im = msgs ; im ; im = im->next ){
 			g_printerr( "%s\n", ( gchar * ) im->data );
 		}
-		na_core_utils_slist_free( msg );
+		na_core_utils_slist_free( msgs );
 		status = EXIT_FAILURE;
 	}
 
@@ -149,9 +159,6 @@ init_options( void )
 	GOptionGroup *misc_group;
 
 	context = g_option_context_new( _( "Output the Nautilus Actions GConf schema on stdout." ));
-			/*"  The schema can be written to stdout.\n"
-			"  It can also be written to an output file, in a file later suitable for an installation via gconftool-2.\n"
-			"  Or you may choose to directly write the schema into the GConf configuration." ));*/
 
 #ifdef ENABLE_NLS
 	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
@@ -274,6 +281,83 @@ write_schema( GConfClient *gconf, const gchar *prefix, GConfValueType type, cons
 	g_free( path );
 	return( ret );
 }*/
+
+static int
+output_to_stdout( GSList **msgs )
+{
+	static const gchar *thisfn = "nautilus_actions_schemas_output_to_stdout";
+	xmlDocPtr doc;
+	xmlNodePtr root_node;
+	xmlNodePtr list_node;
+	xmlChar *text;
+	int textlen;
+	SchemaFromDataDef *isch;
+	const NADataDef *data_def;
+
+	doc = xmlNewDoc( BAD_CAST( "1.0" ));
+
+	root_node = xmlNewNode( NULL, BAD_CAST( NAXML_KEY_SCHEMA_ROOT ));
+	xmlDocSetRootElement( doc, root_node );
+
+	list_node = xmlNewChild( root_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_LIST ), NULL );
+
+	isch = ( SchemaFromDataDef * ) st_schema_from_data_def;
+	while( isch->group ){
+		data_def = na_data_def_get_data_def( isch->group, isch->group_name, isch->data_name );
+
+		if( data_def ){
+			attach_schema_node( doc, list_node, data_def );
+
+		} else {
+			g_warning( "%s: group=%s, name=%s: unable to find NADataDef structure", thisfn, isch->group_name, isch->data_name );
+		}
+
+		isch++;
+	}
+	xmlDocDumpFormatMemoryEnc( doc, &text, &textlen, "UTF-8", 1 );
+	g_printf( "%s\n", ( const char * ) text );
+
+	xmlFree( text );
+	xmlFreeDoc (doc);
+	xmlCleanupParser();
+
+	return( EXIT_SUCCESS );
+}
+
+static void
+attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const NADataDef *def )
+{
+	xmlNodePtr schema_node;
+	xmlChar *content;
+	xmlNodePtr parent_value_node;
+	xmlNodePtr locale_node;
+
+	schema_node = xmlNewChild( list_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE ), NULL );
+
+	content = BAD_CAST( g_build_path( "/", NAGP_SCHEMAS_PATH, def->gconf_entry, NULL ));
+	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_KEY ), content );
+	xmlFree( content );
+
+	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
+
+	xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_TYPE ), BAD_CAST( na_data_types_get_gconf_dump_key( def->type )));
+	if( def->type == NAFD_TYPE_STRING_LIST ){
+		xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LISTTYPE ), BAD_CAST( "string" ));
+	}
+
+	locale_node = xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE ), NULL );
+	xmlNewProp( locale_node, BAD_CAST( "name" ), BAD_CAST( "C" ));
+
+	xmlNewChild( locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( def->short_label ));
+
+	xmlNewChild( locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( def->long_label ));
+
+	parent_value_node = def->localizable ? locale_node : schema_node;
+
+	content = xmlEncodeSpecialChars( doc, BAD_CAST( def->default_value ));
+	xmlNewChild( parent_value_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_DEFAULT ), content );
+	xmlFree( content );
+}
 
 /*
  * print a help message and exit with failure

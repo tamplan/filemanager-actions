@@ -1,5 +1,22 @@
 2009-03-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/Makefile.am: Automatically generate configurations schemas.
+
+	* data/nautilus-actions.schemas.in:
+	Renamed as data/nautilus-actions-prefs.schemas.in.
+	Remove configurations schemas (now dynamically generated).
+
+	* po/POTFILES.in: Updated accordingly.
+
+	* src/core/na-icontextual-factory.c:
+	* src/core/na-object-action-factory.c: Fix typo.
+
+	* src/utils/nautilus-actions-schemas.c:
+	Output configurations schemas to stdout.
+
+	* po/POTFILES.skip:
+	New file: do not try to translate dynamically generated schema.
+
 	* Makefile.am:
 	Build data/ after src/ to bo take advantage of dynamic generation of schemas.
 
