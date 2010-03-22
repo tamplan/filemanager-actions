@@ -461,7 +461,7 @@ query_file_attributes( NASelectedInfo *nsi )
 	}
 
 	nsi->private->mimetype = g_strdup( g_file_info_get_attribute_as_string( info, G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE ));
-	nsi->private->file_type = ( GFileType ) g_file_info_get_attribute_int32( info, G_FILE_ATTRIBUTE_STANDARD_TYPE );
+	nsi->private->file_type = ( GFileType ) g_file_info_get_attribute_uint32( info, G_FILE_ATTRIBUTE_STANDARD_TYPE );
 
 	g_object_unref( info );
 }

@@ -1,5 +1,8 @@
 2009-03-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-selected-info.c (query_file_attributes):
+	Fix file_info_get_attribute.
+
 	* src/core/na-object-action.c (na_object_action_is_candidate):
 	Considere background menu just as a special case of selection menu.
 
