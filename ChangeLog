@@ -1,5 +1,9 @@
 2009-03-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-menu/nautilus-actions.c
+	(get_file_or_background_items): New function.
+	(build_nautilus_menus, get_candidate_profile): Add debug messages.
+
 	* src/core/na-selected-info.c (query_file_attributes):
 	Fix file_info_get_attribute.
 
