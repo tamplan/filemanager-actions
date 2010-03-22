@@ -152,7 +152,7 @@ interface_base_finalize( NAIContextualInterface *klass )
  * na_icontextual_is_candidate:
  * @object: a #NAIContextual to be checked.
  * @target: the current target.
- * @files: the currently selected items, as provided by Nautilus.
+ * @files: the currently selected items, as a #GList of #NASelectedInfo items.
  *
  * Determines if the given object may be candidate to be displayed in
  * the Nautilus context menu, depending of the list of currently selected
@@ -310,26 +310,22 @@ is_current_folder_inside( const NAIContextual *object, NASelectedInfo *current_f
 	gboolean is_inside;
 	GSList *folders, *ifold;
 	const gchar *path;
-	gchar *current_folder_uri;
+	gchar *current_folder_path;
 
 	is_inside = FALSE;
-	current_folder_uri = na_selected_info_get_uri( current_folder );
+	current_folder_path = na_selected_info_get_name( current_folder );
 	folders = na_object_get_folders( object );
 
 	for( ifold = folders ; ifold && !is_inside ; ifold = ifold->next ){
 		path = ( const gchar * ) ifold->data;
 		if( path && g_utf8_strlen( path, -1 )){
-			if( !strcmp( path, "*" )){
-				is_inside = TRUE;
-			} else {
-				is_inside = g_str_has_prefix( current_folder_uri, path );
-				g_debug( "na_object_object_is_current_folder_inside: current_folder_uri=%s, path=%s, is_inside=%s", current_folder_uri, path, is_inside ? "True":"False" );
-			}
+			is_inside = g_str_has_prefix( current_folder_path, path );
+			g_debug( "na_object_object_is_current_folder_inside: current_folder_path=%s, path=%s, is_inside=%s", current_folder_path, path, is_inside ? "True":"False" );
 		}
 	}
 
 	na_core_utils_slist_free( folders );
-	g_free( current_folder_uri );
+	g_free( current_folder_path );
 
 	return( is_inside );
 }
@@ -431,7 +427,7 @@ is_target_selection_candidate( const NAIContextual *object, GList *files )
 			g_free( tmp_mimetype );
 			tmp_mimetype = tmp_mimetype2;
 
-			if( na_selected_info_is_directory( NA_SELECTED_INFO( iter ))){
+			if( na_selected_info_is_directory( NA_SELECTED_INFO( iter1->data ))){
 				dir_count++;
 			} else {
 				file_count++;
