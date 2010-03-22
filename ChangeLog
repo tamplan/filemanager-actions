@@ -1,3 +1,7 @@
+2009-03-22 Pierre Wieser <pwieser@trychlos.org>
+
+	* data/.gitignore: Update .gitignore.
+
 2009-03-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/Makefile.am: Automatically generate configurations schemas.
