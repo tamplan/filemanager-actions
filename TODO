@@ -41,8 +41,6 @@
 
 - for each toolbar, let the user choose which buttons are displayed
 
-- make tabs moveable and detachable
-
 - have a visual indication of the sort order in the tree
 
 - when a unique app is found, use libwnck (?) to activate it
