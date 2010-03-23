@@ -412,7 +412,7 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 		g_free( uri );
 
 		nautilus_menus_list = get_file_or_background_items(
-				NAUTILUS_ACTIONS( provider ), ITEM_TARGET_BACKGROUND, ( void * ) current_folder );
+				NAUTILUS_ACTIONS( provider ), ITEM_TARGET_LOCATION, ( void * ) current_folder );
 	}
 
 	return( nautilus_menus_list );
@@ -496,7 +496,7 @@ get_file_or_background_items( NautilusActions *plugin, guint target, void *selec
 
 	pivot_tree = na_pivot_get_items( plugin->private->pivot );
 
-	if( target == ITEM_TARGET_BACKGROUND ){
+	if( target == ITEM_TARGET_LOCATION ){
 		g_return_val_if_fail( NAUTILUS_IS_FILE_INFO( selection ), NULL );
 		selected = na_selected_info_get_list_from_item( NAUTILUS_FILE_INFO( selection ));
 

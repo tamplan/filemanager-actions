@@ -1,3 +1,37 @@
+2009-03-23 Pierre Wieser <pwieser@trychlos.org>
+
+	Restore the target-location indicator.
+
+	* src/api/na-ifactory-object-data.h:
+	* src/core/na-object-action-factory.c:
+	Renamed NAFO_DATA_TARGET_BACKGROUND as NAFO_DATA_TARGET_LOCATION.
+
+	* src/api/na-object-api.h
+	(na_object_is_target_location, na_object_set_target_location):
+	New macros.
+
+	* src/api/na-object-item.h:
+	* src/plugin-menu/nautilus-actions.c (menu_provider_get_background_items):
+	Renamed ITEM_TARGET_BACKGROUND as ITEM_TARGET_LOCATION.
+
+	* src/core/na-icontextual-factory.c:
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-item-factory.c:
+	Update data descriptions.
+
+	* src/core/na-icontextual.c (is_target_background_candidate):
+	Renamed as is_target_location_candidate().
+
+	* src/core/na-object-action.c (na_object_action_is_candidate):
+	Only selects the action if it is candidate for this target.
+
+	* src/nact/nact-iaction-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nautilus-actions-config-tool.ui:
+	Display the target-location checkbox.
+
+	* src/utils/nautilus-actions-new.c:
+	Let the user select the target-location boolean indicator.
+
 2009-03-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-icontextual.c

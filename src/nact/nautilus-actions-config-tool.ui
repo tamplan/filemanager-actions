@@ -113,7 +113,7 @@
                                     <child>
                                       <object class="GtkTable" id="table7">
                                         <property name="visible">True</property>
-                                        <property name="n_rows">2</property>
+                                        <property name="n_rows">3</property>
                                         <property name="n_columns">2</property>
                                         <property name="column_spacing">5</property>
                                         <child>
@@ -122,7 +122,8 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
-                                            <property name="tooltip_text" translatable="yes">When checked, the action will be candidate to be displayed in Nautilus context menus when there is a selection. It thus applies to selected objects. The item will also appear in Nautilus Edit menu.</property>
+                                            <property name="tooltip_text" translatable="yes">When checked, the action will be candidate to be displayed in Nautilus context menus when there is a selection. It thus applies to selected objects. The item will also appear in Nautilus Edit menu.
+Menus are always candidate if they contain at least one action.</property>
                                             <property name="use_underline">True</property>
                                             <property name="draw_indicator">True</property>
                                           </object>
@@ -141,8 +142,8 @@
                                           <packing>
                                             <property name="left_attach">1</property>
                                             <property name="right_attach">2</property>
-                                            <property name="top_attach">1</property>
-                                            <property name="bottom_attach">2</property>
+                                            <property name="top_attach">2</property>
+                                            <property name="bottom_attach">3</property>
                                           </packing>
                                         </child>
                                         <child>
@@ -154,14 +155,35 @@
                                             <property name="mnemonic_widget">ActionMenuLabelEntry</property>
                                           </object>
                                           <packing>
-                                            <property name="top_attach">1</property>
-                                            <property name="bottom_attach">2</property>
+                                            <property name="top_attach">2</property>
+                                            <property name="bottom_attach">3</property>
                                             <property name="x_options">GTK_FILL</property>
                                             <property name="y_options"></property>
                                           </packing>
                                         </child>
                                         <child>
                                           <placeholder/>
+                                        </child>
+                                        <child>
+                                          <placeholder/>
+                                        </child>
+                                        <child>
+                                          <object class="GtkCheckButton" id="ActionTargetLocationButton">
+                                            <property name="label" translatable="yes">Display item in _location context menu</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="tooltip_text" translatable="yes">When checked, the action will be candidate to be displayed in Nautilus context menus when there is no selection. It thus applies to current location. The item will also appear in Nautilus File menu.
+Menus are always candidate if they contain at least one action.</property>
+                                            <property name="use_underline">True</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="left_attach">1</property>
+                                            <property name="right_attach">2</property>
+                                            <property name="top_attach">1</property>
+                                            <property name="bottom_attach">2</property>
+                                          </packing>
                                         </child>
                                       </object>
                                       <packing>
@@ -179,11 +201,12 @@
                                         <property name="column_spacing">5</property>
                                         <child>
                                           <object class="GtkCheckButton" id="ActionTargetToolbarButton">
-                                            <property name="label" translatable="yes">Display item as an icon in the _toolbar</property>
+                                            <property name="label" translatable="yes">Display item in the _toolbar</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
-                                            <property name="tooltip_text" translatable="yes">When checked, the action will be displayed in Nautilus toolbar. It applies to current folder when there is no selection.</property>
+                                            <property name="tooltip_text" translatable="yes">When checked, the action will be displayed in Nautilus toolbar. It applies to current folder when there is no selection.
+Menus are never displayed in the toolbar.</property>
                                             <property name="use_underline">True</property>
                                             <property name="draw_indicator">True</property>
                                           </object>
@@ -1333,6 +1356,9 @@ Defining several profiles lets you have several commands, each applying with a d
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -2130,24 +2156,24 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionIdLabel"/>
-      <widget name="ActionMenuLabelLabel"/>
       <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionIdLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
     </widgets>
   </object>
 </interface>

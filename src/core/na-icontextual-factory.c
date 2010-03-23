@@ -216,7 +216,8 @@ NADataDef data_def_conditions [] = {
 					"'smb': files accessed via Samba (Windows share)\n" \
 					"'dav': files accessed via WebDAV.\n" \
 					"All schemes used by your favorite file manager may be used here.\n" \
-					"This obviously only applies when there is a selection.\n" \
+					"This obviously only applies when there is a selection, " \
+					"or when targeting the special 'x-nautilus-desktop' scheme.\n" \
 					"Defaults to 'file'." ),
 				NAFD_TYPE_STRING_LIST,
 				"[file]",
@@ -240,7 +241,6 @@ NADataDef data_def_conditions [] = {
 				N_( "List of folders" ),
 				N_( "Defines the list of valid paths to be matched against the current folder.\n " \
 					"All folders 'under' the specified path are considered valid.\n" \
-					"This is only used when there is no selection, or the selection only contains directories.\n" \
 					"Defaults to '/'." ),
 				NAFD_TYPE_STRING_LIST,
 				"[/]",

@@ -66,6 +66,7 @@ static gchar     *icon             = "";
 static gboolean   enabled          = FALSE;
 static gboolean   disabled         = FALSE;
 static gboolean   target_selection = FALSE;
+static gboolean   target_location  = FALSE;
 static gboolean   nocontext        = FALSE;
 static gboolean   target_toolbar   = FALSE;
 static gboolean   notoolbar        = FALSE;
@@ -94,6 +95,7 @@ static const ArgFromDataDef st_arg_from_data_def[] = {
 		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ICON,             &icon },
 		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ENABLED,          &enabled },
 		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_SELECTION, &target_selection },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_LOCATION,  &target_location },
 		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_TOOLBAR,   &target_toolbar },
 		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TOOLBAR_LABEL,    &label_toolbar },
 		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PATH,             &command },

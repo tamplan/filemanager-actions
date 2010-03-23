@@ -68,10 +68,11 @@ static NADataDef data_def_action [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "Targets the context menu (default)" ),
-				N_( "Whether the action of the menu targets the selection file manager " \
-					"context menus.\n" \
+				N_( "Targets the selection context menu (default)" ),
+				N_( "Whether the action targets the selection file manager context menus.\n" \
 					"This used to be the historical behavior.\n" \
+					"Note that menus are always potential candidate to the display in " \
+					"selection context menus provided that they contain at least one action.\n" \
 					"Defaults to TRUE." ),
 				NAFD_TYPE_BOOLEAN,
 				"true",
@@ -80,39 +81,34 @@ static NADataDef data_def_action [] = {
 				FALSE,
 				FALSE,
 				"target-selection",
-				'c',
-				"context",
+				'n',
+				"selection",
 				0,
 				G_OPTION_ARG_NONE,
 				NULL,
 				NULL },
 
-	/* this data has been introduced in 2.29.1 and has been left up to 2.29.4
-	 * it has been removed starting with 2.29.5
-	 * it is no more used anywhere
-	 * it is so no more readable (it doesn't take anymore any useful information)
-	 * nor writable (obsolete)
-	 *
-	 * we now consider that the folders condition is to be met every time
-	 * a selection contains folders
-	 */
-	{ NAFO_DATA_TARGET_BACKGROUND,
-				FALSE,
-				FALSE,
-				FALSE,
-				"Target the folder context menu",
-				"Does the action target the context menu when there is no selection ?",
+	{ NAFO_DATA_TARGET_LOCATION,
+				TRUE,
+				TRUE,
+				TRUE,
+				N_( "Targets the location context menu" ),
+				N_( "Whether the action targets the file manager context menus " \
+					"when there is no selection, thus applying to current location.\n" \
+					"Note that menus are always potential candidate to the display in " \
+					"selection context menus provided that they contain at least one action.\n" \
+					"Defaults to FALSE" ),
 				NAFD_TYPE_BOOLEAN,
-				"true",
+				"false",
+				TRUE,
+				TRUE,
 				FALSE,
 				FALSE,
-				FALSE,
-				FALSE,
-				"target-background",
+				"target-location",
+				'N',
+				"location",
 				0,
-				NULL,
-				0,
-				0,
+				G_OPTION_ARG_NONE,
 				NULL,
 				NULL },
 
@@ -122,7 +118,9 @@ static NADataDef data_def_action [] = {
 				TRUE,
 				N_( "Targets the toolbar" ),
 				N_( "Whether the action is candidate to be displayed in file manager toolbar.\n" \
-					"Note, that as of Nautilus 2.26, menus cannot be candidate to toolbar display." ),
+					"This only applies to current location.\n" \
+					"Note that menus are never displayed in the toolbar.\n" \
+					"Defaults to FALSE." ),
 				NAFD_TYPE_BOOLEAN,
 				"false",
 				TRUE,

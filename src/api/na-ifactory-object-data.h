@@ -62,7 +62,7 @@ G_BEGIN_DECLS
 #define NA_FACTORY_OBJECT_ACTION_GROUP		"na-factory-group-action"
 #define NAFO_DATA_VERSION					"na-factory-data-version"
 #define NAFO_DATA_TARGET_SELECTION			"na-factory-data-target-selection"
-#define NAFO_DATA_TARGET_BACKGROUND			"na-factory-data-target-background"
+#define NAFO_DATA_TARGET_LOCATION			"na-factory-data-target-location"
 #define NAFO_DATA_TARGET_TOOLBAR			"na-factory-data-target-toolbar"
 #define NAFO_DATA_TOOLBAR_LABEL				"na-factory-data-toolbar-label"
 #define NAFO_DATA_TOOLBAR_SAME_LABEL		"na-factory-data-toolbar-same-label"

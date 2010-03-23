@@ -701,10 +701,9 @@ na_object_action_is_candidate( const NAObjectAction *action, guint target, GList
 	if( !action->private->dispose_has_run ){
 
 		is_candidate =
-			( na_object_is_target_selection( action ) &&
-					( target == ITEM_TARGET_BACKGROUND || target == ITEM_TARGET_SELECTION )) ||
-			( na_object_is_target_toolbar( action ) &&
-						target == ITEM_TARGET_TOOLBAR );
+			( na_object_is_target_selection( action ) && target == ITEM_TARGET_SELECTION ) ||
+			( na_object_is_target_location( action ) && target == ITEM_TARGET_LOCATION ) ||
+			( na_object_is_target_toolbar( action ) && target == ITEM_TARGET_TOOLBAR );
 	}
 
 	return( is_candidate );

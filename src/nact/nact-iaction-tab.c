@@ -78,6 +78,7 @@ static void          on_tab_updatable_selection_changed( NactIActionTab *instanc
 static void          on_tab_updatable_provider_changed( NactIActionTab *instance, NAObjectItem *item );
 
 static void          on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance );
+static void          on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance );
 
 static void          check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label );
 static void          on_label_changed( GtkEntry *entry, NactIActionTab *instance );
@@ -258,6 +259,13 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 				"toggled",
 				G_CALLBACK( on_target_selection_toggled ));
 
+		button = base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetLocationButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( button ),
+				"toggled",
+				G_CALLBACK( on_target_location_toggled ));
+
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
@@ -398,7 +406,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	gboolean enable_tab;
-	gboolean target_selection, target_toolbar;
+	gboolean target_selection, target_location, target_toolbar;
 	gboolean enable_label;
 	gboolean same_label;
 	GtkWidget *label_widget, *tooltip_widget, *icon_widget, *title_widget;
@@ -432,7 +440,11 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );
 
 		target_selection = ( item && (
-				( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_selection( NA_OBJECT_ACTION( item ))) ||
+				( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_selection( item )) ||
+				( NA_IS_OBJECT_MENU( item ))));
+
+		target_location = ( item && (
+				( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_location( item )) ||
 				( NA_IS_OBJECT_MENU( item ))));
 
 		target_toolbar = ( item && (
@@ -443,7 +455,12 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
 		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
-		enable_label = ( item && ( NA_IS_OBJECT_MENU( item ) || target_selection ));
+		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetLocationButton" ));
+		gtk_toggle_button_set_active( toggle, target_location );
+		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
+		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
+
+		enable_label = ( item && ( NA_IS_OBJECT_MENU( item ) || target_selection || target_location ));
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
 		label = item ? na_object_get_label( item ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
@@ -576,6 +593,45 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 				g_signal_handlers_block_by_func(( gpointer ) button, on_target_selection_toggled, instance );
 				gtk_toggle_button_set_active( button, !is_target );
 				g_signal_handlers_unblock_by_func(( gpointer ) button, on_target_selection_toggled, instance );
+			}
+		}
+	}
+}
+
+static void
+on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance )
+{
+	static const gchar *thisfn = "nact_iaction_tab_on_target_location_toggled";
+	NAObjectAction *action;
+	gboolean is_target;
+	gboolean editable;
+
+	if( !st_on_selection_change ){
+		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
+
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				NULL );
+
+		g_debug( "%s: item=%p (%s), editable=%s",
+				thisfn, ( void * ) action, action ? G_OBJECT_TYPE_NAME( action ) : "(null)",
+				editable ? "True":"False" );
+
+		if( action && NA_IS_OBJECT_ACTION( action )){
+
+			is_target = gtk_toggle_button_get_active( button );
+
+			if( editable ){
+				na_object_set_target_location( action, is_target );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
+
+			} else {
+				g_signal_handlers_block_by_func(( gpointer ) button, on_target_location_toggled, instance );
+				gtk_toggle_button_set_active( button, !is_target );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_target_location_toggled, instance );
 			}
 		}
 	}

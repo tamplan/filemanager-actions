@@ -130,6 +130,7 @@ G_BEGIN_DECLS
  */
 #define na_object_get_version( obj )					(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_VERSION ))
 #define na_object_is_target_selection( obj )			(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_SELECTION )))
+#define na_object_is_target_location( obj )				(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_LOCATION )))
 #define na_object_is_target_toolbar( obj )				(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_TOOLBAR )))
 #define na_object_get_toolbar_label( obj )				(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLBAR_LABEL ))
 #define na_object_is_toolbar_same_label( obj )			(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLBAR_SAME_LABEL )))
@@ -137,6 +138,7 @@ G_BEGIN_DECLS
 
 #define na_object_set_version( obj, version )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_VERSION, ( const void * )( version ))
 #define na_object_set_target_selection( obj, target )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_SELECTION, ( const void * ) GUINT_TO_POINTER( target ))
+#define na_object_set_target_location( obj, target )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_LOCATION, ( const void * ) GUINT_TO_POINTER( target ))
 #define na_object_set_target_toolbar( obj, target )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TARGET_TOOLBAR, ( const void * ) GUINT_TO_POINTER( target ))
 #define na_object_set_toolbar_label( obj, label )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLBAR_LABEL, ( const void * )( label ))
 #define na_object_set_toolbar_same_label( obj, same )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLBAR_SAME_LABEL, ( const void * ) GUINT_TO_POINTER( same ))

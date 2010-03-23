@@ -57,7 +57,7 @@ static void     interface_base_finalize( NAIContextualInterface *klass );
 
 static gboolean v_is_candidate( NAIContextual *object, guint target, GList *selection );
 
-static gboolean is_target_background_candidate( const NAIContextual *object, NASelectedInfo *current_folder );
+static gboolean is_target_location_candidate( const NAIContextual *object, NASelectedInfo *current_folder );
 static gboolean is_target_toolbar_candidate( const NAIContextual *object, NASelectedInfo *current_folder );
 static gboolean is_current_folder_inside( const NAIContextual *object, NASelectedInfo *current_folder );
 static gboolean is_target_selection_candidate( const NAIContextual *object, GList *files );
@@ -172,8 +172,8 @@ na_icontextual_is_candidate( const NAIContextual *object, guint target, GList *f
 	is_candidate = v_is_candidate( NA_ICONTEXTUAL( object ), target, files );
 
 	switch( target ){
-		case ITEM_TARGET_BACKGROUND:
-			is_candidate = is_target_background_candidate( object, ( NASelectedInfo * ) files->data );
+		case ITEM_TARGET_LOCATION:
+			is_candidate = is_target_location_candidate( object, ( NASelectedInfo * ) files->data );
 			break;
 
 		case ITEM_TARGET_TOOLBAR:
@@ -285,7 +285,7 @@ v_is_candidate( NAIContextual *object, guint target, GList *selection )
 }
 
 static gboolean
-is_target_background_candidate( const NAIContextual *object, NASelectedInfo *current_folder )
+is_target_location_candidate( const NAIContextual *object, NASelectedInfo *current_folder )
 {
 	gboolean is_candidate;
 

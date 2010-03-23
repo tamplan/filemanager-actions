@@ -279,7 +279,7 @@ NADataDef data_def_item [] = {
 				NULL,
 				NULL },
 
-	/* dynamic data, so non readable / non writable
+	/* dynamic data, so non readable / non writable (but has property)
 	 * is left at the NAIIOProvider disposition
 	 */
 	{ NAFO_DATA_PROVIDER_DATA,
