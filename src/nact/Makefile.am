@@ -126,6 +126,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-providers-list.h								\
 	nact-schemes-list.c									\
 	nact-schemes-list.h									\
+	nact-sort-buttons.c									\
+	nact-sort-buttons.h									\
 	nact-tree-model.c									\
 	nact-tree-model.h									\
 	nact-tree-model-dnd.c								\

@@ -58,6 +58,7 @@
 #include "nact-marshal.h"
 #include "nact-main-window.h"
 #include "nact-confirm-logout.h"
+#include "nact-sort-buttons.h"
 
 /* private class data
  */
@@ -703,6 +704,7 @@ instance_dispose( GObject *window )
 		na_object_unref_items( self->private->deleted );
 
 		nact_iactions_list_dispose( NACT_IACTIONS_LIST( window ));
+		nact_sort_buttons_dispose( self );
 		nact_iaction_tab_dispose( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_dispose( NACT_ICOMMAND_TAB( window ));
 		nact_ifolders_tab_dispose( NACT_IFOLDERS_TAB( window ));
@@ -1024,6 +1026,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 
 		nact_iactions_list_set_management_mode( NACT_IACTIONS_LIST( window ), IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
 		nact_iactions_list_initial_load_toplevel( NACT_IACTIONS_LIST( window ));
+		nact_sort_buttons_initial_load( window );
 
 		nact_iaction_tab_initial_load_toplevel( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_initial_load_toplevel( NACT_ICOMMAND_TAB( window ));
@@ -1075,6 +1078,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 		/* fill the IActionsList at last so that all signals are connected
 		 */
 		nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
+		nact_sort_buttons_runtime_init( window );
 
 		/* this to update the title when an item is modified
 		 */
@@ -1109,6 +1113,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 		nact_iadvanced_tab_all_widgets_showed( NACT_IADVANCED_TAB( window ));
 
 		nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));
+		nact_sort_buttons_all_widgets_showed( window );
 	}
 }
 

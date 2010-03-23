@@ -1,5 +1,16 @@
 2009-03-23 Pierre Wieser <pwieser@trychlos.org>
 
+	Add buttons to sort the list.
+
+	* src/nact/nact-sort-buttons.c:
+	* src/nact/nact-sort-buttons.h: New files.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-main-window.c: Updated accordingly.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Define three new buttons to help to sort the list of items.
+
 	* src/core/Makefile.am:
 	No more give a version number to the core library.
 
