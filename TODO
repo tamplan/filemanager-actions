@@ -41,8 +41,6 @@
 
 - for each toolbar, let the user choose which buttons are displayed
 
-- have a visual indication of the sort order in the tree
-
 - when a unique app is found, use libwnck (?) to activate it
 
 - have a preference for modified and invalid fonts
@@ -139,3 +137,7 @@
             properties/
             conditions/
             command/
+
+- bug: when order changes, nact is not marked modified
+
+- bug: when profile order changes, an unref is warned at end
