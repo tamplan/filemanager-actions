@@ -69,8 +69,6 @@
 - Nautilus bug when dnd to nautilus on other screen
   see https://bugzilla.gnome.org/show_bug.cgi?id=593453
 
-- Nautilus bug: doesn't refresh toolbar when an item is updated
-
 - nact: new action assistant
 
 - DBus service: list current I/O providers
@@ -92,6 +90,7 @@
 
 - enhancement.management: we should be able to fully export a configuration
   this implies exporting menus and full tree
+  + restore hierarchy on import
 
 - enhancement.ui: rows implicitely selected should have a special display
   (as a sort of 'transparent' selection)
@@ -131,12 +130,6 @@
 - icon: is defined as localestring in desktop entry spec
   but path is defined as string in this same spec
   and icon may be a path -> so what to do with this ?
-
-- try to restore hierarchy on import
-
-- use NADataDef to automatically generate schemas
-  in data/nautilus-actions.schemas.in
-  and in src/utils/nautilus-actions-schemas
 
 - in GConf, for v3, have conditions in a subfolder
   configurations/
