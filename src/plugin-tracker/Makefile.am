@@ -60,7 +60,7 @@ libnautilus_actions_tracker_la_LIBADD = \
 libnautilus_actions_tracker_la_LDFLAGS = \
 	-module 													\
 	-no-undefined												\
-	-avoid-version 												\
+	-avoid-version												\
 	$(NULL)
 
 EXTRA_DIST = \

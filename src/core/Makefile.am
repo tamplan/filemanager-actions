@@ -101,10 +101,9 @@ libna_core_la_SOURCES = \
 libna_core_la_LIBADD = \
 	$(NULL)
 
-VERSION_INFO = `echo @PACKAGE_VERSION@ | sed 's/\./:/g'`
 libna_core_la_LDFLAGS = \
 	-no-undefined										\
-	-version-number $(VERSION_INFO)						\
+	-avoid-version										\
 	$(NULL)
 
 pkgdata_DATA = \
