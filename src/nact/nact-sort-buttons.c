@@ -134,6 +134,33 @@ nact_sort_buttons_dispose( NactMainWindow *window )
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 }
 
+/**
+ * nact_sort_buttons_display_order_change:
+ * @window: the #NactMainWindow.
+ * @order_mode: the new order mode.
+ *
+ * Relayed via NactMainWindow, this is a NAIPivotConsumer notification.
+ */
+void
+nact_sort_buttons_display_order_change( NactMainWindow *window, guint order_mode )
+{
+	static const gchar *thisfn = "nact_sort_buttons_display_order_change";
+	GtkToggleButton *button;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" ));
+	gtk_toggle_button_set_active( button, FALSE );
+
+	button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" ));
+	gtk_toggle_button_set_active( button, FALSE );
+
+	button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" ));
+	gtk_toggle_button_set_active( button, FALSE );
+
+	display_sort_order( window, order_mode );
+}
+
 static void
 on_sort_down_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *window )
 {

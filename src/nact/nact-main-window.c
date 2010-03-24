@@ -1428,6 +1428,7 @@ ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order
 	/*self = NACT_MAIN_WINDOW( instance );*/
 
 	nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( instance ), order_mode );
+	nact_sort_buttons_display_order_change( NACT_MAIN_WINDOW( instance ), order_mode );
 }
 
 static gchar *

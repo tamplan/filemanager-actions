@@ -139,7 +139,3 @@
             command/
 
 - bug: when order changes, nact is not marked modified
-
-- bug: when we change order via preferences, the buttons should reflect this
-
-- bug: when one clicks on target location, no more able to cut paste
