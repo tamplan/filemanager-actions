@@ -818,17 +818,26 @@ na_pivot_set_loadable( NAPivot *pivot, guint loadable )
 gboolean
 na_pivot_is_level_zero_writable( const NAPivot *pivot )
 {
-	gboolean writable;
+	gboolean all_locked;
+	gboolean gconf_locked;
+	GConfClient *gconf;
+	gchar *path;
 
 	writable = FALSE;
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), writable );
 
 	if( !pivot->private->dispose_has_run ){
 
-		writable = !na_pivot_is_configuration_locked_by_admin( pivot );
+		all_locked = na_pivot_is_configuration_locked_by_admin( pivot );
+
+		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
+
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, "mandatory/io-gconf/locked" );
+		gconf_locked = na_gconf_utils_read_bool( gconf, path, FALSE, FALSE );
+		g_free( path );
 	}
 
-	return( writable );
+	return( !all_locked && !gconf_locked );
 }
 
 /**
@@ -851,10 +860,9 @@ na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot )
 	if( !pivot->private->dispose_has_run ){
 
 		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
+
 		path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, "mandatory/all/locked" );
-
 		locked = na_gconf_utils_read_bool( gconf, path, FALSE, FALSE );
-
 		g_free( path );
 	}
 

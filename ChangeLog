@@ -1,5 +1,8 @@
 2009-03-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-pivot.c (na_pivot_is_level_zero_writable):
+	Writable if not all not GConf are locked by admin.
+
 	* src/nact/nact-iaction-tab.c (nact_iaction_tab_runtime_init_toplevel):
 	* src/nact/nact-iadvanced-tab.c (runtime_init_connect_signals):
 	* src/nact/nact-icommand-tab.c (nact_icommand_tab_runtime_init_toplevel):
