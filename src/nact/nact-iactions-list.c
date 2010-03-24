@@ -98,7 +98,6 @@ static gboolean on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactIActio
 static gboolean on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactIActionsList *instance );
 static gboolean on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *instance );
 static void     on_label_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIActionsList *instance );
-static void     on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void     on_tab_updatable_item_updated( NactIActionsList *instance, NAObject *object, gboolean force_display );
 static void     open_popup( NactIActionsList *instance, GdkEventButton *event );
 
@@ -447,13 +446,6 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 				G_OBJECT( treeview ),
 				"button-press-event",
 				G_CALLBACK( on_button_press_event ));
-
-		/* install a virtual function as 'selection-changed' handler */
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_iactions_list_selection_changed ));
 
 		/* updates the treeview display when an item is modified */
 		ialid->tab_updated_handler = base_window_signal_connect(
@@ -1247,19 +1239,6 @@ on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gch
 	new_text = g_strdup( text );
 
 	g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_COLUMN_EDITED, object, new_text, IACTIONS_LIST_LABEL_COLUMN );
-}
-
-/*
- * our handler for "selection-changed" emitted by the interface
- * this let us transform the signal in a virtual function
- * so that our implementors have the best of two worlds ;-)
- */
-static void
-on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items )
-{
-	if( NACT_IACTIONS_LIST_GET_INTERFACE( instance )->selection_changed ){
-		NACT_IACTIONS_LIST_GET_INTERFACE( instance )->selection_changed( instance, selected_items );
-	}
 }
 
 /*
