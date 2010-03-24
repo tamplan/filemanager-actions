@@ -171,7 +171,7 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
 
 		base_window_signal_connect(

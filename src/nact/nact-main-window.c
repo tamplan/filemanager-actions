@@ -166,6 +166,7 @@ static void     on_base_initial_load_toplevel( NactMainWindow *window, gpointer 
 static void     on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data );
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
+static void     on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
 static void     on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void     on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data );
 static void     set_current_object_item( NactMainWindow *window, GSList *selected_items );
@@ -373,12 +374,13 @@ class_init( NactMainWindowClass *klass )
 			G_TYPE_POINTER );
 
 	/**
-	 * nact-tab-updatable-selection-changed:
+	 * main-window-selection-changed:
 	 *
 	 * This signal is emitted by this main window, in response of a
-	 * change of the selection in IActionsList.
+	 * change of the selection in IActionsList, after having updated
+	 * its properties.
 	 * Notebook tabs should connect to this signal and update their
-	 * display to reflect the content of the new selection.
+	 * display to reflect the content of the new selection (if applyable).
 	 *
 	 * Note also that, where this main window will receive from
 	 * IActionsList the full list of currently selected items, this
@@ -387,7 +389,7 @@ class_init( NactMainWindowClass *klass )
 	 * See #iactions_list_selection_changed().
 	 */
 	st_signals[ SELECTION_CHANGED ] = g_signal_new(
-			TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED,
+			MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 			G_TYPE_OBJECT,
 			G_SIGNAL_RUN_LAST,
 			0,					/* no default handler */
@@ -484,7 +486,6 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->selection_changed = NULL;
 	iface->get_treeview_name = iactions_list_get_treeview_name;
 }
 
@@ -847,7 +848,7 @@ nact_main_window_has_modified_items( const NactMainWindow *window )
 		g_debug( "%s: has_modified=%s", thisfn, has_modified ? "True":"False" );
 	}
 
-	return( count_deleted > 0 || has_modified );
+	return( count_deleted > 0 || has_modified || nact_main_menubar_is_level_zero_order_changed( window ));
 }
 
 /**
@@ -1087,6 +1088,12 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 				G_OBJECT( window ),
 				IACTIONS_LIST_SIGNAL_STATUS_CHANGED,
 				G_CALLBACK( on_iactions_list_status_changed ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
+				G_CALLBACK( on_main_window_level_zero_order_changed ));
 	}
 }
 
@@ -1115,6 +1122,14 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 		nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));
 		nact_sort_buttons_all_widgets_showed( window );
 	}
+}
+
+static void
+on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_data )
+{
+	g_debug( "nact_main_window_on_main_window_level_zero_order_changed" );
+
+	setup_dialog_title( window );
 }
 
 /*
@@ -1175,12 +1190,14 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 
 	setup_dialog_title( window );
 
-	g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED, GINT_TO_POINTER( count ));
+	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_SELECTION_CHANGED, GINT_TO_POINTER( count ));
 }
 
 static void
 on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data )
 {
+	g_debug( "nact_main_window_on_iactions_list_status_changed" );
+
 	setup_dialog_title( window );
 }
 
@@ -1251,6 +1268,12 @@ iactions_list_get_treeview_name( NactIActionsList *instance )
 	return( name );
 }
 
+/*
+ * the title bar of the main window brings up three informations:
+ * - the name of the application
+ * - the name of the currently selected item if there is only one
+ * - an asterisk if anything has been modified
+ */
 static void
 setup_dialog_title( NactMainWindow *window )
 {
@@ -1260,6 +1283,7 @@ setup_dialog_title( NactMainWindow *window )
 	gchar *label;
 	gchar *tmp;
 
+	g_debug( "setup_dialog_title" );
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	title = base_application_get_application_name( BASE_APPLICATION( application ));
 
@@ -1429,6 +1453,9 @@ ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order
 
 	nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( instance ), order_mode );
 	nact_sort_buttons_display_order_change( NACT_MAIN_WINDOW( instance ), order_mode );
+
+	g_signal_emit_by_name(
+			NACT_MAIN_WINDOW( instance ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
 }
 
 static gchar *

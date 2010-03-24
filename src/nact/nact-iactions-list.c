@@ -191,7 +191,7 @@ interface_base_init( NactIActionsListInterface *klass )
 		 * The main window is typically the only interested. It will
 		 * setup current item and profiles, before emitting another
 		 * signal targeting the notebook tabs
-		 * (see. TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED signal).
+		 * (see. MAIN_WINDOW_SIGNAL_SELECTION_CHANGED signal).
 		 */
 		st_signals[ SELECTION_CHANGED ] = g_signal_new_class_handler(
 				IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
@@ -350,16 +350,14 @@ nact_iactions_list_initial_load_toplevel( NactIActionsList *instance )
 	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
 
 		treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
-
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
-		ialid->selection_changed_send_allowed = FALSE;
+		ialid->selection_changed_allowed = FALSE;
 
 		/* associates the ActionsList to the label */
 		label = base_window_get_widget( BASE_WINDOW( instance ), "ActionsListLabel" );
 		gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( treeview ));
 
 		nact_tree_model_initial_load( BASE_WINDOW( instance ), treeview );
-
 		gtk_tree_view_set_enable_tree_lines( treeview, TRUE );
 
 		/* create visible columns on the tree view
@@ -416,6 +414,7 @@ nact_iactions_list_runtime_init_toplevel( NactIActionsList *instance, GList *ite
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
+		ialid->selection_changed_allowed = FALSE;
 		have_dnd = have_dnd_mode( instance, ialid );
 		have_filter_selection = have_filter_selection_mode( instance, ialid );
 
@@ -538,10 +537,12 @@ nact_iactions_list_dispose( NactIActionsList *instance )
 
 		treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-		ialid = nact_iactions_list_priv_get_instance_data( instance );
-		ialid->selection_changed_send_allowed = FALSE;
-		g_list_free( ialid->modified_items );
 
+		ialid = nact_iactions_list_priv_get_instance_data( instance );
+		g_list_free( ialid->modified_items );
+		ialid->modified_items = NULL;
+
+		ialid->selection_changed_allowed = FALSE;
 		nact_tree_model_dispose( model );
 
 		g_free( ialid );
@@ -668,14 +669,12 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
 		profiles_are_displayed = are_profiles_displayed( instance, ialid );
 
-		ialid->selection_changed_send_allowed = FALSE;
-
+		ialid->selection_changed_allowed = FALSE;
 		nact_tree_model_fill( model, items, profiles_are_displayed );
+		ialid->selection_changed_allowed = TRUE;
 
 		g_list_free( ialid->modified_items );
 		ialid->modified_items = NULL;
-
-		ialid->selection_changed_send_allowed = TRUE;
 
 		g_signal_emit_by_name(
 				instance,
@@ -761,8 +760,9 @@ nact_iactions_list_on_treeview_selection_changed( GtkTreeSelection *selection, N
 	IActionsListInstanceData *ialid;
 
 	ialid = nact_iactions_list_priv_get_instance_data( instance );
-	if( ialid->selection_changed_send_allowed ){
+	if( ialid->selection_changed_allowed ){
 
+		g_debug( "nact_iactions_list_on_treeview_selection_changed" );
 		g_signal_handler_block( instance, ialid->tab_updated_handler );
 
 		selected_items = nact_iactions_list_bis_get_selected_items( instance );
@@ -770,9 +770,9 @@ nact_iactions_list_on_treeview_selection_changed( GtkTreeSelection *selection, N
 		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, selected_items );
 
 		g_signal_handler_unblock( instance, ialid->tab_updated_handler );
-	}
 
-	/* selection list is freed in cleanup handler for the signal */
+		/* selection list is freed in cleanup handler for the signal */
+	}
 }
 
 /**
@@ -1070,6 +1070,9 @@ inline_edition( NactIActionsList *instance )
 
 	ialid = nact_iactions_list_priv_get_instance_data( instance );
 	if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
+
+		ialid->selection_changed_allowed = FALSE;
+
 		treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
 		selection = gtk_tree_view_get_selection( treeview );
 		listrows = gtk_tree_selection_get_selected_rows( selection, NULL );
@@ -1077,13 +1080,13 @@ inline_edition( NactIActionsList *instance )
 		if( g_list_length( listrows ) == 1 ){
 			path = ( GtkTreePath * ) listrows->data;
 			column = gtk_tree_view_get_column( treeview, IACTIONS_LIST_LABEL_COLUMN );
-			ialid->selection_changed_send_allowed = FALSE;
 			gtk_tree_view_set_cursor( treeview, path, column, TRUE );
-			ialid->selection_changed_send_allowed = TRUE;
 		}
 
 		g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
 		g_list_free( listrows );
+
+		ialid->selection_changed_allowed = TRUE;
 	}
 }
 
@@ -1150,7 +1153,7 @@ on_edition_status_changed( NactIActionsList *instance, NAIDuplicable *object )
 
 	/* do not send status-changed signal while filling the tree
 	 */
-	if( ialid->selection_changed_send_allowed ){
+	if( ialid->selection_changed_allowed ){
 		g_signal_emit_by_name( instance, IACTIONS_LIST_SIGNAL_STATUS_CHANGED, NULL );
 	}
 }

@@ -1,9 +1,34 @@
 2009-03-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iaction-tab.c (nact_iaction_tab_runtime_init_toplevel):
+	* src/nact/nact-iadvanced-tab.c (runtime_init_connect_signals):
+	* src/nact/nact-icommand-tab.c (nact_icommand_tab_runtime_init_toplevel):
+	* src/nact/nact-iconditions-tab.c (nact_iconditions_tab_runtime_init_toplevel):
+	* src/nact/nact-ifolders-tab.c (nact_ifolders_tab_runtime_init_toplevel):
+	* src/nact/nact-main-tab.h:
+	Signal TAB_UPDATABLE_SIGNAL_SELECTION_CHANGED is renamed as
+	MAIN_WINDOW_SIGNAL_SELECTION_CHANGED.
+
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-menubar.h
+	(nact_main_menubar_is_level_zero_order_changed): New function.
+
+	* src/nact/nact-iactions-list.h:
+	* src/nact/nact-iactions-list-bis.c (nact_iactions_list_bis_delete):
+	Add an argument to select the row at end of the function.
+
+	* src/nact/nact-main-window.c:
+	Connect to MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED to update
+	dialog title.
+
 	* src/nact/nact-iactions-list.c:
 	* src/nact/nact-iactions-list.h
 	(selection_changed): Remove the not used API.
 	Remove the connection to the signal and the call to the interface.
+
+	* src/nact/nact-assistant-export.c (iactions_list_iface_init):
+	Use the IACTIONS_LIST_SIGNAL_SELECTION_CHANGED instead of the
+	interface API.
 
 	* src/nact/nact-main-window.c
 	(ipivot_consumer_on_display_order_changed):

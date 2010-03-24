@@ -168,7 +168,7 @@ nact_iactions_list_bis_collapse_to_parent( NactIActionsList *instance )
  * possible, and refilter the display model.
  */
 void
-nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items )
+nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items, gboolean select_at_end )
 {
 	static const gchar *thisfn = "nact_iactions_list_bis_delete";
 	GtkTreeView *treeview;
@@ -177,8 +177,8 @@ nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items )
 	GList *it;
 	IActionsListInstanceData *ialid;
 
-	g_debug( "%s: instance=%p, items=%p (count=%d)",
-			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
+	g_debug( "%s: instance=%p, items=%p (count=%d), select_at_end=%s",
+			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ), select_at_end ? "True":"False" );
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
 	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
@@ -187,7 +187,7 @@ nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items )
 		model = gtk_tree_view_get_model( treeview );
 
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
-		ialid->selection_changed_send_allowed = FALSE;
+		ialid->selection_changed_allowed = FALSE;
 
 		decrement_counters( instance, ialid, items );
 
@@ -206,10 +206,12 @@ nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items )
 
 		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
 
-		ialid->selection_changed_send_allowed = TRUE;
+		ialid->selection_changed_allowed = TRUE;
 
 		if( path ){
-			nact_iactions_list_bis_select_row_at_path( instance, treeview, model, path );
+			if( select_at_end ){
+				nact_iactions_list_bis_select_row_at_path( instance, treeview, model, path );
+			}
 			gtk_tree_path_free( path );
 		}
 	}
@@ -597,6 +599,7 @@ nact_iactions_list_bis_remove_modified( NactIActionsList *instance, const NAObje
 
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
 		ialid->modified_items = g_list_remove( ialid->modified_items, item );
+
 		if( g_list_length( ialid->modified_items ) == 0 ){
 			g_list_free( ialid->modified_items );
 			ialid->modified_items = NULL;

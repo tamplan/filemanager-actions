@@ -137,5 +137,3 @@
             properties/
             conditions/
             command/
-
-- bug: when order changes, nact is not marked modified

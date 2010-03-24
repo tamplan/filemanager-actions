@@ -122,7 +122,7 @@ void      nact_iactions_list_set_management_mode( NactIActionsList *instance, gi
 
 void      nact_iactions_list_bis_clear_selection( NactIActionsList *instance, GtkTreeView *treeview );
 void      nact_iactions_list_bis_collapse_to_parent( NactIActionsList *instance );
-void      nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items );
+void      nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items, gboolean select_at_end );
 void      nact_iactions_list_bis_expand_to_first_child( NactIActionsList *instance );
 NAObject *nact_iactions_list_bis_get_item( NactIActionsList *instance, const gchar *uuid );
 GList    *nact_iactions_list_bis_get_items( NactIActionsList *instance );

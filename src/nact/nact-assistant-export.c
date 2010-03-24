@@ -222,7 +222,6 @@ iactions_list_iface_init( NactIActionsListInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->selection_changed = on_iactions_list_selection_changed;
 	iface->get_treeview_name = on_iactions_list_get_treeview_name;
 }
 
@@ -382,6 +381,12 @@ on_runtime_init_dialog( NactAssistantExport *dialog, gpointer user_data )
 	g_assert( NACT_IS_ASSISTANT_EXPORT( dialog ));
 
 	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
+
+	base_window_signal_connect(
+			BASE_WINDOW( dialog ),
+			G_OBJECT( dialog ),
+			IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_iactions_list_selection_changed ));
 
 	assist_runtime_init_intro( dialog, assistant );
 	assist_runtime_init_actions_list( dialog, assistant );

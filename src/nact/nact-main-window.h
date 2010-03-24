@@ -69,6 +69,7 @@ typedef struct {
 }
 	NactMainWindowClass;
 
+#define MAIN_WINDOW_SIGNAL_SELECTION_CHANGED			"main-window-selection-changed"
 #define MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES	"main-window-update-sensitivities"
 #define MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED		"main-window-level-zero-order-changed"
 

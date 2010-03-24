@@ -54,8 +54,8 @@ typedef struct {
 
 	/* signal management
 	 */
+	gboolean selection_changed_allowed;
 	gulong   tab_updated_handler;
-	gboolean selection_changed_send_allowed;
 
 	/* maintains a flat list of modified objects
 	 * should be faster than iterating each time this is needed

@@ -416,6 +416,22 @@ nact_main_menubar_dispose( NactMainWindow *window )
 }
 
 /**
+ * nact_main_menubar_is_level_zero_order_changed:
+ * @window: the #NactMainWindow main window.
+ *
+ * Returns: %TRUE if the level zero has changed, %FALSE else.
+ */
+gboolean
+nact_main_menubar_is_level_zero_order_changed( const NactMainWindow *window )
+{
+	MenubarIndicatorsStruct *mis;
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
+
+	return( mis->level_zero_order_changed );
+}
+
+/**
  * Whether the specified object should be relabeled when pasted ?
  * @object: the considered #NAObject-derived object.
  * @pivot: the #NAPivot instance.
@@ -557,8 +573,9 @@ on_level_zero_order_changed( NactMainWindow *window, gpointer user_data )
 {
 	MenubarIndicatorsStruct *mis;
 
-	g_debug( "nact_main_menubar_on_level_zero_order_changed" );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	g_debug( "nact_main_menubar_on_level_zero_order_changed: change=%s", user_data ? "True":"False" );
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	mis->level_zero_order_changed = GPOINTER_TO_INT( user_data );
@@ -1075,7 +1092,7 @@ on_cut_activated( GtkAction *gtk_action, NactMainWindow *window )
 		clipboard = nact_main_window_get_clipboard( window );
 		nact_clipboard_primary_set( clipboard, to_delete, CLIPBOARD_MODE_CUT );
 		update_clipboard_counters( window );
-		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete );
+		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete, TRUE );
 	}
 
 	na_object_unref_selected_items( items );
@@ -1302,7 +1319,7 @@ on_delete_activated( GtkAction *gtk_action, NactMainWindow *window )
 
 	if( to_delete ){
 		nact_main_window_move_to_deleted( window, to_delete );
-		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete );
+		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete, TRUE );
 	}
 
 	na_object_unref_selected_items( items );
