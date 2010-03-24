@@ -334,6 +334,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 			break;
 	}
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
+	enable_order_mode_buttons( editor );
 
 	create_root_menu = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_CREATE_ROOT_MENU, FALSE );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "CreateRootMenuButton" );
@@ -462,6 +463,28 @@ on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor )
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
+}
+
+static void
+enable_order_mode_buttons( NactPreferencesEditor *editor )
+{
+	NactApplication *application;
+	NAUpdater *updater;
+	gboolean writable;
+	GtkWidget *button;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+	updater = nact_application_get_updater( application );
+	writable = na_pivot_is_level_zero_writable( NA_PIVOT( updater ));
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
+	gtk_widget_set_sensitive( button, writable );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaDescButton" );
+	gtk_widget_set_sensitive( button, writable );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "OrderManualButton" );
+	gtk_widget_set_sensitive( button, writable );
 }
 
 static void

@@ -38,6 +38,7 @@
 #include "nact-application.h"
 #include "nact-sort-buttons.h"
 
+static void enable_buttons( NactMainWindow *window );
 static void on_sort_down_button_toggled( GtkToggleButton *button, NactMainWindow *window );
 static void on_sort_manual_button_toggled( GtkToggleButton *button, NactMainWindow *window );
 static void on_sort_up_button_toggled( GtkToggleButton *button, NactMainWindow *window );
@@ -95,6 +96,8 @@ nact_sort_buttons_runtime_init( NactMainWindow *window )
 			G_OBJECT( button ),
 			"toggled",
 			G_CALLBACK( on_sort_manual_button_toggled ));
+
+	enable_buttons( window );
 }
 
 /**
@@ -159,6 +162,28 @@ nact_sort_buttons_display_order_change( NactMainWindow *window, guint order_mode
 	gtk_toggle_button_set_active( button, FALSE );
 
 	display_sort_order( window, order_mode );
+}
+
+static void
+enable_buttons( NactMainWindow *window )
+{
+	NactApplication *application;
+	NAUpdater *updater;
+	gboolean writable;
+	GtkWidget *button;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	writable = na_pivot_is_level_zero_writable( NA_PIVOT( updater ));
+
+	button = base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" );
+	gtk_widget_set_sensitive( button, writable );
+
+	button = base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" );
+	gtk_widget_set_sensitive( button, writable );
+
+	button = base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" );
+	gtk_widget_set_sensitive( button, writable );
 }
 
 static void

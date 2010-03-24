@@ -1,5 +1,9 @@
 2009-03-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-preferences-editor.c (on_base_runtime_init_dialog):
+	* src/nact/nact-sort-buttons.c (nact_sort_buttons_runtime_init):
+	Forbid the modification of order mode is level zero is not writable.
+
 	* src/core/na-pivot.c (na_pivot_is_level_zero_writable):
 	Writable if not all not GConf are locked by admin.
 
