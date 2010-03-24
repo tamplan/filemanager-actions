@@ -988,7 +988,7 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 				if( parent ){
 					pos = na_object_get_position( parent, origin );
 				}
-				g_object_unref( origin );
+				na_updater_remove_item( updater, NA_OBJECT( origin ));
 			}
 
 			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));

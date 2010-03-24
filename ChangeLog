@@ -1,3 +1,8 @@
+2009-03-24 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-main-menubar.c (save_item):
+	Not only unref old origin, but also remove it from tree.
+
 2009-03-23 Pierre Wieser <pwieser@trychlos.org>
 
 	Add buttons to sort the list.
