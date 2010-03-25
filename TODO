@@ -137,6 +137,3 @@
             properties/
             conditions/
             command/
-
-- enhancement.ui: implement on_mandatory_prefs_changed NAIPivotConsumer interface
-  to dynamically enable/disable order-mode buttons when admin changes them.

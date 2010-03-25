@@ -180,6 +180,7 @@ static gboolean confirm_for_giveup_from_menu( NactMainWindow *window );
 static gboolean confirm_for_giveup_from_pivot( NactMainWindow *window );
 static void     ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data );
 static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode );
+static void     ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance );
 static void     reload( NactMainWindow *window );
 
 static gchar   *iabout_get_application_name( NAIAbout *instance );
@@ -550,7 +551,7 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	iface->on_create_root_menu_changed = NULL;
 	iface->on_display_about_changed = NULL;
 	iface->on_display_order_changed = ipivot_consumer_on_display_order_changed;
-	iface->on_mandatory_prefs_changed = NULL;
+	iface->on_mandatory_prefs_changed = ipivot_consumer_on_mandatory_prefs_changed;
 }
 
 static void
@@ -1457,6 +1458,12 @@ ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order
 
 	g_signal_emit_by_name(
 			NACT_MAIN_WINDOW( instance ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
+}
+
+static void
+ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance )
+{
+	nact_sort_buttons_level_zero_writability_change( NACT_MAIN_WINDOW( instance ));
 }
 
 static gchar *

@@ -164,6 +164,22 @@ nact_sort_buttons_display_order_change( NactMainWindow *window, guint order_mode
 	display_sort_order( window, order_mode );
 }
 
+/**
+ * nact_sort_buttons_level_zero_writability_change:
+ * @window: the #NactMainWindow.
+ *
+ * Relayed via NactMainWindow, this is a NAIPivotConsumer notification.
+ */
+void
+nact_sort_buttons_level_zero_writability_change( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_sort_buttons_level_zero_writability_change";
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	enable_buttons( window );
+}
+
 static void
 enable_buttons( NactMainWindow *window )
 {
