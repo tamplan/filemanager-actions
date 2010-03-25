@@ -1,3 +1,27 @@
+Version 2.30.0
+==============
+
+	Release date 2010-03-26
+
+	Enhancements:
+
+		- Immplement full NautilusMenuProvider interface.
+		- Allow the user to define a full hierarchy of menus and actions.
+		- Implement full drag and drop.
+		- Implement full cut/copy/paste clipboard support.
+		- Allow an administrator to lock all the configuration.
+		- Fully manage readonly items.
+
+	New and updated translations:
+
+		cs (Marek Černocký, Petr Kovar, Andre Klapper)
+		de (Mario Blättermann, Christian Kirbach)
+		es (Jorge González, Ricardo Varas)
+		eu (Inaki Larranaga Murgoitio)
+		fr (Claude Paroz)
+		nb (Kjartan Maraas)
+		sl (Andrej Žnidaršič, Matej Urbančič)
+
 Version 2.29.4
 ==============
 
