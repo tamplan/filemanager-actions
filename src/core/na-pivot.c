@@ -116,6 +116,7 @@ static gulong        time_val_diff( const GTimeVal *recent, const GTimeVal *old 
 
 /* NAGConf runtime preferences management */
 static void          monitor_runtime_preferences( NAPivot *pivot );
+static void          on_mandatory_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
 static void          on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
 static void          display_order_changed( NAPivot *pivot );
 static void          create_root_menu_changed( NAPivot *pivot );
@@ -874,6 +875,7 @@ monitor_runtime_preferences( NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_pivot_monitor_runtime_preferences";
 	GList *list = NULL;
+	gchar *path;
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
@@ -885,7 +887,39 @@ monitor_runtime_preferences( NAPivot *pivot )
 					( GConfClientNotifyFunc ) on_preferences_change,
 					pivot ));
 
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, "mandatory" );
+	list = g_list_prepend( list,
+			na_gconf_monitor_new(
+					path,
+					( GConfClientNotifyFunc ) on_mandatory_prefs_changed,
+					pivot ));
+	g_free( path );
+
 	pivot->private->monitors = list;
+}
+
+static void
+on_mandatory_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
+{
+	const gchar *key;
+	gchar *key_entry;
+	GList *ic;
+
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		key = gconf_entry_get_key( entry );
+		key_entry = g_path_get_basename( key );
+
+		if( !strcmp( key_entry, "locked" )){
+			for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
+				na_ipivot_consumer_notify_of_mandatory_prefs_changed( NA_IPIVOT_CONSUMER( ic->data ));
+			}
+		}
+
+		g_free( key_entry );
+	}
 }
 
 static void

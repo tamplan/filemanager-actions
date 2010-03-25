@@ -186,6 +186,31 @@ void na_ipivot_consumer_notify_of_items_changed( NAIPivotConsumer *instance )
 }
 
 /**
+ * na_ipivot_consumer_notify_of_mandatory_prefs_changed:
+ * @instance: the #NAIPivotConsumer instance to be notified of the modifications.
+ *
+ * Notifies the consumers that a mandatory 'locked' preference has been changed.
+ */
+void na_ipivot_consumer_notify_of_mandatory_prefs_changed( NAIPivotConsumer *instance )
+{
+	static const gchar *thisfn = "na_ipivot_consumer_notify_of_mandatory_prefs_changed";
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		if( is_notify_allowed( instance )){
+
+			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_mandatory_prefs_changed ){
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_mandatory_prefs_changed( instance );
+			}
+		}
+	}
+}
+
+/**
  * na_ipivot_consumer_notify_of_create_root_menu_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.

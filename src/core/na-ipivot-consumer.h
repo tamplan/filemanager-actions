@@ -103,6 +103,14 @@ typedef struct {
 	 * is changed.
 	 */
 	void ( *on_display_order_changed )   ( NAIPivotConsumer *instance, gint order_mode );
+
+	/**
+	 * on_mandatory_prefs_changed:
+	 * @instance: the #NAIPivotConsumer instance which implements this interface.
+	 *
+	 * This function is triggered each time a mandatory 'locked' preference is changed.
+	 */
+	void ( *on_mandatory_prefs_changed ) ( NAIPivotConsumer *instance );
 }
 	NAIPivotConsumerInterface;
 
@@ -111,6 +119,7 @@ GType na_ipivot_consumer_get_type( void );
 void  na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance );
 
 void  na_ipivot_consumer_notify_of_items_changed           ( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_mandatory_prefs_changed ( NAIPivotConsumer *instance );
 void  na_ipivot_consumer_notify_of_create_root_menu_changed( NAIPivotConsumer *instance, gboolean enabled );
 void  na_ipivot_consumer_notify_of_display_about_changed   ( NAIPivotConsumer *instance, gboolean enabled );
 void  na_ipivot_consumer_notify_of_display_order_changed   ( NAIPivotConsumer *instance, gint order_mode );

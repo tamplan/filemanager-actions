@@ -1,5 +1,16 @@
 2009-03-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-ipivot-consumer.c
+	(na_ipivot_consumer_notify_of_mandatory_prefs_changed) : New function.
+	(on_mandatory_prefs_changed): New interface API.
+
+	* src/core/na-pivot.c (monitor_runtime_preferences):
+	Monitor the mandatory preferences set by the admin.
+
+	* src/nact/nact-main-window.c (ipivot_consumer_iface_init):
+	* src/plugin-menu/nautilus-actions.c (ipivot_consumer_iface_init):
+	For now, only declare NULL implementations.
+
 	* src/nact/nact-preferences-editor.c (on_base_runtime_init_dialog):
 	* src/nact/nact-sort-buttons.c (nact_sort_buttons_runtime_init):
 	Forbid the modification of order mode is level zero is not writable.

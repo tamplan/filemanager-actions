@@ -550,6 +550,7 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	iface->on_create_root_menu_changed = NULL;
 	iface->on_display_about_changed = NULL;
 	iface->on_display_order_changed = ipivot_consumer_on_display_order_changed;
+	iface->on_mandatory_prefs_changed = NULL;
 }
 
 static void
