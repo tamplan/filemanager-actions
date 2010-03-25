@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_MENUBAR_TOOLS_H__
-#define __NACT_MAIN_MENUBAR_TOOLS_H__
+#ifndef __NACT_MAIN_MENUBAR_FILE_H__
+#define __NACT_MAIN_MENUBAR_FILE_H__
 
 /**
  * SECTION: nact_main_menubar
- * @short_description: Main menubar Tools menu management.
- * @include: nact/nact-main-menubar-tools.h
+ * @short_description: Main menubar File menu management.
+ * @include: nact/nact-main-menubar-file.h
  */
 
 #include <gtk/gtk.h>
@@ -43,11 +43,16 @@
 
 G_BEGIN_DECLS
 
-void nact_main_menubar_tools_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis );
+void nact_main_menubar_file_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis );
 
-void nact_main_menubar_tools_on_import( GtkAction *action, NactMainWindow *window );
-void nact_main_menubar_tools_on_export( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_file_on_new_menu   ( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_file_on_new_action ( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_file_on_new_profile( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_file_on_save       ( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_file_on_quit       ( GtkAction *action, NactMainWindow *window );
+
+void nact_main_menubar_file_save_items( NactMainWindow *window );
 
 G_END_DECLS
 
-#endif /* __NACT_NACT_MENUBAR_TOOLS_H__ */
+#endif /* __NACT_NACT_MENUBAR_FILE_H__ */

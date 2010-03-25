@@ -39,11 +39,11 @@
 
 #include <gtk/gtk.h>
 
-#include "nact-main-window.h"
+#include "nact-main-menubar.h"
 
 G_BEGIN_DECLS
 
-void nact_main_menubar_maintainer_on_update_sensitivities( NactMainWindow *window, gpointer user_data );
+void nact_main_menubar_maintainer_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis );
 
 void nact_main_menubar_maintainer_on_dump_selection       ( GtkAction *action, NactMainWindow *window );
 void nact_main_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, NactMainWindow *window );

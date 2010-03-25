@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_MENUBAR_TOOLS_H__
-#define __NACT_MAIN_MENUBAR_TOOLS_H__
+#ifndef __NACT_MAIN_MENUBAR_EDIT_H__
+#define __NACT_MAIN_MENUBAR_EDIT_H__
 
 /**
  * SECTION: nact_main_menubar
- * @short_description: Main menubar Tools menu management.
- * @include: nact/nact-main-menubar-tools.h
+ * @short_description: Main menubar Edit menu management.
+ * @include: nact/nact-main-menubar-edit.h
  */
 
 #include <gtk/gtk.h>
@@ -43,11 +43,19 @@
 
 G_BEGIN_DECLS
 
-void nact_main_menubar_tools_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis );
+void     nact_main_menubar_edit_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis );
 
-void nact_main_menubar_tools_on_import( GtkAction *action, NactMainWindow *window );
-void nact_main_menubar_tools_on_export( GtkAction *action, NactMainWindow *window );
+void     nact_main_menubar_edit_on_cut          ( GtkAction *action, NactMainWindow *window );
+void     nact_main_menubar_edit_on_copy         ( GtkAction *action, NactMainWindow *window );
+void     nact_main_menubar_edit_on_paste        ( GtkAction *action, NactMainWindow *window );
+void     nact_main_menubar_edit_on_paste_into   ( GtkAction *action, NactMainWindow *window );
+void     nact_main_menubar_edit_on_duplicate    ( GtkAction *action, NactMainWindow *window );
+void     nact_main_menubar_edit_on_delete       ( GtkAction *action, NactMainWindow *window );
+void     nact_main_menubar_edit_on_reload       ( GtkAction *action, NactMainWindow *window );
+void     nact_main_menubar_edit_on_prefererences( GtkAction *action, NactMainWindow *window );
+
+gboolean nact_main_menubar_edit_is_pasted_object_relabeled( NAObject *object, NAPivot *pivot );
 
 G_END_DECLS
 
-#endif /* __NACT_NACT_MENUBAR_TOOLS_H__ */
+#endif /* __NACT_NACT_MENUBAR_EDIT_H__ */

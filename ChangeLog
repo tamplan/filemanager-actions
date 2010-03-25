@@ -1,5 +1,15 @@
 2009-03-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar-edit.c:
+	* src/nact/nact-main-menubar-edit.h:
+	* src/nact/nact-main-menubar-file.c:
+	* src/nact/nact-main-menubar-file.h:
+	* src/nact/nact-main-menubar-view.c:
+	* src/nact/nact-main-menubar-view.h: New files.
+
+	* po/POTFILES.in:
+	* src/nact/Makefile.am: Updated accordingly.
+
 	* src/nact/nact-main-window.c
 	(ipivot_consumer_on_mandatory_prefs_changed):
 	Implement NAIPivotConsumer notification.

@@ -33,7 +33,7 @@
 #endif
 
 #include "nact-confirm-logout.h"
-#include "nact-main-menubar.h"
+#include "nact-main-menubar-file.h"
 
 /* private class data
  */
@@ -323,7 +323,7 @@ on_save_and_quit_clicked( GtkButton *button, NactConfirmLogout *editor )
 	g_debug( "%s: button=%p, editor=%p", thisfn, ( void * ) button, ( void * ) editor );
 
 	main_window = NACT_MAIN_WINDOW( base_window_get_parent( BASE_WINDOW( editor )));
-	nact_main_menubar_save_items( main_window );
+	nact_main_menubar_file_save_items( main_window );
 
 	close_dialog( editor, TRUE );
 }

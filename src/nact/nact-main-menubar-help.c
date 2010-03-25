@@ -41,11 +41,12 @@
  * nact_main_menubar_help_on_update_sensitivities:
  * @window: the #NactMainWindow main application window.
  * @user_data: user data ?
+ * @mis: the #MenubarIndicatorsStruct structure.
  *
  * Update sensitivities on the Help menu.
  */
 void
-nact_main_menubar_help_on_update_sensitivities( NactMainWindow *window, gpointer user_data )
+nact_main_menubar_help_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis )
 {
 	/* TODO: help temporarily disabled */
 	nact_main_menubar_enable_item( window, "HelpItem", FALSE );

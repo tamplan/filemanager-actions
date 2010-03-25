@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MAIN_MENUBAR_TOOLS_H__
-#define __NACT_MAIN_MENUBAR_TOOLS_H__
+#ifndef __NACT_MAIN_MENUBAR_VIEW_H__
+#define __NACT_MAIN_MENUBAR_VIEW_H__
 
 /**
  * SECTION: nact_main_menubar
- * @short_description: Main menubar Tools menu management.
- * @include: nact/nact-main-menubar-tools.h
+ * @short_description: Main menubar View menu management.
+ * @include: nact/nact-main-menubar-view.h
  */
 
 #include <gtk/gtk.h>
@@ -43,11 +43,15 @@
 
 G_BEGIN_DECLS
 
-void nact_main_menubar_tools_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis );
+void nact_main_menubar_view_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis );
 
-void nact_main_menubar_tools_on_import( GtkAction *action, NactMainWindow *window );
-void nact_main_menubar_tools_on_export( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_view_on_expand_all   ( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_view_on_collapse_all ( GtkAction *action, NactMainWindow *window );
+void nact_main_menubar_view_on_toolbar_file ( GtkToggleAction *action, NactMainWindow *window );
+void nact_main_menubar_view_on_toolbar_edit ( GtkToggleAction *action, NactMainWindow *window );
+void nact_main_menubar_view_on_toolbar_tools( GtkToggleAction *action, NactMainWindow *window );
+void nact_main_menubar_view_on_toolbar_help ( GtkToggleAction *action, NactMainWindow *window );
 
 G_END_DECLS
 
-#endif /* __NACT_NACT_MENUBAR_TOOLS_H__ */
+#endif /* __NACT_NACT_MENUBAR_VIEW_H__ */

@@ -39,7 +39,7 @@
 
 #include <api/na-object.h>
 
-#include <core/na-pivot.h>
+#include <core/na-updater.h>
 
 #include "nact-main-window.h"
 
@@ -49,31 +49,38 @@ G_BEGIN_DECLS
  * interface ; it is then used to update action sensitivities
  */
 typedef struct {
-	gint     selected_menus;
-	gint     selected_actions;
-	gint     selected_profiles;
-	gint     clipboard_menus;
-	gint     clipboard_actions;
-	gint     clipboard_profiles;
-	gint     list_menus;
-	gint     list_actions;
-	gint     list_profiles;
-	gboolean is_modified;
-	gboolean have_exportables;
-	gboolean treeview_has_focus;
-	gboolean level_zero_order_changed;
-	gulong   popup_handler;
+	gint       selected_menus;
+	gint       selected_actions;
+	gint       selected_profiles;
+	gint       clipboard_menus;
+	gint       clipboard_actions;
+	gint       clipboard_profiles;
+	gint       list_menus;
+	gint       list_actions;
+	gint       list_profiles;
+	gboolean   is_modified;
+	gboolean   have_exportables;
+	gboolean   treeview_has_focus;
+	gboolean   level_zero_order_changed;
+	gulong     popup_handler;
+
+	/* set by the nact_main_menubar_on_update_sensitivities() function itself
+	 */
+	gboolean   is_level_zero_writable;
+	gboolean   has_writable_providers;
+	guint      count_selected;
+	GList     *selected_items;
+	NAUpdater *updater;
 }
 	MenubarIndicatorsStruct;
 
-#define MENUBAR_PROP_INDICATORS			"nact-menubar-indicators"
+#define MENUBAR_PROP_INDICATORS				"nact-menubar-indicators"
+#define MENUBAR_PROP_UI_MANAGER				"nact-menubar-ui-manager"
 
 void     nact_main_menubar_runtime_init( NactMainWindow *window );
 void     nact_main_menubar_dispose( NactMainWindow *window );
 gboolean nact_main_menubar_is_level_zero_order_changed( const NactMainWindow *window );
-gboolean nact_main_menubar_is_pasted_object_relabeled( NAObject *object, NAPivot *pivot );
 void     nact_main_menubar_open_popup( NactMainWindow *window, GdkEventButton *event );
-void     nact_main_menubar_save_items( NactMainWindow *window );
 void     nact_main_menubar_enable_item( NactMainWindow *window, const gchar *name, gboolean enabled );
 
 G_END_DECLS

@@ -41,23 +41,15 @@
  * nact_main_menubar_tools_on_update_sensitivities:
  * @window: the #NactMainWindow main application window.
  * @user_data: user data ?
+ * @mis: the #MenubarIndicatorsStruct structure.
  *
  * Update sensitivities on the Tools menu.
  */
 void
-nact_main_menubar_tools_on_update_sensitivities( NactMainWindow *window, gpointer user_data )
+nact_main_menubar_tools_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis )
 {
-	static const gchar *thisfn = "nact_main_menubar_tools_on_update_sensitivities";
-	MenubarIndicatorsStruct *mis;
-	gboolean has_writable_providers;
-
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-
-	has_writable_providers = nact_window_has_writable_providers( NACT_WINDOW( window ));
-	g_debug( "%s: has_writable_providers=%s", thisfn, has_writable_providers ? "True":"False" );
-
 	/* import item enabled if at least one writable provider */
-	nact_main_menubar_enable_item( window, "ImportItem", has_writable_providers );
+	nact_main_menubar_enable_item( window, "ImportItem", mis->has_writable_providers );
 
 	/* export item enabled if IActionsList store contains actions */
 	nact_main_menubar_enable_item( window, "ExportItem", mis->have_exportables );
