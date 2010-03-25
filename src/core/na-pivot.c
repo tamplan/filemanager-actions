@@ -824,8 +824,10 @@ na_pivot_is_level_zero_writable( const NAPivot *pivot )
 	GConfClient *gconf;
 	gchar *path;
 
-	writable = FALSE;
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), writable );
+	all_locked = FALSE;
+	gconf_locked = FALSE;
+
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
 
 	if( !pivot->private->dispose_has_run ){
 

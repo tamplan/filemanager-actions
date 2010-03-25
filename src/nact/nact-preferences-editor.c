@@ -75,6 +75,7 @@ static void     on_base_all_widgets_showed( NactPreferencesEditor *editor, gpoin
 static void     on_esc_quit_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void     on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
+static void     enable_order_mode_buttons( NactPreferencesEditor *editor );
 static void     save_preferences( NactPreferencesEditor *editor );
 
 static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
