@@ -321,6 +321,29 @@ free_desktop_paths( GList *paths )
 }
 
 /*
+ * called before starting with reading an object
+ */
+void
+nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages )
+{
+	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_start";
+
+	g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
+			thisfn,
+			( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
+			( void * ) reader_data,
+			( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
+			( void * ) messages );
+
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
+	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
+
+	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
+	}
+}
+
+/*
  * reading any data from a desktop file requires:
  * - a NadpDesktopFile object which has been initialized with the .desktop file
  *   -> has been attached to the NAObjectItem in get_item() above
