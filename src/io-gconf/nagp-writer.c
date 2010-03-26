@@ -251,7 +251,6 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 		} else {
 			this_id = na_object_get_id( object );
-
 		}
 
 		this_path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, this_id );

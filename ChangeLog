@@ -133,6 +133,9 @@
 
 2009-03-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-writer.c (nagp_writer_write_data):
+	Remove blank line.
+
 	* src/io-desktop/nadp-desktop-provider.c:
 	* src/io-desktop/nadp-reader.c:
 	* src/io-desktop/nadp-reader.h
