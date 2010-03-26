@@ -111,11 +111,6 @@
 	SelectionCount
 	Capabilities
 
-- Review:
-	Mimetypes
-	Basenames
-	Schemes
-
 - profile path and parameters should be set together as only one variable ?
 
 - icon: is defined as localestring in desktop entry spec
