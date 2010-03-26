@@ -133,6 +133,11 @@
 
 2009-03-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-desktop/nadp-reader.c:
+	* src/io-desktop/nadp-reader.h
+	(nadp_reader_ifactory_provider_read_start): Removed unused function.
+
 	* src/io-desktop/nadp-desktop-file.c:
 	* src/io-desktop/nadp-desktop-file.h
 	(check_key_file): Check that we don't have a 'Hidden=true' key.

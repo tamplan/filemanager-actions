@@ -37,7 +37,6 @@ G_BEGIN_DECLS
 
 GList       *nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
 
-void         nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages );
 NADataBoxed *nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, const NADataDef *iddef, GSList **messages );
 void         nadp_reader_ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages );
 
