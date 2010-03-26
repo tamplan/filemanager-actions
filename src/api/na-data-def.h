@@ -95,6 +95,8 @@ typedef struct {
 
 	gchar     *gconf_entry;				/* same entry is also used for GConf-based XML docs */
 
+	gchar     *desktop_entry;
+
 	/* some parameters to be used when the variable is to be entered via a
 	 * command-line program (e.g. see nautilus-actions-new).
 	 */

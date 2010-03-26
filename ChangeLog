@@ -133,6 +133,14 @@
 
 2009-03-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-def.h:
+	* src/core/na-icontextual-factory.c:
+	* src/core/na-object-id-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-profile-factory.c:
+	Define the key for .desktop file.
+
 	* src/io-gconf/nagp-writer.c (nagp_writer_write_data):
 	Remove blank line.
 
