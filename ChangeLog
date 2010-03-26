@@ -1,3 +1,7 @@
+2009-03-26 Pierre Wieser <pwieser@trychlos.org>
+
+	Releasing 2.30.0.
+
 2009-03-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-menubar-edit.c:
