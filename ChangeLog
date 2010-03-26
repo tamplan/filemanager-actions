@@ -312,6 +312,10 @@
 
 2010-03-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump version number for data branch.
+
+2009-03-26 Pierre Wieser <pwieser@trychlos.org>
+
 	Releasing 2.30.0.
 
 2010-03-25 Pierre Wieser <pwieser@trychlos.org>
