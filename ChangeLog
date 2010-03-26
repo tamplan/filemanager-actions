@@ -133,6 +133,24 @@
 
 2009-03-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h
+	(check_key_file): Check that we don't have a 'Hidden=true' key.
+	(nadp_desktop_file_get_profiles): New function.
+
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-desktop/nadp-desktop-provider.h:
+	Move reader functions and structure to nadp-reader.c.
+
+	* src/io-desktop/nadp-keys.h:
+	Relabel type of items in .desktop file (cf. draft 0.9).
+
+	* src/io-desktop/nadp-reader.c:
+	* src/io-desktop/nadp-reader.h:
+	Read profiles present in the .desktop file.
+
+2009-03-26 Pierre Wieser <pwieser@trychlos.org>
+
 	Releasing 2.30.0.
 
 2009-03-25 Pierre Wieser <pwieser@trychlos.org>

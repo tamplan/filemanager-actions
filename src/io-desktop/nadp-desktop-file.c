@@ -313,16 +313,44 @@ check_key_file( NadpDesktopFile *ndf )
 	static const gchar *thisfn = "nadp_desktop_file_check_key_file";
 	gboolean ret;
 	gchar *start_group;
+	gboolean has_key;
+	gboolean hidden;
+	GError *error;
 
-	ret = TRUE;
+	ret = FALSE;
+	error = NULL;
 
 	/* start group must be 'Desktop Entry' */
 	start_group = g_key_file_get_start_group( ndf->private->key_file );
 	if( strcmp( start_group, NADP_GROUP_DESKTOP )){
-
 		g_warning( "%s: %s: invalid start group, found %s, waited for %s",
 				thisfn, ndf->private->path, start_group, NADP_GROUP_DESKTOP );
 		ret = FALSE;
+
+	/* must not have Hidden=true value */
+	} else {
+		has_key = g_key_file_has_key( ndf->private->key_file, start_group, NADP_KEY_HIDDEN, &error );
+		if( error ){
+			g_warning( "%s: %s: %s", thisfn, ndf->private->path, error->message );
+			ret = FALSE;
+
+		} else if( has_key ){
+			hidden = g_key_file_get_boolean( ndf->private->key_file, start_group, NADP_KEY_HIDDEN, &error );
+			if( error ){
+				g_warning( "%s: %s: %s", thisfn, ndf->private->path, error->message );
+				ret = FALSE;
+
+			} else if( hidden ){
+				g_warning( "%s: %s: Hidden=true", thisfn, ndf->private->path );
+				ret = FALSE;
+
+			} else {
+				ret = TRUE;
+			}
+
+		} else {
+			ret = TRUE;
+		}
 	}
 
 	g_free( start_group );
@@ -394,6 +422,54 @@ nadp_desktop_file_get_id( const NadpDesktopFile *ndf )
 	}
 
 	return( value );
+}
+
+/**
+ * nadp_desktop_file_get_profiles:
+ * @ndf: the #NadpDesktopFile instance.
+ *
+ * Returns: the list of profiles in the file, as a newly allocated GSList
+ * which must be na_core_utils_slist_free() by the caller.
+ *
+ * Silently ignore unknown groups.
+ */
+GSList *
+nadp_desktop_file_get_profiles( const NadpDesktopFile *ndf )
+{
+	GSList *list;
+	gchar **groups, **ig;
+	gchar *profile_pfx;
+	gchar *profile_id;
+	guint pfx_len;
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+
+	list = NULL;
+
+	if( !ndf->private->dispose_has_run ){
+
+		groups = g_key_file_get_groups( ndf->private->key_file, NULL );
+		if( groups ){
+			ig = groups;
+			profile_pfx = g_strdup_printf( "%s ", NADP_GROUP_PROFILE );
+			pfx_len = strlen( profile_pfx );
+
+			while( *ig ){
+
+				if( !strncmp( *ig, profile_pfx, pfx_len )){
+					profile_id = g_strdup( *ig );
+					list = g_slist_prepend( list, profile_id+pfx_len );
+				}
+
+				ig++;
+			}
+
+			g_strfreev( groups );
+			g_free( profile_pfx );
+		}
+	}
+
+	return( list );
 }
 
 /**

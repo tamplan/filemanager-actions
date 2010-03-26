@@ -93,48 +93,6 @@ nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 }
 
 /*
- * the item comes from being readen from a desktop file
- * -> see if this desktop file is writable ?
- *
- * This is only used to setup the 'read-only' initial status of the
- * NAObjectItem - We don't care of all events which can suddenly make
- * this item becomes readonly (eventually we will deal for errors,
- * and reset the flag at this time)
- *
- * Internal function: do not call from outside the instance.
- */
-/*
-gboolean
-nadp_iio_provider_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
-{
-	static const gchar *thisfn = "nadp_iio_provider_is_writable";
-	gboolean writable;
-	NadpDesktopFile *ndf;
-	gchar *path;
-
-	writable = FALSE;
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), writable );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), writable );
-
-	if( NA_IS_OBJECT_MENU( item )){
-		g_warning( "%s: menu are not yet handled by Desktop provider", thisfn );
-		return( FALSE );
-	}
-
-	ndf = ( NadpDesktopFile * ) na_object_get_provider_data( item );
-
-	if( ndf ){
-		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), writable );
-		path = nadp_desktop_file_get_key_file_path( ndf );
-		writable = nadp_utils_is_writable_file( path );
-		g_free( path );
-	}
-
-	return( writable );
-}
-*/
-
-/*
  * This is implementation of NAIIOProvider::write_item method
  */
 guint
@@ -308,3 +266,45 @@ desktop_weak_notify( NadpDesktopFile *ndf, GObject *item )
 
 	g_object_unref( ndf );
 }
+
+#if 0
+/*
+ * the item comes from being readen from a desktop file
+ * -> see if this desktop file is writable ?
+ *
+ * This is only used to setup the 'read-only' initial status of the
+ * NAObjectItem - We don't care of all events which can suddenly make
+ * this item becomes readonly (eventually we will deal for errors,
+ * and reset the flag at this time)
+ *
+ * Internal function: do not call from outside the instance.
+ */
+gboolean
+nadp_writer_desktop_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
+{
+	static const gchar *thisfn = "nadp_writer_desktop_is_writable";
+	gboolean writable;
+	NadpDesktopFile *ndf;
+	gchar *path;
+
+	writable = FALSE;
+	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), writable );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), writable );
+
+	if( NA_IS_OBJECT_MENU( item )){
+		g_warning( "%s: menu are not yet handled by Desktop provider", thisfn );
+		return( FALSE );
+	}
+
+	ndf = ( NadpDesktopFile * ) na_object_get_provider_data( item );
+
+	if( ndf ){
+		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), writable );
+		path = nadp_desktop_file_get_key_file_path( ndf );
+		writable = nadp_utils_is_writable_file( path );
+		g_free( path );
+	}
+
+	return( writable );
+}
+#endif

@@ -76,14 +76,6 @@ typedef struct {
 }
 	NadpDesktopProviderClass;
 
-/* the structure passed as reader data to NAIFactoryObject
- */
-typedef struct {
-	NadpDesktopFile *ndf;
-	NAObjectItem    *action;
-}
-	NadpReaderData;
-
 /* this is a ':'-separated list of XDG_DATA_DIRS/subdirs searched for
  * menus or actions .desktop files.
  */
