@@ -336,18 +336,18 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 	NADataBoxed *boxed;
 	gboolean found;
 	NadpReaderData *nrd;
-	gchar *group, *key;
+	gchar *group, *id;
 	gchar *msg;
 	gchar *str_value;
 	gboolean bool_value;
 	GSList *slist_value;
 	guint uint_value;
 
-	/*g_debug( "%s: reader=%p (%s), reader_data=%p, def=%p, messages=%p",
+	/*g_debug( "%s: reader=%p (%s), reader_data=%p, def=%p (%s), messages=%p",
 			thisfn,
 			( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
 			( void * ) reader_data,
-			( void * ) def,
+			( void * ) def, def->name,
 			( void * ) messages );*/
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
@@ -361,12 +361,22 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 		nrd = ( NadpReaderData * ) reader_data;
 		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( nrd->ndf ), NULL );
 
-		if( nadp_keys_get_group_and_key( def, &group, &key )){
+		if( def->desktop_entry ){
+
+			if( NA_IS_OBJECT_ITEM( object )){
+				group = g_strdup( NADP_GROUP_DESKTOP );
+
+			} else {
+				g_return_val_if_fail( NA_IS_OBJECT_PROFILE( object ), NULL );
+				id = na_object_get_id( object );
+				group = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, id );
+				g_free( id );
+			}
 
 			switch( def->type ){
 
 				case NAFD_TYPE_LOCALE_STRING:
-					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, key, &found, def->default_value );
+					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( str_value && found ){
 						boxed = na_data_boxed_new( def );
 						na_data_boxed_set_from_void( boxed, str_value );
@@ -375,7 +385,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					break;
 
 				case NAFD_TYPE_STRING:
-					str_value = nadp_desktop_file_get_string( nrd->ndf, group, key, &found, def->default_value );
+					str_value = nadp_desktop_file_get_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( str_value && found ){
 						boxed = na_data_boxed_new( def );
 						na_data_boxed_set_from_void( boxed, str_value );
@@ -384,7 +394,8 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					break;
 
 				case NAFD_TYPE_BOOLEAN:
-					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, key, &found, na_core_utils_boolean_from_string( def->default_value ));
+					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, def->desktop_entry, &found, na_core_utils_boolean_from_string( def->default_value ));
+					g_debug( "%s: name=%s, found=%s, value=%s", thisfn, def->name, found ? "True":"False", bool_value ? "True":"False" );
 					if( found ){
 						boxed = na_data_boxed_new( def );
 						na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( bool_value ));
@@ -392,7 +403,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					break;
 
 				case NAFD_TYPE_STRING_LIST:
-					slist_value = nadp_desktop_file_get_string_list( nrd->ndf, group, key, &found, def->default_value );
+					slist_value = nadp_desktop_file_get_string_list( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( slist_value && found ){
 						boxed = na_data_boxed_new( def );
 						na_data_boxed_set_from_void( boxed, slist_value );
@@ -401,7 +412,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					break;
 
 				case NAFD_TYPE_UINT:
-					uint_value = nadp_desktop_file_get_uint( nrd->ndf, group, key, &found, atoi( def->default_value ));
+					uint_value = nadp_desktop_file_get_uint( nrd->ndf, group, def->desktop_entry, &found, atoi( def->default_value ));
 					if( found ){
 						boxed = na_data_boxed_new( def );
 						na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( uint_value ));
@@ -414,8 +425,6 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					*messages = g_slist_append( *messages, msg );
 			}
 
-			/*g_debug( "%s: group=%s, key=%s", thisfn, group, key );*/
-			g_free( key );
 			g_free( group );
 		}
 	}
@@ -498,7 +507,6 @@ read_done_load_profiles( const NAIFactoryProvider *provider, NAObjectAction *act
 	 * this is mandatory for pre-2.29 actions which introduced order of profiles
 	 */
 	for( ip = list_profiles ; ip ; ip = ip->next ){
-		g_debug( "nadp_reader_read_done_load_profiles: loading profile=%s", ( gchar * ) ip->data );
 		read_done_action_load_profile( provider, reader_data, ( const gchar * ) ip->data, messages );
 	}
 }
@@ -506,8 +514,11 @@ read_done_load_profiles( const NAIFactoryProvider *provider, NAObjectAction *act
 static void
 read_done_action_load_profile( const NAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages )
 {
-	NAObjectProfile *profile = na_object_profile_new();
+	NAObjectProfile *profile;
 
+	g_debug( "nadp_reader_read_done_action_load_profile: loading profile=%s", profile_id );
+
+	profile = na_object_profile_new();
 	na_object_set_id( profile, profile_id );
 
 	na_ifactory_provider_read_item(

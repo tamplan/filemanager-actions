@@ -92,15 +92,6 @@ G_BEGIN_DECLS
 #define NADP_VALUE_CAPABILITY_EXECUTABLE			"Executable"
 #define NADP_VALUE_CAPABILITY_LOCAL					"Local"
 
-typedef struct {
-	gchar *data_id;
-	gchar *group;
-	gchar *key;
-}
-	NadpIdKey;
-
-gboolean nadp_keys_get_group_and_key( const NADataDef *iddef, gchar **group, gchar **key );
-
 G_END_DECLS
 
 #endif /* __NADP_KEYS_H__ */

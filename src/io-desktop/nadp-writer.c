@@ -33,13 +33,16 @@
 #endif
 
 #include <errno.h>
+#include <string.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-data-types.h>
 #include <api/na-object-api.h>
 #include <api/na-ifactory-provider.h>
 
 #include "nadp-desktop-file.h"
 #include "nadp-desktop-provider.h"
+#include "nadp-keys.h"
 #include "nadp-writer.h"
 #include "nadp-xdg-dirs.h"
 
@@ -308,3 +311,98 @@ nadp_writer_desktop_is_writable( const NAIIOProvider *provider, const NAObjectIt
 	return( writable );
 }
 #endif
+
+guint
+nadp_writer_ifactory_provider_write_start( const NAIFactoryProvider *provider, void *writer_data,
+							const NAIFactoryObject *object, GSList **messages  )
+{
+	if( NA_IS_OBJECT_ITEM( object )){
+		nadp_desktop_file_set_string(
+				NADP_DESKTOP_FILE( writer_data ),
+				NADP_GROUP_DESKTOP,
+				NADP_KEY_TYPE,
+				NA_IS_OBJECT_ACTION( object ) ? NADP_VALUE_TYPE_ACTION : NADP_VALUE_TYPE_MENU );
+	}
+
+	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
+guint
+nadp_writer_ifactory_provider_write_data(
+				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,
+				const NADataBoxed *boxed, GSList **messages )
+{
+	static const gchar *thisfn = "nadp_writer_ifactory_provider_write_data";
+	NadpDesktopFile *ndf;
+	guint code;
+	NADataDef *def;
+	gchar *profile_id;
+	gchar *group_name;
+	gchar *str_value;
+	gboolean bool_value;
+	GSList *slist_value;
+	guint uint_value;
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( writer_data ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	/*g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
+
+	code = NA_IIO_PROVIDER_CODE_OK;
+	ndf = NADP_DESKTOP_FILE( writer_data );
+
+	if( na_data_boxed_is_set( boxed )){
+		def = na_data_boxed_get_data_def( boxed );
+
+		if( def->desktop_entry && strlen( def->desktop_entry )){
+
+			if( NA_IS_OBJECT_PROFILE( object )){
+				profile_id = na_object_get_id( object );
+				group_name = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, profile_id );
+				g_free( profile_id );
+
+			} else {
+				group_name = g_strdup( NADP_GROUP_DESKTOP );
+			}
+
+			switch( def->type ){
+
+				case NAFD_TYPE_STRING:
+					str_value = na_data_boxed_get_as_string( boxed );
+					nadp_desktop_file_set_string( ndf, group_name, def->desktop_entry, str_value );
+					g_free( str_value );
+					break;
+
+				case NAFD_TYPE_LOCALE_STRING:
+					str_value = na_data_boxed_get_as_string( boxed );
+					nadp_desktop_file_set_locale_string( ndf, group_name, def->desktop_entry, str_value );
+					g_free( str_value );
+					break;
+
+				case NAFD_TYPE_BOOLEAN:
+					bool_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
+					nadp_desktop_file_set_boolean( ndf, group_name, def->desktop_entry, bool_value );
+					break;
+
+				case NAFD_TYPE_STRING_LIST:
+					slist_value = ( GSList * ) na_data_boxed_get_as_void( boxed );
+					nadp_desktop_file_set_string_list( ndf, group_name, def->desktop_entry, slist_value );
+					na_core_utils_slist_free( slist_value );
+					break;
+
+				case NAFD_TYPE_UINT:
+					uint_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
+					nadp_desktop_file_set_uint( ndf, group_name, def->desktop_entry, uint_value );
+					break;
+
+				default:
+					g_warning( "%s: unknown type=%u for %s", thisfn, def->type, def->name );
+					code = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+			}
+
+			/*g_debug( "%s: gconf=%p, code=%u, path=%s", thisfn, ( void * ) gconf, code, path );*/
+
+			g_free( group_name );
+		}
+	}
+
+	return( code );
+}

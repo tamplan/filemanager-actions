@@ -42,12 +42,15 @@ NADataDef data_def_item [] = {
 
 	/* this data is marked as non readable as it has to be readen specifically
 	 * in order to be able to create the corresponding NAObjectItem-derived object
-	 * it is nonetheless marked writable
+	 * it is not writable as different I/O providers have different values for it
+	 * it is not instantiated
+	 * it is just left here to be able to define the corresponding GConf schema
+	 * and to export it as XML
 	 */
 	{ NAFO_DATA_TYPE,
 				FALSE,
-				TRUE,
-				TRUE,
+				FALSE,
+				FALSE,
 				N_( "Type of the item" ),
 				N_( "Defines if the item is an action or a menu. Possible values are :\n" \
 					"- 'Action',\n" \
@@ -55,12 +58,12 @@ NADataDef data_def_item [] = {
 					"The value is case sensitive and must not be localized." ),
 				NAFD_TYPE_STRING,
 				"Action",
-				TRUE,
+				FALSE,
 				FALSE,
 				FALSE,
 				FALSE,
 				"type",
-				"Type",
+				NULL,
 				0,
 				NULL,
 				0,
