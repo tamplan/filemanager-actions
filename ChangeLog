@@ -131,6 +131,10 @@
 	* src/core/na-factory-object.c (set_defaults_iter):
 	Only set a default value when the box has not been yet allocated.
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_slist_to_array):
+	New function.
+
 2009-03-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-data-def.h:

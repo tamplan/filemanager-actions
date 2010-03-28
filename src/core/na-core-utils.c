@@ -388,6 +388,25 @@ na_core_utils_slist_remove_utf8( GSList *list, const gchar *str )
 }
 
 /**
+ * na_core_utils_slist_to_array:
+ * @slist: a list of strings.
+ *
+ * Returns: a newly allocated array of strings, which should be
+ * g_strfreev() by the caller.
+ */
+gchar **
+na_core_utils_slist_to_array( GSList *slist )
+{
+	gchar **array;
+	gchar *text;
+
+	text = na_core_utils_slist_to_text( slist );
+	array = g_strsplit( text, ";", -1 );
+
+	return( array );
+}
+
+/**
  * na_core_utils_slist_to_text:
  * @strlist: a list of strings.
  *
