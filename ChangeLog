@@ -1,5 +1,8 @@
 2009-03-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-boxed.h:
+	* src/core/na-data-boxed.c (na_data_boxed_set_default): Removed function.
+
 	* src/core/na-factory-object.c (set_defaults_iter):
 	Only set a default value when the box has not been yet allocated.
 

@@ -87,7 +87,6 @@ gchar       *na_data_boxed_get_as_string  ( const NADataBoxed *boxed );
 void        *na_data_boxed_get_as_void    ( const NADataBoxed *boxed );
 void         na_data_boxed_get_as_value   ( const NADataBoxed *boxed, GValue *value );
 
-void         na_data_boxed_set_default    ( NADataBoxed *boxed );
 void         na_data_boxed_set_from_boxed ( NADataBoxed *boxed, const NADataBoxed *value );
 void         na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value );
 void         na_data_boxed_set_from_value ( NADataBoxed *boxed, const GValue *value );

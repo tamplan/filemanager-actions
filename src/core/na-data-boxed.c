@@ -698,32 +698,6 @@ na_data_boxed_get_as_value( const NADataBoxed *boxed, GValue *value )
 }
 
 /**
- * na_data_boxed_set_default:
- * @boxed: the #NADataBoxed whose value is to be set.
- *
- * Set the @boxed with its default value.
- */
-void
-na_data_boxed_set_default( NADataBoxed *boxed )
-{
-	g_return_if_fail( NA_IS_DATA_BOXED( boxed ));
-
-	if( !boxed->private->dispose_has_run ){
-
-		DataBoxedFn *fn = get_data_boxed_fn( boxed->private->def->type );
-
-		if( fn ){
-			if( fn->free ){
-				( *fn->free )( boxed );
-			}
-			if( fn->set_from_string ){
-				( *fn->set_from_string )( boxed, boxed->private->def->default_value );
-			}
-		}
-	}
-}
-
-/**
  * na_data_boxed_set_from_boxed:
  * @boxed: the #NADataBoxed whose value is to be set.
  * @value: the source #NADataBoxed.
