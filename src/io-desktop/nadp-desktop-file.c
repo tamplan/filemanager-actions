@@ -317,7 +317,7 @@ check_key_file( NadpDesktopFile *ndf )
 	gboolean hidden;
 	GError *error;
 
-	ret = FALSE;
+	ret = TRUE;
 	error = NULL;
 
 	/* start group must be 'Desktop Entry' */
@@ -326,9 +326,10 @@ check_key_file( NadpDesktopFile *ndf )
 		g_warning( "%s: %s: invalid start group, found %s, waited for %s",
 				thisfn, ndf->private->path, start_group, NADP_GROUP_DESKTOP );
 		ret = FALSE;
+	}
 
 	/* must not have Hidden=true value */
-	} else {
+	if( ret ){
 		has_key = g_key_file_has_key( ndf->private->key_file, start_group, NADP_KEY_HIDDEN, &error );
 		if( error ){
 			g_warning( "%s: %s: %s", thisfn, ndf->private->path, error->message );
@@ -343,13 +344,7 @@ check_key_file( NadpDesktopFile *ndf )
 			} else if( hidden ){
 				g_warning( "%s: %s: Hidden=true", thisfn, ndf->private->path );
 				ret = FALSE;
-
-			} else {
-				ret = TRUE;
 			}
-
-		} else {
-			ret = TRUE;
 		}
 	}
 
@@ -560,6 +555,7 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 				g_error_free( error );
 				g_free( read_value );
 			}
+
 		} else {
 			g_free( value );
 			value = read_value;
@@ -718,6 +714,113 @@ nadp_desktop_file_get_uint( const NadpDesktopFile *ndf, const gchar *group, cons
 	}
 
 	return( value );
+}
+
+/**
+ * nadp_desktop_file_set_boolean:
+ * @ndf: this #NadpDesktopFile object.
+ * @group: the name of the group.
+ * @key: the name of the key.
+ * @value: the value to be written.
+ *
+ * Write the given boolean value.
+ */
+void
+nadp_desktop_file_set_boolean( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean value )
+{
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+
+	if( !ndf->private->dispose_has_run ){
+
+		g_key_file_set_boolean( ndf->private->key_file, group, key, value );
+	}
+}
+
+/**
+ * nadp_desktop_file_set_locale_string:
+ * @ndf: this #NadpDesktopFile object.
+ * @group: the name of the group.
+ * @key: the name of the key.
+ * @value: the value to be written.
+ *
+ * Write the given string value.
+ */
+void
+nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value )
+{
+	char **locales;
+
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+
+	if( !ndf->private->dispose_has_run ){
+
+		locales = ( char ** ) g_get_language_names();
+		g_key_file_set_locale_string( ndf->private->key_file, group, key, locales[0], value );
+	}
+}
+
+/**
+ * nadp_desktop_file_set_string:
+ * @ndf: this #NadpDesktopFile object.
+ * @group: the name of the group.
+ * @key: the name of the key.
+ * @value: the value to be written.
+ *
+ * Write the given string value.
+ */
+void
+nadp_desktop_file_set_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value )
+{
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+
+	if( !ndf->private->dispose_has_run ){
+
+		g_key_file_set_string( ndf->private->key_file, group, key, value );
+	}
+}
+
+/**
+ * nadp_desktop_file_set_string_list:
+ * @ndf: this #NadpDesktopFile object.
+ * @group: the name of the group.
+ * @key: the name of the key.
+ * @value: the value to be written.
+ *
+ * Write the given list value.
+ */
+void
+nadp_desktop_file_set_string_list( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, GSList *value )
+{
+	gchar **array;
+
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+
+	if( !ndf->private->dispose_has_run ){
+
+		array = na_core_utils_slist_to_array( value );
+		g_key_file_set_string_list( ndf->private->key_file, group, key, ( const gchar * const * ) array, g_slist_length( value ));
+		g_strfreev( array );
+	}
+}
+
+/**
+ * nadp_desktop_file_set_uint:
+ * @ndf: this #NadpDesktopFile object.
+ * @group: the name of the group.
+ * @key: the name of the key.
+ * @value: the value to be written.
+ *
+ * Write the given uint value.
+ */
+void
+nadp_desktop_file_set_uint( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, guint value )
+{
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+
+	if( !ndf->private->dispose_has_run ){
+
+		g_key_file_set_integer( ndf->private->key_file, group, key, value );
+	}
 }
 
 /**

@@ -90,6 +90,12 @@ gchar           *nadp_desktop_file_get_string       ( const NadpDesktopFile *ndf
 GSList          *nadp_desktop_file_get_string_list  ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, const gchar *default_value );
 guint            nadp_desktop_file_get_uint         ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, guint default_value );
 
+void             nadp_desktop_file_set_boolean      ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean value );
+void             nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value );
+void             nadp_desktop_file_set_string       ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value );
+void             nadp_desktop_file_set_string_list  ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, GSList *value );
+void             nadp_desktop_file_set_uint         ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, guint value );
+
 G_END_DECLS
 
 #endif /* __NADP_DESKTOP_FILE_H__ */
