@@ -284,6 +284,12 @@ na_factory_object_set_defaults( NAIFactoryObject *object )
 	}
 }
 
+/*
+ * because this function is called very early in the NAIFactoryObject life,
+ * we assume here that if a NADataBoxed has been allocated, then this is
+ * most probably because it is set. Thus a 'null' value is not considered
+ * as an 'unset' value.
+ */
 static gboolean
 set_defaults_iter( NADataDef *def, NafoDefaultIter *data )
 {
@@ -292,14 +298,9 @@ set_defaults_iter( NADataDef *def, NafoDefaultIter *data )
 
 	is_null = TRUE;
 	boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
-	if( boxed ){
-		is_null = ( na_data_boxed_get_as_void( boxed ) == NULL );
-	}
-	if( is_null ){
-		if( !boxed ){
-			boxed = na_data_boxed_new( def );
-			attach_boxed_to_object( data->object, boxed );
-		}
+	if( !boxed ){
+		boxed = na_data_boxed_new( def );
+		attach_boxed_to_object( data->object, boxed );
 		na_data_boxed_set_from_string( boxed, def->default_value );
 	}
 

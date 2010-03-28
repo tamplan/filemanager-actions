@@ -1,3 +1,8 @@
+2009-03-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-factory-object.c (set_defaults_iter):
+	Only set a default value when the box has not been yet allocated.
+
 2009-03-26 Pierre Wieser <pwieser@trychlos.org>
 
 	Releasing 2.30.0.
