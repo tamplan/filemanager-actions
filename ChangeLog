@@ -131,6 +131,15 @@
 	* src/core/na-factory-object.c (set_defaults_iter):
 	Only set a default value when the box has not been yet allocated.
 
+	* src/io-gconf/nagp-writer.c (nagp_writer_write_start):
+	Explicitely write item type.
+
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h
+	(nadp_desktop_file_set_boolean, nadp_desktop_file_set_locale_string,
+	nadp_desktop_file_set_string, nadp_desktop_file_set_string_list,
+	nadp_desktop_file_set_uint): New functions.
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c (na_core_utils_slist_to_array):
 	New function.

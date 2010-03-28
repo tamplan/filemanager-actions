@@ -213,6 +213,21 @@ guint
 nagp_writer_write_start( const NAIFactoryProvider *writer, void *writer_data,
 							const NAIFactoryObject *object, GSList **messages  )
 {
+	GConfClient *gconf;
+	gchar *id;
+	gchar *path;
+
+	if( NA_IS_OBJECT_ITEM( object )){
+		id = na_object_get_id( object );
+		path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, id, NAGP_ENTRY_TYPE );
+		gconf = NAGP_GCONF_PROVIDER( writer )->private->gconf;
+
+		na_gconf_utils_write_string( gconf, path, NA_IS_OBJECT_ACTION( object ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU, NULL );
+
+		g_free( path );
+		g_free( id );
+	}
+
 	return( NA_IIO_PROVIDER_CODE_OK );
 }
 
