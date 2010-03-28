@@ -179,8 +179,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_OBJECT_ACTION( instance );
 
 	self->private = g_new0( NAObjectActionPrivate, 1 );
-
-	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( instance ), NAFO_DATA_TYPE, ( void * ) "Action" );
 }
 
 static void

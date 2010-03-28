@@ -57,7 +57,7 @@ NADataDef data_def_item [] = {
 					"- 'Menu'.\n" \
 					"The value is case sensitive and must not be localized." ),
 				NAFD_TYPE_STRING,
-				"Action",
+				NULL,
 				FALSE,
 				FALSE,
 				FALSE,

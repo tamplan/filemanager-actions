@@ -131,6 +131,15 @@
 	* src/core/na-factory-object.c (set_defaults_iter):
 	Only set a default value when the box has not been yet allocated.
 
+	* src/api/na-ifactory-object.h:
+	* src/core/na-ifactory-object.c (na_ifactory_object_get_data_groups):
+	New function.
+
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-action.c (instance_init):
+	* src/core/na-object-menu.c (instance_init):
+	No more instantiate 'type' data box.
+
 	* src/core/na-object-item-factory.c:
 	NAFO_DATA_TYPE is no more automatically readen nor written.
 

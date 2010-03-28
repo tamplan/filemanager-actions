@@ -142,6 +142,34 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
 }
 
 /**
+ * na_ifactory_object_get_data_groups:
+ * @object: a #NAIFactoryObject object.
+ *
+ * Returns: The #NADataGroup groups definition, or %NULL.
+ *
+ * The returned #NADataGroup is owned by the #NAIFactoryObject @object,
+ * and should not be released by the caller.
+ */
+NADataGroup *
+na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
+{
+	NADataGroup *groups;
+
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+
+	groups = NULL;
+
+	if( ifactory_object_initialized && !ifactory_object_finalized ){
+
+		if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
+			groups = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object );
+		}
+	}
+
+	return( groups );
+}
+
+/**
  * na_ifactory_object_get_data_boxed:
  * @object: a #NAIFactoryObject object.
  * @name: the name of the elementary data we are searching for.

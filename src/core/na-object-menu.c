@@ -173,8 +173,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_OBJECT_MENU( instance );
 
 	self->private = g_new0( NAObjectMenuPrivate, 1 );
-
-	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( instance ), NAFO_DATA_TYPE, ( void * ) "Menu" );
 }
 
 static void

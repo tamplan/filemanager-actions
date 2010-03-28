@@ -88,6 +88,7 @@ struct ExportFormatFn {
 	void ( *write_list_attribs_fn )( NAXMLWriter *, const NAObjectItem * );
 	gchar  *element_node;
 	void ( *write_data_fn )( NAXMLWriter *, const NAObjectId *, const NADataBoxed * );
+	void ( *write_type_fn )( NAXMLWriter *, const NAObjectItem *, const NADataDef *, const gchar * );
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -99,14 +100,21 @@ static void            instance_dispose( GObject *object );
 static void            instance_finalize( GObject *object );
 
 static void            write_data_schema_v1( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed );
+static void            write_data_schema_v1_element( NAXMLWriter *writer, const NADataDef *def );
+static void            write_type_schema_v1( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value );
 static void            write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed );
+static void            write_data_schema_v2_element( NAXMLWriter *writer, const NADataDef *def, const gchar *object_id, const gchar *value_str );
+static void            write_type_schema_v2( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value );
 static void            write_list_attribs_dump( NAXMLWriter *writer, const NAObjectItem *object );
 static void            write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed );
+static void            write_data_dump_element( NAXMLWriter *writer, const NADataDef *def, const NADataBoxed *boxed, const gchar *entry, const gchar *value_str );
+static void            write_type_dump( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value );
 
 static xmlDocPtr       build_xml_doc( NAXMLWriter *writer );
 static ExportFormatFn *find_export_format_fn( GQuark format );
 static gchar          *get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format );
 static void            output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg );
+static void            write_type( NAXMLWriter *writer, NAObjectItem *object, const NADataGroup *groups );
 static guint           writer_to_buffer( NAXMLWriter *writer );
 
 static ExportFormatFn st_export_format_fn[] = {
@@ -116,21 +124,24 @@ static ExportFormatFn st_export_format_fn[] = {
 					NAXML_KEY_SCHEMA_LIST,
 					NULL,
 					NAXML_KEY_SCHEMA_NODE,
-					write_data_schema_v1 },
+					write_data_schema_v1,
+					write_type_schema_v1 },
 
 	{ NAXML_FORMAT_GCONF_SCHEMA_V2,
 					NAXML_KEY_SCHEMA_ROOT,
 					NAXML_KEY_SCHEMA_LIST,
 					NULL,
 					NAXML_KEY_SCHEMA_NODE,
-					write_data_schema_v2 },
+					write_data_schema_v2,
+					write_type_schema_v2 },
 
 	{ NAXML_FORMAT_GCONF_ENTRY,
 					NAXML_KEY_DUMP_ROOT,
 					NAXML_KEY_DUMP_LIST,
 					write_list_attribs_dump,
 					NAXML_KEY_DUMP_NODE,
-					write_data_dump },
+					write_data_dump,
+					write_type_dump },
 
 	{ NULL }
 };
@@ -373,6 +384,7 @@ guint
 naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object, GSList **messages  )
 {
 	NAXMLWriter *writer;
+	NADataGroup *groups;
 
 	g_debug( "naxml_writer_write_start: object=%p (%s)", ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
@@ -386,6 +398,9 @@ naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data,
 		if( writer->private->fn_str->write_list_attribs_fn ){
 			( *writer->private->fn_str->write_list_attribs_fn )( writer, NA_OBJECT_ITEM( object ));
 		}
+
+		groups = na_ifactory_object_get_data_groups( object );
+		write_type( writer, NA_OBJECT_ITEM( object ), groups );
 	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );
@@ -399,12 +414,17 @@ naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, 
 	/*NADataDef *def = na_data_boxed_get_data_def( boxed );
 	g_debug( "naxml_writer_write_data: def=%s", def->name );*/
 
-	writer = NAXML_WRITER( writer_data );
+	/* do no export empty values
+	 */
+	if( na_data_boxed_is_set( boxed )){
 
-	writer->private->schema_node = NULL;
-	writer->private->locale_node = NULL;
+		writer = NAXML_WRITER( writer_data );
 
-	( *writer->private->fn_str->write_data_fn )( writer, NA_OBJECT_ID( object ), boxed );
+		writer->private->schema_node = NULL;
+		writer->private->locale_node = NULL;
+
+		( *writer->private->fn_str->write_data_fn )( writer, NA_OBJECT_ID( object ), boxed );
+	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );
 }
@@ -424,16 +444,32 @@ write_data_schema_v1( NAXMLWriter *writer, const NAObjectId *object, const NADat
 
 	def = na_data_boxed_get_data_def( boxed );
 
+	write_data_schema_v1_element( writer, def );
+}
+
+static void
+write_data_schema_v1_element( NAXMLWriter *writer, const NADataDef *def )
+{
 	if( !writer->private->locale_node ){
 		writer->private->locale_node = xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE ), NULL );
 		xmlNewProp( writer->private->locale_node, BAD_CAST( "name" ), BAD_CAST( "C" ));
 	}
 
 	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
-
 	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( def->short_label ));
-
 	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( def->long_label ));
+}
+
+static void
+write_type_schema_v1( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value )
+{
+	gchar *object_id;
+
+	object_id = na_object_get_id( object );
+	write_data_schema_v2_element( writer, def, object_id, value );
+	write_data_schema_v1_element( writer, def );
+
+	g_free( object_id );
 }
 
 /*
@@ -446,18 +482,10 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 {
 	gchar *object_id;
 	NADataDef *def;
-	xmlChar *content;
-	xmlNodePtr parent_value_node;
 	gchar *value_str;
 
 	def = na_data_boxed_get_data_def( boxed );
 	value_str = na_data_boxed_get_as_string( boxed );
-
-	/* do no export empty values
-	 */
-	if( !na_data_boxed_is_set( boxed )){
-		return;
-	}
 
 	/* boolean value must be lowercase
 	 */
@@ -466,8 +494,6 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 		g_free( value_str );
 		value_str = tmp;
 	}
-
-	writer->private->schema_node = xmlNewChild( writer->private->list_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE ), NULL );
 
 	object_id = na_object_get_id( object );
 
@@ -479,6 +505,25 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 		g_free( object_id );
 		object_id = tmp;
 	}
+
+	write_data_schema_v2_element( writer, def, object_id, value_str );
+
+	g_free( value_str );
+	g_free( object_id );
+}
+
+/*
+ * <schema>
+ *  <key>/schemas/apps/nautilus-actions/configurations/entry</key>
+ *  <applyto>/apps/nautilus-actions/configurations/item_id/profile_id/entry</applyto>
+ */
+static void
+write_data_schema_v2_element( NAXMLWriter *writer, const NADataDef *def, const gchar *object_id, const gchar *value_str )
+{
+	xmlChar *content;
+	xmlNodePtr parent_value_node;
+
+	writer->private->schema_node = xmlNewChild( writer->private->list_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE ), NULL );
 
 	content = BAD_CAST( g_build_path( "/", NAGP_SCHEMAS_PATH, def->gconf_entry, NULL ));
 	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_KEY ), content );
@@ -504,8 +549,21 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 	content = xmlEncodeSpecialChars( writer->private->doc, BAD_CAST( value_str ));
 	xmlNewChild( parent_value_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_DEFAULT ), content );
 	xmlFree( content );
+}
 
-	g_free( value_str );
+/*
+ * <schema>
+ *  <key>/schemas/apps/nautilus-actions/configurations/entry</key>
+ *  <applyto>/apps/nautilus-actions/configurations/item_id/profile_id/entry</applyto>
+ */
+static void
+write_type_schema_v2( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value )
+{
+	gchar *object_id;
+
+	object_id = na_object_get_id( object );
+	write_data_schema_v2_element( writer, def, object_id, value );
+
 	g_free( object_id );
 }
 
@@ -526,24 +584,11 @@ write_list_attribs_dump( NAXMLWriter *writer, const NAObjectItem *object )
 static void
 write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed )
 {
-	xmlNodePtr entry_node;
 	gchar *entry;
 	NADataDef *def;
-	xmlNodePtr value_node;
-	xmlNodePtr value_list_node, value_list_value_node;
-	GSList *list, *is;
-	xmlChar *encoded_content;
 	gchar *value_str;
 
-	value_str = NULL;
 	def = na_data_boxed_get_data_def( boxed );
-
-	/* do no export empty values
-	 */
-	if( !na_data_boxed_is_set( boxed )){
-		return;
-	}
-
 	value_str = na_data_boxed_get_as_string( boxed );
 
 	/* boolean value must be lowercase
@@ -554,8 +599,6 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxe
 		value_str = tmp;
 	}
 
-	entry_node = xmlNewChild( writer->private->list_node, NULL, BAD_CAST( writer->private->fn_str->element_node ), NULL );
-
 	if( NA_IS_OBJECT_PROFILE( object )){
 		gchar *id = na_object_get_id( object );
 		entry = g_strdup_printf( "%s/%s", id, def->gconf_entry );
@@ -563,6 +606,24 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxe
 	} else {
 		entry = g_strdup( def->gconf_entry );
 	}
+
+	write_data_dump_element( writer, def, boxed, entry, value_str );
+
+	g_free( entry );
+	g_free( value_str );
+}
+
+static void
+write_data_dump_element( NAXMLWriter *writer, const NADataDef *def, const NADataBoxed *boxed, const gchar *entry, const gchar *value_str )
+{
+	xmlNodePtr entry_node;
+	xmlNodePtr value_node;
+	xmlNodePtr value_list_node, value_list_value_node;
+	GSList *list, *is;
+	xmlChar *encoded_content;
+
+	entry_node = xmlNewChild( writer->private->list_node, NULL, BAD_CAST( writer->private->fn_str->element_node ), NULL );
+
 	xmlNewChild( entry_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_KEY ), BAD_CAST( entry ));
 
 	value_node = xmlNewChild( entry_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE ), NULL );
@@ -583,10 +644,13 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxe
 		encoded_content = xmlEncodeSpecialChars( writer->private->doc, BAD_CAST( value_str ));
 		xmlNewChild( value_node, NULL, BAD_CAST( na_data_types_get_gconf_dump_key( def->type )), encoded_content );
 		xmlFree( encoded_content );
-		g_free( value_str );
 	}
+}
 
-	g_free( entry );
+static void
+write_type_dump( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value )
+{
+	write_data_dump_element( writer, def, NULL, def->gconf_entry, value );
 }
 
 static ExportFormatFn *
@@ -682,7 +746,7 @@ get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format )
 	return( candidate_fname );
 }
 
-/**
+/*
  * output_xml_to_file:
  * @xml: the xml buffer.
  * @filename: the full path of the output filename as an URI.
@@ -747,6 +811,23 @@ output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg )
 
 	g_object_unref( stream );
 	g_object_unref( file );
+}
+
+/* at end of write_start (list_node already created)
+ * explicitly write the 'Type' node
+ */
+static void
+write_type( NAXMLWriter *writer, NAObjectItem *object, const NADataGroup *groups )
+{
+	const NADataDef *def;
+	const gchar *svalue;
+
+	writer->private->schema_node = NULL;
+	writer->private->locale_node = NULL;
+	def = na_data_def_get_data_def( groups, NA_FACTORY_OBJECT_ITEM_GROUP, NAFO_DATA_TYPE );
+	svalue = NA_IS_OBJECT_ACTION( object ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU;
+
+	( *writer->private->fn_str->write_type_fn )( writer, object, def, svalue );
 }
 
 static guint

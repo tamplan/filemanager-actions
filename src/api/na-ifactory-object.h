@@ -175,11 +175,13 @@ typedef struct {
 
 GType        na_ifactory_object_get_type( void );
 
-NADataBoxed *na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *name );
+NADataGroup *na_ifactory_object_get_data_groups( const NAIFactoryObject *object );
 
-void        *na_ifactory_object_get_as_void   ( const NAIFactoryObject *object, const gchar *name );
+NADataBoxed *na_ifactory_object_get_data_boxed ( const NAIFactoryObject *object, const gchar *name );
 
-void         na_ifactory_object_set_from_void ( NAIFactoryObject *object, const gchar *name, const void *data );
+void        *na_ifactory_object_get_as_void    ( const NAIFactoryObject *object, const gchar *name );
+
+void         na_ifactory_object_set_from_void  ( NAIFactoryObject *object, const gchar *name, const void *data );
 
 G_END_DECLS
 
