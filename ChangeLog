@@ -218,6 +218,12 @@
 	* src/io-desktop/nadp-writer.c (nadp_iio_provider_write_item):
 	Remove key when it is no more set.
 
+	* src/api/na-object-api.h
+	(na_object_get_description, na_object_set_description): New macros.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nautilus-actions-config-tool.ui: Add description entry.
+
 	* src/io-desktop/nadp-keys.h: Remove unused keys.
 
 	* src/io-desktop/nadp-reader.c (nadp_reader_ifactory_provider_read_done):

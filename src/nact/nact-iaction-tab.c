@@ -111,8 +111,8 @@ static void          release_icon_combobox( NactIActionTab *instance );
 
 static GtkButton    *get_enabled_button( NactIActionTab *instance );
 static void          on_enabled_toggled( GtkToggleButton *button, NactIActionTab *instance );
-
 static void          on_readonly_toggled( GtkToggleButton *button, NactIActionTab *instance );
+static void          on_description_changed( GtkEntry *entry, NactIActionTab *instance );
 
 static void          display_provider_name( NactIActionTab *instance, NAObjectItem *item );
 
@@ -334,6 +334,13 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 				G_OBJECT( button ),
 				"toggled",
 				G_CALLBACK( on_readonly_toggled ));
+
+		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionDescriptionEntry" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( label_widget ),
+				"changed",
+				G_CALLBACK( on_description_changed ));
 	}
 }
 
@@ -543,6 +550,12 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		gtk_toggle_button_set_active( readonly_button, item ? na_object_is_readonly( item ) : FALSE );
 		gtk_widget_set_sensitive( GTK_WIDGET( readonly_button ), item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( readonly_button ), FALSE );
+
+		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionDescriptionEntry" );
+		label = item ? na_object_get_description( item ) : g_strdup( "" );
+		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
+		g_free( label );
+		gtk_widget_set_sensitive( label_widget, item != NULL );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemID" );
 		label = item ? na_object_get_id( item ) : g_strdup( "" );
@@ -1130,6 +1143,22 @@ on_readonly_toggled( GtkToggleButton *button, NactIActionTab *instance )
 		g_signal_handlers_block_by_func(( gpointer ) button, on_readonly_toggled, instance );
 		gtk_toggle_button_set_active( button, !active );
 		g_signal_handlers_unblock_by_func(( gpointer ) button, on_readonly_toggled, instance );
+	}
+}
+
+static void
+on_description_changed( GtkEntry *entry, NactIActionTab *instance )
+{
+	NAObjectItem *edited;
+
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+			NULL );
+
+	if( edited ){
+		na_object_set_description( edited, gtk_entry_get_text( entry ));
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 

@@ -98,6 +98,7 @@ G_BEGIN_DECLS
  */
 #define na_object_get_tooltip( obj )					(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLTIP ))
 #define na_object_get_icon( obj )						(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ICON ))
+#define na_object_get_description( obj )				(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_DESCRIPTION ))
 #define na_object_get_items( obj )						(( GList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SUBITEMS ))
 #define na_object_get_items_slist( obj )				(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SUBITEMS_SLIST ))
 #define na_object_is_enabled( obj )						(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ENABLED )))
@@ -107,6 +108,7 @@ G_BEGIN_DECLS
 
 #define na_object_set_tooltip( obj, tooltip )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLTIP, ( const void * )( tooltip ))
 #define na_object_set_icon( obj, icon )					na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ICON, ( const void * )( icon ))
+#define na_object_set_description( obj, desc )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_DESCRIPTION, ( const void * )( desc ))
 #define na_object_set_items( obj, list )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SUBITEMS, ( const void * )( list ))
 #define na_object_set_items_slist( obj, slist )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SUBITEMS_SLIST, ( const void * )( slist ))
 #define na_object_set_enabled( obj, enabled )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ENABLED, ( const void * ) GUINT_TO_POINTER( enabled ))
