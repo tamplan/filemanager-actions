@@ -41,21 +41,9 @@ G_BEGIN_DECLS
 #define NADP_KEY_TYPE								G_KEY_FILE_DESKTOP_KEY_TYPE
 #define NADP_VALUE_TYPE_ACTION						"ExtensionAction"
 #define NADP_VALUE_TYPE_MENU						"ExtensionMenu"
-#define NADP_KEY_NAME								G_KEY_FILE_DESKTOP_KEY_NAME
-#define NADP_KEY_TOOLTIP							"Tooltip"
-#define NADP_KEY_ICON								G_KEY_FILE_DESKTOP_KEY_ICON
-#define NADP_KEY_DESCRIPTION						"Description"
-#define NADP_KEY_SUGGESTED_SHORTCUT					"SuggestedShortcut"
 
-#define NADP_KEY_TARGET_SELECTION					"TargetSelection"
-#define NADP_KEY_TARGET_BACKGROUND					"TargetBackground"
-#define NADP_KEY_TARGET_CONTEXT						"TargetContext"
-#define NADP_KEY_TARGET_TOOLBAR						"TargetToolbar"
-#define NADP_KEY_TOOLBAR_LABEL						"ToolbarLabel"
 #define NADP_KEY_PROFILES							"Profiles"
 
-#define NADP_KEY_EXEC								G_KEY_FILE_DESKTOP_KEY_EXEC
-#define NADP_KEY_PATH								G_KEY_FILE_DESKTOP_KEY_PATH
 #define NADP_KEY_EXECUTION_MODE						"ExecutionMode"
 #define NADP_VALUE_EXECUTION_MODE_NORMAL			"Normal"
 #define NADP_VALUE_EXECUTION_MODE_MINIMIZED			"Minimized"
@@ -63,28 +51,13 @@ G_BEGIN_DECLS
 #define NADP_VALUE_EXECUTION_MODE_TERMINAL			"Terminal"
 #define NADP_VALUE_EXECUTION_MODE_EMBEDDED			"Embedded"
 #define NADP_VALUE_EXECUTION_MODE_DISPLAY_OUTPUT	"DisplayOutput"
-#define NADP_KEY_STARTUP_NOTIFY						G_KEY_FILE_DESKTOP_KEY_STARTUP_NOTIFY
-#define NADP_KEY_STARTUP_WM_CLASS					G_KEY_FILE_DESKTOP_KEY_STARTUP_WM_CLASS
-#define NADP_KEY_EXECUTE_AS							"ExecuteAs"
-#define NADP_KEY_FOR_EACH							"ForEach"
 
 #define NADP_KEY_ITEMS_LIST							"ItemsList"
-#define NADP_KEY_GET_ITEMS_LIST						"GetItemsList"
 
 #define NADP_KEY_ONLY_SHOW_IN						G_KEY_FILE_DESKTOP_KEY_ONLY_SHOW_IN
 #define NADP_KEY_NOT_SHOW_IN						G_KEY_FILE_DESKTOP_KEY_NOT_SHOW_IN
 #define NADP_KEY_NO_DISPLAY							"NoDisplay"
 #define NADP_KEY_HIDDEN								G_KEY_FILE_DESKTOP_KEY_HIDDEN
-#define NADP_KEY_TRY_EXEC							G_KEY_FILE_DESKTOP_KEY_TRY_EXEC
-#define NADP_KEY_SHOW_IF_REGISTERED					"ShowIfRegistered"
-#define NADP_KEY_SHOW_IF_TRUE						"ShowIfTrue"
-#define NADP_KEY_SHOW_IF_RUNNING					"ShowIfRunning"
-#define NADP_KEY_MIMETYPES							"MimeTypes"
-#define NADP_KEY_BASENAMES							"Basenames"
-#define NADP_KEY_MATCHCASE							"Matchcase"
-#define NADP_KEY_SELECTION_COUNT					"SelectionCount"
-#define NADP_KEY_SCHEMES							"Schemes"
-#define NADP_KEY_FOLDERS							"Folders"
 #define NADP_KEY_CAPABILITIES						"Capabilities"
 #define NADP_VALUE_CAPABILITY_OWNER					"Owner"
 #define NADP_VALUE_CAPABILITY_READABLE				"Readable"
