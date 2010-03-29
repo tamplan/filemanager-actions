@@ -70,6 +70,7 @@ static void              desktop_weak_notify( NadpDesktopFile *ndf, GObject *ite
 static void              free_desktop_paths( GList *paths );
 
 static gboolean          read_done_desktop_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
+static void              read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
 static void              read_done_load_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *data, GSList **messages );
 static void              read_done_action_load_profile( const NAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages );
 static void              read_done_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages );
@@ -457,6 +458,7 @@ nadp_reader_ifactory_provider_read_done( const NAIFactoryProvider *reader, void 
 		if( NA_IS_OBJECT_ITEM( serializable )){
 			writable = read_done_desktop_is_writable( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
 			na_object_set_readonly( serializable, !writable );
+			read_subitems_key( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
 		}
 
 		if( NA_IS_OBJECT_ACTION( serializable )){
@@ -483,6 +485,25 @@ read_done_desktop_is_writable( const NAIFactoryProvider *provider, NAObjectItem 
 	g_free( path );
 
 	return( writable );
+}
+
+static void
+read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
+{
+	GSList *subitems;
+	gboolean key_found;
+
+	subitems = nadp_desktop_file_get_string_list( reader_data->ndf,
+			NADP_GROUP_DESKTOP,
+			NA_IS_OBJECT_ACTION( item ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
+			&key_found,
+			NULL );
+
+	if( key_found ){
+		na_object_set_items_slist( item, subitems );
+	}
+
+	na_core_utils_slist_free( subitems );
 }
 
 static void

@@ -125,6 +125,9 @@
 
 2009-03-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-reader.c (nadp_reader_ifactory_provider_read_done):
+	Explicitly read subitems string list.
+
 	* src/io-desktop/nadp-desktop-provider.c (ifactory_provider_iface_init):
 	* src/io-desktop/nadp-writer.c:
 	* src/io-desktop/nadp-writer.h (nadp_writer_ifactory_provider_write_done):
