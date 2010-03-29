@@ -170,6 +170,12 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
  * actually writes the item to the existing NadpDesktopFile
  * as we have choosen to take advantage of data factory management system
  * we do not need to enumerate each and every elementary data
+ *
+ * As we want keep comments between through multiple updates, we cannot
+ * just delete the .desktop file and recreate it as we are doing for GConf.
+ * Instead of that, we delete each group before updating it, then deleting
+ * last groups (not updated ones) at end.
+ * -> as a side effect, we lose comments inside of groups :(
  */
 static guint
 write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages )
@@ -348,20 +354,20 @@ nadp_writer_ifactory_provider_write_data(
 
 	code = NA_IIO_PROVIDER_CODE_OK;
 	ndf = NADP_DESKTOP_FILE( writer_data );
+	def = na_data_boxed_get_data_def( boxed );
 
-	if( na_data_boxed_is_set( boxed )){
-		def = na_data_boxed_get_data_def( boxed );
+	if( def->desktop_entry && strlen( def->desktop_entry )){
 
-		if( def->desktop_entry && strlen( def->desktop_entry )){
+		if( NA_IS_OBJECT_PROFILE( object )){
+			profile_id = na_object_get_id( object );
+			group_name = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, profile_id );
+			g_free( profile_id );
 
-			if( NA_IS_OBJECT_PROFILE( object )){
-				profile_id = na_object_get_id( object );
-				group_name = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, profile_id );
-				g_free( profile_id );
+		} else {
+			group_name = g_strdup( NADP_GROUP_DESKTOP );
+		}
 
-			} else {
-				group_name = g_strdup( NADP_GROUP_DESKTOP );
-			}
+		if( na_data_boxed_is_set( boxed )){
 
 			switch( def->type ){
 
@@ -398,10 +404,11 @@ nadp_writer_ifactory_provider_write_data(
 					code = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 			}
 
-			/*g_debug( "%s: gconf=%p, code=%u, path=%s", thisfn, ( void * ) gconf, code, path );*/
-
-			g_free( group_name );
+		} else {
+			nadp_desktop_file_remove_key( ndf, group_name, def->desktop_entry );
 		}
+
+		g_free( group_name );
 	}
 
 	return( code );

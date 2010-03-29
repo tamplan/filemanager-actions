@@ -468,6 +468,47 @@ nadp_desktop_file_get_profiles( const NadpDesktopFile *ndf )
 }
 
 /**
+ * nadp_desktop_file_remove_key:
+ * @ndf: this #NadpDesktopFile instance.
+ * @group: the group.
+ * @key: the key.
+ *
+ * Removes the specified key.
+ *
+ * Note that this doesn't work very well for localized keys, as we only
+ * remove a key which has the exact same label that the provided one.
+ * So we'd have to remove:
+ * - key
+ * - key[en_US.UTF-8]
+ * - key[en_US]
+ * - key[en]
+ */
+void
+nadp_desktop_file_remove_key( const NadpDesktopFile *ndf, const gchar *group, const gchar *key )
+{
+	char **locales;
+	char **iloc;
+	gchar *locale_key;
+
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+
+	if( !ndf->private->dispose_has_run ){
+
+		g_key_file_remove_key( ndf->private->key_file, group, key, NULL );
+
+		locales = ( char ** ) g_get_language_names();
+		iloc = locales;
+
+		while( *iloc ){
+			locale_key = g_strdup_printf( "%s[%s]", key, *iloc );
+			g_key_file_remove_key( ndf->private->key_file, group, locale_key, NULL );
+			g_free( locale_key );
+			iloc++;
+		}
+	}
+}
+
+/**
  * nadp_desktop_file_get_boolean:
  * @ndf: this #NadpDesktopFile instance.
  * @group: the searched group.
@@ -755,6 +796,13 @@ nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 	if( !ndf->private->dispose_has_run ){
 
 		locales = ( char ** ) g_get_language_names();
+		/*
+		en_US.UTF-8
+		en_US
+		en.UTF-8
+		en
+		C
+		*/
 		g_key_file_set_locale_string( ndf->private->key_file, group, key, locales[0], value );
 	}
 }
