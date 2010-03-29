@@ -85,6 +85,7 @@ gchar           *nadp_desktop_file_get_id           ( const NadpDesktopFile *ndf
 GSList          *nadp_desktop_file_get_profiles     ( const NadpDesktopFile *ndf );
 
 void             nadp_desktop_file_remove_key       ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key );
+void             nadp_desktop_file_remove_profile   ( const NadpDesktopFile *ndf, const gchar *profile_id );
 
 gboolean         nadp_desktop_file_get_boolean      ( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, gboolean default_value );
 gchar           *nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, gboolean *key_found, const gchar *default_value );

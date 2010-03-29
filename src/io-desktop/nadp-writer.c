@@ -173,9 +173,8 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
  *
  * As we want keep comments between through multiple updates, we cannot
  * just delete the .desktop file and recreate it as we are doing for GConf.
- * Instead of that, we delete each group before updating it, then deleting
- * last groups (not updated ones) at end.
- * -> as a side effect, we lose comments inside of groups :(
+ * Instead of that, we delete at end groups that have not been walked through
+ * -> as a side effect, we lose comments inside of these groups :(
  */
 static guint
 write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages )
@@ -419,9 +418,12 @@ nadp_writer_ifactory_provider_write_done( const NAIFactoryProvider *provider, vo
 							const NAIFactoryObject *object, GSList **messages  )
 {
 	GSList *subitems;
+	GSList *profile_groups;
+	GSList *ip;
 
 	if( NA_IS_OBJECT_ITEM( object )){
 		subitems = na_object_get_items_slist( object );
+		na_core_utils_slist_dump( subitems );
 
 		nadp_desktop_file_set_string_list(
 				NADP_DESKTOP_FILE( writer_data ),
@@ -429,6 +431,17 @@ nadp_writer_ifactory_provider_write_done( const NAIFactoryProvider *provider, vo
 				NA_IS_OBJECT_ACTION( object ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
 				subitems );
 
+		profile_groups = nadp_desktop_file_get_profiles( NADP_DESKTOP_FILE( writer_data ));
+		na_core_utils_slist_dump( profile_groups );
+
+		for( ip = profile_groups ; ip ; ip = ip->next ){
+			if( !na_core_utils_slist_find( subitems, ( const gchar * ) ip->data )){
+				g_debug( "nadp_writer_ifactory_provider_write_done: deleting (removed) profile %s", ( const gchar * ) ip->data );
+				nadp_desktop_file_remove_profile( NADP_DESKTOP_FILE( writer_data ), ( const gchar * ) ip->data );
+			}
+		}
+
+		na_core_utils_slist_free( profile_groups );
 		na_core_utils_slist_free( subitems );
 	}
 

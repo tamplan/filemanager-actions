@@ -552,6 +552,9 @@ read_done_load_profiles( const NAIFactoryProvider *provider, NAObjectAction *act
 			read_done_action_load_profile( provider, reader_data, profile_id, messages );
 		}
 	}
+
+	na_core_utils_slist_free( list_profiles );
+	na_core_utils_slist_free( order );
 }
 
 static void

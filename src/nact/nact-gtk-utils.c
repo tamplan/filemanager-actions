@@ -48,6 +48,8 @@ void
 nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
 {
 	GList *renderers, *irender;
+	GtkTextBuffer *buffer;
+	GtkTextTag *tag;
 
 	if( GTK_IS_ENTRY( widget )){
 		gtk_editable_set_editable( GTK_EDITABLE( widget ), editable );
@@ -56,6 +58,14 @@ nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
 		/*g_object_set( G_OBJECT( widget ), "has-frame", editable, NULL );*/
 		/* this prevents the caret to be displayed when we click in the entry */
 		g_object_set( G_OBJECT( widget ), "can-focus", editable, NULL );
+
+	} else if( GTK_IS_TEXT_VIEW( widget )){
+		buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( widget ));
+		tag = gtk_text_buffer_create_tag( buffer,
+				"nact-tag",
+				"editable", editable,
+				"editable-set", TRUE,
+				NULL );
 
 	} else if( GTK_IS_TOGGLE_BUTTON( widget )){
 		/* transforms to a quasi standard GtkButton */

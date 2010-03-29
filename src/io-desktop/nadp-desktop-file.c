@@ -450,10 +450,9 @@ nadp_desktop_file_get_profiles( const NadpDesktopFile *ndf )
 			pfx_len = strlen( profile_pfx );
 
 			while( *ig ){
-
 				if( !strncmp( *ig, profile_pfx, pfx_len )){
-					profile_id = g_strdup( *ig );
-					list = g_slist_prepend( list, profile_id+pfx_len );
+					profile_id = g_strdup( *ig+pfx_len );
+					list = g_slist_prepend( list, profile_id );
 				}
 
 				ig++;
@@ -505,6 +504,28 @@ nadp_desktop_file_remove_key( const NadpDesktopFile *ndf, const gchar *group, co
 			g_free( locale_key );
 			iloc++;
 		}
+	}
+}
+
+/**
+ * nadp_desktop_file_remove_profile:
+ * @ndf: this #NadpDesktopFile instance.
+ * @profile_id: the id of the profile.
+ *
+ * Removes the group which describes the specified profile.
+ */
+void
+nadp_desktop_file_remove_profile( const NadpDesktopFile *ndf, const gchar *profile_id )
+{
+	gchar *group_name;
+
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
+
+	if( !ndf->private->dispose_has_run ){
+
+		group_name = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, profile_id );
+		g_key_file_remove_group( ndf->private->key_file, group_name, NULL );
+		g_free( group_name );
 	}
 }
 

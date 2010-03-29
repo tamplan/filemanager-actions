@@ -211,6 +211,22 @@
 
 2010-03-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-gtk-utils.c (nact_gtk_utils_set_editable):
+	Take into account new GtktextView widget.
+
+	* src/io-desktop/nadp-writer.c (nadp_iio_provider_write_item):
+	Remove groups which no longer exist.
+
+	* src/io-desktop/nadp-reader.c (read_done_load_profiles):
+	Free string lists.
+
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h (nadp_desktop_file_remove_profile):
+	New function.
+
+	* src/io-desktop/nadp-desktop-file.c (nadp_desktop_file_get_profiles):
+	Fix allocation of profile id.
+
 	* src/io-desktop/nadp-desktop-file.c:
 	* src/io-desktop/nadp-desktop-file.h (nadp_desktop_file_remove_key):
 	New function.
