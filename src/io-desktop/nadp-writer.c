@@ -406,3 +406,24 @@ nadp_writer_ifactory_provider_write_data(
 
 	return( code );
 }
+
+guint
+nadp_writer_ifactory_provider_write_done( const NAIFactoryProvider *provider, void *writer_data,
+							const NAIFactoryObject *object, GSList **messages  )
+{
+	GSList *subitems;
+
+	if( NA_IS_OBJECT_ITEM( object )){
+		subitems = na_object_get_items_slist( object );
+
+		nadp_desktop_file_set_string_list(
+				NADP_DESKTOP_FILE( writer_data ),
+				NADP_GROUP_DESKTOP,
+				NA_IS_OBJECT_ACTION( object ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
+				subitems );
+
+		na_core_utils_slist_free( subitems );
+	}
+
+	return( NA_IIO_PROVIDER_CODE_OK );
+}

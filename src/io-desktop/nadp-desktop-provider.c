@@ -228,7 +228,7 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 	iface->read_done = nadp_reader_ifactory_provider_read_done;
 	iface->write_start = nadp_writer_ifactory_provider_write_start;
 	iface->write_data = nadp_writer_ifactory_provider_write_data;
-	iface->write_done = NULL;
+	iface->write_done = nadp_writer_ifactory_provider_write_done;
 }
 
 static guint

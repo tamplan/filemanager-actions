@@ -123,6 +123,13 @@
 	(nadp_desktop_file_get_file_type):
 	Do not emit a warning if Type is not found in the .desktop file.
 
+2009-03-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/io-desktop/nadp-desktop-provider.c (ifactory_provider_iface_init):
+	* src/io-desktop/nadp-writer.c:
+	* src/io-desktop/nadp-writer.h (nadp_writer_ifactory_provider_write_done):
+	New function: explicitly write subitems string list for actions and menus.
+
 2009-03-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-data-boxed.h:

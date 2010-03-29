@@ -49,6 +49,10 @@ guint    nadp_writer_ifactory_provider_write_data(
 				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,
 				const NADataBoxed *boxed, GSList **messages );
 
+guint    nadp_writer_ifactory_provider_write_done(
+				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,
+				GSList **messages  );
+
 G_END_DECLS
 
 #endif /* __NADP_WRITER_H__ */
