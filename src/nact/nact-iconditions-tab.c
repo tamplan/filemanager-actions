@@ -378,7 +378,6 @@ on_tab_updatable_enable_tab( NactIConditionsTab *instance, NAObjectItem *item )
 		g_return_if_fail( NACT_IS_ICONDITIONS_TAB( instance ));
 
 		tab_set_sensitive( instance );
-
 	}
 }
 
