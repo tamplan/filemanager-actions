@@ -342,7 +342,7 @@ check_key_file( NadpDesktopFile *ndf )
 				ret = FALSE;
 
 			} else if( hidden ){
-				g_warning( "%s: %s: Hidden=true", thisfn, ndf->private->path );
+				g_debug( "%s: %s: Hidden=true", thisfn, ndf->private->path );
 				ret = FALSE;
 			}
 		}

@@ -94,13 +94,11 @@
 - Implement:
 	Description
 	SuggestedShortcut
-	GetItemsList
 	Path
 	ExecutionMode
 	StartupNotify
 	StartupWMClass
 	ExecuteAs
-	ForEach
 	OnlyShowIn
 	NotShowIn
 	Hidden
