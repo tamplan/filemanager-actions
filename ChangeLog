@@ -123,6 +123,9 @@
 	(nadp_desktop_file_get_file_type):
 	Do not emit a warning if Type is not found in the .desktop file.
 
+	* src/io-desktop/nadp-keys.h:
+	Set back action (resp. menu) Type to Action (resp. Menu).
+
 	* src/io-desktop/nadp-desktop-file.c (check_key_file):
 	Only write a debug message if file is hidden.
 

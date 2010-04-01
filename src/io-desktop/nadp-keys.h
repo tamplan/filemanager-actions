@@ -39,8 +39,8 @@ G_BEGIN_DECLS
 #define NADP_GROUP_PROFILE							"X-Action-Profile"
 
 #define NADP_KEY_TYPE								G_KEY_FILE_DESKTOP_KEY_TYPE
-#define NADP_VALUE_TYPE_ACTION						"ExtensionAction"
-#define NADP_VALUE_TYPE_MENU						"ExtensionMenu"
+#define NADP_VALUE_TYPE_ACTION						"Action"
+#define NADP_VALUE_TYPE_MENU						"Menu"
 
 #define NADP_KEY_PROFILES							"Profiles"
 

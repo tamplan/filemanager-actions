@@ -93,7 +93,7 @@
 
 - Implement:
 	Description
-	SuggestedShortcut
+	SuggestedShortcut (see gnome-keybinding-properties)
 	Path
 	ExecutionMode
 	StartupNotify
