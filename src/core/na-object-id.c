@@ -266,7 +266,7 @@ na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
  * @object: the #NAObjectId object to be pasted.
  * @relabel: whether this object should be relabeled when pasted.
  * @relabel: whether this item should be renumbered ?
- * @action: if @object is a #NAObjectProfile, the parent #NAObjectAction.
+ * @parent: the parent of @object, or %NULL.
  *
  * Prepares @object to be pasted.
  *
@@ -281,21 +281,22 @@ na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
  * user preferences.
  */
 void
-na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *action )
+na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *parent )
 {
 	static const gchar *thisfn = "na_object_id_prepare_for_paste";
 	GList *subitems, *it;
 
-	g_debug( "%s: object=%p, relabel=%s, renumber=%s, action=%p",
-			thisfn, ( void * ) object, relabel ? "True":"False", renumber ? "True":"False", ( void * ) action );
+	g_debug( "%s: object=%p, relabel=%s, renumber=%s, parent=%p",
+			thisfn, ( void * ) object, relabel ? "True":"False", renumber ? "True":"False", ( void * ) parent );
+
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !action || NA_IS_OBJECT_ACTION( action ));
+	g_return_if_fail( !parent || NA_IS_OBJECT_ITEM( parent ));
 
 	if( !object->private->dispose_has_run ){
 
 		if( NA_IS_OBJECT_PROFILE( object )){
-			na_object_set_parent( object, action );
-			na_object_set_new_id( object, action );
+			na_object_set_parent( object, parent );
+			na_object_set_new_id( object, parent );
 			if( renumber && relabel ){
 				na_object_set_copy_of_label( object );
 			}

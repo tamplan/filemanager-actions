@@ -89,8 +89,8 @@ G_BEGIN_DECLS
 #define na_object_sort_alpha_asc( a, b )				na_object_id_sort_alpha_asc( NA_OBJECT_ID( a ), NA_OBJECT_ID( b ))
 #define na_object_sort_alpha_desc( a, b )				na_object_id_sort_alpha_desc( NA_OBJECT_ID( a ), NA_OBJECT_ID( b ))
 
-#define na_object_prepare_for_paste( obj, relabel, renumber, action ) \
-														na_object_id_prepare_for_paste( NA_OBJECT_ID( obj ), ( relabel ), ( renumber ), ( NAObjectId * )( action ))
+#define na_object_prepare_for_paste( obj, relabel, renumber, parent ) \
+														na_object_id_prepare_for_paste( NA_OBJECT_ID( obj ), ( relabel ), ( renumber ), ( NAObjectId * )( parent ))
 #define na_object_set_copy_of_label( obj )				na_object_id_set_copy_of_label( NA_OBJECT_ID( obj ))
 #define na_object_set_new_id( obj, parent )				na_object_id_set_new_id( NA_OBJECT_ID( obj ), ( NAObjectId * )( parent ))
 

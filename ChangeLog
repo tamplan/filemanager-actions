@@ -1,3 +1,9 @@
+2009-04-01 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-object-api.h (na_object_prepare_for_paste):
+	* src/core/na-object-id.c (na_object_id_prepare_for_paste):
+	Parent is not always an action, may be a menu.
+
 2009-03-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-data-boxed.h:
