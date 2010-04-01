@@ -206,6 +206,9 @@
 	* src/io-desktop/nadp-keys.h:
 	Set back action (resp. menu) Type to Action (resp. Menu).
 
+	* src/nact/nautilus-actions-config-tool.ui:
+	Insert a scrolled window as text view parent.
+
 	* src/io-desktop/nadp-desktop-file.c (check_key_file):
 	Only write a debug message if file is hidden.
 
