@@ -521,13 +521,13 @@ msgstr ""
 "Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
 "Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 
-#: ../src/core/na-icontextual-factory.c:47
+#: ../src/core/na-icontext-factory.c:47
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
 msgstr ""
 "Die Liste der Muster, die auf die ausgewählten Datei(en) und Ordner zutreffen "
 "müssen"
 
-#: ../src/core/na-icontextual-factory.c:48
+#: ../src/core/na-icontext-factory.c:48
 msgid ""
 "A list of strings with joker '*' or '?' to be matched against the name(s) of "
 "the selected file(s)/folder(s). Each selected items must match at least one "
@@ -540,7 +540,7 @@ msgstr ""
 "muss mindestens einem der Muster entsprechen, damit die Aktion erscheint.\n"
 "Vorgabe ist »*«."
 
-#: ../src/core/na-icontextual-factory.c:65
+#: ../src/core/na-icontext-factory.c:65
 msgid ""
 "A pattern to be matched against basenames of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
@@ -549,18 +549,18 @@ msgstr ""
 "Ordnern zutreffen muss (Sie müssen für jedes Muster, das Sie benötigen, ein "
 "weiteres erstellen)."
 
-#: ../src/core/na-icontextual-factory.c:68
-#: ../src/core/na-icontextual-factory.c:119
+#: ../src/core/na-icontext-factory.c:68
+#: ../src/core/na-icontext-factory.c:119
 msgid "<EXPR>"
 msgstr "<AUSDRUCK>"
 
-#: ../src/core/na-icontextual-factory.c:74
+#: ../src/core/na-icontext-factory.c:74
 msgid "Whether the specified basenames are case sensitive (default)"
 msgstr ""
 "Ist gesetzt, falls für die angegebenen Basisnamen Groß-/Kleinschreibung "
 "berücksichtigt werden soll (Vorgabe)"
 
-#: ../src/core/na-icontextual-factory.c:75
+#: ../src/core/na-icontext-factory.c:75
 msgid ""
 "Must be set to 'true' if the filename patterns are case sensitive, to 'false' "
 "otherwise. E.g., if you need to match a filename in a case-sensitive manner, "
@@ -577,7 +577,7 @@ msgstr ""
 "Dies wirkt sich nur auf die Zielauswahl aus, sofern eine Auswahl existiert.\n"
 "Vorgabe ist »wahr«."
 
-#: ../src/core/na-icontextual-factory.c:99
+#: ../src/core/na-icontext-factory.c:99
 msgid ""
 "List of patterns to be matched against the mimetypes of the selected file(s)/"
 "folder(s)"
@@ -585,7 +585,7 @@ msgstr ""
 "Die Liste der Muster, die beim Filtern der ausgewählten Datei(en) oder Ordner "
 "nach dem MIME-Typen zutreffen müssen"
 
-#: ../src/core/na-icontextual-factory.c:100
+#: ../src/core/na-icontext-factory.c:100
 msgid ""
 "A list of strings with joker '*' to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected items must match at least one of "
@@ -599,7 +599,7 @@ msgstr ""
 "Dies wirkt sich nur auf die Zielauswahl aus, sofern eine Auswahl existiert.\n"
 "Vorgabe ist »*«."
 
-#: ../src/core/na-icontextual-factory.c:116
+#: ../src/core/na-icontext-factory.c:116
 msgid ""
 "A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
@@ -608,11 +608,11 @@ msgstr ""
 "oder Ordnern zutreffen muss (Sie müssen für jedes Muster, das Sie benötigen, "
 "ein weiteres erstellen)."
 
-#: ../src/core/na-icontextual-factory.c:125
+#: ../src/core/na-icontext-factory.c:125
 msgid "Whether the profile applies to files"
 msgstr "Legt fest, ob das Profil auf Dateien angewendet werden soll"
 
-#: ../src/core/na-icontextual-factory.c:126
+#: ../src/core/na-icontext-factory.c:126
 msgid ""
 "Set to 'true' if the selection can have files, to 'false' otherwise.\n"
 "This setting is tied in with the 'isdir' setting. The valid combinations "
@@ -641,11 +641,11 @@ msgstr ""
 "Dies trifft nur zu, wenn auf eine Auswahl abgezielt wird.\n"
 "Vorgabe ist »wahr«."
 
-#: ../src/core/na-icontextual-factory.c:153
+#: ../src/core/na-icontext-factory.c:153
 msgid "Whether the profile applies to folders"
 msgstr "Legt fest, ob das Profil auf Ordner angewendet werden soll"
 
-#: ../src/core/na-icontextual-factory.c:154
+#: ../src/core/na-icontext-factory.c:154
 msgid ""
 "Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
 "This setting is tied in with the 'isfile' setting. The valid combinations "
@@ -674,11 +674,11 @@ msgstr ""
 "Dies trifft nur zu, wenn auf eine Auswahl abgezielt wird.\n"
 "Vorgabe ist »falsch«."
 
-#: ../src/core/na-icontextual-factory.c:181
+#: ../src/core/na-icontext-factory.c:181
 msgid "Whether the selection may be multiple"
 msgstr "Legt fest, ob Mehrfachauswahlen möglich sind"
 
-#: ../src/core/na-icontextual-factory.c:182
+#: ../src/core/na-icontext-factory.c:182
 msgid ""
 "If you need more than one files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set it to 'false'.\n"
@@ -690,7 +690,7 @@ msgstr ""
 "Dies wirkt sich nur auf die Zielauswahl aus.\n"
 "Vorgabe ist »falsch«."
 
-#: ../src/core/na-icontextual-factory.c:204
+#: ../src/core/na-icontext-factory.c:204
 msgid ""
 "List of schemes to be matched against those of selected file(s)/folder(s)"
 msgstr ""
@@ -698,7 +698,7 @@ msgstr ""
 "zutreffen müssen"
 
 #. too long string for iso c: 510 (max=509)
-#: ../src/core/na-icontextual-factory.c:206
+#: ../src/core/na-icontext-factory.c:206
 #| msgid ""
 #| "Defines the list of valid schemes to be matched against the selected "
 #| "items. The scheme is the protocol used to access the files. The keyword to "
@@ -751,7 +751,7 @@ msgstr ""
 "oder wenn es auf das spezielle »x-nautilus-desktop«-Schema abzielt.\n"
 "Vorgabe ist »file«."
 
-#: ../src/core/na-icontextual-factory.c:233
+#: ../src/core/na-icontext-factory.c:233
 msgid ""
 "A valid GIO scheme where the selected file(s)/folder(s) should be located. "
 "You must set one option for each scheme you need"
@@ -760,7 +760,7 @@ msgstr ""
 "werden soll (Sie müssen jeweils eine Option für jedes Schema festlegen, dass "
 "Sie benötigen)"
 
-#: ../src/core/na-icontextual-factory.c:235
+#: ../src/core/na-icontext-factory.c:235
 #: ../src/core/na-object-action-factory.c:158
 #: ../src/core/na-object-item-factory.c:94
 #: ../src/core/na-object-item-factory.c:116
@@ -769,11 +769,11 @@ msgstr ""
 msgid "<STRING>"
 msgstr "<ZEICHENKETTE>"
 
-#: ../src/core/na-icontextual-factory.c:241
+#: ../src/core/na-icontext-factory.c:241
 msgid "List of folders"
 msgstr "Liste von Ordnern"
 
-#: ../src/core/na-icontextual-factory.c:242
+#: ../src/core/na-icontext-factory.c:242
 #| msgid ""
 #| "Defines the list of valid paths to be matched against the current folder.\n"
 #| " All folders 'under' the specified path are considered valid.\n"
@@ -790,7 +790,7 @@ msgstr ""
 "Alle Unterordner der angegebenen Adressen werden als gültig angesehen.\n"
 "Vorgabe ist »/«."
 
-#: ../src/core/na-icontextual-factory.c:256
+#: ../src/core/na-icontext-factory.c:256
 msgid ""
 "The path of a (parent) directory for which the item will be displayed. You "
 "must set one option for each folder you need"
@@ -798,7 +798,7 @@ msgstr ""
 "Die Adresse eines (Eltern-)Ordners, für den das Objekt angezeigt werden soll. "
 "Sie müssen jeweils eine Aktion für jeden benötigten Ordner festlegen."
 
-#: ../src/core/na-icontextual-factory.c:258
+#: ../src/core/na-icontext-factory.c:258
 #: ../src/core/na-object-profile-factory.c:86
 #: ../src/utils/nautilus-actions-new.c:132
 msgid "<PATH>"

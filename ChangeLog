@@ -115,6 +115,21 @@
 
 2009-04-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-icontextual.h: Renamed as src/api/na-icontext.h.
+	* src/core/na-icontextual.c: Renamed as src/core/na-icontext.c.
+	* src/core/na-icontextual-factory.c: Renamed as	src/core/na-icontext-factory.c.
+
+	* po/POTFILES.in:
+	* src/api/Makefile.am:
+	* src/api/na-icontext.h:
+	* src/api/na-object-api.h:
+	* src/core/Makefile.am:
+	* src/core/na-icontext.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-profile.c:
+	* src/plugin-menu/nautilus-actions.c:
+	* src/utils/nautilus-actions-run.c: Updated accordingly.
+
 	* src/api/na-object-api.h (na_object_prepare_for_paste):
 	* src/core/na-object-id.c (na_object_id_prepare_for_paste):
 	Parent is not always an action, may be a menu.

@@ -44,7 +44,7 @@
 #include "na-ifactory-object.h"
 #include "na-ifactory-object-data.h"
 #include "na-iduplicable.h"
-#include "na-icontextual.h"
+#include "na-icontext.h"
 #include "na-object-action.h"
 #include "na-object-profile.h"
 #include "na-object-menu.h"
@@ -171,10 +171,10 @@ G_BEGIN_DECLS
 #define na_object_set_schemes( obj, schemes )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SCHEMES, ( const void * )( schemes ))
 #define na_object_set_folders( obj, folders )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_FOLDERS, ( const void * )( folders ))
 
-/* NAIContextual
+/* NAIContext
  */
-#define na_object_set_scheme( obj, scheme, add )		na_icontextual_set_scheme( NA_ICONTEXTUAL( obj ), ( const gchar * )( scheme ), ( add ))
-#define na_object_replace_folder( obj, old, new )		na_icontextual_replace_folder( NA_ICONTEXTUAL( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
+#define na_object_set_scheme( obj, scheme, add )		na_icontext_set_scheme( NA_ICONTEXT( obj ), ( const gchar * )( scheme ), ( add ))
+#define na_object_replace_folder( obj, old, new )		na_icontext_replace_folder( NA_ICONTEXT( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
 
 G_END_DECLS
 

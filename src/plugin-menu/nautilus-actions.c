@@ -562,7 +562,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 		}
 #endif
 
-		/*if( !na_icontextual_is_candidate( it->data, target, files )){
+		/*if( !na_icontext_is_candidate( it->data, target, files )){
 			continue;
 		}*/
 
@@ -588,7 +588,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 		g_return_val_if_fail( NA_IS_OBJECT_ACTION( it->data ), NULL );
 		action_label = na_object_get_label( it->data );
 
-		/* to be removed when NAObjectAction will implement NAIContextual interface
+		/* to be removed when NAObjectAction will implement NAIContext interface
 		 */
 		if( !na_object_action_is_candidate( it->data, target, files )){
 			g_debug( "%s: action %s is not candidate", thisfn, action_label );
@@ -627,7 +627,7 @@ get_candidate_profile( NautilusActions *plugin, NAObjectAction *action, guint ta
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 		NAObjectProfile *profile = NA_OBJECT_PROFILE( ip->data );
 
-		if( na_icontextual_is_candidate( NA_ICONTEXTUAL( profile ), target, files )){
+		if( na_icontext_is_candidate( NA_ICONTEXT( profile ), target, files )){
 			profile_label = na_object_get_label( profile );
 			g_debug( "%s: selecting %s (profile=%p '%s')", thisfn, action_label, ( void * ) profile, profile_label );
 			g_free( profile_label );

@@ -369,7 +369,7 @@ get_profile_for_targets( NAObjectAction *action, GList *targets )
 	profiles = na_object_get_items( action );
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 
-		if( na_icontextual_is_candidate( NA_ICONTEXTUAL( ip->data ), ITEM_TARGET_SELECTION, targets )){
+		if( na_icontext_is_candidate( NA_ICONTEXT( ip->data ), ITEM_TARGET_SELECTION, targets )){
 			candidate = NA_OBJECT_PROFILE( ip->data );
 		}
 	}

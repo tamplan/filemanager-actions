@@ -479,11 +479,11 @@ msgstr ""
 "Copyright-a %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
 "Copyright-a %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 
-#: ../src/core/na-icontextual-factory.c:47
+#: ../src/core/na-icontext-factory.c:47
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
 msgstr "Ereduen zerrenda hautatutako fitxategiak/karpetak bat etortzeko"
 
-#: ../src/core/na-icontextual-factory.c:48
+#: ../src/core/na-icontext-factory.c:48
 msgid ""
 "A list of strings with joker '*' or '?' to be matched against the name(s) of "
 "the selected file(s)/folder(s). Each selected items must match at least one "
@@ -498,7 +498,7 @@ msgstr ""
 "Hautapen bat dagoenean soilik aplikatzen da hau.\n"
 "Lehenetsi gisa '*'."
 
-#: ../src/core/na-icontextual-factory.c:65
+#: ../src/core/na-icontext-factory.c:65
 msgid ""
 "A pattern to be matched against basenames of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
@@ -507,18 +507,18 @@ msgstr ""
 "Komodinak (? edo *) eduki ditzake. Behar duzun eredu bakoitzeko aukera "
 "bat ezarri behar duzu."
 
-#: ../src/core/na-icontextual-factory.c:68
-#: ../src/core/na-icontextual-factory.c:119
+#: ../src/core/na-icontext-factory.c:68
+#: ../src/core/na-icontext-factory.c:119
 msgid "<EXPR>"
 msgstr "<ADIERA>"
 
-#: ../src/core/na-icontextual-factory.c:74
+#: ../src/core/na-icontext-factory.c:74
 msgid "Whether the specified basenames are case sensitive (default)"
 msgstr ""
 "Zehaztutako oinarrizko izenek maiuskulak eta minuskulak bereizten "
 "dituzten (lehenetsia) ala ez"
 
-#: ../src/core/na-icontextual-factory.c:75
+#: ../src/core/na-icontext-factory.c:75
 msgid ""
 "Must be set to 'true' if the filename patterns are case sensitive, to "
 "'false' otherwise. E.g., if you need to match a filename in a case-sensitive "
@@ -534,13 +534,13 @@ msgstr ""
 "Hautapen bat dagoenean soilik aplikatzen da hau.\n"
 "Lehenetsi gisa 'true'."
 
-#: ../src/core/na-icontextual-factory.c:99
+#: ../src/core/na-icontext-factory.c:99
 msgid ""
 "List of patterns to be matched against the mimetypes of the selected file(s)/"
 "folder(s)"
 msgstr "Ereduen zerrenda hautatutako fitxategi edo karpeten MIME motak bat etortzeko"
 
-#: ../src/core/na-icontextual-factory.c:100
+#: ../src/core/na-icontext-factory.c:100
 msgid ""
 "A list of strings with joker '*' to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected items must match at least one of "
@@ -554,7 +554,7 @@ msgstr ""
 "Hautapen bat dagoenean soilik aplikatzen da hau.\n"
 "Lehenetsi gisa '*'."
 
-#: ../src/core/na-icontextual-factory.c:116
+#: ../src/core/na-icontext-factory.c:116
 msgid ""
 "A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
@@ -562,11 +562,11 @@ msgstr ""
 "Eredua hautatutako fitxategi edo karpetak bat etortzeko. Komodinak (? edo *) eduki "
 "ditzake. Behar duzun eredu bakoitzeko aukera bat ezarri behar duzu."
 
-#: ../src/core/na-icontextual-factory.c:125
+#: ../src/core/na-icontext-factory.c:125
 msgid "Whether the profile applies to files"
 msgstr "Profilak fitxategiei aplikatuko zaizkien ala ez adierazten du"
 
-#: ../src/core/na-icontextual-factory.c:126
+#: ../src/core/na-icontext-factory.c:126
 msgid ""
 "Set to 'true' if the selection can have files, to 'false' otherwise.\n"
 "This setting is tied in with the 'isdir' setting. The valid combinations "
@@ -589,11 +589,11 @@ msgstr ""
 "Hautapen bat dagoenean soilik aplikatzen da hau.\n"
 "Lehenetsi gisa 'true'."
 
-#: ../src/core/na-icontextual-factory.c:153
+#: ../src/core/na-icontext-factory.c:153
 msgid "Whether the profile applies to folders"
 msgstr "Profilak karpetei aplikatuko zaien ala ez adierazten du"
 
-#: ../src/core/na-icontextual-factory.c:154
+#: ../src/core/na-icontext-factory.c:154
 msgid ""
 "Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
 "This setting is tied in with the 'isfile' setting. The valid combinations "
@@ -616,11 +616,11 @@ msgstr ""
 "Hautapen bat dagoenean soilik aplikatzen da hau.\n"
 "Lehenetsi gisa 'false'."
 
-#: ../src/core/na-icontextual-factory.c:181
+#: ../src/core/na-icontext-factory.c:181
 msgid "Whether the selection may be multiple"
 msgstr "Hautapena anitzkoitza den ala ez adierazten du"
 
-#: ../src/core/na-icontextual-factory.c:182
+#: ../src/core/na-icontext-factory.c:182
 msgid ""
 "If you need more than one files or folders to be selected, set this key to "
 "'true'. If you want just one file or folder, set it to 'false'.\n"
@@ -633,12 +633,12 @@ msgstr ""
 "Hautapen bat dagoenean soilik aplikatzen da hau.\n"
 "Lehenetsi gisa 'false'."
 
-#: ../src/core/na-icontextual-factory.c:204
+#: ../src/core/na-icontext-factory.c:204
 msgid "List of schemes to be matched against those of selected file(s)/folder(s)"
 msgstr "Eskemen zerrenda hautatutako fitxategiak/karpetak bat etortzeko"
 
 #. too long string for iso c: 510 (max=509)
-#: ../src/core/na-icontextual-factory.c:206
+#: ../src/core/na-icontext-factory.c:206
 msgid ""
 "Defines the list of valid schemes to be matched against the selected items. "
 "The scheme is the protocol used to access the files. The keyword to use is "
@@ -676,7 +676,7 @@ msgstr ""
 "Hautapen bat dagoenean soilik aplikatzen da hau.\n"
 "Lehenetsi gisa 'file'."
 
-#: ../src/core/na-icontextual-factory.c:232
+#: ../src/core/na-icontext-factory.c:232
 msgid ""
 "A valid GIO scheme where the selected file(s)/folder(s) should be located. "
 "You must set one option for each scheme you need"
@@ -684,7 +684,7 @@ msgstr ""
 "Baliozko GIO eskema bat (hautatutako fitxategiak kokatuta egon beharko luketena). Behar "
 "duzun eskema bakoitzeko ezarri behar duzu"
 
-#: ../src/core/na-icontextual-factory.c:234
+#: ../src/core/na-icontext-factory.c:234
 #: ../src/core/na-object-action-factory.c:160
 #: ../src/core/na-object-item-factory.c:94
 #: ../src/core/na-object-item-factory.c:116
@@ -693,11 +693,11 @@ msgstr ""
 msgid "<STRING>"
 msgstr "<KATEA>"
 
-#: ../src/core/na-icontextual-factory.c:240
+#: ../src/core/na-icontext-factory.c:240
 msgid "List of folders"
 msgstr "Karpeten zerrenda"
 
-#: ../src/core/na-icontextual-factory.c:241
+#: ../src/core/na-icontext-factory.c:241
 msgid ""
 "Defines the list of valid paths to be matched against the current folder.\n"
 " All folders 'under' the specified path are considered valid.\n"
@@ -711,7 +711,7 @@ msgstr ""
 "bakarrik dituenean.\n"
 "Lehenetsia '/' da."
 
-#: ../src/core/na-icontextual-factory.c:256
+#: ../src/core/na-icontext-factory.c:256
 msgid ""
 "The path of a (parent) directory for which the item will be displayed. You "
 "must set one option for each folder you need"
@@ -719,7 +719,7 @@ msgstr ""
 "Direktorio (guraso) bate bide-izena, dagokion elementua bistaratzeko. "
 "Aukera bat ezarri behar duzu behar duzun karpeta bakoitzeko"
 
-#: ../src/core/na-icontextual-factory.c:258
+#: ../src/core/na-icontext-factory.c:258
 #: ../src/core/na-object-profile-factory.c:86
 #: ../src/utils/nautilus-actions-new.c:130
 msgid "<PATH>"

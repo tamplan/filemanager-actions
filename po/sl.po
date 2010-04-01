@@ -325,11 +325,11 @@ msgstr ""
 "Avtorske pravice %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
 "Avtorske pravice %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 
-#: ../src/core/na-icontextual-factory.c:47
+#: ../src/core/na-icontext-factory.c:47
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
 msgstr "Seznam vzorcev za skladnje izbran-e/ih datotek(e) in map(e)"
 
-#: ../src/core/na-icontextual-factory.c:48
+#: ../src/core/na-icontext-factory.c:48
 msgid ""
 "A list of strings with joker '*' or '?' to be matched against the name(s) of the selected file(s)/folder(s). Each selected items must match at least one of the filename patterns for the action or the menu be candidate to display.\n"
 "This obviously only applies when there is a selection.\n"
@@ -339,20 +339,20 @@ msgstr ""
 "To je uporabljeno samo, ko obstaja izbor.\n"
 "Privzeto '*'."
 
-#: ../src/core/na-icontextual-factory.c:65
+#: ../src/core/na-icontext-factory.c:65
 msgid "A pattern to be matched against basenames of selected file(s)/folder(s). May include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr "Vzorec za skladanje z izbranimi datotekami/mapami. Lahko vključuje nadomestna znaka (* ali ?). Nastaviti morate eno možnost za vsak vzorec, ki ga potrebujete"
 
-#: ../src/core/na-icontextual-factory.c:68
-#: ../src/core/na-icontextual-factory.c:119
+#: ../src/core/na-icontext-factory.c:68
+#: ../src/core/na-icontext-factory.c:119
 msgid "<EXPR>"
 msgstr "<IZRAZ>"
 
-#: ../src/core/na-icontextual-factory.c:74
+#: ../src/core/na-icontext-factory.c:74
 msgid "Whether the specified basenames are case sensitive (default)"
 msgstr "Ali so določena osnovna imena občutljiva na velikost črk (privzeto)"
 
-#: ../src/core/na-icontextual-factory.c:75
+#: ../src/core/na-icontext-factory.c:75
 msgid ""
 "Must be set to 'true' if the filename patterns are case sensitive, to 'false' otherwise. E.g., if you need to match a filename in a case-sensitive manner, set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', then set 'false'.\n"
 "This obviously only applies when there is a selection.\n"
@@ -362,11 +362,11 @@ msgstr ""
 " To je uporabljeno samo, če obstaja izbor.\n"
 "Privzeto 'true'."
 
-#: ../src/core/na-icontextual-factory.c:99
+#: ../src/core/na-icontext-factory.c:99
 msgid "List of patterns to be matched against the mimetypes of the selected file(s)/folder(s)"
 msgstr "Seznam vzorcev za skladanje mime vrst izbran-e/ih datotek(e)/map(e)"
 
-#: ../src/core/na-icontextual-factory.c:100
+#: ../src/core/na-icontext-factory.c:100
 msgid ""
 "A list of strings with joker '*' to be matched against the mimetypes of the selected file(s)/folder(s). Each selected items must match at least one of the mimetype patterns for the action to appear.\n"
 "This obviously only applies when there is a selection.\n"
@@ -376,15 +376,15 @@ msgstr ""
 "To je uporabljeno samo, ko obstaja izbira.\n"
 "Privzeto '*'."
 
-#: ../src/core/na-icontextual-factory.c:116
+#: ../src/core/na-icontext-factory.c:116
 msgid "A pattern to be matched against mimetypes of selected file(s)/folder(s). May include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr "Vzorec za skladanje z izbranimi datotekami/mapami. Lahko vključuje nadomestna znaka (* ali ?). Nastaviti morate eno možnost za vsak vzorec, ki ga potrebujete"
 
-#: ../src/core/na-icontextual-factory.c:125
+#: ../src/core/na-icontext-factory.c:125
 msgid "Whether the profile applies to files"
 msgstr "Ali je profil uveljavljen za datoteke"
 
-#: ../src/core/na-icontextual-factory.c:126
+#: ../src/core/na-icontext-factory.c:126
 msgid ""
 "Set to 'true' if the selection can have files, to 'false' otherwise.\n"
 "This setting is tied in with the 'isdir' setting. The valid combinations are: \n"
@@ -404,11 +404,11 @@ msgstr ""
 "To je uveljavljeno samo, če obstaja izbor.\n"
 "Privzeto 'true'."
 
-#: ../src/core/na-icontextual-factory.c:153
+#: ../src/core/na-icontext-factory.c:153
 msgid "Whether the profile applies to folders"
 msgstr "Ali je profil uveljavljen za mape"
 
-#: ../src/core/na-icontextual-factory.c:154
+#: ../src/core/na-icontext-factory.c:154
 msgid ""
 "Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
 "This setting is tied in with the 'isfile' setting. The valid combinations are: \n"
@@ -428,11 +428,11 @@ msgstr ""
 "To je uporabljeno samo, ko obstaja izbor.\n"
 "Privzeto 'false'."
 
-#: ../src/core/na-icontextual-factory.c:181
+#: ../src/core/na-icontext-factory.c:181
 msgid "Whether the selection may be multiple"
 msgstr "Ali je lahko izbira večkratna"
 
-#: ../src/core/na-icontextual-factory.c:182
+#: ../src/core/na-icontext-factory.c:182
 msgid ""
 "If you need more than one files or folders to be selected, set this key to 'true'. If you want just one file or folder, set it to 'false'.\n"
 "This obviously only applies when there is a selection.\n"
@@ -442,12 +442,12 @@ msgstr ""
 "To je uporabljeno samo, ko obstaja izbor.\n"
 "Privzeto 'false'."
 
-#: ../src/core/na-icontextual-factory.c:204
+#: ../src/core/na-icontext-factory.c:204
 msgid "List of schemes to be matched against those of selected file(s)/folder(s)"
 msgstr "Seznam shem za skladnje izbran-e/ih datotek(e) in map(e)"
 
 #. too long string for iso c: 510 (max=509)
-#: ../src/core/na-icontextual-factory.c:206
+#: ../src/core/na-icontext-factory.c:206
 msgid ""
 "Defines the list of valid schemes to be matched against the selected items. The scheme is the protocol used to access the files. The keyword to use is the one used in the URI by the file manager.\n"
 "Examples of valid URI include:\n"
@@ -478,12 +478,13 @@ msgstr ""
 "To je uporabljeno samo ko obstaja izbor ali ob ciljanju posebne sheme 'x-nautilus-desktop'.\n"
 "Privzeto 'datoteka'"
 
-#: ../src/core/na-icontextual-factory.c:233
+#: ../src/core/na-icontext-factory.c:232
 msgid "A valid GIO scheme where the selected file(s)/folder(s) should be located. You must set one option for each scheme you need"
 msgstr "Veljavna shema GIO kjer naj bi se nahajale izbrane datoteke/mape. Nastaviti morate eno možnost za vsako shemo, ki jo potrebujete"
 
-#: ../src/core/na-icontextual-factory.c:235
-#: ../src/core/na-object-action-factory.c:158
+#: ../src/core/na-icontext-factory.c:234
+#: ../src/core/na-object-action-factory.c:160
+
 #: ../src/core/na-object-item-factory.c:94
 #: ../src/core/na-object-item-factory.c:116
 #: ../src/core/na-object-profile-factory.c:121
@@ -491,11 +492,12 @@ msgstr "Veljavna shema GIO kjer naj bi se nahajale izbrane datoteke/mape. Nastav
 msgid "<STRING>"
 msgstr "<NIZ>"
 
-#: ../src/core/na-icontextual-factory.c:241
+#: ../src/core/na-icontext-factory.c:240
 msgid "List of folders"
 msgstr "Seznam map"
 
-#: ../src/core/na-icontextual-factory.c:242
+#: ../src/core/na-icontext-factory.c:241
+
 msgid ""
 "Defines the list of valid paths to be matched against the current folder.\n"
 " All folders 'under' the specified path are considered valid.\n"
@@ -505,11 +507,11 @@ msgstr ""
 " Vse mape 'pod' določeno potjo so obravnavane kot veljavne.\n"
 "Privzeta vrednost je '/'."
 
-#: ../src/core/na-icontextual-factory.c:256
+#: ../src/core/na-icontext-factory.c:256
 msgid "The path of a (parent) directory for which the item will be displayed. You must set one option for each folder you need"
 msgstr "Pod (nadrejene) mape za katero bo prikazan predmet. Nastaviti morate eno možnost za vsako mapo, ki jo potrebujete"
 
-#: ../src/core/na-icontextual-factory.c:258
+#: ../src/core/na-icontext-factory.c:258
 #: ../src/core/na-object-profile-factory.c:86
 #: ../src/utils/nautilus-actions-new.c:132
 msgid "<PATH>"
