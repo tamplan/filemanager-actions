@@ -397,11 +397,16 @@ na_core_utils_slist_remove_utf8( GSList *list, const gchar *str )
 gchar **
 na_core_utils_slist_to_array( GSList *slist )
 {
+	GString *str;
+	GSList *is;
 	gchar **array;
-	gchar *text;
 
-	text = na_core_utils_slist_to_text( slist );
-	array = g_strsplit( text, ";", -1 );
+	str = g_string_new( "" );
+	for( is = slist ; is ; is = is->next ){
+		g_string_append_printf( str, "%s;", ( const gchar * ) is->data );
+	}
+	array = g_strsplit( str->str, ";", -1 );
+	g_string_free( str, TRUE );
 
 	return( array );
 }

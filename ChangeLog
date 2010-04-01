@@ -123,6 +123,9 @@
 	(nadp_desktop_file_get_file_type):
 	Do not emit a warning if Type is not found in the .desktop file.
 
+	* src/core/na-core-utils.c (na_core_utils_slist_to_array):
+	Fix built of array.
+
 	* src/io-desktop/nadp-keys.h:
 	Set back action (resp. menu) Type to Action (resp. Menu).
 
