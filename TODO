@@ -92,6 +92,7 @@
   what we should do: compute once, and monitor to only change when needed
 
 - Implement:
+	Description
 	SuggestedShortcut (see gnome-keybinding-properties)
 	GetItemsList
 	Path
