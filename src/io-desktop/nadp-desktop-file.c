@@ -340,23 +340,32 @@ check_key_file( NadpDesktopFile *ndf )
 gchar *
 nadp_desktop_file_get_file_type( const NadpDesktopFile *ndf )
 {
-	static const gchar *thisfn = "nadp_desktop_file_get_type";
+	static const gchar *thisfn = "nadp_desktop_file_get_file_type";
 	gchar *type;
+	gboolean has_key;
 	GError *error;
 
-	type = NULL;
-	error = NULL;
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+
+	type = NULL;
 
 	if( !ndf->private->dispose_has_run ){
 
-		type = g_key_file_get_string( ndf->private->key_file, NADP_GROUP_DESKTOP, NADP_KEY_TYPE, &error );
+		error = NULL;
 
+		has_key = g_key_file_has_key( ndf->private->key_file, NADP_GROUP_DESKTOP, NADP_KEY_TYPE, &error );
 		if( error ){
 			g_warning( "%s: %s", thisfn, error->message );
 			g_error_free( error );
-			g_free( type );
-			type = NULL;
+
+		} else if( has_key ){
+			type = g_key_file_get_string( ndf->private->key_file, NADP_GROUP_DESKTOP, NADP_KEY_TYPE, &error );
+			if( error ){
+				g_warning( "%s: %s", thisfn, error->message );
+				g_error_free( error );
+				g_free( type );
+				type = NULL;
+			}
 		}
 	}
 

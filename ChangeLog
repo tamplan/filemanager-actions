@@ -14,6 +14,10 @@
 	* src/core/na-object-id.c (na_object_id_prepare_for_paste):
 	Parent is not always an action, may be a menu.
 
+	* src/io-desktop/nadp-desktop-file.c
+	(nadp_desktop_file_get_file_type):
+	Do not emit a warning if Type is not found in the .desktop file.
+
 2009-03-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-data-boxed.h:
