@@ -1,5 +1,9 @@
 2009-04-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	* src/nact/nact-main-tab.c (nact_main_tab_is_page_enabled):
+	GTK_WIDGET_IS_SENSITIVE is deprecated starting from gtk 2.20.
+
 	* src/core/na-core-utils.c (na_core_utils_file_exists):
 	* src/io-xml/naxml-writer.c (output_xml_to_file):
 	Takes an URI as the filename.

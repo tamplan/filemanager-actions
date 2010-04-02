@@ -119,6 +119,7 @@ AM_GCONF_SOURCE_2
 # Gtk  >= 2.12: GtkBuilder
 #
 # [nact-assistant] remove work-around for #589745 when Gtk+ >= 2.18
+# [nact-main-tab.c] remove test on gtk_version when Gtk >= 2.18
 # [nact-main-menubar] GtkActivatable only available starting with Gtk+ 2.16
 # [configure.ac, nautilus-actions.c] remove test for
 # nautilus_menu_provider_emit_items_updated_signal() when Gnome >= 2.16
