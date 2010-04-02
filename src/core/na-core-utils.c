@@ -650,7 +650,7 @@ na_core_utils_file_delete( const gchar *path )
 
 /**
  * na_core_utils_file_exists:
- * @fname: a file full filename.
+ * @fname: a file full URI.
  *
  * Returns: %TRUE if the specified file exists, %FALSE else.
  *
@@ -662,7 +662,7 @@ na_core_utils_file_exists( const gchar *fname )
 	GFile *file;
 	gboolean exists;
 
-	file = g_file_new_for_path( fname );
+	file = g_file_new_for_uri( fname );
 	exists = g_file_query_exists( file, NULL );
 	g_object_unref( file );
 

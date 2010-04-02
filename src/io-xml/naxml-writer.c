@@ -611,7 +611,7 @@ find_export_format_fn( GQuark format )
 /*
  * get_output_fname:
  * @item: the #NAObjectItme-derived object to be exported.
- * @folder: the path of the directoy where to write the output XML file.
+ * @folder: the URI of the directoy where to write the output XML file.
  * @format: the export format.
  *
  * Returns: a filename suitable for writing the output XML.
@@ -685,12 +685,12 @@ get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format )
 /**
  * output_xml_to_file:
  * @xml: the xml buffer.
- * @filename: the full path of the output filename.
+ * @filename: the full path of the output filename as an URI.
  * @msg: a GSList to append messages.
  *
  * Exports an item to the given filename.
  */
-void
+static void
 output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg )
 {
 	static const gchar *thisfn = "naxml_writer_output_xml_to_file";
@@ -702,7 +702,7 @@ output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg )
 	g_return_if_fail( xml );
 	g_return_if_fail( filename && g_utf8_strlen( filename, -1 ));
 
-	file = g_file_new_for_path( filename );
+	file = g_file_new_for_uri( filename );
 
 	stream = g_file_replace( file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &error );
 	if( error ){

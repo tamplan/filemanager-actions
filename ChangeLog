@@ -1,3 +1,9 @@
+2009-04-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-core-utils.c (na_core_utils_file_exists):
+	* src/io-xml/naxml-writer.c (output_xml_to_file):
+	Takes an URI as the filename.
+
 2009-04-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-object-api.h (na_object_prepare_for_paste):
