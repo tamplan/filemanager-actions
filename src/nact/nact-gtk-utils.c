@@ -88,17 +88,16 @@ nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
 /**
  * nact_utils_get_pixbuf:
  * @name: the name of the file or an icon.
- * @size: the desired size (width=height).
+ * widget: the widget on which the imagecshould be rendered.
+ * size: the desired size.
  *
- * Returns a #GdkPixbuf of the given size.
+ * Returns a pixbuf for the given widget.
  */
 GdkPixbuf *
-nact_gtk_utils_get_pixbuf( const gchar *name, gint size )
+nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, gint size )
 {
 	static const gchar *thisfn = "nact_gtk_utils_get_pixbuf";
 	GdkPixbuf* pixbuf;
-	GIcon *icon;
-	GtkIconTheme *theme;
 	GError *error;
 
 	error = NULL;
@@ -115,21 +114,35 @@ nact_gtk_utils_get_pixbuf( const gchar *name, gint size )
 			}
 
 		} else {
-			icon = g_themed_icon_new( name );
-			theme = gtk_icon_theme_get_default();
-			pixbuf = gtk_icon_theme_load_icon( theme, name, size, GTK_ICON_LOOKUP_GENERIC_FALLBACK, &error );
-			if( error ){
-				g_warning( "%s: gtk_icon_theme_load_icon: name=%s, error=%s", thisfn, name, error->message );
-				g_error_free( error );
-				error = NULL;
-				pixbuf = NULL;
-			}
+			pixbuf = gtk_widget_render_icon( widget, name, size, NULL );
 		}
 	}
 
 	if( !pixbuf ){
+		g_debug( "%s: null pixbuf, loading transparent image", thisfn );
 		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", size, size, NULL );
 	}
 
 	return( pixbuf );
+}
+
+/**
+ * nact_utils_render:
+ * @name: the name of the file or an icon.
+ * widget: the widget on which the image should be rendered.
+ * size: the desired size.
+ *
+ * Displays the (maybe themed) image on the given widget.
+ */
+void
+nact_gtk_utils_render( const gchar *name, GtkImage *widget, gint size )
+{
+	GdkPixbuf* pixbuf;
+
+	pixbuf = nact_gtk_utils_get_pixbuf( name, GTK_WIDGET( widget ), size );
+
+	if( pixbuf ){
+		gtk_image_set_from_pixbuf( widget, pixbuf );
+		g_object_unref( pixbuf );
+	}
 }

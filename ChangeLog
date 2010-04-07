@@ -1,3 +1,14 @@
+2009-04-07 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h
+	(nact_gtk_utils_get_pixbuf): Render an icon for a given widget.
+	(nact_utils_render): New function.
+
+	* src/nact/nact-iaction-tab.c (on_icon_changed):
+	* src/nact/nact-main-statusbar.c (nact_main_statusbar_set_locked):
+	* src/nact/nact-tree-model.c (display_item): Updated accordingly.
+
 2009-04-02 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:

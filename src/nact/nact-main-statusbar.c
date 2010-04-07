@@ -215,8 +215,7 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean readonly, gint 
 	}
 
 	if( set_pixbuf ){
-		pixbuf = nact_gtk_utils_get_pixbuf( NULL, GTK_ICON_SIZE_MENU );
-		gtk_image_set_from_pixbuf( image, pixbuf );
+		nact_gtk_utils_render( NULL, image, GTK_ICON_SIZE_MENU );
 	}
 }
 

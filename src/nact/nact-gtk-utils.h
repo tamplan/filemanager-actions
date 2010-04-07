@@ -43,9 +43,10 @@ G_BEGIN_DECLS
 
 void       nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable );
 
-/* pixbuf utilities
+/* image utilities
  */
-GdkPixbuf *nact_gtk_utils_get_pixbuf( const gchar *name, gint size );
+GdkPixbuf *nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, gint size );
+void       nact_gtk_utils_render( const gchar *name, GtkImage *widget, gint size );
 
 G_END_DECLS
 

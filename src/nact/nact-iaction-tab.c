@@ -879,7 +879,6 @@ create_stock_icon_model( void )
 	model = gtk_list_store_new( ICON_N_COLUMN, G_TYPE_STRING, G_TYPE_STRING );
 
 	gtk_list_store_append( model, &row );
-
 	/* i18n notes: when no icon is selected in the drop-down list */
 	gtk_list_store_set( model, &row, ICON_STOCK_COLUMN, "", ICON_LABEL_COLUMN, _( "None" ), -1 );
 
@@ -962,7 +961,6 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 {
 	static const gchar *thisfn = "nact_iaction_tab_on_icon_changed";
 	GtkImage *image;
-	GdkPixbuf *pixbuf;
 	NAObjectItem *edited;
 	const gchar *icon_name;
 
@@ -981,13 +979,8 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, TRUE );
 	}
 
-	pixbuf = nact_gtk_utils_get_pixbuf( icon_name, GTK_ICON_SIZE_MENU );
-
-	if( pixbuf ){
-		image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
-		g_assert( GTK_IS_WIDGET( image ));
-		gtk_image_set_from_pixbuf( image, pixbuf );
-	}
+	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
+	nact_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_MENU );
 }
 
 static gint
