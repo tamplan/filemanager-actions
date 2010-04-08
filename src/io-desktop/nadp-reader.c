@@ -246,11 +246,11 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
 	item = NULL;
 	type = nadp_desktop_file_get_file_type( ndf );
 
-	if( !strcmp( type, NADP_VALUE_TYPE_MENU )){
-		item = NA_IFACTORY_OBJECT( na_object_menu_new());
-
-	} else if( !type || !strlen( type ) || !strcmp( type, NADP_VALUE_TYPE_ACTION )){
+	if( !type || !strlen( type ) || !strcmp( type, NADP_VALUE_TYPE_ACTION )){
 		item = NA_IFACTORY_OBJECT( na_object_action_new());
+
+	} else if( !strcmp( type, NADP_VALUE_TYPE_MENU )){
+		item = NA_IFACTORY_OBJECT( na_object_menu_new());
 
 	} else {
 		g_warning( "%s: unknown type=%s", thisfn, type );
