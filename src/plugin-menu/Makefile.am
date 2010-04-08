@@ -35,20 +35,20 @@ AM_CPPFLAGS += \
 
 nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
 
-nautilus_extension_LTLIBRARIES = libnautilus-actions.la
+nautilus_extension_LTLIBRARIES = libnautilus-actions-menu.la
 
-libnautilus_actions_la_SOURCES = \
+libnautilus_actions_menu_la_SOURCES = \
 	nautilus-module.c											\
 	nautilus-actions.c											\
 	nautilus-actions.h											\
 	$(NULL)
 
-libnautilus_actions_la_LIBADD = \
+libnautilus_actions_menu_la_LIBADD = \
 	$(top_builddir)/src/core/libna-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
-libnautilus_actions_la_LDFLAGS = \
+libnautilus_actions_menu_la_LDFLAGS = \
 	-module 													\
 	-no-undefined												\
 	-avoid-version												\
