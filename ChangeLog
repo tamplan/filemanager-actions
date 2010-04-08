@@ -1,5 +1,8 @@
 2009-04-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c (setup_dialog_title):
+	Review/normalize debug entry message.
+
 	* src/nact/nact-ifolders-tab.c (on_add_folder_clicked):
 	Folders list is definitively a list of paths (not URI).
 

@@ -1279,13 +1279,15 @@ iactions_list_get_treeview_name( NactIActionsList *instance )
 static void
 setup_dialog_title( NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_window_setup_dialog_title";
 	GtkWindow *toplevel;
 	NactApplication *application;
 	gchar *title;
 	gchar *label;
 	gchar *tmp;
 
-	g_debug( "setup_dialog_title" );
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	title = base_application_get_application_name( BASE_APPLICATION( application ));
 

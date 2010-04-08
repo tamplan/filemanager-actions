@@ -143,4 +143,4 @@
 
 - "x-nautilus-desktop:///" is rather a scheme than a folder
 
-- setup_dialog_title: add file to g_debug line
+- should not be able to click twice on a sort button
