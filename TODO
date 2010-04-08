@@ -140,7 +140,7 @@
 
 - 20100408: gconf_concat_dir_and_key: have seen this as deprecated, but do not
   find again the reference :(
+  not even in unstable library on the web
+  http://library.gnome.org/devel/gconf/unstable/gconf-gconf.html#gconf-concat-dir-and-key
 
 - "x-nautilus-desktop:///" is rather a scheme than a folder
-
-- should not be able to click twice on a sort button

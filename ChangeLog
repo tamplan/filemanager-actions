@@ -1,5 +1,9 @@
 2009-04-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-sort-buttons.c (on_sort_down_button_toggled,
+	on_sort_manual_button_toggled, on_sort_up_button_toggled):
+	Do not let the user click twice on a sort button.
+
 	* src/nact/nact-main-window.c (setup_dialog_title):
 	Review/normalize debug entry message.
 

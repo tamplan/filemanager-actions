@@ -207,13 +207,19 @@ on_sort_down_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *wi
 {
 	GtkToggleButton *button;
 
+	g_debug( "nact_sort_buttons_on_sort_down_button_toggled: is_active=%s", gtk_toggle_button_get_active( toggled_button ) ? "True":"False" );
+
 	if( gtk_toggle_button_get_active( toggled_button )){
+
+		gtk_widget_set_sensitive( GTK_WIDGET( toggled_button ), FALSE );
 
 		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" ));
 		gtk_toggle_button_set_active( button, FALSE );
+		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
 
 		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" ));
 		gtk_toggle_button_set_active( button, FALSE );
+		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
 
 		set_new_sort_order( window, IPREFS_ORDER_ALPHA_DESCENDING );
 	}
@@ -224,13 +230,19 @@ on_sort_manual_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *
 {
 	GtkToggleButton *button;
 
+	g_debug( "nact_sort_buttons_on_sort_manual_button_toggled: is_active=%s", gtk_toggle_button_get_active( toggled_button ) ? "True":"False" );
+
 	if( gtk_toggle_button_get_active( toggled_button )){
+
+		gtk_widget_set_sensitive( GTK_WIDGET( toggled_button ), FALSE );
 
 		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" ));
 		gtk_toggle_button_set_active( button, FALSE );
+		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
 
 		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" ));
 		gtk_toggle_button_set_active( button, FALSE );
+		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
 
 		set_new_sort_order( window, IPREFS_ORDER_MANUAL );
 	}
@@ -241,13 +253,19 @@ on_sort_up_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *wind
 {
 	GtkToggleButton *button;
 
+	g_debug( "nact_sort_buttons_on_sort_up_button_toggled: is_active=%s", gtk_toggle_button_get_active( toggled_button ) ? "True":"False" );
+
 	if( gtk_toggle_button_get_active( toggled_button )){
+
+		gtk_widget_set_sensitive( GTK_WIDGET( toggled_button ), FALSE );
 
 		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" ));
 		gtk_toggle_button_set_active( button, FALSE );
+		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
 
 		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" ));
 		gtk_toggle_button_set_active( button, FALSE );
+		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
 
 		set_new_sort_order( window, IPREFS_ORDER_ALPHA_ASCENDING );
 	}
