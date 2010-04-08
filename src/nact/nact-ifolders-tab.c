@@ -58,12 +58,12 @@ struct NactIFoldersTabInterfacePrivate {
 /* column ordering
  */
 enum {
-	FOLDERS_URI_COLUMN = 0,
+	FOLDERS_PATH_COLUMN = 0,
 	FOLDERS_N_COLUMN
 };
 
 #define IPREFS_FOLDERS_DIALOG		"ifolders-chooser"
-#define IPREFS_FOLDERS_URI			"ifolders-uri"
+#define IPREFS_FOLDERS_PATH			"ifolders-path"
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
@@ -82,14 +82,14 @@ static void         inline_edition( NactIFoldersTab *instance );
 static void         insert_new_row( NactIFoldersTab *instance );
 static void         delete_row( NactIFoldersTab *instance );
 
-static void         add_row( NactIFoldersTab *instance, GtkTreeView *listview, const gchar *uri );
-static void         add_uri_to_folders( NactIFoldersTab *instance, const gchar *uri );
+static void         add_row( NactIFoldersTab *instance, GtkTreeView *listview, const gchar *path );
+static void         add_path_to_folders( NactIFoldersTab *instance, const gchar *path );
 static GtkTreeView *get_folders_treeview( NactIFoldersTab *instance );
-static void         on_folder_uri_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIFoldersTab *instance );
+static void         on_folder_path_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIFoldersTab *instance );
 static void         on_folders_selection_changed( GtkTreeSelection *selection, NactIFoldersTab *instance );
 static void         on_add_folder_clicked( GtkButton *button, NactIFoldersTab *instance );
 static void         on_remove_folder_clicked( GtkButton *button, NactIFoldersTab *instance );
-static void         remove_uri_from_folders( NactIFoldersTab *instance, const gchar *uri );
+static void         remove_path_from_folders( NactIFoldersTab *instance, const gchar *path );
 static void         reset_folders( NactIFoldersTab *instance );
 static void         setup_folders( NactIFoldersTab *instance );
 static void         treeview_cell_edited( NactIFoldersTab *instance, const gchar *path_string, const gchar *text, gint column, gchar **old_text );
@@ -179,16 +179,16 @@ nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance )
 	if( st_initialized && !st_finalized ){
 
 		model = gtk_list_store_new( FOLDERS_N_COLUMN, G_TYPE_STRING );
-		gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), FOLDERS_URI_COLUMN, GTK_SORT_ASCENDING );
+		gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), FOLDERS_PATH_COLUMN, GTK_SORT_ASCENDING );
 		listview = get_folders_treeview( instance );
 		gtk_tree_view_set_model( listview, GTK_TREE_MODEL( model ));
 		g_object_unref( model );
 
 		text_cell = gtk_cell_renderer_text_new();
 		column = gtk_tree_view_column_new_with_attributes(
-				"folder-uri",
+				"folder-path",
 				text_cell,
-				"text", FOLDERS_URI_COLUMN,
+				"text", FOLDERS_PATH_COLUMN,
 				NULL );
 		gtk_tree_view_append_column( listview, column );
 
@@ -226,13 +226,13 @@ nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance )
 				G_CALLBACK( on_tab_updatable_enable_tab ));
 
 		listview = get_folders_treeview( instance );
-		column = gtk_tree_view_get_column( listview, FOLDERS_URI_COLUMN );
+		column = gtk_tree_view_get_column( listview, FOLDERS_PATH_COLUMN );
 		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( renderers->data ),
 				"edited",
-				G_CALLBACK( on_folder_uri_edited ));
+				G_CALLBACK( on_folder_path_edited ));
 
 		add_button = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton");
 		base_window_signal_connect(
@@ -326,7 +326,7 @@ on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_select
 
 		treeview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" ));
 		gtk_widget_set_sensitive( GTK_WIDGET( treeview ), profile != NULL );
-		column = gtk_tree_view_get_column( treeview, FOLDERS_URI_COLUMN );
+		column = gtk_tree_view_get_column( treeview, FOLDERS_PATH_COLUMN );
 		nact_gtk_utils_set_editable( GTK_OBJECT( column ), editable );
 
 		widget = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" );
@@ -369,7 +369,6 @@ tab_set_sensitive( NactIFoldersTab *instance )
 			NULL );
 
 	enable_tab = ( profile != NULL );
-
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS, enable_tab );
 
 	return( enable_tab );
@@ -424,7 +423,7 @@ inline_edition( NactIFoldersTab *instance )
 
 	if( g_list_length( listrows ) == 1 ){
 		path = ( GtkTreePath * ) listrows->data;
-		column = gtk_tree_view_get_column( listview, FOLDERS_URI_COLUMN );
+		column = gtk_tree_view_get_column( listview, FOLDERS_PATH_COLUMN );
 		gtk_tree_view_set_cursor( listview, path, column, TRUE );
 	}
 
@@ -433,7 +432,7 @@ inline_edition( NactIFoldersTab *instance )
 }
 
 /*
- * the list is sorted on uri : it is no worth to try to insert a row
+ * the list is sorted on path: it is no worth to try to insert a row
  * before currently selected item...
  */
 static void
@@ -442,7 +441,7 @@ insert_new_row( NactIFoldersTab *instance )
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	const gchar *uri = "file:///";
+	const gchar *folder_path = "/";
 	GtkTreePath *path;
 	GtkTreeViewColumn *column;
 
@@ -450,11 +449,11 @@ insert_new_row( NactIFoldersTab *instance )
 	model = gtk_tree_view_get_model( listview );
 
 	gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
-	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, FOLDERS_URI_COLUMN, uri, -1 );
-	add_uri_to_folders( instance, uri );
+	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, FOLDERS_PATH_COLUMN, folder_path, -1 );
+	add_path_to_folders( instance, folder_path );
 
 	path = gtk_tree_model_get_path( model, &iter );
-	column = gtk_tree_view_get_column( listview, FOLDERS_URI_COLUMN );
+	column = gtk_tree_view_get_column( listview, FOLDERS_PATH_COLUMN );
 	gtk_tree_view_set_cursor( listview, path, column, TRUE );
 	gtk_tree_path_free( path );
 }
@@ -468,7 +467,7 @@ delete_row( NactIFoldersTab *instance )
 	GList *rows;
 	GtkTreePath *path;
 	GtkTreeIter iter;
-	gchar *uri;
+	gchar *folder_path;
 
 	listview = get_folders_treeview( instance );
 	model = gtk_tree_view_get_model( listview );
@@ -478,11 +477,11 @@ delete_row( NactIFoldersTab *instance )
 	if( g_list_length( rows ) == 1 ){
 		path = ( GtkTreePath * ) rows->data;
 		gtk_tree_model_get_iter( model, &iter, path );
-		gtk_tree_model_get( model, &iter, FOLDERS_URI_COLUMN, &uri, -1 );
+		gtk_tree_model_get( model, &iter, FOLDERS_PATH_COLUMN, &folder_path, -1 );
 
 		gtk_list_store_remove( GTK_LIST_STORE( model ), &iter );
-		remove_uri_from_folders( instance, uri );
-		g_free( uri );
+		remove_path_from_folders( instance, folder_path );
+		g_free( folder_path );
 
 		if( gtk_tree_model_get_iter( model, &iter, path ) ||
 			gtk_tree_path_prev( path )){
@@ -496,7 +495,7 @@ delete_row( NactIFoldersTab *instance )
 }
 
 static void
-add_row( NactIFoldersTab *instance, GtkTreeView *listview, const gchar *uri )
+add_row( NactIFoldersTab *instance, GtkTreeView *listview, const gchar *path )
 {
 	GtkTreeModel *model;
 	GtkTreeIter row;
@@ -510,12 +509,12 @@ add_row( NactIFoldersTab *instance, GtkTreeView *listview, const gchar *uri )
 	gtk_list_store_set(
 			GTK_LIST_STORE( model ),
 			&row,
-			FOLDERS_URI_COLUMN, uri,
+			FOLDERS_PATH_COLUMN, path,
 			-1 );
 }
 
 static void
-add_uri_to_folders( NactIFoldersTab *instance, const gchar *uri )
+add_path_to_folders( NactIFoldersTab *instance, const gchar *path )
 {
 	NAObjectAction *action;
 	NAObjectProfile *edited;
@@ -528,7 +527,7 @@ add_uri_to_folders( NactIFoldersTab *instance, const gchar *uri )
 			NULL );
 
 	folders = na_object_get_folders( edited );
-	folders = g_slist_prepend( folders, ( gpointer ) g_strdup( uri ));
+	folders = g_slist_prepend( folders, ( gpointer ) g_strdup( path ));
 	na_object_set_folders( edited, folders );
 	na_core_utils_slist_free( folders );
 
@@ -549,14 +548,38 @@ get_folders_treeview( NactIFoldersTab *instance )
 static void
 on_add_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 {
+#if 0
+	/* this is the code I sent to gtk-app-devel list
+	 * to know why one is not able to just enter '/' in the location entry
+	 */
+	GtkWidget *dialog;
+	gchar *path;
+
+	dialog = gtk_file_chooser_dialog_new( _( "Select a folder" ),
+			NULL,
+			GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			NULL );
+
+	gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), "/" );
+
+	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
+		path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
+		g_debug( "nact_ifolders_tab_on_add_folder_clicked: path=%s", path );
+		g_free( path );
+	}
+
+	gtk_widget_destroy( dialog );
+#endif
 	GtkWidget *dialog;
 	GtkWindow *toplevel;
 	NactApplication *application;
 	NAUpdater *updater;
-	gchar *uri;
+	gchar *path;
 	GtkTreeView *listview;
 
-	uri = NULL;
+	path = NULL;
 	listview = get_folders_treeview( instance );
 	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
 
@@ -575,18 +598,18 @@ on_add_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 
 	base_iprefs_position_named_window( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
 
-	uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDERS_URI, "x-nautilus-desktop:///" );
-	if( uri && strlen( uri )){
-		gtk_file_chooser_set_uri( GTK_FILE_CHOOSER( dialog ), uri );
+	path = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDERS_PATH, "/" );
+	if( path && g_utf8_strlen( path, -1 )){
+		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
 	}
-	g_free( uri );
+	g_free( path );
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
-		uri = gtk_file_chooser_get_uri( GTK_FILE_CHOOSER( dialog ));
-		nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_FOLDERS_URI, uri );
-		add_row( instance, listview, uri );
-		add_uri_to_folders( instance, uri );
-		g_free( uri );
+		path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
+		nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_FOLDERS_PATH, path );
+		add_row( instance, listview, path );
+		add_path_to_folders( instance, path );
+		g_free( path );
 	}
 
 	base_iprefs_save_named_window_position( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
@@ -595,9 +618,9 @@ on_add_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 }
 
 static void
-on_folder_uri_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIFoldersTab *instance )
+on_folder_path_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactIFoldersTab *instance )
 {
-	treeview_cell_edited( instance, path, text, FOLDERS_URI_COLUMN, NULL );
+	treeview_cell_edited( instance, path, text, FOLDERS_PATH_COLUMN, NULL );
 }
 
 static void
@@ -612,7 +635,6 @@ on_folders_selection_changed( GtkTreeSelection *selection, NactIFoldersTab *inst
 			NULL );
 
 	if( editable ){
-
 		button = base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton");
 		gtk_widget_set_sensitive( button, gtk_tree_selection_count_selected_rows( selection ) > 0 );
 	}
@@ -625,7 +647,7 @@ on_remove_folder_clicked( GtkButton *button, NactIFoldersTab *instance )
 }
 
 static void
-remove_uri_from_folders( NactIFoldersTab *instance, const gchar *uri )
+remove_path_from_folders( NactIFoldersTab *instance, const gchar *path )
 {
 	NAObjectProfile *edited;
 	GSList *folders;
@@ -636,7 +658,7 @@ remove_uri_from_folders( NactIFoldersTab *instance, const gchar *uri )
 			NULL );
 
 	folders = na_object_get_folders( edited );
-	folders = na_core_utils_slist_remove_utf8( folders, uri );
+	folders = na_core_utils_slist_remove_utf8( folders, path );
 	na_object_set_folders( edited, folders );
 
 	na_core_utils_slist_free( folders );
@@ -699,7 +721,7 @@ treeview_cell_edited( NactIFoldersTab *instance, const gchar *path_string, const
 	gtk_tree_model_get_iter( model, &iter, path );
 	gtk_tree_path_free( path );
 
-	gtk_tree_model_get( model, &iter, FOLDERS_URI_COLUMN, &previous_text, -1 );
+	gtk_tree_model_get( model, &iter, FOLDERS_PATH_COLUMN, &previous_text, -1 );
 
 	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, column, text, -1 );
 

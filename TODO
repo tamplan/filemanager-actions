@@ -138,4 +138,9 @@
             conditions/
             command/
 
-- gconf_concat_dir_and_key
+- 20100408: gconf_concat_dir_and_key: have seen this as deprecated, but do not
+  find again the reference :(
+
+- "x-nautilus-desktop:///" is rather a scheme than a folder
+
+- setup_dialog_title: add file to g_debug line

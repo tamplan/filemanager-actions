@@ -868,8 +868,8 @@ Defining several profiles lets you have several commands, each applying with a d
                                           <object class="GtkTreeView" id="FoldersTreeview">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="tooltip_text" translatable="yes">List of URIs for which the current item will be displayed.
-"*" means "all the URIs".</property>
+                                            <property name="tooltip_text" translatable="yes">List of paths for which the current item will be displayed.
+"/" means "all the paths".</property>
                                           </object>
                                         </child>
                                       </object>
@@ -1413,6 +1413,9 @@ Defining several profiles lets you have several commands, each applying with a d
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -1429,9 +1432,9 @@ Defining several profiles lets you have several commands, each applying with a d
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
             <property name="select_multiple">True</property>
-            <property name="use_preview_label">False</property>
-            <property name="preview_widget_active">False</property>
             <property name="local_only">False</property>
+            <property name="preview_widget_active">False</property>
+            <property name="use_preview_label">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -2225,24 +2228,24 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionIdLabel"/>
-      <widget name="ActionMenuLabelLabel"/>
       <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionIdLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
     </widgets>
   </object>
 </interface>

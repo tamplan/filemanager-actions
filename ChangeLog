@@ -1,5 +1,8 @@
 2009-04-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-ifolders-tab.c (on_add_folder_clicked):
+	Folders list is definitively a list of paths (not URI).
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c (na_core_utils_str_collate): New function.
 
