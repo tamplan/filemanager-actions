@@ -36,6 +36,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
@@ -457,7 +458,7 @@ deals_with_toolbar_label( NAIFactoryObject *instance )
 		na_object_set_toolbar_same_label( instance, TRUE );
 
 	} else {
-		same_label = ( g_utf8_collate( action_label, toolbar_label ) == 0 );
+		same_label = ( na_core_utils_str_collate( action_label, toolbar_label ) == 0 );
 		na_object_set_toolbar_same_label( instance, same_label );
 	}
 

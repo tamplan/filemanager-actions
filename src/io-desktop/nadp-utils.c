@@ -37,6 +37,8 @@
 #include <glib/gstdio.h>
 #include <uuid/uuid.h>
 
+#include <api/na-core-utils.h>
+
 #include "nadp-desktop-provider.h"
 #include "nadp-utils.h"
 
@@ -54,7 +56,7 @@ nadp_utils_gslist_remove_from( GSList *list, const gchar *string )
 
 	for( is = list ; is ; is = is->next ){
 		const gchar *istr = ( const gchar * ) is->data;
-		if( !g_utf8_collate( string, istr )){
+		if( !na_core_utils_str_collate( string, istr )){
 			g_free( is->data );
 			list = g_slist_delete_link( list, is );
 			break;

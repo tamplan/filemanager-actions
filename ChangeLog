@@ -1,5 +1,27 @@
 2009-04-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_str_collate): New function.
+
+	* src/core/na-data-boxed.c (locale_are_equal):
+	* src/core/na-object-action.c (deals_with_toolbar_label):
+	* src/core/na-object-id.c (na_object_id_sort_alpha_asc):
+	* src/io-desktop/nadp-utils.c (nadp_utils_gslist_remove_from):
+	* src/nact/base-builder.c (already_loaded): Updated accordingly.
+
+	* src/api/na-gconf-utils.h:
+	* src/core/na-gconf-utils.c (na_gconf_utils_has_entry):
+	Check for an entry in the previously loaded list.
+
+	* src/io-gconf/nagp-reader.c
+	(read_item): First check for Type default value.
+	(read_item, read_done_item_is_writable,
+	read_done_action_load_profile): Load entries.
+
+	* src/nact/nact-iaction-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-icommand-tab.c (on_tab_updatable_selection_changed):
+	Protect gtk_ functions against null values.
+
 	* src/plugin-menu/Makefile.am:
 	Rename plugin to libnautilus-actions-menu.
 

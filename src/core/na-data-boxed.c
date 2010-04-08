@@ -948,7 +948,7 @@ locale_are_equal( const NADataBoxed *a, const NADataBoxed *b )
 	if( !a->private->u.string || !b->private->u.string ){
 		return( FALSE );
 	}
-	return( g_utf8_collate( a->private->u.string, b->private->u.string ) == 0 );
+	return( na_core_utils_str_collate( a->private->u.string, b->private->u.string ) == 0 );
 }
 
 static gboolean
@@ -973,7 +973,7 @@ locale_is_set( const NADataBoxed *boxed )
 
 	if( boxed->private->u.string && g_utf8_strlen( boxed->private->u.string, -1 )){
 		if( boxed->private->def->default_value && g_utf8_strlen( boxed->private->def->default_value, -1 )){
-			is_set = ( g_utf8_collate( boxed->private->u.string, boxed->private->def->default_value ) != 0 );
+			is_set = ( na_core_utils_str_collate( boxed->private->u.string, boxed->private->def->default_value ) != 0 );
 		} else {
 			is_set = TRUE;
 		}

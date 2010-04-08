@@ -44,7 +44,7 @@ G_BEGIN_DECLS
 GSList  *na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path );
 void     na_gconf_utils_free_subdirs( GSList *subdirs );
 
-gboolean na_gconf_utils_has_entry  ( GConfClient *gconf, const gchar *path, const gchar *entry );
+gboolean na_gconf_utils_has_entry  ( GSList *entries, const gchar *entry );
 GSList  *na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path );
 gboolean na_gconf_utils_get_bool_from_entries       ( GSList *entries, const gchar *entry, gboolean *value );
 gboolean na_gconf_utils_get_string_from_entries     ( GSList *entries, const gchar *entry, gchar **value );

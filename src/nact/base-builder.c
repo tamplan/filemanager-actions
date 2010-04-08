@@ -265,7 +265,7 @@ already_loaded( BaseBuilder *builder, const gchar *filename )
 	GSList *it;
 
 	for( it = builder->private->fnames ; it && !loaded ; it = it->next ){
-		if( !g_utf8_collate(( const gchar * ) it->data, filename )){
+		if( !na_core_utils_str_collate(( const gchar * ) it->data, filename )){
 			loaded = TRUE;
 		}
 	}

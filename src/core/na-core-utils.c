@@ -86,6 +86,31 @@ na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str )
 }
 
 /**
+ * na_core_utils_str_collate:
+ * @str1: an UTF-8 encoded string.
+ * @str2: an UTF-8 encoded string.
+ *
+ * Returns: -1 if str1 < str2, 0 if str1 = str2, +1 if str1 > str2.
+ */
+int
+na_core_utils_str_collate( const gchar *str1, const gchar *str2 )
+{
+	int res;
+
+	if( str1 && str2 ){
+		res = g_utf8_collate( str1, str2 );
+	} else if( !str1 && !str2 ){
+		res = 0;
+	} else if( !str1 ){
+		res = -1;
+	} else {
+		g_return_val_if_fail( str2 == NULL, 0 );
+		res = 1;
+	}
+	return( res );
+}
+
+/**
  * na_core_utils_str_get_first_word:
  * @string: a space-separated string.
  *
@@ -352,7 +377,7 @@ na_core_utils_slist_remove_utf8( GSList *list, const gchar *str )
 
 	for( is = list ; is ; is = is->next ){
 		const gchar *istr = ( const gchar * ) is->data;
-		if( !g_utf8_collate( str, istr )){
+		if( !na_core_utils_str_collate( str, istr )){
 			g_free( is->data );
 			list = g_slist_delete_link( list, is );
 			break;
@@ -409,7 +434,7 @@ na_core_utils_slist_find( GSList *list, const gchar *str )
 
 	for( il = list ; il ; il = il->next ){
 		const gchar *istr = ( const gchar * ) il->data;
-		if( !g_utf8_collate( str, istr )){
+		if( !na_core_utils_str_collate( str, istr )){
 			return( TRUE );
 		}
 	}

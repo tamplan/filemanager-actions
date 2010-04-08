@@ -81,43 +81,27 @@ na_gconf_utils_free_subdirs( GSList *subdirs )
 
 /**
  * na_gconf_utils_has_entry:
- * @gconf: a  #GConfClient instance.
- * @path: the full path of a key.
+ * @entries: the list of entries as returned by #na_gconf_utils_get_entries().
  * @entry: the entry to be tested.
  *
- * Returns: %TRUE if the given @entry exists for the given @path,
+ * Returns: %TRUE if the given @entry exists in the specified @entries,
  * %FALSE else.
  */
 gboolean
-na_gconf_utils_has_entry( GConfClient *gconf, const gchar *path, const gchar *entry )
+na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
 {
-	static const gchar *thisfn = "na_gconf_utils_has_entry";
-	gboolean have_entry = FALSE;
-	GError *error = NULL;
-	gchar *key;
-	GConfValue *value;
+	GSList *ie;
 
-	key = g_strdup_printf( "%s/%s", path, entry );
-
-	value = gconf_client_get_without_default( gconf, key, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, error=%s", thisfn, key, error->message );
-		g_error_free( error );
-		if( value ){
-			gconf_value_free( value );
-			value = NULL;
+	for( ie = entries ; ie ; ie = ie->next ){
+		gchar *key = g_path_get_basename( gconf_entry_get_key( ( GConfEntry * ) ie->data));
+		int res = strcmp( key, entry );
+		g_free( key );
+		if( res == 0 ){
+			return( TRUE );
 		}
 	}
 
-	if( value ){
-		have_entry = TRUE;
-		gconf_value_free( value );
-	}
-
-	g_free( key );
-
-	return( have_entry );
+	return( FALSE );
 }
 
 /**
@@ -309,71 +293,6 @@ na_gconf_utils_free_entries( GSList *list )
 }
 
 /**
- * na_gconf_utils_read_string:
- * @gconf: a #GConfClient instance.
- * @path: the full path to the key.
- * @use_schema: whether to use the default value from schema, or not.
- * @default_value: default value to be used if schema is not used or
- * doesn't exist.
- *
- * Returns: the required string value in a newly allocated string which
- * should be g_free() by the caller.
- */
-gchar *
-na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_schema, const gchar *default_value )
-{
-	GConfValue *value = NULL;
-	gchar *result;
-
-	g_return_val_if_fail( GCONF_IS_CLIENT( gconf ), NULL );
-
-	result = g_strdup( default_value );
-
-	value = read_value( gconf, path, use_schema, GCONF_VALUE_STRING );
-
-	if( value ){
-		g_free( result );
-		result = g_strdup( gconf_value_get_string( value ));
-		gconf_value_free( value );
-	}
-
-	return( result );
-}
-
-static GConfValue *
-read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfValueType type )
-{
-	static const gchar *thisfn = "na_gconf_utils_read_value";
-	GError *error = NULL;
-	GConfValue *value = NULL;
-
-	if( use_schema ){
-		value = gconf_client_get( gconf, path, &error );
-	} else {
-		value = gconf_client_get_without_default( gconf, path, &error );
-	}
-
-	if( error ){
-		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
-		g_error_free( error );
-		if( value ){
-			gconf_value_free( value );
-			value = NULL;
-		}
-	}
-
-	if( value ){
-		if( value->type != type ){
-			g_warning( "%s: path=%s, found type '%u' while waiting for type '%u'", thisfn, path, value->type, type );
-			gconf_value_free( value );
-			value = NULL;
-		}
-	}
-
-	return( value );
-}
-
-/**
  * na_gconf_utils_read_bool:
  * @gconf: a #GConfClient instance.
  * @path: the full path to the key.
@@ -430,6 +349,38 @@ na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_sch
 	}
 
 	return( ret );
+}
+
+/**
+ * na_gconf_utils_read_string:
+ * @gconf: a #GConfClient instance.
+ * @path: the full path to the key.
+ * @use_schema: whether to use the default value from schema, or not.
+ * @default_value: default value to be used if schema is not used or
+ * doesn't exist.
+ *
+ * Returns: the required string value in a newly allocated string which
+ * should be g_free() by the caller.
+ */
+gchar *
+na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_schema, const gchar *default_value )
+{
+	GConfValue *value = NULL;
+	gchar *result;
+
+	g_return_val_if_fail( GCONF_IS_CLIENT( gconf ), NULL );
+
+	result = g_strdup( default_value );
+
+	value = read_value( gconf, path, use_schema, GCONF_VALUE_STRING );
+
+	if( value ){
+		g_free( result );
+		result = g_strdup( gconf_value_get_string( value ));
+		gconf_value_free( value );
+	}
+
+	return( result );
 }
 
 /**
@@ -703,6 +654,39 @@ na_gconf_utils_slist_to_string( GSList *slist )
 	str = g_string_append( str, "]" );
 
 	return( g_string_free( str, FALSE ));
+}
+
+static GConfValue *
+read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfValueType type )
+{
+	static const gchar *thisfn = "na_gconf_utils_read_value";
+	GError *error = NULL;
+	GConfValue *value = NULL;
+
+	if( use_schema ){
+		value = gconf_client_get( gconf, path, &error );
+	} else {
+		value = gconf_client_get_without_default( gconf, path, &error );
+	}
+
+	if( error ){
+		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
+		g_error_free( error );
+		if( value ){
+			gconf_value_free( value );
+			value = NULL;
+		}
+	}
+
+	if( value ){
+		if( value->type != type ){
+			g_warning( "%s: path=%s, found type '%u' while waiting for type '%u'", thisfn, path, value->type, type );
+			gconf_value_free( value );
+			value = NULL;
+		}
+	}
+
+	return( value );
 }
 
 static gboolean

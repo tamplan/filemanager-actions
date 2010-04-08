@@ -48,6 +48,7 @@
 
 typedef struct {
 	gchar        *path;
+	GSList       *entries;
 	NAObjectItem *parent;
 }
 	ReaderData;
@@ -111,7 +112,6 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 {
 	static const gchar *thisfn = "nagp_gconf_provider_read_item";
 	NAObjectItem *item;
-	gboolean have_type;
 	gchar *full_path;
 	gchar *type;
 	gchar *id;
@@ -122,21 +122,18 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
 	g_return_val_if_fail( !provider->private->dispose_has_run, NULL );
 
-	have_type = na_gconf_utils_has_entry( provider->private->gconf, path, NAGP_ENTRY_TYPE );
 	full_path = gconf_concat_dir_and_key( path, NAGP_ENTRY_TYPE );
 	type = na_gconf_utils_read_string( provider->private->gconf, full_path, TRUE, NAGP_VALUE_TYPE_ACTION );
 	g_free( full_path );
 	item = NULL;
 
-	/* a menu has a type='Menu'
+	/* a menu may have 'Action' or 'Menu' type ; defaults to Action
 	 */
-	if( have_type && !strcmp( type, NAGP_VALUE_TYPE_MENU )){
-		item = NA_OBJECT_ITEM( na_object_menu_new());
-
-	/* else this should be an action (no type, or type='Action')
-	 */
-	} else if( !have_type || !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
+	if( !type || !strlen( type ) || !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
 		item = NA_OBJECT_ITEM( na_object_action_new());
+
+	} else if( !strcmp( type, NAGP_VALUE_TYPE_MENU )){
+		item = NA_OBJECT_ITEM( na_object_menu_new());
 
 	} else {
 		g_warning( "%s: unknown type '%s' at %s", thisfn, type, path );
@@ -151,6 +148,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 
 		data = g_new0( ReaderData, 1 );
 		data->path = ( gchar * ) path;
+		data->entries = na_gconf_utils_get_entries( provider->private->gconf, path );
 
 		na_ifactory_provider_read_item(
 				NA_IFACTORY_PROVIDER( provider ),
@@ -158,6 +156,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 				NA_IFACTORY_OBJECT( item ),
 				messages );
 
+		na_gconf_utils_free_entries( data->entries );
 		g_free( data );
 	}
 
@@ -223,17 +222,16 @@ nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, co
 static void
 read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages )
 {
-	GSList *entries, *ie;
+	GSList *ie;
 	gboolean writable;
 	GConfEntry *gconf_entry;
 	const gchar *key;
 
 	/* check for writability of this item
+	 * item is writable if and only if all entries are themselves writable
 	 */
-	entries = na_gconf_utils_get_entries( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
-
 	writable = TRUE;
-	for( ie = entries ; ie && writable ; ie = ie->next ){
+	for( ie = data->entries ; ie && writable ; ie = ie->next ){
 		gconf_entry = ( GConfEntry * ) ie->data;
 		key = gconf_entry_get_key( gconf_entry );
 		writable = is_key_writable( NAGP_GCONF_PROVIDER( provider ), key );
@@ -289,6 +287,7 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 	profile_data = g_new0( ReaderData, 1 );
 	profile_data->parent = data->parent;
 	profile_data->path = ( gchar * ) path;
+	profile_data->entries = na_gconf_utils_get_entries( NAGP_GCONF_PROVIDER( provider )->private->gconf, path );
 
 	na_ifactory_provider_read_item(
 			NA_IFACTORY_PROVIDER( provider ),
@@ -296,6 +295,7 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 			NA_IFACTORY_OBJECT( profile ),
 			messages );
 
+	na_gconf_utils_free_entries( profile_data->entries );
 	g_free( profile_data );
 }
 
@@ -317,7 +317,8 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 	gint int_value;
 
 	boxed = NULL;
-	have_entry = na_gconf_utils_has_entry( provider->private->gconf, path, def->gconf_entry );
+	have_entry = na_gconf_utils_has_entry( reader_data->entries, def->gconf_entry );
+	g_debug( "%s: entry=%s, have_entry=%s", thisfn, def->gconf_entry, have_entry ? "True":"False" );
 
 	if( have_entry ){
 		boxed = na_data_boxed_new( def );
@@ -327,13 +328,14 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 
 			case NAFD_TYPE_STRING:
 			case NAFD_TYPE_LOCALE_STRING:
-				str_value = na_gconf_utils_read_string( provider->private->gconf, entry_path, FALSE, NULL );
+				str_value = na_gconf_utils_read_string( provider->private->gconf, entry_path, TRUE, NULL );
+				g_debug( "%s: entry=%s, value=%s", thisfn, def->gconf_entry, str_value );
 				na_data_boxed_set_from_string( boxed, str_value );
 				g_free( str_value );
 				break;
 
 			case NAFD_TYPE_BOOLEAN:
-				bool_value = na_gconf_utils_read_bool( provider->private->gconf, entry_path, FALSE, FALSE );
+				bool_value = na_gconf_utils_read_bool( provider->private->gconf, entry_path, TRUE, FALSE );
 				na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( bool_value ));
 				break;
 
@@ -344,7 +346,7 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 				break;
 
 			case NAFD_TYPE_UINT:
-				int_value = na_gconf_utils_read_int( provider->private->gconf, entry_path, FALSE, 0 );
+				int_value = na_gconf_utils_read_int( provider->private->gconf, entry_path, TRUE, 0 );
 				na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( int_value ));
 				break;
 
