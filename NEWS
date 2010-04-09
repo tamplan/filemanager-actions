@@ -1,3 +1,46 @@
+Version 2.30.1
+==============
+
+	Release date 2010-04-09
+
+	Enhancements:
+
+		- Slightly relax the validity rules of a profile, so that already
+		  existing actions may be still considered as valid, even when 
+		  commands do not use an absolute path.
+
+		- Current position and folder of icons chooser dialog are now saved.
+
+	Bug fixes:
+
+		- Fix #614595 reported by Sense Hofstede
+		  (Not all icons displayed in the nautilus-actions-config-tool)
+		- Fix #614596 reported by Sense Hofstede
+		  (Nautilus Actions' actions don't show up in context menus)
+		- Do not prevent the export assistant to actually export items
+		- Do not let a user untoggle a sort button
+		- Do not mark the main window modified when first loading an empty set
+		- Folders are definitively a list of paths
+		- Also load items which are only described via their schemas
+		- Only set defaults on non yet allocated data
+		- Parent is not always an action, may be a menu
+		- Also delete embedded schema names from GConf entries
+		- Monitors GConf schemas
+
+	Code enhancement:
+
+		- No more use GTK_WIDGET_IS_SENSITIVE macro after Gtk 2.20
+
+	Other modifications:
+
+		- Menu plugin is renamed as libnautilus-actions-menu.so
+
+	New and updated translations:
+
+		cs (Marek Černocký, Andre Klapper)
+		es (Jorge González)
+		sl (Andrej Žnidaršič, Matej Urbančič)
+
 Version 2.30.0
 ==============
 

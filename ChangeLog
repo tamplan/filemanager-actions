@@ -1,5 +1,7 @@
 2009-04-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Updated.
+
 	* src/nact/nact-sort-buttons.c (set_new_sort_order):
 	Do not rewrite in GConf a just-readen sort order.
 
