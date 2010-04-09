@@ -40,8 +40,10 @@
 
 #include <core/na-io-provider.h>
 
+#include "base-iprefs.h"
 #include "base-window.h"
 #include "nact-application.h"
+#include "nact-iprefs.h"
 #include "nact-main-statusbar.h"
 #include "nact-gtk-utils.h"
 #include "nact-iactions-list.h"
@@ -61,6 +63,9 @@ enum {
 	ICON_LABEL_COLUMN,
 	ICON_N_COLUMN
 };
+
+#define IPREFS_ICONS_DIALOG					"icons-chooser"
+#define IPREFS_ICONS_PATH					"icons-path"
 
 /* IActionTab properties, set against the GObject instance
  */
@@ -939,6 +944,9 @@ on_icon_browse( GtkButton *button, NactIActionTab *instance )
 	GtkWindow *toplevel;
 	gchar *filename;
 	GtkWidget *icon_widget;
+	NactApplication *application;
+	NAUpdater *updater;
+	gchar *path;
 
 	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
 
@@ -951,12 +959,29 @@ on_icon_browse( GtkButton *button, NactIActionTab *instance )
 			NULL
 			);
 
+	base_iprefs_position_named_window( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_ICONS_DIALOG );
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+	updater = nact_application_get_updater( application );
+
+	path = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_ICONS_PATH, "" );
+	if( path && g_utf8_strlen( path, -1 )){
+		gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dialog ), path );
+	}
+	g_free( path );
+
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), filename );
 	    g_free (filename);
+
+		path = gtk_file_chooser_get_current_folder( GTK_FILE_CHOOSER( dialog ));
+	    nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_ICONS_PATH, path );
+		g_free( path );
 	  }
+
+	base_iprefs_save_named_window_position( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_ICONS_DIALOG );
 
 	gtk_widget_destroy( dialog );
 }

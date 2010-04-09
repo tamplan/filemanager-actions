@@ -2,6 +2,9 @@
 
 	* configure.ac: Bump version number for release.
 
+	* src/nact/nact-iaction-tab.c (on_icon_browse):
+	Save current position and folder of icon chooser.
+
 2009-04-08 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-object-profile.c (is_valid_path_parameters):
