@@ -1,3 +1,7 @@
+2009-04-09 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Bump version number for release.
+
 2009-04-08 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-object-profile.c (is_valid_path_parameters):
