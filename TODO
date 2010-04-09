@@ -144,3 +144,5 @@
   http://library.gnome.org/devel/gconf/unstable/gconf-gconf.html#gconf-concat-dir-and-key
 
 - "x-nautilus-desktop:///" is rather a scheme than a folder
+
+- enhancement.ui: add a 'why this item is invalid' 

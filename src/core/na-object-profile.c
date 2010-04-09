@@ -361,25 +361,27 @@ profile_is_valid( const NAObjectProfile *profile )
 	return( is_valid );
 }
 
+/*
+ * historical behavior was to not check path nor parameters at all
+ * 2.29.x serie, and up to 2.30.0, have tried to check an actual executable path
+ * but most of already actions only used a command, relying on the PATH env variable
+ * so, starting with 2.30.1, we only check for non empty path+parameters
+ */
 static gboolean
 is_valid_path_parameters( const NAObjectProfile *profile )
 {
 	gboolean valid;
 	gchar *path, *parameters;
-	gchar *command, *exe;
+	gchar *command;
 
 	path = na_object_get_path( profile );
 	parameters = na_object_get_parameters( profile );
 
 	command = g_strdup_printf( "%s %s", path, parameters );
-	exe = na_core_utils_str_get_first_word( command );
+	g_strstrip( command );
 
-	valid =
-		g_file_test( exe, G_FILE_TEST_EXISTS ) &&
-		g_file_test( exe, G_FILE_TEST_IS_EXECUTABLE ) &&
-		!g_file_test( exe, G_FILE_TEST_IS_DIR );
+	valid = g_utf8_strlen( command, -1 ) > 0;
 
-	g_free( exe );
 	g_free( command );
 	g_free( parameters );
 	g_free( path );
