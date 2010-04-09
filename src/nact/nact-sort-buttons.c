@@ -38,6 +38,8 @@
 #include "nact-application.h"
 #include "nact-sort-buttons.h"
 
+static gboolean st_set_sort_order = FALSE;
+
 static void enable_buttons( NactMainWindow *window );
 static void on_sort_down_button_toggled( GtkToggleButton *button, NactMainWindow *window );
 static void on_sort_manual_button_toggled( GtkToggleButton *button, NactMainWindow *window );
@@ -121,6 +123,8 @@ nact_sort_buttons_all_widgets_showed( NactMainWindow *window )
 	updater = nact_application_get_updater( application );
 	order_mode = na_iprefs_get_order_mode( NA_IPREFS( updater ));
 	display_sort_order( window, order_mode );
+
+	st_set_sort_order = TRUE;
 }
 
 /**
@@ -277,9 +281,11 @@ set_new_sort_order( NactMainWindow *window, guint order_mode )
 	NactApplication *application;
 	NAUpdater *updater;
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	na_iprefs_set_order_mode( NA_IPREFS( updater ), order_mode );
+	if( st_set_sort_order ){
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		updater = nact_application_get_updater( application );
+		na_iprefs_set_order_mode( NA_IPREFS( updater ), order_mode );
+	}
 }
 
 static void

@@ -141,6 +141,3 @@
 - "x-nautilus-desktop:///" is rather a scheme than a folder
 
 - enhancement.ui: add a 'why this item is invalid' 
-
-- remove foo
-- bug when deleting last action
