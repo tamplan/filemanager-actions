@@ -38,14 +38,32 @@
 #include "nact-application.h"
 #include "nact-sort-buttons.h"
 
+typedef struct {
+	gchar    *btn_name;
+	/*GCallback on_btn_toggled;*/
+	guint     order_mode;
+}
+	ToggleGroup;
+
 static gboolean st_set_sort_order = FALSE;
+static gboolean st_in_toggle      = FALSE;
+static gint     st_last_active    = -1;
 
 static void enable_buttons( NactMainWindow *window );
-static void on_sort_down_button_toggled( GtkToggleButton *button, NactMainWindow *window );
-static void on_sort_manual_button_toggled( GtkToggleButton *button, NactMainWindow *window );
-static void on_sort_up_button_toggled( GtkToggleButton *button, NactMainWindow *window );
+static void on_toggle_button_toggled( GtkToggleButton *button, NactMainWindow *window );
 static void set_new_sort_order( NactMainWindow *window, guint order_mode );
 static void display_sort_order( NactMainWindow *window, guint order_mode );
+static gint toggle_group_get_active( ToggleGroup *group, BaseWindow *window );
+static gint toggle_group_get_for_mode( ToggleGroup *group, guint mode );
+static void toggle_group_set_active( ToggleGroup *group, BaseWindow *window, gint idx );
+static gint toggle_group_get_from_button( ToggleGroup *group, BaseWindow *window, GtkToggleButton *toggled_button );
+
+static ToggleGroup st_toggle_group [] = {
+		{ "SortManualButton", IPREFS_ORDER_MANUAL },
+		{ "SortUpButton",     IPREFS_ORDER_ALPHA_ASCENDING },
+		{ "SortDownButton",   IPREFS_ORDER_ALPHA_DESCENDING },
+		{ NULL }
+};
 
 /**
  * nact_sort_buttons_initial_load:
@@ -66,38 +84,33 @@ nact_sort_buttons_initial_load( NactMainWindow *window )
  * @window: the #NactMainWindow.
  *
  * Initialization of the UI each time it is displayed.
+ *
+ * At end, buttons are all :
+ * - off,
+ * - connected,
+ * - enabled (sensitive) if level zero is writable
  */
 void
 nact_sort_buttons_runtime_init( NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_sort_buttons_runtime_init";
 	GtkToggleButton *button;
+	gint i;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" ));
-	gtk_toggle_button_set_active( button, FALSE );
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( button ),
-			"toggled",
-			G_CALLBACK( on_sort_up_button_toggled ));
+	i = 0;
+	while( st_toggle_group[i].btn_name ){
 
-	button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" ));
-	gtk_toggle_button_set_active( button, FALSE );
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( button ),
-			"toggled",
-			G_CALLBACK( on_sort_down_button_toggled ));
+		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), st_toggle_group[i].btn_name ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( button ),
+				"toggled",
+				G_CALLBACK( on_toggle_button_toggled ));
 
-	button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" ));
-	gtk_toggle_button_set_active( button, FALSE );
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( button ),
-			"toggled",
-			G_CALLBACK( on_sort_manual_button_toggled ));
+		i += 1;
+	}
 
 	enable_buttons( window );
 }
@@ -113,16 +126,8 @@ void
 nact_sort_buttons_all_widgets_showed( NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_sort_buttons_all_widgets_showed";
-	NactApplication *application;
-	NAUpdater *updater;
-	guint order_mode;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	order_mode = na_iprefs_get_order_mode( NA_IPREFS( updater ));
-	display_sort_order( window, order_mode );
 
 	st_set_sort_order = TRUE;
 }
@@ -152,18 +157,8 @@ void
 nact_sort_buttons_display_order_change( NactMainWindow *window, guint order_mode )
 {
 	static const gchar *thisfn = "nact_sort_buttons_display_order_change";
-	GtkToggleButton *button;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" ));
-	gtk_toggle_button_set_active( button, FALSE );
-
-	button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" ));
-	gtk_toggle_button_set_active( button, FALSE );
-
-	button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" ));
-	gtk_toggle_button_set_active( button, FALSE );
 
 	display_sort_order( window, order_mode );
 }
@@ -191,123 +186,163 @@ enable_buttons( NactMainWindow *window )
 	NAUpdater *updater;
 	gboolean writable;
 	GtkWidget *button;
+	gint i;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
 	writable = na_pivot_is_level_zero_writable( NA_PIVOT( updater ));
 
-	button = base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" );
-	gtk_widget_set_sensitive( button, writable );
-
-	button = base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" );
-	gtk_widget_set_sensitive( button, writable );
-
-	button = base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" );
-	gtk_widget_set_sensitive( button, writable );
-}
-
-static void
-on_sort_down_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *window )
-{
-	GtkToggleButton *button;
-
-	g_debug( "nact_sort_buttons_on_sort_down_button_toggled: is_active=%s", gtk_toggle_button_get_active( toggled_button ) ? "True":"False" );
-
-	if( gtk_toggle_button_get_active( toggled_button )){
-
-		gtk_widget_set_sensitive( GTK_WIDGET( toggled_button ), FALSE );
-
-		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" ));
-		gtk_toggle_button_set_active( button, FALSE );
-		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
-
-		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" ));
-		gtk_toggle_button_set_active( button, FALSE );
-		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
-
-		set_new_sort_order( window, IPREFS_ORDER_ALPHA_DESCENDING );
+	i = 0;
+	while( st_toggle_group[i].btn_name ){
+		button = base_window_get_widget( BASE_WINDOW( window ), st_toggle_group[i].btn_name );
+		gtk_widget_set_sensitive( button, writable );
+		i += 1;
 	}
 }
 
 static void
-on_sort_manual_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *window )
+on_toggle_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *window )
 {
-	GtkToggleButton *button;
+	static const gchar *thisfn = "nact_sort_buttons_on_toggle_button_toggled";
+	gint ibtn, iprev;
 
-	g_debug( "nact_sort_buttons_on_sort_manual_button_toggled: is_active=%s", gtk_toggle_button_get_active( toggled_button ) ? "True":"False" );
+	if( !st_in_toggle ){
 
-	if( gtk_toggle_button_get_active( toggled_button )){
+		ibtn = toggle_group_get_from_button( st_toggle_group, BASE_WINDOW( window ), toggled_button );
+		g_return_if_fail( ibtn >= 0 );
 
-		gtk_widget_set_sensitive( GTK_WIDGET( toggled_button ), FALSE );
+		iprev = toggle_group_get_active( st_toggle_group, BASE_WINDOW( window ));
 
-		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" ));
-		gtk_toggle_button_set_active( button, FALSE );
-		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
+		g_debug( "%s: iprev=%d, ibtn=%d", thisfn, iprev, ibtn );
 
-		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" ));
-		gtk_toggle_button_set_active( button, FALSE );
-		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
+		if( iprev == ibtn ){
+			gtk_toggle_button_set_active( toggled_button, TRUE );
 
-		set_new_sort_order( window, IPREFS_ORDER_MANUAL );
-	}
-}
-
-static void
-on_sort_up_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *window )
-{
-	GtkToggleButton *button;
-
-	g_debug( "nact_sort_buttons_on_sort_up_button_toggled: is_active=%s", gtk_toggle_button_get_active( toggled_button ) ? "True":"False" );
-
-	if( gtk_toggle_button_get_active( toggled_button )){
-
-		gtk_widget_set_sensitive( GTK_WIDGET( toggled_button ), FALSE );
-
-		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" ));
-		gtk_toggle_button_set_active( button, FALSE );
-		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
-
-		button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" ));
-		gtk_toggle_button_set_active( button, FALSE );
-		gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
-
-		set_new_sort_order( window, IPREFS_ORDER_ALPHA_ASCENDING );
+		} else {
+			toggle_group_set_active( st_toggle_group, BASE_WINDOW( window ), ibtn );
+			set_new_sort_order( window, st_toggle_group[ibtn].order_mode );
+		}
 	}
 }
 
 static void
 set_new_sort_order( NactMainWindow *window, guint order_mode )
 {
+	static const gchar *thisfn = "nact_sort_buttons_set_new_sort_order";
 	NactApplication *application;
 	NAUpdater *updater;
 
 	if( st_set_sort_order ){
+		g_debug( "%s: order_mode=%d", thisfn, order_mode );
+
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
 		na_iprefs_set_order_mode( NA_IPREFS( updater ), order_mode );
 	}
 }
 
+/*
+ * activate the button corresponding to the new sort order
+ * desactivate the previous button
+ * do nothing if new button and previous button are the sames
+ */
 static void
 display_sort_order( NactMainWindow *window, guint order_mode )
 {
-	GtkToggleButton *button;
+	static const gchar *thisfn = "nact_sort_buttons_display_sort_order";
+	gint iprev, inew;
 
-	switch( order_mode ){
-		case IPREFS_ORDER_ALPHA_ASCENDING:
-			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortUpButton" ));
-			gtk_toggle_button_set_active( button, TRUE );
-			break;
+	iprev = toggle_group_get_active( st_toggle_group, BASE_WINDOW( window ));
 
-		case IPREFS_ORDER_ALPHA_DESCENDING:
-			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortDownButton" ));
-			gtk_toggle_button_set_active( button, TRUE );
-			break;
+	inew = toggle_group_get_for_mode( st_toggle_group, order_mode );
+	g_return_if_fail( inew >= 0 );
 
-		case IPREFS_ORDER_MANUAL:
-			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "SortManualButton" ));
-			gtk_toggle_button_set_active( button, TRUE );
-			break;
+	g_debug( "%s: iprev=%d, inew=%d", thisfn, iprev, inew );
 
+	if( iprev == -1 || inew != iprev ){
+		toggle_group_set_active( st_toggle_group, BASE_WINDOW( window ), inew );
 	}
+}
+
+/*
+ * returns the index of the button currently active
+ * or -1 if not found
+ */
+static gint
+toggle_group_get_active( ToggleGroup *group, BaseWindow *window )
+{
+	GtkToggleButton *button;
+	gint i = 0;
+
+	if( st_last_active != -1 ){
+		return( st_last_active );
+	}
+
+	while( group[i].btn_name ){
+		button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, group[i].btn_name ));
+		if( gtk_toggle_button_get_active( button )){
+			return( i );
+		}
+		i += 1;
+	}
+
+	return( -1 );
+}
+
+/*
+ * returns the index of the button for the given order mode
+ * or -1 if not found
+ */
+static gint
+toggle_group_get_for_mode( ToggleGroup *group, guint mode )
+{
+	gint i = 0;
+
+	while( group[i].btn_name ){
+		if( group[i].order_mode == mode ){
+			return( i );
+		}
+		i += 1;
+	}
+
+	return( -1 );
+}
+
+static void
+toggle_group_set_active( ToggleGroup *group, BaseWindow *window, gint idx )
+{
+	static const gchar *thisfn = "nact_sort_buttons_toggle_group_set_active";
+	GtkToggleButton *button;
+	gint i;
+
+	g_debug( "%s: idx=%d", thisfn, idx );
+
+	i = 0;
+	st_in_toggle = TRUE;
+
+	while( group[i].btn_name ){
+		button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, group[i].btn_name ));
+		gtk_toggle_button_set_active( button, i==idx );
+		i += 1;
+	}
+
+	st_in_toggle = FALSE;
+	st_last_active = idx;
+}
+
+static gint
+toggle_group_get_from_button( ToggleGroup *group, BaseWindow *window, GtkToggleButton *toggled_button )
+{
+	GtkToggleButton *button;
+	gint i = 0;
+
+	while( group[i].btn_name ){
+		button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, group[i].btn_name ));
+		if( button == toggled_button ){
+			return( i );
+		}
+		i += 1;
+	}
+
+	return( -1 );
 }
