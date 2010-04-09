@@ -57,11 +57,6 @@
   give same defaults that when creating an action in NACT
   choose the target I/O provider
 
-- NACT: unable to really delete an action imported with schemas
-  2009-11-21 (2.29.2-provider) not able to reproduce this, whether the
-  action is imported via Import assistant or by drag and drop from
-  Nautilus
-
 - Nautilus bug when dnd to nautilus on other screen
   see https://bugzilla.gnome.org/show_bug.cgi?id=593453
 
@@ -146,3 +141,6 @@
 - "x-nautilus-desktop:///" is rather a scheme than a folder
 
 - enhancement.ui: add a 'why this item is invalid' 
+
+- remove foo
+- bug when deleting last action

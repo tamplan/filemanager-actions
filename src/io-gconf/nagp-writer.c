@@ -172,20 +172,13 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	ret = NA_IIO_PROVIDER_CODE_OK;
 	uuid = na_object_get_id( NA_OBJECT( item ));
 
-	path = gconf_concat_dir_and_key( NAGP_SCHEMAS_PATH, uuid );
-	gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
-	if( error ){
-		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
-		*messages = g_slist_append( *messages, g_strdup( error->message ));
-		g_error_free( error );
-		error = NULL;
-		ret = NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR;
-	}
-	g_free( path );
-
+	/* GCONF_UNSET_INCLUDING_SCHEMA_NAMES seems mean: including the name
+	 * of the schemas which is embedded in the GConfEntry - this doesn't
+	 * mean including the schemas themselves
+	 */
 	if( ret == NA_IIO_PROVIDER_CODE_OK ){
 		path = gconf_concat_dir_and_key( NAGP_CONFIGURATIONS_PATH, uuid );
-		gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
+		gconf_client_recursive_unset( self->private->gconf, path, GCONF_UNSET_INCLUDING_SCHEMA_NAMES, &error );
 		if( error ){
 			g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
 			*messages = g_slist_append( *messages, g_strdup( error->message ));
@@ -193,11 +186,24 @@ nagp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 			error = NULL;
 			ret = NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR;
 		}
+		gconf_client_suggest_sync( self->private->gconf, NULL );
+		g_free( path );
 	}
 
-	gconf_client_suggest_sync( self->private->gconf, NULL );
+	if( ret == NA_IIO_PROVIDER_CODE_OK ){
+		path = gconf_concat_dir_and_key( NAGP_SCHEMAS_PATH, uuid );
+		gconf_client_recursive_unset( self->private->gconf, path, 0, &error );
+		if( error ){
+			g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
+			*messages = g_slist_append( *messages, g_strdup( error->message ));
+			g_error_free( error );
+			error = NULL;
+			ret = NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR;
+		}
+		g_free( path );
+		gconf_client_suggest_sync( self->private->gconf, NULL );
+	}
 
-	g_free( path );
 	g_free( uuid );
 
 	return( ret );

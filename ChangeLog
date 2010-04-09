@@ -1,5 +1,8 @@
 2009-04-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-writer.c (nagp_iio_provider_delete_item):
+	Also delete the schema names which may be embedded in GConfEntry.
+
 	* src/api/na-gconf-utils.h:
 	* src/core/na-gconf-utils.c (na_gconf_utils_dump_entries):
 	New function.
