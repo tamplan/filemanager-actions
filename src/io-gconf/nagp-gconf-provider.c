@@ -274,6 +274,12 @@ install_monitors( NagpGConfProvider *provider )
 					( GConfClientNotifyFunc ) config_path_changed_cb,
 					provider ));
 
+	list = g_list_prepend( list,
+			na_gconf_monitor_new(
+					NAGP_SCHEMAS_PATH,
+					( GConfClientNotifyFunc ) config_path_changed_cb,
+					provider ));
+
 	return( list );
 }
 

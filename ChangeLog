@@ -1,5 +1,8 @@
 2009-04-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-gconf-provider.c (install_monitors):
+	Also monitors schemas to be triggered when importing a schema.
+
 	* configure.ac: Bump version number for release.
 
 	* src/nact/nact-iaction-tab.c (on_icon_browse):
