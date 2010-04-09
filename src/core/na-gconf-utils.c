@@ -37,6 +37,7 @@
 #include <api/na-core-utils.h>
 #include <api/na-gconf-utils.h>
 
+static void        dump_entry( GConfEntry *entry, void *user_data );
 static GConfValue *read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfValueType type );
 static gboolean    sync_gconf( GConfClient *gconf, gchar **message );
 
@@ -277,6 +278,60 @@ na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry
 	}
 
 	return( found );
+}
+
+/**
+ * na_gconf_utils_dump_entries:
+ * @list: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ *
+ * Dumps the content of the entries.
+ */
+void
+na_gconf_utils_dump_entries( GSList *list )
+{
+	g_slist_foreach( list, ( GFunc ) dump_entry, NULL );
+}
+
+static void
+dump_entry( GConfEntry *entry, void *user_data )
+{
+	static const gchar *thisfn = "na_gconf_utils_dump_entry";
+
+	gchar *key = g_path_get_basename( gconf_entry_get_key( entry ));
+	GConfValue *value = gconf_entry_get_value( entry );
+	gchar *str;
+	gboolean str_free = FALSE;
+
+	switch( value->type ){
+		case GCONF_VALUE_STRING:
+			str = ( gchar * ) gconf_value_get_string( value );
+			break;
+
+		case GCONF_VALUE_INT:
+			str = g_strdup_printf( "%d", gconf_value_get_int( value ));
+			str_free = TRUE;
+			break;
+
+		case GCONF_VALUE_FLOAT:
+			str = g_strdup_printf( "%f", gconf_value_get_float( value ));
+			str_free = TRUE;
+			break;
+
+		case GCONF_VALUE_BOOL:
+			str = g_strdup_printf( "%s", gconf_value_get_bool( value ) ? "True":"False" );
+			str_free = TRUE;
+			break;
+
+		default:
+			str = g_strdup( "(undetermined value)" );
+			str_free = TRUE;
+	}
+	g_debug( "%s: key=%s, value=%s", thisfn, key, str );
+
+	if( str_free ){
+		g_free( str );
+	}
+	g_free( key );
 }
 
 /**

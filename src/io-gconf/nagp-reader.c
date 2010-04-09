@@ -149,6 +149,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 		data = g_new0( ReaderData, 1 );
 		data->path = ( gchar * ) path;
 		data->entries = na_gconf_utils_get_entries( provider->private->gconf, path );
+		na_gconf_utils_dump_entries( data->entries );
 
 		na_ifactory_provider_read_item(
 				NA_IFACTORY_PROVIDER( provider ),

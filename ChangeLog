@@ -1,5 +1,12 @@
 2009-04-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-gconf-utils.h:
+	* src/core/na-gconf-utils.c (na_gconf_utils_dump_entries):
+	New function.
+
+	* src/io-gconf/nagp-reader.c (read_item):
+	Dump content of readen entries.
+
 	* src/io-gconf/nagp-gconf-provider.c (install_monitors):
 	Also monitors schemas to be triggered when importing a schema.
 
