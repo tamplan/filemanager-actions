@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-03-23 22:07+0000\n"
-"PO-Revision-Date: 2010-03-28 13:47+0200\n"
+"POT-Creation-Date: 2010-03-28 11:47+0000\n"
+"PO-Revision-Date: 2010-04-11 16:22+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -133,7 +133,6 @@ msgid "Last selected folder"
 msgstr "Última carpeta seleccionada"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:22
-#| msgid "List of subitem ids"
 msgid "List of default schemes"
 msgstr "Lista de esquemas predeterminados"
 
@@ -150,7 +149,6 @@ msgid "Position and size of the Legend dialog"
 msgstr "Posición y tamaño del diálogo de leyenda"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:26
-#| msgid "Width of the main window pane ; default is set by the UI manager"
 msgid ""
 "Position and size of the Legend dialog ; default is set by the UI manager."
 msgstr ""
@@ -158,12 +156,10 @@ msgstr ""
 "predeterminado."
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:27
-#| msgid "Position and size of the Legend dialog"
 msgid "Position and size of the URI chooser window"
 msgstr "Posición y tamaño de la ventana del selector de URI"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:28
-#| msgid "Width of the main window pane ; default is set by the UI manager"
 msgid ""
 "Position and size of the URI chooser window in the Folders tab ; default is "
 "set by the window manager."
@@ -176,7 +172,6 @@ msgid "Position and size of the command chooser window"
 msgstr "Posición y tamaño de la ventana del selector de comandos"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:30
-#| msgid "Width of the main window pane ; default is set by the UI manager"
 msgid ""
 "Position and size of the command chooser window in the Command tab ; default "
 "is set by the window manager."
@@ -189,7 +184,6 @@ msgid "Position and size of the export assistant window"
 msgstr "Posición y tamaño de la ventana del asistente de exportación"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:32
-#| msgid "Width of the main window pane ; default is set by the UI manager"
 msgid ""
 "Position and size of the export assistant window ; default is set by the "
 "window manager."
@@ -202,7 +196,6 @@ msgid "Position and size of the import assistant window"
 msgstr "Posición y tamaño de la ventana del asistente de importación"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:34
-#| msgid "Width of the main window pane ; default is set by the UI manager"
 msgid ""
 "Position and size of the import assistant window ; default is set by the "
 "window manager."
@@ -211,12 +204,10 @@ msgstr ""
 "ventanas establece lo predeterminado."
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:35
-#| msgid "Position and size of the Legend dialog"
 msgid "Position and size of the interaction dialog at import time"
 msgstr "Posición y tamaño del diálogo de interacción al importar"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:36
-#| msgid "Width of the main window pane ; default is set by the UI manager"
 msgid ""
 "Position and size of the interaction dialog at import time ; default is set "
 "by the window manager."
@@ -229,7 +220,6 @@ msgid "Position and size of the main window"
 msgstr "Posición y tamaño de la ventana principal"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:38
-#| msgid "Width of the main window pane ; default is set by the UI manager"
 msgid ""
 "Position and size of the main window ; default is set by the window manager."
 msgstr ""
@@ -241,7 +231,6 @@ msgid "Position and size of the preferences dialog"
 msgstr "Posición y tamaño de la ventana del diálogo de preferencias"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:40
-#| msgid "Width of the main window pane ; default is set by the UI manager"
 msgid ""
 "Position and size of the preferences dialog ; default is set by the window "
 "manager."
@@ -357,26 +346,23 @@ msgstr ""
 "duplicados."
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:57
-#, fuzzy
 #| msgid "Whether the action is enabled"
 msgid "Whether the Desktop I/O provider is locked"
-msgstr "Indica si la acción está activada"
+msgstr "Indica si el proveedor de E/S del Escritorio está bloqueado"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:58
 msgid "Whether the Esc key should close the assistants"
 msgstr "Indica si la tecla Esc debe cerrar los asistentes"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:59
-#, fuzzy
 #| msgid "Whether the action is enabled"
 msgid "Whether the GConf I/O provider is locked"
-msgstr "Indica si la acción está activada"
+msgstr "Indica si el proveedor de E/S de GConf está bloqueado"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:60
-#, fuzzy
 #| msgid "Whether the action is enabled"
 msgid "Whether the whole configuration is locked"
-msgstr "Indica si la acción está activada"
+msgstr "Indica si la configuración completa está bloqueada"
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:61
 msgid "Whether to display or not the Edit toolbar in the main window."
@@ -447,6 +433,9 @@ msgid ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
 "USA."
 msgstr ""
+"Debería haber recibido una copia de la Licencia Pública General de GNU junto "
+"con este programa, de lo contrario, escriba a la Free Software Foundation, "
+"Inc, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 EE. UU."
 
 #: ../src/core/na-iabout.c:206
 msgid "A graphical interface to create and edit your Nautilus actions."
@@ -457,7 +446,7 @@ msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
 msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2007-2010"
 
 #: ../src/core/na-iabout.c:253
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
 #| "Copyright %s 2009 Pierre Wieser <pwieser@trychlos.org>"
@@ -466,14 +455,14 @@ msgid ""
 "Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
 "Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 
 #: ../src/core/na-icontextual-factory.c:47
-#, fuzzy
 #| msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
 msgstr ""
-"La lista de patrones con la que coincidir los archivos/carpetas seleccionados"
+"La lista de patrones con la que coincidir lo(s) archivo(s) y/o carpeta(s) "
+"seleccionada(s)"
 
 #: ../src/core/na-icontextual-factory.c:48
 #, fuzzy
@@ -574,10 +563,9 @@ msgstr ""
 "comodines (? o *) (debe establecer una opción por cada patrón que necesite)"
 
 #: ../src/core/na-icontextual-factory.c:125
-#, fuzzy
 #| msgid "Whether the labels are the sames"
 msgid "Whether the profile applies to files"
-msgstr "Indica si las etiquetas son las mismas"
+msgstr "Indica si el perfil se aplica a archivos"
 
 #: ../src/core/na-icontextual-factory.c:126
 #, fuzzy
@@ -612,10 +600,9 @@ msgstr ""
 "aparecerá)"
 
 #: ../src/core/na-icontextual-factory.c:153
-#, fuzzy
 #| msgid "Whether the labels are the sames"
 msgid "Whether the profile applies to folders"
-msgstr "Indica si las etiquetas son las mismas"
+msgstr "Indica si el perfil se aplica a carpetas"
 
 #: ../src/core/na-icontextual-factory.c:154
 #, fuzzy
@@ -650,10 +637,9 @@ msgstr ""
 "aparecerá)"
 
 #: ../src/core/na-icontextual-factory.c:181
-#, fuzzy
 #| msgid "Whether the action is enabled"
 msgid "Whether the selection may be multiple"
-msgstr "Indica si la acción está activada"
+msgstr "Indica si la selección puede ser múltiple"
 
 #: ../src/core/na-icontextual-factory.c:182
 #, fuzzy
@@ -670,12 +656,12 @@ msgstr ""
 "esta clave. Si tan sólo quiere un archivo o carpeta, póngala a «false»"
 
 #: ../src/core/na-icontextual-factory.c:204
-#, fuzzy
 #| msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgid ""
 "List of schemes to be matched against those of selected file(s)/folder(s)"
 msgstr ""
-"La lista de patrones con la que coincidir los archivos/carpetas seleccionados"
+"La lista de esquemas con la que coincidir lo(s) archivo(s) y/o carpeta(s) "
+"seleccionada(s)"
 
 #. too long string for iso c: 510 (max=509)
 #: ../src/core/na-icontextual-factory.c:206
@@ -736,7 +722,6 @@ msgstr ""
 "Se pueden usar todos los esquemas GnomeVFS que use Nautilus aquí."
 
 #: ../src/core/na-icontextual-factory.c:233
-#, fuzzy
 #| msgid ""
 #| "A valid GIO scheme where the selected files should be located. You must "
 #| "set one option for each scheme you need"
@@ -744,8 +729,8 @@ msgid ""
 "A valid GIO scheme where the selected file(s)/folder(s) should be located. "
 "You must set one option for each scheme you need"
 msgstr ""
-"Un esquema GIO válido donde los archivos seleccionados deberían situarse. "
-"Debe establecerla por cada esquema que necesite."
+"Un esquema GIO válido donde lo(s) archivo(s) y/o carpeta(s) seleccionada(s) "
+"deberían situarse. Debe establecer una opción para cada esquema que necesite."
 
 #: ../src/core/na-icontextual-factory.c:235
 #: ../src/core/na-object-action-factory.c:158
@@ -805,7 +790,7 @@ msgstr ""
 "existente «%s»."
 
 #: ../src/core/na-importer-ask.c:298
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "The action \"%s\" imported from \"%s\" has the same identifiant than the "
 #| "already existing \"%s\"."
@@ -813,7 +798,7 @@ msgid ""
 "The menu \"%s\" imported from \"%s\" has the same identifiant than the "
 "already existing \"%s\"."
 msgstr ""
-"La acción importada «%s» de «%s» tiene el mismo identificador que la ya "
+"El menú importado «%s» de «%s» tiene el mismo identificador que la ya "
 "existente «%s»."
 
 #: ../src/core/na-io-provider.c:1253
@@ -860,28 +845,27 @@ msgid ""
 "Program flow error.\n"
 "Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
 msgstr ""
+"Error en el flujo del programa.\n"
+"Por favor, rellene un informe de error en http://bugzilla.gnome.org."
 
 #: ../src/core/na-io-provider.c:1319
-#, fuzzy
 #| msgid "I/O provider is not willing to write."
 msgid "The I/O provider is not willing to do that."
-msgstr "El proveedor de E/S no quiere escribir."
+msgstr "El proveedor de E/S no hacer eso."
 
 #: ../src/core/na-io-provider.c:1323
-#, fuzzy
 #| msgid "No writable I/O provider found."
 msgid "Write error in I/O provider."
-msgstr "No se encontró un proveedor de E/S escribible."
+msgstr "Error de escritura en el proveedor de E/S."
 
 #: ../src/core/na-io-provider.c:1327
 msgid "Unable to delete GConf schemas."
 msgstr "No se pudieron borrar los esquemas de GConf."
 
 #: ../src/core/na-io-provider.c:1331
-#, fuzzy
 #| msgid "Unable to set the default icon for the application."
 msgid "Unable to delete configuration."
-msgstr "No se pudo obtener el icono predeterminado para la aplicación."
+msgstr "No se pudo eliminar la configuración."
 
 #: ../src/core/na-io-provider.c:1335
 #, c-format
@@ -899,13 +883,12 @@ msgstr "Acción de Nautilus nueva"
 
 #: ../src/core/na-object-action.c:428
 msgid "Profile automatically created from pre-v2 action"
-msgstr ""
+msgstr "Perfil creado automáticamente desde la acción pre-v2"
 
 #: ../src/core/na-object-action-factory.c:50
-#, fuzzy
 #| msgid "The version of the configuration format"
 msgid "Version of the format"
-msgstr "La versión del formato de configuración"
+msgstr "Versión del formato"
 
 #: ../src/core/na-object-action-factory.c:51
 #, fuzzy
@@ -1130,6 +1113,8 @@ msgid ""
 "May be used as a description for the function of the profile.\n"
 "If not set, it defaults to an auto-generated name."
 msgstr ""
+"Se usará como la descripción para la función del perfil.\n"
+"Si no está establecido se usa un nombre autogenerado predeterminado."
 
 #: ../src/core/na-object-profile-factory.c:71
 #, fuzzy
@@ -1262,6 +1247,8 @@ msgstr ""
 #, c-format
 msgid "Invalid XML root element %s found at line %d while waiting for %s."
 msgstr ""
+"Se encontró un elemento raíz XML no válido %s en la línea %d mientras se "
+"esperaba a %s."
 
 #: ../src/io-xml/naxml-reader.c:156
 #, c-format
@@ -1271,19 +1258,19 @@ msgstr "No se puede analizar el archivo XML: %s."
 #: ../src/io-xml/naxml-reader.c:157
 #, c-format
 msgid "Node %s at line %d has not been dealt with."
-msgstr ""
+msgstr "No se ha trabajado con el nodo %s en la línea %d."
 
 #: ../src/io-xml/naxml-reader.c:1322
 msgid "Item was renumbered due to user request."
-msgstr ""
+msgstr "Se cambió el número del elemento a petición del usuario."
 
 #: ../src/io-xml/naxml-reader.c:1328
 msgid "Existing item was overriden due to user request."
-msgstr ""
+msgstr "Se sobreescribió el elemento existente a petición del usuario."
 
 #: ../src/io-xml/naxml-reader.c:1337
 msgid "Import was canceled due to user request."
-msgstr ""
+msgstr "Se canceló la importación a petición del usuario."
 
 #. i18n: the action has been renumbered during import operation
 #: ../src/io-xml/naxml-reader.c:1376
@@ -1292,7 +1279,7 @@ msgstr ""
 
 #: ../src/io-xml/naxml-formats.c:48
 msgid "Export as a _full GConf schema file"
-msgstr ""
+msgstr "Exportar como un archivo de esquema GConf co_mpleto"
 
 #: ../src/io-xml/naxml-formats.c:49
 msgid ""
@@ -1472,31 +1459,31 @@ msgstr "Cambie a ella."
 msgid "Nautilus Actions Configuration Tool"
 msgstr "Herramienta de configuración de acciones de Nautilus"
 
-#: ../src/nact/nact-assistant-export.c:674
+#: ../src/nact/nact-assistant-export.c:679
 #, fuzzy
 #| msgid "About to export selected actions:"
 msgid "About to export selected items:"
 msgstr "Acerca de exportar las acciones seleccionadas:"
 
-#: ../src/nact/nact-assistant-export.c:688
+#: ../src/nact/nact-assistant-export.c:693
 msgid "Into the destination folder:"
 msgstr "En la carpeta de destino:"
 
-#: ../src/nact/nact-assistant-export.c:748
+#: ../src/nact/nact-assistant-export.c:753
 msgid "Export canceled due to user action."
 msgstr "Se canceló la exportación debido a una acción del usuario"
 
 #. i18n: result of the export assistant
-#: ../src/nact/nact-assistant-export.c:776
+#: ../src/nact/nact-assistant-export.c:781
 msgid "Selected actions have been proceeded :"
 msgstr "Las acciones seleccionadas se han procesado: "
 
 #. i18n: action as been successfully exported to <filename>
-#: ../src/nact/nact-assistant-export.c:794
+#: ../src/nact/nact-assistant-export.c:799
 msgid "Successfully exported as"
 msgstr "Exportado correctamente como"
 
-#: ../src/nact/nact-assistant-export.c:817
+#: ../src/nact/nact-assistant-export.c:822
 msgid "You may not have write permissions on selected folder."
 msgstr "Puede que no tenga permisos de escritura en la carpeta seleccionada."
 
@@ -1669,63 +1656,63 @@ msgstr "ej."
 msgid "Select a folder"
 msgstr "Seleccionar una carpeta"
 
-#: ../src/nact/nact-main-menubar.c:134 ../src/nact/nact-main-menubar.c:241
+#: ../src/nact/nact-main-menubar.c:106 ../src/nact/nact-main-menubar.c:213
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../src/nact/nact-main-menubar.c:135 ../src/nact/nact-main-menubar.c:245
+#: ../src/nact/nact-main-menubar.c:107 ../src/nact/nact-main-menubar.c:217
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/nact/nact-main-menubar.c:136
+#: ../src/nact/nact-main-menubar.c:108
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/nact/nact-main-menubar.c:137
+#: ../src/nact/nact-main-menubar.c:109
 msgid "_Toolbars"
 msgstr "Barras de _herramientas"
 
-#: ../src/nact/nact-main-menubar.c:138 ../src/nact/nact-main-menubar.c:249
+#: ../src/nact/nact-main-menubar.c:110 ../src/nact/nact-main-menubar.c:221
 msgid "_Tools"
 msgstr "_Herramientas"
 
-#: ../src/nact/nact-main-menubar.c:139
+#: ../src/nact/nact-main-menubar.c:111
 msgid "_Maintainer"
 msgstr "_Mantenedor"
 
-#: ../src/nact/nact-main-menubar.c:140 ../src/nact/nact-main-menubar.c:253
+#: ../src/nact/nact-main-menubar.c:112 ../src/nact/nact-main-menubar.c:225
 msgid "_Help"
 msgstr "Ay_uda"
 
-#: ../src/nact/nact-main-menubar.c:142
+#: ../src/nact/nact-main-menubar.c:114
 msgid "New _menu"
 msgstr "_Menú nuevo"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
-#: ../src/nact/nact-main-menubar.c:144
+#: ../src/nact/nact-main-menubar.c:116
 msgid "Insert a new menu at the current position"
 msgstr "Insertar un menú nuevo en la posición actual"
 
-#: ../src/nact/nact-main-menubar.c:146
+#: ../src/nact/nact-main-menubar.c:118
 msgid "_New action"
 msgstr "Acción _nueva"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New action' item
-#: ../src/nact/nact-main-menubar.c:148
+#: ../src/nact/nact-main-menubar.c:120
 msgid "Define a new action"
 msgstr "Definir una acción nueva"
 
-#: ../src/nact/nact-main-menubar.c:150
+#: ../src/nact/nact-main-menubar.c:122
 msgid "New _profile"
 msgstr "_Perfil nuevo"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
-#: ../src/nact/nact-main-menubar.c:152
+#: ../src/nact/nact-main-menubar.c:124
 msgid "Define a new profile attached to the current action"
 msgstr "Definir un perfil nuevo acoplado con la acción actual"
 
 #. i18n: tooltip displayed in the status bar when selecting 'Save' item
-#: ../src/nact/nact-main-menubar.c:156
+#: ../src/nact/nact-main-menubar.c:128
 msgid ""
 "Record all the modified actions. Invalid actions will be silently ignored"
 msgstr ""
@@ -1733,62 +1720,62 @@ msgstr ""
 "silenciosamente."
 
 #. i18n: tooltip displayed in the status bar when selecting 'Quit' item
-#: ../src/nact/nact-main-menubar.c:160
+#: ../src/nact/nact-main-menubar.c:132
 msgid "Quit the application"
 msgstr "Salir de la aplicación"
 
 #. i18n: tooltip displayed in the status bar when selecting the Cut item
-#: ../src/nact/nact-main-menubar.c:164
+#: ../src/nact/nact-main-menubar.c:136
 msgid "Cut the selected item(s) to the clipboard"
 msgstr "Cortar los elementos seleccionados al portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the Copy item
-#: ../src/nact/nact-main-menubar.c:168
+#: ../src/nact/nact-main-menubar.c:140
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "Copiar los elementos seleccionados al portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the Paste item
-#: ../src/nact/nact-main-menubar.c:172
+#: ../src/nact/nact-main-menubar.c:144
 #, fuzzy
 #| msgid "Define a new profile attached to the current action."
 msgid "Insert the content of the clipboard just before the current position"
 msgstr "Definir un perfil nuevo acoplado con la acción actual."
 
-#: ../src/nact/nact-main-menubar.c:174
+#: ../src/nact/nact-main-menubar.c:146
 msgid "Paste _into"
 msgstr "Pegar _en"
 
 #. i18n: tooltip displayed in the status bar when selecting the Paste Into item
-#: ../src/nact/nact-main-menubar.c:176
+#: ../src/nact/nact-main-menubar.c:148
 msgid "Insert the content of the clipboard as first child of the current item"
 msgstr ""
 
-#: ../src/nact/nact-main-menubar.c:178
+#: ../src/nact/nact-main-menubar.c:150
 msgid "D_uplicate"
 msgstr "D_uplicar"
 
 #. i18n: tooltip displayed in the status bar when selecting the Duplicate item
-#: ../src/nact/nact-main-menubar.c:180
+#: ../src/nact/nact-main-menubar.c:152
 #, fuzzy
 #| msgid "Click to remove the selected scheme."
 msgid "Duplicate the selected item(s)"
 msgstr "Pulse para quitar el esquema seleccionado."
 
 #. i18n: tooltip displayed in the status bar when selecting the Delete item
-#: ../src/nact/nact-main-menubar.c:184
+#: ../src/nact/nact-main-menubar.c:156
 #, fuzzy
 #| msgid "Click to remove the selected scheme."
 msgid "Delete the selected item(s)"
 msgstr "Pulse para quitar el esquema seleccionado."
 
-#: ../src/nact/nact-main-menubar.c:186
+#: ../src/nact/nact-main-menubar.c:158
 #, fuzzy
 #| msgid "_Reload the list of actions"
 msgid "_Reload the items"
 msgstr "_Actualizar la lista de acciones"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
-#: ../src/nact/nact-main-menubar.c:188
+#: ../src/nact/nact-main-menubar.c:160
 #, fuzzy
 #| msgid "Cancel your current modifications and reload the list of actions"
 msgid ""
@@ -1797,170 +1784,170 @@ msgid ""
 msgstr "Cancelar las modificaciones actuales y recargar la lista de acciones"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
-#: ../src/nact/nact-main-menubar.c:192
+#: ../src/nact/nact-main-menubar.c:164
 msgid "Edit your preferences"
 msgstr "Editar sus preferencias"
 
-#: ../src/nact/nact-main-menubar.c:194
+#: ../src/nact/nact-main-menubar.c:166
 msgid "_Expand all"
 msgstr "_Expandir todo"
 
 #. i18n: tooltip displayed in the status bar when selecting the Expand all item
-#: ../src/nact/nact-main-menubar.c:196
+#: ../src/nact/nact-main-menubar.c:168
 msgid "Entirely expand the items hierarchy"
 msgstr "Expandir completamente la jerarquía de los elementos"
 
-#: ../src/nact/nact-main-menubar.c:198
+#: ../src/nact/nact-main-menubar.c:170
 msgid "_Collapse all"
 msgstr "_Contraer todo"
 
 #. i18n: tooltip displayed in the status bar when selecting the Collapse all item
-#: ../src/nact/nact-main-menubar.c:200
+#: ../src/nact/nact-main-menubar.c:172
 msgid "Entirely collapse the items hierarchy"
 msgstr ""
 
-#: ../src/nact/nact-main-menubar.c:203
+#: ../src/nact/nact-main-menubar.c:175
 msgid "_Import assistant..."
 msgstr "Asistente de _importación..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Import item
-#: ../src/nact/nact-main-menubar.c:205
+#: ../src/nact/nact-main-menubar.c:177
 msgid ""
 "Import one or more actions from external (XML) files into your configuration"
 msgstr ""
 
-#: ../src/nact/nact-main-menubar.c:207
+#: ../src/nact/nact-main-menubar.c:179
 msgid "E_xport assistant..."
 msgstr "Asistente de e_xportación..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Export item
-#: ../src/nact/nact-main-menubar.c:209
+#: ../src/nact/nact-main-menubar.c:181
 msgid ""
 "Export one or more actions from your configuration to external XML files"
 msgstr ""
 
-#: ../src/nact/nact-main-menubar.c:212
+#: ../src/nact/nact-main-menubar.c:184
 #, fuzzy
 #| msgid "Quit the application."
 msgid "_Dump the selection"
 msgstr "Salir de la aplicación."
 
 #. i18n: tooltip displayed in the status bar when selecting the Dump selection item
-#: ../src/nact/nact-main-menubar.c:214
+#: ../src/nact/nact-main-menubar.c:186
 #, fuzzy
 #| msgid "Click to remove the selected scheme."
 msgid "Recursively dump selected items"
 msgstr "Pulse para quitar el esquema seleccionado."
 
-#: ../src/nact/nact-main-menubar.c:216
+#: ../src/nact/nact-main-menubar.c:188
 msgid "_Brief tree store dump"
 msgstr ""
 
 #. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
-#: ../src/nact/nact-main-menubar.c:218
+#: ../src/nact/nact-main-menubar.c:190
 msgid "Briefly dump the tree store"
 msgstr ""
 
-#: ../src/nact/nact-main-menubar.c:220
+#: ../src/nact/nact-main-menubar.c:192
 msgid "_List modified items"
 msgstr "_Listar elementos modificados"
 
 #. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
-#: ../src/nact/nact-main-menubar.c:222
+#: ../src/nact/nact-main-menubar.c:194
 msgid "List the modified items"
 msgstr "Listar los elementos modificados"
 
-#: ../src/nact/nact-main-menubar.c:224
+#: ../src/nact/nact-main-menubar.c:196
 #, fuzzy
 #| msgid "Quit the application."
 msgid "_Dump the clipboard"
 msgstr "Salir de la aplicación."
 
 #. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
-#: ../src/nact/nact-main-menubar.c:226
+#: ../src/nact/nact-main-menubar.c:198
 #, fuzzy
 #| msgid "Cut the selected item(s) to the clipboard"
 msgid "Dump the content of the clipboard object"
 msgstr "Cortar los elementos seleccionados al portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the Help item
-#: ../src/nact/nact-main-menubar.c:231
+#: ../src/nact/nact-main-menubar.c:203
 #, fuzzy
 #| msgid "Display help about this program."
 msgid "Display help about this program"
 msgstr "Mostrar ayuda acerca de este programa."
 
 #. i18n: tooltip displayed in the status bar when selecting the About item
-#: ../src/nact/nact-main-menubar.c:235
+#: ../src/nact/nact-main-menubar.c:207
 #, fuzzy
 #| msgid "Display help about this program."
 msgid "Display informations about this program"
 msgstr "Mostrar ayuda acerca de este programa."
 
 #. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
-#: ../src/nact/nact-main-menubar.c:243
+#: ../src/nact/nact-main-menubar.c:215
 msgid "Display the File toolbar"
 msgstr "Mostrar la barra de herramientas de Archivo"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
-#: ../src/nact/nact-main-menubar.c:247
+#: ../src/nact/nact-main-menubar.c:219
 msgid "Display the Edit toolbar"
 msgstr "Mostrar la barra de herramientas de Editar"
 
 #. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
-#: ../src/nact/nact-main-menubar.c:251
+#: ../src/nact/nact-main-menubar.c:223
 msgid "Display the Tools toolbar"
 msgstr "Mostrar la barra de herramientas de Herramientas"
 
 #. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
-#: ../src/nact/nact-main-menubar.c:255
+#: ../src/nact/nact-main-menubar.c:227
 msgid "Display the Help toolbar"
 msgstr "Mostrar la barra de herramientas de Ayuda"
 
 #. i18n: note the space at the beginning of the sentence
-#: ../src/nact/nact-main-menubar.c:490
+#: ../src/nact/nact-main-menubar.c:451
 #, c-format
 msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
 msgstr ""
 
-#: ../src/nact/nact-main-menubar.c:858
-msgid "New profile"
-msgstr "Perfil nuevo"
-
-#: ../src/nact/nact-main-menubar.c:1067
+#: ../src/nact/nact-main-menubar-edit.c:242
 msgid "Not all items have been cut as following ones are not modifiable:"
 msgstr ""
 
-#: ../src/nact/nact-main-menubar.c:1297
+#: ../src/nact/nact-main-menubar-edit.c:492
 msgid "Not all items have been deleted as following ones are not modifiable:"
 msgstr ""
 
-#: ../src/nact/nact-main-window.c:1305
+#: ../src/nact/nact-main-menubar-file.c:200
+msgid "New profile"
+msgstr "Perfil nuevo"
+
+#: ../src/nact/nact-main-window.c:1336
 msgid ""
 "Reloading a fresh list of actions requires that you give up with your "
 "current modifications."
 msgstr ""
 
-#: ../src/nact/nact-main-window.c:1308
+#: ../src/nact/nact-main-window.c:1339
 #, fuzzy
 #| msgid "Are you sure you want to quit this assistant ?"
 msgid "Do you really want to do this ?"
 msgstr "¿Está seguro de que quiere salir de este asistente?"
 
-#: ../src/nact/nact-main-window.c:1331
+#: ../src/nact/nact-main-window.c:1362
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
 "reload a fresh one."
 msgstr ""
 
-#: ../src/nact/nact-main-window.c:1338
+#: ../src/nact/nact-main-window.c:1369
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
 msgstr ""
 
-#: ../src/nact/nact-main-window.c:1344
+#: ../src/nact/nact-main-window.c:1375
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr ""
 
@@ -2069,21 +2056,21 @@ msgstr ""
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
 #. i18n: label of an automagic root submenu
 #: ../src/plugin-menu/nautilus-actions.c:295
-#: ../src/plugin-menu/nautilus-actions.c:808
+#: ../src/plugin-menu/nautilus-actions.c:809
 msgid "Nautilus Actions"
 msgstr "Acciones de Nautilus"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:810
+#: ../src/plugin-menu/nautilus-actions.c:811
 msgid ""
 "A submenu which embeds the currently available Nautilus Actions extensions"
 msgstr ""
 
-#: ../src/plugin-menu/nautilus-actions.c:857
+#: ../src/plugin-menu/nautilus-actions.c:858
 msgid "About Nautilus Actions"
 msgstr "Acerca de las Acciones de Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:858
+#: ../src/plugin-menu/nautilus-actions.c:859
 msgid "Display information about Nautilus Actions"
 msgstr "Mostrar información acerca de las acciones de Nautilus"
 
