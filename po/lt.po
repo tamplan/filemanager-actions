@@ -2,1053 +2,2535 @@
 # Copyright (C) 2005 Free Software Foundation, Inc.
 # This file is distributed under the same license as the nautilus-actions package.
 # Žygimantas Beručka <zygis@gnome.org>, 2005.
-#
-#
-#
+# Aurimas Černius <aurisc4@gmail.com>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-16 17:18+0200\n"
-"PO-Revision-Date: 2005-12-26 17:46+0200\n"
-"Last-Translator: Žygimantas Beručka <zygis@gnome.org>\n"
-"Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
+"POT-Creation-Date: 2010-04-12 00:48+0300\n"
+"PO-Revision-Date: 2010-04-12 00:47+0300\n"
+"Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
+"Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: UTF-8\n"
 
-#: ../nact/nact.desktop.in.h:1
-msgid "Add items to the Nautilus popup menu"
-msgstr "Įtraukti naujus punktus į Nautilus meniu"
+#: ../data/nautilus-actions-prefs.schemas.in.h:1
+msgid "Add an 'About' item in the Nautilus context menu"
+msgstr "Įtraukti „Apie“ punktą į Nautilus kontekstinį meniu"
 
-#: ../nact/nact.desktop.in.h:2
-msgid "Nautilus Actions Configuration"
-msgstr "Nautilus veiksmų konfigūravimas"
+#: ../data/nautilus-actions-prefs.schemas.in.h:2
+msgid "Ask for a confirmation when quitting by Esc"
+msgstr "Klausti patvirtinimo išeinant su Esc klavišu"
 
-#: ../nact/nautilus-actions-config.glade.h:1
-#, fuzzy
-msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
-msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
+#: ../data/nautilus-actions-prefs.schemas.in.h:3
+msgid "Define a 'Nautilus Actions' root menu"
+msgstr "Apibrėžti „Nautilus veiksmų“ šakninį meniu"
 
-#: ../nact/nautilus-actions-config.glade.h:3
-#, fuzzy, no-c-format
-msgid "<b>%%</b>: a percent sign"
-msgstr "<b>%%</b>: procentų ženklas"
+#: ../data/nautilus-actions-prefs.schemas.in.h:4
+msgid "Display Edit toolbar"
+msgstr "Rodyti keitimo įrankinę"
 
-#: ../nact/nautilus-actions-config.glade.h:5
-#, fuzzy, no-c-format
+#: ../data/nautilus-actions-prefs.schemas.in.h:5
+msgid "Display File toolbar"
+msgstr "Rodyti failo įrankinę"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:6
+msgid "Display Help toolbar"
+msgstr "Rodyti pagalbos įrankinę"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:7
+msgid "Display Tools toolbar"
+msgstr "Rodyti priemonių įrankinę"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:8
+msgid "I/O providers Write priority"
+msgstr "Įvedimo/išvedimo tiekėjų rašymo prioritetas"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:9
 msgid ""
-"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
-"full paths"
+"If TRUE, a confirmation will be requested when quitting an assistant by "
+"hitting the Esc key."
 msgstr ""
-"<b>%M</b>: pažymėtų bylų/aplankų (su pilnais keliais) atskirtų tarpais "
-"sąrašas."
+"Jei TEIGIAMA, bus prašoma patvirtinimo išeinant iš pagalbininko paspaudžiant "
+"Esc klavišą."
 
-#: ../nact/nautilus-actions-config.glade.h:7
-#, fuzzy, no-c-format
-msgid "<b>%U</b>: username of the GnomeVFS URI"
-msgstr "<b>%U</b>: gnome-vfs URI naudotojo vardas"
-
-#: ../nact/nautilus-actions-config.glade.h:9
-#, fuzzy, no-c-format
-msgid "<b>%d</b>: base folder of the selected file(s)"
-msgstr "<b>%d</b>: pasirinktų bylų bazinis aplankas"
-
-#: ../nact/nautilus-actions-config.glade.h:11
-#, fuzzy, no-c-format
+#: ../data/nautilus-actions-prefs.schemas.in.h:10
 msgid ""
-"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+"If TRUE, and if the user has defined a single root menu for its actions, "
+"then an 'About Nautilus Actions' will be displayed at end of the first "
+"submenu."
 msgstr ""
-"<b>%f</b>: pažymėtosios arba, jei pasirinkta daugiau, pirmosios bylos vardas"
+"Jei TEIGIAMA ir naudotojas apibrėžė vieną šakninį meniu savo veiksmams, "
+"tuomet „Apie Nautilus veiksmus“ bus rodomas pirmojo submeniu pabaigoje."
 
-#: ../nact/nautilus-actions-config.glade.h:13
-#, fuzzy, no-c-format
-msgid "<b>%h</b>: hostname of the GnomeVFS URI"
-msgstr "<b>%h</b>: gnome-vfs URI kompiuterio pavadinimas"
+#: ../data/nautilus-actions-prefs.schemas.in.h:11
+msgid "If TRUE, assistant may be closed by hitting the Esc key."
+msgstr "Jei TEIGIAMA, pagalbininką galima užverti paspaudžiant Esc klavišą."
 
-#: ../nact/nautilus-actions-config.glade.h:15
-#, fuzzy, no-c-format
+#: ../data/nautilus-actions-prefs.schemas.in.h:12
 msgid ""
-"<b>%m</b>: space-separated list of the basenames of the selected\n"
-"file(s)/folder(s)"
+"If TRUE, then a 'Nautilus Actions' item will be defined in the Nautilus "
+"context menu, and will a root menu of all available actions."
 msgstr ""
-"<b>%m</b>: pažymėtų bylų/aplankų bazinių vardų atskirtų tarpais sąrašas."
+"Jei TEIGIAMA, elementas „Nautilus veiksmai“ bus apibrėžtas Nautilus "
+"kontekstiniame meniu ir bus visų veiksmų šakninis meniu."
 
-#: ../nact/nautilus-actions-config.glade.h:18
-#, fuzzy, no-c-format
-msgid "<b>%s</b>: scheme of the GnomeVFS URI"
-msgstr "<b>%s</b>: gnome-vfs URI schema"
+#: ../data/nautilus-actions-prefs.schemas.in.h:13
+msgid "Import mode"
+msgstr "Importavimo veiksena"
 
-#: ../nact/nautilus-actions-config.glade.h:20
-#, fuzzy, no-c-format
-msgid "<b>%u</b>: GnomeVFS URI"
-msgstr "<b>%u</b>: gnome-vfs URI"
+#: ../data/nautilus-actions-prefs.schemas.in.h:14
+msgid "Last folder selected when browsing for a command in the Command tab."
+msgstr "Paskutinis pasirinktas aplankas naršant komandų kortelėje."
 
-#: ../nact/nautilus-actions-config.glade.h:21
-msgid "<b>Action</b>"
-msgstr "<b>Veiksmas</b>"
+#: ../data/nautilus-actions-prefs.schemas.in.h:15
+msgid "Last folder selected when browsing for an URI in the Folders tab."
+msgstr "Paskutinis pasirinktas aplankas naršant URI aplankų kortelėje."
 
-#: ../nact/nautilus-actions-config.glade.h:22
-#, fuzzy
-msgid "<b>Appears if file matches</b>"
-msgstr "<b>Rodoma, jei yra pasirinkta</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:23
-msgid "<b>Appears if scheme is in this list</b>"
-msgstr "<b>Rodoma jei schema yra šiame sąraše</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:24
-msgid "<b>Appears if selection contains</b>"
-msgstr "<b>Rodoma, jei yra pasirinkta</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:25
-msgid "<b>Nautilus Menu Item</b>"
-msgstr "<b>Nautilus meniu elementas</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:26
-msgid "<b>Profiles</b>"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:28
-#, no-c-format
-msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
-msgstr "<i><b><span size=\"small\">pvz., %s</span></b></i>"
-
-#: ../nact/nautilus-actions-config.glade.h:29
-msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
-msgstr "<span size=\"larger\"><b>Parametrų legenda</b></span>"
-
-#: ../nact/nautilus-actions-config.glade.h:30
+#: ../data/nautilus-actions-prefs.schemas.in.h:16
 msgid ""
-"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
-"\n"
-"place secondary text here"
-msgstr ""
+"Last folder selected when choosing a folder from where import new actions."
+msgstr "Paskutinis pasirinktas aplankas iš kur importuoti naujus veiksmus "
 
-#: ../nact/nautilus-actions-config.glade.h:33
-#, fuzzy
+#: ../data/nautilus-actions-prefs.schemas.in.h:17
 msgid ""
-"A string with wildcards (? or *) that will be used to match the filenames. "
-"You can set several filename patterns by separating them with a semi-colon "
-"(;)."
-msgstr ""
-"Užrašas su ženklais ? arba *, kuris bus naudojamas bylų atitikimui. Gali "
-"atitikti keletą bylų šablonų, juos reikia atskirti kabliataškiu."
+"Last folder selected when choosing a folder where to export the actions."
+msgstr "Paskutinis pasirinktas aplankas kur eksportuoti veiksmus."
 
-#: ../nact/nautilus-actions-config.glade.h:34
-#, fuzzy
+#: ../data/nautilus-actions-prefs.schemas.in.h:18
+msgid "Last import mode choosen by the user"
+msgstr "Paskutinė naudotojo pasirinkta importavimo veiksena"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:19
 msgid ""
-"A string with wildcards (? or *) that will be used to match the mimetypes of "
-"files. You can set several mimetype patterns by separating them with a semi-"
-"colon (;)."
+"Last import mode choosen by the user when he is asked for in import mode. "
+"Possible values are: - \"NoImport\": do not import an action whose UUID "
+"already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
+"already exists, - \"Override\": override the existing action with the "
+"imported one."
 msgstr ""
-"Užrašas su ženklais ? arba *, kuris bus naudojamas bylų atitikimui. Gali "
-"atitikti keletą bylų šablonų, juos reikia atskirti kabliataškiu."
+"Paskutinė naudotojo pasirinkta importavimo veiksena, kai jis prašė "
+"importavimo veiksenos. Galimos reikšmės: - „NoImport“: neimportuoti veiksmo, "
+"kurio UUID jau yra, - „Renumber“: išskirti naują UUID, jei importuojamas "
+"UUID jau yra, - „Override“: perrašyti esamą veiksmą importuojamu."
 
-#: ../nact/nautilus-actions-config.glade.h:35
-#, fuzzy
-msgid "Action"
-msgstr "<b>Veiksmas</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:36
-#, fuzzy
-msgid "Advanced Conditions"
-msgstr "Sąlygos"
-
-#: ../nact/nautilus-actions-config.glade.h:37
-msgid "Appears if selection has multiple files or folders"
-msgstr "Rodoma jei pasirinkta keletas bylų ar aplankų"
-
-#: ../nact/nautilus-actions-config.glade.h:38
-msgid "Both"
-msgstr "Ir tas, ir tas"
-
-#: ../nact/nautilus-actions-config.glade.h:39
-#, fuzzy
-msgid "Click to add a new scheme."
-msgstr "Spragtelėkite norėdami pridėti naują schemą"
-
-#: ../nact/nautilus-actions-config.glade.h:40
-#, fuzzy
-msgid "Click to choose a command from the file chooser dialog."
-msgstr "Spragtelėkite norėdami pasirinkti komandą bylų pasirinkimo dialoge"
-
-#: ../nact/nautilus-actions-config.glade.h:41
-#, fuzzy
+#: ../data/nautilus-actions-prefs.schemas.in.h:20
 msgid ""
-"Click to choose a custom icon from a file instead of a predefined icon from "
-"the drop-down list."
+"Last import mode choosen in the Import assistant. Possible values are : - "
+"\"NoImport\": do not import an action whose UUID already exists, - \"Renumber"
+"\": allocate a new UUID if the imported UUID already exists, - \"Override\": "
+"override the existing action with the imported one, - \"Ask\": ask the user "
+"each time."
 msgstr ""
-"Spragtelėkite norėdami pasirinkti kitokią ikoną, nei duotosios šiame sąraše"
+"Paskutinė importavimo veiksena, pasirinktą iš importavimo pagalbininko. "
+"Galimo reikšmės : - „NoImport“: neimportuoti veiksmo, kurio UUID jau yra, - "
+"„Renumber“: išskirti naują UUID, jei importuojamas UUID jau yra, - "
+"„Override“: perrašyti esamą veiksmą importuojamu, - „Ask“: klausti naudotojo "
+"kiekvieną kartą."
 
-#: ../nact/nautilus-actions-config.glade.h:42
-#, fuzzy
-msgid "Click to remove the selected scheme."
-msgstr "Spragtelėkite norėdami pašalinti schemą"
+#: ../data/nautilus-actions-prefs.schemas.in.h:21
+msgid "Last selected folder"
+msgstr "Paskutinis pasirinktas aplankas"
 
-#: ../nact/nautilus-actions-config.glade.h:43
-#, fuzzy
+#: ../data/nautilus-actions-prefs.schemas.in.h:22
+msgid "List of default schemes"
+msgstr "Numatytųjų schemų sąrašas"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:23
+msgid "List of items at first level of the hierarchy"
+msgstr "Pirmojo hierarchijos lygmens elementų sąrašas"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:24
+msgid "Main pane position"
+msgstr "Pagrindinio polangio padėtis"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:25
+msgid "Position and size of the Legend dialog"
+msgstr "Legendos dialogo padėtis ir dydis"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:26
 msgid ""
-"Click to toggle the display of the list of special tokens you can use in the "
-"parameter field."
-msgstr ""
-"Spragtelėkite norėdami pamatyti specialių žymių, kurias galite naudoti "
-"parametrų laukelyje, sąrašą"
+"Position and size of the Legend dialog ; default is set by the UI manager."
+msgstr "Legendos dialogo padėtis ir dydis ; numatytuosius nustato UI valdyklė."
 
-#: ../nact/nautilus-actions-config.glade.h:44
-msgid "Conditions"
-msgstr "Sąlygos"
+#: ../data/nautilus-actions-prefs.schemas.in.h:27
+msgid "Position and size of the URI chooser window"
+msgstr "URI parinkėjo lango padėtis ir dydis"
 
-#: ../nact/nautilus-actions-config.glade.h:45
-msgid "Create a copy of the selected action."
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:46
+#: ../data/nautilus-actions-prefs.schemas.in.h:28
 msgid ""
-"Delete the action without any confirmation nor the possibility to restore it."
+"Position and size of the URI chooser window in the Folders tab ; default is "
+"set by the window manager."
 msgstr ""
+"URI parinkėjo lango padėtis ir dydis aplankų kortelėje ; numatytieji "
+"nustatomi langų tvarkyklės."
 
-#: ../nact/nautilus-actions-config.glade.h:47
-msgid "Duplicate"
-msgstr ""
+#: ../data/nautilus-actions-prefs.schemas.in.h:29
+msgid "Position and size of the command chooser window"
+msgstr "Komandų parinkėjo lango padėtis ir dydis"
 
-#: ../nact/nautilus-actions-config.glade.h:48
-msgid "Export existing configs"
-msgstr "Eksportuoti esamas konfigūracijos bylas"
-
-#: ../nact/nautilus-actions-config.glade.h:49
-#, fuzzy
-msgid "File to Import:"
-msgstr "Importuotina byla"
-
-#: ../nact/nautilus-actions-config.glade.h:50
-msgid "Filenames:"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:51
-msgid "Icon:"
-msgstr "Piktograma"
-
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../data/nautilus-actions-prefs.schemas.in.h:30
 msgid ""
-"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
-"will not match photo.JPG)"
+"Position and size of the command chooser window in the Command tab ; default "
+"is set by the window manager."
 msgstr ""
+"Komandų parinkėjo lango padėtis ir dydis komandų kortelėje ; numatytieji "
+"nustatomi langų tvarkyklės."
 
-#: ../nact/nautilus-actions-config.glade.h:53
-msgid "Import new configurations"
-msgstr "Importuoti naujas konfigūracijas"
+#: ../data/nautilus-actions-prefs.schemas.in.h:31
+msgid "Position and size of the export assistant window"
+msgstr "Eksportavimo pagalbininko lango padėtis ir dydis"
 
-#: ../nact/nautilus-actions-config.glade.h:54
-msgid "Import/Export"
-msgstr "Importuoti/eksportuoti"
-
-#: ../nact/nautilus-actions-config.glade.h:55
-msgid "Import/Export Settings"
-msgstr "Importuoti/eksportuoti nustatymus"
-
-#: ../nact/nautilus-actions-config.glade.h:56
-#, fuzzy
-msgid "Label of the menu item in the Nautilus popup menu."
-msgstr "Nautilus meniu punkto užrašas"
-
-#: ../nact/nautilus-actions-config.glade.h:57
-msgid "Label:"
-msgstr "Užrašas:"
-
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../data/nautilus-actions-prefs.schemas.in.h:32
 msgid ""
-"Manage importation of external action configurations and exportation of "
-"existing actions."
+"Position and size of the export assistant window ; default is set by the "
+"window manager."
 msgstr ""
+"Eksportavimo pagalbininko lango padėtis ir dydis ; numatytieji nustatomi "
+"langų tvarkyklės."
 
-#: ../nact/nautilus-actions-config.glade.h:59
-msgid "Match case"
-msgstr ""
+#: ../data/nautilus-actions-prefs.schemas.in.h:33
+msgid "Position and size of the import assistant window"
+msgstr "Importavimo pagalbininko lango padėtis ir dydis"
 
-#: ../nact/nautilus-actions-config.glade.h:60
-msgid "Mimetypes:"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:61
-msgid "Nautilus Action Editor"
-msgstr "Nautilus veiksmų redaktorius"
-
-#: ../nact/nautilus-actions-config.glade.h:62
-#, fuzzy
-msgid "Nautilus Action Profile Editor"
-msgstr "Nautilus veiksmų redaktorius"
-
-#: ../nact/nautilus-actions-config.glade.h:63
-msgid "Nautilus Actions"
-msgstr "Nautilus veiksmai"
-
-#: ../nact/nautilus-actions-config.glade.h:64
-#, fuzzy
+#: ../data/nautilus-actions-prefs.schemas.in.h:34
 msgid ""
-"Nautilus Actions Configuration Tool\n"
-"Application to configure Nautilus Action extension"
+"Position and size of the import assistant window ; default is set by the "
+"window manager."
 msgstr ""
-"Nautilus veiksmų konfigūravimo įrankis\n"
-"Programa Nautilus veiksmų išplėtimui konfigūruoti"
+"Importavimo pagalbininko lango padėtis ir dydis ; numatytieji nustatomi "
+"langų tvarkyklės."
 
-#: ../nact/nautilus-actions-config.glade.h:66
-msgid "Only files"
-msgstr "Tik bylos"
+#: ../data/nautilus-actions-prefs.schemas.in.h:35
+msgid "Position and size of the interaction dialog at import time"
+msgstr "Sąveikos dialogo padėtis ir dydis importavimo metu"
 
-#: ../nact/nautilus-actions-config.glade.h:67
-msgid "Only folders"
-msgstr "Tik aplankai"
-
-#: ../nact/nautilus-actions-config.glade.h:68
-#, fuzzy
+#: ../data/nautilus-actions-prefs.schemas.in.h:36
 msgid ""
-"Parameters that will be sent to the program. Click on the 'Legend' button to "
-"see the different replacement tokens."
+"Position and size of the interaction dialog at import time ; default is set "
+"by the window manager."
 msgstr ""
-"Parametrai, kurie bus nusiųsti programai. Norėdami pamatyti žymių sąrašą "
-"spragtelėkite mygtuką „Legenda“"
+"Sąveikos dialogo padėtis ir dydis importavimo metu ; numatytieji nustatomi "
+"langų tvarkyklės."
 
-#: ../nact/nautilus-actions-config.glade.h:69
-msgid "Parameters:"
-msgstr "Parametrai:"
+#: ../data/nautilus-actions-prefs.schemas.in.h:37
+msgid "Position and size of the main window"
+msgstr "Pagrindinio lango padėtis ir dydis"
 
-#: ../nact/nautilus-actions-config.glade.h:70
-msgid "Path:"
-msgstr "Kelias:"
-
-#: ../nact/nautilus-actions-config.glade.h:71
-msgid "Project Website"
-msgstr "Projekto svetainė"
-
-#: ../nact/nautilus-actions-config.glade.h:72
-#, fuzzy
-msgid "Save in Folder:"
-msgstr "Išsaugoti aplanke"
-
-#: ../nact/nautilus-actions-config.glade.h:73
-#, fuzzy
+#: ../data/nautilus-actions-prefs.schemas.in.h:38
 msgid ""
-"Select the configurations you want to export. Use Shift or Ctrl key to "
-"select more than one."
+"Position and size of the main window ; default is set by the window manager."
 msgstr ""
-"Pasirinkite norimas eksportuoti konfigūracijas. Norėdami pasirinkti keletą, "
-"naudokite Shift arba Ctrl klavišus."
+"Pagrindinio lango padėtis ir dydis ; numatytieji nustatomi langų tvarkyklės."
 
-#: ../nact/nautilus-actions-config.glade.h:74
-#, fuzzy
-msgid "Select the configurations you want to export:"
-msgstr "Pasirinkite eksportuotinas konfigūracijas:"
+#: ../data/nautilus-actions-prefs.schemas.in.h:39
+msgid "Position and size of the preferences dialog"
+msgstr "Nustatymų dialogo padėtis ir dydis"
 
-#: ../nact/nautilus-actions-config.glade.h:75
-msgid "Select the file you want to import."
-msgstr "Pasirinkite norimą importuoti bylą."
-
-#: ../nact/nautilus-actions-config.glade.h:76
-#, fuzzy
+#: ../data/nautilus-actions-prefs.schemas.in.h:40
 msgid ""
-"Select the folder you want your config to be saved in. This folder must "
-"exist."
+"Position and size of the preferences dialog ; default is set by the window "
+"manager."
 msgstr ""
-"Pasirinkite aplanką, kuriame norite išsaugoti savo konfigūraciją. Šis "
-"aplankas jau turi egzistuoti."
+"Nustatymų dialogo padėtis ir dydis ; numatytieji nustatomi langų tvarkyklės."
 
-#: ../nact/nautilus-actions-config.glade.h:77
-#, fuzzy
+#: ../data/nautilus-actions-prefs.schemas.in.h:41
+msgid "Preferred export format"
+msgstr "Pageidaujamas eksportavimo formatas"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:42
+msgid "Sort mode"
+msgstr "Rikiavimo režimas"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:43
 msgid ""
-"Select the kind of files where you want your action to appear. If you don't "
-"know what to choose, try selecting just 'file' which is the most common "
-"choice. You can add a new scheme by clicking on the '+' button."
+"The list of schemes proposed by default on each new profile. A default "
+"default list is harcoded in nautilus-actions-config-tool, which may be "
+"updated by the user."
 msgstr ""
-"Pasirinkite kokios rūšies byloms turėtų būti rodomas šis veiksmas. Jeigu "
-"nežinote ką pasirinkti, pabandykite pasirinkti tiesiog „file“. Naują schemą "
-"galite pridėti naują schemą paspaudę mygtuką „+“."
+"Kiekvienam naujam profiliui siūlomų numatytųjų schemų sąrašas. Numatytasis "
+"numatytųjų sąrašas yra įrašytas į nautilus-actions-config-tool, jį gali "
+"atnaujinti naudotojas."
 
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../data/nautilus-actions-prefs.schemas.in.h:44
+msgid ""
+"The order in which I/O providers are tested when we need to write a new item "
+"down to a storage subsystem."
+msgstr ""
+"Eilės tvarka,įvedimo/išvedimo tiekėjams testuoti, kai reikia įrašyti naują "
+"elementą į saugojimo posistemę."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:45
+msgid ""
+"The whole configuration must be understood here as the global set and order "
+"of menus and actions. When this configuration is locked, then the user is no "
+"more able to modify nor create or delete any menu or action. All items are "
+"read-only. As the order of items is also locked, the level zero itself "
+"cannot be modified, and the user is unable to reorder the items."
+msgstr ""
+"Visa konfigūracija turėtų būti suprantama kai visuotinė meniu ir veiksmų "
+"aibė. Kai konfigūracija yra užrakinta, naudotojas nebegali keisti, sukurti "
+"ar trinti jokio meniu ar veiksmo. Visi elementai yra tik skaitymui. Jei "
+"elementų eilės tvarka taip pat užrakinama, nulinis lygmuo taip pat negali "
+"būti pakeistas, todėl naudotojas negali perrikiuoti elementų."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:46
+msgid ""
+"This is the preferred export format, used as a default when exporting items, "
+"or dropping them outside of the application. Possible values are: - "
+"\"GConfSchemaV1\": this used to be the historical export format. The "
+"exported file may later be imported via Import assistant of the Nautilus "
+"Actions Configuration Tool, or via the gconftool-2 --import-schema-file "
+"command-line tool. - \"GConfSchemaV2\": a lighter while still compatible "
+"schema. The exported file may later be imported via Import assistant of the "
+"Nautilus Actions Configuration Tool, or via the gconftool-2 --import-schema-"
+"file command-line tool. - \"GConfEntry\": this should be the preferred "
+"format for newly exported actions. The exported file may later be imported "
+"via Import assistant of the Nautilus Actions Configuration Tool, or via the "
+"gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
+"runtime for the format he wishes use."
+msgstr ""
+"Tai yra pageidaujamas eksportavimo formatas, numatytai naudojamas "
+"eksportuojant elementus arba numetant juos už programos ribų. Galimos "
+"reikšmės: - „GConfSchemaV1“: buvo istorinis eksportavimo formatas. "
+"Eksportuotą failą vėliau galima importuoti naudojant Nautilus Actions "
+"Configuration Tool pagalbininką arba gconftool-2 --import-schema-file "
+"komandinės eilutės įrankį. - „GConfSchemaV2“: paprastesnė, bet vis dar "
+"suderinama schema. Eksportuotą failą vėliau galima importuoti naudojant "
+"Nautilus Actions Configuration Tool pagalbininką arba gconftool-2 --import-"
+"schema-file komandinės eilutės įrankį. „GConfEntry“: turėtų būti "
+"mėgiamiausias formatas naujai eksportuojamiems veiksmams. Eksportuotą failą "
+"vėliau galima importuoti naudojant Nautilus Actions Configuration Tool "
+"pagalbininką arba gconftool-2 --load command-line įrankį. - „Ask“: "
+"naudotojas vykdymo metu bus paklaustas, kokio formato pageidauja."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:47
+msgid ""
+"This preference indicates the preferred sort mode. Possible values are : - "
+"\"AscendingOrder\": the actions are maintained in ascending alphabetical "
+"order (historical behavior). - \"DescendingOrder\": the actions are "
+"maintained in descending alphabetical order. - \"ManualOrder\": user is free "
+"to reorder them via Nautilus-Actions configuration tool."
+msgstr ""
+"Šis nustatymas nurodo pageidaujamą rikiavimo tvarką. Galimos reikšmės: - "
+"„AscendingOrder“: veiksmai laikomi abėcėlės tvarka (istorinė elgsena). - "
+"„DescendingOrder“: veiksmai laikomi atvirkštine abėcėlės tvarka. - "
+"„ManualOrder“: naudotojas gali laisvai perrikiuoti juos naudodamas Nautilus-"
+"Actions configuration tool."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:48
+msgid ""
+"UUID of the items at the first level of the hierarchy. If this key is not "
+"found or empty, then all found items are considered as a flat list."
+msgstr ""
+"Pirmojo hierarchijos lygmens elementų UUID. Jei šis raktas nerastas arba yra "
+"tuščias, tuomet visi rasti elementai yra laikomi kaip plokščias sąrašas."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:49
+msgid ""
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, readen from .desktop files to being modified in "
+"NACT."
+msgstr ""
+"Jei nustatyta teigiama (greičiausiai kaip privalomas raktas), draudžia visų "
+"elementų, meniu ir veiksmų, nuskaitytų iš .desktop failo pakeitimą naudojant "
+"NACT."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:50
+msgid ""
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, readen from GConf to being modified in NACT."
+msgstr ""
+"Jei nustatyta teigiama (greičiausiai kaip privalomas raktas), draudžia visų "
+"elementų, meniu ir veiksmų, nuskaitytų iš GConf pakeitimą naudojant NACT."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:51
+msgid "Whether actions should be relabeled when pasted or duplicated"
+msgstr "Ar veiksmai turėtų būti pervadinami įdedant arba dubliuojant"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:52
+msgid "Whether actions should be relabeled when pasted or duplicated."
+msgstr "Ar veiksmai turėtų būti pervadinami įdedant arba dubliuojant."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:53
+msgid "Whether menus should be relabeled when pasted or duplicated"
+msgstr "Ar meniu turėtų būti pervadinami įdedant arba dubliuojant"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:54
+msgid "Whether menus should be relabeled when pasted or duplicated."
+msgstr "Ar meniu turėtų būti pervadinami įdedant arba dubliuojant."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:55
+msgid "Whether profiles should be relabeled when pasted or duplicated"
+msgstr "Ar profiliai turėtų būti pervadinami įdedant arba dubliuojant"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:56
+msgid "Whether profiles should be relabeled when pasted or duplicated."
+msgstr "Ar profiliai turėtų būti pervadinami įdedant arba dubliuojant."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:57
+msgid "Whether the Desktop I/O provider is locked"
+msgstr "Ar darbastalio įvedimo/išvedimo tiekėjas yra užrakintas"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:58
+msgid "Whether the Esc key should close the assistants"
+msgstr "Ar Esc klavišas turėtų užverti pagalbininkus"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:59
+msgid "Whether the GConf I/O provider is locked"
+msgstr "Ar GConf įvedimo/išvedimo tiekėjas yra užrakintas"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:60
+msgid "Whether the whole configuration is locked"
+msgstr "Ar visa konfigūracija yra užrakinta"
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:61
+msgid "Whether to display or not the Edit toolbar in the main window."
+msgstr "Ar rodyti keitimo įrankinę pagrindiniame lange."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:62
+msgid "Whether to display or not the File toolbar in the main window."
+msgstr "Ar rodyti failo įrankinę pagrindiniame lange."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:63
+msgid "Whether to display or not the Help toolbar in the main window."
+msgstr "Ar rodyti pagalbos įrankinę pagrindiniame lange."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:64
+msgid "Whether to display or not the Tools toolbar in the main window."
+msgstr "Ar rodyti įrankių įrankinę pagrindiniame lange."
+
+#: ../data/nautilus-actions-prefs.schemas.in.h:65
+msgid "Width of the main window pane ; default is set by the UI manager."
+msgstr "Pagrindinio polangio plotis ; numatytąjį nustato sąsajos valdyklė."
+
+#: ../src/core/na-exporter.c:157
+#, c-format
+msgid "NAIExporter %s doesn't implement 'to_buffer' interface."
+msgstr "NAIExporter %s nerealizuoja „to_buffer“ interfeiso."
+
+#: ../src/core/na-exporter.c:164 ../src/core/na-exporter.c:237
+#, c-format
+msgid "No NAIExporter implementation found for %s format."
+msgstr "Nerasta NAIExporter realizacija %s formatui."
+
+#: ../src/core/na-exporter.c:230
+#, c-format
+msgid "NAIExporter %s doesn't implement 'to_file' interface."
+msgstr "NAIExporter %s nerealizuoja „to_file“ interfeiso."
+
+#: ../src/core/na-iabout.c:176
+msgid ""
+"Nautilus Actions Configuration Tool is free software; you can redistribute "
+"it and/or modify it under the terms of the GNU General Public License as "
+"published by the Free Software Foundation; either version 2 of the License, "
+"or (at your option) any later version."
+msgstr ""
+"Nautilus Actions Configuration Tool yra laisva programinė įranga; Jūs galite "
+"jį platinti ir (arba) keisti pagal GNU Bendros Viešosios Licencijos, kaip "
+"pateikia Free Software Foundation, sąlygas; licencijos versija 2 arba (Jūsų "
+"pasirinkta) bet kuri vėlesnė."
+
+#: ../src/core/na-iabout.c:180
+msgid ""
+"Nautilus Actions Configuration Tool is distributed in the hope that it will "
+"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
+"Public License for more details."
+msgstr ""
+"Nautilus Actions Configuration Tool platinama, tikintis, kad ji bus "
+"naudinga, bet BE JOKIŲ GARANTIJŲ; net be numanomų PREKYBINIŲ ar TINKAMUMO "
+"KONKREČIAM TIKSLUI garantijų. Daugiau rasite GNU Bendroje Viešojoje "
+"Licencijoje."
+
+#: ../src/core/na-iabout.c:184
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"Nautilus Actions Configuration Tool ; if not, write to the Free Software "
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
+"USA."
+msgstr ""
+"Jūs turėjote gauti GNU Bendros Viešosios Licencijos kopiją kartu su Nautilus "
+"Actions Configuration Tool ; jei negavote, parašykite Free Software "
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
+"USA."
+
+#: ../src/core/na-iabout.c:206
+msgid "A graphical interface to create and edit your Nautilus actions."
+msgstr "Grafinė sąsaja Nautilus veiksmams kurti bei keisti."
+
+#: ../src/core/na-iabout.c:212
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr ""
+msgstr "GNOME vertimo projektas <gnome-i18n@gnome.org>"
 
-#: ../nact/nautilus-actions-config.glade.h:80
-#, fuzzy
-msgid ""
-"The command that will be launched by selecting the action in Nautilus popup "
-"menu."
-msgstr "Komanda, kuri bus paleista, pasirinkus veiksmą Nautiliaus meniu"
-
-#: ../nact/nautilus-actions-config.glade.h:81
-msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr ""
-"Ši programa yra išleista GNU Bendrosios viešosios licencijos (GPL) sąlygomis"
-
-#: ../nact/nautilus-actions-config.glade.h:82
-#, fuzzy
-msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr "Meniu punkto paaiškinimas, kuris bus rodomas Nautilus būsenos juostoje"
-
-#: ../nact/nautilus-actions-config.glade.h:83
-msgid "Tooltip:"
-msgstr "Paaiškinimas:"
-
-#: ../nact/nautilus-actions-config.glade.h:84
-msgid "_Browse"
-msgstr "_Naršyti"
-
-#: ../nact/nautilus-actions-config.glade.h:85
-msgid "_Legend"
-msgstr ""
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact.c:163
-#, fuzzy, c-format
-msgid "Can't duplicate action '%s'!"
-msgstr "Nepavyko įrašyti duomenų byloje %s\n"
-
-#. create columns on the tree view
-#: ../nact/nact.c:277 ../nact/nact-import-export.c:162
-msgid "Icon"
-msgstr "Piktograma"
-
-#: ../nact/nact.c:282 ../nact/nact-import-export.c:167
-msgid "Label"
-msgstr "Užrašas"
-
-#: ../nact/nact.c:303 ../nact/nact-editor.c:628
-#: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
-msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr "Nepavyko įkelti Nautilus veiksmų konfigūravimo įrankio sąsajos"
-
-#. i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:185
-msgid "/path/to"
-msgstr "/kelias/iki"
-
-#: ../nact/nact-utils.c:186 ../nact/nact-utils.c:188
-msgid "file1.txt"
-msgstr "byla1.txt"
-
-#: ../nact/nact-utils.c:186
-msgid "file2.txt"
-msgstr "byla2.txt"
-
-#: ../nact/nact-utils.c:187 ../nact/nact-utils.c:188
-msgid "folder1"
-msgstr "aplankas1"
-
-#: ../nact/nact-utils.c:187
-msgid "folder2"
-msgstr "aplankas2"
-
-#: ../nact/nact-utils.c:190
-msgid "test.example.net"
-msgstr "tai.pavyzdys.net"
-
-#: ../nact/nact-utils.c:191
-msgid "file.txt"
-msgstr "byla.txt"
-
-#: ../nact/nact-utils.c:192
-msgid "folder"
-msgstr "aplankas"
-
-#. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:168
-msgid "None"
-msgstr "Jokios"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:449
-#, fuzzy, c-format
-msgid "Can't copy action's profile '%s'!"
-msgstr "Nepavyko įrašyti duomenų byloje %s\n"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:474
-#, fuzzy, c-format
-msgid "Can't paste action's profile '%s'!"
-msgstr "Nepavyko įrašyti duomenų byloje %s\n"
-
-#. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:479
-#, c-format
-msgid "%s Copy"
-msgstr ""
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:539
-#, fuzzy, c-format
-msgid "Can't delete action's profile '%s'!"
-msgstr "Nepavyko įrašyti duomenų byloje %s\n"
-
-#: ../nact/nact-editor.c:591
-msgid "Profile Name"
-msgstr ""
-
-#: ../nact/nact-editor.c:644
-msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr "Nautiliaus meniu punkto piktograma"
-
-#: ../nact/nact-editor.c:666
-msgid "Add a New Action"
-msgstr "Pridėti naują veiksmą"
-
-#: ../nact/nact-editor.c:670
-#, c-format
-msgid "Edit Action \"%s\""
-msgstr "Keisti veiksmą „%s“"
-
-#: ../nact/nact-import-export.c:205
-#, c-format
-msgid "Can't parse file '%s' as GConf schema description file!"
-msgstr ""
-
-#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:226
-#, c-format
-msgid "Action '%s' importation failed!"
-msgstr ""
-
-#. initialize the default schemes
-#. i18n notes : description of 'file' scheme
-#: ../nact/nact-prefs.c:164
-#, c-format
-msgid "%sLocal Files"
-msgstr "%sVietinės bylos"
-
-#. i18n notes : description of 'sftp' scheme
-#: ../nact/nact-prefs.c:166
-#, c-format
-msgid "%sSSH Files"
-msgstr "%sSSH bylos"
-
-#. i18n notes : description of 'smb' scheme
-#: ../nact/nact-prefs.c:168
-#, c-format
-msgid "%sWindows Files"
-msgstr "%sWindows bylos"
-
-#. i18n notes : description of 'ftp' scheme
-#: ../nact/nact-prefs.c:170
-#, c-format
-msgid "%sFTP Files"
-msgstr "%sFTP bylos"
-
-#. i18n notes : description of 'dav' scheme
-#: ../nact/nact-prefs.c:172
-#, c-format
-msgid "%sWebdav Files"
-msgstr "%sWebdav bylos"
-
-#. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-profile-editor.c:243
-msgid "new-scheme"
-msgstr "nauja schema"
-
-#: ../nact/nact-profile-editor.c:244
-msgid "New Scheme Description"
-msgstr "Naujos schemos aprašymas"
-
-#: ../nact/nact-profile-editor.c:329
-msgid "Scheme"
-msgstr "Schema"
-
-#: ../nact/nact-profile-editor.c:341
-msgid "Description"
-msgstr "Aprašymas"
-
-#: ../nact/nact-profile-editor.c:532
-#, fuzzy
-msgid "Add a New Profile"
-msgstr "Pridėti naują veiksmą"
-
-#: ../nact/nact-profile-editor.c:536
-#, fuzzy, c-format
-msgid "Edit Profile \"%s\""
-msgstr "Keisti veiksmą „%s“"
-
-#. GConf description strings :
-#: ../utils/nautilus-actions-new-config.c:49
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
-msgid "The label of the menu item"
-msgstr "Meniu punkto užrašas"
-
-#: ../utils/nautilus-actions-new-config.c:49
-msgid "LABEL"
-msgstr "UŽRAŠAS"
-
-#: ../utils/nautilus-actions-new-config.c:50
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
-msgid "The tooltip of the menu item"
-msgstr "Meniu punkto paaiškinimas"
-
-#: ../utils/nautilus-actions-new-config.c:50
-msgid "TOOLTIP"
-msgstr "PAAIŠKINIMAS"
-
-#: ../utils/nautilus-actions-new-config.c:51
-#, fuzzy
-msgid "The icon of the menu item (filename or GTK stock ID)"
-msgstr "Meniu punkto ikona (bylos vardas arba Gtk standartinis id)"
-
-#: ../utils/nautilus-actions-new-config.c:51
-msgid "ICON"
-msgstr "IKONA"
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
-msgid "The path of the command"
-msgstr "Komandos kelias"
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../utils/nautilus-actions-new-config.c:61
-msgid "PATH"
-msgstr "KELIAS"
-
-#: ../utils/nautilus-actions-new-config.c:53
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
-msgid "The parameters of the command"
-msgstr "Komandos parametrai"
-
-#: ../utils/nautilus-actions-new-config.c:53
-msgid "PARAMS"
-msgstr "PARAMETRAI"
-
-#: ../utils/nautilus-actions-new-config.c:54
-#, fuzzy
-msgid ""
-"A pattern to match selected files against. May include wildcards (* or ?) "
-"(you must set one option for each pattern you need)"
-msgstr ""
-"Šablonas, kurį turėtų atitikti bylos. Galima naudoti ženklus „?“ arba "
-"„*“ (turite tai nurodyti kiekvienam šablonui)"
-
-#: ../utils/nautilus-actions-new-config.c:54
-#: ../utils/nautilus-actions-new-config.c:56
-msgid "EXPR"
-msgstr "IŠRAIŠKA"
-
-#: ../utils/nautilus-actions-new-config.c:56
-#, fuzzy
-msgid ""
-"A pattern to match selected files' mimetype against. May include wildcards "
-"(* or ?) (you must set one option for each pattern you need)"
-msgstr ""
-"Šablonas, kurį turėtų atitikti bylos. Galima naudoti ženklus „?“ arba "
-"„*“ (turite tai nurodyti kiekvienam šablonui)"
-
-#: ../utils/nautilus-actions-new-config.c:57
-msgid "Set it if the selection can contain files"
-msgstr "Nustatykite jeigu galima pasirinkti bylas"
-
-#: ../utils/nautilus-actions-new-config.c:58
-msgid "Set it if the selection can contain folders"
-msgstr "Nustatykite jeigu galima pasirinkti aplankus"
-
-#: ../utils/nautilus-actions-new-config.c:59
-msgid "Set it if the selection can have several items"
-msgstr "Nustatykite jeigu galima pasirinkti keletą elementų"
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid ""
-"A GnomeVFS scheme where the selected files should be located (you must set "
-"it for each scheme you need)"
-msgstr ""
-"GnomeVFS schema, kur turi būti pasirinktos bylos (turite tai nurodyti "
-"kiekvienai reikiamai schemai)"
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid "SCHEME"
-msgstr "SCHEMA"
-
-#: ../utils/nautilus-actions-new-config.c:61
-msgid ""
-"The path of the file where to save the new GConf schema definition file "
-"[default: /tmp/config_UUID.schemas]"
-msgstr ""
-"Bylos kelias, kur išsaugoti naują GConf schemos aprašymo bylą [numatytasis: /"
-"tmp/config_UUID.schemas]"
-
-#: ../utils/nautilus-actions-new-config.c:100
+#: ../src/core/na-iabout.c:253
 #, c-format
 msgid ""
-"Syntax error:\n"
-"\t- %s\n"
-"Try %s --help\n"
+"Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
-"Sintaksės klaida:\n"
-"\t- %s\n"
-"Pabandykite %s --help\n"
+"Autorinės teisės %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"Autorinės teisės %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 
-#: ../utils/nautilus-actions-new-config.c:152
-#, fuzzy, c-format
-msgid "Creating %s..."
-msgstr "Kuriama %s..."
-
-#: ../utils/nautilus-actions-new-config.c:171
-#, fuzzy, c-format
-msgid " Failed: Can't create %s: %s\n"
-msgstr " Nepavyko: negalima sukurti %s: %s\n"
-
-#: ../utils/nautilus-actions-new-config.c:180
-#, fuzzy, c-format
-msgid "  OK, saved in %s\n"
-msgstr "  Gerai, išsaugota %s\n"
-
-#: ../utils/nautilus-actions-new-config.c:185
-#, fuzzy, c-format
-msgid " Failed: %s\n"
-msgstr "  Nepavyko\n"
-
-#: ../utils/nautilus-actions-tools-utils.c:48
-#, c-format
-msgid "Can't write data in file %s\n"
-msgstr "Nepavyko įrašyti duomenų byloje %s\n"
-
-#: ../utils/nautilus-actions-tools-utils.c:54
-#, c-format
-msgid "Can't open file %s for writing\n"
-msgstr "Nepavyko atverti bylos %s rašymui\n"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
-msgid ""
-"The label of the menu item that will appear in the Nautilus popup menu when "
-"the selection matches the appearance condition settings"
-msgstr ""
-"Nautiliaus meniu elemento punkto užrašas rodomas, kai pasirinkimas atitinka "
-"sąlygų nustatymus"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
-msgid ""
-"The tooltip of the menu item that will appear in the Nautilus statusbar when "
-"the user points to the Nautilus popup menu item with his/her mouse"
-msgstr ""
-"Meniu punkto paaiškinimas, kuris bus rodomas Nautilus būsenos juostoje, kai "
-"naudotojas užves pelės kursorių virš to Nautilus meniu punkto"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
-msgid "The icon of the menu item"
-msgstr "Meniu punkto piktograma"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
-msgid ""
-"The icon of the menu item that will appear next to the label in the Nautilus "
-"popup menu when the selection matches the appearance conditions settings"
-msgstr ""
-"Meniu punkto piktograma, kuri bus rodoma Nautiliaus meniu, šalia užrašo, kai "
-"pasirinkti elementai atitiks išvaizdos kriterijus"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
-msgid "A description name of the profile"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
-msgid ""
-"The field is here to give the user a human readable name for a profile in "
-"the Nact interface. If not set there will be a default auto generated string "
-"set by default"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
-msgid ""
-"The path of the command to start when the user select the menu item in the "
-"Nautilus popup menu"
-msgstr ""
-"Paleidžiamos komandos, kuri bus vykdoma naudotojui pasirinkus atitinkamą "
-"Nautilus meniu punktą, kelias"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
-#, fuzzy
-msgid ""
-"The parameters of the command to start when the user selects the menu item "
-"in the Nautilus popup menu.\n"
-"\n"
-"The parameters can contain some special tokens which are replaced by "
-"Nautilus information before starting the command:\n"
-"\n"
-"%d: base folder of the selected file(s)\n"
-"%f: the name of the selected file or the first one if many are selected\n"
-"%m: space-separated list of the basenames of the selected file(s)/folder(s)\n"
-"%M: space-separated list of the selected file(s)/folder(s), with their full "
-"paths\n"
-"%u: GnomeVFS URI\n"
-"%s: scheme of the GnomeVFS URI\n"
-"%h: hostname of the GnomeVFS URI\n"
-"%U: username of the GnomeVFS URI\n"
-"%%: a percent sign"
-msgstr ""
-"Naudotojui pasirinkus Nautiliaus meniu elementą paleidžiamos komandos "
-"parametrai.\n"
-"\n"
-"Parametruose gali būti keletas specialių žymių, kurias Nautilius pakeičia "
-"prieš paleisdamas komandą:\n"
-"\n"
-"%d: bazinis pasirinktų bylų aplankas\n"
-"%f: pasirinktos bylos vardas, arba jei pasirinkta keletas bylų - pirmosios\n"
-"bylos vardas\n"
-"%m: kableliais atskirtų bazinių pasirinktų bylų/aplankų sąrašas\n"
-"%M: kableliais atskirtų pasirinktų bylų/aplankų sąrašas su jų pilnais "
-"keliais\n"
-"%u: gnome-vfs URI\n"
-"%s: gnome-vfs URI schema\n"
-"%h: gnome-vfs URI kompiuterio vardas\n"
-"%U: gnome-vfs URI naudotojo vardas\n"
-"%%: procento ženklas"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
-msgid "The list of pattern to match the selected file(s)/folder(s)"
+#: ../src/core/na-icontextual-factory.c:47
+msgid "List of patterns to be matched against the selected file(s)/folder(s)"
 msgstr "Šablonų atitinkančių pasirinktą bylą(as)/aplanką(us) sąrašas"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
-#, fuzzy
+#: ../src/core/na-icontextual-factory.c:48
 msgid ""
-"A list of strings with joker '*' or '?' to match the name of the selected "
-"file(s)/folder(s). Each selected items must match at least one of the "
-"filename patterns for the action to appear"
+"A list of strings with joker '*' or '?' to be matched against the name(s) of "
+"the selected file(s)/folder(s). Each selected items must match at least one "
+"of the filename patterns for the action or the menu be candidate to "
+"display.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*'."
 msgstr ""
 "Užrašų su ženklais „*“ arba „*“, kurie naudojami pasirinktų bylų/aplankų "
 "atitikimui, sąrašas. Kiekvienas pasirinktas elementas turi atitikti bent "
-"vieną iš šių šablonų, kad veiksmas būtų rodomas"
+"vieną iš šių šablonų, kad veiksmas arba meniu būtų tinkamas rodymui.\n"
+"Žinoma, tai taikoma tik jei yra kas nors pasirinkta.\n"
+"Numatyta „*“."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-#, fuzzy
+#: ../src/core/na-icontextual-factory.c:65
 msgid ""
-"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr "teigiama, jei galima pasirinkti keletą elementų, kitu atveju neigiama"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
-#, fuzzy
-msgid ""
-"If you need to match a filename in a case-sensitive manner, set this key to "
-"'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
-"'false'"
+"A pattern to be matched against basenames of selected file(s)/folder(s). May "
+"include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr ""
-"Jeigu Jums reikia pasirinkti vieną ar daugiau bylų ar aplankų, nustatykite "
-"šio rakto reikšmę į teigiamą. Jeigu norite pasirinkti tik vieną bylą ar "
-"aplanką, nustatykite į neigiamą."
+"Šablonas, kurį turėtų atitikti bylų/aplankų keliai. Galima naudoti ženklus "
+"„?“ arba „*“, Turite tai nurodyti parinktį  kiekvienam šablonui"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
-#, fuzzy
-msgid "The list of patterns to match the mimetypes of the selected file(s)"
-msgstr "Šablonų, atitinkančių pažymėtas bylas/aplankus, sąrašas"
+#: ../src/core/na-icontextual-factory.c:68
+#: ../src/core/na-icontextual-factory.c:119
+msgid "<EXPR>"
+msgstr "<EXPR>"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
-#, fuzzy
-msgid ""
-"A list of strings with joker '*' or '?' to match the mimetypes of the "
-"selected file(s). Each selected items must match at least one of the "
-"mimetype patterns for the action to appear"
+#: ../src/core/na-icontextual-factory.c:74
+msgid "Whether the specified basenames are case sensitive (default)"
 msgstr ""
-"Užrašų su ženklais „*“ arba „*“, kurie naudojami pasirinktų bylų/aplankų "
-"atitikimui, sąrašas. Kiekvienas pasirinktas elementas turi atitikti bent "
-"vieną iš šių šablonų, kad veiksmas būtų rodomas"
+"Ar pasirinktiems keliams skiriamos didžiosios ir mažosios raidės (numatyta)"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
-#, fuzzy
+#: ../src/core/na-icontextual-factory.c:75
 msgid ""
-"The valid combinations are:\n"
-"\n"
+"Must be set to 'true' if the filename patterns are case sensitive, to "
+"'false' otherwise. E.g., if you need to match a filename in a case-sensitive "
+"manner, set this key to 'true'. If you also want, for example '*.jpg' to "
+"match 'photo.JPG', then set 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
+msgstr ""
+"Nustatykite į teigiamą, jei failų šablonams reikia skirti didžiąsias ir "
+"mažąsias raides, neigiamą priešingu atveju. Pvz., jeigu jums reikia rasti "
+"failą skiriant raidžių dydį, nustatykite šį raktą į teigiamą. Jeigu norite, "
+"kad pvz. „*.jpg“ tai pat rastų ir „fotografija.JPG“, tuomet nustatykite į "
+"neigiamą.\n"
+"Žinoma, tai galioje tik jei yra kas nors pasirinkta.\n"
+"Numatyta teigiama."
+
+#: ../src/core/na-icontextual-factory.c:99
+msgid ""
+"List of patterns to be matched against the mimetypes of the selected file(s)/"
+"folder(s)"
+msgstr "Šablonų sąrašas pažymėtų failų/aplankų MIME tipams"
+
+#: ../src/core/na-icontextual-factory.c:100
+msgid ""
+"A list of strings with joker '*' to be matched against the mimetypes of the "
+"selected file(s)/folder(s). Each selected items must match at least one of "
+"the mimetype patterns for the action to appear.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*'."
+msgstr ""
+"Užrašų su ženklais „*“, kurie naudojami pasirinktų failų/aplankų atitikimui "
+"pagal MIME tipus, sąrašas. Kiekvienas pasirinktas elementas turi atitikti "
+"bent vieną iš šių šablonų, kad veiksmas būtų rodomas.\n"
+"Tai žinoma galioja tik jei kas nors yra pasirinkta.\n"
+"Numatyta „*“."
+
+#: ../src/core/na-icontextual-factory.c:116
+msgid ""
+"A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
+"include wildcards (* or ?). You must set one option for each pattern you need"
+msgstr ""
+"Šablonas, kurį turėtų atitikti failų MIME tipai. Galima naudoti ženklus „?“ "
+"arba „*“. Turite tai nurodyti kiekvienam šablonui."
+
+#: ../src/core/na-icontextual-factory.c:125
+msgid "Whether the profile applies to files"
+msgstr "Ar profilis taikomas failams"
+
+#: ../src/core/na-icontextual-factory.c:126
+msgid ""
+"Set to 'true' if the selection can have files, to 'false' otherwise.\n"
+"This setting is tied in with the 'isdir' setting. The valid combinations "
+"are: \n"
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
 "isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-"configuration will never appear)"
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
 msgstr ""
-"Čia yra tinkamos kombinacjos:\n"
-"\n"
-"- „isfile“ yra „true“ ir „isdir“ yra „false“: galima pasirinkti tik bylas\n"
-"- „isfile“ yra „false“ ir „isdir“ yra „true“: galima pasirinkti tik "
-"aplankus\n"
-"- „isfile“ yra „true“ ir „isdir“ yra „true“: galima pasirinkti ir bylas, ir "
-"aplankus\n"
-"- „isfile“ yra „false“ ir „isdir“ yra „false“: netinkama kombinacija"
+"Nustatykite teigiamą, jei pažymėjimas gali turėti failų, priešingu atveju "
+"nustatykite neigiamą.\n"
+"Nustatymas yra susijęs su „isdir“ nustatymu. Tinkamos kombinacijos:\n"
+"isfile=TRUE ir isdir=FALSE: galima pasirinkti tik failus\n"
+"isfile=FALSE ir isdir=TRUE: galima pasirinkti tik aplankus\n"
+"isfile=TRUE ir isdir=TRUE: galima pasirinkti ir bylas, ir aplankus\n"
+"isfile=FALSE ir isdir=FALSE: netinkama kombinacija (konfigūracija niekada "
+"nepasirodys).\n"
+"Tai žinoma yra taikoma tik jei kas nors pasirinkta.\n"
+"Numatyta teigiama."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
-msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr "teigiama, jei galima pasirinkti keletą bylų, kitu atveju neigiama"
+#: ../src/core/na-icontextual-factory.c:153
+msgid "Whether the profile applies to folders"
+msgstr "Ar profilis taikomas aplankams"
 
-#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
-#, fuzzy
-msgid "This setting is tied in with the 'isdir' setting. "
-msgstr "Šis nustatymas susietas su „isdir“ nustatymu."
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
-msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr "teigiama, jei galima pasirinkti aplankus, kitu atveju neigiama"
-
-#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
-#, fuzzy
-msgid "This setting is tied in with the 'isfile' setting. "
-msgstr "Šis nustatymas susietas su „isfile“ nustatymu."
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
-msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr "teigiama, jei galima pasirinkti keletą elementų, kitu atveju neigiama"
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
+#: ../src/core/na-icontextual-factory.c:154
 msgid ""
-"If you need one or more files or folders to be selected, set this key to "
-"'true'. If you want just one file or folder, set 'false'"
+"Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
+"This setting is tied in with the 'isfile' setting. The valid combinations "
+"are: \n"
+"isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
+"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
+"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
 msgstr ""
-"Jeigu Jums reikia pasirinkti vieną ar daugiau bylų ar aplankų, nustatykite "
-"šio rakto reikšmę į teigiamą. Jeigu norite pasirinkti tik vieną bylą ar "
-"aplanką, nustatykite į neigiamą."
+"Nustatykite teigiamą, jei pažymėjimas gali turėti aplankų, priešingu atveju "
+"nustatykite neigiamą.\n"
+"Nustatymas yra susijęs su „isfile“ nustatymu. Tinkamos kombinacijos:\n"
+"isfile=TRUE ir isdir=FALSE: galima pasirinkti tik failus\n"
+"isfile=FALSE ir isdir=TRUE: galima pasirinkti tik aplankus\n"
+"isfile=TRUE ir isdir=TRUE: galima pasirinkti ir bylas, ir aplankus\n"
+"isfile=FALSE ir isdir=FALSE: netinkama kombinacija (konfigūracija niekada "
+"nepasirodys).\n"
+"Tai žinoma yra taikoma tik jei kas nors pasirinkta.\n"
+"Numatyta teigiama."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:99
-msgid "The list of GnomeVFS schemes where the selected files should be located"
-msgstr "GnomeVFS schemų, kur turėtų būti pažymėtos bylos, sąrašas"
+#: ../src/core/na-icontextual-factory.c:181
+msgid "Whether the selection may be multiple"
+msgstr "Ar galima žymėti daugiau nei vieną"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:100
-#, fuzzy
+#: ../src/core/na-icontextual-factory.c:182
 msgid ""
-"Defines the list of valid GnomeVFS schemes to be matched against the "
-"selected items. The GnomeVFS scheme is the protocol used to access the "
-"files. The keyword to use is the one used in the GnomeVFS URI.\n"
-"\n"
-"Examples of GnomeVFS URI include: \n"
-"file:///tmp/foo.txt\n"
-"sftp:///root@test.example.net/tmp/foo.txt\n"
-"\n"
+"If you need more than one files or folders to be selected, set this key to "
+"'true'. If you want just one file or folder, set it to 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
+msgstr ""
+"Jeigu Jums reikia pasirinkti vieną ar daugiau failų ar aplankų, nustatykite "
+"šio rakto reikšmę į teigiamą. Jeigu norite pasirinkti tik vieną failą ar "
+"aplanką, nustatykite į neigiamą.\n"
+"Tai žinoma yra taikoma tik jei kas nors pasirinkta.\n"
+"Numatyta teigiama."
+
+#: ../src/core/na-icontextual-factory.c:204
+msgid ""
+"List of schemes to be matched against those of selected file(s)/folder(s)"
+msgstr "Schemų sąrašas pritaikymui pažymėtiems failams/aplankams."
+
+#. too long string for iso c: 510 (max=509)
+#: ../src/core/na-icontextual-factory.c:206
+msgid ""
+"Defines the list of valid schemes to be matched against the selected items. "
+"The scheme is the protocol used to access the files. The keyword to use is "
+"the one used in the URI by the file manager.\n"
+"Examples of valid URI include:\n"
+"- file:///tmp/foo.txt\n"
+"- sftp:///root@test.example.net/tmp/foo.txt\n"
 "The most common schemes are:\n"
-"\n"
 "'file': local files\n"
 "'sftp': files accessed via SSH\n"
 "'ftp': files accessed via FTP\n"
 "'smb': files accessed via Samba (Windows share)\n"
-"'dav': files accessed via WebDav\n"
-"\n"
-"All GnomeVFS schemes used by Nautilus can be used here."
+"'dav': files accessed via WebDAV.\n"
+"All schemes used by your favorite file manager may be used here.\n"
+"This obviously only applies when there is a selection, or when targeting the "
+"special 'x-nautilus-desktop' scheme.\n"
+"Defaults to 'file'."
 msgstr ""
-"Nurodo tinkamų GnomeVFS schemų sąrašą atitinkančių pasirinktus elementus. "
-"GnomeVFS schema, tai protokolas naudojamas pasiekti byloms. Naudotinas "
-"raktažodis toks koks naudojamas GnomeVFS URI.\n"
-"\n"
-"GnomeVFS URI pavyzdys:\n"
-"file:///tmp/foo.txt\n"
+"Nurodo tinkamų schemų sąrašą pritaikymui pasirinktiems elementams. Schema, "
+"tai protokolas, naudojamas pasiekti byloms. Naudotinas raktažodis toks, koks "
+"naudojamas failų tvarkyklės URI.\n"
+"Tinkamo URI pavyzdžiai:\n"
+"- file:///tmp/foo.txt\n"
 "sftp:///root@tai.pavyzdys.net/tmp/foo.txt\n"
-"\n"
 "Dažniausiai naudojamos schemos:\n"
-"\n"
 "„file“: vietinės bylos\n"
 "„sftp“: bylos prieinamos per SSH\n"
 "„ftp“: bylos prieinamos per FTP\n"
-"„smb“: bylos prieinamos per Samba (Windows viešinys)\n"
+"„smb“: bylos prieinamos per Samba (Windows dalijamas katalogas)\n"
 "„dav“: bylos prieinamos per WebDav\n"
-"\n"
-"Čia gali būti visos Nautiliaus naudojamos GnomeVFS schemos."
+"Visos jūsų failų tvarkyklės naudojamos schemos čia gali būti naudojamos.\n"
+"Tai žinoma galioja tik jei kas nors yra pasirinkta arba kai taikoma speciali "
+"„x-nautilus-desktop“ schema.\n"
+"Numatyta „file“."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:101
-msgid "The version of the configuration format"
-msgstr "Konfigūracijos formato versija"
+#: ../src/core/na-icontextual-factory.c:233
+msgid ""
+"A valid GIO scheme where the selected file(s)/folder(s) should be located. "
+"You must set one option for each scheme you need"
+msgstr ""
+"Tinkama GIO schema, kur turi būti surasti pasirinkti failai/aplankai. Turite "
+"tai nurodyti kiekvienai reikiamai schemai."
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:102
+#: ../src/core/na-icontextual-factory.c:235
+#: ../src/core/na-object-action-factory.c:158
+#: ../src/core/na-object-item-factory.c:94
+#: ../src/core/na-object-item-factory.c:116
+#: ../src/core/na-object-profile-factory.c:121
+#: ../src/utils/nautilus-actions-run.c:60
+msgid "<STRING>"
+msgstr "<STRING>"
+
+#: ../src/core/na-icontextual-factory.c:241
+msgid "List of folders"
+msgstr "Aplankų sąrašas"
+
+#: ../src/core/na-icontextual-factory.c:242
+msgid ""
+"Defines the list of valid paths to be matched against the current folder.\n"
+" All folders 'under' the specified path are considered valid.\n"
+"Defaults to '/'."
+msgstr ""
+"Apibrėžia tinkamų kelių sąrašą, pritaikymui esamam aplankui.\n"
+" Visi aplankai nurodyti kelio viduje yra laikomi tinkamais.\n"
+"Numatyta „/“."
+
+#: ../src/core/na-icontextual-factory.c:256
+msgid ""
+"The path of a (parent) directory for which the item will be displayed. You "
+"must set one option for each folder you need"
+msgstr ""
+"(Tėvinio) aplanko kelias, kuriam elementas bus rodomas. Turite pasirinkti "
+"kiekvienam reikiamam aplankui."
+
+#: ../src/core/na-icontextual-factory.c:258
+#: ../src/core/na-object-profile-factory.c:86
+#: ../src/utils/nautilus-actions-new.c:132
+msgid "<PATH>"
+msgstr "<PATH>"
+
+#: ../src/core/na-importer-ask.c:292
+#, c-format
+msgid ""
+"The action \"%s\" imported from \"%s\" has the same identifiant than the "
+"already existing \"%s\"."
+msgstr ""
+"Veiksmas „%s“, importuotas iš „%s“ turi tą patį identifikatorių kaip ir jau "
+"esamas „%s“."
+
+#: ../src/core/na-importer-ask.c:298
+#, c-format
+msgid ""
+"The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+"already existing \"%s\"."
+msgstr ""
+"Meniu „%s“, importuotas iš „%s“, turi tą patį identifikatorių kaip ir jau "
+"esamas „%s“."
+
+#: ../src/core/na-io-provider.c:1253
+msgid "Item is read-only."
+msgstr "Elementas yra tik skaitymui."
+
+#: ../src/core/na-io-provider.c:1257
+msgid "I/O provider is not willing to write."
+msgstr "Įvedimo/išvedimo tiekėjas nerašo."
+
+#: ../src/core/na-io-provider.c:1261
+msgid "No writable I/O provider found."
+msgstr "Nerastas rašomas įvedimo/išvedimo tiekėjas."
+
+#: ../src/core/na-io-provider.c:1265
+msgid "I/O provider has been locked down by an administrator."
+msgstr "Įvedimo/išvedimo tiekėją užrakino sistemos administratorius."
+
+#: ../src/core/na-io-provider.c:1269
+msgid "I/O provider has been locked down by the user."
+msgstr "Įvedimo/išvedimo tiekėją užrakino kitas naudotojas."
+
+#: ../src/core/na-io-provider.c:1273
+msgid "I/O provider implementation lacks of required API."
+msgstr "Įvedimo/išvedimo tiekėjui trūksta reikiamo API realizacijos."
+
+#: ../src/core/na-io-provider.c:1277
+msgid "The whole configuration has been locked down by an administrator."
+msgstr "Visa konfigūracija užrakinta sistemos administratoriaus."
+
+#: ../src/core/na-io-provider.c:1286
+#, c-format
+msgid ""
+"Item is not writable for an unknown reason (%d).\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+msgstr ""
+"Elementas nerašomas dėl nežinomos priežasties (%d).\n"
+"Praneškite apie klaidą http://bugzilla.gnome.org."
+
+#: ../src/core/na-io-provider.c:1310
+msgid "OK."
+msgstr "Sėkminga."
+
+#: ../src/core/na-io-provider.c:1314
+msgid ""
+"Program flow error.\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+msgstr ""
+"Programos tėkmės klaida.\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+
+#: ../src/core/na-io-provider.c:1319
+msgid "The I/O provider is not willing to do that."
+msgstr "Įvedimo/išvedimo tiekėjas to neatlieka."
+
+#: ../src/core/na-io-provider.c:1323
+msgid "Write error in I/O provider."
+msgstr "Rašymo klaida įvedimo/išvedimo tiekėjuje."
+
+#: ../src/core/na-io-provider.c:1327
+msgid "Unable to delete GConf schemas."
+msgstr "Nepavyko ištrinti GConf schemų."
+
+#: ../src/core/na-io-provider.c:1331
+msgid "Unable to delete configuration."
+msgstr "Nepavyko ištrinti konfigūracijos."
+
+#: ../src/core/na-io-provider.c:1335
+#, c-format
+msgid ""
+"Unknow return code (%d).\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+msgstr ""
+"Nežinomas pabaigos kodas (%d).\n"
+"Praneškite apie klaidą http://bugzilla.gnome.org."
+
+#. i18n: default label for a new action
+#: ../src/core/na-object-action.c:59
+msgid "New Nautilus action"
+msgstr "Naujas Nautilus veiksmas"
+
+#: ../src/core/na-object-action.c:429
+msgid "Profile automatically created from pre-v2 action"
+msgstr "Profilis automatiškai sukurtas iš prieš-v2 veiksmo"
+
+#: ../src/core/na-object-action-factory.c:50
+msgid "Version of the format"
+msgstr "Formato versija"
+
+#: ../src/core/na-object-action-factory.c:51
 msgid ""
 "The version of the configuration format that will be used to manage backward "
-"compatibility"
+"compatibility."
 msgstr ""
 "Konfigūracijos formato versija, kuri bus naudojama suderinamumui su "
-"senesnėmis versijomis"
+"senesnėmis versijomis."
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:205
+#: ../src/core/na-object-action-factory.c:71
+msgid "Targets the selection context menu (default)"
+msgstr "Taikosi į žymėjimo kontekstinį meniu (numatyta)"
+
+#: ../src/core/na-object-action-factory.c:72
+msgid ""
+"Whether the action targets the selection file manager context menus.\n"
+"This used to be the historical behavior.\n"
+"Note that menus are always potential candidate to the display in selection "
+"context menus provided that they contain at least one action.\n"
+"Defaults to TRUE."
+msgstr ""
+"Ar veiksmas taikosi failų naršyklės žymėjimo kontekstinius meniu.\n"
+"Tai buvo istorinis veikimas.\n"
+"Meniu visada yra potencialus kandidatas rodymui žymėjimo kontekstiniame "
+"meniu, jei tik raktas turi bent vieną veiksmą.\n"
+"Numatyta TEIGIAMA."
+
+#: ../src/core/na-object-action-factory.c:95
+msgid "Targets the location context menu"
+msgstr "Taikosi į vietos kontekstinį meniu"
+
+#: ../src/core/na-object-action-factory.c:96
+msgid ""
+"Whether the action targets the file manager context menus when there is no "
+"selection, thus applying to current location.\n"
+"Note that menus are always potential candidate to the display in selection "
+"context menus provided that they contain at least one action.\n"
+"Defaults to FALSE"
+msgstr ""
+"Ar veiksmas taikosi failų naršyklės kontekstinius meniu kai nėra pažymėjimo, "
+"tokiu būdu pritaikant esamai vietai.\n"
+"Meniu visada yra potencialus kandidatas rodymui žymėjimo kontekstiniame "
+"meniu, jei tik raktas turi bent vieną veiksmą.\n"
+"Numatyta NEIGIAMA."
+
+#: ../src/core/na-object-action-factory.c:119
+msgid "Targets the toolbar"
+msgstr "Taikosi į įrankinę"
+
+#: ../src/core/na-object-action-factory.c:120
+msgid ""
+"Whether the action is candidate to be displayed in file manager toolbar.\n"
+"This only applies to current location.\n"
+"Note that menus are never displayed in the toolbar.\n"
+"Defaults to FALSE."
+msgstr ""
+"Ar veiksmas yra kandidatas rodymui failų naršyklės įrankinėje.\n"
+"Tai taikoma esamai vietai.\n"
+"Meniu niekada nerodomi įrankinėje.\n"
+"Numatyta NEIGIAMA."
+
+#: ../src/core/na-object-action-factory.c:142
+msgid "Label of the toolbar item"
+msgstr "Įrankinės elemento užrašas"
+
+#: ../src/core/na-object-action-factory.c:143
+msgid ""
+"The label displayed besides of the icon in the file manager toolbar.\n"
+"Note that actual display may depend of your own Desktop Environment "
+"preferences.\n"
+"Defaults to label of the context menu when not set or empty."
+msgstr ""
+"Užrašas rodomas šalia piktogramos failų naršyklės įrankinėje.\n"
+"Tikrasis vaizdavimas gali priklausyti nuo asmeninių darbastalio aplinkos "
+"nustatymų.\n"
+"Numatyta kontekstinio meniu užrašas, kai nenurodyta arba tuščia."
+
+#. i18n: copied items have a label as 'Copy of original label'
+#: ../src/core/na-object-id.c:342
+#, c-format
+msgid "Copy of %s"
+msgstr "%s kopija"
+
+#: ../src/core/na-object-item-factory.c:51
+msgid "Type of the item"
+msgstr "Elemento tipas"
+
+#: ../src/core/na-object-item-factory.c:52
+msgid ""
+"Defines if the item is an action or a menu. Possible values are :\n"
+"- 'Action',\n"
+"- 'Menu'.\n"
+"The value is case sensitive and must not be localized."
+msgstr ""
+"Nurodo, ar elementas yra veiksmas, ar meniu. Galimos reikšmės :\n"
+"- „Action“,\n"
+"- „Menu“,\n"
+"Reikšmė yra jautri raidžių dydžiui ir nelokalizuojama."
+
+#: ../src/core/na-object-item-factory.c:78
+msgid "Label of the context menu item (mandatory)"
+msgstr "Kontekstinio meniu punkto užrašas (privalomas)"
+
+#: ../src/core/na-object-item-factory.c:79
+msgid ""
+"The label of the menu item that will appear in the file manager context menu "
+"when the selection matches the appearance condition settings.\n"
+"It is also used as a default for the toolbar label of an action."
+msgstr ""
+"Meniu punkto užrašas bus rodomas failų naršyklės kontekstiniame meniu, kai "
+"pažymėjimas atitinka išvaizdos sąlygos nustatymus.\n"
+"Jis taip pat naudojamas kaip numatytas įrankinės veiksmo užrašas."
+
+#: ../src/core/na-object-item-factory.c:100
+msgid "Tooltip of the context menu item"
+msgstr "Kontekstinio meniu punkto paaiškinimas"
+
+#: ../src/core/na-object-item-factory.c:101
+msgid ""
+"The tooltip of the menu item that will appear in the file manager statusbar "
+"when the user points to the file manager context menu item with his/her "
+"mouse."
+msgstr ""
+"Meniu punkto paaiškinimas, kuris bus rodomas failų naršyklės būsenos "
+"juostoje, kai naudotojas užves pelės žymeklį virš to meniu punkto."
+
+#: ../src/core/na-object-item-factory.c:122
+msgid "Icon of the context menu item"
+msgstr "Kontekstinio meniu punkto piktograma"
+
+#: ../src/core/na-object-item-factory.c:123
+msgid ""
+"The icon of the menu item that will appear next to the label in the file "
+"manager context menu when the selection matches the appearance conditions "
+"settings.\n"
+"May be the localized name of a themed icon, or a full path to any "
+"appropriate image."
+msgstr ""
+"Meniu punkto piktograma, kuri bus rodoma failų naršyklės kontekstiniame "
+"meniu, šalia užrašo, kai pasirinkti elementai atitiks išvaizdos kriterijus.\n"
+"Gali būti lokalizuotas temos piktogramos pavadinimas arba pilnas kelias iki "
+"paveikslėlio."
+
+#: ../src/core/na-object-item-factory.c:139
+msgid "<PATH|NAME>"
+msgstr "<PATH|NAME>"
+
+#: ../src/core/na-object-item-factory.c:145
+msgid "Description relative to the item"
+msgstr "Elemento aprašymas"
+
+#: ../src/core/na-object-item-factory.c:146
+msgid ""
+"Some text which explains the goal of the menu or the action.\n"
+"May be used, e.g. when displaying available items on a web site."
+msgstr ""
+"Tekstas, paaiškinantis meniu arba veiksmo tikslą.\n"
+"Gali būti naudojamas, kai pvz. galimi elementai rodomi interneto svetainėje."
+
+#: ../src/core/na-object-item-factory.c:191
+msgid "List of subitem ids"
+msgstr "Po-elementų identifikatorių sąrašas"
+
+#: ../src/core/na-object-item-factory.c:192
+msgid ""
+"Ordered list of the IDs of the subitems. This may be actions or menus if the "
+"item is a menu, or profiles if the item is an action.\n"
+"If this list doesn't exist or is empty for an action or a menu, subitems are "
+"attached in the order of the read operations."
+msgstr ""
+"Surikiuotas po-elementų identifikatorių sąrašas. Tai gali būti veiksmai arba "
+"meniu, jei elementas yra meniu, arba profiliai, jeigu elementas yra "
+"veiksmas.\n"
+"Jei šis sąrašas neegzistuoja arba yra tuščias veiksmui arba meniu, po-"
+"elementai yra prijungiami skaitymo operacijų seka."
+
+#: ../src/core/na-object-item-factory.c:214
+msgid "Whether the action or the menu is enabled (default)"
+msgstr "Ar veiksmas arba meniu yra leidžiamas (numatyta)"
+
+#: ../src/core/na-object-item-factory.c:215
+msgid ""
+"If the or the menu action is disabled, it will never appear in the file "
+"manager context menu.\n"
+"Defaults to TRUE."
+msgstr ""
+"Jei veiksmas arba meniu yra draudžiamas, jis niekada nepasirodys failų "
+"naršyklės kontekstiniame meniu.\n"
+"Numatyta TEIGIAMA."
+
+#. i18n: default label for a new menu
+#: ../src/core/na-object-menu.c:58
+msgid "New Nautilus menu"
+msgstr "Naujas Nautilus meniu"
+
+#. i18n: label for the default profile
+#: ../src/core/na-object-profile.c:446
+msgid "Default profile"
+msgstr "Numatytas profilis"
+
+#: ../src/core/na-object-profile-factory.c:50
+msgid "Name of the profile"
+msgstr "Profilio pavadinimas"
+
+#: ../src/core/na-object-profile-factory.c:51
+msgid ""
+"May be used as a description for the function of the profile.\n"
+"If not set, it defaults to an auto-generated name."
+msgstr ""
+"Gali būti naudojamas kaip profilio funkcijos aprašymas.\n"
+"Jei nenustatytas, pavadinimas automatiškai sugeneruojamas."
+
+#: ../src/core/na-object-profile-factory.c:71
+msgid "Path of the command"
+msgstr "Komandos kelias"
+
+#: ../src/core/na-object-profile-factory.c:72
+msgid ""
+"The path of the command to be executed when the user select the menu item in "
+"the file manager context menu or in the toolbar."
+msgstr ""
+"Paleidžiamos komandos, kuri bus vykdoma naudotojui pasirinkus atitinkamą "
+"punktą failų naršyklės kontekstiniame meniu arba įrankinėje, kelias."
+
+#: ../src/core/na-object-profile-factory.c:92
+msgid "Parameters of the command"
+msgstr "Komandos parametrai"
+
+#. too long string for iso c: 665 (max=509)
+#: ../src/core/na-object-profile-factory.c:94
+msgid ""
+"The parameters of the command to be executed when the user selects the menu "
+"item in the file manager context menu or in the toolbar.\n"
+"The parameters may contain some special tokens which are replaced by the "
+"informations provided by the file manager before starting the command:\n"
+"%d: base folder of the selected file(s)\n"
+"%f: the name of the selected file or the first one if several are selected\n"
+"%h: hostname of the URI\n"
+"%m: space-separated list of the basenames of the selected file(s)/folder(s)\n"
+"%M: space-separated list of the selected file(s)/folder(s), with their full "
+"paths\n"
+"%p: port number of the first URI\n"
+"%R: space-separated list of selected URIs\n"
+"%s: scheme of the URI\n"
+"%u: URI\n"
+"%U: username of the URI\n"
+"%%: a percent sign."
+msgstr ""
+"Naudotojui pasirinkus failų naršyklės kontekstinio meniu arba įrankinės "
+"elementą paleidžiamos komandos parametrai.\n"
+"Parametruose gali būti keletas specialių leksemų, kurias failų naršyklė "
+"pakeičia prieš paleidžiant komandą:\n"
+"%d: pažymėtų failų aplankas\n"
+"%f: pažymėto failo pavadinimas, arba, jei pažymėti keli failai - pirmojo "
+"failo pavadinimas\n"
+"%h: URI kompiuterio pavadinimas\n"
+"%m: kableliais atskirtų pažymėtų failų/aplankų aplankų sąrašas\n"
+"%M: kableliais atskirtų pažymėtų failų/aplankų sąrašas su jų pilnais "
+"keliais\n"
+"%p: pirmojo URI prievado numeris\n"
+"%R: tarpais skiriamas pažymėtų URI sąrašas\n"
+"%s: URI schema\n"
+"%u: URI\n"
+"%U: URI aplankas\n"
+"%%: procento ženklas."
+
+#: ../src/io-desktop/nadp-desktop-provider.c:220
+msgid "Nautilus-Actions Desktop I/O Provider"
+msgstr "Nautilus-Actions darbastalio įvesties/išvesties tiekėjas"
+
+#: ../src/io-gconf/nagp-gconf-provider.c:228
+msgid "Nautilus-Actions GConf I/O Provider"
+msgstr "Nautilus-Actions GConf įvesties/išvesties tiekėjas"
+
+#: ../src/io-xml/naxml-reader.c:147
+#, c-format
+msgid "Item ID %s already exists."
+msgstr "Elemento ID %s jau yra."
+
+#: ../src/io-xml/naxml-reader.c:148
+msgid "Item ID not found."
+msgstr "Elemento ID nerastas."
+
+#: ../src/io-xml/naxml-reader.c:149
+#, c-format
+msgid "Unwaited key path %s while importing a menu."
+msgstr "Nelauktas rakto kelias %s importuojant meniu."
+
+#: ../src/io-xml/naxml-reader.c:150
+#, c-format
+msgid "Element %s at line %d already found, ignored."
+msgstr "Elementas %s eilutėje %d jau rastas, nepaisomas."
+
+#: ../src/io-xml/naxml-reader.c:151
+#, c-format
+msgid "Invalid item ID: waited for %s, found %s at line %d."
+msgstr "Neleistinas elemento ID: tikėtasi %s, rasta %s eilutėje %d."
+
+#: ../src/io-xml/naxml-reader.c:152
+#, c-format
+msgid "Unknown element %s found at line %d while waiting for %s."
+msgstr "Nežinomas elementas %s rastas eilutėje %d tikintis %s."
+
+#. i18n: do not translate keywords 'Action' nor 'Menu'
+#: ../src/io-xml/naxml-reader.c:154
+#, c-format
+msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
+msgstr "Nežinomas tipas %s rastas eilutėje %d, tikintis veiksmo arba meniu."
+
+#: ../src/io-xml/naxml-reader.c:155
+#, c-format
+msgid "Invalid XML root element %s found at line %d while waiting for %s."
+msgstr "Neteisingas XML šakninis elementas %s rastas eilutėje %d tikintis %s."
+
+#: ../src/io-xml/naxml-reader.c:156
+#, c-format
+msgid "Unable to parse XML file: %s."
+msgstr "Nepavyko perskaityti XML failo: %s."
+
+#: ../src/io-xml/naxml-reader.c:157
+#, c-format
+msgid "Node %s at line %d has not been dealt with."
+msgstr "Mazgas %s eilutėje %d neapdorotas."
+
+#: ../src/io-xml/naxml-reader.c:1322
+msgid "Item was renumbered due to user request."
+msgstr "Elementas buvo pernumeruotas naudotojo prašymu."
+
+#: ../src/io-xml/naxml-reader.c:1328
+msgid "Existing item was overriden due to user request."
+msgstr "Esamas elementas buvo perrašytas naudotojo prašymu."
+
+#: ../src/io-xml/naxml-reader.c:1337
+msgid "Import was canceled due to user request."
+msgstr "Importavimas atšauktas naudotojo prašymu."
+
+#. i18n: the action has been renumbered during import operation
+#: ../src/io-xml/naxml-reader.c:1376
+msgid "(renumbered)"
+msgstr "(pernumeruota)"
+
+#: ../src/io-xml/naxml-formats.c:48
+msgid "Export as a _full GConf schema file"
+msgstr "Eksportuoti kai _pilną GConf schemos failą"
+
+#: ../src/io-xml/naxml-formats.c:49
+msgid ""
+"This used to be the historical export format.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+"Tai buvo naudojamas kaip istorinis eksporto formatas.\n"
+"Eksportuojamas schemos failas vėliau gali būti importuotas šiais būdais:\n"
+"- Nautilus Actions Configuration Tool importavimo pagalbininkų,\n"
+"- arba gconftool-2 --import-schema-file komandinės eilutės įrankiu."
+
+#: ../src/io-xml/naxml-formats.c:58
+msgid "Export as a _light GConf schema (v2) file"
+msgstr "Eksportuoti kaip _supaprastintą GConf schemos (v2) failą"
+
+#: ../src/io-xml/naxml-formats.c:59
+msgid ""
+"This format has been introduced in v 1.11 serie.\n"
+"This is the lightest schema still compatible with GConf command-line tools,\n"
+"while keeping backward compatibility with older Nautilus Actions "
+"Configuration Tool versions.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+"Šis formatas buvo įtrauktas v 1.11 serijoje.\n"
+"Tai yra paprasčiausia schema, suderinama su GConf komandinės eilutės "
+"įrankiais,\n"
+"išlaikant suderinamumą su senesnėmis Nautilus Actions Configuration Tool "
+"versijomis.\n"
+"Eksportuojamas schemos failas vėliau gali būti importuotas šiais būdais:\n"
+"- Nautilus Actions Configuration Tool importavimo pagalbininkų,\n"
+"- arba gconftool-2 --import-schema-file komandinės eilutės įrankiu."
+
+#: ../src/io-xml/naxml-formats.c:71
+msgid "Export as a GConf _dump file"
+msgstr "Eksportuoti kai GConf san_dėlio failą"
+
+#: ../src/io-xml/naxml-formats.c:72
+msgid ""
+"This format has been introduced in v 1.11 serie, and should be the preferred "
+"format for newly exported items.\n"
+"It is not backward compatible with previous Nautilus Actions Configuration "
+"Tool versions,\n"
+"though it may still be imported via standard GConf command-line tools.\n"
+"The exported dump file may later be imported via :\n"
+"- Import assistant of a compatible Nautilus Actions Configuration Tool,\n"
+"- or via the gconftool-2 --load command-line tool."
+msgstr ""
+"Šis formatas įtrauktas v 1.11 serijoje ir turėtų būti mėgiamiausias formatas "
+"naujai eksportuojamiems elementams.\n"
+"Jis nėra suderinamas su ankstesnėmis Nautilus Actions Configuration Tool "
+"versijomis,\n"
+"tačiau vis dar gali būti importuojamas naudojant standartinius GConf "
+"komandinės eilutės įrankius.\n"
+"Eksportuojamas sandėlio failas vėliau gali būti importuotas šiais būdais:\n"
+"- Nautilus Actions Configuration Tool importavimo pagalbininkų,\n"
+"- arba gconftool-2 --load komandinės eilutės įrankiu."
+
+#: ../src/nact/base-application.c:1292
+msgid "Unable to initialize the internationalization environment."
+msgstr "Nepavyko inicializuoti internacionalizacijos aplinkos."
+
+#: ../src/nact/base-application.c:1301
+msgid "Unable to initialize the Gtk+ user interface."
+msgstr "Nepavyko inicializuoti Gtk+ naudotojo sąsajos."
+
+#: ../src/nact/base-application.c:1310
+msgid "Another instance of the application is already running."
+msgstr "Programa jau paleista."
+
+#: ../src/nact/base-application.c:1319
+msgid "No filename provided for the UI XML definition."
+msgstr "Nepateiktas failas UI XML apibrėžimui."
+
+#. i18n: Unable to load the XML definition from <filename>
+#: ../src/nact/base-application.c:1329
+#, c-format
+msgid "Unable to load the XML definition from %s."
+msgstr "Nepavyko pakrauti XML apibrėžimo iš %s."
+
+#: ../src/nact/base-application.c:1342
+msgid "Unable to set the default icon for the application."
+msgstr "Nepavyko nustatyti numatytos piktogramos programai."
+
+#: ../src/nact/base-application.c:1351
+msgid "Unable to get the main window of the application."
+msgstr "Nepavyko gauti programos pagrindinio lango."
+
+#: ../src/nact/base-assistant.c:577
+msgid "Are you sure you want to quit this assistant ?"
+msgstr "Ar tikrai norite užverti pagalbininką ?"
+
+#: ../src/nact/base-window.c:1200
+#, c-format
+msgid "Unable to load %s XML definition."
+msgstr "Nepavyko pakrauti %s XML apibrėžimo."
+
+#: ../src/nact/base-window.c:1286
+#, c-format
+msgid "Unable to load %s UI XML definition: %s"
+msgstr "Nepavyko pakrauti %s UI XML apibrėžimo: %s"
+
+#: ../src/nact/egg-desktop-file.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "Failas nėra tinkamas .desktop failas"
+
+#: ../src/nact/egg-desktop-file.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "Neatpažinta desktop failo versija „%s“"
+
+#: ../src/nact/egg-desktop-file.c:958
+#, c-format
+msgid "Starting %s"
+msgstr "Paleidžiama %s"
+
+#: ../src/nact/egg-desktop-file.c:1100
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "Programa nepriima dokumentų komandinėje eilutėje"
+
+#: ../src/nact/egg-desktop-file.c:1168
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "Neatpažinta paleidimo parinktis: %d"
+
+#: ../src/nact/egg-desktop-file.c:1373
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "Negalima perduoti dokumento URI desktop įrašui „tipas=saitas“"
+
+#: ../src/nact/egg-desktop-file.c:1394
+#, c-format
+msgid "Not a launchable item"
+msgstr "Nepaleidžiamas elementas"
+
+#: ../src/nact/egg-sm-client.c:239
+msgid "Disable connection to session manager"
+msgstr "Uždrausti prisijungimą prie sesijų tvarkyklės"
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "Specify file containing saved configuration"
+msgstr "Nurodykite failą su įrašyta konfigūracija"
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "FILE"
+msgstr "FAILAS"
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "Specify session management ID"
+msgstr "Nurodykite sesijos valdymo ID"
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "ID"
+msgstr "ID"
+
+#: ../src/nact/egg-sm-client.c:267
+msgid "Session management options:"
+msgstr "Sesijos valdymo parinktys:"
+
+#: ../src/nact/egg-sm-client.c:268
+msgid "Show session management options"
+msgstr "Rodyti sesijos valdymo parinktis"
+
+#: ../src/nact/nact-application.c:72
+msgid "Set it to run multiple instances of the program [unique]"
+msgstr "Nustatyti vykdyti daug programos vienetų [unikalus]"
+
+#: ../src/nact/nact-application.c:74
+msgid "Output the version number, and exit gracefully [no]"
+msgstr "Išvesti versijos numerį ir gražiai išeiti [ne]"
+
+#: ../src/nact/nact-application.c:353
+msgid ""
+"Another instance of Nautilus Actions Configuration Tool is already running."
+msgstr "Nautilus Actions Configuration Tool jau paleistas."
+
+#. i18n: another instance is already running: second line of error message
+#: ../src/nact/nact-application.c:355
+msgid "Please switch back to it."
+msgstr "Grįžkite į jį."
+
+#. static const gchar *thisfn = "nact_application_appli_get_application_name";
+#. g_debug( "%s: application=%p", thisfn, ( void * ) application );
+#. i18n: this is the application name, used in window title
+#: ../src/nact/nact-application.c:413
+msgid "Nautilus Actions Configuration Tool"
+msgstr "Nautilus Actions Configuration Tool"
+
+#: ../src/nact/nact-assistant-export.c:679
+msgid "About to export selected items:"
+msgstr "Ruošiamasi eksportuoti pažymėtus elementus:"
+
+#: ../src/nact/nact-assistant-export.c:693
+msgid "Into the destination folder:"
+msgstr "Į aplanką:"
+
+#: ../src/nact/nact-assistant-export.c:753
+msgid "Export canceled due to user action."
+msgstr "Eksportavimas atšauktas dėl naudotojo veiksmo."
+
+#. i18n: result of the export assistant
+#: ../src/nact/nact-assistant-export.c:781
+msgid "Selected actions have been proceeded :"
+msgstr "Pažymėti veiksmai buvo apdoroti :"
+
+#. i18n: action as been successfully exported to <filename>
+#: ../src/nact/nact-assistant-export.c:799
+msgid "Successfully exported as"
+msgstr "Sėkmingai išeksportuota kaip"
+
+#: ../src/nact/nact-assistant-export.c:822
+msgid "You may not have write permissions on selected folder."
+msgstr "Galbūt neturite teisių rašyti į nurodytą aplanką."
+
+#. i18n: the title of the confirm page of the import assistant
+#: ../src/nact/nact-assistant-import.c:563
+msgid "About to import selected files:"
+msgstr "Ruošiamasi importuoti pažymėtus failus:"
+
+#. i18n: result of the import assistant
+#: ../src/nact/nact-assistant-import.c:788
+msgid "Selected files have been proceeded :"
+msgstr "Pažymėti failai buvo apdoroti :"
+
+#. i18n: indicate that the file has been successfully imported
+#: ../src/nact/nact-assistant-import.c:806
+msgid "Import OK"
+msgstr "Importavimas sėkmingas"
+
+#. i18n: this is the globally unique identifier and the label of the newly imported action
+#: ../src/nact/nact-assistant-import.c:812
+#, c-format
+msgid "UUID: %s\t%s"
+msgstr "UUID: %s %s"
+
+#. i18n: indicate that the file was not iported
+#: ../src/nact/nact-assistant-import.c:823
+msgid "Not imported"
+msgstr "Neimportuotas"
+
+#: ../src/nact/nact.desktop.in.h:1
+msgid "Add items to the Nautilus popup menu"
+msgstr "Įtraukti naujus punktus į Nautilus meniu"
+
+#: ../src/nact/nact.desktop.in.h:2
+msgid "Nautilus Actions Configuration"
+msgstr "Nautilus veiksmų konfigūravimas"
+
+#. i18n: The action <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:326
+#, c-format
+msgid "The action \"%s\" is about to be exported."
+msgstr "Veiksmas „%s“ tuoj bus eksportuotas."
+
+#. i18n: The menu <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:329
+#, c-format
+msgid "The menu \"%s\" is about to be exported."
+msgstr "Meniu „%s“ tuoj bus eksportuotas."
+
+#: ../src/nact/nact-export-format.c:46
+msgid "_Ask me"
+msgstr "_Klausti"
+
+#: ../src/nact/nact-export-format.c:47
+msgid ""
+"You will be asked for the format to choose each time an item is about to be "
+"exported."
+msgstr ""
+"Bus prašoma pasirinkti formatą kiekvieną kartą prie eksportuojant elementą."
+
+#: ../src/nact/nact-iaction-tab.c:525
+msgid "Menu"
+msgstr "Meniu"
+
+#: ../src/nact/nact-iaction-tab.c:526
+msgid "<b>Menu properties</b>"
+msgstr "<b>Meniu savybės</b>"
+
+#: ../src/nact/nact-iaction-tab.c:528
+msgid "Action"
+msgstr "Veiksmas"
+
+#: ../src/nact/nact-iaction-tab.c:529
+msgid "<b>Action properties</b>"
+msgstr "<b>Veiksmo savybės</b>"
+
+#: ../src/nact/nact-iaction-tab.c:677
+msgid "Caution: a label is mandatory for the action or the menu."
+msgstr "Pastaba: užrašas veiksmui ar meniu yra būtinas."
+
+#. i18n notes: when no icon is selected in the drop-down list
+#: ../src/nact/nact-iaction-tab.c:893
+msgid "None"
+msgstr "Jokios"
+
+#: ../src/nact/nact-iaction-tab.c:954
+msgid "Choosing an icon"
+msgstr "Pasirenkama piktograma"
+
+#: ../src/nact/nact-icommand-tab.c:416
+msgid "Caution: a label is mandatory for the profile."
+msgstr "Pastaba: užrašas profiliui yra būtinas."
+
+#: ../src/nact/nact-icommand-tab.c:573
+msgid "Choosing a command"
+msgstr "Pasirenkama komanda"
+
+#. i18n notes: example strings for the command preview
+#: ../src/nact/nact-icommand-tab.c:652
+msgid "/path/to"
+msgstr "/kelias/iki"
+
+#: ../src/nact/nact-icommand-tab.c:653
+msgid "file1.txt"
+msgstr "byla1.txt"
+
+#: ../src/nact/nact-icommand-tab.c:653
+msgid "file2.txt"
+msgstr "byla2.txt"
+
+#: ../src/nact/nact-icommand-tab.c:654
+msgid " folder1"
+msgstr " aplankas1"
+
+#: ../src/nact/nact-icommand-tab.c:654
+msgid "folder2"
+msgstr "aplankas2"
+
+#: ../src/nact/nact-icommand-tab.c:655
+msgid " file1.txt"
+msgstr " failas1.txt"
+
+#: ../src/nact/nact-icommand-tab.c:655
+msgid "folder1"
+msgstr "aplankas1"
+
+#: ../src/nact/nact-icommand-tab.c:657
+msgid "test.example.net"
+msgstr "tai.pavyzdys.net"
+
+#: ../src/nact/nact-icommand-tab.c:658
+msgid "file.txt"
+msgstr "byla.txt"
+
+#: ../src/nact/nact-icommand-tab.c:659
+msgid "folder"
+msgstr "aplankas"
+
+#: ../src/nact/nact-icommand-tab.c:660
+msgid "8080"
+msgstr "8080"
+
+#: ../src/nact/nact-icommand-tab.c:664
+msgid "file:///path/to/file1.text"
+msgstr "file:///kelias/iki/failo1.text"
+
+#: ../src/nact/nact-icommand-tab.c:665
+msgid "file:///path/to/file2.text"
+msgstr "file:///kelias/iki/failo2.text"
+
+#: ../src/nact/nact-icommand-tab.c:666
+msgid "file:///path/to/a/dir"
+msgstr "file:///kelias/iki/katalogo"
+
+#: ../src/nact/nact-icommand-tab.c:667
+msgid "file:///path/to/another/dir"
+msgstr "file:///kelias/iki/kito/katalogo"
+
+#: ../src/nact/nact-icommand-tab.c:846
+msgid "e.g.,"
+msgstr "pvz.,"
+
+#. i18n: title of the FileChoose dialog when selecting an URI which
+#. * will be compare to Nautilus 'current_folder'
+#.
+#: ../src/nact/nact-ifolders-tab.c:558 ../src/nact/nact-ifolders-tab.c:589
+msgid "Select a folder"
+msgstr "Pasirinkite aplanką"
+
+#: ../src/nact/nact-main-menubar.c:106 ../src/nact/nact-main-menubar.c:213
+msgid "_File"
+msgstr "_Failas"
+
+#: ../src/nact/nact-main-menubar.c:107 ../src/nact/nact-main-menubar.c:217
+msgid "_Edit"
+msgstr "_Keisti"
+
+#: ../src/nact/nact-main-menubar.c:108
+msgid "_View"
+msgstr "R_odymas"
+
+#: ../src/nact/nact-main-menubar.c:109
+msgid "_Toolbars"
+msgstr "_Įrankinės"
+
+#: ../src/nact/nact-main-menubar.c:110 ../src/nact/nact-main-menubar.c:221
+msgid "_Tools"
+msgstr "Įr_ankiai"
+
+#: ../src/nact/nact-main-menubar.c:111
+msgid "_Maintainer"
+msgstr "_Prižiūrėtojas"
+
+#: ../src/nact/nact-main-menubar.c:112 ../src/nact/nact-main-menubar.c:225
+msgid "_Help"
+msgstr "_Žinynas"
+
+#: ../src/nact/nact-main-menubar.c:114
+msgid "New _menu"
+msgstr "Naujas _meniu"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
+#: ../src/nact/nact-main-menubar.c:116
+msgid "Insert a new menu at the current position"
+msgstr "Įterpti naują meniu esamoje pozicijoje"
+
+#: ../src/nact/nact-main-menubar.c:118
+msgid "_New action"
+msgstr "_Naujas veiksmas"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New action' item
+#: ../src/nact/nact-main-menubar.c:120
+msgid "Define a new action"
+msgstr "Apibrėžti naują veiksmą"
+
+#: ../src/nact/nact-main-menubar.c:122
+msgid "New _profile"
+msgstr "Naujas _profilis"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
+#: ../src/nact/nact-main-menubar.c:124
+msgid "Define a new profile attached to the current action"
+msgstr "Apibrėžti naują profilį, prijungtą prie esamo veiksmo"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Save' item
+#: ../src/nact/nact-main-menubar.c:128
+msgid ""
+"Record all the modified actions. Invalid actions will be silently ignored"
+msgstr ""
+"Įrašyti visus pakeistus veiksmus. Netinkami veiksmai bus tyliai nepaisomi."
+
+#. i18n: tooltip displayed in the status bar when selecting 'Quit' item
+#: ../src/nact/nact-main-menubar.c:132
+msgid "Quit the application"
+msgstr "Užverti programą"
+
+#. i18n: tooltip displayed in the status bar when selecting the Cut item
+#: ../src/nact/nact-main-menubar.c:136
+msgid "Cut the selected item(s) to the clipboard"
+msgstr "Iškirpti pažymėtą(us) elementą(us) į iškarpinę"
+
+#. i18n: tooltip displayed in the status bar when selecting the Copy item
+#: ../src/nact/nact-main-menubar.c:140
+msgid "Copy the selected item(s) to the clipboard"
+msgstr "Kopijuoti pažymėtą(us) elementą(us) į iškarpinę"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste item
+#: ../src/nact/nact-main-menubar.c:144
+msgid "Insert the content of the clipboard just before the current position"
+msgstr "Įterpti iškarpinės turinį prie esamą poziciją"
+
+#: ../src/nact/nact-main-menubar.c:146
+msgid "Paste _into"
+msgstr "Įdėti _į"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste Into item
+#: ../src/nact/nact-main-menubar.c:148
+msgid "Insert the content of the clipboard as first child of the current item"
+msgstr "Įterpti iškarpinės turinį kaip pirmąjį esamo elemento vaiką"
+
+#: ../src/nact/nact-main-menubar.c:150
+msgid "D_uplicate"
+msgstr "D_ubliuoti"
+
+#. i18n: tooltip displayed in the status bar when selecting the Duplicate item
+#: ../src/nact/nact-main-menubar.c:152
+msgid "Duplicate the selected item(s)"
+msgstr "Dubliuoti pažymėtą(us) elementą(us)"
+
+#. i18n: tooltip displayed in the status bar when selecting the Delete item
+#: ../src/nact/nact-main-menubar.c:156
+msgid "Delete the selected item(s)"
+msgstr "Ištrinti pažymėtą(us) elementą(us)"
+
+#: ../src/nact/nact-main-menubar.c:158
+msgid "_Reload the items"
+msgstr "_Įkelti elementus iš naujo"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
+#: ../src/nact/nact-main-menubar.c:160
+msgid ""
+"Cancel your current modifications and reload the initial list of menus and "
+"actions"
+msgstr ""
+"Atšaukti visus atliktus pakeitimus ir iš naujo įkelti pradinį meniu ir "
+"veiksmų sąrašą"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
+#: ../src/nact/nact-main-menubar.c:164
+msgid "Edit your preferences"
+msgstr "Keisti nustatymus"
+
+#: ../src/nact/nact-main-menubar.c:166
+msgid "_Expand all"
+msgstr "_Išskleisti visus"
+
+#. i18n: tooltip displayed in the status bar when selecting the Expand all item
+#: ../src/nact/nact-main-menubar.c:168
+msgid "Entirely expand the items hierarchy"
+msgstr "Visiškai išskleisti elementų hierarchiją"
+
+#: ../src/nact/nact-main-menubar.c:170
+msgid "_Collapse all"
+msgstr "_Suskleisti visus"
+
+#. i18n: tooltip displayed in the status bar when selecting the Collapse all item
+#: ../src/nact/nact-main-menubar.c:172
+msgid "Entirely collapse the items hierarchy"
+msgstr "Visiškai suskleisti elementų hierarchiją"
+
+#: ../src/nact/nact-main-menubar.c:175
+msgid "_Import assistant..."
+msgstr "_Importo pagalbininkas..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Import item
+#: ../src/nact/nact-main-menubar.c:177
+msgid ""
+"Import one or more actions from external (XML) files into your configuration"
+msgstr ""
+"Importuoti vieną ar daugiau veiksmų iš išorinių (XML) failų į jūsų "
+"konfigūraciją"
+
+#: ../src/nact/nact-main-menubar.c:179
+msgid "E_xport assistant..."
+msgstr "_Eksporto pagalbininkas..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Export item
+#: ../src/nact/nact-main-menubar.c:181
+msgid ""
+"Export one or more actions from your configuration to external XML files"
+msgstr ""
+"Eksportuoti vieną ar daugiau veiksmų iš jūsų konfigūracijos į išorinius XML "
+"failus"
+
+#: ../src/nact/nact-main-menubar.c:184
+msgid "_Dump the selection"
+msgstr "_Saugoti pažymėtus"
+
+#. i18n: tooltip displayed in the status bar when selecting the Dump selection item
+#: ../src/nact/nact-main-menubar.c:186
+msgid "Recursively dump selected items"
+msgstr "Rekursiškai saugoti pažymėtus elementus"
+
+#: ../src/nact/nact-main-menubar.c:188
+msgid "_Brief tree store dump"
+msgstr "_Trumpas medžio saugyklos saugojimas"
+
+#. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
+#: ../src/nact/nact-main-menubar.c:190
+msgid "Briefly dump the tree store"
+msgstr "Trumpai saugoti medžio saugyklą"
+
+#: ../src/nact/nact-main-menubar.c:192
+msgid "_List modified items"
+msgstr "_Pakeistų elementų sąrašas"
+
+#. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
+#: ../src/nact/nact-main-menubar.c:194
+msgid "List the modified items"
+msgstr "Išvardinti pakeistus elementus"
+
+#: ../src/nact/nact-main-menubar.c:196
+msgid "_Dump the clipboard"
+msgstr "Iš_saugoti iškarpinę"
+
+#. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
+#: ../src/nact/nact-main-menubar.c:198
+msgid "Dump the content of the clipboard object"
+msgstr "Išsaugoti iškarpinės turinį"
+
+#. i18n: tooltip displayed in the status bar when selecting the Help item
+#: ../src/nact/nact-main-menubar.c:203
+msgid "Display help about this program"
+msgstr "Rodyti pagalbą apie šią programą"
+
+#. i18n: tooltip displayed in the status bar when selecting the About item
+#: ../src/nact/nact-main-menubar.c:207
+msgid "Display informations about this program"
+msgstr "Rodyti informaciją apie šią programą"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
+#: ../src/nact/nact-main-menubar.c:215
+msgid "Display the File toolbar"
+msgstr "Rodyti failo įrankinę"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
+#: ../src/nact/nact-main-menubar.c:219
+msgid "Display the Edit toolbar"
+msgstr "Rodyti keitimo įrankinę"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
+#: ../src/nact/nact-main-menubar.c:223
+msgid "Display the Tools toolbar"
+msgstr "Rodyti įrankių įrankinę"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
+#: ../src/nact/nact-main-menubar.c:227
+msgid "Display the Help toolbar"
+msgstr "Rodyti pagalbos įrankinę"
+
+#. i18n: note the space at the beginning of the sentence
+#: ../src/nact/nact-main-menubar.c:451
+#, c-format
+msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
+msgstr " Šiuo metu pakrauti %d meniu, %d veikas(ai), %d profilis(iai)"
+
+#: ../src/nact/nact-main-menubar-edit.c:242
+msgid "Not all items have been cut as following ones are not modifiable:"
+msgstr "Ne visi elementai buvo iškirpti, kadangi šie yra nekeičiami:"
+
+#: ../src/nact/nact-main-menubar-edit.c:492
+msgid "Not all items have been deleted as following ones are not modifiable:"
+msgstr "Ne visi elementai buvo ištrinti, kadangi šie yra nekeičiami:"
+
+#: ../src/nact/nact-main-menubar-file.c:200
+msgid "New profile"
+msgstr "Naujas profilis"
+
+#: ../src/nact/nact-main-window.c:1338
+msgid ""
+"Reloading a fresh list of actions requires that you give up with your "
+"current modifications."
+msgstr "Veiksmų įkėlimas iš naujo reikalauja atšaukti visus jūsų pakeitimus."
+
+#: ../src/nact/nact-main-window.c:1341
+msgid "Do you really want to do this ?"
+msgstr "Ar tikrai norite tą padaryti ?"
+
+#: ../src/nact/nact-main-window.c:1364
+msgid ""
+"One or more actions have been modified in the filesystem.\n"
+"You could keep to work with your current list of actions, or you may want to "
+"reload a fresh one."
+msgstr ""
+"Vienas ar daugiau veiksmų buvo pakeistas failų sistemoje.\n"
+"Jūs galite tęsti darbą su dabartiniu veiksmų sąrašu, arba pakrauti jį iš "
+"naujo."
+
+#: ../src/nact/nact-main-window.c:1371
+msgid ""
+"Note that reloading a fresh list of actions requires that you give up with "
+"your current modifications."
+msgstr ""
+"Veiksmų sąrašo įkėlimas iš naujo reikalauja atsisakyti visų esamų pakeitimų."
+
+#: ../src/nact/nact-main-window.c:1377
+msgid "Do you want to reload a fresh list of actions ?"
+msgstr "Ar tikrai norite pakrauti iš naujo veiksmų sąrašą ?"
+
+#: ../src/nact/nact-providers-list.c:117
+msgid "To be read"
+msgstr "Bus perskaitytas"
+
+#: ../src/nact/nact-providers-list.c:125
+msgid "Writable"
+msgstr "Rašomas"
+
+#: ../src/nact/nact-providers-list.c:133
+msgid "I/O Provider"
+msgstr "Įvedimo/išvedimo tiekėjas"
+
+#. i18n: default name when the I/O providers doesn't provide one
+#: ../src/nact/nact-providers-list.c:210
+msgid "no name"
+msgstr "be pavadinimo"
+
+#. i18n: name displayed when the corresponding I/O provider is unavailable at runtime
+#: ../src/nact/nact-providers-list.c:214
+msgid "unavailable I/O provider"
+msgstr "nepasiekiamas įvedimo/išvedimo tiekėjas"
+
+#. i18n notes : description of 'file' scheme
+#: ../src/nact/nact-schemes-list.c:244
+msgid "Local files"
+msgstr "Vietiniai failai"
+
+#. i18n notes : description of 'sftp' scheme
+#: ../src/nact/nact-schemes-list.c:246
+msgid "SSH files"
+msgstr "SSH failai"
+
+#. i18n notes : description of 'smb' scheme
+#: ../src/nact/nact-schemes-list.c:248
+msgid "Windows files"
+msgstr "Windows failai"
+
+#. i18n notes : description of 'ftp' scheme
+#: ../src/nact/nact-schemes-list.c:250
+msgid "FTP files"
+msgstr "FTP failai"
+
+#. i18n notes : description of 'dav' scheme
+#: ../src/nact/nact-schemes-list.c:252
+msgid "WebDAV files"
+msgstr "WebDAV failai"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../src/nact/nact-schemes-list.c:784
+msgid "new-scheme"
+msgstr "nauja schema"
+
+#: ../src/nact/nact-schemes-list.c:785
+msgid "New scheme description"
+msgstr "Naujos schemos aprašymas"
+
+#: ../src/nact/nact-tree-model-dnd.c:120
+msgid "Unable to drop a profile here"
+msgstr "Negalima numesti profilio čia"
+
+#: ../src/nact/nact-tree-model-dnd.c:121
+msgid "Unable to drop an action or a menu here"
+msgstr "Negalima numesti veiksmo arba meniu čia"
+
+#: ../src/nact/nact-tree-model-dnd.c:122
+msgid "Unable to drop here as parent is not writable"
+msgstr "Negalima numesti čia, kadangi tėvas nėra rašomas"
+
+#: ../src/nact/nact-tree-model-dnd.c:123
+msgid "Unable to drop here as level zero is not writable"
+msgstr "Negalima numesti čia, kadangi nulinis lygmuo nėra rašomas"
+
+#: ../src/nact/nact-tree-model-dnd.c:853
+msgid "Some messages have occurred during drop operation."
+msgstr "Kilo pranešimų numetimo veiksmo metu."
+
+#: ../src/nact/nact-window.c:358
+msgid "An error has occured when trying to save the item"
+msgstr "Įvyko klaida bandant išsaugoti elementą"
+
+#: ../src/nact/nact-window.c:404
+msgid "An error has occured when trying to delete the item"
+msgstr "Įvyko klaida bandant ištrinti elementą"
+
+#: ../src/nact/nact-window.c:461
+#, c-format
+msgid "Some items have been modified."
+msgstr "Kai kurie elementai buvo pakeisti."
+
+#: ../src/nact/nact-window.c:462
+msgid "Are you sure you want to quit without saving them ?"
+msgstr "Ar tikrai norite išeiti nesaugant elemento ?"
+
+#. i18n: title of the About dialog box, when seen from Nautilus file manager
+#. i18n: label of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:295
+#: ../src/plugin-menu/nautilus-actions.c:809
+msgid "Nautilus Actions"
+msgstr "Nautilus veiksmai"
+
+#. i18n: tooltip of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:811
+msgid ""
+"A submenu which embeds the currently available Nautilus Actions extensions"
+msgstr "Po-meniu, kuris laiko šiuo metu prieinamus Nautilus Actions plėtinius"
+
+#: ../src/plugin-menu/nautilus-actions.c:858
+msgid "About Nautilus Actions"
+msgstr "Apie Nautilus Actions"
+
+#: ../src/plugin-menu/nautilus-actions.c:859
+msgid "Display information about Nautilus Actions"
+msgstr "Rodyti informaciją apie Nautilus Actions"
+
+#: ../src/test/test-reader.c:49
+msgid "The URI of the file to be imported"
+msgstr "Importuotino failo URI"
+
+#: ../src/test/test-reader.c:49 ../src/utils/nautilus-actions-run.c:62
+msgid "<URI>"
+msgstr "<URI>"
+
+#: ../src/test/test-reader.c:56 ../src/utils/nautilus-actions-new.c:139
+#: ../src/utils/nautilus-actions-run.c:69
+#: ../src/utils/nautilus-actions-schemas.c:91
+msgid "Output the version number"
+msgstr "Išvedimo versijos numeris"
+
+#: ../src/test/test-reader.c:106
+msgid "Import a file."
+msgstr "Importuoti failą."
+
+#: ../src/test/test-reader.c:120 ../src/utils/nautilus-actions-new.c:333
+#: ../src/utils/nautilus-actions-run.c:197
+#: ../src/utils/nautilus-actions-schemas.c:175
+msgid ""
+"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
+"mail to <maintainer@nautilus-actions.org>.\n"
+msgstr ""
+"Pranešimai apie klaidas yra laukiami adresu http://bugzilla.gnome.org arba "
+"jūsų galite parašyti į <maintainer@nautilus-actions.org>.\n"
+
+#: ../src/test/test-reader.c:128 ../src/utils/nautilus-actions-new.c:347
+#: ../src/utils/nautilus-actions-run.c:205
+#: ../src/utils/nautilus-actions-schemas.c:183
+msgid "Miscellaneous options"
+msgstr "Įvairios parinktys"
+
+#: ../src/test/test-reader.c:149 ../src/utils/nautilus-actions-new.c:177
+#: ../src/utils/nautilus-actions-run.c:111
+#: ../src/utils/nautilus-actions-schemas.c:124
+#, c-format
+msgid "Syntax error: %s\n"
+msgstr "Sintaksės klaida: %s\n"
+
+#: ../src/test/test-reader.c:164
+#, c-format
+msgid "Error: uri is mandatory.\n"
+msgstr "Klaida: uri yra privalomas.\n"
+
+#: ../src/test/test-reader.c:176 ../src/utils/nautilus-actions-new.c:553
+#: ../src/utils/nautilus-actions-run.c:432
+#: ../src/utils/nautilus-actions-schemas.c:368
+#, c-format
+msgid "Try %s --help for usage.\n"
+msgstr "Bandykite %s --help dėl naudojimo.\n"
+
+#: ../src/utils/nautilus-actions-new.c:117
+msgid "Set it if the item should be disabled at creation"
+msgstr "Nustatykite, jei elementas turi būti uždraustas sukūrimo metu"
+
+#: ../src/utils/nautilus-actions-new.c:119
+msgid "Set it if the item doesn't target the context menu"
+msgstr "Nustatyti, jei elementas nesitaiko į kontekstinį meniu"
+
+#: ../src/utils/nautilus-actions-new.c:121
+msgid "Set it if the item doesn't target the toolbar"
+msgstr "Nustatyti, jei elementas nesitaiko į įrankinę"
+
+#: ../src/utils/nautilus-actions-new.c:123
+msgid "Set it if the basename patterns are case insensitive"
+msgstr "Nustatyti, jei katalogų šablonai skiria didžiąsias ir mažąsias raides"
+
+#: ../src/utils/nautilus-actions-new.c:130
+msgid "Store the newly created action as a GConf configuration"
+msgstr "Įrašyti naujai sukurtą veiksmą kaip GConf konfigūraciją"
+
+#: ../src/utils/nautilus-actions-new.c:132
+msgid ""
+"The path of the folder where to write the new action as a GConf dump output "
+"[default: stdout]"
+msgstr ""
+"Aplanko kelias, kur išsaugoti naują veiksmą kaip GConf saugyklos išvedimas "
+"[numatytasis: stdout]"
+
+#: ../src/utils/nautilus-actions-new.c:190
+#, c-format
+msgid "Error: an action label is mandatory.\n"
+msgstr "Klaida: veiksmo užrašas yra privalomas.\n"
+
+#: ../src/utils/nautilus-actions-new.c:195
+#, c-format
+msgid "Error: '--enabled' and '--disabled' options cannot both be specified.\n"
+msgstr ""
+"Klaida: „--enabled“ ir „--disabled“ parinktys negali būti abu nustatyti.\n"
+
+#: ../src/utils/nautilus-actions-new.c:202
 #, c-format
 msgid ""
-"The action '%s' already exists with the name '%s', please first remove the "
-"existing one before trying to add this one"
+"Error: '--context' and '--nocontext' options cannot both be specified.\n"
 msgstr ""
+"Klaida: „--context“ ir „--nocontext“ parinktys negali būti abi nustatytos.\n"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:222
-#, fuzzy, c-format
-msgid "Can't save action '%s'"
-msgstr "Tvarkyti veiksmus"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:470
+#: ../src/utils/nautilus-actions-new.c:209
 #, c-format
 msgid ""
-"A profile already exists with the name '%s', please first remove or rename "
-"the existing one before trying to add this one"
+"Error: '--toolbar' and '--notoolbar' options cannot both be specified.\n"
 msgstr ""
+"Klaida: „--tollbar“ ir „--notoolbar“ parinktys negali būti abi nustatytos.\n"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:524
-#, fuzzy, c-format
-msgid "Can't remove the old profile '%s'"
-msgstr "Nepavyko įrašyti duomenų byloje %s\n"
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:531
-#, c-format
-msgid "Can't find profile named '%s'"
-msgstr ""
-
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:184
-msgid " and some profiles are incomplete: "
-msgstr ""
-
-#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:204
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:717
-msgid ","
-msgstr ""
-
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:303
-#, c-format
-msgid "%s (one missing key: %s)%s"
-msgid_plural "%s (missing keys: %s)%s"
-msgstr[0] ""
-msgstr[1] ""
-
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:682
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:817
+#: ../src/utils/nautilus-actions-new.c:214
 #, c-format
 msgid ""
-"This XML file is not a valid Nautilus-actions config file (found <%s> "
-"element instead of <%s>)"
+"Error: '--match-case' and '--nocase' options cannot both be specified.\n"
 msgstr ""
+"Klaida: „--match-case“ ir „--nocase“ parinktys negali būti abi nustatytos.\n"
 
-#. if the version of the file is greater than the current one, we reject the file
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
+#: ../src/utils/nautilus-actions-new.c:221
+#, c-format
+msgid "Error: only one output option may be specified.\n"
+msgstr "Klaida: tik viena išvedimo parinktis gali būti nustatyta.\n"
+
+#. i18n: Action <action_label> written to...
+#: ../src/utils/nautilus-actions-new.c:234
+#, c-format
+msgid "Action '%s' succesfully written to GConf configuration.\n"
+msgstr "Veiksmas „%s“ sėkmingai įrašytas į GConf konfigūraciją.\n"
+
+#: ../src/utils/nautilus-actions-new.c:314
+msgid ""
+"Define a new action.\n"
+"\n"
+"  The created action defaults to be written to stdout.\n"
+"  It can also be written to an output folder, in a file later suitable for "
+"an import in NACT.\n"
+"  Or you may choose to directly write the action into your GConf "
+"configuration."
+msgstr ""
+"Apibrėžti naują veiksmą.\n"
+"\n"
+"  Sukurtas veiksmas numatytai rašomas į stdout.\n"
+"  Jis taip pat gali būti įrašytas į išvedimo aplanką bei failą, vėliau "
+"tinkamą importavimui su NACT.\n"
+"  Arba Jūs galite pasirinkti tiesiogiai rašyti veiksmo informaciją į GConf "
+"konfigūraciją."
+
+#: ../src/utils/nautilus-actions-new.c:342
+msgid "Output of the program"
+msgstr "Programos išvedimas"
+
+#: ../src/utils/nautilus-actions-new.c:342
+msgid "Choose where the program creates the action"
+msgstr "Pasirinkite, kur programa sukuria veiksmą"
+
+#. i18n: unable to create <output_dir> dir: <strerror_message>
+#: ../src/utils/nautilus-actions-new.c:468
+#, c-format
+msgid "Error: unable to create %s dir: %s"
+msgstr "Klaida: negalima sukurti %s katalogo: %s"
+
+#. i18n: Action <action_label> written to <output_filename>...
+#: ../src/utils/nautilus-actions-new.c:482
 #, c-format
 msgid ""
-"This config file is more recent than this version of Nautilus-actions can "
-"support. Please upgrade Nautilus-actions to the latest version if you want "
-"to be able to import it (File version: %s (max supported version : %s))"
+"Action '%s' succesfully written to %s, and ready to be imported in NACT.\n"
 msgstr ""
+"Veiksmas „%s“ sėkmingai įrašytas į %s ir yra parinktas importavimui su "
+"NACT.\n"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
-#, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
-msgid_plural ""
-"This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
-"s"
-msgstr[0] ""
-msgstr[1] ""
+#: ../src/utils/nautilus-actions-new.c:515
+msgid "Error: unable to find 'na-gconf' provider."
+msgstr "Klaida: nepavyko rasti „na-gconf“ tiekėjo."
 
-#. No error occured but we have not found the "version" gconf key
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
-#, c-format
+#: ../src/utils/nautilus-actions-run.c:60
+msgid "The internal identifiant of the action to be launched"
+msgstr "Vidinis veiksmo identifikatorius bus paleistas"
+
+#: ../src/utils/nautilus-actions-run.c:62
 msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+"A target, file or folder, for the action. More than one options may be "
+"specified"
 msgstr ""
+"Tikslas, failas arba aplankas, veiksmui. Gali būti nurodytos kelios parinktys"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:827
+#: ../src/utils/nautilus-actions-run.c:126
 #, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
-"instead of <%s>)"
-msgstr ""
+msgid "Error: action id is mandatory.\n"
+msgstr "Klaida: veiksmo id yra privalomas.\n"
+
+#: ../src/utils/nautilus-actions-run.c:156
+#, c-format
+msgid "Action %s is not a valid candidate. Exiting.\n"
+msgstr "Veiksmas %s nėra tinkamas kandidatas. Išeinama.\n"
+
+#: ../src/utils/nautilus-actions-run.c:183
+msgid "Execute an action on the specified target."
+msgstr "Įvykdyti veiksmą nurodytam veiksmui."
+
+#: ../src/utils/nautilus-actions-run.c:230
+#, c-format
+msgid "Error: action '%s' doesn't exist.\n"
+msgstr "Klaida: veiksmo „%s“ nėra.\n"
+
+#: ../src/utils/nautilus-actions-run.c:235
+#, c-format
+msgid "Error: action '%s' is disabled.\n"
+msgstr "Klaida: veiksmas „%s“ uždraustas.\n"
+
+#: ../src/utils/nautilus-actions-run.c:243
+#, c-format
+msgid "Error: action '%s' is not valid.\n"
+msgstr "Klaida: veiksmas „%s“ netinkamas.\n"
+
+#: ../src/utils/nautilus-actions-run.c:276
+#, c-format
+msgid "Error: unable to get a connection to session DBus: %s"
+msgstr "Klaida: nepavyko gauti prisijungimo prie sesijos DBus: %s"
+
+#: ../src/utils/nautilus-actions-run.c:287
+#, c-format
+msgid "Error: unable to get a proxy on %s service"
+msgstr "Klaida: nepavyko gauti proxy servisui %s"
+
+#: ../src/utils/nautilus-actions-run.c:297
+#, c-format
+msgid "Error on GetSelectedPaths call: %s"
+msgstr "Klaida iškvietime GetSelectedPaths: %s"
+
+#: ../src/utils/nautilus-actions-schemas.c:86
+msgid "Output the schema on stdout"
+msgstr "Išvesti schemą į stdout"
+
+#: ../src/utils/nautilus-actions-schemas.c:161
+msgid "Output the Nautilus Actions GConf schema on stdout."
+msgstr "Išvesti Nautilus Actions GConf schemą į stdout."
+
+#, fuzzy
+#~ msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
+#~ msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
+
+#, fuzzy
+#~ msgid "<b>%%</b>: a percent sign"
+#~ msgstr "<b>%%</b>: procentų ženklas"
+
+#, fuzzy
+#~ msgid ""
+#~ "<b>%M</b>: space-separated list of the selected file(s)/folder(s) with "
+#~ "their full paths"
+#~ msgstr ""
+#~ "<b>%M</b>: pažymėtų bylų/aplankų (su pilnais keliais) atskirtų tarpais "
+#~ "sąrašas."
+
+#, fuzzy
+#~ msgid "<b>%U</b>: username of the GnomeVFS URI"
+#~ msgstr "<b>%U</b>: gnome-vfs URI naudotojo vardas"
+
+#, fuzzy
+#~ msgid "<b>%d</b>: base folder of the selected file(s)"
+#~ msgstr "<b>%d</b>: pasirinktų bylų bazinis aplankas"
+
+#, fuzzy
+#~ msgid ""
+#~ "<b>%f</b>: the name of the selected file or the 1st one if many are "
+#~ "selected"
+#~ msgstr ""
+#~ "<b>%f</b>: pažymėtosios arba, jei pasirinkta daugiau, pirmosios bylos "
+#~ "vardas"
+
+#, fuzzy
+#~ msgid "<b>%h</b>: hostname of the GnomeVFS URI"
+#~ msgstr "<b>%h</b>: gnome-vfs URI kompiuterio pavadinimas"
+
+#, fuzzy
+#~ msgid ""
+#~ "<b>%m</b>: space-separated list of the basenames of the selected\n"
+#~ "file(s)/folder(s)"
+#~ msgstr ""
+#~ "<b>%m</b>: pažymėtų bylų/aplankų bazinių vardų atskirtų tarpais sąrašas."
+
+#, fuzzy
+#~ msgid "<b>%s</b>: scheme of the GnomeVFS URI"
+#~ msgstr "<b>%s</b>: gnome-vfs URI schema"
+
+#, fuzzy
+#~ msgid "<b>%u</b>: GnomeVFS URI"
+#~ msgstr "<b>%u</b>: gnome-vfs URI"
+
+#, fuzzy
+#~ msgid "<b>Appears if file matches</b>"
+#~ msgstr "<b>Rodoma, jei yra pasirinkta</b>"
+
+#~ msgid "<b>Appears if scheme is in this list</b>"
+#~ msgstr "<b>Rodoma jei schema yra šiame sąraše</b>"
+
+#~ msgid "<b>Appears if selection contains</b>"
+#~ msgstr "<b>Rodoma, jei yra pasirinkta</b>"
+
+#~ msgid "<b>Nautilus Menu Item</b>"
+#~ msgstr "<b>Nautilus meniu elementas</b>"
+
+#~ msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
+#~ msgstr "<i><b><span size=\"small\">pvz., %s</span></b></i>"
+
+#~ msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
+#~ msgstr "<span size=\"larger\"><b>Parametrų legenda</b></span>"
+
+#, fuzzy
+#~ msgid ""
+#~ "A string with wildcards (? or *) that will be used to match the "
+#~ "filenames. You can set several filename patterns by separating them with "
+#~ "a semi-colon (;)."
+#~ msgstr ""
+#~ "Užrašas su ženklais ? arba *, kuris bus naudojamas bylų atitikimui. Gali "
+#~ "atitikti keletą bylų šablonų, juos reikia atskirti kabliataškiu."
+
+#, fuzzy
+#~ msgid ""
+#~ "A string with wildcards (? or *) that will be used to match the mimetypes "
+#~ "of files. You can set several mimetype patterns by separating them with a "
+#~ "semi-colon (;)."
+#~ msgstr ""
+#~ "Užrašas su ženklais ? arba *, kuris bus naudojamas bylų atitikimui. Gali "
+#~ "atitikti keletą bylų šablonų, juos reikia atskirti kabliataškiu."
+
+#, fuzzy
+#~ msgid "Advanced Conditions"
+#~ msgstr "Sąlygos"
+
+#~ msgid "Appears if selection has multiple files or folders"
+#~ msgstr "Rodoma jei pasirinkta keletas bylų ar aplankų"
+
+#~ msgid "Both"
+#~ msgstr "Ir tas, ir tas"
+
+#, fuzzy
+#~ msgid "Click to add a new scheme."
+#~ msgstr "Spragtelėkite norėdami pridėti naują schemą"
+
+#, fuzzy
+#~ msgid "Click to choose a command from the file chooser dialog."
+#~ msgstr "Spragtelėkite norėdami pasirinkti komandą bylų pasirinkimo dialoge"
+
+#, fuzzy
+#~ msgid ""
+#~ "Click to choose a custom icon from a file instead of a predefined icon "
+#~ "from the drop-down list."
+#~ msgstr ""
+#~ "Spragtelėkite norėdami pasirinkti kitokią ikoną, nei duotosios šiame "
+#~ "sąraše"
+
+#, fuzzy
+#~ msgid ""
+#~ "Click to toggle the display of the list of special tokens you can use in "
+#~ "the parameter field."
+#~ msgstr ""
+#~ "Spragtelėkite norėdami pamatyti specialių žymių, kurias galite naudoti "
+#~ "parametrų laukelyje, sąrašą"
+
+#~ msgid "Conditions"
+#~ msgstr "Sąlygos"
+
+#~ msgid "Export existing configs"
+#~ msgstr "Eksportuoti esamas konfigūracijos bylas"
+
+#, fuzzy
+#~ msgid "File to Import:"
+#~ msgstr "Importuotina byla"
+
+#~ msgid "Icon:"
+#~ msgstr "Piktograma"
+
+#~ msgid "Import new configurations"
+#~ msgstr "Importuoti naujas konfigūracijas"
+
+#~ msgid "Import/Export"
+#~ msgstr "Importuoti/eksportuoti"
+
+#~ msgid "Import/Export Settings"
+#~ msgstr "Importuoti/eksportuoti nustatymus"
+
+#, fuzzy
+#~ msgid "Label of the menu item in the Nautilus popup menu."
+#~ msgstr "Nautilus meniu punkto užrašas"
+
+#~ msgid "Label:"
+#~ msgstr "Užrašas:"
+
+#~ msgid "Nautilus Action Editor"
+#~ msgstr "Nautilus veiksmų redaktorius"
+
+#, fuzzy
+#~ msgid ""
+#~ "Nautilus Actions Configuration Tool\n"
+#~ "Application to configure Nautilus Action extension"
+#~ msgstr ""
+#~ "Nautilus veiksmų konfigūravimo įrankis\n"
+#~ "Programa Nautilus veiksmų išplėtimui konfigūruoti"
+
+#~ msgid "Only files"
+#~ msgstr "Tik bylos"
+
+#~ msgid "Only folders"
+#~ msgstr "Tik aplankai"
+
+#, fuzzy
+#~ msgid ""
+#~ "Parameters that will be sent to the program. Click on the 'Legend' button "
+#~ "to see the different replacement tokens."
+#~ msgstr ""
+#~ "Parametrai, kurie bus nusiųsti programai. Norėdami pamatyti žymių sąrašą "
+#~ "spragtelėkite mygtuką „Legenda“"
+
+#~ msgid "Parameters:"
+#~ msgstr "Parametrai:"
+
+#~ msgid "Path:"
+#~ msgstr "Kelias:"
+
+#~ msgid "Project Website"
+#~ msgstr "Projekto svetainė"
+
+#, fuzzy
+#~ msgid ""
+#~ "Select the configurations you want to export. Use Shift or Ctrl key to "
+#~ "select more than one."
+#~ msgstr ""
+#~ "Pasirinkite norimas eksportuoti konfigūracijas. Norėdami pasirinkti "
+#~ "keletą, naudokite Shift arba Ctrl klavišus."
+
+#, fuzzy
+#~ msgid "Select the configurations you want to export:"
+#~ msgstr "Pasirinkite eksportuotinas konfigūracijas:"
+
+#~ msgid "Select the file you want to import."
+#~ msgstr "Pasirinkite norimą importuoti bylą."
+
+#, fuzzy
+#~ msgid ""
+#~ "Select the folder you want your config to be saved in. This folder must "
+#~ "exist."
+#~ msgstr ""
+#~ "Pasirinkite aplanką, kuriame norite išsaugoti savo konfigūraciją. Šis "
+#~ "aplankas jau turi egzistuoti."
+
+#, fuzzy
+#~ msgid ""
+#~ "Select the kind of files where you want your action to appear. If you "
+#~ "don't know what to choose, try selecting just 'file' which is the most "
+#~ "common choice. You can add a new scheme by clicking on the '+' button."
+#~ msgstr ""
+#~ "Pasirinkite kokios rūšies byloms turėtų būti rodomas šis veiksmas. Jeigu "
+#~ "nežinote ką pasirinkti, pabandykite pasirinkti tiesiog „file“. Naują "
+#~ "schemą galite pridėti naują schemą paspaudę mygtuką „+“."
+
+#, fuzzy
+#~ msgid ""
+#~ "The command that will be launched by selecting the action in Nautilus "
+#~ "popup menu."
+#~ msgstr "Komanda, kuri bus paleista, pasirinkus veiksmą Nautiliaus meniu"
+
+#~ msgid "This software is licensed under the GNU Genaral Public License (GPL)"
+#~ msgstr ""
+#~ "Ši programa yra išleista GNU Bendrosios viešosios licencijos (GPL) "
+#~ "sąlygomis"
+
+#, fuzzy
+#~ msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
+#~ msgstr ""
+#~ "Meniu punkto paaiškinimas, kuris bus rodomas Nautilus būsenos juostoje"
+
+#~ msgid "Tooltip:"
+#~ msgstr "Paaiškinimas:"
+
+#~ msgid "_Browse"
+#~ msgstr "_Naršyti"
+
+#, fuzzy
+#~ msgid "Can't duplicate action '%s'!"
+#~ msgstr "Nepavyko įrašyti duomenų byloje %s\n"
+
+#~ msgid "Icon"
+#~ msgstr "Piktograma"
+
+#~ msgid "Label"
+#~ msgstr "Užrašas"
+
+#, fuzzy
+#~ msgid "Can't copy action's profile '%s'!"
+#~ msgstr "Nepavyko įrašyti duomenų byloje %s\n"
+
+#, fuzzy
+#~ msgid "Can't paste action's profile '%s'!"
+#~ msgstr "Nepavyko įrašyti duomenų byloje %s\n"
+
+#, fuzzy
+#~ msgid "Can't delete action's profile '%s'!"
+#~ msgstr "Nepavyko įrašyti duomenų byloje %s\n"
+
+#~ msgid "Icon of the menu item in the Nautilus popup menu"
+#~ msgstr "Nautiliaus meniu punkto piktograma"
+
+#~ msgid "Edit Action \"%s\""
+#~ msgstr "Keisti veiksmą „%s“"
+
+#~ msgid "Scheme"
+#~ msgstr "Schema"
+
+#~ msgid "Description"
+#~ msgstr "Aprašymas"
+
+#, fuzzy
+#~ msgid "Edit Profile \"%s\""
+#~ msgstr "Keisti veiksmą „%s“"
+
+#~ msgid "LABEL"
+#~ msgstr "UŽRAŠAS"
+
+#~ msgid "TOOLTIP"
+#~ msgstr "PAAIŠKINIMAS"
+
+#, fuzzy
+#~ msgid "The icon of the menu item (filename or GTK stock ID)"
+#~ msgstr "Meniu punkto ikona (bylos vardas arba Gtk standartinis id)"
+
+#~ msgid "ICON"
+#~ msgstr "IKONA"
+
+#~ msgid "PARAMS"
+#~ msgstr "PARAMETRAI"
+
+#, fuzzy
+#~ msgid ""
+#~ "A pattern to match selected files' mimetype against. May include "
+#~ "wildcards (* or ?) (you must set one option for each pattern you need)"
+#~ msgstr ""
+#~ "Šablonas, kurį turėtų atitikti bylos. Galima naudoti ženklus „?“ arba "
+#~ "„*“ (turite tai nurodyti kiekvienam šablonui)"
+
+#~ msgid "Set it if the selection can contain files"
+#~ msgstr "Nustatykite jeigu galima pasirinkti bylas"
+
+#~ msgid "Set it if the selection can contain folders"
+#~ msgstr "Nustatykite jeigu galima pasirinkti aplankus"
+
+#~ msgid "Set it if the selection can have several items"
+#~ msgstr "Nustatykite jeigu galima pasirinkti keletą elementų"
+
+#~ msgid "SCHEME"
+#~ msgstr "SCHEMA"
+
+#, fuzzy
+#~ msgid "  OK, saved in %s\n"
+#~ msgstr "  Gerai, išsaugota %s\n"
+
+#, fuzzy
+#~ msgid " Failed: %s\n"
+#~ msgstr "  Nepavyko\n"
+
+#~ msgid "Can't write data in file %s\n"
+#~ msgstr "Nepavyko įrašyti duomenų byloje %s\n"
+
+#~ msgid "Can't open file %s for writing\n"
+#~ msgstr "Nepavyko atverti bylos %s rašymui\n"
+
+#~ msgid "'true' if the selection can have files, 'false' otherwise"
+#~ msgstr "teigiama, jei galima pasirinkti keletą bylų, kitu atveju neigiama"
+
+#, fuzzy
+#~ msgid "This setting is tied in with the 'isdir' setting. "
+#~ msgstr "Šis nustatymas susietas su „isdir“ nustatymu."
+
+#~ msgid "'true' if the selection can have folders, 'false' otherwise"
+#~ msgstr "teigiama, jei galima pasirinkti aplankus, kitu atveju neigiama"
+
+#, fuzzy
+#~ msgid "This setting is tied in with the 'isfile' setting. "
+#~ msgstr "Šis nustatymas susietas su „isfile“ nustatymu."
+
+#~ msgid "'true' if the selection can have several items, 'false' otherwise"
+#~ msgstr ""
+#~ "teigiama, jei galima pasirinkti keletą elementų, kitu atveju neigiama"
+
+#~ msgid ""
+#~ "The list of GnomeVFS schemes where the selected files should be located"
+#~ msgstr "GnomeVFS schemų, kur turėtų būti pažymėtos bylos, sąrašas"
+
+#, fuzzy
+#~ msgid "Can't save action '%s'"
+#~ msgstr "Tvarkyti veiksmus"
+
+#, fuzzy
+#~ msgid "Can't remove the old profile '%s'"
+#~ msgstr "Nepavyko įrašyti duomenų byloje %s\n"
 
 #~ msgid " "
 #~ msgstr " "
@@ -1080,9 +2562,6 @@ msgstr ""
 
 #~ msgid "Old XML config file (Nautilus-actions v0.x)"
 #~ msgstr "Sena XML konfigūracijos byla (Nautilus-actions v0.x)"
-
-#~ msgid "Type of configuration :"
-#~ msgstr "Konfigūracijos tipas:"
 
 #~ msgid "translator-credits"
 #~ msgstr "Žygimantas Beručka <zygis@gnome.org>"
@@ -1176,12 +2655,6 @@ msgstr ""
 
 #~ msgid "The old xml config file to convert"
 #~ msgstr "Sena konvertuotina xml konfigūracijos byla"
-
-#~ msgid "FILE"
-#~ msgstr "BYLA"
-
-#~ msgid "The name of the newly-converted GConf schema file"
-#~ msgstr "Naujai konvertuotos GConf schemos bylos vardas"
 
 #~ msgid ""
 #~ "Convert all old xml config files from previous installations [default]"
