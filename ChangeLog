@@ -83,8 +83,16 @@
 
 2010-04-12 Pierre Wieser <pwieser@trychlos.org>
 
-	* src/plugin-menu/Makefile.am:
-	* src/plugin-tracker/Makefile.am: Fix incorrect log domains.
+	Move item properties to their own tab.
+
+	* src/nact/nact-iproperties-tab.c:
+	* src/nact/nact-iproperties-tab.h: New files.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.c:
+	* src/nact/nautilus-actions-config-tool.ui: Updated accordingly.
 
 2010-04-09 Pierre Wieser <pwieser@trychlos.org>
 

@@ -54,6 +54,22 @@ Version 2.30.2
 
 		es (Jorge González)
 		lt (Gintautas Miliauskas)
+=======
+[newdata branch]
+
+	Enhancements:
+
+		- Implement .desktop files as a new storage format, shareable with
+		  most common willing-to desktop environments (KDE, XFCE, etc.)
+
+		- Implement new properties, both in GConf and .desktop files:
+		  . a description of the item
+
+	UI modifications:
+
+		- Item properties have now their own 'Properties' tab
+		- 'Advanced conditions' tab is renamed as 'Schemes' tab
+>>>>>>> Move item properties to their own tab
 
 Version 2.30.1
 ==============

@@ -132,6 +132,6 @@
   not even in unstable library on the web
   http://library.gnome.org/devel/gconf/unstable/gconf-gconf.html#gconf-concat-dir-and-key
 
-- "x-nautilus-desktop:///" is rather a scheme than a folder
+- "x-nautilus-desktop:///" is rather a scheme than a folder => actually is an URI
 
 - enhancement.ui: add a 'why this item is invalid' 

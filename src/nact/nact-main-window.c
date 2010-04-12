@@ -52,6 +52,7 @@
 #include "nact-ifolders-tab.h"
 #include "nact-iconditions-tab.h"
 #include "nact-iadvanced-tab.h"
+#include "nact-iproperties-tab.h"
 #include "nact-main-tab.h"
 #include "nact-main-menubar.h"
 #include "nact-main-statusbar.h"
@@ -148,6 +149,7 @@ static void     icommand_tab_iface_init( NactICommandTabInterface *iface );
 static void     ifolders_tab_iface_init( NactIFoldersTabInterface *iface );
 static void     iconditions_tab_iface_init( NactIConditionsTabInterface *iface );
 static void     iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
+static void     iproperties_tab_iface_init( NactIPropertiesTabInterface *iface );
 static void     iabout_iface_init( NAIAboutInterface *iface );
 static void     ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
 static void     iprefs_base_iface_init( BaseIPrefsInterface *iface );
@@ -251,6 +253,12 @@ register_type( void )
 		NULL
 	};
 
+	static const GInterfaceInfo iproperties_tab_iface_info = {
+		( GInterfaceInitFunc ) iproperties_tab_iface_init,
+		NULL,
+		NULL
+	};
+
 	static const GInterfaceInfo iabout_iface_info = {
 		( GInterfaceInitFunc ) iabout_iface_init,
 		NULL,
@@ -284,6 +292,8 @@ register_type( void )
 	g_type_add_interface_static( type, NACT_ICONDITIONS_TAB_TYPE, &iconditions_tab_iface_info );
 
 	g_type_add_interface_static( type, NACT_IADVANCED_TAB_TYPE, &iadvanced_tab_iface_info );
+
+	g_type_add_interface_static( type, NACT_IPROPERTIES_TAB_TYPE, &iproperties_tab_iface_info );
 
 	g_type_add_interface_static( type, NA_IABOUT_TYPE, &iabout_iface_info );
 
@@ -531,6 +541,14 @@ iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface )
 }
 
 static void
+iproperties_tab_iface_init( NactIPropertiesTabInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_iproperties_tab_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+}
+
+static void
 iabout_iface_init( NAIAboutInterface *iface )
 {
 	static const gchar *thisfn = "nact_main_window_iabout_iface_init";
@@ -713,6 +731,7 @@ instance_dispose( GObject *window )
 		nact_ifolders_tab_dispose( NACT_IFOLDERS_TAB( window ));
 		nact_iconditions_tab_dispose( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_dispose( NACT_IADVANCED_TAB( window ));
+		nact_iproperties_tab_dispose( NACT_IPROPERTIES_TAB( window ));
 		nact_main_menubar_dispose( self );
 
 		/* chain up to the parent class */
@@ -1036,6 +1055,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_ifolders_tab_initial_load_toplevel( NACT_IFOLDERS_TAB( window ));
 		nact_iconditions_tab_initial_load_toplevel( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_initial_load_toplevel( NACT_IADVANCED_TAB( window ));
+		nact_iproperties_tab_initial_load_toplevel( NACT_IPROPERTIES_TAB( window ));
 
 		nact_main_statusbar_initial_load_toplevel( window );
 	}
@@ -1073,6 +1093,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_ifolders_tab_runtime_init_toplevel( NACT_IFOLDERS_TAB( window ));
 		nact_iconditions_tab_runtime_init_toplevel( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_runtime_init_toplevel( NACT_IADVANCED_TAB( window ));
+		nact_iproperties_tab_runtime_init_toplevel( NACT_IPROPERTIES_TAB( window ));
 		nact_main_menubar_runtime_init( window );
 
 		order_mode = na_iprefs_get_order_mode( NA_IPREFS( updater ));
@@ -1112,6 +1133,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( window ));
 	g_return_if_fail( NACT_IS_ICONDITIONS_TAB( window ));
 	g_return_if_fail( NACT_IS_IADVANCED_TAB( window ));
+	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( window ));
 
 	if( !window->private->dispose_has_run ){
 
@@ -1120,6 +1142,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 		nact_ifolders_tab_all_widgets_showed( NACT_IFOLDERS_TAB( window ));
 		nact_iconditions_tab_all_widgets_showed( NACT_ICONDITIONS_TAB( window ));
 		nact_iadvanced_tab_all_widgets_showed( NACT_IADVANCED_TAB( window ));
+		nact_iproperties_tab_all_widgets_showed( NACT_IPROPERTIES_TAB( window ));
 
 		nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));
 		nact_sort_buttons_all_widgets_showed( window );

@@ -103,6 +103,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iconditions-tab.h								\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
+	nact-iproperties-tab.c								\
+	nact-iproperties-tab.h								\
 	nact-main.c											\
 	nact-main-menubar.c									\
 	nact-main-menubar.h									\

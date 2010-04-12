@@ -63,7 +63,8 @@ enum {
 	TAB_COMMAND,
 	TAB_FOLDERS,
 	TAB_CONDITIONS,
-	TAB_ADVANCED
+	TAB_ADVANCED,
+	TAB_PROPERTIES
 };
 
 void     nact_main_tab_enable_page( NactMainWindow *window, gint page, gboolean enabled );
