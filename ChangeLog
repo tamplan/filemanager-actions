@@ -83,6 +83,9 @@
 
 2010-04-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-menu/Makefile.am:
+	* src/plugin-tracker/Makefile.am: Fix incorrect log domains.
+
 	* po/POTFILES.in: Add src/nact/nact-iproperties-tab.c file.
 
 	* src/nact/nautilus-actions-config-tool.ui: Adjust vertical paddings.
