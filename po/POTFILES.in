@@ -31,6 +31,7 @@ src/nact/nact-export-format.c
 src/nact/nact-iaction-tab.c
 src/nact/nact-icommand-tab.c
 src/nact/nact-ifolders-tab.c
+src/nact/nact-iproperties-tab.c
 src/nact/nact-main-menubar.c
 src/nact/nact-main-menubar-edit.c
 src/nact/nact-main-menubar-file.c

@@ -83,6 +83,8 @@
 
 2010-04-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in: Add src/nact/nact-iproperties-tab.c file.
+
 	* src/nact/nautilus-actions-config-tool.ui: Adjust vertical paddings.
 
 	"Advanced conditions" tab is renamed as "Schemes".
