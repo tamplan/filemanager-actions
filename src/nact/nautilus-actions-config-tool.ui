@@ -709,11 +709,12 @@ Defining several profiles lets you have several commands, each applying with a d
                           <object class="GtkVBox" id="vbox10">
                             <property name="visible">True</property>
                             <property name="orientation">vertical</property>
+                            <property name="spacing">10</property>
                             <child>
                               <object class="GtkLabel" id="label2">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
-                                <property name="ypad">10</property>
+                                <property name="xpad">10</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Appears if folder's path is one or inside one of these&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
                               </object>
@@ -1077,16 +1078,17 @@ Defining several profiles lets you have several commands, each applying with a d
                         <property name="visible">True</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
+                        <property name="spacing">10</property>
                         <child>
                           <object class="GtkVBox" id="vbox340">
                             <property name="visible">True</property>
-                            <property name="border_width">6</property>
                             <property name="orientation">vertical</property>
                             <property name="spacing">10</property>
                             <child>
                               <object class="GtkLabel" id="label46">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
+                                <property name="xpad">10</property>
                                 <property name="label" translatable="yes">&lt;b&gt;Appears if scheme is in this list&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
                               </object>

@@ -83,6 +83,8 @@
 
 2010-04-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nautilus-actions-config-tool.ui: Adjust vertical paddings.
+
 	"Advanced conditions" tab is renamed as "Schemes".
 
 	* src/nact/nact-iadvanced-tab.c: Renamed as src/nact/nact-ischemes-tab.c.
