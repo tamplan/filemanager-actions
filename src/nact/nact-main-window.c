@@ -51,8 +51,8 @@
 #include "nact-icommand-tab.h"
 #include "nact-ifolders-tab.h"
 #include "nact-iconditions-tab.h"
-#include "nact-iadvanced-tab.h"
 #include "nact-iproperties-tab.h"
+#include "nact-ischemes-tab.h"
 #include "nact-main-tab.h"
 #include "nact-main-menubar.h"
 #include "nact-main-statusbar.h"
@@ -148,7 +148,7 @@ static void     iaction_tab_iface_init( NactIActionTabInterface *iface );
 static void     icommand_tab_iface_init( NactICommandTabInterface *iface );
 static void     ifolders_tab_iface_init( NactIFoldersTabInterface *iface );
 static void     iconditions_tab_iface_init( NactIConditionsTabInterface *iface );
-static void     iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface );
+static void     ischemes_tab_iface_init( NactISchemesTabInterface *iface );
 static void     iproperties_tab_iface_init( NactIPropertiesTabInterface *iface );
 static void     iabout_iface_init( NAIAboutInterface *iface );
 static void     ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
@@ -247,8 +247,8 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo iadvanced_tab_iface_info = {
-		( GInterfaceInitFunc ) iadvanced_tab_iface_init,
+	static const GInterfaceInfo ischemes_tab_iface_info = {
+		( GInterfaceInitFunc ) ischemes_tab_iface_init,
 		NULL,
 		NULL
 	};
@@ -291,7 +291,7 @@ register_type( void )
 
 	g_type_add_interface_static( type, NACT_ICONDITIONS_TAB_TYPE, &iconditions_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_IADVANCED_TAB_TYPE, &iadvanced_tab_iface_info );
+	g_type_add_interface_static( type, NACT_ISCHEMES_TAB_TYPE, &ischemes_tab_iface_info );
 
 	g_type_add_interface_static( type, NACT_IPROPERTIES_TAB_TYPE, &iproperties_tab_iface_info );
 
@@ -533,9 +533,9 @@ iconditions_tab_iface_init( NactIConditionsTabInterface *iface )
 }
 
 static void
-iadvanced_tab_iface_init( NactIAdvancedTabInterface *iface )
+ischemes_tab_iface_init( NactISchemesTabInterface *iface )
 {
-	static const gchar *thisfn = "nact_main_window_iadvanced_tab_iface_init";
+	static const gchar *thisfn = "nact_main_window_ischemes_tab_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
@@ -730,7 +730,7 @@ instance_dispose( GObject *window )
 		nact_icommand_tab_dispose( NACT_ICOMMAND_TAB( window ));
 		nact_ifolders_tab_dispose( NACT_IFOLDERS_TAB( window ));
 		nact_iconditions_tab_dispose( NACT_ICONDITIONS_TAB( window ));
-		nact_iadvanced_tab_dispose( NACT_IADVANCED_TAB( window ));
+		nact_ischemes_tab_dispose( NACT_ISCHEMES_TAB( window ));
 		nact_iproperties_tab_dispose( NACT_IPROPERTIES_TAB( window ));
 		nact_main_menubar_dispose( self );
 
@@ -1054,7 +1054,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_icommand_tab_initial_load_toplevel( NACT_ICOMMAND_TAB( window ));
 		nact_ifolders_tab_initial_load_toplevel( NACT_IFOLDERS_TAB( window ));
 		nact_iconditions_tab_initial_load_toplevel( NACT_ICONDITIONS_TAB( window ));
-		nact_iadvanced_tab_initial_load_toplevel( NACT_IADVANCED_TAB( window ));
+		nact_ischemes_tab_initial_load_toplevel( NACT_ISCHEMES_TAB( window ));
 		nact_iproperties_tab_initial_load_toplevel( NACT_IPROPERTIES_TAB( window ));
 
 		nact_main_statusbar_initial_load_toplevel( window );
@@ -1092,7 +1092,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_icommand_tab_runtime_init_toplevel( NACT_ICOMMAND_TAB( window ));
 		nact_ifolders_tab_runtime_init_toplevel( NACT_IFOLDERS_TAB( window ));
 		nact_iconditions_tab_runtime_init_toplevel( NACT_ICONDITIONS_TAB( window ));
-		nact_iadvanced_tab_runtime_init_toplevel( NACT_IADVANCED_TAB( window ));
+		nact_ischemes_tab_runtime_init_toplevel( NACT_ISCHEMES_TAB( window ));
 		nact_iproperties_tab_runtime_init_toplevel( NACT_IPROPERTIES_TAB( window ));
 		nact_main_menubar_runtime_init( window );
 
@@ -1132,7 +1132,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( window ));
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( window ));
 	g_return_if_fail( NACT_IS_ICONDITIONS_TAB( window ));
-	g_return_if_fail( NACT_IS_IADVANCED_TAB( window ));
+	g_return_if_fail( NACT_IS_ISCHEMES_TAB( window ));
 	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( window ));
 
 	if( !window->private->dispose_has_run ){
@@ -1141,7 +1141,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 		nact_icommand_tab_all_widgets_showed( NACT_ICOMMAND_TAB( window ));
 		nact_ifolders_tab_all_widgets_showed( NACT_IFOLDERS_TAB( window ));
 		nact_iconditions_tab_all_widgets_showed( NACT_ICONDITIONS_TAB( window ));
-		nact_iadvanced_tab_all_widgets_showed( NACT_IADVANCED_TAB( window ));
+		nact_ischemes_tab_all_widgets_showed( NACT_ISCHEMES_TAB( window ));
 		nact_iproperties_tab_all_widgets_showed( NACT_IPROPERTIES_TAB( window ));
 
 		nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));

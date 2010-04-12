@@ -83,6 +83,16 @@
 
 2010-04-12 Pierre Wieser <pwieser@trychlos.org>
 
+	"Advanced conditions" tab is renamed as "Schemes".
+
+	* src/nact/nact-iadvanced-tab.c: Renamed as src/nact/nact-ischemes-tab.c.
+	* src/nact/nact-iadvanced-tab.h: Renamed as src/nact/nact-ischemes-tab.h.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.c: Updated accordingly.
+
 	Move item properties to their own tab.
 
 	* src/nact/nact-iproperties-tab.c:

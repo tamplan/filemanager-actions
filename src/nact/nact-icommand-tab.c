@@ -50,7 +50,7 @@
 #include "nact-main-tab.h"
 #include "nact-icommand-tab.h"
 #include "nact-iconditions-tab.h"
-#include "nact-iadvanced-tab.h"
+#include "nact-ischemes-tab.h"
 
 /* private interface data
  */
@@ -686,7 +686,7 @@ parse_parameters( NactICommandTab *instance )
 
 	nact_iconditions_tab_get_isfiledir( NACT_ICONDITIONS_TAB( instance ), &is_file, &is_dir );
 	accept_multiple = nact_iconditions_tab_get_multiple( NACT_ICONDITIONS_TAB( instance ));
-	scheme_list = nact_iadvanced_tab_get_schemes( NACT_IADVANCED_TAB( instance ));
+	scheme_list = nact_ischemes_tab_get_schemes( NACT_ISCHEMES_TAB( instance ));
 
 	separator = g_strdup_printf( " %s/", ex_path );
 	start = g_strdup_printf( "%s/", ex_path );

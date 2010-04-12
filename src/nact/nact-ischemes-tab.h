@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_IADVANCED_TAB_H__
-#define __NACT_IADVANCED_TAB_H__
+#ifndef __NACT_ISCHEMES_TAB_H__
+#define __NACT_ISCHEMES_TAB_H__
 
 /**
- * SECTION: nact_iadvanced_tab
- * @short_description: #NactIAdvancedTab interface declaration.
- * @include: nact/nact-iadvanced-tab.h
+ * SECTION: nact_ischemes_tab
+ * @short_description: #NactISchemesTab interface declaration.
+ * @include: nact/nact-ischemes-tab.h
  *
  * This interface implements all the widgets which define the
  * conditions for the action.
@@ -44,30 +44,30 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IADVANCED_TAB_TYPE							( nact_iadvanced_tab_get_type())
-#define NACT_IADVANCED_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IADVANCED_TAB_TYPE, NactIAdvancedTab ))
-#define NACT_IS_IADVANCED_TAB( object )					( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IADVANCED_TAB_TYPE ))
-#define NACT_IADVANCED_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IADVANCED_TAB_TYPE, NactIAdvancedTabInterface ))
+#define NACT_ISCHEMES_TAB_TYPE						( nact_ischemes_tab_get_type())
+#define NACT_ISCHEMES_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ISCHEMES_TAB_TYPE, NactISchemesTab ))
+#define NACT_IS_ISCHEMES_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ISCHEMES_TAB_TYPE ))
+#define NACT_ISCHEMES_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ISCHEMES_TAB_TYPE, NactISchemesTabInterface ))
 
-typedef struct NactIAdvancedTab NactIAdvancedTab;
+typedef struct NactISchemesTab                 NactISchemesTab;
 
-typedef struct NactIAdvancedTabInterfacePrivate NactIAdvancedTabInterfacePrivate;
+typedef struct NactISchemesTabInterfacePrivate NactISchemesTabInterfacePrivate;
 
 typedef struct {
-	GTypeInterface                    parent;
-	NactIAdvancedTabInterfacePrivate *private;
+	GTypeInterface                   parent;
+	NactISchemesTabInterfacePrivate *private;
 }
-	NactIAdvancedTabInterface;
+	NactISchemesTabInterface;
 
-GType   nact_iadvanced_tab_get_type( void );
+GType   nact_ischemes_tab_get_type( void );
 
-void    nact_iadvanced_tab_initial_load_toplevel( NactIAdvancedTab *instance );
-void    nact_iadvanced_tab_runtime_init_toplevel( NactIAdvancedTab *instance );
-void    nact_iadvanced_tab_all_widgets_showed( NactIAdvancedTab *instance );
-void    nact_iadvanced_tab_dispose( NactIAdvancedTab *instance );
+void    nact_ischemes_tab_initial_load_toplevel( NactISchemesTab *instance );
+void    nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance );
+void    nact_ischemes_tab_all_widgets_showed( NactISchemesTab *instance );
+void    nact_ischemes_tab_dispose( NactISchemesTab *instance );
 
-GSList *nact_iadvanced_tab_get_schemes( NactIAdvancedTab *instance );
+GSList *nact_ischemes_tab_get_schemes( NactISchemesTab *instance );
 
 G_END_DECLS
 
-#endif /* __NACT_IADVANCED_TAB_H__ */
+#endif /* __NACT_ISCHEMES_TAB_H__ */

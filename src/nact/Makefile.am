@@ -93,8 +93,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iactions-list-priv.h							\
 	nact-iaction-tab.c									\
 	nact-iaction-tab.h									\
-	nact-iadvanced-tab.c								\
-	nact-iadvanced-tab.h								\
 	nact-ifolders-tab.c									\
 	nact-ifolders-tab.h									\
 	nact-icommand-tab.c									\
@@ -105,6 +103,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iprefs.h										\
 	nact-iproperties-tab.c								\
 	nact-iproperties-tab.h								\
+	nact-ischemes-tab.c									\
+	nact-ischemes-tab.h									\
 	nact-main.c											\
 	nact-main-menubar.c									\
 	nact-main-menubar.h									\

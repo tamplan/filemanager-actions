@@ -37,11 +37,11 @@
 #include "base-window.h"
 #include "nact-main-tab.h"
 #include "nact-schemes-list.h"
-#include "nact-iadvanced-tab.h"
+#include "nact-ischemes-tab.h"
 
 /* private interface data
  */
-struct NactIAdvancedTabInterfacePrivate {
+struct NactISchemesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -49,17 +49,17 @@ static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
 static GType         register_type( void );
-static void          interface_base_init( NactIAdvancedTabInterface *klass );
-static void          interface_base_finalize( NactIAdvancedTabInterface *klass );
+static void          interface_base_init( NactISchemesTabInterface *klass );
+static void          interface_base_finalize( NactISchemesTabInterface *klass );
 
-static void          runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview );
-static void          on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selected );
-static void          on_tab_updatable_enable_tab( NactIAdvancedTab *instance, NAObjectItem *item );
-static gboolean      tab_set_sensitive( NactIAdvancedTab *instance );
-static GtkTreeView  *get_schemes_tree_view( NactIAdvancedTab *instance );
+static void          runtime_init_connect_signals( NactISchemesTab *instance, GtkTreeView *listview );
+static void          on_tab_updatable_selection_changed( NactISchemesTab *instance, gint count_selected );
+static void          on_tab_updatable_enable_tab( NactISchemesTab *instance, NAObjectItem *item );
+static gboolean      tab_set_sensitive( NactISchemesTab *instance );
+static GtkTreeView  *get_schemes_tree_view( NactISchemesTab *instance );
 
 GType
-nact_iadvanced_tab_get_type( void )
+nact_ischemes_tab_get_type( void )
 {
 	static GType iface_type = 0;
 
@@ -73,11 +73,11 @@ nact_iadvanced_tab_get_type( void )
 static GType
 register_type( void )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_register_type";
+	static const gchar *thisfn = "nact_ischemes_tab_register_type";
 	GType type;
 
 	static const GTypeInfo info = {
-		sizeof( NactIAdvancedTabInterface ),
+		sizeof( NactISchemesTabInterface ),
 		( GBaseInitFunc ) interface_base_init,
 		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
@@ -90,7 +90,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( G_TYPE_INTERFACE, "NactIAdvancedTab", &info, 0 );
+	type = g_type_register_static( G_TYPE_INTERFACE, "NactISchemesTab", &info, 0 );
 
 	g_type_interface_add_prerequisite( type, BASE_WINDOW_TYPE );
 
@@ -98,24 +98,24 @@ register_type( void )
 }
 
 static void
-interface_base_init( NactIAdvancedTabInterface *klass )
+interface_base_init( NactISchemesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_interface_base_init";
+	static const gchar *thisfn = "nact_ischemes_tab_interface_base_init";
 
 	if( !st_initialized ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
-		klass->private = g_new0( NactIAdvancedTabInterfacePrivate, 1 );
+		klass->private = g_new0( NactISchemesTabInterfacePrivate, 1 );
 
 		st_initialized = TRUE;
 	}
 }
 
 static void
-interface_base_finalize( NactIAdvancedTabInterface *klass )
+interface_base_finalize( NactISchemesTabInterface *klass )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_interface_base_finalize";
+	static const gchar *thisfn = "nact_ischemes_tab_interface_base_finalize";
 
 	if( st_initialized && !st_finalized ){
 
@@ -128,29 +128,29 @@ interface_base_finalize( NactIAdvancedTabInterface *klass )
 }
 
 void
-nact_iadvanced_tab_initial_load_toplevel( NactIAdvancedTab *instance )
+nact_ischemes_tab_initial_load_toplevel( NactISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_initial_load_toplevel";
+	static const gchar *thisfn = "nact_ischemes_tab_initial_load_toplevel";
 
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 		nact_schemes_list_create_model( get_schemes_tree_view( instance ), TRUE );
 	}
 }
 
 void
-nact_iadvanced_tab_runtime_init_toplevel( NactIAdvancedTab *instance )
+nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_runtime_init_toplevel";
+	static const gchar *thisfn = "nact_ischemes_tab_runtime_init_toplevel";
 	GtkTreeView *listview;
 
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 		listview = get_schemes_tree_view( instance );
 		runtime_init_connect_signals( instance, listview );
@@ -159,14 +159,14 @@ nact_iadvanced_tab_runtime_init_toplevel( NactIAdvancedTab *instance )
 }
 
 static void
-runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview )
+runtime_init_connect_signals( NactISchemesTab *instance, GtkTreeView *listview )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_runtime_init_connect_signals";
+	static const gchar *thisfn = "nact_ischemes_tab_runtime_init_connect_signals";
 
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p, listview=%p", thisfn, ( void * ) instance, ( void * ) listview );
-		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
@@ -183,26 +183,26 @@ runtime_init_connect_signals( NactIAdvancedTab *instance, GtkTreeView *listview 
 }
 
 void
-nact_iadvanced_tab_all_widgets_showed( NactIAdvancedTab *instance )
+nact_ischemes_tab_all_widgets_showed( NactISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_all_widgets_showed";
+	static const gchar *thisfn = "nact_ischemes_tab_all_widgets_showed";
 
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 	}
 }
 
 void
-nact_iadvanced_tab_dispose( NactIAdvancedTab *instance )
+nact_ischemes_tab_dispose( NactISchemesTab *instance )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_dispose";
+	static const gchar *thisfn = "nact_ischemes_tab_dispose";
 
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 		nact_schemes_list_dispose( BASE_WINDOW( instance ));
 	}
@@ -213,12 +213,12 @@ nact_iadvanced_tab_dispose( NactIAdvancedTab *instance )
  * The caller should call na_core_utils_slist_free() after use.
  */
 GSList *
-nact_iadvanced_tab_get_schemes( NactIAdvancedTab *instance )
+nact_ischemes_tab_get_schemes( NactISchemesTab *instance )
 {
 	GSList *list;
 
 	list = NULL;
-	g_return_val_if_fail( NACT_IS_IADVANCED_TAB( instance ), list );
+	g_return_val_if_fail( NACT_IS_ISCHEMES_TAB( instance ), list );
 
 	if( st_initialized && !st_finalized ){
 
@@ -229,9 +229,9 @@ nact_iadvanced_tab_get_schemes( NactIAdvancedTab *instance )
 }
 
 static void
-on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selected )
+on_tab_updatable_selection_changed( NactISchemesTab *instance, gint count_selected )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_on_tab_updatable_selection_changed";
+	static const gchar *thisfn = "nact_ischemes_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	NAObjectProfile *profile;
 	gboolean enable_tab;
@@ -242,7 +242,7 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
-		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 		g_object_get(
 				G_OBJECT( instance ),
@@ -267,21 +267,21 @@ on_tab_updatable_selection_changed( NactIAdvancedTab *instance, gint count_selec
 }
 
 static void
-on_tab_updatable_enable_tab( NactIAdvancedTab *instance, NAObjectItem *item )
+on_tab_updatable_enable_tab( NactISchemesTab *instance, NAObjectItem *item )
 {
-	static const gchar *thisfn = "nact_iadvanced_tab_on_tab_updatable_enable_tab";
+	static const gchar *thisfn = "nact_ischemes_tab_on_tab_updatable_enable_tab";
 
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
-		g_return_if_fail( NACT_IS_IADVANCED_TAB( instance ));
+		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 		tab_set_sensitive( instance );
 	}
 }
 
 static gboolean
-tab_set_sensitive( NactIAdvancedTab *instance )
+tab_set_sensitive( NactISchemesTab *instance )
 {
 	NAObjectItem *item;
 	NAObjectProfile *profile;
@@ -294,13 +294,13 @@ tab_set_sensitive( NactIAdvancedTab *instance )
 			NULL );
 
 	enable_tab = ( profile != NULL && na_object_is_target_selection( NA_OBJECT_ACTION( item )));
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ADVANCED, enable_tab );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES, enable_tab );
 
 	return( enable_tab );
 }
 
 static GtkTreeView *
-get_schemes_tree_view( NactIAdvancedTab *instance )
+get_schemes_tree_view( NactISchemesTab *instance )
 {
 	GtkWidget *treeview;
 
