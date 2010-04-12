@@ -425,10 +425,14 @@ is_target_selection_candidate( const NAIContext *object, GList *files )
 				g_debug( "na_icontext_is_target_selection_candidate: tmp_filename=%s", tmp_filename );
 			}
 
-			/* --> for the moment we deal with all mimetypes case-insensitively */
+			/* --> for the moment we deal with all mimetypes case-insensitively
+			 * note that a symlink to a directory has a 'inode/directory' mimetype
+			 * and, in general, a symlink to a target has the target's mimetype
+			 */
 			tmp_mimetype2 = g_ascii_strdown( tmp_mimetype, strlen( tmp_mimetype ));
 			g_free( tmp_mimetype );
 			tmp_mimetype = tmp_mimetype2;
+			g_debug( "mimetype=%s", tmp_mimetype );
 
 			if( na_selected_info_is_directory( NA_SELECTED_INFO( iter1->data ))){
 				dir_count++;
