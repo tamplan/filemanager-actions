@@ -179,10 +179,13 @@ NADataDef data_def_conditions [] = {
 				NULL,
 				NULL },
 
+	/* this is obsoleted starting with 2.30-newdata (released as 2.31.x serie)
+	 * and replaced by count-sign and count-number
+	 */
 	{ NAFO_DATA_MULTIPLE,
 				TRUE,
-				TRUE,
-				TRUE,
+				FALSE,
+				FALSE,
 				N_( "Whether the selection may be multiple" ),
 				N_( "If you need more than one files or folders to be selected, set this " \
 					"key to 'true'. If you want just one file or folder, set it to 'false'.\n" \
@@ -190,14 +193,14 @@ NADataDef data_def_conditions [] = {
 					"Defaults to 'false'." ),
 				NAFD_TYPE_BOOLEAN,
 				"false",
-				TRUE,
-				TRUE,
+				FALSE,
+				FALSE,
 				FALSE,
 				FALSE,
 				"accept-multiple-files",
 				NULL,
-				'u',
-				"accept-multiple",
+				0,
+				NULL,
 				0,
 				G_OPTION_ARG_NONE,
 				NULL,
@@ -264,6 +267,30 @@ NADataDef data_def_conditions [] = {
 				N_( "The path of a (parent) directory for which the item will be displayed. " \
 					"You must set one option for each folder you need" ),
 				N_( "<PATH>" ) },
+
+	{ NAFO_DATA_SELECTION_COUNT,
+				TRUE,
+				TRUE,
+				TRUE,
+				N_( "Operator of the selection count relation" ),
+				N_( "Whether this profile may be selected depending of the count of the selection.\n" \
+					"This is a string of the form \"{'<'|'='|'>'} number\".\n" \
+					"Examples of valid strings are: \"=0\", \"> 1\", \"< 10\".\n" \
+					"Defaults to \">0\"." ),
+				NAFD_TYPE_STRING,
+				">0",
+				TRUE,
+				TRUE,
+				FALSE,
+				FALSE,
+				"selection-count",
+				"SelectionCount",
+				0,
+				NULL,
+				0,
+				G_OPTION_ARG_NONE,
+				NULL,
+				NULL },
 
 	{ NULL },
 };

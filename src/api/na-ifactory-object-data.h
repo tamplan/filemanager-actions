@@ -86,6 +86,7 @@ G_BEGIN_DECLS
 #define NAFO_DATA_MULTIPLE					"na-factory-data-multiple"
 #define NAFO_DATA_SCHEMES					"na-factory-data-schemes"
 #define NAFO_DATA_FOLDERS					"na-factory-data-folders"
+#define NAFO_DATA_SELECTION_COUNT			"na-factory-data-selection-count"
 
 G_END_DECLS
 

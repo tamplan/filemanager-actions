@@ -102,12 +102,19 @@
 	ExecuteAs
 	OnlyShowIn
 	NotShowIn
-	Hidden
 	TryExec
 	ShowIfRegistered
 	ShowIfTrue
 	ShowIfRunning
 	SelectionCount
+
+	existing: [x] boolean: accept multiple
+		we so only test if selection is unique or not
+
+	next: a string 
+		accept-multiple = FALSE -> '=1'
+		accept-multiple = TRUE  -> '>0'
+
 	Capabilities
 
 - profile path and parameters should be set together as only one variable ?

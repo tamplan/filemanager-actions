@@ -78,10 +78,19 @@
 	* src/plugin-tracker/na-tracker-dbus.c
 	(na_tracker_dbus_get_selected_paths): Also sends the mimetype.
 
-	* src/utils/nautilus-actions-run.c (targets_from_selection):
-	Get the mimetype from DBus interface.
+2009-04-13 Pierre Wieser <pwieser@trychlos.org>
 
-2010-04-12 Pierre Wieser <pwieser@trychlos.org>
+	* po/POTFILES.in: Adding src/nact/nact-iconditions-tab.c file.
+
+	* src/api/na-ifactory-object-data.h:
+	* src/core/na-icontext-factory.c:
+	Adding NAFO_DATA_SELECTION_COUNT data, obsoleting NAFO_DATA_MULTIPLE.
+
+	* src/nact/nact-iconditions-tab.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Adding required entries for SelectionCount data.
+
+2009-04-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/plugin-menu/Makefile.am:
 	* src/plugin-tracker/Makefile.am: Fix incorrect log domains.

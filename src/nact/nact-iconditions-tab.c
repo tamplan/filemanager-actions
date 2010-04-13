@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
 #include <api/na-core-utils.h>
@@ -47,6 +48,28 @@
  */
 struct NactIConditionsTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
+};
+
+/* columns in the selection count combobox
+ */
+enum {
+	COUNT_SIGN_COLUMN = 0,
+	COUNT_LABEL_COLUMN,
+	COUNT_N_COLUMN
+};
+
+typedef struct {
+	gchar *sign;
+	gchar *label;
+}
+	SelectionCountStruct;
+
+/* i18n notes: selection count symbol, respectively 'less than', 'equal to' and 'greater than' */
+static SelectionCountStruct st_counts[] = {
+		{ N_( "<" ), N_( "(strictly lesser than)" ) },
+		{ N_( "=" ), N_( "(equal to)" ) },
+		{ N_( ">" ), N_( "(strictly greater than)" ) },
+		{ NULL }
 };
 
 static gboolean st_initialized = FALSE;
@@ -72,7 +95,11 @@ static void       on_basenames_changed( GtkEntry *entry, NactIConditionsTab *ins
 static void       on_isfiledir_toggled( GtkToggleButton *button, NactIConditionsTab *instance );
 static void       on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance );
 static void       on_mimetypes_changed( GtkEntry *entry, NactIConditionsTab *instance );
+
 static void       on_multiple_toggled( GtkToggleButton *button, NactIConditionsTab *instance );
+static void       init_count_combobox( NactIConditionsTab *instance );
+static void       dispose_count_combobox( NactIConditionsTab *instance );
+
 static void       set_isfiledir( NactIConditionsTab *instance, gboolean isfile, gboolean isdir, gboolean readonly );
 
 GType
@@ -153,6 +180,8 @@ nact_iconditions_tab_initial_load_toplevel( NactIConditionsTab *instance )
 	g_return_if_fail( NACT_IS_ICONDITIONS_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		init_count_combobox( instance );
 	}
 }
 
@@ -255,6 +284,8 @@ nact_iconditions_tab_dispose( NactIConditionsTab *instance )
 	g_return_if_fail( NACT_IS_ICONDITIONS_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		dispose_count_combobox( instance );
 	}
 }
 
@@ -588,6 +619,53 @@ on_multiple_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 			}
 		}
 	}
+}
+
+static void
+init_count_combobox( NactIConditionsTab *instance )
+{
+	GtkTreeModel *model;
+	guint i;
+	GtkTreeIter row;
+	GtkComboBox *combo;
+	GtkCellRenderer *cell_renderer_text;
+
+	model = GTK_TREE_MODEL( gtk_list_store_new( COUNT_N_COLUMN, G_TYPE_STRING, G_TYPE_STRING ));
+	i = 0;
+	while( st_counts[i].sign ){
+		gtk_list_store_append( GTK_LIST_STORE( model ), &row );
+		gtk_list_store_set( GTK_LIST_STORE( model ), &row, COUNT_SIGN_COLUMN, st_counts[i].sign, -1 );
+		gtk_list_store_set( GTK_LIST_STORE( model ), &row, COUNT_LABEL_COLUMN, st_counts[i].label, -1 );
+		i += 1;
+	}
+
+	combo = GTK_COMBO_BOX( base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountSigneCombobox" ));
+	gtk_combo_box_set_model( combo, model );
+	g_object_unref( model );
+
+	gtk_cell_layout_clear( GTK_CELL_LAYOUT( combo ));
+
+	cell_renderer_text = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), cell_renderer_text, FALSE );
+	gtk_cell_layout_add_attribute( GTK_CELL_LAYOUT( combo ), cell_renderer_text, "text", COUNT_SIGN_COLUMN );
+
+	cell_renderer_text = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), cell_renderer_text, TRUE );
+	g_object_set( G_OBJECT( cell_renderer_text ), "xalign", ( gdouble ) 0.0, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
+	gtk_cell_layout_add_attribute( GTK_CELL_LAYOUT( combo ), cell_renderer_text, "text", COUNT_LABEL_COLUMN );
+
+	gtk_combo_box_set_active( GTK_COMBO_BOX( combo ), 0 );
+}
+
+static void
+dispose_count_combobox( NactIConditionsTab *instance )
+{
+	GtkComboBox *combo;
+	GtkTreeModel *model;
+
+	combo = GTK_COMBO_BOX( base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountSigneCombobox" ));
+	model = gtk_combo_box_get_model( combo );
+	gtk_list_store_clear( GTK_LIST_STORE( model ));
 }
 
 static void

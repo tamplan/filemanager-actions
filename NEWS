@@ -65,6 +65,8 @@ Version 2.30.2
 		- Implement new properties, both in GConf and .desktop files:
 		  . a description of the item
 
+		- The 'accept multiple files' flag is replaced with a count selector
+
 	UI modifications:
 
 		- Item properties have now their own 'Properties' tab
