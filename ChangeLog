@@ -1,3 +1,7 @@
+2009-04-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-selected-info.c (dump): New function.
+
 2009-04-09 Pierre Wieser <pwieser@trychlos.org>
 
 	* NEWS: Updated.

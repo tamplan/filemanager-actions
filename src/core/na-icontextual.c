@@ -408,9 +408,11 @@ is_target_selection_candidate( const NAIContextual *object, GList *files )
 	for( iter1 = files ; iter1 ; iter1 = iter1->next ){
 
 		tmp_filename = na_selected_info_get_name( NA_SELECTED_INFO( iter1->data ));
+		g_debug( "na_icontext_is_target_selection_candidate: tmp_filename=%s", tmp_filename );
 
 		if( tmp_filename ){
 			tmp_mimetype = na_selected_info_get_mime_type( NA_SELECTED_INFO( iter1->data ));
+			g_debug( "na_icontext_is_target_selection_candidate: tmp_mimetype=%s", tmp_mimetype );
 
 			if( !matchcase ){
 				/* --> if case-insensitive asked, lower all the string
@@ -420,6 +422,7 @@ is_target_selection_candidate( const NAIContextual *object, GList *files )
 				tmp_filename2 = g_ascii_strdown( tmp_filename, strlen( tmp_filename ));
 				g_free( tmp_filename );
 				tmp_filename = tmp_filename2;
+				g_debug( "na_icontext_is_target_selection_candidate: tmp_filename=%s", tmp_filename );
 			}
 
 			/* --> for the moment we deal with all mimetypes case-insensitively */

@@ -61,6 +61,7 @@ static void            instance_init( GTypeInstance *instance, gpointer klass );
 static void            instance_dispose( GObject *object );
 static void            instance_finalize( GObject *object );
 
+static void            dump( const NASelectedInfo *nsi );
 static NASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
 static NASelectedInfo *new_from_uri( const gchar *uri );
 static void            query_file_attributes( NASelectedInfo *info );
@@ -418,6 +419,20 @@ na_selected_info_create_for_uri( const gchar *uri )
 	return( obj );
 }
 
+static void
+dump( const NASelectedInfo *nsi )
+{
+	static const gchar *thisfn = "na_selected_info_dump";
+
+	g_debug( "%s:            uri=%s", thisfn, nsi->private->uri );
+	g_debug( "%s:       mimetype=%s", thisfn, nsi->private->mimetype );
+	g_debug( "%s:      vfs->path=%s", thisfn, nsi->private->vfs->path );
+	g_debug( "%s: vfs->host_name=%s", thisfn, nsi->private->vfs->host_name );
+	g_debug( "%s: vfs->host_port=%d", thisfn, nsi->private->vfs->host_port );
+	g_debug( "%s: vfs->user_name=%s", thisfn, nsi->private->vfs->user_name );
+	g_debug( "%s:  vfs->password=%s", thisfn, nsi->private->vfs->password );
+}
+
 static NASelectedInfo *
 new_from_nautilus_file_info( NautilusFileInfo *item )
 {
@@ -440,6 +455,7 @@ new_from_uri( const gchar *uri )
 	query_file_attributes( info );
 	na_gnome_vfs_uri_parse( info->private->vfs, info->private->uri );
 
+	dump( info );
 	return( info );
 }
 
