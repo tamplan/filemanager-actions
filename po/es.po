@@ -557,13 +557,9 @@ msgstr ""
 "Un patrón para coincidir con los archivos seleccionados. Puede incluir "
 "comodines (? o *) (debe establecer una opción por cada patrón que necesite)"
 
-<<<<<<< HEAD
-#: ../src/core/na-icontextual-factory.c:125
-=======
 #: ../src/core/na-icontext-factory.c:125
 #, fuzzy
 #| msgid "Whether the labels are the sames"
->>>>>>> Refactor NAIContextual as NAIContext
 msgid "Whether the profile applies to files"
 msgstr "Indica si el perfil se aplica a archivos"
 
@@ -599,13 +595,9 @@ msgstr ""
 "isfile=FALSE e isdir=FALSE: combinación inválida (su configuración nunca "
 "aparecerá)"
 
-<<<<<<< HEAD
-#: ../src/core/na-icontextual-factory.c:153
-=======
 #: ../src/core/na-icontext-factory.c:153
 #, fuzzy
 #| msgid "Whether the labels are the sames"
->>>>>>> Refactor NAIContextual as NAIContext
 msgid "Whether the profile applies to folders"
 msgstr "Indica si el perfil se aplica a carpetas"
 
@@ -641,13 +633,9 @@ msgstr ""
 "isfile=FALSE e isdir=FALSE: combinación inválida (su configuración nunca "
 "aparecerá)"
 
-<<<<<<< HEAD
-#: ../src/core/na-icontextual-factory.c:181
-=======
 #: ../src/core/na-icontext-factory.c:181
 #, fuzzy
 #| msgid "Whether the action is enabled"
->>>>>>> Refactor NAIContextual as NAIContext
 msgid "Whether the selection may be multiple"
 msgstr "Indica si la selección puede ser múltiple"
 
@@ -665,13 +653,9 @@ msgstr ""
 "Si necesita que se selecciones uno o más archivos o carpetas, ponga a «true» "
 "esta clave. Si tan sólo quiere un archivo o carpeta, póngala a «false»"
 
-<<<<<<< HEAD
-#: ../src/core/na-icontextual-factory.c:204
-=======
 #: ../src/core/na-icontext-factory.c:204
 #, fuzzy
 #| msgid "The list of pattern to match the selected file(s)/folder(s)"
->>>>>>> Refactor NAIContextual as NAIContext
 msgid ""
 "List of schemes to be matched against those of selected file(s)/folder(s)"
 msgstr ""
@@ -736,15 +720,11 @@ msgstr ""
 "\n"
 "Se pueden usar todos los esquemas GnomeVFS que use Nautilus aquí."
 
-<<<<<<< HEAD
-#: ../src/core/na-icontextual-factory.c:233
-=======
 #: ../src/core/na-icontext-factory.c:233
 #, fuzzy
 #| msgid ""
 #| "A valid GIO scheme where the selected files should be located. You must "
 #| "set one option for each scheme you need"
->>>>>>> Refactor NAIContextual as NAIContext
 msgid ""
 "A valid GIO scheme where the selected file(s)/folder(s) should be located. "
 "You must set one option for each scheme you need"

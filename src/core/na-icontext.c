@@ -313,7 +313,7 @@ is_current_folder_inside( const NAIContext *object, NASelectedInfo *current_fold
 	gchar *current_folder_path;
 
 	is_inside = FALSE;
-	current_folder_path = na_selected_info_get_name( current_folder );
+	current_folder_path = na_selected_info_get_path( current_folder );
 	folders = na_object_get_folders( object );
 
 	for( ifold = folders ; ifold && !is_inside ; ifold = ifold->next ){
@@ -407,7 +407,7 @@ is_target_selection_candidate( const NAIContext *object, GList *files )
 
 	for( iter1 = files ; iter1 ; iter1 = iter1->next ){
 
-		tmp_filename = na_selected_info_get_name( NA_SELECTED_INFO( iter1->data ));
+		tmp_filename = na_selected_info_get_path( NA_SELECTED_INFO( iter1->data ));
 		g_debug( "na_icontext_is_target_selection_candidate: tmp_filename=%s", tmp_filename );
 
 		if( tmp_filename ){

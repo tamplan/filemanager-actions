@@ -1,5 +1,16 @@
 2009-04-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-selected-info.h:
+	* src/core/na-selected-info.c (na_selected_info_get_name):
+	Renamed as na_selected_info_get_path.
+
+	* src/core/na-icontext.c
+	(is_current_folder_inside, is_target_selection_candidate):
+	Updated accordingly.
+
+	* src/core/na-object-profile.c (na_object_profile_parse_parameters):
+	Do not try to deal with null values.
+
 	* src/plugin-menu/nautilus-actions.c (create_item_from_profile):
 	Duplicate the candidate profile, set the parent to null.
 

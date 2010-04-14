@@ -46,7 +46,7 @@ struct NASelectedInfoClassPrivate {
 struct NASelectedInfoPrivate {
 	gboolean       dispose_has_run;
 	gchar         *uri;
-	NAGnomeVFSURI *vfs;;
+	NAGnomeVFSURI *vfs;
 	GFile         *location;
 	gchar         *mimetype;
 	GFileType      file_type;
@@ -307,26 +307,26 @@ na_selected_info_get_mime_type( const NASelectedInfo *nsi )
 }
 
 /**
- * na_selected_info_get_name:
+ * na_selected_info_get_path:
  * @nsi: this #NASelectedInfo object.
  *
  * Returns: the filename of the item.
  */
 gchar *
-na_selected_info_get_name( const NASelectedInfo *nsi )
+na_selected_info_get_path( const NASelectedInfo *nsi )
 {
-	gchar *name;
+	gchar *path;
 
 	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
 
-	name = NULL;
+	path = NULL;
 
 	if( !nsi->private->dispose_has_run ){
 
-		name = g_strdup( nsi->private->vfs->path );
+		path = g_strdup( nsi->private->vfs->path );
 	}
 
-	return( name );
+	return( path );
 }
 
 /**

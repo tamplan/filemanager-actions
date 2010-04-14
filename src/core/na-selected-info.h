@@ -81,7 +81,7 @@ void            na_selected_info_free_list         ( GList *list );
 
 GFile          *na_selected_info_get_location  ( const NASelectedInfo *nsi );
 gchar          *na_selected_info_get_mime_type ( const NASelectedInfo *nsi );
-gchar          *na_selected_info_get_name      ( const NASelectedInfo *nsi );
+gchar          *na_selected_info_get_path      ( const NASelectedInfo *nsi );
 gchar          *na_selected_info_get_uri       ( const NASelectedInfo *nsi );
 gchar          *na_selected_info_get_uri_scheme( const NASelectedInfo *nsi );
 gboolean        na_selected_info_is_directory  ( const NASelectedInfo *nsi );

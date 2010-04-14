@@ -520,7 +520,7 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target,
 			na_gnome_vfs_uri_parse( vfs, iuri );
 
 			uri = g_strdup( iuri );
-			dirname = g_path_get_dirname( ipath );
+			dirname = ipath ? g_path_get_dirname( ipath ) : NULL;
 			scheme = g_strdup( vfs->scheme );
 			filename = g_strdup( ibname );
 			hostname = g_strdup( vfs->host_name );
@@ -531,13 +531,17 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target,
 			na_gnome_vfs_uri_free( vfs );
 		}
 
-		tmp = g_shell_quote( ibname );
-		g_string_append_printf( basename_list, " %s", tmp );
-		g_free( tmp );
+		if( ibname ){
+			tmp = g_shell_quote( ibname );
+			g_string_append_printf( basename_list, " %s", tmp );
+			g_free( tmp );
+		}
 
-		tmp = g_shell_quote( ipath );
-		g_string_append_printf( pathname_list, " %s", tmp );
-		g_free( tmp );
+		if( ipath ){
+			tmp = g_shell_quote( ipath );
+			g_string_append_printf( pathname_list, " %s", tmp );
+			g_free( tmp );
+		}
 
 		tmp = g_shell_quote( iuri );
 		g_string_append_printf( uris_list, " %s", tmp );
@@ -560,35 +564,45 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target,
 			/* base dir of the (first) selected item
 			 */
 			case 'd':
-				tmp = g_shell_quote( dirname );
-				string = g_string_append( string, tmp );
-				g_free( tmp );
+				if( dirname ){
+					tmp = g_shell_quote( dirname );
+					string = g_string_append( string, tmp );
+					g_free( tmp );
+				}
 				break;
 
 			/* basename of the (first) selected item
 			 */
 			case 'f':
-				tmp = g_shell_quote( filename );
-				string = g_string_append( string, tmp );
-				g_free( tmp );
+				if( filename ){
+					tmp = g_shell_quote( filename );
+					string = g_string_append( string, tmp );
+					g_free( tmp );
+				}
 				break;
 
 			/* hostname of the (first) URI
 			 */
 			case 'h':
-				string = g_string_append( string, hostname );
+				if( hostname ){
+					string = g_string_append( string, hostname );
+				}
 				break;
 
 			/* space-separated list of the basenames
 			 */
 			case 'm':
-				string = g_string_append( string, basename_list->str );
+				if( basename_list->str ){
+					string = g_string_append( string, basename_list->str );
+				}
 				break;
 
 			/* space-separated list of full pathnames
 			 */
 			case 'M':
-				string = g_string_append( string, pathname_list->str );
+				if( pathname_list->str ){
+					string = g_string_append( string, pathname_list->str );
+				}
 				break;
 
 			/* port number of the (first) URI
@@ -602,25 +616,33 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target,
 			/* list of URIs
 			 */
 			case 'R':
-				string = g_string_append( string, uris_list->str );
+				if( uris_list->str ){
+					string = g_string_append( string, uris_list->str );
+				}
 				break;
 
 			/* scheme of the (first) URI
 			 */
 			case 's':
-				string = g_string_append( string, scheme );
+				if( scheme ){
+					string = g_string_append( string, scheme );
+				}
 				break;
 
 			/* URI of the first item
 			 */
 			case 'u':
-				string = g_string_append( string, uri );
+				if( uri ){
+					string = g_string_append( string, uri );
+				}
 				break;
 
 			/* username of the (first) URI
 			 */
 			case 'U':
-				string = g_string_append( string, username );
+				if( username ){
+					string = g_string_append( string, username );
+				}
 				break;
 
 			/* a percent sign
