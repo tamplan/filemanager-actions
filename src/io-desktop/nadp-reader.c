@@ -553,7 +553,6 @@ read_done_load_profiles( const NAIFactoryProvider *provider, NAObjectAction *act
 		}
 	}
 
-	na_core_utils_slist_free( list_profiles );
 	na_core_utils_slist_free( order );
 }
 
