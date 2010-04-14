@@ -1,3 +1,37 @@
+Version 2.30.2
+==============
+
+	Release date 2010-04-xx
+
+	Enhancements:
+
+		- DBus interface na_tracker_dbus_get_selected_paths() now brings up
+		  both the URI and the Nautilus mimetype of selected items to the caller.
+
+	Bug fixes:
+
+		- Fix #615646 reported by Deji Akingunola
+		  (Nautilus crashes when trash icon is right-clicked)
+		- Fix GLib assertions when parsing parameters, using null values
+		- Duplicate the profile attached to the Nautilus menu item, rather than
+		  adding a new reference; then do not try to unref its parent
+		- Increment the reference count of the returned GFile location, so that
+		  it may be safely unreffed when parsing profile parameters
+		- Fix incorrect plugins log domains
+
+	Code enhancement:
+
+		- Refactor NAIContextual class as NAIContext.
+
+	Other modifications:
+
+		- Implement more of future .desktop files.
+
+	New and updated translations:
+
+		es (Jorge González)
+		lt (Gintautas Miliauskas)
+
 Version 2.30.1
 ==============
 

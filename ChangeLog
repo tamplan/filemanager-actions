@@ -1,5 +1,9 @@
 2009-04-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Update before release.
+
+	* configure.ac: Bump version number before release.
+
 	* src/core/na-selected-info.h:
 	* src/core/na-selected-info.c (na_selected_info_get_name):
 	Renamed as na_selected_info_get_path.
