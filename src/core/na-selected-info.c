@@ -63,7 +63,7 @@ static void            instance_finalize( GObject *object );
 
 static void            dump( const NASelectedInfo *nsi );
 static NASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
-static NASelectedInfo *new_from_uri( const gchar *uri );
+static NASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype );
 static void            query_file_attributes( NASelectedInfo *info );
 
 GType
@@ -194,10 +194,7 @@ na_selected_info_get_list_from_item( NautilusFileInfo *item )
 {
 	GList *selected;
 
-	gchar *uri = nautilus_file_info_get_uri( item );
-	NASelectedInfo *info = na_selected_info_create_for_uri( uri );
-	g_free( uri );
-
+	NASelectedInfo *info = new_from_nautilus_file_info( item );
 	selected = g_list_prepend( NULL, info );
 
 	return( selected );
@@ -404,17 +401,18 @@ na_selected_info_is_directory( const NASelectedInfo *nsi )
 /**
  * na_selected_info_create_for_uri:
  * @uri: an URI.
+ * @mimetype: the corresponding Nautilus mime type, or %NULL.
  *
  * Returns: a newly allocated #NASelectedInfo object for the given @uri.
  */
 NASelectedInfo *
-na_selected_info_create_for_uri( const gchar *uri )
+na_selected_info_create_for_uri( const gchar *uri, const gchar *mimetype )
 {
 	static const gchar *thisfn = "na_selected_info_create_for_uri";
 
-	g_debug( "%s", thisfn );
+	g_debug( "%s: uri=%s, mimetype=%s", thisfn, uri, mimetype );
 
-	NASelectedInfo *obj = new_from_uri( uri );
+	NASelectedInfo *obj = new_from_uri( uri, mimetype );
 
 	return( obj );
 }
@@ -437,18 +435,23 @@ static NASelectedInfo *
 new_from_nautilus_file_info( NautilusFileInfo *item )
 {
 	gchar *uri = nautilus_file_info_get_uri( item );
-	NASelectedInfo *info = new_from_uri( uri );
+	gchar *mimetype = nautilus_file_info_get_mime_type( item );
+	NASelectedInfo *info = new_from_uri( uri, mimetype );
+	g_free( mimetype );
 	g_free( uri );
 
 	return( info );
 }
 
 static NASelectedInfo *
-new_from_uri( const gchar *uri )
+new_from_uri( const gchar *uri, const gchar *mimetype )
 {
 	NASelectedInfo *info = g_object_new( NA_SELECTED_INFO_TYPE, NULL );
 
 	info->private->uri = g_strdup( uri );
+	if( mimetype ){
+		info->private->mimetype = g_strdup( mimetype );
+	}
 	info->private->location = g_file_new_for_uri( uri );
 	info->private->vfs = g_new0( NAGnomeVFSURI, 1 );
 
@@ -467,7 +470,7 @@ query_file_attributes( NASelectedInfo *nsi )
 
 	error = NULL;
 	GFileInfo *info = g_file_query_info( nsi->private->location,
-			G_FILE_ATTRIBUTE_STANDARD_TYPE "," G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE,
+			G_FILE_ATTRIBUTE_STANDARD_TYPE "," G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
 			G_FILE_QUERY_INFO_NONE, NULL, &error );
 
 	if( error ){
@@ -476,7 +479,10 @@ query_file_attributes( NASelectedInfo *nsi )
 		return;
 	}
 
-	nsi->private->mimetype = g_strdup( g_file_info_get_attribute_as_string( info, G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE ));
+	if( !nsi->private->mimetype ){
+		nsi->private->mimetype = g_strdup( g_file_info_get_attribute_as_string( info, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE ));
+	}
+
 	nsi->private->file_type = ( GFileType ) g_file_info_get_attribute_uint32( info, G_FILE_ATTRIBUTE_STANDARD_TYPE );
 
 	g_object_unref( info );

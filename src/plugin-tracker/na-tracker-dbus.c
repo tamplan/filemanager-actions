@@ -122,10 +122,9 @@ class_init( NATrackerDBusClass *klass )
 
 	/* Installation du mécanisme d’introspection,
 	 * permettant de faire l’appel de méthodes via un nom.
-	 * - Le second paramètre de cette fonction : &dbus_glib_dummy_object_object_info
-	 * est généré lors de l’appel à dbus-binding-tool
-	 * et sa définition peut être retrouvée dans le fichier
-	 * na-tracker-dbus-glue.h
+	 * - Le second paramètre de cette fonction (dbus_glib_na_tracker_dbus_object_info)
+	 * est généré lors de l’appel à dbus-binding-tool, et sa définition
+	 * peut être retrouvée dans le fichier na-tracker-dbus-glue.h
 	 */
 	dbus_g_object_type_install_info( NA_TRACKER_DBUS_TYPE, &dbus_glib_na_tracker_dbus_object_info );
 }
@@ -210,7 +209,14 @@ na_tracker_dbus_set_uris( NATrackerDBus *tracker, GList *files )
  * @paths: the location in which copy the strings to be sent.
  * @error: the location of a GError.
  *
- * Send on session DBus the list of URIs of currently selected items.
+ * Sends on session DBus the list of currently selected items, as two strings
+ * for each item :
+ * - the uri
+ * - the mimetype as returned by NautilusFileInfo.
+ *
+ * This is required as some particular items are only known by Nautilus
+ * (e.g. computer), and standard GLib functions are not able to retrieve
+ * their mimetype.
  *
  * Exported as GetSelectedPaths method on Tracker.Status interface.
  */
@@ -230,13 +236,14 @@ na_tracker_dbus_get_selected_paths( NATrackerDBus *tracker, char ***paths, GErro
 
 	if( !tracker->private->dispose_has_run ){
 
-		count = g_list_length( tracker->private->selected );
+		count = 2 * g_list_length( tracker->private->selected );
 		*paths = ( char ** ) g_new0( gchar *, 1+count );
 		iter = *paths;
 
 		for( it = tracker->private->selected ; it ; it = it->next ){
-
 			*iter = nautilus_file_info_get_uri(( NautilusFileInfo * ) it->data );
+			iter++;
+			*iter = nautilus_file_info_get_mime_type(( NautilusFileInfo * ) it->data );
 			iter++;
 		}
 	}

@@ -1,6 +1,14 @@
 2009-04-14 Pierre Wieser <pwieser@trychlos.org>
 
-	* src/core/na-selected-info.c (dump): New function.
+	* src/core/na-selected-info.c
+	(dump): New function.
+	(na_selected_info_create_for_uri): Accepts a mimetype.
+
+	* src/plugin-tracker/na-tracker-dbus.c
+	(na_tracker_dbus_get_selected_paths): Also sends the mimetype.
+
+	* src/utils/nautilus-actions-run.c (targets_from_selection):
+	Get the mimetype from DBus interface.
 
 2009-04-09 Pierre Wieser <pwieser@trychlos.org>
 

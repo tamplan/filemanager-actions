@@ -74,7 +74,7 @@ static GOptionContext  *init_options( void );
 static NAObjectAction  *get_action( const gchar *id );
 static GList           *targets_from_selection( void );
 static GList           *targets_from_commandline( void );
-static GList           *get_selection_from_strv( const gchar **strv );
+static GList           *get_selection_from_strv( const gchar **strv, gboolean has_mimetype );
 static NAObjectProfile *get_profile_for_targets( NAObjectAction *action, GList *targets );
 static void             execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets );
 static void             dump_targets( GList *targets );
@@ -251,9 +251,10 @@ get_action( const gchar *id )
 
 /*
  * the DBus.Tracker.Status interface returns a list of strings
- * where each item is the URI of a selected item.
+ * where each selected item brings up both its URI and its Nautilus
+ * mime type.
  *
- * We return to the caller a GList of NautilusFileInfo
+ * We return to the caller a GList of NASelectedInfo objects
  */
 static GList *
 targets_from_selection( void )
@@ -302,7 +303,7 @@ targets_from_selection( void )
 	}
 	g_debug( "%s: function call is ok", thisfn );
 
-	selection = get_selection_from_strv(( const gchar ** ) paths );
+	selection = get_selection_from_strv(( const gchar ** ) paths, TRUE );
 
 	g_strfreev( paths );
 
@@ -315,7 +316,7 @@ targets_from_selection( void )
 /*
  * get targets from command-line
  *
- * We return to the caller a GList of NautilusFileInfo
+ * We return to the caller a GList of NASelectedInfo objects.
  */
 static GList *
 targets_from_commandline( void )
@@ -325,13 +326,13 @@ targets_from_commandline( void )
 
 	g_debug( "%s", thisfn );
 
-	targets = get_selection_from_strv(( const gchar ** ) targets_array );
+	targets = get_selection_from_strv(( const gchar ** ) targets_array, FALSE );
 
 	return( targets );
 }
 
 static GList *
-get_selection_from_strv( const gchar **strv )
+get_selection_from_strv( const gchar **strv, gboolean has_mimetype )
 {
 	GList *list;
 	gchar **iter;
@@ -340,7 +341,13 @@ get_selection_from_strv( const gchar **strv )
 	iter = ( gchar ** ) strv;
 
 	while( *iter ){
-		NASelectedInfo *nsi = na_selected_info_create_for_uri( *iter );
+		const gchar *uri = ( const gchar * ) *iter;
+		const gchar *mimetype = NULL;
+		if( has_mimetype ){
+			iter++;
+			mimetype = ( const gchar * ) *iter;
+		}
+		NASelectedInfo *nsi = na_selected_info_create_for_uri( uri, mimetype );
 		list = g_list_prepend( list, nsi );
 		iter++;
 	}
