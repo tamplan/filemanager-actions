@@ -78,7 +78,7 @@
 	* src/plugin-tracker/na-tracker-dbus.c
 	(na_tracker_dbus_get_selected_paths): Also sends the mimetype.
 
-2009-04-13 Pierre Wieser <pwieser@trychlos.org>
+2010-04-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* po/POTFILES.in: Adding src/nact/nact-iconditions-tab.c file.
 
@@ -90,7 +90,7 @@
 	* src/nact/nautilus-actions-config-tool.ui:
 	Adding required entries for SelectionCount data.
 
-2009-04-12 Pierre Wieser <pwieser@trychlos.org>
+2010-04-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/plugin-menu/Makefile.am:
 	* src/plugin-tracker/Makefile.am: Fix incorrect log domains.
@@ -387,11 +387,11 @@
 	* src/io-desktop/nadp-reader.h:
 	Read profiles present in the .desktop file.
 
-2009-03-26 Pierre Wieser <pwieser@trychlos.org>
+2010-03-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump version number for data branch.
 
-2009-03-26 Pierre Wieser <pwieser@trychlos.org>
+2010-03-26 Pierre Wieser <pwieser@trychlos.org>
 
 	Releasing 2.30.0.
 
