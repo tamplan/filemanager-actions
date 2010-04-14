@@ -1,5 +1,8 @@
 2009-04-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-selected-info.c (na_selected_info_get_location):
+	Increment the reference count of the returned location.
+
 	* src/core/na-gconf-utils.c (dump_entry):
 	Do not try to dump a null value.
 

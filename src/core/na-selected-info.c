@@ -261,7 +261,9 @@ na_selected_info_free_list( GList *list )
  * na_selected_info_get_location:
  * @nsi: this #NASelectedInfo object.
  *
- * Returns: a pointer to the #GFile location.
+ * Returns: a new reference to the #GFile location.
+ *
+ * The returned location should be g_object_unref() by the caller.
  */
 GFile *
 na_selected_info_get_location( const NASelectedInfo *nsi )
@@ -274,7 +276,7 @@ na_selected_info_get_location( const NASelectedInfo *nsi )
 
 	if( !nsi->private->dispose_has_run ){
 
-		location = nsi->private->location;
+		location = g_object_ref( nsi->private->location );
 	}
 
 	return( location );
