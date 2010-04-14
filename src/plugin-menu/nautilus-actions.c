@@ -646,8 +646,11 @@ create_item_from_profile( NAObjectProfile *profile, guint target, GList *files )
 {
 	NautilusMenuItem *item;
 	NAObjectAction *action;
+	NAObjectProfile *duplicate;
 
 	action = NA_OBJECT_ACTION( na_object_get_parent( profile ));
+	duplicate = NA_OBJECT_PROFILE( na_object_duplicate( profile ));
+	na_object_set_parent( duplicate, NULL );
 
 	item = create_menu_item( NA_OBJECT_ITEM( action ));
 
@@ -657,9 +660,9 @@ create_item_from_profile( NAObjectProfile *profile, guint target, GList *files )
 	g_signal_connect( item,
 				"activate",
 				G_CALLBACK( execute_action ),
-				g_object_ref( profile ));
+				duplicate );
 
-	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_profile, profile );
+	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_profile, duplicate );
 
 	g_object_set_data_full( G_OBJECT( item ),
 			"nautilus-actions-files",

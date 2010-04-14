@@ -1,5 +1,8 @@
 2009-04-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-menu/nautilus-actions.c (create_item_from_profile):
+	Duplicate the candidate profile, set the parent to null.
+
 	* src/core/na-selected-info.c (na_selected_info_get_location):
 	Increment the reference count of the returned location.
 
