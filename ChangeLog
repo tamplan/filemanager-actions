@@ -1,5 +1,8 @@
 2009-04-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-gconf-utils.c (dump_entry):
+	Do not try to dump a null value.
+
 	* src/core/na-selected-info.c
 	(dump): New function.
 	(na_selected_info_create_for_uri): Accepts a mimetype.
