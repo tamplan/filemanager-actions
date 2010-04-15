@@ -69,7 +69,7 @@ nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 gboolean
 nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 {
-	/*static const gchar *thisfn = "nagp_iio_provider_is_able_to_write";*/
+	static const gchar *thisfn = "nagp_iio_provider_is_able_to_write";
 	static const gchar *path = "/apps/nautilus-actions/foo";
 	NagpGConfProvider *self;
 	gboolean able_to = FALSE;
@@ -82,18 +82,28 @@ nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 
 	if( !self->private->dispose_has_run ){
 
-		if( !na_gconf_utils_write_string( self->private->gconf, path, "1", NULL )){
-			able_to = FALSE;
-
-		} else if( !gconf_client_recursive_unset( self->private->gconf, path, 0, NULL )){
+		if( !na_gconf_utils_write_string( self->private->gconf, path, "foo", NULL )){
 			able_to = FALSE;
 
 		} else {
-			able_to = TRUE;
+			gchar *str = na_gconf_utils_read_string( self->private->gconf, path, FALSE, NULL );
+			if( strcmp( str, "foo" )){
+				able_to = FALSE;
+
+			} else if( !gconf_client_recursive_unset( self->private->gconf, path, 0, NULL )){
+				able_to = FALSE;
+
+			} else {
+				able_to = TRUE;
+			}
+
+			g_free( str );
 		}
 	}
 
-	/*g_debug( "%s: provider=%p, able_to=%s", thisfn, ( void * ) provider, able_to ? "True":"False" );*/
+	gconf_client_suggest_sync( self->private->gconf, NULL );
+
+	g_debug( "%s: provider=%p, able_to=%s", thisfn, ( void * ) provider, able_to ? "True":"False" );
 	return( able_to );
 }
 
