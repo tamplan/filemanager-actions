@@ -59,8 +59,6 @@ enum {
 #define SCHEMES_LIST_EDITABLE			"nact-schemes-list-editable"
 #define SCHEMES_LIST_TREEVIEW			"nact-schemes-list-treeview"
 
-#define SCHEMES_LIST_DESC_TITLE			"schemes-description"
-
 static gboolean st_on_selection_change = FALSE;
 
 static void       init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window );
@@ -138,7 +136,7 @@ nact_schemes_list_create_model( GtkTreeView *treeview, gboolean for_action )
 
 	text_cell = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(
-			SCHEMES_LIST_DESC_TITLE,
+			"scheme-description",
 			text_cell,
 			"text", SCHEMES_DESC_COLUMN,
 			NULL );
@@ -743,52 +741,24 @@ insert_new_row( BaseWindow *window )
 {
 	GtkTreeView *listview;
 	GtkTreeModel *model;
-	GtkTreeSelection *selection;
-	GList *listrows;
+	GtkTreeIter iter;
+	gboolean for_action;
 	GtkTreePath *path;
-	GtkTreeIter iter, sibling;
-	gboolean inserted;
 	GtkTreeViewColumn *column;
 
 	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
 	model = gtk_tree_view_get_model( listview );
-	selection = gtk_tree_view_get_selection( listview );
-	listrows = gtk_tree_selection_get_selected_rows( selection, NULL );
-	inserted = FALSE;
-	column = NULL;
+	for_action = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( listview ), SCHEMES_LIST_FOR_ACTION ));
 
-	if( g_list_length( listrows ) == 1 ){
-		gtk_tree_view_get_cursor( listview, &path, &column );
-		if( gtk_tree_model_get_iter( model, &sibling, path )){
-			/* though the path of sibling is correct, the new row is always
-			 * inserted at path=0 !
-			 */
-			/*g_debug( "insert_new_row: sibling=%s", gtk_tree_model_get_string_from_iter( &sibling ));*/
-			gtk_list_store_insert_before( GTK_LIST_STORE( model ), &iter, &sibling );
-			inserted = TRUE;
-		}
-		gtk_tree_path_free( path );
-	}
-
-	if( !inserted ){
-		gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
-	}
-
-	if( !column || column == gtk_tree_view_get_column( listview, SCHEMES_CHECKBOX_COLUMN )){
-		column = gtk_tree_view_get_column( listview, SCHEMES_KEYWORD_COLUMN );
-	}
-
-	gtk_list_store_set( GTK_LIST_STORE( model ), &iter,
+	gtk_list_store_insert_with_values( GTK_LIST_STORE( model ), &iter, 0,
 			SCHEMES_CHECKBOX_COLUMN, FALSE,
 			/* i18n notes : scheme name set for a new entry in the scheme list */
 			SCHEMES_KEYWORD_COLUMN, _( "new-scheme" ),
-			SCHEMES_DESC_COLUMN, _( "New scheme description" ),
+			SCHEMES_DESC_COLUMN, for_action ? "" : _( "New scheme description" ),
 			-1 );
 
-	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
-	g_list_free( listrows );
-
 	path = gtk_tree_model_get_path( model, &iter );
+	column = gtk_tree_view_get_column( listview, SCHEMES_KEYWORD_COLUMN );
 	gtk_tree_view_set_cursor( listview, path, column, TRUE );
 	gtk_tree_path_free( path );
 }
