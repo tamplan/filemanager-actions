@@ -38,30 +38,4 @@
 #define NAGP_VALUE_TYPE_MENU			"Menu"
 #define NAGP_VALUE_TYPE_ACTION			"Action"
 
-#define NAGP_ENTRY_LABEL				"label"
-#define NAGP_ENTRY_TOOLTIP				"tooltip"
-#define NAGP_ENTRY_ICON					"icon"
-#define NAGP_ENTRY_ENABLED				"enabled"
-#define NAGP_ENTRY_ITEMS_LIST			"items"
-
-#define NAGP_ENTRY_VERSION				"version"
-#define NAGP_ENTRY_TARGET_SELECTION		"target-selection"
-#define NAGP_ENTRY_TARGET_CONTEXT		"target-context"
-#define NAGP_ENTRY_TARGET_BACKGROUND	"target-background"
-#define NAGP_ENTRY_TARGET_TOOLBAR		"target-toolbar"
-#define NAGP_ENTRY_TOOLBAR_LABEL		"toolbar-label"
-#define NAGP_ENTRY_TOOLBAR_SAME_LABEL	"toolbar-same-label"
-
-#define NAGP_ENTRY_PROFILE_LABEL		"desc-name"
-#define NAGP_ENTRY_PATH					"path"
-#define NAGP_ENTRY_PARAMETERS			"parameters"
-#define NAGP_ENTRY_BASENAMES			"basenames"
-#define NAGP_ENTRY_MATCHCASE			"matchcase"
-#define NAGP_ENTRY_MIMETYPES			"mimetypes"
-#define NAGP_ENTRY_ISFILE				"isfile"
-#define NAGP_ENTRY_ISDIR				"isdir"
-#define NAGP_ENTRY_MULTIPLE				"accept-multiple-files"
-#define NAGP_ENTRY_SCHEMES				"schemes"
-#define NAGP_ENTRY_FOLDERS				"folders"
-
 #endif /* __NAGP_GCONF_PROVIDER_KEYS_H__ */

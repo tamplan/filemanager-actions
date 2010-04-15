@@ -47,6 +47,9 @@
 
 2010-04-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-keys.h:
+	Remove unused GConf entry keys.
+
 	* src/io-gconf/nagp-writer.c (nagp_iio_provider_is_willing_to_write):
 	Force GConf sync to get ride of 'foo' entry.
 
