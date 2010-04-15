@@ -594,7 +594,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                                   <object class="GtkTreeView" id="SchemesTreeView">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="tooltip_text" translatable="yes">You may define here any number of scheme. They will be proposed as available schemes when defining conditions for an action.
+                                    <property name="tooltip_text" translatable="yes">You may define here any number of schemes. They will be proposed as available schemes when defining conditions for an action.
 If the list becomes empty, NACT will automatically refill in with a default list.
 You can add a new scheme by clicking on the '+' button.</property>
                                     <property name="headers_visible">False</property>

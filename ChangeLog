@@ -47,6 +47,8 @@
 
 2010-04-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-preferences.ui: Fix typo.
+
 	* src/io-gconf/nagp-keys.h:
 	Remove unused GConf entry keys.
 
