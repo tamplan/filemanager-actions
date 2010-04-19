@@ -41,9 +41,13 @@
 NADataDef data_def_item [] = {
 
 	/* this data is marked as non readable as it has to be readen specifically
-	 * in order to be able to create the corresponding NAObjectItem-derived object
-	 * it is not writable as different I/O providers have different values for it
-	 * it is not instantiated
+	 * in order to be able to create the corresponding NAObjectItem-derived
+	 * object
+	 * it is not writable as different I/O providers may have different values
+	 * for it, and thus it must be written specifically
+	 * (cf. nagp_writer_write_start(), nadp_writer_write_start())
+	 * it is not instantiated because we never need to have an actual value
+	 * (actually being determined at runtime by object class)
 	 * it is just left here to be able to define the corresponding GConf schema
 	 * and to export it as XML
 	 */
@@ -160,6 +164,32 @@ NADataDef data_def_item [] = {
 				TRUE,
 				"description",
 				"Description",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
+
+	{ NAFO_DATA_SHORTCUT,
+				TRUE,
+				TRUE,
+				TRUE,
+				N_( "Suggested shortcut" ),
+				N_( "A shortcut suggested for the action or the menu.\n" \
+					"Please note that this might be only a suggestion as the shortcut may " \
+					"be already reserved for another use. Implementation should not override " \
+					"an already existing shortcut to define this one.\n" \
+					"The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n" \
+					"Defaults to empty." ),
+				NAFD_TYPE_STRING,
+				"",
+				TRUE,
+				TRUE,
+				FALSE,
+				FALSE,
+				"shortcut",
+				"SuggestedShortcut",
 				0,
 				NULL,
 				0,
