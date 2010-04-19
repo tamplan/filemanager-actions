@@ -346,5 +346,30 @@ NADataDef data_def_item [] = {
 				NULL,
 				NULL },
 
+	/* this integer version number is introduced with .desktop files and obsoletes
+	 * the previous string version number which was only set on actions
+	 * we so have: "1.0" < "1.1" < "2.0" < 1
+	 */
+	{ NAFO_DATA_IVERSION,
+				TRUE,
+				TRUE,
+				TRUE,
+				N_( "Version of the format" ),
+				N_( "The version of the configuration format that will be used to manage backward compatibility." ),
+				NAFD_TYPE_UINT,
+				"1",
+				TRUE,
+				TRUE,
+				FALSE,
+				FALSE,
+				"iversion",
+				NULL,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
+
 	{ NULL },
 };

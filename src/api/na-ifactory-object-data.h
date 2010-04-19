@@ -47,6 +47,7 @@ G_BEGIN_DECLS
 #define NAFO_DATA_CONDITIONS				"na-factory-data-conditions"
 
 #define NA_FACTORY_OBJECT_ITEM_GROUP		"na-factory-group-item"
+#define NAFO_DATA_IVERSION					"na-factory-data-iversion"
 #define NAFO_DATA_TYPE						"na-factory-data-type"
 #define NAFO_DATA_LABEL						"na-factory-data-label"
 #define NAFO_DATA_TOOLTIP					"na-factory-data-tooltip"
@@ -77,6 +78,10 @@ G_BEGIN_DECLS
 #define NAFO_DATA_DESCNAME					"na-factory-data-descname"
 #define NAFO_DATA_PATH						"na-factory-data-path"
 #define NAFO_DATA_PARAMETERS				"na-factory-data-parameters"
+#define NAFO_DATA_EXECUTION_MODE			"na-factory-data-execution-mode"
+#define NAFO_DATA_STARTUP_NOTIFY			"na-factory-data-startup-notify"
+#define NAFO_DATA_STARTUP_WMCLASS			"na-factory-data-startup-wm-class"
+#define NAFO_DATA_EXECUTE_AS				"na-factory-data-execute-as"
 
 #define NA_FACTORY_OBJECT_CONDITIONS_GROUP	"na-factory-group-conditions"
 #define NAFO_DATA_BASENAMES					"na-factory-data-basenames"
@@ -88,6 +93,13 @@ G_BEGIN_DECLS
 #define NAFO_DATA_SCHEMES					"na-factory-data-schemes"
 #define NAFO_DATA_FOLDERS					"na-factory-data-folders"
 #define NAFO_DATA_SELECTION_COUNT			"na-factory-data-selection-count"
+#define NAFO_DATA_ONLY_SHOW					"na-factory-data-only-show-in"
+#define NAFO_DATA_NOT_SHOW					"na-factory-data-not-show-in"
+#define NAFO_DATA_TRY_EXEC					"na-factory-data-try-exec"
+#define NAFO_DATA_SHOW_IF_REGISTERED		"na-factory-data-show-if-registered"
+#define NAFO_DATA_SHOW_IF_TRUE				"na-factory-data-show-if-true"
+#define NAFO_DATA_SHOW_IF_RUNNING			"na-factory-data-show-if-running"
+#define NAFO_DATA_CAPABILITITES				"na-factory-data-capabilitites"
 
 G_END_DECLS
 

@@ -38,18 +38,23 @@
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
 
-extern NADataDef data_def_id[];			/* defined in na-object-id-factory.c */
-extern NADataDef data_def_item [];		/* defined in na-object-item-factory.c */
+extern NADataDef data_def_id[];				/* defined in na-object-id-factory.c */
+extern NADataDef data_def_item [];			/* defined in na-object-item-factory.c */
+extern NADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
 
 static NADataDef data_def_action [] = {
 
+	/* this version number, expressed as a string, is obsoleted starting with .desktop
+	 * files introduction ; it is replaced by an integer version number, at the item level
+	 * the new integer version number starts at 1. It will so be consistant with future
+	 * versions of .desktop files
+	 */
 	{ NAFO_DATA_VERSION,
 				TRUE,
+				FALSE,
 				TRUE,
-				TRUE,
-				N_( "Version of the format" ),
-				N_( "The version of the configuration format that will be used to manage " \
-					"backward compatibility." ),
+				"Version of the format",
+				"The version of the configuration format that will be used to manage backward compatibility.",
 				NAFD_TYPE_STRING,
 				"2.0",
 				TRUE,
@@ -418,6 +423,6 @@ NADataGroup action_data_groups [] = {
 	{ NA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
 	{ NA_FACTORY_OBJECT_ACTION_GROUP,     data_def_action },
 	{ NA_FACTORY_ACTION_V1_GROUP,         data_def_action_v1 },
-	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, NULL },
+	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, data_def_conditions },
 	{ NULL }
 };

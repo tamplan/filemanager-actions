@@ -39,7 +39,7 @@
 #include <api/na-data-types.h>
 
 extern NADataDef data_def_id [];			/* defined in na-object-id-factory.c */
-extern NADataDef data_def_conditions [];	/* defined in na-iconditions-factory.c */
+extern NADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
 
 static NADataDef data_def_profile [] = {
 
@@ -65,6 +65,10 @@ static NADataDef data_def_profile [] = {
 				NULL,
 				NULL },
 
+	/* Path and Parameters are two separate data both in GConf, in GConf-derived
+	 * export files and in NACT. Only in desktop files, they are merged as only
+	 * one 'Exec' data.
+	 */
 	{ NAFO_DATA_PATH,
 				TRUE,
 				TRUE,
@@ -87,27 +91,51 @@ static NADataDef data_def_profile [] = {
 				NULL,
 				N_( "<PATH>" ) },
 
+	/* Desktop files not only introduced new properties conditions to item and profiles,
+	 * but also slightly changed the meaning of some parameters. This is synchronized
+	 * with the change of version data (from "2.0" string to '1' integer)
+	 */
 	{ NAFO_DATA_PARAMETERS,
 				TRUE,
 				TRUE,
 				TRUE,
 				N_( "Parameters of the command" ),
-										/* too long string for iso c: 665 (max=509) */
+										/* too long string for iso c: (max=509) */
 				N_( "The parameters of the command to be executed when the user selects the menu " \
 					"item in the file manager context menu or in the toolbar.\n" \
 					"The parameters may contain some special tokens which are replaced by the " \
 					"informations provided by the file manager before starting the command:\n" \
-					"%d: base folder of the selected file(s)\n" \
-					"%f: the name of the selected file or the first one if several are selected\n" \
-					"%h: hostname of the URI\n" \
-					"%m: space-separated list of the basenames of the selected file(s)/folder(s)\n" \
-					"%M: space-separated list of the selected file(s)/folder(s), with their full paths\n" \
-					"%p: port number of the first URI\n" \
-					"%R: space-separated list of selected URIs\n" \
-					"%s: scheme of the URI\n" \
-					"%u: URI\n" \
-					"%U: username of the URI\n" \
-					"%%: a percent sign." ),
+					"- up to version \"2.0\":\n" \
+					"  %d: base folder of the selected file(s)\n" \
+					"  %f: the name of the selected file or the first one if several are selected\n" \
+					"  %h: hostname of the URI\n" \
+					"  %m: space-separated list of the basenames of the selected file(s)/folder(s)\n" \
+					"  %M: space-separated list of the selected file(s)/folder(s), with their full paths\n" \
+					"  %p: port number of the first URI\n" \
+					"  %R: space-separated list of selected URIs\n" \
+					"  %s: scheme of the URI\n" \
+					"  %u: URI\n" \
+					"  %U: username of the URI\n" \
+					"  %%: a percent sign." \
+					"- starting from version '1':\n" \
+					"  %b: (first) basename of the selected file(s)/folder(s)\n" \
+					"  %B: space-separated list of the basenames of the selected file(s)/folder(s)\n" \
+					"  %c: count the selected file(s)/folder(s)\n" \
+					"  %d: (first) base directory of the selected file(s)/folder(s)\n" \
+					"  %D: space-separated list of base directories of the selected file(s)/folder(s)\n" \
+					"  %f: (first) filename of the selected file(s)/folder(s)\n" \
+					"  %F: space-separated list of the filenames of the selected file(s)/folder(s)\n" \
+					"  %h: hostname of the (first) URI\n" \
+					"  %n: username of the (first) URI\n" \
+					"  %p: port number of the (first) URI\n" \
+					"  %s: scheme of the (first) URI\n" \
+					"  %u: (first) URI\n" \
+					"  %U: space-separated list of selected URIs\n" \
+					"  %w: (first) basename without the extension\n" \
+					"  %W: space-separated list of basenames without the extension\n" \
+					"  %x: (first) extension\n" \
+					"  %X: space-separated list of the extensions\n" \
+					"  %%: a percent sign." ),
 				NAFD_TYPE_STRING,
 				"",
 				TRUE,
@@ -122,6 +150,107 @@ static NADataDef data_def_profile [] = {
 				G_OPTION_ARG_STRING,
 				NULL,
 				N_( "<STRING>" ) },
+
+	{ NAFO_DATA_EXECUTION_MODE,
+				TRUE,
+				TRUE,
+				TRUE,
+				N_( "Execution mode" ),
+				N_( "Execution mode of the program.\n" \
+					"This may be choosen between following values:\n" \
+					"- Normal: starts as a standard graphical user interface\n" \
+					"- Terminal: starts the preferred terminal of the graphical environment, " \
+						"and runs the command in it\n" \
+					"- Embedded: makes use of a special feature of the file manager which allows " \
+						"a terminal to be ran inside of it; an acceptable fallback is Terminal\n" \
+					"- DisplayOutput: the ran terminal may be closed at end of the command, but " \
+						"standard streams (stdout, stderr) should be collected and displayed; " \
+						"an acceptable fallback is Terminal.\n" \
+					"Defaults to \"Normal\"." ),
+				NAFD_TYPE_UINT,
+				"1",
+				TRUE,
+				TRUE,
+				FALSE,
+				FALSE,
+				"execution-mode",
+				"ExecutionMode",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
+
+	{ NAFO_DATA_STARTUP_NOTIFY,
+				TRUE,
+				TRUE,
+				TRUE,
+				N_( "Startup notify" ),
+				N_( "Only relevant when ExecutionMode=Normal.\n" \
+					"Defaults to FALSE." ),
+				NAFD_TYPE_BOOLEAN,
+				"false",
+				TRUE,
+				TRUE,
+				FALSE,
+				FALSE,
+				"startup-notify",
+				"StartupNotify",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
+
+	{ NAFO_DATA_STARTUP_WMCLASS,
+				TRUE,
+				TRUE,
+				TRUE,
+				N_( "Startup WM Class" ),
+				N_( "Only relevant when ExecutionMode=Normal.\n" \
+					"Defaults to empty." ),
+				NAFD_TYPE_STRING,
+				"",
+				TRUE,
+				TRUE,
+				FALSE,
+				FALSE,
+				"startup-wmclass",
+				"StartupWMClass",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
+
+	{ NAFO_DATA_EXECUTE_AS,
+				TRUE,
+				TRUE,
+				TRUE,
+				N_( "Execute as user" ),
+				N_( "The user the command must be ran as. " \
+					"The user may be identified by its numeric UID or by its login.\n" \
+					"The implementation should ignore a profile defining a non-existing UID " \
+					"or login as a value for the ExecuteAs key.\n" \
+					"The implementation might require the presence of a well-configured subsystem (e.g. sudo).\n" \
+					"Defaults to empty: the command will be executed as the current user." ),
+				NAFD_TYPE_STRING,
+				"",
+				TRUE,
+				TRUE,
+				FALSE,
+				FALSE,
+				"execute-as",
+				"ExecuteAs",
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
 
 	{ NULL },
 };

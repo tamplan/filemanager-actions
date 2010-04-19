@@ -38,6 +38,7 @@
 
 extern NADataDef data_def_id [];			/* defined in na-object-id-factory.c */
 extern NADataDef data_def_item [];			/* defined in na-object-item-factory.c */
+extern NADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
 
 static NADataDef data_def_menu [] = {
 	{ NULL },
@@ -47,6 +48,6 @@ NADataGroup menu_data_groups [] = {
 	{ NA_FACTORY_OBJECT_ID_GROUP,         data_def_id },
 	{ NA_FACTORY_OBJECT_ITEM_GROUP,       data_def_item },
 	{ NA_FACTORY_OBJECT_MENU_GROUP,       data_def_menu },
-	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, NULL },
+	{ NA_FACTORY_OBJECT_CONDITIONS_GROUP, data_def_conditions },
 	{ NULL }
 };

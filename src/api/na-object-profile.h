@@ -67,6 +67,13 @@ typedef struct {
 }
 	NAObjectProfileClass;
 
+enum {
+	NA_EXECUTION_MODE_NORMAL = 1,
+	NA_EXECUTION_MODE_TERMINAL,
+	NA_EXECUTION_MODE_EMBEDDED,
+	NA_EXECUTION_MODE_DISPLAY_OUTPUT
+};
+
 GType            na_object_profile_get_type( void );
 
 NAObjectProfile *na_object_profile_new( void );
