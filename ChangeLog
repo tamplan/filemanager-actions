@@ -45,6 +45,12 @@
 	* src/utils/nautilus-actions-run.c:
 	Mark two new strings for translation.
 
+2010-04-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_slist_from_array):
+	Fix leading and trailing spaces management.
+
 2010-04-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-ifactory-object-data.h:

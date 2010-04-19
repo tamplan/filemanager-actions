@@ -57,8 +57,8 @@ gchar   *na_core_utils_str_remove_suffix( const gchar *string, const gchar *suff
  */
 GSList  *na_core_utils_slist_duplicate( GSList *list );
 void     na_core_utils_slist_dump( GSList *list );
-GSList  *na_core_utils_slist_from_split( const gchar *string, const gchar *separator );
 GSList  *na_core_utils_slist_from_array( const gchar **str_array );
+GSList  *na_core_utils_slist_from_split( const gchar *string, const gchar *separator );
 gchar   *na_core_utils_slist_join_at_end( GSList *list, const gchar *link );
 GSList  *na_core_utils_slist_remove_ascii( GSList *list, const gchar *text );
 GSList  *na_core_utils_slist_remove_utf8( GSList *list, const gchar *string );
