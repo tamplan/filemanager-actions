@@ -3,13 +3,14 @@
 # Mario Izquierdo <mariodebian@gmail.com>, 2005.
 # Francisco Javier F. Serrador <serrador@cvs.gnome.org>, 2005, 2006.
 # Jorge González <jorgegonz@svn.gnome.org>, 2008, 2010.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-04-14 20:14+0000\n"
-"PO-Revision-Date: 2010-04-15 01:20+0200\n"
+"POT-Creation-Date: 2010-04-14 23:21+0000\n"
+"PO-Revision-Date: 2010-05-01 10:48+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1748,23 +1749,20 @@ msgstr "D_uplicar"
 
 #. i18n: tooltip displayed in the status bar when selecting the Duplicate item
 #: ../src/nact/nact-main-menubar.c:152
-#, fuzzy
 #| msgid "Click to remove the selected scheme."
 msgid "Duplicate the selected item(s)"
-msgstr "Pulse para quitar el esquema seleccionado."
+msgstr "Duplicar los elementos seleccionados"
 
 #. i18n: tooltip displayed in the status bar when selecting the Delete item
 #: ../src/nact/nact-main-menubar.c:156
-#, fuzzy
 #| msgid "Click to remove the selected scheme."
 msgid "Delete the selected item(s)"
-msgstr "Pulse para quitar el esquema seleccionado."
+msgstr "Eliminar los elementos seleccionados"
 
 #: ../src/nact/nact-main-menubar.c:158
-#, fuzzy
 #| msgid "_Reload the list of actions"
 msgid "_Reload the items"
-msgstr "_Actualizar la lista de acciones"
+msgstr "_Actualizar los elementos"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
 #: ../src/nact/nact-main-menubar.c:160
@@ -1850,29 +1848,25 @@ msgid "List the modified items"
 msgstr "Listar los elementos modificados"
 
 #: ../src/nact/nact-main-menubar.c:196
-#| msgid "Quit the application."
 msgid "_Dump the clipboard"
 msgstr "_Volcar el portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
 #: ../src/nact/nact-main-menubar.c:198
-#| msgid "Cut the selected item(s) to the clipboard"
 msgid "Dump the content of the clipboard object"
 msgstr "Volcar el contenido del objeto del portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the Help item
 #: ../src/nact/nact-main-menubar.c:203
-#, fuzzy
 #| msgid "Display help about this program."
 msgid "Display help about this program"
-msgstr "Mostrar ayuda acerca de este programa."
+msgstr "Mostrar ayuda acerca de este programa"
 
 #. i18n: tooltip displayed in the status bar when selecting the About item
 #: ../src/nact/nact-main-menubar.c:207
-#, fuzzy
 #| msgid "Display help about this program."
 msgid "Display informations about this program"
-msgstr "Mostrar ayuda acerca de este programa."
+msgstr "Mostrar información acerca de este programa"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
 #: ../src/nact/nact-main-menubar.c:215
@@ -1898,7 +1892,7 @@ msgstr "Mostrar la barra de herramientas de Ayuda"
 #: ../src/nact/nact-main-menubar.c:451
 #, c-format
 msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
-msgstr ""
+msgstr "actualmente hay %d menú(s), %d acción(es), %d perfil(es) cargados"
 
 #: ../src/nact/nact-main-menubar-edit.c:242
 msgid "Not all items have been cut as following ones are not modifiable:"
@@ -1919,7 +1913,6 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nact-main-window.c:1341
-#| msgid "Are you sure you want to quit this assistant ?"
 msgid "Do you really want to do this ?"
 msgstr "¿Está seguro de que quiere hacerlo?"
 
@@ -1938,30 +1931,29 @@ msgstr ""
 
 #: ../src/nact/nact-main-window.c:1377
 msgid "Do you want to reload a fresh list of actions ?"
-msgstr ""
+msgstr "¿Quiere recargar una lista actual de acciones?"
 
 #: ../src/nact/nact-providers-list.c:117
 msgid "To be read"
-msgstr ""
+msgstr "Para leer"
 
 #: ../src/nact/nact-providers-list.c:125
 msgid "Writable"
-msgstr ""
+msgstr "Escribible"
 
 #: ../src/nact/nact-providers-list.c:133
-#| msgid "Whether the action is enabled"
 msgid "I/O Provider"
 msgstr "Proveedor de E/S"
 
 #. i18n: default name when the I/O providers doesn't provide one
 #: ../src/nact/nact-providers-list.c:210
 msgid "no name"
-msgstr ""
+msgstr "sin nombre"
 
 #. i18n: name displayed when the corresponding I/O provider is unavailable at runtime
 #: ../src/nact/nact-providers-list.c:214
 msgid "unavailable I/O provider"
-msgstr ""
+msgstr "proveedor de E/S no disponible"
 
 #. i18n notes : description of 'file' scheme
 #: ../src/nact/nact-schemes-list.c:244
@@ -2006,21 +1998,20 @@ msgid "Unable to drop an action or a menu here"
 msgstr "Aquí no se puede soltar una acción o un menú"
 
 #: ../src/nact/nact-tree-model-dnd.c:122
-#| msgid "Unable to parse XML file: %s."
 msgid "Unable to drop here as parent is not writable"
 msgstr "No se puede soltar aquí ya que el padre no es escribible"
 
 #: ../src/nact/nact-tree-model-dnd.c:123
 msgid "Unable to drop here as level zero is not writable"
-msgstr ""
+msgstr "No se pudo soltar aquí ya que el nivel cero no es escribible"
 
 #: ../src/nact/nact-tree-model-dnd.c:853
 msgid "Some messages have occurred during drop operation."
-msgstr ""
+msgstr "Sucedieron algunos mensajes durante la operación de soltado."
 
 #: ../src/nact/nact-window.c:358
 msgid "An error has occured when trying to save the item"
-msgstr ""
+msgstr "Ocurrió un error al intentar guardar el elemento"
 
 #: ../src/nact/nact-window.c:404
 msgid "An error has occured when trying to delete the item"
@@ -2133,9 +2124,6 @@ msgid "Store the newly created action as a GConf configuration"
 msgstr "Almacenar la nueva acción creada como una configuración de GConf"
 
 #: ../src/utils/nautilus-actions-new.c:132
-#| msgid ""
-#| "The path of the file where to save the new GConf schema definition file "
-#| "[default: /tmp/config_UUID.schemas]"
 msgid ""
 "The path of the folder where to write the new action as a GConf dump output "
 "[default: stdout]"
@@ -2237,6 +2225,8 @@ msgid ""
 "A target, file or folder, for the action. More than one options may be "
 "specified"
 msgstr ""
+"Un destino, archivo o carpeta para la acción. Se puede especificar más de "
+"una opción."
 
 #: ../src/utils/nautilus-actions-run.c:126
 #, c-format
