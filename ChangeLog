@@ -64,6 +64,9 @@
 	* src/nact/nact-iconditions-tab.c (na_object_is_matchcase):
 	Renamed as na_object_get_matchcase().
 
+	* src/core/na-object-profile.c (na_object_profile_parse_parameters):
+	Do not add extraneous blanks when parsing parameters.
+
 2010-04-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-ifactory-object-data.h:
