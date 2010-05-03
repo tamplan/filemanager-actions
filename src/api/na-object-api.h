@@ -154,20 +154,14 @@ G_BEGIN_DECLS
  */
 #define na_object_get_path( obj )						(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PATH ))
 #define na_object_get_parameters( obj )					(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PARAMETERS ))
-#define na_object_get_basenames( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_BASENAMES ))
-#define na_object_is_matchcase( obj )					(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MATCHCASE )))
-#define na_object_get_mimetypes( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES ))
 #define na_object_is_file( obj )						(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISFILE )))
 #define na_object_is_dir( obj )							(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISDIR )))
 #define na_object_is_multiple( obj )					(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MULTIPLE )))
-#define na_object_get_schemes( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SCHEMES ))
-#define na_object_get_folders( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_FOLDERS ))
 
 #define na_object_set_path( obj, path )					na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PATH, ( const void * )( path ))
 #define na_object_set_parameters( obj, parms )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PARAMETERS, ( const void * )( parms ))
 #define na_object_set_basenames( obj, bnames )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_BASENAMES, ( const void * )( bnames ))
 #define na_object_set_matchcase( obj, match )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MATCHCASE, ( const void * ) GUINT_TO_POINTER( match ))
-#define na_object_set_mimetypes( obj, types )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES, ( const void * )( types ))
 #define na_object_set_isfile( obj, isfile )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISFILE, ( const void * ) GUINT_TO_POINTER( isfile ))
 #define na_object_set_isdir( obj, isdir )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISDIR, ( const void * ) GUINT_TO_POINTER( isdir ))
 #define na_object_set_multiple( obj, multiple )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MULTIPLE, ( const void * ) GUINT_TO_POINTER( multiple ))
@@ -176,6 +170,23 @@ G_BEGIN_DECLS
 
 /* NAIContext
  */
+#define na_object_get_only_show_in( obj )				(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ONLY_SHOW ))
+#define na_object_get_not_show_in( obj )				(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_NOT_SHOW ))
+#define na_object_get_try_exec( obj )					(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TRY_EXEC ))
+#define na_object_get_show_if_registered( obj )			(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHOW_IF_REGISTERED ))
+#define na_object_get_show_if_true( obj )				(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHOW_IF_TRUE ))
+#define na_object_get_show_if_running( obj )			(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHOW_IF_RUNNING ))
+#define na_object_get_mimetypes( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES ))
+#define na_object_get_all_mimetypes( obj )				(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ALL_MIMETYPES )))
+#define na_object_get_basenames( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_BASENAMES ))
+#define na_object_get_matchcase( obj )					(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MATCHCASE )))
+#define na_object_get_selection_count( obj )			(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SELECTION_COUNT ))
+#define na_object_get_schemes( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SCHEMES ))
+#define na_object_get_folders( obj )					(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_FOLDERS ))
+#define na_object_get_capabilities( obj )				(( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_CAPABILITITES ))
+
+#define na_object_set_mimetypes( obj, types )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES, ( const void * )( types ))
+#define na_object_set_all_mimetypes( obj, all )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ALL_MIMETYPES, ( const void * ) GUINT_TO_POINTER( all ))
 #define na_object_set_scheme( obj, scheme, add )		na_icontext_set_scheme( NA_ICONTEXT( obj ), ( const gchar * )( scheme ), ( add ))
 #define na_object_replace_folder( obj, old, new )		na_icontext_replace_folder( NA_ICONTEXT( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
 

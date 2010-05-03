@@ -538,7 +538,6 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 	GList *it;
 	NAObjectProfile *profile;
 	NautilusMenuItem *item;
-	gchar *action_label;
 
 	g_debug( "%s: plugin=%p, tree=%p, target=%d, files=%p (count=%d)",
 			thisfn, ( void * ) plugin, ( void * ) tree, target,
@@ -562,9 +561,9 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 		}
 #endif
 
-		/*if( !na_icontext_is_candidate( it->data, target, files )){
+		if( !na_icontext_is_candidate( NA_ICONTEXT( it->data ), target, files )){
 			continue;
-		}*/
+		}
 
 		/* recursively build sub-menus
 		 */
@@ -586,24 +585,12 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 		}
 
 		g_return_val_if_fail( NA_IS_OBJECT_ACTION( it->data ), NULL );
-		action_label = na_object_get_label( it->data );
 
-		/* to be removed when NAObjectAction will implement NAIContext interface
-		 */
-		if( !na_object_action_is_candidate( it->data, target, files )){
-			g_debug( "%s: action %s is not candidate", thisfn, action_label );
-			g_free( action_label );
-			continue;
-		}
-
-		g_debug( "%s: action %s is candidate", thisfn, action_label );
 		profile = get_candidate_profile( plugin, NA_OBJECT_ACTION( it->data ), target, files );
 		if( profile ){
 			item = create_item_from_profile( profile, target, files );
 			menus_list = g_list_append( menus_list, item );
 		}
-
-		g_free( action_label );
 	}
 
 	return( menus_list );

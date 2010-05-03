@@ -45,6 +45,25 @@
 	* src/utils/nautilus-actions-run.c:
 	Mark two new strings for translation.
 
+2010-05-03 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-icontext.h:
+	* src/api/na-ifactory-object-data.h:
+	* src/api/na-object-api.h:
+	* src/core/na-icontext-factory.c:
+	* src/core/na-icontext.c:
+	Define new NAFO_DATA_ALL_MIMETYPES data, set to TRUE when the context
+	is to be selected for all mimetypes.
+
+	* src/core/na-object-action.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile.c:
+	* src/plugin-menu/nautilus-actions.c:
+	All objects implement NAIContextInterface.
+
+	* src/nact/nact-iconditions-tab.c (na_object_is_matchcase):
+	Renamed as na_object_get_matchcase().
+
 2010-04-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-ifactory-object-data.h:

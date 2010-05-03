@@ -82,6 +82,9 @@ static void         ifactory_object_read_done( NAIFactoryObject *instance, const
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
+static void         icontext_iface_init( NAIContextInterface *iface );
+static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
+
 static gboolean     menu_is_valid( const NAObjectMenu *menu );
 static gboolean     is_valid_label( const NAObjectMenu *menu );
 
@@ -116,6 +119,12 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo icontext_iface_info = {
+		( GInterfaceInitFunc ) icontext_iface_init,
+		NULL,
+		NULL
+	};
+
 	static const GInterfaceInfo ifactory_object_iface_info = {
 		( GInterfaceInitFunc ) ifactory_object_iface_init,
 		NULL,
@@ -125,6 +134,8 @@ register_type( void )
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( NA_OBJECT_ITEM_TYPE, "NAObjectMenu", &info, 0 );
+
+	g_type_add_interface_static( type, NA_ICONTEXT_TYPE, &icontext_iface_info );
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
@@ -315,6 +326,12 @@ ifactory_object_read_start( NAIFactoryObject *instance, const NAIFactoryProvider
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
+	/* test for all mimetypes
+	 */
+	na_icontext_have_all_mimetypes( NA_ICONTEXT( instance ));
+
+	/* last, set other action defaults
+	 */
 	na_factory_object_set_defaults( instance );
 }
 
@@ -330,6 +347,22 @@ static guint
 ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
 	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
+static void
+icontext_iface_init( NAIContextInterface *iface )
+{
+	static const gchar *thisfn = "na_object_menu_icontext_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->is_candidate = icontext_is_candidate;
+}
+
+static gboolean
+icontext_is_candidate( NAIContext *object, guint target, GList *selection )
+{
+	return( TRUE );
 }
 
 static gboolean

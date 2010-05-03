@@ -370,7 +370,7 @@ on_tab_updatable_selection_changed( NactIConditionsTab *instance, gint count_sel
 		nact_gtk_utils_set_editable( GTK_OBJECT( basenames_widget ), editable );
 
 		matchcase_button = get_matchcase_button( instance );
-		matchcase = profile ? na_object_is_matchcase( profile ) : FALSE;
+		matchcase = profile ? na_object_get_matchcase( profile ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
 		gtk_widget_set_sensitive( GTK_WIDGET( matchcase_button ), item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( matchcase_button ), editable );

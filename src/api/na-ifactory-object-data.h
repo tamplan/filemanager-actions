@@ -87,6 +87,7 @@ G_BEGIN_DECLS
 #define NAFO_DATA_BASENAMES					"na-factory-data-basenames"
 #define NAFO_DATA_MATCHCASE					"na-factory-data-matchcase"
 #define NAFO_DATA_MIMETYPES					"na-factory-data-mimetypes"
+#define NAFO_DATA_ALL_MIMETYPES				"na-factory-data-all-mimetypes"
 #define NAFO_DATA_ISFILE					"na-factory-data-isfile"
 #define NAFO_DATA_ISDIR						"na-factory-data-isdir"
 #define NAFO_DATA_MULTIPLE					"na-factory-data-multiple"

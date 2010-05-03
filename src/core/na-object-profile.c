@@ -83,7 +83,8 @@ static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static void         icontext_conditions_iface_init( NAIContextInterface *iface );
+static void         icontext_iface_init( NAIContextInterface *iface );
+static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
 
 static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
@@ -120,8 +121,8 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo icontext_conditions_iface_info = {
-		( GInterfaceInitFunc ) icontext_conditions_iface_init,
+	static const GInterfaceInfo icontext_iface_info = {
+		( GInterfaceInitFunc ) icontext_iface_init,
 		NULL,
 		NULL
 	};
@@ -136,7 +137,7 @@ register_type( void )
 
 	type = g_type_register_static( NA_OBJECT_ID_TYPE, "NAObjectProfile", &info, 0 );
 
-	g_type_add_interface_static( type, NA_ICONTEXT_TYPE, &icontext_conditions_iface_info );
+	g_type_add_interface_static( type, NA_ICONTEXT_TYPE, &icontext_iface_info );
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
@@ -327,6 +328,12 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
+	/* test for all mimetypes
+	 */
+	na_icontext_have_all_mimetypes( NA_ICONTEXT( instance ));
+
+	/* last, set other action defaults
+	 */
 	na_factory_object_set_defaults( instance );
 }
 
@@ -337,11 +344,19 @@ ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider
 }
 
 static void
-icontext_conditions_iface_init( NAIContextInterface *iface )
+icontext_iface_init( NAIContextInterface *iface )
 {
-	static const gchar *thisfn = "na_object_profile_icontext_conditions_iface_init";
+	static const gchar *thisfn = "na_object_profile_icontext_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->is_candidate = icontext_is_candidate;
+}
+
+static gboolean
+icontext_is_candidate( NAIContext *object, guint target, GList *selection )
+{
+	return( TRUE );
 }
 
 static gboolean

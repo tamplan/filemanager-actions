@@ -84,6 +84,9 @@ static void         ifactory_object_read_done( NAIFactoryObject *instance, const
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
+static void         icontext_iface_init( NAIContextInterface *iface );
+static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
+
 static void         convert_pre_v2_action( NAIFactoryObject *instance );
 static void         deals_with_toolbar_label( NAIFactoryObject *instance );
 
@@ -122,6 +125,12 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo icontext_iface_info = {
+		( GInterfaceInitFunc ) icontext_iface_init,
+		NULL,
+		NULL
+	};
+
 	static const GInterfaceInfo ifactory_object_iface_info = {
 		( GInterfaceInitFunc ) ifactory_object_iface_init,
 		NULL,
@@ -131,6 +140,8 @@ register_type( void )
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( NA_OBJECT_ITEM_TYPE, "NAObjectAction", &info, 0 );
+
+	g_type_add_interface_static( type, NA_ICONTEXT_TYPE, &icontext_iface_info );
 
 	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
 
@@ -337,6 +348,10 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 	 */
 	deals_with_toolbar_label( instance );
 
+	/* test for all mimetypes
+	 */
+	na_icontext_have_all_mimetypes( NA_ICONTEXT( instance ));
+
 	/* last, set other action defaults
 	 */
 	na_factory_object_set_defaults( instance );
@@ -376,6 +391,22 @@ ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider
 	}
 
 	return( code );
+}
+
+static void
+icontext_iface_init( NAIContextInterface *iface )
+{
+	static const gchar *thisfn = "na_object_action_icontext_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->is_candidate = icontext_is_candidate;
+}
+
+static gboolean
+icontext_is_candidate( NAIContext *object, guint target, GList *selection )
+{
+	return( TRUE );
 }
 
 /*

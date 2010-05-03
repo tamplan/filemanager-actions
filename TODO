@@ -141,3 +141,6 @@
 - "x-nautilus-desktop:///" is rather a scheme than a folder => actually is an URI
 
 - enhancement.ui: add a 'why this item is invalid' 
+
+- setup the dynamic all-mimetypes data
+

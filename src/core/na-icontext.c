@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <dbus/dbus-glib.h>
 #include <string.h>
 
 #include <libnautilus-extension/nautilus-file-info.h>
@@ -57,6 +58,21 @@ static void     interface_base_finalize( NAIContextInterface *klass );
 
 static gboolean v_is_candidate( NAIContext *object, guint target, GList *selection );
 
+static gboolean is_candidate_for_target( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_show_in( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_try_exec( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_show_if_registered( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_show_if_true( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_show_if_running( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files );
+static gboolean is_mimetype_of( const gchar *file_type, const gchar *group, const gchar *subgroup );
+static void     split_mimetype( const gchar *mimetype, gchar **group, gchar **subgroup );
+static gboolean is_candidate_for_basenames( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_selection_count( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_schemes( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_folders( const NAIContext *object, guint target, GList *files );
+static gboolean is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files );
+
 static gboolean is_target_location_candidate( const NAIContext *object, NASelectedInfo *current_folder );
 static gboolean is_target_toolbar_candidate( const NAIContext *object, NASelectedInfo *current_folder );
 static gboolean is_current_folder_inside( const NAIContext *object, NASelectedInfo *current_folder );
@@ -67,6 +83,7 @@ static gboolean is_valid_isfiledir( const NAIContext *object );
 static gboolean is_valid_schemes( const NAIContext *object );
 static gboolean is_valid_folders( const NAIContext *object );
 
+static gboolean is_positive_assertion( const gchar *assertion );
 static gboolean validate_schemes( GSList *object_schemes, NASelectedInfo *iter );
 
 /**
@@ -171,18 +188,36 @@ na_icontext_is_candidate( const NAIContext *object, guint target, GList *files )
 
 	is_candidate = v_is_candidate( NA_ICONTEXT( object ), target, files );
 
-	switch( target ){
-		case ITEM_TARGET_LOCATION:
-			is_candidate = is_target_location_candidate( object, ( NASelectedInfo * ) files->data );
-			break;
+	if( is_candidate ){
+		is_candidate =
+				is_candidate_for_target( object, target, files ) &&
+				is_candidate_for_show_in( object, target, files ) &&
+				is_candidate_for_try_exec( object, target, files ) &&
+				is_candidate_for_show_if_registered( object, target, files ) &&
+				is_candidate_for_show_if_true( object, target, files ) &&
+				is_candidate_for_show_if_running( object, target, files ) &&
+				is_candidate_for_mimetypes( object, target, files ) &&
+				is_candidate_for_basenames( object, target, files ) &&
+				is_candidate_for_selection_count( object, target, files ) &&
+				is_candidate_for_schemes( object, target, files ) &&
+				is_candidate_for_folders( object, target, files ) &&
+				is_candidate_for_capabilities( object, target, files );
+	}
 
-		case ITEM_TARGET_TOOLBAR:
-			is_candidate = is_target_toolbar_candidate( object, ( NASelectedInfo * ) files->data );
-			break;
+	if( is_candidate ){
+		switch( target ){
+			case ITEM_TARGET_LOCATION:
+				is_candidate = is_target_location_candidate( object, ( NASelectedInfo * ) files->data );
+				break;
 
-		case ITEM_TARGET_SELECTION:
-		default:
-			is_candidate = is_target_selection_candidate( object, files );
+			case ITEM_TARGET_TOOLBAR:
+				is_candidate = is_target_toolbar_candidate( object, ( NASelectedInfo * ) files->data );
+				break;
+
+			case ITEM_TARGET_SELECTION:
+			default:
+				is_candidate = is_target_selection_candidate( object, files );
+		}
 	}
 
 	return( is_candidate );
@@ -215,6 +250,40 @@ na_icontext_is_valid( const NAIContext *object )
 		is_valid_folders( object );
 
 	return( is_valid );
+}
+
+/**
+ * na_icontext_have_all_mimetypes:
+ * @context: the #NAIContext object to be checked.
+ *
+ * Check if this object is valid for all mimetypes. This is done at load
+ * time, and let us spend as less time as possible when testing for
+ * candidates.
+ */
+void
+na_icontext_have_all_mimetypes( NAIContext *object )
+{
+	gboolean all = TRUE;
+	GSList *mimetypes = na_object_get_mimetypes( object );
+	GSList *im;
+
+	for( im = mimetypes ; im ; im = im->next ){
+		if( !im->data || !strlen( im->data )){
+			continue;
+		}
+		const gchar *imtype = ( const gchar * ) im->data;
+		if( !strcmp( imtype, "*" ) ||
+			!strcmp( imtype, "*/*" ) ||
+			!strcmp( imtype, "all" ) ||
+			!strcmp( imtype, "all/*" ) ||
+			!strcmp( imtype, "all/all" )){
+				continue;
+		}
+		all = FALSE;
+		break;
+	}
+
+	na_object_set_all_mimetypes( object, all );
 }
 
 /**
@@ -282,6 +351,324 @@ v_is_candidate( NAIContext *object, guint target, GList *selection )
 	}
 
 	return( is_candidate );
+}
+
+/*
+ * whether the given NAIContext object is candidate for this target
+ * target is context menu for location, context menu for selection or toolbar for location
+ * only actions are concerned by this check
+ */
+static gboolean
+is_candidate_for_target( const NAIContext *object, guint target, GList *files )
+{
+	static const gchar *thisfn = "na_icontext_is_candidate_for_target";
+	gboolean ok = TRUE;
+
+	if( NA_IS_OBJECT_ACTION( object )){
+		switch( target ){
+			case ITEM_TARGET_LOCATION:
+				ok = na_object_is_target_location( object );
+				break;
+
+			case ITEM_TARGET_TOOLBAR:
+				ok = na_object_is_target_toolbar( object );
+				break;
+
+			case ITEM_TARGET_SELECTION:
+				ok = na_object_is_target_selection( object );
+				break;
+
+			default:
+				g_warning( "%s: unknonw target=%d", thisfn, target );
+		}
+	}
+
+	return( ok );
+}
+
+/*
+ * only show in / not show in
+ * only one of these two data may be set
+ */
+static gboolean
+is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+
+	/* TODO: how-to get current running environment ? */
+
+	return( ok );
+}
+
+/*
+ * if the data is set, it should be the path of an executable file
+ */
+static gboolean
+is_candidate_for_try_exec( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+	gchar *tryexec = na_object_get_try_exec( object );
+
+	if( tryexec && strlen( tryexec )){
+		ok = FALSE;
+		GFile *file = g_file_new_for_path( tryexec );
+		GFileInfo *info = g_file_query_info( file, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE, G_FILE_QUERY_INFO_NONE, NULL, NULL );
+		ok = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE );
+		g_object_unref( info );
+		g_object_unref( file );
+	}
+
+	g_free( tryexec );
+
+	return( ok );
+}
+
+static gboolean
+is_candidate_for_show_if_registered( const NAIContext *object, guint target, GList *files )
+{
+	static const gchar *thisfn = "na_icontext_is_candidate_for_show_if_registered";
+	gboolean ok = TRUE;
+	gchar *name = na_object_get_show_if_registered( object );
+
+	if( name && strlen( name )){
+		ok = FALSE;
+		GError *error = NULL;
+		DBusGConnection *connection = dbus_g_bus_get( DBUS_BUS_SESSION, &error );
+
+		if( !connection ){
+			if( error ){
+				g_warning( "%s: %s", thisfn, error->message );
+				g_error_free( error );
+			}
+
+		} else {
+			DBusGProxy *proxy = dbus_g_proxy_new_for_name( connection, name, NULL, NULL );
+			ok = ( proxy != NULL );
+			dbus_g_connection_unref( connection );
+		}
+	}
+
+	g_free( name );
+
+	return( ok );
+}
+
+static gboolean
+is_candidate_for_show_if_true( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+	gchar *command = na_object_get_show_if_true( object );
+
+	if( command && strlen( command )){
+		ok = FALSE;
+		gchar *stdout = NULL;
+		g_spawn_command_line_sync( command, &stdout, NULL, NULL, NULL );
+
+		if( stdout && !strcmp( stdout, "true" )){
+			ok = TRUE;
+		}
+
+		g_free( stdout );
+	}
+
+	g_free( command );
+
+	return( ok );
+}
+
+static gboolean
+is_candidate_for_show_if_running( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+	gchar *running = na_object_get_show_if_running( object );
+
+	if( running && strlen( running )){
+		/* TODO: how to get the list of running processes ?
+		 * or how to known if a given process is currently running
+		 */
+	}
+
+	g_free( running );
+
+	return( ok );
+}
+
+/*
+ * object may embed a list of - possibly negated - mimetypes
+ * each file of the selection must satisfy all conditions of this list
+ * an empty list is considered the same as '*' or '* / *'
+ *
+ * most time, we will just have '*' - so try to optimize the code to
+ * be as fast as possible when we don't filter on mimetype
+ *
+ * mimetypes are of type : "image/ *; !image/jpeg"
+ * file mimetype must be compatible with at least one positive assertion
+ * (they are ORed), while not being of any negative assertions (they are
+ * ANDed)
+ */
+static gboolean
+is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+	gboolean all = na_object_get_all_mimetypes( object );
+	GList *it;
+
+	if( !all ){
+		GSList *mimetypes = na_object_get_mimetypes( object );
+		GSList *im;
+		gboolean positive;
+		guint count_positive = 0;
+		guint count_compatible = 0;
+
+		for( im = mimetypes ; im && ok ; im = im->data ){
+			const gchar *imtype = ( const gchar * ) im->data;
+			positive = is_positive_assertion( imtype );
+			if( positive ){
+				count_positive += 1;
+			}
+			gchar *imgroup, *imsubgroup;
+			split_mimetype( imtype, &imgroup, &imsubgroup );
+
+			for( it = files ; it && ok ; it = it->next ){
+				gchar *ftype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
+				gboolean type_of = is_mimetype_of( ftype, imgroup, imsubgroup );
+
+				if( positive ){
+					if( type_of ){
+						count_compatible += 1;
+					}
+				} else {
+					if( type_of ){
+						ok = FALSE;
+						break;
+					}
+				}
+
+				g_free( ftype );
+			}
+
+			g_free( imgroup );
+			g_free( imsubgroup );
+		}
+
+		if( count_positive > 0 && count_compatible == 0 ){
+			ok = FALSE;
+		}
+
+		na_core_utils_slist_free( mimetypes );
+	}
+
+	return( ok );
+}
+
+/*
+ * does the file have a mimetype which is 'a sort of' specified one ?
+ * for example, "image/jpeg" is clearly a sort of "image/ *"
+ * but how to check to see if "msword/xml" is a sort of "application/xml" ??
+ */
+static gboolean
+is_mimetype_of( const gchar *file_type, const gchar *group, const gchar *subgroup )
+{
+	gboolean is_type_of;
+	gchar *fgroup, *fsubgroup;
+
+	split_mimetype( file_type, &fgroup, &fsubgroup );
+
+	is_type_of = ( strcmp( fgroup, group ) == 0 );
+	if( is_type_of ){
+		if( strcmp( subgroup, "*" )){
+			is_type_of = ( strcmp( fsubgroup, subgroup ) == 0 );
+		}
+	}
+
+	g_free( fgroup );
+	g_free( fsubgroup );
+
+	return( is_type_of );
+}
+
+static void
+split_mimetype( const gchar *mimetype, gchar **group, gchar **subgroup )
+{
+	GSList *slist = na_core_utils_slist_from_split( mimetype, "/" );
+	GSList *is = slist;
+	*group = g_strdup(( const gchar * ) is->data );
+	is = is->next;
+	*subgroup = g_strdup(( const gchar * ) is->data );
+	na_core_utils_slist_free( slist );
+}
+
+static gboolean
+is_candidate_for_basenames( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+	GSList *basenames = na_object_get_basenames( object );
+
+	if( basenames ){
+		gboolean matchcase = na_object_get_matchcase( object );
+		matchcase = FALSE;
+
+		na_core_utils_slist_free( basenames );
+	}
+
+	return( ok );
+}
+
+static gboolean
+is_candidate_for_selection_count( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+	gchar *selection_count = na_object_get_selection_count( object );
+
+	if( selection_count && strlen( selection_count )){
+
+	}
+
+	g_free( selection_count );
+
+	return( ok );
+}
+
+static gboolean
+is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+	GSList *schemes = na_object_get_schemes( object );
+
+	if( schemes ){
+
+		na_core_utils_slist_free( schemes );
+	}
+
+	return( ok );
+}
+
+static gboolean
+is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+	GSList *folders = na_object_get_folders( object );
+
+	if( folders ){
+
+		na_core_utils_slist_free( folders );
+	}
+
+	return( ok );
+}
+
+static gboolean
+is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files )
+{
+	gboolean ok = TRUE;
+	GSList *capabilities = na_object_get_capabilities( object );
+
+	if( capabilities ){
+
+		na_core_utils_slist_free( capabilities );
+	}
+
+	return( ok );
 }
 
 static gboolean
@@ -357,7 +744,7 @@ is_target_selection_candidate( const NAIContext *object, GList *files )
 	gchar *tmp_pattern, *tmp_filename, *tmp_filename2, *tmp_mimetype, *tmp_mimetype2;
 
 	basenames = na_object_get_basenames( object );
-	matchcase = na_object_is_matchcase( object );
+	matchcase = na_object_get_matchcase( object );
 	multiple = na_object_is_multiple( object );
 	isdir = na_object_is_dir( object );
 	isfile = na_object_is_file( object );
@@ -615,6 +1002,25 @@ is_valid_folders( const NAIContext *object )
 	}
 
 	return( valid );
+}
+
+/*
+ * "image/ *" is a positive assertion
+ * "!image/jpeg" is a negative one
+ */
+static gboolean
+is_positive_assertion( const gchar *assertion )
+{
+	gboolean positive = TRUE;
+
+	if( assertion ){
+		const gchar *stripped = g_strstrip(( gchar * ) assertion );
+		if( stripped ){
+			positive = ( stripped[0] != '!' );
+		}
+	}
+
+	return( positive );
 }
 
 static gboolean

@@ -121,6 +121,34 @@ NADataDef data_def_conditions [] = {
 					"You must set one option for each pattern you need" ),
 				N_( "<EXPR>" ) },
 
+	/* a runtime boolean set to TRUE if we detect that the previous string list
+	 * just cover all mimetypes - this let us optimize the check for candidate
+	 * in the menu plugin
+	 * when FALSE, than we have to check each and every mimetype :(
+	 */
+	{ NAFO_DATA_ALL_MIMETYPES,
+				FALSE,
+				FALSE,
+				TRUE,
+				"Does the mimetypes list is generic ?",
+				"The generic wildcard may be coded as '*', or '*/*' or 'all' or 'all/*'."
+				"In each case, we will try to spend as less time as possible to check " \
+				"selection mimetypes",
+				NAFD_TYPE_BOOLEAN,
+				"false",
+				TRUE,
+				TRUE,
+				FALSE,
+				FALSE,
+				NULL,
+				NULL,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
+
 	{ NAFO_DATA_ISFILE,
 				TRUE,
 				TRUE,
