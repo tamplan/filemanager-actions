@@ -60,6 +60,9 @@ typedef struct NadpDesktopProviderPrivate      NadpDesktopProviderPrivate;
  */
 struct NadpDesktopProviderPrivate {
 	gboolean dispose_has_run;
+	GList   *monitors;
+	GTimeVal last_event;
+	guint    event_source_id;
 };
 
 typedef struct {
@@ -79,11 +82,14 @@ typedef struct {
 /* this is a ':'-separated list of XDG_DATA_DIRS/subdirs searched for
  * menus or actions .desktop files.
  */
-#define NADP_DESKTOP_PROVIDER_SUBDIRS		"file-manager/actions"
+#define NADP_DESKTOP_PROVIDER_SUBDIRS	"file-manager/actions"
 
 GType nadp_desktop_provider_get_type     ( void );
-
 void  nadp_desktop_provider_register_type( GTypeModule *module );
+
+void  nadp_desktop_provider_add_monitor     ( NadpDesktopProvider *provider, const gchar *dir );
+void  nadp_desktop_provider_on_monitor_event( NadpDesktopProvider *provider );
+void  nadp_desktop_provider_release_monitors( NadpDesktopProvider *provider );
 
 G_END_DECLS
 

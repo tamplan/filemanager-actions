@@ -61,7 +61,7 @@ typedef struct {
 }
 	NadpReaderData;
 
-static GList            *get_list_of_desktop_paths( const NadpDesktopProvider *provider, GSList **mesages );
+static GList            *get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **mesages );
 static void              get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
 static gboolean          is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id );
 static GList            *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
@@ -94,6 +94,7 @@ nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), NULL );
 
 	items = NULL;
+	nadp_desktop_provider_release_monitors( NADP_DESKTOP_PROVIDER( provider ));
 
 	desktop_paths = get_list_of_desktop_paths( NADP_DESKTOP_PROVIDER( provider ), messages );
 	for( ip = desktop_paths ; ip ; ip = ip->next ){
@@ -122,7 +123,7 @@ nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
  * the ordered of preference (most preferred first)
  */
 static GList *
-get_list_of_desktop_paths( const NadpDesktopProvider *provider, GSList **messages )
+get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **messages )
 {
 	GList *files;
 	GSList *xdg_dirs, *idir;
@@ -137,11 +138,12 @@ get_list_of_desktop_paths( const NadpDesktopProvider *provider, GSList **message
 	 */
 	for( idir = xdg_dirs ; idir ; idir = idir->next ){
 
-		/* explore chaque N-A candidate subdirectory for each XDG dir
+		/* explore each N-A candidate subdirectory for each XDG dir
 		 */
 		for( isub = subdirs ; isub ; isub = isub->next ){
 
 			dir = g_build_filename(( gchar * ) idir->data, ( gchar * ) isub->data, NULL );
+			nadp_desktop_provider_add_monitor( provider, dir );
 			get_list_of_desktop_files( provider, &files, dir, messages );
 			g_free( dir );
 		}

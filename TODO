@@ -91,6 +91,32 @@
   and more because we also compute this on selection change
   what we should do: compute once, and monitor to only change when needed
 
+- profile path and parameters should be set together as only one variable ?
+
+- icon: is defined as localestring in desktop entry spec
+  but path is defined as string in this same spec
+  and icon may be a path -> so what to do with this ?
+
+- in GConf, for v3, have conditions in a subfolder
+  configurations/
+    id/
+       properties/
+       conditions/
+       profiles/
+          profile-un/
+            properties/
+            conditions/
+            command/
+
+- 20100408: gconf_concat_dir_and_key: have seen this as deprecated, but do not
+  find again the reference :(
+  not even in unstable library on the web
+  http://library.gnome.org/devel/gconf/unstable/gconf-gconf.html#gconf-concat-dir-and-key
+
+- "x-nautilus-desktop:///" is rather a scheme than a folder => actually is an URI
+
+- enhancement.ui: add a 'why this item is invalid'
+
 - Implement:
 	SuggestedShortcut (see gnome-keybinding-properties)
 	GetItemsList
@@ -116,28 +142,316 @@
 
 	Capabilities
 
-- profile path and parameters should be set together as only one variable ?
+Action definition
+Type 	This define this .desktop file as an Action definition.
+Defaults to "Action". 	string 	no
+Name 	The label of the action, as it should appear in the context menu.
+Parameters may appear in Name value, and will be substituted at runtime. 	localestring 	YES
+Tooltip 	The tooltip associated with the item in the context menu.
+Parameters may appear in Tooltip value, and will be substituted at runtime.
+Defaults to empty.
+	localestring 	no
+Icon 	The name of a themed icon, or the path to an icon.
+Parameters may appear in Icon value, and will be substituted at runtime.
+Defaults to empty. 	localestring 	no
+Description 	A free description of the action, which may be used in the management UI, in a Web page, and so on.
+Defaults to empty. 	localestring 	no
+SuggestedShortcut 	A shortcut suggested for the action.
+Please note that this might be only a suggestion as the shortcut may be already reserved for another use. Implementation should not override an already existing shortcut to define this one.
+The format may look like "<Control>a" or "<Shift><Alt>F1".
+Defaults to empty. 	string 	no
+Enabled 	Whether the item is candidate to be displayed in the context menu.
+A user might define many actions or menus, and choose to only enable some of them from time to time.
+Defaults to "true". 	boolean 	no
+Hidden 	Same meaning as in DES.
+Defaults to "false". 	boolean 	no
+TargetContext 	Whether the item targets the file manager context menu.
+This means that the action will be candidate if defined conditions met the current selection.
+Defaults to "true". 	boolean 	no
+TargetLocation 	Whether the item targets a location menu, if the file manager supports this.
+This means that the action will be candidate if defined conditions met the current location.
+Defaults to "false". 	boolean 	no
+TargetToolbar 	Whether the item targets the toolbar, if the file manager supports this.
+Note that, in order to keep a nice and stable UI, the file manager may reserve toolbar actions to those only targeting the current folder.
+Defaults to "false". 	boolean 	no
+ToolbarLabel 	The label to be displayed in the toolbar, if it is not the same that those displayed in context menu.
+Parameters may appear in ToolbarLabel value, and will be substituted at runtime.
+Defaults to Name value. 	localestring 	no
+Profiles
 
-- icon: is defined as localestring in desktop entry spec
-  but path is defined as string in this same spec
-  and icon may be a path -> so what to do with this ?
+The ordered list of the profiles attached to this action.
+Each element of this strings list may be:
 
-- in GConf, for v3, have conditions in a subfolder
-  configurations/
-    id/
-       properties/
-       conditions/
-       profiles/
-          profile-un/
-            properties/
-            conditions/
-            command/
+    * a profile_id, i.e. the id of a profile, as an ASCII string
+    * a command to be executed, if the string is enclosed between square brackets ('['...']').
 
-- 20100408: gconf_concat_dir_and_key: have seen this as deprecated, but do not
-  find again the reference :(
-  not even in unstable library on the web
-  http://library.gnome.org/devel/gconf/unstable/gconf-gconf.html#gconf-concat-dir-and-key
+So, "Profiles" key has a dynamic value: if an element of the string list is enclosed between square brackets ('['...']'), it is considered as a command, optionally with parameters and arguments, and so will be subject to an evaluation at runtime. If the standard output of the command is a valid strings list, then it is substituted to the bracketed element. It the command doesn't exist or cannot be executed, the bracketed element is just ignored.
 
-- "x-nautilus-desktop:///" is rather a scheme than a folder => actually is an URI
+After reading, and maybe evaluation of dynamic elements, profiles identified by the "Profiles" value, but not found in this .desktop file, are just ignored.
 
-- enhancement.ui: add a 'why this item is invalid' 
+It is up to the implementation to decide whether profiles found in this .desktop file, but not identified in this list, should or not be attached to the action.
+It could be for example an acceptable fallback to append these « orphan » profiles at the end of the list of profiles.
+Another choice might also be:
+
+    * at runtime, only attach to the action profiles which are listed in this "Profiles" key
+    * while a management UI may load all profiles found in the .desktop file.
+
+	strings list 	YES
+Profile definition
+
+Profile is identified by its profile_id, as an ASCII string.
+
+Each profile defined in the "Profiles" key, whether statically by its profile_id identifiant, or as the result of an evaluated command, must be defined in a [X-Action-Profile profile_id] group.
+
+When several profiles are defined for an action, only the first valid profile whose conditions are met at runtime is selected to be made available in the context menu.
+
+Defining several profiles let so the user have ordered OR-ed set of conditions, i.e. have one action be available if one set of conditions is met, OR this same action, though most probably with a slightly different command, be available if another set of conditions is met, and so on.
+
+In order to be valid, a profile must at least have an executable command.
+Key 	Description 	Value type 	Req ?
+Name 	The name of the profile; this name is not displayed in the context menu, and should just be thought as a convenience for the management UI. It may also be seen as a good place for a description of what the profile exactly does.
+Defaults to empty. 	localestring 	no
+Exec 	Same meaning as in DES.
+Parameters may appear in Exec value, and will be substituted at runtime. 	string 	YES
+Path 	The working directory the program should be started in.
+Parameters may appear in Path value, and will be substituted at runtime.
+Defaults to base directory of the current selection, which happens to be the value of "%d" parameter. 	string 	no
+ExecutionMode 	Execution mode of the program.
+This may be choosen between following values:
+
+    * Normal: Starts as a standard graphical user interface
+    * Terminal: Starts the preferred terminal of the graphical environment, and runs the command in it
+    * Embedded: Makes use of a special feature of the file manager which allows a terminal to be ran inside of it; an acceptable fallback is Terminal
+    * DisplayOutput: The ran terminal may be closed at end of the command, but standard streams (stdout, stderr) should be collected and displayed; an acceptable fallback is Terminal
+
+Defaults to "Normal". 	string 	no
+StartupNotify 	Same meaning as in DES.
+Only relevant when ExecutionMode=Normal.
+Defaults to "false". 	boolean 	no
+StartupWMClass 	Same meaning as in DES.
+Only relevant when ExecutionMode=Normal.
+Defaults to empty. 	string 	no
+ExecuteAs 	The user the command must be ran as. The user may be identified by its numeric UID or by its login.
+The implementation should ignore a profile defining a non-existing UID or login as a value for the ExecuteAs key.
+The implementation might require the presence of a well-configured subsystem (e.g. sudo).
+Defaults to empty: the command will be executed as the current user. 	string 	no
+Menu definition
+
+Just as an action, a menu has label, tooltip, icon.
+
+But, where an action is intended to eventually execute a command, a menu is just a way of gathering some subitems, actions or menus, in an ordered list.
+
+In order to be valid, a menu must have a non-empty name, and include at least one valid subitem.
+
+It is the responsability of the implementation to ensure that the displayed menus are relevant, i.e. not empty, with no separator at the begin or the end of the menu, with no double separator, etc.
+
+The menu is so defined as a particular case of a .desktop file, identified by its desktop_file_id, whose the [Desktop Entry] section has following keys:
+Key 	Description 	Value type 	Req ?
+Type 	This define this .desktop file as a Menu definition.
+Must be equal to "Menu". 	string 	YES
+Name 	The label of the menu, as it should appear in the context menu.
+Parameters may appear in Name value, and will be substituted at runtime. 	localestring 	YES
+Tooltip 	The tooltip associated with the submenu in the context menu.
+Parameters may appear in Tooltip value, and will be substituted at runtime.
+Defaults to empty. 	localestring 	no
+Icon 	The name of a themed icon, or the path to an icon, to be associated to the submenu.
+Parameters may appear in Icon value, and will be substituted at runtime.
+Defaults to empty. 	localestring 	no
+Description 	A free description of the menu, which may be used in the management UI, in a Web page, and so on.
+Defaults to empty. 	localestring 	no
+SuggestedShortcut 	A shortcut suggested for the menu.
+Please note that this might be only a suggestion as the shortcut may be already reserved for another use. Implementation should not override an already existing shortcut to define this one.
+The format may look like "<Control>a" or "<Shift><Alt>F1".
+Defaults to empty. 	string 	no
+Enabled 	Whether the item is candidate to be displayed in the context menu.
+A user might define many actions or menus, and choose to only enable some of them from time to time.
+Defaults to "true". 	boolean 	no
+Hidden 	Same meaning as in DES.
+Defaults to "false". 	boolean 	no
+ItemsList
+
+The ordered list of the items (actions or menus) attached to this menu.
+Each element of this strings list may be:
+
+    * the id of an action or a menu,
+    * a command to be executed, if the string is enclosed between square brackets ('['...']').
+
+So, "ItemsList" key has a dynamic value: if an element of the string list is enclosed between square brackets ('['...']'), it is considered as a command, optionally with parameters and arguments, and so will be subject to an evaluation at runtime. If the standard output of the command is a valid strings list, then it is substituted to the bracketed element. It the command doesn't exist or cannot be executed, the bracketed element is just ignored.
+
+The keyword SEPARATOR is a special case of desktop_file_id. It may be used to define a separator in the menu.
+
+Actions or menus not identified here, or not identified as subitems of a menu or of a submenu, should not be ignored by the implementation; instead of that, the implementation should display these « orphan » items (though in a unspecified order).
+	strings list 	YES
+Conditions
+
+As a remainder of that has been said above, each one of the following conditions may appear in a menu, an action or a profile.
+
+Conditions are AND-ed, that is all specified conditions which appear in a menu, an action or a profile must be met in order the item be considered as a candidate.
+
+When a condition is defined as a string list, elements of the list are considered as OR-ed.
+When an element of the string list is negated, it must be considered as an AND condition.
+
+Example:
+
+    The line « MimeTypes = image/*; video/*; » must be readen as « condition is met if each file in the current selection has a mimetype of "image/*" or of "video/*" »
+
+    And the line « MimeTypes = image/*; video/*; !image/bmp » must be readen as « condition is met if each file in the current selection has a mimetype of "image/*" or of "video/*", but must not have the "image/bmp" mimetype ».
+
+Key 	Description 	Value type 	Req ?
+OnlyShowIn,
+NotShowIn 	Same meaning as in DES.
+Note that, as in DES, only one of these two keys may be mentioned, else the condition group would be considered invalid.
+Defaults to show anywhere. 	strings list 	no
+TryExec 	Same meaning as in DES.
+Note that, when specified, only the presence and the executability status of the specified file are checked.
+Parameters may appear in TryExec value, and will be substituted at runtime.
+Defaults to successful. 	string 	no
+ShowIfRegistered 	The well-known name of a DBus service.
+The item will be candidate if the named service is registered on session DBus at runtime.
+Parameters may appear in ShowIfRegistered value, and will be substituted at runtime.
+Defaults to successful.
+Comment: 	This is the equivalent of KDE "X-KDE-ShowIfRunning" key.
+	string 	no
+ShowIfTrue 	A command which, when executed, should output a string on stdout.
+The item will be candidate if the outputed string is equal to "true".
+Parameters may appear in ShowIfTrue value, and will be substituted at runtime.
+Example: [ -r %d/.svn/entries ] && echo "true"
+Defaults to successful.
+Comment: 	This is the equivalent of KDE "X-KDE-ShowIfDBusCall" key, extended to any command able to output a string.
+	string 	no
+ShowIfRunning 	The name of a process.
+The item will be candidate if the process name is found in memory at runtime.
+Parameters may appear in ShowIfRunning value, and will be substituted at runtime.
+Defaults to successful. 	string 	no
+MimeTypes 	Same meaning as in DES.
+Each mimetype may be fully specified (e.g. "audio/mpeg;"), or as a group (e.g. "image/*;").
+Mimetypes may be negated (e.g. "audio/*; !audio/mpeg;").
+Some of well-known mimetypes include:
+
+    * "all/all": matches all items
+    * "all/allfiles": matches only files
+    * "inode/directory": matches only directories
+
+'*' character is accepted as a wildcard in only two cases:
+
+    * when used alone as in "*;", i.e. when used as a group wildcard without subgroup,
+    * when used as the subgroup wildcard, after the '/' character, as in "image/*".
+
+Defaults to "*;", which happends to be exactly equivalent to "all/all" or to "all/*".
+Comment: 		This is the equivalent of "ServiceTypes", "X-KDE-ServiceTypes", "ExcludeServiceTypes" KDE and "MimeType" freedesktop keys.
+	strings list 	no
+Basenames 	List of basenames the selection should match in order this profile be selected.
+'*' character is accepted as a wildcard.
+Basenames may be negated (e.g. "*; !*.h;").
+Defaults to "*;". 	strings list 	no
+Matchcase 	Whether the above Basenames is case sensitive.
+Defaults to "true". 	boolean 	no
+SelectionCount 	Whether this profile may be selected depending of the count of the selection.
+This is a string of the form "{'<'|'='|'>'} number".
+Examples of valid strings are: "=0", "> 1", "< 10".
+Defaults to ">0". 	string 	no
+Schemes 	The list of schemes the selection must satisfy in order the item be selected.
+Exemples of well-known schemes are:
+
+    * "file"
+    * "sftp"
+    * "smb"
+    * "http"
+
+Schemes may be negated, e.g. "!http;".
+Defaults to "*;".
+Comment: 	This is the equivalent of "X-KDE-Protocol" and "X-KDE-Protocols" KDE keys.
+	strings list 	no
+Folders 	A list of paths the current base directory must be in in order the item be selected.
+A folder path may be negated (e.g. "/data; !/data/resources/secret;").
+'*' character is accepted as a wildcard, replacing any level(s) of subdirectory (e.g. "/music; /video; !*/secret;").
+Also note that a terminating '/*' is always implied by the definition of this key.
+Last, note that different implementations today widely consider that, for a directory point of view, having no selection is roughly the same that selecting the currently opened folder. If this makes a difference for your action, then SelectionCount is for you. Defaults to "/". 	strings list 	no
+Capabilities 	A list of capabilities each item of the selection must satisfy in order the item be candidate.
+Capabilities may be negated.
+Capabilities have to be choosen between following predefined ones:
+
+    * "Owner": current user is the owner of selected items
+    * "Readable": selected items are readable by user (probably more usefull when negated)
+    * "Writable": selected items are writable by user
+    * "Executable": selected items are executable by user
+    * "Local": selected items are local
+
+Defaults to "*;".
+Comment: 	This is the equivalent of "X-KDE-Require" KDE key.
+	strings list 	no
+Parameters
+
+Whenever parameters are said to be accepted, they will be replaced at run-time.
+
+Also, this specification doesn't make any assumption about whether a parameter is relevant in a given situation, or secure, or may be used several times, or so. It instead considers that this sort of check is up to the action creator.
+
+The implementation should take care of correctly shell-escape the substituted values, so that it should not be needed for the action creator to use any sort of quotes to handle spaces in filenames.
+
+Though some parameters are not sensible to the count of the selection (e.g. "%c", the selection count itself), most have two declensions:
+
+    * a "singular" one, e.g. "%b", the basename of the selected item
+    * a "plural" one, e.g. "%B", a space-separated list of the basenames of selected items
+
+When the selection is empty or contains only one element, these two forms are exactly equivalent.
+When the selection contains more than one item:
+
+    * if the first parameter found in the Exec key is of a singular form, then the implementation should consider that the command is only able to deal with one item at a time, and thus that it has to be ran one time for each selected item;
+    *
+    * contrarily, if the first parameter found is of the plural form, then the implementation should consider that the command is able to deal with a list of items, and thus the command should be executed only once.
+
+Example:
+
+    Say the current folder is /data, and the current selection contains the three files pierre, paul and jacques.
+
+    If the Exec key is "echo %b", then the following commands will be run:
+    "echo pierre"
+    "echo paul"
+    "echo jacques"
+
+    If the Exec key is "echo %B", then the following command will be run:
+    "echo pierre paul jacques"
+
+    If the Exec key is "echo %b %B", then the following commands will be run:
+    "echo pierre pierre paul jacques"
+    "echo paul pierre paul jacques"
+    "echo jacques pierre paul jacques"
+
+    If the Exec key is "echo %B %b", then the following commands will be run:
+    "echo pierre paul jacques pierre"
+    The basename used is those of the first item of the selected items list as provided by the file manager. There is only a small chance that it would be those of the first visually selected item, and there is contrarily great chances that it would not be predictable at all.
+
+    Even if the choosen parameter is the same for all selected items, the behavior is the identical.
+    If the Exec key is "echo %d %B", then the following commands will be run:
+    "echo /data pierre paul jacques"
+    "echo /data pierre paul jacques"
+    "echo /data pierre paul jacques"
+    which obviously doesn't make many sense.
+
+    As the last three examples show up, action creator should avoid to mix singular and plural forms, unless they know what they are doing, whether it doesn't make sense or this may lead to unwaited results.
+
+    Nonetheless, mixing singular and plural forms, though we warn against, is not an error. As a counter example, there may be some situations where a command-line of the form "echo %B %d" would be useful. In that case, the following command would be run:
+    "echo pierre paul jacques /data"
+    It is left as an exercize for the reader to find a use case.
+
+The word "first" in the following table makes so reference to the case where the singular form parameter is used in a plural form command. We recall one more time that which is the "first" element is not specified, and, most probably, rather unpredictable.
+Parameter 	Description
+%b 	(first) basename
+%B 	space-separated list of basenames
+%c 	count of selected items
+%d 	(first) base directory
+%D 	space-separated list of base directory of each selected items
+%f 	(first) file name
+%F 	space-separated list of selected file names
+%h 	hostname of the (first) URI
+%n 	username of the (first) URI
+%p 	port number of the (first) URI
+%s 	scheme of the (first) URI
+%u 	(first) URI
+%U 	space-separated list of selected URIs
+%w 	(first) basename without the extension
+%W 	space-separated list of basenames without their extension
+%x 	(first) extension
+%X 	space-separated list of extensions
+%% 	the « % » character
+

@@ -41,6 +41,7 @@
 
 #include "nadp-desktop-provider.h"
 #include "nadp-keys.h"
+#include "nadp-monitor.h"
 #include "nadp-reader.h"
 #include "nadp-writer.h"
 
@@ -52,19 +53,24 @@ struct NadpDesktopProviderClassPrivate {
 
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
+static guint         st_timeout_msec = 100;
+static guint         st_timeout_usec = 100000;
 
-static void   class_init( NadpDesktopProviderClass *klass );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *object );
-static void   instance_finalize( GObject *object );
+static void     class_init( NadpDesktopProviderClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
 
-static void   iio_provider_iface_init( NAIIOProviderInterface *iface );
-static gchar *iio_provider_get_id( const NAIIOProvider *provider );
-static gchar *iio_provider_get_name( const NAIIOProvider *provider );
-static guint  iio_provider_get_version( const NAIIOProvider *provider );
+static void     iio_provider_iface_init( NAIIOProviderInterface *iface );
+static gchar   *iio_provider_get_id( const NAIIOProvider *provider );
+static gchar   *iio_provider_get_name( const NAIIOProvider *provider );
+static guint    iio_provider_get_version( const NAIIOProvider *provider );
 
-static void   ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
-static guint  ifactory_provider_get_version( const NAIFactoryProvider *reader );
+static void     ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
+static guint    ifactory_provider_get_version( const NAIFactoryProvider *reader );
+
+static gboolean on_monitor_timeout( NadpDesktopProvider *provider );
+static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 GType
 nadp_desktop_provider_get_type( void )
@@ -141,6 +147,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NadpDesktopProviderPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+	self->private->monitors = NULL;
 }
 
 static void
@@ -156,6 +163,8 @@ instance_dispose( GObject *object )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
+
+		nadp_desktop_provider_release_monitors( self );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -235,4 +244,95 @@ static guint
 ifactory_provider_get_version( const NAIFactoryProvider *reader )
 {
 	return( 1 );
+}
+
+/**
+ * nadp_desktop_provider_add_monitor:
+ * @provider: this #NadpDesktopProvider object.
+ * @dir: the path to the directory to be monitored. May not exist.
+ *
+ * Installs a GIO monitor on the given directory.
+ */
+void
+nadp_desktop_provider_add_monitor( NadpDesktopProvider *provider, const gchar *dir )
+{
+	NadpMonitor *monitor;
+
+	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ));
+
+	if( !provider->private->dispose_has_run ){
+
+		monitor = nadp_monitor_new( provider, dir );
+		provider->private->monitors = g_list_prepend( provider->private->monitors, monitor );
+	}
+}
+
+/**
+ * nadp_desktop_provider_on_monitor_event:
+ * @provider: this #NadpDesktopProvider object.
+ *
+ * Factorize events received from GIO when monitoring desktop directories.
+ */
+void
+nadp_desktop_provider_on_monitor_event( NadpDesktopProvider *provider )
+{
+	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ));
+
+	if( !provider->private->dispose_has_run ){
+
+		g_get_current_time( &provider->private->last_event );
+
+		if( !provider->private->event_source_id ){
+			provider->private->event_source_id =
+				g_timeout_add( st_timeout_msec, ( GSourceFunc ) on_monitor_timeout, provider );
+		}
+	}
+}
+
+/**
+ * nadp_desktop_provider_release_monitors:
+ * @provider: this #NadpDesktopProvider object.
+ *
+ * Release previously set desktop monitors.
+ */
+void
+nadp_desktop_provider_release_monitors( NadpDesktopProvider *provider )
+{
+	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ));
+
+	if( provider->private->monitors ){
+
+		g_list_foreach( provider->private->monitors, ( GFunc ) g_object_unref, NULL );
+		g_list_free( provider->private->monitors );
+		provider->private->monitors = NULL;
+	}
+}
+
+static gboolean
+on_monitor_timeout( NadpDesktopProvider *provider )
+{
+	GTimeVal now;
+	gulong diff;
+
+	g_get_current_time( &now );
+	diff = time_val_diff( &now, &provider->private->last_event );
+	if( diff < st_timeout_usec ){
+		return( TRUE );
+	}
+
+	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ), NULL );
+
+	provider->private->event_source_id = 0;
+	return( FALSE );
+}
+
+/*
+ * returns the difference in microseconds.
+ */
+static gulong
+time_val_diff( const GTimeVal *recent, const GTimeVal *old )
+{
+	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
+	microsec += recent->tv_usec  - old->tv_usec;
+	return( microsec );
 }

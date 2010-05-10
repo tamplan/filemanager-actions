@@ -43,6 +43,8 @@ libna_io_desktop_la_SOURCES = \
 	nadp-keys.c											\
 	nadp-keys.h											\
 	nadp-module.c										\
+	nadp-monitor.c										\
+	nadp-monitor.h										\
 	nadp-reader.c										\
 	nadp-reader.h										\
 	nadp-utils.c										\

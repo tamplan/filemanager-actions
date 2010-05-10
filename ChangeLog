@@ -45,6 +45,24 @@
 	* src/utils/nautilus-actions-run.c:
 	Mark two new strings for translation.
 
+2010-05-10 Pierre Wieser <pwieser@trychlos.org>
+
+	Monitor .desktop files and directories.
+
+	* src/io-desktop/nadp-monitor.c:
+	* src/io-desktop/nadp-monitor.h: New files.
+
+	* src/io-desktop/Makefile.am: Updated accordingly.
+
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-desktop/nadp-desktop-provider.h
+	(nadp_desktop_provider_add_monitor,
+	nadp_desktop_provider_on_monitor_event,
+	nadp_desktop_provider_release_monitors): New functions.
+
+	* src/io-desktop/nadp-reader.c (get_list_of_desktop_paths):
+	Installs a monitor for each candidate directory.
+
 2010-05-03 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-icontext.h:
