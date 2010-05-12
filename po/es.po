@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-04-14 23:21+0000\n"
-"PO-Revision-Date: 2010-05-01 10:48+0200\n"
+"POT-Creation-Date: 2010-05-01 08:49+0000\n"
+"PO-Revision-Date: 2010-05-12 09:24+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -495,10 +495,11 @@ msgid "<EXPR>"
 msgstr "<EXPR>"
 
 #: ../src/core/na-icontext-factory.c:75
-#, fuzzy
 #| msgid "Set it if the selection can have several items"
 msgid "Whether the specified basenames are case sensitive (default)"
-msgstr "Establézcalo si la selección puede contener varios elementos"
+msgstr ""
+"Indica si los nombres base especificados son sensibles a mayúsculas "
+"(predeterminado)"
 
 #: ../src/core/na-icontext-factory.c:76
 #, fuzzy
@@ -519,14 +520,13 @@ msgstr ""
 "coincida con «foto.JPG», póngala a «false»"
 
 #: ../src/core/na-icontext-factory.c:101
-#, fuzzy
 #| msgid "The list of patterns to match the mimetypes of the selected file(s)"
 msgid ""
 "List of patterns to be matched against the mimetypes of the selected file(s)/"
 "folder(s)"
 msgstr ""
-"La lista de patrones con la que coincidir los tipos MIME de los archivos "
-"seleccionados"
+"La lista de patrones con la que coincidir los tipos MIME de los archivos y/o "
+"carpetas seleccionadas"
 
 #: ../src/core/na-icontext-factory.c:102
 #, fuzzy
@@ -558,7 +558,6 @@ msgstr ""
 "comodines (? o *) (debe establecer una opción por cada patrón que necesite)"
 
 #: ../src/core/na-icontext-factory.c:128
-#, fuzzy
 #| msgid "Whether the labels are the sames"
 msgid "Whether the profile applies to files"
 msgstr "Indica si el perfil se aplica a archivos"
@@ -596,7 +595,6 @@ msgstr ""
 "aparecerá)"
 
 #: ../src/core/na-icontext-factory.c:157
-#, fuzzy
 #| msgid "Whether the labels are the sames"
 msgid "Whether the profile applies to folders"
 msgstr "Indica si el perfil se aplica a carpetas"
@@ -634,7 +632,6 @@ msgstr ""
 "aparecerá)"
 
 #: ../src/core/na-icontext-factory.c:186
-#, fuzzy
 #| msgid "Whether the action is enabled"
 msgid "Whether the selection may be multiple"
 msgstr "Indica si la selección puede ser múltiple"
@@ -1428,10 +1425,9 @@ msgid "Set it to run multiple instances of the program [unique]"
 msgstr ""
 
 #: ../src/nact/nact-application.c:74
-#, fuzzy
 #| msgid "Output the version number"
 msgid "Output the version number, and exit gracefully [no]"
-msgstr "Mostrar el número de versión"
+msgstr "Mostrar el número de versión y salir con elegancia [no]"
 
 #: ../src/nact/nact-application.c:353
 msgid ""
@@ -1453,10 +1449,9 @@ msgid "Nautilus Actions Configuration Tool"
 msgstr "Herramienta de configuración de acciones de Nautilus"
 
 #: ../src/nact/nact-assistant-export.c:679
-#, fuzzy
 #| msgid "About to export selected actions:"
 msgid "About to export selected items:"
-msgstr "Acerca de exportar las acciones seleccionadas:"
+msgstr "Acerca de exportar los elementos seleccionadas:"
 
 #: ../src/nact/nact-assistant-export.c:693
 msgid "Into the destination folder:"
@@ -1516,29 +1511,30 @@ msgstr "Configuración de acciones de Nautilus"
 
 #. i18n: The action <label> is about to be exported
 #: ../src/nact/nact-export-ask.c:326
-#, fuzzy, c-format
+#, c-format
 #| msgid "The action \"%s\" is about to be exported."
 msgid "The action \"%s\" is about to be exported."
 msgstr "La acción «%s» está a punto de ser exportada."
 
 #. i18n: The menu <label> is about to be exported
 #: ../src/nact/nact-export-ask.c:329
-#, fuzzy, c-format
+#, c-format
 #| msgid "The action \"%s\" is about to be exported."
 msgid "The menu \"%s\" is about to be exported."
-msgstr "La acción «%s» está a punto de ser exportada."
+msgstr "El menú «%s» está a punto de ser exportado."
 
 #: ../src/nact/nact-export-format.c:46
 msgid "_Ask me"
 msgstr "_Preguntarme"
 
 #: ../src/nact/nact-export-format.c:47
-#, fuzzy
 #| msgid "The action \"%s\" is about to be exported."
 msgid ""
 "You will be asked for the format to choose each time an item is about to be "
 "exported."
-msgstr "La acción «%s» está a punto de ser exportada."
+msgstr ""
+"Se le preguntará el formato que elegir cada vez que un elemento se va a "
+"exportar."
 
 #: ../src/nact/nact-iaction-tab.c:525
 msgid "Menu"
@@ -1749,18 +1745,15 @@ msgstr "D_uplicar"
 
 #. i18n: tooltip displayed in the status bar when selecting the Duplicate item
 #: ../src/nact/nact-main-menubar.c:152
-#| msgid "Click to remove the selected scheme."
 msgid "Duplicate the selected item(s)"
 msgstr "Duplicar los elementos seleccionados"
 
 #. i18n: tooltip displayed in the status bar when selecting the Delete item
 #: ../src/nact/nact-main-menubar.c:156
-#| msgid "Click to remove the selected scheme."
 msgid "Delete the selected item(s)"
 msgstr "Eliminar los elementos seleccionados"
 
 #: ../src/nact/nact-main-menubar.c:158
-#| msgid "_Reload the list of actions"
 msgid "_Reload the items"
 msgstr "_Actualizar los elementos"
 
@@ -1858,13 +1851,11 @@ msgstr "Volcar el contenido del objeto del portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the Help item
 #: ../src/nact/nact-main-menubar.c:203
-#| msgid "Display help about this program."
 msgid "Display help about this program"
 msgstr "Mostrar ayuda acerca de este programa"
 
 #. i18n: tooltip displayed in the status bar when selecting the About item
 #: ../src/nact/nact-main-menubar.c:207
-#| msgid "Display help about this program."
 msgid "Display informations about this program"
 msgstr "Mostrar información acerca de este programa"
 
