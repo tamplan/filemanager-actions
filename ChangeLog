@@ -45,6 +45,30 @@
 	* src/utils/nautilus-actions-run.c:
 	Mark two new strings for translation.
 
+2010-05-12 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-icontext.h:
+	* src/core/na-icontext.c
+	(na_icontext_have_all_mimetypes): Removed function.
+	(na_icontext_read_done): New function.
+
+	* src/core/na-object-action.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile.c: Updated accordingly.
+
+	* src/api/na-object-api.h
+	(na_object_get_iversion, na_object_set_iversion): New functions.
+
+	* src/core/na-icontext-factory.c:
+	* src/core/na-object-item-factory.c:
+	Adjustments on default values.
+
+	* src/io-gconf/nagp-reader.c (read_done_profile_attach_profile):
+	Convert pre-v3 parameters.
+
+	* src/plugin-menu/nautilus-actions.c:
+	Adjust NautilusMenuProvider interface.
+
 2010-05-10 Pierre Wieser <pwieser@trychlos.org>
 
 	Monitor .desktop files and directories.

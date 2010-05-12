@@ -328,9 +328,11 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	/* test for all mimetypes
+	g_debug( "na_object_profile_ifactory_object_read_done: profile=%p", ( void * ) instance );
+
+	/* prepare the context after the reading
 	 */
-	na_icontext_have_all_mimetypes( NA_ICONTEXT( instance ));
+	na_icontext_read_done( NA_ICONTEXT( instance ));
 
 	/* last, set other action defaults
 	 */

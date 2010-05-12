@@ -348,9 +348,9 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 	 */
 	deals_with_toolbar_label( instance );
 
-	/* test for all mimetypes
+	/* prepare the context after the reading
 	 */
-	na_icontext_have_all_mimetypes( NA_ICONTEXT( instance ));
+	na_icontext_read_done( NA_ICONTEXT( instance ));
 
 	/* last, set other action defaults
 	 */

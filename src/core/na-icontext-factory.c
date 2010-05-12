@@ -103,9 +103,9 @@ NADataDef data_def_conditions [] = {
 					"selected file(s)/folder(s). Each selected items must match at least one of " \
 					"the mimetype patterns for the action to appear.\n" \
 					"This obviously only applies when there is a selection.\n" \
-					"Defaults to '*'." ),
+					"Defaults to '*/*'." ),
 				NAFD_TYPE_STRING_LIST,
-				"[*]",
+				"[*/*]",
 				TRUE,
 				TRUE,
 				FALSE,
@@ -131,11 +131,11 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				TRUE,
 				"Does the mimetypes list is generic ?",
-				"The generic wildcard may be coded as '*', or '*/*' or 'all' or 'all/*'."
+				"The generic wildcard may be coded as '*', or '*/*' or 'all' or 'all/*' or 'all/all'."
 				"In each case, we will try to spend as less time as possible to check " \
 				"selection mimetypes",
 				NAFD_TYPE_BOOLEAN,
-				"false",
+				"true",
 				TRUE,
 				TRUE,
 				FALSE,

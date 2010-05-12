@@ -326,9 +326,9 @@ ifactory_object_read_start( NAIFactoryObject *instance, const NAIFactoryProvider
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	/* test for all mimetypes
+	/* prepare the context after the reading
 	 */
-	na_icontext_have_all_mimetypes( NA_ICONTEXT( instance ));
+	na_icontext_read_done( NA_ICONTEXT( instance ));
 
 	/* last, set other action defaults
 	 */

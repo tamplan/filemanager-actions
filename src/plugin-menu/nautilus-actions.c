@@ -86,7 +86,7 @@ static GList            *menu_provider_get_background_items( NautilusMenuProvide
 static GList            *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
 static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 
-static GList            *get_file_or_background_items( NautilusActions *plugin, guint target, void *selection );
+static GList            *get_file_or_background_items( NautilusActions *plugin, guint target, GList *selection );
 static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files );
 static NAObjectProfile  *get_candidate_profile( NautilusActions *plugin, NAObjectAction *action, guint target, GList *files );
 static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, guint target, GList *files );
@@ -404,6 +404,9 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 	static const gchar *thisfn = "nautilus_actions_menu_provider_get_background_items";
 	GList *nautilus_menus_list = NULL;
 	gchar *uri;
+	GList *selected;
+
+	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
 
@@ -412,8 +415,12 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 				thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
 		g_free( uri );
 
+		selected = na_selected_info_get_list_from_item( current_folder );
+
 		nautilus_menus_list = get_file_or_background_items(
-				NAUTILUS_ACTIONS( provider ), ITEM_TARGET_LOCATION, ( void * ) current_folder );
+				NAUTILUS_ACTIONS( provider ), ITEM_TARGET_LOCATION, selected );
+
+		na_selected_info_free_list( selected );
 	}
 
 	return( nautilus_menus_list );
@@ -430,9 +437,7 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 {
 	static const gchar *thisfn = "nautilus_actions_menu_provider_get_file_items";
 	GList *nautilus_menus_list = NULL;
-
-	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
-			thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
+	GList *selected;
 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 
@@ -443,8 +448,15 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
 
+		g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
+				thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
+
+		selected = na_selected_info_get_list_from_list(( GList * ) files );
+
 		nautilus_menus_list = get_file_or_background_items(
-				NAUTILUS_ACTIONS( provider ), ITEM_TARGET_SELECTION, ( void * ) files );
+				NAUTILUS_ACTIONS( provider ), ITEM_TARGET_SELECTION, selected );
+
+		na_selected_info_free_list( selected );
 	}
 
 	return( nautilus_menus_list );
@@ -464,12 +476,14 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 	GList *selected;
 	GList *pivot_tree;
 
-	uri = nautilus_file_info_get_uri( current_folder );
-	g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
-			thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
-	g_free( uri );
+	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
+
+		uri = nautilus_file_info_get_uri( current_folder );
+		g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
+				thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
+		g_free( uri );
 
 		pivot_tree = na_pivot_get_items( NAUTILUS_ACTIONS( provider )->private->pivot );
 
@@ -485,11 +499,10 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 }
 
 static GList *
-get_file_or_background_items( NautilusActions *plugin, guint target, void *selection )
+get_file_or_background_items( NautilusActions *plugin, guint target, GList *selection )
 {
 	GList *menus_list;
 	GList *pivot_tree;
-	GList *selected;
 	gboolean root_menu;
 	gboolean add_about;
 
@@ -497,19 +510,7 @@ get_file_or_background_items( NautilusActions *plugin, guint target, void *selec
 
 	pivot_tree = na_pivot_get_items( plugin->private->pivot );
 
-	if( target == ITEM_TARGET_LOCATION ){
-		g_return_val_if_fail( NAUTILUS_IS_FILE_INFO( selection ), NULL );
-		selected = na_selected_info_get_list_from_item( NAUTILUS_FILE_INFO( selection ));
-
-	} else {
-		g_return_val_if_fail( target == ITEM_TARGET_SELECTION, NULL );
-		selected = na_selected_info_get_list_from_list(( GList * ) selection );
-	}
-
-	menus_list = build_nautilus_menus( plugin, pivot_tree, target, selected );
-	/*g_debug( "%s: menus has %d level zero items", thisfn, g_list_length( menus_list ));*/
-
-	na_selected_info_free_list( selected );
+	menus_list = build_nautilus_menus( plugin, pivot_tree, target, selection );
 
 	root_menu = na_iprefs_read_bool( NA_IPREFS( plugin->private->pivot ), IPREFS_CREATE_ROOT_MENU, FALSE );
 	if( root_menu ){
@@ -517,7 +518,6 @@ get_file_or_background_items( NautilusActions *plugin, guint target, void *selec
 	}
 
 	add_about = na_iprefs_read_bool( NA_IPREFS( plugin->private->pivot ), IPREFS_ADD_ABOUT_ITEM, TRUE );
-	/*g_debug( "%s: add_about=%s", thisfn, add_about ? "True":"False" );*/
 	if( add_about ){
 		menus_list = add_about_item( plugin, menus_list );
 	}

@@ -60,6 +60,8 @@ static void          read_done_action_load_profiles_from_list( const NAIFactoryP
 static void          read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
 static void          read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
 
+static void          convert_pre_v3_parameters( NAObjectProfile *profile );
+static void          convert_pre_v3_parameters_str( gchar *str );
 static NADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
 static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 
@@ -315,7 +317,107 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 static void
 read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages )
 {
+	guint iversion;
+
+	g_debug( "nagp_reader_read_done_attach_profile: profile=%p", ( void * ) profile );
+
 	na_object_attach_profile( data->parent, profile );
+
+	/* converts pre-v3 parameters
+	 */
+	iversion = na_object_get_iversion( data->parent );
+	if( iversion < 3 ){
+		convert_pre_v3_parameters( profile );
+	}
+}
+
+/*
+ * starting wih v3, parameters are relabeled
+ *   pre-v3 parameters					post-v3 parameters
+ *   ----------------------------		-----------------------------------
+ *   									%b: (first) basename	(new)
+ *   									%B: list of basenames	(was %m)
+ *   									%c: count				(new)
+ * 	 %d: (first) base directory			...................		(unchanged)
+ * 										%D: list of base dir	(new)
+ *   %f: (first) pathname				...................		(unchanged)
+ *   									%F: list of pathnames	(was %M)
+ *   %h: (first) hostname				...................		(unchanged)
+ *   %m: list of basenames	-> %B		-						(removed)
+ *   %M: list of pathnames	-> %F		-						(removed)
+ *   									%n: (first) username	(was %U)
+ *   %p: (first) port number			...................		(unchanged)
+ *   %R: list of URIs		-> %U		-						(removed)
+ *   %s: (first) scheme					...................		(unchanged)
+ *   %u: (first) URI					...................		(unchanged)
+ *   %U: (first) username	-> %n		%U: list of URIs		(was %R)
+ *   									%w: (first) basename w/o ext.	(new)
+ *   									%W: list of basenames w/o ext.	(new)
+ *   									%x: (first) extension	(new)
+ *   									%X: list of extensions	(new)
+ *   %%: %								...................		(unchanged)
+ *
+ * For pre-v3 items,
+ * - substitute %m with %B
+ * - substitute %M with %F
+ * - substitute %U with %n
+ * - substitute %R with %U
+ *
+ * Note that pre-v3 items only have parameters in the command and path fields.
+ * Are only located in 'profile' objects.
+ * Are only found in GConf provider, as .desktop files have been simultaneously
+ * introduced.
+ */
+static void
+convert_pre_v3_parameters( NAObjectProfile *profile )
+{
+	gchar *path = na_object_get_path( profile );
+	convert_pre_v3_parameters_str( path );
+	na_object_set_path( profile, path );
+	g_free( path );
+
+	gchar *parms = na_object_get_parameters( profile );
+	convert_pre_v3_parameters_str( parms );
+	na_object_set_parameters( profile, parms );
+	g_free( parms );
+}
+
+static void
+convert_pre_v3_parameters_str( gchar *str )
+{
+	gchar *iter = str;
+
+	while(( iter = g_strstr_len( iter, strlen( iter ), "%" )) != NULL ){
+
+		switch( iter[1] ){
+
+			/* %m (list of basenames) becomes %B
+			 */
+			case 'm':
+				iter[1] = 'B';
+				break;
+
+			/* %M (list of filenames) becomes %F
+			 */
+			case 'M':
+				iter[1] = 'F';
+				break;
+
+			/* %U ((first) username) becomes %n
+			 */
+			case 'U':
+				iter[1] = 'n';
+				break;
+
+			/* %R (list of URIs) becomes %U
+			 */
+			case 'R':
+				iter[1] = 'U';
+				break;
+		}
+
+		iter += 2;
+	}
 }
 
 static NADataBoxed *
