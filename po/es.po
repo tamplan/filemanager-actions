@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
 "POT-Creation-Date: 2010-05-01 08:49+0000\n"
-"PO-Revision-Date: 2010-05-12 09:24+0200\n"
+"PO-Revision-Date: 2010-05-14 00:04+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -453,7 +453,6 @@ msgstr ""
 "Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 
 #: ../src/core/na-icontext-factory.c:47
-#, fuzzy
 #| msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
 msgstr ""
@@ -651,7 +650,6 @@ msgstr ""
 "esta clave. Si tan sólo quiere un archivo o carpeta, póngala a «false»"
 
 #: ../src/core/na-icontext-factory.c:210
-#, fuzzy
 #| msgid "The list of pattern to match the selected file(s)/folder(s)"
 msgid ""
 "List of schemes to be matched against those of selected file(s)/folder(s)"
@@ -718,7 +716,6 @@ msgstr ""
 "Se pueden usar todos los esquemas GnomeVFS que use Nautilus aquí."
 
 #: ../src/core/na-icontext-factory.c:240
-#, fuzzy
 #| msgid ""
 #| "A valid GIO scheme where the selected files should be located. You must "
 #| "set one option for each scheme you need"
@@ -727,7 +724,7 @@ msgid ""
 "You must set one option for each scheme you need"
 msgstr ""
 "Un esquema GIO válido donde lo(s) archivo(s) y/o carpeta(s) seleccionada(s) "
-"deberían situarse. Debe establecer una opción para cada esquema que necesite."
+"deberían ubicarse. Debe establecer una opción para cada esquema que necesite."
 
 #: ../src/core/na-icontext-factory.c:242
 #: ../src/core/na-object-action-factory.c:163
@@ -739,10 +736,9 @@ msgid "<STRING>"
 msgstr "<CADENA>"
 
 #: ../src/core/na-icontext-factory.c:248
-#, fuzzy
 #| msgid "List of subitem ids"
 msgid "List of folders"
-msgstr "Lista de los ID de los subelementos"
+msgstr "Lista de carpetas"
 
 #: ../src/core/na-icontext-factory.c:249
 #, fuzzy
@@ -760,7 +756,6 @@ msgstr ""
 "«bajo» el URI especificada se consideran inválidas."
 
 #: ../src/core/na-icontext-factory.c:264
-#, fuzzy
 #| msgid ""
 #| "A valid GIO scheme where the selected files should be located. You must "
 #| "set one option for each scheme you need"
@@ -768,8 +763,8 @@ msgid ""
 "The path of a (parent) directory for which the item will be displayed. You "
 "must set one option for each folder you need"
 msgstr ""
-"Un esquema GIO válido donde los archivos seleccionados deberían situarse. "
-"Debe establecerla por cada esquema que necesite."
+"La ruta de una carpeta (padre) para la cual el elemento se mostrará. Debe "
+"establecer una opción para cada carpeta que necesite."
 
 #: ../src/core/na-icontext-factory.c:266
 #: ../src/core/na-object-profile-factory.c:88
