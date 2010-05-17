@@ -148,7 +148,7 @@ main( int argc, char** argv )
 	dump_targets( targets );
 
 	if( g_list_length( targets ) == 0 ){
-		g_print( "No current selection. Nothing to do. Exiting.\n" );
+		g_print( _( "No current selection. Nothing to do. Exiting.\n" ));
 		exit( status );
 	}
 
@@ -159,7 +159,7 @@ main( int argc, char** argv )
 
 	profile = get_profile_for_targets( action, targets );
 	if( !profile ){
-		g_print( "No valid profile is candidate to execution. Exiting...\n" );
+		g_print( _( "No valid profile is candidate to execution. Exiting.\n" ));
 		exit( status );
 	}
 	g_debug( "%s: profile %p found", thisfn, ( void * ) profile );
