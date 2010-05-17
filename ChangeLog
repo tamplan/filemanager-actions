@@ -1,5 +1,7 @@
 2010-05-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Post release bump version number.
+
 	* src/io-desktop/nadp-reader.c (read_done_load_profiles):
 	Do not reload already loaded profiles.
 	Just ignore non-referenced profiles.
