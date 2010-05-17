@@ -506,29 +506,28 @@ read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *item, NadpR
 	na_core_utils_slist_free( subitems );
 }
 
+/*
+ * read and attach profiles in the specified order
+ * profiles which may exist in .desktop files, but are not referenced
+ * in the 'Profiles' string list are just ignored
+ */
 static void
 read_done_load_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *reader_data, GSList **messages )
 {
 	GSList *order;
-	GSList *list_profiles;
 	GSList *ip;
+	gchar *profile_id;
+	NAObjectId *found;
 
 	reader_data->action = action;
 	order = na_object_get_items_slist( action );
-	list_profiles = nadp_desktop_file_get_profiles( reader_data->ndf );
 
-	/* read profiles in the specified order
-	 */
 	for( ip = order ; ip ; ip = ip->next ){
-		read_done_action_load_profile( provider, reader_data, ( const gchar * ) ip->data, messages );
-		list_profiles = na_core_utils_slist_remove_ascii( list_profiles, ( const gchar * ) ip->data );
-	}
-
-	/* append other profiles
-	 * this is mandatory for pre-2.29 actions which introduced order of profiles
-	 */
-	for( ip = list_profiles ; ip ; ip = ip->next ){
-		read_done_action_load_profile( provider, reader_data, ( const gchar * ) ip->data, messages );
+		profile_id = ( gchar * ) ip->data;
+		found = na_object_get_item( action, profile_id );
+		if( !found ){
+			read_done_action_load_profile( provider, reader_data, profile_id, messages );
+		}
 	}
 }
 
