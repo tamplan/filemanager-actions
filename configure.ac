@@ -98,7 +98,7 @@ AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 AM_PROG_LIBTOOL
 
 # localization
-# note that this same version is also required for in autogen.sh
+# note that this same version is also required by autogen.sh
 IT_PROG_INTLTOOL([0.35.5])
 GETTEXT_PACKAGE=${PACKAGE}
 AC_SUBST([GETTEXT_PACKAGE])

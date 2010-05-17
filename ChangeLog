@@ -1,5 +1,7 @@
 2010-05-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Fix typo.
+
 	* src/core/na-core-utils.c (na_core_utils_slist_from_array):
 	Strip the strings extracted from the array.
 
