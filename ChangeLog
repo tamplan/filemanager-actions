@@ -45,6 +45,12 @@
 	* src/utils/nautilus-actions-run.c:
 	Mark two new strings for translation.
 
+	* src/core/na-object-action-factory.c:
+	No more set a string version.
+
+	* src/io-gconf/nagp-reader.c (read_done_profile_attach_profile):
+	Test both string and integer versions.
+
 2010-05-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-icontext.h:

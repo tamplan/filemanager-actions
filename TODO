@@ -455,3 +455,5 @@ Parameter 	Description
 %X 	space-separated list of extensions
 %% 	the « % » character
 
+- bug: nact 2.30.2: creating a new action, saving -> makes other actions modified !
+- bug: nact 2.30.2: action pre 1.4.1 has several profiles

@@ -318,6 +318,7 @@ static void
 read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages )
 {
 	guint iversion;
+	gchar *version;
 
 	g_debug( "nagp_reader_read_done_attach_profile: profile=%p", ( void * ) profile );
 
@@ -325,7 +326,9 @@ read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectPr
 
 	/* converts pre-v3 parameters
 	 */
+	version = na_object_get_version( data->parent );
 	iversion = na_object_get_iversion( data->parent );
+	g_debug( "nagp_reader_read_done_attach_profile: version=%s, iversion=%d", version, iversion );
 	if( iversion < 3 ){
 		convert_pre_v3_parameters( profile );
 	}
