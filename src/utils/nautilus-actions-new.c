@@ -140,6 +140,8 @@ static GOptionEntry misc_entries[] = {
 	{ NULL }
 };
 
+#define CANNOT_BOTH		_( "Error: '%s' and '%s' options cannot both be specified.\n" )
+
 static GOptionEntry   *build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds );
 static GOptionContext *init_options( void );
 static NAObjectAction *get_action_from_cmdline( void );
@@ -192,26 +194,26 @@ main( int argc, char** argv )
 	}
 
 	if( enabled && disabled ){
-		g_printerr( _( "Error: '--enabled' and '--disabled' options cannot both be specified.\n" ));
+		g_printerr( CANNOT_BOTH, "--enabled", "--disabled" );
 		errors += 1;
 	} else if( !disabled ){
 		enabled = TRUE;
 	}
 
 	if( target_selection && nocontext ){
-		g_printerr( _( "Error: '--context' and '--nocontext' options cannot both be specified.\n" ));
+		g_printerr( CANNOT_BOTH, "--context", "--nocontext" );
 		errors += 1;
 	} else if( !nocontext ){
 		target_selection = TRUE;
 	}
 
 	if( target_toolbar && notoolbar ){
-		g_printerr( _( "Error: '--toolbar' and '--notoolbar' options cannot both be specified.\n" ));
+		g_printerr( CANNOT_BOTH, "--toolbar", "--notoolbar" );
 		errors += 1;
 	}
 
 	if( matchcase && nocase ){
-		g_printerr( _( "Error: '--match-case' and '--nocase' options cannot both be specified.\n" ));
+		g_printerr( CANNOT_BOTH, "--match-case", "--nocase" );
 		errors += 1;
 	} else if( !nocase ){
 		matchcase = TRUE;

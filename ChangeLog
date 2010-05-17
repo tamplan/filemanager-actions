@@ -1,5 +1,8 @@
 2010-05-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/nautilus-actions-new.c:
+	Factorize error message to make translation easier.
+
 	* src/utils/nautilus-actions-run.c:
 	Mark two new strings for translation.
 
