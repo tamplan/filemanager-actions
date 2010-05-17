@@ -532,19 +532,28 @@ na_object_profile_parse_parameters( const NAObjectProfile *profile, gint target,
 		}
 
 		if( ibname ){
+			if( strlen( basename_list->str )){
+				basename_list = g_string_append( basename_list, " " );
+			}
 			tmp = g_shell_quote( ibname );
-			g_string_append_printf( basename_list, " %s", tmp );
+			g_string_append_printf( basename_list, "%s", tmp );
 			g_free( tmp );
 		}
 
 		if( ipath ){
+			if( strlen( pathname_list->str )){
+				pathname_list = g_string_append( pathname_list, " " );
+			}
 			tmp = g_shell_quote( ipath );
-			g_string_append_printf( pathname_list, " %s", tmp );
+			g_string_append_printf( pathname_list, "%s", tmp );
 			g_free( tmp );
 		}
 
+		if( strlen( uris_list->str )){
+			uris_list = g_string_append( uris_list, " " );
+		}
 		tmp = g_shell_quote( iuri );
-		g_string_append_printf( uris_list, " %s", tmp );
+		g_string_append_printf( uris_list, "%s", tmp );
 		g_free( tmp );
 
 		g_free( ibname );
