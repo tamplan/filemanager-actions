@@ -248,28 +248,40 @@ read_done_action_load_profiles_from_list( const NAIFactoryProvider *provider, NA
 	GSList *order;
 	GSList *list_profiles;
 	GSList *ip;
+	gchar *profile_id;
 	gchar *profile_path;
+	NAObjectId *found;
 
 	data->parent = NA_OBJECT_ITEM( action );
 	order = na_object_get_items_slist( action );
 	list_profiles = na_gconf_utils_get_subdirs( NAGP_GCONF_PROVIDER( provider )->private->gconf, data->path );
 
 	/* read profiles in the specified order
+	 * as a protection against bugs in NACT, we check that profile has not
+	 * already been loaded
 	 */
 	for( ip = order ; ip ; ip = ip->next ){
-		profile_path = gconf_concat_dir_and_key( data->path, ( gchar * ) ip->data );
-		g_debug( "nagp_reader_read_done_action: loading profile=%s", ( gchar * ) ip->data );
-		read_done_action_load_profile( provider, data, profile_path, messages );
-		list_profiles = na_core_utils_slist_remove_ascii( list_profiles, profile_path );
-		g_free( profile_path );
+		profile_id = ( gchar * ) ip->data;
+		found = na_object_get_item( action, profile_id );
+		if( !found ){
+			g_debug( "nagp_reader_read_done_action: loading profile=%s", profile_id );
+			profile_path = gconf_concat_dir_and_key( data->path, profile_id );
+			read_done_action_load_profile( provider, data, profile_path, messages );
+			g_free( profile_path );
+		}
 	}
 
 	/* append other profiles
 	 * this is mandatory for pre-2.29 actions which introduced order of profiles
 	 */
 	for( ip = list_profiles ; ip ; ip = ip->next ){
-		g_debug( "nagp_reader_read_done_action: loading profile=%s", ( gchar * ) ip->data );
-		read_done_action_load_profile( provider, data, ( const gchar * ) ip->data, messages );
+		profile_id = g_path_get_basename(( const gchar * ) ip->data );
+		found = na_object_get_item( action, profile_id );
+		if( !found ){
+			g_debug( "nagp_reader_read_done_action: loading profile=%s", profile_id );
+			read_done_action_load_profile( provider, data, ( const gchar * ) ip->data, messages );
+		}
+		g_free( profile_id );
 	}
 }
 
