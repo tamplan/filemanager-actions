@@ -412,6 +412,10 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 				are_equal = na_data_boxed_are_equal( a_boxed, b_boxed );
 				if( !are_equal ){
 					g_debug( "%s: %s not equal as %s different", thisfn, G_OBJECT_TYPE_NAME( a ), a_def->name );
+					g_debug( "%s: a=", thisfn );
+					na_data_boxed_dump( a_boxed );
+					g_debug( "%s: b=", thisfn );
+					na_data_boxed_dump( b_boxed );
 				}
 
 			} else {

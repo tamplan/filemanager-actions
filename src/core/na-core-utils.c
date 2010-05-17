@@ -304,7 +304,7 @@ na_core_utils_slist_from_array( const gchar **str_array )
 	idx = ( gchar ** ) str_array;
 
 	while( *idx ){
-		slist = g_slist_prepend( slist, g_strdup( *idx ));
+		slist = g_slist_prepend( slist, g_strstrip( g_strdup( *idx )));
 		idx++;
 	}
 

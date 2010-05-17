@@ -254,6 +254,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	NactApplication *application;
 	NAUpdater *updater;
 	MenubarIndicatorsStruct *mis;
+	gchar *label;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -280,8 +281,15 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	 * recursively each and every modified item
 	 */
 	for( it = items ; it ; it = it->next ){
+		label = na_object_get_label( it->data );
+		g_debug( "%s saving item %s %p (%s), modified=%s",
+				thisfn,
+				G_OBJECT_TYPE_NAME( it->data ),
+				( void * ) it->data, label,
+				na_object_is_modified( it->data ) ? "True":"False" );
 		save_item( window, updater, NA_OBJECT_ITEM( it->data ));
 		na_object_check_status( it->data );
+		g_free( label );
 	}
 	g_list_free( items );
 

@@ -1,5 +1,14 @@
 2010-05-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-core-utils.c (na_core_utils_slist_from_array):
+	Strip the strings extracted from the array.
+
+	* src/core/na-factory-object.c (na_factory_object_are_equal):
+	Dump the data when different.
+
+	* src/nact/nact-main-menubar-file.c
+	(nact_main_menubar_file_save_items): Add a debug message.
+
 	* src/api/na-object-api.h (na_object_set_last_version):
 	* src/api/na-object-action.h:
 	* src/core/na-object-action.c (na_object_action_set_last_version):
