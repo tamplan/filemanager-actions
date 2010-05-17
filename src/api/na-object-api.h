@@ -144,6 +144,7 @@ G_BEGIN_DECLS
 #define na_object_set_toolbar_same_label( obj, same )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLBAR_SAME_LABEL, ( const void * ) GUINT_TO_POINTER( same ))
 #define na_object_set_last_allocated( obj, last )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_LAST_ALLOCATED, ( const void * ) GUINT_TO_POINTER( last ))
 
+#define na_object_set_last_version( obj )				na_object_action_set_last_version( NA_OBJECT_ACTION( obj ))
 #define na_object_reset_last_allocated( obj )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_LAST_ALLOCATED, ( const void * ) GUINT_TO_POINTER( 0 ))
 #define na_object_attach_profile( obj, profile )		na_object_action_attach_profile( NA_OBJECT_ACTION( obj ), NA_OBJECT_PROFILE( profile ))
 

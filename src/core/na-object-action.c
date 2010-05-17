@@ -435,6 +435,7 @@ convert_pre_v2_action( NAIFactoryObject *instance )
 		}
 
 		na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
+		na_object_set_last_version( instance );
 	}
 }
 
@@ -676,6 +677,23 @@ na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profil
 
 		na_object_append_item( action, profile );
 		na_object_set_parent( profile, action );
+	}
+}
+
+/**
+ * na_object_action_set_last_version:
+ * @action: the #NAObjectAction action to update.
+ *
+ * Set the version number of the @action to the last one.
+ */
+void
+na_object_action_set_last_version( NAObjectAction *action )
+{
+	g_return_if_fail( NA_IS_OBJECT_ACTION( action ));
+
+	if( !action->private->dispose_has_run ){
+
+		na_object_set_version( action, "2.0" );
 	}
 }
 

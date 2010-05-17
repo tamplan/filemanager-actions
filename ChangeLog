@@ -1,5 +1,13 @@
 2010-05-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-object-api.h (na_object_set_last_version):
+	* src/api/na-object-action.h:
+	* src/core/na-object-action.c (na_object_action_set_last_version):
+	New functions.
+
+	* src/core/na-object-action.c (convert_pre_v2_action):
+	Reset action to last version number after conversion from pre-v2.
+
 	* src/core/na-object-profile.c (na_object_profile_parse_parameters):
 	Do not add extraneous blanks when parsing parameters.
 
