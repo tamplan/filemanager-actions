@@ -87,7 +87,7 @@ static guint        ifactory_object_write_done( NAIFactoryObject *instance, cons
 static void         icontext_iface_init( NAIContextInterface *iface );
 static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
 
-static void         convert_pre_v2_action( NAIFactoryObject *instance );
+static void         convert_v1_to_v2( NAIFactoryObject *instance );
 static void         deals_with_toolbar_label( NAIFactoryObject *instance );
 
 static gboolean     object_object_is_valid( const NAObjectAction *action );
@@ -341,7 +341,7 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 
 	/* may attach a new profile if we detect a pre-v2 action
 	 */
-	convert_pre_v2_action( instance );
+	conver_v1_to_v2( instance );
 
 	/* deals with obsoleted data, i.e. data which may have been written in the past
 	 * but are no long written by now
@@ -411,12 +411,15 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
 
 /*
  * do we have a pre-v2 action ?
- *  it may be identified by an version = "1.x"
+ *  it is be identified by an version = "1.x"
  *  or by any data found in data_def_action_v1 (defined in na-object-action-factory.c)
- *  -> move obsoleted data to a new profile
+ *  -> move obsoleted data to a new profile, updating the version string
+ *
+ * This may have been done in nagp_reader_read_done because only GConf has pre-v2
+ * actions, but it is easyer to do the conversion before setting defaults
  */
 static void
-convert_pre_v2_action( NAIFactoryObject *instance )
+convert_v1_to_v2( NAIFactoryObject *instance )
 {
 	gboolean is_pre_v2;
 	GList *to_move;
@@ -466,7 +469,7 @@ convert_pre_v2_action( NAIFactoryObject *instance )
 		}
 
 		na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
-		na_object_set_last_version( instance );
+		na_object_set_version( instance, "2.0" );
 	}
 }
 
