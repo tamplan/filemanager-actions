@@ -79,6 +79,9 @@ typedef struct {
 										 * this default is also displayed in command-line help
 										 * of nautilus-actions-new utility */
 
+	gboolean   write_if_default;		/* write this value even if it is the default value ?
+										 * default to FALSE */
+
 	gboolean   copyable;				/* whether this data should be automatically copied when
 										 * we are duplicating an object to another
 										 * in all cases, the implementation is always triggered

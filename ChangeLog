@@ -8,6 +8,20 @@
 
 2010-05-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-def.h: Add write_if_default.
+
+	* src/core/na-icontext-factory.c:
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-id-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-profile-factory.c: Update all data structures.
+
+	* src/io-desktop/nadp-writer.c
+	(nadp_writer_ifactory_provider_write_data):
+	* src/io-gconf/nagp-writer.c (nagp_writer_write_data):
+	* src/io-xml/naxml-writer.c (naxml_writer_write_data):
+	Updated accordingly.
+
 	* src/io-desktop/nadp-reader.c
 	(nadp_reader_ifactory_provider_read_start): Removed function.
 

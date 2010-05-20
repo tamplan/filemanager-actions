@@ -87,7 +87,7 @@ struct ExportFormatFn {
 	gchar  *list_node;
 	void ( *write_list_attribs_fn )( NAXMLWriter *, const NAObjectItem * );
 	gchar  *element_node;
-	void ( *write_data_fn )( NAXMLWriter *, const NAObjectId *, const NADataBoxed * );
+	void ( *write_data_fn )( NAXMLWriter *, const NAObjectId *, const NADataBoxed *, const NADataDef * );
 	void ( *write_type_fn )( NAXMLWriter *, const NAObjectItem *, const NADataDef *, const gchar * );
 };
 
@@ -99,14 +99,14 @@ static void            instance_init( GTypeInstance *instance, gpointer klass );
 static void            instance_dispose( GObject *object );
 static void            instance_finalize( GObject *object );
 
-static void            write_data_schema_v1( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed );
+static void            write_data_schema_v1( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed, const NADataDef *def );
 static void            write_data_schema_v1_element( NAXMLWriter *writer, const NADataDef *def );
 static void            write_type_schema_v1( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value );
-static void            write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed );
+static void            write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed, const NADataDef *def );
 static void            write_data_schema_v2_element( NAXMLWriter *writer, const NADataDef *def, const gchar *object_id, const gchar *value_str );
 static void            write_type_schema_v2( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value );
 static void            write_list_attribs_dump( NAXMLWriter *writer, const NAObjectItem *object );
-static void            write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed );
+static void            write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed, const NADataDef *def );
 static void            write_data_dump_element( NAXMLWriter *writer, const NADataDef *def, const NADataBoxed *boxed, const gchar *entry, const gchar *value_str );
 static void            write_type_dump( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value );
 
@@ -410,20 +410,23 @@ guint
 naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages )
 {
 	NAXMLWriter *writer;
+	NADataDef *def;
 
 	/*NADataDef *def = na_data_boxed_get_data_def( boxed );
 	g_debug( "naxml_writer_write_data: def=%s", def->name );*/
 
+	def = na_data_boxed_get_data_def( boxed );
+
 	/* do no export empty values
 	 */
-	if( na_data_boxed_is_set( boxed )){
+	if( na_data_boxed_is_set( boxed ) || def->write_if_default ){
 
 		writer = NAXML_WRITER( writer_data );
 
 		writer->private->schema_node = NULL;
 		writer->private->locale_node = NULL;
 
-		( *writer->private->fn_str->write_data_fn )( writer, NA_OBJECT_ID( object ), boxed );
+		( *writer->private->fn_str->write_data_fn )( writer, NA_OBJECT_ID( object ), boxed, def );
 	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );
@@ -436,13 +439,9 @@ naxml_writer_write_done( const NAIFactoryProvider *provider, void *writer_data, 
 }
 
 static void
-write_data_schema_v1( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed )
+write_data_schema_v1( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed, const NADataDef *def )
 {
-	NADataDef *def;
-
-	write_data_schema_v2( writer, object, boxed );
-
-	def = na_data_boxed_get_data_def( boxed );
+	write_data_schema_v2( writer, object, boxed, def );
 
 	write_data_schema_v1_element( writer, def );
 }
@@ -478,13 +477,11 @@ write_type_schema_v1( NAXMLWriter *writer, const NAObjectItem *object, const NAD
  *  <applyto>/apps/nautilus-actions/configurations/item_id/profile_id/entry</applyto>
  */
 static void
-write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed )
+write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed, const NADataDef *def )
 {
 	gchar *object_id;
-	NADataDef *def;
 	gchar *value_str;
 
-	def = na_data_boxed_get_data_def( boxed );
 	value_str = na_data_boxed_get_as_string( boxed );
 
 	/* boolean value must be lowercase
@@ -582,13 +579,11 @@ write_list_attribs_dump( NAXMLWriter *writer, const NAObjectItem *object )
 }
 
 static void
-write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed )
+write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed, const NADataDef *def )
 {
 	gchar *entry;
-	NADataDef *def;
 	gchar *value_str;
 
-	def = na_data_boxed_get_data_def( boxed );
 	value_str = na_data_boxed_get_as_string( boxed );
 
 	/* boolean value must be lowercase

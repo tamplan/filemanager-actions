@@ -262,9 +262,9 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 	msg = NULL;
 	code = NA_IIO_PROVIDER_CODE_OK;
+	def = na_data_boxed_get_data_def( boxed );
 
-	if( na_data_boxed_is_set( boxed )){
-		def = na_data_boxed_get_data_def( boxed );
+	if( na_data_boxed_is_set( boxed ) || def->write_if_default ){
 
 		if( NA_IS_OBJECT_PROFILE( object )){
 			NAObjectItem *parent = NA_OBJECT_ITEM( na_object_get_parent( object ));
