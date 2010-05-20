@@ -423,6 +423,7 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
 static void
 convert_v1_to_v2( NAIFactoryObject *instance )
 {
+	static const gchar *thisfn = "na_object_action_convert_v1_to_v2";
 	gboolean is_pre_v2;
 	GList *to_move;
 	NADataDef *def;
@@ -438,9 +439,8 @@ convert_v1_to_v2( NAIFactoryObject *instance )
 	while( def->name ){
 		boxed = na_ifactory_object_get_data_boxed( instance , def->name );
 		if( boxed ){
-			g_debug( "na_object_action_convert_pre_v2_action: " \
-					 "boxed=%p (%s) marked to be moved from action body to profile",
-							 ( void * ) boxed, def->name );
+			g_debug( "%s: boxed=%p (%s) marked to be moved from action body to profile",
+							 thisfn, ( void * ) boxed, def->name );
 			to_move =g_list_prepend( to_move, boxed );
 		}
 		def++;

@@ -60,8 +60,8 @@ static void          read_done_action_load_profiles_from_list( const NAIFactoryP
 static void          read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
 static void          read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
 
-static void          convert_pre_v3_parameters( NAObjectProfile *profile );
-static void          convert_pre_v3_parameters_str( gchar *str );
+static gboolean      convert_pre_v3_parameters( NAObjectProfile *profile );
+static gboolean      convert_pre_v3_parameters_str( gchar *str );
 static NADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
 static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 
@@ -317,20 +317,21 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *d
 static void
 read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages )
 {
+	static const gchar *thisfn = "nagp_reader_read_done_attach_profile";
 	guint iversion;
-	gchar *version;
 
-	g_debug( "nagp_reader_read_done_attach_profile: profile=%p", ( void * ) profile );
+	g_debug( "%s: profile=%p", thisfn, ( void * ) profile );
 
 	na_object_attach_profile( data->parent, profile );
 
 	/* converts pre-v3 parameters
 	 */
-	version = na_object_get_version( data->parent );
 	iversion = na_object_get_iversion( data->parent );
-	g_debug( "nagp_reader_read_done_attach_profile: version=%s, iversion=%d", version, iversion );
+	g_debug( "%s: iversion=%d", thisfn, iversion );
 	if( iversion < 3 ){
-		convert_pre_v3_parameters( profile );
+		if( convert_pre_v3_parameters( profile )){
+			na_object_set_iversion( data->parent, 3 );
+		}
 	}
 }
 
@@ -370,57 +371,82 @@ read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectPr
  * Are only located in 'profile' objects.
  * Are only found in GConf provider, as .desktop files have been simultaneously
  * introduced.
+ *
+ * As a recall of the dynamics of the reading when loading an action:
+ *  - na_object_action_read_done: set action defaults
+ *  - nagp_reader_read_done: read profiles
+ *     >  na_object_profile_read_done: convert old parameters
+ *
+ * So, when converting v2 to v3 parameters in a v2 profile,
+ * action already has its default values (including iversion=3)
  */
-static void
+static gboolean
 convert_pre_v3_parameters( NAObjectProfile *profile )
 {
+	gboolean path_changed, parms_changed;
+
 	gchar *path = na_object_get_path( profile );
-	convert_pre_v3_parameters_str( path );
-	na_object_set_path( profile, path );
+	path_changed = convert_pre_v3_parameters_str( path );
+	if( path_changed ){
+		na_object_set_path( profile, path );
+	}
 	g_free( path );
 
 	gchar *parms = na_object_get_parameters( profile );
-	convert_pre_v3_parameters_str( parms );
-	na_object_set_parameters( profile, parms );
+	parms_changed = convert_pre_v3_parameters_str( parms );
+	if( parms_changed ){
+		na_object_set_parameters( profile, parms );
+	}
 	g_free( parms );
+
+	return( path_changed || parms_changed );
 }
 
-static void
+static gboolean
 convert_pre_v3_parameters_str( gchar *str )
 {
+	gboolean changed;
 	gchar *iter = str;
 
+	changed = FALSE;
 	while(( iter = g_strstr_len( iter, strlen( iter ), "%" )) != NULL ){
 
+		g_debug( "convert_pre_v3_parameters_str: iter[1]='%c'", iter[1] );
 		switch( iter[1] ){
 
 			/* %m (list of basenames) becomes %B
 			 */
 			case 'm':
 				iter[1] = 'B';
+				changed = TRUE;
 				break;
 
 			/* %M (list of filenames) becomes %F
 			 */
 			case 'M':
 				iter[1] = 'F';
+				changed = TRUE;
 				break;
 
 			/* %U ((first) username) becomes %n
 			 */
 			case 'U':
 				iter[1] = 'n';
+				changed = TRUE;
 				break;
 
 			/* %R (list of URIs) becomes %U
 			 */
 			case 'R':
 				iter[1] = 'U';
+				changed = TRUE;
 				break;
 		}
 
 		iter += 2;
 	}
+
+	return( changed );
 }
 
 static NADataBoxed *

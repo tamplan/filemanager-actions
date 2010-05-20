@@ -8,6 +8,9 @@
 
 2010-05-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-reader.c (read_done_profile_attach_profile):
+	Migrate old v2 parameters to v3.
+
 	* src/core/na-object-action.c (deals_with_version):
 	Setup a version number if not already set.
 
