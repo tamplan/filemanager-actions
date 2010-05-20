@@ -8,6 +8,9 @@
 
 2010-05-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-action.c (deals_with_version):
+	Setup a version number if not already set.
+
 	* src/core/na-object-action.c (convert_pre_v2_action):
 	Renamed as convert_v1_to_v2.
 

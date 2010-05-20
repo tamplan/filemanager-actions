@@ -89,6 +89,7 @@ static gboolean     icontext_is_candidate( NAIContext *object, guint target, GLi
 
 static void         convert_v1_to_v2( NAIFactoryObject *instance );
 static void         deals_with_toolbar_label( NAIFactoryObject *instance );
+static void         deals_with_version( NAIFactoryObject *instance );
 
 static gboolean     object_object_is_valid( const NAObjectAction *action );
 static gboolean     is_valid_label( const NAObjectAction *action );
@@ -341,12 +342,13 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 
 	/* may attach a new profile if we detect a pre-v2 action
 	 */
-	conver_v1_to_v2( instance );
+	convert_v1_to_v2( instance );
 
 	/* deals with obsoleted data, i.e. data which may have been written in the past
 	 * but are no long written by now
 	 */
 	deals_with_toolbar_label( instance );
+	deals_with_version( instance );
 
 	/* prepare the context after the reading
 	 */
@@ -497,6 +499,36 @@ deals_with_toolbar_label( NAIFactoryObject *instance )
 
 	g_free( action_label );
 	g_free( toolbar_label );
+}
+
+/*
+ * manage the conversion from version string to version number
+ * -> pre-v2 actions have already been converted to a version string "2.0"
+ * -> if we have here no version string nor version number, then we may
+ *    consider that this is an item written by the 2.30 N-A version
+ *    so we just force a version number to 2
+ */
+static void
+deals_with_version( NAIFactoryObject *instance )
+{
+	guint version_uint;
+	gchar *version_str;
+
+	version_uint = na_object_get_iversion( instance );
+
+	if( !version_uint ){
+		version_str = na_object_get_version( instance );
+
+		if( !version_str || !strlen( version_str )){
+			g_free( version_str );
+			version_str = g_strdup( "2.0" );
+		}
+
+		version_uint = atoi( version_str );
+		na_object_set_iversion( instance, version_uint );
+
+		g_free( version_str );
+	}
 }
 
 static gboolean
