@@ -327,7 +327,10 @@ na_core_utils_slist_join_at_end( GSList *slist, const gchar *link )
 	str = g_string_new( "" );
 
 	for( is = slist ; is ; is = is->next ){
-		g_string_append_printf( str, "%s%s", ( const gchar * ) is->data, link );
+		if( str->len ){
+			g_string_append_printf( str, "%s", link );
+		}
+		g_string_append_printf( str, "%s", ( const gchar * ) is->data );
 	}
 
 	return( g_string_free( str, FALSE ));
@@ -669,6 +672,48 @@ info_dir_is_writable( GFile *file, const gchar *path_or_uri )
 	g_object_unref( info );
 
 	return( writable );
+}
+
+/**
+ * na_core_utils_dir_split_ext:
+ * @string: the input path or URI to be splitted.
+ * @first: a pointer to a buffer which will contain the first part of the split.
+ * @ext: a pointer to a buffer which will contain the extension part of the path.
+ *
+ * Split the given @string, returning the first part and the extension in newly
+ * allocated buffers which should be g_free() by the caller.
+ *
+ * Returns an empty string as extension if no extension is detected.
+ */
+void
+na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext )
+{
+	gchar *dupped;
+	gchar **array, **iter;
+
+	dupped = g_strreverse( g_strdup( string ));
+	array = g_strsplit( dupped, ".", 2 );
+
+	if( g_strv_length( array ) == 1 ){
+		if( ext ){
+			*ext = g_strdup( "" );
+		}
+		if( first ){
+			*first = g_strreverse( g_strdup(( const gchar * ) *array ));
+		}
+	} else {
+		if( ext ){
+			*ext = g_strreverse( g_strdup(( const gchar * ) *array ));
+		}
+		iter = array;
+		++iter;
+		if( first ){
+			*first = g_strreverse( g_strdup(( const gchar * ) *iter ));
+		}
+	}
+
+	g_strfreev( array );
+	g_free( dupped );
 }
 
 /**

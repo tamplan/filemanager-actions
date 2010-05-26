@@ -40,6 +40,7 @@
 #include <libnautilus-extension/nautilus-file-info.h>
 #include <libnautilus-extension/nautilus-menu-provider.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
 #include <core/na-pivot.h>
@@ -47,6 +48,7 @@
 #include <core/na-iprefs.h>
 #include <core/na-ipivot-consumer.h>
 #include <core/na-selected-info.h>
+#include <core/na-tokens.h>
 
 #include "nautilus-actions.h"
 
@@ -86,8 +88,10 @@ static GList            *menu_provider_get_background_items( NautilusMenuProvide
 static GList            *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
 static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 
-static GList            *get_file_or_background_items( NautilusActions *plugin, guint target, GList *selection );
-static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files );
+static GList            *get_menus_items( NautilusActions *plugin, guint target, GList *selection );
+static GList            *expand_tokens( GList *tree, NATokens *tokens );
+static NAObjectItem     *expand_tokens_item( NAObjectItem *item, NATokens *tokens );
+static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files, NATokens *tokens );
 static NAObjectProfile  *get_candidate_profile( NautilusActions *plugin, NAObjectAction *action, guint target, GList *files );
 static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, guint target, GList *files );
 static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems );
@@ -417,8 +421,7 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 
 		selected = na_selected_info_get_list_from_item( current_folder );
 
-		nautilus_menus_list = get_file_or_background_items(
-				NAUTILUS_ACTIONS( provider ), ITEM_TARGET_LOCATION, selected );
+		nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_LOCATION, selected );
 
 		na_selected_info_free_list( selected );
 	}
@@ -453,8 +456,7 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 
 		selected = na_selected_info_get_list_from_list(( GList * ) files );
 
-		nautilus_menus_list = get_file_or_background_items(
-				NAUTILUS_ACTIONS( provider ), ITEM_TARGET_SELECTION, selected );
+		nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_SELECTION, selected );
 
 		na_selected_info_free_list( selected );
 	}
@@ -474,7 +476,6 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 	GList *nautilus_menus_list = NULL;
 	gchar *uri;
 	GList *selected;
-	GList *pivot_tree;
 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 
@@ -485,12 +486,9 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 				thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
 		g_free( uri );
 
-		pivot_tree = na_pivot_get_items( NAUTILUS_ACTIONS( provider )->private->pivot );
-
 		selected = na_selected_info_get_list_from_item( current_folder );
 
-		nautilus_menus_list = build_nautilus_menus(
-				NAUTILUS_ACTIONS( provider ), pivot_tree, ITEM_TARGET_TOOLBAR, selected );
+		nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_TOOLBAR, selected );
 
 		na_selected_info_free_list( selected );
 	}
@@ -499,38 +497,140 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 }
 
 static GList *
-get_file_or_background_items( NautilusActions *plugin, guint target, GList *selection )
+get_menus_items( NautilusActions *plugin, guint target, GList *selection )
 {
 	GList *menus_list;
-	GList *pivot_tree;
+	NATokens *tokens;
+	GList *pivot_tree, *copy_tree;
 	gboolean root_menu;
 	gboolean add_about;
 
 	g_return_val_if_fail( NA_IS_PIVOT( plugin->private->pivot ), NULL );
 
+	tokens = na_tokens_new_from_selection( selection );
 	pivot_tree = na_pivot_get_items( plugin->private->pivot );
+	copy_tree = expand_tokens( pivot_tree, tokens );
 
-	menus_list = build_nautilus_menus( plugin, pivot_tree, target, selection );
+	menus_list = build_nautilus_menus( plugin, pivot_tree, target, selection, tokens );
 
-	root_menu = na_iprefs_read_bool( NA_IPREFS( plugin->private->pivot ), IPREFS_CREATE_ROOT_MENU, FALSE );
-	if( root_menu ){
-		menus_list = create_root_menu( plugin, menus_list );
-	}
+	na_object_unref_items( copy_tree );
+	g_object_unref( tokens );
 
-	add_about = na_iprefs_read_bool( NA_IPREFS( plugin->private->pivot ), IPREFS_ADD_ABOUT_ITEM, TRUE );
-	if( add_about ){
-		menus_list = add_about_item( plugin, menus_list );
+	if( target != ITEM_TARGET_TOOLBAR ){
+
+		root_menu = na_iprefs_read_bool( NA_IPREFS( plugin->private->pivot ), IPREFS_CREATE_ROOT_MENU, FALSE );
+		if( root_menu ){
+			menus_list = create_root_menu( plugin, menus_list );
+		}
+
+		add_about = na_iprefs_read_bool( NA_IPREFS( plugin->private->pivot ), IPREFS_ADD_ABOUT_ITEM, TRUE );
+		if( add_about ){
+			menus_list = add_about_item( plugin, menus_list );
+		}
 	}
 
 	return( menus_list );
 }
 
 /*
- * when building a menu for the toolbar, do not use menus hierarchy
- * files is a GList of NASelectedInfo items
+ * create a copy of the tree where all fields which may embed parameters
+ * have been expanded
  */
 static GList *
-build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files )
+expand_tokens( GList *pivot_tree, NATokens *tokens )
+{
+	GList *tree, *it;
+
+	tree = NULL;
+
+	for( it = pivot_tree ; it ; it = it->next ){
+		NAObjectItem *item = NA_OBJECT_ITEM( na_object_duplicate( it->data ));
+		tree = g_list_prepend( tree, expand_tokens_item( item, tokens ));
+	}
+
+	return( g_list_reverse( tree ));
+}
+
+static NAObjectItem *
+expand_tokens_item( NAObjectItem *item, NATokens *tokens )
+{
+	gchar *old, *new;
+	GSList *subitems_slist, *its, *new_slist;
+	GList *subitems, *it, *new_list;
+
+	old = na_object_get_label( item );
+	new = na_tokens_parse_parameters( tokens, old, TRUE );
+	na_object_set_label( item, new );
+	g_free( old );
+	g_free( new );
+
+	old = na_object_get_tooltip( item );
+	new = na_tokens_parse_parameters( tokens, old, TRUE );
+	na_object_set_tooltip( item, new );
+	g_free( old );
+	g_free( new );
+
+	old = na_object_get_icon( item );
+	new = na_tokens_parse_parameters( tokens, old, TRUE );
+	na_object_set_icon( item, new );
+	g_free( old );
+	g_free( new );
+
+	if( NA_IS_OBJECT_ACTION( item )){
+		old = na_object_get_toolbar_label( item );
+		new = na_tokens_parse_parameters( tokens, old, TRUE );
+		na_object_set_toolbar_label( item, new );
+		g_free( old );
+		g_free( new );
+	}
+
+	subitems_slist = na_object_get_items_slist( item );
+	new_slist = NULL;
+	for( its = subitems_slist ; its ; its = its->next ){
+		old = ( gchar * ) its->data;
+		new = na_tokens_parse_parameters( tokens, old, FALSE );
+		new_slist = g_slist_prepend( new_slist, new );
+	}
+	na_object_set_items_slist( item, new_slist );
+	na_core_utils_slist_free( subitems_slist );
+	na_core_utils_slist_free( new_slist );
+
+	subitems = na_object_get_items( item );
+	new_list = NULL;
+	for( it = subitems ; it ; it = it->next ){
+		if( NA_IS_OBJECT_MENU( item )){
+			expand_tokens_item( NA_OBJECT_ITEM( it->data ), tokens );
+
+		} else {
+			old = na_object_get_path( it->data );
+			new = na_tokens_parse_parameters( tokens, old, FALSE );
+			na_object_set_path( it->data, new );
+			g_free( old );
+			g_free( new );
+
+			old = na_object_get_parameters( it->data );
+			new = na_tokens_parse_parameters( tokens, old, FALSE );
+			na_object_set_parameters( it->data, new );
+			g_free( old );
+			g_free( new );
+		}
+	}
+
+	return( item );
+}
+
+/*
+ * when building a menu for the toolbar, do not use menus hierarchy
+ * files is a GList of NASelectedInfo items
+ *
+ * TODO: menus, actions and profiles may embed parameters in their data.
+ * This mainly means that the objects have to be re-parsed for each new
+ * selection (e.g. because a label may change if it depends of the current
+ * selection). Thus, all the hierarchy must be recursively re-parsed, and
+ * re-checked for validity !
+ */
+static GList *
+build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files, NATokens *tokens )
 {
 	static const gchar *thisfn = "nautilus_actions_build_nautilus_menus";
 	GList *menus_list = NULL;
@@ -569,7 +669,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 		 */
 		if( NA_IS_OBJECT_MENU( it->data )){
 			subitems = na_object_get_items( it->data );
-			submenu = build_nautilus_menus( plugin, subitems, target, files );
+			submenu = build_nautilus_menus( plugin, subitems, target, files, tokens );
 			/*g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));*/
 
 			if( submenu ){

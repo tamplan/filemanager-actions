@@ -454,3 +454,8 @@ Parameter 	Description
 %x 	(first) extension
 %X 	space-separated list of extensions
 %% 	the « % » character
+
+- an item may become invalid at runtime
+  e.g. when the label contains only a list of extension (%X)
+  but selected files do not have extension - most likely, there should be other examples..
+  => label must be expanded and checked and kept before testing for candidate

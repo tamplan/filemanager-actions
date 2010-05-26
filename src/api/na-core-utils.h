@@ -76,6 +76,7 @@ gchar   *na_core_utils_gstring_joinv( const gchar *start, const gchar *separator
  */
 gboolean na_core_utils_dir_is_writable_path( const gchar *path );
 gboolean na_core_utils_dir_is_writable_uri( const gchar *uri );
+void     na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext );
 
 /* file management
  */

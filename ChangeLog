@@ -6,6 +6,20 @@
 
 	* src/core/na-iabout.c: Update copyright notice.
 
+2010-05-26 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_dir_split_ext):
+	New function.
+
+	* src/core/na-tokens.h:
+	* src/core/na-tokens.c: New files.
+
+	* src/core/Makefile.am: Udated accordingly.
+
+	* src/plugin-menu/nautilus-actions.c:
+	Expand tokens which may embed parameters.
+
 2010-05-20 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/io-gconf/nagp-reader.c (read_done_profile_attach_profile):

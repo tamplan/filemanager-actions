@@ -96,6 +96,8 @@ libna_core_la_SOURCES = \
 	na-selected-info.h									\
 	na-updater.c										\
 	na-updater.h										\
+	na-tokens.c											\
+	na-tokens.h											\
 	$(NULL)
 
 libna_core_la_LIBADD = \
