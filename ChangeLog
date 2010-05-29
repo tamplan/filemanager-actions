@@ -6,6 +6,10 @@
 
 	* src/core/na-iabout.c: Update copyright notice.
 
+2010-05-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Define GSEAL_ENABLED.
+
 2010-05-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-core-utils.h:
