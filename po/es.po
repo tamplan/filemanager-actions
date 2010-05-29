@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-05-17 18:28+0000\n"
-"PO-Revision-Date: 2010-05-25 18:54+0200\n"
+"POT-Creation-Date: 2010-05-25 17:00+0000\n"
+"PO-Revision-Date: 2010-05-29 11:00+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -253,12 +253,18 @@ msgid ""
 "default list is harcoded in nautilus-actions-config-tool, which may be "
 "updated by the user."
 msgstr ""
+"La lista de esquemas propuesta de forma predeterminada para cada perfil "
+"nuevo. Existe una lista predeterminada grabada en la herramienta de "
+"configuración de las Acciones de Nautilus (nautilus-actions-config-tool), "
+"que el usuario puede actualizar."
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:44
 msgid ""
 "The order in which I/O providers are tested when we need to write a new item "
 "down to a storage subsystem."
 msgstr ""
+"El orden en el que los proveedores de E/S se comprueban cuando se necesita "
+"escribir un elemento nuevo en un subsistema de almacenamiento."
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:45
 msgid ""
@@ -810,6 +816,8 @@ msgid ""
 "Item is not writable for an unknown reason (%d).\n"
 "Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
 msgstr ""
+"Por alguna razón desconocida no se puede escribir el elemento (%d).\n"
+"Por favor, rellene un informe de error en http://bugzilla.gnome.org."
 
 #: ../src/core/na-io-provider.c:1310
 msgid "OK."
@@ -1207,12 +1215,16 @@ msgstr ""
 #, c-format
 msgid "Unknown element %s found at line %d while waiting for %s."
 msgstr ""
+"Se encontró un elemento desconocido %s en la línea %d mientras se esperaba "
+"por %s."
 
 #. i18n: do not translate keywords 'Action' nor 'Menu'
 #: ../src/io-xml/naxml-reader.c:154
 #, c-format
 msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
 msgstr ""
+"Se encontró un tipo desconocido (%s) en la línea %d mientras se esperaba a "
+"la acción o al menú."
 
 #: ../src/io-xml/naxml-reader.c:155
 #, c-format
@@ -2100,8 +2112,6 @@ msgstr ""
 
 #: ../src/utils/nautilus-actions-new.c:143
 #, c-format
-#| msgid ""
-#| "Error: '--match-case' and '--nocase' options cannot both be specified.\n"
 msgid "Error: '%s' and '%s' options cannot both be specified.\n"
 msgstr "Error: no se pueden especificar a la vez las opciones «%s» y «%s».\n"
 
