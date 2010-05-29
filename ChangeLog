@@ -10,6 +10,9 @@
 
 	* configure.ac: Define GSEAL_ENABLED.
 
+	* src/nact/nautilus-actions-config-tool.ui:
+	Implement all new fields.
+
 2010-05-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-core-utils.h:

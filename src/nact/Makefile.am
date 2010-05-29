@@ -93,12 +93,18 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iactions-list-priv.h							\
 	nact-iaction-tab.c									\
 	nact-iaction-tab.h									\
+	nact-ibasenames-tab.c								\
+	nact-ibasenames-tab.h								\
+	nact-ienvironment-tab.c								\
+	nact-ienvironment-tab.h								\
+	nact-iexecution-tab.c								\
+	nact-iexecution-tab.h								\
 	nact-ifolders-tab.c									\
 	nact-ifolders-tab.h									\
 	nact-icommand-tab.c									\
 	nact-icommand-tab.h									\
-	nact-iconditions-tab.c								\
-	nact-iconditions-tab.h								\
+	nact-imimetypes-tab.c								\
+	nact-imimetypes-tab.h								\
 	nact-iprefs.c										\
 	nact-iprefs.h										\
 	nact-iproperties-tab.c								\
