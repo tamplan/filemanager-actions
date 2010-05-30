@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-05-25 17:00+0000\n"
-"PO-Revision-Date: 2010-05-29 11:00+0200\n"
+"POT-Creation-Date: 2010-05-29 09:01+0000\n"
+"PO-Revision-Date: 2010-05-30 11:57+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -483,7 +483,6 @@ msgstr ""
 "con uno de los patrones para que aparezca la acción"
 
 #: ../src/core/na-icontext-factory.c:66
-#, fuzzy
 #| msgid ""
 #| "A pattern to match selected files against. May include wildcards (* or ?) "
 #| "(you must set one option for each pattern you need)"
@@ -491,8 +490,9 @@ msgid ""
 "A pattern to be matched against basenames of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr ""
-"Un patrón para coincidir con los archivos seleccionados. Puede incluir "
-"comodines (? o *) (debe establecer una opción por cada patrón que necesite)"
+"Un patrón para coincidir con los nombres base de los archivo(s)/carpeta(s) "
+"seleccionada(as). Puede incluir comodines (* o ?). Debe establecer una "
+"opción por cada patrón que necesite."
 
 #: ../src/core/na-icontext-factory.c:69 ../src/core/na-icontext-factory.c:122
 msgid "<EXPR>"
@@ -531,7 +531,6 @@ msgstr ""
 "carpetas seleccionadas"
 
 #: ../src/core/na-icontext-factory.c:102
-#, fuzzy
 #| msgid ""
 #| "A list of strings with joker '*' or '?' to match the mimetypes of the "
 #| "selected file(s). Each selected items must match at least one of the "
@@ -543,12 +542,14 @@ msgid ""
 "This obviously only applies when there is a selection.\n"
 "Defaults to '*'."
 msgstr ""
-"Una lista de cadenas con comodines «*» o «?» para coincidir con los tipos MIME "
-"de los archivos seleccionados. Cada elemento seleccionado debe coincidir al "
-"menos con uno de los patrones de tipos MIME para que aparezca la acción"
+"Una lista de cadenas con comodines «*» para coincidir con los tipos MIME de "
+"los archivo(s)/carpeta(s) seleccionada(s). Cada elemento seleccionado debe "
+"coincidir al menos con uno de los patrones de tipos MIME para que aparezca "
+"la acción.\n"
+"Obviamente esto sólo aparece cuando existe una selección.\n"
+"Lo predeterminado es «*»."
 
 #: ../src/core/na-icontext-factory.c:119
-#, fuzzy
 #| msgid ""
 #| "A pattern to match selected files against. May include wildcards (* or ?) "
 #| "(you must set one option for each pattern you need)"
@@ -556,8 +557,9 @@ msgid ""
 "A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr ""
-"Un patrón para coincidir con los archivos seleccionados. Puede incluir "
-"comodines (? o *) (debe establecer una opción por cada patrón que necesite)"
+"Un patrón para coincidir con los tipos MIME de el(los) archivo(s)/carpeta(s) "
+"seleccionada(s). Puede incluir comodines (* o ?). Debe establecer una opción "
+"por cada patrón que necesite."
 
 #: ../src/core/na-icontext-factory.c:128
 msgid "Whether the profile applies to files"
@@ -870,7 +872,6 @@ msgid "Version of the format"
 msgstr "Versión del formato"
 
 #: ../src/core/na-object-action-factory.c:51
-#, fuzzy
 #| msgid ""
 #| "The version of the configuration format that will be used to manage "
 #| "backward compatibility"
@@ -879,7 +880,7 @@ msgid ""
 "compatibility."
 msgstr ""
 "La versión del formato de configuración que se usará para gestionar la "
-"compatibilidad hacia atrás"
+"compatibilidad hacia atrás."
 
 #: ../src/core/na-object-action-factory.c:72
 #, fuzzy
@@ -924,7 +925,6 @@ msgid ""
 msgstr ""
 
 #: ../src/core/na-object-action-factory.c:146
-#, fuzzy
 #| msgid "Label of the item in the toolbar"
 msgid "Label of the toolbar item"
 msgstr "Etiqueta del elemento en la barra de herramientas"
@@ -1726,6 +1726,8 @@ msgstr "Pegar _en"
 #: ../src/nact/nact-main-menubar.c:148
 msgid "Insert the content of the clipboard as first child of the current item"
 msgstr ""
+"Insertar el contenido del portapapeles como el primer hijo del elemento "
+"actual"
 
 #: ../src/nact/nact-main-menubar.c:150
 msgid "D_uplicate"
@@ -1775,7 +1777,7 @@ msgstr "_Contraer todo"
 #. i18n: tooltip displayed in the status bar when selecting the Collapse all item
 #: ../src/nact/nact-main-menubar.c:172
 msgid "Entirely collapse the items hierarchy"
-msgstr ""
+msgstr "Contraer completamente la jerarquía de elementos"
 
 #: ../src/nact/nact-main-menubar.c:175
 msgid "_Import assistant..."
@@ -1786,6 +1788,7 @@ msgstr "Asistente de _importación..."
 msgid ""
 "Import one or more actions from external (XML) files into your configuration"
 msgstr ""
+"Importar una o más acciones de archivos externos (XML) en su configuración"
 
 #: ../src/nact/nact-main-menubar.c:179
 msgid "E_xport assistant..."
@@ -1796,6 +1799,7 @@ msgstr "Asistente de e_xportación..."
 msgid ""
 "Export one or more actions from your configuration to external XML files"
 msgstr ""
+"Exportar una o más acciones de su configuración a archivos XML externos"
 
 #: ../src/nact/nact-main-menubar.c:184
 #, fuzzy
@@ -1817,7 +1821,7 @@ msgstr ""
 #. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
 #: ../src/nact/nact-main-menubar.c:190
 msgid "Briefly dump the tree store"
-msgstr ""
+msgstr "Volcar brevemente el árbol del almacén"
 
 #: ../src/nact/nact-main-menubar.c:192
 msgid "_List modified items"
