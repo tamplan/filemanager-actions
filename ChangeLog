@@ -6,6 +6,35 @@
 
 	* src/core/na-iabout.c: Update copyright notice.
 
+2010-05-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-ibasenames-tab.h: Define NactIBasenamesTabInterface interface.
+
+	* src/nact/nact-icommand-tab.c:
+	No more include removed	nact-iconditions-tab.h file.
+
+	* src/nact/nact-ienvironment-tab.c:
+	* src/nact/nact-ienvironment-tab.h: Define NactIEnvironmentTabInterface interface.
+
+	* src/nact/nact-iexecution-tab.c:
+	* src/nact/nact-iexecution-tab.h: Define NactIExecutionTabInterface interface.
+
+	* src/nact/nact-ifolders-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-ischemes-tab.c (on_tab_updatable_selection_changed):
+	tab_set_sensitive() returned value is not used here.
+
+	* src/nact/nact-imimetypes-tab.c:
+	* src/nact/nact-imimetypes-tab.h: Define NactIMimetypesTabInterface interface.
+
+	* src/nact/nact-iproperties-tab.c (on_tab_updatable_selection_changed):
+	Set a mnemonic in the tab label.
+
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.c: Add the four new tabs, remove the old one.
+
+	* src/nact/nautilus-actions-config-tool.ui: Fix some size groups.
+
 2010-05-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Define GSEAL_ENABLED.

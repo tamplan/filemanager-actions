@@ -260,12 +260,13 @@ on_tab_updatable_selection_changed( NactIPropertiesTab *instance, gint count_sel
 			notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( instance ), "MainNotebook" ));
 			page = gtk_notebook_get_nth_page( notebook, TAB_ACTION );
 			title_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionPropertiesTitle" );
+			label_widget = gtk_notebook_get_tab_label( notebook, page );
 			if( item && NA_IS_OBJECT_MENU( item )){
-				gtk_notebook_set_tab_label_text( notebook, page, _( "Menu" ));
-				gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Menu properties</b>" ));
+				gtk_label_set_label( GTK_LABEL( label_widget ), _( "Me_nu" ));
+				gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Menu editable properties</b>" ));
 			} else {
-				gtk_notebook_set_tab_label_text( notebook, page, _( "Action" ));
-				gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Action properties</b>" ));
+				gtk_label_set_label( GTK_LABEL( label_widget ), _( "_Action" ));
+				gtk_label_set_markup( GTK_LABEL( title_widget ), _( "<b>Action editable properties</b>" ));
 			}
 		}
 

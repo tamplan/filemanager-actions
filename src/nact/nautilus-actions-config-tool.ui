@@ -210,7 +210,6 @@ Menus are always candidate if they contain at least one action.</property>
                                             <property name="top_attach">2</property>
                                             <property name="bottom_attach">3</property>
                                             <property name="x_options">GTK_FILL</property>
-                                            <property name="y_options"></property>
                                           </packing>
                                         </child>
                                         <child>
@@ -342,7 +341,6 @@ Menus are never displayed in the toolbar.</property>
                                           </object>
                                           <packing>
                                             <property name="x_options">GTK_FILL</property>
-                                            <property name="y_options"></property>
                                           </packing>
                                         </child>
                                         <child>
@@ -357,7 +355,6 @@ Menus are never displayed in the toolbar.</property>
                                             <property name="top_attach">1</property>
                                             <property name="bottom_attach">2</property>
                                             <property name="x_options">GTK_FILL</property>
-                                            <property name="y_options"></property>
                                           </packing>
                                         </child>
                                         <child>
@@ -2420,63 +2417,12 @@ Defining several profiles lets you have several commands, each applying with a d
                                 <child>
                                   <object class="GtkTable" id="table4">
                                     <property name="visible">True</property>
-                                    <property name="n_rows">6</property>
+                                    <property name="n_rows">3</property>
                                     <property name="n_columns">2</property>
                                     <property name="column_spacing">6</property>
                                     <property name="row_spacing">3</property>
                                     <child>
-                                      <object class="GtkLabel" id="ActionItemID">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                        <property name="yalign">1</property>
-                                        <property name="ypad">6</property>
-                                      </object>
-                                      <packing>
-                                        <property name="left_attach">1</property>
-                                        <property name="right_attach">2</property>
-                                        <property name="top_attach">4</property>
-                                        <property name="bottom_attach">5</property>
-                                        <property name="y_options">GTK_FILL</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="ActionIdLabel">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">1</property>
-                                        <property name="label" translatable="yes">Id. :</property>
-                                      </object>
-                                      <packing>
-                                        <property name="top_attach">4</property>
-                                        <property name="bottom_attach">5</property>
-                                        <property name="x_options">GTK_FILL</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="label19">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">1</property>
-                                        <property name="label" translatable="yes">I/O provider :</property>
-                                      </object>
-                                      <packing>
-                                        <property name="top_attach">5</property>
-                                        <property name="bottom_attach">6</property>
-                                        <property name="x_options">GTK_FILL</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="ActionItemProvider">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">0</property>
-                                      </object>
-                                      <packing>
-                                        <property name="left_attach">1</property>
-                                        <property name="right_attach">2</property>
-                                        <property name="top_attach">5</property>
-                                        <property name="bottom_attach">6</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="ActionDescriptionLabel">
+                                      <object class="GtkLabel" id="label18">
                                         <property name="visible">True</property>
                                         <property name="xalign">1</property>
                                         <property name="yalign">0</property>
@@ -2525,22 +2471,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkCheckButton" id="ActionReadonlyButton">
-                                        <property name="label" translatable="yes">Read-only</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">False</property>
-                                        <property name="focus_on_click">False</property>
-                                        <property name="draw_indicator">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="left_attach">1</property>
-                                        <property name="right_attach">2</property>
-                                        <property name="top_attach">3</property>
-                                        <property name="bottom_attach">4</property>
-                                      </packing>
-                                    </child>
-                                    <child>
                                       <object class="GtkLabel" id="label39">
                                         <property name="visible">True</property>
                                         <property name="xalign">1</property>
@@ -2550,6 +2480,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                       <packing>
                                         <property name="top_attach">2</property>
                                         <property name="bottom_attach">3</property>
+                                        <property name="x_options">GTK_FILL</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -2581,9 +2512,6 @@ Defining several profiles lets you have several commands, each applying with a d
                                     <child>
                                       <placeholder/>
                                     </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -2592,7 +2520,7 @@ Defining several profiles lets you have several commands, each applying with a d
                               <object class="GtkLabel" id="ActionPropertiesTitle">
                                 <property name="visible">True</property>
                                 <property name="xpad">5</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Action properties&lt;/b&gt;</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Action editable properties&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
                               </object>
                             </child>
@@ -2600,6 +2528,109 @@ Defining several profiles lets you have several commands, each applying with a d
                           <packing>
                             <property name="expand">False</property>
                             <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkFrame" id="frame6">
+                            <property name="visible">True</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <object class="GtkAlignment" id="alignment6">
+                                <property name="visible">True</property>
+                                <property name="top_padding">6</property>
+                                <property name="bottom_padding">6</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkTable" id="table3">
+                                    <property name="visible">True</property>
+                                    <property name="n_rows">3</property>
+                                    <property name="n_columns">2</property>
+                                    <property name="column_spacing">6</property>
+                                    <property name="row_spacing">6</property>
+                                    <child>
+                                      <object class="GtkLabel" id="ActionItemID">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                        <property name="top_attach">1</property>
+                                        <property name="bottom_attach">2</property>
+                                        <property name="y_options">GTK_FILL</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="label49">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes">Id. :</property>
+                                      </object>
+                                      <packing>
+                                        <property name="top_attach">1</property>
+                                        <property name="bottom_attach">2</property>
+                                        <property name="x_options">GTK_FILL</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="label19">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes">I/O provider :</property>
+                                      </object>
+                                      <packing>
+                                        <property name="top_attach">2</property>
+                                        <property name="bottom_attach">3</property>
+                                        <property name="x_options">GTK_FILL</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="ActionItemProvider">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                        <property name="top_attach">2</property>
+                                        <property name="bottom_attach">3</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkCheckButton" id="ActionReadonlyButton">
+                                        <property name="label" translatable="yes">Read-only</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="focus_on_click">False</property>
+                                        <property name="draw_indicator">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">1</property>
+                                        <property name="right_attach">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkLabel" id="label10">
+                                <property name="visible">True</property>
+                                <property name="xpad">5</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Read-only properties&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </object>
@@ -2763,6 +2794,9 @@ Defining several profiles lets you have several commands, each applying with a d
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -2778,10 +2812,10 @@ Defining several profiles lets you have several commands, each applying with a d
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <property name="preview_widget_active">False</property>
             <property name="local_only">False</property>
-            <property name="select_multiple">True</property>
+            <property name="preview_widget_active">False</property>
             <property name="use_preview_label">False</property>
+            <property name="select_multiple">True</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -3587,39 +3621,39 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="label4"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionToolbarLabelLabel"/>
       <widget name="ActionMenuLabelLabel"/>
-      <widget name="ActionIdLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
       <widget name="ActionTooltipLabel"/>
       <widget name="ActionIconLabel"/>
     </widgets>
   </object>
-  <object class="GtkSizeGroup" id="ConditionsLabelSizeGroup">
-    <widgets>
-      <widget name="label17"/>
-      <widget name="ConditionsMimetypesLabel"/>
-      <widget name="ConditionsFilenamesLabel"/>
-    </widgets>
-  </object>
   <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
     <widgets>
-      <widget name="label45"/>
-      <widget name="label44"/>
       <widget name="label43"/>
+      <widget name="label44"/>
+      <widget name="label45"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
+    <widgets>
+      <widget name="label18"/>
+      <widget name="label39"/>
+      <widget name="label49"/>
+      <widget name="label19"/>
     </widgets>
   </object>
 </interface>

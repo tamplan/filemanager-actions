@@ -49,7 +49,6 @@
 #include "nact-iactions-list.h"
 #include "nact-main-tab.h"
 #include "nact-icommand-tab.h"
-#include "nact-iconditions-tab.h"
 #include "nact-ischemes-tab.h"
 
 /* private interface data

@@ -234,7 +234,6 @@ on_tab_updatable_selection_changed( NactISchemesTab *instance, gint count_select
 	static const gchar *thisfn = "nact_ischemes_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	NAObjectProfile *profile;
-	gboolean enable_tab;
 	GSList *schemes;
 	gboolean editable;
 
@@ -251,7 +250,7 @@ on_tab_updatable_selection_changed( NactISchemesTab *instance, gint count_select
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
-		enable_tab = tab_set_sensitive( instance );
+		tab_set_sensitive( instance );
 
 		if( profile ){
 			schemes = na_object_get_schemes( profile );

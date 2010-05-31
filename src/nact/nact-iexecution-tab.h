@@ -28,13 +28,13 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_ICOMMAND_TAB_H__
-#define __NACT_ICOMMAND_TAB_H__
+#ifndef __NACT_IEXECUTION_TAB_H__
+#define __NACT_IEXECUTION_TAB_H__
 
 /**
- * SECTION: nact_icommand_tab
- * @short_description: #NactICommandTab interface declaration.
- * @include: nact/nact-icommand-tab.h
+ * SECTION: nact_iexecution_tab
+ * @short_description: #NactIExecutionTab interface declaration.
+ * @include: nact/nact-iexecution-tab.h
  *
  * This interface implements all the widgets which define the
  * actual action to be executed.
@@ -44,28 +44,28 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ICOMMAND_TAB_TYPE						( nact_icommand_tab_get_type())
-#define NACT_ICOMMAND_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICOMMAND_TAB_TYPE, NactICommandTab ))
-#define NACT_IS_ICOMMAND_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICOMMAND_TAB_TYPE ))
-#define NACT_ICOMMAND_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICOMMAND_TAB_TYPE, NactICommandTabInterface ))
+#define NACT_IEXECUTION_TAB_TYPE						( nact_iexecution_tab_get_type())
+#define NACT_IEXECUTION_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IEXECUTION_TAB_TYPE, NactIExecutionTab ))
+#define NACT_IS_IEXECUTION_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IEXECUTION_TAB_TYPE ))
+#define NACT_IEXECUTION_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IEXECUTION_TAB_TYPE, NactIExecutionTabInterface ))
 
-typedef struct NactICommandTab NactICommandTab;
+typedef struct NactIExecutionTab                 NactIExecutionTab;
 
-typedef struct NactICommandTabInterfacePrivate NactICommandTabInterfacePrivate;
+typedef struct NactIExecutionTabInterfacePrivate NactIExecutionTabInterfacePrivate;
 
 typedef struct {
-	GTypeInterface                   parent;
-	NactICommandTabInterfacePrivate *private;
+	GTypeInterface                     parent;
+	NactIExecutionTabInterfacePrivate *private;
 }
-	NactICommandTabInterface;
+	NactIExecutionTabInterface;
 
-GType    nact_icommand_tab_get_type( void );
+GType nact_iexecution_tab_get_type( void );
 
-void     nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance );
-void     nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance );
-void     nact_icommand_tab_all_widgets_showed( NactICommandTab *instance );
-void     nact_icommand_tab_dispose( NactICommandTab *instance );
+void  nact_iexecution_tab_initial_load_toplevel( NactIExecutionTab *instance );
+void  nact_iexecution_tab_runtime_init_toplevel( NactIExecutionTab *instance );
+void  nact_iexecution_tab_all_widgets_showed   ( NactIExecutionTab *instance );
+void  nact_iexecution_tab_dispose              ( NactIExecutionTab *instance );
 
 G_END_DECLS
 
-#endif /* __NACT_ICOMMAND_TAB_H__ */
+#endif /* __NACT_IEXECUTION_TAB_H__ */

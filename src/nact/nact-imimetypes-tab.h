@@ -28,44 +28,44 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_ICOMMAND_TAB_H__
-#define __NACT_ICOMMAND_TAB_H__
+#ifndef __NACT_IMIMETYPES_TAB_H__
+#define __NACT_IMIMETYPES_TAB_H__
 
 /**
- * SECTION: nact_icommand_tab
- * @short_description: #NactICommandTab interface declaration.
- * @include: nact/nact-icommand-tab.h
+ * SECTION: nact_imimetypes_tab
+ * @short_description: #NactIMimetypesTab interface declaration.
+ * @include: nact/nact-imimetypes-tab.h
  *
  * This interface implements all the widgets which define the
- * actual action to be executed.
+ * mimetypes-based conditions.
  */
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define NACT_ICOMMAND_TAB_TYPE						( nact_icommand_tab_get_type())
-#define NACT_ICOMMAND_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICOMMAND_TAB_TYPE, NactICommandTab ))
-#define NACT_IS_ICOMMAND_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICOMMAND_TAB_TYPE ))
-#define NACT_ICOMMAND_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICOMMAND_TAB_TYPE, NactICommandTabInterface ))
+#define NACT_IMIMETYPES_TAB_TYPE						( nact_imimetypes_tab_get_type())
+#define NACT_IMIMETYPES_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IMIMETYPES_TAB_TYPE, NactIMimetypesTab ))
+#define NACT_IS_IMIMETYPES_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IMIMETYPES_TAB_TYPE ))
+#define NACT_IMIMETYPES_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IMIMETYPES_TAB_TYPE, NactIMimetypesTabInterface ))
 
-typedef struct NactICommandTab NactICommandTab;
+typedef struct NactIMimetypesTab                 NactIMimetypesTab;
 
-typedef struct NactICommandTabInterfacePrivate NactICommandTabInterfacePrivate;
+typedef struct NactIMimetypesTabInterfacePrivate NactIMimetypesTabInterfacePrivate;
 
 typedef struct {
-	GTypeInterface                   parent;
-	NactICommandTabInterfacePrivate *private;
+	GTypeInterface                     parent;
+	NactIMimetypesTabInterfacePrivate *private;
 }
-	NactICommandTabInterface;
+	NactIMimetypesTabInterface;
 
-GType    nact_icommand_tab_get_type( void );
+GType nact_imimetypes_tab_get_type( void );
 
-void     nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance );
-void     nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance );
-void     nact_icommand_tab_all_widgets_showed( NactICommandTab *instance );
-void     nact_icommand_tab_dispose( NactICommandTab *instance );
+void  nact_imimetypes_tab_initial_load_toplevel( NactIMimetypesTab *instance );
+void  nact_imimetypes_tab_runtime_init_toplevel( NactIMimetypesTab *instance );
+void  nact_imimetypes_tab_all_widgets_showed   ( NactIMimetypesTab *instance );
+void  nact_imimetypes_tab_dispose              ( NactIMimetypesTab *instance );
 
 G_END_DECLS
 
-#endif /* __NACT_ICOMMAND_TAB_H__ */
+#endif /* __NACT_IMIMETYPES_TAB_H__ */

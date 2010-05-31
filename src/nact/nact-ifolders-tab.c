@@ -294,7 +294,6 @@ on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_select
 	static const gchar *thisfn = "nact_ifolders_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	NAObjectProfile *profile;
-	gboolean enable_tab;
 	gboolean editable;
 	GtkTreeView *treeview;
 	GtkTreeViewColumn *column;
@@ -318,7 +317,7 @@ on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_select
 
 		g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
 
-		enable_tab = tab_set_sensitive( instance );
+		tab_set_sensitive( instance );
 
 		if( item && NA_IS_OBJECT_ACTION( item )){
 			setup_folders( instance );
