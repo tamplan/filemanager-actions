@@ -65,8 +65,8 @@ GType    nact_iproperties_tab_get_type( void );
 
 void     nact_iproperties_tab_initial_load_toplevel( NactIPropertiesTab *instance );
 void     nact_iproperties_tab_runtime_init_toplevel( NactIPropertiesTab *instance );
-void     nact_iproperties_tab_all_widgets_showed( NactIPropertiesTab *instance );
-void     nact_iproperties_tab_dispose( NactIPropertiesTab *instance );
+void     nact_iproperties_tab_all_widgets_showed   ( NactIPropertiesTab *instance );
+void     nact_iproperties_tab_dispose              ( NactIPropertiesTab *instance );
 
 G_END_DECLS
 

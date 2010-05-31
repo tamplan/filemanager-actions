@@ -63,10 +63,10 @@ GType   nact_ischemes_tab_get_type( void );
 
 void    nact_ischemes_tab_initial_load_toplevel( NactISchemesTab *instance );
 void    nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance );
-void    nact_ischemes_tab_all_widgets_showed( NactISchemesTab *instance );
-void    nact_ischemes_tab_dispose( NactISchemesTab *instance );
+void    nact_ischemes_tab_all_widgets_showed   ( NactISchemesTab *instance );
+void    nact_ischemes_tab_dispose              ( NactISchemesTab *instance );
 
-GSList *nact_ischemes_tab_get_schemes( NactISchemesTab *instance );
+GSList *nact_ischemes_tab_get_schemes          ( NactISchemesTab *instance );
 
 G_END_DECLS
 
