@@ -95,6 +95,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iaction-tab.h									\
 	nact-ibasenames-tab.c								\
 	nact-ibasenames-tab.h								\
+	nact-icapabilities-tab.c							\
+	nact-icapabilities-tab.h							\
 	nact-ienvironment-tab.c								\
 	nact-ienvironment-tab.h								\
 	nact-iexecution-tab.c								\

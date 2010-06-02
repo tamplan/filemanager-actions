@@ -53,6 +53,7 @@
 #include "nact-imimetypes-tab.h"
 #include "nact-ifolders-tab.h"
 #include "nact-ischemes-tab.h"
+#include "nact-icapabilities-tab.h"
 #include "nact-ienvironment-tab.h"
 #include "nact-iexecution-tab.h"
 #include "nact-iproperties-tab.h"
@@ -153,6 +154,7 @@ static void     ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface );
 static void     imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface );
 static void     ifolders_tab_iface_init( NactIFoldersTabInterface *iface );
 static void     ischemes_tab_iface_init( NactISchemesTabInterface *iface );
+static void     icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface );
 static void     ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface );
 static void     iexecution_tab_iface_init( NactIExecutionTabInterface *iface );
 static void     iproperties_tab_iface_init( NactIPropertiesTabInterface *iface );
@@ -265,6 +267,12 @@ register_type( void )
 		NULL
 	};
 
+	static const GInterfaceInfo icapabilities_tab_iface_info = {
+		( GInterfaceInitFunc ) icapabilities_tab_iface_init,
+		NULL,
+		NULL
+	};
+
 	static const GInterfaceInfo ienvironment_tab_iface_info = {
 		( GInterfaceInitFunc ) ienvironment_tab_iface_init,
 		NULL,
@@ -318,6 +326,8 @@ register_type( void )
 	g_type_add_interface_static( type, NACT_IFOLDERS_TAB_TYPE, &ifolders_tab_iface_info );
 
 	g_type_add_interface_static( type, NACT_ISCHEMES_TAB_TYPE, &ischemes_tab_iface_info );
+
+	g_type_add_interface_static( type, NACT_ICAPABILITIES_TAB_TYPE, &icapabilities_tab_iface_info );
 
 	g_type_add_interface_static( type, NACT_IENVIRONMENT_TAB_TYPE, &ienvironment_tab_iface_info );
 
@@ -579,6 +589,14 @@ ischemes_tab_iface_init( NactISchemesTabInterface *iface )
 }
 
 static void
+icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_icapabilities_tab_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+}
+
+static void
 ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface )
 {
 	static const gchar *thisfn = "nact_main_window_ienvironment_tab_iface_init";
@@ -786,6 +804,7 @@ instance_dispose( GObject *window )
 		nact_imimetypes_tab_dispose( NACT_IMIMETYPES_TAB( window ));
 		nact_ifolders_tab_dispose( NACT_IFOLDERS_TAB( window ));
 		nact_ischemes_tab_dispose( NACT_ISCHEMES_TAB( window ));
+		nact_icapabilities_tab_dispose( NACT_ICAPABILITIES_TAB( window ));
 		nact_ienvironment_tab_dispose( NACT_IENVIRONMENT_TAB( window ));
 		nact_iexecution_tab_dispose( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_dispose( NACT_IPROPERTIES_TAB( window ));
@@ -1113,6 +1132,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_imimetypes_tab_initial_load_toplevel( NACT_IMIMETYPES_TAB( window ));
 		nact_ifolders_tab_initial_load_toplevel( NACT_IFOLDERS_TAB( window ));
 		nact_ischemes_tab_initial_load_toplevel( NACT_ISCHEMES_TAB( window ));
+		nact_icapabilities_tab_initial_load_toplevel( NACT_ICAPABILITIES_TAB( window ));
 		nact_ienvironment_tab_initial_load_toplevel( NACT_IENVIRONMENT_TAB( window ));
 		nact_iexecution_tab_initial_load_toplevel( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_initial_load_toplevel( NACT_IPROPERTIES_TAB( window ));
@@ -1154,6 +1174,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_imimetypes_tab_runtime_init_toplevel( NACT_IMIMETYPES_TAB( window ));
 		nact_ifolders_tab_runtime_init_toplevel( NACT_IFOLDERS_TAB( window ));
 		nact_ischemes_tab_runtime_init_toplevel( NACT_ISCHEMES_TAB( window ));
+		nact_icapabilities_tab_runtime_init_toplevel( NACT_ICAPABILITIES_TAB( window ));
 		nact_ienvironment_tab_runtime_init_toplevel( NACT_IENVIRONMENT_TAB( window ));
 		nact_iexecution_tab_runtime_init_toplevel( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_runtime_init_toplevel( NACT_IPROPERTIES_TAB( window ));
@@ -1210,6 +1231,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 		nact_imimetypes_tab_all_widgets_showed( NACT_IMIMETYPES_TAB( window ));
 		nact_ifolders_tab_all_widgets_showed( NACT_IFOLDERS_TAB( window ));
 		nact_ischemes_tab_all_widgets_showed( NACT_ISCHEMES_TAB( window ));
+		nact_icapabilities_tab_all_widgets_showed( NACT_ICAPABILITIES_TAB( window ));
 		nact_ienvironment_tab_all_widgets_showed( NACT_IENVIRONMENT_TAB( window ));
 		nact_iexecution_tab_all_widgets_showed( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_all_widgets_showed( NACT_IPROPERTIES_TAB( window ));

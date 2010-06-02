@@ -6,6 +6,15 @@
 
 	* src/core/na-iabout.c: Update copyright notice.
 
+2010-06-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-icapabilities-tab.c:
+	* src/nact/nact-icapabilities-tab.h: Define NactICapabilitiesInterface interface.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.c: Updated accordingly.
+
 2010-05-30 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-ibasenames-tab.c:
