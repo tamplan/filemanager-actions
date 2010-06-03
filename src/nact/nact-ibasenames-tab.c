@@ -36,7 +36,9 @@
 #include <glib/gi18n.h>
 
 #include <api/na-object-api.h>
+#include <api/na-core-utils.h>
 
+#include "nact-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-ibasenames-tab.h"
 
@@ -54,6 +56,11 @@ enum {
 	BASENAMES_MUST_NOT_MATCH_COLUMN,
 	BASENAMES_N_COLUMN
 };
+
+#define BASENAMES_LIST_VIEW				"nact-ibasenames-list-view"
+#define BASENAMES_LIST_EDITABLE			"nact-ibasenames-list-editable"
+#define BASENAMES_LIST_SORT_HEADER		"nact-ibasenames-list-sort-header"
+#define BASENAMES_LIST_SORT_ORDER		"nact-ibasenames-list-sort-order"
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
@@ -76,7 +83,11 @@ static void     on_selection_changed( GtkTreeSelection *selection, BaseWindow *w
 static void     on_tab_updatable_selection_changed( NactIBasenamesTab *instance, gint count_selected );
 static void     on_tab_updatable_enable_tab( NactIBasenamesTab *instance, NAObjectItem *item );
 
+static void     delete_current_row( BaseWindow *window );
+static void     edit_inline( BaseWindow *window );
+static void     insert_new_row( BaseWindow *window );
 static void     iter_for_setup( gchar *filter, GtkTreeModel *model );
+static void     sort_on_column( GtkTreeViewColumn *treeviewcolumn, BaseWindow *window, guint colid );
 static gboolean tab_set_sensitive( NactIBasenamesTab *instance );
 
 GType
@@ -181,7 +192,6 @@ nact_ibasenames_tab_initial_load_toplevel( NactIBasenamesTab *instance )
 				"text", BASENAMES_ITEM_COLUMN,
 				NULL );
 		gtk_tree_view_append_column( listview, column );
-		gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), BASENAMES_ITEM_COLUMN, GTK_SORT_ASCENDING );
 
 		radio_cell = gtk_cell_renderer_toggle_new();
 		gtk_cell_renderer_toggle_set_radio( GTK_CELL_RENDERER_TOGGLE( radio_cell ), TRUE );
@@ -227,6 +237,7 @@ nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance )
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	GtkWidget *add_button, *remove_button;
+	GtkTreeModel *model;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
@@ -313,6 +324,14 @@ nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance )
 				G_OBJECT( listview ),
 				"key-press-event",
 				G_CALLBACK( on_key_pressed_event ));
+
+		g_object_set_data( G_OBJECT( instance ), BASENAMES_LIST_VIEW, listview );
+
+		model = gtk_tree_view_get_model( listview );
+		gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), BASENAMES_ITEM_COLUMN, GTK_SORT_ASCENDING );
+
+		g_object_set_data( G_OBJECT( listview ), BASENAMES_LIST_SORT_HEADER, GUINT_TO_POINTER( BASENAMES_ITEM_COLUMN ));
+		g_object_set_data( G_OBJECT( listview ), BASENAMES_LIST_SORT_ORDER, GUINT_TO_POINTER( GTK_SORT_ASCENDING ));
 	}
 }
 
@@ -349,19 +368,78 @@ nact_ibasenames_tab_dispose( NactIBasenamesTab *instance )
 static void
 on_add_filter_clicked( GtkButton *button, BaseWindow *window )
 {
+	insert_new_row( window );
 }
 
 static void
 on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_on_filter_clicked";
-
-	g_debug( "%s", thisfn );
+	sort_on_column( treeviewcolumn, window, BASENAMES_ITEM_COLUMN );
 }
 
 static void
-on_filter_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, BaseWindow *window )
+on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, BaseWindow *window )
 {
+	GtkTreeView *listview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	gchar *old_text;
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	gboolean must_match, must_not_match;
+	gchar *to_add, *to_remove;
+	GSList *basenames;
+
+	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), BASENAMES_LIST_VIEW ));
+	model = gtk_tree_view_get_model( listview );
+	path = gtk_tree_path_new_from_string( path_str );
+	gtk_tree_model_get_iter( model, &iter, path );
+	gtk_tree_path_free( path );
+
+	gtk_tree_model_get( model, &iter,
+			BASENAMES_ITEM_COLUMN, &old_text,
+			BASENAMES_MUST_MATCH_COLUMN, &must_match,
+			BASENAMES_MUST_NOT_MATCH_COLUMN, &must_not_match,
+			-1 );
+
+	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, BASENAMES_ITEM_COLUMN, text, -1 );
+
+	g_object_get(
+			G_OBJECT( window ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			NULL );
+
+	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+	if( context ){
+		basenames = na_object_get_basenames( context );
+
+		if( basenames ){
+			to_remove = g_strdup( old_text );
+			basenames = na_core_utils_slist_remove_ascii( basenames, to_remove );
+			g_free( to_remove );
+			to_remove = g_strdup_printf( "!%s", old_text );
+			basenames = na_core_utils_slist_remove_ascii( basenames, to_remove );
+			g_free( to_remove );
+		}
+
+		if( must_match ){
+			basenames = g_slist_prepend( basenames, g_strdup( text ));
+
+		} else if( must_not_match ){
+			to_add = g_strdup_printf( "!%s", text );
+			basenames = g_slist_prepend( basenames, to_add );
+		}
+
+		na_object_set_basenames( context, basenames );
+		na_core_utils_slist_free( basenames );
+		g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	}
+
+	g_free( old_text );
 }
 
 static gboolean
@@ -372,17 +450,17 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
 	stop = FALSE;
 
 	if( event->keyval == GDK_F2 ){
-		/*edit_inline( window );*/
+		edit_inline( window );
 		stop = TRUE;
 	}
 
 	if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
-		/*insert_new_row( window );*/
+		insert_new_row( window );
 		stop = TRUE;
 	}
 
 	if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
-		/*delete_current_row( window );*/
+		delete_current_row( window );
 		stop = TRUE;
 	}
 
@@ -392,47 +470,153 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
 static void
 on_must_match_clicked( GtkTreeViewColumn *treeviewcolumn, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_on_must_match_clicked";
-
-	g_debug( "%s", thisfn );
+	sort_on_column( treeviewcolumn, window, BASENAMES_MUST_MATCH_COLUMN );
 }
 
+/*
+ * clicking on an already active toggle button has no effect
+ * clicking on an inactive toggle button has a double effect:
+ * - the other toggle button becomes inactive
+ * - this toggle button becomes active
+ * the corresponding strings must be respectively removed/added to the
+ * filters list
+ */
 static void
-on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, BaseWindow *window )
+on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, BaseWindow *window )
 {
+	/*static const gchar *thisfn = "nact_ibasenames_tab_on_must_match_toggled";*/
+	GtkTreeView *listview;
+	GtkTreeModel *model;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	gchar *filter;
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	GSList *basenames;
+	gchar *to_remove;
+
+	/*gboolean is_active = gtk_cell_renderer_toggle_get_active( cell_renderer );
+	g_debug( "%s: is_active=%s", thisfn, is_active ? "True":"False" );*/
+
+	if( !gtk_cell_renderer_toggle_get_active( cell_renderer )){
+		listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), BASENAMES_LIST_VIEW ));
+		model = gtk_tree_view_get_model( listview );
+		path = gtk_tree_path_new_from_string( path_str );
+		gtk_tree_model_get_iter( model, &iter, path );
+		gtk_tree_path_free( path );
+
+		gtk_tree_model_get( model, &iter, BASENAMES_ITEM_COLUMN, &filter, -1 );
+		gtk_list_store_set( GTK_LIST_STORE( model ), &iter, BASENAMES_MUST_MATCH_COLUMN, TRUE, BASENAMES_MUST_NOT_MATCH_COLUMN, FALSE, -1 );
+
+		g_object_get(
+				G_OBJECT( window ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				NULL );
+
+		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+		if( context ){
+			basenames = na_object_get_basenames( context );
+			if( basenames ){
+				to_remove = g_strdup_printf( "!%s", filter );
+				basenames = na_core_utils_slist_remove_ascii( basenames, to_remove );
+				g_free( to_remove );
+			}
+			basenames = g_slist_prepend( basenames, filter );
+			na_object_set_basenames( context, basenames );
+			na_core_utils_slist_free( basenames );
+			g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		}
+	}
 }
 
 static void
 on_must_not_match_clicked( GtkTreeViewColumn *treeviewcolumn, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_on_must_not_match_clicked";
-
-	g_debug( "%s", thisfn );
+	sort_on_column( treeviewcolumn, window, BASENAMES_MUST_MATCH_COLUMN );
 }
 
 static void
-on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, BaseWindow *window )
+on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, BaseWindow *window )
 {
+	/*static const gchar *thisfn = "nact_ibasenames_tab_on_must_not_match_toggled";*/
+	GtkTreeView *listview;
+	GtkTreeModel *model;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	gchar *filter;
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	GSList *basenames;
+	gchar *to_add;
+
+	/*gboolean is_active = gtk_cell_renderer_toggle_get_active( cell_renderer );
+	g_debug( "%s: is_active=%s", thisfn, is_active ? "True":"False" );*/
+
+	if( !gtk_cell_renderer_toggle_get_active( cell_renderer )){
+		listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), BASENAMES_LIST_VIEW ));
+		model = gtk_tree_view_get_model( listview );
+		path = gtk_tree_path_new_from_string( path_str );
+		gtk_tree_model_get_iter( model, &iter, path );
+		gtk_tree_path_free( path );
+
+		gtk_tree_model_get( model, &iter, BASENAMES_ITEM_COLUMN, &filter, -1 );
+		gtk_list_store_set( GTK_LIST_STORE( model ), &iter, BASENAMES_MUST_MATCH_COLUMN, FALSE, BASENAMES_MUST_NOT_MATCH_COLUMN, TRUE, -1 );
+
+		g_object_get(
+				G_OBJECT( window ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				NULL );
+
+		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+		if( context ){
+			basenames = na_object_get_basenames( context );
+			if( basenames ){
+				basenames = na_core_utils_slist_remove_ascii( basenames, filter );
+			}
+			to_add = g_strdup_printf( "!%s", filter );
+			basenames = g_slist_prepend( basenames, to_add );
+			na_object_set_basenames( context, basenames );
+			na_core_utils_slist_free( basenames );
+			g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		}
+
+		g_free( filter );
+	}
 }
 
 static void
 on_remove_filter_clicked( GtkButton *button, BaseWindow *window )
 {
+	delete_current_row( window );
 }
 
 static void
 on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 {
+	GtkTreeView *listview;
+	gboolean editable;
+	GtkButton *button;
+
+	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), BASENAMES_LIST_VIEW ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( listview ), BASENAMES_LIST_EDITABLE ));
+	button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RemoveBasenameButton"));
+	gtk_widget_set_sensitive( GTK_WIDGET( button ), editable && gtk_tree_selection_count_selected_rows( selection ) > 0);
 }
 
 /*
  * basically we are using here a rather common scheme:
  * - object has a GSList of strings, each of one being a basename description,
  *   which may be negated
- * - split this list into two list boxes, the first for positive assertion,
- *   and the second for negative ones
- * - let these two lists be updated by the user
- * - update the object with a concatenation of the listbox contents
+ * - the list is displayed in a listview with radio toggle buttons
+ *   so that a user cannot have both positive and negative assertions
+ *   for the same basename filter
+ * - update the object with a summary of the listbox contents
  */
 static void
 on_tab_updatable_selection_changed( NactIBasenamesTab *instance, gint count_selected )
@@ -440,11 +624,14 @@ on_tab_updatable_selection_changed( NactIBasenamesTab *instance, gint count_sele
 	static const gchar *thisfn = "nact_ibasenames_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	NAObjectProfile *profile;
+	NAIContext *context;
 	GSList *basenames;
 	gboolean editable;
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
+	GtkTreeViewColumn *column;
+	GtkWidget *button;
 	GtkTreePath *path;
 
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
@@ -460,13 +647,8 @@ on_tab_updatable_selection_changed( NactIBasenamesTab *instance, gint count_sele
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
-		basenames = NULL;
-
-		if( profile ){
-			basenames = na_object_get_basenames( profile );
-		} else {
-			basenames = na_object_get_basenames( item );
-		}
+		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+		basenames = na_object_get_basenames( context );
 
 		st_on_selection_change = TRUE;
 
@@ -479,6 +661,17 @@ on_tab_updatable_selection_changed( NactIBasenamesTab *instance, gint count_sele
 		if( basenames ){
 			g_slist_foreach( basenames, ( GFunc ) iter_for_setup, model );
 		}
+
+		g_object_set_data( G_OBJECT( listview ), BASENAMES_LIST_EDITABLE, GUINT_TO_POINTER(( guint ) editable ));
+
+		column = gtk_tree_view_get_column( listview, BASENAMES_ITEM_COLUMN );
+		nact_gtk_utils_set_editable( GTK_OBJECT( column ), editable );
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "AddBasenameButton");
+		nact_gtk_utils_set_editable( GTK_OBJECT( button ), editable );
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "RemoveBasenameButton");
+		nact_gtk_utils_set_editable( GTK_OBJECT( button ), editable );
 
 		st_on_selection_change = FALSE;
 
@@ -506,6 +699,117 @@ on_tab_updatable_enable_tab( NactIBasenamesTab *instance, NAObjectItem *item )
 }
 
 static void
+delete_current_row( BaseWindow *window )
+{
+	GtkTreeView *listview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GList *rows;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	gchar *filter;
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	GSList *basenames;
+	gchar *to_remove;
+
+	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), BASENAMES_LIST_VIEW ));
+	selection = gtk_tree_view_get_selection( listview );
+	model = gtk_tree_view_get_model( listview );
+	rows = gtk_tree_selection_get_selected_rows( selection, NULL );
+
+	if( g_list_length( rows ) == 1 ){
+		path = ( GtkTreePath * ) rows->data;
+		gtk_tree_model_get_iter( model, &iter, path );
+		gtk_tree_model_get( model, &iter, BASENAMES_ITEM_COLUMN, &filter, -1 );
+		gtk_list_store_remove( GTK_LIST_STORE( model ), &iter );
+
+		g_object_get(
+				G_OBJECT( window ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				NULL );
+
+		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+		if( context ){
+			basenames = na_object_get_basenames( context );
+			if( basenames ){
+				to_remove = g_strdup_printf( "!%s", filter );
+				basenames = na_core_utils_slist_remove_ascii( basenames, to_remove );
+				g_free( to_remove );
+				basenames = na_core_utils_slist_remove_ascii( basenames, filter );
+				na_object_set_basenames( context, basenames );
+				na_core_utils_slist_free( basenames );
+				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+			}
+		}
+
+		g_free( filter );
+
+		if( gtk_tree_model_get_iter( model, &iter, path ) ||
+			gtk_tree_path_prev( path )){
+			gtk_tree_view_set_cursor( listview, path, NULL, FALSE );
+		}
+	}
+
+	g_list_foreach( rows, ( GFunc ) gtk_tree_path_free, NULL );
+	g_list_free( rows );
+}
+
+static void
+edit_inline( BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_ibasenames_tab_edit_inline";
+	GtkTreeView *listview;
+	GtkTreeSelection *selection;
+	GList *rows;
+	GtkTreePath *path;
+	GtkTreeViewColumn *column;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), BASENAMES_LIST_VIEW ));
+	selection = gtk_tree_view_get_selection( listview );
+	rows = gtk_tree_selection_get_selected_rows( selection, NULL );
+
+	if( g_list_length( rows ) == 1 ){
+		gtk_tree_view_get_cursor( listview, &path, &column );
+		gtk_tree_view_set_cursor( listview, path, column, TRUE );
+		gtk_tree_path_free( path );
+	}
+
+	g_list_foreach( rows, ( GFunc ) gtk_tree_path_free, NULL );
+	g_list_free( rows );
+}
+
+static void
+insert_new_row( BaseWindow *window )
+{
+	GtkTreeView *listview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	GtkTreeViewColumn *column;
+
+	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), BASENAMES_LIST_VIEW ));
+	model = gtk_tree_view_get_model( listview );
+
+	gtk_list_store_insert_with_values( GTK_LIST_STORE( model ), &iter, 0,
+			/* i18n notes : new basename filter for a new row in the basenames list */
+			BASENAMES_ITEM_COLUMN, _( "new-basename-filter" ),
+			BASENAMES_MUST_MATCH_COLUMN, FALSE,
+			BASENAMES_MUST_NOT_MATCH_COLUMN, FALSE,
+			-1 );
+
+	path = gtk_tree_model_get_path( model, &iter );
+	column = gtk_tree_view_get_column( listview, BASENAMES_ITEM_COLUMN );
+	gtk_tree_view_set_cursor( listview, path, column, TRUE );
+	gtk_tree_path_free( path );
+}
+
+static void
 iter_for_setup( gchar *basename, GtkTreeModel *model )
 {
 	GtkTreeIter iter;
@@ -518,7 +822,7 @@ iter_for_setup( gchar *basename, GtkTreeModel *model )
 	negative = FALSE;
 
 	if( filter[0] == '!' ){
-		tmp = g_strdup( filter+1 );
+		tmp = g_strstrip( g_strdup( filter+1 ));
 		g_free( filter );
 		filter = tmp;
 		negative = TRUE;
@@ -537,6 +841,37 @@ iter_for_setup( gchar *basename, GtkTreeModel *model )
 			-1 );
 
 	g_free( filter );
+}
+
+static void
+sort_on_column( GtkTreeViewColumn *treeviewcolumn, BaseWindow *window, guint new_col_id )
+{
+	GtkTreeView *listview;
+	guint prev_col_id;
+	guint prev_order, new_order;
+	GtkTreeModel *model;
+
+	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), BASENAMES_LIST_VIEW ));
+	prev_col_id = GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( listview ), BASENAMES_LIST_SORT_HEADER ));
+	prev_order = GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( listview ), BASENAMES_LIST_SORT_ORDER ));
+
+	if( new_col_id == prev_col_id ){
+		new_order = ( prev_order == GTK_SORT_ASCENDING ? GTK_SORT_DESCENDING : GTK_SORT_ASCENDING );
+	} else {
+		new_order = GTK_SORT_ASCENDING;
+	}
+
+	g_object_set_data( G_OBJECT( listview ), BASENAMES_LIST_SORT_HEADER, GUINT_TO_POINTER( new_col_id ));
+	g_object_set_data( G_OBJECT( listview ), BASENAMES_LIST_SORT_ORDER, GUINT_TO_POINTER( new_order ));
+
+	model = gtk_tree_view_get_model( listview );
+	gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), new_col_id, new_order );
+
+	/*gtk_tree_sortable_set_sort_func( GTK_TREE_SORTABLE( model ), new_col_id,
+			IACTIONS_LIST_LABEL_COLUMN,
+			( GtkTreeIterCompareFunc ) sort_actions_list,
+			NULL,
+			NULL );*/
 }
 
 static gboolean

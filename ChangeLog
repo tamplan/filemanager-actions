@@ -6,6 +6,10 @@
 
 	* src/core/na-iabout.c: Update copyright notice.
 
+2010-06-03 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-ibasenames-tab.c: Implement NactIBasenamesInterface interface.
+
 2010-06-02 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nautilus-actions-config-tool.ui:
