@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-05-29 09:01+0000\n"
-"PO-Revision-Date: 2010-05-30 11:57+0200\n"
+"POT-Creation-Date: 2010-05-30 09:58+0000\n"
+"PO-Revision-Date: 2010-06-03 21:32+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -483,9 +483,6 @@ msgstr ""
 "con uno de los patrones para que aparezca la acción"
 
 #: ../src/core/na-icontext-factory.c:66
-#| msgid ""
-#| "A pattern to match selected files against. May include wildcards (* or ?) "
-#| "(you must set one option for each pattern you need)"
 msgid ""
 "A pattern to be matched against basenames of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
@@ -531,10 +528,6 @@ msgstr ""
 "carpetas seleccionadas"
 
 #: ../src/core/na-icontext-factory.c:102
-#| msgid ""
-#| "A list of strings with joker '*' or '?' to match the mimetypes of the "
-#| "selected file(s). Each selected items must match at least one of the "
-#| "mimetype patterns for the action to appear"
 msgid ""
 "A list of strings with joker '*' to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected items must match at least one of "
@@ -550,9 +543,6 @@ msgstr ""
 "Lo predeterminado es «*»."
 
 #: ../src/core/na-icontext-factory.c:119
-#| msgid ""
-#| "A pattern to match selected files against. May include wildcards (* or ?) "
-#| "(you must set one option for each pattern you need)"
 msgid ""
 "A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
@@ -872,9 +862,6 @@ msgid "Version of the format"
 msgstr "Versión del formato"
 
 #: ../src/core/na-object-action-factory.c:51
-#| msgid ""
-#| "The version of the configuration format that will be used to manage "
-#| "backward compatibility"
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility."
@@ -925,7 +912,6 @@ msgid ""
 msgstr ""
 
 #: ../src/core/na-object-action-factory.c:146
-#| msgid "Label of the item in the toolbar"
 msgid "Label of the toolbar item"
 msgstr "Etiqueta del elemento en la barra de herramientas"
 
@@ -1274,7 +1260,7 @@ msgstr ""
 
 #: ../src/io-xml/naxml-formats.c:58
 msgid "Export as a _light GConf schema (v2) file"
-msgstr ""
+msgstr "Exportar como un archivo de esquema _ligero de GConf (v2)"
 
 #: ../src/io-xml/naxml-formats.c:59
 msgid ""
@@ -1289,7 +1275,7 @@ msgstr ""
 
 #: ../src/io-xml/naxml-formats.c:71
 msgid "Export as a GConf _dump file"
-msgstr ""
+msgstr "Exportar como un _volcado de archivo de GConf"
 
 #: ../src/io-xml/naxml-formats.c:72
 msgid ""
@@ -1305,7 +1291,7 @@ msgstr ""
 
 #: ../src/nact/base-application.c:1292
 msgid "Unable to initialize the internationalization environment."
-msgstr ""
+msgstr "No se pudo inicializar el entorno de internacionalización."
 
 #: ../src/nact/base-application.c:1301
 msgid "Unable to initialize the Gtk+ user interface."
@@ -1344,10 +1330,10 @@ msgid "Unable to load %s XML definition."
 msgstr "No se pudo cargar la definición XML de %s."
 
 #: ../src/nact/base-window.c:1286
-#, fuzzy, c-format
+#, c-format
 #| msgid "Unable to load %s XML definition."
 msgid "Unable to load %s UI XML definition: %s"
-msgstr "No se pudo cargar la definición XML de %s."
+msgstr "No se pudo cargar la definición XML del IU de %s: %s"
 
 #: ../src/nact/egg-desktop-file.c:165
 #, c-format
@@ -1415,7 +1401,7 @@ msgstr "Mostrar las opciones de gestión de la sesión"
 
 #: ../src/nact/nact-application.c:72
 msgid "Set it to run multiple instances of the program [unique]"
-msgstr ""
+msgstr "Establecerlo para ejecutar múltiples instancias del programa [único]"
 
 #: ../src/nact/nact-application.c:74
 msgid "Output the version number, and exit gracefully [no]"
@@ -1713,10 +1699,10 @@ msgstr "Copiar los elementos seleccionados al portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the Paste item
 #: ../src/nact/nact-main-menubar.c:144
-#, fuzzy
 #| msgid "Define a new profile attached to the current action."
 msgid "Insert the content of the clipboard just before the current position"
-msgstr "Definir un perfil nuevo acoplado con la acción actual."
+msgstr ""
+"Insertar el contenido del portapepeles justo después de la posición actual"
 
 #: ../src/nact/nact-main-menubar.c:146
 msgid "Paste _into"
@@ -1749,12 +1735,13 @@ msgstr "_Actualizar los elementos"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
 #: ../src/nact/nact-main-menubar.c:160
-#, fuzzy
 #| msgid "Cancel your current modifications and reload the list of actions"
 msgid ""
 "Cancel your current modifications and reload the initial list of menus and "
 "actions"
-msgstr "Cancelar las modificaciones actuales y recargar la lista de acciones"
+msgstr ""
+"Cancelar las modificaciones actuales y recargar la lista inicial de menús y "
+"acciones"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
 #: ../src/nact/nact-main-menubar.c:164
@@ -1802,21 +1789,19 @@ msgstr ""
 "Exportar una o más acciones de su configuración a archivos XML externos"
 
 #: ../src/nact/nact-main-menubar.c:184
-#, fuzzy
 #| msgid "Quit the application."
 msgid "_Dump the selection"
-msgstr "Salir de la aplicación."
+msgstr "_Volcar la selección"
 
 #. i18n: tooltip displayed in the status bar when selecting the Dump selection item
 #: ../src/nact/nact-main-menubar.c:186
-#, fuzzy
 #| msgid "Click to remove the selected scheme."
 msgid "Recursively dump selected items"
-msgstr "Pulse para quitar el esquema seleccionado."
+msgstr "Volcar recursivamente los elementos seleccionados"
 
 #: ../src/nact/nact-main-menubar.c:188
 msgid "_Brief tree store dump"
-msgstr ""
+msgstr "Volcar _brevemente el árbol del almacén"
 
 #. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
 #: ../src/nact/nact-main-menubar.c:190
