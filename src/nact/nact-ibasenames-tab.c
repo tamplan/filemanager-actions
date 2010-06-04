@@ -55,6 +55,7 @@ static GType   register_type( void );
 static void    interface_base_init( NactIBasenamesTabInterface *klass );
 static void    interface_base_finalize( NactIBasenamesTabInterface *klass );
 
+static void    on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance );
 static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
 static void    on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
 
@@ -175,6 +176,7 @@ void
 nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance )
 {
 	static const gchar *thisfn = "nact_ibasenames_tab_runtime_init_toplevel";
+	GtkWidget *button;
 
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
 
@@ -193,6 +195,13 @@ nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance )
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
 				G_CALLBACK( on_tab_updatable_enable_tab ));
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesMatchcaseButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( button ),
+				"toggled",
+				G_CALLBACK( on_matchcase_toggled ));
 
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 	}
@@ -229,6 +238,43 @@ nact_ibasenames_tab_dispose( NactIBasenamesTab *instance )
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
+	}
+}
+
+static void
+on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
+{
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	gboolean matchcase;
+	gboolean editable;
+
+	if( !st_on_selection_change ){
+
+		g_object_get(
+				G_OBJECT( data->window ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				NULL );
+
+		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+		if( context ){
+
+			matchcase = gtk_toggle_button_get_active( button );
+
+			if( editable ){
+				na_object_set_matchcase( context, matchcase );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+
+			} else {
+				g_signal_handlers_block_by_func(( gpointer ) button, on_matchcase_toggled, instance );
+				gtk_toggle_button_set_active( button, !matchcase );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_matchcase_toggled, instance );
+			}
+		}
 	}
 }
 
