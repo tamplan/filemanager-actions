@@ -791,7 +791,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                       <object class="GtkLabel" id="label68">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">The current item will appear if the basename of each element of the selection matches one filter of the 'Must match one' column, while not matching any of the filters of the 'Must not match any' column.</property>
+                                        <property name="label" translatable="yes">The current item will appear if the basename of each element of the selection matches one filter of the 'Must match one of' column, while not matching any of the filters of the 'Must not match any of' column.</property>
                                         <property name="wrap">True</property>
                                       </object>
                                       <packing>
@@ -952,7 +952,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                       <object class="GtkLabel" id="label67">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">The current item will appear if the mimetype of each element of the selection matches one filter of the 'Must match one' column, while not matching any of the filters of the 'Must not match any' column.</property>
+                                        <property name="label" translatable="yes">The current item will appear if the mimetype of each element of the selection matches one filter of the 'Must match one of' column, while not matching any of the filters of the 'Must not match any of' column.</property>
                                         <property name="wrap">True</property>
                                       </object>
                                       <packing>
@@ -1095,7 +1095,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                       <object class="GtkLabel" id="label72">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">The current item will appear if the location of each element of the selection is one or inside one of the paths of the 'Must be inside of' column, while not being one or inside one of the 'Must not be inside of' column.</property>
+                                        <property name="label" translatable="yes">The current item will appear if the location of each element of the selection is one or inside one of the paths of the 'Must match one of' column, while not being one or inside one of the 'Must not match any of' column.</property>
                                         <property name="wrap">True</property>
                                       </object>
                                       <packing>
@@ -1249,7 +1249,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                       <object class="GtkLabel" id="label74">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">The current item will appear if the scheme of each element of the selection matches one of the 'Must match one' column, while not matching any of the 'Must not match any' column.</property>
+                                        <property name="label" translatable="yes">The current item will appear if the scheme of each element of the selection matches one of the 'Must match one of' column, while not matching any of the 'Must not match any of' column.</property>
                                         <property name="wrap">True</property>
                                       </object>
                                       <packing>
