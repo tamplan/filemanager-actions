@@ -142,7 +142,9 @@ nact_match_list_create_model( BaseWindow *window,
 	radio_cell = gtk_cell_renderer_toggle_new();
 	gtk_cell_renderer_toggle_set_radio( GTK_CELL_RENDERER_TOGGLE( radio_cell ), TRUE );
 	column = gtk_tree_view_column_new_with_attributes(
-			_( "Must match one" ),
+			/* i18n: label of the header of a column which let the user select a positive filter
+			 */
+			_( "Must match one of" ),
 			radio_cell,
 			"active", MUST_MATCH_COLUMN,
 			NULL );
@@ -151,7 +153,9 @@ nact_match_list_create_model( BaseWindow *window,
 	radio_cell = gtk_cell_renderer_toggle_new();
 	gtk_cell_renderer_toggle_set_radio( GTK_CELL_RENDERER_TOGGLE( radio_cell ), TRUE );
 	column = gtk_tree_view_column_new_with_attributes(
-			_( "Must not match any" ),
+			/* i18n: label of the header of a column which let the user select a negative filter
+			 */
+			_( "Must not match any of" ),
 			radio_cell,
 			"active", MUST_NOT_MATCH_COLUMN,
 			NULL );
