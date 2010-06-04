@@ -251,6 +251,38 @@ na_factory_object_iter_on_boxed( const NAIFactoryObject *object, NAFactoryObject
 }
 
 /**
+ * na_factory_object_get_default:
+ * @object: this #NAIFactoryObject object.
+ * @name: the searched name.
+ *
+ * Returns: the default value for this @object, as a newly allocated
+ * string which should be g_free() by the caller.
+ */
+gchar *
+na_factory_object_get_default( NAIFactoryObject *object, const gchar *name )
+{
+	static const gchar *thisfn = "na_factory_object_set_defaults";
+	gchar *value;
+	NADataDef *def;
+
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+
+	value = NULL;
+
+	if( ifactory_object_initialized && !ifactory_object_finalized ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+		def = na_factory_object_get_data_def( object, name );
+		if( def ){
+			value = g_strdup( def->default_value );
+		}
+	}
+
+	return( value );
+}
+
+/**
  * na_factory_object_set_defaults:
  * @object: this #NAIFactoryObject object.
  *

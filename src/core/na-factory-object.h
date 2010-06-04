@@ -53,6 +53,7 @@ NADataDef   *na_factory_object_get_data_def     ( const NAIFactoryObject *object
 NADataGroup *na_factory_object_get_data_groups  ( const NAIFactoryObject *object );
 void         na_factory_object_iter_on_boxed    ( const NAIFactoryObject *object, NAFactoryObjectIterBoxedFn pfn, void *data );
 
+gchar       *na_factory_object_get_default      ( NAIFactoryObject *object, const gchar *name );
 void         na_factory_object_set_defaults     ( NAIFactoryObject *object );
 
 void         na_factory_object_move_boxed       ( NAIFactoryObject *target, const NAIFactoryObject *source, NADataBoxed *boxed );

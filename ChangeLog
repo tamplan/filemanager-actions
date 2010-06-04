@@ -8,6 +8,16 @@
 
 2010-06-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-object-api.h:
+	* src/api/na-ifactory-object-data.h:
+	* src/core/na-object-profile-factory.c: Add NAFO_DATA_WORKING_DIR data.
+
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h (na_factory_object_get_default):
+	New	function.
+
+	* src/nact/nact-icommand-tab.c: Implement working directory.
+
 	* src/nact/nact-imimetypes-tab.c: 
 	Take advantage of new nact_match_list_xxx functions.
 

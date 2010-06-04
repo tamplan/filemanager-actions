@@ -39,6 +39,7 @@
 #include <api/na-object-api.h>
 
 #include <core/na-iprefs.h>
+#include <core/na-factory-object.h>
 
 #include "base-window.h"
 #include "base-iprefs.h"
@@ -62,6 +63,8 @@ struct NactICommandTabInterfacePrivate {
 #define IPREFS_LEGEND_DIALOG				"icommand-legend-dialog"
 #define IPREFS_COMMAND_CHOOSER				"icommand-command-chooser"
 #define IPREFS_FOLDER_URI					"icommand-folder-uri"
+#define IPREFS_WORKING_DIR_DIALOG			"icommand-working-dir-dialog"
+#define IPREFS_WORKING_DIR_URI				"icommand-working-dir-uri"
 
 /* a data set in the LegendDialog GObject
  */
@@ -94,6 +97,8 @@ static void       on_legend_clicked( GtkButton *button, NactICommandTab *instanc
 static void       on_parameters_changed( GtkEntry *entry, NactICommandTab *instance );
 static void       on_path_browse( GtkButton *button, NactICommandTab *instance );
 static void       on_path_changed( GtkEntry *entry, NactICommandTab *instance );
+static void       on_wdir_browse( GtkButton *button, NactICommandTab *instance );
+static void       on_wdir_changed( GtkEntry *entry, NactICommandTab *instance );
 static gchar     *parse_parameters( NactICommandTab *instance );
 static void       set_label_label( NactICommandTab *instance, const gchar *color );
 static void       update_example_label( NactICommandTab *instance, NAObjectProfile *profile );
@@ -204,8 +209,8 @@ void
 nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 {
 	static const gchar *thisfn = "nact_icommand_tab_runtime_init_toplevel";
-	GtkWidget *label_entry, *path_entry, *parameters_entry;
-	GtkButton *path_button, *legend_button;
+	GtkWidget *label_entry, *path_entry, *parameters_entry, *wdir_entry;
+	GtkButton *path_button, *legend_button, *wdir_button;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
@@ -246,6 +251,20 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 				G_OBJECT( legend_button ),
 				"clicked",
 				G_CALLBACK( on_legend_clicked ));
+
+		wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( wdir_entry ),
+				"changed",
+				G_CALLBACK( on_wdir_changed ));
+
+		wdir_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "CommandWorkingDirectoryButton" ));
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( wdir_button ),
+				"clicked",
+				G_CALLBACK( on_wdir_browse ));
 
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
@@ -315,8 +334,8 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 	NAObjectItem *item;
 	NAObjectProfile *profile;
 	gboolean enable_tab;
-	GtkWidget *label_entry, *path_entry, *parameters_entry;
-	gchar *label, *path, *parameters;
+	GtkWidget *label_entry, *path_entry, *parameters_entry, *wdir_entry;
+	gchar *label, *path, *parameters, *wdir;
 	gboolean editable;
 	GtkButton *path_button;
 	GtkButton *legend_button;
@@ -368,6 +387,14 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 
 		legend_button = get_legend_button( instance );
 		gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );
+
+		wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
+		wdir = profile ? na_object_get_working_dir( profile ) : g_strdup( "" );
+		wdir = wdir ? wdir : g_strdup( "" );
+		gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir );
+		g_free( wdir );
+		gtk_widget_set_sensitive( wdir_entry, profile != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( wdir_entry ), editable );
 
 		st_on_selection_change = FALSE;
 	}
@@ -594,7 +621,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
 		gtk_entry_set_text( GTK_ENTRY( path_entry ), filename );
-	    g_free (filename);
+	    g_free( filename );
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
@@ -623,6 +650,89 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 			na_object_set_path( edited, gtk_entry_get_text( entry ));
 			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 			update_example_label( instance, edited );
+		}
+	}
+}
+
+static void
+on_wdir_browse( GtkButton *button, NactICommandTab *instance )
+{
+	gboolean set_current_location = FALSE;
+	gchar *uri = NULL;
+	NactApplication *application;
+	NAObjectProfile *profile;
+	NAUpdater *updater;
+	GtkWindow *toplevel;
+	GtkWidget *dialog;
+	GtkWidget *wdir_entry;
+	const gchar *wdir;
+	gchar *wdir_uri;
+	gchar *default_value;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+	updater = nact_application_get_updater( application );
+	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
+
+	dialog = gtk_file_chooser_dialog_new(
+			_( "Choosing a working directory" ),
+			toplevel,
+			GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			NULL
+			);
+
+	base_iprefs_position_named_window( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_WORKING_DIR_DIALOG );
+
+	wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
+	wdir = gtk_entry_get_text( GTK_ENTRY( wdir_entry ));
+
+	if( wdir && strlen( wdir )){
+		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), wdir );
+
+	} else {
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				NULL );
+
+		default_value = na_factory_object_get_default( NA_IFACTORY_OBJECT( profile ), NAFO_DATA_WORKING_DIR );
+		uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_WORKING_DIR_URI, default_value );
+		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
+		g_free( uri );
+		g_free( default_value );
+	}
+
+	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
+		wdir_uri = gtk_file_chooser_get_uri( GTK_FILE_CHOOSER( dialog ));
+		gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir_uri );
+	    g_free( wdir_uri );
+	  }
+
+	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
+	nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_WORKING_DIR_URI, uri );
+	g_free( uri );
+
+	base_iprefs_save_named_window_position( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_WORKING_DIR_DIALOG );
+
+	gtk_widget_destroy( dialog );
+}
+
+static void
+on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
+{
+	NAObjectProfile *edited;
+
+	if( !st_on_selection_change ){
+
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+				NULL );
+
+		if( edited ){
+			na_object_set_working_dir( edited, gtk_entry_get_text( entry ));
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 		}
 	}
 }

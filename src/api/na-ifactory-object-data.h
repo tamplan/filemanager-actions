@@ -78,6 +78,7 @@ G_BEGIN_DECLS
 #define NAFO_DATA_DESCNAME					"na-factory-data-descname"
 #define NAFO_DATA_PATH						"na-factory-data-path"
 #define NAFO_DATA_PARAMETERS				"na-factory-data-parameters"
+#define NAFO_DATA_WORKING_DIR				"na-factory-data-working-dir"
 #define NAFO_DATA_EXECUTION_MODE			"na-factory-data-execution-mode"
 #define NAFO_DATA_STARTUP_NOTIFY			"na-factory-data-startup-notify"
 #define NAFO_DATA_STARTUP_WMCLASS			"na-factory-data-startup-wm-class"
