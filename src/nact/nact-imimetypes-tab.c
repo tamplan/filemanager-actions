@@ -32,9 +32,12 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include <api/na-object-api.h>
 
 #include "nact-main-tab.h"
+#include "nact-match-list.h"
 #include "nact-imimetypes-tab.h"
 
 /* private interface data
@@ -43,16 +46,20 @@ struct NactIMimetypesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+#define ITAB_NAME						"mimetypes"
+
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
-static gboolean st_on_selection_change = FALSE;
 
 static GType    register_type( void );
 static void     interface_base_init( NactIMimetypesTabInterface *klass );
 static void     interface_base_finalize( NactIMimetypesTabInterface *klass );
 
-static void     on_tab_updatable_selection_changed( NactIMimetypesTab *instance, gint count_selected );
-static gboolean tab_set_sensitive( NactIMimetypesTab *instance );
+static void     on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
+static void     on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
+
+static GSList  *get_mimetypes( void *context );
+static void     set_mimetypes( void *context, GSList *filters );
 
 GType
 nact_imimetypes_tab_get_type( void )
@@ -133,11 +140,26 @@ void
 nact_imimetypes_tab_initial_load_toplevel( NactIMimetypesTab *instance )
 {
 	static const gchar *thisfn = "nact_imimetypes_tab_initial_load_toplevel";
+	GtkWidget *list, *add, *remove;
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+		list = base_window_get_widget( BASE_WINDOW( instance ), "MimetypesTreeView" );
+		add = base_window_get_widget( BASE_WINDOW( instance ), "AddMimetypeButton" );
+		remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveMimetypeButton" );
+
+		nact_match_list_create_model(
+				BASE_WINDOW( instance ),
+				ITAB_NAME,
+				TAB_MIMETYPES,
+				list, add, remove,
+				( pget_filters ) get_mimetypes,
+				( pset_filters ) set_mimetypes,
+				_( "Mimetype filter" ));
 	}
 }
 
@@ -153,16 +175,25 @@ nact_imimetypes_tab_runtime_init_toplevel( NactIMimetypesTab *instance )
 {
 	static const gchar *thisfn = "nact_imimetypes_tab_runtime_init_toplevel";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
+				G_CALLBACK( on_tab_updatable_enable_tab ));
+
+		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 	}
 }
 
@@ -171,10 +202,11 @@ nact_imimetypes_tab_all_widgets_showed( NactIMimetypesTab *instance )
 {
 	static const gchar *thisfn = "nact_imimetypes_tab_all_widgets_showed";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	}
 }
 
@@ -189,44 +221,36 @@ nact_imimetypes_tab_dispose( NactIMimetypesTab *instance )
 {
 	static const gchar *thisfn = "nact_imimetypes_tab_dispose";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+		nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 	}
 }
 
 static void
-on_tab_updatable_selection_changed( NactIMimetypesTab *instance, gint count_selected )
+on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_on_tab_updatable_selection_changed";
-
-	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
-	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
-
-	if( st_initialized && !st_finalized ){
-
-		st_on_selection_change = TRUE;
-
-		tab_set_sensitive( instance );
-
-		st_on_selection_change = FALSE;
-	}
+	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
 }
 
-static gboolean
-tab_set_sensitive( NactIMimetypesTab *instance )
+static void
+on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item )
 {
-	NAObjectProfile *profile;
-	gboolean enable_tab;
+	nact_match_list_on_enable_tab( window, ITAB_NAME, item );
+}
 
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-			NULL );
+static GSList *
+get_mimetypes( void *context )
+{
+	return( na_object_get_mimetypes( context ));
+}
 
-	enable_tab = ( profile != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_MIMETYPES, enable_tab );
-
-	return( enable_tab );
+static void
+set_mimetypes( void *context, GSList *filters )
+{
+	na_object_set_mimetypes( context, filters );
 }

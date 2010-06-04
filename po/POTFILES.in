@@ -29,6 +29,8 @@ src/nact/nact.desktop.in
 src/nact/nact-export-ask.c
 src/nact/nact-export-format.c
 src/nact/nact-iaction-tab.c
+src/nact/nact-ibasenames-tab.c
+src/nact/nact-imimetypes-tab.c
 src/nact/nact-icommand-tab.c
 src/nact/nact-iconditions-tab.c
 src/nact/nact-ifolders-tab.c
@@ -37,6 +39,7 @@ src/nact/nact-main-menubar.c
 src/nact/nact-main-menubar-edit.c
 src/nact/nact-main-menubar-file.c
 src/nact/nact-main-window.c
+src/nact/nact-match-list.c
 src/nact/nact-preferences.ui
 src/nact/nact-providers-list.c
 src/nact/nact-schemes-list.c
