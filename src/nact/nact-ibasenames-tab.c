@@ -50,12 +50,13 @@ struct NactIBasenamesTabInterfacePrivate {
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
+static gboolean st_on_selection_change = FALSE;
 
 static GType   register_type( void );
 static void    interface_base_init( NactIBasenamesTabInterface *klass );
 static void    interface_base_finalize( NactIBasenamesTabInterface *klass );
 
-static void    on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance );
+static void    on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window );
 static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
 static void    on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
 
@@ -242,7 +243,7 @@ nact_ibasenames_tab_dispose( NactIBasenamesTab *instance )
 }
 
 static void
-on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
+on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window )
 {
 	NAObjectItem *item;
 	NAObjectProfile *profile;
@@ -253,7 +254,7 @@ on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 	if( !st_on_selection_change ){
 
 		g_object_get(
-				G_OBJECT( data->window ),
+				G_OBJECT( window ),
 				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
@@ -267,12 +268,12 @@ on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 
 			if( editable ){
 				na_object_set_matchcase( context, matchcase );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
 
 			} else {
-				g_signal_handlers_block_by_func(( gpointer ) button, on_matchcase_toggled, instance );
+				g_signal_handlers_block_by_func(( gpointer ) button, on_matchcase_toggled, window );
 				gtk_toggle_button_set_active( button, !matchcase );
-				g_signal_handlers_unblock_by_func(( gpointer ) button, on_matchcase_toggled, instance );
+				g_signal_handlers_unblock_by_func(( gpointer ) button, on_matchcase_toggled, window );
 			}
 		}
 	}
@@ -281,7 +282,11 @@ on_matchcase_toggled( GtkToggleButton *button, NactIConditionsTab *instance )
 static void
 on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 {
+	st_on_selection_change = TRUE;
+
 	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
+
+	st_on_selection_change = FALSE;
 }
 
 static void
