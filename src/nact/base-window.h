@@ -90,6 +90,7 @@ gboolean         base_window_yesno_dlg( const BaseWindow *window, GtkMessageType
 gulong           base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
 gulong           base_window_signal_connect_after( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
 gulong           base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const gchar *signal, GCallback fn );
+gulong           base_window_signal_connect_with_data( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn, void *user_data );
 
 G_END_DECLS
 

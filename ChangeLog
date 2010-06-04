@@ -6,6 +6,20 @@
 
 	* src/core/na-iabout.c: Update copyright notice.
 
+2010-06-04 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-match-list.c:
+	* src/nact/nact-match-list.h: New files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h (base_window_signal_connect_with_data):
+	New function.
+
+	* src/nact/nact-ibasenames-tab.c: 
+	Take advantage of new nact_match_list_xxx functions.
+
 2010-06-03 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-ibasenames-tab.c: Implement NactIBasenamesInterface interface.

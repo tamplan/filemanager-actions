@@ -162,8 +162,6 @@ G_BEGIN_DECLS
 
 #define na_object_set_path( obj, path )					na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PATH, ( const void * )( path ))
 #define na_object_set_parameters( obj, parms )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PARAMETERS, ( const void * )( parms ))
-#define na_object_set_basenames( obj, bnames )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_BASENAMES, ( const void * )( bnames ))
-#define na_object_set_matchcase( obj, match )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MATCHCASE, ( const void * ) GUINT_TO_POINTER( match ))
 #define na_object_set_isfile( obj, isfile )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISFILE, ( const void * ) GUINT_TO_POINTER( isfile ))
 #define na_object_set_isdir( obj, isdir )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISDIR, ( const void * ) GUINT_TO_POINTER( isdir ))
 #define na_object_set_multiple( obj, multiple )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MULTIPLE, ( const void * ) GUINT_TO_POINTER( multiple ))
@@ -189,6 +187,8 @@ G_BEGIN_DECLS
 
 #define na_object_set_mimetypes( obj, types )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES, ( const void * )( types ))
 #define na_object_set_all_mimetypes( obj, all )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ALL_MIMETYPES, ( const void * ) GUINT_TO_POINTER( all ))
+#define na_object_set_basenames( obj, bnames )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_BASENAMES, ( const void * )( bnames ))
+#define na_object_set_matchcase( obj, match )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MATCHCASE, ( const void * ) GUINT_TO_POINTER( match ))
 #define na_object_set_scheme( obj, scheme, add )		na_icontext_set_scheme( NA_ICONTEXT( obj ), ( const gchar * )( scheme ), ( add ))
 #define na_object_replace_folder( obj, old, new )		na_icontext_replace_folder( NA_ICONTEXT( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
 

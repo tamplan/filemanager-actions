@@ -132,10 +132,11 @@ nact_ischemes_tab_initial_load_toplevel( NactISchemesTab *instance )
 {
 	static const gchar *thisfn = "nact_ischemes_tab_initial_load_toplevel";
 
+	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
+
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 		nact_schemes_list_create_model( get_schemes_tree_view( instance ), TRUE );
 	}

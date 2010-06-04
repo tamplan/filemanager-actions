@@ -1372,6 +1372,22 @@ base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const
 	return( handler_id );
 }
 
+gulong
+base_window_signal_connect_with_data( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn, void *user_data )
+{
+	gulong handler_id = 0;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), ( gulong ) 0 );
+
+	if( !window->private->dispose_has_run ){
+
+		handler_id = g_signal_connect( instance, signal, fn, user_data );
+		record_connected_signal( window, instance, handler_id );
+	}
+
+	return( handler_id );
+}
+
 static void
 record_connected_signal( BaseWindow *window, GObject *instance, gulong handler_id )
 {
