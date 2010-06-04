@@ -66,8 +66,6 @@ void    nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance );
 void    nact_ischemes_tab_all_widgets_showed   ( NactISchemesTab *instance );
 void    nact_ischemes_tab_dispose              ( NactISchemesTab *instance );
 
-GSList *nact_ischemes_tab_get_schemes          ( NactISchemesTab *instance );
-
 G_END_DECLS
 
 #endif /* __NACT_ISCHEMES_TAB_H__ */

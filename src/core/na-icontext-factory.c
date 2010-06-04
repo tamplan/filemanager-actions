@@ -264,7 +264,7 @@ NADataDef data_def_conditions [] = {
 					"or when targeting the special 'x-nautilus-desktop' scheme.\n" \
 					"Defaults to 'file'." ),
 				NAFD_TYPE_STRING_LIST,
-				"[file]",
+				"[*]",
 				FALSE,
 				TRUE,
 				TRUE,

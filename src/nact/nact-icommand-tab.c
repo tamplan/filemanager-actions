@@ -756,6 +756,9 @@ static gchar *
 parse_parameters( NactICommandTab *instance )
 {
 	GString *tmp_string = g_string_new( "" );
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
 
 	/* i18n notes: example strings for the command preview */
 	gchar *ex_path = _( "/path/to" );
@@ -799,7 +802,15 @@ parse_parameters( NactICommandTab *instance )
 	is_dir = TRUE;
 	accept_multiple = TRUE;
 
-	scheme_list = nact_ischemes_tab_get_schemes( NACT_ISCHEMES_TAB( instance ));
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			NULL );
+
+	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+	scheme_list = na_object_get_schemes( context );
 
 	separator = g_strdup_printf( " %s/", ex_path );
 	start = g_strdup_printf( "%s/", ex_path );

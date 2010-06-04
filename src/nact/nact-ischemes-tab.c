@@ -32,11 +32,12 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include <api/na-object-api.h>
 
-#include "base-window.h"
 #include "nact-main-tab.h"
-#include "nact-schemes-list.h"
+#include "nact-match-list.h"
 #include "nact-ischemes-tab.h"
 
 /* private interface data
@@ -45,18 +46,20 @@ struct NactISchemesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+#define ITAB_NAME						"schemes"
+
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
-static GType         register_type( void );
-static void          interface_base_init( NactISchemesTabInterface *klass );
-static void          interface_base_finalize( NactISchemesTabInterface *klass );
+static GType   register_type( void );
+static void    interface_base_init( NactISchemesTabInterface *klass );
+static void    interface_base_finalize( NactISchemesTabInterface *klass );
 
-static void          runtime_init_connect_signals( NactISchemesTab *instance, GtkTreeView *listview );
-static void          on_tab_updatable_selection_changed( NactISchemesTab *instance, gint count_selected );
-static void          on_tab_updatable_enable_tab( NactISchemesTab *instance, NAObjectItem *item );
-static gboolean      tab_set_sensitive( NactISchemesTab *instance );
-static GtkTreeView  *get_schemes_tree_view( NactISchemesTab *instance );
+static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
+static void    on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
+
+static GSList *get_schemes( void *context );
+static void    set_schemes( void *context, GSList *filters );
 
 GType
 nact_ischemes_tab_get_type( void )
@@ -131,6 +134,7 @@ void
 nact_ischemes_tab_initial_load_toplevel( NactISchemesTab *instance )
 {
 	static const gchar *thisfn = "nact_ischemes_tab_initial_load_toplevel";
+	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
@@ -138,7 +142,19 @@ nact_ischemes_tab_initial_load_toplevel( NactISchemesTab *instance )
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-		nact_schemes_list_create_model( get_schemes_tree_view( instance ), TRUE );
+		list = base_window_get_widget( BASE_WINDOW( instance ), "SchemesTreeView" );
+		add = base_window_get_widget( BASE_WINDOW( instance ), "AddSchemeButton" );
+		remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveSchemeButton" );
+
+		nact_match_list_create_model(
+				BASE_WINDOW( instance ),
+				ITAB_NAME,
+				TAB_SCHEMES,
+				list, add, remove,
+				( pget_filters ) get_schemes,
+				( pset_filters ) set_schemes,
+				NULL,
+				_( "Scheme filter" ));
 	}
 }
 
@@ -146,28 +162,12 @@ void
 nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance )
 {
 	static const gchar *thisfn = "nact_ischemes_tab_runtime_init_toplevel";
-	GtkTreeView *listview;
+
+	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
-
-		listview = get_schemes_tree_view( instance );
-		runtime_init_connect_signals( instance, listview );
-		nact_schemes_list_init_view( listview, BASE_WINDOW( instance ));
-	}
-}
-
-static void
-runtime_init_connect_signals( NactISchemesTab *instance, GtkTreeView *listview )
-{
-	static const gchar *thisfn = "nact_ischemes_tab_runtime_init_connect_signals";
-
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p, listview=%p", thisfn, ( void * ) instance, ( void * ) listview );
-		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
@@ -180,6 +180,8 @@ runtime_init_connect_signals( NactISchemesTab *instance, GtkTreeView *listview )
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
 				G_CALLBACK( on_tab_updatable_enable_tab ));
+
+		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 	}
 }
 
@@ -188,10 +190,11 @@ nact_ischemes_tab_all_widgets_showed( NactISchemesTab *instance )
 {
 	static const gchar *thisfn = "nact_ischemes_tab_all_widgets_showed";
 
+	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
+
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 	}
 }
 
@@ -200,112 +203,36 @@ nact_ischemes_tab_dispose( NactISchemesTab *instance )
 {
 	static const gchar *thisfn = "nact_ischemes_tab_dispose";
 
+	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
+
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
-		nact_schemes_list_dispose( BASE_WINDOW( instance ));
-	}
-}
-
-/**
- * Returns selected schemes as a list of strings.
- * The caller should call na_core_utils_slist_free() after use.
- */
-GSList *
-nact_ischemes_tab_get_schemes( NactISchemesTab *instance )
-{
-	GSList *list;
-
-	list = NULL;
-	g_return_val_if_fail( NACT_IS_ISCHEMES_TAB( instance ), list );
-
-	if( st_initialized && !st_finalized ){
-
-		list = nact_schemes_list_get_schemes( get_schemes_tree_view( instance ));
-	}
-
-	return( list );
-}
-
-static void
-on_tab_updatable_selection_changed( NactISchemesTab *instance, gint count_selected )
-{
-	static const gchar *thisfn = "nact_ischemes_tab_on_tab_updatable_selection_changed";
-	NAObjectItem *item;
-	NAObjectProfile *profile;
-	GSList *schemes;
-	gboolean editable;
-
-	schemes = NULL;
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
-		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
-
-		g_object_get(
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-				TAB_UPDATABLE_PROP_EDITABLE, &editable,
-				NULL );
-
-		tab_set_sensitive( instance );
-
-		if( profile ){
-			schemes = na_object_get_schemes( profile );
-		}
-
-		nact_schemes_list_setup_values(
-				get_schemes_tree_view( instance ),
-				BASE_WINDOW( instance ),
-				schemes,
-				item && NA_IS_OBJECT_ACTION( item ),
-				editable );
+		nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 	}
 }
 
 static void
-on_tab_updatable_enable_tab( NactISchemesTab *instance, NAObjectItem *item )
+on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 {
-	static const gchar *thisfn = "nact_ischemes_tab_on_tab_updatable_enable_tab";
-
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
-		g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
-
-		tab_set_sensitive( instance );
-	}
+	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
 }
 
-static gboolean
-tab_set_sensitive( NactISchemesTab *instance )
+static void
+on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item )
 {
-	NAObjectItem *item;
-	NAObjectProfile *profile;
-	gboolean enable_tab;
-
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-			NULL );
-
-	enable_tab = ( profile != NULL && na_object_is_target_selection( NA_OBJECT_ACTION( item )));
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES, enable_tab );
-
-	return( enable_tab );
+	nact_match_list_on_enable_tab( window, ITAB_NAME, item );
 }
 
-static GtkTreeView *
-get_schemes_tree_view( NactISchemesTab *instance )
+static GSList *
+get_schemes( void *context )
 {
-	GtkWidget *treeview;
+	return( na_object_get_schemes( context ));
+}
 
-	treeview = base_window_get_widget( BASE_WINDOW( instance ), "SchemesTreeView" );
-	g_assert( GTK_IS_TREE_VIEW( treeview ));
-
-	return( GTK_TREE_VIEW( treeview ));
+static void
+set_schemes( void *context, GSList *filters )
+{
+	na_object_set_schemes( context, filters );
 }
