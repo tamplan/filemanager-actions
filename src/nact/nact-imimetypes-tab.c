@@ -51,15 +51,15 @@ struct NactIMimetypesTabInterfacePrivate {
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
-static GType    register_type( void );
-static void     interface_base_init( NactIMimetypesTabInterface *klass );
-static void     interface_base_finalize( NactIMimetypesTabInterface *klass );
+static GType   register_type( void );
+static void    interface_base_init( NactIMimetypesTabInterface *klass );
+static void    interface_base_finalize( NactIMimetypesTabInterface *klass );
 
-static void     on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
-static void     on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
+static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
+static void    on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
 
-static GSList  *get_mimetypes( void *context );
-static void     set_mimetypes( void *context, GSList *filters );
+static GSList *get_mimetypes( void *context );
+static void    set_mimetypes( void *context, GSList *filters );
 
 GType
 nact_imimetypes_tab_get_type( void )
@@ -159,6 +159,7 @@ nact_imimetypes_tab_initial_load_toplevel( NactIMimetypesTab *instance )
 				list, add, remove,
 				( pget_filters ) get_mimetypes,
 				( pset_filters ) set_mimetypes,
+				NULL,
 				_( "Mimetype filter" ));
 	}
 }

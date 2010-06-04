@@ -43,11 +43,28 @@ G_BEGIN_DECLS
 
 typedef GSList * ( *pget_filters )( void * );
 typedef void     ( *pset_filters )( void *, GSList * );
+typedef void     ( *pon_add_callback )( GtkButton *button, void *user_data );
+
+typedef struct {
+	BaseWindow      *window;
+	guint            tab_id;
+	GtkTreeView     *listview;
+	GtkWidget       *addbutton;
+	GtkWidget       *removebutton;
+	pget_filters     pget;
+	pset_filters     pset;
+	pon_add_callback pon_add;
+	gchar           *item_header;
+	gboolean         editable;
+	guint            sort_column;
+	guint            sort_order;
+}
+	MatchListStr;
 
 void  nact_match_list_create_model        ( BaseWindow *window, const gchar *tab_name,
 		guint tab_id,
 		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
-		pget_filters pget, pset_filters pset,
+		pget_filters pget, pset_filters pset, pon_add_callback pon_add,
 		const gchar *item_header );
 
 void  nact_match_list_init_view           ( BaseWindow *window, const gchar *tab_name );
@@ -57,6 +74,8 @@ void  nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab
 
 void  nact_match_list_on_enable_tab       ( BaseWindow *window, const gchar *tab_name,
 		NAObjectItem *item );
+
+void  nact_match_list_insert_row( MatchListStr *data, const gchar *filter, gboolean match, gboolean not_match );
 
 void  nact_match_list_dispose             ( BaseWindow *window, const gchar *tab_name );
 

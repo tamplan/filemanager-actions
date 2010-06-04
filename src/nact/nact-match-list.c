@@ -42,21 +42,6 @@
 #include "nact-main-tab.h"
 #include "nact-match-list.h"
 
-typedef struct {
-	BaseWindow  *window;
-	guint        tab_id;
-	GtkTreeView *listview;
-	GtkWidget   *addbutton;
-	GtkWidget   *removebutton;
-	pget_filters pget;
-	pset_filters pset;
-	gchar       *item_header;
-	gboolean     editable;
-	guint        sort_column;
-	guint        sort_order;
-}
-	MatchListStr;
-
 /* column ordering
  */
 enum {
@@ -79,6 +64,7 @@ static void     on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer,
 static void     on_remove_filter_clicked( GtkButton *button, MatchListStr *data );
 static void     on_selection_changed( GtkTreeSelection *selection, MatchListStr *data );
 
+static void     add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix );
 static void     delete_current_row( MatchListStr *data );
 static void     edit_inline( MatchListStr *data );
 static void     insert_new_row( MatchListStr *data );
@@ -96,6 +82,7 @@ static gboolean tab_set_sensitive( MatchListStr *data );
  * @removebutton: the #GtkButton widget.
  * @pget: a pointer to the function to get the list of filters.
  * @pset: a pointer to the function to set the list of filters.
+ * @pon_add: an optional pointer to a function which handles the Add button.
  * @item_header: the title of the item header.
  *
  * Creates the tree model.
@@ -104,7 +91,7 @@ void
 nact_match_list_create_model( BaseWindow *window,
 		const gchar *tab_name, guint tab_id,
 		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
-		pget_filters pget, pset_filters pset,
+		pget_filters pget, pset_filters pset, pon_add_callback pon_add,
 		const gchar *item_header )
 {
 	MatchListStr *data;
@@ -121,6 +108,7 @@ nact_match_list_create_model( BaseWindow *window,
 	data->removebutton = removebutton;
 	data->pget = pget;
 	data->pset = pset;
+	data->pon_add = pon_add;
 	data->item_header = g_strdup( item_header );
 	data->editable = FALSE;
 	data->sort_column = 0;
@@ -244,7 +232,7 @@ nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
 			window,
 			G_OBJECT( data->addbutton ),
 			"clicked",
-			G_CALLBACK( on_add_filter_clicked ),
+			data->pon_add ? G_CALLBACK( data->pon_add ) : G_CALLBACK( on_add_filter_clicked ),
 			data );
 
 	base_window_signal_connect_with_data(
@@ -368,6 +356,48 @@ nact_match_list_on_enable_tab( BaseWindow *window, const gchar *tab_name, NAObje
 	g_return_if_fail( data != NULL );
 
 	tab_set_sensitive( data );
+}
+
+/**
+ * nact_match_list_insert_row:
+ * @data: the #MatchListStr structure.
+ * @filter: the item to add.
+ * @match: whether the 'must match' column is checked.
+ * @not_match: whether the 'must not match' column is checked.
+ *
+ * Add a new row to the list view.
+ */
+void
+nact_match_list_insert_row( MatchListStr *data, const gchar *filter, gboolean match, gboolean not_match )
+{
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	GtkTreeViewColumn *column;
+
+	g_return_if_fail( !( match && not_match ));
+
+	model = gtk_tree_view_get_model( data->listview );
+
+	gtk_list_store_insert_with_values( GTK_LIST_STORE( model ), &iter, 0,
+			/* i18n notes : new filter for a new row in a match/no matchlist */
+			ITEM_COLUMN, filter,
+			MUST_MATCH_COLUMN, match,
+			MUST_NOT_MATCH_COLUMN, not_match,
+			-1 );
+
+	path = gtk_tree_model_get_path( model, &iter );
+	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
+	gtk_tree_view_set_cursor( data->listview, path, column, TRUE );
+	gtk_tree_path_free( path );
+
+	if( match ){
+		add_filter( data, filter, "" );
+	}
+
+	if( not_match ){
+		add_filter( data, filter, "!" );
+	}
 }
 
 /**
@@ -636,6 +666,34 @@ on_selection_changed( GtkTreeSelection *selection, MatchListStr *data )
 }
 
 static void
+add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix )
+{
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	GSList *filters;
+	gchar *to_add;
+
+	g_object_get(
+			G_OBJECT( data->window ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			NULL );
+
+	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+	if( context ){
+		filters = ( *data->pget )( context );
+		to_add = g_strdup_printf( "%s%s", prefix, filter );
+		filters = g_slist_prepend( filters, to_add );
+		( *data->pset )( context, filters );
+		na_core_utils_slist_free( filters );
+
+		g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	}
+}
+
+static void
 delete_current_row( MatchListStr *data )
 {
 	GtkTreeSelection *selection;
@@ -719,24 +777,7 @@ edit_inline( MatchListStr *data )
 static void
 insert_new_row( MatchListStr *data )
 {
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	GtkTreePath *path;
-	GtkTreeViewColumn *column;
-
-	model = gtk_tree_view_get_model( data->listview );
-
-	gtk_list_store_insert_with_values( GTK_LIST_STORE( model ), &iter, 0,
-			/* i18n notes : new filter for a new row in a match/no matchlist */
-			ITEM_COLUMN, _( "new-filter" ),
-			MUST_MATCH_COLUMN, FALSE,
-			MUST_NOT_MATCH_COLUMN, FALSE,
-			-1 );
-
-	path = gtk_tree_model_get_path( model, &iter );
-	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
-	gtk_tree_view_set_cursor( data->listview, path, column, TRUE );
-	gtk_tree_path_free( path );
+	nact_match_list_insert_row( data, _( "new-filter" ), FALSE, FALSE );
 }
 
 static void

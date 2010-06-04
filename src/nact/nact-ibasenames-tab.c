@@ -51,15 +51,15 @@ struct NactIBasenamesTabInterfacePrivate {
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
-static GType    register_type( void );
-static void     interface_base_init( NactIBasenamesTabInterface *klass );
-static void     interface_base_finalize( NactIBasenamesTabInterface *klass );
+static GType   register_type( void );
+static void    interface_base_init( NactIBasenamesTabInterface *klass );
+static void    interface_base_finalize( NactIBasenamesTabInterface *klass );
 
-static void     on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
-static void     on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
+static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
+static void    on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
 
-static GSList  *get_basenames( void *context );
-static void     set_basenames( void *context, GSList *filters );
+static GSList *get_basenames( void *context );
+static void    set_basenames( void *context, GSList *filters );
 
 GType
 nact_ibasenames_tab_get_type( void )
@@ -159,6 +159,7 @@ nact_ibasenames_tab_initial_load_toplevel( NactIBasenamesTab *instance )
 				list, add, remove,
 				( pget_filters ) get_basenames,
 				( pset_filters ) set_basenames,
+				NULL,
 				_( "Basename filter" ));
 	}
 }
