@@ -6,6 +6,13 @@
 
 	* src/core/na-iabout.c: Update copyright notice.
 
+2010-06-07 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-add-scheme.ui: New file.
+
+	* po/POTFILES.in:
+	* src/nact/Makefile.am: Updated accordingly.
+
 2010-06-04 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-object-api.h: Reorganization.

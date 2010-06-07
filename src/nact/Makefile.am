@@ -171,6 +171,7 @@ nautilus_actions_config_tool_LDADD = \
 pkgdata_DATA = \
 	nautilus-actions-config-tool.actions				\
 	nautilus-actions-maintainer.actions					\
+	nact-add-scheme.ui									\
 	nact-assistant-export.ui							\
 	nact-preferences.ui									\
 	nautilus-actions-config-tool.ui						\
