@@ -67,7 +67,7 @@ static GType   register_type( void );
 static void    interface_base_init( NactIFoldersTabInterface *klass );
 static void    interface_base_finalize( NactIFoldersTabInterface *klass );
 
-static void    on_add_folder_clicked( GtkButton *button, MatchListStr *data );
+static void    on_browse_folder_clicked( GtkButton *button, BaseWindow *window );
 static void    on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_selected );
 static void    on_tab_updatable_enable_tab( NactIFoldersTab *instance, NAObjectItem *item );
 
@@ -166,7 +166,6 @@ nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance )
 				list, add, remove,
 				( pget_filters ) get_folders,
 				( pset_filters ) set_folders,
-				( pon_add_callback ) on_add_folder_clicked,
 				_( "Folder filter" ));
 	}
 }
@@ -175,6 +174,7 @@ void
 nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance )
 {
 	static const gchar *thisfn = "nact_ifolders_tab_runtime_init_toplevel";
+	GtkWidget *button;
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
@@ -195,6 +195,13 @@ nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance )
 				G_CALLBACK( on_tab_updatable_enable_tab ));
 
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( button ),
+				"clicked",
+				G_CALLBACK( on_browse_folder_clicked ));
 	}
 }
 
@@ -227,7 +234,7 @@ nact_ifolders_tab_dispose( NactIFoldersTab *instance )
 }
 
 static void
-on_add_folder_clicked( GtkButton *button, MatchListStr *data )
+on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 {
 #if 0
 	/* this is the code I sent to gtk-app-devel list
@@ -261,7 +268,7 @@ on_add_folder_clicked( GtkButton *button, MatchListStr *data )
 	NAUpdater *updater;
 
 	path = NULL;
-	toplevel = base_window_get_toplevel( data->window );
+	toplevel = base_window_get_toplevel( window );
 
 	/* i18n: title of the FileChoose dialog when selecting an URI which
 	 * will be compare to Nautilus 'current_folder'
@@ -273,10 +280,10 @@ on_add_folder_clicked( GtkButton *button, MatchListStr *data )
 			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 			NULL );
 
-	application = NACT_APPLICATION( base_window_get_application( data->window ));
+	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
 
-	base_iprefs_position_named_window( data->window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
+	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
 
 	path = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDERS_PATH, "/" );
 	if( path && g_utf8_strlen( path, -1 )){
@@ -286,14 +293,14 @@ on_add_folder_clicked( GtkButton *button, MatchListStr *data )
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
-		nact_iprefs_write_string( data->window, IPREFS_FOLDERS_PATH, path );
+		nact_iprefs_write_string( window, IPREFS_FOLDERS_PATH, path );
 
-		nact_match_list_insert_row( data, path, FALSE, FALSE );
+		nact_match_list_insert_row( window, ITAB_NAME, path, FALSE, FALSE );
 
 		g_free( path );
 	}
 
-	base_iprefs_save_named_window_position( data->window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
+	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
 
 	gtk_widget_destroy( dialog );
 }

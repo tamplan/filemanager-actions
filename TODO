@@ -477,3 +477,6 @@ Parameter 	Description
   when version is recorded (as 1.4.1 or 2.0) then schemes is reliable
   when version is not recorded, it is a 2.30 serie, and scheme is not recorded when default (i.e. file)
   do not try to force anything than that, but this will have to be documented
+
+- ui.enhancement: let the user edit the current default schemes 
+  when adding from defaults for a #NAIContext

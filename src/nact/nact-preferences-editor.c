@@ -289,7 +289,7 @@ on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	nact_export_format_init_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_PREFERENCES );
 
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
-	nact_schemes_list_create_model( listview, FALSE );
+	nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
 
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
 	nact_providers_list_create_model( listview );
@@ -406,7 +406,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	/* fifth tab: default schemes
 	 */
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
-	nact_schemes_list_init_view( listview, BASE_WINDOW( editor ));
+	nact_schemes_list_init_view( listview, BASE_WINDOW( editor ), NULL, NULL );
 
 	/* sixth tab: I/O providers priorities
 	 */
@@ -437,6 +437,8 @@ on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data )
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
 	gtk_notebook_set_current_page( notebook, 0 );
+
+	nact_schemes_list_show_all( BASE_WINDOW( editor ));
 }
 
 static void

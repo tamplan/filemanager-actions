@@ -70,6 +70,8 @@ nautilus_actions_config_tool_SOURCES = \
 	egg-sm-client-xsmp.c								\
 	egg-tree-multi-dnd.c								\
 	egg-tree-multi-dnd.h								\
+	nact-add-scheme-dialog.c							\
+	nact-add-scheme-dialog.h							\
 	nact-application.c									\
 	nact-application.h									\
 	nact-assistant-export.c								\

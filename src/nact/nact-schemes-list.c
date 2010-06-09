@@ -46,83 +46,91 @@
 #include "nact-main-tab.h"
 #include "nact-schemes-list.h"
 
-/* column ordering
+/* data attached to the treeview widget on initial load
+ * at this time, only treeview and mode are set
+ * on runtime init, the current window is associated to the widget,
+ *  and so, indirectly, to this data
+ * at this time, window is set
+ */
+typedef struct {
+	GtkTreeView        *treeview;		/* set when allocating the data */
+	guint               mode;			/* set when creating the model */
+	BaseWindow         *window;			/* set when initializating the view */
+	pf_new_selection_cb pf_on_sel_changed;
+	void               *user_data;
+}
+	SchemesListData;
+
+/* column ordering in the model
  */
 enum {
-	SCHEMES_CHECKBOX_COLUMN = 0,
-	SCHEMES_KEYWORD_COLUMN,
+	SCHEMES_KEYWORD_COLUMN = 0,
 	SCHEMES_DESC_COLUMN,
+	SCHEMES_ALREADY_USED_COLUMN,
 	SCHEMES_N_COLUMN
 };
 
-#define SCHEMES_LIST_FOR_ACTION			"nact-schemes-list-for-action"
-#define SCHEMES_LIST_EDITABLE			"nact-schemes-list-editable"
+#define SCHEMES_LIST_DATA				"nact-schemes-list-data"
 #define SCHEMES_LIST_TREEVIEW			"nact-schemes-list-treeview"
 
-static gboolean st_on_selection_change = FALSE;
+static void             init_view_setup_defaults( SchemesListData *data );
+static GSList          *init_view_get_default_list( SchemesListData *data );
+static GSList          *init_view_get_default_default_list( SchemesListData *data );
+static void             init_view_connect_signals( SchemesListData *data );
+static void             init_view_select_first_row( SchemesListData *data );
 
-static void       init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window );
-static GSList    *get_default_schemes_list( BaseWindow *window );
-static GSList    *get_default_default_schemes_list( BaseWindow *window );
-static void       init_view_connect_signals( GtkTreeView *treeview, BaseWindow *window );
-static void       init_view_select_first_row( GtkTreeView *treeview );
+static gboolean         setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList *schemes );
 
-static void       iter_for_setup( gchar *scheme, GtkTreeModel *model );
-static gboolean   iter_for_get( GtkTreeModel* scheme_model, GtkTreePath *path, GtkTreeIter* iter, GSList **schemes_list );
-static GSList    *get_list_schemes( GtkTreeView *treeview );
-static gboolean   get_list_schemes_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList **list );
+static GSList          *get_list_schemes( GtkTreeView *treeview );
+static gboolean         get_list_schemes_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList **list );
 
-static gboolean   on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window );
-static void       on_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
-static void       on_add_clicked( GtkButton *button, BaseWindow *window );
-static void       on_remove_clicked( GtkButton *button, BaseWindow *window );
-static void       on_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, BaseWindow *window );
-static void       on_keyword_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, BaseWindow *window );
-static void       on_active_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window );
+static gboolean         on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window );
+static void             on_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
+static void             on_add_clicked( GtkButton *button, BaseWindow *window );
+static void             on_remove_clicked( GtkButton *button, BaseWindow *window );
+static void             on_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, BaseWindow *window );
+static void             on_keyword_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, BaseWindow *window );
 
-static void       edit_cell( BaseWindow *window, const gchar *path_string, const gchar *text, gint column, gboolean *state, gchar **old_text );
-static void       edit_inline( BaseWindow *window );
-static void       insert_new_row( BaseWindow *window );
-static void       delete_row( BaseWindow *window );
+static void             edit_cell( BaseWindow *window, const gchar *path_string, const gchar *text, gint column, gboolean *state, gchar **old_text );
+static void             edit_inline( BaseWindow *window );
+static void             insert_new_row( BaseWindow *window );
+static void             delete_row( BaseWindow *window );
+static void             display_keyword( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data );
+static void             display_description( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data );
+static void             display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data, guint column_id );
 
-static GtkButton *get_add_button( BaseWindow *window );
-static GtkButton *get_remove_button( BaseWindow *window );
+static GtkButton       *get_add_button( BaseWindow *window );
+static GtkButton       *get_remove_button( BaseWindow *window );
+static SchemesListData *get_schemes_list_data( GtkTreeView *treeview );
 
 /**
  * nact_schemes_list_create_schemes_list:
  * @treeview: the #GtkTreeView.
- * @for_action: whether we are opening this listview as properties for
- *  an action, or just as a simple schemes list for preferences edition.
- *  In this later case, we don't display the 'active scheme' checkbox.
+ * @mode: whether we are opening this listview for preferences edition,
+ *  or to add a new scheme from the default list.
  *
  * Create the treeview model when initially loading the widget from
- * the UI manager.
+ * the UI manager. Associates the SchemesListData structure to the widget.
  */
 void
-nact_schemes_list_create_model( GtkTreeView *treeview, gboolean for_action )
+nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
 {
 	static const char *thisfn = "nact_schemes_list_create_model";
 	GtkListStore *model;
-	GtkCellRenderer *toggled_cell;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *text_cell;
 	GtkTreeSelection *selection;
+	SchemesListData *data;
 
-	g_debug( "%s: treeview=%p, for_action=%s", thisfn, ( void * ) treeview, for_action ? "True":"False" );
 	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
+	g_debug( "%s: treeview=%p, mode=%d", thisfn, ( void * ) treeview, mode );
 
-	model = gtk_list_store_new( SCHEMES_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING );
+	data = get_schemes_list_data( treeview );
+	data->mode = mode;
+
+	model = gtk_list_store_new( SCHEMES_N_COLUMN, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN );
 	gtk_tree_view_set_model( treeview, GTK_TREE_MODEL( model ));
 	g_object_unref( model );
-
-	toggled_cell = gtk_cell_renderer_toggle_new();
-	column = gtk_tree_view_column_new_with_attributes(
-			"scheme-selected",
-			toggled_cell,
-			"active", SCHEMES_CHECKBOX_COLUMN,
-			NULL );
-	gtk_tree_view_append_column( treeview, column );
-	g_object_set( G_OBJECT( column ), "visible", GUINT_TO_POINTER( for_action ), NULL );
 
 	text_cell = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(
@@ -132,7 +140,8 @@ nact_schemes_list_create_model( GtkTreeView *treeview, gboolean for_action )
 			NULL );
 	gtk_tree_view_append_column( treeview, column );
 	gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), SCHEMES_KEYWORD_COLUMN, GTK_SORT_ASCENDING );
-	nact_gtk_utils_set_editable( GTK_OBJECT( column ), TRUE );
+	gtk_tree_view_column_set_cell_data_func(
+			column, text_cell, ( GtkTreeCellDataFunc ) display_keyword, data, NULL );
 
 	text_cell = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(
@@ -141,70 +150,77 @@ nact_schemes_list_create_model( GtkTreeView *treeview, gboolean for_action )
 			"text", SCHEMES_DESC_COLUMN,
 			NULL );
 	gtk_tree_view_append_column( treeview, column );
-	nact_gtk_utils_set_editable( GTK_OBJECT( column ), !for_action );
+	gtk_tree_view_column_set_cell_data_func(
+			column, text_cell, ( GtkTreeCellDataFunc ) display_description, data, NULL );
 
 	gtk_tree_view_set_headers_visible( treeview, FALSE );
 
 	selection = gtk_tree_view_get_selection( treeview );
 	gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
-
-	g_object_set_data( G_OBJECT( treeview ), SCHEMES_LIST_FOR_ACTION, GUINT_TO_POINTER( for_action ));
 }
 
 /**
  * nact_schemes_list_init_view:
  * @treeview: the #GtkTreeView.
  * @window: the parent #BaseWindow which embeds the view.
+ * @pf: a callback function which will be called on selection change.
+ * @user_data: user data to be passed to the callback function.
  *
- * Connects signals at runtime initialization of the widget, and setup
- * current default values.
+ * Connects signals at runtime initialization of the widget, and displays
+ * the current default list of schemes.
  *
- * This is the only initialization needed when editing the default
- * schemes preferences. Contrarily, editing a #NAObjetItem schemes
- * properties also requires #nact_schemes_list_setup_values().
+ * When mode is for preferences, this is all that is required for runtime
+ * initialization.
+ *
+ * When mode is for add from defaults, i.e. when editing #NAIContext schemes
+ * conditions, then #nact_schemes_list_setup_values() must also be called in
+ * order to actually setup the already used schemes.
  */
 void
-nact_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window )
+nact_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window, pf_new_selection_cb pf, void *user_data )
 {
 	static const gchar *thisfn = "nact_schemes_list_init_view";
-	GtkButton *button;
+	SchemesListData *data;
 
-	g_debug( "%s: treeview=%p, window=%p", thisfn, ( void * ) treeview, ( void * ) window );
+	g_debug( "%s: treeview=%p, window=%p",
+			thisfn,
+			( void * ) treeview,
+			( void * ) window );
+
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
 
 	g_object_set_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW, treeview );
-	g_object_set_data( G_OBJECT( treeview ), SCHEMES_LIST_EDITABLE, GUINT_TO_POINTER( TRUE ));
 
-	init_view_setup_defaults( treeview, window );
-	init_view_connect_signals( treeview, window );
+	data = get_schemes_list_data( treeview );
+	data->window = window;
+	data->pf_on_sel_changed = pf;
+	data->user_data = user_data;
 
-	button = get_add_button( window );
-	gtk_widget_set_sensitive( GTK_WIDGET( button ), TRUE );
-
-	init_view_select_first_row( treeview );
+	init_view_setup_defaults( data );
+	init_view_connect_signals( data );
 }
 
 static void
-init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window )
+init_view_setup_defaults( SchemesListData *data )
 {
 	GtkListStore *model;
 	GSList *schemes, *iter;
 	GtkTreeIter row;
 	gchar **tokens;
 
-	model = GTK_LIST_STORE( gtk_tree_view_get_model( treeview ));
+	model = GTK_LIST_STORE( gtk_tree_view_get_model( data->treeview ));
 
-	schemes = get_default_schemes_list( window );
+	schemes = init_view_get_default_list( data );
 
 	for( iter = schemes ; iter ; iter = iter->next ){
 
 		tokens = g_strsplit(( gchar * ) iter->data, "|", 2 );
 		gtk_list_store_append( model, &row );
 		gtk_list_store_set( model, &row,
-				SCHEMES_CHECKBOX_COLUMN, FALSE,
 				SCHEMES_KEYWORD_COLUMN, tokens[0],
 				SCHEMES_DESC_COLUMN, tokens[1],
+				SCHEMES_ALREADY_USED_COLUMN, FALSE,
 				-1 );
 		g_strfreev( tokens );
 	}
@@ -217,24 +233,25 @@ init_view_setup_defaults( GtkTreeView *treeview, BaseWindow *window )
  * the returned list must be released with #na_core_utils_slist_free()
  */
 static GSList *
-get_default_schemes_list( BaseWindow *window )
+init_view_get_default_list( SchemesListData *data )
 {
 	GSList *list = NULL;
 	NactApplication *application;
 	NAUpdater *updater;
 
-	application = NACT_APPLICATION( base_window_get_application( window ));
+	application = NACT_APPLICATION( base_window_get_application( data->window ));
 	updater = nact_application_get_updater( application );
 	list = na_iprefs_read_string_list( NA_IPREFS( updater ), "schemes", NULL );
+
 	if( !list ){
-		list = get_default_default_schemes_list( window );
+		list = init_view_get_default_default_list( data );
 	}
 
 	return( list );
 }
 
 static GSList *
-get_default_default_schemes_list( BaseWindow *window )
+init_view_get_default_default_list( SchemesListData *data )
 {
 	GSList *list = NULL;
 
@@ -253,183 +270,186 @@ get_default_default_schemes_list( BaseWindow *window )
 }
 
 static void
-init_view_connect_signals( GtkTreeView *treeview, BaseWindow *window )
+init_view_connect_signals( SchemesListData *data )
 {
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	GtkButton *add_button, *remove_button;
 
-	column = gtk_tree_view_get_column( treeview, SCHEMES_CHECKBOX_COLUMN );
-	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 	base_window_signal_connect(
-			window,
-			G_OBJECT( renderers->data ),
-			"toggled",
-			G_CALLBACK( on_active_toggled ));
-
-	column = gtk_tree_view_get_column( treeview, SCHEMES_KEYWORD_COLUMN );
-	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-	base_window_signal_connect(
-			window,
-			G_OBJECT( renderers->data ),
-			"edited",
-			G_CALLBACK( on_keyword_edited ));
-
-	column = gtk_tree_view_get_column( treeview, SCHEMES_DESC_COLUMN );
-	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-	base_window_signal_connect(
-			window,
-			G_OBJECT( renderers->data ),
-			"edited",
-			G_CALLBACK( on_desc_edited ));
-
-	add_button = get_add_button( window );
-	base_window_signal_connect(
-			window,
-			G_OBJECT( add_button ),
-			"clicked",
-			G_CALLBACK( on_add_clicked ));
-
-	remove_button = get_remove_button( window );
-	base_window_signal_connect(
-			window,
-			G_OBJECT( remove_button ),
-			"clicked",
-			G_CALLBACK( on_remove_clicked ));
-
-	base_window_signal_connect(
-			window,
-			G_OBJECT( gtk_tree_view_get_selection( treeview )),
+			data->window,
+			G_OBJECT( gtk_tree_view_get_selection( data->treeview )),
 			"changed",
 			G_CALLBACK( on_selection_changed ));
 
-	base_window_signal_connect(
-			window,
-			G_OBJECT( treeview ),
-			"key-press-event",
-			G_CALLBACK( on_key_pressed_event ));
+	if( data->mode == SCHEMES_LIST_FOR_PREFERENCES ){
+
+		column = gtk_tree_view_get_column( data->treeview, SCHEMES_KEYWORD_COLUMN );
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
+		base_window_signal_connect(
+				data->window,
+				G_OBJECT( renderers->data ),
+				"edited",
+				G_CALLBACK( on_keyword_edited ));
+
+		column = gtk_tree_view_get_column( data->treeview, SCHEMES_DESC_COLUMN );
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
+		base_window_signal_connect(
+				data->window,
+				G_OBJECT( renderers->data ),
+				"edited",
+				G_CALLBACK( on_desc_edited ));
+
+		add_button = get_add_button( data->window );
+		base_window_signal_connect(
+				data->window,
+				G_OBJECT( add_button ),
+				"clicked",
+				G_CALLBACK( on_add_clicked ));
+
+		remove_button = get_remove_button( data->window );
+		base_window_signal_connect(
+				data->window,
+				G_OBJECT( remove_button ),
+				"clicked",
+				G_CALLBACK( on_remove_clicked ));
+
+		base_window_signal_connect(
+				data->window,
+				G_OBJECT( data->treeview ),
+				"key-press-event",
+				G_CALLBACK( on_key_pressed_event ));
+	}
 }
 
 static void
-init_view_select_first_row( GtkTreeView *treeview )
+init_view_select_first_row( SchemesListData *data )
 {
 	GtkTreeSelection *selection;
 	GtkTreePath *path;
 
 	path = gtk_tree_path_new_first();
-	selection = gtk_tree_view_get_selection( treeview );
+	selection = gtk_tree_view_get_selection( data->treeview );
 	gtk_tree_selection_select_path( selection, path );
 	gtk_tree_path_free( path );
 }
 
 /**
- * nact_schemes_list_setup_values:
- * @treeview: the #GtkTreeView.
- * @schemes: the schemes of the current item to be displayed, or %NULL.
- * @sensitive: whether the widget should be sensitive.
- * @editable: Whether the schemes list is editable or not.
+ * nact_schemes_list_save_values:
+ * @window: the #BaseWindow which embeds this treeview.
+ * @schemes: a #GSList of already used schemes.
  *
- * Setup schemes of the current item if any.
+ * Set the used schemes for the current #NAIContext.
  */
 void
-nact_schemes_list_setup_values( GtkTreeView *treeview, BaseWindow *window, GSList *schemes, gboolean sensitive, gboolean editable )
+nact_schemes_list_setup_values( BaseWindow *window, GSList *schemes )
 {
-	static const gchar *thisfn = "nact_schemes_list_setup_values";
+	GtkTreeView *treeview;
 	GtkTreeModel *model;
-	GtkTreeSelection *selection;
-	GtkTreeViewColumn *column;
-	GtkWidget *widget;
 
-	g_debug( "%s: treeview=%p, schemes=%p (count=%d), sensitive=%s, editable=%s",
-			thisfn, ( void * ) treeview, ( void * ) schemes, schemes ? g_slist_length( schemes ) : 0,
-			sensitive ? "True":"False", editable ? "True":"False" );
-	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-
-	st_on_selection_change = TRUE;
-
-	g_object_set_data( G_OBJECT( treeview ), SCHEMES_LIST_EDITABLE, GUINT_TO_POINTER(( guint ) editable ));
-
+	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
 	model = gtk_tree_view_get_model( treeview );
-	selection = gtk_tree_view_get_selection( treeview );
-
-	gtk_tree_selection_unselect_all( selection );
-	gtk_list_store_clear( GTK_LIST_STORE( model ));
-
-	if( schemes ){
-		init_view_setup_defaults( treeview, window );
-		g_slist_foreach( schemes, ( GFunc ) iter_for_setup, model );
-	}
-
-	gtk_widget_set_sensitive( GTK_WIDGET( treeview ), sensitive );
-
-	column = gtk_tree_view_get_column( treeview, SCHEMES_KEYWORD_COLUMN );
-	nact_gtk_utils_set_editable( GTK_OBJECT( column ), editable );
-
-	widget = GTK_WIDGET( get_add_button( window ));
-	gtk_widget_set_sensitive( widget, sensitive );
-	nact_gtk_utils_set_editable( GTK_OBJECT( widget ), editable );
-
-	widget = GTK_WIDGET( get_remove_button( window ));
-	gtk_widget_set_sensitive( widget, sensitive );
-	nact_gtk_utils_set_editable( GTK_OBJECT( widget ), editable );
-
-	st_on_selection_change = FALSE;
-
-	init_view_select_first_row( treeview );
+	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) setup_values_iter, schemes );
 }
 
-static void
-iter_for_setup( gchar *scheme, GtkTreeModel *model )
+static gboolean
+setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList *schemes )
 {
-	GtkTreeIter iter;
-	gboolean iter_ok = FALSE;
-	gboolean found = FALSE;
-	gchar *i_scheme;
+	gchar *keyword;
+	gchar *description, *new_description;
+	gboolean used;
 
-	iter_ok = gtk_tree_model_get_iter_first( model, &iter );
+	gtk_tree_model_get( model, iter, SCHEMES_KEYWORD_COLUMN, &keyword, SCHEMES_DESC_COLUMN, &description, SCHEMES_ALREADY_USED_COLUMN, &used, -1 );
 
-	while( iter_ok && !found ){
-		gtk_tree_model_get( model, &iter, SCHEMES_KEYWORD_COLUMN, &i_scheme, -1 );
-
-		if( g_ascii_strcasecmp( scheme, i_scheme) == 0 ){
-			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, SCHEMES_CHECKBOX_COLUMN, TRUE, -1 );
-			found = TRUE;
-		}
-
-		g_free( i_scheme );
-		iter_ok = gtk_tree_model_iter_next( model, &iter );
+	if( na_core_utils_slist_find_negated( schemes, keyword )){
+		/* i18n: add a comment when a scheme is already used by current item */
+		new_description = g_strdup_printf( _( "%s (already used)"), description );
+		used = TRUE;
+		gtk_list_store_set( GTK_LIST_STORE( model ), iter, SCHEMES_DESC_COLUMN, new_description, SCHEMES_ALREADY_USED_COLUMN, used, -1 );
+		g_free( new_description );
 	}
 
-	if( !found ){
-		gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
-		gtk_list_store_set(
-				GTK_LIST_STORE( model ),
-				&iter,
-				SCHEMES_CHECKBOX_COLUMN, TRUE,
-				SCHEMES_KEYWORD_COLUMN, scheme,
-				SCHEMES_DESC_COLUMN, "",
-				-1 );
-	}
+	g_free( description );
+	g_free( keyword );
+
+	return( FALSE ); /* don't stop looping */
 }
 
 /**
- * nact_schemes_list_get_schemes:
- * @treeview: the #GtkTreeView.
+ * nact_schemes_list_show_all:
+ * @window: the #BaseWindow which embeds this treeview.
  *
- * Returns selected schemes as a list of strings.
- * The caller should call #na_core_utils_slist_free() after use.
+ * Update visibility of widgets after all widgets are showed.
  */
-GSList *
-nact_schemes_list_get_schemes( GtkTreeView *treeview )
+void
+nact_schemes_list_show_all( BaseWindow *window )
 {
-	GSList *list = NULL;
+	GtkTreeView *listview;
+	SchemesListData *data;
+	GtkButton *button;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
+	data = get_schemes_list_data( listview );
+
+	button = get_add_button( window );
+#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION >= 18 ))
+	gtk_widget_set_visible( GTK_WIDGET( button ), data->mode == SCHEMES_LIST_FOR_PREFERENCES );
+#else
+	if( data->mode == SCHEMES_LIST_FOR_PREFERENCES ){
+		gtk_widget_show( GTK_WIDGET( button ));
+	} else {
+		gtk_widget_hide( GTK_WIDGET( button ));
+	}
+#endif
+	gtk_widget_set_sensitive( GTK_WIDGET( button ), data->mode == SCHEMES_LIST_FOR_PREFERENCES );
+
+	button = get_remove_button( window );
+#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION >= 18 ))
+	gtk_widget_set_visible( GTK_WIDGET( button ), data->mode == SCHEMES_LIST_FOR_PREFERENCES );
+#else
+	if( data->mode == SCHEMES_LIST_FOR_PREFERENCES ){
+		gtk_widget_show( GTK_WIDGET( button ));
+	} else {
+		gtk_widget_hide( GTK_WIDGET( button ));
+	}
+#endif
+	gtk_widget_set_sensitive( GTK_WIDGET( button ), FALSE );
+
+	init_view_select_first_row( data );
+}
+
+/**
+ * nact_schemes_list_get_current_scheme:
+ * @window: the #BaseWindow which embeds this treeview.
+ *
+ * Returns: the currently selected scheme, if any, as a newly allocated
+ * string which should be g_free() by the caller.
+ */
+gchar *
+nact_schemes_list_get_current_scheme( BaseWindow *window )
+{
+	GtkTreeView *treeview;
+	GtkTreeSelection *selection;
 	GtkTreeModel *model;
+	GList *rows;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	gchar *keyword;
 
-	model = gtk_tree_view_get_model( treeview );
-	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) iter_for_get, &list );
+	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
+	selection = gtk_tree_view_get_selection( treeview );
+	rows = gtk_tree_selection_get_selected_rows( selection, &model );
+	keyword = NULL;
 
-	return( list );
+	if( g_list_length( rows ) == 1 ){
+		path = ( GtkTreePath * ) rows->data;
+		gtk_tree_model_get_iter( model, &iter, path );
+		gtk_tree_model_get( model, &iter, SCHEMES_KEYWORD_COLUMN, &keyword, -1 );
+	}
+
+	return( keyword );
 }
 
 /**
@@ -451,9 +471,9 @@ nact_schemes_list_save_defaults( BaseWindow *window )
 
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
 	schemes = get_list_schemes( treeview );
+
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-
 	na_iprefs_write_string_list( NA_IPREFS( updater ), "schemes", schemes );
 
 	na_core_utils_slist_free( schemes );
@@ -510,54 +530,28 @@ nact_schemes_list_dispose( BaseWindow *window )
 	gtk_list_store_clear( GTK_LIST_STORE( model ));
 }
 
-/*
- * CommandExampleLabel is updated each time a field is modified
- * And at each time, we need the list of selected schemes
- */
-static gboolean
-iter_for_get( GtkTreeModel* model, GtkTreePath *path, GtkTreeIter* iter, GSList **schemes_list )
-{
-	gboolean toggle_state;
-	gchar* scheme;
-
-	gtk_tree_model_get( model, iter, SCHEMES_CHECKBOX_COLUMN, &toggle_state, SCHEMES_KEYWORD_COLUMN, &scheme, -1 );
-
-	if( toggle_state ){
-		( *schemes_list ) = g_slist_append(( *schemes_list ), scheme );
-	}
-
-	return( FALSE ); /* don't stop looping */
-}
-
 static gboolean
 on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window )
 {
 	gboolean stop;
-	GtkTreeView *treeview;
-	gboolean editable;
 
 	/*g_debug( "nact_schemes_list_on_key_pressed_event" );*/
 
 	stop = FALSE;
-	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( treeview ), SCHEMES_LIST_EDITABLE ));
 
-	if( editable ){
+	if( event->keyval == GDK_F2 ){
+		edit_inline( window );
+		stop = TRUE;
+	}
 
-		if( event->keyval == GDK_F2 ){
-			edit_inline( window );
-			stop = TRUE;
-		}
+	if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
+		insert_new_row( window );
+		stop = TRUE;
+	}
 
-		if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
-			insert_new_row( window );
-			stop = TRUE;
-		}
-
-		if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
-			delete_row( window );
-			stop = TRUE;
-		}
+	if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
+		delete_row( window );
+		stop = TRUE;
 	}
 
 	return( stop );
@@ -567,22 +561,39 @@ static void
 on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 {
 	/*static const gchar *thisfn = "nact_schemes_list_on_selection_changed";*/
-	GtkTreeView *treeview;
-	gboolean editable;
 	GtkButton *button;
+	GtkTreeView *listview;
+	SchemesListData *data;
+	GtkTreeModel *model;
+	GList *rows;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	gchar *keyword;
+	gboolean used;
 
 	/*g_debug( "%s: selection=%p, window=%p", thisfn, ( void * ) selection, ( void * ) window );*/
 
-	/*g_debug( "%s: getting data on window=%p", thisfn, ( void * ) window );*/
-	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
-
-	/*g_debug( "%s: getting data on treeview=%p", thisfn, ( void * ) treeview );*/
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( treeview ), SCHEMES_LIST_EDITABLE ));
-	/*g_debug( "%s: editable=%s, selected_rows=%d",
-			thisfn, editable ? "True":"False", gtk_tree_selection_count_selected_rows( selection ));*/
-
 	button = get_remove_button( window );
-	gtk_widget_set_sensitive( GTK_WIDGET( button ), editable && gtk_tree_selection_count_selected_rows( selection ) > 0);
+	gtk_widget_set_sensitive( GTK_WIDGET( button ), gtk_tree_selection_count_selected_rows( selection ) > 0);
+
+	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
+	data = ( SchemesListData * ) g_object_get_data( G_OBJECT( listview ), SCHEMES_LIST_DATA );
+
+	if( data->pf_on_sel_changed ){
+		rows = gtk_tree_selection_get_selected_rows( selection, &model );
+		keyword = NULL;
+		used = FALSE;
+
+		if( g_list_length( rows ) == 1 ){
+			path = ( GtkTreePath * ) rows->data;
+			gtk_tree_model_get_iter( model, &iter, path );
+			gtk_tree_model_get( model, &iter, SCHEMES_KEYWORD_COLUMN, &keyword, SCHEMES_ALREADY_USED_COLUMN, &used, -1 );
+		}
+
+		data->pf_on_sel_changed( keyword, used, data->user_data );
+
+		g_free( keyword );
+	}
 }
 
 static void
@@ -597,9 +608,6 @@ on_remove_clicked( GtkButton *button, BaseWindow *window )
 	delete_row( window );
 }
 
-/*
- * do not allow edition of scheme description when editing an action
- */
 static void
 on_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, BaseWindow *window )
 {
@@ -614,76 +622,7 @@ on_desc_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *t
 static void
 on_keyword_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, BaseWindow *window )
 {
-	gboolean state = FALSE;
-	gchar *old_text = NULL;
-	NAObjectProfile *edited;
-
-	edit_cell( window, path, text, SCHEMES_KEYWORD_COLUMN, &state, &old_text );
-
-	if( state ){
-		/*g_debug( "%s: old_scheme=%s", thisfn, old_text );*/
-		if( g_object_class_find_property( G_OBJECT_GET_CLASS( window ), TAB_UPDATABLE_PROP_EDITED_PROFILE )){
-			g_object_get(
-					G_OBJECT( window ),
-					TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
-					NULL );
-			if( edited ){
-				na_object_set_scheme( edited, old_text, FALSE );
-				na_object_set_scheme( edited, text, TRUE );
-				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
-			}
-		}
-	}
-
-	g_free( old_text );
-}
-
-static void
-on_active_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window )
-{
-	GtkTreeView *treeview;
-	gboolean editable;
-	NAObjectProfile *edited;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	GtkTreePath *tree_path;
-	gboolean state;
-	gchar *scheme;
-
-	if( !st_on_selection_change ){
-
-		treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
-		editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( treeview ), SCHEMES_LIST_EDITABLE ));
-		model = gtk_tree_view_get_model( treeview );
-		tree_path = gtk_tree_path_new_from_string( path );
-		gtk_tree_model_get_iter( model, &iter, tree_path );
-		gtk_tree_path_free( tree_path );
-		gtk_tree_model_get( model, &iter, SCHEMES_CHECKBOX_COLUMN, &state, SCHEMES_KEYWORD_COLUMN, &scheme, -1 );
-
-			/* gtk_tree_model_get: returns the previous state
-			g_debug( "%s: gtk_tree_model_get returns keyword=%s state=%s", thisfn, scheme, state ? "True":"False" );*/
-
-		if( !editable ){
-			g_signal_handlers_block_by_func(( gpointer ) renderer, on_active_toggled, window );
-			gtk_cell_renderer_toggle_set_active( renderer, state );
-			g_signal_handlers_unblock_by_func(( gpointer ) renderer, on_active_toggled, window );
-
-		} else {
-			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, SCHEMES_CHECKBOX_COLUMN, !state, -1 );
-			if( g_object_class_find_property( G_OBJECT_GET_CLASS( window ), TAB_UPDATABLE_PROP_EDITED_PROFILE )){
-				g_object_get(
-						G_OBJECT( window ),
-						TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
-						NULL );
-				if( edited ){
-					na_object_set_scheme( edited, scheme, !state );
-					g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
-				}
-			}
-		}
-
-		g_free( scheme );
-	}
+	edit_cell( window, path, text, SCHEMES_KEYWORD_COLUMN, NULL, NULL );
 }
 
 static void
@@ -701,15 +640,12 @@ edit_cell( BaseWindow *window, const gchar *path_string, const gchar *text, gint
 	gtk_tree_path_free( path );
 
 	if( state && old_text ){
-		gtk_tree_model_get( model, &iter, SCHEMES_CHECKBOX_COLUMN, state, SCHEMES_KEYWORD_COLUMN, old_text, -1 );
+		gtk_tree_model_get( model, &iter, SCHEMES_ALREADY_USED_COLUMN, state, SCHEMES_KEYWORD_COLUMN, old_text, -1 );
 	}
 
 	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, column, text, -1 );
 }
 
-/*
- * do not allow edition of scheme description when editing an action
- */
 static void
 edit_inline( BaseWindow *window )
 {
@@ -742,19 +678,17 @@ insert_new_row( BaseWindow *window )
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	gboolean for_action;
 	GtkTreePath *path;
 	GtkTreeViewColumn *column;
 
 	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
 	model = gtk_tree_view_get_model( listview );
-	for_action = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( listview ), SCHEMES_LIST_FOR_ACTION ));
 
 	gtk_list_store_insert_with_values( GTK_LIST_STORE( model ), &iter, 0,
-			SCHEMES_CHECKBOX_COLUMN, FALSE,
 			/* i18n notes : scheme name set for a new entry in the scheme list */
 			SCHEMES_KEYWORD_COLUMN, _( "new-scheme" ),
-			SCHEMES_DESC_COLUMN, for_action ? "" : _( "New scheme description" ),
+			SCHEMES_DESC_COLUMN, _( "New scheme description" ),
+			SCHEMES_ALREADY_USED_COLUMN, FALSE,
 			-1 );
 
 	path = gtk_tree_model_get_path( model, &iter );
@@ -766,15 +700,12 @@ insert_new_row( BaseWindow *window )
 static void
 delete_row( BaseWindow *window )
 {
-	NAObjectProfile *edited;
 	GtkTreeView *listview;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
 	GList *rows;
 	GtkTreeIter iter;
 	GtkTreePath *path;
-	gboolean toggle_state;
-	gchar *scheme;
 
 	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
 	selection = gtk_tree_view_get_selection( listview );
@@ -785,35 +716,41 @@ delete_row( BaseWindow *window )
 	if( g_list_length( rows ) == 1 ){
 		path = ( GtkTreePath * ) rows->data;
 		gtk_tree_model_get_iter( model, &iter, path );
-		gtk_tree_model_get( model, &iter,
-				SCHEMES_CHECKBOX_COLUMN, &toggle_state,
-				SCHEMES_KEYWORD_COLUMN, &scheme, -1 );
 		gtk_list_store_remove( GTK_LIST_STORE( model ), &iter );
-
-		if( toggle_state ){
-			if( g_object_class_find_property( G_OBJECT_GET_CLASS( window ), TAB_UPDATABLE_PROP_EDITED_PROFILE )){
-				g_object_get(
-						G_OBJECT( window ),
-						TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
-						NULL );
-				if( edited ){
-					na_object_set_scheme( edited, scheme, FALSE );
-					g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
-				}
-			}
-		}
-
-		g_free( scheme );
 
 		if( gtk_tree_model_get_iter( model, &iter, path ) ||
 			gtk_tree_path_prev( path )){
-
 			gtk_tree_view_set_cursor( listview, path, NULL, FALSE );
 		}
 	}
 
 	g_list_foreach( rows, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( rows );
+}
+
+static void
+display_keyword( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data )
+{
+	display_label( column, cell, model, iter, data, SCHEMES_KEYWORD_COLUMN );
+}
+
+static void
+display_description( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data )
+{
+	display_label( column, cell, model, iter, data, SCHEMES_DESC_COLUMN );
+}
+
+static void
+display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data, guint column_id )
+{
+	gboolean used;
+
+	gtk_tree_model_get( model, iter, SCHEMES_ALREADY_USED_COLUMN, &used, -1 );
+	g_object_set( cell, "style-set", FALSE, NULL );
+
+	if( used ){
+		g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
+	}
 }
 
 static GtkButton *
@@ -834,4 +771,20 @@ get_remove_button( BaseWindow *window )
 	button = GTK_BUTTON( base_window_get_widget( window, "RemoveSchemeButton" ));
 
 	return( button );
+}
+
+static SchemesListData *
+get_schemes_list_data( GtkTreeView *treeview )
+{
+	SchemesListData *data;
+
+	data = ( SchemesListData * ) g_object_get_data( G_OBJECT( treeview ), SCHEMES_LIST_DATA );
+
+	if( data == NULL ){
+		data = g_new0( SchemesListData, 1 );
+		g_object_set_data( G_OBJECT( treeview ), SCHEMES_LIST_DATA, data );
+		data->treeview = treeview;
+	}
+
+	return( data );
 }

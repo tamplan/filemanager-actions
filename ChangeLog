@@ -6,6 +6,33 @@
 
 	* src/core/na-iabout.c: Update copyright notice.
 
+2010-06-09 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-core-utils.h:
+	* src/api/na-core-utils.c (na_core_utils_slist_find_negated):
+	New function.
+
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-add-scheme-dialog.h: New files.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-main-menubar.c: Update test for Gtk+ version.
+
+	* src/nact/nact-match-list.c:
+	* src/nact/nact-match-list.h: Remove on_add callback.
+
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-imimetypes-tab.c:
+	* src/nact/nact-ischemes-tab.c:
+	* src/nact/nact-preferences-editor.c: Updated accordingly.
+
+	* src/nact/nact-schemes-list.c:
+	* src/nact/nact-schemes-list.h
+	(nact_schemes_list_show_all, nact_schemes_list_get_current_scheme):
+	New functions.
+
 2010-06-07 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-add-scheme.ui: New file.

@@ -34,10 +34,12 @@
 
 #include <glib/gi18n.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
 #include "nact-main-tab.h"
 #include "nact-match-list.h"
+#include "nact-add-scheme-dialog.h"
 #include "nact-ischemes-tab.h"
 
 /* private interface data
@@ -55,6 +57,7 @@ static GType   register_type( void );
 static void    interface_base_init( NactISchemesTabInterface *klass );
 static void    interface_base_finalize( NactISchemesTabInterface *klass );
 
+static void    on_add_from_defaults( GtkButton *button, BaseWindow *window );
 static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
 static void    on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
 
@@ -153,7 +156,6 @@ nact_ischemes_tab_initial_load_toplevel( NactISchemesTab *instance )
 				list, add, remove,
 				( pget_filters ) get_schemes,
 				( pset_filters ) set_schemes,
-				NULL,
 				_( "Scheme filter" ));
 	}
 }
@@ -162,6 +164,7 @@ void
 nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance )
 {
 	static const gchar *thisfn = "nact_ischemes_tab_runtime_init_toplevel";
+	GtkWidget *button;
 
 	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
@@ -182,6 +185,13 @@ nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance )
 				G_CALLBACK( on_tab_updatable_enable_tab ));
 
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "AddFromDefaultButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( button ),
+				"clicked",
+				G_CALLBACK( on_add_from_defaults ));
 	}
 }
 
@@ -193,7 +203,6 @@ nact_ischemes_tab_all_widgets_showed( NactISchemesTab *instance )
 	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
-
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	}
 }
@@ -206,10 +215,38 @@ nact_ischemes_tab_dispose( NactISchemesTab *instance )
 	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
-
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
+	}
+}
+
+static void
+on_add_from_defaults( GtkButton *button, BaseWindow *window )
+{
+	GSList *schemes;
+	gchar *new_scheme;
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+
+	g_object_get(
+			G_OBJECT( window ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			NULL );
+
+	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+	if( context ){
+		schemes = na_object_get_schemes( context );
+		new_scheme = nact_add_scheme_dialog_run( window, schemes );
+		na_core_utils_slist_free( schemes );
+
+		if( new_scheme ){
+			nact_match_list_insert_row( window, ITAB_NAME, new_scheme, FALSE, FALSE );
+			g_free( new_scheme );
+		}
 	}
 }
 

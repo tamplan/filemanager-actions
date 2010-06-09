@@ -65,6 +65,7 @@ GSList  *na_core_utils_slist_remove_utf8( GSList *list, const gchar *string );
 gchar  **na_core_utils_slist_to_array( GSList *slist );
 gchar   *na_core_utils_slist_to_text( GSList *list );
 gboolean na_core_utils_slist_find( GSList *list, const gchar *str );
+gboolean na_core_utils_slist_find_negated( GSList *list, const gchar *str );
 gboolean na_core_utils_slist_are_equal( GSList *a, GSList *b );
 void     na_core_utils_slist_free( GSList *slist );
 

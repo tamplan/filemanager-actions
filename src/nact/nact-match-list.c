@@ -68,6 +68,7 @@ static void     add_filter( MatchListStr *data, const gchar *filter, const gchar
 static void     delete_current_row( MatchListStr *data );
 static void     edit_inline( MatchListStr *data );
 static void     insert_new_row( MatchListStr *data );
+static void     insert_new_row_data( MatchListStr *data, const gchar *filter, gboolean match, gboolean no_match );
 static void     iter_for_setup( gchar *filter, GtkTreeModel *model );
 static void     sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint colid );
 static gboolean tab_set_sensitive( MatchListStr *data );
@@ -91,7 +92,7 @@ void
 nact_match_list_create_model( BaseWindow *window,
 		const gchar *tab_name, guint tab_id,
 		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
-		pget_filters pget, pset_filters pset, pon_add_callback pon_add,
+		pget_filters pget, pset_filters pset,
 		const gchar *item_header )
 {
 	MatchListStr *data;
@@ -108,7 +109,6 @@ nact_match_list_create_model( BaseWindow *window,
 	data->removebutton = removebutton;
 	data->pget = pget;
 	data->pset = pset;
-	data->pon_add = pon_add;
 	data->item_header = g_strdup( item_header );
 	data->editable = FALSE;
 	data->sort_column = 0;
@@ -232,7 +232,7 @@ nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
 			window,
 			G_OBJECT( data->addbutton ),
 			"clicked",
-			data->pon_add ? G_CALLBACK( data->pon_add ) : G_CALLBACK( on_add_filter_clicked ),
+			G_CALLBACK( on_add_filter_clicked ),
 			data );
 
 	base_window_signal_connect_with_data(
@@ -360,7 +360,8 @@ nact_match_list_on_enable_tab( BaseWindow *window, const gchar *tab_name, NAObje
 
 /**
  * nact_match_list_insert_row:
- * @data: the #MatchListStr structure.
+ * @window: the #BaseWindow window which contains the view.
+ * @tab_name: a string constant which identifies this page.
  * @filter: the item to add.
  * @match: whether the 'must match' column is checked.
  * @not_match: whether the 'must not match' column is checked.
@@ -368,36 +369,14 @@ nact_match_list_on_enable_tab( BaseWindow *window, const gchar *tab_name, NAObje
  * Add a new row to the list view.
  */
 void
-nact_match_list_insert_row( MatchListStr *data, const gchar *filter, gboolean match, gboolean not_match )
+nact_match_list_insert_row( BaseWindow *window, const gchar *tab_name, const gchar *filter, gboolean match, gboolean not_match )
 {
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	GtkTreePath *path;
-	GtkTreeViewColumn *column;
+	MatchListStr *data;
 
-	g_return_if_fail( !( match && not_match ));
+	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
+	g_return_if_fail( data != NULL );
 
-	model = gtk_tree_view_get_model( data->listview );
-
-	gtk_list_store_insert_with_values( GTK_LIST_STORE( model ), &iter, 0,
-			/* i18n notes : new filter for a new row in a match/no matchlist */
-			ITEM_COLUMN, filter,
-			MUST_MATCH_COLUMN, match,
-			MUST_NOT_MATCH_COLUMN, not_match,
-			-1 );
-
-	path = gtk_tree_model_get_path( model, &iter );
-	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
-	gtk_tree_view_set_cursor( data->listview, path, column, TRUE );
-	gtk_tree_path_free( path );
-
-	if( match ){
-		add_filter( data, filter, "" );
-	}
-
-	if( not_match ){
-		add_filter( data, filter, "!" );
-	}
+	insert_new_row_data( data, filter, match, not_match );
 }
 
 /**
@@ -777,7 +756,40 @@ edit_inline( MatchListStr *data )
 static void
 insert_new_row( MatchListStr *data )
 {
-	nact_match_list_insert_row( data, _( "new-filter" ), FALSE, FALSE );
+	insert_new_row_data( data, _( "new-filter" ), FALSE, FALSE );
+}
+
+static void
+insert_new_row_data( MatchListStr *data, const gchar *filter, gboolean match, gboolean not_match )
+{
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	GtkTreeViewColumn *column;
+
+	g_return_if_fail( !( match && not_match ));
+
+	model = gtk_tree_view_get_model( data->listview );
+
+	gtk_list_store_insert_with_values( GTK_LIST_STORE( model ), &iter, 0,
+			/* i18n notes : new filter for a new row in a match/no matchlist */
+			ITEM_COLUMN, filter,
+			MUST_MATCH_COLUMN, match,
+			MUST_NOT_MATCH_COLUMN, not_match,
+			-1 );
+
+	path = gtk_tree_model_get_path( model, &iter );
+	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
+	gtk_tree_view_set_cursor( data->listview, path, column, TRUE );
+	gtk_tree_path_free( path );
+
+	if( match ){
+		add_filter( data, filter, "" );
+	}
+
+	if( not_match ){
+		add_filter( data, filter, "!" );
+	}
 }
 
 static void

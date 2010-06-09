@@ -470,6 +470,39 @@ na_core_utils_slist_find( GSList *list, const gchar *str )
 }
 
 /**
+ * na_core_utils_slist_find_negated:
+ * @list: the GSList of strings to be searched.
+ * @str: the searched string.
+ *
+ * Search for a string in a string list which may contain nagated items.
+ *
+ * Returns: %TRUE if the string has been found in list.
+ */
+gboolean
+na_core_utils_slist_find_negated( GSList *list, const gchar *str )
+{
+	GSList *il;
+
+	for( il = list ; il ; il = il->next ){
+		const gchar *istr = g_strstrip( g_strdup( ( const gchar * ) il->data ));
+
+		if( istr[0] == '!' ){
+			gchar *istrdup = g_strdup( istr+1 );
+			int match = na_core_utils_str_collate( str, istrdup );
+			g_free( istrdup );
+			if( match == 0 ){
+				return( TRUE );
+			}
+
+		} else if( na_core_utils_str_collate( str, istr ) == 0 ){
+				return( TRUE );
+		}
+	}
+
+	return( FALSE );
+}
+
+/**
  * na_core_utils_slist_are_equal:
  * @first: a GSList of strings.
  * @second: another GSList of strings to be compared with @first.

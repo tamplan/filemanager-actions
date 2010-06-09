@@ -1108,27 +1108,17 @@ Defining several profiles lets you have several commands, each applying with a d
                                         <property name="visible">True</property>
                                         <property name="spacing">6</property>
                                         <child>
-                                          <object class="GtkVBox" id="vbox11">
+                                          <object class="GtkScrolledWindow" id="scrolledwindow2">
                                             <property name="visible">True</property>
-                                            <property name="orientation">vertical</property>
-                                            <property name="spacing">10</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="hscrollbar_policy">automatic</property>
+                                            <property name="vscrollbar_policy">automatic</property>
+                                            <property name="shadow_type">in</property>
                                             <child>
-                                              <object class="GtkScrolledWindow" id="scrolledwindow2">
+                                              <object class="GtkTreeView" id="FoldersTreeview">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
-                                                <property name="hscrollbar_policy">automatic</property>
-                                                <property name="vscrollbar_policy">automatic</property>
-                                                <property name="shadow_type">in</property>
-                                                <child>
-                                                  <object class="GtkTreeView" id="FoldersTreeview">
-                                                    <property name="visible">True</property>
-                                                    <property name="can_focus">True</property>
-                                                  </object>
-                                                </child>
                                               </object>
-                                              <packing>
-                                                <property name="position">0</property>
-                                              </packing>
                                             </child>
                                           </object>
                                           <packing>
@@ -1136,20 +1126,46 @@ Defining several profiles lets you have several commands, each applying with a d
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkVBox" id="vbox8">
+                                          <object class="GtkVBox" id="vbox4">
                                             <property name="visible">True</property>
                                             <property name="orientation">vertical</property>
-                                            <property name="spacing">6</property>
+                                            <property name="spacing">12</property>
                                             <child>
-                                              <object class="GtkButton" id="AddFolderButton">
+                                              <object class="GtkVBox" id="vbox8">
                                                 <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                                <property name="receives_default">True</property>
+                                                <property name="orientation">vertical</property>
+                                                <property name="spacing">6</property>
                                                 <child>
-                                                  <object class="GtkImage" id="image10">
+                                                  <object class="GtkButton" id="AddFolderButton">
                                                     <property name="visible">True</property>
-                                                    <property name="stock">gtk-add</property>
+                                                    <property name="can_focus">True</property>
+                                                    <property name="receives_default">True</property>
+                                                    <child>
+                                                      <object class="GtkImage" id="image10">
+                                                        <property name="visible">True</property>
+                                                        <property name="stock">gtk-add</property>
+                                                      </object>
+                                                    </child>
                                                   </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">False</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkButton" id="FolderBrowseButton">
+                                                    <property name="label" translatable="yes">_Browse...</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">True</property>
+                                                    <property name="receives_default">True</property>
+                                                    <property name="image">FolderBrowseImage</property>
+                                                    <property name="use_underline">True</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
                                                 </child>
                                               </object>
                                               <packing>
@@ -1283,20 +1299,46 @@ Defining several profiles lets you have several commands, each applying with a d
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkVBox" id="vbox345">
+                                          <object class="GtkVBox" id="vbox10">
                                             <property name="visible">True</property>
                                             <property name="orientation">vertical</property>
-                                            <property name="spacing">6</property>
+                                            <property name="spacing">12</property>
                                             <child>
-                                              <object class="GtkButton" id="AddSchemeButton">
+                                              <object class="GtkVBox" id="vbox19">
                                                 <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                                <property name="receives_default">True</property>
+                                                <property name="orientation">vertical</property>
+                                                <property name="spacing">6</property>
                                                 <child>
-                                                  <object class="GtkImage" id="image16">
+                                                  <object class="GtkButton" id="AddSchemeButton">
                                                     <property name="visible">True</property>
-                                                    <property name="stock">gtk-add</property>
+                                                    <property name="can_focus">True</property>
+                                                    <property name="receives_default">True</property>
+                                                    <child>
+                                                      <object class="GtkImage" id="image16">
+                                                        <property name="visible">True</property>
+                                                        <property name="stock">gtk-add</property>
+                                                      </object>
+                                                    </child>
                                                   </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">False</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkButton" id="AddFromDefaultButton">
+                                                    <property name="label" translatable="yes">A_dd from common...</property>
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">True</property>
+                                                    <property name="receives_default">True</property>
+                                                    <property name="image">SchemeBrowseImage</property>
+                                                    <property name="use_underline">True</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
                                                 </child>
                                               </object>
                                               <packing>
@@ -2553,6 +2595,15 @@ Defining several profiles lets you have several commands, each applying with a d
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -2570,8 +2621,8 @@ Defining several profiles lets you have several commands, each applying with a d
             <property name="visible">True</property>
             <property name="use_preview_label">False</property>
             <property name="local_only">False</property>
-            <property name="select_multiple">True</property>
             <property name="preview_widget_active">False</property>
+            <property name="select_multiple">True</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -3360,41 +3411,49 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
     <property name="visible">True</property>
     <property name="stock">gtk-find-and-replace</property>
   </object>
+  <object class="GtkImage" id="FolderBrowseImage">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkImage" id="SchemeBrowseImage">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="label4"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionToolbarLabelLabel"/>
       <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
     <widgets>
-      <widget name="label45"/>
-      <widget name="label44"/>
       <widget name="label43"/>
+      <widget name="label44"/>
+      <widget name="label45"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
     <widgets>
-      <widget name="label19"/>
-      <widget name="label49"/>
-      <widget name="label39"/>
       <widget name="label18"/>
+      <widget name="label39"/>
+      <widget name="label49"/>
+      <widget name="label19"/>
     </widgets>
   </object>
 </interface>

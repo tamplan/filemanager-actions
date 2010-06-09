@@ -666,7 +666,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                       <object class="GtkLabel" id="label55">
                         <property name="visible">True</property>
                         <property name="xpad">5</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Default schemes&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Common schemes&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
                     </child>

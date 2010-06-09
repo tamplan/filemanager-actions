@@ -161,7 +161,6 @@ nact_ibasenames_tab_initial_load_toplevel( NactIBasenamesTab *instance )
 				list, add, remove,
 				( pget_filters ) get_basenames,
 				( pset_filters ) set_basenames,
-				NULL,
 				_( "Basename filter" ));
 	}
 }
