@@ -253,6 +253,24 @@ on_add_from_defaults( GtkButton *button, BaseWindow *window )
 static void
 on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 {
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	gboolean editable;
+	NAIContext *context;
+	GtkWidget *button;
+
+	g_object_get(
+			G_OBJECT( window ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			NULL );
+
+	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+	button = base_window_get_widget( window, "AddFromDefaultButton" );
+	gtk_widget_set_sensitive( button, editable );
+
 	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
 }
 
