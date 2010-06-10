@@ -1,3 +1,7 @@
+2010-06-10 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-iabout.c: Update copyright notice.
+
 2010-05-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Fix typo.
