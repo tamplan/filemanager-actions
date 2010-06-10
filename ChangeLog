@@ -1,5 +1,7 @@
 2010-06-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump post-release version number.
+
 	* Changelog: Update NEWS before release.
 
 	* configure.ac: Bump pre-release version number.
