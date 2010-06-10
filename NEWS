@@ -1,3 +1,32 @@
+Version 2.30.3
+==============
+
+	Release date 2010-06-10
+
+	Bug fixes:
+
+		- Fix #617058 reported by brunogirin@gmail.com
+		  (Do not add extraneous blanks when parsing parameters)
+		- Fix #618110 reported by Claude Paroz
+		  ( Factorize strings for translators)
+		- Fix bug reported by Dr Amr Osman
+		  (Do not add extraneous blanks when parsing parameters)
+
+	Other modifications:
+
+		- Do not reload already loaded profiles.
+		- Reset action to last version number after conversion from pre-v2.
+
+	New and updated translations:
+
+		cs (Petr Kovar)
+		de (Mario Blättermann)
+		es (Jorge González)
+		fr (Claude Paroz)
+		gl (Fran Diéguez)
+		pt_BR (Daniel S. Koda, Rodrigo Flores)
+		sl (Andrej Žnidaršič, Matej Urbančič)
+
 Version 2.30.2
 ==============
 
