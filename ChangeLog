@@ -1,5 +1,7 @@
 2010-06-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump pre-release version number.
+
 	* src/core/na-iabout.c: Update copyright notice.
 
 2010-05-17 Pierre Wieser <pwieser@trychlos.org>
