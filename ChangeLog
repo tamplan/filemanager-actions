@@ -1,3 +1,16 @@
+2010-06-11 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-icontext.h:
+	* src/core/na-icontext.c (na_icontext_is_all_mimetypes): New function.
+
+	* src/api/na-object-api.h: Define new getters/setters.
+
+	* src/core/na-icontext-factory.c:
+	* src/core/na-object-item-factory.c: Fix comments.
+
+	* src/io-gconf/nagp-reader.c:
+	Convert pre-v3 is_multiple, is_file and is_dir parameters.
+
 2010-06-10 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump post-release version number.

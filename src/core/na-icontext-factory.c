@@ -214,7 +214,7 @@ NADataDef data_def_conditions [] = {
 				NULL },
 
 	/* this is obsoleted starting with 2.30-newdata (released as 2.31.x serie)
-	 * and replaced by count-sign and count-number
+	 * and replaced by selection-count
 	 */
 	{ NAFO_DATA_MULTIPLE,
 				TRUE,

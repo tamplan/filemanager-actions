@@ -62,6 +62,8 @@ static void          read_done_profile_attach_profile( const NAIFactoryProvider 
 
 static gboolean      convert_pre_v3_parameters( NAObjectProfile *profile );
 static gboolean      convert_pre_v3_parameters_str( gchar *str );
+static gboolean      convert_pre_v3_multiple( NAObjectProfile *profile );
+static gboolean      convert_pre_v3_isfiledir( NAObjectProfile *profile );
 static NADataBoxed  *get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, ReaderData *reader_data, const NADataDef *def );
 static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key );
 
@@ -324,13 +326,18 @@ read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectPr
 
 	na_object_attach_profile( data->parent, profile );
 
-	/* converts pre-v3 parameters
+	/* converts pre-v3 data
 	 */
 	iversion = na_object_get_iversion( data->parent );
 	g_debug( "%s: iversion=%d", thisfn, iversion );
+
 	if( iversion < 3 ){
-		if( convert_pre_v3_parameters( profile )){
-			na_object_set_iversion( data->parent, 3 );
+
+		if( convert_pre_v3_parameters( profile ) ||
+			convert_pre_v3_multiple( profile ) ||
+			convert_pre_v3_isfiledir( profile )){
+
+				na_object_set_iversion( data->parent, 3 );
 		}
 	}
 }
@@ -447,6 +454,81 @@ convert_pre_v3_parameters_str( gchar *str )
 	}
 
 	return( changed );
+}
+
+/*
+ * default changes from accept_multiple=false
+ *                   to selection_count>0
+ */
+static gboolean
+convert_pre_v3_multiple( NAObjectProfile *profile )
+{
+	gboolean accept_multiple;
+	gchar *selection_count;
+
+	accept_multiple = na_object_is_multiple( profile );
+	selection_count = g_strdup( accept_multiple ? ">0" : "=1" );
+	na_object_set_selection_count( profile, selection_count );
+	g_free( selection_count );
+
+	return( TRUE );
+}
+
+/*
+ * we may have file=true  and dir=false -> only files          -> all/allfiles
+ *             file=false and dir=true  -> only dirs           -> inode/directory
+ *             file=true  and dir=true  -> both files and dirs -> all/all
+ *
+ * we try to replace this with the corresponding mimetype, but only if
+ * current mimetype is '*' (or * / * or all/all)
+ */
+static gboolean
+convert_pre_v3_isfiledir( NAObjectProfile *profile )
+{
+	gboolean converted;
+	gboolean isfile, isdir;
+	GSList *mimetypes;
+
+	converted = FALSE;
+
+	if( na_icontext_is_all_mimetypes( NA_ICONTEXT( profile ))){
+		converted = TRUE;
+		mimetypes = NULL;
+
+		isfile = na_object_is_file( profile );
+		isdir = na_object_is_dir( profile );
+
+		if( isfile ){
+			if( isdir ){
+				/* both file and dir -> do not modify mimetypes
+				 */
+				converted = FALSE;
+			} else {
+				/* files only
+				 */
+				mimetypes = g_slist_prepend( NULL, g_strdup( "all/allfiles" ));
+			}
+		} else {
+			if( isdir ){
+				/* dir only
+				 */
+				mimetypes = g_slist_prepend( NULL, g_strdup( "inode/directory" ));
+			} else {
+				/* not files nor dir: this is an invalid case -> do not modify
+				 * mimetypes
+				 */
+				converted = FALSE;
+			}
+		}
+
+		if( converted ){
+			na_object_set_mimetypes( profile, mimetypes );
+		}
+
+		na_core_utils_slist_free( mimetypes );
+	}
+
+	return( converted );
 }
 
 static NADataBoxed *

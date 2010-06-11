@@ -193,6 +193,14 @@ G_BEGIN_DECLS
 #define na_object_replace_folder( obj, old, new )		na_icontext_replace_folder( NA_ICONTEXT( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
 #define na_object_set_scheme( obj, scheme, add )		na_icontext_set_scheme( NA_ICONTEXT( obj ), ( const gchar * )( scheme ), ( add ))
 #define na_object_set_schemes( obj, schemes )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SCHEMES, ( const void * )( schemes ))
+#define na_object_set_only_show_in( obj, list )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ONLY_SHOW, ( const void * )( list ))
+#define na_object_set_not_show_in( obj, list )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_NOT_SHOW, ( const void * )( list ))
+#define na_object_set_try_exec( obj, exec )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TRY_EXEC, ( const void * )( exec ))
+#define na_object_set_show_if_registered( obj, name )	na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHOW_IF_REGISTERED, ( const void * )( name ))
+#define na_object_set_show_if_true( obj, exec )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHOW_IF_TRUE, ( const void * )( exec ))
+#define na_object_set_show_if_running( obj, name )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHOW_IF_RUNNING, ( const void * )( name ))
+#define na_object_set_selection_count( obj, cond )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SELECTION_COUNT, ( const void * )( cond ))
+#define na_object_set_capabilities( obj, cap )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_CAPABILITITES, ( const void * )( cap ))
 
 G_END_DECLS
 

@@ -712,7 +712,7 @@ na_object_object_unref( NAObject *object )
 {
 	GList *children, *ic;
 
-	g_debug( "na_object_object_unref: object=%p (%s, ref_count=%d)",
+	g_debug( "na_object_object_unref:enter: object=%p (%s, ref_count=%d)",
 			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
@@ -726,6 +726,9 @@ na_object_object_unref( NAObject *object )
 				na_object_unref( ic->data );
 			}
 		}
+
+		g_debug( "na_object_object_unref:about_to_unref: object=%p (%s, ref_count=%d)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 		g_object_unref( object );
 	}

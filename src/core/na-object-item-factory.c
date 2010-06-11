@@ -361,6 +361,10 @@ NADataDef data_def_item [] = {
 	/* this integer version number is introduced with .desktop files and obsoletes
 	 * the previous string version number which was only set on actions
 	 * we so have: "1.0" < "1.1" < "2.0" < 3
+	 * Also note that iversion=3 is only written in GConf, while .desktop files
+	 * do not have this key.
+	 * Only when version will need to be incremented, we will write a version key
+	 * in .desktop files (probably 1 or 2), and increment this iversion to 4.
 	 */
 	{ NAFO_DATA_IVERSION,
 				TRUE,

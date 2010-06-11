@@ -83,13 +83,14 @@ typedef struct {
 
 GType    na_icontext_get_type( void );
 
-gboolean na_icontext_is_candidate( const NAIContext *object, guint target, GList *selection );
-gboolean na_icontext_is_valid    ( const NAIContext *object );
+gboolean na_icontext_is_candidate    ( const NAIContext *object, guint target, GList *selection );
+gboolean na_icontext_is_valid        ( const NAIContext *object );
+gboolean na_icontext_is_all_mimetypes( const NAIContext *object );
 
-void     na_icontext_read_done     ( NAIContext *object );
+void     na_icontext_read_done       ( NAIContext *object );
 
-void     na_icontext_set_scheme    ( NAIContext *object, const gchar *scheme, gboolean selected );
-void     na_icontext_replace_folder( NAIContext *object, const gchar *old, const gchar *new );
+void     na_icontext_set_scheme      ( NAIContext *object, const gchar *scheme, gboolean selected );
+void     na_icontext_replace_folder  ( NAIContext *object, const gchar *old, const gchar *new );
 
 G_END_DECLS
 

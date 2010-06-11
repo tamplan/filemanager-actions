@@ -83,7 +83,6 @@ static gboolean is_valid_isfiledir( const NAIContext *object );
 static gboolean is_valid_schemes( const NAIContext *object );
 static gboolean is_valid_folders( const NAIContext *object );
 
-static void     check_for_all_mimetypes( NAIContext *context );
 static gboolean is_positive_assertion( const gchar *assertion );
 static gboolean validate_schemes( GSList *object_schemes, NASelectedInfo *iter );
 
@@ -262,6 +261,42 @@ na_icontext_is_valid( const NAIContext *object )
 }
 
 /**
+ * na_icontext_is_all_mimetypes:
+ * @context: the #NAIContext object to be checked.
+ *
+ * Returns: %TRUE if this context is valid for all mimetypes, %FALSE else.
+ */
+gboolean
+na_icontext_is_all_mimetypes( const NAIContext *object )
+{
+	gboolean is_all;
+	GSList *mimetypes, *im;
+
+	g_return_val_if_fail( NA_IS_ICONTEXT( object ), FALSE );
+
+	is_all = TRUE;
+	mimetypes = na_object_get_mimetypes( object );
+
+	for( im = mimetypes ; im ; im = im->next ){
+		if( !im->data || !strlen( im->data )){
+			continue;
+		}
+		const gchar *imtype = ( const gchar * ) im->data;
+		if( !strcmp( imtype, "*" ) ||
+			!strcmp( imtype, "*/*" ) ||
+			!strcmp( imtype, "all" ) ||
+			!strcmp( imtype, "all/*" ) ||
+			!strcmp( imtype, "all/all" )){
+				continue;
+		}
+		is_all = FALSE;
+		break;
+	}
+
+	return( is_all );
+}
+
+/**
  * na_icontext_read_done:
  * @context: the #NAIContext to be prepared.
  *
@@ -270,7 +305,7 @@ na_icontext_is_valid( const NAIContext *object )
 void
 na_icontext_read_done( NAIContext *context )
 {
-	check_for_all_mimetypes( context );
+	na_object_set_all_mimetypes( context, na_icontext_is_all_mimetypes( context ));
 }
 
 /**
@@ -1068,39 +1103,6 @@ is_valid_folders( const NAIContext *object )
 	}
 
 	return( valid );
-}
-
-/*
- * @context: the #NAIContext object to be checked.
- *
- * Check if this object is valid for all mimetypes. This is done at load
- * time, and let us spend as less time as possible when testing for
- * candidates.
- */
-static void
-check_for_all_mimetypes( NAIContext *context )
-{
-	gboolean all = TRUE;
-	GSList *mimetypes = na_object_get_mimetypes( context );
-	GSList *im;
-
-	for( im = mimetypes ; im ; im = im->next ){
-		if( !im->data || !strlen( im->data )){
-			continue;
-		}
-		const gchar *imtype = ( const gchar * ) im->data;
-		if( !strcmp( imtype, "*" ) ||
-			!strcmp( imtype, "*/*" ) ||
-			!strcmp( imtype, "all" ) ||
-			!strcmp( imtype, "all/*" ) ||
-			!strcmp( imtype, "all/all" )){
-				continue;
-		}
-		all = FALSE;
-		break;
-	}
-
-	na_object_set_all_mimetypes( context, all );
 }
 
 /*
