@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-05-17 18:28+0000\n"
-"PO-Revision-Date: 2010-05-19 20:52+0100\n"
+"POT-Creation-Date: 2010-06-10 21:23+0000\n"
+"PO-Revision-Date: 2010-06-12 20:54+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -514,11 +514,16 @@ msgstr ""
 
 #: ../src/core/na-iabout.c:253
 #, c-format
+#| msgid ""
+#| "Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+#| "Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
-"Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright %s 2005 The GNOME Foundation\n"
+"Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
 "Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
-"Copyright %s 2005-2007 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright %s 2005 The GNOME Foundation\n"
+"Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
 "Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
 
 #: ../src/core/na-icontext-factory.c:47
@@ -2128,8 +2133,6 @@ msgstr ""
 
 #: ../src/utils/nautilus-actions-new.c:143
 #, c-format
-#| msgid ""
-#| "Error: '--match-case' and '--nocase' options cannot both be specified.\n"
 msgid "Error: '%s' and '%s' options cannot both be specified.\n"
 msgstr ""
 "Fehler: Die Optionen »%s« und »%s« können nicht\n"
