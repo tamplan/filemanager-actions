@@ -31,11 +31,12 @@ src/nact/nact-export-ask.c
 src/nact/nact-export-format.c
 src/nact/nact-iaction-tab.c
 src/nact/nact-ibasenames-tab.c
-src/nact/nact-imimetypes-tab.c
+src/nact/nact-icapabilities-tab.c
 src/nact/nact-icommand-tab.c
-src/nact/nact-iconditions-tab.c
 src/nact/nact-ifolders-tab.c
+src/nact/nact-imimetypes-tab.c
 src/nact/nact-iproperties-tab.c
+src/nact/nact-ischemes-tab.c
 src/nact/nact-main-menubar.c
 src/nact/nact-main-menubar-edit.c
 src/nact/nact-main-menubar-file.c

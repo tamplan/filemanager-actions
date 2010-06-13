@@ -33,6 +33,7 @@
 #endif
 
 #include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <gio/gio.h>
@@ -605,6 +606,42 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
 
 	g_free( source );
 	return( strlist );
+}
+
+/***
+ * na_core_utils_selcount_get_ope:
+ * @selcount: the selection count condition string.
+ * @ope: a pointer to a newly allocated string which will contains the
+ *  operation code.
+ * @uint: a pointer to a newly allocated string which will contains the
+ *  relevant integer.
+ *
+ * Parses a selection count string, and extract the operation code and the
+ * relevant integer.
+ *
+ * The two returned strings must be g_free() by the caller.
+ */
+void
+na_core_utils_selcount_get_ope_int( const gchar *selcount, gchar **ope, gchar **uint )
+{
+	gchar *dup, *dup2;
+	guint uint_int;
+
+	g_return_if_fail( ope && uint );
+
+	*ope = NULL;
+	*uint = NULL;
+
+	dup = g_strstrip( g_strdup( selcount ));
+	*ope = g_strdup( " " );
+	*ope[0] = dup[0];
+
+	dup2 = g_strstrip( g_strdup( dup+1 ));
+	uint_int = abs( atoi( dup2 ));
+	*uint = g_strdup_printf( "%d", uint_int );
+
+	g_free( dup2 );
+	g_free( dup );
 }
 
 /**

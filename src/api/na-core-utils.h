@@ -73,6 +73,10 @@ void     na_core_utils_slist_free( GSList *slist );
  */
 gchar   *na_core_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list );
 
+/* selection count
+ */
+void     na_core_utils_selcount_get_ope_int( const gchar *selection_count, gchar **ope, gchar **uint );
+
 /* directory management
  */
 gboolean na_core_utils_dir_is_writable_path( const gchar *path );

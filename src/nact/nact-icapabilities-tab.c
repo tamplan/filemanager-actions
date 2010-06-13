@@ -32,8 +32,13 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+#include <stdlib.h>
+
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
+#include "nact-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-icapabilities-tab.h"
 
@@ -41,6 +46,28 @@
  */
 struct NactICapabilitiesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
+};
+
+/* columns in the selection count combobox
+ */
+enum {
+	COUNT_SIGN_COLUMN = 0,
+	COUNT_LABEL_COLUMN,
+	COUNT_N_COLUMN
+};
+
+typedef struct {
+	gchar *sign;
+	gchar *label;
+}
+	SelectionCountStruct;
+
+/* i18n notes: selection count symbol, respectively 'less than', 'equal to' and 'greater than' */
+static SelectionCountStruct st_counts[] = {
+		{ "<", N_( "(strictly lesser than)" ) },
+		{ "=", N_( "(equal to)" ) },
+		{ ">", N_( "(strictly greater than)" ) },
+		{ NULL }
 };
 
 static gboolean st_initialized = FALSE;
@@ -53,8 +80,14 @@ static void         interface_base_finalize( NactICapabilitiesTabInterface *klas
 static void         runtime_init_connect_signals( NactICapabilitiesTab *instance, GtkTreeView *listview );
 static void         on_tab_updatable_selection_changed( NactICapabilitiesTab *instance, gint count_selected );
 static void         on_tab_updatable_enable_tab( NactICapabilitiesTab *instance, NAObjectItem *item );
+static void         on_selcount_ope_changed( GtkComboBox *combo, NactICapabilitiesTab *instance );
+static void         on_selcount_int_changed( GtkEntry *entry, NactICapabilitiesTab *instance );
 static gboolean     tab_set_sensitive( NactICapabilitiesTab *instance );
 static GtkTreeView *get_capabilities_tree_view( NactICapabilitiesTab *instance );
+static void         init_count_combobox( NactICapabilitiesTab *instance );
+static void         set_selection_count_selection( NactICapabilitiesTab *instance, const gchar *ope, const gchar *uint );
+static gchar       *get_selection_count_selection( NactICapabilitiesTab *instance );
+static void         dispose_count_combobox( NactICapabilitiesTab *instance );
 
 GType
 nact_icapabilities_tab_get_type( void )
@@ -130,10 +163,13 @@ nact_icapabilities_tab_initial_load_toplevel( NactICapabilitiesTab *instance )
 {
 	static const gchar *thisfn = "nact_icapabilities_tab_initial_load_toplevel";
 
+	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+
+		init_count_combobox( instance );
 	}
 }
 
@@ -143,10 +179,11 @@ nact_icapabilities_tab_runtime_init_toplevel( NactICapabilitiesTab *instance )
 	static const gchar *thisfn = "nact_icapabilities_tab_runtime_init_toplevel";
 	GtkTreeView *listview;
 
+	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
 		listview = get_capabilities_tree_view( instance );
 		runtime_init_connect_signals( instance, listview );
@@ -157,6 +194,7 @@ static void
 runtime_init_connect_signals( NactICapabilitiesTab *instance, GtkTreeView *listview )
 {
 	static const gchar *thisfn = "nact_icapabilities_tab_runtime_init_connect_signals";
+	GtkWidget *selcount_ope, *selcount_int;
 
 	if( st_initialized && !st_finalized ){
 
@@ -174,6 +212,20 @@ runtime_init_connect_signals( NactICapabilitiesTab *instance, GtkTreeView *listv
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
 				G_CALLBACK( on_tab_updatable_enable_tab ));
+
+		selcount_ope = base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountSigneCombobox" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( selcount_ope ),
+				"changed",
+				G_CALLBACK( on_selcount_ope_changed ));
+
+		selcount_int = base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountNumberEntry" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( selcount_int ),
+				"changed",
+				G_CALLBACK( on_selcount_int_changed ));
 	}
 }
 
@@ -182,10 +234,11 @@ nact_icapabilities_tab_all_widgets_showed( NactICapabilitiesTab *instance )
 {
 	static const gchar *thisfn = "nact_icapabilities_tab_all_widgets_showed";
 
+	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 	}
 }
 
@@ -194,10 +247,13 @@ nact_icapabilities_tab_dispose( NactICapabilitiesTab *instance )
 {
 	static const gchar *thisfn = "nact_icapabilities_tab_dispose";
 
+	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-		g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+
+		dispose_count_combobox( instance );
 	}
 }
 
@@ -207,8 +263,12 @@ on_tab_updatable_selection_changed( NactICapabilitiesTab *instance, gint count_s
 	static const gchar *thisfn = "nact_icapabilities_tab_on_tab_updatable_selection_changed";
 	NAObjectItem *item;
 	NAObjectProfile *profile;
+	NAIContext *context;
 	GSList *capabilities;
 	gboolean editable;
+	gchar *sel_count;
+	gchar *selcount_ope, *selcount_int;
+	GtkWidget *combo, *entry;
 
 	capabilities = NULL;
 	if( st_initialized && !st_finalized ){
@@ -223,6 +283,23 @@ on_tab_updatable_selection_changed( NactICapabilitiesTab *instance, gint count_s
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
+		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+		sel_count = context ? na_object_get_selection_count( context ) : g_strdup( ">0" );
+		na_core_utils_selcount_get_ope_int( sel_count, &selcount_ope, &selcount_int );
+		set_selection_count_selection( instance, selcount_ope, selcount_int );
+		g_free( selcount_int );
+		g_free( selcount_ope );
+		g_free( sel_count );
+
+		combo = base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountSigneCombobox" );
+		gtk_widget_set_sensitive( combo, context != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( combo ), editable );
+
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountNumberEntry" );
+		gtk_widget_set_sensitive( entry, context != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+
 		tab_set_sensitive( instance );
 	}
 }
@@ -232,12 +309,65 @@ on_tab_updatable_enable_tab( NactICapabilitiesTab *instance, NAObjectItem *item 
 {
 	static const gchar *thisfn = "nact_icapabilities_tab_on_tab_updatable_enable_tab";
 
+	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
+
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
-		g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
 		tab_set_sensitive( instance );
+	}
+}
+
+static void
+on_selcount_ope_changed( GtkComboBox *combo, NactICapabilitiesTab *instance )
+{
+	NAObjectItem *edited;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	gboolean editable;
+	gchar *selcount;
+
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			NULL );
+
+	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) edited );
+
+	if( context && editable ){
+		selcount = get_selection_count_selection( instance );
+		na_object_set_selection_count( context, selcount );
+		g_free( selcount );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+	}
+}
+
+static void
+on_selcount_int_changed( GtkEntry *entry, NactICapabilitiesTab *instance )
+{
+	NAObjectItem *edited;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	gboolean editable;
+	gchar *selcount;
+
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			NULL );
+
+	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) edited );
+
+	if( context && editable ){
+		selcount = get_selection_count_selection( instance );
+		na_object_set_selection_count( context, selcount );
+		g_free( selcount );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
 	}
 }
 
@@ -254,7 +384,7 @@ tab_set_sensitive( NactICapabilitiesTab *instance )
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
-	enable_tab = ( profile != NULL && na_object_is_target_selection( NA_OBJECT_ACTION( item )));
+	enable_tab = ( item != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_CAPABILITIES, enable_tab );
 
 	return( enable_tab );
@@ -269,4 +399,98 @@ get_capabilities_tree_view( NactICapabilitiesTab *instance )
 	g_assert( GTK_IS_TREE_VIEW( treeview ));
 
 	return( GTK_TREE_VIEW( treeview ));
+}
+
+static void
+init_count_combobox( NactICapabilitiesTab *instance )
+{
+	GtkTreeModel *model;
+	guint i;
+	GtkTreeIter row;
+	GtkComboBox *combo;
+	GtkCellRenderer *cell_renderer_text;
+
+	model = GTK_TREE_MODEL( gtk_list_store_new( COUNT_N_COLUMN, G_TYPE_STRING, G_TYPE_STRING ));
+	i = 0;
+	while( st_counts[i].sign ){
+		gtk_list_store_append( GTK_LIST_STORE( model ), &row );
+		gtk_list_store_set( GTK_LIST_STORE( model ), &row, COUNT_SIGN_COLUMN, st_counts[i].sign, -1 );
+		gtk_list_store_set( GTK_LIST_STORE( model ), &row, COUNT_LABEL_COLUMN, st_counts[i].label, -1 );
+		i += 1;
+	}
+
+	combo = GTK_COMBO_BOX( base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountSigneCombobox" ));
+	gtk_combo_box_set_model( combo, model );
+	g_object_unref( model );
+
+	gtk_cell_layout_clear( GTK_CELL_LAYOUT( combo ));
+
+	cell_renderer_text = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), cell_renderer_text, FALSE );
+	gtk_cell_layout_add_attribute( GTK_CELL_LAYOUT( combo ), cell_renderer_text, "text", COUNT_SIGN_COLUMN );
+
+	cell_renderer_text = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), cell_renderer_text, TRUE );
+	g_object_set( G_OBJECT( cell_renderer_text ), "xalign", ( gdouble ) 0.0, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
+	gtk_cell_layout_add_attribute( GTK_CELL_LAYOUT( combo ), cell_renderer_text, "text", COUNT_LABEL_COLUMN );
+
+	gtk_combo_box_set_active( GTK_COMBO_BOX( combo ), 0 );
+}
+
+static void
+set_selection_count_selection( NactICapabilitiesTab *instance, const gchar *ope, const gchar *uint )
+{
+	GtkComboBox *combo;
+	GtkEntry *entry;
+	gint i, index;
+
+	combo = GTK_COMBO_BOX( base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountSigneCombobox" ));
+
+	index = -1;
+	for( i=0 ; st_counts[i].sign && index==-1 ; ++i ){
+		if( !strcmp( st_counts[i].sign, ope )){
+			index = i;
+		}
+	}
+	gtk_combo_box_set_active( combo, index );
+
+	entry = GTK_ENTRY( base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountNumberEntry" ));
+	gtk_entry_set_text( entry, uint );
+}
+
+static gchar *
+get_selection_count_selection( NactICapabilitiesTab *instance )
+{
+	GtkComboBox *combo;
+	GtkEntry *entry;
+	gint index;
+	gchar *uints, *selcount;
+	guint uinti;
+
+	combo = GTK_COMBO_BOX( base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountSigneCombobox" ));
+	index = gtk_combo_box_get_active( combo );
+	if( index == -1 ){
+		return( NULL );
+	}
+
+	entry = GTK_ENTRY( base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountNumberEntry" ));
+	uinti = abs( atoi( gtk_entry_get_text( entry )));
+	uints = g_strdup_printf( "%d", uinti );
+	gtk_entry_set_text( entry, uints );
+	g_free( uints );
+
+	selcount = g_strdup_printf( "%s%d", st_counts[index].sign, uinti );
+
+	return( selcount );
+}
+
+static void
+dispose_count_combobox( NactICapabilitiesTab *instance )
+{
+	GtkComboBox *combo;
+	GtkTreeModel *model;
+
+	combo = GTK_COMBO_BOX( base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountSigneCombobox" ));
+	model = gtk_combo_box_get_model( combo );
+	gtk_list_store_clear( GTK_LIST_STORE( model ));
 }

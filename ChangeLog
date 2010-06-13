@@ -3,6 +3,16 @@
 	* src/nact/nact-iaction-tab.c:
 	Use gtk_bin_get_child() function instead of GTK_BIN()->child.
 
+	* po/POTFILES.in:
+	Add src/nact/nact-icapabilities-tab.c, src/nact/nact-ischemes-tab.c.
+	Remove src/nact/nact-iconditions-tab.c.
+
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_selcount_get_ope_int):
+	New function.
+
+	* src/nact/nact-icapabilities-tab.c: Implement selection count.
+
 2010-06-11 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-icontext.h:
