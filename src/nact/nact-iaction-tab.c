@@ -295,7 +295,7 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
-				G_OBJECT( GTK_BIN( icon_widget )->child ),
+				G_OBJECT( gtk_bin_get_child( GTK_BIN( icon_widget ))),
 				"changed",
 				G_CALLBACK( on_icon_changed ));
 
@@ -474,7 +474,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 		icon = item ? na_object_get_icon( item ) : g_strdup( "" );
 		icon = icon ? icon : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), icon );
+		gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( icon_widget ))), icon );
 		g_free( icon );
 		gtk_widget_set_sensitive( icon_widget, item != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( icon_widget ), editable );
@@ -891,7 +891,7 @@ on_icon_browse( GtkButton *button, NactIActionTab *instance )
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
-		gtk_entry_set_text( GTK_ENTRY( GTK_BIN( icon_widget )->child ), filename );
+		gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( icon_widget ))), filename );
 	    g_free (filename);
 
 		path = gtk_file_chooser_get_current_folder( GTK_FILE_CHOOSER( dialog ));

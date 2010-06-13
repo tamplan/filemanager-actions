@@ -1,3 +1,8 @@
+2010-06-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-iaction-tab.c:
+	Use gtk_bin_get_child() function instead of GTK_BIN()->child.
+
 2010-06-11 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-icontext.h:
