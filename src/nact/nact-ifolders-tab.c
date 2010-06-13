@@ -166,6 +166,7 @@ nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance )
 				list, add, remove,
 				( pget_filters ) get_folders,
 				( pset_filters ) set_folders,
+				NULL,
 				_( "Folder filter" ));
 	}
 }

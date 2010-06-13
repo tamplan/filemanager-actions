@@ -43,6 +43,7 @@ G_BEGIN_DECLS
 
 typedef GSList * ( *pget_filters )( void * );
 typedef void     ( *pset_filters )( void *, GSList * );
+typedef gchar *  ( *pon_add_cb )  ( void *, BaseWindow * );
 
 typedef struct {
 	BaseWindow      *window;
@@ -52,6 +53,7 @@ typedef struct {
 	GtkWidget       *removebutton;
 	pget_filters     pget;
 	pset_filters     pset;
+	pon_add_cb       pon_add;
 	gchar           *item_header;
 	gboolean         editable;
 	guint            sort_column;
@@ -62,7 +64,7 @@ typedef struct {
 void  nact_match_list_create_model        ( BaseWindow *window, const gchar *tab_name,
 		guint tab_id,
 		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
-		pget_filters pget, pset_filters pset,
+		pget_filters pget, pset_filters pset, pon_add_cb pon_add,
 		const gchar *item_header );
 
 void  nact_match_list_init_view           ( BaseWindow *window, const gchar *tab_name );

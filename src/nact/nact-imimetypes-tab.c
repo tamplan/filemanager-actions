@@ -159,6 +159,7 @@ nact_imimetypes_tab_initial_load_toplevel( NactIMimetypesTab *instance )
 				list, add, remove,
 				( pget_filters ) get_mimetypes,
 				( pset_filters ) set_mimetypes,
+				NULL,
 				_( "Mimetype filter" ));
 	}
 }

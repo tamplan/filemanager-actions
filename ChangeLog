@@ -1,5 +1,14 @@
 2010-06-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-match-list.c:
+	* src/nact/nact-match-list.h (nact_match_list_create_model):
+	Add on_add_clicked callback parameter.
+
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-imimetypes-tab.c:
+	* src/nact/nact-ischemes-tab.c: Updated accordingly.
+
 	* src/nact/nact-iaction-tab.c:
 	Use gtk_bin_get_child() function instead of GTK_BIN()->child.
 

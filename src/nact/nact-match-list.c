@@ -92,7 +92,7 @@ void
 nact_match_list_create_model( BaseWindow *window,
 		const gchar *tab_name, guint tab_id,
 		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
-		pget_filters pget, pset_filters pset,
+		pget_filters pget, pset_filters pset, pon_add_cb pon_add,
 		const gchar *item_header )
 {
 	MatchListStr *data;
@@ -109,6 +109,7 @@ nact_match_list_create_model( BaseWindow *window,
 	data->removebutton = removebutton;
 	data->pget = pget;
 	data->pset = pset;
+	data->pon_add = pon_add;
 	data->item_header = g_strdup( item_header );
 	data->editable = FALSE;
 	data->sort_column = 0;
@@ -228,12 +229,20 @@ nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
 			G_CALLBACK( on_must_not_match_toggled ),
 			data );
 
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( data->addbutton ),
-			"clicked",
-			G_CALLBACK( on_add_filter_clicked ),
-			data );
+	if( data->pon_add ){
+		base_window_signal_connect(
+				window,
+				G_OBJECT( data->addbutton ),
+				"clicked",
+				G_CALLBACK( data->pon_add ));
+	} else {
+		base_window_signal_connect_with_data(
+				window,
+				G_OBJECT( data->addbutton ),
+				"clicked",
+				G_CALLBACK( on_add_filter_clicked ),
+				data );
+	}
 
 	base_window_signal_connect_with_data(
 			window,
