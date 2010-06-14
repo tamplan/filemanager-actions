@@ -43,7 +43,12 @@ G_BEGIN_DECLS
 
 typedef GSList * ( *pget_filters )( void * );
 typedef void     ( *pset_filters )( void *, GSList * );
-typedef gchar *  ( *pon_add_cb )  ( void *, BaseWindow * );
+typedef void     ( *pon_add_cb )  ( void *, BaseWindow * );
+
+enum {
+	MATCH_LIST_MUST_MATCH_ONE_OF = 1,
+	MATCH_LIST_MUST_MATCH_ALL_OF,
+};
 
 typedef struct {
 	BaseWindow      *window;
@@ -54,6 +59,7 @@ typedef struct {
 	pget_filters     pget;
 	pset_filters     pset;
 	pon_add_cb       pon_add;
+	guint            match_header;
 	gchar           *item_header;
 	gboolean         editable;
 	guint            sort_column;
@@ -65,6 +71,7 @@ void  nact_match_list_create_model        ( BaseWindow *window, const gchar *tab
 		guint tab_id,
 		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
 		pget_filters pget, pset_filters pset, pon_add_cb pon_add,
+		guint match_header,
 		const gchar *item_header );
 
 void  nact_match_list_init_view           ( BaseWindow *window, const gchar *tab_name );

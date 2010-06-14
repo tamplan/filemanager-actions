@@ -22,6 +22,8 @@ src/nact/base-window.c
 src/nact/egg-desktop-file.c
 src/nact/egg-sm-client.c
 src/nact/nact-application.c
+src/nact/nact-add-capability-dialog.c
+src/nact/nact-add-capability.ui
 src/nact/nact-add-scheme.ui
 src/nact/nact-assistant-export.c
 src/nact/nact-assistant-export.ui

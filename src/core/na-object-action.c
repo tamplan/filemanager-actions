@@ -354,6 +354,8 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 	 */
 	na_icontext_read_done( NA_ICONTEXT( instance ));
 
+	na_object_dump( instance );
+
 	/* last, set other action defaults
 	 */
 	na_factory_object_set_defaults( instance );

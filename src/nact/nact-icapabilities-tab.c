@@ -40,6 +40,8 @@
 
 #include "nact-gtk-utils.h"
 #include "nact-main-tab.h"
+#include "nact-match-list.h"
+#include "nact-add-capability-dialog.h"
 #include "nact-icapabilities-tab.h"
 
 /* private interface data
@@ -70,6 +72,8 @@ static SelectionCountStruct st_counts[] = {
 		{ NULL }
 };
 
+#define ITAB_NAME						"capabilities"
+
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
@@ -82,8 +86,11 @@ static void         on_tab_updatable_selection_changed( NactICapabilitiesTab *in
 static void         on_tab_updatable_enable_tab( NactICapabilitiesTab *instance, NAObjectItem *item );
 static void         on_selcount_ope_changed( GtkComboBox *combo, NactICapabilitiesTab *instance );
 static void         on_selcount_int_changed( GtkEntry *entry, NactICapabilitiesTab *instance );
+static void         on_add_clicked( GtkButton *button, BaseWindow *window );
 static gboolean     tab_set_sensitive( NactICapabilitiesTab *instance );
 static GtkTreeView *get_capabilities_tree_view( NactICapabilitiesTab *instance );
+static GSList      *get_capabilities( NAIContext *context );
+static void         set_capabilities( NAIContext *context, GSList *list );
 static void         init_count_combobox( NactICapabilitiesTab *instance );
 static void         set_selection_count_selection( NactICapabilitiesTab *instance, const gchar *ope, const gchar *uint );
 static gchar       *get_selection_count_selection( NactICapabilitiesTab *instance );
@@ -162,6 +169,7 @@ void
 nact_icapabilities_tab_initial_load_toplevel( NactICapabilitiesTab *instance )
 {
 	static const gchar *thisfn = "nact_icapabilities_tab_initial_load_toplevel";
+	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
@@ -170,6 +178,19 @@ nact_icapabilities_tab_initial_load_toplevel( NactICapabilitiesTab *instance )
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		init_count_combobox( instance );
+
+		list = base_window_get_widget( BASE_WINDOW( instance ), "CapabilitiesTreeView" );
+		add = base_window_get_widget( BASE_WINDOW( instance ), "AddCapabilityButton" );
+		remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveCapabilityButton" );
+
+		nact_match_list_create_model( BASE_WINDOW( instance ),
+				ITAB_NAME, TAB_CAPABILITIES,
+				list, add, remove,
+				( pget_filters ) get_capabilities,
+				( pset_filters ) set_capabilities,
+				( pon_add_cb ) on_add_clicked,
+				MATCH_LIST_MUST_MATCH_ALL_OF,
+				_( "Capability filter" ));
 	}
 }
 
@@ -186,6 +207,7 @@ nact_icapabilities_tab_runtime_init_toplevel( NactICapabilitiesTab *instance )
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		listview = get_capabilities_tree_view( instance );
+		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 		runtime_init_connect_signals( instance, listview );
 	}
 }
@@ -254,6 +276,7 @@ nact_icapabilities_tab_dispose( NactICapabilitiesTab *instance )
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		dispose_count_combobox( instance );
+		nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 	}
 }
 
@@ -300,6 +323,7 @@ on_tab_updatable_selection_changed( NactICapabilitiesTab *instance, gint count_s
 		gtk_widget_set_sensitive( entry, context != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 
+		nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, count_selected );
 		tab_set_sensitive( instance );
 	}
 }
@@ -371,6 +395,35 @@ on_selcount_int_changed( GtkEntry *entry, NactICapabilitiesTab *instance )
 	}
 }
 
+static void
+on_add_clicked( GtkButton *button, BaseWindow *window )
+{
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	GSList *capabilities;
+	gchar *new_cap;
+
+	g_object_get(
+			G_OBJECT( window ),
+			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			NULL );
+
+	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+	if( context ){
+		capabilities = na_object_get_capabilities( context );
+		new_cap = nact_add_capability_dialog_run( window, capabilities );
+		g_debug( "nact_icapabilities_tab_on_add_clicked: new_cap=%s", new_cap );
+
+		if( new_cap ){
+			nact_match_list_insert_row( window, ITAB_NAME, new_cap, FALSE, FALSE );
+			g_free( new_cap );
+		}
+	}
+}
+
 static gboolean
 tab_set_sensitive( NactICapabilitiesTab *instance )
 {
@@ -399,6 +452,18 @@ get_capabilities_tree_view( NactICapabilitiesTab *instance )
 	g_assert( GTK_IS_TREE_VIEW( treeview ));
 
 	return( GTK_TREE_VIEW( treeview ));
+}
+
+static GSList *
+get_capabilities( NAIContext *context )
+{
+	return( na_object_get_capabilities( context ));
+}
+
+static void
+set_capabilities( NAIContext *context, GSList *list )
+{
+	na_object_set_capabilities( context, list );
 }
 
 static void

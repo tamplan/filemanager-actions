@@ -51,27 +51,42 @@ enum {
 	N_COLUMN
 };
 
+typedef struct {
+	guint  header_id;
+	gchar *header_label;
+}
+	ColumnHeaderStruct;
+
+/* i18n: label of the header of the column which let the user select a positive filter
+ */
+static ColumnHeaderStruct st_match_headers[] = {
+	{ MATCH_LIST_MUST_MATCH_ONE_OF, N_( "Must match one of" ) },
+	{ MATCH_LIST_MUST_MATCH_ALL_OF, N_( "Must match all of" ) },
+	{ 0 }
+};
+
 static gboolean st_on_selection_change = FALSE;
 
-static void     on_add_filter_clicked( GtkButton *button, MatchListStr *data );
-static void     on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
-static void     on_filter_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, MatchListStr *data );
-static gboolean on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListStr *data );
-static void     on_must_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
-static void     on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, MatchListStr *data );
-static void     on_must_not_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
-static void     on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, MatchListStr *data );
-static void     on_remove_filter_clicked( GtkButton *button, MatchListStr *data );
-static void     on_selection_changed( GtkTreeSelection *selection, MatchListStr *data );
+static void         on_add_filter_clicked( GtkButton *button, MatchListStr *data );
+static void         on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
+static void         on_filter_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, MatchListStr *data );
+static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListStr *data );
+static void         on_must_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
+static void         on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, MatchListStr *data );
+static void         on_must_not_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
+static void         on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, MatchListStr *data );
+static void         on_remove_filter_clicked( GtkButton *button, MatchListStr *data );
+static void         on_selection_changed( GtkTreeSelection *selection, MatchListStr *data );
 
-static void     add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix );
-static void     delete_current_row( MatchListStr *data );
-static void     edit_inline( MatchListStr *data );
-static void     insert_new_row( MatchListStr *data );
-static void     insert_new_row_data( MatchListStr *data, const gchar *filter, gboolean match, gboolean no_match );
-static void     iter_for_setup( gchar *filter, GtkTreeModel *model );
-static void     sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint colid );
-static gboolean tab_set_sensitive( MatchListStr *data );
+static void         add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix );
+static void         delete_current_row( MatchListStr *data );
+static void         edit_inline( MatchListStr *data );
+static const gchar *get_must_match_header( guint id );
+static void         insert_new_row( MatchListStr *data );
+static void         insert_new_row_data( MatchListStr *data, const gchar *filter, gboolean match, gboolean no_match );
+static void         iter_for_setup( gchar *filter, GtkTreeModel *model );
+static void         sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint colid );
+static gboolean     tab_set_sensitive( MatchListStr *data );
 
 /**
  * nact_match_list_create_model:
@@ -93,6 +108,7 @@ nact_match_list_create_model( BaseWindow *window,
 		const gchar *tab_name, guint tab_id,
 		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
 		pget_filters pget, pset_filters pset, pon_add_cb pon_add,
+		guint match_header,
 		const gchar *item_header )
 {
 	MatchListStr *data;
@@ -110,6 +126,7 @@ nact_match_list_create_model( BaseWindow *window,
 	data->pget = pget;
 	data->pset = pset;
 	data->pon_add = pon_add;
+	data->match_header = match_header;
 	data->item_header = g_strdup( item_header );
 	data->editable = FALSE;
 	data->sort_column = 0;
@@ -131,9 +148,7 @@ nact_match_list_create_model( BaseWindow *window,
 	radio_cell = gtk_cell_renderer_toggle_new();
 	gtk_cell_renderer_toggle_set_radio( GTK_CELL_RENDERER_TOGGLE( radio_cell ), TRUE );
 	column = gtk_tree_view_column_new_with_attributes(
-			/* i18n: label of the header of a column which let the user select a positive filter
-			 */
-			_( "Must match one of" ),
+			get_must_match_header( match_header ),
 			radio_cell,
 			"active", MUST_MATCH_COLUMN,
 			NULL );
@@ -317,6 +332,7 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
 	data->editable = editable;
 	filters = ( *data->pget )( context );
+	g_debug( "%s: filters=%p (count=%d)", thisfn, ( void * ) filters, filters ? g_slist_length( filters ) : -1 );
 
 	st_on_selection_change = TRUE;
 
@@ -326,6 +342,7 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	gtk_list_store_clear( GTK_LIST_STORE( model ));
 
 	if( filters ){
+		na_core_utils_slist_dump( filters );
 		g_slist_foreach( filters, ( GFunc ) iter_for_setup, model );
 	}
 
@@ -334,6 +351,7 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 
 	nact_gtk_utils_set_editable( GTK_OBJECT( data->addbutton ), data->editable );
 	nact_gtk_utils_set_editable( GTK_OBJECT( data->removebutton ), data->editable );
+	gtk_widget_set_sensitive( data->removebutton, FALSE );
 
 	st_on_selection_change = FALSE;
 
@@ -760,6 +778,20 @@ edit_inline( MatchListStr *data )
 
 	g_list_foreach( rows, ( GFunc ) gtk_tree_path_free, NULL );
 	g_list_free( rows );
+}
+
+static const gchar *
+get_must_match_header( guint id )
+{
+	guint i;
+
+	for( i = 0 ; st_match_headers[i].header_id ; ++i ){
+		if( st_match_headers[i].header_id == id ){
+			return( st_match_headers[i].header_label );
+		}
+	}
+
+	return( "" );
 }
 
 static void

@@ -1,3 +1,25 @@
+2010-06-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-icontext-factory.c:
+	Change default capabilities to empty list.
+
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-capability-dialog.h:
+	* src/nact/nact-add-capability.ui: New files.
+
+	* po/POTFILES.in:
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-match-list.c:
+	* src/nact/nact-match-list.h (nact_match_list_create_model):
+	Add match_header parameter.
+
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-icapabilities-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-imimetypes-tab.c:
+	* src/nact/nact-ischemes-tab.c: Updated accordingly.
+
 2010-06-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-match-list.c:

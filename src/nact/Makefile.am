@@ -70,6 +70,8 @@ nautilus_actions_config_tool_SOURCES = \
 	egg-sm-client-xsmp.c								\
 	egg-tree-multi-dnd.c								\
 	egg-tree-multi-dnd.h								\
+	nact-add-capability-dialog.c						\
+	nact-add-capability-dialog.h						\
 	nact-add-scheme-dialog.c							\
 	nact-add-scheme-dialog.h							\
 	nact-application.c									\
@@ -173,6 +175,7 @@ nautilus_actions_config_tool_LDADD = \
 pkgdata_DATA = \
 	nautilus-actions-config-tool.actions				\
 	nautilus-actions-maintainer.actions					\
+	nact-add-capability.ui								\
 	nact-add-scheme.ui									\
 	nact-assistant-export.ui							\
 	nact-preferences.ui									\

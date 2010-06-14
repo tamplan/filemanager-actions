@@ -357,15 +357,13 @@ setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GS
 {
 	gchar *keyword;
 	gchar *description, *new_description;
-	gboolean used;
 
-	gtk_tree_model_get( model, iter, SCHEMES_KEYWORD_COLUMN, &keyword, SCHEMES_DESC_COLUMN, &description, SCHEMES_ALREADY_USED_COLUMN, &used, -1 );
+	gtk_tree_model_get( model, iter, SCHEMES_KEYWORD_COLUMN, &keyword, SCHEMES_DESC_COLUMN, &description, -1 );
 
 	if( na_core_utils_slist_find_negated( schemes, keyword )){
 		/* i18n: add a comment when a scheme is already used by current item */
 		new_description = g_strdup_printf( _( "%s (already used)"), description );
-		used = TRUE;
-		gtk_list_store_set( GTK_LIST_STORE( model ), iter, SCHEMES_DESC_COLUMN, new_description, SCHEMES_ALREADY_USED_COLUMN, used, -1 );
+		gtk_list_store_set( GTK_LIST_STORE( model ), iter, SCHEMES_DESC_COLUMN, new_description, SCHEMES_ALREADY_USED_COLUMN, TRUE, -1 );
 		g_free( new_description );
 	}
 

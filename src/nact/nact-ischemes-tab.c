@@ -157,6 +157,7 @@ nact_ischemes_tab_initial_load_toplevel( NactISchemesTab *instance )
 				( pget_filters ) get_schemes,
 				( pset_filters ) set_schemes,
 				NULL,
+				MATCH_LIST_MUST_MATCH_ONE_OF,
 				_( "Scheme filter" ));
 	}
 }

@@ -487,9 +487,9 @@ NADataDef data_def_conditions [] = {
 					"- Writable: selected items are writable by user\n" \
 					"- Executable: selected items are executable by user\n" \
 					"- Local: selected items are local.\n" \
-					"Defaults to \"*;\"." ),
+					"Defaults to empty list." ),
 				NAFD_TYPE_STRING_LIST,
-				"*",
+				NULL,
 				FALSE,
 				TRUE,
 				TRUE,
