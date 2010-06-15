@@ -331,8 +331,12 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 
 	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
 	data->editable = editable;
-	filters = ( *data->pget )( context );
-	g_debug( "%s: filters=%p (count=%d)", thisfn, ( void * ) filters, filters ? g_slist_length( filters ) : -1 );
+	filters = NULL;
+
+	if( context ){
+		filters = ( *data->pget )( context );
+		g_debug( "%s: filters=%p (count=%d)", thisfn, ( void * ) filters, filters ? g_slist_length( filters ) : -1 );
+	}
 
 	st_on_selection_change = TRUE;
 
