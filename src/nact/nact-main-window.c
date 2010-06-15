@@ -1551,17 +1551,26 @@ static void
 ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode )
 {
 	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_display_order_changed";
-	/*NactMainWindow *self;*/
+	NactApplication *application;
+	NAUpdater *updater;
+	GList *tree;
 
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
 	g_debug( "%s: instance=%p, order_mode=%d", thisfn, ( void * ) instance, order_mode );
-	g_assert( NACT_IS_MAIN_WINDOW( instance ));
-	/*self = NACT_MAIN_WINDOW( instance );*/
 
 	nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( instance ), order_mode );
 	nact_sort_buttons_display_order_change( NACT_MAIN_WINDOW( instance ), order_mode );
 
-	g_signal_emit_by_name(
-			NACT_MAIN_WINDOW( instance ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+	updater = nact_application_get_updater( application );
+	tree = na_pivot_get_items( NA_PIVOT( updater ));
+
+	if( g_list_length( tree )){
+		g_signal_emit_by_name(
+				NACT_MAIN_WINDOW( instance ),
+				MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
+				GINT_TO_POINTER( TRUE ));
+	}
 }
 
 static void

@@ -1,5 +1,8 @@
 2010-06-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c:
+	Do not mark the application as modified when list is empty.
+
 	* src/nact/nact-iaction-tab.c:
 	* src/nact/nact-ibasenames-tab.c:
 	* src/nact/nact-icapabilities-tab.c:
