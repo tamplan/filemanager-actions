@@ -32,6 +32,9 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+#include <string.h>
+
 #include <api/na-object-api.h>
 
 #include "nact-main-tab.h"
@@ -43,6 +46,30 @@ struct NactIEnvironmentTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+/* column ordering
+ */
+enum {
+	ENV_BOOL_COLUMN = 0,
+	ENV_LABEL_COLUMN,
+	ENV_KEYWORD_COLUMN,
+	N_COLUMN
+};
+
+typedef struct {
+	gchar *keyword;
+	gchar *label;
+}
+	EnvStruct;
+
+static EnvStruct st_envs[] = {
+	{ "GNOME", N_( "GNOME desktop" ) },
+	{ "KDE",   N_( "KDE desktop" ) },
+	{ "ROX",   N_( "ROX desktop" ) },
+	{ "XFCE",  N_( "XFCE desktop" ) },
+	{ "Old",   N_( "Legacy systems" ) },
+	{ NULL }
+};
+
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 static gboolean st_on_selection_change = FALSE;
@@ -52,7 +79,20 @@ static void     interface_base_init( NactIEnvironmentTabInterface *klass );
 static void     interface_base_finalize( NactIEnvironmentTabInterface *klass );
 
 static void     on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_selected );
-static gboolean tab_set_sensitive( NactIEnvironmentTab *instance );
+static void     on_tab_updatable_enable_tab( NactIEnvironmentTab *instance, NAObjectItem *item );
+
+static void     on_show_always_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
+static void     on_only_show_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
+static void     on_do_not_show_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
+static void     on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window );
+static void     on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
+static void     on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance );
+static void     on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
+static void     on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
+static void     on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
+static void     on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance );
+
+static gboolean tab_set_sensitive( NactIEnvironmentTab *instance, NAIContext *context );
 
 GType
 nact_ienvironment_tab_get_type( void )
@@ -133,11 +173,43 @@ void
 nact_ienvironment_tab_initial_load_toplevel( NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_initial_load_toplevel";
+	GtkTreeView *listview;
+	GtkListStore *model;
+	GtkCellRenderer *check_cell, *text_cell;
+	GtkTreeViewColumn *column;
+	GtkTreeSelection *selection;
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsTreeView" ));
+		model = gtk_list_store_new( N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING );
+		gtk_tree_view_set_model( listview, GTK_TREE_MODEL( model ));
+		g_object_unref( model );
+
+		check_cell = gtk_cell_renderer_toggle_new();
+		column = gtk_tree_view_column_new_with_attributes(
+				"boolean",
+				check_cell,
+				"active", ENV_BOOL_COLUMN,
+				NULL );
+		gtk_tree_view_append_column( listview, column );
+
+		text_cell = gtk_cell_renderer_text_new();
+		column = gtk_tree_view_column_new_with_attributes(
+				"label",
+				text_cell,
+				"text", ENV_LABEL_COLUMN,
+				NULL );
+		gtk_tree_view_append_column( listview, column );
+
+		gtk_tree_view_set_headers_visible( listview, FALSE );
+
+		selection = gtk_tree_view_get_selection( listview );
+		gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 	}
 }
 
@@ -152,17 +224,117 @@ void
 nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_runtime_init_toplevel";
+	GtkWidget *button, *entry;
+	GtkTreeView *listview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreeViewColumn *column;
+	GList *renderers;
+	guint i;
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
+				G_CALLBACK( on_tab_updatable_enable_tab ));
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "ShowAlwaysButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( button ),
+				"toggled",
+				G_CALLBACK( on_show_always_toggled ));
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "OnlyShowButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( button ),
+				"toggled",
+				G_CALLBACK( on_only_show_toggled ));
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "DoNotShowButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( button ),
+				"toggled",
+				G_CALLBACK( on_do_not_show_toggled ));
+
+		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsTreeView" ));
+		model = gtk_tree_view_get_model( listview );
+
+		for( i = 0 ; st_envs[i].keyword ; ++i ){
+			gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
+			gtk_list_store_set(
+					GTK_LIST_STORE( model ),
+					&iter,
+					ENV_BOOL_COLUMN, FALSE,
+					ENV_LABEL_COLUMN, st_envs[i].label,
+					ENV_KEYWORD_COLUMN, st_envs[i].keyword,
+					-1 );
+		}
+
+		column = gtk_tree_view_get_column( listview, ENV_BOOL_COLUMN );
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( renderers->data ),
+				"toggled",
+				G_CALLBACK( on_desktop_toggled ));
+
+
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "TryExecEntry" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( entry ),
+				"changed",
+				G_CALLBACK( on_try_exec_changed ));
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "TryExecButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( button ),
+				"clicked",
+				G_CALLBACK( on_try_exec_browse ));
+
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRegisteredEntry" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( entry ),
+				"changed",
+				G_CALLBACK( on_show_if_registered_changed ));
+
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfTrueEntry" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( entry ),
+				"changed",
+				G_CALLBACK( on_show_if_true_changed ));
+
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningEntry" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( entry ),
+				"changed",
+				G_CALLBACK( on_show_if_running_changed ));
+
+		button = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( button ),
+				"clicked",
+				G_CALLBACK( on_show_if_running_browse ));
 	}
 }
 
@@ -171,10 +343,11 @@ nact_ienvironment_tab_all_widgets_showed( NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_all_widgets_showed";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	}
 }
 
@@ -188,11 +361,21 @@ void
 nact_ienvironment_tab_dispose( NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_dispose";
+	GtkTreeView *listview;
+	GtkTreeModel *model;
+	GtkTreeSelection *selection;
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsTreeView" ));
+		model = gtk_tree_view_get_model( listview );
+		selection = gtk_tree_view_get_selection( listview );
+		gtk_tree_selection_unselect_all( selection );
+		gtk_list_store_clear( GTK_LIST_STORE( model ));
 	}
 }
 
@@ -200,32 +383,264 @@ static void
 on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_selected )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_on_tab_updatable_selection_changed";
+	GtkTreeView *listview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *path;
+	GtkTreeSelection *selection;
+	gboolean next_ok, found;
+	GtkWidget *appear_button;
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	gboolean editable;
+	GSList *show, *notshow, *checked, *ic;
+	gchar *keyword;
 
-	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
+		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
+
 		st_on_selection_change = TRUE;
 
-		tab_set_sensitive( instance );
+		/* reinitialize the list OnlyShowIn/NotShowIn
+		 */
+		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsTreeView" ));
+		model = gtk_tree_view_get_model( listview );
+
+		if( gtk_tree_model_get_iter_first( model, &iter )){
+			next_ok = TRUE;
+			while( next_ok ){
+				gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ENV_BOOL_COLUMN, FALSE, -1 );
+				next_ok = gtk_tree_model_iter_next( model, &iter );
+			}
+		}
+
+		/* setup the tab for current context
+		 */
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				NULL );
+
+		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+		tab_set_sensitive( instance, context );
+
+		show = NULL;
+		notshow = NULL;
+		checked = NULL;
+		found = FALSE;
+		appear_button = base_window_get_widget( BASE_WINDOW( instance ), "ShowAlwaysButton" );
+
+		if( context ){
+			show = na_object_get_only_show_in( context );
+			if( show && g_slist_length( show )){
+				appear_button = base_window_get_widget( BASE_WINDOW( instance ), "OnlyShowButton" );
+				checked = show;
+			} else {
+				notshow = na_object_get_not_show_in( context );
+				if( notshow && g_slist_length( notshow )){
+					appear_button = base_window_get_widget( BASE_WINDOW( instance ), "DoNotShowButton" );
+					checked = notshow;
+				}
+			}
+		}
+
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( appear_button ), TRUE );
+
+		for( ic = checked ; ic ; ic = ic->next ){
+			if( strlen( ic->data )){
+				if( gtk_tree_model_get_iter_first( model, &iter )){
+					next_ok = TRUE;
+					found = FALSE;
+					while( next_ok && !found ){
+						gtk_tree_model_get( model, &iter, ENV_KEYWORD_COLUMN, &keyword, -1 );
+						if( !strcmp( keyword, ic->data )){
+							gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ENV_BOOL_COLUMN, TRUE, -1 );
+							found = TRUE;
+						}
+						g_free( keyword );
+						if( !found ){
+							next_ok = gtk_tree_model_iter_next( model, &iter );
+						}
+					}
+				}
+				if( !found ){
+					g_warning( "%s: unable to set %s environment", thisfn, ( const gchar * ) ic->data );
+				}
+			}
+		}
 
 		st_on_selection_change = FALSE;
+
+		if( context ){
+			path = gtk_tree_path_new_first();
+			if( path ){
+				selection = gtk_tree_view_get_selection( listview );
+				gtk_tree_selection_select_path( selection, path );
+				gtk_tree_path_free( path );
+			}
+		}
 	}
 }
 
-static gboolean
-tab_set_sensitive( NactIEnvironmentTab *instance )
+static void
+on_tab_updatable_enable_tab( NactIEnvironmentTab *instance, NAObjectItem *item )
 {
+	static const gchar *thisfn = "nact_ienvironment_tab_on_tab_updatable_enable_tab";
 	NAObjectProfile *profile;
+	NAIContext *context;
+
+	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
+
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				NULL );
+
+		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+		tab_set_sensitive( instance, context );
+	}
+}
+
+static void
+on_show_always_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *instance )
+{
+	static const gchar *thisfn = "nact_ienvironment_tab_on_show_always_toggled";
+
+	g_debug( "%s: toggle_button=%p (active=%s), instance=%p",
+			thisfn,
+			( void * ) toggle_button, gtk_toggle_button_get_active( toggle_button ) ? "True":"False",
+			( void * ) instance );
+}
+
+static void
+on_only_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *instance )
+{
+	static const gchar *thisfn = "nact_ienvironment_tab_on_only_show_toggled";
+
+	g_debug( "%s: toggle_button=%p (active=%s), instance=%p",
+			thisfn,
+			( void * ) toggle_button, gtk_toggle_button_get_active( toggle_button ) ? "True":"False",
+			( void * ) instance );
+}
+
+static void
+on_do_not_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *instance )
+{
+	static const gchar *thisfn = "nact_ienvironment_tab_on_do_not_show_toggled";
+
+	g_debug( "%s: toggle_button=%p (active=%s), instance=%p",
+			thisfn,
+			( void * ) toggle_button, gtk_toggle_button_get_active( toggle_button ) ? "True":"False",
+			( void * ) instance );
+}
+
+static void
+on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_ienvironment_tab_on_desktop_toggled";
+	GtkTreeView *listview;
+	gboolean editable;
+	NAObjectItem *item;
+	NAObjectProfile *profile;
+	NAIContext *context;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreePath *tree_path;
+	gboolean state;
+	gchar *desktop;
+
+	g_debug( "%s: renderer=%p, path=%s, window=%p", thisfn, ( void * ) renderer, path, ( void * ) window );
+
+	if( !st_on_selection_change ){
+
+		listview = GTK_TREE_VIEW( base_window_get_widget( window, "EnvironmentsTreeView" ));
+		model = gtk_tree_view_get_model( listview );
+		tree_path = gtk_tree_path_new_from_string( path );
+		gtk_tree_model_get_iter( model, &iter, tree_path );
+		gtk_tree_path_free( tree_path );
+		gtk_tree_model_get( model, &iter, ENV_BOOL_COLUMN, &state, ENV_KEYWORD_COLUMN, &desktop, -1 );
+
+		g_object_get(
+				G_OBJECT( window ),
+				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				NULL );
+
+		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+
+		if( !editable ){
+			g_signal_handlers_block_by_func(( gpointer ) renderer, on_desktop_toggled, window );
+			gtk_cell_renderer_toggle_set_active( renderer, state );
+			g_signal_handlers_unblock_by_func(( gpointer ) renderer, on_desktop_toggled, window );
+
+		} else {
+			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ENV_BOOL_COLUMN, !state, -1 );
+			/*
+			if( g_object_class_find_property( G_OBJECT_GET_CLASS( window ), TAB_UPDATABLE_PROP_EDITED_PROFILE )){
+				g_object_get(
+						G_OBJECT( window ),
+						TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+						NULL );
+				if( edited ){
+					na_object_set_scheme( edited, scheme, !state );
+					g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+				}
+			}
+			*/
+		}
+
+		g_free( desktop );
+	}
+}
+
+static void
+on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
+{
+}
+
+static void
+on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance )
+{
+}
+
+static void
+on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
+{
+}
+
+static void
+on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
+{
+}
+
+static void
+on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
+{
+}
+
+static void
+on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance )
+{
+}
+
+static gboolean
+tab_set_sensitive( NactIEnvironmentTab *instance, NAIContext *context )
+{
 	gboolean enable_tab;
 
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-			NULL );
-
-	enable_tab = ( profile != NULL );
+	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT, enable_tab );
 
 	return( enable_tab );

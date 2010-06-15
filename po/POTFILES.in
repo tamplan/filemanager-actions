@@ -35,6 +35,7 @@ src/nact/nact-iaction-tab.c
 src/nact/nact-ibasenames-tab.c
 src/nact/nact-icapabilities-tab.c
 src/nact/nact-icommand-tab.c
+src/nact/nact-ienvironment-tab.c
 src/nact/nact-ifolders-tab.c
 src/nact/nact-imimetypes-tab.c
 src/nact/nact-iproperties-tab.c

@@ -38,6 +38,10 @@
  *
  * This interface implements all the widgets which define the
  * actual action to be executed.
+ *
+ * Notes:
+ * - OnlyShowIn/NotShowIn are configured as one list of strings.
+ *   They are edited here as a radio button and a list of checkbuttons
  */
 
 #include <glib-object.h>

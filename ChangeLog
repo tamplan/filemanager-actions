@@ -1,3 +1,9 @@
+2010-06-15 Pierre Wieser <pwieser@trychlos.org>
+
+	* po/POTFILES.in: Add src/nact/nact-ienvironment-tab.c file.
+
+	* src/nact/nact-ienvironment-tab.c: Connect signals.
+
 2010-06-14 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-icontext-factory.c:
