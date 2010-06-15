@@ -80,32 +80,33 @@ struct NactMainWindowPrivate {
 	GList           *deleted;
 
 	/**
-	 * Currently edited action or menu.
+	 * Currently selected action or menu.
 	 *
-	 * This is the action or menu which is displayed in tab Action ;
-	 * it may be different of the row being currently selected.
+	 * This is the action or menu which is displayed in tabs Action/Menu
+	 * and Properties ; it may be different of the exact row being currently
+	 * selected, e.g. when a sub-profile is edited.
 	 *
-	 * Can be null, and this implies that edited_profile is also null.
+	 * Can be null, and this implies that @selected_profile is also null,
+	 * e.g. when the list is empty or in case of multiple selection.
 	 *
-	 * 'editable_item' property is computed on selection change;
-	 * This is the real writability status of the item.
+	 * 'editable' property is computed on selection change;
+	 * This is the real writability status of the item at this time.
 	 */
-	NAObjectItem    *edited_item;
+	NAObjectItem    *selected_item;
 	gboolean         editable;
 	gint             reason;
 
 	/**
-	 * Currently edited profile.
+	 * Currently selected profile.
 	 *
-	 * This is the profile which is displayed in tabs Command,
-	 * Conditions and Advanced ; it may be different of the row being
-	 * currently selected.
+	 * This is the profile which is displayed in tab Command;
+	 * it may be different of the exact row being currently selected.
 	 *
-	 * Can be null if @edited_item is a menu, or an action with more
+	 * Can be null if @selected_item is a menu, or an action with more
 	 * than one profile and action is selected, or an action without
-	 * any profile.
+	 * any profile, or the list is empty, or in case of multiple selection.
 	 */
-	NAObjectProfile *edited_profile;
+	NAObjectProfile *selected_profile;
 
 	/**
 	 * The convenience clipboard object.
@@ -172,6 +173,7 @@ static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer use
 static void     on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
 static void     on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void     on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data );
+static void     raz_main_properties( NactMainWindow *window );
 static void     set_current_object_item( NactMainWindow *window, GSList *selected_items );
 static void     set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
 static gchar   *iactions_list_get_treeview_name( NactIActionsList *instance );
@@ -690,11 +692,11 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 		switch( property_id ){
 			case PROP_EDITED_ITEM:
-				g_value_set_pointer( value, self->private->edited_item );
+				g_value_set_pointer( value, self->private->selected_item );
 				break;
 
 			case PROP_EDITED_PROFILE:
-				g_value_set_pointer( value, self->private->edited_profile );
+				g_value_set_pointer( value, self->private->selected_profile );
 				break;
 
 			case PROP_EDITABLE:
@@ -724,11 +726,11 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 		switch( property_id ){
 			case PROP_EDITED_ITEM:
-				self->private->edited_item = g_value_get_pointer( value );
+				self->private->selected_item = g_value_get_pointer( value );
 				break;
 
 			case PROP_EDITED_PROFILE:
-				self->private->edited_profile = g_value_get_pointer( value );
+				self->private->selected_profile = g_value_get_pointer( value );
 				break;
 
 			case PROP_EDITABLE:
@@ -1203,6 +1205,8 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 
 	if( !window->private->dispose_has_run ){
 
+		raz_main_properties( window );
+
 		nact_iaction_tab_all_widgets_showed( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_all_widgets_showed( NACT_ICOMMAND_TAB( window ));
 		nact_ibasenames_tab_all_widgets_showed( NACT_IBASENAMES_TAB( window ));
@@ -1253,28 +1257,25 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 		return;
 	}
 
-	window->private->edited_item = NULL;
-	window->private->editable = FALSE;
-	window->private->reason = 0;
-	nact_main_statusbar_set_locked( window, FALSE, 0 );
+	raz_main_properties( window );
 
 	if( count == 1 ){
 		g_return_if_fail( NA_IS_OBJECT_ID( selected_items->data ));
 		object = NA_OBJECT( selected_items->data );
 
 		if( NA_IS_OBJECT_ITEM( object )){
-			window->private->edited_item = NA_OBJECT_ITEM( object );
+			window->private->selected_item = NA_OBJECT_ITEM( object );
 			set_current_object_item( window, selected_items );
 
 		} else {
 			g_assert( NA_IS_OBJECT_PROFILE( object ));
-			window->private->edited_profile = NA_OBJECT_PROFILE( object );
+			window->private->selected_profile = NA_OBJECT_PROFILE( object );
 			set_current_profile( window, TRUE, selected_items );
 		}
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
 		updater = nact_application_get_updater( application );
-		window->private->editable = na_updater_is_item_writable( updater, window->private->edited_item, &window->private->reason );
+		window->private->editable = na_updater_is_item_writable( updater, window->private->selected_item, &window->private->reason );
 		nact_main_statusbar_set_locked( window, !window->private->editable, window->private->reason );
 
 	} else {
@@ -1284,6 +1285,17 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 	setup_dialog_title( window );
 
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_SELECTION_CHANGED, GINT_TO_POINTER( count ));
+}
+
+static void
+raz_main_properties( NactMainWindow *window )
+{
+	window->private->selected_item = NULL;
+	window->private->selected_profile = NULL;
+	window->private->editable = FALSE;
+	window->private->reason = 0;
+
+	nact_main_statusbar_set_locked( window, FALSE, 0 );
 }
 
 static void
@@ -1308,22 +1320,22 @@ set_current_object_item( NactMainWindow *window, GSList *selected_items )
 	/*NAObject *current;*/
 
 	g_debug( "%s: window=%p, current=%p, selected_items=%p",
-			thisfn, ( void * ) window, ( void * ) window->private->edited_item, ( void * ) selected_items );
+			thisfn, ( void * ) window, ( void * ) window->private->selected_item, ( void * ) selected_items );
 
 	/* set the profile to be displayed, if any
 	 */
-	window->private->edited_profile = NULL;
+	window->private->selected_profile = NULL;
 
-	if( window->private->edited_item ){
+	if( window->private->selected_item ){
 
-		if( NA_IS_OBJECT_ACTION( window->private->edited_item )){
+		if( NA_IS_OBJECT_ACTION( window->private->selected_item )){
 
-			count_profiles = na_object_get_items_count( window->private->edited_item );
+			count_profiles = na_object_get_items_count( window->private->selected_item );
 			/*g_return_if_fail( count_profiles >= 1 );*/
 
 			if( count_profiles == 1 ){
-				profiles = na_object_get_items( window->private->edited_item );
-				window->private->edited_profile = NA_OBJECT_PROFILE( profiles->data );
+				profiles = na_object_get_items( window->private->selected_item );
+				window->private->selected_profile = NA_OBJECT_PROFILE( profiles->data );
 			}
 		}
 	}
@@ -1339,13 +1351,13 @@ set_current_profile( NactMainWindow *window, gboolean set_action, GSList *select
 	g_debug( "%s: window=%p, set_action=%s, selected_items=%p",
 			thisfn, ( void * ) window, set_action ? "True":"False", ( void * ) selected_items );
 
-	if( window->private->edited_profile && set_action ){
+	if( window->private->selected_profile && set_action ){
 
-		NAObjectAction *action = NA_OBJECT_ACTION( na_object_get_parent( window->private->edited_profile ));
+		NAObjectAction *action = NA_OBJECT_ACTION( na_object_get_parent( window->private->selected_profile ));
 		NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		NAUpdater *updater = nact_application_get_updater( application );
-		window->private->edited_item = NA_OBJECT_ITEM( action );
-		window->private->editable = na_updater_is_item_writable( updater, window->private->edited_item, &window->private->reason );
+		window->private->selected_item = NA_OBJECT_ITEM( action );
+		window->private->editable = na_updater_is_item_writable( updater, window->private->selected_item, &window->private->reason );
 	}
 }
 
@@ -1382,8 +1394,8 @@ setup_dialog_title( NactMainWindow *window )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	title = base_application_get_application_name( BASE_APPLICATION( application ));
 
-	if( window->private->edited_item ){
-		label = na_object_get_label( window->private->edited_item );
+	if( window->private->selected_item ){
+		label = na_object_get_label( window->private->selected_item );
 		tmp = g_strdup_printf( "%s - %s", title, label );
 		g_free( label );
 		g_free( title );
@@ -1517,8 +1529,8 @@ reload( NactMainWindow *window )
 
 	if( !window->private->dispose_has_run ){
 
-		window->private->edited_item = NULL;
-		window->private->edited_profile = NULL;
+		window->private->selected_item = NULL;
+		window->private->selected_profile = NULL;
 
 		na_object_unref_items( window->private->deleted );
 		window->private->deleted = NULL;
