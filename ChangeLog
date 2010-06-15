@@ -1,5 +1,8 @@
 2010-06-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.c: Remove unused PROP_SELECTED_ROW property.
+
 	* po/POTFILES.in: Add src/nact/nact-ienvironment-tab.c file.
 
 	* src/nact/nact-ienvironment-tab.c: Connect signals.
