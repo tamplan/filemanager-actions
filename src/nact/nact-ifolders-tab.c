@@ -69,7 +69,6 @@ static void    interface_base_finalize( NactIFoldersTabInterface *klass );
 
 static void    on_browse_folder_clicked( GtkButton *button, BaseWindow *window );
 static void    on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_selected );
-static void    on_tab_updatable_enable_tab( NactIFoldersTab *instance, NAObjectItem *item );
 
 static GSList *get_folders( void *context );
 static void    set_folders( void *context, GSList *filters );
@@ -189,12 +188,6 @@ nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance )
 				G_OBJECT( instance ),
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-				G_CALLBACK( on_tab_updatable_enable_tab ));
 
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 
@@ -329,12 +322,6 @@ on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_select
 	gtk_widget_set_sensitive( button, editable );
 
 	nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, count_selected );
-}
-
-static void
-on_tab_updatable_enable_tab( NactIFoldersTab *instance, NAObjectItem *item )
-{
-	nact_match_list_on_enable_tab( BASE_WINDOW( instance ), ITAB_NAME, item );
 }
 
 static GSList *

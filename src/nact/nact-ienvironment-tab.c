@@ -79,7 +79,6 @@ static void     interface_base_init( NactIEnvironmentTabInterface *klass );
 static void     interface_base_finalize( NactIEnvironmentTabInterface *klass );
 
 static void     on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_selected );
-static void     on_tab_updatable_enable_tab( NactIEnvironmentTab *instance, NAObjectItem *item );
 
 static void     on_show_always_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
 static void     on_only_show_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
@@ -243,12 +242,6 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 				G_OBJECT( instance ),
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-				G_CALLBACK( on_tab_updatable_enable_tab ));
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "ShowAlwaysButton" );
 		base_window_signal_connect(
@@ -486,29 +479,6 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 				gtk_tree_path_free( path );
 			}
 		}
-	}
-}
-
-static void
-on_tab_updatable_enable_tab( NactIEnvironmentTab *instance, NAObjectItem *item )
-{
-	static const gchar *thisfn = "nact_ienvironment_tab_on_tab_updatable_enable_tab";
-	NAObjectProfile *profile;
-	NAIContext *context;
-
-	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
-
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
-
-		g_object_get(
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-				NULL );
-
-		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
-		tab_set_sensitive( instance, context );
 	}
 }
 

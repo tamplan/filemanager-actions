@@ -58,7 +58,6 @@ static void    interface_base_finalize( NactIBasenamesTabInterface *klass );
 
 static void    on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window );
 static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
-static void    on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
 
 static GSList *get_basenames( void *context );
 static void    set_basenames( void *context, GSList *filters );
@@ -192,12 +191,6 @@ nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance )
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-				G_CALLBACK( on_tab_updatable_enable_tab ));
-
 		button = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesMatchcaseButton" );
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
@@ -288,12 +281,6 @@ on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
 
 	st_on_selection_change = FALSE;
-}
-
-static void
-on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item )
-{
-	nact_match_list_on_enable_tab( window, ITAB_NAME, item );
 }
 
 static GSList *

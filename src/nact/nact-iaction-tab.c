@@ -514,7 +514,6 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 			if( editable ){
 				na_object_set_target_selection( action, is_target );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 
 			} else {
@@ -553,7 +552,6 @@ on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 			if( editable ){
 				na_object_set_target_location( action, is_target );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 
 			} else {
@@ -657,7 +655,6 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 			if( editable ){
 				na_object_set_target_toolbar( action, is_target );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ENABLE_TAB, action );
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, action, FALSE );
 				toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( action ));
 				toolbar_label_set_sensitive( instance, NA_OBJECT_ITEM( action ));

@@ -83,7 +83,6 @@ static void         interface_base_finalize( NactICapabilitiesTabInterface *klas
 
 static void         runtime_init_connect_signals( NactICapabilitiesTab *instance, GtkTreeView *listview );
 static void         on_tab_updatable_selection_changed( NactICapabilitiesTab *instance, gint count_selected );
-static void         on_tab_updatable_enable_tab( NactICapabilitiesTab *instance, NAObjectItem *item );
 static void         on_selcount_ope_changed( GtkComboBox *combo, NactICapabilitiesTab *instance );
 static void         on_selcount_int_changed( GtkEntry *entry, NactICapabilitiesTab *instance );
 static void         on_add_clicked( GtkButton *button, BaseWindow *window );
@@ -229,12 +228,6 @@ runtime_init_connect_signals( NactICapabilitiesTab *instance, GtkTreeView *listv
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-				G_CALLBACK( on_tab_updatable_enable_tab ));
-
 		selcount_ope = base_window_get_widget( BASE_WINDOW( instance ), "ConditionsCountSigneCombobox" );
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
@@ -324,21 +317,6 @@ on_tab_updatable_selection_changed( NactICapabilitiesTab *instance, gint count_s
 		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 
 		nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, count_selected );
-		tab_set_sensitive( instance );
-	}
-}
-
-static void
-on_tab_updatable_enable_tab( NactICapabilitiesTab *instance, NAObjectItem *item )
-{
-	static const gchar *thisfn = "nact_icapabilities_tab_on_tab_updatable_enable_tab";
-
-	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
-
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
-
 		tab_set_sensitive( instance );
 	}
 }

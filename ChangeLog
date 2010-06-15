@@ -1,5 +1,16 @@
 2010-06-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-icapabilities-tab.c:
+	* src/nact/nact-ienvironment-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-imimetypes-tab.c:
+	* src/nact/nact-ischemes-tab.c:
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.c:
+	Remove irrelevant TAB_UPDATABLE_SIGNAL_ENABLE_TAB signal.
+
 	* src/nact/nact-match-list.c:
 	Do not try to get filters when there is no current context.
 

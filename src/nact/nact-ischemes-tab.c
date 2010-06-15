@@ -59,7 +59,6 @@ static void    interface_base_finalize( NactISchemesTabInterface *klass );
 
 static void    on_add_from_defaults( GtkButton *button, BaseWindow *window );
 static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
-static void    on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
 
 static GSList *get_schemes( void *context );
 static void    set_schemes( void *context, GSList *filters );
@@ -180,12 +179,6 @@ nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance )
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-				G_CALLBACK( on_tab_updatable_enable_tab ));
-
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "AddFromDefaultButton" );
@@ -274,12 +267,6 @@ on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 	gtk_widget_set_sensitive( button, editable );
 
 	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
-}
-
-static void
-on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item )
-{
-	nact_match_list_on_enable_tab( window, ITAB_NAME, item );
 }
 
 static GSList *

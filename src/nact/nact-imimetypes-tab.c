@@ -56,7 +56,6 @@ static void    interface_base_init( NactIMimetypesTabInterface *klass );
 static void    interface_base_finalize( NactIMimetypesTabInterface *klass );
 
 static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
-static void    on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item );
 
 static GSList *get_mimetypes( void *context );
 static void    set_mimetypes( void *context, GSList *filters );
@@ -189,12 +188,6 @@ nact_imimetypes_tab_runtime_init_toplevel( NactIMimetypesTab *instance )
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-				G_CALLBACK( on_tab_updatable_enable_tab ));
-
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 	}
 }
@@ -237,12 +230,6 @@ static void
 on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 {
 	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
-}
-
-static void
-on_tab_updatable_enable_tab( BaseWindow *window, NAObjectItem *item )
-{
-	nact_match_list_on_enable_tab( window, ITAB_NAME, item );
 }
 
 static GSList *

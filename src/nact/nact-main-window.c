@@ -130,7 +130,6 @@ enum {
 	PROVIDER_CHANGED,
 	SELECTION_CHANGED,
 	ITEM_UPDATED,
-	ENABLE_TAB,
 	UPDATE_SENSITIVITIES,
 	ORDER_CHANGED,
 	LAST_SIGNAL
@@ -461,25 +460,6 @@ class_init( NactMainWindowClass *klass )
 			2,
 			G_TYPE_POINTER,
 			G_TYPE_BOOLEAN );
-
-	/**
-	 * nact-tab-updatable-enable-tab:
-	 *
-	 * This signal is emitted by the IActionTab when the nature of the
-	 * item has been modified: some tabs should probably be enabled or
-	 * disabled
-	 */
-	st_signals[ ENABLE_TAB ] = g_signal_new(
-			TAB_UPDATABLE_SIGNAL_ENABLE_TAB,
-			G_TYPE_OBJECT,
-			G_SIGNAL_RUN_LAST,
-			0,					/* no default handler */
-			NULL,
-			NULL,
-			g_cclosure_marshal_VOID__POINTER,
-			G_TYPE_NONE,
-			1,
-			G_TYPE_POINTER );
 
 	/**
 	 * main-window-update-sensitivities:
