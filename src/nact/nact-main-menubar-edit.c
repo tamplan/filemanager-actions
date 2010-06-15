@@ -375,7 +375,7 @@ prepare_for_paste( NactMainWindow *window )
 
 		if( NA_IS_OBJECT_PROFILE( it->data )){
 			if( !action ){
-				g_object_get( G_OBJECT( window ), TAB_UPDATABLE_PROP_EDITED_ACTION, &action, NULL );
+				g_object_get( G_OBJECT( window ), TAB_UPDATABLE_PROP_SELECTED_ITEM, &action, NULL );
 				g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
 			}
 		}

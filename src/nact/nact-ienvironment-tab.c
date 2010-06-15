@@ -422,7 +422,7 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		 */
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
@@ -573,7 +573,7 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *wi
 
 		g_object_get(
 				G_OBJECT( window ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );

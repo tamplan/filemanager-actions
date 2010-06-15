@@ -349,7 +349,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
@@ -804,7 +804,7 @@ parse_parameters( NactICommandTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 

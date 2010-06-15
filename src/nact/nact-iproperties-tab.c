@@ -247,7 +247,7 @@ on_tab_updatable_selection_changed( NactIPropertiesTab *instance, gint count_sel
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -335,7 +335,7 @@ on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -382,7 +382,7 @@ on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
 			NULL );
 
 	if( edited ){

@@ -324,7 +324,7 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 
 	g_object_get(
 			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			TAB_UPDATABLE_PROP_EDITABLE, &editable,
 			NULL );
@@ -475,7 +475,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 
 	g_object_get(
 			G_OBJECT( data->window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
@@ -578,7 +578,7 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 
 		g_object_get(
 				G_OBJECT( data->window ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				NULL );
 
@@ -635,7 +635,7 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 
 		g_object_get(
 				G_OBJECT( data->window ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				NULL );
 
@@ -682,7 +682,7 @@ add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix )
 
 	g_object_get(
 			G_OBJECT( data->window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
@@ -726,7 +726,7 @@ delete_current_row( MatchListStr *data )
 
 		g_object_get(
 				G_OBJECT( data->window ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 				NULL );
 
@@ -899,7 +899,7 @@ tab_set_sensitive( MatchListStr *data )
 
 	g_object_get(
 			G_OBJECT( data->window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 

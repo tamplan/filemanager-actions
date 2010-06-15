@@ -402,7 +402,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -500,7 +500,7 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &action,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -539,7 +539,7 @@ on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &action,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -583,7 +583,7 @@ check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label )
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
 				NULL );
 
 		if( edited && g_utf8_strlen( label, -1 ) == 0 ){
@@ -607,7 +607,7 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
 			NULL );
 
 	if( edited ){
@@ -647,7 +647,7 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &action,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -686,7 +686,7 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -752,7 +752,7 @@ on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
 			NULL );
 
 	if( edited && NA_IS_OBJECT_ACTION( edited )){
@@ -784,7 +784,7 @@ on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
 			NULL );
 
 	if( edited ){
@@ -918,7 +918,7 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &edited,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
 			NULL );
 
 	if( edited ){

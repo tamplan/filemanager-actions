@@ -318,7 +318,7 @@ on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_select
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			TAB_UPDATABLE_PROP_EDITABLE, &editable,
 			NULL );

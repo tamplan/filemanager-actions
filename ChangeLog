@@ -1,5 +1,19 @@
 2010-06-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-icapabilities-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-ienvironment-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-iproperties-tab.c:
+	* src/nact/nact-ischemes-tab.c:
+	* src/nact/nact-main-menubar-edit.c:
+	* src/nact/nact-main-menubar-file.c:
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-match-list.c: Rename main properties.
+
 	* src/nact/nact-main-tab.h:
 	* src/nact/nact-main-window.c: Remove unused PROP_SELECTED_ROW property.
 

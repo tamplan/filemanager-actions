@@ -234,7 +234,7 @@ on_add_from_defaults( GtkButton *button, BaseWindow *window )
 
 	g_object_get(
 			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			NULL );
 
@@ -263,7 +263,7 @@ on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 
 	g_object_get(
 			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &item,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
 			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
 			TAB_UPDATABLE_PROP_EDITABLE, &editable,
 			NULL );

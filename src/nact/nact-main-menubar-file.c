@@ -193,7 +193,7 @@ nact_main_menubar_file_on_new_profile( GtkAction *gtk_action, NactMainWindow *wi
 
 	g_object_get(
 			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_EDITED_ACTION, &action,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &action,
 			NULL );
 
 	profile = na_object_profile_new_with_defaults();

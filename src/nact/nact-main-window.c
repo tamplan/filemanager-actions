@@ -356,7 +356,7 @@ class_init( NactMainWindowClass *klass )
 	object_class->get_property = instance_get_property;
 
 	spec = g_param_spec_pointer(
-			TAB_UPDATABLE_PROP_EDITED_ACTION,
+			TAB_UPDATABLE_PROP_SELECTED_ITEM,
 			"Edited NAObjectItem",
 			"A pointer to the edited NAObjectItem, an action or a menu",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
