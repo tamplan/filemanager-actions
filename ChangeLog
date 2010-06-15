@@ -1,5 +1,9 @@
 2010-06-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-tab.c:
+	* src/nact/nact-main-tab.h (nact_main_tab_get_context):
+	New function.
+
 	* src/nact/nact-iaction-tab.c:
 	* src/nact/nact-ibasenames-tab.c:
 	* src/nact/nact-icapabilities-tab.c:

@@ -31,6 +31,8 @@
 #ifndef __NACT_MAIN_TAB_H__
 #define __NACT_MAIN_TAB_H__
 
+#include <api/na-icontext.h>
+
 #include "nact-main-window.h"
 
 /**
@@ -69,8 +71,10 @@ enum {
 	TAB_PROPERTIES
 };
 
-void     nact_main_tab_enable_page( NactMainWindow *window, gint page, gboolean enabled );
-gboolean nact_main_tab_is_page_enabled( NactMainWindow *window, gint page );
+void        nact_main_tab_enable_page    ( NactMainWindow *window, gint page, gboolean enabled );
+gboolean    nact_main_tab_is_page_enabled( NactMainWindow *window, gint page );
+
+NAIContext *nact_main_tab_get_context    ( NactMainWindow *window, gboolean *editable );
 
 G_END_DECLS
 
