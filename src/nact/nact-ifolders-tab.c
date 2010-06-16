@@ -67,9 +67,9 @@ static GType   register_type( void );
 static void    interface_base_init( NactIFoldersTabInterface *klass );
 static void    interface_base_finalize( NactIFoldersTabInterface *klass );
 
-static void    on_browse_folder_clicked( GtkButton *button, BaseWindow *window );
 static void    on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_selected );
 
+static void    on_browse_folder_clicked( GtkButton *button, BaseWindow *window );
 static GSList *get_folders( void *context );
 static void    set_folders( void *context, GSList *filters );
 
@@ -229,6 +229,20 @@ nact_ifolders_tab_dispose( NactIFoldersTab *instance )
 }
 
 static void
+on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_selected )
+{
+	NAIContext *context;
+	gboolean editable;
+	GtkWidget *button;
+
+	nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, count_selected );
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
+	nact_gtk_utils_set_editable( GTK_OBJECT( button ), editable );
+}
+
+static void
 on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 {
 #if 0
@@ -298,30 +312,6 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
 
 	gtk_widget_destroy( dialog );
-}
-
-static void
-on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_selected )
-{
-	NAObjectItem *item;
-	NAObjectProfile *profile;
-	gboolean editable;
-	NAIContext *context;
-	GtkWidget *button;
-
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
-			NULL );
-
-	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
-
-	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
-	gtk_widget_set_sensitive( button, editable );
-
-	nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, count_selected );
 }
 
 static GSList *

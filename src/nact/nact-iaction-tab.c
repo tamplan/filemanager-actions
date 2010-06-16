@@ -451,7 +451,6 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 			toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
 			same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_is_toolbar_same_label( NA_OBJECT_ACTION( item )) : FALSE;
 			gtk_toggle_button_set_active( toggle, same_label );
-			toolbar_same_label_set_sensitive( instance, item );
 			nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
 			label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
@@ -459,7 +458,6 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 			label = label ? label : g_strdup( "" );
 			gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 			g_free( label );
-			toolbar_label_set_sensitive( instance, item );
 			nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
 
 			tooltip_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionTooltipEntry" );
@@ -467,7 +465,6 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 			tooltip = tooltip ? tooltip : g_strdup( "" );
 			gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
 			g_free( tooltip );
-			gtk_widget_set_sensitive( tooltip_widget, item != NULL );
 			nact_gtk_utils_set_editable( GTK_OBJECT( tooltip_widget ), editable );
 
 			icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
@@ -475,11 +472,9 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 			icon = icon ? icon : g_strdup( "" );
 			gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( icon_widget ))), icon );
 			g_free( icon );
-			gtk_widget_set_sensitive( icon_widget, item != NULL );
 			nact_gtk_utils_set_editable( GTK_OBJECT( icon_widget ), editable );
 
 			icon_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" ));
-			gtk_widget_set_sensitive( GTK_WIDGET( icon_button ), item != NULL );
 			nact_gtk_utils_set_editable( GTK_OBJECT( icon_button ), editable );
 
 			st_on_selection_change = FALSE;
