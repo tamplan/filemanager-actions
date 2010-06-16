@@ -295,7 +295,7 @@ on_tab_updatable_selection_changed( NactICapabilitiesTab *instance, gint count_s
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -333,7 +333,7 @@ on_selcount_ope_changed( GtkComboBox *combo, NactICapabilitiesTab *instance )
 	g_object_get(
 			G_OBJECT( instance ),
 			TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 			TAB_UPDATABLE_PROP_EDITABLE, &editable,
 			NULL );
 
@@ -359,7 +359,7 @@ on_selcount_int_changed( GtkEntry *entry, NactICapabilitiesTab *instance )
 	g_object_get(
 			G_OBJECT( instance ),
 			TAB_UPDATABLE_PROP_SELECTED_ITEM, &edited,
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 			TAB_UPDATABLE_PROP_EDITABLE, &editable,
 			NULL );
 
@@ -385,7 +385,7 @@ on_add_clicked( GtkButton *button, BaseWindow *window )
 	g_object_get(
 			G_OBJECT( window ),
 			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 			NULL );
 
 	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
@@ -412,7 +412,7 @@ tab_set_sensitive( NactICapabilitiesTab *instance )
 	g_object_get(
 			G_OBJECT( instance ),
 			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 			NULL );
 
 	enable_tab = ( item != NULL );

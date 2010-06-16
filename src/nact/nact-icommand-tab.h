@@ -37,7 +37,7 @@
  * @include: nact/nact-icommand-tab.h
  *
  * This interface implements all the widgets which define the
- * actual action to be executed.
+ * actual action to be executed (from NAObjectProfile).
  */
 
 #include <glib-object.h>

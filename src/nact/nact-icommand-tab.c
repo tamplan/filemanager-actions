@@ -81,7 +81,6 @@ static void       interface_base_finalize( NactICommandTabInterface *klass );
 
 static void       on_iactions_list_column_edited( NactICommandTab *instance, NAObject *object, gchar *text, gint column );
 static void       on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected );
-static gboolean   tab_set_sensitive( NactICommandTab *instance );
 
 static void       check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label );
 static GtkWidget *get_label_entry( NactICommandTab *instance );
@@ -187,10 +186,11 @@ nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance )
 {
 	static const gchar *thisfn = "nact_icommand_tab_initial_load_toplevel";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-legend-dialog", IPREFS_LEGEND_DIALOG );
 		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-command-chooser", IPREFS_COMMAND_CHOOSER );
@@ -212,10 +212,11 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 	GtkWidget *label_entry, *path_entry, *parameters_entry, *wdir_entry;
 	GtkButton *path_button, *legend_button, *wdir_button;
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		label_entry = get_label_entry( instance );
 		base_window_signal_connect(
@@ -285,10 +286,11 @@ nact_icommand_tab_all_widgets_showed( NactICommandTab *instance )
 {
 	static const gchar *thisfn = "nact_icommand_tab_all_widgets_showed";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	}
 }
 
@@ -303,10 +305,12 @@ nact_icommand_tab_dispose( NactICommandTab *instance )
 {
 	static const gchar *thisfn = "nact_icommand_tab_dispose";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
 		legend_dialog_hide( instance );
 	}
 }
@@ -331,96 +335,81 @@ static void
 on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected )
 {
 	static const gchar *thisfn = "nact_icommand_tab_on_tab_updatable_selection_changed";
-	NAObjectItem *item;
 	NAObjectProfile *profile;
+	gboolean editable;
 	gboolean enable_tab;
 	GtkWidget *label_entry, *path_entry, *parameters_entry, *wdir_entry;
 	gchar *label, *path, *parameters, *wdir;
-	gboolean editable;
 	GtkButton *path_button;
 	GtkButton *legend_button;
 
-	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
-		st_on_selection_change = TRUE;
+		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
-		enable_tab = tab_set_sensitive( instance );
+		enable_tab = ( profile != NULL );
+		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_COMMAND, enable_tab );
 
-		label_entry = get_label_entry( instance );
-		label = profile ? na_object_get_label( profile ) : g_strdup( "" );
-		label = label ? label : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
-		check_for_label( instance, GTK_ENTRY( label_entry ), label );
-		g_free( label );
-		gtk_widget_set_sensitive( label_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( label_entry ), editable );
+		if( enable_tab ){
+			st_on_selection_change = TRUE;
 
-		path_entry = get_path_entry( instance );
-		path = profile ? na_object_get_path( profile ) : g_strdup( "" );
-		path = path ? path : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
-		g_free( path );
-		gtk_widget_set_sensitive( path_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( path_entry ), editable );
+			label_entry = get_label_entry( instance );
+			label = profile ? na_object_get_label( profile ) : g_strdup( "" );
+			label = label ? label : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
+			check_for_label( instance, GTK_ENTRY( label_entry ), label );
+			g_free( label );
+			gtk_widget_set_sensitive( label_entry, profile != NULL );
+			nact_gtk_utils_set_editable( GTK_OBJECT( label_entry ), editable );
 
-		path_button = get_path_button( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( path_button ), editable );
+			path_entry = get_path_entry( instance );
+			path = profile ? na_object_get_path( profile ) : g_strdup( "" );
+			path = path ? path : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
+			g_free( path );
+			gtk_widget_set_sensitive( path_entry, profile != NULL );
+			nact_gtk_utils_set_editable( GTK_OBJECT( path_entry ), editable );
 
-		parameters_entry = get_parameters_entry( instance );
-		parameters = profile ? na_object_get_parameters( profile ) : g_strdup( "" );
-		parameters = parameters ? parameters : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
-		g_free( parameters );
-		gtk_widget_set_sensitive( parameters_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( parameters_entry ), editable );
+			path_button = get_path_button( instance );
+			gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile != NULL );
+			nact_gtk_utils_set_editable( GTK_OBJECT( path_button ), editable );
 
-		legend_button = get_legend_button( instance );
-		gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );
+			parameters_entry = get_parameters_entry( instance );
+			parameters = profile ? na_object_get_parameters( profile ) : g_strdup( "" );
+			parameters = parameters ? parameters : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
+			g_free( parameters );
+			gtk_widget_set_sensitive( parameters_entry, profile != NULL );
+			nact_gtk_utils_set_editable( GTK_OBJECT( parameters_entry ), editable );
 
-		wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
-		wdir = profile ? na_object_get_working_dir( profile ) : g_strdup( "" );
-		wdir = wdir ? wdir : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir );
-		g_free( wdir );
-		gtk_widget_set_sensitive( wdir_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( wdir_entry ), editable );
+			legend_button = get_legend_button( instance );
+			gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );
 
-		st_on_selection_change = FALSE;
+			wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
+			wdir = profile ? na_object_get_working_dir( profile ) : g_strdup( "" );
+			wdir = wdir ? wdir : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir );
+			g_free( wdir );
+			gtk_widget_set_sensitive( wdir_entry, profile != NULL );
+			nact_gtk_utils_set_editable( GTK_OBJECT( wdir_entry ), editable );
+
+			st_on_selection_change = FALSE;
+		}
 	}
-}
-
-static gboolean
-tab_set_sensitive( NactICommandTab *instance )
-{
-	NAObjectProfile *profile;
-	gboolean enable_tab;
-
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
-			NULL );
-
-	enable_tab = ( profile != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_COMMAND, enable_tab );
-
-	return( enable_tab );
 }
 
 static void
 check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label )
 {
-	NAObjectProfile *edited;
+	NAObjectProfile *profile;
 
 	nact_main_statusbar_hide_status(
 			NACT_MAIN_WINDOW( instance ),
@@ -430,10 +419,10 @@ check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label 
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 			NULL );
 
-	if( edited && g_utf8_strlen( label, -1 ) == 0 ){
+	if( profile && g_utf8_strlen( label, -1 ) == 0 ){
 
 		/* i18n: status bar message when the profile label is empty */
 		nact_main_statusbar_display_status(
@@ -528,20 +517,20 @@ legend_dialog_show( NactICommandTab *instance )
 static void
 on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 {
-	NAObjectProfile *edited;
+	NAObjectProfile *profile;
 	const gchar *label;
 
 	if( !st_on_selection_change ){
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				NULL );
 
-		if( edited ){
+		if( profile ){
 			label = gtk_entry_get_text( entry );
-			na_object_set_label( edited, label );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, TRUE );
+			na_object_set_label( profile, label );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, TRUE );
 			check_for_label( instance, entry, label );
 		}
 	}
@@ -561,19 +550,19 @@ on_legend_clicked( GtkButton *button, NactICommandTab *instance )
 static void
 on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 {
-	NAObjectProfile *edited;
+	NAObjectProfile *profile;
 
 	if( !st_on_selection_change ){
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				NULL );
 
-		if( edited ){
-			na_object_set_parameters( edited, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
-			update_example_label( instance, edited );
+		if( profile ){
+			na_object_set_parameters( profile, gtk_entry_get_text( entry ));
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+			update_example_label( instance, profile );
 		}
 	}
 }
@@ -636,20 +625,20 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 static void
 on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 {
-	NAObjectProfile *edited;
+	NAObjectProfile *profile;
 
 	if( !st_on_selection_change ){
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				NULL );
 
-		if( edited ){
+		if( profile ){
 
-			na_object_set_path( edited, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
-			update_example_label( instance, edited );
+			na_object_set_path( profile, gtk_entry_get_text( entry ));
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+			update_example_label( instance, profile );
 		}
 	}
 }
@@ -693,7 +682,7 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 	} else {
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				NULL );
 
 		default_value = na_factory_object_get_default( NA_IFACTORY_OBJECT( profile ), NAFO_DATA_WORKING_DIR );
@@ -721,36 +710,24 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 static void
 on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 {
-	NAObjectProfile *edited;
+	NAObjectProfile *profile;
 
 	if( !st_on_selection_change ){
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				NULL );
 
-		if( edited ){
-			na_object_set_working_dir( edited, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );
+		if( profile ){
+			na_object_set_working_dir( profile, gtk_entry_get_text( entry ));
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
 		}
 	}
 }
 
 /*
- * Valid parameters :
- *
- * %d : base dir of the (first) selected file(s)/folder(s)
- * %f : the name of the (firstà selected file/folder
- * %h : hostname of the (first) URI
- * %m : list of the basename of the selected files/directories separated by space.
- * %M : list of the selected files/directories with their complete path separated by space.
- * %p : port number of the (first) URI
- * %R : space-separated list of selected URIs
- * %s : scheme of the (first) URI
- * %u : (first) URI
- * %U : username of the (first) URI
- * %% : a percent sign
+ * See core/na-tokens.c for valid parameters
  */
 static gchar *
 parse_parameters( NactICommandTab *instance )
@@ -805,7 +782,7 @@ parse_parameters( NactICommandTab *instance )
 	g_object_get(
 			G_OBJECT( instance ),
 			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 			NULL );
 
 	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );

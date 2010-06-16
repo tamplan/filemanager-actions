@@ -222,7 +222,7 @@ tab_set_sensitive( NactIExecutionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 			NULL );
 
 	enable_tab = ( profile != NULL );

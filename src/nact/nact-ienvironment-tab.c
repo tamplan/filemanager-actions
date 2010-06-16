@@ -416,7 +416,7 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		g_object_get(
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -544,7 +544,7 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *wi
 		g_object_get(
 				G_OBJECT( window ),
 				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_EDITED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				TAB_UPDATABLE_PROP_EDITABLE, &editable,
 				NULL );
 
@@ -558,10 +558,10 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *wi
 		} else {
 			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ENV_BOOL_COLUMN, !state, -1 );
 			/*
-			if( g_object_class_find_property( G_OBJECT_GET_CLASS( window ), TAB_UPDATABLE_PROP_EDITED_PROFILE )){
+			if( g_object_class_find_property( G_OBJECT_GET_CLASS( window ), TAB_UPDATABLE_PROP_SELECTED_PROFILE )){
 				g_object_get(
 						G_OBJECT( window ),
-						TAB_UPDATABLE_PROP_EDITED_PROFILE, &edited,
+						TAB_UPDATABLE_PROP_SELECTED_PROFILE, &edited,
 						NULL );
 				if( edited ){
 					na_object_set_scheme( edited, scheme, !state );

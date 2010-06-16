@@ -84,22 +84,16 @@ static void          on_tab_updatable_selection_changed( NactIActionTab *instanc
 
 static void          on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance );
 static void          on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance );
-
 static void          check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label );
 static void          on_label_changed( GtkEntry *entry, NactIActionTab *instance );
 static void          set_label_label( NactIActionTab *instance, const gchar *color );
-
 static void          on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance );
-
 static void          on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance );
 static void          toolbar_same_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item );
-
 static void          setup_toolbar_label( NactIActionTab *instance, NAObjectItem *item, const gchar *label );
 static void          on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance );
 static void          toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item );
-
 static void          on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance );
-
 static GtkTreeModel *create_stock_icon_model( void );
 static void          icon_combo_list_fill( GtkComboBoxEntry* combo );
 static void          on_icon_browse( GtkButton *button, NactIActionTab *instance );
@@ -387,6 +381,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_selection_changed";
 	gboolean enable_tab;
 	NAObjectItem *item;
+	gboolean editable;
 	gboolean target_selection, target_location, target_toolbar;
 	gboolean enable_label;
 	gboolean same_label;
@@ -394,7 +389,6 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 	gchar *label, *tooltip, *icon;
 	GtkButton *icon_button;
 	GtkToggleButton *toggle;
-	gboolean editable;
 
 	g_return_if_fail( BASE_IS_WINDOW( instance ));
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
@@ -406,87 +400,90 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		enable_tab = ( count_selected == 1 );
 		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );
 
-		g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
-			NULL );
+		if( enable_tab ){
+			st_on_selection_change = TRUE;
 
-		target_selection = ( item && (
-				( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_selection( item )) ||
-				( NA_IS_OBJECT_MENU( item ))));
+			g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				NULL );
 
-		target_location = ( item && (
-				( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_location( item )) ||
-				( NA_IS_OBJECT_MENU( item ))));
+			target_selection = ( item && (
+					( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_selection( item )) ||
+					( NA_IS_OBJECT_MENU( item ))));
 
-		target_toolbar = ( item && (
-				( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_toolbar( NA_OBJECT_ACTION( item )))));
+			target_location = ( item && (
+					( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_location( item )) ||
+					( NA_IS_OBJECT_MENU( item ))));
 
-		st_on_selection_change = TRUE;
+			target_toolbar = ( item && (
+					( NA_IS_OBJECT_ACTION( item ) && na_object_is_target_toolbar( NA_OBJECT_ACTION( item )))));
 
-		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" ));
-		gtk_toggle_button_set_active( toggle, target_selection );
-		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
-		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetLocationButton" ));
-		gtk_toggle_button_set_active( toggle, target_location );
-		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
+			toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" ));
+			gtk_toggle_button_set_active( toggle, target_selection );
+			gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
+			nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
 
-		enable_label = ( item && ( NA_IS_OBJECT_MENU( item ) || target_selection || target_location ));
-		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
-		label = item ? na_object_get_label( item ) : g_strdup( "" );
-		label = label ? label : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
-		if( item ){
-			check_for_label( instance, GTK_ENTRY( label_widget ), label );
+			toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetLocationButton" ));
+			gtk_toggle_button_set_active( toggle, target_location );
+			gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
+			nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
+
+			enable_label = ( item && ( NA_IS_OBJECT_MENU( item ) || target_selection || target_location ));
+			label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
+			label = item ? na_object_get_label( item ) : g_strdup( "" );
+			label = label ? label : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
+			if( item ){
+				check_for_label( instance, GTK_ENTRY( label_widget ), label );
+			}
+			g_free( label );
+			gtk_widget_set_sensitive( label_widget, enable_label );
+			nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
+
+			toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetToolbarButton" ));
+			gtk_toggle_button_set_active( toggle, target_toolbar );
+			gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
+			nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
+
+			toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
+			same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_is_toolbar_same_label( NA_OBJECT_ACTION( item )) : FALSE;
+			gtk_toggle_button_set_active( toggle, same_label );
+			toolbar_same_label_set_sensitive( instance, item );
+			nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
+
+			label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
+			label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_get_toolbar_label( item ) : g_strdup( "" );
+			label = label ? label : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
+			g_free( label );
+			toolbar_label_set_sensitive( instance, item );
+			nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
+
+			tooltip_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionTooltipEntry" );
+			tooltip = item ? na_object_get_tooltip( item ) : g_strdup( "" );
+			tooltip = tooltip ? tooltip : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
+			g_free( tooltip );
+			gtk_widget_set_sensitive( tooltip_widget, item != NULL );
+			nact_gtk_utils_set_editable( GTK_OBJECT( tooltip_widget ), editable );
+
+			icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
+			icon = item ? na_object_get_icon( item ) : g_strdup( "" );
+			icon = icon ? icon : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( icon_widget ))), icon );
+			g_free( icon );
+			gtk_widget_set_sensitive( icon_widget, item != NULL );
+			nact_gtk_utils_set_editable( GTK_OBJECT( icon_widget ), editable );
+
+			icon_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" ));
+			gtk_widget_set_sensitive( GTK_WIDGET( icon_button ), item != NULL );
+			nact_gtk_utils_set_editable( GTK_OBJECT( icon_button ), editable );
+
+			st_on_selection_change = FALSE;
 		}
-		g_free( label );
-		gtk_widget_set_sensitive( label_widget, enable_label );
-		nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
-
-		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetToolbarButton" ));
-		gtk_toggle_button_set_active( toggle, target_toolbar );
-		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
-
-		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
-		same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_is_toolbar_same_label( NA_OBJECT_ACTION( item )) : FALSE;
-		gtk_toggle_button_set_active( toggle, same_label );
-		toolbar_same_label_set_sensitive( instance, item );
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
-
-		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
-		label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_get_toolbar_label( item ) : g_strdup( "" );
-		label = label ? label : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
-		g_free( label );
-		toolbar_label_set_sensitive( instance, item );
-		nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
-
-		tooltip_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionTooltipEntry" );
-		tooltip = item ? na_object_get_tooltip( item ) : g_strdup( "" );
-		tooltip = tooltip ? tooltip : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
-		g_free( tooltip );
-		gtk_widget_set_sensitive( tooltip_widget, item != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( tooltip_widget ), editable );
-
-		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
-		icon = item ? na_object_get_icon( item ) : g_strdup( "" );
-		icon = icon ? icon : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( icon_widget ))), icon );
-		g_free( icon );
-		gtk_widget_set_sensitive( icon_widget, item != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( icon_widget ), editable );
-
-		icon_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" ));
-		gtk_widget_set_sensitive( GTK_WIDGET( icon_button ), item != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( icon_button ), editable );
-
-		st_on_selection_change = FALSE;
 	}
 }
 

@@ -364,7 +364,7 @@ class_init( NactMainWindowClass *klass )
 	g_object_class_install_property( object_class, PROP_EDITED_ITEM, spec );
 
 	spec = g_param_spec_pointer(
-			TAB_UPDATABLE_PROP_EDITED_PROFILE,
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE,
 			"Edited NAObjectProfile",
 			"A pointer to the edited NAObjectProfile",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );

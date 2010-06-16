@@ -46,7 +46,7 @@
 /* properties set against the GObject instance
  */
 #define TAB_UPDATABLE_PROP_SELECTED_ITEM				"nact-tab-updatable-selected-item"
-#define TAB_UPDATABLE_PROP_EDITED_PROFILE				"nact-tab-updatable-selected-profile"
+#define TAB_UPDATABLE_PROP_SELECTED_PROFILE				"nact-tab-updatable-selected-profile"
 #define TAB_UPDATABLE_PROP_EDITABLE						"nact-tab-updatable-editable"
 #define TAB_UPDATABLE_PROP_REASON						"nact-tab-updatable-reason"
 

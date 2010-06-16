@@ -1,5 +1,8 @@
 2010-06-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icommand-tab.h: Review NactICommandTab page.
+
 	* src/core/na-object-action-factory.c: Fix comment.
 
 	* src/nact/nact-iaction-tab.c:

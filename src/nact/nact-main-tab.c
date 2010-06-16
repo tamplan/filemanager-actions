@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <api/na-object-profile.h>
+
 #include "nact-main-tab.h"
 
 /**
