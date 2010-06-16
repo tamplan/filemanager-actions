@@ -1,5 +1,11 @@
 2010-06-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-ibasenames-tab.c: Review NactIBasenamesTab page.
+
+	* src/nact/nact-match-list.c:
+	* src/nact/nact-match-list.h (nact_match_list_on_enable_tab):
+	Removed function.
+
 	* src/nact/nact-icommand-tab.c:
 	* src/nact/nact-icommand-tab.h: Review NactICommandTab page.
 

@@ -79,9 +79,6 @@ void  nact_match_list_init_view           ( BaseWindow *window, const gchar *tab
 void  nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 		guint count );
 
-void  nact_match_list_on_enable_tab       ( BaseWindow *window, const gchar *tab_name,
-		NAObjectItem *item );
-
 void  nact_match_list_insert_row          ( BaseWindow *window, const gchar *tab_name,
 		const gchar *filter, gboolean match, gboolean not_match );
 

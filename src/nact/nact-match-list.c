@@ -86,7 +86,6 @@ static void         insert_new_row( MatchListStr *data );
 static void         insert_new_row_data( MatchListStr *data, const gchar *filter, gboolean match, gboolean no_match );
 static void         iter_for_setup( gchar *filter, GtkTreeModel *model );
 static void         sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint colid );
-static gboolean     tab_set_sensitive( MatchListStr *data );
 
 /**
  * nact_match_list_create_model:
@@ -307,10 +306,8 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 {
 	static const gchar *thisfn = "nact_match_list_on_selection_changed";
 	MatchListStr *data;
-	NAObjectItem *item;
-	NAObjectProfile *profile;
-	gboolean editable;
 	NAIContext *context;
+	gboolean enable_tab;
 	GSList *filters;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
@@ -322,71 +319,44 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
 	g_return_if_fail( data != NULL );
 
-	g_object_get(
-			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
-			NULL );
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &data->editable );
 
-	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
-	data->editable = editable;
-	filters = NULL;
+	enable_tab = ( context != NULL );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( data->window ), data->tab_id, enable_tab );
 
-	if( context ){
+	if( enable_tab ){
+
+		st_on_selection_change = TRUE;
+
 		filters = ( *data->pget )( context );
 		g_debug( "%s: filters=%p (count=%d)", thisfn, ( void * ) filters, filters ? g_slist_length( filters ) : -1 );
-	}
 
-	st_on_selection_change = TRUE;
-
-	model = gtk_tree_view_get_model( data->listview );
-	selection = gtk_tree_view_get_selection( data->listview );
-	gtk_tree_selection_unselect_all( selection );
-	gtk_list_store_clear( GTK_LIST_STORE( model ));
-
-	if( filters ){
-		na_core_utils_slist_dump( filters );
-		g_slist_foreach( filters, ( GFunc ) iter_for_setup, model );
-	}
-
-	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
-	nact_gtk_utils_set_editable( GTK_OBJECT( column ), data->editable );
-
-	nact_gtk_utils_set_editable( GTK_OBJECT( data->addbutton ), data->editable );
-	nact_gtk_utils_set_editable( GTK_OBJECT( data->removebutton ), data->editable );
-	gtk_widget_set_sensitive( data->removebutton, FALSE );
-
-	st_on_selection_change = FALSE;
-
-	path = gtk_tree_path_new_first();
-	if( path ){
+		model = gtk_tree_view_get_model( data->listview );
 		selection = gtk_tree_view_get_selection( data->listview );
-		gtk_tree_selection_select_path( selection, path );
-		gtk_tree_path_free( path );
+		gtk_tree_selection_unselect_all( selection );
+		gtk_list_store_clear( GTK_LIST_STORE( model ));
+
+		if( filters ){
+			na_core_utils_slist_dump( filters );
+			g_slist_foreach( filters, ( GFunc ) iter_for_setup, model );
+		}
+
+		column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
+		nact_gtk_utils_set_editable( GTK_OBJECT( column ), data->editable );
+
+		nact_gtk_utils_set_editable( GTK_OBJECT( data->addbutton ), data->editable );
+		nact_gtk_utils_set_editable( GTK_OBJECT( data->removebutton ), data->editable );
+		gtk_widget_set_sensitive( data->removebutton, FALSE );
+
+		st_on_selection_change = FALSE;
+
+		path = gtk_tree_path_new_first();
+		if( path ){
+			selection = gtk_tree_view_get_selection( data->listview );
+			gtk_tree_selection_select_path( selection, path );
+			gtk_tree_path_free( path );
+		}
 	}
-}
-
-/**
- * nact_match_list_on_enable_tab:
- * @window: the #BaseWindow window which contains the view.
- * @tab_name: a string constant which identifies this page.
- * @item: the currently selected #NAObjectItem.
- *
- * Enable/disable this page of the notebook.
- */
-void
-nact_match_list_on_enable_tab( BaseWindow *window, const gchar *tab_name, NAObjectItem *item )
-{
-	static const gchar *thisfn = "nact_match_list_on_tab_updatable_enable_tab";
-	MatchListStr *data;
-
-	g_debug( "%s: window=%p, tab=%s, item=%p", thisfn, ( void * ) window, tab_name, ( void * ) item );
-
-	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
-	g_return_if_fail( data != NULL );
-
-	tab_set_sensitive( data );
 }
 
 /**
@@ -457,8 +427,6 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 	GtkTreeIter iter;
 	GtkTreePath *path;
 	gchar *old_text;
-	NAObjectItem *item;
-	NAObjectProfile *profile;
 	NAIContext *context;
 	gboolean must_match, must_not_match;
 	gchar *to_add, *to_remove;
@@ -477,13 +445,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 
 	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ITEM_COLUMN, text, -1 );
 
-	g_object_get(
-			G_OBJECT( data->window ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			NULL );
-
-	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
 
 	if( context ){
 		filters = ( *data->pget )( context );
@@ -561,8 +523,6 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gchar *filter;
-	NAObjectItem *item;
-	NAObjectProfile *profile;
 	NAIContext *context;
 	GSList *filters;
 	gchar *to_remove;
@@ -580,13 +540,7 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 		gtk_tree_model_get( model, &iter, ITEM_COLUMN, &filter, -1 );
 		gtk_list_store_set( GTK_LIST_STORE( model ), &iter, MUST_MATCH_COLUMN, TRUE, MUST_NOT_MATCH_COLUMN, FALSE, -1 );
 
-		g_object_get(
-				G_OBJECT( data->window ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-				NULL );
-
-		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
 
 		if( context ){
 			filters = ( *data->pget )( context );
@@ -618,8 +572,6 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gchar *filter;
-	NAObjectItem *item;
-	NAObjectProfile *profile;
 	NAIContext *context;
 	GSList *filters;
 	gchar *to_add;
@@ -637,19 +589,15 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 		gtk_tree_model_get( model, &iter, ITEM_COLUMN, &filter, -1 );
 		gtk_list_store_set( GTK_LIST_STORE( model ), &iter, MUST_MATCH_COLUMN, FALSE, MUST_NOT_MATCH_COLUMN, TRUE, -1 );
 
-		g_object_get(
-				G_OBJECT( data->window ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-				NULL );
-
-		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
 
 		if( context ){
 			filters = ( *data->pget )( context );
+
 			if( filters ){
 				filters = na_core_utils_slist_remove_ascii( filters, filter );
 			}
+
 			to_add = g_strdup_printf( "!%s", filter );
 			filters = g_slist_prepend( filters, to_add );
 			( *data->pset )( context, filters );
@@ -678,19 +626,11 @@ on_selection_changed( GtkTreeSelection *selection, MatchListStr *data )
 static void
 add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix )
 {
-	NAObjectItem *item;
-	NAObjectProfile *profile;
 	NAIContext *context;
 	GSList *filters;
 	gchar *to_add;
 
-	g_object_get(
-			G_OBJECT( data->window ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			NULL );
-
-	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
 
 	if( context ){
 		filters = ( *data->pget )( context );
@@ -712,8 +652,6 @@ delete_current_row( MatchListStr *data )
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gchar *filter;
-	NAObjectItem *item;
-	NAObjectProfile *profile;
 	NAIContext *context;
 	GSList *filters;
 	gchar *to_remove;
@@ -728,13 +666,7 @@ delete_current_row( MatchListStr *data )
 		gtk_tree_model_get( model, &iter, ITEM_COLUMN, &filter, -1 );
 		gtk_list_store_remove( GTK_LIST_STORE( model ), &iter );
 
-		g_object_get(
-				G_OBJECT( data->window ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-				NULL );
-
-		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
 
 		if( context ){
 			filters = ( *data->pget )( context );
@@ -892,23 +824,4 @@ sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint new
 
 	model = gtk_tree_view_get_model( data->listview );
 	gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), new_col_id, new_order );
-}
-
-static gboolean
-tab_set_sensitive( MatchListStr *data )
-{
-	NAObjectItem *item;
-	NAObjectProfile *profile;
-	gboolean enable_tab;
-
-	g_object_get(
-			G_OBJECT( data->window ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			NULL );
-
-	enable_tab = ( profile != NULL || item != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( data->window ), data->tab_id, enable_tab );
-
-	return( enable_tab );
 }

@@ -56,9 +56,9 @@ static GType   register_type( void );
 static void    interface_base_init( NactIBasenamesTabInterface *klass );
 static void    interface_base_finalize( NactIBasenamesTabInterface *klass );
 
-static void    on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window );
 static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
 
+static void    on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window );
 static GSList *get_basenames( void *context );
 static void    set_basenames( void *context, GSList *filters );
 
@@ -237,27 +237,27 @@ nact_ibasenames_tab_dispose( NactIBasenamesTab *instance )
 }
 
 static void
+on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
+{
+	st_on_selection_change = TRUE;
+
+	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
+
+	st_on_selection_change = FALSE;
+}
+
+static void
 on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window )
 {
-	NAObjectItem *item;
-	NAObjectProfile *profile;
 	NAIContext *context;
-	gboolean matchcase;
 	gboolean editable;
+	gboolean matchcase;
 
 	if( !st_on_selection_change ){
 
-		g_object_get(
-				G_OBJECT( window ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-				TAB_UPDATABLE_PROP_EDITABLE, &editable,
-				NULL );
-
-		context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
 
 		if( context ){
-
 			matchcase = gtk_toggle_button_get_active( button );
 
 			if( editable ){
@@ -271,16 +271,6 @@ on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window )
 			}
 		}
 	}
-}
-
-static void
-on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
-{
-	st_on_selection_change = TRUE;
-
-	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
-
-	st_on_selection_change = FALSE;
 }
 
 static GSList *
