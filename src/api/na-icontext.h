@@ -90,6 +90,8 @@ gboolean na_icontext_is_all_mimetypes( const NAIContext *object );
 void     na_icontext_read_done       ( NAIContext *object );
 
 void     na_icontext_set_scheme      ( NAIContext *object, const gchar *scheme, gboolean selected );
+void     na_icontext_set_only_desktop( NAIContext *object, const gchar *desktop, gboolean selected );
+void     na_icontext_set_not_desktop ( NAIContext *object, const gchar *desktop, gboolean selected );
 void     na_icontext_replace_folder  ( NAIContext *object, const gchar *old, const gchar *new );
 
 G_END_DECLS

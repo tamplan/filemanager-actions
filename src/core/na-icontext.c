@@ -312,31 +312,63 @@ na_icontext_read_done( NAIContext *context )
  * na_icontext_set_scheme:
  * @profile: the #NAIContext to be updated.
  * @scheme: name of the scheme.
- * @selected: whether this scheme is candidate to this profile.
+ * @selected: whether this scheme is candidate to this context.
  *
- * Sets the status of a scheme relative to this profile.
+ * Sets the status of a scheme relative to this context.
  */
 void
-na_icontext_set_scheme( NAIContext *profile, const gchar *scheme, gboolean selected )
+na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selected )
 {
-	/*static const gchar *thisfn = "na_icontext_set_scheme";*/
-	gboolean exist;
 	GSList *schemes;
 
-	g_return_if_fail( NA_IS_ICONTEXT( profile ));
+	g_return_if_fail( NA_IS_ICONTEXT( context ));
 
-	schemes = na_object_get_schemes( profile );
-	exist = na_core_utils_slist_find( schemes, scheme );
-	/*g_debug( "%s: scheme=%s exist=%s", thisfn, scheme, exist ? "True":"False" );*/
-
-	if( selected && !exist ){
-		schemes = g_slist_prepend( schemes, g_strdup( scheme ));
-	}
-	if( !selected && exist ){
-		schemes = na_core_utils_slist_remove_ascii( schemes, scheme );
-	}
-	na_object_set_schemes( profile, schemes );
+	schemes = na_object_get_schemes( context );
+	schemes = na_core_utils_slist_setup_element( schemes, scheme, selected );
+	na_object_set_schemes( context, schemes );
 	na_core_utils_slist_free( schemes );
+}
+
+/**
+ * na_icontext_set_only_desktop:
+ * @profile: the #NAIContext to be updated.
+ * @desktop: name of the desktop environment.
+ * @selected: whether this desktop is candidate to this context.
+ *
+ * Sets the status of the desktop relative to this context for the OnlyShowIn list.
+ */
+void
+na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
+{
+	GSList *desktops;
+
+	g_return_if_fail( NA_IS_ICONTEXT( context ));
+
+	desktops = na_object_get_only_show_in( context );
+	desktops = na_core_utils_slist_setup_element( desktops, desktop, selected );
+	na_object_set_only_show_in( context, desktops );
+	na_core_utils_slist_free( desktops );
+}
+
+/**
+ * na_icontext_set_only_desktop:
+ * @profile: the #NAIContext to be updated.
+ * @desktop: name of the desktop environment.
+ * @selected: whether this desktop is candidate to this context.
+ *
+ * Sets the status of the desktop relative to this context for the NotShowIn list.
+ */
+void
+na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
+{
+	GSList *desktops;
+
+	g_return_if_fail( NA_IS_ICONTEXT( context ));
+
+	desktops = na_object_get_not_show_in( context );
+	desktops = na_core_utils_slist_setup_element( desktops, desktop, selected );
+	na_object_set_not_show_in( context, desktops );
+	na_core_utils_slist_free( desktops );
 }
 
 /**

@@ -447,6 +447,34 @@ na_core_utils_slist_to_text( GSList *strlist )
 }
 
 /**
+ * na_core_utils_slist_setup_element:
+ * @list: the GSList of strings to be setup.
+ * @element: the string to add to or remove of the list.
+ * @set: whether the @element should be set or removed.
+ *
+ * Setup the @list so that the @element is once in the @list if @set is %TRUE,
+ * or not if @set is %FALSE.
+ *
+ * Returns: the updated @list.
+ */
+GSList *
+na_core_utils_slist_setup_element( GSList *list, const gchar *element, gboolean set )
+{
+	gboolean exist;
+
+	exist = na_core_utils_slist_find( list, element );
+
+	if( set && !exist ){
+		list = g_slist_prepend( list, g_strdup( element ));
+	}
+	if( !set && exist ){
+		list = na_core_utils_slist_remove_ascii( list, element );
+	}
+
+	return( list );
+}
+
+/**
  * na_core_utils_slist_find:
  * @list: the GSList of strings to be searched.
  * @str: the searched string.

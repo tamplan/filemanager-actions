@@ -1,5 +1,17 @@
 2010-06-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_slist_setup_element): New function.
+
+	* src/api/na-icontext.h:
+	* src/core/na-icontext.c (na_icontext_set_only_desktop,	na_icontext_set_not_desktop):
+	New functions.
+
+	* src/api/na-object-api.h (na_object_set_only_desktop, na_object_set_not_desktop):
+	New macros.
+
+	* src/nact/nact-ienvironment-tab.c: Implement desktop choice.
+
 	* src/nact/nact-icapabilities-tab.c:
 	* src/nact/nautilus-actions-config-tool.ui: Review NactICapabilitiesTab page.
 
