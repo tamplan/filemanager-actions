@@ -1,5 +1,7 @@
 2010-06-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-ischemes-tab.c: Review NactISchemesTab page.
+
 	* src/nact/nact-ifolders-tab.c: Review NactIFoldersTab page.
 
 	* src/nact/nact-ibasenames-tab.c: Review NactIBasenamesTab page.

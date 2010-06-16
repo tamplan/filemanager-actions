@@ -37,6 +37,7 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
+#include "nact-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-match-list.h"
 #include "nact-add-scheme-dialog.h"
@@ -57,9 +58,9 @@ static GType   register_type( void );
 static void    interface_base_init( NactISchemesTabInterface *klass );
 static void    interface_base_finalize( NactISchemesTabInterface *klass );
 
-static void    on_add_from_defaults( GtkButton *button, BaseWindow *window );
 static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
 
+static void    on_add_from_defaults( GtkButton *button, BaseWindow *window );
 static GSList *get_schemes( void *context );
 static void    set_schemes( void *context, GSList *filters );
 
@@ -217,56 +218,37 @@ nact_ischemes_tab_dispose( NactISchemesTab *instance )
 }
 
 static void
+on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
+{
+	NAIContext *context;
+	gboolean editable;
+	GtkWidget *button;
+
+	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
+	button = base_window_get_widget( window, "AddFromDefaultButton" );
+	nact_gtk_utils_set_editable( GTK_OBJECT( button ), editable );
+}
+
+static void
 on_add_from_defaults( GtkButton *button, BaseWindow *window )
 {
 	GSList *schemes;
 	gchar *new_scheme;
-	NAObjectItem *item;
-	NAObjectProfile *profile;
 	NAIContext *context;
 
-	g_object_get(
-			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			NULL );
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), NULL );
+	g_return_if_fail( context );
 
-	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
+	schemes = na_object_get_schemes( context );
+	new_scheme = nact_add_scheme_dialog_run( window, schemes );
+	na_core_utils_slist_free( schemes );
 
-	if( context ){
-		schemes = na_object_get_schemes( context );
-		new_scheme = nact_add_scheme_dialog_run( window, schemes );
-		na_core_utils_slist_free( schemes );
-
-		if( new_scheme ){
-			nact_match_list_insert_row( window, ITAB_NAME, new_scheme, FALSE, FALSE );
-			g_free( new_scheme );
-		}
+	if( new_scheme ){
+		nact_match_list_insert_row( window, ITAB_NAME, new_scheme, FALSE, FALSE );
+		g_free( new_scheme );
 	}
-}
-
-static void
-on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
-{
-	NAObjectItem *item;
-	NAObjectProfile *profile;
-	gboolean editable;
-	NAIContext *context;
-	GtkWidget *button;
-
-	g_object_get(
-			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
-			NULL );
-
-	context = ( profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item );
-
-	button = base_window_get_widget( window, "AddFromDefaultButton" );
-	gtk_widget_set_sensitive( button, editable );
-
-	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
 }
 
 static GSList *
