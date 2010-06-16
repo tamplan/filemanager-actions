@@ -1,3 +1,10 @@
+2010-06-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-object-action-factory.c: Fix comment.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iaction-tab.h: Homogeneïse the code.
+
 2010-06-15 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-tab.c:

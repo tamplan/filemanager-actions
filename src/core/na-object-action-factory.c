@@ -46,8 +46,6 @@ static NADataDef data_def_action [] = {
 
 	/* this version number, expressed as a string, is obsoleted starting with .desktop
 	 * files introduction ; it is replaced by an integer version number, at the item level
-	 * the new integer version number starts at 1. It will so be consistant with future
-	 * versions of .desktop files
 	 */
 	{ NAFO_DATA_VERSION,
 				TRUE,
