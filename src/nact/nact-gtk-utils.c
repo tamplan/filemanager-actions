@@ -35,7 +35,13 @@
 #include <glib.h>
 #include <string.h>
 
+#include <core/na-iprefs.h>
+#include <core/na-updater.h>
+
+#include "base-iprefs.h"
+#include "nact-iprefs.h"
 #include "nact-gtk-utils.h"
+#include "nact-application.h"
 
 /**
  * nact_gtk_utils_set_editable:
@@ -155,4 +161,150 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, gint size )
 		gtk_image_set_from_pixbuf( widget, pixbuf );
 		g_object_unref( pixbuf );
 	}
+}
+
+/**
+ * nact_gtk_utils_select_file:
+ * @window: the #BaseWindow which will be the parent of the dialog box.
+ * @title: the title of the dialog box.
+ * @dialog_name: the name of the dialog box in Preferences to read/write
+ *  its size and position.
+ * @entry: the #GtkEntry which is associated with the selected file.
+ * @entry_name: the name of the entry in Preferences to be readen/written.
+ * @default_dir_uri: the URI of the directory which should be set in there is
+ *  not yet any preference (see @entry_name)
+ *
+ * Opens a #GtkFileChooserDialog and let the user choose an existing file
+ * -> choose and display an existing file name
+ * -> record the dirname URI.
+ *
+ * If the user validates its selection, the choosen file pathname will be
+ * written in the @entry #GtkEntry, while the corresponding dirname
+ * URI will be written as @entry_name in Preferences.
+ */
+void
+nact_gtk_utils_select_file( BaseWindow *window,
+				const gchar *title, const gchar *dialog_name,
+				GtkWidget *entry, const gchar *entry_name,
+				const gchar *default_dir_uri )
+{
+	NactApplication *application;
+	NAUpdater *updater;
+	GtkWindow *toplevel;
+	GtkWidget *dialog;
+	const gchar *text;
+	gchar *filename, *uri;
+
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	updater = nact_application_get_updater( application );
+	toplevel = base_window_get_toplevel( window );
+
+	dialog = gtk_file_chooser_dialog_new(
+			title,
+			toplevel,
+			GTK_FILE_CHOOSER_ACTION_OPEN,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			NULL
+			);
+
+	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), dialog_name );
+
+	text = gtk_entry_get_text( GTK_ENTRY( entry ));
+
+	if( text && strlen( text )){
+		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), text );
+
+	} else {
+		uri = na_iprefs_read_string( NA_IPREFS( updater ), entry_name, default_dir_uri );
+		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
+		g_free( uri );
+	}
+
+	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
+		filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
+		gtk_entry_set_text( GTK_ENTRY( entry ), filename );
+	    g_free( filename );
+	  }
+
+	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
+	nact_iprefs_write_string( window, entry_name, uri );
+	g_free( uri );
+
+	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), dialog_name );
+
+	gtk_widget_destroy( dialog );
+}
+
+/**
+ * nact_gtk_utils_select_dir:
+ * @window: the #BaseWindow which will be the parent of the dialog box.
+ * @title: the title of the dialog box.
+ * @dialog_name: the name of the dialog box in Preferences to read/write
+ *  its size and position.
+ * @entry: the #GtkEntry which is associated with the field.
+ * @entry_name: the name of the entry in Preferences to be readen/written.
+ * @default_dir_uri: the URI of the directory which should be set in there is
+ *  not yet any preference (see @entry_name)
+ *
+ * Opens a #GtkFileChooserDialog and let the user choose an existing directory
+ * -> choose and display an existing dir name
+ * -> record the dirname URI of this dir name.
+ *
+ * If the user validates its selection, the choosen file pathname will be
+ * written in the @entry #GtkEntry, while the corresponding dirname
+ * URI will be written as @entry_name in Preferences.
+ */
+void
+nact_gtk_utils_select_dir( BaseWindow *window,
+				const gchar *title, const gchar *dialog_name,
+				GtkWidget *entry, const gchar *entry_name,
+				const gchar *default_dir_uri )
+{
+	NactApplication *application;
+	NAUpdater *updater;
+	GtkWindow *toplevel;
+	GtkWidget *dialog;
+	const gchar *text;
+	gchar *dir, *uri;
+
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	updater = nact_application_get_updater( application );
+	toplevel = base_window_get_toplevel( window );
+
+	dialog = gtk_file_chooser_dialog_new(
+			title,
+			toplevel,
+			GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+			NULL
+			);
+
+	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), dialog_name );
+
+	text = gtk_entry_get_text( GTK_ENTRY( entry ));
+
+	if( text && strlen( text )){
+		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), text );
+
+	} else {
+		uri = na_iprefs_read_string( NA_IPREFS( updater ), entry_name, default_dir_uri );
+		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
+		g_free( uri );
+	}
+
+	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
+		dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
+		gtk_entry_set_text( GTK_ENTRY( entry ), dir );
+	    g_free( dir );
+	  }
+
+	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
+	nact_iprefs_write_string( window, entry_name, uri );
+	g_free( uri );
+
+	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), dialog_name );
+
+	gtk_widget_destroy( dialog );
 }

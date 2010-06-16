@@ -39,6 +39,8 @@
 
 #include <gtk/gtk.h>
 
+#include "base-window.h"
+
 G_BEGIN_DECLS
 
 void       nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable );
@@ -47,6 +49,18 @@ void       nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable );
  */
 GdkPixbuf *nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, gint size );
 void       nact_gtk_utils_render( const gchar *name, GtkImage *widget, gint size );
+
+/* standard dialog boxes
+ */
+void       nact_gtk_utils_select_file( BaseWindow *window,
+				const gchar *title, const gchar *dialog_name,
+				GtkWidget *entry, const gchar *entry_name,
+				const gchar *default_dir_uri );
+
+void       nact_gtk_utils_select_dir( BaseWindow *window,
+				const gchar *title, const gchar *dialog_name,
+				GtkWidget *entry, const gchar *entry_name,
+				const gchar *default_dir_uri );
 
 G_END_DECLS
 

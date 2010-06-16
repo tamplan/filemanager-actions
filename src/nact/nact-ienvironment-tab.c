@@ -405,6 +405,7 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 	GtkTreeSelection *selection;
 	GtkWidget *always_button, *show_button, *notshow_button;
 	GSList *desktops;
+	gchar *text;
 
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
@@ -421,6 +422,8 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 
 			st_on_selection_change = TRUE;
 
+			/* selection count
+			 */
 			sel_count = na_object_get_selection_count( context );
 			na_core_utils_selcount_get_ope_int( sel_count, &selcount_ope, &selcount_int );
 			set_selection_count_selection( instance, selcount_ope, selcount_int );
@@ -434,6 +437,8 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 			entry = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountNumberEntry" );
 			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 
+			/* desktop environment
+			 */
 			raz_desktop_listview( instance );
 
 			always_button = base_window_get_widget( BASE_WINDOW( instance ), "ShowAlwaysButton" );
@@ -467,6 +472,36 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 			}
 
 			setup_desktop_listview( instance, desktops );
+
+			/* execution environment
+			 */
+			entry = base_window_get_widget( BASE_WINDOW( instance ), "TryExecEntry" );
+			text = na_object_get_try_exec( context );
+			text = text && strlen( text ) ? text : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( entry ), text );
+			g_free( text );
+			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+
+			entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRegisteredEntry" );
+			text = na_object_get_show_if_registered( context );
+			text = text && strlen( text ) ? text : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( entry ), text );
+			g_free( text );
+			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+
+			entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfTrueEntry" );
+			text = na_object_get_show_if_true( context );
+			text = text && strlen( text ) ? text : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( entry ), text );
+			g_free( text );
+			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+
+			entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningEntry" );
+			text = na_object_get_show_if_running( context );
+			text = text && strlen( text ) ? text : g_strdup( "" );
+			gtk_entry_set_text( GTK_ENTRY( entry ), text );
+			g_free( text );
+			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 
 			st_on_selection_change = FALSE;
 
@@ -682,6 +717,12 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *wi
 static void
 on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 {
+	NAIContext *context;
+	const gchar *text;
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	text = gtk_entry_get_text( entry );
+	na_object_set_try_exec( context, text );
 }
 
 static void

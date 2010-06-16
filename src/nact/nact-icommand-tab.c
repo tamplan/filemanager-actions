@@ -570,56 +570,10 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 static void
 on_path_browse( GtkButton *button, NactICommandTab *instance )
 {
-	gboolean set_current_location = FALSE;
-	gchar *uri = NULL;
-	NactApplication *application;
-	NAUpdater *updater;
-	GtkWindow *toplevel;
-	GtkWidget *dialog;
-	GtkWidget *path_entry;
-	const gchar *path;
-	gchar *filename;
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-	updater = nact_application_get_updater( application );
-	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
-
-	dialog = gtk_file_chooser_dialog_new(
-			_( "Choosing a command" ),
-			toplevel,
-			GTK_FILE_CHOOSER_ACTION_OPEN,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-			NULL
-			);
-
-	base_iprefs_position_named_window( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_COMMAND_CHOOSER );
-
-	path_entry = get_path_entry( instance );
-	path = gtk_entry_get_text( GTK_ENTRY( path_entry ));
-
-	if( path && strlen( path )){
-		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
-
-	} else {
-		uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDER_URI, "file:///bin" );
-		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
-		g_free( uri );
-	}
-
-	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
-		filename = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
-		gtk_entry_set_text( GTK_ENTRY( path_entry ), filename );
-	    g_free( filename );
-	  }
-
-	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_FOLDER_URI, uri );
-	g_free( uri );
-
-	base_iprefs_save_named_window_position( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_COMMAND_CHOOSER );
-
-	gtk_widget_destroy( dialog );
+	nact_gtk_utils_select_file(
+			BASE_WINDOW( instance ),
+			_( "Choosing a command" ), IPREFS_COMMAND_CHOOSER,
+			get_path_entry( instance ), IPREFS_FOLDER_URI, "file:///bin" );
 }
 
 static void
@@ -633,78 +587,36 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 				G_OBJECT( instance ),
 				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				NULL );
+		g_return_if_fail( profile );
 
-		if( profile ){
-
-			na_object_set_path( profile, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
-			update_example_label( instance, profile );
-		}
+		na_object_set_path( profile, gtk_entry_get_text( entry ));
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+		update_example_label( instance, profile );
 	}
 }
 
 static void
 on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 {
-	gboolean set_current_location = FALSE;
-	gchar *uri = NULL;
-	NactApplication *application;
-	NAObjectProfile *profile;
-	NAUpdater *updater;
-	GtkWindow *toplevel;
-	GtkWidget *dialog;
 	GtkWidget *wdir_entry;
-	const gchar *wdir;
-	gchar *wdir_uri;
+	NAObjectProfile *profile;
 	gchar *default_value;
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-	updater = nact_application_get_updater( application );
-	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
-
-	dialog = gtk_file_chooser_dialog_new(
-			_( "Choosing a working directory" ),
-			toplevel,
-			GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-			NULL
-			);
-
-	base_iprefs_position_named_window( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_WORKING_DIR_DIALOG );
-
 	wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
-	wdir = gtk_entry_get_text( GTK_ENTRY( wdir_entry ));
 
-	if( wdir && strlen( wdir )){
-		set_current_location = gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), wdir );
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+			NULL );
 
-	} else {
-		g_object_get(
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-				NULL );
+	default_value = na_factory_object_get_default( NA_IFACTORY_OBJECT( profile ), NAFO_DATA_WORKING_DIR );
 
-		default_value = na_factory_object_get_default( NA_IFACTORY_OBJECT( profile ), NAFO_DATA_WORKING_DIR );
-		uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_WORKING_DIR_URI, default_value );
-		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
-		g_free( uri );
-		g_free( default_value );
-	}
+	nact_gtk_utils_select_dir(
+			BASE_WINDOW( instance ),
+			_( "Choosing a working directory" ), IPREFS_WORKING_DIR_DIALOG,
+			wdir_entry, IPREFS_WORKING_DIR_URI, default_value );
 
-	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
-		wdir_uri = gtk_file_chooser_get_uri( GTK_FILE_CHOOSER( dialog ));
-		gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir_uri );
-	    g_free( wdir_uri );
-	  }
-
-	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	nact_iprefs_write_string( BASE_WINDOW( instance ), IPREFS_WORKING_DIR_URI, uri );
-	g_free( uri );
-
-	base_iprefs_save_named_window_position( BASE_WINDOW( instance ), GTK_WINDOW( dialog ), IPREFS_WORKING_DIR_DIALOG );
-
-	gtk_widget_destroy( dialog );
+	g_free( default_value );
 }
 
 static void

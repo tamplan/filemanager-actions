@@ -1,5 +1,11 @@
 2010-06-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h
+	(nact_gtk_utils_select_file, nact_gtk_utils_select_dir): New functions.
+
+	* src/nact/nact-icommand-tab.c: Updated accordingly.
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c (na_core_utils_slist_setup_element): New function.
 
