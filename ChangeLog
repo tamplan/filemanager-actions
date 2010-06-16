@@ -1,5 +1,8 @@
 2010-06-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-icapabilities-tab.c:
+	* src/nact/nautilus-actions-config-tool.ui: Review NactICapabilitiesTab page.
+
 	* src/nact/nact-ischemes-tab.c: Review NactISchemesTab page.
 
 	* src/nact/nact-ifolders-tab.c: Review NactIFoldersTab page.

@@ -1417,74 +1417,6 @@ Defining several profiles lets you have several commands, each applying with a d
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
                         <child>
-                          <object class="GtkFrame" id="frame12">
-                            <property name="visible">True</property>
-                            <property name="label_xalign">0</property>
-                            <property name="shadow_type">in</property>
-                            <child>
-                              <object class="GtkAlignment" id="alignment12">
-                                <property name="visible">True</property>
-                                <property name="top_padding">6</property>
-                                <property name="bottom_padding">6</property>
-                                <property name="left_padding">12</property>
-                                <property name="right_padding">6</property>
-                                <child>
-                                  <object class="GtkHBox" id="hbox10">
-                                    <property name="visible">True</property>
-                                    <property name="spacing">6</property>
-                                    <child>
-                                      <object class="GtkLabel" id="label17">
-                                        <property name="visible">True</property>
-                                        <property name="xalign">1</property>
-                                        <property name="label" translatable="yes">_Count :</property>
-                                        <property name="use_underline">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <object class="GtkComboBox" id="ConditionsCountSigneCombobox">
-                                        <property name="visible">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkEntry" id="ConditionsCountNumberEntry">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="invisible_char">&#x25CF;</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">3</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                            <child type="label">
-                              <object class="GtkLabel" id="label12">
-                                <property name="visible">True</property>
-                                <property name="xpad">5</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Appears if selection contains&lt;/b&gt;</property>
-                                <property name="use_markup">True</property>
-                              </object>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
                           <object class="GtkFrame" id="frame16">
                             <property name="visible">True</property>
                             <property name="label_xalign">0</property>
@@ -1505,7 +1437,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                       <object class="GtkLabel" id="label77">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
-                                        <property name="label" translatable="yes">The current item will appear if each element of the selection matches all capabilities of the 'Must match' column, while not matching any capability of the 'Must not match' column.</property>
+                                        <property name="label" translatable="yes">The current item will appear if each element of the selection matches all capabilities of the 'Must match all of' column, while not matching any capability of the 'Must not match any of' column.</property>
                                         <property name="wrap">True</property>
                                       </object>
                                       <packing>
@@ -1602,7 +1534,7 @@ Defining several profiles lets you have several commands, each applying with a d
                             </child>
                           </object>
                           <packing>
-                            <property name="position">1</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                       </object>
@@ -1629,7 +1561,72 @@ Defining several profiles lets you have several commands, each applying with a d
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
                         <child>
-                          <placeholder/>
+                          <object class="GtkFrame" id="frame12">
+                            <property name="visible">True</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <object class="GtkAlignment" id="alignment12">
+                                <property name="visible">True</property>
+                                <property name="top_padding">6</property>
+                                <property name="bottom_padding">6</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkHBox" id="hbox10">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label17">
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="label" translatable="yes">_Count :</property>
+                                        <property name="use_underline">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <object class="GtkComboBox" id="SelectionCountSigneCombobox">
+                                        <property name="visible">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkEntry" id="SelectionCountNumberEntry">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="invisible_char">&#x25CF;</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="position">3</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child type="label">
+                              <object class="GtkLabel" id="label12">
+                                <property name="visible">True</property>
+                                <property name="xpad">5</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Appears if selection contains&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
                         <child>
                           <object class="GtkFrame" id="frame4">
@@ -1728,7 +1725,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                             <property name="vscrollbar_policy">automatic</property>
                                             <property name="shadow_type">in</property>
                                             <child>
-                                              <object class="GtkTreeView" id="EnvironmentsTreeView">
+                                              <object class="GtkTreeView" id="EnvironmentsDesktopTreeView">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="headers_visible">False</property>
