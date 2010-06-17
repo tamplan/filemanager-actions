@@ -44,6 +44,7 @@ G_BEGIN_DECLS
 void  nact_sort_buttons_initial_load                 ( NactMainWindow *window );
 void  nact_sort_buttons_runtime_init                 ( NactMainWindow *window );
 void  nact_sort_buttons_all_widgets_showed           ( NactMainWindow *window );
+void  nact_sort_buttons_enable_buttons               ( NactMainWindow *window, gboolean enable );
 void  nact_sort_buttons_dispose                      ( NactMainWindow *window );
 void  nact_sort_buttons_display_order_change         ( NactMainWindow *window, guint order_mode );
 void  nact_sort_buttons_level_zero_writability_change( NactMainWindow *window );

@@ -194,7 +194,7 @@ nact_iproperties_tab_runtime_init_toplevel( NactIPropertiesTab *instance )
 		button = base_window_get_widget( BASE_WINDOW( instance ), "SuggestedShortcutButton" );
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
-				G_OBJECT( buffer ),
+				G_OBJECT( button ),
 				"clicked",
 				G_CALLBACK( on_shortcut_clicked ));
 

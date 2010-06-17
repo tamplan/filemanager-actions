@@ -1,5 +1,12 @@
 2010-06-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-sort-buttons.c:
+	* src/nact/nact-sort-buttons.h (nact_sort_buttons_enable_buttons):
+	New function.
+
+	* src/nact/nact-main-menubar.c (on_iactions_list_count_updated):
+	Enable/disable sort buttons depending of items list count.
+
 	* src/api/na-object-api.h
 	(na_object_get_shortcut, na_object_set_shortcut): New macros.
 

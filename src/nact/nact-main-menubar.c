@@ -55,6 +55,7 @@
 #include "nact-main-menubar-tools.h"
 #include "nact-main-menubar-maintainer.h"
 #include "nact-main-menubar-help.h"
+#include "nact-sort-buttons.h"
 
 #define MENUBAR_PROP_STATUS_CONTEXT			"nact-menubar-status-context"
 #define MENUBAR_PROP_MAIN_STATUS_CONTEXT	"nact-menubar-main-status-context"
@@ -445,7 +446,9 @@ on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions
 	mis->list_menus = menus;
 	mis->list_actions = actions;
 	mis->list_profiles = profiles;
-	mis->have_exportables = ( mis->list_actions > 0 );
+	mis->have_exportables = ( mis->list_menus + mis->list_actions > 0 );
+
+	nact_sort_buttons_enable_buttons( window, mis->list_menus + mis->list_actions > 0 );
 
 	/* i18n: note the space at the beginning of the sentence */
 	status = g_strdup_printf( _( " %d menu(s), %d action(s), %d profile(s) are currently loaded" ), menus, actions, profiles );

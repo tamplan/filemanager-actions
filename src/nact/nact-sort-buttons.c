@@ -47,6 +47,7 @@ typedef struct {
 
 static gboolean st_set_sort_order = FALSE;
 static gboolean st_in_toggle      = FALSE;
+static gboolean st_enable_buttons = FALSE;
 static gint     st_last_active    = -1;
 
 static void enable_buttons( NactMainWindow *window );
@@ -133,6 +134,28 @@ nact_sort_buttons_all_widgets_showed( NactMainWindow *window )
 }
 
 /**
+ * nact_sort_buttons_enable_buttons:
+ * @window: the #NactMainWindow.
+ * @enable: whether we wish enable or disable these sort buttons.
+ *
+ * Enable or disable the sort buttons, while keeping relevant with
+ * writability status of the various stages.
+ *
+ * This function may be called when application wishes enable or disable
+ * the sort buttons, typically when there is no record to sort.
+ */
+void
+nact_sort_buttons_enable_buttons( NactMainWindow *window, gboolean enable )
+{
+	static const gchar *thisfn = "nact_sort_buttons_enable_buttons";
+
+	g_debug( "%s: window=%p, enable=%s", thisfn, ( void * ) window, enable ? "True":"False" );
+
+	st_enable_buttons = enable;
+	enable_buttons( window );
+}
+
+/**
  * nact_sort_buttons_dispose:
  * @window: the #NactMainWindow.
  *
@@ -195,7 +218,7 @@ enable_buttons( NactMainWindow *window )
 	i = 0;
 	while( st_toggle_group[i].btn_name ){
 		button = base_window_get_widget( BASE_WINDOW( window ), st_toggle_group[i].btn_name );
-		gtk_widget_set_sensitive( button, writable );
+		gtk_widget_set_sensitive( button, writable && st_enable_buttons );
 		i += 1;
 	}
 }
