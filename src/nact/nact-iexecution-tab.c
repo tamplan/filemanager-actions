@@ -32,8 +32,11 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include <api/na-object-api.h>
 
+#include "nact-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-iexecution-tab.h"
 
@@ -52,7 +55,15 @@ static void     interface_base_init( NactIExecutionTabInterface *klass );
 static void     interface_base_finalize( NactIExecutionTabInterface *klass );
 
 static void     on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_selected );
-static gboolean tab_set_sensitive( NactIExecutionTab *instance );
+
+static void     on_normal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void     on_terminal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void     on_embedded_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void     on_display_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void     execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *togglebutton, GCallback cb, const gchar *mode );
+static void     on_startup_notify_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void     on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance );
+static void     on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance );
 
 GType
 nact_iexecution_tab_get_type( void )
@@ -134,10 +145,11 @@ nact_iexecution_tab_initial_load_toplevel( NactIExecutionTab *instance )
 {
 	static const gchar *thisfn = "nact_iexecution_tab_initial_load_toplevel";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	}
 }
 
@@ -152,17 +164,68 @@ void
 nact_iexecution_tab_runtime_init_toplevel( NactIExecutionTab *instance )
 {
 	static const gchar *thisfn = "nact_iexecution_tab_runtime_init_toplevel";
+	GtkWidget *widget;
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( instance ),
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeNormal" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( widget ),
+				"toggled",
+				G_CALLBACK( on_normal_mode_toggled ));
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeTerminal" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( widget ),
+				"toggled",
+				G_CALLBACK( on_terminal_mode_toggled ));
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeEmbedded" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( widget ),
+				"toggled",
+				G_CALLBACK( on_embedded_mode_toggled ));
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeDisplayOutput" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( widget ),
+				"toggled",
+				G_CALLBACK( on_display_mode_toggled ));
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "StartupNotifyButton" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( widget ),
+				"toggled",
+				G_CALLBACK( on_startup_notify_toggled ));
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( widget ),
+				"changed",
+				G_CALLBACK( on_startup_class_changed ));
+
+		widget = base_window_get_widget( BASE_WINDOW( instance ), "ExecuteAsEntry" );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( widget ),
+				"changed",
+				G_CALLBACK( on_execute_as_changed ));
 	}
 }
 
@@ -171,10 +234,11 @@ nact_iexecution_tab_all_widgets_showed( NactIExecutionTab *instance )
 {
 	static const gchar *thisfn = "nact_iexecution_tab_all_widgets_showed";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	}
 }
 
@@ -189,10 +253,11 @@ nact_iexecution_tab_dispose( NactIExecutionTab *instance )
 {
 	static const gchar *thisfn = "nact_iexecution_tab_dispose";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	}
 }
 
@@ -200,33 +265,168 @@ static void
 on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_selected )
 {
 	static const gchar *thisfn = "nact_iexecution_tab_on_tab_updatable_selection_changed";
+	NAIContext *context;
+	gboolean editable;
+	gboolean enable_tab;
+	gchar *mode;
+	GtkWidget *normal_toggle, *terminal_toggle, *embedded_toggle, *display_toggle;
+	gboolean notify;
+	GtkWidget *notify_check;
+	gchar *class, *user;
+	GtkWidget *entry;
 
-	g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
 
-		st_on_selection_change = TRUE;
+		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 
-		tab_set_sensitive( instance );
+		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
 
-		st_on_selection_change = FALSE;
+		enable_tab = ( context != NULL );
+		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
+
+		if( context ){
+			st_on_selection_change = TRUE;
+
+			normal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeNormal" );
+			nact_gtk_utils_set_editable( GTK_OBJECT( normal_toggle ), editable );
+
+			terminal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeTerminal" );
+			nact_gtk_utils_set_editable( GTK_OBJECT( terminal_toggle ), editable );
+
+			embedded_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeEmbedded" );
+			nact_gtk_utils_set_editable( GTK_OBJECT( embedded_toggle ), editable );
+
+			display_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeDisplayOutput" );
+			nact_gtk_utils_set_editable( GTK_OBJECT( display_toggle ), editable );
+
+			mode = na_object_get_execution_mode( context );
+			if( !strcmp( mode, "Normal" )){
+				gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( normal_toggle ), TRUE );
+			} else if( !strcmp( mode, "Terminal" )){
+				gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( terminal_toggle ), TRUE );
+			} else if( !strcmp( mode, "Embedded" )){
+				gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( embedded_toggle ), TRUE );
+			} else if( !strcmp( mode, "DisplayOutput" )){
+				gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( display_toggle ), TRUE );
+			} else {
+				g_warning( "%s: unable to setup execution mode '%s'", thisfn, mode );
+			}
+			g_free( mode );
+
+			notify = na_object_get_startup_notify( context );
+			notify_check = base_window_get_widget( BASE_WINDOW( instance ), "StartupNotifyButton" );
+			nact_gtk_utils_set_editable( GTK_OBJECT( notify_check ), editable );
+			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( notify_check ), notify );
+
+			class = na_object_get_startup_class( context );
+			entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
+			gtk_entry_set_text( GTK_ENTRY( entry ), class );
+			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+			gtk_widget_set_sensitive( entry, notify );
+			g_free( class );
+
+			user = na_object_get_execute_as( context );
+			entry = base_window_get_widget( BASE_WINDOW( instance ), "ExecuteAsEntry" );
+			gtk_entry_set_text( GTK_ENTRY( entry ), user );
+			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+			g_free( user );
+
+			st_on_selection_change = FALSE;
+		}
 	}
 }
 
-static gboolean
-tab_set_sensitive( NactIExecutionTab *instance )
+static void
+on_normal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance )
 {
-	NAObjectProfile *profile;
-	gboolean enable_tab;
+	execution_mode_toggle( instance, togglebutton, G_CALLBACK( on_normal_mode_toggled ), "Normal" );
+}
 
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			NULL );
+static void
+on_terminal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance )
+{
+	execution_mode_toggle( instance, togglebutton, G_CALLBACK( on_terminal_mode_toggled ), "Terminal" );
+}
 
-	enable_tab = ( profile != NULL );
-	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
+static void
+on_embedded_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance )
+{
+	execution_mode_toggle( instance, togglebutton, G_CALLBACK( on_embedded_mode_toggled ), "Embedded" );
+}
 
-	return( enable_tab );
+static void
+on_display_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance )
+{
+	execution_mode_toggle( instance, togglebutton, G_CALLBACK( on_display_mode_toggled ), "DisplayOutput" );
+}
+
+static void
+execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_button, GCallback cb, const gchar *mode )
+{
+	NAIContext *context;
+	gboolean editable;
+	gboolean active;
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+	active = gtk_toggle_button_get_active( toggle_button );
+
+	if( editable ){
+		if( active ){
+			na_object_set_execution_mode( context, mode );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		}
+
+	} else {
+		g_signal_handlers_block_by_func(( gpointer ) toggle_button, cb, instance );
+		gtk_toggle_button_set_active( toggle_button, !active );
+		g_signal_handlers_unblock_by_func(( gpointer ) toggle_button, cb, instance );
+	}
+}
+
+static void
+on_startup_notify_toggled( GtkToggleButton *toggle_button, NactIExecutionTab *instance )
+{
+	NAIContext *context;
+	gboolean editable;
+	gboolean active;
+	GtkWidget *entry;
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+	active = gtk_toggle_button_get_active( toggle_button );
+
+	if( editable ){
+		na_object_set_startup_notify( context, active );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
+		gtk_widget_set_sensitive( entry, active );
+
+	} else {
+		g_signal_handlers_block_by_func(( gpointer ) toggle_button, on_startup_notify_toggled, instance );
+		gtk_toggle_button_set_active( toggle_button, !active );
+		g_signal_handlers_unblock_by_func(( gpointer ) toggle_button, on_startup_notify_toggled, instance );
+	}
+}
+
+static void
+on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance )
+{
+	NAIContext *context;
+	const gchar *text;
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	text = gtk_entry_get_text( entry );
+	na_object_set_startup_class( context, text );
+}
+
+static void
+on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance )
+{
+	NAIContext *context;
+	const gchar *text;
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	text = gtk_entry_get_text( entry );
+	na_object_set_execute_as( context, text );
 }

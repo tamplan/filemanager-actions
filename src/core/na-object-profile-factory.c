@@ -193,8 +193,8 @@ static NADataDef data_def_profile [] = {
 						"standard streams (stdout, stderr) should be collected and displayed; " \
 						"an acceptable fallback is Terminal.\n" \
 					"Defaults to \"Normal\"." ),
-				NAFD_TYPE_UINT,
-				"1",
+				NAFD_TYPE_STRING,
+				"Normal",
 				FALSE,
 				TRUE,
 				TRUE,

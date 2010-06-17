@@ -160,6 +160,10 @@ G_BEGIN_DECLS
 #define na_object_is_file( obj )						(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISFILE )))
 #define na_object_is_dir( obj )							(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISDIR )))
 #define na_object_is_multiple( obj )					(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MULTIPLE )))
+#define na_object_get_execution_mode( obj )				(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_EXECUTION_MODE ))
+#define na_object_get_startup_notify( obj )				(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_STARTUP_NOTIFY )))
+#define na_object_get_startup_class( obj )				(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_STARTUP_WMCLASS ))
+#define na_object_get_execute_as( obj )					(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_EXECUTE_AS ))
 
 #define na_object_set_path( obj, path )					na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PATH, ( const void * )( path ))
 #define na_object_set_parameters( obj, parms )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PARAMETERS, ( const void * )( parms ))
@@ -167,6 +171,10 @@ G_BEGIN_DECLS
 #define na_object_set_isfile( obj, isfile )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISFILE, ( const void * ) GUINT_TO_POINTER( isfile ))
 #define na_object_set_isdir( obj, isdir )				na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISDIR, ( const void * ) GUINT_TO_POINTER( isdir ))
 #define na_object_set_multiple( obj, multiple )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MULTIPLE, ( const void * ) GUINT_TO_POINTER( multiple ))
+#define na_object_set_execution_mode( obj, mode )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_EXECUTION_MODE, ( const void * )( mode ))
+#define na_object_set_startup_notify( obj, notify )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_STARTUP_NOTIFY, ( const void * ) GUINT_TO_POINTER( notify ))
+#define na_object_set_startup_class( obj, class )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_STARTUP_WMCLASS, ( const void * )( class ))
+#define na_object_set_execute_as( obj, user )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_EXECUTE_AS, ( const void * )( user ))
 
 /* NAIContext
  */

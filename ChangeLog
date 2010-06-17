@@ -1,5 +1,17 @@
 2010-06-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-object-api.h
+	(na_object_get_execution_mode,
+	na_object_get_startup_notify, na_object_get_startup_class,
+	na_object_get_execute_as, na_object_set_execution_mode,
+	na_object_set_startup_notify, na_object_set_startup_class,
+	na_object_set_execute_as): New macros.
+
+	* src/core/na-object-profile-factory.c:
+	Change type of execution mode from uint to string.
+
+	* src/nact/nact-iexecution-tab.c: Implement NactIExecutionTab page.
+
 	* src/nact/nact-ienvironment-tab.c: Implement NactIEnvironmentTab page.
 
 2010-06-16 Pierre Wieser <pwieser@trychlos.org>
