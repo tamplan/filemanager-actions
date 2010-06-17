@@ -447,7 +447,6 @@ on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance )
 	g_object_get(
 			G_OBJECT( instance ),
 			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
 			NULL );
 
 	text = gtk_entry_get_text( entry );
