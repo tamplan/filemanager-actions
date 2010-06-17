@@ -631,10 +631,8 @@ on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
 				NULL );
 
-		if( profile ){
-			na_object_set_working_dir( profile, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
-		}
+		na_object_set_working_dir( profile, gtk_entry_get_text( entry ));
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
 	}
 }
 

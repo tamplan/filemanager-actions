@@ -728,26 +728,60 @@ on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 static void
 on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance )
 {
+	GtkWidget *entry;
+
+	entry = base_window_get_widget( BASE_WINDOW( instance ), "TryExecEntry" );
+
+	nact_gtk_utils_select_file(
+			BASE_WINDOW( instance ),
+			_( "Choosing an executable" ), "ienvironment-try-exec-dialog",
+			entry, "ienvironment-try-exec-uri", "file:///bin" );
 }
 
 static void
 on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 {
+	NAIContext *context;
+	const gchar *text;
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	text = gtk_entry_get_text( entry );
+	na_object_set_show_if_registered( context, text );
 }
 
 static void
 on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 {
+	NAIContext *context;
+	const gchar *text;
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	text = gtk_entry_get_text( entry );
+	na_object_set_show_if_true( context, text );
 }
 
 static void
 on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 {
+	NAIContext *context;
+	const gchar *text;
+
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	text = gtk_entry_get_text( entry );
+	na_object_set_show_if_running( context, text );
 }
 
 static void
 on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance )
 {
+	GtkWidget *entry;
+
+	entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningEntry" );
+
+	nact_gtk_utils_select_file(
+			BASE_WINDOW( instance ),
+			_( "Choosing an executable" ), "ienvironment-show-if-running-dialog",
+			entry, "ienvironment-show-if-running-uri", "file:///bin" );
 }
 
 static void
