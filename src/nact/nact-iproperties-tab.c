@@ -33,6 +33,7 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <string.h>
 
 #include <api/na-object-api.h>
 
@@ -47,6 +48,9 @@
 struct NactIPropertiesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
+
+/* i18n: label of the push button when there is not yet any shortcut */
+#define NO_SHORTCUT						N_( "None" )
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized   = FALSE;
@@ -292,6 +296,10 @@ on_tab_updatable_selection_changed( NactIPropertiesTab *instance, gint count_sel
 
 			shortcut_button = base_window_get_widget( BASE_WINDOW( instance ), "SuggestedShortcutButton" );
 			shortcut = na_object_get_shortcut( item );
+			if( !shortcut || !strlen( shortcut )){
+				g_free( shortcut );
+				shortcut = g_strdup( NO_SHORTCUT );
+			}
 			gtk_button_set_label( GTK_BUTTON( shortcut_button ), shortcut );
 			g_free( shortcut );
 			nact_gtk_utils_set_editable( GTK_OBJECT( shortcut_button ), editable );
