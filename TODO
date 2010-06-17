@@ -473,6 +473,9 @@ Parameter 	Description
   sortable column headers in tab as basenames, mimetypes, and so on, should have
   a small indicator of the current sort order
 
+- 2010-06-17: ui enhancement
+  all edition (entry, buttons, etc.) fields should have a small emblem when read-only.
+
 - default has changed for schemes (was coded as 'file' instead of '*')
   when version is recorded (as 1.4.1 or 2.0) then schemes is reliable
   when version is not recorded, it is a 2.30 serie, and scheme is not recorded when default (i.e. file)
