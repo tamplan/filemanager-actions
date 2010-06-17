@@ -106,6 +106,7 @@ G_BEGIN_DECLS
 #define na_object_get_provider( obj )					na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PROVIDER )
 #define na_object_get_provider_data( obj )				na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PROVIDER_DATA )
 #define na_object_get_iversion( obj )					GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_IVERSION ))
+#define na_object_get_shortcut( obj )					(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHORTCUT ))
 
 #define na_object_set_tooltip( obj, tooltip )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_TOOLTIP, ( const void * )( tooltip ))
 #define na_object_set_icon( obj, icon )					na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ICON, ( const void * )( icon ))
@@ -117,6 +118,7 @@ G_BEGIN_DECLS
 #define na_object_set_provider( obj, provider )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PROVIDER, ( const void * )( provider ))
 #define na_object_set_provider_data( obj, data )		na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PROVIDER_DATA, ( const void * )( data ))
 #define na_object_set_iversion( obj, version )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_IVERSION, ( const void * ) GUINT_TO_POINTER( version ))
+#define na_object_set_shortcut( obj, shortcut )			na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SHORTCUT, ( const void * )( shortcut ))
 
 #define na_object_get_item( obj, id )					na_object_item_get_item( NA_OBJECT_ITEM( obj ),( const gchar * )( id ))
 #define na_object_get_position( obj, child )			na_object_item_get_position( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))

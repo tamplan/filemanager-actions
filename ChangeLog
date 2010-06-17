@@ -1,6 +1,11 @@
 2010-06-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-object-api.h
+	(na_object_get_shortcut, na_object_set_shortcut): New macros.
+
+	* src/nact/nact-iproperties-tab.c: Review NactIPropertiesTab page.
+
+	* src/api/na-object-api.h
 	(na_object_get_execution_mode,
 	na_object_get_startup_notify, na_object_get_startup_class,
 	na_object_get_execute_as, na_object_set_execution_mode,
