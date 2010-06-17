@@ -487,3 +487,5 @@ Parameter 	Description
 - bug: when expanding/collapsing a tree in IActionsList with the left/right arrows, we get
   NA-core-CRITICAL **: na_ifactory_object_get_as_void: assertion `NA_IS_IFACTORY_OBJECT( object )' failed
   we do not get this same message when using the menu or just the Enter key
+
+- 2010-06-17: ui.enhancement: implement shortcut button in NactIPropertiesTab page
