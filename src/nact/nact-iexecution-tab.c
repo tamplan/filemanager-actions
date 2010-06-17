@@ -265,7 +265,7 @@ static void
 on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_selected )
 {
 	static const gchar *thisfn = "nact_iexecution_tab_on_tab_updatable_selection_changed";
-	NAIContext *context;
+	NAObjectProfile *profile;
 	gboolean editable;
 	gboolean enable_tab;
 	gchar *mode;
@@ -281,12 +281,16 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 
 		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 
-		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+		g_object_get(
+				G_OBJECT( instance ),
+				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				NULL );
 
-		enable_tab = ( context != NULL );
+		enable_tab = ( profile != NULL );
 		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
 
-		if( context ){
+		if( enable_tab ){
 			st_on_selection_change = TRUE;
 
 			normal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeNormal" );
@@ -301,7 +305,7 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 			display_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeDisplayOutput" );
 			nact_gtk_utils_set_editable( GTK_OBJECT( display_toggle ), editable );
 
-			mode = na_object_get_execution_mode( context );
+			mode = na_object_get_execution_mode( profile );
 			if( !strcmp( mode, "Normal" )){
 				gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( normal_toggle ), TRUE );
 			} else if( !strcmp( mode, "Terminal" )){
@@ -315,19 +319,19 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 			}
 			g_free( mode );
 
-			notify = na_object_get_startup_notify( context );
+			notify = na_object_get_startup_notify( profile );
 			notify_check = base_window_get_widget( BASE_WINDOW( instance ), "StartupNotifyButton" );
 			nact_gtk_utils_set_editable( GTK_OBJECT( notify_check ), editable );
 			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( notify_check ), notify );
 
-			class = na_object_get_startup_class( context );
+			class = na_object_get_startup_class( profile );
 			entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
 			gtk_entry_set_text( GTK_ENTRY( entry ), class );
 			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 			gtk_widget_set_sensitive( entry, notify );
 			g_free( class );
 
-			user = na_object_get_execute_as( context );
+			user = na_object_get_execute_as( profile );
 			entry = base_window_get_widget( BASE_WINDOW( instance ), "ExecuteAsEntry" );
 			gtk_entry_set_text( GTK_ENTRY( entry ), user );
 			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
@@ -365,17 +369,22 @@ on_display_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *insta
 static void
 execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_button, GCallback cb, const gchar *mode )
 {
-	NAIContext *context;
+	NAObjectProfile *profile;
 	gboolean editable;
 	gboolean active;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			NULL );
+
 	active = gtk_toggle_button_get_active( toggle_button );
 
 	if( editable ){
 		if( active ){
-			na_object_set_execution_mode( context, mode );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+			na_object_set_execution_mode( profile, mode );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
 		}
 
 	} else {
@@ -388,17 +397,22 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 static void
 on_startup_notify_toggled( GtkToggleButton *toggle_button, NactIExecutionTab *instance )
 {
-	NAIContext *context;
+	NAObjectProfile *profile;
 	gboolean editable;
 	gboolean active;
 	GtkWidget *entry;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			NULL );
+
 	active = gtk_toggle_button_get_active( toggle_button );
 
 	if( editable ){
-		na_object_set_startup_notify( context, active );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		na_object_set_startup_notify( profile, active );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
 		gtk_widget_set_sensitive( entry, active );
 
@@ -412,21 +426,30 @@ on_startup_notify_toggled( GtkToggleButton *toggle_button, NactIExecutionTab *in
 static void
 on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance )
 {
-	NAIContext *context;
+	NAObjectProfile *profile;
 	const gchar *text;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+			NULL );
+
 	text = gtk_entry_get_text( entry );
-	na_object_set_startup_class( context, text );
+	na_object_set_startup_class( profile, text );
 }
 
 static void
 on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance )
 {
-	NAIContext *context;
+	NAObjectProfile *profile;
 	const gchar *text;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			NULL );
+
 	text = gtk_entry_get_text( entry );
-	na_object_set_execute_as( context, text );
+	na_object_set_execute_as( profile, text );
 }
