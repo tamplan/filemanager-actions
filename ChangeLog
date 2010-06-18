@@ -1,5 +1,13 @@
 2010-06-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iio-provider.h:
+	* src/core/na-iio-provider.c (na_iio_provider_item_changed):
+	Remove useless item id parameter.
+
+	* src/core/na-ipivot-consumer.c (is_notify_allowed):
+	Set a higher delay (1s to 2s) before notifying NAPivot
+	because of the delay of file monitoring.
+
 	* src/nact/nact-clipboard.c (export_objects):
 	Remove unused dest_folder parameter.
 

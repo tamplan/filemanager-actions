@@ -276,9 +276,15 @@ nadp_desktop_provider_add_monitor( NadpDesktopProvider *provider, const gchar *d
 void
 nadp_desktop_provider_on_monitor_event( NadpDesktopProvider *provider )
 {
+	static const gchar *thisfn = "nadp_desktop_provider_on_monitor_event";
+	GTimeVal now;
+
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ));
 
 	if( !provider->private->dispose_has_run ){
+
+		g_get_current_time( &now );
+		g_debug( "%s: time=%ld.%ld", thisfn, now.tv_sec, now.tv_usec );
 
 		g_get_current_time( &provider->private->last_event );
 
@@ -311,17 +317,21 @@ nadp_desktop_provider_release_monitors( NadpDesktopProvider *provider )
 static gboolean
 on_monitor_timeout( NadpDesktopProvider *provider )
 {
+	static const gchar *thisfn = "nadp_desktop_provider_on_monitor_timeout";
 	GTimeVal now;
 	gulong diff;
+
+	g_debug( "%s", thisfn );
 
 	g_get_current_time( &now );
 	diff = time_val_diff( &now, &provider->private->last_event );
 	if( diff < st_timeout_usec ){
+		g_debug( "%s: unexpired timeout: returning True", thisfn );
 		return( TRUE );
 	}
 
-	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ), NULL );
-
+	g_debug( "%s: expired timeout: advertising IIOProvider, returning False", thisfn );
+	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ));
 	provider->private->event_source_id = 0;
 	return( FALSE );
 }

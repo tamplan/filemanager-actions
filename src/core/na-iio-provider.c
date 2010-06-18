@@ -177,7 +177,6 @@ do_is_able_to_write( const NAIIOProvider *instance )
 /**
  * na_iio_provider_item_changed:
  * @instance: the calling #NAIIOProvider.
- * @id: the id of the modified #NAObjectItem-derived object.
  *
  * Advertises Nautilus-Actions that this #NAIIOProvider @instance has
  * detected a modification in one of its configurations (menu or action).
@@ -186,11 +185,11 @@ do_is_able_to_write( const NAIIOProvider *instance )
  * derived modified objects, but (if possible) only once for each one.
  */
 void
-na_iio_provider_item_changed( const NAIIOProvider *instance, const gchar *id )
+na_iio_provider_item_changed( const NAIIOProvider *instance )
 {
 	static const gchar *thisfn = "na_iio_provider_item_changed";
 
-	g_debug( "%s: instance=%p, id=%s", thisfn, ( void * ) instance, id );
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-	g_signal_emit_by_name(( gpointer ) instance, IIO_PROVIDER_SIGNAL_ITEM_CHANGED, id );
+	g_signal_emit_by_name(( gpointer ) instance, IIO_PROVIDER_SIGNAL_ITEM_CHANGED, NULL );
 }

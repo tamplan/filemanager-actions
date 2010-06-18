@@ -286,9 +286,10 @@ na_ipivot_consumer_notify_of_display_order_changed( NAIPivotConsumer *instance, 
 static gboolean
 is_notify_allowed( const NAIPivotConsumer *instance )
 {
+	static const gchar *thisfn = "na_ipivot_consumer_is_notify_allowed";
 	GTimeVal *last_delay;
 	GTimeVal now;
-	glong ecart;
+	gulong ecart;
 
 	last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
 	if( !last_delay ){
@@ -299,5 +300,6 @@ is_notify_allowed( const NAIPivotConsumer *instance )
 	ecart = 1000000 * ( now.tv_sec - last_delay->tv_sec );
 	ecart += now.tv_usec - last_delay->tv_usec;
 
-	return( ecart > 1000000 );
+	g_debug( "%s: ecart=%ld", thisfn, ecart );
+	return( ecart > 2000000 );
 }

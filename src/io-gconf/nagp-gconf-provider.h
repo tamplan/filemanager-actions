@@ -64,9 +64,8 @@ struct NagpGConfProviderPrivate {
 	gboolean     dispose_has_run;
 	GConfClient *gconf;
 	GList       *monitors;
-	GTimeVal     last_event;
 	guint        event_source_id;
-	gchar       *last_triggered_id;
+	GTimeVal     last_event;
 };
 
 typedef struct {

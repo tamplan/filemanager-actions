@@ -199,10 +199,10 @@ typedef struct {
 GType na_iio_provider_get_type( void );
 
 /* This function is to be called by the I/O provider when it detects
- * that the specified object has been modified in its underlying storage
+ * that an object has been modified in its underlying storage
  * subsystem. It eventually ends up by sending a messages to the consumers.
  */
-void  na_iio_provider_item_changed ( const NAIIOProvider *instance, const gchar *id );
+void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
 
 #define IIO_PROVIDER_SIGNAL_ITEM_CHANGED	"na-iio-provider-notify-pivot"
 

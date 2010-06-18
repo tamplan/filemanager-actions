@@ -70,11 +70,8 @@ static guint    ifactory_provider_get_version( const NAIFactoryProvider *provide
 
 static GList   *install_monitors( NagpGConfProvider *provider );
 static void     config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
-static void     config_path_changed_reset_timeout( NagpGConfProvider *provider );
-static void     config_path_changed_set_timeout( NagpGConfProvider *provider, const gchar *uuid );
 static gboolean config_path_changed_trigger_interface( NagpGConfProvider *provider );
 static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
-static gchar   *entry2uuid( GConfEntry *entry );
 
 GType
 nagp_gconf_provider_get_type( void )
@@ -319,65 +316,21 @@ install_monitors( NagpGConfProvider *provider )
 static void
 config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider )
 {
-	/*static const gchar *thisfn = "nagp_gconf_provider_config_path_changed_cb";*/
-	gchar *uuid;
-
-	/*g_debug( "%s: client=%p, cnxnid=%u, entry=%p, provider=%p",
-			thisfn, ( void * ) client, cnxn_id, ( void * ) entry, ( void * ) provider );*/
-
 	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
 	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
 
 	if( !provider->private->dispose_has_run ){
 
-		uuid = entry2uuid( entry );
-		/*g_debug( "%s: uuid=%s", thisfn, uuid );*/
+		g_get_current_time( &provider->private->last_event );
 
-		if( provider->private->event_source_id ){
-			if( g_ascii_strcasecmp( uuid, provider->private->last_triggered_id )){
-
-				/* there already has a timeout, but on another object
-				 * so trigger the interface for the previous object
-				 * and set the timeout for the new object
-				 */
-				config_path_changed_trigger_interface( provider );
-				config_path_changed_set_timeout( provider, uuid );
-			}
-
-			/* there already has a timeout for this same object
-			 * do nothing
-			 */
-
-		} else {
-			/* there was not yet any timeout: set it
-			 */
-			config_path_changed_set_timeout( provider, uuid );
+		if( !provider->private->event_source_id ){
+			provider->private->event_source_id =
+				g_timeout_add(
+						st_timeout_msec,
+						( GSourceFunc ) config_path_changed_trigger_interface,
+						provider );
 		}
-
-		g_free( uuid );
 	}
-}
-
-static void
-config_path_changed_reset_timeout( NagpGConfProvider *provider )
-{
-	g_free( provider->private->last_triggered_id );
-	provider->private->last_triggered_id = NULL;
-	/*provider->private->last_event = ( GTimeVal ) 0;*/
-	provider->private->event_source_id = 0;
-}
-
-static void
-config_path_changed_set_timeout( NagpGConfProvider *provider, const gchar *uuid )
-{
-	config_path_changed_reset_timeout( provider );
-	provider->private->last_triggered_id = g_strdup( uuid );
-	g_get_current_time( &provider->private->last_event );
-	provider->private->event_source_id =
-		g_timeout_add(
-				st_timeout_msec,
-				( GSourceFunc ) config_path_changed_trigger_interface,
-				provider );
 }
 
 /*
@@ -402,9 +355,9 @@ config_path_changed_trigger_interface( NagpGConfProvider *provider )
 		return( TRUE );
 	}
 
-	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ), provider->private->last_triggered_id );
+	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ));
+	provider->private->event_source_id = 0;
 
-	config_path_changed_reset_timeout( provider );
 	return( FALSE );
 }
 
@@ -417,27 +370,4 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
 	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
 	microsec += recent->tv_usec  - old->tv_usec;
 	return( microsec );
-}
-
-/*
- * gets the uuid from an entry
- */
-static gchar *
-entry2uuid( GConfEntry *entry )
-{
-	const gchar *path;
-	const gchar *subpath;
-	gchar **split;
-	gchar *uuid;
-
-	g_return_val_if_fail( entry, NULL );
-
-	path = gconf_entry_get_key( entry );
-	subpath = path + strlen( NAGP_CONFIGURATIONS_PATH ) + 1;
-	split = g_strsplit( subpath, "/", -1 );
-	/*g_debug( "%s: [0]=%s, [1]=%s", thisfn, split[0], split[1] );*/
-	uuid = g_strdup( split[0] );
-	g_strfreev( split );
-
-	return( uuid );
 }
