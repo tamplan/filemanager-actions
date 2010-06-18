@@ -276,7 +276,6 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 	gchar *dest_folder, *folder;
 	gboolean is_writable;
 	gboolean copy_data;
-	NAGnomeVFSURI *vfs;
 
 	atom_name = gdk_atom_name( selection_data->target );
 	g_debug( "%s: drag_source=%p, context=%p, action=%d, selection_data=%p, rows=%p, atom=%s",
@@ -306,21 +305,20 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 				 * e.g. file:///home/pierre/data/eclipse/nautilus-actions/trash/xds.txt
 				 */
 				folder = get_xds_atom_value( context );
-				/* get the dest folder as a path
-				 */
-				vfs = g_new0( NAGnomeVFSURI, 1 );
-				na_gnome_vfs_uri_parse( vfs, folder );
-				dest_folder = g_path_get_dirname( vfs->path );
-				na_gnome_vfs_uri_free( vfs );
-				g_free( folder );
+				dest_folder = g_path_get_dirname( folder );
+
 				/* check that target folder is writable
 				 */
-				is_writable = na_core_utils_dir_is_writable_path( dest_folder );
+				is_writable = na_core_utils_dir_is_writable_uri( dest_folder );
+				g_debug( "%s: dest_folder=%s, is_writable=%s", thisfn, dest_folder, is_writable ? "True":"False" );
 				gtk_selection_data_set( selection_data, selection_data->target, 8, ( guchar * )( is_writable ? "S" : "F" ), 1 );
+
 				if( is_writable ){
 					nact_clipboard_dnd_set( model->private->clipboard, info, rows, dest_folder, TRUE );
 				}
+
 				g_free( dest_folder );
+				g_free( folder );
 				ret = is_writable;
 				break;
 

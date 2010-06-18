@@ -761,6 +761,8 @@ output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg )
 	g_return_if_fail( xml );
 	g_return_if_fail( filename && g_utf8_strlen( filename, -1 ));
 
+	g_debug( "%s: filename=%s", thisfn, filename );
+
 	file = g_file_new_for_uri( filename );
 
 	stream = g_file_replace( file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &error );

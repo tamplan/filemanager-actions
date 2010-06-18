@@ -114,7 +114,7 @@ static void   instance_finalize( GObject *application );
 static void   get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data );
 static void   clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *data );
 static gchar *export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder );
-static gchar *export_objects( NactClipboard *clipboard, GList *objects, const gchar *dest_folder );
+static gchar *export_objects( NactClipboard *clipboard, GList *objects );
 static gchar *export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported );
 
 static void   get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard );
@@ -270,7 +270,7 @@ nact_clipboard_new( BaseWindow *window )
  * nact_clipboard_dnd_set:
  * @clipboard: this #NactClipboard instance.
  * @rows: the list of row references of dragged items.
- * @folder: the target folder if any (XDS protocol to outside).
+ * @folder: the URI of the target folder if any (XDS protocol to outside).
  * @copy_data: %TRUE if data is to be copied, %FALSE else
  *  (only relevant when drag and drop occurs inside of the tree view).
  *
@@ -427,6 +427,7 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 			g_debug( "%s: data=%p (NactClipboardDndData)", thisfn, ( void * ) data );
 
 			if( data->target == NACT_XCHANGE_FORMAT_XDS ){
+				g_debug( "%s: folder=%s", thisfn, data->folder );
 				export_rows( clipboard, data->rows, data->folder );
 			}
 
@@ -512,7 +513,7 @@ export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 }
 
 static gchar *
-export_objects( NactClipboard *clipboard, GList *objects, const gchar *dest_folder )
+export_objects( NactClipboard *clipboard, GList *objects )
 {
 	gchar *buffer;
 	GString *data;
@@ -526,7 +527,7 @@ export_objects( NactClipboard *clipboard, GList *objects, const gchar *dest_fold
 
 	for( iobj = objects ; iobj ; iobj = iobj->next ){
 		object = NA_OBJECT( iobj->data );
-		buffer = export_row_object( clipboard, object, dest_folder, &exported );
+		buffer = export_row_object( clipboard, object, NULL, &exported );
 		if( buffer && strlen( buffer )){
 			data = g_string_append( data, buffer );
 			g_free( buffer );
@@ -774,7 +775,7 @@ get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionDa
 	user_data = clipboard->private->primary_data;
 
 	if( info == NACT_CLIPBOARD_FORMAT_TEXT_PLAIN ){
-		buffer = export_objects( clipboard, user_data->items, NULL );
+		buffer = export_objects( clipboard, user_data->items );
 		gtk_selection_data_set( selection_data, selection_data->target, 8, ( const guchar * ) buffer, strlen( buffer ));
 		g_free( buffer );
 

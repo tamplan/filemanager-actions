@@ -1,5 +1,12 @@
 2010-06-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-clipboard.c (export_objects):
+	Remove unused dest_folder parameter.
+
+	* src/nact/nact-tree-model-dnd.c
+	(nact_tree_model_dnd_imulti_drag_source_drag_data_get):
+	Get destination folder as an URI.
+
 	* src/nact/nact-iaction-tab.c:
 	Fix invalid cast of NAObjectMenu to NAObjectAction.
 
