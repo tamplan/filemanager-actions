@@ -376,7 +376,7 @@ NADataDef data_def_item [] = {
 				N_( "The version of the configuration format that will be used to manage backward compatibility." ),
 				NAFD_TYPE_UINT,
 				"3",
-				TRUE,
+				FALSE,
 				TRUE,
 				TRUE,
 				FALSE,

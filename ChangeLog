@@ -1,6 +1,13 @@
 2010-06-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-object-item-factory.c:
+	Numeric version is no more writable by default.
+
+	* src/io-gconf/nagp-keys.h:
+	* src/io-gconf/nagp-writer.c (nagp_writer_write_start):
+	Explicitely write the numeric version to GConf.
+
+	* src/core/na-object-item-factory.c:
 	Provider data is no more duplicable by NAObjectFactory.
 
 	* src/core/na-object-item.c (object_copy):

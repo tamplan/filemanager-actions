@@ -38,4 +38,6 @@
 #define NAGP_VALUE_TYPE_MENU			"Menu"
 #define NAGP_VALUE_TYPE_ACTION			"Action"
 
+#define NAGP_ENTRY_IVERSION				"iversion"
+
 #endif /* __NAGP_GCONF_PROVIDER_KEYS_H__ */
