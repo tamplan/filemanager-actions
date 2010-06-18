@@ -335,6 +335,8 @@ NADataDef data_def_item [] = {
 
 	/* dynamic data, so non readable / non writable (but has property)
 	 * is left at the NAIIOProvider disposition
+	 * not copyable as directly duplicated by NAIIOProvider interface
+	 * (see NAObjectItem::object_copy)
 	 */
 	{ NAFO_DATA_PROVIDER_DATA,
 				FALSE,
@@ -345,7 +347,7 @@ NADataDef data_def_item [] = {
 				NAFD_TYPE_POINTER,
 				NULL,
 				FALSE,
-				TRUE,
+				FALSE,
 				FALSE,
 				FALSE,
 				FALSE,

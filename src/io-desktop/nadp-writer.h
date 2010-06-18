@@ -38,8 +38,9 @@ G_BEGIN_DECLS
 gboolean nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider );
 gboolean nadp_iio_provider_is_able_to_write   ( const NAIIOProvider *provider );
 
-guint    nadp_iio_provider_write_item ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint    nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint    nadp_iio_provider_write_item    ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint    nadp_iio_provider_delete_item   ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint    nadp_iio_provider_duplicate_data( const NAIIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
 
 guint    nadp_writer_ifactory_provider_write_start(
 				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,

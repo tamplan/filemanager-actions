@@ -276,6 +276,47 @@ desktop_weak_notify( NadpDesktopFile *ndf, GObject *item )
 	g_object_unref( ndf );
 }
 
+/*
+ * Implementation of NAIIOProvider::duplicate_data
+ * Add a ref on NadpDesktopFile data, so that unreffing origin object in NACT
+ * does not invalid duplicated pointer
+ */
+guint
+nadp_iio_provider_duplicate_data( const NAIIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages )
+{
+	static const gchar *thisfn = "nadp_iio_provider_duplicate_data";
+	guint ret;
+	NadpDesktopProvider *self;
+	NadpDesktopFile *ndf;
+
+	g_debug( "%s: provider=%p (%s), dest=%p (%s), source=%p (%s), messages=%p",
+			thisfn,
+			( void * ) provider, G_OBJECT_TYPE_NAME( provider ),
+			( void * ) dest, G_OBJECT_TYPE_NAME( dest ),
+			( void * ) source, G_OBJECT_TYPE_NAME( source ),
+			( void * ) messages );
+
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( dest ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( source ), ret );
+
+	self = NADP_DESKTOP_PROVIDER( provider );
+
+	if( self->private->dispose_has_run ){
+		return( NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN );
+	}
+
+	ndf = ( NadpDesktopFile * ) na_object_get_provider_data( source );
+	g_return_val_if_fail( ndf && NADP_IS_DESKTOP_FILE( ndf ), ret );
+	na_object_set_provider_data( dest, g_object_ref( ndf ));
+	g_object_weak_ref( G_OBJECT( dest ), ( GWeakNotify ) desktop_weak_notify, ndf );
+
+	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
 #if 0
 /*
  * the item comes from being readen from a desktop file

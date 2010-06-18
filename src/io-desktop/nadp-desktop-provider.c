@@ -204,6 +204,7 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	iface->is_able_to_write = nadp_iio_provider_is_able_to_write;
 	iface->write_item = nadp_iio_provider_write_item;
 	iface->delete_item = nadp_iio_provider_delete_item;
+	iface->duplicate_data = nadp_iio_provider_duplicate_data;
 }
 
 static guint

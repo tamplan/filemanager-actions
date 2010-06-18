@@ -38,6 +38,8 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
+#include "na-io-provider.h"
+
 /* private class data
  */
 struct NAObjectItemClassPrivate {
@@ -204,6 +206,9 @@ instance_finalize( GObject *object )
 static void
 object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 {
+	static const gchar *thisfn = "na_object_item_object_copy";
+	void *provider;
+
 	g_return_if_fail( NA_IS_OBJECT_ITEM( target ));
 	g_return_if_fail( NA_IS_OBJECT_ITEM( source ));
 
@@ -212,6 +217,20 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 
 		if( recursive ){
 			copy_children( NA_OBJECT_ITEM( target ), NA_OBJECT_ITEM( source ));
+		}
+
+		provider = na_object_get_provider( source );
+
+		if( provider ){
+			if( !NA_IS_IO_PROVIDER( provider )){
+				g_warning( "%s: source=%p (%s), provider=%p is not a NAIOProvider",
+						thisfn,
+						( void * ) source, G_OBJECT_TYPE_NAME( source ),
+						( void * ) provider );
+
+			} else {
+				na_io_provider_duplicate_data( NA_IO_PROVIDER( provider ), NA_OBJECT_ITEM( target ), NA_OBJECT_ITEM( source ), NULL );
+			}
 		}
 	}
 }

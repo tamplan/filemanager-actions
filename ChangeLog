@@ -1,5 +1,16 @@
 2010-06-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-item-factory.c:
+	Provider data is no more duplicable by NAObjectFactory.
+
+	* src/core/na-object-item.c (object_copy):
+	Explicitely triggers NAIOProvider::duplicate_data method.
+
+	* src/io-desktop/nadp-desktop-provider.c (iio_provider_iface_init):
+	* src/io-desktop/nadp-writer.c:
+	* src/io-desktop/nadp-writer.h (nadp_iio_provider_duplicate_data):
+	Implement NAIIOProvider::duplicate_data interface.
+
 	* src/io-gconf/nagp-gconf-provider.c (iio_provider_iface_init):
 	Initialize NAIIOProvider duplicate_data() virtual pointer.
 
