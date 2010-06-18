@@ -710,7 +710,7 @@ na_object_object_ref( NAObject *object )
 void
 na_object_object_unref( NAObject *object )
 {
-	GList *children, *ic;
+	GList *children;
 
 	g_debug( "na_object_object_unref:enter: object=%p (%s, ref_count=%d)",
 			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
@@ -720,10 +720,15 @@ na_object_object_unref( NAObject *object )
 	if( !object->private->dispose_has_run ){
 
 		if( NA_IS_OBJECT_ITEM( object )){
-			children = na_object_get_items( object );
+			while( TRUE ){
+				children = na_object_get_items( object );
 
-			for( ic = children ; ic ; ic = ic->next ){
-				na_object_unref( ic->data );
+				if( children ){
+					na_object_unref( children->data );
+
+				} else {
+					break;
+				}
 			}
 		}
 

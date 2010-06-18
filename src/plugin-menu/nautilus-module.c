@@ -34,6 +34,7 @@
 
 #include <string.h>
 #include <syslog.h>
+#include <unistd.h>
 
 #include <libnautilus-extension/nautilus-extension-types.h>
 
@@ -83,6 +84,9 @@ nautilus_module_list_types( const GType **types, int *num_types )
 	type_list[0] = NAUTILUS_ACTIONS_TYPE;
 	*types = type_list;
 	*num_types = 1;
+
+	/* this may let us some time to attach nautilus to the debugger :) */
+	/*sleep( 60 ); */
 }
 
 void

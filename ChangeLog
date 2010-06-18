@@ -1,5 +1,8 @@
 2010-06-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object.c (na_object_object_unref):
+	Fix segfault when unfiltering invalid items.
+
 	* src/core/na-object-item-factory.c:
 	Numeric version is no more writable by default.
 
