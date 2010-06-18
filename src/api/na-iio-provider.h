@@ -193,6 +193,21 @@ typedef struct {
 	 * successfull, or another code depending of the detected error.
 	 */
 	guint    ( *delete_item )        ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
+
+	/**
+	 * duplicate_data:
+	 * @instance: the #NAIIOProvider provider.
+	 * @dest: a #NAObjectItem-derived item, menu or action.
+	 * @source: a #NAObjectItem-derived item, menu or action.
+	 * @messages: a pointer to a #GSList list of strings; the provider
+	 *  may append messages to this list, but shouldn't reinitialize it.
+	 *
+	 * Duplicates provider data (if any) from @source to @dest.
+	 *
+	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the duplicate operation was
+	 * successfull, or another code depending of the detected error.
+	 */
+	guint    ( *duplicate_data )     ( const NAIIOProvider *instance, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
 }
 	NAIIOProviderInterface;
 

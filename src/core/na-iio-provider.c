@@ -125,6 +125,7 @@ interface_base_init( NAIIOProviderInterface *klass )
 		klass->is_able_to_write = do_is_able_to_write;
 		klass->write_item = NULL;
 		klass->delete_item = NULL;
+		klass->duplicate_data = NULL;
 
 		/* register the signal (without any default handler)
 		 * this signal should be sent by the #NAIIOProvider instance when

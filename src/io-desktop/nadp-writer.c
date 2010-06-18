@@ -133,6 +133,7 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 		subdirs = na_core_utils_slist_from_split( NADP_DESKTOP_PROVIDER_SUBDIRS, G_SEARCHPATH_SEPARATOR_S );
 		fulldir = g_build_filename( userdir, ( gchar * ) subdirs->data, NULL );
 		dir_ok = TRUE;
+
 		if( !g_file_test( fulldir, G_FILE_TEST_IS_DIR )){
 			if( g_mkdir_with_parents( fulldir, 0700 )){
 				g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));

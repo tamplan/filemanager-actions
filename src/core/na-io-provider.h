@@ -98,8 +98,9 @@ gboolean       na_io_provider_is_willing_to_write        ( const NAIOProvider *p
 gboolean       na_io_provider_is_able_to_write           ( const NAIOProvider *provider );
 gboolean       na_io_provider_has_write_api              ( const NAIOProvider *provider );
 
-guint          na_io_provider_write_item ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint          na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint          na_io_provider_write_item    ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint          na_io_provider_delete_item   ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint          na_io_provider_duplicate_data( const NAIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
 
 gchar         *na_io_provider_get_readonly_tooltip( guint reason );
 gchar         *na_io_provider_get_return_code_label( guint code );

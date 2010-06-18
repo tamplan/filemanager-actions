@@ -1235,6 +1235,48 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
 }
 
 /**
+ * na_io_provider_duplicate_data:
+ * @provider: this #NAIOProvider object.
+ * @dest: the target #NAObjectItem item.
+ * @source: the source #NAObjectItem item.
+ * @messages: error messages.
+ *
+ * Duplicates provider data (if any) from @source to @dest.
+ *
+ * Returns: the NAIIOProvider return code.
+ */
+guint
+na_io_provider_duplicate_data( const NAIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages )
+{
+	static const gchar *thisfn = "na_io_provider_duplicate_data";
+	guint ret;
+	void *provider_data;
+
+	g_debug( "%s: provider=%p (%s), dest=%p (%s), source=%p (%s), messages=%p", thisfn,
+			( void * ) provider, G_OBJECT_TYPE_NAME( provider ),
+			( void * ) dest, G_OBJECT_TYPE_NAME( dest ),
+			( void * ) source, G_OBJECT_TYPE_NAME( source ),
+			( void * ) messages );
+
+	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+
+	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( dest ), ret );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( source ), ret );
+	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider->private->provider ), ret );
+
+	na_object_set_provider_data( dest, NULL );
+	provider_data = na_object_get_provider_data( source );
+
+	if( provider_data &&
+		NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->duplicate_data ){
+			ret = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->duplicate_data( provider->private->provider, dest, source, messages );
+	}
+
+	return( ret );
+}
+
+/**
  * na_io_provider_get_readonly_tooltip:
  * @reason: the reason for why an item is not writable.
  *
