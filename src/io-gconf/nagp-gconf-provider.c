@@ -211,6 +211,7 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	iface->is_able_to_write = nagp_iio_provider_is_able_to_write;
 	iface->write_item = nagp_iio_provider_write_item;
 	iface->delete_item = nagp_iio_provider_delete_item;
+	iface->duplicate_data = NULL;
 }
 
 static gchar *

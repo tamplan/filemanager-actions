@@ -1,5 +1,8 @@
 2010-06-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-gconf-provider.c (iio_provider_iface_init):
+	Initialize NAIIOProvider duplicate_data() virtual pointer.
+
 	* src/api/na-iio-provider.h:
 	* src/core/na-iio-provider.c (duplicate_data):
 	* src/core/na-io-provider.c:
