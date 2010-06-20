@@ -711,24 +711,32 @@ void
 na_object_object_unref( NAObject *object )
 {
 	GList *children;
-
-	g_debug( "na_object_object_unref:enter: object=%p (%s, ref_count=%d)",
-			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+	GList *ic, *icnext;
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	if( !object->private->dispose_has_run ){
 
+		g_debug( "na_object_object_unref:enter: object=%p (%s, ref_count=%d)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+
 		if( NA_IS_OBJECT_ITEM( object )){
+
+#if 0
 			while( TRUE ){
 				children = na_object_get_items( object );
-
 				if( children ){
 					na_object_unref( children->data );
-
 				} else {
 					break;
 				}
+			}
+#endif
+
+			children = na_object_get_items( object );
+			for( ic = children ; ic ; ic = icnext ){
+				icnext = ic->next;
+				g_object_unref( ic->data );
 			}
 		}
 

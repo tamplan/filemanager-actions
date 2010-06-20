@@ -445,15 +445,17 @@ nact_tree_model_dispose( NactTreeModel *model )
 void
 nact_tree_model_display( NactTreeModel *model, NAObject *object )
 {
-	/*static const gchar *thisfn = "nact_tree_model_display";*/
+	static const gchar *thisfn = "nact_tree_model_display";
 	GtkTreeStore *store;
 	GtkTreeIter iter;
 	GtkTreePath *path;
 
-	/*g_debug( "%s: model=%p (%s), object=%p (%s)", thisfn,
-			( void * ) model, G_OBJECT_TYPE_NAME( model ),
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
 	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+
+	g_debug( "%s: model=%p (%s), object=%p (%s)",
+			thisfn,
+			( void * ) model, G_OBJECT_TYPE_NAME( model ),
+			( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	if( !model->private->dispose_has_run ){
 
@@ -1013,8 +1015,8 @@ iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter
 	 * unchanged in dump_store
 	 */
 	g_object_unref( object );
-	/*g_debug( "nact_tree_model_iter_on_store_item: object=%p (%s, ref_count=%d)",
-			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );*/
+	g_debug( "nact_tree_model_iter_on_store_item: object=%p (%s, ref_count=%d)",
+			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 	path = gtk_tree_model_get_path( store, iter );
 

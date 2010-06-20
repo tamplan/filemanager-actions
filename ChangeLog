@@ -1,3 +1,11 @@
+2010-06-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-object.c (na_object_object_unref):
+	Fix infinite unref of child items.
+
+	* src/nact/nact-tree-model.c (nact_tree_model_display):
+	Set debug messages.
+
 2010-06-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-object.c (na_object_object_unref):
@@ -11,7 +19,7 @@
 	Explicitely write the numeric version to GConf.
 
 	* src/core/na-object-item-factory.c:
-	Provider data is no more duplicable by NAObjectFactory.
+	Provider data is no more duplicable by NAIFactoryObject.
 
 	* src/core/na-object-item.c (object_copy):
 	Explicitely triggers NAIOProvider::duplicate_data method.
