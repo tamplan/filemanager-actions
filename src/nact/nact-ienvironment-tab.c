@@ -418,99 +418,97 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		enable_tab = ( context != NULL );
 		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT, enable_tab );
 
-		if( context ){
+		st_on_selection_change = TRUE;
 
-			st_on_selection_change = TRUE;
+		/* selection count
+		 */
+		sel_count = context ? na_object_get_selection_count( context ) : g_strdup( "" );
+		na_core_utils_selcount_get_ope_int( sel_count, &selcount_ope, &selcount_int );
+		set_selection_count_selection( instance, selcount_ope, selcount_int );
+		g_free( selcount_int );
+		g_free( selcount_ope );
+		g_free( sel_count );
 
-			/* selection count
-			 */
-			sel_count = na_object_get_selection_count( context );
-			na_core_utils_selcount_get_ope_int( sel_count, &selcount_ope, &selcount_int );
-			set_selection_count_selection( instance, selcount_ope, selcount_int );
-			g_free( selcount_int );
-			g_free( selcount_ope );
-			g_free( sel_count );
+		combo = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountSigneCombobox" );
+		nact_gtk_utils_set_editable( GTK_OBJECT( combo ), editable );
 
-			combo = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountSigneCombobox" );
-			nact_gtk_utils_set_editable( GTK_OBJECT( combo ), editable );
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountNumberEntry" );
+		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 
-			entry = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountNumberEntry" );
-			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		/* desktop environment
+		 */
+		raz_desktop_listview( instance );
 
-			/* desktop environment
-			 */
-			raz_desktop_listview( instance );
+		always_button = base_window_get_widget( BASE_WINDOW( instance ), "ShowAlwaysButton" );
+		nact_gtk_utils_set_editable( GTK_OBJECT( always_button ), editable );
 
-			always_button = base_window_get_widget( BASE_WINDOW( instance ), "ShowAlwaysButton" );
-			nact_gtk_utils_set_editable( GTK_OBJECT( always_button ), editable );
+		show_button = base_window_get_widget( BASE_WINDOW( instance ), "OnlyShowButton" );
+		nact_gtk_utils_set_editable( GTK_OBJECT( show_button ), editable );
 
-			show_button = base_window_get_widget( BASE_WINDOW( instance ), "OnlyShowButton" );
-			nact_gtk_utils_set_editable( GTK_OBJECT( show_button ), editable );
+		notshow_button = base_window_get_widget( BASE_WINDOW( instance ), "DoNotShowButton" );
+		nact_gtk_utils_set_editable( GTK_OBJECT( notshow_button ), editable );
 
-			notshow_button = base_window_get_widget( BASE_WINDOW( instance ), "DoNotShowButton" );
-			nact_gtk_utils_set_editable( GTK_OBJECT( notshow_button ), editable );
+		desktops = context ? na_object_get_only_show_in( context ) : NULL;
+		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
 
-			desktops = na_object_get_only_show_in( context );
-			listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
+		if( desktops && g_slist_length( desktops )){
+			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( show_button ), TRUE );
+			gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
+
+		} else {
+			desktops = context ? na_object_get_not_show_in( context ) : NULL;
 
 			if( desktops && g_slist_length( desktops )){
-				gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( show_button ), TRUE );
+				gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( notshow_button ), TRUE );
 				gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
 
 			} else {
-				desktops = na_object_get_not_show_in( context );
-
-				if( desktops && g_slist_length( desktops )){
-					gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( notshow_button ), TRUE );
-					gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
-
-				} else {
-					gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( always_button ), TRUE );
-					gtk_widget_set_sensitive( GTK_WIDGET( listview ), FALSE );
-					desktops = NULL;
-				}
+				gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( always_button ), context != NULL );
+				gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( always_button ), context == NULL );
+				gtk_widget_set_sensitive( GTK_WIDGET( listview ), FALSE );
+				desktops = NULL;
 			}
+		}
 
-			setup_desktop_listview( instance, desktops );
+		setup_desktop_listview( instance, desktops );
 
-			/* execution environment
-			 */
-			entry = base_window_get_widget( BASE_WINDOW( instance ), "TryExecEntry" );
-			text = na_object_get_try_exec( context );
-			text = text && strlen( text ) ? text : g_strdup( "" );
-			gtk_entry_set_text( GTK_ENTRY( entry ), text );
-			g_free( text );
-			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		/* execution environment
+		 */
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "TryExecEntry" );
+		text = context ? na_object_get_try_exec( context ) : g_strdup( "" );
+		text = text && strlen( text ) ? text : g_strdup( "" );
+		gtk_entry_set_text( GTK_ENTRY( entry ), text );
+		g_free( text );
+		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 
-			entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRegisteredEntry" );
-			text = na_object_get_show_if_registered( context );
-			text = text && strlen( text ) ? text : g_strdup( "" );
-			gtk_entry_set_text( GTK_ENTRY( entry ), text );
-			g_free( text );
-			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRegisteredEntry" );
+		text = context ? na_object_get_show_if_registered( context ) : g_strdup( "" );
+		text = text && strlen( text ) ? text : g_strdup( "" );
+		gtk_entry_set_text( GTK_ENTRY( entry ), text );
+		g_free( text );
+		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 
-			entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfTrueEntry" );
-			text = na_object_get_show_if_true( context );
-			text = text && strlen( text ) ? text : g_strdup( "" );
-			gtk_entry_set_text( GTK_ENTRY( entry ), text );
-			g_free( text );
-			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfTrueEntry" );
+		text = context ? na_object_get_show_if_true( context ) : g_strdup( "" );
+		text = text && strlen( text ) ? text : g_strdup( "" );
+		gtk_entry_set_text( GTK_ENTRY( entry ), text );
+		g_free( text );
+		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 
-			entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningEntry" );
-			text = na_object_get_show_if_running( context );
-			text = text && strlen( text ) ? text : g_strdup( "" );
-			gtk_entry_set_text( GTK_ENTRY( entry ), text );
-			g_free( text );
-			nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningEntry" );
+		text = context ? na_object_get_show_if_running( context ) : g_strdup( "" );
+		text = text && strlen( text ) ? text : g_strdup( "" );
+		gtk_entry_set_text( GTK_ENTRY( entry ), text );
+		g_free( text );
+		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
 
-			st_on_selection_change = FALSE;
+		st_on_selection_change = FALSE;
 
-			path = gtk_tree_path_new_first();
-			if( path ){
-				selection = gtk_tree_view_get_selection( listview );
-				gtk_tree_selection_select_path( selection, path );
-				gtk_tree_path_free( path );
-			}
+		path = gtk_tree_path_new_first();
+		if( path ){
+			selection = gtk_tree_view_get_selection( listview );
+			gtk_tree_selection_select_path( selection, path );
+			gtk_tree_path_free( path );
 		}
 	}
 }
@@ -534,14 +532,15 @@ on_selection_count_changed( NactIEnvironmentTab *instance )
 	gchar *selcount;
 
 	if( !st_on_selection_change ){
-
 		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
-		g_return_if_fail( context != NULL );
 
-		selcount = get_selection_count_selection( instance );
-		na_object_set_selection_count( context, selcount );
-		g_free( selcount );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		if( context ){
+			selcount = get_selection_count_selection( instance );
+			na_object_set_selection_count( context, selcount );
+			g_free( selcount );
+
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		}
 	}
 }
 
@@ -572,23 +571,26 @@ on_show_always_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 			( void * ) instance );
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
-	active = gtk_toggle_button_get_active( toggle_button );
 
-	if( editable ){
-		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
-		gtk_widget_set_sensitive( GTK_WIDGET( listview ), !active );
+	if( context ){
+		active = gtk_toggle_button_get_active( toggle_button );
 
-		if( active ){
-			raz_desktop_listview( instance );
-			na_object_set_only_show_in( context, NULL );
-			na_object_set_not_show_in( context, NULL );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		if( editable ){
+			listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
+			gtk_widget_set_sensitive( GTK_WIDGET( listview ), !active );
+
+			if( active ){
+				raz_desktop_listview( instance );
+				na_object_set_only_show_in( context, NULL );
+				na_object_set_not_show_in( context, NULL );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+			}
+
+		} else {
+			g_signal_handlers_block_by_func(( gpointer ) toggle_button, on_show_always_toggled, instance );
+			gtk_toggle_button_set_active( toggle_button, !active );
+			g_signal_handlers_unblock_by_func(( gpointer ) toggle_button, on_show_always_toggled, instance );
 		}
-
-	} else {
-		g_signal_handlers_block_by_func(( gpointer ) toggle_button, on_show_always_toggled, instance );
-		gtk_toggle_button_set_active( toggle_button, !active );
-		g_signal_handlers_unblock_by_func(( gpointer ) toggle_button, on_show_always_toggled, instance );
 	}
 }
 
@@ -607,25 +609,28 @@ on_only_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *insta
 			( void * ) instance );
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
-	active = gtk_toggle_button_get_active( toggle_button );
 
-	if( editable ){
-		if( active ){
-			raz_desktop_listview( instance );
-			show = na_object_get_only_show_in( context );
-			if( show && g_slist_length( show )){
-				setup_desktop_listview( instance, show );
+	if( context ){
+		active = gtk_toggle_button_get_active( toggle_button );
+
+		if( editable ){
+			if( active ){
+				raz_desktop_listview( instance );
+				show = na_object_get_only_show_in( context );
+				if( show && g_slist_length( show )){
+					setup_desktop_listview( instance, show );
+				}
+
+			} else {
+				na_object_set_only_show_in( context, NULL );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
 			}
 
 		} else {
-			na_object_set_only_show_in( context, NULL );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+			g_signal_handlers_block_by_func(( gpointer ) toggle_button, on_only_show_toggled, instance );
+			gtk_toggle_button_set_active( toggle_button, !active );
+			g_signal_handlers_unblock_by_func(( gpointer ) toggle_button, on_only_show_toggled, instance );
 		}
-
-	} else {
-		g_signal_handlers_block_by_func(( gpointer ) toggle_button, on_only_show_toggled, instance );
-		gtk_toggle_button_set_active( toggle_button, !active );
-		g_signal_handlers_unblock_by_func(( gpointer ) toggle_button, on_only_show_toggled, instance );
 	}
 }
 
@@ -644,25 +649,28 @@ on_do_not_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 			( void * ) instance );
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
-	active = gtk_toggle_button_get_active( toggle_button );
 
-	if( editable ){
-		if( active ){
-			raz_desktop_listview( instance );
-			show = na_object_get_not_show_in( context );
-			if( show && g_slist_length( show )){
-				setup_desktop_listview( instance, show );
+	if( context ){
+		active = gtk_toggle_button_get_active( toggle_button );
+
+		if( editable ){
+			if( active ){
+				raz_desktop_listview( instance );
+				show = na_object_get_not_show_in( context );
+				if( show && g_slist_length( show )){
+					setup_desktop_listview( instance, show );
+				}
+
+			} else {
+				na_object_set_not_show_in( context, NULL );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
 			}
 
 		} else {
-			na_object_set_not_show_in( context, NULL );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+			g_signal_handlers_block_by_func(( gpointer ) toggle_button, on_do_not_show_toggled, instance );
+			gtk_toggle_button_set_active( toggle_button, !active );
+			g_signal_handlers_unblock_by_func(( gpointer ) toggle_button, on_do_not_show_toggled, instance );
 		}
-
-	} else {
-		g_signal_handlers_block_by_func(( gpointer ) toggle_button, on_do_not_show_toggled, instance );
-		gtk_toggle_button_set_active( toggle_button, !active );
-		g_signal_handlers_unblock_by_func(( gpointer ) toggle_button, on_do_not_show_toggled, instance );
 	}
 }
 
@@ -683,33 +691,34 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *wi
 	g_debug( "%s: renderer=%p, path=%s, window=%p", thisfn, ( void * ) renderer, path, ( void * ) window );
 
 	if( !st_on_selection_change ){
-
 		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
 
-		if( editable ){
-			listview = GTK_TREE_VIEW( base_window_get_widget( window, "EnvironmentsDesktopTreeView" ));
-			model = gtk_tree_view_get_model( listview );
-			tree_path = gtk_tree_path_new_from_string( path );
-			gtk_tree_model_get_iter( model, &iter, tree_path );
-			gtk_tree_path_free( tree_path );
-			gtk_tree_model_get( model, &iter, ENV_BOOL_COLUMN, &state, ENV_KEYWORD_COLUMN, &desktop, -1 );
-			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ENV_BOOL_COLUMN, !state, -1 );
+		if( context ){
+			if( editable ){
+				listview = GTK_TREE_VIEW( base_window_get_widget( window, "EnvironmentsDesktopTreeView" ));
+				model = gtk_tree_view_get_model( listview );
+				tree_path = gtk_tree_path_new_from_string( path );
+				gtk_tree_model_get_iter( model, &iter, tree_path );
+				gtk_tree_path_free( tree_path );
+				gtk_tree_model_get( model, &iter, ENV_BOOL_COLUMN, &state, ENV_KEYWORD_COLUMN, &desktop, -1 );
+				gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ENV_BOOL_COLUMN, !state, -1 );
 
-			show_button = base_window_get_widget( BASE_WINDOW( window ), "OnlyShowButton" );
-			if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( show_button ))){
-				na_object_set_only_desktop( context, desktop, !state );
+				show_button = base_window_get_widget( BASE_WINDOW( window ), "OnlyShowButton" );
+				if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( show_button ))){
+					na_object_set_only_desktop( context, desktop, !state );
+				} else {
+					na_object_set_not_desktop( context, desktop, !state );
+				}
+
+				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+
+				g_free( desktop );
+
 			} else {
-				na_object_set_not_desktop( context, desktop, !state );
+				g_signal_handlers_block_by_func(( gpointer ) renderer, on_desktop_toggled, window );
+				gtk_cell_renderer_toggle_set_active( renderer, state );
+				g_signal_handlers_unblock_by_func(( gpointer ) renderer, on_desktop_toggled, window );
 			}
-
-			g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
-
-			g_free( desktop );
-
-		} else {
-			g_signal_handlers_block_by_func(( gpointer ) renderer, on_desktop_toggled, window );
-			gtk_cell_renderer_toggle_set_active( renderer, state );
-			g_signal_handlers_unblock_by_func(( gpointer ) renderer, on_desktop_toggled, window );
 		}
 	}
 }
@@ -721,8 +730,12 @@ on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	const gchar *text;
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
-	text = gtk_entry_get_text( entry );
-	na_object_set_try_exec( context, text );
+
+	if( context ){
+		text = gtk_entry_get_text( entry );
+		na_object_set_try_exec( context, text );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	}
 }
 
 static void
@@ -745,8 +758,12 @@ on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	const gchar *text;
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
-	text = gtk_entry_get_text( entry );
-	na_object_set_show_if_registered( context, text );
+
+	if( context ){
+		text = gtk_entry_get_text( entry );
+		na_object_set_show_if_registered( context, text );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	}
 }
 
 static void
@@ -756,8 +773,12 @@ on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	const gchar *text;
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
-	text = gtk_entry_get_text( entry );
-	na_object_set_show_if_true( context, text );
+
+	if( context ){
+		text = gtk_entry_get_text( entry );
+		na_object_set_show_if_true( context, text );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	}
 }
 
 static void
@@ -767,8 +788,12 @@ on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	const gchar *text;
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
-	text = gtk_entry_get_text( entry );
-	na_object_set_show_if_running( context, text );
+
+	if( context ){
+		text = gtk_entry_get_text( entry );
+		na_object_set_show_if_running( context, text );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	}
 }
 
 static void

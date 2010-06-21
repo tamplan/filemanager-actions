@@ -324,38 +324,35 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( data->window ), data->tab_id, enable_tab );
 
-	if( enable_tab ){
+	st_on_selection_change = TRUE;
 
-		st_on_selection_change = TRUE;
+	filters = context ? ( *data->pget )( context ) : NULL;
+	g_debug( "%s: filters=%p (count=%d)", thisfn, ( void * ) filters, filters ? g_slist_length( filters ) : -1 );
 
-		filters = ( *data->pget )( context );
-		g_debug( "%s: filters=%p (count=%d)", thisfn, ( void * ) filters, filters ? g_slist_length( filters ) : -1 );
+	model = gtk_tree_view_get_model( data->listview );
+	selection = gtk_tree_view_get_selection( data->listview );
+	gtk_tree_selection_unselect_all( selection );
+	gtk_list_store_clear( GTK_LIST_STORE( model ));
 
-		model = gtk_tree_view_get_model( data->listview );
+	if( filters ){
+		na_core_utils_slist_dump( filters );
+		g_slist_foreach( filters, ( GFunc ) iter_for_setup, model );
+	}
+
+	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
+	nact_gtk_utils_set_editable( GTK_OBJECT( column ), data->editable );
+
+	nact_gtk_utils_set_editable( GTK_OBJECT( data->addbutton ), data->editable );
+	nact_gtk_utils_set_editable( GTK_OBJECT( data->removebutton ), data->editable );
+	gtk_widget_set_sensitive( data->removebutton, FALSE );
+
+	st_on_selection_change = FALSE;
+
+	path = gtk_tree_path_new_first();
+	if( path ){
 		selection = gtk_tree_view_get_selection( data->listview );
-		gtk_tree_selection_unselect_all( selection );
-		gtk_list_store_clear( GTK_LIST_STORE( model ));
-
-		if( filters ){
-			na_core_utils_slist_dump( filters );
-			g_slist_foreach( filters, ( GFunc ) iter_for_setup, model );
-		}
-
-		column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
-		nact_gtk_utils_set_editable( GTK_OBJECT( column ), data->editable );
-
-		nact_gtk_utils_set_editable( GTK_OBJECT( data->addbutton ), data->editable );
-		nact_gtk_utils_set_editable( GTK_OBJECT( data->removebutton ), data->editable );
-		gtk_widget_set_sensitive( data->removebutton, FALSE );
-
-		st_on_selection_change = FALSE;
-
-		path = gtk_tree_path_new_first();
-		if( path ){
-			selection = gtk_tree_view_get_selection( data->listview );
-			gtk_tree_selection_select_path( selection, path );
-			gtk_tree_path_free( path );
-		}
+		gtk_tree_selection_select_path( selection, path );
+		gtk_tree_path_free( path );
 	}
 }
 
@@ -432,22 +429,22 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 	gchar *to_add, *to_remove;
 	GSList *filters;
 
-	model = gtk_tree_view_get_model( data->listview );
-	path = gtk_tree_path_new_from_string( path_str );
-	gtk_tree_model_get_iter( model, &iter, path );
-	gtk_tree_path_free( path );
-
-	gtk_tree_model_get( model, &iter,
-			ITEM_COLUMN, &old_text,
-			MUST_MATCH_COLUMN, &must_match,
-			MUST_NOT_MATCH_COLUMN, &must_not_match,
-			-1 );
-
-	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ITEM_COLUMN, text, -1 );
-
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
 
 	if( context ){
+		model = gtk_tree_view_get_model( data->listview );
+		path = gtk_tree_path_new_from_string( path_str );
+		gtk_tree_model_get_iter( model, &iter, path );
+		gtk_tree_path_free( path );
+
+		gtk_tree_model_get( model, &iter,
+				ITEM_COLUMN, &old_text,
+				MUST_MATCH_COLUMN, &must_match,
+				MUST_NOT_MATCH_COLUMN, &must_not_match,
+				-1 );
+
+		gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ITEM_COLUMN, text, -1 );
+
 		filters = ( *data->pget )( context );
 
 		if( filters ){
@@ -469,11 +466,10 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 
 		( *data->pset )( context, filters );
 		na_core_utils_slist_free( filters );
+		g_free( old_text );
 
 		g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
 	}
-
-	g_free( old_text );
 }
 
 static gboolean
@@ -531,18 +527,17 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 	g_debug( "%s: is_active=%s", thisfn, is_active ? "True":"False" );*/
 
 	if( !gtk_cell_renderer_toggle_get_active( cell_renderer )){
-
-		model = gtk_tree_view_get_model( data->listview );
-		path = gtk_tree_path_new_from_string( path_str );
-		gtk_tree_model_get_iter( model, &iter, path );
-		gtk_tree_path_free( path );
-
-		gtk_tree_model_get( model, &iter, ITEM_COLUMN, &filter, -1 );
-		gtk_list_store_set( GTK_LIST_STORE( model ), &iter, MUST_MATCH_COLUMN, TRUE, MUST_NOT_MATCH_COLUMN, FALSE, -1 );
-
 		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
 
 		if( context ){
+			model = gtk_tree_view_get_model( data->listview );
+			path = gtk_tree_path_new_from_string( path_str );
+			gtk_tree_model_get_iter( model, &iter, path );
+			gtk_tree_path_free( path );
+
+			gtk_tree_model_get( model, &iter, ITEM_COLUMN, &filter, -1 );
+			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, MUST_MATCH_COLUMN, TRUE, MUST_NOT_MATCH_COLUMN, FALSE, -1 );
+
 			filters = ( *data->pget )( context );
 			if( filters ){
 				to_remove = g_strdup_printf( "!%s", filter );
@@ -580,18 +575,17 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 	g_debug( "%s: is_active=%s", thisfn, is_active ? "True":"False" );*/
 
 	if( !gtk_cell_renderer_toggle_get_active( cell_renderer )){
-
-		model = gtk_tree_view_get_model( data->listview );
-		path = gtk_tree_path_new_from_string( path_str );
-		gtk_tree_model_get_iter( model, &iter, path );
-		gtk_tree_path_free( path );
-
-		gtk_tree_model_get( model, &iter, ITEM_COLUMN, &filter, -1 );
-		gtk_list_store_set( GTK_LIST_STORE( model ), &iter, MUST_MATCH_COLUMN, FALSE, MUST_NOT_MATCH_COLUMN, TRUE, -1 );
-
 		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
 
 		if( context ){
+			model = gtk_tree_view_get_model( data->listview );
+			path = gtk_tree_path_new_from_string( path_str );
+			gtk_tree_model_get_iter( model, &iter, path );
+			gtk_tree_path_free( path );
+
+			gtk_tree_model_get( model, &iter, ITEM_COLUMN, &filter, -1 );
+			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, MUST_MATCH_COLUMN, FALSE, MUST_NOT_MATCH_COLUMN, TRUE, -1 );
+
 			filters = ( *data->pget )( context );
 
 			if( filters ){
@@ -602,11 +596,10 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 			filters = g_slist_prepend( filters, to_add );
 			( *data->pset )( context, filters );
 			na_core_utils_slist_free( filters );
+			g_free( filter );
 
 			g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
 		}
-
-		g_free( filter );
 	}
 }
 

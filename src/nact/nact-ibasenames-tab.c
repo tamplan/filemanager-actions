@@ -254,7 +254,6 @@ on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window )
 	gboolean matchcase;
 
 	if( !st_on_selection_change ){
-
 		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
 
 		if( context ){
