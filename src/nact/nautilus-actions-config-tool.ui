@@ -160,6 +160,7 @@
                     <child>
                       <object class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine the main characteristics of the currently selected item.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -479,7 +480,7 @@ Menus are never displayed in the toolbar.</property>
                     <child type="tab">
                       <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you enter main characteristics of the action, as it will be displayed in the Nautilus context menu : label, tooltip, icon.</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine the main characteristics of the currently selected item.</property>
                         <property name="label" translatable="yes">_Action</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -490,6 +491,8 @@ Menus are never displayed in the toolbar.</property>
                     <child>
                       <object class="GtkVBox" id="vbox5">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you choose the command to be executed, along with its parameters.
+Defining several profiles lets you have several commands, each applying with a different set of conditions.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -765,6 +768,7 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child>
                       <object class="GtkVBox" id="vbox15">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This advanced tab lets you precisely define how your command will be executed.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -1058,6 +1062,8 @@ Defining several profiles lets you have several commands, each applying with a d
                             <child>
                               <object class="GtkAlignment" id="alignment11">
                                 <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">This tab lets you determines for which basenames the currently selected item will be displayed in the Nautilus context menu.
+Basenames may be negated to specify for which basenames your item must not appear.</property>
                                 <property name="top_padding">6</property>
                                 <property name="bottom_padding">6</property>
                                 <property name="left_padding">12</property>
@@ -1197,6 +1203,8 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child type="tab">
                       <object class="GtkLabel" id="label65">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determines for which basenames the currently selected item will be displayed in the Nautilus context menu.
+Basenames may be negated to specify for which basenames your item must not appear.</property>
                         <property name="label" translatable="yes">_Basenames</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -1208,6 +1216,8 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child>
                       <object class="GtkVBox" id="vbox30">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determines for which type of objects the currently selected item will be displayed in the Nautilus context menu.
+Mimetypes may be negated to specify for which type of objects your item must not appear.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -1340,6 +1350,8 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child type="tab">
                       <object class="GtkLabel" id="label75">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determines for which type of objects the currently selected item will be displayed in the Nautilus context menu.
+Mimetypes may be negated to specify for which type of objects your item must not appear.</property>
                         <property name="label" translatable="yes">_Mimetypes</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -1351,6 +1363,8 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child>
                       <object class="GtkVBox" id="vbox6">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determines where (in which folders) the currently selected files must be found in order the item be displayed in the Nautilus context menu.
+Folder filters may be negated to specify for which folders your item must not appear.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -1509,7 +1523,8 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child type="tab">
                       <object class="GtkLabel" id="label16">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you precisely choose in which folders this profile will apply.</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determines where (in which folders) the currently selected files must be found in order the item be displayed in the Nautilus context menu.
+Folder filters may be negated to specify for which folders your item must not appear.</property>
                         <property name="label" translatable="yes">_Folders</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -1521,6 +1536,8 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child>
                       <object class="GtkVBox" id="vbox14">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine which schemes the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+Filters may be negated to specify for which schemes your item must not appear.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -1682,6 +1699,8 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child type="tab">
                       <object class="GtkLabel" id="label8">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine which schemes the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+Filters may be negated to specify for which schemes your item must not appear.</property>
                         <property name="label" translatable="yes">_Schemes</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -1693,6 +1712,8 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child>
                       <object class="GtkVBox" id="vbox45">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine which capabilities the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+Filters may be negated to specify for which capabilities your item must not appear.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -1825,7 +1846,8 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child type="tab">
                       <object class="GtkLabel" id="label50">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This advanced tab lets you precisely choose on which schemes the selection will apply.</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine which capabilities the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+Filters may be negated to specify for which capabilities your item must not appear.</property>
                         <property name="label" translatable="yes">Ca_pabilities</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -1837,6 +1859,7 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child>
                       <object class="GtkVBox" id="vbox25">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine some advanced conditions the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -2220,6 +2243,7 @@ Defining several profiles lets you have several commands, each applying with a d
                     <child type="tab">
                       <object class="GtkLabel" id="label58">
                         <property name="visible">True</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine some advanced conditions the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.</property>
                         <property name="label" translatable="yes">_Environment</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -2662,6 +2686,9 @@ Defining several profiles lets you have several commands, each applying with a d
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -2679,8 +2706,8 @@ Defining several profiles lets you have several commands, each applying with a d
             <property name="visible">True</property>
             <property name="local_only">False</property>
             <property name="use_preview_label">False</property>
-            <property name="preview_widget_active">False</property>
             <property name="select_multiple">True</property>
+            <property name="preview_widget_active">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -3650,39 +3677,39 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="label4"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionToolbarLabelLabel"/>
       <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
     <widgets>
-      <widget name="label45"/>
-      <widget name="label44"/>
       <widget name="label43"/>
+      <widget name="label44"/>
+      <widget name="label45"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
     <widgets>
-      <widget name="label19"/>
-      <widget name="label49"/>
-      <widget name="label39"/>
       <widget name="label18"/>
+      <widget name="label39"/>
+      <widget name="label49"/>
+      <widget name="label19"/>
     </widgets>
   </object>
 </interface>
