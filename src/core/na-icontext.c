@@ -70,13 +70,15 @@ static void     split_mimetype( const gchar *mimetype, gchar **group, gchar **su
 static gboolean is_candidate_for_basenames( const NAIContext *object, guint target, GList *files );
 static gboolean is_candidate_for_selection_count( const NAIContext *object, guint target, GList *files );
 static gboolean is_candidate_for_schemes( const NAIContext *object, guint target, GList *files );
+#if 0
+static gboolean validate_schemes( GSList *object_schemes, NASelectedInfo *iter );
+#endif
 static gboolean is_candidate_for_folders( const NAIContext *object, guint target, GList *files );
+#if 0
+static gboolean is_current_folder_inside( const NAIContext *object, NASelectedInfo *current_folder );
+#endif
 static gboolean is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files );
 
-static gboolean is_target_location_candidate( const NAIContext *object, NASelectedInfo *current_folder );
-static gboolean is_target_toolbar_candidate( const NAIContext *object, NASelectedInfo *current_folder );
-static gboolean is_current_folder_inside( const NAIContext *object, NASelectedInfo *current_folder );
-static gboolean is_target_selection_candidate( const NAIContext *object, GList *files );
 static gboolean is_valid_basenames( const NAIContext *object );
 static gboolean is_valid_mimetypes( const NAIContext *object );
 static gboolean is_valid_isfiledir( const NAIContext *object );
@@ -84,7 +86,6 @@ static gboolean is_valid_schemes( const NAIContext *object );
 static gboolean is_valid_folders( const NAIContext *object );
 
 static gboolean is_positive_assertion( const gchar *assertion );
-static gboolean validate_schemes( GSList *object_schemes, NASelectedInfo *iter );
 
 /**
  * na_icontext_get_type:
@@ -210,22 +211,6 @@ na_icontext_is_candidate( const NAIContext *object, guint target, GList *files )
 				is_candidate_for_schemes( object, target, files ) &&
 				is_candidate_for_folders( object, target, files ) &&
 				is_candidate_for_capabilities( object, target, files );
-	}
-
-	if( is_candidate ){
-		switch( target ){
-			case ITEM_TARGET_LOCATION:
-				is_candidate = is_target_location_candidate( object, ( NASelectedInfo * ) files->data );
-				break;
-
-			case ITEM_TARGET_TOOLBAR:
-				is_candidate = is_target_toolbar_candidate( object, ( NASelectedInfo * ) files->data );
-				break;
-
-			case ITEM_TARGET_SELECTION:
-			default:
-				is_candidate = is_target_selection_candidate( object, files );
-		}
 	}
 
 	return( is_candidate );
@@ -456,8 +441,18 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 	gboolean ok = TRUE;
 	GSList *only_in = na_object_get_only_show_in( object );
 	GSList *not_in = na_object_get_not_show_in( object );
+	gchar *environment;
 
 	/* TODO: how-to get current running environment ? */
+	environment = g_strdup( "GNOME" );
+
+	if( environment && strlen( environment )){
+		if( only_in && g_slist_length( only_in )){
+			ok = na_core_utils_slist_find( only_in, environment );
+		} else if( not_in && g_slist_length( not_in )){
+			ok = !na_core_utils_slist_find( not_in, environment );
+		}
+	}
 
 	if( !ok ){
 		gchar *only_str = na_core_utils_slist_to_text( only_in );
@@ -467,6 +462,7 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 		g_free( only_str );
 	}
 
+	g_free( environment );
 	na_core_utils_slist_free( not_in );
 	na_core_utils_slist_free( only_in );
 
@@ -784,47 +780,7 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 	return( ok );
 }
 
-static gboolean
-is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files )
-{
-	static const gchar *thisfn = "na_icontext_is_candidate_for_capabilities";
-	gboolean ok = TRUE;
-	GSList *capabilities = na_object_get_capabilities( object );
-
-	if( capabilities ){
-
-		if( !ok ){
-			gchar *capabilities_str = na_core_utils_slist_to_text( capabilities );
-			g_debug( "%s: object is not candidate because Capabilities=%s", thisfn, capabilities_str );
-			g_free( capabilities_str );
-		}
-
-		na_core_utils_slist_free( capabilities );
-	}
-
-	return( ok );
-}
-
-static gboolean
-is_target_location_candidate( const NAIContext *object, NASelectedInfo *current_folder )
-{
-	gboolean is_candidate;
-
-	is_candidate = is_current_folder_inside( object, current_folder );
-
-	return( is_candidate );
-}
-
-static gboolean
-is_target_toolbar_candidate( const NAIContext *object, NASelectedInfo *current_folder )
-{
-	gboolean is_candidate;
-
-	is_candidate = is_current_folder_inside( object, current_folder );
-
-	return( is_candidate );
-}
-
+#if 0
 static gboolean
 is_current_folder_inside( const NAIContext *object, NASelectedInfo *current_folder )
 {
@@ -850,7 +806,30 @@ is_current_folder_inside( const NAIContext *object, NASelectedInfo *current_fold
 
 	return( is_inside );
 }
+#endif
 
+static gboolean
+is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files )
+{
+	static const gchar *thisfn = "na_icontext_is_candidate_for_capabilities";
+	gboolean ok = TRUE;
+	GSList *capabilities = na_object_get_capabilities( object );
+
+	if( capabilities ){
+
+		if( !ok ){
+			gchar *capabilities_str = na_core_utils_slist_to_text( capabilities );
+			g_debug( "%s: object is not candidate because Capabilities=%s", thisfn, capabilities_str );
+			g_free( capabilities_str );
+		}
+
+		na_core_utils_slist_free( capabilities );
+	}
+
+	return( ok );
+}
+
+#if 0
 static gboolean
 is_target_selection_candidate( const NAIContext *object, GList *files )
 {
@@ -1052,6 +1031,29 @@ is_target_selection_candidate( const NAIContext *object, GList *files )
 }
 
 static gboolean
+validate_schemes( GSList *object_schemes, NASelectedInfo *nfi )
+{
+	gboolean is_ok;
+	GSList* iter;
+	gchar *scheme;
+
+	is_ok = FALSE;
+
+	for( iter = object_schemes ; iter && !is_ok ; iter = iter->next ){
+		scheme = na_selected_info_get_uri_scheme( nfi );
+
+		if( g_ascii_strncasecmp( scheme, ( gchar * ) iter->data, strlen(( gchar * ) iter->data )) == 0 ){
+			is_ok = TRUE;
+		}
+
+		g_free( scheme );
+	}
+
+	return( is_ok );
+}
+#endif
+
+static gboolean
 is_valid_basenames( const NAIContext *object )
 {
 	gboolean valid;
@@ -1156,26 +1158,4 @@ is_positive_assertion( const gchar *assertion )
 	}
 
 	return( positive );
-}
-
-static gboolean
-validate_schemes( GSList *object_schemes, NASelectedInfo *nfi )
-{
-	gboolean is_ok;
-	GSList* iter;
-	gchar *scheme;
-
-	is_ok = FALSE;
-
-	for( iter = object_schemes ; iter && !is_ok ; iter = iter->next ){
-		scheme = na_selected_info_get_uri_scheme( nfi );
-
-		if( g_ascii_strncasecmp( scheme, ( gchar * ) iter->data, strlen(( gchar * ) iter->data )) == 0 ){
-			is_ok = TRUE;
-		}
-
-		g_free( scheme );
-	}
-
-	return( is_ok );
 }

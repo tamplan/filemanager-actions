@@ -485,3 +485,7 @@ Parameter 	Description
   when adding from defaults for a #NAIContext
 
 - 2010-06-17: ui.enhancement: implement shortcut button in NactIPropertiesTab page
+
+- 2010-06-20: is_candidate_for_show_in: get current environment
+
+- 2010-06-20: is_candidate_for_show_if_running: get current list of processes

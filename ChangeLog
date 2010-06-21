@@ -1,5 +1,9 @@
 2010-06-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c (is_candidate_for_show_in):
+	Implement the check of the environment (though not yet the desktop
+	detection).
+
 	* src/nact/nact-iaction-tab.c:
 	* src/nact/nact-ibasenames-tab.c:
 	* src/nact/nact-icommand-tab.c:
