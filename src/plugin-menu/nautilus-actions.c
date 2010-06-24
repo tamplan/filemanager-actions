@@ -319,11 +319,13 @@ ipivot_consumer_items_changed( NAIPivotConsumer *instance, gpointer user_data )
 	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_items_changed";
 	NautilusActions *self;
 
-	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+
 	self = NAUTILUS_ACTIONS( instance );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 
 		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
 	}
@@ -335,11 +337,13 @@ ipivot_consumer_create_root_menu_changed( NAIPivotConsumer *instance, gboolean e
 	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_create_root_menu_changed";
 	NautilusActions *self;
 
-	g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+
 	self = NAUTILUS_ACTIONS( instance );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
 
 		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
 	}
@@ -351,11 +355,13 @@ ipivot_consumer_display_about_changed( NAIPivotConsumer *instance, gboolean enab
 	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_display_about_changed";
 	NautilusActions *self;
 
-	g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+
 	self = NAUTILUS_ACTIONS( instance );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: instance=%p, enabled=%s", thisfn, ( void * ) instance, enabled ? "True":"False" );
 
 		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
 	}
@@ -367,11 +373,13 @@ ipivot_consumer_display_order_changed( NAIPivotConsumer *instance, gint order_mo
 	static const gchar *thisfn = "nautilus_actions_ipivot_consumer_display_order_changed";
 	NautilusActions *self;
 
-	g_debug( "%s: instance=%p, order_mode=%d", thisfn, ( void * ) instance, order_mode );
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
+
 	self = NAUTILUS_ACTIONS( instance );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: instance=%p, order_mode=%d", thisfn, ( void * ) instance, order_mode );
 
 		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( self ));
 	}
@@ -511,7 +519,7 @@ get_menus_items( NautilusActions *plugin, guint target, GList *selection )
 	pivot_tree = na_pivot_get_items( plugin->private->pivot );
 	copy_tree = expand_tokens( pivot_tree, tokens );
 
-	menus_list = build_nautilus_menus( plugin, pivot_tree, target, selection, tokens );
+	menus_list = build_nautilus_menus( plugin, copy_tree, target, selection, tokens );
 
 	na_object_unref_items( copy_tree );
 	g_object_unref( tokens );
