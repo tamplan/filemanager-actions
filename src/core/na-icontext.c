@@ -477,14 +477,25 @@ is_candidate_for_try_exec( const NAIContext *object, guint target, GList *files 
 {
 	static const gchar *thisfn = "na_icontext_is_candidate_for_try_exec";
 	gboolean ok = TRUE;
+	GError *error = NULL;
 	gchar *tryexec = na_object_get_try_exec( object );
 
 	if( tryexec && strlen( tryexec )){
 		ok = FALSE;
 		GFile *file = g_file_new_for_path( tryexec );
-		GFileInfo *info = g_file_query_info( file, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE, G_FILE_QUERY_INFO_NONE, NULL, NULL );
-		ok = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE );
-		g_object_unref( info );
+		GFileInfo *info = g_file_query_info( file, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE, G_FILE_QUERY_INFO_NONE, NULL, &error );
+		if( error ){
+			g_debug( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+
+		} else {
+			ok = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE );
+		}
+
+		if( info ){
+			g_object_unref( info );
+		}
+
 		g_object_unref( file );
 	}
 
