@@ -1,5 +1,9 @@
 2010-06-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-ienvironment-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-iexecution-tab.c (on_tab_updatable_selection_changed):
+	Radio buttons are inconsistent if and only if there is no context.
+
 	* src/nact/nact-tree-model.c (dump_store): Also dumps origin.
 
 	* src/core/na-updater.c (na_updater_remove_item):

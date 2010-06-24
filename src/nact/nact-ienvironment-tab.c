@@ -450,6 +450,7 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 
 		desktops = context ? na_object_get_only_show_in( context ) : NULL;
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
+		gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( always_button ), context == NULL );
 
 		if( desktops && g_slist_length( desktops )){
 			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( show_button ), TRUE );
@@ -464,7 +465,6 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 
 			} else {
 				gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( always_button ), context != NULL );
-				gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( always_button ), context == NULL );
 				gtk_widget_set_sensitive( GTK_WIDGET( listview ), FALSE );
 				desktops = NULL;
 			}

@@ -305,9 +305,10 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 		nact_gtk_utils_set_editable( GTK_OBJECT( display_toggle ), editable );
 
 		mode = profile ? na_object_get_execution_mode( profile ) : g_strdup( "Normal" );
+		gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( normal_toggle ), profile == NULL );
+
 		if( !strcmp( mode, "Normal" )){
 			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( normal_toggle ), TRUE );
-			gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( normal_toggle ), profile == NULL );
 		} else if( !strcmp( mode, "Terminal" )){
 			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( terminal_toggle ), TRUE );
 		} else if( !strcmp( mode, "Embedded" )){
@@ -317,6 +318,7 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 		} else {
 			g_warning( "%s: unable to setup execution mode '%s'", thisfn, mode );
 		}
+
 		g_free( mode );
 
 		notify = profile ? na_object_get_startup_notify( profile ) : FALSE;
