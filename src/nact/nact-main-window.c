@@ -1026,6 +1026,7 @@ actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater
 		origin = ( NAObject * ) na_object_get_origin( item );
 		if( origin ){
 			na_updater_remove_item( updater, origin );
+			g_object_unref( origin );
 		}
 	}
 }

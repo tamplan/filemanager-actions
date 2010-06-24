@@ -1,5 +1,12 @@
 2010-06-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-updater.c (na_updater_remove_item):
+	Do not unref here removed item.
+	Also remove item from non level zero parent.
+
+	* src/nact/nact-main-window.c (actually_delete_item):
+	Updated accordingly.
+
 	* src/core/na-icontext.c (is_candidate_for_try_exec):
 	Do not try to get info for non existing file.
 

@@ -250,17 +250,13 @@ na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *par
  * @updater: this #NAPivot instance.
  * @item: the #NAObjectItem to be removed from the list.
  *
- * Removes a #NAObjectItem from the hierarchical tree.
- *
- * Note that #NAUpdater also g_object_unref() the removed #NAObjectItem.
- *
- * Last, note that the @item may have been already deleted, when its
- * parents has itself been removed from @updater.
+ * Removes a #NAObjectItem from the hierarchical tree. Does not delete it.
  */
 void
 na_updater_remove_item( NAUpdater *updater, NAObject *item )
 {
 	GList *tree;
+	NAObjectItem *parent;
 
 	g_debug( "na_updater_remove_item: updater=%p, item=%p (%s)",
 			( void * ) updater,
@@ -270,13 +266,17 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 
 	if( !updater->private->dispose_has_run ){
 
-		if( !na_object_get_parent( item )){
+		parent = na_object_get_parent( item );
+		if( parent ){
+			tree = na_object_get_items( parent );
+			tree = g_list_remove( tree, ( gconstpointer ) item );
+			na_object_set_items( parent, tree );
+
+		} else {
 			g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
 			tree = g_list_remove( tree, ( gconstpointer ) item );
 			g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, tree, NULL );
 		}
-
-		g_object_unref( item );
 	}
 }
 
