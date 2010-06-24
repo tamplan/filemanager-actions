@@ -894,6 +894,7 @@ dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpSt
 	gint i;
 	GString *prefix;
 	gchar *id, *label;
+	NAObjectItem *origin;
 
 	depth = gtk_tree_path_get_depth( path );
 	prefix = g_string_new( ntm->prefix );
@@ -903,9 +904,11 @@ dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpSt
 
 	id = na_object_get_id( object );
 	label = na_object_get_label( object );
-	g_debug( "%s: %s%s at %p (ref_count=%d) \"[%s] %s\"",
+	origin = ( NAObjectItem * ) na_object_get_origin( object );
+	g_debug( "%s: %s%s at %p (ref_count=%d) \"[%s] %s\" origin=%p (%s)",
 			ntm->fname, prefix->str,
-			G_OBJECT_TYPE_NAME( object ), ( void * ) object, G_OBJECT( object )->ref_count, id, label );
+			G_OBJECT_TYPE_NAME( object ), ( void * ) object, G_OBJECT( object )->ref_count, id, label,
+			( void * ) origin, origin ? G_OBJECT_TYPE_NAME( object ) : "null" );
 	g_free( label );
 	g_free( id );
 

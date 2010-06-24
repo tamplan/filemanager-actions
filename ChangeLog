@@ -1,5 +1,7 @@
 2010-06-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-model.c (dump_store): Also dumps origin.
+
 	* src/core/na-updater.c (na_updater_remove_item):
 	Do not unref here removed item.
 	Also remove item from non level zero parent.
