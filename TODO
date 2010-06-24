@@ -489,3 +489,6 @@ Parameter 	Description
 - 2010-06-20: is_candidate_for_show_in: get current environment
 
 - 2010-06-20: is_candidate_for_show_if_running: get current list of processes
+
+- 2010-06-21: it appears that na_ipivot_consumer_notify_of_items_changed() may be called more
+  than once in the plugin when more than one item is saved in NACT : this should be only once.
