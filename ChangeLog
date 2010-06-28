@@ -1,5 +1,8 @@
 2010-06-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_save_items):
+	Force sensitivities update when new tree store is empty.
+
 	* src/core/na-iduplicable.c (na_iduplicable_check_status):
 	* src/core/na-object.c (na_object_object_unref):
 	Review debug messages.

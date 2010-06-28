@@ -305,6 +305,13 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	na_pivot_set_new_items( NA_PIVOT( updater ), g_list_reverse( new_pivot ));
 	g_list_free( items );
 
+	/* when new_pivot is empty, then there has been no chance of updating
+	 * sensibilities on check status - so force it there
+	 */
+	if( !new_pivot ){
+		g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+	}
+
 	/* get ride of notification messages of IOProviders
 	 */
 	na_ipivot_consumer_delay_notify( NA_IPIVOT_CONSUMER( window ));
