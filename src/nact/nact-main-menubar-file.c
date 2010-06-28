@@ -255,9 +255,12 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	NAUpdater *updater;
 	MenubarIndicatorsStruct *mis;
 	gchar *label;
+	GList *new_pivot;
+	NAObjectItem *duplicate;
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	/* remove deleted items
 	 * so that new actions with same id do not risk to be deleted later
@@ -270,8 +273,8 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
 	items = nact_iactions_list_bis_get_items( NACT_IACTIONS_LIST( window ));
-	na_pivot_write_level_zero( NA_PIVOT( updater ), items );
 
+	na_pivot_write_level_zero( NA_PIVOT( updater ), items );
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	mis->level_zero_order_changed = FALSE;
 
@@ -280,6 +283,8 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	 * above all, it is less costly to check the status here, than to check
 	 * recursively each and every modified item
 	 */
+	new_pivot = NULL;
+
 	for( it = items ; it ; it = it->next ){
 		label = na_object_get_label( it->data );
 		g_debug( "%s saving item %s %p (%s), modified=%s",
@@ -287,10 +292,17 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 				G_OBJECT_TYPE_NAME( it->data ),
 				( void * ) it->data, label,
 				na_object_is_modified( it->data ) ? "True":"False" );
-		save_item( window, updater, NA_OBJECT_ITEM( it->data ));
-		na_object_check_status( it->data );
 		g_free( label );
+
+		save_item( window, updater, NA_OBJECT_ITEM( it->data ));
+
+		duplicate = NA_OBJECT_ITEM( na_object_duplicate( it->data ));
+		na_object_reset_origin( it->data, duplicate );
+		na_object_check_status( it->data );
+		new_pivot = g_list_prepend( new_pivot, duplicate );
 	}
+
+	na_pivot_set_new_items( NA_PIVOT( updater ), g_list_reverse( new_pivot ));
 	g_list_free( items );
 
 	/* get ride of notification messages of IOProviders
@@ -299,34 +311,37 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 }
 
 /*
- * iterates here on each and every row stored in the tree
- * - do not deal with profiles as they are directly managed by their
- *   action parent
- * - do not deal with not modified, or not valid, items, but allow
- *   for save their subitems
+ * iterates here on each and every NAObjectItem row stored in the tree
+ *
+ * do not deal with profiles as they are directly managed by the action
+ * they are attached to
+ *
+ * level zero order has already been saved from tree store order, so that
+ * we actually do not care of the exact order of level zero NAPivot items
+ *
+ * saving means non-recursively save modified NAObjectItem, simultaneously
+ * reproducing the new item in NAPivot
+ *  +- A
+ *  |  +- B
+ *  |  |  +- C
+ *  |  |  |  +- D
+ *  |  |  |  +- E
+ *  |  |  +- F
+ *  |  +- G
+ *  +- H
+ *  |  +- ...
+ *  save order: A-B-C-D-E-F-G-H (first parent, then children)
  */
 static void
 save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 {
-	static const gchar *thisfn = "nact_main_menubar_file_save_item";
-	NAObjectItem *origin;
-	NAObjectItem *dup_pivot;
-	GList *subitems, *it;
-	NAObjectItem *parent;
-	gint pos;
 	NAIOProvider *provider_before;
 	NAIOProvider *provider_after;
+	GList *subitems, *it;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 	g_return_if_fail( NA_IS_UPDATER( updater ));
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-
-	if( NA_IS_OBJECT_MENU( item )){
-		subitems = na_object_get_items( item );
-		for( it = subitems ; it ; it = it->next ){
-			save_item( window, updater, NA_OBJECT_ITEM( it->data ));
-		}
-	}
 
 	provider_before = na_object_get_provider( item );
 
@@ -337,43 +352,19 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 				na_object_reset_last_allocated( item );
 			}
 
-			/* now that the NAObjectItem has been (non recursively) saved,
-			 * we have to update NAPivot so that the next na_object_check_status()
-			 * will show us that this treeview item is no more modified
-			 */
-			origin = ( NAObjectItem * ) na_object_get_origin( item );
-			g_debug( "%s: origin=%p", thisfn, ( void * ) origin );
-
-			parent = NULL;
-			pos = -1;
-
-			if( origin ){
-				parent = na_object_get_parent( origin );
-				if( parent ){
-					pos = na_object_get_position( parent, origin );
-				}
-				na_updater_remove_item( updater, NA_OBJECT( origin ));
-			}
-
-			dup_pivot = NA_OBJECT_ITEM( na_object_duplicate( item ));
-			na_object_reset_origin( item, dup_pivot );
-			na_object_set_parent( dup_pivot, parent );
-			if( parent ){
-				if( pos == -1 ){
-					na_object_append_item( parent, dup_pivot );
-				} else {
-					na_object_insert_at( parent, dup_pivot, pos );
-				}
-			} else {
-				na_updater_append_item( updater, dup_pivot );
-			}
-
 			nact_iactions_list_bis_remove_modified( NACT_IACTIONS_LIST( window ), item );
 
 			provider_after = na_object_get_provider( item );
 			if( provider_after != provider_before ){
 				g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED, item );
 			}
+	}
+
+	if( NA_IS_OBJECT_MENU( item )){
+		subitems = na_object_get_items( item );
+		for( it = subitems ; it ; it = it->next ){
+			save_item( window, updater, NA_OBJECT_ITEM( it->data ));
+		}
 	}
 }
 

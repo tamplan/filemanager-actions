@@ -307,10 +307,11 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 	gboolean was_modified, was_valid;
 	gboolean changed;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		str = get_duplicable_str( object );
 
@@ -319,7 +320,10 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 		changed = FALSE;
 
 		if( str->origin ){
+			g_debug( "%s: origin=%p (%s)", thisfn, ( void * ) str->origin, G_OBJECT_TYPE_NAME( str->origin ));
+			g_return_if_fail( NA_IS_IDUPLICABLE( str->origin ));
 			str->modified = !v_are_equal( str->origin, object );
+
 		} else {
 			str->modified = TRUE;
 		}

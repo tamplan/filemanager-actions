@@ -542,10 +542,11 @@ na_pivot_load_items( NAPivot *pivot )
 	static const gchar *thisfn = "na_pivot_load_items";
 	GSList *messages, *im;
 
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
 		na_object_unref_items( pivot->private->tree );
 
@@ -558,6 +559,31 @@ na_pivot_load_items( NAPivot *pivot )
 		}
 
 		na_core_utils_slist_free( messages );
+	}
+}
+
+/**
+ * na_pivot_set_new_items:
+ * @pivot: this #NAPivot instance.
+ * @tree: the new tree of items.
+ *
+ * Replace the current list with this one.
+ */
+void
+na_pivot_set_new_items( NAPivot *pivot, GList *items )
+{
+	static const gchar *thisfn = "na_pivot_set_new_items";
+
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: pivot=%p, items=%p (count=%d)",
+				thisfn, ( void * ) pivot, ( void * ) items, items ? g_list_length( items ) : 0 );
+
+		na_object_unref_items( pivot->private->tree );
+
+		pivot->private->tree = items;
 	}
 }
 

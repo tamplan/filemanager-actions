@@ -136,6 +136,7 @@ void          na_pivot_free_providers( GList *providers );
 NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *id );
 GList        *na_pivot_get_items( const NAPivot *pivot );
 void          na_pivot_load_items( NAPivot *pivot );
+void          na_pivot_set_new_items( NAPivot *pivot, GList *tree );
 
 void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  );
 

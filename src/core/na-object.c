@@ -717,11 +717,10 @@ na_object_object_unref( NAObject *object )
 
 	if( !object->private->dispose_has_run ){
 
-		g_debug( "na_object_object_unref:enter: object=%p (%s, ref_count=%d)",
+		g_debug( "na_object_object_unref: object=%p (%s, ref_count=%d)",
 				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 		if( NA_IS_OBJECT_ITEM( object )){
-
 #if 0
 			while( TRUE ){
 				children = na_object_get_items( object );
@@ -732,7 +731,6 @@ na_object_object_unref( NAObject *object )
 				}
 			}
 #endif
-
 			children = na_object_get_items( object );
 			for( ic = children ; ic ; ic = icnext ){
 				icnext = ic->next;
@@ -740,8 +738,8 @@ na_object_object_unref( NAObject *object )
 			}
 		}
 
-		g_debug( "na_object_object_unref:about_to_unref: object=%p (%s, ref_count=%d)",
-				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+		/*g_debug( "na_object_object_unref:about_to_unref: object=%p (%s, ref_count=%d)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );*/
 
 		g_object_unref( object );
 	}
