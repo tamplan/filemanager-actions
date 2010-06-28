@@ -164,10 +164,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_io_provider_instance_init";
 	NAIOProvider *self;
 
+	g_return_if_fail( NA_IS_IO_PROVIDER( instance ));
+
+	self = NA_IO_PROVIDER( instance );
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NA_IS_IO_PROVIDER( instance ));
-	self = NA_IO_PROVIDER( instance );
 
 	self->private = g_new0( NAIOProviderPrivate, 1 );
 
@@ -184,11 +186,13 @@ instance_constructed( GObject *object )
 	static const gchar *thisfn = "na_io_provider_instance_constructed";
 	NAIOProvider *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
+
 	self = NA_IO_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
@@ -244,11 +248,12 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_io_provider_instance_dispose";
 	NAIOProvider *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
 	self = NA_IO_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -274,9 +279,10 @@ instance_finalize( GObject *object )
 	static const gchar *thisfn = "na_io_provider_instance_finalize";
 	NAIOProvider *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
 	self = NA_IO_PROVIDER( object );
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_free( self->private->id );
 	g_free( self->private->name );

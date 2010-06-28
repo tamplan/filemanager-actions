@@ -138,10 +138,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NAImporterAsk *self;
 	GError *error;
 
+	g_return_if_fail( NA_IS_IMPORTER_ASK( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
-	g_return_if_fail( NA_IS_IMPORTER_ASK( instance ));
 	self = NA_IMPORTER_ASK( instance );
 
 	self->private = g_new0( NAImporterAskPrivate, 1 );
@@ -169,12 +170,13 @@ instance_dispose( GObject *dialog )
 	static const gchar *thisfn = "na_importer_ask_instance_dispose";
 	NAImporterAsk *self;
 
-	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
-
 	g_return_if_fail( NA_IS_IMPORTER_ASK( dialog ));
+
 	self = NA_IMPORTER_ASK( dialog );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -194,8 +196,9 @@ instance_finalize( GObject *dialog )
 	static const gchar *thisfn = "na_importer_ask_instance_finalize";
 	NAImporterAsk *self;
 
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 	g_return_if_fail( NA_IS_IMPORTER_ASK( dialog ));
+
+	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 	self = NA_IMPORTER_ASK( dialog );
 
 	g_free( self->private );

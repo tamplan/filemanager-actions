@@ -118,10 +118,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_updater_instance_init";
 	NAUpdater *self;
 
-	g_debug( "%s: instance=%p (%s), klass=%p",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NA_IS_UPDATER( instance ));
 	self = NA_UPDATER( instance );
+
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self->private = g_new0( NAUpdaterPrivate, 1 );
 
@@ -134,11 +135,12 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_updater_instance_dispose";
 	NAUpdater *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_UPDATER( object ));
 	self = NA_UPDATER( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -155,9 +157,10 @@ instance_finalize( GObject *object )
 	static const gchar *thisfn = "na_updater_instance_finalize";
 	NAUpdater *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_UPDATER( object ));
 	self = NA_UPDATER( object );
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_free( self->private );
 
@@ -258,13 +261,13 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 	GList *tree;
 	NAObjectItem *parent;
 
-	g_debug( "na_updater_remove_item: updater=%p, item=%p (%s)",
-			( void * ) updater,
-			( void * ) item, G_IS_OBJECT( item ) ? G_OBJECT_TYPE_NAME( item ) : "(null)" );
-
 	g_return_if_fail( NA_IS_PIVOT( updater ));
 
 	if( !updater->private->dispose_has_run ){
+
+		g_debug( "na_updater_remove_item: updater=%p, item=%p (%s)",
+				( void * ) updater,
+				( void * ) item, G_IS_OBJECT( item ) ? G_OBJECT_TYPE_NAME( item ) : "(null)" );
 
 		parent = na_object_get_parent( item );
 		if( parent ){

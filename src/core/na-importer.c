@@ -59,11 +59,11 @@ na_importer_import_from_uri( const NAPivot *pivot, NAIImporterUriParms *parms )
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), IMPORTER_CODE_PROGRAM_ERROR );
 
-	g_debug( "%s: pivot=%p, parms=%p", thisfn, ( void * ) pivot, ( void * ) parms );
-
 	code = IMPORTER_CODE_PROGRAM_ERROR;
 
 	if( iimporter_initialized && !iimporter_finalized ){
+
+		g_debug( "%s: pivot=%p, parms=%p", thisfn, ( void * ) pivot, ( void * ) parms );
 
 		code = IMPORTER_CODE_NOT_WILLING_TO;
 		modules = na_pivot_get_providers( pivot, NA_IIMPORTER_TYPE );
@@ -106,12 +106,12 @@ na_importer_import_from_list( const NAPivot *pivot, NAIImporterListParms *parms 
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), IMPORTER_CODE_PROGRAM_ERROR );
 
-	g_debug( "%s: pivot=%p, parms=%p", thisfn, ( void * ) pivot, ( void * ) parms );
-
 	code = IMPORTER_CODE_PROGRAM_ERROR;
 	parms->imported = NULL;
 
 	if( iimporter_initialized && !iimporter_finalized ){
+
+		g_debug( "%s: pivot=%p, parms=%p", thisfn, ( void * ) pivot, ( void * ) parms );
 
 		code = IMPORTER_CODE_NOT_WILLING_TO;
 

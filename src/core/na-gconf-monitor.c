@@ -123,9 +123,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_gconf_monitor_instance_init";
 	NAGConfMonitor *self;
 
+	g_return_if_fail( NA_IS_GCONF_MONITOR( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NA_IS_GCONF_MONITOR( instance ));
 	self = NA_GCONF_MONITOR( instance );
 
 	self->private = g_new0( NAGConfMonitorPrivate, 1 );
@@ -141,11 +142,13 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_gconf_monitor_instance_dispose";
 	NAGConfMonitor *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_GCONF_MONITOR( object ));
+
 	self = NA_GCONF_MONITOR( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		/* release the installed monitor before setting dispose_has_run */
 		release_monitor( self );
@@ -269,10 +272,11 @@ release_monitor( NAGConfMonitor *monitor )
 	static const gchar *thisfn = "na_gconf_monitor_release_monitor";
 	GError *error = NULL;
 
-	g_debug( "%s: monitor=%p", thisfn, ( void * ) monitor );
 	g_return_if_fail( NA_IS_GCONF_MONITOR( monitor ));
 
 	if( !monitor->private->dispose_has_run ){
+
+		g_debug( "%s: monitor=%p", thisfn, ( void * ) monitor );
 
 		if( monitor->private->monitor_id ){
 			gconf_client_notify_remove( monitor->private->gconf, monitor->private->monitor_id );

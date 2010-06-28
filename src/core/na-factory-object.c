@@ -607,10 +607,10 @@ na_factory_object_read_item( NAIFactoryObject *serializable, const NAIFactoryPro
 {
 	static const gchar *thisfn = "na_factory_object_read_item";
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 
-		g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
-		g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
+	if( ifactory_object_initialized && !ifactory_object_finalized ){
 
 		NADataGroup *groups = v_get_groups( serializable );
 

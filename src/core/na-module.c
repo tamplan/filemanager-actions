@@ -144,10 +144,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_module_instance_init";
 	NAModule *self;
 
-	g_debug( "%s: instance=%p (%s), klass=%p",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NA_IS_MODULE( instance ));
 	self = NA_MODULE( instance );
+
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self->private = g_new0( NAModulePrivate, 1 );
 
@@ -160,11 +161,12 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_module_instance_dispose";
 	NAModule *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_MODULE( object ));
 	self = NA_MODULE( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -180,9 +182,10 @@ instance_finalize( GObject *object )
 	static const gchar *thisfn = "na_module_instance_finalize";
 	NAModule *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_MODULE( object ));
 	self = NA_MODULE( object );
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_free( self->private->path );
 	g_free( self->private->name );
@@ -303,8 +306,9 @@ module_load( GTypeModule *gmodule )
 	NAModule *module;
 	gboolean loaded;
 
-	g_debug( "%s: gmodule=%p", thisfn, ( void * ) gmodule );
 	g_return_val_if_fail( G_IS_TYPE_MODULE( gmodule ), FALSE );
+
+	g_debug( "%s: gmodule=%p", thisfn, ( void * ) gmodule );
 
 	loaded = FALSE;
 	module = NA_MODULE( gmodule );
@@ -419,8 +423,9 @@ module_unload( GTypeModule *gmodule )
 	static const gchar *thisfn = "na_module_module_unload";
 	NAModule *module;
 
-	g_debug( "%s: gmodule=%p", thisfn, ( void * ) gmodule );
 	g_return_if_fail( G_IS_TYPE_MODULE( gmodule ));
+
+	g_debug( "%s: gmodule=%p", thisfn, ( void * ) gmodule );
 
 	module = NA_MODULE( gmodule );
 

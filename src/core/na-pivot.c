@@ -201,10 +201,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_pivot_instance_init";
 	NAPivot *self;
 
-	g_debug( "%s: instance=%p (%s), klass=%p",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NA_IS_PIVOT( instance ));
 	self = NA_PIVOT( instance );
+
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self->private = g_new0( NAPivotPrivate, 1 );
 
@@ -224,11 +225,12 @@ instance_constructed( GObject *object )
 	static const gchar *thisfn = "na_pivot_instance_constructed";
 	NAPivot *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_PIVOT( object ));
 	self = NA_PIVOT( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 		self->private->modules = na_module_load_modules();
 
@@ -296,11 +298,12 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_pivot_instance_dispose";
 	NAPivot *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_PIVOT( object ));
 	self = NA_PIVOT( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -336,9 +339,10 @@ instance_finalize( GObject *object )
 	static const gchar *thisfn = "na_pivot_instance_finalize";
 	NAPivot *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_PIVOT( object ));
 	self = NA_PIVOT( object );
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_free( self->private );
 
@@ -421,10 +425,11 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 	static const gchar *thisfn = "na_pivot_get_providers";
 	GList *list = NULL;
 
-	g_debug( "%s: pivot=%p, type=%lu (%s)", thisfn, ( void * ) pivot, ( unsigned long ) type, g_type_name( type ));
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: pivot=%p, type=%lu (%s)", thisfn, ( void * ) pivot, ( unsigned long ) type, g_type_name( type ));
 
 		list = na_module_get_extensions_for_type( pivot->private->modules, type );
 		g_debug( "%s: list=%p, count=%d", thisfn, ( void * ) list, list ? g_list_length( list ) : 0 );
@@ -604,12 +609,12 @@ na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot
 {
 	static const gchar *thisfn = "na_pivot_item_changed_handler";
 
-	g_debug( "%s: provider=%p, id=%s, pivot=%p", thisfn, ( void * ) provider, id, ( void * ) pivot );
-
 	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: provider=%p, id=%s, pivot=%p", thisfn, ( void * ) provider, id, ( void * ) pivot );
 
 		/* set a timeout to notify clients at the end of the serie */
 		g_get_current_time( &pivot->private->last_event );
@@ -637,8 +642,9 @@ on_item_changed_timeout( NAPivot *pivot )
 	gulong diff;
 	GList *ic;
 
-	g_debug( "%s: pivot=%p", thisfn, pivot );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+
+	g_debug( "%s: pivot=%p", thisfn, pivot );
 
 	g_get_current_time( &now );
 	diff = time_val_diff( &now, &pivot->private->last_event );
@@ -688,14 +694,15 @@ na_pivot_write_level_zero( const NAPivot *pivot, GList *items )
 	gchar *id;
 	GSList *content;
 
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot);
-
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
 
 	written = FALSE;
 
-	if( !pivot->private->dispose_has_run &&
-		na_pivot_is_level_zero_writable( pivot )){
+	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot);
+
+		if( na_pivot_is_level_zero_writable( pivot )){
 
 			content = NULL;
 			for( it = items ; it ; it = it->next ){
@@ -710,6 +717,7 @@ na_pivot_write_level_zero( const NAPivot *pivot, GList *items )
 			na_core_utils_slist_free( content );
 
 			written = TRUE;
+		}
 	}
 
 	return( written );
@@ -729,11 +737,12 @@ na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer )
 {
 	static const gchar *thisfn = "na_pivot_register_consumer";
 
-	g_debug( "%s: pivot=%p, consumer=%p", thisfn, ( void * ) pivot, ( void * ) consumer );
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( consumer ));
 
 	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: pivot=%p, consumer=%p", thisfn, ( void * ) pivot, ( void * ) consumer );
 
 		pivot->private->consumers = g_list_prepend( pivot->private->consumers, ( gpointer ) consumer );
 	}
@@ -905,9 +914,10 @@ monitor_runtime_preferences( NAPivot *pivot )
 	GList *list = NULL;
 	gchar *path;
 
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 	g_return_if_fail( !pivot->private->dispose_has_run );
+
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
 	list = g_list_prepend( list,
 			na_gconf_monitor_new(
@@ -985,10 +995,11 @@ display_order_changed( NAPivot *pivot )
 	GList *ic;
 	gint order_mode;
 
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
 		order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
 
@@ -1005,10 +1016,11 @@ create_root_menu_changed( NAPivot *pivot )
 	GList *ic;
 	gboolean should_create;
 
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
 		should_create = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_CREATE_ROOT_MENU, FALSE );
 		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
@@ -1024,10 +1036,11 @@ display_about_changed( NAPivot *pivot )
 	GList *ic;
 	gboolean display_about;
 
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-	g_assert( NA_IS_PIVOT( pivot ));
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
 		display_about = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_ADD_ABOUT_ITEM, TRUE );
 

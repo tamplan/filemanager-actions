@@ -140,10 +140,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_tokens_instance_init";
 	NATokens *self;
 
-	g_debug( "%s: instance=%p (%s), klass=%p",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NA_IS_TOKENS( instance ));
 	self = NA_TOKENS( instance );
+
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self->private = g_new0( NATokensPrivate, 1 );
 
@@ -174,11 +175,12 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_tokens_instance_dispose";
 	NATokens *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_TOKENS( object ));
 	self = NA_TOKENS( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -194,9 +196,10 @@ instance_finalize( GObject *object )
 	static const gchar *thisfn = "na_tokens_instance_finalize";
 	NATokens *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_TOKENS( object ));
 	self = NA_TOKENS( object );
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_free( self->private->scheme );
 	g_free( self->private->username );

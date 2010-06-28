@@ -62,6 +62,8 @@ na_exporter_get_formats( const NAPivot *pivot )
 	const NAIExporterFormat *str;
 	NAExportFormat *format;
 
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+
 	formats = NULL;
 
 	if( iexporter_initialized && !iexporter_finalized ){
@@ -124,16 +126,16 @@ na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark fo
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
 
-	g_debug( "%s: pivot=%p, item=%p (%s), format=%u (%s), messages=%p",
-			thisfn,
-			( void * ) pivot,
-			( void * ) item, G_OBJECT_TYPE_NAME( item ),
-			( guint ) format, g_quark_to_string( format ),
-			( void * ) messages );
-
 	buffer = NULL;
 
 	if( iexporter_initialized && !iexporter_finalized ){
+
+		g_debug( "%s: pivot=%p, item=%p (%s), format=%u (%s), messages=%p",
+				thisfn,
+				( void * ) pivot,
+				( void * ) item, G_OBJECT_TYPE_NAME( item ),
+				( guint ) format, g_quark_to_string( format ),
+				( void * ) messages );
 
 		exporter = find_exporter_for_format( pivot, format );
 		g_debug( "%s: exporter=%p (%s)", thisfn, ( void * ) exporter, G_OBJECT_TYPE_NAME( exporter ));
@@ -196,17 +198,17 @@ na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NULL );
 
-	g_debug( "%s: pivot=%p, item=%p (%s), folder=%s, format=%u (%s), messages=%p",
-			thisfn,
-			( void * ) pivot,
-			( void * ) item, G_OBJECT_TYPE_NAME( item ),
-			folder,
-			( guint ) format, g_quark_to_string( format ),
-			( void * ) messages );
-
 	export_uri = NULL;
 
 	if( iexporter_initialized && !iexporter_finalized ){
+
+		g_debug( "%s: pivot=%p, item=%p (%s), folder=%s, format=%u (%s), messages=%p",
+				thisfn,
+				( void * ) pivot,
+				( void * ) item, G_OBJECT_TYPE_NAME( item ),
+				folder,
+				( guint ) format, g_quark_to_string( format ),
+				( void * ) messages );
 
 		exporter = find_exporter_for_format( pivot, format );
 

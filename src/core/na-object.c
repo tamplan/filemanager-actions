@@ -167,12 +167,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_object_instance_init";
 	NAObject *self;
 
-	g_debug( "%s: instance=%p (%s), klass=%p",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-
 	g_return_if_fail( NA_IS_OBJECT( instance ));
 
 	self = NA_OBJECT( instance );
+
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self->private = g_new0( NAObjectPrivate, 1 );
 }
@@ -183,13 +183,13 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_object_instance_dispose";
 	NAObject *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	self = NA_OBJECT( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -210,9 +210,9 @@ instance_finalize( GObject *object )
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
 	self = NA_OBJECT( object );
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	g_free( self->private );
 
@@ -383,13 +383,13 @@ na_object_object_check_status( const NAObject *object )
 	static const gchar *thisfn = "na_object_object_check_status";
 	GList *children, *ic;
 
-	g_debug( "%s: object=%p (%s)",
-			thisfn,
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	if( !object->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)",
+				thisfn,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		if( NA_IS_OBJECT_ITEM( object )){
 			children = na_object_get_items( object );
@@ -674,12 +674,12 @@ na_object_object_ref( NAObject *object )
 	NAObject *ref = NULL;
 	GList *children, *ic;
 
-	g_debug( "na_object_object_ref: object=%p (%s, ref_count=%d)",
-			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
-
 	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
 
 	if( !object->private->dispose_has_run ){
+
+		g_debug( "na_object_object_ref: object=%p (%s, ref_count=%d)",
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 		if( NA_IS_OBJECT_ITEM( object )){
 
@@ -721,17 +721,8 @@ na_object_object_unref( NAObject *object )
 				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 		if( NA_IS_OBJECT_ITEM( object )){
-#if 0
-			while( TRUE ){
-				children = na_object_get_items( object );
-				if( children ){
-					na_object_unref( children->data );
-				} else {
-					break;
-				}
-			}
-#endif
 			children = na_object_get_items( object );
+
 			for( ic = children ; ic ; ic = icnext ){
 				icnext = ic->next;
 				g_object_unref( ic->data );

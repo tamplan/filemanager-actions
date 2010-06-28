@@ -255,15 +255,15 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
 	NAIDuplicable *dup;
 	DuplicableStr *dup_str, *obj_str;
 
-	g_debug( "%s: object=%p (%s)",
-			thisfn,
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
 	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
 
 	dup = NULL;
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: object=%p (%s)",
+				thisfn,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		dup = g_object_new( G_OBJECT_TYPE( object ), NULL );
 
@@ -531,10 +531,12 @@ v_is_valid( const NAIDuplicable *object )
 void
 na_iduplicable_register_consumer( GObject *consumer )
 {
+	g_return_if_fail( st_interface );
+
 	if( st_initialized && !st_finalized ){
 
-		g_return_if_fail( st_interface );
 		g_debug( "na_iduplicable_register_consumer: consumer=%p", ( void * ) consumer );
+
 		st_interface->private->consumers = g_list_prepend( st_interface->private->consumers, consumer );
 	}
 }

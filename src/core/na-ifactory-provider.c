@@ -162,9 +162,6 @@ na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_d
 
 	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
 
-		g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
-		g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
-
 		v_factory_provider_read_start( reader, reader_data, object, messages );
 		na_factory_object_read_item( object, reader, reader_data, messages );
 		v_factory_provider_read_done( reader, reader_data, object, messages );
@@ -192,12 +189,12 @@ na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
-	g_debug( "%s: writer=%p, writer_data=%p, object=%p (%s)",
-			thisfn, ( void * ) writer, ( void * ) writer_data, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
 	code = NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
 
 	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
+
+		g_debug( "%s: writer=%p, writer_data=%p, object=%p (%s)",
+				thisfn, ( void * ) writer, ( void * ) writer_data, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		code = v_factory_provider_write_start( writer, writer_data, object, messages );
 

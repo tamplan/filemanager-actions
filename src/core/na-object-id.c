@@ -128,12 +128,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_object_id_instance_init";
 	NAObjectId *self;
 
-	g_debug( "%s: instance=%p (%s), klass=%p",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-
 	g_return_if_fail( NA_IS_OBJECT_ID( instance ));
 
 	self = NA_OBJECT_ID( instance );
+
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self->private = g_new0( NAObjectIdPrivate, 1 );
 }
@@ -151,13 +151,13 @@ instance_dispose( GObject *object )
 	NAObjectId *self;
 	NAObjectItem *parent;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
 
 	self = NA_OBJECT_ID( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -287,13 +287,13 @@ na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean r
 	static const gchar *thisfn = "na_object_id_prepare_for_paste";
 	GList *subitems, *it;
 
-	g_debug( "%s: object=%p, relabel=%s, renumber=%s, parent=%p",
-			thisfn, ( void * ) object, relabel ? "True":"False", renumber ? "True":"False", ( void * ) parent );
-
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
 	g_return_if_fail( !parent || NA_IS_OBJECT_ITEM( parent ));
 
 	if( !object->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p, relabel=%s, renumber=%s, parent=%p",
+				thisfn, ( void * ) object, relabel ? "True":"False", renumber ? "True":"False", ( void * ) parent );
 
 		if( NA_IS_OBJECT_PROFILE( object )){
 			na_object_set_parent( object, parent );

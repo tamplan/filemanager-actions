@@ -142,10 +142,11 @@ na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance )
 	static const gchar *thisfn = "na_ipivot_consumer_delay_notify";
 	GTimeVal *last_delay;
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
 
@@ -170,11 +171,11 @@ void na_ipivot_consumer_notify_of_items_changed( NAIPivotConsumer *instance )
 {
 	static const gchar *thisfn = "na_ipivot_consumer_notify_of_items_changed";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		if( is_notify_allowed( instance )){
 
@@ -195,11 +196,11 @@ void na_ipivot_consumer_notify_of_mandatory_prefs_changed( NAIPivotConsumer *ins
 {
 	static const gchar *thisfn = "na_ipivot_consumer_notify_of_mandatory_prefs_changed";
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
 	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		if( is_notify_allowed( instance )){
 

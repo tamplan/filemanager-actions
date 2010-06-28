@@ -317,10 +317,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_data_boxed_instance_init";
 	NADataBoxed *self;
 
+	g_return_if_fail( NA_IS_DATA_BOXED( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-
-	g_return_if_fail( NA_IS_DATA_BOXED( instance ));
 
 	self = NA_DATA_BOXED( instance );
 
@@ -335,16 +335,16 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_data_boxed_instance_dispose";
 	NADataBoxed *self;
 
-	g_debug( "%s: object=%p (%s), name=%s",
-			thisfn,
-			( void * ) object, G_OBJECT_TYPE_NAME( object ),
-			NA_DATA_BOXED( object )->private->def->name );
-
 	g_return_if_fail( NA_IS_DATA_BOXED( object ));
 
 	self = NA_DATA_BOXED( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s), name=%s",
+				thisfn,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ),
+				NA_DATA_BOXED( object )->private->def->name );
 
 		self->private->dispose_has_run = TRUE;
 
@@ -410,6 +410,8 @@ na_data_boxed_get_param_spec( const NADataDef *def )
 {
 	GParamSpec *spec;
 	DataBoxedFn *fn;
+
+	g_return_val_if_fail( def != NULL, NULL );
 
 	spec = NULL;
 	fn = get_data_boxed_fn( def->type );

@@ -126,10 +126,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "na_selected_info_instance_init";
 	NASelectedInfo *self;
 
-	g_debug( "%s: instance=%p (%s), klass=%p",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 	g_return_if_fail( NA_IS_SELECTED_INFO( instance ));
 	self = NA_SELECTED_INFO( instance );
+
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self->private = g_new0( NASelectedInfoPrivate, 1 );
 
@@ -143,11 +144,12 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "na_selected_info_instance_dispose";
 	NASelectedInfo *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NA_IS_SELECTED_INFO( object ));
 	self = NA_SELECTED_INFO( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -167,9 +169,10 @@ instance_finalize( GObject *object )
 	static const gchar *thisfn = "na_selected_info_instance_finalize";
 	NASelectedInfo *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_SELECTED_INFO( object ));
 	self = NA_SELECTED_INFO( object );
+
+	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_free( self->private->uri );
 	g_free( self->private->mimetype );
