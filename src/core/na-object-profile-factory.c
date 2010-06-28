@@ -119,7 +119,7 @@ static NADataDef data_def_profile [] = {
 					"  %u: URI\n" \
 					"  %U: username of the URI\n" \
 					"  %%: a percent sign." \
-					"- starting from version '1':\n" \
+					"- starting from version '3':\n" \
 					"  %b: (first) basename of the selected file(s)/folder(s)\n" \
 					"  %B: space-separated list of the basenames of the selected file(s)/folder(s)\n" \
 					"  %c: count the selected file(s)/folder(s)\n" \
