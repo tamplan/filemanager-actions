@@ -424,6 +424,9 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	}
 }
 
+/*
+ * enable forward button if current selection has at least one readable file
+ */
 static gboolean
 has_readable_files( GSList *uris )
 {
@@ -458,14 +461,14 @@ has_readable_files( GSList *uris )
 
 		type = g_file_info_get_file_type( info );
 		if( type != G_FILE_TYPE_REGULAR ){
-			g_warning( "%s: %s is not a file", thisfn, uri );
+			g_debug( "%s: %s is not a file", thisfn, uri );
 			g_object_unref( info );
 			continue;
 		}
 
 		readable = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_READ );
 		if( !readable ){
-			g_warning( "%s: %s is not readable", thisfn, uri );
+			g_debug( "%s: %s is not readable", thisfn, uri );
 			g_object_unref( info );
 			continue;
 		}

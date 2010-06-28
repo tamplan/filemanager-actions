@@ -1,5 +1,8 @@
 2010-06-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-import.c (has_readable_files):
+	Get ride of warning messages in some usual situations.
+
 	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_save_items):
 	Force sensitivities update when new tree store is empty.
 
