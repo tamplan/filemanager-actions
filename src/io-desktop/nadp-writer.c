@@ -374,6 +374,10 @@ nadp_writer_ifactory_provider_write_start( const NAIFactoryProvider *provider, v
 	return( NA_IIO_PROVIDER_CODE_OK );
 }
 
+/*
+ * when writing to .desktop file a profile which has both a path and parameters,
+ * then concatenate these two fields to the 'Exec' key
+ */
 guint
 nadp_writer_ifactory_provider_write_data(
 				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,
@@ -389,6 +393,7 @@ nadp_writer_ifactory_provider_write_data(
 	gboolean bool_value;
 	GSList *slist_value;
 	guint uint_value;
+	gchar *parms, *tmp;
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( writer_data ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	/*g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
@@ -414,6 +419,15 @@ nadp_writer_ifactory_provider_write_data(
 
 				case NAFD_TYPE_STRING:
 					str_value = na_data_boxed_get_as_string( boxed );
+
+					if( !strcmp( def->name, NAFO_DATA_PATH )){
+						parms = na_object_get_parameters( object );
+						tmp = g_strdup_printf( "%s %s", str_value, parms );
+						g_free( str_value );
+						g_free( parms );
+						str_value = tmp;
+					}
+
 					nadp_desktop_file_set_string( ndf, group_name, def->desktop_entry, str_value );
 					g_free( str_value );
 					break;
