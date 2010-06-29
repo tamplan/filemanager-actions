@@ -106,7 +106,7 @@ enum {
 	IMPORTER_CODE_CANCELLED
 };
 
-/* the function which should be provider by the caller in order the
+/* the function which should be provided by the caller in order the
  * #NAIImporter provider be able to check for pre-existance of the
  * imported item
  *
