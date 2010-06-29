@@ -1,3 +1,8 @@
+2010-06-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-gtk-utils.c (nact_gtk_utils_get_pixbuf):
+	Do not emit a warning when file is just not found.
+
 2010-06-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/io-desktop/nadp-writer.c

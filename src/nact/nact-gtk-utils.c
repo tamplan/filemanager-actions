@@ -123,7 +123,11 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, gint size )
 		if( g_path_is_absolute( name )){
 			pixbuf = gdk_pixbuf_new_from_file_at_size( name, size, size, &error );
 			if( error ){
-				g_warning( "%s: gdk_pixbuf_new_from_file_at_size: name=%s, error=%s", thisfn, name, error->message );
+				if( error->code == G_FILE_ERROR_NOENT ){
+					g_debug( "%s: gdk_pixbuf_new_from_file_at_size: name=%s, error=%s", thisfn, name, error->message );
+				} else {
+					g_warning( "%s: gdk_pixbuf_new_from_file_at_size: name=%s, error=%s", thisfn, name, error->message );
+				}
 				g_error_free( error );
 				error = NULL;
 				pixbuf = NULL;
