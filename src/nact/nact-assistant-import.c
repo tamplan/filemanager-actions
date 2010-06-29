@@ -822,7 +822,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 			window->private->items = g_list_prepend( window->private->items, str->item );
 
 		} else {
-			/* i18n: indicate that the file was not iported */
+			/* i18n: indicate that the file was not imported */
 			tmp = g_strdup_printf( "%s\t\t%s\n", text, _( "Not imported" ));
 			g_free( text );
 			text = tmp;
