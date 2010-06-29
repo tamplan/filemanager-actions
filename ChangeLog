@@ -1,5 +1,8 @@
 2010-06-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
+	Make the code in adequation with the comment.
+
 	* src/nact/nact-gtk-utils.c (nact_gtk_utils_get_pixbuf):
 	Do not emit a warning when file is just not found.
 

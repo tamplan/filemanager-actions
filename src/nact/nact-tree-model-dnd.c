@@ -842,7 +842,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 
 	/* if there is more than one message, display them in a dialog box
 	 */
-	if( parms.messages && g_slist_length( parms.messages ) >= 2 ){
+	if( parms.messages && g_slist_length( parms.messages ) > 1 ){
 		GtkMessageDialog *dialog = GTK_MESSAGE_DIALOG( gtk_message_dialog_new(
 				parms.window,
 				GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE,
