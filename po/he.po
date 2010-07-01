@@ -456,7 +456,7 @@ msgstr ""
 
 #: ../src/core/na-iabout.c:212
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr "ירון שהרבני <sh.yaron@gmail.com>\n"
+msgstr "ירון שהרבני <sh.yaron@gmail.com>"
 
 #: ../src/core/na-iabout.c:253
 #, c-format
