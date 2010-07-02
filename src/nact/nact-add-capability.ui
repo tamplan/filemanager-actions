@@ -4,7 +4,7 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkDialog" id="AddCapabilityDialog">
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">Adding a new scheme</property>
+    <property name="title" translatable="yes">Adding a new capability</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
     <property name="has_separator">False</property>
