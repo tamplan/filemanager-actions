@@ -362,12 +362,17 @@ na_object_id_set_copy_of_label( NAObjectId *object )
 void
 na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent )
 {
+	static const gchar *thisfn = "na_object_id_set_new_id";
 	gchar *id;
 
 	g_return_if_fail( NA_IS_OBJECT_ID( object ));
-	g_return_if_fail( !new_parent || NA_IS_OBJECT_ID( new_parent ));
+	g_return_if_fail( !new_parent || NA_IS_OBJECT_ITEM( new_parent ));
 
 	if( !object->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s), new_parent=%p (%s)",
+				thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ),
+				( void * ) new_parent, new_parent ? G_OBJECT_TYPE_NAME( new_parent ) : "n/a" );
 
 		id = v_new_id( object, new_parent );
 

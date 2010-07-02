@@ -203,7 +203,7 @@ iimporter_iface_init( NAIImporterInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = iimporter_get_version;
-	iface->from_uri = naxml_reader_import_from_uri;
+	iface->import_from_uri = naxml_reader_import_from_uri;
 }
 
 static guint

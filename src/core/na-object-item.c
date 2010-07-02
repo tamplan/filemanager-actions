@@ -243,7 +243,7 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 static gchar *
 object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
 {
-	GList *childs, *it;
+	GList *children, *it;
 	uuid_t uuid;
 	gchar uuid_str[64];
 	gchar *new_uuid = NULL;
@@ -252,11 +252,11 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
 
 	if( !NA_OBJECT_ITEM( item )->private->dispose_has_run ){
 
-		/* recurse into NAObjectItems childs
+		/* recurse into NAObjectItems children
 		 * i.e., if a menu, recurse into embedded actions
 		 */
-		childs = na_object_get_items( item );
-		for( it = childs ; it ; it = it->next ){
+		children = na_object_get_items( item );
+		for( it = children ; it ; it = it->next ){
 			na_object_set_new_id( it->data, new_parent );
 		}
 

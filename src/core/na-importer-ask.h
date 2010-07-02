@@ -41,9 +41,11 @@
  * want to be ask to known what to do with it.
  */
 
-#include <api/na-iimporter.h>
-
 G_BEGIN_DECLS
+
+#include <gtk/gtk.h>
+
+#include <api/na-object-item.h>
 
 #define NA_IMPORTER_ASK_TYPE				( na_importer_ask_get_type())
 #define NA_IMPORTER_ASK( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IMPORTER_ASK_TYPE, NAImporterAsk ))
@@ -68,9 +70,17 @@ typedef struct {
 }
 	NAImporterAskClass;
 
+typedef struct {
+	GtkWindow    *parent;
+	gchar        *uri;
+	guint         count;
+	gboolean      keep_choice;
+}
+	NAImporterAskUserParms;
+
 GType na_importer_ask_get_type( void );
 
-guint na_importer_ask_user( const NAIImporterUriParms *parms, const NAObjectItem *existing );
+guint na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms );
 
 G_END_DECLS
 

@@ -103,6 +103,7 @@ typedef struct {
 #define IPREFS_RELABEL_PROFILES				"iprefs-relabel-profiles"
 
 #define IPREFS_IMPORT_ITEMS_IMPORT_MODE		"import-mode"
+#define IPREFS_IMPORT_KEEP_CHOICE			"import-keep-choice"
 #define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
 
 /* alphabetical order values

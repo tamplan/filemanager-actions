@@ -129,8 +129,8 @@ Possible values are:
       <type>list</type>
       <list_type>int</list_type>
       <locale name="C">
-        <short>Position and size of the import assistant window</short>
-        <long>Position and size of the import assistant window ; default is set by the window manager.</long>
+        <short>Position and size of the interaction dialog at import time</short>
+        <long>Position and size of the interaction dialog at import time ; default is set by the window manager.</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -155,8 +155,8 @@ Possible values are:
       <type>list</type>
       <list_type>int</list_type>
       <locale name="C">
-        <short>Position and size of the interaction dialog at import time</short>
-        <long>Position and size of the interaction dialog at import time ; default is set by the window manager.</long>
+        <short>Position and size of the import assistant window</short>
+        <long>Position and size of the import assistant window ; default is set by the window manager.</long>
       </locale>
       <default>[]</default>
     </schema>
@@ -170,6 +170,17 @@ Possible values are:
         <long>Last folder selected when choosing a folder from where import new actions.</long>
       </locale>
       <default>/tmp</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/import-keep-choicee</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Keep last choosen import mode</short>
+        <long>Whether the import system should reuse the last choosen import mode.</long>
+      </locale>
+      <default>false</default>
     </schema>
 
     <schema>

@@ -420,11 +420,13 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
 	gchar *id = NULL;
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( item ), NULL );
-	g_return_val_if_fail( new_parent && NA_IS_OBJECT_ACTION( new_parent ), NULL );
+	g_return_val_if_fail( !new_parent || NA_IS_OBJECT_ACTION( new_parent ), NULL );
 
 	if( !NA_OBJECT_PROFILE( item )->private->dispose_has_run ){
 
-		id = na_object_action_get_new_profile_name( NA_OBJECT_ACTION( new_parent ));
+		if( new_parent ){
+			id = na_object_action_get_new_profile_name( NA_OBJECT_ACTION( new_parent ));
+		}
 	}
 
 	return( id );

@@ -1,3 +1,37 @@
+2010-07-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* data/nautilus-actions-prefs.schemas.in:
+	* src/core/na-iprefs.h:
+	* src/core/na-importer-ask.c:
+	* src/core/na-importer-ask.h:
+	Define a new GConf preference 'keep last user choice'.
+
+	* src/api/na-iimporter.h:
+	* src/core/na-iimporter.c:
+	from_uri() interface is renamed as import_from_uri().
+	Only define na_iimporter_import_from_uri() public API.
+
+	* src/core/na-importer.c:
+	* src/core/na-importer.h:
+	Define here na_importer_import_from_list() internal API.
+
+	* src/io-xml/naxml-provider.c:
+	* src/io-xml/naxml-reader.c:
+	* src/io-xml/naxml-reader.h:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/test/test-reader.c: Updated accordingly.
+
+	* src/core/na-object-id.c (na_object_id_set_new_id):
+	Fix object type test.
+
+	* src/core/na-object-item.c (object_id_new_id):
+	Fix minor typo.
+
+	* src/core/na-object-profile.c (object_id_new_id):
+	Fix order of validity test.
+	Only get a new profile name when a new parent is provided.
+
 2010-06-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-tree-model-dnd.c (drop_uri_list):

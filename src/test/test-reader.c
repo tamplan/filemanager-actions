@@ -64,7 +64,8 @@ static void             exit_with_usage( void );
 int
 main( int argc, char **argv )
 {
-	NAIImporterUriParms parms;
+	NAImporterParms parms;
+	NAImporterResult *result;
 
 	g_type_init();
 
@@ -79,25 +80,24 @@ main( int argc, char **argv )
 	na_pivot_load_items( pivot );
 	/* for test - end */
 
-	parms.version = 1;
-	parms.uri = uri;
+	parms.parent = NULL;
+	parms.uris = g_slist_prepend( NULL, uri );
 	parms.mode = IMPORTER_MODE_ASK;
-	parms.imported = NULL;
 	parms.check_fn = NULL;
 	parms.check_fn_data = NULL;
-	parms.messages = NULL;
 
-	guint code = na_importer_import_from_uri( pivot, &parms );
+	guint code = na_importer_import_from_list( pivot, &parms );
 
 	g_print( "%s: return code from import is %u.\n", g_get_prgname(), code );
 
-	if( parms.imported ){
-		na_object_dump( parms.imported );
-		g_object_unref( parms.imported );
+	result = parms.results->data;
+	if( result->imported ){
+		na_object_dump( result->imported );
+		g_object_unref( result->imported );
 	}
 
-	na_core_utils_slist_dump( parms.messages );
-	na_core_utils_slist_free( parms.messages );
+	na_core_utils_slist_dump( result->messages );
+	na_core_utils_slist_free( result->messages );
 
 	return( 0 );
 }

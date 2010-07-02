@@ -36,6 +36,8 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include <api/na-gconf-utils.h>
+#include <api/na-iimporter.h>
 #include <api/na-object-api.h>
 
 #include "na-gtk-utils.h"
@@ -51,14 +53,15 @@ struct NAImporterAskClassPrivate {
 /* private instance data
  */
 struct NAImporterAskPrivate {
-	gboolean          dispose_has_run;
-	GtkBuilder       *builder;
-	GtkWindow        *toplevel;
-	NAIImporterUriParms *parms;
-	NAObjectItem     *existing;
-	guint             mode;
-	GConfClient      *gconf;
-	gint              dialog_code;
+	gboolean                dispose_has_run;
+	GtkBuilder             *builder;
+	GtkWindow              *toplevel;
+	NAObjectItem           *importing;
+	NAObjectItem           *existing;
+	NAImporterAskUserParms *parms;
+	guint                   mode;
+	GConfClient            *gconf;
+	gint                    dialog_code;
 };
 
 static GtkDialogClass *st_parent_class = NULL;
@@ -199,6 +202,7 @@ instance_finalize( GObject *dialog )
 	g_return_if_fail( NA_IS_IMPORTER_ASK( dialog ));
 
 	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
+
 	self = NA_IMPORTER_ASK( dialog );
 
 	g_free( self->private );
@@ -233,24 +237,27 @@ import_ask_new()
  * becomes his preference import mode.
  */
 guint
-na_importer_ask_user( const NAIImporterUriParms *parms, const NAObjectItem *existing )
+na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms )
 {
 	static const gchar *thisfn = "na_importer_ask_user";
 	NAImporterAsk *dialog;
 	guint mode;
 	gint code;
 
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( importing ), IMPORTER_MODE_NO_IMPORT );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( existing ), IMPORTER_MODE_NO_IMPORT );
 
-	g_debug( "%s: parms=%p, existing=%p", thisfn, ( void * ) parms, ( void * ) existing );
+	g_debug( "%s: importing=%p, existing=%p, parms=%p",
+			thisfn, ( void * ) importing, ( void * ) existing, ( void * ) parms );
 
 	mode = IMPORTER_MODE_NO_IMPORT;
 	dialog = import_ask_new();
 
 	if( dialog->private->toplevel ){
 
-		dialog->private->parms = ( NAIImporterUriParms * ) parms;
+		dialog->private->importing = ( NAObjectItem * ) importing;
 		dialog->private->existing = ( NAObjectItem * ) existing;
+		dialog->private->parms = parms;
 		dialog->private->mode = na_iprefs_get_import_mode( dialog->private->gconf, IPREFS_IMPORT_ASK_LAST_MODE );
 
 		init_dialog( dialog );
@@ -286,10 +293,10 @@ init_dialog( NAImporterAsk *editor )
 
 	g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
 
-	imported_label = na_object_get_label( editor->private->parms->imported );
+	imported_label = na_object_get_label( editor->private->importing );
 	existing_label = na_object_get_label( editor->private->existing );
 
-	if( NA_IS_OBJECT_ACTION( editor->private->parms->imported )){
+	if( NA_IS_OBJECT_ACTION( editor->private->importing )){
 		/* i18n: The action <action_label> imported from <file> has the same id than <existing_label> */
 		label = g_strdup_printf(
 				_( "The action \"%s\" imported from \"%s\" has the same identifiant than the already existing \"%s\"." ),
@@ -323,7 +330,7 @@ init_dialog( NAImporterAsk *editor )
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 
 	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), FALSE );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), editor->private->parms->keep_choice );
 
 	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "OKButton" );
 	g_signal_connect(
@@ -339,8 +346,8 @@ init_dialog( NAImporterAsk *editor )
 			G_CALLBACK( on_cancel_clicked ),
 			editor );
 
-	if( editor->private->parms->window ){
-		gtk_window_set_transient_for( editor->private->toplevel, editor->private->parms->window );
+	if( editor->private->parms->parent ){
+		gtk_window_set_transient_for( editor->private->toplevel, editor->private->parms->parent );
 	}
 
 	gtk_widget_show_all( GTK_WIDGET( editor->private->toplevel ));
@@ -350,7 +357,9 @@ static void
 on_cancel_clicked( GtkButton *button, NAImporterAsk *editor )
 {
 	g_debug( "na_importer_ask_on_cancel_clicked" );
+
 	editor->private->dialog_code = GTK_RESPONSE_CANCEL;
+
 	gtk_dialog_response( GTK_DIALOG( editor ), GTK_RESPONSE_CANCEL );
 }
 
@@ -358,7 +367,9 @@ static void
 on_ok_clicked( GtkButton *button, NAImporterAsk *editor )
 {
 	g_debug( "na_importer_ask_on_ok_clicked" );
+
 	editor->private->dialog_code = GTK_RESPONSE_OK;
+
 	gtk_dialog_response( GTK_DIALOG( editor ), GTK_RESPONSE_OK );
 }
 
@@ -368,6 +379,7 @@ get_selected_mode( NAImporterAsk *editor )
 	guint import_mode;
 	GtkWidget *button;
 	gboolean keep;
+	gchar *path;
 
 	import_mode = IMPORTER_MODE_NO_IMPORT;
 
@@ -387,9 +399,9 @@ get_selected_mode( NAImporterAsk *editor )
 
 	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	if( keep ){
-		na_iprefs_set_import_mode( editor->private->gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE, import_mode );
-	}
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, IPREFS_IMPORT_KEEP_CHOICE );
+	na_gconf_utils_write_bool( editor->private->gconf, path, keep, NULL );
+	g_free( path );
 }
 
 /*

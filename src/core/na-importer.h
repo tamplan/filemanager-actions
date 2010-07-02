@@ -28,26 +28,49 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_NA_IMPORTER_H__
-#define __NACT_NA_IMPORTER_H__
+#ifndef __CORE_NA_IMPORTER_H__
+#define __CORE_NA_IMPORTER_H__
 
 /**
- * SECTION: na_iimport
- * @short_description: #NAIImport internal functions.
- * @include: nact/na-import.h
+ * SECTION: na_iimporter
+ * @short_description: #NAIImporter internal functions.
+ * @include: core/na-importer.h
  */
 
-#include <api/na-object-item.h>
+#include <gtk/gtk.h>
+
 #include <api/na-iimporter.h>
+#include <api/na-object-item.h>
 
 #include <core/na-pivot.h>
 
 G_BEGIN_DECLS
 
-guint na_importer_import_from_uri ( const NAPivot *pivot, NAIImporterUriParms *parms );
+typedef struct {
+	GtkWindow         *parent;			/* the parent window, if any */
+	GSList            *uris;			/* the list of uris of the files to be imported */
+	guint              mode;			/* asked import mode */
+	NAIImporterCheckFn check_fn;		/* a function to check the existence of the imported id */
+	void              *check_fn_data;	/* data function */
+	GList             *results;			/* a #GList of newly allocated NAImporterResult structures,
+										   one for each imported uri, which should be
+										   na_importer_free_result() by the caller */
+}
+	NAImporterParms;
 
-guint na_importer_import_from_list( const NAPivot *pivot, NAIImporterListParms *parms );
+typedef struct {
+	gchar             *uri;				/* the imported uri */
+	guint              mode;			/* the actual import mode in effect for this import */
+	gboolean           exist;			/* whether the imported Id already existed */
+	NAObjectItem      *imported;		/* eventually imported NAObjectItem-derived object, or %NULL */
+	GSList            *messages;		/* a #GSList list of localized strings */
+}
+	NAImporterResult;
+
+guint na_importer_import_from_list( const NAPivot *pivot, NAImporterParms *parms );
+
+void  na_importer_free_result( NAImporterResult *result );
 
 G_END_DECLS
 
-#endif /* __NACT_NA_IMPORTER_H__ */
+#endif /* __CORE_NA_IMPORTER_H__ */

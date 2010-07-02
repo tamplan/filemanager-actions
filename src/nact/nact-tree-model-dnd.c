@@ -795,9 +795,13 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	NactApplication *application;
 	NAUpdater *updater;
 	NactMainWindow *main_window;
-	NAIImporterListParms parms;
+	NAImporterParms parms;
 	GConfClient *gconf;
 	GList *it;
+	guint count;
+	GString *str;
+	GSList *im;
+	GList *imported;
 
 	gchar *dest_str = gtk_tree_path_to_string( dest );
 	g_debug( "%s: model=%p, dest=%p (%s), selection_data=%p",
@@ -815,61 +819,81 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	updater = nact_application_get_updater( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
-	parms.version = 1;
 	g_debug( "%s", ( const gchar * ) selection_data->data );
+
+	parms.parent = base_window_get_toplevel( BASE_WINDOW( main_window ));
 	parms.uris = g_slist_reverse( na_core_utils_slist_from_split(( const gchar * ) selection_data->data, "\r\n" ));
 
 	gconf = gconf_client_get_default();
 	parms.mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
 	g_object_unref( gconf );
 
-	parms.window = base_window_get_toplevel( BASE_WINDOW( main_window ));
-	parms.imported = NULL;
 	parms.check_fn = ( NAIImporterCheckFn ) is_dropped_already_exists;
 	parms.check_fn_data = main_window;
-	parms.messages = NULL;
+	parms.results = NULL;
 
 	na_importer_import_from_list( NA_PIVOT( updater ), &parms );
 
-	/* display first message in status bar
+	/* analysing output results
+	 * - first line of first message is displayed in status bar
+	 * - simultaneously build the concatenation of all lines of messages
+	 * - simultaneously build the list of imported items
 	 */
-	if( parms.messages ){
-		nact_main_statusbar_display_with_timeout(
-				main_window,
-				TREE_MODEL_STATUSBAR_CONTEXT,
-				parms.messages->data );
+	count = 0;
+	str = g_string_new( "" );
+	imported = NULL;
+
+	for( it = parms.results ; it ; it = it->next ){
+		NAImporterResult *result = ( NAImporterResult * ) it->data;
+
+		if( result->messages ){
+			if( count == 0 ){
+				nact_main_statusbar_display_with_timeout(
+						main_window,
+						TREE_MODEL_STATUSBAR_CONTEXT,
+						result->messages->data );
+			}
+			count += 1;
+			for( im = result->messages ; im ; im = im->next ){
+				g_string_append_printf( str, "%s\n", ( const gchar * ) im->data );
+			}
+		}
+
+		if( result->imported ){
+			imported = g_list_prepend( imported, result->imported );
+		}
 	}
 
 	/* if there is more than one message, display them in a dialog box
 	 */
-	if( parms.messages && g_slist_length( parms.messages ) > 1 ){
+	if( count > 1 ){
 		GtkMessageDialog *dialog = GTK_MESSAGE_DIALOG( gtk_message_dialog_new(
-				parms.window,
+				parms.parent,
 				GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE,
 				"%s", _( "Some messages have occurred during drop operation." )));
-		GString *str = g_string_new( "" );
-		GSList *im;
-		for( im = parms.messages ; im ; im = im->next ){
-			g_string_append_printf( str, "%s\n", ( const gchar * ) im->data );
-		}
 		gtk_message_dialog_format_secondary_markup( dialog, "%s", str->str );
-		g_string_free( str, TRUE );
 	}
+
+	g_string_free( str, TRUE );
 
 	/* check status of newly imported items, and insert them in the list view
 	 */
-	for( it = parms.imported ; it ; it = it->next ){
+	for( it = imported ; it ; it = it->next ){
 		na_object_check_status( it->data );
 		na_object_dump( it->data );
 		drop_done = TRUE;
 	}
 
-	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), parms.imported, dest );
+	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), imported, dest );
 	nact_tree_model_dump( model );
 
-	na_object_unref_items( parms.imported );
+	na_object_unref_items( imported );
 	na_core_utils_slist_free( parms.uris );
-	na_core_utils_slist_free( parms.messages );
+
+	for( it = parms.results ; it ; it = it->next ){
+		na_importer_free_result( it->data );
+	}
+	g_list_free( parms.results );
 
 	return( drop_done );
 }

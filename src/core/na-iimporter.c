@@ -34,8 +34,6 @@
 
 #include <api/na-iimporter.h>
 
-#include "na-importer-ask.h"
-
 /* private interface data
  */
 struct NAIImporterInterfacePrivate {
@@ -112,7 +110,7 @@ interface_base_init( NAIImporterInterface *klass )
 		klass->private = g_new0( NAIImporterInterfacePrivate, 1 );
 
 		klass->get_version = iimporter_get_version;
-		klass->from_uri = NULL;
+		klass->import_from_uri = NULL;
 
 		iimporter_initialized = TRUE;
 	}
@@ -140,22 +138,34 @@ iimporter_get_version( const NAIImporter *instance )
 }
 
 /**
- * na_iimporter_ask_user:
+ * na_iimporter_import_from_uri:
  * @importer: this #NAIImporter instance.
- * @parms: a #NAIImporterUriParms structure.
- * @existing: the #NAObjectItem-derived already existing object.
+ * @parms: a #NAIImporterImportFromUriParms structure.
  *
- * Ask the user for what to do when an imported item has the same ID
- * that an already existing one.
+ * Tries to import a #NAObjectItem from the URI specified in @parms, returning
+ * the result in @parms->imported.
  *
- * Returns: the definitive import mode.
+ * Returns: the return code of the operation.
  */
+
 guint
-na_iimporter_ask_user( const NAIImporter *importer, const NAIImporterUriParms *parms, const NAObjectItem *existing )
+na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFromUriParms *parms )
 {
-	guint mode;
+	static const gchar *thisfn = "na_iimporter_import_from_uri";
+	guint code;
 
-	mode = na_importer_ask_user( parms, existing );
+	g_return_val_if_fail( NA_IS_IIMPORTER( importer ), IMPORTER_CODE_PROGRAM_ERROR );
 
-	return( mode );
+	code = IMPORTER_CODE_NOT_WILLING_TO;
+
+	if( iimporter_initialized && !iimporter_finalized ){
+
+		g_debug( "%s: importer=%p, parms=%p", thisfn, ( void * ) importer, ( void * ) parms );
+
+		if( NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri ){
+			code = NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri( importer, parms );
+		}
+	}
+
+	return( code );
 }

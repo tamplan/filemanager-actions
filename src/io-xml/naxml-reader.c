@@ -74,24 +74,24 @@ typedef struct {
  * to import. We thus have one NAXMLReader object per import operation.
  */
 struct NAXMLReaderPrivate {
-	gboolean          dispose_has_run;
+	gboolean                       dispose_has_run;
 
 	/* data provided by the caller
 	 */
-	NAIImporter      *importer;
-	NAIImporterUriParms *parms;
+	NAIImporter                   *importer;
+	NAIImporterImportFromUriParms *parms;
 
 	/* data dynamically set during the import operation
 	 */
-	gboolean      type_found;
-	GList        *nodes;
-	RootNodeStr  *root_node_str;
-	gchar        *item_id;
+	gboolean                       type_found;
+	GList                         *nodes;
+	RootNodeStr                   *root_node_str;
+	gchar                         *item_id;
 
 	/* following values are reset and reused while iterating on each
 	 * element nodes of the imported item (cf. reset_node_data())
 	 */
-	gboolean      node_ok;
+	gboolean                       node_ok;
 };
 
 extern NAXMLKeyStr naxml_schema_key_schema_str[];
@@ -315,7 +315,7 @@ reader_new( void )
  * Returns: the import operation code.
  */
 guint
-naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterUriParms *parms )
+naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFromUriParms *parms )
 {
 	static const gchar *thisfn = "naxml_reader_import_from_uri";
 	NAXMLReader *reader;
@@ -329,6 +329,8 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterUriParms *
 	reader->private->importer = ( NAIImporter * ) instance;
 	reader->private->parms = parms;
 
+	parms->exist = FALSE;
+	parms->import_mode = IMPORTER_MODE_NO_IMPORT;
 	parms->imported = NULL;
 
 	code = reader_parse_xmldoc( reader );
@@ -1301,30 +1303,52 @@ manage_import_mode( NAXMLReader *reader )
 
 	code = IMPORTER_CODE_OK;
 	exists = NULL;
+	mode = 0;
 
 	if( reader->private->parms->check_fn ){
 		exists = ( *reader->private->parms->check_fn )
 						( reader->private->parms->imported, reader->private->parms->check_fn_data );
+
+	} else {
+		renumber_label_item( reader );
+		add_message( reader, "%s", _( "Item was renumbered because the caller did not provide any check function." ));
+		reader->private->parms->import_mode = IMPORTER_MODE_RENUMBER;
 	}
 
 	if( exists ){
-		if( reader->private->parms->mode == IMPORTER_MODE_ASK ){
-			mode = na_iimporter_ask_user( reader->private->importer, reader->private->parms, exists );
+		reader->private->parms->exist = TRUE;
+
+		if( reader->private->parms->asked_mode == IMPORTER_MODE_ASK ){
+			if( reader->private->parms->ask_fn ){
+				mode = ( *reader->private->parms->ask_fn )( reader->private->parms->imported, exists, reader->private->parms->ask_fn_data );
+
+			} else {
+				renumber_label_item( reader );
+				add_message( reader, "%s", _( "Item was renumbered because the caller did not provide any ask user function." ));
+				reader->private->parms->import_mode = IMPORTER_MODE_RENUMBER;
+			}
 
 		} else {
-			mode = reader->private->parms->mode;
+			mode = reader->private->parms->asked_mode;
 		}
+	}
+
+	/* mode is only set if asked mode is ask user and an ask function was provided
+	 * or if asked mode was not ask user
+	 */
+	if( mode ){
+		reader->private->parms->import_mode = mode;
 
 		switch( mode ){
 			case IMPORTER_MODE_RENUMBER:
 				renumber_label_item( reader );
-				if( reader->private->parms->mode == IMPORTER_MODE_ASK ){
+				if( reader->private->parms->asked_mode == IMPORTER_MODE_ASK ){
 					add_message( reader, "%s", _( "Item was renumbered due to user request." ));
 				}
 				break;
 
 			case IMPORTER_MODE_OVERRIDE:
-				if( reader->private->parms->mode == IMPORTER_MODE_ASK ){
+				if( reader->private->parms->asked_mode == IMPORTER_MODE_ASK ){
 					add_message( reader, "%s", _( "Existing item was overriden due to user request." ));
 				}
 				break;
@@ -1333,7 +1357,7 @@ manage_import_mode( NAXMLReader *reader )
 			default:
 				id = na_object_get_id( reader->private->parms->imported );
 				add_message( reader, ERR_ITEM_ID_ALREADY_EXISTS, id );
-				if( reader->private->parms->mode == IMPORTER_MODE_ASK ){
+				if( reader->private->parms->asked_mode == IMPORTER_MODE_ASK ){
 					add_message( reader, "%s", _( "Import was canceled due to user request." ));
 				}
 				g_free( id );

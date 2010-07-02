@@ -36,12 +36,10 @@
  * @short_description: #NAIImporter interface definition.
  * @include: nautilus-actions/na-iimporter.h
  *
- * The #NAIImporter interface imports  items from the outside world.
+ * The #NAIImporter interface imports items from the outside world.
  *
  * Nautilus-Actions v 2.30 - API version:  1
  */
-
-#include <gtk/gtk.h>
 
 #include "na-object-item.h"
 
@@ -52,11 +50,10 @@ G_BEGIN_DECLS
 #define NA_IS_IIMPORTER( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIMPORTER_TYPE ))
 #define NA_IIMPORTER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIMPORTER_TYPE, NAIImporterInterface ))
 
-typedef struct NAIImporter                 NAIImporter;
-typedef struct NAIImporterUriParms         NAIImporterUriParms;
-typedef struct NAIImporterListParms        NAIImporterListParms;
+typedef struct NAIImporter                   NAIImporter;
+typedef struct NAIImporterInterfacePrivate   NAIImporterInterfacePrivate;
 
-typedef struct NAIImporterInterfacePrivate NAIImporterInterfacePrivate;
+typedef struct NAIImporterImportFromUriParms NAIImporterImportFromUriParms;
 
 typedef struct {
 	GTypeInterface               parent;
@@ -70,18 +67,18 @@ typedef struct {
 	 *
 	 * Defaults to 1.
 	 */
-	guint ( *get_version )( const NAIImporter *instance );
+	guint ( *get_version )    ( const NAIImporter *instance );
 
 	/**
 	 * import_from_uri:
 	 * @instance: the #NAIImporter provider.
-	 * @parms: a #NAIImporterUriParms structure.
+	 * @parms: a #NAIImporterImportFromUriParms structure.
 	 *
 	 * Imports an item.
 	 *
 	 * Returns: the return code of the operation.
 	 */
-	guint ( *from_uri )   ( const NAIImporter *instance, NAIImporterUriParms *parms );
+	guint ( *import_from_uri )( const NAIImporter *instance, NAIImporterImportFromUriParms *parms );
 }
 	NAIImporterInterface;
 
@@ -106,50 +103,61 @@ enum {
 	IMPORTER_CODE_CANCELLED
 };
 
-/* the function which should be provided by the caller in order the
- * #NAIImporter provider be able to check for pre-existance of the
- * imported item
- *
- * the function should return the already existing item which has the
+/**
+ * This function may be provided by the caller in order the #NAIImporter
+ * provider be able to check for pre-existence of the imported item.
+ * This function should return the already existing item which has the
  * same id than the currently being imported one, or %NULL if the
- * imported id will be unique
+ * imported id will be unique.
+ * If this function is not provided, then the #NAIImporter provider will not
+ * be able to check for duplicates. In this case, the id of the imported item
+ * should be systematically regenerated as a unique id (uuid), regardless of
+ * the asked import mode.
+ *
+ * (E): - currently imported item
+ *      - fn_data
+ * (S): - already existing item with same id, or %NULL.
  */
-typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, const void *fn_data );
+typedef NAObjectItem * ( *NAIImporterCheckFn )  ( const NAObjectItem *, void *fn_data );
 
-/* parameters via a structure
- * ... when importing a single uri
+/**
+ * This function may be provided by the caller in order the #NAIImporter
+ * provider be able to ask the user to know what to do in the case of a
+ * duplicate id.
+ * This function should return an mode import (not ASK!).
+ * If this function is not provided, then the #NAIImporter provider will
+ * not be able to ask the user. In this case, the duplicated id should be
+ * systematically regenerated as a unique id (uuid).
+ *
+ * (E): - currently imported item
+ *      - already existing item with same id
+ *      - fn_data
+ * (S): - import mode choosen by the user
  */
-struct NAIImporterUriParms {
-	guint              version;			/* i 1: version of this structure */
-	gchar             *uri;				/* i 1: uri of the file to be imported */
-	guint              mode;			/* i 1: import mode */
-	GtkWindow         *window;			/* i 1: a window which will act as a parent of the ask dialog */
-	NAObjectItem      *imported;		/*  o1: eventually imported NAObjectItem-derived object */
-	NAIImporterCheckFn check_fn;		/* i 1: a function to check the existance of the imported item */
-	void              *check_fn_data;	/* i 1: data function */
-	GSList            *messages;		/* io1: a #GSList list of localized strings;
-										 *       the provider may append messages to this list,
-										 *       but shouldn't reinitialize it. */
-};
+typedef guint          ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectItem *, void *fn_data );
 
-/* ... when importing a list of uris
+/*
+ * parameters used in input/output are passed or received through a single structure
  */
-struct NAIImporterListParms {
-	guint              version;			/* i 1: version of this structure */
-	GSList            *uris;			/* i 1: list of uris of the files to be imported */
-	guint              mode;			/* i 1: import mode */
-	GtkWindow         *window;			/* i 1: a window which will act as a parent of the ask dialog */
-	GList             *imported;		/*  o1: list of eventually imported NAObjectItem-derived objects */
-	NAIImporterCheckFn check_fn;		/* i 1: a function to check the existance of each imported item */
-	void              *check_fn_data;	/* i 1: data function */
-	GSList            *messages;		/* io1: a #GSList list of localized strings;
+struct NAIImporterImportFromUriParms {
+	guint                version;		/* i 1: version of this structure */
+	gchar               *uri;			/* i 1: uri of the file to be imported */
+	guint                asked_mode;	/* i 1: asked import mode */
+	gboolean             exist;			/*  o1: whether the imported Id already existed */
+	guint                import_mode;	/*  o1: actually used import mode */
+	NAObjectItem        *imported;		/*  o1: the imported NAObjectItem-derived object, or %NULL */
+	NAIImporterCheckFn   check_fn;		/* i 1: a function to check the existence of the imported id */
+	void                *check_fn_data;	/* i 1: data function */
+	NAIImporterAskUserFn ask_fn;		/* i 1: a function to ask the user what to do in case of a duplicate id */
+	void                *ask_fn_data;	/* i 1: data function */
+	GSList              *messages;		/* io1: a #GSList list of localized strings;
 										 *       the provider may append messages to this list,
 										 *       but shouldn't reinitialize it. */
 };
 
 GType na_iimporter_get_type( void );
 
-guint na_iimporter_ask_user( const NAIImporter *importer, const NAIImporterUriParms *parms, const NAObjectItem *existing );
+guint na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFromUriParms *parms );
 
 G_END_DECLS
 
