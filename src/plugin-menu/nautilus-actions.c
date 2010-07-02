@@ -99,7 +99,6 @@ static NautilusMenuItem *create_menu_item( NAObjectItem *item );
 static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
 static void              weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item );
 static void              destroy_notify_file_list( GList *list);
-static void              weak_notify_menu( NAObjectMenu *menu, NautilusMenuItem *item );
 
 static void              execute_action( NautilusMenuItem *item, NAObjectProfile *profile );
 
@@ -635,7 +634,7 @@ expand_tokens_item( NAObjectItem *item, NATokens *tokens )
  * This mainly means that the objects have to be re-parsed for each new
  * selection (e.g. because a label may change if it depends of the current
  * selection). Thus, all the hierarchy must be recursively re-parsed, and
- * re-checked for validity !
+ * should be re-checked for validity !
  */
 static GList *
 build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files, NATokens *tokens )
@@ -797,21 +796,12 @@ create_item_from_menu( NAObjectMenu *menu, GList *subitems )
 	NautilusMenuItem *item;
 
 	item = create_menu_item( NA_OBJECT_ITEM( menu ));
-	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_menu, menu );
 
 	attach_submenu_to_item( item, subitems );
 	nautilus_menu_item_list_free( subitems );
 
 	/*g_debug( "%s: returning item=%p", thisfn, ( void * ) item );*/
 	return( item );
-}
-
-static void
-weak_notify_menu( NAObjectMenu *menu, NautilusMenuItem *item )
-{
-	g_debug( "nautilus_actions_weak_notify_menu: menu=%p (ref_count=%d)",
-			( void * ) menu, G_OBJECT( menu )->ref_count );
-	/*g_object_unref( menu );*/
 }
 
 static NautilusMenuItem *

@@ -235,12 +235,15 @@ instance_finalize( GObject *object )
 NATokens *
 na_tokens_new_from_selection( GList *selection )
 {
+	static const gchar *thisfn = "na_tokens_new_from_selection";
 	NATokens *tokens;
 	GList *it;
 	gchar *uri, *filename, *basedir, *basename, *bname_woext, *ext;
 	GFile *location;
 	gboolean first;
 	NAGnomeVFSURI *vfs;
+
+	g_debug( "%s: selection=%p (count=%d)", thisfn, ( void * ) selection, g_list_length( selection ));
 
 	first = TRUE;
 	tokens = g_object_new( NA_TOKENS_TYPE, NULL );

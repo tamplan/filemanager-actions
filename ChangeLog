@@ -1,5 +1,13 @@
 2010-07-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-tokens.c (na_tokens_new_from_selection):
+	Add a trace.
+
+	* src/core/na-tokens.h: Fix minor typo.
+
+	* src/plugin-menu/nautilus-actions.c:
+	There should not be any need to keep a reference to our menu.
+
 	* data/nautilus-actions-prefs.schemas.in:
 	* src/core/na-iprefs.h:
 	* src/core/na-importer-ask.c:

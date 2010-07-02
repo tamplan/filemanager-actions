@@ -43,7 +43,7 @@
  * when an item was selected in the Nautilus context menu (i.e. at
  * execution time).
  * Starting with v2.32 (v3.0 ?), this same parsing may occur for each
- * displayed label (as new specs accept tokenss in labels) - we so
+ * displayed label (as new specs accept tokens in labels) - we so
  * factorize this parsing one time for each new selection in the Nautilus
  * plugin, attaching the result to each item in the context menu.
  *
