@@ -1,5 +1,8 @@
 2010-07-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-add-capability-dialog.c (on_base_runtime_init_dialog):
+	Doucle-click validates the dialog.
+
 	* src/nact/nact-add-scheme-dialog.c (on_base_runtime_init_dialog):
 	Doucle-click validates the dialog.
 

@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 
 #include <api/na-core-utils.h>
@@ -92,6 +93,7 @@ static gchar   *base_get_ui_filename( const BaseWindow *dialog );
 static void     on_base_initial_load_dialog( NactAddCapabilityDialog *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactAddCapabilityDialog *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactAddCapabilityDialog *editor, gpointer user_data );
+static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddCapabilityDialog *editor );
 static void     on_cancel_clicked( GtkButton *button, NactAddCapabilityDialog *editor );
 static void     on_ok_clicked( GtkButton *button, NactAddCapabilityDialog *editor );
 static void     on_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
@@ -99,6 +101,7 @@ static void     display_keyword( GtkTreeViewColumn *column, GtkCellRenderer *cel
 static void     display_description( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window );
 static void     display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window, guint column_id );
 static gboolean setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList *capabilities );
+static void     send_ok( NactAddCapabilityDialog *dialog );
 static void     validate_dialog( NactAddCapabilityDialog *editor );
 static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
@@ -389,6 +392,13 @@ on_base_runtime_init_dialog( NactAddCapabilityDialog *dialog, gpointer user_data
 
 		gtk_tree_model_foreach( GTK_TREE_MODEL( model ), ( GtkTreeModelForeachFunc ) setup_values_iter, dialog->private->already_used );
 
+		/* catch double-click */
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( listview ),
+				"button-press-event",
+				G_CALLBACK( on_button_press_event ));
+
 		base_window_signal_connect(
 				BASE_WINDOW( dialog ),
 				G_OBJECT( gtk_tree_view_get_selection( listview )),
@@ -431,6 +441,20 @@ on_base_all_widgets_showed( NactAddCapabilityDialog *dialog, gpointer user_data 
 	}
 }
 
+static gboolean
+on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddCapabilityDialog *dialog )
+{
+	gboolean stop = FALSE;
+
+	/* double-click of left button */
+	if( event->type == GDK_2BUTTON_PRESS && event->button == 1 ){
+		send_ok( dialog );
+		stop = TRUE;
+	}
+
+	return( stop );
+}
+
 static void
 on_cancel_clicked( GtkButton *button, NactAddCapabilityDialog *dialog )
 {
@@ -442,9 +466,7 @@ on_cancel_clicked( GtkButton *button, NactAddCapabilityDialog *dialog )
 static void
 on_ok_clicked( GtkButton *button, NactAddCapabilityDialog *dialog )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( dialog ));
-
-	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
+	send_ok( dialog );
 }
 
 static void
@@ -514,6 +536,14 @@ setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GS
 	g_free( keyword );
 
 	return( FALSE ); /* don't stop looping */
+}
+
+static void
+send_ok( NactAddCapabilityDialog *dialog )
+{
+	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( dialog ));
+
+	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 
 static void
