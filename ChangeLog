@@ -1,5 +1,8 @@
 2010-07-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-add-scheme-dialog.c (on_base_runtime_init_dialog):
+	Doucle-click validates the dialog.
+
 	* src/nact/nact-schemes-list.c (nact_schemes_list_create_model):
 	Scheme keyword and description are editable in user preferences.
 

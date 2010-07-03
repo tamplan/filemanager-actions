@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <gdk/gdkkeysyms.h>
+
 #include <api/na-core-utils.h>
 
 #include "nact-schemes-list.h"
@@ -67,11 +69,13 @@ static gchar   *base_get_ui_filename( const BaseWindow *dialog );
 static void     on_base_initial_load_dialog( NactAddSchemeDialog *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactAddSchemeDialog *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactAddSchemeDialog *editor, gpointer user_data );
+static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddSchemeDialog *dialog );
 static void     on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *editor );
 static void     on_ok_clicked( GtkButton *button, NactAddSchemeDialog *editor );
 static void     on_selection_changed( const gchar *scheme, gboolean used, NactAddSchemeDialog *dialog );
-static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static void     send_ok( NactAddSchemeDialog *dialog );
 static void     validate_dialog( NactAddSchemeDialog *editor );
+static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 GType
 nact_add_scheme_dialog_get_type( void )
@@ -315,6 +319,13 @@ on_base_runtime_init_dialog( NactAddSchemeDialog *dialog, gpointer user_data )
 
 		nact_schemes_list_setup_values( BASE_WINDOW( dialog ), dialog->private->already_used );
 
+		/* catch double-click */
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( listview ),
+				"button-press-event",
+				G_CALLBACK( on_button_press_event ));
+
 		/* dialog buttons
 		 */
 		base_window_signal_connect_by_name(
@@ -345,6 +356,20 @@ on_base_all_widgets_showed( NactAddSchemeDialog *dialog, gpointer user_data )
 	}
 }
 
+static gboolean
+on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddSchemeDialog *dialog )
+{
+	gboolean stop = FALSE;
+
+	/* double-click of left button */
+	if( event->type == GDK_2BUTTON_PRESS && event->button == 1 ){
+		send_ok( dialog );
+		stop = TRUE;
+	}
+
+	return( stop );
+}
+
 static void
 on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *dialog )
 {
@@ -356,9 +381,7 @@ on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *dialog )
 static void
 on_ok_clicked( GtkButton *button, NactAddSchemeDialog *dialog )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( dialog ));
-
-	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
+	send_ok( dialog );
 }
 
 /*
@@ -372,6 +395,14 @@ on_selection_changed( const gchar *scheme, gboolean used, NactAddSchemeDialog *d
 
 	button = base_window_get_widget( BASE_WINDOW( dialog ), "OKButton" );
 	gtk_widget_set_sensitive( button, !used );
+}
+
+static void
+send_ok( NactAddSchemeDialog *dialog )
+{
+	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( dialog ));
+
+	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 
 static void

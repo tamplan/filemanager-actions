@@ -499,8 +499,6 @@ Parameter 	Description
 
 - 2010-07-02: bug 'wipe selected' action has a '%M' parameter which should have been converted at import time
 
-- 2010-07-02: adding a scheme from defaults: double-click should select and validate the scheme
-
 - 2010-07-02: adding a capability: double-click should select and validate the capability
 
 - 2010-07-02: legend dialog: may be closed with the legend button kept toggled -> inconsistency
