@@ -93,6 +93,7 @@ static void       legend_dialog_show( NactICommandTab *instance );
 static void       legend_dialog_hide( NactICommandTab *instance );
 static void       on_label_changed( GtkEntry *entry, NactICommandTab *instance );
 static void       on_legend_clicked( GtkButton *button, NactICommandTab *instance );
+static gboolean   on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, NactICommandTab *instance );
 static void       on_parameters_changed( GtkEntry *entry, NactICommandTab *instance );
 static void       on_path_browse( GtkButton *button, NactICommandTab *instance );
 static void       on_path_changed( GtkEntry *entry, NactICommandTab *instance );
@@ -209,6 +210,7 @@ void
 nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 {
 	static const gchar *thisfn = "nact_icommand_tab_runtime_init_toplevel";
+	GtkWindow *legend_dialog;
 	GtkWidget *label_entry, *path_entry, *parameters_entry, *wdir_entry;
 	GtkButton *path_button, *legend_button, *wdir_button;
 
@@ -252,6 +254,13 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 				G_OBJECT( legend_button ),
 				"clicked",
 				G_CALLBACK( on_legend_clicked ));
+
+		legend_dialog = get_legend_dialog( instance );
+		base_window_signal_connect(
+				BASE_WINDOW( instance ),
+				G_OBJECT( legend_dialog ),
+				"delete-event",
+				G_CALLBACK( on_legend_dialog_deleted ));
 
 		wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
 		base_window_signal_connect(
@@ -542,6 +551,14 @@ on_legend_clicked( GtkButton *button, NactICommandTab *instance )
 	} else {
 		legend_dialog_hide( instance );
 	}
+}
+
+static gboolean
+on_legend_dialog_deleted( GtkWidget *dialog, GdkEvent *event, NactICommandTab *instance )
+{
+	/*g_debug( "on_legend_dialog_deleted" );*/
+	legend_dialog_hide( instance );
+	return( TRUE );
 }
 
 static void

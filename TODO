@@ -499,5 +499,3 @@ Parameter 	Description
 
 - 2010-07-02: bug 'wipe selected' action has a '%M' parameter which should have been converted at import time
 
-- 2010-07-02: legend dialog: may be closed with the legend button kept toggled -> inconsistency
-
