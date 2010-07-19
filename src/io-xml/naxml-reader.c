@@ -746,7 +746,7 @@ naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, c
 		read_done_object_profile( NAXML_READER( reader_data ), NA_OBJECT_PROFILE( object ));
 	}
 
-	g_debug( "quitting naxml_read_done for %s at %p", G_OBJECT_TYPE_NAME( object ), ( void * ) object );
+	g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
 }
 
 /*
