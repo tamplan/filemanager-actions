@@ -1,3 +1,12 @@
+2010-07-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-object-item.h:
+	* src/core/na-object-item.c (na_object_item_factory_write_start):
+	Function is renamed as na_object_item_rebuild_children_slist().
+
+	* src/core/na-object-action.c:
+	* src/core/na-object-menu.c: Updated accordingly.
+
 2010-07-05 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-icommand-tab.c (nact_icommand_tab_runtime_init_toplevel):

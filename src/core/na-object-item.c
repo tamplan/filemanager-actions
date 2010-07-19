@@ -74,7 +74,6 @@ static void   object_copy( NAObject*target, const NAObject *source, gboolean rec
 static gchar *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
 static void   copy_children( NAObjectItem *target, const NAObjectItem *source );
-static void   rebuild_children_slist( NAObjectItem *item );
 
 GType
 na_object_item_get_type( void )
@@ -697,15 +696,35 @@ na_object_item_unref_items_rec( GList *items )
 }
 
 /**
- * na_object_item_factory_write_start:
+ * na_object_item_rebuild_children_slist:
  * @item: this #NAObjectItem-derived object.
  *
  * Rebuild the string list of children.
  */
 void
-na_object_item_factory_write_start( NAObjectItem *item )
+na_object_item_rebuild_children_slist( NAObjectItem *item )
 {
-	rebuild_children_slist( item );
+	GSList *slist;
+	GList *subitems, *it;
+	gchar *id;
+
+	na_object_set_items_slist( item, NULL );
+
+	if( !item->private->dispose_has_run ){
+
+		subitems = na_object_get_items( item );
+		slist = NULL;
+
+		for( it = subitems ; it ; it = it->next ){
+			id = na_object_get_id( it->data );
+			slist = g_slist_prepend( slist, id );
+		}
+		slist = g_slist_reverse( slist );
+
+		na_object_set_items_slist( item, slist );
+
+		na_core_utils_slist_free( slist );
+	}
 }
 
 static void
@@ -732,29 +751,4 @@ copy_children( NAObjectItem *target, const NAObjectItem *source )
 
 	tgt_children = g_list_reverse( tgt_children );
 	na_object_set_items( target, tgt_children );
-}
-
-static void
-rebuild_children_slist( NAObjectItem *item )
-{
-	GSList *slist;
-	GList *subitems, *it;
-	gchar *id;
-
-	slist = NULL;
-
-	if( !item->private->dispose_has_run ){
-
-		subitems = na_object_get_items( item );
-
-		for( it = subitems ; it ; it = it->next ){
-			id = na_object_get_id( it->data );
-			slist = g_slist_prepend( slist, id );
-		}
-		slist = g_slist_reverse( slist );
-
-		na_object_set_items_slist( item, slist );
-
-		na_core_utils_slist_free( slist );
-	}
 }

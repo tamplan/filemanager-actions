@@ -92,7 +92,7 @@ void        na_object_item_count_items( GList *items, gint *menus, gint *actions
 void        na_object_item_unref_items( GList *items );
 void        na_object_item_unref_items_rec( GList *items );
 
-void        na_object_item_factory_write_start( NAObjectItem *item );
+void        na_object_item_rebuild_children_slist( NAObjectItem *item );
 
 G_END_DECLS
 

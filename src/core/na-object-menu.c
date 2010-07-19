@@ -338,7 +338,7 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 static guint
 ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	na_object_item_factory_write_start( NA_OBJECT_ITEM( instance ));
+	na_object_item_rebuild_children_slist( NA_OBJECT_ITEM( instance ));
 
 	return( NA_IIO_PROVIDER_CODE_OK );
 }
