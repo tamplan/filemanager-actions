@@ -221,7 +221,7 @@ nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, co
 		read_done_profile_attach_profile( provider, NA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, messages );
 	}
 
-	g_debug( "quitting nagp_read_done for %s at %p", G_OBJECT_TYPE_NAME( object ), ( void * ) object );
+	g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
 }
 
 static void
