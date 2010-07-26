@@ -233,7 +233,7 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_version = ifactory_provider_get_version;
-	iface->read_start = NULL;
+	iface->read_start = nadp_reader_ifactory_provider_read_start;
 	iface->read_data = nadp_reader_ifactory_provider_read_data;
 	iface->read_done = nadp_reader_ifactory_provider_read_done;
 	iface->write_start = nadp_writer_ifactory_provider_write_start;

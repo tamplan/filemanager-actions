@@ -323,6 +323,35 @@ free_desktop_paths( GList *paths )
 }
 
 /*
+ * at this time, the object has been allocated and its id has been set
+ * read here the subitems key, which may be 'Profiles' or 'ItemsList'
+ * depending of the exact class of the NAObjectItem
+ */
+void
+nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages )
+{
+	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_start";
+	gboolean writable;
+
+	g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
+			thisfn,
+			( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
+			( void * ) reader_data,
+			( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
+			( void * ) messages );
+
+	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
+	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
+	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
+
+	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
+		if( NA_IS_OBJECT_ITEM( serializable )){
+			read_subitems_key( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
+		}
+	}
+}
+
+/*
  * reading any data from a desktop file requires:
  * - a NadpDesktopFile object which has been initialized with the .desktop file
  *   -> has been attached to the NAObjectItem in get_item() above
@@ -460,7 +489,6 @@ nadp_reader_ifactory_provider_read_done( const NAIFactoryProvider *reader, void 
 		if( NA_IS_OBJECT_ITEM( serializable )){
 			writable = read_done_desktop_is_writable( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
 			na_object_set_readonly( serializable, !writable );
-			read_subitems_key( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
 		}
 
 		if( NA_IS_OBJECT_ACTION( serializable )){

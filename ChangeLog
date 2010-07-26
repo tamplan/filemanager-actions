@@ -1,3 +1,14 @@
+2010-07-26 Pierre Wieser <pwieser@trychlos.org>
+
+	Move the reading of the subitems key for the desktop I/O provider
+	from 'read_done' to 'read_start'.
+
+	* src/io-desktop/nadp-reader.c:
+	* src/io-desktop/nadp-reader.h
+	(nadp_reader_ifactory_provider_read_start): New function.
+
+	* src/io-desktop/nadp-desktop-provider.c: Updated accordingly.
+
 2010-07-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-object-item.h:
