@@ -155,7 +155,7 @@ nact_icapabilities_tab_initial_load_toplevel( NactICapabilitiesTab *instance )
 				( pset_filters ) set_capabilities,
 				( pon_add_cb ) on_add_clicked,
 				MATCH_LIST_MUST_MATCH_ALL_OF,
-				_( "Capability filter" ));
+				_( "Capability filter" ), FALSE );
 	}
 }
 

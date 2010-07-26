@@ -110,7 +110,8 @@ nact_match_list_create_model( BaseWindow *window,
 		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
 		pget_filters pget, pset_filters pset, pon_add_cb pon_add,
 		guint match_header,
-		const gchar *item_header )
+		const gchar *item_header,
+		gboolean editable_filter )
 {
 	MatchListStr *data;
 	GtkListStore *model;
@@ -129,7 +130,8 @@ nact_match_list_create_model( BaseWindow *window,
 	data->pon_add = pon_add;
 	data->match_header = match_header;
 	data->item_header = g_strdup( item_header );
-	data->editable = FALSE;
+	data->editable_filter = editable_filter;
+	data->editable_item = FALSE;
 	data->sort_column = 0;
 	data->sort_order = 0;
 	g_object_set_data( G_OBJECT( window ), tab_name, data );
@@ -158,8 +160,7 @@ nact_match_list_create_model( BaseWindow *window,
 	radio_cell = gtk_cell_renderer_toggle_new();
 	gtk_cell_renderer_toggle_set_radio( GTK_CELL_RENDERER_TOGGLE( radio_cell ), TRUE );
 	column = gtk_tree_view_column_new_with_attributes(
-			/* i18n: label of the header of a column which let the user select a negative filter
-			 */
+			/* i18n: label of the header of a column which let the user select a negative filter */
 			_( "Must not match any of" ),
 			radio_cell,
 			"active", MUST_NOT_MATCH_COLUMN,
@@ -205,13 +206,15 @@ nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
 			G_CALLBACK( on_filter_clicked ),
 			data );
 
-	renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( renderers->data ),
-			"edited",
-			G_CALLBACK( on_filter_edited ),
-			data );
+	if( data->editable_filter ){
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
+		base_window_signal_connect_with_data(
+				window,
+				G_OBJECT( renderers->data ),
+				"edited",
+				G_CALLBACK( on_filter_edited ),
+				data );
+	}
 
 	column = gtk_tree_view_get_column( data->listview, MUST_MATCH_COLUMN );
 	base_window_signal_connect_with_data(
@@ -321,7 +324,7 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
 	g_return_if_fail( data != NULL );
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &data->editable );
+	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &data->editable_item );
 
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( data->window ), data->tab_id, enable_tab );
@@ -342,10 +345,10 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	}
 
 	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
-	nact_gtk_utils_set_editable( GTK_OBJECT( column ), data->editable );
+	nact_gtk_utils_set_editable( GTK_OBJECT( column ), data->editable_item && data->editable_filter );
 
-	nact_gtk_utils_set_editable( GTK_OBJECT( data->addbutton ), data->editable );
-	nact_gtk_utils_set_editable( GTK_OBJECT( data->removebutton ), data->editable );
+	nact_gtk_utils_set_editable( GTK_OBJECT( data->addbutton ), data->editable_item );
+	nact_gtk_utils_set_editable( GTK_OBJECT( data->removebutton ), data->editable_item );
 	gtk_widget_set_sensitive( data->removebutton, FALSE );
 
 	st_on_selection_change = FALSE;
@@ -518,8 +521,10 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListStr *data 
 	stop = FALSE;
 
 	if( event->keyval == GDK_F2 ){
-		edit_inline( data );
-		stop = TRUE;
+		if( data->editable_filter ){
+			edit_inline( data );
+			stop = TRUE;
+		}
 	}
 
 	if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
@@ -651,7 +656,7 @@ static void
 on_selection_changed( GtkTreeSelection *selection, MatchListStr *data )
 {
 	gtk_widget_set_sensitive( data->removebutton,
-			data->editable && gtk_tree_selection_count_selected_rows( selection ) > 0 );
+			data->editable_item && gtk_tree_selection_count_selected_rows( selection ) > 0 );
 }
 
 static void

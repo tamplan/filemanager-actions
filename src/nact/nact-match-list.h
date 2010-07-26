@@ -61,7 +61,9 @@ typedef struct {
 	pon_add_cb       pon_add;
 	guint            match_header;
 	gchar           *item_header;
-	gboolean         editable;
+	gboolean         editable_filter;
+	/* dynamic data */
+	gboolean         editable_item;
 	guint            sort_column;
 	guint            sort_order;
 }
@@ -72,7 +74,8 @@ void    nact_match_list_create_model        ( BaseWindow *window, const gchar *t
 			GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
 			pget_filters pget, pset_filters pset, pon_add_cb pon_add,
 			guint match_header,
-			const gchar *item_header );
+			const gchar *item_header,
+			gboolean editable_filter );
 
 void    nact_match_list_init_view           ( BaseWindow *window, const gchar *tab_name );
 

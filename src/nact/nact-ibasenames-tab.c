@@ -162,7 +162,7 @@ nact_ibasenames_tab_initial_load_toplevel( NactIBasenamesTab *instance )
 				( pset_filters ) set_basenames,
 				NULL,
 				MATCH_LIST_MUST_MATCH_ONE_OF,
-				_( "Basename filter" ));
+				_( "Basename filter" ), TRUE );
 	}
 }
 

@@ -160,7 +160,7 @@ nact_imimetypes_tab_initial_load_toplevel( NactIMimetypesTab *instance )
 				( pset_filters ) set_mimetypes,
 				NULL,
 				MATCH_LIST_MUST_MATCH_ONE_OF,
-				_( "Mimetype filter" ));
+				_( "Mimetype filter" ), TRUE );
 	}
 }
 

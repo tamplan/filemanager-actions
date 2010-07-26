@@ -167,7 +167,7 @@ nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance )
 				( pset_filters ) set_folders,
 				NULL,
 				MATCH_LIST_MUST_MATCH_ONE_OF,
-				_( "Folder filter" ));
+				_( "Folder filter" ), TRUE );
 	}
 }
 
