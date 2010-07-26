@@ -34,6 +34,7 @@
 
 #include <glib/gi18n.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
 #include "nact-main-tab.h"
@@ -223,14 +224,15 @@ on_add_clicked( GtkButton *button, BaseWindow *window )
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), NULL );
 
 	if( context ){
-		capabilities = na_object_get_capabilities( context );
+		capabilities = nact_match_list_get_rows( window, ITAB_NAME );
 		new_cap = nact_add_capability_dialog_run( window, capabilities );
-		g_debug( "nact_icapabilities_tab_on_add_clicked: new_cap=%s", new_cap );
 
 		if( new_cap ){
 			nact_match_list_insert_row( window, ITAB_NAME, new_cap, FALSE, FALSE );
 			g_free( new_cap );
 		}
+
+		na_core_utils_slist_free( capabilities );
 	}
 }
 

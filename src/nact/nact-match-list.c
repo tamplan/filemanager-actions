@@ -67,6 +67,8 @@ static ColumnHeaderStruct st_match_headers[] = {
 
 static gboolean st_on_selection_change = FALSE;
 
+static gboolean     get_rows_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList **filters );
+
 static void         on_add_filter_clicked( GtkButton *button, MatchListStr *data );
 static void         on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
 static void         on_filter_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, MatchListStr *data );
@@ -375,6 +377,42 @@ nact_match_list_insert_row( BaseWindow *window, const gchar *tab_name, const gch
 	g_return_if_fail( data != NULL );
 
 	insert_new_row_data( data, filter, match, not_match );
+}
+
+/**
+ * nact_match_list_get_rows:
+ * @window: the #BaseWindow window which contains the view.
+ * @tab_name: a string constant which identifies this page.
+ *
+ * Returns the list of rows as a newly allocated string list which should
+ * be na_core_utils_slist_free() by the caller.
+ */
+GSList *
+nact_match_list_get_rows( BaseWindow *window, const gchar *tab_name )
+{
+	GSList *filters;
+	MatchListStr *data;
+	GtkTreeModel *model;
+
+	filters = NULL;
+	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
+	g_return_val_if_fail( data != NULL, NULL );
+
+	model = gtk_tree_view_get_model( data->listview );
+	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) get_rows_iter, &filters );
+
+	return( filters );
+}
+
+static gboolean
+get_rows_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList **filters )
+{
+	gchar *keyword;
+
+	gtk_tree_model_get( model, iter, ITEM_COLUMN, &keyword, -1 );
+	*filters = g_slist_prepend( *filters, keyword );
+
+	return( FALSE ); /* don't stop looping */
 }
 
 /**

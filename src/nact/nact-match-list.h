@@ -67,22 +67,24 @@ typedef struct {
 }
 	MatchListStr;
 
-void  nact_match_list_create_model        ( BaseWindow *window, const gchar *tab_name,
-		guint tab_id,
-		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
-		pget_filters pget, pset_filters pset, pon_add_cb pon_add,
-		guint match_header,
-		const gchar *item_header );
+void    nact_match_list_create_model        ( BaseWindow *window, const gchar *tab_name,
+			guint tab_id,
+			GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
+			pget_filters pget, pset_filters pset, pon_add_cb pon_add,
+			guint match_header,
+			const gchar *item_header );
 
-void  nact_match_list_init_view           ( BaseWindow *window, const gchar *tab_name );
+void    nact_match_list_init_view           ( BaseWindow *window, const gchar *tab_name );
 
-void  nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
-		guint count );
+void    nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
+			guint count );
 
-void  nact_match_list_insert_row          ( BaseWindow *window, const gchar *tab_name,
-		const gchar *filter, gboolean match, gboolean not_match );
+void    nact_match_list_insert_row          ( BaseWindow *window, const gchar *tab_name,
+			const gchar *filter, gboolean match, gboolean not_match );
 
-void  nact_match_list_dispose             ( BaseWindow *window, const gchar *tab_name );
+GSList *nact_match_list_get_rows            ( BaseWindow *window, const gchar *tab_name );
+
+void    nact_match_list_dispose             ( BaseWindow *window, const gchar *tab_name );
 
 G_END_DECLS
 

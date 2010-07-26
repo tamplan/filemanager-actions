@@ -101,6 +101,7 @@ static void     display_keyword( GtkTreeViewColumn *column, GtkCellRenderer *cel
 static void     display_description( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window );
 static void     display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window, guint column_id );
 static gboolean setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList *capabilities );
+static void     try_for_send_ok( NactAddCapabilityDialog *dialog );
 static void     send_ok( NactAddCapabilityDialog *dialog );
 static void     validate_dialog( NactAddCapabilityDialog *editor );
 static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
@@ -448,7 +449,7 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddCapabili
 
 	/* double-click of left button */
 	if( event->type == GDK_2BUTTON_PRESS && event->button == 1 ){
-		send_ok( dialog );
+		try_for_send_ok( dialog );
 		stop = TRUE;
 	}
 
@@ -527,7 +528,7 @@ setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GS
 
 	if( na_core_utils_slist_find_negated( capabilities, keyword )){
 		/* i18n: add a comment when a capability is already used by current item */
-		new_description = g_strdup_printf( _( "%s (already used)"), description );
+		new_description = g_strdup_printf( _( "%s (already inserted)"), description );
 		gtk_list_store_set( GTK_LIST_STORE( model ), iter, CAPABILITY_DESC_COLUMN, new_description, CAPABILITY_ALREADY_USED_COLUMN, TRUE, -1 );
 		g_free( new_description );
 	}
@@ -536,6 +537,18 @@ setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GS
 	g_free( keyword );
 
 	return( FALSE ); /* don't stop looping */
+}
+
+static void
+try_for_send_ok( NactAddCapabilityDialog *dialog )
+{
+	GtkWidget *button;
+
+	button = base_window_get_widget( BASE_WINDOW( dialog ), "OKButton" );
+
+	if( gtk_widget_get_sensitive( button )){
+		send_ok( dialog );
+	}
 }
 
 static void

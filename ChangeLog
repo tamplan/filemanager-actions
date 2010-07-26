@@ -1,5 +1,16 @@
 2010-07-26 Pierre Wieser <pwieser@trychlos.org>
 
+	Prevent a capability to be inserted twice.
+
+	* src/nact/nact-add-capability-dialog.c (on_button_press_event):
+	On double-clic, check for OK sensitivity.
+
+	* src/nact/nact-icapabilities-tab.c (on_add_clicked):
+	Provide the dialog with our current content rather than current	capabilities.
+
+	* src/nact/nact-match-list.c:
+	* src/nact/nact-match-list.h (nact_match_list_get_rows): New function.
+
 	Fix parameters conversion to v3.
 
 	* src/core/na-object-action.c (icontext_is_candidate):
