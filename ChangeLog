@@ -1,5 +1,8 @@
 2010-07-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-match-list.c (on_filter_edited):
+	Add g_return_if_fail checks on data and context.
+
 	Prevent of inline edition of capabilities.
 
 	* src/nact/nact-match-list.c:

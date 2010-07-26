@@ -397,11 +397,11 @@ nact_match_list_get_rows( BaseWindow *window, const gchar *tab_name )
 	MatchListStr *data;
 	GtkTreeModel *model;
 
-	filters = NULL;
 	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
 	g_return_val_if_fail( data != NULL, NULL );
 
 	model = gtk_tree_view_get_model( data->listview );
+	filters = NULL;
 	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) get_rows_iter, &filters );
 
 	return( filters );
@@ -470,47 +470,49 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 	gchar *to_add, *to_remove;
 	GSList *filters;
 
+	g_return_if_fail( data->editable_filter );
+
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
+	g_return_if_fail( context && NA_IS_ICONTEXT( context ));
 
-	if( context ){
-		model = gtk_tree_view_get_model( data->listview );
-		path = gtk_tree_path_new_from_string( path_str );
-		gtk_tree_model_get_iter( model, &iter, path );
-		gtk_tree_path_free( path );
+	model = gtk_tree_view_get_model( data->listview );
 
-		gtk_tree_model_get( model, &iter,
-				ITEM_COLUMN, &old_text,
-				MUST_MATCH_COLUMN, &must_match,
-				MUST_NOT_MATCH_COLUMN, &must_not_match,
-				-1 );
+	path = gtk_tree_path_new_from_string( path_str );
+	gtk_tree_model_get_iter( model, &iter, path );
+	gtk_tree_path_free( path );
 
-		gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ITEM_COLUMN, text, -1 );
+	gtk_tree_model_get( model, &iter,
+			ITEM_COLUMN, &old_text,
+			MUST_MATCH_COLUMN, &must_match,
+			MUST_NOT_MATCH_COLUMN, &must_not_match,
+			-1 );
 
-		filters = ( *data->pget )( context );
+	gtk_list_store_set( GTK_LIST_STORE( model ), &iter, ITEM_COLUMN, text, -1 );
 
-		if( filters ){
-			to_remove = g_strdup( old_text );
-			filters = na_core_utils_slist_remove_ascii( filters, to_remove );
-			g_free( to_remove );
-			to_remove = g_strdup_printf( "!%s", old_text );
-			filters = na_core_utils_slist_remove_ascii( filters, to_remove );
-			g_free( to_remove );
-		}
+	filters = ( *data->pget )( context );
 
-		if( must_match ){
-			filters = g_slist_prepend( filters, g_strdup( text ));
-
-		} else if( must_not_match ){
-			to_add = g_strdup_printf( "!%s", text );
-			filters = g_slist_prepend( filters, to_add );
-		}
-
-		( *data->pset )( context, filters );
-		na_core_utils_slist_free( filters );
-		g_free( old_text );
-
-		g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	if( filters ){
+		to_remove = g_strdup( old_text );
+		filters = na_core_utils_slist_remove_ascii( filters, to_remove );
+		g_free( to_remove );
+		to_remove = g_strdup_printf( "!%s", old_text );
+		filters = na_core_utils_slist_remove_ascii( filters, to_remove );
+		g_free( to_remove );
 	}
+
+	if( must_match ){
+		filters = g_slist_prepend( filters, g_strdup( text ));
+
+	} else if( must_not_match ){
+		to_add = g_strdup_printf( "!%s", text );
+		filters = g_slist_prepend( filters, to_add );
+	}
+
+	( *data->pset )( context, filters );
+	na_core_utils_slist_free( filters );
+	g_free( old_text );
+
+	g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
 }
 
 static gboolean
