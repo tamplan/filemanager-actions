@@ -460,14 +460,14 @@ na_core_utils_slist_to_text( GSList *strlist )
 GSList *
 na_core_utils_slist_setup_element( GSList *list, const gchar *element, gboolean set )
 {
-	gboolean exist;
+	guint count;
 
-	exist = na_core_utils_slist_find( list, element );
+	count = na_core_utils_slist_count( list, element );
 
-	if( set && !exist ){
+	if( set && count == 0 ){
 		list = g_slist_prepend( list, g_strdup( element ));
 	}
-	if( !set && exist ){
+	if( !set && count > 0 ){
 		list = na_core_utils_slist_remove_ascii( list, element );
 	}
 
@@ -475,27 +475,30 @@ na_core_utils_slist_setup_element( GSList *list, const gchar *element, gboolean 
 }
 
 /**
- * na_core_utils_slist_find:
+ * na_core_utils_slist_count:
  * @list: the GSList of strings to be searched.
  * @str: the searched string.
  *
  * Search for a string in a string list.
  *
- * Returns: %TRUE if the string has been found in list.
+ * Returns: the count of @ßtr in @list list.
  */
-gboolean
-na_core_utils_slist_find( GSList *list, const gchar *str )
+guint
+na_core_utils_slist_count( GSList *list, const gchar *str )
 {
+	guint count;
 	GSList *il;
+
+	count = 0;
 
 	for( il = list ; il ; il = il->next ){
 		const gchar *istr = ( const gchar * ) il->data;
 		if( !na_core_utils_str_collate( str, istr )){
-			return( TRUE );
+			count += 1;
 		}
 	}
 
-	return( FALSE );
+	return( count );
 }
 
 /**
@@ -547,14 +550,14 @@ na_core_utils_slist_are_equal( GSList *first, GSList *second )
 
 	for( il = first ; il ; il = il->next ){
 		const gchar *str = ( const gchar * ) il->data;
-		if( !na_core_utils_slist_find( second, str )){
+		if( na_core_utils_slist_count( second, str ) == 0 ){
 			return( FALSE );
 		}
 	}
 
 	for( il = second ; il ; il = il->next ){
 		const gchar *str = ( const gchar * ) il->data;
-		if( !na_core_utils_slist_find( first, str )){
+		if( na_core_utils_slist_count( first, str ) == 0 ){
 			return( FALSE );
 		}
 	}

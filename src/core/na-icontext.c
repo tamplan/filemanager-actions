@@ -448,9 +448,9 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 
 	if( environment && strlen( environment )){
 		if( only_in && g_slist_length( only_in )){
-			ok = na_core_utils_slist_find( only_in, environment );
+			ok = ( na_core_utils_slist_count( only_in, environment ) > 0 );
 		} else if( not_in && g_slist_length( not_in )){
-			ok = !na_core_utils_slist_find( not_in, environment );
+			ok = ( na_core_utils_slist_count( not_in, environment ) == 0 );
 		}
 	}
 

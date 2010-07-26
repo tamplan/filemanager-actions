@@ -491,7 +491,7 @@ nadp_writer_ifactory_provider_write_done( const NAIFactoryProvider *provider, vo
 		na_core_utils_slist_dump( profile_groups );
 
 		for( ip = profile_groups ; ip ; ip = ip->next ){
-			if( !na_core_utils_slist_find( subitems, ( const gchar * ) ip->data )){
+			if( na_core_utils_slist_count( subitems, ( const gchar * ) ip->data ) == 0 ){
 				g_debug( "nadp_writer_ifactory_provider_write_done: deleting (removed) profile %s", ( const gchar * ) ip->data );
 				nadp_desktop_file_remove_profile( NADP_DESKTOP_FILE( writer_data ), ( const gchar * ) ip->data );
 			}

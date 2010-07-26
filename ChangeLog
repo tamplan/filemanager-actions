@@ -1,5 +1,13 @@
 2010-07-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_slist_find):
+	Moved to na_core_utils_slist_count.
+
+	* src/core/na-icontext.c (is_candidate_for_show_in):
+	* src/io-desktop/nadp-writer.c
+	(nadp_writer_ifactory_provider_write_done): Updated accordingly.
+
 	* src/nact/nact-match-list.c (on_filter_edited):
 	Add g_return_if_fail checks on data and context.
 
