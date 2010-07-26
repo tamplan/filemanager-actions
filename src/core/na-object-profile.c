@@ -86,6 +86,10 @@ static guint        ifactory_object_write_done( NAIFactoryObject *instance, cons
 static void         icontext_iface_init( NAIContextInterface *iface );
 static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
 
+static gboolean     convert_pre_v3_parameters( NAObjectProfile *profile );
+static gboolean     convert_pre_v3_parameters_str( gchar *str );
+static gboolean     convert_pre_v3_multiple( NAObjectProfile *profile );
+static gboolean     convert_pre_v3_isfiledir( NAObjectProfile *profile );
 static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
 
@@ -328,7 +332,27 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
-	g_debug( "na_object_profile_ifactory_object_read_done: profile=%p", ( void * ) instance );
+	static const gchar *thisfn = "na_object_profile_ifactory_object_read_done";
+	NAObjectAction *action;
+	guint iversion;
+
+	g_debug( "%s: profile=%p", thisfn, ( void * ) instance );
+
+	/* converts pre-v3 data
+	 */
+	action = NA_OBJECT_ACTION( na_object_get_parent( instance ));
+	iversion = na_object_get_iversion( action );
+	g_debug( "%s: iversion=%d", thisfn, iversion );
+
+	if( iversion < 3 ){
+
+		if( convert_pre_v3_parameters( NA_OBJECT_PROFILE( instance )) ||
+			convert_pre_v3_multiple( NA_OBJECT_PROFILE( instance )) ||
+			convert_pre_v3_isfiledir( NA_OBJECT_PROFILE( instance ))){
+
+				na_object_set_iversion( action, 3 );
+		}
+	}
 
 	/* prepare the context after the reading
 	 */
@@ -359,6 +383,198 @@ static gboolean
 icontext_is_candidate( NAIContext *object, guint target, GList *selection )
 {
 	return( TRUE );
+}
+
+/*
+ * starting wih v3, parameters are relabeled
+ *   pre-v3 parameters					post-v3 parameters
+ *   ----------------------------		-----------------------------------
+ *   									%b: (first) basename	(new)
+ *   									%B: list of basenames	(was %m)
+ *   									%c: count				(new)
+ * 	 %d: (first) base directory			...................		(unchanged)
+ * 										%D: list of base dir	(new)
+ *   %f: (first) pathname				...................		(unchanged)
+ *   									%F: list of pathnames	(was %M)
+ *   %h: (first) hostname				...................		(unchanged)
+ *   %m: list of basenames	-> %B		-						(removed)
+ *   %M: list of pathnames	-> %F		-						(removed)
+ *   									%n: (first) username	(was %U)
+ *   %p: (first) port number			...................		(unchanged)
+ *   %R: list of URIs		-> %U		-						(removed)
+ *   %s: (first) scheme					...................		(unchanged)
+ *   %u: (first) URI					...................		(unchanged)
+ *   %U: (first) username	-> %n		%U: list of URIs		(was %R)
+ *   									%w: (first) basename w/o ext.	(new)
+ *   									%W: list of basenames w/o ext.	(new)
+ *   									%x: (first) extension	(new)
+ *   									%X: list of extensions	(new)
+ *   %%: %								...................		(unchanged)
+ *
+ * For pre-v3 items,
+ * - substitute %m with %B
+ * - substitute %M with %F
+ * - substitute %U with %n
+ * - substitute %R with %U
+ *
+ * Note that pre-v3 items only have parameters in the command and path fields.
+ * Are only located in 'profile' objects.
+ * Are only found in GConf or XML providers, as .desktop files have been
+ * simultaneously introduced.
+ *
+ * As a recall of the dynamics of the reading when loading an action:
+ *  - na_object_action_read_done: set action defaults
+ *  - nagp_reader_read_done: read profiles
+ *     > nagp_reader_read_start: attach profile to its parent
+ *     >  na_object_profile_read_done: convert old parameters
+ *
+ * So, when converting v2 to v3 parameters in a v2 profile,
+ * action already has its default values (including iversion=3)
+ */
+static gboolean
+convert_pre_v3_parameters( NAObjectProfile *profile )
+{
+	gboolean path_changed, parms_changed;
+
+	gchar *path = na_object_get_path( profile );
+	path_changed = convert_pre_v3_parameters_str( path );
+	if( path_changed ){
+		na_object_set_path( profile, path );
+	}
+	g_free( path );
+
+	gchar *parms = na_object_get_parameters( profile );
+	parms_changed = convert_pre_v3_parameters_str( parms );
+	if( parms_changed ){
+		na_object_set_parameters( profile, parms );
+	}
+	g_free( parms );
+
+	return( path_changed || parms_changed );
+}
+
+static gboolean
+convert_pre_v3_parameters_str( gchar *str )
+{
+	gboolean changed;
+	gchar *iter = str;
+
+	changed = FALSE;
+	while( iter != NULL &&
+			strlen( iter ) > 0 &&
+			( iter = g_strstr_len( iter, strlen( iter ), "%" )) != NULL ){
+
+		g_debug( "convert_pre_v3_parameters_str: iter[1]='%c'", iter[1] );
+		switch( iter[1] ){
+
+			/* %m (list of basenames) becomes %B
+			 */
+			case 'm':
+				iter[1] = 'B';
+				changed = TRUE;
+				break;
+
+			/* %M (list of filenames) becomes %F
+			 */
+			case 'M':
+				iter[1] = 'F';
+				changed = TRUE;
+				break;
+
+			/* %U ((first) username) becomes %n
+			 */
+			case 'U':
+				iter[1] = 'n';
+				changed = TRUE;
+				break;
+
+			/* %R (list of URIs) becomes %U
+			 */
+			case 'R':
+				iter[1] = 'U';
+				changed = TRUE;
+				break;
+		}
+
+		iter += 2;
+	}
+
+	return( changed );
+}
+
+/*
+ * default changes from accept_multiple=false
+ *                   to selection_count>0
+ */
+static gboolean
+convert_pre_v3_multiple( NAObjectProfile *profile )
+{
+	gboolean accept_multiple;
+	gchar *selection_count;
+
+	accept_multiple = na_object_is_multiple( profile );
+	selection_count = g_strdup( accept_multiple ? ">0" : "=1" );
+	na_object_set_selection_count( profile, selection_count );
+	g_free( selection_count );
+
+	return( TRUE );
+}
+
+/*
+ * we may have file=true  and dir=false -> only files          -> all/allfiles
+ *             file=false and dir=true  -> only dirs           -> inode/directory
+ *             file=true  and dir=true  -> both files and dirs -> all/all
+ *
+ * we try to replace this with the corresponding mimetype, but only if
+ * current mimetype is '*' (or * / * or all/all)
+ */
+static gboolean
+convert_pre_v3_isfiledir( NAObjectProfile *profile )
+{
+	gboolean converted;
+	gboolean isfile, isdir;
+	GSList *mimetypes;
+
+	converted = FALSE;
+
+	if( na_icontext_is_all_mimetypes( NA_ICONTEXT( profile ))){
+		converted = TRUE;
+		mimetypes = NULL;
+
+		isfile = na_object_is_file( profile );
+		isdir = na_object_is_dir( profile );
+
+		if( isfile ){
+			if( isdir ){
+				/* both file and dir -> do not modify mimetypes
+				 */
+				converted = FALSE;
+			} else {
+				/* files only
+				 */
+				mimetypes = g_slist_prepend( NULL, g_strdup( "all/allfiles" ));
+			}
+		} else {
+			if( isdir ){
+				/* dir only
+				 */
+				mimetypes = g_slist_prepend( NULL, g_strdup( "inode/directory" ));
+			} else {
+				/* not files nor dir: this is an invalid case -> do not modify
+				 * mimetypes
+				 */
+				converted = FALSE;
+			}
+		}
+
+		if( converted ){
+			na_object_set_mimetypes( profile, mimetypes );
+		}
+
+		na_core_utils_slist_free( mimetypes );
+	}
+
+	return( converted );
 }
 
 static gboolean

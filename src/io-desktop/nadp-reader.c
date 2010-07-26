@@ -70,11 +70,11 @@ static void              desktop_weak_notify( NadpDesktopFile *ndf, GObject *ite
 static void              free_desktop_paths( GList *paths );
 
 static void              read_start_read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
+static void              read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages );
 
 static gboolean          read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
 static void              read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *data, GSList **messages );
 static void              read_done_action_load_profile( const NAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages );
-static void              read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages );
 
 /*
  * Returns an unordered list of NAIFactoryObject-derived objects
@@ -349,6 +349,10 @@ nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void
 		if( NA_IS_OBJECT_ITEM( serializable )){
 			read_start_read_subitems_key( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
 		}
+
+		if( NA_IS_OBJECT_PROFILE( serializable )){
+			read_start_profile_attach_profile( reader, NA_OBJECT_PROFILE( serializable ), ( NadpReaderData * ) reader_data, messages );
+		}
 	}
 }
 
@@ -369,6 +373,12 @@ read_start_read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *
 	}
 
 	na_core_utils_slist_free( subitems );
+}
+
+static void
+read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages )
+{
+	na_object_attach_profile( reader_data->action, profile );
 }
 
 /*
@@ -515,10 +525,7 @@ nadp_reader_ifactory_provider_read_done( const NAIFactoryProvider *reader, void 
 			read_done_action_read_profiles( reader, NA_OBJECT_ACTION( serializable ), ( NadpReaderData * ) reader_data, messages );
 		}
 
-		if( NA_IS_OBJECT_PROFILE( serializable )){
-			read_done_profile_attach_profile( reader, NA_OBJECT_PROFILE( serializable ), ( NadpReaderData * ) reader_data, messages );
-		}
-
+		g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( serializable ), ( void * ) serializable );
 	}
 }
 
@@ -579,10 +586,4 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, NadpReaderDat
 			reader_data,
 			NA_IFACTORY_OBJECT( profile ),
 			messages );
-}
-
-static void
-read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages )
-{
-	na_object_attach_profile( reader_data->action, profile );
 }

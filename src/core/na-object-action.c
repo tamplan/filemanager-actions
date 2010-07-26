@@ -418,9 +418,6 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
  *  it is be identified by an version = "1.x"
  *  or by any data found in data_def_action_v1 (defined in na-object-action-factory.c)
  *  -> move obsoleted data to a new profile, updating the version string
- *
- * This may have been done in nagp_reader_read_done because only GConf has pre-v2
- * actions, but it is easyer to do the conversion before setting defaults
  */
 static void
 convert_v1_to_v2( NAIFactoryObject *instance )
@@ -443,7 +440,7 @@ convert_v1_to_v2( NAIFactoryObject *instance )
 		if( boxed ){
 			g_debug( "%s: boxed=%p (%s) marked to be moved from action body to profile",
 							 thisfn, ( void * ) boxed, def->name );
-			to_move =g_list_prepend( to_move, boxed );
+			to_move = g_list_prepend( to_move, boxed );
 		}
 		def++;
 	}

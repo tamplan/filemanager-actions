@@ -1,5 +1,21 @@
 2010-07-26 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix parameters conversion to v3.
+
+	* src/core/na-object-action.c (icontext_is_candidate):
+	Fix comment and minor typo.
+
+	* src/core/na-object-profile.c:
+	* src/io-gconf/nagp-reader.c (convert_pre_v3_parameters):
+	Move pre-v3 parameters conversion from GConf provider to profile class.
+
+	* src/io-desktop/nadp-reader.c
+	(nadp_reader_ifactory_provider_read_start):
+	* src/io-gconf/nagp-reader.c (nagp_reader_read_start):
+	* src/io-gconf/nagp-gconf-provider.c (ifactory_provider_iface_init):
+	* src/io-gconf/nagp-reader.h:
+	Now attach profile to its parent in 'read_start' interface.
+
 	* src/io-desktop/nadp-reader.c
 	(nadp_reader_ifactory_provider_read_done):
 	* src/io-gconf/nagp-reader.c (nagp_reader_read_done):
