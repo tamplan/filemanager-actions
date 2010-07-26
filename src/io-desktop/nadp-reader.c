@@ -69,11 +69,12 @@ static NAIFactoryObject *item_from_desktop_path( const NadpDesktopProvider *prov
 static void              desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
 static void              free_desktop_paths( GList *paths );
 
-static gboolean          read_done_desktop_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
-static void              read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
-static void              read_done_load_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *data, GSList **messages );
+static void              read_start_read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
+
+static gboolean          read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages );
+static void              read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *data, GSList **messages );
 static void              read_done_action_load_profile( const NAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages );
-static void              read_done_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages );
+static void              read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages );
 
 /*
  * Returns an unordered list of NAIFactoryObject-derived objects
@@ -331,24 +332,43 @@ void
 nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages )
 {
 	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_start";
-	gboolean writable;
-
-	g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
-			thisfn,
-			( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
-			( void * ) reader_data,
-			( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
-			( void * ) messages );
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
 
 	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
+
+		g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
+				thisfn,
+				( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
+				( void * ) reader_data,
+				( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
+				( void * ) messages );
+
 		if( NA_IS_OBJECT_ITEM( serializable )){
-			read_subitems_key( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
+			read_start_read_subitems_key( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
 		}
 	}
+}
+
+static void
+read_start_read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
+{
+	GSList *subitems;
+	gboolean key_found;
+
+	subitems = nadp_desktop_file_get_string_list( reader_data->ndf,
+			NADP_GROUP_DESKTOP,
+			NA_IS_OBJECT_ACTION( item ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
+			&key_found,
+			NULL );
+
+	if( key_found ){
+		na_object_set_items_slist( item, subitems );
+	}
+
+	na_core_utils_slist_free( subitems );
 }
 
 /*
@@ -473,37 +493,37 @@ nadp_reader_ifactory_provider_read_done( const NAIFactoryProvider *reader, void 
 	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_done";
 	gboolean writable;
 
-	g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
-			thisfn,
-			( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
-			( void * ) reader_data,
-			( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
-			( void * ) messages );
-
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ));
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( serializable ));
 
 	if( !NADP_DESKTOP_PROVIDER( reader )->private->dispose_has_run ){
 
+		g_debug( "%s: reader=%p (%s), reader_data=%p, serializable=%p (%s), messages=%p",
+				thisfn,
+				( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
+				( void * ) reader_data,
+				( void * ) serializable, G_OBJECT_TYPE_NAME( serializable ),
+				( void * ) messages );
+
 		if( NA_IS_OBJECT_ITEM( serializable )){
-			writable = read_done_desktop_is_writable( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
+			writable = read_done_item_is_writable( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
 			na_object_set_readonly( serializable, !writable );
 		}
 
 		if( NA_IS_OBJECT_ACTION( serializable )){
-			read_done_load_profiles( reader, NA_OBJECT_ACTION( serializable ), ( NadpReaderData * ) reader_data, messages );
+			read_done_action_read_profiles( reader, NA_OBJECT_ACTION( serializable ), ( NadpReaderData * ) reader_data, messages );
 		}
 
 		if( NA_IS_OBJECT_PROFILE( serializable )){
-			read_done_attach_profile( reader, NA_OBJECT_PROFILE( serializable ), ( NadpReaderData * ) reader_data, messages );
+			read_done_profile_attach_profile( reader, NA_OBJECT_PROFILE( serializable ), ( NadpReaderData * ) reader_data, messages );
 		}
 
 	}
 }
 
 static gboolean
-read_done_desktop_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
+read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
 {
 	NadpDesktopFile *ndf;
 	gchar *path;
@@ -517,32 +537,13 @@ read_done_desktop_is_writable( const NAIFactoryProvider *provider, NAObjectItem 
 	return( writable );
 }
 
-static void
-read_subitems_key( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
-{
-	GSList *subitems;
-	gboolean key_found;
-
-	subitems = nadp_desktop_file_get_string_list( reader_data->ndf,
-			NADP_GROUP_DESKTOP,
-			NA_IS_OBJECT_ACTION( item ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
-			&key_found,
-			NULL );
-
-	if( key_found ){
-		na_object_set_items_slist( item, subitems );
-	}
-
-	na_core_utils_slist_free( subitems );
-}
-
 /*
  * read and attach profiles in the specified order
  * profiles which may exist in .desktop files, but are not referenced
  * in the 'Profiles' string list are just ignored
  */
 static void
-read_done_load_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *reader_data, GSList **messages )
+read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *reader_data, GSList **messages )
 {
 	GSList *order;
 	GSList *ip;
@@ -581,7 +582,7 @@ read_done_action_load_profile( const NAIFactoryProvider *provider, NadpReaderDat
 }
 
 static void
-read_done_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages )
+read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, NadpReaderData *reader_data, GSList **messages )
 {
 	na_object_attach_profile( reader_data->action, profile );
 }

@@ -55,8 +55,8 @@ typedef struct {
 
 static NAObjectItem *read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages );
 
-static void          read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
-static void          read_done_action_load_profiles_from_list( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
+static gboolean      read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages );
+static void          read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages );
 static void          read_done_action_load_profile( const NAIFactoryProvider *provider, ReaderData *data, const gchar *path, GSList **messages );
 static void          read_done_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectProfile *profile, ReaderData *data, GSList **messages );
 
@@ -198,33 +198,39 @@ void
 nagp_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  )
 {
 	static const gchar *thisfn = "nagp_reader_read_done";
+	gboolean writable;
 
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( provider ));
+	g_return_if_fail( NAGP_IS_GCONF_PROVIDER( provider ));
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-	g_debug( "%s: provider=%p, reader_data=%p, object=%p (%s), messages=%p",
-			thisfn,
-			( void * ) provider,
-			( void * ) reader_data,
-			( void * ) object, G_OBJECT_TYPE_NAME( object ),
-			( void * ) messages );
+	if( !NAGP_GCONF_PROVIDER( provider )->private->dispose_has_run ){
 
-	if( NA_IS_OBJECT_ITEM( object )){
-		read_done_item_is_writable( provider, NA_OBJECT_ITEM( object ), ( ReaderData * ) reader_data, messages );
+		g_debug( "%s: provider=%p (%s), reader_data=%p, object=%p (%s), messages=%p",
+				thisfn,
+				( void * ) provider, G_OBJECT_TYPE_NAME( provider ),
+				( void * ) reader_data,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ),
+				( void * ) messages );
+
+		if( NA_IS_OBJECT_ITEM( object )){
+			writable = read_done_item_is_writable( provider, NA_OBJECT_ITEM( object ), ( ReaderData * ) reader_data, messages );
+			na_object_set_readonly( object, !writable );
+		}
+
+		if( NA_IS_OBJECT_ACTION( object )){
+			read_done_action_read_profiles( provider, NA_OBJECT_ACTION( object ), ( ReaderData * ) reader_data, messages );
+		}
+
+		if( NA_IS_OBJECT_PROFILE( object )){
+			read_done_profile_attach_profile( provider, NA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, messages );
+		}
+
+		g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
 	}
-
-	if( NA_IS_OBJECT_ACTION( object )){
-		read_done_action_load_profiles_from_list( provider, NA_OBJECT_ACTION( object ), ( ReaderData * ) reader_data, messages );
-	}
-
-	if( NA_IS_OBJECT_PROFILE( object )){
-		read_done_profile_attach_profile( provider, NA_OBJECT_PROFILE( object ), ( ReaderData * ) reader_data, messages );
-	}
-
-	g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
 }
 
-static void
+static gboolean
 read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, ReaderData *data, GSList **messages )
 {
 	GSList *ie;
@@ -243,11 +249,11 @@ read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *it
 	}
 
 	g_debug( "nagp_reader_read_done_item: writable=%s", writable ? "True":"False" );
-	na_object_set_readonly( item, !writable );
+	return( writable );
 }
 
 static void
-read_done_action_load_profiles_from_list( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages )
+read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages )
 {
 	GSList *order;
 	GSList *list_profiles;

@@ -1,5 +1,10 @@
 2010-07-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-reader.c
+	(nadp_reader_ifactory_provider_read_done):
+	* src/io-gconf/nagp-reader.c (nagp_reader_read_done):
+	Homogeneïze the read_done functions.
+
 	Move the reading of the subitems key for the desktop I/O provider
 	from 'read_done' to 'read_start'.
 
