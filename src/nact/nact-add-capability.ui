@@ -87,7 +87,7 @@
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
                 <property name="xpad">5</property>
-                <property name="label" translatable="yes">&lt;b&gt;Capabilities&lt;/b&gt;</property>
+                <property name="label" translatable="yes">&lt;b&gt;Managed capabilities&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </object>
             </child>
