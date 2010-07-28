@@ -72,6 +72,14 @@ Version 2.99.0
 		- Fix #621410 reported by Bruno Guerreiro
 		  (Nautilus-Actions doesn't respect folders)
 
+	New and updated translations:
+
+		de (Mario Blättermann, Christian Kirbach)
+		es (Jorge González)
+		he (Yaron Shahrabani)
+		lt (Gintautas Miliauskas)
+		sl (Andrej Žnidaršič, Matej Urbančič)
+
 	Note that this version may not be fully fonctionnal. In particular,
 	Nautilus menu plugin may not yet honor all new conditions.
 	
