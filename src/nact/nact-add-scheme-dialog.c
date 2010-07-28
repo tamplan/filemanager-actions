@@ -73,6 +73,7 @@ static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event,
 static void     on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *editor );
 static void     on_ok_clicked( GtkButton *button, NactAddSchemeDialog *editor );
 static void     on_selection_changed( const gchar *scheme, gboolean used, NactAddSchemeDialog *dialog );
+static void     try_for_send_ok( NactAddSchemeDialog *dialog );
 static void     send_ok( NactAddSchemeDialog *dialog );
 static void     validate_dialog( NactAddSchemeDialog *editor );
 static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
@@ -363,7 +364,7 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddSchemeDi
 
 	/* double-click of left button */
 	if( event->type == GDK_2BUTTON_PRESS && event->button == 1 ){
-		send_ok( dialog );
+		try_for_send_ok( dialog );
 		stop = TRUE;
 	}
 
@@ -395,6 +396,18 @@ on_selection_changed( const gchar *scheme, gboolean used, NactAddSchemeDialog *d
 
 	button = base_window_get_widget( BASE_WINDOW( dialog ), "OKButton" );
 	gtk_widget_set_sensitive( button, !used );
+}
+
+static void
+try_for_send_ok( NactAddSchemeDialog *dialog )
+{
+	GtkWidget *button;
+
+	button = base_window_get_widget( BASE_WINDOW( dialog ), "OKButton" );
+
+	if( gtk_widget_get_sensitive( button )){
+		send_ok( dialog );
+	}
 }
 
 static void

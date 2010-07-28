@@ -241,7 +241,7 @@ on_add_from_defaults( GtkButton *button, BaseWindow *window )
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), NULL );
 	g_return_if_fail( context );
 
-	schemes = na_object_get_schemes( context );
+	schemes = nact_match_list_get_rows( window, ITAB_NAME );
 	new_scheme = nact_add_scheme_dialog_run( window, schemes );
 	na_core_utils_slist_free( schemes );
 

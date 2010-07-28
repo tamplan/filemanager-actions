@@ -1,5 +1,11 @@
 2010-07-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-add-scheme-dialog.c:
+	Prevent a default scheme to be inserted twice.
+
+	* src/nact/nact-ischemes-tab.c:
+	Use the current list of rows instead of the current schemes list.
+
 	* src/nact/nact-match-list.c:
 	Prevent a standard filter to be inserted twice.
 
