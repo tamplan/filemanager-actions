@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-07-03 07:56+0000\n"
-"PO-Revision-Date: 2010-07-05 01:03+0100\n"
+"POT-Creation-Date: 2010-07-28 17:22+0000\n"
+"PO-Revision-Date: 2010-07-28 21:51+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -948,35 +948,35 @@ msgstr ""
 "Das Menü »%s« (importiert aus »%s«) hat die gleiche Identifizierung wie das "
 "bereits vorhandene »%s«."
 
-#: ../src/core/na-io-provider.c:1301
+#: ../src/core/na-io-provider.c:1302
 msgid "Item is read-only."
 msgstr "Objekt ist schreibgeschützt."
 
-#: ../src/core/na-io-provider.c:1305
+#: ../src/core/na-io-provider.c:1306
 msgid "I/O provider is not willing to write."
 msgstr "Ein-/Ausgabetreiber ist nicht schreibfähig."
 
-#: ../src/core/na-io-provider.c:1309
+#: ../src/core/na-io-provider.c:1310
 msgid "No writable I/O provider found."
 msgstr "Kein schreibfähiger Ein-/Ausgabetreiber gefunden."
 
-#: ../src/core/na-io-provider.c:1313
+#: ../src/core/na-io-provider.c:1314
 msgid "I/O provider has been locked down by an administrator."
 msgstr "Ein-/Ausgabetreiber ist durch einen Systemverwalter gesperrt."
 
-#: ../src/core/na-io-provider.c:1317
+#: ../src/core/na-io-provider.c:1318
 msgid "I/O provider has been locked down by the user."
 msgstr "Ein-/Ausgabetreiber ist durch den Benutzer gesperrt."
 
-#: ../src/core/na-io-provider.c:1321
+#: ../src/core/na-io-provider.c:1322
 msgid "I/O provider implementation lacks of required API."
 msgstr "Dem Ein-/Ausgabetreiber fehlt die benötigte API."
 
-#: ../src/core/na-io-provider.c:1325
+#: ../src/core/na-io-provider.c:1326
 msgid "The whole configuration has been locked down by an administrator."
 msgstr "Die gesamte Konfiguration wurde durch einen Systemverwalter gesperrt."
 
-#: ../src/core/na-io-provider.c:1334
+#: ../src/core/na-io-provider.c:1335
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
@@ -986,11 +986,11 @@ msgstr ""
 "Bitte seien Sie so freundlich und erstellen Sie einen Fehlerbericht auf "
 "http://bugzilla.gnome.org."
 
-#: ../src/core/na-io-provider.c:1358
+#: ../src/core/na-io-provider.c:1359
 msgid "OK."
 msgstr "OK."
 
-#: ../src/core/na-io-provider.c:1362
+#: ../src/core/na-io-provider.c:1363
 msgid ""
 "Program flow error.\n"
 "Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
@@ -999,23 +999,23 @@ msgstr ""
 "Bitte seien Sie so freundlich und erstellen Sie einen Fehlerbericht auf "
 "http://bugzilla.gnome.org."
 
-#: ../src/core/na-io-provider.c:1367
+#: ../src/core/na-io-provider.c:1368
 msgid "The I/O provider is not willing to do that."
 msgstr "Der Ein-/Ausgabetreiber ist nicht bereit, dies zu erledigen."
 
-#: ../src/core/na-io-provider.c:1371
+#: ../src/core/na-io-provider.c:1372
 msgid "Write error in I/O provider."
 msgstr "Schreibfehler im Ein-/Ausgabetreiber."
 
-#: ../src/core/na-io-provider.c:1375
+#: ../src/core/na-io-provider.c:1376
 msgid "Unable to delete GConf schemas."
 msgstr "Die GConf-Schemata können nicht gelöscht werden."
 
-#: ../src/core/na-io-provider.c:1379
+#: ../src/core/na-io-provider.c:1380
 msgid "Unable to delete configuration."
 msgstr "Die Konfiguration kann nicht gelöscht werden."
 
-#: ../src/core/na-io-provider.c:1383
+#: ../src/core/na-io-provider.c:1384
 #, c-format
 msgid ""
 "Unknow return code (%d).\n"
@@ -1030,7 +1030,7 @@ msgstr ""
 msgid "New Nautilus action"
 msgstr "Neue Nautilus-Aktion"
 
-#: ../src/core/na-object-action.c:465
+#: ../src/core/na-object-action.c:462
 msgid "Profile automatically created from pre-v2 action"
 msgstr "Profil wurde automatisch von einer Aktion vor der Version 2 erstellt"
 
@@ -1259,7 +1259,7 @@ msgid "New Nautilus menu"
 msgstr "Neues Nautilus-Menü"
 
 #. i18n: label for the default profile
-#: ../src/core/na-object-profile.c:465
+#: ../src/core/na-object-profile.c:681
 msgid "Default profile"
 msgstr "Vorgabeprofil"
 
@@ -1763,33 +1763,31 @@ msgstr "Bitte benutzen Sie die bereits laufende Instanz."
 msgid "Nautilus Actions Configuration Tool"
 msgstr "Einstellungen für Nautilus-Aktionen"
 
-#: ../src/nact/nact-add-capability-dialog.c:71
+#: ../src/nact/nact-add-capability-dialog.c:72
 msgid "User is the owner of the item"
 msgstr "Der Benutzer ist der Besitzer des Objekts"
 
-#: ../src/nact/nact-add-capability-dialog.c:72
+#: ../src/nact/nact-add-capability-dialog.c:73
 msgid "Item is readable by the user"
 msgstr "Objekt ist vom Benutzer lesbar"
 
-#: ../src/nact/nact-add-capability-dialog.c:73
+#: ../src/nact/nact-add-capability-dialog.c:74
 msgid "Item is writable by the user"
 msgstr "Objekt ist durch den Benutzer schreibbar"
 
-#: ../src/nact/nact-add-capability-dialog.c:74
+#: ../src/nact/nact-add-capability-dialog.c:75
 msgid "Item is executable by the user"
 msgstr "Objekt ist vom Benutzer ausführbar"
 
-#: ../src/nact/nact-add-capability-dialog.c:75
+#: ../src/nact/nact-add-capability-dialog.c:76
 msgid "Item is local"
 msgstr "Objekt ist lokal"
 
 #. i18n: add a comment when a capability is already used by current item
-#. i18n: add a comment when a scheme is already used by current item
-#: ../src/nact/nact-add-capability-dialog.c:508
-#: ../src/nact/nact-schemes-list.c:367
+#: ../src/nact/nact-add-capability-dialog.c:531
 #, c-format
-msgid "%s (already used)"
-msgstr "%s (bereits verwendet)"
+msgid "%s (already inserted)"
+msgstr "%s (bereits eingefügt)"
 
 #: ../src/nact/nact-assistant-export.c:679
 msgid "About to export selected items:"
@@ -1894,84 +1892,84 @@ msgstr "Symbol wird ausgewählt"
 msgid "Basename filter"
 msgstr "Filter für Basisname"
 
-#: ../src/nact/nact-icapabilities-tab.c:157
+#: ../src/nact/nact-icapabilities-tab.c:158
 msgid "Capability filter"
 msgstr "Filter für Fähigkeiten"
 
-#: ../src/nact/nact-icommand-tab.c:429
+#: ../src/nact/nact-icommand-tab.c:438
 msgid "Caution: a label is mandatory for the profile."
 msgstr "Achtung: Eine Bezeichnung für das Profil ist obligatorisch."
 
-#: ../src/nact/nact-icommand-tab.c:571
+#: ../src/nact/nact-icommand-tab.c:588
 msgid "Choosing a command"
 msgstr "Befehl wird ausgewählt"
 
-#: ../src/nact/nact-icommand-tab.c:612
+#: ../src/nact/nact-icommand-tab.c:629
 msgid "Choosing a working directory"
 msgstr "Arbeitsordner wird ausgewählt"
 
 #. i18n notes: example strings for the command preview
-#: ../src/nact/nact-icommand-tab.c:649
+#: ../src/nact/nact-icommand-tab.c:666
 msgid "/path/to"
 msgstr "/Pfad/zu"
 
-#: ../src/nact/nact-icommand-tab.c:650
+#: ../src/nact/nact-icommand-tab.c:667
 msgid "file1.txt"
 msgstr "Datei1.txt"
 
-#: ../src/nact/nact-icommand-tab.c:650
+#: ../src/nact/nact-icommand-tab.c:667
 msgid "file2.txt"
 msgstr "Datei2.txt"
 
-#: ../src/nact/nact-icommand-tab.c:651
+#: ../src/nact/nact-icommand-tab.c:668
 msgid " folder1"
 msgstr "Ordner1"
 
-#: ../src/nact/nact-icommand-tab.c:651
+#: ../src/nact/nact-icommand-tab.c:668
 msgid "folder2"
 msgstr "Ordner2"
 
-#: ../src/nact/nact-icommand-tab.c:652
+#: ../src/nact/nact-icommand-tab.c:669
 msgid " file1.txt"
 msgstr "Datei1.txt"
 
-#: ../src/nact/nact-icommand-tab.c:652
+#: ../src/nact/nact-icommand-tab.c:669
 msgid "folder1"
 msgstr "Ordner1"
 
-#: ../src/nact/nact-icommand-tab.c:654
+#: ../src/nact/nact-icommand-tab.c:671
 msgid "test.example.net"
 msgstr "test.beispiel.net"
 
-#: ../src/nact/nact-icommand-tab.c:655
+#: ../src/nact/nact-icommand-tab.c:672
 msgid "file.txt"
 msgstr "Datei.txt"
 
-#: ../src/nact/nact-icommand-tab.c:656
+#: ../src/nact/nact-icommand-tab.c:673
 msgid "folder"
 msgstr "Ordner"
 
-#: ../src/nact/nact-icommand-tab.c:657
+#: ../src/nact/nact-icommand-tab.c:674
 msgid "8080"
 msgstr "8080"
 
-#: ../src/nact/nact-icommand-tab.c:661
+#: ../src/nact/nact-icommand-tab.c:678
 msgid "file:///path/to/file1.text"
 msgstr "file:///pfad/zu/datei1.text"
 
-#: ../src/nact/nact-icommand-tab.c:662
+#: ../src/nact/nact-icommand-tab.c:679
 msgid "file:///path/to/file2.text"
 msgstr "file:///pfad/zu/datei2.text"
 
-#: ../src/nact/nact-icommand-tab.c:663
+#: ../src/nact/nact-icommand-tab.c:680
 msgid "file:///path/to/a/dir"
 msgstr "file:///pfad/zu/einem/ordner"
 
-#: ../src/nact/nact-icommand-tab.c:664
+#: ../src/nact/nact-icommand-tab.c:681
 msgid "file:///path/to/another/dir"
 msgstr "file:///pfad/zu/einem/anderen/ordner"
 
-#: ../src/nact/nact-icommand-tab.c:855
+#: ../src/nact/nact-icommand-tab.c:872
 msgid "e.g.,"
 msgstr "z.B.,"
 
@@ -2345,12 +2343,21 @@ msgid "Must match all of"
 msgstr "Muss allen entsprechen von"
 
 #. i18n: label of the header of a column which let the user select a negative filter
-#.
-#: ../src/nact/nact-match-list.c:161
+#: ../src/nact/nact-match-list.c:169
 msgid "Must not match any of"
 msgstr "Darf keinem entsprechen von"
 
-#: ../src/nact/nact-match-list.c:729
+#: ../src/nact/nact-match-list.c:490
+#, c-format
+msgid ""
+"'%s' filter already exists in the list.\n"
+"Please provide another one."
+msgstr ""
+"Filter »%s« existiert bereits in der Liste.\n"
+"Bitte wählen Sie einen anderen."
+
+#. i18n notes : new filter for a new row in a match/no match list
+#: ../src/nact/nact-match-list.c:846
 msgid "new-filter"
 msgstr "Neuer Filter"
 
@@ -2400,6 +2407,12 @@ msgstr "FTP-Dateien"
 #: ../src/nact/nact-schemes-list.c:269
 msgid "WebDAV files"
 msgstr "WebDAV-Dateien"
+
+#. i18n: add a comment when a scheme is already used by current item
+#: ../src/nact/nact-schemes-list.c:367
+#, c-format
+msgid "%s (already used)"
+msgstr "%s (bereits verwendet)"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
 #: ../src/nact/nact-schemes-list.c:689
