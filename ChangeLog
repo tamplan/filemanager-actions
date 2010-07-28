@@ -1,6 +1,8 @@
 2010-07-28 Pierre Wieser <pwieser@trychlos.org>
 
-	* configure.ac: Bump version number before unstable release.
+	* NEWS: Update NEWS before unstable release.
+
+	* configure.ac: Bump the version number before unstable release.
 
 	* src/io-desktop/nadp-module.c (na_extension_startup):
 	Remove the #if/#endif macros to let the .desktop provider be released.

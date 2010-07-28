@@ -1,3 +1,84 @@
+Version 2.99.0
+==============
+
+	Release date 2010-07-29
+
+	Major enhancements:
+
+		- Implement the .desktop file specifications as described at
+		  http://www.nautilus-actions.org/?q=node/377 ; this new storage
+		  format is shareable with most common willing-to desktop 
+		  environments (KDE, XFCE, etc.)
+
+		- Implement new properties, both in GConf and .desktop files:
+		  . a description of the item
+		  . a suggested shortcut for both action and menu
+		  . profile may specify an execution mode
+		  . command may specify the user which should run it
+		  . the 'accept-multiple-files' flag is replaced with a count selector
+
+		- Conditions apply now both to actions, profiles and menus. They have
+		  been extended to include:
+		  . choose/refuse a particular target environment
+		  . specify a pre-requirement
+		  . only appears if a DBus service is registered
+		  . only appears if an external command displays "true"
+		  . only appears if a process is running
+		  
+		- Most of list may have negated assertions : mimetypes, folders,
+		  schemes, basenames, capabilities.
+
+	New parameters:
+
+		- %b: (first) basename
+		- %B: space-separated list of basenames (was %m)
+		- %c: count of selected items
+		- %D: space-separated list of base directory of each selected items
+		- %F: space-separated list of selected file names (was %M)
+		- %h: hostname of the (first) URI
+		- %n: username of the (first) URI (was %U)
+		- %U: space-separated list of selected URIs
+		- %w: (first) basename without the extension
+		- %W: space-separated list of basenames without their extension
+		- %x: (first) extension
+		- %X: space-separated list of extensions
+
+		Renamed parameters (%m, %M and %U) are dynamically taken into
+		account when Nautilus-Actions loads the action. They are 
+		automatically updated at write/export time.
+
+	UI modifications:
+
+		- Each type of conditions has now its own tab
+
+	Bug fixes:
+
+		- Fix #325523 reported by GrumZ
+		  (Add the possibility to define a fixed number of file selected)
+		- Fix #325590 reported by Frederic Ruaudel
+		  (Removable storage context menus)
+		- Fix #330610 reported by Olive
+		  (Permissions as conditions)
+		- Fix #339533 reported by Frederic Ruaudel
+		  (Possibility to run the command provided for each selected files)
+		- Fix #339534 reported by Frederic Ruaudel
+		  (Possibility to have the list of files without their extensions)
+		- Fix #566383 reported by Nathan Middleton
+		  ("Appears if selection contains" options expanded)
+		- Fix #607820 reported by D.
+		  (A case for using gvfs-info attributes matching)
+		- Fix #616477 reported by Thomas Oster
+		  (Add possibility to filter by folder content)
+		- Fix #621410 reported by Bruno Guerreiro
+		  (Nautilus-Actions doesn't respect folders)
+
+	Note that this version may not be fully fonctionnal. In particular,
+	Nautilus menu plugin may not yet honor all new conditions.
+	
+	Note also that due to the renaming of some parameters, actions or menus
+	created / updated with this version may not be compatible with previous,
+	older, ones.
+	
 Version 2.30.3
 ==============
 
@@ -36,6 +117,8 @@ Version 2.30.2
 
 		- Fix #615646 reported by Deji Akingunola
 		  (Nautilus crashes when trash icon is right-clicked)
+		- Fix #615807 reported by anibalf@gmail.com
+		  (Crash in Open Folder)
 		- Fix GLib assertions when parsing parameters, using null values
 		- Duplicate the profile attached to the Nautilus menu item, rather than
 		  adding a new reference; then do not try to unref its parent
@@ -54,24 +137,6 @@ Version 2.30.2
 
 		es (Jorge González)
 		lt (Gintautas Miliauskas)
-=======
-[newdata branch]
-
-	Enhancements:
-
-		- Implement .desktop files as a new storage format, shareable with
-		  most common willing-to desktop environments (KDE, XFCE, etc.)
-
-		- Implement new properties, both in GConf and .desktop files:
-		  . a description of the item
-
-		- The 'accept multiple files' flag is replaced with a count selector
-
-	UI modifications:
-
-		- Item properties have now their own 'Properties' tab
-		- 'Advanced conditions' tab is renamed as 'Schemes' tab
->>>>>>> Move item properties to their own tab
 
 Version 2.30.1
 ==============
@@ -129,6 +194,11 @@ Version 2.30.0
 		- Implement full cut/copy/paste clipboard support.
 		- Allow an administrator to lock all the configuration.
 		- Fully manage readonly items.
+
+	Bug fixes:
+
+		- Fix #614382 reported by Wolter Hellmund
+		  (Nautilus actions won't open)
 
 	New and updated translations:
 
