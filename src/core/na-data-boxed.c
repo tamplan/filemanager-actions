@@ -1004,8 +1004,10 @@ slist_free( const NADataBoxed *boxed )
 static void
 slist_dump( const NADataBoxed *boxed )
 {
-	g_debug( "na-data-boxed: %s=", boxed->private->def->name );
-	na_core_utils_slist_dump( boxed->private->u.slist );
+	static const gchar *thisfn = "na_data_boxed_slist_dump";
+
+	g_debug( "%s: %s is", thisfn, boxed->private->def->name );
+	na_core_utils_slist_dump( thisfn, boxed->private->u.slist );
 }
 
 static gboolean

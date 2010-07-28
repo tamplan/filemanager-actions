@@ -473,13 +473,14 @@ guint
 nadp_writer_ifactory_provider_write_done( const NAIFactoryProvider *provider, void *writer_data,
 							const NAIFactoryObject *object, GSList **messages  )
 {
+	static const gchar *thisfn = "nadp_writer_ifactory_provider_write_done";
 	GSList *subitems;
 	GSList *profile_groups;
 	GSList *ip;
 
 	if( NA_IS_OBJECT_ITEM( object )){
 		subitems = na_object_get_items_slist( object );
-		na_core_utils_slist_dump( subitems );
+		na_core_utils_slist_dump( thisfn, subitems );
 
 		nadp_desktop_file_set_string_list(
 				NADP_DESKTOP_FILE( writer_data ),
@@ -488,11 +489,11 @@ nadp_writer_ifactory_provider_write_done( const NAIFactoryProvider *provider, vo
 				subitems );
 
 		profile_groups = nadp_desktop_file_get_profiles( NADP_DESKTOP_FILE( writer_data ));
-		na_core_utils_slist_dump( profile_groups );
+		na_core_utils_slist_dump( thisfn, profile_groups );
 
 		for( ip = profile_groups ; ip ; ip = ip->next ){
 			if( na_core_utils_slist_count( subitems, ( const gchar * ) ip->data ) == 0 ){
-				g_debug( "nadp_writer_ifactory_provider_write_done: deleting (removed) profile %s", ( const gchar * ) ip->data );
+				g_debug( "%s: deleting (removed) profile %s", thisfn, ( const gchar * ) ip->data );
 				nadp_desktop_file_remove_profile( NADP_DESKTOP_FILE( writer_data ), ( const gchar * ) ip->data );
 			}
 		}

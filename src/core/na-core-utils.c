@@ -235,21 +235,25 @@ na_core_utils_slist_duplicate( GSList *source_slist )
 
 /**
  * na_core_utils_slist_dump:
+ * @prefix: a string to be used as a prefix for each outputed line.
  * @list: a list of strings.
  *
  * Dumps the content of a list of strings.
  */
 void
-na_core_utils_slist_dump( GSList *list )
+na_core_utils_slist_dump( const gchar *prefix, GSList *list )
 {
 	static const gchar *thisfn = "na_core_utils_slist_dump";
 	GSList *i;
 	int c;
+	const gchar *thispfx;
 
-	g_debug( "%s: list at %p has %d element(s)", thisfn, ( void * ) list, g_slist_length( list ));
+	thispfx = ( prefix && strlen( prefix )) ? prefix : thisfn;
+
+	g_debug( "%s: list at %p has %d element(s)", thispfx, ( void * ) list, g_slist_length( list ));
 
 	for( i=list, c=0 ; i ; i=i->next ){
-		g_debug( "%s: [%2d] %s", thisfn, c++, ( gchar * ) i->data );
+		g_debug( "%s: [%2d] %s", thispfx, c++, ( gchar * ) i->data );
 	}
 }
 

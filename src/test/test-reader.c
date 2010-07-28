@@ -96,7 +96,7 @@ main( int argc, char **argv )
 		g_object_unref( result->imported );
 	}
 
-	na_core_utils_slist_dump( result->messages );
+	na_core_utils_slist_dump( NULL, result->messages );
 	na_core_utils_slist_free( result->messages );
 
 	return( 0 );

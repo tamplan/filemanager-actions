@@ -1,3 +1,15 @@
+2010-07-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_slist_dump):
+	Add a prefix parameter to the function.
+
+	* src/core/na-data-boxed.c (slist_dump):
+	* src/core/na-io-provider.c (na_io_provider_get_providers_list):
+	* src/io-desktop/nadp-writer.c (nadp_writer_ifactory_provider_write_done):
+	* src/nact/nact-match-list.c (nact_match_list_on_selection_changed):
+	* src/test/test-reader.c (main): Updated accordingly.
+
 2010-07-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-core-utils.h:

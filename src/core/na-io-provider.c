@@ -321,6 +321,7 @@ na_io_provider_terminate( void )
 GList *
 na_io_provider_get_providers_list( const NAPivot *pivot )
 {
+	static const gchar *thisfn = "na_io_provider_get_providers_list";
 	GSList *order;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
@@ -329,8 +330,8 @@ na_io_provider_get_providers_list( const NAPivot *pivot )
 
 		order = na_iprefs_read_string_list( NA_IPREFS( pivot ), IO_PROVIDER_KEY_ORDER, NULL );
 
-		g_debug( "na_io_provider_get_providers_list: dumping providers order" );
-		na_core_utils_slist_dump( order );
+		g_debug( "%s: dumping providers order", thisfn );
+		na_core_utils_slist_dump( thisfn, order );
 
 		setup_io_providers( pivot, order );
 		na_core_utils_slist_free( order );

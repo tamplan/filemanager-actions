@@ -340,7 +340,7 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	gtk_list_store_clear( GTK_LIST_STORE( model ));
 
 	if( filters ){
-		na_core_utils_slist_dump( filters );
+		na_core_utils_slist_dump( thisfn, filters );
 		g_slist_foreach( filters, ( GFunc ) iter_for_setup, model );
 	}
 
