@@ -49,6 +49,7 @@ NAIExporterFormat naxml_formats[] = {
 			N_( "This used to be the historical export format.\n" \
 				"The exported schema file may later be imported via :\n" \
 				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
+				"- drag-n-drop into the Nautilus Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
 
 	/* GCONF_SCHEMA_V2: the lightest schema still compatible with gconftool-2 --install-schema-file
@@ -62,6 +63,7 @@ NAIExporterFormat naxml_formats[] = {
 				"Tool versions.\n"
 				"The exported schema file may later be imported via :\n" \
 				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
+				"- drag-n-drop into the Nautilus Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
 
 	/* GCONF_ENTRY: not a schema, but a dump of the GConf entry
@@ -76,6 +78,7 @@ NAIExporterFormat naxml_formats[] = {
 				"though it may still be imported via standard GConf command-line tools.\n" \
 				"The exported dump file may later be imported via :\n" \
 				"- Import assistant of a compatible Nautilus Actions Configuration Tool,\n" \
+				"- drag-n-drop into the Nautilus Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --load command-line tool." ) },
 
 	{ NULL }

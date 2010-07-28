@@ -35,6 +35,7 @@
 #include <errno.h>
 #include <gio/gio.h>
 #include <glib/gstdio.h>
+#include <string.h>
 #include <uuid/uuid.h>
 
 #include <api/na-core-utils.h>
@@ -67,8 +68,35 @@ nadp_utils_gslist_remove_from( GSList *list, const gchar *string )
 }
 
 /**
- * nadp_utils_is_writable_file:
- * @path: the path of the file to be tested.
+ *
+ */
+gboolean
+nadp_utils_uri_delete( const gchar *uri )
+{
+	gboolean deleted;
+	gchar *scheme;
+	gchar *path;
+
+	deleted = FALSE;
+	scheme = g_uri_parse_scheme( uri );
+
+	if( !strcmp( scheme, "file" )){
+		path = g_filename_from_uri( uri, NULL, NULL );
+
+		if( path ){
+			deleted = na_core_utils_file_delete( path );
+			g_free( path );
+		}
+	}
+
+	g_free( scheme );
+
+	return( deleted );
+}
+
+/**
+ * nadp_utils_uri_is_writable:
+ * @uri: the URI of the file to be tested.
  *
  * Returns: %TRUE if the file is writable, %FALSE else.
  *
@@ -79,19 +107,19 @@ nadp_utils_gslist_remove_from( GSList *list, const gchar *string )
  * There is no "super-test". Just try...
  */
 gboolean
-nadp_utils_is_writable_file( const gchar *path )
+nadp_utils_uri_is_writable( const gchar *uri )
 {
-	static const gchar *thisfn = "nadp_utils_is_writable_file";
+	static const gchar *thisfn = "nadp_utils_uri_is_writable";
 	GFile *file;
 	GError *error = NULL;
 	GFileInfo *info;
 	gboolean writable;
 
-	if( !path || !g_utf8_strlen( path, -1 )){
+	if( !uri || !g_utf8_strlen( uri, -1 )){
 		return( FALSE );
 	}
 
-	file = g_file_new_for_path( path );
+	file = g_file_new_for_uri( uri );
 	info = g_file_query_info( file,
 			G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE "," G_FILE_ATTRIBUTE_STANDARD_TYPE,
 			G_FILE_QUERY_INFO_NONE, NULL, &error );
@@ -105,8 +133,9 @@ nadp_utils_is_writable_file( const gchar *path )
 
 	writable = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE );
 	if( !writable ){
-		g_debug( "%s: %s is not writable", thisfn, path );
+		g_debug( "%s: %s is not writable", thisfn, uri );
 	}
+
 	g_object_unref( info );
 
 	return( writable );

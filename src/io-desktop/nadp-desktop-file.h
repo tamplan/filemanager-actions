@@ -75,9 +75,10 @@ typedef struct {
 GType            nadp_desktop_file_get_type         ( void );
 
 NadpDesktopFile *nadp_desktop_file_new_from_path    ( const gchar *path );
+NadpDesktopFile *nadp_desktop_file_new_from_uri     ( const gchar *uri );
 NadpDesktopFile *nadp_desktop_file_new_for_write    ( const gchar *path );
 
-gchar           *nadp_desktop_file_get_key_file_path( const NadpDesktopFile *ndf );
+gchar           *nadp_desktop_file_get_key_file_uri ( const NadpDesktopFile *ndf );
 gboolean         nadp_desktop_file_write            ( NadpDesktopFile *ndf );
 
 gchar           *nadp_desktop_file_get_file_type    ( const NadpDesktopFile *ndf );

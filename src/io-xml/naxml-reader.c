@@ -144,7 +144,6 @@ static RootNodeStr st_root_node_str[] = {
 	{ NULL }
 };
 
-#define ERR_ITEM_ID_ALREADY_EXISTS	_( "Item ID %s already exists." )
 #define ERR_ITEM_ID_NOT_FOUND		_( "Item ID not found." )
 #define ERR_MENU_UNWAITED			_( "Unwaited key path %s while importing a menu." )
 #define ERR_NODE_ALREADY_FOUND		_( "Element %s at line %d already found, ignored." )
@@ -167,7 +166,6 @@ static guint         reader_parse_xmldoc( NAXMLReader *reader );
 static guint         iter_on_root_children( NAXMLReader *reader, xmlNode *root );
 static guint         iter_on_list_children( NAXMLReader *reader, xmlNode *first );
 
-static void          add_message( NAXMLReader *reader, const gchar *format, ... );
 static gchar        *build_key_node_list( NAXMLKeyStr *strlist );
 static gchar        *build_root_node_list( void );
 static gchar        *get_value_from_child_node( xmlNode *node, const gchar *child );
@@ -175,7 +173,6 @@ static gchar        *get_value_from_child_child_node( xmlNode *node, const gchar
 static gboolean      is_profile_path( NAXMLReader *reader, xmlChar *text );
 static guint         manage_import_mode( NAXMLReader *reader );
 static void          publish_undealt_nodes( NAXMLReader *reader );
-static void          renumber_label_item( NAXMLReader *reader );
 static void          reset_node_data( NAXMLReader *reader );
 static xmlNode      *search_for_child_node( xmlNode *node, const gchar *key );
 static int           strxcmp( const xmlChar *a, const char *b );
@@ -371,7 +368,7 @@ reader_parse_xmldoc( NAXMLReader *reader )
 
 	if( !doc ){
 		xmlErrorPtr error = xmlGetLastError();
-		add_message( reader,
+		na_core_utils_slist_add_message( &reader->private->parms->messages,
 				ERR_XMLDOC_UNABLE_TOPARSE, error->message );
 		xmlResetError( error );
 		code = IMPORTER_CODE_NOT_WILLING_TO;
@@ -393,7 +390,7 @@ reader_parse_xmldoc( NAXMLReader *reader )
 
 		if( !found ){
 			gchar *node_list = build_root_node_list();
-			add_message( reader,
+			na_core_utils_slist_add_message( &reader->private->parms->messages,
 						ERR_ROOT_UNKNOWN,
 						( const char * ) root_node->name, root_node->line, node_list );
 			g_free( node_list );
@@ -441,14 +438,14 @@ iter_on_root_children( NAXMLReader *reader, xmlNode *root )
 		}
 
 		if( strxcmp( iter->name, reader->private->root_node_str->list_key )){
-			add_message( reader,
+			na_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, reader->private->root_node_str->list_key );
 			continue;
 		}
 
 		if( found ){
-			add_message( reader, ERR_NODE_ALREADY_FOUND, ( const char * ) iter->name, iter->line );
+			na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_ALREADY_FOUND, ( const char * ) iter->name, iter->line );
 			continue;
 		}
 
@@ -515,7 +512,7 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 		}
 
 		if( strxcmp( iter->name, reader->private->root_node_str->element_key )){
-			add_message( reader,
+			na_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, reader->private->root_node_str->element_key );
 			continue;
@@ -546,7 +543,7 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 	 */
 	if( code == IMPORTER_CODE_OK ){
 		if( !reader->private->item_id || !strlen( reader->private->item_id )){
-			add_message( reader, ERR_ITEM_ID_NOT_FOUND );
+			na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_ITEM_ID_NOT_FOUND );
 			code = 	IMPORTER_CODE_NO_ITEM_ID;
 		}
 	}
@@ -880,7 +877,7 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 
 		if( !str ){
 			gchar *node_list = build_key_node_list( naxml_schema_key_schema_str );
-			add_message( reader,
+			na_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, node_list );
 			g_free( node_list );
@@ -889,7 +886,7 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 		}
 
 		if( str->reader_found ){
-			add_message( reader,
+			na_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_ALREADY_FOUND,
 					( const char * ) iter->name, iter->line );
 			reader->private->node_ok = FALSE;
@@ -945,7 +942,7 @@ schema_check_for_id( NAXMLReader *reader, xmlNode *iter )
 
 	if( reader->private->item_id ){
 		if( strcmp( reader->private->item_id, id ) != 0 ){
-			add_message( reader,
+			na_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_INVALID_ID,
 					reader->private->item_id, id, iter->line );
 			reader->private->node_ok = FALSE;
@@ -978,7 +975,7 @@ schema_check_for_type( NAXMLReader *reader, xmlNode *iter )
 			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_menu_new());
 
 		} else {
-			add_message( reader, ERR_NODE_UNKNOWN_TYPE, type, iter->line );
+			na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_UNKNOWN_TYPE, type, iter->line );
 			reader->private->node_ok = FALSE;
 		}
 
@@ -1050,7 +1047,7 @@ dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
 
 		if( !str ){
 			gchar *node_list = build_key_node_list( naxml_dump_key_entry_str );
-			add_message( reader,
+			na_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_UNKNOWN,
 					( const char * ) iter->name, iter->line, node_list );
 			g_free( node_list );
@@ -1059,7 +1056,7 @@ dump_parse_entry_content( NAXMLReader *reader, xmlNode *entry )
 		}
 
 		if( str->reader_found ){
-			add_message( reader,
+			na_core_utils_slist_add_message( &reader->private->parms->messages,
 					ERR_NODE_ALREADY_FOUND,
 					( const char * ) iter->name, iter->line );
 			reader->private->node_ok = FALSE;
@@ -1102,7 +1099,7 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
 			reader->private->parms->imported = NA_OBJECT_ITEM( na_object_menu_new());
 
 		} else {
-			add_message( reader, ERR_NODE_UNKNOWN_TYPE, type, key_node->line );
+			na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NODE_UNKNOWN_TYPE, type, key_node->line );
 			reader->private->node_ok = FALSE;
 		}
 
@@ -1168,19 +1165,6 @@ dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 	}
 
 	return( string );
-}
-
-static void
-add_message( NAXMLReader *reader, const gchar *format, ... )
-{
-	va_list va;
-	gchar *tmp;
-
-	va_start( va, format );
-	tmp = g_markup_vprintf_escaped( format, va );
-	va_end( va );
-
-	reader->private->parms->messages = g_slist_append( reader->private->parms->messages, tmp );
 }
 
 static gchar *
@@ -1285,85 +1269,25 @@ is_profile_path( NAXMLReader *reader, xmlChar *text )
 	return( is_profile );
 }
 
-/*
- * returns IMPORTER_CODE_OK if we can safely insert the action
- * - the id doesn't already exist
- * - the id already exist, but import mode is renumber
- * - the id already exists, but import mode is override
- *
- * returns IMPORTER_CODE_CANCELLED if user chooses to cancel the operation
- */
 static guint
 manage_import_mode( NAXMLReader *reader )
 {
+	NAIImporterManageImportModeParms parms;
 	guint code;
-	NAObjectItem *exists;
-	guint mode;
-	gchar *id;
 
-	code = IMPORTER_CODE_OK;
-	exists = NULL;
-	mode = 0;
+	parms.version = 1;
+	parms.imported = reader->private->parms->imported;
+	parms.check_fn = reader->private->parms->check_fn;
+	parms.check_fn_data = reader->private->parms->check_fn_data;
+	parms.ask_fn = reader->private->parms->ask_fn;
+	parms.ask_fn_data = reader->private->parms->ask_fn_data;
+	parms.asked_mode = reader->private->parms->asked_mode;
+	parms.messages = reader->private->parms->messages;
 
-	if( reader->private->parms->check_fn ){
-		exists = ( *reader->private->parms->check_fn )
-						( reader->private->parms->imported, reader->private->parms->check_fn_data );
+	code = na_iimporter_manage_import_mode( &parms );
 
-	} else {
-		renumber_label_item( reader );
-		add_message( reader, "%s", _( "Item was renumbered because the caller did not provide any check function." ));
-		reader->private->parms->import_mode = IMPORTER_MODE_RENUMBER;
-	}
-
-	if( exists ){
-		reader->private->parms->exist = TRUE;
-
-		if( reader->private->parms->asked_mode == IMPORTER_MODE_ASK ){
-			if( reader->private->parms->ask_fn ){
-				mode = ( *reader->private->parms->ask_fn )( reader->private->parms->imported, exists, reader->private->parms->ask_fn_data );
-
-			} else {
-				renumber_label_item( reader );
-				add_message( reader, "%s", _( "Item was renumbered because the caller did not provide any ask user function." ));
-				reader->private->parms->import_mode = IMPORTER_MODE_RENUMBER;
-			}
-
-		} else {
-			mode = reader->private->parms->asked_mode;
-		}
-	}
-
-	/* mode is only set if asked mode is ask user and an ask function was provided
-	 * or if asked mode was not ask user
-	 */
-	if( mode ){
-		reader->private->parms->import_mode = mode;
-
-		switch( mode ){
-			case IMPORTER_MODE_RENUMBER:
-				renumber_label_item( reader );
-				if( reader->private->parms->asked_mode == IMPORTER_MODE_ASK ){
-					add_message( reader, "%s", _( "Item was renumbered due to user request." ));
-				}
-				break;
-
-			case IMPORTER_MODE_OVERRIDE:
-				if( reader->private->parms->asked_mode == IMPORTER_MODE_ASK ){
-					add_message( reader, "%s", _( "Existing item was overriden due to user request." ));
-				}
-				break;
-
-			case IMPORTER_MODE_NO_IMPORT:
-			default:
-				id = na_object_get_id( reader->private->parms->imported );
-				add_message( reader, ERR_ITEM_ID_ALREADY_EXISTS, id );
-				if( reader->private->parms->asked_mode == IMPORTER_MODE_ASK ){
-					add_message( reader, "%s", _( "Import was canceled due to user request." ));
-				}
-				g_free( id );
-				code = IMPORTER_CODE_CANCELLED;
-		}
-	}
+	reader->private->parms->exist = parms.exist;
+	reader->private->parms->import_mode = parms.import_mode;
 
 	return( code );
 }
@@ -1379,30 +1303,9 @@ publish_undealt_nodes( NAXMLReader *reader )
 	for( iter = reader->private->nodes ; iter ; iter = iter->next ){
 		xmlNode *node = ( xmlNode * ) iter->data;
 		text = xmlNodeGetContent( node );
-		add_message( reader, WARN_UNDEALT_NODE, ( const gchar * ) text, node->line );
+		na_core_utils_slist_add_message( &reader->private->parms->messages, WARN_UNDEALT_NODE, ( const gchar * ) text, node->line );
 		xmlFree( text );
 	}
-}
-
-/*
- * renumber the item, and set a new label
- */
-static void
-renumber_label_item( NAXMLReader *reader )
-{
-	gchar *label, *tmp;
-
-	na_object_set_new_id( reader->private->parms->imported, NULL );
-
-	label = na_object_get_label( reader->private->parms->imported );
-
-	/* i18n: the action has been renumbered during import operation */
-	tmp = g_strdup_printf( "%s %s", label, _( "(renumbered)" ));
-
-	na_object_set_label( reader->private->parms->imported, tmp );
-
-	g_free( tmp );
-	g_free( label );
 }
 
 /*

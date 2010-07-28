@@ -32,10 +32,13 @@
 #define __NADP_READER_H__
 
 #include <api/na-iio-provider.h>
+#include <api/na-iimporter.h>
 
 G_BEGIN_DECLS
 
-GList       *nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages );
+GList       *nadp_iio_provider_read_items            ( const NAIIOProvider *provider, GSList **messages );
+
+guint        nadp_reader_iimporter_import_from_uri   ( const NAIImporter *instance, NAIImporterImportFromUriParms *parms );
 
 void         nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages );
 NADataBoxed *nadp_reader_ifactory_provider_read_data ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, const NADataDef *iddef, GSList **messages );

@@ -52,7 +52,7 @@ struct NadpDesktopFileClassPrivate {
 struct NadpDesktopFilePrivate {
 	gboolean   dispose_has_run;
 	gchar     *id;
-	gchar     *path;
+	gchar     *uri;
 	GKeyFile  *key_file;
 };
 
@@ -64,8 +64,9 @@ static void             instance_init( GTypeInstance *instance, gpointer klass )
 static void             instance_dispose( GObject *object );
 static void             instance_finalize( GObject *object );
 
-static NadpDesktopFile *ndf_new( const gchar *path );
+static NadpDesktopFile *ndf_new( const gchar *uri );
 static gchar           *path2id( const gchar *path );
+static gchar           *uri2id( const gchar *uri );
 static gboolean         check_key_file( NadpDesktopFile *ndf );
 
 GType
@@ -169,7 +170,7 @@ instance_finalize( GObject *object )
 	self = NADP_DESKTOP_FILE( object );
 
 	g_free( self->private->id );
-	g_free( self->private->path );
+	g_free( self->private->uri );
 
 	if( self->private->key_file ){
 		g_key_file_free( self->private->key_file );
@@ -197,14 +198,25 @@ nadp_desktop_file_new_from_path( const gchar *path )
 	static const gchar *thisfn = "nadp_desktop_file_new_from_path";
 	NadpDesktopFile *ndf;
 	GError *error;
+	gchar *uri;
 
 	ndf = NULL;
 	g_debug( "%s: path=%s", thisfn, path );
 	g_return_val_if_fail( path && g_utf8_strlen( path, -1 ) && g_path_is_absolute( path ), ndf );
 
-	ndf = ndf_new( path );
-
 	error = NULL;
+	uri = g_filename_to_uri( path, NULL, &error );
+	if( !uri || error ){
+		g_warning( "%s: %s: %s", thisfn, path, error->message );
+		g_error_free( error );
+		g_free( uri );
+		return( NULL );
+	}
+
+	ndf = ndf_new( uri );
+
+	g_free( uri );
+
 	g_key_file_load_from_file( ndf->private->key_file, path, G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS, &error );
 	if( error ){
 		g_warning( "%s: %s: %s", thisfn, path, error->message );
@@ -212,6 +224,50 @@ nadp_desktop_file_new_from_path( const gchar *path )
 		g_object_unref( ndf );
 		return( NULL );
 	}
+
+	if( !check_key_file( ndf )){
+		g_object_unref( ndf );
+		return( NULL );
+	}
+
+	return( ndf );
+}
+
+/**
+ * nadp_desktop_file_new_from_uri:
+ * @uri: the URI the desktop file should be loaded from.
+ *
+ * Retuns: a newly allocated #NadpDesktopFile object, or %NULL.
+ *
+ * Key file has been loaded, and first validity checks made.
+ */
+NadpDesktopFile *
+nadp_desktop_file_new_from_uri( const gchar *uri )
+{
+	static const gchar *thisfn = "nadp_desktop_file_new_from_uri";
+	NadpDesktopFile *ndf;
+	GError *error;
+	gchar *data;
+	gsize length;
+
+	ndf = NULL;
+	g_debug( "%s: uri=%s", thisfn, uri );
+	g_return_val_if_fail( uri && g_utf8_strlen( uri, -1 ), ndf );
+
+	ndf = ndf_new( uri );
+	data = na_core_utils_file_load_from_uri( uri, &length );
+
+	error = NULL;
+	g_key_file_load_from_data( ndf->private->key_file, data, length, G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS, &error );
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		g_object_unref( ndf );
+		g_free( data );
+		return( NULL );
+	}
+
+	g_free( data );
 
 	if( !check_key_file( ndf )){
 		g_object_unref( ndf );
@@ -232,66 +288,67 @@ nadp_desktop_file_new_for_write( const gchar *path )
 {
 	static const gchar *thisfn = "nadp_desktop_file_new_for_write";
 	NadpDesktopFile *ndf;
+	GError *error;
+	gchar *uri;
 
 	ndf = NULL;
 	g_debug( "%s: path=%s", thisfn, path );
 	g_return_val_if_fail( path && g_utf8_strlen( path, -1 ) && g_path_is_absolute( path ), ndf );
 
-	ndf = ndf_new( path );
+	error = NULL;
+	uri = g_filename_to_uri( path, NULL, &error );
+	if( !uri || error ){
+		g_warning( "%s: %s: %s", thisfn, path, error->message );
+		g_error_free( error );
+		g_free( uri );
+		return( NULL );
+	}
+
+	ndf = ndf_new( uri );
+
+	g_free( uri );
 
 	return( ndf );
 }
 
 /**
- * nadp_desktop_file_get_key_file_path:
+ * nadp_desktop_file_get_key_file_uri:
  * @ndf: the #NadpDesktopFile instance.
  *
- * Returns: the full pathname of the key file, as a newly allocated
+ * Returns: the URI of the key file, as a newly allocated
  * string which should be g_free() by the caller.
  */
 gchar *
-nadp_desktop_file_get_key_file_path( const NadpDesktopFile *ndf )
+nadp_desktop_file_get_key_file_uri( const NadpDesktopFile *ndf )
 {
-	gchar *path;
+	gchar *uri;
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
 
-	path = NULL;
+	uri = NULL;
 
 	if( !ndf->private->dispose_has_run ){
 
-		path = g_strdup( ndf->private->path );
+		uri = g_strdup( ndf->private->uri );
 	}
 
-	return( path );
+	return( uri );
 }
 
-/*
- * ndf_new:
- * @path: the full pathname of a .desktop file.
- *
- * Retuns: a newly allocated #NadpDesktopFile object.
- */
 static NadpDesktopFile *
-ndf_new( const gchar *path )
+ndf_new( const gchar *uri )
 {
 	NadpDesktopFile *ndf;
 
 	ndf = g_object_new( NADP_DESKTOP_FILE_TYPE, NULL );
 
-	ndf->private->id = path2id( path );
-	ndf->private->path = g_strdup( path );
+	ndf->private->id = uri2id( uri );
+	ndf->private->uri = g_strdup( uri );
 
 	return( ndf );
 }
 
 /*
- * path2id:
- * @path: a full pathname.
- *
- * Returns: the id of the file, as a newly allocated string which
- * should be g_free() by the caller.
- *
  * The id of the file is equal to the basename, minus the suffix.
  */
 static gchar *
@@ -303,6 +360,23 @@ path2id( const gchar *path )
 	bname = g_path_get_basename( path );
 	id = na_core_utils_str_remove_suffix( bname, NADP_DESKTOP_FILE_SUFFIX );
 	g_free( bname );
+
+	return( id );
+}
+
+static gchar *
+uri2id( const gchar *uri )
+{
+	gchar *path;
+	gchar *id;
+
+	id = NULL;
+	path = g_filename_from_uri( uri, NULL, NULL );
+
+	if( path ){
+		id = path2id( path );
+		g_free( path );
+	}
 
 	return( id );
 }
@@ -320,11 +394,11 @@ check_key_file( NadpDesktopFile *ndf )
 	ret = TRUE;
 	error = NULL;
 
-	/* start group must be 'Desktop Entry' */
+	/* start group must be [Desktop Entry] */
 	start_group = g_key_file_get_start_group( ndf->private->key_file );
 	if( strcmp( start_group, NADP_GROUP_DESKTOP )){
 		g_warning( "%s: %s: invalid start group, found %s, waited for %s",
-				thisfn, ndf->private->path, start_group, NADP_GROUP_DESKTOP );
+				thisfn, ndf->private->uri, start_group, NADP_GROUP_DESKTOP );
 		ret = FALSE;
 	}
 
@@ -332,17 +406,17 @@ check_key_file( NadpDesktopFile *ndf )
 	if( ret ){
 		has_key = g_key_file_has_key( ndf->private->key_file, start_group, NADP_KEY_HIDDEN, &error );
 		if( error ){
-			g_warning( "%s: %s: %s", thisfn, ndf->private->path, error->message );
+			g_warning( "%s: %s: %s", thisfn, ndf->private->uri, error->message );
 			ret = FALSE;
 
 		} else if( has_key ){
 			hidden = g_key_file_get_boolean( ndf->private->key_file, start_group, NADP_KEY_HIDDEN, &error );
 			if( error ){
-				g_warning( "%s: %s: %s", thisfn, ndf->private->path, error->message );
+				g_warning( "%s: %s: %s", thisfn, ndf->private->uri, error->message );
 				ret = FALSE;
 
 			} else if( hidden ){
-				g_debug( "%s: %s: Hidden=true", thisfn, ndf->private->path );
+				g_debug( "%s: %s: Hidden=true", thisfn, ndf->private->uri );
 				ret = FALSE;
 			}
 		}
@@ -917,7 +991,7 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 	if( !ndf->private->dispose_has_run ){
 
 		data = g_key_file_to_data( ndf->private->key_file, NULL, NULL );
-		file = g_file_new_for_path( ndf->private->path );
+		file = g_file_new_for_uri( ndf->private->uri );
 
 		stream = g_file_replace( file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &error );
 		if( error ){

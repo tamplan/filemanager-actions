@@ -55,6 +55,7 @@ gchar   *na_core_utils_str_remove_suffix( const gchar *string, const gchar *suff
 
 /* some functions to get or set GSList list of strings
  */
+void     na_core_utils_slist_add_message( GSList **list, const gchar *format, ... );
 GSList  *na_core_utils_slist_duplicate( GSList *list );
 void     na_core_utils_slist_dump( const gchar *prefix, GSList *list );
 GSList  *na_core_utils_slist_from_array( const gchar **str_array );
@@ -86,8 +87,9 @@ void     na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar 
 
 /* file management
  */
-gboolean na_core_utils_file_delete( const gchar *path );
-gboolean na_core_utils_file_exists( const gchar *path );
+gboolean na_core_utils_file_delete       ( const gchar *path );
+gboolean na_core_utils_file_exists       ( const gchar *path );
+gchar   *na_core_utils_file_load_from_uri( const gchar *uri, gsize *length );
 
 /* miscellaneous
  */

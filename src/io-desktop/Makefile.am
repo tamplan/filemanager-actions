@@ -40,6 +40,8 @@ libna_io_desktop_la_SOURCES = \
 	nadp-desktop-file.h									\
 	nadp-desktop-provider.c								\
 	nadp-desktop-provider.h								\
+	nadp-formats.c										\
+	nadp-formats.h										\
 	nadp-keys.c											\
 	nadp-keys.h											\
 	nadp-module.c										\

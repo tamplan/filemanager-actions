@@ -36,7 +36,6 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-iio-provider.h>
 #include <api/na-ifactory-provider.h>
 
 #include "nadp-desktop-provider.h"
@@ -51,26 +50,36 @@ struct NadpDesktopProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+extern NAIExporterFormat nadp_formats[];
+
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 static guint         st_timeout_msec = 100;
 static guint         st_timeout_usec = 100000;
 
-static void     class_init( NadpDesktopProviderClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_dispose( GObject *object );
-static void     instance_finalize( GObject *object );
+static void                     class_init( NadpDesktopProviderClass *klass );
+static void                     instance_init( GTypeInstance *instance, gpointer klass );
+static void                     instance_dispose( GObject *object );
+static void                     instance_finalize( GObject *object );
 
-static void     iio_provider_iface_init( NAIIOProviderInterface *iface );
-static gchar   *iio_provider_get_id( const NAIIOProvider *provider );
-static gchar   *iio_provider_get_name( const NAIIOProvider *provider );
-static guint    iio_provider_get_version( const NAIIOProvider *provider );
+static void                     iio_provider_iface_init( NAIIOProviderInterface *iface );
+static gchar                   *iio_provider_get_id( const NAIIOProvider *provider );
+static gchar                   *iio_provider_get_name( const NAIIOProvider *provider );
+static guint                    iio_provider_get_version( const NAIIOProvider *provider );
 
-static void     ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
-static guint    ifactory_provider_get_version( const NAIFactoryProvider *reader );
+static void                     ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
+static guint                    ifactory_provider_get_version( const NAIFactoryProvider *reader );
 
-static gboolean on_monitor_timeout( NadpDesktopProvider *provider );
-static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+static void                     iimporter_iface_init( NAIImporterInterface *iface );
+static guint                    iimporter_get_version( const NAIImporter *importer );
+
+static void                     iexporter_iface_init( NAIExporterInterface *iface );
+static guint                    iexporter_get_version( const NAIExporter *exporter );
+static gchar                   *iexporter_get_name( const NAIExporter *exporter );
+static const NAIExporterFormat *iexporter_get_formats( const NAIExporter *exporter );
+
+static gboolean                 on_monitor_timeout( NadpDesktopProvider *provider );
+static gulong                   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 GType
 nadp_desktop_provider_get_type( void )
@@ -107,6 +116,18 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 		NULL
 	};
 
+	static const GInterfaceInfo iimporter_iface_info = {
+		( GInterfaceInitFunc ) iimporter_iface_init,
+		NULL,
+		NULL
+	};
+
+	static const GInterfaceInfo iexporter_iface_info = {
+		( GInterfaceInitFunc ) iexporter_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NadpDesktopProvider", &info, 0 );
@@ -114,6 +135,10 @@ nadp_desktop_provider_register_type( GTypeModule *module )
 	g_type_module_add_interface( module, st_module_type, NA_IIO_PROVIDER_TYPE, &iio_provider_iface_info );
 
 	g_type_module_add_interface( module, st_module_type, NA_IFACTORY_PROVIDER_TYPE, &ifactory_provider_iface_info );
+
+	g_type_module_add_interface( module, st_module_type, NA_IIMPORTER_TYPE, &iimporter_iface_info );
+
+	g_type_module_add_interface( module, st_module_type, NA_IEXPORTER_TYPE, &iexporter_iface_info );
 }
 
 static void
@@ -245,6 +270,55 @@ static guint
 ifactory_provider_get_version( const NAIFactoryProvider *reader )
 {
 	return( 1 );
+}
+
+static void
+iimporter_iface_init( NAIImporterInterface *iface )
+{
+	static const gchar *thisfn = "nadp_desktop_provider_iimporter_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_version = iimporter_get_version;
+	iface->import_from_uri = nadp_reader_iimporter_import_from_uri;
+}
+
+static guint
+iimporter_get_version( const NAIImporter *importer )
+{
+	return( 1 );
+}
+
+static void
+iexporter_iface_init( NAIExporterInterface *iface )
+{
+	static const gchar *thisfn = "nadp_desktop_iexporter_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_version = iexporter_get_version;
+	iface->get_name = iexporter_get_name;
+	iface->get_formats = iexporter_get_formats;
+	iface->to_file = nadp_writer_iexporter_export_to_file;
+	iface->to_buffer = nadp_writer_iexporter_export_to_buffer;
+}
+
+static guint
+iexporter_get_version( const NAIExporter *exporter )
+{
+	return( 1 );
+}
+
+static gchar *
+iexporter_get_name( const NAIExporter *exporter )
+{
+	return( g_strdup( "NA Desktop Exporter" ));
+}
+
+static const NAIExporterFormat *
+iexporter_get_formats( const NAIExporter *exporter )
+{
+	return( nadp_formats );
 }
 
 /**

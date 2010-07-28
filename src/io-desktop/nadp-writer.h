@@ -32,15 +32,19 @@
 #define __NADP_WRITER_H__
 
 #include <api/na-iio-provider.h>
+#include <api/na-iexporter.h>
 
 G_BEGIN_DECLS
 
-gboolean nadp_iio_provider_is_willing_to_write( const NAIIOProvider *provider );
-gboolean nadp_iio_provider_is_able_to_write   ( const NAIIOProvider *provider );
+gboolean nadp_iio_provider_is_willing_to_write ( const NAIIOProvider *provider );
+gboolean nadp_iio_provider_is_able_to_write    ( const NAIIOProvider *provider );
 
-guint    nadp_iio_provider_write_item    ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint    nadp_iio_provider_delete_item   ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
-guint    nadp_iio_provider_duplicate_data( const NAIIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
+guint    nadp_iio_provider_write_item          ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint    nadp_iio_provider_delete_item         ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
+guint    nadp_iio_provider_duplicate_data      ( const NAIIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
+
+guint    nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParms *parms );
+guint    nadp_writer_iexporter_export_to_file  ( const NAIExporter *instance, NAIExporterFileParms *parms );
 
 guint    nadp_writer_ifactory_provider_write_start(
 				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,

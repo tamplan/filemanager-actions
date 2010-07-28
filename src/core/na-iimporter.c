@@ -32,7 +32,11 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
+#include <api/na-core-utils.h>
 #include <api/na-iimporter.h>
+#include <api/na-object-api.h>
 
 /* private interface data
  */
@@ -48,6 +52,8 @@ static void   interface_base_init( NAIImporterInterface *klass );
 static void   interface_base_finalize( NAIImporterInterface *klass );
 
 static guint  iimporter_get_version( const NAIImporter *instance );
+
+static void   renumber_label_item( NAIImporterManageImportModeParms *parms );
 
 /**
  * na_iimporter_get_type:
@@ -168,4 +174,109 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
 	}
 
 	return( code );
+}
+
+/*
+ * Returns IMPORTER_CODE_OK if we can safely insert the action
+ * - the id doesn't already exist
+ * - the id already exist, but import mode is renumber
+ * - the id already exists, but import mode is override
+ *
+ * Returns IMPORTER_CODE_CANCELLED if user chooses to cancel the operation
+ */
+guint
+na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
+{
+	guint code;
+	NAObjectItem *exists;
+	guint mode;
+	gchar *id;
+
+	g_return_val_if_fail( parms->imported != NULL, IMPORTER_CODE_CANCELLED );
+
+	code = IMPORTER_CODE_OK;
+	exists = NULL;
+	mode = 0;
+
+	if( parms->check_fn ){
+		exists = ( *parms->check_fn )( parms->imported, parms->check_fn_data );
+
+	} else {
+		renumber_label_item( parms );
+		na_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered because the caller did not provide any check function." ));
+		parms->import_mode = IMPORTER_MODE_RENUMBER;
+	}
+
+	if( exists ){
+		parms->exist = TRUE;
+
+		if( parms->asked_mode == IMPORTER_MODE_ASK ){
+			if( parms->ask_fn ){
+				mode = ( *parms->ask_fn )( parms->imported, exists, parms->ask_fn_data );
+
+			} else {
+				renumber_label_item( parms );
+				na_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered because the caller did not provide any ask user function." ));
+				parms->import_mode = IMPORTER_MODE_RENUMBER;
+			}
+
+		} else {
+			mode = parms->asked_mode;
+		}
+	}
+
+	/* mode is only set if asked mode is ask user and an ask function was provided
+	 * or if asked mode was not ask user
+	 */
+	if( mode ){
+		parms->import_mode = mode;
+
+		switch( mode ){
+			case IMPORTER_MODE_RENUMBER:
+				renumber_label_item( parms );
+				if( parms->asked_mode == IMPORTER_MODE_ASK ){
+					na_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered due to user request." ));
+				}
+				break;
+
+			case IMPORTER_MODE_OVERRIDE:
+				if( parms->asked_mode == IMPORTER_MODE_ASK ){
+					na_core_utils_slist_add_message( &parms->messages, "%s", _( "Existing item was overriden due to user request." ));
+				}
+				break;
+
+			case IMPORTER_MODE_NO_IMPORT:
+			default:
+				id = na_object_get_id( parms->imported );
+				na_core_utils_slist_add_message( &parms->messages, _( "Item %s already exists." ), id );
+				if( parms->asked_mode == IMPORTER_MODE_ASK ){
+					na_core_utils_slist_add_message( &parms->messages, "%s", _( "Import was canceled due to user request." ));
+				}
+				g_free( id );
+				code = IMPORTER_CODE_CANCELLED;
+		}
+	}
+
+	return( code );
+}
+
+/*
+ * renumber the item, and set a new label
+ */
+static void
+renumber_label_item( NAIImporterManageImportModeParms *parms )
+{
+	gchar *label, *tmp;
+
+	na_object_set_new_id( parms->imported, NULL );
+
+	label = na_object_get_label( parms->imported );
+
+	/* i18n: the action has been renumbered during import operation */
+	tmp = g_strdup_printf( "%s %s", label, _( "(renumbered)" ));
+
+	na_object_set_label( parms->imported, tmp );
+
+	g_free( tmp );
+	g_free( label );
 }

@@ -66,6 +66,7 @@ static void              get_list_of_desktop_files( const NadpDesktopProvider *p
 static gboolean          is_already_loaded( const NadpDesktopProvider *provider, GList *files, const gchar *desktop_id );
 static GList            *desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const gchar *dir, const gchar *id );
 static NAIFactoryObject *item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages );
+static NAIFactoryObject *item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *ndf, GSList **messages );
 static void              desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
 static void              free_desktop_paths( GList *paths );
 
@@ -251,17 +252,28 @@ desktop_path_from_id( const NadpDesktopProvider *provider, GList *files, const g
 static NAIFactoryObject *
 item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_reader_item_from_desktop_path";
-	NAIFactoryObject *item;
 	NadpDesktopFile *ndf;
-	gchar *type;
-	NadpReaderData *reader_data;
-	gchar *id;
 
 	ndf = nadp_desktop_file_new_from_path( dps->path );
 	if( !ndf ){
 		return( NULL );
 	}
+
+	return( item_from_desktop_file( provider, ndf, messages ));
+}
+
+/*
+ * Returns a newly allocated NAIFactoryObject-derived object, initialized
+ * from the .desktop file
+ */
+static NAIFactoryObject *
+item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *ndf, GSList **messages )
+{
+	static const gchar *thisfn = "nadp_reader_item_from_desktop_file";
+	NAIFactoryObject *item;
+	gchar *type;
+	NadpReaderData *reader_data;
+	gchar *id;
 
 	item = NULL;
 	type = nadp_desktop_file_get_file_type( ndf );
@@ -321,6 +333,75 @@ free_desktop_paths( GList *paths )
 	}
 
 	g_list_free( paths );
+}
+
+/**
+ * nadp_reader_iimporter_import_from_uri:
+ * @instance: the #NAIImporter provider.
+ * @parms: a #NAIImporterUriParms structure.
+ *
+ * Imports an item.
+ *
+ * Returns: the import operation code.
+ *
+ * As soon as we have a valid .desktop file, we are most probably willing
+ * to successfully import an action or a menu of it.
+ *
+ * GLib does not have any primitive to load a key file from an uri.
+ * So we have to load the file into memory, and then try to load the key
+ * file from the memory data.
+ */
+guint
+nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterImportFromUriParms *parms )
+{
+	static const gchar *thisfn = "nadp_reader_iimporter_import_from_uri";
+	guint code;
+	NadpDesktopFile *ndf;
+	NAIImporterManageImportModeParms manage_parms;
+
+	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
+
+	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
+
+	code = IMPORTER_CODE_NOT_WILLING_TO;
+
+	ndf = nadp_desktop_file_new_from_uri( parms->uri );
+	if( ndf ){
+		parms->exist = FALSE;
+		parms->import_mode = IMPORTER_MODE_NO_IMPORT;
+		parms->imported = ( NAObjectItem * ) item_from_desktop_file(
+				( const NadpDesktopProvider * ) NADP_DESKTOP_PROVIDER( instance ),
+				ndf, &parms->messages );
+
+		if( parms->imported ){
+			code = IMPORTER_CODE_OK;
+			g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms->imported ), IMPORTER_CODE_NOT_WILLING_TO );
+
+			manage_parms.version = 1;
+			manage_parms.imported = parms->imported;
+			manage_parms.check_fn = parms->check_fn;
+			manage_parms.check_fn_data = parms->check_fn_data;
+			manage_parms.ask_fn = parms->ask_fn;
+			manage_parms.ask_fn_data = parms->ask_fn_data;
+			manage_parms.asked_mode = parms->asked_mode;
+			manage_parms.messages = parms->messages;
+
+			code = na_iimporter_manage_import_mode( &manage_parms );
+
+			parms->exist = manage_parms.exist;
+			parms->import_mode = manage_parms.import_mode;
+		}
+
+		if( code != IMPORTER_CODE_OK ){
+			if( parms->imported ){
+				g_object_unref( parms->imported );
+				parms->imported = NULL;
+			}
+		}
+	}
+
+	return( code );
 }
 
 /*
@@ -533,13 +614,13 @@ static gboolean
 read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *item, NadpReaderData *reader_data, GSList **messages )
 {
 	NadpDesktopFile *ndf;
-	gchar *path;
+	gchar *uri;
 	gboolean writable;
 
 	ndf = reader_data->ndf;
-	path = nadp_desktop_file_get_key_file_path( ndf );
-	writable = nadp_utils_is_writable_file( path );
-	g_free( path );
+	uri = nadp_desktop_file_get_key_file_uri( ndf );
+	writable = nadp_utils_uri_is_writable( uri );
+	g_free( uri );
 
 	return( writable );
 }

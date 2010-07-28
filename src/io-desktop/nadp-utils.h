@@ -35,7 +35,8 @@ G_BEGIN_DECLS
 
 GSList  *nadp_utils_gslist_remove_from( GSList *list, const gchar *string );
 
-gboolean nadp_utils_is_writable_file( const gchar *path );
+gboolean nadp_utils_uri_delete     ( const gchar *uri );
+gboolean nadp_utils_uri_is_writable( const gchar *uri );
 
 G_END_DECLS
 

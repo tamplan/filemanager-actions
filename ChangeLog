@@ -1,5 +1,47 @@
 2010-07-28 Pierre Wieser <pwieser@trychlos.org>
 
+	Import/export .desktop files.
+
+	* doc/export-format-id: Declare the new export format.
+
+	* po/POTFILES.in: Add a file.
+
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c
+	(na_core_utils_slist_add_message, na_core_utils_file_load_from_uri):
+	New functions.
+
+	* src/api/na-iimporter.h:
+	* src/core/na-iimporter.c (na_iimporter_manage_import_mode):
+	New function.
+
+	* src/io-desktop/nadp-formats.c:
+	* src/io-desktop/nadp-formats.h: New files.
+
+	* src/io-desktop/Makefile.am: Updated accordingly.
+
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h
+	(nadp_desktop_file_new_from_uri): New function.
+	(nadp_desktop_file_get_key_file_path): Renamed as nadp_desktop_file_get_key_file_uri().
+
+	* src/io-desktop/nadp-desktop-provider.c:
+	Declare NAIImporterInterface and NAIExporterInterface interfaces.
+
+	* src/io-desktop/nadp-reader.c:
+	* src/io-desktop/nadp-reader.h
+	(nadp_reader_iimporter_import_from_uri): New function.
+
+	* src/io-desktop/nadp-utils.c:
+	* src/io-desktop/nadp-utils.h
+	(nadp_utils_is_writable_file): Renamed as nadp_utils_uri_is_writable().
+	(nadp_utils_uri_delete): New function.
+
+	* src/io-desktop/nadp-writer.c:
+	* src/io-desktop/nadp-writer.h
+	(nadp_writer_iexporter_export_to_buffer, nadp_writer_iexporter_export_to_file):
+	New functions.
+
 	* src/nact/nact-add-scheme-dialog.c:
 	Prevent a default scheme to be inserted twice.
 

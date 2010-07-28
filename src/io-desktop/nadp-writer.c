@@ -43,6 +43,7 @@
 #include "nadp-desktop-file.h"
 #include "nadp-desktop-provider.h"
 #include "nadp-keys.h"
+#include "nadp-utils.h"
 #include "nadp-writer.h"
 #include "nadp-xdg-dirs.h"
 
@@ -226,7 +227,7 @@ nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 	guint ret;
 	NadpDesktopProvider *self;
 	NadpDesktopFile *ndf;
-	gchar *path;
+	gchar *uri;
 
 	g_debug( "%s: provider=%p (%s), item=%p (%s), messages=%p",
 			thisfn,
@@ -250,11 +251,11 @@ nadp_iio_provider_delete_item( const NAIIOProvider *provider, const NAObjectItem
 
 	if( ndf ){
 		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
-		path = nadp_desktop_file_get_key_file_path( ndf );
-		if( na_core_utils_file_delete( path )){
+		uri = nadp_desktop_file_get_key_file_uri( ndf );
+		if( nadp_utils_uri_delete( uri )){
 			ret = NA_IIO_PROVIDER_CODE_OK;
 		}
-		g_free( path );
+		g_free( uri );
 
 	} else {
 		g_warning( "%s: NadpDesktopFile is null", thisfn );
@@ -317,47 +318,117 @@ nadp_iio_provider_duplicate_data( const NAIIOProvider *provider, NAObjectItem *d
 	return( NA_IIO_PROVIDER_CODE_OK );
 }
 
-#if 0
-/*
- * the item comes from being readen from a desktop file
- * -> see if this desktop file is writable ?
+/**
+ * nadp_writer_iexporter_export_to_buffer:
+ * @instance: this #NAIExporter instance.
+ * @parms: a #NAIExporterBufferParms structure.
  *
- * This is only used to setup the 'read-only' initial status of the
- * NAObjectItem - We don't care of all events which can suddenly make
- * this item becomes readonly (eventually we will deal for errors,
- * and reset the flag at this time)
- *
- * Internal function: do not call from outside the instance.
+ * Export the specified 'item' to a newly allocated buffer.
  */
-gboolean
-nadp_writer_desktop_is_writable( const NAIIOProvider *provider, const NAObjectItem *item )
+guint
+nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParms *parms )
 {
-	static const gchar *thisfn = "nadp_writer_desktop_is_writable";
-	gboolean writable;
-	NadpDesktopFile *ndf;
-	gchar *path;
+	static const gchar *thisfn = "nadp_writer_iexporter_export_to_buffer";
+	guint code;
 
-	writable = FALSE;
-	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), writable );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), writable );
+	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
-	if( NA_IS_OBJECT_MENU( item )){
-		g_warning( "%s: menu are not yet handled by Desktop provider", thisfn );
-		return( FALSE );
+	code = NA_IEXPORTER_CODE_OK;
+	/*
+	NAXMLWriter *writer;
+
+	if( !parms->exported || !NA_IS_OBJECT_ITEM( parms->exported )){
+		code = NA_IEXPORTER_CODE_INVALID_ITEM;
 	}
 
-	ndf = ( NadpDesktopFile * ) na_object_get_provider_data( item );
+	if( code == NA_IEXPORTER_CODE_OK ){
+		writer = NAXML_WRITER( g_object_new( NAXML_WRITER_TYPE, NULL ));
 
-	if( ndf ){
-		g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), writable );
-		path = nadp_desktop_file_get_key_file_path( ndf );
-		writable = nadp_utils_is_writable_file( path );
-		g_free( path );
+		writer->private->provider = ( NAIExporter * ) instance;
+		writer->private->exported = parms->exported;
+		writer->private->messages = parms->messages;
+		writer->private->fn_str = find_export_format_fn( parms->format );
+		writer->private->buffer = NULL;
+
+		if( !writer->private->fn_str ){
+			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
+
+		} else {
+			code = writer_to_buffer( writer );
+			if( code == NA_IEXPORTER_CODE_OK ){
+				parms->buffer = writer->private->buffer;
+			}
+		}
+
+		g_object_unref( writer );
 	}
+	*/
 
-	return( writable );
+	g_debug( "%s: returning code=%u", thisfn, code );
+	return( code );
 }
-#endif
+
+/**
+ * nadp_writer_iexporter_export_to_file:
+ * @instance: this #NAIExporter instance.
+ * @parms: a #NAIExporterFileParms structure.
+ *
+ * Export the specified 'item' to a newly created file.
+ */
+guint
+nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFileParms *parms )
+{
+	static const gchar *thisfn = "nadp_writer_iexporter_export_to_file";
+	guint code;
+
+	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
+
+	code = NA_IEXPORTER_CODE_OK;
+
+	/*
+	NAXMLWriter *writer;
+	gchar *filename;
+
+	if( !parms->exported || !NA_IS_OBJECT_ITEM( parms->exported )){
+		code = NA_IEXPORTER_CODE_INVALID_ITEM;
+	}
+
+	if( code == NA_IEXPORTER_CODE_OK ){
+		writer = NAXML_WRITER( g_object_new( NAXML_WRITER_TYPE, NULL ));
+
+		writer->private->provider = ( NAIExporter * ) instance;
+		writer->private->exported = parms->exported;
+		writer->private->messages = parms->messages;
+		writer->private->fn_str = find_export_format_fn( parms->format );
+		writer->private->buffer = NULL;
+
+		if( !writer->private->fn_str ){
+			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
+
+		} else {
+			code = writer_to_buffer( writer );
+
+			if( code == NA_IEXPORTER_CODE_OK ){
+				filename = get_output_fname( parms->exported, parms->folder, parms->format );
+
+				if( filename ){
+					parms->basename = g_path_get_basename( filename );
+					output_xml_to_file(
+							writer->private->buffer, filename, parms->messages ? &writer->private->messages : NULL );
+					g_free( filename );
+				}
+			}
+
+			g_free( writer->private->buffer );
+		}
+
+		g_object_unref( writer );
+	}
+	*/
+
+	g_debug( "%s: returning code=%u", thisfn, code );
+	return( code );
+}
 
 guint
 nadp_writer_ifactory_provider_write_start( const NAIFactoryProvider *provider, void *writer_data,

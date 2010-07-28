@@ -209,6 +209,19 @@ na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
 	return( removed );
 }
 
+void
+na_core_utils_slist_add_message( GSList **messages, const gchar *format, ... )
+{
+	va_list va;
+	gchar *tmp;
+
+	va_start( va, format );
+	tmp = g_markup_vprintf_escaped( format, va );
+	va_end( va );
+
+	*messages = g_slist_append( *messages, tmp );
+}
+
 /**
  * na_core_utils_slist_duplicate:
  * @source_slist: the #GSList to be duplicated.
@@ -866,6 +879,38 @@ na_core_utils_file_exists( const gchar *fname )
 	g_object_unref( file );
 
 	return( exists );
+}
+
+/**
+ * na_core_utils_file_load_from_uri:
+ * @uri: the URI the file must be loaded from.
+ * @length: a pointer to the length of the readen content.
+ *
+ * Loads the file into a newly allocated buffer, and set up the length of the
+ * readen content if not %NULL.
+ *
+ * Returns: the newly allocated buffer which contains the file content, or %NULL.
+ * This buffer should be g_free() by the caller.
+ */
+gchar *
+na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
+{
+	gchar *data;
+	GFile *file;
+
+	file = g_file_new_for_uri( uri );
+
+	if( !g_file_load_contents( file, NULL, &data, length, NULL, NULL )){
+		g_free( data );
+		data = NULL;
+		if( length ){
+			*length = 0;
+		}
+	}
+
+	g_object_unref( file );
+
+	return( data );
 }
 
 /**
