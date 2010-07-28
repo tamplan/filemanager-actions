@@ -1,5 +1,8 @@
 2010-07-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-match-list.c:
+	Prevent a standard filter to be inserted twice.
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c (na_core_utils_slist_dump):
 	Add a prefix parameter to the function.
