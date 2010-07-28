@@ -185,6 +185,21 @@ instance_finalize( GObject *object )
 }
 
 /**
+ * nadp_desktop_file_new:
+ *
+ * Retuns: a newly allocated #NadpDesktopFile object.
+ */
+NadpDesktopFile *
+nadp_desktop_file_new( void )
+{
+	NadpDesktopFile *ndf;
+
+	ndf = g_object_new( NADP_DESKTOP_FILE_TYPE, NULL );
+
+	return( ndf );
+}
+
+/**
  * nadp_desktop_file_new_from_path:
  * @path: the full pathname of a .desktop file.
  *
@@ -309,6 +324,29 @@ nadp_desktop_file_new_for_write( const gchar *path )
 	g_free( uri );
 
 	return( ndf );
+}
+
+/**
+ * nadp_desktop_file_get_key_file:
+ * @ndf: the #NadpDesktopFile instance.
+ *
+ * Returns: a pointer to the internal #GKeyFile.
+ */
+GKeyFile *
+nadp_desktop_file_get_key_file( const NadpDesktopFile *ndf )
+{
+	GKeyFile *key_file;
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
+
+	key_file = NULL;
+
+	if( !ndf->private->dispose_has_run ){
+
+		key_file = ndf->private->key_file;
+	}
+
+	return( key_file );
 }
 
 /**

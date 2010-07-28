@@ -1,5 +1,13 @@
 2010-07-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h
+	(nadp_desktop_file_new, nadp_desktop_file_get_key_file):
+	New functions.
+
+	* src/io-desktop/nadp-writer.c
+	(nadp_writer_iexporter_export_to_buffer): Implement the function.
+
 	Import/export .desktop files.
 
 	* doc/export-format-id: Declare the new export format.

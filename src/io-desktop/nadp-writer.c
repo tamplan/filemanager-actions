@@ -42,14 +42,33 @@
 
 #include "nadp-desktop-file.h"
 #include "nadp-desktop-provider.h"
+#include "nadp-formats.h"
 #include "nadp-keys.h"
 #include "nadp-utils.h"
 #include "nadp-writer.h"
 #include "nadp-xdg-dirs.h"
 
-static guint write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages );
+/* the association between an export format and the functions
+ */
+typedef struct {
+	gchar  *format;
+	void   *foo;
+}
+	ExportFormatFn;
 
-static void  desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
+static ExportFormatFn st_export_format_fn[] = {
+
+	{ NADP_FORMAT_DESKTOP_V1,
+					NULL },
+
+	{ NULL }
+};
+
+static guint           write_item( const NAIIOProvider *provider, const NAObjectItem *item, NadpDesktopFile *ndf, GSList **messages );
+
+static void            desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
+
+static ExportFormatFn *find_export_format_fn( GQuark format );
 
 /*
  * This is implementation of NAIIOProvider::is_willing_to_write method
@@ -329,40 +348,41 @@ guint
 nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParms *parms )
 {
 	static const gchar *thisfn = "nadp_writer_iexporter_export_to_buffer";
-	guint code;
+	guint code, write_code;
+	ExportFormatFn *fmt;
+	GKeyFile *key_file;
+	NadpDesktopFile *ndf;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
+	parms->buffer = NULL;
 	code = NA_IEXPORTER_CODE_OK;
-	/*
-	NAXMLWriter *writer;
 
 	if( !parms->exported || !NA_IS_OBJECT_ITEM( parms->exported )){
 		code = NA_IEXPORTER_CODE_INVALID_ITEM;
 	}
 
 	if( code == NA_IEXPORTER_CODE_OK ){
-		writer = NAXML_WRITER( g_object_new( NAXML_WRITER_TYPE, NULL ));
+		fmt = find_export_format_fn( parms->format );
 
-		writer->private->provider = ( NAIExporter * ) instance;
-		writer->private->exported = parms->exported;
-		writer->private->messages = parms->messages;
-		writer->private->fn_str = find_export_format_fn( parms->format );
-		writer->private->buffer = NULL;
-
-		if( !writer->private->fn_str ){
+		if( !fmt ){
 			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
 
 		} else {
-			code = writer_to_buffer( writer );
-			if( code == NA_IEXPORTER_CODE_OK ){
-				parms->buffer = writer->private->buffer;
-			}
-		}
+			ndf = nadp_desktop_file_new();
+			write_code = na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( instance ), ndf, NA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
 
-		g_object_unref( writer );
+			if( write_code != NA_IIO_PROVIDER_CODE_OK ){
+				code = NA_IEXPORTER_CODE_ERROR;
+
+			} else {
+				key_file = nadp_desktop_file_get_key_file( ndf );
+				parms->buffer = g_key_file_to_data( key_file, NULL, NULL );
+			}
+
+			g_object_unref( ndf );
+		}
 	}
-	*/
 
 	g_debug( "%s: returning code=%u", thisfn, code );
 	return( code );
@@ -379,52 +399,49 @@ guint
 nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFileParms *parms )
 {
 	static const gchar *thisfn = "nadp_writer_iexporter_export_to_file";
-	guint code;
+	guint code, write_code;
+	gchar *id, *folder_path, *dest_path;
+	ExportFormatFn *fmt;
+	NadpDesktopFile *ndf;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
+	parms->basename = NULL;
 	code = NA_IEXPORTER_CODE_OK;
-
-	/*
-	NAXMLWriter *writer;
-	gchar *filename;
 
 	if( !parms->exported || !NA_IS_OBJECT_ITEM( parms->exported )){
 		code = NA_IEXPORTER_CODE_INVALID_ITEM;
 	}
 
 	if( code == NA_IEXPORTER_CODE_OK ){
-		writer = NAXML_WRITER( g_object_new( NAXML_WRITER_TYPE, NULL ));
+		fmt = find_export_format_fn( parms->format );
 
-		writer->private->provider = ( NAIExporter * ) instance;
-		writer->private->exported = parms->exported;
-		writer->private->messages = parms->messages;
-		writer->private->fn_str = find_export_format_fn( parms->format );
-		writer->private->buffer = NULL;
-
-		if( !writer->private->fn_str ){
+		if( !fmt ){
 			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
 
 		} else {
-			code = writer_to_buffer( writer );
+			id = na_object_get_id( parms->exported );
+			parms->basename = g_strdup_printf( "%s%s", id, NADP_DESKTOP_FILE_SUFFIX );
+			g_free( id );
 
-			if( code == NA_IEXPORTER_CODE_OK ){
-				filename = get_output_fname( parms->exported, parms->folder, parms->format );
+			folder_path = g_filename_from_uri( parms->folder, NULL, NULL );
+			dest_path = g_strdup_printf( "%s/%s", folder_path, parms->basename );
+			g_free( folder_path );
 
-				if( filename ){
-					parms->basename = g_path_get_basename( filename );
-					output_xml_to_file(
-							writer->private->buffer, filename, parms->messages ? &writer->private->messages : NULL );
-					g_free( filename );
-				}
+			ndf = nadp_desktop_file_new_for_write( dest_path );
+			write_code = na_ifactory_provider_write_item( NA_IFACTORY_PROVIDER( instance ), ndf, NA_IFACTORY_OBJECT( parms->exported ), &parms->messages );
+
+			if( write_code != NA_IIO_PROVIDER_CODE_OK ){
+				code = NA_IEXPORTER_CODE_ERROR;
+
+			} else if( !nadp_desktop_file_write( ndf )){
+				code = NA_IEXPORTER_CODE_UNABLE_TO_WRITE;
 			}
 
-			g_free( writer->private->buffer );
+			g_free( dest_path );
+			g_object_unref( ndf );
 		}
-
-		g_object_unref( writer );
 	}
-	*/
 
 	g_debug( "%s: returning code=%u", thisfn, code );
 	return( code );
@@ -574,4 +591,23 @@ nadp_writer_ifactory_provider_write_done( const NAIFactoryProvider *provider, vo
 	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
+static ExportFormatFn *
+find_export_format_fn( GQuark format )
+{
+	ExportFormatFn *found;
+	ExportFormatFn *i;
+
+	found = NULL;
+	i = st_export_format_fn;
+
+	while( i->format && !found ){
+		if( g_quark_from_string( i->format ) == format ){
+			found = i;
+		}
+		i++;
+	}
+
+	return( found );
 }
