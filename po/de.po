@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-07-28 17:22+0000\n"
-"PO-Revision-Date: 2010-07-28 21:51+0100\n"
+"POT-Creation-Date: 2010-07-28 20:59+0000\n"
+"PO-Revision-Date: 2010-07-29 22:22+0100\n"
 "Last-Translator: Mario Blättermann <mariobl@gnome.org>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -557,9 +557,9 @@ msgid ""
 "A pattern to be matched against basenames of selected file(s)/folder(s). May "
 "include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr ""
-"Ein Muster mit Platzhaltern »?« und »*«, das auf Basisnamen von Datei(en) oder "
-"Ordnern zutreffen muss (Sie müssen für jedes Muster, das Sie benötigen, ein "
-"weiteres erstellen)."
+"Ein Muster mit Platzhaltern »?« und »*«, das auf Basisnamen von Datei(en) "
+"oder Ordnern zutreffen muss (Sie müssen für jedes Muster, das Sie benötigen, "
+"ein weiteres erstellen)."
 
 #: ../src/core/na-icontext-factory.c:70 ../src/core/na-icontext-factory.c:125
 msgid "<EXPR>"
@@ -581,10 +581,10 @@ msgid ""
 "Defaults to 'true'."
 msgstr ""
 "Legt fest, ob beim Filtern nach Dateinamen Groß- und Kleinschreibung beachtet "
-"werden soll (»wahr«), andernfalls »falsch«. Falls Sie beispielsweise für einen "
-"Dateinamen Groß-/Kleinschreibung berücksichtigen wollen, setzen Sie diesen "
-"Schlüssel auf »wahr«. Falls Sie bei »*.jpg« auch »*.JPG« erfassen wollen, setzen "
-"Sie diesen Schlüssel auf »falsch«.\n"
+"werden soll (»wahr«), andernfalls »falsch«. Falls Sie beispielsweise für "
+"einen Dateinamen Groß-/Kleinschreibung berücksichtigen wollen, setzen Sie "
+"diesen Schlüssel auf »wahr«. Falls Sie bei »*.jpg« auch »*.JPG« erfassen "
+"wollen, setzen Sie diesen Schlüssel auf »falsch«.\n"
 "Dies wirkt sich nur auf die Zielauswahl aus, sofern eine Auswahl existiert.\n"
 "Vorgabe ist »wahr«."
 
@@ -645,8 +645,8 @@ msgstr ""
 "enthalten\n"
 "»isfile« ist »falsch« und »isdir« ist »wahr«: Die Auswahl darf nur Ordner "
 "enthalten\n"
-"»isfile« ist »wahr« und »isdir« ist »wahr«: Die Auswahl darf Dateien und Ordner "
-"enthalten\n"
+"»isfile« ist »wahr« und »isdir« ist »wahr«: Die Auswahl darf Dateien und "
+"Ordner enthalten\n"
 "»isfile« ist »falsch« und »isdir« ist »falsch«: Die Kombination ist ungültig "
 "(Ihre Konfiguration wird niemals angezeigt).\n"
 "Dies trifft nur zu, wenn auf eine Auswahl abgezielt wird.\n"
@@ -678,8 +678,8 @@ msgstr ""
 "enthalten\n"
 "»isfile« ist »falsch« und »isdir« ist »wahr«: Die Auswahl darf nur Ordner "
 "enthalten\n"
-"»isfile« ist »wahr« und »isdir« ist »wahr«: Die Auswahl darf Dateien und Ordner "
-"enthalten\n"
+"»isfile« ist »wahr« und »isdir« ist »wahr«: Die Auswahl darf Dateien und "
+"Ordner enthalten\n"
 "»isfile« ist »falsch« und »isdir« ist »falsch«: Die Kombination ist ungültig "
 "(Ihre Konfiguration wird niemals angezeigt).\n"
 "Dies trifft nur zu, wenn auf eine Auswahl abgezielt wird.\n"
@@ -929,6 +929,43 @@ msgstr ""
 "- Ausführbar: Der Benutzer kann die gewählten Objekte ausführen\n"
 "- Lokal: Die gewählten Objekte sind lokal abgelegt.\n"
 "Die Voreinstellung ist eine leere Liste."
+
+#: ../src/core/na-iimporter.c:206
+msgid ""
+"Item was renumbered because the caller did not provide any check function."
+msgstr ""
+"Objekt wurde neu nummeriert, weil der Aufruf keine Überprüfungsfunktion "
+"bereitstellte."
+
+#: ../src/core/na-iimporter.c:219
+msgid ""
+"Item was renumbered because the caller did not provide any ask user function."
+msgstr ""
+"Objekt wurde neu nummeriert, weil der Aufruf keine Funktion zur "
+"benutzerseitigen Bestätigung bereitstellte."
+
+#: ../src/core/na-iimporter.c:238
+msgid "Item was renumbered due to user request."
+msgstr "Objekt wurde auf Grund einer Benutzeranfrage neu nummeriert."
+
+#: ../src/core/na-iimporter.c:244
+msgid "Existing item was overriden due to user request."
+msgstr ""
+"Existierendes Element wurde auf Grund einer Benutzeranfrage überschrieben."
+
+#: ../src/core/na-iimporter.c:251
+#, c-format
+msgid "Item %s already exists."
+msgstr "Objekt %s existiert bereits."
+
+#: ../src/core/na-iimporter.c:253
+msgid "Import was canceled due to user request."
+msgstr "Import wurde auf Grund einer Benutzeranfrage abgebrochen."
+
+#. i18n: the action has been renumbered during import operation
+#: ../src/core/na-iimporter.c:276
+msgid "(renumbered)"
+msgstr "(Nummerierung geändert)"
 
 #: ../src/core/na-importer-ask.c:302
 #, c-format
@@ -1468,7 +1505,7 @@ msgstr ""
 "Voreingestellt ist nichts: Der Befehl wird unter dem aktuellen Benutzer "
 "ausgeführt."
 
-#: ../src/io-desktop/nadp-desktop-provider.c:225
+#: ../src/io-desktop/nadp-desktop-provider.c:250
 msgid "Nautilus-Actions Desktop I/O Provider"
 msgstr "Desktop-Ein-/Ausgabetreiber für Nautilus-Aktionen"
 
@@ -1477,91 +1514,55 @@ msgid "Nautilus-Actions GConf I/O Provider"
 msgstr "GConf Ein-/Ausgabetreiber für Nautilus-Aktionen"
 
 #: ../src/io-xml/naxml-reader.c:147
-#, c-format
-msgid "Item ID %s already exists."
-msgstr "Objektkennung %s existiert bereits."
-
-#: ../src/io-xml/naxml-reader.c:148
 msgid "Item ID not found."
 msgstr "Objektkennung wurde nicht gefunden."
 
-#: ../src/io-xml/naxml-reader.c:149
+#: ../src/io-xml/naxml-reader.c:148
 #, c-format
 msgid "Unwaited key path %s while importing a menu."
 msgstr "Unerwarteter Schlüsselpfad %s beim Importieren eines Menüs."
 
-#: ../src/io-xml/naxml-reader.c:150
+#: ../src/io-xml/naxml-reader.c:149
 #, c-format
 msgid "Element %s at line %d already found, ignored."
 msgstr "Element %s in Zeile %d bereits gefunden, wird ignoriert."
 
-#: ../src/io-xml/naxml-reader.c:151
+#: ../src/io-xml/naxml-reader.c:150
 #, c-format
 msgid "Invalid item ID: waited for %s, found %s at line %d."
 msgstr ""
-"Ungültige Objektkennung: Es wurde »%s« erwartet, aber »%s« in Zeile %d gefunden."
+"Ungültige Objektkennung: Es wurde »%s« erwartet, aber »%s« in Zeile %d "
+"gefunden."
 
-#: ../src/io-xml/naxml-reader.c:152
+#: ../src/io-xml/naxml-reader.c:151
 #, c-format
 msgid "Unknown element %s found at line %d while waiting for %s."
 msgstr "Unbekanntes Element %s gefunden in Zeile %d, während %s erwartet wurde."
 
 #. i18n: do not translate keywords 'Action' nor 'Menu'
-#: ../src/io-xml/naxml-reader.c:154
+#: ../src/io-xml/naxml-reader.c:153
 #, c-format
 msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
 msgstr ""
 "Unbekannter Typ %s gefunden in Zeile %d, während Aktion oder Menü erwartet "
 "wurde."
 
-#: ../src/io-xml/naxml-reader.c:155
+#: ../src/io-xml/naxml-reader.c:154
 #, c-format
 msgid "Invalid XML root element %s found at line %d while waiting for %s."
 msgstr ""
 "Ungültiges XML-Hauptelement %s wurde in Zeile %d gefunden, während %s "
 "erwartet wurde."
 
-#: ../src/io-xml/naxml-reader.c:156
+#: ../src/io-xml/naxml-reader.c:155
 #, c-format
 msgid "Unable to parse XML file: %s."
 msgstr "Fehler beim Verarbeiten der XML-Datei: %s"
 
-#: ../src/io-xml/naxml-reader.c:157
+#: ../src/io-xml/naxml-reader.c:156
 #, c-format
 msgid "Node %s at line %d has not been dealt with."
 msgstr "Knoten %s in Zeile %d wurde nicht verarbeitet."
-
-#: ../src/io-xml/naxml-reader.c:1314
-msgid ""
-"Item was renumbered because the caller did not provide any check function."
-msgstr ""
-"Objekt wurde neu nummeriert, weil der Aufruf keine Überprüfungsfunktion "
-"bereitstellte."
-
-#: ../src/io-xml/naxml-reader.c:1327
-msgid ""
-"Item was renumbered because the caller did not provide any ask user function."
-msgstr ""
-"Objekt wurde neu nummeriert, weil der Aufruf keine Funktion zur "
-"benutzerseitigen Bestätigung bereitstellte."
-
-#: ../src/io-xml/naxml-reader.c:1346
-msgid "Item was renumbered due to user request."
-msgstr "Objekt wurde auf Grund einer Benutzeranfrage neu nummeriert."
-
-#: ../src/io-xml/naxml-reader.c:1352
-msgid "Existing item was overriden due to user request."
-msgstr ""
-"Existierendes Element wurde auf Grund einer Benutzeranfrage überschrieben."
-
-#: ../src/io-xml/naxml-reader.c:1361
-msgid "Import was canceled due to user request."
-msgstr "Import wurde auf Grund einer Benutzeranfrage abgebrochen."
-
-#. i18n: the action has been renumbered during import operation
-#: ../src/io-xml/naxml-reader.c:1400
-msgid "(renumbered)"
-msgstr "(Nummerierung geändert)"
 
 #: ../src/io-xml/naxml-formats.c:48
 msgid "Export as a _full GConf schema file"
@@ -1572,18 +1573,20 @@ msgid ""
 "This used to be the historical export format.\n"
 "The exported schema file may later be imported via :\n"
 "- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
 "- or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
 "Dies ist das übliche historische Exportformat.\n"
 "Die exportierte Datei kann später importiert werden über:\n"
 "- den Importassistenten des Konfigurationswerkzeugs für Nautilus-Aktionen,\n"
+"- durch Ziehen und Ablegen im Konfigurationswerkzeug für Nautilus-Aktionen\n"
 "- oder das Befehlszeilenwerkzeug »gconftool-2 --import-schema-file«."
 
-#: ../src/io-xml/naxml-formats.c:58
+#: ../src/io-xml/naxml-formats.c:59
 msgid "Export as a _light GConf schema (v2) file"
 msgstr "Als verein_fachte GConf-Schemadatei (v_2) exportieren"
 
-#: ../src/io-xml/naxml-formats.c:59
+#: ../src/io-xml/naxml-formats.c:60
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "This is the lightest schema still compatible with GConf command-line tools,\n"
@@ -1591,6 +1594,7 @@ msgid ""
 "Configuration Tool versions.\n"
 "The exported schema file may later be imported via :\n"
 "- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
 "- or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
 "Dieses Format wurde in der Version 1.11 eingeführt.\n"
@@ -1601,13 +1605,14 @@ msgstr ""
 "Aktionen-Konfigurationswerkzeugs erhalten bleibt.\n"
 "Die exportierte Datei kann später importiert werden über:\n"
 "- den Importassistenten des Konfigurationswerkzeugs für Nautilus-Aktionen,\n"
+"- durch Ziehen und Ablegen im Konfigurationswerkzeug für Nautilus-Aktionen\n"
 "- oder das Befehlszeilenwerkzeug »gconftool-2 --import-schema-file«."
 
-#: ../src/io-xml/naxml-formats.c:71
+#: ../src/io-xml/naxml-formats.c:73
 msgid "Export as a GConf _dump file"
 msgstr "Als GConf-_Eintragsdatei exportieren"
 
-#: ../src/io-xml/naxml-formats.c:72
+#: ../src/io-xml/naxml-formats.c:74
 msgid ""
 "This format has been introduced in v 1.11 serie, and should be the preferred "
 "format for newly exported items.\n"
@@ -1616,6 +1621,7 @@ msgid ""
 "though it may still be imported via standard GConf command-line tools.\n"
 "The exported dump file may later be imported via :\n"
 "- Import assistant of a compatible Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
 "- or via the gconftool-2 --load command-line tool."
 msgstr ""
 "Dieses Format wurde in Version 1.11 eingeführt, es sollte das bevorzugte "
@@ -1626,6 +1632,7 @@ msgstr ""
 "importiert werden.\n"
 " Die exportierte Datei kann später importiert werden über:\n"
 "- den Importassistenten des Konfigurationswerkzeugs für Nautilus-Aktionen,\n"
+"- durch Ziehen und Ablegen im Konfigurationswerkzeug für Nautilus-Aktionen\n"
 "- oder das Befehlszeilenwerkzeug »gconftool-2 --load«."
 
 #: ../src/nact/base-application.c:1292
@@ -2778,8 +2785,8 @@ msgstr ""
 #~ "localized."
 #~ msgstr ""
 #~ "Definiert, ob das Objekt eine Aktion oder ein Menü ist. Mögliche Werte "
-#~ "sind: »Action« und »Menu«. Der Wert berücksichtigt Klein-/Großschreibung und "
-#~ "darf nicht übersetzt werden."
+#~ "sind: »Action« und »Menu«. Der Wert berücksichtigt Klein-/Großschreibung "
+#~ "und darf nicht übersetzt werden."
 
 #~ msgid ""
 #~ "Defines the list of valid URIs to be matched against the current folder. "
@@ -2831,8 +2838,8 @@ msgstr ""
 #~ "applies when targeting selection."
 #~ msgstr ""
 #~ "Wenn ein oder mehrere Dateien oder Ordner ausgewählt werden darf, dann "
-#~ "setzen Sie diesen Schlüssel auf »wahr«. Andernfalls auf »falsch«. Dies wirkt "
-#~ "sich nur auf die Zielauswahl aus."
+#~ "setzen Sie diesen Schlüssel auf »wahr«. Andernfalls auf »falsch«. Dies "
+#~ "wirkt sich nur auf die Zielauswahl aus."
 
 #~ msgid ""
 #~ "If you need to match a filename in a case-sensitive manner, set this key "
@@ -2840,8 +2847,8 @@ msgstr ""
 #~ "'false'. This only applies when targeting selection."
 #~ msgstr ""
 #~ "Legt fest, ob beim Filtern nach Dateinamen Groß- und Kleinschreibung "
-#~ "beachtet werden soll (»wahr«), andernfalls »falsch«. Dies wirkt sich nur auf "
-#~ "die Zielauswahl aus."
+#~ "beachtet werden soll (»wahr«), andernfalls »falsch«. Dies wirkt sich nur "
+#~ "auf die Zielauswahl aus."
 
 #~ msgid ""
 #~ "Ordered list of the IDs of the subitems. This may be actions or menus if "
@@ -2925,8 +2932,8 @@ msgstr ""
 #~ msgid ""
 #~ "The parameters of the command to start when the user selects the menu item "
 #~ "in the Nautilus popup menu. The parameters can contain some special tokens "
-#~ "which are replaced by Nautilus information before starting the command: %"
-#~ "d: base folder of the selected file(s) %f: the name of the selected file "
+#~ "which are replaced by Nautilus information before starting the command: "
+#~ "%d: base folder of the selected file(s) %f: the name of the selected file "
 #~ "or the first one if many are selected %h: hostname of the URI %m: space-"
 #~ "separated list of the basenames of the selected file(s)/folder(s) %M: "
 #~ "space-separated list of the selected file(s)/folder(s), with their full "
@@ -2943,8 +2950,8 @@ msgstr ""
 #~ "Durch Leerzeichen getrennte Liste der Basisordner der ausgewählten Datei"
 #~ "(en) und Ordner %M: Durch Leerzeichen getrennte Liste der Basisordner mit "
 #~ "vollständigem Pfad %p: Port-Nummer der ersten Adresse %R: Durch "
-#~ "Leerzeichen getrennte Liste der gewählten Adressen %s: Schema der Adresse %"
-#~ "u: Adresse %U: Benutzername der Adresse %%: Ein Prozentzeichen"
+#~ "Leerzeichen getrennte Liste der gewählten Adressen %s: Schema der Adresse "
+#~ "%u: Adresse %U: Benutzername der Adresse %%: Ein Prozentzeichen"
 
 #~ msgid "The path of the command"
 #~ msgstr "Der Pfad des Befehls"
@@ -2987,9 +2994,9 @@ msgstr ""
 #~ "enthalten\n"
 #~ "»isfile« ist »wahr« und »isdir« ist »wahr«: Die Auswahl darf Dateien und "
 #~ "Ordner enthalten\n"
-#~ "»isfile« ist »falsch« und »isdir« ist »falsch«: Die Kombination ist ungültig "
-#~ "(Ihre Konfiguration wird niemals angezeigt). Dies trifft nur zu, wenn auf "
-#~ "eine Auswahl abgezielt wird."
+#~ "»isfile« ist »falsch« und »isdir« ist »falsch«: Die Kombination ist "
+#~ "ungültig (Ihre Konfiguration wird niemals angezeigt). Dies trifft nur zu, "
+#~ "wenn auf eine Auswahl abgezielt wird."
 
 #~ msgid ""
 #~ "This setting is tied in with the 'isfile' setting. The valid combinations "
@@ -3009,9 +3016,9 @@ msgstr ""
 #~ "enthalten\n"
 #~ "»isfile« ist »wahr« und »isdir« ist »wahr«: Die Auswahl darf Dateien und "
 #~ "Ordner enthalten\n"
-#~ "»isfile« ist »falsch« und »isdir« ist »falsch«: Die Kombination ist ungültig "
-#~ "(Ihre Konfiguration wird niemals angezeigt). Dies trifft nur zu, wenn auf "
-#~ "eine Auswahl abgezielt wird."
+#~ "»isfile« ist »falsch« und »isdir« ist »falsch«: Die Kombination ist "
+#~ "ungültig (Ihre Konfiguration wird niemals angezeigt). Dies trifft nur zu, "
+#~ "wenn auf eine Auswahl abgezielt wird."
 
 #~ msgid ""
 #~ "Whether the action is candidate to be displayed in Nautilus toolbar. Note, "
@@ -3144,8 +3151,8 @@ msgstr ""
 
 #~ msgid "Invalid content: waited for %s prefix, found %s at line %d."
 #~ msgstr ""
-#~ "Ungültiger Inhalt: Es wurde Das Präfix »%s« erwartet, aber »%s« in Zeile %d "
-#~ "gefunden."
+#~ "Ungültiger Inhalt: Es wurde Das Präfix »%s« erwartet, aber »%s« in Zeile "
+#~ "%d gefunden."
 
 #~ msgid "Invalid UUID %s found at line %d."
 #~ msgstr "Ungültige UUID %s wurde in Zeile %d gefunden."
@@ -3288,8 +3295,8 @@ msgstr ""
 #~ "The action '%s' already exists with the name '%s', please first remove the "
 #~ "existing one before trying to add this one"
 #~ msgstr ""
-#~ "Die Aktion »%s« mit dem Namen »%s« existiert bereits. Entfernen Sie zunächst "
-#~ "die existierende Aktion, bevor Sie diese hinzufügen"
+#~ "Die Aktion »%s« mit dem Namen »%s« existiert bereits. Entfernen Sie "
+#~ "zunächst die existierende Aktion, bevor Sie diese hinzufügen"
 
 #~ msgid "Can't save action '%s'"
 #~ msgstr "Aktion »%s« kann nicht gespeichert werden"
@@ -3336,11 +3343,11 @@ msgstr ""
 #~ "(Dateiversion: %s, maximal unterstützte Version: %s)"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
-#~ "s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
+#~ "%s)%s"
 #~ msgid_plural ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing keys: %"
-#~ "s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing keys: "
+#~ "%s)%s"
 #~ msgstr[0] ""
 #~ "Diese XML-Datei ist keine gültige Konfigurationsdatei für Nautilus-actions "
 #~ "(fehlender Schlüssel: %s)%s"
@@ -3355,8 +3362,8 @@ msgstr ""
 #~ "(fehlender Schlüssel: %s)"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (root node is <%"
-#~ "s> instead of <%s>)"
+#~ "This XML file is not a valid Nautilus-actions config file (root node is <"
+#~ "%s> instead of <%s>)"
 #~ msgstr ""
 #~ "Diese XML-Datei ist keine gültige Konfigurationsdatei für Nautilus-actions "
 #~ "(Anfangsknoten ist <%s> anstelle von <%s>)"
@@ -3548,8 +3555,8 @@ msgstr ""
 #~ "jpg will not match photo.JPG)"
 #~ msgstr ""
 #~ "Falls ausgewählt, wird das Dateinamenmuster unter Berücksichtigung der "
-#~ "Groß- und Kleinschreibung angewandt (z.B. die Suche nach »*.jpg« beinhaltet "
-#~ "nicht »foto.JPG«)"
+#~ "Groß- und Kleinschreibung angewandt (z.B. die Suche nach »*.jpg« "
+#~ "beinhaltet nicht »foto.JPG«)"
 
 #~ msgid "Import new configurations"
 #~ msgstr "Neue Einstellungen importieren"
