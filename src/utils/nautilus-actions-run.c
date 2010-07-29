@@ -43,6 +43,7 @@
 
 #include <core/na-pivot.h>
 #include <core/na-selected-info.h>
+#include <core/na-tokens.h>
 
 #include <plugin-tracker/na-tracker.h>
 #include <plugin-tracker/na-tracker-dbus.h>
@@ -78,7 +79,6 @@ static GList           *get_selection_from_strv( const gchar **strv, gboolean ha
 static NAObjectProfile *get_profile_for_targets( NAObjectAction *action, GList *targets );
 static void             execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets );
 static void             dump_targets( GList *targets );
-static void             free_targets( GList *targets );
 static void             exit_with_usage( void );
 
 int
@@ -152,7 +152,7 @@ main( int argc, char** argv )
 		exit( status );
 	}
 
-	if( !na_object_action_is_candidate( action, ITEM_TARGET_SELECTION, targets )){
+	if( !na_icontext_is_candidate( NA_ICONTEXT( action ), ITEM_TARGET_SELECTION, targets )){
 		g_printerr( _( "Action %s is not a valid candidate. Exiting.\n" ), id );
 		exit( status );
 	}
@@ -166,7 +166,7 @@ main( int argc, char** argv )
 
 	execute_action( action, profile, targets );
 
-	free_targets( targets );
+	na_selected_info_free_list( targets );
 	exit( status );
 }
 
@@ -367,8 +367,8 @@ get_profile_for_targets( NAObjectAction *action, GList *targets )
 
 	candidate = NULL;
 	profiles = na_object_get_items( action );
-	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 
+	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
 		if( na_icontext_is_candidate( NA_ICONTEXT( ip->data ), ITEM_TARGET_SELECTION, targets )){
 			candidate = NA_OBJECT_PROFILE( ip->data );
 		}
@@ -380,25 +380,11 @@ get_profile_for_targets( NAObjectAction *action, GList *targets )
 static void
 execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets )
 {
-	static const gchar *thisfn = "nautilus_action_run_execute_action";
-	GString *cmd;
-	gchar *param, *path;
+	/*static const gchar *thisfn = "nautilus_action_run_execute_action";*/
+	NATokens *tokens;
 
-	path = na_object_get_path( profile );
-	cmd = g_string_new( path );
-
-	param = na_object_profile_parse_parameters( profile, ITEM_TARGET_SELECTION, targets );
-
-	if( param != NULL ){
-		g_string_append_printf( cmd, " %s", param );
-		g_free( param );
-	}
-
-	g_debug( "%s: executing '%s'", thisfn, cmd->str );
-	g_spawn_command_line_async( cmd->str, NULL );
-
-	g_string_free (cmd, TRUE);
-	g_free( path );
+	tokens = na_tokens_new_from_selection( targets );
+	na_tokens_execute_action( tokens, profile );
 }
 
 /*
@@ -418,16 +404,6 @@ dump_targets( GList *targets )
 		g_free( mimetype );
 		g_free( uri );
 	}
-}
-
-/*
- *
- */
-static void
-free_targets( GList *targets )
-{
-	g_list_foreach( targets, ( GFunc ) g_object_unref, NULL );
-	g_list_free( targets );
 }
 
 /*

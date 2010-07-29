@@ -761,32 +761,3 @@ na_object_action_set_last_version( NAObjectAction *action )
 		na_object_set_version( action, "2.0" );
 	}
 }
-
-/**
- * na_object_action_is_candidate:
- * @action: the #NAObjectAction to be tested.
- * @target: the current target.
- * @selection: the current Nautilus selection.
- *
- * Returns: %TRUE if the @action may be candidate for this @target.
- *
- * Note that this public function will become NAIContext::is_candidate
- * when NAObjectAction will implement the interface.
- */
-gboolean
-na_object_action_is_candidate( const NAObjectAction *action, guint target, GList *selection )
-{
-	gboolean is_candidate = FALSE;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), is_candidate );
-
-	if( !action->private->dispose_has_run ){
-
-		is_candidate =
-			( na_object_is_target_selection( action ) && target == ITEM_TARGET_SELECTION ) ||
-			( na_object_is_target_location( action ) && target == ITEM_TARGET_LOCATION ) ||
-			( na_object_is_target_toolbar( action ) && target == ITEM_TARGET_TOOLBAR );
-	}
-
-	return( is_candidate );
-}

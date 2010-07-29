@@ -35,6 +35,7 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-object-api.h>
 
 #include "na-gnome-vfs-uri.h"
 #include "na-selected-info.h"
@@ -74,11 +75,15 @@ struct NATokensPrivate {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType register_type( void );
-static void  class_init( NATokensClass *klass );
-static void  instance_init( GTypeInstance *instance, gpointer klass );
-static void  instance_dispose( GObject *object );
-static void  instance_finalize( GObject *object );
+static GType    register_type( void );
+static void     class_init( NATokensClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
+
+static void     execute_action_command( const gchar *command, const NAObjectProfile *profile );
+static gboolean is_singular_exec( const NATokens *tokens, const gchar *exec );
+static gchar   *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8 );
 
 GType
 na_tokens_get_type( void )
@@ -327,6 +332,123 @@ na_tokens_new_from_selection( GList *selection )
 gchar *
 na_tokens_parse_parameters( const NATokens *tokens, const gchar *input, gboolean utf8 )
 {
+	return( parse_singular( tokens, input, 0, utf8 ));
+}
+
+/**
+ * na_tokens_execute_action:
+ * @tokens: a #NATokens object.
+ * @profile: the #NAObjectProfile to be executed.
+ *
+ * Execute the given action, regarding the context described by @tokens.
+ */
+void
+na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile )
+{
+	gchar *path, *parameters, *exec, *command;
+	gboolean singular;
+	guint i;
+
+	path = na_object_get_path( profile );
+	parameters = na_object_get_parameters( profile );
+	exec = g_strdup_printf( "%s %s", path, parameters );
+	g_free( parameters );
+	g_free( path );
+
+	singular = is_singular_exec( tokens, exec );
+
+	if( singular ){
+		for( i = 0 ; i < tokens->private->count ; ++i ){
+			command = parse_singular( tokens, exec, i, FALSE );
+			execute_action_command( command, profile );
+			g_free( command );
+		}
+
+	} else {
+		command = na_tokens_parse_parameters( tokens, exec, FALSE );
+		execute_action_command( command, profile );
+		g_free( command );
+	}
+
+
+	g_free( exec );
+}
+
+static void
+execute_action_command( const gchar *command, const NAObjectProfile *profile )
+{
+	static const gchar *thisfn = "nautilus_actions_execute_action_command";
+
+	g_debug( "%s: command=%s, profile=%p", thisfn, command, ( void * ) profile );
+
+	g_spawn_command_line_async( command, NULL );
+}
+
+/*
+ * na_tokens_is_singular_exec:
+ * @tokens: the current #NATokens object.
+ * @exec: the to be executed command-line before having been parsed
+ *
+ * Returns: %TRUE if the first parameter found in @exec command-line is
+ * of singular form, %FALSE else.
+ *
+ * %% and %c are considered here as singular parameters. This function
+ * so defaults to %TRUE as long as no plural form parameter is found.
+ */
+static gboolean
+is_singular_exec( const NATokens *tokens, const gchar *exec )
+{
+	gboolean singular;
+	gchar *found;
+
+	singular = TRUE;
+	found = g_strstr_len( exec, -1, "%" );
+
+	if( found ){
+		switch( found[1] ){
+			case 'b':
+			case 'c':
+			case 'd':
+			case 'f':
+			case 'h':
+			case 'n':
+			case 'p':
+			case 's':
+			case 'u':
+			case 'w':
+			case 'x':
+			case '%':
+				break;
+
+			case 'B':
+			case 'D':
+			case 'F':
+			case 'U':
+			case 'W':
+			case 'X':
+				singular = FALSE;
+				break;
+		}
+	}
+
+	return( singular );
+}
+
+/*
+ * na_tokens_parse_singular:
+ * @tokens: a #NATokens object.
+ * @input: the input string, may or may not contain tokens.
+ * @i: the number of the iteration in a multiple selection, starting with zero.
+ * @utf8: whether the @input string is UTF-8 encoded, or a standard ASCII
+ *  string.
+ *
+ * A command is said of 'singular form' when its first parameter is not
+ * of plural form. In the case of a multiple selection, singular form
+ * commands are executed one time for each element of the selection
+ */
+static gchar *
+parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8 )
+{
 	GString *output;
 	gchar *iter, *prev_iter, *tmp;
 
@@ -359,7 +481,7 @@ na_tokens_parse_parameters( const NATokens *tokens, const gchar *input, gboolean
 		switch( iter[1] ){
 			case 'b':
 				if( tokens->private->basenames ){
-					tmp = g_shell_quote( tokens->private->basenames->data );
+					tmp = g_shell_quote( g_slist_nth_data( tokens->private->basenames, i ));
 					output = g_string_append( output, tmp );
 					g_free( tmp );
 				}
@@ -377,7 +499,7 @@ na_tokens_parse_parameters( const NATokens *tokens, const gchar *input, gboolean
 
 			case 'd':
 				if( tokens->private->basedirs ){
-					tmp = g_shell_quote( tokens->private->basedirs->data );
+					tmp = g_shell_quote( g_slist_nth_data( tokens->private->basedirs, i ));
 					output = g_string_append( output, tmp );
 					g_free( tmp );
 				}
@@ -391,7 +513,7 @@ na_tokens_parse_parameters( const NATokens *tokens, const gchar *input, gboolean
 
 			case 'f':
 				if( tokens->private->filenames ){
-					tmp = g_shell_quote( tokens->private->filenames->data );
+					tmp = g_shell_quote( g_slist_nth_data( tokens->private->filenames, i ));
 					output = g_string_append( output, tmp );
 					g_free( tmp );
 				}
@@ -433,7 +555,7 @@ na_tokens_parse_parameters( const NATokens *tokens, const gchar *input, gboolean
 
 			case 'u':
 				if( tokens->private->uris ){
-					tmp = g_shell_quote( tokens->private->uris->data );
+					tmp = g_shell_quote( g_slist_nth_data( tokens->private->uris, i ));
 					output = g_string_append( output, tmp );
 					g_free( tmp );
 				}
@@ -447,7 +569,7 @@ na_tokens_parse_parameters( const NATokens *tokens, const gchar *input, gboolean
 
 			case 'w':
 				if( tokens->private->basenames_woext ){
-					tmp = g_shell_quote( tokens->private->basenames_woext->data );
+					tmp = g_shell_quote( g_slist_nth_data( tokens->private->basenames_woext, i ));
 					output = g_string_append( output, tmp );
 					g_free( tmp );
 				}
@@ -461,7 +583,7 @@ na_tokens_parse_parameters( const NATokens *tokens, const gchar *input, gboolean
 
 			case 'x':
 				if( tokens->private->exts ){
-					tmp = g_shell_quote( tokens->private->exts->data );
+					tmp = g_shell_quote( g_slist_nth_data( tokens->private->exts, i ));
 					output = g_string_append( output, tmp );
 					g_free( tmp );
 				}

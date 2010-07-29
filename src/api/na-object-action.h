@@ -84,8 +84,6 @@ gchar          *na_object_action_get_new_profile_name( const NAObjectAction *act
 void            na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile );
 void            na_object_action_set_last_version( NAObjectAction *action );
 
-gboolean        na_object_action_is_candidate( const NAObjectAction *action, guint target, GList *selection );
-
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_ACTION_H__ */

@@ -91,14 +91,14 @@ static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *
 static GList            *get_menus_items( NautilusActions *plugin, guint target, GList *selection );
 static GList            *expand_tokens( GList *tree, NATokens *tokens );
 static NAObjectItem     *expand_tokens_item( NAObjectItem *item, NATokens *tokens );
+static void              expand_tokens_context( NAIContext *context, NATokens *tokens );
 static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files, NATokens *tokens );
 static NAObjectProfile  *get_candidate_profile( NautilusActions *plugin, NAObjectAction *action, guint target, GList *files );
-static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, guint target, GList *files );
+static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, NATokens *tokens );
 static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems );
 static NautilusMenuItem *create_menu_item( NAObjectItem *item );
 static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
 static void              weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item );
-static void              destroy_notify_file_list( GList *list);
 
 static void              execute_action( NautilusMenuItem *item, NAObjectProfile *profile );
 
@@ -540,8 +540,15 @@ get_menus_items( NautilusActions *plugin, guint target, GList *selection )
 }
 
 /*
- * create a copy of the tree where all fields which may embed parameters
- * have been expanded
+ * create a copy of the tree where almost all fields which may embed
+ * parameters have been expanded
+ * here, 'almost' should be readen as:
+ * - all displayable fields, or fields which may have an impact on the display
+ *   (e.g. label, tooltip, icon name)
+ * - all fields which we do not need later
+ *
+ * we keep until the last item activation the Exec key, whose first parameter
+ * actualy determines the form (singular or plural) of the execution..
  */
 static GList *
 expand_tokens( GList *pivot_tree, NATokens *tokens )
@@ -564,7 +571,11 @@ expand_tokens_item( NAObjectItem *item, NATokens *tokens )
 	gchar *old, *new;
 	GSList *subitems_slist, *its, *new_slist;
 	GList *subitems, *it, *new_list;
+	NAObjectItem *expanded_item;
 
+	/* label, tooltip and icon name
+	 * plus the toolbar label if this is an action
+	 */
 	old = na_object_get_label( item );
 	new = na_tokens_parse_parameters( tokens, old, TRUE );
 	na_object_set_label( item, new );
@@ -591,50 +602,110 @@ expand_tokens_item( NAObjectItem *item, NATokens *tokens )
 		g_free( new );
 	}
 
+	/* A NAObjectItem, whether it is an action or a menu, is also a NAIContext
+	 */
+	expand_tokens_context( NA_ICONTEXT( item ), tokens );
+
+	/* subitems lists, whether this is the profiles list of an action
+	 * or the items list of a menu, may be dynamic and embed a command;
+	 * this command itself may embed parameters
+	 */
 	subitems_slist = na_object_get_items_slist( item );
 	new_slist = NULL;
 	for( its = subitems_slist ; its ; its = its->next ){
 		old = ( gchar * ) its->data;
-		new = na_tokens_parse_parameters( tokens, old, FALSE );
+		if( old[0] == '[' && old[strlen(old)-1] == ']' ){
+			new = na_tokens_parse_parameters( tokens, old, FALSE );
+		} else {
+			new = g_strdup( old );
+		}
 		new_slist = g_slist_prepend( new_slist, new );
 	}
 	na_object_set_items_slist( item, new_slist );
 	na_core_utils_slist_free( subitems_slist );
 	na_core_utils_slist_free( new_slist );
 
+	/* last, deal with subitems
+	 */
 	subitems = na_object_get_items( item );
-	new_list = NULL;
-	for( it = subitems ; it ; it = it->next ){
-		if( NA_IS_OBJECT_MENU( item )){
-			expand_tokens_item( NA_OBJECT_ITEM( it->data ), tokens );
 
-		} else {
-			old = na_object_get_path( it->data );
+	if( NA_IS_OBJECT_MENU( item )){
+		new_list = NULL;
+
+		for( it = subitems ; it ; it = it->next ){
+			expanded_item = expand_tokens_item( NA_OBJECT_ITEM( it->data ), tokens );
+			new_list = g_list_prepend( new_list, expanded_item );
+		}
+
+		na_object_set_items( item, g_list_reverse( new_list ));
+
+	} else {
+		g_return_val_if_fail( NA_IS_OBJECT_ACTION( item ), NULL );
+
+		for( it = subitems ; it ; it = it->next ){
+
+			/* desktop Exec key = GConf path+parameters
+			 * do not touch them here
+			 */
+			old = na_object_get_working_dir( it->data );
 			new = na_tokens_parse_parameters( tokens, old, FALSE );
-			na_object_set_path( it->data, new );
+			na_object_set_working_dir( it->data, new );
 			g_free( old );
 			g_free( new );
 
-			old = na_object_get_parameters( it->data );
-			new = na_tokens_parse_parameters( tokens, old, FALSE );
-			na_object_set_parameters( it->data, new );
-			g_free( old );
-			g_free( new );
+			/* a NAObjectProfile is also a NAIContext
+			 */
+			expand_tokens_context( NA_ICONTEXT( it->data ), tokens );
 		}
 	}
 
 	return( item );
 }
 
+static void
+expand_tokens_context( NAIContext *context, NATokens *tokens )
+{
+	gchar *old, *new;
+
+	old = na_object_get_try_exec( context );
+	new = na_tokens_parse_parameters( tokens, old, FALSE );
+	na_object_set_try_exec( context, new );
+	g_free( old );
+	g_free( new );
+
+	old = na_object_get_show_if_registered( context );
+	new = na_tokens_parse_parameters( tokens, old, FALSE );
+	na_object_set_show_if_registered( context, new );
+	g_free( old );
+	g_free( new );
+
+	old = na_object_get_show_if_true( context );
+	new = na_tokens_parse_parameters( tokens, old, FALSE );
+	na_object_set_show_if_true( context, new );
+	g_free( old );
+	g_free( new );
+
+	old = na_object_get_show_if_running( context );
+	new = na_tokens_parse_parameters( tokens, old, FALSE );
+	na_object_set_show_if_running( context, new );
+	g_free( old );
+	g_free( new );
+}
+
 /*
- * when building a menu for the toolbar, do not use menus hierarchy
- * files is a GList of NASelectedInfo items
+ * @plugin: this #NautilusActions module instance.
+ * @tree: a copy of the #NAPivot tree, where all fields - but
+ *  displayable parameters expanded
+ * @target: whether we target location or context menu, or toolbar.
+ * @files: the current selection in the file-manager, as a #GList of #NASelectedInfo items
+ * @tokens: a #NATokens object which embeds all possible values, regarding the
+ *  current selection, for all parameters
  *
- * TODO: menus, actions and profiles may embed parameters in their data.
- * This mainly means that the objects have to be re-parsed for each new
- * selection (e.g. because a label may change if it depends of the current
- * selection). Thus, all the hierarchy must be recursively re-parsed, and
- * should be re-checked for validity !
+ * When building a menu for the toolbar, do not use menus hierarchy
+ *
+ * As menus, actions and profiles may embed parameters in their data,
+ * all the hierarchy must be recursively re-parsed, and should be
+ * re-checked for validity !
  */
 static GList *
 build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files, NATokens *tokens )
@@ -658,7 +729,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 		/* check this here as a security though NAPivot should only have
 		 * loaded valid and enabled items
 		 */
-		if( !na_object_is_enabled( it->data ) || !na_object_is_valid( it->data )){
+		if( !na_object_is_enabled( it->data )){
 			gchar *label = na_object_get_label( it->data );
 			g_warning( "%s: '%s' item: enabled=%s, valid=%s", thisfn, label,
 					na_object_is_enabled( it->data ) ? "True":"False",
@@ -667,6 +738,13 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 			continue;
 		}
 #endif
+
+		/* but we have to re-check for validity as a label may become
+		 * dynamically empty - thus the NAObjectItem invalid :(
+		 */
+		if( !na_object_is_valid( it->data )){
+			continue;
+		}
 
 		if( !na_icontext_is_candidate( NA_ICONTEXT( it->data ), target, files )){
 			continue;
@@ -680,12 +758,12 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 			/*g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));*/
 
 			if( submenu ){
-				if( target != ITEM_TARGET_TOOLBAR ){
-					item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu );
-					menus_list = g_list_append( menus_list, item );
+				if( target == ITEM_TARGET_TOOLBAR ){
+					menus_list = g_list_concat( menus_list, submenu );
 
 				} else {
-					menus_list = g_list_concat( menus_list, submenu );
+					item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu );
+					menus_list = g_list_append( menus_list, item );
 				}
 			}
 			continue;
@@ -695,7 +773,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 
 		profile = get_candidate_profile( plugin, NA_OBJECT_ACTION( it->data ), target, files );
 		if( profile ){
-			item = create_item_from_profile( profile, target, files );
+			item = create_item_from_profile( profile, target, files, tokens );
 			menus_list = g_list_append( menus_list, item );
 		}
 	}
@@ -736,7 +814,7 @@ get_candidate_profile( NautilusActions *plugin, NAObjectAction *action, guint ta
 }
 
 static NautilusMenuItem *
-create_item_from_profile( NAObjectProfile *profile, guint target, GList *files )
+create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, NATokens *tokens )
 {
 	NautilusMenuItem *item;
 	NAObjectAction *action;
@@ -759,30 +837,23 @@ create_item_from_profile( NAObjectProfile *profile, guint target, GList *files )
 	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_profile, duplicate );
 
 	g_object_set_data_full( G_OBJECT( item ),
-			"nautilus-actions-files",
-			na_selected_info_copy_list( files ),
-			( GDestroyNotify ) destroy_notify_file_list );
-
-	g_object_set_data( G_OBJECT( item ),
-			"nautilus-actions-target",
-			GUINT_TO_POINTER( target ));
+			"nautilus-actions-tokens",
+			g_object_ref( tokens ),
+			( GDestroyNotify ) g_object_unref );
 
 	return( item );
 }
 
+/*
+ * called _after_ the NautilusMenuItem has been finalized
+ */
 static void
 weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item )
 {
 	g_debug( "nautilus_actions_weak_notify_profile: profile=%p (ref_count=%d)",
 			( void * ) profile, G_OBJECT( profile )->ref_count );
-	g_object_unref( profile );
-}
 
-static void
-destroy_notify_file_list( GList *list)
-{
-	g_debug( "nautilus_actions_destroy_notify_file_list" );
-	na_selected_info_free_list( list );
+	g_object_unref( profile );
 }
 
 /*
@@ -842,35 +913,24 @@ attach_submenu_to_item( NautilusMenuItem *item, GList *subitems )
 	}
 }
 
+/*
+ * callback triggered when an item is activated
+ * path and parameters must yet been parsed against tokens
+ *
+ * note that if first parameter if of singular form, then we have to loop
+ * againt the selected, each time replacing the singular parameters with
+ * the current item of the selection
+ */
 static void
 execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action";
-	GList *files;
-	GString *cmd;
-	gchar *param, *path;
-	guint target;
+	NATokens *tokens;
 
 	g_debug( "%s: item=%p, profile=%p", thisfn, ( void * ) item, ( void * ) profile );
 
-	files = ( GList * ) g_object_get_data( G_OBJECT( item ), "nautilus-actions-files" );
-	target = GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( item ), "nautilus-actions-target" ));
-
-	path = na_object_get_path( profile );
-	cmd = g_string_new( path );
-
-	param = na_object_profile_parse_parameters( profile, target, files );
-
-	if( param != NULL ){
-		g_string_append_printf( cmd, " %s", param );
-		g_free( param );
-	}
-
-	g_debug( "%s: executing '%s'", thisfn, cmd->str );
-	g_spawn_command_line_async( cmd->str, NULL );
-
-	g_string_free (cmd, TRUE);
-	g_free( path );
+	tokens = NA_TOKENS( g_object_get_data( G_OBJECT( item ), "nautilus-actions-tokens" ));
+	na_tokens_execute_action( tokens, profile );
 }
 
 /*

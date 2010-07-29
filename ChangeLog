@@ -1,5 +1,24 @@
 2010-07-29 Pierre Wieser <pwieser@trychlos.org>
 
+	Do some cleanup in NAObjectAction and NAObjectProfile code.
+	Implement execution of singular vs. plural command forms.
+
+	* src/api/na-object-action.h:
+	* src/core/na-object-action.c (na_object_action_is_candidate):
+	Removed function.
+
+	* src/api/na-object-profile.h:
+	* src/core/na-object-profile.c (na_object_profile_parse_parameters):
+	Removed function.
+
+	* src/core/na-tokens.c:
+	* src/core/na-tokens.h (na_tokens_execute_action): New function.
+
+	* src/plugin-menu/nautilus-actions.c (execute_action):
+	Move action execution to NATokens class.
+
+	* src/utils/nautilus-actions-run.c: Now use NATokens class.
+
 	* doc/: Renamed as docs/
 
 	* configure.ac:

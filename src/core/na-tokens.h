@@ -42,18 +42,19 @@
  * Note that until v2.30, tokens were parsed against selection list only
  * when an item was selected in the Nautilus context menu (i.e. at
  * execution time).
- * Starting with v2.32 (v3.0 ?), this same parsing may occur for each
- * displayed label (as new specs accept tokens in labels) - we so
+ * Starting with unstable v2.99 (stable v3.0), this same parsing may occur
+ * for each displayed label (as new specs accept tokens in labels) - we so
  * factorize this parsing one time for each new selection in the Nautilus
  * plugin, attaching the result to each item in the context menu.
  *
  * Adding a parameter requires updating of :
- * - nautilus-actions/core/na-object-profile.c::na_object_profile_parse_parameters()
+ * - src/core/na-tokens.c::na_tokens_is_singular_exec()
+ * - src/core/na-tokens.c::na_tokens_parse_parameters()
  * - nautilus-actions/nact/nact-icommand-tab.c:parse_parameters()
- * - nautilus-actions/nact/nautilus-actions-config-tool.ui:LegendDialog
+ * - src/nact/nautilus-actions-config-tool.ui:LegendDialog
  */
 
-#include <glib-object.h>
+#include <api/na-object-profile.h>
 
 G_BEGIN_DECLS
 
@@ -85,6 +86,8 @@ GType     na_tokens_get_type( void );
 NATokens *na_tokens_new_from_selection( GList *selection );
 
 gchar    *na_tokens_parse_parameters( const NATokens *tokens, const gchar *string, gboolean utf8 );
+
+void      na_tokens_execute_action  ( const NATokens *tokens, const NAObjectProfile *profile );
 
 G_END_DECLS
 
