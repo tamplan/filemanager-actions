@@ -1,5 +1,9 @@
 2010-07-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-formats.c:
+	* src/io-desktop/nadp-formats.h: New files.
+	These should have been added to 2.99.0, but where forgotten.
+
 	* docs/nact/Makefile.am: New file.
 
 	* configure.ac:
