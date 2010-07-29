@@ -40,6 +40,7 @@ AC_CONFIG_FILES([
 	Makefile
 	data/Makefile
 	docs/Makefile
+	docs/nact/Makefile
 	m4/Makefile
 	icons/Makefile
 	icons/16x16/Makefile

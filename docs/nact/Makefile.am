@@ -25,15 +25,3 @@
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
-
-subdirs = \
-	nact								\
-	$(NULL)
-
-pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
-
-dist_pkgdoc_DATA = \
-	export-format-id					\
-	io-provider-id						\
-	objects-hierarchy.odg				\
-	$(NULL)

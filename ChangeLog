@@ -1,5 +1,10 @@
 2010-07-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/nact/Makefile.am: New file.
+
+	* configure.ac:
+	* docs/Makefile.am: Updated accordingly.
+
 	Create NACT user's manual skeleton.
 	
 	* docs/nact/C/appendix-feedback.xml:
