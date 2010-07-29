@@ -39,7 +39,7 @@ AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([
 	Makefile
 	data/Makefile
-	doc/Makefile
+	docs/Makefile
 	m4/Makefile
 	icons/Makefile
 	icons/16x16/Makefile

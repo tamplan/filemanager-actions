@@ -1,5 +1,10 @@
 2010-07-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/: Renamed as docs/
+
+	* configure.ac:
+	* Makefile;am: Updated accordingly.
+
 	* configure.ac: Bump the version number after release.
 
 2010-07-28 Pierre Wieser <pwieser@trychlos.org>

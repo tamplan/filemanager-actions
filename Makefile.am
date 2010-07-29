@@ -29,7 +29,7 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = \
-	doc									\
+	docs								\
 	m4									\
 	icons								\
 	src									\
