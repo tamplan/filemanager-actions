@@ -1,3 +1,7 @@
+2010-07-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Bump the version number after release.
+
 2010-07-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* NEWS: Update NEWS before unstable release.
