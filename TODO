@@ -486,9 +486,9 @@ Parameter 	Description
 
 - 2010-06-17: ui.enhancement: implement shortcut button in NactIPropertiesTab page
 
-- 2010-06-20: is_candidate_for_show_in: get current environment
+- 2010-06-20: TODO: is_candidate_for_show_in: get current environment
 
-- 2010-06-20: is_candidate_for_show_if_running: get current list of processes
+- 2010-06-20: TODO: is_candidate_for_show_if_running: get current list of processes
 
 - 2010-06-21: it appears that na_ipivot_consumer_notify_of_items_changed() may be called more
   than once in the plugin when more than one item is saved in NACT : this should be only once.
@@ -499,3 +499,13 @@ Parameter 	Description
 
 - 2010-07-27: enhancement: while editing a new filter, making it duplicate, try to keep editing
   instead of terminating the edition and letting the old value
+
+- 2010-07-30: TODO: is_candidate_for_basenames
+
+- 2010-07-30: TODO: is_candidate_for_selection_count
+
+- 2010-07-30: TODO: is_candidate_for_schemes
+
+- 2010-07-30: TODO: is_candidate_for_folders
+
+- 2010-07-30: TODO: is_candidate_for_capabilities
