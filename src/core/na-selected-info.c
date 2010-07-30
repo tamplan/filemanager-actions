@@ -286,6 +286,31 @@ na_selected_info_get_location( const NASelectedInfo *nsi )
 }
 
 /**
+ * na_selected_info_get_basename:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: the basename of the file associated with this
+ * #NASelectedInfo object, as a newly allocated string which
+ * must be g_free() by the caller.
+ */
+gchar *
+na_selected_info_get_basename( const NASelectedInfo *nsi )
+{
+	gchar *basename;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+
+	basename = NULL;
+
+	if( !nsi->private->dispose_has_run ){
+
+		basename = g_strdup( g_path_get_basename( nsi->private->vfs->path ));
+	}
+
+	return( basename );
+}
+
+/**
  * na_selected_info_get_mime_type:
  * @nsi: this #NASelectedInfo object.
  *

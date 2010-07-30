@@ -1,5 +1,12 @@
 2010-07-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c (is_candidate_for_basenames):
+	Implement the function.
+
+	* src/core/na-selected-info.c:
+	* src/core/na-selected-info.h (na_selected_info_get_basename):
+	New function.
+
 	* configure.ac:	Add a dependancy on libgtop.
 
 	* src/core/na-icontext.c (is_candidate_for_show_if_running):

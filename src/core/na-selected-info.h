@@ -80,6 +80,7 @@ GList          *na_selected_info_copy_list         ( GList *list );
 void            na_selected_info_free_list         ( GList *list );
 
 GFile          *na_selected_info_get_location  ( const NASelectedInfo *nsi );
+gchar          *na_selected_info_get_basename  ( const NASelectedInfo *nsi );
 gchar          *na_selected_info_get_mime_type ( const NASelectedInfo *nsi );
 gchar          *na_selected_info_get_path      ( const NASelectedInfo *nsi );
 gchar          *na_selected_info_get_uri       ( const NASelectedInfo *nsi );
