@@ -778,6 +778,7 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 					}
 				}
 
+				g_object_unref( pattern_spec );
 				g_free( pattern );
 			}
 		}

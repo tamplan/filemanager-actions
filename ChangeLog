@@ -1,6 +1,9 @@
 2010-07-30 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-icontext.c (is_candidate_for_basenames):
+	Unref the GPatternSpec after use.
+
+	* src/core/na-icontext.c (is_candidate_for_basenames):
 	Implement the function.
 
 	* src/core/na-selected-info.c:
