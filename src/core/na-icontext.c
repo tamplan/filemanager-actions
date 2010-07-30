@@ -34,6 +34,10 @@
 
 #include <dbus/dbus-glib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <glibtop/proclist.h>
+#include <glibtop/procstate.h>
 
 #include <libnautilus-extension/nautilus-file-info.h>
 
@@ -575,12 +579,29 @@ is_candidate_for_show_if_running( const NAIContext *object, guint target, GList 
 {
 	static const gchar *thisfn = "na_icontext_is_candidate_for_show_if_running";
 	gboolean ok = TRUE;
+	gchar *searched;
+	glibtop_proclist proclist;
+	glibtop_proc_state procstate;
+	pid_t *pid_list;
+	guint i;
 	gchar *running = na_object_get_show_if_running( object );
 
 	if( running && strlen( running )){
-		/* TODO: how to get the list of running processes ?
-		 * or how to known if a given process is currently running
-		 */
+		ok = FALSE;
+		searched = g_path_get_basename( running );
+		pid_list = glibtop_get_proclist( &proclist, GLIBTOP_KERN_PROC_ALL, 0 );
+
+		for( i=0 ; i<proclist.number && !ok ; ++i ){
+			glibtop_get_proc_state( &procstate, pid_list[i] );
+			/*g_debug( "%s: i=%d, cmd=%s", thisfn, i, procstate.cmd );*/
+			if( strcmp( procstate.cmd, searched ) == 0 ){
+				g_debug( "%s: i=%d, cmd=%s", thisfn, i, procstate.cmd );
+				ok = TRUE;
+			}
+		}
+
+		g_free( pid_list );
+		g_free( searched );
 	}
 
 	if( !ok ){

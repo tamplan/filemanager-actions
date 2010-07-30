@@ -129,6 +129,7 @@ NAUTILUS_EXTENSION=2.8.0
 GCONF_REQUIRED=2.8.0
 LIBXML_REQUIRED=2.6.0
 GOBJECT_REQUIRED=2.4.0
+LIBGTOP_REQUIRED=2.23.1
 
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 if test "${PKG_CONFIG}" = "no"; then
@@ -142,6 +143,7 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 	gconf-2.0				>= ${GCONF_REQUIRED}		\
 	libxml-2.0				>= ${LIBXML_REQUIRED}		\
 	libnautilus-extension	>= ${NAUTILUS_EXTENSION}	\
+	libgtop-2.0				>= ${LIBGTOP_REQUIRED}		\
 	sm						>= 1.0.0					\
 	uuid												\
 	unique-1.0											\
