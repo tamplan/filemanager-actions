@@ -87,6 +87,11 @@ gchar          *na_selected_info_get_path      ( const NASelectedInfo *nsi );
 gchar          *na_selected_info_get_uri       ( const NASelectedInfo *nsi );
 gchar          *na_selected_info_get_uri_scheme( const NASelectedInfo *nsi );
 gboolean        na_selected_info_is_directory  ( const NASelectedInfo *nsi );
+gboolean        na_selected_info_is_executable ( const NASelectedInfo *nsi );
+gboolean        na_selected_info_is_local      ( const NASelectedInfo *nsi );
+gboolean        na_selected_info_is_owner      ( const NASelectedInfo *nsi, const gchar *user );
+gboolean        na_selected_info_is_readable   ( const NASelectedInfo *nsi );
+gboolean        na_selected_info_is_writable   ( const NASelectedInfo *nsi );
 
 NASelectedInfo *na_selected_info_create_for_uri( const gchar *uri, const gchar *mimetype );
 

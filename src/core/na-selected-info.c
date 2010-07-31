@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include "na-gnome-vfs-uri.h"
 #include "na-selected-info.h"
 
@@ -50,6 +52,10 @@ struct NASelectedInfoPrivate {
 	GFile         *location;
 	gchar         *mimetype;
 	GFileType      file_type;
+	gboolean       can_read;
+	gboolean       can_write;
+	gboolean       can_execute;
+	gchar         *owner;
 };
 
 
@@ -176,6 +182,7 @@ instance_finalize( GObject *object )
 
 	g_free( self->private->uri );
 	g_free( self->private->mimetype );
+	g_free( self->private->owner );
 
 	g_free( self->private );
 
@@ -454,6 +461,125 @@ na_selected_info_is_directory( const NASelectedInfo *nsi )
 }
 
 /**
+ * na_selected_info_is_executable:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: %TRUE if the item is executable by the user, %FALSE else.
+ */
+gboolean
+na_selected_info_is_executable( const NASelectedInfo *nsi )
+{
+	gboolean is_exe;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+
+	is_exe = FALSE;
+
+	if( !nsi->private->dispose_has_run ){
+
+		is_exe = nsi->private->can_execute;
+	}
+
+	return( is_exe );
+}
+
+/**
+ * na_selected_info_is_local:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: %TRUE if the item is on a local filesystem, %FALSE else.
+ */
+gboolean
+na_selected_info_is_local( const NASelectedInfo *nsi )
+{
+	gboolean is_local;
+	gchar *scheme;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+
+	is_local = FALSE;
+
+	if( !nsi->private->dispose_has_run ){
+
+		scheme = na_selected_info_get_uri_scheme( nsi );
+		is_local = ( strcmp( scheme, "file" ) == 0 );
+		g_free( scheme );
+	}
+
+	return( is_local );
+}
+
+/**
+ * na_selected_info_is_owner:
+ * @nsi: this #NASelectedInfo object.
+ * @user: the user to be tested against the owner of the @nsi object.
+ *
+ * Returns: %TRUE if the item is a owner, %FALSE else.
+ */
+gboolean
+na_selected_info_is_owner( const NASelectedInfo *nsi, const gchar *user )
+{
+	gboolean is_owner;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+
+	is_owner = FALSE;
+
+	if( !nsi->private->dispose_has_run ){
+
+		is_owner = ( strcmp( nsi->private->owner, user ) == 0 );
+	}
+
+	return( is_owner );
+}
+
+/**
+ * na_selected_info_is_readable:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: %TRUE if the item is a readable, %FALSE else.
+ */
+gboolean
+na_selected_info_is_readable( const NASelectedInfo *nsi )
+{
+	gboolean is_readable;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+
+	is_readable = FALSE;
+
+	if( !nsi->private->dispose_has_run ){
+
+		is_readable = nsi->private->can_read;
+	}
+
+	return( is_readable );
+}
+
+/**
+ * na_selected_info_is_writable:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: %TRUE if the item is a writable, %FALSE else.
+ */
+gboolean
+na_selected_info_is_writable( const NASelectedInfo *nsi )
+{
+	gboolean is_writable;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+
+	is_writable = FALSE;
+
+	if( !nsi->private->dispose_has_run ){
+
+		is_writable = nsi->private->can_write;
+	}
+
+	return( is_writable );
+}
+
+/**
  * na_selected_info_create_for_uri:
  * @uri: an URI.
  * @mimetype: the corresponding Nautilus mime type, or %NULL.
@@ -525,7 +651,12 @@ query_file_attributes( NASelectedInfo *nsi )
 
 	error = NULL;
 	GFileInfo *info = g_file_query_info( nsi->private->location,
-			G_FILE_ATTRIBUTE_STANDARD_TYPE "," G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+			G_FILE_ATTRIBUTE_STANDARD_TYPE
+				"," G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE
+				"," G_FILE_ATTRIBUTE_ACCESS_CAN_READ
+				"," G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE
+				"," G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE
+				"," G_FILE_ATTRIBUTE_OWNER_USER,
 			G_FILE_QUERY_INFO_NONE, NULL, &error );
 
 	if( error ){
@@ -539,6 +670,12 @@ query_file_attributes( NASelectedInfo *nsi )
 	}
 
 	nsi->private->file_type = ( GFileType ) g_file_info_get_attribute_uint32( info, G_FILE_ATTRIBUTE_STANDARD_TYPE );
+
+	nsi->private->can_read = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_READ );
+	nsi->private->can_write = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE );
+	nsi->private->can_execute = g_file_info_get_attribute_boolean( info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE );
+
+	nsi->private->owner = g_strdup( g_file_info_get_attribute_as_string( info, G_FILE_ATTRIBUTE_OWNER_USER ));
 
 	g_object_unref( info );
 }

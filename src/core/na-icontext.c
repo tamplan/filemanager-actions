@@ -943,8 +943,54 @@ is_candidate_for_capabilities( const NAIContext *object, guint target, GList *fi
 	static const gchar *thisfn = "na_icontext_is_candidate_for_capabilities";
 	gboolean ok = TRUE;
 	GSList *capabilities = na_object_get_capabilities( object );
+	GSList *ic;
+	const gchar *cap;
+	GList *it;
+	gboolean positive, match;
+	guint count_positive = 0;
+	guint count_compatible = 0;
 
 	if( capabilities ){
+		for( ic = capabilities ; ic && ok ; ic = ic->next ){
+			cap = ( const gchar * ) ic->data;
+			positive = is_positive_assertion( cap );
+			if( positive ){
+				count_positive += 1;
+			} else {
+				cap += 1;
+			}
+
+			for( it = files ; it && ok ; it = it->next ){
+				if( !strcmp( cap, "Owner" )){
+					match = na_selected_info_is_owner( NA_SELECTED_INFO( it->data ), getlogin());
+					count_compatible_patterns( positive, match, &count_compatible, &ok );
+
+				} else if( !strcmp( cap, "Readable" )){
+					match = na_selected_info_is_readable( NA_SELECTED_INFO( it->data ));
+					count_compatible_patterns( positive, match, &count_compatible, &ok );
+
+				} else if( !strcmp( cap, "Writable" )){
+					match = na_selected_info_is_writable( NA_SELECTED_INFO( it->data ));
+					count_compatible_patterns( positive, match, &count_compatible, &ok );
+
+				} else if( !strcmp( cap, "Executable" )){
+					match = na_selected_info_is_executable( NA_SELECTED_INFO( it->data ));
+					count_compatible_patterns( positive, match, &count_compatible, &ok );
+
+				} else if( !strcmp( cap, "Local" )){
+					match = na_selected_info_is_local( NA_SELECTED_INFO( it->data ));
+					count_compatible_patterns( positive, match, &count_compatible, &ok );
+
+				} else {
+					g_warning( "%s: unknown capability %s", thisfn, cap );
+				}
+			}
+		}
+
+		if( count_positive > 0 && count_compatible == 0 ){
+			ok = FALSE;
+		}
+
 
 		if( !ok ){
 			gchar *capabilities_str = na_core_utils_slist_to_text( capabilities );
@@ -957,230 +1003,6 @@ is_candidate_for_capabilities( const NAIContext *object, guint target, GList *fi
 
 	return( ok );
 }
-
-#if 0
-static gboolean
-is_target_selection_candidate( const NAIContext *object, GList *files )
-{
-	gboolean retv = FALSE;
-	GSList *basenames, *mimetypes, *schemes;
-	gboolean matchcase, multiple, isdir, isfile;
-	gboolean test_multiple_file = FALSE;
-	gboolean test_file_type = FALSE;
-	gboolean test_scheme = FALSE;
-	gboolean test_basename = FALSE;
-	gboolean test_mimetype = FALSE;
-	GList* glob_patterns = NULL;
-	GList* glob_mime_patterns = NULL;
-	GSList* iter;
-	GList* iter1;
-	GList* iter2;
-	guint dir_count = 0;
-	guint file_count = 0;
-	guint total_count = 0;
-	guint scheme_ok_count = 0;
-	guint glob_ok_count = 0;
-	guint mime_glob_ok_count = 0;
-	gboolean basename_match_ok = FALSE;
-	gboolean mimetype_match_ok = FALSE;
-	gchar *tmp_pattern, *tmp_filename, *tmp_filename2, *tmp_mimetype, *tmp_mimetype2;
-
-	basenames = na_object_get_basenames( object );
-	matchcase = na_object_get_matchcase( object );
-	multiple = na_object_is_multiple( object );
-	isdir = na_object_is_dir( object );
-	isfile = na_object_is_file( object );
-	mimetypes = na_object_get_mimetypes( object );
-	schemes = na_object_get_schemes( object );
-
-	if( basenames && basenames->next != NULL &&
-			g_ascii_strcasecmp(( gchar * )( basenames->data ), "*" ) == 0 ){
-		/* if the only pattern is '*' then all files will match, so it
-		 * is not necessary to make the test for each of them
-		 */
-		test_basename = TRUE;
-
-	} else {
-		for (iter = basenames ; iter ; iter = iter->next ){
-
-			tmp_pattern = ( gchar * ) iter->data;
-			if( !matchcase ){
-				/* --> if case-insensitive asked, lower all the string
-				 * since the pattern matching function don't manage it
-				 * itself.
-				 */
-				tmp_pattern = g_ascii_strdown(( gchar * ) iter->data, strlen(( gchar * ) iter->data ));
-			}
-
-			glob_patterns = g_list_append( glob_patterns, g_pattern_spec_new( tmp_pattern ));
-
-			if( !matchcase ){
-				g_free( tmp_pattern );
-			}
-		}
-	}
-
-	if( mimetypes && mimetypes->next != NULL &&
-			( g_ascii_strcasecmp(( gchar * )( mimetypes->data ), "*" ) == 0 ||
-			  g_ascii_strcasecmp(( gchar * )( mimetypes->data), "*/*") == 0 )){
-		/* if the only pattern is '*' or * / * then all mimetypes will
-		 * match, so it is not necessary to make the test for each of them
-		 */
-		test_mimetype = TRUE;
-
-	} else {
-		for( iter = mimetypes ; iter ; iter = iter->next ){
-			glob_mime_patterns = g_list_append( glob_mime_patterns, g_pattern_spec_new(( gchar * ) iter->data ));
-		}
-	}
-
-	for( iter1 = files ; iter1 ; iter1 = iter1->next ){
-
-		tmp_filename = na_selected_info_get_path( NA_SELECTED_INFO( iter1->data ));
-		g_debug( "na_icontext_is_target_selection_candidate: tmp_filename=%s", tmp_filename );
-
-		if( tmp_filename ){
-			tmp_mimetype = na_selected_info_get_mime_type( NA_SELECTED_INFO( iter1->data ));
-			g_debug( "na_icontext_is_target_selection_candidate: tmp_mimetype=%s", tmp_mimetype );
-
-			if( !matchcase ){
-				/* --> if case-insensitive asked, lower all the string
-				 * since the pattern matching function don't manage it
-				 * itself.
-				 */
-				tmp_filename2 = g_ascii_strdown( tmp_filename, strlen( tmp_filename ));
-				g_free( tmp_filename );
-				tmp_filename = tmp_filename2;
-				g_debug( "na_icontext_is_target_selection_candidate: tmp_filename=%s", tmp_filename );
-			}
-
-			/* --> for the moment we deal with all mimetypes case-insensitively
-			 * note that a symlink to a directory has a 'inode/directory' mimetype
-			 * and, in general, a symlink to a target has the target's mimetype
-			 */
-			tmp_mimetype2 = g_ascii_strdown( tmp_mimetype, strlen( tmp_mimetype ));
-			g_free( tmp_mimetype );
-			tmp_mimetype = tmp_mimetype2;
-
-			if( na_selected_info_is_directory( NA_SELECTED_INFO( iter1->data ))){
-				dir_count++;
-			} else {
-				file_count++;
-			}
-
-			scheme_ok_count += validate_schemes( schemes, NA_SELECTED_INFO( iter1->data ));
-
-			if( !test_basename ){ /* if it is already ok, skip the test to improve performance */
-				basename_match_ok = FALSE;
-				iter2 = glob_patterns;
-				while( iter2 && !basename_match_ok ){
-					if( g_pattern_match_string(( GPatternSpec * ) iter2->data, tmp_filename )){
-						basename_match_ok = TRUE;
-					}
-					iter2 = iter2->next;
-				}
-
-				if( basename_match_ok ){
-					glob_ok_count++;
-				}
-			}
-
-			if( !test_mimetype ){ /* if it is already ok, skip the test to improve performance */
-				mimetype_match_ok = FALSE;
-				iter2 = glob_mime_patterns;
-				while( iter2 && !mimetype_match_ok ){
-					if (g_pattern_match_string(( GPatternSpec * ) iter2->data, tmp_mimetype )){
-						mimetype_match_ok = TRUE;
-					}
-					iter2 = iter2->next;
-				}
-
-				if( mimetype_match_ok ){
-					mime_glob_ok_count++;
-				}
-			}
-
-			g_free( tmp_mimetype );
-			g_free( tmp_filename );
-		}
-
-		total_count++;
-	}
-
-	if(( files != NULL ) && ( files->next == NULL ) && ( !multiple )){
-		test_multiple_file = TRUE;
-
-	} else if( multiple ){
-		test_multiple_file = TRUE;
-	}
-
-	if( isdir && isfile ){
-		if( dir_count > 0 || file_count > 0 ){
-			test_file_type = TRUE;
-		}
-	} else if( isdir && !isfile ){
-		if( file_count == 0 ){
-			test_file_type = TRUE;
-		}
-	} else if( !isdir && isfile ){
-		if( dir_count == 0 ){
-			test_file_type = TRUE;
-		}
-	}
-
-	if( scheme_ok_count == total_count ){
-		test_scheme = TRUE;
-	}
-
-	if( !test_basename ){ /* if not already tested */
-		if( glob_ok_count == total_count ){
-			test_basename = TRUE;
-		}
-	}
-
-	if( !test_mimetype ){ /* if not already tested */
-		if( mime_glob_ok_count == total_count ){
-			test_mimetype = TRUE;
-		}
-	}
-
-	if( test_basename && test_mimetype && test_file_type && test_scheme && test_multiple_file ){
-		retv = TRUE;
-	}
-
-	g_list_foreach (glob_patterns, (GFunc) g_pattern_spec_free, NULL);
-	g_list_free (glob_patterns);
-	g_list_foreach (glob_mime_patterns, (GFunc) g_pattern_spec_free, NULL);
-	g_list_free (glob_mime_patterns);
-	na_core_utils_slist_free( schemes );
-	na_core_utils_slist_free( mimetypes );
-	na_core_utils_slist_free( basenames );
-
-	return retv;
-}
-
-static gboolean
-validate_schemes( GSList *object_schemes, NASelectedInfo *nfi )
-{
-	gboolean is_ok;
-	GSList* iter;
-	gchar *scheme;
-
-	is_ok = FALSE;
-
-	for( iter = object_schemes ; iter && !is_ok ; iter = iter->next ){
-		scheme = na_selected_info_get_uri_scheme( nfi );
-
-		if( g_ascii_strncasecmp( scheme, ( gchar * ) iter->data, strlen(( gchar * ) iter->data )) == 0 ){
-			is_ok = TRUE;
-		}
-
-		g_free( scheme );
-	}
-
-	return( is_ok );
-}
-#endif
 
 static void
 count_compatible_patterns( gboolean positive, gboolean match, guint *count_compatible, gboolean *ok )
