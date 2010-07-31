@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-07-03 11:06+0000\n"
-"PO-Revision-Date: 2010-07-10 11:00+0200\n"
+"POT-Creation-Date: 2010-07-28 20:59+0000\n"
+"PO-Revision-Date: 2010-07-31 11:04+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -429,6 +429,11 @@ msgid ""
 "published by the Free Software Foundation; either version 2 of the License, "
 "or (at your option) any later version."
 msgstr ""
+"La herramienta de configuración de las acciones de Nautilus es software "
+"libre: usted puede redistribuirlo y/o modificarlo bajo los términos de la "
+"Licencia Pública General GNU publicada por la Fundación para el Software "
+"Libre, ya sea la versión 2 de la Licencia, o (a su elección) cualquier "
+"versión posterior."
 
 #: ../src/core/na-iabout.c:180
 msgid ""
@@ -437,6 +442,11 @@ msgid ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
 "Public License for more details."
 msgstr ""
+"La herramienta de configuración de las acciones de Nautilus se distribuye "
+"con la esperanza de que sea útil, pero SIN GARANTÍA ALGUNA; ni siquiera la "
+"garantía implícita MERCANTIL o de APTITUD PARA UN PROPÓSITO DETERMINADO. "
+"Consulte los detalles de la Licencia Pública General GNU para obtener una "
+"información más detallada."
 
 #: ../src/core/na-iabout.c:184
 msgid ""
@@ -475,7 +485,6 @@ msgstr ""
 "seleccionada(s)"
 
 #: ../src/core/na-icontext-factory.c:48
-#, fuzzy
 #| msgid ""
 #| "A list of strings with joker '*' or '?' to match the name of the selected "
 #| "file(s)/folder(s). Each selected items must match at least one of the "
@@ -490,7 +499,10 @@ msgid ""
 msgstr ""
 "Una lista de cadenas con comodines «*» o «?» para coincidir con los archivos/"
 "carpetas seleccionados. Cada elemento seleccionado debe coincidir al menos "
-"con uno de los patrones para que aparezca la acción"
+"con uno de los patrones para que aparezca la acción o con el candidato del "
+"menú que mostrar.\n"
+"Esto, ovbiamente, sólo se aplica cuando existe una selección.\n"
+"Lo predeterminado es «*»."
 
 #: ../src/core/na-icontext-factory.c:67
 msgid ""
@@ -538,12 +550,6 @@ msgstr ""
 "carpetas seleccionadas"
 
 #: ../src/core/na-icontext-factory.c:104
-#| msgid ""
-#| "A list of strings with joker '*' to be matched against the mimetypes of "
-#| "the selected file(s)/folder(s). Each selected items must match at least "
-#| "one of the mimetype patterns for the action to appear.\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to '*'."
 msgid ""
 "A list of strings with joker '*' to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected items must match at least one of "
@@ -873,6 +879,43 @@ msgid ""
 "Defaults to empty list."
 msgstr ""
 
+#: ../src/core/na-iimporter.c:206
+msgid ""
+"Item was renumbered because the caller did not provide any check function."
+msgstr ""
+"El elemento se reenumeró porque quien lo llamó no proporcionó ninguna "
+"función de comprobación."
+
+#: ../src/core/na-iimporter.c:219
+msgid ""
+"Item was renumbered because the caller did not provide any ask user function."
+msgstr ""
+"El elemento se reenumeró porque quién lo llamó no proporcionó ninguna "
+"función para preguntar al usuario."
+
+#: ../src/core/na-iimporter.c:238
+msgid "Item was renumbered due to user request."
+msgstr "Se cambió el número del elemento a petición del usuario."
+
+#: ../src/core/na-iimporter.c:244
+msgid "Existing item was overriden due to user request."
+msgstr "Se sobreescribió el elemento existente a petición del usuario."
+
+#: ../src/core/na-iimporter.c:251
+#, c-format
+#| msgid "Item ID %s already exists."
+msgid "Item %s already exists."
+msgstr "El elemento %s ya existe."
+
+#: ../src/core/na-iimporter.c:253
+msgid "Import was canceled due to user request."
+msgstr "Se canceló la importación a petición del usuario."
+
+#. i18n: the action has been renumbered during import operation
+#: ../src/core/na-iimporter.c:276
+msgid "(renumbered)"
+msgstr "(reenumerado)"
+
 #: ../src/core/na-importer-ask.c:302
 #, c-format
 msgid ""
@@ -891,35 +934,35 @@ msgstr ""
 "El menú importado «%s» de «%s» tiene el mismo identificador que la ya "
 "existente «%s»."
 
-#: ../src/core/na-io-provider.c:1301
+#: ../src/core/na-io-provider.c:1302
 msgid "Item is read-only."
 msgstr "El elemento es de sólo lectura."
 
-#: ../src/core/na-io-provider.c:1305
+#: ../src/core/na-io-provider.c:1306
 msgid "I/O provider is not willing to write."
 msgstr "El proveedor de E/S no quiere escribir."
 
-#: ../src/core/na-io-provider.c:1309
+#: ../src/core/na-io-provider.c:1310
 msgid "No writable I/O provider found."
 msgstr "No se encontró un proveedor de E/S escribible."
 
-#: ../src/core/na-io-provider.c:1313
+#: ../src/core/na-io-provider.c:1314
 msgid "I/O provider has been locked down by an administrator."
 msgstr "Un administrador ha bloqueado el proveedor de E/S."
 
-#: ../src/core/na-io-provider.c:1317
+#: ../src/core/na-io-provider.c:1318
 msgid "I/O provider has been locked down by the user."
 msgstr "El usuario ha bloqueado el proveedor de E/S."
 
-#: ../src/core/na-io-provider.c:1321
+#: ../src/core/na-io-provider.c:1322
 msgid "I/O provider implementation lacks of required API."
 msgstr "La implementación del proveedor de E/S carece de la API requerida."
 
-#: ../src/core/na-io-provider.c:1325
+#: ../src/core/na-io-provider.c:1326
 msgid "The whole configuration has been locked down by an administrator."
 msgstr "Un administrador ha bloqueado la configuración completa."
 
-#: ../src/core/na-io-provider.c:1334
+#: ../src/core/na-io-provider.c:1335
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
@@ -928,11 +971,11 @@ msgstr ""
 "Por alguna razón desconocida no se puede escribir el elemento (%d).\n"
 "Por favor, rellene un informe de error en http://bugzilla.gnome.org."
 
-#: ../src/core/na-io-provider.c:1358
+#: ../src/core/na-io-provider.c:1359
 msgid "OK."
 msgstr "Aceptar."
 
-#: ../src/core/na-io-provider.c:1362
+#: ../src/core/na-io-provider.c:1363
 msgid ""
 "Program flow error.\n"
 "Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
@@ -940,23 +983,23 @@ msgstr ""
 "Error en el flujo del programa.\n"
 "Por favor, rellene un informe de error en http://bugzilla.gnome.org."
 
-#: ../src/core/na-io-provider.c:1367
+#: ../src/core/na-io-provider.c:1368
 msgid "The I/O provider is not willing to do that."
 msgstr "El proveedor de E/S no hacer eso."
 
-#: ../src/core/na-io-provider.c:1371
+#: ../src/core/na-io-provider.c:1372
 msgid "Write error in I/O provider."
 msgstr "Error de escritura en el proveedor de E/S."
 
-#: ../src/core/na-io-provider.c:1375
+#: ../src/core/na-io-provider.c:1376
 msgid "Unable to delete GConf schemas."
 msgstr "No se pudieron borrar los esquemas de GConf."
 
-#: ../src/core/na-io-provider.c:1379
+#: ../src/core/na-io-provider.c:1380
 msgid "Unable to delete configuration."
 msgstr "No se pudo eliminar la configuración."
 
-#: ../src/core/na-io-provider.c:1383
+#: ../src/core/na-io-provider.c:1384
 #, c-format
 msgid ""
 "Unknow return code (%d).\n"
@@ -970,7 +1013,7 @@ msgstr ""
 msgid "New Nautilus action"
 msgstr "Acción de Nautilus nueva"
 
-#: ../src/core/na-object-action.c:465
+#: ../src/core/na-object-action.c:462
 msgid "Profile automatically created from pre-v2 action"
 msgstr "Perfil creado automáticamente desde la acción pre-v2"
 
@@ -1039,10 +1082,6 @@ msgid "Type of the item"
 msgstr "Tipo del elemento"
 
 #: ../src/core/na-object-item-factory.c:59
-#| msgid ""
-#| "Defines if the item is an action or a menu. Possible values are : - "
-#| "\"Action\", - \"Menu\". The value is case sensitive and must not be "
-#| "localized."
 msgid ""
 "Defines if the item is an action or a menu. Possible values are :\n"
 "- 'Action',\n"
@@ -1073,7 +1112,6 @@ msgstr ""
 "aparición"
 
 #: ../src/core/na-object-item-factory.c:111
-#| msgid "The tooltip of the menu item"
 msgid "Tooltip of the context menu item"
 msgstr "El consejo del elemento del menú contextual"
 
@@ -1092,7 +1130,6 @@ msgstr ""
 "ratón"
 
 #: ../src/core/na-object-item-factory.c:135
-#| msgid "The icon of the menu item"
 msgid "Icon of the context menu item"
 msgstr "El icono del elemento del menú contextual"
 
@@ -1154,13 +1191,11 @@ msgid ""
 msgstr ""
 
 #: ../src/core/na-object-item-factory.c:262
-#, fuzzy
 #| msgid "Whether the action is enabled"
 msgid "Whether the action or the menu is enabled (default)"
-msgstr "Indica si la acción está activada"
+msgstr "Indica si la acción o el menú está activado (predeterminado)"
 
 #: ../src/core/na-object-item-factory.c:263
-#, fuzzy
 #| msgid ""
 #| "If the action is disabled, it will never appear in the Nautilus context "
 #| "menu."
@@ -1169,7 +1204,9 @@ msgid ""
 "manager context menu.\n"
 "Defaults to TRUE."
 msgstr ""
-"Si se desactiva la acción, nunca aparece en el menú contextual de Nautilus."
+"Si se desactiva la acción o la acción de menú, nunca aparecerá en el menú "
+"contextual del gestor de archivos.\n"
+"Lo predeterminado es cierto («TRUE»)."
 
 #: ../src/core/na-object-item-factory.c:375
 msgid "Version of the format"
@@ -1189,12 +1226,11 @@ msgid "New Nautilus menu"
 msgstr "Menú de Nautilus nuevo"
 
 #. i18n: label for the default profile
-#: ../src/core/na-object-profile.c:465
+#: ../src/core/na-object-profile.c:681
 msgid "Default profile"
 msgstr "Perfil predeterminado"
 
 #: ../src/core/na-object-profile-factory.c:50
-#| msgid "A description name of the profile"
 msgid "Name of the profile"
 msgstr "Nombre del perfil"
 
@@ -1374,7 +1410,7 @@ msgid ""
 "Defaults to empty: the command will be executed as the current user."
 msgstr ""
 
-#: ../src/io-desktop/nadp-desktop-provider.c:225
+#: ../src/io-desktop/nadp-desktop-provider.c:250
 msgid "Nautilus-Actions Desktop I/O Provider"
 msgstr "Proveedor de E/S para el escritorio de las Acciones de Nautilus"
 
@@ -1383,31 +1419,26 @@ msgid "Nautilus-Actions GConf I/O Provider"
 msgstr "Proveedor de E/S para GConf de las Acciones de Nautilus"
 
 #: ../src/io-xml/naxml-reader.c:147
-#, c-format
-msgid "Item ID %s already exists."
-msgstr "El ID del elemento %s ya existe."
-
-#: ../src/io-xml/naxml-reader.c:148
 msgid "Item ID not found."
 msgstr "No se encontró el ID del elemento."
 
-#: ../src/io-xml/naxml-reader.c:149
+#: ../src/io-xml/naxml-reader.c:148
 #, c-format
 msgid "Unwaited key path %s while importing a menu."
 msgstr "Ruta de clave %s no esperada al importar un menú."
 
-#: ../src/io-xml/naxml-reader.c:150
+#: ../src/io-xml/naxml-reader.c:149
 #, c-format
 msgid "Element %s at line %d already found, ignored."
 msgstr "Ya se encontró el elemento %s en la línea %d, ignorado."
 
-#: ../src/io-xml/naxml-reader.c:151
+#: ../src/io-xml/naxml-reader.c:150
 #, c-format
 msgid "Invalid item ID: waited for %s, found %s at line %d."
 msgstr ""
 "ID de elemento no válido: se esperaba %s, se encontró %s en la línea %d."
 
-#: ../src/io-xml/naxml-reader.c:152
+#: ../src/io-xml/naxml-reader.c:151
 #, c-format
 msgid "Unknown element %s found at line %d while waiting for %s."
 msgstr ""
@@ -1415,56 +1446,29 @@ msgstr ""
 "por %s."
 
 #. i18n: do not translate keywords 'Action' nor 'Menu'
-#: ../src/io-xml/naxml-reader.c:154
+#: ../src/io-xml/naxml-reader.c:153
 #, c-format
 msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
 msgstr ""
 "Se encontró un tipo desconocido (%s) en la línea %d mientras se esperaba a "
 "la acción o al menú."
 
-#: ../src/io-xml/naxml-reader.c:155
+#: ../src/io-xml/naxml-reader.c:154
 #, c-format
 msgid "Invalid XML root element %s found at line %d while waiting for %s."
 msgstr ""
 "Se encontró un elemento raíz XML no válido %s en la línea %d mientras se "
 "esperaba a %s."
 
-#: ../src/io-xml/naxml-reader.c:156
+#: ../src/io-xml/naxml-reader.c:155
 #, c-format
 msgid "Unable to parse XML file: %s."
 msgstr "No se puede analizar el archivo XML: %s."
 
-#: ../src/io-xml/naxml-reader.c:157
+#: ../src/io-xml/naxml-reader.c:156
 #, c-format
 msgid "Node %s at line %d has not been dealt with."
 msgstr "No se ha trabajado con el nodo %s en la línea %d."
-
-#: ../src/io-xml/naxml-reader.c:1314
-msgid ""
-"Item was renumbered because the caller did not provide any check function."
-msgstr ""
-
-#: ../src/io-xml/naxml-reader.c:1327
-msgid ""
-"Item was renumbered because the caller did not provide any ask user function."
-msgstr ""
-
-#: ../src/io-xml/naxml-reader.c:1346
-msgid "Item was renumbered due to user request."
-msgstr "Se cambió el número del elemento a petición del usuario."
-
-#: ../src/io-xml/naxml-reader.c:1352
-msgid "Existing item was overriden due to user request."
-msgstr "Se sobreescribió el elemento existente a petición del usuario."
-
-#: ../src/io-xml/naxml-reader.c:1361
-msgid "Import was canceled due to user request."
-msgstr "Se canceló la importación a petición del usuario."
-
-#. i18n: the action has been renumbered during import operation
-#: ../src/io-xml/naxml-reader.c:1400
-msgid "(renumbered)"
-msgstr ""
 
 #: ../src/io-xml/naxml-formats.c:48
 msgid "Export as a _full GConf schema file"
@@ -1475,14 +1479,15 @@ msgid ""
 "This used to be the historical export format.\n"
 "The exported schema file may later be imported via :\n"
 "- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
 "- or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
 
-#: ../src/io-xml/naxml-formats.c:58
+#: ../src/io-xml/naxml-formats.c:59
 msgid "Export as a _light GConf schema (v2) file"
 msgstr "Exportar como un archivo de esquema _ligero de GConf (v2)"
 
-#: ../src/io-xml/naxml-formats.c:59
+#: ../src/io-xml/naxml-formats.c:60
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "This is the lightest schema still compatible with GConf command-line tools,\n"
@@ -1490,14 +1495,15 @@ msgid ""
 "Configuration Tool versions.\n"
 "The exported schema file may later be imported via :\n"
 "- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
 "- or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
 
-#: ../src/io-xml/naxml-formats.c:71
+#: ../src/io-xml/naxml-formats.c:73
 msgid "Export as a GConf _dump file"
 msgstr "Exportar como un _volcado de archivo de GConf"
 
-#: ../src/io-xml/naxml-formats.c:72
+#: ../src/io-xml/naxml-formats.c:74
 msgid ""
 "This format has been introduced in v 1.11 serie, and should be the preferred "
 "format for newly exported items.\n"
@@ -1506,6 +1512,7 @@ msgid ""
 "though it may still be imported via standard GConf command-line tools.\n"
 "The exported dump file may later be imported via :\n"
 "- Import assistant of a compatible Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
 "- or via the gconftool-2 --load command-line tool."
 msgstr ""
 
@@ -1645,33 +1652,32 @@ msgstr "Cambie a ella."
 msgid "Nautilus Actions Configuration Tool"
 msgstr "Herramienta de configuración de acciones de Nautilus"
 
-#: ../src/nact/nact-add-capability-dialog.c:71
+#: ../src/nact/nact-add-capability-dialog.c:72
 msgid "User is the owner of the item"
 msgstr "El usuario es el propietario del elemento"
 
-#: ../src/nact/nact-add-capability-dialog.c:72
+#: ../src/nact/nact-add-capability-dialog.c:73
 msgid "Item is readable by the user"
 msgstr "El usuario puede leer el elemento"
 
-#: ../src/nact/nact-add-capability-dialog.c:73
+#: ../src/nact/nact-add-capability-dialog.c:74
 msgid "Item is writable by the user"
 msgstr "El usuario puede escribir el elemento"
 
-#: ../src/nact/nact-add-capability-dialog.c:74
+#: ../src/nact/nact-add-capability-dialog.c:75
 msgid "Item is executable by the user"
 msgstr "El usuario puede ejecutar el elemento"
 
-#: ../src/nact/nact-add-capability-dialog.c:75
+#: ../src/nact/nact-add-capability-dialog.c:76
 msgid "Item is local"
 msgstr "El elemento es local"
 
 #. i18n: add a comment when a capability is already used by current item
-#. i18n: add a comment when a scheme is already used by current item
-#: ../src/nact/nact-add-capability-dialog.c:508
-#: ../src/nact/nact-schemes-list.c:367
+#: ../src/nact/nact-add-capability-dialog.c:531
 #, c-format
-msgid "%s (already used)"
-msgstr "%s (ya se está usando)"
+#| msgid "%s (already used)"
+msgid "%s (already inserted)"
+msgstr "%s (ya se insertó)"
 
 #: ../src/nact/nact-assistant-export.c:679
 msgid "About to export selected items:"
@@ -1775,84 +1781,84 @@ msgstr "Eligiendo un icono"
 msgid "Basename filter"
 msgstr "Filtro de nombre base"
 
-#: ../src/nact/nact-icapabilities-tab.c:157
+#: ../src/nact/nact-icapabilities-tab.c:158
 msgid "Capability filter"
 msgstr "Filtro de capacidades"
 
-#: ../src/nact/nact-icommand-tab.c:429
+#: ../src/nact/nact-icommand-tab.c:438
 msgid "Caution: a label is mandatory for the profile."
 msgstr "Precaución: la etiqueta es obligatoria para el perfil."
 
-#: ../src/nact/nact-icommand-tab.c:571
+#: ../src/nact/nact-icommand-tab.c:588
 msgid "Choosing a command"
 msgstr "Eligiendo un comando"
 
-#: ../src/nact/nact-icommand-tab.c:612
+#: ../src/nact/nact-icommand-tab.c:629
 msgid "Choosing a working directory"
 msgstr "Elegir un directorio de trabajo"
 
 #. i18n notes: example strings for the command preview
-#: ../src/nact/nact-icommand-tab.c:649
+#: ../src/nact/nact-icommand-tab.c:666
 msgid "/path/to"
 msgstr "/ruta/a"
 
-#: ../src/nact/nact-icommand-tab.c:650
+#: ../src/nact/nact-icommand-tab.c:667
 msgid "file1.txt"
 msgstr "archivo1.txt"
 
-#: ../src/nact/nact-icommand-tab.c:650
+#: ../src/nact/nact-icommand-tab.c:667
 msgid "file2.txt"
 msgstr "archivo2.txt"
 
-#: ../src/nact/nact-icommand-tab.c:651
+#: ../src/nact/nact-icommand-tab.c:668
 msgid " folder1"
 msgstr " carpeta1"
 
-#: ../src/nact/nact-icommand-tab.c:651
+#: ../src/nact/nact-icommand-tab.c:668
 msgid "folder2"
 msgstr "carpeta2"
 
-#: ../src/nact/nact-icommand-tab.c:652
+#: ../src/nact/nact-icommand-tab.c:669
 msgid " file1.txt"
 msgstr " archivo1.txt"
 
-#: ../src/nact/nact-icommand-tab.c:652
+#: ../src/nact/nact-icommand-tab.c:669
 msgid "folder1"
 msgstr "carpeta1"
 
-#: ../src/nact/nact-icommand-tab.c:654
+#: ../src/nact/nact-icommand-tab.c:671
 msgid "test.example.net"
 msgstr "prueba.ejemplo.net"
 
-#: ../src/nact/nact-icommand-tab.c:655
+#: ../src/nact/nact-icommand-tab.c:672
 msgid "file.txt"
 msgstr "archivo.txt"
 
-#: ../src/nact/nact-icommand-tab.c:656
+#: ../src/nact/nact-icommand-tab.c:673
 msgid "folder"
 msgstr "carpeta"
 
-#: ../src/nact/nact-icommand-tab.c:657
+#: ../src/nact/nact-icommand-tab.c:674
 msgid "8080"
 msgstr "8080"
 
-#: ../src/nact/nact-icommand-tab.c:661
+#: ../src/nact/nact-icommand-tab.c:678
 msgid "file:///path/to/file1.text"
 msgstr "file:///ruta/al/archivo1.text"
 
-#: ../src/nact/nact-icommand-tab.c:662
+#: ../src/nact/nact-icommand-tab.c:679
 msgid "file:///path/to/file2.text"
 msgstr "file:///ruta/al/archivo2.text"
 
-#: ../src/nact/nact-icommand-tab.c:663
+#: ../src/nact/nact-icommand-tab.c:680
 msgid "file:///path/to/a/dir"
 msgstr "file:///ruta/al/directorio"
 
-#: ../src/nact/nact-icommand-tab.c:664
+#: ../src/nact/nact-icommand-tab.c:681
 msgid "file:///path/to/another/dir"
 msgstr "file:///ruta/a/otro/directorio"
 
-#: ../src/nact/nact-icommand-tab.c:855
+#: ../src/nact/nact-icommand-tab.c:872
 msgid "e.g.,"
 msgstr "ej."
 
@@ -2226,12 +2232,21 @@ msgid "Must match all of"
 msgstr "Debe coincidir con todas"
 
 #. i18n: label of the header of a column which let the user select a negative filter
-#.
-#: ../src/nact/nact-match-list.c:161
+#: ../src/nact/nact-match-list.c:169
 msgid "Must not match any of"
 msgstr "No debe coincidir con ninguna de"
 
-#: ../src/nact/nact-match-list.c:729
+#: ../src/nact/nact-match-list.c:490
+#, c-format
+msgid ""
+"'%s' filter already exists in the list.\n"
+"Please provide another one."
+msgstr ""
+"El filtro «%s» ya existe en la lista.\n"
+"Proporcione otro."
+
+#. i18n notes : new filter for a new row in a match/no match list
+#: ../src/nact/nact-match-list.c:846
 msgid "new-filter"
 msgstr "filtro-nuevo"
 
@@ -2281,6 +2296,12 @@ msgstr "Archivos FTP"
 #: ../src/nact/nact-schemes-list.c:269
 msgid "WebDAV files"
 msgstr "Archivos WebDAV"
+
+#. i18n: add a comment when a scheme is already used by current item
+#: ../src/nact/nact-schemes-list.c:367
+#, c-format
+msgid "%s (already used)"
+msgstr "%s (ya se está usando)"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
 #: ../src/nact/nact-schemes-list.c:689
