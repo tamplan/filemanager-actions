@@ -796,6 +796,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">Starts the command as a standard graphical user interface.</property>
                                         <property name="use_underline">True</property>
                                         <property name="active">True</property>
                                         <property name="draw_indicator">True</property>
@@ -812,6 +813,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">Starts the preferred terminal of the graphical environment, and runs the command in it.</property>
                                         <property name="use_underline">True</property>
                                         <property name="draw_indicator">True</property>
                                         <property name="group">ExecutionModeNormal</property>
@@ -830,6 +832,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">Makes use of a special feature of the file manager which allows a terminal to be ran inside of it; an acceptable fallback is to run in a terminal.</property>
                                         <property name="use_underline">True</property>
                                         <property name="draw_indicator">True</property>
                                         <property name="group">ExecutionModeNormal</property>
@@ -848,6 +851,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">The ran terminal may be closed at end of the command, but standard streams (stdout, stderr) should be collected and displayed; an acceptable fallback is to run in a terminal.</property>
                                         <property name="use_underline">True</property>
                                         <property name="draw_indicator">True</property>
                                         <property name="group">ExecutionModeNormal</property>
@@ -920,6 +924,7 @@ Defining several profiles lets you have several commands, each applying with a d
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">When clicked, it is known that the ran application will send a "remove" message when started with the DESKTOP_STARTUP_ID environment variable set.</property>
                                         <property name="use_underline">True</property>
                                         <property name="draw_indicator">True</property>
                                       </object>
@@ -945,6 +950,8 @@ Defining several profiles lets you have several commands, each applying with a d
                                       <object class="GtkEntry" id="StartupWMClassEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">if specified, it is known that the ran application will map at least one window with the given string as its WM class or WM name hint.
+This is only relevant when execution mode is normal.</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -1007,6 +1014,8 @@ Defining several profiles lets you have several commands, each applying with a d
                                       <object class="GtkEntry" id="ExecuteAsEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">The user the command must be ran as.
+This may be a username or a UID.</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -1062,8 +1071,6 @@ Defining several profiles lets you have several commands, each applying with a d
                             <child>
                               <object class="GtkAlignment" id="alignment11">
                                 <property name="visible">True</property>
-                                <property name="tooltip_text" translatable="yes">This tab lets you determines for which basenames the currently selected item will be displayed in the Nautilus context menu.
-Basenames may be negated to specify for which basenames your item must not appear.</property>
                                 <property name="top_padding">6</property>
                                 <property name="bottom_padding">6</property>
                                 <property name="left_padding">12</property>
@@ -1093,6 +1100,10 @@ Basenames may be negated to specify for which basenames your item must not appea
                                           <object class="GtkScrolledWindow" id="scrolledwindow12">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">This list lets you determines for which basenames the currently selected item will be displayed in the Nautilus context menu.
+Basenames may use '*' and '?' wildcards.
+Basenames may be negated to specify for which basenames your item must not appear.
+</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
                                             <property name="shadow_type">in</property>
@@ -1119,6 +1130,7 @@ Basenames may be negated to specify for which basenames your item must not appea
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
+                                                <property name="tooltip_text" translatable="yes">Click to add a new basename filter.</property>
                                                 <child>
                                                   <object class="GtkImage" id="image4">
                                                     <property name="visible">True</property>
@@ -1137,6 +1149,7 @@ Basenames may be negated to specify for which basenames your item must not appea
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
+                                                <property name="tooltip_text" translatable="yes">Click to remove the current basename filter.</property>
                                                 <child>
                                                   <object class="GtkImage" id="image20">
                                                     <property name="visible">True</property>
@@ -1168,6 +1181,7 @@ Basenames may be negated to specify for which basenames your item must not appea
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">Click to define the above basename filters as case sensitive.</property>
                                         <property name="use_underline">True</property>
                                         <property name="xalign">0</property>
                                         <property name="active">True</property>
@@ -1216,8 +1230,6 @@ Basenames may be negated to specify for which basenames your item must not appea
                     <child>
                       <object class="GtkVBox" id="vbox30">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determines for which type of objects the currently selected item will be displayed in the Nautilus context menu.
-Mimetypes may be negated to specify for which type of objects your item must not appear.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -1258,6 +1270,9 @@ Mimetypes may be negated to specify for which type of objects your item must not
                                           <object class="GtkScrolledWindow" id="scrolledwindow8">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">This list lets you determines for which mimetypes the currently selected item will be displayed in the Nautilus context menu.
+Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.
+Mimetypes may be negated to specify for which basenames your item must not appear.</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
                                             <property name="shadow_type">in</property>
@@ -1282,6 +1297,7 @@ Mimetypes may be negated to specify for which type of objects your item must not
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
+                                                <property name="tooltip_text" translatable="yes">Click to add a new mimetype filter.</property>
                                                 <child>
                                                   <object class="GtkImage" id="image14">
                                                     <property name="visible">True</property>
@@ -1300,6 +1316,7 @@ Mimetypes may be negated to specify for which type of objects your item must not
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
+                                                <property name="tooltip_text" translatable="yes">Click to remove the current mimetype filter.</property>
                                                 <child>
                                                   <object class="GtkImage" id="image15">
                                                     <property name="visible">True</property>
@@ -1363,8 +1380,6 @@ Mimetypes may be negated to specify for which type of objects your item must not
                     <child>
                       <object class="GtkVBox" id="vbox6">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determines where (in which folders) the currently selected files must be found in order the item be displayed in the Nautilus context menu.
-Folder filters may be negated to specify for which folders your item must not appear.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -1405,6 +1420,9 @@ Folder filters may be negated to specify for which folders your item must not ap
                                           <object class="GtkScrolledWindow" id="scrolledwindow2">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">This list lets you determine where (in which folders) the currently selected files must be found in order the item be displayed in the Nautilus context menu.
+Folders may use '*' or '?' wildcards.
+Folder filters may be negated to specify for which folders your item must not appear.</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
                                             <property name="shadow_type">in</property>
@@ -1434,6 +1452,7 @@ Folder filters may be negated to specify for which folders your item must not ap
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="receives_default">True</property>
+                                                    <property name="tooltip_text" translatable="yes">Click to add a new folder filter.</property>
                                                     <child>
                                                       <object class="GtkImage" id="image10">
                                                         <property name="visible">True</property>
@@ -1453,6 +1472,7 @@ Folder filters may be negated to specify for which folders your item must not ap
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="receives_default">True</property>
+                                                    <property name="tooltip_text" translatable="yes">Click to browse the filesystem in order to selec a new folder filter.</property>
                                                     <property name="image">FolderBrowseImage</property>
                                                     <property name="use_underline">True</property>
                                                   </object>
@@ -1473,6 +1493,7 @@ Folder filters may be negated to specify for which folders your item must not ap
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
+                                                <property name="tooltip_text" translatable="yes">Click to remove the current folder filter.</property>
                                                 <child>
                                                   <object class="GtkImage" id="image11">
                                                     <property name="visible">True</property>
@@ -1536,8 +1557,6 @@ Folder filters may be negated to specify for which folders your item must not ap
                     <child>
                       <object class="GtkVBox" id="vbox14">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determine which schemes the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
-Filters may be negated to specify for which schemes your item must not appear.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -1578,6 +1597,8 @@ Filters may be negated to specify for which schemes your item must not appear.</
                                           <object class="GtkScrolledWindow" id="scrolledwindow4">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">This list lets you determine which schemes the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+Filters may be negated to specify for which schemes your item must not appear.</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
                                             <property name="shadow_type">in</property>
@@ -1610,6 +1631,7 @@ Filters may be negated to specify for which schemes your item must not appear.</
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="receives_default">True</property>
+                                                    <property name="tooltip_text" translatable="yes">Click to add a new scheme filter.</property>
                                                     <child>
                                                       <object class="GtkImage" id="image16">
                                                         <property name="visible">True</property>
@@ -1629,6 +1651,7 @@ Filters may be negated to specify for which schemes your item must not appear.</
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="receives_default">True</property>
+                                                    <property name="tooltip_text" translatable="yes">Click to select a new scheme filter among default schemes.</property>
                                                     <property name="image">SchemeBrowseImage</property>
                                                     <property name="use_underline">True</property>
                                                   </object>
@@ -1649,6 +1672,7 @@ Filters may be negated to specify for which schemes your item must not appear.</
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
+                                                <property name="tooltip_text" translatable="yes">Click to remove the current scheme filter.</property>
                                                 <child>
                                                   <object class="GtkImage" id="image17">
                                                     <property name="visible">True</property>
@@ -1712,8 +1736,6 @@ Filters may be negated to specify for which schemes your item must not appear.</
                     <child>
                       <object class="GtkVBox" id="vbox45">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determine which capabilities the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
-Filters may be negated to specify for which capabilities your item must not appear.</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
@@ -1754,6 +1776,8 @@ Filters may be negated to specify for which capabilities your item must not appe
                                           <object class="GtkScrolledWindow" id="scrolledwindow10">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">This list lets you determine which capabilities the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+Capabilities may be negated to specify for which capabilities your item must not appear.</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
                                             <property name="shadow_type">in</property>
@@ -1781,6 +1805,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
+                                                <property name="tooltip_text" translatable="yes">Click to add a new capability filter.</property>
                                                 <child>
                                                   <object class="GtkImage" id="image5">
                                                     <property name="visible">True</property>
@@ -1798,6 +1823,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
+                                                <property name="tooltip_text" translatable="yes">Click to remove the current capability.</property>
                                                 <child>
                                                   <object class="GtkImage" id="image6">
                                                     <property name="visible">True</property>
@@ -1897,6 +1923,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                     <child>
                                       <object class="GtkComboBox" id="SelectionCountSigneCombobox">
                                         <property name="visible">True</property>
+                                        <property name="tooltip_text" translatable="yes">Select the operator which will be used when comparing your count with those of the current selection.</property>
                                       </object>
                                       <packing>
                                         <property name="position">2</property>
@@ -1906,6 +1933,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                       <object class="GtkEntry" id="SelectionCountNumberEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">Your count limit as a positive integer.</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -1975,6 +2003,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">False</property>
+                                                <property name="tooltip_text" translatable="yes">When selected, the item will appear regarding of the current desktop environment.</property>
                                                 <property name="use_underline">True</property>
                                                 <property name="active">True</property>
                                                 <property name="draw_indicator">True</property>
@@ -1990,6 +2019,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">False</property>
+                                                <property name="tooltip_text" translatable="yes">When selected, your item will only appear in selected desktop environments.</property>
                                                 <property name="use_underline">True</property>
                                                 <property name="draw_indicator">True</property>
                                                 <property name="group">ShowAlwaysButton</property>
@@ -2005,6 +2035,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">False</property>
+                                                <property name="tooltip_text" translatable="yes">When selected, your item will never appear in selected desktop environments.</property>
                                                 <property name="use_underline">True</property>
                                                 <property name="draw_indicator">True</property>
                                                 <property name="group">ShowAlwaysButton</property>
@@ -2024,6 +2055,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                           <object class="GtkScrolledWindow" id="scrolledwindow5">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">Select the desktop environments in which you want your item only appear (or not).</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
                                             <property name="shadow_type">in</property>
@@ -2095,6 +2127,8 @@ Filters may be negated to specify for which capabilities your item must not appe
                                       <object class="GtkEntry" id="TryExecEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">If set, your item will only appear if the file is executable.
+If the file is not present or if it is not executable, then your item will not appear in Nautilus context menu.</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -2108,6 +2142,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">Click to browse for a file in the filesystem.</property>
                                         <property name="image">ImageTryExecBrowse</property>
                                         <property name="use_underline">True</property>
                                       </object>
@@ -2134,6 +2169,8 @@ Filters may be negated to specify for which capabilities your item must not appe
                                       <object class="GtkEntry" id="ShowIfRegisteredEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">If set, your item will only appear if the specifiied name is currently registered on D-Bus.
+</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -2159,6 +2196,9 @@ Filters may be negated to specify for which capabilities your item must not appe
                                       <object class="GtkEntry" id="ShowIfTrueEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">If set, this must correspond to a command which, when ran, should display "true" on stdout.
+If the command is not found, or does not display the correct result, your item will not appear in Nautilus context menu.
+</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -2184,6 +2224,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                       <object class="GtkEntry" id="ShowIfRunningEntry">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="tooltip_text" translatable="yes">If set, then the name should correspond to a running process.</property>
                                         <property name="invisible_char">&#x25CF;</property>
                                       </object>
                                       <packing>
@@ -2199,6 +2240,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">Click to search for a file in the filesystem.</property>
                                         <property name="image">ImageRunningBrowse</property>
                                         <property name="use_underline">True</property>
                                       </object>
@@ -2302,6 +2344,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                           <object class="GtkTextView" id="ActionDescriptionText">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">A free description of your action or your menu.</property>
                                           </object>
                                         </child>
                                       </object>
@@ -2318,6 +2361,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">When enabled, your item will be candidate to be displayed in the Nautilus context menu.</property>
                                         <property name="use_underline">True</property>
                                         <property name="draw_indicator">True</property>
                                       </object>
@@ -2348,6 +2392,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
+                                            <property name="tooltip_text" translatable="yes">A shortcut suggested for the action or the menu.</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -2408,6 +2453,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                     <child>
                                       <object class="GtkLabel" id="ActionItemID">
                                         <property name="visible">True</property>
+                                        <property name="tooltip_text" translatable="yes">Internal identifiant of the item.</property>
                                         <property name="xalign">0</property>
                                       </object>
                                       <packing>
@@ -2445,6 +2491,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                     <child>
                                       <object class="GtkLabel" id="ActionItemProvider">
                                         <property name="visible">True</property>
+                                        <property name="tooltip_text" translatable="yes">Storage provider of the item.</property>
                                         <property name="xalign">0</property>
                                       </object>
                                       <packing>
@@ -2460,6 +2507,7 @@ Filters may be negated to specify for which capabilities your item must not appe
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
+                                        <property name="tooltip_text" translatable="yes">When checked, this means that the item is read-only and cannot be updated.</property>
                                         <property name="focus_on_click">False</property>
                                         <property name="draw_indicator">True</property>
                                       </object>
@@ -2692,6 +2740,9 @@ Filters may be negated to specify for which capabilities your item must not appe
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -2707,10 +2758,10 @@ Filters may be negated to specify for which capabilities your item must not appe
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <property name="preview_widget_active">False</property>
-            <property name="select_multiple">True</property>
-            <property name="use_preview_label">False</property>
             <property name="local_only">False</property>
+            <property name="preview_widget_active">False</property>
+            <property name="use_preview_label">False</property>
+            <property name="select_multiple">True</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -3680,39 +3731,39 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="label4"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionToolbarLabelLabel"/>
       <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
     <widgets>
-      <widget name="label45"/>
-      <widget name="label44"/>
       <widget name="label43"/>
+      <widget name="label44"/>
+      <widget name="label45"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
     <widgets>
-      <widget name="label19"/>
-      <widget name="label49"/>
-      <widget name="label39"/>
       <widget name="label18"/>
+      <widget name="label39"/>
+      <widget name="label49"/>
+      <widget name="label19"/>
     </widgets>
   </object>
 </interface>
