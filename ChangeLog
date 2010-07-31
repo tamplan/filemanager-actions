@@ -1,5 +1,8 @@
 2010-07-31 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-match-list.c (on_must_match_toggled):
+	Fix crash when defining a positive assertion.
+
 	* src/core/na-icontext.c (is_candidate_for_capabilities):
 	Implement the function.
 

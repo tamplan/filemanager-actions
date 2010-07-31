@@ -595,7 +595,7 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 			g_free( to_remove );
 		}
 
-		filters = g_slist_prepend( filters, filter );
+		filters = g_slist_prepend( filters, g_strdup( filter ));
 		( *data->pset )( context, filters );
 
 		na_core_utils_slist_free( filters );
