@@ -84,6 +84,7 @@ static gboolean is_current_folder_inside( const NAIContext *object, NASelectedIn
 #endif
 static gboolean is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files );
 
+static void     count_compatible_patterns( gboolean positive, gboolean match, guint *count_compatible, gboolean *ok );
 static gboolean is_valid_basenames( const NAIContext *object );
 static gboolean is_valid_mimetypes( const NAIContext *object );
 static gboolean is_valid_isfiledir( const NAIContext *object );
@@ -656,18 +657,7 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 			for( it = files ; it && ok ; it = it->next ){
 				gchar *ftype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
 				gboolean type_of = is_mimetype_of( ftype, imgroup, imsubgroup );
-
-				if( positive ){
-					if( type_of ){
-						count_compatible += 1;
-					}
-				} else {
-					if( type_of ){
-						ok = FALSE;
-						break;
-					}
-				}
-
+				count_compatible_patterns( positive, type_of, &count_compatible, &ok );
 				g_free( ftype );
 			}
 
@@ -765,18 +755,8 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 					match = g_pattern_match_string( pattern_spec, bname_utf8 );
 					g_free( bname_utf8 );
 					g_free( bname );
-
 					g_debug( "%s: pattern=%s, positive=%s, match=%s", thisfn, pattern, positive ? "True":"False", match ? "True":"False" );
-					if( positive ){
-						if( match ){
-							count_compatible += 1;
-						}
-					} else {
-						if( match ){
-							ok = FALSE;
-							break;
-						}
-					}
+					count_compatible_patterns( positive, match, &count_compatible, &ok );
 				}
 
 				g_object_unref( pattern_spec );
@@ -844,8 +824,41 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 	static const gchar *thisfn = "na_icontext_is_candidate_for_schemes";
 	gboolean ok = TRUE;
 	GSList *schemes = na_object_get_schemes( object );
+	GSList *is;
+	gboolean positive;
+	guint count_positive = 0;
+	guint count_compatible = 0;
+	gchar *pattern, *scheme;
+	GList *it;
+	gboolean match;
 
 	if( schemes ){
+		for( is = schemes ; is && ok ; is = is->next ){
+			pattern = ( gchar * ) is->data;
+
+			positive = is_positive_assertion( pattern );
+			if( positive ){
+				count_positive += 1;
+			} else {
+				pattern += 1;
+			}
+
+			if( strcmp( pattern, "*" ) == 0 ){
+				count_compatible_patterns( positive, TRUE, &count_compatible, &ok );
+
+			} else {
+				for( it = files ; it && ok ; it = it->next ){
+					scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( it->data ));
+					match = ( strcmp( pattern, scheme ) == 0 );
+					g_free( scheme );
+					count_compatible_patterns( positive, match, &count_compatible, &ok );
+				}
+			}
+		}
+
+		if( count_positive > 0 && count_compatible == 0 ){
+			ok = FALSE;
+		}
 
 		if( !ok ){
 			gchar *schemes_str = na_core_utils_slist_to_text( schemes );
@@ -1152,6 +1165,18 @@ validate_schemes( GSList *object_schemes, NASelectedInfo *nfi )
 	return( is_ok );
 }
 #endif
+
+static void
+count_compatible_patterns( gboolean positive, gboolean match, guint *count_compatible, gboolean *ok )
+{
+	if( positive ){
+		if( match ){
+			*count_compatible += 1;
+		}
+	} else if( match ){
+		*ok = FALSE;
+	}
+}
 
 static gboolean
 is_valid_basenames( const NAIContext *object )

@@ -1,5 +1,8 @@
 2010-07-31 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c (is_candidate_for_schemes):
+	Implement the function.
+
 	* src/core/na-icontext.c (is_candidate_for_selection_count):
 	Implement the function.
 
