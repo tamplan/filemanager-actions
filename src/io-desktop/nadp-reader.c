@@ -429,6 +429,7 @@ nadp_reader_ifactory_provider_read_start( const NAIFactoryProvider *reader, void
 
 		if( NA_IS_OBJECT_ITEM( serializable )){
 			read_start_read_subitems_key( reader, NA_OBJECT_ITEM( serializable ), ( NadpReaderData * ) reader_data, messages );
+			na_object_set_iversion( serializable, 3 );
 		}
 
 		if( NA_IS_OBJECT_PROFILE( serializable )){

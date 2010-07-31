@@ -33,6 +33,7 @@
 #endif
 
 #include <dbus/dbus-glib.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -804,10 +805,28 @@ is_candidate_for_selection_count( const NAIContext *object, guint target, GList 
 {
 	static const gchar *thisfn = "na_icontext_is_candidate_for_selection_count";
 	gboolean ok = TRUE;
+	gint limit;
+	guint count;
 	gchar *selection_count = na_object_get_selection_count( object );
 
 	if( selection_count && strlen( selection_count )){
+		limit = atoi( selection_count+1 );
+		count = g_list_length( files );
+		ok = FALSE;
 
+		switch( selection_count[0] ){
+			case '<':
+				ok = ( count < limit );
+				break;
+			case '=':
+				ok = ( count == limit );
+				break;
+			case '>':
+				ok = ( count > limit );
+				break;
+			default:
+				break;
+		}
 	}
 
 	if( !ok ){

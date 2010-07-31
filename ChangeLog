@@ -1,3 +1,11 @@
+2010-07-31 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-icontext.c (is_candidate_for_selection_count):
+	Implement the function.
+
+	* src/io-desktop/nadp-reader.c
+	(nadp_reader_ifactory_provider_read_start): Set minimal version number.
+
 2010-07-30 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-icontext.c (is_candidate_for_basenames):
