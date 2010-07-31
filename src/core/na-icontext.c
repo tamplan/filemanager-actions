@@ -79,9 +79,6 @@ static gboolean is_candidate_for_schemes( const NAIContext *object, guint target
 static gboolean validate_schemes( GSList *object_schemes, NASelectedInfo *iter );
 #endif
 static gboolean is_candidate_for_folders( const NAIContext *object, guint target, GList *files );
-#if 0
-static gboolean is_current_folder_inside( const NAIContext *object, NASelectedInfo *current_folder );
-#endif
 static gboolean is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files );
 
 static void     count_compatible_patterns( gboolean positive, gboolean match, guint *count_compatible, gboolean *ok );
@@ -741,7 +738,6 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 				pattern = matchcase ?
 						g_strdup(( gchar * ) ib->data ) :
 						g_ascii_strdown(( gchar * ) ib->data, strlen(( gchar * ) ib->data ));
-
 				positive = is_positive_assertion( pattern );
 				if( positive ){
 					count_positive += 1;
@@ -759,7 +755,7 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 					count_compatible_patterns( positive, match, &count_compatible, &ok );
 				}
 
-				g_object_unref( pattern_spec );
+				g_pattern_spec_free( pattern_spec );
 				g_free( pattern );
 			}
 		}
@@ -835,7 +831,6 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 	if( schemes ){
 		for( is = schemes ; is && ok ; is = is->next ){
 			pattern = ( gchar * ) is->data;
-
 			positive = is_positive_assertion( pattern );
 			if( positive ){
 				count_positive += 1;
@@ -878,8 +873,57 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 	static const gchar *thisfn = "na_icontext_is_candidate_for_folders";
 	gboolean ok = TRUE;
 	GSList *folders = na_object_get_folders( object );
+	GSList *id;
+	const gchar *pattern;
+	GList *it;
+	gchar *dirname, *dirname_utf8;
+	gboolean positive, match;
+	guint count_positive = 0;
+	guint count_compatible = 0;
+	GPatternSpec *pattern_spec;
 
 	if( folders ){
+		if( strcmp( folders->data, "/" ) != 0 || g_slist_length( folders ) > 1 ){
+			for( id = folders ; id && ok ; id = id->next ){
+				pattern = ( const gchar * ) id->data;
+				positive = is_positive_assertion( pattern );
+				if( positive ){
+					count_positive += 1;
+				} else {
+					pattern += 1;
+				}
+
+				pattern_spec = NULL;
+				if( g_strstr_len( pattern, -1, "*" ) != NULL ){
+					pattern_spec = g_pattern_spec_new( pattern );
+				}
+
+				for( it = files ; it && ok ; it = it->next ){
+					dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( it->data ));
+
+					if( pattern_spec ){
+						dirname_utf8 = g_filename_to_utf8( dirname, -1, NULL, NULL, NULL );
+						match = g_pattern_match_string( pattern_spec, dirname_utf8 );
+						g_free( dirname_utf8 );
+
+					} else {
+						match = g_str_has_prefix( dirname, pattern );
+					}
+
+					g_free( dirname );
+					g_debug( "%s: pattern=%s, positive=%s, match=%s", thisfn, pattern, positive ? "True":"False", match ? "True":"False" );
+					count_compatible_patterns( positive, match, &count_compatible, &ok );
+				}
+
+				if( pattern_spec ){
+					g_pattern_spec_free( pattern_spec );
+				}
+			}
+		}
+
+		if( count_positive > 0 && count_compatible == 0 ){
+			ok = FALSE;
+		}
 
 		if( !ok ){
 			gchar *folders_str = na_core_utils_slist_to_text( folders );
@@ -892,34 +936,6 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 
 	return( ok );
 }
-
-#if 0
-static gboolean
-is_current_folder_inside( const NAIContext *object, NASelectedInfo *current_folder )
-{
-	gboolean is_inside;
-	GSList *folders, *ifold;
-	const gchar *path;
-	gchar *current_folder_path;
-
-	is_inside = FALSE;
-	current_folder_path = na_selected_info_get_path( current_folder );
-	folders = na_object_get_folders( object );
-
-	for( ifold = folders ; ifold && !is_inside ; ifold = ifold->next ){
-		path = ( const gchar * ) ifold->data;
-		if( path && g_utf8_strlen( path, -1 )){
-			is_inside = g_str_has_prefix( current_folder_path, path );
-			g_debug( "na_object_object_is_current_folder_inside: current_folder_path=%s, path=%s, is_inside=%s", current_folder_path, path, is_inside ? "True":"False" );
-		}
-	}
-
-	na_core_utils_slist_free( folders );
-	g_free( current_folder_path );
-
-	return( is_inside );
-}
-#endif
 
 static gboolean
 is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files )

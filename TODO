@@ -496,8 +496,6 @@ Parameter 	Description
 - 2010-07-27: enhancement: while editing a new filter, making it duplicate, try to keep editing
   instead of terminating the edition and letting the old value
 
-- 2010-07-30: TODO: is_candidate_for_folders
-
 - 2010-07-30: TODO: is_candidate_for_capabilities
 
 - 2010-06-20: TODO: is_candidate_for_show_in: get current environment

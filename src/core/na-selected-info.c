@@ -311,6 +311,31 @@ na_selected_info_get_basename( const NASelectedInfo *nsi )
 }
 
 /**
+ * na_selected_info_get_dirname:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: the dirname of the file associated with this
+ * #NASelectedInfo object, as a newly allocated string which
+ * must be g_free() by the caller.
+ */
+gchar *
+na_selected_info_get_dirname( const NASelectedInfo *nsi )
+{
+	gchar *dirname;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+
+	dirname = NULL;
+
+	if( !nsi->private->dispose_has_run ){
+
+		dirname = g_strdup( g_path_get_dirname( nsi->private->vfs->path ));
+	}
+
+	return( dirname );
+}
+
+/**
  * na_selected_info_get_mime_type:
  * @nsi: this #NASelectedInfo object.
  *

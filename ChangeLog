@@ -1,5 +1,12 @@
 2010-07-31 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c (is_candidate_for_folders):
+	Implement the function.
+
+	* src/core/na-selected-info.c:
+	* src/core/na-selected-info.h (na_selected_info_get_dirname):
+	New function.
+
 	* src/core/na-icontext.c (is_candidate_for_schemes):
 	Implement the function.
 
