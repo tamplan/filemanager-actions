@@ -291,6 +291,9 @@ nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
 	gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), ITEM_COLUMN, GTK_SORT_ASCENDING );
 	data->sort_column = ITEM_COLUMN;
 	data->sort_order = GTK_SORT_ASCENDING;
+
+	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
+	sort_on_column( column, data, ITEM_COLUMN );
 }
 
 /**
@@ -608,7 +611,7 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 static void
 on_must_not_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data )
 {
-	sort_on_column( treeviewcolumn, data, MUST_MATCH_COLUMN );
+	sort_on_column( treeviewcolumn, data, MUST_NOT_MATCH_COLUMN );
 }
 
 static void
@@ -958,9 +961,13 @@ sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint new
 	guint prev_col_id;
 	guint prev_order, new_order;
 	GtkTreeModel *model;
+	GtkTreeViewColumn *column;
 
 	prev_col_id = data->sort_column;
 	prev_order = data->sort_order;
+
+	column = gtk_tree_view_get_column( data->listview, prev_col_id );
+	gtk_tree_view_column_set_sort_indicator( column, FALSE );
 
 	if( new_col_id == prev_col_id ){
 		new_order = ( prev_order == GTK_SORT_ASCENDING ? GTK_SORT_DESCENDING : GTK_SORT_ASCENDING );
@@ -970,6 +977,9 @@ sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint new
 
 	data->sort_column = new_col_id;
 	data->sort_order = new_order;
+
+	gtk_tree_view_column_set_sort_indicator( treeviewcolumn, TRUE );
+	gtk_tree_view_column_set_sort_order( treeviewcolumn, new_order );
 
 	model = gtk_tree_view_get_model( data->listview );
 	gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), new_col_id, new_order );

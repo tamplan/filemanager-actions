@@ -469,10 +469,6 @@ Parameter 	Description
   after deleting this default value in the UI, we should write basenames=[] in the I/O provider
   so that we really have an empty list
 
-- 2010-06-03: ui enhancement
-  sortable column headers in tab as basenames, mimetypes, and so on, should have
-  a small indicator of the current sort order
-
 - 2010-06-17: ui enhancement
   all edition (entry, buttons, etc.) fields should have a small emblem when read-only.
 

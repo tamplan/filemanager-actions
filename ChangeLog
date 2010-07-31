@@ -1,5 +1,11 @@
 2010-07-31 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-match-list.c (on_must_not_match_clicked):
+	Fix incorrect column id.
+
+	* src/nact/nact-match-list.c (sort_on_column):
+	Display sort indicator.
+
 	* src/nact/nact-match-list.c (on_must_match_toggled):
 	Fix crash when defining a positive assertion.
 
