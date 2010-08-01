@@ -19,6 +19,7 @@ config.status
 config.sub
 configure
 depcomp
+gnome-doc-utils.make
 install/
 install-sh
 intltool-extract.in

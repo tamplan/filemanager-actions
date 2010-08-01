@@ -26,7 +26,7 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-subdirs = \
+SUBDIRS = \
 	nact								\
 	$(NULL)
 

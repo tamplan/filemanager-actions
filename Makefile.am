@@ -29,7 +29,7 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = \
-	docs								\
+	doc									\
 	m4									\
 	icons								\
 	src									\
@@ -45,15 +45,18 @@ DISTCHECK_CONFIGURE_FLAGS = \
 # do not try to install schemas when making distcheck
 DISTCHECK_CONFIGURE_FLAGS += \
 	--disable-schemas-install			\
+	--disable-scrollkeeper				\
 	$(NULL)
 
 EXTRA_DIST = \
+	gnome-doc-utils.make				\
 	intltool-extract.in					\
 	intltool-merge.in					\
 	intltool-update.in					\
 	$(NULL)
 
 DISTCLEANFILES = \
+	gnome-doc-utils.make				\
 	intltool-extract					\
 	intltool-merge						\
 	intltool-update						\

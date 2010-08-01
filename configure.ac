@@ -39,8 +39,8 @@ AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([
 	Makefile
 	data/Makefile
-	docs/Makefile
-	docs/nact/Makefile
+	doc/Makefile
+	doc/nact/Makefile
 	m4/Makefile
 	icons/Makefile
 	icons/16x16/Makefile
@@ -84,6 +84,7 @@ AC_PROG_MAKE_SET
 
 # Gnome stuff
 GNOME_COMMON_INIT
+GNOME_DOC_INIT
 GNOME_MAINTAINER_MODE_DEFINES
 NA_GNOME_COMPILE_WARNINGS([error],[-ansi -Wno-overlength-strings -Wformat=2])
 AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} ${DISABLE_DEPRECATED}"])

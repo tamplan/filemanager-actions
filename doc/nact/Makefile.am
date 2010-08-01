@@ -25,3 +25,49 @@
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
+
+# from Migrating your documentation to gnome-doc-utils
+# http://live.gnome.org/GnomeDocUtilsMigrationHowTo
+
+include $(top_srcdir)/gnome-doc-utils.make
+
+dist-hook: doc-dist-hook
+
+DOC_MODULE = nautilus-actions-config-tool
+
+DOC_ENTITIES = \
+	$(NULL)
+
+DOC_INCLUDES = \
+	appendix-feedback.xml						\
+	appendix-gnu-fdl-1.3.xml					\
+	articleinfo.xml								\
+	legalnotice.xml								\
+	$(NULL)
+
+DOC_FIGURES = \
+	figures/nact-basenames-tab.png				\
+	figures/nact-capabilities-tab.png			\
+	figures/nact-command-tab.png				\
+	figures/nact-environment-tab.png			\
+	figures/nact-execution-tab.png				\
+	figures/nact-folders-tab.png				\
+	figures/nact-legend.png						\
+	figures/nact-main-empty.png					\
+	figures/nact-mimetypes-tab.png				\
+	figures/nact-new-capability.png				\
+	figures/nact-preferences-export.png			\
+	figures/nact-preferences-import.png			\
+	figures/nact-preferences-io-providers.png	\
+	figures/nact-preferences-runtime.png		\
+	figures/nact-preferences-schemes.png		\
+	figures/nact-preferences-ui.png				\
+	figures/nact-properties-tab.png				\
+	figures/nact-schemes-tab.png				\
+	$(NULL)
+
+clean-local :
+	rm -f *~
+
+DOC_LINGUAS = \
+	$(NULL)
