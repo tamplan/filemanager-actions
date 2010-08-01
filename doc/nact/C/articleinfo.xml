@@ -20,7 +20,7 @@
   </abstract>
 
   <releaseinfo revision="&manrevision;" role="stub">
-    This manual describes version &appversion; of &appname;.
+    This manual describes version &appversion; of &appnamex;.
   </releaseinfo>
 
   <publisher>
@@ -69,7 +69,7 @@
 
   <revhistory>
     <revision>
-      <revnumber>&appname; User's Manual v 3.0</revnumber>
+      <revnumber>&appnamex; User's Manual v 3.0</revnumber>
       <date>August 2010</date>
       <revdescription>
         <para role="author">
