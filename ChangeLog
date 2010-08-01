@@ -1,3 +1,32 @@
+2010-08-01 Pierre Wieser <pwieser@trychlos.org>
+
+	* doc/README: Define a global documentation plan.
+
+	* doc/api/Makefile.am:
+	* doc/api/version.xml.in:
+	Define a stub for future public API documentation, targeting
+	Nautilus-Actions plugins developers.
+
+	* doc/internals/Makefile.am:
+	Define a stub for future internal documentation, targeting
+	Nautilus-Actions core developers.
+
+	* doc/product/Makefile.am:
+	Define a stub for future global Nautilus-Actions documentation.
+
+	* configure.ac:
+	* doc/Makefile.am: Updated accordingly.
+
+	* doc/nact/ChangeLog:
+	* doc/nact/nautilus-actions-config-tool.omf.in: New files.
+
+	* doc/nact/C/articleinfo.xml:
+	* doc/nact/C/legalnotice.xml: Included as external entities rather
+	than from xi:include because of db2omf complains.
+
+	* doc/nact/C/appendix-feedback.xml:
+	* doc/nact/C/appendix-gnu-fdl-1.3.xml: Add DOCTYPE declaration.
+
 2010-07-31 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nautilus-actions-config-tool.ui:

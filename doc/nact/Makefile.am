@@ -36,13 +36,13 @@ dist-hook: doc-dist-hook
 DOC_MODULE = nautilus-actions-config-tool
 
 DOC_ENTITIES = \
+	articleinfo.xml								\
+	legalnotice.xml								\
 	$(NULL)
 
 DOC_INCLUDES = \
 	appendix-feedback.xml						\
 	appendix-gnu-fdl-1.3.xml					\
-	articleinfo.xml								\
-	legalnotice.xml								\
 	$(NULL)
 
 DOC_FIGURES = \

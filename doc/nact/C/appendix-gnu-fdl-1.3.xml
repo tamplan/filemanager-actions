@@ -1,4 +1,7 @@
 <?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+]>
+
 <appendix id="appendix-gnu-fdl">
   <title>GNU Free Documentation License</title>
   <simpara>Version 1.3, 3 November 2008</simpara>

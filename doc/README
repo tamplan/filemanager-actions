@@ -1,0 +1,21 @@
+The documentation associated with Nautilus-Actions is composed of
+several parts:
+
+- a global documentation which describes all features of the product,
+  such as D-Bus interface, command-line utilities, what is an I/O
+  provider and which I/O providers are provided by default, a description
+  of the export formats, an annexe for .desktop files, a note about
+  versions
+  product/
+  
+- the Nautilus-Actions configuration tool user's manual
+  nact/
+
+- the public API which must be used to develop Nautilus-Actions plugins
+  api/
+  only document here the public API
+
+- some articles which target the Nautilus-Actions core developer.
+  internals/
+  put here all informations which may be relevant to the core developer
+  included the internal API
