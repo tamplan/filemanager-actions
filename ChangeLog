@@ -1,5 +1,8 @@
 2010-08-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* nact/nact-iactions-list-bis.c (nact_iactions_list_bis_insert_items):
+	A new NAObjectItem must be inserted before the current NAObjectItem.
+
 	* doc/README: Define a global documentation plan.
 
 	* doc/api/Makefile.am:

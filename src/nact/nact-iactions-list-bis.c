@@ -453,7 +453,7 @@ nact_iactions_list_bis_insert_items( NactIActionsList *instance, GList *items, N
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreePath *insert_path;
-	NAObject *object;
+	NAObject *object, *parent;
 
 	g_debug( "%s: instance=%p, items=%p (%d items), sibling=%p",
 			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ), ( void * ) sibling );
@@ -472,18 +472,25 @@ nact_iactions_list_bis_insert_items( NactIActionsList *instance, GList *items, N
 
 		} else {
 			insert_path = get_selection_first_path( treeview );
-
-			/* as a particular case, insert profiles _into_ current action
-			 */
 			object = nact_tree_model_object_at_path( NACT_TREE_MODEL( model ), insert_path );
+
+			/* as a particular case, insert a new profile _into_ current action
+			 */
 			/*g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 			g_debug( "%s: items->data is %s", thisfn, G_OBJECT_TYPE_NAME( items->data ));*/
-			if( NA_IS_OBJECT_ACTION( object ) &&
-				NA_IS_OBJECT_PROFILE( items->data )){
+			if( NA_IS_OBJECT_ACTION( object ) && NA_IS_OBJECT_PROFILE( items->data )){
 
 				nact_iactions_list_bis_insert_into( instance, items );
 				gtk_tree_path_free( insert_path );
 				return;
+			}
+
+			/* insert a new NAObjectItem before current NAObjectItem
+			 */
+			if( NA_IS_OBJECT_PROFILE( object ) && NA_IS_OBJECT_ITEM( items->data )){
+				parent = ( NAObject * ) na_object_get_parent( object );
+				gtk_tree_path_free( insert_path );
+				insert_path = object_to_path( instance, NACT_TREE_MODEL( model ), parent );
 			}
 		}
 
