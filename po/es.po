@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD.es\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-07-28 20:59+0000\n"
-"PO-Revision-Date: 2010-07-31 11:04+0200\n"
+"POT-Creation-Date: 2010-07-31 09:05+0000\n"
+"PO-Revision-Date: 2010-08-01 13:40+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -323,6 +323,9 @@ msgid ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, readen from GConf to being modified in NACT."
 msgstr ""
+"Cuando está establecido a cierto (seguramente como clave obligatoria) evita "
+"que se modifiquen todos los elementos, menús y acciones en las Acciones de "
+"Nautilus, leídos en GConf."
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:52
 msgid "Whether actions should be relabeled when pasted or duplicated"
@@ -371,6 +374,8 @@ msgstr "Indica si el proveedor de E/S de GConf está bloqueado"
 #: ../data/nautilus-actions-prefs.schemas.in.h:61
 msgid "Whether the import system should reuse the last choosen import mode."
 msgstr ""
+"Indica si el sistema de importación debe reusar el último método de "
+"importación seleccionado."
 
 #: ../data/nautilus-actions-prefs.schemas.in.h:62
 msgid "Whether the whole configuration is locked"
@@ -485,10 +490,6 @@ msgstr ""
 "seleccionada(s)"
 
 #: ../src/core/na-icontext-factory.c:48
-#| msgid ""
-#| "A list of strings with joker '*' or '?' to match the name of the selected "
-#| "file(s)/folder(s). Each selected items must match at least one of the "
-#| "filename patterns for the action to appear"
 msgid ""
 "A list of strings with joker '*' or '?' to be matched against the name(s) of "
 "the selected file(s)/folder(s). Each selected items must match at least one "
@@ -741,7 +742,7 @@ msgstr ""
 #: ../src/core/na-object-item-factory.c:105
 #: ../src/core/na-object-item-factory.c:129
 #: ../src/core/na-object-profile-factory.c:155
-#: ../src/utils/nautilus-actions-run.c:60
+#: ../src/utils/nautilus-actions-run.c:61
 msgid "<STRING>"
 msgstr "<CADENA>"
 
@@ -903,7 +904,6 @@ msgstr "Se sobreescribió el elemento existente a petición del usuario."
 
 #: ../src/core/na-iimporter.c:251
 #, c-format
-#| msgid "Item ID %s already exists."
 msgid "Item %s already exists."
 msgstr "El elemento %s ya existe."
 
@@ -1116,7 +1116,6 @@ msgid "Tooltip of the context menu item"
 msgstr "El consejo del elemento del menú contextual"
 
 #: ../src/core/na-object-item-factory.c:112
-#, fuzzy
 #| msgid ""
 #| "The tooltip of the menu item that will appear in the Nautilus statusbar "
 #| "when the user points to the Nautilus popup menu item with his/her mouse"
@@ -1125,16 +1124,15 @@ msgid ""
 "when the user points to the file manager context menu item with his/her "
 "mouse."
 msgstr ""
-"El consejo del elemento del menú que aparecerá en la barra de estado de "
-"Nautilus cuando se apunte al elemento del menú emergente de Nautilus con su "
-"ratón"
+"El consejo del elemento del menú que aparecerá en la barra de estado del "
+"gestor de archivos cuando el usuario apunte al elemento del menú emergente "
+"de Nautilus con su ratón."
 
 #: ../src/core/na-object-item-factory.c:135
 msgid "Icon of the context menu item"
 msgstr "El icono del elemento del menú contextual"
 
 #: ../src/core/na-object-item-factory.c:136
-#, fuzzy
 #| msgid ""
 #| "The icon of the menu item that will appear next to the label in the "
 #| "Nautilus popup menu when the selection matches the appearance conditions "
@@ -1146,9 +1144,11 @@ msgid ""
 "May be the localized name of a themed icon, or a full path to any "
 "appropriate image."
 msgstr ""
-"El icono del elemento del menú que aparecerá en la barra al lado de la "
-"etiqueta en el menú emergente de nautilus cuando la selección coincida con "
-"los ajustes de las condiciones de aparición"
+"El icono del elemento del menú que aparecerá junto a la etiqueta en el menú "
+"emergente del gestor de archivos cuando la selección coincida con los "
+"ajustes de las condiciones de aparición.\n"
+"Puede ser el nombre localizado de un icono del tema, o una ruta completa a "
+"cualquier imagen apropiada."
 
 #: ../src/core/na-object-item-factory.c:154
 msgid "<PATH|NAME>"
@@ -1191,14 +1191,10 @@ msgid ""
 msgstr ""
 
 #: ../src/core/na-object-item-factory.c:262
-#| msgid "Whether the action is enabled"
 msgid "Whether the action or the menu is enabled (default)"
 msgstr "Indica si la acción o el menú está activado (predeterminado)"
 
 #: ../src/core/na-object-item-factory.c:263
-#| msgid ""
-#| "If the action is disabled, it will never appear in the Nautilus context "
-#| "menu."
 msgid ""
 "If the or the menu action is disabled, it will never appear in the file "
 "manager context menu.\n"
@@ -1324,22 +1320,26 @@ msgid ""
 msgstr ""
 "Los parámetros del comando para iniciar cuando el usuario seleccione el "
 "elemento del menú en el menú contextual de Nautilus.\n"
-"\n"
 "Los parámetros pueden contener algunos tokens especiales que se reemplazan "
 "por información de Nautilus antes de iniciar el comando:\n"
-"\n"
-"%d: carpeta base de los archivos seleccionados\n"
-"%f: el nombre del archivo seleccionado o el del primer archivo si hay varios "
-"seleccionados\n"
-"%m: lista de los nombres base de los archivos/carpetas seleccionados "
+"- hasta la versión «2.0»:\n"
+"  %d: carpeta base de los archivos seleccionados\n"
+"  %f: el nombre del archivo seleccionado o el del primer archivo si hay "
+"varios seleccionados\n"
+"  %h : nombre de host del URI\n"
+"  %m: lista de los nombres base de los archivos/carpetas seleccionados "
 "separados por un espacio\n"
-"%M: lista de los archivos/carpetas seleccionados con su ruta completa "
+"  %M: lista de los archivos/carpetas seleccionados con su ruta completa "
 "separada por un espacio\n"
-"%u: URI de GnomeVFS \n"
-"%s: esquema del URI de GnomeVFS\n"
-"%h : nombre de host del URI GnomeVFS\n"
-"%U: nombre de usuario del URI %s/GnomeVFS\n"
-"%%: un signo de porcentaje"
+"..%p: número de puerto del primer URI\n"
+"  %R: lista separada por espacios de los URI seleccionados\n"
+"  %s: esquema del URI\n"
+"  %u: URI\n"
+"  %U: nombre de usuario del URI\n"
+"  %%: un signo de porcentaje.- comenzando por la versión «3»:\n"
+"  %b: (primer) nombre base de los archivos/carpetas seleccionados\n"
+"  %B: lista separada por espacios de los nombres base de los archivos/"
+"carpetas seleccionados\n"
 
 #: ../src/core/na-object-profile-factory.c:161
 msgid "Working directory"
@@ -1675,7 +1675,6 @@ msgstr "El elemento es local"
 #. i18n: add a comment when a capability is already used by current item
 #: ../src/nact/nact-add-capability-dialog.c:531
 #, c-format
-#| msgid "%s (already used)"
 msgid "%s (already inserted)"
 msgstr "%s (ya se insertó)"
 
@@ -2352,23 +2351,23 @@ msgstr "¿Está seguro de que quiere salir sin guardarlos?"
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
 #. i18n: label of an automagic root submenu
 #: ../src/plugin-menu/nautilus-actions.c:298
-#: ../src/plugin-menu/nautilus-actions.c:897
+#: ../src/plugin-menu/nautilus-actions.c:957
 msgid "Nautilus Actions"
 msgstr "Acciones de Nautilus"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:899
+#: ../src/plugin-menu/nautilus-actions.c:959
 msgid ""
 "A submenu which embeds the currently available Nautilus Actions extensions"
 msgstr ""
 "Un submenú que se empotra en las extensiones disponibles actualmente de las "
 "Acciones de Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:946
+#: ../src/plugin-menu/nautilus-actions.c:1006
 msgid "About Nautilus Actions"
 msgstr "Acerca de las Acciones de Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:947
+#: ../src/plugin-menu/nautilus-actions.c:1007
 msgid "Display information about Nautilus Actions"
 msgstr "Mostrar información acerca de las acciones de Nautilus"
 
@@ -2376,12 +2375,12 @@ msgstr "Mostrar información acerca de las acciones de Nautilus"
 msgid "The URI of the file to be imported"
 msgstr "El URI del archivo para importar"
 
-#: ../src/test/test-reader.c:49 ../src/utils/nautilus-actions-run.c:62
+#: ../src/test/test-reader.c:49 ../src/utils/nautilus-actions-run.c:63
 msgid "<URI>"
 msgstr "<URI>"
 
 #: ../src/test/test-reader.c:56 ../src/utils/nautilus-actions-new.c:139
-#: ../src/utils/nautilus-actions-run.c:69
+#: ../src/utils/nautilus-actions-run.c:70
 #: ../src/utils/nautilus-actions-schemas.c:91
 msgid "Output the version number"
 msgstr "Mostrar el número de versión"
@@ -2419,7 +2418,7 @@ msgid "Error: uri is mandatory.\n"
 msgstr "Error: es obligatorio un URL.\n"
 
 #: ../src/test/test-reader.c:182 ../src/utils/nautilus-actions-new.c:555
-#: ../src/utils/nautilus-actions-run.c:439
+#: ../src/utils/nautilus-actions-run.c:415
 #: ../src/utils/nautilus-actions-schemas.c:368
 #, c-format
 msgid "Try %s --help for usage.\n"
@@ -2521,11 +2520,11 @@ msgstr ""
 msgid "Error: unable to find 'na-gconf' provider."
 msgstr "Error: no se pudo encontrar el proveedor «na-gconf»."
 
-#: ../src/utils/nautilus-actions-run.c:60
+#: ../src/utils/nautilus-actions-run.c:61
 msgid "The internal identifiant of the action to be launched"
 msgstr "El identificador interno de la acción que lanzar"
 
-#: ../src/utils/nautilus-actions-run.c:62
+#: ../src/utils/nautilus-actions-run.c:63
 msgid ""
 "A target, file or folder, for the action. More than one options may be "
 "specified"
