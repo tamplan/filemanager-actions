@@ -113,7 +113,8 @@
 
   <sect1 id="getting-started">
     <title>Getting Started</title>
-    <sect2 id="starting">
+    
+    <sect2 id="getting-started-starting">
       <title>Starting &appname;</title>
       <para>
         You can start &appname; in the following ways:
@@ -145,14 +146,16 @@
             <tip>
               <para>
                 To view other command line options that are available,
-                type <command>totem --help</command>, then press <keycap>Return</keycap>.
+                type <command>nautilus-actions-config-tool --help-all</command>,
+                then press <keycap>Return</keycap>.
               </para>
             </tip>
           </listitem>
         </varlistentry>
       </variablelist>
     </sect2>
-    <sect2 id="when-start">
+    
+    <sect2 id="getting-started-first-run">
       <title>The first run</title>
       <para>
         When you start &appname;, the following window is displayed.
@@ -173,9 +176,11 @@
           </mediaobject>
         </screenshot>
       </figure>
+
       <!-- Include any descriptions of the GUI immediately after the screenshot
            of the main UI, for example, the items on the menubar and on the toolbar.
            This section is optional. -->
+
       <para>
         The &appname; main window contains the following elements:
       </para>
@@ -187,6 +192,140 @@
               The menus on the menubar contain all of the commands
               you need to use in &appname;.
             </para>
+            <para>
+              Shortcuts are available for some commands:
+            </para>
+            <variablelist>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>Ctrl</keycap>
+                      <keycap>N</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Create a new action.
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>Ctrl</keycap>
+                      <keycap>S</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Save modified actions and menus.
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>Ctrl</keycap>
+                      <keycap>Q</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Quit the application.
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>Ctrl</keycap>
+                      <keycap>X</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Cut the current selection, keeping it in the clipboard.
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>Ctrl</keycap>
+                      <keycap>C</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Copy the current selection to the clipboard.
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>Ctrl</keycap>
+                      <keycap>V</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Insert the content of the clipboard before the current item.
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>Shift</keycap>
+                      <keycap>Ctrl</keycap>
+                      <keycap>V</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Insert the content of the clipboard as subitems of the current item.
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>Delete</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Delete the current selection.
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>F5</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Reload the actions and menus.
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  <shortcut>
+                    <keycombo>
+                      <keycap>Ctrl</keycap>
+                      <keycap>H</keycap>
+                    </keycombo>
+                  </shortcut>
+                </term>
+                <listitem>
+                  Display the help.
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -194,7 +333,18 @@
           <listitem>
             <para>
               The list on the left of the main window contains all items,
-              whether they are actions or menus, currently available.
+              whether they are actions or menus, currently available for edition in
+              &appname;.
+            </para>
+            <para>
+              Items may be sorted in ascending or descending alphabetical order, or
+              not sorted at all, directly organized and managed by the user.
+            </para>
+            <para>
+              Invalid items are displayed in red color.
+            </para>
+            <para>
+              Modified items are displayed in italic characters.
             </para>
           </listitem>
         </varlistentry>
@@ -202,7 +352,119 @@
           <term>Properties tabs.</term>
           <listitem>
             <para>
+              The right part of the main window displays all is needed to define
+              how, when and where actions and menus should be displayed.
             </para>
+            <variablelist>
+              <varlistentry>
+                <term>
+                  Action/Menu
+                </term>
+                <listitem>
+                  <para>
+                    Define in which &nautilus; menus the item should appear, and
+                    how it will be displayed.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  Command
+                </term>
+                <listitem>
+                  <para>
+                    Specify which command to execute, and which parameters
+                    pass to it.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  Execution
+                </term>
+                <listitem>
+                  <para>
+                    Specify how the command should be executed.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  Basenames
+                </term>
+                <listitem>
+                  <para>
+                    Define the basename filters the &nautilus; selection must satisfy
+                    in order the action or menu be candidate for display.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  Mimetypes
+                </term>
+                <listitem>
+                  <para>
+                    Define the mimetype filters the &nautilus; selection must satisfy
+                    in order the action or menu be candidate for display.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  Folders
+                </term>
+                <listitem>
+                  <para>
+                    Define the folder filters the &nautilus; selection must satisfy
+                    in order the action or menu be candidate for display.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  Schemes
+                </term>
+                <listitem>
+                  <para>
+                    Define the scheme filters the &nautilus; selection must satisfy
+                    in order the action or menu be candidate for display.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  Capabilities
+                </term>
+                <listitem>
+                  <para>
+                    Define the capability filters the &nautilus; selection must satisfy
+                    in order the action or menu be candidate for display.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  Environment
+                </term>
+                <listitem>
+                  <para>
+                    Define some environment conditions the &nautilus; selection must satisfy
+                    in order the action or menu be candidate for display.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                  Properties
+                </term>
+                <listitem>
+                  <para>
+                    Display items properties.
+                  </para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -211,6 +473,10 @@
             <para>
               The statusbar displays some status informations about the
               currently selected row in the items list.
+            </para>
+            <para>
+              When no relevant information is to be displayed, the statusbar
+              displays the count of loaded menus, actions and profiles.
             </para>
           </listitem>
         </varlistentry>
@@ -225,20 +491,37 @@
   <sect1 id="usage">
     <title>Using &appname;</title>
 
-<!-- ====================== Usage Subsection ========================== -->
-    <sect2 id="totem-open-file">
-      <title>To Open a File</title>
-      <para>To open a video or an audio file, choose
+    <sect2 id="usage-create-action">
+      <title>Creating an action</title>
+      <para>
+        To create a new action, choose
         <menuchoice>
           <shortcut>
             <keycombo>
               <keycap>Ctrl</keycap>
-              <keycap>O</keycap>
+              <keycap>N</keycap>
             </keycombo>
           </shortcut>
-          <guimenu>Movie</guimenu>
-          <guisubmenu>Open</guisubmenu>
+          <guimenu>File</guimenu>
+          <guisubmenu>New action</guisubmenu>
         </menuchoice>.
+      </para>
+      <para>
+        A new action is inserted in the items list just before the current action or menu.
+        It is also displayed in right tabs.
+      </para>
+      <para>
+        In items list, the new action is displayed in italic characters. Italics are used
+        as a reminder that the item has not yet been saved.
+      </para>
+      <para>
+        It is also displayed in red color. Red color is used as an indicator that the item
+        is invalid, that is that the item cannot be candidate to be displayed in a
+        &nautilus; context menu because some of its informations are missing or erroneous.
+        Though this newly inserted action has some suitable defaults, it lacks a command
+        to be executed to be considered valid by &appname;
+      </para>
+        
         The <application>Select Movies or Playlists</application> dialog is displayed.
   Select the file or files you want to open, then click
  <guibutton>OK</guibutton>.

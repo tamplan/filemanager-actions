@@ -493,3 +493,6 @@ Parameter 	Description
   instead of terminating the edition and letting the old value
 
 - 2010-06-20: TODO: is_candidate_for_show_in: get current environment
+
+- 2010-08-01: BUG: select a profile, create new action -> the new action is inserted just before
+  current profile ! should be just before current NAObjectItem
