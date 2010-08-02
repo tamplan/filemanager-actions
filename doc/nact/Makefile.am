@@ -37,6 +37,9 @@ DOC_MODULE = nautilus-actions-config-tool
 
 DOC_ENTITIES = \
 	articleinfo.xml								\
+	nact-usage.xml								\
+	nact-prefs.xml								\
+	nact-misc.xml								\
 	legalnotice.xml								\
 	appendix-gnu-fdl-1.3.xml					\
 	$(NULL)

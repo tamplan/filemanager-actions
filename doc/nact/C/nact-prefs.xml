@@ -1,0 +1,45 @@
+<!-- ========================= Preferences ============================ -->
+
+  <sect1 id="prefs">
+    <title>Preferences</title>
+    <para>
+    </para>
+
+    <sect2 id="prefs-runtime">
+      <title>Runtime preferences</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="prefs-ui">
+      <title>UI preferences</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="prefs-import">
+      <title>Import preferences</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="prefs-export">
+      <title>Export preferences</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="prefs-schemes">
+      <title>Schemes preferences</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="prefs-providers">
+      <title>I/O providers preferences</title>
+      <para>
+      </para>
+    </sect2>
+
+  </sect1>
+  <!-- end of sect1 - preferences -->

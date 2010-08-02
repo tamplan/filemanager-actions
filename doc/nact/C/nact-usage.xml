@@ -1,0 +1,355 @@
+<!-- ============================== Usage ============================= -->
+<!-- Use this section to describe how to use the application to perform the
+     tasks for which the application is designed. -->
+
+  <sect1 id="usage">
+    <title>Using &appname;</title>
+
+    <sect2 id="usage-create-action">
+      <title>Creating an action</title>
+      <para>
+        To create a new action, choose
+        <menuchoice>
+          <shortcut>
+            <keycombo>
+              <keycap>Ctrl</keycap>
+              <keycap>N</keycap>
+            </keycombo>
+          </shortcut>
+          <guimenu>File</guimenu>
+          <guisubmenu>New action</guisubmenu>
+        </menuchoice>.
+      </para>
+      <para>
+        A new action is inserted in the items list. The exact place where the
+        action is inserted depends of the current sort order of the items list.
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>
+            Manual order
+          </term>
+          <listitem>
+            <para>
+              The new action is inserted just before the current action or menu.
+            </para>
+            <para>
+              This place will not change when you later modify the label of the action.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>
+            Ascending (resp. descending) alphabetical order
+          </term>
+          <listitem>
+            <para>
+              The new action is inserted at the correct place, regarding the default
+              "New Nautilus action" label.
+            </para>
+            <para>
+              This place will be automatically changed, each time you modify the
+              label of the action.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+        Properties of this new action are also displayed in right tabs.
+      </para>
+      <note>
+        <para>
+          In items list, the new action is displayed in italic characters. Italics are used
+          as a reminder that the item has not yet been saved.
+        </para>
+      </note>
+      <note>
+        <para>
+          The new action is also displayed in red color in items list.
+          Red color is used as an indicator that the item
+          is invalid, that is that the item cannot be candidate to be displayed in a
+          &nautilus; context menu because some of its informations are missing or erroneous.
+          Here, and though this newly inserted action has some suitable defaults, it lacks a 
+          command to be executed to be considered valid by &appname;
+        </para>
+      </note>
+
+      <sect3 id="usage-create-action-where">
+        <title>Where should appear the action ?</title>
+        <para>
+        </para>
+      </sect3>
+
+      <sect3 id="usage-create-action-display">
+        <title>How the action will it appear ?</title>
+        <para>
+        </para>
+      </sect3>
+
+      <sect3 id="usage-create-action-when">
+        <title>When the action will it be displayed ?</title>
+        <para>
+        </para>
+
+        <sect4 id="usage-create-action-when-basenames">
+          <title>Basenames</title>
+          <para>
+          </para>
+        </sect4>
+
+        <sect4 id="usage-create-action-when-mimetypes">
+          <title>Mimetypes</title>
+          <para>
+          </para>
+        </sect4>
+
+        <sect4 id="usage-create-action-when-folders">
+          <title>Folders</title>
+          <para>
+          </para>
+        </sect4>
+
+        <sect4 id="usage-create-action-when-schemes">
+          <title>Schemes</title>
+          <para>
+          </para>
+        </sect4>
+
+        <sect4 id="usage-create-action-when-capabilities">
+          <title>Capabilities</title>
+          <para>
+          </para>
+        </sect4>
+
+        <sect4 id="usage-create-action-when-environment">
+          <title>Environment</title>
+          <para>
+          </para>
+        </sect4>
+
+      </sect3>
+
+      <sect3 id="usage-create-action-what">
+        <title>What the action should it execute ?</title>
+        <para>
+        </para>
+      </sect3>
+
+      <sect3 id="usage-create-action-how">
+        <title>How the action should it be executed ?</title>
+        <para>
+        </para>
+      </sect3>
+
+    </sect2>
+    <!-- end of creating an action -->
+
+    <sect2 id="usage-organize-action">
+      <title>Organizing actions in menus</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="usage-profile">
+      <title>Defining more profiles</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="usage-edit">
+      <title>Editing</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="usage-save">
+      <title>Saving</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="usage-import">
+      <title>Importing</title>
+      <para>
+      </para>
+    </sect2>
+
+    <sect2 id="usage-export">
+      <title>Exporting</title>
+      <para>
+      </para>
+    </sect2>
+    
+      <!--
+        The <application>Select Movies or Playlists</application> dialog is displayed.
+      </para>
+      <para>You can drag a file from another application such as a file manager to the
+        <application>
+&appname;        </application> window. If you drag the file to the display area, the file will replace the current
+        playlist and will start playing immediately. If you drag the file to the playlist in the sidebar, the file will be
+        appended to the current playlist. The <application>
+&appname;        </application> application
+        will open the file and play the movie or song. <application>
+&appname;        </application>
+        displays the title of the movie or song in the titlebar of
+        the window and in the playlist in the sidebar.
+      </para>
+      <para>If you try to open a file format that <application>
+&appname;        </application> does
+ not recognize, the application displays an error message. This error is most often encountered
+ if you do not have the correct codecs installed. Information on getting codecs working can be found on
+ the <ulink url="http://projects.gnome.org/totem/#codecs" type="http"><application>
+&appname;          </application> website</ulink>.
+      </para>
+    </sect2>
+      
+  Select the file or files you want to open, then click
+ <guibutton>OK</guibutton>.
+
+      <para>To pause a movie or song that is playing, click on the
+        <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="figures/totem_pause_button.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>Shows pause button.</phrase>
+          </textobject>
+        </inlinemediaobject> button, or choose
+        <menuchoice>
+          <shortcut>
+            <keycombo>
+              <keycap>Ctrl</keycap>
+              <keycap>Space</keycap>
+            </keycombo>
+          </shortcut>
+          <guimenu>Movie</guimenu>
+          <guimenuitem>Play / Pause</guimenuitem>
+        </menuchoice>. You may also use the <keycap>P</keycap> key to pause or play a movie.
+      </para>
+    
+    <sect2 id="totem-usage-change-zoom">
+      <title>To Change the Zoom Factor</title>
+      <sect3 id="totem-usage-change-size">
+        <title>To Change the Video Size</title>
+        <para>To change the zoom factor of the display area, you can use the
+        following methods:
+      </para>
+        <itemizedlist>
+          <listitem>
+            <para>To zoom to fullscreen mode, choose
+   <menuchoice>
+                <shortcut>
+                  <keycap>F11</keycap>
+                </shortcut>
+                <guimenu>View</guimenu>
+                <guimenuitem>Fullscreen</guimenuitem>
+              </menuchoice>. You can also
+   use the <keycap>F</keycap> key to toggle fullscreen mode.
+   To exit fullscreen mode, click on the
+   <guibutton>Leave Fullscreen</guibutton> button or press
+   <keycap>Esc</keycap>, <keycap>F11</keycap> or <keycap>F</keycap>.
+          </para>
+          </listitem>
+          <listitem>
+            <para>To change the size of the original movie or visualization,
+            choose
+            <menuchoice>
+                <shortcut>
+                  <keycombo>
+                    <keycap>Ctrl</keycap>
+                    <keycap>0</keycap>
+                  </keycombo>
+                </shortcut>
+                <guimenu>View</guimenu>
+                <guimenuitem>Fit Window to Movie</guimenuitem>
+              </menuchoice> and choose a scale ratio.
+      </para>
+          </listitem>
+        </itemizedlist>
+      </sect3>
+
+        <para>By default, <application>
+&appname;          </application> will choose the same language for the
+   subtitles as the one you normally use on your computer.</para>
+      </note>
+      <para><application>
+&appname;        </application> will automatically load and display subtitles for a video if it finds a subtitle file with the
+   same name as the video being played, and the extension <filename class="extension">asc</filename>, <filename class="extension">txt</filename>,
+   <filename class="extension">sub</filename>, <filename class="extension">srt</filename>, <filename class="extension">smi</filename>,
+   <filename class="extension">ssa</filename> or <filename class="extension">ass</filename>.
+   </para>
+   
+      <para>With the <guilabel>Coherence DLNA/UPnP Client</guilabel> plugin enabled, choose
+
+    <sect2 id="totem-plugins-gromit">
+      <title>Gromit Annotations</title>
+      <para>The <guilabel>Gromit Annotations</guilabel> plugin allows you to draw on top of movies as they are played using
+        <ulink url="http://www.home.unix-ag.org/simon/gromit/" type="http">
+          <application>Gromit</application>
+        </ulink>. You must have
+
+      <title>Jamendo</title>
+      <para>The <guilabel>Jamendo</guilabel> plugin allows you to listen to the collection of Creative Commons-licensed music on the
+        <ulink url="http://www.jamendo.com/en/" type="http">Jamendo</ulink> service.</para>
+      <sect3 id="totem-plugins-jamendo-configuration">
+        <title>To Configure the Plugin</title>
+        <para>The <guilabel>Jamendo</guilabel> plugin can be configured. Click on the <guibutton>Configure</guibutton> button when enabling the plugin,
+          and the <application>Jamendo Plugin Configuration</application> dialog will be displayed. Here, you can choose whether to download songs in Ogg or
+          MP3 format (Ogg is preferred due to its open-source nature); and the number of albums to retrieve when doing a search (choose more albums if
+          you have a faster Internet connection).</para>
+        <para>Once you&apos;re done, click <guibutton>OK</guibutton>.</para>
+      </sect3>
+      <sect3 id="totem-plugins-jamendo-setup">
+        <title>To Display the Jamendo Sidebar</title>
+        <para>With the <guilabel>Jamendo</guilabel> plugin enabled, choose
+          <menuchoice>
+            <shortcut>
+              <keycap>F9</keycap>
+            </shortcut>
+            <guimenu>View</guimenu>
+            <guimenuitem>Sidebar</guimenuitem>
+          </menuchoice> or click on the
+          <guibutton>Sidebar</guibutton> button to show the sidebar. Select <guilabel>Jamendo</guilabel> from the drop-down list at the top of the sidebar
+          to display the <guilabel>Jamendo</guilabel> sidebar.</para>
+      </sect3>
+      <sect3 id="totem-plugins-jamendo-search">
+        <title>To Search for Music</title>
+        <para>Enter your search terms in the search entry at the top of the <guilabel>Jamendo</guilabel> sidebar. You can search by either artist or
+          by tags. Click on the search button to start your search.</para>
+        <para>Search results will be displayed in the tree view in the <guilabel>Search Results</guilabel> page of the sidebar, and can be browsed
+          through using the arrow buttons at the bottom of the sidebar. Albums are listed, and if you click on an album, its tracks will be listed
+          below it. Click again to hide the album&apos;s tracks.</para>
+        <para>With an artist selected, you can click on the <guibutton>Jamendo Album Page</guibutton> button to open that album&apos;s page on the
+          Jamendo website. Double-clicking an album, or choosing <menuchoice>
+            <guimenuitem>Add to Playlist</guimenuitem>
+          </menuchoice> from the album&apos;s
+          context menu, will replace your playlist with all the tracks on that album and begin streaming the first track from Jamendo&apos;s website.
+          Double-clicking an individual track will replace your playlist with just that track.</para>
+      </sect3>
+      <sect3 id="totem-plugins-jamendo-popular">
+
+    <sect2 id="totem-plugins-publish">
+      <title>Publish Playlist</title>
+      <para>The <guilabel>Publish Playlist</guilabel> plugin allows you to publish playlists on your local network to allow other computers to access
+        and play them.</para>
+      <sect3 id="totem-plugins-publish-configuration">
+        <title>To Configure the Plugin</title>
+        <para>The <guilabel>Publish Playlist</guilabel> plugin can be configured. Click on the <guibutton>Configure</guibutton> button when enabling the
+          plugin, and the configuration dialog will be displayed. Here, you can change the name which will appear for your playlist share. The following
+          strings will be replaced when playlists are published:
+          <variablelist>
+            <varlistentry>
+              <term>
+                <literal>%a</literal>
+              </term>
+              <listitem>
+                <para>Replaced with the program&apos;s name: <application>
+&appname;                  </application>.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+ </para>
+      -->
+
+  </sect1>
+  <!-- end of sect1 - using nautils-actions-config-tool -->
