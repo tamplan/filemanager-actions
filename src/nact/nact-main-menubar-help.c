@@ -48,9 +48,7 @@
 void
 nact_main_menubar_help_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis )
 {
-	/* TODO: help temporarily disabled */
-	nact_main_menubar_enable_item( window, "HelpItem", FALSE );
-
+	nact_main_menubar_enable_item( window, "HelpItem", TRUE );
 	/* about always enabled */
 }
 
@@ -64,6 +62,15 @@ nact_main_menubar_help_on_update_sensitivities( NactMainWindow *window, gpointer
 void
 nact_main_menubar_help_on_help( GtkAction *action, NactMainWindow *window )
 {
+	static const gchar *thisfn = "nact_main_menubar_help_on_help";
+	GError *error;
+
+	error = NULL;
+	gtk_show_uri( NULL, "ghelp:nautilus-actions-config-tool", GDK_CURRENT_TIME, &error );
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+	}
 }
 
 /**
