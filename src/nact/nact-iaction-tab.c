@@ -898,10 +898,13 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 		icon_name = gtk_entry_get_text( icon_entry );
 		na_object_set_icon( item, icon_name );
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, TRUE );
-
-		image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
-		nact_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_MENU );
 	}
+
+	/* icon_name may be null if there is no current item
+	 * in such a case, we blank the image
+	 */
+	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
+	nact_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_MENU );
 }
 
 static gint

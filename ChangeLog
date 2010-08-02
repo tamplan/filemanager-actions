@@ -1,5 +1,9 @@
 2010-08-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-gtk-utils.c (nact_gtk_utils_get_pixbuf):
+	* src/nact/nact-iaction-tab.c (on_icon_changed):
+	Fix bad reinitialization of the icon item.
+
 	* doc/nact/C/figures/nact-basenames-tab.png:
 	* doc/nact/C/figures/nact-capabilities-tab.png:
 	* doc/nact/C/figures/nact-command-tab.png:

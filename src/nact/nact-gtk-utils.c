@@ -148,7 +148,7 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, gint size )
 
 /**
  * nact_utils_render:
- * @name: the name of the file or an icon.
+ * @name: the name of the file or an icon, or %NULL.
  * widget: the widget on which the image should be rendered.
  * size: the desired size.
  *
@@ -159,7 +159,11 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, gint size )
 {
 	GdkPixbuf* pixbuf;
 
-	pixbuf = nact_gtk_utils_get_pixbuf( name, GTK_WIDGET( widget ), size );
+	if( name ){
+		pixbuf = nact_gtk_utils_get_pixbuf( name, GTK_WIDGET( widget ), size );
+	} else {
+		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", size, size, NULL );
+	}
 
 	if( pixbuf ){
 		gtk_image_set_from_pixbuf( widget, pixbuf );
