@@ -493,3 +493,5 @@ Parameter 	Description
   instead of terminating the edition and letting the old value
 
 - 2010-06-20: TODO: is_candidate_for_show_in: get current environment
+
+- 2010-08-02: icon is not reset when last action is removed

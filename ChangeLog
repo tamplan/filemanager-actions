@@ -1,5 +1,25 @@
 2010-08-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/nact/C/figures/nact-basenames-tab.png:
+	* doc/nact/C/figures/nact-capabilities-tab.png:
+	* doc/nact/C/figures/nact-command-tab.png:
+	* doc/nact/C/figures/nact-environment-tab.png:
+	* doc/nact/C/figures/nact-execution-tab.png:
+	* doc/nact/C/figures/nact-folders-tab.png:
+	* doc/nact/C/figures/nact-legend.png:
+	* doc/nact/C/figures/nact-main-empty.png:
+	* doc/nact/C/figures/nact-mimetypes-tab.png:
+	* doc/nact/C/figures/nact-new-capability.png:
+	* doc/nact/C/figures/nact-preferences-export.png:
+	* doc/nact/C/figures/nact-preferences-import.png:
+	* doc/nact/C/figures/nact-preferences-io-providers.png:
+	* doc/nact/C/figures/nact-preferences-runtime.png:
+	* doc/nact/C/figures/nact-preferences-schemes.png:
+	* doc/nact/C/figures/nact-preferences-ui.png:
+	* doc/nact/C/figures/nact-properties-tab.png:
+	* doc/nact/C/figures/nact-schemes-tab.png:
+	Update all screenshots to include window decoration.
+
 	* doc/nact/nautilus-actions-config-tool.omf.in:
 	Change categorie and type of the NACT user's manual.
 
