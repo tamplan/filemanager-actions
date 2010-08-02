@@ -1,5 +1,7 @@
 2010-08-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Update comments.
+
 	* src/nact/nact-add-capability-dialog.c (try_for_send_ok):
 	* src/nact/nact-add-scheme-dialog.c (try_for_send_ok):
 	* src/nact/nact-main-tab.c (nact_main_tab_is_page_enabled):
