@@ -1855,7 +1855,7 @@ Capabilities may be negated to specify for which capabilities your item must not
                               <object class="GtkLabel" id="label76">
                                 <property name="visible">True</property>
                                 <property name="xpad">5</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Capability conditions&lt;/b&gt;</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Capabilities conditions&lt;/b&gt;</property>
                                 <property name="use_markup">True</property>
                               </object>
                             </child>
@@ -2743,6 +2743,9 @@ If the command is not found, or does not display the correct result, your item w
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -2758,10 +2761,10 @@ If the command is not found, or does not display the correct result, your item w
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <property name="local_only">False</property>
-            <property name="preview_widget_active">False</property>
-            <property name="use_preview_label">False</property>
             <property name="select_multiple">True</property>
+            <property name="preview_widget_active">False</property>
+            <property name="local_only">False</property>
+            <property name="use_preview_label">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -3731,39 +3734,39 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="label4"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="label4"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionMenuLabelLabel"/>
-      <widget name="ActionToolbarLabelLabel"/>
-      <widget name="ActionTooltipLabel"/>
       <widget name="ActionIconLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
     <widgets>
-      <widget name="label43"/>
-      <widget name="label44"/>
       <widget name="label45"/>
+      <widget name="label44"/>
+      <widget name="label43"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
     <widgets>
-      <widget name="label18"/>
-      <widget name="label39"/>
-      <widget name="label49"/>
       <widget name="label19"/>
+      <widget name="label49"/>
+      <widget name="label39"/>
+      <widget name="label18"/>
     </widgets>
   </object>
 </interface>
