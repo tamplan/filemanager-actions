@@ -1,5 +1,10 @@
 2010-08-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-add-capability-dialog.c (try_for_send_ok):
+	* src/nact/nact-add-scheme-dialog.c (try_for_send_ok):
+	* src/nact/nact-main-tab.c (nact_main_tab_is_page_enabled):
+	Check that Gtk+ is more recent that 2.18 for gtk_widget_get_sensitive().
+
 	Split the NACT manual by chapter.
 
 	* doc/nact/C/nact-usage.xml:

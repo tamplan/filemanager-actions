@@ -402,10 +402,17 @@ static void
 try_for_send_ok( NactAddSchemeDialog *dialog )
 {
 	GtkWidget *button;
+	gboolean is_sensitive;
 
 	button = base_window_get_widget( BASE_WINDOW( dialog ), "OKButton" );
 
-	if( gtk_widget_get_sensitive( button )){
+#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION >= 18 ))
+	is_sensitive = gtk_widget_is_sensitive( button );
+#else
+	is_sensitive = GTK_WIDGET_IS_SENSITIVE( button );
+#endif
+
+	if( is_sensitive ){
 		send_ok( dialog );
 	}
 }

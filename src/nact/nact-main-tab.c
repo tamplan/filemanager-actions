@@ -75,7 +75,7 @@ nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
 	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
 	page = gtk_notebook_get_nth_page( notebook, num_page );
 
-#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION > 18 ))
+#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION >= 18 ))
 	is_sensitive = gtk_widget_is_sensitive( page );
 #else
 	is_sensitive = GTK_WIDGET_IS_SENSITIVE( page );
