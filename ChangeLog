@@ -1,5 +1,8 @@
 2010-08-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar.c:
+	Change help menu item from Gtk default to Gnome (apparent) standard.
+
 	* src/nact/nact-main-menubar-help.c (nact_main_menubar_help_on_help):
 	Connect to Yelp.
 
