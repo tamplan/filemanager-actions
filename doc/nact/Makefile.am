@@ -48,6 +48,8 @@ DOC_INCLUDES = \
 	$(NULL)
 
 DOC_FIGURES = \
+	figures/add.png								\
+	figures/remove.png							\
 	figures/nact-basenames-tab.png				\
 	figures/nact-capabilities-tab.png			\
 	figures/nact-command-tab.png				\
