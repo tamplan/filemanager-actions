@@ -6,11 +6,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: nautilus-actions.HEAD.es\n"
+"Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-07-31 09:05+0000\n"
-"PO-Revision-Date: 2010-08-01 13:40+0200\n"
+"POT-Creation-Date: 2010-08-02 20:33+0000\n"
+"PO-Revision-Date: 2010-08-03 06:58+0200\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1116,9 +1116,6 @@ msgid "Tooltip of the context menu item"
 msgstr "El consejo del elemento del menú contextual"
 
 #: ../src/core/na-object-item-factory.c:112
-#| msgid ""
-#| "The tooltip of the menu item that will appear in the Nautilus statusbar "
-#| "when the user points to the Nautilus popup menu item with his/her mouse"
 msgid ""
 "The tooltip of the menu item that will appear in the file manager statusbar "
 "when the user points to the file manager context menu item with his/her "
@@ -1133,10 +1130,6 @@ msgid "Icon of the context menu item"
 msgstr "El icono del elemento del menú contextual"
 
 #: ../src/core/na-object-item-factory.c:136
-#| msgid ""
-#| "The icon of the menu item that will appear next to the label in the "
-#| "Nautilus popup menu when the selection matches the appearance conditions "
-#| "settings"
 msgid ""
 "The icon of the menu item that will appear next to the label in the file "
 "manager context menu when the selection matches the appearance conditions "
@@ -2136,6 +2129,11 @@ msgstr "_Volcar el portapapeles"
 msgid "Dump the content of the clipboard object"
 msgstr "Volcar el contenido del objeto del portapapeles"
 
+#: ../src/nact/nact-main-menubar.c:202
+#| msgid "Conditions"
+msgid "Contents"
+msgstr "Contenido"
+
 #. i18n: tooltip displayed in the status bar when selecting the Help item
 #: ../src/nact/nact-main-menubar.c:204
 msgid "Display help about this program"
@@ -2235,7 +2233,7 @@ msgstr "Debe coincidir con todas"
 msgid "Must not match any of"
 msgstr "No debe coincidir con ninguna de"
 
-#: ../src/nact/nact-match-list.c:490
+#: ../src/nact/nact-match-list.c:493
 #, c-format
 msgid ""
 "'%s' filter already exists in the list.\n"
@@ -2245,7 +2243,7 @@ msgstr ""
 "Proporcione otro."
 
 #. i18n notes : new filter for a new row in a match/no match list
-#: ../src/nact/nact-match-list.c:846
+#: ../src/nact/nact-match-list.c:849
 msgid "new-filter"
 msgstr "filtro-nuevo"
 
@@ -3381,9 +3379,6 @@ msgstr "Mostrar la salida del esquema de GConf de Nautilus Actions en stdout."
 #~ msgstr ""
 #~ "Pulse para ver la lista de tokens especiales que puede usar en el campo "
 #~ "de parámetros."
-
-#~ msgid "Conditions"
-#~ msgstr "Condiciones"
 
 #~ msgid ""
 #~ "Delete the action without any confirmation nor the possibility to restore "
