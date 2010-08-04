@@ -389,46 +389,56 @@ execute_action_command( const gchar *command, const NAObjectProfile *profile )
  * @tokens: the current #NATokens object.
  * @exec: the to be executed command-line before having been parsed
  *
- * Returns: %TRUE if the first parameter found in @exec command-line is
- * of singular form, %FALSE else.
- *
- * %% and %c are considered here as singular parameters. This function
- * so defaults to %TRUE as long as no plural form parameter is found.
+ * Returns: %TRUE if the first relevant parameter found in @exec
+ * command-line is of singular form, %FALSE else.
  */
 static gboolean
 is_singular_exec( const NATokens *tokens, const gchar *exec )
 {
 	gboolean singular;
-	gchar *found;
+	gboolean found;
+	gchar *iter;
 
-	singular = TRUE;
-	found = g_strstr_len( exec, -1, "%" );
+	singular = FALSE;
+	found = FALSE;
+	iter = ( gchar * ) exec;
 
-	if( found ){
-		switch( found[1] ){
+	while(( iter = g_strstr_len( iter, -1, "%" )) != NULL && !found ){
+
+		switch( iter[1] ){
 			case 'b':
-			case 'c':
 			case 'd':
 			case 'f':
-			case 'h':
-			case 'n':
-			case 'p':
-			case 's':
+			case 'm':
 			case 'u':
 			case 'w':
 			case 'x':
-			case '%':
+				found = TRUE;
+				singular = TRUE;
 				break;
 
 			case 'B':
 			case 'D':
 			case 'F':
+			case 'M':
 			case 'U':
 			case 'W':
 			case 'X':
+				found = TRUE;
 				singular = FALSE;
 				break;
+
+			/* all other parameters are irrelevant according to DES-EMA
+			 * c: selection count
+			 * h: hostname
+			 * n: username
+			 * p: port
+			 * s: scheme
+			 * %: %
+			 */
 		}
+
+		iter += 2;			/* skip the % sign and the character after */
 	}
 
 	return( singular );
