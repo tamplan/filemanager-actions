@@ -8,12 +8,13 @@
 
   <abstract role="description">
     <para>
-      In short, &prodname; is a &nautilus; extension which let the user
-      define new actions in the file-manager context menus, and group them
-      into his own menus.
+      &prodname; is a &nautilus; extension whose principal function
+      is to allow the user to add arbitrary actions to the file manager
+      context menus. These actions may be organized in menus and submenus,
+      exported and shared with other desktop environments.
     </para>
     <para>
-      This manual describes the &appname; user interface, and shows how
+      This manual describes the &appname; user interface, and explains how
       you may configure your menus and actions, making them be displayed
       and applied depending on specific conditions.
     </para>

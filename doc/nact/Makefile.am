@@ -36,12 +36,15 @@ dist-hook: doc-dist-hook
 DOC_MODULE = nautilus-actions-config-tool
 
 DOC_ENTITIES = \
-	articleinfo.xml								\
-	nact-usage.xml								\
-	nact-prefs.xml								\
-	nact-misc.xml								\
-	legalnotice.xml								\
 	appendix-gnu-fdl-1.3.xml					\
+	articleinfo.xml								\
+	legalnotice.xml								\
+	nact-conditions.xml							\
+	nact-misc.xml								\
+	nact-prefs.xml								\
+	nact-profiles.xml							\
+	nact-sorting.xml							\
+	nact-starting.xml							\
 	$(NULL)
 
 DOC_INCLUDES = \
@@ -50,6 +53,7 @@ DOC_INCLUDES = \
 DOC_FIGURES = \
 	figures/add.png								\
 	figures/remove.png							\
+	figures/nact-action-tab.png					\
 	figures/nact-basenames-tab.png				\
 	figures/nact-capabilities-tab.png			\
 	figures/nact-command-tab.png				\
@@ -60,6 +64,7 @@ DOC_FIGURES = \
 	figures/nact-main-empty.png					\
 	figures/nact-mimetypes-tab.png				\
 	figures/nact-new-capability.png				\
+	figures/nact-new-scheme.png					\
 	figures/nact-preferences-export.png			\
 	figures/nact-preferences-import.png			\
 	figures/nact-preferences-io-providers.png	\
@@ -68,6 +73,9 @@ DOC_FIGURES = \
 	figures/nact-preferences-ui.png				\
 	figures/nact-properties-tab.png				\
 	figures/nact-schemes-tab.png				\
+	figures/start-context-menu.png				\
+	figures/start-context-menu-nautilus.png		\
+	figures/start-zenity-result.png				\
 	$(NULL)
 
 clean-local :

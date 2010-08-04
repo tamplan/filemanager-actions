@@ -1,0 +1,78 @@
+<sect2 id="usage-sorting">
+  <title>Sorting the items list</title>
+  <para>
+    Your actions and menus will be displayed in file manager context menus
+    in the same order that they are listed in the items list, on the left
+    pane of the main &appname; window.
+  </para>
+  <para>
+    You may decide to:
+  </para>
+  <itemizedlist>
+    <listitem>
+      <para>
+        sort your actions and menus in ascending or descending alphabetical
+        order of their label,
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        or do not sort, and manually organize your actions and menus
+        in your own order.
+      </para>
+    </listitem>
+  </itemizedlist>
+
+  <sect3 id="usage-sorting-alpha">
+    <title>Alphabetically sorting your actions and menus</title>
+    <para>
+      In these modes, actions and menus are sorted depending of their label,
+      inside of their parent. 
+    </para>
+  </sect3>
+
+  <sect3 id="usage-sorting-manual">
+    <title>Manually organizing your actions and menus</title>
+    <para>
+      In this mode, a new action or a new menu will be inserted just before
+      the current action or menu, inside of the same parent if apply. 
+    </para>
+  </sect3>
+</sect2>
+
+<!--
+      <para>
+        The exact place where the
+        action is inserted depends of the current sort order of the items list:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>
+            Manual order:
+          </term>
+          <listitem>
+            <para>
+              The new action is inserted just before the current action or menu.
+            </para>
+            <para>
+              This place will not change when you later modify the label of the action.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>
+            Ascending (resp. descending) alphabetical order:
+          </term>
+          <listitem>
+            <para>
+              The new action is inserted at the correct place, regarding the default
+              &laquosp;<literal>New Nautilus action</literal>&spraquo; label.
+            </para>
+            <para>
+              This place will be automatically changed, each time you modify the
+              label of the action.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+-->
