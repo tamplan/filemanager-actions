@@ -1,5 +1,14 @@
 2010-08-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c
+	(na_core_utils_str_get_first_word): Removed function.
+	(na_core_utils_str_split_first_word): New function.
+
+	* src/io-desktop/nadp-reader.c
+	(nadp_reader_ifactory_provider_read_done):
+	Split the Exec content to get Path and Parameters data.
+
 	* src/core/na-object-profile-factory.c:
 	Review the description of the NAFO_DATA_PARAMETERS data.
 

@@ -112,36 +112,6 @@ na_core_utils_str_collate( const gchar *str1, const gchar *str2 )
 }
 
 /**
- * na_core_utils_str_get_first_word:
- * @string: a space-separated string.
- *
- * Returns: the first word of @string, as a newly allocated string which
- * should be g_free() by the caller.
- */
-gchar *
-na_core_utils_str_get_first_word( const gchar *string )
-{
-	gchar **splitted, **iter;
-	gchar *word, *tmp;
-
-	splitted = g_strsplit( string, " ", 0 );
-	iter = splitted;
-	word = NULL;
-
-	while( *iter ){
-		tmp = g_strstrip( *iter );
-		if( g_utf8_strlen( tmp, -1 )){
-			word = g_strdup( tmp );
-			break;
-		}
-		iter++;
-	}
-
-	g_strfreev( splitted );
-	return( word );
-}
-
-/**
  * na_core_utils_str_remove_char:
  * @string: source string.
  * @to_remove: the character to remove.
@@ -207,6 +177,33 @@ na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
 	}
 
 	return( removed );
+}
+
+/**
+ * na_core_utils_str_split_first_word:
+ * @string: a space-separated string.
+ * @first: a pointer to a gchar *.
+ * @other: a pointer to a gchar *.
+ *
+ * Split the @string string into two components:
+ * - the first word which is allocated in @first,
+ * - the rest of the string which is allocated in @other.
+ *
+ * The two allocated strings should be g_free() by the caller.
+ */
+void
+na_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **other )
+{
+	gchar **splitted, **iter;
+
+	splitted = g_strsplit( string, " ", 2 );
+	iter = splitted;
+
+	*first = g_strdup( *iter );
+	iter++;
+	*other = g_strdup( *iter );
+
+	g_strfreev( splitted );
 }
 
 void
