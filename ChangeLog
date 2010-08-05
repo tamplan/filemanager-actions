@@ -1,5 +1,10 @@
 2010-08-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-profile-factory.c:
+	Review the description of the NAFO_DATA_PARAMETERS data.
+
+	* src/core/na-tokens.h: Update the comment.
+
 	* po/POTFILES.in: Add src/core/na-tokens.c file.
 
 	* src/core/na-tokens.c:

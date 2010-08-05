@@ -68,7 +68,7 @@ static NADataDef data_def_profile [] = {
 
 	/* Path and Parameters are two separate data both in GConf, in GConf-derived
 	 * export files and in NACT. Only in desktop files, they are merged as only
-	 * one 'Exec' data.
+	 * one 'Exec' data which is splitted at read time.
 	 */
 	{ NAFO_DATA_PATH,
 				TRUE,
@@ -120,23 +120,25 @@ static NADataDef data_def_profile [] = {
 					"  %U: username of the URI\n" \
 					"  %%: a percent sign." \
 					"- starting from version '3':\n" \
-					"  %b: (first) basename of the selected file(s)/folder(s)\n" \
+					"  %b: (first) basename\n" \
 					"  %B: space-separated list of the basenames of the selected file(s)/folder(s)\n" \
 					"  %c: count the selected file(s)/folder(s)\n" \
-					"  %d: (first) base directory of the selected file(s)/folder(s)\n" \
+					"  %d: (first) base directory\n" \
 					"  %D: space-separated list of base directories of the selected file(s)/folder(s)\n" \
-					"  %f: (first) filename of the selected file(s)/folder(s)\n" \
+					"  %f: (first) filename\n" \
 					"  %F: space-separated list of the filenames of the selected file(s)/folder(s)\n" \
 					"  %h: hostname of the (first) URI\n" \
+					"  %m: (first) mimetype\n" \
+					"  %M: space-separated list of the mimetypes of the selected file(s)/folder(s)\n" \
 					"  %n: username of the (first) URI\n" \
 					"  %p: port number of the (first) URI\n" \
 					"  %s: scheme of the (first) URI\n" \
 					"  %u: (first) URI\n" \
-					"  %U: space-separated list of selected URIs\n" \
+					"  %U: space-separated list of the URIs of the selected file(s)/folder(s)\n" \
 					"  %w: (first) basename without the extension\n" \
 					"  %W: space-separated list of basenames without the extension\n" \
 					"  %x: (first) extension\n" \
-					"  %X: space-separated list of the extensions\n" \
+					"  %X: space-separated list of the extensions of the selected file(s)/folder(s)\n" \
 					"  %%: a percent sign." ),
 				NAFD_TYPE_STRING,
 				"",

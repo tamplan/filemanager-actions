@@ -48,9 +48,10 @@
  * plugin, attaching the result to each item in the context menu.
  *
  * Adding a parameter requires updating of :
- * - src/core/na-tokens.c::is_singular_exec()
- * - src/core/na-tokens.c::parse_singular()
- * - src/nact/nautilus-actions-config-tool.ui:LegendDialog
+ * - src/core/na-tokens.c::is_singular_exec() function
+ * - src/core/na-tokens.c::parse_singular() function
+ * - src/nact/nautilus-actions-config-tool.ui:LegendDialog labels
+ * - src/core/na-object-profile-factory.c:NAFO_DATA_PARAMETERS comment
  *
  * Valid parameters are :
  *
