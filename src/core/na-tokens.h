@@ -48,10 +48,32 @@
  * plugin, attaching the result to each item in the context menu.
  *
  * Adding a parameter requires updating of :
- * - src/core/na-tokens.c::na_tokens_is_singular_exec()
- * - src/core/na-tokens.c::na_tokens_parse_parameters()
- * - nautilus-actions/nact/nact-icommand-tab.c:parse_parameters()
+ * - src/core/na-tokens.c::is_singular_exec()
+ * - src/core/na-tokens.c::parse_singular()
  * - src/nact/nautilus-actions-config-tool.ui:LegendDialog
+ *
+ * Valid parameters are :
+ *
+ * %b: (first) basename
+ * %B: space-separated list of basenames
+ * %c: count of selected items
+ * %d: (first) base directory
+ * %D: space-separated list of base directory of each selected items
+ * %f: (first) file name
+ * %F: space-separated list of selected file names
+ * %h: hostname of the (first) URI
+ * %m: (first) mimetype
+ * %M: space-separated list of mimetypes
+ * %n: username of the (first) URI
+ * %p: port number of the (first) URI
+ * %s: scheme of the (first) URI
+ * %u: (first) URI
+ * %U: space-separated list of selected URIs
+ * %w: (first) basename without the extension
+ * %W: space-separated list of basenames without their extension
+ * %x: (first) extension
+ * %X: space-separated list of extensions
+ * %%: the « % » character
  */
 
 #include <api/na-object-profile.h>
@@ -83,6 +105,7 @@ typedef struct {
 
 GType     na_tokens_get_type( void );
 
+NATokens *na_tokens_new_for_example   ( void );
 NATokens *na_tokens_new_from_selection( GList *selection );
 
 gchar    *na_tokens_parse_parameters( const NATokens *tokens, const gchar *string, gboolean utf8 );

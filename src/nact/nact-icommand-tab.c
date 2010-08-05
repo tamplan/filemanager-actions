@@ -40,6 +40,7 @@
 
 #include <core/na-iprefs.h>
 #include <core/na-factory-object.h>
+#include <core/na-tokens.h>
 
 #include "base-window.h"
 #include "base-iprefs.h"
@@ -71,9 +72,10 @@ struct NactICommandTabInterfacePrivate {
 #define ICOMMAND_TAB_LEGEND_VISIBLE			"nact-icommand-tab-legend-dialog-visible"
 #define ICOMMAND_TAB_STATUSBAR_CONTEXT		"nact-icommand-tab-statusbar-context"
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized = FALSE;
-static gboolean st_on_selection_change = FALSE;
+static gboolean  st_initialized = FALSE;
+static gboolean  st_finalized = FALSE;
+static gboolean  st_on_selection_change = FALSE;
+static NATokens *st_tokens = NULL;
 
 static GType      register_type( void );
 static void       interface_base_init( NactICommandTabInterface *klass );
@@ -287,6 +289,13 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 				G_OBJECT( instance ),
 				IACTIONS_LIST_SIGNAL_COLUMN_EDITED,
 				G_CALLBACK( on_iactions_list_column_edited ));
+
+		/* allocate a static fake NATokens object which will be user to build
+		 * the example label - this object will be unreffed on dispose
+		 */
+		if( !st_tokens ){
+			st_tokens = na_tokens_new_for_example();
+		}
 	}
 }
 
@@ -321,6 +330,10 @@ nact_icommand_tab_dispose( NactICommandTab *instance )
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		legend_dialog_hide( instance );
+
+		if( st_tokens ){
+			g_object_unref( st_tokens );
+		}
 	}
 }
 
@@ -657,6 +670,7 @@ on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 static gchar *
 parse_parameters( NactICommandTab *instance )
 {
+#if 0
 	GString *tmp_string = g_string_new( "" );
 	NAObjectItem *item;
 	NAObjectProfile *profile;
@@ -837,6 +851,17 @@ parse_parameters( NactICommandTab *instance )
 	g_free( iter );
 
 	return( g_string_free( tmp_string, FALSE ));
+#endif
+
+	const gchar *command = gtk_entry_get_text( GTK_ENTRY( get_path_entry( instance )));
+	const gchar *param_template = gtk_entry_get_text( GTK_ENTRY( get_parameters_entry( instance )));
+	gchar *exec, *returned;
+
+	exec = g_strdup_printf( "%s %s", command, param_template );
+	returned = na_tokens_parse_parameters( st_tokens, exec, FALSE );
+	g_free( exec );
+
+	return( returned );
 }
 
 static void

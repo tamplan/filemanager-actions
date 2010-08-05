@@ -1,3 +1,18 @@
+2010-08-05 Pierre Wieser <pwieser@trychlos.org>
+
+	* po/POTFILES.in: Add src/core/na-tokens.c file.
+
+	* src/core/na-tokens.c:
+	* src/core/na-tokens.h (na_tokens_new_for_example): New function.
+
+	* src/core/na-tokens.c (parse_singular):
+	Implement %m and %M parameters for mimetypes.
+
+	* src/nact/nact-icommand-tab.c (parse_parameters):
+	Use a fake NATokens object to print an example of the command.
+
+	* src/nact/nautilus-actions-config-tool.ui: Fix some labels.
+
 2010-08-04 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-tokens.c (is_singular_exec):

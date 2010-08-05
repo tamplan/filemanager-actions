@@ -2503,7 +2503,7 @@ If the command is not found, or does not display the correct result, your item w
                                     </child>
                                     <child>
                                       <object class="GtkCheckButton" id="ActionReadonlyButton">
-                                        <property name="label" translatable="yes">Read-only</property>
+                                        <property name="label" translatable="yes">Read-only item</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
@@ -2746,6 +2746,12 @@ If the command is not found, or does not display the correct result, your item w
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -2762,9 +2768,9 @@ If the command is not found, or does not display the correct result, your item w
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
             <property name="select_multiple">True</property>
-            <property name="preview_widget_active">False</property>
             <property name="local_only">False</property>
             <property name="use_preview_label">False</property>
+            <property name="preview_widget_active">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -3110,7 +3116,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
         <child>
           <object class="GtkTable" id="table5">
             <property name="visible">True</property>
-            <property name="n_rows">18</property>
+            <property name="n_rows">20</property>
             <property name="n_columns">2</property>
             <property name="column_spacing">2</property>
             <property name="row_spacing">6</property>
@@ -3191,8 +3197,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">9</property>
-                <property name="bottom_attach">10</property>
+                <property name="top_attach">11</property>
+                <property name="bottom_attach">12</property>
                 <property name="x_options">GTK_SHRINK | GTK_FILL</property>
               </packing>
             </child>
@@ -3205,8 +3211,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">10</property>
-                <property name="bottom_attach">11</property>
+                <property name="top_attach">12</property>
+                <property name="bottom_attach">13</property>
                 <property name="x_options">GTK_SHRINK | GTK_FILL</property>
               </packing>
             </child>
@@ -3219,8 +3225,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">11</property>
-                <property name="bottom_attach">12</property>
+                <property name="top_attach">13</property>
+                <property name="bottom_attach">14</property>
                 <property name="x_options">GTK_SHRINK | GTK_FILL</property>
               </packing>
             </child>
@@ -3233,8 +3239,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">12</property>
-                <property name="bottom_attach">13</property>
+                <property name="top_attach">14</property>
+                <property name="bottom_attach">15</property>
                 <property name="x_options">GTK_SHRINK | GTK_FILL</property>
               </packing>
             </child>
@@ -3247,8 +3253,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">17</property>
-                <property name="bottom_attach">18</property>
+                <property name="top_attach">19</property>
+                <property name="bottom_attach">20</property>
                 <property name="x_options">GTK_SHRINK | GTK_FILL</property>
               </packing>
             </child>
@@ -3315,7 +3321,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the base directory of the selected file(s)/folder(s).</property>
+                <property name="label" translatable="yes">space-separated list of the base directories of the selected file(s)/folder(s).</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -3335,8 +3341,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">9</property>
-                <property name="bottom_attach">10</property>
+                <property name="top_attach">11</property>
+                <property name="bottom_attach">12</property>
                 <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
@@ -3345,13 +3351,13 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">scheme of the (first) URI.</property>
+                <property name="label" translatable="yes">scheme of the (first) selected URI.</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">10</property>
-                <property name="bottom_attach">11</property>
+                <property name="top_attach">12</property>
+                <property name="bottom_attach">13</property>
                 <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
@@ -3365,8 +3371,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">11</property>
-                <property name="bottom_attach">12</property>
+                <property name="top_attach">13</property>
+                <property name="bottom_attach">14</property>
                 <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
@@ -3375,13 +3381,13 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="yalign">0</property>
-                <property name="label" translatable="yes">space-separated list of selected URIs.</property>
+                <property name="label" translatable="yes">space-separated list of the URIs of the selected file(s)/folder(s).</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">12</property>
-                <property name="bottom_attach">13</property>
+                <property name="top_attach">14</property>
+                <property name="bottom_attach">15</property>
                 <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
@@ -3395,8 +3401,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">17</property>
-                <property name="bottom_attach">18</property>
+                <property name="top_attach">19</property>
+                <property name="bottom_attach">20</property>
                 <property name="x_options">GTK_FILL</property>
               </packing>
             </child>
@@ -3441,7 +3447,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
               <object class="GtkLabel" id="label63">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the selected filename(s).</property>
+                <property name="label" translatable="yes">space-separated list of the filenames of the selected file(s)/folder(s).</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -3483,8 +3489,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">8</property>
-                <property name="bottom_attach">9</property>
+                <property name="top_attach">10</property>
+                <property name="bottom_attach">11</property>
               </packing>
             </child>
             <child>
@@ -3496,8 +3502,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">8</property>
-                <property name="bottom_attach">9</property>
+                <property name="top_attach">10</property>
+                <property name="bottom_attach">11</property>
               </packing>
             </child>
             <child>
@@ -3509,8 +3515,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">13</property>
-                <property name="bottom_attach">14</property>
+                <property name="top_attach">15</property>
+                <property name="bottom_attach">16</property>
               </packing>
             </child>
             <child>
@@ -3522,8 +3528,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">14</property>
-                <property name="bottom_attach">15</property>
+                <property name="top_attach">16</property>
+                <property name="bottom_attach">17</property>
               </packing>
             </child>
             <child>
@@ -3535,21 +3541,21 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">15</property>
-                <property name="bottom_attach">16</property>
+                <property name="top_attach">17</property>
+                <property name="bottom_attach">18</property>
               </packing>
             </child>
             <child>
               <object class="GtkLabel" id="label79">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the extension of the selected file(s)/folder(s).</property>
+                <property name="label" translatable="yes">space-separated list of the extensions of the selected file(s)/folder(s).</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">16</property>
-                <property name="bottom_attach">17</property>
+                <property name="top_attach">18</property>
+                <property name="bottom_attach">19</property>
               </packing>
             </child>
             <child>
@@ -3560,8 +3566,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">13</property>
-                <property name="bottom_attach">14</property>
+                <property name="top_attach">15</property>
+                <property name="bottom_attach">16</property>
               </packing>
             </child>
             <child>
@@ -3572,8 +3578,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">14</property>
-                <property name="bottom_attach">15</property>
+                <property name="top_attach">16</property>
+                <property name="bottom_attach">17</property>
               </packing>
             </child>
             <child>
@@ -3584,8 +3590,8 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">15</property>
-                <property name="bottom_attach">16</property>
+                <property name="top_attach">17</property>
+                <property name="bottom_attach">18</property>
               </packing>
             </child>
             <child>
@@ -3596,8 +3602,58 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                 <property name="use_markup">True</property>
               </object>
               <packing>
-                <property name="top_attach">16</property>
-                <property name="bottom_attach">17</property>
+                <property name="top_attach">18</property>
+                <property name="bottom_attach">19</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label83">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%m&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">8</property>
+                <property name="bottom_attach">9</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label85">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">9</property>
+                <property name="bottom_attach">10</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label84">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">(first) mimetype.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">8</property>
+                <property name="bottom_attach">9</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label86">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">space-separated list of the mimetypes of the selected file(s)/folder(s).</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">9</property>
+                <property name="bottom_attach">10</property>
               </packing>
             </child>
           </object>

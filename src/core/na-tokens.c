@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
 #include <api/na-core-utils.h>
@@ -66,6 +67,8 @@ struct NATokensPrivate {
 	gchar   *basenames_woext_str;
 	GSList  *exts;
 	gchar   *exts_str;
+	GSList  *mimetypes;
+	gchar   *mimetypes_str;
 
 	gchar   *hostname;
 	gchar   *username;
@@ -75,15 +78,16 @@ struct NATokensPrivate {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType    register_type( void );
-static void     class_init( NATokensClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_dispose( GObject *object );
-static void     instance_finalize( GObject *object );
+static GType     register_type( void );
+static void      class_init( NATokensClass *klass );
+static void      instance_init( GTypeInstance *instance, gpointer klass );
+static void      instance_dispose( GObject *object );
+static void      instance_finalize( GObject *object );
 
-static void     execute_action_command( const gchar *command, const NAObjectProfile *profile );
-static gboolean is_singular_exec( const NATokens *tokens, const gchar *exec );
-static gchar   *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8 );
+static NATokens *build_string_lists( NATokens *tokens );
+static void      execute_action_command( const gchar *command, const NAObjectProfile *profile );
+static gboolean  is_singular_exec( const NATokens *tokens, const gchar *exec );
+static gchar    *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8 );
 
 GType
 na_tokens_get_type( void )
@@ -165,6 +169,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->basenames_woext_str = NULL;
 	self->private->exts = NULL;
 	self->private->exts_str = NULL;
+	self->private->mimetypes = NULL;
+	self->private->mimetypes_str = NULL;
 
 	self->private->hostname = NULL;
 	self->private->username = NULL;
@@ -210,6 +216,8 @@ instance_finalize( GObject *object )
 	g_free( self->private->username );
 	g_free( self->private->hostname );
 
+	g_free( self->private->mimetypes_str );
+	na_core_utils_slist_free( self->private->mimetypes );
 	g_free( self->private->exts_str );
 	na_core_utils_slist_free( self->private->exts );
 	g_free( self->private->basenames_woext_str );
@@ -232,6 +240,67 @@ instance_finalize( GObject *object )
 }
 
 /**
+ * na_tokens_new_for_example:
+ *
+ * Returns: a new #NATokens object initialized with fake values for two
+ * regular files, in order to be used as an example of an expanded command
+ * line.
+ */
+NATokens *
+na_tokens_new_for_example( void )
+{
+	NATokens *tokens;
+	const gchar *ex_uri1 = _( "file:///path/to/file1.mid" );
+	const gchar *ex_uri2 = _( "file:///path/to/file2.jpeg" );
+	const gchar *ex_mimetype1 = _( "audio/x-midi" );
+	const gchar *ex_mimetype2 = _( "image/jpeg" );
+	const guint  ex_port = 8080;
+	const gchar *ex_host = _( "test.example.net" );
+	const gchar *ex_user = _( "user" );
+	NAGnomeVFSURI *vfs;
+	gchar *dirname, *bname, *bname_woext, *ext;
+	GSList *is;
+	gboolean first;
+
+	tokens = g_object_new( NA_TOKENS_TYPE, NULL );
+	first = TRUE;
+	tokens->private->count = 2;
+
+	tokens->private->uris = g_slist_append( tokens->private->uris, g_strdup( ex_uri1 ));
+	tokens->private->uris = g_slist_append( tokens->private->uris, g_strdup( ex_uri2 ));
+
+	for( is = tokens->private->uris ; is ; is = is->next ){
+		vfs = g_new0( NAGnomeVFSURI, 1 );
+		na_gnome_vfs_uri_parse( vfs, is->data );
+
+		tokens->private->filenames = g_slist_append( tokens->private->filenames, g_strdup( vfs->path ));
+		dirname = g_path_get_dirname( vfs->path );
+		tokens->private->basedirs = g_slist_append( tokens->private->basedirs, dirname );
+		bname = g_path_get_basename( vfs->path );
+		tokens->private->basenames = g_slist_append( tokens->private->basenames, bname );
+		na_core_utils_dir_split_ext( bname, &bname_woext, &ext );
+		tokens->private->basenames_woext = g_slist_append( tokens->private->basenames_woext, bname_woext );
+		tokens->private->exts = g_slist_append( tokens->private->exts, ext );
+
+		if( first ){
+			tokens->private->scheme = g_strdup( vfs->scheme );
+			first = FALSE;
+		}
+
+		na_gnome_vfs_uri_free( vfs );
+	}
+
+	tokens->private->mimetypes = g_slist_append( tokens->private->mimetypes, g_strdup( ex_mimetype1 ));
+	tokens->private->mimetypes = g_slist_append( tokens->private->mimetypes, g_strdup( ex_mimetype2 ));
+
+	tokens->private->hostname = g_strdup( ex_host );
+	tokens->private->username = g_strdup( ex_user );
+	tokens->private->port = ex_port;
+
+	return( build_string_lists( tokens ));
+}
+
+/**
  * na_tokens_new_from_selection:
  * @selection: a #GList list of #NASelectedInfo objects.
  *
@@ -243,7 +312,7 @@ na_tokens_new_from_selection( GList *selection )
 	static const gchar *thisfn = "na_tokens_new_from_selection";
 	NATokens *tokens;
 	GList *it;
-	gchar *uri, *filename, *basedir, *basename, *bname_woext, *ext;
+	gchar *uri, *filename, *basedir, *basename, *bname_woext, *ext, *mimetype;
 	GFile *location;
 	gboolean first;
 	NAGnomeVFSURI *vfs;
@@ -257,6 +326,7 @@ na_tokens_new_from_selection( GList *selection )
 
 	for( it = selection ; it ; it = it->next ){
 		location = na_selected_info_get_location( NA_SELECTED_INFO( it->data ));
+		mimetype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
 
 		uri = na_selected_info_get_uri( NA_SELECTED_INFO( it->data ));
 		filename = g_file_get_path( location );
@@ -283,18 +353,12 @@ na_tokens_new_from_selection( GList *selection )
 		tokens->private->basenames = g_slist_prepend( tokens->private->basenames, basename );
 		tokens->private->basenames_woext = g_slist_prepend( tokens->private->basenames_woext, bname_woext );
 		tokens->private->exts = g_slist_prepend( tokens->private->exts, ext );
+		tokens->private->mimetypes = g_slist_prepend( tokens->private->mimetypes, mimetype );
 
 		g_object_unref( location );
 	}
 
-	tokens->private->uris_str = na_core_utils_slist_join_at_end( tokens->private->uris, " " );
-	tokens->private->filenames_str = na_core_utils_slist_join_at_end( tokens->private->filenames, " " );
-	tokens->private->basedirs_str = na_core_utils_slist_join_at_end( tokens->private->basedirs, " " );
-	tokens->private->basenames_str = na_core_utils_slist_join_at_end( tokens->private->basenames, " " );
-	tokens->private->basenames_woext_str = na_core_utils_slist_join_at_end( tokens->private->basenames_woext, " " );
-	tokens->private->exts_str = na_core_utils_slist_join_at_end( tokens->private->exts, " " );
-
-	return( tokens );
+	return( build_string_lists( tokens ));
 }
 
 /**
@@ -304,27 +368,6 @@ na_tokens_new_from_selection( GList *selection )
  * @utf8: whether the @input string is UTF-8 encoded, or a standard ASCII string.
  *
  * Expands the parameters in the given string.
- *
- * Valid parameters are :
- *
- * %b: (first) basename
- * %B: space-separated list of basenames
- * %c: count of selected items
- * %d: (first) base directory
- * %D: space-separated list of base directory of each selected items
- * %f: (first) file name
- * %F: space-separated list of selected file names
- * %h: hostname of the (first) URI
- * %n: username of the (first) URI
- * %p: port number of the (first) URI
- * %s: scheme of the (first) URI
- * %u: (first) URI
- * %U: space-separated list of selected URIs
- * %w: (first) basename without the extension
- * %W: space-separated list of basenames without their extension
- * %x: (first) extension
- * %X: space-separated list of extensions
- * %%: the « % » character
  *
  * Returns: a copy of @input string with tokens expanded, as a newly
  * allocated string which should be g_free() by the caller.
@@ -372,6 +415,20 @@ na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile
 
 
 	g_free( exec );
+}
+
+static NATokens *
+build_string_lists( NATokens *tokens )
+{
+	tokens->private->uris_str = na_core_utils_slist_join_at_end( tokens->private->uris, " " );
+	tokens->private->filenames_str = na_core_utils_slist_join_at_end( tokens->private->filenames, " " );
+	tokens->private->basedirs_str = na_core_utils_slist_join_at_end( tokens->private->basedirs, " " );
+	tokens->private->basenames_str = na_core_utils_slist_join_at_end( tokens->private->basenames, " " );
+	tokens->private->basenames_woext_str = na_core_utils_slist_join_at_end( tokens->private->basenames_woext, " " );
+	tokens->private->exts_str = na_core_utils_slist_join_at_end( tokens->private->exts, " " );
+	tokens->private->mimetypes_str = na_core_utils_slist_join_at_end( tokens->private->mimetypes, " " );
+
+	return( tokens );
 }
 
 static void
@@ -540,6 +597,20 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 					tmp = g_shell_quote( tokens->private->hostname );
 					output = g_string_append( output, tmp );
 					g_free( tmp );
+				}
+				break;
+
+			case 'm':
+				if( tokens->private->mimetypes ){
+					tmp = g_shell_quote( g_slist_nth_data( tokens->private->mimetypes, i ));
+					output = g_string_append( output, tmp );
+					g_free( tmp );
+				}
+				break;
+
+			case 'M':
+				if( tokens->private->mimetypes ){
+					output = g_string_append( output, tokens->private->mimetypes_str );
 				}
 				break;
 
