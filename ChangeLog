@@ -1,3 +1,22 @@
+2010-08-07 Pierre Wieser <pwieser@trychlos.org>
+
+	Setup auto-save in preferences.
+
+	* data/nautilus-actions-prefs.schemas.in:
+	Describe new auto-save-on and auto-save-period preference keys.
+
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h
+	(nact_iprefs_read_uint,	nact_iprefs_write_uint): New functions.
+	IPREFS_AUTOSAVE_ON, IPREFS_AUTOSAVE_PERIOD: New preference keys.
+
+	* src/nact/nact-preferences-editor.c:
+	Update the new auto-save-on and auto-save-period preference keys.
+
+
+	* src/nact/nact-preferences.ui:
+	* src/nact/nautilus-actions-config-tool.ui: New preference frame.
+
 2010-08-05 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-core-utils.h:

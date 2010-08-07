@@ -293,7 +293,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkCheckButton" id="EscCloseButton">
-                                <property name="label" translatable="yes">Esc key quits the assistant</property>
+                                <property name="label" translatable="yes">Esc key _quits the assistant</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -307,7 +307,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                             </child>
                             <child>
                               <object class="GtkCheckButton" id="EscConfirmButton">
-                                <property name="label" translatable="yes">Ask for a confirmation when quitting the assistant on Esc key</property>
+                                <property name="label" translatable="yes">Ask for a _confirmation when quitting the assistant on Esc key</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -338,6 +338,99 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                   <packing>
                     <property name="expand">False</property>
                     <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame" id="frame8">
+                    <property name="visible">True</property>
+                    <property name="border_width">6</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkAlignment" id="alignment8">
+                        <property name="visible">True</property>
+                        <property name="left_padding">12</property>
+                        <child>
+                          <object class="GtkVBox" id="vbox3">
+                            <property name="visible">True</property>
+                            <property name="border_width">6</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkCheckButton" id="AutoSaveCheckButton">
+                                <property name="label" translatable="yes">Automatically _saves pending modifications</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="tooltip_text" translatable="yes">When this option is checked, pending modification will be periodically and automatically saved.</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="hbox2">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkLabel" id="AutoSaveLabel1">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="xpad">4</property>
+                                    <property name="label" translatable="yes">Periodicity :</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkSpinButton" id="AutoSavePeriodicitySpinButton">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                    <property name="width_chars">5</property>
+                                    <property name="snap_to_ticks">True</property>
+                                    <property name="numeric">True</property>
+                                    <property name="update_policy">if-valid</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="AutoSaveLabel2">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="xpad">4</property>
+                                    <property name="label" translatable="yes">minutes</property>
+                                  </object>
+                                  <packing>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label4">
+                        <property name="visible">True</property>
+                        <property name="xpad">5</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Auto-save&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>

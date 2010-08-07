@@ -73,6 +73,9 @@ static void     on_base_initial_load_dialog( NactPreferencesEditor *editor, gpoi
 static void     on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_esc_quit_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void     esc_quit_activated( NactPreferencesEditor *editor, gboolean esc_quit_active );
+static void     on_auto_save_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void     auto_save_activated( NactPreferencesEditor *editor, gboolean auto_save_active );
 static void     on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     enable_order_mode_buttons( NactPreferencesEditor *editor );
@@ -311,6 +314,9 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	GtkWidget *button;
 	gboolean esc_quit, esc_confirm;
 	GtkTreeView *listview;
+	gboolean auto_save_on;
+	guint auto_save_period;
+	GtkAdjustment *adjustment;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
@@ -369,10 +375,27 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 
 	esc_quit = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_ASSIST_ESC_QUIT, TRUE );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), esc_quit );
+	esc_quit_activated( editor, esc_quit );
 
 	esc_confirm = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_ASSIST_ESC_CONFIRM, TRUE );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "EscConfirmButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), esc_confirm );
+
+	auto_save_on = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_AUTOSAVE_ON, FALSE );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSaveCheckButton" );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), auto_save_on );
+	auto_save_activated( editor, auto_save_on );
+
+	base_window_signal_connect(
+			BASE_WINDOW( editor ),
+			G_OBJECT( button ),
+			"toggled",
+			G_CALLBACK( on_auto_save_toggled ));
+
+	auto_save_period = nact_iprefs_read_uint( BASE_WINDOW( editor ), IPREFS_AUTOSAVE_PERIOD, 5 );
+	button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSavePeriodicitySpinButton" );
+	adjustment = gtk_spin_button_get_adjustment( GTK_SPIN_BUTTON( button ));
+	gtk_adjustment_configure( adjustment, auto_save_period, 1, 999, 1, 10, 0 );
 
 	/* third tab: import tool
 	 */
@@ -445,11 +468,42 @@ static void
 on_esc_quit_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 {
 	gboolean is_active;
-	GtkWidget *toggle;
 
 	is_active = gtk_toggle_button_get_active( button );
+	esc_quit_activated( editor, is_active );
+}
+
+static void
+esc_quit_activated( NactPreferencesEditor *editor, gboolean esc_quit_active )
+{
+	GtkWidget *toggle;
+
 	toggle = base_window_get_widget( BASE_WINDOW( editor ), "EscConfirmButton" );
-	gtk_widget_set_sensitive( toggle, is_active );
+	gtk_widget_set_sensitive( toggle, esc_quit_active );
+}
+
+static void
+on_auto_save_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
+{
+	gboolean is_active;
+
+	is_active = gtk_toggle_button_get_active( button );
+	auto_save_activated( editor, is_active );
+}
+
+static void
+auto_save_activated( NactPreferencesEditor *editor, gboolean auto_save_activated )
+{
+	GtkWidget *widget;
+
+	widget = base_window_get_widget( BASE_WINDOW( editor ), "AutoSavePeriodicitySpinButton" );
+	gtk_widget_set_sensitive( widget, auto_save_activated );
+
+	widget = base_window_get_widget( BASE_WINDOW( editor ), "AutoSaveLabel1" );
+	gtk_widget_set_sensitive( widget, auto_save_activated );
+
+	widget = base_window_get_widget( BASE_WINDOW( editor ), "AutoSaveLabel2" );
+	gtk_widget_set_sensitive( widget, auto_save_activated );
 }
 
 static void
@@ -503,6 +557,9 @@ save_preferences( NactPreferencesEditor *editor )
 	GtkWidget *container;
 	NAExportFormat *export_format;
 	gboolean esc_quit, esc_confirm;
+	gboolean auto_save_on;
+	guint auto_save_period;
+	GtkAdjustment *adjustment;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
@@ -555,6 +612,15 @@ save_preferences( NactPreferencesEditor *editor )
 	button = base_window_get_widget( BASE_WINDOW( editor ), "EscConfirmButton" );
 	esc_confirm = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_ASSIST_ESC_CONFIRM, esc_confirm );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSaveCheckButton" );
+	auto_save_on = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_AUTOSAVE_ON, auto_save_on );
+
+	button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSavePeriodicitySpinButton" );
+	adjustment = gtk_spin_button_get_adjustment( GTK_SPIN_BUTTON( button ));
+	auto_save_period = ( guint ) gtk_adjustment_get_value( adjustment );
+	nact_iprefs_write_uint( BASE_WINDOW( editor ), IPREFS_AUTOSAVE_PERIOD, auto_save_period );
 
 	/* third tab: import tool
 	 */

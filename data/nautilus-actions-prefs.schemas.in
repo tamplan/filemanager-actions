@@ -27,6 +27,28 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/auto-save-on</key>
+      <owner>nautilus-actions</owner>
+      <type>bool</type>
+      <locale name="C">
+        <short>Whether the auto-save feature should be activated</short>
+        <long>If TRUE, the pending modifications will be periodically and automatically saved.</long>
+      </locale>
+      <default>false</default>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/nautilus-actions/preferences/auto-save-period</key>
+      <owner>nautilus-actions</owner>
+      <type>int</type>
+      <locale name="C">
+        <short>Periodicity of the auto-save</short>
+        <long>Defines the periodicity in minutes of the automatic save.</long>
+      </locale>
+      <default>5</default>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/nautilus-actions/preferences/export-assistant</key>
       <owner>nautilus-actions</owner>
       <type>list</type>

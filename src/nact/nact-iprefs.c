@@ -232,6 +232,35 @@ nact_iprefs_migrate_key( const BaseWindow *window, const gchar *old_key, const g
 }
 
 /**
+ * nact_iprefs_read_uint:
+ * @window: this #BaseWindow-derived window.
+ * @name: the preference entry.
+ * @default_value: the value to be returned if the key is not found.
+ *
+ * Returns: the uint value associated with the given key.
+ */
+guint
+nact_iprefs_read_uint( const BaseWindow *window, const gchar *name, guint default_value )
+{
+	guint value;
+	gchar *path;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), 0 );
+	g_return_val_if_fail( NACT_IS_IPREFS( window ), 0 );
+
+	value = 0;
+
+	if( st_initialized && !st_finalized ){
+
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+		value = na_gconf_utils_read_int( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, TRUE, default_value );
+		g_free( path );
+	}
+
+	return( value );
+}
+
+/**
  * nact_iprefs_write_bool:
  * @window: this #BaseWindow-derived window.
  * @name: the preference entry.
@@ -251,6 +280,30 @@ nact_iprefs_write_bool( const BaseWindow *window, const gchar *name, gboolean va
 
 		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
 		na_gconf_utils_write_bool( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, value, NULL );
+		g_free( path );
+	}
+}
+
+/**
+ * nact_iprefs_write_uint:
+ * @window: this #BaseWindow-derived window.
+ * @name: the preference entry.
+ * @value: the value to be written.
+ *
+ * Writes the given uint value.
+ */
+void
+nact_iprefs_write_uint( const BaseWindow *window, const gchar *name, guint value )
+{
+	gchar *path;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( NACT_IS_IPREFS( window ));
+
+	if( st_initialized && !st_finalized ){
+
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+		na_gconf_utils_write_int( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, value, NULL );
 		g_free( path );
 	}
 }
