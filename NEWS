@@ -1,3 +1,45 @@
+Version 2.99.1
+==============
+
+	Release date 2010-08-07
+
+	Enhancements:
+
+		- NACT now implements an auto-save feature.
+		- Display sort indicator in condition lists.
+		- Some sort of user's manual is connected to NACT help.
+
+	Other modifications: 
+
+		- Help shortcut is now F1 (no more Ctrl+H).
+
+	Bug fixes:
+
+		- Implement multiple execution.
+		- Implement all filter conditions.
+		- Fix a crash when defining a positive assertion.
+		- Fix wrong insertion of an action or a menu inside an action.
+		- Fix capabilities frame title consistency.
+		- Fix bad reinitialization of the icon item.
+
+	New parameters:
+
+		- %m: (first) mimetype.
+		- %M: space-separated list of mimetypes.
+
+	New and updated translations:
+
+		de (Mario Blättermann)
+		es (Jorge González)
+		sl (Andrej Žnidaršič, Matej Urbančič)
+
+	Note that this version may not be fully fonctionnal. In particular,
+	Nautilus menu plugin may not yet honor all new conditions.
+	
+	Note also that due to the renaming of some parameters, actions or menus
+	created / updated with this version may not be compatible with previous,
+	older, ones.
+	
 Version 2.99.0
 ==============
 
