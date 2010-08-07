@@ -160,53 +160,23 @@ na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance )
 }
 
 /**
- * na_ipivot_consumer_notify_of_items_changed:
+ * na_ipivot_consumer_notify_of_autosave_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
+ * @enabled: whether auto-save feature is now enabled.
+ * @period: new auto-save period in minutes.
  *
- * Notifies the consumers that the actions have been modified on one of
- * the underlying storage subsystems.
+ * Notifies the consumers that the ato-save preferences have been changed.
  */
-void na_ipivot_consumer_notify_of_items_changed( NAIPivotConsumer *instance )
+void
+na_ipivot_consumer_notify_of_autosave_changed( NAIPivotConsumer *instance, gboolean enabled, guint period )
 {
-	static const gchar *thisfn = "na_ipivot_consumer_notify_of_items_changed";
-
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
 	if( st_initialized && !st_finalized ){
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
-		if( is_notify_allowed( instance )){
-
-			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_items_changed ){
-				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_items_changed( instance, NULL );
-			}
-		}
-	}
-}
-
-/**
- * na_ipivot_consumer_notify_of_mandatory_prefs_changed:
- * @instance: the #NAIPivotConsumer instance to be notified of the modifications.
- *
- * Notifies the consumers that a mandatory 'locked' preference has been changed.
- */
-void na_ipivot_consumer_notify_of_mandatory_prefs_changed( NAIPivotConsumer *instance )
-{
-	static const gchar *thisfn = "na_ipivot_consumer_notify_of_mandatory_prefs_changed";
-
-	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
-
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
-		if( is_notify_allowed( instance )){
-
-			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_mandatory_prefs_changed ){
-				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_mandatory_prefs_changed( instance );
-			}
+		if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_autosave_changed ){
+			NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_autosave_changed( instance, enabled, period );
 		}
 	}
 }
@@ -279,6 +249,58 @@ na_ipivot_consumer_notify_of_display_order_changed( NAIPivotConsumer *instance, 
 
 			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed ){
 				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_display_order_changed( instance, order_mode );
+			}
+		}
+	}
+}
+
+/**
+ * na_ipivot_consumer_notify_of_items_changed:
+ * @instance: the #NAIPivotConsumer instance to be notified of the end
+ * of the modifications.
+ *
+ * Notifies the consumers that the actions have been modified on one of
+ * the underlying storage subsystems.
+ */
+void na_ipivot_consumer_notify_of_items_changed( NAIPivotConsumer *instance )
+{
+	static const gchar *thisfn = "na_ipivot_consumer_notify_of_items_changed";
+
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+		if( is_notify_allowed( instance )){
+
+			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_items_changed ){
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_items_changed( instance, NULL );
+			}
+		}
+	}
+}
+
+/**
+ * na_ipivot_consumer_notify_of_mandatory_prefs_changed:
+ * @instance: the #NAIPivotConsumer instance to be notified of the modifications.
+ *
+ * Notifies the consumers that a mandatory 'locked' preference has been changed.
+ */
+void na_ipivot_consumer_notify_of_mandatory_prefs_changed( NAIPivotConsumer *instance )
+{
+	static const gchar *thisfn = "na_ipivot_consumer_notify_of_mandatory_prefs_changed";
+
+	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
+
+	if( st_initialized && !st_finalized ){
+
+		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+		if( is_notify_allowed( instance )){
+
+			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_mandatory_prefs_changed ){
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_mandatory_prefs_changed( instance );
 			}
 		}
 	}

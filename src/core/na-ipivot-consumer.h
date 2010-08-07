@@ -59,17 +59,17 @@ typedef struct {
 	NAIPivotConsumerInterfacePrivate *private;
 
 	/**
-	 * on_items_changed:
+	 * on_autosave_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
-	 * user_data: user data set when emitting the message. Currently,
-	 * not used.
+	 * @enabled: whether auto-save feature is now enabled.
+	 * @period: new auto-save period in minutes.
 	 *
-	 * This function is triggered once when #NAPivot detects the end of
-	 * a bunch of modifications. At this time, the embedded list of
-	 * #NAAction has been updated to be up to date.
+	 * This function is triggered once when #NAPivot detects that the
+	 * auto-save preferences have been changed. Parameters are the new
+	 * parameters of the configuration.
 	 */
-	void ( *on_items_changed )           ( NAIPivotConsumer *instance, gpointer user_data );
+	void ( *on_autosave_changed )        ( NAIPivotConsumer *instance, gboolean enabled, guint period );
 
 	/**
 	 * on_create_root_menu_changed:
@@ -105,6 +105,19 @@ typedef struct {
 	void ( *on_display_order_changed )   ( NAIPivotConsumer *instance, gint order_mode );
 
 	/**
+	 * on_items_changed:
+	 * @instance: the #NAIPivotConsumer instance which implements this
+	 * interface.
+	 * user_data: user data set when emitting the message. Currently,
+	 * not used.
+	 *
+	 * This function is triggered once when #NAPivot detects the end of
+	 * a bunch of modifications. At this time, the embedded list of
+	 * #NAAction has been updated to be up to date.
+	 */
+	void ( *on_items_changed )           ( NAIPivotConsumer *instance, gpointer user_data );
+
+	/**
 	 * on_mandatory_prefs_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this interface.
 	 *
@@ -118,11 +131,12 @@ GType na_ipivot_consumer_get_type( void );
 
 void  na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance );
 
-void  na_ipivot_consumer_notify_of_items_changed           ( NAIPivotConsumer *instance );
-void  na_ipivot_consumer_notify_of_mandatory_prefs_changed ( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_autosave_changed        ( NAIPivotConsumer *instance, gboolean enabled, guint period );
 void  na_ipivot_consumer_notify_of_create_root_menu_changed( NAIPivotConsumer *instance, gboolean enabled );
 void  na_ipivot_consumer_notify_of_display_about_changed   ( NAIPivotConsumer *instance, gboolean enabled );
 void  na_ipivot_consumer_notify_of_display_order_changed   ( NAIPivotConsumer *instance, gint order_mode );
+void  na_ipivot_consumer_notify_of_items_changed           ( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_mandatory_prefs_changed ( NAIPivotConsumer *instance );
 
 G_END_DECLS
 

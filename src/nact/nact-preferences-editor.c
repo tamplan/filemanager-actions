@@ -392,7 +392,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 			"toggled",
 			G_CALLBACK( on_auto_save_toggled ));
 
-	auto_save_period = nact_iprefs_read_uint( BASE_WINDOW( editor ), IPREFS_AUTOSAVE_PERIOD, 5 );
+	auto_save_period = na_iprefs_read_uint( NA_IPREFS( updater ), IPREFS_AUTOSAVE_PERIOD, 5 );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSavePeriodicitySpinButton" );
 	adjustment = gtk_spin_button_get_adjustment( GTK_SPIN_BUTTON( button ));
 	gtk_adjustment_configure( adjustment, auto_save_period, 1, 999, 1, 10, 0 );

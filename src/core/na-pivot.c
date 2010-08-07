@@ -121,6 +121,7 @@ static void          on_preferences_change( GConfClient *client, guint cnxn_id, 
 static void          display_order_changed( NAPivot *pivot );
 static void          create_root_menu_changed( NAPivot *pivot );
 static void          display_about_changed( NAPivot *pivot );
+static void          autosave_changed( NAPivot *pivot );
 
 GType
 na_pivot_get_type( void )
@@ -985,6 +986,10 @@ on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NA
 		display_order_changed( pivot );
 	}
 
+	if( !g_ascii_strcasecmp( key_entry, IPREFS_AUTOSAVE_ON ) || !g_ascii_strcasecmp( key_entry, IPREFS_AUTOSAVE_PERIOD )){
+		autosave_changed( pivot );
+	}
+
 	g_free( key_entry );
 }
 
@@ -1046,6 +1051,29 @@ display_about_changed( NAPivot *pivot )
 
 		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 			na_ipivot_consumer_notify_of_display_about_changed( NA_IPIVOT_CONSUMER( ic->data ), display_about );
+		}
+	}
+}
+
+static void
+autosave_changed( NAPivot *pivot )
+{
+	static const gchar *thisfn = "na_pivot_autosave_changed";
+	GList *ic;
+	gboolean autosave_on;
+	guint autosave_period;
+
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
+
+		autosave_on = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_AUTOSAVE_ON, FALSE );
+		autosave_period = na_iprefs_read_uint( NA_IPREFS( pivot ), IPREFS_AUTOSAVE_PERIOD, 5 );
+
+		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
+			na_ipivot_consumer_notify_of_autosave_changed( NA_IPIVOT_CONSUMER( ic->data ), autosave_on, autosave_period );
 		}
 	}
 }

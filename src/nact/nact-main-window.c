@@ -59,6 +59,7 @@
 #include "nact-iproperties-tab.h"
 #include "nact-main-tab.h"
 #include "nact-main-menubar.h"
+#include "nact-main-menubar-file.h"
 #include "nact-main-statusbar.h"
 #include "nact-marshal.h"
 #include "nact-main-window.h"
@@ -182,6 +183,8 @@ static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer 
 
 static gboolean confirm_for_giveup_from_menu( NactMainWindow *window );
 static gboolean confirm_for_giveup_from_pivot( NactMainWindow *window );
+static void     install_autosave( NactMainWindow *window );
+static void     ipivot_consumer_on_autosave_changed( NAIPivotConsumer *instance, gboolean enabled, guint period );
 static void     ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data );
 static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode );
 static void     ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance );
@@ -605,10 +608,11 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->on_items_changed = ipivot_consumer_on_items_changed;
+	iface->on_autosave_changed = ipivot_consumer_on_autosave_changed;
 	iface->on_create_root_menu_changed = NULL;
 	iface->on_display_about_changed = NULL;
 	iface->on_display_order_changed = ipivot_consumer_on_display_order_changed;
+	iface->on_items_changed = ipivot_consumer_on_items_changed;
 	iface->on_mandatory_prefs_changed = ipivot_consumer_on_mandatory_prefs_changed;
 }
 
@@ -1201,6 +1205,8 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 
 		nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));
 		nact_sort_buttons_all_widgets_showed( window );
+
+		install_autosave( window );
 	}
 }
 
@@ -1468,6 +1474,22 @@ confirm_for_giveup_from_pivot( NactMainWindow *window )
 	return( reload_ok );
 }
 
+static void
+install_autosave( NactMainWindow *window )
+{
+	gboolean autosave_on;
+	guint autosave_period;
+	NactApplication *application;
+	NAUpdater *updater;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	autosave_on = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_AUTOSAVE_ON, FALSE );
+	autosave_period = na_iprefs_read_uint( NA_IPREFS( updater ), IPREFS_AUTOSAVE_PERIOD, 5 );
+
+	nact_main_menubar_file_set_autosave( window, autosave_on, autosave_period );
+}
+
 /*
  * called by NAPivot because this window implements the IIOConsumer
  * interface, i.e. it wish to be advertised when the list of actions
@@ -1498,30 +1520,20 @@ ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data
 	}
 }
 
+/*
+ * called by NAPivot via NAIPivotConsumer whenever the
+ * autosave preferences have been modified.
+ */
 static void
-reload( NactMainWindow *window )
+ipivot_consumer_on_autosave_changed( NAIPivotConsumer *instance, gboolean enabled, guint period )
 {
-	static const gchar *thisfn = "nact_main_window_reload";
-	NactApplication *application;
-	NAUpdater *updater;
+	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_autosave_changed";
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
+	g_debug( "%s: instance=%p, enabled=%s, period=%d",
+			thisfn, ( void * ) instance, enabled ? "True":"False", period );
 
-	if( !window->private->dispose_has_run ){
-
-		window->private->selected_item = NULL;
-		window->private->selected_profile = NULL;
-
-		na_object_unref_items( window->private->deleted );
-		window->private->deleted = NULL;
-
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		updater = nact_application_get_updater( application );
-		na_pivot_load_items( NA_PIVOT( updater ));
-		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( NA_PIVOT( updater )));
-		nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
-	}
+	nact_main_menubar_file_set_autosave( NACT_MAIN_WINDOW( instance ), enabled, period );
 }
 
 /*
@@ -1558,6 +1570,32 @@ static void
 ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance )
 {
 	nact_sort_buttons_level_zero_writability_change( NACT_MAIN_WINDOW( instance ));
+}
+
+static void
+reload( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_reload";
+	NactApplication *application;
+	NAUpdater *updater;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+
+		window->private->selected_item = NULL;
+		window->private->selected_profile = NULL;
+
+		na_object_unref_items( window->private->deleted );
+		window->private->deleted = NULL;
+
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		updater = nact_application_get_updater( application );
+		na_pivot_load_items( NA_PIVOT( updater ));
+		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( NA_PIVOT( updater )));
+		nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
+	}
 }
 
 static gchar *

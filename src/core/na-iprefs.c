@@ -394,6 +394,34 @@ na_iprefs_read_string_list( const NAIPrefs *instance, const gchar *name, const g
 	return( list );
 }
 
+/**
+ * na_iprefs_read_uint:
+ * @instance: this #NAIPrefs interface instance.
+ * @name: the preference entry.
+ * @default_value: the value to be returned if the key is not found.
+ *
+ * Returns: the uint value associated with the given key.
+ */
+guint
+na_iprefs_read_uint( const NAIPrefs *instance, const gchar *name, guint default_value )
+{
+	guint value;
+	gchar *path;
+
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), 0 );
+
+	value = 0;
+
+	if( st_initialized && !st_finalized ){
+
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+		value = na_gconf_utils_read_int( na_iprefs_get_gconf_client( instance ), path, TRUE, default_value );
+		g_free( path );
+	}
+
+	return( value );
+}
+
 /*
  * na_iprefs_write_string:
  * @instance: this #NAIPrefs interface instance.

@@ -65,8 +65,6 @@ typedef struct {
 #define IPREFS_IMPORT_ITEMS_FOLDER_URI			"import-folder-uri"
 #define IPREFS_ASSIST_ESC_QUIT					"assistant-esc-quit"
 #define IPREFS_ASSIST_ESC_CONFIRM				"assistant-esc-confirm"
-#define IPREFS_AUTOSAVE_ON						"auto-save-on"
-#define IPREFS_AUTOSAVE_PERIOD					"auto-save-period"
 
 /* these are special export formats
  */
@@ -82,7 +80,6 @@ void   nact_iprefs_set_export_format( const BaseWindow *window, const gchar *pre
 
 void  nact_iprefs_migrate_key       ( const BaseWindow *window, const gchar *old_key, const gchar *new_key );
 
-guint nact_iprefs_read_uint         ( const BaseWindow *window, const gchar *key, guint defaut_value );
 void  nact_iprefs_write_bool        ( const BaseWindow *window, const gchar *key, gboolean value );
 void  nact_iprefs_write_uint        ( const BaseWindow *window, const gchar *key, guint value );
 void  nact_iprefs_write_string      ( const BaseWindow *window, const gchar *name, const gchar *value );

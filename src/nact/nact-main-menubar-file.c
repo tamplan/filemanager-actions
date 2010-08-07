@@ -38,10 +38,15 @@
 
 #include "nact-application.h"
 #include "nact-iactions-list.h"
+#include "nact-main-statusbar.h"
 #include "nact-main-tab.h"
 #include "nact-main-menubar-file.h"
 
-static void save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item );
+static guint st_event_autosave = 0;
+
+static void     save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item );
+static gboolean autosave_callback( NactMainWindow *window );
+static void     autosave_destroyed( NactMainWindow *window );
 
 /**
  * nact_main_menubar_file_on_update_sensitivities:
@@ -396,4 +401,53 @@ nact_main_menubar_file_on_quit( GtkAction *gtk_action, NactMainWindow *window )
 	if( !has_modified || nact_window_warn_modified( NACT_WINDOW( window ))){
 		g_object_unref( window );
 	}
+}
+
+/**
+ * nact_main_menubar_file_set_autosave:
+ * @window: the #NactMainWindow main window.
+ * @enabled: whether the autosave feature is enabled.
+ * @period: autosave periodicity in minutes.
+ *
+ * Setup or disabled the autosave feature.
+ */
+void
+nact_main_menubar_file_set_autosave( NactMainWindow *window, gboolean enabled, guint period )
+{
+	static const gchar *thisfn = "nact_main_menubar_file_set_autosave";
+
+	if( st_event_autosave ){
+		if( !g_source_remove( st_event_autosave )){
+			g_warning( "%s: unable to remove autosave event source", thisfn );
+		}
+		st_event_autosave = 0;
+	}
+
+	if( enabled ){
+		st_event_autosave = g_timeout_add_seconds_full(
+				G_PRIORITY_DEFAULT,
+				period * 60,
+				( GSourceFunc ) autosave_callback,
+				window,
+				( GDestroyNotify ) autosave_destroyed );
+	}
+}
+
+static gboolean
+autosave_callback( NactMainWindow *window )
+{
+	const gchar *context = "autosave-context";
+	g_debug( "nact_main_menubar_file_autosave_callback" );
+
+	nact_main_statusbar_display_status( window, context, _( "Automatically saving pending modifications..." ));
+	nact_main_menubar_file_save_items( window );
+	nact_main_statusbar_hide_status( window, context );
+
+	return( TRUE );
+}
+
+static void
+autosave_destroyed( NactMainWindow *window )
+{
+	g_debug( "nact_main_menubar_file_autosave_destroyed" );
 }

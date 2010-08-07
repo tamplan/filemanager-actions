@@ -106,6 +106,9 @@ typedef struct {
 #define IPREFS_IMPORT_KEEP_CHOICE			"import-keep-choice"
 #define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
 
+#define IPREFS_AUTOSAVE_ON					"auto-save-on"
+#define IPREFS_AUTOSAVE_PERIOD				"auto-save-period"
+
 /* alphabetical order values
  */
 enum {
@@ -127,6 +130,7 @@ GConfClient *na_iprefs_get_gconf_client ( const NAIPrefs *instance );
 gboolean     na_iprefs_read_bool        ( const NAIPrefs *instance, const gchar *key, gboolean default_value );
 gchar       *na_iprefs_read_string      ( const NAIPrefs *instance, const gchar *key, const gchar *default_value );
 GSList      *na_iprefs_read_string_list ( const NAIPrefs *instance, const gchar *key, const gchar *default_value );
+guint        na_iprefs_read_uint        ( const NAIPrefs *instance, const gchar *key, guint defaut_value );
 
 void         na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *key, GSList *value );
 

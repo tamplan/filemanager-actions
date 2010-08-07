@@ -1,5 +1,29 @@
 2010-08-07 Pierre Wieser <pwieser@trychlos.org>
 
+	Implement auto-save feature.
+
+	* src/core/na-ipivot-consumer.c:
+	* src/core/na-ipivot-consumer.h (on_autosave_changed): New interface.
+
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h (na_iprefs_read_uint): New function.
+
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h (nact_iprefs_read_uint): Removed function.
+
+	* src/core/na-pivot.c (on_preferences_change):
+	Trigger NAIPivotConsumer interface when autosave is changed.
+
+	* src/nact/nact-main-menubar-file.c:
+	* src/nact/nact-main-menubar-file.h
+	(nact_main_menubar_file_set_autosave): New function.
+
+	* src/nact/nact-main-window.c (ipivot_consumer_on_autosave_changed):
+	Implement the new on_autosave_changed() NAIPivotConsumer interface.
+
+	* src/nact/nact-preferences-editor.c (on_base_runtime_init_dialog):
+	Replace nact_iprefs_read_uint() with na_iprefs_read_uint().
+
 	Setup auto-save in preferences.
 
 	* data/nautilus-actions-prefs.schemas.in:
