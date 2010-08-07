@@ -1,0 +1,176 @@
+<sect2 id="usage-where">
+  <title>Locating the action</title>
+  <para>
+    &nautilus; file-manager may display your custom action in different places,
+    depending on you will request here, and if some item is currently selected.
+  </para>
+
+  <sect3 id="usage-where-selection">
+    <title>Targeting the selection context menu</title>
+    <para>
+      When <guilabel>Display item in selection context menu</guilabel> checkbox
+      is activated, then your action will be candidate to be displayed in 
+      &nautilus; context menu, as long as at least one item is selected in 
+      the file-manager. Your action will so deal with currently selected
+      item(s).
+    </para>
+    <tip>
+      <para>
+        When an action targets the selection context menu, and is actually 
+        displayed in &nautilus; context menu, then it is also displayed
+        in the <guimenu>Edit</guimenu> menu.
+      </para>
+    </tip>
+    <para>
+      This checkbox is activated by default.
+    </para>
+    <para>
+      When targeting the selection context menu, and in order to be
+      actually displayed, all the conditions defined in
+      your candidate action must be met by each item currently selected
+      in the &nautilus; file-manager. 
+    </para>
+  </sect3>
+
+  <sect3 id="usage-where-location">
+    <title>Targeting the location context menu</title>
+    <para>
+      When <guilabel>Display item in location context menu</guilabel> checkbox
+      is activated, then your action will be candidate to be displayed in 
+      &nautilus; context menu, when the file-manager selection will be empty.
+      Your action will so deal with currently displayed location.
+    </para>
+    <tip>
+      <para>
+        When an action targets the location context menu, and is actually 
+        displayed in &nautilus; context menu, then it is also displayed
+        in the <guimenu>File</guimenu> menu.
+      </para>
+    </tip>
+    <para>
+      When targeting the location context menu, and in order to be
+      actually displayed, all the conditions defined in
+      your candidate action must be met by the location currently displayed
+      in the &nautilus; file-manager. 
+    </para>
+  </sect3>
+
+  <sect3 id="usage-where-toolbar">
+    <title>Targeting the toolbar</title>
+    <para>
+      When <guilabel>Display item in the toolbar</guilabel> checkbox
+      is activated, then your action will be candidate to be displayed in 
+      &nautilus; toolbar.
+    </para>
+    <para>
+      Actions displayed in the toolbar only deal with the location which
+      is currently displayed in the file-manager, not with the items which
+      may be currently selected (or not). In order to be displayed, all the
+      conditions defined in your candidate action must so be met by the
+      current location. 
+    </para>
+  </sect3>
+
+  <sect3 id="usage-where-notes">
+    <title>Notes</title>
+
+    <formalpara>
+      <title>If your action targets a menu</title>
+      <para>
+        Whether your action targets the selection context menu or the location
+        context menu, and both in &nautilus; context menus that in 
+        <guimenu>File</guimenu> or <guimenu>Edit</guimenu> menus, your
+        action will be displayed as
+      </para>
+    </formalpara>
+    <itemizedlist>
+      <listitem>
+        <para>
+          the <guilabel>Context label</guilabel> as a label,
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          the <guilabel>Icon</guilabel>,
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          those two properties being associated with the
+          <guilabel>Tooltip</guilabel>.
+        </para>
+      </listitem>
+    </itemizedlist>
+    <note>
+      <para>
+        Depending of the exact configuration of your desktop environment,
+        the icon may or may not be displayed in front of the label in
+        the menu.
+      </para>
+    </note>
+    <tip>
+      <para>
+        You may embed some parameters in the label, the icon name of the tooltip.
+        These parameters will be dynamically substituted at runtime with values
+        which will depend of currently selected item(s). 
+      </para>
+    </tip>
+
+    <formalpara>
+      <title>If your action targets the toolbar</title>
+      <para>
+        In the toolbar, your action will be displayed as
+      </para>
+    </formalpara>
+    <itemizedlist>
+      <listitem>
+        <para>
+          the <guilabel>Toolbar label</guilabel> as a label,
+        </para>
+        <tip>
+          <para>
+            The toolbar label defaults to the same label than
+            those used in menus. By unchecking the
+            <guilabel>Use same label for icon in the toolbar</guilabel>
+            checkbox, then you can define a label specific to the
+            toolbar, usually shorter those defined for the menus.
+          </para>
+        </tip>
+      </listitem>
+      <listitem>
+        <para>
+          the <guilabel>Icon</guilabel>,
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          associated with the <guilabel>Tooltip</guilabel>.
+        </para>
+      </listitem>
+    </itemizedlist>
+    <note>
+      <para>
+        Depending of the exact configuration of your desktop environment,
+        the toolbar label may or may not be displayed in front of the icon
+        in the toolbar.
+      </para>
+    </note>
+    <tip>
+      <para>
+        You may embed some parameters in the toolbar label, the icon name of the tooltip.
+        These parameters will be dynamically substituted at runtime with values
+        which will depend of currently selected item(s). 
+      </para>
+    </tip>
+
+    <formalpara>
+      <title>Defining several targets</title>
+      <para>
+        An action may target both the selection context menu, the location context
+        menu and the toolbar, or one or more among these. If no target is defined,
+        <abbrev>i.e.</abbrev> if the three checkboxes are unchecked, then your action
+        will never be displayed.
+      </para>
+    </formalpara>
+  </sect3>
+</sect2>

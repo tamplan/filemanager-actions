@@ -1,5 +1,5 @@
 <sect2 id="usage-profile">
-  <title>Defining several profiles</title>
+  <title>Using profiles to extend your action</title>
   <para>
     There is some situations where you will want a given action behave
     slightly differently depending on the currently selected items or

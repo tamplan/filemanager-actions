@@ -40,11 +40,18 @@ DOC_ENTITIES = \
 	articleinfo.xml								\
 	legalnotice.xml								\
 	nact-conditions.xml							\
+	nact-edit.xml								\
+	nact-execution.xml							\
+	nact-export.xml								\
+	nact-import.xml								\
+	nact-menus.xml								\
 	nact-misc.xml								\
 	nact-prefs.xml								\
 	nact-profiles.xml							\
+	nact-save.xml								\
 	nact-sorting.xml							\
 	nact-starting.xml							\
+	nact-where.xml								\
 	$(NULL)
 
 DOC_INCLUDES = \

@@ -1,0 +1,189 @@
+<sect2 id="usage-execution">
+  <title>What the action should it execute ?</title>
+  <para>
+    You most probably want your action eventually ends up with
+    executing something. As a matter of fact, having something
+    to execute is one of the few conditions which are required
+    in order an action be considered as valid.
+  </para>
+  <para>
+    Enter the command you wish to execute in the <guilabel>Path</guilabel>
+    entry box. Or click on <guibutton>Browse</guibutton> to
+    select a file on the filesystem.
+  </para>
+  <para>
+    Enter the parameters of your command in the
+    <guilabel>Parameters</guilabel> entry box.
+  </para>
+  <para>
+    The <guibutton>Legend</guibutton> button has a toggling action:
+    click once to display the <guilabel>Parameter Legend</guilabel>
+    dialog box; click a second time to hide it.
+  </para>
+  <figure id="nact-FIG-legend">
+    <title>List of available parameters</title>
+    <screenshot>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="figures/nact-legend.png" format="PNG"/>
+        </imageobject>
+        <textobject>
+          <phrase>Shows the list of available parameters.</phrase>
+        </textobject>
+        <caption>
+          <para>The available parameters</para>
+        </caption>
+      </mediaobject>
+    </screenshot>
+  </figure>
+
+  <sect3 id="usage-execution-work">
+    <title>Where the action should it be executed ?</title>
+    <para>
+      Your action may be executed in a particular working directory.
+      You may specify it in the <guilabel>Command</guilabel> tab, in the
+      <guilabel>Working directory</guilabel> entry box, or by clicking
+      on <guibutton>Browse</guibutton> to select a folder on the 
+      filesystem.
+    </para>
+    <para>
+      The working directory defaults to <literal>%d</literal>, which runs
+      the command in the base directory of the first selected item.
+    </para>
+  </sect3>
+
+  <sect3 id="usage-execution-how">
+    <title>How the action should it be executed ?</title>
+    <figure id="nact-FIG-execution">
+      <title>Configuration of the execution mode</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/nact-execution-tab.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>Shows how to configure the execution mode of a command.</phrase>
+          </textobject>
+          <caption>
+            <para>Configuration of the execution mode</para>
+          </caption>
+        </mediaobject>
+      </screenshot>
+    </figure>
+
+    <sect4 id="usage-execution-how-mode">
+      <title>Specifying the execution mode</title>
+      <para>
+        The execution mode of your command may be choosen between following 
+        values:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term>
+            Normal
+          </term>
+          <listitem>
+            <para>
+              Starts the command as a standard graphical user interface.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>
+            Terminal
+          </term>
+          <listitem>
+            <para>
+              Starts the preferred terminal of the desktop environment,
+              and runs the command in it.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>
+            Embedded
+          </term>
+          <listitem>
+            <para>
+              Makes use of a special feature of the file manager which may allow
+              a terminal to be ran in it.
+            </para>
+            <para>
+              As &nautilus; does not have this feature, this option is strictly
+              equivalent to <literal>Terminal</literal> option.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>
+            Display output
+          </term>
+          <listitem>
+            <para>
+              Starts the preferred terminal of the desktop environment, and
+              runs the command in it. At end, standard streams (stdout, stderr) 
+              are collected and displayed.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+        The execution mode of a command defaults to <literal>Normal</literal>.
+        That is, the command is executed without any particular pre- or
+        post-work.
+      </para>
+    </sect4>
+
+    <sect4 id="usage-execution-how-notify">
+      <title>Specifying the startup notification</title>
+      <para>
+        If the execution mode of the command is actually <literal>Normal</literal>,
+        and if you know that the application will send a <literal>remove</literal>
+        message with the <envar>DESKTOP_STARTUP_ID</envar> environment variable set,
+        then check the <guilabel>Startup notify</guilabel> checkbox.
+      </para>
+      <para>
+        See the
+        <ulink url="http://www.freedesktop.org/Standards/startup-notification-spec" type="http">
+        <citetitle>Startup Notification Protocol Specification</citetitle></ulink>
+        for more details.
+      </para>
+    </sect4>
+
+    <sect4 id="usage-execution-how-class">
+      <title>Specifying the window class</title>
+      <para>
+        If the execution mode of the command is actually <literal>Normal</literal>,
+        and if you know that the application will map at least one window with a
+        given class name,
+        then enter that name into the <guilabel>Startup Window Manager class</guilabel>
+        entry box.
+      </para>
+      <para>
+        See the
+        <ulink url="http://www.freedesktop.org/Standards/startup-notification-spec" type="http">
+        <citetitle>Startup Notification Protocol Specification</citetitle></ulink>
+        for more details.
+      </para>
+    </sect4>
+
+    <sect4 id="usage-execution-how-user">
+      <title>Specifying the owner of the execution</title>
+      <para>
+        Enter in the <guilabel>Execute as user</guilabel> entry box the username
+        or the <acronym>UID</acronym> of the user your command must be ran as.
+      </para>
+      <para>
+        If you do not enter anything in this field, then the command will be
+        executed as the current user.
+      </para>
+    </sect4>
+
+    <sect4 id="usage-execution-how-singular">
+      <title>Multiple execution</title>
+      <para>
+      </para>
+    </sect4>
+  </sect3>
+
+</sect2>
