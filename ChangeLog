@@ -1,5 +1,7 @@
 2010-08-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump version number after unstable release.
+
 	Implement auto-save feature.
 
 	* src/core/na-ipivot-consumer.c:
