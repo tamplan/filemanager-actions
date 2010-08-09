@@ -353,7 +353,7 @@ na_object_id_set_copy_of_label( NAObjectId *object )
  * @object: the #NAObjectId object whose internal identifiant is to be
  * set.
  * @new_parent: if @object is a #NAObjectProfile, then @new_parent
- * should be set to the #NAObjectActio new parent. Else, it would not
+ * should be set to the #NAObjectAction new parent. Else, it would not
  * be possible to allocate a new profile id compatible with already
  * existing ones.
  *
