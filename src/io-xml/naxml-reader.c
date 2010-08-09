@@ -155,10 +155,10 @@ static RootNodeStr st_root_node_str[] = {
 #define ERR_XMLDOC_UNABLE_TOPARSE	_( "Unable to parse XML file: %s." )
 #define WARN_UNDEALT_NODE			_( "Node %s at line %d has not been dealt with." )
 
+static void          read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile );
 static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text );
 static NADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const NADataDef *def );
 static void          read_done_object_action( NAXMLReader *reader, NAObjectAction *action );
-static void          read_done_object_profile( NAXMLReader *reader, NAObjectProfile *profile );
 static gchar        *read_done_get_next_profile_id( NAXMLReader *reader );
 static void          read_done_load_profile( NAXMLReader *reader, const gchar *profile_id );
 
@@ -587,6 +587,16 @@ naxml_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, 
 			( void * ) reader_data,
 			( void * ) object, G_OBJECT_TYPE_NAME( object ),
 			( void * ) messages );
+
+	if( NA_IS_OBJECT_PROFILE( object )){
+		read_start_profile_attach_profile( NAXML_READER( reader_data ), NA_OBJECT_PROFILE( object ));
+	}
+}
+
+static void
+read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile )
+{
+	na_object_attach_profile( reader->private->parms->imported, profile );
 }
 
 /*
@@ -739,10 +749,6 @@ naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, c
 		read_done_object_action( NAXML_READER( reader_data ), NA_OBJECT_ACTION( object ));
 	}
 
-	if( NA_IS_OBJECT_PROFILE( object )){
-		read_done_object_profile( NAXML_READER( reader_data ), NA_OBJECT_PROFILE( object ));
-	}
-
 	g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
 }
 
@@ -782,12 +788,6 @@ read_done_object_action( NAXMLReader *reader, NAObjectAction *action )
 			}
 		}
 	}
-}
-
-static void
-read_done_object_profile( NAXMLReader *reader, NAObjectProfile *profile )
-{
-	na_object_attach_profile( reader->private->parms->imported, profile );
 }
 
 /*
