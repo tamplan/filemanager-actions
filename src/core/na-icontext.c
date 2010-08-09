@@ -79,7 +79,6 @@ static gboolean is_compatible_scheme( const gchar *pattern, const gchar *scheme 
 static gboolean is_candidate_for_folders( const NAIContext *object, guint target, GList *files );
 static gboolean is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files );
 
-static void     count_compatible_patterns( gboolean positive, gboolean match, guint *count_compatible, gboolean *ok );
 static gboolean is_valid_basenames( const NAIContext *object );
 static gboolean is_valid_mimetypes( const NAIContext *object );
 static gboolean is_valid_isfiledir( const NAIContext *object );
@@ -668,9 +667,7 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 				}
 			}
 
-			if( ok ){
-				ok = match;
-			}
+			ok &= match;
 
 			g_free( fsubgroup );
 			g_free( fgroup );
@@ -770,9 +767,7 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 					g_free( pattern );
 				}
 
-				if( ok ){
-					ok = match;
-				}
+				ok &= match;
 
 				g_free( bname_utf8 );
 				g_free( bname );
@@ -834,6 +829,9 @@ is_candidate_for_selection_count( const NAIContext *object, guint target, GList 
  * are all in the same location and the scheme mainly depends on location
  * so we have here a great possible optimization by only testing the
  * first selected item.
+ *
+ * note that this optimization may be wrong, for example when ran from the
+ * command-line with a random set of pseudo-selected items.
  */
 static gboolean
 is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
@@ -866,9 +864,7 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 				}
 			}
 
-			if( ok ){
-				ok = match;
-			}
+			ok &= match;
 
 			g_free( scheme );
 		}
@@ -905,6 +901,9 @@ is_compatible_scheme( const gchar *pattern, const gchar *scheme )
  * assumuing here the same sort of optimization than for schemes
  * i.e. we assume that all selected items are located in the same dirname
  * so we only check first dirname against folder conditions
+ *
+ * note that this optimization may be wrong, for example when ran from the
+ * command-line with a random set of pseudo-selected items.
  */
 static gboolean
 is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
@@ -939,9 +938,7 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 				}
 			}
 
-			if( ok ){
-				ok = match;
-			}
+			ok &= match;
 
 			g_free( dirname_utf8 );
 			g_free( dirname );
@@ -965,54 +962,41 @@ is_candidate_for_capabilities( const NAIContext *object, guint target, GList *fi
 	static const gchar *thisfn = "na_icontext_is_candidate_for_capabilities";
 	gboolean ok = TRUE;
 	GSList *capabilities = na_object_get_capabilities( object );
-	GSList *ic;
-	const gchar *cap;
-	GList *it;
-	gboolean positive, match;
-	guint count_positive = 0;
-	guint count_compatible = 0;
 
 	if( capabilities ){
-		for( ic = capabilities ; ic && ok ; ic = ic->next ){
-			cap = ( const gchar * ) ic->data;
-			positive = is_positive_assertion( cap );
-			if( positive ){
-				count_positive += 1;
-			} else {
-				cap += 1;
-			}
+		GSList *ic;
+		GList *it;
+		const gchar *cap;
+		gboolean match, positive;
 
-			for( it = files ; it && ok ; it = it->next ){
-				if( !strcmp( cap, "Owner" )){
+		for( it = files ; it && ok ; it = it->next ){
+			for( ic = capabilities ; ic && ok ; ic = ic->next ){
+				cap = ( const gchar * ) ic->data;
+				positive = is_positive_assertion( cap );
+				match = FALSE;
+
+				if( !strcmp( positive ? cap : cap+1, "Owner" )){
 					match = na_selected_info_is_owner( NA_SELECTED_INFO( it->data ), getlogin());
-					count_compatible_patterns( positive, match, &count_compatible, &ok );
 
-				} else if( !strcmp( cap, "Readable" )){
+				} else if( !strcmp( positive ? cap : cap+1, "Readable" )){
 					match = na_selected_info_is_readable( NA_SELECTED_INFO( it->data ));
-					count_compatible_patterns( positive, match, &count_compatible, &ok );
 
-				} else if( !strcmp( cap, "Writable" )){
+				} else if( !strcmp( positive ? cap : cap+1, "Writable" )){
 					match = na_selected_info_is_writable( NA_SELECTED_INFO( it->data ));
-					count_compatible_patterns( positive, match, &count_compatible, &ok );
 
-				} else if( !strcmp( cap, "Executable" )){
+				} else if( !strcmp( positive ? cap : cap+1, "Executable" )){
 					match = na_selected_info_is_executable( NA_SELECTED_INFO( it->data ));
-					count_compatible_patterns( positive, match, &count_compatible, &ok );
 
-				} else if( !strcmp( cap, "Local" )){
+				} else if( !strcmp( positive ? cap : cap+1, "Local" )){
 					match = na_selected_info_is_local( NA_SELECTED_INFO( it->data ));
-					count_compatible_patterns( positive, match, &count_compatible, &ok );
 
 				} else {
 					g_warning( "%s: unknown capability %s", thisfn, cap );
 				}
+
+				ok &= (( positive && match ) || ( !positive && !match ));
 			}
 		}
-
-		if( count_positive > 0 && count_compatible == 0 ){
-			ok = FALSE;
-		}
-
 
 		if( !ok ){
 			gchar *capabilities_str = na_core_utils_slist_to_text( capabilities );
@@ -1024,18 +1008,6 @@ is_candidate_for_capabilities( const NAIContext *object, guint target, GList *fi
 	}
 
 	return( ok );
-}
-
-static void
-count_compatible_patterns( gboolean positive, gboolean match, guint *count_compatible, gboolean *ok )
-{
-	if( positive ){
-		if( match ){
-			*count_compatible += 1;
-		}
-	} else if( match ){
-		*ok = FALSE;
-	}
 }
 
 static gboolean
