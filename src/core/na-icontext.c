@@ -901,62 +901,50 @@ is_compatible_scheme( const gchar *pattern, const gchar *scheme )
 	return( compatible );
 }
 
+/*
+ * assumuing here the same sort of optimization than for schemes
+ * i.e. we assume that all selected items are located in the same dirname
+ * so we only check first dirname against folder conditions
+ */
 static gboolean
 is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 {
 	static const gchar *thisfn = "na_icontext_is_candidate_for_folders";
 	gboolean ok = TRUE;
 	GSList *folders = na_object_get_folders( object );
-	GSList *id;
-	const gchar *pattern;
-	GList *it;
-	gchar *dirname, *dirname_utf8;
-	gboolean positive, match;
-	guint count_positive = 0;
-	guint count_compatible = 0;
-	GPatternSpec *pattern_spec;
 
 	if( folders ){
 		if( strcmp( folders->data, "/" ) != 0 || g_slist_length( folders ) > 1 ){
+			GSList *id;
+			gchar *dirname, *dirname_utf8;
+			const gchar *pattern;
+			gboolean match, positive;
+
+			dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( files->data ));
+			dirname_utf8 = g_filename_to_utf8( dirname, -1, NULL, NULL, NULL );
+			match = FALSE;
+
 			for( id = folders ; id && ok ; id = id->next ){
 				pattern = ( const gchar * ) id->data;
 				positive = is_positive_assertion( pattern );
-				if( positive ){
-					count_positive += 1;
-				} else {
-					pattern += 1;
-				}
 
-				pattern_spec = NULL;
-				if( g_strstr_len( pattern, -1, "*" ) != NULL ){
-					pattern_spec = g_pattern_spec_new( pattern );
-				}
-
-				for( it = files ; it && ok ; it = it->next ){
-					dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( it->data ));
-
-					if( pattern_spec ){
-						dirname_utf8 = g_filename_to_utf8( dirname, -1, NULL, NULL, NULL );
-						match = g_pattern_match_string( pattern_spec, dirname_utf8 );
-						g_free( dirname_utf8 );
-
-					} else {
-						match = g_str_has_prefix( dirname, pattern );
+				if( !positive || !match ){
+					if( g_pattern_match_simple( positive ? pattern : pattern+1, dirname_utf8 )){
+						if( positive ){
+							match = TRUE;
+						} else {
+							ok = FALSE;
+						}
 					}
-
-					g_free( dirname );
-					g_debug( "%s: pattern=%s, positive=%s, match=%s", thisfn, pattern, positive ? "True":"False", match ? "True":"False" );
-					count_compatible_patterns( positive, match, &count_compatible, &ok );
-				}
-
-				if( pattern_spec ){
-					g_pattern_spec_free( pattern_spec );
 				}
 			}
-		}
 
-		if( count_positive > 0 && count_compatible == 0 ){
-			ok = FALSE;
+			if( ok ){
+				ok = match;
+			}
+
+			g_free( dirname_utf8 );
+			g_free( dirname );
 		}
 
 		if( !ok ){
