@@ -1,5 +1,17 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix XML import of localized vs. unlocalized icons.
+
+	* src/api/na-ifactory-object-data.h:
+	* src/core/na-object-item-factory.c:
+	Define new NAFO_DATA_ICON_NOLOC unlocalized icon name.
+
+	* src/api/na-object-api.h (na_object_get_icon_noloc): New macro.
+
+	* src/io-xml/naxml-reader.c
+	(read_data_boxed_from_node): Only allocate a NADataBoxed for a non null value.
+	(naxml_reader_read_done): Deals with localized/unlocalized icon name.
+
 	* src/io-xml/naxml-reader.c (naxml_reader_read_start):
 	Attach the profile to the action before trying to read it.
 

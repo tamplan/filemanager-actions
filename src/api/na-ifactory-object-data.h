@@ -52,6 +52,7 @@ G_BEGIN_DECLS
 #define NAFO_DATA_LABEL						"na-factory-data-label"
 #define NAFO_DATA_TOOLTIP					"na-factory-data-tooltip"
 #define NAFO_DATA_ICON						"na-factory-data-icon"
+#define NAFO_DATA_ICON_NOLOC				"na-factory-data-unlocalized-icon"
 #define NAFO_DATA_DESCRIPTION				"na-factory-data-description"
 #define NAFO_DATA_SHORTCUT					"na-factory-data-shortcut"
 #define NAFO_DATA_SUBITEMS					"na-factory-data-items"

@@ -158,9 +158,11 @@ static RootNodeStr st_root_node_str[] = {
 static void          read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile );
 static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text );
 static NADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const NADataDef *def );
-static void          read_done_object_action( NAXMLReader *reader, NAObjectAction *action );
-static gchar        *read_done_get_next_profile_id( NAXMLReader *reader );
-static void          read_done_load_profile( NAXMLReader *reader, const gchar *profile_id );
+static void          read_done_item( NAXMLReader *reader, NAObjectItem *item );
+static void          read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item );
+static void          read_done_action( NAXMLReader *reader, NAObjectAction *action );
+static gchar        *read_done_action_get_next_profile_id( NAXMLReader *reader );
+static void          read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id );
 
 static guint         reader_parse_xmldoc( NAXMLReader *reader );
 static guint         iter_on_root_children( NAXMLReader *reader, xmlNode *root );
@@ -635,14 +637,14 @@ naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, c
 			g_warning( "%s: no '%s' child in node at line %u", thisfn, reader->private->root_node_str->key_entry, parent_node->line );
 
 		} else {
-			xmlChar *text = xmlNodeGetContent( entry_node );
-			/*g_debug( "naxml_reader_read_data: trying %s", ( const gchar * ) text );*/
+			xmlChar *path = xmlNodeGetContent( entry_node );
+			/*g_debug( "%s: found %s=%s", thisfn, def->gconf_entry, ( const gchar * ) path );*/
 
-			if( read_data_is_path_adhoc_for_object( reader, object, text )){
-				boxed = read_data_boxed_from_node( reader, text, parent_node, def );
+			if( read_data_is_path_adhoc_for_object( reader, object, path )){
+				boxed = read_data_boxed_from_node( reader, path, parent_node, def );
 			}
 
-			xmlFree( text );
+			xmlFree( path );
 		}
 	}
 
@@ -690,7 +692,7 @@ read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject 
 
 		g_free( factory_profile_id );
 		g_free( node_profile_id );
-}
+	}
 
 	na_core_utils_slist_free( path_slist );
 
@@ -698,14 +700,14 @@ read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject 
 }
 
 static NADataBoxed *
-read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const NADataDef *def )
+read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, const NADataDef *def )
 {
 	NADataBoxed *boxed;
 	gchar *entry;
 	gchar *value;
 
 	boxed = NULL;
-	entry = g_path_get_basename(( const gchar * ) text );
+	entry = g_path_get_basename(( const gchar * ) path );
 
 	/*g_debug( "read_data_boxed_from_node: node_entry=%s def_gconf=%s",
 			entry, def->gconf_entry );*/
@@ -716,9 +718,12 @@ read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, 
 
 		if( reader->private->root_node_str->fn_get_value ){
 			value = ( *reader->private->root_node_str->fn_get_value )( reader, parent, def );
-			boxed = na_data_boxed_new( def );
-			na_data_boxed_set_from_string( boxed, value );
-			g_free( value );
+
+			if( value ){
+				boxed = na_data_boxed_new( def );
+				na_data_boxed_set_from_string( boxed, value );
+				g_free( value );
+			}
 		}
 	}
 
@@ -745,11 +750,48 @@ naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, c
 			( void * ) object, G_OBJECT_TYPE_NAME( object ),
 			( void * ) messages );
 
+	if( NA_IS_OBJECT_ITEM( object )){
+		read_done_item( NAXML_READER( reader_data ), NA_OBJECT_ITEM( object ));
+	}
+
 	if( NA_IS_OBJECT_ACTION( object )){
-		read_done_object_action( NAXML_READER( reader_data ), NA_OBJECT_ACTION( object ));
+		read_done_action( NAXML_READER( reader_data ), NA_OBJECT_ACTION( object ));
 	}
 
 	g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
+}
+
+static void
+read_done_item( NAXMLReader *reader, NAObjectItem *item )
+{
+	read_done_item_set_localized_icon( reader, item );
+}
+
+/*
+ * just having readen this NAObjectItem
+ * so deals with unlocalized/localized icon name/path
+ */
+static void
+read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item )
+{
+	gchar *icon, *unloc_icon;
+
+	/* deals with localized/unlocalized icon name
+	 * it used to be unlocalized up to 2.29.4 included
+	 */
+	icon = na_object_get_icon( item );
+
+	if( !icon || !strlen( icon )){
+		unloc_icon = na_object_get_icon_noloc( item );
+
+		if( unloc_icon && strlen( unloc_icon )){
+			na_object_set_icon( item, unloc_icon );
+		}
+
+		g_free( unloc_icon );
+	}
+
+	g_free( icon );
 }
 
 /*
@@ -760,7 +802,7 @@ naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, c
  * Also note that profiles order has been introduced in 2.29 serie
  */
 static void
-read_done_object_action( NAXMLReader *reader, NAObjectAction *action )
+read_done_action( NAXMLReader *reader, NAObjectAction *action )
 {
 	GSList *order, *ip;
 	gchar *profile_id;
@@ -771,16 +813,16 @@ read_done_object_action( NAXMLReader *reader, NAObjectAction *action )
 		 */
 		order = na_object_get_items_slist( reader->private->parms->imported );
 		for( ip = order ; ip ; ip = ip->next ){
-			read_done_load_profile( reader, ( const gchar * ) ip->data );
+			read_done_action_load_profile( reader, ( const gchar * ) ip->data );
 		}
 
 		/* then attach unordered ones
 		 */
 		while( 1 ){
-			profile_id = read_done_get_next_profile_id( reader );
+			profile_id = read_done_action_get_next_profile_id( reader );
 
 			if( profile_id ){
-				read_done_load_profile( reader, profile_id );
+				read_done_action_load_profile( reader, profile_id );
 				g_free( profile_id );
 
 			} else {
@@ -794,14 +836,14 @@ read_done_object_action( NAXMLReader *reader, NAObjectAction *action )
  * return the first profile id found in the nodes
  */
 static gchar *
-read_done_get_next_profile_id( NAXMLReader *reader )
+read_done_action_get_next_profile_id( NAXMLReader *reader )
 {
 	gchar *profile_id;
 	GList *ip;
 
 	profile_id = NULL;
 
-	/*g_debug( "read_done_get_next_profile_id: nodes=%p (count=%d)",
+	/*g_debug( "read_done_action_get_next_profile_id: nodes=%p (count=%d)",
 			( void * ) reader->private->nodes, g_list_length( reader->private->nodes ));*/
 
 	for( ip = reader->private->nodes ; ip && !profile_id ; ip = ip->next ){
@@ -830,9 +872,9 @@ read_done_get_next_profile_id( NAXMLReader *reader )
 }
 
 static void
-read_done_load_profile( NAXMLReader *reader, const gchar *profile_id )
+read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
 {
-	/*g_debug( "naxml_reader_read_done_load_profile: profile_id=%s", profile_id );*/
+	/*g_debug( "naxml_reader_read_done_action_load_profile: profile_id=%s", profile_id );*/
 
 	NAObjectProfile *profile = na_object_profile_new();
 
