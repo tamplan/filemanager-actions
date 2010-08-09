@@ -1,5 +1,8 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iaction-tab.c (on_icon_browse):
+	Fix incorrect setting of GConf preference.
+
 	* src/nact/nact-gtk-utils.c:
 	* src/nact/nact-gtk-utils.h
 	(nact_gtk_utils_get_pixbuf, nact_gtk_utils_render):

@@ -874,7 +874,7 @@ on_icon_browse( GtkButton *button, NactIActionTab *instance )
 	nact_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
 			_( "Choosing an icon" ), IPREFS_ICONS_DIALOG,
-			gtk_bin_get_child( GTK_BIN( icon_widget )), IPREFS_ICONS_DIALOG, "" );
+			gtk_bin_get_child( GTK_BIN( icon_widget )), IPREFS_ICONS_PATH, "" );
 }
 
 static void
