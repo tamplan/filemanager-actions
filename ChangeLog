@@ -1,5 +1,8 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c (is_candidate_for_schemes):
+	Fix incorrect and optimize handling of scheme conditions.
+
 	* src/core/na-icontext.c (is_candidate_for_basenames):
 	Fix incorrect handling of basename conditions.
 

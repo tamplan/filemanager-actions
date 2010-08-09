@@ -75,9 +75,7 @@ static void     split_mimetype( const gchar *mimetype, gchar **group, gchar **su
 static gboolean is_candidate_for_basenames( const NAIContext *object, guint target, GList *files );
 static gboolean is_candidate_for_selection_count( const NAIContext *object, guint target, GList *files );
 static gboolean is_candidate_for_schemes( const NAIContext *object, guint target, GList *files );
-#if 0
-static gboolean validate_schemes( GSList *object_schemes, NASelectedInfo *iter );
-#endif
+static gboolean is_compatible_scheme( const gchar *pattern, const gchar *scheme );
 static gboolean is_candidate_for_folders( const NAIContext *object, guint target, GList *files );
 static gboolean is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files );
 
@@ -670,7 +668,9 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 				}
 			}
 
-			ok = match;
+			if( ok ){
+				ok = match;
+			}
 
 			g_free( fsubgroup );
 			g_free( fgroup );
@@ -770,7 +770,9 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 					g_free( pattern );
 				}
 
-				ok = match;
+				if( ok ){
+					ok = match;
+				}
 
 				g_free( bname_utf8 );
 				g_free( bname );
@@ -827,45 +829,48 @@ is_candidate_for_selection_count( const NAIContext *object, guint target, GList 
 	return( ok );
 }
 
+/*
+ * it is likely that all selected items have the same scheme, because they
+ * are all in the same location and the scheme mainly depends on location
+ * so we have here a great possible optimization by only testing the
+ * first selected item.
+ */
 static gboolean
 is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 {
 	static const gchar *thisfn = "na_icontext_is_candidate_for_schemes";
 	gboolean ok = TRUE;
 	GSList *schemes = na_object_get_schemes( object );
-	GSList *is;
-	gboolean positive;
-	guint count_positive = 0;
-	guint count_compatible = 0;
-	gchar *pattern, *scheme;
-	GList *it;
-	gboolean match;
 
 	if( schemes ){
-		for( is = schemes ; is && ok ; is = is->next ){
-			pattern = ( gchar * ) is->data;
-			positive = is_positive_assertion( pattern );
-			if( positive ){
-				count_positive += 1;
-			} else {
-				pattern += 1;
-			}
+		if( strcmp( schemes->data, "*" ) != 0 || g_slist_length( schemes ) > 1 ){
+			GSList *is;
+			gchar *scheme, *pattern;
+			gboolean match, positive;
 
-			if( strcmp( pattern, "*" ) == 0 ){
-				count_compatible_patterns( positive, TRUE, &count_compatible, &ok );
+			scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( files->data ));
+			match = FALSE;
 
-			} else {
-				for( it = files ; it && ok ; it = it->next ){
-					scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( it->data ));
-					match = ( strcmp( pattern, scheme ) == 0 );
-					g_free( scheme );
-					count_compatible_patterns( positive, match, &count_compatible, &ok );
+			for( is = schemes ; is && ok ; is = is->next ){
+				pattern = ( gchar * ) is->data;
+				positive = is_positive_assertion( pattern );
+
+				if( !positive || !match ){
+					if( is_compatible_scheme( positive ? pattern : pattern+1, scheme )){
+						if( positive ){
+							match = TRUE;
+						} else {
+							ok = FALSE;
+						}
+					}
 				}
 			}
-		}
 
-		if( count_positive > 0 && count_compatible == 0 ){
-			ok = FALSE;
+			if( ok ){
+				ok = match;
+			}
+
+			g_free( scheme );
 		}
 
 		if( !ok ){
@@ -878,6 +883,22 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 	}
 
 	return( ok );
+}
+
+static gboolean
+is_compatible_scheme( const gchar *pattern, const gchar *scheme )
+{
+	gboolean compatible;
+
+	compatible = FALSE;
+
+	if( strcmp( pattern, "*" )){
+		compatible = TRUE;
+	} else {
+		compatible = ( strcmp( pattern, scheme ) == 0 );
+	}
+
+	return( compatible );
 }
 
 static gboolean
