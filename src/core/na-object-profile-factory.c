@@ -66,6 +66,30 @@ static NADataDef data_def_profile [] = {
 				NULL,
 				NULL },
 
+	/* label of the profile was unlocalized up to and included 1.11.0
+	 */
+	{ NAFO_DATA_DESCNAME_NOLOC,
+				TRUE,
+				FALSE,
+				FALSE,
+				"Unlocalized name of the profile",
+				"Unlocalized name of the profile",
+				NAFD_TYPE_STRING,
+				"",
+				FALSE,
+				FALSE,
+				FALSE,
+				FALSE,
+				FALSE,
+				"desc-name",
+				NULL,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				NULL },
+
 	/* Path and Parameters are two separate data both in GConf, in GConf-derived
 	 * export files and in NACT. Only in desktop files, they are merged as only
 	 * one 'Exec' data which is splitted at read time.

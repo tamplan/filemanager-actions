@@ -163,6 +163,8 @@ static void          read_done_item_set_localized_icon( NAXMLReader *reader, NAO
 static void          read_done_action( NAXMLReader *reader, NAObjectAction *action );
 static gchar        *read_done_action_get_next_profile_id( NAXMLReader *reader );
 static void          read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id );
+static void          read_done_profile( NAXMLReader *reader, NAObjectProfile *profile );
+static void          read_done_profile_set_localized_label( NAXMLReader *reader, NAObjectProfile *profile );
 
 static guint         reader_parse_xmldoc( NAXMLReader *reader );
 static guint         iter_on_root_children( NAXMLReader *reader, xmlNode *root );
@@ -758,6 +760,10 @@ naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, c
 		read_done_action( NAXML_READER( reader_data ), NA_OBJECT_ACTION( object ));
 	}
 
+	if( NA_IS_OBJECT_PROFILE( object )){
+		read_done_profile( NAXML_READER( reader_data ), NA_OBJECT_PROFILE( object ));
+	}
+
 	g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
 }
 
@@ -885,6 +891,39 @@ read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
 			reader,
 			NA_IFACTORY_OBJECT( profile ),
 			&reader->private->parms->messages );
+}
+
+static void
+read_done_profile( NAXMLReader *reader, NAObjectProfile *profile )
+{
+	read_done_profile_set_localized_label( reader, profile );
+}
+
+/*
+ * just having readen this NAObjectProfile
+ * so deals with unlocalized/localized desc-name
+ */
+static void
+read_done_profile_set_localized_label( NAXMLReader *reader, NAObjectProfile *profile )
+{
+	gchar *descname, *unloc_descname;
+
+	/* deals with localized/unlocalized descname name
+	 * it used to be unlocalized up to 2.29.4 included
+	 */
+	descname = na_object_get_label( profile );
+
+	if( !descname || !strlen( descname )){
+		unloc_descname = na_object_get_label_noloc( profile );
+
+		if( unloc_descname && strlen( unloc_descname )){
+			na_object_set_label( profile, unloc_descname );
+		}
+
+		g_free( unloc_descname );
+	}
+
+	g_free( descname );
 }
 
 /*

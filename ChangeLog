@@ -1,5 +1,16 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix XML import of localized vs. unlocalized profile label.
+
+	* src/api/na-ifactory-object-data.h:
+	* src/core/na-object-profile-factory.c:
+	Define new NAFO_DATA_DESCNAME_NOLOC unlocalized profile label.
+
+	* src/api/na-object-api.h (na_object_get_label_noloc): New macro.
+
+	* src/io-xml/naxml-reader.c (naxml_reader_read_done):
+	Deals with localized vs. unlocalized profile description name.
+
 	Fix XML import of localized vs. unlocalized icons.
 
 	* src/api/na-ifactory-object-data.h:

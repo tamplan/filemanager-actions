@@ -80,6 +80,7 @@ G_BEGIN_DECLS
  */
 #define na_object_get_id( obj )							(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ID ))
 #define na_object_get_label( obj )						(( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), ( NA_IS_OBJECT_PROFILE( obj ) ? NAFO_DATA_DESCNAME : NAFO_DATA_LABEL )))
+#define na_object_get_label_noloc( obj )				(( gchar * )( NA_IS_OBJECT_PROFILE( obj ) ? na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_DESCNAME_NOLOC ) : NULL ))
 #define na_object_get_parent( obj )						(( NAObjectItem * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_PARENT ))
 
 #define na_object_set_id( obj, id )						na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ID, ( const void * )( id ))
