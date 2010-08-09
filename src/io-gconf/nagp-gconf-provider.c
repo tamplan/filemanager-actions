@@ -52,8 +52,7 @@ struct NagpGConfProviderClassPrivate {
 
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
-static gint          st_timeout_msec = 100;
-static gint          st_timeout_usec = 100000;
+static gint          st_burst_timeout = 100;		/* burst timeout in msec */
 
 static void     class_init( NagpGConfProviderClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
@@ -308,11 +307,18 @@ install_monitors( NagpGConfProvider *provider )
  * - first, GConf underlying subsystem advertises us, through the watch
  *   mechanism, of each and every modification ; this leads us to be
  *   triggered for each new/modified/deleted _entry_
- * - as we would trigger the NAIIOProvider interface only once for each
- *   modified _object_, we install a timer in order to wait for all
- *   entries have been modified, or another object is concerned
- * - as soon as one of the two previous conditions is met, we trigger
- *   the NAIIOProvider interface with the corresponding object id
+ * - as we want trigger the NAIIOProvider interface only once for each
+ *   update operation (i.e. once for each flow of individual notifications),
+ *   then we install a timer in order to wait for all
+ *   entries have been modified
+ * - when a [burst_timeout] reasonable delay has elapsed without having
+ *   received any new individual notification, then we can assume that
+ *   we have reached the end of the flow and that we can now trigger
+ *   the NAIIOProvider interface
+ *
+ * Note that we used to try to send one notification per modified object.
+ * This cannot work as we are not sure at all that we will received
+ * individual notifications themselves grouped by object.
  */
 static void
 config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider )
@@ -327,7 +333,7 @@ config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, N
 		if( !provider->private->event_source_id ){
 			provider->private->event_source_id =
 				g_timeout_add(
-						st_timeout_msec,
+						st_burst_timeout,
 						( GSourceFunc ) config_path_changed_trigger_interface,
 						provider );
 		}
@@ -336,29 +342,33 @@ config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, N
 
 /*
  * this timer is set when we receive the first event of a serie
- * we continue to loop until last event is at least one half of a
- * second old
+ * we continue to loop until last event is older that the st_burst_timeout
+ * delay (in msec)
  * there is no race condition here as we are not multithreaded
  * or .. is there ?
  */
 static gboolean
 config_path_changed_trigger_interface( NagpGConfProvider *provider )
 {
-	/*static const gchar *thisfn = "nagp_gconf_provider_config_path_changed_trigger_interface";*/
+	static const gchar *thisfn = "nagp_gconf_provider_config_path_changed_trigger_interface";
 	GTimeVal now;
 	gulong diff;
-
-	/*g_debug( "%s: provider=%p", thisfn, ( void * ) provider );*/
+	gulong timeout_usec = 1000*st_burst_timeout;
 
 	g_get_current_time( &now );
 	diff = time_val_diff( &now, &provider->private->last_event );
-	if( diff < st_timeout_usec ){
+	if( diff < timeout_usec ){
 		return( TRUE );
 	}
 
+	/* last individual notification is older that the st_burst_timeout
+	 * so triggers the NAIIOProvider interface and destroys this timeout
+	 */
+	g_debug( "%s: triggering NAIIOProvider interface for provider=%p (%s)",
+			thisfn, ( void * ) provider, G_OBJECT_TYPE_NAME( provider ));
+
 	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ));
 	provider->private->event_source_id = 0;
-
 	return( FALSE );
 }
 

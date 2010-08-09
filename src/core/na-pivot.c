@@ -91,8 +91,7 @@ enum {
 
 
 static GObjectClass *st_parent_class = NULL;
-static gint          st_timeout_msec = 100;
-static gint          st_timeout_usec = 100000;
+static gint          st_burst_timeout = 200;		/* burst timeout in msec */
 
 static GType         register_type( void );
 static void          class_init( NAPivotClass *klass );
@@ -622,15 +621,14 @@ na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot
 
 		if( !pivot->private->event_source_id ){
 			pivot->private->event_source_id =
-				g_timeout_add( st_timeout_msec, ( GSourceFunc ) on_item_changed_timeout, pivot );
+				g_timeout_add( st_burst_timeout, ( GSourceFunc ) on_item_changed_timeout, pivot );
 		}
 	}
 }
 
 /*
  * this timer is set when we receive the first event of a serie
- * we continue to loop until last event is at least one half of a
- * second old
+ * we continue to loop until last event is older that our burst timeout
  *
  * there is no race condition here as we are not multithreaded
  * or .. is there ?
@@ -642,16 +640,20 @@ on_item_changed_timeout( NAPivot *pivot )
 	GTimeVal now;
 	gulong diff;
 	GList *ic;
+	gulong timeout_usec = 1000*st_burst_timeout;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
 
-	g_debug( "%s: pivot=%p", thisfn, pivot );
-
 	g_get_current_time( &now );
 	diff = time_val_diff( &now, &pivot->private->last_event );
-	if( diff < st_timeout_usec ){
+	if( diff < timeout_usec ){
 		return( TRUE );
 	}
+
+	/* last individual notification is older that the st_burst_timeout
+	 * so triggers the NAIIOProvider interface and destroys this timeout
+	 */
+	g_debug( "%s: triggering NAIPivotConsumer interfaces", thisfn );
 
 	if( pivot->private->automatic_reload ){
 		na_pivot_load_items( pivot );

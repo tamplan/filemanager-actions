@@ -1,5 +1,22 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Review notification bufferization.
+
+	* src/core/na-ipivot-consumer.c:
+	* src/core/na-ipivot-consumer.h
+	(na_ipivot_consumer_delay_notify): Removed function.
+	(na_ipivot_consumer_allow_notify): New function.
+
+	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_save_items):
+	* src/nact/nact-main-window.c (instance_init):
+	* src/plugin-menu/nautilus-actions.c (instance_init):
+	Updated accordingly.
+
+	* src/core/na-pivot.c (on_item_changed_timeout):
+	* src/io-desktop/nadp-desktop-provider.c (on_monitor_timeout):
+	* src/io-gconf/nagp-gconf-provider.c (config_path_changed_trigger_interface):
+	Review the code.
+
 	Fix XML import of localized vs. unlocalized profile label.
 
 	* src/api/na-ifactory-object-data.h:

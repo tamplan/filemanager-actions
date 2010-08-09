@@ -54,8 +54,7 @@ extern NAIExporterFormat nadp_formats[];
 
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
-static guint         st_timeout_msec = 100;
-static guint         st_timeout_usec = 100000;
+static guint         st_burst_timeout = 100;		/* burst timeout in msec */
 
 static void                     class_init( NadpDesktopProviderClass *klass );
 static void                     instance_init( GTypeInstance *instance, gpointer klass );
@@ -351,21 +350,15 @@ nadp_desktop_provider_add_monitor( NadpDesktopProvider *provider, const gchar *d
 void
 nadp_desktop_provider_on_monitor_event( NadpDesktopProvider *provider )
 {
-	static const gchar *thisfn = "nadp_desktop_provider_on_monitor_event";
-	GTimeVal now;
-
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ));
 
 	if( !provider->private->dispose_has_run ){
-
-		g_get_current_time( &now );
-		g_debug( "%s: time=%ld.%ld", thisfn, now.tv_sec, now.tv_usec );
 
 		g_get_current_time( &provider->private->last_event );
 
 		if( !provider->private->event_source_id ){
 			provider->private->event_source_id =
-				g_timeout_add( st_timeout_msec, ( GSourceFunc ) on_monitor_timeout, provider );
+				g_timeout_add( st_burst_timeout, ( GSourceFunc ) on_monitor_timeout, provider );
 		}
 	}
 }
@@ -395,17 +388,20 @@ on_monitor_timeout( NadpDesktopProvider *provider )
 	static const gchar *thisfn = "nadp_desktop_provider_on_monitor_timeout";
 	GTimeVal now;
 	gulong diff;
-
-	g_debug( "%s", thisfn );
+	gulong timeout_usec = 1000*st_burst_timeout;
 
 	g_get_current_time( &now );
 	diff = time_val_diff( &now, &provider->private->last_event );
-	if( diff < st_timeout_usec ){
-		g_debug( "%s: unexpired timeout: returning True", thisfn );
+	if( diff < timeout_usec ){
 		return( TRUE );
 	}
 
-	g_debug( "%s: expired timeout: advertising IIOProvider, returning False", thisfn );
+	/* last individual notification is older that the st_burst_timeout
+	 * so triggers the NAIIOProvider interface and destroys this timeout
+	 */
+	g_debug( "%s: triggering NAIIOProvider interface for provider=%p (%s)",
+			thisfn, ( void * ) provider, G_OBJECT_TYPE_NAME( provider ));
+
 	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ));
 	provider->private->event_source_id = 0;
 	return( FALSE );

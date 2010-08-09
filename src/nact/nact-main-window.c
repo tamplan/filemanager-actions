@@ -662,6 +662,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			G_CALLBACK( on_tab_updatable_item_updated ));
 
 	self->private->dispose_has_run = FALSE;
+
+	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( instance ), TRUE, 0 );
 }
 
 static void

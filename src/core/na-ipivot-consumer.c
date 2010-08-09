@@ -128,34 +128,48 @@ interface_base_finalize( NAIPivotConsumerInterface *klass )
 }
 
 /**
- * na_ipivot_consumer_delay_notify:
+ * na_ipivot_consumer_allow_notify:
  * @instance: the #NAIPivotConsumer instance.
+ * @allow: whether notifications are allowed for this consumer.
+ * @delay: delay in msec before actually allow the notifications;
+ *  only considered when @allow is %TRUE.
  *
- * Informs the #NAIPivotconsumer instance that the next notification
- * message should only be handled if a short delay has expired. This
- * let us to no be polluted by notifications that we create ourselves
- * (e.g. when saving actions).
+ * Set the notification flag for this consumer.
+ *
+ * When @allow is %FALSE, then all notifications from #NAPivot are blocked.
+ *
+ * Allowing notifications with a delay is useful in particular when saving
+ * the items list from NACT. As both I/O providers and NAPivot bufferize
+ * their individual notifications, NAIPivot consumers will only be
+ * triggered themselves after the sum of all burst timeouts.
+ * So, we reauthorize notifications at end of save code, with a delay
+ * which _should_ be greater that this sum...
  */
 void
-na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance )
+na_ipivot_consumer_allow_notify( NAIPivotConsumer *instance, gboolean allow, guint delay )
 {
-	static const gchar *thisfn = "na_ipivot_consumer_delay_notify";
-	GTimeVal *last_delay;
+	static const gchar *thisfn = "na_ipivot_consumer_allow_notify";
+	GTimeVal *tval;
 
 	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
 
 	if( st_initialized && !st_finalized ){
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+		g_debug( "%s: instance=%p, allow=%s, delay=%d", thisfn, ( void * ) instance, allow ? "True":"False", delay );
 
-		last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
+		g_object_set_data( G_OBJECT( instance ), "na-ipivot-consumer-allow-notify", GUINT_TO_POINTER( allow ));
 
-		if( !last_delay ){
-			last_delay = g_new0( GTimeVal, 1 );
-			g_object_set_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify", last_delay );
+		if( allow ){
+			tval = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
+
+			if( !tval ){
+				tval = g_new0( GTimeVal, 1 );
+				g_object_set_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify", tval );
+			}
+
+			g_get_current_time( tval );
+			g_time_val_add( tval, 1000*delay );
 		}
-
-		g_get_current_time( last_delay );
 	}
 }
 
@@ -175,8 +189,11 @@ na_ipivot_consumer_notify_of_autosave_changed( NAIPivotConsumer *instance, gbool
 
 	if( st_initialized && !st_finalized ){
 
-		if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_autosave_changed ){
-			NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_autosave_changed( instance, enabled, period );
+		if( is_notify_allowed( instance )){
+
+			if( NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_autosave_changed ){
+				NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )->on_autosave_changed( instance, enabled, period );
+			}
 		}
 	}
 }
@@ -309,20 +326,22 @@ void na_ipivot_consumer_notify_of_mandatory_prefs_changed( NAIPivotConsumer *ins
 static gboolean
 is_notify_allowed( const NAIPivotConsumer *instance )
 {
-	static const gchar *thisfn = "na_ipivot_consumer_is_notify_allowed";
-	GTimeVal *last_delay;
-	GTimeVal now;
-	gulong ecart;
+	gboolean allowed;
+	GTimeVal *tval, now;
+	glong ecart;
 
-	last_delay = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
-	if( !last_delay ){
-		return( TRUE );
+	allowed = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-allow-notify" ));
+
+	if( allowed ){
+		tval = ( GTimeVal * ) g_object_get_data( G_OBJECT( instance ), "na-ipivot-consumer-delay-notify" );
+
+		if( tval ){
+			g_get_current_time( &now );
+			ecart = G_USEC_PER_SEC * ( now.tv_sec - tval->tv_sec );
+			ecart += now.tv_usec - tval->tv_usec;
+			allowed = ( ecart > 0 );
+		}
 	}
 
-	g_get_current_time( &now );
-	ecart = 1000000 * ( now.tv_sec - last_delay->tv_sec );
-	ecart += now.tv_usec - last_delay->tv_usec;
-
-	g_debug( "%s: ecart=%ld", thisfn, ecart );
-	return( ecart > 2000000 );
+	return( allowed );
 }

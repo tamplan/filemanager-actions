@@ -129,7 +129,7 @@ typedef struct {
 
 GType na_ipivot_consumer_get_type( void );
 
-void  na_ipivot_consumer_delay_notify( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_allow_notify( NAIPivotConsumer *instance, gboolean allow, guint delay );
 
 void  na_ipivot_consumer_notify_of_autosave_changed        ( NAIPivotConsumer *instance, gboolean enabled, guint period );
 void  na_ipivot_consumer_notify_of_create_root_menu_changed( NAIPivotConsumer *instance, gboolean enabled );

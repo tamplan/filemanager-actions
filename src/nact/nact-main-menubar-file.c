@@ -267,6 +267,10 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
+	/* get ride of notification messages of IOProviders
+	 */
+	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( window ), FALSE, 0 );
+
 	/* remove deleted items
 	 * so that new actions with same id do not risk to be deleted later
 	 */
@@ -317,9 +321,9 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 		g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 	}
 
-	/* get ride of notification messages of IOProviders
+	/* restore NAPivot notifications
 	 */
-	na_ipivot_consumer_delay_notify( NA_IPIVOT_CONSUMER( window ));
+	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( window ), TRUE, 1000 );
 }
 
 /*

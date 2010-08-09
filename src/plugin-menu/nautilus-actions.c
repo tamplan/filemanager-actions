@@ -193,6 +193,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+
+	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( instance ), TRUE, 0 );
 }
 
 static void
