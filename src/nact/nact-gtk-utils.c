@@ -43,6 +43,9 @@
 #include "nact-gtk-utils.h"
 #include "nact-application.h"
 
+#define DEFAULT_WIDTH		22
+#define DEFAULT_HEIGHT		22
+
 /**
  * nact_gtk_utils_set_editable:
  * @widget: the #GtkWdiget.
@@ -110,18 +113,24 @@ nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
  * Returns a pixbuf for the given widget.
  */
 GdkPixbuf *
-nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, gint size )
+nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize size )
 {
 	static const gchar *thisfn = "nact_gtk_utils_get_pixbuf";
 	GdkPixbuf* pixbuf;
 	GError *error;
+	gint width, height;
 
 	error = NULL;
 	pixbuf = NULL;
 
+	if( !gtk_icon_size_lookup( size, &width, &height )){
+		width = DEFAULT_WIDTH;
+		height = DEFAULT_HEIGHT;
+	}
+
 	if( name && strlen( name )){
 		if( g_path_is_absolute( name )){
-			pixbuf = gdk_pixbuf_new_from_file_at_size( name, size, size, &error );
+			pixbuf = gdk_pixbuf_new_from_file_at_size( name, width, height, &error );
 			if( error ){
 				if( error->code == G_FILE_ERROR_NOENT ){
 					g_debug( "%s: gdk_pixbuf_new_from_file_at_size: name=%s, error=%s", thisfn, name, error->message );
@@ -140,7 +149,7 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, gint size )
 
 	if( !pixbuf ){
 		g_debug( "%s: null pixbuf, loading transparent image", thisfn );
-		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", size, size, NULL );
+		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", width, height, NULL );
 	}
 
 	return( pixbuf );
@@ -155,14 +164,20 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, gint size )
  * Displays the (maybe themed) image on the given widget.
  */
 void
-nact_gtk_utils_render( const gchar *name, GtkImage *widget, gint size )
+nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
 {
 	GdkPixbuf* pixbuf;
+	gint width, height;
 
 	if( name ){
 		pixbuf = nact_gtk_utils_get_pixbuf( name, GTK_WIDGET( widget ), size );
+
 	} else {
-		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", size, size, NULL );
+		if( !gtk_icon_size_lookup( size, &width, &height )){
+			width = DEFAULT_WIDTH;
+			height = DEFAULT_HEIGHT;
+		}
+		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", width, height, NULL );
 	}
 
 	if( pixbuf ){
@@ -179,7 +194,7 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, gint size )
  *  its size and position.
  * @entry: the #GtkEntry which is associated with the selected file.
  * @entry_name: the name of the entry in Preferences to be readen/written.
- * @default_dir_uri: the URI of the directory which should be set in there is
+ * @default_dir_uri: the URI of the directory which should be set if there is
  *  not yet any preference (see @entry_name)
  *
  * Opens a #GtkFileChooserDialog and let the user choose an existing file

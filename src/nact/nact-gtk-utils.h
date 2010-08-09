@@ -47,8 +47,8 @@ void       nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable );
 
 /* image utilities
  */
-GdkPixbuf *nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, gint size );
-void       nact_gtk_utils_render( const gchar *name, GtkImage *widget, gint size );
+GdkPixbuf *nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize size );
+void       nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size );
 
 /* standard dialog boxes
  */

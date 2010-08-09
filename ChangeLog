@@ -1,3 +1,10 @@
+2010-08-09 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h
+	(nact_gtk_utils_get_pixbuf, nact_gtk_utils_render):
+	Size parameter is actually of GtkIconSize type.
+
 2010-08-07 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Bump version number after unstable release.
