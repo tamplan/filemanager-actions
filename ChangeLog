@@ -1,5 +1,8 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c (is_candidate_for_mimetypes):
+	Fix incorrect handling of conditions.
+
 	* src/nact/nact-iaction-tab.c (on_icon_browse):
 	Fix incorrect setting of GConf preference.
 

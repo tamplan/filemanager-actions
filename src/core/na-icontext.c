@@ -624,6 +624,14 @@ is_candidate_for_show_if_running( const NAIContext *object, guint target, GList 
  * file mimetype must be compatible with at least one positive assertion
  * (they are ORed), while not being of any negative assertions (they are
  * ANDed)
+ *
+ * here, for each mimetype of the selection, do
+ * . match is FALSE while this mimetype has not matched a positive assertion
+ * . nomatch is FALSE while this mimetype has not matched a negative assertion
+ * we are going to check each mimetype filter
+ *  while we have not found a match among positive conditions (i.e. while !match)
+ *  we have to check all negative conditions to verify that the current
+ *  examined mimetype never match these
  */
 static gboolean
 is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files )
@@ -631,39 +639,42 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 	static const gchar *thisfn = "na_icontext_is_candidate_for_mimetypes";
 	gboolean ok = TRUE;
 	gboolean all = na_object_get_all_mimetypes( object );
-	GList *it;
 
 	g_debug( "%s: all=%s", thisfn, all ? "True":"False" );
 
 	if( !all ){
 		GSList *mimetypes = na_object_get_mimetypes( object );
 		GSList *im;
-		gboolean positive;
-		guint count_positive = 0;
-		guint count_compatible = 0;
+		GList *it;
 
-		for( im = mimetypes ; im && ok ; im = im->next ){
-			const gchar *imtype = ( const gchar * ) im->data;
-			positive = is_positive_assertion( imtype );
-			if( positive ){
-				count_positive += 1;
+		for( it = files ; it && ok ; it = it->next ){
+			gchar *ftype, *fgroup, *fsubgroup;
+			gboolean match, positive;
+
+			ftype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
+			split_mimetype( ftype, &fgroup, &fsubgroup );
+			match = FALSE;
+
+			for( im = mimetypes ; im && ok ; im = im->next ){
+				const gchar *imtype = ( const gchar * ) im->data;
+				positive = is_positive_assertion( imtype );
+
+				if( !positive || !match ){
+					if( is_mimetype_of( positive ? imtype : imtype+1, fgroup, fsubgroup )){
+						if( positive ){
+							match = TRUE;
+						} else {
+							ok = FALSE;
+						}
+					}
+				}
 			}
-			gchar *imgroup, *imsubgroup;
-			split_mimetype( positive ? imtype : imtype+1, &imgroup, &imsubgroup );
 
-			for( it = files ; it && ok ; it = it->next ){
-				gchar *ftype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
-				gboolean type_of = is_mimetype_of( ftype, imgroup, imsubgroup );
-				count_compatible_patterns( positive, type_of, &count_compatible, &ok );
-				g_free( ftype );
-			}
+			ok = match;
 
-			g_free( imgroup );
-			g_free( imsubgroup );
-		}
-
-		if( count_positive > 0 && count_compatible == 0 ){
-			ok = FALSE;
+			g_free( fsubgroup );
+			g_free( fgroup );
+			g_free( ftype );
 		}
 
 		if( !ok ){
@@ -679,31 +690,35 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 }
 
 /*
- * does the file have a mimetype which is 'a sort of' specified one ?
+ * does the file fgroup/fsubgrop have a mimetype which is 'a sort of'
+ *  mimetype specified one ?
  * for example, "image/jpeg" is clearly a sort of "image/ *"
  * but how to check to see if "msword/xml" is a sort of "application/xml" ??
  */
 static gboolean
-is_mimetype_of( const gchar *file_type, const gchar *group, const gchar *subgroup )
+is_mimetype_of( const gchar *mimetype, const gchar *fgroup, const gchar *fsubgroup )
 {
 	gboolean is_type_of;
-	gchar *fgroup, *fsubgroup;
+	gchar *mgroup, *msubgroup;
 
-	split_mimetype( file_type, &fgroup, &fsubgroup );
+	split_mimetype( mimetype, &mgroup, &msubgroup );
 
-	is_type_of = ( strcmp( fgroup, group ) == 0 );
+	is_type_of = ( strcmp( fgroup, mgroup ) == 0 );
 	if( is_type_of ){
-		if( strcmp( subgroup, "*" )){
-			is_type_of = ( strcmp( fsubgroup, subgroup ) == 0 );
+		if( strcmp( msubgroup, "*" ) != 0 ){
+			is_type_of = ( strcmp( fsubgroup, msubgroup ) == 0 );
 		}
 	}
 
-	g_free( fgroup );
-	g_free( fsubgroup );
+	g_free( mgroup );
+	g_free( msubgroup );
 
 	return( is_type_of );
 }
 
+/*
+ * split the given mimetype to its group and subgroup components
+ */
 static void
 split_mimetype( const gchar *mimetype, gchar **group, gchar **subgroup )
 {
