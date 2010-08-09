@@ -736,47 +736,45 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 	static const gchar *thisfn = "na_icontext_is_candidate_for_basenames";
 	gboolean ok = TRUE;
 	GSList *basenames = na_object_get_basenames( object );
-	GSList *ib;
-	gboolean positive;
-	guint count_positive = 0;
-	guint count_compatible = 0;
-	gchar *pattern, *bname, *bname_utf8;
-	GList *it;
-	GPatternSpec *pattern_spec;
-	gboolean match;
 
 	if( basenames ){
 		if( strcmp( basenames->data, "*" ) != 0 || g_slist_length( basenames ) > 1 ){
 			gboolean matchcase = na_object_get_matchcase( object );
+			GSList *ib;
+			GList *it;
 
-			for( ib = basenames ; ib && ok ; ib = ib->next ){
-				pattern = matchcase ?
+			for( it = files ; it && ok ; it = it->next ){
+				gchar *pattern, *bname, *bname_utf8;
+				gboolean match, positive;
+
+				bname = na_selected_info_get_basename( NA_SELECTED_INFO( it->data ));
+				bname_utf8 = g_filename_to_utf8( bname, -1, NULL, NULL, NULL );
+				match = FALSE;
+
+				for( ib = basenames ; ib && ok ; ib = ib->next ){
+					pattern = matchcase ?
 						g_strdup(( gchar * ) ib->data ) :
 						g_ascii_strdown(( gchar * ) ib->data, strlen(( gchar * ) ib->data ));
-				positive = is_positive_assertion( pattern );
-				if( positive ){
-					count_positive += 1;
+					positive = is_positive_assertion( pattern );
+
+					if( !positive || !match ){
+						if( g_pattern_match_simple( positive ? pattern : pattern+1, bname_utf8 )){
+							if( positive ){
+								match = TRUE;
+							} else {
+								ok = FALSE;
+							}
+						}
+					}
+
+					g_free( pattern );
 				}
 
-				pattern_spec = g_pattern_spec_new( positive ? pattern : pattern+1 );
+				ok = match;
 
-				for( it = files ; it && ok ; it = it->next ){
-					bname = na_selected_info_get_basename( NA_SELECTED_INFO( it->data ));
-					bname_utf8 = g_filename_to_utf8( bname, -1, NULL, NULL, NULL );
-					match = g_pattern_match_string( pattern_spec, bname_utf8 );
-					g_free( bname_utf8 );
-					g_free( bname );
-					g_debug( "%s: pattern=%s, positive=%s, match=%s", thisfn, pattern, positive ? "True":"False", match ? "True":"False" );
-					count_compatible_patterns( positive, match, &count_compatible, &ok );
-				}
-
-				g_pattern_spec_free( pattern_spec );
-				g_free( pattern );
+				g_free( bname_utf8 );
+				g_free( bname );
 			}
-		}
-
-		if( count_positive > 0 && count_compatible == 0 ){
-			ok = FALSE;
 		}
 
 		if( !ok ){
