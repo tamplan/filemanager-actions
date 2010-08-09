@@ -330,7 +330,6 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), class );
 		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
-		gtk_widget_set_sensitive( entry, notify );
 		g_free( class );
 
 		user = profile ? na_object_get_execute_as( profile ) : g_strdup( "" );
@@ -373,6 +372,8 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 	NAObjectProfile *profile;
 	gboolean editable;
 	gboolean active;
+	gboolean is_normal;
+	GtkWidget *widget;
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -386,6 +387,13 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 		if( editable ){
 			if( active ){
 				na_object_set_execution_mode( profile, mode );
+
+				is_normal = ( strcmp( mode, "Normal" ) == 0 );
+				widget = base_window_get_widget( BASE_WINDOW( instance ), "StartupNotifyButton" );
+				gtk_widget_set_sensitive( widget, is_normal );
+				widget = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
+				gtk_widget_set_sensitive( widget, is_normal );
+
 				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
 			}
 
@@ -403,7 +411,6 @@ on_startup_notify_toggled( GtkToggleButton *toggle_button, NactIExecutionTab *in
 	NAObjectProfile *profile;
 	gboolean editable;
 	gboolean active;
-	GtkWidget *entry;
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -417,8 +424,6 @@ on_startup_notify_toggled( GtkToggleButton *toggle_button, NactIExecutionTab *in
 		if( editable ){
 			na_object_set_startup_notify( profile, active );
 			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
-			entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
-			gtk_widget_set_sensitive( entry, active );
 
 		} else {
 			g_signal_handlers_block_by_func(( gpointer ) toggle_button, on_startup_notify_toggled, instance );

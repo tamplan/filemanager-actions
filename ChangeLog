@@ -1,5 +1,8 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iexecution-tab.c (execution_mode_toggle):
+	Fix sensitivity of startup fields vs. execution mode.
+
 	* src/core/na-icontext.c (is_candidate_for_capabilities):
 	Fix incorrect handling of capability conditions.
 
