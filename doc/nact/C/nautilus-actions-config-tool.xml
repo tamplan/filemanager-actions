@@ -16,6 +16,9 @@
   <!ENTITY windows  "<productname>Windows</productname>">
   <!ENTITY zenity   "<productname>Zenity</productname>">
 
+  <!-- other entities -->
+  <!ENTITY desema "<ulink url='http://www.nautilus-actions.org/?q=node/377' type='http'>DES-EMA specification</ulink>">
+
   <!-- the synopsys of the document -->
   <!ENTITY articleinfo SYSTEM "articleinfo.xml">
   <!ENTITY legalnotice SYSTEM "legalnotice.xml">
@@ -32,6 +35,7 @@
   <!ENTITY import      SYSTEM "nact-import.xml">
   <!ENTITY preferences SYSTEM "nact-prefs.xml">
   <!ENTITY misc-infos  SYSTEM "nact-misc.xml">
+  <!ENTITY bugs        SYSTEM "nact-bugs.xml">
   <!ENTITY gnu-fdl     SYSTEM "appendix-gnu-fdl-1.3.xml">
 
   <!-- some user-defined internal entities 
@@ -167,14 +171,12 @@
 <!-- This section is optional and is commented out by default.
      You can use it to describe known bugs and limitations of the
      program if there are any - please be frank and list all
-     problems you know of.
+     problems you know of. -->
 
   <sect1 id="bugs">
     <title>Known Bugs and Limitations</title>
-    <para>
-    </para>
+    &bugs;
   </sect1>
--->
 
 <!-- =========================== About ================================ -->
 <!-- This section contains info about the program (not docs), such as

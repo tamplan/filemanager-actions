@@ -213,6 +213,18 @@
               <varlistentry>
                 <term>
                     <keycombo>
+                      <keycap>F2</keycap>
+                    </keycombo>
+                </term>
+                <listitem>
+                  <para>
+                    Edit a cell in a listbox.
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+                    <keycombo>
                       <keycap>F1</keycap>
                     </keycombo>
                 </term>
@@ -248,13 +260,21 @@
             </para>
             <para>
               Items may be sorted in ascending or descending alphabetical order, or
-              not sorted at all, directly organized and managed by the user.
+              not sorted at all, being directly organized and managed by the user.
             </para>
             <para>
               Invalid items are displayed in red color.
             </para>
             <para>
               Modified items are displayed in italic characters.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>Sort buttons</term>
+          <listitem>
+            <para>
+              Three buttons allow you to toggle between sort modes.
             </para>
           </listitem>
         </varlistentry>
@@ -388,6 +408,10 @@
               When no relevant information is to be displayed, the statusbar
               displays the count of loaded menus, actions and profiles.
             </para>
+            <para>
+              The &laquosp;read-only&spraquo; icon is displayed in
+              the right of the statusbar when appropriate.
+            </para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -406,7 +430,7 @@
         </para>
       </formalpara>
       <para>
-        &zenity; is a program which allows its user to create a graphical
+        &zenity; is a program which will allow you to create a graphical
         user interface from a command-line.
       </para>
       <para>
@@ -439,10 +463,7 @@
         </para>
       </formalpara>
       <para>
-        A new action is inserted in the items list.
-      </para>
-      <para>
-        This new action is automatically selected in the items list,
+        A new action is inserted in the items list,
         and its properties are displayed in the tabs on the right pane.
       </para>
       <para>
@@ -498,8 +519,9 @@
          <para>
             The label is a mandatory property of your action. If it happens
             to be empty, then your action will be considered as invalid by
-            &prodname;, and will never be candidate to be displayed in the
-            file-manager context menus.
+            &prodname;: it will be displayed in red in <guilabel>Items list</guilabel>
+            and will never be candidate to be displayed in the
+            file manager context menus.
           </para>
         </listitem>
         <listitem>
@@ -600,6 +622,11 @@
               </para>
             </listitem>
           </itemizedlist>
+          <para>
+            If the cmmand you enter does not have an absolute path,
+            then it will be searched for in the <envvar>PATH</envvar>
+            variable at execution time.
+          </para>
         </listitem>
         <listitem>
           <para>
@@ -611,6 +638,13 @@
             The <guilabel>Parameters</guilabel> contains the arguments which will
             be passed to your command when it will be executed. These arguments may
             embed parameters which will be expanded at runtime.
+          </para>
+          <para>
+            If both <guilabel>Path</guilabel> and <guilabel>Parameters</guilabel>
+            are empty, then this action will be considered as invalid: it will be
+            displayed in red in <guilabel>Items list</guilabel> and will be
+            never be candidate to be displayed in the
+            file manager context menus.
           </para>
         </listitem>
       </itemizedlist>

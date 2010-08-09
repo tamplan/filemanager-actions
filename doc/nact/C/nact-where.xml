@@ -1,34 +1,47 @@
 <sect2 id="usage-where">
   <title>Locating the action</title>
+    <figure id="nact-FIG-tab-action-where">
+      <title>Target configuration</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/nact-action-tab.png" format="PNG" />
+          </imageobject>
+          <textobject>
+            <phrase>Shows the tab which lets you configure the target of your action.</phrase>
+          </textobject>
+          <caption>
+            <para>Target configuration</para>
+          </caption>
+        </mediaobject>
+      </screenshot>
+    </figure>
   <para>
-    &nautilus; file-manager may display your custom action in different places,
-    depending on you will request here, and if some item is currently selected.
+    &nautilus; file manager may display your action in different places,
+    depending on what you will request here, and if some item is currently selected.
   </para>
 
   <sect3 id="usage-where-selection">
     <title>Targeting the selection context menu</title>
     <para>
-      When <guilabel>Display item in selection context menu</guilabel> checkbox
-      is activated, then your action will be candidate to be displayed in 
-      &nautilus; context menu, as long as at least one item is selected in 
-      the file-manager. Your action will so deal with currently selected
-      item(s).
+      When <guilabel>Display item in selection context menu</guilabel>
+      is checked, then your action will be candidate to be displayed in 
+      &nautilus; context menu as soon as at least one item is selected in 
+      the file manager. Your action will so deal with currently selected
+      item(s).In order to be
+      actually displayed, all the conditions defined in
+      your candidate action must be met by each item currently selected
+      in the &nautilus; file manager. 
     </para>
     <tip>
       <para>
         When an action targets the selection context menu, and is actually 
         displayed in &nautilus; context menu, then it is also displayed
-        in the <guimenu>Edit</guimenu> menu.
+        in &nautilus; <guimenu>Edit</guimenu> menu.
       </para>
     </tip>
     <para>
-      This checkbox is activated by default.
-    </para>
-    <para>
-      When targeting the selection context menu, and in order to be
-      actually displayed, all the conditions defined in
-      your candidate action must be met by each item currently selected
-      in the &nautilus; file-manager. 
+      This target is checked by default.
     </para>
   </sect3>
 
@@ -37,22 +50,20 @@
     <para>
       When <guilabel>Display item in location context menu</guilabel> checkbox
       is activated, then your action will be candidate to be displayed in 
-      &nautilus; context menu, when the file-manager selection will be empty.
+      &nautilus; context menu when the file manager selection will be empty.
       Your action will so deal with currently displayed location.
+      In order to be
+      actually displayed, all the conditions defined in
+      your candidate action must be met by the location currently displayed
+      in the &nautilus; file manager. 
     </para>
     <tip>
       <para>
         When an action targets the location context menu, and is actually 
         displayed in &nautilus; context menu, then it is also displayed
-        in the <guimenu>File</guimenu> menu.
+        in &nautilus; <guimenu>File</guimenu> menu.
       </para>
     </tip>
-    <para>
-      When targeting the location context menu, and in order to be
-      actually displayed, all the conditions defined in
-      your candidate action must be met by the location currently displayed
-      in the &nautilus; file-manager. 
-    </para>
   </sect3>
 
   <sect3 id="usage-where-toolbar">
@@ -77,8 +88,8 @@
     <formalpara>
       <title>If your action targets a menu</title>
       <para>
-        Whether your action targets the selection context menu or the location
-        context menu, and both in &nautilus; context menus that in 
+        Whether it is the selection context menu or the location
+        context menu, and both in &nautilus; context menus and in 
         <guimenu>File</guimenu> or <guimenu>Edit</guimenu> menus, your
         action will be displayed as
       </para>
@@ -96,7 +107,7 @@
       </listitem>
       <listitem>
         <para>
-          those two properties being associated with the
+          these two properties being associated with the
           <guilabel>Tooltip</guilabel>.
         </para>
       </listitem>
@@ -110,7 +121,7 @@
     </note>
     <tip>
       <para>
-        You may embed some parameters in the label, the icon name of the tooltip.
+        You may embed some parameters in the label, the icon name or the tooltip.
         These parameters will be dynamically substituted at runtime with values
         which will depend of currently selected item(s). 
       </para>
@@ -119,7 +130,7 @@
     <formalpara>
       <title>If your action targets the toolbar</title>
       <para>
-        In the toolbar, your action will be displayed as
+        Your action will be displayed as
       </para>
     </formalpara>
     <itemizedlist>
@@ -127,15 +138,6 @@
         <para>
           the <guilabel>Toolbar label</guilabel> as a label,
         </para>
-        <tip>
-          <para>
-            The toolbar label defaults to the same label than
-            those used in menus. By unchecking the
-            <guilabel>Use same label for icon in the toolbar</guilabel>
-            checkbox, then you can define a label specific to the
-            toolbar, usually shorter those defined for the menus.
-          </para>
-        </tip>
       </listitem>
       <listitem>
         <para>
@@ -144,7 +146,8 @@
       </listitem>
       <listitem>
         <para>
-          associated with the <guilabel>Tooltip</guilabel>.
+          these two properties being associated with the
+          <guilabel>Tooltip</guilabel>.
         </para>
       </listitem>
     </itemizedlist>
@@ -157,7 +160,16 @@
     </note>
     <tip>
       <para>
-        You may embed some parameters in the toolbar label, the icon name of the tooltip.
+        The toolbar label defaults to the same label than
+        those used in menus. By unchecking the
+        <guilabel>Use same label for icon in the toolbar</guilabel>
+        checkbox, then you can define a label specific to the
+        toolbar, usually shorter that those defined for the menus.
+      </para>
+    </tip>
+    <tip>
+      <para>
+        You may embed some parameters in the toolbar label, the icon name or the tooltip.
         These parameters will be dynamically substituted at runtime with values
         which will depend of currently selected item(s). 
       </para>

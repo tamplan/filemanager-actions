@@ -434,12 +434,36 @@
           <listitem>
             <para>
               Or click on
-              <guibutton>Common</guibutton> to select a scheme among these
-              defined as default schemes in 
+              <guibutton>Common</guibutton> to select a scheme among those
+              predefined in 
               <menuchoice>
                 <guimenu>Edit</guimenu>
                 <guimenuitem>Preferences</guimenuitem>
               </menuchoice>.
+            </para>
+            <figure id="nact-FIG-add-scheme">
+              <title>Selecting a scheme among predefined defaults</title>
+              <screenshot>
+                <mediaobject>
+                  <imageobject>
+                    <imagedata fileref="figures/nact-new-scheme.png" format="PNG"/>
+                  </imageobject>
+                  <textobject>
+                    <phrase>Show the list of predefined schemess.</phrase>
+                  </textobject>
+                  <caption>
+                    <para>Selecting a scheme among predefined defaults</para>
+                  </caption>
+                </mediaobject>
+              </screenshot>
+            </figure>
+            <para>
+              A new scheme may only be selected here if it is not already
+              defined as a scheme filter.
+            </para>
+            <para>
+              To select a new scheme, click <guibutton>OK</guibutton>, or
+              double-click on the desired row.
             </para>
           </listitem>
         </itemizedlist>
@@ -546,6 +570,14 @@
                 </mediaobject>
               </screenshot>
             </figure>
+            <para>
+              A new capability may only be selected here if it is not already
+              defined as a capability filter.
+            </para>
+            <para>
+              To select a new capability, click <guibutton>OK</guibutton>, or
+              double-click on the desired row.
+            </para>
           </listitem>
         </itemizedlist>
       </listitem>
@@ -609,7 +641,7 @@
       <para>
         If your action consists in displaying the differences between
         two files, you may define here
-        <guilabel>Count = (equal to) 2</guilabel>.
+        &laquosp;<literal>Count = (equal to) 2</literal>&spraquo;.
       </para>
     </example>
     <para>
@@ -668,7 +700,7 @@
       </listitem>
     </itemizedlist>
     <para>
-      Only one of three choices is authorized.
+      Only one choice between these three items is possible.
     </para>
     <para>
       To define the desktop environment condition:
@@ -681,15 +713,15 @@
         <simplelist type="vert">
           <member>does your action should always appear, regarding of
            the desktop environment ?</member>
-          <member>does your action should also appear in some desktop
+          <member>does your action should only appear in some desktop
            environment(s) ?</member>
-          <member>does your action should never appeat in some
+          <member>does your action should never appear in some
            desktop environment(s) ?</member>
         </simplelist>
       </listitem>
       <listitem>
         <para>
-          If your action does not should always appear, then
+          If your action should not always appear, then
           select the relevant desktop environment(s) in the listbox
           in the right side.
         </para>
@@ -697,7 +729,7 @@
     </orderedlist>
     <para>
       The target desktop environment condition defaults to
-      &laquosp;<guilabel>Always appear</guilabel>&spraquo;,
+      &laquosp;<literal>Always appear</literal>&spraquo;,
       which means that the action will be candidate to be displayed
       regarding of the current desktop environment.
     </para>
@@ -710,8 +742,10 @@
       which will permit you to configure your environment-based conditions.
     </para>
     <para>
-      You may define that your action will only appear in some given
-      file is present on the filesystem and is executable.
+      You may define that your action will only appear if some
+      prerequisite package is installed on your system. This is
+      checked here by specifying that a specific file from the
+      package must be present on the filesystem and executable.
     </para>
     <para>
       To define the relevant file, enter its full filename in the
@@ -725,7 +759,7 @@
     </para>
     <tip>
       <para>
-        You may embed some parameters in the searched filename or its options.
+        You may embed some parameters in the searched filename.
         These parameters will be dynamically substituted at runtime with values
         which will depend of currently selected item(s). 
       </para>
@@ -739,7 +773,7 @@
       which will permit you to configure your environment-based conditions.
     </para>
     <para>
-      You may define that your action will only appear in some given
+      You may define that your action will only appear if some given
       name is registered on D-Bus system at runtime.
     </para>
     <para>
@@ -767,13 +801,13 @@
       which will permit you to configure your environment-based conditions.
     </para>
     <para>
-      You may define that your action will only appear in some given
+      You may define that your action will only appear if some given
       command outputs a <literal>true</literal> string.
     </para>
     <para>
       This lets you define your own customized condition filter,
       by writing a small script which outputs, or not, the
-      <literal>true</literal> string when it is ran.
+      <literal>true</literal> string on stdout when it is ran.
     </para>
     <para>
       To define the command, enter it in the
@@ -800,7 +834,7 @@
       which will permit you to configure your environment-based conditions.
     </para>
     <para>
-      You may define that your action will only appear in some given
+      You may define that your action will only appear if some given
       binary is currently running.
     </para>
     <para>

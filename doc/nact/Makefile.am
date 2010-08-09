@@ -39,6 +39,7 @@ DOC_ENTITIES = \
 	appendix-gnu-fdl-1.3.xml					\
 	articleinfo.xml								\
 	legalnotice.xml								\
+	nact-bugs.xml								\
 	nact-conditions.xml							\
 	nact-edit.xml								\
 	nact-execution.xml							\
