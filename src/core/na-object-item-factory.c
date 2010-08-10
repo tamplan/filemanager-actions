@@ -160,7 +160,7 @@ NADataDef data_def_item [] = {
 				FALSE,
 				FALSE,
 				"Unlocalized icon name or path",
-				"Unlocalized icon name or path",
+				NULL,
 				NAFD_TYPE_STRING,
 				"",
 				FALSE,

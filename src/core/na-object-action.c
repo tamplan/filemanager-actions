@@ -404,23 +404,48 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
  *  it is be identified by an version = "1.x"
  *  or by any data found in data_def_action_v1 (defined in na-object-action-factory.c)
  *  -> move obsoleted data to a new profile, updating the version string
+ *
+ *  actions readen from .desktop already have iversion=3 (cf. desktop_read_start)
+ *  and v1 actions may only come from xml or gconf
  */
 static void
 read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 {
 	static const gchar *thisfn = "na_object_action_read_done_convert_v1_to_v2";
-	gboolean is_pre_v2;
+	guint iversion;
+	gchar *version;
 	GList *to_move;
 	NADataDef *def;
 	NADataBoxed *boxed;
-	gchar *version;
 	GList *ibox;
 	NAObjectProfile *profile;
 
-	is_pre_v2 = FALSE;
-	to_move = NULL;
+	/* check for new numeric version
+	 */
+	iversion = na_object_get_iversion( instance );
+	if( iversion >= 2 ){
+		return;
+	}
 
+	/* check for older alpha version
+	 * was not set in 2.30 serie
+	 */
+	version = na_object_get_version( instance );
+	if( version ){
+		iversion = atoi( version );
+		g_free( version );
+	}
+	if( iversion >= 2 ){
+		return;
+	}
+
+	/* we so have here a not-versioned action, in very old 1.x or in 2.30
+	 * search for old data in the body: this is only possible before profiles
+	 * because starting with contexts, iversion was written
+	 */
+	to_move = NULL;
 	def = data_def_action_v1;
+
 	while( def->name ){
 		boxed = na_ifactory_object_get_data_boxed( instance , def->name );
 		if( boxed ){
@@ -431,33 +456,26 @@ read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 		def++;
 	}
 
+	if( !to_move ){
+		return;
+	}
+
+	/* now create a new profile
+	 */
+	profile = na_object_profile_new();
+	na_object_set_id( profile, "profile-pre-v2" );
+	na_object_set_label( profile, _( "Profile automatically created from pre-v2 action" ));
+	na_object_attach_profile( instance, profile );
+
 	if( to_move ){
-		is_pre_v2 = TRUE;
-
-	} else {
-		version = na_object_get_version( instance );
-		if( version && strlen( version ) && atoi( version ) < 2 ){
-			is_pre_v2 = TRUE;
+		for( ibox = to_move ; ibox ; ibox = ibox->next ){
+			na_factory_object_move_boxed(
+					NA_IFACTORY_OBJECT( profile ), instance, NA_DATA_BOXED( ibox->data ));
 		}
-		g_free( version );
 	}
 
-	if( is_pre_v2 ){
-		profile = na_object_profile_new();
-		na_object_set_id( profile, "profile-pre-v2" );
-		na_object_set_label( profile, _( "Profile automatically created from pre-v2 action" ));
-		na_object_attach_profile( instance, profile );
-
-		if( to_move ){
-			for( ibox = to_move ; ibox ; ibox = ibox->next ){
-				na_factory_object_move_boxed(
-						NA_IFACTORY_OBJECT( profile ), instance, NA_DATA_BOXED( ibox->data ));
-			}
-		}
-
-		na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
-		na_object_set_version( instance, "2.0" );
-	}
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
+	na_object_set_version( instance, "2.0" );
 }
 
 /*

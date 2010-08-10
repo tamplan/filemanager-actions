@@ -73,7 +73,7 @@ static NADataDef data_def_profile [] = {
 				FALSE,
 				FALSE,
 				"Unlocalized name of the profile",
-				"Unlocalized name of the profile",
+				NULL,
 				NAFD_TYPE_STRING,
 				"",
 				FALSE,

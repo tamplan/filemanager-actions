@@ -522,7 +522,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 
 				case NAFD_TYPE_LOCALE_STRING:
 					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
-					if( str_value && found ){
+					if( found ){
 						boxed = na_data_boxed_new( def );
 						na_data_boxed_set_from_void( boxed, str_value );
 					}
@@ -531,7 +531,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 
 				case NAFD_TYPE_STRING:
 					str_value = nadp_desktop_file_get_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
-					if( str_value && found ){
+					if( found ){
 						boxed = na_data_boxed_new( def );
 						na_data_boxed_set_from_void( boxed, str_value );
 					}
@@ -549,7 +549,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 
 				case NAFD_TYPE_STRING_LIST:
 					slist_value = nadp_desktop_file_get_string_list( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
-					if( slist_value && found ){
+					if( found ){
 						boxed = na_data_boxed_new( def );
 						na_data_boxed_set_from_void( boxed, slist_value );
 					}

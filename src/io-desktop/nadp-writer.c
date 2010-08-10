@@ -510,7 +510,7 @@ nadp_writer_ifactory_provider_write_data(
 			group_name = g_strdup( NADP_GROUP_DESKTOP );
 		}
 
-		if( na_data_boxed_is_set( boxed ) || def->write_if_default ){
+		if( !na_data_boxed_is_default( boxed ) || def->write_if_default ){
 
 			switch( def->type ){
 

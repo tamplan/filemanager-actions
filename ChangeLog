@@ -1,5 +1,26 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Allow writing of empty data.
+
+	* src/api/na-data-boxed.h:
+	* src/core/na-data-boxed.c
+	(na_data_boxed_is_set): Removed function.
+	(na_data_boxed_is_default): New function.
+
+	* src/io-desktop/nadp-writer.c (nadp_writer_ifactory_provider_write_data):
+	* src/io-gconf/nagp-writer.c (nagp_writer_write_data):
+	* src/io-xml/naxml-writer.c (naxml_writer_write_data):
+	Updated accordingly.
+
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-profile-factory.c:
+	Remove useless log description for a fake data.
+
+	* src/io-desktop/nadp-reader.c
+	(nadp_reader_ifactory_provider_read_data):
+	* src/io-xml/naxml-reader.c (read_data_boxed_from_node):
+	Set NADataBoxed as soon as a value is found.
+
 	Review pre- and post- write operations in I/O providers.
 
 	* src/core/na-object-action.c: Cleanup the code.

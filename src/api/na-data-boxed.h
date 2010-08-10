@@ -77,8 +77,8 @@ NADataBoxed *na_data_boxed_new            ( const NADataDef *def );
 
 NADataDef   *na_data_boxed_get_data_def   ( const NADataBoxed *boxed );
 gboolean     na_data_boxed_are_equal      ( const NADataBoxed *a, const NADataBoxed *b );
+gboolean     na_data_boxed_is_default     ( const NADataBoxed *boxed );
 gboolean     na_data_boxed_is_valid       ( const NADataBoxed *boxed );
-gboolean     na_data_boxed_is_set         ( const NADataBoxed *boxed );
 void         na_data_boxed_dump           ( const NADataBoxed *boxed );
 
 void         na_data_boxed_set_data_def   ( NADataBoxed *boxed, const NADataDef *def );

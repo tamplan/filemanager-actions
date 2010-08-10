@@ -16,11 +16,6 @@ TODO
 
 - 2010-08-09: in v1.x until ??, %f used to be the basename!!
 
-- an empty list is not a default value
-  e.g. basenames default value = [*]
-  after deleting this default value in the UI, we should write basenames=[] in the I/O provider
-  so that we really have an empty list
-
 N-A ENHANCEMENTS
 ================
 - allow users to upload/download actions directly from a web repository

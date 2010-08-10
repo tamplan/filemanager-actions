@@ -457,7 +457,7 @@ naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, 
 
 	/* do no export empty values
 	 */
-	if( na_data_boxed_is_set( boxed ) || def->write_if_default ){
+	if( !na_data_boxed_is_default( boxed ) || def->write_if_default ){
 
 		writer = NAXML_WRITER( writer_data );
 
