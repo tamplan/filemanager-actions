@@ -1,5 +1,18 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Immediately reacts to a status change in I/O providers.
+
+	* src/core/na-ipivot-consumer.c:
+	* src/core/na-ipivot-consumer.h
+	(na_ipivot_consumer_notify_of_io_provider_prefs_changed): New function.
+	(on_io_provider_prefs_changed): New interface API.
+
+	* src/core/na-pivot.c (monitor_runtime_preferences):
+	Add a monitor on io-providers GConf branch.
+
+	* src/nact/nact-main-window.c
+	(ipivot_consumer_on_io_provider_prefs_changed): New function.
+
 	Controls are not modifiable for a read-only item.
 
 	* src/nact/nact-gtk-utils.c:

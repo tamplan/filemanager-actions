@@ -174,10 +174,10 @@ static void     on_main_window_level_zero_order_changed( NactMainWindow *window,
 static void     on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
 static void     on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data );
 static void     raz_main_properties( NactMainWindow *window );
-static void     set_current_object_item( NactMainWindow *window, GSList *selected_items );
-static void     set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items );
-static gchar   *iactions_list_get_treeview_name( NactIActionsList *instance );
+static void     setup_current_selection( NactMainWindow *window, NAObjectId *selected_row );
 static void     setup_dialog_title( NactMainWindow *window );
+static void     setup_writability_status( NactMainWindow *window );
+static gchar   *iactions_list_get_treeview_name( NactIActionsList *instance );
 
 static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display );
 
@@ -187,7 +187,9 @@ static void     install_autosave( NactMainWindow *window );
 static void     ipivot_consumer_on_autosave_changed( NAIPivotConsumer *instance, gboolean enabled, guint period );
 static void     ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data );
 static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode );
+static void     ipivot_consumer_on_io_provider_prefs_changed( NAIPivotConsumer *instance );
 static void     ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance );
+static void     update_ui_after_provider_change( NactMainWindow *window );
 static void     reload( NactMainWindow *window );
 
 static gchar   *iabout_get_application_name( NAIAbout *instance );
@@ -612,6 +614,7 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	iface->on_create_root_menu_changed = NULL;
 	iface->on_display_about_changed = NULL;
 	iface->on_display_order_changed = ipivot_consumer_on_display_order_changed;
+	iface->on_io_provider_prefs_changed = ipivot_consumer_on_io_provider_prefs_changed;
 	iface->on_items_changed = ipivot_consumer_on_items_changed;
 	iface->on_mandatory_prefs_changed = ipivot_consumer_on_mandatory_prefs_changed;
 }
@@ -1230,10 +1233,7 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 {
 	static const gchar *thisfn = "nact_main_window_on_iactions_list_selection_changed";
 	NactMainWindow *window;
-	NAObject *object;
 	gint count;
-	NactApplication *application;
-	NAUpdater *updater;
 
 	count = g_slist_length( selected_items );
 
@@ -1250,30 +1250,20 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 
 	if( count == 1 ){
 		g_return_if_fail( NA_IS_OBJECT_ID( selected_items->data ));
-		object = NA_OBJECT( selected_items->data );
-
-		if( NA_IS_OBJECT_ITEM( object )){
-			window->private->selected_item = NA_OBJECT_ITEM( object );
-			set_current_object_item( window, selected_items );
-
-		} else {
-			g_assert( NA_IS_OBJECT_PROFILE( object ));
-			window->private->selected_profile = NA_OBJECT_PROFILE( object );
-			set_current_profile( window, TRUE, selected_items );
-		}
-
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-		updater = nact_application_get_updater( application );
-		window->private->editable = na_updater_is_item_writable( updater, window->private->selected_item, &window->private->reason );
-		nact_main_statusbar_set_locked( window, !window->private->editable, window->private->reason );
-
-	} else {
-		set_current_object_item( window, selected_items );
+		setup_current_selection( window, NA_OBJECT_ID( selected_items->data ));
+		setup_writability_status( window );
 	}
 
 	setup_dialog_title( window );
-
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_SELECTION_CHANGED, GINT_TO_POINTER( count ));
+}
+
+static void
+on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data )
+{
+	g_debug( "nact_main_window_on_iactions_list_status_changed" );
+
+	setup_dialog_title( window );
 }
 
 static void
@@ -1287,79 +1277,33 @@ raz_main_properties( NactMainWindow *window )
 	nact_main_statusbar_set_locked( window, FALSE, 0 );
 }
 
-static void
-on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data )
-{
-	g_debug( "nact_main_window_on_iactions_list_status_changed" );
-
-	setup_dialog_title( window );
-}
-
 /*
- * update the notebook when selection changes in ActionsList
- * if there is only one profile, we also setup the profile
- * count_profiles may be null (invalid action)
+ * enter after raz_properties
+ * only called when only one selected row
  */
 static void
-set_current_object_item( NactMainWindow *window, GSList *selected_items )
+setup_current_selection( NactMainWindow *window, NAObjectId *selected_row )
 {
-	static const gchar *thisfn = "nact_main_window_set_current_object_item";
-	gint count_profiles;
+	guint nb_profiles;
 	GList *profiles;
-	/*NAObject *current;*/
 
-	g_debug( "%s: window=%p, current=%p, selected_items=%p",
-			thisfn, ( void * ) window, ( void * ) window->private->selected_item, ( void * ) selected_items );
+	if( NA_IS_OBJECT_PROFILE( selected_row )){
+		window->private->selected_profile = NA_OBJECT_PROFILE( selected_row );
+		window->private->selected_item = NA_OBJECT_ITEM( na_object_get_parent( selected_row ));
 
-	/* set the profile to be displayed, if any
-	 */
-	window->private->selected_profile = NULL;
+	} else {
+		g_return_if_fail( NA_IS_OBJECT_ITEM( selected_row ));
+		window->private->selected_item = NA_OBJECT_ITEM( selected_row );
 
-	if( window->private->selected_item ){
+		if( NA_IS_OBJECT_ACTION( selected_row )){
+			nb_profiles = na_object_get_items_count( selected_row );
 
-		if( NA_IS_OBJECT_ACTION( window->private->selected_item )){
-
-			count_profiles = na_object_get_items_count( window->private->selected_item );
-			/*g_return_if_fail( count_profiles >= 1 );*/
-
-			if( count_profiles == 1 ){
-				profiles = na_object_get_items( window->private->selected_item );
+			if( nb_profiles == 1 ){
+				profiles = na_object_get_items( selected_row );
 				window->private->selected_profile = NA_OBJECT_PROFILE( profiles->data );
 			}
 		}
 	}
-
-	set_current_profile( window, FALSE, selected_items );
-}
-
-static void
-set_current_profile( NactMainWindow *window, gboolean set_action, GSList *selected_items )
-{
-	static const gchar *thisfn = "nact_main_window_set_current_profile";
-
-	g_debug( "%s: window=%p, set_action=%s, selected_items=%p",
-			thisfn, ( void * ) window, set_action ? "True":"False", ( void * ) selected_items );
-
-	if( window->private->selected_profile && set_action ){
-
-		NAObjectAction *action = NA_OBJECT_ACTION( na_object_get_parent( window->private->selected_profile ));
-		NactApplication *application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		NAUpdater *updater = nact_application_get_updater( application );
-		window->private->selected_item = NA_OBJECT_ITEM( action );
-		window->private->editable = na_updater_is_item_writable( updater, window->private->selected_item, &window->private->reason );
-	}
-}
-
-static gchar *
-iactions_list_get_treeview_name( NactIActionsList *instance )
-{
-	gchar *name = NULL;
-
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( instance ), NULL );
-
-	name = g_strdup( "ActionsList" );
-
-	return( name );
 }
 
 /*
@@ -1400,6 +1344,32 @@ setup_dialog_title( NactMainWindow *window )
 	toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
 	gtk_window_set_title( toplevel, title );
 	g_free( title );
+}
+
+static void
+setup_writability_status( NactMainWindow *window )
+{
+	NactApplication *application;
+	NAUpdater *updater;
+
+	g_return_if_fail( NA_IS_OBJECT_ITEM( window->private->selected_item ));
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	window->private->editable = na_updater_is_item_writable( updater, window->private->selected_item, &window->private->reason );
+	nact_main_statusbar_set_locked( window, !window->private->editable, window->private->reason );
+}
+
+static gchar *
+iactions_list_get_treeview_name( NactIActionsList *instance )
+{
+	gchar *name = NULL;
+
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( instance ), NULL );
+
+	name = g_strdup( "ActionsList" );
+
+	return( name );
 }
 
 static void
@@ -1569,9 +1539,26 @@ ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order
 }
 
 static void
+ipivot_consumer_on_io_provider_prefs_changed( NAIPivotConsumer *instance )
+{
+	update_ui_after_provider_change( NACT_MAIN_WINDOW( instance ));
+}
+
+static void
 ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance )
 {
-	nact_sort_buttons_level_zero_writability_change( NACT_MAIN_WINDOW( instance ));
+	update_ui_after_provider_change( NACT_MAIN_WINDOW( instance ));
+}
+
+static void
+update_ui_after_provider_change( NactMainWindow *window )
+{
+	nact_sort_buttons_level_zero_writability_change( window );
+
+	if( window->private->selected_item ){
+		setup_writability_status( window );
+		g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_SELECTION_CHANGED, GINT_TO_POINTER( 1 ));
+	}
 }
 
 static void

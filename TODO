@@ -25,8 +25,6 @@ TODO
   after deleting this default value in the UI, we should write basenames=[] in the I/O provider
   so that we really have an empty list
 
-- nact_gtk_utils_set_editable for radio buttons and combobox
-
 N-A ENHANCEMENTS
 ================
 - allow users to upload/download actions directly from a web repository
@@ -36,20 +34,19 @@ N-A ENHANCEMENTS
   the dialog box does not become taller of wider than the screen when there is a lot of
   lines, making it unreadable
 
-- 2010-07-27: enhancement: while editing a new filter, making it duplicate, try to keep editing
+- 2010-07-27: while editing a new filter, making it duplicate, try to keep editing
   instead of terminating the edition and letting the old value
 
-- 2010-08-09: ui.enhancement na-pivot:st_burst_timeout should be a preference
+- 2010-08-09: na-pivot:st_burst_timeout should be a preference
 
-- 2010-08-09: ui.enhancement: plugins should be able to provide a preference page
+- 2010-08-09: plugins should be able to provide a preference page
 
-- ui.enhancement: let the user edit the current default schemes 
-  when adding from defaults for a #NAIContext
+- let the user edit the current default schemes when adding from defaults for a #NAIContext
 
 - 2010-06-17: ui enhancement
   all edition (entry, buttons, etc.) fields should have a small emblem when read-only.
 
-- enhancement.ui: add a 'why this item is invalid'
+- add a 'why this item is invalid'
 
 - nact-iactions-list.c: display_label
   the 'editable' cell property should be set only once, instead of at each redraw

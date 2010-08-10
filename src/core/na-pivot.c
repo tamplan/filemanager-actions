@@ -91,7 +91,7 @@ enum {
 
 
 static GObjectClass *st_parent_class = NULL;
-static gint          st_burst_timeout = 200;		/* burst timeout in msec */
+static gint          st_burst_timeout = 100;		/* burst timeout in msec */
 
 static GType         register_type( void );
 static void          class_init( NAPivotClass *klass );
@@ -115,6 +115,7 @@ static gulong        time_val_diff( const GTimeVal *recent, const GTimeVal *old 
 
 /* NAGConf runtime preferences management */
 static void          monitor_runtime_preferences( NAPivot *pivot );
+static void          on_io_provider_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
 static void          on_mandatory_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
 static void          on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
 static void          display_order_changed( NAPivot *pivot );
@@ -936,30 +937,44 @@ monitor_runtime_preferences( NAPivot *pivot )
 					pivot ));
 	g_free( path );
 
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, "io-providers" );
+	list = g_list_prepend( list,
+			na_gconf_monitor_new(
+					path,
+					( GConfClientNotifyFunc ) on_io_provider_prefs_changed,
+					pivot ));
+	g_free( path );
+
 	pivot->private->monitors = list;
 }
 
 static void
-on_mandatory_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
+on_io_provider_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
 {
-	const gchar *key;
-	gchar *key_entry;
 	GList *ic;
 
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
 
-		key = gconf_entry_get_key( entry );
-		key_entry = g_path_get_basename( key );
-
-		if( !strcmp( key_entry, "locked" )){
-			for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-				na_ipivot_consumer_notify_of_mandatory_prefs_changed( NA_IPIVOT_CONSUMER( ic->data ));
-			}
+		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
+			na_ipivot_consumer_notify_of_io_provider_prefs_changed( NA_IPIVOT_CONSUMER( ic->data ));
 		}
+	}
+}
 
-		g_free( key_entry );
+static void
+on_mandatory_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
+{
+	GList *ic;
+
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
+			na_ipivot_consumer_notify_of_mandatory_prefs_changed( NA_IPIVOT_CONSUMER( ic->data ));
+		}
 	}
 }
 

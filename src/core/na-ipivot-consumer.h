@@ -69,7 +69,7 @@ typedef struct {
 	 * auto-save preferences have been changed. Parameters are the new
 	 * parameters of the configuration.
 	 */
-	void ( *on_autosave_changed )        ( NAIPivotConsumer *instance, gboolean enabled, guint period );
+	void ( *on_autosave_changed )         ( NAIPivotConsumer *instance, gboolean enabled, guint period );
 
 	/**
 	 * on_create_root_menu_changed:
@@ -80,7 +80,7 @@ typedef struct {
 	 * This function is triggered each time the setting of the display
 	 * of an 'About' item in the Nautilus context menu is changed.
 	 */
-	void ( *on_create_root_menu_changed )( NAIPivotConsumer *instance, gboolean enabled );
+	void ( *on_create_root_menu_changed ) ( NAIPivotConsumer *instance, gboolean enabled );
 
 	/**
 	 * on_display_about_changed:
@@ -91,7 +91,7 @@ typedef struct {
 	 * This function is triggered each time the setting of the display
 	 * of an 'About' item in the Nautilus context menu is changed.
 	 */
-	void ( *on_display_about_changed )   ( NAIPivotConsumer *instance, gboolean enabled );
+	void ( *on_display_about_changed )    ( NAIPivotConsumer *instance, gboolean enabled );
 
 	/**
 	 * on_display_order_changed:
@@ -102,7 +102,15 @@ typedef struct {
 	 * This function is triggered each time the display order preference
 	 * is changed.
 	 */
-	void ( *on_display_order_changed )   ( NAIPivotConsumer *instance, gint order_mode );
+	void ( *on_display_order_changed )    ( NAIPivotConsumer *instance, gint order_mode );
+
+	/**
+	 * on_io_provider_prefs_changed:
+	 * @instance: the #NAIPivotConsumer instance which implements this interface.
+	 *
+	 * This function is triggered each time an i/o provider preference is changed.
+	 */
+	void ( *on_io_provider_prefs_changed )( NAIPivotConsumer *instance );
 
 	/**
 	 * on_items_changed:
@@ -115,15 +123,15 @@ typedef struct {
 	 * a bunch of modifications. At this time, the embedded list of
 	 * #NAAction has been updated to be up to date.
 	 */
-	void ( *on_items_changed )           ( NAIPivotConsumer *instance, gpointer user_data );
+	void ( *on_items_changed )            ( NAIPivotConsumer *instance, gpointer user_data );
 
 	/**
 	 * on_mandatory_prefs_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this interface.
 	 *
-	 * This function is triggered each time a mandatory 'locked' preference is changed.
+	 * This function is triggered each time a mandatory preference is changed.
 	 */
-	void ( *on_mandatory_prefs_changed ) ( NAIPivotConsumer *instance );
+	void ( *on_mandatory_prefs_changed )  ( NAIPivotConsumer *instance );
 }
 	NAIPivotConsumerInterface;
 
@@ -131,12 +139,13 @@ GType na_ipivot_consumer_get_type( void );
 
 void  na_ipivot_consumer_allow_notify( NAIPivotConsumer *instance, gboolean allow, guint delay );
 
-void  na_ipivot_consumer_notify_of_autosave_changed        ( NAIPivotConsumer *instance, gboolean enabled, guint period );
-void  na_ipivot_consumer_notify_of_create_root_menu_changed( NAIPivotConsumer *instance, gboolean enabled );
-void  na_ipivot_consumer_notify_of_display_about_changed   ( NAIPivotConsumer *instance, gboolean enabled );
-void  na_ipivot_consumer_notify_of_display_order_changed   ( NAIPivotConsumer *instance, gint order_mode );
-void  na_ipivot_consumer_notify_of_items_changed           ( NAIPivotConsumer *instance );
-void  na_ipivot_consumer_notify_of_mandatory_prefs_changed ( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_autosave_changed         ( NAIPivotConsumer *instance, gboolean enabled, guint period );
+void  na_ipivot_consumer_notify_of_create_root_menu_changed ( NAIPivotConsumer *instance, gboolean enabled );
+void  na_ipivot_consumer_notify_of_display_about_changed    ( NAIPivotConsumer *instance, gboolean enabled );
+void  na_ipivot_consumer_notify_of_display_order_changed    ( NAIPivotConsumer *instance, gint order_mode );
+void  na_ipivot_consumer_notify_of_io_provider_prefs_changed( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_items_changed            ( NAIPivotConsumer *instance );
+void  na_ipivot_consumer_notify_of_mandatory_prefs_changed  ( NAIPivotConsumer *instance );
 
 G_END_DECLS
 
