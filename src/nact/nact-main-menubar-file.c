@@ -323,7 +323,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 
 	/* restore NAPivot notifications
 	 */
-	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( window ), TRUE, 1000 );
+	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( window ), TRUE, 2000 );
 }
 
 /*
