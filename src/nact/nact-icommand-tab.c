@@ -84,7 +84,6 @@ static void       interface_base_finalize( NactICommandTabInterface *klass );
 static void       on_iactions_list_column_edited( NactICommandTab *instance, NAObject *object, gchar *text, gint column );
 static void       on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected );
 
-static void       check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label );
 static GtkWidget *get_label_entry( NactICommandTab *instance );
 static GtkButton *get_legend_button( NactICommandTab *instance );
 static GtkWindow *get_legend_dialog( NactICommandTab *instance );
@@ -102,7 +101,6 @@ static void       on_path_changed( GtkEntry *entry, NactICommandTab *instance );
 static void       on_wdir_browse( GtkButton *button, NactICommandTab *instance );
 static void       on_wdir_changed( GtkEntry *entry, NactICommandTab *instance );
 static gchar     *parse_parameters( NactICommandTab *instance );
-static void       set_label_label( NactICommandTab *instance, const gchar *color );
 static void       update_example_label( NactICommandTab *instance, NAObjectProfile *profile );
 
 GType
@@ -386,7 +384,6 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		label = profile ? na_object_get_label( profile ) : g_strdup( "" );
 		label = label ? label : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
-		check_for_label( instance, GTK_ENTRY( label_entry ), label );
 		g_free( label );
 		gtk_widget_set_sensitive( label_entry, profile != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( label_entry ), editable );
@@ -427,34 +424,6 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		nact_gtk_utils_set_editable( GTK_OBJECT( wdir_button ), editable );
 
 		st_on_selection_change = FALSE;
-	}
-}
-
-static void
-check_for_label( NactICommandTab *instance, GtkEntry *entry, const gchar *label )
-{
-	NAObjectProfile *profile;
-
-	nact_main_statusbar_hide_status(
-			NACT_MAIN_WINDOW( instance ),
-			ICOMMAND_TAB_STATUSBAR_CONTEXT );
-
-	set_label_label( instance, "black" );
-
-	g_object_get(
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			NULL );
-
-	if( profile && g_utf8_strlen( label, -1 ) == 0 ){
-
-		/* i18n: status bar message when the profile label is empty */
-		nact_main_statusbar_display_status(
-				NACT_MAIN_WINDOW( instance ),
-				ICOMMAND_TAB_STATUSBAR_CONTEXT,
-				_( "Caution: a label is mandatory for the profile." ));
-
-		set_label_label( instance, "red" );
 	}
 }
 
@@ -554,7 +523,6 @@ on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 			label = gtk_entry_get_text( entry );
 			na_object_set_label( profile, label );
 			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, TRUE );
-			check_for_label( instance, entry, label );
 		}
 	}
 }
@@ -866,17 +834,6 @@ parse_parameters( NactICommandTab *instance )
 	g_free( exec );
 
 	return( returned );
-}
-
-static void
-set_label_label( NactICommandTab *instance, const gchar *color_str )
-{
-	GtkWidget *label;
-	GdkColor color;
-
-	label = base_window_get_widget( BASE_WINDOW( instance ), "ProfileLabelLabel" );
-	gdk_color_parse( color_str, &color );
-	gtk_widget_modify_fg( label, GTK_STATE_NORMAL, &color );
 }
 
 static void

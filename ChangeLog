@@ -1,4 +1,6 @@
-2010-08-09 Pierre Wieser <pwieser@trychlos.org>
+2010-08-10 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-icommand-tab.c: No more check for a non-empty profile name.
 
 	Allow writing of empty data.
 
@@ -68,6 +70,8 @@
 	* src/nact/nact-match-list.c
 	(on_key_pressed_event): Only insert/delete rows if item is editable.
 	(on_must_match_toggled, on_must_not_match_toggled): Manage radio buttons.
+
+2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
 	Review notification bufferization.
 
