@@ -86,8 +86,8 @@ DOC_FIGURES = \
 	figures/start-zenity-result.png				\
 	$(NULL)
 
-clean-local :
-	rm -f *~
-
 DOC_LINGUAS = \
 	$(NULL)
+
+clean-local :
+	rm -f *~
