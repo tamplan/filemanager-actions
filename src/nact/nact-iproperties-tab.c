@@ -293,6 +293,7 @@ on_tab_updatable_selection_changed( NactIPropertiesTab *instance, gint count_sel
 		label = item ? na_object_get_description( item ) : g_strdup( "" );
 		gtk_text_buffer_set_text( buffer, label, -1 );
 		g_free( label );
+		nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
 
 		shortcut_button = base_window_get_widget( BASE_WINDOW( instance ), "SuggestedShortcutButton" );
 		shortcut = item ? na_object_get_shortcut( item ) : g_strdup( "" );

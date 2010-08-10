@@ -308,13 +308,17 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 		gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( normal_toggle ), profile == NULL );
 
 		if( !strcmp( mode, "Normal" )){
-			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( normal_toggle ), TRUE );
+			nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( normal_toggle ), G_CALLBACK( on_normal_mode_toggled ));
+
 		} else if( !strcmp( mode, "Terminal" )){
-			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( terminal_toggle ), TRUE );
+			nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( terminal_toggle ), G_CALLBACK( on_terminal_mode_toggled ));
+
 		} else if( !strcmp( mode, "Embedded" )){
-			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( embedded_toggle ), TRUE );
+			nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( embedded_toggle ), G_CALLBACK( on_embedded_mode_toggled ));
+
 		} else if( !strcmp( mode, "DisplayOutput" )){
-			gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( display_toggle ), TRUE );
+			nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( display_toggle ), G_CALLBACK( on_display_mode_toggled ));
+
 		} else {
 			g_warning( "%s: unable to setup execution mode '%s'", thisfn, mode );
 		}
@@ -398,9 +402,7 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 			}
 
 		} else {
-			g_signal_handlers_block_by_func(( gpointer ) toggle_button, cb, instance );
-			gtk_toggle_button_set_active( toggle_button, !active );
-			g_signal_handlers_unblock_by_func(( gpointer ) toggle_button, cb, instance );
+			nact_gtk_utils_reset_initial_state( toggle_button, cb, instance, active );
 		}
 	}
 }

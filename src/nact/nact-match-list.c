@@ -545,13 +545,17 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListStr *data 
 	}
 
 	if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
-		insert_new_row( data );
-		stop = TRUE;
+		if( data->editable_item ){
+			insert_new_row( data );
+			stop = TRUE;
+		}
 	}
 
 	if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
-		delete_current_row( data );
-		stop = TRUE;
+		if( data->editable_item ){
+			delete_current_row( data );
+			stop = TRUE;
+		}
 	}
 
 	return( stop );
@@ -579,32 +583,41 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 	NAIContext *context;
 	GSList *filters;
 	gchar *to_remove;
+	gboolean active;
 
 	/*gboolean is_active = gtk_cell_renderer_toggle_get_active( cell_renderer );
 	g_debug( "%s: is_active=%s", thisfn, is_active ? "True":"False" );*/
 
-	if( !gtk_cell_renderer_toggle_get_active( cell_renderer )){
-		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
-		g_return_if_fail( NA_IS_ICONTEXT( context ));
+	active = gtk_cell_renderer_toggle_get_active( cell_renderer );
 
-		set_match_status( path_str, TRUE, FALSE, data );
+	if( data->editable_item ){
+		if( !active ){
+			context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
+			g_return_if_fail( NA_IS_ICONTEXT( context ));
 
-		filter = get_filter_from_path( path_str, data );
-		filters = ( *data->pget )( context );
+			set_match_status( path_str, TRUE, FALSE, data );
 
-		if( filters ){
-			to_remove = g_strdup_printf( "!%s", filter );
-			filters = na_core_utils_slist_remove_ascii( filters, to_remove );
-			g_free( to_remove );
+			filter = get_filter_from_path( path_str, data );
+			filters = ( *data->pget )( context );
+
+			if( filters ){
+				to_remove = g_strdup_printf( "!%s", filter );
+				filters = na_core_utils_slist_remove_ascii( filters, to_remove );
+				g_free( to_remove );
+			}
+
+			filters = g_slist_prepend( filters, g_strdup( filter ));
+			( *data->pset )( context, filters );
+
+			na_core_utils_slist_free( filters );
+			g_free( filter );
+
+			g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
 		}
-
-		filters = g_slist_prepend( filters, g_strdup( filter ));
-		( *data->pset )( context, filters );
-
-		na_core_utils_slist_free( filters );
-		g_free( filter );
-
-		g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	} else {
+		g_signal_handlers_block_by_func(( gpointer ) cell_renderer, on_must_match_toggled, data );
+		gtk_cell_renderer_toggle_set_active( cell_renderer, !active );
+		g_signal_handlers_unblock_by_func(( gpointer ) cell_renderer, on_must_match_toggled, data );
 	}
 }
 
@@ -622,31 +635,40 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 	NAIContext *context;
 	GSList *filters;
 	gchar *to_add;
+	gboolean active;
 
 	/*gboolean is_active = gtk_cell_renderer_toggle_get_active( cell_renderer );
 	g_debug( "%s: is_active=%s", thisfn, is_active ? "True":"False" );*/
 
-	if( !gtk_cell_renderer_toggle_get_active( cell_renderer )){
-		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
-		g_return_if_fail( NA_IS_ICONTEXT( context ));
+	active = gtk_cell_renderer_toggle_get_active( cell_renderer );
 
-		set_match_status( path_str, FALSE, TRUE, data );
+	if( data->editable_item ){
+		if( !active ){
+			context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
+			g_return_if_fail( NA_IS_ICONTEXT( context ));
 
-		filter = get_filter_from_path( path_str, data );
-		filters = ( *data->pget )( context );
+			set_match_status( path_str, FALSE, TRUE, data );
 
-		if( filters ){
-			filters = na_core_utils_slist_remove_ascii( filters, filter );
+			filter = get_filter_from_path( path_str, data );
+			filters = ( *data->pget )( context );
+
+			if( filters ){
+				filters = na_core_utils_slist_remove_ascii( filters, filter );
+			}
+
+			to_add = g_strdup_printf( "!%s", filter );
+			filters = g_slist_prepend( filters, to_add );
+			( *data->pset )( context, filters );
+
+			na_core_utils_slist_free( filters );
+			g_free( filter );
+
+			g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
 		}
-
-		to_add = g_strdup_printf( "!%s", filter );
-		filters = g_slist_prepend( filters, to_add );
-		( *data->pset )( context, filters );
-
-		na_core_utils_slist_free( filters );
-		g_free( filter );
-
-		g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	} else {
+		g_signal_handlers_block_by_func(( gpointer ) cell_renderer, on_must_not_match_toggled, data );
+		gtk_cell_renderer_toggle_set_active( cell_renderer, !active );
+		g_signal_handlers_unblock_by_func(( gpointer ) cell_renderer, on_must_not_match_toggled, data );
 	}
 }
 

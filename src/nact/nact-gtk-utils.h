@@ -45,6 +45,9 @@ G_BEGIN_DECLS
 
 void       nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable );
 
+void       nact_gtk_utils_set_initial_state  ( GtkToggleButton *button, GCallback func );
+void       nact_gtk_utils_reset_initial_state( GtkToggleButton *button, GCallback func, void *data, gboolean active );
+
 /* image utilities
  */
 GdkPixbuf *nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize size );

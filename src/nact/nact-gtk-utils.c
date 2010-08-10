@@ -57,10 +57,19 @@ void
 nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
 {
 	GList *renderers, *irender;
-	GtkTextBuffer *buffer;
-	GtkTextTag *tag;
 
-	if( GTK_IS_ENTRY( widget )){
+	if( GTK_IS_COMBO_BOX_ENTRY( widget )){
+		/* idem as GtkEntry */
+		gtk_editable_set_editable( GTK_EDITABLE( gtk_bin_get_child( GTK_BIN( widget ))), editable );
+		g_object_set( G_OBJECT( gtk_bin_get_child( GTK_BIN( widget ))), "can-focus", editable, NULL );
+		/* disable the listbox button itself */
+		gtk_combo_box_set_button_sensitivity( GTK_COMBO_BOX( widget ), editable ? GTK_SENSITIVITY_ON : GTK_SENSITIVITY_OFF );
+
+	} else if( GTK_IS_COMBO_BOX( widget )){
+			/* disable the listbox button itself */
+			gtk_combo_box_set_button_sensitivity( GTK_COMBO_BOX( widget ), editable ? GTK_SENSITIVITY_ON : GTK_SENSITIVITY_OFF );
+
+	} else if( GTK_IS_ENTRY( widget )){
 		gtk_editable_set_editable( GTK_EDITABLE( widget ), editable );
 		/* removing the frame leads to a disturbing modification of the
 		 * height of the control */
@@ -69,12 +78,8 @@ nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
 		g_object_set( G_OBJECT( widget ), "can-focus", editable, NULL );
 
 	} else if( GTK_IS_TEXT_VIEW( widget )){
-		buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( widget ));
-		tag = gtk_text_buffer_create_tag( buffer,
-				"nact-tag",
-				"editable", editable,
-				"editable-set", TRUE,
-				NULL );
+		g_object_set( G_OBJECT( widget ), "can-focus", editable, NULL );
+		gtk_text_view_set_editable( GTK_TEXT_VIEW( widget ), editable );
 
 	} else if( GTK_IS_TOGGLE_BUTTON( widget )){
 		/* transforms to a quasi standard GtkButton */
@@ -82,16 +87,6 @@ nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
 		/* this at least prevent the keyboard focus to go to the button
 		 * (which is better than nothing) */
 		g_object_set( G_OBJECT( widget ), "can-focus", editable, NULL );
-
-	} else if( GTK_IS_BUTTON( widget )){
-		gtk_widget_set_sensitive( GTK_WIDGET( widget ), editable );
-
-	} else if( GTK_IS_COMBO_BOX_ENTRY( widget )){
-		/* idem as GtkEntry */
-		gtk_editable_set_editable( GTK_EDITABLE( gtk_bin_get_child( GTK_BIN( widget ))), editable );
-		g_object_set( G_OBJECT( gtk_bin_get_child( GTK_BIN( widget ))), "can-focus", editable, NULL );
-		/* disable the listbox button itself */
-		gtk_combo_box_set_button_sensitivity( GTK_COMBO_BOX( widget ), editable ? GTK_SENSITIVITY_ON : GTK_SENSITIVITY_OFF );
 
 	} else if( GTK_IS_TREE_VIEW_COLUMN( widget )){
 		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( GTK_TREE_VIEW_COLUMN( widget )));
@@ -101,6 +96,68 @@ nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
 			}
 		}
 		g_list_free( renderers );
+
+	} else if( GTK_IS_BUTTON( widget )){
+		gtk_widget_set_sensitive( GTK_WIDGET( widget ), editable );
+	}
+}
+
+/**
+ * nact_gtk_utils_set_initial_state:
+ * @button: the #GtkToggleButton activated as initial state.
+ * @func: the corresponding on_toggled function.
+ *
+ * Record on each #GtkRadioButton of the same group the characteristics
+ * of those which is activated as the initial state. This is useful to handle
+ * read-only radio-button.
+ *
+ * As a side-effect, this initial button is set as active here.
+ */
+void
+nact_gtk_utils_set_initial_state( GtkToggleButton *button, GCallback func )
+{
+	GSList *group, *ig;
+	GtkRadioButton *other;
+
+	group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ));
+	for( ig = group ; ig ; ig = ig->next ){
+		other = GTK_RADIO_BUTTON( ig->data );
+		g_object_set_data( G_OBJECT( other ), "nact-initial-state-button", button );
+		g_object_set_data( G_OBJECT( other ), "nact-initial-state-func", func );
+	}
+
+	gtk_toggle_button_set_active( button, TRUE );
+}
+
+/**
+ * nact_gtk_utils_reset_initials:
+ * @button: the #GtkToggleButton being toggled.
+ * @func: the corresponding on_toggled function.
+ * @data: data associated with the @func callback.
+ * @active: wheter @button is currently being tried to get activated.
+ *
+ * When clicking on a read-only radio button, this function ensures that
+ * the radio button is not modified. This function should be called only
+ * when the control is read-only (not editable).
+ */
+void
+nact_gtk_utils_reset_initial_state( GtkToggleButton *button, GCallback func, void *data, gboolean active )
+{
+	GtkToggleButton *initial_button;
+	GCallback initial_func;
+
+	if( active ){
+		initial_button = GTK_TOGGLE_BUTTON( g_object_get_data( G_OBJECT( button ), "nact-initial-state-button" ));
+		initial_func = G_CALLBACK( g_object_get_data( G_OBJECT( button ), "nact-initial-state-func" ));
+
+		g_signal_handlers_block_by_func(( gpointer ) button, func, data );
+		g_signal_handlers_block_by_func(( gpointer ) initial_button, initial_func, data );
+
+		gtk_toggle_button_set_active( button, FALSE );
+		gtk_toggle_button_set_active( initial_button, TRUE );
+
+		g_signal_handlers_unblock_by_func(( gpointer ) initial_button, initial_func, data );
+		g_signal_handlers_unblock_by_func(( gpointer ) button, func, data );
 	}
 }
 

@@ -6,10 +6,6 @@ N-A BUGS
 - changing conditions in IConditionsTab should trigger an update of the
   example label
 
-- should not be able to remove a line from a condition filter listbox when item is read-only
-
-- should not be able to toggle execution mode when item is read-only
-
 - when error on writing, should let the item modified
 
 TODO
@@ -28,6 +24,8 @@ TODO
   e.g. basenames default value = [*]
   after deleting this default value in the UI, we should write basenames=[] in the I/O provider
   so that we really have an empty list
+
+- nact_gtk_utils_set_editable for radio buttons and combobox
 
 N-A ENHANCEMENTS
 ================

@@ -362,7 +362,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 	gboolean enable_tab;
 	GtkWidget *label_entry, *path_entry, *parameters_entry, *wdir_entry;
 	gchar *label, *path, *parameters, *wdir;
-	GtkButton *path_button;
+	GtkButton *path_button, *wdir_button;
 	GtkButton *legend_button;
 
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
@@ -421,6 +421,10 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		g_free( wdir );
 		gtk_widget_set_sensitive( wdir_entry, profile != NULL );
 		nact_gtk_utils_set_editable( GTK_OBJECT( wdir_entry ), editable );
+
+		wdir_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "CommandWorkingDirectoryButton" ));
+		gtk_widget_set_sensitive( GTK_WIDGET( wdir_button ), profile != NULL );
+		nact_gtk_utils_set_editable( GTK_OBJECT( wdir_button ), editable );
 
 		st_on_selection_change = FALSE;
 	}

@@ -1,5 +1,29 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Controls are not modifiable for a read-only item.
+
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h
+	(nact_gtk_utils_set_initial_state, nact_gtk_utils_reset_initial_state):
+	New functions.
+
+	* src/nact/nact-icommand-tab.c (on_tab_updatable_selection_changed):
+	Manage working directory browse button.
+
+	* src/nact/nact-ienvironment-tab.c (on_tab_updatable_selection_changed):
+	Manage try exec and show if running browse buttons.
+	Manage desktop environment radio buttons.
+
+	* src/nact/nact-iexecution-tab.c (on_tab_updatable_selection_changed):
+	Manage execution mode radio buttons.
+
+	* src/nact/nact-iproperties-tab.c (on_tab_updatable_selection_changed):
+	Manage description text view.
+
+	* src/nact/nact-match-list.c
+	(on_key_pressed_event): Only insert/delete rows if item is editable.
+	(on_must_match_toggled, on_must_not_match_toggled): Manage radio buttons.
+
 	Review notification bufferization.
 
 	* src/core/na-ipivot-consumer.c:
