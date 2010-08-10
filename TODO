@@ -16,10 +16,6 @@ TODO
 
 - 2010-08-09: in v1.x until ??, %f used to be the basename!!
 
-- "write even if default" was added for version only
-  but version should not been written in desktop files (not in the spec)
-  so version should be explictely written (as type)
-
 - an empty list is not a default value
   e.g. basenames default value = [*]
   after deleting this default value in the UI, we should write basenames=[] in the I/O provider

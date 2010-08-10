@@ -46,6 +46,9 @@
 #include "nagp-writer.h"
 #include "nagp-keys.h"
 
+static void write_start_write_type( NagpGConfProvider *provider, NAObjectItem *item );
+static void write_start_write_version( NagpGConfProvider *provider, NAObjectItem *item );
+
 /*
  * API function: should only be called through NAIIOProvider interface
  */
@@ -223,28 +226,46 @@ guint
 nagp_writer_write_start( const NAIFactoryProvider *writer, void *writer_data,
 							const NAIFactoryObject *object, GSList **messages  )
 {
-	GConfClient *gconf;
-	gchar *id;
-	gchar *path;
-	guint iversion;
-
 	if( NA_IS_OBJECT_ITEM( object )){
-		id = na_object_get_id( object );
-		gconf = NAGP_GCONF_PROVIDER( writer )->private->gconf;
-
-		path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, id, NAGP_ENTRY_TYPE );
-		na_gconf_utils_write_string( gconf, path, NA_IS_OBJECT_ACTION( object ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU, NULL );
-		g_free( path );
-
-		path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, id, NAGP_ENTRY_IVERSION );
-		iversion = na_object_get_iversion( object );
-		na_gconf_utils_write_int( gconf, path, iversion, NULL );
-		g_free( path );
-
-		g_free( id );
+		write_start_write_type( NAGP_GCONF_PROVIDER( writer ), NA_OBJECT_ITEM( object ));
+		write_start_write_version( NAGP_GCONF_PROVIDER( writer ), NA_OBJECT_ITEM( object ));
 	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
+static void
+write_start_write_type( NagpGConfProvider *provider, NAObjectItem *item )
+{
+	gchar *id, *path;
+
+	id = na_object_get_id( item );
+	path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, id, NAGP_ENTRY_TYPE );
+
+	na_gconf_utils_write_string(
+			provider->private->gconf,
+			path,
+			NA_IS_OBJECT_ACTION( item ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU,
+			NULL );
+
+	g_free( path );
+	g_free( id );
+}
+
+static void
+write_start_write_version( NagpGConfProvider *provider, NAObjectItem *item )
+{
+	gchar *id, *path;
+	guint iversion;
+
+	id = na_object_get_id( item );
+	path = g_strdup_printf( "%s/%s/%s", NAGP_CONFIGURATIONS_PATH, id, NAGP_ENTRY_IVERSION );
+
+	iversion = na_object_get_iversion( item );
+	na_gconf_utils_write_int( provider->private->gconf, path, iversion, NULL );
+
+	g_free( path );
+	g_free( id );
 }
 
 guint

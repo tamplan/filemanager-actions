@@ -391,10 +391,13 @@ NADataDef data_def_item [] = {
 	 * do not have this key.
 	 * Only when version will need to be incremented again, we will write a version
 	 * key in .desktop files (probably 1 or 2), and increment this iversion to 4.
+	 * As this version number will not be the same in .desktop and in GConf, it
+	 * is marked as not automatically writable: it has to be written specifically
+	 * by each i/o provider.
 	 */
 	{ NAFO_DATA_IVERSION,
 				TRUE,
-				TRUE,
+				FALSE,
 				TRUE,
 				N_( "Version of the format" ),
 				N_( "The version of the configuration format that will be used to manage backward compatibility." ),

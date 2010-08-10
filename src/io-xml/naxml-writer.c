@@ -99,6 +99,9 @@ static void            instance_init( GTypeInstance *instance, gpointer klass );
 static void            instance_dispose( GObject *object );
 static void            instance_finalize( GObject *object );
 
+static void            write_start_write_type( NAXMLWriter *writer, NAObjectItem *object, const NADataGroup *groups );
+static void            write_start_write_version( NAXMLWriter *writer, NAObjectItem *object, const NADataGroup *groups );
+
 static void            write_data_schema_v1( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxed *boxed, const NADataDef *def );
 static void            write_data_schema_v1_element( NAXMLWriter *writer, const NADataDef *def );
 static void            write_type_schema_v1( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value );
@@ -114,7 +117,6 @@ static xmlDocPtr       build_xml_doc( NAXMLWriter *writer );
 static ExportFormatFn *find_export_format_fn( GQuark format );
 static gchar          *get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format );
 static void            output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg );
-static void            write_type( NAXMLWriter *writer, NAObjectItem *object, const NADataGroup *groups );
 static guint           writer_to_buffer( NAXMLWriter *writer );
 
 static ExportFormatFn st_export_format_fn[] = {
@@ -400,10 +402,46 @@ naxml_writer_write_start( const NAIFactoryProvider *provider, void *writer_data,
 		}
 
 		groups = na_ifactory_object_get_data_groups( object );
-		write_type( writer, NA_OBJECT_ITEM( object ), groups );
+		write_start_write_type( writer, NA_OBJECT_ITEM( object ), groups );
+		write_start_write_version( writer, NA_OBJECT_ITEM( object ), groups );
 	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
+/* at end of write_start (list_node already created)
+ * explicitly write the 'Type' node
+ */
+static void
+write_start_write_type( NAXMLWriter *writer, NAObjectItem *object, const NADataGroup *groups )
+{
+	const NADataDef *def;
+	const gchar *svalue;
+
+	writer->private->schema_node = NULL;
+	writer->private->locale_node = NULL;
+	def = na_data_def_get_data_def( groups, NA_FACTORY_OBJECT_ITEM_GROUP, NAFO_DATA_TYPE );
+	svalue = NA_IS_OBJECT_ACTION( object ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU;
+
+	( *writer->private->fn_str->write_type_fn )( writer, object, def, svalue );
+}
+
+static void
+write_start_write_version( NAXMLWriter *writer, NAObjectItem *object, const NADataGroup *groups )
+{
+	const NADataDef *def;
+	guint iversion;
+	gchar *svalue;
+
+	writer->private->schema_node = NULL;
+	writer->private->locale_node = NULL;
+	def = na_data_def_get_data_def( groups, NA_FACTORY_OBJECT_ITEM_GROUP, NAFO_DATA_IVERSION );
+	iversion = na_object_get_iversion( object );
+	svalue = g_strdup_printf( "%d", iversion );
+
+	( *writer->private->fn_str->write_type_fn )( writer, object, def, svalue );
+
+	g_free( svalue );
 }
 
 guint
@@ -808,23 +846,6 @@ output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg )
 
 	g_object_unref( stream );
 	g_object_unref( file );
-}
-
-/* at end of write_start (list_node already created)
- * explicitly write the 'Type' node
- */
-static void
-write_type( NAXMLWriter *writer, NAObjectItem *object, const NADataGroup *groups )
-{
-	const NADataDef *def;
-	const gchar *svalue;
-
-	writer->private->schema_node = NULL;
-	writer->private->locale_node = NULL;
-	def = na_data_def_get_data_def( groups, NA_FACTORY_OBJECT_ITEM_GROUP, NAFO_DATA_TYPE );
-	svalue = NA_IS_OBJECT_ACTION( object ) ? NAGP_VALUE_TYPE_ACTION : NAGP_VALUE_TYPE_MENU;
-
-	( *writer->private->fn_str->write_type_fn )( writer, object, def, svalue );
 }
 
 static guint

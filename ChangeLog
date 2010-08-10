@@ -1,5 +1,16 @@
 2010-08-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Review pre- and post- write operations in I/O providers.
+
+	* src/core/na-object-action.c: Cleanup the code.
+
+	* src/core/na-object-item-factory.c:
+	NAFO_DATA_IVERSION becomes unwritable.
+
+	* src/io-desktop/nadp-writer.c:
+	* src/io-gconf/nagp-writer.c:
+	* src/io-xml/naxml-writer.c: Cleanup the code.
+
 	Immediately reacts to a status change in I/O providers.
 
 	* src/core/na-ipivot-consumer.c:

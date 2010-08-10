@@ -87,9 +87,11 @@ static guint        ifactory_object_write_done( NAIFactoryObject *instance, cons
 static void         icontext_iface_init( NAIContextInterface *iface );
 static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
 
-static void         convert_v1_to_v2( NAIFactoryObject *instance );
-static void         deals_with_toolbar_label( NAIFactoryObject *instance );
-static void         deals_with_version( NAIFactoryObject *instance );
+static void         read_done_convert_v1_to_v2( NAIFactoryObject *instance );
+static void         read_done_deals_with_toolbar_label( NAIFactoryObject *instance );
+static void         read_done_deals_with_version( NAIFactoryObject *instance );
+
+static guint        write_done_write_profiles( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
 static gboolean     object_object_is_valid( const NAObjectAction *action );
 static gboolean     is_valid_label( const NAObjectAction *action );
@@ -342,13 +344,13 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 
 	/* may attach a new profile if we detect a pre-v2 action
 	 */
-	convert_v1_to_v2( instance );
+	read_done_convert_v1_to_v2( instance );
 
 	/* deals with obsoleted data, i.e. data which may have been written in the past
 	 * but are no long written by now
 	 */
-	deals_with_toolbar_label( instance );
-	deals_with_version( instance );
+	read_done_deals_with_toolbar_label( instance );
+	read_done_deals_with_version( instance );
 
 	/* prepare the context after the reading
 	 */
@@ -372,27 +374,11 @@ ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvide
 static guint
 ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
 {
-	static const gchar *thisfn = "na_object_action_ifactory_object_write_done";
 	guint code;
-	GSList *children_slist, *ic;
-	NAObjectProfile *profile;
 
-	code = NA_IIO_PROVIDER_CODE_OK;
+	g_return_val_if_fail( NA_IS_OBJECT_ACTION( instance ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
-	if( NA_IS_OBJECT_ACTION( instance )){
-		children_slist = na_object_get_items_slist( instance );
-
-		for( ic = children_slist ; ic && code == NA_IIO_PROVIDER_CODE_OK ; ic = ic->next ){
-			profile = NA_OBJECT_PROFILE( na_object_get_item( instance, ic->data ));
-
-			if( profile ){
-				code = na_ifactory_provider_write_item( writer, writer_data, NA_IFACTORY_OBJECT( profile ), messages );
-
-			} else {
-				g_warning( "%s: profile not found: %s", thisfn, ( const gchar * ) ic->data );
-			}
-		}
-	}
+	code = write_done_write_profiles( instance, writer, writer_data, messages );
 
 	return( code );
 }
@@ -420,9 +406,9 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
  *  -> move obsoleted data to a new profile, updating the version string
  */
 static void
-convert_v1_to_v2( NAIFactoryObject *instance )
+read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 {
-	static const gchar *thisfn = "na_object_action_convert_v1_to_v2";
+	static const gchar *thisfn = "na_object_action_read_done_convert_v1_to_v2";
 	gboolean is_pre_v2;
 	GList *to_move;
 	NADataDef *def;
@@ -478,7 +464,7 @@ convert_v1_to_v2( NAIFactoryObject *instance )
  * if toolbar-same-label is true, then ensure that this is actually true
  */
 static void
-deals_with_toolbar_label( NAIFactoryObject *instance )
+read_done_deals_with_toolbar_label( NAIFactoryObject *instance )
 {
 	gchar *toolbar_label;
 	gchar *action_label;
@@ -508,7 +494,7 @@ deals_with_toolbar_label( NAIFactoryObject *instance )
  *    so we just force a version number to 2
  */
 static void
-deals_with_version( NAIFactoryObject *instance )
+read_done_deals_with_version( NAIFactoryObject *instance )
 {
 	guint version_uint;
 	gchar *version_str;
@@ -528,6 +514,35 @@ deals_with_version( NAIFactoryObject *instance )
 
 		g_free( version_str );
 	}
+}
+
+/*
+ * write the profiles of the action
+ * note that subitems string list has been rebuilt on write_start
+ */
+static guint
+write_done_write_profiles( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages )
+{
+	static const gchar *thisfn = "na_object_action_write_done_write_profiles";
+	guint code;
+	GSList *children_slist, *ic;
+	NAObjectProfile *profile;
+
+	code = NA_IIO_PROVIDER_CODE_OK;
+	children_slist = na_object_get_items_slist( instance );
+
+	for( ic = children_slist ; ic && code == NA_IIO_PROVIDER_CODE_OK ; ic = ic->next ){
+		profile = NA_OBJECT_PROFILE( na_object_get_item( instance, ic->data ));
+
+		if( profile ){
+			code = na_ifactory_provider_write_item( writer, writer_data, NA_IFACTORY_OBJECT( profile ), messages );
+
+		} else {
+			g_warning( "%s: profile not found: %s", thisfn, ( const gchar * ) ic->data );
+		}
+	}
+
+	return( code );
 }
 
 static gboolean

@@ -68,6 +68,9 @@ static guint           write_item( const NAIIOProvider *provider, const NAObject
 
 static void            desktop_weak_notify( NadpDesktopFile *ndf, GObject *item );
 
+static void            write_start_write_type( NadpDesktopFile *ndp, NAObjectItem *item );
+static void            write_done_write_subitems_list( NadpDesktopFile *ndp, NAObjectItem *item );
+
 static ExportFormatFn *find_export_format_fn( GQuark format );
 
 /*
@@ -452,14 +455,20 @@ nadp_writer_ifactory_provider_write_start( const NAIFactoryProvider *provider, v
 							const NAIFactoryObject *object, GSList **messages  )
 {
 	if( NA_IS_OBJECT_ITEM( object )){
-		nadp_desktop_file_set_string(
-				NADP_DESKTOP_FILE( writer_data ),
-				NADP_GROUP_DESKTOP,
-				NADP_KEY_TYPE,
-				NA_IS_OBJECT_ACTION( object ) ? NADP_VALUE_TYPE_ACTION : NADP_VALUE_TYPE_MENU );
+		write_start_write_type( NADP_DESKTOP_FILE( writer_data ), NA_OBJECT_ITEM( object ));
 	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
+static void
+write_start_write_type( NadpDesktopFile *ndp, NAObjectItem *item )
+{
+	nadp_desktop_file_set_string(
+			ndp,
+			NADP_GROUP_DESKTOP,
+			NADP_KEY_TYPE,
+			NA_IS_OBJECT_ACTION( item ) ? NADP_VALUE_TYPE_ACTION : NADP_VALUE_TYPE_MENU );
 }
 
 /*
@@ -561,36 +570,41 @@ guint
 nadp_writer_ifactory_provider_write_done( const NAIFactoryProvider *provider, void *writer_data,
 							const NAIFactoryObject *object, GSList **messages  )
 {
-	static const gchar *thisfn = "nadp_writer_ifactory_provider_write_done";
-	GSList *subitems;
-	GSList *profile_groups;
-	GSList *ip;
-
 	if( NA_IS_OBJECT_ITEM( object )){
-		subitems = na_object_get_items_slist( object );
-		na_core_utils_slist_dump( thisfn, subitems );
-
-		nadp_desktop_file_set_string_list(
-				NADP_DESKTOP_FILE( writer_data ),
-				NADP_GROUP_DESKTOP,
-				NA_IS_OBJECT_ACTION( object ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
-				subitems );
-
-		profile_groups = nadp_desktop_file_get_profiles( NADP_DESKTOP_FILE( writer_data ));
-		na_core_utils_slist_dump( thisfn, profile_groups );
-
-		for( ip = profile_groups ; ip ; ip = ip->next ){
-			if( na_core_utils_slist_count( subitems, ( const gchar * ) ip->data ) == 0 ){
-				g_debug( "%s: deleting (removed) profile %s", thisfn, ( const gchar * ) ip->data );
-				nadp_desktop_file_remove_profile( NADP_DESKTOP_FILE( writer_data ), ( const gchar * ) ip->data );
-			}
-		}
-
-		na_core_utils_slist_free( profile_groups );
-		na_core_utils_slist_free( subitems );
+		write_done_write_subitems_list( NADP_DESKTOP_FILE( writer_data ), NA_OBJECT_ITEM( object ));
 	}
 
 	return( NA_IIO_PROVIDER_CODE_OK );
+}
+
+static void
+write_done_write_subitems_list( NadpDesktopFile *ndp, NAObjectItem *item )
+{
+	static const gchar *thisfn = "nadp_writer_write_done_write_subitems_list";
+	GSList *subitems;
+	GSList *profile_groups, *ip;
+
+	subitems = na_object_get_items_slist( item );
+	na_core_utils_slist_dump( thisfn, subitems );
+
+	nadp_desktop_file_set_string_list(
+			ndp,
+			NADP_GROUP_DESKTOP,
+			NA_IS_OBJECT_ACTION( item ) ? NADP_KEY_PROFILES : NADP_KEY_ITEMS_LIST,
+			subitems );
+
+	profile_groups = nadp_desktop_file_get_profiles( ndp );
+	na_core_utils_slist_dump( thisfn, profile_groups );
+
+	for( ip = profile_groups ; ip ; ip = ip->next ){
+		if( na_core_utils_slist_count( subitems, ( const gchar * ) ip->data ) == 0 ){
+			g_debug( "%s: deleting (removed) profile %s", thisfn, ( const gchar * ) ip->data );
+			nadp_desktop_file_remove_profile( ndp, ( const gchar * ) ip->data );
+		}
+	}
+
+	na_core_utils_slist_free( profile_groups );
+	na_core_utils_slist_free( subitems );
 }
 
 static ExportFormatFn *
