@@ -50,9 +50,9 @@
       As of version 3.0, menu separators cannot be
       configured in &appname;, and are not honored by &nautilus; plugin.
     </para>
-    <para>
-      One has to note that, for now, &nautilus; file manager does not
-      allow its plugins to define separators in the context menu.
-    </para>
   </formalpara>
+  <para>
+    One has to note that, for now, &nautilus; file manager does not
+    allow its plugins to define separators in the context menu.
+  </para>
 </sect2>
