@@ -256,15 +256,15 @@ na_selected_info_copy_list( GList *files )
 
 /**
  * na_selected_info_free_list:
- * @list: a #GList of #NASelectedInfo items.
+ * @files: a #GList of #NASelectedInfo items.
  *
- * Frees up the #GList @list.
+ * Frees up the #GList @files.
  */
 void
-na_selected_info_free_list( GList *list )
+na_selected_info_free_list( GList *files )
 {
-	g_list_foreach( list, ( GFunc ) g_object_unref, NULL );
-	g_list_free( list );
+	g_list_foreach( files, ( GFunc ) g_object_unref, NULL );
+	g_list_free( files );
 }
 
 /**

@@ -489,13 +489,14 @@
         </screenshot>
       </figure>
       <para>
-        In the items list, the new action is displayed in italic characters.
+        In the <guilabel>Items list</guilabel>, the new action is displayed in italic characters.
       </para>
       <para>
         Italics are used as a reminder that the item has not yet been saved.
       </para>
       <para>
-        As another reminder, an asterisk (&laquosp;<literal>*</literal>&spraquo;)
+        As another reminder that there is some pending modifications,
+        an asterisk (&laquosp;<literal>*</literal>&spraquo;)
         comes to prefix the application name in the title bar. 
       </para>
       <formalpara>

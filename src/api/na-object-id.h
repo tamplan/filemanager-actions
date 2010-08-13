@@ -91,7 +91,7 @@ GType  na_object_id_get_type( void );
 gint   na_object_id_sort_alpha_asc ( const NAObjectId *a, const NAObjectId *b );
 gint   na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
 
-void   na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *action );
+void   na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *parent );
 void   na_object_id_set_copy_of_label( NAObjectId *object );
 void   na_object_id_set_new_id       ( NAObjectId *object, const NAObjectId *new_parent );
 

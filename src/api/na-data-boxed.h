@@ -34,7 +34,7 @@
 /**
  * SECTION: na_data_boxed
  * @short_description: #NADataBoxed class definition.
- * @include: core/na-data-boxed.h
+ * @include: nautilus-actions/na-data-boxed.h
  *
  * The object which encapsulates an elementary data of #NAIFactoryObject.
  * A #NADataBoxed object has a type and a value.

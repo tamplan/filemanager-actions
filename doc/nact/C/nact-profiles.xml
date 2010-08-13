@@ -63,7 +63,7 @@
     </para>
     <para>
       So, ordering of the profiles may be important for your action: the
-      first valid profile found, the first selected profile.
+      first valid profile found, the first - and the only - selected profile.
     </para>
     <para>
       You may order your profiles inside an action in two ways.

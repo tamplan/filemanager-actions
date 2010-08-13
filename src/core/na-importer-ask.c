@@ -224,9 +224,9 @@ import_ask_new()
 
 /**
  * na_importer_ask_user:
- * @importer: this #NAIImporter instance.
+ * @importing: the #NAObjectItem-derived object being currently imported.
+ * @existing: the #NAObjectItem-derived already existing object with the same ID.
  * @parms: a #NAIImporterUriParms structure.
- * @existing: the #NAObjectItem-derived already existing object.
  *
  * Ask the user for what to do when an imported item has the same ID
  * that an already existing one.

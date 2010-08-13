@@ -15,56 +15,79 @@
     parameters. These parameters will be expanded at runtime,
     with values which will depend of currently selected item(s).
   </para>
-  <para>
-    In the <guilabel>Command</guilabel> page, click on <guilabel>Legend</guilabel>
-    button to see the list of available parameters.
-  </para>
-  <figure id="nact-FIG-legend">
-    <title>List of available parameters</title>
-    <screenshot>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="figures/nact-legend.png" format="PNG"/>
-        </imageobject>
-        <textobject>
-          <phrase>Shows the list of available parameters.</phrase>
-        </textobject>
-        <caption>
-          <para>The available parameters</para>
-        </caption>
-      </mediaobject>
-    </screenshot>
-  </figure>
-  <tip>
+
+  <sect3 id="usage-execution-parameters">
+    <title>Available parameters</title>
     <para>
-      The <guibutton>Legend</guibutton> button has a toggling action:
-      click once to display the <guilabel>Parameter Legend</guilabel>
-      dialog box; click a second time to hide it.
+      In the <guilabel>Command</guilabel> page, click on <guilabel>Legend</guilabel>
+      button to see the list of available parameters.
     </para>
-  </tip>
-  <note>
-    <para>
-      the word &laquosp;<guilabel>first</guilabel>&spraquo; may be misleading
-      as it only refers to the list of selected items as provided by the file
-      manager to the &prodname; plugin.
-    </para>
-    <para>
-      In particular, it has nothing to do with the visual selection you may
-      have done in the file manager window. And, in fact, which is the
-      &laquosp;<guilabel>first</guilabel>&spraquo; selected item in a
-      multiple selection is absolutly undefined and rather unpredictable.
-    </para>
-  </note>
+    <figure id="nact-FIG-legend">
+      <title>List of available parameters</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/nact-legend.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>Shows the list of available parameters.</phrase>
+          </textobject>
+          <caption>
+            <para>The available parameters</para>
+          </caption>
+        </mediaobject>
+      </screenshot>
+    </figure>
+    <tip>
+      <para>
+        The <guibutton>Legend</guibutton> button has a toggling action:
+        click once to display the <guilabel>Parameter Legend</guilabel>
+        dialog box; click a second time to hide it.
+      </para>
+    </tip>
+    <note>
+      <para>
+        The word &laquosp;<guilabel>first</guilabel>&spraquo; may be misleading
+        as it only refers to the list of selected items internally provided by
+        the file manager to the &prodname; plugin.
+      </para>
+      <para>
+        In particular, it has <emphasis>nothing to do</emphasis> with the
+        visual selection you may
+        have done in the file manager window. And, in fact, which is the
+        &laquosp;<guilabel>first</guilabel>&spraquo; selected item in a
+        multiple selection is absolutly undefined and rather unpredictable.
+      </para>
+    </note>
+  </sect3>
 
   <sect3 id="usage-execution-work">
     <title>Where the action should it be executed ?</title>
     <para>
       Your action may be executed in a particular working directory.
+    </para>
+    <para>
       You may specify it in the <guilabel>Command</guilabel> tab, in the
       <guilabel>Working directory</guilabel> entry box, or by clicking
       on <guibutton>Browse</guibutton> to select a folder on the 
       filesystem.
     </para>
+    <figure id="nact-FIG-work-dir-frame">
+      <title>Working directory frame</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/nact-working-directory-frame.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>Focus on the working directory selection frame.</phrase>
+          </textobject>
+          <caption>
+            <para>Working directory frame</para>
+          </caption>
+        </mediaobject>
+      </screenshot>
+    </figure>
     <para>
       The working directory defaults to <literal>%d</literal>, which runs
       the command in the base directory of the (first) selected item.
@@ -79,18 +102,28 @@
 
   <sect3 id="usage-execution-how">
     <title>How the action should it be executed ?</title>
+    <para>
+      Apart from configuring the conditions the selection must met in
+      order your action be displayed in file manager menus, &prodname;
+      allows you to configure how exactly your command will be
+      executed.
+    </para>
+    <para>
+      Click on the <guilabel>Execution</guilabel> tab to show the page
+      which will permit you to configure the execution of your command.
+    </para>
     <figure id="nact-FIG-execution">
-      <title>Configuration of the execution mode</title>
+      <title>Configuration of the execution modes</title>
       <screenshot>
         <mediaobject>
           <imageobject>
             <imagedata fileref="figures/nact-execution-tab.png" format="PNG"/>
           </imageobject>
           <textobject>
-            <phrase>Shows how to configure the execution mode of a command.</phrase>
+            <phrase>Shows how to configure the execution modes of a command.</phrase>
           </textobject>
           <caption>
-            <para>Configuration of the execution mode</para>
+            <para>Configuration of the execution modes</para>
           </caption>
         </mediaobject>
       </screenshot>
@@ -98,6 +131,22 @@
 
     <sect4 id="usage-execution-how-mode">
       <title>Execution mode</title>
+      <figure id="nact-FIG-execution-mode">
+        <title>Configuration of the execution mode</title>
+        <screenshot>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="figures/nact-exec-mode-frame.png" format="PNG"/>
+            </imageobject>
+            <textobject>
+              <phrase>Focus on the execution mode frame.</phrase>
+            </textobject>
+            <caption>
+              <para>Configuration of the execution mode</para>
+            </caption>
+          </mediaobject>
+        </screenshot>
+      </figure>
       <para>
         The execution mode of your command may be choosen between following 
         values:
@@ -161,6 +210,22 @@
 
     <sect4 id="usage-execution-how-notify">
       <title>Startup notification</title>
+      <figure id="nact-FIG-startup-mode">
+        <title>Configuration of the startup modes</title>
+        <screenshot>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="figures/nact-startup-mode-frame.png" format="PNG"/>
+            </imageobject>
+            <textobject>
+              <phrase>Focus on the Startup mode frame.</phrase>
+            </textobject>
+            <caption>
+              <para>Configuration of the startup modes</para>
+            </caption>
+          </mediaobject>
+        </screenshot>
+      </figure>
       <para>
         If the execution mode of the command is <literal>Normal</literal>,
         and if you know that the application will send a <literal>remove</literal>
@@ -194,6 +259,22 @@
 
     <sect4 id="usage-execution-how-user">
       <title>Owner of the execution</title>
+      <figure id="nact-FIG-execute-as">
+        <title>Configuration of the owner of the run</title>
+        <screenshot>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="figures/nact-execute-as-frame.png" format="PNG"/>
+            </imageobject>
+            <textobject>
+              <phrase>Focus on the <guilabel>Execute as</guilabel> frame.</phrase>
+            </textobject>
+            <caption>
+              <para>Configuration of the owner of the run</para>
+            </caption>
+          </mediaobject>
+        </screenshot>
+      </figure>
       <para>
         Enter in the <guilabel>Execute as user</guilabel> entry box the username
         or the <acronym>UID</acronym> of the user your command must be ran as.
@@ -215,8 +296,9 @@
         giving to each execution a different item as argument.
       </para>
       <para>
-        Actually, the command will be executed once, or repeated for each
-        selected item, depending of the form of arguments.
+        Actually, &prodname; automatically handles these two behaviors,
+        depending of the form and the order of the parameters in the comamnd
+        arguments.
       </para>
       <para>
         Though some parameters are not sensible to the count of the
@@ -322,14 +404,14 @@
             </row>
             <row>
               <entry><literal>%f</literal></entry>
-              <entry>(first) file name</entry>
+              <entry>(first) filename</entry>
               <entry>singular</entry>
               <entry></entry>
               <entry></entry>
             </row>
             <row>
               <entry><literal>%F</literal></entry>
-              <entry>space-separated list of selected file names</entry>
+              <entry>space-separated list of selected filenames</entry>
               <entry></entry>
               <entry></entry>
               <entry>plural</entry>

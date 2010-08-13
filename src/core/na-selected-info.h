@@ -76,8 +76,8 @@ GType           na_selected_info_get_type( void );
 
 GList          *na_selected_info_get_list_from_item( NautilusFileInfo *item );
 GList          *na_selected_info_get_list_from_list( GList *nautilus_selection );
-GList          *na_selected_info_copy_list         ( GList *list );
-void            na_selected_info_free_list         ( GList *list );
+GList          *na_selected_info_copy_list         ( GList *files );
+void            na_selected_info_free_list         ( GList *files );
 
 GFile          *na_selected_info_get_location  ( const NASelectedInfo *nsi );
 gchar          *na_selected_info_get_basename  ( const NASelectedInfo *nsi );

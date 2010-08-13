@@ -213,7 +213,7 @@ na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 /**
  * na_iprefs_get_import_mode:
  * @gconf: a #GCongClient client.
- * @name: name of the import key to be readen
+ * @pref: name of the import key to be readen
  *
  * Returns: the import mode currently set.
  *
@@ -224,14 +224,14 @@ na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
  * those defined in schemas.
  */
 guint
-na_iprefs_get_import_mode( GConfClient *gconf, const gchar *name )
+na_iprefs_get_import_mode( GConfClient *gconf, const gchar *pref )
 {
 	gint import_mode = DEFAULT_IMPORT_MODE_INT;
 	gint import_int;
 	gchar *import_str;
 	gchar *path;
 
-	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, pref );
 
 	import_str = na_gconf_utils_read_string(
 			gconf,
@@ -252,18 +252,19 @@ na_iprefs_get_import_mode( GConfClient *gconf, const gchar *name )
 /**
  * na_iprefs_set_import_mode:
  * @gconf: a #GCongClient client.
+ * @pref: name of the import key to be written
  * @mode: the new value to be written.
  *
  * Writes the current status of 'import mode' to the GConf
  * preference system.
  */
 void
-na_iprefs_set_import_mode( GConfClient *gconf, const gchar *name, guint mode )
+na_iprefs_set_import_mode( GConfClient *gconf, const gchar *pref, guint mode )
 {
 	const gchar *import_str;
 	gchar *path;
 
-	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, pref );
 
 	import_str = gconf_enum_to_string( import_mode_table, mode );
 
@@ -302,15 +303,14 @@ na_iprefs_get_gconf_client( const NAIPrefs *instance )
 /**
  * na_iprefs_read_bool:
  * @instance: this #NAIPrefs interface instance.
- * @name: the name of the preference entry.
+ * @key: the name of the preference entry.
  * @default_value: default value to be returned if the entry is not found,
- * no default value is available in the schema, of there is no schema at
- * all.
+ *  no default value is available in the schema, of there is no schema at all.
  *
  * Returns: the boolean value.
  */
 gboolean
-na_iprefs_read_bool( const NAIPrefs *instance, const gchar *name, gboolean default_value )
+na_iprefs_read_bool( const NAIPrefs *instance, const gchar *key, gboolean default_value )
 {
 	gchar *path;
 	gboolean ret;
@@ -321,7 +321,7 @@ na_iprefs_read_bool( const NAIPrefs *instance, const gchar *name, gboolean defau
 
 	if( st_initialized && !st_finalized ){
 
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, key );
 		ret = na_gconf_utils_read_bool( na_iprefs_get_gconf_client( instance ), path, TRUE, default_value );
 		g_free( path );
 	}
@@ -332,15 +332,15 @@ na_iprefs_read_bool( const NAIPrefs *instance, const gchar *name, gboolean defau
 /**
  * na_iprefs_read_string:
  * @instance: this #NAIPrefs interface instance.
- * @name: the preference key.
+ * @key: the preference key.
  * @default_value: the default value, used if entry is not found and
- * there is no schema.
+ *  there is no schema.
  *
  * Returns: the value, as a newly allocated string which should be
  * g_free() by the caller.
  */
 gchar *
-na_iprefs_read_string( const NAIPrefs *instance, const gchar *name, const gchar *default_value )
+na_iprefs_read_string( const NAIPrefs *instance, const gchar *key, const gchar *default_value )
 {
 	gchar *path;
 	gchar *value;
@@ -351,7 +351,7 @@ na_iprefs_read_string( const NAIPrefs *instance, const gchar *name, const gchar 
 
 	if( st_initialized && !st_finalized ){
 
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, key );
 		value = na_gconf_utils_read_string( na_iprefs_get_gconf_client( instance ), path, TRUE, default_value );
 		g_free( path );
 	}
@@ -362,15 +362,15 @@ na_iprefs_read_string( const NAIPrefs *instance, const gchar *name, const gchar 
 /**
  * na_iprefs_read_string_list:
  * @instance: this #NAIPrefs interface instance.
- * @name: the preference key.
+ * @key: the preference key.
  * @default_value: a default value, used if entry is not found, or there
- * is no default value in the schema, of there is no schema at all.
+ *  is no default value in the schema, of there is no schema at all.
  *
  * Returns: the list value, which should be na_utils_free_string_list()
  * by the caller.
  */
 GSList *
-na_iprefs_read_string_list( const NAIPrefs *instance, const gchar *name, const gchar *default_value )
+na_iprefs_read_string_list( const NAIPrefs *instance, const gchar *key, const gchar *default_value )
 {
 	gchar *path;
 	GSList *list;
@@ -381,7 +381,7 @@ na_iprefs_read_string_list( const NAIPrefs *instance, const gchar *name, const g
 
 	if( st_initialized && !st_finalized ){
 
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, key );
 		list = na_gconf_utils_read_string_list( na_iprefs_get_gconf_client( instance ), path );
 		g_free( path );
 
@@ -397,13 +397,13 @@ na_iprefs_read_string_list( const NAIPrefs *instance, const gchar *name, const g
 /**
  * na_iprefs_read_uint:
  * @instance: this #NAIPrefs interface instance.
- * @name: the preference entry.
+ * @key: the preference entry.
  * @default_value: the value to be returned if the key is not found.
  *
  * Returns: the uint value associated with the given key.
  */
 guint
-na_iprefs_read_uint( const NAIPrefs *instance, const gchar *name, guint default_value )
+na_iprefs_read_uint( const NAIPrefs *instance, const gchar *key, guint default_value )
 {
 	guint value;
 	gchar *path;
@@ -414,7 +414,7 @@ na_iprefs_read_uint( const NAIPrefs *instance, const gchar *name, guint default_
 
 	if( st_initialized && !st_finalized ){
 
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, key );
 		value = na_gconf_utils_read_int( na_iprefs_get_gconf_client( instance ), path, TRUE, default_value );
 		g_free( path );
 	}
@@ -448,13 +448,13 @@ write_string( NAIPrefs *instance, const gchar *name, const gchar *value )
 /**
  * na_iprefs_write_string_list
  * @instance: this #NAIPrefs interface instance.
- * @name: the preference key.
+ * @key: the preference key.
  * @value: the value to be written.
  *
  * Writes the value as the given GConf preference.
  */
 void
-na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *name, GSList *list )
+na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *key, GSList *value )
 {
 	gchar *path;
 
@@ -462,8 +462,8 @@ na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *name, GSList
 
 	if( st_initialized && !st_finalized ){
 
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
-		na_gconf_utils_write_string_list( na_iprefs_get_gconf_client( instance ), path, list, NULL );
+		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, key );
+		na_gconf_utils_write_string_list( na_iprefs_get_gconf_client( instance ), path, value, NULL );
 		g_free( path );
 	}
 }

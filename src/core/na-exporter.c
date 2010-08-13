@@ -175,7 +175,7 @@ na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark fo
  * na_exporter_to_file:
  * @pivot: the #NAPivot pivot for the running application.
  * @item: a #NAObjectItem-derived object.
- * @folder: the URI of the target folder.
+ * @folder_uri: the URI of the target folder.
  * @format: the #GQuark target format.
  * @messages: a pointer to a #GSList list of strings; the provider
  *  may append messages to this list, but shouldn't reinitialize it.
@@ -186,7 +186,7 @@ na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark fo
  * should be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar *folder, GQuark format, GSList **messages )
+na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar *folder_uri, GQuark format, GSList **messages )
 {
 	static const gchar *thisfn = "na_exporter_to_file";
 	gchar *export_uri;
@@ -202,11 +202,11 @@ na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar
 
 	if( iexporter_initialized && !iexporter_finalized ){
 
-		g_debug( "%s: pivot=%p, item=%p (%s), folder=%s, format=%u (%s), messages=%p",
+		g_debug( "%s: pivot=%p, item=%p (%s), folder_uri=%s, format=%u (%s), messages=%p",
 				thisfn,
 				( void * ) pivot,
 				( void * ) item, G_OBJECT_TYPE_NAME( item ),
-				folder,
+				folder_uri,
 				( guint ) format, g_quark_to_string( format ),
 				( void * ) messages );
 
@@ -215,7 +215,7 @@ na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar
 		if( exporter ){
 			parms.version = 1;
 			parms.exported = ( NAObjectItem * ) item;
-			parms.folder = ( gchar * ) folder;
+			parms.folder = ( gchar * ) folder_uri;
 			parms.format = format;
 			parms.basename = NULL;
 			parms.messages = messages ? *messages : NULL;
@@ -224,7 +224,7 @@ na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar
 				NA_IEXPORTER_GET_INTERFACE( exporter )->to_file( exporter, &parms );
 
 				if( parms.basename ){
-					export_uri = g_strdup_printf( "%s%s%s", folder, G_DIR_SEPARATOR_S, parms.basename );
+					export_uri = g_strdup_printf( "%s%s%s", folder_uri, G_DIR_SEPARATOR_S, parms.basename );
 				}
 
 			} else {

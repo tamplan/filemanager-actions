@@ -126,7 +126,7 @@ G_BEGIN_DECLS
 #define na_object_get_position( obj, child )			na_object_item_get_position( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
 #define na_object_append_item( obj, child )				na_object_item_append_item( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
 #define na_object_insert_at( obj, child, pos )			na_object_item_insert_at( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ), ( pos ))
-#define na_object_insert_item( obj, child, sibling )	na_object_item_insert_item( NA_OBJECT_ITEM( obj ), NA_OBJECT( child ), ( NAObject * )( sibling ))
+#define na_object_insert_item( obj, child, sibling )	na_object_item_insert_item( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ), ( NAObjectId * )( sibling ))
 #define na_object_remove_item( obj, child )				na_object_item_remove_item( NA_OBJECT_ITEM( obj ), NA_OBJECT_ID( child ))
 
 #define na_object_get_items_count( obj )				na_object_item_get_items_count( NA_OBJECT_ITEM( obj ))

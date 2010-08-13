@@ -2,8 +2,8 @@
   <title>Sorting the items list</title>
   <para>
     Your actions and menus will be displayed in file manager context menus
-    in the same order that they are listed in the items list, on the left
-    pane of the main &appname; window.
+    in the same order that they are listed in the <guilabel>Items list</guilabel>,
+    on the left pane of the main &appname; window.
   </para>
   <para>
     You may decide to:
@@ -29,6 +29,26 @@
       In these modes, actions and menus are sorted depending of their label,
       inside of their parent. 
     </para>
+    <para>
+      You may sort your actions by:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Click on
+          <guibutton><inlinegraphic fileref="figures/sort-asc.png" /></guibutton>
+          (<abbrev>resp.</abbrev>
+          <guibutton><inlinegraphic fileref="figures/sort-desc.png" /></guibutton>)
+          button to sort your actions in ascending (<abbrev>resp.</abbrev> descending)
+          order.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Or edit your corresponding preference.
+        </para>
+      </listitem>
+    </itemizedlist>
   </sect3>
 
   <sect3 id="usage-sorting-manual">
@@ -37,42 +57,22 @@
       In this mode, a new action or a new menu will be inserted just before
       the current action or menu, inside of the same parent if apply. 
     </para>
+    <para>
+      To choose this mode:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Click on
+          <guibutton><inlinegraphic fileref="figures/sort-manual.png" /></guibutton>
+          button.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Or edit your corresponding preference.
+        </para>
+      </listitem>
+    </itemizedlist>
   </sect3>
 </sect2>
-
-<!--
-      <para>
-        The exact place where the
-        action is inserted depends of the current sort order of the items list:
-      </para>
-      <variablelist>
-        <varlistentry>
-          <term>
-            Manual order:
-          </term>
-          <listitem>
-            <para>
-              The new action is inserted just before the current action or menu.
-            </para>
-            <para>
-              This place will not change when you later modify the label of the action.
-            </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>
-            Ascending (resp. descending) alphabetical order:
-          </term>
-          <listitem>
-            <para>
-              The new action is inserted at the correct place, regarding the default
-              &laquosp;<literal>New Nautilus action</literal>&spraquo; label.
-            </para>
-            <para>
-              This place will be automatically changed, each time you modify the
-              label of the action.
-            </para>
-          </listitem>
-        </varlistentry>
-      </variablelist>
--->

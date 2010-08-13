@@ -172,20 +172,20 @@ instance_finalize( GObject *object )
 
 /**
  * na_export_format_new:
- * @str: a #NAIExporterFormat which describes an export format.
+ * @exporter_format: a #NAIExporterFormat which describes an export format.
  * @exporter: the #NAIExporter which provides this export format.
  *
  * Returns: a newly allocated #NAExportFormat object.
  */
 NAExportFormat *
-na_export_format_new( const NAIExporterFormat *str, const NAIExporter *exporter )
+na_export_format_new( const NAIExporterFormat *exporter_format, const NAIExporter *exporter )
 {
 	NAExportFormat *format;
 
 	format = g_object_new( NA_EXPORT_FORMAT_TYPE, NULL );
 
-	format->private->id = g_quark_from_string( str->format );
-	format->private->str = ( NAIExporterFormat * ) str;
+	format->private->id = g_quark_from_string( exporter_format->format );
+	format->private->str = ( NAIExporterFormat * ) exporter_format;
 	format->private->exporter = ( NAIExporter * ) exporter;
 
 	return( format );

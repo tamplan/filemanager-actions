@@ -168,49 +168,49 @@ interface_base_finalize( NAIContextInterface *klass )
 
 /**
  * na_icontext_is_candidate:
- * @object: a #NAIContext to be checked.
+ * @context: a #NAIContext to be checked.
  * @target: the current target.
- * @files: the currently selected items, as a #GList of #NASelectedInfo items.
+ * @selection: the currently selected items, as a #GList of #NASelectedInfo items.
  *
  * Determines if the given object may be candidate to be displayed in
  * the Nautilus context menu, depending of the list of currently selected
  * items.
  *
  * This function is called by nautilus-actions::build_nautilus_menus()
- * for each item found in NAPivot items list, and, when this an action,
+ * for each item found in #NAPivot items list, and, when this an action,
  * for each profile of this action.
  *
- * Returns: %TRUE if this object succeeds to all tests and is so a
+ * Returns: %TRUE if this @context succeeds to all tests and is so a
  * valid candidate to be displayed in Nautilus context menu, %FALSE
  * else.
  */
 gboolean
-na_icontext_is_candidate( const NAIContext *object, guint target, GList *files )
+na_icontext_is_candidate( const NAIContext *context, guint target, GList *selection )
 {
 	static const gchar *thisfn = "na_icontext_is_candidate";
 	gboolean is_candidate;
 
-	g_return_val_if_fail( NA_IS_ICONTEXT( object ), FALSE );
+	g_return_val_if_fail( NA_IS_ICONTEXT( context ), FALSE );
 
-	g_debug( "%s: object=%p (%s), target=%d, files=%p (count=%d)",
-			thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ), target, (void * ) files, g_list_length( files ));
+	g_debug( "%s: object=%p (%s), target=%d, selection=%p (count=%d)",
+			thisfn, ( void * ) context, G_OBJECT_TYPE_NAME( context ), target, (void * ) selection, g_list_length( selection ));
 
-	is_candidate = v_is_candidate( NA_ICONTEXT( object ), target, files );
+	is_candidate = v_is_candidate( NA_ICONTEXT( context ), target, selection );
 
 	if( is_candidate ){
 		is_candidate =
-				is_candidate_for_target( object, target, files ) &&
-				is_candidate_for_show_in( object, target, files ) &&
-				is_candidate_for_try_exec( object, target, files ) &&
-				is_candidate_for_show_if_registered( object, target, files ) &&
-				is_candidate_for_show_if_true( object, target, files ) &&
-				is_candidate_for_show_if_running( object, target, files ) &&
-				is_candidate_for_mimetypes( object, target, files ) &&
-				is_candidate_for_basenames( object, target, files ) &&
-				is_candidate_for_selection_count( object, target, files ) &&
-				is_candidate_for_schemes( object, target, files ) &&
-				is_candidate_for_folders( object, target, files ) &&
-				is_candidate_for_capabilities( object, target, files );
+				is_candidate_for_target( context, target, selection ) &&
+				is_candidate_for_show_in( context, target, selection ) &&
+				is_candidate_for_try_exec( context, target, selection ) &&
+				is_candidate_for_show_if_registered( context, target, selection ) &&
+				is_candidate_for_show_if_true( context, target, selection ) &&
+				is_candidate_for_show_if_running( context, target, selection ) &&
+				is_candidate_for_mimetypes( context, target, selection ) &&
+				is_candidate_for_basenames( context, target, selection ) &&
+				is_candidate_for_selection_count( context, target, selection ) &&
+				is_candidate_for_schemes( context, target, selection ) &&
+				is_candidate_for_folders( context, target, selection ) &&
+				is_candidate_for_capabilities( context, target, selection );
 	}
 
 	return( is_candidate );
@@ -218,29 +218,29 @@ na_icontext_is_candidate( const NAIContext *object, guint target, GList *files )
 
 /**
  * na_icontext_is_valid:
- * @profile: the #NAObjectProfile to be checked.
+ * @context: the #NAObjectProfile to be checked.
  *
- * Returns: %TRUE if this profile is valid, %FALSE else.
+ * Returns: %TRUE if this @context is valid, %FALSE else.
  *
- * This function is part of NAIDuplicable::check_status() and is called
- * by NAIDuplicable objects which also implement NAIContext
+ * This function is part of #NAIDuplicable::check_status() and is called
+ * by #NAIDuplicable objects which also implement #NAIContext
  * interface. It so doesn't make sense of asking the object for its
  * validity status as it has already been checked before calling the
  * function.
  */
 gboolean
-na_icontext_is_valid( const NAIContext *object )
+na_icontext_is_valid( const NAIContext *context )
 {
 	gboolean is_valid;
 
-	g_return_val_if_fail( NA_IS_ICONTEXT( object ), FALSE );
+	g_return_val_if_fail( NA_IS_ICONTEXT( context ), FALSE );
 
 	is_valid =
-		is_valid_basenames( object ) &&
-		is_valid_mimetypes( object ) &&
-		is_valid_isfiledir( object ) &&
-		is_valid_schemes( object ) &&
-		is_valid_folders( object );
+		is_valid_basenames( context ) &&
+		is_valid_mimetypes( context ) &&
+		is_valid_isfiledir( context ) &&
+		is_valid_schemes( context ) &&
+		is_valid_folders( context );
 
 	return( is_valid );
 }
@@ -249,18 +249,18 @@ na_icontext_is_valid( const NAIContext *object )
  * na_icontext_is_all_mimetypes:
  * @context: the #NAIContext object to be checked.
  *
- * Returns: %TRUE if this context is valid for all mimetypes, %FALSE else.
+ * Returns: %TRUE if this @context is valid for all mimetypes, %FALSE else.
  */
 gboolean
-na_icontext_is_all_mimetypes( const NAIContext *object )
+na_icontext_is_all_mimetypes( const NAIContext *context )
 {
 	gboolean is_all;
 	GSList *mimetypes, *im;
 
-	g_return_val_if_fail( NA_IS_ICONTEXT( object ), FALSE );
+	g_return_val_if_fail( NA_IS_ICONTEXT( context ), FALSE );
 
 	is_all = TRUE;
-	mimetypes = na_object_get_mimetypes( object );
+	mimetypes = na_object_get_mimetypes( context );
 
 	for( im = mimetypes ; im ; im = im->next ){
 		if( !im->data || !strlen( im->data )){
@@ -295,11 +295,11 @@ na_icontext_read_done( NAIContext *context )
 
 /**
  * na_icontext_set_scheme:
- * @profile: the #NAIContext to be updated.
+ * @context: the #NAIContext to be updated.
  * @scheme: name of the scheme.
- * @selected: whether this scheme is candidate to this context.
+ * @selected: whether this scheme is candidate to this @context.
  *
- * Sets the status of a scheme relative to this context.
+ * Sets the status of a @scheme relative to this @context.
  */
 void
 na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selected )
@@ -316,11 +316,11 @@ na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selec
 
 /**
  * na_icontext_set_only_desktop:
- * @profile: the #NAIContext to be updated.
+ * @context: the #NAIContext to be updated.
  * @desktop: name of the desktop environment.
- * @selected: whether this desktop is candidate to this context.
+ * @selected: whether this @desktop is candidate to this @context.
  *
- * Sets the status of the desktop relative to this context for the OnlyShowIn list.
+ * Sets the status of the @desktop relative to this @context for the OnlyShowIn list.
  */
 void
 na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
@@ -337,11 +337,11 @@ na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolea
 
 /**
  * na_icontext_set_only_desktop:
- * @profile: the #NAIContext to be updated.
+ * @context: the #NAIContext to be updated.
  * @desktop: name of the desktop environment.
- * @selected: whether this desktop is candidate to this context.
+ * @selected: whether this @desktop is candidate to this @context.
  *
- * Sets the status of the desktop relative to this context for the NotShowIn list.
+ * Sets the status of the @desktop relative to this @context for the NotShowIn list.
  */
 void
 na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
@@ -358,35 +358,35 @@ na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean
 
 /**
  * na_icontext_replace_folder:
- * @profile: the #NAIContext to be updated.
+ * @context: the #NAIContext to be updated.
  * @old: the old uri.
  * @new: the new uri.
  *
  * Replaces the @old URI by the @new one.
  */
 void
-na_icontext_replace_folder( NAIContext *profile, const gchar *old, const gchar *new )
+na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *new )
 {
 	GSList *folders;
 
-	g_return_if_fail( NA_IS_ICONTEXT( profile ));
+	g_return_if_fail( NA_IS_ICONTEXT( context ));
 
-	folders = na_object_get_folders( profile );
+	folders = na_object_get_folders( context );
 	folders = na_core_utils_slist_remove_utf8( folders, old );
 	folders = g_slist_append( folders, ( gpointer ) g_strdup( new ));
-	na_object_set_folders( profile, folders );
+	na_object_set_folders( context, folders );
 	na_core_utils_slist_free( folders );
 }
 
 static gboolean
-v_is_candidate( NAIContext *object, guint target, GList *selection )
+v_is_candidate( NAIContext *context, guint target, GList *selection )
 {
 	gboolean is_candidate;
 
 	is_candidate = TRUE;
 
-	if( NA_ICONTEXT_GET_INTERFACE( object )->is_candidate ){
-		is_candidate = NA_ICONTEXT_GET_INTERFACE( object )->is_candidate( object, target, selection );
+	if( NA_ICONTEXT_GET_INTERFACE( context )->is_candidate ){
+		is_candidate = NA_ICONTEXT_GET_INTERFACE( context )->is_candidate( context, target, selection );
 	}
 
 	return( is_candidate );
@@ -829,9 +829,10 @@ is_candidate_for_selection_count( const NAIContext *object, guint target, GList 
  * are all in the same location and the scheme mainly depends on location
  * so we have here a great possible optimization by only testing the
  * first selected item.
- *
  * note that this optimization may be wrong, for example when ran from the
- * command-line with a random set of pseudo-selected items.
+ * command-line with a random set of pseudo-selected items
+ * so we take care of only checking _distincts_ schemes of provided selection
+ * against schemes conditions.
  */
 static gboolean
 is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
@@ -842,31 +843,42 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 
 	if( schemes ){
 		if( strcmp( schemes->data, "*" ) != 0 || g_slist_length( schemes ) > 1 ){
-			GSList *is;
-			gchar *scheme, *pattern;
-			gboolean match, positive;
+			GSList *distincts = NULL;
+			GList *it;
 
-			scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( files->data ));
-			match = FALSE;
+			for( it = files ; it && ok ; it = it->next ){
+				gchar *scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( files->data ));
 
-			for( is = schemes ; is && ok ; is = is->next ){
-				pattern = ( gchar * ) is->data;
-				positive = is_positive_assertion( pattern );
+				if( na_core_utils_slist_count( distincts, scheme ) == 0 ){
+					GSList *is;
+					gchar *scheme, *pattern;
+					gboolean match, positive;
 
-				if( !positive || !match ){
-					if( is_compatible_scheme( positive ? pattern : pattern+1, scheme )){
-						if( positive ){
-							match = TRUE;
-						} else {
-							ok = FALSE;
+					match = FALSE;
+					distincts = g_slist_prepend( distincts, g_strdup( scheme ));
+
+					for( is = schemes ; is && ok ; is = is->next ){
+						pattern = ( gchar * ) is->data;
+						positive = is_positive_assertion( pattern );
+
+						if( !positive || !match ){
+							if( is_compatible_scheme( positive ? pattern : pattern+1, scheme )){
+								if( positive ){
+									match = TRUE;
+								} else {
+									ok = FALSE;
+								}
+							}
 						}
 					}
+
+					ok &= match;
 				}
+
+				g_free( scheme );
 			}
 
-			ok &= match;
-
-			g_free( scheme );
+			na_core_utils_slist_free( distincts );
 		}
 
 		if( !ok ){
@@ -899,11 +911,10 @@ is_compatible_scheme( const gchar *pattern, const gchar *scheme )
 
 /*
  * assumuing here the same sort of optimization than for schemes
- * i.e. we assume that all selected items are located in the same dirname
- * so we only check first dirname against folder conditions
- *
- * note that this optimization may be wrong, for example when ran from the
- * command-line with a random set of pseudo-selected items.
+ * i.e. we assume that all selected items are must probably located
+ * in the same dirname
+ * so we take care of only checking _distinct_ dirnames against folder
+ * conditions
  */
 static gboolean
 is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
@@ -914,34 +925,46 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 
 	if( folders ){
 		if( strcmp( folders->data, "/" ) != 0 || g_slist_length( folders ) > 1 ){
-			GSList *id;
-			gchar *dirname, *dirname_utf8;
-			const gchar *pattern;
-			gboolean match, positive;
+			GSList *distincts = NULL;
+			GList *it;
 
-			dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( files->data ));
-			dirname_utf8 = g_filename_to_utf8( dirname, -1, NULL, NULL, NULL );
-			match = FALSE;
+			for( it = files ; it && ok ; it = it->next ){
+				gchar *dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( files->data ));
 
-			for( id = folders ; id && ok ; id = id->next ){
-				pattern = ( const gchar * ) id->data;
-				positive = is_positive_assertion( pattern );
+				if( na_core_utils_slist_count( distincts, dirname ) == 0 ){
+					GSList *id;
+					gchar *dirname_utf8;
+					const gchar *pattern;
+					gboolean match, positive;
 
-				if( !positive || !match ){
-					if( g_pattern_match_simple( positive ? pattern : pattern+1, dirname_utf8 )){
-						if( positive ){
-							match = TRUE;
-						} else {
-							ok = FALSE;
+					distincts = g_slist_prepend( distincts, g_strdup( dirname ));
+					dirname_utf8 = g_filename_to_utf8( dirname, -1, NULL, NULL, NULL );
+					match = FALSE;
+
+					for( id = folders ; id && ok ; id = id->next ){
+						pattern = ( const gchar * ) id->data;
+						positive = is_positive_assertion( pattern );
+
+						if( !positive || !match ){
+							if( g_pattern_match_simple( positive ? pattern : pattern+1, dirname_utf8 )){
+								if( positive ){
+									match = TRUE;
+								} else {
+									ok = FALSE;
+								}
+							}
 						}
 					}
+
+					ok &= match;
+
+					g_free( dirname_utf8 );
 				}
+
+				g_free( dirname );
 			}
 
-			ok &= match;
-
-			g_free( dirname_utf8 );
-			g_free( dirname );
+			na_core_utils_slist_free( distincts );
 		}
 
 		if( !ok ){

@@ -1,3 +1,71 @@
+2010-08-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* Makefile.am:
+	Build doc after src so that libraries are available when documenting them.
+
+	* autogen.sh:
+	* configure.ac: Implement gtk-doc and manuals generation.
+
+	* doc/api/Makefile.am: Build gtk-doc for public API.
+
+	* doc/nact/C/nact-conditions.xml:
+	* doc/nact/C/nact-execution.xml:
+	* doc/nact/C/nact-menus.xml:
+	* doc/nact/C/nact-profiles.xml:
+	* doc/nact/C/nact-sorting.xml:
+	* doc/nact/C/nact-starting.xml:
+	* doc/nact/C/nact-where.xml:
+	* doc/nact/C/nautilus-actions-config-tool.xml:
+	Update NACT user's manual.
+
+	* doc/nact/Makefile.am: Implement manuals generation.
+
+	* src/api/na-core-utils.h:
+	* src/api/na-data-boxed.h:
+	* src/api/na-data-types.h:
+	* src/api/na-gconf-utils.h:
+	* src/api/na-icontext.h:
+	* src/api/na-iduplicable.h:
+	* src/api/na-iimporter.h:
+	* src/api/na-object-api.h:
+	* src/api/na-object-id.h:
+	* src/api/na-object-item.h:
+	* src/core/na-core-utils.c:
+	* src/core/na-data-boxed.c:
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h:
+	* src/core/na-exporter.c:
+	* src/core/na-exporter.h:
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h:
+	* src/core/na-gconf-monitor.c:
+	* src/core/na-gconf-utils.c:
+	* src/core/na-iabout.h:
+	* src/core/na-icontext.c:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-importer-ask.c:
+	* src/core/na-io-provider.c:
+	* src/core/na-iprefs.c:
+	* src/core/na-object-id.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object.c:
+	* src/core/na-selected-info.c:
+	* src/core/na-selected-info.h:
+	Update comments to suits gtk-doc requirements.
+
+	* COPYING-DOCS:
+	* doc/nact/C/figures/nact-desktop-environment-frame.png:
+	* doc/nact/C/figures/nact-exec-mode-frame.png:
+	* doc/nact/C/figures/nact-execute-as-frame.png:
+	* doc/nact/C/figures/nact-execution-environment-frame.png:
+	* doc/nact/C/figures/nact-selection-count-frame.png:
+	* doc/nact/C/figures/nact-startup-mode-frame.png:
+	* doc/nact/C/figures/nact-target-location.png:
+	* doc/nact/C/figures/nact-working-directory-frame.png:
+	* doc/nact/C/figures/sort-asc.png doc/nact/C/figures/sort-desc.png:
+	* doc/nact/C/figures/sort-manual.png:
+	* m4/na-enable-manuals.m4: New files.
+
 2010-08-10 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-icommand-tab.c: No more check for a non-empty profile name.

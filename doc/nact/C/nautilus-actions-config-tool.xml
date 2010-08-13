@@ -16,8 +16,18 @@
   <!ENTITY windows  "<productname>Windows</productname>">
   <!ENTITY zenity   "<productname>Zenity</productname>">
 
+  <!-- some user-defined internal entities
+       merely because it appears that xsltproc may sometimes loose
+       its path to the DocBook DTD -->
+  <!ENTITY laquosp "&#171;&#160;">
+  <!ENTITY spraquo "&#160;&#187;">
+
   <!-- other entities -->
   <!ENTITY desema "<ulink url='http://www.nautilus-actions.org/?q=node/377' type='http'>DES-EMA specification</ulink>">
+  <!ENTITY asterisk       "&laquosp;<literal>*</literal>&spraquo;">
+  <!ENTITY question_mark  "&laquosp;<literal>?</literal>&spraquo;">
+  <!ENTITY must_match     "&laquosp;must match one of&spraquo;">
+  <!ENTITY must_not_match "&laquosp;must not match any of&spraquo;">
 
   <!-- the synopsys of the document -->
   <!ENTITY articleinfo SYSTEM "articleinfo.xml">
@@ -37,12 +47,6 @@
   <!ENTITY misc-infos  SYSTEM "nact-misc.xml">
   <!ENTITY bugs        SYSTEM "nact-bugs.xml">
   <!ENTITY gnu-fdl     SYSTEM "appendix-gnu-fdl-1.3.xml">
-
-  <!-- some user-defined internal entities 
-       merely because it appears that xsltproc may sometimes loose
-       its path to the DocBook DTD -->
-  <!ENTITY laquosp "&#171;&#160;">
-  <!ENTITY spraquo "&#160;&#187;">
 ]>
 
 <!-- ========================= Document Header ======================== -->

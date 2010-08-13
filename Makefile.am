@@ -29,12 +29,12 @@
 ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = \
-	doc									\
 	m4									\
 	icons								\
 	src									\
 	po									\
 	data								\
+	doc									\
 	$(NULL)
 
 # a foo directory so that make distcheck has a vpath which is prefixed
@@ -46,6 +46,9 @@ DISTCHECK_CONFIGURE_FLAGS = \
 DISTCHECK_CONFIGURE_FLAGS += \
 	--disable-schemas-install			\
 	--disable-scrollkeeper				\
+	--enable-gtk-doc					\
+	--enable-html-manuals				\
+	--enable-pdf-manuals				\
 	$(NULL)
 
 EXTRA_DIST = \

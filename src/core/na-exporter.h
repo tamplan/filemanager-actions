@@ -47,7 +47,7 @@ GList *na_exporter_get_formats ( const NAPivot *pivot );
 void   na_exporter_free_formats( GList *formats );
 
 gchar *na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark format, GSList **messages );
-gchar *na_exporter_to_file  ( const NAPivot *pivot, const NAObjectItem *item, const gchar *uri, GQuark format, GSList **messages );
+gchar *na_exporter_to_file  ( const NAPivot *pivot, const NAObjectItem *item, const gchar *folder_uri, GQuark format, GSList **messages );
 
 G_END_DECLS
 

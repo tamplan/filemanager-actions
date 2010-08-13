@@ -421,29 +421,29 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
 
 /**
  * na_object_item_get_position:
- * @object: this #NAObjectItem object.
+ * @item: this #NAObjectItem object.
  * @child: a #NAObjectId-derived child.
  *
- * Returns: the position of @child in the subitems list of @object,
+ * Returns: the position of @child in the subitems list of @item,
  * starting from zero, or -1 if not found.
  */
 gint
-na_object_item_get_position( const NAObjectItem *object, const NAObjectId *child )
+na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child )
 {
 	gint pos = -1;
-	GList *childs;
+	GList *children;
 
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), pos );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), pos );
 	g_return_val_if_fail( NA_IS_OBJECT_ID( child ), pos );
 
 	if( !child ){
 		return( pos );
 	}
 
-	if( !object->private->dispose_has_run ){
+	if( !item->private->dispose_has_run ){
 
-		childs = na_object_get_items( object );
-		pos = g_list_index( childs, ( gconstpointer ) child );
+		children = na_object_get_items( item );
+		pos = g_list_index( children, ( gconstpointer ) child );
 	}
 
 	return( pos );
@@ -483,37 +483,37 @@ na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
 /**
  * na_object_item_insert_at:
  * @item: the #NAObjectItem in which add the subitem.
- * @object: a #NAObjectId-derived to be inserted in the list of subitems.
- * @pos: the position at which the @object child should be inserted.
+ * @child: a #NAObjectId-derived to be inserted in the list of subitems.
+ * @pos: the position at which the @child should be inserted.
  *
- * Inserts a new @object in the list of subitems of @item.
+ * Inserts a new @child in the list of subitems of @item.
  *
- * Doesn't modify the reference count on @object.
+ * Doesn't modify the reference count on @child.
  */
 void
-na_object_item_insert_at( NAObjectItem *item, const NAObjectId *object, gint pos )
+na_object_item_insert_at( NAObjectItem *item, const NAObjectId *child, gint pos )
 {
-	GList *childs, *it;
+	GList *children, *it;
 	gint i;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( NA_IS_OBJECT_ID( child ));
 
 	if( !item->private->dispose_has_run ){
 
-		childs = na_object_get_items( item );
-		if( pos == -1 || pos >= g_list_length( childs )){
-			na_object_append_item( item, object );
+		children = na_object_get_items( item );
+		if( pos == -1 || pos >= g_list_length( children )){
+			na_object_append_item( item, child );
 
 		} else {
 			i = 0;
-			for( it = childs ; it && i <= pos ; it = it->next ){
+			for( it = children ; it && i <= pos ; it = it->next ){
 				if( i == pos ){
-					childs = g_list_insert_before( childs, it, ( gpointer ) object );
+					children = g_list_insert_before( children, it, ( gpointer ) child );
 				}
 				i += 1;
 			}
-			na_object_set_items( item, childs );
+			na_object_set_items( item, children );
 		}
 	}
 }
@@ -521,41 +521,41 @@ na_object_item_insert_at( NAObjectItem *item, const NAObjectId *object, gint pos
 /**
  * na_object_item_insert_item:
  * @item: the #NAObjectItem to which add the subitem.
- * @object: a #NAObject to be inserted in the list of subitems.
- * @before: the #NAObject before which the @object should be inserted.
+ * @child: a #NAObjectId to be inserted in the list of subitems.
+ * @before: the #NAObjectId before which the @child should be inserted.
  *
- * Inserts a new @object in the list of subitems of @item.
+ * Inserts a new @child in the list of subitems of @item.
  *
- * Doesn't modify the reference count on @object.
+ * Doesn't modify the reference count on @child.
  */
 void
-na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NAObject *before )
+na_object_item_insert_item( NAObjectItem *item, const NAObjectId *child, const NAObjectId *before )
 {
-	GList *childs;
+	GList *children;
 	GList *before_list;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( !before || NA_IS_OBJECT( before ));
+	g_return_if_fail( NA_IS_OBJECT_ID( child ));
+	g_return_if_fail( !before || NA_IS_OBJECT_ID( before ));
 
 	if( !item->private->dispose_has_run ){
 
-		childs = na_object_get_items( item );
-		if( !g_list_find( childs, ( gpointer ) object )){
+		children = na_object_get_items( item );
+		if( !g_list_find( children, ( gpointer ) child )){
 
 			before_list = NULL;
 
 			if( before ){
-				before_list = g_list_find( childs, ( gconstpointer ) before );
+				before_list = g_list_find( children, ( gconstpointer ) before );
 			}
 
 			if( before_list ){
-				childs = g_list_insert_before( childs, before_list, ( gpointer ) object );
+				children = g_list_insert_before( children, before_list, ( gpointer ) child );
 			} else {
-				childs = g_list_prepend( childs, ( gpointer ) object );
+				children = g_list_prepend( children, ( gpointer ) child );
 			}
 
-			na_object_set_items( item, childs );
+			na_object_set_items( item, children );
 		}
 	}
 }
@@ -563,19 +563,19 @@ na_object_item_insert_item( NAObjectItem *item, const NAObject *object, const NA
 /**
  * na_object_item_remove_item:
  * @item: the #NAObjectItem from which the subitem must be removed.
- * @object: a #NAObjectId-derived to be removed from the list of subitems.
+ * @child: a #NAObjectId-derived to be removed from the list of subitems.
  *
- * Removes an @object from the list of subitems of @item.
+ * Removes a @child from the list of subitems of @item.
  *
- * Doesn't modify the reference count on @object.
+ * Doesn't modify the reference count on @child.
  */
 void
-na_object_item_remove_item( NAObjectItem *item, const NAObjectId *object )
+na_object_item_remove_item( NAObjectItem *item, const NAObjectId *child )
 {
 	GList *children;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
-	g_return_if_fail( NA_IS_OBJECT_ID( object ));
+	g_return_if_fail( NA_IS_OBJECT_ID( child ));
 
 	if( !item->private->dispose_has_run ){
 
@@ -583,10 +583,10 @@ na_object_item_remove_item( NAObjectItem *item, const NAObjectId *object )
 
 		if( children ){
 			g_debug( "na_object_item_remove_item: removing %p (%s) from %p (%s)",
-					( void * ) object, G_OBJECT_TYPE_NAME( object ),
+					( void * ) child, G_OBJECT_TYPE_NAME( child ),
 					( void * ) item, G_OBJECT_TYPE_NAME( item ));
 
-			children = g_list_remove( children, ( gconstpointer ) object );
+			children = g_list_remove( children, ( gconstpointer ) child );
 			g_debug( "na_object_item_remove_item: after: children=%p, count=%u", ( void * ) children, g_list_length( children ));
 			na_object_set_items( item, children );
 		}
@@ -662,7 +662,7 @@ na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *prof
 
 /**
  * na_object_item_unref_items:
- * @list: a list of #NAObject-derived items.
+ * @items: a list of #NAObject-derived items.
  *
  * Unref only the first level the #NAObject of the list, freeing the list at last.
  *
@@ -677,9 +677,9 @@ na_object_item_unref_items( GList *items )
 
 /**
  * na_object_item_unref_items_rec:
- * @list: a list of #NAObject-derived items.
+ * @items: a list of #NAObject-derived items.
  *
- * Recursively unref the #NAObject of the list, freeing the list at last.
+ * Recursively unref the #NAObject's of the list, freeing the list at last.
  *
  * This is heavily used by NACT.
  */

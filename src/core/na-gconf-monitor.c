@@ -183,13 +183,17 @@ instance_finalize( GObject *object )
 
 /**
  * na_gconf_monitor_new:
- * @client: a #GConfClient object already initialized by the caller.
  * @path: the absolute path to monitor.
- * @preload: a #GConfClientPreloadType for this monitoring.
  * @handler: the function to be triggered by the monitor.
  * @user_data: data to pass to the @handler.
  *
  * Initializes the monitoring of a GConf path.
+ *
+ * Returns: a new #NAGConfMonitor object, which will monitor the given path,
+ * triggeering the @handler in case of modifications.
+ *
+ * This monitoring will only be stopped when object is released, via
+ * g_object_unref().
  */
 NAGConfMonitor *
 na_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data )

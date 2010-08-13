@@ -41,6 +41,7 @@ AC_CONFIG_FILES([
 	data/Makefile
 	doc/Makefile
 	doc/api/Makefile
+	doc/api/version.xml
 	doc/internals/Makefile
 	doc/nact/Makefile
 	doc/product/Makefile
@@ -97,6 +98,9 @@ AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} ${WARN_CFLAGS}"])
 # GLib marshaling
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
+# check for gtk-doc
+GTK_DOC_CHECK([1.10],[--flavour no-tmpl])
+
 # libtool
 AM_PROG_LIBTOOL
 
@@ -150,11 +154,15 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 	unique-1.0											\
 	dbus-glib-1
 )
+
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
 # defines log domains when in maintainer mode
 NA_LOG_DOMAINS
+
+# add --enable-html-manual and --enable-pdf-manual configure options
+NA_ENABLE_MANUALS
 
 # when working in a test environment, nautilus is typically installed in
 # a non-standard location ; lets specify this here

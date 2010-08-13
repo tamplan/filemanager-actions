@@ -56,15 +56,15 @@ void     na_core_utils_str_split_first_word( const gchar *string, gchar **first,
 /* some functions to get or set GSList list of strings
  */
 void     na_core_utils_slist_add_message( GSList **list, const gchar *format, ... );
-GSList  *na_core_utils_slist_duplicate( GSList *list );
+GSList  *na_core_utils_slist_duplicate( GSList *slist );
 void     na_core_utils_slist_dump( const gchar *prefix, GSList *list );
 GSList  *na_core_utils_slist_from_array( const gchar **str_array );
-GSList  *na_core_utils_slist_from_split( const gchar *string, const gchar *separator );
-gchar   *na_core_utils_slist_join_at_end( GSList *list, const gchar *link );
-GSList  *na_core_utils_slist_remove_ascii( GSList *list, const gchar *text );
-GSList  *na_core_utils_slist_remove_utf8( GSList *list, const gchar *string );
+GSList  *na_core_utils_slist_from_split( const gchar *text, const gchar *separator );
+gchar   *na_core_utils_slist_join_at_end( GSList *slist, const gchar *link );
+GSList  *na_core_utils_slist_remove_ascii( GSList *slist, const gchar *text );
+GSList  *na_core_utils_slist_remove_utf8( GSList *slist, const gchar *text );
 gchar  **na_core_utils_slist_to_array( GSList *slist );
-gchar   *na_core_utils_slist_to_text( GSList *list );
+gchar   *na_core_utils_slist_to_text( GSList *slist );
 GSList  *na_core_utils_slist_setup_element( GSList *list, const gchar *element, gboolean set );
 guint    na_core_utils_slist_count( GSList *list, const gchar *str );
 gboolean na_core_utils_slist_find_negated( GSList *list, const gchar *str );
@@ -88,7 +88,7 @@ void     na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar 
 /* file management
  */
 gboolean na_core_utils_file_delete       ( const gchar *path );
-gboolean na_core_utils_file_exists       ( const gchar *path );
+gboolean na_core_utils_file_exists       ( const gchar *uri );
 gchar   *na_core_utils_file_load_from_uri( const gchar *uri, gsize *length );
 
 /* miscellaneous

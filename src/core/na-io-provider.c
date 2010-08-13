@@ -586,7 +586,7 @@ na_io_provider_find_provider_by_id( GList *providers, const gchar *id )
 
 /**
  * na_io_provider_get_writable_provider:
- * @iprefs: an implementor of the #NAIPrefs interface.
+ * @pivot: the #NAPivot instance.
  *
  * Returns: the first willing and able to write I/O provider, or NULL.
  *

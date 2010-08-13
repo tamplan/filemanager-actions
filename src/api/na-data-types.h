@@ -42,13 +42,22 @@
 G_BEGIN_DECLS
 
 /**
- * Elementary factory data types
+ * NAFactoryDataType:
+ * @NAFD_TYPE_STRING:        an ASCII string
+ * @NAFD_TYPE_LOCALE_STRING: a localized UTF-8 string
+ * @NAFD_TYPE_BOOLEAN:       a boolean
+ *                           can be initialized with "true" or "false" (case insensitive)
+ * @NAFD_TYPE_STRING_LIST:   a list of ASCII strings
+ * @NAFD_TYPE_POINTER:       a ( void * ) pointer
+ *                           should be initialized to NULL
+ * @NAFD_TYPE_UINT:          an unsigned integer
+ *
  * Each elementary factory data must be typed as one of these
  * IFactoryProvider implementations should provide a primitive for reading
  * (resp. writing) a value for each of these elementary data types.
  *
  * IMPORTANT NOTE
- * Please note that this enumeration may  be compiled in by extensions.
+ * Please note that this enumeration may be compiled in by the extensions.
  * They must so remain fixed, unless you want see strange effects (e.g.
  * an extension has been compiled with NAFD_TYPE_STRING = 2, while you
  * have inserted another element, making it to 3 !) - or you know what

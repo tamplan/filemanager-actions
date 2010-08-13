@@ -62,9 +62,8 @@ typedef struct {
 	 * get_application_name:
 	 * @iabout: this #NAIAbout implementor.
 	 *
-	 * Returns the application name as a newly allocated string.
-	 *
-	 * The application name will be g_free() by the interface.
+	 * Returns: the application name as a newly allocated string,
+	 * which will be g_free() by the interface.
 	 */
 	gchar *     ( *get_application_name )( NAIAbout *instance );
 
@@ -72,7 +71,7 @@ typedef struct {
 	 * get_toplevel:
 	 * @iabout: this #NAIAbout implementor.
 	 *
-	 * Returns the toplevel parent of the displayed dialog box.
+	 * Returns: the toplevel parent of the displayed dialog box.
 	 */
 	GtkWindow * ( *get_toplevel )        ( NAIAbout *instance );
 }

@@ -538,7 +538,7 @@ na_data_boxed_is_default( const NADataBoxed *boxed )
 
 /**
  * na_data_boxed_is_valid:
- * @object: the #NADataBoxed object whose validity is to be checked.
+ * @boxed: the #NADataBoxed object whose validity is to be checked.
  *
  * Returns: %TRUE if the boxed is valid, %FALSE else.
  */

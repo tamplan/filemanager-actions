@@ -266,7 +266,7 @@ na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
  * na_object_id_prepare_for_paste:
  * @object: the #NAObjectId object to be pasted.
  * @relabel: whether this object should be relabeled when pasted.
- * @relabel: whether this item should be renumbered ?
+ * @renumber: whether this item should be renumbered ?
  * @parent: the parent of @object, or %NULL.
  *
  * Prepares @object to be pasted.

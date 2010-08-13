@@ -151,8 +151,6 @@ ifactory_provider_get_version( const NAIFactoryProvider *instance )
  * @object: the #NAIFactoryObject object to be unserialilzed.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
- *
- * Returns: a newly instantiated #NAIFactoryObject object just readen from @reader.
  */
 void
 na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages )
@@ -172,7 +170,7 @@ na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_d
  * na_ifactory_provider_write_item:
  * @writer: the instance which implements this #NAIFactoryProvider interface.
  * @writer_data: instance data.
- * @serializable: the #NAIFactoryObject-derived object to be serialized.
+ * @object: the #NAIFactoryObject-derived object to be serialized.
  * @messages: a pointer to a #GSList list of strings; the implementation
  *  may append messages to this list, but shouldn't reinitialize it.
  *

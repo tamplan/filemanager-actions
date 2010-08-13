@@ -221,20 +221,20 @@ na_core_utils_slist_add_message( GSList **messages, const gchar *format, ... )
 
 /**
  * na_core_utils_slist_duplicate:
- * @source_slist: the #GSList to be duplicated.
+ * @slist: the #GSList to be duplicated.
  *
  * Returns: a #GSList of strings.
  *
- * The returned list should be #na_core_utils_slist_free() by the caller.
+ * The returned list should be na_core_utils_slist_free() by the caller.
  */
 GSList *
-na_core_utils_slist_duplicate( GSList *source_slist )
+na_core_utils_slist_duplicate( GSList *slist )
 {
 	GSList *dest_slist, *it;
 
 	dest_slist = NULL;
 
-	for( it = source_slist ; it != NULL ; it = it->next ){
+	for( it = slist ; it != NULL ; it = it->next ){
 		dest_slist = g_slist_prepend( dest_slist, g_strdup(( gchar * ) it->data ) );
 	}
 
@@ -269,11 +269,12 @@ na_core_utils_slist_dump( const gchar *prefix, GSList *list )
 
 /**
  * na_core_utils_slist_from_split:
- * @@text: a string to be splitted.
+ * @text: a string to be splitted.
+ * @separator: the string to be used as the separator.
  *
  * Returns: a #GSList with the list of strings after having been splitted.
  *
- * The returned #GSList should be #na_core_utils_slist_free() by the caller.
+ * The returned #GSList should be na_core_utils_slist_free() by the caller.
  */
 GSList *
 na_core_utils_slist_from_split( const gchar *text, const gchar *separator )
@@ -353,56 +354,56 @@ na_core_utils_slist_join_at_end( GSList *slist, const gchar *link )
 
 /**
  * na_core_utils_slist_remove_ascii:
- * @list: the GSList to be updated.
+ * @slist: the #GSList to be updated.
  * @text: string to remove.
  *
  * Removes a string from a GSList of strings.
  *
- * Returns the new list after update.
+ * Returns: the same, updated, @slist.
  */
 GSList *
-na_core_utils_slist_remove_ascii( GSList *list, const gchar *text )
+na_core_utils_slist_remove_ascii( GSList *slist, const gchar *text )
 {
 	GSList *il;
 
-	for( il = list ; il ; il = il->next ){
+	for( il = slist ; il ; il = il->next ){
 
 		const gchar *istr = ( const gchar * ) il->data;
 		if( !g_ascii_strcasecmp( text, istr )){
 
-			list = g_slist_remove( list, ( gconstpointer ) istr );
-			return( list );
+			slist = g_slist_remove( slist, ( gconstpointer ) istr );
+			return( slist );
 		}
 	}
 
-	return( list );
+	return( slist );
 }
 
 /**
  * na_core_utils_slist_remove_utf8:
- * @list: the GSList to be updated.
- * @str: the string to be removed.
+ * @slist: the #GSList to be updated.
+ * @text: the string to be removed.
  *
- * Removes from the @list the item which has a string which is equal to
- * @str.
+ * Removes from the @slist the item which has a string which is equal to
+ * @text.
  *
- * Returns: the new @list start position.
+ * Returns: the new @slist start position.
  */
 GSList *
-na_core_utils_slist_remove_utf8( GSList *list, const gchar *str )
+na_core_utils_slist_remove_utf8( GSList *slist, const gchar *text )
 {
 	GSList *is;
 
-	for( is = list ; is ; is = is->next ){
+	for( is = slist ; is ; is = is->next ){
 		const gchar *istr = ( const gchar * ) is->data;
-		if( !na_core_utils_str_collate( str, istr )){
+		if( !na_core_utils_str_collate( text, istr )){
 			g_free( is->data );
-			list = g_slist_delete_link( list, is );
+			slist = g_slist_delete_link( slist, is );
 			break;
 		}
 	}
 
-	return( list );
+	return( slist );
 }
 
 /**
@@ -431,7 +432,7 @@ na_core_utils_slist_to_array( GSList *slist )
 
 /**
  * na_core_utils_slist_to_text:
- * @strlist: a list of strings.
+ * @slist: a list of strings.
  *
  * Concatenates a string list to a semi-colon-separated text
  * suitable for an entry in the user interface
@@ -440,13 +441,13 @@ na_core_utils_slist_to_array( GSList *slist )
  * caller.
  */
 gchar *
-na_core_utils_slist_to_text( GSList *strlist )
+na_core_utils_slist_to_text( GSList *slist )
 {
 	GSList *ib;
 	gchar *tmp;
 	gchar *text = g_strdup( "" );
 
-	for( ib = strlist ; ib ; ib = ib->next ){
+	for( ib = slist ; ib ; ib = ib->next ){
 		if( strlen( text )){
 			tmp = g_strdup_printf( "%s; ", text );
 			g_free( text );
@@ -550,28 +551,28 @@ na_core_utils_slist_find_negated( GSList *list, const gchar *str )
 
 /**
  * na_core_utils_slist_are_equal:
- * @first: a GSList of strings.
- * @second: another GSList of strings to be compared with @first.
+ * @a: a GSList of strings.
+ * @b: another GSList of strings to be compared with @first.
  *
  * Compare two string lists, without regards to the order.
  *
  * Returns: %TRUE if the two lists have same content.
  */
 gboolean
-na_core_utils_slist_are_equal( GSList *first, GSList *second )
+na_core_utils_slist_are_equal( GSList *a, GSList *b )
 {
 	GSList *il;
 
-	for( il = first ; il ; il = il->next ){
+	for( il = a ; il ; il = il->next ){
 		const gchar *str = ( const gchar * ) il->data;
-		if( na_core_utils_slist_count( second, str ) == 0 ){
+		if( na_core_utils_slist_count( b, str ) == 0 ){
 			return( FALSE );
 		}
 	}
 
-	for( il = second ; il ; il = il->next ){
+	for( il = b ; il ; il = il->next ){
 		const gchar *str = ( const gchar * ) il->data;
-		if( na_core_utils_slist_count( first, str ) == 0 ){
+		if( na_core_utils_slist_count( a, str ) == 0 ){
 			return( FALSE );
 		}
 	}
@@ -581,7 +582,7 @@ na_core_utils_slist_are_equal( GSList *first, GSList *second )
 
 /**
  * na_core_utils_slist_free:
- * @list: a #GSList list of strings.
+ * @slist: a #GSList list of strings.
  *
  * Releases the strings and the list itself.
  */
@@ -798,7 +799,7 @@ info_dir_is_writable( GFile *file, const gchar *path_or_uri )
  * Split the given @string, returning the first part and the extension in newly
  * allocated buffers which should be g_free() by the caller.
  *
- * Returns an empty string as extension if no extension is detected.
+ * The extension is set to an empty string if no extension is detected.
  */
 void
 na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext )
@@ -859,19 +860,19 @@ na_core_utils_file_delete( const gchar *path )
 
 /**
  * na_core_utils_file_exists:
- * @fname: a file full URI.
+ * @uri: a file URI.
  *
  * Returns: %TRUE if the specified file exists, %FALSE else.
  *
  * Race condition: cf. na_core_utils_dir_is_writable() comment.
  */
 gboolean
-na_core_utils_file_exists( const gchar *fname )
+na_core_utils_file_exists( const gchar *uri )
 {
 	GFile *file;
 	gboolean exists;
 
-	file = g_file_new_for_uri( fname );
+	file = g_file_new_for_uri( uri );
 	exists = g_file_query_exists( file, NULL );
 	g_object_unref( file );
 

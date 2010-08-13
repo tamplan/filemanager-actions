@@ -1,14 +1,14 @@
 <sect2 id="usage-where">
   <title>Locating the action</title>
-    <figure id="nact-FIG-tab-action-where">
+    <figure id="nact-FIG-target-location-where">
       <title>Target configuration</title>
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="figures/nact-action-tab.png" format="PNG" />
+            <imagedata fileref="figures/nact-target-location.png" format="PNG" />
           </imageobject>
           <textobject>
-            <phrase>Shows the tab which lets you configure the target of your action.</phrase>
+            <phrase>Shows the three fields which lets you configure the target of your action.</phrase>
           </textobject>
           <caption>
             <para>Target configuration</para>
@@ -18,7 +18,13 @@
     </figure>
   <para>
     &nautilus; file manager may display your action in different places,
-    depending on what you will request here, and if some item is currently selected.
+    depending on what you will request here, and if some item is currently
+    selected (or not).
+  </para>
+  <para>
+    Click on the <guilabel>Action</guilabel> tab to show the page
+    which will permit you to configure the locations your action
+    targets.
   </para>
 
   <sect3 id="usage-where-selection">
@@ -50,7 +56,7 @@
     <para>
       When <guilabel>Display item in location context menu</guilabel> checkbox
       is activated, then your action will be candidate to be displayed in 
-      &nautilus; context menu when the file manager selection will be empty.
+      &nautilus; context menu when the file manager selection is empty.
       Your action will so deal with currently displayed location.
       In order to be
       actually displayed, all the conditions defined in
@@ -86,12 +92,12 @@
     <title>Notes</title>
 
     <formalpara>
-      <title>If your action targets a menu</title>
+      <title>If your action is to be displayed in a context menu</title>
       <para>
         Whether it is the selection context menu or the location
         context menu, and both in &nautilus; context menus and in 
-        <guimenu>File</guimenu> or <guimenu>Edit</guimenu> menus, your
-        action will be displayed as
+        <guimenu>File</guimenu> or <guimenu>Edit</guimenu> menus, it
+        will be displayed as
       </para>
     </formalpara>
     <itemizedlist>
@@ -128,9 +134,9 @@
     </tip>
 
     <formalpara>
-      <title>If your action targets the toolbar</title>
+      <title>If your action is to be displayed in the toolbar</title>
       <para>
-        Your action will be displayed as
+        It will be displayed as
       </para>
     </formalpara>
     <itemizedlist>
@@ -179,7 +185,14 @@
       <title>Defining several targets</title>
       <para>
         An action may target both the selection context menu, the location context
-        menu and the toolbar, or one or more among these. If no target is defined,
+        menu and the toolbar, or one or more among these.
+      </para>
+    </formalpara>
+
+    <formalpara>
+      <title>Defining no target at all</title>
+      <para>
+        If no target is defined,
         <abbrev>i.e.</abbrev> if the three checkboxes are unchecked, then your action
         will never be displayed.
       </para>

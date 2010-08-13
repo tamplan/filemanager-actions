@@ -68,7 +68,7 @@ typedef struct {
 
 GType           na_export_format_get_type( void );
 
-NAExportFormat *na_export_format_new( const NAIExporterFormat *format, const NAIExporter *exporter );
+NAExportFormat *na_export_format_new( const NAIExporterFormat *exporter_format, const NAIExporter *exporter );
 
 GQuark          na_export_format_get_quark      ( const NAExportFormat *format );
 gchar          *na_export_format_get_id         ( const NAExportFormat *format );

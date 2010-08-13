@@ -364,7 +364,7 @@ na_tokens_new_from_selection( GList *selection )
 /**
  * na_tokens_parse_parameters:
  * @tokens: a #NATokens object.
- * @input: the input string, may or may not contain tokens.
+ * @string: the input string, may or may not contain tokens.
  * @utf8: whether the @input string is UTF-8 encoded, or a standard ASCII string.
  *
  * Expands the parameters in the given string.
@@ -373,9 +373,9 @@ na_tokens_new_from_selection( GList *selection )
  * allocated string which should be g_free() by the caller.
  */
 gchar *
-na_tokens_parse_parameters( const NATokens *tokens, const gchar *input, gboolean utf8 )
+na_tokens_parse_parameters( const NATokens *tokens, const gchar *string, gboolean utf8 )
 {
-	return( parse_singular( tokens, input, 0, utf8 ));
+	return( parse_singular( tokens, string, 0, utf8 ));
 }
 
 /**

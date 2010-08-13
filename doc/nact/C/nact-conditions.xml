@@ -2,21 +2,28 @@
   <title>Defining the conditions</title>
   <para>
     Whether your action will eventually be displayed in &nautilus; file manager
-    context menus as well as in its toolbar depends of the conditions you will have
+    context menus or in its toolbar depends of the conditions you will have
     defined for it.
   </para>
   <para>
-    Each time the selection changes in the file manager, &prodname;
-    checks all your actions, comparing the defined conditions against
-    the properties of selected items.
+    Conditions may be put against the location the file manager currently
+    points to, or against the currently selected items in this location.
   </para>
   <para>
-    All defined conditions must be satisfied by the current file manager
-    selection in order your action be actually displayed. 
+    Each time the selection or the location change in the file manager,
+    &prodname; checks all your actions, comparing the defined conditions
+    against the new location and selection: all defined conditions must
+    be satisfied in order your action be actually displayed. 
   </para>
 
   <sect3 id="usage-conditions-basenames">
     <title>Basename-based conditions</title>
+    <para>
+      You may decide that your action will appear depending on the basenames
+      of the items currently selected in the file-manager: you may define that each
+      item of the selection must meet some sort of basename, and you may simultaneously
+      decide that none of the selected item(s) can have some other sort of basename.
+    </para>
     <para>
       Click on the <guilabel>Basenames</guilabel> tab to show the page
       which will permit you to configure your basename-based conditions.
@@ -38,10 +45,23 @@
       </screenshot>
     </figure>
     <para>
-      You may decide that your action will appear depending on the basenames
-      of the items currently selected in the file-manager: you may define that each
-      item of the selection must meet some sort of basename, and you may simultaneously
-      decide that none of the selected item(s) can have some other sort of basename.
+      In fact, basename-based conditions are built as a list of
+      &must_match; and &must_not_match;
+      patterns. In order you action be candidate regarding of these basename-based
+      conditions, each element of the selection must be valid for all the listed
+      conditions: the basename of each element must match at least one of the defined
+      &must_match; patterns, and must not match any of
+      the defined &must_not_match; patterns.
+    </para>
+    <para>
+      If at least one element of the selection does not match all the defined
+      conditions, then your action will not be displayed.
+    </para>
+    <para>
+      When targeting the selection context menu, your basename-based conditions
+      will be checked against the currently selected items. When targeting the
+      location context menu or the toolbar, your basename-based conditions will
+      be checked against the basename of the current location.
     </para>
     <para>
       Defining a new basename-based condition involves two steps.
@@ -65,8 +85,8 @@
             </para>
             <tip>
               <para>
-                A basename-based condition may use &laquosp;<literal>*</literal>&spraquo; or
-                &laquosp;<literal>?</literal>&spraquo; wildcard characters.
+                A basename-based condition may use &asterisk; or
+                &question_mark; wildcard characters.
               </para>
             </tip>
           </listitem>
@@ -74,14 +94,13 @@
       </listitem>
       <listitem>
         <para>
-          Indicates whether this a &laquosp;match&spraquo; or a &laquosp;no match&spraquo;
-          condition.
+          Indicates whether this a &must_match;
+          or a &must_not_match; condition.
         </para>
         <para>
           Click on the <guilabel>Must match one of</guilabel> or
           <guilabel>Must not match any of</guilabel> radio button in the same
-          row to set a &laquosp;must have&spraquo; or
-          &laquosp;must not have&spraquo; condition.
+          row to set the corresponding condition.
         </para>
       </listitem>
     </orderedlist>
@@ -104,7 +123,7 @@
         <para>
           When disactivated, filters are considered as case insensitive,
           which means that <filename>/my/file</filename> and
-          <filename>My/File</filename> filenames are considered the same
+          <filename>/My/File</filename> filenames are considered the same
           name.
         </para>
         <para>
@@ -114,20 +133,22 @@
       </listitem>
     </itemizedlist>
     <para>
-      When the action is examined to see if it should be displayed, the basename
-      of each currently selected item is compared to the list of these basename-based
-      conditions for this action.
-    </para>
-    <para>
       By default, the basename-based condition is just one
-      &laquosp;<literal>must match *</literal>&spraquo; condition.
-      This means that basenames are not considered as a relevant condition
-      for the action.
+      &laquosp;<literal>must match one of *</literal>&spraquo; condition.
+      As all basenames always match the &asterisk;
+      condition, this just means that basename-based conditions are not
+      considered as relevant for the action.
     </para>
   </sect3>
 
   <sect3 id="usage-conditions-mimetypes">
     <title>Mimetype-based conditions</title>
+    <para>
+      You may decide that your action will appear depending on the mimetypes
+      of the items currently selected in the file-manager: you may define that each
+      item of the selection must meet some sort of mimetype; and you may simultaneously
+      decide that none of the selected item(s) can have some other sort of mimetype.
+    </para>
     <para>
       Click on the <guilabel>Mimetypes</guilabel> tab to show the page
       which will permit you to configure your mimetype-based conditions.
@@ -149,10 +170,24 @@
       </screenshot>
     </figure>
     <para>
-      You may decide that your action will appear depending on the mimetypes
-      of the items currently selected in the file-manager: you may define that each
-      item of the selection must meet some sort of mimetype; and you may simultaneously
-      decide that none of the selected item(s) can have some other sort of mimetype.
+      In fact, mimetype-based conditions are built as a list of
+      &must_match; and &must_not_match; patterns.
+      In order you action be candidate regarding of these mimetype-based
+      conditions, each element of the selection must be valid for all the listed
+      conditions: the mimetype of each element must match at least one of the defined
+      &must_match; patterns, and must not match any of
+      the defined &must_not_match; patterns.
+    </para>
+    <para>
+      If at least one element of the selection does not match all the defined
+      conditions, then your action will not be displayed.
+    </para>
+    <para>
+      When targeting the selection context menu, your mimetype-based conditions
+      will be checked against the currently selected items. When targeting the
+      location context menu or the toolbar, your mimetype-based conditions will
+      be checked against the mimetype of the current location, which happens to
+      be the well known &laquosp;inode/directory&spraquo; mimetype.
     </para>
     <para>
       Defining a new mimetype-based condition involves two steps.
@@ -180,21 +215,19 @@
             </para>
             <tip>
               <para>
-                The &laquosp;<literal>*</literal>&spraquo; asterisk may be used as
-                a wildcard in some situations:
+                The &asterisk; wildcard is supported only in some situations:
               </para>
               <itemizedlist>
                 <listitem>
                   <para>
                     The &laquosp;<literal>*/*</literal>&spraquo; expression
                     matches all mimetypes. As a convenient shortcut, the
-                    &laquosp;<literal>*</literal>&spraquo; literal is
-                    also accepted for this same purpose.
+                    &asterisk; literal is also accepted for this same purpose.
                   </para>
                 </listitem>
                 <listitem>
                   <para>
-                    A &laquosp;<literal>group/*</literal>&spraquo; string
+                    A <literal>group/*</literal> string
                     matches all subgroups of <literal>group</literal> mimetype.
                   </para>
                 </listitem>
@@ -202,7 +235,7 @@
             </tip>
             <note>
               <para>
-                The &laquosp;<literal>*/subgroup</literal>&spraquo; string
+                The <literal>*/subgroup</literal> string
                 is not accepted as a valid wildcard.
               </para>
             </note>
@@ -211,26 +244,20 @@
       </listitem>
       <listitem>
         <para>
-          Indicates whether this a &laquosp;match&spraquo; or a &laquosp;no match&spraquo;
-          condition.
+          Indicates whether this a &must_match; or a &must_not_match; condition.
         </para>
         <para>
           Click on the <guilabel>Must match one of</guilabel> or
           <guilabel>Must not match any of</guilabel> radio button in the same
-          row to set a &laquosp;must have&spraquo; or
-          &laquosp;must not have&spraquo; condition.
+          row to set the corresponding condition.
         </para>
       </listitem>
     </orderedlist>
     <para>
-      When the action is examined to see if it should be displayed, the mimetype
-      of each currently selected item is compared to the list of these mimetype-based
-      conditions for this action.
-    </para>
-    <para>
       By default, the mimetype-based condition is just one
-      &laquosp;<literal>must match */*</literal>&spraquo; condition.
-      This means that mimetypes are not considered as a relevant condition
+      &laquosp;<literal>must match one of */*</literal>&spraquo; condition.
+      As all mimetypes always match the &laquosp;<literal>*/*</literal>&spraquo;,
+      this just means that mimetypes are not considered as relevant 
       for the action.
     </para>
     <example>
@@ -273,6 +300,19 @@
   <sect3 id="usage-conditions-folders">
     <title>Folder-based conditions</title>
     <para>
+      You may decide that your action will appear depending on the directory
+      the items currently selected in the file-manager are located in:
+      you may define that each item of the selection must be located in one
+      hierarchy or in another; and you may simultaneously
+      decide that none of the selected item(s) can be located in some other
+      hierarchy.
+    </para>
+    <para>
+      A folder-based condition must be understood as the specification
+      of the hierarchy in which the currently examined item should (or
+      should not) stay: this is a pattern on the dirname of the element.
+    </para>
+    <para>
       Click on the <guilabel>Folders</guilabel> tab to show the page
       which will permit you to configure your folder-based conditions.
     </para>
@@ -293,17 +333,25 @@
       </screenshot>
     </figure>
     <para>
-      You may decide that your action will appear depending on the directory
-      the items currently selected in the file-manager are located in:
-      you may define that each item of the selection must be located in one
-      hierarchy or in another; and you may simultaneously
-      decide that none of the selected item(s) can be located in some other
-      hierarchy.
+      In fact, folder-based conditions are built as a list of
+      &must_match; and &must_not_match; patterns.
+      In order you action be candidate regarding of these folder-based
+      conditions, each element of the selection must be valid for all the
+      listed conditions: each element must located in one of the defined
+      &must_match; folders, and must not match any of the defined
+      &must_not_match; folders.
     </para>
     <para>
-      A folder-based condition must be understood as the specification
-      of the hierarchy in which the currently examined item should (or
-      should not) stay.
+      If at least one element of the selection does not match all the
+      defined conditions, then your action will not be displayed.
+    </para>
+    <para>
+      When targeting the selection context menu, your folder-based
+      conditions will be checked against the dirname of each currently
+      selected items.
+      When targeting the location context menu or the toolbar,
+      your folder-based conditions will be checked against the current
+      location.
     </para>
     <para>
       Defining a new folder-based condition involves two steps.
@@ -327,8 +375,7 @@
             </para>
             <tip>
               <para>
-                The &laquosp;<literal>*</literal>&spraquo; and
-                &laquosp;<literal>?</literal>&spraquo; characters
+                The &asterisk; and &question_mark; characters
                 are accepted as wildcards at any level of the defined
                 folder filter.
               </para>
@@ -344,27 +391,21 @@
       </listitem>
       <listitem>
         <para>
-          Indicates whether this a &laquosp;match&spraquo; or a &laquosp;no match&spraquo;
+          Indicates whether this a &must_match; or a &must_not_match;
           condition.
         </para>
         <para>
           Click on the <guilabel>Must match one of</guilabel> or
           <guilabel>Must not match any of</guilabel> radio button in the same
-          row to set a &laquosp;must have&spraquo; or
-          &laquosp;must not have&spraquo; condition.
+          row to set the corresponding condition.
         </para>
       </listitem>
     </orderedlist>
     <para>
-      When the action is examined to see if it should be displayed, the location
-      of each currently selected item is compared to the list of these folder-based
-      conditions for this action.
-    </para>
-    <para>
       By default, the folder-based condition is just one
-      &laquosp;<literal>must match /</literal>&spraquo; condition.
+      &laquosp;<literal>must match one of /</literal>&spraquo; condition.
       As <literal>/</literal> is always the top of an Unix-like filesystem,
-      then all selected files always match this condition.
+      then all selected items always match this condition.
     </para>
     <note>
       <para>
@@ -376,6 +417,13 @@
 
   <sect3 id="usage-conditions-schemes">
     <title>Scheme-base-conditions</title>
+    <para>
+      You may decide that your action will appear depending on the schemes
+      of the URIs of the items currently selected in the file-manager:
+      you may define that each item of the selection must have some scheme;
+      and you may simultaneously
+      decide that none of the selected item(s) may have some other scheme.
+    </para>
     <para>
       Click on the <guilabel>Schemes</guilabel> tab to show the page
       which will permit you to configure your scheme-based conditions.
@@ -397,11 +445,23 @@
       </screenshot>
     </figure>
     <para>
-      You may decide that your action will appear depending on the schemes
-      of the URIs of the items currently selected in the file-manager:
-      you may define that each item of the selection must have some scheme;
-      and you may simultaneously
-      decide that none of the selected item(s) may have some other scheme.
+      In fact, scheme-based conditions are built as a list of
+      &must_match; and &must_not_match; patterns.
+      In order you action be candidate regarding of these scheme-based
+      conditions, each element of the selection must be valid for all the
+      listed conditions: the scheme of each element must match at least one
+      of the defined &must_match; patterns, and must not match any of
+      the defined &must_not_match; patterns.
+    </para>
+    <para>
+      If at least one element of the selection does not match all the defined
+      conditions, then your action will not be displayed.
+    </para>
+    <para>
+      When targeting the selection context menu, your scheme-based conditions
+      will be checked against the currently selected items. When targeting the
+      location context menu or the toolbar, your scheme-based conditions will
+      be checked against the scheme of the current location.
     </para>
     <para>
       Defining a new scheme-based condition involves two steps.
@@ -425,8 +485,7 @@
             </para>
             <tip>
               <para>
-                Scheme-based conditions only accept
-                &laquosp;<literal>*</literal>&spraquo; asterisk wildcard,
+                Scheme-based conditions only accept &asterisk; wildcard,
                 which stands for &laquosp;any scheme&spraquo;.
               </para>
             </tip>
@@ -470,32 +529,36 @@
       </listitem>
       <listitem>
         <para>
-          Indicates whether this a &laquosp;match&spraquo; or a &laquosp;no match&spraquo;
-          condition.
+          Indicates whether this a &must_match; or a &must_not_match; condition.
         </para>
         <para>
           Click on the <guilabel>Must match one of</guilabel> or
-          <guilabel>Must not match any of</guilabel> radio button in the same
-          row to set a &laquosp;must have&spraquo; or
-          &laquosp;must not have&spraquo; condition.
+          <guilabel>Must not match any of</guilabel> radio button
+          in the same row to set the corresponding condition.
         </para>
       </listitem>
     </orderedlist>
     <para>
-      When the action is examined to see if it should be displayed, the
-      scheme of the URI
-      of each currently selected item is compared to the list of these
-      scheme-based conditions for this action.
-    </para>
-    <para>
       By default, the scheme-based condition is just one
-      &laquosp;<literal>must match *</literal>&spraquo; condition,
+      &laquosp;<literal>must match one of *</literal>&spraquo; condition,
       which means that schemes are not relevant for this action.
     </para>
   </sect3>
 
   <sect3 id="usage-conditions-capabilities">
     <title>Capability-based conditions</title>
+    <para>
+      Capabilities are some properties that a file may exhibit to the user.
+    </para>
+    <para>
+      But the <literal>Local</literal> capability, all others are dependant
+      of the user who executes the command.
+    </para>
+    <para>
+      You may so decide that your action will appear, or not, depending
+      on the capabilities of the selected item(s) <abbrev>vs.</abbrev>
+      the current user.
+    </para>
     <para>
       Click on the <guilabel>Capabilities</guilabel> tab to show the page
       which will permit you to configure your capability-based conditions.
@@ -517,16 +580,23 @@
       </screenshot>
     </figure>
     <para>
-      Capabilities are some properties that a file may exhibit to the user.
+      In fact, capability-based conditions are built as a list of
+      &laquosp;must match all of&spraquo; and &must_not_match; patterns.
+      In order you action be candidate regarding of these capability-based
+      conditions, each element of the selection must be valid for all the
+      listed conditions: the capability of each element must match each
+      of the defined &laquosp;must match all of&spraquo; capabilities,
+      and must not match any of the defined &must_not_match; ones.
     </para>
     <para>
-      But the <literal>Local</literal> capability, all others are dependant
-      of the user who executes the command.
+      If at least one element of the selection does not match all the defined
+      conditions, then your action will not be displayed.
     </para>
     <para>
-      You may so decide that your action will appear, or not, depending
-      on the capabilities of the selected item(s) <abbrev>vs.</abbrev>
-      the current user.
+      When targeting the selection context menu, your capability-based conditions
+      will be checked against the currently selected items. When targeting the
+      location context menu or the toolbar, your capability-based conditions will
+      be checked against those of of the current location.
     </para>
     <para>
       Defining a new capability-based condition involves two steps.
@@ -583,22 +653,16 @@
       </listitem>
       <listitem>
         <para>
-          Indicates whether this a &laquosp;match&spraquo; or a &laquosp;no match&spraquo;
-          condition.
+          Indicates whether this a &laquosp;must match all of&spraquo;
+          or a &must_not_match; condition.
         </para>
         <para>
-          Click on the <guilabel>Must match one of</guilabel> or
+          Click on the <guilabel>Must match all of</guilabel> or
           <guilabel>Must not match any of</guilabel> radio button in the same
-          row to set a &laquosp;must have&spraquo; or
-          &laquosp;must not have&spraquo; condition.
+          row to set the corresponding condition.
         </para>
       </listitem>
     </orderedlist>
-    <para>
-      When the action is examined to see if it should be displayed, this list
-      of capabilities that selected item(s) must match (or not) is compared
-      to those exhibited to the user.
-    </para>
     <para>
       By default, the capability-based condition list is empty. This means
       that capabilities are not relevant for this action.
@@ -607,6 +671,19 @@
 
   <sect3 id="usage-conditions-count">
     <title>Selection count condition</title>
+    <para>
+      You may define that your action will only appear if the current
+      selection in the file manager has some precise count, or some
+      precise relation with a given count.
+    </para>
+    <example>
+      <title>A selection count use case</title>
+      <para>
+        If your action consists in displaying the differences between
+        two files, you may define here
+        &laquosp;<literal>Count = (equal to) 2</literal>&spraquo;.
+      </para>
+    </example>
     <para>
       Click on the <guilabel>Environment</guilabel> tab to show the page
       which will permit you to configure your environment-based conditions.
@@ -632,18 +709,34 @@
       </screenshot>
     </figure>
     <para>
-      You may define that your action will only appear if the current
-      selection in the file manager has some precise count, or some
-      precise relation with a given count.
+      The selection count condition is defined in the
+      <guilabel>Appears if selection contains</guilabel> frame.
     </para>
-    <example>
-      <title>A selection count use case</title>
-      <para>
-        If your action consists in displaying the differences between
-        two files, you may define here
-        &laquosp;<literal>Count = (equal to) 2</literal>&spraquo;.
-      </para>
-    </example>
+    <figure id="nact-FIG-frame-count">
+      <title>Selection count condition frame</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/nact-selection-count-frame.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>
+              Focus on the <guilabel>Appears if selection contains</guilabel> frame.
+            </phrase>
+          </textobject>
+          <caption>
+            <para>Selection count condition frame</para>
+          </caption>
+        </mediaobject>
+      </screenshot>
+    </figure>
+    <para>
+      When targeting the selection context menu, the count condition
+      defined here will be checked against the count of currently
+      selected items. When targeting the location context menu or
+      the toolbar, the count condition will be checked against zero
+      because there is no selected item in this case.
+    </para>
     <para>
       To define a selection count condition:
     </para>
@@ -654,9 +747,9 @@
           the operator you want apply to the selection count:
         </para>
         <simplelist type="vert">
-          <member><literal>&lt; (strictly less than)</literal></member>
-          <member><literal>= (equal to)</literal></member>
-          <member><literal>&gt; (strictly greather than)</literal></member>
+          <member><literal>&lt;</literal> <termdef>(strictly less than)</termdef></member>
+          <member><literal>=</literal> <termdef>(equal to)</termdef></member>
+          <member><literal>&gt;</literal> <termdef>(strictly greather than)</termdef></member>
         </simplelist>
       </listitem>
       <listitem>
@@ -675,10 +768,6 @@
 
   <sect3 id="usage-conditions-desktop">
     <title>Desktop selection</title>
-    <para>
-      Click on the <guilabel>Environment</guilabel> tab to show the page
-      which will permit you to configure your environment-based conditions.
-    </para>
     <para>
       You may define that your action:
     </para>
@@ -702,6 +791,32 @@
     <para>
       Only one choice between these three items is possible.
     </para>
+    <para>
+      Click on the <guilabel>Environment</guilabel> tab to show the page
+      which will permit you to configure your environment-based conditions.
+    </para>
+    <para>
+      The desktop selection is defined in the
+      <guilabel>Desktop environment</guilabel> frame.
+    </para>
+    <figure id="nact-FIG-frame-desktop">
+      <title>Desktop selection frame</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/nact-desktop-environment-frame.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>
+              Focus on the <guilabel>Desktop environment</guilabel> frame.
+            </phrase>
+          </textobject>
+          <caption>
+            <para>Desktop selection frame</para>
+          </caption>
+        </mediaobject>
+      </screenshot>
+    </figure>
     <para>
       To define the desktop environment condition:
     </para>
@@ -728,7 +843,7 @@
       </listitem>
     </orderedlist>
     <para>
-      The target desktop environment condition defaults to
+      The targeted desktop environment condition defaults to
       &laquosp;<literal>Always appear</literal>&spraquo;,
       which means that the action will be candidate to be displayed
       regarding of the current desktop environment.
@@ -738,15 +853,38 @@
   <sect3 id="usage-conditions-executable">
     <title>Executable found condition</title>
     <para>
+      You may define that your action will only appear if some
+      prerequisite package is installed on your system. This is
+      checked here by specifying that a specific file, known or
+      at least supposed to be provided by the package, must be
+      present on the filesystem, and executable.
+    </para>
+    <para>
       Click on the <guilabel>Environment</guilabel> tab to show the page
       which will permit you to configure your environment-based conditions.
     </para>
     <para>
-      You may define that your action will only appear if some
-      prerequisite package is installed on your system. This is
-      checked here by specifying that a specific file from the
-      package must be present on the filesystem and executable.
+      The executable found condition is defined in the
+      <guilabel>Execution environment</guilabel> frame.
     </para>
+    <figure id="nact-FIG-frame-execution-environment">
+      <title>Execution environment frame</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/nact-execution-environment-frame.png" format="PNG"/>
+          </imageobject>
+          <textobject>
+            <phrase>
+              Focus on the <guilabel>Execution environment</guilabel> frame.
+            </phrase>
+          </textobject>
+          <caption>
+            <para>Execution environment frame</para>
+          </caption>
+        </mediaobject>
+      </screenshot>
+    </figure>
     <para>
       To define the relevant file, enter its full filename in the
       <guilabel>Appears if the file is executable</guilabel> entry
@@ -769,12 +907,13 @@
   <sect3 id="usage-conditions-dbus">
     <title>D-Bus registration condition</title>
     <para>
-      Click on the <guilabel>Environment</guilabel> tab to show the page
-      which will permit you to configure your environment-based conditions.
-    </para>
-    <para>
       You may define that your action will only appear if some given
       name is registered on D-Bus system at runtime.
+    </para>
+    <para>
+      Click on the <guilabel>Environment</guilabel> tab to show the page
+      which will permit you to configure your environment-based conditions,
+      and focus on <guilabel>Execution environment</guilabel> frame.
     </para>
     <para>
       To define the relevant name, enter it in the
@@ -797,12 +936,14 @@
   <sect3 id="usage-conditions-true">
     <title>Customized condition</title>
     <para>
-      Click on the <guilabel>Environment</guilabel> tab to show the page
-      which will permit you to configure your environment-based conditions.
+      You may define that your action will only appear if some given
+      command outputs a <literal>true</literal> string on its standard
+      output.
     </para>
     <para>
-      You may define that your action will only appear if some given
-      command outputs a <literal>true</literal> string.
+      Click on the <guilabel>Environment</guilabel> tab to show the page
+      which will permit you to configure your environment-based conditions,
+      and focus on <guilabel>Execution environment</guilabel> frame.
     </para>
     <para>
       This lets you define your own customized condition filter,
@@ -830,12 +971,13 @@
   <sect3 id="usage-conditions-run">
     <title>Running process condition</title>
     <para>
-      Click on the <guilabel>Environment</guilabel> tab to show the page
-      which will permit you to configure your environment-based conditions.
-    </para>
-    <para>
       You may define that your action will only appear if some given
       binary is currently running.
+    </para>
+    <para>
+      Click on the <guilabel>Environment</guilabel> tab to show the page
+      which will permit you to configure your environment-based conditions,
+      and focus on <guilabel>Execution environment</guilabel> frame.
     </para>
     <para>
       To define the binary, enter its name in the

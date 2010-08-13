@@ -13,6 +13,8 @@ REQUIRED_INTLTOOL_VERSION=0.35.5
 	exit 1
 }
 
+gtkdocize || exit 1
+
 which gnome-autogen.sh || {
 	echo "You need to install gnome-common from the GNOME Git"
 	exit 1

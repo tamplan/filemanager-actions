@@ -105,73 +105,141 @@ enum {
 };
 
 /**
+ * NAIImporterCheckFn:
+ * @imported: the currently imported #NAObjectItem.
+ * @fn_data: some data to be passed to the function.
+ *
  * This function may be provided by the caller in order the #NAIImporter
  * provider be able to check for pre-existence of the imported item.
  * This function should return the already existing item which has the
  * same id than the currently being imported one, or %NULL if the
  * imported id will be unique.
+ *
  * If this function is not provided, then the #NAIImporter provider will not
  * be able to check for duplicates. In this case, the id of the imported item
  * should be systematically regenerated as a unique id (uuid), regardless of
  * the asked import mode.
  *
- * (E): - currently imported item
- *      - fn_data
- * (S): - already existing item with same id, or %NULL.
+ * Returns: the already existing #NAObjectItem with same id, or %NULL.
  */
-typedef NAObjectItem * ( *NAIImporterCheckFn )  ( const NAObjectItem *, void *fn_data );
+typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
 
 /**
+ * NAIImporterAskUserFn:
+ * @imported: the currently imported #NAObjectItem.
+ * @existing: an already existing #NAObjectItem with same id.
+ * @fn_data: some data to be passed to the function.
+ *
  * This function may be provided by the caller in order the #NAIImporter
  * provider be able to ask the user to know what to do in the case of a
  * duplicate id.
- * This function should return an mode import (not ASK!).
+ *
  * If this function is not provided, then the #NAIImporter provider will
  * not be able to ask the user. In this case, the duplicated id should be
  * systematically regenerated as a unique id (uuid).
  *
- * (E): - currently imported item
- *      - already existing item with same id
- *      - fn_data
- * (S): - import mode choosen by the user
+ * Returns: the import mode choosen by the user, which must not be %ASK.
  */
-typedef guint          ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectItem *, void *fn_data );
+typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectItem *, void * );
 
-/*
- * parameters used in input/output are passed or received through a single structure
+/**
+ * NAIImporterImportFromUriParms:
+ * @version:       the version of this structure, currently equals to 1.
+ *                 input;
+ *                 since version 1 of the structure.
+ * @uri:           uri of the file to be imported.
+ *                 input;
+ *                 since version 1 of the structure.
+ * @asked_mode:    asked import mode.
+ *                 input;
+ *                 since version 1 of the structure.
+ * @exist:         whether the imported Id already existed.
+ *                 output;
+ *                 since version 1 of the structure.
+ * @import_mode:   actually used import mode.
+ *                 output;
+ *                 since version 1 of the structure.
+ * @imported:      the imported NAObjectItem-derived object, or %NULL.
+ *                 output;
+ *                 since version 1 of the structure.
+ * @check_fn:      a #NAIImporterCheckFn function to check the existence of the imported id.
+ *                 input;
+ *                 since version 1 of the structure.
+ * @check_fn_data: @check_fn data
+ *                 input;
+ *                 since version 1 of the structure.
+ * @ask_fn:        a #NAIImporterAskUserFn function to ask the user what to do in case of a duplicate id
+ *                 input;
+ *                 since version 1 of the structure.
+ * @ask_fn_data:   @ask_fn data
+ *                 input;
+ *                 since version 1 of the structure.
+ * @messages:      a #GSList list of localized strings;
+ *                 the provider may append messages to this list, but shouldn't reinitialize it
+ *                 input/output;
+ *                 since version 1 of the structure.
+ *
+ * This structure allows all used parameters when importing from an URI
+ * to be passed and received through a single structure.
  */
 struct NAIImporterImportFromUriParms {
-	guint                version;		/* i 1: version of this structure */
-	gchar               *uri;			/* i 1: uri of the file to be imported */
-	guint                asked_mode;	/* i 1: asked import mode */
-	gboolean             exist;			/*  o1: whether the imported Id already existed */
-	guint                import_mode;	/*  o1: actually used import mode */
-	NAObjectItem        *imported;		/*  o1: the imported NAObjectItem-derived object, or %NULL */
-	NAIImporterCheckFn   check_fn;		/* i 1: a function to check the existence of the imported id */
-	void                *check_fn_data;	/* i 1: data function */
-	NAIImporterAskUserFn ask_fn;		/* i 1: a function to ask the user what to do in case of a duplicate id */
-	void                *ask_fn_data;	/* i 1: data function */
-	GSList              *messages;		/* io1: a #GSList list of localized strings;
-										 *       the provider may append messages to this list,
-										 *       but shouldn't reinitialize it. */
+	guint                version;
+	gchar               *uri;
+	guint                asked_mode;
+	gboolean             exist;
+	guint                import_mode;
+	NAObjectItem        *imported;
+	NAIImporterCheckFn   check_fn;
+	void                *check_fn_data;
+	NAIImporterAskUserFn ask_fn;
+	void                *ask_fn_data;
+	GSList              *messages;
 };
 
 /*
- * parameters used when managing import mode
+ * NAIImporterManageImportModeParms:
+ * @version:       the version of this structure, currently equals to 1.
+ *                 input;
+ *                 since version 1 of the structure.
+ * @imported:      the imported #NAObjectItem-derived object
+ * @asked_mode:    asked import mode
+ * @check_fn:      a #NAIImporterCheckFn function to check the existence of the imported id.
+ *                 input;
+ *                 since version 1 of the structure.
+ * @check_fn_data: @check_fn data
+ *                 input;
+ *                 since version 1 of the structure.
+ * @ask_fn:        a #NAIImporterAskUserFn function to ask the user what to do in case of a duplicate id
+ *                 input;
+ *                 since version 1 of the structure.
+ * @ask_fn_data:   @ask_fn data
+ *                 input;
+ *                 since version 1 of the structure.
+ * @exist:         whether the imported Id already existed
+ *                 output;
+ *                 since version 1 of the structure.
+ * @import_mode:   actually used import mode
+ *                 output;
+ *                 since version 1 of the structure.
+ * @messages:      a #GSList list of localized strings;
+ *                 the provider may append messages to this list, but shouldn't reinitialize it
+ *                 input/output;
+ *                 since version 1 of the structure.
+ *
+ * This structure allows all used parameters when managing the import mode
+ * to be passed and received through a single structure.
  */
 struct NAIImporterManageImportModeParms {
-	guint                version;		/* i 1: version of this structure */
-	NAObjectItem        *imported;		/* i 1: the imported NAObjectItem-derived object */
-	guint                asked_mode;	/* i 1: asked import mode */
-	NAIImporterCheckFn   check_fn;		/* i 1: a function to check the existence of the imported id */
-	void                *check_fn_data;	/* i 1: data function */
-	NAIImporterAskUserFn ask_fn;		/* i 1: a function to ask the user what to do in case of a duplicate id */
-	void                *ask_fn_data;	/* i 1: data function */
-	gboolean             exist;			/*  o1: whether the imported Id already existed */
-	guint                import_mode;	/*  o1: actually used import mode */
-	GSList              *messages;		/* io1: a #GSList list of localized strings;
-										 *       the provider may append messages to this list,
-										 *       but shouldn't reinitialize it. */
+	guint                version;
+	NAObjectItem        *imported;
+	guint                asked_mode;
+	NAIImporterCheckFn   check_fn;
+	void                *check_fn_data;
+	NAIImporterAskUserFn ask_fn;
+	void                *ask_fn_data;
+	gboolean             exist;
+	guint                import_mode;
+	GSList              *messages;
 };
 
 GType na_iimporter_get_type( void );

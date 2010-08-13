@@ -282,14 +282,14 @@ na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry
 
 /**
  * na_gconf_utils_dump_entries:
- * @list: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
  *
  * Dumps the content of the entries.
  */
 void
-na_gconf_utils_dump_entries( GSList *list )
+na_gconf_utils_dump_entries( GSList *entries )
 {
-	g_slist_foreach( list, ( GFunc ) dump_entry, NULL );
+	g_slist_foreach( entries, ( GFunc ) dump_entry, NULL );
 }
 
 static void
@@ -340,15 +340,15 @@ dump_entry( GConfEntry *entry, void *user_data )
 
 /**
  * na_gconf_utils_free_entries:
- * @list: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
+ * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
  *
  * Releases the provided list.
  */
 void
-na_gconf_utils_free_entries( GSList *list )
+na_gconf_utils_free_entries( GSList *entries )
 {
-	g_slist_foreach( list, ( GFunc ) gconf_entry_unref, NULL );
-	g_slist_free( list );
+	g_slist_foreach( entries, ( GFunc ) gconf_entry_unref, NULL );
+	g_slist_free( entries );
 }
 
 /**
@@ -624,6 +624,8 @@ na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList 
  * @message: a pointer to a gchar * which will be allocated if needed.
  *
  * Removes an entry from user preferences.
+ *
+ * Returns: %TRUE if the operation was successfull, %FALSE else.
  */
 gboolean
 na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **message )

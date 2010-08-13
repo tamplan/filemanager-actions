@@ -81,10 +81,10 @@ gboolean    na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem 
 
 NAObjectId *na_object_item_get_item    ( const NAObjectItem *item, const gchar *id );
 gint        na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child );
-void        na_object_item_append_item ( NAObjectItem *object, const NAObjectId *item );
-void        na_object_item_insert_at   ( NAObjectItem *object, const NAObjectId *item, gint pos );
-void        na_object_item_insert_item ( NAObjectItem *object, const NAObject *item, const NAObject *before );
-void        na_object_item_remove_item ( NAObjectItem *object, const NAObjectId *item );
+void        na_object_item_append_item ( NAObjectItem *item, const NAObjectId *child );
+void        na_object_item_insert_at   ( NAObjectItem *item, const NAObjectId *child, gint pos );
+void        na_object_item_insert_item ( NAObjectItem *item, const NAObjectId *child, const NAObjectId *before );
+void        na_object_item_remove_item ( NAObjectItem *item, const NAObjectId *child );
 
 guint       na_object_item_get_items_count( const NAObjectItem *item );
 

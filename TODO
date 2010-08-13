@@ -8,6 +8,8 @@ N-A BUGS
 
 - when error on writing, should let the item modified
 
+- 2.30.3: sort buttons are sensitive even if the list is empty: should not.
+
 TODO
 ====
 - 2010-06-20: is_candidate_for_show_in: get current environment
@@ -15,6 +17,9 @@ TODO
 - 2010-06-17: implement shortcut button in NactIPropertiesTab page
 
 - 2010-08-09: in v1.x until ??, %f used to be the basename!!
+
+- 2010-08-12: NACT user's manual: review notes against tips
+  when do we should use each of them
 
 N-A ENHANCEMENTS
 ================
@@ -124,6 +129,10 @@ OTHER BUGS
 
 - Nautilus bug when dnd to nautilus on other screen
   see https://bugzilla.gnome.org/show_bug.cgi?id=593453
+
+- db2html: should create figures/ subdirectory
+  and should not leave a nautilus-actions-config-tool.junk/ subdirectory
+  to be confirmed against fedora13 before opening
 
 NOTES
 =====

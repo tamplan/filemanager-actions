@@ -83,16 +83,16 @@ typedef struct {
 
 GType    na_icontext_get_type( void );
 
-gboolean na_icontext_is_candidate    ( const NAIContext *object, guint target, GList *selection );
-gboolean na_icontext_is_valid        ( const NAIContext *object );
-gboolean na_icontext_is_all_mimetypes( const NAIContext *object );
+gboolean na_icontext_is_candidate    ( const NAIContext *context, guint target, GList *selection );
+gboolean na_icontext_is_valid        ( const NAIContext *context );
+gboolean na_icontext_is_all_mimetypes( const NAIContext *context );
 
-void     na_icontext_read_done       ( NAIContext *object );
+void     na_icontext_read_done       ( NAIContext *context );
 
-void     na_icontext_set_scheme      ( NAIContext *object, const gchar *scheme, gboolean selected );
-void     na_icontext_set_only_desktop( NAIContext *object, const gchar *desktop, gboolean selected );
-void     na_icontext_set_not_desktop ( NAIContext *object, const gchar *desktop, gboolean selected );
-void     na_icontext_replace_folder  ( NAIContext *object, const gchar *old, const gchar *new );
+void     na_icontext_set_scheme      ( NAIContext *context, const gchar *scheme, gboolean selected );
+void     na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolean selected );
+void     na_icontext_set_not_desktop ( NAIContext *context, const gchar *desktop, gboolean selected );
+void     na_icontext_replace_folder  ( NAIContext *context, const gchar *old, const gchar *new );
 
 G_END_DECLS
 

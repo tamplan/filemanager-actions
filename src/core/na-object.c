@@ -787,7 +787,7 @@ build_class_hierarchy( const NAObject *object )
 /**
  * na_object_object_get_hierarchy:
  *
- * Returns the class hierarchy,
+ * Returns: the class hierarchy,
  * from the topmost base class, to the most-derived one.
  */
 GList *
