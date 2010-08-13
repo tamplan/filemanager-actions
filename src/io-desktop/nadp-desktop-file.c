@@ -923,6 +923,7 @@ void
 nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value )
 {
 	char **locales;
+	guint i;
 
 	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
 
@@ -936,7 +937,16 @@ nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 		en
 		C
 		*/
-		g_key_file_set_locale_string( ndf->private->key_file, group, key, locales[0], value );
+
+		/* using locales[0] writes a string with, e.g. Label[en_US.UTF-8]
+		 * after thatn trying to read the same key with another locale, even en_US.utf-8,
+		 * fails ans returns an empty string.
+		 * so write all available locales for the string, so that there is a chance at
+		 * least one of these will be used as default
+		 */
+		for( i = 0 ; i < g_strv_length( locales ) ; ++i ){
+			g_key_file_set_locale_string( ndf->private->key_file, group, key, locales[i], value );
+		}
 	}
 }
 
