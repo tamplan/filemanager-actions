@@ -1,0 +1,19 @@
+data/gconf-schemas
+------------------
+This directory contains schemas to be installed in GConf.
+
+Note to translators.
+--------------------
+Only nautilus-actions-prefs-schemas.in may be translated in place.
+Other files are automatically generated.
+In particular, nautilus-actions-conf-schemas.in is generated from data
+factory includes, and automatically takes into account translations
+from po/ files.
+
+Note to packagers.
+------------------
+Even if you choose to not actually install schemas in GConf at install
+time, we will find back them in prefix/share/nautilus-actions/gconf-schemas/
+subdirectory.
+ 
+P. Wieser, Aug. 2010.
