@@ -1,3 +1,37 @@
+Version 2.99.2
+==============
+
+	Release date
+
+	Enhancements:
+
+		- Implement gtk-doc.
+		- Distribution now includes
+		  . API and NACT documentation.
+		  . some example of actions.
+
+	Bug fixes:
+
+		- Converts v2 %f parameter to v3 %b.
+		- Fix Makefile.am's to make distcheck.
+		- Fix writing of locales to .desktop files.
+		- No more consider profile name as mandatory.
+		- Allow the writing of empty data.
+		- Let the UI immediately reacts when the status of an I/O provider changes.
+		- Data for a read-only item is no more modifiable.
+		- Fix XML import of localized vs. unlocalized old data.
+		- Fix 'parent is not an action' error on XML import.
+		- Fix sensitivy of startup fields vs. execution mode.
+		- Fix incorrect handling of list conditions.
+		- Fix incorrect setting of icon path in GConf.
+		- Fix regression when displaying a path-based icon.
+
+	New and updated translations:
+
+		- de (Mario Blättermann)
+		- sl (Matej Urbančič, Andrej Žnidaršič)
+		- sv (Daniel Nylander)
+
 Version 2.99.1
 ==============
 

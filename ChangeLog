@@ -1,5 +1,7 @@
 2010-08-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Update NEWS before unstable release.
+
 	Create a new data/actions subdirectory.
 
 	* configure.ac:
