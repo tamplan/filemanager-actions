@@ -36,7 +36,7 @@ schemas_files = $(schemas_in_files:.schemas.in=.schemas)
 nautilus-actions-confs.schemas.in:
 	$(top_srcdir)/src/utils/nautilus-actions-schemas -s > $@
 
-schemasdir = $(pkgdatadir)
+schemasdir = $(pkgdatadir)/gconf-schemas
 
 schemas_DATA = $(schemas_files)
 
