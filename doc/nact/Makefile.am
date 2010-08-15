@@ -189,8 +189,8 @@ install-pdf-manuals:
 		_srcdir=$(top_builddir)/doc/nact/$$_lc; \
 		_destdir=$(DESTDIR)$(pkgdocdir)/pdf/$$_lc; \
 		if ! test -d $$_destdir; then $(MKDIR_P) $$_destdir; fi; \
-		echo $(INSTALL_DATA) "$$_srcdir/$(target).pdf" "$$_destdir/$(target).pdf"; \
-		$(INSTALL_DATA) "$$_srcdir/$(target).pdf" "$$_destdir/$(target).pdf"; \
+		echo $(INSTALL_DATA) "$$_srcdir/$(DOC_MODULE).pdf" "$$_destdir/$(DOC_MODULE).pdf"; \
+		$(INSTALL_DATA) "$$_srcdir/$(DOC_MODULE).pdf" "$$_destdir/$(DOC_MODULE).pdf"; \
 	done
 
 uninstall-pdf-manuals:

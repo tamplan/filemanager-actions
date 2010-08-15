@@ -1,5 +1,7 @@
 2010-08-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/nact/Makefile.am:	Fix PDF installation.
+
 	* src/core/na-object-profile.c (convert_pre_v3_parameters_str):
 	%f used to be the name of the file (a basename), converts it to %b.
 
