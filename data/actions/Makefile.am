@@ -28,7 +28,7 @@
 
 actionsdir = $(pkgdatadir)/actions
 
-actions_DATA = $(actions_files)
+actions_DATA = $(addprefix $(srcdir)/, $(actions_files))
 
 actions_files = \
 	my-first-na-action.desktop			\
@@ -36,3 +36,5 @@ actions_files = \
 	open-terminal-here.desktop			\
 	show-na-parameters.desktop			\
 	$(NULL)
+
+$(actions_files):
