@@ -8,7 +8,7 @@ xml/
 *-unused.txt
 *.args
 *.hierarchy
-*.interface
+*.interfaces
 *.prerequisites
 *.signals
 *.types
