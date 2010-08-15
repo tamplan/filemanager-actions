@@ -26,10 +26,6 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-actionsdir = $(pkgdatadir)/actions
-
-actions_DATA = $(addprefix $(srcdir)/, $(actions_files))
-
 actions_files = \
 	my-first-na-action.desktop			\
 	my-first-na-menu.desktop			\
@@ -37,4 +33,6 @@ actions_files = \
 	show-na-parameters.desktop			\
 	$(NULL)
 
-$(actions_files):
+actionsdir = $(pkgdatadir)/samples
+
+dist_actions_DATA = $(addprefix $(srcdir)/, $(actions_files))
