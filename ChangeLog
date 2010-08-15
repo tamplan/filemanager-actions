@@ -1,5 +1,10 @@
 2010-08-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Move exports/ subdirectory into data/ tree.
+
+	* configure.ac:
+	* data/Makefile.am: Updated accordingly.
+
 	* doc/nact/Makefile.am:	Fix PDF installation.
 
 	* src/core/na-object-profile.c (convert_pre_v3_parameters_str):
