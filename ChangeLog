@@ -1,9 +1,17 @@
 2010-08-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Move schemas into a new subdirectory data/gconf-schemas.
+
+	* configure.ac:
+	* data/Makefile.am: Updated accordingly.
+
 	Move exports/ subdirectory into data/ tree.
 
 	* configure.ac:
 	* data/Makefile.am: Updated accordingly.
+
+	* data/exports/Makefile.am:
+	* data/exports/README: New files.
 
 	* doc/nact/Makefile.am:	Fix PDF installation.
 

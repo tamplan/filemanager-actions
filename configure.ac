@@ -40,6 +40,7 @@ AC_CONFIG_FILES([
 	Makefile
 	data/Makefile
 	data/exports/Makefile
+	data/gconf-schemas/Makefile
 	doc/Makefile
 	doc/api/Makefile
 	doc/api/version.xml

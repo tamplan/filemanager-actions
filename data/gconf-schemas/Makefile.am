@@ -26,10 +26,6 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-SUBDIRS = \
-	exports												\
-	$(NULL)
-
 schemas_in_files = \
 	nautilus-actions-prefs.schemas.in					\
 	nautilus-actions-confs.schemas.in					\
