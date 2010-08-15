@@ -389,12 +389,12 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
  * starting wih v3, parameters are relabeled
  *   pre-v3 parameters					post-v3 parameters
  *   ----------------------------		-----------------------------------
- *   									%b: (first) basename	(new)
+ *   									%b: (first) basename	(was %f)
  *   									%B: list of basenames	(was %m)
  *   									%c: count				(new)
  * 	 %d: (first) base directory			...................		(unchanged)
  * 										%D: list of base dir	(new)
- *   %f: (first) pathname				...................		(unchanged)
+ *   %f: (first) filename	-> %b		%f: (first) pathname	(new)
  *   									%F: list of pathnames	(was %M)
  *   %h: (first) hostname				...................		(unchanged)
  *   %m: list of basenames	-> %B		-						(removed)
@@ -412,6 +412,7 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
  *   %%: %								...................		(unchanged)
  *
  * For pre-v3 items,
+ * - substitute %f with %b
  * - substitute %m with %B
  * - substitute %M with %F
  * - substitute %U with %n
@@ -466,6 +467,13 @@ convert_pre_v3_parameters_str( gchar *str )
 
 		g_debug( "convert_pre_v3_parameters_str: iter[1]='%c'", iter[1] );
 		switch( iter[1] ){
+
+			/* %f (first filename) becomes %b
+			 */
+			case 'f':
+				iter[1] = 'b';
+				changed = TRUE;
+				break;
 
 			/* %m (list of basenames) becomes %B
 			 */
