@@ -39,6 +39,7 @@ AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([
 	Makefile
 	data/Makefile
+	data/actions/Makefile
 	data/exports/Makefile
 	data/gconf-schemas/Makefile
 	doc/Makefile

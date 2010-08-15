@@ -1,0 +1,12 @@
+
+[Desktop Entry]
+Type=Action
+ToolbarLabel[en_US.UTF-8]=List Parameters
+Icon[en_US.UTF-8]=/usr/share/icons/hicolor/16x16/apps/nautilus-actions.png
+Name[en_US.UTF-8]=List Parameters
+Profiles=profile-pre-v2;
+
+[X-Action-Profile profile-pre-v2]
+Exec=zenity --list --text="Nautilus Action Parameters for the selected items:" --column="Parameter" --column="Token" --column="Value" "Gnome-vfs URI" %%u "%u" "Hostname" %%h "%h" "Base folder" %%d "%d" "Scheme" %%s "%s" "Username" %%U "%U" "First item selected" %%f "%f" "Selected items" %%M "%M" "Basenames" %%m "%m" --height=370 --print-column=2
+Schemes=file;sftp;smb;ftp;dav;ssh;x-nautilus-desktop;symlink;
+Name[en_US.UTF-8]=Profile automatically created from pre-v2 action

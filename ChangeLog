@@ -1,5 +1,13 @@
 2010-08-15 Pierre Wieser <pwieser@trychlos.org>
 
+	Create a new data/actions subdirectory.
+
+	* configure.ac:
+	* data/Makefile.am: Updated accordingly.
+
+	* data/actions/Makefile.am:
+	* data/actions/README: New files.
+
 	Move schemas into a new subdirectory data/gconf-schemas.
 
 	* configure.ac:
