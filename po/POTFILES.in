@@ -1,4 +1,4 @@
-data/nautilus-actions-prefs.schemas.in
+data/gconf-schemas/nautilus-actions-prefs.schemas.in
 src/core/na-exporter.c
 src/core/na-iabout.c
 src/core/na-icontext-factory.c
