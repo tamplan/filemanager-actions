@@ -31,8 +31,6 @@
 
 include $(top_srcdir)/gnome-doc-utils.make
 
-dist-hook: doc-dist-hook
-
 DOC_MODULE = nautilus-actions-config-tool
 
 DOC_ENTITIES = \
@@ -100,53 +98,128 @@ DOC_FIGURES = \
 DOC_LINGUAS = \
 	$(NULL)
 
-# generate HTML and PDF NACT user's manual if --enable-manuals has been set
-all-local: manuals
+# generate HTML and PDF NACT user's manual if 
+# --enable-html-manuals and/or --enable-pdf-manuals have been set
+# the generated docs are installed in pkgdocdir/doc/{html|pdf}/
 
-manuals: html-manual pdf-manual
+pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
-sources_dir = $(top_srcdir)/doc/nact/C
+all-local: all-manuals
 
-target_dir = $(top_builddir)/doc/nact/C
+all-manuals: all-html-manuals all-pdf-manuals
 
-# let DOC_MODULE.xml be the first of the list
-sources_files = \
-	$(addprefix 									\
-		$(sources_dir)/, 							\
-			$(DOC_MODULE).xml						\
-			$(DOC_ENTITIES)							\
-			$(DOC_INCLUDES)							\
-			$(DOC_FIGURES))							\
-	$(NULL)
+install-data-local: install-manuals
 
-$(sources_files):
+install-manuals: install-html-manuals install-pdf-manuals
 
-target_html = $(target_dir)/$(DOC_MODULE)/$(DOC_MODULE).html
+uninstall-local: uninstall-manuals
 
-target_pdf = $(target_dir)/$(DOC_MODULE).pdf
+uninstall-manuals: uninstall-html-manuals uninstall-pdf-manuals
+
+dist-hook: doc-dist-hook dist-html-manuals-hook dist-pdf-manuals-hook
 
 if ENABLE_HTML_MANUALS
-html-manual: $(target_html)
+all-html-manuals: html.stamp
 
-$(target_html): $(sources_files)
-	@echo "Generating $(target_html)..."
-	-db2html -b html -u $<
+html.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) ChangeLog
+	@-for i in C $(_DOC_REAL_LINGUAS); do \
+		rm -fr $$i/$(DOC_MODULE).junk; \
+		echo "Generating $$i/$(DOC_MODULE)/$(DOC_MODULE).html ..."; \
+		if ! test -d $$i; then $(MKDIR_P) $$i; fi; \
+		(cd $$i; \
+		 if test "x$(abs_srcdir)" != "x$(abs_builddir)"; then cp $(abs_srcdir)/$$i/*.xml .; fi; \
+		 db2html --nochunks $(DOC_MODULE).xml; \
+		 if test "x$(abs_srcdir)" != "x$(abs_builddir)"; then rm -f *.xml .; fi; \
+		); \
+		cp -rp $(abs_srcdir)/$$i/figures $$i/$(DOC_MODULE)/; \
+		chmod -R u+w $$i/$(DOC_MODULE); \
+	done
+	touch html.stamp
+
+install-html-manuals:
+	@-for _lc in C $(_DOC_REAL_LINGUAS); do \
+		_srcdir=$(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE); \
+		_destdir=$(DESTDIR)$(pkgdocdir)/html/$$_lc; \
+		if ! test -d $$_destdir; then $(MKDIR_P) $$_destdir; fi; \
+		find $$_srcdir -type f | while read _f; do \
+			_dname=`dirname $$_f`; \
+			_subdir=`echo "$$_dname" | sed "s|^$$_srcdir[/]*||"`; \
+			if ! test -d "$$_destdir/$$_subdir"; then $(MKDIR_P) "$$_destdir/$$_subdir"; fi; \
+			_bname=`basename "$$_f"`; \
+			echo $(INSTALL_DATA) "$$_f" "$$_destdir/$$_subdir/$$_bname"; \
+			$(INSTALL_DATA) "$$_f" "$$_destdir/$$_subdir/$$_bname"; \
+		done; \
+	done
+
+uninstall-html-manuals:
+	rm -fr $(DESTDIR)$(pkgdocdir)/html
+
+dist-html-manuals-hook:
+	for _lc in C $(_DOC_REAL_LINGUAS); do \
+		$(MKDIR_P) $(distdir)/html/$$_lc; \
+		cp -r $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE)/* $(distdir)/html/$$_lc/; \
+	done
+	find $(distdir)/html -type d -exec chmod 755 {} \;
+	find $(distdir)/html -type f -exec chmod 644 {} \;
 else
-html-manual:
+all-html-manuals:
+
+install-html-manuals:
+
+uninstall-html-manuals:
+
+dist-html-manuals-hook:
 endif
 
 if ENABLE_PDF_MANUALS
-pdf-manual: $(target_pdf)
+all-pdf-manuals: pdf.stamp
 
-$(target_pdf): $(sources_files)
-	@echo "Generating $(target_pdf)..."
-	-dblatex $< >/dev/null
+pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) ChangeLog
+	@-for i in C $(_DOC_REAL_LINGUAS); do \
+		_target=$$i/$(DOC_MODULE).pdf; \
+		echo "Generating $$_target ..."; \
+		if ! test -d $$i; then $(MKDIR_P) $$i; fi; \
+		echo "dblatex --output $$_target $<"; \
+		dblatex --output $$_target $<; \
+	done
+	touch pdf.stamp
+
+install-pdf-manuals:
+	@-for _lc in C $(_DOC_REAL_LINGUAS); do \
+		_srcdir=$(top_builddir)/doc/nact/$$_lc; \
+		_destdir=$(DESTDIR)$(pkgdocdir)/pdf/$$_lc; \
+		if ! test -d $$_destdir; then $(MKDIR_P) $$_destdir; fi; \
+		echo $(INSTALL_DATA) "$$_srcdir/$(target).pdf" "$$_destdir/$(target).pdf"; \
+		$(INSTALL_DATA) "$$_srcdir/$(target).pdf" "$$_destdir/$(target).pdf"; \
+	done
+
+uninstall-pdf-manuals:
+	rm -fr $(DESTDIR)$(pkgdocdir)/pdf
+
+dist-pdf-manuals-hook:
+	for _lc in C $(_DOC_REAL_LINGUAS); do \
+		$(MKDIR_P) $(distdir)/pdf/$$_lc; \
+		cp $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE).pdf $(distdir)/pdf/$$_lc/; \
+	done
+	find $(distdir)/pdf -type d -exec chmod 755 {} \;
+	find $(distdir)/pdf -type f -exec chmod 644 {} \;
 else
-pdf-manual:
+all-pdf-manuals:
+
+install-pdf-manuals:
+
+uninstall-pdf-manuals:
+
+dist-pdf-manuals-hook:
 endif
 
-clean-local:
+clean-local: clean-manuals
 	rm -f *~
-	rm -f  $(target_dir)/*.pdf
-	rm -f  $(target_dir)/*.html
-	rm -fr $(target_dir)/$(DOC_MODULE)
+	rm -f *.stamp
+
+distclean-local: clean-manuals
+
+clean-manuals:
+	for lc in C $(_DOC_REAL_LINGUAS); do \
+		rm -fr $$lc; \
+	done

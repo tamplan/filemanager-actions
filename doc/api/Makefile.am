@@ -35,6 +35,8 @@ DOC_MODULE_VERSION = 3
 
 DOC_MAIN_SGML_FILE = $(DOC_MODULE)-docs.xml
 
+doc_sections = $(DOC_MODULE)-sections.txt
+
 # from the API documentation point of view
 # we have to ignore all headers in src/core, and all corresponding source
 # that is, only consider in src/core .c sources whose header is in src/api
@@ -68,8 +70,8 @@ SCAN_OPTIONS = \
 
 # The directory containing the source code. Relative to $(srcdir)
 DOC_SOURCE_DIR = \
-	../../src/api 								\
-	--source-dir=../../src/core					\
+	$(top_srcdir)/src/api 						\
+	--source-dir=$(top_srcdir)/src/core			\
 	$(NULL)
 
 # Used for dependencies
@@ -167,4 +169,4 @@ EXTRA_DIST += \
 	$(xml_in_files)								\
 	$(NULL)
 
-TESTS = ($GTKDOC_CHECK)
+#TESTS = $(GTKDOC_CHECK)

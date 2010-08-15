@@ -53,6 +53,7 @@ DISTCHECK_CONFIGURE_FLAGS += \
 
 EXTRA_DIST = \
 	gnome-doc-utils.make				\
+	gtk-doc.make						\
 	intltool-extract.in					\
 	intltool-merge.in					\
 	intltool-update.in					\
@@ -60,6 +61,7 @@ EXTRA_DIST = \
 
 DISTCLEANFILES = \
 	gnome-doc-utils.make				\
+	gtk-doc.make						\
 	intltool-extract					\
 	intltool-merge						\
 	intltool-update						\
@@ -73,6 +75,7 @@ dist_pkgdoc_DATA = \
 	ChangeLog-2008						\
 	ChangeLog-2009						\
 	COPYING								\
+	COPYING-DOCS						\
 	INSTALL								\
 	MAINTAINERS							\
 	NEWS								\

@@ -36,6 +36,7 @@ stamp-h1
 *.o
 *.la
 *.lo
+*.log
 *.bak
 *.gladep
 nautilus-actions-*.tar.gz

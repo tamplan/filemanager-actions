@@ -1,5 +1,8 @@
 2010-08-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/api/nautilus-actions-sections.txt:
+	* doc/api/nautilus-actions-docs.xml: New files.
+
 	* src/io-desktop/nadp-desktop-file.c (nadp_desktop_file_set_locale_string):
 	Write all available locales to have a chance another locale can get it.
 
