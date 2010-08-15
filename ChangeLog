@@ -1,5 +1,8 @@
 2010-08-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/gconf-schemas/Makefile.am:
+	Install GConf schemas in PKGDATADIR/gconf-schemas.
+
 	* NEWS: Update NEWS before unstable release.
 
 	Create a new data/actions subdirectory.
