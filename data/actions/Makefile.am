@@ -25,3 +25,14 @@
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
+
+actionsdir = $(pkgdatadir)/actions
+
+actions_DATA = $(actions_files)
+
+actions_files = \
+	my-first-na-action.desktop			\
+	my-first-na-menu.desktop			\
+	open-terminal-here.desktop			\
+	show-na-parameters.desktop			\
+	$(NULL)

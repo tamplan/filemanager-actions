@@ -1,0 +1,33 @@
+
+[Desktop Entry]
+Type=Action
+Icon[en_US.UTF-8]=gtk-about
+Icon[en_US]=gtk-about
+Icon[en.UTF-8]=gtk-about
+Icon[en]=gtk-about
+Icon[C]=gtk-about
+Tooltip[en_US.UTF-8]=This will execute an action with some parameters
+Tooltip[en_US]=This will execute an action with some parameters
+Tooltip[en.UTF-8]=This will execute an action with some parameters
+Tooltip[en]=This will execute an action with some parameters
+Tooltip[C]=This will execute an action with some parameters
+ToolbarLabel[en_US.UTF-8]=My first action
+ToolbarLabel[en_US]=My first action
+ToolbarLabel[en.UTF-8]=My first action
+ToolbarLabel[en]=My first action
+ToolbarLabel[C]=My first action
+Name[en_US.UTF-8]=My first action
+Name[en_US]=My first action
+Name[en.UTF-8]=My first action
+Name[en]=My first action
+Name[C]=My first action
+Profiles=profile-zero;
+
+Name[en_US.utf8]=My first action
+Tooltip[en_US.utf8]=This will execute an action with some parameters
+Icon[en_US.utf8]=gtk-about
+ToolbarLabel[en_US.utf8]=My first action
+
+[X-Action-Profile profile-zero]
+Exec=zenity --info --text="%c selected item(s): %f"
+Name[en_US.UTF-8]=Default profile

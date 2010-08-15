@@ -1,5 +1,11 @@
 2010-08-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/actions/Makefile.am:
+	* data/actions/my-first-na-action.desktop:
+	* data/actions/my-first-na-menu.desktop:
+	* data/actions/open-terminal-here.desktop:
+	* data/actions/show-na-parameters.desktop: New files.
+
 	* data/gconf-schemas/Makefile.am:
 	Install GConf schemas in PKGDATADIR/gconf-schemas.
 

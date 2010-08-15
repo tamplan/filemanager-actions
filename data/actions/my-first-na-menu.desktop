@@ -1,0 +1,10 @@
+
+[Desktop Entry]
+Type=Menu
+Name[en]=My First Nautilus-Actions menu
+Name[C]=My First Nautilus-Actions menu
+ItemsList=my-first-na-action;show-na-parameters;open-terminal-here;
+Tooltip[en]=Contains some default Nautilus-Actions actions
+Tooltip[C]=Contains some default Nautilus-Actions actions
+Icon[en]=/usr/share/icons/hicolor/22x22/mimetypes/application-x-catalog.png
+Icon[C]=/usr/share/icons/hicolor/22x22/mimetypes/application-x-catalog.png
