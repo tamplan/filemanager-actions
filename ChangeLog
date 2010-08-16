@@ -1,3 +1,7 @@
+2010-08-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Bump version number after unstable release.
+
 2010-08-15 Pierre Wieser <pwieser@trychlos.org>
 
 	* data/actions/Makefile.am:
