@@ -1,5 +1,8 @@
 2010-08-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c (is_candidate_for_schemes):
+	Remove wrong variable override.
+
 	* configure.ac: Bump version number after unstable release.
 
 2010-08-15 Pierre Wieser <pwieser@trychlos.org>
