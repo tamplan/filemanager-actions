@@ -1,5 +1,7 @@
 2010-08-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/nact/Makefile.am: Fix PDF build.
+
 	* configure.ac: Bump version number after unstable release.
 
 	* doc/nact/Makefile.am:	Fix manuals cleanup.

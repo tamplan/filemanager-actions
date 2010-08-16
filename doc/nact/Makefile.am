@@ -179,8 +179,8 @@ pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) ChangeLog
 		_target=$$i/$(DOC_MODULE).pdf; \
 		echo "Generating $$_target ..."; \
 		if ! test -d $$i; then $(MKDIR_P) $$i; fi; \
-		echo "dblatex --output $$_target $<"; \
-		dblatex --output $$_target $<; \
+		echo "dblatex --output $$_target $$i/$(DOC_MODULE).xml"; \
+		dblatex --output $$_target $$i/$(DOC_MODULE).xml; \
 	done
 	touch pdf.stamp
 
