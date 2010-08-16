@@ -1,3 +1,14 @@
+Version 2.99.3
+==============
+
+	Release date 2010-08-16
+
+	Bug fixes:
+
+		- Fix #627021 reported by Götz Waschk
+		  (uninitialized variable in na-icontext.c)
+		- Fix manuals cleanup in Makefile
+
 Version 2.99.2
 ==============
 
