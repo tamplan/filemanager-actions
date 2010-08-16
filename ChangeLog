@@ -1,5 +1,7 @@
 2010-08-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/nact/Makefile.am:	Fix manuals cleanup.
+
 	* src/core/na-icontext.c (is_candidate_for_schemes):
 	Remove wrong variable override.
 

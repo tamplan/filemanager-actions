@@ -213,13 +213,19 @@ uninstall-pdf-manuals:
 dist-pdf-manuals-hook:
 endif
 
-clean-local: clean-manuals
+clean-local: clean-html-manuals clean-pdf-manuals
 	rm -f *~
 	rm -f *.stamp
 
-distclean-local: clean-manuals
+distclean-local: clean-html-manuals clean-pdf-manuals
 
-clean-manuals:
+clean-html-manuals:
 	for lc in C $(_DOC_REAL_LINGUAS); do \
-		rm -fr $$lc; \
+		rm -fr $$lc/$(DOC_MODULE); \
+		rm -fr $$lc/$(DOC_MODULE).junk; \
+	done
+
+clean-pdf-manuals:
+	for lc in C $(_DOC_REAL_LINGUAS); do \
+		rm -f $$lc/*.pdf; \
 	done
