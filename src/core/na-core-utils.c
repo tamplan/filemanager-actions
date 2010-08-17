@@ -196,14 +196,26 @@ na_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **
 {
 	gchar **splitted, **iter;
 
-	splitted = g_strsplit( string, " ", 2 );
-	iter = splitted;
+	if( first ){
+		*first = NULL;
+	}
 
-	*first = g_strdup( *iter );
-	iter++;
-	*other = g_strdup( *iter );
+	if( other ){
+		*other = NULL;
+	}
 
-	g_strfreev( splitted );
+	if( string && g_utf8_strlen( string, -1 )){
+		splitted = g_strsplit( string, " ", 2 );
+		iter = splitted;
+		if( first ){
+			*first = g_strdup( *iter );
+		}
+		iter++;
+		if( other ){
+			*other = g_strdup( *iter );
+		}
+		g_strfreev( splitted );
+	}
 }
 
 void
