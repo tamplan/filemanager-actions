@@ -772,14 +772,19 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 	gchar *label;
 	GSList *is;
 	gint errors;
-	GtkLabel *summary_label;
+	GtkTextView *summary_textview;
+	GtkTextBuffer *summary_buffer;
+	GtkTextTag *title_tag;
+	GtkTextIter start, end;
+	gint title_len;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
 	/* i18n: result of the export assistant */
 	text = g_strdup( _( "Selected actions have been proceeded :" ));
-	tmp = g_strdup_printf( "<b>%s</b>\n\n", text );
+	title_len = g_utf8_strlen( text, -1 );
+	tmp = g_strdup_printf( "%s\n\n", text );
 	g_free( text );
 	text = tmp;
 
@@ -824,9 +829,20 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 		text = tmp;
 	}
 
-	summary_label = GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AssistantExportSummaryLabel" ));
-	gtk_label_set_markup( summary_label, text );
+	summary_textview = GTK_TEXT_VIEW( base_window_get_widget( BASE_WINDOW( window ), "AssistantExportSummaryTextView" ));
+	summary_buffer = gtk_text_view_get_buffer( summary_textview );
+	gtk_text_buffer_set_text( summary_buffer, text, -1 );
 	g_free( text );
+
+	title_tag = gtk_text_buffer_create_tag( summary_buffer, "title",
+			"weight", PANGO_WEIGHT_BOLD,
+			NULL );
+
+	gtk_text_buffer_get_iter_at_offset( summary_buffer, &start, 0 );
+	gtk_text_buffer_get_iter_at_offset( summary_buffer, &end, title_len );
+	gtk_text_buffer_apply_tag( summary_buffer, title_tag, &start, &end );
+
+	g_object_unref( title_tag );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	base_assistant_set_warn_on_cancel( BASE_ASSISTANT( window ), FALSE );

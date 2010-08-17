@@ -2769,6 +2769,12 @@ If the command is not found, or does not display the correct result, your item w
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -2784,10 +2790,10 @@ If the command is not found, or does not display the correct result, your item w
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
+            <property name="use_preview_label">False</property>
+            <property name="select_multiple">True</property>
             <property name="preview_widget_active">False</property>
             <property name="local_only">False</property>
-            <property name="select_multiple">True</property>
-            <property name="use_preview_label">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -3057,10 +3063,18 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel" id="AssistantImportSummaryLabel">
+          <object class="GtkScrolledWindow" id="scrolledwindow6">
             <property name="visible">True</property>
-            <property name="xalign">0</property>
-            <property name="xpad">20</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <child>
+              <object class="GtkTextView" id="AssistantImportSummaryTextView">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">0</property>

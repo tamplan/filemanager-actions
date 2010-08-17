@@ -1,5 +1,12 @@
 2010-08-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* Replace GtkLable with GtkTextView in import and export assistants.
+
+	* src/nact/nact-assistant-export.c (assist_prepare_exportdone):
+	* src/nact/nact-assistant-import.c (prepare_importdone):
+	* src/nact/nact-assistant-export.ui:
+	* src/nact/nautilus-actions-config-tool.ui: Updated accordingly.
+
 	* src/core/na-core-utils.c (na_core_utils_str_split_first_word):
 	Accepts null or empty input string or output pointers.
 
