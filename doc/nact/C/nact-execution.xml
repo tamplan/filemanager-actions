@@ -518,38 +518,77 @@
           <filename>pierre</filename>, <filename>paul</filename>
           and <filename>jacques</filename>.
         </para>
-        <para>
-          If we have requested <literal>echo %b</literal>,
-          then the following commands will be run:
-        </para>
+        <formalpara>
+          <title>
+            If we have requested <command>echo %b</command>,
+          </title>
+          <para>
+            then the following commands will be successively run:
+          </para>
+        </formalpara>
         <simplelist>
           <member><command>echo pierre</command></member>
           <member><command>echo paul</command></member>
           <member><command>echo jacques</command></member>
         </simplelist>
         <para>
-          Contrarily, if we have requester <literal>echo %B</literal>,
-          then the following command will be run:
+          This is because <literal>%b</literal> marks a <emphasis>singular</emphasis>
+          parameter. The command is the run once for each of the selected items.
         </para>
+        <formalpara>
+          <title>
+            Contrarily, if we have requester <command>echo %B</command>,
+          </title>
+          <para>
+            then the following command will be run:
+          </para>
+        </formalpara>
         <simplelist>
           <member><command>echo pierre paul jacques</command></member>
         </simplelist>
         <para>
-          If we have requested <literal>echo %b %B</literal>,
-          then the following commands will be run:
+          This is because <literal>%B</literal> marks a a <emphasis>plural</emphasis>
+          parameter. The command is then run only once, with the list of selected
+          items as arguments.
         </para>
+        <formalpara>
+          <title>
+            If we have requested <command>echo %b %B</command>,
+          </title>
+          <para>
+            then the following commands will be successively run:
+          </para>
+        </formalpara>
         <simplelist>
           <member><command>echo pierre pierre paul jacques</command></member>
           <member><command>echo paul pierre paul jacques</command></member>
           <member><command>echo jacques pierre paul jacques</command></member>
         </simplelist>
         <para>
-          And if we have requested <literal>echo %B %b</literal>,
-          then the following commands will be run:
+          This is because the first <emphasis>relevant</emphasis> parameter
+          is <literal>%b</literal>, and so the command is run once for each
+          selected item, replacing at each occurrence the <literal>%b</literal>
+          parameter with the corresponding item. The second parameter is
+          computed and added as arguments to the executed command.
         </para>
+        <formalpara>
+          <title>
+            And if we have requested <literal>echo %B %b</literal>,
+          </title>
+          <para>
+            then the following commands will be run:
+          </para>
+        </formalpara>
         <simplelist>
           <member><command>echo pierre paul jacques pierre</command></member>
         </simplelist>
+        <para>
+          This is because the first <emphasis>relevant</emphasis> parameter here
+          is <literal>%B</literal>. The command is then run only once, replacing
+          <literal>%B</literal> with the space-separated list of basenames. As
+          the command is only run once, the <literal>%b</literal> is substituted
+          only once with the (first) basename. 
+        </para>
       </example>
    </sect4>
   </sect3>

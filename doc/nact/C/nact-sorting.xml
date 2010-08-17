@@ -29,6 +29,22 @@
       In these modes, actions and menus are sorted depending of their label,
       inside of their parent. 
     </para>
+    <figure id="nact-FIG-sort-buttons">
+      <title>Sort buttons in the main window</title>
+      <screenshot>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="figures/sort-buttons-frame.png" format="PNG" />
+          </imageobject>
+          <textobject>
+            <phrase>Shows the three sort buttons in the main window.</phrase>
+          </textobject>
+          <caption>
+            <para>Sort buttons in the main window</para>
+          </caption>
+        </mediaobject>
+      </screenshot>
+    </figure>
     <para>
       You may sort your actions by:
     </para>

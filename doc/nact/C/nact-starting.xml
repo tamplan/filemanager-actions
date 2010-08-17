@@ -624,7 +624,7 @@
             </listitem>
           </itemizedlist>
           <para>
-            If the cmmand you enter does not have an absolute path,
+            If the command you enter does not have an absolute path,
             then it will be searched for in the <envar>PATH</envar>
             variable at execution time.
           </para>

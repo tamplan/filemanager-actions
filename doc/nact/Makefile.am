@@ -86,6 +86,7 @@ DOC_FIGURES = \
 	figures/nact-working-directory-frame.png		\
 	figures/remove.png								\
 	figures/sort-asc.png							\
+	figures/sort-buttons-frame.png					\
 	figures/sort-desc.png							\
 	figures/sort-manual.png							\
 	figures/start-context-menu.png					\
