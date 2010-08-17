@@ -1,3 +1,8 @@
+2010-08-17 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/io-desktop/nadp-reader.c (read_done_profile_split_exec):
+	Only try to split a non-null command.
+
 2010-08-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* doc/nact/Makefile.am: Fix PDF build.

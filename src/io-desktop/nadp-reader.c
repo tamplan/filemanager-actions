@@ -682,11 +682,14 @@ read_done_profile_split_exec( const NAIFactoryProvider *provider, NAObjectProfil
 	gchar *path, *parameters;
 
 	exec = na_object_get_path( profile );
-	na_core_utils_str_split_first_word( exec, &path, &parameters );
-	na_object_set_path( profile, path );
-	na_object_set_parameters( profile, parameters );
 
-	g_free( parameters );
-	g_free( path );
+	if( exec && g_utf8_strlen( exec, -1 )){
+		na_core_utils_str_split_first_word( exec, &path, &parameters );
+		na_object_set_path( profile, path );
+		na_object_set_parameters( profile, parameters );
+		g_free( parameters );
+		g_free( path );
+	}
+
 	g_free( exec );
 }
