@@ -695,37 +695,6 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		}
 	}
 
-	/* import actions
-	 * getting results in the same order than uris
-	 * simultaneously building the actions list
-	 */
-#if 0
-	for( is = uris ; is ; is = is->next ){
-
-		parms.version = 1;
-		parms.uri = ( gchar * ) is->data;
-		parms.mode = mode;
-		parms.window = base_window_get_toplevel( base_application_get_main_window( BASE_APPLICATION( application )));
-		parms.messages = NULL;
-		parms.imported = NULL;
-
-		code = na_importer_import_from_uri( NA_PIVOT( updater ), &parms );
-
-		str = g_new0( ImportUriStruct, 1 );
-		str->uri = g_strdup( parms.uri );
-		str->item = parms.imported;
-		str->msg = na_core_utils_slist_duplicate( parms.messages );
-		na_core_utils_slist_free( parms.messages );
-
-		if( str->item ){
-			na_object_check_status( str->item );
-			imported_items = g_list_prepend( imported_items, str->item );
-		}
-
-		window->private->results = g_slist_prepend( window->private->results, str );
-	}
-#endif
-
 	na_core_utils_slist_free( import_parms.uris );
 	window->private->results = import_parms.results;
 

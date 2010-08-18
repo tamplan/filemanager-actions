@@ -1,3 +1,7 @@
+2010-08-18 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-assistant-import.c (assistant_apply): Cleanup code.
+
 2010-08-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* Replace GtkLable with GtkTextView in import and export assistants.
