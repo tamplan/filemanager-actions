@@ -90,6 +90,7 @@ static gboolean     convert_pre_v3_parameters( NAObjectProfile *profile );
 static gboolean     convert_pre_v3_parameters_str( gchar *str );
 static gboolean     convert_pre_v3_multiple( NAObjectProfile *profile );
 static gboolean     convert_pre_v3_isfiledir( NAObjectProfile *profile );
+static void         split_path_parameters( NAObjectProfile *profile );
 static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
 
@@ -354,6 +355,11 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 		}
 	}
 
+	/* split path+parameters
+	 * not done in io-desktop because some actions may have all arguments in path
+	 */
+	split_path_parameters( NA_OBJECT_PROFILE( instance ));
+
 	/* prepare the context after the reading
 	 */
 	na_icontext_read_done( NA_ICONTEXT( instance ));
@@ -583,6 +589,27 @@ convert_pre_v3_isfiledir( NAObjectProfile *profile )
 	}
 
 	return( converted );
+}
+
+static void
+split_path_parameters( NAObjectProfile *profile )
+{
+	gchar *path, *parameters;
+	gchar *exec;
+
+	path = na_object_get_path( profile );
+	parameters = na_object_get_parameters( profile );
+	exec = g_strdup_printf( "%s %s", path, parameters );
+	g_free( parameters );
+	g_free( path );
+
+	na_core_utils_str_split_first_word( exec, &path, &parameters );
+	g_free( exec );
+
+	na_object_set_path( profile, path );
+	na_object_set_parameters( profile, parameters );
+	g_free( parameters );
+	g_free( path );
 }
 
 static gboolean

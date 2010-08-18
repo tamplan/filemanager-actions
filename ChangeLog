@@ -1,5 +1,11 @@
 2010-08-18 Pierre Wieser <pwieser@trychlos.org>
 
+	Path+parameters are splitted whatever be the I/O importer.
+
+	* src/io-desktop/nadp-reader.c (read_done_profile_split_exec): Removed function.
+
+	* src/core/na-object-profile.c (split_path_parameters): New function.
+
 	* src/core/na-data-boxed.c (uint_set_from_string):
 	Fix default uint value when reading null string.
 
