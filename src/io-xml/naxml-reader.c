@@ -85,6 +85,7 @@ struct NAXMLReaderPrivate {
 	 */
 	gboolean                       type_found;
 	GList                         *nodes;
+	GList                         *dealt;
 	RootNodeStr                   *root_node_str;
 	gchar                         *item_id;
 
@@ -252,6 +253,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->parms = NULL;
 	self->private->type_found = FALSE;
 	self->private->nodes = NULL;
+	self->private->dealt = NULL;
 	self->private->root_node_str = NULL;
 }
 
@@ -270,6 +272,7 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		g_list_free( self->private->nodes );
+		g_list_free( self->private->dealt );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -606,6 +609,10 @@ read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile
 /*
  * this callback function is called by NAIFactoryObject once for each
  * serializable data for the object
+ *
+ * Note that some nodes may be readen twice because of multiple definition
+ * of the same data (e.g. icon which exists in localized and unlocalized
+ * versions). So do not remove dealt-with nodes here
  */
 NADataBoxed *
 naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
@@ -651,7 +658,7 @@ naxml_reader_read_data( const NAIFactoryProvider *provider, void *reader_data, c
 	}
 
 	if( boxed ){
-		reader->private->nodes = g_list_remove( reader->private->nodes, parent_node );
+		reader->private->dealt = g_list_prepend( reader->private->dealt, parent_node );
 	}
 
 	return( boxed );
@@ -1075,6 +1082,7 @@ schema_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 		value = get_value_from_child_node( node, NAXML_KEY_SCHEMA_NODE_DEFAULT );
 	}
 
+	/*g_debug( "name=%s, localizable=%s, value=%s", def->name, def->localizable ? "True":"False", value );*/
 	return( value );
 }
 
@@ -1380,9 +1388,12 @@ publish_undealt_nodes( NAXMLReader *reader )
 
 	for( iter = reader->private->nodes ; iter ; iter = iter->next ){
 		xmlNode *node = ( xmlNode * ) iter->data;
-		text = xmlNodeGetContent( node );
-		na_core_utils_slist_add_message( &reader->private->parms->messages, WARN_UNDEALT_NODE, ( const gchar * ) text, node->line );
-		xmlFree( text );
+
+		if( !g_list_find( reader->private->dealt, node )){
+			text = xmlNodeGetContent( node );
+			na_core_utils_slist_add_message( &reader->private->parms->messages, WARN_UNDEALT_NODE, ( const gchar * ) text, node->line );
+			xmlFree( text );
+		}
 	}
 }
 
