@@ -1,5 +1,8 @@
 2010-08-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-profile.c (convert_pre_v3_parameters_str):
+	As a special optimization, converts '%d/%f' to '%f'.
+
 	* src/io-xml/naxml-reader.c (naxml_reader_read_data):
 	Let a node available for a second reading in case of a multiple-defined
 	data (e.g. icon which exists in localized and unlocalized forms).

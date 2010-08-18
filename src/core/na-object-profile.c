@@ -403,8 +403,8 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
  *   %f: (first) filename	-> %b		%f: (first) pathname	(new)
  *   									%F: list of pathnames	(was %M)
  *   %h: (first) hostname				...................		(unchanged)
- *   %m: list of basenames	-> %B		-						(removed)
- *   %M: list of pathnames	-> %F		-						(removed)
+ *   %m: list of basenames	-> %B		%m: (first) mimetype	(new)
+ *   %M: list of pathnames	-> %F		%M: list of mimetypes	(new)
  *   									%n: (first) username	(was %U)
  *   %p: (first) port number			...................		(unchanged)
  *   %R: list of URIs		-> %U		-						(removed)
@@ -418,11 +418,11 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
  *   %%: %								...................		(unchanged)
  *
  * For pre-v3 items,
- * - substitute %f with %b
+ * - substitute %f with %b, and as a special case %d/%f -> %f
  * - substitute %m with %B
  * - substitute %M with %F
- * - substitute %U with %n
  * - substitute %R with %U
+ * - substitute %U with %n
  *
  * Note that pre-v3 items only have parameters in the command and path fields.
  * Are only located in 'profile' objects.
@@ -474,6 +474,16 @@ convert_pre_v3_parameters_str( gchar *str )
 		g_debug( "convert_pre_v3_parameters_str: iter[1]='%c'", iter[1] );
 		switch( iter[1] ){
 
+			/* as a special optimization case, "%d/%f" parameters
+			 * may be favourably converted to just "%f" instead of "%d/%b"
+			 */
+			case 'd':
+				if( !strcmp( iter, "%d/%f" )){
+					g_strlcpy( iter, iter+3, strlen( iter ));
+					changed = TRUE;
+				}
+				break;
+
 			/* %f (first filename) becomes %b
 			 */
 			case 'f':
@@ -495,17 +505,17 @@ convert_pre_v3_parameters_str( gchar *str )
 				changed = TRUE;
 				break;
 
-			/* %U ((first) username) becomes %n
-			 */
-			case 'U':
-				iter[1] = 'n';
-				changed = TRUE;
-				break;
-
 			/* %R (list of URIs) becomes %U
 			 */
 			case 'R':
 				iter[1] = 'U';
+				changed = TRUE;
+				break;
+
+			/* %U ((first) username) becomes %n
+			 */
+			case 'U':
+				iter[1] = 'n';
 				changed = TRUE;
 				break;
 		}
@@ -599,7 +609,7 @@ split_path_parameters( NAObjectProfile *profile )
 
 	path = na_object_get_path( profile );
 	parameters = na_object_get_parameters( profile );
-	exec = g_strdup_printf( "%s %s", path, parameters );
+	exec = g_strstrip( g_strdup_printf( "%s %s", path ? path : "", parameters ? parameters : "" ));
 	g_free( parameters );
 	g_free( path );
 
