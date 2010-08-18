@@ -255,6 +255,10 @@ nadp_desktop_file_new_from_path( const gchar *path )
  * Retuns: a newly allocated #NadpDesktopFile object, or %NULL.
  *
  * Key file has been loaded, and first validity checks made.
+ *
+ * Note: This function is in particular used when importing a file.
+ * So it is rather common that the file not be a .desktop one.
+ * Do not warns when file is malformed.
  */
 NadpDesktopFile *
 nadp_desktop_file_new_from_uri( const gchar *uri )
@@ -275,7 +279,9 @@ nadp_desktop_file_new_from_uri( const gchar *uri )
 	error = NULL;
 	g_key_file_load_from_data( ndf->private->key_file, data, length, G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS, &error );
 	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
+		if( error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
+			g_warning( "%s: %s", thisfn, error->message );
+		}
 		g_error_free( error );
 		g_object_unref( ndf );
 		g_free( data );

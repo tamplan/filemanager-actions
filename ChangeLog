@@ -1,5 +1,8 @@
 2010-08-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c (nadp_desktop_file_new_from_uri):
+	Do not warn about malformed .desktop file when importing an URI.
+
 	Path+parameters are splitted whatever be the I/O importer.
 
 	* src/io-desktop/nadp-reader.c (read_done_profile_split_exec): Removed function.
