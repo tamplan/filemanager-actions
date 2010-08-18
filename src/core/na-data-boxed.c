@@ -1417,7 +1417,7 @@ uint_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *source )
 static void
 uint_set_from_string( NADataBoxed *boxed, const gchar *string )
 {
-	boxed->private->u.uint = atoi( string );
+	boxed->private->u.uint = string ? atoi( string ) : 0;
 }
 
 static void

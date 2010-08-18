@@ -1,5 +1,8 @@
 2010-08-18 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-data-boxed.c (uint_set_from_string):
+	Fix default uint value when reading null string.
+
 	* src/nact/nact-assistant-import.c (assistant_apply): Cleanup code.
 
 2010-08-17 Pierre Wieser <pwieser@trychlos.org>
