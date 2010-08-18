@@ -77,7 +77,6 @@ static guint        ifactory_object_get_version( const NAIFactoryObject *instanc
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
 static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
-static void         ifactory_object_read_start( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
@@ -286,7 +285,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 	iface->copy = NULL;
 	iface->are_equal = ifactory_object_are_equal;
 	iface->is_valid = ifactory_object_is_valid;
-	iface->read_start = ifactory_object_read_start;
+	iface->read_start = NULL;
 	iface->read_done = ifactory_object_read_done;
 	iface->write_start = ifactory_object_write_start;
 	iface->write_done = ifactory_object_write_done;
@@ -319,18 +318,15 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 }
 
 static void
-ifactory_object_read_start( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
-{
-}
-
-static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
+	na_object_item_deals_with_version( NA_OBJECT_ITEM( instance ));
+
 	/* prepare the context after the reading
 	 */
 	na_icontext_read_done( NA_ICONTEXT( instance ));
 
-	/* last, set other action defaults
+	/* last, set other menu defaults
 	 */
 	na_factory_object_set_defaults( instance );
 }

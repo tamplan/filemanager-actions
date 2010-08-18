@@ -37,6 +37,7 @@
 #include <api/na-object-api.h>
 
 #include "nact-main-tab.h"
+#include "nact-gtk-utils.h"
 #include "nact-match-list.h"
 #include "nact-ibasenames-tab.h"
 
@@ -239,11 +240,26 @@ nact_ibasenames_tab_dispose( NactIBasenamesTab *instance )
 static void
 on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 {
-	st_on_selection_change = TRUE;
+	NAIContext *context;
+	gboolean editable;
+	GtkToggleButton *matchcase_button;
+	gboolean matchcase;
 
-	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
+	if( st_initialized && !st_finalized ){
 
-	st_on_selection_change = FALSE;
+		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
+
+		st_on_selection_change = TRUE;
+
+		nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
+
+		matchcase_button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, "BasenamesMatchcaseButton" ));
+		matchcase = context ? na_object_get_matchcase( context ) : FALSE;
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
+		nact_gtk_utils_set_editable( GTK_OBJECT( matchcase_button ), editable );
+
+		st_on_selection_change = FALSE;
+	}
 }
 
 static void

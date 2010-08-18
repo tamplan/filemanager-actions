@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <stdlib.h>
 #include <string.h>
 #include <uuid/uuid.h>
 
@@ -693,6 +694,46 @@ na_object_item_unref_items_rec( GList *items )
 	}
 
 	g_list_free( items );
+}
+
+/**
+ * na_object_item_deals_with_version:
+ * @item: this #NAObjectItem-derived object.
+ *
+ * Just after the @item has been readen from NAIFactoryProvider, setup
+ * the version. This is needed because some conversions may occur in
+ * this object.
+ *
+ * Note that there is only some 2.x versions where the version string
+ * was not systematically written. If @item has been readen from a
+ * .desktop file, then iversion is already set to (at least) 3.
+ */
+void
+na_object_item_deals_with_version( NAObjectItem *item )
+{
+	guint version_uint;
+	gchar *version_str;
+
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !item->private->dispose_has_run ){
+
+		version_uint = na_object_get_iversion( item );
+
+		if( !version_uint ){
+			version_str = na_object_get_version( item );
+
+			if( !version_str || !strlen( version_str )){
+				g_free( version_str );
+				version_str = g_strdup( "2.0" );
+			}
+
+			version_uint = atoi( version_str );
+			na_object_set_iversion( item, version_uint );
+
+			g_free( version_str );
+		}
+	}
 }
 
 /**

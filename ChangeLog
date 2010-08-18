@@ -1,3 +1,22 @@
+2010-08-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-object-item.h:
+	* src/core/na-object-item.c
+	(na_object_item_deals_with_version): New function.
+
+	* src/api/na-object-profile.h:
+	* src/core/na-object-profile.c
+	(na_object_profile_convert_v2_to_last): New function.
+
+	* src/core/na-object-action.c:
+	* src/core/na-object-menu.c
+	(ifactory_object_read_start): Removed (unused) function.
+
+	* src/io-xml/naxml-reader.c (naxml_reader_read_done): Cleanup code.
+
+	* src/nact/nact-ibasenames-tab.c (on_tab_updatable_selection_changed):
+	Display matchcase status for the current context.
+
 2010-08-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-object-profile.c (convert_pre_v3_parameters_str):

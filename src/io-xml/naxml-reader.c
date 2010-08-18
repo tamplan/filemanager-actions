@@ -159,12 +159,10 @@ static RootNodeStr st_root_node_str[] = {
 static void          read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile );
 static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text );
 static NADataBoxed  *read_data_boxed_from_node( NAXMLReader *reader, xmlChar *text, xmlNode *parent, const NADataDef *def );
-static void          read_done_item( NAXMLReader *reader, NAObjectItem *item );
 static void          read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item );
-static void          read_done_action( NAXMLReader *reader, NAObjectAction *action );
+static void          read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action );
 static gchar        *read_done_action_get_next_profile_id( NAXMLReader *reader );
 static void          read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id );
-static void          read_done_profile( NAXMLReader *reader, NAObjectProfile *profile );
 static void          read_done_profile_set_localized_label( NAXMLReader *reader, NAObjectProfile *profile );
 
 static guint         reader_parse_xmldoc( NAXMLReader *reader );
@@ -757,24 +755,18 @@ naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, c
 			( void * ) messages );
 
 	if( NA_IS_OBJECT_ITEM( object )){
-		read_done_item( NAXML_READER( reader_data ), NA_OBJECT_ITEM( object ));
+		read_done_item_set_localized_icon( NAXML_READER( reader_data ), NA_OBJECT_ITEM( object ));
 	}
 
 	if( NA_IS_OBJECT_ACTION( object )){
-		read_done_action( NAXML_READER( reader_data ), NA_OBJECT_ACTION( object ));
+		read_done_action_read_profiles( NAXML_READER( reader_data ), NA_OBJECT_ACTION( object ));
 	}
 
 	if( NA_IS_OBJECT_PROFILE( object )){
-		read_done_profile( NAXML_READER( reader_data ), NA_OBJECT_PROFILE( object ));
+		read_done_profile_set_localized_label( NAXML_READER( reader_data ), NA_OBJECT_PROFILE( object ));
 	}
 
 	g_debug( "%s: quitting for %s at %p", thisfn, G_OBJECT_TYPE_NAME( object ), ( void * ) object );
-}
-
-static void
-read_done_item( NAXMLReader *reader, NAObjectItem *item )
-{
-	read_done_item_set_localized_icon( reader, item );
 }
 
 /*
@@ -812,7 +804,7 @@ read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item )
  * Also note that profiles order has been introduced in 2.29 serie
  */
 static void
-read_done_action( NAXMLReader *reader, NAObjectAction *action )
+read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action )
 {
 	GSList *order, *ip;
 	gchar *profile_id;
@@ -895,12 +887,6 @@ read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
 			reader,
 			NA_IFACTORY_OBJECT( profile ),
 			&reader->private->parms->messages );
-}
-
-static void
-read_done_profile( NAXMLReader *reader, NAObjectProfile *profile )
-{
-	read_done_profile_set_localized_label( reader, profile );
 }
 
 /*

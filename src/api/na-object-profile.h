@@ -79,6 +79,8 @@ GType            na_object_profile_get_type( void );
 NAObjectProfile *na_object_profile_new( void );
 NAObjectProfile *na_object_profile_new_with_defaults( void );
 
+void             na_object_profile_convert_v2_to_last( NAObjectProfile *profile );
+
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_PROFILE_H__ */

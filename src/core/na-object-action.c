@@ -79,7 +79,6 @@ static guint        ifactory_object_get_version( const NAIFactoryObject *instanc
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
 static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
-static void         ifactory_object_read_start( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
@@ -87,9 +86,8 @@ static guint        ifactory_object_write_done( NAIFactoryObject *instance, cons
 static void         icontext_iface_init( NAIContextInterface *iface );
 static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
 
-static void         read_done_convert_v1_to_v2( NAIFactoryObject *instance );
+static gboolean     read_done_convert_v1_to_last( NAIFactoryObject *instance );
 static void         read_done_deals_with_toolbar_label( NAIFactoryObject *instance );
-static void         read_done_deals_with_version( NAIFactoryObject *instance );
 
 static guint        write_done_write_profiles( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
@@ -295,7 +293,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 	iface->copy = NULL;
 	iface->are_equal = ifactory_object_are_equal;
 	iface->is_valid = ifactory_object_is_valid;
-	iface->read_start = ifactory_object_read_start;
+	iface->read_start = NULL;
 	iface->read_done = ifactory_object_read_done;
 	iface->write_start = ifactory_object_write_start;
 	iface->write_done = ifactory_object_write_done;
@@ -327,11 +325,6 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 	return( object_object_is_valid( NA_OBJECT_ACTION( object )));
 }
 
-static void
-ifactory_object_read_start( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
-{
-}
-
 /*
  * at this time, we don't yet have readen the profiles as this will be
  * done in ifactory_provider_read_done - we so just be able to deal with
@@ -340,17 +333,24 @@ ifactory_object_read_start( NAIFactoryObject *instance, const NAIFactoryProvider
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
+	guint iversion;
+
 	g_debug( "na_object_action_ifactory_object_read_done: instance=%p", ( void * ) instance );
 
+	na_object_item_deals_with_version( NA_OBJECT_ITEM( instance ));
+
 	/* may attach a new profile if we detect a pre-v2 action
+	 * the v1_to_v2 conversion must be followed by a v2_to_v3 one
 	 */
-	read_done_convert_v1_to_v2( instance );
+	iversion = na_object_get_iversion( instance );
+	if( iversion < 2 ){
+		read_done_convert_v1_to_last( instance );
+	}
 
 	/* deals with obsoleted data, i.e. data which may have been written in the past
-	 * but are no long written by now
+	 * but are no long written by now - not relevant for a menu
 	 */
 	read_done_deals_with_toolbar_label( instance );
-	read_done_deals_with_version( instance );
 
 	/* prepare the context after the reading
 	 */
@@ -402,45 +402,25 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
 /*
  * do we have a pre-v2 action ?
  *  it is be identified by an version = "1.x"
- *  or by any data found in data_def_action_v1 (defined in na-object-action-factory.c)
- *  -> move obsoleted data to a new profile, updating the version string
+ *  any data found in data_def_action_v1 (defined in na-object-action-factory.c)
+ *  is obsoleted and moved to a new profile
  *
- *  actions readen from .desktop already have iversion=3 (cf. desktop_read_start)
- *  and v1 actions may only come from xml or gconf
+ * actions readen from .desktop already have iversion=3 (cf. desktop_read_start)
+ * and v1 actions may only come from xml or gconf
+ *
+ * returns TRUE if this actually was a v1 action which has been converted to v2
  */
-static void
-read_done_convert_v1_to_v2( NAIFactoryObject *instance )
+static gboolean
+read_done_convert_v1_to_last( NAIFactoryObject *instance )
 {
-	static const gchar *thisfn = "na_object_action_read_done_convert_v1_to_v2";
-	guint iversion;
-	gchar *version;
+	static const gchar *thisfn = "na_object_action_read_done_read_done_convert_v1_to_last";
 	GList *to_move;
 	NADataDef *def;
 	NADataBoxed *boxed;
 	GList *ibox;
 	NAObjectProfile *profile;
 
-	/* check for new numeric version
-	 */
-	iversion = na_object_get_iversion( instance );
-	if( iversion >= 2 ){
-		return;
-	}
-
-	/* check for older alpha version
-	 * was not set in 2.30 serie
-	 */
-	version = na_object_get_version( instance );
-	if( version ){
-		iversion = atoi( version );
-		g_free( version );
-	}
-	if( iversion >= 2 ){
-		return;
-	}
-
-	/* we so have here a not-versioned action, in very old 1.x or in 2.30
-	 * search for old data in the body: this is only possible before profiles
+	/* search for old data in the body: this is only possible before profiles
 	 * because starting with contexts, iversion was written
 	 */
 	to_move = NULL;
@@ -457,7 +437,7 @@ read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 	}
 
 	if( !to_move ){
-		return;
+		return( FALSE );
 	}
 
 	/* now create a new profile
@@ -475,7 +455,8 @@ read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 	}
 
 	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
-	na_object_set_version( instance, "2.0" );
+	na_object_profile_convert_v2_to_last( profile );
+	return( TRUE );
 }
 
 /*
@@ -502,36 +483,6 @@ read_done_deals_with_toolbar_label( NAIFactoryObject *instance )
 
 	g_free( action_label );
 	g_free( toolbar_label );
-}
-
-/*
- * manage the conversion from version string to version number
- * -> pre-v2 actions have already been converted to a version string "2.0"
- * -> if we have here no version string nor version number, then we may
- *    consider that this is an item written by the 2.30 N-A version
- *    so we just force a version number to 2
- */
-static void
-read_done_deals_with_version( NAIFactoryObject *instance )
-{
-	guint version_uint;
-	gchar *version_str;
-
-	version_uint = na_object_get_iversion( instance );
-
-	if( !version_uint ){
-		version_str = na_object_get_version( instance );
-
-		if( !version_str || !strlen( version_str )){
-			g_free( version_str );
-			version_str = g_strdup( "2.0" );
-		}
-
-		version_uint = atoi( version_str );
-		na_object_set_iversion( instance, version_uint );
-
-		g_free( version_str );
-	}
 }
 
 /*

@@ -90,6 +90,7 @@ static gboolean     convert_pre_v3_parameters( NAObjectProfile *profile );
 static gboolean     convert_pre_v3_parameters_str( gchar *str );
 static gboolean     convert_pre_v3_multiple( NAObjectProfile *profile );
 static gboolean     convert_pre_v3_isfiledir( NAObjectProfile *profile );
+static void         read_done_ending( NAObjectProfile *profile );
 static void         split_path_parameters( NAObjectProfile *profile );
 static gboolean     profile_is_valid( const NAObjectProfile *profile );
 static gboolean     is_valid_path_parameters( const NAObjectProfile *profile );
@@ -346,27 +347,10 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 	g_debug( "%s: iversion=%d", thisfn, iversion );
 
 	if( iversion < 3 ){
-
-		if( convert_pre_v3_parameters( NA_OBJECT_PROFILE( instance )) ||
-			convert_pre_v3_multiple( NA_OBJECT_PROFILE( instance )) ||
-			convert_pre_v3_isfiledir( NA_OBJECT_PROFILE( instance ))){
-
-				na_object_set_iversion( action, 3 );
-		}
+		na_object_profile_convert_v2_to_last( NA_OBJECT_PROFILE( instance ));
 	}
 
-	/* split path+parameters
-	 * not done in io-desktop because some actions may have all arguments in path
-	 */
-	split_path_parameters( NA_OBJECT_PROFILE( instance ));
-
-	/* prepare the context after the reading
-	 */
-	na_icontext_read_done( NA_ICONTEXT( instance ));
-
-	/* last, set other action defaults
-	 */
-	na_factory_object_set_defaults( instance );
+	read_done_ending( NA_OBJECT_PROFILE( instance ));
 }
 
 static guint
@@ -539,6 +523,7 @@ convert_pre_v3_multiple( NAObjectProfile *profile )
 	accept_multiple = na_object_is_multiple( profile );
 	selection_count = g_strdup( accept_multiple ? ">0" : "=1" );
 	na_object_set_selection_count( profile, selection_count );
+	g_debug( "na_object_profile_convert_pre_v3_multiple: set selection_count=%s", selection_count );
 	g_free( selection_count );
 
 	return( TRUE );
@@ -599,6 +584,23 @@ convert_pre_v3_isfiledir( NAObjectProfile *profile )
 	}
 
 	return( converted );
+}
+
+static void
+read_done_ending( NAObjectProfile *profile )
+{
+	/* split path+parameters
+	 * not done in io-desktop because some actions may have all arguments in path
+	 */
+	split_path_parameters( profile );
+
+	/* prepare the context after the reading
+	 */
+	na_icontext_read_done( NA_ICONTEXT( profile ));
+
+	/* last, set other action defaults
+	 */
+	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
 }
 
 static void
@@ -727,4 +729,33 @@ na_object_profile_new_with_defaults( void )
 	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
 
 	return( profile );
+}
+
+/**
+ * na_object_profile_convert_v2_to_last:
+ *
+ * Converts to v3 a @profile which has just been created from a pre-v2 action.
+ */
+void
+na_object_profile_convert_v2_to_last( NAObjectProfile *profile )
+{
+	NAObjectAction *action;
+	guint iversion;
+	gboolean parms_converted, multiple_converted, isfiledir_converted;
+
+	g_return_if_fail( NA_IS_OBJECT_PROFILE( profile ));
+
+	action = NA_OBJECT_ACTION( na_object_get_parent( profile ));
+	iversion = na_object_get_iversion( action );
+	g_return_if_fail( iversion < 3 );
+
+	parms_converted = convert_pre_v3_parameters( profile );
+	multiple_converted = convert_pre_v3_multiple( profile );
+	isfiledir_converted = convert_pre_v3_isfiledir( profile );
+
+	if( parms_converted || multiple_converted || isfiledir_converted ){
+		na_object_set_iversion( action, 3 );
+	}
+
+	read_done_ending( profile );
 }
