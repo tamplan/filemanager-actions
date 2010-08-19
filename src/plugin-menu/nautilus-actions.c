@@ -756,8 +756,9 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 		 */
 		if( NA_IS_OBJECT_MENU( it->data )){
 			subitems = na_object_get_items( it->data );
+			g_debug( "%s: menu has %d items", thisfn, g_list_length( subitems ));
 			submenu = build_nautilus_menus( plugin, subitems, target, files, tokens );
-			/*g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));*/
+			g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));
 
 			if( submenu ){
 				if( target == ITEM_TARGET_TOOLBAR ){

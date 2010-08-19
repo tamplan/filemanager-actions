@@ -1,5 +1,12 @@
 2010-08-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c
+	(is_mimetype_of): Take care of wildcard expressions.
+	(is_candidate_for_folders): Only try to g_pattern_match() if has pattern.
+
+	* src/plugin-menu/nautilus-actions.c
+	(build_nautilus_menus): Add debug messages.
+
 	* data/actions/open-terminal-here.desktop:
 	* data/actions/show-na-parameters.desktop: Fix typo.
 

@@ -658,6 +658,8 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 
 				if( !positive || !match ){
 					if( is_mimetype_of( positive ? imtype : imtype+1, fgroup, fsubgroup )){
+						g_debug( "%s: condition=%s, positive=%s, ftype=%s, fgroup=%s, fsubgroup=%s, matched",
+								thisfn, imtype, positive ? "True":"False", ftype, fgroup, fsubgroup );
 						if( positive ){
 							match = TRUE;
 						} else {
@@ -697,6 +699,10 @@ is_mimetype_of( const gchar *mimetype, const gchar *fgroup, const gchar *fsubgro
 {
 	gboolean is_type_of;
 	gchar *mgroup, *msubgroup;
+
+	if( !strcmp( mimetype, "*" ) || !strcmp( mimetype, "*/*" )){
+		return( TRUE );
+	}
 
 	split_mimetype( mimetype, &mgroup, &msubgroup );
 
@@ -932,10 +938,13 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 				gchar *dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( files->data ));
 
 				if( na_core_utils_slist_count( distincts, dirname ) == 0 ){
+					g_debug( "%s: distinct dirname=%s", thisfn, dirname );
+
 					GSList *id;
-					gchar *dirname_utf8;
+					gchar *dirname_utf8, *pattern_utf8;
 					const gchar *pattern;
 					gboolean match, positive;
+					gboolean has_pattern;
 
 					distincts = g_slist_prepend( distincts, g_strdup( dirname ));
 					dirname_utf8 = g_filename_to_utf8( dirname, -1, NULL, NULL, NULL );
@@ -944,16 +953,25 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 					for( id = folders ; id && ok ; id = id->next ){
 						pattern = ( const gchar * ) id->data;
 						positive = is_positive_assertion( pattern );
+						pattern_utf8 = g_filename_to_utf8( positive ? pattern : pattern+1, -1, NULL, NULL, NULL );
+						has_pattern = ( g_strstr_len( pattern_utf8, -1, "*" ) != NULL );
 
 						if( !positive || !match ){
-							if( g_pattern_match_simple( positive ? pattern : pattern+1, dirname_utf8 )){
+							if(( has_pattern && g_pattern_match_simple( pattern_utf8, dirname_utf8 )) || g_str_has_prefix( dirname_utf8, pattern_utf8 )){
+								g_debug( "%s: condition=%s, positive=%s: matched",
+										thisfn, pattern, positive ? "True":"False" );
 								if( positive ){
 									match = TRUE;
 								} else {
 									ok = FALSE;
 								}
+							/*} else {
+								g_debug( "%s: condition=%s, positive=%s: not matched",
+										thisfn, pattern_utf8, positive ? "True":"False" );*/
 							}
 						}
+
+						g_free( pattern_utf8 );
 					}
 
 					ok &= match;
