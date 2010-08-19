@@ -9,7 +9,28 @@ Name[en]=Open a terminal here
 Profiles=profile-zero;
 TargetToolbar=true
 
+ToolbarLabel[en_US.UTF-8]=Open a terminal here
+ToolbarLabel[en_US]=Open a terminal here
+ToolbarLabel[en.UTF-8]=Open a terminal here
+ToolbarLabel[C]=Open a terminal here
+Icon[en_US.UTF-8]=/usr/share/icons/gnome/24x24/apps/gnome-terminal.png
+Icon[en_US]=/usr/share/icons/gnome/24x24/apps/gnome-terminal.png
+Icon[en.UTF-8]=/usr/share/icons/gnome/24x24/apps/gnome-terminal.png
+Icon[C]=/usr/share/icons/gnome/24x24/apps/gnome-terminal.png
+Tooltip[en_US.UTF-8]=Open a terminal if the current location
+Tooltip[en_US]=Open a terminal if the current location
+Tooltip[en.UTF-8]=Open a terminal if the current location
+Tooltip[C]=Open a terminal if the current location
+Name[en_US.UTF-8]=Open a terminal here
+Name[en_US]=Open a terminal here
+Name[en.UTF-8]=Open a terminal here
+Name[C]=Open a terminal here
+
 [X-Action-Profile profile-zero]
 Exec=gnome-terminal --working-directory=%f
 Name[en_US.UTF-8]=Default profile
 MimeTypes=inode/directory;
+Name[en_US]=Default profile
+Name[en.UTF-8]=Default profile
+Name[en]=Default profile
+Name[C]=Default profile

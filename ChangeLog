@@ -1,5 +1,8 @@
 2010-08-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/actions/open-terminal-here.desktop:
+	* data/actions/show-na-parameters.desktop: Fix typo.
+
 	* src/api/na-object-item.h:
 	* src/core/na-object-item.c
 	(na_object_item_deals_with_version): New function.
