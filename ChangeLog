@@ -1,5 +1,8 @@
 2010-08-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nautilus-actions-config-tool.ui:
+	Do not overexpand the example label.
+
 	* src/core/na-object-profile.c (convert_pre_v3_parameters_str):
 	Fix conversion of '%d/%f' to '%f' when there are other parameters.
 
