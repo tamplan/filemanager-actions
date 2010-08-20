@@ -447,6 +447,7 @@ convert_pre_v3_parameters( NAObjectProfile *profile )
 static gboolean
 convert_pre_v3_parameters_str( gchar *str )
 {
+	static const gchar *thisfn = "na_object_profile_convert_pre_v3_parameters_str";
 	gboolean changed;
 	gchar *iter = str;
 
@@ -455,15 +456,15 @@ convert_pre_v3_parameters_str( gchar *str )
 			strlen( iter ) > 0 &&
 			( iter = g_strstr_len( iter, strlen( iter ), "%" )) != NULL ){
 
-		g_debug( "convert_pre_v3_parameters_str: iter[1]='%c'", iter[1] );
+		g_debug( "%s: iter[1]='%c'", thisfn, iter[1] );
 		switch( iter[1] ){
 
 			/* as a special optimization case, "%d/%f" parameters
 			 * may be favourably converted to just "%f" instead of "%d/%b"
 			 */
 			case 'd':
-				if( !strcmp( iter, "%d/%f" )){
-					g_strlcpy( iter, iter+3, strlen( iter ));
+				if( !strncmp( iter, "%d/%f", 5 )){
+					strncpy( iter, iter+3, strlen( iter ));
 					changed = TRUE;
 				}
 				break;

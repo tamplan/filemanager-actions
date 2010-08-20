@@ -1,5 +1,8 @@
 2010-08-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-profile.c (convert_pre_v3_parameters_str):
+	Fix conversion of '%d/%f' to '%f' when there are other parameters.
+
 	* src/core/na-icontext.c
 	(is_candidate_for_mimetypes): Improve debug messages.
 	(is_candidate_for_basenames): Take care of matchcase.
