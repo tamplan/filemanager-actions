@@ -1,6 +1,10 @@
 2010-08-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-icontext.c
+	(is_candidate_for_mimetypes): Improve debug messages.
+	(is_candidate_for_basenames): Take care of matchcase.
+
+	* src/core/na-icontext.c
 	(is_mimetype_of): Take care of wildcard expressions.
 	(is_candidate_for_folders): Only try to g_pattern_match() if has pattern.
 

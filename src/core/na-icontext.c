@@ -669,17 +669,16 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 				}
 			}
 
-			ok &= match;
+			if( !match ){
+				gchar *mimetypes_str = na_core_utils_slist_to_text( mimetypes );
+				g_debug( "%s: no positive match found for Mimetypes=%s", thisfn, mimetypes_str );
+				g_free( mimetypes_str );
+				ok = FALSE;
+			}
 
 			g_free( fsubgroup );
 			g_free( fgroup );
 			g_free( ftype );
-		}
-
-		if( !ok ){
-			gchar *mimetypes_str = na_core_utils_slist_to_text( mimetypes );
-			g_debug( "%s: object is not candidate because Mimetypes=%s", thisfn, mimetypes_str );
-			g_free( mimetypes_str );
 		}
 
 		na_core_utils_slist_free( mimetypes );
@@ -745,13 +744,20 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 			gboolean matchcase = na_object_get_matchcase( object );
 			GSList *ib;
 			GList *it;
+			gchar *tmp;
 
 			for( it = files ; it && ok ; it = it->next ){
 				gchar *pattern, *bname, *bname_utf8;
 				gboolean match, positive;
+				gchar *pattern_utf8;
 
 				bname = na_selected_info_get_basename( NA_SELECTED_INFO( it->data ));
 				bname_utf8 = g_filename_to_utf8( bname, -1, NULL, NULL, NULL );
+				if( !matchcase ){
+					tmp = g_ascii_strdown( bname_utf8, g_utf8_strlen( bname_utf8, -1 ));
+					g_free( bname_utf8 );
+					bname_utf8 = tmp;
+				}
 				match = FALSE;
 
 				for( ib = basenames ; ib && ok ; ib = ib->next ){
@@ -759,9 +765,12 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 						g_strdup(( gchar * ) ib->data ) :
 						g_ascii_strdown(( gchar * ) ib->data, strlen(( gchar * ) ib->data ));
 					positive = is_positive_assertion( pattern );
+					pattern_utf8 = g_filename_to_utf8( positive ? pattern : pattern+1, -1, NULL, NULL, NULL );
 
 					if( !positive || !match ){
-						if( g_pattern_match_simple( positive ? pattern : pattern+1, bname_utf8 )){
+						if( g_pattern_match_simple( pattern_utf8, bname_utf8 )){
+							g_debug( "%s: condition=%s, positive=%s, basename=%s: matched",
+									thisfn, pattern_utf8, positive ? "True":"False", bname_utf8 );
 							if( positive ){
 								match = TRUE;
 							} else {
@@ -770,20 +779,20 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 						}
 					}
 
+					g_free( pattern_utf8 );
 					g_free( pattern );
 				}
 
-				ok &= match;
+				if( !match ){
+					gchar *basenames_str = na_core_utils_slist_to_text( basenames );
+					g_debug( "%s: no positive match found for Basenames=%s", thisfn, basenames_str );
+					g_free( basenames_str );
+					ok = FALSE;
+				}
 
 				g_free( bname_utf8 );
 				g_free( bname );
 			}
-		}
-
-		if( !ok ){
-			gchar *basenames_str = na_core_utils_slist_to_text( basenames );
-			g_debug( "%s: object is not candidate because Basenames=%s", thisfn, basenames_str );
-			g_free( basenames_str );
 		}
 
 		na_core_utils_slist_free( basenames );
