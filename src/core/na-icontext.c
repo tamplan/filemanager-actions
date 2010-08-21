@@ -862,11 +862,11 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 			GList *it;
 
 			for( it = files ; it && ok ; it = it->next ){
-				gchar *scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( files->data ));
+				gchar *scheme = na_selected_info_get_uri_scheme( NA_SELECTED_INFO( it->data ));
 
 				if( na_core_utils_slist_count( distincts, scheme ) == 0 ){
 					GSList *is;
-					gchar *pattern;
+					gchar *pattern, *scheme;
 					gboolean match, positive;
 
 					match = FALSE;
@@ -944,7 +944,7 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 			GList *it;
 
 			for( it = files ; it && ok ; it = it->next ){
-				gchar *dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( files->data ));
+				gchar *dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( it->data ));
 
 				if( na_core_utils_slist_count( distincts, dirname ) == 0 ){
 					g_debug( "%s: distinct dirname=%s", thisfn, dirname );

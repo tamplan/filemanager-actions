@@ -1,5 +1,9 @@
 2010-08-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c
+	(is_candidate_for_schemes, is_candidate_for_folders):
+	Address each ocurrence of file instead of just the first one.
+
 	* doc/nact/Makefile.am: Fix PDF distribution.
 
 2010-08-19 Pierre Wieser <pwieser@trychlos.org>
