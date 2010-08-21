@@ -40,7 +40,7 @@
  * A #NADataBoxed object has a type and a value.
  */
 
-#include <glib-object.h>
+#include <glib.h>
 
 #include "na-data-def.h"
 

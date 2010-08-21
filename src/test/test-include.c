@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include <utils/console-utils.h>
+#include <api/na-object.h>
 
 int
 main()
