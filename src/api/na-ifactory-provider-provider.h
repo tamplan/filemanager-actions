@@ -37,6 +37,8 @@
  * @include: nautilus-actions/na-ifactory_provider-fn.h
  */
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 typedef struct NAIFactoryProvider                 NAIFactoryProvider;

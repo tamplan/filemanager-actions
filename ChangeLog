@@ -1,5 +1,19 @@
 2010-08-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-dbus.h
+	* src/api/na-ifactory-provider-provider.h
+	* src/core/na-importer-ask.h
+	* src/io-desktop/nadp-formats.h
+	* src/io-desktop/nadp-reader.h
+	* src/io-desktop/nadp-utils.h
+	* src/io-desktop/nadp-writer.h
+	* src/io-gconf/nagp-reader.h
+	* src/io-gconf/nagp-writer.h
+	* src/io-xml/naxml-formats.h
+	* src/io-xml/naxml-reader.h
+	* src/io-xml/naxml-writer.h
+	* src/nact/nact-tree-model-priv.h: Fix single inclusion.
+
 	* src/core/na-icontext.c
 	(is_candidate_for_schemes, is_candidate_for_folders):
 	Address each ocurrence of file instead of just the first one.

@@ -31,6 +31,8 @@
 #ifndef __NAXML_FORMATS_H__
 #define __NAXML_FORMATS_H__
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 #define NAXML_FORMAT_GCONF_SCHEMA_V1			"GConfSchemaV1"

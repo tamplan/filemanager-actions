@@ -41,6 +41,7 @@
 
 #include <api/na-data-boxed.h>
 #include <api/na-iexporter.h>
+#include <api/na-ifactory-provider.h>
 
 G_BEGIN_DECLS
 

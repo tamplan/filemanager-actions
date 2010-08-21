@@ -31,6 +31,8 @@
 #ifndef __NADP_UTILS_H__
 #define __NADP_UTILS_H__
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 GSList  *nadp_utils_gslist_remove_from( GSList *list, const gchar *string );

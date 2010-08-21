@@ -33,6 +33,7 @@
 
 #include <api/na-iio-provider.h>
 #include <api/na-iimporter.h>
+#include <api/na-ifactory-provider.h>
 
 G_BEGIN_DECLS
 

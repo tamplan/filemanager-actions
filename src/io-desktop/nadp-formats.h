@@ -31,6 +31,8 @@
 #ifndef __NADP_FORMATS_H__
 #define __NADP_FORMATS_H__
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 #define NADP_FORMAT_DESKTOP_V1			"Desktop1"

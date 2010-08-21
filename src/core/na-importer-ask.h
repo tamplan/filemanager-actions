@@ -41,11 +41,11 @@
  * want to be ask to known what to do with it.
  */
 
-G_BEGIN_DECLS
-
 #include <gtk/gtk.h>
 
 #include <api/na-object-item.h>
+
+G_BEGIN_DECLS
 
 #define NA_IMPORTER_ASK_TYPE				( na_importer_ask_get_type())
 #define NA_IMPORTER_ASK( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IMPORTER_ASK_TYPE, NAImporterAsk ))

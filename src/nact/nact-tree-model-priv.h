@@ -37,6 +37,9 @@
 #ifndef __NACT_TREE_MODEL_PRIV_H__
 #define __NACT_TREE_MODEL_PRIV_H__
 
+#include "base-window.h"
+#include "nact-clipboard.h"
+
 G_BEGIN_DECLS
 
 /* private instance data

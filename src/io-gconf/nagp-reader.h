@@ -32,6 +32,7 @@
 #define __NAGP_READER_H__
 
 #include <api/na-iio-provider.h>
+#include <api/na-ifactory-provider.h>
 
 G_BEGIN_DECLS
 

@@ -37,6 +37,8 @@
  * @include: nautilus-actions/na-dbus.h
  */
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 #define NAUTILUS_ACTIONS_DBUS_SERVICE	"org.nautilus-actions.DBus"
