@@ -129,7 +129,7 @@ html.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) ChangeLog
 		(cd $$i; \
 		 if test "x$(abs_srcdir)" != "x$(abs_builddir)"; then cp $(abs_srcdir)/$$i/*.xml .; fi; \
 		 db2html --nochunks $(DOC_MODULE).xml; \
-		 if test "x$(abs_srcdir)" != "x$(abs_builddir)"; then rm -f *.xml .; fi; \
+		 if test "x$(abs_srcdir)" != "x$(abs_builddir)"; then rm -f *.xml; fi; \
 		); \
 		cp -rp $(abs_srcdir)/$$i/figures $$i/$(DOC_MODULE)/; \
 		chmod -R u+w $$i/$(DOC_MODULE); \
@@ -179,8 +179,8 @@ pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) ChangeLog
 		_target=$$i/$(DOC_MODULE).pdf; \
 		echo "Generating $$_target ..."; \
 		if ! test -d $$i; then $(MKDIR_P) $$i; fi; \
-		echo "dblatex --output $$_target $$i/$(DOC_MODULE).xml"; \
-		dblatex --output $$_target $$i/$(DOC_MODULE).xml; \
+		echo "dblatex --output $$_target $(top_srcdir)/doc/nact/$$i/$(DOC_MODULE).xml"; \
+		dblatex --output $$_target $(top_srcdir)/doc/nact/$$i/$(DOC_MODULE).xml; \
 	done
 	touch pdf.stamp
 
