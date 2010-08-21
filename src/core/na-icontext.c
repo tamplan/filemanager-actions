@@ -866,7 +866,7 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 
 				if( na_core_utils_slist_count( distincts, scheme ) == 0 ){
 					GSList *is;
-					gchar *pattern, *scheme;
+					gchar *pattern;
 					gboolean match, positive;
 
 					match = FALSE;
