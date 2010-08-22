@@ -360,7 +360,9 @@ na_selected_info_get_mime_type( const NASelectedInfo *nsi )
 
 	if( !nsi->private->dispose_has_run ){
 
-		mimetype = g_strdup( nsi->private->mimetype );
+		if( nsi->private->mimetype ){
+			mimetype = g_strdup( nsi->private->mimetype );
+		}
 	}
 
 	return( mimetype );

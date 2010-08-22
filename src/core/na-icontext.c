@@ -648,31 +648,40 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 			gchar *ftype, *fgroup, *fsubgroup;
 			gboolean match, positive;
 
-			ftype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
-			split_mimetype( ftype, &fgroup, &fsubgroup );
 			match = FALSE;
+			ftype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
 
-			for( im = mimetypes ; im && ok ; im = im->next ){
-				const gchar *imtype = ( const gchar * ) im->data;
-				positive = is_positive_assertion( imtype );
+			if( ftype ){
+				split_mimetype( ftype, &fgroup, &fsubgroup );
 
-				if( !positive || !match ){
-					if( is_mimetype_of( positive ? imtype : imtype+1, fgroup, fsubgroup )){
-						g_debug( "%s: condition=%s, positive=%s, ftype=%s, fgroup=%s, fsubgroup=%s, matched",
-								thisfn, imtype, positive ? "True":"False", ftype, fgroup, fsubgroup );
-						if( positive ){
-							match = TRUE;
-						} else {
-							ok = FALSE;
+				for( im = mimetypes ; im && ok ; im = im->next ){
+					const gchar *imtype = ( const gchar * ) im->data;
+					positive = is_positive_assertion( imtype );
+
+					if( !positive || !match ){
+						if( is_mimetype_of( positive ? imtype : imtype+1, fgroup, fsubgroup )){
+							g_debug( "%s: condition=%s, positive=%s, ftype=%s, fgroup=%s, fsubgroup=%s, matched",
+									thisfn, imtype, positive ? "True":"False", ftype, fgroup, fsubgroup );
+							if( positive ){
+								match = TRUE;
+							} else {
+								ok = FALSE;
+							}
 						}
 					}
 				}
-			}
 
-			if( !match ){
-				gchar *mimetypes_str = na_core_utils_slist_to_text( mimetypes );
-				g_debug( "%s: no positive match found for Mimetypes=%s", thisfn, mimetypes_str );
-				g_free( mimetypes_str );
+				if( !match ){
+					gchar *mimetypes_str = na_core_utils_slist_to_text( mimetypes );
+					g_debug( "%s: no positive match found for Mimetypes=%s", thisfn, mimetypes_str );
+					g_free( mimetypes_str );
+					ok = FALSE;
+				}
+
+			} else {
+				gchar *uri = na_selected_info_get_uri( NA_SELECTED_INFO( it->data ));
+				g_debug( "%s: null mimetype found for %s", thisfn, uri );
+				g_free( uri );
 				ok = FALSE;
 			}
 
