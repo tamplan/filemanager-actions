@@ -1,5 +1,11 @@
 2010-08-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* po/POTFILES.in: Add src/core/na-selected-info.c file.
+
+	* src/core/na-selected-info.c (query_file_attributes):
+	Make the error message translatable.
+
+
 	* src/core/na-tokens.c
 	(na_tokens_new_from_selection): Do not get dirname of a null filename.
 	(parse_singular): Take care of possibly null data or over-indexing.

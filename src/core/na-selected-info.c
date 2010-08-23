@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
 #include "na-gnome-vfs-uri.h"
@@ -671,7 +672,7 @@ query_file_attributes( NASelectedInfo *nsi, gchar **errmsg )
 
 	if( error ){
 		if( errmsg ){
-			*errmsg = g_strdup_printf( "Error when querying informations for %s URI: %s", nsi->private->uri, error->message );
+			*errmsg = g_strdup_printf( _( "Error when querying informations for %s URI: %s" ), nsi->private->uri, error->message );
 		} else {
 			g_warning( "%s: g_file_query_info: %s", thisfn, error->message );
 		}

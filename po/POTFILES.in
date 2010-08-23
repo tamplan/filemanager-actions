@@ -13,6 +13,7 @@ src/core/na-object-item-factory.c
 src/core/na-object-menu.c
 src/core/na-object-profile.c
 src/core/na-object-profile-factory.c
+src/core/na-selected-info.c
 src/core/na-tokens.c
 src/io-desktop/nadp-desktop-provider.c
 src/io-gconf/nagp-gconf-provider.c
