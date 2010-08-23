@@ -410,6 +410,10 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
  * - either there is zero item selected - current_folder should so be the
  *   folder currently displayed in the file manager view
  * - or when there is only one selected directory
+ *
+ * Note that 'x-nautilus-desktop:///' cannot be interpreted by
+ * #NASelectedInfo::query_file_attributes() function. It so never participate
+ * to the display of actions.
  */
 static GList *
 menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
@@ -423,16 +427,17 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
 
-		uri = nautilus_file_info_get_uri( current_folder );
-		g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
-				thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
-		g_free( uri );
-
 		selected = na_selected_info_get_list_from_item( current_folder );
 
-		nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_LOCATION, selected );
+		if( selected ){
+			uri = nautilus_file_info_get_uri( current_folder );
+			g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
+					thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
+			g_free( uri );
 
-		na_selected_info_free_list( selected );
+			nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_LOCATION, selected );
+			na_selected_info_free_list( selected );
+		}
 	}
 
 	return( nautilus_menus_list );
@@ -460,14 +465,15 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
 
-		g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
-				thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
-
 		selected = na_selected_info_get_list_from_list(( GList * ) files );
 
-		nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_SELECTION, selected );
+		if( selected ){
+			g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
+					thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
 
-		na_selected_info_free_list( selected );
+			nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_SELECTION, selected );
+			na_selected_info_free_list( selected );
+		}
 	}
 
 	return( nautilus_menus_list );
@@ -490,16 +496,17 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
 
-		uri = nautilus_file_info_get_uri( current_folder );
-		g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
-				thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
-		g_free( uri );
-
 		selected = na_selected_info_get_list_from_item( current_folder );
 
-		nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_TOOLBAR, selected );
+		if( selected ){
+			uri = nautilus_file_info_get_uri( current_folder );
+			g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
+					thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
+			g_free( uri );
 
-		na_selected_info_free_list( selected );
+			nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_TOOLBAR, selected );
+			na_selected_info_free_list( selected );
+		}
 	}
 
 	return( nautilus_menus_list );

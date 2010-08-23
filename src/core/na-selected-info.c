@@ -205,8 +205,12 @@ na_selected_info_get_list_from_item( NautilusFileInfo *item )
 {
 	GList *selected;
 
+	selected = NULL;
 	NASelectedInfo *info = new_from_nautilus_file_info( item );
-	selected = g_list_prepend( NULL, info );
+
+	if( info ){
+		selected = g_list_prepend( NULL, info );
+	}
 
 	return( selected );
 }
@@ -228,10 +232,13 @@ na_selected_info_get_list_from_list( GList *nautilus_selection )
 
 	for( it = nautilus_selection ; it ; it = it->next ){
 		NASelectedInfo *info = new_from_nautilus_file_info( NAUTILUS_FILE_INFO( it->data ));
-		selected = g_list_prepend( selected, info );
+
+		if( info ){
+			selected = g_list_prepend( selected, info );
+		}
 	}
 
-	return( g_list_reverse( selected ));
+	return( selected ? g_list_reverse( selected ) : NULL );
 }
 
 /**
