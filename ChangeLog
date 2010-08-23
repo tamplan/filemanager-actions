@@ -1,6 +1,8 @@
 2010-08-23 Pierre Wieser <pwieser@trychlos.org>
 
-	* src/api/na-data-boxed.h: Revert to glib-object.h
+	* src/utils/nautilus-actions-schemas.c: Include glib-object.h.
+
+	* src/api/na-data-boxed.h: Revert to glib-object.h.
 
 2010-08-22 Pierre Wieser <pwieser@trychlos.org>
 

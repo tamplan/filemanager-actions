@@ -33,6 +33,7 @@
 #endif
 
 #include <glib.h>
+#include <glib-object.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
 #include <libxml/tree.h>
