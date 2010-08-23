@@ -1,3 +1,12 @@
+Version 2.99.5
+==============
+
+	Release date 2010-08-23
+
+	Bug fix:
+
+		- Do not try to build a Nautilus menu when there is no info available.
+
 Version 2.99.4
 ==============
 

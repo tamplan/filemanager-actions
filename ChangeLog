@@ -1,5 +1,7 @@
 2010-08-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Update NEWS before unstable release.
+
 	* src/core/na-selected-info.c
 	(na_selected_info_get_list_from_item, na_selected_info_get_list_from_list):
 	Returns a null list when NASelectedInfo object is null.
