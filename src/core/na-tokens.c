@@ -330,9 +330,12 @@ na_tokens_new_from_selection( GList *selection )
 
 		uri = na_selected_info_get_uri( NA_SELECTED_INFO( it->data ));
 		filename = g_file_get_path( location );
-		basedir = g_path_get_dirname( filename );
+		basedir = filename ? g_path_get_dirname( filename ) : NULL;
 		basename = g_file_get_basename( location );
 		na_core_utils_dir_split_ext( basename, &bname_woext, &ext );
+
+		g_debug( "%s: uri=%s, filename=%s, basedir=%s, basename=%s, bname_woext=%s, ext=%s",
+				thisfn, uri, filename, basedir, basename, bname_woext, ext );
 
 		if( first ){
 			vfs = g_new0( NAGnomeVFSURI, 1 );
@@ -518,6 +521,7 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 {
 	GString *output;
 	gchar *iter, *prev_iter, *tmp;
+	const gchar *nth;
 
 	output = g_string_new( "" );
 
@@ -548,14 +552,17 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 		switch( iter[1] ){
 			case 'b':
 				if( tokens->private->basenames ){
-					tmp = g_shell_quote( g_slist_nth_data( tokens->private->basenames, i ));
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					nth = ( const gchar * ) g_slist_nth_data( tokens->private->basenames, i );
+					if( nth ){
+						tmp = g_shell_quote( nth );
+						output = g_string_append( output, tmp );
+						g_free( tmp );
+					}
 				}
 				break;
 
 			case 'B':
-				if( tokens->private->basenames ){
+				if( tokens->private->basenames_str ){
 					output = g_string_append( output, tokens->private->basenames_str );
 				}
 				break;
@@ -566,28 +573,34 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 
 			case 'd':
 				if( tokens->private->basedirs ){
-					tmp = g_shell_quote( g_slist_nth_data( tokens->private->basedirs, i ));
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					nth = ( const gchar * ) g_slist_nth_data( tokens->private->basedirs, i );
+					if( nth ){
+						tmp = g_shell_quote( nth );
+						output = g_string_append( output, tmp );
+						g_free( tmp );
+					}
 				}
 				break;
 
 			case 'D':
-				if( tokens->private->basedirs ){
+				if( tokens->private->basedirs_str ){
 					output = g_string_append( output, tokens->private->basedirs_str );
 				}
 				break;
 
 			case 'f':
 				if( tokens->private->filenames ){
-					tmp = g_shell_quote( g_slist_nth_data( tokens->private->filenames, i ));
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					nth = ( const gchar * ) g_slist_nth_data( tokens->private->filenames, i );
+					if( nth ){
+						tmp = g_shell_quote( nth );
+						output = g_string_append( output, tmp );
+						g_free( tmp );
+					}
 				}
 				break;
 
 			case 'F':
-				if( tokens->private->filenames ){
+				if( tokens->private->filenames_str ){
 					output = g_string_append( output, tokens->private->filenames_str );
 				}
 				break;
@@ -602,14 +615,17 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 
 			case 'm':
 				if( tokens->private->mimetypes ){
-					tmp = g_shell_quote( g_slist_nth_data( tokens->private->mimetypes, i ));
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					nth = ( const gchar * ) g_slist_nth_data( tokens->private->mimetypes, i );
+					if( nth ){
+						tmp = g_shell_quote( nth );
+						output = g_string_append( output, tmp );
+						g_free( tmp );
+					}
 				}
 				break;
 
 			case 'M':
-				if( tokens->private->mimetypes ){
+				if( tokens->private->mimetypes_str ){
 					output = g_string_append( output, tokens->private->mimetypes_str );
 				}
 				break;
@@ -636,42 +652,51 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 
 			case 'u':
 				if( tokens->private->uris ){
-					tmp = g_shell_quote( g_slist_nth_data( tokens->private->uris, i ));
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					nth = ( const gchar * ) g_slist_nth_data( tokens->private->uris, i );
+					if( nth ){
+						tmp = g_shell_quote( nth );
+						output = g_string_append( output, tmp );
+						g_free( tmp );
+					}
 				}
 				break;
 
 			case 'U':
-				if( tokens->private->uris ){
+				if( tokens->private->uris_str ){
 					output = g_string_append( output, tokens->private->uris_str );
 				}
 				break;
 
 			case 'w':
 				if( tokens->private->basenames_woext ){
-					tmp = g_shell_quote( g_slist_nth_data( tokens->private->basenames_woext, i ));
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					nth = ( const gchar * ) g_slist_nth_data( tokens->private->basenames_woext, i );
+					if( nth ){
+						tmp = g_shell_quote( nth );
+						output = g_string_append( output, tmp );
+						g_free( tmp );
+					}
 				}
 				break;
 
 			case 'W':
-				if( tokens->private->basenames_woext ){
+				if( tokens->private->basenames_woext_str ){
 					output = g_string_append( output, tokens->private->basenames_woext_str );
 				}
 				break;
 
 			case 'x':
 				if( tokens->private->exts ){
-					tmp = g_shell_quote( g_slist_nth_data( tokens->private->exts, i ));
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					nth = ( const gchar * ) g_slist_nth_data( tokens->private->exts, i );
+					if( nth ){
+						tmp = g_shell_quote( nth );
+						output = g_string_append( output, tmp );
+						g_free( tmp );
+					}
 				}
 				break;
 
 			case 'X':
-				if( tokens->private->exts ){
+				if( tokens->private->exts_str ){
 					output = g_string_append( output, tokens->private->exts_str );
 				}
 				break;

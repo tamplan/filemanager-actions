@@ -1,5 +1,9 @@
 2010-08-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-tokens.c
+	(na_tokens_new_from_selection): Do not get dirname of a null filename.
+	(parse_singular): Take care of possibly null data or over-indexing.
+
 	* src/core/na-selected-info.c:
 	* src/core/na-selected-info.h (na_selected_info_create_for_uri):
 	Add errmsg parameter to check for incorrect URIs.
