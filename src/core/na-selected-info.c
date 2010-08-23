@@ -69,8 +69,8 @@ static void            instance_finalize( GObject *object );
 
 static void            dump( const NASelectedInfo *nsi );
 static NASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
-static NASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype );
-static void            query_file_attributes( NASelectedInfo *info );
+static NASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg );
+static gboolean        query_file_attributes( NASelectedInfo *info, gchar **errmsg );
 
 GType
 na_selected_info_get_type( void )
@@ -585,17 +585,19 @@ na_selected_info_is_writable( const NASelectedInfo *nsi )
  * na_selected_info_create_for_uri:
  * @uri: an URI.
  * @mimetype: the corresponding Nautilus mime type, or %NULL.
+ * @errmsg: a pointer to a string which will contain an error message on
+ *  return.
  *
  * Returns: a newly allocated #NASelectedInfo object for the given @uri.
  */
 NASelectedInfo *
-na_selected_info_create_for_uri( const gchar *uri, const gchar *mimetype )
+na_selected_info_create_for_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 {
 	static const gchar *thisfn = "na_selected_info_create_for_uri";
 
 	g_debug( "%s: uri=%s, mimetype=%s", thisfn, uri, mimetype );
 
-	NASelectedInfo *obj = new_from_uri( uri, mimetype );
+	NASelectedInfo *obj = new_from_uri( uri, mimetype, errmsg );
 
 	return( obj );
 }
@@ -619,7 +621,7 @@ new_from_nautilus_file_info( NautilusFileInfo *item )
 {
 	gchar *uri = nautilus_file_info_get_uri( item );
 	gchar *mimetype = nautilus_file_info_get_mime_type( item );
-	NASelectedInfo *info = new_from_uri( uri, mimetype );
+	NASelectedInfo *info = new_from_uri( uri, mimetype, NULL );
 	g_free( mimetype );
 	g_free( uri );
 
@@ -627,7 +629,7 @@ new_from_nautilus_file_info( NautilusFileInfo *item )
 }
 
 static NASelectedInfo *
-new_from_uri( const gchar *uri, const gchar *mimetype )
+new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 {
 	NASelectedInfo *info = g_object_new( NA_SELECTED_INFO_TYPE, NULL );
 
@@ -635,18 +637,24 @@ new_from_uri( const gchar *uri, const gchar *mimetype )
 	if( mimetype ){
 		info->private->mimetype = g_strdup( mimetype );
 	}
+
 	info->private->location = g_file_new_for_uri( uri );
 	info->private->vfs = g_new0( NAGnomeVFSURI, 1 );
-
-	query_file_attributes( info );
 	na_gnome_vfs_uri_parse( info->private->vfs, info->private->uri );
 
-	dump( info );
+	if( query_file_attributes( info, errmsg )){
+		dump( info );
+
+	} else {
+		g_object_unref( info );
+		info = NULL;
+	}
+
 	return( info );
 }
 
-static void
-query_file_attributes( NASelectedInfo *nsi )
+static gboolean
+query_file_attributes( NASelectedInfo *nsi, gchar **errmsg )
 {
 	static const gchar *thisfn = "na_selected_info_query_file_attributes";
 	GError *error;
@@ -662,9 +670,13 @@ query_file_attributes( NASelectedInfo *nsi )
 			G_FILE_QUERY_INFO_NONE, NULL, &error );
 
 	if( error ){
-		g_warning( "%s: g_file_query_info: %s", thisfn, error->message );
+		if( errmsg ){
+			*errmsg = g_strdup_printf( "Error when querying informations for %s URI: %s", nsi->private->uri, error->message );
+		} else {
+			g_warning( "%s: g_file_query_info: %s", thisfn, error->message );
+		}
 		g_error_free( error );
-		return;
+		return( FALSE );
 	}
 
 	if( !nsi->private->mimetype ){
@@ -680,4 +692,6 @@ query_file_attributes( NASelectedInfo *nsi )
 	nsi->private->owner = g_strdup( g_file_info_get_attribute_as_string( info, G_FILE_ATTRIBUTE_OWNER_USER ));
 
 	g_object_unref( info );
+
+	return( TRUE );
 }

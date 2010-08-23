@@ -93,7 +93,7 @@ gboolean        na_selected_info_is_owner      ( const NASelectedInfo *nsi, cons
 gboolean        na_selected_info_is_readable   ( const NASelectedInfo *nsi );
 gboolean        na_selected_info_is_writable   ( const NASelectedInfo *nsi );
 
-NASelectedInfo *na_selected_info_create_for_uri( const gchar *uri, const gchar *mimetype );
+NASelectedInfo *na_selected_info_create_for_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg );
 
 G_END_DECLS
 

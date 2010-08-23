@@ -1,5 +1,12 @@
 2010-08-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-selected-info.c:
+	* src/core/na-selected-info.h (na_selected_info_create_for_uri):
+	Add errmsg parameter to check for incorrect URIs.
+
+	* src/utils/nautilus-actions-run.c (get_selection_from_strv):
+	Do not try to deal with malformed URIs.
+
 	* src/utils/nautilus-actions-schemas.c: Include glib-object.h.
 
 	* src/api/na-data-boxed.h: Revert to glib-object.h.

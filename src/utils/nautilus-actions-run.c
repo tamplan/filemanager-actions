@@ -336,6 +336,7 @@ get_selection_from_strv( const gchar **strv, gboolean has_mimetype )
 {
 	GList *list;
 	gchar **iter;
+	gchar *errmsg;
 
 	list = NULL;
 	iter = ( gchar ** ) strv;
@@ -347,8 +348,18 @@ get_selection_from_strv( const gchar **strv, gboolean has_mimetype )
 			iter++;
 			mimetype = ( const gchar * ) *iter;
 		}
-		NASelectedInfo *nsi = na_selected_info_create_for_uri( uri, mimetype );
-		list = g_list_prepend( list, nsi );
+
+		errmsg = NULL;
+		NASelectedInfo *nsi = na_selected_info_create_for_uri( uri, mimetype, &errmsg );
+
+		if( errmsg ){
+			g_printerr( "%s\n", errmsg );
+			g_free( errmsg );
+		}
+
+		if( nsi ){
+			list = g_list_prepend( list, nsi );
+		}
 		iter++;
 	}
 
