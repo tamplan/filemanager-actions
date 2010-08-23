@@ -1,3 +1,35 @@
+Version 2.99.4
+==============
+
+	Release date 2010-08-23
+
+	Enhancements:
+
+		- Replace GtkLabel vith GtkTextView in import and export assistants
+		  summary.
+		- Converts pre-v2 '%d/%f' to v3 '%f'.
+		- Improve robustness of tokens parsing.
+
+	Bug fixes:
+
+		- Fix PDF manual build and distribution.
+		- Accepts null or empty input string or output pointers.
+		- Fix default int value when reading null string.
+		- Do not warn about malformed .desktop file when importing an URI.
+		- Path+parameters are splitted whatever be the I/O importer.
+		- Fix typos in sample actions.
+		- Fix mimetypes and folders selection.
+		- Fix basename check when matchcase is false.
+		- Address each occurrence of selected instead of just the first one.
+		- Take care of possibly NULL values when run from the command-line
+		  (reported by Юрий Пухальский)
+		- Do not overexpand the example label.
+
+	New and updated translations:
+
+		- es (Bryan Alberto Baron Chinchilla, Jorge González)
+		- sl (Matej Urbančič, Andrej Žnidaršič)
+
 Version 2.99.3
 ==============
 
