@@ -1,5 +1,9 @@
 2010-08-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump version number after unstable release.
+
+	* NEWS: Update NEWS before unstable release.
+
 	* po/POTFILES.in: Add src/core/na-selected-info.c file.
 
 	* src/core/na-selected-info.c (query_file_attributes):
