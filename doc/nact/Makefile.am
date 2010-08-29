@@ -95,7 +95,7 @@ DOC_FIGURES = \
 	figures/start-zenity-result.png					\
 	$(NULL)
 
-DOC_LINGUAS = \
+DOC_LINGUAS = de	\
 	$(NULL)
 
 # generate HTML and PDF NACT user's manual if 
