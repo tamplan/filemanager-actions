@@ -1,5 +1,9 @@
 2010-08-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/nact/C/nact-starting.xml: Update manual.
+
+	* doc/nact/C/figures/read-only.png: New file.
+
 	* doc/nact/Makefile.am: Remove '$(NULL)' expressions.
 
 	* configure.ac: Bump version number after unstable release.

@@ -213,18 +213,6 @@
               <varlistentry>
                 <term>
                     <keycombo>
-                      <keycap>F2</keycap>
-                    </keycombo>
-                </term>
-                <listitem>
-                  <para>
-                    Edit a cell in a listbox.
-                  </para>
-                </listitem>
-              </varlistentry>
-              <varlistentry>
-                <term>
-                    <keycombo>
                       <keycap>F1</keycap>
                     </keycombo>
                 </term>
@@ -409,7 +397,9 @@
               displays the count of loaded menus, actions and profiles.
             </para>
             <para>
-              The &laquosp;read-only&spraquo; icon is displayed in
+              The &laquosp;read-only&spraquo; icon 
+              <inlinegraphic fileref="figures/read-only.png" />
+              is displayed in
               the right of the statusbar when appropriate.
             </para>
           </listitem>
