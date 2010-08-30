@@ -1,5 +1,7 @@
 2010-08-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/nact/Makefile.am: Remove '$(NULL)' expressions.
+
 	* configure.ac: Bump version number after unstable release.
 
 2010-08-23 Pierre Wieser <pwieser@trychlos.org>

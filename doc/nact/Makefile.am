@@ -50,11 +50,9 @@ DOC_ENTITIES = \
 	nact-save.xml									\
 	nact-sorting.xml								\
 	nact-starting.xml								\
-	nact-where.xml									\
-	$(NULL)
+	nact-where.xml
 
-DOC_INCLUDES = \
-	$(NULL)
+DOC_INCLUDES =
 
 DOC_FIGURES = \
 	figures/add.png									\
@@ -92,11 +90,9 @@ DOC_FIGURES = \
 	figures/sort-manual.png							\
 	figures/start-context-menu.png					\
 	figures/start-context-menu-nautilus.png			\
-	figures/start-zenity-result.png					\
-	$(NULL)
+	figures/start-zenity-result.png
 
-DOC_LINGUAS = de	\
-	$(NULL)
+DOC_LINGUAS = de
 
 # generate HTML and PDF NACT user's manual if 
 # --enable-html-manuals and/or --enable-pdf-manuals have been set
