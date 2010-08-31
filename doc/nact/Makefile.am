@@ -93,7 +93,7 @@ DOC_FIGURES = \
 	figures/start-context-menu-nautilus.png			\
 	figures/start-zenity-result.png
 
-DOC_LINGUAS = de
+DOC_LINGUAS = de es
 
 # generate HTML and PDF NACT user's manual if 
 # --enable-html-manuals and/or --enable-pdf-manuals have been set
