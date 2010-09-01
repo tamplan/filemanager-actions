@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-08-20 07:39+0000\n"
-"PO-Revision-Date: 2010-08-20 20:48+0100\n"
+"POT-Creation-Date: 2010-08-31 03:29+0000\n"
+"PO-Revision-Date: 2010-08-31 18:28+0100\n"
 "Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr "Določi korenski meni programa"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:4
 msgid "Defines the periodicity in minutes of the automatic save."
-msgstr ""
+msgstr "Določi čas med samodejnimi shranjevanji v minutah."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:5
 msgid "Display Edit toolbar"
@@ -1142,6 +1142,11 @@ msgstr ""
 "Ta način podprtosti morda zahteva prisotnost dobro nastavljenega podsistema (kot je na primer sudo).\n"
 "Privzeto prazno: ukaz bo bil izveden kot trenutni uporabnik."
 
+#: ../src/core/na-selected-info.c:682
+#, c-format
+msgid "Error when querying informations for %s URI: %s"
+msgstr "Napaka med poizvedbo podatkov za URI %s: %s"
+
 #: ../src/core/na-tokens.c:253
 msgid "file:///path/to/file1.mid"
 msgstr "file:///pot/do/datoteke1.mid"
@@ -2086,20 +2091,20 @@ msgstr "Ali ste prepričani, da želite končati brez shranjevanja predmeta?"
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
 #. i18n: label of an automagic root submenu
 #: ../src/plugin-menu/nautilus-actions.c:300
-#: ../src/plugin-menu/nautilus-actions.c:960
+#: ../src/plugin-menu/nautilus-actions.c:967
 msgid "Nautilus Actions"
 msgstr "Dejanja Nautilusa"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:962
+#: ../src/plugin-menu/nautilus-actions.c:969
 msgid "A submenu which embeds the currently available Nautilus Actions extensions"
 msgstr "Podmeni, ki vključuje trenutno razpoložljive razširitve dejanj Nautilusa"
 
-#: ../src/plugin-menu/nautilus-actions.c:1009
+#: ../src/plugin-menu/nautilus-actions.c:1016
 msgid "About Nautilus Actions"
 msgstr "O programu"
 
-#: ../src/plugin-menu/nautilus-actions.c:1010
+#: ../src/plugin-menu/nautilus-actions.c:1017
 msgid "Display information about Nautilus Actions"
 msgstr "Prikaz podrobnosti o programu"
 
@@ -2115,7 +2120,7 @@ msgstr "<URI>"
 #: ../src/test/test-reader.c:56
 #: ../src/utils/nautilus-actions-new.c:139
 #: ../src/utils/nautilus-actions-run.c:70
-#: ../src/utils/nautilus-actions-schemas.c:91
+#: ../src/utils/nautilus-actions-schemas.c:92
 msgid "Output the version number"
 msgstr "Izpiše številko različice"
 
@@ -2126,21 +2131,21 @@ msgstr "Uvozi datoteko."
 #: ../src/test/test-reader.c:126
 #: ../src/utils/nautilus-actions-new.c:335
 #: ../src/utils/nautilus-actions-run.c:197
-#: ../src/utils/nautilus-actions-schemas.c:175
+#: ../src/utils/nautilus-actions-schemas.c:176
 msgid "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to mail to <maintainer@nautilus-actions.org>.\n"
 msgstr "Poročila o hroščih so dobrodošla na http://bugzilla.gnome.org, lahko jih pošljete tudi na elektronski naslov <maintainer@nautilus-actions.org>.\n"
 
 #: ../src/test/test-reader.c:134
 #: ../src/utils/nautilus-actions-new.c:349
 #: ../src/utils/nautilus-actions-run.c:205
-#: ../src/utils/nautilus-actions-schemas.c:183
+#: ../src/utils/nautilus-actions-schemas.c:184
 msgid "Miscellaneous options"
 msgstr "Razne možnosti"
 
 #: ../src/test/test-reader.c:155
 #: ../src/utils/nautilus-actions-new.c:179
 #: ../src/utils/nautilus-actions-run.c:111
-#: ../src/utils/nautilus-actions-schemas.c:124
+#: ../src/utils/nautilus-actions-schemas.c:125
 #, c-format
 msgid "Syntax error: %s\n"
 msgstr "Napaka skladnje: %s\n"
@@ -2152,8 +2157,8 @@ msgstr "Napaka: uri je obvezen.\n"
 
 #: ../src/test/test-reader.c:182
 #: ../src/utils/nautilus-actions-new.c:555
-#: ../src/utils/nautilus-actions-run.c:415
-#: ../src/utils/nautilus-actions-schemas.c:368
+#: ../src/utils/nautilus-actions-run.c:426
+#: ../src/utils/nautilus-actions-schemas.c:369
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Poskusite %s --help za izpis podrobnosti o uporabi.\n"
@@ -2303,11 +2308,11 @@ msgstr "Napaka: ni mogoče dobiti posredniškega strežnika na napravi %s"
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Napaka v klicu GetSelectedPaths: %s"
 
-#: ../src/utils/nautilus-actions-schemas.c:86
+#: ../src/utils/nautilus-actions-schemas.c:87
 msgid "Output the schema on stdout"
 msgstr "Izhod sheme na standardnemu izpisu"
 
-#: ../src/utils/nautilus-actions-schemas.c:161
+#: ../src/utils/nautilus-actions-schemas.c:162
 msgid "Output the Nautilus Actions GConf schema on stdout."
 msgstr "Izhod Nautilusovih dejanj sheme GConf na  standardnemu izpisu."
 
