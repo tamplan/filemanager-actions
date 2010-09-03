@@ -31,6 +31,15 @@
 #
 # do not use the $(NULL) syntax here as this may prevent Damned-Lies
 # to correctly generate POT files (cf. mail of Claude Paroz 2008-08-29)
+#
+# This produces the Nautilus-Actions Configuration Tool (NACT) Users's Manual.
+# As a user's manual, it may be translated.
+# Default is to produce DocBook XML documents, suitable for Yelp, the
+# Gnome help system.
+# --enable-html-manuals and --enable-pdf-manuals are configure options
+# which produce HTML and PDF formats. These options are always enabled
+# when making distcheck, so that all output formats for all known locales
+# are always included in the distributed tarball.
 
 include $(top_srcdir)/gnome-doc-utils.make
 
@@ -111,11 +120,14 @@ DOC_LINGUAS = de es
 # - xhtml subdirectory has to be previously created
 # - figures subdirectory has to be copied to xhtml/
 # - there is (as of 2010-09-03) no icon for notes and tips
-# the produced output is very close of that Yelp gives, with in particular
+# the produced output is very close of what Yelp gives, with in particular
 # summaries in each chapter while db2html does not produce them
 #
-# db2html, gnome-doc-tool: external links are not honored
-# (converted to simple links which target the same frame window)
+# contrarily, gnome-doc-tool does not produce the legal and abstract
+# in top of the document, while db2html does.
+#
+# both db2html and gnome-doc-tool do not honor external links;
+# they are converted to simple links which target the same frame window
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
@@ -139,29 +151,45 @@ all-html-manuals: html.stamp omf2build.stamp
 html.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		rm -fr $$i/$(DOC_MODULE).junk; \
-		echo "Generating $$i/$(DOC_MODULE)/$(DOC_MODULE).html ..."; \
 		if ! test -d $$i; then $(MKDIR_P) $$i; fi; \
 		(cd $$i; \
 		 if test "x$(abs_srcdir)" != "x$(abs_builddir)"; then cp $(abs_srcdir)/$$i/*.xml .; fi; \
-		 db2html --nochunks $(DOC_MODULE).xml; \
+		 if test "x$(WITH_DB2HTML)" = "xyes"; then \
+			_htmlsubdir=$(DOC_MODULE); \
+			echo "Generating $$i/$$_htmlsubdir/$(DOC_MODULE).html ..."; \
+			db2html --nochunks $(DOC_MODULE).xml; \
+		 fi; \
+		 if test "x$(WITH_GDT)" = "xyes"; then \
+			_htmlsubdir=xhtml; \
+			echo "Generating $$i/$$_htmlsubdir/$(DOC_MODULE).html ..."; \
+		 	if ! test -d $$_htmlsubdir; then $(MKDIR_P) $$_htmlsubdir; fi; \
+			gnome-doc-tool html -o $$_htmlsubdir -d0 $(DOC_MODULE).xml; \
+		 fi; \
 		 if test "x$(abs_srcdir)" != "x$(abs_builddir)"; then rm -f *.xml; fi; \
 		); \
-		cp -rp $(abs_srcdir)/$$i/figures $$i/$(DOC_MODULE)/; \
-		chmod -R u+w $$i/$(DOC_MODULE); \
+		if test -d $(abs_srcdir)/$$i/figures; then cp -rp $(abs_srcdir)/$$i/figures $$_htmlsubdir/; fi; \
+		chmod -R u+w $$i/$$_htmlsubdir; \
 	done
 	touch html.stamp
 
 # if --htmldir has not been specified, then we default to PKGDOCDIR/html
 # in all case, we append the locale as a subdirectory level
+#
+# note that we do not honor here the --with-html-dir gtk-doc option,
+# but the --htmldir autotools option
+#
+# as html have multiple files, we create a per-document subdirectory
 install-html-manuals:
 	@-for _lc in C $(_DOC_REAL_LINGUAS); do \
-		_srcdir=$(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE); \
-		if test "$(htmldir)" = "$(pkgdocdir)"; then \
-			_destdir=$(DESTDIR)$(pkgdocdir)/html/$$_lc; \
+		if test "$(htmldir)" = "$(docdir)"; then \
+			_destdir=$(DESTDIR)$(pkgdocdir)/html/$$_lc/nact; \
 		else \
-			_destdir=$(DESTDIR)$(htmldir)/$$_lc; \
-		fi \
+			_destdir=$(DESTDIR)$(htmldir)/$$_lc/nact; \
+		fi; \
 		if ! test -d $$_destdir; then $(MKDIR_P) $$_destdir; fi; \
+		if test "x$(WITH_DB2HTML)" = "xyes"; then _htmlsubdir=$(DOC_MODULE); fi; \
+		if test "x$(WITH_GDT)" = "xyes"; then _htmlsubdir=xhtml; fi; \
+		_srcdir=$(top_builddir)/doc/nact/$$_lc/$$_htmlsubdir; \
 		find $$_srcdir -type f | while read _f; do \
 			_dname=`dirname $$_f`; \
 			_subdir=`echo "$$_dname" | sed "s|^$$_srcdir[/]*||"`; \
@@ -173,12 +201,19 @@ install-html-manuals:
 	done
 
 uninstall-html-manuals:
-	rm -fr $(DESTDIR)$(pkgdocdir)/html
+	if test "$(htmldir)" = "$(docdir)"; then \
+		_instdir=$(DESTDIR)$(pkgdocdir)/html; \
+	else \
+		_instdir=$(DESTDIR)$(htmldir); \
+	fi; \
+	rm -fr $$_instdir
 
 dist-html-manuals-hook:
 	for _lc in C $(_DOC_REAL_LINGUAS); do \
 		$(MKDIR_P) $(distdir)/html/$$_lc; \
-		cp -r $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE)/* $(distdir)/html/$$_lc/; \
+		if test "x$(WITH_DB2HTML)" = "xyes"; then _htmlsubdir=$(DOC_MODULE); fi; \
+		if test "x$(WITH_GDT)" = "xyes"; then _htmlsubdir=xhtml; fi; \
+		cp -r $(top_builddir)/doc/nact/$$_lc/$$_htmlsubdir/* $(distdir)/html/$$_lc/; \
 	done
 	find $(distdir)/html -type d -exec chmod 755 {} \;
 	find $(distdir)/html -type f -exec chmod 644 {} \;
@@ -207,21 +242,28 @@ pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 
 # if --pdfdir has not been specified, then we default to PKGDOCDIR/pdf
 # in all case, we append the locale as a subdirectory level
+#
+# as pdf are monobloc documents, we do not create a per-document subdir
 install-pdf-manuals:
 	@-for _lc in C $(_DOC_REAL_LINGUAS); do \
 		_srcdir=$(top_builddir)/doc/nact/$$_lc; \
-		if test "$(pdfdir)" = "$(pkgdocdir)"; then \
+		if test "$(pdfdir)" = "$(docdir)"; then \
 			_destdir=$(DESTDIR)$(pkgdocdir)/pdf/$$_lc; \
 		else \
 			_destdir=$(DESTDIR)$(pdfdir)/$$_lc; \
-		fi \
+		fi; \
 		if ! test -d $$_destdir; then $(MKDIR_P) $$_destdir; fi; \
 		echo $(INSTALL_DATA) "$$_srcdir/$(DOC_MODULE).pdf" "$$_destdir/$(DOC_MODULE).pdf"; \
 		$(INSTALL_DATA) "$$_srcdir/$(DOC_MODULE).pdf" "$$_destdir/$(DOC_MODULE).pdf"; \
 	done
 
 uninstall-pdf-manuals:
-	rm -fr $(DESTDIR)$(pkgdocdir)/pdf
+	if test "$(pdfdir)" = "$(docdir)"; then \
+		_instdir=$(DESTDIR)$(pkgdocdir)/pdf; \
+	else \
+		_instdir=$(DESTDIR)$(pdfdir); \
+	fi; \
+	rm -fr $$_instdir
 
 dist-pdf-manuals-hook:
 	for _lc in C $(_DOC_REAL_LINGUAS); do \
@@ -269,6 +311,7 @@ clean-html-manuals:
 	for lc in C $(_DOC_REAL_LINGUAS); do \
 		rm -fr $$lc/$(DOC_MODULE); \
 		rm -fr $$lc/$(DOC_MODULE).junk; \
+		rm -fr $$lc/xhtml; \
 	done
 
 clean-pdf-manuals:

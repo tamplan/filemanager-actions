@@ -48,6 +48,8 @@ DISTCHECK_CONFIGURE_FLAGS += \
 	--disable-scrollkeeper				\
 	--enable-gtk-doc					\
 	--enable-html-manuals				\
+	--without-db2html					\
+	--with-gdt							\
 	--enable-pdf-manuals				\
 	$(NULL)
 

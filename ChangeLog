@@ -1,5 +1,14 @@
 2010-09-03 Pierre Wieser <pwieser@trychlos.org>
 
+	Declare --with-db2html and --with-gdt options.
+
+	* Makefile.am:
+	Defaut distribution includes PDF and gnome-doc-tool HTML manuals.
+
+	* doc/nact/Makefile.am:
+	* m4/na-enable-manuals.m4:
+	Define --with-db2html and --with-gdt options.
+
 	* doc/nact/Makefile.am:
 	HTML and PDF installations honor --htmldir= and --pdfdir= options.
 
