@@ -1046,6 +1046,7 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 
 		data = g_key_file_to_data( ndf->private->key_file, NULL, NULL );
 		file = g_file_new_for_uri( ndf->private->uri );
+		g_debug( "%s: uri=%s", thisfn, ndf->private->uri );
 
 		stream = g_file_replace( file, NULL, FALSE, G_FILE_CREATE_NONE, NULL, &error );
 		if( error ){
@@ -1082,7 +1083,9 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 		g_object_unref( stream );
 		g_object_unref( file );
 		g_free( data );
+
+		return( TRUE );
 	}
 
-	return( TRUE );
+	return( FALSE );
 }
