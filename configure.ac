@@ -28,9 +28,10 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([Nautilus-Actions],[2.99.6],[maintainer@nautilus-actions.org])
-AC_CANONICAL_TARGET
+AC_INIT([Nautilus-Actions],[2.99.6],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+
 AM_INIT_AUTOMAKE
+AC_CANONICAL_TARGET
 
 AC_CONFIG_SRCDIR([src/plugin-menu/nautilus-module.c])
 
@@ -164,14 +165,14 @@ AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 # defines log domains when in maintainer mode
 NA_LOG_DOMAINS
 
-# add --enable-html-manual and --enable-pdf-manual configure options
+# add --enable-html-manuals and --enable-pdf-manuals configure options
 NA_ENABLE_MANUALS
 
 # when working in a test environment, nautilus is typically installed in
 # a non-standard location ; lets specify this here
 NA_NAUTILUS_EXTDIR
 
-# define NACT_MAINTAINER_MODE variable
+# define NA_MAINTAINER_MODE variable
 NA_IS_MAINTAINER_MODE
 
 # Check for menu update function
