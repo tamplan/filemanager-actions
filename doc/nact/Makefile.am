@@ -151,10 +151,16 @@ html.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 	done
 	touch html.stamp
 
+# if --htmldir has not been specified, then we default to PKGDOCDIR/html
+# in all case, we append the locale as a subdirectory level
 install-html-manuals:
 	@-for _lc in C $(_DOC_REAL_LINGUAS); do \
 		_srcdir=$(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE); \
-		_destdir=$(DESTDIR)$(pkgdocdir)/html/$$_lc; \
+		if test "$(htmldir)" = "$(pkgdocdir)"; then \
+			_destdir=$(DESTDIR)$(pkgdocdir)/html/$$_lc; \
+		else \
+			_destdir=$(DESTDIR)$(htmldir)/$$_lc; \
+		fi \
 		if ! test -d $$_destdir; then $(MKDIR_P) $$_destdir; fi; \
 		find $$_srcdir -type f | while read _f; do \
 			_dname=`dirname $$_f`; \
@@ -199,10 +205,16 @@ pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 	done
 	touch pdf.stamp
 
+# if --pdfdir has not been specified, then we default to PKGDOCDIR/pdf
+# in all case, we append the locale as a subdirectory level
 install-pdf-manuals:
 	@-for _lc in C $(_DOC_REAL_LINGUAS); do \
 		_srcdir=$(top_builddir)/doc/nact/$$_lc; \
-		_destdir=$(DESTDIR)$(pkgdocdir)/pdf/$$_lc; \
+		if test "$(pdfdir)" = "$(pkgdocdir)"; then \
+			_destdir=$(DESTDIR)$(pkgdocdir)/pdf/$$_lc; \
+		else \
+			_destdir=$(DESTDIR)$(pdfdir)/$$_lc; \
+		fi \
 		if ! test -d $$_destdir; then $(MKDIR_P) $$_destdir; fi; \
 		echo $(INSTALL_DATA) "$$_srcdir/$(DOC_MODULE).pdf" "$$_destdir/$(DOC_MODULE).pdf"; \
 		$(INSTALL_DATA) "$$_srcdir/$(DOC_MODULE).pdf" "$$_destdir/$(DOC_MODULE).pdf"; \
