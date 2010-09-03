@@ -1,5 +1,8 @@
 2010-09-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/nact/Makefile.am:
+	Fix make distcheck when distributing tranlations of NACT user's manual.
+
 	* configure.ac:
 	Revert inversion of AC_CANONICAL_TARGET and	AM_INIT_AUTOMAKE.
 

@@ -25,9 +25,12 @@
 #   Rodrigo Moya <rodrigo@gnome-db.org>
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
-
+#
 # from Migrating your documentation to gnome-doc-utils
 # http://live.gnome.org/GnomeDocUtilsMigrationHowTo
+#
+# do not use the $(NULL) syntax here as this may prevent Damned-Lies
+# to correctly generate POT files (cf. mail of Claude Paroz 2008-08-29)
 
 include $(top_srcdir)/gnome-doc-utils.make
 
@@ -98,6 +101,21 @@ DOC_LINGUAS = de es
 # generate HTML and PDF NACT user's manual if 
 # --enable-html-manuals and/or --enable-pdf-manuals have been set
 # the generated docs are installed in pkgdocdir/doc/{html|pdf}/
+#
+# translations only have .po files (should also have figures/ subdirectory)
+# so do not generate HTML/PDF documents for them
+#
+# an alternative for generating HTML manual is
+# gnome-doc-tool html -o xhtml -d0 nautilus-actions-config-tool.xml
+# which is part of gnome-doc-utils package
+# - xhtml subdirectory has to be previously created
+# - figures subdirectory has to be copied to xhtml/
+# - there is (as of 2010-09-03) no icon for notes and tips
+# the produced output is very close of that Yelp gives, with in particular
+# summaries in each chapter while db2html does not produce them
+#
+# db2html, gnome-doc-tool: external links are not honored
+# (converted to simple links which target the same frame window)
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
@@ -116,9 +134,9 @@ uninstall-manuals: uninstall-html-manuals uninstall-pdf-manuals
 dist-hook: doc-dist-hook dist-html-manuals-hook dist-pdf-manuals-hook
 
 if ENABLE_HTML_MANUALS
-all-html-manuals: html.stamp
+all-html-manuals: html.stamp omf2build.stamp
 
-html.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) ChangeLog
+html.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		rm -fr $$i/$(DOC_MODULE).junk; \
 		echo "Generating $$i/$(DOC_MODULE)/$(DOC_MODULE).html ..."; \
@@ -169,9 +187,9 @@ dist-html-manuals-hook:
 endif
 
 if ENABLE_PDF_MANUALS
-all-pdf-manuals: pdf.stamp
+all-pdf-manuals: pdf.stamp omf2build.stamp
 
-pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) ChangeLog
+pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		_target=$$i/$(DOC_MODULE).pdf; \
 		echo "Generating $$_target ..."; \
@@ -209,6 +227,25 @@ uninstall-pdf-manuals:
 
 dist-pdf-manuals-hook:
 endif
+
+# apparently, a bug in gnome-doc-utils.make
+# when generating the omf for locales, original (C) xml is rightly searched
+# for in srcdir, while locale (generated) ones are searched for in current
+# directory, which happens to be builddir (in particular when making distcheck)
+# cf. '$(_DOC_POFILES):' target in gnome-doc-utils.make to see the generation
+# of locale xml
+# so we copy the locale xml here from srcdir to builddir
+omf2build.stamp:
+	@-for _lc in $(_DOC_REAL_LINGUAS); do \
+		_srcdir=$(top_srcdir)/doc/nact/$$_lc; \
+		_destdir=$(top_builddir)/doc/nact/$$_lc; \
+		if test "$$_destdir" != "$$_srcdir"; then \
+			if test -f $$_srcdir/$(DOC_MODULE).xml; then \
+				cp -v $$_srcdir/$(DOC_MODULE).xml  $$_destdir/$(DOC_MODULE).xml; \
+			fi \
+		fi \
+	done
+	touch omf2build.stamp
 
 clean-local: clean-html-manuals clean-pdf-manuals
 	rm -f *~
