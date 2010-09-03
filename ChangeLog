@@ -1,5 +1,8 @@
 2010-09-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-reader.c (nadp_reader_iimporter_import_from_uri):
+	Do not keep the imported desktop file.
+
 	* src/io-desktop/nadp-desktop-file.c (nadp_desktop_file_write):
 	Do not return TRUE if file has not been written due to dispose state.
 

@@ -378,6 +378,13 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterI
 			code = IMPORTER_CODE_OK;
 			g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms->imported ), IMPORTER_CODE_NOT_WILLING_TO );
 
+			/* remove the weak reference on desktop file set by 'item_from_desktop_file'
+			 * as we must consider this #NAObjectItem as a new one
+			 */
+			na_object_set_provider_data( parms->imported, NULL );
+			g_object_weak_unref( G_OBJECT( parms->imported ), ( GWeakNotify ) desktop_weak_notify, ndf );
+			g_object_unref( ndf );
+
 			manage_parms.version = 1;
 			manage_parms.imported = parms->imported;
 			manage_parms.check_fn = parms->check_fn;
