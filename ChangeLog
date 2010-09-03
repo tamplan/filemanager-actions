@@ -1,5 +1,8 @@
 2010-09-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	Revert inversion of AC_CANONICAL_TARGET and	AM_INIT_AUTOMAKE.
+
 	* src/io-desktop/nadp-writer.c (write_done_write_subitems_list):
 	Improve debug messages.
 

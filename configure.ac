@@ -30,8 +30,9 @@ AC_PREREQ([2.53])
 
 AC_INIT([Nautilus-Actions],[2.99.6],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
 
-AM_INIT_AUTOMAKE
 AC_CANONICAL_TARGET
+
+AM_INIT_AUTOMAKE
 
 AC_CONFIG_SRCDIR([src/plugin-menu/nautilus-module.c])
 
