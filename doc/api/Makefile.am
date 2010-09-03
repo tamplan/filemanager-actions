@@ -37,7 +37,7 @@ DOC_MAIN_SGML_FILE = $(DOC_MODULE)-docs.xml
 
 doc_sections = $(DOC_MODULE)-sections.txt
 
-# from the API documentation point of view
+# from the public API documentation point of view
 # we have to ignore all headers in src/core, and all corresponding source
 # that is, only consider in src/core .c sources whose header is in src/api
 
