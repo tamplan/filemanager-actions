@@ -583,9 +583,12 @@ write_done_write_subitems_list( NadpDesktopFile *ndp, NAObjectItem *item )
 	static const gchar *thisfn = "nadp_writer_write_done_write_subitems_list";
 	GSList *subitems;
 	GSList *profile_groups, *ip;
+	gchar *tmp;
 
 	subitems = na_object_get_items_slist( item );
-	na_core_utils_slist_dump( thisfn, subitems );
+	tmp = g_strdup_printf( "%s (written subitems)", thisfn );
+	na_core_utils_slist_dump( tmp, subitems );
+	g_free( tmp );
 
 	nadp_desktop_file_set_string_list(
 			ndp,
@@ -594,7 +597,9 @@ write_done_write_subitems_list( NadpDesktopFile *ndp, NAObjectItem *item )
 			subitems );
 
 	profile_groups = nadp_desktop_file_get_profiles( ndp );
-	na_core_utils_slist_dump( thisfn, profile_groups );
+	tmp = g_strdup_printf( "%s (existing profiles)", thisfn );
+	na_core_utils_slist_dump( tmp, profile_groups );
+	g_free( tmp );
 
 	for( ip = profile_groups ; ip ; ip = ip->next ){
 		if( na_core_utils_slist_count( subitems, ( const gchar * ) ip->data ) == 0 ){

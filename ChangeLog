@@ -1,5 +1,8 @@
 2010-09-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-writer.c (write_done_write_subitems_list):
+	Improve debug messages.
+
 	* src/nact/nact-icommand-tab.c
 	(on_tab_updatable_selection_changed): Update example label.
 	(parse_parameters): Cleanup code.
