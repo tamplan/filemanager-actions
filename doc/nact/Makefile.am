@@ -96,6 +96,7 @@ DOC_FIGURES = \
 	figures/nact-startup-mode-frame.png				\
 	figures/nact-target-location.png				\
 	figures/nact-working-directory-frame.png		\
+	figures/read-only.png							\
 	figures/remove.png								\
 	figures/sort-asc.png							\
 	figures/sort-buttons-frame.png					\
@@ -146,14 +147,15 @@ uninstall-manuals: uninstall-html-manuals uninstall-pdf-manuals
 dist-hook: doc-dist-hook dist-html-manuals-hook dist-pdf-manuals-hook
 
 if ENABLE_HTML_MANUALS
-all-html-manuals: html.stamp omf2build.stamp
+all-html-manuals: html.stamp
 
 html.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		rm -fr $$i/$(DOC_MODULE).junk; \
 		if ! test -d $$i; then $(MKDIR_P) $$i; fi; \
 		(cd $$i; \
-		 if test "x$(abs_srcdir)" != "x$(abs_builddir)"; then cp $(abs_srcdir)/$$i/*.xml .; fi; \
+		 copied=0; \
+		 if test ! -f $(DOC_MODULE).xml; then cp -v $(abs_srcdir)/C/*.xml .; copied=1; fi; \
 		 if test "x$(WITH_DB2HTML)" = "xyes"; then \
 			_htmlsubdir=$(DOC_MODULE); \
 			echo "Generating $$i/$$_htmlsubdir/$(DOC_MODULE).html ..."; \
@@ -165,10 +167,10 @@ html.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 		 	if ! test -d $$_htmlsubdir; then $(MKDIR_P) $$_htmlsubdir; fi; \
 			gnome-doc-tool html -o $$_htmlsubdir -d0 $(DOC_MODULE).xml; \
 		 fi; \
-		 if test "x$(abs_srcdir)" != "x$(abs_builddir)"; then rm -f *.xml; fi; \
+		 if test -d $(abs_srcdir)/$$i/figures; then cp -rp $(abs_srcdir)/$$i/figures $$_htmlsubdir/; fi; \
+		 chmod -R u+w $$_htmlsubdir; \
+		 if test $$copied -eq 1; then rm -f *.xml; fi \
 		); \
-		if test -d $(abs_srcdir)/$$i/figures; then cp -rp $(abs_srcdir)/$$i/figures $$_htmlsubdir/; fi; \
-		chmod -R u+w $$i/$$_htmlsubdir; \
 	done
 	touch html.stamp
 
@@ -228,7 +230,7 @@ dist-html-manuals-hook:
 endif
 
 if ENABLE_PDF_MANUALS
-all-pdf-manuals: pdf.stamp omf2build.stamp
+all-pdf-manuals: pdf.stamp
 
 pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
@@ -281,25 +283,6 @@ uninstall-pdf-manuals:
 
 dist-pdf-manuals-hook:
 endif
-
-# apparently, a bug in gnome-doc-utils.make
-# when generating the omf for locales, original (C) xml is rightly searched
-# for in srcdir, while locale (generated) ones are searched for in current
-# directory, which happens to be builddir (in particular when making distcheck)
-# cf. '$(_DOC_POFILES):' target in gnome-doc-utils.make to see the generation
-# of locale xml
-# so we copy the locale xml here from srcdir to builddir
-omf2build.stamp:
-	@-for _lc in $(_DOC_REAL_LINGUAS); do \
-		_srcdir=$(top_srcdir)/doc/nact/$$_lc; \
-		_destdir=$(top_builddir)/doc/nact/$$_lc; \
-		if test "$$_destdir" != "$$_srcdir"; then \
-			if test -f $$_srcdir/$(DOC_MODULE).xml; then \
-				cp -v $$_srcdir/$(DOC_MODULE).xml  $$_destdir/$(DOC_MODULE).xml; \
-			fi \
-		fi \
-	done
-	touch omf2build.stamp
 
 clean-local: clean-html-manuals clean-pdf-manuals
 	rm -f *~

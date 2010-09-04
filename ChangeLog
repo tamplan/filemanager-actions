@@ -1,3 +1,7 @@
+2010-09-04 Pierre Wieser <pwieser@trychlos.org>
+
+	* doc/nact/Makefile.am: Fix make distcheck.
+
 2010-09-03 Pierre Wieser <pwieser@trychlos.org>
 
 	Declare --with-db2html and --with-gdt options.
