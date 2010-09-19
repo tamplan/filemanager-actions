@@ -1,949 +1,2419 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# Funda Wang <fundawang@linux.net.cn>, 2004.
+# Chinese (China) translation of nautilus-action.
+# Copyright (C) 2004, 2010 Free Software Foundation, Inc.
+# This file is distributed under the same license as the nautilus-action package.
 #
+# Funda Wang <fundawang@linux.net.cn>, 2004.
+# lainme <lainme993@gmail.com>, 2010.
+# Aron Xu <happyaron.xu@gmail.com>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: nautilus-actions HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-16 17:18+0200\n"
-"PO-Revision-Date: 2005-11-26 18:06+0800\n"
-"Last-Translator: Funda Wang <fundawang@linux.net.cn>\n"
-"Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
+"Project-Id-Version: nautilus-actions master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=nautilus-actions&component=general\n"
+"POT-Creation-Date: 2010-09-03 16:36+0000\n"
+"PO-Revision-Date: 2010-09-19 15:54+0800\n"
+"Last-Translator: lainme <lainme993@gmail.com>\n"
+"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../nact/nact.desktop.in.h:1
-msgid "Add items to the Nautilus popup menu"
-msgstr "在 Nautilus 弹出菜单中添加项目"
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:1
+msgid "Add an 'About' item in the Nautilus context menu"
+msgstr "在 Nautilus 右键菜单中添加“关于”项目"
 
-#: ../nact/nact.desktop.in.h:2
-msgid "Nautilus Actions Configuration"
-msgstr "Nautilus 动作配置"
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:2
+msgid "Ask for a confirmation when quitting by Esc"
+msgstr "当用 Esc 退出时要求确认"
 
-#: ../nact/nautilus-actions-config.glade.h:1
-#, fuzzy
-msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
-msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:3
+msgid "Define a 'Nautilus Actions' root menu"
+msgstr "定义一个“Nautilus 动作”根菜单"
 
-#: ../nact/nautilus-actions-config.glade.h:3
-#, fuzzy, no-c-format
-msgid "<b>%%</b>: a percent sign"
-msgstr "<b>%%</b>：百分号"
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:4
+msgid "Defines the periodicity in minutes of the automatic save."
+msgstr "定义自动保存的周期，以分钟为单位。"
 
-#: ../nact/nautilus-actions-config.glade.h:5
-#, no-c-format
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:5
+msgid "Display Edit toolbar"
+msgstr "显示编辑栏"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:6
+msgid "Display File toolbar"
+msgstr "显示文件栏"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:7
+msgid "Display Help toolbar"
+msgstr "显示帮助栏"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:8
+msgid "Display Tools toolbar"
+msgstr "显示工具栏"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:9
+msgid "I/O providers Write priority"
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:10
 msgid ""
-"<b>%M</b>: space-separated list of the selected file(s)/folder(s) with their "
-"full paths"
-msgstr ""
+"If TRUE, a confirmation will be requested when quitting an assistant by "
+"hitting the Esc key."
+msgstr "若为 TRUE，通过点击 Esc 键退出向导时将要求确认。"
 
-#: ../nact/nautilus-actions-config.glade.h:7
-#, no-c-format
-msgid "<b>%U</b>: username of the GnomeVFS URI"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:9
-#, no-c-format
-msgid "<b>%d</b>: base folder of the selected file(s)"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:11
-#, no-c-format
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:11
 msgid ""
-"<b>%f</b>: the name of the selected file or the 1st one if many are selected"
+"If TRUE, and if the user has defined a single root menu for its actions, "
+"then an 'About Nautilus Actions' will be displayed at end of the first "
+"submenu."
 msgstr ""
+"若为 TRUE，并且如果用户已为动作定义了单一的根菜单，那么“关于 Nautilus 动作”将"
+"显示在第一个子菜单的最后。"
 
-#: ../nact/nautilus-actions-config.glade.h:13
-#, no-c-format
-msgid "<b>%h</b>: hostname of the GnomeVFS URI"
-msgstr ""
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:12
+msgid "If TRUE, assistant may be closed by hitting the Esc key."
+msgstr "若为 TRUE，向导可以通过点击 Esc 键关闭。"
 
-#: ../nact/nautilus-actions-config.glade.h:15
-#, no-c-format
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:13
 msgid ""
-"<b>%m</b>: space-separated list of the basenames of the selected\n"
-"file(s)/folder(s)"
-msgstr ""
+"If TRUE, the pending modifications will be periodically and automatically "
+"saved."
+msgstr "若为 TRUE，未保存的修改将定期自动保存。"
 
-#: ../nact/nautilus-actions-config.glade.h:18
-#, no-c-format
-msgid "<b>%s</b>: scheme of the GnomeVFS URI"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:20
-#, no-c-format
-msgid "<b>%u</b>: GnomeVFS URI"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:21
-msgid "<b>Action</b>"
-msgstr "<b>动作</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:22
-msgid "<b>Appears if file matches</b>"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:23
-msgid "<b>Appears if scheme is in this list</b>"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:24
-#, fuzzy
-msgid "<b>Appears if selection contains</b>"
-msgstr "矩形选区"
-
-#: ../nact/nautilus-actions-config.glade.h:25
-msgid "<b>Nautilus Menu Item</b>"
-msgstr "<b>Nautilus 菜单项</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:26
-msgid "<b>Profiles</b>"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:28
-#, no-c-format
-msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
-msgstr "<i><b><span size=\"small\">如 %s</span></b></i>"
-
-#: ../nact/nautilus-actions-config.glade.h:29
-#, fuzzy
-msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
-msgstr "<span size=\"larger\"><b>参数标志</b></span>"
-
-#: ../nact/nautilus-actions-config.glade.h:30
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:14
 msgid ""
-"<span weight=\"bold\" size=\"larger\">place primary text here</span>\n"
-"\n"
-"place secondary text here"
+"If TRUE, then a 'Nautilus Actions' item will be defined in the Nautilus "
+"context menu, and will a root menu of all available actions."
 msgstr ""
+"若为 TRUE，将在 Nautilus 右键菜单中定义一个“Nautilus 动作”项目，并成为所有动"
+"作的根菜单。"
 
-#: ../nact/nautilus-actions-config.glade.h:33
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:15
+msgid "Import mode"
+msgstr "导入模式"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:16
+msgid "Keep last choosen import mode"
+msgstr "保持最后选定的导入模式"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:17
+msgid "Last folder selected when browsing for a command in the Command tab."
+msgstr "在命令选项卡浏览命令时最后选定的文件夹。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:18
+msgid "Last folder selected when browsing for an URI in the Folders tab."
+msgstr "在文件夹选项卡浏览地址时最后选定的文件夹。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:19
 msgid ""
-"A string with wildcards (? or *) that will be used to match the filenames. "
-"You can set several filename patterns by separating them with a semi-colon "
-"(;)."
-msgstr ""
+"Last folder selected when choosing a folder from where import new actions."
+msgstr "选择导入新动作的文件夹时最后选定的文件夹。"
 
-#: ../nact/nautilus-actions-config.glade.h:34
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:20
 msgid ""
-"A string with wildcards (? or *) that will be used to match the mimetypes of "
-"files. You can set several mimetype patterns by separating them with a semi-"
-"colon (;)."
-msgstr ""
+"Last folder selected when choosing a folder where to export the actions."
+msgstr "选择导出动作的文件夹时最后选定的文件夹。"
 
-#: ../nact/nautilus-actions-config.glade.h:35
-#, fuzzy
-msgid "Action"
-msgstr "<b>动作</b>"
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:21
+msgid "Last import mode choosen by the user"
+msgstr "用户最后选定的导入模式"
 
-#: ../nact/nautilus-actions-config.glade.h:36
-#, fuzzy
-msgid "Advanced Conditions"
-msgstr "<b>外观条件</b>"
-
-#: ../nact/nautilus-actions-config.glade.h:37
-msgid "Appears if selection has multiple files or folders"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:38
-msgid "Both"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:39
-#, fuzzy
-msgid "Click to add a new scheme."
-msgstr "用“%s”打开选中的项目"
-
-#: ../nact/nautilus-actions-config.glade.h:40
-msgid "Click to choose a command from the file chooser dialog."
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:41
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:22
 msgid ""
-"Click to choose a custom icon from a file instead of a predefined icon from "
-"the drop-down list."
+"Last import mode choosen by the user when he is asked for in import mode. "
+"Possible values are: - \"NoImport\": do not import an action whose UUID "
+"already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
+"already exists, - \"Override\": override the existing action with the "
+"imported one."
 msgstr ""
+"在导入模式中，用户被询问时最后选定的导入模式。可能的值有：-“不导入”：不导入 "
+"UUID 已经存在的动作，-“重新编号”：如果导入的 UUID 已经存在则指定一个新 "
+"UUID，-“覆盖”：用导入的覆盖已存在的动作。"
 
-#: ../nact/nautilus-actions-config.glade.h:42
-#, fuzzy
-msgid "Click to remove the selected scheme."
-msgstr "用“%s”打开选中的项目"
-
-#: ../nact/nautilus-actions-config.glade.h:43
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:23
 msgid ""
-"Click to toggle the display of the list of special tokens you can use in the "
-"parameter field."
+"Last import mode choosen in the Import assistant. Possible values are : - "
+"\"NoImport\": do not import an action whose UUID already exists, - \"Renumber"
+"\": allocate a new UUID if the imported UUID already exists, - \"Override\": "
+"override the existing action with the imported one, - \"Ask\": ask the user "
+"each time."
+msgstr ""
+"在导入向导中最后选定的导入模式。可能的值有：-“不导入”：不导入 UUID 已经存在的"
+"动作，-“重新编号”：如果导入的 UUID 已经存在则指定一个新 UUID，-“覆盖”：用导入"
+"的覆盖已存在的动作，-“询问”：每次询问用户。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:24
+msgid "Last selected folder"
+msgstr "最后选定的文件夹"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:25
+msgid "List of default schemes"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:44
-msgid "Conditions"
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
+msgid "List of items at first level of the hierarchy"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:45
-msgid "Create a copy of the selected action."
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:27
+msgid "Main pane position"
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:46
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:28
+msgid "Periodicity of the auto-save"
+msgstr "自动保存的周期"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:29
+msgid "Position and size of the Legend dialog"
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:30
 msgid ""
-"Delete the action without any confirmation nor the possibility to restore it."
+"Position and size of the Legend dialog ; default is set by the UI manager."
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:47
-msgid "Duplicate"
-msgstr ""
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:31
+msgid "Position and size of the URI chooser window"
+msgstr "地址选择窗口的位置和大小"
 
-#: ../nact/nautilus-actions-config.glade.h:48
-msgid "Export existing configs"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:49
-#, fuzzy
-msgid "File to Import:"
-msgstr "要导入的文件："
-
-#: ../nact/nautilus-actions-config.glade.h:50
-#, fuzzy
-msgid "Filenames:"
-msgstr "文件模式："
-
-#: ../nact/nautilus-actions-config.glade.h:51
-#, fuzzy
-msgid "Icon:"
-msgstr "图标："
-
-#: ../nact/nautilus-actions-config.glade.h:52
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:32
 msgid ""
-"If selected, the filename patterns will be matched case sensitive (eg, *.jpg "
-"will not match photo.JPG)"
-msgstr ""
+"Position and size of the URI chooser window in the Folders tab ; default is "
+"set by the window manager."
+msgstr "在文件夹选项卡中地址选择窗口的位置和大小；默认由窗口管理器设置。"
 
-#: ../nact/nautilus-actions-config.glade.h:53
-msgid "Import new configurations"
-msgstr "导入新配置"
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:33
+msgid "Position and size of the command chooser window"
+msgstr "命令选择窗口的位置和大小"
 
-#: ../nact/nautilus-actions-config.glade.h:54
-msgid "Import/Export"
-msgstr "导入/导出"
-
-#: ../nact/nautilus-actions-config.glade.h:55
-#, fuzzy
-msgid "Import/Export Settings"
-msgstr "导入/导出"
-
-#: ../nact/nautilus-actions-config.glade.h:56
-#, fuzzy
-msgid "Label of the menu item in the Nautilus popup menu."
-msgstr "在 Nautilus 弹出菜单中添加项目"
-
-#: ../nact/nautilus-actions-config.glade.h:57
-msgid "Label:"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:58
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:34
 msgid ""
-"Manage importation of external action configurations and exportation of "
-"existing actions."
-msgstr ""
+"Position and size of the command chooser window in the Command tab ; default "
+"is set by the window manager."
+msgstr "在命令选项卡中命令选择窗口的位置和大小；默认由窗口管理器设置。"
 
-#: ../nact/nautilus-actions-config.glade.h:59
-msgid "Match case"
-msgstr ""
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:35
+msgid "Position and size of the export assistant window"
+msgstr "导出向导窗口的位置和大小"
 
-#: ../nact/nautilus-actions-config.glade.h:60
-msgid "Mimetypes:"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:61
-#, fuzzy
-msgid "Nautilus Action Editor"
-msgstr "Nautilus 动作"
-
-#: ../nact/nautilus-actions-config.glade.h:62
-#, fuzzy
-msgid "Nautilus Action Profile Editor"
-msgstr "Nautilus 动作配置"
-
-#: ../nact/nautilus-actions-config.glade.h:63
-msgid "Nautilus Actions"
-msgstr "Nautilus 动作"
-
-#: ../nact/nautilus-actions-config.glade.h:64
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:36
 msgid ""
-"Nautilus Actions Configuration Tool\n"
-"Application to configure Nautilus Action extension"
+"Position and size of the export assistant window ; default is set by the "
+"window manager."
+msgstr "导出向导窗口的位置和大小；默认由窗口管理器设置。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:37
+msgid "Position and size of the import assistant window"
+msgstr "导入向导窗口的位置和大小"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:38
+msgid ""
+"Position and size of the import assistant window ; default is set by the "
+"window manager."
+msgstr "导入向导窗口的位置和大小；默认由窗口管理器设置。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:39
+msgid "Position and size of the interaction dialog at import time"
+msgstr "导入时交互对话框的位置和大小"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:40
+msgid ""
+"Position and size of the interaction dialog at import time ; default is set "
+"by the window manager."
+msgstr "导入时交互对话框的位置和大小；默认由窗口管理器决定。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:41
+msgid "Position and size of the main window"
+msgstr "主窗口的位置和大小"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:42
+msgid ""
+"Position and size of the main window ; default is set by the window manager."
+msgstr "主窗口的位置和大小；默认由窗口管理器设置。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:43
+msgid "Position and size of the preferences dialog"
+msgstr "首选项对话框的位置和大小"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:44
+msgid ""
+"Position and size of the preferences dialog ; default is set by the window "
+"manager."
+msgstr "首选项对话框的位置和大小；默认由窗口管理器设置。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:45
+msgid "Preferred export format"
+msgstr "首选的导出格式"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:46
+msgid "Sort mode"
+msgstr "排序模式"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:47
+msgid ""
+"The list of schemes proposed by default on each new profile. A default "
+"default list is harcoded in nautilus-actions-config-tool, which may be "
+"updated by the user."
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:66
-msgid "Only files"
-msgstr "仅文件"
-
-#: ../nact/nautilus-actions-config.glade.h:67
-msgid "Only folders"
-msgstr "仅文件夹"
-
-#: ../nact/nautilus-actions-config.glade.h:68
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:48
 msgid ""
-"Parameters that will be sent to the program. Click on the 'Legend' button to "
-"see the different replacement tokens."
+"The order in which I/O providers are tested when we need to write a new item "
+"down to a storage subsystem."
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:69
-msgid "Parameters:"
-msgstr "参数："
-
-#: ../nact/nautilus-actions-config.glade.h:70
-msgid "Path:"
-msgstr "路径："
-
-#: ../nact/nautilus-actions-config.glade.h:71
-msgid "Project Website"
-msgstr "项目网站"
-
-#: ../nact/nautilus-actions-config.glade.h:72
-#, fuzzy
-msgid "Save in Folder:"
-msgstr "保存于文件夹："
-
-#: ../nact/nautilus-actions-config.glade.h:73
-#, fuzzy
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:49
 msgid ""
-"Select the configurations you want to export. Use Shift or Ctrl key to "
-"select more than one."
-msgstr "选择您想要导出的配置："
-
-#: ../nact/nautilus-actions-config.glade.h:74
-#, fuzzy
-msgid "Select the configurations you want to export:"
-msgstr "选择您想要导出的配置："
-
-#: ../nact/nautilus-actions-config.glade.h:75
-#, fuzzy
-msgid "Select the file you want to import."
-msgstr "选择您想要导出的配置："
-
-#: ../nact/nautilus-actions-config.glade.h:76
-msgid ""
-"Select the folder you want your config to be saved in. This folder must "
-"exist."
+"The whole configuration must be understood here as the global set and order "
+"of menus and actions. When this configuration is locked, then the user is no "
+"more able to modify nor create or delete any menu or action. All items are "
+"read-only. As the order of items is also locked, the level zero itself "
+"cannot be modified, and the user is unable to reorder the items."
 msgstr ""
 
-#: ../nact/nautilus-actions-config.glade.h:77
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:50
 msgid ""
-"Select the kind of files where you want your action to appear. If you don't "
-"know what to choose, try selecting just 'file' which is the most common "
-"choice. You can add a new scheme by clicking on the '+' button."
+"This is the preferred export format, used as a default when exporting items, "
+"or dropping them outside of the application. Possible values are: - "
+"\"GConfSchemaV1\": this used to be the historical export format. The "
+"exported file may later be imported via Import assistant of the Nautilus "
+"Actions Configuration Tool, or via the gconftool-2 --import-schema-file "
+"command-line tool. - \"GConfSchemaV2\": a lighter while still compatible "
+"schema. The exported file may later be imported via Import assistant of the "
+"Nautilus Actions Configuration Tool, or via the gconftool-2 --import-schema-"
+"file command-line tool. - \"GConfEntry\": this should be the preferred "
+"format for newly exported actions. The exported file may later be imported "
+"via Import assistant of the Nautilus Actions Configuration Tool, or via the "
+"gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
+"runtime for the format he wishes use."
 msgstr ""
 
-#. TRANSLATORS: Replace this string with your names, one name per line.
-#: ../nact/nautilus-actions-config.glade.h:79
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:51
+msgid ""
+"This preference indicates the preferred sort mode. Possible values are : - "
+"\"AscendingOrder\": the actions are maintained in ascending alphabetical "
+"order (historical behavior). - \"DescendingOrder\": the actions are "
+"maintained in descending alphabetical order. - \"ManualOrder\": user is free "
+"to reorder them via Nautilus-Actions configuration tool."
+msgstr ""
+"这个首选项指出首选的排序模式。可能的值是：-“升序”：动作以字母顺序升序排列（历"
+"史行为）。-“降序”：动作以字母顺序降序排列。-“手动排序”：用户可以通过 "
+"Nautilus 动作配置工具自由重新排列它们。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:52
+msgid ""
+"UUID of the items at the first level of the hierarchy. If this key is not "
+"found or empty, then all found items are considered as a flat list."
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:53
+msgid ""
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, readen from .desktop files to being modified in "
+"NACT."
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:54
+msgid ""
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, readen from GConf to being modified in NACT."
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:55
+msgid "Whether actions should be relabeled when pasted or duplicated"
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:56
+msgid "Whether actions should be relabeled when pasted or duplicated."
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:57
+msgid "Whether menus should be relabeled when pasted or duplicated"
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:58
+msgid "Whether menus should be relabeled when pasted or duplicated."
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:59
+msgid "Whether profiles should be relabeled when pasted or duplicated"
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:60
+msgid "Whether profiles should be relabeled when pasted or duplicated."
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:61
+msgid "Whether the Desktop I/O provider is locked"
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:62
+msgid "Whether the Esc key should close the assistants"
+msgstr "Esc 键是否应关闭向导"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:63
+msgid "Whether the GConf I/O provider is locked"
+msgstr ""
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:64
+msgid "Whether the auto-save feature should be activated"
+msgstr "自动保存特性是否应该激活"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
+msgid "Whether the import system should reuse the last choosen import mode."
+msgstr "导入系统是否应重用最后选定的导入模式。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:66
+#, fuzzy
+msgid "Whether the whole configuration is locked"
+msgstr "文件的权限，以八进制显示。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:67
+msgid "Whether to display or not the Edit toolbar in the main window."
+msgstr "是否在主窗口显示编辑工具栏。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:68
+msgid "Whether to display or not the File toolbar in the main window."
+msgstr "是否在主窗口显示文件工具栏。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:69
+msgid "Whether to display or not the Help toolbar in the main window."
+msgstr "是否在主窗口显示帮助工具栏。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:70
+msgid "Whether to display or not the Tools toolbar in the main window."
+msgstr "是否在主窗口显示工具工具栏。"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:71
+msgid "Width of the main window pane ; default is set by the UI manager."
+msgstr "主窗格的宽度；默认由用户界面管理器设置。"
+
+#: ../src/core/na-exporter.c:159
+#, c-format
+msgid "NAIExporter %s doesn't implement 'to_buffer' interface."
+msgstr ""
+
+#: ../src/core/na-exporter.c:166 ../src/core/na-exporter.c:239
+#, c-format
+msgid "No NAIExporter implementation found for %s format."
+msgstr ""
+
+#: ../src/core/na-exporter.c:232
+#, c-format
+msgid "NAIExporter %s doesn't implement 'to_file' interface."
+msgstr ""
+
+#: ../src/core/na-iabout.c:176
+msgid ""
+"Nautilus Actions Configuration Tool is free software; you can redistribute "
+"it and/or modify it under the terms of the GNU General Public License as "
+"published by the Free Software Foundation; either version 2 of the License, "
+"or (at your option) any later version."
+msgstr ""
+"Nautilus 动作配置工具是一个自由软件；您可以在遵守由自由软件基金会发布的 GNU "
+"通用公共许可协议的情况下重新分发并且(或者)修改软件；或第二版许可协议，或(根据"
+"您的选择)任何更新版本。"
+
+#: ../src/core/na-iabout.c:180
+msgid ""
+"Nautilus Actions Configuration Tool is distributed in the hope that it will "
+"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
+"Public License for more details."
+msgstr ""
+"Nautilus 动作配置工具发布是希望它有用，但没有任何保证；甚至没有商业性的或对特"
+"定目的适用性的暗指。更多细节请参看 GNU 通用公共许可协议。"
+
+#: ../src/core/na-iabout.c:184
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"Nautilus Actions Configuration Tool ; if not, write to the Free Software "
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
+"USA."
+msgstr ""
+"您应当在收到 Nautilus 动作配置工具的同时收到了 GNU 公共许可证的副本；如果没有"
+"的话，请给自由软件基金会写信，地址是：51 Franklin Street, Fifth Floor, "
+"Boston, MA 02110-1301, USA"
+
+#: ../src/core/na-iabout.c:206
+msgid "A graphical interface to create and edit your Nautilus actions."
+msgstr "创建和编辑 Nautilus 动作的可视化工具"
+
+#: ../src/core/na-iabout.c:212
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
-msgstr ""
+msgstr "GNOME 翻译项目 <gnome-i18n@gnome.org>"
 
-#: ../nact/nautilus-actions-config.glade.h:80
-msgid ""
-"The command that will be launched by selecting the action in Nautilus popup "
-"menu."
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:81
-msgid "This software is licensed under the GNU Genaral Public License (GPL)"
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:82
-msgid "Tooltip of the menu item that will appear in the Nautilus statusbar."
-msgstr ""
-
-#: ../nact/nautilus-actions-config.glade.h:83
-msgid "Tooltip:"
-msgstr "工具提示："
-
-#: ../nact/nautilus-actions-config.glade.h:84
-#, fuzzy
-msgid "_Browse"
-msgstr "浏览(_B)..."
-
-#: ../nact/nautilus-actions-config.glade.h:85
-msgid "_Legend"
-msgstr ""
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact.c:163
-#, c-format
-msgid "Can't duplicate action '%s'!"
-msgstr ""
-
-#. create columns on the tree view
-#: ../nact/nact.c:277 ../nact/nact-import-export.c:162
-msgid "Icon"
-msgstr "图标"
-
-#: ../nact/nact.c:282 ../nact/nact-import-export.c:167
-msgid "Label"
-msgstr ""
-
-#: ../nact/nact.c:303 ../nact/nact-editor.c:628
-#: ../nact/nact-import-export.c:312 ../nact/nact-profile-editor.c:495
-msgid "Could not load interface for Nautilus Actions Config Tool"
-msgstr ""
-
-#. i18n notes: example strings for the command preview
-#: ../nact/nact-utils.c:185
-msgid "/path/to"
-msgstr ""
-
-#: ../nact/nact-utils.c:186 ../nact/nact-utils.c:188
-msgid "file1.txt"
-msgstr ""
-
-#: ../nact/nact-utils.c:186
-msgid "file2.txt"
-msgstr ""
-
-#: ../nact/nact-utils.c:187 ../nact/nact-utils.c:188
-#, fuzzy
-msgid "folder1"
-msgstr "%u 个文件夹"
-
-#: ../nact/nact-utils.c:187
-#, fuzzy
-msgid "folder2"
-msgstr "%u 个文件夹"
-
-#: ../nact/nact-utils.c:190
-msgid "test.example.net"
-msgstr ""
-
-#: ../nact/nact-utils.c:191
-msgid "file.txt"
-msgstr ""
-
-#: ../nact/nact-utils.c:192
-#, fuzzy
-msgid "folder"
-msgstr "%u 个文件夹"
-
-#. i18n notes: when no icon is selected in the drop-down list
-#: ../nact/nact-editor.c:168
-msgid "None"
-msgstr "无"
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:449
-#, c-format
-msgid "Can't copy action's profile '%s'!"
-msgstr ""
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:474
-#, c-format
-msgid "Can't paste action's profile '%s'!"
-msgstr ""
-
-#. i18n notes: this is the default name of a copied profile
-#: ../nact/nact-editor.c:479
-#, c-format
-msgid "%s Copy"
-msgstr ""
-
-#. i18n notes: will be displayed in a dialog
-#: ../nact/nact-editor.c:539
-#, c-format
-msgid "Can't delete action's profile '%s'!"
-msgstr ""
-
-#: ../nact/nact-editor.c:591
-msgid "Profile Name"
-msgstr ""
-
-#: ../nact/nact-editor.c:644
-msgid "Icon of the menu item in the Nautilus popup menu"
-msgstr ""
-
-#: ../nact/nact-editor.c:666
-msgid "Add a New Action"
-msgstr "添加新动作"
-
-#: ../nact/nact-editor.c:670
-#, c-format
-msgid "Edit Action \"%s\""
-msgstr "编辑动作“%s”"
-
-#: ../nact/nact-import-export.c:205
-#, c-format
-msgid "Can't parse file '%s' as GConf schema description file!"
-msgstr ""
-
-#. i18n notes: %s is the label of the action (eg, 'Mount ISO')
-#: ../nact/nact-import-export.c:226
-#, c-format
-msgid "Action '%s' importation failed!"
-msgstr ""
-
-#. initialize the default schemes
-#. i18n notes : description of 'file' scheme
-#: ../nact/nact-prefs.c:164
-#, c-format
-msgid "%sLocal Files"
-msgstr "%s本地文件"
-
-#. i18n notes : description of 'sftp' scheme
-#: ../nact/nact-prefs.c:166
-#, c-format
-msgid "%sSSH Files"
-msgstr "%sSSH 文件"
-
-#. i18n notes : description of 'smb' scheme
-#: ../nact/nact-prefs.c:168
-#, c-format
-msgid "%sWindows Files"
-msgstr "%sWindows 文件"
-
-#. i18n notes : description of 'ftp' scheme
-#: ../nact/nact-prefs.c:170
-#, c-format
-msgid "%sFTP Files"
-msgstr "%sFTP文件"
-
-#. i18n notes : description of 'dav' scheme
-#: ../nact/nact-prefs.c:172
-#, c-format
-msgid "%sWebdav Files"
-msgstr "%sWebdav 文件"
-
-#. i18n notes : scheme name set for a new entry in the scheme list
-#: ../nact/nact-profile-editor.c:243
-msgid "new-scheme"
-msgstr ""
-
-#: ../nact/nact-profile-editor.c:244
-#, fuzzy
-msgid "New Scheme Description"
-msgstr "描述"
-
-#: ../nact/nact-profile-editor.c:329
-#, fuzzy
-msgid "Scheme"
-msgstr "主题"
-
-#: ../nact/nact-profile-editor.c:341
-msgid "Description"
-msgstr "描述"
-
-#: ../nact/nact-profile-editor.c:532
-#, fuzzy
-msgid "Add a New Profile"
-msgstr "添加新动作"
-
-#: ../nact/nact-profile-editor.c:536
-#, fuzzy, c-format
-msgid "Edit Profile \"%s\""
-msgstr "编辑动作“%s”"
-
-#. GConf description strings :
-#: ../utils/nautilus-actions-new-config.c:49
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:72
-#, fuzzy
-msgid "The label of the menu item"
-msgstr "文件的大小。"
-
-#: ../utils/nautilus-actions-new-config.c:49
-msgid "LABEL"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:50
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:74
-#, fuzzy
-msgid "The tooltip of the menu item"
-msgstr "文件的类型。"
-
-#: ../utils/nautilus-actions-new-config.c:50
-msgid "TOOLTIP"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:51
-#, fuzzy
-msgid "The icon of the menu item (filename or GTK stock ID)"
-msgstr "菜单项的图标"
-
-#: ../utils/nautilus-actions-new-config.c:51
-msgid "ICON"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:80
-msgid "The path of the command"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:52
-#: ../utils/nautilus-actions-new-config.c:55
-#: ../utils/nautilus-actions-new-config.c:61
-msgid "PATH"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:53
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:82
-msgid "The parameters of the command"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:53
-msgid "PARAMS"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:54
-msgid ""
-"A pattern to match selected files against. May include wildcards (* or ?) "
-"(you must set one option for each pattern you need)"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:54
-#: ../utils/nautilus-actions-new-config.c:56
-msgid "EXPR"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:56
-msgid ""
-"A pattern to match selected files' mimetype against. May include wildcards "
-"(* or ?) (you must set one option for each pattern you need)"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:57
-#, fuzzy
-msgid "Set it if the selection can contain files"
-msgstr "矩形选区"
-
-#: ../utils/nautilus-actions-new-config.c:58
-#, fuzzy
-msgid "Set it if the selection can contain folders"
-msgstr "矩形选区"
-
-#: ../utils/nautilus-actions-new-config.c:59
-msgid "Set it if the selection can have several items"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid ""
-"A GnomeVFS scheme where the selected files should be located (you must set "
-"it for each scheme you need)"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:60
-msgid "SCHEME"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:61
-msgid ""
-"The path of the file where to save the new GConf schema definition file "
-"[default: /tmp/config_UUID.schemas]"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:100
+#: ../src/core/na-iabout.c:253
 #, c-format
 msgid ""
-"Syntax error:\n"
-"\t- %s\n"
-"Try %s --help\n"
+"Copyright %s 2005 The GNOME Foundation\n"
+"Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
+msgstr ""
+"版权所有 %s 2005 GNOME 基金会\n"
+"版权所有 %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
+"版权所有 %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
+
+#: ../src/core/na-icontext-factory.c:47
+msgid "List of patterns to be matched against the selected file(s)/folder(s)"
 msgstr ""
 
-#: ../utils/nautilus-actions-new-config.c:152
-#, fuzzy, c-format
-msgid "Creating %s..."
-msgstr "正在准备复制..."
-
-#: ../utils/nautilus-actions-new-config.c:171
-#, c-format
-msgid " Failed: Can't create %s: %s\n"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:180
-#, c-format
-msgid "  OK, saved in %s\n"
-msgstr ""
-
-#: ../utils/nautilus-actions-new-config.c:185
-#, fuzzy, c-format
-msgid " Failed: %s\n"
-msgstr "视图失败"
-
-#: ../utils/nautilus-actions-tools-utils.c:48
-#, c-format
-msgid "Can't write data in file %s\n"
-msgstr ""
-
-#: ../utils/nautilus-actions-tools-utils.c:54
-#, c-format
-msgid "Can't open file %s for writing\n"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:73
+#: ../src/core/na-icontext-factory.c:48
 msgid ""
-"The label of the menu item that will appear in the Nautilus popup menu when "
-"the selection matches the appearance condition settings"
+"A list of strings with joker '*' or '?' to be matched against the name(s) of "
+"the selected file(s)/folder(s). Each selected items must match at least one "
+"of the filename patterns for the action or the menu be candidate to "
+"display.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*'."
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:75
+#: ../src/core/na-icontext-factory.c:67
 msgid ""
-"The tooltip of the menu item that will appear in the Nautilus statusbar when "
-"the user points to the Nautilus popup menu item with his/her mouse"
+"A pattern to be matched against basenames of selected file(s)/folder(s). May "
+"include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:76
-msgid "The icon of the menu item"
-msgstr "菜单项的图标"
+#: ../src/core/na-icontext-factory.c:70 ../src/core/na-icontext-factory.c:125
+msgid "<EXPR>"
+msgstr "<表达式>"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:77
+#: ../src/core/na-icontext-factory.c:76
+msgid "Whether the specified basenames are case sensitive (default)"
+msgstr "指定的前缀名是否大小写敏感（默认）"
+
+#: ../src/core/na-icontext-factory.c:77
 msgid ""
-"The icon of the menu item that will appear next to the label in the Nautilus "
-"popup menu when the selection matches the appearance conditions settings"
+"Must be set to 'true' if the filename patterns are case sensitive, to "
+"'false' otherwise. E.g., if you need to match a filename in a case-sensitive "
+"manner, set this key to 'true'. If you also want, for example '*.jpg' to "
+"match 'photo.JPG', then set 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:78
-msgid "A description name of the profile"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:79
+#: ../src/core/na-icontext-factory.c:103
 msgid ""
-"The field is here to give the user a human readable name for a profile in "
-"the Nact interface. If not set there will be a default auto generated string "
-"set by default"
+"List of patterns to be matched against the mimetypes of the selected file(s)/"
+"folder(s)"
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:81
+#: ../src/core/na-icontext-factory.c:104
 msgid ""
-"The path of the command to start when the user select the menu item in the "
-"Nautilus popup menu"
+"A list of strings with joker '*' to be matched against the mimetypes of the "
+"selected file(s)/folder(s). Each selected items must match at least one of "
+"the mimetype patterns for the action to appear.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*/*'."
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:83
+#: ../src/core/na-icontext-factory.c:122
 msgid ""
-"The parameters of the command to start when the user selects the menu item "
-"in the Nautilus popup menu.\n"
-"\n"
-"The parameters can contain some special tokens which are replaced by "
-"Nautilus information before starting the command:\n"
-"\n"
-"%d: base folder of the selected file(s)\n"
-"%f: the name of the selected file or the first one if many are selected\n"
-"%m: space-separated list of the basenames of the selected file(s)/folder(s)\n"
-"%M: space-separated list of the selected file(s)/folder(s), with their full "
-"paths\n"
-"%u: GnomeVFS URI\n"
-"%s: scheme of the GnomeVFS URI\n"
-"%h: hostname of the GnomeVFS URI\n"
-"%U: username of the GnomeVFS URI\n"
-"%%: a percent sign"
+"A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
+"include wildcards (* or ?). You must set one option for each pattern you need"
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:84
-msgid "The list of pattern to match the selected file(s)/folder(s)"
-msgstr ""
+#: ../src/core/na-icontext-factory.c:160
+msgid "Whether the profile applies to files"
+msgstr "配置文件是否应用到文件"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:85
+#: ../src/core/na-icontext-factory.c:161
 msgid ""
-"A list of strings with joker '*' or '?' to match the name of the selected "
-"file(s)/folder(s). Each selected items must match at least one of the "
-"filename patterns for the action to appear"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:86
-msgid ""
-"'true' if the filename patterns have to be case sensitive, 'false' otherwise"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:87
-msgid ""
-"If you need to match a filename in a case-sensitive manner, set this key to "
-"'true'. If you also want, for example '*.jpg' to match 'photo.JPG', set "
-"'false'"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:88
-msgid "The list of patterns to match the mimetypes of the selected file(s)"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:89
-msgid ""
-"A list of strings with joker '*' or '?' to match the mimetypes of the "
-"selected file(s). Each selected items must match at least one of the "
-"mimetype patterns for the action to appear"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:90
-msgid ""
-"The valid combinations are:\n"
-"\n"
+"Set to 'true' if the selection can have files, to 'false' otherwise.\n"
+"This setting is tied in with the 'isdir' setting. The valid combinations "
+"are: \n"
 "isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
 "isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
 "isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
 "isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
-"configuration will never appear)"
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:91
-msgid "'true' if the selection can have files, 'false' otherwise"
-msgstr ""
+#: ../src/core/na-icontext-factory.c:190
+msgid "Whether the profile applies to folders"
+msgstr "配置文件是否应用到文件夹"
 
-#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:93
-msgid "This setting is tied in with the 'isdir' setting. "
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:94
-msgid "'true' if the selection can have folders, 'false' otherwise"
-msgstr ""
-
-#. i18n notes: The last space is important if your language add a space after a period sign "." because a string is concatenated after this string
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:96
-msgid "This setting is tied in with the 'isfile' setting. "
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:97
-msgid "'true' if the selection can have several items, 'false' otherwise"
-msgstr ""
-
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:98
+#: ../src/core/na-icontext-factory.c:191
 msgid ""
-"If you need one or more files or folders to be selected, set this key to "
-"'true'. If you want just one file or folder, set 'false'"
+"Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
+"This setting is tied in with the 'isfile' setting. The valid combinations "
+"are: \n"
+"isfile=TRUE and isdir=FALSE: the selection may hold only files\n"
+"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n"
+"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n"
+"isfile=FALSE and isdir=FALSE: this is an invalid combination (your "
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:99
-#, fuzzy
-msgid "The list of GnomeVFS schemes where the selected files should be located"
-msgstr "无法确定选中文件的权限。"
+#: ../src/core/na-icontext-factory.c:223
+msgid "Whether the selection may be multiple"
+msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:100
+#: ../src/core/na-icontext-factory.c:224
 msgid ""
-"Defines the list of valid GnomeVFS schemes to be matched against the "
-"selected items. The GnomeVFS scheme is the protocol used to access the "
-"files. The keyword to use is the one used in the GnomeVFS URI.\n"
-"\n"
-"Examples of GnomeVFS URI include: \n"
-"file:///tmp/foo.txt\n"
-"sftp:///root@test.example.net/tmp/foo.txt\n"
-"\n"
+"If you need more than one files or folders to be selected, set this key to "
+"'true'. If you want just one file or folder, set it to 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:248
+msgid ""
+"List of schemes to be matched against those of selected file(s)/folder(s)"
+msgstr ""
+
+#. too long string for iso c: 510 (max=509)
+#: ../src/core/na-icontext-factory.c:250
+msgid ""
+"Defines the list of valid schemes to be matched against the selected items. "
+"The scheme is the protocol used to access the files. The keyword to use is "
+"the one used in the URI by the file manager.\n"
+"Examples of valid URI include:\n"
+"- file:///tmp/foo.txt\n"
+"- sftp:///root@test.example.net/tmp/foo.txt\n"
 "The most common schemes are:\n"
-"\n"
 "'file': local files\n"
 "'sftp': files accessed via SSH\n"
 "'ftp': files accessed via FTP\n"
 "'smb': files accessed via Samba (Windows share)\n"
-"'dav': files accessed via WebDav\n"
-"\n"
-"All GnomeVFS schemes used by Nautilus can be used here."
+"'dav': files accessed via WebDAV.\n"
+"All schemes used by your favorite file manager may be used here.\n"
+"This obviously only applies when there is a selection, or when targeting the "
+"special 'x-nautilus-desktop' scheme.\n"
+"Defaults to 'file'."
 msgstr ""
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:101
+#: ../src/core/na-icontext-factory.c:279
+msgid ""
+"A valid GIO scheme where the selected file(s)/folder(s) should be located. "
+"You must set one option for each scheme you need"
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:281
+#: ../src/core/na-object-action-factory.c:171
+#: ../src/core/na-object-item-factory.c:105
+#: ../src/core/na-object-item-factory.c:129
+#: ../src/core/na-object-profile-factory.c:181
+#: ../src/utils/nautilus-actions-run.c:61
+msgid "<STRING>"
+msgstr "<字符串>"
+
+#: ../src/core/na-icontext-factory.c:287
+msgid "List of folders"
+msgstr "文件夹列表"
+
+#: ../src/core/na-icontext-factory.c:288
+msgid ""
+"Defines the list of valid paths to be matched against the current folder.\n"
+" All folders 'under' the specified path are considered valid.\n"
+"Defaults to '/'."
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:304
+msgid ""
+"The path of a (parent) directory for which the item will be displayed. You "
+"must set one option for each folder you need"
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:306
+#: ../src/core/na-object-profile-factory.c:118
+#: ../src/utils/nautilus-actions-new.c:132
+msgid "<PATH>"
+msgstr "<路径>"
+
+#: ../src/core/na-icontext-factory.c:312
 #, fuzzy
-msgid "The version of the configuration format"
+msgid "Operator of the selection count relation"
+msgstr "矩形选区"
+
+#: ../src/core/na-icontext-factory.c:313
+msgid ""
+"Whether this profile may be selected depending of the count of the "
+"selection.\n"
+"This is a string of the form \"{'<'|'='|'>'} number\".\n"
+"Examples of valid strings are: \"=0\", \"> 1\", \"< 10\".\n"
+"Defaults to \">0\"."
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:337
+msgid "Only show in environment"
+msgstr "仅在环境中显示。"
+
+#: ../src/core/na-icontext-factory.c:338
+msgid "Defaults to all."
+msgstr "设置默认为全部。"
+
+#: ../src/core/na-icontext-factory.c:359
+msgid "Not show in environment"
+msgstr "不在环境中现实。"
+
+#: ../src/core/na-icontext-factory.c:360
+msgid "Defaults to none."
+msgstr "设置默认为无。"
+
+#: ../src/core/na-icontext-factory.c:381
+msgid "Try exec"
+msgstr "尝试 exec"
+
+#: ../src/core/na-icontext-factory.c:382
+msgid ""
+"Note that, when specified, only the presence and the executability status of "
+"the specified file are checked.\n"
+"Parameters may appear in TryExec value, and will be substituted at runtime.\n"
+"Defaults to successful."
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:406
+msgid "Show if registered"
+msgstr "显示是否已注册"
+
+#: ../src/core/na-icontext-factory.c:407
+msgid ""
+"The well-known name of a DBus service.\n"
+"The item will be candidate if the named service is registered on session "
+"DBus at runtime.\n"
+"Parameters may appear in ShowIfRegistered value, and will be substituted at "
+"runtime.\n"
+"Defaults to successful."
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:431
+msgid "Show if True"
+msgstr "显示是否为真"
+
+#: ../src/core/na-icontext-factory.c:432
+msgid ""
+"A command which, when executed, should output a string on stdout.\n"
+"The item will be candidate if the outputed string is equal to \"true\".\n"
+"Parameters may appear in ShowIfTrue value, and will be substituted at "
+"runtime.\n"
+"Defaults to successful."
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:456
+msgid "Show if running"
+msgstr "显示是否正在运行"
+
+#: ../src/core/na-icontext-factory.c:457
+msgid ""
+"The name of a process.\n"
+"The item will be candidate if the process name is found in memory at "
+"runtime.\n"
+"Parameters may appear in ShowIfRunning value, and will be substituted at "
+"runtime.\n"
+"Defaults to successful."
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:481
+msgid "Capabilities"
+msgstr ""
+
+#: ../src/core/na-icontext-factory.c:482
+msgid ""
+"A list of capabilities each item of the selection must satisfy in order the "
+"item be candidate.\n"
+"Capabilities may be negated.\n"
+"Capabilities have to be choosen between following predefined ones:\n"
+"- Owner: current user is the owner of selected items\n"
+"- Readable: selected items are readable by user (probably more usefull when "
+"negated)\n"
+"- Writable: selected items are writable by user\n"
+"- Executable: selected items are executable by user\n"
+"- Local: selected items are local.\n"
+"Defaults to empty list."
+msgstr ""
+
+#: ../src/core/na-iimporter.c:206
+msgid ""
+"Item was renumbered because the caller did not provide any check function."
+msgstr ""
+
+#: ../src/core/na-iimporter.c:219
+msgid ""
+"Item was renumbered because the caller did not provide any ask user function."
+msgstr ""
+
+#: ../src/core/na-iimporter.c:238
+msgid "Item was renumbered due to user request."
+msgstr "由于用户的请求，项目被重新编号。"
+
+#: ../src/core/na-iimporter.c:244
+msgid "Existing item was overriden due to user request."
+msgstr "由于用户的请求，存在的项目被覆盖。"
+
+#: ../src/core/na-iimporter.c:251
+#, c-format
+msgid "Item %s already exists."
+msgstr "项目 %s 已经存在。"
+
+#: ../src/core/na-iimporter.c:253
+msgid "Import was canceled due to user request."
+msgstr "由于用户的请求，导入被取消。"
+
+#. i18n: the action has been renumbered during import operation
+#: ../src/core/na-iimporter.c:276
+msgid "(renumbered)"
+msgstr ""
+
+#: ../src/core/na-importer-ask.c:302
+#, c-format
+msgid ""
+"The action \"%s\" imported from \"%s\" has the same identifiant than the "
+"already existing \"%s\"."
+msgstr ""
+
+#: ../src/core/na-importer-ask.c:308
+#, c-format
+msgid ""
+"The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+"already existing \"%s\"."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1302
+msgid "Item is read-only."
+msgstr "项目是只读的。"
+
+#: ../src/core/na-io-provider.c:1306
+msgid "I/O provider is not willing to write."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1310
+msgid "No writable I/O provider found."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1314
+msgid "I/O provider has been locked down by an administrator."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1318
+msgid "I/O provider has been locked down by the user."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1322
+msgid "I/O provider implementation lacks of required API."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1326
+msgid "The whole configuration has been locked down by an administrator."
+msgstr "整个配置被管理员锁定。"
+
+#: ../src/core/na-io-provider.c:1335
+#, c-format
+msgid ""
+"Item is not writable for an unknown reason (%d).\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1359
+msgid "OK."
+msgstr "完成。"
+
+#: ../src/core/na-io-provider.c:1363
+msgid ""
+"Program flow error.\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1368
+msgid "The I/O provider is not willing to do that."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1372
+msgid "Write error in I/O provider."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1376
+msgid "Unable to delete GConf schemas."
+msgstr ""
+
+#: ../src/core/na-io-provider.c:1380
+msgid "Unable to delete configuration."
+msgstr "无法删除配置。"
+
+#: ../src/core/na-io-provider.c:1384
+#, c-format
+msgid ""
+"Unknow return code (%d).\n"
+"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+msgstr ""
+
+#. i18n: default label for a new action
+#: ../src/core/na-object-action.c:59
+msgid "New Nautilus action"
+msgstr "新的 Nautilus 动作"
+
+#: ../src/core/na-object-action.c:447
+msgid "Profile automatically created from pre-v2 action"
+msgstr ""
+
+#: ../src/core/na-object-action-factory.c:76
+msgid "Targets the selection context menu (default)"
+msgstr ""
+
+#: ../src/core/na-object-action-factory.c:77
+msgid ""
+"Whether the action targets the selection file manager context menus.\n"
+"This used to be the historical behavior.\n"
+"Note that menus are always potential candidate to the display in selection "
+"context menus provided that they contain at least one action.\n"
+"Defaults to TRUE."
+msgstr ""
+
+#: ../src/core/na-object-action-factory.c:102
+msgid "Targets the location context menu"
+msgstr ""
+
+#: ../src/core/na-object-action-factory.c:103
+msgid ""
+"Whether the action targets the file manager context menus when there is no "
+"selection, thus applying to current location.\n"
+"Note that menus are always potential candidate to the display in selection "
+"context menus provided that they contain at least one action.\n"
+"Defaults to FALSE"
+msgstr ""
+
+#: ../src/core/na-object-action-factory.c:128
+msgid "Targets the toolbar"
+msgstr ""
+
+#: ../src/core/na-object-action-factory.c:129
+msgid ""
+"Whether the action is candidate to be displayed in file manager toolbar.\n"
+"This only applies to current location.\n"
+"Note that menus are never displayed in the toolbar.\n"
+"Defaults to FALSE."
+msgstr ""
+
+#: ../src/core/na-object-action-factory.c:153
+#, fuzzy
+msgid "Label of the toolbar item"
+msgstr "文件的大小。"
+
+#: ../src/core/na-object-action-factory.c:154
+msgid ""
+"The label displayed besides of the icon in the file manager toolbar.\n"
+"Note that actual display may depend of your own Desktop Environment "
+"preferences.\n"
+"Defaults to label of the context menu when not set or empty."
+msgstr ""
+
+#. i18n: copied items have a label as 'Copy of original label'
+#: ../src/core/na-object-id.c:342
+#, c-format
+msgid "Copy of %s"
+msgstr "%s 的副本"
+
+#: ../src/core/na-object-item-factory.c:58
+msgid "Type of the item"
+msgstr "项目的类型"
+
+#: ../src/core/na-object-item-factory.c:59
+msgid ""
+"Defines if the item is an action or a menu. Possible values are :\n"
+"- 'Action',\n"
+"- 'Menu'.\n"
+"The value is case sensitive and must not be localized."
+msgstr ""
+
+#: ../src/core/na-object-item-factory.c:87
+#, fuzzy
+msgid "Label of the context menu item (mandatory)"
+msgstr "文件的大小。"
+
+#: ../src/core/na-object-item-factory.c:88
+msgid ""
+"The label of the menu item that will appear in the file manager context menu "
+"when the selection matches the appearance condition settings.\n"
+"It is also used as a default for the toolbar label of an action."
+msgstr ""
+
+#: ../src/core/na-object-item-factory.c:111
+#, fuzzy
+msgid "Tooltip of the context menu item"
+msgstr "文件的类型。"
+
+#: ../src/core/na-object-item-factory.c:112
+msgid ""
+"The tooltip of the menu item that will appear in the file manager statusbar "
+"when the user points to the file manager context menu item with his/her "
+"mouse."
+msgstr ""
+
+#: ../src/core/na-object-item-factory.c:135
+#, fuzzy
+msgid "Icon of the context menu item"
+msgstr "右键菜单项的图标"
+
+#: ../src/core/na-object-item-factory.c:136
+msgid ""
+"The icon of the menu item that will appear next to the label in the file "
+"manager context menu when the selection matches the appearance conditions "
+"settings.\n"
+"May be the localized name of a themed icon, or a full path to any "
+"appropriate image."
+msgstr ""
+
+#: ../src/core/na-object-item-factory.c:154
+msgid "<PATH|NAME>"
+msgstr ""
+
+#: ../src/core/na-object-item-factory.c:184
+msgid "Description relative to the item"
+msgstr "关于项目的描述"
+
+#: ../src/core/na-object-item-factory.c:185
+msgid ""
+"Some text which explains the goal of the menu or the action.\n"
+"May be used, e.g. when displaying available items on a web site."
+msgstr ""
+
+#: ../src/core/na-object-item-factory.c:207
+msgid "Suggested shortcut"
+msgstr "推荐的快捷键"
+
+#: ../src/core/na-object-item-factory.c:208
+msgid ""
+"A shortcut suggested for the action or the menu.\n"
+"Please note that this might be only a suggestion as the shortcut may be "
+"already reserved for another use. Implementation should not override an "
+"already existing shortcut to define this one.\n"
+"The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n"
+"Defaults to empty."
+msgstr ""
+
+#: ../src/core/na-object-item-factory.c:261
+msgid "List of subitem ids"
+msgstr ""
+
+#: ../src/core/na-object-item-factory.c:262
+msgid ""
+"Ordered list of the IDs of the subitems. This may be actions or menus if the "
+"item is a menu, or profiles if the item is an action.\n"
+"If this list doesn't exist or is empty for an action or a menu, subitems are "
+"attached in the order of the read operations."
+msgstr ""
+
+#: ../src/core/na-object-item-factory.c:286
+msgid "Whether the action or the menu is enabled (default)"
+msgstr "动作和菜单是否被激活（默认）"
+
+#: ../src/core/na-object-item-factory.c:287
+msgid ""
+"If the or the menu action is disabled, it will never appear in the file "
+"manager context menu.\n"
+"Defaults to TRUE."
+msgstr ""
+"如果菜单动作被禁用，它不会出现在文件管理器右键菜单中。\n"
+"默认是 TRUE。"
+
+#: ../src/core/na-object-item-factory.c:402
+#, fuzzy
+msgid "Version of the format"
 msgstr "文件的权限，以八进制显示。"
 
-#: ../libnautilus-actions/nautilus-actions-config-gconf-private.h:102
+#: ../src/core/na-object-item-factory.c:403
+#, fuzzy
 msgid ""
 "The version of the configuration format that will be used to manage backward "
-"compatibility"
+"compatibility."
+msgstr "文件的权限，以八进制显示。"
+
+#. i18n: default label for a new menu
+#: ../src/core/na-object-menu.c:58
+msgid "New Nautilus menu"
+msgstr "新 Nautilus 菜单"
+
+#. i18n: label for the default profile
+#: ../src/core/na-object-profile.c:729
+msgid "Default profile"
+msgstr "默认配置文件"
+
+#: ../src/core/na-object-profile-factory.c:50
+msgid "Name of the profile"
+msgstr "配置文件的名称"
+
+#: ../src/core/na-object-profile-factory.c:51
+msgid ""
+"May be used as a description for the function of the profile.\n"
+"If not set, it defaults to an auto-generated name."
 msgstr ""
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:205
+#: ../src/core/na-object-profile-factory.c:101
+msgid "Path of the command"
+msgstr "命令的路径"
+
+#: ../src/core/na-object-profile-factory.c:102
+msgid ""
+"The path of the command to be executed when the user select the menu item in "
+"the file manager context menu or in the toolbar."
+msgstr ""
+"当用户在文件管理器右键菜单或工具栏选择此菜单项目时，所要执行的命令的路径。"
+
+#: ../src/core/na-object-profile-factory.c:128
+msgid "Parameters of the command"
+msgstr "命令的参数"
+
+#. too long string for iso c: (max=509)
+#: ../src/core/na-object-profile-factory.c:130
+msgid ""
+"The parameters of the command to be executed when the user selects the menu "
+"item in the file manager context menu or in the toolbar.\n"
+"The parameters may contain some special tokens which are replaced by the "
+"informations provided by the file manager before starting the command:\n"
+"- up to version \"2.0\":\n"
+"  %d: base folder of the selected file(s)\n"
+"  %f: the name of the selected file or the first one if several are "
+"selected\n"
+"  %h: hostname of the URI\n"
+"  %m: space-separated list of the basenames of the selected file(s)/folder"
+"(s)\n"
+"  %M: space-separated list of the selected file(s)/folder(s), with their "
+"full paths\n"
+"  %p: port number of the first URI\n"
+"  %R: space-separated list of selected URIs\n"
+"  %s: scheme of the URI\n"
+"  %u: URI\n"
+"  %U: username of the URI\n"
+"  %%: a percent sign.- starting from version '3':\n"
+"  %b: (first) basename\n"
+"  %B: space-separated list of the basenames of the selected file(s)/folder"
+"(s)\n"
+"  %c: count the selected file(s)/folder(s)\n"
+"  %d: (first) base directory\n"
+"  %D: space-separated list of base directories of the selected file(s)/folder"
+"(s)\n"
+"  %f: (first) filename\n"
+"  %F: space-separated list of the filenames of the selected file(s)/folder"
+"(s)\n"
+"  %h: hostname of the (first) URI\n"
+"  %m: (first) mimetype\n"
+"  %M: space-separated list of the mimetypes of the selected file(s)/folder"
+"(s)\n"
+"  %n: username of the (first) URI\n"
+"  %p: port number of the (first) URI\n"
+"  %s: scheme of the (first) URI\n"
+"  %u: (first) URI\n"
+"  %U: space-separated list of the URIs of the selected file(s)/folder(s)\n"
+"  %w: (first) basename without the extension\n"
+"  %W: space-separated list of basenames without the extension\n"
+"  %x: (first) extension\n"
+"  %X: space-separated list of the extensions of the selected file(s)/folder"
+"(s)\n"
+"  %%: a percent sign."
+msgstr ""
+
+#: ../src/core/na-object-profile-factory.c:187
+msgid "Working directory"
+msgstr "工作目录"
+
+#: ../src/core/na-object-profile-factory.c:188
 #, c-format
 msgid ""
-"The action '%s' already exists with the name '%s', please first remove the "
-"existing one before trying to add this one"
+"The working directory the command will be started in.\n"
+"Defaults to \"%d\"."
+msgstr ""
+"命令开始所在的工作目录。\n"
+"默认是“%d”。"
+
+#: ../src/core/na-object-profile-factory.c:210
+msgid "Execution mode"
 msgstr ""
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:222
+#: ../src/core/na-object-profile-factory.c:211
+msgid ""
+"Execution mode of the program.\n"
+"This may be choosen between following values:\n"
+"- Normal: starts as a standard graphical user interface\n"
+"- Terminal: starts the preferred terminal of the graphical environment, and "
+"runs the command in it\n"
+"- Embedded: makes use of a special feature of the file manager which allows "
+"a terminal to be ran inside of it; an acceptable fallback is Terminal\n"
+"- DisplayOutput: the ran terminal may be closed at end of the command, but "
+"standard streams (stdout, stderr) should be collected and displayed; an "
+"acceptable fallback is Terminal.\n"
+"Defaults to \"Normal\"."
+msgstr ""
+
+#: ../src/core/na-object-profile-factory.c:242
+msgid "Startup notify"
+msgstr "启动提示"
+
+#: ../src/core/na-object-profile-factory.c:243
+msgid ""
+"Only relevant when ExecutionMode=Normal.\n"
+"Defaults to FALSE."
+msgstr ""
+
+#: ../src/core/na-object-profile-factory.c:265
+msgid "Startup WM Class"
+msgstr ""
+
+#: ../src/core/na-object-profile-factory.c:266
+msgid ""
+"Only relevant when ExecutionMode=Normal.\n"
+"Defaults to empty."
+msgstr ""
+
+#: ../src/core/na-object-profile-factory.c:288
+msgid "Execute as user"
+msgstr "作为用户执行"
+
+#: ../src/core/na-object-profile-factory.c:289
+msgid ""
+"The user the command must be ran as. The user may be identified by its "
+"numeric UID or by its login.\n"
+"The implementation should ignore a profile defining a non-existing UID or "
+"login as a value for the ExecuteAs key.\n"
+"The implementation might require the presence of a well-configured subsystem "
+"(e.g. sudo).\n"
+"Defaults to empty: the command will be executed as the current user."
+msgstr ""
+
+#: ../src/core/na-selected-info.c:682
+#, c-format
+msgid "Error when querying informations for %s URI: %s"
+msgstr ""
+
+#: ../src/core/na-tokens.c:253
+msgid "file:///path/to/file1.mid"
+msgstr "file:///path/to/file1.mid"
+
+#: ../src/core/na-tokens.c:254
+msgid "file:///path/to/file2.jpeg"
+msgstr "file:///path/to/file2.jpeg"
+
+#: ../src/core/na-tokens.c:255
+msgid "audio/x-midi"
+msgstr "audio/x-midi"
+
+#: ../src/core/na-tokens.c:256
+msgid "image/jpeg"
+msgstr "image/jpeg"
+
+#: ../src/core/na-tokens.c:258
+msgid "test.example.net"
+msgstr "test.example.net"
+
+#: ../src/core/na-tokens.c:259
+msgid "user"
+msgstr "用户"
+
+#: ../src/io-desktop/nadp-desktop-provider.c:249
+#, fuzzy
+msgid "Nautilus-Actions Desktop I/O Provider"
+msgstr "Nautilus 动作配置"
+
+#: ../src/io-gconf/nagp-gconf-provider.c:225
+#, fuzzy
+msgid "Nautilus-Actions GConf I/O Provider"
+msgstr "Nautilus 动作配置"
+
+#: ../src/io-xml/naxml-reader.c:148
+msgid "Item ID not found."
+msgstr "没有找到项目 ID。"
+
+#: ../src/io-xml/naxml-reader.c:149
+#, c-format
+msgid "Unwaited key path %s while importing a menu."
+msgstr ""
+
+#: ../src/io-xml/naxml-reader.c:150
+#, c-format
+msgid "Element %s at line %d already found, ignored."
+msgstr ""
+
+#: ../src/io-xml/naxml-reader.c:151
+#, c-format
+msgid "Invalid item ID: waited for %s, found %s at line %d."
+msgstr ""
+
+#: ../src/io-xml/naxml-reader.c:152
+#, c-format
+msgid "Unknown element %s found at line %d while waiting for %s."
+msgstr ""
+
+#. i18n: do not translate keywords 'Action' nor 'Menu'
+#: ../src/io-xml/naxml-reader.c:154
+#, c-format
+msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
+msgstr ""
+
+#: ../src/io-xml/naxml-reader.c:155
+#, c-format
+msgid "Invalid XML root element %s found at line %d while waiting for %s."
+msgstr ""
+
+#: ../src/io-xml/naxml-reader.c:156
+#, c-format
+msgid "Unable to parse XML file: %s."
+msgstr "无法解析 XML 文件：%s。"
+
+#: ../src/io-xml/naxml-reader.c:157
+#, c-format
+msgid "Node %s at line %d has not been dealt with."
+msgstr ""
+
+#: ../src/io-xml/naxml-formats.c:48
+msgid "Export as a _full GConf schema file"
+msgstr ""
+
+#: ../src/io-xml/naxml-formats.c:49
+msgid ""
+"This used to be the historical export format.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+
+#: ../src/io-xml/naxml-formats.c:59
+msgid "Export as a _light GConf schema (v2) file"
+msgstr ""
+
+#: ../src/io-xml/naxml-formats.c:60
+msgid ""
+"This format has been introduced in v 1.11 serie.\n"
+"This is the lightest schema still compatible with GConf command-line tools,\n"
+"while keeping backward compatibility with older Nautilus Actions "
+"Configuration Tool versions.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+
+#: ../src/io-xml/naxml-formats.c:73
+msgid "Export as a GConf _dump file"
+msgstr ""
+
+#: ../src/io-xml/naxml-formats.c:74
+msgid ""
+"This format has been introduced in v 1.11 serie, and should be the preferred "
+"format for newly exported items.\n"
+"It is not backward compatible with previous Nautilus Actions Configuration "
+"Tool versions,\n"
+"though it may still be imported via standard GConf command-line tools.\n"
+"The exported dump file may later be imported via :\n"
+"- Import assistant of a compatible Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
+"- or via the gconftool-2 --load command-line tool."
+msgstr ""
+
+#: ../src/nact/base-application.c:1292
+msgid "Unable to initialize the internationalization environment."
+msgstr ""
+
+#: ../src/nact/base-application.c:1301
+msgid "Unable to initialize the Gtk+ user interface."
+msgstr ""
+
+#: ../src/nact/base-application.c:1310
+msgid "Another instance of the application is already running."
+msgstr "应用程序的另一个实例已在运行。"
+
+#: ../src/nact/base-application.c:1319
+msgid "No filename provided for the UI XML definition."
+msgstr ""
+
+#. i18n: Unable to load the XML definition from <filename>
+#: ../src/nact/base-application.c:1329
+#, c-format
+msgid "Unable to load the XML definition from %s."
+msgstr "无法从 %s 中载入 XML 定义。"
+
+#: ../src/nact/base-application.c:1342
+msgid "Unable to set the default icon for the application."
+msgstr "无法为应用程序设置默认图标。"
+
+#: ../src/nact/base-application.c:1351
+msgid "Unable to get the main window of the application."
+msgstr ""
+
+#: ../src/nact/base-assistant.c:577
+msgid "Are you sure you want to quit this assistant ?"
+msgstr "您确定要退出向导吗？"
+
+#: ../src/nact/base-window.c:1200
+#, c-format
+msgid "Unable to load %s XML definition."
+msgstr ""
+
+#: ../src/nact/base-window.c:1286
+#, c-format
+msgid "Unable to load %s UI XML definition: %s"
+msgstr ""
+
+#: ../src/nact/egg-desktop-file.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "文件不是一个有效的 .desktop 文件"
+
+#: ../src/nact/egg-desktop-file.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr ""
+
+#: ../src/nact/egg-desktop-file.c:958
 #, fuzzy, c-format
-msgid "Can't save action '%s'"
-msgstr "管理动作"
+msgid "Starting %s"
+msgstr "正在准备复制..."
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:470
+#: ../src/nact/egg-desktop-file.c:1100
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr ""
+
+#: ../src/nact/egg-desktop-file.c:1168
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr ""
+
+#: ../src/nact/egg-desktop-file.c:1373
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr ""
+
+#: ../src/nact/egg-desktop-file.c:1394
+#, c-format
+msgid "Not a launchable item"
+msgstr "不是一个可执行的项目"
+
+#: ../src/nact/egg-sm-client.c:239
+msgid "Disable connection to session manager"
+msgstr ""
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "Specify file containing saved configuration"
+msgstr ""
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "FILE"
+msgstr "文件"
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "Specify session management ID"
+msgstr ""
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "ID"
+msgstr "ID"
+
+#: ../src/nact/egg-sm-client.c:267
+msgid "Session management options:"
+msgstr ""
+
+#: ../src/nact/egg-sm-client.c:268
+msgid "Show session management options"
+msgstr ""
+
+#: ../src/nact/nact-application.c:72
+msgid "Set it to run multiple instances of the program [unique]"
+msgstr ""
+
+#: ../src/nact/nact-application.c:74
+msgid "Output the version number, and exit gracefully [no]"
+msgstr ""
+
+#: ../src/nact/nact-application.c:353
+msgid ""
+"Another instance of Nautilus Actions Configuration Tool is already running."
+msgstr ""
+
+#. i18n: another instance is already running: second line of error message
+#: ../src/nact/nact-application.c:355
+msgid "Please switch back to it."
+msgstr ""
+
+#. static const gchar *thisfn = "nact_application_appli_get_application_name";
+#. g_debug( "%s: application=%p", thisfn, ( void * ) application );
+#. i18n: this is the application name, used in window title
+#: ../src/nact/nact-application.c:413
+msgid "Nautilus Actions Configuration Tool"
+msgstr "Nautilus 动作配置工具"
+
+#: ../src/nact/nact-add-capability-dialog.c:72
+#, fuzzy
+msgid "User is the owner of the item"
+msgstr "菜单项目的图标"
+
+#: ../src/nact/nact-add-capability-dialog.c:73
+msgid "Item is readable by the user"
+msgstr ""
+
+#: ../src/nact/nact-add-capability-dialog.c:74
+msgid "Item is writable by the user"
+msgstr ""
+
+#: ../src/nact/nact-add-capability-dialog.c:75
+msgid "Item is executable by the user"
+msgstr ""
+
+#: ../src/nact/nact-add-capability-dialog.c:76
+msgid "Item is local"
+msgstr ""
+
+#. i18n: add a comment when a capability is already used by current item
+#: ../src/nact/nact-add-capability-dialog.c:531
+#, c-format
+msgid "%s (already inserted)"
+msgstr ""
+
+#: ../src/nact/nact-assistant-export.c:679
+msgid "About to export selected items:"
+msgstr ""
+
+#: ../src/nact/nact-assistant-export.c:693
+msgid "Into the destination folder:"
+msgstr ""
+
+#: ../src/nact/nact-assistant-export.c:753
+msgid "Export canceled due to user action."
+msgstr ""
+
+#. i18n: result of the export assistant
+#: ../src/nact/nact-assistant-export.c:785
+msgid "Selected actions have been proceeded :"
+msgstr ""
+
+#. i18n: action as been successfully exported to <filename>
+#: ../src/nact/nact-assistant-export.c:804
+msgid "Successfully exported as"
+msgstr ""
+
+#: ../src/nact/nact-assistant-export.c:827
+msgid "You may not have write permissions on selected folder."
+msgstr ""
+
+#. i18n: the title of the confirm page of the import assistant
+#: ../src/nact/nact-assistant-import.c:548
+msgid "About to import selected files:"
+msgstr ""
+
+#. i18n: result of the import assistant
+#: ../src/nact/nact-assistant-import.c:748
+msgid "Selected files have been proceeded :"
+msgstr ""
+
+#. i18n: indicate that the file has been successfully imported
+#: ../src/nact/nact-assistant-import.c:767
+msgid "Import OK"
+msgstr "导入完成"
+
+#. i18n: this is the globally unique identifier and the label of the newly imported action
+#: ../src/nact/nact-assistant-import.c:773
+#, c-format
+msgid "UUID: %s\t%s"
+msgstr "UUID：%s\t%s"
+
+#. i18n: indicate that the file was not imported
+#: ../src/nact/nact-assistant-import.c:782
+msgid "Not imported"
+msgstr "没有导入"
+
+#: ../src/nact/nact.desktop.in.h:1
+msgid "Add items to the Nautilus popup menu"
+msgstr "在 Nautilus 弹出菜单中添加项目"
+
+#: ../src/nact/nact.desktop.in.h:2
+msgid "Nautilus Actions Configuration"
+msgstr "Nautilus 动作配置"
+
+#. i18n: The action <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:326
+#, c-format
+msgid "The action \"%s\" is about to be exported."
+msgstr ""
+
+#. i18n: The menu <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:329
+#, c-format
+msgid "The menu \"%s\" is about to be exported."
+msgstr ""
+
+#: ../src/nact/nact-export-format.c:46
+msgid "_Ask me"
+msgstr "询问我(_A)"
+
+#: ../src/nact/nact-export-format.c:47
+msgid ""
+"You will be asked for the format to choose each time an item is about to be "
+"exported."
+msgstr ""
+
+#: ../src/nact/nact-iaction-tab.c:596
+msgid "Caution: a label is mandatory for the action or the menu."
+msgstr ""
+
+#. i18n notes: when no icon is selected in the drop-down list
+#. i18n: label of the push button when there is not yet any shortcut
+#: ../src/nact/nact-iaction-tab.c:819 ../src/nact/nact-iproperties-tab.c:53
+msgid "None"
+msgstr "无"
+
+#: ../src/nact/nact-iaction-tab.c:876
+msgid "Choosing an icon"
+msgstr "选择一个图标"
+
+#: ../src/nact/nact-ibasenames-tab.c:166
+msgid "Basename filter"
+msgstr ""
+
+#: ../src/nact/nact-icapabilities-tab.c:158
+msgid "Capability filter"
+msgstr ""
+
+#: ../src/nact/nact-icommand-tab.c:575
+msgid "Choosing a command"
+msgstr "选择一个命令"
+
+#: ../src/nact/nact-icommand-tab.c:616
+msgid "Choosing a working directory"
+msgstr "选择一个工作目录"
+
+#: ../src/nact/nact-icommand-tab.c:677
+msgid "e.g.,"
+msgstr "例如，"
+
+#: ../src/nact/nact-ienvironment-tab.c:68
+msgid "(strictly lesser than)"
+msgstr "(严格小于)"
+
+#: ../src/nact/nact-ienvironment-tab.c:69
+msgid "(equal to)"
+msgstr "(等于)"
+
+#: ../src/nact/nact-ienvironment-tab.c:70
+msgid "(strictly greater than)"
+msgstr "(严格大于)"
+
+#: ../src/nact/nact-ienvironment-tab.c:90
+msgid "GNOME desktop"
+msgstr "GNOME桌面"
+
+#: ../src/nact/nact-ienvironment-tab.c:91
+msgid "KDE desktop"
+msgstr "KDE 桌面"
+
+#: ../src/nact/nact-ienvironment-tab.c:92
+msgid "ROX desktop"
+msgstr "ROX 桌面"
+
+#: ../src/nact/nact-ienvironment-tab.c:93
+msgid "XFCE desktop"
+msgstr "XFCE 桌面"
+
+#: ../src/nact/nact-ienvironment-tab.c:94
+msgid "Legacy systems"
+msgstr ""
+
+#: ../src/nact/nact-ienvironment-tab.c:751
+#: ../src/nact/nact-ienvironment-tab.c:809
+msgid "Choosing an executable"
+msgstr ""
+
+#: ../src/nact/nact-ifolders-tab.c:170
+msgid "Folder filter"
+msgstr "文件夹过滤器"
+
+#. i18n: title of the FileChoose dialog when selecting an URI which
+#. * will be compare to Nautilus 'current_folder'
+#.
+#: ../src/nact/nact-ifolders-tab.c:255 ../src/nact/nact-ifolders-tab.c:285
+msgid "Select a folder"
+msgstr "选择文件夹"
+
+#: ../src/nact/nact-imimetypes-tab.c:163
+msgid "Mimetype filter"
+msgstr ""
+
+#: ../src/nact/nact-iproperties-tab.c:279
+msgid "Me_nu"
+msgstr "菜单 (_N)"
+
+#: ../src/nact/nact-iproperties-tab.c:280
+msgid "<b>Menu editable properties</b>"
+msgstr "<b>菜单可编辑属性</b>"
+
+#: ../src/nact/nact-iproperties-tab.c:282
+msgid "_Action"
+msgstr "动作 (_A)"
+
+#: ../src/nact/nact-iproperties-tab.c:283
+msgid "<b>Action editable properties</b>"
+msgstr "<b>动作可编辑属性</b>"
+
+#: ../src/nact/nact-ischemes-tab.c:161
+#, fuzzy
+msgid "Scheme filter"
+msgstr "主题"
+
+#: ../src/nact/nact-main-menubar.c:107 ../src/nact/nact-main-menubar.c:214
+msgid "_File"
+msgstr "文件(_F)"
+
+#: ../src/nact/nact-main-menubar.c:108 ../src/nact/nact-main-menubar.c:218
+msgid "_Edit"
+msgstr "编辑(_E)"
+
+#: ../src/nact/nact-main-menubar.c:109
+msgid "_View"
+msgstr "查看(_V)"
+
+#: ../src/nact/nact-main-menubar.c:110
+msgid "_Toolbars"
+msgstr "工具栏(_T)"
+
+#: ../src/nact/nact-main-menubar.c:111 ../src/nact/nact-main-menubar.c:222
+msgid "_Tools"
+msgstr "工具(_T)"
+
+#: ../src/nact/nact-main-menubar.c:112
+msgid "_Maintainer"
+msgstr "维护者(_M)"
+
+#: ../src/nact/nact-main-menubar.c:113 ../src/nact/nact-main-menubar.c:226
+msgid "_Help"
+msgstr "帮助(_H)"
+
+#: ../src/nact/nact-main-menubar.c:115
+msgid "New _menu"
+msgstr "新建菜单(_M)"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
+#: ../src/nact/nact-main-menubar.c:117
+msgid "Insert a new menu at the current position"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:119
+msgid "_New action"
+msgstr "新建动作(_N)"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New action' item
+#: ../src/nact/nact-main-menubar.c:121
+msgid "Define a new action"
+msgstr "定义新动作"
+
+#: ../src/nact/nact-main-menubar.c:123
+msgid "New _profile"
+msgstr "新建配置(_P)"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
+#: ../src/nact/nact-main-menubar.c:125
+msgid "Define a new profile attached to the current action"
+msgstr ""
+
+#. i18n: tooltip displayed in the status bar when selecting 'Save' item
+#: ../src/nact/nact-main-menubar.c:129
+msgid ""
+"Record all the modified actions. Invalid actions will be silently ignored"
+msgstr "记录有所修改过的动作。无效的动作将安静地被忽略"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Quit' item
+#: ../src/nact/nact-main-menubar.c:133
+msgid "Quit the application"
+msgstr "退出"
+
+#. i18n: tooltip displayed in the status bar when selecting the Cut item
+#: ../src/nact/nact-main-menubar.c:137
+msgid "Cut the selected item(s) to the clipboard"
+msgstr "剪贴选定的项目到剪贴板"
+
+#. i18n: tooltip displayed in the status bar when selecting the Copy item
+#: ../src/nact/nact-main-menubar.c:141
+msgid "Copy the selected item(s) to the clipboard"
+msgstr "复制选定的项目到剪贴板"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste item
+#: ../src/nact/nact-main-menubar.c:145
+msgid "Insert the content of the clipboard just before the current position"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:147
+msgid "Paste _into"
+msgstr "粘贴进入(_I)"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste Into item
+#: ../src/nact/nact-main-menubar.c:149
+msgid "Insert the content of the clipboard as first child of the current item"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:151
+msgid "D_uplicate"
+msgstr "建立副本(_U)"
+
+#. i18n: tooltip displayed in the status bar when selecting the Duplicate item
+#: ../src/nact/nact-main-menubar.c:153
+#, fuzzy
+msgid "Duplicate the selected item(s)"
+msgstr "用“%s”打开选中的项目"
+
+#. i18n: tooltip displayed in the status bar when selecting the Delete item
+#: ../src/nact/nact-main-menubar.c:157
+#, fuzzy
+msgid "Delete the selected item(s)"
+msgstr "用“%s”打开选中的项目"
+
+#: ../src/nact/nact-main-menubar.c:159
+msgid "_Reload the items"
+msgstr "重新载入项目(_R)"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
+#: ../src/nact/nact-main-menubar.c:161
+msgid ""
+"Cancel your current modifications and reload the initial list of menus and "
+"actions"
+msgstr ""
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
+#: ../src/nact/nact-main-menubar.c:165
+msgid "Edit your preferences"
+msgstr "编辑您的首选项"
+
+#: ../src/nact/nact-main-menubar.c:167
+msgid "_Expand all"
+msgstr "全部展开(_E)"
+
+#. i18n: tooltip displayed in the status bar when selecting the Expand all item
+#: ../src/nact/nact-main-menubar.c:169
+msgid "Entirely expand the items hierarchy"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:171
+msgid "_Collapse all"
+msgstr "全部折叠(_C)"
+
+#. i18n: tooltip displayed in the status bar when selecting the Collapse all item
+#: ../src/nact/nact-main-menubar.c:173
+msgid "Entirely collapse the items hierarchy"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:176
+msgid "_Import assistant..."
+msgstr "导入向导(_I)..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Import item
+#: ../src/nact/nact-main-menubar.c:178
+msgid ""
+"Import one or more actions from external (XML) files into your configuration"
+msgstr "从外部文件(XML)导入一个或多个动作到您的配置中"
+
+#: ../src/nact/nact-main-menubar.c:180
+msgid "E_xport assistant..."
+msgstr "导出向导(_X)..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Export item
+#: ../src/nact/nact-main-menubar.c:182
+msgid ""
+"Export one or more actions from your configuration to external XML files"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:185
+msgid "_Dump the selection"
+msgstr ""
+
+#. i18n: tooltip displayed in the status bar when selecting the Dump selection item
+#: ../src/nact/nact-main-menubar.c:187
+msgid "Recursively dump selected items"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:189
+msgid "_Brief tree store dump"
+msgstr ""
+
+#. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
+#: ../src/nact/nact-main-menubar.c:191
+msgid "Briefly dump the tree store"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:193
+msgid "_List modified items"
+msgstr ""
+
+#. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
+#: ../src/nact/nact-main-menubar.c:195
+msgid "List the modified items"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:197
+msgid "_Dump the clipboard"
+msgstr ""
+
+#. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
+#: ../src/nact/nact-main-menubar.c:199
+msgid "Dump the content of the clipboard object"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar.c:202
+msgid "Contents"
+msgstr ""
+
+#. i18n: tooltip displayed in the status bar when selecting the Help item
+#: ../src/nact/nact-main-menubar.c:204
+msgid "Display help about this program"
+msgstr "显示关于本程序的帮助"
+
+#. i18n: tooltip displayed in the status bar when selecting the About item
+#: ../src/nact/nact-main-menubar.c:208
+msgid "Display informations about this program"
+msgstr "显示关于本程序的信息"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
+#: ../src/nact/nact-main-menubar.c:216
+msgid "Display the File toolbar"
+msgstr "显示文件栏"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
+#: ../src/nact/nact-main-menubar.c:220
+msgid "Display the Edit toolbar"
+msgstr "显示编辑栏"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
+#: ../src/nact/nact-main-menubar.c:224
+msgid "Display the Tools toolbar"
+msgstr "显示工具栏"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
+#: ../src/nact/nact-main-menubar.c:228
+msgid "Display the Help toolbar"
+msgstr "显示帮助栏"
+
+#. i18n: note the space at the beginning of the sentence
+#: ../src/nact/nact-main-menubar.c:454
+#, c-format
+msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar-edit.c:242
+msgid "Not all items have been cut as following ones are not modifiable:"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar-edit.c:492
+msgid "Not all items have been deleted as following ones are not modifiable:"
+msgstr ""
+
+#: ../src/nact/nact-main-menubar-file.c:205
+msgid "New profile"
+msgstr "新建配置"
+
+#: ../src/nact/nact-main-menubar-file.c:446
+msgid "Automatically saving pending modifications..."
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:1400
+msgid ""
+"Reloading a fresh list of actions requires that you give up with your "
+"current modifications."
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:1403
+msgid "Do you really want to do this ?"
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:1426
+msgid ""
+"One or more actions have been modified in the filesystem.\n"
+"You could keep to work with your current list of actions, or you may want to "
+"reload a fresh one."
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:1433
+msgid ""
+"Note that reloading a fresh list of actions requires that you give up with "
+"your current modifications."
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:1439
+msgid "Do you want to reload a fresh list of actions ?"
+msgstr ""
+
+#: ../src/nact/nact-match-list.c:63
+msgid "Must match one of"
+msgstr ""
+
+#: ../src/nact/nact-match-list.c:64
+msgid "Must match all of"
+msgstr ""
+
+#. i18n: label of the header of a column which let the user select a negative filter
+#: ../src/nact/nact-match-list.c:169
+msgid "Must not match any of"
+msgstr ""
+
+#: ../src/nact/nact-match-list.c:493
 #, c-format
 msgid ""
-"A profile already exists with the name '%s', please first remove or rename "
-"the existing one before trying to add this one"
+"'%s' filter already exists in the list.\n"
+"Please provide another one."
 msgstr ""
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:524
+#. i18n notes : new filter for a new row in a match/no match list
+#: ../src/nact/nact-match-list.c:871
+msgid "new-filter"
+msgstr ""
+
+#: ../src/nact/nact-providers-list.c:117
+msgid "To be read"
+msgstr ""
+
+#: ../src/nact/nact-providers-list.c:125
+msgid "Writable"
+msgstr "可写"
+
+#: ../src/nact/nact-providers-list.c:133
+msgid "I/O Provider"
+msgstr ""
+
+#. i18n: default name when the I/O providers doesn't provide one
+#: ../src/nact/nact-providers-list.c:210
+msgid "no name"
+msgstr "未命名"
+
+#. i18n: name displayed when the corresponding I/O provider is unavailable at runtime
+#: ../src/nact/nact-providers-list.c:214
+msgid "unavailable I/O provider"
+msgstr ""
+
+#. i18n notes : description of 'file' scheme
+#: ../src/nact/nact-schemes-list.c:261
+msgid "Local files"
+msgstr "本地文件"
+
+#. i18n notes : description of 'sftp' scheme
+#: ../src/nact/nact-schemes-list.c:263
+msgid "SSH files"
+msgstr "SSH 文件"
+
+#. i18n notes : description of 'smb' scheme
+#: ../src/nact/nact-schemes-list.c:265
+msgid "Windows files"
+msgstr "Windows 文件"
+
+#. i18n notes : description of 'ftp' scheme
+#: ../src/nact/nact-schemes-list.c:267
+msgid "FTP files"
+msgstr "FTP 文件"
+
+#. i18n notes : description of 'dav' scheme
+#: ../src/nact/nact-schemes-list.c:269
+msgid "WebDAV files"
+msgstr "Webdav 文件"
+
+#. i18n: add a comment when a scheme is already used by current item
+#: ../src/nact/nact-schemes-list.c:367
 #, c-format
-msgid "Can't remove the old profile '%s'"
+msgid "%s (already used)"
 msgstr ""
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config.c:531
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../src/nact/nact-schemes-list.c:689
+msgid "new-scheme"
+msgstr ""
+
+#: ../src/nact/nact-schemes-list.c:690
+msgid "New scheme description"
+msgstr ""
+
+#: ../src/nact/nact-tree-model-dnd.c:120
+msgid "Unable to drop a profile here"
+msgstr ""
+
+#: ../src/nact/nact-tree-model-dnd.c:121
+msgid "Unable to drop an action or a menu here"
+msgstr ""
+
+#: ../src/nact/nact-tree-model-dnd.c:122
+msgid "Unable to drop here as parent is not writable"
+msgstr ""
+
+#: ../src/nact/nact-tree-model-dnd.c:123
+msgid "Unable to drop here as level zero is not writable"
+msgstr ""
+
+#: ../src/nact/nact-tree-model-dnd.c:873
+msgid "Some messages have occurred during drop operation."
+msgstr ""
+
+#: ../src/nact/nact-window.c:358
+msgid "An error has occured when trying to save the item"
+msgstr ""
+
+#: ../src/nact/nact-window.c:404
+msgid "An error has occured when trying to delete the item"
+msgstr ""
+
+#: ../src/nact/nact-window.c:461
 #, c-format
-msgid "Can't find profile named '%s'"
+msgid "Some items have been modified."
+msgstr "一些项目已被修改。"
+
+#: ../src/nact/nact-window.c:462
+msgid "Are you sure you want to quit without saving them ?"
 msgstr ""
 
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:184
-msgid " and some profiles are incomplete: "
+#. i18n: title of the About dialog box, when seen from Nautilus file manager
+#. i18n: label of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:300
+#: ../src/plugin-menu/nautilus-actions.c:967
+msgid "Nautilus Actions"
+msgstr "Nautilus 动作"
+
+#. i18n: tooltip of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:969
+msgid ""
+"A submenu which embeds the currently available Nautilus Actions extensions"
 msgstr ""
 
-#. i18n notes: this is a list separator, it can have more than one character (ie, in French it will be ", ")
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:204
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:717
-msgid ","
+#: ../src/plugin-menu/nautilus-actions.c:1016
+msgid "About Nautilus Actions"
+msgstr "关于 Nautilus 动作"
+
+#: ../src/plugin-menu/nautilus-actions.c:1017
+msgid "Display information about Nautilus Actions"
+msgstr "显示关于 Nautilus 动作的信息"
+
+#: ../src/test/test-reader.c:49
+msgid "The URI of the file to be imported"
 msgstr ""
 
-#. i18n notes: will be displayed in an error dialog concatenated to another error message
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:303
+#: ../src/test/test-reader.c:49 ../src/utils/nautilus-actions-run.c:63
+msgid "<URI>"
+msgstr "<URI>"
+
+#: ../src/test/test-reader.c:56 ../src/utils/nautilus-actions-new.c:139
+#: ../src/utils/nautilus-actions-run.c:70
+#: ../src/utils/nautilus-actions-schemas.c:92
+msgid "Output the version number"
+msgstr "输出版本号"
+
+#: ../src/test/test-reader.c:112
+msgid "Import a file."
+msgstr "导入一个文件。"
+
+#: ../src/test/test-reader.c:126 ../src/utils/nautilus-actions-new.c:335
+#: ../src/utils/nautilus-actions-run.c:197
+#: ../src/utils/nautilus-actions-schemas.c:176
+msgid ""
+"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
+"mail to <maintainer@nautilus-actions.org>.\n"
+msgstr ""
+
+#: ../src/test/test-reader.c:134 ../src/utils/nautilus-actions-new.c:349
+#: ../src/utils/nautilus-actions-run.c:205
+#: ../src/utils/nautilus-actions-schemas.c:184
+msgid "Miscellaneous options"
+msgstr "杂项"
+
+#: ../src/test/test-reader.c:155 ../src/utils/nautilus-actions-new.c:179
+#: ../src/utils/nautilus-actions-run.c:111
+#: ../src/utils/nautilus-actions-schemas.c:125
 #, c-format
-msgid "%s (one missing key: %s)%s"
-msgid_plural "%s (missing keys: %s)%s"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Syntax error: %s\n"
+msgstr "语法错误：%s\n"
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:682
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:817
+#: ../src/test/test-reader.c:170
+#, c-format
+msgid "Error: uri is mandatory.\n"
+msgstr ""
+
+#: ../src/test/test-reader.c:182 ../src/utils/nautilus-actions-new.c:555
+#: ../src/utils/nautilus-actions-run.c:426
+#: ../src/utils/nautilus-actions-schemas.c:369
+#, c-format
+msgid "Try %s --help for usage.\n"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:117
+msgid "Set it if the item should be disabled at creation"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:119
+msgid "Set it if the item doesn't target the context menu"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:121
+msgid "Set it if the item doesn't target the toolbar"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:123
+msgid "Set it if the basename patterns are case insensitive"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:130
+msgid "Store the newly created action as a GConf configuration"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:132
+msgid ""
+"The path of the folder where to write the new action as a GConf dump output "
+"[default: stdout]"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:143
+#, c-format
+msgid "Error: '%s' and '%s' options cannot both be specified.\n"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:192
+#, c-format
+msgid "Error: an action label is mandatory.\n"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:223
+#, c-format
+msgid "Error: only one output option may be specified.\n"
+msgstr ""
+
+#. i18n: Action <action_label> written to...
+#: ../src/utils/nautilus-actions-new.c:236
+#, c-format
+msgid "Action '%s' succesfully written to GConf configuration.\n"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:316
+msgid ""
+"Define a new action.\n"
+"\n"
+"  The created action defaults to be written to stdout.\n"
+"  It can also be written to an output folder, in a file later suitable for "
+"an import in NACT.\n"
+"  Or you may choose to directly write the action into your GConf "
+"configuration."
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:344
+msgid "Output of the program"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-new.c:344
+msgid "Choose where the program creates the action"
+msgstr ""
+
+#. i18n: unable to create <output_dir> dir: <strerror_message>
+#: ../src/utils/nautilus-actions-new.c:470
+#, c-format
+msgid "Error: unable to create %s dir: %s"
+msgstr ""
+
+#. i18n: Action <action_label> written to <output_filename>...
+#: ../src/utils/nautilus-actions-new.c:484
 #, c-format
 msgid ""
-"This XML file is not a valid Nautilus-actions config file (found <%s> "
-"element instead of <%s>)"
+"Action '%s' succesfully written to %s, and ready to be imported in NACT.\n"
 msgstr ""
 
-#. if the version of the file is greater than the current one, we reject the file
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:696
-#, c-format
-msgid ""
-"This config file is more recent than this version of Nautilus-actions can "
-"support. Please upgrade Nautilus-actions to the latest version if you want "
-"to be able to import it (File version: %s (max supported version : %s))"
+#: ../src/utils/nautilus-actions-new.c:517
+msgid "Error: unable to find 'na-gconf' provider."
 msgstr ""
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:744
-#, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)%s"
-msgid_plural ""
-"This XML file is not a valid Nautilus-actions config file (missing keys: %s)%"
-"s"
-msgstr[0] ""
-msgstr[1] ""
-
-#. No error occured but we have not found the "version" gconf key
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:753
-#, c-format
-msgid ""
-"This XML file is not a valid Nautilus-actions config file (missing key: %s)"
+#: ../src/utils/nautilus-actions-run.c:61
+msgid "The internal identifiant of the action to be launched"
 msgstr ""
 
-#. i18n notes: will be displayed in an error dialog
-#: ../libnautilus-actions/nautilus-actions-config-schema-reader.c:827
-#, c-format
+#: ../src/utils/nautilus-actions-run.c:63
 msgid ""
-"This XML file is not a valid Nautilus-actions config file (root node is <%s> "
-"instead of <%s>)"
+"A target, file or folder, for the action. More than one options may be "
+"specified"
 msgstr ""
+
+#: ../src/utils/nautilus-actions-run.c:126
+#, c-format
+msgid "Error: action id is mandatory.\n"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-run.c:151
+#, c-format
+msgid "No current selection. Nothing to do. Exiting.\n"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-run.c:156
+#, c-format
+msgid "Action %s is not a valid candidate. Exiting.\n"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-run.c:162
+#, c-format
+msgid "No valid profile is candidate to execution. Exiting.\n"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-run.c:183
+msgid "Execute an action on the specified target."
+msgstr ""
+
+#: ../src/utils/nautilus-actions-run.c:230
+#, c-format
+msgid "Error: action '%s' doesn't exist.\n"
+msgstr "错误：动作 %s 不存在。\n"
+
+#: ../src/utils/nautilus-actions-run.c:235
+#, c-format
+msgid "Error: action '%s' is disabled.\n"
+msgstr "错误：动作 %s 不可用。\n"
+
+#: ../src/utils/nautilus-actions-run.c:243
+#, c-format
+msgid "Error: action '%s' is not valid.\n"
+msgstr "错误：动作 %s 无效。\n"
+
+#: ../src/utils/nautilus-actions-run.c:277
+#, c-format
+msgid "Error: unable to get a connection to session DBus: %s"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-run.c:288
+#, c-format
+msgid "Error: unable to get a proxy on %s service"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-run.c:298
+#, c-format
+msgid "Error on GetSelectedPaths call: %s"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-schemas.c:87
+msgid "Output the schema on stdout"
+msgstr ""
+
+#: ../src/utils/nautilus-actions-schemas.c:162
+msgid "Output the Nautilus Actions GConf schema on stdout."
+msgstr ""
+
+#~ msgid "8080"
+#~ msgstr "8080"
+
+#, fuzzy
+#~ msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
+#~ msgstr "(C) 2005 Frederic Ruaudel <grumz@grumz.net>"
+
+#, fuzzy
+#~ msgid "<b>%%</b>: a percent sign"
+#~ msgstr "<b>%%</b>：百分号"
+
+#~ msgid "<b>Action</b>"
+#~ msgstr "<b>动作</b>"
+
+#, fuzzy
+#~ msgid "<b>Appears if selection contains</b>"
+#~ msgstr "矩形选区"
+
+#~ msgid "<b>Nautilus Menu Item</b>"
+#~ msgstr "<b>Nautilus 菜单项</b>"
+
+#~ msgid "<i><b><span size=\"small\">e.g., %s</span></b></i>"
+#~ msgstr "<i><b><span size=\"small\">如 %s</span></b></i>"
+
+#, fuzzy
+#~ msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
+#~ msgstr "<span size=\"larger\"><b>参数标志</b></span>"
+
+#, fuzzy
+#~ msgid "Advanced Conditions"
+#~ msgstr "<b>外观条件</b>"
+
+#, fuzzy
+#~ msgid "Click to add a new scheme."
+#~ msgstr "用“%s”打开选中的项目"
+
+#, fuzzy
+#~ msgid "File to Import:"
+#~ msgstr "要导入的文件："
+
+#, fuzzy
+#~ msgid "Filenames:"
+#~ msgstr "文件模式："
+
+#, fuzzy
+#~ msgid "Icon:"
+#~ msgstr "图标："
+
+#~ msgid "Import new configurations"
+#~ msgstr "导入新配置"
+
+#~ msgid "Import/Export"
+#~ msgstr "导入/导出"
+
+#, fuzzy
+#~ msgid "Import/Export Settings"
+#~ msgstr "导入/导出"
+
+#, fuzzy
+#~ msgid "Label of the menu item in the Nautilus popup menu."
+#~ msgstr "在 Nautilus 弹出菜单中添加项目"
+
+#, fuzzy
+#~ msgid "Nautilus Action Editor"
+#~ msgstr "Nautilus 动作"
+
+#~ msgid "Only files"
+#~ msgstr "仅文件"
+
+#~ msgid "Only folders"
+#~ msgstr "仅文件夹"
+
+#~ msgid "Parameters:"
+#~ msgstr "参数："
+
+#~ msgid "Path:"
+#~ msgstr "路径："
+
+#~ msgid "Project Website"
+#~ msgstr "项目网站"
+
+#, fuzzy
+#~ msgid ""
+#~ "Select the configurations you want to export. Use Shift or Ctrl key to "
+#~ "select more than one."
+#~ msgstr "选择您想要导出的配置："
+
+#, fuzzy
+#~ msgid "Select the configurations you want to export:"
+#~ msgstr "选择您想要导出的配置："
+
+#, fuzzy
+#~ msgid "Select the file you want to import."
+#~ msgstr "选择您想要导出的配置："
+
+#~ msgid "Tooltip:"
+#~ msgstr "工具提示："
+
+#, fuzzy
+#~ msgid "_Browse"
+#~ msgstr "浏览(_B)..."
+
+#~ msgid "Icon"
+#~ msgstr "图标"
+
+#~ msgid "Edit Action \"%s\""
+#~ msgstr "编辑动作“%s”"
+
+#~ msgid "Description"
+#~ msgstr "描述"
+
+#, fuzzy
+#~ msgid "Edit Profile \"%s\""
+#~ msgstr "编辑动作“%s”"
+
+#, fuzzy
+#~ msgid "The icon of the menu item (filename or GTK stock ID)"
+#~ msgstr "菜单项的图标"
+
+#, fuzzy
+#~ msgid "Set it if the selection can contain folders"
+#~ msgstr "矩形选区"
+
+#, fuzzy
+#~ msgid " Failed: %s\n"
+#~ msgstr "视图失败"
+
+#, fuzzy
+#~ msgid ""
+#~ "The list of GnomeVFS schemes where the selected files should be located"
+#~ msgstr "无法确定选中文件的权限。"
+
+#, fuzzy
+#~ msgid "Can't save action '%s'"
+#~ msgstr "管理动作"
 
 #~ msgid " "
 #~ msgstr " "
@@ -954,17 +2424,11 @@ msgstr ""
 #~ msgid "Import all my old configs"
 #~ msgstr "导入我所有的旧配置"
 
-#~ msgid "Type of configuration :"
-#~ msgstr "配置类型："
-
 #~ msgid "translator-credits"
 #~ msgstr "Funda Wang <fundawang@linux.net.cn>, 2005"
 
 #~ msgid "Manage your actions using NACT configuration tool"
 #~ msgstr "使用 NACT 配置工具管理您的动作"
-
-#~ msgid "FILE"
-#~ msgstr "文件"
 
 #, fuzzy
 #~ msgid "The name of the new converted GConf schema file"
