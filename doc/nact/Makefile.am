@@ -30,7 +30,8 @@
 # http://live.gnome.org/GnomeDocUtilsMigrationHowTo
 #
 # do not use the $(NULL) syntax here as this may prevent Damned-Lies
-# to correctly generate POT files (cf. mail of Claude Paroz 2008-08-29)
+# to correctly generate POT files (cf. mail of Claude Paroz 2010-08-29
+# http://mail.gnome.org/archives/gnome-i18n/2010-August/msg00229.html).
 #
 # This produces the Nautilus-Actions Configuration Tool (NACT) Users's Manual.
 # As a user's manual, it may be translated.
