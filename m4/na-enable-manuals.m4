@@ -51,7 +51,7 @@ AC_DEFUN([_AC_ARG_NA_ENABLE_HTML_MANUALS],[
 		[html-manuals],
 		AC_HELP_STRING(
 			[--enable-html-manuals],
-			[build HTML manuals @<:@no@:>@]),,[enable_html_manuals="no"])
+			[build HTML manuals @<:@default=no@:>@]),,[enable_html_manuals="no"])
 ])
 
 AC_DEFUN([_AC_ARG_NA_WITH_DB2HTML],[
@@ -106,7 +106,7 @@ AC_DEFUN([_AC_ARG_NA_ENABLE_PDF_MANUALS],[
 		[pdf-manuals],
 		AC_HELP_STRING(
 			[--enable-pdf-manuals],
-			[use dblatex to build PDF manuals @<:@default=no@:>@]),,[enable_pdf_manuals="no"])
+			[build PDF manuals (use dblatex) @<:@default=no@:>@]),,[enable_pdf_manuals="no"])
 ])
 
 AC_DEFUN([_CHECK_FOR_PDF_MANUALS],[
