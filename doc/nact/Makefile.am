@@ -37,10 +37,17 @@
 # As a user's manual, it may be translated.
 # Default is to produce DocBook XML documents, suitable for Yelp, the
 # Gnome help system.
-# --enable-html-manuals and --enable-pdf-manuals are configure options
-# which produce HTML and PDF formats. These options are always enabled
+#
+# --enable-html-manuals (resp. --enable-pdf-manuals) are configure options
+# which produce HTML (resp. PDF) formats. These options are always enabled
 # when making distcheck, so that all output formats for all known locales
 # are always included in the distributed tarball.
+#
+# Note that gnome-doc-tool generates and distributes the translated xml
+# files in doc/nact/<lang>/. When installing, g-d-t installs these help
+# files in <datadir>/gnome/help/nautilus-actions-config-tool/<lang>.
+# At install time, missing tranlated images are replace with symlinks to
+# ../../C/figures/<image.png>.
 
 include $(top_srcdir)/gnome-doc-utils.make
 
@@ -109,28 +116,6 @@ DOC_FIGURES = \
 
 DOC_LINGUAS = de es
 
-# generate HTML and PDF NACT user's manual if 
-# --enable-html-manuals and/or --enable-pdf-manuals have been set
-# the generated docs are installed in pkgdocdir/doc/{html|pdf}/
-#
-# translations only have .po files (should also have figures/ subdirectory)
-# so do not generate HTML/PDF documents for them
-#
-# an alternative for generating HTML manual is
-# gnome-doc-tool html -o xhtml -d0 nautilus-actions-config-tool.xml
-# which is part of gnome-doc-utils package
-# - xhtml subdirectory has to be previously created
-# - figures subdirectory has to be copied to xhtml/
-# - there is (as of 2010-09-03) no icon for notes and tips
-# the produced output is very close of what Yelp gives, with in particular
-# summaries in each chapter while db2html does not produce them
-#
-# contrarily, gnome-doc-tool does not produce the legal and abstract
-# in top of the document, while db2html does.
-#
-# both db2html and gnome-doc-tool do not honor external links;
-# they are converted to simple links which target the same frame window
-
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
 all-local: all-manuals
@@ -147,42 +132,67 @@ uninstall-manuals: uninstall-html-manuals uninstall-pdf-manuals
 
 dist-hook: doc-dist-hook dist-html-manuals-hook dist-pdf-manuals-hook
 
+# Build HTML manuals as <lang>/html/<module>.html
+#
+# The '_DOC_LC_DOCS' prerequisite ensures that the translated .xml doc
+# has been generated (path is po -> mo -> xml)
+#
+# An alternative for generating HTML manual is
+# gnome-doc-tool html -o xhtml -d0 nautilus-actions-config-tool.xml
+# which is part of gnome-doc-utils package:
+# - xhtml subdirectory has to be previously created
+# - figures subdirectory has to be copied to xhtml/
+# - there is (as of 2010-09-03) no icon for notes and tips.
+# The produced output is very close of what Yelp gives, with in particular
+# summaries in each chapter while db2html does not produce them
+#
+# Contrarily, gnome-doc-tool does not produce the legal and abstract
+# in top of the document, while db2html does.
+#
+# Both db2html and gnome-doc-tool do not honor external links;
+# they are converted to simple links which target the same frame window
+
 if ENABLE_HTML_MANUALS
 all-html-manuals: html.stamp
+	@echo "in all-html-manuals"
 
-html.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
+html.stamp: $(_DOC_LC_DOCS)
+	@echo "in html-stamp"
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		rm -fr $$i/$(DOC_MODULE).junk; \
 		if ! test -d $$i; then $(MKDIR_P) $$i; fi; \
 		(cd $$i; \
-		 copied=0; \
-		 if test ! -f $(DOC_MODULE).xml; then cp -v $(abs_srcdir)/C/*.xml .; copied=1; fi; \
 		 if test "x$(WITH_DB2HTML)" = "xyes"; then \
-			_htmlsubdir=$(DOC_MODULE); \
-			echo "Generating $$i/$$_htmlsubdir/$(DOC_MODULE).html ..."; \
+			echo "Generating $$i/html/$(DOC_MODULE).html ..."; \
 			db2html --nochunks $(DOC_MODULE).xml; \
+			mv -v $(DOC_MODULE) html; \
 		 fi; \
 		 if test "x$(WITH_GDT)" = "xyes"; then \
-			_htmlsubdir=xhtml; \
-			echo "Generating $$i/$$_htmlsubdir/$(DOC_MODULE).html ..."; \
-		 	if ! test -d $$_htmlsubdir; then $(MKDIR_P) $$_htmlsubdir; fi; \
-			gnome-doc-tool html -o $$_htmlsubdir -d0 $(DOC_MODULE).xml; \
+			echo "Generating $$i/html/$(DOC_MODULE).html ..."; \
+		 	if ! test -d html; then $(MKDIR_P) html; fi; \
+			gnome-doc-tool html -o html -d0 $(DOC_MODULE).xml; \
 		 fi; \
-		 if test -d $(abs_srcdir)/$$i/figures; then cp -rp $(abs_srcdir)/$$i/figures $$_htmlsubdir/; fi; \
-		 chmod -R u+w $$_htmlsubdir; \
-		 if test $$copied -eq 1; then rm -f *.xml; fi \
+		 chmod -R u+w html; \
 		); \
 	done
 	touch html.stamp
+else
+all-html-manuals:
+endif
 
-# if --htmldir has not been specified, then we default to PKGDOCDIR/html
+# Install HTML manuals if they exist (do not try to rebuild them)
+#
+# If --htmldir has not been specified, then we default to PKGDOCDIR/html
 # in all case, we append the locale as a subdirectory level
 #
-# note that we do not honor here the --with-html-dir gtk-doc option,
-# but the --htmldir autotools option
+# Note that we do not honor here the --with-html-dir gtk-doc option,
+# but the --htmldir autotools one
 #
-# as html have multiple files, we create a per-document subdirectory
-install-html-manuals:
+# As html have multiple files, we create a per-document subdirectory
+# as <pkgdocdir>/html/<lc>/nact/<module>.html
+
+install-html-manuals: install-html-figs
+	@echo "in install-html-manuals"
 	@-for _lc in C $(_DOC_REAL_LINGUAS); do \
 		if test "$(htmldir)" = "$(docdir)"; then \
 			_destdir=$(DESTDIR)$(pkgdocdir)/html/$$_lc/nact; \
@@ -190,10 +200,8 @@ install-html-manuals:
 			_destdir=$(DESTDIR)$(htmldir)/$$_lc/nact; \
 		fi; \
 		if ! test -d $$_destdir; then $(MKDIR_P) $$_destdir; fi; \
-		if test "x$(WITH_DB2HTML)" = "xyes"; then _htmlsubdir=$(DOC_MODULE); fi; \
-		if test "x$(WITH_GDT)" = "xyes"; then _htmlsubdir=xhtml; fi; \
-		_srcdir=$(top_builddir)/doc/nact/$$_lc/$$_htmlsubdir; \
-		find $$_srcdir -type f | while read _f; do \
+		_srcdir=$(top_builddir)/doc/nact/$$_lc/html; \
+		find $$_srcdir -type f | grep -v '/figures/' | while read _f; do \
 			_dname=`dirname $$_f`; \
 			_subdir=`echo "$$_dname" | sed "s|^$$_srcdir[/]*||"`; \
 			if ! test -d "$$_destdir/$$_subdir"; then $(MKDIR_P) "$$_destdir/$$_subdir"; fi; \
@@ -211,29 +219,81 @@ uninstall-html-manuals:
 	fi; \
 	rm -fr $$_instdir
 
-dist-html-manuals-hook:
-	for _lc in C $(_DOC_REAL_LINGUAS); do \
-		$(MKDIR_P) $(distdir)/html/$$_lc; \
-		if test "x$(WITH_DB2HTML)" = "xyes"; then _htmlsubdir=$(DOC_MODULE); fi; \
-		if test "x$(WITH_GDT)" = "xyes"; then _htmlsubdir=xhtml; fi; \
-		cp -r $(top_builddir)/doc/nact/$$_lc/$$_htmlsubdir/* $(distdir)/html/$$_lc/; \
+# copied from gnome-doc-utils.make install-doc-figs target
+# modified to install the figures with html manuals
+install-html-figs:
+	@echo "in install-html-figs"
+	if test "$(htmldir)" = "$(docdir)"; then \
+		_instdir=$(DESTDIR)$(pkgdocdir)/html; \
+	else \
+		_instdir=$(DESTDIR)$(htmldir); \
+	fi; \
+	list='$(patsubst C/%,%,$(_DOC_C_FIGURES))'; \
+	for lc in C $(_DOC_REAL_LINGUAS); do \
+	  if test -f $(top_builddir)/doc/nact/$$lc/html/$(DOC_MODULE).html; then \
+		for fig in $$list; do \
+			figsymlink=false; \
+			if test -f "$$lc/$$fig"; then \
+				figfile="$$lc/$$fig"; \
+			elif test -f "$(srcdir)/$$lc/$$fig"; then \
+				figfile="$(srcdir)/$$lc/$$fig"; \
+			else \
+				figsymlink=true; \
+			fi; \
+			figdir=`echo $$fig | sed -e 's/^\(.*\/\).*/\1/' -e '/\//!s/.*//'`; \
+			figdir="$$_instdir/$$lc/nact/$$figdir"; \
+			if ! test -d "$$figdir"; then echo "$(mkinstalldirs) $$figdir"; $(mkinstalldirs) "$$figdir"; fi; \
+			figbase=`echo $$fig | sed -e 's/^.*\///'`; \
+			if $$figsymlink; then \
+				echo "cd $$figdir && $(LN_S) -f ../../C/$$fig $$figbase"; \
+				( cd "$$figdir" && $(LN_S) -f "../../C/$$fig" "$$figbase" ); \
+			else \
+				echo "$(INSTALL_DATA) $$figfile $$figdir$$figbase"; \
+				$(INSTALL_DATA) "$$figfile" "$$figdir$$figbase"; \
+			fi; \
+		done; \
+	  fi; \
 	done
-	find $(distdir)/html -type d -exec chmod 755 {} \;
-	find $(distdir)/html -type f -exec chmod 644 {} \;
-else
-all-html-manuals:
-
-install-html-manuals:
-
-uninstall-html-manuals:
 
 dist-html-manuals-hook:
-endif
+	list='$(patsubst C/%,%,$(_DOC_C_FIGURES))'; \
+	for lc in C $(_DOC_REAL_LINGUAS); do \
+	  if test -f $(top_builddir)/doc/nact/$$lc/html/$(DOC_MODULE).html; then \
+		$(MKDIR_P) $(distdir)/$$lc/html; \
+		cp $(top_builddir)/doc/nact/$$lc/html/* $(distdir)/$$lc/html/; \
+		for fig in $$list; do \
+			figsymlink=false; \
+			if test -f "$$lc/$$fig"; then \
+				figfile="$$lc/$$fig"; \
+			elif test -f "$(srcdir)/$$lc/$$fig"; then \
+				figfile="$(srcdir)/$$lc/$$fig"; \
+			else \
+				figsymlink=true; \
+			fi; \
+			figdir=`echo $$fig | sed -e 's/^\(.*\/\).*/\1/' -e '/\//!s/.*//'`; \
+			figdir="$$distdir/$$lc/html/$$figdir"; \
+			if ! test -d "$$figdir"; then echo "$(mkinstalldirs) $$figdir"; $(mkinstalldirs) "$$figdir"; fi; \
+			figbase=`echo $$fig | sed -e 's/^.*\///'`; \
+			if $$figsymlink; then \
+				echo "cd $$figdir && $(LN_S) -f ../../C/$$fig $$figbase"; \
+				( cd "$$figdir" && $(LN_S) -f "../../C/$$fig" "$$figbase" ); \
+			else \
+				echo "$(INSTALL_DATA) $$figfile $$figdir$$figbase"; \
+				$(INSTALL_DATA) "$$figfile" "$$figdir$$figbase"; \
+			fi; \
+		done; \
+	  fi; \
+	done
+	find $(distdir) -type d -exec chmod 755 {} \;
+	find $(distdir) -type f -exec chmod 644 {} \;
 
+# Build pdf manuals as <lang>/<module>.pdf
 if ENABLE_PDF_MANUALS
-all-pdf-manuals: pdf.stamp
+all-pdf-manuals: pdf-figs.stamp pdf.stamp
+	@echo "in all-pdf-manuals"
 
-pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
+pdf.stamp: $(_DOC_LC_DOCS)
+	@echo "in pdf.stamp"
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		_target=$$i/$(DOC_MODULE).pdf; \
 		echo "Generating $$_target ..."; \
@@ -243,11 +303,34 @@ pdf.stamp: $(_DOC_C_DOCS) $(_DOC_C_FIGURES) $(_DOC_LC_DOCS) ChangeLog
 	done
 	touch pdf.stamp
 
+# copied from gnome-doc-utils.make install-doc-figs target
+# modified to have the figures available when building pdf manuals
+# not trying to symlinl C/figures/ 
+pdf-figs.stamp:
+	@echo "in build-pdf-figs"
+	@list='$(patsubst C/%,%,$(_DOC_C_FIGURES))'; for fig in $$list; do \
+	  for lc in $(_DOC_REAL_LINGUAS); do \
+	    figdir="$$lc/"`echo $$fig | sed -e 's/^\(.*\/\).*/\1/' -e '/\//!s/.*//'`; \
+	    figdir="$(builddir)/$$figdir"; \
+	    if ! test -d "$$figdir"; then echo "$(MKDIR_P) $$figdir"; $(MKDIR_P) "$$figdir"; fi; \
+	    figbase=`echo $$fig | sed -e 's/^.*\///'`; \
+	    if ! test -f "$$lc/$$fig"; then \
+	      echo "cd $$figdir && $(LN_S) -f ../../C/$$fig $$figbase"; \
+	      ( cd "$$figdir" && $(LN_S) -f "../../C/$$fig" "$$figbase" ); \
+	    fi; \
+	  done; \
+	done
+	touch pdf-figs.stamp
+else
+all-pdf-manuals:
+endif
+
 # if --pdfdir has not been specified, then we default to PKGDOCDIR/pdf
 # in all case, we append the locale as a subdirectory level
 #
 # as pdf are monobloc documents, we do not create a per-document subdir
 install-pdf-manuals:
+	@echo "in install-pdf-manuals"
 	@-for _lc in C $(_DOC_REAL_LINGUAS); do \
 		_srcdir=$(top_builddir)/doc/nact/$$_lc; \
 		if test "$(pdfdir)" = "$(docdir)"; then \
@@ -271,21 +354,12 @@ uninstall-pdf-manuals:
 dist-pdf-manuals-hook:
 	for _lc in C $(_DOC_REAL_LINGUAS); do \
 		$(MKDIR_P) $(distdir)/pdf/$$_lc; \
-		cp $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE).pdf $(distdir)/pdf/$$_lc/; \
+		cp $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE).pdf $(distdir)/$$_lc/; \
 	done
-	find $(distdir)/pdf -type d -exec chmod 755 {} \;
-	find $(distdir)/pdf -type f -exec chmod 644 {} \;
-else
-all-pdf-manuals:
+	find $(distdir) -type d -exec chmod 755 {} \;
+	find $(distdir) -type f -exec chmod 644 {} \;
 
-install-pdf-manuals:
-
-uninstall-pdf-manuals:
-
-dist-pdf-manuals-hook:
-endif
-
-clean-local: clean-html-manuals clean-pdf-manuals
+clean-local: clean-html-manuals clean-pdf-manuals clean-figs
 	rm -f *~
 	rm -f *.stamp
 
@@ -295,10 +369,18 @@ clean-html-manuals:
 	for lc in C $(_DOC_REAL_LINGUAS); do \
 		rm -fr $$lc/$(DOC_MODULE); \
 		rm -fr $$lc/$(DOC_MODULE).junk; \
-		rm -fr $$lc/xhtml; \
+		rm -fr $$lc/html; \
 	done
 
 clean-pdf-manuals:
 	for lc in C $(_DOC_REAL_LINGUAS); do \
 		rm -f $$lc/*.pdf; \
+	done
+
+clean-figs:
+	for lc in $(_DOC_REAL_LINGUAS); do \
+		if test -d $$lc/figures; then \
+			for l in `find $$lc/figures -type l`; do rm -vf $$l; done; \
+			(rmdir $$lc/figures 2>/dev/null && echo "rmdir $$lc/figures"); \
+		fi; \
 	done

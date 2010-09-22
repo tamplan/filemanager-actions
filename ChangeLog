@@ -1,3 +1,10 @@
+2010-09-23 Pierre Wieser <pwieser@trychlos.org>
+
+	* doc/nact/Makefile.am:
+	Do not rebuild pdf files each time make is run.
+	Have figures available when pdf are built.
+	Install figures with html documents.
+
 2010-09-04 Pierre Wieser <pwieser@trychlos.org>
 
 	* doc/nact/Makefile.am: Fix make distcheck.
