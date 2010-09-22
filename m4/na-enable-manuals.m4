@@ -28,18 +28,25 @@
 
 # serial 1 creation
 
-dnl add:
-dnl --enable-html-manuals output user manual in HTML, all locales
-dnl --enable-pdf-manuals  output user manual in PDF, all locales
-dnl --with-db2html        use db2html (docbook-utils) to generate HTML
-dnl --with-gdt            use gnome-doc-tool (gnome-doc-utils) to generate HTML (default)
+dnl --enable-html-manuals[=gdt|db2html]
+dnl   generates HTML manuals for all locales
+dnl   if no option is given, first try gnome-doc-tool (from gnome-doc-utils)
+dnl   then fallback to db2html (from docbook-utils).
+dnl   else one may specify
+dnl   --enable-html-manuals=gdt
+dnl   or
+dnl   --enable-html-manuals=db2html
+dnl   in this case, fail if the specified tool is not found
+dnl
+dnl --enable-pdf-manuals[=dblatex]
+dnl   output PDF manuals for all locales
+dnl   only use dblatex for now
+dnl   only '=dblatex' option is recognized for now.
 dnl
 dnl usage:  NA_ENABLE_MANUALS
 
 AC_DEFUN([NA_ENABLE_MANUALS],[
 	AC_REQUIRE([_AC_ARG_NA_ENABLE_HTML_MANUALS])dnl
-	AC_REQUIRE([_AC_ARG_NA_WITH_DB2HTML])dnl
-	AC_REQUIRE([_AC_ARG_NA_WITH_GDT])dnl
 	AC_REQUIRE([_AC_ARG_NA_ENABLE_PDF_MANUALS])dnl
 	
 	_CHECK_FOR_HTML_MANUALS
@@ -50,75 +57,70 @@ AC_DEFUN([_AC_ARG_NA_ENABLE_HTML_MANUALS],[
 	AC_ARG_ENABLE(
 		[html-manuals],
 		AC_HELP_STRING(
-			[--enable-html-manuals],
-			[build HTML manuals @<:@default=no@:>@]),,[enable_html_manuals="no"])
-])
-
-AC_DEFUN([_AC_ARG_NA_WITH_DB2HTML],[
-	AC_ARG_WITH(
-		[db2html],
-		AC_HELP_STRING(
-			[--with-db2html],
-			[use db2html to generate HTML documents @<:@no@:>@]),,[with_db2html="no"])
-])
-
-AC_DEFUN([_AC_ARG_NA_WITH_GDT],[
-	AC_ARG_WITH(
-		[gdt],
-		AC_HELP_STRING(
-			[--with-gdt],
-			[use gnome-doc-tool to generate HTML documents @<:@yes@:>@]),,[with_gdt="yes"])
+			[--enable-html-manuals@<:@=gdt|db2html@:>@],
+			[build HTML manuals]),
+			[enable_html_manuals=$enableval],
+			[enable_html_manuals="no"])
 ])
 
 AC_DEFUN([_CHECK_FOR_HTML_MANUALS],[
 	AC_MSG_CHECKING([whether to build HTML manuals])
-	AC_MSG_RESULT(${enable_html_manuals})
-
-	if test "x${enable_html_manuals}" = "xyes"; then
-		if test "x${with_db2html}" = "xyes" -a "x${with_gdt}" = "xyes"; then
-			AC_MSG_ERROR([--with-db2html and --with-gdt are mutually incompatible])
-		fi
-		if test "x${with_db2html}" = "xno" -a "x${with_gdt}" = "xno"; then
-			AC_MSG_ERROR([--with-db2html or --with-gdt must be choosen])
-		fi
-		if test "x${with_db2html}" = "xyes"; then
-			AC_CHECK_PROG([_db2html_found],[db2html],[yes],[no])
-			if test "x${_db2html_found}" = "xno"; then
-				AC_MSG_ERROR([db2html not available and --enable-html-manuals --with-db2html requested])
+	if test "x${enable_html_manuals}" = "xno"; then
+		AC_MSG_RESULT([no])
+	else
+		AC_MSG_RESULT([yes])
+		if test "x${enable_html_manuals}" = "xyes"; then
+			AC_CHECK_PROG([with_gdt],[gnome-doc-tool],[yes],[no])
+			if test "x${with_gdt}" = "xno"; then
+				AC_CHECK_PROG([with_db2html],[db2html],[yes],[no])
 			fi
+		elif test "x${enable_html_manuals}" = "xgdt"; then
+			AC_CHECK_PROG([with_gdt],[gnome-doc-tool],[yes],[no])
+			with_db2html="no"
+		elif test "x${enable_html_manuals}" = "xdb2html"; then
+			AC_CHECK_PROG([with_db2html],[db2html],[yes],[no])
+			with_gdt="no"
+		else
+			AC_MSG_ERROR([${enable_html_manuals} is not a known tool, must be 'gdt' or 'db2html'])
 		fi
-		if test "x${with_gdt}" = "xyes"; then
-			AC_CHECK_PROG([_gdt_found],[gnome-doc-tool],[yes],[no])
-			if test "x${_gdt_found}" = "xno"; then
-				AC_MSG_ERROR([gnome-doc-tools not available and --enable-html-manuals requested])
-			fi
+		if test "x${with_gdt}" = "xno" -a "x${with_db2html}" = "xno"; then
+			AC_MSG_ERROR([neither gnome-doc-tool not db2html have been found, unable to generate HTML manuals])
 		fi
 	fi
 
 	AC_SUBST([WITH_DB2HTML],[${with_db2html}])
 	AC_SUBST([WITH_GDT],[${with_gdt}])
 
-	AM_CONDITIONAL([ENABLE_HTML_MANUALS], [test "x${enable_html_manuals}" = "xyes"])
+	AM_CONDITIONAL([ENABLE_HTML_MANUALS], [test "x${enable_html_manuals}" != "xno"])
 ])
 
 AC_DEFUN([_AC_ARG_NA_ENABLE_PDF_MANUALS],[
 	AC_ARG_ENABLE(
 		[pdf-manuals],
 		AC_HELP_STRING(
-			[--enable-pdf-manuals],
-			[build PDF manuals (use dblatex) @<:@default=no@:>@]),,[enable_pdf_manuals="no"])
+			[--enable-pdf-manuals@<:@=dblatex@:>@],
+			[build PDF manuals]),
+			[enable_pdf_manuals=$enableval],
+			[enable_pdf_manuals="no"])
 ])
 
 AC_DEFUN([_CHECK_FOR_PDF_MANUALS],[
 	AC_MSG_CHECKING([whether to build PDF manuals])
-	AC_MSG_RESULT(${enable_pdf_manuals})
-
-	if test "x${enable_pdf_manuals}" = "xyes"; then
-		AC_CHECK_PROG([_dblatex_found],[dblatex],[yes],[no])
-		if test "x${_dblatex_found}" = "xno"; then
-			AC_MSG_ERROR([dblatex not available and --enable-pdf-manual requested])
+	if test "x${enable_pdf_manuals}" = "xno"; then
+		AC_MSG_RESULT([no])
+	else
+		AC_MSG_RESULT([yes])
+		if test "x${enable_pdf_manuals}" = "xyes"; then
+			AC_CHECK_PROG([with_dblatex],[dblatex],[yes],[no])
+		elif test "x${enable_pdf_manuals}" = "xdblatex"; then
+			AC_CHECK_PROG([with_dblatex],[dblatex],[yes],[no])
+		else
+			AC_MSG_ERROR([${enable_pdf_manuals} is not a known tool, must be 'dblatex'])
+		fi
+		if test "x${with_dblatex}" = "xno"; then
+			AC_MSG_ERROR([dblatex has not been found, unable to generate PDF manuals])
 		fi
 	fi
 
-	AM_CONDITIONAL([ENABLE_PDF_MANUALS], [test "x${enable_pdf_manuals}" = "xyes"])
+	AM_CONDITIONAL([ENABLE_PDF_MANUALS], [test "x${enable_pdf_manuals}" != "xno"])
 ])
