@@ -2,6 +2,7 @@
 # Copyright (C) 2009, 2010 the author(s) of Nautilus Actions.
 # Copyright (C) 2006 Tomas Kyjovsky.
 # This file is distributed under the same license as the nautilus-actions package.
+#
 # Tomas Kyjovsky <tomas.kyjovsky@mail.muni.cz>, 2006.
 # Petr Kovar <pknbe@volny.cz>, 2010.
 # Marek Černocký <marek@manet.cz>, 2009, 2010.
@@ -10,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-25 22:09+0200\n"
-"PO-Revision-Date: 2010-08-05 10:30+0200\n"
+"POT-Creation-Date: 2010-09-22 02:04+0200\n"
+"PO-Revision-Date: 2010-09-05 21:13+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -36,7 +37,7 @@ msgstr "Určuje kořenovou nabídku „Akcí Nautilus“"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:4
 msgid "Defines the periodicity in minutes of the automatic save."
-msgstr ""
+msgstr "Definuje v minutách, jak často se má automaticky ukládat."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:5
 msgid "Display Edit toolbar"
@@ -85,6 +86,7 @@ msgid ""
 "If TRUE, the pending modifications will be periodically and automatically "
 "saved."
 msgstr ""
+"Pokud je ZAPNUTO, budou nevyřízené změny pravidelně a automaticky ukládány."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:14
 msgid ""
@@ -170,7 +172,7 @@ msgstr "Umístění hlavního panelu"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:28
 msgid "Periodicity of the auto-save"
-msgstr ""
+msgstr "Četnost automatického ukládání"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:29
 msgid "Position and size of the Legend dialog"
@@ -426,9 +428,8 @@ msgid "Whether the GConf I/O provider is locked"
 msgstr "Zda je zprostředkovatel V/V GConf zamknutý"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:64
-#, fuzzy
 msgid "Whether the auto-save feature should be activated"
-msgstr "Zda by klávesa Esc měla zavřít průvodce"
+msgstr "Zda by měla být aktivována funkce automatického ukládání"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
 msgid "Whether the import system should reuse the last choosen import mode."
@@ -1314,7 +1315,6 @@ msgstr "Parametry příkazu"
 
 #. too long string for iso c: (max=509)
 #: ../src/core/na-object-profile-factory.c:130
-#, fuzzy
 msgid ""
 "The parameters of the command to be executed when the user selects the menu "
 "item in the file manager context menu or in the toolbar.\n"
@@ -1368,7 +1368,7 @@ msgstr ""
 "- až od verze „2.0“:\n"
 "  %d : základní složka vybraného souboru či souborů\n"
 "  %f: název vybraného souboru nebo prvního z vybraných, pokud je jich více\n"
-"  %h: název hostitele z URI\n"
+"  %h: název hostitele z adresy URI\n"
 "  %m: mezerami oddělovaný seznam základních názvů vybraných souborů/složek\n"
 "  %M: mezerami oddělovaný seznam vybraných souborů/složek včetně úplných "
 "cest\n"
@@ -1378,24 +1378,26 @@ msgstr ""
 "  %u: adresa URI\n"
 "  %U: jméno uživatele adresy URI\n"
 "  %%: znak procenta\n"
-"  %b: (první) základní název vybraných souborů/složek\n"
+"  %b: (první) základní název\n"
 "  %B: mezerami oddělovaný seznam základních názvů vybraných souborů/složek\n"
 "  %c: počet vybraných souborů/složek\n"
-"  %d: (první) základní složka vybraných souborů/složek\n"
+"  %d: (první) základní složka\n"
 "  %D: mezerami oddělovaný seznam základních složek vybraných souborů/složek\n"
-"  %f: (první) název vybraných souborů/složek\n"
+"  %f: (první) název souboru\n"
 "  %F: mezerami oddělovaný seznam názvů vybraných souborů/složek\n"
 "  %h: název počítače (první) adresy URI\n"
+"  %m: (první) type MIME\n"
+"  %M: mezerami oddělovaný seznam typů MIME vybraných souborů/složek\n"
 "  %n: jméno uživatele (první) adresy URI\n"
 "  %p: číslo portu (první) adresy URI\n"
 "  %s: schéma (první) adresy URI\n"
 "  %u: (první) adresa URI\n"
-"  %U: mezerami oddělovaný seznam vybraných adres URI\n"
+"  %U: mezerami oddělovaný seznam adres URI vybraných souborů/složek\n"
 "  %w: (první) základní název bez přípony\n"
 "  %W: mezerami oddělovaný seznam základních názvů bez přípony\n"
 "  %x: (první) přípona\n"
-"  %X: mezerami oddělovaný seznam přípon\n"
-"  %%: znak procenta"
+"  %X: mezerami oddělovaný seznam přípon vybraných souborů/složek\n"
+"  %%: znak procenta."
 
 #: ../src/core/na-object-profile-factory.c:187
 msgid "Working directory"
@@ -1489,33 +1491,31 @@ msgstr ""
 #: ../src/core/na-selected-info.c:682
 #, c-format
 msgid "Error when querying informations for %s URI: %s"
-msgstr ""
+msgstr "Chyba při dotazování na informace pro adresu URI %s: %s"
 
 #: ../src/core/na-tokens.c:253
-#, fuzzy
 msgid "file:///path/to/file1.mid"
-msgstr "file:///cesta/k/souboru1.text"
+msgstr "file:///cesta/k/souboru1.mid"
 
 #: ../src/core/na-tokens.c:254
-#, fuzzy
 msgid "file:///path/to/file2.jpeg"
-msgstr "file:///cesta/k/souboru2.text"
+msgstr "file:///cesta/k/souboru2.jpeg"
 
 #: ../src/core/na-tokens.c:255
 msgid "audio/x-midi"
-msgstr ""
+msgstr "audio/x-midi"
 
 #: ../src/core/na-tokens.c:256
 msgid "image/jpeg"
-msgstr ""
+msgstr "image/jpeg"
 
-#: ../src/core/na-tokens.c:258 ../src/nact/nact-icommand-tab.c:657
+#: ../src/core/na-tokens.c:258
 msgid "test.example.net"
 msgstr "test.priklad.cz"
 
 #: ../src/core/na-tokens.c:259
 msgid "user"
-msgstr ""
+msgstr "uživatel"
 
 #: ../src/io-desktop/nadp-desktop-provider.c:249
 msgid "Nautilus-Actions Desktop I/O Provider"
@@ -1908,72 +1908,15 @@ msgstr "Filtr základního názvu"
 msgid "Capability filter"
 msgstr "Filtr schopností"
 
-#: ../src/nact/nact-icommand-tab.c:573
+#: ../src/nact/nact-icommand-tab.c:575
 msgid "Choosing a command"
 msgstr "Výběr příkazu"
 
-#: ../src/nact/nact-icommand-tab.c:614
+#: ../src/nact/nact-icommand-tab.c:616
 msgid "Choosing a working directory"
 msgstr "Výběr pracovní složky"
 
-#. i18n notes: example strings for the command preview
-#: ../src/nact/nact-icommand-tab.c:652
-msgid "/path/to"
-msgstr "/cesta/k"
-
-#: ../src/nact/nact-icommand-tab.c:653
-msgid "file1.txt"
-msgstr "soubor1.txt"
-
-#: ../src/nact/nact-icommand-tab.c:653
-msgid "file2.txt"
-msgstr "soubor2.txt"
-
-#: ../src/nact/nact-icommand-tab.c:654
-msgid " folder1"
-msgstr " složka1"
-
-#: ../src/nact/nact-icommand-tab.c:654
-msgid "folder2"
-msgstr "složka2"
-
-#: ../src/nact/nact-icommand-tab.c:655
-msgid " file1.txt"
-msgstr " soubor1.txt"
-
-#: ../src/nact/nact-icommand-tab.c:655
-msgid "folder1"
-msgstr "složka1"
-
-#: ../src/nact/nact-icommand-tab.c:658
-msgid "file.txt"
-msgstr "soubor.txt"
-
-#: ../src/nact/nact-icommand-tab.c:659
-msgid "folder"
-msgstr "složka"
-
-#: ../src/nact/nact-icommand-tab.c:660
-msgid "8080"
-msgstr "8080"
-
-#: ../src/nact/nact-icommand-tab.c:664
-msgid "file:///path/to/file1.text"
-msgstr "file:///cesta/k/souboru1.text"
-
-#: ../src/nact/nact-icommand-tab.c:665
-msgid "file:///path/to/file2.text"
-msgstr "file:///cesta/k/souboru2.text"
-
-#: ../src/nact/nact-icommand-tab.c:666
-msgid "file:///path/to/a/dir"
-msgstr "file:///cesta/ke/složce"
-
-#: ../src/nact/nact-icommand-tab.c:667
-msgid "file:///path/to/another/dir"
-msgstr "file:///cesta/k/jiné/složce"
-
-#: ../src/nact/nact-icommand-tab.c:858
+#: ../src/nact/nact-icommand-tab.c:677
 msgid "e.g.,"
 msgstr "např.,"
 
@@ -2301,7 +2244,7 @@ msgstr "Nový profil"
 
 #: ../src/nact/nact-main-menubar-file.c:446
 msgid "Automatically saving pending modifications..."
-msgstr ""
+msgstr "Automatické ukládání nevyřízených změn…"
 
 #: ../src/nact/nact-main-window.c:1400
 msgid ""
@@ -2703,6 +2646,48 @@ msgstr "Vypsat schéma na standardní výstup"
 #: ../src/utils/nautilus-actions-schemas.c:162
 msgid "Output the Nautilus Actions GConf schema on stdout."
 msgstr "Výpis schématu GConf pro Akce Nautilus na standardní výstup"
+
+#~ msgid "/path/to"
+#~ msgstr "/cesta/k"
+
+#~ msgid "file1.txt"
+#~ msgstr "soubor1.txt"
+
+#~ msgid "file2.txt"
+#~ msgstr "soubor2.txt"
+
+#~ msgid " folder1"
+#~ msgstr " složka1"
+
+#~ msgid "folder2"
+#~ msgstr "složka2"
+
+#~ msgid " file1.txt"
+#~ msgstr " soubor1.txt"
+
+#~ msgid "folder1"
+#~ msgstr "složka1"
+
+#~ msgid "file.txt"
+#~ msgstr "soubor.txt"
+
+#~ msgid "folder"
+#~ msgstr "složka"
+
+#~ msgid "8080"
+#~ msgstr "8080"
+
+#~ msgid "file:///path/to/file1.text"
+#~ msgstr "file:///cesta/k/souboru1.text"
+
+#~ msgid "file:///path/to/file2.text"
+#~ msgstr "file:///cesta/k/souboru2.text"
+
+#~ msgid "file:///path/to/a/dir"
+#~ msgstr "file:///cesta/ke/složce"
+
+#~ msgid "file:///path/to/another/dir"
+#~ msgstr "file:///cesta/k/jiné/složce"
 
 #~ msgid "Caution: a label is mandatory for the profile."
 #~ msgstr "Upozornění: popisek je pro profil povinný."
