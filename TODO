@@ -8,8 +8,6 @@ N-A BUGS
 
 - when error on writing, should let the item modified
 
-- 2.30.3: sort buttons are sensitive even if the list is empty: should not.
-
 TODO
 ====
 - 2010-06-20: is_candidate_for_show_in: get current environment
