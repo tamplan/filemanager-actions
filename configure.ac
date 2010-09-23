@@ -28,7 +28,7 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([Nautilus-Actions],[2.99.6],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+AC_INIT([Nautilus-Actions],[3.0],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
 
 AC_CANONICAL_TARGET
 
