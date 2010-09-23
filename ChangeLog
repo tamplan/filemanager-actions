@@ -1,5 +1,7 @@
 2010-09-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/api/Makefile.am: Fix the warning when overriding GTKDOC_RUN.
+
 	* m4/na-enable-manuals.m4:
 	* run-autogen.sh:
 	Update --enable-html-manuals and --enable-pdf-manuals options.

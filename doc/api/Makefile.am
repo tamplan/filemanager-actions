@@ -100,14 +100,15 @@ AM_LDFLAGS = \
 # Need this to be able to set ourselves GTKDOC_RUN
 # This is extracted from gtk-doc.make
 if GTK_DOC_USE_LIBTOOL
-orig_gtkdoc_run = $(LIBTOOL) --mode=execute
+override GTKDOC_RUN = \
+	$(gtkdoc_run_prefix) $(LIBTOOL) --mode=execute
 else
-orig_gtkdoc_run = sh -c
+override GTKDOC_RUN = \
+	$(gtkdoc_run_prefix) sh -c
 endif
 
-GTKDOC_RUN = \
+gtkdoc_run_prefix = \
 	LD_LIBRARY_PATH=$(core_libdir)				\
-	$(orig_gtkdoc_run)							\
 	$(NULL)
 
 # Extra options to supply to gtkdoc-mkdb
