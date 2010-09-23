@@ -1,3 +1,28 @@
+Version 3.0
+===========
+
+	Release date 2010-09-24
+
+	Modifications:
+
+		- --enable-html-manuals and --enable-pdf-manuals configure options
+		  have been updated to accept the conversion programme as an argument;
+		  --with-db2html and --with-gdt configuration options have so been
+		  removed.
+
+	Bug fixes:
+
+		- Fix HTML and PDF user's manuals build and distribution.
+		- Fix a warning when overriding GTKDOC_RUN.
+
+	New and updated translations:
+
+		- cs (Marek Cernocky, Petr Kovar)
+		- de (Mario Blättermann)
+		- es (Jorge González)
+		- sl (Matej Urbančič, Andrej Žnidaršič)
+		- zh_CN (Aron Xu)
+
 Version 2.99.5
 ==============
 
