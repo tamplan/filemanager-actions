@@ -58,7 +58,7 @@ AC_DEFUN([_AC_ARG_NA_ENABLE_HTML_MANUALS],[
 		[html-manuals],
 		AC_HELP_STRING(
 			[--enable-html-manuals@<:@=gdt|db2html@:>@],
-			[build HTML manuals]),
+			[build HTML manuals @<:@gdt@:>@]),
 			[enable_html_manuals=$enableval],
 			[enable_html_manuals="no"])
 ])
@@ -99,7 +99,7 @@ AC_DEFUN([_AC_ARG_NA_ENABLE_PDF_MANUALS],[
 		[pdf-manuals],
 		AC_HELP_STRING(
 			[--enable-pdf-manuals@<:@=dblatex@:>@],
-			[build PDF manuals]),
+			[build PDF manuals @<:@dblatex@:>@]),
 			[enable_pdf_manuals=$enableval],
 			[enable_pdf_manuals="no"])
 ])
