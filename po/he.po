@@ -7,47 +7,51 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-01 12:28+0300\n"
-"PO-Revision-Date: 2010-07-01 13:46+0200\n"
+"POT-Creation-Date: 2010-09-27 09:23+0200\n"
+"PO-Revision-Date: 2010-09-27 09:26+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:1
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:1
 msgid "Add an 'About' item in the Nautilus context menu"
 msgstr "הוספת פריט 'על אודות' בתפריט ההקשר של Nautilus"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:2
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:2
 msgid "Ask for a confirmation when quitting by Esc"
 msgstr "בקשת אישור בעת היציאה עם Esc"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:3
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:3
 msgid "Define a 'Nautilus Actions' root menu"
 msgstr "הגדרת תפריט עיקרי ל־'פעולות Nautilus'"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:4
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:4
+msgid "Defines the periodicity in minutes of the automatic save."
+msgstr "Defines the periodicity in minutes of the automatic save."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:5
 msgid "Display Edit toolbar"
 msgstr "הצגת סרגל הכלים לעריכה"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:5
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:6
 msgid "Display File toolbar"
 msgstr "הצגת סרגל הכלים לקובץ"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:6
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:7
 msgid "Display Help toolbar"
 msgstr "הצגת סרגל הכלים לעזרה"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:7
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:8
 msgid "Display Tools toolbar"
 msgstr "הצגת סרגל הכלים לכלים"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:8
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:9
 msgid "I/O providers Write priority"
 msgstr "עדיפות הכתיבה לספקי קלט/פלט"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:9
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:10
 msgid ""
 "If TRUE, a confirmation will be requested when quitting an assistant by "
 "hitting the Esc key."
@@ -55,7 +59,7 @@ msgstr ""
 "If TRUE, a confirmation will be requested when quitting an assistant by "
 "hitting the Esc key."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:10
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:11
 msgid ""
 "If TRUE, and if the user has defined a single root menu for its actions, "
 "then an 'About Nautilus Actions' will be displayed at end of the first "
@@ -65,11 +69,19 @@ msgstr ""
 "then an 'About Nautilus Actions' will be displayed at end of the first "
 "submenu."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:11
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:12
 msgid "If TRUE, assistant may be closed by hitting the Esc key."
 msgstr "If TRUE, assistant may be closed by hitting the Esc key."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:12
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:13
+msgid ""
+"If TRUE, the pending modifications will be periodically and automatically "
+"saved."
+msgstr ""
+"If TRUE, the pending modifications will be periodically and automatically "
+"saved."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:14
 msgid ""
 "If TRUE, then a 'Nautilus Actions' item will be defined in the Nautilus "
 "context menu, and will a root menu of all available actions."
@@ -77,35 +89,39 @@ msgstr ""
 "If TRUE, then a 'Nautilus Actions' item will be defined in the Nautilus "
 "context menu, and will a root menu of all available actions."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:13
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:15
 msgid "Import mode"
 msgstr "Import mode"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:14
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:16
+msgid "Keep last choosen import mode"
+msgstr "Keep last choosen import mode"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:17
 msgid "Last folder selected when browsing for a command in the Command tab."
 msgstr "Last folder selected when browsing for a command in the Command tab."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:15
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:18
 msgid "Last folder selected when browsing for an URI in the Folders tab."
 msgstr "Last folder selected when browsing for an URI in the Folders tab."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:16
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:19
 msgid ""
 "Last folder selected when choosing a folder from where import new actions."
 msgstr ""
 "Last folder selected when choosing a folder from where import new actions."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:17
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:20
 msgid ""
 "Last folder selected when choosing a folder where to export the actions."
 msgstr ""
 "Last folder selected when choosing a folder where to export the actions."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:18
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:21
 msgid "Last import mode choosen by the user"
 msgstr "Last import mode choosen by the user"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:19
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:22
 msgid ""
 "Last import mode choosen by the user when he is asked for in import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
@@ -119,7 +135,7 @@ msgstr ""
 "already exists, - \"Override\": override the existing action with the "
 "imported one."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:20
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:23
 msgid ""
 "Last import mode choosen in the Import assistant. Possible values are : - "
 "\"NoImport\": do not import an action whose UUID already exists, - \"Renumber"
@@ -133,37 +149,41 @@ msgstr ""
 "override the existing action with the imported one, - \"Ask\": ask the user "
 "each time."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:21
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:24
 msgid "Last selected folder"
 msgstr "Last selected folder"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:22
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:25
 msgid "List of default schemes"
 msgstr "List of default schemes"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:23
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
 msgid "List of items at first level of the hierarchy"
 msgstr "List of items at first level of the hierarchy"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:24
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:27
 msgid "Main pane position"
 msgstr "Main pane position"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:25
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:28
+msgid "Periodicity of the auto-save"
+msgstr "Periodicity of the auto-save"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:29
 msgid "Position and size of the Legend dialog"
 msgstr "Position and size of the Legend dialog"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:26
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:30
 msgid ""
 "Position and size of the Legend dialog ; default is set by the UI manager."
 msgstr ""
 "Position and size of the Legend dialog ; default is set by the UI manager."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:27
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:31
 msgid "Position and size of the URI chooser window"
 msgstr "Position and size of the URI chooser window"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:28
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:32
 msgid ""
 "Position and size of the URI chooser window in the Folders tab ; default is "
 "set by the window manager."
@@ -171,11 +191,11 @@ msgstr ""
 "Position and size of the URI chooser window in the Folders tab ; default is "
 "set by the window manager."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:29
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:33
 msgid "Position and size of the command chooser window"
 msgstr "Position and size of the command chooser window"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:30
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:34
 msgid ""
 "Position and size of the command chooser window in the Command tab ; default "
 "is set by the window manager."
@@ -183,11 +203,11 @@ msgstr ""
 "Position and size of the command chooser window in the Command tab ; default "
 "is set by the window manager."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:31
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:35
 msgid "Position and size of the export assistant window"
 msgstr "Position and size of the export assistant window"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:32
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:36
 msgid ""
 "Position and size of the export assistant window ; default is set by the "
 "window manager."
@@ -195,11 +215,11 @@ msgstr ""
 "Position and size of the export assistant window ; default is set by the "
 "window manager."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:33
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:37
 msgid "Position and size of the import assistant window"
 msgstr "Position and size of the import assistant window"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:34
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:38
 msgid ""
 "Position and size of the import assistant window ; default is set by the "
 "window manager."
@@ -207,11 +227,11 @@ msgstr ""
 "Position and size of the import assistant window ; default is set by the "
 "window manager."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:35
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:39
 msgid "Position and size of the interaction dialog at import time"
 msgstr "Position and size of the interaction dialog at import time"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:36
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:40
 msgid ""
 "Position and size of the interaction dialog at import time ; default is set "
 "by the window manager."
@@ -219,21 +239,21 @@ msgstr ""
 "Position and size of the interaction dialog at import time ; default is set "
 "by the window manager."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:37
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:41
 msgid "Position and size of the main window"
 msgstr "Position and size of the main window"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:38
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:42
 msgid ""
 "Position and size of the main window ; default is set by the window manager."
 msgstr ""
 "Position and size of the main window ; default is set by the window manager."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:39
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:43
 msgid "Position and size of the preferences dialog"
 msgstr "Position and size of the preferences dialog"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:40
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:44
 msgid ""
 "Position and size of the preferences dialog ; default is set by the window "
 "manager."
@@ -241,15 +261,15 @@ msgstr ""
 "Position and size of the preferences dialog ; default is set by the window "
 "manager."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:41
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:45
 msgid "Preferred export format"
 msgstr "Preferred export format"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:42
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:46
 msgid "Sort mode"
 msgstr "Sort mode"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:43
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:47
 msgid ""
 "The list of schemes proposed by default on each new profile. A default "
 "default list is harcoded in nautilus-actions-config-tool, which may be "
@@ -259,7 +279,7 @@ msgstr ""
 "default list is harcoded in nautilus-actions-config-tool, which may be "
 "updated by the user."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:44
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:48
 msgid ""
 "The order in which I/O providers are tested when we need to write a new item "
 "down to a storage subsystem."
@@ -267,7 +287,7 @@ msgstr ""
 "The order in which I/O providers are tested when we need to write a new item "
 "down to a storage subsystem."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:45
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:49
 msgid ""
 "The whole configuration must be understood here as the global set and order "
 "of menus and actions. When this configuration is locked, then the user is no "
@@ -281,7 +301,7 @@ msgstr ""
 "read-only. As the order of items is also locked, the level zero itself "
 "cannot be modified, and the user is unable to reorder the items."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:46
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:50
 msgid ""
 "This is the preferred export format, used as a default when exporting items, "
 "or dropping them outside of the application. Possible values are: - "
@@ -311,7 +331,7 @@ msgstr ""
 "gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
 "runtime for the format he wishes use."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:47
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:51
 msgid ""
 "This preference indicates the preferred sort mode. Possible values are : - "
 "\"AscendingOrder\": the actions are maintained in ascending alphabetical "
@@ -325,7 +345,7 @@ msgstr ""
 "maintained in descending alphabetical order. - \"ManualOrder\": user is free "
 "to reorder them via Nautilus-Actions configuration tool."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:48
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:52
 msgid ""
 "UUID of the items at the first level of the hierarchy. If this key is not "
 "found or empty, then all found items are considered as a flat list."
@@ -333,7 +353,7 @@ msgstr ""
 "UUID of the items at the first level of the hierarchy. If this key is not "
 "found or empty, then all found items are considered as a flat list."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:49
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:53
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, readen from .desktop files to being modified in "
@@ -343,7 +363,7 @@ msgstr ""
 "items, menus and actions, readen from .desktop files to being modified in "
 "NACT."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:50
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:54
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, readen from GConf to being modified in NACT."
@@ -351,77 +371,85 @@ msgstr ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, readen from GConf to being modified in NACT."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:51
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:55
 msgid "Whether actions should be relabeled when pasted or duplicated"
 msgstr "Whether actions should be relabeled when pasted or duplicated"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:52
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:56
 msgid "Whether actions should be relabeled when pasted or duplicated."
 msgstr "Whether actions should be relabeled when pasted or duplicated."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:53
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:57
 msgid "Whether menus should be relabeled when pasted or duplicated"
 msgstr "Whether menus should be relabeled when pasted or duplicated"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:54
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:58
 msgid "Whether menus should be relabeled when pasted or duplicated."
 msgstr "Whether menus should be relabeled when pasted or duplicated."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:55
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:59
 msgid "Whether profiles should be relabeled when pasted or duplicated"
 msgstr "Whether profiles should be relabeled when pasted or duplicated"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:56
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:60
 msgid "Whether profiles should be relabeled when pasted or duplicated."
 msgstr "Whether profiles should be relabeled when pasted or duplicated."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:57
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:61
 msgid "Whether the Desktop I/O provider is locked"
 msgstr "Whether the Desktop I/O provider is locked"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:58
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:62
 msgid "Whether the Esc key should close the assistants"
 msgstr "Whether the Esc key should close the assistants"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:59
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:63
 msgid "Whether the GConf I/O provider is locked"
 msgstr "Whether the GConf I/O provider is locked"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:60
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:64
+msgid "Whether the auto-save feature should be activated"
+msgstr "Whether the auto-save feature should be activated"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
+msgid "Whether the import system should reuse the last choosen import mode."
+msgstr "Whether the import system should reuse the last choosen import mode."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:66
 msgid "Whether the whole configuration is locked"
 msgstr "Whether the whole configuration is locked"
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:61
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:67
 msgid "Whether to display or not the Edit toolbar in the main window."
 msgstr "Whether to display or not the Edit toolbar in the main window."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:62
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:68
 msgid "Whether to display or not the File toolbar in the main window."
 msgstr "Whether to display or not the File toolbar in the main window."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:63
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:69
 msgid "Whether to display or not the Help toolbar in the main window."
 msgstr "Whether to display or not the Help toolbar in the main window."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:64
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:70
 msgid "Whether to display or not the Tools toolbar in the main window."
 msgstr "Whether to display or not the Tools toolbar in the main window."
 
-#: ../data/nautilus-actions-prefs.schemas.in.h:65
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:71
 msgid "Width of the main window pane ; default is set by the UI manager."
 msgstr "Width of the main window pane ; default is set by the UI manager."
 
-#: ../src/core/na-exporter.c:157
+#: ../src/core/na-exporter.c:159
 #, c-format
 msgid "NAIExporter %s doesn't implement 'to_buffer' interface."
 msgstr ""
 
-#: ../src/core/na-exporter.c:164 ../src/core/na-exporter.c:237
+#: ../src/core/na-exporter.c:166 ../src/core/na-exporter.c:239
 #, c-format
 msgid "No NAIExporter implementation found for %s format."
 msgstr ""
 
-#: ../src/core/na-exporter.c:230
+#: ../src/core/na-exporter.c:232
 #, c-format
 msgid "NAIExporter %s doesn't implement 'to_file' interface."
 msgstr ""
@@ -612,8 +640,8 @@ msgstr ""
 #: ../src/core/na-object-action-factory.c:171
 #: ../src/core/na-object-item-factory.c:105
 #: ../src/core/na-object-item-factory.c:129
-#: ../src/core/na-object-profile-factory.c:155
-#: ../src/utils/nautilus-actions-run.c:60
+#: ../src/core/na-object-profile-factory.c:181
+#: ../src/utils/nautilus-actions-run.c:61
 msgid "<STRING>"
 msgstr "<STRING>"
 
@@ -635,7 +663,7 @@ msgid ""
 msgstr ""
 
 #: ../src/core/na-icontext-factory.c:306
-#: ../src/core/na-object-profile-factory.c:94
+#: ../src/core/na-object-profile-factory.c:118
 #: ../src/utils/nautilus-actions-new.c:132
 msgid "<PATH>"
 msgstr "<PATH>"
@@ -741,49 +769,81 @@ msgid ""
 "Defaults to empty list."
 msgstr ""
 
-#: ../src/core/na-importer-ask.c:292
+#: ../src/core/na-iimporter.c:206
+msgid ""
+"Item was renumbered because the caller did not provide any check function."
+msgstr ""
+
+#: ../src/core/na-iimporter.c:219
+msgid ""
+"Item was renumbered because the caller did not provide any ask user function."
+msgstr ""
+
+#: ../src/core/na-iimporter.c:238
+msgid "Item was renumbered due to user request."
+msgstr "הפריט מוספר מחדש לבקשת המשתמש."
+
+#: ../src/core/na-iimporter.c:244
+msgid "Existing item was overriden due to user request."
+msgstr "הפריט הקיים נדרס לבקשת המשתמש."
+
+#: ../src/core/na-iimporter.c:251
+#, c-format
+msgid "Item %s already exists."
+msgstr "הפריט %s כבר קיים."
+
+#: ../src/core/na-iimporter.c:253
+msgid "Import was canceled due to user request."
+msgstr "הייבוא בוטל לבקשת המשתמש."
+
+#. i18n: the action has been renumbered during import operation
+#: ../src/core/na-iimporter.c:276
+msgid "(renumbered)"
+msgstr "(ממוספר מחדש)"
+
+#: ../src/core/na-importer-ask.c:302
 #, c-format
 msgid ""
 "The action \"%s\" imported from \"%s\" has the same identifiant than the "
 "already existing \"%s\"."
 msgstr ""
 
-#: ../src/core/na-importer-ask.c:298
+#: ../src/core/na-importer-ask.c:308
 #, c-format
 msgid ""
 "The menu \"%s\" imported from \"%s\" has the same identifiant than the "
 "already existing \"%s\"."
 msgstr ""
 
-#: ../src/core/na-io-provider.c:1295
+#: ../src/core/na-io-provider.c:1302
 msgid "Item is read-only."
 msgstr "הפריט הוא לקריאה בלבד."
 
-#: ../src/core/na-io-provider.c:1299
+#: ../src/core/na-io-provider.c:1306
 msgid "I/O provider is not willing to write."
 msgstr "ספק הקלט/פלט אינו מוכן לכתיבה."
 
-#: ../src/core/na-io-provider.c:1303
+#: ../src/core/na-io-provider.c:1310
 msgid "No writable I/O provider found."
 msgstr "לא נמצא ספק קלט/פלט הניתן לכתיבה"
 
-#: ../src/core/na-io-provider.c:1307
+#: ../src/core/na-io-provider.c:1314
 msgid "I/O provider has been locked down by an administrator."
 msgstr "ספק הקלט/פלט ננעל על ידי המנהל."
 
-#: ../src/core/na-io-provider.c:1311
+#: ../src/core/na-io-provider.c:1318
 msgid "I/O provider has been locked down by the user."
 msgstr "ספק הקלט/פלט ננעל על ידי המשתמש."
 
-#: ../src/core/na-io-provider.c:1315
+#: ../src/core/na-io-provider.c:1322
 msgid "I/O provider implementation lacks of required API."
 msgstr "ליישום ספק הקלט/פלט חסר ה־API הדרוש."
 
-#: ../src/core/na-io-provider.c:1319
+#: ../src/core/na-io-provider.c:1326
 msgid "The whole configuration has been locked down by an administrator."
 msgstr "כל התצורה ננעלה על ידי המנהל."
 
-#: ../src/core/na-io-provider.c:1328
+#: ../src/core/na-io-provider.c:1335
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
@@ -792,33 +852,33 @@ msgstr ""
 "הפריט אינו ניתן לכתיבה מסיבות בלתי ידועות (%d).\n"
 "נא לגלות התחשבות ולמלא דוח שגיאות בכתובת http://bugzilla.gnome.org."
 
-#: ../src/core/na-io-provider.c:1352
+#: ../src/core/na-io-provider.c:1359
 msgid "OK."
 msgstr "בוצע."
 
-#: ../src/core/na-io-provider.c:1356
+#: ../src/core/na-io-provider.c:1363
 msgid ""
 "Program flow error.\n"
 "Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
 msgstr ""
 
-#: ../src/core/na-io-provider.c:1361
+#: ../src/core/na-io-provider.c:1368
 msgid "The I/O provider is not willing to do that."
 msgstr "ספק הקלט/פלט אינו מוכן לעשות זאת."
 
-#: ../src/core/na-io-provider.c:1365
+#: ../src/core/na-io-provider.c:1372
 msgid "Write error in I/O provider."
 msgstr "שגיאת כתיבה בספק הקלט/פלט."
 
-#: ../src/core/na-io-provider.c:1369
+#: ../src/core/na-io-provider.c:1376
 msgid "Unable to delete GConf schemas."
 msgstr "לא ניתן למחוק את סכימות ה־GConf."
 
-#: ../src/core/na-io-provider.c:1373
+#: ../src/core/na-io-provider.c:1380
 msgid "Unable to delete configuration."
 msgstr "לא ניתן למחוק את התצורה."
 
-#: ../src/core/na-io-provider.c:1377
+#: ../src/core/na-io-provider.c:1384
 #, c-format
 msgid ""
 "Unknow return code (%d).\n"
@@ -832,7 +892,7 @@ msgstr ""
 msgid "New Nautilus action"
 msgstr "פעולת Nautilus חדשה"
 
-#: ../src/core/na-object-action.c:465
+#: ../src/core/na-object-action.c:447
 msgid "Profile automatically created from pre-v2 action"
 msgstr "הפרופיל נוצר אוטומטית מפעולה שלפני גרסה 2"
 
@@ -943,11 +1003,11 @@ msgstr ""
 msgid "<PATH|NAME>"
 msgstr "<PATH|NAME>"
 
-#: ../src/core/na-object-item-factory.c:160
+#: ../src/core/na-object-item-factory.c:184
 msgid "Description relative to the item"
 msgstr "תיאור המתייחס לפריט"
 
-#: ../src/core/na-object-item-factory.c:161
+#: ../src/core/na-object-item-factory.c:185
 msgid ""
 "Some text which explains the goal of the menu or the action.\n"
 "May be used, e.g. when displaying available items on a web site."
@@ -955,11 +1015,11 @@ msgstr ""
 "טקסט כלשהו המסביר את מטרת הפריט או הפעולה.\n"
 "ניתן להשתמש לדוגמה בעת הצגת פריטים זמינים באתר אינטרנט."
 
-#: ../src/core/na-object-item-factory.c:183
+#: ../src/core/na-object-item-factory.c:207
 msgid "Suggested shortcut"
 msgstr "קיצור מקשים מוצע"
 
-#: ../src/core/na-object-item-factory.c:184
+#: ../src/core/na-object-item-factory.c:208
 msgid ""
 "A shortcut suggested for the action or the menu.\n"
 "Please note that this might be only a suggestion as the shortcut may be "
@@ -969,11 +1029,11 @@ msgid ""
 "Defaults to empty."
 msgstr ""
 
-#: ../src/core/na-object-item-factory.c:237
+#: ../src/core/na-object-item-factory.c:261
 msgid "List of subitem ids"
 msgstr "רשימה של מספרי תת־פריטים"
 
-#: ../src/core/na-object-item-factory.c:238
+#: ../src/core/na-object-item-factory.c:262
 msgid ""
 "Ordered list of the IDs of the subitems. This may be actions or menus if the "
 "item is a menu, or profiles if the item is an action.\n"
@@ -981,22 +1041,22 @@ msgid ""
 "attached in the order of the read operations."
 msgstr ""
 
-#: ../src/core/na-object-item-factory.c:262
+#: ../src/core/na-object-item-factory.c:286
 msgid "Whether the action or the menu is enabled (default)"
 msgstr ""
 
-#: ../src/core/na-object-item-factory.c:263
+#: ../src/core/na-object-item-factory.c:287
 msgid ""
 "If the or the menu action is disabled, it will never appear in the file "
 "manager context menu.\n"
 "Defaults to TRUE."
 msgstr ""
 
-#: ../src/core/na-object-item-factory.c:375
+#: ../src/core/na-object-item-factory.c:402
 msgid "Version of the format"
 msgstr "גרסת המבנה"
 
-#: ../src/core/na-object-item-factory.c:376
+#: ../src/core/na-object-item-factory.c:403
 msgid ""
 "The version of the configuration format that will be used to manage backward "
 "compatibility."
@@ -1008,7 +1068,7 @@ msgid "New Nautilus menu"
 msgstr "תפריט Nautilus חדש"
 
 #. i18n: label for the default profile
-#: ../src/core/na-object-profile.c:463
+#: ../src/core/na-object-profile.c:729
 msgid "Default profile"
 msgstr "פרופיל ברירת המחדל"
 
@@ -1022,22 +1082,22 @@ msgid ""
 "If not set, it defaults to an auto-generated name."
 msgstr ""
 
-#: ../src/core/na-object-profile-factory.c:77
+#: ../src/core/na-object-profile-factory.c:101
 msgid "Path of the command"
 msgstr "נתיב הפקודה"
 
-#: ../src/core/na-object-profile-factory.c:78
+#: ../src/core/na-object-profile-factory.c:102
 msgid ""
 "The path of the command to be executed when the user select the menu item in "
 "the file manager context menu or in the toolbar."
 msgstr ""
 
-#: ../src/core/na-object-profile-factory.c:104
+#: ../src/core/na-object-profile-factory.c:128
 msgid "Parameters of the command"
 msgstr "הפרמטרים של הפקודה"
 
 #. too long string for iso c: (max=509)
-#: ../src/core/na-object-profile-factory.c:106
+#: ../src/core/na-object-profile-factory.c:130
 msgid ""
 "The parameters of the command to be executed when the user selects the menu "
 "item in the file manager context menu or in the toolbar.\n"
@@ -1057,46 +1117,50 @@ msgid ""
 "  %s: scheme of the URI\n"
 "  %u: URI\n"
 "  %U: username of the URI\n"
-"  %%: a percent sign.- starting from version '1':\n"
-"  %b: (first) basename of the selected file(s)/folder(s)\n"
+"  %%: a percent sign.- starting from version '3':\n"
+"  %b: (first) basename\n"
 "  %B: space-separated list of the basenames of the selected file(s)/folder"
 "(s)\n"
 "  %c: count the selected file(s)/folder(s)\n"
-"  %d: (first) base directory of the selected file(s)/folder(s)\n"
+"  %d: (first) base directory\n"
 "  %D: space-separated list of base directories of the selected file(s)/folder"
 "(s)\n"
-"  %f: (first) filename of the selected file(s)/folder(s)\n"
+"  %f: (first) filename\n"
 "  %F: space-separated list of the filenames of the selected file(s)/folder"
 "(s)\n"
 "  %h: hostname of the (first) URI\n"
+"  %m: (first) mimetype\n"
+"  %M: space-separated list of the mimetypes of the selected file(s)/folder"
+"(s)\n"
 "  %n: username of the (first) URI\n"
 "  %p: port number of the (first) URI\n"
 "  %s: scheme of the (first) URI\n"
 "  %u: (first) URI\n"
-"  %U: space-separated list of selected URIs\n"
+"  %U: space-separated list of the URIs of the selected file(s)/folder(s)\n"
 "  %w: (first) basename without the extension\n"
 "  %W: space-separated list of basenames without the extension\n"
 "  %x: (first) extension\n"
-"  %X: space-separated list of the extensions\n"
+"  %X: space-separated list of the extensions of the selected file(s)/folder"
+"(s)\n"
 "  %%: a percent sign."
 msgstr ""
 
-#: ../src/core/na-object-profile-factory.c:161
+#: ../src/core/na-object-profile-factory.c:187
 msgid "Working directory"
 msgstr "תיקיית העבודה"
 
-#: ../src/core/na-object-profile-factory.c:162
+#: ../src/core/na-object-profile-factory.c:188
 #, c-format
 msgid ""
 "The working directory the command will be started in.\n"
 "Defaults to \"%d\"."
 msgstr ""
 
-#: ../src/core/na-object-profile-factory.c:184
+#: ../src/core/na-object-profile-factory.c:210
 msgid "Execution mode"
 msgstr "מצב הפעלה"
 
-#: ../src/core/na-object-profile-factory.c:185
+#: ../src/core/na-object-profile-factory.c:211
 msgid ""
 "Execution mode of the program.\n"
 "This may be choosen between following values:\n"
@@ -1111,31 +1175,31 @@ msgid ""
 "Defaults to \"Normal\"."
 msgstr ""
 
-#: ../src/core/na-object-profile-factory.c:216
+#: ../src/core/na-object-profile-factory.c:242
 msgid "Startup notify"
 msgstr "התרעת הפעלה"
 
-#: ../src/core/na-object-profile-factory.c:217
+#: ../src/core/na-object-profile-factory.c:243
 msgid ""
 "Only relevant when ExecutionMode=Normal.\n"
 "Defaults to FALSE."
 msgstr ""
 
-#: ../src/core/na-object-profile-factory.c:239
+#: ../src/core/na-object-profile-factory.c:265
 msgid "Startup WM Class"
 msgstr ""
 
-#: ../src/core/na-object-profile-factory.c:240
+#: ../src/core/na-object-profile-factory.c:266
 msgid ""
 "Only relevant when ExecutionMode=Normal.\n"
 "Defaults to empty."
 msgstr ""
 
-#: ../src/core/na-object-profile-factory.c:262
+#: ../src/core/na-object-profile-factory.c:288
 msgid "Execute as user"
 msgstr "הפעלה כמשתמש"
 
-#: ../src/core/na-object-profile-factory.c:263
+#: ../src/core/na-object-profile-factory.c:289
 msgid ""
 "The user the command must be ran as. The user may be identified by its "
 "numeric UID or by its login.\n"
@@ -1146,18 +1210,42 @@ msgid ""
 "Defaults to empty: the command will be executed as the current user."
 msgstr ""
 
-#: ../src/io-desktop/nadp-desktop-provider.c:225
+#: ../src/core/na-selected-info.c:682
+#, c-format
+msgid "Error when querying informations for %s URI: %s"
+msgstr ""
+
+#: ../src/core/na-tokens.c:253
+msgid "file:///path/to/file1.mid"
+msgstr "file:///path/to/file1.mid"
+
+#: ../src/core/na-tokens.c:254
+msgid "file:///path/to/file2.jpeg"
+msgstr "file:///path/to/file2.jpeg"
+
+#: ../src/core/na-tokens.c:255
+msgid "audio/x-midi"
+msgstr "audio/x-midi"
+
+#: ../src/core/na-tokens.c:256
+msgid "image/jpeg"
+msgstr "image/jpeg"
+
+#: ../src/core/na-tokens.c:258
+msgid "test.example.net"
+msgstr "test.example.net"
+
+#: ../src/core/na-tokens.c:259
+msgid "user"
+msgstr ""
+
+#: ../src/io-desktop/nadp-desktop-provider.c:249
 msgid "Nautilus-Actions Desktop I/O Provider"
 msgstr "ספק קלט/פלט שולחן עבודה לפעולות Nautilus"
 
-#: ../src/io-gconf/nagp-gconf-provider.c:226
+#: ../src/io-gconf/nagp-gconf-provider.c:225
 msgid "Nautilus-Actions GConf I/O Provider"
 msgstr "ספק קלט/פלט Gconf לפעולות Nautilus"
-
-#: ../src/io-xml/naxml-reader.c:147
-#, c-format
-msgid "Item ID %s already exists."
-msgstr "מספר הפריט %s כבר קיים."
 
 #: ../src/io-xml/naxml-reader.c:148
 msgid "Item ID not found."
@@ -1204,23 +1292,6 @@ msgstr "לא ניתן לנתח את קובץ ה־XML:‏ %s."
 msgid "Node %s at line %d has not been dealt with."
 msgstr ""
 
-#: ../src/io-xml/naxml-reader.c:1322
-msgid "Item was renumbered due to user request."
-msgstr "הפריט מוספר מחדש לבקשת המשתמש."
-
-#: ../src/io-xml/naxml-reader.c:1328
-msgid "Existing item was overriden due to user request."
-msgstr "הפריט הקיים נדרס לבקשת המשתמש."
-
-#: ../src/io-xml/naxml-reader.c:1337
-msgid "Import was canceled due to user request."
-msgstr "הייבוא בוטל לבקשת המשתמש."
-
-#. i18n: the action has been renumbered during import operation
-#: ../src/io-xml/naxml-reader.c:1376
-msgid "(renumbered)"
-msgstr "(ממוספר מחדש)"
-
 #: ../src/io-xml/naxml-formats.c:48
 msgid "Export as a _full GConf schema file"
 msgstr ""
@@ -1230,14 +1301,15 @@ msgid ""
 "This used to be the historical export format.\n"
 "The exported schema file may later be imported via :\n"
 "- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
 "- or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
 
-#: ../src/io-xml/naxml-formats.c:58
+#: ../src/io-xml/naxml-formats.c:59
 msgid "Export as a _light GConf schema (v2) file"
 msgstr ""
 
-#: ../src/io-xml/naxml-formats.c:59
+#: ../src/io-xml/naxml-formats.c:60
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "This is the lightest schema still compatible with GConf command-line tools,\n"
@@ -1245,14 +1317,15 @@ msgid ""
 "Configuration Tool versions.\n"
 "The exported schema file may later be imported via :\n"
 "- Import assistant of the Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
 "- or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
 
-#: ../src/io-xml/naxml-formats.c:71
+#: ../src/io-xml/naxml-formats.c:73
 msgid "Export as a GConf _dump file"
 msgstr "ייצוא כקובץ אי_סוף של GConf"
 
-#: ../src/io-xml/naxml-formats.c:72
+#: ../src/io-xml/naxml-formats.c:74
 msgid ""
 "This format has been introduced in v 1.11 serie, and should be the preferred "
 "format for newly exported items.\n"
@@ -1261,6 +1334,7 @@ msgid ""
 "though it may still be imported via standard GConf command-line tools.\n"
 "The exported dump file may later be imported via :\n"
 "- Import assistant of a compatible Nautilus Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
 "- or via the gconftool-2 --load command-line tool."
 msgstr ""
 
@@ -1396,33 +1470,31 @@ msgstr "נא לעבור אליו בחזרה."
 msgid "Nautilus Actions Configuration Tool"
 msgstr "כלי להגדרת פעולות Nautilus"
 
-#: ../src/nact/nact-add-capability-dialog.c:71
+#: ../src/nact/nact-add-capability-dialog.c:72
 msgid "User is the owner of the item"
 msgstr "המשתמש הוא הבעלים של פריט זה"
 
-#: ../src/nact/nact-add-capability-dialog.c:72
+#: ../src/nact/nact-add-capability-dialog.c:73
 msgid "Item is readable by the user"
 msgstr "הפריט ניתן לקריאה על ידי המשתמש"
 
-#: ../src/nact/nact-add-capability-dialog.c:73
+#: ../src/nact/nact-add-capability-dialog.c:74
 msgid "Item is writable by the user"
 msgstr "הפריט ניתן לכתיבה על ידי המשתמש"
 
-#: ../src/nact/nact-add-capability-dialog.c:74
+#: ../src/nact/nact-add-capability-dialog.c:75
 msgid "Item is executable by the user"
 msgstr "הפריט ניתן להפעלה על ידי המשתמש"
 
-#: ../src/nact/nact-add-capability-dialog.c:75
+#: ../src/nact/nact-add-capability-dialog.c:76
 msgid "Item is local"
 msgstr "הפריט הוא מקומי"
 
 #. i18n: add a comment when a capability is already used by current item
-#. i18n: add a comment when a scheme is already used by current item
-#: ../src/nact/nact-add-capability-dialog.c:508
-#: ../src/nact/nact-schemes-list.c:365
+#: ../src/nact/nact-add-capability-dialog.c:531
 #, c-format
-msgid "%s (already used)"
-msgstr "%s (כבר בשימוש)"
+msgid "%s (already inserted)"
+msgstr "%s (כבר נוסף)"
 
 #: ../src/nact/nact-assistant-export.c:679
 msgid "About to export selected items:"
@@ -1437,42 +1509,42 @@ msgid "Export canceled due to user action."
 msgstr "הייצוא בוטל עקב פעולות משתמש."
 
 #. i18n: result of the export assistant
-#: ../src/nact/nact-assistant-export.c:781
+#: ../src/nact/nact-assistant-export.c:785
 msgid "Selected actions have been proceeded :"
 msgstr "הפעולות הנבחרות הועברו :"
 
 #. i18n: action as been successfully exported to <filename>
-#: ../src/nact/nact-assistant-export.c:799
+#: ../src/nact/nact-assistant-export.c:804
 msgid "Successfully exported as"
 msgstr "יוצא בהצלחה כ־"
 
-#: ../src/nact/nact-assistant-export.c:822
+#: ../src/nact/nact-assistant-export.c:827
 msgid "You may not have write permissions on selected folder."
 msgstr "יתכן שאין לך הרשאות כתיבה לתיקייה הנוכחית."
 
 #. i18n: the title of the confirm page of the import assistant
-#: ../src/nact/nact-assistant-import.c:563
+#: ../src/nact/nact-assistant-import.c:548
 msgid "About to import selected files:"
 msgstr "לקראת ייבוא הקבצים הנבחרים:"
 
 #. i18n: result of the import assistant
-#: ../src/nact/nact-assistant-import.c:788
+#: ../src/nact/nact-assistant-import.c:748
 msgid "Selected files have been proceeded :"
 msgstr "הקבצים הנבחרים הועברו בהצלחה :"
 
 #. i18n: indicate that the file has been successfully imported
-#: ../src/nact/nact-assistant-import.c:806
+#: ../src/nact/nact-assistant-import.c:767
 msgid "Import OK"
 msgstr "הייבוא הצליח"
 
 #. i18n: this is the globally unique identifier and the label of the newly imported action
-#: ../src/nact/nact-assistant-import.c:812
+#: ../src/nact/nact-assistant-import.c:773
 #, c-format
 msgid "UUID: %s\t%s"
 msgstr "מזהה ייחודי: %s\t%s"
 
-#. i18n: indicate that the file was not iported
-#: ../src/nact/nact-assistant-import.c:823
+#. i18n: indicate that the file was not imported
+#: ../src/nact/nact-assistant-import.c:782
 msgid "Not imported"
 msgstr "לא מיובא"
 
@@ -1520,88 +1592,23 @@ msgstr "ללא"
 msgid "Choosing an icon"
 msgstr "בחירת סמל"
 
-#: ../src/nact/nact-ibasenames-tab.c:165
+#: ../src/nact/nact-ibasenames-tab.c:166
 msgid "Basename filter"
 msgstr "מסנן שם הבסיס"
 
-#: ../src/nact/nact-icapabilities-tab.c:157
+#: ../src/nact/nact-icapabilities-tab.c:158
 msgid "Capability filter"
 msgstr "מסנן היכולות"
 
-#: ../src/nact/nact-icommand-tab.c:429
-msgid "Caution: a label is mandatory for the profile."
-msgstr "אזהרה: כל פרופיל מחויב בתווית"
-
-#: ../src/nact/nact-icommand-tab.c:571
+#: ../src/nact/nact-icommand-tab.c:575
 msgid "Choosing a command"
 msgstr "בחירת פקודה"
 
-#: ../src/nact/nact-icommand-tab.c:612
+#: ../src/nact/nact-icommand-tab.c:616
 msgid "Choosing a working directory"
 msgstr "בחירת תיקיית עבודה"
 
-#. i18n notes: example strings for the command preview
-#: ../src/nact/nact-icommand-tab.c:649
-msgid "/path/to"
-msgstr "/path/to"
-
-#: ../src/nact/nact-icommand-tab.c:650
-msgid "file1.txt"
-msgstr "קובץ1.txt"
-
-#: ../src/nact/nact-icommand-tab.c:650
-msgid "file2.txt"
-msgstr "קובץ2.txt"
-
-#: ../src/nact/nact-icommand-tab.c:651
-msgid " folder1"
-msgstr "תיקייה1"
-
-#: ../src/nact/nact-icommand-tab.c:651
-msgid "folder2"
-msgstr "תיקיה2"
-
-#: ../src/nact/nact-icommand-tab.c:652
-msgid " file1.txt"
-msgstr "קובץ1.txt"
-
-#: ../src/nact/nact-icommand-tab.c:652
-msgid "folder1"
-msgstr "תיקיה1"
-
-#: ../src/nact/nact-icommand-tab.c:654
-msgid "test.example.net"
-msgstr "test.example.net"
-
-#: ../src/nact/nact-icommand-tab.c:655
-msgid "file.txt"
-msgstr "קובץ.txt"
-
-#: ../src/nact/nact-icommand-tab.c:656
-msgid "folder"
-msgstr "תיקיה"
-
-#: ../src/nact/nact-icommand-tab.c:657
-msgid "8080"
-msgstr "8080"
-
-#: ../src/nact/nact-icommand-tab.c:661
-msgid "file:///path/to/file1.text"
-msgstr "file:///path/to/file1.text"
-
-#: ../src/nact/nact-icommand-tab.c:662
-msgid "file:///path/to/file2.text"
-msgstr "file:///path/to/file2.text"
-
-#: ../src/nact/nact-icommand-tab.c:663
-msgid "file:///path/to/a/dir"
-msgstr "file:///path/to/a/dir"
-
-#: ../src/nact/nact-icommand-tab.c:664
-msgid "file:///path/to/another/dir"
-msgstr "file:///path/to/another/dir"
-
-#: ../src/nact/nact-icommand-tab.c:855
+#: ../src/nact/nact-icommand-tab.c:677
 msgid "e.g.,"
 msgstr "לדוגמה:"
 
@@ -1637,8 +1644,8 @@ msgstr "שולחן עבודה XFCE"
 msgid "Legacy systems"
 msgstr "מערכות מיושנות"
 
-#: ../src/nact/nact-ienvironment-tab.c:750
-#: ../src/nact/nact-ienvironment-tab.c:808
+#: ../src/nact/nact-ienvironment-tab.c:751
+#: ../src/nact/nact-ienvironment-tab.c:809
 msgid "Choosing an executable"
 msgstr "בחירת קובץ הפעלה"
 
@@ -1683,7 +1690,7 @@ msgstr "_קובץ"
 
 #: ../src/nact/nact-main-menubar.c:108 ../src/nact/nact-main-menubar.c:218
 msgid "_Edit"
-msgstr "_עריכה"
+msgstr "ע_ריכה"
 
 #: ../src/nact/nact-main-menubar.c:109
 msgid "_View"
@@ -1817,7 +1824,7 @@ msgstr "צמצום כל היררכיית הפריטים"
 
 #: ../src/nact/nact-main-menubar.c:176
 msgid "_Import assistant..."
-msgstr "מסייע היי_בוא..."
+msgstr "מסייע הי_בוא..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Import item
 #: ../src/nact/nact-main-menubar.c:178
@@ -1827,7 +1834,7 @@ msgstr "יש לייבא פעולה אחת או יותר מקובצי XML חיצ�
 
 #: ../src/nact/nact-main-menubar.c:180
 msgid "E_xport assistant..."
-msgstr "מסייע היי_צוא..."
+msgstr "מסייע הי_צוא..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Export item
 #: ../src/nact/nact-main-menubar.c:182
@@ -1870,6 +1877,10 @@ msgstr "_איסוף תוכן לוח הגזירים"
 #: ../src/nact/nact-main-menubar.c:199
 msgid "Dump the content of the clipboard object"
 msgstr "איסוף התוכן מפריט לוח הגזירים"
+
+#: ../src/nact/nact-main-menubar.c:202
+msgid "Contents"
+msgstr "תכנים"
 
 #. i18n: tooltip displayed in the status bar when selecting the Help item
 #: ../src/nact/nact-main-menubar.c:204
@@ -1915,21 +1926,25 @@ msgstr "לא כל הפריטים נגזרו כיוון שהבאים אינם נ�
 msgid "Not all items have been deleted as following ones are not modifiable:"
 msgstr "לא כל הפריטים נמחקו כיוון שהבאים אינם ניתנים לשינוי:"
 
-#: ../src/nact/nact-main-menubar-file.c:200
+#: ../src/nact/nact-main-menubar-file.c:205
 msgid "New profile"
 msgstr "פרופיל חדש"
 
-#: ../src/nact/nact-main-window.c:1422
+#: ../src/nact/nact-main-menubar-file.c:446
+msgid "Automatically saving pending modifications..."
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:1400
 msgid ""
 "Reloading a fresh list of actions requires that you give up with your "
 "current modifications."
 msgstr "טעינה מחדש של רשימת פעולות דורשת ויתור על השינויים הנוכחיים."
 
-#: ../src/nact/nact-main-window.c:1425
+#: ../src/nact/nact-main-window.c:1403
 msgid "Do you really want to do this ?"
 msgstr "האם באמת ברצונך לעשות זאת ?"
 
-#: ../src/nact/nact-main-window.c:1448
+#: ../src/nact/nact-main-window.c:1426
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
@@ -1939,7 +1954,7 @@ msgstr ""
 "ניתן להמשיך לעבור על רשימת הפעולות הנוכחית שלך, או שניתן לטעון מחדש רשימה "
 "רעננה."
 
-#: ../src/nact/nact-main-window.c:1455
+#: ../src/nact/nact-main-window.c:1433
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
@@ -1947,7 +1962,7 @@ msgstr ""
 "נא לשים לב כי טעינה מחדש של רשימת פעולות דורשת ממך לוותר על השינויים "
 "הנוכחיים שביצעת."
 
-#: ../src/nact/nact-main-window.c:1461
+#: ../src/nact/nact-main-window.c:1439
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "האם ברצונך לטעון מחדש רשימת פעולות רעננה ?"
 
@@ -1960,12 +1975,19 @@ msgid "Must match all of"
 msgstr "עליו להתאים לכול אחד מ־"
 
 #. i18n: label of the header of a column which let the user select a negative filter
-#.
-#: ../src/nact/nact-match-list.c:161
+#: ../src/nact/nact-match-list.c:169
 msgid "Must not match any of"
 msgstr "עליו לא להתאים לאף אחד מ־"
 
-#: ../src/nact/nact-match-list.c:729
+#: ../src/nact/nact-match-list.c:493
+#, c-format
+msgid ""
+"'%s' filter already exists in the list.\n"
+"Please provide another one."
+msgstr ""
+
+#. i18n notes : new filter for a new row in a match/no match list
+#: ../src/nact/nact-match-list.c:871
 msgid "new-filter"
 msgstr "מסנן-חדש"
 
@@ -1992,36 +2014,42 @@ msgid "unavailable I/O provider"
 msgstr "ספק קלט/פלט לא זמין"
 
 #. i18n notes : description of 'file' scheme
-#: ../src/nact/nact-schemes-list.c:259
+#: ../src/nact/nact-schemes-list.c:261
 msgid "Local files"
 msgstr "קבצים מקומיים"
 
 #. i18n notes : description of 'sftp' scheme
-#: ../src/nact/nact-schemes-list.c:261
+#: ../src/nact/nact-schemes-list.c:263
 msgid "SSH files"
 msgstr "קובצי SSH"
 
 #. i18n notes : description of 'smb' scheme
-#: ../src/nact/nact-schemes-list.c:263
+#: ../src/nact/nact-schemes-list.c:265
 msgid "Windows files"
 msgstr "קובצי Windows"
 
 #. i18n notes : description of 'ftp' scheme
-#: ../src/nact/nact-schemes-list.c:265
+#: ../src/nact/nact-schemes-list.c:267
 msgid "FTP files"
 msgstr "קובצי FTP"
 
 #. i18n notes : description of 'dav' scheme
-#: ../src/nact/nact-schemes-list.c:267
+#: ../src/nact/nact-schemes-list.c:269
 msgid "WebDAV files"
 msgstr "קובצי WebDAV"
 
+#. i18n: add a comment when a scheme is already used by current item
+#: ../src/nact/nact-schemes-list.c:367
+#, c-format
+msgid "%s (already used)"
+msgstr "%s (כבר בשימוש)"
+
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../src/nact/nact-schemes-list.c:687
+#: ../src/nact/nact-schemes-list.c:689
 msgid "new-scheme"
 msgstr "new-scheme"
 
-#: ../src/nact/nact-schemes-list.c:688
+#: ../src/nact/nact-schemes-list.c:690
 msgid "New scheme description"
 msgstr "תיאור לסכימה החדשה"
 
@@ -2041,7 +2069,7 @@ msgstr "לא ניתן להשליך כאן כיוון שההורה אינו ני�
 msgid "Unable to drop here as level zero is not writable"
 msgstr "לא ניתן להשליך כאן כיוון שרמה אפס אינה ניתנת לכתיבה"
 
-#: ../src/nact/nact-tree-model-dnd.c:849
+#: ../src/nact/nact-tree-model-dnd.c:873
 msgid "Some messages have occurred during drop operation."
 msgstr "נוספו כמה הודעות במהלך פעולת ההשלכה."
 
@@ -2064,22 +2092,22 @@ msgstr "האם ברצונך לצאת מבלי לשמור אותם ?"
 
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
 #. i18n: label of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:299
-#: ../src/plugin-menu/nautilus-actions.c:907
+#: ../src/plugin-menu/nautilus-actions.c:300
+#: ../src/plugin-menu/nautilus-actions.c:967
 msgid "Nautilus Actions"
 msgstr "פעולות Nautilus"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:909
+#: ../src/plugin-menu/nautilus-actions.c:969
 msgid ""
 "A submenu which embeds the currently available Nautilus Actions extensions"
 msgstr "תת־תפריט שמטמיע את ההרחבות הזמינות של פעולות Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:956
+#: ../src/plugin-menu/nautilus-actions.c:1016
 msgid "About Nautilus Actions"
 msgstr "על אודות פעולות Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:957
+#: ../src/plugin-menu/nautilus-actions.c:1017
 msgid "Display information about Nautilus Actions"
 msgstr "הצגת מידע על אודות פעולות Nautilus"
 
@@ -2087,13 +2115,13 @@ msgstr "הצגת מידע על אודות פעולות Nautilus"
 msgid "The URI of the file to be imported"
 msgstr "הכתובת של הקובץ לייבוא"
 
-#: ../src/test/test-reader.c:49 ../src/utils/nautilus-actions-run.c:62
+#: ../src/test/test-reader.c:49 ../src/utils/nautilus-actions-run.c:63
 msgid "<URI>"
 msgstr "<URI>"
 
 #: ../src/test/test-reader.c:56 ../src/utils/nautilus-actions-new.c:139
-#: ../src/utils/nautilus-actions-run.c:69
-#: ../src/utils/nautilus-actions-schemas.c:91
+#: ../src/utils/nautilus-actions-run.c:70
+#: ../src/utils/nautilus-actions-schemas.c:92
 msgid "Output the version number"
 msgstr "פלט "
 
@@ -2103,7 +2131,7 @@ msgstr "ייבוא קובץ."
 
 #: ../src/test/test-reader.c:126 ../src/utils/nautilus-actions-new.c:335
 #: ../src/utils/nautilus-actions-run.c:197
-#: ../src/utils/nautilus-actions-schemas.c:175
+#: ../src/utils/nautilus-actions-schemas.c:176
 msgid ""
 "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
 "mail to <maintainer@nautilus-actions.org>.\n"
@@ -2113,13 +2141,13 @@ msgstr ""
 
 #: ../src/test/test-reader.c:134 ../src/utils/nautilus-actions-new.c:349
 #: ../src/utils/nautilus-actions-run.c:205
-#: ../src/utils/nautilus-actions-schemas.c:183
+#: ../src/utils/nautilus-actions-schemas.c:184
 msgid "Miscellaneous options"
 msgstr "אפשרויות שונות"
 
 #: ../src/test/test-reader.c:155 ../src/utils/nautilus-actions-new.c:179
 #: ../src/utils/nautilus-actions-run.c:111
-#: ../src/utils/nautilus-actions-schemas.c:124
+#: ../src/utils/nautilus-actions-schemas.c:125
 #, c-format
 msgid "Syntax error: %s\n"
 msgstr "שגיאת תחביר: %s\n"
@@ -2130,8 +2158,8 @@ msgid "Error: uri is mandatory.\n"
 msgstr "שגיאה: הכתובת מחייבת.\n"
 
 #: ../src/test/test-reader.c:182 ../src/utils/nautilus-actions-new.c:555
-#: ../src/utils/nautilus-actions-run.c:439
-#: ../src/utils/nautilus-actions-schemas.c:368
+#: ../src/utils/nautilus-actions-run.c:426
+#: ../src/utils/nautilus-actions-schemas.c:369
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "יש לנסות %s --help לעזרה בשימוש.\n"
@@ -2227,11 +2255,11 @@ msgstr "הפעולה '%s' נכתבה בהצלחה אל %s, ומוכנה לייב
 msgid "Error: unable to find 'na-gconf' provider."
 msgstr "שגיאה: לא ניתן למצוא את ספק ה־'na-gconf'."
 
-#: ../src/utils/nautilus-actions-run.c:60
+#: ../src/utils/nautilus-actions-run.c:61
 msgid "The internal identifiant of the action to be launched"
 msgstr "המזהה הפנימי של הפעולה להפעלה"
 
-#: ../src/utils/nautilus-actions-run.c:62
+#: ../src/utils/nautilus-actions-run.c:63
 msgid ""
 "A target, file or folder, for the action. More than one options may be "
 "specified"
@@ -2291,13 +2319,52 @@ msgstr "שגיאה: לא ניתן לקבל את המתווך בשרות %s"
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "שגיאה בקריאת GetSelectedPaths:‏ %s"
 
-#: ../src/utils/nautilus-actions-schemas.c:86
+#: ../src/utils/nautilus-actions-schemas.c:87
 msgid "Output the schema on stdout"
 msgstr "פלט הסכימה ל־stdout"
 
-#: ../src/utils/nautilus-actions-schemas.c:161
+#: ../src/utils/nautilus-actions-schemas.c:162
 msgid "Output the Nautilus Actions GConf schema on stdout."
 msgstr "פלט של סכימת ה־GConf ל־stdout של פעולות Nautilus"
+
+#~ msgid "Caution: a label is mandatory for the profile."
+#~ msgstr "אזהרה: כל פרופיל מחויב בתווית"
+
+#~ msgid "/path/to"
+#~ msgstr "/path/to"
+
+#~ msgid "file1.txt"
+#~ msgstr "קובץ1.txt"
+
+#~ msgid "file2.txt"
+#~ msgstr "קובץ2.txt"
+
+#~ msgid " folder1"
+#~ msgstr "תיקייה1"
+
+#~ msgid "folder2"
+#~ msgstr "תיקיה2"
+
+#~ msgid " file1.txt"
+#~ msgstr "קובץ1.txt"
+
+#~ msgid "folder1"
+#~ msgstr "תיקיה1"
+
+#~ msgid "file.txt"
+#~ msgstr "קובץ.txt"
+
+#~ msgid "folder"
+#~ msgstr "תיקיה"
+
+#~ msgid "8080"
+#~ msgstr "8080"
+
+#~ msgid "file:///path/to/a/dir"
+#~ msgstr "file:///path/to/a/dir"
+
+#~ msgid "file:///path/to/another/dir"
+#~ msgstr "file:///path/to/another/dir"
 
 #, fuzzy
 #~ msgid "(C) 2005-2007 Frederic Ruaudel <grumz@grumz.net>"
