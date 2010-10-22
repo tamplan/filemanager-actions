@@ -114,7 +114,7 @@ DOC_FIGURES = \
 	figures/start-context-menu-nautilus.png			\
 	figures/start-zenity-result.png
 
-DOC_LINGUAS = de es
+DOC_LINGUAS = de es sl
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
