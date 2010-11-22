@@ -1,3 +1,17 @@
+2010-11-22 Pierre Wieser <pwieser@trychlos.org>
+
+	* po/POTFILES.in:
+	Fix #635521: translatable sentences of the *.ui files don't appear in .po file.
+
+	* run-autogen.sh:
+	Clean up aborted make distcheck before running autogen.
+
+	* doc/nact/C/nact-execution.xml:
+	Fix typo in NACT user's manual.
+
+	* src/core/na-icontext-factory.c:
+	Fix #632992: add comment about default value translation.
+
 2010-09-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Pre-release version bump.
@@ -35,7 +49,7 @@
 	Fix make distcheck when distributing tranlations of NACT user's manual.
 
 	* configure.ac:
-	Revert inversion of AC_CANONICAL_TARGET and	AM_INIT_AUTOMAKE.
+	Revert inversion of AC_CANONICAL_TARGET and AM_INIT_AUTOMAKE.
 
 	* src/io-desktop/nadp-writer.c (write_done_write_subitems_list):
 	Improve debug messages.

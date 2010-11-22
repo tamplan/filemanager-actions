@@ -4,7 +4,7 @@ src/core/na-iabout.c
 src/core/na-icontext-factory.c
 src/core/na-iimporter.c
 src/core/na-importer-ask.c
-src/core/na-importer-ask.ui
+[type: gettext/glade] src/core/na-importer-ask.ui
 src/core/na-io-provider.c
 src/core/na-object-action.c
 src/core/na-object-action-factory.c
@@ -26,10 +26,10 @@ src/nact/egg-desktop-file.c
 src/nact/egg-sm-client.c
 src/nact/nact-application.c
 src/nact/nact-add-capability-dialog.c
-src/nact/nact-add-capability.ui
-src/nact/nact-add-scheme.ui
+[type: gettext/glade] src/nact/nact-add-capability.ui
+[type: gettext/glade] src/nact/nact-add-scheme.ui
 src/nact/nact-assistant-export.c
-src/nact/nact-assistant-export.ui
+[type: gettext/glade] src/nact/nact-assistant-export.ui
 src/nact/nact-assistant-import.c
 src/nact/nact.desktop.in
 src/nact/nact-export-ask.c
@@ -48,12 +48,12 @@ src/nact/nact-main-menubar-edit.c
 src/nact/nact-main-menubar-file.c
 src/nact/nact-main-window.c
 src/nact/nact-match-list.c
-src/nact/nact-preferences.ui
+[type: gettext/glade] src/nact/nact-preferences.ui
 src/nact/nact-providers-list.c
 src/nact/nact-schemes-list.c
 src/nact/nact-tree-model-dnd.c
 src/nact/nact-window.c
-src/nact/nautilus-actions-config-tool.ui
+[type: gettext/glade] src/nact/nautilus-actions-config-tool.ui
 src/plugin-menu/nautilus-actions.c
 src/test/test-reader.c
 src/utils/nautilus-actions-new.c
