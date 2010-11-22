@@ -45,6 +45,8 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "List of patterns to be matched against the selected file(s)/folder(s)" ),
+				/* i18n: wildcard characters '*' and '?' should be considered as literalls,
+				 *  and not be translated */
 				N_( "A list of strings with joker '*' or '?' to be matched against the name(s) " \
 					"of the selected file(s)/folder(s). Each selected items must match at least " \
 					"one of the filename patterns for the action or the menu be candidate to " \
@@ -64,9 +66,13 @@ NADataDef data_def_conditions [] = {
 				"basename",
 				0,
 				G_OPTION_ARG_STRING_ARRAY,
+				/* i18n: wildcard characters '*' and '?' should be considered as literalls,
+				 *  and not be translated */
 				N_( "A pattern to be matched against basenames of selected file(s)/folder(s). " \
 					"May include wildcards (* or ?). " \
 					"You must set one option for each pattern you need" ),
+					/* i18n: the "<EXPR>" is just an abbreviation for "an expression",
+					 *  so is tranlatable */
 				N_( "<EXPR>" ) },
 
 	{ NAFO_DATA_MATCHCASE,
@@ -74,6 +80,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Whether the specified basenames are case sensitive (default)" ),
+				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "Must be set to 'true' if the filename patterns are case sensitive, to 'false' " \
 					"otherwise. E.g., if you need to match a filename in a case-sensitive manner, " \
 					"set this key to 'true'. If you also want, for example '*.jpg' to match 'photo.JPG', " \
@@ -101,6 +108,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "List of patterns to be matched against the mimetypes of the selected file(s)/folder(s)" ),
+				/* i18n: wildcard character '*' is taken literally, and should not be translated */
 				N_( "A list of strings with joker '*' to be matched against the mimetypes of the " \
 					"selected file(s)/folder(s). Each selected items must match at least one of " \
 					"the mimetype patterns for the action to appear.\n" \
@@ -119,9 +127,11 @@ NADataDef data_def_conditions [] = {
 				"mimetype",
 				0,
 				G_OPTION_ARG_STRING_ARRAY,
+				/* i18n: wildcard character '*' is taken literally, and should not be translated */
 				N_( "A pattern to be matched against mimetypes of selected file(s)/folder(s). " \
-					"May include wildcards (* or ?). " \
+					"May include the asterisk wildcard '*'. " \
 					"You must set one option for each pattern you need" ),
+				/* i18n: "<EXPR>" is just an abbreviation for "an expression", so is tranlatable */
 				N_( "<EXPR>" ) },
 
 	/* a runtime boolean set to TRUE if we detect that the previous string list
@@ -158,12 +168,13 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Whether the profile applies to files" ),
+				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "Set to 'true' if the selection can have files, to 'false' otherwise.\n" \
 					"This setting is tied in with the 'isdir' setting. The valid combinations are: \n" \
-					"isfile=TRUE and isdir=FALSE: the selection may hold only files\n" \
-					"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n" \
-					"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n" \
-					"isfile=FALSE and isdir=FALSE: this is an invalid combination " \
+					"isfile='true' and isdir='false': the selection may hold only files\n" \
+					"isfile='false' and isdir='true': the selection may hold only folders\n" \
+					"isfile='true' and isdir='true': the selection may hold both files and folders\n" \
+					"isfile='false' and isdir='false': this is an invalid combination " \
 					"(your configuration will never appear).\n" \
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to 'true'." ),
@@ -188,12 +199,13 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Whether the profile applies to folders" ),
+				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "Set to 'true' if the selection can have folders, to 'false' otherwise.\n" \
 					"This setting is tied in with the 'isfile' setting. The valid combinations are: \n" \
-					"isfile=TRUE and isdir=FALSE: the selection may hold only files\n" \
-					"isfile=FALSE and isdir=TRUE: the selection may hold only folders\n" \
-					"isfile=TRUE and isdir=TRUE: the selection may hold both files and folders\n" \
-					"isfile=FALSE and isdir=FALSE: this is an invalid combination " \
+					"isfile='true' and isdir='false': the selection may hold only files\n" \
+					"isfile='false' and isdir='true': the selection may hold only folders\n" \
+					"isfile='true' and isdir='true': the selection may hold both files and folders\n" \
+					"isfile='false' and isdir='false': this is an invalid combination " \
 					"(your configuration will never appear).\n" \
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to 'false'." ),
@@ -221,6 +233,7 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				FALSE,
 				N_( "Whether the selection may be multiple" ),
+				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "If you need more than one files or folders to be selected, set this " \
 					"key to 'true'. If you want just one file or folder, set it to 'false'.\n" \
 					"This obviously only applies when there is a selection.\n" \
@@ -247,6 +260,8 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				N_( "List of schemes to be matched against those of selected file(s)/folder(s)" ),
 										/* too long string for iso c: 510 (max=509) */
+				/* i18n: schemes (sftp, ssh, ftp, file, etc.) are standard keywords which define
+				 *  the access protocol to an object, they should not be translated */
 				N_( "Defines the list of valid schemes to be matched against the selected " \
 					"items. The scheme is the protocol used to access the files. The " \
 					"keyword to use is the one used in the URI by the file manager.\n" \
@@ -278,6 +293,7 @@ NADataDef data_def_conditions [] = {
 				G_OPTION_ARG_STRING,
 				N_( "A valid GIO scheme where the selected file(s)/folder(s) should be located. " \
 					"You must set one option for each scheme you need" ),
+				/* i18n: "<STRING>" is just an abbreviation for "a string", so is tranlatable */
 				N_( "<STRING>" ) },
 
 	{ NAFO_DATA_FOLDERS,
@@ -303,6 +319,7 @@ NADataDef data_def_conditions [] = {
 				G_OPTION_ARG_STRING,
 				N_( "The path of a (parent) directory for which the item will be displayed. " \
 					"You must set one option for each folder you need" ),
+				/* i18n: "<PATH>" is just an abbreviation for "a folder path", so is tranlatable */
 				N_( "<PATH>" ) },
 
 	{ NAFO_DATA_SELECTION_COUNT,
@@ -379,9 +396,10 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Try exec" ),
+				/* i18n: TryExec is a keyword of the specification, it is not translatable */
 				N_( "Note that, when specified, only the presence and the executability status of " \
 					"the specified file are checked.\n" \
-					"Parameters may appear in TryExec value, and will be substituted at runtime.\n" \
+					"Parameters may appear in 'TryExec' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				NAFD_TYPE_STRING,
 				NULL,
@@ -404,9 +422,10 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Show if registered" ),
+				/* i18n: ShowIfRegistered is a keyword of the specification, it is not translatable */
 				N_( "The well-known name of a DBus service.\n" \
 					"The item will be candidate if the named service is registered on session DBus at runtime.\n" \
-					"Parameters may appear in ShowIfRegistered value, and will be substituted at runtime.\n" \
+					"Parameters may appear in 'ShowIfRegistered' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				NAFD_TYPE_STRING,
 				NULL,
@@ -429,9 +448,10 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Show if True" ),
+				/* i18n: ShowIfTrue is a keyword of the specification, it is not translatable */
 				N_( "A command which, when executed, should output a string on stdout.\n" \
 					"The item will be candidate if the outputed string is equal to \"true\".\n" \
-					"Parameters may appear in ShowIfTrue value, and will be substituted at runtime.\n" \
+					"Parameters may appear in 'ShowIfTrue' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				NAFD_TYPE_STRING,
 				NULL,
@@ -454,9 +474,10 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Show if running" ),
+				/* i18n: ShowIfRunning is a keyword of the specification, it is not translatable */
 				N_( "The name of a process.\n" \
 					"The item will be candidate if the process name is found in memory at runtime.\n" \
-					"Parameters may appear in ShowIfRunning value, and will be substituted at runtime.\n" \
+					"Parameters may appear in 'ShowIfRunning' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				NAFD_TYPE_STRING,
 				NULL,
@@ -479,14 +500,16 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "Capabilities" ),
+				/* i18n: 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' are all keywords
+				 *  of the specification, they are not translatable */
 				N_( "A list of capabilities each item of the selection must satisfy in order the item be candidate.\n" \
 					"Capabilities may be negated.\n" \
 					"Capabilities have to be choosen between following predefined ones:\n" \
-					"- Owner: current user is the owner of selected items\n" \
-					"- Readable: selected items are readable by user (probably more usefull when negated)\n" \
-					"- Writable: selected items are writable by user\n" \
-					"- Executable: selected items are executable by user\n" \
-					"- Local: selected items are local.\n" \
+					"- 'Owner': current user is the owner of selected items\n" \
+					"- 'Readable': selected items are readable by user (probably more usefull when negated)\n" \
+					"- 'Writable': selected items are writable by user\n" \
+					"- 'Executable': selected items are executable by user\n" \
+					"- 'Local': selected items are local.\n" \
 					"Defaults to empty list." ),
 				NAFD_TYPE_STRING_LIST,
 				NULL,
