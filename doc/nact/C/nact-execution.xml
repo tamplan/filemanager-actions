@@ -297,7 +297,7 @@
       </para>
       <para>
         Actually, &prodname; automatically handles these two behaviors,
-        depending of the form and the order of the parameters in the comamnd
+        depending of the form and the order of the parameters in the command
         arguments.
       </para>
       <para>
