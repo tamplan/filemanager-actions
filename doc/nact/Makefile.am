@@ -163,13 +163,11 @@ dist-hook: doc-dist-hook dist-html-manuals-hook dist-pdf-manuals-hook dist-manua
 
 if ENABLE_HTML_MANUALS
 all-html-manuals: html.stamp
-	@echo "in all-html-manuals"
 
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files
 # we so are sure that they exist and are up to date
 # (path is .po ->[msgfmt]-> .mo ->[xml2po]-> .xml)
 html.stamp: $(_DOC_LC_DOCS)
-	@echo "in html-stamp"
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		(cd $$i; \
 		 if test "x$(WITH_DB2HTML)" = "xyes"; then \
@@ -201,7 +199,6 @@ endif
 # but the --htmldir autotools one
 
 install-html-manuals: install-html-figs
-	@echo "in install-html-manuals"
 	for lc in C $(_DOC_REAL_LINGUAS); do \
 		if test "x$(htmldir)" = "x$(docdir)"; then \
 			_instdir="$(DESTDIR)$(pkgdocdir)/html/$$lc/nact"; \
@@ -217,7 +214,6 @@ install-html-manuals: install-html-figs
 # symlinks may have been created in srcdir when building pdfs to replace
 # missing translated images; they may or may not be present
 install-html-figs:
-	@echo "in install-html-figs"
 	if test "x$(htmldir)" = "x$(docdir)"; then \
 		_instdir="$(DESTDIR)$(pkgdocdir)/html"; \
 	else \
@@ -269,13 +265,11 @@ dist-html-manuals-hook:
 
 if ENABLE_PDF_MANUALS
 all-pdf-manuals: pdf-figs.stamp pdf.stamp
-	@echo "in all-pdf-manuals"
 
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files
 # we so are sure that they exist and are up to date
 # (path is .po ->[msgfmt]-> .mo ->[xml2po]-> .xml)
 pdf.stamp: $(_DOC_LC_DOCS)
-	@echo "in pdf.stamp"
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		_target=$$i/$(DOC_MODULE).pdf; \
 		echo "Generating $$_target ..."; \
@@ -289,7 +283,6 @@ pdf.stamp: $(_DOC_LC_DOCS)
 # modified to have the figures available when building pdf manuals
 # not trying to symlink C/figures/ 
 pdf-figs.stamp:
-	@echo "in build-pdf-figs"
 	@list='$(patsubst C/%,%,$(_DOC_C_FIGURES))'; for fig in $$list; do \
 	  for lc in $(_DOC_REAL_LINGUAS); do \
 	    figdir="$$lc/"`echo $$fig | sed -e 's/^\(.*\/\).*/\1/' -e '/\//!s/.*//'`; \
@@ -312,7 +305,6 @@ endif
 #
 # as pdf are monobloc documents, we do not create a per-document subdir
 install-pdf-manuals:
-	@echo "in install-pdf-manuals"
 	@-for lc in C $(_DOC_REAL_LINGUAS); do \
 		_srcdir=$(top_builddir)/doc/nact/$$lc; \
 		if test "$(pdfdir)" = "$(docdir)"; then \
@@ -335,7 +327,7 @@ uninstall-pdf-manuals:
 
 dist-pdf-manuals-hook:
 	for _lc in C $(_DOC_REAL_LINGUAS); do \
-		cp $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE).pdf $(distdir)/$$_lc/; \
+		cp $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE).pdf $(distdir)/$$_lc/ || :; \
 	done
 
 dist-manuals-hooks:

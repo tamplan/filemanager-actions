@@ -1,5 +1,8 @@
 2010-11-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/nact/Makefile.am:
+	Be tolerant about not buildable pdf.
+
 	* po/POTFILES.in:
 	Fix #635521: translatable sentences of the *.ui files don't appear in .po file.
 
