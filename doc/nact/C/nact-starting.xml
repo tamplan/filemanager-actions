@@ -621,7 +621,7 @@
         </listitem>
         <listitem>
           <para>
-            Enter <userinput>--info --text="%c selected item(s): %U"</userinput>
+            Enter <userinput>--info --text='%c selected item(s): %U'</userinput>
             in the <guilabel>Parameters</guilabel>
             entry box.
           </para>
