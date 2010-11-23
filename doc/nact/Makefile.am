@@ -186,7 +186,6 @@ html.stamp: $(_DOC_LC_DOCS)
 		 chmod -R u+w html; \
 		); \
 	done
-	touch html.stamp
 else
 all-html-manuals:
 endif
@@ -211,8 +210,6 @@ install-html-manuals: install-html-figs
 
 # copied from gnome-doc-utils.make install-doc-figs target
 # modified to install the figures with html manuals
-# symlinks may have been created in srcdir when building pdfs to replace
-# missing translated images; they may or may not be present
 install-html-figs:
 	if test "x$(htmldir)" = "x$(docdir)"; then \
 		_instdir="$(DESTDIR)$(pkgdocdir)/html"; \
@@ -264,38 +261,31 @@ dist-html-manuals-hook:
 # We only use dblatex for now
 
 if ENABLE_PDF_MANUALS
-all-pdf-manuals: pdf-figs.stamp pdf.stamp
+all-pdf-manuals: pdf-stamp
 
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files
 # we so are sure that they exist and are up to date
 # (path is .po ->[msgfmt]-> .mo ->[xml2po]-> .xml)
-pdf.stamp: $(_DOC_LC_DOCS)
-	@-for i in C $(_DOC_REAL_LINGUAS); do \
-		_target=$$i/$(DOC_MODULE).pdf; \
+pdf-stamp: $(_DOC_LC_DOCS)
+	@-for lc in C $(_DOC_REAL_LINGUAS); do \
+		_target=$$lc/$(DOC_MODULE).pdf; \
 		echo "Generating $$_target ..."; \
-		if ! test -d $$i; then $(MKDIR_P) $$i; fi; \
-		echo "dblatex --output $$_target $(top_srcdir)/doc/nact/$$i/$(DOC_MODULE).xml"; \
-		dblatex --output $$_target $(top_srcdir)/doc/nact/$$i/$(DOC_MODULE).xml; \
-	done
-	touch pdf.stamp
-
-# copied from gnome-doc-utils.make install-doc-figs target
-# modified to have the figures available when building pdf manuals
-# not trying to symlink C/figures/ 
-pdf-figs.stamp:
-	@list='$(patsubst C/%,%,$(_DOC_C_FIGURES))'; for fig in $$list; do \
-	  for lc in $(_DOC_REAL_LINGUAS); do \
-	    figdir="$$lc/"`echo $$fig | sed -e 's/^\(.*\/\).*/\1/' -e '/\//!s/.*//'`; \
-	    figdir="$(builddir)/$$figdir"; \
-	    if ! test -d "$$figdir"; then echo "$(MKDIR_P) $$figdir"; $(MKDIR_P) "$$figdir"; fi; \
-	    figbase=`echo $$fig | sed -e 's/^.*\///'`; \
-	    if ! test -f "$$lc/$$fig"; then \
-	      echo "cd $$figdir && $(LN_S) -f ../../C/$$fig $$figbase"; \
-	      ( cd "$$figdir" && $(LN_S) -f "../../C/$$fig" "$$figbase" ); \
+		if [ "$$lc" != "C" ]; then \
+		  list='$(patsubst C/%,%,$(_DOC_C_FIGURES))'; \
+		  for fig in $$list; do \
+	        figdir="$$lc/"`echo $$fig | sed -e 's/^\(.*\/\).*/\1/' -e '/\//!s/.*//'`; \
+	        figdir="$(builddir)/$$figdir"; \
+	        if ! test -d "$$figdir"; then echo "$(MKDIR_P) $$figdir"; $(MKDIR_P) "$$figdir"; fi; \
+	        figbase=`echo $$fig | sed -e 's/^.*\///'`; \
+	        if ! test -f "$$lc/$$fig"; then \
+	          echo "cd $$figdir && $(LN_S) -f ../../C/$$fig $$figbase"; \
+	          ( cd "$$figdir" && $(LN_S) -f "../../C/$$fig" "$$figbase" ); \
+	        fi; \
+	      done; \
 	    fi; \
-	  done; \
+		echo "dblatex --output $$_target $(top_srcdir)/doc/nact/$$lc/$(DOC_MODULE).xml"; \
+		dblatex --output $$_target $(top_srcdir)/doc/nact/$$lc/$(DOC_MODULE).xml; \
 	done
-	touch pdf-figs.stamp
 else
 all-pdf-manuals:
 endif
