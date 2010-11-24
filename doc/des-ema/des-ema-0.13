@@ -1,0 +1,1413 @@
+<?php
+
+function code( $string ){
+?><code><font size="+1"><?php echo $string; ?></font></code><?php
+}
+
+function desktop(){
+    code( ".desktop" );
+}
+
+function directory(){
+    code( ".directory" );
+}
+
+function DES(){
+    ?><a href="http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html" target="_blank">DES</a><?php
+}
+
+function this_url( $name, $url ){
+    ?><a href="http://www.nautilus-actions.org/?q=node/377<?php echo $url; ?>"><?php echo $name; ?></a><?php
+}
+
+?>
+
+<br />
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2>Introduction</h2>
+
+<p>
+This is <acronym>DES-EMA</acronym>, the Extension for Menus and Actions of the <a href="http://www.freedesktop.org/" target="_blank">freedesktop.org</a> <a href="http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html" target="_blank">Desktop Entry Specification</a> (DES).
+</p>
+<p>
+This specification aims to define a common format for user actions, allowing creators to share their actions between compliant desktop environments. This also covers how actions may be organized in a hierarchy of menus, submenus, and so on. It explains how actions and menus should be described in <?php desktop(); ?> files, how and where these <?php desktop(); ?> files are to be searched for, and how the final hierarchy should be built.
+</p>
+<p>
+This specification doesn't explicitly handle the &laquo;&nbsp;level-zero&nbsp;&raquo; case (but see the <?php this_url( "appendix A", "#level-zero" ); ?> for a proposition about that).
+</p>
+<p>
+Such an extension, targeting action items in file manager context menu, has been widely discussed in <a href="https://mail.kde.org/mailman/listinfo/kde-devel" target="_blank">KDE</a>, <a href="http://lists.freedesktop.org/mailman/listinfo/xdg" target="_blank">freedesktop.org</a> and <a href="http://foo-projects.org/mailman/listinfo/thunar-dev" target="_blank">Thunar</a> lists.
+</p>
+<p>
+This is version 0.13 of our draft, updated on 2010, August 4th (see <?php this_url( "ChangeLog", "#changelog" ); ?> below).
+</p>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2>Desktop file</h2>
+
+<h4>Desktop file format</h4>
+
+<p>
+This specification relies on the common syntax defined in <?php DES(); ?>. We are just reminding here the reader of some main points.
+</p>
+<ul>
+<li>Files are UTF-8 encoded.</li>
+<li>All keys and values are case sensitive.</li>
+<li>The <?php code( "[Desktop Entry]" ); ?> group must be the first group of the file.</li>
+<li>Boolean values must be "<?php code( "true" ); ?>" or "<?php code( "false" ); ?>".</li>
+<li>Strings, in strings lists, are semicolon-separated; the list itself ends with a semicolon.</li>
+</ul>
+<p>
+Please note that, in all tables below, <?php code( "Req=YES" ); ?> just means that the value is required to define a valid action (resp. menu, resp. profile). A management UI is free to handle invalid actions (resp. menus, resp. profiles), and in fact that might even be needed in order to be able to fix invalid items, and make them valid...
+</p>
+
+<h4>Desktop file identifiant</h4>
+
+<p>
+In the rest of this specification, when a desktop file needs to be identified, we are using the basename of the file, without the extension, calling this a <i>desktop_file_id</i>.
+</p>
+
+<h4 id="searchpath">Desktop files search path</h4>
+
+<p>
+<?php desktop(); ?> files are searched for in "<?php code( "XDG_DATA_DIRS/file-manager/actions" ); ?>" directories, as defined in <a href="http://www.freedesktop.org/" target="_blank">freedesktop.org</a> <a href="http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html" target="_blank">XDG specifications</a>.
+</p>
+<p>
+When building the whole hierarchy of the menus and actions to be displayed in the file manager context menu, the implementation should ensure that all used <i>desktop_file_id</i>s are unique. In the case where two <?php desktop(); ?> files have the same <i>desktop_file_id</i>, then the first found should take precedence.
+</p>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2>Managed objects</h2>
+
+<h4 id="managed-actions">Actions and profiles</h4>
+
+<p>
+This specification essentially defines how actions are to be described in <?php desktop(); ?> files in order to be displayed in a file manager context menu, and available as selectable items to be executed by the user.
+</p>
+<p>
+An action might be defined as a group of several elements:
+<ul>
+<li>the displayable part: label, tooltip, icon</li>
+<li>conditions which have to be met in order the item be actually displayed in the context menu; these conditions are checked against the current file manager selection; these might be mimetypes, scheme, etc.</li>
+<li>the command to be executed, and its parameters.</li>
+</ul>
+</p>
+<p>
+As a user might want have the very same action (same label, same icon, and so on) execute a different command depending of the current environment at runtime, we define that an action is built on one to several profiles, where each profile is defined by:</li>
+<ul>
+<li>conditions which have to be met in order the item be actually displayed in the context menu; these conditions are checked against the current file manager selection; these might be mimetypes, scheme, etc.</li>
+<li>the command to be executed, and its parameters.</li>
+</ul>
+</p>
+
+<h4 id="managed-menus">Menus</h4>
+
+<p>
+This specification also defines how these actions may be gathered and ordered in menus, and submenus, and so on.
+</p>
+<p>
+A menu is defined by:
+<ul>
+<li>its displayable part: label, tooltip, icon</li>
+<li>conditions which are to be met in order the menu, and recursively all of its subitems, be actuelly displayed in the file manager context menu</li>
+<li>the ordered list of the items in the menu.</li>
+</ul>
+</p>
+
+<h4>Conditions</h4>
+
+<p>
+As we are dealing with three level of objects (menus, actions, profiles), it appears that whether a condition must be defined at one of these levels is rather an arbitrary decision.
+</p>
+<p>
+We so say that conditions may appear in any of these levels:
+</p>
+<ul>
+<li>When a condition appears in a menu definition, the result of its evaluation recursively applies to all included items. If the condition is not met, then neither the menu nor any of its subitems will be displayed.</li>
+<li>When a condition appears in an action definition, the result of its evaluation applies to all its profiles. If the condition is not met, then the action will not be candidate; the profiles will even not be considered.</li>
+</ul>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2>Action definition</h2>
+
+<p>
+An action must be entirely defined in one <?php desktop(); ?> file. The action is identified by the <i>desktop_file_id</i> in which it is defined.
+</p>
+<p>
+Only valid actions are displayed in the file manager context menu.
+</p>
+<p>
+To be valid, an action must have a non-empty name, and at least one profile must be found valid at runtime.
+</p>
+<p>
+As stated <?php this_url( "above", "#managed-actions" ); ?>, an action may embed its own conditions. If these conditions are not met at runtime, then profiles are not even considered.
+</p>
+<p>
+An action is primarily defined in the <?php code( "[Desktop Entry]" ); ?> group, which has following keys:
+</p>
+
+<table border="1">
+<tr valign="top">
+<td><b>Key</b></td>
+<td><b>Description</b></td>
+<td nowrap="nowrap"><b>Value type</b></td>
+<td><b>Req&nbsp;?</b></td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Type" ); ?></td>
+<td>This define this <?php desktop(); ?> file as an Action definition.<br />
+Defaults to "<?php code( "Action" ); ?>".</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Name" ); ?></td>
+<td>The label of the action, as it should appear in the context menu.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "Name" ); ?> value, and will be substituted at runtime.</td>
+<td>localestring</td>
+<td>YES</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Tooltip" ); ?></td>
+<td>The tooltip associated with the item in the context menu.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "Tooltip" ); ?> value, and will be substituted at runtime.<br />
+Defaults to empty.
+</td>
+<td>localestring</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Icon" ); ?></td>
+<td>The name of a themed icon, or the path to an icon.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "Icon" ); ?> value, and will be substituted at runtime.<br />
+Defaults to empty.</td>
+<td>localestring</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Description" ); ?></td>
+<td>A free description of the action, which may be used in the management UI, in a Web page, and so on.<br />
+Defaults to empty.</td>
+<td>localestring</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "SuggestedShortcut" ); ?></td>
+<td>A shortcut suggested for the action.<br />
+Please note that this might be only a suggestion as the shortcut may be already reserved for another use. Implementation should not override an already existing shortcut to define this one.<br />
+The format may look like "&lt;Control&gt;a" or "&lt;Shift&gt;&lt;Alt&gt;F1".<br />
+Defaults to empty.</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Enabled" ); ?></td>
+<td>Whether the item is candidate to be displayed in the context menu.<br />
+A user might define many actions or menus, and choose to only enable some of them from time to time.<br />
+Defaults to "<?php code( "true" ); ?>".</td>
+<td>boolean</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Hidden" ); ?></td>
+<td>From <?php DES(); ?>: <?php code( "Hidden" ); ?> should have been called <?php code( "Deleted" ); ?>. It means the user deleted (at his level) something that was present (at an upper level, e.g. in the system dirs). It's strictly equivalent to the <?php desktop(); ?> file not existing at all, as far as that user is concerned. This can also be used to "uninstall" existing files (e.g. due to a renaming) - by letting make install install a file with <?php code( "Hidden=true" ); ?> in it.<br />
+Defaults to "<?php code( "false" ); ?>".</td>
+<td>boolean</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "TargetContext" ); ?></td>
+<td>Whether the item targets the file manager context menu.<br />
+This means that the action will be candidate if defined conditions met the current selection.<br />
+Defaults to "<?php code( "true" ); ?>".</td>
+<td>boolean</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "TargetLocation" ); ?></td>
+<td>Whether the item targets a location menu, if the file manager supports this.<br />
+This means that the action will be candidate if defined conditions met the current location.<br />
+Defaults to "<?php code( "false" ); ?>".</td>
+<td>boolean</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "TargetToolbar" ); ?></td>
+<td>Whether the item targets the toolbar, if the file manager supports this.<br />
+Note that, in order to keep a nice and stable UI, the file manager may reserve toolbar actions to those only targeting the current folder.<br />
+Defaults to "<?php code( "false" ); ?>".</td>
+<td>boolean</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "ToolbarLabel" ); ?></td>
+<td>The label to be displayed in the toolbar, if it is not the same that those displayed in context menu.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "ToolbarLabel" ); ?> value, and will be substituted at runtime.<br />
+Defaults to <?php code( "Name" ); ?> value.</td>
+<td>localestring</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td nowrap="nowrap"><?php code( "Profiles" ); ?></td>
+<td><p>The ordered list of the profiles attached to this action.<br />
+Each element of this strings list may be:
+<ul>
+ <li>a <i>profile_id</i>, <i>i.e.</i> the id of a profile, as an ASCII string</li>
+ <li>a command to be executed, if the string is enclosed between square brackets ('<?php code( "[" ); ?>'...'<?php code( "]" ); ?>').</li>
+</ul>
+
+So, "<?php code( "Profiles" ); ?>" key has a dynamic value: if an element of the string list is enclosed between square brackets ('<?php code( "[" ); ?>'...'<?php code( "]" ); ?>'), it is considered as a command, optionally with <?php this_url( "parameters", "#parameters" ); ?> and arguments, and so will be subject to an evaluation at runtime. If the standard output of the command is a valid strings list, then it is substituted to the bracketed element. It the command doesn't exist or cannot be executed, the bracketed element is just ignored.
+</p>
+<p>
+After reading, and maybe evaluation of dynamic elements, profiles identified by the "<?php code( "Profiles" ); ?>" value, but not found in this <?php desktop(); ?> file, are just ignored.
+</p>
+<p>
+It is up to the implementation to decide whether profiles found in this <?php desktop(); ?> file, but not identified in this list, should or not be attached to the action.<br/>
+It could be for example an acceptable fallback to append these &laquo;&nbsp;orphan&nbsp;&raquo; profiles at the end of the list of profiles.<br />
+Another choice might also be:
+</p>
+<ul>
+<li>at runtime, only attach to the action profiles which are listed in this "<?php code( "Profiles" ); ?>" key</li>
+<li>while a management UI may load all profiles found in the <?php desktop(); ?> file.</li>
+</ul>
+</td>
+<td>strings list</td>
+<td>YES</td>
+</tr>
+
+</table>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2>Profile definition</h2>
+
+<p>
+Profile is identified by its <i>profile_id</i>, as an ASCII string.
+</p>
+<p>
+Each profile defined in the "<?php code( "Profiles" ); ?>" key, whether statically by its <i>profile_id</i> identifiant, or as the result of an evaluated command, must be defined in a <?php code( "[X-Action-Profile <i>profile_id</i>]" ); ?> group.
+</p>
+<p>
+When several profiles are defined for an action, only the first valid profile whose conditions are met at runtime is selected to be made available in the context menu.
+</p>
+<p>
+Defining several profiles let so the user have an ordered OR-ed set of conditions, i.e. have one action be available if one set of conditions is met, OR this same action, though most probably with a slightly different command, be available if another set of conditions is met, and so on.
+</p>
+<p>
+In order to be valid, a profile must at least have an executable command.
+</p>
+
+<table border="1">
+<tr valign="top">
+<td><b>Key</b></td>
+<td><b>Description</b></td>
+<td nowrap="nowrap"><b>Value type</b></td>
+<td><b>Req&nbsp;?</b></td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Name" ); ?></td>
+<td>The name of the profile; this name is not displayed in the context menu, and should just be thought as a convenience for the management UI. It may also be seen as a good place for a description of what the profile exactly does.<br />
+Defaults to empty.</td>
+<td>localestring</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Exec" ); ?></td>
+<td>From <?php DES(); ?>: command to execute, possibly with arguments<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "Exec" ); ?> value, and will be substituted at runtime.
+</td>
+<td>string</td>
+<td>YES</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Path" ); ?></td>
+<td>The working directory the program should be started in.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "Path" ); ?> value, and will be substituted at runtime.<br />
+Defaults to base directory of the current selection, which happens to be the value of "<?php code( "%d" ); ?>" parameter.
+</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "ExecutionMode" ); ?></td>
+<td>Execution mode of the program.<br />
+This may be choosen between following values:
+<ul>
+<li><?php code( "Normal" ); ?>: Starts as a standard graphical user interface</li>
+<li><?php code( "Terminal" ); ?>: Starts the preferred terminal of the graphical environment, and runs the command in it</li>
+<li><?php code( "Embedded" ); ?>: Makes use of a special feature of the file manager which allows a terminal to be ran inside of it; an acceptable fallback is <?php code( "Terminal" ); ?></li>
+<li><?php code( "DisplayOutput" ); ?>: The ran terminal may be closed at end of the command, but standard streams (stdout, stderr) should be collected and displayed; an acceptable fallback is <?php code( "Terminal" ); ?></li>
+</ul>
+Defaults to "<?php code( "Normal" ); ?>".
+</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "StartupNotify" ); ?></td>
+<td>From <?php DES(); ?>: if "<?php code( "true" ); ?>", it is KNOWN that the application will send a "remove" message when started with the DESKTOP_STARTUP_ID environment variable set. If "<?php code( "false" ); ?>", it is KNOWN that the application does not work with startup notification at all (does not shown any window, breaks even when using StartupWMClass, etc.). If absent, a reasonable handling is up to implementations (assuming false, using StartupWMClass, etc.). (See the <a href="http://www.freedesktop.org/Standards/startup-notification-spec">Startup Notification Protocol Specification</a> for more details).<br />
+Only relevant when <?php code( "ExecutionMode=Normal" ); ?>.<br />
+Defaults to "<?php code( "false" ); ?>".</td>
+<td>boolean</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "StartupWMClass" ); ?></td>
+<td>From <?php DES(); ?>: if specified, it is known that the application will map at least one window with the given string as its WM class or WM name hint (see the <a href="http://www.freedesktop.org/Standards/startup-notification-spec">Startup Notification Protocol Specification</a> for more details). <br />
+Only relevant when <?php code( "ExecutionMode=Normal" ); ?>.<br />
+Defaults to empty.</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "ExecuteAs" ); ?></td>
+<td>The user the command must be ran as. The user may be identified by its numeric UID or by its login.<br />
+The implementation should ignore a profile defining a non-existing UID or login as a value for the <?php code( "ExecuteAs" ); ?> key.<br />
+The implementation might require the presence of a well-configured subsystem (e.g. sudo).<br />
+Defaults to empty: the command will be executed as the current user.</td>
+<td>string</td>
+<td>no</td>
+</tr>
+</table>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2>Menu definition</h2>
+
+<p>
+Just as an action, a menu has label, tooltip, icon.
+</p>
+<p>
+But, where an action is intended to eventually execute a command, a menu is just a way of gathering some subitems, actions or menus, in an ordered list.
+</p>
+<p>
+In order to be valid, a menu must have a non-empty name, and include at least one valid subitem.
+</p>
+<p>
+It is the responsability of the implementation to ensure that the displayed menus are relevant, <i>i.e.</i> not empty, with no separator at the begin or the end of the menu, with no double separator, etc.
+</p>
+<p>
+As stated <?php this_url( "above", "#managed-menus" ); ?>, a menu may embed its own conditions. If these conditions are not met at runtime, then subitems are not even considered.
+</p>
+<p>
+The menu is so defined as a particular case of a <?php desktop(); ?> file, identified by its <i>desktop_file_id</i>, whose the <?php code( "[Desktop Entry]" ); ?> section has following keys:
+</p>
+
+<table border="1">
+<tr valign="top">
+<td nowrap="nowrap"><b>Key</b></td>
+<td><b>Description</b></td>
+<td nowrap="nowrap"><b>Value type</b></td>
+<td><b>Req&nbsp;?</b></td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Type" ); ?></td>
+<td>This define this <?php desktop(); ?> file as a Menu definition.<br />
+Must be equal to "<?php code( "Menu" ); ?>".</td>
+<td>string</td>
+<td>YES</td>
+</tr><tr valign="top">
+<td><?php code( "Name" ); ?></td>
+<td>The label of the menu, as it should appear in the context menu.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "Name" ); ?> value, and will be substituted at runtime.</td>
+<td>localestring</td>
+<td>YES</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Tooltip" ); ?></td>
+<td>The tooltip associated with the submenu in the context menu.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "Tooltip" ); ?> value, and will be substituted at runtime.<br />
+Defaults to empty.
+</td>
+<td>localestring</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Icon" ); ?></td>
+<td>The name of a themed icon, or the path to an icon, to be associated to the submenu.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "Icon" ); ?> value, and will be substituted at runtime.<br />
+Defaults to empty.</td>
+<td>localestring</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Description" ); ?></td>
+<td>A free description of the menu, which may be used in the management UI, in a Web page, and so on.<br />
+Defaults to empty.</td>
+<td>localestring</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "SuggestedShortcut" ); ?></td>
+<td>A shortcut suggested for the menu.<br />
+Please note that this might be only a suggestion as the shortcut may be already reserved for another use. Implementation should not override an already existing shortcut to define this one.<br />
+The format may look like "&lt;Control&gt;a" or "&lt;Shift&gt;&lt;Alt&gt;F1".<br />
+Defaults to empty.</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Enabled" ); ?></td>
+<td>Whether the item is candidate to be displayed in the context menu.<br />
+A user might define many actions or menus, and choose to only enable some of them from time to time.<br />
+Defaults to "<?php code( "true" ); ?>".</td>
+<td>boolean</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Hidden" ); ?></td>
+<td>From <?php DES(); ?>: <?php code( "Hidden" ); ?> should have been called <?php code( "Deleted" ); ?>. It means the user deleted (at his level) something that was present (at an upper level, e.g. in the system dirs). It's strictly equivalent to the <?php desktop(); ?> file not existing at all, as far as that user is concerned. This can also be used to "uninstall" existing files (e.g. due to a renaming) - by letting make install install a file with <?php code( "Hidden=true" ); ?> in it.<br />
+Defaults to "<?php code( "false" ); ?>".</td>
+<td>boolean</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td nowrap="nowrap" id="itemslist"><?php code( "ItemsList" ); ?></td>
+<td><p>The ordered list of the subitems (actions or menus) attached to this menu.<br />
+Each element of this strings list may be:
+<ul>
+<!--
+ Wrong formulation because this prevent to use GConf uuid
+ <li>a <i>desktop_file_id</i>, <i>i.e.</i> the id of a <?php desktop(); ?> file which describes an action or a menu,</li>
+ -->
+ <li>the id of an action or a menu,</li>
+ <li>a command to be executed, if the string is enclosed between square brackets ('<?php code( "[" ); ?>'...'<?php code( "]" ); ?>').</li>
+</ul>
+So, "<?php code( "ItemsList" ); ?>" key has a dynamic value: if an element of the string list is enclosed between square brackets ('<?php code( "[" ); ?>'...'<?php code( "]" ); ?>'), it is considered as a command, optionally with <?php this_url( "parameters", "#parameters" ); ?> and arguments, and so will be subject to an evaluation at runtime. If the standard output of the command is a valid strings list, then it is substituted to the bracketed element. It the command doesn't exist or cannot be executed, the bracketed element is just ignored.
+</p>
+<p>
+The keyword <?php code( "SEPARATOR" ); ?> is a special case of <i>desktop_file_id</i>. It may be used to define a separator in the menu.
+</p>
+<p>
+Actions or menus identified here as a subitem of a menu should not be redisplayed elsewhere.
+</p>
+<p>
+Actions or menus not identified here, or not identified as subitems of a menu or of a submenu, should not be ignored by the implementation; instead of that, the implementation should display these &laquo;&nbsp;orphan&nbsp;&raquo; items, most probably at the level zero of the hierarchy (though in a unspecified order).
+</p>
+</td>
+<td>strings list</td>
+<td>YES</td>
+</tr>
+
+</table>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2>Conditions</h2>
+
+<p>
+As a remainder of that has been said above, each one of the following conditions may appear in a menu, an action or a profile.
+</p>
+<p>
+Conditions are AND-ed, that is all specified conditions which appear in a menu, an action or a profile must be met in order the item be considered as a candidate.
+</p>
+<p>
+When a condition is defined as a string list, elements of the list are considered as OR-ed (but for <?php this_url( "Capabilities", "#capabilities" ); ?>).<br />
+When an element of the string list is negated, it must be considered as an AND condition.
+</p>
+<p>Example:</p>
+<blockquote>
+ <p>
+ The line &laquo;&nbsp;<?php code( "MimeTypes = image/*; video/*;" ); ?>&nbsp;&raquo; must be readen as &laquo;&nbsp;condition is met if each file in the current selection has a mimetype of "<?php code( "image/*" ); ?>" or of "<?php code( "video/*" ); ?>"&nbsp;&raquo;
+  </p>
+  <p>And the line &laquo;&nbsp;<?php code( "MimeTypes = image/*; video/*; !image/bmp" ); ?>&nbsp;&raquo; must be readen as &laquo;&nbsp;condition is met if each file in the current selection has a mimetype of "<?php code( "image/*" ); ?>" or of "<?php code( "video/*" ); ?>", but must not have the "<?php code( "image/bmp" ); ?>" mimetype&nbsp;&raquo;.
+  </p>
+</blockquote>
+
+<table border="1">
+<tr valign="top">
+<td><b>Key</b></td>
+<td><b>Description</b></td>
+<td nowrap="nowrap"><b>Value type</b></td>
+<td><b>Req&nbsp;?</b></td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "OnlyShowIn" ); ?>,<br /><?php code( "NotShowIn" ); ?></td>
+<td>From <?php DES(); ?>: a list of strings identifying the environments that should display/not display a given desktop entry. Only one of these keys, either <?php code( "OnlyShowIn" ); ?> or <?php code( "NotShowIn" ); ?>, may appear in a group (for possible values see the <a href="http://www.freedesktop.org/Standards/menu-spec">Desktop Menu Specification</a>).<br />
+Defaults to show anywhere.</td>
+<td nowrap="nowrap">strings list</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "TryExec" ); ?></td>
+<td>Fromn <?php DES(); ?>: path to an executable file on disk used to determine if some program is actually installed. If the path is not an absolute path, the file is looked up in the $PATH environment variable. If the file is not found or is not executable, this condition evals to <?php code( "false" ); ?>.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "TryExec" ); ?> value, and will be substituted at runtime.<br />
+Defaults to successful.</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "ShowIfRegistered" ); ?></td>
+<td>The well-known name of a DBus service.<br />
+The item will be candidate if the named service is registered on session DBus at runtime.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "ShowIfRegistered" ); ?> value, and will be substituted at runtime.<br />
+Defaults to successful.<br />
+    <table border="0">
+    <tr>
+    <td valign="top"><i>Comment:</i></td>
+    <td valign="top"><i>This is the equivalent of KDE "<?php code( "X-KDE-ShowIfRunning" ); ?>" key.</i></td>
+    </tr>
+    </table>
+</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "ShowIfTrue" ); ?></td>
+<td>A command which, when executed, should output a string on stdout.<br />
+The item will be candidate if the outputed string is equal to "<?php code( "true" ); ?>".<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "ShowIfTrue" ); ?> value, and will be substituted at runtime.<br />
+Example: <?php code( "[ -r %d/.svn/entries ] && echo \"true\"" ); ?><br />
+Defaults to successful.<br />
+    <table border="0">
+    <tr>
+    <td valign="top"><i>Comment:</i></td>
+    <td valign="top"><i>This is the equivalent of KDE "<?php code( "X-KDE-ShowIfDBusCall" ); ?>" key, extended to any command able to output a string.</i></td>
+    </tr>
+    </table>
+</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "ShowIfRunning" ); ?></td>
+<td>The name of a process.<br />
+The item will be candidate if the process name is found in memory at runtime.<br />
+<?php this_url( "Parameters", "#parameters" ); ?> may appear in <?php code( "ShowIfRunning" ); ?> value, and will be substituted at runtime.<br />
+Defaults to successful.
+</td>
+
+<td>string</td>
+<td>no</td>
+</tr>
+<tr valign="top">
+<td><?php code( "MimeTypes" ); ?></td>
+<td>From <?php DES(); ?>: the MIME type(s) supported by this application.<br />
+Each mimetype may be fully specified (e.g. "<?php code( "audio/mpeg;" ); ?>"), or as a group (e.g. "<?php code( "image/*;" ); ?>").<br />
+Mimetypes may be negated (e.g. "<?php code( "audio/*; !audio/mpeg;" ); ?>").<br />
+Some of well-known mimetypes include:<br />
+<ul>
+<li>"<?php code( "all/all" ); ?>": matches all items</li>
+<li>"<?php code( "all/allfiles" ); ?>": matches only files</li>
+<li>"<?php code( "inode/directory" ); ?>": matches only directories</li>
+</ul>
+'<?php code( "*" ); ?>' character is accepted as a wildcard in only two cases:
+<ul>
+ <li>when used alone as in "<?php code( "*;" ); ?>", <i>i.e.</i> when used as a group wildcard without subgroup,</li>
+ <li>when used as the subgroup wildcard, after the '<?php code( "/" ); ?>' character, as in "<?php code( "image/*" ); ?>".</li>
+</ul>
+Defaults to "<?php code( "*;" ); ?>", which happends to be exactly equivalent to "<?php code( "all/all" ); ?>" or to "<?php code( "all/*" ); ?>".
+    <table border="0">
+    <tr>
+    <td valign="top"><i>Comment:</i></td>
+    <!--
+    <td valign="top"><i>Do we should include "<?php code( "allfiles" ); ?>" mimetype, which seems obsolete, in order to keep compatibility with some old versions of KDE ?</i></td>
+    </tr>
+    <tr>
+    -->
+    <td></td>
+    <td><i>This is the equivalent of "<?php code( "ServiceTypes" ); ?>", "<?php code( "X-KDE-ServiceTypes" ); ?>", "<?php code( "ExcludeServiceTypes" ); ?>" KDE and "<?php code( "MimeType" ); ?>" freedesktop keys.</i></td>
+    </tr>
+    </table>
+</td>
+<td>strings list</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Basenames" ); ?></td>
+<td>List of basenames the selection should match in order this profile be selected.<br />
+'<?php code( "*" ); ?>' character is accepted as a wildcard.<br />
+Basenames may be negated (e.g. "<?php code( "*; !*.h;" ); ?>").<br />
+Defaults to "<?php code( "*;" ); ?>".</td>
+<td>strings list</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Matchcase" ); ?></td>
+<td>Whether the above <?php code( "Basenames" ); ?> is case sensitive.<br />
+Defaults to "<?php code( "true" ); ?>".</td>
+<td>boolean</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td id="selection-count"><?php code( "SelectionCount" ); ?></td>
+<td>Whether this profile may be selected depending of the count of the selection.<br />
+This is a string of the form "<?php code( "{'<'|'='|'>'} number" ); ?>".<br />
+Examples of valid strings are: "<?php code( "=0" ); ?>", "<?php code( "> 1" ); ?>", "<?php code( "< 10" ); ?>".<br />
+Defaults to "<?php code( ">0" ); ?>".
+</td>
+<td>string</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Schemes" ); ?></td>
+<td>The list of schemes the selection must satisfy in order the item be selected.<br />
+Exemples of well-known schemes are:<br />
+<ul>
+<li>"<?php code( "file" ); ?>"</li>
+<li>"<?php code( "sftp" ); ?>"</li>
+<li>"<?php code( "smb" ); ?>"</li>
+<li>"<?php code( "http" ); ?>"</li>
+</ul>
+Schemes may be negated, e.g. "<?php code( "!http;" ); ?>".<br />
+Defaults to "<?php code( "*;" ); ?>".
+    <table border="0">
+    <tr>
+    <td valign="top"><i>Comment:</i></td>
+    <td valign="top"><i>This is the equivalent of "<?php code( "X-KDE-Protocol" ); ?>" and "<?php code( "X-KDE-Protocols" ); ?>" KDE keys.</i></td>
+    </tr>
+    <!--
+    <tr>
+    <td></td>
+    <td><i>Does a "Protocols" key would be better understood than a "Schemes" key ?</i></td>
+    </tr> 
+    -->
+    </table>
+</td>
+<td>strings list</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "Folders" ); ?></td>
+<td>A list of paths the current base directory must be in in order the item be selected.<br />
+A folder path may be negated (e.g. "<?php code( "/data; !/data/resources/secret;" ); ?>").<br />
+'<?php code( "*" ); ?>' character is accepted as a wildcard, replacing any level(s) of subdirectory (e.g. "<?php code( "/music; /video; !*/secret;" ); ?>").<br />
+ Also note that a terminating '<?php code( "/*" ); ?>' is always implied by the definition of this key.<br />
+ Last, note that different implementations today widely consider that, for a directory point of view, having no selection is roughly the same that selecting the currently opened folder. If this makes a difference for your action, then <?php this_url( "SelectionCount", "#selection-count" ); ?> is for you.
+Defaults to "<?php code( "/" ); ?>".</td>
+<td>strings list</td>
+<td>no</td>
+</tr>
+
+<tr valign="top">
+<td id="capabilities"><?php code( "Capabilities" ); ?></td>
+<td>A list of capabilities each item of the selection must satisfy in order the item be candidate.<br />
+Capabilities may be negated.<br />
+Please note that each element of the specified list must be considered as ANDed, i.e. if we have "<?php code( "Capabilities=Readable;Writable;!Local" ); ?>", then each element of the selection must be both readable AND writable AND not local.<br />
+Capabilities have to be choosen between following predefined ones:
+<ul>
+<li>"<?php code( "Owner" ); ?>": current user is the owner of selected items</li>
+<li>"<?php code( "Readable" ); ?>": selected items are readable by user (probably more usefull when negated)</li>
+<li>"<?php code( "Writable" ); ?>": selected items are writable by user</li>
+<li>"<?php code( "Executable" ); ?>": selected items are executable by user</li>
+<li>"<?php code( "Local" ); ?>": selected items are local</li>
+</ul>
+Defaults to an empty list (do not care of capabilities).
+    <table border="0">
+    <tr>
+    <td valign="top"><i>Comment:</i></td>
+    <td valign="top"><i>This is the equivalent of "<?php code( "X-KDE-Require" ); ?>" KDE key.</i></td>
+    </tr>
+    <!--
+    <tr>
+    <td></td>
+    <td><i>Some other relevant capabilities ?</i></td>
+    </tr>
+    -->
+    </table>
+</td>
+<td>strings list</td>
+<td>no</td>
+</tr>
+
+</table>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2 id="parameters">Parameters</h2>
+
+<p>
+Whenever parameters are said to be accepted, they will be replaced at run-time.
+</p>
+<p>
+Also, this specification doesn't make any assumption about whether a parameter is relevant in a given situation, or secure, or may be used several times, or so. It instead considers that this sort of check is up to the action creator.
+</p>
+<p>
+The implementation should take care of correctly shell-escape the substituted values, so that it should not be needed for the action creator to use any sort of quotes to handle spaces in filenames.
+</p>
+<p>
+Though some parameters are not sensible to the count of the selection (e.g. "<?php code( "%c" ); ?>", the selection count itself), most have two declensions:
+ <ul>
+  <li>a "singular" one, e.g. "<?php code( "%b" ); ?>", the basename of the selected item</li>
+  <li>a "plural" one, e.g. "<?php code( "%B" ); ?>", a space-separated list of the basenames of selected items</li>
+ </ul>
+</p>
+<p>
+ When the selection is empty or contains only one element, these two forms are exactly equivalent.
+</p>
+<p>
+ When the selection contains more than one item:
+ <ul>
+  <li>if the first relevant parameter found in the <?php code( "Exec" ); ?> key is of a singular form, then the implementation should consider that the command is only able to deal with one item at a time, and thus that it has to be ran one time for each selected item; the same corresponding value must so be used in all parameter expansions;<li>
+  <li>contrarily, if the first relevant parameter found is of the plural form, then the implementation should consider that the command is able to deal with a list of items, and thus the command should be executed only once;</li>
+  <li>if all found parameters are &laquo;&nbsp;irrelevant&nbsp;&raquo;, then the default is to consider that the command should be executed only once.</li>
+ </ul>
+</p>
+<p>
+Example:
+</p>
+<blockquote>
+ <p>
+  Say the current folder is /data, and the current selection contains the three files <?php code( "pierre" ); ?>, <?php code( "paul" ); ?> and <?php code( "jacques" ); ?>.
+  </p>
+ <p>
+  If the <?php code( "Exec" ); ?> key is "<?php code( "echo %b" ); ?>", then the following commands will be run:<br />
+       "<?php code( "echo pierre" ); ?>"<br />
+       "<?php code( "echo paul" ); ?>"<br />
+       "<?php code( "echo jacques" ); ?>"<br />
+  </p>
+  <p>
+   If the <?php code( "Exec" ); ?> key is "<?php code( "echo %B" ); ?>", then the following command will be run:<br />
+       "<?php code( "echo pierre paul jacques" ); ?>"
+  </p>
+  <p>
+  If the <?php code( "Exec" ); ?> key is "<?php code( "echo %b %B" ); ?>", then the following commands will be run:<br />
+       "<?php code( "echo pierre pierre paul jacques" ); ?>"<br />
+       "<?php code( "echo paul pierre paul jacques" ); ?>"<br />
+       "<?php code( "echo jacques pierre paul jacques" ); ?>"<br />
+  </p>
+  <p>
+  If the <?php code( "Exec" ); ?> key is "<?php code( "echo %B %b" ); ?>", then the following commands will be run:<br />
+       "<?php code( "echo pierre paul jacques pierre" ); ?>"<br />
+  The basename used is those of the first item of the selected items list as provided by the file manager. There is only a small chance that it would be those of the first visually selected item, and there is contrarily great chances that it would not be predictable at all.
+  </p>
+  <p>
+   Even if the choosen parameter is the same for all selected items, the behavior is the identical.<br />
+   If the <?php code( "Exec" ); ?> key is "<?php code( "echo %d %B" ); ?>", then the following commands will be run:<br />
+       "<?php code( "echo /data pierre paul jacques" ); ?>"<br />
+       "<?php code( "echo /data pierre paul jacques" ); ?>"<br />
+       "<?php code( "echo /data pierre paul jacques" ); ?>"<br />
+    which obviously doesn't make many sense.
+  </p>
+  <p>
+   As the last three examples show up, action creator should avoid to mix singular and plural forms, unless they know what they are doing, whether it doesn't make sense or this may lead to unwaited results.
+  </p>
+  <p>
+   Nonetheless, mixing singular and plural forms, though we warn against, is not an error. As a counter example, there may be some situations where a command-line of the form "<?php code( "echo %B %d" ); ?>" would be useful. In that case, the following command would be run:<br />
+       "<?php code( "echo pierre paul jacques /data" ); ?>"<br />
+    It is left as an exercize for the reader to find a use case.
+  </p>
+</blockquote>
+
+<p>
+The word "first" in the following table makes so reference to the case where the singular form parameter is used in a plural form command. We recall one more time that which is the "first" element is not specified, and, most probably, rather unpredictable.
+</p>
+
+<table border="1">
+<tr valign="top">
+<td align="center"><b>Parameter</b></td>
+<td><b>Description</b></td>
+<td colspan="3" align="center"><b>Said form</b></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%b</td>
+<td>(first) basename</td>
+<td>singular</td>
+<td></td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%B</td>
+<td>space-separated list of basenames</td>
+<td></td>
+<td></td>
+<td>plural</td>
+</tr>
+
+<tr valign="top">
+<td align="center">%c</td>
+<td>count of selected items</td>
+<td></td>
+<td>irrelevant</td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%d</td>
+<td>(first) base directory</td>
+<td>singular</td>
+<td></td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%D</td>
+<td>space-separated list of base directory of each selected items</td>
+<td></td>
+<td></td>
+<td>plural</td>
+</tr>
+
+<tr valign="top">
+<td align="center">%f</td>
+<td>(first) file name</td>
+<td>singular</td>
+<td></td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%F</td>
+<td>space-separated list of selected file names</td>
+<td></td>
+<td></td>
+<td>plural</td>
+</tr>
+
+<tr valign="top">
+<td align="center">%h</td>
+<td>hostname of the (first) URI</td>
+<td></td>
+<td>irrelevant</td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%m</td>
+<td>mimetype of the (first) selected item</td>
+<td>singular</td>
+<td></td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%M</td>
+<td>space-separated list of the mimetypes of the selected items</td>
+<td></td>
+<td></td>
+<td>plural</td>
+</tr>
+
+<tr valign="top">
+<td align="center">%n</td>
+<td>username of the (first) URI</td>
+<td></td>
+<td>irrelevant</td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%p</td>
+<td>port number of the (first) URI</td>
+<td></td>
+<td>irrelevant</td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%s</td>
+<td>scheme of the (first) URI</td>
+<td></td>
+<td>irrelevant</td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%u</td>
+<td>(first) URI</td>
+<td>singular</td>
+<td></td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%U</td>
+<td>space-separated list of selected URIs</td>
+<td></td>
+<td></td>
+<td>plural</td>
+</tr>
+
+<tr valign="top">
+<td align="center">%w</td>
+<td>(first) basename without the extension</td>
+<td>singular</td>
+<td></td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%W</td>
+<td>space-separated list of basenames without their extension</td>
+<td></td>
+<td></td>
+<td>plural</td>
+</tr>
+
+<tr valign="top">
+<td align="center">%x</td>
+<td>(first) extension</td>
+<td>singular</td>
+<td></td>
+<td></td>
+</tr>
+
+<tr valign="top">
+<td align="center">%X</td>
+<td>space-separated list of extensions</td>
+<td></td>
+<td></td>
+<td>plural</td>
+</tr>
+
+<tr valign="top">
+<td align="center">%%</td>
+<td>the &laquo;&nbsp;%&nbsp;&raquo; character</td>
+<td></td>
+<td>irrelevant</td>
+<td></td>
+</tr>
+
+</table>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2 id="hierarchy">Building the whole hierarchy</h2>
+
+<p>
+The processus described here is only a sort of meta-algorythm, whose only goal is to better specify how the menus and actions should be layouted in the final hierarchy.
+</p>
+<p>
+The implementor might take advantage of preparing once the whole hierarchy of the menus and actions:
+</p>
+<ul>
+ <li>to minimize the time spent in the parsing of all files;</li>
+ <li>to identify and eliminate duplicate <i>desktop_file_id</i>s,</li>
+ <li>to eliminate invalid menus and actions.</li>
+</ul>
+<p>
+<ol>
+ <li>as described in <?php this_url( "Desktop files search path", "#searchpath" ); ?> chapter, scan relevant directories, eliminating duplicate <i>desktop_file_id</i>s and invalid <?php desktop(); ?> files; implentation so obtains a flat list of menus or actions;<br />&nbsp;</li>
+ <li>recursively build the hierarchy; this merely consists in the build of the hierarchy as a tree of menus and actions, where each <i>desktop_file_id</i> addressed as the subitem of a menu consumes this same id from the flat list
+  <ul>
+   <li>if the level-zero order (which is not specified here, but see <?php this_url( "Appendix A", "#level-zero" ); ?> for a proposal) is defined by the implementation, then each <i>desktop_file_id</i> addressed in the level zero consumes this same id from the flat list;</li>
+   <li>else, if might be reasonable to start with an empty tree;</li>
+  </ul><br />&nbsp;</li>
+ <li>at the end, implementation stays with:
+  <ul>
+   <li>the output tree with some menus at the root;</li>
+   <li>some actions, left in the input flat list because they were not addressed by any menu; these left actions should be added to the level zero of the hierarchy (though in a unspecified order)</li>
+   <li>some menus, left in the input flat list because their subitems were not found; as these menus happen to be empty, they must be considered as invalid.</li>
+  </ul></li>
+</ol>
+</p>
+<p>
+ After this built phase, the resultant tree only contains valid (before runtime parameters expansion) menus and actions.
+</p>
+<p>
+ So, menus or actions may appear at the level zero of the whole hierarchy for only two reasons:
+ <ol>
+  <li>because they are explicitly addressed by the level-zero configuration, if the implementation defines it; this may concern menus and actions;</li>
+  <li>because these items were not adressed by any menu (but this may only concern actions).</li>
+ </ol>
+</p>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2 id="level-zero">Appendix A. The level-zero case</h2>
+
+<p>
+Though not strictly an action or a menu definition, the level-zero issue might be easily solved by this specification. The implementation is free to implement it or not.
+</p>
+<p>
+Ordering the elements which have to be displayed at the level-zero of the file manager context menu is just a particular case of a menu definition.
+</p>
+<p>
+An implementation might define a <?php code( "level-zero.directory" ); ?> file, which would contain the ordered list of level zero items identified by their <i>desktop_file_id</i>.
+</p>
+<p>
+The <?php code( "[Desktop Entry]" ); ?> section of this <?php code( "level-zero.directory" ); ?> file would so have only one of the following keys:
+</p>
+
+<table border="1">
+<tr valign="top">
+<td nowrap="nowrap"><b>Key</b></td>
+<td><b>Description</b></td>
+<td nowrap="nowrap"><b>Value type</b></td>
+<td><b>Req&nbsp;?</b></td>
+</tr>
+
+<tr valign="top">
+<td><?php code( "ItemsList" ); ?></td>
+<td>Same signification as <?php this_url( "above", "#itemslist" ); ?><br />
+</td>
+<td>strings list</td>
+<td>no</td>
+</tr>
+<!--
+    <tr valign="top">
+    <td><?php code( "GetItemsList" ); ?></td>
+    <td>Same signification as
+    <a href="http://www.nautilus-actions.org/?q=node/377#getitemslist">above</a><br />
+    </td>
+    <td>string</td>
+    <td>no</td>
+    </tr>
+-->
+</table>
+
+<p>
+The <?php code( "level-zero.directory" ); ?> file may be searched for in <?php code( "XDG_DATA_DIRS/file-manager/actions" ); ?>. The first one found would be used.
+</p>
+<p>
+Not finding a <?php code( "level-zero.directory" ); ?> file should not prevent actions or menus to be displayed. Instead, they just would be displayed in an unspecified, implementation-dependant, order.
+</p>
+<p>
+The name "<?php code( "level-zero.directory" ); ?>" is choosen to not risk any collision with regular <?php desktop(); ?> files.
+</p>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2 id="menu-rationales">Appendix B. Some rationales about menu definition</h2>
+
+<h3>The KDE way</h3>
+
+<p>
+KDE defines the "<?php code( "X-KDE-Submenu" ); ?>" key. This key defines the label of a submenu the current action(s) should be included in. Order of the actions in this submenu is defined by the "<?php code( "Actions" ); ?>" key, though this might be altered by the "<?php code( "X-KDE-Priority" ); ?>" key. When several <?php desktop(); ?> files define the same submenu, actions are merged.
+</p>
+<p>
+What are the advantages of this solution ?
+</p>
+<ul>
+<li>It exists, and is widely used in KDE ServiceMenus.</li>
+<li>This is a down-to-top, self-contained, approach where each action says in which submenu it whishes to be included in.</li>
+</ul>
+<p>
+What are the inconvenients of this solution ?
+</p>
+<ul>
+<li>It lacks of an <?php code( "Icon" ); ?> key associated to the submenu; though this certainly be added, the risk exists that several submenus with same label actually define different icons.</li>
+<li>It lacks of a <?php code( "Tooltip" ); ?> key associated to the submenu (though... idem as above)</li>
+<li>When several <?php desktop(); ?> files define the same submenu (<i>i.e.</i> the same label), a merge operation is done so that all actions are included in the same submenu. The order of the actions after such a merge operation is not defined.</li>
+<li>There is no way to define the global order of the actions, when all <?php desktop(); ?> files have been dealt with.</li>
+<li>As the menu is adressed at the action-level, one has to modifiy each action when he wants to reorganize his menus.</li>
+<li>Whether there is any menu or not, there is no way to define order of level-zero elements.</li>
+</ul>
+
+<h3>An alternate way</h3>
+
+<p>
+As the menu may be seen as just a particular case of action, it appears logically that its definition may directly be derived from the action definition.
+</p>
+<p>
+What are the advantages (over the KDE way) of using this definition ?
+</p>
+<ul>
+<li>User/sysadmin has full control on the order of the displayed items, and on the content of the submenus.</li>
+<li>Defining menus outside of the actions is a conceptual advantage; this let creators of actions do their work without having to wonder in which menu the action should go.</li>
+<li>There is no way for an action creator to decide himself if its action is <i>Important</i> or should be displayed at the <i>TopLevel</i>.</li>
+<li>Associated with <i>ad-hoc</i> conditions, we are able to define conditional menus, thus optimizing the building of the whole contextual menu.</li>
+<li>This is not XML ;-)</li>
+</ul>
+<p>
+What are the inconvenients ?
+</p>
+<ul>
+<li>As a top-to-down approach, just dropping a new <?php desktop(); ?> file somewhere is not enough to get advantage of this; not referenced actions or submenus will just be displayed anywhere in the contextual menu.</li>
+</ul>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2 id="example-c">Appendix C. An example of an action</h2>
+
+<p>
+In the following example, we define an "Open terminal here" action, which has three profiles. These profiles are thought to be able to open a suitable terminal in most situations. They are ordered, and so only the first profile whose conditions are met at runtime will be used in the file manager context menu.
+</p>
+
+<blockquote>
+  <pre>
+    [Desktop Entry]
+    Name = Open terminal here
+    Tooltip = Open a new terminal here
+    Icon = terminal
+    Profiles = on_folder; on_file; on_desktop;
+
+    [X-Action-Profile on_folder]
+    Name = open a terminal on the current folder or on the selected folder
+    MimeTypes = inode/directory;
+    # note that this means strictly less than 2, as the equal sign is part of the DES syntax
+    SelectionCount = < 2
+    Exec = gnome-terminal --working-directory=%d
+
+    [X-Action-Profile on_file]
+    Name = open a terminal in the folder which contains selected items
+    MimeTypes = all/allfiles;
+    Exec = gnome-terminal --working-directory=$(echo %D | cut -d' ' -f1)
+
+    [X-Action-Profile on_desktop]
+    Name = open a terminal of the desktop
+    Schemes = x-nautilus-desktop;
+    Exec = gnome-terminal --working-directory=~/Desktop
+  </pre>
+</blockquote>
+
+<p>
+Note that this is only an example of how an action may be defined in a <?php desktop(); ?> file. It has not been deeply tested, and there is most probably more efficient ways of opening a terminal somewhere...
+</p>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2 id="example-d">Appendix D. An example of a menu</h2>
+
+<p>
+Say for the example that the action defined <?php this_url( "in previous appendix", "#example-c" ); ?> is saved as <?php code( "~/.local/share/file-manager/actions/open-terminal.desktop" ); ?> file.
+</p>
+<p>
+et define a menu which will embed this action. We will so create a second <?php desktop(); ?> file, with following content:
+</p>
+
+<blockquote>
+  <pre>
+    [Desktop Entry]
+    Type = Menu
+    Name = Terminal menu
+    Tooltip = Some actions on terminals
+    Icon = terminal-group
+    ItemsList = open-terminal;
+  </pre>
+</blockquote>
+
+<p>
+This may be saved, e.g. as <?php code( "~/.local/share/file-manager/actions/menu-terminal.desktop" ); ?> file.
+</p>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2 id="refs">References</h2>
+
+<ul>
+<li><a href="http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html" target="_blank">Desktop Entry Specification</a></li>
+<li><a href="http://standards.freedesktop.org/menu-spec/menu-spec-latest.html" target="_blank">Desktop Menu Specification</a></li>
+<li><a href="http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html" target="_blank">XDG Base Directory Specification</a></li>
+<li><a href="http://developer.kde.org/documentation/tutorials/dot/servicemenus.html" target="_blank">Creating Konqueror Service Menus</a></li>
+<li><a href="http://www.krusader.org/handbook/useractions.html" target="_blank">Krusader UserActions</a></li>
+<li><a href="http://thunar.xfce.org/pwiki/documentation/custom_actions" target="_blank">Thunar Custom Actions</a></li>
+</ul>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2 id="contributors">Contributors</h2>
+
+<ul>
+<li>Jonas B&auml;hr</li>
+<li>David Faure</li>
+<li>Ted Gould</li>
+<li>Hong Jen Yee &laquo;&nbsp;PCMan&nbsp;&raquo;</li>
+<li>Michael Pyne</li>
+<li>Liam R. E. Quin</li>
+<li>Pierre Wieser</li>
+</ul>
+
+<!-- ----------------------------------------------------------------------------- -->
+
+<h2 id="changelog">ChangeLog</h2>
+
+<table border="1">
+<tr>
+<td align="center">Version</td>
+<td align="center">Date</td>
+<td>Changes</td>
+</tr>
+
+<tr>
+<td align="center">0.1-draft</td>
+<td align="center">2009-12-07</td>
+<td>Creation</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.2-draft</td>
+<td align="center">2009-12-17</td>
+<td>
+- Move syntax considerations to a new "Desktop file" section.<br />
+- Add "Managed objects" section.<br />
+- Add "Defining menus" section.<br />
+- Deal with level zero items.<br />
+- Define a separate "Conditions" section.<br />
+- Remove "Rationales" section, moving comments to the corresponding key description.<br />
+- Remove <?php code( "Type" ); ?> key<br />
+- Remove all <?php code( "X-Action-" ); ?> prefix of the key names.<br />
+- Add needed keys in order to provider equivalent functionalities to KDE service menus.<br />
+- Current and extensions keys have been merged in the same table.<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.3-draft</td>
+<td align="center">2009-12-23</td>
+<td>
+- No more talk about &laquo; extending &raquo;, but rather of &laquo; deriving &raquo;.<br />
+- Replace &laquo;&nbsp;<a href="http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html" target="_blank"><acronym>fds</acronym></a>&nbsp;&raquo; acronym with &laquo;&nbsp;<?php DES(); ?>&nbsp;&raquo;.<br />
+- More clearly notice what this specification specifies, and what it doesn't specify.<br />
+- Move the &laquo;&nbsp;level-zero&nbsp;&raquo; case to a specific <?php this_url( "appendix", "#level-zero" ); ?>, as not a main part of this specification.<br />
+- Move rationales about the menu description to a specific <?php this_url( "appendix", "#menu-rationales" ); ?>.<br />
+- <?php code( "Comment" ); ?> key is renamed as <?php code( "Tooltip" ); ?> in menu and action definitions.<br />
+- Add <?php code( "Description" ); ?>, <?php code( "SuggestedShortcut" ); ?> keys to menu and action definitions.<br />
+- Add <?php code( "Path" ); ?>, <?php code( "StartupNotify" ); ?>, <?php code( "StartupWMClass" ); ?>, <?php code( "ForEach" ); ?> keys to profile definition.<br />
+- Remove <?php code( "SelectionCount" ); ?> key.<br />
+- Define available parameters.<br />
+- Create <?php this_url( "Contributors", "#contributors" ); ?> chapter.<br />
+- Create <?php this_url( "References", "#refs" ); ?> chapter.<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.4-draft</td>
+<td align="center">2010-01-07</td>
+<td>
+- Remove <?php code( "ToolbarSameLabel" ); ?> action property.<br />
+- Add <?php code( "ExecuteAs" ); ?> profile property.<br />
+- Restore <?php code( "SelectionCount" ); ?> condition.<br />
+- Add myself as a <?php this_url( "contributor", "#contributors" ); ?>.<br />
+- Add a link to <?php this_url( "ChangeLog", "#changelog" ); ?>.<br />
+- Fix some links.<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.5-draft</td>
+<td align="center">2010-01-28</td>
+<td>
+- Setup a default value for <?php code( "Path" ); ?> parameter.<br />
+- Update <?php this_url( "Contributors", "#contributors" ); ?>.<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.6-draft</td>
+<td align="center">2010-02-03</td>
+<td>
+- Add <?php code( "Type" ); ?> key for distinguishing Actions from Menus.<br />
+- Specifies what to do with present, but not listed, profiles.<br />
+- Specifies defaults for <?php code( "TryExec" ); ?>, <?php code( "ShowIfRegistered" ); ?>, <?php code( "ShowIfTrue" ); ?>, <?php code( "ShowIfRunning" ); ?>, <?php code( "MimeTypes" ); ?>, <?php code( "SelectionCount" ); ?>, <?php code( "Schemes" ); ?>, <?php code( "Capabilities" ); ?> keys.<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.7-draft</td>
+<td align="center">2010-03-01</td>
+<td>
+- Remove <?php code( "Minimized" ); ?> and <?php code( "Maximized" ); ?> from available <?php code( "ExecutionMode" ); ?> modes.<br />
+- Remove <?php code( "ForEach" ); ?> key<br />
+- <?php code( "Profiles" ); ?> and <?php code( "ItemsList" ); ?> become dynamic<br />
+- Remove <?php code( "GetItemsList" ); ?> key<br />
+- Change <?php code( "SelectionCount" ); ?> default from "<?php code( "*" ); ?>" to "<?php code( ">0" ); ?>"<br />
+- <?php code( "Folders" ); ?> elements may be negated<br />
+- Specify how to read a Conditions string list which contains both positive and negated elements<br />
+</td>
+
+<tr valign="top">
+<td align="center">0.8-draft</td>
+<td align="center">2010-03-18</td>
+<td>
+- Update the <?php code( "Profile" ); ?> and <?php code( "ItemsList" ); ?> keys description, describing their dynamic behavior.<br />
+- Update the <?php code( "Path" ); ?> key description, removing the word 'first'.<br />
+- Set the <?php code( "ItemsList" ); ?> key as requested.<br />
+- Specify the use of wildcards in <?php code( "MimeTypes" ); ?>, <?php code( "Basenames" ); ?> and <?php code( "Folders" ); ?> keys.<br />
+- The <?php code( "Folders" ); ?> key value is now defined as a list of paths.<br />
+- Update the <?php code( "Folders" ); ?> key description, describing SelectionCount-based behavior.<br />
+- More precisely describes parameters expansion against multiple selection.</br />
+- Create <?php this_url( "Appendix C", "#example-c" ); ?> with an example of an action.<br />
+- Specify the format of the <?php code( "SuggestedShortcut" ); ?> key.<br />
+- Change to ExtensionAction and ExtensionMenu the type of actions and menus.<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.9-draft</td>
+<td align="center">2010-03-25</td>
+<td>
+- Define the <?php code( "TargetLocation" ); ?> key.<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.10-draft</td>
+<td align="center">2010-03-29</td>
+<td>
+- <?php code( "Hidden" ); ?> and <?php code( "NoDisplay" ); ?> keys are moved to <?php code( "Desktop Entry" ); ?> group.<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.11-draft</td>
+<td align="center">2010-04-15</td>
+<td>
+- Change back the <?php code( "Type" ); ?> of actions (resp. menus) to "<?php code( "Action" ); ?>" (resp. "<?php code( "Menu" ); ?>").<br />
+- Change the keyword "<?php code( "_SEPARATOR_" ); ?>" to "<?php code( "SEPARATOR" ); ?>".<br />
+- Add <?php this_url( "Appendix D", "#example-d" ); ?> with an example of a menu.<br />
+- Rename the "<?php code( "NoDisplay" ); ?>" keyword to "<?php code( "Enabled" ); ?>".<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.12-draft</td>
+<td align="center">2010-06-15</td>
+<td>
+- Replace the "Same as DES" words by the exact relevant excerpt from DES, for <?php code( "Hidden" ); ?>, <?php code( "Exec" ); ?>, <?php code( "StartupNotify" ); ?>, <?php code( "StartupWMClass" ); ?>, <?php code( "OnlyShowIn/NotShowIn" ); ?> and <?php code( "TryExec" ); ?> keys.<br />
+- Change the <?php code( "Capabilities" ); ?>" default value from "<?php code( "*;" ); ?>" to the empty list.<br />
+- Specify that the <?php code( "Capabilities" ); ?>" conditions are ANDed.<br />
+</td>
+</tr>
+
+<tr valign="top">
+<td align="center">0.13-draft</td>
+<td align="center">2010-08-04</td>
+<td>
+- Slightly rewrite introduction.<br />
+- Improve consistency of the specification by replace &laquo;&nbsp;protocol&nbsp;&raquo; with &laquo;&nbsp;scheme&nbsp;&raquo;, and &laquo;&nbsp;program&nbsp;&raquo; with &laquo;&nbsp;command&nbsp;&raquo;.<br />
+- Restates in relevant chapters that actions and menus may have their own set of conditions.<br />
+- Add a <?php this_url( "Building the whole hierarchy", "#hierarchy" ); ?> new chapter.<br />
+- add <?php code( "%m" ); ?> and <?php code( "%M" ); ?> parameters.<br />
+- Better specify which parameters can be used to determine between &laquo;&nbsp;singular&nbsp;&raquo; and &laquo;&nbsp;plural&nbsp;&raquo; forms, and define the default behavior when only &laquo;&nbsp;irrelevant&nbsp;&raquo; parameters are found.<br />
+- States which value must be used in parameter expansions in the case of a singular form.<br />
+- The condition defined by the <?php code( "TryExec" ); ?> key evaluates to <?php code( "false" ); ?> if the specified file is not found or is not executable, instead of the entry being ignored.<br />
+</td>
+</tr>
+
+</table>
