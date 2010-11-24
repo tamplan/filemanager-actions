@@ -249,6 +249,7 @@ uninstall-html-manuals:
 	rm -fr $$_instdir
 
 # locale figures (_DOC_LC_FIGURES) are distributed by gnome-doc-utils
+# when they exist
 dist-html-manuals-hook:
 	for lc in C $(_DOC_REAL_LINGUAS); do \
 		if test -f $(top_builddir)/doc/nact/$$lc/html/$(DOC_MODULE).html; then \
@@ -285,6 +286,9 @@ pdf-stamp: $(_DOC_LC_DOCS)
 	    fi; \
 		echo "dblatex --output $$_target $(top_srcdir)/doc/nact/$$lc/$(DOC_MODULE).xml"; \
 		dblatex --output $$_target $(top_srcdir)/doc/nact/$$lc/$(DOC_MODULE).xml; \
+		if [ "$$lc" != "C" ]; then \
+		  for i in `find $$lc/figures -type l`; do rm -f $$i; done; \
+		fi; \
 	done
 else
 all-pdf-manuals:
@@ -317,7 +321,7 @@ uninstall-pdf-manuals:
 
 dist-pdf-manuals-hook:
 	for _lc in C $(_DOC_REAL_LINGUAS); do \
-		cp $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE).pdf $(distdir)/$$_lc/ || :; \
+		cp -v $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE).pdf $(distdir)/$$_lc/ || :; \
 	done
 
 dist-manuals-hooks:

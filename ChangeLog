@@ -1,7 +1,12 @@
+2010-11-24 Pierre Wieser <pwieser@trychlos.org>
+
+	* doc/nact/Makefile.am:
+	Do not distribute non translated figures in xx/ subdirectories.
+
 2010-11-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* doc/nact/C/nact-starting.xml:
-	Work-around in order to be able sl pdf.
+	Work-around in order to be able to build sl pdf.
 
 	* doc/nact/Makefile.am:
 	Include non-translated figures in translated pdf.
