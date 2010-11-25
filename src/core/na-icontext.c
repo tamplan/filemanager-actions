@@ -425,6 +425,7 @@ is_candidate_for_target( const NAIContext *object, guint target, GList *files )
 
 	if( !ok ){
 		g_debug( "%s: object is not candidate because target doesn't match (asked=%d)", thisfn, target );
+		/*na_object_dump( object );*/
 	}
 
 	return( ok );

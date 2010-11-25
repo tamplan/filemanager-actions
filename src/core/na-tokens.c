@@ -470,6 +470,7 @@ is_singular_exec( const NATokens *tokens, const gchar *exec )
 			case 'd':
 			case 'f':
 			case 'm':
+			case 'o':
 			case 'u':
 			case 'w':
 			case 'x':
@@ -481,6 +482,7 @@ is_singular_exec( const NATokens *tokens, const gchar *exec )
 			case 'D':
 			case 'F':
 			case 'M':
+			case 'O':
 			case 'U':
 			case 'W':
 			case 'X':
@@ -628,6 +630,11 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 				if( tokens->private->mimetypes_str ){
 					output = g_string_append( output, tokens->private->mimetypes_str );
 				}
+				break;
+
+			/* no-op operators */
+			case 'o':
+			case 'O':
 				break;
 
 			case 'n':

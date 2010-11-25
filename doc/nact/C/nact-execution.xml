@@ -445,6 +445,20 @@
               <entry></entry>
             </row>
             <row>
+              <entry><literal>%o</literal></entry>
+              <entry>no-op operator which forces a singular form of execution</entry>
+              <entry>singular</entry>
+              <entry></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>%O</literal></entry>
+              <entry>no-op operator which forces a plural form of execution</entry>
+              <entry></entry>
+              <entry></entry>
+              <entry>plural</entry>
+            </row>
+            <row>
               <entry><literal>%p</literal></entry>
               <entry>port number of the (first) URI</entry>
               <entry></entry>

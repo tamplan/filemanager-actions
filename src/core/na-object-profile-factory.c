@@ -137,6 +137,8 @@ static NADataDef data_def_profile [] = {
 					"  %h: hostname of the URI\n" \
 					"  %m: space-separated list of the basenames of the selected file(s)/folder(s)\n" \
 					"  %M: space-separated list of the selected file(s)/folder(s), with their full paths\n" \
+					"  %o: no-op operator which forces a singular form of execution\n" \
+					"  %O: no-op operator which forces a plural form of execution\n" \
 					"  %p: port number of the first URI\n" \
 					"  %R: space-separated list of selected URIs\n" \
 					"  %s: scheme of the URI\n" \

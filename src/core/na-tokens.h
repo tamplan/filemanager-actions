@@ -47,7 +47,9 @@
  * factorize this parsing one time for each new selection in the Nautilus
  * plugin, attaching the result to each item in the context menu.
  *
- * Adding a parameter requires updating of :
+ * Adding a parameter requires updating of:
+ * - doc/nact/C/figures/nact-legend.png screenshot
+ * - doc/nact/C/nact-execution.xml "Multiple execution" paragraph
  * - src/core/na-tokens.c::is_singular_exec() function
  * - src/core/na-tokens.c::parse_singular() function
  * - src/nact/nautilus-actions-config-tool.ui:LegendDialog labels
@@ -66,6 +68,8 @@
  * %m: (first) mimetype
  * %M: space-separated list of mimetypes
  * %n: username of the (first) URI
+ * %o: no-op operator which forces a singular form of execution
+ * %O: no-op operator which forces a plural form of execution
  * %p: port number of the (first) URI
  * %s: scheme of the (first) URI
  * %u: (first) URI

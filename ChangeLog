@@ -1,3 +1,19 @@
+2010-11-25 Pierre Wieser <pwieser@trychlos.org>
+
+	Add %o/%O no-op parameters.
+
+	* doc/nact/C/figures/nact-legend.png: Update legend screenshot.
+	* doc/nact/C/nact-execution.xml: Update parameters description.
+
+	* src/core/na-object-profile-factory.c:
+	* src/core/na-tokens.h: Update comments.
+
+	* src/core/na-tokens.c
+	(is_singular_exec, parse_singular): Update with new parameters.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Update legend dialog.
+
 2010-11-24 Pierre Wieser <pwieser@trychlos.org>
 
 	* doc/des-ema/des-ema-0.12:
