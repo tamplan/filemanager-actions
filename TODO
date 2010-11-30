@@ -135,6 +135,8 @@ OTHER BUGS
 - gnome-doc-util: should only distribute symlinks instead of plain files
   for missing translated figures
 
+- gnome-doc-utils-stylesheets-0.20.1: should manage 'termdef'
+
 NOTES
 =====
 - Note about the schemas in Nautilus Actions:
