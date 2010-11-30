@@ -95,8 +95,8 @@ static void              expand_tokens_context( NAIContext *context, NATokens *t
 static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files, NATokens *tokens );
 static NAObjectProfile  *get_candidate_profile( NautilusActions *plugin, NAObjectAction *action, guint target, GList *files );
 static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, NATokens *tokens );
-static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems );
-static NautilusMenuItem *create_menu_item( NAObjectItem *item );
+static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems, guint target );
+static NautilusMenuItem *create_menu_item( NAObjectItem *item, guint target );
 static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
 static void              weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item );
 
@@ -772,7 +772,7 @@ build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList 
 					menus_list = g_list_concat( menus_list, submenu );
 
 				} else {
-					item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu );
+					item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu, target );
 					menus_list = g_list_append( menus_list, item );
 				}
 			}
@@ -834,7 +834,7 @@ create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, 
 	duplicate = NA_OBJECT_PROFILE( na_object_duplicate( profile ));
 	na_object_set_parent( duplicate, NULL );
 
-	item = create_menu_item( NA_OBJECT_ITEM( action ));
+	item = create_menu_item( NA_OBJECT_ITEM( action ), target );
 
 	/* attach a weak ref on the Nautilus menu item: our profile will be
 	 * unreffed in weak notify function
@@ -871,12 +871,12 @@ weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item )
  * we can so safely release our own ref on subitems after this function
  */
 static NautilusMenuItem *
-create_item_from_menu( NAObjectMenu *menu, GList *subitems )
+create_item_from_menu( NAObjectMenu *menu, GList *subitems, guint target )
 {
 	/*static const gchar *thisfn = "nautilus_actions_create_item_from_menu";*/
 	NautilusMenuItem *item;
 
-	item = create_menu_item( NA_OBJECT_ITEM( menu ));
+	item = create_menu_item( NA_OBJECT_ITEM( menu ), target );
 
 	attach_submenu_to_item( item, subitems );
 	nautilus_menu_item_list_free( subitems );
@@ -886,15 +886,14 @@ create_item_from_menu( NAObjectMenu *menu, GList *subitems )
 }
 
 static NautilusMenuItem *
-create_menu_item( NAObjectItem *item )
+create_menu_item( NAObjectItem *item, guint target )
 {
 	NautilusMenuItem *menu_item;
 	gchar *id, *name, *label, *tooltip, *icon;
 
 	id = na_object_get_id( item );
-	name = g_strdup_printf( "%s-%s-%s", PACKAGE, G_OBJECT_TYPE_NAME( item ), id );
+	name = g_strdup_printf( "%s-%s-%s-%d", PACKAGE, G_OBJECT_TYPE_NAME( item ), id, target );
 	label = na_object_get_label( item );
-	/*g_debug( "nautilus_actions_create_menu_item: %s - %s", name, label );*/
 	tooltip = na_object_get_tooltip( item );
 	icon = na_object_get_icon( item );
 

@@ -1,3 +1,9 @@
+2010-11-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/plugin-menu/nautilus-actions.c (create_menu_item):
+	Set a unique name per target menu so that icons are displayed even
+	when both toolbar and location context menu are targeted.
+
 2010-11-25 Pierre Wieser <pwieser@trychlos.org>
 
 	Add %o/%O no-op parameters.
