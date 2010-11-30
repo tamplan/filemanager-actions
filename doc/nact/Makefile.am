@@ -120,6 +120,8 @@ pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
 all-local: all-manuals
 
+.PHONY: all-manuals
+
 all-manuals: all-html-manuals all-pdf-manuals
 
 install-data-local: install-manuals
@@ -162,30 +164,33 @@ dist-hook: doc-dist-hook dist-html-manuals-hook dist-pdf-manuals-hook dist-manua
 #   which target the same frame window.
 
 if ENABLE_HTML_MANUALS
-all-html-manuals: html.stamp
-
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files
 # we so are sure that they exist and are up to date
 # (path is .po ->[msgfmt]-> .mo ->[xml2po]-> .xml)
-html.stamp: $(_DOC_LC_DOCS)
+all-html-manuals: $(_DOC_LC_DOCS)
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		(cd $$i; \
 		 if test "x$(WITH_DB2HTML)" = "xyes"; then \
 			echo "Generating $$i/html/$(DOC_MODULE).html ..."; \
 			rm -fr $(DOC_MODULE).junk; \
 			rm -fr html; \
-			db2html --nochunks $(DOC_MODULE).xml; \
+			cmd="db2html --nochunks $(DOC_MODULE).xml"; \
+			echo "$$cmd"; \
+			$$cmd; \
 			mv -v $(DOC_MODULE) html; \
 		 fi; \
 		 if test "x$(WITH_GDT)" = "xyes"; then \
 			echo "Generating $$i/html/$(DOC_MODULE).html ..."; \
 			rm -fr html; \
 		 	$(MKDIR_P) html; \
-			gnome-doc-tool html -o html -d0 $(DOC_MODULE).xml; \
+			cmd="gnome-doc-tool html -o html -d0 $(DOC_MODULE).xml"; \
+			echo "$$cmd"; \
+			$$cmd; \
 		 fi; \
 		 chmod -R u+w html; \
 		); \
 	done
+	touch all-html-manuals
 else
 all-html-manuals:
 endif
@@ -262,12 +267,10 @@ dist-html-manuals-hook:
 # We only use dblatex for now
 
 if ENABLE_PDF_MANUALS
-all-pdf-manuals: pdf-stamp
-
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files
 # we so are sure that they exist and are up to date
 # (path is .po ->[msgfmt]-> .mo ->[xml2po]-> .xml)
-pdf-stamp: $(_DOC_LC_DOCS)
+all-pdf-manuals: $(_DOC_LC_DOCS)
 	@-for lc in C $(_DOC_REAL_LINGUAS); do \
 		_target=$$lc/$(DOC_MODULE).pdf; \
 		echo "Generating $$_target ..."; \
@@ -290,6 +293,7 @@ pdf-stamp: $(_DOC_LC_DOCS)
 		  for i in `find $$lc/figures -type l`; do rm -f $$i; done; \
 		fi; \
 	done
+	touch all-pdf-manuals
 else
 all-pdf-manuals:
 endif
