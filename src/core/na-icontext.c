@@ -417,6 +417,10 @@ is_candidate_for_target( const NAIContext *object, guint target, GList *files )
 				ok = na_object_is_target_selection( object );
 				break;
 
+			case ITEM_TARGET_ANY:
+				ok = TRUE;
+				break;
+
 			default:
 				g_warning( "%s: unknonw target=%d", thisfn, target );
 				ok = FALSE;

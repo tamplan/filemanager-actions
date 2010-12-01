@@ -68,11 +68,16 @@ typedef struct {
 	NAObjectItemClass;
 
 /* targets
+ *
+ * ITEM_TARGET_ANY is just a wilcard target defined in order to be able
+ * to activate an action from a keyboard shortcut, while keeping this
+ * same action hidden from the UI.
  */
 enum {
 	ITEM_TARGET_SELECTION = 1,
 	ITEM_TARGET_LOCATION,
-	ITEM_TARGET_TOOLBAR
+	ITEM_TARGET_TOOLBAR,
+	ITEM_TARGET_ANY
 };
 
 GType       na_object_item_get_type( void );

@@ -1,5 +1,13 @@
 2010-12-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-object-item.h: Define new ITEM_TARGET_ANY target.
+
+	* src/core/na-icontext.c (is_candidate_for_target):
+	Unconditionnally accepts any target.
+
+	* src/utils/nautilus-actions-run.c (main, get_profile_for_targets):
+	Ask there is no selection on the target. Fix #634056.
+
 	* configure.ac: call new NA_SET_DEFAULT_IO_PROVIDER macro.
 
 	* m4/na-default-io-provider.m4: New file.

@@ -152,7 +152,7 @@ main( int argc, char** argv )
 		exit( status );
 	}
 
-	if( !na_icontext_is_candidate( NA_ICONTEXT( action ), ITEM_TARGET_SELECTION, targets )){
+	if( !na_icontext_is_candidate( NA_ICONTEXT( action ), ITEM_TARGET_ANY, targets )){
 		g_printerr( _( "Action %s is not a valid candidate. Exiting.\n" ), id );
 		exit( status );
 	}
@@ -228,17 +228,13 @@ get_action( const gchar *id )
 
 	if( !action ){
 		g_printerr( _( "Error: action '%s' doesn't exist.\n" ), id );
-	}
 
-	if( action ){
+	} else {
 		if( !na_object_is_enabled( action )){
 			g_printerr( _( "Error: action '%s' is disabled.\n" ), id );
 			g_object_unref( action );
 			action = NULL;
 		}
-	}
-
-	if( action ){
 		if( !na_object_is_valid( action )){
 			g_printerr( _( "Error: action '%s' is not valid.\n" ), id );
 			g_object_unref( action );
@@ -380,7 +376,7 @@ get_profile_for_targets( NAObjectAction *action, GList *targets )
 	profiles = na_object_get_items( action );
 
 	for( ip = profiles ; ip && !candidate ; ip = ip->next ){
-		if( na_icontext_is_candidate( NA_ICONTEXT( ip->data ), ITEM_TARGET_SELECTION, targets )){
+		if( na_icontext_is_candidate( NA_ICONTEXT( ip->data ), ITEM_TARGET_ANY, targets )){
 			candidate = NA_OBJECT_PROFILE( ip->data );
 		}
 	}
