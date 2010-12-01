@@ -330,7 +330,14 @@ na_io_provider_get_providers_list( const NAPivot *pivot )
 
 		order = na_iprefs_read_string_list( NA_IPREFS( pivot ), IO_PROVIDER_KEY_ORDER, NULL );
 
-		g_debug( "%s: dumping providers order", thisfn );
+		if( g_slist_length( order ) > 0 ){
+			g_debug( "%s: dumping providers order", thisfn );
+
+		} else {
+			g_debug( "%s: initializing empty list with default I/O provider", thisfn );
+			order = g_slist_append( order, g_strdup( NA_DEFAULT_IO_PROVIDER ));
+		}
+
 		na_core_utils_slist_dump( thisfn, order );
 
 		setup_io_providers( pivot, order );

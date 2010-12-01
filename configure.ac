@@ -167,8 +167,11 @@ NA_LOG_DOMAINS
 # add --enable-html-manuals and --enable-pdf-manuals configure options
 NA_ENABLE_MANUALS
 
-# when working in a test environment, nautilus is typically installed in
-# a non-standard location ; lets specify this here
+# add --with-default-io-provider option
+NA_SET_DEFAULT_IO_PROVIDER([desktop])
+
+# when working in a test environment, nautilus extensions are typically
+# installed in a non-standard location ; lets specify them here
 NA_NAUTILUS_EXTDIR
 
 # define NA_MAINTAINER_MODE variable
