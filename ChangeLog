@@ -1,5 +1,15 @@
 2010-12-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	- Pre-release bump version number.
+	- Define NAUTILUS_ACTIONS_DEBUG variable.
+
+	* src/nact/nact-main.c (log_handler),
+	* src/plugin-menu/nautilus-module.c (log_handler),
+	* src/plugin-tracker/na-tracker-plugin.c (log_handler),
+	* src/utils/console-utils.c (log_handler):
+	Display debug informations when NAUTILUS_ACTIONS_DEBUG variable is set.
+
 	* doc/nact/Makefile.am:
 	Distribute admon-* icons with html docs	(workaround for #636175).
 

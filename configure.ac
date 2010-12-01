@@ -28,7 +28,7 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([Nautilus-Actions],[3.0],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+AC_INIT([Nautilus-Actions],[3.0.2],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
 
 AC_CANONICAL_TARGET
 
@@ -173,6 +173,7 @@ NA_NAUTILUS_EXTDIR
 
 # define NA_MAINTAINER_MODE variable
 NA_IS_MAINTAINER_MODE
+AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
 
 # Check for menu update function
 AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)

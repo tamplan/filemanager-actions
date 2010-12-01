@@ -58,6 +58,8 @@ log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *mes
 #ifdef NA_MAINTAINER_MODE
 	( *st_default_log_func )( log_domain, log_level, message, user_data );
 #else
-	/* do nothing */
+	if( g_getenv( NAUTILUS_ACTIONS_DEBUG )){
+		( *st_default_log_func )( log_domain, log_level, message, user_data );
+	}
 #endif
 }
