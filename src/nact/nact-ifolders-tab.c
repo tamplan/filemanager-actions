@@ -296,12 +296,12 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 
 	path = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDERS_PATH, "/" );
 	if( path && g_utf8_strlen( path, -1 )){
-		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), path );
+		gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dialog ), path );
 	}
 	g_free( path );
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
-		path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dialog ));
+		path = gtk_file_chooser_get_current_folder( GTK_FILE_CHOOSER( dialog ));
 		nact_iprefs_write_string( window, IPREFS_FOLDERS_PATH, path );
 
 		nact_match_list_insert_row( window, ITAB_NAME, path, FALSE, FALSE );

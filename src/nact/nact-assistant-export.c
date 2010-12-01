@@ -515,7 +515,7 @@ assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *as
 
 	uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_EXPORT_ITEMS_FOLDER_URI, "file:///tmp" );
 	if( uri && strlen( uri )){
-		gtk_file_chooser_set_uri( GTK_FILE_CHOOSER( chooser ), uri );
+		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( chooser ), uri );
 	}
 	g_free( uri );
 
@@ -559,7 +559,7 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_FOLDER_SELECTION ){
 
-		uri = gtk_file_chooser_get_uri( chooser );
+		uri = gtk_file_chooser_get_current_folder_uri( chooser );
 		g_debug( "%s: uri=%s", thisfn, uri );
 		enabled = ( uri && strlen( uri ) && na_core_utils_dir_is_writable_uri( uri ));
 

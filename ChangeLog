@@ -1,5 +1,12 @@
 2010-12-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.c
+	(assist_runtime_init_target_folder, on_folder_selection_changed):
+	Set/get current folder URI. Fix #616532.
+
+	* src/nact/nact-ifolders-tab.c (on_browse_folder_clicked):
+	Set/get current folder. Fix #616532.
+
 	* src/api/na-object-item.h: Define new ITEM_TARGET_ANY target.
 
 	* src/core/na-icontext.c (is_candidate_for_target):
