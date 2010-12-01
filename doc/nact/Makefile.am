@@ -148,12 +148,14 @@ dist-hook: doc-dist-hook dist-html-manuals-hook dist-pdf-manuals-hook dist-manua
 #   files will be created, then is considered as the output filename
 # -d0: nochunks
 # The produced output is very close of what Yelp gives, with in particular
-# summaries in each chapter while db2html does not produce them.
+# a summary in each chapter while db2html does not produce them.
 # As of v 0.20.1:
-# - there is no icon for notes and tips.
+# - there is no icon for notes and tips (see #636175).
 # - does not produce the legal and abstract sections in top of the document
 # - does not honor external links: they are converted to simple links
 #   which target the same frame window.
+# gnome-doc-tool is so our preferred tool for its proximity with Yelp
+# and the summary in top of the chapters.
 #
 # db2html --nochunks nautilus-actions-config-tool.xml
 # Generate the html document(s) in a nautilus-actions-config-tool/
@@ -164,10 +166,18 @@ dist-hook: doc-dist-hook dist-html-manuals-hook dist-pdf-manuals-hook dist-manua
 #   which target the same frame window.
 
 if ENABLE_HTML_MANUALS
+all-html-manuals: html.stamp
+else
+all-html-manuals:
+endif
+
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files
 # we so are sure that they exist and are up to date
 # (path is .po ->[msgfmt]-> .mo ->[xml2po]-> .xml)
-all-html-manuals: $(_DOC_LC_DOCS)
+#
+# - do not use '--copy_graphics' here (see #636175)
+# - admon-* icons will be installed in admon/ subdir
+html.stamp: $(_DOC_LC_DOCS)
 	@-for i in C $(_DOC_REAL_LINGUAS); do \
 		(cd $$i; \
 		 if test "x$(WITH_DB2HTML)" = "xyes"; then \
@@ -186,14 +196,12 @@ all-html-manuals: $(_DOC_LC_DOCS)
 			cmd="gnome-doc-tool html -o html -d0 $(DOC_MODULE).xml"; \
 			echo "$$cmd"; \
 			$$cmd; \
+			sed -i -e 's?url("admon?url("admon/admon?' html/$(DOC_MODULE).html; \
 		 fi; \
 		 chmod -R u+w html; \
 		); \
 	done
-	touch all-html-manuals
-else
-all-html-manuals:
-endif
+	touch html.stamp
 
 # Install HTML manuals if they exist (do not try to rebuild them)
 # in <htmldir>/<lang>/nact/ subdirectory; htmldir defaulting
@@ -201,8 +209,7 @@ endif
 #
 # Note that we do not honor here the --with-html-dir gtk-doc option,
 # but the --htmldir autotools one
-
-install-html-manuals: install-html-figs
+install-html-manuals: all-html-manuals install-html-figs install-html-admon
 	for lc in C $(_DOC_REAL_LINGUAS); do \
 		if test "x$(htmldir)" = "x$(docdir)"; then \
 			_instdir="$(DESTDIR)$(pkgdocdir)/html/$$lc/nact"; \
@@ -210,7 +217,9 @@ install-html-manuals: install-html-figs
 			_instdir="$(DESTDIR)$(htmldir)/$$lc/nact"; \
 		fi; \
 		_srcdir="$(top_builddir)/doc/nact/$$lc/html"; \
-		cp -vrp $$_srcdir/* $$_instdir/; \
+		if test -f "$$_srcdir/$(DOC_MODULE).html"; then \
+			cp -vrp $$_srcdir/* $$_instdir/; \
+		fi; \
 	done
 
 # copied from gnome-doc-utils.make install-doc-figs target
@@ -245,6 +254,26 @@ install-html-figs:
 	  fi; \
 	done
 
+# A workaround against the bug #636175 (do not install admon-* icons)
+# Only works when gnome-doc-utils is installed on the station
+# Install icons in the html/ dir
+admon_dir := /usr/share/gnome-doc-utils/icons/hicolor/48x48/status
+admon_png := $(wildcard $(admon_dir)/*.png)
+install-html-admon:
+	if test -d "$(admon_dir)"; then \
+		if test "x$(htmldir)" = "x$(docdir)"; then \
+			_instdir="$(DESTDIR)$(pkgdocdir)/html"; \
+		else \
+			_instdir="$(DESTDIR)$(htmldir)"; \
+		fi; \
+		for lc in C $(_DOC_REAL_LINGUAS); do \
+			if test -f "$(top_builddir)/doc/nact/$$lc/html/$(DOC_MODULE).html"; then \
+				$(mkinstalldirs) "$$_instdir/$$lc/nact/admon"; \
+				cp -v $(admon_png) "$$_instdir/$$lc/nact/admon/"; \
+			fi; \
+		done; \
+	fi
+
 uninstall-html-manuals:
 	if test "x$(htmldir)" = "x$(docdir)"; then \
 		_instdir="$(DESTDIR)$(pkgdocdir)/html"; \
@@ -255,10 +284,16 @@ uninstall-html-manuals:
 
 # locale figures (_DOC_LC_FIGURES) are distributed by gnome-doc-utils
 # when they exist
-dist-html-manuals-hook:
+#
+# - distribute admon-* icons
+dist-html-manuals-hook: all-html-manuals
 	for lc in C $(_DOC_REAL_LINGUAS); do \
 		if test -f $(top_builddir)/doc/nact/$$lc/html/$(DOC_MODULE).html; then \
 			cp -rpv $(top_builddir)/doc/nact/$$lc/html $(distdir)/$$lc/; \
+		fi; \
+		if test -d "$(admon_dir)"; then \
+			$(mkinstalldirs) "$(distdir)/$$lc/html/admon"; \
+			cp -v $(admon_png) "$(distdir)/$$lc/html/admon/"; \
 		fi; \
 	done
 
@@ -267,10 +302,15 @@ dist-html-manuals-hook:
 # We only use dblatex for now
 
 if ENABLE_PDF_MANUALS
+all-pdf-manuals: pdf.stamp
+else
+all-pdf-manuals:
+endif
+
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files
 # we so are sure that they exist and are up to date
 # (path is .po ->[msgfmt]-> .mo ->[xml2po]-> .xml)
-all-pdf-manuals: $(_DOC_LC_DOCS)
+pdf.stamp: $(_DOC_LC_DOCS)
 	@-for lc in C $(_DOC_REAL_LINGUAS); do \
 		_target=$$lc/$(DOC_MODULE).pdf; \
 		echo "Generating $$_target ..."; \
@@ -293,16 +333,13 @@ all-pdf-manuals: $(_DOC_LC_DOCS)
 		  for i in `find $$lc/figures -type l`; do rm -f $$i; done; \
 		fi; \
 	done
-	touch all-pdf-manuals
-else
-all-pdf-manuals:
-endif
+	touch pdf.stamp
 
 # if --pdfdir has not been specified, then we default to PKGDOCDIR/pdf
 # in all case, we append the locale as a subdirectory level
 #
 # as pdf are monobloc documents, we do not create a per-document subdir
-install-pdf-manuals:
+install-pdf-manuals: all-pdf-manuals
 	@-for lc in C $(_DOC_REAL_LINGUAS); do \
 		_srcdir=$(top_builddir)/doc/nact/$$lc; \
 		if test "$(pdfdir)" = "$(docdir)"; then \
@@ -323,7 +360,7 @@ uninstall-pdf-manuals:
 	fi; \
 	rm -fr $$_instdir
 
-dist-pdf-manuals-hook:
+dist-pdf-manuals-hook: all-pdf-manuals
 	for _lc in C $(_DOC_REAL_LINGUAS); do \
 		cp -v $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE).pdf $(distdir)/$$_lc/ || :; \
 	done
