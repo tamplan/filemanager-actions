@@ -149,7 +149,7 @@
                   </object>
                   <packing>
                     <property name="resize">False</property>
-                    <property name="shrink">True</property>
+                    <property name="shrink">False</property>
                   </packing>
                 </child>
                 <child>
@@ -2783,6 +2783,9 @@ If the command is not found, or does not display the correct result, your item w
       <placeholder/>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
@@ -2798,10 +2801,10 @@ If the command is not found, or does not display the correct result, your item w
         <child>
           <object class="GtkFileChooserWidget" id="ImportFileChooser">
             <property name="visible">True</property>
-            <property name="preview_widget_active">False</property>
             <property name="select_multiple">True</property>
-            <property name="local_only">False</property>
             <property name="use_preview_label">False</property>
+            <property name="preview_widget_active">False</property>
+            <property name="local_only">False</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -3887,39 +3890,39 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="label4"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionToolbarLabelLabel"/>
       <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
     <widgets>
-      <widget name="label45"/>
-      <widget name="label44"/>
       <widget name="label43"/>
+      <widget name="label44"/>
+      <widget name="label45"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
     <widgets>
-      <widget name="label19"/>
-      <widget name="label49"/>
-      <widget name="label39"/>
       <widget name="label18"/>
+      <widget name="label39"/>
+      <widget name="label49"/>
+      <widget name="label19"/>
     </widgets>
   </object>
 </interface>
