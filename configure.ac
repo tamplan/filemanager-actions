@@ -159,7 +159,9 @@ PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
 )
 
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
+AC_DEFINE_UNQUOTED([NAUTILUS_ACTIONS_CFLAGS],["${NAUTILUS_ACTIONS_CFLAGS}"],[N-A compiler flags])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
+AC_DEFINE_UNQUOTED([NAUTILUS_ACTIONS_LIBS],["${NAUTILUS_ACTIONS_LIBS}"],[N-A linker flags])
 
 # defines log domains when in maintainer mode
 NA_LOG_DOMAINS
@@ -168,7 +170,7 @@ NA_LOG_DOMAINS
 NA_ENABLE_MANUALS
 
 # add --with-default-io-provider option
-NA_SET_DEFAULT_IO_PROVIDER([desktop])
+NA_SET_DEFAULT_IO_PROVIDER([na-desktop])
 
 # when working in a test environment, nautilus extensions are typically
 # installed in a non-standard location ; lets specify them here
@@ -182,4 +184,30 @@ AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment
 AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)
 AC_CHECK_FUNCS(nautilus_menu_provider_emit_items_updated_signal)
 
+# display and keep configuration informations
+config_options="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g'`" 
+AC_DEFINE_UNQUOTED([NA_CONFIG_OPTIONS],["$0 ${config_options}"],["Configure options"])
+
 AC_OUTPUT
+
+if test "x${enable_schemas_install}" = "xno"; then
+	_ac_na_schemas_install="disabled"; else
+	_ac_na_schemas_install="enabled in ${GCONF_SCHEMA_FILE_DIR}"
+fi
+_ac_na_gtk_doc=`if test "x${enable_gtk_doc}" = "xno"; then echo disabled; else echo enabled; fi`
+$as_echo "
+	${PACKAGE_STRING} configuration summary:
+
+	Installation prefix             ${prefix}
+	Build system type               ${ac_cv_build}
+	Preprocessor flags              ${AM_CPPFLAGS}
+	Compiler flags                  ${AM_CFLAGS} ${NAUTILUS_ACTIONS_CFLAGS}
+	Linker flags                    ${NAUTILUS_ACTIONS_LIBS}
+	Nautilus extensions directory   ${ac_with_nact_nautilus_extdir}
+	Default I/O provider            ${with_default_io_provider}
+	GConf schemas installation      ${_ac_na_schemas_install}
+	Maintainer mode                 ${_ac_na_maintainer_mode}
+	Gtk documentation               ${_ac_na_gtk_doc}
+	HTML manuals generation         ${_ac_na_html_manuals}
+	PDF manuals generation          ${_ac_na_pdf_manuals}
+"

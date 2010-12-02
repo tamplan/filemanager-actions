@@ -65,6 +65,7 @@ AC_DEFUN([_AC_ARG_NA_ENABLE_HTML_MANUALS],[
 
 AC_DEFUN([_CHECK_FOR_HTML_MANUALS],[
 	AC_MSG_CHECKING([whether to build HTML manuals])
+	_ac_na_html_manuals="disabled"
 	if test "x${enable_html_manuals}" = "xno"; then
 		AC_MSG_RESULT([no])
 	else
@@ -86,6 +87,12 @@ AC_DEFUN([_CHECK_FOR_HTML_MANUALS],[
 		if test "x${with_gdt}" = "xno" -a "x${with_db2html}" = "xno"; then
 			AC_MSG_ERROR([neither gnome-doc-tool not db2html have been found, unable to generate HTML manuals])
 		fi
+		_ac_na_html_manuals="enabled with"
+		if test "x${with_gdt}" = "xno"; then
+			_ac_na_html_manuals="${_ac_na_html_manuals} db2html"
+		else
+			_ac_na_html_manuals="${_ac_na_html_manuals} gnome-doc-tool"
+		fi
 	fi
 
 	AC_SUBST([WITH_DB2HTML],[${with_db2html}])
@@ -106,14 +113,17 @@ AC_DEFUN([_AC_ARG_NA_ENABLE_PDF_MANUALS],[
 
 AC_DEFUN([_CHECK_FOR_PDF_MANUALS],[
 	AC_MSG_CHECKING([whether to build PDF manuals])
+	_ac_na_pdf_manuals="disabled"
 	if test "x${enable_pdf_manuals}" = "xno"; then
 		AC_MSG_RESULT([no])
 	else
 		AC_MSG_RESULT([yes])
 		if test "x${enable_pdf_manuals}" = "xyes"; then
 			AC_CHECK_PROG([with_dblatex],[dblatex],[yes],[no])
+			_ac_na_pdf_manuals="enabled with dblatex"
 		elif test "x${enable_pdf_manuals}" = "xdblatex"; then
 			AC_CHECK_PROG([with_dblatex],[dblatex],[yes],[no])
+			_ac_na_pdf_manuals="enabled with dblatex"
 		else
 			AC_MSG_ERROR([${enable_pdf_manuals} is not a known tool, must be 'dblatex'])
 		fi

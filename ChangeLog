@@ -1,3 +1,11 @@
+2010-12-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Display a summary of configuration options.
+
+	* m4/na-enable-manuals.m4:
+	* m4/na-maintainer-mode.m4:
+	* m4/na-nautilus-extdir.m4: Define displayable variables.
+
 2010-12-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-assistant-export.c

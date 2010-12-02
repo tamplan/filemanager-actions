@@ -31,9 +31,12 @@
 dnl define NA_MAINTAINER_MODE
 
 AC_DEFUN([NA_IS_MAINTAINER_MODE],[
+	_ac_na_maintainer_mode="disabled"
+
 	if test "${USE_MAINTAINER_MODE}" = "yes"; then
 		AC_DEFINE([NA_MAINTAINER_MODE],[1],[Define to 1 if we are in maintainer mode])
 		AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} ${DISABLE_DEPRECATED} -DGSEAL_ENABLED"])
 		AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} -Werror"])
+		_ac_na_maintainer_mode="enabled"
 	fi
 ])

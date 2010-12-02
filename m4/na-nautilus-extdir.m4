@@ -39,6 +39,7 @@ AC_DEFUN([NA_NAUTILUS_EXTDIR],[
 	else
 		AC_MSG_NOTICE([installing plugin in ${ac_with_nact_nautilus_extdir}])
 		AC_SUBST([NAUTILUS_EXTENSIONS_DIR],[${ac_with_nact_nautilus_extdir}])
+		AC_DEFINE_UNQUOTED([NA_NAUTILUS_EXTENSIONS_DIR],[${ac_with_nact_nautilus_extdir}],[Nautilus extensions directory])
 	fi
 ])
 
