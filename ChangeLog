@@ -1,5 +1,12 @@
 2010-12-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h (nact_gtk_utils_select_file_with_preview):
+	New function.
+
+	* src/nact/nact-iaction-tab.c (on_icon_browse):
+	Add a preview when selecting an icon.
+
 	Factorize help description.
 
 	* po/POTFILES.in: add src/utils/console-utils.c file.

@@ -98,6 +98,7 @@ static GtkTreeModel *create_stock_icon_model( void );
 static void          icon_combo_list_fill( GtkComboBoxEntry* combo );
 static void          on_icon_browse( GtkButton *button, NactIActionTab *instance );
 static void          on_icon_changed( GtkEntry *entry, NactIActionTab *instance );
+static void          icon_preview_cb( GtkFileChooser *dialog, GtkWidget *preview );
 static gint          sort_stock_ids( gconstpointer a, gconstpointer b );
 static gchar        *strip_underscore( const gchar *text );
 static void          release_icon_combobox( NactIActionTab *instance );
@@ -871,10 +872,10 @@ on_icon_browse( GtkButton *button, NactIActionTab *instance )
 
 	icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 
-	nact_gtk_utils_select_file(
+	nact_gtk_utils_select_file_with_preview(
 			BASE_WINDOW( instance ),
 			_( "Choosing an icon" ), IPREFS_ICONS_DIALOG,
-			gtk_bin_get_child( GTK_BIN( icon_widget )), IPREFS_ICONS_PATH, "" );
+			gtk_bin_get_child( GTK_BIN( icon_widget )), IPREFS_ICONS_PATH, "", G_CALLBACK( icon_preview_cb ));
 }
 
 static void
@@ -905,6 +906,26 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 	 */
 	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
 	nact_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_MENU );
+}
+
+static void
+icon_preview_cb( GtkFileChooser *dialog, GtkWidget *preview )
+{
+	char *filename;
+	GdkPixbuf *pixbuf;
+	gboolean have_preview;
+
+	filename = gtk_file_chooser_get_preview_filename( dialog );
+	pixbuf = gdk_pixbuf_new_from_file_at_size( filename, 128, 128, NULL );
+	have_preview = ( pixbuf != NULL );
+	g_free( filename );
+
+	if( have_preview ){
+		gtk_image_set_from_pixbuf( GTK_IMAGE( preview ), pixbuf );
+		g_object_unref( pixbuf );
+	}
+
+	gtk_file_chooser_set_preview_widget_active( dialog, have_preview );
 }
 
 static gint

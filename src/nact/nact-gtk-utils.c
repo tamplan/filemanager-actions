@@ -268,12 +268,45 @@ nact_gtk_utils_select_file( BaseWindow *window,
 				GtkWidget *entry, const gchar *entry_name,
 				const gchar *default_dir_uri )
 {
+	nact_gtk_utils_select_file_with_preview(
+			window, title, dialog_name, entry, entry_name, default_dir_uri, NULL );
+}
+
+/**
+ * nact_gtk_utils_select_file_with_preview:
+ * @window: the #BaseWindow which will be the parent of the dialog box.
+ * @title: the title of the dialog box.
+ * @dialog_name: the name of the dialog box in Preferences to read/write
+ *  its size and position.
+ * @entry: the #GtkEntry which is associated with the selected file.
+ * @entry_name: the name of the entry in Preferences to be readen/written.
+ * @default_dir_uri: the URI of the directory which should be set if there is
+ *  not yet any preference (see @entry_name)
+ * @update_preview_cb: the callback function in charge of updating the
+ *  preview widget. May be NULL.
+ *
+ * Opens a #GtkFileChooserDialog and let the user choose an existing file
+ * -> choose and display an existing file name
+ * -> record the dirname URI.
+ *
+ * If the user validates its selection, the choosen file pathname will be
+ * written in the @entry #GtkEntry, while the corresponding dirname
+ * URI will be written as @entry_name in Preferences.
+ */
+void
+nact_gtk_utils_select_file_with_preview( BaseWindow *window,
+				const gchar *title, const gchar *dialog_name,
+				GtkWidget *entry, const gchar *entry_name,
+				const gchar *default_dir_uri,
+				GCallback update_preview_cb )
+{
 	NactApplication *application;
 	NAUpdater *updater;
 	GtkWindow *toplevel;
 	GtkWidget *dialog;
 	const gchar *text;
 	gchar *filename, *uri;
+	GtkWidget *preview;
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
@@ -287,6 +320,12 @@ nact_gtk_utils_select_file( BaseWindow *window,
 			GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 			NULL
 			);
+
+	if( update_preview_cb ){
+		preview = gtk_image_new();
+		gtk_file_chooser_set_preview_widget( GTK_FILE_CHOOSER( dialog ), preview );
+		g_signal_connect( dialog, "update-preview", update_preview_cb, preview );
+	}
 
 	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), dialog_name );
 
