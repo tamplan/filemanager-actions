@@ -33,12 +33,27 @@
 #endif
 
 #include <glib.h>
+#include <glib/gi18n.h>
 
 #include "console-utils.h"
 
 static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
 
 static GLogFunc st_default_log_func = NULL;
+
+/**
+ * console_cmdline_get_description:
+ *
+ * Returns: a newly allocated string to be displayed as a description
+ * of the usage message. The returned string should be g_free() by the
+ * caller.
+ */
+gchar *
+console_cmdline_get_description( void ){
+	return( g_strdup_printf( "%s.\n%s", PACKAGE_STRING,
+			_( "Bug reports are welcomed at http://bugzilla.gnome.org,"
+				" or you may prefer to mail to <maintainer@nautilus-actions.org>.\n" )));
+}
 
 /**
  * console_init_log_handler:

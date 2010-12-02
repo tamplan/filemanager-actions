@@ -37,6 +37,8 @@
  * @include: utils/console-utils.h
  */
 
-void console_init_log_handler( void );
+gchar *console_cmdline_get_description( void );
+
+void   console_init_log_handler( void );
 
 #endif /* __CONSOLE_UTILS_H__ */

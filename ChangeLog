@@ -1,5 +1,18 @@
 2010-12-02 Pierre Wieser <pwieser@trychlos.org>
 
+	Factorize help description.
+
+	* po/POTFILES.in: add src/utils/console-utils.c file.
+
+	* src/utils/console-utils.c:
+	* src/utils/console-utils.h (console_cmdline_get_description):
+	New function.
+
+	* src/utils/nautilus-actions-new.c (init_options):
+	* src/utils/nautilus-actions-run.c (init_options):
+	* src/utils/nautilus-actions-schemas.c (init_options):
+	Updated to take advantage of new function.
+
 	* configure.ac: Display a summary of configuration options.
 
 	* m4/na-enable-manuals.m4:

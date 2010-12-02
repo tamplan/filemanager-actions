@@ -172,12 +172,8 @@ init_options( void )
 	g_option_context_add_main_entries( context, entries, NULL );
 #endif
 
-	description = g_strdup_printf( "%s.\n%s", PACKAGE_STRING,
-			_( "Bug reports are welcomed at http://bugzilla.gnome.org,"
-				" or you may prefer to mail to <maintainer@nautilus-actions.org>.\n" ));
-
+	description = console_cmdline_get_description();
 	g_option_context_set_description( context, description );
-
 	g_free( description );
 
 	misc_group = g_option_group_new(

@@ -56,6 +56,7 @@ src/nact/nact-window.c
 [type: gettext/glade] src/nact/nautilus-actions-config-tool.ui
 src/plugin-menu/nautilus-actions.c
 src/test/test-reader.c
+src/utils/console-utils.c
 src/utils/nautilus-actions-new.c
 src/utils/nautilus-actions-run.c
 src/utils/nautilus-actions-schemas.c
