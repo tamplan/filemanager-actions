@@ -45,7 +45,7 @@ AC_DEFUN([_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER],[
 	AC_ARG_WITH(
 		[default-io-provider],
 		AS_HELP_STRING(
-			[--with-default-io-provider@<:@=gconf|desktop@:>@],
+			[--with-default-io-provider@<:@=na-gconf|na-desktop@:>@],
 			[define default I/O provider  @<:@$1@:>@]),
 			[with_default_io_provider=$withval],
 			[with_default_io_provider="$1"])
@@ -54,11 +54,11 @@ AC_DEFUN([_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER],[
 AC_DEFUN([_CHECK_FOR_DEFAULT_IO_PROVIDER],[
 	AC_MSG_CHECKING([for default I/O provider on new actions])
 	AC_MSG_RESULT([${with_default_io_provider}])
-	if test "x${with_default_io_provider}" != "xgconf"; then
-		if test "x${with_default_io_provider}" != "xdesktop"; then
-			AC_MSG_ERROR([a default I/O provider must be specified, must be 'gconf' or 'desktop'])
+	if test "x${with_default_io_provider}" != "xna-gconf"; then
+		if test "x${with_default_io_provider}" != "xna-desktop"; then
+			AC_MSG_ERROR([a default I/O provider must be specified, must be 'na-gconf' or 'na-desktop'])
 		fi
 	fi
 
-	AC_DEFINE_UNQUOTED([NA_DEFAULT_IO_PROVIDER],["na-${with_default_io_provider}"],[Default I/O Provider])
+	AC_DEFINE_UNQUOTED([NA_DEFAULT_IO_PROVIDER],["${with_default_io_provider}"],[Default I/O Provider])
 ])
