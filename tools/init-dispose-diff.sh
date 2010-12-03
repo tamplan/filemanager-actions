@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# A script to check that we have as much instance_dispose that instance_init
+# A script to check that we have as many instance_dispose that instance_init
 # in our debug traces.
 #
 # $1 = input file (debug log)
