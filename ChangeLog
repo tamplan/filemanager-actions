@@ -1,3 +1,8 @@
+2010-12-03 Pierre Wieser <pwieser@trychlos.org>
+
+	* NEWS:
+	* README: Update before release.
+
 2010-12-02 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nautilus-actions-config-tool.ui:

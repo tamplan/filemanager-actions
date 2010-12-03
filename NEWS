@@ -1,3 +1,48 @@
+Version 3.0.2
+=============
+
+	Release date 2010-12-03
+
+	Modifications:
+
+		- Add %o/%O no-op parameters in order to be able to force the
+		  multiple execution (cf. DES-EMA specification v 0.15).
+		- Running with NAUTILUS_ACTIONS_DEBUG environment variable set
+		  display debug messages.
+		- The default I/O provider may be chosen at configure time,
+		  and defaults to 'na-desktop'.
+		- Display a summary of configuration options at configure time.
+		- Add a preview when selecting an icon.
+
+	Bug fixes:
+
+		- Fix #616532 - Can't select directory in the Nautilus Actions export
+		  assistant while browsing it with a GtkFileChooserWidget
+		  (reported by Sense Hofstede).
+		- Fix #632992 - Add comment about default value translation
+		  (reported by claude Paroz).
+		- Fix #633439 - Make menu items, ttoltips etc. translatable
+		  (reported by Andreas Heinlein).
+		- Fix #634056 - Create 'hidden' actions
+		  (reported by Andreas Heinlein).
+		- Fix #635521 - Translatable sentences of the *.ui files don't appear
+		  in .po file (reported by Geodebay@gmail.com)
+		- Include non translated figures in translated HTML and PDF manuals
+		  (no not distribute them).
+		- Include and distribute admon-* icons in HTML manuals.
+		- Fix the display of icons in Nautilus toolbar when the same action
+		  is also displayed in location or selection context menu.
+		- Do not allow actions list to be fully shrinked.
+
+	New and updated translations:
+
+		- ca (Carles Ferrando, Gil Forcada)
+		- es (Jorge González)
+		- eu (dooteo, Inaki Larranaga Murgoitio)
+		- he (Yaron Shahrabani)
+		- pt_BR (Djavan Fagundes)
+		- sl (Matej Urbančič, Andrej Žnidaršič)
+
 Version 3.0
 ===========
 
