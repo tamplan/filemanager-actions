@@ -1,5 +1,9 @@
 2010-12-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Post release version bump.
+
+	Releasing 3.0.2
+
 	* NEWS:
 	* README: Update before release.
 
