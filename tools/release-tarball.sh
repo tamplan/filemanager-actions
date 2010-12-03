@@ -64,5 +64,9 @@ git tag -s "${tag}" -m "${msg}"
 git pull --rebase && git push && git push --tags
 
 echo "
+Compressing local git repository"
+git gc
+
+echo "
 Successfully ended. You may now send your mail.
 "
