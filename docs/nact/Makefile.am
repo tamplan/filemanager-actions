@@ -44,7 +44,7 @@
 # are always included in the distributed tarball.
 #
 # Note that gnome-doc-tool generates and distributes the translated xml
-# files in $(nactdir)/<lang>/. When installing, g-d-t installs these help
+# files in docs/nact/<lang>/. When installing, g-d-t installs these help
 # files in <datadir>/gnome/help/nautilus-actions-config-tool/<lang>.
 # At install time, missing tranlated images are replace with symlinks to
 # ../../C/figures/<image.png>.
@@ -53,66 +53,11 @@ include $(top_srcdir)/gnome-doc-utils.make
 
 DOC_MODULE = nautilus-actions-config-tool
 
-DOC_ENTITIES = \
-	appendix-gnu-fdl-1.3.xml						\
-	articleinfo.xml									\
-	legalnotice.xml									\
-	nact-bugs.xml									\
-	nact-conditions.xml								\
-	nact-edit.xml									\
-	nact-execution.xml								\
-	nact-export.xml									\
-	nact-import.xml									\
-	nact-menus.xml									\
-	nact-misc.xml									\
-	nact-prefs.xml									\
-	nact-profiles.xml								\
-	nact-save.xml									\
-	nact-sorting.xml								\
-	nact-starting.xml								\
-	nact-where.xml
+DOC_ENTITIES = $(patsubst C/%,%,$(shell \ls -1 C/*.xml | $(GREP) -v $(DOC_MODULE)))
 
 DOC_INCLUDES =
 
-DOC_FIGURES = \
-	figures/add.png									\
-	figures/nact-action-tab.png						\
-	figures/nact-basenames-tab.png					\
-	figures/nact-capabilities-tab.png				\
-	figures/nact-command-tab.png					\
-	figures/nact-desktop-environment-frame.png		\
-	figures/nact-environment-tab.png				\
-	figures/nact-exec-mode-frame.png				\
-	figures/nact-execute-as-frame.png				\
-	figures/nact-execution-environment-frame.png	\
-	figures/nact-execution-tab.png					\
-	figures/nact-folders-tab.png					\
-	figures/nact-legend.png							\
-	figures/nact-main-empty.png						\
-	figures/nact-mimetypes-tab.png					\
-	figures/nact-new-capability.png					\
-	figures/nact-new-scheme.png						\
-	figures/nact-preferences-export.png				\
-	figures/nact-preferences-import.png				\
-	figures/nact-preferences-io-providers.png		\
-	figures/nact-preferences-runtime.png			\
-	figures/nact-preferences-schemes.png			\
-	figures/nact-preferences-ui.png					\
-	figures/nact-properties-tab.png					\
-	figures/nact-schemes-tab.png					\
-	figures/nact-selection-count-frame.png			\
-	figures/nact-startup-mode-frame.png				\
-	figures/nact-target-location.png				\
-	figures/nact-working-directory-frame.png		\
-	figures/read-only.png							\
-	figures/remove.png								\
-	figures/sort-asc.png							\
-	figures/sort-buttons-frame.png					\
-	figures/sort-desc.png							\
-	figures/sort-manual.png							\
-	figures/start-context-menu.png					\
-	figures/start-context-menu-nautilus.png			\
-	figures/start-zenity-result.png
+DOC_FIGURES = $(patsubst C/%,%,$(shell \ls -1 C/figures/*)))
 
 DOC_LINGUAS = de es sl
 

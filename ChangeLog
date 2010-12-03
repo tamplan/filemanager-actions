@@ -1,5 +1,8 @@
 2010-12-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/nact/Makefile.am:
+	Automatically build DOC_ENTITIES and DOC_FIGURES lists.
+
 	Rename doc/ subdirectory to docs/.
 
 	* Makefile.am:
