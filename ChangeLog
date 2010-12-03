@@ -1,5 +1,11 @@
 2010-12-03 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename doc/ subdirectory to docs/.
+
+	* Makefile.am:
+	* configure.ac:
+	* docs/nact/Makefile.am: Updated accordingly.
+
 	* configure.ac: Post release version bump.
 
 	Releasing 3.0.2

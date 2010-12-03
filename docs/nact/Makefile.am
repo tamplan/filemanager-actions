@@ -44,7 +44,7 @@
 # are always included in the distributed tarball.
 #
 # Note that gnome-doc-tool generates and distributes the translated xml
-# files in doc/nact/<lang>/. When installing, g-d-t installs these help
+# files in $(nactdir)/<lang>/. When installing, g-d-t installs these help
 # files in <datadir>/gnome/help/nautilus-actions-config-tool/<lang>.
 # At install time, missing tranlated images are replace with symlinks to
 # ../../C/figures/<image.png>.
@@ -117,6 +117,8 @@ DOC_FIGURES = \
 DOC_LINGUAS = de es sl
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
+
+nactdir := docs/nact
 
 all-local: all-manuals
 
@@ -216,7 +218,8 @@ install-html-manuals: all-html-manuals install-html-figs install-html-admon
 		else \
 			_instdir="$(DESTDIR)$(htmldir)/$$lc/nact"; \
 		fi; \
-		_srcdir="$(top_builddir)/doc/nact/$$lc/html"; \
+		_srcdir="$(top_builddir)/$(nactdir)/$$lc/html"; \
+		echo "_srcdir=$$_srcdir"; \
 		if test -f "$$_srcdir/$(DOC_MODULE).html"; then \
 			cp -vrp $$_srcdir/* $$_instdir/; \
 		fi; \
@@ -230,10 +233,10 @@ install-html-figs:
 	else \
 		_instdir="$(DESTDIR)$(htmldir)"; \
 	fi; \
-	_srcdir="$(top_srcdir)/doc/nact"; \
+	_srcdir="$(top_srcdir)/$(nactdir)"; \
 	list='$(patsubst C/%,%,$(_DOC_C_FIGURES))'; \
 	for lc in C $(_DOC_REAL_LINGUAS); do \
-	  if test -f "$(top_builddir)/doc/nact/$$lc/html/$(DOC_MODULE).html"; then \
+	  if test -f "$(top_builddir)/$(nactdir)/$$lc/html/$(DOC_MODULE).html"; then \
 		for fig in $$list; do \
 			figsymlink=false; \
 			if test -f "$$_srcdir/$$lc/$$fig" -a ! -h "$$_srcdir/$$lc/$$fig"; then \
@@ -267,7 +270,7 @@ install-html-admon:
 			_instdir="$(DESTDIR)$(htmldir)"; \
 		fi; \
 		for lc in C $(_DOC_REAL_LINGUAS); do \
-			if test -f "$(top_builddir)/doc/nact/$$lc/html/$(DOC_MODULE).html"; then \
+			if test -f "$(top_builddir)/$(nactdir)/$$lc/html/$(DOC_MODULE).html"; then \
 				$(mkinstalldirs) "$$_instdir/$$lc/nact/admon"; \
 				cp -v $(admon_png) "$$_instdir/$$lc/nact/admon/"; \
 			fi; \
@@ -288,8 +291,8 @@ uninstall-html-manuals:
 # - distribute admon-* icons
 dist-html-manuals-hook: all-html-manuals
 	for lc in C $(_DOC_REAL_LINGUAS); do \
-		if test -f $(top_builddir)/doc/nact/$$lc/html/$(DOC_MODULE).html; then \
-			cp -rpv $(top_builddir)/doc/nact/$$lc/html $(distdir)/$$lc/; \
+		if test -f $(top_builddir)/$(nactdir)/$$lc/html/$(DOC_MODULE).html; then \
+			cp -rpv $(top_builddir)/$(nactdir)/$$lc/html $(distdir)/$$lc/; \
 		fi; \
 		if test -d "$(admon_dir)"; then \
 			$(mkinstalldirs) "$(distdir)/$$lc/html/admon"; \
@@ -327,8 +330,8 @@ pdf.stamp: $(_DOC_LC_DOCS)
 	        fi; \
 	      done; \
 	    fi; \
-		echo "dblatex --output $$_target $(top_srcdir)/doc/nact/$$lc/$(DOC_MODULE).xml"; \
-		dblatex --output $$_target $(top_srcdir)/doc/nact/$$lc/$(DOC_MODULE).xml; \
+		echo "dblatex --output $$_target $(top_srcdir)/$(nactdir)/$$lc/$(DOC_MODULE).xml"; \
+		dblatex --output $$_target $(top_srcdir)/$(nactdir)/$$lc/$(DOC_MODULE).xml; \
 		if [ "$$lc" != "C" ]; then \
 		  for i in `find $$lc/figures -type l`; do rm -f $$i; done; \
 		fi; \
@@ -341,7 +344,7 @@ pdf.stamp: $(_DOC_LC_DOCS)
 # as pdf are monobloc documents, we do not create a per-document subdir
 install-pdf-manuals: all-pdf-manuals
 	@-for lc in C $(_DOC_REAL_LINGUAS); do \
-		_srcdir=$(top_builddir)/doc/nact/$$lc; \
+		_srcdir=$(top_builddir)/$(nactdir)/$$lc; \
 		if test "$(pdfdir)" = "$(docdir)"; then \
 			_instdir=$(DESTDIR)$(pkgdocdir)/pdf/$$lc; \
 		else \
@@ -362,7 +365,7 @@ uninstall-pdf-manuals:
 
 dist-pdf-manuals-hook: all-pdf-manuals
 	for _lc in C $(_DOC_REAL_LINGUAS); do \
-		cp -v $(top_builddir)/doc/nact/$$_lc/$(DOC_MODULE).pdf $(distdir)/$$_lc/ || :; \
+		cp -v $(top_builddir)/$(nactdir)/$$_lc/$(DOC_MODULE).pdf $(distdir)/$$_lc/ || :; \
 	done
 
 dist-manuals-hooks:

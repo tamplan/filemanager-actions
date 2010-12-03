@@ -34,7 +34,7 @@ SUBDIRS = \
 	src									\
 	po									\
 	data								\
-	doc									\
+	docs								\
 	$(NULL)
 
 # a foo directory so that make distcheck has a vpath which is prefixed

@@ -44,12 +44,12 @@ AC_CONFIG_FILES([
 	data/actions/Makefile
 	data/exports/Makefile
 	data/gconf-schemas/Makefile
-	doc/Makefile
-	doc/api/Makefile
-	doc/api/version.xml
-	doc/internals/Makefile
-	doc/nact/Makefile
-	doc/product/Makefile
+	docs/Makefile
+	docs/api/Makefile
+	docs/api/version.xml
+	docs/internals/Makefile
+	docs/nact/Makefile
+	docs/product/Makefile
 	m4/Makefile
 	icons/Makefile
 	icons/16x16/Makefile
