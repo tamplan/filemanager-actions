@@ -32,7 +32,7 @@
 #define __NAUTILUS_ACTIONS_API_NA_CORE_UTILS_H__
 
 /**
- * SECTION: na_core_utils
+ * SECTION: core-utils
  * @short_description: Core library utilities.
  * @include: nautilus-action/na-core-utils.h
  */

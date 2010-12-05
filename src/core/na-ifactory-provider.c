@@ -59,7 +59,11 @@ static guint v_factory_provider_write_start( const NAIFactoryProvider *writer, v
 static guint v_factory_provider_write_done( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *serializable, GSList **messages );
 
 /**
+ * na_ifactory_provider_get_type:
+ *
  * Registers the GType of this interface.
+ *
+ * Returns: the #NAIFactoryProvider #GType.
  */
 GType
 na_ifactory_provider_get_type( void )

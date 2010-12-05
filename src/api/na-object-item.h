@@ -32,7 +32,7 @@
 #define __NAUTILUS_ACTIONS_API_NA_OBJECT_ITEM_H__
 
 /**
- * SECTION: na_object_item
+ * SECTION: object-item
  * @short_description: #NAObjectItem class definition.
  * @include: nautilus-actions/na-object-item.h
  *

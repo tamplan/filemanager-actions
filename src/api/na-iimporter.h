@@ -32,13 +32,15 @@
 #define __NAUTILUS_ACTIONS_API_NA_IIMPORTER_H__
 
 /**
- * SECTION: na_iimporter
- * @short_description: #NAIImporter interface definition.
+ * SECTION: iimporter
+ * @section_id: iimporter
+ * @title: NAIImporter (na-iimporter.h title)
+ * @short_description: #NAIImporter interface definition (na-iimporter.h short description)
  * @include: nautilus-actions/na-iimporter.h
  *
  * The #NAIImporter interface imports items from the outside world.
  *
- * Nautilus-Actions v 2.30 - API version:  1
+ * Since: Nautilus-Actions v 2.30 (API version 1)
  */
 
 #include "na-object-item.h"

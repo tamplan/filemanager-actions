@@ -32,8 +32,10 @@
 #define __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__
 
 /**
- * SECTION: na_ifactory_object
- * @short_description: #NAIFactoryObject interface definition.
+ * SECTION: ifactory-object
+ * @section_id: ifactory-object
+ * @title: NAIFactoryObject (na-ifactory-object.h title)
+ * @short_description: #NAIFactoryObject interface definition (na-ifactory-object.h short description).
  * @include: nautilus-actions/na-ifactory_object.h
  *
  * This interface must be implemented by #NAObject-derived objects which
@@ -43,9 +45,9 @@
  * interface must meet following conditions:
  * - must accept an empty constructor
  *
- * Elementary data are implemented as a GList of NADataBoxed objects.
+ * Elementary data are implemented as a #GList of #NADataBoxed objects.
  *
- * Nautilus-Actions v 2.30 - API version:  1
+ * Since: Nautilus-Actions v 2.30 (API version 1)
  */
 
 #include "na-data-def.h"

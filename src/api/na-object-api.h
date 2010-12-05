@@ -32,7 +32,7 @@
 #define __NAUTILUS_ACTIONS_API_NA_OBJECT_API_H__
 
 /**
- * SECTION: na_object
+ * SECTION: object-api
  * @short_description: #NAObject public API.
  * @include: nautilus-actions/na-object-api.h
  *

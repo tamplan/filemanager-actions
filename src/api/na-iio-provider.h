@@ -31,22 +31,6 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_IIO_PROVIDER_H__
 #define __NAUTILUS_ACTIONS_API_NA_IIO_PROVIDER_H__
 
-/**
- * SECTION: na_iio_provider
- * @short_description: #NAIIOProvider interface definition.
- * @include: nautilus-actions/na-iio-provider.h
- *
- * The #NAIIOProvider interface provides two types of services:
- * - load all items at startup
- * - create, update or delete items via the management user interface.
- *
- * These services may be fully implemented by the I/O provider itself.
- * Or, the I/O provider may also prefer to take advantage of the data
- * factory management (see #NAIFactoryObject and #NAIFactoryProvider interfaces).
- *
- * Nautilus-Actions v 2.30 - API version:  1
- */
-
 #include "na-object-item.h"
 
 G_BEGIN_DECLS
@@ -221,9 +205,29 @@ void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
 
 #define IIO_PROVIDER_SIGNAL_ITEM_CHANGED	"na-iio-provider-notify-pivot"
 
-/* The reasons for which an item may not be writable
- * adding a new status here should imply also adding a new tooltip
+/* Adding a new status here should imply also adding a new tooltip
  * in #na_io_provider_get_readonly_tooltip().
+ */
+/**
+ * NAIIOProviderWritabilityStatus:
+ *
+ * @NA_IIO_PROVIDER_STATUS_UNDETERMINED: undertermined.
+ * @NA_IIO_PROVIDER_STATUS_WRITABLE: the item is writable.
+ * @NA_IIO_PROVIDER_STATUS_ITEM_READONLY: the item is read-only.
+ * @NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO: the provider is not
+ *  willing to write this item, or doest not implement the required
+ *  interface.
+ * @NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND: the provider has not been
+ *  found.
+ * @NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN: the provider has been
+ *  locked by the administrator.
+ * @NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER: the provider has been
+ *  locked by the user.
+ * @NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN: the whole
+ *  configuration has been locked by the administrator.
+ * @NA_IIO_PROVIDER_STATUS_NO_API: no API has been found.
+ *
+ * The reasons for which an item may not be writable.
  */
 enum {
 	NA_IIO_PROVIDER_STATUS_UNDETERMINED = 0,
@@ -235,6 +239,7 @@ enum {
 	NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER,
 	NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN,
 	NA_IIO_PROVIDER_STATUS_NO_API,
+	/*< private >*/
 	NA_IIO_PROVIDER_STATUS_LAST,
 };
 

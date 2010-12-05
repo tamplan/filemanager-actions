@@ -3,49 +3,74 @@
                "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
 [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY version SYSTEM "version.xml">
+  <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
+  <!ENTITY nautilus "<productname>Nautilus</productname>">
 ]>
 <book id="index">
   <bookinfo>
-    <title>nautilus-actions Reference Manual</title>
+    <title>&prodname; Reference Manual</title>
     <releaseinfo>
-      for nautilus-actions [VERSION]
+      For Nautilus-Actions &version;
+      <!--
       The latest version of this documentation can be found on-line at
       <ulink role="online-location" url="http://[SERVER]/nautilus-actions/index.html">http://[SERVER]/nautilus-actions/</ulink>.
+      -->
     </releaseinfo>
   </bookinfo>
 
   <chapter>
-    <title>[Insert title here]</title>
-        <xi:include href="xml/na-iio-provider.xml"/>
+    <title>&prodname; Overview</title>
+    <xi:include href="what-is-it.xml" />
+    <xi:include href="compiling.xml" />
+    <xi:include href="dist-content.xml" />
+  </chapter>
+
+  <chapter>
+    <title>&prodname; Overview</title>
+  </chapter>
+
+  <chapter>
+    <title>Available interfaces</title>
+    <xi:include href="xml/iio-provider.xml" />
+    <xi:include href="xml/iimporter.xml" />
+    <xi:include href="xml/iexporter.xml" />
+    <xi:include href="xml/ifactory-provider.xml" />
+    <xi:include href="xml/ifactory-object.xml" />
+  </chapter>
+
+  <chapter>
+    <title>DBus services (nautilus-actions-api.xml title)</title>
+    <xi:include href="xml/dbus.xml" />
+  </chapter>
+
+  <chapter>
+    <title>Others (nautilus-actions-api.xml title)</title>
     <xi:include href="xml/na-object-id.xml"/>
     <xi:include href="xml/na-object-action.xml"/>
     <xi:include href="xml/na-icontext.xml"/>
-    <xi:include href="xml/na-ifactory-provider.xml"/>
     <xi:include href="xml/na-gconf-monitor.xml"/>
     <xi:include href="xml/na-data-boxed.xml"/>
-    <xi:include href="xml/na-iimporter.xml"/>
-    <xi:include href="xml/na-ifactory-object.xml"/>
     <xi:include href="xml/na-object-menu.xml"/>
     <xi:include href="xml/na-object-item.xml"/>
     <xi:include href="xml/na-object.xml"/>
     <xi:include href="xml/na-object-profile.xml"/>
     <xi:include href="xml/na-iduplicable.xml"/>
-    <xi:include href="xml/na-iexporter.xml"/>
     <xi:include href="xml/na-ifactory-object-data.xml"/>
     <xi:include href="xml/na-extension.xml"/>
     <xi:include href="xml/na-data-types.xml"/>
     <xi:include href="xml/na-gconf-utils.xml"/>
     <xi:include href="xml/na-ifactory-provider-provider.xml"/>
     <xi:include href="xml/na-core-utils.xml"/>
-    <xi:include href="xml/na-dbus.xml"/>
     <xi:include href="xml/na-data-def.xml"/>
     <xi:include href="xml/na-object-api.xml"/>
-
   </chapter>
+
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
      <xi:include href="xml/tree_index.sgml"/>
   </chapter>
+
   <index id="api-index-full">
     <title>API Index</title>
     <xi:include href="xml/api-index-full.xml"><xi:fallback /></xi:include>

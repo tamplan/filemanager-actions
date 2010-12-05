@@ -32,12 +32,9 @@
 #define __NAUTILUS_ACTIONS_API_NA_OBJECT_PROFILE_H__
 
 /**
- * SECTION: na_object_profile
+ * SECTION: object-profile
  * @short_description: #NAObjectProfile class definition.
  * @include: nautilus-actions/na-object-item.h
- *
- * This is a pure virtual class, i.e. not an instantiatable one, but
- * serves as the base class for #NAObjectAction and #NAObjectMenu.
  */
 
 #include "na-object-id.h"

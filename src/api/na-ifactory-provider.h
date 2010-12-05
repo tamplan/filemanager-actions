@@ -32,8 +32,10 @@
 #define __NAUTILUS_ACTIONS_API_NA_IFACTORY_PROVIDER_H__
 
 /**
- * SECTION: na_ifactory_provider
- * @short_description: #NAIFactoryProvider interface definition.
+ * SECTION: ifactory-provider
+ * @section_id: ifactory-provider
+ * @title: NAIFactoryProvider (na-ifactory-provider.h title)
+ * @short_description: #NAIFactoryProvider interface definition (na-ifactory-provider.h short description)
  * @include: nautilus-actions/na-ifactory_provider.h
  *
  * This is the interface used by data factory management system for

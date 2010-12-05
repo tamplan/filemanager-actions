@@ -32,7 +32,8 @@
 #define __NAUTILUS_ACTIONS_API_NA_OBJECT_MENU_H__
 
 /**
- * SECTION: na_object_menu
+ * SECTION: object-menu
+ * @title: NAObjectMenu class definition
  * @short_description: #NAObjectMenu class definition.
  * @include: nautilus-actions/na-object-menu.h
  */

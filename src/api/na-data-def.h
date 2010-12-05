@@ -32,7 +32,7 @@
 #define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_DEF_H__
 
 /**
- * SECTION: na_ifactory_object
+ * SECTION: ifactory-object
  * @short_description: Data Factory Definitions.
  * @include: nautilus-actions/na-data-def.h
  */

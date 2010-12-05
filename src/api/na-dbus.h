@@ -32,9 +32,15 @@
 #define __NAUTILUS_ACTIONS_API_NA_DBUS_H__
 
 /**
- * SECTION: na_dbus
- * @short_description: Nautilus-Actions DBus description.
+ * SECTION: dbus
+ * @section_id: dbus
+ * @title: DBus interface (na-dbus.h title)
+ * @short_description: DBus interface (na-dbus.h short description)
  * @include: nautilus-actions/na-dbus.h
+ *
+ * Nautilus-Actions, through its Tracker plugin, exposes several DBus interfaces.
+ * These interfaces may be queried in order to get informations about current
+ * selection, Nautilus-Actions status, and so on.
  */
 
 #include <glib.h>

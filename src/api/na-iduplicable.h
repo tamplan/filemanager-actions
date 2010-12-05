@@ -32,7 +32,8 @@
 #define __NAUTILUS_ACTIONS_API_NA_IDUPLICABLE_H__
 
 /**
- * SECTION: na_iduplicable
+ * SECTION: iduplicable
+ * @title: #NAIDuplicable interface
  * @short_description: #NAIDuplicable interface.
  * @include: nautilus-actions/private/na-iduplicable.h
  *

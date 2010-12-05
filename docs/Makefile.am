@@ -27,10 +27,8 @@
 #   ... and many others (see AUTHORS)
 
 SUBDIRS = \
-	api									\
-	internals							\
 	nact								\
-	product								\
+	reference							\
 	$(NULL)
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@

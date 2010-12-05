@@ -32,7 +32,7 @@
 #define __NAUTILUS_ACTIONS_API_NA_ICONTEXT_H__
 
 /**
- * SECTION: na_icontext
+ * SECTION: icontext
  * @short_description: #NAIContext interface definition.
  * @include: nautilus-actions/na-icontext.h
  *

@@ -26,6 +26,10 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
+#
+# Nautilus-Actions Reference Manual
+#
+
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make
 
@@ -35,34 +39,13 @@ DOC_MODULE_VERSION = 3
 
 DOC_MAIN_SGML_FILE = $(DOC_MODULE)-docs.xml
 
-doc_sections = $(DOC_MODULE)-sections.txt
-
 # from the public API documentation point of view
 # we have to ignore all headers in src/core, and all corresponding source
 # that is, only consider in src/core .c sources whose header is in src/api
-
-core_headers = \
-	na-exporter.h								\
-	na-export-format.h							\
-	na-factory-object.h							\
-	na-factory-provider.h						\
-	na-gnome-vfs-uri.h							\
-	na-gtk-utils.h								\
-	na-iabout.h									\
-	na-importer-ask.h							\
-	na-importer.h								\
-	na-io-provider.h							\
-	na-ipivot-consumer.h						\
-	na-iprefs.h									\
-	na-module.h									\
-	na-pivot.h									\
-	na-selected-info.h							\
-	na-tokens.h									\
-	na-updater.h								\
-	$(NULL)
+core_headers = $(patsubst $(top_srcdir)/src/core/%,%,$(shell \ls -1 $(top_srcdir)/src/core/*.h))
 
 # Extra options to supply to gtkdoc-scan
-#	--ignore-headers="config.h devkit-disks-daemon-glue.h devkit-disks-device-glue.h gdu-private.h gdu-marshal.h gdu-shared.h"
+#	--ignore-headers="config.h devkit-disks-daemon-glue.h"
 #	--rebuild-sections
 SCAN_OPTIONS = \
 	--rebuild-types								\
@@ -73,10 +56,6 @@ DOC_SOURCE_DIR = \
 	$(top_srcdir)/src/api 						\
 	--source-dir=$(top_srcdir)/src/core			\
 	$(NULL)
-
-# Used for dependencies
-#HFILE_GLOB = $(top_srcdir)/src/gdu*/*.h
-#CFILE_GLOB = $(top_srcdir)/src/gdu*/*.c
 
 # Headers to ignore
 IGNORE_HFILES = \
@@ -112,7 +91,6 @@ gtkdoc_run_prefix = \
 	$(NULL)
 
 # Extra options to supply to gtkdoc-mkdb
-#	--ignore-files="devkit-disks-daemon-glue.h devkit-disks-device-glue.h gdu-private.h gdu-marshal.h gdu-shared.h"
 MKDB_OPTIONS = \
 	--sgml-mode 								\
 	--output-format=xml							\
@@ -149,17 +127,6 @@ xml_files = $(xml_in_files:.xml.in=.xml)
 #CLEANFILES += \
 #	*~											\
 #	gnome-disk-utility-scan*					\
-#	gnome-disk-utility.args						\
-#	gnome-disk-utility.hierarchy				\
-#	gnome-disk-utility.interfaces				\
-#	gnome-disk-utility.prerequisites			\
-#	gnome-disk-utility.signals					\
-#	*.bak										\
-#	gnome-disk-utility-decl-list.txt			\
-#	gnome-disk-utility-decl.txt					\
-#	gnome-disk-utility-overrides.txt			\
-#	gnome-disk-utility-undeclared.txt			\
-#	gnome-disk-utility-undocumented.txt			\
 #	gnome-disk-utility-sections.txt				\
 #	*.stamp										\
 #	-rf html xml tmpl							\
@@ -169,5 +136,10 @@ xml_files = $(xml_in_files:.xml.in=.xml)
 EXTRA_DIST += \
 	$(xml_in_files)								\
 	$(NULL)
+
+install-data-local: install-data-local-hook
+
+install-data-local-hook:
+	echo "core_headers=$(core_headers)"
 
 #TESTS = $(GTKDOC_CHECK)

@@ -32,7 +32,7 @@
 #define __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__
 
 /**
- * SECTION: na_data_boxed
+ * SECTION: data-boxed
  * @short_description: #NADataBoxed class definition.
  * @include: nautilus-actions/na-data-boxed.h
  *

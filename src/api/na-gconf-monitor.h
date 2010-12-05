@@ -32,7 +32,7 @@
 #define __NAUTILUS_ACTIONS_API_NA_GCONF_MONITOR_H__
 
 /**
- * SECTION: na_gconf_monitor
+ * SECTION: gconf-monitor
  * @short_description: #NAGConfMonitor class definition.
  * @include: nautilus-actions/na-gconf-monitor.h
  *

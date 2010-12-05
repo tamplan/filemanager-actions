@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
+  <!ENTITY nautilus "<productname>Nautilus</productname>">
+]>
+
+<refentry id="na-what-is-it" revision="4 Dec 2010">
+
+  <refmeta>
+    <refentrytitle>What is it ?</refentrytitle>
+    <manvolnum>3</manvolnum>
+    <refmiscinfo>Nautilus-Actions</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>What is it ?</refname>
+    <refpurpose>
+      What is Nautilus-Actions ?
+    </refpurpose>
+  </refnamediv>
+
+  <refsect1 id="what-is-it">
+    <title>What is Nautilus-Actions ?</title>
+    <para>
+    </para>
+  </refsect1>
+
+</refentry>

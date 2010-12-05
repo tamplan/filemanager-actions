@@ -34,6 +34,44 @@
 
 #include <api/na-iio-provider.h>
 
+/**
+ * SECTION: iio-provider
+ * @section_id: iio-provider
+ * @title: NAIIOProvider
+ * @short_description: An interface to provide I/O services
+ * @include: nautilus-actions/na-iio-provider.h
+ *
+ * The #NAIIOProvider interface has been defined in order to let internal
+ * and external plugins be written. With this interface, a plugin may
+ * provide read and write accesses to an alternate storage subsystem.
+ *
+ * The #NAIIOProvider interface provides three types of services:
+ * <itemizedlist>
+ *  <listitem>
+ *   <para>
+ *    load all items at startup;
+ *   </para>
+ *  </listitem>
+ *  <listitem>
+ *   <para>
+ *    create, update or delete items via the management user interface;
+ *   </para>
+ *  </listitem>
+ *  <listitem>
+ *   <para>
+ *    advertize Nautilus-Actions when an item has been modified on the
+ *    underlying storage subsystems.
+ *   </para>
+ *  </listitem>
+ * </itemizedlist>
+ *
+ * These services may be fully implemented by the I/O provider itself.
+ * Or, the I/O provider may also prefer to take advantage of the data
+ * factory management (see #NAIFactoryObject and #NAIFactoryProvider interfaces).
+ *
+ * Since Nautilus-Actions v 2.30 (API version 1)
+ */
+
 /* private interface data
  */
 struct NAIIOProviderInterfacePrivate {

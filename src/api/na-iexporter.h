@@ -32,13 +32,15 @@
 #define __NAUTILUS_ACTIONS_API_NA_IEXPORTER_H__
 
 /**
- * SECTION: na_iexporter
- * @short_description: #NAIExporter interface definition.
+ * SECTION: iexporter
+ * @section_id: iexporter
+ * @title: NAIExporter (na-iexporter.h title)
+ * @short_description: #NAIExporter interface definition na-iexporter.h short description)
  * @include: nautilus-actions/na-iexporter.h
  *
  * The #NAIExporter interface exports items to the outside world.
  *
- * Nautilus-Actions v 2.30 - API version:  1
+ * Since: Nautilus-Actions v 2.30 (API version 1)
  */
 
 #include "na-object-item.h"

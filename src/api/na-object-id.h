@@ -32,7 +32,8 @@
 #define __NAUTILUS_ACTIONS_API_NA_OBJECT_ID_H__
 
 /**
- * SECTION: na_object_id
+ * SECTION: object-id
+ * @title: NAObjectId class definition
  * @short_description: #NAObjectId class definition.
  * @include: nautilus-actions/na-object-id.h
  *

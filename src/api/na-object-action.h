@@ -32,7 +32,8 @@
 #define __NAUTILUS_ACTIONS_API_NA_OBJECT_ACTION_H__
 
 /**
- * SECTION: na_object_action
+ * SECTION: object-action
+ * @title: #NAObjectAction class definition
  * @short_description: #NAObjectAction class definition.
  * @include: nautilus-actions/na-object-action.h
  *
