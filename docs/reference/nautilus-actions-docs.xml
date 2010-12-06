@@ -2,36 +2,48 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
                "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
 [
-  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+  <!ENTITY % local.common.attrib "xmlns:xi CDATA #FIXED 'http://www.w3.org/2003/XInclude'">
   <!ENTITY version SYSTEM "version.xml">
   <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
   <!ENTITY nautilus "<productname>Nautilus</productname>">
 ]>
+<!--
+ I miss several things here:
+ - I would like to insert line breaks somewhere (e.g. inside of releaseinfo)
+ - I would like to get ride of the extra space which comes with 'version.xml'
+   and in general with all included entities
+   (see e.g. na-getting.xml)
+-->
 <book id="index">
   <bookinfo>
     <title>&prodname; Reference Manual</title>
     <releaseinfo>
       For Nautilus-Actions &version;
-      <!--
+      <!-- linebreak -->
       The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="http://[SERVER]/nautilus-actions/index.html">http://[SERVER]/nautilus-actions/</ulink>.
-      -->
+      <ulink role="online-location" url="http://www.nautilus-actions.org/docs/reference/">http://www.nautilus-actions.org/docs/reference</ulink>.
     </releaseinfo>
+    <copyright>
+      <year>2010</year>
+	  <holder>Pierre Wieser</holder>
+    </copyright>
   </bookinfo>
 
   <chapter>
     <title>&prodname; Overview</title>
-    <xi:include href="what-is-it.xml" />
-    <xi:include href="compiling.xml" />
-    <xi:include href="dist-content.xml" />
+    <xi:include href="na-what-is-it.xml" />
+    <xi:include href="na-getting.xml" />
+    <xi:include href="na-dist-content.xml" />
+    <xi:include href="na-compiling.xml" />
   </chapter>
 
   <chapter>
-    <title>&prodname; Overview</title>
+    <title>Extending &prodname;</title>
+    <xi:include href="na-plugin.xml" />
   </chapter>
 
   <chapter>
-    <title>Available interfaces</title>
+    <title>Public extension interfaces</title>
     <xi:include href="xml/iio-provider.xml" />
     <xi:include href="xml/iimporter.xml" />
     <xi:include href="xml/iexporter.xml" />

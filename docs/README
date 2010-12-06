@@ -2,10 +2,8 @@ docs
 ----
 As of Nautilus-Actions 3.0, the documentation is composed of two main
 parts:
-
-- the Reference Manual describes all features of the product, and
-  rather targets developers and packagers;
-  
+- the Reference Manual describes all features of the product, rather
+  targeting developers and packagers;
 - the Nautilus-Actions Configuration Tool User's Manual.
 
 P. Wieser, Dec. 2010

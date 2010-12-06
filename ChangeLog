@@ -1,5 +1,12 @@
 2010-12-06 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/reference/na-compiling.xml:
+	* docs/reference/na-dist-content.xml:
+	* docs/reference/na-getting.xml:
+	* docs/reference/na-plugin.xml:
+	* docs/reference/na-what-is-it.xml:
+	* docs/reference/version_dir.xml: New files.
+
 	* data/actions/my-first-na-action.desktop:
 	* data/actions/my-first-na-menu.desktop:
 	* data/actions/open-terminal-here.desktop:
