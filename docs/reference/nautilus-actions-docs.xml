@@ -39,7 +39,8 @@
 
   <chapter>
     <title>Extending &prodname;</title>
-    <xi:include href="na-plugin.xml" />
+    <xi:include href="na-plugin-overview.xml" />
+    <xi:include href="na-plugin-api.xml" />
   </chapter>
 
   <chapter>

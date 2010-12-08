@@ -6,7 +6,7 @@
   <!ENTITY nautilus "<productname>Nautilus</productname>">
 ]>
 
-<refentry id="na-plugin" revision="6 Dec 2010">
+<refentry id="na-plugin-overview" revision="8 Dec 2010">
 
   <refmeta>
     <refentrytitle>Extending Nautilus-Actions</refentrytitle>
@@ -14,13 +14,13 @@
   </refmeta>
 
   <refnamediv>
-    <refname>Plugin development</refname>
+    <refname>Plugin overview</refname>
     <refpurpose>
-      How to extend Nautilus-Actions and develop new plugins ?
+      What are plugins and what is their perimeter ?
     </refpurpose>
   </refnamediv>
 
-  <refsect1 id="plugin">
+  <refsect1 id="plugin-overview">
     <title>Plugin Overview</title>
     <para>
       &prodname; may be extended by developing new extensions
@@ -38,7 +38,8 @@
             Storing menus and actions in a specific storage subsystem
           </title>
           <para>
-            This extension is provided via the public NAIIOProvider
+            This extension is provided via the public
+            <link linkend="NAIIOProvider">NAIIOProvider</link>
             interface; it takes care of reading and writing menus
             and actions to a specific storage subsystem.
           </para>
@@ -50,7 +51,8 @@
             Exporting menus and actions
           </title>
           <para>
-            This extension is provided via the public NAIExporter
+            This extension is provided via the public
+            <link linkend="NAIExporter">NAIExporter</link>
             interface; it takes care of exporting menus and actions
             to the filesystem from the &prodname; Configuration Tool
             user interface.
@@ -63,7 +65,8 @@
             Importing menus and actions
           </title>
           <para>
-            This extension is provided via the public NAIImporter
+            This extension is provided via the public
+            <link linkend="NAIImporter">NAIImporter</link>
             interface; it takes care of importing menus and actions
             from the filesystem into the &prodname; Configuration Tool
             user interface.

@@ -6,7 +6,7 @@
   <!ENTITY nautilus "<productname>Nautilus</productname>">
 ]>
 
-<refentry id="na-dist-content" revision="6 Dec 2010">
+<refentry id="na-dist-content" revision="8 Dec 2010">
 
   <refmeta>
     <refentrytitle>Distribution content</refentrytitle>
@@ -29,13 +29,13 @@
     <itemizedlist>
       <listitem>
         <para>
-          Programs
+          Program sources
         </para>
         <itemizedlist>
           <listitem>
             a &nautilus; plugin, said <emphasis>menu</emphasis>,
             responsible for managing displayed menus and actions
-            through &nautilus; extensions;
+            through &nautilus; extension system;
           </listitem>
           <listitem>
             a &nautilus; plugin, said <emphasis>tracker</emphasis>,
@@ -86,11 +86,15 @@
         <para>
           Samples
         </para>
-        <para>
-          The sample menus and actions described in the
-          &prodname; Configuration Tool User's Manual
-          are included in the standard distribution.
-        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              The sample menus and actions described in the
+              &prodname; Configuration Tool User's Manual
+              are included in the standard distribution.
+            </para>
+          </listitem>
+        </itemizedlist>
       </listitem>
     </itemizedlist>
   </refsect1>

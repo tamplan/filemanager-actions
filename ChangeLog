@@ -1,3 +1,9 @@
+2010-12-08 Pierre Wieser <pwieser@trychlos.org>
+
+	Update reference manual for NAIIOProvider interface.
+
+	* docs/reference/na-plugin-api.xml: New file.
+
 2010-12-06 Pierre Wieser <pwieser@trychlos.org>
 
 	* docs/reference/na-compiling.xml:

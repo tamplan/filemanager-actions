@@ -40,9 +40,9 @@ G_BEGIN_DECLS
 #define NA_IS_IIO_PROVIDER( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIO_PROVIDER_TYPE ))
 #define NA_IIO_PROVIDER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIO_PROVIDER_TYPE, NAIIOProviderInterface ))
 
-typedef struct NAIIOProvider                 NAIIOProvider;
+typedef struct _NAIIOProvider                 NAIIOProvider;
 
-typedef struct NAIIOProviderInterfacePrivate NAIIOProviderInterfacePrivate;
+typedef struct _NAIIOProviderInterfacePrivate NAIIOProviderInterfacePrivate;
 
 typedef struct {
 	GTypeInterface                 parent;
@@ -68,7 +68,7 @@ typedef struct {
 	 * To avoid any collision, the I/O provider id is allocated by the
 	 * Nautilus-Actions maintainer team. If you wish develop a new I/O
 	 * provider, and so need a new provider id, please contact the
-	 * maintainers (see #nautilus-actions.doap).
+	 * maintainers (see nautilus-actions.doap).
 	 *
 	 * The I/O provider must implement this function.
 	 */
@@ -93,7 +93,7 @@ typedef struct {
 	 *
 	 * Reads the whole items list from the specified I/O provider.
 	 *
-	 * Returns: a unordered flat #GList of #NAIFactoryObject-derived objects
+	 * Returns: a unordered flat #GList of #NAObject-derived objects
 	 * (menus or actions); the actions embed their own profiles.
 	 */
 	GList *  ( *read_items )         ( const NAIIOProvider *instance, GSList **messages );
@@ -109,7 +109,7 @@ typedef struct {
 	 * It is not supposed to make any assumption on the environment it is
 	 * currently running on.
 	 * This property just says that the developer/maintainer has released
-	 * the needed code in order to update/create/delete #NAIFactoryObject-
+	 * the needed code in order to update/create/delete #NAObject-
 	 * derived objects.
 	 *
 	 * Note that even if this property is %TRUE, there is yet many
@@ -186,7 +186,11 @@ typedef struct {
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * Duplicates provider data (if any) from @source to @dest.
+	 * Duplicates provider-specific data (if any) from @source to @dest.
+	 *
+	 * Note that this does not duplicate in any way any #NAObject-derived
+	 * object. We are just dealing here with the provider-specific data
+	 * which may have been attached to a #NAObject-derived object.
 	 *
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the duplicate operation was
 	 * successfull, or another code depending of the detected error.
@@ -241,11 +245,29 @@ enum {
 	NA_IIO_PROVIDER_STATUS_NO_API,
 	/*< private >*/
 	NA_IIO_PROVIDER_STATUS_LAST,
-};
+}
+	NAIIOProviderWritabilityStatus;
 
-/* return code of operations
- * adding a new code here should imply also adding a new label
+/* adding a new code here should imply also adding a new label
  * in #na_io_provider_get_return_code_label().
+ */
+/**
+ * NAIIOProviderOperationStatus:
+ *
+ * @NA_IIO_PROVIDER_CODE_OK: the requested operation has been successful.
+ *
+ * @NA_IIO_PROVIDER_CODE_PROGRAM_ERROR: a program error has been detected.
+ *  You should open a bug in <ulink url="">Bugzilla</ulink>.
+ *
+ * @NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:
+ *
+ * @NA_IIO_PROVIDER_CODE_WRITE_ERROR:
+ *
+ * @NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR:
+ *
+ * @NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:
+ *
+ * The return code of operations.
  */
 enum {
 	NA_IIO_PROVIDER_CODE_OK = 0,
@@ -254,7 +276,8 @@ enum {
 	NA_IIO_PROVIDER_CODE_WRITE_ERROR,
 	NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR,
 	NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR,
-};
+}
+	NAIIOProviderOperationStatus;
 
 G_END_DECLS
 

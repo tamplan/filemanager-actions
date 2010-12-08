@@ -28,7 +28,7 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([Nautilus-Actions],[3.1.0],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+AC_INIT([Nautilus-Actions],[3.0.3],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
 
 AC_CANONICAL_TARGET
 
@@ -192,7 +192,8 @@ if test "x${enable_schemas_install}" = "xno"; then
 	_ac_na_schemas_install="disabled"; else
 	_ac_na_schemas_install="enabled in ${GCONF_SCHEMA_FILE_DIR}"
 fi
-_ac_na_gtk_doc=`if test "x${enable_gtk_doc}" = "xno"; then echo disabled; else echo enabled; fi`
+_ac_na_gtk_html_doc=`if test "x${enable_gtk_doc_html}" = "xno"; then echo disabled; else echo "enabled with gtk-doc"; fi`
+_ac_na_gtk_pdf_doc=`if test "x${enable_gtk_doc_pdf}" = "xno"; then echo disabled; else echo enabled; fi`
 $as_echo "
 	${PACKAGE_STRING} configuration summary:
 
@@ -205,7 +206,8 @@ $as_echo "
 	Default I/O provider            ${with_default_io_provider}
 	GConf schemas installation      ${_ac_na_schemas_install}
 	Maintainer mode                 ${_ac_na_maintainer_mode}
-	Gtk documentation               ${_ac_na_gtk_doc}
+	HTML API Reference generation   ${_ac_na_gtk_html_doc}
+	PDF API Reference generation    ${_ac_na_gtk_pdf_doc}
 	HTML manuals generation         ${_ac_na_html_manuals}
 	PDF manuals generation          ${_ac_na_pdf_manuals}
 "

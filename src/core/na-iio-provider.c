@@ -36,14 +36,13 @@
 
 /**
  * SECTION: iio-provider
- * @section_id: iio-provider
  * @title: NAIIOProvider
- * @short_description: An interface to provide I/O services
+ * @short_description: The I/O Provider Interface
  * @include: nautilus-actions/na-iio-provider.h
  *
- * The #NAIIOProvider interface has been defined in order to let internal
- * and external plugins be written. With this interface, a plugin may
- * provide read and write accesses to an alternate storage subsystem.
+ * The #NAIIOProvider interface is defined in order to let internal
+ * and external plugins provide read and write accesses
+ * to an alternate storage subsystem.
  *
  * The #NAIIOProvider interface provides three types of services:
  * <itemizedlist>
@@ -59,8 +58,8 @@
  *  </listitem>
  *  <listitem>
  *   <para>
- *    advertize Nautilus-Actions when an item has been modified on the
- *    underlying storage subsystems.
+ *    inform Nautilus-Actions when an item has been modified on the
+ *    underlying storage subsystem.
  *   </para>
  *  </listitem>
  * </itemizedlist>
@@ -74,7 +73,7 @@
 
 /* private interface data
  */
-struct NAIIOProviderInterfacePrivate {
+struct _NAIIOProviderInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -222,6 +221,11 @@ do_is_able_to_write( const NAIIOProvider *instance )
  *
  * This function should be triggered for each and every #NAObjectItem-
  * derived modified objects, but (if possible) only once for each one.
+ *
+ * When receiving this signal, the current &prodname; program will
+ * automatically ask its I/O providers for a current list of menus and
+ * actions, or ask the user if he is willing to reload such a current
+ * list, depending of the exact running &prodname; program.
  */
 void
 na_iio_provider_item_changed( const NAIIOProvider *instance )

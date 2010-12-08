@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
+  <!ENTITY nautilus "<productname>Nautilus</productname>">
+]>
+
+<refentry id="na-plugin-api" revision="8 Dec 2010">
+
+  <refmeta>
+    <refentrytitle>Developing a Nautilus-Actions plugin</refentrytitle>
+    <refmiscinfo>Nautilus-Actions</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>Plugin development</refname>
+    <refpurpose>
+      How to develop a plugin ?
+    </refpurpose>
+  </refnamediv>
+
+  <refsect1 id="plugin-what">
+    <title>What is a plugin ?</title>
+    <para>
+      Basically, a plugin is just a shared library,
+      which will be dynamically loaded by &prodname;
+      at startup.
+    </para>
+    <para>
+      In order to be recognized as a &prodname; plugin,
+      the library must export some well-known functions
+      (see <link linkend="plugin-api">Which functions the plugin must it export ?</link>).
+    </para>
+    <para>
+      When compiled with adequate options
+      (see <link linkend="plugin-compile">How to compile a plugin ?</link>),
+      and installed in the correct location
+      (see <link linkend="plugin-where">Where the plugin must it be installed ?</link>),
+      all &prodname; programs will automatically load the plugin
+      at startup time.
+    </para>
+  </refsect1>
+
+  <refsect1 id="plugin-compile">
+    <title>How to compile a plugin ?</title>
+    <para>
+      The suggested way of producing a dynamically loadable library
+      is to use <application>autoconf</application>,
+      <application>automake</application> and
+      <application>libtool</application> GNU applications.
+    </para>
+    <para>
+      In this case, it is enough to use the <option>-module</option>
+      option in your <filename>Makefile.am</filename>, as in:
+      <programlisting>
+        libna_io_desktop_la_LDFLAGS = -module -no-undefined -avoid-version
+      </programlisting>
+    </para>
+  </refsect1>
+
+  <refsect1 id="plugin-where">
+    <title>Where the plugin must it be installed ?</title>
+    <para>
+      &prodname; searches for its plugins in
+      <filename>pkglibdir</filename> directory,
+      which most often happens to be
+      <filename>/usr/lib/nautilus-actions/</filename> or
+      <filename>/usr/lib64/nautilus-actions/</filename>,
+      depending of your system.
+    </para>
+  </refsect1>
+
+  <refsect1 id="plugin-api">
+    <title>Which functions the plugin must it export ?</title>
+    <para>
+      The plugin MUST define and export following API:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <programlisting>
+          <funcdef>
+            gboolean na_extension_startup( GTypeModule *plugin );
+          </funcdef>
+        </programlisting>
+        <para>
+          This function is called by the &prodname; program
+          at startup time, while it is being loading the
+          plugins.
+        </para>
+        <para>
+          The plugin may run its own initialization process,
+          in particular registering the GTypes it manages.
+          The plugin must return <returnvalue>TRUE</returnvalue>
+          if it has been successully
+          initialized, <returnvalue>FALSE</returnvalue> else.
+        </para>
+        <example>
+          <programlisting>
+            static GType st_module_type = 0;
+
+            gboolean
+            na_extension_startup( GTypeModule *plugin )
+            {
+
+            	static GTypeInfo info = {
+            		sizeof( NadpDesktopProviderClass ),
+            		NULL,
+            		NULL,
+            		( GClassInitFunc ) class_init,
+            		NULL,
+            		NULL,
+            		sizeof( NadpDesktopProvider ),
+            		0,
+            		( GInstanceInitFunc ) instance_init
+            	};
+
+            	static const GInterfaceInfo iio_provider_iface_info = {
+            		( GInterfaceInitFunc ) iio_provider_iface_init,
+            		NULL,
+            		NULL
+            	};
+
+            	st_module_type = g_type_module_register_type( plugin, G_TYPE_OBJECT, "NadpDesktopProvider", &amp;info, 0 );
+
+            	g_type_module_add_interface( plugin, st_module_type, NA_IIO_PROVIDER_TYPE, &amp;iio_provider_iface_info );
+
+            	return( TRUE );
+            }
+          </programlisting>
+        </example>
+      </listitem>
+      <listitem>
+        <programlisting>
+          <funcdef>
+            guint na_extension_list_types( const GType **types );
+          </funcdef>
+        </programlisting>
+        <para>
+          This function is called by the &prodname; program
+          after having received the successfull initialization
+          return code from <function>na_extension_startup</function>
+          function.
+        </para>
+        <para>
+          The plugin must populates the <parameter>types</parameter>
+          parameter with a null-terminated list of the GTypes the
+          plugin manages. Each GType returned will be later allocated
+          by the &prodname; program as a new GObjet-derived object.
+          The plugin must return the count of defined GType types.
+        </para>
+        <example>
+          <programlisting>
+            /* the count of GType types provided by this extension
+             * each new GType type must
+             * - be registered in na_extension_startup()
+             * - be addressed in na_extension_list_types().
+             */
+            #define NADP_TYPES_COUNT	1
+
+            guint
+            na_extension_list_types( const GType **types )
+            {
+            	static GType types_list [1+NADP_TYPES_COUNT];
+
+                /* NADP_DESKTOP_PROVIDER_TYPE has been previously
+                 * registered in na_extension_startup function
+                 */
+            	types_list[0] = NADP_DESKTOP_PROVIDER_TYPE;
+            
+            	types_list[NADP_TYPES_COUNT] = 0;
+            	*types = types_list;
+            
+            	return( NADP_TYPES_COUNT );
+            }
+          </programlisting>
+        </example>
+      </listitem>
+      <listitem>
+        <programlisting>
+          <funcdef>
+            guint na_extension_get_version( void );
+          </funcdef>
+        </programlisting>
+        <para>
+          This function is called by the &prodname; program at
+          termination time, just before actually unloading the
+          plugin.
+        </para>
+        <para>
+          The plugin may take advantage of this to release all
+          previously allocated handle, resources and so on.
+        </para>
+      </listitem>
+    </itemizedlist>
+    <para>
+      The plugin may define and export following optional API:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <programlisting>
+          <funcdef>
+            guint na_extension_get_version( void );
+          </funcdef>
+        </programlisting>
+        <para>
+          This function is called by the &prodname; program each time
+          it needs to know which version of this API the plugin
+          implements.
+        </para>
+        <para>
+          If the plugin does not implement this function, then
+          the &prodname; program considers that the plugin
+          implements version 1 of this API.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </refsect1>
+
+</refentry>
