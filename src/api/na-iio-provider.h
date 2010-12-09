@@ -35,10 +35,10 @@
 
 G_BEGIN_DECLS
 
-#define NA_IIO_PROVIDER_TYPE						( na_iio_provider_get_type())
-#define NA_IIO_PROVIDER( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IIO_PROVIDER_TYPE, NAIIOProvider ))
-#define NA_IS_IIO_PROVIDER( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIO_PROVIDER_TYPE ))
-#define NA_IIO_PROVIDER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIO_PROVIDER_TYPE, NAIIOProviderInterface ))
+#define NA_IIO_PROVIDER_TYPE                        ( na_iio_provider_get_type())
+#define NA_IIO_PROVIDER( instance )                 ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IIO_PROVIDER_TYPE, NAIIOProvider ))
+#define NA_IS_IIO_PROVIDER( instance )              ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIO_PROVIDER_TYPE ))
+#define NA_IIO_PROVIDER_GET_INTERFACE( instance )   ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIO_PROVIDER_TYPE, NAIIOProviderInterface ))
 
 typedef struct _NAIIOProvider                 NAIIOProvider;
 
@@ -79,7 +79,7 @@ typedef struct {
 	 *
 	 * Returns: the version of this interface supported by the I/O provider.
 	 *
-	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
+	 * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
 	 */
 	guint    ( *get_version )        ( const NAIIOProvider *instance );
 
@@ -97,7 +97,7 @@ typedef struct {
 	 * Returns: the id of the I/O provider, as a newly allocated string
 	 * which should be g_free() by the caller.
 	 *
-	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
+	 * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
 	 */
 	gchar *  ( *get_id )             ( const NAIIOProvider *instance );
 
@@ -110,7 +110,7 @@ typedef struct {
 	 * Returns: the name to be displayed for this I/O provider, as a
 	 * newly allocated string which should be g_free() by the caller.
 	 *
-	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
+	 * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
 	 */
 	gchar *  ( *get_name )           ( const NAIIOProvider *instance );
 
@@ -127,7 +127,7 @@ typedef struct {
 	 * Returns: a unordered flat #GList of #NAObjectItem -derived objects
 	 * (menus or actions); the actions embed their own profiles.
 	 *
-	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
+	 * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
 	 */
 	GList *  ( *read_items )         ( const NAIIOProvider *instance, GSList **messages );
 
@@ -151,7 +151,7 @@ typedef struct {
 	 * Returns: %TRUE if this I/O provider is willing to write,
 	 *  %FALSE else.
 	 *
-	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
+	 * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
 	 */
 	gboolean ( *is_willing_to_write )( const NAIIOProvider *instance );
 
@@ -183,7 +183,7 @@ typedef struct {
 	 * Returns: %TRUE if this I/O provider is able to do write
 	 * operations at runtime, %FALSE else.
 	 *
-	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
+	 * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
 	 */
 	gboolean ( *is_able_to_write )   ( const NAIIOProvider *instance );
 
@@ -206,7 +206,7 @@ typedef struct {
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the write operation
 	 * was successfull, or another code depending of the detected error.
 	 *
-	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
+	 * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
 	 */
 	guint    ( *write_item )         ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 
@@ -225,7 +225,7 @@ typedef struct {
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the delete operation was
 	 * successfull, or another code depending of the detected error.
 	 *
-	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
+	 * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
 	 */
 	guint    ( *delete_item )        ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 
@@ -246,7 +246,7 @@ typedef struct {
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the duplicate operation was
 	 * successfull, or another code depending of the detected error.
 	 *
-	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
+	 * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
 	 */
 	guint    ( *duplicate_data )     ( const NAIIOProvider *instance, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
 }

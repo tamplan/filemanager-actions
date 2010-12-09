@@ -222,7 +222,7 @@ import_ask_new()
 	return( g_object_new( NA_IMPORTER_ASK_TYPE, NULL ));
 }
 
-/**
+/*
  * na_importer_ask_user:
  * @importing: the #NAObjectItem-derived object being currently imported.
  * @existing: the #NAObjectItem-derived already existing object with the same ID.

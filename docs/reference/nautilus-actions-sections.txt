@@ -20,10 +20,34 @@ NAIIOProviderOperationStatus
 na_iio_provider_item_changed
 
 <SUBSECTION Standard>
+na_iio_provider_get_type
 
 <SUBSECTION Private>
 NAIIOProviderInterfacePrivate
-na_iio_provider_get_type
+</SECTION>
+
+<SECTION>
+<FILE>iimporter</FILE>
+NA_IIMPORTER_TYPE
+NA_IIMPORTER
+NA_IS_IIMPORTER
+NA_IIMPORTER_GET_INTERFACE
+NAIImporter
+NAIImporterInterface
+NAIImporterImportFromUriParms
+NAIImporterManageImportModeParms
+NAIImporterCheckFn
+NAIImporterAskUserFn
+NAIImporterImportMode
+NAIImporterImportStatus
+na_iimporter_import_from_uri
+na_iimporter_manage_import_mode
+
+<SUBSECTION Standard>
+na_iimporter_get_type
+
+<SUBSECTION Private>
+NAIImporterInterfacePrivate
 </SECTION>
 
 <SECTION>
@@ -57,24 +81,6 @@ na_ifactory_provider_write_item
 NA_IFACTORY_PROVIDER
 NA_IS_IFACTORY_PROVIDER
 na_ifactory_provider_get_type
-</SECTION>
-
-<SECTION>
-<FILE>iimporter</FILE>
-NA_IIMPORTER_TYPE
-NA_IIMPORTER_GET_INTERFACE
-NAIImporter
-NAIImporterInterfacePrivate
-NAIImporterImportFromUriParms
-NAIImporterManageImportModeParms
-NAIImporterInterface
-na_iimporter_import_from_uri
-na_iimporter_manage_import_mode
-
-<SUBSECTION Standard>
-NA_IIMPORTER
-NA_IS_IIMPORTER
-na_iimporter_get_type
 </SECTION>
 
 <SECTION>

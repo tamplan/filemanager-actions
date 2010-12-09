@@ -31,10 +31,15 @@
 #ifndef __CORE_NA_IMPORTER_H__
 #define __CORE_NA_IMPORTER_H__
 
-/**
- * SECTION: na_iimporter
- * @short_description: #NAIImporter internal functions.
+/*
+ * SECTION: iimporter
+ * @title: NAIImporter
+ * @short_description: The NAIImporter internal functions.
  * @include: core/na-importer.h
+ *
+ * Internal Nautilus-Actions code should never directly call a
+ * #NAIImporter interface method, but rather should call the
+ * corresponding na_importer_xxx() function.
  */
 
 #include <gtk/gtk.h>

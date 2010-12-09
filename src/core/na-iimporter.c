@@ -38,9 +38,44 @@
 #include <api/na-iimporter.h>
 #include <api/na-object-api.h>
 
+/**
+ * SECTION: iimporter
+ * @title: NAIImporter
+ * @short_description: The Import Interface
+ * @include: nautilus-actions/na-iimporter.h
+ *
+ * The #NAIImporter interface imports items from the outside world.
+ *
+ * <refsect2>
+ *  <title>Versions historic</title>
+ *  <table>
+ *    <title>Historic of the versions of the #NAIImporter interface</title>
+ *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
+ *      <colspec colname="na-version" />
+ *      <colspec colname="api-version" />
+ *      <colspec colname="current" />
+ *      <thead>
+ *        <row>
+ *          <entry>&prodname; version</entry>
+ *          <entry>#NAIImporter interface version</entry>
+ *          <entry></entry>
+ *        </row>
+ *      </thead>
+ *      <tbody>
+ *        <row>
+ *          <entry>since 2.30</entry>
+ *          <entry>1</entry>
+ *          <entry>current version</entry>
+ *        </row>
+ *      </tbody>
+ *    </tgroup>
+ *  </table>
+ * </refsect2>
+ */
+
 /* private interface data
  */
-struct NAIImporterInterfacePrivate {
+struct _NAIImporterInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -149,9 +184,11 @@ iimporter_get_version( const NAIImporter *instance )
  * @parms: a #NAIImporterImportFromUriParms structure.
  *
  * Tries to import a #NAObjectItem from the URI specified in @parms, returning
- * the result in @parms->imported.
+ * the result in <structfield>@parms->imported</structfield>.
  *
  * Returns: the return code of the operation.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
  */
 
 guint
@@ -176,13 +213,37 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
 	return( code );
 }
 
-/*
- * Returns IMPORTER_CODE_OK if we can safely insert the action
- * - the id doesn't already exist
- * - the id already exist, but import mode is renumber
- * - the id already exists, but import mode is override
+/**
+ * na_iimporter_manage_import_mode:
+ * @parms: a NAIImporterManageImportModeParms struct.
  *
- * Returns IMPORTER_CODE_CANCELLED if user chooses to cancel the operation
+ * Returns: the #NAIImporterImportStatus status of the operation:
+ *
+ * <itemizedlist>
+ *   <listitem>
+ *     <para>
+ *       IMPORTER_CODE_OK if we can safely insert the action:
+ *     </para>
+ *     <itemizedlist>
+ *       <listitem>
+ *         <para>the id doesn't already exist</para>
+ *       </listitem>
+ *       <listitem>
+ *         <para>the id already exist, but import mode is renumber</para>
+ *       </listitem>
+ *       <listitem>
+ *         <para>the id already exists, but import mode is override</para>
+ *       </listitem>
+ *     </itemizedlist>
+ *   </listitem>
+ *   <listitem>
+ *     <para>
+ *       IMPORTER_CODE_CANCELLED if user chooses to cancel the operation
+ *     </para>
+ *   </listitem>
+ * </itemizedlist>
+ *
+ * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
  */
 guint
 na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )

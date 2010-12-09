@@ -31,44 +31,48 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_IIMPORTER_H__
 #define __NAUTILUS_ACTIONS_API_NA_IIMPORTER_H__
 
-/**
- * SECTION: iimporter
- * @section_id: iimporter
- * @title: NAIImporter (na-iimporter.h title)
- * @short_description: #NAIImporter interface definition (na-iimporter.h short description)
- * @include: nautilus-actions/na-iimporter.h
- *
- * The #NAIImporter interface imports items from the outside world.
- *
- * Since: Nautilus-Actions v 2.30 (API version 1)
- */
-
 #include "na-object-item.h"
 
 G_BEGIN_DECLS
 
-#define NA_IIMPORTER_TYPE						( na_iimporter_get_type())
-#define NA_IIMPORTER( instance )				( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IIMPORTER_TYPE, NAIImporter ))
-#define NA_IS_IIMPORTER( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIMPORTER_TYPE ))
-#define NA_IIMPORTER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIMPORTER_TYPE, NAIImporterInterface ))
+#define NA_IIMPORTER_TYPE                       ( na_iimporter_get_type())
+#define NA_IIMPORTER( instance )                ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IIMPORTER_TYPE, NAIImporter ))
+#define NA_IS_IIMPORTER( instance )             ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIMPORTER_TYPE ))
+#define NA_IIMPORTER_GET_INTERFACE( instance )  ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIMPORTER_TYPE, NAIImporterInterface ))
 
-typedef struct NAIImporter                      NAIImporter;
-typedef struct NAIImporterInterfacePrivate      NAIImporterInterfacePrivate;
+typedef struct _NAIImporter                      NAIImporter;
+typedef struct _NAIImporterInterfacePrivate      NAIImporterInterfacePrivate;
+typedef struct _NAIImporterImportFromUriParms    NAIImporterImportFromUriParms;
 
-typedef struct NAIImporterImportFromUriParms    NAIImporterImportFromUriParms;
-typedef struct NAIImporterManageImportModeParms NAIImporterManageImportModeParms;
-
+/**
+ * NAIImporterInterface:
+ * @get_version:     returns the version of this interface that the
+ *                   plugin implements.
+ * @import_from_uri: imports an item.
+ *
+ * This defines the interface that a #NAIImporter should implement.
+ */
 typedef struct {
+	/*< private >*/
 	GTypeInterface               parent;
 	NAIImporterInterfacePrivate *private;
 
+	/*< public >*/
 	/**
 	 * get_version:
 	 * @instance: the #NAIImporter provider.
 	 *
-	 * Returns: the version of this interface supported by the I/O provider.
+	 * This method is called by the &prodname; program each time
+	 * it needs to know which version of this interface the plugin
+	 * implements.
 	 *
-	 * Defaults to 1.
+	 * If this method is not implemented by the plugin,
+	 * the &prodname; program considers that the plugin only implements
+	 * the version 1 of the #NAIImporter interface.
+	 *
+	 * Returns: the version of this interface supported by the plugin.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
 	 */
 	guint ( *get_version )    ( const NAIImporter *instance );
 
@@ -80,23 +84,49 @@ typedef struct {
 	 * Imports an item.
 	 *
 	 * Returns: the return code of the operation.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
 	 */
 	guint ( *import_from_uri )( const NAIImporter *instance, NAIImporterImportFromUriParms *parms );
 }
 	NAIImporterInterface;
 
-/* import mode
+/**
+ * NAIImporterImportMode:
+ * @IMPORTER_MODE_NO_IMPORT: a "do not import anything" mode.
+ * @IMPORTER_MODE_RENUMBER: reallocate a new id when the imported one
+ *  already exists.
+ * @IMPORTER_MODE_OVERRIDE: override the existing id with the imported
+ *  one.
+ * @IMPORTER_MODE_ASK: ask the user for what to do with this particular
+ *  item.
+ *
+ * Define the mode of an import operation.
  */
-enum {
-	IMPORTER_MODE_NO_IMPORT = 1,		/* this is a "do not import anything" mode */
+typedef enum {
+	IMPORTER_MODE_NO_IMPORT = 1,
 	IMPORTER_MODE_RENUMBER,
 	IMPORTER_MODE_OVERRIDE,
 	IMPORTER_MODE_ASK
-};
+}
+	NAIImporterImportMode;
 
-/* return code
+/**
+ * NAIImporterImportStatus:
+ * @IMPORTER_CODE_OK: import ok.
+ * @IMPORTER_CODE_PROGRAM_ERROR: a program error has been detected.
+ *  You should open a bug in
+ *  <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions">Bugzilla</ulink>.
+ * @IMPORTER_CODE_NOT_WILLING_TO: the plugin is not willing to import
+ *  anything.
+ * @IMPORTER_CODE_NO_ITEM_ID: item id not found.
+ * @IMPORTER_CODE_NO_ITEM_TYPE: item type not found.
+ * @IMPORTER_CODE_UNKNOWN_ITEM_TYPE: unknown item type.
+ * @IMPORTER_CODE_CANCELLED: operation cancelled by the user.
+ *
+ * Define the return status of an import operation.
  */
-enum {
+typedef enum {
 	IMPORTER_CODE_OK = 0,
 	IMPORTER_CODE_PROGRAM_ERROR,
 	IMPORTER_CODE_NOT_WILLING_TO,
@@ -104,11 +134,12 @@ enum {
 	IMPORTER_CODE_NO_ITEM_TYPE,
 	IMPORTER_CODE_UNKNOWN_ITEM_TYPE,
 	IMPORTER_CODE_CANCELLED
-};
+}
+	NAIImporterImportStatus;
 
 /**
  * NAIImporterCheckFn:
- * @imported: the currently imported #NAObjectItem.
+ * @imported: the currently imported #NAObjectItem -derived object.
  * @fn_data: some data to be passed to the function.
  *
  * This function may be provided by the caller in order the #NAIImporter
@@ -123,6 +154,8 @@ enum {
  * the asked import mode.
  *
  * Returns: the already existing #NAObjectItem with same id, or %NULL.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
  */
 typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
 
@@ -140,7 +173,10 @@ typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
  * not be able to ask the user. In this case, the duplicated id should be
  * systematically regenerated as a unique id (uuid).
  *
- * Returns: the import mode choosen by the user, which must not be %ASK.
+ * Returns: the import mode choosen by the user, which must not be
+ * %IMPORTER_MODE_ASK.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
  */
 typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectItem *, void * );
 
@@ -161,16 +197,16 @@ typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectIte
  * @import_mode:   actually used import mode.
  *                 output;
  *                 since version 1 of the structure.
- * @imported:      the imported NAObjectItem-derived object, or %NULL.
+ * @imported:      the imported #NAObjectItem -derived object, or %NULL.
  *                 output;
  *                 since version 1 of the structure.
- * @check_fn:      a #NAIImporterCheckFn function to check the existence of the imported id.
+ * @check_fn:      a NAIImporterCheckFn() function to check the existence of the imported id.
  *                 input;
  *                 since version 1 of the structure.
  * @check_fn_data: @check_fn data
  *                 input;
  *                 since version 1 of the structure.
- * @ask_fn:        a #NAIImporterAskUserFn function to ask the user what to do in case of a duplicate id
+ * @ask_fn:        a NAIImporterAskUserFn() function to ask the user what to do in case of a duplicate id
  *                 input;
  *                 since version 1 of the structure.
  * @ask_fn_data:   @ask_fn data
@@ -183,8 +219,10 @@ typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectIte
  *
  * This structure allows all used parameters when importing from an URI
  * to be passed and received through a single structure.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
  */
-struct NAIImporterImportFromUriParms {
+struct _NAIImporterImportFromUriParms {
 	guint                version;
 	gchar               *uri;
 	guint                asked_mode;
@@ -198,12 +236,12 @@ struct NAIImporterImportFromUriParms {
 	GSList              *messages;
 };
 
-/*
+/**
  * NAIImporterManageImportModeParms:
  * @version:       the version of this structure, currently equals to 1.
  *                 input;
  *                 since version 1 of the structure.
- * @imported:      the imported #NAObjectItem-derived object
+ * @imported:      the imported #NAObjectItem -derived object
  * @asked_mode:    asked import mode
  * @check_fn:      a #NAIImporterCheckFn function to check the existence of the imported id.
  *                 input;
@@ -230,8 +268,10 @@ struct NAIImporterImportFromUriParms {
  *
  * This structure allows all used parameters when managing the import mode
  * to be passed and received through a single structure.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
  */
-struct NAIImporterManageImportModeParms {
+typedef struct {
 	guint                version;
 	NAObjectItem        *imported;
 	guint                asked_mode;
@@ -242,7 +282,8 @@ struct NAIImporterManageImportModeParms {
 	gboolean             exist;
 	guint                import_mode;
 	GSList              *messages;
-};
+}
+	NAIImporterManageImportModeParms;
 
 GType na_iimporter_get_type( void );
 

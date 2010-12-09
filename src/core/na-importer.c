@@ -55,7 +55,7 @@ static guint         import_from_uri( const NAPivot *pivot, GList *modules, NAIm
 static NAObjectItem *is_importing_already_exists( const NAObjectItem *importing, ImporterExistsStr *parms );
 static guint         ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms );
 
-/**
+/*
  * na_importer_import_from_list:
  * @pivot: the #NAPivot pivot for this application.
  * @parms: a #NAImporterParms structure.
@@ -116,7 +116,7 @@ na_importer_import_from_list( const NAPivot *pivot, NAImporterParms *parms )
 	return( code );
 }
 
-/**
+/*
  * na_importer_free_result:
  * @result: the #NAImporterResult structure to be released.
  *

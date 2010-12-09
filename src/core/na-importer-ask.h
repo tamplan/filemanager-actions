@@ -31,9 +31,10 @@
 #ifndef __CORE_NA_IMPORTER_ASK_H__
 #define __CORE_NA_IMPORTER_ASK_H__
 
-/**
- * SECTION: na_importer_ask
- * @short_description: #NAImporterAsk class definition.
+/*
+ * SECTION: importer-ask
+ * @title: NAImporterAsk
+ * @short_description: The #NAImporterAsk class definition.
  * @include: core/na-iimporter-ask.h
  *
  * This class reates and manages a dialog. It is ran each time an
