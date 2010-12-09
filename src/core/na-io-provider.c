@@ -295,7 +295,7 @@ instance_finalize( GObject *object )
 	}
 }
 
-/**
+/*
  * na_io_provider_terminate:
  *
  * Called by on #NAPivot dispose(), free here resources allocated to
@@ -309,7 +309,7 @@ na_io_provider_terminate( void )
 	st_io_providers = NULL;
 }
 
-/**
+/*
  * na_io_provider_get_providers_list:
  * @pivot: the current #NAPivot instance.
  *
@@ -502,7 +502,7 @@ add_io_providers_from_prefs( const NAPivot *pivot, GList *runtime_providers )
 	return( providers );
 }
 
-/**
+/*
  * na_io_provider_reorder_providers_list:
  * @pivot: the #NAPivot instance of the application.
  *
@@ -532,7 +532,7 @@ na_io_provider_reorder_providers_list( const NAPivot *pivot )
 	na_core_utils_slist_free( order );
 }
 
-/**
+/*
  * na_io_provider_dump_providers_list:
  * @providers: the list of #NAIOProvider to be dumped.
  *
@@ -562,7 +562,7 @@ dump( const NAIOProvider *provider )
 	g_debug( "%s: item_changed_handler=%lu", thisfn, provider->private->item_changed_handler );
 }
 
-/**
+/*
  * na_io_provider_find_provider_by_id:
  * @providers: the current list of #NAIOProvider.
  * @id: the searched internal id.
@@ -591,7 +591,7 @@ na_io_provider_find_provider_by_id( GList *providers, const gchar *id )
 	return( provider );
 }
 
-/**
+/*
  * na_io_provider_get_writable_provider:
  * @pivot: the #NAPivot instance.
  *
@@ -624,7 +624,7 @@ na_io_provider_get_writable_provider( const NAPivot *pivot )
 	return( provider );
 }
 
-/**
+/*
  * na_io_provider_read_items:
  * @pivot: the #NAPivot object which owns the list of registered I/O
  * storage providers.
@@ -900,7 +900,7 @@ filter_unwanted_items_rec( GList *hierarchy, gboolean load_disabled, gboolean lo
 	return( filtered );
 }
 
-/**
+/*
  * na_io_provider_get_id:
  * @provider: this #NAIOProvider.
  *
@@ -923,7 +923,7 @@ na_io_provider_get_id( const NAIOProvider *provider )
 	return( id );
 }
 
-/**
+/*
  * na_io_provider_get_name:
  * @provider: this #NAIOProvider.
  *
@@ -951,7 +951,7 @@ na_io_provider_get_name( const NAIOProvider *provider )
 	return( name );
 }
 
-/**
+/*
  * na_io_provider_is_user_readable_at_startup:
  * @provider: this #NAIOProvider.
  * @iprefs: an implementor of the #NAIPrefs interface.
@@ -994,7 +994,7 @@ na_io_provider_is_user_readable_at_startup( const NAIOProvider *provider, const 
 	return( to_be_read );
 }
 
-/**
+/*
  * na_io_provider_is_user_writable:
  * @provider: this #NAIOProvider.
  * @iprefs: an implementor of the #NAIPrefs interface.
@@ -1033,7 +1033,7 @@ na_io_provider_is_user_writable( const NAIOProvider *provider, const NAIPrefs *i
 	return( writable );
 }
 
-/**
+/*
  * na_io_provider_is_locked_by_admin:
  * @provider: this #NAIOProvider.
  * @iprefs: an implementor of the #NAIPrefs interface.
@@ -1065,7 +1065,7 @@ na_io_provider_is_locked_by_admin( const NAIOProvider *provider, const NAIPrefs 
 	return( locked );
 }
 
-/**
+/*
  * na_io_provider_get_provider:
  * @provider: the #NAIOProvider object.
  *
@@ -1090,7 +1090,7 @@ na_io_provider_get_provider( const NAIOProvider *provider )
 	return( instance );
 }
 
-/**
+/*
  * na_io_provider_is_willing_to_write:
  * @provider: this #NAIOProvider.
  *
@@ -1120,7 +1120,7 @@ na_io_provider_is_willing_to_write( const NAIOProvider *provider )
 	return( willing_to );
 }
 
-/**
+/*
  * na_io_provider_is_able_to_write:
  * @provider: this #NAIOProvider.
  *
@@ -1150,7 +1150,7 @@ na_io_provider_is_able_to_write( const NAIOProvider *provider )
 	return( able_to );
 }
 
-/**
+/*
  * na_io_provider_has_write_api:
  * @provider: this #NAIOProvider.
  *
@@ -1179,7 +1179,7 @@ na_io_provider_has_write_api( const NAIOProvider *provider )
 	return( has_api );
 }
 
-/**
+/*
  * na_io_provider_write_item:
  * @provider: this #NAIOProvider object.
  * @item: a #NAObjectItem to be written to the storage subsystem.
@@ -1216,7 +1216,7 @@ na_io_provider_write_item( const NAIOProvider *provider, const NAObjectItem *ite
 	return( ret );
 }
 
-/**
+/*
  * na_io_provider_delete_item:
  * @provider: this #NAIOProvider object.
  * @item: the #NAObjectItem item to be deleted.
@@ -1248,7 +1248,7 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
 	return( ret );
 }
 
-/**
+/*
  * na_io_provider_duplicate_data:
  * @provider: this #NAIOProvider object.
  * @dest: the target #NAObjectItem item.
@@ -1290,7 +1290,7 @@ na_io_provider_duplicate_data( const NAIOProvider *provider, NAObjectItem *dest,
 	return( ret );
 }
 
-/**
+/*
  * na_io_provider_get_readonly_tooltip:
  * @reason: the reason for why an item is not writable.
  *
@@ -1347,7 +1347,7 @@ na_io_provider_get_readonly_tooltip( guint reason )
 	return( tooltip );
 }
 
-/**
+/*
  * na_io_provider_get_return_code_label:
  * @code: the return code of an operation.
  *

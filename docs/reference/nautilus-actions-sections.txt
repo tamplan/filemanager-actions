@@ -1,5 +1,13 @@
 
 <SECTION>
+<FILE>extension</FILE>
+na_extension_startup
+na_extension_get_version
+na_extension_list_types
+na_extension_shutdown
+</SECTION>
+
+<SECTION>
 <FILE>iio-provider</FILE>
 NA_IIO_PROVIDER_TYPE
 NA_IIO_PROVIDER
@@ -7,6 +15,8 @@ NA_IS_IIO_PROVIDER
 NA_IIO_PROVIDER_GET_INTERFACE
 NAIIOProvider
 NAIIOProviderInterface
+NAIIOProviderWritabilityStatus
+NAIIOProviderOperationStatus
 na_iio_provider_item_changed
 
 <SUBSECTION Standard>
@@ -14,7 +24,6 @@ na_iio_provider_item_changed
 <SUBSECTION Private>
 NAIIOProviderInterfacePrivate
 na_iio_provider_get_type
-IIO_PROVIDER_SIGNAL_ITEM_CHANGED
 </SECTION>
 
 <SECTION>
@@ -388,14 +397,6 @@ NAFO_DATA_SHOW_IF_REGISTERED
 NAFO_DATA_SHOW_IF_TRUE
 NAFO_DATA_SHOW_IF_RUNNING
 NAFO_DATA_CAPABILITITES
-</SECTION>
-
-<SECTION>
-<FILE>na-extension</FILE>
-na_extension_startup
-na_extension_get_version
-na_extension_list_types
-na_extension_shutdown
 </SECTION>
 
 <SECTION>

@@ -58,7 +58,7 @@
  *  </listitem>
  *  <listitem>
  *   <para>
- *    inform Nautilus-Actions when an item has been modified on the
+ *    inform &prodname; when an item has been modified on the
  *    underlying storage subsystem.
  *   </para>
  *  </listitem>
@@ -66,9 +66,34 @@
  *
  * These services may be fully implemented by the I/O provider itself.
  * Or, the I/O provider may also prefer to take advantage of the data
- * factory management (see #NAIFactoryObject and #NAIFactoryProvider interfaces).
+ * factory management (see #NAIFactoryObject and #NAIFactoryProvider
+ * interfaces).
  *
- * Since Nautilus-Actions v 2.30 (API version 1)
+ * <refsect2>
+ *  <title>Versions historic</title>
+ *  <table>
+ *    <title>Historic of the versions of the #NAIIOProvider interface</title>
+ *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
+ *      <colspec colname="na-version" />
+ *      <colspec colname="api-version" />
+ *      <colspec colname="current" />
+ *      <thead>
+ *        <row>
+ *          <entry>&prodname; version</entry>
+ *          <entry>#NAIIOProvider interface version</entry>
+ *          <entry></entry>
+ *        </row>
+ *      </thead>
+ *      <tbody>
+ *        <row>
+ *          <entry>since 2.30</entry>
+ *          <entry>1</entry>
+ *          <entry>current version</entry>
+ *        </row>
+ *      </tbody>
+ *    </tgroup>
+ *  </table>
+ * </refsect2>
  */
 
 /* private interface data
@@ -164,10 +189,18 @@ interface_base_init( NAIIOProviderInterface *klass )
 		klass->delete_item = NULL;
 		klass->duplicate_data = NULL;
 
-		/* register the signal (without any default handler)
-		 * this signal should be sent by the #NAIIOProvider instance when
-		 * an item has changed in the underlying storage subsystem
-		 * #NAPivot is connected to this signal
+		/**
+		 * NAIIOProvider::notify-pivot:
+		 * @provider: the #NAIIOProvider which has called the
+		 *  na_iio_provider_item_changed() function.
+		 * @arg1: not used, initialized to %NULL.
+		 *
+		 * This signal is not meant to be directly sent by a plugin.
+		 * Instead, the plugin should call the na_iio_provider_item_changed()
+		 * function.
+		 *
+		 * The signal is registered without any default handler.
+		 * Only NAPivot object is connected to it.
 		 */
 		st_signals[ ITEM_CHANGED ] = g_signal_new(
 					IIO_PROVIDER_SIGNAL_ITEM_CHANGED,
@@ -216,16 +249,19 @@ do_is_able_to_write( const NAIIOProvider *instance )
  * na_iio_provider_item_changed:
  * @instance: the calling #NAIIOProvider.
  *
- * Advertises Nautilus-Actions that this #NAIIOProvider @instance has
- * detected a modification in one of its configurations (menu or action).
+ * Informs Nautilus-Actions that this #NAIIOProvider @instance has
+ * detected a modification in one of its items (menu or action).
  *
- * This function should be triggered for each and every #NAObjectItem-
- * derived modified objects, but (if possible) only once for each one.
+ * This function may be triggered for each and every
+ * #NAObjectItem -derived modified objects, and, at least, once
+ * for a coherent set of updates.
  *
  * When receiving this signal, the current &prodname; program will
  * automatically ask its I/O providers for a current list of menus and
  * actions, or ask the user if he is willing to reload such a current
  * list, depending of the exact running &prodname; program.
+ *
+ * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
  */
 void
 na_iio_provider_item_changed( const NAIIOProvider *instance )

@@ -44,17 +44,42 @@ typedef struct _NAIIOProvider                 NAIIOProvider;
 
 typedef struct _NAIIOProviderInterfacePrivate NAIIOProviderInterfacePrivate;
 
+/**
+ * NAIIOProviderInterface:
+ * @get_version:         returns the version of this interface that the
+ *                       plugin implements.
+ * @get_id:              returns the internal id of the plugin.
+ * @get_name:            returns the public name of the plugin.
+ * @read_items:          reads items.
+ * @is_willing_to_write: asks if the plugin is willing to write.
+ * @is_able_to_write:    asks if the plugin is able to write.
+ * @write_item:          writes an item.
+ * @delete_item:         deletes an item.
+ * @duplicate_data:      duplicates the provider-specific data.
+ *
+ * This defines the interface that a #NAIIOProvider should implement.
+ */
 typedef struct {
+	/*< private >*/
 	GTypeInterface                 parent;
 	NAIIOProviderInterfacePrivate *private;
 
+	/*< public >*/
 	/**
 	 * get_version:
 	 * @instance: the #NAIIOProvider provider.
 	 *
+	 * This method is called by the &prodname; program each time
+	 * it needs to know which version of this interface the plugin
+	 * implements.
+	 *
+	 * If this method is not implemented by the plugin,
+	 * the &prodname; program considers that the plugin only implements
+	 * the version 1 of the #NAIIOProvider interface.
+	 *
 	 * Returns: the version of this interface supported by the I/O provider.
 	 *
-	 * Defaults to 1.
+	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
 	 */
 	guint    ( *get_version )        ( const NAIIOProvider *instance );
 
@@ -62,15 +87,17 @@ typedef struct {
 	 * get_id:
 	 * @instance: the #NAIIOProvider provider.
 	 *
-	 * Returns: the id of the I/O provider, as a newly allocated string
-	 * which should be g_free() by the caller.
-	 *
 	 * To avoid any collision, the I/O provider id is allocated by the
 	 * Nautilus-Actions maintainer team. If you wish develop a new I/O
 	 * provider, and so need a new provider id, please contact the
 	 * maintainers (see nautilus-actions.doap).
 	 *
-	 * The I/O provider must implement this function.
+	 * The I/O provider must implement this method.
+	 *
+	 * Returns: the id of the I/O provider, as a newly allocated string
+	 * which should be g_free() by the caller.
+	 *
+	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
 	 */
 	gchar *  ( *get_id )             ( const NAIIOProvider *instance );
 
@@ -78,10 +105,12 @@ typedef struct {
 	 * get_name:
 	 * @instance: the #NAIIOProvider provider.
 	 *
+	 * Defaults to an empty string.
+	 *
 	 * Returns: the name to be displayed for this I/O provider, as a
 	 * newly allocated string which should be g_free() by the caller.
 	 *
-	 * Defaults to an empty string.
+	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
 	 */
 	gchar *  ( *get_name )           ( const NAIIOProvider *instance );
 
@@ -93,8 +122,12 @@ typedef struct {
 	 *
 	 * Reads the whole items list from the specified I/O provider.
 	 *
-	 * Returns: a unordered flat #GList of #NAObject-derived objects
+	 * The I/O provider must implement this method.
+	 *
+	 * Returns: a unordered flat #GList of #NAObjectItem -derived objects
 	 * (menus or actions); the actions embed their own profiles.
+	 *
+	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
 	 */
 	GList *  ( *read_items )         ( const NAIIOProvider *instance, GSList **messages );
 
@@ -102,28 +135,29 @@ typedef struct {
 	 * is_willing_to_write:
 	 * @instance: the #NAIIOProvider provider.
 	 *
-	 * Returns: %TRUE if this I/O provider is willing to write,
-	 *  %FALSE else.
-	 *
 	 * The 'willing_to_write' property is intrinsic to the I/O provider.
 	 * It is not supposed to make any assumption on the environment it is
 	 * currently running on.
 	 * This property just says that the developer/maintainer has released
-	 * the needed code in order to update/create/delete #NAObject-
-	 * derived objects.
+	 * the needed code in order to update/create/delete #NAObjectItem
+	 * -derived objects.
 	 *
 	 * Note that even if this property is %TRUE, there is yet many
 	 * reasons for not being able to update/delete existing items or
 	 * create new ones (see e.g. #is_able_to_write() below).
+	 *
+	 * Defaults to %FALSE.
+	 *
+	 * Returns: %TRUE if this I/O provider is willing to write,
+	 *  %FALSE else.
+	 *
+	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
 	 */
 	gboolean ( *is_willing_to_write )( const NAIIOProvider *instance );
 
 	/**
 	 * is_able_to_write:
 	 * @instance: the #NAIIOProvider provider.
-	 *
-	 * Returns: %TRUE if this I/O provider is able to do write
-	 * operations at runtime, %FALSE else.
 	 *
 	 * The 'able_to_write' property is a runtime one.
 	 * When returning %TRUE, the I/O provider insures that it has
@@ -143,57 +177,76 @@ typedef struct {
 	 * Note that even if this property is %TRUE, there is yet many
 	 * reasons for not being able to update/delete existing items or
 	 * create new ones (see e.g. 'locked' preference key).
+	 *
+	 * Defaults to %FALSE.
+	 *
+	 * Returns: %TRUE if this I/O provider is able to do write
+	 * operations at runtime, %FALSE else.
+	 *
+	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
 	 */
 	gboolean ( *is_able_to_write )   ( const NAIIOProvider *instance );
 
 	/**
 	 * write_item:
 	 * @instance: the #NAIIOProvider provider.
-	 * @item: a #NAObjectItem-derived item, menu or action.
+	 * @item: a #NAObjectItem -derived item, menu or action.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Writes a new @item.
 	 *
+	 * There is no update_item function ; it is the responsability
+	 * of the provider to delete the previous version of an item before
+	 * actually writing the new one.
+	 *
+	 * The I/O provider should implement this method, or return
+	 * %FALSE in is_willing_to_write() method above.
+	 *
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the write operation
 	 * was successfull, or another code depending of the detected error.
 	 *
-	 * Note: there is no update_item function ; it is the responsability
-	 * of the provider to delete the previous version of an item before
-	 * actually writing the new one.
+	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
 	 */
 	guint    ( *write_item )         ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 
 	/**
 	 * delete_item:
 	 * @instance: the #NAIIOProvider provider.
-	 * @item: a #NAObjectItem-derived item, menu or action.
+	 * @item: a #NAObjectItem -derived item, menu or action.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Deletes an existing @item from the I/O subsystem.
 	 *
+	 * The I/O provider should implement this method, or return
+	 * %FALSE in is_willing_to_write() method above.
+	 *
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the delete operation was
 	 * successfull, or another code depending of the detected error.
+	 *
+	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
 	 */
 	guint    ( *delete_item )        ( const NAIIOProvider *instance, const NAObjectItem *item, GSList **messages );
 
 	/**
 	 * duplicate_data:
 	 * @instance: the #NAIIOProvider provider.
-	 * @dest: a #NAObjectItem-derived item, menu or action.
-	 * @source: a #NAObjectItem-derived item, menu or action.
+	 * @dest: a #NAObjectItem -derived item, menu or action.
+	 * @source: a #NAObjectItem -derived item, menu or action.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Duplicates provider-specific data (if any) from @source to @dest.
 	 *
-	 * Note that this does not duplicate in any way any #NAObject-derived
-	 * object. We are just dealing here with the provider-specific data
-	 * which may have been attached to a #NAObject-derived object.
+	 * Note that this does not duplicate in any way any #NAObjectItem
+	 * -derived object. We are just dealing here with the provider-specific
+	 * data which may have been attached to a #NAObjectItem -derived object.
 	 *
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the duplicate operation was
 	 * successfull, or another code depending of the detected error.
+	 *
+	 * Since: Nautilus-Actions v 2.30, #NAIIOProvider interface v 1.
 	 */
 	guint    ( *duplicate_data )     ( const NAIIOProvider *instance, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
 }
@@ -207,14 +260,16 @@ GType na_iio_provider_get_type( void );
  */
 void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
 
-#define IIO_PROVIDER_SIGNAL_ITEM_CHANGED	"na-iio-provider-notify-pivot"
+/* signal sent from a NAIIOProvider
+ * via the na_iio_provider_item_changed() function
+ */
+#define IIO_PROVIDER_SIGNAL_ITEM_CHANGED	"notify-pivot"
 
 /* Adding a new status here should imply also adding a new tooltip
  * in #na_io_provider_get_readonly_tooltip().
  */
 /**
  * NAIIOProviderWritabilityStatus:
- *
  * @NA_IIO_PROVIDER_STATUS_UNDETERMINED: undertermined.
  * @NA_IIO_PROVIDER_STATUS_WRITABLE: the item is writable.
  * @NA_IIO_PROVIDER_STATUS_ITEM_READONLY: the item is read-only.
@@ -233,7 +288,7 @@ void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
  *
  * The reasons for which an item may not be writable.
  */
-enum {
+typedef enum {
 	NA_IIO_PROVIDER_STATUS_UNDETERMINED = 0,
 	NA_IIO_PROVIDER_STATUS_WRITABLE,
 	NA_IIO_PROVIDER_STATUS_ITEM_READONLY,
@@ -253,23 +308,21 @@ enum {
  */
 /**
  * NAIIOProviderOperationStatus:
- *
  * @NA_IIO_PROVIDER_CODE_OK: the requested operation has been successful.
- *
  * @NA_IIO_PROVIDER_CODE_PROGRAM_ERROR: a program error has been detected.
- *  You should open a bug in <ulink url="">Bugzilla</ulink>.
- *
- * @NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:
- *
- * @NA_IIO_PROVIDER_CODE_WRITE_ERROR:
- *
- * @NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR:
- *
- * @NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:
+ *  You should open a bug in
+ *  <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions">Bugzilla</ulink>.
+ * @NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN: the provider is not willing
+ *  to do the requested action.
+ * @NA_IIO_PROVIDER_CODE_WRITE_ERROR: a write error has been detected.
+ * @NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR: the schemas could not be
+ *  deleted.
+ * @NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR: the configuration could not
+ *  be deleted.
  *
  * The return code of operations.
  */
-enum {
+typedef enum {
 	NA_IIO_PROVIDER_CODE_OK = 0,
 	NA_IIO_PROVIDER_CODE_PROGRAM_ERROR = 1 + NA_IIO_PROVIDER_STATUS_LAST,
 	NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN,

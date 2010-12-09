@@ -31,13 +31,18 @@
 #ifndef __CORE_NA_IO_PROVIDER_H__
 #define __CORE_NA_IO_PROVIDER_H__
 
-/**
- * SECTION: na_io_provider
+/*
+ * SECTION: io-provider
+ * @title: NAIIOProvider internals.
  * @short_description: #NAIOProvider class definition.
  * @include: core/na-io-provider.h
  *
  * NAIOProvider is the Nautilus-Actions class which is used to manage
- * external I/O Providers which implement NAIIOProvider interface.
+ * external I/O Providers which implement #NAIIOProvider interface.
+ *
+ * Internal Nautilus-Actions code should never directly call a
+ * #NAIIOProvider interface method, but rather should call the
+ * corresponding NAIOProvider class method.
  */
 
 #include "na-iprefs.h"

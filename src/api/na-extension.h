@@ -32,18 +32,120 @@
 #define __NAUTILUS_ACTIONS_API_NA_EXTENSION_H__
 
 /**
- * SECTION: na_extension
+ * SECTION: extension
+ * @title: Plugins
  * @short_description: Nautilus-Actions extension interface definition.
  * @include: nautilus-actions/na-extension.h
  *
- * Nautilus-Actions accepts extensions as dynamically loadable libraries
+ * &prodname; accepts extensions as dynamically loadable libraries
  * (aka plugins).
  *
- * At startup time, candidate libraries are searched for in PKGLIBDIR/
- * directory. A valid candidate must at least export the #na_extension_startup()
- * and #na_extension_list_types() functions.
+ * As of today, &prodname; may be extended in the following areas:
+ *  <itemizedlist>
+ *    <listitem>
+ *      <formalpara>
+ *        <title>
+ *          Storing menus and actions in a specific storage subsystem
+ *        </title>
+ *        <para>
+ *          This extension is provided via the public
+ *          <link linkend="NAIIOProvider">NAIIOProvider</link>
+ *          interface; it takes care of reading and writing menus
+ *          and actions to a specific storage subsystem.
+ *        </para>
+ *      </formalpara>
+ *    </listitem>
+ *    <listitem>
+ *      <formalpara>
+ *        <title>
+ *          Exporting menus and actions
+ *        </title>
+ *        <para>
+ *          This extension is provided via the public
+ *          <link linkend="NAIExporter">NAIExporter</link>
+ *          interface; it takes care of exporting menus and actions
+ *          to the filesystem from the &prodname; Configuration Tool
+ *          user interface.
+ *        </para>
+ *      </formalpara>
+ *    </listitem>
+ *    <listitem>
+ *      <formalpara>
+ *        <title>
+ *          Importing menus and actions
+ *        </title>
+ *        <para>
+ *          This extension is provided via the public
+ *          <link linkend="NAIImporter">NAIImporter</link>
+ *          interface; it takes care of importing menus and actions
+ *          from the filesystem into the &prodname; Configuration Tool
+ *          user interface.
+ *        </para>
+ *      </formalpara>
+ *    </listitem>
+ *  </itemizedlist>
  *
- * Nautilus-Actions v 2.30 - API version:  1
+ * In order to be recognized as a valid &prodname; plugin, the library
+ * must at least export the functions described in this extension API.
+ *
+ * <refsect2>
+ *   <title>Developing a &prodname; plugin</title>
+ *   <refsect3>
+ *     <title>Building the dynamically loadable library</title>
+ *       <para>
+ * The suggested way of producing a dynamically loadable library is to
+ * use
+ * <application><ulink url="http://www.gnu.org/software/autoconf/">autoconf</ulink></application>,
+ * <application><ulink url="http://www.gnu.org/software/automake/">automake</ulink></application>
+ * and
+ * <application><ulink url="http://www.gnu.org/software/libtool/">libtool</ulink></application>
+ * GNU applications.
+ *       </para>
+ *       <para>
+ * In this case, it should be enough to use the <option>-module</option>
+ * option in your <filename>Makefile.am</filename>, as in:
+ * <programlisting>
+ *   libna_io_desktop_la_LDFLAGS = -module -no-undefined -avoid-version
+ * </programlisting>
+ *       </para>
+ *    </refsect3>
+ *    <refsect3>
+ *      <title>Installing the library</title>
+ *       <para>
+ * At startup time, &prodname; searches for its candidate libraries in
+ * <filename>PKGLIBDIR</filename> directory, which most often happens to
+ * be <filename>/usr/lib/nautilus-actions/</filename> or
+ * <filename>/usr/lib64/nautilus-actions/</filename>,
+ * depending of your system.
+ *       </para>
+ *   </refsect3>
+ * </refsect2>
+ *
+ * <refsect2>
+ *  <title>Versions historic</title>
+ *  <table>
+ *    <title>Historic of the versions of this extension API</title>
+ *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
+ *      <colspec colname="na-version" />
+ *      <colspec colname="api-version" />
+ *      <colspec colname="current" />
+ *      <thead>
+ *        <row>
+ *          <entry>&prodname; version</entry>
+ *          <entry>extension API version</entry>
+ *          <entry></entry>
+ *        </row>
+ *      </thead>
+ *      <tbody>
+ *        <row>
+ *          <entry>since 2.30</entry>
+ *          <entry>1</entry>
+ *          <entry>current version</entry>
+ *        </row>
+ *      </tbody>
+ *    </tgroup>
+ *  </table>
+ * </refsect2>
  */
 
 #include <glib-object.h>
@@ -52,29 +154,71 @@ G_BEGIN_DECLS
 
 /**
  * na_extension_startup:
- * @module: the #GTypeModule of the library being loaded.
+ * @module: the #GTypeModule of the plugin library being loaded.
  *
  * This function is called by the Nautilus-Actions plugin manager when
- * the library is first loaded in memory. The library may so take
+ * the plugin library is first loaded in memory. The library may so take
  * advantage of this call by initializing itself, registering its
  * internal #GType types, etc.
+ *
+ * A Nautilus-Actions extension must implement this function in order
+ * to be considered as a valid candidate to dynamic load.
+ *
+ * <example>
+ *   <programlisting>
+ *     static GType st_module_type = 0;
+ *
+ *     gboolean
+ *     na_extension_startup( GTypeModule *plugin )
+ *     {
+ *         static GTypeInfo info = {
+ *             sizeof( NadpDesktopProviderClass ),
+ *             NULL,
+ *             NULL,
+ *             ( GClassInitFunc ) class_init,
+ *             NULL,
+ *             NULL,
+ *             sizeof( NadpDesktopProvider ),
+ *             0,
+ *             ( GInstanceInitFunc ) instance_init
+ *         };
+ *
+ *         static const GInterfaceInfo iio_provider_iface_info = {
+ *             ( GInterfaceInitFunc ) iio_provider_iface_init,
+ *             NULL,
+ *             NULL
+ *         };
+ *
+ *         st_module_type = g_type_module_register_type( plugin, G_TYPE_OBJECT, "NadpDesktopProvider", &amp;info, 0 );
+ *
+ *         g_type_module_add_interface( plugin, st_module_type, NA_IIO_PROVIDER_TYPE, &amp;iio_provider_iface_info );
+ *
+ *         return( TRUE );
+ *     }
+ *   </programlisting>
+ * </example>
  *
  * Returns: %TRUE if the initialization is successfull, %FALSE else.
  * In this later case, the library is unloaded and no more considered.
  *
- * A Nautilus-Actions extension must implement this function in order
- * to be considered as a valid candidate to dynamic load.
+ * Since: Nautilus-Actions v 2.30, extension API v 1.
  */
 gboolean na_extension_startup    ( GTypeModule *module );
 
 /**
  * na_extension_get_version:
  *
+ * This function is called by the &prodname; program each time
+ * it needs to know which version of this API the plugin
+ * implements.
+ *
+ * If this function is not exported by the library,
+ * the plugin manager considers that the library only implements the
+ * version 1 of this extension API.
+ *
  * Returns: the version of this API supported by the module.
  *
- * If this function is not exported by the library, or returns zero,
- * the plugin manager considers that the library only implements the
- * version 1 of this API.
+ * Since: Nautilus-Actions v 2.30, extension API v 1.
  */
 guint    na_extension_get_version( void );
 
@@ -84,23 +228,48 @@ guint    na_extension_get_version( void );
  *  instantiable #GType types this library implements.
  *
  * Returned #GType types must already have been registered in the
- * #GType system (e.g. at #na_extension_startup() time), and may implement
- * one or more of the interfaces defined in Nautilus-Actions API.
+ * #GType system (e.g. at #na_extension_startup() time), and the objects
+ * they describe may implement one or more of the interfaces defined in
+ * this Nautilus-Actions public API.
  *
  * The Nautilus-Actions plugin manager will instantiate one #GTypeInstance-
  * derived object for each returned #GType type, and associate these objects
  * to this library.
  *
- * Returns: the number of #GType types returned in the @types array, not
- * counting the terminating zero item.
- *
  * A Nautilus-Actions extension must implement this function in order
  * to be considered as a valid candidate to dynamic load.
  *
- * If this function is not exported by the library, or returns zero,
- * the plugin manager considers that the library doesn't implement
- * any Nautilus-Action interface. In this case, the library is
- * unloaded and no more considered.
+ * <example>
+ *   <programlisting>
+ *     &lcomment; the count of GType types provided by this extension
+ *      * each new GType type must
+ *      * - be registered in na_extension_startup()
+ *      * - be addressed in na_extension_list_types().
+ *      &rcomment;
+ *     #define NADP_TYPES_COUNT    1
+ *
+ *     guint
+ *     na_extension_list_types( const GType **types )
+ *     {
+ *          static GType types_list [1+NADP_TYPES_COUNT];
+ *
+ *          &lcomment; NADP_DESKTOP_PROVIDER_TYPE has been previously
+ *           * registered in na_extension_startup function
+ *           &rcomment;
+ *          types_list[0] = NADP_DESKTOP_PROVIDER_TYPE;
+ *
+ *          types_list[NADP_TYPES_COUNT] = 0;
+ *          *types = types_list;
+ *
+ *          return( NADP_TYPES_COUNT );
+ *     }
+ *   </programlisting>
+ * </example>
+ *
+ * Returns: the number of #GType types returned in the @types array, not
+ * counting the terminating zero item.
+ *
+ * Since: Nautilus-Actions v 2.30, extension API v 1.
  */
 guint    na_extension_list_types ( const GType **types );
 
@@ -111,7 +280,13 @@ guint    na_extension_list_types ( const GType **types );
  * shutdown itself.
  *
  * The dynamicaly loaded library may take advantage of this call to
- * release any resource it may have previously allocated.
+ * release any resource, handle, and so on, it may have previously
+ * allocated.
+ *
+ * A Nautilus-Actions extension must implement this function in order
+ * to be considered as a valid candidate to dynamic load.
+ *
+ * Since: Nautilus-Actions v 2.30, extension API v 1.
  */
 void     na_extension_shutdown   ( void );
 
