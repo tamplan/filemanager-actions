@@ -70,6 +70,24 @@ NAIExporterInterfacePrivate
 </SECTION>
 
 <SECTION>
+<FILE>ifactory-provider</FILE>
+NA_IFACTORY_PROVIDER_TYPE
+NA_IFACTORY_PROVIDER
+NA_IS_IFACTORY_PROVIDER
+NA_IFACTORY_PROVIDER_GET_INTERFACE
+NAIFactoryProvider
+NAIFactoryProviderInterface
+na_ifactory_provider_read_item
+na_ifactory_provider_write_item
+
+<SUBSECTION Standard>
+na_ifactory_provider_get_type
+
+<SUBSECTION Private>
+NAIFactoryProviderInterfacePrivate
+</SECTION>
+
+<SECTION>
 <FILE>ifactory-object</FILE>
 NA_IFACTORY_OBJECT_TYPE
 NA_IFACTORY_OBJECT_GET_INTERFACE
@@ -85,21 +103,6 @@ na_ifactory_object_set_from_void
 NA_IFACTORY_OBJECT
 NA_IS_IFACTORY_OBJECT
 na_ifactory_object_get_type
-</SECTION>
-
-<SECTION>
-<FILE>ifactory-provider</FILE>
-NA_IFACTORY_PROVIDER_TYPE
-NA_IFACTORY_PROVIDER_GET_INTERFACE
-NAIFactoryProviderInterfacePrivate
-NAIFactoryProviderInterface
-na_ifactory_provider_read_item
-na_ifactory_provider_write_item
-
-<SUBSECTION Standard>
-NA_IFACTORY_PROVIDER
-NA_IS_IFACTORY_PROVIDER
-na_ifactory_provider_get_type
 </SECTION>
 
 <SECTION>
@@ -434,11 +437,6 @@ na_gconf_utils_write_string_list
 na_gconf_utils_remove_entry
 na_gconf_utils_slist_from_string
 na_gconf_utils_slist_to_string
-</SECTION>
-
-<SECTION>
-<FILE>na-ifactory-provider-provider</FILE>
-NAIFactoryProvider
 </SECTION>
 
 <SECTION>

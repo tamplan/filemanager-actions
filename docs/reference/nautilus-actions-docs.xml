@@ -50,13 +50,17 @@
     <xi:include href="xml/iio-provider.xml" />
     <xi:include href="xml/iimporter.xml" />
     <xi:include href="xml/iexporter.xml" />
-    <xi:include href="xml/ifactory-provider.xml" />
-    <xi:include href="xml/ifactory-object.xml" />
   </chapter>
 
   <chapter>
     <title>DBus services (nautilus-actions-api.xml title)</title>
     <xi:include href="xml/dbus.xml" />
+  </chapter>
+
+  <chapter>
+    <title>Data factory management system</title>
+    <xi:include href="xml/ifactory-provider.xml" />
+    <xi:include href="xml/ifactory-object.xml" />
   </chapter>
 
   <chapter>

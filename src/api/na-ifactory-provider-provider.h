@@ -31,19 +31,11 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_IFACTORY_PROVIDER_PROVIDER_H__
 #define __NAUTILUS_ACTIONS_API_NA_IFACTORY_PROVIDER_PROVIDER_H__
 
-/**
- * SECTION: ifactory-provider
- * @section_id: ifactory-provider
- * @title: NAIFactoryProvider (na-ifactory-provider-provider.h title)
- * @short_description: #NAIFactoryProvider interface definition (na-ifactory-provider-provider.h short description)
- * @include: nautilus-actions/na-ifactory_provider-provider.h
- */
-
 #include <glib.h>
 
 G_BEGIN_DECLS
 
-typedef struct NAIFactoryProvider NAIFactoryProvider;
+typedef struct _NAIFactoryProvider NAIFactoryProvider;
 
 G_END_DECLS
 

@@ -31,86 +31,96 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_IFACTORY_PROVIDER_H__
 #define __NAUTILUS_ACTIONS_API_NA_IFACTORY_PROVIDER_H__
 
-/**
- * SECTION: ifactory-provider
- * @section_id: ifactory-provider
- * @title: NAIFactoryProvider (na-ifactory-provider.h title)
- * @short_description: #NAIFactoryProvider interface definition (na-ifactory-provider.h short description)
- * @include: nautilus-actions/na-ifactory_provider.h
- *
- * This is the interface used by data factory management system for
- * having serialization/unserialization services. This interface should
- * be implemented by I/O providers which would take advantage of this
- * system.
- *
- * Nautilus-Actions v 2.30 - API version:  1
- */
-
 #include "na-data-boxed.h"
 #include "na-ifactory-object.h"
 #include "na-ifactory-provider-provider.h"
 
 G_BEGIN_DECLS
 
-#define NA_IFACTORY_PROVIDER_TYPE						( na_ifactory_provider_get_type())
-#define NA_IFACTORY_PROVIDER( instance )				( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_PROVIDER_TYPE, NAIFactoryProvider ))
-#define NA_IS_IFACTORY_PROVIDER( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_PROVIDER_TYPE ))
-#define NA_IFACTORY_PROVIDER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_PROVIDER_TYPE, NAIFactoryProviderInterface ))
+#define NA_IFACTORY_PROVIDER_TYPE                       ( na_ifactory_provider_get_type())
+#define NA_IFACTORY_PROVIDER( instance )                ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_PROVIDER_TYPE, NAIFactoryProvider ))
+#define NA_IS_IFACTORY_PROVIDER( instance )             ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_PROVIDER_TYPE ))
+#define NA_IFACTORY_PROVIDER_GET_INTERFACE( instance )  ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_PROVIDER_TYPE, NAIFactoryProviderInterface ))
 
-typedef struct NAIFactoryProviderInterfacePrivate NAIFactoryProviderInterfacePrivate;
+typedef struct _NAIFactoryProviderInterfacePrivate NAIFactoryProviderInterfacePrivate;
 
+/**
+ * NAIFactoryProviderInterface:
+ * @get_version: returns the version of this interface the plugin implements.
+ * @read_start:  triggered just before reading an item.
+ * @read_data:   reads an item.
+ * @read_done:   triggered at the end of item reading.
+ * @write_start: triggered just before writing an item.
+ * @write_data:  writes an item.
+ * @write_done:  triggered at the end of item writing.
+ *
+ * This defines the interface that a #NAIFactoryProvider may implement.
+ */
 typedef struct {
+	/*< private >*/
 	GTypeInterface                      parent;
 	NAIFactoryProviderInterfacePrivate *private;
 
+	/*< public >*/
 	/**
 	 * get_version:
 	 * @instance: this #NAIFactoryProvider instance.
 	 *
+	 * Defaults to 1.
+	 *
 	 * Returns: the version of this interface supported by @instance implementation.
 	 *
-	 * Defaults to 1.
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
 	 */
 	guint         ( *get_version )( const NAIFactoryProvider *instance );
 
 	/**
 	 * read_start:
 	 * @reader: this #NAIFactoryProvider instance.
-	 * @reader_data: the data associated to this instance.
+	 * @reader_data: the data associated to this instance, as provided
+	 *  when na_ifactory_provider_read_item() was called.
 	 * @object: the #NAIFactoryObject object which comes to be readen.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * API called by #NAIFactoryObject just before starting with reading data.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
 	 */
 	void          ( *read_start ) ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
 
 	/**
 	 * read_data:
 	 * @reader: this #NAIFactoryProvider instance.
-	 * @reader_data: the data associated to this instance.
+	 * @reader_data: the data associated to this instance, as provided
+	 *  when na_ifactory_provider_read_item() was called.
 	 * @object: the #NAIFactoryobject being unserialized.
 	 * @def: a #NADataDef structure which identifies the data to be unserialized.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
+	 * This method must be implemented in order any data be read.
+	 *
 	 * Returns: a newly allocated NADataBoxed which contains the readen value.
 	 * Should return %NULL if data is not found.
 	 *
-	 * This method must be implemented in order any data be read.
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
 	 */
 	NADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
 
 	/**
 	 * read_done:
 	 * @reader: this #NAIFactoryProvider instance.
-	 * @reader_data: the data associated to this instance.
+	 * @reader_data: the data associated to this instance, as provided
+	 *  when na_ifactory_provider_read_item() was called.
 	 * @object: the #NAIFactoryObject object which comes to be readen.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * API called by #NAIFactoryObject when all data have been readen.
 	 * Implementor may take advantage of this to do some cleanup.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
 	 */
 	void          ( *read_done )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
 
@@ -122,9 +132,11 @@ typedef struct {
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
+	 * API called by #NAIFactoryObject just before starting with writing data.
+	 *
 	 * Returns: a NAIIOProvider operation return code.
 	 *
-	 * API called by #NAIFactoryObject just before starting with writing data.
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
 	 */
 	guint         ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 
@@ -140,9 +152,11 @@ typedef struct {
 	 *
 	 * Write the data embedded in @value down to @instance.
 	 *
+	 * This method must be implemented in order any data be written.
+	 *
 	 * Returns: a NAIIOProvider operation return code.
 	 *
-	 * This method must be implemented in order any data be written.
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
 	 */
 	guint         ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages );
 
@@ -154,10 +168,12 @@ typedef struct {
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * Returns: a NAIIOProvider operation return code.
-	 *
 	 * API called by #NAIFactoryObject when all data have been written.
 	 * Implementor may take advantage of this to do some cleanup.
+	 *
+	 * Returns: a NAIIOProvider operation return code.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
 	 */
 	guint         ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 }

@@ -1,5 +1,14 @@
 2010-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Document NAIFactoryProvider interface.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-ifactory-provider-provider.h:
+	* src/api/na-ifactory-provider.h:
+	* src/core/na-factory-provider.h:
+	* src/core/na-ifactory-provider.c: Updated accordingly.
+
 	Fix NAIExporter reference manual.
 
 	* docs/reference/nautilus-actions-sections.txt:
