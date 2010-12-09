@@ -31,50 +31,57 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_IEXPORTER_H__
 #define __NAUTILUS_ACTIONS_API_NA_IEXPORTER_H__
 
-/**
- * SECTION: iexporter
- * @section_id: iexporter
- * @title: NAIExporter (na-iexporter.h title)
- * @short_description: #NAIExporter interface definition na-iexporter.h short description)
- * @include: nautilus-actions/na-iexporter.h
- *
- * The #NAIExporter interface exports items to the outside world.
- *
- * Since: Nautilus-Actions v 2.30 (API version 1)
- */
-
 #include "na-object-item.h"
 
 G_BEGIN_DECLS
 
-#define NA_IEXPORTER_TYPE						( na_iexporter_get_type())
-#define NA_IEXPORTER( instance )				( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IEXPORTER_TYPE, NAIExporter ))
-#define NA_IS_IEXPORTER( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IEXPORTER_TYPE ))
-#define NA_IEXPORTER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IEXPORTER_TYPE, NAIExporterInterface ))
+#define NA_IEXPORTER_TYPE                       ( na_iexporter_get_type())
+#define NA_IEXPORTER( instance )                ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IEXPORTER_TYPE, NAIExporter ))
+#define NA_IS_IEXPORTER( instance )             ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IEXPORTER_TYPE ))
+#define NA_IEXPORTER_GET_INTERFACE( instance )  ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IEXPORTER_TYPE, NAIExporterInterface ))
 
-typedef struct NAIExporter                 NAIExporter;
-typedef struct NAIExporterFileParms        NAIExporterFileParms;
-typedef struct NAIExporterBufferParms      NAIExporterBufferParms;
+typedef struct _NAIExporter                 NAIExporter;
+typedef struct _NAIExporterFileParms        NAIExporterFileParms;
+typedef struct _NAIExporterBufferParms      NAIExporterBufferParms;
+typedef struct _NAIExporterInterfacePrivate NAIExporterInterfacePrivate;
 
-typedef struct NAIExporterInterfacePrivate NAIExporterInterfacePrivate;
-
-/* When listing available export formats, the instance returns a GList
+/**
+ * NAIExporterFormat:
+ * @format:      format identifier (ascii).
+ * @label:       short label to be displayed in dialog (UTF-8 localized)
+ * @description: full description of the format (UTF-8 localized);
+ *               mainly used in the export assistant.
+ *
+ * This structure describes a supported output format.
+ * It must be implemented by each #NAIExporter implementation
+ * (see e.g. io-xml/naxml-formats.c).
+ *
+ * When listing available export formats, the instance returns a #GList
  * of these structures.
- * This structure must be implemented by each #NAIExporter implementation
- * (see e.g. io-xml/naxml-formats.c)
  */
 typedef struct {
-	gchar *format;					/* format identifier (ascii) */
-	gchar *label;					/* short label to be displayed in dialog (UTF-8 localized) */
-	gchar *description;				/* full description of the format (UTF-8 localized)
-									 * mainly used in the export assistant */
+	gchar *format;
+	gchar *label;
+	gchar *description;
 }
 	NAIExporterFormat;
 
+/**
+ * NAIExporterInterface:
+ * @get_version: returns the version of this interface the plugin implements.
+ * @get_name:    returns the public plugin name.
+ * @get_formats: returns the list of supported formats.
+ * @to_file:     exports an item to a file.
+ * @to_buffer:   exports an item to a buffer.
+ *
+ * This defines the interface that a #NAIExporter should implement.
+ */
 typedef struct {
+	/*< private >*/
 	GTypeInterface               parent;
 	NAIExporterInterfacePrivate *private;
 
+	/*< public >*/
 	/**
 	 * get_version:
 	 * @instance: this #NAIExporter instance.
@@ -140,42 +147,71 @@ typedef struct {
 }
 	NAIExporterInterface;
 
-/* The reasons for which an item may not have been exported
+/**
+ * NAIExporterExportStatus:
+ * @NA_IEXPORTER_CODE_OK:              export OK.
+ * @NA_IEXPORTER_CODE_INVALID_ITEM:    exported item was found invalid.
+ * @NA_IEXPORTER_CODE_INVALID_TARGET:  selected target was found invalid.
+ * @NA_IEXPORTER_CODE_INVALID_FORMAT:  asked format was found invalid.
+ * @NA_IEXPORTER_CODE_UNABLE_TO_WRITE: unable to write the item.
+ * @NA_IEXPORTER_CODE_ERROR:           other undetermined error.
+ *
+ * The reasons for which an item may not have been exported
  */
-enum {
+typedef enum {
 	NA_IEXPORTER_CODE_OK = 0,
 	NA_IEXPORTER_CODE_INVALID_ITEM,
 	NA_IEXPORTER_CODE_INVALID_TARGET,
 	NA_IEXPORTER_CODE_INVALID_FORMAT,
 	NA_IEXPORTER_CODE_UNABLE_TO_WRITE,
 	NA_IEXPORTER_CODE_ERROR,
+}
+	NAIExporterExportStatus;
+
+/**
+ * NAIExporterFileParms:
+ * @version:  version of this structure (input, since v 1)
+ * @exported: exported NAObjectItem-derived object (input, since v 1)
+ * @folder:   URI of the target folder (input, since v 1)
+ * @format:   export format as a GQuark (input, since v 1)
+ * @basename: basename of the exported file (output, since v 1)
+ * @messages: a #GSList list of localized strings;
+ *            the provider may append messages to this list,
+ *            but shouldn't reinitialize it
+ *            (input/output, since v 1).
+ *
+ * The structure that the plugin receives as a parameter of
+ * #NAIExporterInterface.to_file () interface method.
+ */
+struct _NAIExporterFileParms {
+	guint         version;
+	NAObjectItem *exported;
+	gchar        *folder;
+	GQuark        format;
+	gchar        *basename;
+	GSList       *messages;
 };
 
-/* parameters via a structure
- * ... when exporting to a file
+/**
+ * NAIExporterBufferParms:
+ * @version:  version of this structure (input, since v 1)
+ * @exported: exported NAObjectItem-derived object (input, since v 1)
+ * @format:   export format as a GQuark (input, since v 1)
+ * @buffer:   buffer which contains the exported object (output, since v 1)
+ * @messages: a #GSList list of localized strings;
+ *            the provider may append messages to this list,
+ *            but shouldn't reinitialize it
+ *            (input/output, since v 1).
+ *
+ * The structure that the plugin receives as a parameter of
+ * #NAIExporterInterface.to_buffer () interface method.
  */
-struct NAIExporterFileParms {
-	guint         version;				/* i 1: version of this structure */
-	NAObjectItem *exported;				/* i 1: exported NAObjectItem-derived object */
-	gchar        *folder;				/* i 1: URI of the target folder */
-	GQuark        format;				/* i 1: export format as a GQuark */
-	gchar        *basename;				/*  o1: basename of the exported file */
-	GSList       *messages;				/* io1: a #GSList list of localized strings;
-										 *       the provider may append messages to this list,
-										 *       but shouldn't reinitialize it. */
-};
-
-/* parameters via a structure
- * ... when exporting to a buffer
- */
-struct NAIExporterBufferParms {
-	guint         version;				/* i 1: version of this structure */
-	NAObjectItem *exported;				/* i 1: exported NAObjectItem-derived object */
-	GQuark        format;				/* i 1: export format as a GQuark */
-	gchar        *buffer;				/*  o1: buffer which contains the exported object */
-	GSList       *messages;				/* io1: a #GSList list of localized strings;
-										 *       the provider may append messages to this list,
-										 *       but shouldn't reinitialize it. */
+struct _NAIExporterBufferParms {
+	guint         version;
+	NAObjectItem *exported;
+	GQuark        format;
+	gchar        *buffer;
+	GSList       *messages;
 };
 
 GType na_iexporter_get_type( void );

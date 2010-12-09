@@ -270,21 +270,17 @@ void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
  */
 /**
  * NAIIOProviderWritabilityStatus:
- * @NA_IIO_PROVIDER_STATUS_UNDETERMINED: undertermined.
- * @NA_IIO_PROVIDER_STATUS_WRITABLE: the item is writable.
- * @NA_IIO_PROVIDER_STATUS_ITEM_READONLY: the item is read-only.
- * @NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO: the provider is not
- *  willing to write this item, or doest not implement the required
- *  interface.
- * @NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND: the provider has not been
- *  found.
- * @NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN: the provider has been
- *  locked by the administrator.
- * @NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER: the provider has been
- *  locked by the user.
- * @NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN: the whole
- *  configuration has been locked by the administrator.
- * @NA_IIO_PROVIDER_STATUS_NO_API: no API has been found.
+ * @NA_IIO_PROVIDER_STATUS_UNDETERMINED:             undertermined.
+ * @NA_IIO_PROVIDER_STATUS_WRITABLE:                 the item is writable.
+ * @NA_IIO_PROVIDER_STATUS_ITEM_READONLY:            the item is read-only.
+ * @NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO:  the provider is not willing to write this item,
+ *                                                   or doest not implement the required interface.
+ * @NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND:        the provider has not been found.
+ * @NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN: the provider has been locked by the administrator.
+ * @NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER:  the provider has been locked by the user.
+ * @NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN: the whole configuration has been locked
+ *                                                        by the administrator.
+ * @NA_IIO_PROVIDER_STATUS_NO_API:                   no API has been found.
  *
  * The reasons for which an item may not be writable.
  */
@@ -308,17 +304,15 @@ typedef enum {
  */
 /**
  * NAIIOProviderOperationStatus:
- * @NA_IIO_PROVIDER_CODE_OK: the requested operation has been successful.
+ * @NA_IIO_PROVIDER_CODE_OK:            the requested operation has been successful.
  * @NA_IIO_PROVIDER_CODE_PROGRAM_ERROR: a program error has been detected.
- *  You should open a bug in
- *  <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions">Bugzilla</ulink>.
- * @NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN: the provider is not willing
- *  to do the requested action.
- * @NA_IIO_PROVIDER_CODE_WRITE_ERROR: a write error has been detected.
- * @NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR: the schemas could not be
- *  deleted.
- * @NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR: the configuration could not
- *  be deleted.
+ *                                      You should open a bug in
+ *                                      <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions">Bugzilla</ulink>.
+ * @NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:   the provider is not willing
+ *                                             to do the requested action.
+ * @NA_IIO_PROVIDER_CODE_WRITE_ERROR:          a write error has been detected.
+ * @NA_IIO_PROVIDER_CODE_DELETE_SCHEMAS_ERROR: the schemas could not be deleted.
+ * @NA_IIO_PROVIDER_CODE_DELETE_CONFIG_ERROR:  the configuration could not be deleted.
  *
  * The return code of operations.
  */

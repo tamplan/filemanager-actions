@@ -34,12 +34,12 @@ NA_IS_IIMPORTER
 NA_IIMPORTER_GET_INTERFACE
 NAIImporter
 NAIImporterInterface
-NAIImporterImportFromUriParms
-NAIImporterManageImportModeParms
-NAIImporterCheckFn
-NAIImporterAskUserFn
 NAIImporterImportMode
 NAIImporterImportStatus
+NAIImporterCheckFn
+NAIImporterAskUserFn
+NAIImporterImportFromUriParms
+NAIImporterManageImportModeParms
 na_iimporter_import_from_uri
 na_iimporter_manage_import_mode
 
@@ -48,6 +48,25 @@ na_iimporter_get_type
 
 <SUBSECTION Private>
 NAIImporterInterfacePrivate
+</SECTION>
+
+<SECTION>
+<FILE>iexporter</FILE>
+NA_IEXPORTER_TYPE
+NA_IEXPORTER
+NA_IS_IEXPORTER
+NA_IEXPORTER_GET_INTERFACE
+NAIExporter
+NAIExporterInterface
+NAIExporterFormat
+NAIExporterFileParms
+NAIExporterBufferParms
+
+<SUBSECTION Standard>
+na_iexporter_get_type
+
+<SUBSECTION Private>
+NAIExporterInterfacePrivate
 </SECTION>
 
 <SECTION>
@@ -81,23 +100,6 @@ na_ifactory_provider_write_item
 NA_IFACTORY_PROVIDER
 NA_IS_IFACTORY_PROVIDER
 na_ifactory_provider_get_type
-</SECTION>
-
-<SECTION>
-<FILE>iexporter</FILE>
-NA_IEXPORTER_TYPE
-NA_IEXPORTER_GET_INTERFACE
-NAIExporter
-NAIExporterFileParms
-NAIExporterBufferParms
-NAIExporterInterfacePrivate
-NAIExporterFormat
-NAIExporterInterface
-
-<SUBSECTION Standard>
-NA_IEXPORTER
-NA_IS_IEXPORTER
-na_iexporter_get_type
 </SECTION>
 
 <SECTION>

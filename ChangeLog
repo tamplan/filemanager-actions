@@ -1,5 +1,15 @@
 2010-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix NAIExporter reference manual.
+
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-iexporter.h:
+	* src/api/na-iimporter.h:
+	* src/api/na-iio-provider.h:
+	* src/core/na-exporter.c:
+	* src/core/na-exporter.h:
+	* src/core/na-iexporter.c: Updated accordingly.
+
 	Fix NAIImporter reference manual.
 
 	* docs/reference/.gitignore:

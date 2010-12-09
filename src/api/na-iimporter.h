@@ -43,6 +43,7 @@ G_BEGIN_DECLS
 typedef struct _NAIImporter                      NAIImporter;
 typedef struct _NAIImporterInterfacePrivate      NAIImporterInterfacePrivate;
 typedef struct _NAIImporterImportFromUriParms    NAIImporterImportFromUriParms;
+typedef struct _NAIImporterManageImportModeParms NAIImporterManageImportModeParms;
 
 /**
  * NAIImporterInterface:
@@ -94,12 +95,12 @@ typedef struct {
 /**
  * NAIImporterImportMode:
  * @IMPORTER_MODE_NO_IMPORT: a "do not import anything" mode.
- * @IMPORTER_MODE_RENUMBER: reallocate a new id when the imported one
- *  already exists.
- * @IMPORTER_MODE_OVERRIDE: override the existing id with the imported
- *  one.
- * @IMPORTER_MODE_ASK: ask the user for what to do with this particular
- *  item.
+ * @IMPORTER_MODE_RENUMBER:  reallocate a new id when the imported one
+ *                           already exists.
+ * @IMPORTER_MODE_OVERRIDE:  override the existing id with the imported
+ *                           one.
+ * @IMPORTER_MODE_ASK:       ask the user for what to do with this particular
+ *                           item.
  *
  * Define the mode of an import operation.
  */
@@ -113,16 +114,16 @@ typedef enum {
 
 /**
  * NAIImporterImportStatus:
- * @IMPORTER_CODE_OK: import ok.
- * @IMPORTER_CODE_PROGRAM_ERROR: a program error has been detected.
- *  You should open a bug in
- *  <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions">Bugzilla</ulink>.
- * @IMPORTER_CODE_NOT_WILLING_TO: the plugin is not willing to import
- *  anything.
- * @IMPORTER_CODE_NO_ITEM_ID: item id not found.
- * @IMPORTER_CODE_NO_ITEM_TYPE: item type not found.
+ * @IMPORTER_CODE_OK:                import ok.
+ * @IMPORTER_CODE_PROGRAM_ERROR:     a program error has been detected.
+ *                                   You should open a bug in
+ *                                   <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions">Bugzilla</ulink>.
+ * @IMPORTER_CODE_NOT_WILLING_TO:    the plugin is not willing to import
+ *                                   anything.
+ * @IMPORTER_CODE_NO_ITEM_ID:        item id not found.
+ * @IMPORTER_CODE_NO_ITEM_TYPE:      item type not found.
  * @IMPORTER_CODE_UNKNOWN_ITEM_TYPE: unknown item type.
- * @IMPORTER_CODE_CANCELLED: operation cancelled by the user.
+ * @IMPORTER_CODE_CANCELLED:         operation cancelled by the user.
  *
  * Define the return status of an import operation.
  */
@@ -271,7 +272,7 @@ struct _NAIImporterImportFromUriParms {
  *
  * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
  */
-typedef struct {
+struct _NAIImporterManageImportModeParms {
 	guint                version;
 	NAObjectItem        *imported;
 	guint                asked_mode;
@@ -282,8 +283,7 @@ typedef struct {
 	gboolean             exist;
 	guint                import_mode;
 	GSList              *messages;
-}
-	NAIImporterManageImportModeParms;
+};
 
 GType na_iimporter_get_type( void );
 

@@ -44,7 +44,7 @@ static const NAIExporterFormat *exporter_get_formats( const NAIExporter *exporte
 static gchar                   *exporter_get_name( const NAIExporter *exporter );
 static NAIExporter             *find_exporter_for_format( const NAPivot *pivot, GQuark format );
 
-/**
+/*
  * na_exporter_get_formats:
  * @pivot: the #NAPivot instance.
  *
@@ -86,7 +86,7 @@ na_exporter_get_formats( const NAPivot *pivot )
 	return( formats );
 }
 
-/**
+/*
  * na_exporter_free_formats:
  * @formats: a list of available export formats, as returned by
  *  #na_exporter_get_formats().
@@ -100,7 +100,7 @@ na_exporter_free_formats( GList *formats )
 	g_list_free( formats );
 }
 
-/**
+/*
  * na_exporter_to_buffer:
  * @pivot: the #NAPivot pivot for the running application.
  * @item: a #NAObjectItem-derived object.
@@ -171,7 +171,7 @@ na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark fo
 	return( buffer );
 }
 
-/**
+/*
  * na_exporter_to_file:
  * @pivot: the #NAPivot pivot for the running application.
  * @item: a #NAObjectItem-derived object.
