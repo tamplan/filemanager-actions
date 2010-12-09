@@ -31,25 +31,6 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__
 #define __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_H__
 
-/**
- * SECTION: ifactory-object
- * @section_id: ifactory-object
- * @title: NAIFactoryObject (na-ifactory-object.h title)
- * @short_description: #NAIFactoryObject interface definition (na-ifactory-object.h short description).
- * @include: nautilus-actions/na-ifactory_object.h
- *
- * This interface must be implemented by #NAObject-derived objects which
- * should take advantage of data factory management system.
- *
- * A #NAObject-derived which should implement this #NAIFactoryObject
- * interface must meet following conditions:
- * - must accept an empty constructor
- *
- * Elementary data are implemented as a #GList of #NADataBoxed objects.
- *
- * Since: Nautilus-Actions v 2.30 (API version 1)
- */
-
 #include "na-data-def.h"
 #include "na-data-boxed.h"
 #include "na-ifactory-provider-provider.h"
@@ -61,10 +42,25 @@ G_BEGIN_DECLS
 #define NA_IS_IFACTORY_OBJECT( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_OBJECT_TYPE ))
 #define NA_IFACTORY_OBJECT_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_OBJECT_TYPE, NAIFactoryObjectInterface ))
 
-typedef struct NAIFactoryObject                 NAIFactoryObject;
+typedef struct _NAIFactoryObject                 NAIFactoryObject;
 
-typedef struct NAIFactoryObjectInterfacePrivate NAIFactoryObjectInterfacePrivate;
+typedef struct _NAIFactoryObjectInterfacePrivate NAIFactoryObjectInterfacePrivate;
 
+/**
+ * NAIFactoryObjectInterface:
+ * @get_version: returns the version of this interface the NAObjectItem implements.
+ * @get_groups:  returns a pointer to the NADataGroup which defines this object.
+ * @copy:        post copy callback.
+ * @are_equal:   tests if two NAObjectItem are equals.
+ * @is_valid:    tests if one NAObjectItem is valid.
+ * @read_start:  triggered before serializing a NAObjectItem.
+ * @read_done:   triggered after a NAObjectItem has been serialized.
+ * @write_start: triggered before unserializing a NAObjectItem.
+ * @write_done:  triggered after a NAObjectItem has been unserialized.
+ *
+ * In order to take full advantage of our data managament system, NAOBjectItem-derived
+ * objects all implement this #NAIFactoryObject interface.
+ */
 typedef struct {
 	GTypeInterface                    parent;
 	NAIFactoryObjectInterfacePrivate *private;
@@ -73,9 +69,11 @@ typedef struct {
 	 * get_version:
 	 * @instance: this #NAIFactoryObject instance.
 	 *
+	 * Defaults to 1.
+	 *
 	 * Returns: the version of this interface supported by @instance implementation.
 	 *
-	 * Defaults to 1.
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
 	 */
 	guint         ( *get_version )( const NAIFactoryObject *instance );
 
@@ -84,6 +82,8 @@ typedef struct {
 	 * @instance: this #NAIFactoryObject instance.
 	 *
 	 * Returns: a pointer to the NADataGroup which defines this object.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
 	 */
 	NADataGroup * ( *get_groups ) ( const NAIFactoryObject *instance );
 
@@ -95,6 +95,8 @@ typedef struct {
 	 * This function is triggered after having copied @source to
 	 * @instance target. This later may take advantage of this call
 	 * to do some particular copy tasks.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
 	 */
 	void          ( *copy )       ( NAIFactoryObject *instance, const NAIFactoryObject *source );
 
@@ -103,10 +105,12 @@ typedef struct {
 	 * @a: the first #NAIFactoryObject instance.
 	 * @b: the second #NAIFactoryObject instance.
 	 *
-	 * Returns: %TRUE if @a is equal to @b.
-	 *
 	 * This function is triggered after all elementary data comparisons
 	 * have been sucessfully made.
+	 *
+	 * Returns: %TRUE if @a is equal to @b.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
 	 */
 	gboolean      ( *are_equal )  ( const NAIFactoryObject *a, const NAIFactoryObject *b );
 
@@ -114,10 +118,12 @@ typedef struct {
 	 * is_valid:
 	 * @object: the #NAIFactoryObject instance whose validity is to be checked.
 	 *
-	 * Returns: %TRUE if @object is valid.
-	 *
 	 * This function is triggered after all elementary data comparisons
 	 * have been sucessfully made.
+	 *
+	 * Returns: %TRUE if @object is valid.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
 	 */
 	gboolean      ( *is_valid )   ( const NAIFactoryObject *object );
 
@@ -130,6 +136,8 @@ typedef struct {
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Called just before the object is unserialized.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
 	 */
 	void          ( *read_start ) ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
@@ -142,6 +150,8 @@ typedef struct {
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
 	 * Called when the object has been unserialized.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
 	 */
 	void          ( *read_done )  ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
@@ -156,6 +166,8 @@ typedef struct {
 	 * Called just before the object is serialized.
 	 *
 	 * Returns: a NAIIOProvider operation return code.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
 	 */
 	guint         ( *write_start )( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
@@ -170,6 +182,8 @@ typedef struct {
 	 * Called when the object has been serialized.
 	 *
 	 * Returns: a NAIIOProvider operation return code.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
 	 */
 	guint         ( *write_done ) ( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 }
@@ -177,9 +191,9 @@ typedef struct {
 
 GType        na_ifactory_object_get_type( void );
 
-NADataGroup *na_ifactory_object_get_data_groups( const NAIFactoryObject *object );
-
 NADataBoxed *na_ifactory_object_get_data_boxed ( const NAIFactoryObject *object, const gchar *name );
+
+NADataGroup *na_ifactory_object_get_data_groups( const NAIFactoryObject *object );
 
 void        *na_ifactory_object_get_as_void    ( const NAIFactoryObject *object, const gchar *name );
 

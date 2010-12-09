@@ -90,19 +90,21 @@ NAIFactoryProviderInterfacePrivate
 <SECTION>
 <FILE>ifactory-object</FILE>
 NA_IFACTORY_OBJECT_TYPE
+NA_IFACTORY_OBJECT
+NA_IS_IFACTORY_OBJECT
 NA_IFACTORY_OBJECT_GET_INTERFACE
 NAIFactoryObject
-NAIFactoryObjectInterfacePrivate
 NAIFactoryObjectInterface
-na_ifactory_object_get_data_groups
 na_ifactory_object_get_data_boxed
+na_ifactory_object_get_data_groups
 na_ifactory_object_get_as_void
 na_ifactory_object_set_from_void
 
 <SUBSECTION Standard>
-NA_IFACTORY_OBJECT
-NA_IS_IFACTORY_OBJECT
 na_ifactory_object_get_type
+
+<SUBSECTION Private>
+NAIFactoryObjectInterfacePrivate
 </SECTION>
 
 <SECTION>

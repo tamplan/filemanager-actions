@@ -38,9 +38,55 @@
 
 #include "na-factory-object.h"
 
+/**
+ * SECTION: ifactory-object
+ * @title: NAIFactoryObject
+ * @short_description: The interface implemented by NAObjectItem-derived objects.
+ * @include: nautilus-actions/na-ifactory_object.h
+ *
+ * This interface is implemented by #NAObjectItem derived objects so that they
+ * can take advantage of our data factory management system.
+ *
+ * A #NAObjectItem derived object which would implement this #NAIFactoryObject
+ * interface must meet following conditions:
+ * <itemizedlist>
+ *   <listitem>
+ *     <para>
+ *       accept an empty constructor
+ *     </para>
+ *   </listitem>
+ * </itemizedlist>
+ *
+ * <refsect2>
+ *  <title>Versions historic</title>
+ *  <table>
+ *    <title>Historic of the versions of the #NAIFactoryObject interface</title>
+ *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
+ *      <colspec colname="na-version" />
+ *      <colspec colname="api-version" />
+ *      <colspec colname="current" />
+ *      <thead>
+ *        <row>
+ *          <entry>&prodname; version</entry>
+ *          <entry>#NAIFactoryObject interface version</entry>
+ *          <entry></entry>
+ *        </row>
+ *      </thead>
+ *      <tbody>
+ *        <row>
+ *          <entry>since 2.30</entry>
+ *          <entry>1</entry>
+ *          <entry>current version</entry>
+ *        </row>
+ *      </tbody>
+ *    </tgroup>
+ *  </table>
+ * </refsect2>
+ */
+
 /* private interface data
  */
-struct NAIFactoryObjectInterfacePrivate {
+struct _NAIFactoryObjectInterfacePrivate {
 	void *empty;					/* so that gcc -pedantic is happy */
 };
 
@@ -142,43 +188,17 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
 }
 
 /**
- * na_ifactory_object_get_data_groups:
- * @object: a #NAIFactoryObject object.
- *
- * Returns: The #NADataGroup groups definition, or %NULL.
- *
- * The returned #NADataGroup is owned by the #NAIFactoryObject @object,
- * and should not be released by the caller.
- */
-NADataGroup *
-na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
-{
-	NADataGroup *groups;
-
-	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
-
-	groups = NULL;
-
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
-
-		if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
-			groups = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object );
-		}
-	}
-
-	return( groups );
-}
-
-/**
  * na_ifactory_object_get_data_boxed:
  * @object: a #NAIFactoryObject object.
  * @name: the name of the elementary data we are searching for.
  *
+ * The returned #NADataBoxed is owned by #NAIFactoryObject @object, and
+ * should not be released by the caller.
+ *
  * Returns: The #NADataBoxed object which contains the specified data,
  * or %NULL.
  *
- * The returned #NADataBoxed is owned by #NAIFactoryObject @object, and
- * should not be released by the caller.
+ * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
  */
 NADataBoxed *
 na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *name )
@@ -206,16 +226,48 @@ na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *
 }
 
 /**
+ * na_ifactory_object_get_data_groups:
+ * @object: a #NAIFactoryObject object.
+ *
+ * The returned #NADataGroup is owned by the #NAIFactoryObject @object,
+ * and should not be released by the caller.
+ *
+ * Returns: The #NADataGroup groups definition, or %NULL.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+ */
+NADataGroup *
+na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
+{
+	NADataGroup *groups;
+
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
+
+	groups = NULL;
+
+	if( ifactory_object_initialized && !ifactory_object_finalized ){
+
+		if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
+			groups = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object );
+		}
+	}
+
+	return( groups );
+}
+
+/**
  * na_ifactory_object_get_as_void:
  * @object: this #NAIFactoryObject instance.
  * @name: the elementary data whose value is to be got.
  *
- * Returns: the searched value.
- *
- * If the type of the value is NAFD_TYPE_STRING, NAFD_TYPE_LOCALE_STRING,
- * or NAFD_TYPE_STRING_LIST, then the returned value is a newly allocated
+ * If the type of the value is %NAFD_TYPE_STRING, %NAFD_TYPE_LOCALE_STRING,
+ * or %NAFD_TYPE_STRING_LIST, then the returned value is a newly allocated
  * one and should be g_free() (resp. na_core_utils_slist_free()) by the
  * caller.
+ *
+ * Returns: the searched value.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
  */
 void *
 na_ifactory_object_get_as_void( const NAIFactoryObject *object, const gchar *name )
@@ -232,6 +284,8 @@ na_ifactory_object_get_as_void( const NAIFactoryObject *object, const gchar *nam
  * @data: the value to set.
  *
  * Set the elementary data with the given value.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
  */
 void
 na_ifactory_object_set_from_void( NAIFactoryObject *object, const gchar *name, const void *data )
