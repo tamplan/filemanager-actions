@@ -31,12 +31,6 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_DEF_H__
 #define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_DEF_H__
 
-/**
- * SECTION: ifactory-object
- * @short_description: Data Factory Definitions.
- * @include: nautilus-actions/na-data-def.h
- */
-
 #include <glib.h>
 
 G_BEGIN_DECLS
@@ -90,9 +84,9 @@ G_BEGIN_DECLS
  *                    Defaults to @short_label if NULL.
  * @option_arg_label: the description for the argument.
  *
- * This structure fully describes an elementary factory data
+ * This structure fully describes an elementary factory data.
  * Each #NAIFactoryObject item definition may include several groups of
- * this structure
+ * this structure.
  */
 typedef struct {
 	gchar     *name;
@@ -126,7 +120,7 @@ typedef struct {
  *
  * This structure fully describes a logical group of data.
  * Each #NAIFactoryObject item definition is built from a list of
- * these groups
+ * these groups.
  */
 typedef struct {
 	gchar     *group;

@@ -64,7 +64,7 @@
  *       <para>
  *         whether they are a string, an integer, a boolean, a simple
  *         or double-linked list, each elementary data is encapsuled
- *         into a #NADataBox, small sort of structure (incidentally,
+ *         into a #NADataBoxed, small sort of structure (incidentally,
  *         which acts almost as the new GLib #GVariant, but too late,
  *         guys :)).
  *       </para>
@@ -75,7 +75,7 @@
  *       <title>Our objects are de-structured.</title>
  *       <para>
  *         Instead of organizing our elementary datas into structures,
- *         our objects are just flat lists of #NADataBox.
+ *         our objects are just flat lists of #NADataBoxed.
  *       </para>
  *     </formalpara>
  *   </listitem>
@@ -265,7 +265,7 @@ ifactory_provider_get_version( const NAIFactoryProvider *instance )
  * its items. The function takes care of collecting and structuring data,
  * while the callback interface methods #NAIFactoryProviderInterface.read_start(),
  * #NAIFactoryProviderInterface.read_data() and #NAIFactoryProviderInterface.read_done()
- * just have to fill a given #NADataBox with the ad-hoc data type.
+ * just have to fill a given #NADataBoxed with the ad-hoc data type.
  *
  * <example>
  *   <programlisting>

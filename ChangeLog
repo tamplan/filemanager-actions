@@ -1,5 +1,18 @@
 2010-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Document NADataDef and NADataGroup structures.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-data-def.h:
+	* src/api/na-ifactory-object-data.h:
+	* src/api/na-ifactory-object.h:
+	* src/core/na-data-def.c:
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h:
+	* src/core/na-ifactory-object.c:
+	* src/core/na-ifactory-provider.c: Updated accordingly.
+
 	Document NAIFactoryObject interface.
 
 	* docs/reference/nautilus-actions-sections.txt:

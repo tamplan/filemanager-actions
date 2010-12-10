@@ -37,12 +37,25 @@
 #include <api/na-data-def.h>
 
 /**
+ * SECTION: data-def
+ * @title: NADataDef, NADataGroup
+ * @short_description: Data Factory Definitions.
+ * @include: nautilus-actions/na-data-def.h
+ *
+ * #NADataDef and #NADataGroup are structures which handle the list of
+ * elementary datas for each and every #NAObjectItem which happens to
+ * implement the #NAIFactoryObject interface.
+ */
+
+/**
  * na_data_def_get_data_def:
  * @group: a #NADataGroup structure array.
  * @group_name: the searched group name.
  * @name: the searched data name.
  *
  * Returns: a pointer to the #NADataDef structure, or %NULL if not found.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 const NADataDef *
 na_data_def_get_data_def( const NADataGroup *group, const gchar *group_name, const gchar *name )

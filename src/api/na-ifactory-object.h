@@ -58,13 +58,16 @@ typedef struct _NAIFactoryObjectInterfacePrivate NAIFactoryObjectInterfacePrivat
  * @write_start: triggered before unserializing a NAObjectItem.
  * @write_done:  triggered after a NAObjectItem has been unserialized.
  *
- * In order to take full advantage of our data managament system, NAOBjectItem-derived
- * objects all implement this #NAIFactoryObject interface.
+ * In order to take full advantage of our data managament system,
+ * NAObjectItem-derived objects all implement this #NAIFactoryObject
+ * interface.
  */
 typedef struct {
+	/*< private >*/
 	GTypeInterface                    parent;
 	NAIFactoryObjectInterfacePrivate *private;
 
+	/*< public >*/
 	/**
 	 * get_version:
 	 * @instance: this #NAIFactoryObject instance.

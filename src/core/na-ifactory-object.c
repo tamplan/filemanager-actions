@@ -99,7 +99,7 @@ static void  interface_base_finalize( NAIFactoryObjectInterface *klass );
 
 static guint ifactory_object_get_version( const NAIFactoryObject *instance );
 
-/**
+/*
  * Registers the GType of this interface.
  */
 GType

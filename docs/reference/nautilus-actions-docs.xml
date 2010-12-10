@@ -58,9 +58,12 @@
   </chapter>
 
   <chapter>
-    <title>Data factory management system</title>
+    <title>Data Factory Management System</title>
     <xi:include href="xml/ifactory-provider.xml" />
     <xi:include href="xml/ifactory-object.xml" />
+    <xi:include href="xml/data-def.xml"/>
+    <xi:include href="xml/ifactory-data.xml"/>
+    <xi:include href="xml/na-data-boxed.xml"/>
   </chapter>
 
   <chapter>
@@ -69,18 +72,14 @@
     <xi:include href="xml/na-object-action.xml"/>
     <xi:include href="xml/na-icontext.xml"/>
     <xi:include href="xml/na-gconf-monitor.xml"/>
-    <xi:include href="xml/na-data-boxed.xml"/>
     <xi:include href="xml/na-object-menu.xml"/>
     <xi:include href="xml/na-object-item.xml"/>
     <xi:include href="xml/na-object.xml"/>
     <xi:include href="xml/na-object-profile.xml"/>
     <xi:include href="xml/na-iduplicable.xml"/>
-    <xi:include href="xml/na-ifactory-object-data.xml"/>
     <xi:include href="xml/na-data-types.xml"/>
     <xi:include href="xml/na-gconf-utils.xml"/>
-    <xi:include href="xml/na-ifactory-provider-provider.xml"/>
     <xi:include href="xml/na-core-utils.xml"/>
-    <xi:include href="xml/na-data-def.xml"/>
     <xi:include href="xml/na-object-api.xml"/>
   </chapter>
 

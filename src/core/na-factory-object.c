@@ -111,7 +111,7 @@ static void         attach_boxed_to_object( NAIFactoryObject *object, NADataBoxe
 static void         free_data_boxed_list( NAIFactoryObject *object );
 static void         iter_on_data_defs( const NADataGroup *idgroups, guint mode, NADataDefIterFunc pfn, void *user_data );
 
-/**
+/*
  * na_factory_object_define_properties:
  * @class: the #GObjectClass.
  * @groups: the list of #NADataGroup structure which define the data of the class.
@@ -159,7 +159,7 @@ define_class_properties_iter( const NADataDef *def, GObjectClass *class )
 	return( stop );
 }
 
-/**
+/*
  * na_factory_object_get_data_def:
  * @object: this #NAIFactoryObject object.
  * @name: the searched name.
@@ -197,7 +197,7 @@ na_factory_object_get_data_def( const NAIFactoryObject *object, const gchar *nam
 	return( def );
 }
 
-/**
+/*
  * na_factory_object_get_data_groups:
  * @object: the #NAIFactoryObject instance.
  *
@@ -220,7 +220,7 @@ na_factory_object_get_data_groups( const NAIFactoryObject *object )
 	return( groups );
 }
 
-/**
+/*
  * na_factory_object_iter_on_boxed:
  * @object: this #NAIFactoryObject object.
  * @pfn: the function to be called.
@@ -250,7 +250,7 @@ na_factory_object_iter_on_boxed( const NAIFactoryObject *object, NAFactoryObject
 	}
 }
 
-/**
+/*
  * na_factory_object_get_default:
  * @object: this #NAIFactoryObject object.
  * @name: the searched name.
@@ -282,7 +282,7 @@ na_factory_object_get_default( NAIFactoryObject *object, const gchar *name )
 	return( value );
 }
 
-/**
+/*
  * na_factory_object_set_defaults:
  * @object: this #NAIFactoryObject object.
  *
@@ -340,7 +340,7 @@ set_defaults_iter( NADataDef *def, NafoDefaultIter *data )
 	return( FALSE );
 }
 
-/**
+/*
  * na_factory_object_move_boxed:
  * @target: the target #NAIFactoryObject instance.
  * @source: the source #NAIFactoryObject instance.
@@ -372,7 +372,7 @@ na_factory_object_move_boxed( NAIFactoryObject *target, const NAIFactoryObject *
 	}
 }
 
-/**
+/*
  * na_factory_object_copy:
  * @target: the target #NAIFactoryObject instance.
  * @source: the source #NAIFactoryObject instance.
@@ -413,7 +413,7 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 	v_copy( target, source );
 }
 
-/**
+/*
  * na_factory_object_are_equal:
  * @a: the first #NAIFactoryObject instance.
  * @b: the second #NAIFactoryObject isntance.
@@ -484,7 +484,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 	return( are_equal );
 }
 
-/**
+/*
  * na_factory_object_is_valid:
  * @object: the #NAIFactoryObject instance whose validity is to be checked.
  *
@@ -542,7 +542,7 @@ is_valid_mandatory_iter( const NADataDef *def, NafoValidIter *data )
 	return( !data->is_valid );
 }
 
-/**
+/*
  * na_factory_object_dump:
  * @object: this #NAIFactoryObject instance.
  *
@@ -580,7 +580,7 @@ na_factory_object_dump( const NAIFactoryObject *object )
 	}
 }
 
-/**
+/*
  * na_factory_object_finalize:
  * @object: the #NAIFactoryObject being finalized.
  *
@@ -592,7 +592,7 @@ na_factory_object_finalize( NAIFactoryObject *object )
 	free_data_boxed_list( object );
 }
 
-/**
+/*
  * na_factory_object_read_item:
  * @object: this #NAIFactoryObject instance.
  * @reader: the #NAIFactoryProvider which is at the origin of this read.
@@ -660,7 +660,7 @@ read_data_iter( NADataDef *def, NafoReadIter *iter )
 	return( stop );
 }
 
-/**
+/*
  * na_factory_object_write_item:
  * @object: this #NAIFactoryObject instance.
  * @writer: the #NAIFactoryProvider which is at the origin of this write.
@@ -731,7 +731,7 @@ write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIt
 	return( iter->code != NA_IIO_PROVIDER_CODE_OK );
 }
 
-/**
+/*
  * na_factory_object_get_as_value:
  * @object: this #NAIFactoryObject instance.
  * @name: the elementary data id.
@@ -757,7 +757,7 @@ na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *nam
 	}
 }
 
-/**
+/*
  * na_factory_object_get_as_void:
  * @object: this #NAIFactoryObject instance.
  * @name: the elementary data whose value is to be got.
@@ -787,7 +787,7 @@ na_factory_object_get_as_void( const NAIFactoryObject *object, const gchar *name
 	return( value );
 }
 
-/**
+/*
  * na_factory_object_set_from_value:
  * @object: this #NAIFactoryObject instance.
  * @name: the elementary data id.
@@ -820,7 +820,7 @@ na_factory_object_set_from_value( NAIFactoryObject *object, const gchar *name, c
 	}
 }
 
-/**
+/*
  * na_factory_object_set_from_void:
  * @object: this #NAIFactoryObject instance.
  * @name: the elementary data whose value is to be set.

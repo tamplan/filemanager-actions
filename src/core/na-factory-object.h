@@ -31,8 +31,7 @@
 #ifndef __CORE_NA_FACTORY_OBJECT_H__
 #define __CORE_NA_FACTORY_OBJECT_H__
 
-/**
- * SECTION: na_ifactory_object
+/*
  * @short_description: #NAIFactoryObject internal functions.
  * @include: core/na-factory-object.h
  *
