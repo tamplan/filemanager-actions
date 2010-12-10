@@ -37,7 +37,7 @@
 /**
  * SECTION: iio-provider
  * @title: NAIIOProvider
- * @short_description: The I/O Provider Interface
+ * @short_description: The I/O Provider Interface v 1
  * @include: nautilus-actions/na-iio-provider.h
  *
  * The #NAIIOProvider interface is defined in order to let internal

@@ -44,7 +44,7 @@
 /**
  * SECTION: data-boxed
  * @title: NADataBoxed
- * @short_description: The elementary data class definition.
+ * @short_description: The Data Factory Element Class Definition
  * @include: nautilus-actions/na-data-boxed.h
  *
  * The object which encapsulates an elementary data of #NAIFactoryObject.

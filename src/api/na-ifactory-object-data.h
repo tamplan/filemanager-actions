@@ -32,10 +32,16 @@
 #define __NAUTILUS_ACTIONS_API_NA_IFACTORY_OBJECT_DATA_H__
 
 /**
- * SECTION: ifactory-data
- * @title: Constant definitions
- * @short_description: Declaration of serializable elementary datas.
+ * SECTION: data-name
+ * @title: Constants
+ * @short_description: The Data Factory Constant Definitions
  * @include: nautilus-actions/na-ifactory-object-data.h
+ *
+ * Each elementary data get its own name here.
+ *
+ * Through #NADataDef and #NADataGroup definitions, each #NAObjectItem
+ * derived object which implement the #NAIFactoryObject interface will
+ * dynamically define a property for each attached elementary data.
  */
 
 #include <glib.h>

@@ -39,7 +39,7 @@
 /**
  * SECTION: data-def
  * @title: NADataDef, NADataGroup
- * @short_description: Data Factory Definitions.
+ * @short_description: The Data Factory Structure Definitions
  * @include: nautilus-actions/na-data-def.h
  *
  * #NADataDef and #NADataGroup are structures which handle the list of

@@ -1,4 +1,7 @@
 
+# ---------------------------------------------------------------------
+# Plugins — The Nautilus-Actions extension interface definition v 1
+
 <SECTION>
 <FILE>extension</FILE>
 na_extension_startup
@@ -6,6 +9,9 @@ na_extension_get_version
 na_extension_list_types
 na_extension_shutdown
 </SECTION>
+
+# ---------------------------------------------------------------------
+# NAIIOProvider — The I/O Provider Interface v 1
 
 <SECTION>
 <FILE>iio-provider</FILE>
@@ -17,7 +23,6 @@ NAIIOProvider
 NAIIOProviderInterface
 NAIIOProviderWritabilityStatus
 NAIIOProviderOperationStatus
-IIO_PROVIDER_SIGNAL_ITEM_CHANGED
 na_iio_provider_item_changed
 
 <SUBSECTION Standard>
@@ -25,7 +30,12 @@ na_iio_provider_get_type
 
 <SUBSECTION Private>
 NAIIOProviderInterfacePrivate
+IIO_PROVIDER_SIGNAL_ITEM_CHANGED
+NAIIOProvider::notify-pivot
 </SECTION>
+
+# ---------------------------------------------------------------------
+# NAIImporter — The Import Interface v 1
 
 <SECTION>
 <FILE>iimporter</FILE>
@@ -51,6 +61,9 @@ na_iimporter_get_type
 NAIImporterInterfacePrivate
 </SECTION>
 
+# ---------------------------------------------------------------------
+# NAIExporter — The Export Interface v 1
+
 <SECTION>
 <FILE>iexporter</FILE>
 NA_IEXPORTER_TYPE
@@ -71,6 +84,9 @@ na_iexporter_get_type
 NAIExporterInterfacePrivate
 </SECTION>
 
+# ---------------------------------------------------------------------
+# NAIFactoryProvider — The Data Factory Provider Interface v 1
+
 <SECTION>
 <FILE>ifactory-provider</FILE>
 NA_IFACTORY_PROVIDER_TYPE
@@ -88,6 +104,9 @@ na_ifactory_provider_get_type
 <SUBSECTION Private>
 NAIFactoryProviderInterfacePrivate
 </SECTION>
+
+# ---------------------------------------------------------------------
+# NAIFactoryObject — The #NAObjectItem Interface v 1
 
 <SECTION>
 <FILE>ifactory-object</FILE>
@@ -109,11 +128,53 @@ na_ifactory_object_get_type
 NAIFactoryObjectInterfacePrivate
 </SECTION>
 
+# ---------------------------------------------------------------------
+# NADataBoxed — The Elementary Data Class Definition
+
+<SECTION>
+<FILE>data-boxed</FILE>
+NA_DATA_BOXED_TYPE
+NA_DATA_BOXED
+NA_IS_DATA_BOXED
+NADataBoxed
+na_data_boxed_new
+na_data_boxed_get_data_def
+na_data_boxed_get_param_spec
+na_data_boxed_are_equal
+na_data_boxed_is_default
+na_data_boxed_is_valid
+na_data_boxed_dump
+na_data_boxed_set_data_def
+na_data_boxed_get_as_string
+na_data_boxed_get_as_void
+na_data_boxed_get_as_value
+na_data_boxed_set_from_boxed
+na_data_boxed_set_from_string
+na_data_boxed_set_from_value
+na_data_boxed_set_from_void
+
+<SUBSECTION Standard>
+na_data_boxed_get_type
+NA_DATA_BOXED_CLASS
+NA_IS_DATA_BOXED_CLASS
+NA_DATA_BOXED_GET_CLASS
+
+<SUBSECTION Private>
+NADataBoxedPrivate
+NADataBoxedClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# NADataType — The Data Factory Type Definitions
+
 <SECTION>
 <FILE>data-type</FILE>
 NAFactoryDataType
 na_data_types_get_gconf_dump_key
 </SECTION>
+
+# ---------------------------------------------------------------------
+# NADataDef, NADataGroup — The Data Factory Structure Definitions
 
 <SECTION>
 <FILE>data-def</FILE>
@@ -122,8 +183,11 @@ NADataGroup
 na_data_def_get_data_def
 </SECTION>
 
+# ---------------------------------------------------------------------
+# Constants — The Data Factory Constant Definitions
+
 <SECTION>
-<FILE>ifactory-data</FILE>
+<FILE>data-name</FILE>
 NA_FACTORY_OBJECT_ID_GROUP
 NAFO_DATA_ID
 NAFO_DATA_LABEL
@@ -183,36 +247,7 @@ NAFO_DATA_SHOW_IF_RUNNING
 NAFO_DATA_CAPABILITITES
 </SECTION>
 
-<SECTION>
-<FILE>data-boxed</FILE>
-NA_DATA_BOXED_TYPE
-NA_DATA_BOXED
-NA_IS_DATA_BOXED
-NADataBoxed
-na_data_boxed_new
-na_data_boxed_get_data_def
-na_data_boxed_get_param_spec
-na_data_boxed_are_equal
-na_data_boxed_is_default
-na_data_boxed_is_valid
-na_data_boxed_dump
-na_data_boxed_set_data_def
-na_data_boxed_get_as_string
-na_data_boxed_get_as_void
-na_data_boxed_get_as_value
-na_data_boxed_set_from_boxed
-na_data_boxed_set_from_string
-na_data_boxed_set_from_value
-na_data_boxed_set_from_void
-
-<SUBSECTION Standard>
-na_data_boxed_get_type
-NA_DATA_BOXED_CLASS
-NA_IS_DATA_BOXED_CLASS
-NA_DATA_BOXED_GET_CLASS
-NADataBoxedPrivate
-NADataBoxedClassPrivate
-</SECTION>
+# ---------------------------------------------------------------------
 
 <SECTION>
 <FILE>dbus</FILE>

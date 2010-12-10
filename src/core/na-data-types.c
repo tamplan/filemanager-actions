@@ -37,7 +37,7 @@
 /**
  * SECTION: data-type
  * @title: NADataType
- * @short_description: #NADataBoxed type definitions.
+ * @short_description: The Data Factory Type Definitions
  * @include: nautilus-actions/na-data-types.h
  */
 

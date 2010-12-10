@@ -53,8 +53,8 @@ typedef struct _NAIExporterInterfacePrivate NAIExporterInterfacePrivate;
  *               mainly used in the export assistant.
  *
  * This structure describes a supported output format.
- * It must be implemented by each #NAIExporter implementation
- * (see e.g. io-xml/naxml-formats.c).
+ * It must be provided by each #NAIExporter implementation
+ * (see e.g. <filename>src/io-xml/naxml-formats.c</filename>).
  *
  * When listing available export formats, the instance returns a #GList
  * of these structures.
@@ -89,6 +89,8 @@ typedef struct {
 	 * Returns: the version of this interface supported by the I/O provider.
 	 *
 	 * Defaults to 1.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
 	 */
 	guint                     ( *get_version )( const NAIExporter *instance );
 
@@ -98,17 +100,14 @@ typedef struct {
 	 *
 	 * Returns: the name to be displayed for this instance, as a
 	 * newly allocated string which should be g_free() by the caller.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
 	 */
 	gchar *                   ( *get_name )   ( const NAIExporter *instance );
 
 	/**
 	 * get_formats:
 	 * @instance: this #NAIExporter instance.
-	 *
-	 * Returns: a list of #NAIExporterFormat structures which describe the
-	 * formats supported by @instance.
-	 *
-	 * Defaults to %NULL (no format at all).
 	 *
 	 * The returned list is owned by the @instance. It must not be
 	 * released by the caller.
@@ -117,6 +116,13 @@ typedef struct {
 	 * Nautilus-Actions maintainer team. If you wish develop a new
 	 * export format, and so need a new format id, please contact the
 	 * maintainers (see #nautilus-actions.doap).
+	 *
+	 * Returns: a list of #NAIExporterFormat structures which describe the
+	 * formats supported by @instance.
+	 *
+	 * Defaults to %NULL (no format at all).
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
 	 */
 	const NAIExporterFormat * ( *get_formats )( const NAIExporter *instance );
 
@@ -128,7 +134,9 @@ typedef struct {
 	 * Exports the specified 'exported' to the target 'folder' in the required
 	 * 'format'.
 	 *
-	 * Returns: the status of the operation.
+	 * Returns: the #NAIExporterExportStatus status of the operation.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
 	 */
 	guint                     ( *to_file )    ( const NAIExporter *instance, NAIExporterFileParms *parms );
 
@@ -141,7 +149,9 @@ typedef struct {
 	 * the required 'format'. The allocated 'buffer' should be g_free()
 	 * by the caller.
 	 *
-	 * Returns: the status of the operation.
+	 * Returns: the #NAIExporterExportStatus status of the operation.
+	 *
+	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
 	 */
 	guint                     ( *to_buffer )  ( const NAIExporter *instance, NAIExporterBufferParms *parms );
 }

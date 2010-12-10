@@ -41,7 +41,7 @@
 /**
  * SECTION: ifactory-provider
  * @title: NAIFactoryProvider
- * @short_description: The Data Factory Management System
+ * @short_description: The Data Factory Provider Interface v 1
  * @include: nautilus-actions/na-ifactory_provider.h
  *
  * &prodname; has to deal with a relatively great number of elementary datas,

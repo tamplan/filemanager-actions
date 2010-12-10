@@ -34,7 +34,7 @@
 /**
  * SECTION: extension
  * @title: Plugins
- * @short_description: Nautilus-Actions extension interface definition.
+ * @short_description: The Nautilus-Actions Extension Interface Definition v 1
  * @include: nautilus-actions/na-extension.h
  *
  * &prodname; accepts extensions as dynamically loadable libraries

@@ -1,3 +1,21 @@
+2010-12-10 Pierre Wieser <pwieser@trychlos.org>
+
+	Fix Data Factory Management System documentation.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-extension.h:
+	* src/api/na-iexporter.h:
+	* src/api/na-ifactory-object-data.h:
+	* src/core/na-data-boxed.c:
+	* src/core/na-data-def.c:
+	* src/core/na-data-types.c:
+	* src/core/na-iexporter.c:
+	* src/core/na-ifactory-object.c:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-iimporter.c:
+	* src/core/na-iio-provider.c: Updated accordingly.
+
 2010-12-09 Pierre Wieser <pwieser@trychlos.org>
 
 	Document NADataBoxed class.

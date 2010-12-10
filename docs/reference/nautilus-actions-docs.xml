@@ -61,10 +61,10 @@
     <title>Data Factory Management System</title>
     <xi:include href="xml/ifactory-provider.xml" />
     <xi:include href="xml/ifactory-object.xml" />
+    <xi:include href="xml/data-boxed.xml"/>
     <xi:include href="xml/data-type.xml"/>
     <xi:include href="xml/data-def.xml"/>
-    <xi:include href="xml/ifactory-data.xml"/>
-    <xi:include href="xml/data-boxed.xml"/>
+    <xi:include href="xml/data-name.xml"/>
   </chapter>
 
   <chapter>

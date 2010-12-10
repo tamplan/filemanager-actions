@@ -41,7 +41,7 @@
 /**
  * SECTION: iimporter
  * @title: NAIImporter
- * @short_description: The Import Interface
+ * @short_description: The Import Interface v 1
  * @include: nautilus-actions/na-iimporter.h
  *
  * The #NAIImporter interface imports items from the outside world.

@@ -37,7 +37,7 @@
 /**
  * SECTION: iexporter
  * @title: NAIExporter
- * @short_description: The Export Interface
+ * @short_description: The Export Interface v 1
  * @include: nautilus-actions/na-iexporter.h
  *
  * The #NAIExporter interface exports items to the outside world.
