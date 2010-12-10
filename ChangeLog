@@ -1,5 +1,14 @@
 2010-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	Document NADataBoxed class.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-data-boxed.h:
+	* src/api/na-data-types.h:
+	* src/core/na-data-boxed.c:
+	* src/core/na-data-types.c: Updated accordingly.
+
 	Document NADataDef and NADataGroup structures.
 
 	* docs/reference/nautilus-actions-docs.xml:

@@ -17,6 +17,7 @@ NAIIOProvider
 NAIIOProviderInterface
 NAIIOProviderWritabilityStatus
 NAIIOProviderOperationStatus
+IIO_PROVIDER_SIGNAL_ITEM_CHANGED
 na_iio_provider_item_changed
 
 <SUBSECTION Standard>
@@ -58,6 +59,7 @@ NA_IS_IEXPORTER
 NA_IEXPORTER_GET_INTERFACE
 NAIExporter
 NAIExporterInterface
+NAIExporterExportStatus
 NAIExporterFormat
 NAIExporterFileParms
 NAIExporterBufferParms
@@ -105,6 +107,12 @@ na_ifactory_object_get_type
 
 <SUBSECTION Private>
 NAIFactoryObjectInterfacePrivate
+</SECTION>
+
+<SECTION>
+<FILE>data-type</FILE>
+NAFactoryDataType
+na_data_types_get_gconf_dump_key
 </SECTION>
 
 <SECTION>
@@ -173,6 +181,37 @@ NAFO_DATA_SHOW_IF_REGISTERED
 NAFO_DATA_SHOW_IF_TRUE
 NAFO_DATA_SHOW_IF_RUNNING
 NAFO_DATA_CAPABILITITES
+</SECTION>
+
+<SECTION>
+<FILE>data-boxed</FILE>
+NA_DATA_BOXED_TYPE
+NA_DATA_BOXED
+NA_IS_DATA_BOXED
+NADataBoxed
+na_data_boxed_new
+na_data_boxed_get_data_def
+na_data_boxed_get_param_spec
+na_data_boxed_are_equal
+na_data_boxed_is_default
+na_data_boxed_is_valid
+na_data_boxed_dump
+na_data_boxed_set_data_def
+na_data_boxed_get_as_string
+na_data_boxed_get_as_void
+na_data_boxed_get_as_value
+na_data_boxed_set_from_boxed
+na_data_boxed_set_from_string
+na_data_boxed_set_from_value
+na_data_boxed_set_from_void
+
+<SUBSECTION Standard>
+na_data_boxed_get_type
+NA_DATA_BOXED_CLASS
+NA_IS_DATA_BOXED_CLASS
+NA_DATA_BOXED_GET_CLASS
+NADataBoxedPrivate
+NADataBoxedClassPrivate
 </SECTION>
 
 <SECTION>
@@ -275,6 +314,7 @@ na_object_item_count_items
 na_object_item_unref_items
 na_object_item_unref_items_rec
 na_object_item_rebuild_children_slist
+na_object_item_deals_with_version
 
 <SUBSECTION Standard>
 NA_OBJECT_ITEM
@@ -317,6 +357,7 @@ NAObjectProfileClassPrivate
 NAObjectProfile
 na_object_profile_new
 na_object_profile_new_with_defaults
+na_object_profile_convert_v2_to_last
 
 <SUBSECTION Standard>
 NA_OBJECT_PROFILE
@@ -385,43 +426,6 @@ na_gconf_monitor_get_type
 NA_GCONF_MONITOR_CLASS
 NA_IS_GCONF_MONITOR_CLASS
 NA_GCONF_MONITOR_GET_CLASS
-</SECTION>
-
-<SECTION>
-<FILE>data-boxed</FILE>
-<TITLE>NADataBoxed</TITLE>
-NA_DATA_BOXED_TYPE
-NADataBoxedPrivate
-NADataBoxedClassPrivate
-NADataBoxed
-na_data_boxed_get_param_spec
-na_data_boxed_new
-na_data_boxed_get_data_def
-na_data_boxed_are_equal
-na_data_boxed_is_default
-na_data_boxed_is_valid
-na_data_boxed_dump
-na_data_boxed_set_data_def
-na_data_boxed_get_as_string
-na_data_boxed_get_as_void
-na_data_boxed_get_as_value
-na_data_boxed_set_from_boxed
-na_data_boxed_set_from_string
-na_data_boxed_set_from_value
-na_data_boxed_set_from_void
-
-<SUBSECTION Standard>
-NA_DATA_BOXED
-NA_IS_DATA_BOXED
-na_data_boxed_get_type
-NA_DATA_BOXED_CLASS
-NA_IS_DATA_BOXED_CLASS
-NA_DATA_BOXED_GET_CLASS
-</SECTION>
-
-<SECTION>
-<FILE>na-data-types</FILE>
-na_data_types_get_gconf_dump_key
 </SECTION>
 
 <SECTION>

@@ -31,31 +31,23 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__
 #define __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__
 
-/**
- * SECTION: data-boxed
- * @short_description: #NADataBoxed class definition.
- * @include: nautilus-actions/na-data-boxed.h
- *
- * The object which encapsulates an elementary data of #NAIFactoryObject.
- * A #NADataBoxed object has a type and a value.
- */
-
 #include <glib-object.h>
 
 #include "na-data-def.h"
 
 G_BEGIN_DECLS
 
-#define NA_DATA_BOXED_TYPE					( na_data_boxed_get_type())
-#define NA_DATA_BOXED( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_DATA_BOXED_TYPE, NADataBoxed ))
-#define NA_DATA_BOXED_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_DATA_BOXED_TYPE, NADataBoxedClass ))
-#define NA_IS_DATA_BOXED( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_DATA_BOXED_TYPE ))
-#define NA_IS_DATA_BOXED_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_DATA_BOXED_TYPE ))
-#define NA_DATA_BOXED_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_DATA_BOXED_TYPE, NADataBoxedClass ))
+#define NA_DATA_BOXED_TYPE                  ( na_data_boxed_get_type())
+#define NA_DATA_BOXED( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_DATA_BOXED_TYPE, NADataBoxed ))
+#define NA_DATA_BOXED_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_DATA_BOXED_TYPE, NADataBoxedClass ))
+#define NA_IS_DATA_BOXED( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_DATA_BOXED_TYPE ))
+#define NA_IS_DATA_BOXED_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_DATA_BOXED_TYPE ))
+#define NA_DATA_BOXED_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_DATA_BOXED_TYPE, NADataBoxedClass ))
 
 typedef struct NADataBoxedPrivate      NADataBoxedPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject             parent;
 	NADataBoxedPrivate *private;
 }

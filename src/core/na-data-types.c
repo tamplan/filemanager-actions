@@ -34,6 +34,13 @@
 
 #include <api/na-data-types.h>
 
+/**
+ * SECTION: data-type
+ * @title: NADataType
+ * @short_description: #NADataBoxed type definitions.
+ * @include: nautilus-actions/na-data-types.h
+ */
+
 typedef struct {
 	guint  type;
 	gchar *gconf_dump_key;
@@ -56,8 +63,10 @@ static FactoryType st_factory_type[] = {
  *
  * Returns: the GConf key suitable for this type.
  *
- * The returned key is owned by FactoryData, and should not be released
- * by the caller.
+ * The returned key is owned by the factory data management system, and
+ * should not be released by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30
  */
 const gchar *
 na_data_types_get_gconf_dump_key( guint type )

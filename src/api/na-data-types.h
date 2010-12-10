@@ -31,12 +31,6 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
 #define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
 
-/**
- * SECTION: na_data
- * @short_description: NADataBoxed type definitions.
- * @include: nautilus-actions/na-data-types.h
- */
-
 #include <glib.h>
 
 G_BEGIN_DECLS
@@ -56,29 +50,28 @@ G_BEGIN_DECLS
  * IFactoryProvider implementations should provide a primitive for reading
  * (resp. writing) a value for each of these elementary data types.
  *
- * IMPORTANT NOTE
+ * <note>
+ *   <para>
  * Please note that this enumeration may be compiled in by the extensions.
  * They must so remain fixed, unless you want see strange effects (e.g.
- * an extension has been compiled with NAFD_TYPE_STRING = 2, while you
+ * an extension has been compiled with %NAFD_TYPE_STRING = 2, while you
  * have inserted another element, making it to 3 !) - or you know what
  * you are doing...
+ *   </para>
+ *   <para>
+ *     So, only add new items at the end of the enum. You have been warned!
+ *   </para>
+ * </note>
  */
-
-enum {
-	NAFD_TYPE_STRING = 1,				/* an ASCII string */
-
-	NAFD_TYPE_LOCALE_STRING,			/* a localized UTF-8 string */
-
-	NAFD_TYPE_BOOLEAN,					/* a boolean
-										 * can be initialized with "true" or "false" (case insensitive) */
-
-	NAFD_TYPE_STRING_LIST,				/* a list of ASCII strings */
-
-	NAFD_TYPE_POINTER,					/* a ( void * ) pointer
-										 * should be initialized to NULL */
-
-	NAFD_TYPE_UINT,						/* an unsigned integer */
-};
+typedef enum {
+	NAFD_TYPE_STRING = 1,
+	NAFD_TYPE_LOCALE_STRING,
+	NAFD_TYPE_BOOLEAN,
+	NAFD_TYPE_STRING_LIST,
+	NAFD_TYPE_POINTER,
+	NAFD_TYPE_UINT
+}
+	NAFactoryDataType;
 
 const gchar *na_data_types_get_gconf_dump_key( guint type );
 
