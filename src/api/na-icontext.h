@@ -33,49 +33,62 @@
 
 /**
  * SECTION: icontext
- * @short_description: #NAIContext interface definition.
+ * @title: NAIContext
+ * @short_description: The Contextual Interface
  * @include: nautilus-actions/na-icontext.h
  *
- * This interface is implemented by all #NAObject-derived objects
+ * This interface is implemented by all #NAObject -derived objects
  * whose the display in the Nautilus context menu is subject to some
  * conditions.
  *
- * Implementors, typically actions, profiles and menus, host the required
- * data as #NADataBoxed in a dedicated NA_FACTORY_CONDITIONS_GROUP
- * data group.
+ * Implementors, typically #NAObjectAction, #NAObjectProfile and
+ * #NAObjectMenu, host the required data as #NADataBoxed in a dedicated
+ * NA_FACTORY_CONDITIONS_GROUP data group.
  */
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define NA_ICONTEXT_TYPE						( na_icontext_get_type())
-#define NA_ICONTEXT( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_ICONTEXT_TYPE, NAIContext ))
-#define NA_IS_ICONTEXT( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_ICONTEXT_TYPE ))
-#define NA_ICONTEXT_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_ICONTEXT_TYPE, NAIContextInterface ))
+#define NA_ICONTEXT_TYPE                       ( na_icontext_get_type())
+#define NA_ICONTEXT( instance )                ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_ICONTEXT_TYPE, NAIContext ))
+#define NA_IS_ICONTEXT( instance )             ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_ICONTEXT_TYPE ))
+#define NA_ICONTEXT_GET_INTERFACE( instance )  ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_ICONTEXT_TYPE, NAIContextInterface ))
 
-typedef struct NAIContext                 NAIContext;
+typedef struct _NAIContext                 NAIContext;
 
-typedef struct NAIContextInterfacePrivate NAIContextInterfacePrivate;
+typedef struct _NAIContextInterfacePrivate NAIContextInterfacePrivate;
 
+/**
+ * NAIContextInterface:
+ * @is_candidate: determines if the given NAObject-derived object is
+ *                candidate to display in Nautilus.
+ *
+ * This interface manages all conditions relevant to a displayable status
+ * in Nautilus.
+ */
 typedef struct {
+	/*< private >*/
 	GTypeInterface              parent;
 	NAIContextInterfacePrivate *private;
 
+	/*< public >*/
 	/**
 	 * is_candidate:
-	 * @object: this #NAIContext object.
+	 * @object: this NAIContext object.
 	 * @target: the initial target which triggered this function's stack.
 	 *  This target is defined in na-object-item.h.
-	 * @selection: the current selection as a #GList of #NautilusFileInfo.
+	 * @selection: the current selection as a GList of NautilusFileInfo.
+	 *
+	 * The NAIContext implementor may take advantage of this
+	 * virtual function to check for its own specific data. Only if the
+	 * implementor does return %TRUE (or just doesn't implement this
+	 * virtual), the conditions themselves will be checked.
 	 *
 	 * Returns: %TRUE if the @object may be a potential candidate, %FALSE
 	 * else.
 	 *
-	 * The #NAIContext implementor may take advantage of this
-	 * virtual function to check for its own specific data. Only if the
-	 * implementor does return %TRUE (or just doesn't implement this
-	 * virtual), the conditions themselves will be checked.
+	 * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
 	 */
 	gboolean ( *is_candidate )( NAIContext *object, guint target, GList *selection );
 }

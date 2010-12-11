@@ -82,9 +82,9 @@
 
   <chapter>
     <title>Miscellaneous API</title>
-    <xi:include href="xml/na-gconf-monitor.xml"/>
-    <xi:include href="xml/na-gconf-utils.xml"/>
-    <xi:include href="xml/na-core-utils.xml"/>
+    <xi:include href="xml/core-utils.xml"/>
+    <xi:include href="xml/gconf-monitor.xml"/>
+    <xi:include href="xml/gconf-utils.xml"/>
   </chapter>
 
   <chapter id="object-tree">

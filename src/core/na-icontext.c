@@ -50,7 +50,7 @@
 
 /* private interface data
  */
-struct NAIContextInterfacePrivate {
+struct _NAIContextInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -170,19 +170,21 @@ interface_base_finalize( NAIContextInterface *klass )
  * na_icontext_is_candidate:
  * @context: a #NAIContext to be checked.
  * @target: the current target.
- * @selection: the currently selected items, as a #GList of #NASelectedInfo items.
+ * @selection: the currently selected items, as a #GList of NASelectedInfo items.
  *
  * Determines if the given object may be candidate to be displayed in
  * the Nautilus context menu, depending of the list of currently selected
  * items.
  *
- * This function is called by nautilus-actions::build_nautilus_menus()
- * for each item found in #NAPivot items list, and, when this an action,
- * for each profile of this action.
+ * This function is called by <methodname>build_nautilus_menus</methodname>
+ * plugin function for each item found in NAPivot items list, and, when this
+ * an action, for each profile of this action.
  *
  * Returns: %TRUE if this @context succeeds to all tests and is so a
  * valid candidate to be displayed in Nautilus context menu, %FALSE
  * else.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
  */
 gboolean
 na_icontext_is_candidate( const NAIContext *context, guint target, GList *selection )
@@ -222,11 +224,13 @@ na_icontext_is_candidate( const NAIContext *context, guint target, GList *select
  *
  * Returns: %TRUE if this @context is valid, %FALSE else.
  *
- * This function is part of #NAIDuplicable::check_status() and is called
- * by #NAIDuplicable objects which also implement #NAIContext
+ * This function is part of <methodname>NAIDuplicable::check_status</methodname>
+ * and is called by #NAIDuplicable objects which also implement #NAIContext
  * interface. It so doesn't make sense of asking the object for its
  * validity status as it has already been checked before calling the
  * function.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
  */
 gboolean
 na_icontext_is_valid( const NAIContext *context )
@@ -250,6 +254,8 @@ na_icontext_is_valid( const NAIContext *context )
  * @context: the #NAIContext object to be checked.
  *
  * Returns: %TRUE if this @context is valid for all mimetypes, %FALSE else.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
  */
 gboolean
 na_icontext_is_all_mimetypes( const NAIContext *context )
@@ -286,6 +292,8 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
  * @context: the #NAIContext to be prepared.
  *
  * Prepares the specified #NAIContext just after it has been readen.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
  */
 void
 na_icontext_read_done( NAIContext *context )
@@ -300,6 +308,8 @@ na_icontext_read_done( NAIContext *context )
  * @selected: whether this scheme is candidate to this @context.
  *
  * Sets the status of a @scheme relative to this @context.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
  */
 void
 na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selected )
@@ -321,6 +331,8 @@ na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selec
  * @selected: whether this @desktop is candidate to this @context.
  *
  * Sets the status of the @desktop relative to this @context for the OnlyShowIn list.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
  */
 void
 na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
@@ -342,6 +354,8 @@ na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolea
  * @selected: whether this @desktop is candidate to this @context.
  *
  * Sets the status of the @desktop relative to this @context for the NotShowIn list.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
  */
 void
 na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
@@ -363,6 +377,8 @@ na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean
  * @new: the new uri.
  *
  * Replaces the @old URI by the @new one.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
  */
 void
 na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *new )
