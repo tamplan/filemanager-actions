@@ -293,7 +293,7 @@ NAObjectClassPrivate
 </SECTION>
 
 # ---------------------------------------------------------------------
-# NAObjectId — The Identified Object Class Definition
+# NAObjectId — The Identified Object Base Class Definition
 
 <SECTION>
 <FILE>object-id</FILE>
@@ -321,6 +321,43 @@ NAObjectIdClassPrivate
 </SECTION>
 
 # ---------------------------------------------------------------------
+# NAObjectItem — The Object Item Base Class Definition 
+
+<SECTION>
+<FILE>object-item</FILE>
+<TITLE>NAObjectItem</TITLE>
+NA_OBJECT_ITEM_TYPE
+NA_OBJECT_ITEM
+NA_IS_OBJECT_ITEM
+NAObjectItem
+NAItemTarget
+na_object_item_are_equal
+na_object_item_get_item
+na_object_item_get_position
+na_object_item_append_item
+na_object_item_insert_at
+na_object_item_insert_item
+na_object_item_remove_item
+na_object_item_get_items_count
+na_object_item_count_items
+na_object_item_unref_items
+na_object_item_unref_items_rec
+na_object_item_rebuild_children_slist
+na_object_item_deals_with_version
+
+<SUBSECTION Standard>
+na_object_item_get_type
+NA_OBJECT_ITEM_CLASS
+NA_IS_OBJECT_ITEM_CLASS
+NA_OBJECT_ITEM_GET_CLASS
+NAObjectItemClass
+
+<SUBSECTION Private>
+NAObjectItemPrivate
+NAObjectItemClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
 
 <SECTION>
 <FILE>iduplicable</FILE>
@@ -344,38 +381,6 @@ na_iduplicable_register_consumer
 NA_IDUPLICABLE
 NA_IS_IDUPLICABLE
 na_iduplicable_get_type
-</SECTION>
-
-# ---------------------------------------------------------------------
-
-<SECTION>
-<FILE>object-item</FILE>
-<TITLE>NAObjectItem</TITLE>
-NA_OBJECT_ITEM_TYPE
-NAObjectItemPrivate
-NAObjectItemClassPrivate
-NAObjectItem
-na_object_item_are_equal
-na_object_item_get_item
-na_object_item_get_position
-na_object_item_append_item
-na_object_item_insert_at
-na_object_item_insert_item
-na_object_item_remove_item
-na_object_item_get_items_count
-na_object_item_count_items
-na_object_item_unref_items
-na_object_item_unref_items_rec
-na_object_item_rebuild_children_slist
-na_object_item_deals_with_version
-
-<SUBSECTION Standard>
-NA_OBJECT_ITEM
-NA_IS_OBJECT_ITEM
-na_object_item_get_type
-NA_OBJECT_ITEM_CLASS
-NA_IS_OBJECT_ITEM_CLASS
-NA_OBJECT_ITEM_GET_CLASS
 </SECTION>
 
 # ---------------------------------------------------------------------

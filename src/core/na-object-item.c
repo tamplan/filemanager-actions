@@ -43,13 +43,13 @@
 
 /* private class data
  */
-struct NAObjectItemClassPrivate {
+struct _NAObjectItemClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAObjectItemPrivate {
+struct _NAObjectItemPrivate {
 	gboolean   dispose_has_run;
 
 	void      *provider_data;
@@ -273,8 +273,6 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
  * @a: the first (original) #NAObjectItem instance.
  * @b: the second #NAObjectItem instance.
  *
- * Returns: %TRUE if @a is equal to @b.
- *
  * This function participates to the #na_iduplicable_check_status() stack,
  * and is triggered after all comparable elementary data (in #NAIFactoryObject
  * sense) have already been successfully compared.
@@ -284,6 +282,10 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
  *
  * Note that, when called from na_object_check_status, the status of children
  * have already been checked, and so we should be able to rely on them.
+ *
+ * Returns: %TRUE if @a is equal to @b.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b )
@@ -389,10 +391,12 @@ na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b )
  * @item: the #NAObjectItem from which we want retrieve a subitem.
  * @id: the id of the searched subitem.
  *
- * Returns: a pointer to the #NAObjectId-derived child with the required id.
+ * Returns: a pointer to the #NAObjectId -derived child with the required id.
  *
  * The returned #NAObjectId is owned by the @item object ; the
  * caller should not try to g_free() nor g_object_unref() it.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 NAObjectId *
 na_object_item_get_item( const NAObjectItem *item, const gchar *id )
@@ -423,10 +427,12 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
 /**
  * na_object_item_get_position:
  * @item: this #NAObjectItem object.
- * @child: a #NAObjectId-derived child.
+ * @child: a #NAObjectId -derived child.
  *
  * Returns: the position of @child in the subitems list of @item,
  * starting from zero, or -1 if not found.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gint
 na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child )
@@ -459,6 +465,8 @@ na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child )
  * and setup the parent pointer of the child to its new parent.
  *
  * Doesn't modify the reference count on @object.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
@@ -484,12 +492,14 @@ na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
 /**
  * na_object_item_insert_at:
  * @item: the #NAObjectItem in which add the subitem.
- * @child: a #NAObjectId-derived to be inserted in the list of subitems.
+ * @child: a #NAObjectId -derived to be inserted in the list of subitems.
  * @pos: the position at which the @child should be inserted.
  *
  * Inserts a new @child in the list of subitems of @item.
  *
  * Doesn't modify the reference count on @child.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_item_insert_at( NAObjectItem *item, const NAObjectId *child, gint pos )
@@ -528,6 +538,8 @@ na_object_item_insert_at( NAObjectItem *item, const NAObjectId *child, gint pos 
  * Inserts a new @child in the list of subitems of @item.
  *
  * Doesn't modify the reference count on @child.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_item_insert_item( NAObjectItem *item, const NAObjectId *child, const NAObjectId *before )
@@ -564,11 +576,13 @@ na_object_item_insert_item( NAObjectItem *item, const NAObjectId *child, const N
 /**
  * na_object_item_remove_item:
  * @item: the #NAObjectItem from which the subitem must be removed.
- * @child: a #NAObjectId-derived to be removed from the list of subitems.
+ * @child: a #NAObjectId -derived to be removed from the list of subitems.
  *
  * Removes a @child from the list of subitems of @item.
  *
  * Doesn't modify the reference count on @child.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_item_remove_item( NAObjectItem *item, const NAObjectId *child )
@@ -599,6 +613,8 @@ na_object_item_remove_item( NAObjectItem *item, const NAObjectId *child )
  * @item: the #NAObjectItem from which we want a count of subitems.
  *
  * Returns: the count of subitems of @item.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 guint
 na_object_item_get_items_count( const NAObjectItem *item )
@@ -620,17 +636,19 @@ na_object_item_get_items_count( const NAObjectItem *item )
 
 /**
  * na_object_item_count_items:
- * @items: a list if #NAObject-derived to be counted.
+ * @items: a list if #NAObject -derived to be counted.
  * @menus: will be set to the count of menus.
  * @actions: will be set to the count of actions.
  * @profiles: will be set to the count of profiles.
  * @recurse: whether to recursively count all items, or only those in
  *  level zero of the list.
  *
- * Count the numbers of items if the provided list.
+ * Returns: the count the numbers of items if the provided list.
  *
  * As this function is recursive, the counters should be initialized by
  * the caller before calling it.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse )
@@ -663,11 +681,13 @@ na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *prof
 
 /**
  * na_object_item_unref_items:
- * @items: a list of #NAObject-derived items.
+ * @items: a list of #NAObject -derived items.
  *
  * Unref only the first level the #NAObject of the list, freeing the list at last.
  *
- * This is rather only used by #NAPivot.
+ * This is rather only used by NAPivot.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_item_unref_items( GList *items )
@@ -678,11 +698,13 @@ na_object_item_unref_items( GList *items )
 
 /**
  * na_object_item_unref_items_rec:
- * @items: a list of #NAObject-derived items.
+ * @items: a list of #NAObject -derived items.
  *
  * Recursively unref the #NAObject's of the list, freeing the list at last.
  *
  * This is heavily used by NACT.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_item_unref_items_rec( GList *items )
@@ -698,7 +720,7 @@ na_object_item_unref_items_rec( GList *items )
 
 /**
  * na_object_item_deals_with_version:
- * @item: this #NAObjectItem-derived object.
+ * @item: this #NAObjectItem -derived object.
  *
  * Just after the @item has been readen from NAIFactoryProvider, setup
  * the version. This is needed because some conversions may occur in
@@ -707,6 +729,8 @@ na_object_item_unref_items_rec( GList *items )
  * Note that there is only some 2.x versions where the version string
  * was not systematically written. If @item has been readen from a
  * .desktop file, then iversion is already set to (at least) 3.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_item_deals_with_version( NAObjectItem *item )
@@ -738,9 +762,11 @@ na_object_item_deals_with_version( NAObjectItem *item )
 
 /**
  * na_object_item_rebuild_children_slist:
- * @item: this #NAObjectItem-derived object.
+ * @item: this #NAObjectItem -derived object.
  *
  * Rebuild the string list of children.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_item_rebuild_children_slist( NAObjectItem *item )

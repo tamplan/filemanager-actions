@@ -33,7 +33,8 @@
 
 /**
  * SECTION: object-item
- * @short_description: #NAObjectItem class definition.
+ * @title: NAObjectItem
+ * @short_description: The Object Item Base Class Definition
  * @include: nautilus-actions/na-object-item.h
  *
  * This is a pure virtual class, i.e. not an instantiatable one, but
@@ -44,41 +45,50 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_ITEM_TYPE					( na_object_item_get_type())
-#define NA_OBJECT_ITEM( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ITEM_TYPE, NAObjectItem ))
-#define NA_OBJECT_ITEM_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ITEM_TYPE, NAObjectItemClass ))
-#define NA_IS_OBJECT_ITEM( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ITEM_TYPE ))
-#define NA_IS_OBJECT_ITEM_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ITEM_TYPE ))
-#define NA_OBJECT_ITEM_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ITEM_TYPE, NAObjectItemClass ))
+#define NA_OBJECT_ITEM_TYPE                  ( na_object_item_get_type())
+#define NA_OBJECT_ITEM( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ITEM_TYPE, NAObjectItem ))
+#define NA_OBJECT_ITEM_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ITEM_TYPE, NAObjectItemClass ))
+#define NA_IS_OBJECT_ITEM( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ITEM_TYPE ))
+#define NA_IS_OBJECT_ITEM_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ITEM_TYPE ))
+#define NA_OBJECT_ITEM_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ITEM_TYPE, NAObjectItemClass ))
 
-typedef struct NAObjectItemPrivate      NAObjectItemPrivate;
+typedef struct _NAObjectItemPrivate      NAObjectItemPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAObjectId           parent;
 	NAObjectItemPrivate *private;
 }
 	NAObjectItem;
 
-typedef struct NAObjectItemClassPrivate NAObjectItemClassPrivate;
+typedef struct _NAObjectItemClassPrivate NAObjectItemClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAObjectIdClass           parent;
 	NAObjectItemClassPrivate *private;
 }
 	NAObjectItemClass;
 
-/* targets
+/**
+ * NAItemTarget:
+ * @ITEM_TARGET_SELECTION: when targeting the selection context menu.
+ * @ITEM_TARGET_LOCATION:  when targeting the background context menu.
+ * @ITEM_TARGET_TOOLBAR:   when targeting the toolbar.
+ * @ITEM_TARGET_ANY:       a wilcard target defined in order to be able
+ *                         to activate an action from a keyboard shortcut,
+ *                         while keeping this same action hidden from the UI.
  *
- * ITEM_TARGET_ANY is just a wilcard target defined in order to be able
- * to activate an action from a keyboard shortcut, while keeping this
- * same action hidden from the UI.
+ * The #NAItemTarget mode is Nautilus-driven. It determines in which part
+ * of the Nautilus UI our actions will be displayed.
  */
-enum {
+typedef enum {
 	ITEM_TARGET_SELECTION = 1,
 	ITEM_TARGET_LOCATION,
 	ITEM_TARGET_TOOLBAR,
 	ITEM_TARGET_ANY
-};
+}
+	NAItemTarget;
 
 GType       na_object_item_get_type( void );
 
