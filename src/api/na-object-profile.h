@@ -33,7 +33,8 @@
 
 /**
  * SECTION: object-profile
- * @short_description: #NAObjectProfile class definition.
+ * @title: NAObjectProfile
+ * @short_description: The Action Profile Class Definition
  * @include: nautilus-actions/na-object-item.h
  */
 
@@ -41,24 +42,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_PROFILE_TYPE					( na_object_profile_get_type())
-#define NA_OBJECT_PROFILE( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_PROFILE_TYPE, NAObjectProfile ))
-#define NA_OBJECT_PROFILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_PROFILE_TYPE, NAObjectProfileClass ))
-#define NA_IS_OBJECT_PROFILE( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_PROFILE_TYPE ))
-#define NA_IS_OBJECT_PROFILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_PROFILE_TYPE ))
-#define NA_OBJECT_PROFILE_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_PROFILE_TYPE, NAObjectProfileClass ))
+#define NA_OBJECT_PROFILE_TYPE                  ( na_object_profile_get_type())
+#define NA_OBJECT_PROFILE( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_PROFILE_TYPE, NAObjectProfile ))
+#define NA_OBJECT_PROFILE_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_PROFILE_TYPE, NAObjectProfileClass ))
+#define NA_IS_OBJECT_PROFILE( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_PROFILE_TYPE ))
+#define NA_IS_OBJECT_PROFILE_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_PROFILE_TYPE ))
+#define NA_OBJECT_PROFILE_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_PROFILE_TYPE, NAObjectProfileClass ))
 
-typedef struct NAObjectProfilePrivate      NAObjectProfilePrivate;
+typedef struct _NAObjectProfilePrivate      NAObjectProfilePrivate;
 
 typedef struct {
+	/*< private >*/
 	NAObjectId              parent;
 	NAObjectProfilePrivate *private;
 }
 	NAObjectProfile;
 
-typedef struct NAObjectProfileClassPrivate NAObjectProfileClassPrivate;
+typedef struct _NAObjectProfileClassPrivate NAObjectProfileClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAObjectIdClass              parent;
 	NAObjectProfileClassPrivate *private;
 }

@@ -73,11 +73,11 @@
     <xi:include href="xml/object-id.xml"/>
     <xi:include href="xml/object-item.xml"/>
     <xi:include href="xml/object-action.xml"/>
-    <xi:include href="xml/na-object-profile.xml"/>
-    <xi:include href="xml/na-object-menu.xml"/>
-    <xi:include href="xml/na-iduplicable.xml"/>
-    <xi:include href="xml/na-icontext.xml"/>
-    <xi:include href="xml/na-object-api.xml"/>
+    <xi:include href="xml/object-profile.xml"/>
+    <xi:include href="xml/object-menu.xml"/>
+    <xi:include href="xml/iduplicable.xml"/>
+    <xi:include href="xml/icontext.xml"/>
+    <xi:include href="xml/object-api.xml"/>
   </chapter>
 
   <chapter>

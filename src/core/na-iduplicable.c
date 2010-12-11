@@ -36,7 +36,7 @@
 
 /* private interface data
  */
-struct NAIDuplicableInterfacePrivate {
+struct _NAIDuplicableInterfacePrivate {
 	GList *consumers;
 };
 
@@ -135,9 +135,9 @@ interface_base_init( NAIDuplicableInterface *klass )
 		klass->is_valid = NULL;
 
 		/**
-		 * na-iduplicable-status-changed:
+		 * NAIDuplicable::status-changed:
 		 *
-		 * This signal is emitted by NAIDuplicable when the modification
+		 * This signal is emitted by #NAIDuplicable when the modification
 		 * or the validity status of an object has been modified.
 		 */
 		st_signals[ STATUS_CHANGED ] = g_signal_new(
@@ -180,6 +180,8 @@ interface_base_finalize( NAIDuplicableInterface *klass )
  * @object: the #NAIDuplicable object to be initialized.
  *
  * Releases resources.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 void
 na_iduplicable_dispose( const NAIDuplicable *object )
@@ -207,10 +209,12 @@ na_iduplicable_dispose( const NAIDuplicable *object )
  * Dumps via g_debug the properties of the object.
  *
  * We ouput here only the data we set ourselves againt the
- * #NAIDuplicable-implemented object.
+ * #NAIDuplicable -implemented object.
  *
  * This function should be called by the implementation when it dumps
  * itself its own content.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 void
 na_iduplicable_dump( const NAIDuplicable *object )
@@ -234,7 +238,7 @@ na_iduplicable_dump( const NAIDuplicable *object )
  * na_iduplicable_duplicate:
  * @object: the #NAIDuplicable object to be duplicated.
  *
- * Exactly duplicates a #NAIDuplicable-implemented object, including
+ * Exactly duplicates a #NAIDuplicable -implemented object, including
  * modification and validity status which are copied from @object to
  * the duplicated one.
  *
@@ -242,11 +246,16 @@ na_iduplicable_dump( const NAIDuplicable *object )
  * everywhere in the program that recursivity is provided but #NAObject
  * implementation.
  *
- * +------------------------------------------------------------------------------+
- * | na_object_duplicate (aka na_iduplicable_duplicate) is definitively recursive |
- * +------------------------------------------------------------------------------+
+ * <important>
+ *   <para>
+ *     na_object_duplicate() (aka na_iduplicable_duplicate())
+ *     is definitively recursive
+ *   </para>
+ * </important>
  *
  * Returns: a new #NAIDuplicable.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 NAIDuplicable *
 na_iduplicable_duplicate( const NAIDuplicable *object )
@@ -292,12 +301,14 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
  * functions na_iduplicable_is_modified() and na_iduplicable_is_valid()
  * will then only return the current value of the properties.
  *
- * #na_iduplicable_check_status() is not, as itself, recursive.
+ * na_iduplicable_check_status() is not, as itself, recursive.
  * That is, the modification and validity status are only set on the
  * specified object.
  * #NAObject implementation has choosen to handle itself the recursivity:
- * #na_object_check_status() so first check status for childs, before
+ * na_object_check_status() so first check status for childs, before
  * calling this function.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 void
 na_iduplicable_check_status( const NAIDuplicable *object )
@@ -369,6 +380,8 @@ na_iduplicable_check_status( const NAIDuplicable *object )
  * Returns the origin of a duplicated #NAIDuplicable.
  *
  * Returns: the original #NAIDuplicable, or NULL.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 NAIDuplicable *
 na_iduplicable_get_origin( const NAIDuplicable *object )
@@ -397,6 +410,8 @@ na_iduplicable_get_origin( const NAIDuplicable *object )
  * without rechecking the edition status itself.
  *
  * Returns: %TRUE is the provided object is valid.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 gboolean
 na_iduplicable_is_valid( const NAIDuplicable *object )
@@ -421,11 +436,13 @@ na_iduplicable_is_valid( const NAIDuplicable *object )
  * na_iduplicable_is_modified:
  * @object: the #NAIDuplicable object whose status is to be returned.
  *
- * Returns the current value of the %PROP_IDUPLICABLE_ISMODIFIED
+ * Returns the current value of the 'is_modified'
  * property without rechecking the edition status itself.
  *
  * Returns: %TRUE is the provided object has been modified regarding of
  * the original one.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 gboolean
 na_iduplicable_is_modified( const NAIDuplicable *object )
@@ -452,6 +469,8 @@ na_iduplicable_is_modified( const NAIDuplicable *object )
  * @origin: the new original #NAIDuplicable.
  *
  * Sets the new origin of a duplicated #NAIDuplicable.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 void
 na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
@@ -474,6 +493,8 @@ na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
  * @modified: the new modification status #NAIDuplicable.
  *
  * Sets the new modified of a duplicated #NAIDuplicable.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 void
 na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )
@@ -527,6 +548,8 @@ v_is_valid( const NAIDuplicable *object )
  *
  * This function registers a consumer, i.e. an instance to which edition
  * status signals will be propagated.
+ *
+ * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
  */
 void
 na_iduplicable_register_consumer( GObject *consumer )

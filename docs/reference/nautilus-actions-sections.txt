@@ -358,6 +358,7 @@ NAObjectItemClassPrivate
 </SECTION>
 
 # ---------------------------------------------------------------------
+# NAObjectAction — The Action Class Definition
 
 <SECTION>
 <FILE>object-action</FILE>
@@ -386,13 +387,64 @@ NAObjectActionClassPrivate
 </SECTION>
 
 # ---------------------------------------------------------------------
+# NAObjectProfile — The Action Profile Class Definition
+
+<SECTION>
+<FILE>object-profile</FILE>
+NA_OBJECT_PROFILE_TYPE
+NA_OBJECT_PROFILE
+NA_IS_OBJECT_PROFILE
+NAObjectProfile
+na_object_profile_new
+na_object_profile_new_with_defaults
+na_object_profile_convert_v2_to_last
+
+<SUBSECTION Standard>
+na_object_profile_get_type
+NA_OBJECT_PROFILE_CLASS
+NA_IS_OBJECT_PROFILE_CLASS
+NA_OBJECT_PROFILE_GET_CLASS
+NAObjectProfileClass
+
+<SUBSECTION Private>
+NAObjectProfilePrivate
+NAObjectProfileClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# NAObjectMenu — The Menu Class Definition
+
+<SECTION>
+<FILE>object-menu</FILE>
+NA_OBJECT_MENU_TYPE
+NA_OBJECT_MENU
+NA_IS_OBJECT_MENU
+NAObjectMenu
+na_object_menu_new
+na_object_menu_new_with_defaults
+
+<SUBSECTION Standard>
+na_object_menu_get_type
+NA_OBJECT_MENU_CLASS
+NA_IS_OBJECT_MENU_CLASS
+NA_OBJECT_MENU_GET_CLASS
+NAObjectMenuClass
+
+<SUBSECTION Private>
+NAObjectMenuPrivate
+NAObjectMenuClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+# NAIDuplicable — The Duplication Interface
 
 <SECTION>
 <FILE>iduplicable</FILE>
 NA_IDUPLICABLE_TYPE
+NA_IDUPLICABLE
+NA_IS_IDUPLICABLE
 NA_IDUPLICABLE_GET_INTERFACE
 NAIDuplicable
-NAIDuplicableInterfacePrivate
 NAIDuplicableInterface
 NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED
 na_iduplicable_dispose
@@ -405,53 +457,12 @@ na_iduplicable_is_modified
 na_iduplicable_set_origin
 na_iduplicable_set_modified
 na_iduplicable_register_consumer
+
 <SUBSECTION Standard>
-NA_IDUPLICABLE
-NA_IS_IDUPLICABLE
 na_iduplicable_get_type
-</SECTION>
 
-# ---------------------------------------------------------------------
-
-<SECTION>
-<FILE>na-object-profile</FILE>
-<TITLE>NAObjectProfile</TITLE>
-NA_OBJECT_PROFILE_TYPE
-NAObjectProfilePrivate
-NAObjectProfileClassPrivate
-NAObjectProfile
-na_object_profile_new
-na_object_profile_new_with_defaults
-na_object_profile_convert_v2_to_last
-
-<SUBSECTION Standard>
-NA_OBJECT_PROFILE
-NA_IS_OBJECT_PROFILE
-na_object_profile_get_type
-NA_OBJECT_PROFILE_CLASS
-NA_IS_OBJECT_PROFILE_CLASS
-NA_OBJECT_PROFILE_GET_CLASS
-</SECTION>
-
-# ---------------------------------------------------------------------
-
-<SECTION>
-<FILE>object-menu</FILE>
-<TITLE>NAObjectMenu</TITLE>
-NA_OBJECT_MENU_TYPE
-NAObjectMenuPrivate
-NAObjectMenuClassPrivate
-NAObjectMenu
-na_object_menu_new
-na_object_menu_new_with_defaults
-
-<SUBSECTION Standard>
-NA_OBJECT_MENU
-NA_IS_OBJECT_MENU
-na_object_menu_get_type
-NA_OBJECT_MENU_CLASS
-NA_IS_OBJECT_MENU_CLASS
-NA_OBJECT_MENU_GET_CLASS
+<SUBSECTION Private>
+NAIDuplicableInterfacePrivate
 </SECTION>
 
 # ---------------------------------------------------------------------

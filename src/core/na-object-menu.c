@@ -44,13 +44,13 @@
 
 /* private class data
  */
-struct NAObjectMenuClassPrivate {
+struct _NAObjectMenuClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAObjectMenuPrivate {
+struct _NAObjectMenuPrivate {
 	gboolean dispose_has_run;
 };
 
@@ -419,6 +419,8 @@ is_valid_label( const NAObjectMenu *menu )
  * Allocates a new #NAObjectMenu object.
  *
  * Returns: the newly allocated #NAObjectMenu object.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 NAObjectMenu *
 na_object_menu_new( void )
@@ -436,6 +438,8 @@ na_object_menu_new( void )
  * Allocates a new #NAObjectMenu object, and setup default values.
  *
  * Returns: the newly allocated #NAObjectMenu object.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 NAObjectMenu *
 na_object_menu_new_with_defaults( void )

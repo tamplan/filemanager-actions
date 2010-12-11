@@ -1,5 +1,16 @@
 2010-12-11 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix NAIDuplicable Interface documentation.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-iduplicable.h:
+	* src/api/na-object-menu.h:
+	* src/api/na-object-profile.h:
+	* src/core/na-iduplicable.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile.c: Updated accordingly.
+
 	Fix NAObjectAction documentation.
 
 	* docs/reference/nautilus-actions-docs.xml:

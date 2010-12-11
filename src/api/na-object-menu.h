@@ -33,8 +33,8 @@
 
 /**
  * SECTION: object-menu
- * @title: NAObjectMenu class definition
- * @short_description: #NAObjectMenu class definition.
+ * @title: NAObjectMenu
+ * @short_description: The Menu Class Definition
  * @include: nautilus-actions/na-object-menu.h
  */
 
@@ -42,24 +42,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_MENU_TYPE					( na_object_menu_get_type())
-#define NA_OBJECT_MENU( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_MENU_TYPE, NAObjectMenu ))
-#define NA_OBJECT_MENU_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_MENU_TYPE, NAObjectMenuClass ))
-#define NA_IS_OBJECT_MENU( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_MENU_TYPE ))
-#define NA_IS_OBJECT_MENU_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_MENU_TYPE ))
-#define NA_OBJECT_MENU_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_MENU_TYPE, NAObjectMenuClass ))
+#define NA_OBJECT_MENU_TYPE                  ( na_object_menu_get_type())
+#define NA_OBJECT_MENU( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_MENU_TYPE, NAObjectMenu ))
+#define NA_OBJECT_MENU_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_MENU_TYPE, NAObjectMenuClass ))
+#define NA_IS_OBJECT_MENU( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_MENU_TYPE ))
+#define NA_IS_OBJECT_MENU_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_MENU_TYPE ))
+#define NA_OBJECT_MENU_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_MENU_TYPE, NAObjectMenuClass ))
 
-typedef struct NAObjectMenuPrivate      NAObjectMenuPrivate;
+typedef struct _NAObjectMenuPrivate      NAObjectMenuPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAObjectItem         parent;
 	NAObjectMenuPrivate *private;
 }
 	NAObjectMenu;
 
-typedef struct NAObjectMenuClassPrivate NAObjectMenuClassPrivate;
+typedef struct _NAObjectMenuClassPrivate NAObjectMenuClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAObjectItemClass         parent;
 	NAObjectMenuClassPrivate *private;
 }

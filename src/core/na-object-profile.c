@@ -49,13 +49,13 @@
 
 /* private class data
  */
-struct NAObjectProfileClassPrivate {
+struct _NAObjectProfileClassPrivate {
 	void *empty;							/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAObjectProfilePrivate {
+struct _NAObjectProfilePrivate {
 	gboolean dispose_has_run;
 };
 
@@ -702,6 +702,8 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
  * Allocates a new profile.
  *
  * Returns: the newly allocated #NAObjectProfile profile.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 NAObjectProfile *
 na_object_profile_new( void )
@@ -719,6 +721,8 @@ na_object_profile_new( void )
  * Allocates a new profile, and set default values.
  *
  * Returns: the newly allocated #NAObjectProfile profile.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 NAObjectProfile *
 na_object_profile_new_with_defaults( void )
@@ -734,8 +738,11 @@ na_object_profile_new_with_defaults( void )
 
 /**
  * na_object_profile_convert_v2_to_last:
+ * @profile: the #NAObjectProfile profile to be converted.
  *
  * Converts to v3 a @profile which has just been created from a pre-v2 action.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_profile_convert_v2_to_last( NAObjectProfile *profile )
