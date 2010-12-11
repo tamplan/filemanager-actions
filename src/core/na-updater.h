@@ -31,9 +31,8 @@
 #ifndef __CORE_NA_UPDATER_H__
 #define __CORE_NA_UPDATER_H__
 
-/**
- * SECTION: na_updater
- * @short_description: #NAUpdater class definition.
+/* @title: NAUpdater
+ * @short_description: The #NAUpdater Class Definition
  * @include: core/na-updater.h
  *
  * #NAUpdater is a #NAPivot-derived class which allows its clients
@@ -44,24 +43,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_UPDATER_TYPE					( na_updater_get_type())
-#define NA_UPDATER( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NA_UPDATER_TYPE, NAUpdater ))
-#define NA_UPDATER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_UPDATER_TYPE, NAUpdaterClass ))
-#define NA_IS_UPDATER( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_UPDATER_TYPE ))
-#define NA_IS_UPDATER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_UPDATER_TYPE ))
-#define NA_UPDATER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_UPDATER_TYPE, NAUpdaterClass ))
+#define NA_UPDATER_TYPE                 ( na_updater_get_type())
+#define NA_UPDATER( object )            ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_UPDATER_TYPE, NAUpdater ))
+#define NA_UPDATER_CLASS( klass )       ( G_TYPE_CHECK_CLASS_CAST( klass, NA_UPDATER_TYPE, NAUpdaterClass ))
+#define NA_IS_UPDATER( object )         ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_UPDATER_TYPE ))
+#define NA_IS_UPDATER_CLASS( klass )    ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_UPDATER_TYPE ))
+#define NA_UPDATER_GET_CLASS( object )  ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_UPDATER_TYPE, NAUpdaterClass ))
 
-typedef struct NAUpdaterPrivate      NAUpdaterPrivate;
+typedef struct _NAUpdaterPrivate      NAUpdaterPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAPivot           parent;
 	NAUpdaterPrivate *private;
 }
 	NAUpdater;
 
-typedef struct NAUpdaterClassPrivate NAUpdaterClassPrivate;
+typedef struct _NAUpdaterClassPrivate NAUpdaterClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAPivotClass           parent;
 	NAUpdaterClassPrivate *private;
 }

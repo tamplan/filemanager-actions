@@ -31,8 +31,8 @@
 #ifndef __CORE_NA_FACTORY_PROVIDER_H__
 #define __CORE_NA_FACTORY_PROVIDER_H__
 
-/*
- * SECTION: ifactory_provider
+/* @title: NAIFactoryProvider
+ * @short_description: The #NAIFactoryProvider Internal Functions
  * @include: core/na-factory-provider.h
  *
  * Declare the function only accessed from core library (not published as API).

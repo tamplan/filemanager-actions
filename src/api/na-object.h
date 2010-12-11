@@ -33,102 +33,125 @@
 
 /**
  * SECTION: object
- * @short_description: #NAObject class definition.
+ * @title: NAObject
+ * @short_description: The #NAObject Base Class Definition
  * @include: nautilus-actions/na-object.h
  *
- * This is the base class of all our data object hierarchy.
+ * This is the base class of all our data object hierarchy. #NAObject is
+ * supposed to be used as a pure virtual base class, i.e. should only be
+ * derived.
  */
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_TYPE					( na_object_object_get_type())
-#define NA_OBJECT( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_TYPE, NAObject ))
-#define NA_OBJECT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_TYPE, NAObjectClass ))
-#define NA_IS_OBJECT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_TYPE ))
-#define NA_IS_OBJECT_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_TYPE ))
-#define NA_OBJECT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_TYPE, NAObjectClass ))
+#define NA_OBJECT_TYPE                  ( na_object_object_get_type())
+#define NA_OBJECT( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_TYPE, NAObject ))
+#define NA_OBJECT_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_TYPE, NAObjectClass ))
+#define NA_IS_OBJECT( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_TYPE ))
+#define NA_IS_OBJECT_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_TYPE ))
+#define NA_OBJECT_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_TYPE, NAObjectClass ))
 
-typedef struct NAObjectPrivate      NAObjectPrivate;
+typedef struct _NAObjectPrivate      NAObjectPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject          parent;
 	NAObjectPrivate *private;
 }
 	NAObject;
 
-typedef struct NAObjectClassPrivate NAObjectClassPrivate;
+typedef struct _NAObjectClassPrivate NAObjectClassPrivate;
 
+/**
+ * NAObjectClass:
+ * @dump:      Dumps the #NAObject -part of the #NAObject -derived object.
+ * @copy:      Copies a #NAObject to another.
+ * @are_equal: Tests if two #NAObject are equal.
+ * @is_valid:  Tests if a #NAObject is valid.
+ *
+ * The #NAObjectClass defines some methods available to derived classes.
+ */
 typedef struct {
+	/*< private >*/
 	GObjectClass          parent;
 	NAObjectClassPrivate *private;
 
+	/*< public >*/
 	/**
 	 * dump:
-	 * @object: the #NAObject-derived object to be dumped.
+	 * @object: the NAObject-derived object to be dumped.
 	 *
 	 * Dumps via g_debug the content of the object.
 	 *
-	 * #NAObject class takes care of calling this function for each
+	 * NAObject class takes care of calling this function for each
 	 * derived class, starting from topmost base class up to most-
 	 * derived one. Each derived class has so only to take care of
 	 * dumping its own data.
+	 *
+	 * Since: Nautilus-Actions v 2.30.
 	 */
 	void     ( *dump )     ( const NAObject *object );
 
 	/**
 	 * copy:
-	 * @target: the #NAObject-derived object which will receive data.
-	 * @source: the #NAObject-derived object which will provide data.
+	 * @target: the NAObject-derived object which will receive data.
+	 * @source: the NAObject-derived object which will provide data.
 	 * @recursive: whether children should be recursively copied.
 	 *
 	 * Copies data and properties from @source to @target.
 	 *
 	 * Each derived class should take care of implementing this function
-	 * when relevant. #NAObject class will take care of calling this
+	 * when relevant. NAObject class will take care of calling this
 	 * function for each class of the hierarchy, starting from topmost
 	 * base class up to the most-derived one. Each class has so only to
 	 * take care of dumping its own data.
+	 *
+	 * Since: Nautilus-Actions v 2.30.
 	 */
 	void     ( *copy )     ( NAObject *target, const NAObject *source, gboolean recursive );
 
 	/**
 	 * are_equal:
-	 * @a: a first #NAObject object.
-	 * @b: a second #NAObject object to be compared to the first one.
+	 * @a: a first NAObject object.
+	 * @b: a second NAObject object to be compared to the first one.
 	 *
 	 * Compares the two objects.
 	 *
-	 * Returns: %TRUE if @a and @b are identical, %FALSE else.
-	 *
 	 * Each derived class should take care of implementing this function
-	 * when relevant. #NAObject class will take care of calling this
+	 * when relevant. NAObject class will take care of calling this
 	 * function for each class of the hierarchy, starting from topmost
 	 * base class up to the most-derived one, at least while result
-	 * stays at %TRUE.
+	 * stays at TRUE.
 	 * As soon as a difference is detected, the calling sequence will
 	 * be stopped, and the result returned.
+	 *
+	 * Returns: TRUE if @a and @b are identical, FALSE else.
+	 *
+	 * Since: Nautilus-Actions v 2.30.
 	 */
 	gboolean ( *are_equal )( const NAObject *a, const NAObject *b );
 
 	/**
 	 * is_valid:
-	 * @object: the #NAObject object to be checked.
+	 * @object: the NAObject object to be checked.
 	 *
 	 * Checks @object for validity.
 	 *
-	 * Returns: %TRUE if @object is valid, %FALSE else.
-	 *
-	 * A #NAObject is valid if its internal identifiant is set.
+	 * A NAObject is valid if its internal identifiant is set.
 	 *
 	 * Each derived class should take care of implementing this function
-	 * when relevant. #NAObject class will take care of calling this
+	 * when relevant. NAObject class will take care of calling this
 	 * function for each class of the hierarchy, starting from topmost
 	 * base class up to the most-derived one, at least while result
-	 * stays at %TRUE.
+	 * stays at TRUE.
 	 * As soon as a difference is detected, the calling sequence will
 	 * be stopped, and the result returned.
+	 *
+	 * Returns: TRUE if @object is valid, FALSE else.
+	 *
+	 * Since: Nautilus-Actions v 2.30.
 	 */
 	gboolean ( *is_valid ) ( const NAObject *object );
 }

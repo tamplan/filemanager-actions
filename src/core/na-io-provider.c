@@ -44,13 +44,13 @@
 
 /* private class data
  */
-struct NAIOProviderClassPrivate {
+struct _NAIOProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAIOProviderPrivate {
+struct _NAIOProviderPrivate {
 	gboolean       dispose_has_run;
 	gchar         *id;
 	gchar         *name;

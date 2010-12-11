@@ -38,7 +38,7 @@
 
 /* private interface data
  */
-struct NAIPivotConsumerInterfacePrivate {
+struct _NAIPivotConsumerInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -51,7 +51,7 @@ static void     interface_base_finalize( NAIPivotConsumerInterface *klass );
 
 static gboolean is_notify_allowed( const NAIPivotConsumer *instance );
 
-/**
+/*
  * Registers the GType of this interface.
  */
 GType
@@ -127,7 +127,7 @@ interface_base_finalize( NAIPivotConsumerInterface *klass )
 	}
 }
 
-/**
+/*
  * na_ipivot_consumer_allow_notify:
  * @instance: the #NAIPivotConsumer instance.
  * @allow: whether notifications are allowed for this consumer.
@@ -173,7 +173,7 @@ na_ipivot_consumer_allow_notify( NAIPivotConsumer *instance, gboolean allow, gui
 	}
 }
 
-/**
+/*
  * na_ipivot_consumer_notify_of_autosave_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
@@ -198,7 +198,7 @@ na_ipivot_consumer_notify_of_autosave_changed( NAIPivotConsumer *instance, gbool
 	}
 }
 
-/**
+/*
  * na_ipivot_consumer_notify_of_create_root_menu_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
@@ -222,7 +222,7 @@ na_ipivot_consumer_notify_of_create_root_menu_changed( NAIPivotConsumer *instanc
 	}
 }
 
-/**
+/*
  * na_ipivot_consumer_notify_of_display_about_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
@@ -247,7 +247,7 @@ na_ipivot_consumer_notify_of_display_about_changed( NAIPivotConsumer *instance, 
 	}
 }
 
-/**
+/*
  * na_ipivot_consumer_notify_of_display_order_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
@@ -271,7 +271,7 @@ na_ipivot_consumer_notify_of_display_order_changed( NAIPivotConsumer *instance, 
 	}
 }
 
-/**
+/*
  * na_ipivot_consumer_notify_of_io_provider_prefs_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the modifications.
  *
@@ -296,7 +296,7 @@ void na_ipivot_consumer_notify_of_io_provider_prefs_changed( NAIPivotConsumer *i
 	}
 }
 
-/**
+/*
  * na_ipivot_consumer_notify_of_items_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the end
  * of the modifications.
@@ -323,7 +323,7 @@ void na_ipivot_consumer_notify_of_items_changed( NAIPivotConsumer *instance )
 	}
 }
 
-/**
+/*
  * na_ipivot_consumer_notify_of_mandatory_prefs_changed:
  * @instance: the #NAIPivotConsumer instance to be notified of the modifications.
  *

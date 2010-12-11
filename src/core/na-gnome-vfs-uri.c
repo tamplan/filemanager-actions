@@ -320,7 +320,7 @@ gnome_vfs_canonicalize_pathname (gchar *path)
 
 static const gchar hex[16] = "0123456789ABCDEF";
 
-/**
+/*
  * gnome_vfs_escape_set:
  * @string: string to be escaped.
  * @match_set: a string containing all characters to be escaped in @string.
@@ -385,7 +385,7 @@ gnome_vfs_escape_set (const char *string,
 	return result;
 }
 
-/**
+/*
  * gnome_vfs_remove_optional_escapes:
  * @uri: an escaped uri.
  *
@@ -518,7 +518,7 @@ unescape_character (const char *scanner)
 	return (first_digit << 4) | second_digit;
 }
 
-/**
+/*
  * gnome_vfs_unescape_string:
  * @escaped_string: an escaped uri, path, or other string.
  * @illegal_characters: a string containing a sequence of characters

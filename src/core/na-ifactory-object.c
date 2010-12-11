@@ -38,52 +38,6 @@
 
 #include "na-factory-object.h"
 
-/**
- * SECTION: ifactory-object
- * @title: NAIFactoryObject
- * @short_description: The #NAObjectItem Interface v 1
- * @include: nautilus-actions/na-ifactory_object.h
- *
- * This interface is implemented by #NAObjectItem derived objects so that they
- * can take advantage of our data factory management system.
- *
- * A #NAObjectItem derived object which would implement this #NAIFactoryObject
- * interface must meet following conditions:
- * <itemizedlist>
- *   <listitem>
- *     <para>
- *       accept an empty constructor
- *     </para>
- *   </listitem>
- * </itemizedlist>
- *
- * <refsect2>
- *  <title>Versions historic</title>
- *  <table>
- *    <title>Historic of the versions of the #NAIFactoryObject interface</title>
- *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
- *      <colspec colname="na-version" />
- *      <colspec colname="api-version" />
- *      <colspec colname="current" />
- *      <thead>
- *        <row>
- *          <entry>&prodname; version</entry>
- *          <entry>#NAIFactoryObject interface version</entry>
- *          <entry></entry>
- *        </row>
- *      </thead>
- *      <tbody>
- *        <row>
- *          <entry>since 2.30</entry>
- *          <entry>1</entry>
- *          <entry>current version</entry>
- *        </row>
- *      </tbody>
- *    </tgroup>
- *  </table>
- * </refsect2>
- */
-
 /* private interface data
  */
 struct _NAIFactoryObjectInterfacePrivate {

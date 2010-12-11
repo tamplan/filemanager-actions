@@ -44,13 +44,13 @@
 
 /* private class data
  */
-struct NATokensClassPrivate {
+struct _NATokensClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NATokensPrivate {
+struct _NATokensPrivate {
 	gboolean dispose_has_run;
 
 	guint    count;
@@ -239,7 +239,7 @@ instance_finalize( GObject *object )
 	}
 }
 
-/**
+/*
  * na_tokens_new_for_example:
  *
  * Returns: a new #NATokens object initialized with fake values for two
@@ -300,7 +300,7 @@ na_tokens_new_for_example( void )
 	return( build_string_lists( tokens ));
 }
 
-/**
+/*
  * na_tokens_new_from_selection:
  * @selection: a #GList list of #NASelectedInfo objects.
  *
@@ -364,7 +364,7 @@ na_tokens_new_from_selection( GList *selection )
 	return( build_string_lists( tokens ));
 }
 
-/**
+/*
  * na_tokens_parse_parameters:
  * @tokens: a #NATokens object.
  * @string: the input string, may or may not contain tokens.
@@ -381,7 +381,7 @@ na_tokens_parse_parameters( const NATokens *tokens, const gchar *string, gboolea
 	return( parse_singular( tokens, string, 0, utf8 ));
 }
 
-/**
+/*
  * na_tokens_execute_action:
  * @tokens: a #NATokens object.
  * @profile: the #NAObjectProfile to be executed.

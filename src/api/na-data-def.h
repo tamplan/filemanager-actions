@@ -31,6 +31,17 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_DEF_H__
 #define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_DEF_H__
 
+/**
+ * SECTION: data-def
+ * @title: NADataDef, NADataGroup
+ * @short_description: The Data Factory Structure Definitions
+ * @include: nautilus-actions/na-data-def.h
+ *
+ * #NADataDef and #NADataGroup are structures which handle the list of
+ * elementary datas for each and every #NAObjectItem which happens to
+ * implement the #NAIFactoryObject interface.
+ */
+
 #include <glib.h>
 
 G_BEGIN_DECLS

@@ -31,6 +31,41 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_IEXPORTER_H__
 #define __NAUTILUS_ACTIONS_API_NA_IEXPORTER_H__
 
+/**
+ * SECTION: iexporter
+ * @title: NAIExporter
+ * @short_description: The Export Interface v 1
+ * @include: nautilus-actions/na-iexporter.h
+ *
+ * The #NAIExporter interface exports items to the outside world.
+ *
+ * <refsect2>
+ *  <title>Versions historic</title>
+ *  <table>
+ *    <title>Historic of the versions of the #NAIExporter interface</title>
+ *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
+ *      <colspec colname="na-version" />
+ *      <colspec colname="api-version" />
+ *      <colspec colname="current" />
+ *      <thead>
+ *        <row>
+ *          <entry>&prodname; version</entry>
+ *          <entry>#NAIExporter interface version</entry>
+ *          <entry></entry>
+ *        </row>
+ *      </thead>
+ *      <tbody>
+ *        <row>
+ *          <entry>since 2.30</entry>
+ *          <entry>1</entry>
+ *          <entry>current version</entry>
+ *        </row>
+ *      </tbody>
+ *    </tgroup>
+ *  </table>
+ * </refsect2>
+ */
+
 #include "na-object-item.h"
 
 G_BEGIN_DECLS

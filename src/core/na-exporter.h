@@ -31,9 +31,8 @@
 #ifndef __CORE_NA_EXPORTER_H__
 #define __CORE_NA_EXPORTER_H__
 
-/*
- * SECTION: na_iexporter
- * @short_description: #NAIExporter internal functions.
+/* @title: NAIExporter
+ * @short_description: The #NAIExporter Internal Functions
  * @include: core/na-exporter.h
  */
 

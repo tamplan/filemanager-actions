@@ -38,41 +38,6 @@
 #include <api/na-iimporter.h>
 #include <api/na-object-api.h>
 
-/**
- * SECTION: iimporter
- * @title: NAIImporter
- * @short_description: The Import Interface v 1
- * @include: nautilus-actions/na-iimporter.h
- *
- * The #NAIImporter interface imports items from the outside world.
- *
- * <refsect2>
- *  <title>Versions historic</title>
- *  <table>
- *    <title>Historic of the versions of the #NAIImporter interface</title>
- *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
- *      <colspec colname="na-version" />
- *      <colspec colname="api-version" />
- *      <colspec colname="current" />
- *      <thead>
- *        <row>
- *          <entry>&prodname; version</entry>
- *          <entry>#NAIImporter interface version</entry>
- *          <entry></entry>
- *        </row>
- *      </thead>
- *      <tbody>
- *        <row>
- *          <entry>since 2.30</entry>
- *          <entry>1</entry>
- *          <entry>current version</entry>
- *        </row>
- *      </tbody>
- *    </tgroup>
- *  </table>
- * </refsect2>
- */
-
 /* private interface data
  */
 struct _NAIImporterInterfacePrivate {

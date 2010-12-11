@@ -31,9 +31,8 @@
 #ifndef __CORE_NA_IABOUT_H__
 #define __CORE_NA_IABOUT_H__
 
-/**
- * SECTION: na_iabout
- * @short_description: NAIAbout interface definition.
+/* @title NAIAbout
+ * @short_description: The #NAIAbout Interface Definition
  * @include: runtime/na-iabout.h
  *
  * This interface displays the 'About Nautilus Actions' dialog box.
@@ -45,19 +44,21 @@
 
 G_BEGIN_DECLS
 
-#define NA_IABOUT_TYPE						( na_iabout_get_type())
-#define NA_IABOUT( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IABOUT_TYPE, NAIAbout ))
-#define NA_IS_IABOUT( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IABOUT_TYPE ))
-#define NA_IABOUT_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IABOUT_TYPE, NAIAboutInterface ))
+#define NA_IABOUT_TYPE                        ( na_iabout_get_type())
+#define NA_IABOUT( object )                   ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IABOUT_TYPE, NAIAbout ))
+#define NA_IS_IABOUT( object )                ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IABOUT_TYPE ))
+#define NA_IABOUT_GET_INTERFACE( instance )   ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IABOUT_TYPE, NAIAboutInterface ))
 
-typedef struct NAIAbout                 NAIAbout;
+typedef struct _NAIAbout                 NAIAbout;
 
-typedef struct NAIAboutInterfacePrivate NAIAboutInterfacePrivate;
+typedef struct _NAIAboutInterfacePrivate NAIAboutInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface            parent;
 	NAIAboutInterfacePrivate *private;
 
+	/*< public >*/
 	/**
 	 * get_application_name:
 	 * @iabout: this #NAIAbout implementor.

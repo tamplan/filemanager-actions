@@ -31,8 +31,8 @@
 #ifndef __CORE_NA_FACTORY_OBJECT_H__
 #define __CORE_NA_FACTORY_OBJECT_H__
 
-/*
- * @short_description: #NAIFactoryObject internal functions.
+/* @title: NAIFactoryObject
+ * @short_description: The #NAIFactoryObject Internal Functions
  * @include: core/na-factory-object.h
  *
  * Declare the function only accessed from core library, i.e. not

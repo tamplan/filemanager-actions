@@ -31,9 +31,8 @@
 #ifndef __CORE_NA_TOKENS_H__
 #define __CORE_NA_TOKENS_H__
 
-/**
- * SECTION: na_tokens
- * @short_description: #NATokens class definition.
+/* @title: NATokens
+ * @short_description: The #NATokens Class Definition
  * @include: core/na-tokens.h
  *
  * The #NATokens class manages the tokens which are to be replaced with
@@ -85,24 +84,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_TOKENS_TYPE					( na_tokens_get_type())
-#define NA_TOKENS( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TOKENS_TYPE, NATokens ))
-#define NA_TOKENS_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_TOKENS_TYPE, NATokensClass ))
-#define NA_IS_TOKENS( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TOKENS_TYPE ))
-#define NA_IS_TOKENS_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TOKENS_TYPE ))
-#define NA_TOKENS_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TOKENS_TYPE, NATokensClass ))
+#define NA_TOKENS_TYPE                  ( na_tokens_get_type())
+#define NA_TOKENS( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TOKENS_TYPE, NATokens ))
+#define NA_TOKENS_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TOKENS_TYPE, NATokensClass ))
+#define NA_IS_TOKENS( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TOKENS_TYPE ))
+#define NA_IS_TOKENS_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TOKENS_TYPE ))
+#define NA_TOKENS_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TOKENS_TYPE, NATokensClass ))
 
-typedef struct NATokensPrivate      NATokensPrivate;
+typedef struct _NATokensPrivate      NATokensPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject          parent;
 	NATokensPrivate *private;
 }
 	NATokens;
 
-typedef struct NATokensClassPrivate NATokensClassPrivate;
+typedef struct _NATokensClassPrivate NATokensClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass          parent;
 	NATokensClassPrivate *private;
 }

@@ -46,13 +46,13 @@
 
 /* private class data
  */
-struct NAImporterAskClassPrivate {
+struct _NAImporterAskClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAImporterAskPrivate {
+struct _NAImporterAskPrivate {
 	gboolean                dispose_has_run;
 	GtkBuilder             *builder;
 	GtkWindow              *toplevel;

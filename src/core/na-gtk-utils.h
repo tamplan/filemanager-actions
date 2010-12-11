@@ -31,9 +31,8 @@
 #ifndef __CORE_API_NA_GTK_UTILS_H__
 #define __CORE_API_NA_GTK_UTILS_H__
 
-/**
- * SECTION: na_core_utils
- * @short_description: Core library utilities.
+/* @title: GTK+
+ * @short_description: The Gtk+ Library Utilities.
  * @include: nautilus-action/na-core-utils.h
  */
 

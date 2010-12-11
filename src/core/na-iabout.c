@@ -38,7 +38,7 @@
 
 /* private interface data
  */
-struct NAIAboutInterfacePrivate {
+struct _NAIAboutInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -141,7 +141,7 @@ v_get_toplevel( NAIAbout *instance )
 	return( NULL );
 }
 
-/**
+/*
  * na_iabout_display:
  * @instance: the #NAIAbout implementor.
  *
@@ -222,7 +222,7 @@ na_iabout_display( NAIAbout *instance )
 	}
 }
 
-/**
+/*
  * na_iabout_get_icon_name:
  *
  * Returns: the name of the default icon for the application, as a newly
@@ -234,7 +234,7 @@ na_iabout_get_icon_name( void )
 	return( g_strdup( PACKAGE ));
 }
 
-/**
+/*
  * na_iabout_get_copyright:
  * @console: whether the string is to be printed on a console.
  *

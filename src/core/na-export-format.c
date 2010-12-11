@@ -36,13 +36,13 @@
 
 /* private class data
  */
-struct NAExportFormatClassPrivate {
+struct _NAExportFormatClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAExportFormatPrivate {
+struct _NAExportFormatPrivate {
 	gboolean           dispose_has_run;
 	GQuark             id;
 	NAIExporterFormat *str;
@@ -170,7 +170,7 @@ instance_finalize( GObject *object )
 	}
 }
 
-/**
+/*
  * na_export_format_new:
  * @exporter_format: a #NAIExporterFormat which describes an export format.
  * @exporter: the #NAIExporter which provides this export format.
@@ -191,7 +191,7 @@ na_export_format_new( const NAIExporterFormat *exporter_format, const NAIExporte
 	return( format );
 }
 
-/**
+/*
  * na_export_format_get_quark:
  * @format: this #NAExportFormat object.
  *
@@ -214,7 +214,7 @@ na_export_format_get_quark( const NAExportFormat *format )
 	return( id );
 }
 
-/**
+/*
  * na_export_format_get_id:
  * @format: this #NAExportFormat object.
  *
@@ -238,7 +238,7 @@ na_export_format_get_id( const NAExportFormat *format )
 	return( id );
 }
 
-/**
+/*
  * na_export_format_get_label:
  * @format: this #NAExportFormat object.
  *
@@ -262,7 +262,7 @@ na_export_format_get_label( const NAExportFormat *format )
 	return( label );
 }
 
-/**
+/*
  * na_export_format_get_description:
  * @format: this #NAExportFormat object.
  *
@@ -286,7 +286,7 @@ na_export_format_get_description( const NAExportFormat *format )
 	return( description );
 }
 
-/**
+/*
  * na_export_format_get_exporter:
  * @format: this #NAExportFormat object.
  *

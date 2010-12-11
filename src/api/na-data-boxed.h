@@ -31,6 +31,42 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__
 #define __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__
 
+/**
+ * SECTION: data-boxed
+ * @title: NADataBoxed
+ * @short_description: The Data Factory Element Class Definition
+ * @include: nautilus-actions/na-data-boxed.h
+ *
+ * The object which encapsulates an elementary data of #NAIFactoryObject.
+ * A #NADataBoxed object has a type and a value.
+ *
+ * <refsect2>
+ *  <title>Versions historic</title>
+ *  <table>
+ *    <title>Historic of the versions of the #NADataBoxed interface</title>
+ *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
+ *      <colspec colname="na-version" />
+ *      <colspec colname="api-version" />
+ *      <colspec colname="current" />
+ *      <thead>
+ *        <row>
+ *          <entry>&prodname; version</entry>
+ *          <entry>#NADataBoxed interface version</entry>
+ *          <entry></entry>
+ *        </row>
+ *      </thead>
+ *      <tbody>
+ *        <row>
+ *          <entry>since 2.30</entry>
+ *          <entry>1</entry>
+ *          <entry>current version</entry>
+ *        </row>
+ *      </tbody>
+ *    </tgroup>
+ *  </table>
+ * </refsect2>
+ */
+
 #include <glib-object.h>
 
 #include "na-data-def.h"
@@ -56,6 +92,7 @@ typedef struct {
 typedef struct NADataBoxedClassPrivate NADataBoxedClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass             parent;
 	NADataBoxedClassPrivate *private;
 }

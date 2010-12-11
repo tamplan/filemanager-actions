@@ -31,10 +31,8 @@
 #ifndef __CORE_NA_IMPORTER_H__
 #define __CORE_NA_IMPORTER_H__
 
-/*
- * SECTION: iimporter
- * @title: NAIImporter
- * @short_description: The NAIImporter internal functions.
+/* @title: NAIImporter
+ * @short_description: The #NAIImporter Internal Functions
  * @include: core/na-importer.h
  *
  * Internal Nautilus-Actions code should never directly call a

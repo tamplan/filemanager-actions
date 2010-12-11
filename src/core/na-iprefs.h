@@ -31,9 +31,8 @@
 #ifndef __CORE_NA_IPREFS_H__
 #define __CORE_NA_IPREFS_H__
 
-/**
- * SECTION: na_iprefs
- * @short_description: #NAIPrefs interface definition.
+/* @title: NAIPrefs
+ * @short_description: The #NAIPrefs Interface Definition
  * @include: core/na-iprefs.h
  *
  * This interface should only be implemented by #NAPivot. This is
@@ -72,16 +71,17 @@
 
 G_BEGIN_DECLS
 
-#define NA_IPREFS_TYPE						( na_iprefs_get_type())
-#define NA_IPREFS( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IPREFS_TYPE, NAIPrefs ))
-#define NA_IS_IPREFS( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPREFS_TYPE ))
-#define NA_IPREFS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPREFS_TYPE, NAIPrefsInterface ))
+#define NA_IPREFS_TYPE                        ( na_iprefs_get_type())
+#define NA_IPREFS( object )                   ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IPREFS_TYPE, NAIPrefs ))
+#define NA_IS_IPREFS( object )                ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPREFS_TYPE ))
+#define NA_IPREFS_GET_INTERFACE( instance )   ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPREFS_TYPE, NAIPrefsInterface ))
 
-typedef struct NAIPrefs NAIPrefs;
+typedef struct _NAIPrefs NAIPrefs;
 
-typedef struct NAIPrefsInterfacePrivate NAIPrefsInterfacePrivate;
+typedef struct _NAIPrefsInterfacePrivate NAIPrefsInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface            parent;
 	NAIPrefsInterfacePrivate *private;
 }

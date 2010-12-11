@@ -36,7 +36,7 @@
 
 #include "na-gtk-utils.h"
 
-/**
+/*
  * na_gtk_utils_search_for_child_widget:
  * @container: a #GtkContainer, usually the #GtkWindow toplevel.
  * @name: the name of the searched widget.

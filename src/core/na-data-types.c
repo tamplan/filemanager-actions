@@ -34,13 +34,6 @@
 
 #include <api/na-data-types.h>
 
-/**
- * SECTION: data-type
- * @title: NADataType
- * @short_description: The Data Factory Type Definitions
- * @include: nautilus-actions/na-data-types.h
- */
-
 typedef struct {
 	guint  type;
 	gchar *gconf_dump_key;

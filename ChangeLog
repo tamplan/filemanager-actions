@@ -1,5 +1,59 @@
 2010-12-11 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix NAObject documentation.
+
+	* docs/reference/nautilus-actions-docs.xml
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-data-boxed.h:
+	* src/api/na-data-def.h:
+	* src/api/na-data-types.h:
+	* src/api/na-iexporter.h:
+	* src/api/na-ifactory-object.h:
+	* src/api/na-ifactory-provider.h:
+	* src/api/na-iimporter.h:
+	* src/api/na-iio-provider.h:
+	* src/api/na-object.h:
+	* src/core/na-data-boxed.c:
+	* src/core/na-data-def.c:
+	* src/core/na-data-types.c:
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h:
+	* src/core/na-exporter.h:
+	* src/core/na-factory-object.h:
+	* src/core/na-factory-provider.c:
+	* src/core/na-factory-provider.h:
+	* src/core/na-gnome-vfs-uri.c:
+	* src/core/na-gnome-vfs-uri.h:
+	* src/core/na-gtk-utils.c:
+	* src/core/na-gtk-utils.h:
+	* src/core/na-iabout.c:
+	* src/core/na-iabout.h:
+	* src/core/na-iexporter.c:
+	* src/core/na-ifactory-object.c:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-iimporter.c:
+	* src/core/na-iio-provider.c:
+	* src/core/na-importer-ask.c:
+	* src/core/na-importer-ask.h:
+	* src/core/na-importer.h:
+	* src/core/na-io-provider.c:
+	* src/core/na-io-provider.h:
+	* src/core/na-ipivot-consumer.c:
+	* src/core/na-ipivot-consumer.h:
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h:
+	* src/core/na-module.c:
+	* src/core/na-module.h:
+	* src/core/na-object.c:
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h:
+	* src/core/na-selected-info.c:
+	* src/core/na-selected-info.h:
+	* src/core/na-tokens.c:
+	* src/core/na-tokens.h:
+	* src/core/na-updater.c:
+	* src/core/na-updater.h: Updated accordingly.
+
 	Fix D-Bus Services documentation.
 
 	* docs/reference/nautilus-actions-docs.xml:

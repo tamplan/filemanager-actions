@@ -31,9 +31,8 @@
 #ifndef __CORE_NA_SELECTED_INFO_H__
 #define __CORE_NA_SELECTED_INFO_H__
 
-/**
- * SECTION: na_selected_info
- * @short_description: #NASelectedInfo class definition.
+/* @title: NASelectedInfo
+ * @short_description: The #NASelectedInfo Class Definition
  * @include: core/na-selected-info.h
  *
  * An object is instantiated for each Nautilus selected item, in order
@@ -49,24 +48,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_SELECTED_INFO_TYPE					( na_selected_info_get_type())
-#define NA_SELECTED_INFO( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_SELECTED_INFO_TYPE, NASelectedInfo ))
-#define NA_SELECTED_INFO_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NA_SELECTED_INFO_TYPE, NASelectedInfoClass ))
-#define NA_IS_SELECTED_INFO( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_SELECTED_INFO_TYPE ))
-#define NA_IS_SELECTED_INFO_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_SELECTED_INFO_TYPE ))
-#define NA_SELECTED_INFO_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_SELECTED_INFO_TYPE, NASelectedInfoClass ))
+#define NA_SELECTED_INFO_TYPE                  ( na_selected_info_get_type())
+#define NA_SELECTED_INFO( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_SELECTED_INFO_TYPE, NASelectedInfo ))
+#define NA_SELECTED_INFO_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_SELECTED_INFO_TYPE, NASelectedInfoClass ))
+#define NA_IS_SELECTED_INFO( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_SELECTED_INFO_TYPE ))
+#define NA_IS_SELECTED_INFO_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_SELECTED_INFO_TYPE ))
+#define NA_SELECTED_INFO_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_SELECTED_INFO_TYPE, NASelectedInfoClass ))
 
-typedef struct NASelectedInfoPrivate      NASelectedInfoPrivate;
+typedef struct _NASelectedInfoPrivate      NASelectedInfoPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject                parent;
 	NASelectedInfoPrivate *private;
 }
 	NASelectedInfo;
 
-typedef struct NASelectedInfoClassPrivate NASelectedInfoClassPrivate;
+typedef struct _NASelectedInfoClassPrivate NASelectedInfoClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass                parent;
 	NASelectedInfoClassPrivate *private;
 }

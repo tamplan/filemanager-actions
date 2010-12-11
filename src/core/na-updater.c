@@ -40,13 +40,13 @@
 
 /* private class data
  */
-struct NAUpdaterClassPrivate {
+struct _NAUpdaterClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAUpdaterPrivate {
+struct _NAUpdaterPrivate {
 	gboolean           dispose_has_run;
 };
 
@@ -170,7 +170,7 @@ instance_finalize( GObject *object )
 	}
 }
 
-/**
+/*
  * na_updater_new:
  *
  * Returns: a newly allocated #NAUpdater object.
@@ -188,7 +188,7 @@ na_updater_new( void )
 	return( updater );
 }
 
-/**
+/*
  * na_updater_append_item:
  * @updater: this #NAUpdater object.
  * @item: a #NAObjectItem-derived object to be appended to the tree.
@@ -211,7 +211,7 @@ na_updater_append_item( NAUpdater *updater, NAObjectItem *item )
 	}
 }
 
-/**
+/*
  * na_updater_insert_item:
  * @updater: this #NAUpdater object.
  * @item: a #NAObjectItem-derived object to be inserted in the tree.
@@ -248,7 +248,7 @@ na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *par
 	}
 }
 
-/**
+/*
  * na_updater_remove_item:
  * @updater: this #NAPivot instance.
  * @item: the #NAObjectItem to be removed from the list.
@@ -283,7 +283,7 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 	}
 }
 
-/**
+/*
  * na_updater_is_item_writable:
  * @updater: this #NAUpdater object.
  * @item: the #NAObjectItem to be written.
@@ -377,7 +377,7 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
 	return( writable );
 }
 
-/**
+/*
  * na_updater_write_item:
  * @updater: this #NAUpdater instance.
  * @item: a #NAObjectItem to be written down to the storage subsystem.
@@ -427,7 +427,7 @@ na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **me
 	return( ret );
 }
 
-/**
+/*
  * na_updater_delete_item:
  * @updater: this #NAUpdater instance.
  * @item: the #NAObjectItem to be deleted from the storage subsystem.

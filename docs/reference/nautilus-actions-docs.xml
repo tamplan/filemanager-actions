@@ -68,19 +68,23 @@
   </chapter>
 
   <chapter>
-    <title>Others (nautilus-actions-api.xml title)</title>
+    <title>NAObject Hierarchy</title>
+    <xi:include href="xml/object.xml"/>
     <xi:include href="xml/na-object-id.xml"/>
-    <xi:include href="xml/na-object-action.xml"/>
-    <xi:include href="xml/na-icontext.xml"/>
-    <xi:include href="xml/na-gconf-monitor.xml"/>
-    <xi:include href="xml/na-object-menu.xml"/>
     <xi:include href="xml/na-object-item.xml"/>
-    <xi:include href="xml/na-object.xml"/>
+    <xi:include href="xml/na-object-action.xml"/>
     <xi:include href="xml/na-object-profile.xml"/>
+    <xi:include href="xml/na-object-menu.xml"/>
     <xi:include href="xml/na-iduplicable.xml"/>
+    <xi:include href="xml/na-icontext.xml"/>
+    <xi:include href="xml/na-object-api.xml"/>
+  </chapter>
+
+  <chapter>
+    <title>Miscellaneous API</title>
+    <xi:include href="xml/na-gconf-monitor.xml"/>
     <xi:include href="xml/na-gconf-utils.xml"/>
     <xi:include href="xml/na-core-utils.xml"/>
-    <xi:include href="xml/na-object-api.xml"/>
   </chapter>
 
   <chapter id="object-tree">

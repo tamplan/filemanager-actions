@@ -39,7 +39,7 @@
 extern gboolean ifactory_provider_initialized;		/* defined in na-ifactory-provider.c */
 extern gboolean ifactory_provider_finalized;
 
-/**
+/*
  * na_factory_provider_read_data:
  * @reader: the instance which implements this #NAIFactoryProvider interface.
  * @reader_data: instance data.
@@ -75,7 +75,7 @@ na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_da
 	return( boxed );
 }
 
-/**
+/*
  * na_factory_provider_write_data:
  * @writer: the instance which implements this #NAIFactoryProvider interface.
  * @writer_data: instance data.

@@ -39,7 +39,7 @@
 
 /* private interface data
  */
-struct NAIPrefsInterfacePrivate {
+struct _NAIPrefsInterfacePrivate {
 	GConfClient *gconf;
 };
 
@@ -146,7 +146,7 @@ interface_base_finalize( NAIPrefsInterface *klass )
 	}
 }
 
-/**
+/*
  * na_iprefs_get_order_mode:
  * @instance: this #NAIPrefs interface instance.
  *
@@ -184,7 +184,7 @@ na_iprefs_get_order_mode( NAIPrefs *instance )
 	return( alpha_order );
 }
 
-/**
+/*
  * na_iprefs_set_order_mode:
  * @instance: this #NAIPrefs interface instance.
  * @mode: the new value to be written.
@@ -210,7 +210,7 @@ na_iprefs_set_order_mode( NAIPrefs *instance, gint mode )
 	}
 }
 
-/**
+/*
  * na_iprefs_get_import_mode:
  * @gconf: a #GCongClient client.
  * @pref: name of the import key to be readen
@@ -249,7 +249,7 @@ na_iprefs_get_import_mode( GConfClient *gconf, const gchar *pref )
 	return( import_mode );
 }
 
-/**
+/*
  * na_iprefs_set_import_mode:
  * @gconf: a #GCongClient client.
  * @pref: name of the import key to be written
@@ -277,7 +277,7 @@ na_iprefs_set_import_mode( GConfClient *gconf, const gchar *pref, guint mode )
 	g_free( path );
 }
 
-/**
+/*
  * na_iprefs_get_gconf_client:
  * @instance: this #NAIPrefs interface instance.
  *
@@ -300,7 +300,7 @@ na_iprefs_get_gconf_client( const NAIPrefs *instance )
 	return( client );
 }
 
-/**
+/*
  * na_iprefs_read_bool:
  * @instance: this #NAIPrefs interface instance.
  * @key: the name of the preference entry.
@@ -329,7 +329,7 @@ na_iprefs_read_bool( const NAIPrefs *instance, const gchar *key, gboolean defaul
 	return( ret );
 }
 
-/**
+/*
  * na_iprefs_read_string:
  * @instance: this #NAIPrefs interface instance.
  * @key: the preference key.
@@ -359,7 +359,7 @@ na_iprefs_read_string( const NAIPrefs *instance, const gchar *key, const gchar *
 	return( value );
 }
 
-/**
+/*
  * na_iprefs_read_string_list:
  * @instance: this #NAIPrefs interface instance.
  * @key: the preference key.
@@ -394,7 +394,7 @@ na_iprefs_read_string_list( const NAIPrefs *instance, const gchar *key, const gc
 	return( list );
 }
 
-/**
+/*
  * na_iprefs_read_uint:
  * @instance: this #NAIPrefs interface instance.
  * @key: the preference entry.
@@ -445,7 +445,7 @@ write_string( NAIPrefs *instance, const gchar *name, const gchar *value )
 	}
 }
 
-/**
+/*
  * na_iprefs_write_string_list
  * @instance: this #NAIPrefs interface instance.
  * @key: the preference key.

@@ -38,13 +38,13 @@
 
 /* private class data
  */
-struct NAObjectClassPrivate {
+struct _NAObjectClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAObjectPrivate {
+struct _NAObjectPrivate {
 	gboolean   dispose_has_run;
 };
 
@@ -359,7 +359,7 @@ iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter
 
 /**
  * na_object_object_check_status:
- * @object: the #NAObject-derived object to be checked.
+ * @object: the #NAObject -derived object to be checked.
  *
  * Recursively checks for the edition status of @object and its childs
  * (if any).
@@ -370,12 +370,14 @@ iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter
  * na_object_object_check_status( object )
  *  +- na_iduplicable_check_status( object )
  *      +- get_origin( object )
- *      +- modified_status = v_are_equal( origin, object ) -> interface are_equal()
- *      +- valid_status = v_is_valid( object )             -> interface is_valid()
+ *      +- modified_status = v_are_equal( origin, object ) -> interface <structfield>NAObjectClass::are_equal</structfield>
+ *      +- valid_status = v_is_valid( object )             -> interface <structfield>NAObjectClass::is_valid</structfield>
  *
  * Note that the recursivity is managed here, so that we can be sure
  * that edition status of childs is actually checked before those of
  * the parent.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_object_check_status( const NAObject *object )
@@ -410,10 +412,12 @@ na_object_object_check_status( const NAObject *object )
  * Checks for modification and validity status of the @object, its
  * parent, the parent of its parent, etc. up to the top of the hierarchy.
  *
- * Returns: %TRUE if at least one of the status has changed, %FALSE else.
- *
  * Checking the modification of any of the status should be more
  * efficient that systematically force the display of the item.
+ *
+ * Returns: %TRUE if at least one of the status has changed, %FALSE else.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_object_object_check_status_up( const NAObject *object )
@@ -474,11 +478,13 @@ push_modified_status_up( const NAObject *object, gboolean is_modified )
 
 /**
  * na_object_object_copy:
- * @target: the target #NAObject-derived object.
- * @source: the source #NAObject-derived object.
+ * @target: the target #NAObject -derived object.
+ * @source: the source #NAObject -derived object.
  * @recursive: whether the copy should be recursive.
  *
  * Copies @source to @target.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_object_copy( NAObject *target, const NAObject *source, gboolean recursive )
@@ -516,16 +522,18 @@ object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data )
 
 /**
  * na_object_object_dump:
- * @object: the #NAObject-derived object to be dumped.
+ * @object: the #NAObject -derived object to be dumped.
  *
- * Dumps via g_debug the actual content of the object.
+ * Dumps via g_debug() the actual content of the object.
  *
- * The recursivity is dealt with here. If we let #NAObjectItem do this,
- * the dump of #NAObjectItem-derived object will be splitted, childs
- * being inserted inside.
+ * The recursivity is dealt with here because, if we would let
+ * #NAObjectItem do this, the dump of #NAObjectItem -derived object
+ * would be splitted, childs being inserted inside.
  *
  * na_object_dump() doesn't modify the reference count of the dumped
  * object.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_object_dump( const NAObject *object )
@@ -551,11 +559,13 @@ na_object_object_dump( const NAObject *object )
 
 /**
  * na_object_object_dump_norec:
- * @object: the #NAObject-derived object to be dumped.
+ * @object: the #NAObject -derived object to be dumped.
  *
  * Dumps via g_debug the actual content of the object.
  *
  * This function is not recursive.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_object_dump_norec( const NAObject *object )
@@ -582,9 +592,11 @@ dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *us
 
 /**
  * na_object_object_dump_tree:
- * @tree: a hierarchical list of #NAObject-derived objects.
+ * @tree: a hierarchical list of #NAObject -derived objects.
  *
  * Outputs a brief, hierarchical dump of the provided list.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_object_dump_tree( GList *tree )
@@ -625,7 +637,7 @@ dump_tree( GList *tree, gint level )
 
 /**
  * na_object_object_reset_origin:
- * @object: a #NAObject-derived object.
+ * @object: a #NAObject -derived object.
  * @origin: must be a duplication of @object.
  *
  * Recursively reset origin of @object and its children to @origin (and
@@ -635,6 +647,8 @@ dump_tree( GList *tree, gint level )
  *
  * This only works if @origin has just been duplicated from @object,
  * and thus we do not have to check if children lists are equal.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_object_reset_origin( NAObject *object, const NAObject *origin )
@@ -661,12 +675,14 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
 
 /**
  * na_object_object_ref:
- * @object: a #NAObject-derived object.
+ * @object: a #NAObject -derived object.
  *
  * Recursively ref the @object and all its children, incrementing their
  * reference_count by 1.
  *
  * Returns: a reference on the @pbject.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 NAObject *
 na_object_object_ref( NAObject *object )
@@ -702,10 +718,12 @@ na_object_object_ref( NAObject *object )
 
 /**
  * na_object_object_unref:
- * @object: a #NAObject-derived object.
+ * @object: a #NAObject -derived object.
  *
  * Recursively unref the @object and all its children, decrementing their
  * reference_count by 1.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_object_unref( NAObject *object )
@@ -786,9 +804,12 @@ build_class_hierarchy( const NAObject *object )
 
 /**
  * na_object_object_get_hierarchy:
+ * @object: the #NAObject -derived object.
  *
  * Returns: the class hierarchy,
  * from the topmost base class, to the most-derived one.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GList *
 na_object_object_get_hierarchy( const NAObject *object )
@@ -809,6 +830,12 @@ na_object_object_get_hierarchy( const NAObject *object )
 
 /**
  * na_object_free_hierarchy:
+ * @hierarchy: the #GList of hierarchy, as returned from
+ *  na_object_get_hierarchy().
+ *
+ * Releases the #NAObject hierarchy.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_free_hierarchy( GList *hierarchy )
@@ -818,10 +845,12 @@ na_object_free_hierarchy( GList *hierarchy )
 
 /**
  * na_object_object_debug_invalid:
- * @object: the #NAObject-derived object which is invalid.
+ * @object: the #NAObject -derived object which is invalid.
  * @reason: the reason.
  *
  * Dump the object with the invalidity reason.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_object_debug_invalid( const NAObject *object, const gchar *reason )

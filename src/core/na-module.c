@@ -40,13 +40,13 @@
 
 /* private class data
  */
-struct NAModuleClassPrivate {
+struct _NAModuleClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAModulePrivate {
+struct _NAModulePrivate {
 	gboolean  dispose_has_run;
 	gchar    *path;						/* full pathname of the plugin */
 	gchar    *name;						/* basename without the extension */
@@ -198,7 +198,7 @@ instance_finalize( GObject *object )
 	}
 }
 
-/**
+/*
  * na_module_dump:
  * @module: this #NAModule instance.
  *
@@ -219,7 +219,7 @@ na_module_dump( const NAModule *module )
 	}
 }
 
-/**
+/*
  * na_module_load_modules:
  *
  * Load availables dynamically loadable extension libraries (plugins).
@@ -449,7 +449,7 @@ module_unload( GTypeModule *gmodule )
 	module->private->shutdown = NULL;
 }
 
-/**
+/*
  * na_module_get_extensions_for_type:
  * @type: the serched GType.
  *
@@ -475,7 +475,7 @@ na_module_get_extensions_for_type( GList *modules, GType type )
 	return( g_list_reverse( willing_to ));
 }
 
-/**
+/*
  * na_module_free_extensions_list:
  * @extensions: a #GList as returned by #na_module_get_extensions_for_type().
  *
@@ -488,7 +488,7 @@ na_module_free_extensions_list( GList *extensions )
 	g_list_free( extensions );
 }
 
-/**
+/*
  * na_module_has_id:
  * @module: this #NAModule object.
  * @id: the searched id.
@@ -510,7 +510,7 @@ na_module_has_id( NAModule *module, const gchar *id )
 	return( id_ok );
 }
 
-/**
+/*
  * na_module_release_modules:
  * @modules: the list of loaded modules.
  *

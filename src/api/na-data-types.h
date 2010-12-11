@@ -31,6 +31,13 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
 #define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
 
+/**
+ * SECTION: data-type
+ * @title: NADataType
+ * @short_description: The Data Factory Type Definitions
+ * @include: nautilus-actions/na-data-types.h
+ */
+
 #include <glib.h>
 
 G_BEGIN_DECLS

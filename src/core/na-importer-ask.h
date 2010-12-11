@@ -31,10 +31,8 @@
 #ifndef __CORE_NA_IMPORTER_ASK_H__
 #define __CORE_NA_IMPORTER_ASK_H__
 
-/*
- * SECTION: importer-ask
- * @title: NAImporterAsk
- * @short_description: The #NAImporterAsk class definition.
+/* @title: NAImporterAsk
+ * @short_description: The #NAImporterAsk Class Definition
  * @include: core/na-iimporter-ask.h
  *
  * This class reates and manages a dialog. It is ran each time an
@@ -48,24 +46,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_IMPORTER_ASK_TYPE				( na_importer_ask_get_type())
-#define NA_IMPORTER_ASK( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IMPORTER_ASK_TYPE, NAImporterAsk ))
-#define NA_IMPORTER_ASK_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_IMPORTER_ASK_TYPE, NAImporterAskClass ))
-#define NA_IS_IMPORTER_ASK( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IMPORTER_ASK_TYPE ))
-#define NA_IS_IMPORTER_ASK_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_IMPORTER_ASK_TYPE ))
-#define NA_IMPORTER_ASK_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_IMPORTER_ASK_TYPE, NAImporterAskClass ))
+#define NA_IMPORTER_ASK_TYPE                 ( na_importer_ask_get_type())
+#define NA_IMPORTER_ASK( object )            ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IMPORTER_ASK_TYPE, NAImporterAsk ))
+#define NA_IMPORTER_ASK_CLASS( klass )       ( G_TYPE_CHECK_CLASS_CAST( klass, NA_IMPORTER_ASK_TYPE, NAImporterAskClass ))
+#define NA_IS_IMPORTER_ASK( object )         ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IMPORTER_ASK_TYPE ))
+#define NA_IS_IMPORTER_ASK_CLASS( klass )    ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_IMPORTER_ASK_TYPE ))
+#define NA_IMPORTER_ASK_GET_CLASS( object )  ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_IMPORTER_ASK_TYPE, NAImporterAskClass ))
 
-typedef struct NAImporterAskPrivate      NAImporterAskPrivate;
+typedef struct _NAImporterAskPrivate      NAImporterAskPrivate;
 
 typedef struct {
+	/*< private >*/
 	GtkDialog             parent;
 	NAImporterAskPrivate *private;
 }
 	NAImporterAsk;
 
-typedef struct NAImporterAskClassPrivate NAImporterAskClassPrivate;
+typedef struct _NAImporterAskClassPrivate NAImporterAskClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GtkDialogClass             parent;
 	NAImporterAskClassPrivate *private;
 }

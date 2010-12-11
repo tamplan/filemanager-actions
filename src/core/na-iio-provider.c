@@ -34,68 +34,6 @@
 
 #include <api/na-iio-provider.h>
 
-/**
- * SECTION: iio-provider
- * @title: NAIIOProvider
- * @short_description: The I/O Provider Interface v 1
- * @include: nautilus-actions/na-iio-provider.h
- *
- * The #NAIIOProvider interface is defined in order to let internal
- * and external plugins provide read and write accesses
- * to an alternate storage subsystem.
- *
- * The #NAIIOProvider interface provides three types of services:
- * <itemizedlist>
- *  <listitem>
- *   <para>
- *    load all items at startup;
- *   </para>
- *  </listitem>
- *  <listitem>
- *   <para>
- *    create, update or delete items via the management user interface;
- *   </para>
- *  </listitem>
- *  <listitem>
- *   <para>
- *    inform &prodname; when an item has been modified on the
- *    underlying storage subsystem.
- *   </para>
- *  </listitem>
- * </itemizedlist>
- *
- * These services may be fully implemented by the I/O provider itself.
- * Or, the I/O provider may also prefer to take advantage of the data
- * factory management (see #NAIFactoryObject and #NAIFactoryProvider
- * interfaces).
- *
- * <refsect2>
- *  <title>Versions historic</title>
- *  <table>
- *    <title>Historic of the versions of the #NAIIOProvider interface</title>
- *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
- *      <colspec colname="na-version" />
- *      <colspec colname="api-version" />
- *      <colspec colname="current" />
- *      <thead>
- *        <row>
- *          <entry>&prodname; version</entry>
- *          <entry>#NAIIOProvider interface version</entry>
- *          <entry></entry>
- *        </row>
- *      </thead>
- *      <tbody>
- *        <row>
- *          <entry>since 2.30</entry>
- *          <entry>1</entry>
- *          <entry>current version</entry>
- *        </row>
- *      </tbody>
- *    </tgroup>
- *  </table>
- * </refsect2>
- */
-
 /* private interface data
  */
 struct _NAIIOProviderInterfacePrivate {

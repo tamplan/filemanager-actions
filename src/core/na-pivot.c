@@ -45,13 +45,13 @@
 
 /* private class data
  */
-struct NAPivotClassPrivate {
+struct _NAPivotClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAPivotPrivate {
+struct _NAPivotPrivate {
 	gboolean  dispose_has_run;
 
 	guint     loadable_set;
@@ -361,7 +361,7 @@ iprefs_iface_init( NAIPrefsInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
-/**
+/*
  * na_pivot_new:
  *
  * Returns: a newly allocated #NAPivot object.
@@ -379,7 +379,7 @@ na_pivot_new( void )
 	return( pivot );
 }
 
-/**
+/*
  * na_pivot_dump:
  * @pivot: the #NAPivot object do be dumped.
  *
@@ -407,7 +407,7 @@ na_pivot_dump( const NAPivot *pivot )
 	}
 }
 
-/**
+/*
  * na_pivot_get_providers:
  * @pivot: this #NAPivot instance.
  * @type: the type of searched interface.
@@ -439,7 +439,7 @@ na_pivot_get_providers( const NAPivot *pivot, GType type )
 	return( list );
 }
 
-/**
+/*
  * na_pivot_free_providers:
  * @providers: a list of providers.
  *
@@ -455,7 +455,7 @@ na_pivot_free_providers( GList *providers )
 	na_module_free_extensions_list( providers );
 }
 
-/**
+/*
  * na_pivot_get_item:
  * @pivot: this #NAPivot instance.
  * @id: the required item identifier.
@@ -510,7 +510,7 @@ get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id )
 	return( found );
 }
 
-/**
+/*
  * na_pivot_get_items:
  * @pivot: this #NAPivot instance.
  *
@@ -536,7 +536,7 @@ na_pivot_get_items( const NAPivot *pivot )
 	return( tree );
 }
 
-/**
+/*
  * na_pivot_load_items:
  * @pivot: this #NAPivot instance.
  *
@@ -568,7 +568,7 @@ na_pivot_load_items( NAPivot *pivot )
 	}
 }
 
-/**
+/*
  * na_pivot_set_new_items:
  * @pivot: this #NAPivot instance.
  * @tree: the new tree of items.
@@ -593,7 +593,7 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
 	}
 }
 
-/**
+/*
  * na_pivot_item_changed_handler:
  * @provider: the #NAIIOProvider which has emitted the signal.
  * @id: the id of the changed #NAObjectItem-derived object.
@@ -679,7 +679,7 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
 	return( microsec );
 }
 
-/**
+/*
  * na_pivot_write_level_zero:
  * @pivot: this #NAPivot instance.
  * @items: the #GList of items whose first level is to be written.
@@ -727,7 +727,7 @@ na_pivot_write_level_zero( const NAPivot *pivot, GList *items )
 	return( written );
 }
 
-/**
+/*
  * na_pivot_register_consumer:
  * @pivot: this #NAPivot instance.
  * @consumer: a #NAIPivotConsumer which wishes be notified of any
@@ -759,7 +759,7 @@ free_consumers( GList *consumers )
 	g_list_free( consumers );
 }
 
-/**
+/*
  * na_pivot_set_automatic_reload:
  * @pivot: this #NAPivot instance.
  * @reload: whether this #NAPivot instance should automatically reload
@@ -784,7 +784,7 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 	}
 }
 
-/**
+/*
  * na_pivot_is_disable_loadable:
  * @pivot: this #NAPivot instance.
  *
@@ -807,7 +807,7 @@ na_pivot_is_disable_loadable( const NAPivot *pivot )
 	return( is_loadable );
 }
 
-/**
+/*
  * na_pivot_is_invalid_loadable:
  * @pivot: this #NAPivot instance.
  *
@@ -830,7 +830,7 @@ na_pivot_is_invalid_loadable( const NAPivot *pivot )
 	return( is_loadable );
 }
 
-/**
+/*
  * na_pivot_set_loadable:
  * @pivot: this #NAPivot instance.
  * @loadable: the population of items to be loaded.
@@ -848,7 +848,7 @@ na_pivot_set_loadable( NAPivot *pivot, guint loadable )
 	}
 }
 
-/**
+/*
  * na_pivot_is_level_zero_writable:
  * @pivot: this #NAPivot instance.
  *
@@ -882,7 +882,7 @@ na_pivot_is_level_zero_writable( const NAPivot *pivot )
 	return( !all_locked && !gconf_locked );
 }
 
-/**
+/*
  * na_pivot_is_configuration_locked_by_admin:
  * @pivot: this #NAPivot.
  *

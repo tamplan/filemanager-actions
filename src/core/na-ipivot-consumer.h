@@ -31,9 +31,8 @@
 #ifndef __CORE_NA_IPIVOT_CONSUMER_H__
 #define __CORE_NA_IPIVOT_CONSUMER_H__
 
-/**
- * SECTION: na_ipivot_consumer
- * @short_description: #NAIPivotConsumer interface definition.
+/* @title: NAIPivotConsumer
+ *  @short_description: The #NAIPivotConsumer Interface Definition
  * @include: runtime/na-ipivot-consumer.h
  *
  * This interface should be implemented by all classes which embed a
@@ -45,20 +44,22 @@
 
 G_BEGIN_DECLS
 
-#define NA_IPIVOT_CONSUMER_TYPE							( na_ipivot_consumer_get_type())
-#define NA_IPIVOT_CONSUMER( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IPIVOT_CONSUMER_TYPE, NAIPivotConsumer ))
-#define NA_IS_IPIVOT_CONSUMER( object )					( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPIVOT_CONSUMER_TYPE ))
-#define NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPIVOT_CONSUMER_TYPE, NAIPivotConsumerInterface ))
+#define NA_IPIVOT_CONSUMER_TYPE                        ( na_ipivot_consumer_get_type())
+#define NA_IPIVOT_CONSUMER( object )                   ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IPIVOT_CONSUMER_TYPE, NAIPivotConsumer ))
+#define NA_IS_IPIVOT_CONSUMER( object )                ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPIVOT_CONSUMER_TYPE ))
+#define NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )   ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPIVOT_CONSUMER_TYPE, NAIPivotConsumerInterface ))
 
-typedef struct NAIPivotConsumer                 NAIPivotConsumer;
+typedef struct _NAIPivotConsumer                 NAIPivotConsumer;
 
-typedef struct NAIPivotConsumerInterfacePrivate NAIPivotConsumerInterfacePrivate;
+typedef struct _NAIPivotConsumerInterfacePrivate NAIPivotConsumerInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                     parent;
 	NAIPivotConsumerInterfacePrivate *private;
 
-	/**
+	/*< public >*/
+	/*
 	 * on_autosave_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
@@ -71,7 +72,7 @@ typedef struct {
 	 */
 	void ( *on_autosave_changed )         ( NAIPivotConsumer *instance, gboolean enabled, guint period );
 
-	/**
+	/*
 	 * on_create_root_menu_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
@@ -82,7 +83,7 @@ typedef struct {
 	 */
 	void ( *on_create_root_menu_changed ) ( NAIPivotConsumer *instance, gboolean enabled );
 
-	/**
+	/*
 	 * on_display_about_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
@@ -93,7 +94,7 @@ typedef struct {
 	 */
 	void ( *on_display_about_changed )    ( NAIPivotConsumer *instance, gboolean enabled );
 
-	/**
+	/*
 	 * on_display_order_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
@@ -104,7 +105,7 @@ typedef struct {
 	 */
 	void ( *on_display_order_changed )    ( NAIPivotConsumer *instance, gint order_mode );
 
-	/**
+	/*
 	 * on_io_provider_prefs_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this interface.
 	 *
@@ -112,7 +113,7 @@ typedef struct {
 	 */
 	void ( *on_io_provider_prefs_changed )( NAIPivotConsumer *instance );
 
-	/**
+	/*
 	 * on_items_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this
 	 * interface.
@@ -125,7 +126,7 @@ typedef struct {
 	 */
 	void ( *on_items_changed )            ( NAIPivotConsumer *instance, gpointer user_data );
 
-	/**
+	/*
 	 * on_mandatory_prefs_changed:
 	 * @instance: the #NAIPivotConsumer instance which implements this interface.
 	 *

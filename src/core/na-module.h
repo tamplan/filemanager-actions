@@ -31,9 +31,8 @@
 #ifndef __CORE_NA_MODULE_H__
 #define __CORE_NA_MODULE_H__
 
-/**
- * SECTION: na_module
- * @short_description: #NAModule class definition.
+/* @title: NAModule
+ * @short_description: The #NAModule Class Definition
  * @include: core/na-module.h
  *
  * The NAModule class manages Nautilus-Actions extensions as dynamically
@@ -69,24 +68,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_MODULE_TYPE					( na_module_get_type())
-#define NA_MODULE( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_MODULE_TYPE, NAModule ))
-#define NA_MODULE_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NA_MODULE_TYPE, NAModuleClass ))
-#define NA_IS_MODULE( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_MODULE_TYPE ))
-#define NA_IS_MODULE_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_MODULE_TYPE ))
-#define NA_MODULE_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_MODULE_TYPE, NAModuleClass ))
+#define NA_MODULE_TYPE                  ( na_module_get_type())
+#define NA_MODULE( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_MODULE_TYPE, NAModule ))
+#define NA_MODULE_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_MODULE_TYPE, NAModuleClass ))
+#define NA_IS_MODULE( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_MODULE_TYPE ))
+#define NA_IS_MODULE_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_MODULE_TYPE ))
+#define NA_MODULE_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_MODULE_TYPE, NAModuleClass ))
 
-typedef struct NAModulePrivate      NAModulePrivate;
+typedef struct _NAModulePrivate      NAModulePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeModule      parent;
 	NAModulePrivate *private;
 }
 	NAModule;
 
-typedef struct NAModuleClassPrivate NAModuleClassPrivate;
+typedef struct _NAModuleClassPrivate NAModuleClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeModuleClass      parent;
 	NAModuleClassPrivate *private;
 }

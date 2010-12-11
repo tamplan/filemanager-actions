@@ -40,13 +40,13 @@
 
 /* private class data
  */
-struct NASelectedInfoClassPrivate {
+struct _NASelectedInfoClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NASelectedInfoPrivate {
+struct _NASelectedInfoPrivate {
 	gboolean       dispose_has_run;
 	gchar         *uri;
 	NAGnomeVFSURI *vfs;
@@ -193,7 +193,7 @@ instance_finalize( GObject *object )
 	}
 }
 
-/**
+/*
  * na_selected_info_get_list_from_item:
  * @item: a #NautilusFileInfo item
  *
@@ -215,7 +215,7 @@ na_selected_info_get_list_from_item( NautilusFileInfo *item )
 	return( selected );
 }
 
-/**
+/*
  * na_selected_info_get_list_from_list:
  * @nautilus_selection: a #GList list of #NautilusFileInfo items.
  *
@@ -241,7 +241,7 @@ na_selected_info_get_list_from_list( GList *nautilus_selection )
 	return( selected ? g_list_reverse( selected ) : NULL );
 }
 
-/**
+/*
  * na_selected_info_copy_list:
  * @files: a #GList list of #NASelectedInfo items.
  *
@@ -262,7 +262,7 @@ na_selected_info_copy_list( GList *files )
 	return( copy );
 }
 
-/**
+/*
  * na_selected_info_free_list:
  * @files: a #GList of #NASelectedInfo items.
  *
@@ -275,7 +275,7 @@ na_selected_info_free_list( GList *files )
 	g_list_free( files );
 }
 
-/**
+/*
  * na_selected_info_get_location:
  * @nsi: this #NASelectedInfo object.
  *
@@ -300,7 +300,7 @@ na_selected_info_get_location( const NASelectedInfo *nsi )
 	return( location );
 }
 
-/**
+/*
  * na_selected_info_get_basename:
  * @nsi: this #NASelectedInfo object.
  *
@@ -325,7 +325,7 @@ na_selected_info_get_basename( const NASelectedInfo *nsi )
 	return( basename );
 }
 
-/**
+/*
  * na_selected_info_get_dirname:
  * @nsi: this #NASelectedInfo object.
  *
@@ -350,7 +350,7 @@ na_selected_info_get_dirname( const NASelectedInfo *nsi )
 	return( dirname );
 }
 
-/**
+/*
  * na_selected_info_get_mime_type:
  * @nsi: this #NASelectedInfo object.
  *
@@ -376,7 +376,7 @@ na_selected_info_get_mime_type( const NASelectedInfo *nsi )
 	return( mimetype );
 }
 
-/**
+/*
  * na_selected_info_get_path:
  * @nsi: this #NASelectedInfo object.
  *
@@ -399,7 +399,7 @@ na_selected_info_get_path( const NASelectedInfo *nsi )
 	return( path );
 }
 
-/**
+/*
  * na_selected_info_get_uri:
  * @nsi: this #NASelectedInfo object.
  *
@@ -423,7 +423,7 @@ na_selected_info_get_uri( const NASelectedInfo *nsi )
 	return( uri );
 }
 
-/**
+/*
  * na_selected_info_get_uri_scheme:
  * @nsi: this #NASelectedInfo object.
  *
@@ -447,7 +447,7 @@ na_selected_info_get_uri_scheme( const NASelectedInfo *nsi )
 	return( scheme );
 }
 
-/**
+/*
  * na_selected_info_is_directory:
  * @nsi: this #NASelectedInfo object.
  *
@@ -470,7 +470,7 @@ na_selected_info_is_directory( const NASelectedInfo *nsi )
 	return( is_dir );
 }
 
-/**
+/*
  * na_selected_info_is_executable:
  * @nsi: this #NASelectedInfo object.
  *
@@ -493,7 +493,7 @@ na_selected_info_is_executable( const NASelectedInfo *nsi )
 	return( is_exe );
 }
 
-/**
+/*
  * na_selected_info_is_local:
  * @nsi: this #NASelectedInfo object.
  *
@@ -519,7 +519,7 @@ na_selected_info_is_local( const NASelectedInfo *nsi )
 	return( is_local );
 }
 
-/**
+/*
  * na_selected_info_is_owner:
  * @nsi: this #NASelectedInfo object.
  * @user: the user to be tested against the owner of the @nsi object.
@@ -543,7 +543,7 @@ na_selected_info_is_owner( const NASelectedInfo *nsi, const gchar *user )
 	return( is_owner );
 }
 
-/**
+/*
  * na_selected_info_is_readable:
  * @nsi: this #NASelectedInfo object.
  *
@@ -566,7 +566,7 @@ na_selected_info_is_readable( const NASelectedInfo *nsi )
 	return( is_readable );
 }
 
-/**
+/*
  * na_selected_info_is_writable:
  * @nsi: this #NASelectedInfo object.
  *
@@ -589,7 +589,7 @@ na_selected_info_is_writable( const NASelectedInfo *nsi )
 	return( is_writable );
 }
 
-/**
+/*
  * na_selected_info_create_for_uri:
  * @uri: an URI.
  * @mimetype: the corresponding Nautilus mime type, or %NULL.
