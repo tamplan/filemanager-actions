@@ -202,7 +202,7 @@ initialize_dbus_connection( void )
 	 * instantiation takes care of installing introspection infos
 	 */
 	tracker = g_object_new( NA_TRACKER_DBUS_TYPE, NULL );
-	dbus_g_connection_register_g_object( connection, NA_TRACKER_DBUS_TRACKER_PATH, G_OBJECT( tracker ));
+	dbus_g_connection_register_g_object( connection, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH, G_OBJECT( tracker ));
 
 	g_debug( "%s: registering tracker path is ok", thisfn );
 	return( tracker );

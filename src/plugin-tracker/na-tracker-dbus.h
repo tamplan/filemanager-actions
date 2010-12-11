@@ -80,9 +80,6 @@ void     na_tracker_dbus_set_uris( NATrackerDBus *tracker, GList *files );
 
 gboolean na_tracker_dbus_get_selected_paths( NATrackerDBus *tracker, char ***paths, GError **error );
 
-#define NA_TRACKER_DBUS_TRACKER_PATH		"/org/nautilus_actions/DBus/Tracker"
-#define NA_TRACKER_DBUS_TRACKER_INTERFACE	"org.nautilus_actions.DBus.Tracker.Status"
-
 G_END_DECLS
 
 #endif /* __NA_TRACKER_DBUS_H__ */

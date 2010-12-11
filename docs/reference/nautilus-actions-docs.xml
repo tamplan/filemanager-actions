@@ -53,7 +53,7 @@
   </chapter>
 
   <chapter>
-    <title>DBus services (nautilus-actions-api.xml title)</title>
+    <title>DBus services</title>
     <xi:include href="xml/dbus.xml" />
   </chapter>
 

@@ -1,3 +1,15 @@
+2010-12-11 Pierre Wieser <pwieser@trychlos.org>
+
+	Fix D-Bus Services documentation.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-dbus.h:
+	* src/plugin-tracker/na-tracker-dbus.h:
+	* src/plugin-tracker/na-tracker.c:
+	* src/utils/nautilus-actions-run.c:
+	* tools/dbus-introspect.sh: Updated accordingly.
+
 2010-12-10 Pierre Wieser <pwieser@trychlos.org>
 
 	Fix Data Factory Management System documentation.

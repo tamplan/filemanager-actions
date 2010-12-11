@@ -45,9 +45,6 @@
 #include <core/na-selected-info.h>
 #include <core/na-tokens.h>
 
-#include <plugin-tracker/na-tracker.h>
-#include <plugin-tracker/na-tracker-dbus.h>
-
 #include "console-utils.h"
 #include "nautilus-actions-run-bindings.h"
 
@@ -274,7 +271,9 @@ targets_from_selection( void )
 	g_debug( "%s: connection is ok", thisfn );
 
 	proxy = dbus_g_proxy_new_for_name( connection,
-			NAUTILUS_ACTIONS_DBUS_SERVICE, NA_TRACKER_DBUS_TRACKER_PATH, NA_TRACKER_DBUS_TRACKER_INTERFACE );
+			NAUTILUS_ACTIONS_DBUS_SERVICE,
+			NAUTILUS_ACTIONS_DBUS_TRACKER_PATH,
+			NAUTILUS_ACTIONS_DBUS_TRACKER_INTERFACE );
 
 	if( !proxy ){
 		g_printerr( _( "Error: unable to get a proxy on %s service" ), NAUTILUS_ACTIONS_DBUS_SERVICE );

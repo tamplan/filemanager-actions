@@ -85,6 +85,16 @@ NAIExporterInterfacePrivate
 </SECTION>
 
 # ---------------------------------------------------------------------
+# D-Bus — The D-Bus Services 
+
+<SECTION>
+<FILE>dbus</FILE>
+NAUTILUS_ACTIONS_DBUS_SERVICE
+NAUTILUS_ACTIONS_DBUS_TRACKER_PATH
+NAUTILUS_ACTIONS_DBUS_TRACKER_INTERFACE
+</SECTION>
+
+# ---------------------------------------------------------------------
 # NAIFactoryProvider — The Data Factory Provider Interface v 1
 
 <SECTION>
@@ -158,6 +168,7 @@ na_data_boxed_get_type
 NA_DATA_BOXED_CLASS
 NA_IS_DATA_BOXED_CLASS
 NA_DATA_BOXED_GET_CLASS
+NADataBoxedClass
 
 <SUBSECTION Private>
 NADataBoxedPrivate
@@ -248,12 +259,6 @@ NAFO_DATA_CAPABILITITES
 </SECTION>
 
 # ---------------------------------------------------------------------
-
-<SECTION>
-<FILE>dbus</FILE>
-<TITLE>DBus (nautilus-actions-sections title)</TITLE>
-NAUTILUS_ACTIONS_DBUS_SERVICE
-</SECTION>
 
 <SECTION>
 <FILE>object</FILE>
