@@ -34,7 +34,7 @@
 /**
  * SECTION: object
  * @title: NAObject
- * @short_description: The #NAObject Base Class Definition
+ * @short_description: The Deepest Base Class Definition
  * @include: nautilus-actions/na-object.h
  *
  * This is the base class of all our data object hierarchy. #NAObject is

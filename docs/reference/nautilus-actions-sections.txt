@@ -259,6 +259,7 @@ NAFO_DATA_CAPABILITITES
 </SECTION>
 
 # ---------------------------------------------------------------------
+# NAObject — The Deepest Base Class Definition 
 
 <SECTION>
 <FILE>object</FILE>
@@ -291,6 +292,36 @@ NAObjectPrivate
 NAObjectClassPrivate
 </SECTION>
 
+# ---------------------------------------------------------------------
+# NAObjectId — The Identified Object Class Definition
+
+<SECTION>
+<FILE>object-id</FILE>
+<TITLE>NAObjectId</TITLE>
+NA_OBJECT_ID_TYPE
+NA_OBJECT_ID
+NA_IS_OBJECT_ID
+NAObjectId
+NAObjectIdClass
+na_object_id_sort_alpha_asc
+na_object_id_sort_alpha_desc
+na_object_id_prepare_for_paste
+na_object_id_set_copy_of_label
+na_object_id_set_new_id
+
+<SUBSECTION Standard>
+na_object_id_get_type
+NA_OBJECT_ID_CLASS
+NA_IS_OBJECT_ID_CLASS
+NA_OBJECT_ID_GET_CLASS
+
+<SUBSECTION Private>
+NAObjectIdPrivate
+NAObjectIdClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+
 <SECTION>
 <FILE>iduplicable</FILE>
 NA_IDUPLICABLE_TYPE
@@ -315,27 +346,7 @@ NA_IS_IDUPLICABLE
 na_iduplicable_get_type
 </SECTION>
 
-<SECTION>
-<FILE>object-id</FILE>
-<TITLE>NAObjectId</TITLE>
-NA_OBJECT_ID_TYPE
-NAObjectIdPrivate
-NAObjectIdClassPrivate
-NAObjectId
-na_object_id_sort_alpha_asc
-na_object_id_sort_alpha_desc
-na_object_id_prepare_for_paste
-na_object_id_set_copy_of_label
-na_object_id_set_new_id
-
-<SUBSECTION Standard>
-NA_OBJECT_ID
-NA_IS_OBJECT_ID
-na_object_id_get_type
-NA_OBJECT_ID_CLASS
-NA_IS_OBJECT_ID_CLASS
-NA_OBJECT_ID_GET_CLASS
-</SECTION>
+# ---------------------------------------------------------------------
 
 <SECTION>
 <FILE>object-item</FILE>
@@ -367,6 +378,8 @@ NA_IS_OBJECT_ITEM_CLASS
 NA_OBJECT_ITEM_GET_CLASS
 </SECTION>
 
+# ---------------------------------------------------------------------
+
 <SECTION>
 <FILE>object-action</FILE>
 <TITLE>NAObjectAction</TITLE>
@@ -390,6 +403,8 @@ NA_IS_OBJECT_ACTION_CLASS
 NA_OBJECT_ACTION_GET_CLASS
 </SECTION>
 
+# ---------------------------------------------------------------------
+
 <SECTION>
 <FILE>na-object-profile</FILE>
 <TITLE>NAObjectProfile</TITLE>
@@ -410,6 +425,8 @@ NA_IS_OBJECT_PROFILE_CLASS
 NA_OBJECT_PROFILE_GET_CLASS
 </SECTION>
 
+# ---------------------------------------------------------------------
+
 <SECTION>
 <FILE>object-menu</FILE>
 <TITLE>NAObjectMenu</TITLE>
@@ -428,6 +445,8 @@ NA_OBJECT_MENU_CLASS
 NA_IS_OBJECT_MENU_CLASS
 NA_OBJECT_MENU_GET_CLASS
 </SECTION>
+
+# ---------------------------------------------------------------------
 
 <SECTION>
 <FILE>icontext</FILE>
@@ -451,6 +470,8 @@ NA_IS_ICONTEXT
 na_icontext_get_type
 </SECTION>
 
+# ---------------------------------------------------------------------
+
 <SECTION>
 <FILE>gconf-monitor</FILE>
 <TITLE>NAGConfMonitor</TITLE>
@@ -469,6 +490,8 @@ NA_GCONF_MONITOR_CLASS
 NA_IS_GCONF_MONITOR_CLASS
 NA_GCONF_MONITOR_GET_CLASS
 </SECTION>
+
+# ---------------------------------------------------------------------
 
 <SECTION>
 <FILE>na-gconf-utils</FILE>

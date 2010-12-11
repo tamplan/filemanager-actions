@@ -1,5 +1,13 @@
 2010-12-11 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix NAObjectId documentation.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-object-id.h:
+	* src/api/na-object.h:
+	* src/core/na-object-id.c: Updated accordingly.
+
 	Fix NAObject documentation.
 
 	* docs/reference/nautilus-actions-docs.xml

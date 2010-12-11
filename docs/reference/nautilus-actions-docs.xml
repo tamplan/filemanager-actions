@@ -70,7 +70,7 @@
   <chapter>
     <title>NAObject Hierarchy</title>
     <xi:include href="xml/object.xml"/>
-    <xi:include href="xml/na-object-id.xml"/>
+    <xi:include href="xml/object-id.xml"/>
     <xi:include href="xml/na-object-item.xml"/>
     <xi:include href="xml/na-object-action.xml"/>
     <xi:include href="xml/na-object-profile.xml"/>

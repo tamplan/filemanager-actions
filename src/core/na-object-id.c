@@ -39,13 +39,13 @@
 
 /* private class data
  */
-struct NAObjectIdClassPrivate {
+struct _NAObjectIdClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAObjectIdPrivate {
+struct _NAObjectIdPrivate {
 	gboolean   dispose_has_run;
 };
 
@@ -223,9 +223,20 @@ object_is_valid( const NAObject *object )
  * Sort the objects in alphabetical ascending order of their label.
  *
  * Returns:
- * -1 if @a must be sorted before @b,
- *  0 if @a and @b are equal from the local point of view,
- *  1 if @a must be sorted after @b.
+ *
+ * <itemizedlist>
+ *   <listitem>
+ *     <para>-1 if @a must be sorted before @b,</para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>0 if @a and @b are equal from the local point of view,</para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>1 if @a must be sorted after @b.</para>
+ *   </listitem>
+ * </itemizedlist>
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gint
 na_object_id_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b )
@@ -252,9 +263,20 @@ na_object_id_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b )
  * Sort the objects in alphabetical descending order of their label.
  *
  * Returns:
- * -1 if @a must be sorted before @b,
- *  0 if @a and @b are equal from the local point of view,
- *  1 if @a must be sorted after @b.
+ *
+ * <itemizedlist>
+ *   <listitem>
+ *     <para>-1 if @a must be sorted before @b,</para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>0 if @a and @b are equal from the local point of view,</para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>1 if @a must be sorted after @b.</para>
+ *   </listitem>
+ * </itemizedlist>
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gint
 na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
@@ -280,6 +302,8 @@ na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
  *
  * Actual relabeling takes place if @relabel is %TRUE, depending of the
  * user preferences.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *parent )
@@ -326,6 +350,8 @@ na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean r
  * @object: the #NAObjectId object whose label is to be changed.
  *
  * Sets the 'Copy of' label.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_id_set_copy_of_label( NAObjectId *object )
@@ -358,6 +384,8 @@ na_object_id_set_copy_of_label( NAObjectId *object )
  * existing ones.
  *
  * Request a new id to the derived class, and set it.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent )

@@ -33,12 +33,12 @@
 
 /**
  * SECTION: object-id
- * @title: NAObjectId class definition
- * @short_description: #NAObjectId class definition.
+ * @title: NAObjectId
+ * @short_description: The Identified Object Class Definition
  * @include: nautilus-actions/na-object-id.h
  *
  * This is a pure virtual class, i.e. not an instantiatable one.
- * It serves as the base class for #NAObject-derived object which have
+ * It serves as the base class for #NAObject -derived object which have
  * a unique Id, i.e. for #NAObjectItem and #NAObjectProfile.
  */
 
@@ -46,42 +46,53 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_ID_TYPE					( na_object_id_get_type())
-#define NA_OBJECT_ID( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ID_TYPE, NAObjectId ))
-#define NA_OBJECT_ID_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ID_TYPE, NAObjectIdClass ))
-#define NA_IS_OBJECT_ID( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ID_TYPE ))
-#define NA_IS_OBJECT_ID_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ID_TYPE ))
-#define NA_OBJECT_ID_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ID_TYPE, NAObjectIdClass ))
+#define NA_OBJECT_ID_TYPE                  ( na_object_id_get_type())
+#define NA_OBJECT_ID( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ID_TYPE, NAObjectId ))
+#define NA_OBJECT_ID_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ID_TYPE, NAObjectIdClass ))
+#define NA_IS_OBJECT_ID( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ID_TYPE ))
+#define NA_IS_OBJECT_ID_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ID_TYPE ))
+#define NA_OBJECT_ID_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ID_TYPE, NAObjectIdClass ))
 
-typedef struct NAObjectIdPrivate      NAObjectIdPrivate;
+typedef struct _NAObjectIdPrivate      NAObjectIdPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAObject           parent;
 	NAObjectIdPrivate *private;
 }
 	NAObjectId;
 
-typedef struct NAObjectIdClassPrivate NAObjectIdClassPrivate;
+typedef struct _NAObjectIdClassPrivate NAObjectIdClassPrivate;
 
+/**
+ * NAObjectIdClass:
+ * @new_id: Allocate a new id to an existing NAObjectId.
+ *
+ * The #NAObjectIdClass defines some methods available to derived classes.
+ */
 typedef struct {
+	/*< private >*/
 	NAObjectClass           parent;
 	NAObjectIdClassPrivate *private;
 
+	/*< public >*/
 	/**
 	 * new_id:
-	 * @object: a #NAObjectId object.
-	 * @new_parent: possibly the new #NAObjectId parent, or NULL.
-	 * If not NULL, this should actually be a #NAObjectItem.
+	 * @object: a NAObjectId object.
+	 * @new_parent: possibly the new NAObjectId parent, or NULL.
+	 * If not NULL, this should actually be a NAObjectItem.
 	 *
-	 * Returns: a new id suitable for this @object.
-	 *
-	 * If @object is a #NAObjectProfile, then @new_parent must be a
-	 * not null #NAObjectAction. This function ensures that the new
+	 * If @object is a NAObjectProfile, then @new_parent must be a
+	 * not null NAObjectAction. This function ensures that the new
 	 * profile name does not already exist in the given @new_parent.
 	 *
 	 * This is a pure virtual function which should be implemented by
 	 * the actual class. Actually, we asks for the most-derived class
 	 * which implements this function.
+	 *
+	 * Returns: a new id suitable for this @object.
+	 *
+	 * Since: Nautilus-Actions v 2.30.
 	 */
 	gchar * ( *new_id )( const NAObjectId *object, const NAObjectId *new_parent );
 }
