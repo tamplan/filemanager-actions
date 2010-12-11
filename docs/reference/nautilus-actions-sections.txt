@@ -360,6 +360,34 @@ NAObjectItemClassPrivate
 # ---------------------------------------------------------------------
 
 <SECTION>
+<FILE>object-action</FILE>
+<TITLE>NAObjectAction</TITLE>
+NA_OBJECT_ACTION_TYPE
+NA_OBJECT_ACTION
+NA_IS_OBJECT_ACTION
+NAObjectAction
+na_object_action_new
+na_object_action_new_with_profile
+na_object_action_new_with_defaults
+na_object_action_get_new_profile_name
+na_object_action_attach_profile
+na_object_action_set_last_version
+
+<SUBSECTION Standard>
+na_object_action_get_type
+NA_OBJECT_ACTION_CLASS
+NA_IS_OBJECT_ACTION_CLASS
+NA_OBJECT_ACTION_GET_CLASS
+NAObjectActionClass
+
+<SUBSECTION Private>
+NAObjectActionPrivate
+NAObjectActionClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
+
+<SECTION>
 <FILE>iduplicable</FILE>
 NA_IDUPLICABLE_TYPE
 NA_IDUPLICABLE_GET_INTERFACE
@@ -381,31 +409,6 @@ na_iduplicable_register_consumer
 NA_IDUPLICABLE
 NA_IS_IDUPLICABLE
 na_iduplicable_get_type
-</SECTION>
-
-# ---------------------------------------------------------------------
-
-<SECTION>
-<FILE>object-action</FILE>
-<TITLE>NAObjectAction</TITLE>
-NA_OBJECT_ACTION_TYPE
-NAObjectActionPrivate
-NAObjectActionClassPrivate
-NAObjectAction
-na_object_action_new
-na_object_action_new_with_profile
-na_object_action_new_with_defaults
-na_object_action_get_new_profile_name
-na_object_action_attach_profile
-na_object_action_set_last_version
-
-<SUBSECTION Standard>
-NA_OBJECT_ACTION
-NA_IS_OBJECT_ACTION
-na_object_action_get_type
-NA_OBJECT_ACTION_CLASS
-NA_IS_OBJECT_ACTION_CLASS
-NA_OBJECT_ACTION_GET_CLASS
 </SECTION>
 
 # ---------------------------------------------------------------------

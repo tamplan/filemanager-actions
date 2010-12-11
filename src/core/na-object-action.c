@@ -45,13 +45,13 @@
 
 /* private class data
  */
-struct NAObjectActionClassPrivate {
+struct _NAObjectActionClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAObjectActionPrivate {
+struct _NAObjectActionPrivate {
 	gboolean dispose_has_run;
 };
 
@@ -600,6 +600,8 @@ is_valid_toolbar_label( const NAObjectAction *action )
  * but without any profile.
  *
  * Returns: the newly allocated #NAObjectAction object.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 NAObjectAction *
 na_object_action_new( void )
@@ -617,6 +619,8 @@ na_object_action_new( void )
  * Allocates a new #NAObjectAction object along with a default profile.
  *
  * Returns: the newly allocated #NAObjectAction action.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 NAObjectAction *
 na_object_action_new_with_profile( void )
@@ -638,6 +642,8 @@ na_object_action_new_with_profile( void )
  * These two objects have suitable default values.
  *
  * Returns: the newly allocated #NAObjectAction action.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 NAObjectAction *
 na_object_action_new_with_defaults( void )
@@ -668,12 +674,14 @@ na_object_action_new_with_defaults( void )
  * which is not yet allocated. The provided name is so only suitable
  * for the specified @action.
  *
- * Returns: a newly allocated profile name, which should be g_free() by
- * the caller.
- *
  * When inserting a list of profiles in the action, we iter first for
  * new names, before actually do the insertion. We so keep the last
  * allocated name to avoid to allocate the same one twice.
+ *
+ * Returns: a newly allocated profile name, which should be g_free() by
+ * the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_object_action_get_new_profile_name( const NAObjectAction *action )
@@ -715,6 +723,8 @@ na_object_action_get_new_profile_name( const NAObjectAction *action )
  * @profile: the #NAObjectProfile profile to be attached to @action.
  *
  * Adds a profile at the end of the list of profiles.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile )
@@ -734,6 +744,8 @@ na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profil
  * @action: the #NAObjectAction action to update.
  *
  * Set the version number of the @action to the last one.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_object_action_set_last_version( NAObjectAction *action )

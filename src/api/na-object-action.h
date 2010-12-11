@@ -33,17 +33,24 @@
 
 /**
  * SECTION: object-action
- * @title: #NAObjectAction class definition
- * @short_description: #NAObjectAction class definition.
+ * @title: NAObjectAction
+ * @short_description: The Action Class Definition
  * @include: nautilus-actions/na-object-action.h
  *
- * This is the class which maintains data and properties of a Nautilus
+ * This is the class which maintains data and properties of a &prodname;
  * action.
  *
- * Note about edition status:
- * As a particular rule of #NAItem derived class, a #NAObjectAction is
- * considered modified as soon as any of its profiles has been modified
- * itself (because they are saved as a whole).
+ * <note>
+ *   <formalpara>
+ *     <title>Edition status</title>
+ *     <para>
+ *       As a particular rule for a #NAObjectItem -derived class,
+ *       a #NAObjectAction is considered modified as soon as any of
+ *       its profiles has been modified itself
+ *       (because they are saved as a whole).
+ *     </para>
+ *   </formalpara>
+ * </note>
  */
 
 #include "na-object-item.h"
@@ -51,24 +58,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_ACTION_TYPE					( na_object_action_get_type())
-#define NA_OBJECT_ACTION( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ACTION_TYPE, NAObjectAction ))
-#define NA_OBJECT_ACTION_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ACTION_TYPE, NAObjectActionClass ))
-#define NA_IS_OBJECT_ACTION( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ACTION_TYPE ))
-#define NA_IS_OBJECT_ACTION_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ACTION_TYPE ))
-#define NA_OBJECT_ACTION_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ACTION_TYPE, NAObjectActionClass ))
+#define NA_OBJECT_ACTION_TYPE                  ( na_object_action_get_type())
+#define NA_OBJECT_ACTION( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ACTION_TYPE, NAObjectAction ))
+#define NA_OBJECT_ACTION_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ACTION_TYPE, NAObjectActionClass ))
+#define NA_IS_OBJECT_ACTION( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ACTION_TYPE ))
+#define NA_IS_OBJECT_ACTION_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ACTION_TYPE ))
+#define NA_OBJECT_ACTION_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ACTION_TYPE, NAObjectActionClass ))
 
-typedef struct NAObjectActionPrivate      NAObjectActionPrivate;
+typedef struct _NAObjectActionPrivate      NAObjectActionPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAObjectItem           parent;
 	NAObjectActionPrivate *private;
 }
 	NAObjectAction;
 
-typedef struct NAObjectActionClassPrivate NAObjectActionClassPrivate;
+typedef struct _NAObjectActionClassPrivate NAObjectActionClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	NAObjectItemClass           parent;
 	NAObjectActionClassPrivate *private;
 }

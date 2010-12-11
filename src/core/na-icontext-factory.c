@@ -144,7 +144,7 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				TRUE,
 				"Does the mimetypes list is generic ?",
-				"The generic wildcard may be coded as '*', or '*/*' or 'all' or 'all/*' or 'all/all'."
+				"The generic wildcard may be coded as '*', or '*/*' or 'all' or 'all/*' or 'all/all'. "
 				"In each case, we will try to spend as less time as possible to check " \
 				"selection mimetypes",
 				NAFD_TYPE_BOOLEAN,

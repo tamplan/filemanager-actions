@@ -1,5 +1,13 @@
 2010-12-11 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix NAObjectAction documentation.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-object-action.h:
+	* src/core/na-icontext-factory.c:
+	* src/core/na-object-action.c: Updated accordingly.
+
 	Fix NAObjectItem documentation.
 
 	* docs/reference/nautilus-actions-docs.xml:
