@@ -32,8 +32,9 @@
 #define __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
 
 /**
- * SECTION: na_gconf_utils
- * @short_description: GConf utilities.
+ * SECTION: gconf-utils
+ * @title: GConf Misc
+ * @short_description: The Library Utilities
  * @include: runtime/na-gconf-utils.h
  */
 

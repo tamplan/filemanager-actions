@@ -628,30 +628,34 @@ na_object_set_capabilities
 </SECTION>
 
 # ---------------------------------------------------------------------
+# NAGConfMonitor — The GConf Monitoring Class Definition
 
 <SECTION>
 <FILE>gconf-monitor</FILE>
-<TITLE>NAGConfMonitor</TITLE>
 NA_GCONF_MONITOR_TYPE
-NAGConfMonitorPrivate
-NAGConfMonitorClassPrivate
+NA_GCONF_MONITOR
+NA_IS_GCONF_MONITOR
 NAGConfMonitor
 na_gconf_monitor_new
 na_gconf_monitor_release_monitors
 
 <SUBSECTION Standard>
-NA_GCONF_MONITOR
-NA_IS_GCONF_MONITOR
 na_gconf_monitor_get_type
 NA_GCONF_MONITOR_CLASS
 NA_IS_GCONF_MONITOR_CLASS
 NA_GCONF_MONITOR_GET_CLASS
+NAGConfMonitorClass
+
+<SUBSECTION Private>
+NAGConfMonitorPrivate
+NAGConfMonitorClassPrivate
 </SECTION>
 
 # ---------------------------------------------------------------------
+# GConf Misc — The Library Utilities 
 
 <SECTION>
-<FILE>na-gconf-utils</FILE>
+<FILE>gconf-utils</FILE>
 na_gconf_utils_get_subdirs
 na_gconf_utils_free_subdirs
 na_gconf_utils_has_entry
@@ -673,6 +677,9 @@ na_gconf_utils_remove_entry
 na_gconf_utils_slist_from_string
 na_gconf_utils_slist_to_string
 </SECTION>
+
+# ---------------------------------------------------------------------
+# Core Misc — The Library Utilities 
 
 <SECTION>
 <FILE>core-utils</FILE>

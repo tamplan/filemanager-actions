@@ -52,6 +52,8 @@ static gboolean info_dir_is_writable( GFile *file, const gchar *path );
  *
  * Returns: %TRUE if the string evaluates to "true" (case insensitive),
  * %FALSE else.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_core_utils_boolean_from_string( const gchar *string )
@@ -67,6 +69,8 @@ na_core_utils_boolean_from_string( const gchar *string )
  * Appends a prefix to each line of the string.
  *
  * Returns: a new string which should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str )
@@ -91,7 +95,20 @@ na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str )
  * @str1: an UTF-8 encoded string.
  * @str2: an UTF-8 encoded string.
  *
- * Returns: -1 if str1 < str2, 0 if str1 = str2, +1 if str1 > str2.
+ * Returns:
+ * <itemizedlist>
+ *   <listitem>
+ *     <para>-1 if str1 < str2,</para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>0 if str1 = str2,</para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>+1 if str1 > str2.</para>
+ *   </listitem>
+ * </itemizedlist>
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 int
 na_core_utils_str_collate( const gchar *str1, const gchar *str2 )
@@ -120,6 +137,8 @@ na_core_utils_str_collate( const gchar *str1, const gchar *str2 )
  * minus all the found occurrences of the given @to_remove char.
  *
  * The returned string should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_core_utils_str_remove_char( const gchar *string, const gchar *to_remove )
@@ -162,6 +181,8 @@ na_core_utils_str_remove_char( const gchar *string, const gchar *to_remove )
  * @suffix, then the returned string is equal to source @string.
  *
  * The returned string should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
@@ -186,10 +207,18 @@ na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix )
  * @other: a pointer to a gchar *.
  *
  * Split the @string string into two components:
- * - the first word which is allocated in @first,
- * - the rest of the string which is allocated in @other.
+ * <itemizedlist>
+ *   <listitem>
+ *     <para>the first word which is allocated in @first,</para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>the rest of the string which is allocated in @other.</para>
+ *   </listitem>
+ * </itemizedlist>
  *
  * The two allocated strings should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **other )
@@ -238,6 +267,8 @@ na_core_utils_slist_add_message( GSList **messages, const gchar *format, ... )
  * Returns: a #GSList of strings.
  *
  * The returned list should be na_core_utils_slist_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_core_utils_slist_duplicate( GSList *slist )
@@ -261,6 +292,8 @@ na_core_utils_slist_duplicate( GSList *slist )
  * @list: a list of strings.
  *
  * Dumps the content of a list of strings.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_core_utils_slist_dump( const gchar *prefix, GSList *list )
@@ -287,6 +320,8 @@ na_core_utils_slist_dump( const gchar *prefix, GSList *list )
  * Returns: a #GSList with the list of strings after having been splitted.
  *
  * The returned #GSList should be na_core_utils_slist_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_core_utils_slist_from_split( const gchar *text, const gchar *separator )
@@ -321,6 +356,8 @@ na_core_utils_slist_from_split( const gchar *text, const gchar *separator )
  *
  * Returns: a #GSList list of strings, which should be #na_core_utils_slist_free()
  * by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_core_utils_slist_from_array( const gchar **str_array )
@@ -345,6 +382,8 @@ na_core_utils_slist_from_array( const gchar **str_array )
  * @link: the string used to join each element.
  *
  * Returns: a newly allocated string which should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_core_utils_slist_join_at_end( GSList *slist, const gchar *link )
@@ -372,6 +411,8 @@ na_core_utils_slist_join_at_end( GSList *slist, const gchar *link )
  * Removes a string from a GSList of strings.
  *
  * Returns: the same, updated, @slist.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_core_utils_slist_remove_ascii( GSList *slist, const gchar *text )
@@ -400,6 +441,8 @@ na_core_utils_slist_remove_ascii( GSList *slist, const gchar *text )
  * @text.
  *
  * Returns: the new @slist start position.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_core_utils_slist_remove_utf8( GSList *slist, const gchar *text )
@@ -424,6 +467,8 @@ na_core_utils_slist_remove_utf8( GSList *slist, const gchar *text )
  *
  * Returns: a newly allocated array of strings, which should be
  * g_strfreev() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar **
 na_core_utils_slist_to_array( GSList *slist )
@@ -451,6 +496,8 @@ na_core_utils_slist_to_array( GSList *slist )
  *
  * Returns: a newly allocated string, which should be g_free() by the
  * caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_core_utils_slist_to_text( GSList *slist )
@@ -483,6 +530,8 @@ na_core_utils_slist_to_text( GSList *slist )
  * or not if @set is %FALSE.
  *
  * Returns: the updated @list.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_core_utils_slist_setup_element( GSList *list, const gchar *element, gboolean set )
@@ -509,6 +558,8 @@ na_core_utils_slist_setup_element( GSList *list, const gchar *element, gboolean 
  * Search for a string in a string list.
  *
  * Returns: the count of @ßtr in @list list.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 guint
 na_core_utils_slist_count( GSList *list, const gchar *str )
@@ -536,6 +587,8 @@ na_core_utils_slist_count( GSList *list, const gchar *str )
  * Search for a string in a string list which may contain nagated items.
  *
  * Returns: %TRUE if the string has been found in list.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_core_utils_slist_find_negated( GSList *list, const gchar *str )
@@ -569,6 +622,8 @@ na_core_utils_slist_find_negated( GSList *list, const gchar *str )
  * Compare two string lists, without regards to the order.
  *
  * Returns: %TRUE if the two lists have same content.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_core_utils_slist_are_equal( GSList *a, GSList *b )
@@ -597,6 +652,8 @@ na_core_utils_slist_are_equal( GSList *a, GSList *b )
  * @slist: a #GSList list of strings.
  *
  * Releases the strings and the list itself.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_core_utils_slist_free( GSList *slist )
@@ -614,6 +671,8 @@ na_core_utils_slist_free( GSList *slist )
  * Concatenates a gchar **list of strings to a new string.
  *
  * Returns: a newly allocated string which should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_core_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar **list )
@@ -678,6 +737,8 @@ text_to_string_list( const gchar *text, const gchar *separator, const gchar *def
  * relevant integer.
  *
  * The two returned strings must be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_core_utils_selcount_get_ope_int( const gchar *selcount, gchar **ope, gchar **uint )
@@ -713,6 +774,8 @@ na_core_utils_selcount_get_ope_int( const gchar *selcount, gchar **ope, gchar **
  * but before the caller has been able to actually write into it.
  *
  * There is no "super-test". Just try...
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_core_utils_dir_is_writable_path( const gchar *path )
@@ -744,6 +807,8 @@ na_core_utils_dir_is_writable_path( const gchar *path )
  * but before the caller has been able to actually write into it.
  *
  * There is no "super-test". Just try...
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_core_utils_dir_is_writable_uri( const gchar *uri )
@@ -812,6 +877,8 @@ info_dir_is_writable( GFile *file, const gchar *path_or_uri )
  * allocated buffers which should be g_free() by the caller.
  *
  * The extension is set to an empty string if no extension is detected.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext )
@@ -849,6 +916,8 @@ na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext )
  * @path: the path of the file to be deleted.
  *
  * Returns: %TRUE if the file is successfully deleted, %FALSE else.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_core_utils_file_delete( const gchar *path )
@@ -876,7 +945,10 @@ na_core_utils_file_delete( const gchar *path )
  *
  * Returns: %TRUE if the specified file exists, %FALSE else.
  *
- * Race condition: cf. na_core_utils_dir_is_writable() comment.
+ * Race condition: cf. na_core_utils_dir_is_writable_path() and
+ * na_core_utils_dir_is_writable_uri() comments.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_core_utils_file_exists( const gchar *uri )
@@ -901,6 +973,8 @@ na_core_utils_file_exists( const gchar *uri )
  *
  * Returns: the newly allocated buffer which contains the file content, or %NULL.
  * This buffer should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
@@ -928,10 +1002,14 @@ na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
  *
  * Print a version message on the console
  *
- * nautilus-actions-new (Nautilus-Actions) v 2.29.1
- * Copyright (C) 2005-2007 Frederic Ruaudel
- * Copyright (C) 2009, 2010 Pierre Wieser
- * Nautilus-Actions is free software, licensed under GPLv2 or later.
+ * <programlisting>
+ *   nautilus-actions-new (Nautilus-Actions) v 2.29.1
+ *   Copyright (C) 2005-2007 Frederic Ruaudel
+ *   Copyright (C) 2009, 2010 Pierre Wieser
+ *   Nautilus-Actions is free software, licensed under GPLv2 or later.
+ * </programlisting>
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_core_utils_print_version( void )

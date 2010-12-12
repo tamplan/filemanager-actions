@@ -1,5 +1,16 @@
 2010-12-11 Pierre Wieser <pwieser@trychlos.org>
 
+	Fic Miscellaneous API documentation.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/api/na-core-utils.h:
+	* src/api/na-gconf-monitor.h:
+	* src/api/na-gconf-utils.h:
+	* src/core/na-core-utils.c:
+	* src/core/na-gconf-monitor.c:
+	* src/core/na-gconf-utils.c: Updated accordingly.
+
 	Fix NAObject API documentation.
 
 	* docs/reference/nautilus-actions-docs.xml:

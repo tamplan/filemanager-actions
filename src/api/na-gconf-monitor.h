@@ -33,7 +33,8 @@
 
 /**
  * SECTION: gconf-monitor
- * @short_description: #NAGConfMonitor class definition.
+ * @title: NAGConfMonitor
+ * @short_description: The GConf Monitoring Class Definition
  * @include: nautilus-actions/na-gconf-monitor.h
  *
  * This class manages the GConf monitoring.
@@ -45,24 +46,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_GCONF_MONITOR_TYPE					( na_gconf_monitor_get_type())
-#define NA_GCONF_MONITOR( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NA_GCONF_MONITOR_TYPE, NAGConfMonitor ))
-#define NA_GCONF_MONITOR_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NA_GCONF_MONITOR_TYPE, NAGConfMonitorClass ))
-#define NA_IS_GCONF_MONITOR( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_GCONF_MONITOR_TYPE ))
-#define NA_IS_GCONF_MONITOR_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_GCONF_MONITOR_TYPE ))
-#define NA_GCONF_MONITOR_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_GCONF_MONITOR_TYPE, NAGConfMonitorClass ))
+#define NA_GCONF_MONITOR_TYPE                  ( na_gconf_monitor_get_type())
+#define NA_GCONF_MONITOR( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_GCONF_MONITOR_TYPE, NAGConfMonitor ))
+#define NA_GCONF_MONITOR_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_GCONF_MONITOR_TYPE, NAGConfMonitorClass ))
+#define NA_IS_GCONF_MONITOR( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_GCONF_MONITOR_TYPE ))
+#define NA_IS_GCONF_MONITOR_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_GCONF_MONITOR_TYPE ))
+#define NA_GCONF_MONITOR_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_GCONF_MONITOR_TYPE, NAGConfMonitorClass ))
 
-typedef struct NAGConfMonitorPrivate NAGConfMonitorPrivate;
+typedef struct _NAGConfMonitorPrivate NAGConfMonitorPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject                parent;
 	NAGConfMonitorPrivate *private;
 }
 	NAGConfMonitor;
 
-typedef struct NAGConfMonitorClassPrivate NAGConfMonitorClassPrivate;
+typedef struct _NAGConfMonitorClassPrivate NAGConfMonitorClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass                parent;
 	NAGConfMonitorClassPrivate *private;
 }

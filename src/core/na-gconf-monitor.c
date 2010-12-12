@@ -36,13 +36,13 @@
 
 /* private class data
  */
-struct NAGConfMonitorClassPrivate {
+struct _NAGConfMonitorClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAGConfMonitorPrivate {
+struct _NAGConfMonitorPrivate {
 	gboolean              dispose_has_run;
 	GConfClient          *gconf;
 	gchar                *path;
@@ -189,11 +189,13 @@ instance_finalize( GObject *object )
  *
  * Initializes the monitoring of a GConf path.
  *
+ * This monitoring will only be stopped when object is released, via
+ * g_object_unref().
+ *
  * Returns: a new #NAGConfMonitor object, which will monitor the given path,
  * triggeering the @handler in case of modifications.
  *
- * This monitoring will only be stopped when object is released, via
- * g_object_unref().
+ * Since: Nautilus-Actions v 2.30.
  */
 NAGConfMonitor *
 na_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data )
@@ -259,6 +261,8 @@ install_monitor( NAGConfMonitor *monitor )
  * @monitors: a list of #NAGConfMonitors.
  *
  * Release allocated monitors.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_gconf_monitor_release_monitors( GList *monitors )

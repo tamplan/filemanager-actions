@@ -43,12 +43,14 @@ static gboolean    sync_gconf( GConfClient *gconf, gchar **message );
 
 /**
  * na_gconf_utils_get_subdirs:
- * @gconf: a  #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: a full path to be readen.
  *
  * Returns: a list of full path subdirectories.
  *
- * The returned list should be #na_gconf_utils_free_subdirs() by the caller.
+ * The returned list should be na_gconf_utils_free_subdirs() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
@@ -70,9 +72,11 @@ na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
 
 /**
  * na_gconf_utils_free_subdirs:
- * @subdirs: the subdirectory list as returned from #na_gconf_utils_get_subdirs().
+ * @subdirs: the subdirectory list as returned from na_gconf_utils_get_subdirs().
  *
  * Release the list.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_gconf_utils_free_subdirs( GSList *subdirs )
@@ -82,11 +86,13 @@ na_gconf_utils_free_subdirs( GSList *subdirs )
 
 /**
  * na_gconf_utils_has_entry:
- * @entries: the list of entries as returned by #na_gconf_utils_get_entries().
+ * @entries: the list of entries as returned by na_gconf_utils_get_entries().
  * @entry: the entry to be tested.
  *
  * Returns: %TRUE if the given @entry exists in the specified @entries,
  * %FALSE else.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
@@ -107,7 +113,7 @@ na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
 
 /**
  * na_gconf_utils_get_entries:
- * @gconf: a  #GConfClient instance.
+ * @gconf: a  GConfClient instance.
  * @path: a full path to be readen.
  *
  * Loads all the key=value pairs of the specified key.
@@ -117,6 +123,8 @@ na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
  * The returned list is not recursive : it contains only the immediate
  * children of @path. To free the returned list, call
  * na_gconf_utils_free_entries().
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
@@ -146,6 +154,8 @@ na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
  *
  * If the entry was not found, or was not of boolean type, @value is set
  * to %FALSE.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gboolean *value )
@@ -193,6 +203,8 @@ na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gbool
  * to %NULL.
  *
  * If @value is returned not NULL, it should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gchar **value )
@@ -239,8 +251,10 @@ na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gch
  * If the entry was not found, or was not of string list type, @value
  * is set to %NULL.
  *
- * If @value is returned not NULL, it should be na_utils_free_string_list()
+ * If @value is returned not NULL, it should be na_core_utils_slist_free()
  * by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry, GSList **value )
@@ -285,6 +299,8 @@ na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry
  * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
  *
  * Dumps the content of the entries.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_gconf_utils_dump_entries( GSList *entries )
@@ -343,6 +359,8 @@ dump_entry( GConfEntry *entry, void *user_data )
  * @entries: a list of #GConfEntry as returned by na_gconf_utils_get_entries().
  *
  * Releases the provided list.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 void
 na_gconf_utils_free_entries( GSList *entries )
@@ -353,13 +371,15 @@ na_gconf_utils_free_entries( GSList *entries )
 
 /**
  * na_gconf_utils_read_bool:
- * @gconf: a #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @use_schema: whether to use the default value from schema, or not.
  * @default_value: default value to be used if schema is not used or
  * doesn't exist.
  *
  * Returns: the required boolean value.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_schema, gboolean default_value )
@@ -382,13 +402,15 @@ na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_sc
 
 /**
  * na_gconf_utils_read_int:
- * @gconf: a #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @use_schema: whether to use the default value from schema, or not.
  * @default_value: default value to be used if schema is not used or
  * doesn't exist.
  *
  * Returns: the required integer value.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gint
 na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_schema, gint default_value )
@@ -412,7 +434,7 @@ na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_sch
 
 /**
  * na_gconf_utils_read_string:
- * @gconf: a #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @use_schema: whether to use the default value from schema, or not.
  * @default_value: default value to be used if schema is not used or
@@ -420,6 +442,8 @@ na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_sch
  *
  * Returns: the required string value in a newly allocated string which
  * should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_schema, const gchar *default_value )
@@ -444,13 +468,15 @@ na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_
 
 /**
  * na_gconf_utils_read_string_list:
- * @gconf: a #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: the full path to the key to be read.
  *
  * Returns: a list of strings,
  * or %NULL if the entry was not found or was not of string list type.
  *
- * The returned list must be released with na_utils_free_string_list().
+ * The returned list must be released with na_core_utils_slist_free().
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
@@ -474,7 +500,7 @@ na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
 
 /**
  * na_gconf_utils_write_bool:
- * @gconf: a #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @value: the value to be written.
  * @message: a pointer to a gchar * which will be allocated if needed.
@@ -485,6 +511,8 @@ na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
  *
  * If returned not NULL, the @message contains an error message.
  * It should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value, gchar **message )
@@ -509,7 +537,7 @@ na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value
 
 /**
  * na_gconf_utils_write_int:
- * @gconf: a #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @value: the value to be written.
  * @message: a pointer to a gchar * which will be allocated if needed.
@@ -520,6 +548,8 @@ na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value
  *
  * If returned not NULL, the @message contains an error message.
  * It should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gchar **message )
@@ -544,7 +574,7 @@ na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gch
 
 /**
  * na_gconf_utils_write_string:
- * @gconf: a #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @value: the value to be written.
  * @message: a pointer to a gchar * which will be allocated if needed.
@@ -555,6 +585,8 @@ na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gch
  *
  * If returned not NULL, the @message contains an error message.
  * It should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message )
@@ -579,7 +611,7 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
 
 /**
  * na_gconf_utils_write_string_list:
- * @gconf: a #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: the full path to the key.
  * @value: the list of values to be written.
  * @message: a pointer to a gchar * which will be allocated if needed.
@@ -590,6 +622,8 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
  *
  * If returned not NULL, the @message contains an error message.
  * It should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList *value, gchar **message )
@@ -619,13 +653,15 @@ na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList 
 
 /**
  * na_gconf_utils_remove_entry:
- * @gconf: a #GConfClient instance.
+ * @gconf: a GConfClient instance.
  * @path: the full path to the entry.
  * @message: a pointer to a gchar * which will be allocated if needed.
  *
  * Removes an entry from user preferences.
  *
  * Returns: %TRUE if the operation was successfull, %FALSE else.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gboolean
 na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **message )
@@ -662,6 +698,8 @@ na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **mess
  * Returns: a newly allocated list of strings, which should be
  * na_core_utils_slist_free() by the caller, or %NULL if the provided
  * string was not of the GConf form.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 GSList *
 na_gconf_utils_slist_from_string( const gchar *value )
@@ -695,6 +733,8 @@ na_gconf_utils_slist_from_string( const gchar *value )
  *
  * Returns: the content of @slist, with the GConf format, as a newly
  * allocated string which should be g_free() by the caller.
+ *
+ * Since: Nautilus-Actions v 2.30.
  */
 gchar *
 na_gconf_utils_slist_to_string( GSList *slist )
