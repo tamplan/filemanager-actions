@@ -57,7 +57,7 @@ DOC_ENTITIES = $(patsubst C/%,%,$(shell \ls -1 C/*.xml | $(GREP) -v $(DOC_MODULE
 
 DOC_INCLUDES =
 
-DOC_FIGURES = $(patsubst C/%,%,$(shell \ls -1 C/figures/*)))
+DOC_FIGURES = $(patsubst C/%,%,$(shell \ls -1 C/figures/*))
 
 DOC_LINGUAS = de es sl
 

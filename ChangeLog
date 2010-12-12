@@ -1,5 +1,7 @@
 2010-12-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/nact/Makefile.am: Fix user's manual generation.
+
 	Fic Miscellaneous API documentation.
 
 	* docs/reference/nautilus-actions-docs.xml:
