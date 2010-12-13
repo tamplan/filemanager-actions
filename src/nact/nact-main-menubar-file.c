@@ -47,9 +47,10 @@
 static guint  st_event_autosave   = 0;
 
 static gchar *st_save_error       = N_( "Save error" );
+static gchar *st_save_warning     = N_( "Some items may not have been saved" );
 static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items list" );
 
-static void     save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item );
+static gboolean save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages );
 static gboolean autosave_callback( NactMainWindow *window );
 static void     autosave_destroyed( NactMainWindow *window );
 
@@ -308,11 +309,12 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	nact_main_window_remove_deleted( window );
 
 	/* recursively save the modified items
-	 * check is useless here if item was not modified, but not very costly
+	 * check is useless here if item was not modified, but not very costly;
 	 * above all, it is less costly to check the status here, than to check
 	 * recursively each and every modified item
 	 */
 	new_pivot = NULL;
+	messages = NULL;
 
 	for( it = items ; it ; it = it->next ){
 		label = na_object_get_label( it->data );
@@ -323,12 +325,19 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 				na_object_is_modified( it->data ) ? "True":"False" );
 		g_free( label );
 
-		save_item( window, updater, NA_OBJECT_ITEM( it->data ));
+		save_item( window, updater, NA_OBJECT_ITEM( it->data ), &messages );
 
 		duplicate = NA_OBJECT_ITEM( na_object_duplicate( it->data ));
 		na_object_reset_origin( it->data, duplicate );
 		na_object_check_status( it->data );
 		new_pivot = g_list_prepend( new_pivot, duplicate );
+	}
+
+	if( g_slist_length( messages )){
+		msg = na_core_utils_slist_join_at_end( messages, "\n" );
+		base_window_error_dlg( BASE_WINDOW( window ), GTK_MESSAGE_WARNING, st_save_warning, msg );
+		g_free( msg );
+		na_core_utils_slist_free( messages );
 	}
 
 	na_pivot_set_new_items( NA_PIVOT( updater ), g_list_reverse( new_pivot ));
@@ -368,21 +377,25 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
  *  |  +- ...
  *  save order: A-B-C-D-E-F-G-H (first parent, then children)
  */
-static void
-save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
+static gboolean
+save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages )
 {
+	gboolean ret;
 	NAIOProvider *provider_before;
 	NAIOProvider *provider_after;
 	GList *subitems, *it;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-	g_return_if_fail( NA_IS_UPDATER( updater ));
-	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
 
+	ret = TRUE;
 	provider_before = na_object_get_provider( item );
 
-	if( na_object_is_modified( item ) &&
-		nact_window_save_item( NACT_WINDOW( window ), item )){
+	if( na_object_is_modified( item )){
+		ret = FALSE;
+
+		if( nact_window_save_item( NACT_WINDOW( window ), item )){
 
 			if( NA_IS_OBJECT_ACTION( item )){
 				na_object_reset_last_allocated( item );
@@ -394,14 +407,17 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item )
 			if( provider_after != provider_before ){
 				g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED, item );
 			}
+		}
 	}
 
 	if( NA_IS_OBJECT_MENU( item )){
 		subitems = na_object_get_items( item );
 		for( it = subitems ; it ; it = it->next ){
-			save_item( window, updater, NA_OBJECT_ITEM( it->data ));
+			ret &= save_item( window, updater, NA_OBJECT_ITEM( it->data ), messages );
 		}
 	}
+
+	return( ret );
 }
 
 /**

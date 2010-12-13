@@ -1,5 +1,8 @@
 2010-12-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_save_items):
+	Display a warning summary when items may not have been saved.
+
 	* src/core/na-pivot.c:
 	* src/core/na-pivot.h (na_pivot_write_level_zero):
 	Let the function returns error messages.
