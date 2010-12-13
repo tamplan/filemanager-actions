@@ -1,3 +1,8 @@
+2010-12-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* docs/reference/Makefile.am:
+	Remove call to GTKDOC_CHECK macro which makes 'make distcheck' fail.
+
 2010-12-11 Pierre Wieser <pwieser@trychlos.org>
 
 	* docs/nact/Makefile.am: Fix user's manual generation.

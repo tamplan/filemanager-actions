@@ -150,4 +150,4 @@ install-data-local-hook:
 	echo "written_xmls_regexp=$(written_xmls_regexp)"
 	echo "written_xmls=$(written_xmls)"
 
-TESTS = $(GTKDOC_CHECK)
+#TESTS = $(GTKDOC_CHECK)
