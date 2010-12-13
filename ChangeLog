@@ -1,5 +1,7 @@
 2010-12-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/nact/C/nact-conditions.xml: Review 'note' vs. 'tip' usage.
+
 	* docs/reference/Makefile.am:
 	Remove call to GTKDOC_CHECK macro which makes 'make distcheck' fail.
 

@@ -231,14 +231,14 @@
                     matches all subgroups of <literal>group</literal> mimetype.
                   </para>
                 </listitem>
+                <listitem>
+                  <para>
+                    The <literal>*/subgroup</literal> string
+                    is not accepted as a valid wildcard.
+                  </para>
+                </listitem>
               </itemizedlist>
             </tip>
-            <note>
-              <para>
-                The <literal>*/subgroup</literal> string
-                is not accepted as a valid wildcard.
-              </para>
-            </note>
           </listitem>
         </itemizedlist>
       </listitem>
