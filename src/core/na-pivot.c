@@ -683,6 +683,11 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
  * na_pivot_write_level_zero:
  * @pivot: this #NAPivot instance.
  * @items: the #GList of items whose first level is to be written.
+ * @messages: a pointer to a #GSList in which we will add happening
+ *  error messages;
+ *  the pointer may be %NULL;
+ *  if not %NULL, the #GSList must have been initialized by the
+ *  caller.
  *
  * Rewrite the level-zero items in GConf preferences.
  *
@@ -690,7 +695,7 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
  * and so on), %FALSE else.
  */
 gboolean
-na_pivot_write_level_zero( const NAPivot *pivot, GList *items )
+na_pivot_write_level_zero( const NAPivot *pivot, GList *items, GSList **messages )
 {
 	static const gchar *thisfn = "na_pivot_write_level_zero";
 	gboolean written;
@@ -716,11 +721,9 @@ na_pivot_write_level_zero( const NAPivot *pivot, GList *items )
 			}
 			content = g_slist_reverse( content );
 
-			na_iprefs_write_string_list( NA_IPREFS( pivot ), IPREFS_LEVEL_ZERO_ITEMS, content );
+			written = na_iprefs_write_string_list( NA_IPREFS( pivot ), IPREFS_LEVEL_ZERO_ITEMS, content );
 
 			na_core_utils_slist_free( content );
-
-			written = TRUE;
 		}
 	}
 

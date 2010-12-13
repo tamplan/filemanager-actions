@@ -1,5 +1,13 @@
 2010-12-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h (na_pivot_write_level_zero):
+	Let the function returns error messages.
+
+	* src/core/na-io-provider.c (na_io_provider_get_writable_provider):
+	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_save_items):
+	Updated accordingly.
+
 	* src/core/na-iprefs.c:
 	* src/core/na-iprefs.h (na_iprefs_write_string_list):
 	Returns a writing status.

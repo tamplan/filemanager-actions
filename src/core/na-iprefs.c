@@ -462,7 +462,7 @@ na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *key, GSList 
 	gboolean ret = FALSE;
 	gchar *path;
 
-	g_return_if_fail( NA_IS_IPREFS( instance ), FALSE );
+	g_return_val_if_fail( NA_IS_IPREFS( instance ), FALSE );
 
 	if( st_initialized && !st_finalized ){
 

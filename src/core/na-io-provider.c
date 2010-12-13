@@ -627,7 +627,7 @@ na_io_provider_get_writable_provider( const NAPivot *pivot )
 /*
  * na_io_provider_read_items:
  * @pivot: the #NAPivot object which owns the list of registered I/O
- * storage providers.
+ *  storage providers.
  * @messages: error messages.
  *
  * Loads the tree from I/O storage subsystems.
@@ -665,7 +665,7 @@ na_io_provider_read_items( const NAPivot *pivot, GSList **messages )
 
 	if( merged || !level_zero || !g_slist_length( level_zero )){
 		g_debug( "%s: rewriting level-zero", thisfn );
-		if( !na_pivot_write_level_zero( pivot, hierarchy )){
+		if( !na_pivot_write_level_zero( pivot, hierarchy, messages )){
 			g_warning( "%s: unable to update level-zero", thisfn );
 		}
 	}

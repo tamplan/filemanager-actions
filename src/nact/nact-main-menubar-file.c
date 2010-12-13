@@ -34,6 +34,8 @@
 
 #include <glib/gi18n.h>
 
+#include <api/na-core-utils.h>
+
 #include <core/na-io-provider.h>
 
 #include "nact-application.h"
@@ -42,7 +44,10 @@
 #include "nact-main-tab.h"
 #include "nact-main-menubar-file.h"
 
-static guint st_event_autosave = 0;
+static guint  st_event_autosave   = 0;
+
+static gchar *st_save_error       = N_( "Save error" );
+static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items list" );
 
 static void     save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item );
 static gboolean autosave_callback( NactMainWindow *window );
@@ -262,6 +267,8 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	gchar *label;
 	GList *new_pivot;
 	NAObjectItem *duplicate;
+	GSList *messages;
+	gchar *msg;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -271,21 +278,34 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	 */
 	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( window ), FALSE, 0 );
 
-	/* remove deleted items
-	 * so that new actions with same id do not risk to be deleted later
-	 */
-	nact_main_window_remove_deleted( window );
-
-	/* always write the level zero list of items
+	/* always write the level zero list of items as the first save phase
 	 * and reset the corresponding modification flag
 	 */
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
 	items = nact_iactions_list_bis_get_items( NACT_IACTIONS_LIST( window ));
+	messages = NULL;
 
-	na_pivot_write_level_zero( NA_PIVOT( updater ), items );
+	if( !na_pivot_write_level_zero( NA_PIVOT( updater ), items, &messages )){
+
+		if( g_slist_length( messages )){
+			msg = na_core_utils_slist_join_at_end( messages, "\n" );
+		} else {
+			msg = g_strdup( st_level_zero_write );
+		}
+		base_window_error_dlg( BASE_WINDOW( window ), GTK_MESSAGE_ERROR, st_save_error, msg );
+		g_free( msg );
+		na_core_utils_slist_free( messages );
+		return;
+	}
+
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	mis->level_zero_order_changed = FALSE;
+
+	/* remove deleted items
+	 * so that new actions with same id do not risk to be deleted later
+	 */
+	nact_main_window_remove_deleted( window );
 
 	/* recursively save the modified items
 	 * check is useless here if item was not modified, but not very costly

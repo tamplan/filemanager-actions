@@ -141,7 +141,7 @@ void          na_pivot_set_new_items( NAPivot *pivot, GList *tree );
 
 void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  );
 
-gboolean      na_pivot_write_level_zero( const NAPivot *pivot, GList *items );
+gboolean      na_pivot_write_level_zero( const NAPivot *pivot, GList *items, GSList **messages );
 
 /* NAIPivotConsumer interface management
  */
