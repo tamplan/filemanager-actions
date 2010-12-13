@@ -47,6 +47,7 @@ DISTCHECK_CONFIGURE_FLAGS += \
 	--disable-schemas-install			\
 	--disable-scrollkeeper				\
 	--enable-gtk-doc					\
+	--enable-gtk-doc-pdf				\
 	--enable-html-manuals				\
 	--without-db2html					\
 	--with-gdt							\

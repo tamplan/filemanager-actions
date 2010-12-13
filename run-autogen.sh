@@ -10,6 +10,7 @@ exec ./autogen.sh \
 	--with-nautilus-extdir=$(pwd)/install/lib/nautilus \
 	--disable-schemas-install \
 	--enable-gtk-doc \
+	--enable-gtk-doc-pdf \
 	--disable-scrollkeeper \
 	--enable-html-manuals \
 	--enable-pdf-manuals

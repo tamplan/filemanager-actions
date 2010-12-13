@@ -1,5 +1,8 @@
 2010-12-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* Makefile.am:
+	* run-autogen.sh: Ask for PDF generation of the reference manual.
+
 	Fix API index reference.
 
 	* docs/reference/nautilus-actions-docs.xml:
