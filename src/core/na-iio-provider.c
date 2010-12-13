@@ -199,7 +199,7 @@ do_is_able_to_write( const NAIIOProvider *instance )
  * actions, or ask the user if he is willing to reload such a current
  * list, depending of the exact running &prodname; program.
  *
- * Since: Nautilus-Actions v 2.30, NAIIOProvider interface v 1.
+ * Since: 2.30
  */
 void
 na_iio_provider_item_changed( const NAIIOProvider *instance )

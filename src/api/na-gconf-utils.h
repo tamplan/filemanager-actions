@@ -34,7 +34,7 @@
 /**
  * SECTION: gconf-utils
  * @title: GConf Misc
- * @short_description: The Library Utilities
+ * @short_description: The GConf Library Utilities
  * @include: runtime/na-gconf-utils.h
  */
 

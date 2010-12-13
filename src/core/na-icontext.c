@@ -184,7 +184,7 @@ interface_base_finalize( NAIContextInterface *klass )
  * valid candidate to be displayed in Nautilus context menu, %FALSE
  * else.
  *
- * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
+ * Since: 2.30
  */
 gboolean
 na_icontext_is_candidate( const NAIContext *context, guint target, GList *selection )
@@ -230,7 +230,7 @@ na_icontext_is_candidate( const NAIContext *context, guint target, GList *select
  * validity status as it has already been checked before calling the
  * function.
  *
- * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
+ * Since: 2.30
  */
 gboolean
 na_icontext_is_valid( const NAIContext *context )
@@ -255,7 +255,7 @@ na_icontext_is_valid( const NAIContext *context )
  *
  * Returns: %TRUE if this @context is valid for all mimetypes, %FALSE else.
  *
- * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
+ * Since: 2.30
  */
 gboolean
 na_icontext_is_all_mimetypes( const NAIContext *context )
@@ -293,7 +293,7 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
  *
  * Prepares the specified #NAIContext just after it has been readen.
  *
- * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
+ * Since: 2.30
  */
 void
 na_icontext_read_done( NAIContext *context )
@@ -309,7 +309,7 @@ na_icontext_read_done( NAIContext *context )
  *
  * Sets the status of a @scheme relative to this @context.
  *
- * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
+ * Since: 2.30
  */
 void
 na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selected )
@@ -332,7 +332,7 @@ na_icontext_set_scheme( NAIContext *context, const gchar *scheme, gboolean selec
  *
  * Sets the status of the @desktop relative to this @context for the OnlyShowIn list.
  *
- * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
+ * Since: 2.30
  */
 void
 na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
@@ -355,7 +355,7 @@ na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolea
  *
  * Sets the status of the @desktop relative to this @context for the NotShowIn list.
  *
- * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
+ * Since: 2.30
  */
 void
 na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean selected )
@@ -378,7 +378,7 @@ na_icontext_set_not_desktop( NAIContext *context, const gchar *desktop, gboolean
  *
  * Replaces the @old URI by the @new one.
  *
- * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
+ * Since: 2.30
  */
 void
 na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *new )

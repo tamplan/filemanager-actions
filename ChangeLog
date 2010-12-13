@@ -1,5 +1,39 @@
 2010-12-13 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix API index reference.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	* src/api/na-core-utils.h:
+	* src/api/na-extension.h:
+	* src/api/na-gconf-utils.h:
+	* src/api/na-icontext.h:
+	* src/api/na-iduplicable.h:
+	* src/api/na-iexporter.h:
+	* src/api/na-ifactory-object.h:
+	* src/api/na-ifactory-provider.h:
+	* src/api/na-iimporter.h:
+	* src/api/na-iio-provider.h:
+	* src/api/na-object-id.h:
+	* src/api/na-object.h:
+	* src/core/na-core-utils.c:
+	* src/core/na-data-boxed.c:
+	* src/core/na-data-def.c:
+	* src/core/na-data-types.c:
+	* src/core/na-gconf-monitor.c:
+	* src/core/na-gconf-utils.c:
+	* src/core/na-icontext.c:
+	* src/core/na-iduplicable.c:
+	* src/core/na-ifactory-object.c:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-iimporter.c:
+	* src/core/na-iio-provider.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object-menu.c:
+	* src/core/na-object-profile.c:
+	* src/core/na-object.c: Updated accordingly.
+
 	* docs/nact/C/nact-conditions.xml: Review 'note' vs. 'tip' usage.
 
 	* docs/reference/Makefile.am:

@@ -703,7 +703,7 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
  *
  * Returns: the newly allocated #NAObjectProfile profile.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAObjectProfile *
 na_object_profile_new( void )
@@ -722,7 +722,7 @@ na_object_profile_new( void )
  *
  * Returns: the newly allocated #NAObjectProfile profile.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAObjectProfile *
 na_object_profile_new_with_defaults( void )
@@ -742,7 +742,7 @@ na_object_profile_new_with_defaults( void )
  *
  * Converts to v3 a @profile which has just been created from a pre-v2 action.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_profile_convert_v2_to_last( NAObjectProfile *profile )

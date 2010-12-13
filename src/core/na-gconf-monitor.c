@@ -195,7 +195,7 @@ instance_finalize( GObject *object )
  * Returns: a new #NAGConfMonitor object, which will monitor the given path,
  * triggeering the @handler in case of modifications.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAGConfMonitor *
 na_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data )
@@ -262,7 +262,7 @@ install_monitor( NAGConfMonitor *monitor )
  *
  * Release allocated monitors.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_gconf_monitor_release_monitors( GList *monitors )

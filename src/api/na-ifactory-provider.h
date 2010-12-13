@@ -174,7 +174,7 @@ typedef struct {
 	 *
 	 * Returns: the version of this interface supported by @instance implementation.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
+	 * Since: 2.30
 	 */
 	guint         ( *get_version )( const NAIFactoryProvider *instance );
 
@@ -189,7 +189,7 @@ typedef struct {
 	 *
 	 * API called by #NAIFactoryObject just before starting with reading data.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
+	 * Since: 2.30
 	 */
 	void          ( *read_start ) ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
 
@@ -208,7 +208,7 @@ typedef struct {
 	 * Returns: a newly allocated NADataBoxed which contains the readen value.
 	 * Should return %NULL if data is not found.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
+	 * Since: 2.30
 	 */
 	NADataBoxed * ( *read_data )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );
 
@@ -224,7 +224,7 @@ typedef struct {
 	 * API called by #NAIFactoryObject when all data have been readen.
 	 * Implementor may take advantage of this to do some cleanup.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
+	 * Since: 2.30
 	 */
 	void          ( *read_done )  ( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
 
@@ -240,7 +240,7 @@ typedef struct {
 	 *
 	 * Returns: a NAIIOProvider operation return code.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
+	 * Since: 2.30
 	 */
 	guint         ( *write_start )( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 
@@ -260,7 +260,7 @@ typedef struct {
 	 *
 	 * Returns: a NAIIOProvider operation return code.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
+	 * Since: 2.30
 	 */
 	guint         ( *write_data ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages );
 
@@ -277,7 +277,7 @@ typedef struct {
 	 *
 	 * Returns: a NAIIOProvider operation return code.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
+	 * Since: 2.30
 	 */
 	guint         ( *write_done ) ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 }

@@ -92,7 +92,7 @@ typedef struct {
 	 *
 	 * Returns: a new id suitable for this @object.
 	 *
-	 * Since: Nautilus-Actions v 2.30.
+	 * Since: 2.30
 	 */
 	gchar * ( *new_id )( const NAObjectId *object, const NAObjectId *new_parent );
 }

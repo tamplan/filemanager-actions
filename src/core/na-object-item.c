@@ -285,7 +285,7 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
  *
  * Returns: %TRUE if @a is equal to @b.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gboolean
 na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b )
@@ -396,7 +396,7 @@ na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b )
  * The returned #NAObjectId is owned by the @item object ; the
  * caller should not try to g_free() nor g_object_unref() it.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAObjectId *
 na_object_item_get_item( const NAObjectItem *item, const gchar *id )
@@ -432,7 +432,7 @@ na_object_item_get_item( const NAObjectItem *item, const gchar *id )
  * Returns: the position of @child in the subitems list of @item,
  * starting from zero, or -1 if not found.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gint
 na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child )
@@ -466,7 +466,7 @@ na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child )
  *
  * Doesn't modify the reference count on @object.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
@@ -499,7 +499,7 @@ na_object_item_append_item( NAObjectItem *item, const NAObjectId *child )
  *
  * Doesn't modify the reference count on @child.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_item_insert_at( NAObjectItem *item, const NAObjectId *child, gint pos )
@@ -539,7 +539,7 @@ na_object_item_insert_at( NAObjectItem *item, const NAObjectId *child, gint pos 
  *
  * Doesn't modify the reference count on @child.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_item_insert_item( NAObjectItem *item, const NAObjectId *child, const NAObjectId *before )
@@ -582,7 +582,7 @@ na_object_item_insert_item( NAObjectItem *item, const NAObjectId *child, const N
  *
  * Doesn't modify the reference count on @child.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_item_remove_item( NAObjectItem *item, const NAObjectId *child )
@@ -614,7 +614,7 @@ na_object_item_remove_item( NAObjectItem *item, const NAObjectId *child )
  *
  * Returns: the count of subitems of @item.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 guint
 na_object_item_get_items_count( const NAObjectItem *item )
@@ -648,7 +648,7 @@ na_object_item_get_items_count( const NAObjectItem *item )
  * As this function is recursive, the counters should be initialized by
  * the caller before calling it.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse )
@@ -687,7 +687,7 @@ na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *prof
  *
  * This is rather only used by NAPivot.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_item_unref_items( GList *items )
@@ -704,7 +704,7 @@ na_object_item_unref_items( GList *items )
  *
  * This is heavily used by NACT.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_item_unref_items_rec( GList *items )
@@ -730,7 +730,7 @@ na_object_item_unref_items_rec( GList *items )
  * was not systematically written. If @item has been readen from a
  * .desktop file, then iversion is already set to (at least) 3.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_item_deals_with_version( NAObjectItem *item )
@@ -766,7 +766,7 @@ na_object_item_deals_with_version( NAObjectItem *item )
  *
  * Rebuild the string list of children.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_item_rebuild_children_slist( NAObjectItem *item )

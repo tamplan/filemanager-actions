@@ -59,7 +59,7 @@ static FactoryType st_factory_type[] = {
  * The returned key is owned by the factory data management system, and
  * should not be released by the caller.
  *
- * Since: Nautilus-Actions v 2.30
+ * Since: 2.30
  */
 const gchar *
 na_data_types_get_gconf_dump_key( guint type )

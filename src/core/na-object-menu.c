@@ -420,7 +420,7 @@ is_valid_label( const NAObjectMenu *menu )
  *
  * Returns: the newly allocated #NAObjectMenu object.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAObjectMenu *
 na_object_menu_new( void )
@@ -439,7 +439,7 @@ na_object_menu_new( void )
  *
  * Returns: the newly allocated #NAObjectMenu object.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAObjectMenu *
 na_object_menu_new_with_defaults( void )

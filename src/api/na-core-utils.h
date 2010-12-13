@@ -34,7 +34,7 @@
 /**
  * SECTION: core-utils
  * @title: Core Misc
- * @short_description: The Library Utilities
+ * @short_description: The Core Library Utilities
  * @include: nautilus-action/na-core-utils.h
  */
 

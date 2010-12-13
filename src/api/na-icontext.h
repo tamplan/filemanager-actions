@@ -88,7 +88,7 @@ typedef struct {
 	 * Returns: %TRUE if the @object may be a potential candidate, %FALSE
 	 * else.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIContext interface v 1.
+	 * Since: 2.30
 	 */
 	gboolean ( *is_candidate )( NAIContext *object, guint target, GList *selection );
 }

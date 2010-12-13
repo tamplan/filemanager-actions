@@ -108,7 +108,7 @@ typedef struct {
 	 *
 	 * Returns: the version of this interface supported by the plugin.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
+	 * Since: 2.30
 	 */
 	guint ( *get_version )    ( const NAIImporter *instance );
 
@@ -121,7 +121,7 @@ typedef struct {
 	 *
 	 * Returns: the return code of the operation.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
+	 * Since: 2.30
 	 */
 	guint ( *import_from_uri )( const NAIImporter *instance, NAIImporterImportFromUriParms *parms );
 }
@@ -191,7 +191,7 @@ typedef enum {
  *
  * Returns: the already existing #NAObjectItem with same id, or %NULL.
  *
- * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
+ * Since: 2.30
  */
 typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
 
@@ -212,7 +212,7 @@ typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
  * Returns: the import mode choosen by the user, which must not be
  * %IMPORTER_MODE_ASK.
  *
- * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
+ * Since: 2.30
  */
 typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectItem *, void * );
 
@@ -256,7 +256,7 @@ typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectIte
  * This structure allows all used parameters when importing from an URI
  * to be passed and received through a single structure.
  *
- * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
+ * Since: 2.30
  */
 struct _NAIImporterImportFromUriParms {
 	guint                version;
@@ -305,7 +305,7 @@ struct _NAIImporterImportFromUriParms {
  * This structure allows all used parameters when managing the import mode
  * to be passed and received through a single structure.
  *
- * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
+ * Since: 2.30
  */
 struct _NAIImporterManageImportModeParms {
 	guint                version;

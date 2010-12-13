@@ -125,7 +125,7 @@ typedef struct {
 	 *
 	 * Defaults to 1.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
+	 * Since: 2.30
 	 */
 	guint                     ( *get_version )( const NAIExporter *instance );
 
@@ -136,7 +136,7 @@ typedef struct {
 	 * Returns: the name to be displayed for this instance, as a
 	 * newly allocated string which should be g_free() by the caller.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
+	 * Since: 2.30
 	 */
 	gchar *                   ( *get_name )   ( const NAIExporter *instance );
 
@@ -157,7 +157,7 @@ typedef struct {
 	 *
 	 * Defaults to %NULL (no format at all).
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
+	 * Since: 2.30
 	 */
 	const NAIExporterFormat * ( *get_formats )( const NAIExporter *instance );
 
@@ -171,7 +171,7 @@ typedef struct {
 	 *
 	 * Returns: the #NAIExporterExportStatus status of the operation.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
+	 * Since: 2.30
 	 */
 	guint                     ( *to_file )    ( const NAIExporter *instance, NAIExporterFileParms *parms );
 
@@ -186,7 +186,7 @@ typedef struct {
 	 *
 	 * Returns: the #NAIExporterExportStatus status of the operation.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIExporter interface v 1.
+	 * Since: 2.30
 	 */
 	guint                     ( *to_buffer )  ( const NAIExporter *instance, NAIExporterBufferParms *parms );
 }

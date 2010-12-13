@@ -201,7 +201,7 @@ G_BEGIN_DECLS
  * Returns: %TRUE if the initialization is successfull, %FALSE else.
  * In this later case, the library is unloaded and no more considered.
  *
- * Since: Nautilus-Actions v 2.30, extension API v 1.
+ * Since: 2.30
  */
 gboolean na_extension_startup    ( GTypeModule *module );
 
@@ -218,7 +218,7 @@ gboolean na_extension_startup    ( GTypeModule *module );
  *
  * Returns: the version of this API supported by the module.
  *
- * Since: Nautilus-Actions v 2.30, extension API v 1.
+ * Since: 2.30
  */
 guint    na_extension_get_version( void );
 
@@ -269,7 +269,7 @@ guint    na_extension_get_version( void );
  * Returns: the number of #GType types returned in the @types array, not
  * counting the terminating zero item.
  *
- * Since: Nautilus-Actions v 2.30, extension API v 1.
+ * Since: 2.30
  */
 guint    na_extension_list_types ( const GType **types );
 
@@ -286,7 +286,7 @@ guint    na_extension_list_types ( const GType **types );
  * A Nautilus-Actions extension must implement this function in order
  * to be considered as a valid candidate to dynamic load.
  *
- * Since: Nautilus-Actions v 2.30, extension API v 1.
+ * Since: 2.30
  */
 void     na_extension_shutdown   ( void );
 

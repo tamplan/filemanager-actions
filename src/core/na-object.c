@@ -377,7 +377,7 @@ iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter
  * that edition status of childs is actually checked before those of
  * the parent.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_object_check_status( const NAObject *object )
@@ -417,7 +417,7 @@ na_object_object_check_status( const NAObject *object )
  *
  * Returns: %TRUE if at least one of the status has changed, %FALSE else.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gboolean
 na_object_object_check_status_up( const NAObject *object )
@@ -484,7 +484,7 @@ push_modified_status_up( const NAObject *object, gboolean is_modified )
  *
  * Copies @source to @target.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_object_copy( NAObject *target, const NAObject *source, gboolean recursive )
@@ -533,7 +533,7 @@ object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data )
  * na_object_dump() doesn't modify the reference count of the dumped
  * object.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_object_dump( const NAObject *object )
@@ -565,7 +565,7 @@ na_object_object_dump( const NAObject *object )
  *
  * This function is not recursive.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_object_dump_norec( const NAObject *object )
@@ -596,7 +596,7 @@ dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *us
  *
  * Outputs a brief, hierarchical dump of the provided list.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_object_dump_tree( GList *tree )
@@ -648,7 +648,7 @@ dump_tree( GList *tree, gint level )
  * This only works if @origin has just been duplicated from @object,
  * and thus we do not have to check if children lists are equal.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_object_reset_origin( NAObject *object, const NAObject *origin )
@@ -682,7 +682,7 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
  *
  * Returns: a reference on the @pbject.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAObject *
 na_object_object_ref( NAObject *object )
@@ -723,7 +723,7 @@ na_object_object_ref( NAObject *object )
  * Recursively unref the @object and all its children, decrementing their
  * reference_count by 1.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_object_unref( NAObject *object )
@@ -809,7 +809,7 @@ build_class_hierarchy( const NAObject *object )
  * Returns: the class hierarchy,
  * from the topmost base class, to the most-derived one.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 GList *
 na_object_object_get_hierarchy( const NAObject *object )
@@ -835,7 +835,7 @@ na_object_object_get_hierarchy( const NAObject *object )
  *
  * Releases the #NAObject hierarchy.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_free_hierarchy( GList *hierarchy )
@@ -850,7 +850,7 @@ na_object_free_hierarchy( GList *hierarchy )
  *
  * Dump the object with the invalidity reason.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_object_debug_invalid( const NAObject *object, const gchar *reason )

@@ -601,7 +601,7 @@ is_valid_toolbar_label( const NAObjectAction *action )
  *
  * Returns: the newly allocated #NAObjectAction object.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAObjectAction *
 na_object_action_new( void )
@@ -620,7 +620,7 @@ na_object_action_new( void )
  *
  * Returns: the newly allocated #NAObjectAction action.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAObjectAction *
 na_object_action_new_with_profile( void )
@@ -643,7 +643,7 @@ na_object_action_new_with_profile( void )
  *
  * Returns: the newly allocated #NAObjectAction action.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NAObjectAction *
 na_object_action_new_with_defaults( void )
@@ -681,7 +681,7 @@ na_object_action_new_with_defaults( void )
  * Returns: a newly allocated profile name, which should be g_free() by
  * the caller.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gchar *
 na_object_action_get_new_profile_name( const NAObjectAction *action )
@@ -724,7 +724,7 @@ na_object_action_get_new_profile_name( const NAObjectAction *action )
  *
  * Adds a profile at the end of the list of profiles.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profile )
@@ -745,7 +745,7 @@ na_object_action_attach_profile( NAObjectAction *action, NAObjectProfile *profil
  *
  * Set the version number of the @action to the last one.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_action_set_last_version( NAObjectAction *action )

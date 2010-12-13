@@ -405,7 +405,7 @@ get_data_boxed_fn( guint type )
  *
  * Returns: a #GParamSpec structure.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 GParamSpec *
 na_data_boxed_get_param_spec( const NADataDef *def )
@@ -433,7 +433,7 @@ na_data_boxed_get_param_spec( const NADataDef *def )
  *
  * Returns: a newly allocated #NADataBoxed.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NADataBoxed *
 na_data_boxed_new( const NADataDef *def )
@@ -456,7 +456,7 @@ na_data_boxed_new( const NADataDef *def )
  * Returns: a pointer to the #NADataDef structure attached to the object.
  * Should never be %NULL.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 NADataDef *
 na_data_boxed_get_data_def( const NADataBoxed *boxed )
@@ -482,7 +482,7 @@ na_data_boxed_get_data_def( const NADataBoxed *boxed )
  *
  * Returns: %TRUE if the two boxeds are equal, %FALSE else.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gboolean
 na_data_boxed_are_equal( const NADataBoxed *a, const NADataBoxed *b )
@@ -520,7 +520,7 @@ na_data_boxed_are_equal( const NADataBoxed *a, const NADataBoxed *b )
  * Returns: %TRUE if the #NADataBoxed holds its default value,
  * %FALSE else.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gboolean
 na_data_boxed_is_default( const NADataBoxed *boxed )
@@ -552,7 +552,7 @@ na_data_boxed_is_default( const NADataBoxed *boxed )
  *
  * Returns: %TRUE if the boxed is valid, %FALSE else.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gboolean
 na_data_boxed_is_valid( const NADataBoxed *boxed )
@@ -584,7 +584,7 @@ na_data_boxed_is_valid( const NADataBoxed *boxed )
  *
  * Dump the content of @boxed.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_data_boxed_dump( const NADataBoxed *boxed )
@@ -609,7 +609,7 @@ na_data_boxed_dump( const NADataBoxed *boxed )
  * -> the new type must be the same that the previous one.
  * -> value is unchanged.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_data_boxed_set_data_def( NADataBoxed *boxed, const NADataDef *new_def )
@@ -631,7 +631,7 @@ na_data_boxed_set_data_def( NADataBoxed *boxed, const NADataDef *new_def )
  * Returns: the value of the @boxed, as a newly allocated string which
  * should be g_free() by the caller.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gchar *
 na_data_boxed_get_as_string( const NADataBoxed *boxed )
@@ -667,7 +667,7 @@ na_data_boxed_get_as_string( const NADataBoxed *boxed )
  * NAFD_TYPE_STRING_LIST, then the content is returned in a newly
  * allocated value, which should be released by the caller.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void *
 na_data_boxed_get_as_void( const NADataBoxed *boxed )
@@ -700,7 +700,7 @@ na_data_boxed_get_as_void( const NADataBoxed *boxed )
  *
  * Setup @value with the content of the @boxed.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_data_boxed_get_as_value( const NADataBoxed *boxed, GValue *value )
@@ -728,7 +728,7 @@ na_data_boxed_get_as_value( const NADataBoxed *boxed, GValue *value )
  *
  * Copy value from @value to @boxed.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_data_boxed_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *value )
@@ -761,7 +761,7 @@ na_data_boxed_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *value )
  *
  * Evaluates the @value and set it to the @boxed.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value )
@@ -792,7 +792,7 @@ na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value )
  *
  * Evaluates the @value and set it to the @boxed.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_data_boxed_set_from_value( NADataBoxed *boxed, const GValue *value )
@@ -823,7 +823,7 @@ na_data_boxed_set_from_value( NADataBoxed *boxed, const GValue *value )
  *
  * Evaluates the @value and set it to the @boxed.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_data_boxed_set_from_void( NADataBoxed *boxed, const void *value )

@@ -181,7 +181,7 @@ interface_base_finalize( NAIDuplicableInterface *klass )
  *
  * Releases resources.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 void
 na_iduplicable_dispose( const NAIDuplicable *object )
@@ -214,7 +214,7 @@ na_iduplicable_dispose( const NAIDuplicable *object )
  * This function should be called by the implementation when it dumps
  * itself its own content.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 void
 na_iduplicable_dump( const NAIDuplicable *object )
@@ -255,7 +255,7 @@ na_iduplicable_dump( const NAIDuplicable *object )
  *
  * Returns: a new #NAIDuplicable.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 NAIDuplicable *
 na_iduplicable_duplicate( const NAIDuplicable *object )
@@ -308,7 +308,7 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
  * na_object_check_status() so first check status for childs, before
  * calling this function.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 void
 na_iduplicable_check_status( const NAIDuplicable *object )
@@ -381,7 +381,7 @@ na_iduplicable_check_status( const NAIDuplicable *object )
  *
  * Returns: the original #NAIDuplicable, or NULL.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 NAIDuplicable *
 na_iduplicable_get_origin( const NAIDuplicable *object )
@@ -411,7 +411,7 @@ na_iduplicable_get_origin( const NAIDuplicable *object )
  *
  * Returns: %TRUE is the provided object is valid.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 gboolean
 na_iduplicable_is_valid( const NAIDuplicable *object )
@@ -442,7 +442,7 @@ na_iduplicable_is_valid( const NAIDuplicable *object )
  * Returns: %TRUE is the provided object has been modified regarding of
  * the original one.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 gboolean
 na_iduplicable_is_modified( const NAIDuplicable *object )
@@ -470,7 +470,7 @@ na_iduplicable_is_modified( const NAIDuplicable *object )
  *
  * Sets the new origin of a duplicated #NAIDuplicable.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 void
 na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
@@ -494,7 +494,7 @@ na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
  *
  * Sets the new modified of a duplicated #NAIDuplicable.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 void
 na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )
@@ -549,7 +549,7 @@ v_is_valid( const NAIDuplicable *object )
  * This function registers a consumer, i.e. an instance to which edition
  * status signals will be propagated.
  *
- * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+ * Since: 2.30
  */
 void
 na_iduplicable_register_consumer( GObject *consumer )

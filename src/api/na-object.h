@@ -90,7 +90,7 @@ typedef struct {
 	 * derived one. Each derived class has so only to take care of
 	 * dumping its own data.
 	 *
-	 * Since: Nautilus-Actions v 2.30.
+	 * Since: 2.30
 	 */
 	void     ( *dump )     ( const NAObject *object );
 
@@ -108,7 +108,7 @@ typedef struct {
 	 * base class up to the most-derived one. Each class has so only to
 	 * take care of dumping its own data.
 	 *
-	 * Since: Nautilus-Actions v 2.30.
+	 * Since: 2.30
 	 */
 	void     ( *copy )     ( NAObject *target, const NAObject *source, gboolean recursive );
 
@@ -129,7 +129,7 @@ typedef struct {
 	 *
 	 * Returns: TRUE if @a and @b are identical, FALSE else.
 	 *
-	 * Since: Nautilus-Actions v 2.30.
+	 * Since: 2.30
 	 */
 	gboolean ( *are_equal )( const NAObject *a, const NAObject *b );
 
@@ -151,7 +151,7 @@ typedef struct {
 	 *
 	 * Returns: TRUE if @object is valid, FALSE else.
 	 *
-	 * Since: Nautilus-Actions v 2.30.
+	 * Since: 2.30
 	 */
 	gboolean ( *is_valid ) ( const NAObject *object );
 }

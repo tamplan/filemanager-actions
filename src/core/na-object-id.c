@@ -236,7 +236,7 @@ object_is_valid( const NAObject *object )
  *   </listitem>
  * </itemizedlist>
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gint
 na_object_id_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b )
@@ -276,7 +276,7 @@ na_object_id_sort_alpha_asc( const NAObjectId *a, const NAObjectId *b )
  *   </listitem>
  * </itemizedlist>
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 gint
 na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
@@ -303,7 +303,7 @@ na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
  * Actual relabeling takes place if @relabel is %TRUE, depending of the
  * user preferences.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *parent )
@@ -351,7 +351,7 @@ na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean r
  *
  * Sets the 'Copy of' label.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_id_set_copy_of_label( NAObjectId *object )
@@ -385,7 +385,7 @@ na_object_id_set_copy_of_label( NAObjectId *object )
  *
  * Request a new id to the derived class, and set it.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 void
 na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent )

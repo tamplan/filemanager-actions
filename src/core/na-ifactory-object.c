@@ -152,7 +152,7 @@ ifactory_object_get_version( const NAIFactoryObject *instance )
  * Returns: The #NADataBoxed object which contains the specified data,
  * or %NULL.
  *
- * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+ * Since: 2.30
  */
 NADataBoxed *
 na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *name )
@@ -188,7 +188,7 @@ na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *
  *
  * Returns: The #NADataGroup groups definition, or %NULL.
  *
- * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+ * Since: 2.30
  */
 NADataGroup *
 na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
@@ -221,7 +221,7 @@ na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
  *
  * Returns: the searched value.
  *
- * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+ * Since: 2.30
  */
 void *
 na_ifactory_object_get_as_void( const NAIFactoryObject *object, const gchar *name )
@@ -239,7 +239,7 @@ na_ifactory_object_get_as_void( const NAIFactoryObject *object, const gchar *nam
  *
  * Set the elementary data with the given value.
  *
- * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+ * Since: 2.30
  */
 void
 na_ifactory_object_set_from_void( NAIFactoryObject *object, const gchar *name, const void *data )

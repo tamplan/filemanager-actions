@@ -143,7 +143,7 @@ typedef struct {
 	 * care itself of calling each function in the class hierarchy,
 	 * from topmost base class to most-derived one.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+	 * Since: 2.30
 	 */
 	void     ( *copy )     ( NAIDuplicable *target, const NAIDuplicable *source );
 
@@ -162,7 +162,7 @@ typedef struct {
 	 *
 	 * Returns: TRUE if @a and @b are identical, FALSE else.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+	 * Since: 2.30
 	 */
 	gboolean ( *are_equal )( const NAIDuplicable *a, const NAIDuplicable *b );
 
@@ -179,7 +179,7 @@ typedef struct {
 	 *
 	 * Returns: TRUE if @object is valid, FALSE else.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIDuplicable interface v 1.
+	 * Since: 2.30
 	 */
 	gboolean ( *is_valid )   ( const NAIDuplicable *object );
 }

@@ -153,7 +153,7 @@ iimporter_get_version( const NAIImporter *instance )
  *
  * Returns: the return code of the operation.
  *
- * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
+ * Since: 2.30
  */
 
 guint
@@ -208,7 +208,7 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
  *   </listitem>
  * </itemizedlist>
  *
- * Since: Nautilus-Actions v 2.30, NAIImporter interface v 1.
+ * Since: 2.30
  */
 guint
 na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )

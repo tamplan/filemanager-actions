@@ -44,7 +44,7 @@
  *
  * Returns: a pointer to the #NADataDef structure, or %NULL if not found.
  *
- * Since: Nautilus-Actions v 2.30.
+ * Since: 2.30
  */
 const NADataDef *
 na_data_def_get_data_def( const NADataGroup *group, const gchar *group_name, const gchar *name )

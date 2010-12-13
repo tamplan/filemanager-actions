@@ -184,7 +184,7 @@ ifactory_provider_get_version( const NAIFactoryProvider *instance )
  *   </programlisting>
  * </example>
  *
- * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
+ * Since: 2.30
  */
 void
 na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_data, NAIFactoryObject *object, GSList **messages )
@@ -213,7 +213,7 @@ na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_d
  *
  * Returns: a NAIIOProvider operation return code.
  *
- * Since: Nautilus-Actions v 2.30, NAIFactoryProvider interface v 1.
+ * Since: 2.30
  */
 guint
 na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_data, NAIFactoryObject *object, GSList **messages )

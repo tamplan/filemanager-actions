@@ -122,7 +122,7 @@ typedef struct {
 	 *
 	 * Returns: the version of this interface supported by @instance implementation.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+	 * Since: 2.30
 	 */
 	guint         ( *get_version )( const NAIFactoryObject *instance );
 
@@ -132,7 +132,7 @@ typedef struct {
 	 *
 	 * Returns: a pointer to the NADataGroup which defines this object.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+	 * Since: 2.30
 	 */
 	NADataGroup * ( *get_groups ) ( const NAIFactoryObject *instance );
 
@@ -145,7 +145,7 @@ typedef struct {
 	 * @instance target. This later may take advantage of this call
 	 * to do some particular copy tasks.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+	 * Since: 2.30
 	 */
 	void          ( *copy )       ( NAIFactoryObject *instance, const NAIFactoryObject *source );
 
@@ -159,7 +159,7 @@ typedef struct {
 	 *
 	 * Returns: %TRUE if @a is equal to @b.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+	 * Since: 2.30
 	 */
 	gboolean      ( *are_equal )  ( const NAIFactoryObject *a, const NAIFactoryObject *b );
 
@@ -172,7 +172,7 @@ typedef struct {
 	 *
 	 * Returns: %TRUE if @object is valid.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+	 * Since: 2.30
 	 */
 	gboolean      ( *is_valid )   ( const NAIFactoryObject *object );
 
@@ -186,7 +186,7 @@ typedef struct {
 	 *
 	 * Called just before the object is unserialized.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+	 * Since: 2.30
 	 */
 	void          ( *read_start ) ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
@@ -200,7 +200,7 @@ typedef struct {
 	 *
 	 * Called when the object has been unserialized.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+	 * Since: 2.30
 	 */
 	void          ( *read_done )  ( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 
@@ -216,7 +216,7 @@ typedef struct {
 	 *
 	 * Returns: a NAIIOProvider operation return code.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+	 * Since: 2.30
 	 */
 	guint         ( *write_start )( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
@@ -232,7 +232,7 @@ typedef struct {
 	 *
 	 * Returns: a NAIIOProvider operation return code.
 	 *
-	 * Since: Nautilus-Actions v 2.30, NAIFactoryObject interface v 1.
+	 * Since: 2.30
 	 */
 	guint         ( *write_done ) ( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 }
