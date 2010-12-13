@@ -132,7 +132,7 @@ gchar       *na_iprefs_read_string      ( const NAIPrefs *instance, const gchar 
 GSList      *na_iprefs_read_string_list ( const NAIPrefs *instance, const gchar *key, const gchar *default_value );
 guint        na_iprefs_read_uint        ( const NAIPrefs *instance, const gchar *key, guint defaut_value );
 
-void         na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *key, GSList *value );
+gboolean     na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *key, GSList *value );
 
 G_END_DECLS
 

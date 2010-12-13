@@ -1,5 +1,9 @@
 2010-12-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h (na_iprefs_write_string_list):
+	Returns a writing status.
+
 	* Makefile.am:
 	* run-autogen.sh: Ask for PDF generation of the reference manual.
 

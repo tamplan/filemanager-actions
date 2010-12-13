@@ -452,18 +452,24 @@ write_string( NAIPrefs *instance, const gchar *name, const gchar *value )
  * @value: the value to be written.
  *
  * Writes the value as the given GConf preference.
+ *
+ * Returns: %TRUE if the string list has been successfully written,
+ *  %FALSE else.
  */
-void
+gboolean
 na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *key, GSList *value )
 {
+	gboolean ret = FALSE;
 	gchar *path;
 
-	g_return_if_fail( NA_IS_IPREFS( instance ));
+	g_return_if_fail( NA_IS_IPREFS( instance ), FALSE );
 
 	if( st_initialized && !st_finalized ){
 
 		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, key );
-		na_gconf_utils_write_string_list( na_iprefs_get_gconf_client( instance ), path, value, NULL );
+		ret = na_gconf_utils_write_string_list( na_iprefs_get_gconf_client( instance ), path, value, NULL );
 		g_free( path );
 	}
+
+	return( ret );
 }
