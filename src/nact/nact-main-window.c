@@ -161,7 +161,7 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
-static void     actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater );
+static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
 
 static gchar   *base_get_toplevel_name( const BaseWindow *window );
 static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
@@ -978,34 +978,57 @@ nact_main_window_reload( NactMainWindow *window )
 /**
  * nact_main_window_remove_deleted:
  * @window: this #NactMainWindow instance.
+ * @messages: a pointer to a #GSList of error messages.
  *
  * Removes the deleted items from the underlying I/O storage subsystem.
+ *
+ * Each item of <structfield>NactMainWindow::private::deleted</structfield>
+ * #GList may actually itself be a tree (e.g. a #NAObjectMenu). The embedded
+ * items will be recursivelly removed, starting from the root.
+ *
+ * Returns: %TRUE if all candidate items have been successfully deleted,
+ * %FALSE else.
+ *
+ * @messages #GSList is only filled up in case of an error has occured.
+ * If there is no error (nact_main_window_remove_deleted() returns %TRUE),
+ * then the caller may safely assume that @messages is returned in the
+ * same state that it has been provided.
  */
-void
-nact_main_window_remove_deleted( NactMainWindow *window )
+gboolean
+nact_main_window_remove_deleted( NactMainWindow *window, GSList **messages )
 {
+	gboolean delete_ok = TRUE;
 	NactApplication *application;
 	NAUpdater *updater;
 	GList *it;
 	NAObject *item;
+	GList *not_deleted;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
 
 	if( !window->private->dispose_has_run ){
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
+		not_deleted = NULL;
 
 		for( it = window->private->deleted ; it ; it = it->next ){
 			item = NA_OBJECT( it->data );
-			actually_delete_item( window, item, updater );
+			delete_ok = actually_delete_item( window, item, updater, &not_deleted, messages );
 		}
 
 		na_object_unref_items( window->private->deleted );
 		window->private->deleted = NULL;
 
 		setup_dialog_title( window );
+
+		if( g_list_length( not_deleted )){
+			nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), not_deleted, NULL );
+			na_object_unref_items( not_deleted );
+		}
 	}
+
+	return( delete_ok );
 }
 
 /*
@@ -1013,31 +1036,43 @@ nact_main_window_remove_deleted( NactMainWindow *window )
  * action has been marked as modified when the profile has been deleted,
  * and thus updated in the storage subsystem as well as in the pivot
  */
-static void
-actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater )
+static gboolean
+actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages )
 {
+	gboolean delete_ok = TRUE;
 	GList *items, *it;
 	NAObject *origin;
+	gchar *msg;
 
 	g_debug( "nact_main_window_actually_delete_item: item=%p (%s)",
 			( void * ) item, G_OBJECT_TYPE_NAME( item ));
 
 	if( NA_IS_OBJECT_ITEM( item )){
-		nact_window_delete_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ));
+		msg = NULL;
+		delete_ok = nact_window_delete_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ), &msg );
 
-		if( NA_IS_OBJECT_MENU( item )){
+		if( !delete_ok ){
+			*messages = g_slist_append( *messages, msg );
+			*not_deleted = g_list_append( *not_deleted, na_object_ref( item ));
+			g_free( msg );
+
+		} else if( NA_IS_OBJECT_MENU( item )){
 			items = na_object_get_items( item );
-			for( it = items ; it ; it = it->next ){
-				actually_delete_item( window, NA_OBJECT( it->data ), updater );
+			for( it = items ; delete_ok && it ; it = it->next ){
+				delete_ok &= actually_delete_item( window, NA_OBJECT( it->data ), updater, not_deleted, messages );
 			}
 		}
 
-		origin = ( NAObject * ) na_object_get_origin( item );
-		if( origin ){
-			na_updater_remove_item( updater, origin );
-			g_object_unref( origin );
+		if( delete_ok ){
+			origin = ( NAObject * ) na_object_get_origin( item );
+			if( origin ){
+				na_updater_remove_item( updater, origin );
+				g_object_unref( origin );
+			}
 		}
 	}
+
+	return( delete_ok );
 }
 
 static gchar *

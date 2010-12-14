@@ -693,6 +693,11 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
  *
  * Returns: %TRUE if successfully written (i.e. writable, not locked,
  * and so on), %FALSE else.
+ *
+ * @messages #GSList is only filled up in case of an error has occured.
+ * If there is no error (na_pivot_write_level_zero() returns %TRUE), then
+ * the caller may safely assume that @messages is returned in the same
+ * state that it has been provided.
  */
 gboolean
 na_pivot_write_level_zero( const NAPivot *pivot, GList *items, GSList **messages )

@@ -1,3 +1,16 @@
+2010-12-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-pivot.c (na_pivot_write_level_zero): Improve comment.
+
+	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_save_items):
+	Improve delete process, restoring items which cannot have been deleted.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h (nact_main_window_remove_deleted):
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h (nact_window_delete_item):
+	Improve delete process, returning a status and an error message.
+
 2010-12-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_save_items):

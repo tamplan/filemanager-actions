@@ -49,6 +49,7 @@ static guint  st_event_autosave   = 0;
 static gchar *st_save_error       = N_( "Save error" );
 static gchar *st_save_warning     = N_( "Some items may not have been saved" );
 static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items list" );
+static gchar *st_delete_error     = N_( "Some items cannot have been deleted" );
 
 static gboolean save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages );
 static gboolean autosave_callback( NactMainWindow *window );
@@ -233,7 +234,7 @@ nact_main_menubar_file_on_new_profile( GtkAction *gtk_action, NactMainWindow *wi
  * Saving is not only saving modified items, but also saving hierarchy
  * (and order if alpha order is not set).
  *
- * This is the same function that #nact_main_menubar_file_save_items(), just with
+ * This is the same function that nact_main_menubar_file_save_items(), just with
  * different arguments.
  */
 void
@@ -254,8 +255,29 @@ nact_main_menubar_file_on_save( GtkAction *gtk_action, NactMainWindow *window )
  * @window: the #NactMainWindow main window.
  *
  * Save items.
- * This is the same function that #nact_main_menubar_file_on_save(), just with
- * different arguments.
+ * This is the same function that nact_main_menubar_file_on_save(), just
+ * with different arguments.
+ *
+ * Synopsis:
+ * - rewrite the level-zero items list
+ * - delete the items which are marked to be deleted
+ * - rewrite (i.e. delete/write) updated items
+ *
+ * The difficulty here is that some sort of pseudo-transactionnal process
+ * must be setup:
+ *
+ * - if the level-zero items list cannot be updated, then an error message
+ *   is displayed, and we abort the whole processus
+ *
+ * - if some items cannot be actually deleted, then an error message is
+ *   displayed, and the whole processus is aborted;
+ *   plus:
+ *   a/ items which have not been deleted must be restored (maybe marked
+ *      as deleted ?) -> so these items are modified
+ *   b/ the level-zero list must be updated with these restored items
+ *      and reset modified
+ *
+ * - idem if some items cannot be actually rewritten...
  */
 void
 nact_main_menubar_file_save_items( NactMainWindow *window )
@@ -288,7 +310,6 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	messages = NULL;
 
 	if( !na_pivot_write_level_zero( NA_PIVOT( updater ), items, &messages )){
-
 		if( g_slist_length( messages )){
 			msg = na_core_utils_slist_join_at_end( messages, "\n" );
 		} else {
@@ -306,7 +327,17 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	/* remove deleted items
 	 * so that new actions with same id do not risk to be deleted later
 	 */
-	nact_main_window_remove_deleted( window );
+	if( !nact_main_window_remove_deleted( window, &messages )){
+		if( g_slist_length( messages )){
+			msg = na_core_utils_slist_join_at_end( messages, "\n" );
+		} else {
+			msg = g_strdup( st_delete_error );
+		}
+		base_window_error_dlg( BASE_WINDOW( window ), GTK_MESSAGE_ERROR, st_save_error, msg );
+		g_free( msg );
+		na_core_utils_slist_free( messages );
+		return;
+	}
 
 	/* recursively save the modified items
 	 * check is useless here if item was not modified, but not very costly;
@@ -384,6 +415,7 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSLis
 	NAIOProvider *provider_before;
 	NAIOProvider *provider_after;
 	GList *subitems, *it;
+	gchar *msg;
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
 	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
@@ -394,8 +426,9 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSLis
 
 	if( na_object_is_modified( item )){
 		ret = FALSE;
+		msg = NULL;
 
-		if( nact_window_save_item( NACT_WINDOW( window ), item )){
+		if( nact_window_save_item( NACT_WINDOW( window ), item, &msg )){
 
 			if( NA_IS_OBJECT_ACTION( item )){
 				na_object_reset_last_allocated( item );
@@ -407,6 +440,11 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSLis
 			if( provider_after != provider_before ){
 				g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED, item );
 			}
+
+		} else {
+			/* TODO:
+			 * add the error message to the GSList
+			 */
 		}
 	}
 

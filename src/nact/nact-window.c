@@ -308,6 +308,7 @@ nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item
  * nact_window_save_item:
  * @window: this #NactWindow instance.
  * @item: the #NAObjectItem to be saved.
+ * @msg: a pointer to a location where wi may allocate a new error message.
  *
  * Saves a modified item (action or menu) to the I/O storage subsystem.
  *
@@ -315,10 +316,14 @@ nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item
  *
  * Writing a menu only involves writing its NAObjectItem properties,
  * along with the list and the order of its subitems, but not the
- * subitems themselves (because they may be unmodified)
+ * subitems themselves (because they may be unmodified).
+ *
+ * 2010-12-13 pwi v 3.0.3
+ * As we are displaying a summary of errors from the calling function,
+ * we no more care here of displaying each individual error message.
  */
 gboolean
-nact_window_save_item( NactWindow *window, NAObjectItem *item )
+nact_window_save_item( NactWindow *window, NAObjectItem *item, gchar **msg )
 {
 	static const gchar *thisfn = "nact_window_save_item";
 	gboolean save_ok = FALSE;
@@ -326,7 +331,6 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 	NAUpdater *updater;
 	GSList *messages = NULL;
 	guint ret;
-	gchar *msgerr;
 
 	g_debug( "%s: window=%p, item=%p (%s)", thisfn,
 			( void * ) window, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
@@ -341,23 +345,12 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
 		ret = na_updater_write_item( updater, item, &messages );
 		g_debug( "nact_window_save_item: ret=%d", ret );
 
-		msgerr = NULL;
-
 		if( messages ){
-			msgerr = na_core_utils_slist_join_at_end( messages, "\n" );
+			*msg = na_core_utils_slist_join_at_end( messages, "\n" );
 			na_core_utils_slist_free( messages );
 
 		} else if( ret != NA_IIO_PROVIDER_CODE_OK ){
-			msgerr = na_io_provider_get_return_code_label( ret );
-		}
-
-		if( msgerr ){
-			base_window_error_dlg(
-					BASE_WINDOW( window ),
-					GTK_MESSAGE_WARNING,
-					_( "An error has occured when trying to save the item" ),
-					msgerr );
-			g_free( msgerr );
+			*msg = na_io_provider_get_return_code_label( ret );
 		}
 
 		save_ok = ( ret == NA_IIO_PROVIDER_CODE_OK );
@@ -372,9 +365,13 @@ nact_window_save_item( NactWindow *window, NAObjectItem *item )
  * @item: the item (action or menu) to delete.
  *
  * Deleted an item from the I/O storage subsystem.
+ *
+ * 2010-12-13 pwi v 3.0.3
+ * As we are displaying a summary of errors from the calling function,
+ * we no more care here of displaying each individual error message.
  */
 gboolean
-nact_window_delete_item( NactWindow *window, const NAObjectItem *item )
+nact_window_delete_item( NactWindow *window, const NAObjectItem *item, gchar **msg )
 {
 	static const gchar *thisfn = "nact_window_delete_item";
 	gboolean delete_ok = FALSE;
@@ -398,12 +395,11 @@ nact_window_delete_item( NactWindow *window, const NAObjectItem *item )
 		ret = na_updater_delete_item( updater, item, &messages );
 
 		if( messages ){
-			base_window_error_dlg(
-					BASE_WINDOW( window ),
-					GTK_MESSAGE_WARNING,
-					_( "An error has occured when trying to delete the item" ),
-					( const gchar * ) messages->data );
+			*msg = na_core_utils_slist_join_at_end( messages, "\n" );
 			na_core_utils_slist_free( messages );
+
+		} else if( ret != NA_IIO_PROVIDER_CODE_OK ){
+			*msg = na_io_provider_get_return_code_label( ret );
 		}
 
 		delete_ok = ( ret == NA_IIO_PROVIDER_CODE_OK );

@@ -75,8 +75,8 @@ gboolean   nact_window_has_writable_providers( NactWindow *window );
 
 gboolean   nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item, guint *reason );
 
-gboolean   nact_window_save_item  ( NactWindow *window, NAObjectItem *item );
-gboolean   nact_window_delete_item( NactWindow *window, const NAObjectItem *item );
+gboolean   nact_window_save_item  ( NactWindow *window, NAObjectItem *item, gchar **msgerr );
+gboolean   nact_window_delete_item( NactWindow *window, const NAObjectItem *item, gchar **msgerr );
 
 void       nact_window_count_level_zero_items( GList *items, guint *actions, guint *profiles, guint *menus );
 
