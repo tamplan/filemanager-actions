@@ -29,6 +29,7 @@
 AC_PREREQ([2.53])
 
 AC_INIT([Nautilus-Actions],[3.0.3],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 
 AC_CANONICAL_TARGET
 
@@ -131,7 +132,7 @@ AM_GCONF_SOURCE_2
 #
 GLIB_REQUIRED=2.16.0
 GTK_REQUIRED=2.12.0
-NAUTILUS_EXTENSION=2.8.0
+NAUTILUS_EXTENSION_REQUIRED=2.8.0
 GCONF_REQUIRED=2.8.0
 LIBXML_REQUIRED=2.6.0
 GOBJECT_REQUIRED=2.4.0
@@ -142,23 +143,46 @@ if test "${PKG_CONFIG}" = "no"; then
 	AC_MSG_ERROR([You need to install pkg-config])
 fi
 
-PKG_CHECK_MODULES([NAUTILUS_ACTIONS], \
-	glib-2.0				>= ${GLIB_REQUIRED}			\
-	gmodule-2.0				>= ${GLIB_REQUIRED}			\
-	gtk+-2.0				>= ${GTK_REQUIRED}			\
-	gconf-2.0				>= ${GCONF_REQUIRED}		\
-	libxml-2.0				>= ${LIBXML_REQUIRED}		\
-	libnautilus-extension	>= ${NAUTILUS_EXTENSION}	\
-	libgtop-2.0				>= ${LIBGTOP_REQUIRED}		\
-	sm						>= 1.0.0					\
-	uuid												\
-	unique-1.0											\
-	dbus-glib-1
-)
+PKG_CHECK_MODULES([DBUS],				[dbus-glib-1])
+PKG_CHECK_MODULES([GCONF],				[gconf-2.0		>= ${GCONF_REQUIRED}])
+PKG_CHECK_MODULES([GMODULE],			[gmodule-2.0	>= ${GLIB_REQUIRED}])
+PKG_CHECK_MODULES([GLIB],				[glib-2.0		>= ${GLIB_REQUIRED}])
+PKG_CHECK_MODULES([GTK],				[gtk+-2.0		>= ${GTK_REQUIRED}])
+PKG_CHECK_MODULES([GTOP],				[libgtop-2.0	>= ${LIBGTOP_REQUIRED}])
+PKG_CHECK_MODULES([LIBXML],				[libxml-2.0		>= ${LIBXML_REQUIRED}])
+PKG_CHECK_MODULES([SM],					[sm				>= 1.0.0])
+PKG_CHECK_MODULES([UNIQUE],				[unique-1.0])
+PKG_CHECK_MODULES([UUID],				[uuid])
+PKG_CHECK_MODULES([NAUTILUS_EXTENSION],	[libnautilus-extension >= ${NAUTILUS_EXTENSION_REQUIRED}])
 
-AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
+AC_SUBST([NAUTILUS_ACTIONS_CFLAGS],["	\
+	${DBUS_CFLAGS}						\
+	${GCONF_CFLAGS}						\
+	${CGMODULE_CFLAGS}					\
+	${GLIB_CFLAGS}						\
+	${GTK_CFLAGS}						\
+	${GTOP_CFLAGS}						\
+	${LIBXML_CFLAGS}					\
+	${SM_CFLAGS}						\
+	${UNIQUE_CFLAGS}					\
+	${UUID_CFLAGS}						\
+	${NAUTILUS_EXTENSION_CFLAGS}		\
+"])
 AC_DEFINE_UNQUOTED([NAUTILUS_ACTIONS_CFLAGS],["${NAUTILUS_ACTIONS_CFLAGS}"],[N-A compiler flags])
-AC_SUBST([NAUTILUS_ACTIONS_LIBS])
+
+AC_SUBST([NAUTILUS_ACTIONS_LIBS],["		\
+	${DBUS_LIBS}						\
+	${GCONF_LIBS}						\
+	${CGMODULE_LIBS}					\
+	${GLIB_LIBS}						\
+	${GTK_LIBS}							\
+	${GTOP_LIBS}						\
+	${LIBXML_LIBS}						\
+	${SM_LIBS}							\
+	${UNIQUE_LIBS}						\
+	${UUID_LIBS}						\
+	${NAUTILUS_EXTENSION_LIBS}			\
+"])
 AC_DEFINE_UNQUOTED([NAUTILUS_ACTIONS_LIBS],["${NAUTILUS_ACTIONS_LIBS}"],[N-A linker flags])
 
 # defines log domains when in maintainer mode
@@ -199,9 +223,6 @@ $as_echo "
 
 	Installation prefix             ${prefix}
 	Build system type               ${ac_cv_build}
-	Preprocessor flags              ${AM_CPPFLAGS}
-	Compiler flags                  ${AM_CFLAGS} ${NAUTILUS_ACTIONS_CFLAGS}
-	Linker flags                    ${NAUTILUS_ACTIONS_LIBS}
 	Nautilus extensions directory   ${ac_with_nact_nautilus_extdir}
 	Default I/O provider            ${with_default_io_provider}
 	GConf schemas installation      ${_ac_na_schemas_install}
@@ -211,3 +232,6 @@ $as_echo "
 	HTML manuals generation         ${_ac_na_html_manuals}
 	PDF manuals generation          ${_ac_na_pdf_manuals}
 "
+#	Preprocessor flags              ${AM_CPPFLAGS}
+#	Compiler flags                  ${AM_CFLAGS} ${NAUTILUS_ACTIONS_CFLAGS}
+#	Linker flags                    ${NAUTILUS_ACTIONS_LIBS}

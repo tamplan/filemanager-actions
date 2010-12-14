@@ -1,5 +1,11 @@
 2010-12-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	- make silent rules available, disabling by default
+	- individualize modules cheks.
+
+	* run-autogen.sh: Enable silent rules.
+
 	* src/core/na-pivot.c (na_pivot_write_level_zero): Improve comment.
 
 	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_save_items):

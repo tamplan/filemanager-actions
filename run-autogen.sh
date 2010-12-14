@@ -8,6 +8,7 @@ find . -maxdepth 1 -type d -name 'nautilus-actions-*' | xargs rm -fr
 exec ./autogen.sh \
 	--prefix=$(pwd)/install \
 	--with-nautilus-extdir=$(pwd)/install/lib/nautilus \
+	--enable-silent-rules \
 	--disable-schemas-install \
 	--enable-gtk-doc \
 	--enable-gtk-doc-pdf \
