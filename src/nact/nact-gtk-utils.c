@@ -52,9 +52,13 @@
  * @editable: whether the @widget is editable or not.
  *
  * Try to set a visual indication of whether the @widget is editable or not.
+ *
+ * Having a GtkWidget should be enough, but we also deal with a GtkTreeViewColumn.
+ * So the most-bottom common ancestor is just GObject (since GtkObject having been
+ * deprecated in Gtk+-3.0)
  */
 void
-nact_gtk_utils_set_editable( GtkWidget *widget, gboolean editable )
+nact_gtk_utils_set_editable( GObject *widget, gboolean editable )
 {
 	GList *renderers, *irender;
 
@@ -63,7 +67,7 @@ nact_gtk_utils_set_editable( GtkWidget *widget, gboolean editable )
 	 * while 'has_entry' property exists since 2.24
 	 */
 #if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
-	if( gtk_combo_box_get_has_entry( GTK_COMBO_BOX( widget ))){
+	if( GTK_IS_COMBO_BOX( widget ) && gtk_combo_box_get_has_entry( GTK_COMBO_BOX( widget ))){
 #else
 	if( GTK_IS_COMBO_BOX_ENTRY( widget )){
 #endif

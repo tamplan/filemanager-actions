@@ -351,10 +351,10 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	}
 
 	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
-	nact_gtk_utils_set_editable( GTK_WIDGET( column ), data->editable_item && data->editable_filter );
+	nact_gtk_utils_set_editable( G_OBJECT( column ), data->editable_item && data->editable_filter );
 
-	nact_gtk_utils_set_editable( GTK_WIDGET( data->addbutton ), data->editable_item );
-	nact_gtk_utils_set_editable( GTK_WIDGET( data->removebutton ), data->editable_item );
+	nact_gtk_utils_set_editable( G_OBJECT( data->addbutton ), data->editable_item );
+	nact_gtk_utils_set_editable( G_OBJECT( data->removebutton ), data->editable_item );
 	gtk_widget_set_sensitive( data->removebutton, FALSE );
 
 	st_on_selection_change = FALSE;

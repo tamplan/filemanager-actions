@@ -1,5 +1,27 @@
 2010-12-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* m4/na-check-module.m4: Fix variable substitution.
+
+	* run-autogen.sh: Re-enable silent rules in Gtk+-3 build.
+
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h (nact_gtk_utils_set_editable):
+	* src/nact/nact-iaction-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-ibasenames-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-icommand-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-ienvironment-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-iexecution-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-ifolders-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-iproperties-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-ischemes-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-match-list.c (nact_match_list_on_selection_changed):
+	* src/nact/nact-schemes-list.c (nact_schemes_list_create_model):
+	Use GObject instead of GtkWidget parameter.
+
+	* src/nact/nact-iaction-tab.c
+	(nact_iaction_tab_runtime_init_toplevel):
+	Dynamicallu allocates the GtkComboBox or the GtkComboBoxEntry.
+
 	* configure.ac: Build with Gtk+ 3.0 if first found by pkg-config.
 
 	* run-autogen.sh: Setup PKG_CONFIG_PATH and LD_LIBRARY_PATH

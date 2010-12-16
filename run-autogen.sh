@@ -30,4 +30,5 @@ LD_LIBRARY_PATH=/home/pierre/.local/jhbuild/lib \
 	exec ./autogen.sh \
 		--prefix=/home/pierre/.local/jhbuild \
 		--with-nautilus-extdir=/home/pierre/.local/jhbuild/lib/nautilus \
+		--enable-silent-rules \
 		--disable-schemas-install

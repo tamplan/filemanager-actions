@@ -113,6 +113,7 @@ static void          icon_preview_cb( GtkFileChooser *dialog, GtkWidget *preview
 static gint          sort_stock_ids( gconstpointer a, gconstpointer b );
 static gchar        *strip_underscore( const gchar *text );
 static void          release_icon_combobox( NactIActionTab *instance );
+static GtkWidget    *get_icon_combo_box( NactIActionTab *instance );
 
 GType
 nact_iaction_tab_get_type( void )
@@ -192,21 +193,24 @@ interface_base_finalize( NactIActionTabInterface *klass )
  * GTK_ICON_SIZE_DIALOG       : 48x48
  *
  * icon is rendered for GTK_ICON_SIZE_MENU (na_object_item_get_pixbuf)
+ *
+ * Starting with 3.0.3, the ComboBox is dynamically created into its container.
  */
 void
 nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 {
 	static const gchar *thisfn = "nact_iaction_tab_initial_load_toplevel";
-	GtkWidget *icon_widget;
-	GtkTreeModel *model;
-	GtkButton *button;
 	GtkFrame *frame;
+	GtkButton *button;
 	gint size;
 #if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
 	GtkRequisition minimal_size, natural_size;
 #else
 	GtkRequisition requisition;
 #endif
+	GtkWidget *container;
+	GtkWidget *icon_combo;
+	GtkTreeModel *model;
 
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
 
@@ -218,27 +222,30 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 		frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconFrame" ));
 #if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
 		gtk_widget_get_preferred_size( GTK_WIDGET( button ), &minimal_size, &natural_size );
-		size = MAX( minimal_size.height, natural_size.height ) - 4;
+		size = MAX( minimal_size.height, natural_size.height );
 #else
 		gtk_widget_size_request( GTK_WIDGET( button ), &requisition );
-		g_debug( "%s: button requisition width=%d, height=%d", thisfn, requisition.width, requisition.height );
-		size = requisition.height - 4;
+		size = requisition.height;
 #endif
 		gtk_widget_set_size_request( GTK_WIDGET( frame ), size, size );
 		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 
-		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 		model = create_stock_icon_model();
-		gtk_combo_box_set_model( GTK_COMBO_BOX( icon_widget ), model );
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
+		icon_combo = gtk_combo_box_new_with_model_and_entry( model );
+#else
+		icon_combo = gtk_combo_box_entry_new_with_model( model );
+#endif
 		g_object_unref( model );
+		container = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconHBox" );
+		gtk_box_pack_start( GTK_BOX( container ), icon_combo, TRUE, TRUE, 0 );
 
 #if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
-		icon_combo_list_set_entry( GTK_COMBO_BOX( icon_widget ));
+		icon_combo_list_set_entry( GTK_COMBO_BOX( icon_combo ));
 #else
-		icon_combo_list_set_entry( GTK_COMBO_BOX_ENTRY( icon_widget ));
+		icon_combo_list_set_entry( GTK_COMBO_BOX_ENTRY( icon_combo ));
 #endif
-
-		icon_combo_list_set_layout( GTK_COMBO_BOX( icon_widget ));
+		icon_combo_list_set_layout( GTK_COMBO_BOX( icon_combo ));
 	}
 }
 
@@ -316,7 +323,7 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 				"changed",
 				G_CALLBACK( on_tooltip_changed ));
 
-		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
+		icon_widget = get_icon_combo_box( instance );
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
 				G_OBJECT( gtk_bin_get_child( GTK_BIN( icon_widget ))),
@@ -457,12 +464,12 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" ));
 		gtk_toggle_button_set_active( toggle, target_selection || ( item && NA_IS_OBJECT_MENU( item )));
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_WIDGET( toggle ), editable );
+		nact_gtk_utils_set_editable( G_OBJECT( toggle ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetLocationButton" ));
 		gtk_toggle_button_set_active( toggle, target_location || ( item && NA_IS_OBJECT_MENU( item )));
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_WIDGET( toggle ), editable );
+		nact_gtk_utils_set_editable( G_OBJECT( toggle ), editable );
 
 		enable_label = target_selection || target_location || ( item && NA_IS_OBJECT_MENU( item ));
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
@@ -474,25 +481,25 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		}
 		g_free( label );
 		gtk_widget_set_sensitive( label_widget, enable_label );
-		nact_gtk_utils_set_editable( GTK_WIDGET( label_widget ), editable );
+		nact_gtk_utils_set_editable( G_OBJECT( label_widget ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetToolbarButton" ));
 		gtk_toggle_button_set_active( toggle, target_toolbar );
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_WIDGET( toggle ), editable );
+		nact_gtk_utils_set_editable( G_OBJECT( toggle ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
 		same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_is_toolbar_same_label( item ) : FALSE;
 		gtk_toggle_button_set_active( toggle, same_label );
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), target_toolbar );
-		nact_gtk_utils_set_editable( GTK_WIDGET( toggle ), editable );
+		nact_gtk_utils_set_editable( G_OBJECT( toggle ), editable );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
 		label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_get_toolbar_label( item ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		g_free( label );
 		gtk_widget_set_sensitive( label_widget, target_toolbar && !same_label );
-		nact_gtk_utils_set_editable( GTK_WIDGET( label_widget ), editable );
+		nact_gtk_utils_set_editable( G_OBJECT( label_widget ), editable );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelLabel" );
 		gtk_widget_set_sensitive( label_widget, target_toolbar && !same_label );
@@ -502,17 +509,17 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		tooltip = tooltip ? tooltip : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
 		g_free( tooltip );
-		nact_gtk_utils_set_editable( GTK_WIDGET( tooltip_widget ), editable );
+		nact_gtk_utils_set_editable( G_OBJECT( tooltip_widget ), editable );
 
-		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
+		icon_widget = get_icon_combo_box( instance );
 		icon = item ? na_object_get_icon( item ) : g_strdup( "" );
 		icon = icon ? icon : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( icon_widget ))), icon );
 		g_free( icon );
-		nact_gtk_utils_set_editable( GTK_WIDGET( icon_widget ), editable );
+		nact_gtk_utils_set_editable( G_OBJECT( icon_widget ), editable );
 
 		icon_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" ));
-		nact_gtk_utils_set_editable( GTK_WIDGET( icon_button ), editable );
+		nact_gtk_utils_set_editable( G_OBJECT( icon_button ), editable );
 
 		st_on_selection_change = FALSE;
 	}
@@ -918,14 +925,15 @@ icon_combo_list_set_layout( GtkComboBox *combo )
 static void
 on_icon_browse( GtkButton *button, NactIActionTab *instance )
 {
-	GtkWidget *icon_widget;
-
-	icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
-
 	nact_gtk_utils_select_file_with_preview(
 			BASE_WINDOW( instance ),
-			_( "Choosing an icon" ), IPREFS_ICONS_DIALOG,
-			gtk_bin_get_child( GTK_BIN( icon_widget )), IPREFS_ICONS_PATH, "", G_CALLBACK( icon_preview_cb ));
+			_( "Choosing an icon" ),
+			IPREFS_ICONS_DIALOG,
+			gtk_bin_get_child( GTK_BIN( get_icon_combo_box( instance ))),
+			IPREFS_ICONS_PATH,
+			"",
+			G_CALLBACK( icon_preview_cb )
+	);
 }
 
 static void
@@ -1036,7 +1044,18 @@ release_icon_combobox( NactIActionTab *instance )
 	GtkWidget *combo;
 	GtkTreeModel *model;
 
-	combo = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
+	combo = get_icon_combo_box( instance );
 	model = gtk_combo_box_get_model( GTK_COMBO_BOX( combo ));
 	gtk_list_store_clear( GTK_LIST_STORE( model ));
+}
+
+static GtkWidget *
+get_icon_combo_box( NactIActionTab *instance )
+{
+	GtkWidget *icon_box, *icon_combo;
+
+	icon_box = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconHBox" );
+	icon_combo = GTK_WIDGET( gtk_container_get_children( GTK_CONTAINER( icon_box ))->data );
+
+	return( icon_combo );
 }

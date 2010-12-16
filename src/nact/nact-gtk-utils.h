@@ -43,7 +43,7 @@
 
 G_BEGIN_DECLS
 
-void       nact_gtk_utils_set_editable( GtkWidget *widget, gboolean editable );
+void       nact_gtk_utils_set_editable( GObject *widget, gboolean editable );
 
 void       nact_gtk_utils_set_initial_state  ( GtkToggleButton *button, GCallback func );
 void       nact_gtk_utils_reset_initial_state( GtkToggleButton *button, GCallback func, void *data, gboolean active );

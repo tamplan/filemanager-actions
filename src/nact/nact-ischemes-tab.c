@@ -228,7 +228,7 @@ on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
 	button = base_window_get_widget( window, "AddFromDefaultButton" );
-	nact_gtk_utils_set_editable( GTK_WIDGET( button ), editable );
+	nact_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }
 
 static void
