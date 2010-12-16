@@ -270,7 +270,7 @@ na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existin
 
 		mode = dialog->private->mode;
 
-		gtk_widget_hide_all( GTK_WIDGET( dialog->private->toplevel ));
+		gtk_widget_hide( GTK_WIDGET( dialog->private->toplevel ));
 		gtk_widget_destroy( GTK_WIDGET( dialog->private->toplevel ));
 
 	} else {

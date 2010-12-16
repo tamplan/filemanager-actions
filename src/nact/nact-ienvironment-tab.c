@@ -431,23 +431,23 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		g_free( sel_count );
 
 		combo = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountSigneCombobox" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( combo ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( combo ), editable );
 
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountNumberEntry" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( entry ), editable );
 
 		/* desktop environment
 		 */
 		raz_desktop_listview( instance );
 
 		always_button = base_window_get_widget( BASE_WINDOW( instance ), "ShowAlwaysButton" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( always_button ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( always_button ), editable );
 
 		show_button = base_window_get_widget( BASE_WINDOW( instance ), "OnlyShowButton" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( show_button ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( show_button ), editable );
 
 		notshow_button = base_window_get_widget( BASE_WINDOW( instance ), "DoNotShowButton" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( notshow_button ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( notshow_button ), editable );
 
 		desktops = context ? na_object_get_only_show_in( context ) : NULL;
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
@@ -480,34 +480,34 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		text = text && strlen( text ) ? text : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), text );
 		g_free( text );
-		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( entry ), editable );
 
 		browse_button = base_window_get_widget( BASE_WINDOW( instance ), "TryExecButton" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( browse_button ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( browse_button ), editable );
 
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRegisteredEntry" );
 		text = context ? na_object_get_show_if_registered( context ) : g_strdup( "" );
 		text = text && strlen( text ) ? text : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), text );
 		g_free( text );
-		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( entry ), editable );
 
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfTrueEntry" );
 		text = context ? na_object_get_show_if_true( context ) : g_strdup( "" );
 		text = text && strlen( text ) ? text : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), text );
 		g_free( text );
-		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( entry ), editable );
 
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningEntry" );
 		text = context ? na_object_get_show_if_running( context ) : g_strdup( "" );
 		text = text && strlen( text ) ? text : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), text );
 		g_free( text );
-		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( entry ), editable );
 
 		browse_button = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningButton" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( browse_button ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( browse_button ), editable );
 
 		st_on_selection_change = FALSE;
 

@@ -239,7 +239,7 @@ on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_select
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
 	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
-	nact_gtk_utils_set_editable( GTK_OBJECT( button ), editable );
+	nact_gtk_utils_set_editable( GTK_WIDGET( button ), editable );
 }
 
 static void

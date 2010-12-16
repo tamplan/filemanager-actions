@@ -538,7 +538,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseAssistant *assi
 
 	if( !assistant->private->dispose_has_run ){
 
-		if( event->keyval == GDK_Escape &&
+		if( event->keyval == GDK_KEY_Escape &&
 			assistant->private->cancel_on_escape ){
 
 				assistant->private->escape_key_pressed = TRUE;

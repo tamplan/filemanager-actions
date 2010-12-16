@@ -26,17 +26,30 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 3 prefix message with 'msg_'
+# serial 1 creation
 
-dnl define NA_MAINTAINER_MODE
+dnl usage:  NA_CHECK_MODULE([var],[condition])
+dnl
+dnl this macro checks that gtk+-2.0 and gtk+-3.0 libraries are not mixed
 
-AC_DEFUN([NA_IS_MAINTAINER_MODE],[
-	msg_maintainer_mode="disabled"
-
-	if test "${USE_MAINTAINER_MODE}" = "yes"; then
-		AC_DEFINE([NA_MAINTAINER_MODE],[1],[Define to 1 if we are in maintainer mode])
-		AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} ${DISABLE_DEPRECATED} -DGSEAL_ENABLED"])
-		AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} -Werror"])
-		msg_maintainer_mode="enabled"
+AC_DEFUN([NA_CHECK_MODULE],[
+	PKG_CHECK_MODULES([$1],[$2])
+	#echo "cflags='${$1_CFLAGS}'"
+	#echo "libs='${$1_LIBS}'"
+	if ! test -z "${$1_LIBS}"; then
+		if test "${have_gtk3}" = "yes"; then
+			if test "$(echo ${$1_LIBS} | grep gtk-x11-2.0)" != ""; then
+				AC_MSG_ERROR([$1: compiling with Gtk+-3 but adresses Gtk+-2 libraries])
+			fi
+		else
+			if test "$(echo ${$1_LIBS} | grep gtk-x11-3.0)" != ""; then
+				AC_MSG_ERROR([$1: compiling with Gtk+-2 but adresses Gtk+-3 libraries])
+			fi
+		fi
+				
+		NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} $1_CFLAGS"
+		NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} $1_LIBS"
+	else
+		AC_MSG_ERROR([condition $2 not satisfied])
 	fi
 ])

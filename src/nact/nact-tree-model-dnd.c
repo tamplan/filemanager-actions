@@ -163,25 +163,52 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 	gchar *atom_name;
 	guint info;
 	gchar *path_str;
+	GdkAtom selection_data_selection;
+	GdkAtom selection_data_target;
+	GdkAtom selection_data_type;
+	gint selection_data_format;
+	gint selection_data_length;
 
 	g_debug( "%s: drag_dest=%p, dest=%p, selection_data=%p", thisfn, ( void * ) drag_dest, ( void * ) dest, ( void * ) selection_data );
 	g_return_val_if_fail( NACT_IS_TREE_MODEL( drag_dest ), FALSE );
 
-	atom_name = gdk_atom_name( selection_data->selection );
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+	selection_data_selection = gtk_selection_data_get_selection( selection_data );
+#else
+	selection_data_selection = selection_data->selection;
+#endif
+	atom_name = gdk_atom_name( selection_data_selection );
 	g_debug( "%s: selection=%s", thisfn, atom_name );
 	g_free( atom_name );
 
-	atom_name = gdk_atom_name( selection_data->target );
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+	selection_data_target = gtk_selection_data_get_target( selection_data );
+#else
+	selection_data_target = selection_data->target;
+#endif
+	atom_name = gdk_atom_name( selection_data_target );
 	g_debug( "%s: target=%s", thisfn, atom_name );
 	g_free( atom_name );
 
-	atom_name = gdk_atom_name( selection_data->type );
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+	selection_data_type = gtk_selection_data_get_data_type( selection_data );
+#else
+	selection_data_type = selection_data->type;
+#endif
+	atom_name = gdk_atom_name( selection_data_type );
 	g_debug( "%s: type=%s", thisfn, atom_name );
 	g_free( atom_name );
 
-	g_debug( "%s: format=%d, length=%d", thisfn, selection_data->format, selection_data->length );
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+	selection_data_format = gtk_selection_data_get_format( selection_data );
+	selection_data_length = gtk_selection_data_get_length( selection_data );
+#else
+	selection_data_format = selection_data->format;
+	selection_data_length = selection_data->length;
+#endif
+	g_debug( "%s: format=%d, length=%d", thisfn, selection_data_format, selection_data_length );
 
-	info = target_atom_to_id( selection_data->type );
+	info = target_atom_to_id( selection_data_type );
 	g_debug( "%s: info=%u", thisfn, info );
 
 	path_str = gtk_tree_path_to_string( dest );
@@ -276,10 +303,28 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 	gchar *dest_folder, *folder;
 	gboolean is_writable;
 	gboolean copy_data;
+	GdkAtom selection_data_target;
+	GdkDragAction context_suggested_action;
+	GdkDragAction context_selected_action;
 
-	atom_name = gdk_atom_name( selection_data->target );
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+	selection_data_target = gtk_selection_data_get_target( selection_data );
+#else
+	selection_data_target = selection_data->target;
+#endif
+
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 22 ) || GTK_MAJOR_VERSION >= 3 )
+	context_suggested_action = gdk_drag_context_get_suggested_action( context );
+	context_selected_action = gdk_drag_context_get_selected_action( context );
+#else
+	context_suggested_action = context->suggested_action;
+	context_selected_action = context->action;
+#endif
+
+	atom_name = gdk_atom_name( selection_data_target );
 	g_debug( "%s: drag_source=%p, context=%p, action=%d, selection_data=%p, rows=%p, atom=%s",
-			thisfn, ( void * ) drag_source, ( void * ) context, ( int ) context->suggested_action, ( void * ) selection_data, ( void * ) rows,
+			thisfn, ( void * ) drag_source, ( void * ) context, ( int ) context_suggested_action,
+			( void * ) selection_data, ( void * ) rows,
 			atom_name );
 	g_free( atom_name );
 
@@ -294,8 +339,9 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 
 		switch( info ){
 			case NACT_XCHANGE_FORMAT_NACT:
-				copy_data = ( context->action == GDK_ACTION_COPY );
-				gtk_selection_data_set( selection_data, selection_data->target, 8, ( guchar * ) "", 0 );
+				copy_data = ( context_selected_action == GDK_ACTION_COPY );
+				gtk_selection_data_set( selection_data,
+						selection_data_target, 8, ( guchar * ) "", 0 );
 				nact_clipboard_dnd_set( model->private->clipboard, info, rows, NULL, copy_data );
 				ret = TRUE;
 				break;
@@ -311,7 +357,8 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 				 */
 				is_writable = na_core_utils_dir_is_writable_uri( dest_folder );
 				g_debug( "%s: dest_folder=%s, is_writable=%s", thisfn, dest_folder, is_writable ? "True":"False" );
-				gtk_selection_data_set( selection_data, selection_data->target, 8, ( guchar * )( is_writable ? "S" : "F" ), 1 );
+				gtk_selection_data_set( selection_data,
+						selection_data_target, 8, ( guchar * )( is_writable ? "S" : "F" ), 1 );
 
 				if( is_writable ){
 					nact_clipboard_dnd_set( model->private->clipboard, info, rows, dest_folder, TRUE );
@@ -325,7 +372,8 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 			case NACT_XCHANGE_FORMAT_APPLICATION_XML:
 			case NACT_XCHANGE_FORMAT_TEXT_PLAIN:
 				data = nact_clipboard_dnd_get_text( model->private->clipboard, rows );
-				gtk_selection_data_set( selection_data, selection_data->target, 8, ( guchar * ) data, strlen( data ));
+				gtk_selection_data_set( selection_data,
+						selection_data_target, 8, ( guchar * ) data, strlen( data ));
 				g_free( data );
 				ret = TRUE;
 				break;
@@ -436,6 +484,7 @@ nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, B
 {
 	static const gchar *thisfn = "nact_tree_model_dnd_on_drag_begin";
 	NactTreeModel *model;
+	GdkWindow *context_source_window;
 
 	g_debug( "%s: widget=%p, context=%p, window=%p",
 			thisfn, ( void * ) widget, ( void * ) context, ( void * ) window );
@@ -450,8 +499,14 @@ nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, B
 
 		nact_clipboard_dnd_clear( model->private->clipboard );
 
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 22 ) || GTK_MAJOR_VERSION >= 3 )
+		context_source_window = gdk_drag_context_get_source_window( context );
+#else
+		context_source_window = context->source_window;
+#endif
+
 		gdk_property_change(
-				context->source_window,
+				context_source_window,
 				XDS_ATOM, TEXT_ATOM, 8, GDK_PROP_MODE_REPLACE, ( guchar * ) XDS_FILENAME, strlen( XDS_FILENAME ));
 	}
 }
@@ -467,6 +522,7 @@ nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, Bas
 {
 	static const gchar *thisfn = "nact_tree_model_dnd_on_drag_end";
 	NactTreeModel *model;
+	GdkWindow *context_source_window;
 
 	g_debug( "%s: widget=%p, context=%p, window=%p",
 			thisfn, ( void * ) widget, ( void * ) context, ( void * ) window );
@@ -478,7 +534,14 @@ nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, Bas
 
 		nact_clipboard_dnd_drag_end( model->private->clipboard );
 		nact_clipboard_dnd_clear( model->private->clipboard );
-		gdk_property_delete( context->source_window, XDS_ATOM );
+
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 22 ) || GTK_MAJOR_VERSION >= 3 )
+		context_source_window = gdk_drag_context_get_source_window( context );
+#else
+		context_source_window = context->source_window;
+#endif
+
+		gdk_property_delete( context_source_window, XDS_ATOM );
 	}
 }
 
@@ -802,6 +865,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	GString *str;
 	GSList *im;
 	GList *imported;
+	const gchar *selection_data_data;
 
 	gchar *dest_str = gtk_tree_path_to_string( dest );
 	g_debug( "%s: model=%p, dest=%p (%s), selection_data=%p",
@@ -819,10 +883,15 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	updater = nact_application_get_updater( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
-	g_debug( "%s", ( const gchar * ) selection_data->data );
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+	selection_data_data = ( const gchar * ) gtk_selection_data_get_data( selection_data );
+#else
+	selection_data_data = ( const gchar * ) selection_data->data;
+#endif
+	g_debug( "%s", selection_data_data );
 
 	parms.parent = base_window_get_toplevel( BASE_WINDOW( main_window ));
-	parms.uris = g_slist_reverse( na_core_utils_slist_from_split(( const gchar * ) selection_data->data, "\r\n" ));
+	parms.uris = g_slist_reverse( na_core_utils_slist_from_split( selection_data_data, "\r\n" ));
 
 	gconf = gconf_client_get_default();
 	parms.mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
@@ -1023,11 +1092,18 @@ get_xds_atom_value( GdkDragContext *context )
 {
 	gchar *ret;
 	gint actual_length;
+	GdkWindow *context_source_window;
+
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 22 ) || GTK_MAJOR_VERSION >= 3 )
+		context_source_window = gdk_drag_context_get_source_window( context );
+#else
+		context_source_window = context->source_window;
+#endif
 
 	g_return_val_if_fail( context != NULL, NULL );
-	g_return_val_if_fail( context->source_window != NULL, NULL );
+	g_return_val_if_fail( context_source_window != NULL, NULL );
 
-	gdk_property_get( context->source_window,		/* a GdkWindow */
+	gdk_property_get( context_source_window,		/* a GdkWindow */
 						XDS_ATOM, 					/* the property to retrieve */
 						TEXT_ATOM,					/* the desired property type */
 						0, 							/* offset (in 4 bytes chunks) */

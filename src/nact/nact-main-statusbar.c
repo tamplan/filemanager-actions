@@ -62,18 +62,28 @@ nact_main_statusbar_initial_load_toplevel( NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_statusbar_initial_load_toplevel";
 	gint width, height;
 	GtkStatusbar *bar;
-	GtkRequisition requisition;
 	GtkFrame *frame;
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
+	GtkRequisition minimal_size, natural_size;
+#else
+	GtkRequisition requisition;
+#endif
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	gtk_icon_size_lookup( GTK_ICON_SIZE_MENU, &width, &height );
 
 	bar = get_statusbar( window );
+	frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedFrame" ));
+
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
+	gtk_widget_get_preferred_size( GTK_WIDGET( bar ), &minimal_size, &natural_size );
+	gtk_widget_set_size_request( GTK_WIDGET( bar ), natural_size.width, height+8 );
+#else
 	gtk_widget_size_request( GTK_WIDGET( bar ), &requisition );
 	gtk_widget_set_size_request( GTK_WIDGET( bar ), requisition.width, height+8 );
+#endif
 
-	frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedFrame" ));
 	gtk_widget_set_size_request( GTK_WIDGET( frame ), width+4, height+4 );
 	gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 }

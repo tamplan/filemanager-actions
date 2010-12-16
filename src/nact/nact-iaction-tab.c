@@ -95,7 +95,18 @@ static void          on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *
 static void          toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item );
 static void          on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance );
 static GtkTreeModel *create_stock_icon_model( void );
-static void          icon_combo_list_fill( GtkComboBoxEntry* combo );
+
+/* GtkComboBoxEntry is deprecated from Gtk+3
+ * see. http://git.gnome.org/browse/gtk+/commit/?id=9612c648176378bf237ad0e1a8c6c995b0ca7c61
+ * while 'has_entry' property exists since 2.24
+ */
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
+static void          icon_combo_list_set_entry( GtkComboBox* combo );
+#else
+static void          icon_combo_list_set_entry( GtkComboBoxEntry* combo );
+#endif
+
+static void          icon_combo_list_set_layout( GtkComboBox* combo );
 static void          on_icon_browse( GtkButton *button, NactIActionTab *instance );
 static void          on_icon_changed( GtkEntry *entry, NactIActionTab *instance );
 static void          icon_preview_cb( GtkFileChooser *dialog, GtkWidget *preview );
@@ -189,9 +200,13 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 	GtkWidget *icon_widget;
 	GtkTreeModel *model;
 	GtkButton *button;
-	GtkRequisition requisition;
 	GtkFrame *frame;
 	gint size;
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
+	GtkRequisition minimal_size, natural_size;
+#else
+	GtkRequisition requisition;
+#endif
 
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
 
@@ -200,10 +215,15 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" ));
+		frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconFrame" ));
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
+		gtk_widget_get_preferred_size( GTK_WIDGET( button ), &minimal_size, &natural_size );
+		size = MAX( minimal_size.height, natural_size.height ) - 4;
+#else
 		gtk_widget_size_request( GTK_WIDGET( button ), &requisition );
 		g_debug( "%s: button requisition width=%d, height=%d", thisfn, requisition.width, requisition.height );
-		frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconFrame" ));
 		size = requisition.height - 4;
+#endif
 		gtk_widget_set_size_request( GTK_WIDGET( frame ), size, size );
 		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 
@@ -211,7 +231,14 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 		model = create_stock_icon_model();
 		gtk_combo_box_set_model( GTK_COMBO_BOX( icon_widget ), model );
 		g_object_unref( model );
-		icon_combo_list_fill( GTK_COMBO_BOX_ENTRY( icon_widget ));
+
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
+		icon_combo_list_set_entry( GTK_COMBO_BOX( icon_widget ));
+#else
+		icon_combo_list_set_entry( GTK_COMBO_BOX_ENTRY( icon_widget ));
+#endif
+
+		icon_combo_list_set_layout( GTK_COMBO_BOX( icon_widget ));
 	}
 }
 
@@ -430,12 +457,12 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" ));
 		gtk_toggle_button_set_active( toggle, target_selection || ( item && NA_IS_OBJECT_MENU( item )));
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( toggle ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetLocationButton" ));
 		gtk_toggle_button_set_active( toggle, target_location || ( item && NA_IS_OBJECT_MENU( item )));
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( toggle ), editable );
 
 		enable_label = target_selection || target_location || ( item && NA_IS_OBJECT_MENU( item ));
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
@@ -447,25 +474,25 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		}
 		g_free( label );
 		gtk_widget_set_sensitive( label_widget, enable_label );
-		nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( label_widget ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetToolbarButton" ));
 		gtk_toggle_button_set_active( toggle, target_toolbar );
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), item && NA_IS_OBJECT_ACTION( item ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( toggle ), editable );
 
 		toggle = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ToolbarSameLabelButton" ));
 		same_label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_is_toolbar_same_label( item ) : FALSE;
 		gtk_toggle_button_set_active( toggle, same_label );
 		gtk_widget_set_sensitive( GTK_WIDGET( toggle ), target_toolbar );
-		nact_gtk_utils_set_editable( GTK_OBJECT( toggle ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( toggle ), editable );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelEntry" );
 		label = item && NA_IS_OBJECT_ACTION( item ) ? na_object_get_toolbar_label( item ) : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
 		g_free( label );
 		gtk_widget_set_sensitive( label_widget, target_toolbar && !same_label );
-		nact_gtk_utils_set_editable( GTK_OBJECT( label_widget ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( label_widget ), editable );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionToolbarLabelLabel" );
 		gtk_widget_set_sensitive( label_widget, target_toolbar && !same_label );
@@ -475,17 +502,17 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		tooltip = tooltip ? tooltip : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( tooltip_widget ), tooltip );
 		g_free( tooltip );
-		nact_gtk_utils_set_editable( GTK_OBJECT( tooltip_widget ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( tooltip_widget ), editable );
 
 		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconComboBoxEntry" );
 		icon = item ? na_object_get_icon( item ) : g_strdup( "" );
 		icon = icon ? icon : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( icon_widget ))), icon );
 		g_free( icon );
-		nact_gtk_utils_set_editable( GTK_OBJECT( icon_widget ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( icon_widget ), editable );
 
 		icon_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconBrowseButton" ));
-		nact_gtk_utils_set_editable( GTK_OBJECT( icon_button ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( icon_button ), editable );
 
 		st_on_selection_change = FALSE;
 	}
@@ -629,11 +656,20 @@ static void
 set_label_label( NactIActionTab *instance, const gchar *color_str )
 {
 	GtkWidget *label;
-	GdkColor color;
 
 	label = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelLabel" );
+
+	/* gtk_widget_modify_fg() is deprecated as of Gtk+ 3.0
+	 */
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
+	GdkRGBA color;
+	gdk_rgba_parse( &color, color_str );
+	gtk_widget_override_color( label, GTK_STATE_FLAG_ACTIVE, &color );
+#else
+	GdkColor color;
 	gdk_color_parse( color_str, &color );
 	gtk_widget_modify_fg( label, GTK_STATE_NORMAL, &color );
+#endif
 }
 
 static void
@@ -842,15 +878,29 @@ create_stock_icon_model( void )
 	return( GTK_TREE_MODEL( model ));
 }
 
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
 static void
-icon_combo_list_fill( GtkComboBoxEntry* combo )
+icon_combo_list_set_entry( GtkComboBox* combo )
 {
-	GtkCellRenderer *cell_renderer_pix;
-	GtkCellRenderer *cell_renderer_text;
-
+	if( gtk_combo_box_get_entry_text_column( combo ) == -1 ){
+		gtk_combo_box_set_entry_text_column( combo, ICON_STOCK_COLUMN );
+	}
+}
+#else
+static void
+icon_combo_list_set_entry( GtkComboBoxEntry* combo )
+{
 	if( gtk_combo_box_entry_get_text_column( combo ) == -1 ){
 		gtk_combo_box_entry_set_text_column( combo, ICON_STOCK_COLUMN );
 	}
+}
+#endif
+
+static void
+icon_combo_list_set_layout( GtkComboBox *combo )
+{
+	GtkCellRenderer *cell_renderer_pix;
+	GtkCellRenderer *cell_renderer_text;
 
 	gtk_cell_layout_clear( GTK_CELL_LAYOUT( combo ));
 

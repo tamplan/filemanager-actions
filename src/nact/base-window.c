@@ -522,13 +522,13 @@ instance_dispose( GObject *window )
 			g_debug( "%s: quitting assistant", thisfn );
 			gtk_main_quit();
 			if( is_toplevel_initialized( self, self->private->toplevel_window )){
-				gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_window ));
+				gtk_widget_hide( GTK_WIDGET( self->private->toplevel_window ));
 			}
 
 		} else {
 			g_debug( "%s: quitting dialog", thisfn );
 			if( is_toplevel_initialized( self, self->private->toplevel_window )){
-				gtk_widget_hide_all( GTK_WIDGET( self->private->toplevel_window ));
+				gtk_widget_hide( GTK_WIDGET( self->private->toplevel_window ));
 			}
 		}
 

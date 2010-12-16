@@ -351,10 +351,10 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	}
 
 	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
-	nact_gtk_utils_set_editable( GTK_OBJECT( column ), data->editable_item && data->editable_filter );
+	nact_gtk_utils_set_editable( GTK_WIDGET( column ), data->editable_item && data->editable_filter );
 
-	nact_gtk_utils_set_editable( GTK_OBJECT( data->addbutton ), data->editable_item );
-	nact_gtk_utils_set_editable( GTK_OBJECT( data->removebutton ), data->editable_item );
+	nact_gtk_utils_set_editable( GTK_WIDGET( data->addbutton ), data->editable_item );
+	nact_gtk_utils_set_editable( GTK_WIDGET( data->removebutton ), data->editable_item );
 	gtk_widget_set_sensitive( data->removebutton, FALSE );
 
 	st_on_selection_change = FALSE;
@@ -537,21 +537,21 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListStr *data 
 
 	stop = FALSE;
 
-	if( event->keyval == GDK_F2 ){
+	if( event->keyval == GDK_KEY_F2 ){
 		if( data->editable_filter ){
 			edit_inline( data );
 			stop = TRUE;
 		}
 	}
 
-	if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
+	if( event->keyval == GDK_KEY_Insert || event->keyval == GDK_KEY_KP_Insert ){
 		if( data->editable_item ){
 			insert_new_row( data );
 			stop = TRUE;
 		}
 	}
 
-	if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
+	if( event->keyval == GDK_KEY_Delete || event->keyval == GDK_KEY_KP_Delete ){
 		if( data->editable_item ){
 			delete_current_row( data );
 			stop = TRUE;

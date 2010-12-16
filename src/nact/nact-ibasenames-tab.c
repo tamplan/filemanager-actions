@@ -256,7 +256,7 @@ on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 		matchcase_button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, "BasenamesMatchcaseButton" ));
 		matchcase = context ? na_object_get_matchcase( context ) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
-		nact_gtk_utils_set_editable( GTK_OBJECT( matchcase_button ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( matchcase_button ), editable );
 
 		st_on_selection_change = FALSE;
 	}

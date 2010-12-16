@@ -54,11 +54,19 @@
  * Try to set a visual indication of whether the @widget is editable or not.
  */
 void
-nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
+nact_gtk_utils_set_editable( GtkWidget *widget, gboolean editable )
 {
 	GList *renderers, *irender;
 
+	/* GtkComboBoxEntry is deprecated from Gtk+3
+	 * see. http://git.gnome.org/browse/gtk+/commit/?id=9612c648176378bf237ad0e1a8c6c995b0ca7c61
+	 * while 'has_entry' property exists since 2.24
+	 */
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
+	if( gtk_combo_box_get_has_entry( GTK_COMBO_BOX( widget ))){
+#else
 	if( GTK_IS_COMBO_BOX_ENTRY( widget )){
+#endif
 		/* idem as GtkEntry */
 		gtk_editable_set_editable( GTK_EDITABLE( gtk_bin_get_child( GTK_BIN( widget ))), editable );
 		g_object_set( G_OBJECT( gtk_bin_get_child( GTK_BIN( widget ))), "can-focus", editable, NULL );
@@ -66,8 +74,8 @@ nact_gtk_utils_set_editable( GtkObject *widget, gboolean editable )
 		gtk_combo_box_set_button_sensitivity( GTK_COMBO_BOX( widget ), editable ? GTK_SENSITIVITY_ON : GTK_SENSITIVITY_OFF );
 
 	} else if( GTK_IS_COMBO_BOX( widget )){
-			/* disable the listbox button itself */
-			gtk_combo_box_set_button_sensitivity( GTK_COMBO_BOX( widget ), editable ? GTK_SENSITIVITY_ON : GTK_SENSITIVITY_OFF );
+		/* disable the listbox button itself */
+		gtk_combo_box_set_button_sensitivity( GTK_COMBO_BOX( widget ), editable ? GTK_SENSITIVITY_ON : GTK_SENSITIVITY_OFF );
 
 	} else if( GTK_IS_ENTRY( widget )){
 		gtk_editable_set_editable( GTK_EDITABLE( widget ), editable );
@@ -200,7 +208,15 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
 			}
 
 		} else {
+			/* gtk_widget_render_icon() is deprecated since Gtk+ 3.0
+			 * see http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#gtk-widget-render-icon
+			 * and http://git.gnome.org/browse/gtk+/commit/?id=07eeae15825403037b7df139acf9bfa104d5559d
+			 */
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
+			pixbuf = gtk_widget_render_icon_pixbuf( widget, name, size );
+#else
 			pixbuf = gtk_widget_render_icon( widget, name, size, NULL );
+#endif
 		}
 	}
 

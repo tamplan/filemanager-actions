@@ -293,16 +293,16 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 		st_on_selection_change = TRUE;
 
 		normal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeNormal" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( normal_toggle ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( normal_toggle ), editable );
 
 		terminal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeTerminal" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( terminal_toggle ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( terminal_toggle ), editable );
 
 		embedded_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeEmbedded" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( embedded_toggle ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( embedded_toggle ), editable );
 
 		display_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeDisplayOutput" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( display_toggle ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( display_toggle ), editable );
 
 		mode = profile ? na_object_get_execution_mode( profile ) : g_strdup( "Normal" );
 		gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( normal_toggle ), profile == NULL );
@@ -327,19 +327,19 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 
 		notify = profile ? na_object_get_startup_notify( profile ) : FALSE;
 		notify_check = base_window_get_widget( BASE_WINDOW( instance ), "StartupNotifyButton" );
-		nact_gtk_utils_set_editable( GTK_OBJECT( notify_check ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( notify_check ), editable );
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( notify_check ), notify );
 
 		class = profile ? na_object_get_startup_class( profile ) : g_strdup( "" );
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), class );
-		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( entry ), editable );
 		g_free( class );
 
 		user = profile ? na_object_get_execute_as( profile ) : g_strdup( "" );
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "ExecuteAsEntry" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), user );
-		nact_gtk_utils_set_editable( GTK_OBJECT( entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( entry ), editable );
 		g_free( user );
 
 		st_on_selection_change = FALSE;

@@ -346,7 +346,11 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, NACT_CLIPBOARD_NACT_ATOM );
 		if( selection ){
 
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+			data = ( NactClipboardDndData * ) gtk_selection_data_get_data( selection );
+#else
 			data = ( NactClipboardDndData * ) selection->data;
+#endif
 			if( data->target == NACT_XCHANGE_FORMAT_NACT ){
 
 				model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) data->rows->data );
@@ -423,7 +427,11 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 		g_debug( "%s: selection=%p", thisfn, ( void * ) selection );
 
 		if( selection ){
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+			data = ( NactClipboardDndData * ) gtk_selection_data_get_data( selection );
+#else
 			data = ( NactClipboardDndData * ) selection->data;
+#endif
 			g_debug( "%s: data=%p (NactClipboardDndData)", thisfn, ( void * ) data );
 
 			if( data->target == NACT_XCHANGE_FORMAT_XDS ){
@@ -456,12 +464,20 @@ static void
 get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, guchar *data )
 {
 	static const gchar *thisfn = "nact_clipboard_get_from_dnd_clipboard_callback";
+	GdkAtom selection_data_target;
+
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+	selection_data_target = gtk_selection_data_get_target( selection_data );
+#else
+	selection_data_target = selection_data->target;
+#endif
 
 	g_debug( "%s: clipboard=%p, selection_data=%p, target=%s, info=%d, data=%p",
 			thisfn, ( void * ) clipboard,
-			( void * ) selection_data, gdk_atom_name( selection_data->target ), info, ( void * ) data );
+			( void * ) selection_data, gdk_atom_name( selection_data_target ), info, ( void * ) data );
 
-	gtk_selection_data_set( selection_data, selection_data->target, 8, data, sizeof( NactClipboardDndData ));
+	gtk_selection_data_set( selection_data,
+			selection_data_target, 8, data, sizeof( NactClipboardDndData ));
 }
 
 static void
@@ -707,7 +723,11 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
 
 		if( selection ){
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+			user_data = ( PrimaryData * ) gtk_selection_data_get_data( selection );
+#else
 			user_data = ( PrimaryData * ) selection->data;
+#endif
 			g_debug( "%s: retrieving PrimaryData=%p", thisfn, ( void * ) user_data );
 
 			if( user_data ){
@@ -767,20 +787,29 @@ get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionDa
 	static const gchar *thisfn = "nact_clipboard_get_from_primary_clipboard_callback";
 	PrimaryData *user_data;
 	gchar *buffer;
+	GdkAtom selection_data_target;
+
+#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+	selection_data_target = gtk_selection_data_get_target( selection_data );
+#else
+	selection_data_target = selection_data->target;
+#endif
 
 	g_debug( "%s: gtk_clipboard=%p, selection_data=%p, target=%s, info=%d, clipboard=%p",
 			thisfn, ( void * ) gtk_clipboard,
-			( void * ) selection_data, gdk_atom_name( selection_data->target ), info, ( void * ) clipboard );
+			( void * ) selection_data, gdk_atom_name( selection_data_target ), info, ( void * ) clipboard );
 
 	user_data = clipboard->private->primary_data;
 
 	if( info == NACT_CLIPBOARD_FORMAT_TEXT_PLAIN ){
 		buffer = export_objects( clipboard, user_data->items );
-		gtk_selection_data_set( selection_data, selection_data->target, 8, ( const guchar * ) buffer, strlen( buffer ));
+		gtk_selection_data_set( selection_data,
+				selection_data_target, 8, ( const guchar * ) buffer, strlen( buffer ));
 		g_free( buffer );
 
 	} else {
-		gtk_selection_data_set( selection_data, selection_data->target, 8, ( const guchar * ) user_data, sizeof( PrimaryData ));
+		gtk_selection_data_set( selection_data,
+				selection_data_target, 8, ( const guchar * ) user_data, sizeof( PrimaryData ));
 	}
 }
 

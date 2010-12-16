@@ -1,3 +1,53 @@
+2010-12-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Build with Gtk+ 3.0 if first found by pkg-config.
+
+	* run-autogen.sh: Setup PKG_CONFIG_PATH and LD_LIBRARY_PATH
+	to be able to build against Gtk+ 3.0.
+
+	* src/core/na-importer-ask.c (na_importer_ask_user):
+	* src/nact/base-window.c (instance_dispose):
+	Replace deprecated gtk_widget_hide_all() with gtk_widget_hide().
+
+	* src/nact/base-assistant.c (on_key_pressed_event):
+	* src/nact/nact-iactions-list.c (on_key_pressed_event):
+	* src/nact/nact-match-list.c (on_key_pressed_event):
+	* src/nact/nact-schemes-list.c (on_key_pressed_event):
+	Replace deprecated GDK_xxxx symbols keys with GDK_KEY_xxxx.
+
+	* src/nact/nact-clipboard.c
+	(nact_clipboard_dnd_get_data,get_from_dnd_clipboard_callback,
+	nact_clipboard_primary_get,get_from_primary_clipboard_callback):
+	* src/nact/nact-tree-model-dnd.c
+	(nact_tree_model_dnd_idrag_dest_drag_data_received,
+	nact_tree_model_dnd_imulti_drag_source_drag_data_get,
+	nact_tree_model_dnd_on_drag_begin,nact_tree_model_dnd_on_drag_end,
+	drop_uri_list,get_xds_atom_value):
+	Use gtk_selection_data_get_xxx accessors, available since Gtk+ 2.14.
+	Use gdk_drag_context_get_xxx accessors, available since Gtk+ 2.22.
+
+	* src/nact/nact-gtk-utils.c (nact_gtk_utils_set_editable):
+	* src/nact/nact-gtk-utils.h:
+	* src/nact/nact-iaction-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-ibasenames-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-icommand-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-ienvironment-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-iexecution-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-ifolders-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-iproperties-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-ischemes-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-match-list.c (nact_match_list_on_selection_changed):
+	* src/nact/nact-schemes-list.c (nact_schemes_list_create_model):
+	Replace deprecated GtkObject with GtkWidget.
+	Replace deprecated GtkComboboxEntry with GtkCombobox starting with
+	Gtk+ 2.24.
+
+	* src/nact/nact-gtk-utils.c (nact_gtk_utils_get_pixbuf):
+	Replace deprecated gtk_widget_render_icon() with gtk_widget_render_icon_pixbuf().
+
+	* src/nact/nact-main-statusbar.c (nact_main_statusbar_initial_load_toplevel):
+	Replace deprecated gtk_widget_size_request() with gtk_widget_get_preferred_size().
+
 2010-12-14 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac:

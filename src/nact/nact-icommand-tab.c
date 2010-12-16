@@ -386,7 +386,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
 		g_free( label );
 		gtk_widget_set_sensitive( label_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( label_entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( label_entry ), editable );
 
 		path_entry = get_path_entry( instance );
 		path = profile ? na_object_get_path( profile ) : g_strdup( "" );
@@ -394,11 +394,11 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
 		g_free( path );
 		gtk_widget_set_sensitive( path_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( path_entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( path_entry ), editable );
 
 		path_button = get_path_button( instance );
 		gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( path_button ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( path_button ), editable );
 
 		parameters_entry = get_parameters_entry( instance );
 		parameters = profile ? na_object_get_parameters( profile ) : g_strdup( "" );
@@ -406,7 +406,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
 		g_free( parameters );
 		gtk_widget_set_sensitive( parameters_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( parameters_entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( parameters_entry ), editable );
 
 		legend_button = get_legend_button( instance );
 		gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );
@@ -419,11 +419,11 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir );
 		g_free( wdir );
 		gtk_widget_set_sensitive( wdir_entry, profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( wdir_entry ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( wdir_entry ), editable );
 
 		wdir_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "CommandWorkingDirectoryButton" ));
 		gtk_widget_set_sensitive( GTK_WIDGET( wdir_button ), profile != NULL );
-		nact_gtk_utils_set_editable( GTK_OBJECT( wdir_button ), editable );
+		nact_gtk_utils_set_editable( GTK_WIDGET( wdir_button ), editable );
 
 		st_on_selection_change = FALSE;
 	}

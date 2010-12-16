@@ -130,60 +130,46 @@ AM_GCONF_SOURCE_2
 # [configure.ac, nautilus-actions.c] remove test for
 # 	nautilus_menu_provider_emit_items_updated_signal() when Gnome >= 2.16
 #
-GLIB_REQUIRED=2.16.0
-GTK_REQUIRED=2.12.0
-NAUTILUS_EXTENSION_REQUIRED=2.8.0
-GCONF_REQUIRED=2.8.0
-LIBXML_REQUIRED=2.6.0
-GOBJECT_REQUIRED=2.4.0
-LIBGTOP_REQUIRED=2.23.1
-
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 if test "${PKG_CONFIG}" = "no"; then
 	AC_MSG_ERROR([You need to install pkg-config])
 fi
 
-PKG_CHECK_MODULES([DBUS],				[dbus-glib-1])
-PKG_CHECK_MODULES([GCONF],				[gconf-2.0		>= ${GCONF_REQUIRED}])
-PKG_CHECK_MODULES([GMODULE],			[gmodule-2.0	>= ${GLIB_REQUIRED}])
-PKG_CHECK_MODULES([GLIB],				[glib-2.0		>= ${GLIB_REQUIRED}])
-PKG_CHECK_MODULES([GTK],				[gtk+-2.0		>= ${GTK_REQUIRED}])
-PKG_CHECK_MODULES([GTOP],				[libgtop-2.0	>= ${LIBGTOP_REQUIRED}])
-PKG_CHECK_MODULES([LIBXML],				[libxml-2.0		>= ${LIBXML_REQUIRED}])
-PKG_CHECK_MODULES([SM],					[sm				>= 1.0.0])
-PKG_CHECK_MODULES([UNIQUE],				[unique-1.0])
-PKG_CHECK_MODULES([UUID],				[uuid])
-PKG_CHECK_MODULES([NAUTILUS_EXTENSION],	[libnautilus-extension >= ${NAUTILUS_EXTENSION_REQUIRED}])
+gtk_required=2.12.0
+PKG_CHECK_MODULES([GTK3],[gtk+-3.0 >= ${gtk_required}],[have_gtk3=yes],[have_gtk3=no])
+if test "${have_gtk3}" = "yes"; then
+	unique_module="unique-3.0"
+	NAUTILUS_ACTIONS_CFLAGS="${GTK3_CFLAGS}"
+	NAUTILUS_ACTIONS_LIBS="${GTK3_LIBS}"
+	AC_MSG_CHECKING([for GTK2])
+	AC_MSG_RESULT([skipped as Gtk+-3 build has been detected])
+else
+	PKG_CHECK_MODULES([GTK2],[gtk+-2.0 >= ${gtk_required}],[have_gtk2=yes],[have_gtk2=no])
+	if test "${have_gtk2}" = "yes"; then
+		unique_module="unique-1.0"
+		NAUTILUS_ACTIONS_CFLAGS="${GTK2_CFLAGS}"
+		NAUTILUS_ACTIONS_LIBS="${GTK2_LIBS}"
+	else
+		AC_MSG_ERROR([unable to find any Gtk+ library])
+	fi
+fi
 
-AC_SUBST([NAUTILUS_ACTIONS_CFLAGS],["	\
-	${DBUS_CFLAGS}						\
-	${GCONF_CFLAGS}						\
-	${CGMODULE_CFLAGS}					\
-	${GLIB_CFLAGS}						\
-	${GTK_CFLAGS}						\
-	${GTOP_CFLAGS}						\
-	${LIBXML_CFLAGS}					\
-	${SM_CFLAGS}						\
-	${UNIQUE_CFLAGS}					\
-	${UUID_CFLAGS}						\
-	${NAUTILUS_EXTENSION_CFLAGS}		\
-"])
-AC_DEFINE_UNQUOTED([NAUTILUS_ACTIONS_CFLAGS],["${NAUTILUS_ACTIONS_CFLAGS}"],[N-A compiler flags])
+glib_required=2.16.0
 
-AC_SUBST([NAUTILUS_ACTIONS_LIBS],["		\
-	${DBUS_LIBS}						\
-	${GCONF_LIBS}						\
-	${CGMODULE_LIBS}					\
-	${GLIB_LIBS}						\
-	${GTK_LIBS}							\
-	${GTOP_LIBS}						\
-	${LIBXML_LIBS}						\
-	${SM_LIBS}							\
-	${UNIQUE_LIBS}						\
-	${UUID_LIBS}						\
-	${NAUTILUS_EXTENSION_LIBS}			\
-"])
-AC_DEFINE_UNQUOTED([NAUTILUS_ACTIONS_LIBS],["${NAUTILUS_ACTIONS_LIBS}"],[N-A linker flags])
+dnl aclocal complains if the comma is not just after the square bracket
+NA_CHECK_MODULE([DBUS],              [dbus-glib-1])
+NA_CHECK_MODULE([GCONF],             [gconf-2.0 >= 2.8.0])
+NA_CHECK_MODULE([GMODULE],           [gmodule-2.0 >= ${glib_required}])
+NA_CHECK_MODULE([GLIB],              [glib-2.0 >= ${glib_required}])
+NA_CHECK_MODULE([GTOP],              [libgtop-2.0 >= 2.23.1])
+NA_CHECK_MODULE([LIBXML],            [libxml-2.0 >= 2.6])
+NA_CHECK_MODULE([SM],                [sm >= 1.0])
+NA_CHECK_MODULE([UNIQUE],            [${unique_module}])
+NA_CHECK_MODULE([UUID],              [uuid])
+NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.8])
+
+AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
+AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
 # defines log domains when in maintainer mode
 NA_LOG_DOMAINS
@@ -195,7 +181,7 @@ NA_ENABLE_MANUALS
 NA_SET_DEFAULT_IO_PROVIDER([na-desktop])
 
 # when working in a test environment, nautilus extensions are typically
-# installed in a non-standard location ; lets specify them here
+# installed in a non-standard location ; lets specify this location here
 NA_NAUTILUS_EXTDIR
 
 # define NA_MAINTAINER_MODE variable
@@ -213,11 +199,11 @@ AC_DEFINE_UNQUOTED([NA_CONFIG_OPTIONS],["$0 ${config_options}"],["Configure opti
 AC_OUTPUT
 
 if test "x${enable_schemas_install}" = "xno"; then
-	_ac_na_schemas_install="disabled"; else
-	_ac_na_schemas_install="enabled in ${GCONF_SCHEMA_FILE_DIR}"
+	msg_schemas_install="disabled"; else
+	msg_schemas_install="enabled in ${GCONF_SCHEMA_FILE_DIR}"
 fi
-_ac_na_gtk_html_doc=`if test "x${enable_gtk_doc_html}" = "xno"; then echo disabled; else echo "enabled with gtk-doc"; fi`
-_ac_na_gtk_pdf_doc=`if test "x${enable_gtk_doc_pdf}" = "xno"; then echo disabled; else echo enabled; fi`
+msg_gtk_html_doc=`if test "x${enable_gtk_doc_html}" = "xno"; then echo disabled; else echo "enabled with gtk-doc"; fi`
+msg_gtk_pdf_doc=`if test "x${enable_gtk_doc_pdf}" = "xno"; then echo disabled; else echo enabled; fi`
 $as_echo "
 	${PACKAGE_STRING} configuration summary:
 
@@ -225,12 +211,12 @@ $as_echo "
 	Build system type               ${ac_cv_build}
 	Nautilus extensions directory   ${ac_with_nact_nautilus_extdir}
 	Default I/O provider            ${with_default_io_provider}
-	GConf schemas installation      ${_ac_na_schemas_install}
-	Maintainer mode                 ${_ac_na_maintainer_mode}
-	HTML API Reference generation   ${_ac_na_gtk_html_doc}
-	PDF API Reference generation    ${_ac_na_gtk_pdf_doc}
-	HTML manuals generation         ${_ac_na_html_manuals}
-	PDF manuals generation          ${_ac_na_pdf_manuals}
+	GConf schemas installation      ${msg_schemas_install}
+	Maintainer mode                 ${msg_maintainer_mode}
+	HTML API Reference generation   ${msg_gtk_html_doc}
+	PDF API Reference generation    ${msg_gtk_pdf_doc}
+	HTML manuals generation         ${msg_html_manuals}
+	PDF manuals generation          ${msg_pdf_manuals}
 "
 #	Preprocessor flags              ${AM_CPPFLAGS}
 #	Compiler flags                  ${AM_CFLAGS} ${NAUTILUS_ACTIONS_CFLAGS}

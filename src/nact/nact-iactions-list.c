@@ -1195,22 +1195,22 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactIActionsList *i
 	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );*/
 	gboolean stop = FALSE;
 
-	if( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter ){
+	if( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter ){
 		nact_iactions_list_bis_toggle_collapse( instance );
 		stop = TRUE;
 	}
 
-	if( event->keyval == GDK_F2 ){
+	if( event->keyval == GDK_KEY_F2 ){
 		inline_edition( instance );
 		stop = TRUE;
 	}
 
-	if( event->keyval == GDK_Right ){
+	if( event->keyval == GDK_KEY_Right ){
 		nact_iactions_list_bis_expand_to_first_child( instance );
 		stop = TRUE;
 	}
 
-	if( event->keyval == GDK_Left ){
+	if( event->keyval == GDK_KEY_Left ){
 		nact_iactions_list_bis_collapse_to_parent( instance );
 		stop = TRUE;
 	}

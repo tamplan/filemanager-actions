@@ -142,7 +142,7 @@ nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
 	gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), SCHEMES_KEYWORD_COLUMN, GTK_SORT_ASCENDING );
 	gtk_tree_view_column_set_cell_data_func(
 			column, text_cell, ( GtkTreeCellDataFunc ) display_keyword, data, NULL );
-	nact_gtk_utils_set_editable( GTK_OBJECT( column ), mode == SCHEMES_LIST_FOR_PREFERENCES );
+	nact_gtk_utils_set_editable( GTK_WIDGET( column ), mode == SCHEMES_LIST_FOR_PREFERENCES );
 
 	text_cell = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(
@@ -153,7 +153,7 @@ nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
 	gtk_tree_view_append_column( treeview, column );
 	gtk_tree_view_column_set_cell_data_func(
 			column, text_cell, ( GtkTreeCellDataFunc ) display_description, data, NULL );
-	nact_gtk_utils_set_editable( GTK_OBJECT( column ), mode == SCHEMES_LIST_FOR_PREFERENCES );
+	nact_gtk_utils_set_editable( GTK_WIDGET( column ), mode == SCHEMES_LIST_FOR_PREFERENCES );
 
 	gtk_tree_view_set_headers_visible( treeview, FALSE );
 
@@ -539,17 +539,17 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
 
 	stop = FALSE;
 
-	if( event->keyval == GDK_F2 ){
+	if( event->keyval == GDK_KEY_F2 ){
 		edit_inline( window );
 		stop = TRUE;
 	}
 
-	if( event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert ){
+	if( event->keyval == GDK_KEY_Insert || event->keyval == GDK_KEY_KP_Insert ){
 		insert_new_row( window );
 		stop = TRUE;
 	}
 
-	if( event->keyval == GDK_Delete || event->keyval == GDK_KP_Delete ){
+	if( event->keyval == GDK_KEY_Delete || event->keyval == GDK_KEY_KP_Delete ){
 		delete_row( window );
 		stop = TRUE;
 	}
