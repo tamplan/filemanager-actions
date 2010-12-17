@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-12-03 10:21+0000\n"
-"PO-Revision-Date: 2010-12-03 13:09+0100\n"
+"POT-Creation-Date: 2010-12-16 20:19+0000\n"
+"PO-Revision-Date: 2010-12-17 14:57+0100\n"
 "Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -528,7 +528,7 @@ msgstr "Veljavna shema GIO, kjer naj bi se nahajale izbrane datoteke/mape. Nasta
 #: ../src/core/na-object-item-factory.c:105
 #: ../src/core/na-object-item-factory.c:129
 #: ../src/core/na-object-profile-factory.c:183
-#: ../src/utils/nautilus-actions-run.c:61
+#: ../src/utils/nautilus-actions-run.c:58
 msgid "<STRING>"
 msgstr "<NIZ>"
 
@@ -683,33 +683,33 @@ msgstr ""
 "- 'Local': izbrani predmeti so krajevni.\n"
 "Privzeto prazen seznam."
 
-#: ../src/core/na-iimporter.c:206
+#: ../src/core/na-iimporter.c:232
 msgid "Item was renumbered because the caller did not provide any check function."
 msgstr "Predmet je bil ponovno oštevilčen, ker klicalnik ni zagotovil zmožnosti preverjanja."
 
-#: ../src/core/na-iimporter.c:219
+#: ../src/core/na-iimporter.c:245
 msgid "Item was renumbered because the caller did not provide any ask user function."
 msgstr "Predmet je bil ponovno oštevilčen, ker klicalnik ni zagotovil nobene zmožnosti vprašanja uporabnika."
 
-#: ../src/core/na-iimporter.c:238
+#: ../src/core/na-iimporter.c:264
 msgid "Item was renumbered due to user request."
 msgstr "Predmet je bil preštevilčen zaradi uporabniške zahteve."
 
-#: ../src/core/na-iimporter.c:244
+#: ../src/core/na-iimporter.c:270
 msgid "Existing item was overriden due to user request."
 msgstr "Obstoječi predmet je bil prepisan zaradi uporabniške zahteve."
 
-#: ../src/core/na-iimporter.c:251
+#: ../src/core/na-iimporter.c:277
 #, c-format
 msgid "Item %s already exists."
 msgstr "Predmet %s že obstaja"
 
-#: ../src/core/na-iimporter.c:253
+#: ../src/core/na-iimporter.c:279
 msgid "Import was canceled due to user request."
 msgstr "Uvoz je bil preklican zaradi zahteve uporabnika."
 
 #. i18n: the action has been renumbered during import operation
-#: ../src/core/na-iimporter.c:276
+#: ../src/core/na-iimporter.c:302
 msgid "(renumbered)"
 msgstr "(ponovno oštevilčeno)"
 
@@ -891,7 +891,7 @@ msgstr ""
 "Privzeto oznaka vsebinskega menija, kadar ni nastavljen ali je prazen."
 
 #. i18n: copied items have a label as 'Copy of original label'
-#: ../src/core/na-object-id.c:342
+#: ../src/core/na-object-id.c:368
 #, c-format
 msgid "Copy of %s"
 msgstr "Kopija %s"
@@ -1014,7 +1014,7 @@ msgid "New Nautilus menu"
 msgstr "Nov meni Nautilusa"
 
 #. i18n: label for the default profile
-#: ../src/core/na-object-profile.c:729
+#: ../src/core/na-object-profile.c:733
 msgid "Default profile"
 msgstr "Privzet profil"
 
@@ -1996,23 +1996,39 @@ msgstr "Nekateri predmeti niso bili izrezani, ker naslednjih ni mogoče spremeni
 msgid "Not all items have been deleted as following ones are not modifiable:"
 msgstr "Nekateri predmeti niso bili izbrisani, ker naslednjih ni mogoče spremeniti:"
 
-#: ../src/nact/nact-main-menubar-file.c:205
+#: ../src/nact/nact-main-menubar-file.c:49
+msgid "Save error"
+msgstr "Napaka shranjevanja"
+
+#: ../src/nact/nact-main-menubar-file.c:50
+msgid "Some items may not have been saved"
+msgstr "Nekateri predmeti morda niso bili shranjeni"
+
+#: ../src/nact/nact-main-menubar-file.c:51
+msgid "Unable to rewrite the level-zero items list"
+msgstr "Seznama predmetov ničte ravni ni bilo mogoče prepisati"
+
+#: ../src/nact/nact-main-menubar-file.c:52
+msgid "Some items cannot have been deleted"
+msgstr "Nekaterih predmetov ni bilo mogoče izbrisati"
+
+#: ../src/nact/nact-main-menubar-file.c:212
 msgid "New profile"
 msgstr "Nov profil"
 
-#: ../src/nact/nact-main-menubar-file.c:446
+#: ../src/nact/nact-main-menubar-file.c:520
 msgid "Automatically saving pending modifications..."
 msgstr "Samodejno shrani pridržane spremembe ..."
 
-#: ../src/nact/nact-main-window.c:1400
+#: ../src/nact/nact-main-window.c:1435
 msgid "Reloading a fresh list of actions requires that you give up with your current modifications."
 msgstr "S ponovnim nalaganjem svežega seznama dejanj, bodo trenutne spremembe izgubljene."
 
-#: ../src/nact/nact-main-window.c:1403
+#: ../src/nact/nact-main-window.c:1438
 msgid "Do you really want to do this ?"
 msgstr "Ali ste prepričani, da želite nadaljevati?"
 
-#: ../src/nact/nact-main-window.c:1426
+#: ../src/nact/nact-main-window.c:1461
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to reload a fresh one."
@@ -2020,11 +2036,11 @@ msgstr ""
 "Eno ali več dejanj v datotečnem sistemu je bilo spremenjenih.\n"
 "Delo je mogoče nadaljevati s trenutnim seznamom dejanj, ali pa ga osvežiti."
 
-#: ../src/nact/nact-main-window.c:1433
+#: ../src/nact/nact-main-window.c:1468
 msgid "Note that reloading a fresh list of actions requires that you give up with your current modifications."
 msgstr "S ponovnim nalaganjem svežega seznama dejanj, bodo vaše trenutne spremembe izgubljene."
 
-#: ../src/nact/nact-main-window.c:1439
+#: ../src/nact/nact-main-window.c:1474
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "Ali želite ponovno naložiti svež seznam dejanj?"
 
@@ -2410,20 +2426,12 @@ msgstr "Ni mogoče spustiti sem, ker raven nič ni zapisljiva"
 msgid "Some messages have occurred during drop operation."
 msgstr "Nekatera sporočila so se zgodila med dejanjem spusta."
 
-#: ../src/nact/nact-window.c:358
-msgid "An error has occured when trying to save the item"
-msgstr "Med poskusom shranjevanja predmeta je prišlo do napake"
-
-#: ../src/nact/nact-window.c:404
-msgid "An error has occured when trying to delete the item"
-msgstr "Med poskusom brisanja predmeta je prišlo do napake"
-
-#: ../src/nact/nact-window.c:461
+#: ../src/nact/nact-window.c:457
 #, c-format
 msgid "Some items have been modified."
 msgstr "Nekateri predmeti so bili spremenjeni."
 
-#: ../src/nact/nact-window.c:462
+#: ../src/nact/nact-window.c:458
 msgid "Are you sure you want to quit without saving them ?"
 msgstr "Ali ste prepričani, da želite končati brez shranjevanja predmeta?"
 
@@ -3373,13 +3381,13 @@ msgid "The URI of the file to be imported"
 msgstr "URI datoteke za uvoz"
 
 #: ../src/test/test-reader.c:49
-#: ../src/utils/nautilus-actions-run.c:63
+#: ../src/utils/nautilus-actions-run.c:60
 msgid "<URI>"
 msgstr "<URI>"
 
 #: ../src/test/test-reader.c:56
 #: ../src/utils/nautilus-actions-new.c:139
-#: ../src/utils/nautilus-actions-run.c:70
+#: ../src/utils/nautilus-actions-run.c:67
 #: ../src/utils/nautilus-actions-schemas.c:92
 msgid "Output the version number"
 msgstr "Izpiše številko različice"
@@ -3395,14 +3403,14 @@ msgstr "Poročila o hroščih so dobrodošla na http://bugzilla.gnome.org, lahko
 
 #: ../src/test/test-reader.c:134
 #: ../src/utils/nautilus-actions-new.c:346
-#: ../src/utils/nautilus-actions-run.c:201
+#: ../src/utils/nautilus-actions-run.c:198
 #: ../src/utils/nautilus-actions-schemas.c:180
 msgid "Miscellaneous options"
 msgstr "Razne možnosti"
 
 #: ../src/test/test-reader.c:155
 #: ../src/utils/nautilus-actions-new.c:179
-#: ../src/utils/nautilus-actions-run.c:111
+#: ../src/utils/nautilus-actions-run.c:108
 #: ../src/utils/nautilus-actions-schemas.c:125
 #, c-format
 msgid "Syntax error: %s\n"
@@ -3415,7 +3423,7 @@ msgstr "Napaka: uri je obvezen.\n"
 
 #: ../src/test/test-reader.c:182
 #: ../src/utils/nautilus-actions-new.c:552
-#: ../src/utils/nautilus-actions-run.c:418
+#: ../src/utils/nautilus-actions-run.c:417
 #: ../src/utils/nautilus-actions-schemas.c:365
 #, c-format
 msgid "Try %s --help for usage.\n"
@@ -3504,64 +3512,64 @@ msgstr "Dejanje '%s' je bilo uspešno zapisano v %s in je pripravljeno za uvoz v
 msgid "Error: unable to find 'na-gconf' provider."
 msgstr "Napaka: ni mogoče najti ponudnika 'na-gconf'."
 
-#: ../src/utils/nautilus-actions-run.c:61
+#: ../src/utils/nautilus-actions-run.c:58
 msgid "The internal identifiant of the action to be launched"
 msgstr "Notranje določilo dejanja za izvedbo"
 
-#: ../src/utils/nautilus-actions-run.c:63
+#: ../src/utils/nautilus-actions-run.c:60
 msgid "A target, file or folder, for the action. More than one options may be specified"
 msgstr "Cilj, datoteka ali mapa za dejanje. Navedenih je lahko več možnosti"
 
-#: ../src/utils/nautilus-actions-run.c:126
+#: ../src/utils/nautilus-actions-run.c:123
 #, c-format
 msgid "Error: action id is mandatory.\n"
 msgstr "Napaka: id dejanja je obvezno.\n"
 
-#: ../src/utils/nautilus-actions-run.c:151
+#: ../src/utils/nautilus-actions-run.c:148
 #, c-format
 msgid "No current selection. Nothing to do. Exiting.\n"
 msgstr "Ni trenutnega izbora. Program nima dela, zato se bo končal.\n"
 
-#: ../src/utils/nautilus-actions-run.c:156
+#: ../src/utils/nautilus-actions-run.c:153
 #, c-format
 msgid "Action %s is not a valid candidate. Exiting.\n"
 msgstr "Dejanje %s ni veljaven kandidat. Končevanje programa.\n"
 
-#: ../src/utils/nautilus-actions-run.c:162
+#: ../src/utils/nautilus-actions-run.c:159
 #, c-format
 msgid "No valid profile is candidate to execution. Exiting.\n"
 msgstr "Noben veljaven profil ni kandidat za izvedbo. Končevanje programa.\n"
 
-#: ../src/utils/nautilus-actions-run.c:183
+#: ../src/utils/nautilus-actions-run.c:180
 msgid "Execute an action on the specified target."
 msgstr "Izvede dejanje na navedenemu cilju."
 
-#: ../src/utils/nautilus-actions-run.c:226
+#: ../src/utils/nautilus-actions-run.c:223
 #, c-format
 msgid "Error: action '%s' doesn't exist.\n"
 msgstr "Napaka: dejanje '%s' ne obstaja.\n"
 
-#: ../src/utils/nautilus-actions-run.c:230
+#: ../src/utils/nautilus-actions-run.c:227
 #, c-format
 msgid "Error: action '%s' is disabled.\n"
 msgstr "Napaka: dejanje '%s' je onemogočeno.\n"
 
-#: ../src/utils/nautilus-actions-run.c:235
+#: ../src/utils/nautilus-actions-run.c:232
 #, c-format
 msgid "Error: action '%s' is not valid.\n"
 msgstr "Napaka: dejanje '%s' ni veljavno.\n"
 
-#: ../src/utils/nautilus-actions-run.c:269
+#: ../src/utils/nautilus-actions-run.c:266
 #, c-format
 msgid "Error: unable to get a connection to session DBus: %s"
 msgstr "Napaka: ni mogoče dobiti povezave s sejo DBus: %s"
 
-#: ../src/utils/nautilus-actions-run.c:280
+#: ../src/utils/nautilus-actions-run.c:279
 #, c-format
 msgid "Error: unable to get a proxy on %s service"
 msgstr "Napaka: ni mogoče dobiti posredniškega strežnika na napravi %s"
 
-#: ../src/utils/nautilus-actions-run.c:290
+#: ../src/utils/nautilus-actions-run.c:289
 #, c-format
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Napaka v klicu GetSelectedPaths: %s"
@@ -3574,6 +3582,10 @@ msgstr "Izhod sheme na standardnemu izpisu"
 msgid "Output the Nautilus Actions GConf schema on stdout."
 msgstr "Izhod Nautilusovih dejanj sheme GConf na  standardnemu izpisu."
 
+#~ msgid "An error has occured when trying to save the item"
+#~ msgstr "Med poskusom shranjevanja predmeta je prišlo do napake"
+#~ msgid "An error has occured when trying to delete the item"
+#~ msgstr "Med poskusom brisanja predmeta je prišlo do napake"
 #~ msgid "/path/to"
 #~ msgstr "/pot/do"
 #~ msgid "file1.txt"
