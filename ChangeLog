@@ -1,5 +1,7 @@
 2010-12-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Update before release.
+
 	* README: Add some words about importer/exporter plugins.
 
 	* m4/na-check-for-gtk.m4: New file.

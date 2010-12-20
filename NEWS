@@ -1,3 +1,28 @@
+Version 3.0.3
+=============
+
+	Release date 2010-12-20
+
+	Modifications:
+
+		- Add --enable-silent-rules option to configure;
+		  this is disabled by default;
+		  enabled when building the distributed tarball.
+		- Add --with-gtk=[2|3|auto] option to configure.
+		- NACT User's Manual: review 'Note' vs. 'Tip' usage.
+		- Generate the API Reference Manual.
+
+	Bug fixes:
+
+		- Improve save process when an error is detected on a deleted
+		  item.
+
+	New and updated translations:
+
+		- de (Mario Blättermann)
+		- es (Jorge González)
+		- sl (Matej Urbančič, Andrej Žnidaršič)
+
 Version 3.0.2
 =============
 
