@@ -32,12 +32,12 @@
 #include <config.h>
 #endif
 
-#include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 
 #include <api/na-object-api.h>
 #include <api/na-core-utils.h>
 
+#include "base-keysyms.h"
 #include "nact-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-match-list.h"
@@ -537,21 +537,21 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListStr *data 
 
 	stop = FALSE;
 
-	if( event->keyval == GDK_KEY_F2 ){
+	if( event->keyval == NACT_KEY_F2 ){
 		if( data->editable_filter ){
 			edit_inline( data );
 			stop = TRUE;
 		}
 	}
 
-	if( event->keyval == GDK_KEY_Insert || event->keyval == GDK_KEY_KP_Insert ){
+	if( event->keyval == NACT_KEY_Insert || event->keyval == NACT_KEY_KP_Insert ){
 		if( data->editable_item ){
 			insert_new_row( data );
 			stop = TRUE;
 		}
 	}
 
-	if( event->keyval == GDK_KEY_Delete || event->keyval == GDK_KEY_KP_Delete ){
+	if( event->keyval == NACT_KEY_Delete || event->keyval == NACT_KEY_KP_Delete ){
 		if( data->editable_item ){
 			delete_current_row( data );
 			stop = TRUE;

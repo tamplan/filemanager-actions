@@ -135,24 +135,7 @@ if test "${PKG_CONFIG}" = "no"; then
 	AC_MSG_ERROR([You need to install pkg-config])
 fi
 
-gtk_required=2.12.0
-PKG_CHECK_MODULES([GTK3],[gtk+-3.0 >= ${gtk_required}],[have_gtk3=yes],[have_gtk3=no])
-if test "${have_gtk3}" = "yes"; then
-	unique_module="unique-3.0"
-	NAUTILUS_ACTIONS_CFLAGS="${GTK3_CFLAGS}"
-	NAUTILUS_ACTIONS_LIBS="${GTK3_LIBS}"
-	AC_MSG_CHECKING([for GTK2])
-	AC_MSG_RESULT([skipped as Gtk+-3 build has been detected])
-else
-	PKG_CHECK_MODULES([GTK2],[gtk+-2.0 >= ${gtk_required}],[have_gtk2=yes],[have_gtk2=no])
-	if test "${have_gtk2}" = "yes"; then
-		unique_module="unique-1.0"
-		NAUTILUS_ACTIONS_CFLAGS="${GTK2_CFLAGS}"
-		NAUTILUS_ACTIONS_LIBS="${GTK2_LIBS}"
-	else
-		AC_MSG_ERROR([unable to find any Gtk+ library])
-	fi
-fi
+NA_CHECK_FOR_GTK
 
 glib_required=2.16.0
 
@@ -164,7 +147,6 @@ NA_CHECK_MODULE([GLIB],              [glib-2.0 >= ${glib_required}])
 NA_CHECK_MODULE([GTOP],              [libgtop-2.0 >= 2.23.1])
 NA_CHECK_MODULE([LIBXML],            [libxml-2.0 >= 2.6])
 NA_CHECK_MODULE([SM],                [sm >= 1.0])
-NA_CHECK_MODULE([UNIQUE],            [${unique_module}])
 NA_CHECK_MODULE([UUID],              [uuid])
 NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.8])
 
@@ -204,12 +186,16 @@ if test "x${enable_schemas_install}" = "xno"; then
 fi
 msg_gtk_html_doc=`if test "x${enable_gtk_doc_html}" = "xno"; then echo disabled; else echo "enabled with gtk-doc"; fi`
 msg_gtk_pdf_doc=`if test "x${enable_gtk_doc_pdf}" = "xno"; then echo disabled; else echo enabled; fi`
+msg_gtk_version=""
+if test "${have_gtk3}" = "yes"; then msg_gtk_version="Gtk+ 3.0"; 
+	elif  test "${have_gtk2}" = "yes"; then msg_gtk_version="Gtk+ 2.0"; fi
 $as_echo "
 	${PACKAGE_STRING} configuration summary:
 
 	Installation prefix             ${prefix}
 	Build system type               ${ac_cv_build}
-	Nautilus extensions directory   ${ac_with_nact_nautilus_extdir}
+	Nautilus extensions directory   ${with_nautilus_extdir}
+	Gtk+ version                    ${msg_gtk_version}
 	Default I/O provider            ${with_default_io_provider}
 	GConf schemas installation      ${msg_schemas_install}
 	Maintainer mode                 ${msg_maintainer_mode}

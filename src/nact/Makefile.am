@@ -59,6 +59,7 @@ nautilus_actions_config_tool_SOURCES = \
 	base-dialog.h										\
 	base-iprefs.c										\
 	base-iprefs.h										\
+	base-keysyms.h										\
 	base-window.c										\
 	base-window.h										\
 	base-window-class.h									\

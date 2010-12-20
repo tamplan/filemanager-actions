@@ -28,28 +28,49 @@
 
 # serial 1 creation
 
-dnl usage:  NA_CHECK_MODULE([var],[condition])
+dnl usage:  NA_CHECK_MODULE(var,condition[,error])
 dnl
 dnl this macro checks that gtk+-2.0 and gtk+-3.0 libraries are not mixed
+dnl
+dnl if 'error' != 'no', then displays an error message if condition is
+dnl not met.
+# translit($1, 'a-z', 'A-Z'),
 
 AC_DEFUN([NA_CHECK_MODULE],[
-	PKG_CHECK_MODULES([$1],[$2])
-	#echo "cflags='${$1_CFLAGS}'"
-	#echo "libs='${$1_LIBS}'"
-	if ! test -z "${$1_LIBS}"; then
+	PKG_CHECK_MODULES([$1],[$2],[have_$1="yes"],[have_$1="no"])
+
+	#echo "have_gtk2=$have_gtk2 have_gtk3=$have_gtk3"
+	#echo "$1_CFLAGS='${$1_CFLAGS}'"
+	#echo "$1_LIBS='${$1_LIBS}'"
+	#echo "against Gtk2: $(echo ${$1_LIBS} | grep -E 'gtk-@<:@^-@:>@+-2\.0')"
+	#echo "against Gtk3: $(echo ${$1_LIBS} | grep -E 'gtk-@<:@^-@:>@+-3\.0')"
+
+	if test "${have_$1}" = "yes"; then
 		if test "${have_gtk3}" = "yes"; then
-			if test "$(echo ${$1_LIBS} | grep gtk-x11-2.0)" != ""; then
-				AC_MSG_ERROR([$1: compiling with Gtk+-3 but adresses Gtk+-2 libraries])
+			if echo ${$1_LIBS} | grep -qE 'gtk-@<:@^-@:>@+-2\.0'; then
+				_NA_CHECK_MODULE_MSG([$3],[$1: compiling with Gtk+-3 but adresses Gtk+-2 libraries])
+				have_$1="no"
 			fi
-		else
-			if test "$(echo ${$1_LIBS} | grep gtk-x11-3.0)" != ""; then
-				AC_MSG_ERROR([$1: compiling with Gtk+-2 but adresses Gtk+-3 libraries])
+		elif test "${have_gtk2}" = "yes"; then
+			if echo ${$1_LIBS} | grep -qE 'gtk-@<:@^-@:>@+-3.0'; then
+				_NA_CHECK_MODULE_MSG([$3],[$1: compiling with Gtk+-2 but adresses Gtk+-3 libraries])
+				have_$1="no"
 			fi
 		fi
-				
+	else
+		_NA_CHECK_MODULE_MSG([$3],[$1: condition $2 not satisfied])
+	fi
+
+	if test "${have_$1}" = "yes"; then
 		NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${$1_CFLAGS}"
 		NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${$1_LIBS}"
+	fi
+])
+
+AC_DEFUN([_NA_CHECK_MODULE_MSG],[
+	if test "$1" = "no"; then
+		AC_MSG_RESULT([warning: $2])
 	else
-		AC_MSG_ERROR([condition $2 not satisfied])
+		AC_MSG_ERROR([$2])
 	fi
 ])

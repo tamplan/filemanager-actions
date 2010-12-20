@@ -34,12 +34,12 @@
 AC_DEFUN([NA_NAUTILUS_EXTDIR],[
 	AC_REQUIRE([_AC_ARG_NA_NAUTILUS_EXTDIR])dnl
 	AC_REQUIRE([_AC_NA_CHECK_NAUTILUS_EXTDIR])dnl
-	if test "${ac_with_nact_nautilus_extdir}" = ""; then
+	if test "${with_nautilus_extdir}" = ""; then
 		AC_MSG_ERROR([Unable to determine nautilus extension folder, please use --with-nautilus-extdir option])
 	else
-		AC_MSG_NOTICE([installing plugin in ${ac_with_nact_nautilus_extdir}])
-		AC_SUBST([NAUTILUS_EXTENSIONS_DIR],[${ac_with_nact_nautilus_extdir}])
-		AC_DEFINE_UNQUOTED([NA_NAUTILUS_EXTENSIONS_DIR],[${ac_with_nact_nautilus_extdir}],[Nautilus extensions directory])
+		AC_MSG_NOTICE([installing plugin in ${with_nautilus_extdir}])
+		AC_SUBST([NAUTILUS_EXTENSIONS_DIR],[${with_nautilus_extdir}])
+		AC_DEFINE_UNQUOTED([NA_NAUTILUS_EXTENSIONS_DIR],[${with_nautilus_extdir}],[Nautilus extensions directory])
 	fi
 ])
 
@@ -50,15 +50,15 @@ AC_DEFUN([_AC_ARG_NA_NAUTILUS_EXTDIR],[
 			[--with-nautilus-extdir=DIR],
 			[nautilus plugins extension directory @<:@auto@:>@]
 		),
-	[ac_with_nact_nautilus_extdir=$withval],
-	[ac_with_nact_nautilus_extdir=""]
+	[with_nautilus_extdir=$withval],
+	[with_nautilus_extdir=""]
 	)
 ])
 
 AC_DEFUN([_AC_NA_CHECK_NAUTILUS_EXTDIR],[
-	if test "${ac_with_nact_nautilus_extdir}" = ""; then
+	if test "${with_nautilus_extdir}" = ""; then
 		if test "{PKG_CONFIG}" != ""; then
-			ac_with_nact_nautilus_extdir=`${PKG_CONFIG} --variable=extensiondir libnautilus-extension`
+			with_nautilus_extdir=`${PKG_CONFIG} --variable=extensiondir libnautilus-extension`
 		fi
 	fi
 ])

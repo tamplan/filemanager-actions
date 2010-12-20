@@ -234,7 +234,7 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 #if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
 		icon_combo = gtk_combo_box_new_with_model_and_entry( model );
 #else
-		icon_combo = gtk_combo_box_entry_new_with_model( model );
+		icon_combo = gtk_combo_box_entry_new_with_model( model, ICON_LABEL_COLUMN );
 #endif
 		g_object_unref( model );
 		container = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconHBox" );

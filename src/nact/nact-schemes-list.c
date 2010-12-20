@@ -33,7 +33,6 @@
 #endif
 
 #include <gconf/gconf-client.h>
-#include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 
 #include <api/na-core-utils.h>
@@ -41,6 +40,7 @@
 
 #include <core/na-iprefs.h>
 
+#include "base-keysyms.h"
 #include "nact-application.h"
 #include "nact-gtk-utils.h"
 #include "nact-main-tab.h"
@@ -539,17 +539,17 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
 
 	stop = FALSE;
 
-	if( event->keyval == GDK_KEY_F2 ){
+	if( event->keyval == NACT_KEY_F2 ){
 		edit_inline( window );
 		stop = TRUE;
 	}
 
-	if( event->keyval == GDK_KEY_Insert || event->keyval == GDK_KEY_KP_Insert ){
+	if( event->keyval == NACT_KEY_Insert || event->keyval == NACT_KEY_KP_Insert ){
 		insert_new_row( window );
 		stop = TRUE;
 	}
 
-	if( event->keyval == GDK_KEY_Delete || event->keyval == GDK_KEY_KP_Delete ){
+	if( event->keyval == NACT_KEY_Delete || event->keyval == NACT_KEY_KP_Delete ){
 		delete_row( window );
 		stop = TRUE;
 	}
