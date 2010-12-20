@@ -1,5 +1,7 @@
 2010-12-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Post-release bump version.
+
 	* NEWS: Update before release.
 
 	* README: Add some words about importer/exporter plugins.
