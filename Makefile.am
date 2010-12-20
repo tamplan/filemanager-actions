@@ -44,6 +44,7 @@ DISTCHECK_CONFIGURE_FLAGS = \
 
 # do not try to install schemas when making distcheck
 DISTCHECK_CONFIGURE_FLAGS += \
+	--enable-silent-rules				\
 	--disable-schemas-install			\
 	--disable-scrollkeeper				\
 	--enable-gtk-doc					\
