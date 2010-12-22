@@ -1,5 +1,10 @@
 2010-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* Makefile.am: Enable '-Wl,--as-needed' link option at make distcheck.
+
+	* configure.ac:
+	* m4/na-compiler-flags.m4: Define --enable-as-needed configure option.
+
 	* src/core/Makefile.am: Build core library against its dependancies.
 	Fix #637797 - -Wl,--as-needed bug.
 

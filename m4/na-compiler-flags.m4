@@ -155,3 +155,25 @@ AC_DEFUN([GNOME_CXX_WARNINGS],[
   WARN_CXXFLAGS="$CXXFLAGS $warnCXXFLAGS $complCXXFLAGS"
   AC_SUBST(WARN_CXXFLAGS)
 ])
+
+dnl Bug #637797 
+dnl see also http://www.gentoo.org/proj/en/qa/asneeded.xml
+dnl the '-Wl,--as-needed' link option is forced in make distcheck
+
+AC_DEFUN([NA_LINK_AS_NEEDED],[
+	AC_ARG_ENABLE(
+		[as-needed],
+		AC_HELP_STRING(
+			[--enable-as-needed],
+			[Enable '-Wl,--as-needed' link option @<:@no@:>@]
+		),
+		[enable_as_needed=$enableval],
+		[enable_as_needed=no])
+
+	AC_MSG_CHECKING([whether to only link with needed libraries])
+	AC_MSG_RESULT([$enable_as_needed])
+
+	if test "x${enable_as_needed}" = "xyes"; then
+		AC_SUBST([AM_LDFLAGS],["${AM_LDFLAGS} -Wl,--as-needed"])
+	fi
+])
