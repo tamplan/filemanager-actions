@@ -11,4 +11,5 @@ xml/
 *.prerequisites
 *.signals
 *.types
+version_dir.xml
 warnings*
