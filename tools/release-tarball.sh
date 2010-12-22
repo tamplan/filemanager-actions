@@ -2,10 +2,13 @@
 #
 # Release a new Nautilus-Actions version
 #
-# (E): 1. (opt) "stable" will update the latest.tar.gz links
 
-if [ ! -f Makefile ]; then
-	echo "Makefile not found, probably not the good current directory" 1>&2
+if [ ! -f configure.ac ]; then
+	echo "configure.ac not found, probably not the good current directory" 1>&2
+	exit 1
+fi
+if [ "$(basename $(pwd))" != "nautilus-actions" ]; then
+	echo "current directory is $(pwd): change to nautilus-actions" 1>&2
 	exit 1
 fi
 
@@ -19,25 +22,40 @@ if [ ! -f "${tarname}" ]; then
 	exit 1
 fi
 
-bstable=0
-if [ "x$1" = "xstable" ]; then
-	bstable=1
-fi
+minor=$(echo ${version} | cut -d. -f2)
+let minor_x=${minor}/2*2
+[ ${minor} -eq ${minor_x} ] && bstable=1 || bstable=0
 
 echo -n "
 Releasing "
 [ ${bstable} -eq 1 ] && echo -n "stable" || echo -n "unstable"
 echo " ${tarname}"
 
+echo -n "Are you OK to release (y/N) ? "
+while [ 1 ]; do
+	read -n1 -s key
+	key=$(echo $key | tr '[:upper:]' '[:lower:]')
+	[ "$key" = "y" -o "$key" = "n" -o "$key" = "" ] && break
+done
+[ "$key" = "y" ] && echo "Yes" || echo "No"
+[ "$key" != "y" ] && exit
+
+# are we local ?
 destdir="/net/data/tarballs/${product}"
+desthost="stormy.trychlos.org"
+local=1
+[ "$(ls ${destdir} 2>/dev/null)" = "" ] && local=0
 echo " 
 Installing in ${destdir}"
-mkdir -p "${destdir}"
-scp -v "${tarname}" "${destdir}/"
-sha1sum ${tarname} > ${tarname}.sha1sum
+cmd="mkdir -p "${destdir}""
+[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || ${cmd}
+[ ${local} -eq 0 ] && scp -v "${tarname}" "${desthost}:${destdir}/" || scp -v "${tarname}" "${destdir}/"
+cmd="sha1sum ${destdir}/${tarname} > ${destdir}/${tarname}.sha1sum"
+[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || ${cmd}
 if [ "${bstable}" -eq 1 ]; then
 	echo "Updating ${destdir}/latest.tar.gz"
-	(cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz)
+	cmd="(cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz)"
+	[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || ${cmd}
 fi
 
 echo " 
@@ -48,12 +66,12 @@ ssh pwieser@master.gnome.org install-module -u ${tarname}
 echo " 
 Installing on kimsufi"
 destdir="/home/www/${product}/tarballs"
-scp "${tarname}" root@kimsufi:${destdir}/
+scp "${tarname}" maintainer@kimsufi:${destdir}/
+ssh maintainer@kimsufi "sha1sum ${destdir}/${tarname} > ${destdir}/${tarname}.sha1sum"
 if [ "x$1" = "xstable" ]; then
 	echo "Updating ${destdir}/latest.tar.gz"
-	ssh root@kimsufi "cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz"
+	ssh maintainer@kimsufi "cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz"
 fi
-ssh root@kimsufi chown maintainer:users /home/www/nautilus-actions/tarballs/*
 
 echo " 
 Tagging git"
