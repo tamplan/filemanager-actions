@@ -1,5 +1,8 @@
 2010-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/Makefile.am: Build core library against its dependancies.
+	Fix #637797 - -Wl,--as-needed bug.
+
 	* run-autogen.sh: No more enable silent rules in development.
 
 	* tools/release-tarball.sh: Fix remote install of the tarball.

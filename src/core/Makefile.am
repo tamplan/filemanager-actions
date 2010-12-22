@@ -101,6 +101,7 @@ libna_core_la_SOURCES = \
 	$(NULL)
 
 libna_core_la_LIBADD = \
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 libna_core_la_LDFLAGS = \
