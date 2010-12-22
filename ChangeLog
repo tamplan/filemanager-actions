@@ -1,5 +1,7 @@
 2010-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* run-autogen.sh: No more enable silent rules in development.
+
 	* tools/release-tarball.sh: Fix remote install of the tarball.
 
 2010-12-20 Pierre Wieser <pwieser@trychlos.org>

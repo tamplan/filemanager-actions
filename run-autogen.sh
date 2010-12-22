@@ -11,13 +11,13 @@ find . -maxdepth 1 -type d -name 'nautilus-actions-*' | xargs rm -fr
 	exec ./autogen.sh \
 		--prefix=$(pwd)/install \
 		--with-nautilus-extdir=$(pwd)/install/lib/nautilus \
-		--enable-silent-rules \
 		--disable-schemas-install \
 		--enable-gtk-doc \
 		--enable-gtk-doc-pdf \
 		--disable-scrollkeeper \
 		--enable-html-manuals \
-		--enable-pdf-manuals $*
+		--enable-pdf-manuals \
+		$*
 
 # Build with Gtk+ 3 (actually a 2.97.x unstable version)
 # installed in ~/.local/jhbuild
@@ -37,4 +37,5 @@ find . -maxdepth 1 -type d -name 'nautilus-actions-*' | xargs rm -fr
 			--prefix=${autogen_prefix} \
 			--with-nautilus-extdir=${autogen_prefix}/lib/nautilus \
 			--enable-silent-rules \
-			--disable-schemas-install $*
+			--disable-schemas-install \
+			$*
