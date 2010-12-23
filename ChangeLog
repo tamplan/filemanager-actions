@@ -1,5 +1,8 @@
 2010-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* doc/reference/Makefile.am: include auto created files in
+	content_files, so that they are build before XML generation.
+
 	* Makefile.am: Enable '-Wl,--as-needed' link option at make distcheck.
 
 	* configure.ac:
