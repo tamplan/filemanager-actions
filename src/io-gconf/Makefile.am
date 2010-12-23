@@ -48,6 +48,7 @@ libna_io_gconf_la_SOURCES = \
 
 libna_io_gconf_la_LIBADD = \
 	$(top_builddir)/src/core/libna-core.la				\
+	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
 libna_io_gconf_la_LDFLAGS = \

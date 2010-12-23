@@ -1,5 +1,11 @@
 2010-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/Makefile.am:
+	* src/io-gconf/Makefile.am:
+	* src/io-xml/Makefile.am:
+	Also compile dynamic plugins with needed dependancies
+	(get ride of #637797 when loaded from PcManFm)
+
 	* src/nact/egg-sm-client-private.h:
 	* src/nact/egg-sm-client-xsmp.c:
 	Apply Mathias Clasen patch to build against Gtk+ 2.91.7.
