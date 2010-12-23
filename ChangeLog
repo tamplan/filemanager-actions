@@ -1,5 +1,9 @@
 2010-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/egg-sm-client-private.h:
+	* src/nact/egg-sm-client-xsmp.c:
+	Apply Mathias Clasen patch to build against Gtk+ 2.91.7.
+
 	* doc/reference/Makefile.am: include auto created files in
 	content_files, so that they are build before XML generation.
 
