@@ -107,6 +107,7 @@ libna_core_la_LIBADD = \
 libna_core_la_LDFLAGS = \
 	-no-undefined										\
 	-avoid-version										\
+	-fPIC												\
 	$(NULL)
 
 pkgdata_DATA = \

@@ -1,3 +1,9 @@
+2010-12-26 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/Makefile.am:
+	Add -fPIC parameter
+	Get ride of 'relocation R_X86_64_32 against .rodata.str1.8' message.
+
 2010-12-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/io-desktop/Makefile.am:
