@@ -629,6 +629,7 @@ new_from_nautilus_file_info( NautilusFileInfo *item )
 {
 	gchar *uri = nautilus_file_info_get_uri( item );
 	gchar *mimetype = nautilus_file_info_get_mime_type( item );
+	g_debug( "new_from_nautilus_file_info: uri=%s, mimetype=%s", uri, mimetype );
 	NASelectedInfo *info = new_from_uri( uri, mimetype, NULL );
 	g_free( mimetype );
 	g_free( uri );

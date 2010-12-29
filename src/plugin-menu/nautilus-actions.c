@@ -458,12 +458,21 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 
 	g_return_val_if_fail( NAUTILUS_IS_ACTIONS( provider ), NULL );
 
-	/* no need to go further if there is no files in the list */
-	if( !g_list_length( files )){
-		return(( GList * ) NULL );
-	}
-
 	if( !NAUTILUS_ACTIONS( provider )->private->dispose_has_run ){
+
+		/* no need to go further if there is no files in the list */
+		if( !g_list_length( files )){
+			return(( GList * ) NULL );
+		}
+
+#ifdef NA_MAINTAINER_MODE
+		GList *im;
+		for( im = files ; im ; im = im->next ){
+			gchar *uri = nautilus_file_info_get_uri( NAUTILUS_FILE_INFO( im->data ));
+			g_debug( "%s: uri=%s", thisfn, uri );
+			g_free( uri );
+		}
+#endif
 
 		selected = na_selected_info_get_list_from_list(( GList * ) files );
 
