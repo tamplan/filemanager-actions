@@ -1,5 +1,17 @@
 2010-12-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-selected-info.c:
+	* src/core/na-selected-info.h:
+	No more keep GFile location nor NAGnomeVFSURI parsed URI.
+	(na_selected_info_get_location): Removed function.
+	(na_selected_info_get_uri_host, na_selected_info_get_uri_user,
+	na_selected_info_get_uri_port): New functions.
+
+	* src/core/na-tokens.c (na_tokens_new_from_selection):
+	Make use of new na_selected_info functions.
+	Quote the filename elements.
+	Fix #638278.
+
 	* src/core/na-tokens.c (build_string_lists):
 	Keep the same order than Nautilus. Fix #638272.
 

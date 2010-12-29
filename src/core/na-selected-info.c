@@ -49,8 +49,13 @@ struct _NASelectedInfoClassPrivate {
 struct _NASelectedInfoPrivate {
 	gboolean       dispose_has_run;
 	gchar         *uri;
-	NAGnomeVFSURI *vfs;
-	GFile         *location;
+	gchar         *filename;
+	gchar         *dirname;
+	gchar         *basename;
+	gchar         *hostname;
+	gchar         *username;
+	gchar         *scheme;
+	guint          port;
 	gchar         *mimetype;
 	GFileType      file_type;
 	gboolean       can_read;
@@ -71,7 +76,7 @@ static void            instance_finalize( GObject *object );
 static void            dump( const NASelectedInfo *nsi );
 static NASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
 static NASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg );
-static gboolean        query_file_attributes( NASelectedInfo *info, gchar **errmsg );
+static gboolean        query_file_attributes( NASelectedInfo *info, GFile *location, gchar **errmsg );
 
 GType
 na_selected_info_get_type( void )
@@ -160,9 +165,6 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_object_unref( self->private->location );
-		na_gnome_vfs_uri_free( self->private->vfs );
-
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
@@ -182,6 +184,12 @@ instance_finalize( GObject *object )
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 	g_free( self->private->uri );
+	g_free( self->private->filename );
+	g_free( self->private->dirname );
+	g_free( self->private->basename );
+	g_free( self->private->hostname );
+	g_free( self->private->username );
+	g_free( self->private->scheme );
 	g_free( self->private->mimetype );
 	g_free( self->private->owner );
 
@@ -276,31 +284,6 @@ na_selected_info_free_list( GList *files )
 }
 
 /*
- * na_selected_info_get_location:
- * @nsi: this #NASelectedInfo object.
- *
- * Returns: a new reference to the #GFile location.
- *
- * The returned location should be g_object_unref() by the caller.
- */
-GFile *
-na_selected_info_get_location( const NASelectedInfo *nsi )
-{
-	GFile *location;
-
-	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
-
-	location = NULL;
-
-	if( !nsi->private->dispose_has_run ){
-
-		location = g_object_ref( nsi->private->location );
-	}
-
-	return( location );
-}
-
-/*
  * na_selected_info_get_basename:
  * @nsi: this #NASelectedInfo object.
  *
@@ -319,7 +302,7 @@ na_selected_info_get_basename( const NASelectedInfo *nsi )
 
 	if( !nsi->private->dispose_has_run ){
 
-		basename = g_strdup( g_path_get_basename( nsi->private->vfs->path ));
+		basename = g_strdup( nsi->private->basename );
 	}
 
 	return( basename );
@@ -344,7 +327,7 @@ na_selected_info_get_dirname( const NASelectedInfo *nsi )
 
 	if( !nsi->private->dispose_has_run ){
 
-		dirname = g_strdup( g_path_get_dirname( nsi->private->vfs->path ));
+		dirname = g_strdup( nsi->private->dirname );
 	}
 
 	return( dirname );
@@ -380,7 +363,8 @@ na_selected_info_get_mime_type( const NASelectedInfo *nsi )
  * na_selected_info_get_path:
  * @nsi: this #NASelectedInfo object.
  *
- * Returns: the filename of the item.
+ * Returns: the filename of the item as a newly allocated string which
+ * should be g_free() by the caller.
  */
 gchar *
 na_selected_info_get_path( const NASelectedInfo *nsi )
@@ -393,7 +377,7 @@ na_selected_info_get_path( const NASelectedInfo *nsi )
 
 	if( !nsi->private->dispose_has_run ){
 
-		path = g_strdup( nsi->private->vfs->path );
+		path = g_strdup( nsi->private->filename );
 	}
 
 	return( path );
@@ -424,6 +408,77 @@ na_selected_info_get_uri( const NASelectedInfo *nsi )
 }
 
 /*
+ * na_selected_info_get_uri_host:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: the host associated to this @nsi object, as a
+ * newly allocated string which should be g_free() by the caller.
+ */
+gchar *
+na_selected_info_get_uri_host( const NASelectedInfo *nsi )
+{
+	gchar *host;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+
+	host = NULL;
+
+	if( !nsi->private->dispose_has_run ){
+
+		host = g_strdup( nsi->private->hostname );
+	}
+
+	return( host );
+}
+
+/*
+ * na_selected_info_get_uri_user:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: the user associated to this @nsi object, as a
+ * newly allocated string which should be g_free() by the caller.
+ */
+gchar *
+na_selected_info_get_uri_user( const NASelectedInfo *nsi )
+{
+	gchar *user;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), NULL );
+
+	user = NULL;
+
+	if( !nsi->private->dispose_has_run ){
+
+		user = g_strdup( nsi->private->username );
+	}
+
+	return( user );
+}
+
+/*
+ * na_selected_info_get_uri_port:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: the port associated to this @nsi object.
+ */
+guint
+na_selected_info_get_uri_port( const NASelectedInfo *nsi )
+{
+	guint port;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), 0 );
+
+	port = 0;
+
+	if( !nsi->private->dispose_has_run ){
+
+		port = nsi->private->port;
+	}
+
+	return( port );
+}
+
+/*
  * na_selected_info_get_uri_scheme:
  * @nsi: this #NASelectedInfo object.
  *
@@ -441,7 +496,7 @@ na_selected_info_get_uri_scheme( const NASelectedInfo *nsi )
 
 	if( !nsi->private->dispose_has_run ){
 
-		scheme = g_strdup( nsi->private->vfs->scheme );
+		scheme = g_strdup( nsi->private->scheme );
 	}
 
 	return( scheme );
@@ -615,13 +670,19 @@ dump( const NASelectedInfo *nsi )
 {
 	static const gchar *thisfn = "na_selected_info_dump";
 
-	g_debug( "%s:            uri=%s", thisfn, nsi->private->uri );
-	g_debug( "%s:       mimetype=%s", thisfn, nsi->private->mimetype );
-	g_debug( "%s:      vfs->path=%s", thisfn, nsi->private->vfs->path );
-	g_debug( "%s: vfs->host_name=%s", thisfn, nsi->private->vfs->host_name );
-	g_debug( "%s: vfs->host_port=%d", thisfn, nsi->private->vfs->host_port );
-	g_debug( "%s: vfs->user_name=%s", thisfn, nsi->private->vfs->user_name );
-	g_debug( "%s:  vfs->password=%s", thisfn, nsi->private->vfs->password );
+	g_debug( "%s:         uri=%s", thisfn, nsi->private->uri );
+	g_debug( "%s:    mimetype=%s", thisfn, nsi->private->mimetype );
+	g_debug( "%s:    filename=%s", thisfn, nsi->private->filename );
+	g_debug( "%s:     dirname=%s", thisfn, nsi->private->dirname );
+	g_debug( "%s:    basename=%s", thisfn, nsi->private->basename );
+	g_debug( "%s:    hostname=%s", thisfn, nsi->private->hostname );
+	g_debug( "%s:    username=%s", thisfn, nsi->private->username );
+	g_debug( "%s:      scheme=%s", thisfn, nsi->private->scheme );
+	g_debug( "%s:        port=%d", thisfn, nsi->private->port );
+	g_debug( "%s:    can_read=%s", thisfn, nsi->private->can_read ? "True":"False" );
+	g_debug( "%s:   can_write=%s", thisfn, nsi->private->can_write ? "True":"False" );
+	g_debug( "%s: can_execute=%s", thisfn, nsi->private->can_execute ? "True":"False" );
+	g_debug( "%s:       owner=%s", thisfn, nsi->private->owner );
 }
 
 static NASelectedInfo *
@@ -640,6 +701,9 @@ new_from_nautilus_file_info( NautilusFileInfo *item )
 static NASelectedInfo *
 new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 {
+	GFile *location;
+	NAGnomeVFSURI *vfs;
+
 	NASelectedInfo *info = g_object_new( NA_SELECTED_INFO_TYPE, NULL );
 
 	info->private->uri = g_strdup( uri );
@@ -647,29 +711,39 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 		info->private->mimetype = g_strdup( mimetype );
 	}
 
-	info->private->location = g_file_new_for_uri( uri );
-	info->private->vfs = g_new0( NAGnomeVFSURI, 1 );
-	na_gnome_vfs_uri_parse( info->private->vfs, info->private->uri );
+	info->private->filename = g_filename_from_uri( uri, NULL, NULL );
+	info->private->dirname = g_path_get_dirname( info->private->filename );
+	info->private->basename = g_path_get_basename( info->private->filename );
 
-	if( query_file_attributes( info, errmsg )){
+	vfs = g_new0( NAGnomeVFSURI, 1 );
+	na_gnome_vfs_uri_parse( vfs, uri );
+	info->private->hostname = g_strdup( vfs->host_name );
+	info->private->username = g_strdup( vfs->user_name );
+	info->private->scheme = g_strdup( vfs->scheme );
+	info->private->port = vfs->host_port;
+	na_gnome_vfs_uri_free( vfs );
+
+	location = g_file_new_for_uri( uri );
+	if( query_file_attributes( info, location, errmsg )){
 		dump( info );
 
 	} else {
 		g_object_unref( info );
 		info = NULL;
 	}
+	g_object_unref( location );
 
 	return( info );
 }
 
 static gboolean
-query_file_attributes( NASelectedInfo *nsi, gchar **errmsg )
+query_file_attributes( NASelectedInfo *nsi, GFile *location, gchar **errmsg )
 {
 	static const gchar *thisfn = "na_selected_info_query_file_attributes";
 	GError *error;
 
 	error = NULL;
-	GFileInfo *info = g_file_query_info( nsi->private->location,
+	GFileInfo *info = g_file_query_info( location,
 			G_FILE_ATTRIBUTE_STANDARD_TYPE
 				"," G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE
 				"," G_FILE_ATTRIBUTE_ACCESS_CAN_READ
