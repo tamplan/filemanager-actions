@@ -1,3 +1,8 @@
+2010-12-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/plugin-menu/nautilus-module.c (set_log_handler):
+	Remove obsolete TODO.
+
 2010-12-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/Makefile.am:
