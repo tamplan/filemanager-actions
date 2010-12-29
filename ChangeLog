@@ -1,5 +1,8 @@
 2010-12-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-tokens.c (build_string_lists):
+	Keep the same order than Nautilus. Fix #638272.
+
 	* src/core/na-selected-info.c (new_from_nautilus_file_info):
 	* src/plugin-menu/nautilus-actions.c (menu_provider_get_file_items):
 	Add debug messages to trace order and names in the selection.
