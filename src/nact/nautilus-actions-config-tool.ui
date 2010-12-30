@@ -2,1325 +2,6 @@
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
-  <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
-    <widgets>
-      <widget name="label19"/>
-      <widget name="label49"/>
-      <widget name="label39"/>
-      <widget name="label18"/>
-    </widgets>
-  </object>
-  <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
-    <widgets>
-      <widget name="label45"/>
-      <widget name="label44"/>
-      <widget name="label43"/>
-    </widgets>
-  </object>
-  <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
-    <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionToolbarLabelLabel"/>
-      <widget name="ActionMenuLabelLabel"/>
-    </widgets>
-  </object>
-  <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
-    <widgets>
-      <widget name="CommandPathButton"/>
-      <widget name="CommandLegendButton"/>
-    </widgets>
-  </object>
-  <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
-    <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="label4"/>
-    </widgets>
-  </object>
-  <object class="GtkImage" id="ImageWorkingDirectoryBrowse">
-    <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
-  </object>
-  <object class="GtkImage" id="ImageParametersLegend">
-    <property name="visible">True</property>
-    <property name="stock">gtk-help</property>
-  </object>
-  <object class="GtkImage" id="ImagePathBrowse">
-    <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
-  </object>
-  <object class="GtkImage" id="ImageIconBrowse">
-    <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
-  </object>
-  <object class="GtkImage" id="ImageRunningBrowse">
-    <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
-  </object>
-  <object class="GtkImage" id="ImageTryExecBrowse">
-    <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
-  </object>
-  <object class="GtkImage" id="SchemeBrowseImage">
-    <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
-  </object>
-  <object class="GtkImage" id="FolderBrowseImage">
-    <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
-  </object>
-  <object class="GtkImage" id="ImageLogoutSave">
-    <property name="visible">True</property>
-    <property name="stock">gtk-save</property>
-  </object>
-  <object class="GtkImage" id="ImageLogoutQuit">
-    <property name="visible">True</property>
-    <property name="stock">gtk-quit</property>
-  </object>
-  <object class="GtkMessageDialog" id="ConfirmLogoutDialog">
-    <property name="border_width">5</property>
-    <property name="title" translatable="yes">End of session</property>
-    <property name="modal">True</property>
-    <property name="icon_name">nautilus-actions</property>
-    <property name="type_hint">dialog</property>
-    <property name="skip_taskbar_hint">True</property>
-    <property name="skip_pager_hint">True</property>
-    <property name="deletable">False</property>
-    <property name="message_type">question</property>
-    <property name="text">User session is ending, but some modifications are still pending.</property>
-    <property name="secondary_text">&lt;b&gt;You want to save your modifications now, don't you ?&lt;/b&gt;</property>
-    <property name="secondary_use_markup">True</property>
-    <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox3">
-        <property name="visible">True</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area3">
-            <property name="visible">True</property>
-            <property name="layout_style">center</property>
-            <child>
-              <object class="GtkButton" id="SaveQuitButton">
-                <property name="label" translatable="yes">_Save and quit</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="image">ImageLogoutSave</property>
-                <property name="use_underline">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="QuitNoSaveButton">
-                <property name="label" translatable="yes">_Quit without saving</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="image">ImageLogoutQuit</property>
-                <property name="use_underline">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="CancelQuitButton">
-                <property name="label">gtk-cancel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-    <action-widgets>
-      <action-widget response="3">SaveQuitButton</action-widget>
-      <action-widget response="1">QuitNoSaveButton</action-widget>
-      <action-widget response="2">CancelQuitButton</action-widget>
-    </action-widgets>
-  </object>
-  <object class="GtkWindow" id="LegendDialog">
-    <property name="type_hint">dialog</property>
-    <child>
-      <object class="GtkVBox" id="vbox16">
-        <property name="visible">True</property>
-        <property name="border_width">12</property>
-        <property name="spacing">6</property>
-        <child>
-          <object class="GtkHBox" id="hbox11">
-            <property name="visible">True</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkImage" id="image9">
-                <property name="visible">True</property>
-                <property name="stock">gtk-help</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label25">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">&lt;span size="larger"&gt;&lt;b&gt;Parameter Legend&lt;/b&gt;&lt;/span&gt;</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkHSeparator" id="hseparator2">
-            <property name="visible">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkTable" id="table5">
-            <property name="visible">True</property>
-            <property name="n_rows">22</property>
-            <property name="n_columns">2</property>
-            <property name="column_spacing">2</property>
-            <property name="row_spacing">6</property>
-            <child>
-              <object class="GtkLabel" id="label20">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%b&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label21">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%B&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label5">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%c&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label22">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">3</property>
-                <property name="bottom_attach">4</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label23">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%D&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">4</property>
-                <property name="bottom_attach">5</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label33">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%p&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">13</property>
-                <property name="bottom_attach">14</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label35">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">14</property>
-                <property name="bottom_attach">15</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label11">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">15</property>
-                <property name="bottom_attach">16</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label36">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">16</property>
-                <property name="bottom_attach">17</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label13">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%%&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">21</property>
-                <property name="bottom_attach">22</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label14">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">(first) basename.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label37">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the basenames of the selected file(s)/folder(s).</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label24">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">count of selected item(s).</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label26">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">(first) base directory.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">3</property>
-                <property name="bottom_attach">4</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label27">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the base directories of the selected file(s)/folder(s).</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">4</property>
-                <property name="bottom_attach">5</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label28">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">port number of the (first) selected URI.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">13</property>
-                <property name="bottom_attach">14</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label30">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">scheme of the (first) selected URI.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">14</property>
-                <property name="bottom_attach">15</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label31">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">(first) URI.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">15</property>
-                <property name="bottom_attach">16</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="abel32">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the URIs of the selected file(s)/folder(s).</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">16</property>
-                <property name="bottom_attach">17</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label34">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">a percent sign.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">21</property>
-                <property name="bottom_attach">22</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label46">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%f&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">5</property>
-                <property name="bottom_attach">6</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label2">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">(first) filename.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">5</property>
-                <property name="bottom_attach">6</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label62">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%F&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">6</property>
-                <property name="bottom_attach">7</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label63">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the filenames of the selected file(s)/folder(s).</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">6</property>
-                <property name="bottom_attach">7</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label64">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">7</property>
-                <property name="bottom_attach">8</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label69">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">hostname of the (first) selected URI.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">7</property>
-                <property name="bottom_attach">8</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label70">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%n&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">10</property>
-                <property name="bottom_attach">11</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label78">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">username of the (first) selected URI.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">10</property>
-                <property name="bottom_attach">11</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label29">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">(first) basename without the extension.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">17</property>
-                <property name="bottom_attach">18</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label32">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the basenames without the extension.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">18</property>
-                <property name="bottom_attach">19</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label60">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">(first) extension.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">19</property>
-                <property name="bottom_attach">20</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label79">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the extensions of the selected file(s)/folder(s).</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">20</property>
-                <property name="bottom_attach">21</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label9">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%w&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">17</property>
-                <property name="bottom_attach">18</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label80">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%W&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">18</property>
-                <property name="bottom_attach">19</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label81">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%x&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">19</property>
-                <property name="bottom_attach">20</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label82">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%X&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">20</property>
-                <property name="bottom_attach">21</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label83">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%m&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">8</property>
-                <property name="bottom_attach">9</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label85">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">9</property>
-                <property name="bottom_attach">10</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label84">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">(first) mimetype.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">8</property>
-                <property name="bottom_attach">9</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label86">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">space-separated list of the mimetypes of the selected file(s)/folder(s).</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">9</property>
-                <property name="bottom_attach">10</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label88">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%o&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">11</property>
-                <property name="bottom_attach">12</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label89">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">&lt;b&gt;%O&lt;/b&gt; :</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="top_attach">12</property>
-                <property name="bottom_attach">13</property>
-                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label90">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">no-op operator which forces a singular form of execution.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">11</property>
-                <property name="bottom_attach">12</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label91">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yalign">0</property>
-                <property name="label" translatable="yes">no-op operator which forces a plural form of execution.</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">12</property>
-                <property name="bottom_attach">13</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="padding">4</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkAssistant" id="ImportAssistant">
-    <property name="border_width">12</property>
-    <property name="title" translatable="yes">Importing actions</property>
-    <property name="modal">True</property>
-    <property name="type_hint">dialog</property>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <object class="GtkLabel" id="label3">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
-      </object>
-      <packing>
-        <property name="page_type">intro</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkVBox" id="vbox34">
-        <property name="visible">True</property>
-        <child>
-          <object class="GtkFileChooserWidget" id="ImportFileChooser">
-            <property name="visible">True</property>
-            <property name="local_only">False</property>
-            <property name="preview_widget_active">False</property>
-            <property name="select_multiple">True</property>
-            <property name="use_preview_label">False</property>
-          </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-      <packing>
-        <property name="title">Selecting what files to import</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkVBox" id="vbox35">
-        <property name="visible">True</property>
-        <property name="border_width">10</property>
-        <property name="spacing">10</property>
-        <child>
-          <object class="GtkVBox" id="vbox20">
-            <property name="visible">True</property>
-            <property name="spacing">10</property>
-            <child>
-              <object class="GtkLabel" id="label38">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="ypad">10</property>
-                <property name="label" translatable="yes">&lt;b&gt;What should I do when importing an item whose ID already exists ?&lt;/b&gt;</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkVBox" id="vbox21">
-                <property name="visible">True</property>
-                <property name="spacing">10</property>
-                <child>
-                  <object class="GtkVBox" id="vbox22">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkRadioButton" id="NoImportButton">
-                        <property name="label" translatable="yes">Do _not import the item whose ID already exists</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkHBox" id="hbox18">
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkLabel" id="NoImportLabel">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="xpad">16</property>
-                            <property name="label" translatable="yes">This used to be the historical behavior.
-The selected file will be marked as "NOT OK" in the Summary page.
-The existing item will not be modified.</property>
-                          </object>
-                          <packing>
-                            <property name="padding">4</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkVBox" id="vbox23">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkRadioButton" id="RenumberButton">
-                        <property name="label" translatable="yes">A_llocate a new identifiant for the imported item</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                        <property name="group">NoImportButton</property>
-                      </object>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkHBox" id="hbox6">
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkLabel" id="RenumberLabel">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="xpad">16</property>
-                            <property name="label" translatable="yes">The selected file will be imported with a slightly modified label indicating the renumbering.
-The existing item will not be modified.</property>
-                            <property name="wrap">True</property>
-                          </object>
-                          <packing>
-                            <property name="padding">4</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkVBox" id="vbox24">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkRadioButton" id="OverrideButton">
-                        <property name="label" translatable="yes">_Override the existing item</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                        <property name="group">NoImportButton</property>
-                      </object>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkHBox" id="hbox7">
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkLabel" id="OverrideLabel">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="xpad">16</property>
-                            <property name="label" translatable="yes">The item found in the selected file will silently override the current one which has the same identifiant.
-Be warned: this mode may be dangerous. You will not be prompted another time.</property>
-                            <property name="wrap">True</property>
-                          </object>
-                          <packing>
-                            <property name="padding">4</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkVBox" id="vbox36">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkRadioButton" id="AskButton">
-                        <property name="label" translatable="yes">_Ask me</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                        <property name="group">NoImportButton</property>
-                      </object>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkHBox" id="hbox8">
-                        <property name="visible">True</property>
-                        <child>
-                          <object class="GtkLabel" id="AskLabel">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="xpad">16</property>
-                            <property name="label" translatable="yes">You will be asked each time an imported ID already exists.</property>
-                            <property name="wrap">True</property>
-                          </object>
-                          <packing>
-                            <property name="padding">4</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">3</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-      <packing>
-        <property name="title">Managing duplicates</property>
-      </packing>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <object class="GtkVBox" id="vbox12">
-        <property name="visible">True</property>
-        <child>
-          <object class="GtkLabel" id="AssistantImportConfirmLabel">
-            <property name="visible">True</property>
-            <property name="xalign">0</property>
-            <property name="xpad">20</property>
-          </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-      <packing>
-        <property name="page_type">confirm</property>
-        <property name="title" translatable="yes">Summary</property>
-      </packing>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <object class="GtkVBox" id="vbox13">
-        <property name="visible">True</property>
-        <child>
-          <object class="GtkScrolledWindow" id="scrolledwindow6">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
-            <child>
-              <object class="GtkTextView" id="AssistantImportSummaryTextView">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="editable">False</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-      </object>
-      <packing>
-        <property name="page_type">summary</property>
-        <property name="title" translatable="yes">Import is done</property>
-      </packing>
-    </child>
-  </object>
   <object class="GtkWindow" id="MainWindow">
     <child>
       <object class="GtkVBox" id="vbox1">
@@ -1728,7 +409,7 @@ In this case, the defined conditions will be applied to the current folder, and 
                                                         <property name="xpad">2</property>
                                                         <property name="ypad">2</property>
                                                         <property name="stock">gtk-stock-blank</property>
-                                                        <property name="icon-size">1</property>
+                                                        <property name="icon-size">2</property>
                                                       </object>
                                                     </child>
                                                   </object>
@@ -4029,5 +2710,1327 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkAssistant" id="ImportAssistant">
+    <property name="border_width">12</property>
+    <property name="title" translatable="yes">Importing actions</property>
+    <property name="modal">True</property>
+    <property name="type_hint">dialog</property>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label3">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
+      </object>
+      <packing>
+        <property name="page_type">intro</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox34">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkFileChooserWidget" id="ImportFileChooser">
+            <property name="visible">True</property>
+            <property name="local_only">False</property>
+            <property name="preview_widget_active">False</property>
+            <property name="select_multiple">True</property>
+            <property name="use_preview_label">False</property>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="title">Selecting what files to import</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox35">
+        <property name="visible">True</property>
+        <property name="border_width">10</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkVBox" id="vbox20">
+            <property name="visible">True</property>
+            <property name="spacing">10</property>
+            <child>
+              <object class="GtkLabel" id="label38">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="ypad">10</property>
+                <property name="label" translatable="yes">&lt;b&gt;What should I do when importing an item whose ID already exists ?&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox21">
+                <property name="visible">True</property>
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkVBox" id="vbox22">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkRadioButton" id="NoImportButton">
+                        <property name="label" translatable="yes">Do _not import the item whose ID already exists</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="draw_indicator">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox18">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="NoImportLabel">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="xpad">16</property>
+                            <property name="label" translatable="yes">This used to be the historical behavior.
+The selected file will be marked as "NOT OK" in the Summary page.
+The existing item will not be modified.</property>
+                          </object>
+                          <packing>
+                            <property name="padding">4</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="vbox23">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkRadioButton" id="RenumberButton">
+                        <property name="label" translatable="yes">A_llocate a new identifiant for the imported item</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">NoImportButton</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox6">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="RenumberLabel">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="xpad">16</property>
+                            <property name="label" translatable="yes">The selected file will be imported with a slightly modified label indicating the renumbering.
+The existing item will not be modified.</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="padding">4</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="vbox24">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkRadioButton" id="OverrideButton">
+                        <property name="label" translatable="yes">_Override the existing item</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">NoImportButton</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox7">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="OverrideLabel">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="xpad">16</property>
+                            <property name="label" translatable="yes">The item found in the selected file will silently override the current one which has the same identifiant.
+Be warned: this mode may be dangerous. You will not be prompted another time.</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="padding">4</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="vbox36">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkRadioButton" id="AskButton">
+                        <property name="label" translatable="yes">_Ask me</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="use_underline">True</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">NoImportButton</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkHBox" id="hbox8">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkLabel" id="AskLabel">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="xpad">16</property>
+                            <property name="label" translatable="yes">You will be asked each time an imported ID already exists.</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="padding">4</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="title">Managing duplicates</property>
+      </packing>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox12">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkLabel" id="AssistantImportConfirmLabel">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="xpad">20</property>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+      <packing>
+        <property name="page_type">confirm</property>
+        <property name="title" translatable="yes">Summary</property>
+      </packing>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox13">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow6">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <child>
+              <object class="GtkTextView" id="AssistantImportSummaryTextView">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+      <packing>
+        <property name="page_type">summary</property>
+        <property name="title" translatable="yes">Import is done</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkWindow" id="LegendDialog">
+    <property name="type_hint">dialog</property>
+    <child>
+      <object class="GtkVBox" id="vbox16">
+        <property name="visible">True</property>
+        <property name="border_width">12</property>
+        <property name="spacing">6</property>
+        <child>
+          <object class="GtkHBox" id="hbox11">
+            <property name="visible">True</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkImage" id="image9">
+                <property name="visible">True</property>
+                <property name="stock">gtk-help</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label25">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">&lt;span size="larger"&gt;&lt;b&gt;Parameter Legend&lt;/b&gt;&lt;/span&gt;</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHSeparator" id="hseparator2">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkTable" id="table5">
+            <property name="visible">True</property>
+            <property name="n_rows">22</property>
+            <property name="n_columns">2</property>
+            <property name="column_spacing">2</property>
+            <property name="row_spacing">6</property>
+            <child>
+              <object class="GtkLabel" id="label20">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%b&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label21">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%B&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label5">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%c&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label22">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%d&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label23">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%D&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">4</property>
+                <property name="bottom_attach">5</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label33">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%p&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">13</property>
+                <property name="bottom_attach">14</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label35">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%s&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">14</property>
+                <property name="bottom_attach">15</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label11">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%u&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">15</property>
+                <property name="bottom_attach">16</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label36">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%U&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">16</property>
+                <property name="bottom_attach">17</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label13">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%%&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">21</property>
+                <property name="bottom_attach">22</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label14">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">(first) basename.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label37">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">space-separated list of the basenames of the selected file(s)/folder(s).</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label24">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">count of selected item(s).</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label26">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">(first) base directory.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label27">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">space-separated list of the base directories of the selected file(s)/folder(s).</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">4</property>
+                <property name="bottom_attach">5</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label28">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">port number of the (first) selected URI.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">13</property>
+                <property name="bottom_attach">14</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label30">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">scheme of the (first) selected URI.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">14</property>
+                <property name="bottom_attach">15</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label31">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">(first) URI.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">15</property>
+                <property name="bottom_attach">16</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="abel32">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">space-separated list of the URIs of the selected file(s)/folder(s).</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">16</property>
+                <property name="bottom_attach">17</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label34">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">a percent sign.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">21</property>
+                <property name="bottom_attach">22</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label46">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%f&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">5</property>
+                <property name="bottom_attach">6</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label2">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">(first) filename.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">5</property>
+                <property name="bottom_attach">6</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label62">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%F&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">6</property>
+                <property name="bottom_attach">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label63">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">space-separated list of the filenames of the selected file(s)/folder(s).</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">6</property>
+                <property name="bottom_attach">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label64">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%h&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">7</property>
+                <property name="bottom_attach">8</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label69">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">hostname of the (first) selected URI.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">7</property>
+                <property name="bottom_attach">8</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label70">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%n&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">10</property>
+                <property name="bottom_attach">11</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label78">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">username of the (first) selected URI.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">10</property>
+                <property name="bottom_attach">11</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label29">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">(first) basename without the extension.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">17</property>
+                <property name="bottom_attach">18</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label32">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">space-separated list of the basenames without the extension.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">18</property>
+                <property name="bottom_attach">19</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label60">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">(first) extension.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">19</property>
+                <property name="bottom_attach">20</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label79">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">space-separated list of the extensions of the selected file(s)/folder(s).</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">20</property>
+                <property name="bottom_attach">21</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label9">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%w&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">17</property>
+                <property name="bottom_attach">18</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label80">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%W&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">18</property>
+                <property name="bottom_attach">19</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label81">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%x&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">19</property>
+                <property name="bottom_attach">20</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label82">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%X&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">20</property>
+                <property name="bottom_attach">21</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label83">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%m&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">8</property>
+                <property name="bottom_attach">9</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label85">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&lt;b&gt;%M&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">9</property>
+                <property name="bottom_attach">10</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label84">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">(first) mimetype.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">8</property>
+                <property name="bottom_attach">9</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label86">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">space-separated list of the mimetypes of the selected file(s)/folder(s).</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">9</property>
+                <property name="bottom_attach">10</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label88">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%o&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">11</property>
+                <property name="bottom_attach">12</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label89">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">&lt;b&gt;%O&lt;/b&gt; :</property>
+                <property name="use_markup">True</property>
+              </object>
+              <packing>
+                <property name="top_attach">12</property>
+                <property name="bottom_attach">13</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label90">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">no-op operator which forces a singular form of execution.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">11</property>
+                <property name="bottom_attach">12</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label91">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">no-op operator which forces a plural form of execution.</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">12</property>
+                <property name="bottom_attach">13</property>
+                <property name="x_options">GTK_FILL</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="padding">4</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkMessageDialog" id="ConfirmLogoutDialog">
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">End of session</property>
+    <property name="modal">True</property>
+    <property name="icon_name">nautilus-actions</property>
+    <property name="type_hint">dialog</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
+    <property name="deletable">False</property>
+    <property name="message_type">question</property>
+    <property name="text">User session is ending, but some modifications are still pending.</property>
+    <property name="secondary_text">&lt;b&gt;You want to save your modifications now, don't you ?&lt;/b&gt;</property>
+    <property name="secondary_use_markup">True</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox3">
+        <property name="visible">True</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area3">
+            <property name="visible">True</property>
+            <property name="layout_style">center</property>
+            <child>
+              <object class="GtkButton" id="SaveQuitButton">
+                <property name="label" translatable="yes">_Save and quit</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="image">ImageLogoutSave</property>
+                <property name="use_underline">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="QuitNoSaveButton">
+                <property name="label" translatable="yes">_Quit without saving</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="image">ImageLogoutQuit</property>
+                <property name="use_underline">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="CancelQuitButton">
+                <property name="label">gtk-cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="3">SaveQuitButton</action-widget>
+      <action-widget response="1">QuitNoSaveButton</action-widget>
+      <action-widget response="2">CancelQuitButton</action-widget>
+    </action-widgets>
+  </object>
+  <object class="GtkImage" id="ImageLogoutQuit">
+    <property name="visible">True</property>
+    <property name="stock">gtk-quit</property>
+  </object>
+  <object class="GtkImage" id="ImageLogoutSave">
+    <property name="visible">True</property>
+    <property name="stock">gtk-save</property>
+  </object>
+  <object class="GtkImage" id="FolderBrowseImage">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkImage" id="SchemeBrowseImage">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkImage" id="ImageTryExecBrowse">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkImage" id="ImageRunningBrowse">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkImage" id="ImageIconBrowse">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkImage" id="ImagePathBrowse">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkImage" id="ImageParametersLegend">
+    <property name="visible">True</property>
+    <property name="stock">gtk-help</property>
+  </object>
+  <object class="GtkImage" id="ImageWorkingDirectoryBrowse">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find-and-replace</property>
+  </object>
+  <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
+    <widgets>
+      <widget name="label4"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
+    <widgets>
+      <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
+    <widgets>
+      <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
+    <widgets>
+      <widget name="label43"/>
+      <widget name="label44"/>
+      <widget name="label45"/>
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
+    <widgets>
+      <widget name="label18"/>
+      <widget name="label39"/>
+      <widget name="label49"/>
+      <widget name="label19"/>
+    </widgets>
   </object>
 </interface>

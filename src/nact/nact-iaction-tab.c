@@ -963,7 +963,7 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 	 * in such a case, we blank the image
 	 */
 	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
-	nact_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_MENU );
+	nact_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_SMALL_TOOLBAR );
 }
 
 static void
