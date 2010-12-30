@@ -61,6 +61,8 @@ static GType    register_type( void );
 static void     interface_base_init( NAIContextInterface *klass );
 static void     interface_base_finalize( NAIContextInterface *klass );
 
+static void     convert_allfiles_mimetype( NAIContext *context );
+
 static gboolean v_is_candidate( NAIContext *object, guint target, GList *selection );
 
 static gboolean is_candidate_for_target( const NAIContext *object, guint target, GList *files );
@@ -284,6 +286,8 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
 		break;
 	}
 
+	na_core_utils_slist_free( mimetypes );
+
 	return( is_all );
 }
 
@@ -293,11 +297,27 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
  *
  * Prepares the specified #NAIContext just after it has been readen.
  *
+ * <unorderedlist>
+ *   <listitem>
+ *     <para>
+ *       This converts a 'all/allfiles' mimetype to 'all/all' + 'file' scheme.
+ *     </para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>
+ *       This setup an internal flag when mimetypes is like 'all/all'
+ *       in order to optimize computation time;
+ *     </para>
+ *   </listitem>
+ * </unorderedlist>
+ *
  * Since: 2.30
  */
 void
 na_icontext_read_done( NAIContext *context )
 {
+	convert_allfiles_mimetype( context );
+
 	na_object_set_all_mimetypes( context, na_icontext_is_all_mimetypes( context ));
 }
 
@@ -392,6 +412,55 @@ na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *
 	folders = g_slist_append( folders, ( gpointer ) g_strdup( new ));
 	na_object_set_folders( context, folders );
 	na_core_utils_slist_free( folders );
+}
+
+/*
+ * Convert 'all/allfiles' mimetype to 'all/all' + 'file' scheme.
+ * This takes into account
+ * - all/allfiles, allfiles, allfiles/ * and allfiles/all
+ * - negated assertions.
+ */
+static void
+convert_allfiles_mimetype( NAIContext *context )
+{
+	GSList *mimetypes, *im;
+	GSList *schemes;
+	gchar *tmp;
+	gboolean modified;
+
+	modified = FALSE;
+	mimetypes = na_object_get_mimetypes( context );
+	schemes = na_object_get_schemes( context );
+
+	for( im = mimetypes ; im ; im = im->next ){
+		if( !im->data || !strlen( im->data )){
+			continue;
+		}
+
+		gchar *imtype = ( gchar * ) im->data;
+		gboolean positive = is_positive_assertion( imtype );
+		guint i = ( positive ? 0 : 1 );
+
+		if( !strcmp( imtype+i, "allfiles" ) ||
+			!strcmp( imtype+i, "allfiles/*" ) ||
+			!strcmp( imtype+i, "allfiles/all" ) ||
+			!strcmp( imtype+i, "all/allfiles" )){
+
+				g_free( im->data );
+				im->data = g_strdup( "all/all" );
+				tmp = g_strdup_printf( "%sfile", positive ? "" : "!" );
+				schemes = g_slist_prepend( schemes, tmp );
+				modified = TRUE;
+		}
+	}
+
+	if( modified ){
+		na_object_set_mimetypes( context, mimetypes );
+		na_object_set_schemes( context, schemes );
+	}
+
+	na_core_utils_slist_free( mimetypes );
+	na_core_utils_slist_free( schemes );
 }
 
 static gboolean
