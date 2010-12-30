@@ -1,5 +1,8 @@
 2010-12-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c (setup_dialog_title):
+	Setup item label before application name in window title.
+
 	* src/core/na-icontext.c (na_icontext_read_done):
 	Convert 'all/allfiles' mimetype to 'all/all' + 'file' scheme.
 

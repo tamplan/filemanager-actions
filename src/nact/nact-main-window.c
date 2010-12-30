@@ -1364,7 +1364,7 @@ setup_dialog_title( NactMainWindow *window )
 
 	if( window->private->selected_item ){
 		label = na_object_get_label( window->private->selected_item );
-		tmp = g_strdup_printf( "%s - %s", title, label );
+		tmp = g_strdup_printf( "%s - %s", label, title );
 		g_free( label );
 		g_free( title );
 		title = tmp;
