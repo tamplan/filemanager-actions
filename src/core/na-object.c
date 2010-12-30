@@ -702,10 +702,10 @@ na_object_object_ref( NAObject *object )
 			children = na_object_get_items( object );
 
 			for( ic = children ; ic ; ic = ic->next ){
-
+				/*
 				g_debug( "na_object_object_ref: child=%p (%s, ref_count=%d)",
 							( void * ) ic->data, G_OBJECT_TYPE_NAME( ic->data ), G_OBJECT( ic->data )->ref_count );
-
+							*/
 				na_object_ref( ic->data );
 			}
 		}
