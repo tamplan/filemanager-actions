@@ -1,3 +1,8 @@
+2010-12-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-object-id.c (na_object_id_prepare_for_paste):
+	Set data provider to NULL when duplicating a desktop file item.
+
 2010-12-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-selected-info.c:

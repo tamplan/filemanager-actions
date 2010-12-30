@@ -333,6 +333,7 @@ na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean r
 					na_object_set_copy_of_label( object );
 				}
 				na_object_set_provider( object, NULL );
+				na_object_set_provider_data( object, NULL );
 				na_object_set_readonly( object, FALSE );
 			}
 			if( NA_IS_OBJECT_MENU( object )){
