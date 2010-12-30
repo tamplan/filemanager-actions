@@ -68,6 +68,7 @@ static NadpDesktopFile *ndf_new( const gchar *uri );
 static gchar           *path2id( const gchar *path );
 static gchar           *uri2id( const gchar *uri );
 static gboolean         check_key_file( NadpDesktopFile *ndf );
+static void             remove_encoding_part( NadpDesktopFile *ndf );
 
 GType
 nadp_desktop_file_get_type( void )
@@ -706,10 +707,6 @@ nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, c
  *
  * Returns: the readen value, or the default value if the entry has not
  * been found in the given group.
- *
- * Note that g_key_file_has_key doesn't deal correctly with localized
- * strings which have a key[modifier] (it recognizes them as the key
- *  "key[modifier]", not "key")
  */
 gchar *
 nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *entry, gboolean *key_found, const gchar *default_value )
@@ -924,6 +921,14 @@ nadp_desktop_file_set_boolean( const NadpDesktopFile *ndf, const gchar *group, c
  * @value: the value to be written.
  *
  * Write the given string value.
+ *
+ * Until v 3.0.4, locale strings used to be written for all available locales
+ * e.g. 'en_US.UTF-8', 'en_US', 'en.UTF-8', 'en', 'C'.
+ *
+ * Starting with v 3.0.4, encoding part of the locale is no more written.
+ *
+ * Starting with v 3.x.x, the language part of the locale is part of the UI;
+ * the user is so free to select exactly which language he wish modify.
  */
 void
 nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value )
@@ -945,13 +950,19 @@ nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 		*/
 
 		/* using locales[0] writes a string with, e.g. Label[en_US.UTF-8]
-		 * after thatn trying to read the same key with another locale, even en_US.utf-8,
+		 * after that trying to read the same key with another locale, even en_US.utf-8,
 		 * fails ans returns an empty string.
 		 * so write all available locales for the string, so that there is a chance at
 		 * least one of these will be used as default
+		 *
+		 * pwi 2010-12-30 v 3.0.4
+		 * no more write encoding part of the locale as desktop files are supposed to
+		 * be UTF-8 encoded.
 		 */
 		for( i = 0 ; i < g_strv_length( locales ) ; ++i ){
-			g_key_file_set_locale_string( ndf->private->key_file, group, key, locales[i], value );
+			if( !g_strstr_len( locales[i], -1, "." )){
+				g_key_file_set_locale_string( ndf->private->key_file, group, key, locales[i], value );
+			}
 		}
 	}
 }
@@ -1027,6 +1038,10 @@ nadp_desktop_file_set_uint( const NadpDesktopFile *ndf, const gchar *group, cons
  * Writes the key file to the disk.
  *
  * Returns: %TRUE if write is ok, %FALSE else.
+ *
+ * Starting with v 3.0.4, locale strings whose identifier include an
+ * encoding part are removed from the desktop file when rewriting it
+ * (these were wrongly written between v 2.99 and 3.0.3).
  */
 gboolean
 nadp_desktop_file_write( NadpDesktopFile *ndf )
@@ -1043,6 +1058,10 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), ret );
 
 	if( !ndf->private->dispose_has_run ){
+
+		if( ndf->private->key_file ){
+			remove_encoding_part( ndf );
+		}
 
 		data = g_key_file_to_data( ndf->private->key_file, NULL, NULL );
 		file = g_file_new_for_uri( ndf->private->uri );
@@ -1088,4 +1107,49 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 	}
 
 	return( FALSE );
+}
+
+static void
+remove_encoding_part( NadpDesktopFile *ndf )
+{
+	static const gchar *thisfn = "nadp_desktop_file_remove_encoding_part";
+	gchar **groups;
+	gchar **keys;
+	guint ig, ik;
+	GRegex *regex;
+	GMatchInfo *info;
+	GError *error;
+
+	error = NULL;
+	regex = g_regex_new( "\\[(.*)\\.(.*)\\]$", G_REGEX_CASELESS | G_REGEX_UNGREEDY, G_REGEX_MATCH_NOTEMPTY, &error );
+	if( error ){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+
+	} else {
+		groups = g_key_file_get_groups( ndf->private->key_file, NULL );
+
+		for( ig = 0 ; ig < g_strv_length( groups ) ; ++ig ){
+			keys = g_key_file_get_keys( ndf->private->key_file, groups[ig], NULL, NULL );
+
+			for( ik = 0 ; ik < g_strv_length( keys ) ; ++ik ){
+
+				if( g_regex_match( regex, keys[ik], 0, &info )){
+					g_key_file_remove_key( ndf->private->key_file, groups[ig], keys[ik], &error );
+					if( error ){
+						g_warning( "%s: %s", thisfn, error->message );
+						g_error_free( error );
+						error = NULL;
+					}
+				}
+
+				g_match_info_free( info );
+			}
+
+			g_strfreev( keys );
+		}
+
+		g_strfreev( groups );
+		g_regex_unref( regex );
+	}
 }

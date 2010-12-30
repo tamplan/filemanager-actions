@@ -1,5 +1,8 @@
 2010-12-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c (nadp_desktop_file_set_locale_string):
+	No more write the encoding part of the locale in the .desktop file.
+
 	* src/nact/nact-main-window.c (setup_dialog_title):
 	Setup item label before application name in window title.
 
