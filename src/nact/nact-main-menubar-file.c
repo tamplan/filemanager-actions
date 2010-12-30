@@ -297,7 +297,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	/* get ride of notification messages of IOProviders
+	/* get ride of notification messages of I/O providers
 	 */
 	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( window ), FALSE, 0 );
 
@@ -395,7 +395,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
  * level zero order has already been saved from tree store order, so that
  * we actually do not care of the exact order of level zero NAPivot items
  *
- * saving means non-recursively save modified NAObjectItem, simultaneously
+ * saving means recursively save modified NAObjectItem, simultaneously
  * reproducing the new item in NAPivot
  *  +- A
  *  |  +- B
