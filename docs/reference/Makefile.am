@@ -64,10 +64,19 @@ SCAN_OPTIONS = \
 	$(NULL)
 
 # The directory containing the source code. Relative to $(srcdir)
+# Starting with gtk-doc 1.15, multiple source dirs are directly handled
+# by gtk-doc.make
+if HAVE_GTK_DOC_115
+DOC_SOURCE_DIR = \
+	$(top_srcdir)/src/api 						\
+	$(top_srcdir)/src/core						\
+	$(NULL)
+else
 DOC_SOURCE_DIR = \
 	$(top_srcdir)/src/api 						\
 	--source-dir=$(top_srcdir)/src/core			\
 	$(NULL)
+endif
 
 # Headers to ignore
 IGNORE_HFILES = \

@@ -297,7 +297,7 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
  *
  * Prepares the specified #NAIContext just after it has been readen.
  *
- * <unorderedlist>
+ * <itemizedlist>
  *   <listitem>
  *     <para>
  *       This converts a 'all/allfiles' mimetype to 'all/all' + 'file' scheme.
@@ -309,7 +309,7 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
  *       in order to optimize computation time;
  *     </para>
  *   </listitem>
- * </unorderedlist>
+ * </itemizedlist>
  *
  * Since: 2.30
  */

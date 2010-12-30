@@ -29,14 +29,12 @@
 AC_PREREQ([2.53])
 
 AC_INIT([Nautilus-Actions],[3.0.4],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
-
 AC_CANONICAL_TARGET
-
 AM_INIT_AUTOMAKE
 
 AC_CONFIG_SRCDIR([src/plugin-menu/nautilus-module.c])
-
 AC_CONFIG_HEADERS([src/config.h])
 
 AC_CONFIG_FILES([
@@ -101,9 +99,6 @@ AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} ${WARN_CFLAGS}"])
 # GLib marshaling
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
-# check for gtk-doc
-GTK_DOC_CHECK([1.10],[--flavour no-tmpl])
-
 # libtool
 AM_PROG_LIBTOOL
 
@@ -153,6 +148,18 @@ NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.8])
 
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
+
+# check for gtk-doc
+# Starting with gtk-doc 1.15, multiple source dirs are directly handled
+# by gtk-doc.make
+GTK_DOC_CHECK([1.10],[--flavour no-tmpl])
+have_gtk_doc_115="no"
+if test "x${enable_gtk_doc}" = "xyes"; then
+	AC_MSG_CHECKING([for gtk-doc >= 1.15])
+	PKG_CHECK_EXISTS([gtk-doc >= 1.15],[have_gtk_doc_115="yes"],[have_gtk_doc_115="no"])
+	AC_MSG_RESULT([${have_gtk_doc_115}])
+fi
+AM_CONDITIONAL([HAVE_GTK_DOC_115], [test x$have_gtk_doc_115 = xyes])
 
 # defines log domains when in maintainer mode
 NA_LOG_DOMAINS
