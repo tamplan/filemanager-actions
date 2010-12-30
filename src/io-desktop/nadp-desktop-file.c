@@ -927,14 +927,29 @@ nadp_desktop_file_set_boolean( const NadpDesktopFile *ndf, const gchar *group, c
  *
  * Starting with v 3.0.4, encoding part of the locale is no more written.
  *
- * Starting with v 3.x.x, the language part of the locale is part of the UI;
- * the user is so free to select exactly which language he wish modify.
+ * The better solution would be to include in the UI a listbox with all
+ * available locales, letting the user choose himself which locale he wish
+ * modify.
+ *
+ * A first fallback would be to set some sort of user preferences: whether
+ * to write all available locales, whether to write all but C locales, ...
+ *
+ * As of v 3.0.4, we choose:
+ * - always write the first locale, which should obviously be the user locale;
+ * - also write all locales derived from the first (e.g. en_US, en_GB, en);
+ * - when the prefix of the locale changes, stop to write other locales unless
+ *   the first prefix was 'en', as we suppose that the C locale will always be
+ *   in english.
+ *
+ * The locale prefix is identified by '_' or '@' character.
  */
 void
 nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *group, const gchar *key, const gchar *value )
 {
 	char **locales;
 	guint i;
+	gchar *prefix;
+	gboolean write;
 
 	g_return_if_fail( NADP_IS_DESKTOP_FILE( ndf ));
 
@@ -949,6 +964,14 @@ nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 		C
 		*/
 
+		prefix = g_strdup( locales[0] );
+		for( i = 0 ; prefix[i] ; ++i ){
+			if( prefix[i] == '_' || prefix[i] == '@' || prefix[i] == '.' ){
+				prefix[i] = '\0';
+				break;
+			}
+		}
+
 		/* using locales[0] writes a string with, e.g. Label[en_US.UTF-8]
 		 * after that trying to read the same key with another locale, even en_US.utf-8,
 		 * fails ans returns an empty string.
@@ -960,10 +983,27 @@ nadp_desktop_file_set_locale_string( const NadpDesktopFile *ndf, const gchar *gr
 		 * be UTF-8 encoded.
 		 */
 		for( i = 0 ; i < g_strv_length( locales ) ; ++i ){
-			if( !g_strstr_len( locales[i], -1, "." )){
+			write = FALSE;
+
+			if( g_strstr_len( locales[i], -1, "." )){
+				continue;
+			}
+
+			/* write the locale string for all locales derived from the first one */
+			if( !strncmp( locales[i], prefix, strlen( prefix ))){
+				write = TRUE;
+
+			/* also write other locales if first was a 'en'-derivative */
+			} else if( !strcmp( prefix, "en" )){
+				write = TRUE;
+			}
+
+			if( write ){
 				g_key_file_set_locale_string( ndf->private->key_file, group, key, locales[i], value );
 			}
 		}
+
+		g_free( prefix );
 	}
 }
 
@@ -1052,6 +1092,7 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 	GFile *file;
 	GFileOutputStream *stream;
 	GError *error;
+	gsize length;
 
 	ret = FALSE;
 	error = NULL;
@@ -1063,7 +1104,7 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 			remove_encoding_part( ndf );
 		}
 
-		data = g_key_file_to_data( ndf->private->key_file, NULL, NULL );
+		data = g_key_file_to_data( ndf->private->key_file, &length, NULL );
 		file = g_file_new_for_uri( ndf->private->uri );
 		g_debug( "%s: uri=%s", thisfn, ndf->private->uri );
 
@@ -1079,7 +1120,7 @@ nadp_desktop_file_write( NadpDesktopFile *ndf )
 			return( FALSE );
 		}
 
-		g_output_stream_write( G_OUTPUT_STREAM( stream ), data, g_utf8_strlen( data, -1 ), NULL, &error );
+		g_output_stream_write( G_OUTPUT_STREAM( stream ), data, length, NULL, &error );
 		if( error ){
 			g_warning( "%s: g_output_stream_write: %s", thisfn, error->message );
 			g_error_free( error );
