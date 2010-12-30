@@ -1,5 +1,7 @@
 2010-12-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Update NEWS before release.
+
 	* src/io-desktop/nadp-desktop-file.c (nadp_desktop_file_write):
 	Use returned data length instead of trying to computer a (false) another.
 

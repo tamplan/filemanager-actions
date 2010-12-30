@@ -1,3 +1,45 @@
+Version 3.0.4
+=============
+
+	Release date 2010-12-30
+
+	Modifications:
+
+		Nautilus-Actions Configuration Tool
+
+		- Change window title as 'label - application'.
+		- Review user interface tooltips.
+		- Add --enable-as-needed configure option to be able to mimic Gentoo
+		  configuration (cf. #637797).
+
+	Bug fixes:
+
+		- Improve writing of locale strings in .desktop files for languages
+		  other than 'en'.
+		- Fix reference doc generation for gtk-doc >= 1.15.
+		- No more write the encoding part of the locale in the .desktop
+		  file.
+		- Convert 'all/allfiles' mimetype to 'all/all' + 'file' scheme.
+		- Allow duplication of items based on .desktop files.
+		- Apply Mathias Clasen patch to EggSMClient to build against Gtk+
+		  2.91.7.
+		- Fix #638278 - Properly quotes filenames
+		  (reported by Johan Spee).
+		- Fix #638272 - Keep the same order than Nautilus
+		  (reported by Johan Spee).
+		- Get ride of 'relocation R_X86_64_32 against .rodata.str1.8'
+		  message (Fedora 14 - 64bits).
+		- Fix #637797 - Build core and plugin libraries against their
+		  dependancies
+		  (reported by dabbott@gentoo.org and Ionut Biru).
+		- Fix #634056 - Create 'hidden' actions
+		  (reported by Andreas Heinlein).
+
+	New and updated translations:
+
+		- cs (Marek Černocký, Andre Klapper, Petr Kovar)
+		- es (Jorge González)
+
 Version 3.0.3
 =============
 
