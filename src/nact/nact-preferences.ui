@@ -1,17 +1,28 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="stock">gtk-go-down</property>
+  </object>
+  <object class="GtkImage" id="image">
+    <property name="visible">True</property>
+    <property name="xalign">0</property>
+    <property name="stock">gtk-go-up</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="stock">gtk-missing-image</property>
+  </object>
   <object class="GtkDialog" id="PreferencesDialog">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Nautilus Actions Preferences</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
-    <property name="has_separator">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox4">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkNotebook" id="PreferencesNotebook">
@@ -20,7 +31,6 @@
             <child>
               <object class="GtkVBox" id="vbox33">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame3">
                     <property name="visible">True</property>
@@ -35,7 +45,6 @@
                           <object class="GtkVBox" id="vbox30">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="GtkRadioButton" id="OrderAlphaAscButton">
@@ -114,7 +123,6 @@
                           <object class="GtkVBox" id="vbox17">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="GtkCheckButton" id="CreateRootMenuButton">
@@ -179,7 +187,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
             <child>
               <object class="GtkVBox" id="vbox34">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame2">
                     <property name="visible">True</property>
@@ -193,7 +200,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                         <child>
                           <object class="GtkVBox" id="vbox25">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel" id="label45">
                                 <property name="visible">True</property>
@@ -210,7 +216,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                               <object class="GtkVBox" id="vbox27">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkCheckButton" id="RelabelMenuButton">
                                     <property name="label" translatable="yes">Relabel _menus</property>
@@ -290,7 +295,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                           <object class="GtkVBox" id="vbox43">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkCheckButton" id="EscCloseButton">
                                 <property name="label" translatable="yes">Esc key _quits the assistant</property>
@@ -354,7 +358,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                           <object class="GtkVBox" id="vbox3">
                             <property name="visible">True</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkCheckButton" id="AutoSaveCheckButton">
                                 <property name="label" translatable="yes">Automatically _saves pending modifications</property>
@@ -388,7 +391,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                   <object class="GtkSpinButton" id="AutoSavePeriodicitySpinButton">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="invisible_char">&#x25CF;</property>
+                                    <property name="invisible_char">●</property>
                                     <property name="width_chars">5</property>
                                     <property name="snap_to_ticks">True</property>
                                     <property name="numeric">True</property>
@@ -453,7 +456,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
             <child>
               <object class="GtkVBox" id="vbox35">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame4">
                     <property name="visible">True</property>
@@ -467,7 +469,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                         <child>
                           <object class="GtkVBox" id="vbox13">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel" id="label8">
                                 <property name="visible">True</property>
@@ -484,7 +485,6 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                               <object class="GtkVBox" id="vbox32">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkRadioButton" id="PrefsNoImportButton">
@@ -593,7 +593,6 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox41">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame5">
                     <property name="visible">True</property>
@@ -607,12 +606,10 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                         <child>
                           <object class="GtkVBox" id="vbox15">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkVBox" id="PreferencesExportFormatVBox">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                               </object>
                               <packing>
@@ -658,7 +655,6 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox44">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame13">
                     <property name="visible">True</property>
@@ -703,7 +699,6 @@ You can add a new scheme by clicking on the '+' button.</property>
                             <child>
                               <object class="GtkVBox" id="vbox29">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkButton" id="AddSchemeButton">
@@ -788,7 +783,6 @@ You can add a new scheme by clicking on the '+' button.</property>
             <child>
               <object class="GtkVBox" id="vbox1">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkFrame" id="frame7">
                     <property name="visible">True</property>
@@ -831,7 +825,6 @@ You can add a new scheme by clicking on the '+' button.</property>
                             <child>
                               <object class="GtkVBox" id="vbox2">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkButton" id="ProviderButtonUp">
@@ -841,7 +834,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
                                     <property name="tooltip_text" translatable="yes">Move up the selected I/O provider in the order of priority when trying to write a new item.</property>
-                                    <property name="image">image3</property>
+                                    <property name="image">image</property>
                                     <property name="use_underline">True</property>
                                   </object>
                                   <packing>
@@ -857,7 +850,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                                     <property name="sensitive">False</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
-                                    <property name="image">image2</property>
+                                    <property name="image">image3</property>
                                     <property name="use_underline">True</property>
                                   </object>
                                   <packing>
@@ -956,17 +949,5 @@ You can add a new scheme by clicking on the '+' button.</property>
       <action-widget response="0">CancelButton</action-widget>
       <action-widget response="0">OKButton</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="stock">gtk-missing-image</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="stock">gtk-sort-ascending</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="stock">gtk-sort-descending</property>
   </object>
 </interface>
