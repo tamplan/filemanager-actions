@@ -51,11 +51,11 @@ cmd="mkdir -p "${destdir}""
 [ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || ${cmd}
 [ ${local} -eq 0 ] && scp -v "${tarname}" "${desthost}:${destdir}/" || scp -v "${tarname}" "${destdir}/"
 cmd="sha1sum ${destdir}/${tarname} > ${destdir}/${tarname}.sha1sum"
-[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || ${cmd}
+[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || eval "${cmd}"
 if [ "${bstable}" -eq 1 ]; then
 	echo "Updating ${destdir}/latest.tar.gz"
-	cmd="(cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz)"
-	[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || ${cmd}
+	cmd="(cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz; ls -l latest.tar.gz ${tarname})"
+	[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || eval "${cmd}"
 fi
 
 echo " 
@@ -68,9 +68,9 @@ Installing on kimsufi"
 destdir="/home/www/${product}/tarballs"
 scp "${tarname}" maintainer@kimsufi:${destdir}/
 ssh maintainer@kimsufi "sha1sum ${destdir}/${tarname} > ${destdir}/${tarname}.sha1sum"
-if [ "x$1" = "xstable" ]; then
+if [ ${bstable} -eq 1 ]; then
 	echo "Updating ${destdir}/latest.tar.gz"
-	ssh maintainer@kimsufi "cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz"
+	ssh maintainer@kimsufi "cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz; ls -l latest.tar.gz ${tarname}
 fi
 
 echo " 
