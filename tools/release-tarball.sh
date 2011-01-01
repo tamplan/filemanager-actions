@@ -54,7 +54,7 @@ cmd="sha1sum ${destdir}/${tarname} > ${destdir}/${tarname}.sha1sum"
 [ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || eval "${cmd}"
 if [ "${bstable}" -eq 1 ]; then
 	echo "Updating ${destdir}/latest.tar.gz"
-	cmd="(cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz; ls -l latest.tar.gz ${tarname})"
+	cmd="(cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz; ls -l latest.tar.gz ${tarname}*)"
 	[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || eval "${cmd}"
 fi
 
@@ -70,7 +70,7 @@ scp "${tarname}" maintainer@kimsufi:${destdir}/
 ssh maintainer@kimsufi "sha1sum ${destdir}/${tarname} > ${destdir}/${tarname}.sha1sum"
 if [ ${bstable} -eq 1 ]; then
 	echo "Updating ${destdir}/latest.tar.gz"
-	ssh maintainer@kimsufi "cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz; ls -l latest.tar.gz ${tarname}
+	ssh maintainer@kimsufi "cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz; ls -l latest.tar.gz ${tarname}*"
 fi
 
 echo " 
