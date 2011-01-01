@@ -972,9 +972,9 @@ create_root_menu( NautilusActions *plugin, GList *menu )
 	icon = na_iabout_get_icon_name();
 	root_item = nautilus_menu_item_new( "NautilusActionsExtensions",
 				/* i18n: label of an automagic root submenu */
-				_( "Nautilus-Actions" ),
+				_( "Nautilus-Actions actions" ),
 				/* i18n: tooltip of an automagic root submenu */
-				_( "A submenu which embeds the currently available Nautilus-Actions extensions" ),
+				_( "A submenu which embeds the currently available Nautilus-Actions actions and menus" ),
 				icon );
 	attach_submenu_to_item( root_item, menu );
 	nautilus_menu = g_list_append( NULL, root_item );
@@ -1022,7 +1022,7 @@ add_about_item( NautilusActions *plugin, GList *menu )
 
 		about_item = nautilus_menu_item_new( "AboutNautilusActions",
 					_( "About Nautilus-Actions" ),
-					_( "Display information about Nautilus-Actions" ),
+					_( "Display some informations about Nautilus-Actions" ),
 					icon );
 
 		g_signal_connect_data( about_item,
