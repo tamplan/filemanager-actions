@@ -3966,27 +3966,27 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkImage" id="FolderBrowseImage">
     <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
+    <property name="stock">gtk-find</property>
   </object>
   <object class="GtkImage" id="SchemeBrowseImage">
     <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
+    <property name="stock">gtk-find</property>
   </object>
   <object class="GtkImage" id="ImageTryExecBrowse">
     <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
+    <property name="stock">gtk-find</property>
   </object>
   <object class="GtkImage" id="ImageRunningBrowse">
     <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
+    <property name="stock">gtk-find</property>
   </object>
   <object class="GtkImage" id="ImageIconBrowse">
     <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
+    <property name="stock">gtk-find</property>
   </object>
   <object class="GtkImage" id="ImagePathBrowse">
     <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
+    <property name="stock">gtk-find</property>
   </object>
   <object class="GtkImage" id="ImageParametersLegend">
     <property name="visible">True</property>
@@ -3994,7 +3994,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkImage" id="ImageWorkingDirectoryBrowse">
     <property name="visible">True</property>
-    <property name="stock">gtk-find-and-replace</property>
+    <property name="stock">gtk-find</property>
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
