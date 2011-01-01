@@ -95,22 +95,11 @@ static void          on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *
 static void          toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item );
 static void          on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance );
 static GtkTreeModel *create_stock_icon_model( void );
-
-/* GtkComboBoxEntry is deprecated from Gtk+3
- * see. http://git.gnome.org/browse/gtk+/commit/?id=9612c648176378bf237ad0e1a8c6c995b0ca7c61
- * while 'has_entry' property exists since 2.24
- */
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
-static void          icon_combo_list_set_entry( GtkComboBox* combo );
-#else
-static void          icon_combo_list_set_entry( GtkComboBoxEntry* combo );
-#endif
-
 static void          icon_combo_list_set_layout( GtkComboBox* combo );
 static void          on_icon_browse( GtkButton *button, NactIActionTab *instance );
 static void          on_icon_changed( GtkEntry *entry, NactIActionTab *instance );
 static void          icon_preview_cb( GtkFileChooser *dialog, GtkWidget *preview );
-static gint          sort_stock_ids( gconstpointer a, gconstpointer b );
+static gint          sort_stock_ids_by_label( gconstpointer a, gconstpointer b );
 static gchar        *strip_underscore( const gchar *text );
 static void          release_icon_combobox( NactIActionTab *instance );
 static GtkWidget    *get_icon_combo_box( NactIActionTab *instance );
@@ -233,19 +222,14 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 		model = create_stock_icon_model();
 #if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
 		icon_combo = gtk_combo_box_new_with_model_and_entry( model );
+		gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( icon_combo ), ICON_STOCK_COLUMN );
 #else
-		icon_combo = gtk_combo_box_entry_new_with_model( model, ICON_LABEL_COLUMN );
+		icon_combo = gtk_combo_box_entry_new_with_model( model, ICON_STOCK_COLUMN );
 #endif
+		icon_combo_list_set_layout( GTK_COMBO_BOX( icon_combo ));
 		g_object_unref( model );
 		container = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconHBox" );
 		gtk_box_pack_start( GTK_BOX( container ), icon_combo, TRUE, TRUE, 0 );
-
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
-		icon_combo_list_set_entry( GTK_COMBO_BOX( icon_combo ));
-#else
-		icon_combo_list_set_entry( GTK_COMBO_BOX_ENTRY( icon_combo ));
-#endif
-		icon_combo_list_set_layout( GTK_COMBO_BOX( icon_combo ));
 	}
 }
 
@@ -864,7 +848,7 @@ create_stock_icon_model( void )
 
 	stock_list = gtk_stock_list_ids();
 	icon_theme = gtk_icon_theme_get_default();
-	stock_list = g_slist_sort( stock_list, ( GCompareFunc ) sort_stock_ids );
+	stock_list = g_slist_sort( stock_list, ( GCompareFunc ) sort_stock_ids_by_label );
 
 	for( iter = stock_list ; iter ; iter = iter->next ){
 		icon_info = gtk_icon_theme_lookup_icon( icon_theme, ( gchar * ) iter->data, GTK_ICON_SIZE_MENU, GTK_ICON_LOOKUP_GENERIC_FALLBACK );
@@ -884,24 +868,6 @@ create_stock_icon_model( void )
 
 	return( GTK_TREE_MODEL( model ));
 }
-
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
-static void
-icon_combo_list_set_entry( GtkComboBox* combo )
-{
-	if( gtk_combo_box_get_entry_text_column( combo ) == -1 ){
-		gtk_combo_box_set_entry_text_column( combo, ICON_STOCK_COLUMN );
-	}
-}
-#else
-static void
-icon_combo_list_set_entry( GtkComboBoxEntry* combo )
-{
-	if( gtk_combo_box_entry_get_text_column( combo ) == -1 ){
-		gtk_combo_box_entry_set_text_column( combo, ICON_STOCK_COLUMN );
-	}
-}
-#endif
 
 static void
 icon_combo_list_set_layout( GtkComboBox *combo )
@@ -987,7 +953,7 @@ icon_preview_cb( GtkFileChooser *dialog, GtkWidget *preview )
 }
 
 static gint
-sort_stock_ids( gconstpointer a, gconstpointer b )
+sort_stock_ids_by_label( gconstpointer a, gconstpointer b )
 {
 	GtkStockItem stock_item_a;
 	GtkStockItem stock_item_b;

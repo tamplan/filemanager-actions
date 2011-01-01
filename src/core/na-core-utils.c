@@ -117,10 +117,13 @@ na_core_utils_str_collate( const gchar *str1, const gchar *str2 )
 
 	if( str1 && str2 ){
 		res = g_utf8_collate( str1, str2 );
+
 	} else if( !str1 && !str2 ){
 		res = 0;
+
 	} else if( !str1 ){
 		res = -1;
+
 	} else {
 		g_return_val_if_fail( str2 == NULL, 0 );
 		res = 1;
