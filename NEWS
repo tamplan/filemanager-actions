@@ -1,3 +1,28 @@
+Version 3.0.5
+=============
+
+	Release date 2011-01-01
+
+	General modifications:
+
+		- Nautilus-Actions is set as the "official" name of the application.
+
+	Modifications in Nautilus-Actions Configuration Tool:
+
+		- Button arrows in I/O Providers Preferences tab are reset so that
+		  the Up button has an upward arrow, and the Down button has a
+		  downward arrow.
+		- Browse buttons now use the 'gtk-find' stock icon instead of the
+		  inappropriate 'gtk-find-and-replace'.
+		- Update the NACT User's Manual to reflect last changes.
+
+	Bug fixes:
+
+		- Fix pathname breakdown for 'x-nautilus-desktop:///' URI.
+		  Fix #638450 - Nautilus crashes when opening Trash or Network
+		  reported by György Balló and Ionut Biru.
+		- Fix #638461 - Stock icons are no more displayed in NACT.
+
 Version 3.0.4
 =============
 
