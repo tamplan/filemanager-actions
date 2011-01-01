@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -35,7 +35,7 @@
  * @short_description: The #NAIAbout Interface Definition
  * @include: runtime/na-iabout.h
  *
- * This interface displays the 'About Nautilus Actions' dialog box.
+ * This interface displays the 'About Nautilus-Actions' dialog box.
  * The application name may be provided by the implementor ; else,
  * the name of the application will be displayed.
  */

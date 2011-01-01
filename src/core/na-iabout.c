@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -173,16 +173,16 @@ na_iabout_display( NAIAbout *instance )
 	};
 
 	static gchar *license[] = {
-		N_( "Nautilus Actions Configuration Tool is free software; you can "
+		N_( "Nautilus-Actions Configuration Tool is free software; you can "
 			"redistribute it and/or modify it under the terms of the GNU General "
 			"Public License as published by the Free Software Foundation; either "
 			"version 2 of the License, or (at your option) any later version." ),
-		N_( "Nautilus Actions Configuration Tool is distributed in the hope that it "
+		N_( "Nautilus-Actions Configuration Tool is distributed in the hope that it "
 			"will be useful, but WITHOUT ANY WARRANTY; without even the implied "
 			"warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See "
 			"the GNU General Public License for more details." ),
 		N_( "You should have received a copy of the GNU General Public License along "
-			"with Nautilus Actions Configuration Tool ; if not, write to the Free "
+			"with Nautilus-Actions Configuration Tool ; if not, write to the Free "
 			"Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
 			"MA 02110-1301, USA." ),
 		NULL
@@ -203,7 +203,7 @@ na_iabout_display( NAIAbout *instance )
 		gtk_show_about_dialog( toplevel,
 				"artists", artists,
 				"authors", authors,
-				"comments", _( "A graphical interface to create and edit your Nautilus actions." ),
+				"comments", _( "A graphical interface to create and edit your Nautilus-Actions." ),
 				"copyright", copyright,
 				"documenters", documenters,
 				"license", license_i18n,

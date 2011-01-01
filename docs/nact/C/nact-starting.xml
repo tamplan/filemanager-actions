@@ -12,7 +12,7 @@
               <menuchoice>
                 <guisubmenu>Preferences</guisubmenu>
                 <guisubmenu>Look and Feel</guisubmenu>
-                <guimenuitem>Nautilus Actions Configuration Tool</guimenuitem>
+                <guimenuitem>Nautilus-Actions Configuration Tool</guimenuitem>
               </menuchoice>.
             </para>
           </listitem>

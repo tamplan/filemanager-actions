@@ -1,4 +1,4 @@
-# Nautilus Actions
+# Nautilus-Actions
 # A Nautilus extension which offers configurable context menu actions.
 #
 # Copyright (C) 2005 The GNOME Foundation
@@ -26,7 +26,7 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 2 change NACT_ prefix to NA_ (Nautilus Actions)
+# serial 2 change NACT_ prefix to NA_ (Nautilus-Actions)
 
 # let the user specify an alternate nautilus-extension dir
 # --with-nautilus-extdir=<dir>

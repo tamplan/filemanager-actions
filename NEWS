@@ -83,7 +83,7 @@ Version 3.0.2
 
 	Bug fixes:
 
-		- Fix #616532 - Can't select directory in the Nautilus Actions export
+		- Fix #616532 - Can't select directory in the Nautilus-Actions export
 		  assistant while browsing it with a GtkFileChooserWidget
 		  (reported by Sense Hofstede).
 		- Fix #632992 - Add comment about default value translation
@@ -429,7 +429,7 @@ Version 2.30.1
 		- Fix #614595 reported by Sense Hofstede
 		  (Not all icons displayed in the nautilus-actions-config-tool)
 		- Fix #614596 reported by Sense Hofstede
-		  (Nautilus Actions' actions don't show up in context menus)
+		  (Nautilus-Actions' actions don't show up in context menus)
 		- Do not prevent the export assistant to actually export items
 		- Do not let a user untoggle a sort button
 		- Do not mark the main window modified when first loading an empty set
@@ -471,7 +471,7 @@ Version 2.30.0
 	Bug fixes:
 
 		- Fix #614382 reported by Wolter Hellmund
-		  (Nautilus actions won't open)
+		  (Nautilus-Actions won't open)
 
 	New and updated translations:
 
@@ -687,7 +687,7 @@ Version 2.29.1
 
 	Other enhancements :
 	- items are freely reorderable ;
-	- an 'About Nautilus Actions' item can be added to Nautilus menus ;
+	- an 'About Nautilus-Actions' item can be added to Nautilus menus ;
     - preferences can be edited through the NACT user interface ;
 	- actions can be imported and exported by drag and drop ;
 	- one toolbar is defined for each menu, and can be displayed in NACT ;

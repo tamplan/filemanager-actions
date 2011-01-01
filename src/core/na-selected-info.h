@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu selected_infos.
  *
  * Copyright (C) 2005 The GNOME Foundation

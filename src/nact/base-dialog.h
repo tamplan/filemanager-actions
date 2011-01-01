@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -37,7 +37,7 @@
  * @include: nact/base-dialog.h
  *
  * This class is derived from BaseWindow class, and serves as a base
- * class for all Nautilus Actions dialogs.
+ * class for all Nautilus-Actions dialogs.
  */
 
 #include "base-window.h"

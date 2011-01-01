@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -56,10 +56,10 @@
  *   - descending alphabetical order,
  *   - manual ordering.
  *
- * - adding a 'About Nautilus Actions' item at end of actions: yes/no
+ * - adding a 'About Nautilus-Actions' item at end of actions: yes/no
  *
- *   When checked, an 'About Nautilus Actions' is displayed as the last
- *   item of the root submenu of Nautilus Actions actions.
+ *   When checked, an 'About Nautilus-Actions' is displayed as the last
+ *   item of the root submenu of Nautilus-Actions actions.
  *
  *   It the user didn't have defined a root submenu, whether in the NACT
  *   user interface or by choosing the ad-hoc preference, the plugin

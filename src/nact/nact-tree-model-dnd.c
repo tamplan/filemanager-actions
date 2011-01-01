@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -73,7 +73,7 @@
  *   call once nact_tree_model_idrag_dest_drag_data_received
  *   call once nact_clipboard_on_drag_end( treeview, context, main_window )
  *
- * when we drop in Nautilus Actions
+ * when we drop in Nautilus-Actions
  *   call once egg_tree_multi_dnd_on_drag_data_get( treeview, context, selection_data, info=0, time )
  *   call once nact_tree_model_imulti_drag_source_drag_data_get( drag_source, context, selection_data, path_list, atom=XdndNautilusActions )
  *   call once nact_clipboard_get_data_for_intern_use

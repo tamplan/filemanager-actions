@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -350,7 +350,7 @@ appli_initialize_unique_app( BaseApplication *application )
 	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_unique_app( application );
 
 	if( !ok ){
-		msg1 = g_strdup( _( "Another instance of Nautilus Actions Configuration Tool is already running." ));
+		msg1 = g_strdup( _( "Another instance of Nautilus-Actions Configuration Tool is already running." ));
 		/* i18n: another instance is already running: second line of error message */
 		msg2 = g_strdup( _( "Please switch back to it." ));
 
@@ -410,7 +410,7 @@ appli_get_application_name( BaseApplication *application )
 	/*g_debug( "%s: application=%p", thisfn, ( void * ) application );*/
 
 	/* i18n: this is the application name, used in window title */
-	return( g_strdup( _( "Nautilus Actions Configuration Tool" )));
+	return( g_strdup( _( "Nautilus-Actions Configuration Tool" )));
 }
 
 static gchar *

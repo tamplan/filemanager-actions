@@ -139,7 +139,7 @@ OTHER BUGS
 
 NOTES
 =====
-- Note about the schemas in Nautilus Actions:
+- Note about the schemas in Nautilus-Actions:
   a) actions are identified by uuid
   b) so, all GConf keys have a path with the uuid of the action
   c) I'm not willing to write a schema for each and every uuid

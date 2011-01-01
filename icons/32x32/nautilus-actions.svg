@@ -260,7 +260,7 @@
             <dc:title>Ulisse Perusin</dc:title>
           </cc:Agent>
         </dc:creator>
-        <dc:title>Nautilus Actions</dc:title>
+        <dc:title>Nautilus-Actions</dc:title>
         <dc:subject>
           <rdf:Bag>
             <rdf:li>Nautilus</rdf:li>

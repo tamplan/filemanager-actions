@@ -349,7 +349,7 @@ msgid "<guimenu>System</guimenu> menu"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:10(para)
-msgid "Choose <menuchoice><guisubmenu>Preferences</guisubmenu><guisubmenu>Look and Feel</guisubmenu><guimenuitem>Nautilus Actions Configuration Tool</guimenuitem></menuchoice>."
+msgid "Choose <menuchoice><guisubmenu>Preferences</guisubmenu><guisubmenu>Look and Feel</guisubmenu><guimenuitem>Nautilus-Actions Configuration Tool</guimenuitem></menuchoice>."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:21(term)

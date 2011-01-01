@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -47,8 +47,8 @@ NAIExporterFormat nadp_formats[] = {
 			N_( "Export as a ._desktop file" ),
 			N_( "This format let you easily share your actions with others, including other desktop environments.\n" \
 				"The exported .desktop file may later be imported via :\n" \
-				"- Import assistant of the Nautilus Actions Configuration Tool,\n" \
-				"- drag-n-drop into the Nautilus Actions Configuration Tool,\n" \
+				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
+				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
 				"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory." ) },
 
 	{ NULL }

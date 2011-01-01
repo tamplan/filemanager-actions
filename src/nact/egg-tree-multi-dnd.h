@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -46,7 +46,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * Adapted by Pierre Wieser for the needs of Nautilus Actions
+ * Adapted by Pierre Wieser for the needs of Nautilus-Actions
  */
 
 #ifndef __EGG_TREE_MULTI_DND_H__

@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -159,7 +159,7 @@ init_options( void )
 	gchar *description;
 	GOptionGroup *misc_group;
 
-	context = g_option_context_new( _( "Output the Nautilus Actions GConf schema on stdout." ));
+	context = g_option_context_new( _( "Output the Nautilus-Actions GConf schema on stdout." ));
 
 #ifdef ENABLE_NLS
 	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );

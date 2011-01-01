@@ -1,5 +1,5 @@
 /*
- * Nautilus Actions
+ * Nautilus-Actions
  * A Nautilus extension which offers configurable context menu actions.
  *
  * Copyright (C) 2005 The GNOME Foundation
@@ -37,7 +37,7 @@
  * @include: nact/base-assistant.h
  *
  * This class is derived from BaseWindow class, and serves as a base
- * class for all Nautilus Actions assistants.
+ * class for all Nautilus-Actions assistants.
  *
  * Note: as a work-around to #589745 (Apply message in GtkAssistant),
  * we may trigger "on_assistant_apply" function from the
