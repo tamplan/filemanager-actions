@@ -1,5 +1,9 @@
 2011-01-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Post release version bump.
+
+	* NEWS: Update NEWS before release.
+
 	* src/plugin-menu/nautilus-actions.c (create_root_menu):
 	Update the root menu label to better reflect the product name.
 
