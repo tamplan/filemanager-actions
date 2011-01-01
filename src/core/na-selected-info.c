@@ -698,6 +698,13 @@ new_from_nautilus_file_info( NautilusFileInfo *item )
 	return( info );
 }
 
+/*
+ * Nautilus uses to address the desktop via the 'x-nautilus-desktop:///' URI.
+ * g_filename_from_uri() complains that
+ * "The URI 'x-nautilus-desktop:///' is not an absolute URI using the "file" scheme".
+ * We so prefer the vfs->path member wich is just a decomposition of the URI,
+ * and does not try to interpret it.
+ */
 static NASelectedInfo *
 new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 {
@@ -711,12 +718,11 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 		info->private->mimetype = g_strdup( mimetype );
 	}
 
-	info->private->filename = g_filename_from_uri( uri, NULL, NULL );
-	info->private->dirname = g_path_get_dirname( info->private->filename );
-	info->private->basename = g_path_get_basename( info->private->filename );
-
 	vfs = g_new0( NAGnomeVFSURI, 1 );
 	na_gnome_vfs_uri_parse( vfs, uri );
+	info->private->filename = g_strdup( vfs->path );
+	info->private->dirname = g_path_get_dirname( info->private->filename );
+	info->private->basename = g_path_get_basename( info->private->filename );
 	info->private->hostname = g_strdup( vfs->host_name );
 	info->private->username = g_strdup( vfs->user_name );
 	info->private->scheme = g_strdup( vfs->scheme );
@@ -756,6 +762,7 @@ query_file_attributes( NASelectedInfo *nsi, GFile *location, gchar **errmsg )
 		if( errmsg ){
 			*errmsg = g_strdup_printf( _( "Error when querying informations for %s URI: %s" ), nsi->private->uri, error->message );
 		} else {
+			g_warning( "%s: URI='%s'", thisfn, nsi->private->uri );
 			g_warning( "%s: g_file_query_info: %s", thisfn, error->message );
 		}
 		g_error_free( error );
