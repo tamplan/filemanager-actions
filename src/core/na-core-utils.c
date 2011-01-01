@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2005 The GNOME Foundation
  * Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
- * Copyright (C) 2009, 2010 Pierre Wieser and others (see AUTHORS)
+ * Copyright (C) 2009, 2010, 2011 Pierre Wieser and others (see AUTHORS)
  *
  * This Program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -1005,7 +1005,7 @@ na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
  * <programlisting>
  *   nautilus-actions-new (Nautilus-Actions) v 2.29.1
  *   Copyright (C) 2005-2007 Frederic Ruaudel
- *   Copyright (C) 2009, 2010 Pierre Wieser
+ *   Copyright (C) 2009, 2010, 2011 Pierre Wieser
  *   Nautilus-Actions is free software, licensed under GPLv2 or later.
  * </programlisting>
  *
