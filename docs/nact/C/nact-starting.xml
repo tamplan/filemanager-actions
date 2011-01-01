@@ -527,8 +527,8 @@
         </listitem>
         <listitem>
           <para>
-            Select <userinput>gtk-about</userinput> in the <guilabel>Icon</guilabel>
-            drop-down list.
+            Select <inlinegraphic fileref="figures/stock-icon-about.png" /> 
+            in the <guilabel>Icon</guilabel> drop-down list.
           </para>
           <para>
             The <guilabel>Icon</guilabel> selection defines the icon which will
