@@ -46,9 +46,10 @@
 
 G_BEGIN_DECLS
 
-/* GDK_KEY_ defines have been defined since Gtk+ 2.21.8
+/* GDK_KEY_ defines have been defined since Gtk+ 2.21.8 released on 2010-09-14
+ * see http://git.gnome.org/browse/gtk+/commit/?id=750c81f43dda6c783372b983e630ecd30b776d7e
  */
-#if(( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION >= 22 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 21, 8 )
 
 #define NACT_KEY_Escape    (GDK_KEY_Escape)
 #define NACT_KEY_Insert    (GDK_KEY_Insert)

@@ -1,5 +1,7 @@
 2011-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-keysyms.h: Use GTK_CHECK_VERSION macro.
+
 	* configure.ac:
 	* m4/na-check-for-gtk.m4:
 	Move back gtk_required variable to improve readibility of configure.ac.
