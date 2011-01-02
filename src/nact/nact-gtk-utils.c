@@ -212,11 +212,11 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
 			}
 
 		} else {
-			/* gtk_widget_render_icon() is deprecated since Gtk+ 3.0
-			 * see http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#gtk-widget-render-icon
-			 * and http://git.gnome.org/browse/gtk+/commit/?id=07eeae15825403037b7df139acf9bfa104d5559d
-			 */
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
+/* gtk_widget_render_icon() is deprecated since Gtk+ 3.0
+ * see http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#gtk-widget-render-icon
+ * and http://git.gnome.org/browse/gtk+/commit/?id=07eeae15825403037b7df139acf9bfa104d5559d
+ */
+#if GTK_CHECK_VERSION( 2, 91, 7 )
 			pixbuf = gtk_widget_render_icon_pixbuf( widget, name, size );
 #else
 			pixbuf = gtk_widget_render_icon( widget, name, size, NULL );

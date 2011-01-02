@@ -63,7 +63,11 @@ nact_main_statusbar_initial_load_toplevel( NactMainWindow *window )
 	gint width, height;
 	GtkStatusbar *bar;
 	GtkFrame *frame;
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
+/* gtk_widget_size_request() is deprecated since Gtk+ 3.0
+ * see http://library.gnome.org/devel/gtk/unstable/GtkWidget.html#gtk-widget-render-icon
+ * and http://git.gnome.org/browse/gtk+/commit/?id=07eeae15825403037b7df139acf9bfa104d5559d
+ */
+#if GTK_CHECK_VERSION( 2, 91, 7 )
 	GtkRequisition minimal_size, natural_size;
 #else
 	GtkRequisition requisition;
@@ -76,7 +80,7 @@ nact_main_statusbar_initial_load_toplevel( NactMainWindow *window )
 	bar = get_statusbar( window );
 	frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedFrame" ));
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 91, 7 )
 	gtk_widget_get_preferred_size( GTK_WIDGET( bar ), &minimal_size, &natural_size );
 	gtk_widget_set_size_request( GTK_WIDGET( bar ), natural_size.width, height+8 );
 #else
