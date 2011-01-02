@@ -62,11 +62,11 @@ nact_gtk_utils_set_editable( GObject *widget, gboolean editable )
 {
 	GList *renderers, *irender;
 
-	/* GtkComboBoxEntry is deprecated from Gtk+3
-	 * see. http://git.gnome.org/browse/gtk+/commit/?id=9612c648176378bf237ad0e1a8c6c995b0ca7c61
-	 * while 'has_entry' property exists since 2.24
-	 */
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
+/* GtkComboBoxEntry is deprecated from Gtk+3
+ * see. http://git.gnome.org/browse/gtk+/commit/?id=9612c648176378bf237ad0e1a8c6c995b0ca7c61
+ * while 'has_entry' property exists since 2.24
+ */
+#if GTK_CHECK_VERSION( 2, 24, 0 )
 	if( GTK_IS_COMBO_BOX( widget ) && gtk_combo_box_get_has_entry( GTK_COMBO_BOX( widget ))){
 #else
 	if( GTK_IS_COMBO_BOX_ENTRY( widget )){

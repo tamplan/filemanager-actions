@@ -220,12 +220,18 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
 
 		model = create_stock_icon_model();
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 24 ) || GTK_MAJOR_VERSION >= 3 )
+
+/* GtkComboBoxEntry is deprecated from Gtk+3
+ * see. http://git.gnome.org/browse/gtk+/commit/?id=9612c648176378bf237ad0e1a8c6c995b0ca7c61
+ * while 'has_entry' property exists since 2.24
+ */
+#if GTK_CHECK_VERSION( 2, 24, 0 )
 		icon_combo = gtk_combo_box_new_with_model_and_entry( model );
 		gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( icon_combo ), ICON_STOCK_COLUMN );
 #else
 		icon_combo = gtk_combo_box_entry_new_with_model( model, ICON_STOCK_COLUMN );
 #endif
+
 		icon_combo_list_set_layout( GTK_COMBO_BOX( icon_combo ));
 		g_object_unref( model );
 		container = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconHBox" );
