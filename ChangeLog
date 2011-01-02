@@ -8,7 +8,9 @@
 	* src/nact/egg-sm-client-xsmp.c: 
 	* src/nact/nact-add-capability-dialog.c:
 	* src/nact/nact-add-scheme-dialog.c:
-	* src/nact/nact-main-tab.c: Use GTK_CHECK_VERSION macro.
+	* src/nact/nact-main-tab.c:
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-tree-model-dnd.c: Use GTK_CHECK_VERSION macro.
 
 	* configure.ac:
 	* m4/na-check-for-gtk.m4:

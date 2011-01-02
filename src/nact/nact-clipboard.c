@@ -346,7 +346,10 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, NACT_CLIPBOARD_NACT_ATOM );
 		if( selection ){
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+/* gtk_selection_data_get_data() appears with Gtk+ 2.14.0 release on 2008-09-04
+ * see http://git.gnome.org/browse/gtk+/commit/?id=9eae7a1d2e7457d67ba00bb8c35775c1523fa186
+ */
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 			data = ( NactClipboardDndData * ) gtk_selection_data_get_data( selection );
 #else
 			data = ( NactClipboardDndData * ) selection->data;
@@ -427,7 +430,7 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 		g_debug( "%s: selection=%p", thisfn, ( void * ) selection );
 
 		if( selection ){
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 			data = ( NactClipboardDndData * ) gtk_selection_data_get_data( selection );
 #else
 			data = ( NactClipboardDndData * ) selection->data;
@@ -466,7 +469,7 @@ get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *sele
 	static const gchar *thisfn = "nact_clipboard_get_from_dnd_clipboard_callback";
 	GdkAtom selection_data_target;
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_target = gtk_selection_data_get_target( selection_data );
 #else
 	selection_data_target = selection_data->target;
@@ -723,7 +726,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
 
 		if( selection ){
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 			user_data = ( PrimaryData * ) gtk_selection_data_get_data( selection );
 #else
 			user_data = ( PrimaryData * ) selection->data;
@@ -789,7 +792,7 @@ get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionDa
 	gchar *buffer;
 	GdkAtom selection_data_target;
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_target = gtk_selection_data_get_target( selection_data );
 #else
 	selection_data_target = selection_data->target;

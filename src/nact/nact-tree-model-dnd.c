@@ -172,7 +172,10 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 	g_debug( "%s: drag_dest=%p, dest=%p, selection_data=%p", thisfn, ( void * ) drag_dest, ( void * ) dest, ( void * ) selection_data );
 	g_return_val_if_fail( NACT_IS_TREE_MODEL( drag_dest ), FALSE );
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+/* gtk_selection_data_get_data() appears with Gtk+ 2.14.0 release on 2008-09-04
+ * see http://git.gnome.org/browse/gtk+/commit/?id=9eae7a1d2e7457d67ba00bb8c35775c1523fa186
+ */
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_selection = gtk_selection_data_get_selection( selection_data );
 #else
 	selection_data_selection = selection_data->selection;
@@ -181,7 +184,7 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 	g_debug( "%s: selection=%s", thisfn, atom_name );
 	g_free( atom_name );
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_target = gtk_selection_data_get_target( selection_data );
 #else
 	selection_data_target = selection_data->target;
@@ -190,7 +193,7 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 	g_debug( "%s: target=%s", thisfn, atom_name );
 	g_free( atom_name );
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_type = gtk_selection_data_get_data_type( selection_data );
 #else
 	selection_data_type = selection_data->type;
@@ -199,7 +202,7 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 	g_debug( "%s: type=%s", thisfn, atom_name );
 	g_free( atom_name );
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_format = gtk_selection_data_get_format( selection_data );
 	selection_data_length = gtk_selection_data_get_length( selection_data );
 #else
@@ -307,7 +310,7 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 	GdkDragAction context_suggested_action;
 	GdkDragAction context_selected_action;
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_target = gtk_selection_data_get_target( selection_data );
 #else
 	selection_data_target = selection_data->target;
@@ -883,7 +886,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	updater = nact_application_get_updater( application );
 	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 14 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_data = ( const gchar * ) gtk_selection_data_get_data( selection_data );
 #else
 	selection_data_data = ( const gchar * ) selection_data->data;
