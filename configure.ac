@@ -114,6 +114,7 @@ AM_GLIB_GNU_GETTEXT
 # GConf support
 AC_PATH_PROG([GCONFTOOL],[gconftool-2],[no])
 AM_GCONF_SOURCE_2
+AC_DEFINE_UNQUOTED([HAVE_GCONF],[1],[Whether we compile against the GConf library])
 
 # note that requiring through pkg-config the version number of the
 # nautilus-extension library actually returns the version number of

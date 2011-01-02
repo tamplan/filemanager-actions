@@ -135,7 +135,9 @@
 
 2011-01-03 Pierre Wieser <pwieser@trychlos.org>
 
-	* configure.ac: Define HAVE_GSETTINGS variable.
+	* configure.ac:
+	- Define HAVE_GSETTINGS variable.
+	- Define HAVE_GCONF variable.
 
 2011-01-02 Pierre Wieser <pwieser@trychlos.org>
 
