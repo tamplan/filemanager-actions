@@ -156,7 +156,8 @@ AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 AC_MSG_CHECKING([for GSettings])
 PKG_CHECK_EXISTS([glib-2.0 >= 2.26],[have_gsettings="yes"],[have_gsettings="no"])
 AC_MSG_RESULT([${have_gsettings}])
-AC_DEFINE_UNQUOTED([HAVE_GSETTINGS],[ test "x${have_gsettings}" = "xyes"],[Whether we compile against a recent enough GIO])
+if test "x${have_gsettings}" = "xyes"; then have_gsettings_b=1; else have_gsettings_b=0; fi
+AC_DEFINE_UNQUOTED([HAVE_GSETTINGS],[${have_gsettings_b}],[Whether we compile against a recent enough GIO])
 
 # As of N-A 3.0.6, GConf is always enabled
 AM_CONDITIONAL([HAVE_GSETTINGS_AND_GCONF], [test "x${have_gsettings}" = "xyes"])

@@ -32,7 +32,14 @@
 #include <config.h>
 #endif
 
+#include <gconf/gconf-client.h>
+#include <string.h>
+
+#include <api/na-core-utils.h>
+#include <api/na-gconf-utils.h>
+
 #include "na-gsettings-migrate.h"
+#include "na-iprefs.h"
 
 static void migrate_configurations( const NAPivot *pivot, GConfClient *gconf );
 static void migrate_io_providers( const NAPivot *pivot, GConfClient *gconf );
@@ -45,12 +52,13 @@ static void migrate_preferences( const NAPivot *pivot, GConfClient *gconf );
  * already done.
  */
 void
-na_pivot_gsettings_migrate( const NAPivot *pivot )
+na_gsettings_migrate( const NAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_gsettings_migrate";
+	static const gchar *thisfn = "na_gsettings_migrate";
 	GConfClient *gconf_client;
 	GSList *root, *ir;
-	const gchar *bname;
+	gchar *bname;
+	GError *error;
 
 	gconf_client = gconf_client_get_default();
 	if( !gconf_client ){
@@ -81,6 +89,15 @@ na_pivot_gsettings_migrate( const NAPivot *pivot )
 				g_warning( "%s: unknown branch: %s", thisfn, branch );
 			}
 
+			error = NULL;
+			/*
+			gconf_client_recursive_unset( gconf_client, branch, GCONF_UNSET_INCLUDING_SCHEMA_NAMES, &error );
+			 */
+			if( error ){
+				g_warning( "%s: branch=%s, error=%s", thisfn, branch, error->message );
+				g_error_free( error );
+			}
+
 			g_free( bname );
 		}
 
@@ -90,6 +107,9 @@ na_pivot_gsettings_migrate( const NAPivot *pivot )
 	g_object_unref( gconf_client );
 }
 
+/*
+ * each found configurations is recreated as a .desktop file
+ */
 static void
 migrate_configurations( const NAPivot *pivot, GConfClient *gconf )
 {
