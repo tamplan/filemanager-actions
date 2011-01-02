@@ -13,7 +13,8 @@
 	* src/nact/nact-tree-model-dnd.c:
 	* src/nact/nact-gtk-utils.c:
 	* src/nact/nact-iaction-tab.c:
-	* src/nact/nact-main-statusbar.c: Use GTK_CHECK_VERSION macro.
+	* src/nact/nact-main-statusbar.c:
+	* src/nact/nact-main-menubar.c: Use GTK_CHECK_VERSION macro.
 
 	* configure.ac:
 	* m4/na-check-for-gtk.m4:

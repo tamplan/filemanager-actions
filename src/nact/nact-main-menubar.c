@@ -73,16 +73,16 @@ enum {
 };
 
 /* GtkActivatable
- * gtk_action_get_tooltip are only available starting with Gtk 2.16
+ * gtk_action_get_tooltip() is only available starting with Gtk 2.16
  * until this is a required level, we must have some code to do the
  * same thing
  */
-#undef GTK_HAS_ACTIVATABLE
-#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION >= 16 ))
-	#define GTK_HAS_ACTIVATABLE
+#undef NA_HAS_GTK_ACTIVATABLE
+#if GTK_CHECK_VERSION( 2,16,0 )
+	#define NA_HAS_GTK_ACTIVATABLE
 #endif
 
-#ifndef GTK_HAS_ACTIVATABLE
+#ifndef NA_HAS_GTK_ACTIVATABLE
 #define MENUBAR_PROP_ITEM_ACTION			"nact-menubar-item-action"
 #endif
 
@@ -627,7 +627,7 @@ on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window )
 
 	tooltip = NULL;
 
-#ifdef GTK_HAS_ACTIVATABLE
+#ifdef NA_HAS_GTK_ACTIVATABLE
 	action = gtk_activatable_get_related_action( GTK_ACTIVATABLE( proxy ));
 	if( action ){
 		tooltip = ( gchar * ) gtk_action_get_tooltip( action );
@@ -643,7 +643,7 @@ on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window )
 		nact_main_statusbar_display_status( window, MENUBAR_PROP_STATUS_CONTEXT, tooltip );
 	}
 
-#ifndef GTK_HAS_ACTIVATABLE
+#ifndef NA_HAS_GTK_ACTIVATABLE
 	g_free( tooltip );
 #endif
 }
@@ -693,7 +693,7 @@ on_proxy_connect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *pr
 				"deselect",
 				G_CALLBACK( on_menu_item_deselected ));
 
-#ifndef GTK_HAS_ACTIVATABLE
+#ifndef NA_HAS_GTK_ACTIVATABLE
 		g_object_set_data( G_OBJECT( proxy ), MENUBAR_PROP_ITEM_ACTION, action );
 #endif
 	}
