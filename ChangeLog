@@ -1,3 +1,9 @@
+2011-01-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac:
+	* m4/na-check-for-gtk.m4:
+	Move back gtk_required variable to improve readibility of configure.ac.
+
 2011-01-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Post release version bump.

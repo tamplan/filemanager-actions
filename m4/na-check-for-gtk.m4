@@ -52,8 +52,6 @@ AC_DEFUN([_AC_NA_ARG_GTK],[
 ])
 
 AC_DEFUN([_AC_NA_CHECK_GTK],[
-	gtk_required=2.12.0
-
 	if test "${with_gtk}" = "auto"; then
 		_AC_NA_CHECK_FOR_GTK3
 		if test "${have_gtk3}" != "yes"; then

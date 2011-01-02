@@ -131,9 +131,10 @@ if test "${PKG_CONFIG}" = "no"; then
 	AC_MSG_ERROR([You need to install pkg-config])
 fi
 
-NA_CHECK_FOR_GTK
-
 glib_required=2.16.0
+gtk_required=2.12.0
+
+NA_CHECK_FOR_GTK
 
 dnl aclocal complains if the comma is not just after the square bracket
 NA_CHECK_MODULE([DBUS],              [dbus-glib-1])
