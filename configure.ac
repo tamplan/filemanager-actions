@@ -151,6 +151,12 @@ NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.8])
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
+# GSettings migration
+AC_MSG_CHECKING([for GSettings])
+PKG_CHECK_EXISTS([glib-2.0 >= 2.26],[have_gsettings="yes"],[have_gsettings="no"])
+AC_MSG_RESULT([${have_gsettings}])
+AC_DEFINE_UNQUOTED([HAVE_GSETTINGS],[ test "x${have_gsettings}" = "xyes"],[Whether we compile against a recent enough GIO])
+
 # check for gtk-doc
 # Starting with gtk-doc 1.15, multiple source dirs are directly handled
 # by gtk-doc.make
