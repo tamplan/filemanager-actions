@@ -394,7 +394,7 @@ nact_schemes_list_show_all( BaseWindow *window )
 	data = get_schemes_list_data( listview );
 
 	button = get_add_button( window );
-#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION >= 18 ))
+#if GTK_CHECK_VERSION( 2, 18, 0 )
 	gtk_widget_set_visible( GTK_WIDGET( button ), data->mode == SCHEMES_LIST_FOR_PREFERENCES );
 #else
 	if( data->mode == SCHEMES_LIST_FOR_PREFERENCES ){
@@ -406,7 +406,7 @@ nact_schemes_list_show_all( BaseWindow *window )
 	gtk_widget_set_sensitive( GTK_WIDGET( button ), data->mode == SCHEMES_LIST_FOR_PREFERENCES );
 
 	button = get_remove_button( window );
-#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION >= 18 ))
+#if GTK_CHECK_VERSION( 2, 18, 0 )
 	gtk_widget_set_visible( GTK_WIDGET( button ), data->mode == SCHEMES_LIST_FOR_PREFERENCES );
 #else
 	if( data->mode == SCHEMES_LIST_FOR_PREFERENCES ){
