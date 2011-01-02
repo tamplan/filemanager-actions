@@ -1,5 +1,8 @@
 2011-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/egg-desktop-file.c:
+	Get ride of tests for Gtk+ 2.12.0 as this is the minimal required version.
+
 	* src/nact/base-keysyms.h: Use GTK_CHECK_VERSION macro.
 
 	* configure.ac:
