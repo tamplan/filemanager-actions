@@ -5,7 +5,10 @@
 
 	* src/nact/base-keysyms.h:
 	* src/nact/egg-sm-client-private.h:
-	* src/nact/egg-sm-client-xsmp.c: Use GTK_CHECK_VERSION macro.
+	* src/nact/egg-sm-client-xsmp.c: 
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-main-tab.c: Use GTK_CHECK_VERSION macro.
 
 	* configure.ac:
 	* m4/na-check-for-gtk.m4:

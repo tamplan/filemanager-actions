@@ -75,7 +75,12 @@ nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
 	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
 	page = gtk_notebook_get_nth_page( notebook, num_page );
 
-#if(( GTK_MAJOR_VERSION > 2 ) || ( GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION >= 18 ))
+/* gtk_widget_is_sensitive() appears with Gtk+ 2.17.5 released on 2009-07-18
+ * see http://git.gnome.org/browse/gtk+/commit/?id=8f6017622937770082f7b49dfbe135fae5608704
+ * GTK_WIDGET_IS_SENSITIVE macro is deprecated since 2.19.7 released on 2010-03-09
+ * see http://git.gnome.org/browse/gtk+/commit/?id=a27d5a2c9eba7af5b056de32ff9b2b4dd1eb97e1
+ */
+#if GTK_CHECK_VERSION( 2, 17, 5 )
 	is_sensitive = gtk_widget_is_sensitive( page );
 #else
 	is_sensitive = GTK_WIDGET_IS_SENSITIVE( page );
