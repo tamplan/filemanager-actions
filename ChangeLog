@@ -135,6 +135,16 @@
 
 2011-01-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Define a conditional if we have both GSettings and GConf.
+
+	* src/core/na-gsettings-migrate.c:
+	* src/core/na-gsettings-migrate.h: New files.
+
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/core/na-pivot.c (instance_constructed):
+	Call na_gsettings_migrate() if we have both GSettings and GConf.
+
 	* configure.ac:
 	- Define HAVE_GSETTINGS variable.
 	- Define HAVE_GCONF variable.

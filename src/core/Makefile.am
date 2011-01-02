@@ -100,6 +100,13 @@ libna_core_la_SOURCES = \
 	na-tokens.h											\
 	$(NULL)
 
+if HAVE_GSETTINGS_AND_GCONF
+libna_core_la_SOURCES += \
+	na-gsettings-migrate.c								\
+	na-gsettings-migrate.h								\
+	$(NULL)
+endif
+
 libna_core_la_LIBADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)

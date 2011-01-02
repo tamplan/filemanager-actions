@@ -158,6 +158,9 @@ PKG_CHECK_EXISTS([glib-2.0 >= 2.26],[have_gsettings="yes"],[have_gsettings="no"]
 AC_MSG_RESULT([${have_gsettings}])
 AC_DEFINE_UNQUOTED([HAVE_GSETTINGS],[ test "x${have_gsettings}" = "xyes"],[Whether we compile against a recent enough GIO])
 
+# As of N-A 3.0.6, GConf is always enabled
+AM_CONDITIONAL([HAVE_GSETTINGS_AND_GCONF], [test "x${have_gsettings}" = "xyes"])
+
 # check for gtk-doc
 # Starting with gtk-doc 1.15, multiple source dirs are directly handled
 # by gtk-doc.make

@@ -43,6 +43,10 @@
 #include "na-module.h"
 #include "na-pivot.h"
 
+#ifdef HAVE_GSETTINGS && HAVE_GCONF
+#include "na-gsettings-migrate.h"
+#endif
+
 /* private class data
  */
 struct _NAPivotClassPrivate {
@@ -234,6 +238,10 @@ instance_constructed( GObject *object )
 		g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 		self->private->modules = na_module_load_modules();
+
+#ifdef HAVE_GSETTINGS && HAVE_GCONF
+		na_gsettings_migrate( self );
+#endif
 
 		monitor_runtime_preferences( self );
 
