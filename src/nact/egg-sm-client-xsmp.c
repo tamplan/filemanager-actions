@@ -40,7 +40,7 @@
 /* patch provided by Mathias Clasen
  * see http://git.gnome.org/browse/libegg/commit/?id=0be81fa47fb5dabba2be40888ed5d4b16f0ae6a3
  */
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 && GTK_MICRO_VERSION >= 7 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 91, 7 )
 #include <gdk/gdkx.h>
 #endif
 
@@ -380,7 +380,7 @@ sm_client_xsmp_startup (EggSMClient *client,
       free (ret_client_id);
 
       gdk_threads_enter ();
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 91 && GTK_MICRO_VERSION >= 7 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 91, 7 )
       gdk_x11_set_sm_client_id (xsmp->client_id);
 #else
       gdk_set_sm_client_id (xsmp->client_id);

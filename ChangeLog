@@ -3,7 +3,9 @@
 	* src/nact/egg-desktop-file.c:
 	Get ride of tests for Gtk+ 2.12.0 as this is the minimal required version.
 
-	* src/nact/base-keysyms.h: Use GTK_CHECK_VERSION macro.
+	* src/nact/base-keysyms.h:
+	* src/nact/egg-sm-client-private.h:
+	* src/nact/egg-sm-client-xsmp.c: Use GTK_CHECK_VERSION macro.
 
 	* configure.ac:
 	* m4/na-check-for-gtk.m4:
