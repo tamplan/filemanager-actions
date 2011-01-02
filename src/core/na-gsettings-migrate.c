@@ -41,9 +41,9 @@
 #include "na-gsettings-migrate.h"
 #include "na-iprefs.h"
 
-static void migrate_configurations( const NAPivot *pivot, GConfClient *gconf );
-static void migrate_io_providers( const NAPivot *pivot, GConfClient *gconf );
-static void migrate_preferences( const NAPivot *pivot, GConfClient *gconf );
+static void migrate_configurations( const NAPivot *pivot, GConfClient *gconf, const gchar *path );
+static void migrate_io_providers( const NAPivot *pivot, GConfClient *gconf, const gchar *path );
+static void migrate_preferences( const NAPivot *pivot, GConfClient *gconf, const gchar *path );
 
 /*
  * This function is called at NAPivot construction, after plugins have been
@@ -77,13 +77,13 @@ na_gsettings_migrate( const NAPivot *pivot )
 			bname = g_path_get_basename( branch );
 
 			if( !strcmp( bname, "configurations" )){
-				migrate_configurations( pivot, gconf_client );
+				migrate_configurations( pivot, gconf_client, branch );
 
 			} else if( !strcmp( bname, "io-providers")){
-				migrate_io_providers( pivot, gconf_client );
+				migrate_io_providers( pivot, gconf_client, branch );
 
 			} else if( !strcmp( bname, "preferences")){
-				migrate_preferences( pivot, gconf_client );
+				migrate_preferences( pivot, gconf_client, branch );
 
 			} else {
 				g_warning( "%s: unknown branch: %s", thisfn, branch );
@@ -109,18 +109,28 @@ na_gsettings_migrate( const NAPivot *pivot )
 
 /*
  * each found configurations is recreated as a .desktop file
+ * this suppose that the 'na-desktop' i/o provider is willing to write
+ * at the end, the 'na-gconf' i/o provider is disabled, both for reading
+ * and for writing
  */
 static void
-migrate_configurations( const NAPivot *pivot, GConfClient *gconf )
+migrate_configurations( const NAPivot *pivot, GConfClient *gconf, const gchar *path )
 {
 }
 
+/*
+ * io-providers branch is migrated to io-providers GSettings object
+ */
 static void
-migrate_io_providers( const NAPivot *pivot, GConfClient *gconf )
+migrate_io_providers( const NAPivot *pivot, GConfClient *gconf, const gchar *path )
 {
 }
 
+/*
+ * preferences are migrated, almost one for one
+ * the 'iprefs-level-zero' is recreated as a .dir file
+ */
 static void
-migrate_preferences( const NAPivot *pivot, GConfClient *gconf )
+migrate_preferences( const NAPivot *pivot, GConfClient *gconf, const gchar *path )
 {
 }
