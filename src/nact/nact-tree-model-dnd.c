@@ -316,7 +316,7 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 	selection_data_target = selection_data->target;
 #endif
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 22 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 22, 0 )
 	context_suggested_action = gdk_drag_context_get_suggested_action( context );
 	context_selected_action = gdk_drag_context_get_selected_action( context );
 #else
@@ -502,7 +502,7 @@ nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, B
 
 		nact_clipboard_dnd_clear( model->private->clipboard );
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 22 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 22, 0 )
 		context_source_window = gdk_drag_context_get_source_window( context );
 #else
 		context_source_window = context->source_window;
@@ -538,7 +538,7 @@ nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, Bas
 		nact_clipboard_dnd_drag_end( model->private->clipboard );
 		nact_clipboard_dnd_clear( model->private->clipboard );
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 22 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 22, 0 )
 		context_source_window = gdk_drag_context_get_source_window( context );
 #else
 		context_source_window = context->source_window;
@@ -1097,7 +1097,7 @@ get_xds_atom_value( GdkDragContext *context )
 	gint actual_length;
 	GdkWindow *context_source_window;
 
-#if(( GTK_MAJOR_VERSION >= 2 && GTK_MINOR_VERSION >= 22 ) || GTK_MAJOR_VERSION >= 3 )
+#if GTK_CHECK_VERSION( 2, 22, 0 )
 		context_source_window = gdk_drag_context_get_source_window( context );
 #else
 		context_source_window = context->source_window;
