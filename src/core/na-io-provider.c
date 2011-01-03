@@ -609,15 +609,8 @@ na_io_provider_get_writable_provider( const NAPivot *pivot )
 	provider = NULL;
 
 	for( ip = providers ; ip && !provider ; ip = ip->next ){
-
-		if( na_io_provider_is_willing_to_write( NA_IO_PROVIDER( ip->data )) &&
-			na_io_provider_is_able_to_write( NA_IO_PROVIDER( ip->data )) &&
-			na_io_provider_has_write_api( NA_IO_PROVIDER( ip->data )) &&
-			na_io_provider_is_user_writable( NA_IO_PROVIDER( ip->data ), NA_IPREFS( pivot )) &&
-			!na_io_provider_is_locked_by_admin( NA_IO_PROVIDER( ip->data ), NA_IPREFS( pivot )) &&
-			!na_pivot_is_configuration_locked_by_admin( pivot )){
-
-				provider = NA_IO_PROVIDER( ip->data );
+		if( na_io_provider_are_writings_authorized( NA_IO_PROVIDER( ip->data ), pivot )){
+			provider = NA_IO_PROVIDER( ip->data );
 		}
 	}
 
@@ -1177,6 +1170,26 @@ na_io_provider_has_write_api( const NAIOProvider *provider )
 	}
 
 	return( has_api );
+}
+
+/*
+ * na_io_provider_get_writable_provider:
+ * @pivot: the #NAPivot instance.
+ *
+ * Returns: the first willing and able to write I/O provider, or NULL.
+ *
+ * The returned provider should not be g_object_unref() by the caller.
+ */
+gboolean
+na_io_provider_are_writings_authorized( const NAIOProvider *provider, const NAPivot *pivot )
+{
+
+	return( na_io_provider_is_willing_to_write( provider ) &&
+			na_io_provider_is_able_to_write( provider ) &&
+			na_io_provider_has_write_api( provider ) &&
+			na_io_provider_is_user_writable( provider , NA_IPREFS( pivot )) &&
+			!na_io_provider_is_locked_by_admin( provider , NA_IPREFS( pivot )) &&
+			!na_pivot_is_configuration_locked_by_admin( pivot ));
 }
 
 /*

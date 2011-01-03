@@ -103,6 +103,8 @@ gboolean       na_io_provider_is_willing_to_write        ( const NAIOProvider *p
 gboolean       na_io_provider_is_able_to_write           ( const NAIOProvider *provider );
 gboolean       na_io_provider_has_write_api              ( const NAIOProvider *provider );
 
+gboolean       na_io_provider_are_writings_authorized    ( const NAIOProvider *provider, const NAPivot *pivot );
+
 guint          na_io_provider_write_item    ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
 guint          na_io_provider_delete_item   ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
 guint          na_io_provider_duplicate_data( const NAIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );

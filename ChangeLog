@@ -135,6 +135,10 @@
 
 2011-01-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-io-provider.c:
+	* src/core/na-io-provider.h (na_io_provider_are_writings_authorized):
+	New function.
+
 	* configure.ac: Define a conditional if we have both GSettings and GConf.
 
 	* src/core/na-gsettings-migrate.c:
