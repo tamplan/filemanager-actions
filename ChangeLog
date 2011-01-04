@@ -1,5 +1,7 @@
 2011-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Fix "API Reference generation" message.
+
 	* m4/na-enable-manuals.m4:
 	Better specify that --enable-html-manuals (resp. pdf) are for user's manuals.
 

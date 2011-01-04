@@ -193,8 +193,7 @@ if test "x${enable_schemas_install}" = "xno"; then
 	msg_schemas_install="disabled"; else
 	msg_schemas_install="enabled in ${GCONF_SCHEMA_FILE_DIR}"
 fi
-msg_gtk_html_doc=`if test "x${enable_gtk_doc_html}" = "xno"; then echo disabled; else echo "enabled with gtk-doc"; fi`
-msg_gtk_pdf_doc=`if test "x${enable_gtk_doc_pdf}" = "xno"; then echo disabled; else echo enabled; fi`
+msg_gtk_doc=`if test "x${enable_gtk_doc}" = "xno"; then echo "disabled"; else echo "enabled"; fi`
 msg_gtk_version=""
 if test "${have_gtk3}" = "yes"; then msg_gtk_version="Gtk+ 3.0"; 
 	elif  test "${have_gtk2}" = "yes"; then msg_gtk_version="Gtk+ 2.0"; fi
@@ -208,10 +207,9 @@ $as_echo "
 	Default I/O provider            ${with_default_io_provider}
 	GConf schemas installation      ${msg_schemas_install}
 	Maintainer mode                 ${msg_maintainer_mode}
-	HTML API Reference generation   ${msg_gtk_html_doc}
-	PDF API Reference generation    ${msg_gtk_pdf_doc}
-	HTML manuals generation         ${msg_html_manuals}
-	PDF manuals generation          ${msg_pdf_manuals}
+	API Reference generation        ${msg_gtk_doc}
+	HTML User's Manuals generation  ${msg_html_manuals}
+	PDF User's Manuals generation   ${msg_pdf_manuals}
 "
 #	Preprocessor flags              ${AM_CPPFLAGS}
 #	Compiler flags                  ${AM_CFLAGS} ${NAUTILUS_ACTIONS_CFLAGS}
