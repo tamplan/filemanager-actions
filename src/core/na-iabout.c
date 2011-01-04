@@ -203,7 +203,9 @@ na_iabout_display( NAIAbout *instance )
 		gtk_show_about_dialog( toplevel,
 				"artists", artists,
 				"authors", authors,
-				"comments", _( "A graphical interface to create and edit your Nautilus-Actions." ),
+				/* i10n: "Nautilus actions" here is not a typo; this does not refer to the
+				 * Nautilus-Actions product, but to the actions which are to be added to Nautilus */
+				"comments", _( "A graphical interface to create and edit your Nautilus actions." ),
 				"copyright", copyright,
 				"documenters", documenters,
 				"license", license_i18n,

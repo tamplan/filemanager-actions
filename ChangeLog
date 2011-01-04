@@ -1,3 +1,8 @@
+2011-01-04 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-iabout.c (na_iabout_display):
+	Fix typo in comment, adding a note to the translators.
+
 2011-01-02 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/egg-desktop-file.c:
