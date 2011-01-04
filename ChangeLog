@@ -1,5 +1,8 @@
 2011-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* m4/na-enable-manuals.m4:
+	Better specify that --enable-html-manuals (resp. pdf) are for user's manuals.
+
 	* src/core/na-selected-info.c (new_from_uri):
 	- Add an excerpt from RFC 2396 about valid characters in URIs.
 	- Prefer the filename from g_filename_from_uri() when possible.
