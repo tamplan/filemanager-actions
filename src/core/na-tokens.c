@@ -85,7 +85,6 @@ static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
 static NATokens *build_string_lists( NATokens *tokens );
-static gchar    *build_string_lists_item( GSList **pslist );
 static void      execute_action_command( const gchar *command, const NAObjectProfile *profile );
 static gboolean  is_singular_exec( const NATokens *tokens, const gchar *exec );
 static gchar    *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8 );
@@ -340,7 +339,8 @@ na_tokens_new_from_selection( GList *selection )
 			first = FALSE;
 		}
 
-		tokens->private->uris = g_slist_prepend( tokens->private->uris, uri );
+		/* even an URI has to be quoted in order to preserve simple quotes */
+		tokens->private->uris = g_slist_prepend( tokens->private->uris, g_shell_quote( uri ));
 
 		tokens->private->filenames = g_slist_prepend( tokens->private->filenames, g_shell_quote( filename ));
 		tokens->private->basedirs = g_slist_prepend( tokens->private->basedirs, g_shell_quote( basedir ));
@@ -419,25 +419,15 @@ na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile
 static NATokens *
 build_string_lists( NATokens *tokens )
 {
-	tokens->private->uris_str            = build_string_lists_item( &tokens->private->uris );
-	tokens->private->filenames_str       = build_string_lists_item( &tokens->private->filenames );
-	tokens->private->basedirs_str        = build_string_lists_item( &tokens->private->basedirs );
-	tokens->private->basenames_str       = build_string_lists_item( &tokens->private->basenames );
-	tokens->private->basenames_woext_str = build_string_lists_item( &tokens->private->basenames_woext );
-	tokens->private->exts_str            = build_string_lists_item( &tokens->private->exts );
-	tokens->private->mimetypes_str       = build_string_lists_item( &tokens->private->mimetypes );
+	tokens->private->uris_str            = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->uris ), " " );
+	tokens->private->filenames_str       = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->filenames ), " " );
+	tokens->private->basedirs_str        = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->basedirs ), " " );
+	tokens->private->basenames_str       = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->basenames ), " " );
+	tokens->private->basenames_woext_str = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->basenames_woext ), " " );
+	tokens->private->exts_str            = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->exts ), " " );
+	tokens->private->mimetypes_str       = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->mimetypes ), " " );
 
 	return( tokens );
-}
-
-static gchar *
-build_string_lists_item( GSList **pslist )
-{
-	*pslist = g_slist_reverse( *pslist );
-
-	gchar *str = na_core_utils_slist_join_at_end( *pslist, " " );
-
-	return( str );
 }
 
 static void

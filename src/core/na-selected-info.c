@@ -702,14 +702,66 @@ new_from_nautilus_file_info( NautilusFileInfo *item )
  * Nautilus uses to address the desktop via the 'x-nautilus-desktop:///' URI.
  * g_filename_from_uri() complains that
  * "The URI 'x-nautilus-desktop:///' is not an absolute URI using the "file" scheme".
- * We so prefer the vfs->path member wich is just a decomposition of the URI,
- * and does not try to interpret it.
+ * In this case, we prefer the vfs->path member wich is just a decomposition of the
+ * URI, and does not try to interpret it.
+ *
+ * *********************************************************************************
+ * Extract from RFC 2396:
+ *
+ * 2.4.3. Excluded US-ASCII Characters
+ *
+ * Although they are disallowed within the URI syntax, we include here a
+ * description of those US-ASCII characters that have been excluded and
+ * the reasons for their exclusion.
+ *
+ * The control characters in the US-ASCII coded character set are not
+ * used within a URI, both because they are non-printable and because
+ * they are likely to be misinterpreted by some control mechanisms.
+ *
+ * control = <US-ASCII coded characters 00-1F and 7F hexadecimal>
+ *
+ * The space character is excluded because significant spaces may
+ * disappear and insignificant spaces may be introduced when URI are
+ * transcribed or typeset or subjected to the treatment of word-
+ * processing programs. Whitespace is also used to delimit URI in many
+ * contexts.
+ *
+ * space = <US-ASCII coded character 20 hexadecimal>
+ *
+ * The angle-bracket "<" and ">" and double-quote (") characters are
+ * excluded because they are often used as the delimiters around URI in
+ * text documents and protocol fields. The character "#" is excluded
+ * because it is used to delimit a URI from a fragment identifier in URI
+ * references (Section 4). The percent character "%" is excluded because
+ * it is used for the encoding of escaped characters.
+ *
+ * delims = "<" | ">" | "#" | "%" | <">
+ *
+ * Other characters are excluded because gateways and other transport
+ * agents are known to sometimes modify such characters, or they are
+ * used as delimiters.
+ *
+ * unwise = "{" | "}" | "|" | "\" | "^" | "[" | "]" | "`"
+ *
+ * Data corresponding to excluded characters must be escaped in order to
+ * be properly represented within a URI.
+ *
+ * pwi 2011-01-04:
+ *
+ * It results from the above excerpt that:
+ * - as double quotes are not valid character in URI, they have to be
+ *   escaped as %22, and so Nautilus does
+ * - but simple quotes are not forbidden, and so have not to be
+ *   escaped, and so Nautilus does not escape them
+ *
+ * As a result, we may have valid, non-escaped, simple quotes in an URI.
  */
 static NASelectedInfo *
 new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 {
 	GFile *location;
 	NAGnomeVFSURI *vfs;
+	GError *error;
 
 	NASelectedInfo *info = g_object_new( NA_SELECTED_INFO_TYPE, NULL );
 
@@ -720,7 +772,16 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 
 	vfs = g_new0( NAGnomeVFSURI, 1 );
 	na_gnome_vfs_uri_parse( vfs, uri );
-	info->private->filename = g_strdup( vfs->path );
+	error = NULL;
+	info->private->filename = g_filename_from_uri( uri, NULL, &error );
+	if( error ){
+		g_debug( "new_from_uri: uri='%s', error=%s", uri, error->message );
+		g_error_free( error );
+	}
+	if( !info->private->filename ){
+		g_debug( "new_from_uri: uri='%s', filename=NULL, setting it to '%s'", uri, vfs->path );
+		info->private->filename = g_strdup( vfs->path );
+	}
 	info->private->dirname = g_path_get_dirname( info->private->filename );
 	info->private->basename = g_path_get_basename( info->private->filename );
 	info->private->hostname = g_strdup( vfs->host_name );

@@ -1,5 +1,13 @@
 2011-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-selected-info.c (new_from_uri):
+	- Add an excerpt from RFC 2396 about valid characters in URIs.
+	- Prefer the filename from g_filename_from_uri() when possible.
+
+	* src/core/na-tokens.c
+	(na_tokens_new_from_selection): Also g_shell_quote() the URI to preserve quotes.
+	(build_string_lists_item): Removed function.
+
 	* src/core/na-iabout.c (na_iabout_display):
 	Fix typo in comment, adding a note to the translators.
 
