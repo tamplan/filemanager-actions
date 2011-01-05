@@ -114,9 +114,9 @@ GType     na_tokens_get_type( void );
 NATokens *na_tokens_new_for_example   ( void );
 NATokens *na_tokens_new_from_selection( GList *selection );
 
-gchar    *na_tokens_parse_parameters( const NATokens *tokens, const gchar *string, gboolean utf8 );
+gchar    *na_tokens_parse_for_display ( const NATokens *tokens, const gchar *string, gboolean utf8 );
 
-void      na_tokens_execute_action  ( const NATokens *tokens, const NAObjectProfile *profile );
+void      na_tokens_execute_action    ( const NATokens *tokens, const NAObjectProfile *profile );
 
 G_END_DECLS
 

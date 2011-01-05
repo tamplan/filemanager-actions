@@ -52,24 +52,14 @@ struct _NATokensClassPrivate {
  */
 struct _NATokensPrivate {
 	gboolean dispose_has_run;
-
 	guint    count;
-
 	GSList  *uris;
-	gchar   *uris_str;
 	GSList  *filenames;
-	gchar   *filenames_str;
 	GSList  *basedirs;
-	gchar   *basedirs_str;
 	GSList  *basenames;
-	gchar   *basenames_str;
 	GSList  *basenames_woext;
-	gchar   *basenames_woext_str;
 	GSList  *exts;
-	gchar   *exts_str;
 	GSList  *mimetypes;
-	gchar   *mimetypes_str;
-
 	gchar   *hostname;
 	gchar   *username;
 	guint    port;
@@ -84,10 +74,11 @@ static void      instance_init( GTypeInstance *instance, gpointer klass );
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
-static NATokens *build_string_lists( NATokens *tokens );
-static void      execute_action_command( const gchar *command, const NAObjectProfile *profile );
+static void      execute_action_command( gchar *command, const NAObjectProfile *profile );
 static gboolean  is_singular_exec( const NATokens *tokens, const gchar *exec );
-static gchar    *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8 );
+static gchar    *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted );
+static GString  *quote_string( GString *input, const gchar *name, gboolean quoted );
+static GString  *quote_string_list( GString *input, GSList *names, gboolean quoted );
 
 GType
 na_tokens_get_type( void )
@@ -158,20 +149,12 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NATokensPrivate, 1 );
 
 	self->private->uris = NULL;
-	self->private->uris_str = NULL;
 	self->private->filenames = NULL;
-	self->private->filenames_str = NULL;
 	self->private->basedirs = NULL;
-	self->private->basedirs_str = NULL;
 	self->private->basenames = NULL;
-	self->private->basenames_str = NULL;
 	self->private->basenames_woext = NULL;
-	self->private->basenames_woext_str = NULL;
 	self->private->exts = NULL;
-	self->private->exts_str = NULL;
 	self->private->mimetypes = NULL;
-	self->private->mimetypes_str = NULL;
-
 	self->private->hostname = NULL;
 	self->private->username = NULL;
 	self->private->port = 0;
@@ -215,20 +198,12 @@ instance_finalize( GObject *object )
 	g_free( self->private->scheme );
 	g_free( self->private->username );
 	g_free( self->private->hostname );
-
-	g_free( self->private->mimetypes_str );
 	na_core_utils_slist_free( self->private->mimetypes );
-	g_free( self->private->exts_str );
 	na_core_utils_slist_free( self->private->exts );
-	g_free( self->private->basenames_woext_str );
 	na_core_utils_slist_free( self->private->basenames_woext );
-	g_free( self->private->basenames_str );
 	na_core_utils_slist_free( self->private->basenames );
-	g_free( self->private->basedirs_str );
 	na_core_utils_slist_free( self->private->basedirs );
-	g_free( self->private->filenames_str );
 	na_core_utils_slist_free( self->private->filenames );
-	g_free( self->private->uris_str );
 	na_core_utils_slist_free( self->private->uris );
 
 	g_free( self->private );
@@ -297,7 +272,7 @@ na_tokens_new_for_example( void )
 	tokens->private->username = g_strdup( ex_user );
 	tokens->private->port = ex_port;
 
-	return( build_string_lists( tokens ));
+	return( tokens );
 }
 
 /*
@@ -339,42 +314,36 @@ na_tokens_new_from_selection( GList *selection )
 			first = FALSE;
 		}
 
-		/* even an URI has to be quoted in order to preserve simple quotes */
-		tokens->private->uris = g_slist_prepend( tokens->private->uris, g_shell_quote( uri ));
-
-		tokens->private->filenames = g_slist_prepend( tokens->private->filenames, g_shell_quote( filename ));
-		tokens->private->basedirs = g_slist_prepend( tokens->private->basedirs, g_shell_quote( basedir ));
-		tokens->private->basenames = g_slist_prepend( tokens->private->basenames, g_shell_quote( basename ));
-		tokens->private->basenames_woext = g_slist_prepend( tokens->private->basenames_woext, g_shell_quote( bname_woext ));
-		tokens->private->exts = g_slist_prepend( tokens->private->exts, g_shell_quote( ext ));
-
-		g_free( filename );
-		g_free( basedir );
-		g_free( basename );
-		g_free( bname_woext );
-		g_free( ext );
-
-		tokens->private->mimetypes = g_slist_prepend( tokens->private->mimetypes, mimetype );
+		tokens->private->uris = g_slist_append( tokens->private->uris, uri );
+		tokens->private->filenames = g_slist_append( tokens->private->filenames, filename );
+		tokens->private->basedirs = g_slist_append( tokens->private->basedirs, basedir );
+		tokens->private->basenames = g_slist_append( tokens->private->basenames, basename );
+		tokens->private->basenames_woext = g_slist_append( tokens->private->basenames_woext, bname_woext );
+		tokens->private->exts = g_slist_append( tokens->private->exts, ext );
+		tokens->private->mimetypes = g_slist_append( tokens->private->mimetypes, mimetype );
 	}
 
-	return( build_string_lists( tokens ));
+	return( tokens );
 }
 
 /*
- * na_tokens_parse_parameters:
+ * na_tokens_parse_for_display:
  * @tokens: a #NATokens object.
  * @string: the input string, may or may not contain tokens.
  * @utf8: whether the @input string is UTF-8 encoded, or a standard ASCII string.
  *
  * Expands the parameters in the given string.
  *
+ * This expanded string is meant to be displayed only (not executed) as
+ * filenames are not shell-quoted.
+ *
  * Returns: a copy of @input string with tokens expanded, as a newly
  * allocated string which should be g_free() by the caller.
  */
 gchar *
-na_tokens_parse_parameters( const NATokens *tokens, const gchar *string, gboolean utf8 )
+na_tokens_parse_for_display( const NATokens *tokens, const gchar *string, gboolean utf8 )
 {
-	return( parse_singular( tokens, string, 0, utf8 ));
+	return( parse_singular( tokens, string, 0, utf8, FALSE ));
 }
 
 /*
@@ -387,9 +356,10 @@ na_tokens_parse_parameters( const NATokens *tokens, const gchar *string, gboolea
 void
 na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile )
 {
-	gchar *path, *parameters, *exec, *command;
+	gchar *path, *parameters, *exec;
 	gboolean singular;
 	guint i;
+	gchar *command;
 
 	path = na_object_get_path( profile );
 	parameters = na_object_get_parameters( profile );
@@ -401,43 +371,58 @@ na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile
 
 	if( singular ){
 		for( i = 0 ; i < tokens->private->count ; ++i ){
-			command = parse_singular( tokens, exec, i, FALSE );
+			command = parse_singular( tokens, exec, i, FALSE, TRUE );
 			execute_action_command( command, profile );
 			g_free( command );
 		}
 
 	} else {
-		command = na_tokens_parse_parameters( tokens, exec, FALSE );
+		command = parse_singular( tokens, exec, 0, FALSE, TRUE );
 		execute_action_command( command, profile );
 		g_free( command );
 	}
 
-
 	g_free( exec );
 }
 
-static NATokens *
-build_string_lists( NATokens *tokens )
-{
-	tokens->private->uris_str            = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->uris ), " " );
-	tokens->private->filenames_str       = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->filenames ), " " );
-	tokens->private->basedirs_str        = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->basedirs ), " " );
-	tokens->private->basenames_str       = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->basenames ), " " );
-	tokens->private->basenames_woext_str = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->basenames_woext ), " " );
-	tokens->private->exts_str            = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->exts ), " " );
-	tokens->private->mimetypes_str       = na_core_utils_slist_join_at_end( g_slist_reverse( tokens->private->mimetypes ), " " );
-
-	return( tokens );
-}
-
 static void
-execute_action_command( const gchar *command, const NAObjectProfile *profile )
+execute_action_command( gchar *command, const NAObjectProfile *profile )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action_command";
+	GError *error;
+	gchar **argv;
+	gint argc;
+	gchar *wdir;
+	GPid child_pid;
 
 	g_debug( "%s: command=%s, profile=%p", thisfn, command, ( void * ) profile );
 
-	g_spawn_command_line_async( command, NULL );
+	error = NULL;
+
+	if( !g_shell_parse_argv( command, &argc, &argv, &error )){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+
+	} else {
+		wdir = na_object_get_working_dir( profile );
+		g_debug( "%s: wdir=%s", thisfn, wdir );
+
+		g_spawn_async( wdir,
+				argv,
+				NULL,
+				G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL,
+				NULL,
+				NULL,
+				&child_pid,
+				&error );
+		if( error ){
+			g_warning( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+		}
+
+		g_spawn_close_pid( child_pid );
+		g_free( wdir );
+	}
 }
 
 /*
@@ -503,7 +488,7 @@ is_singular_exec( const NATokens *tokens, const gchar *exec )
 }
 
 /*
- * na_tokens_parse_singular:
+ * parse_singular:
  * @tokens: a #NATokens object.
  * @input: the input string, may or may not contain tokens.
  * @i: the number of the iteration in a multiple selection, starting with zero.
@@ -513,12 +498,15 @@ is_singular_exec( const NATokens *tokens, const gchar *exec )
  * A command is said of 'singular form' when its first parameter is not
  * of plural form. In the case of a multiple selection, singular form
  * commands are executed one time for each element of the selection
+ *
+ * Returns: a #GSList which contains two fields: the command and its parameters.
+ * The returned #GSList should be na_core_utils_slist_free() by the caller.
  */
 static gchar *
-parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8 )
+parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted )
 {
 	GString *output;
-	gchar *iter, *prev_iter, *tmp;
+	gchar *iter, *prev_iter;
 	const gchar *nth;
 
 	output = g_string_new( "" );
@@ -552,14 +540,14 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 				if( tokens->private->basenames ){
 					nth = ( const gchar * ) g_slist_nth_data( tokens->private->basenames, i );
 					if( nth ){
-						output = g_string_append( output, nth );
+						output = quote_string( output, nth, quoted );
 					}
 				}
 				break;
 
 			case 'B':
-				if( tokens->private->basenames_str ){
-					output = g_string_append( output, tokens->private->basenames_str );
+				if( tokens->private->basenames ){
+					output = quote_string_list( output, tokens->private->basenames, quoted );
 				}
 				break;
 
@@ -571,14 +559,14 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 				if( tokens->private->basedirs ){
 					nth = ( const gchar * ) g_slist_nth_data( tokens->private->basedirs, i );
 					if( nth ){
-						output = g_string_append( output, nth );
+						output = quote_string( output, nth, quoted );
 					}
 				}
 				break;
 
 			case 'D':
-				if( tokens->private->basedirs_str ){
-					output = g_string_append( output, tokens->private->basedirs_str );
+				if( tokens->private->basedirs ){
+					output = quote_string_list( output, tokens->private->basedirs, quoted );
 				}
 				break;
 
@@ -586,39 +574,37 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 				if( tokens->private->filenames ){
 					nth = ( const gchar * ) g_slist_nth_data( tokens->private->filenames, i );
 					if( nth ){
-						output = g_string_append( output, nth );
+						output = quote_string( output, nth, quoted );
 					}
 				}
 				break;
 
 			case 'F':
-				if( tokens->private->filenames_str ){
-					output = g_string_append( output, tokens->private->filenames_str );
+				if( tokens->private->filenames ){
+					output = quote_string_list( output, tokens->private->filenames, quoted );
 				}
 				break;
 
 			case 'h':
 				if( tokens->private->hostname ){
-					tmp = g_shell_quote( tokens->private->hostname );
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					output = quote_string( output, tokens->private->hostname, quoted );
 				}
 				break;
 
+			/* mimetypes are never quoted
+			 */
 			case 'm':
 				if( tokens->private->mimetypes ){
 					nth = ( const gchar * ) g_slist_nth_data( tokens->private->mimetypes, i );
 					if( nth ){
-						tmp = g_shell_quote( nth );
-						output = g_string_append( output, tmp );
-						g_free( tmp );
+						output = quote_string( output, nth, FALSE );
 					}
 				}
 				break;
 
 			case 'M':
-				if( tokens->private->mimetypes_str ){
-					output = g_string_append( output, tokens->private->mimetypes_str );
+				if( tokens->private->mimetypes ){
+					output = quote_string_list( output, tokens->private->mimetypes, FALSE );
 				}
 				break;
 
@@ -629,21 +615,21 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 
 			case 'n':
 				if( tokens->private->username ){
-					tmp = g_shell_quote( tokens->private->username );
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					output = quote_string( output, tokens->private->username, quoted );
 				}
 				break;
 
+			/* port number is never quoted
+			 */
 			case 'p':
-				g_string_append_printf( output, "%d", tokens->private->port );
+				if( tokens->private->port > 0 ){
+					g_string_append_printf( output, "%d", tokens->private->port );
+				}
 				break;
 
 			case 's':
 				if( tokens->private->scheme ){
-					tmp = g_shell_quote( tokens->private->scheme );
-					output = g_string_append( output, tmp );
-					g_free( tmp );
+					output = quote_string( output, tokens->private->scheme, quoted );
 				}
 				break;
 
@@ -651,16 +637,14 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 				if( tokens->private->uris ){
 					nth = ( const gchar * ) g_slist_nth_data( tokens->private->uris, i );
 					if( nth ){
-						tmp = g_shell_quote( nth );
-						output = g_string_append( output, tmp );
-						g_free( tmp );
+						output = quote_string( output, nth, quoted );
 					}
 				}
 				break;
 
 			case 'U':
-				if( tokens->private->uris_str ){
-					output = g_string_append( output, tokens->private->uris_str );
+				if( tokens->private->uris ){
+					output = quote_string_list( output, tokens->private->uris, quoted );
 				}
 				break;
 
@@ -668,14 +652,14 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 				if( tokens->private->basenames_woext ){
 					nth = ( const gchar * ) g_slist_nth_data( tokens->private->basenames_woext, i );
 					if( nth ){
-						output = g_string_append( output, nth );
+						output = quote_string( output, nth, quoted );
 					}
 				}
 				break;
 
 			case 'W':
-				if( tokens->private->basenames_woext_str ){
-					output = g_string_append( output, tokens->private->basenames_woext_str );
+				if( tokens->private->basenames_woext ){
+					output = quote_string_list( output, tokens->private->basenames_woext, quoted );
 				}
 				break;
 
@@ -683,14 +667,14 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 				if( tokens->private->exts ){
 					nth = ( const gchar * ) g_slist_nth_data( tokens->private->exts, i );
 					if( nth ){
-						output = g_string_append( output, nth );
+						output = quote_string( output, nth, quoted );
 					}
 				}
 				break;
 
 			case 'X':
-				if( tokens->private->exts_str ){
-					output = g_string_append( output, tokens->private->exts_str );
+				if( tokens->private->exts ){
+					output = quote_string_list( output, tokens->private->exts, quoted );
 				}
 				break;
 
@@ -708,4 +692,45 @@ parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean ut
 	output = g_string_append_len( output, prev_iter, strlen( prev_iter ));
 
 	return( g_string_free( output, FALSE ));
+}
+
+static GString *
+quote_string( GString *input, const gchar *name, gboolean quoted )
+{
+	gchar *tmp;
+
+	if( quoted ){
+		tmp = g_shell_quote( name );
+		input = g_string_append( input, tmp );
+		g_free( tmp );
+
+	} else {
+		input = g_string_append( input, name );
+	}
+
+	return( input );
+}
+
+static GString *
+quote_string_list( GString *input, GSList *names, gboolean quoted )
+{
+	GSList *it;
+	gchar *tmp;
+
+	if( quoted ){
+		GSList *quoted_names = NULL;
+		for( it = names ; it ; it = it->next ){
+			quoted_names = g_slist_append( quoted_names, g_shell_quote(( const gchar * ) it->data ));
+		}
+		tmp = na_core_utils_slist_join_at_end( quoted_names, " " );
+		na_core_utils_slist_free( quoted_names );
+
+	} else {
+		tmp = na_core_utils_slist_join_at_end( g_slist_reverse( names ), " " );
+	}
+
+	input = g_string_append( input, tmp );
+	g_free( tmp );
+
+	return( input );
 }

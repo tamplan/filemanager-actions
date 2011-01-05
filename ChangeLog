@@ -1,5 +1,19 @@
 2011-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-tokens.c (na_tokens_new_from_selection):
+	No more prepare the list string of selection.
+	Directly build the selection list in the correct order.
+	(execute_action_command): Setup the working directory.
+
+	* src/core/na-tokens.c:
+	* src/core/na-tokens.h (na_tokens_parse_parameters):
+	Renamed as na_tokens_parse_for_display() as filenames are not quoted
+	when displayed as part of an expanded label.
+
+	* src/nact/nact-icommand-tab.c (parse_parameters):
+	* src/plugin-menu/nautilus-actions.c (expand_tokens_item):
+	Updated accordingly.
+
 	* configure.ac: Fix "API Reference generation" message.
 
 	* m4/na-enable-manuals.m4:

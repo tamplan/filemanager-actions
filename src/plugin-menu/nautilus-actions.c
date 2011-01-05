@@ -595,26 +595,26 @@ expand_tokens_item( NAObjectItem *item, NATokens *tokens )
 	 * plus the toolbar label if this is an action
 	 */
 	old = na_object_get_label( item );
-	new = na_tokens_parse_parameters( tokens, old, TRUE );
+	new = na_tokens_parse_for_display( tokens, old, TRUE );
 	na_object_set_label( item, new );
 	g_free( old );
 	g_free( new );
 
 	old = na_object_get_tooltip( item );
-	new = na_tokens_parse_parameters( tokens, old, TRUE );
+	new = na_tokens_parse_for_display( tokens, old, TRUE );
 	na_object_set_tooltip( item, new );
 	g_free( old );
 	g_free( new );
 
 	old = na_object_get_icon( item );
-	new = na_tokens_parse_parameters( tokens, old, TRUE );
+	new = na_tokens_parse_for_display( tokens, old, TRUE );
 	na_object_set_icon( item, new );
 	g_free( old );
 	g_free( new );
 
 	if( NA_IS_OBJECT_ACTION( item )){
 		old = na_object_get_toolbar_label( item );
-		new = na_tokens_parse_parameters( tokens, old, TRUE );
+		new = na_tokens_parse_for_display( tokens, old, TRUE );
 		na_object_set_toolbar_label( item, new );
 		g_free( old );
 		g_free( new );
@@ -633,7 +633,7 @@ expand_tokens_item( NAObjectItem *item, NATokens *tokens )
 	for( its = subitems_slist ; its ; its = its->next ){
 		old = ( gchar * ) its->data;
 		if( old[0] == '[' && old[strlen(old)-1] == ']' ){
-			new = na_tokens_parse_parameters( tokens, old, FALSE );
+			new = na_tokens_parse_for_display( tokens, old, FALSE );
 		} else {
 			new = g_strdup( old );
 		}
@@ -666,7 +666,7 @@ expand_tokens_item( NAObjectItem *item, NATokens *tokens )
 			 * do not touch them here
 			 */
 			old = na_object_get_working_dir( it->data );
-			new = na_tokens_parse_parameters( tokens, old, FALSE );
+			new = na_tokens_parse_for_display( tokens, old, FALSE );
 			na_object_set_working_dir( it->data, new );
 			g_free( old );
 			g_free( new );
@@ -686,25 +686,25 @@ expand_tokens_context( NAIContext *context, NATokens *tokens )
 	gchar *old, *new;
 
 	old = na_object_get_try_exec( context );
-	new = na_tokens_parse_parameters( tokens, old, FALSE );
+	new = na_tokens_parse_for_display( tokens, old, FALSE );
 	na_object_set_try_exec( context, new );
 	g_free( old );
 	g_free( new );
 
 	old = na_object_get_show_if_registered( context );
-	new = na_tokens_parse_parameters( tokens, old, FALSE );
+	new = na_tokens_parse_for_display( tokens, old, FALSE );
 	na_object_set_show_if_registered( context, new );
 	g_free( old );
 	g_free( new );
 
 	old = na_object_get_show_if_true( context );
-	new = na_tokens_parse_parameters( tokens, old, FALSE );
+	new = na_tokens_parse_for_display( tokens, old, FALSE );
 	na_object_set_show_if_true( context, new );
 	g_free( old );
 	g_free( new );
 
 	old = na_object_get_show_if_running( context );
-	new = na_tokens_parse_parameters( tokens, old, FALSE );
+	new = na_tokens_parse_for_display( tokens, old, FALSE );
 	na_object_set_show_if_running( context, new );
 	g_free( old );
 	g_free( new );

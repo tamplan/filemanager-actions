@@ -649,7 +649,7 @@ parse_parameters( NactICommandTab *instance )
 	gchar *exec, *returned;
 
 	exec = g_strdup_printf( "%s %s", command, param_template );
-	returned = na_tokens_parse_parameters( st_tokens, exec, FALSE );
+	returned = na_tokens_parse_for_display( st_tokens, exec, FALSE );
 	g_free( exec );
 
 	return( returned );
