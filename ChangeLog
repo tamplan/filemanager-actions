@@ -101,6 +101,18 @@
 	* src/nact/nautilus-actions-config-tool.ui:
 	Apply patch provided by Christian Kirbach. Fix #638548.
 
+2011-01-05 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/utils/nautilus-actions-gconf2desktop.sh.in:
+	* src/utils/nautilus-actions-delete.c:
+	* src/utils/nautilus-actions-print.c:
+	New items migration script and programs.
+	They take care of migrating users and mandatory items to .desktop files.
+
+	* configure.ac:
+	* src/utils/Makefile.am:
+	* src/utils/.gitignore: Updated accordingly.
+
 2011-01-04 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-tokens.c (na_tokens_new_from_selection):

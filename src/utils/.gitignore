@@ -1,6 +1,9 @@
 nautilus-actions-check-actions-change
+nautilus-actions-delete
+nautilus-actions-gconf2desktop.sh
 nautilus-actions-new-config
 nautilus-actions-new
+nautilus-actions-print
 nautilus-actions-run
 nautilus-actions-run-bindings.h
 nautilus-actions-schemas

@@ -28,7 +28,7 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([Nautilus-Actions],[3.0.7],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+AC_INIT([Nautilus-Actions],[3.1.0],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CANONICAL_TARGET
@@ -66,7 +66,10 @@ AC_CONFIG_FILES([
 	src/test/Makefile
 	src/utils/Makefile
 	tools/Makefile
+	src/utils/nautilus-actions-gconf2desktop.sh
 	po/Makefile.in
+],[
+	chmod a+x src/utils/nautilus-actions-gconf2desktop.sh
 ])
 
 AC_CONFIG_MACRO_DIR([m4])
@@ -151,16 +154,6 @@ NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.8])
 
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
-
-# GSettings migration
-AC_MSG_CHECKING([for GSettings])
-PKG_CHECK_EXISTS([glib-2.0 >= 2.26],[have_gsettings="yes"],[have_gsettings="no"])
-AC_MSG_RESULT([${have_gsettings}])
-if test "x${have_gsettings}" = "xyes"; then have_gsettings_b=1; else have_gsettings_b=0; fi
-AC_DEFINE_UNQUOTED([HAVE_GSETTINGS],[${have_gsettings_b}],[Whether we compile against a recent enough GIO])
-
-# As of N-A 3.0.6, GConf is always enabled
-AM_CONDITIONAL([HAVE_GSETTINGS_AND_GCONF], [test "x${have_gsettings}" = "xyes"])
 
 # check for gtk-doc
 # Starting with gtk-doc 1.15, multiple source dirs are directly handled

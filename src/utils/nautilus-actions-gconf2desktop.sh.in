@@ -1,0 +1,412 @@
+#!/bin/ksh 
+# Nautilus-Actions
+# A Nautilus extension which offers configurable context menu actions.
+#
+# Copyright (C) 2005 The GNOME Foundation
+# Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+# Copyright (C) 2009, 2010, 2011 Pierre Wieser and others (see AUTHORS)
+#
+# This Program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+#
+# This Program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this Library; see the file COPYING.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place,
+# Suite 330, Boston, MA 02111-1307, USA.
+#
+# Authors:
+#   Frederic Ruaudel <grumz@grumz.net>
+#   Rodrigo Moya <rodrigo@gnome-db.org>
+#   Pierre Wieser <pwieser@trychlos.org>
+#   ... and many others (see AUTHORS)
+
+errs=0										# will be the exit code of the script
+my_cmd="${0}"								# e.g. "./make-ks.sh"
+my_parms="$*"								# e.g. "-host toaster"
+my_cmdline="${my_cmd} ${my_parms}"
+me="$(basename ${my_cmd})"					# e.g. "make-ks.sh"
+											# used in msg and msgerr functions
+my_tmproot="/tmp/$(echo ${me} | sed 's?\..*$??').$$"
+											# e.g. "/tmp/make-ks.1978"
+
+# These three functions must be defined using the name() syntax in order
+# to share traps with the caller process (cf. man (1) ksh).
+#
+trap_exit()
+{
+	clear_tmpfiles
+	[ "${opt_verbose}" = "yes" -o ${errs} -gt 0 ] && msg "exiting with code ${errs}"
+	exit ${errs}
+}
+
+trap_int()
+{
+	msg "quitting on keyboard interrupt"
+	let errs+=1
+	exit
+}
+
+trap_term()
+{
+	[ "${opt_verbose}" = "yes" ] && msg "quitting on TERM signal"
+	exit
+}
+
+# setup the different trap functions
+trap 'trap_term' TERM
+trap 'trap_int'  INT
+trap 'trap_exit' EXIT
+
+function clear_tmpfiles
+{
+	\rm -f ${my_tmproot}.*
+}
+
+function msg
+{
+	typeset _eol="\n"
+	[ $# -ge 2 ] && _eol="${2}"
+	printf "[%s] %s${_eol}" ${me} "${1}"
+	return 0
+}
+
+function msgerr
+{
+	msg "error: ${1}" 1>&2
+	return $?
+}
+
+function msgwarn
+{
+	msg "warning: ${1}" 1>&2
+	return $?
+}
+
+function msg_help
+{
+	msg_version
+	echo "
+ This program is meant to safely migrate menus and actions from GConf to
+ .desktop files.
+ Users menus and actions are automatically migrated when Nautilus-Actions
+ menu plugin is loaded by Nautilus file-manager.
+
+ Usage: ${my_cmd} [options]
+   --[no]help                print this message, and exit [${opt_help_def}]
+   --[no]version             print script version, and exit [${opt_version_def}]
+   --[no]dummy               dummy execution [${opt_dummy_def}]
+   --[no]verbose             runs verbosely [${opt_verbose_def}]
+   --print=/filename         full pathname of the nautilus-actions-print program [${opt_print_def}]
+   --dir=/dirname            directory where the migrated objects must be stored [${opt_dir_def}]
+   --[no]force               force the rewriting of an already existing item [${opt_force_def}]
+   --[no]delete              delete the item after the migration [${opt_delete_def}]"
+}
+
+function msg_version
+{
+	echo "
+ @PACKAGE_NAME@ v @PACKAGE_VERSION@
+ Copyright (C) 2011 Pierre Wieser."
+}
+
+function command
+{
+	typeset _cmd="${1}"
+
+	if [ "${opt_dummy}" = "yes" -o "${opt_verbose}" = "yes" ]; then
+		typeset _prefix=""
+		[ "${opt_dummy}" = "yes" ] && _prefix="[dummy] "
+		echo "${_prefix}${_cmd}"
+	fi
+
+	if [ "${opt_dummy}" = "no" ]; then
+		eval ${_cmd}
+	fi
+}
+
+# initialize common command-line options
+nbopt=$#
+opt_help=
+opt_help_def="no"
+opt_dummy=
+opt_dummy_def="yes"
+opt_version=
+opt_version_def="no"
+opt_verbose=
+opt_verbose_def="no"
+
+# a first loop over command line arguments to detect verbose mode
+while :
+do
+	# break when all arguments have been read
+	case $# in
+		0)
+			break
+			;;
+	esac
+
+	# get and try to interpret the next argument
+	_option=$1
+	shift
+
+	# make all options have two hyphens
+	_orig_option=${_option}
+	case ${_option} in
+		--*)
+			;;
+		-*)
+			_option=-${_option}
+				;;
+		esac
+
+	# now process options and their argument
+	case ${_option} in
+		--noverb | --noverbo | --noverbos | --noverbose)
+			opt_verbose="no"
+			;;
+		--verb | --verbo | --verbos | --verbose)
+			opt_verbose="yes"
+				;;
+	esac
+done
+
+[ "${opt_verbose}" = "yes" ] && msg "setting opt_verbose to 'yes'"
+
+# script_opt_verb has scanned all command-line arguments
+# in order to detect the opt_verbose;
+# reset arguments so that they can be scanned again in main script 
+set -- ${my_parms}
+
+# interpreting command-line arguments
+print_program="nautilus-actions-print"
+opt_print=
+opt_print_def="$(which ${print_program} 2>/dev/null)"
+
+opt_dir=
+[ $(id -u) -eq 0 ] && opt_dir_def="/usr" || opt_dir_def="${HOME}/.local"
+opt_dir_def="${opt_dir_def}/share/file-manager/actions"
+
+# default is to not force rewriting of already existing items
+# instead they are renumbered
+opt_force=
+opt_force_def="no"
+
+# default is to not delete the migrated item
+opt_delete=
+opt_delete_def="no"
+
+# path of the branch which contains the configurations
+na_configurations="/apps/nautilus-actions/configurations"
+
+# loop over command line arguments
+pos=0
+while :
+do
+	# break when all arguments have been read
+	case $# in
+		0)
+			break
+			;;
+	esac
+
+	# get and try to interpret the next argument
+	option=$1
+	shift
+
+	# make all options have two hyphens
+	orig_option=${option}
+	case ${option} in
+		--*)
+			;;
+		-*)
+			option=-${option}
+			;;
+	esac
+
+	# split and extract argument for options that take one
+	case ${option} in
+		--*=*)
+			optarg=$(echo ${option} | sed -e 's/^[^=]*=//')
+			option=$(echo ${option} | sed 's/=.*//')
+			;;
+		# these options take a mandatory argument
+		# since, we didn't find it in 'option', so it should be
+		# next word in the command line
+		--di | --dir | \
+		--p | --pr | --pri | --prin | --print)
+			optarg=$1
+			shift
+			;;
+	esac
+
+	# now process options and their argument
+	case ${option} in
+		--de | --del | --dele | --delet | --delete)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_delete to 'yes'"
+			opt_delete="yes"
+			;;
+		--di | --dir)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_dir to '${optarg}'"
+			opt_dir="${optarg}"
+			;;
+		--du | --dum | --dumm | --dummy)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_dummy to 'yes'"
+			opt_dummy="yes"
+			;;
+		--f | --fo | --for | --forc | --force)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_force to 'yes'"
+			opt_force="yes"
+			;;
+		--h | --he | --hel | --help)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_help to 'yes'"
+			opt_help="yes"
+			;;
+		--node | --nodel | --nodele | --nodelet | --nodelete)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_delete to 'no'"
+			opt_delete="no"
+			;;
+		--nodu | --nodum | --nodumm | --nodummy)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_dummy to 'no'"
+			opt_dummy="no"
+			;;
+		--nof | --nofo | --nofor | --noforc | --noforce)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_force to 'no'"
+			opt_force="no"
+			;;
+		--noh | --nohe | --nohel | --nohelp)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_help to 'no'"
+			opt_help="no"
+			;;
+		--noverb | --noverbo | --noverbos | --noverbose)
+			;;
+		--novers | --noversi | --noversio | --noversion)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_version to 'no'"
+			opt_version="no"
+			;;
+		--p | --pr | --pri | --prin | --print)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_print to '${optarg}'"
+			opt_print="${optarg}"
+			;;
+		--verb | --verbo | --verbos | --verbose)
+			;;
+		--vers | --versi | --versio | --version)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_version to 'yes'"
+			opt_version="yes"
+			;;
+		--*)
+			msgerr "unrecognized option: '${orig_option}'"
+			let errs+=1
+			;;
+		# positional parameters
+		*)
+			let pos+=1
+			#if [ ${pos} -eq 1 ]; then
+			#	[ "${opt_verbose}" = "yes" ] && msg "setting opt_output to '${option}'"
+			#	opt_output=${option}
+			#else
+				msgerr "unexpected positional parameter #${pos}: '${option}'"
+				let errs+=1
+			#fi
+			;;
+	esac
+done
+
+# set option defaults
+set | grep -e '^opt_' | cut -d= -f1 | while read _name; do
+	if [ "$(echo ${_name} | sed 's/.*\(_orig\)/\1/')" != "_orig" ]; then
+		if [ "$(echo ${_name} | sed 's/.*\(_def\)/\1/')" != "_def" ]; then
+			_value="$(eval echo "$"${_name})"
+			eval ${_name}_orig="$(eval echo "$"${_name})"
+			if [ ${nbopt} -eq 0 -a "${_name}" = "opt_help" ]; then
+				opt_help="yes"
+				_value="yes"
+			fi
+			if [ "${_value}" = "" ]; then
+				eval ${_name}="$(eval echo "$"${_name}_def)"
+			fi
+		fi
+	fi
+done
+
+if [ "${opt_help}" = "yes" ]; then
+	msg_help
+	echo ""
+	exit
+fi
+
+if [ "${opt_version}" = "yes" ]; then
+	msg_version
+	echo ""
+	exit
+fi
+
+if [ "${opt_print}" = "" ]; then
+	msgerr "${print_program}: not found"
+	let errs+=1
+elif [ ! -x ${opt_print} ]; then
+	msgerr "${print_program}: not executable"
+	let errs+=1
+fi
+
+if [ ${errs} -gt 0 ]; then
+	msg "${errs} error(s) have been detected"
+	msg "try '${my_cmd} --help' for usage"
+	exit
+fi
+
+# ---------------------------------------------------------------------
+# MAIN CODE
+
+# if we do not have gconftool-2, then exit
+which gconftool-2 1>/dev/null 2>&1 || { msg "gconftool-2: not available"; exit 1; }
+
+# create the destination directory if it does not yet exist
+command "mkdir -p ${opt_dir} || exit 1"
+
+let count=0
+
+# list objects in configurations/ subdir
+for dir in $(gconftool-2 --all-dirs ${na_configurations}); do
+	id=$(basename ${dir})
+	let count+=1
+	[ "${opt_verbose}" = "yes" ] && msg "item=${id}"
+	if [ -e ${opt_dir}/${id}.desktop -a "${opt_force}" = "no" ]; then
+		msgwarn "${opt_dir}/${id}.desktop already exists"
+		i=0
+		while [ -e ${opt_dir}/${id}-${i}.desktop ]; do
+			let i+=1
+		done
+		command "${opt_print} --id ${id} | grep -v ${print_program} > ${opt_dir}/${id}-${i}.desktop"
+	else
+		command "${opt_print} --id ${id} | grep -v ${print_program} > ${opt_dir}/${id}.desktop"
+	fi
+done
+
+# force sync
+killall gconfd-2
+
+# at the end, we delete the branch
+if [ "${opt_delete}" = "yes" -a ${count} -gt 0 ]; then
+	if [ $(id -u) -eq 0 ]; then
+		# rather a bad hack to find where mandatory items are stored by GConf
+		# nautilus-actions-delete directly removes our branch from the XML tree!
+		xml=$(find /etc -name gconf.xml.mandatory)/%gconf-tree.xml
+		path='/gconf/dir[@name="apps"]/dir[@name="nautilus-actions"]/dir[@name="configurations"]'
+		command "$(dirname ${opt_print})/nautilus-actions-delete --path '${path}' --xml ${xml} > ${xml}2"
+		command "mv ${xml}2 ${xml}"
+	else
+		# this does not work for mandatory items
+		command "gconftool-2 --recursive-unset ${na_configurations}"
+	fi
+fi
+
+msg "${count} migrated items"
+
+exit

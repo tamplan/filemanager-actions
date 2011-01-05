@@ -27,7 +27,9 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
+	nautilus-actions-delete										\
 	nautilus-actions-new										\
+	nautilus-actions-print										\
 	nautilus-actions-run										\
 	nautilus-actions-schemas									\
 	$(NULL)
@@ -40,6 +42,17 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
 	$(NULL)
 
+nautilus_actions_delete_SOURCES = \
+	nautilus-actions-delete.c									\
+	console-utils.c												\
+	console-utils.h												\
+	$(NULL)
+
+nautilus_actions_delete_LDADD = \
+	$(top_builddir)/src/core/libna-core.la						\
+	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NULL)
+
 nautilus_actions_new_SOURCES = \
 	nautilus-actions-new.c										\
 	console-utils.c												\
@@ -47,6 +60,17 @@ nautilus_actions_new_SOURCES = \
 	$(NULL)
 
 nautilus_actions_new_LDADD = \
+	$(top_builddir)/src/core/libna-core.la						\
+	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NULL)
+
+nautilus_actions_print_SOURCES = \
+	nautilus-actions-print.c									\
+	console-utils.c												\
+	console-utils.h												\
+	$(NULL)
+
+nautilus_actions_print_LDADD = \
 	$(top_builddir)/src/core/libna-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
@@ -82,4 +106,9 @@ nautilus_actions_schemas_LDADD = \
 
 CLEANFILES = \
 	$(BUILT_SOURCES)											\
+	$(bin_SCRIPTS)												\
+	$(NULL)
+
+bin_SCRIPTS = \
+	nautilus-actions-gconf2desktop.sh							\
 	$(NULL)
