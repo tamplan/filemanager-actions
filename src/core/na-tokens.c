@@ -422,6 +422,7 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 
 		g_spawn_close_pid( child_pid );
 		g_free( wdir );
+		g_strfreev( argv );
 	}
 }
 
