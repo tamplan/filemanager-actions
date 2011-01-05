@@ -348,7 +348,7 @@ na_io_provider_get_providers_list( const NAPivot *pivot )
 }
 
 /*
- * @priority: the internal ids of IO providers id descending order of
+ * @priority: the internal ids of IO providers in descending order of
  * priority for writing new elements, as a string list
  *
  * build the static list of I/O providers, depending of setup of NAPivot
@@ -421,10 +421,9 @@ merge_available_io_providers( const NAPivot *pivot, GList *ordered )
 
 		provider = NULL;
 		if( id ){
-
 			provider = na_io_provider_find_provider_by_id( merged, id );
-			if( !provider ){
 
+			if( !provider ){
 				g_debug( "%s: no provider already allocated in ordered list for id=%s", thisfn, id );
 				provider = g_object_new( NA_IO_PROVIDER_TYPE, IO_PROVIDER_PROP_ID, id, NULL );
 				merged = g_list_append( merged, provider );
@@ -1173,12 +1172,16 @@ na_io_provider_has_write_api( const NAIOProvider *provider )
 }
 
 /*
- * na_io_provider_get_writable_provider:
+ * na_io_provider_are_writings_authorized:
+ * @provider: the #NAIOProvider provider.
  * @pivot: the #NAPivot instance.
  *
- * Returns: the first willing and able to write I/O provider, or NULL.
+ * Returns: %TRUE if the @provider will be able to write proposed items,
+ * %FALSE else.
  *
- * The returned provider should not be g_object_unref() by the caller.
+ * Unless some external condition change between this call and the actual
+ * writing, the caller can be sure that writings are really possible when
+ * this function returns %TRUE.
  */
 gboolean
 na_io_provider_are_writings_authorized( const NAIOProvider *provider, const NAPivot *pivot )
