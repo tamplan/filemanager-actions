@@ -1,0 +1,59 @@
+Deprecating GConf
+=================
+
+ Gnome is deprecating GConf in favour of GSettings. This is the short story.
+ We so have to migrate several pool of datas.
+ 
+ Starting with 3.1.0, Nautilus-Actions is provided with the needed migrations
+ tools, whether the migration may occur automatically (for users items and
+ preferences), or the system admin must run a script (for mandatory items).
+ 
+ Note that this does not break backward compatibility. The 3.1.x serie of
+ Nautilus-Actions may still be run on a "old" platform. The oldest supported
+ is Ubuntu 8 LTS.
+
+ 1. Items, menus and actions, stored in GConf backend
+ ----------------------------------------------------
+ Historically, actions, then menus, were stored in GConf. These are user items.
+
+ A system admin is free to define mandatory menus and actions, and to store
+ them in the Mandatory pool of GConf. So defined items are so available to
+ all users, though as read-only items.
+
+   1a. Migrating user items
+   ------------------------
+   The good news is:
+   user items are automatically migrated from GConf to .desktop files.
+
+   The migration happens when the user runs the Nautilus-Actions Configuration
+   Tool user interface, or when the Nautilus-Actions menu plugin is loaded
+   by the Nautilus file-manager, or when the user runs one of the command-line
+   tools nautilus-actions-new or nautilus-actions-run.
+
+   The nautilus-actions-print, nautilus-actions-delete and nautilus-actions-schemas
+   command-line tools have no effect on the migration process.
+
+   The new .desktop files are stored in HOME/.local/file-manager/actions.
+
+   When the migration of its items has occurred, the GConf I/O Provider is
+   disabled, both for reading and writing.
+
+   1b. Migrating mandatory items
+   -----------------------------
+   The bad news is:
+   the system admin has to manually run nautilus-actions-gconf2desktop.sh script
+   as root in order to migrate existing mandatory items to .desktop files.
+
+   The new .desktop files default to be stored in /usr/share/file-manager/actions.
+   
+   It is enough to run this script once, e.g. when installing for the first time
+   a recent enough version (>= 3.1.0) of Nautilus-Actions.
+   
+   Command-line example:
+   # nautilus-actions-gconf2desktop.sh -delete -nodummy
+
+ 2. User preferences stored in GConf
+ -----------------------------------
+ User preferences are automatically migrated from GConf to the target system.
+
+P. Wieser - Jan. 2011
