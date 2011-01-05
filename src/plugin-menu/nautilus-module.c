@@ -38,6 +38,8 @@
 
 #include <libnautilus-extension/nautilus-extension-types.h>
 
+#include <core/na-gconf-migration.h>
+
 #include "nautilus-actions.h"
 
 static void set_log_handler( void );
@@ -69,6 +71,12 @@ nautilus_module_initialize( GTypeModule *module )
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
 	g_type_module_set_name( module, PACKAGE_STRING );
+
+	/* pwi 2011-01-05
+	 * run GConf migration tools before doing anything else
+	 * above all before allocating a new NAPivot
+	 */
+	na_gconf_migration_run();
 
 	nautilus_actions_register_type( module );
 }

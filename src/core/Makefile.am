@@ -32,6 +32,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
+	-DBINDIR=\"$(bindir)\"								\
 	-DPKGDATADIR=\"$(pkgdatadir)\"						\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_CORE}\"				\
@@ -51,6 +52,8 @@ libna_core_la_SOURCES = \
 	na-factory-object.h									\
 	na-factory-provider.c								\
 	na-factory-provider.h								\
+	na-gconf-migration.c								\
+	na-gconf-migration.h								\
 	na-gconf-monitor.c									\
 	na-gconf-utils.c									\
 	na-gnome-vfs-uri.c									\
@@ -99,13 +102,6 @@ libna_core_la_SOURCES = \
 	na-tokens.c											\
 	na-tokens.h											\
 	$(NULL)
-
-if HAVE_GSETTINGS_AND_GCONF
-libna_core_la_SOURCES += \
-	na-gsettings-migrate.c								\
-	na-gsettings-migrate.h								\
-	$(NULL)
-endif
 
 libna_core_la_LIBADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\

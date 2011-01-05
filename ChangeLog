@@ -103,6 +103,17 @@
 
 2011-01-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-gconf-migration.c:
+	* src/core/na-gconf-migration.h (na_gconf_migration_run): New function.
+
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/nact/nact-main.c (main):
+	* src/plugin-menu/nautilus-module.c (nautilus_module_initialize):
+	* src/utils/nautilus-actions-new.c (main):
+	* src/utils/nautilus-actions-run.c (main):
+	Automatically run the migration tool at startup.
+
 	* src/utils/nautilus-actions-gconf2desktop.sh.in:
 	* src/utils/nautilus-actions-delete.c:
 	* src/utils/nautilus-actions-print.c:

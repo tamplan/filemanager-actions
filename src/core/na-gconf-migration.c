@@ -32,52 +32,38 @@
 #include <config.h>
 #endif
 
-#include <core/na-gconf-migration.h>
+#include "na-gconf-migration.h"
 
-#include "nact-application.h"
-
-static void set_log_handler( void );
-static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
-
-static GLogFunc st_default_log_func = NULL;
-
-int
-main( int argc, char *argv[] )
+/**
+ * na_gconf_migration_run:
+ *
+ * Migrate users actions and menus from GConf to .desktop files.
+ * Migrate users preferences to NASettings.
+ *
+ * Since: 3.1.0
+ */
+void
+na_gconf_migration_run( void )
 {
-	NactApplication *app;
-	int ret;
+	static const gchar *thisfn = "na_gconf_migration_run";
+	gchar *command, *out, *err;
+	GError *error;
 
-	set_log_handler();
+	command = g_strdup_printf( "%s/nautilus-actions-gconf2desktop.sh -print %s/nautilus-actions-print -delete -nodummy", BINDIR, BINDIR );
+	g_debug( "%s: command=%s", thisfn, command );
 
-	/* pwi 2011-01-05
-	 * run GConf migration tools before doing anything else
-	 * above all before allocating a new NAPivot
-	 */
-	na_gconf_migration_run();
+	error = NULL;
+	if( !g_spawn_command_line_sync( command, &out, &err, NULL, &error )){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+		error = NULL;
 
-	app = nact_application_new_with_args( argc, argv );
-
-	ret = base_application_run( BASE_APPLICATION( app ));
-
-	g_object_unref( app );
-
-	return( ret );
-}
-
-static void
-set_log_handler( void )
-{
-	st_default_log_func = g_log_set_default_handler(( GLogFunc ) log_handler, NULL );
-}
-
-static void
-log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data )
-{
-#ifdef NA_MAINTAINER_MODE
-	( *st_default_log_func )( log_domain, log_level, message, user_data );
-#else
-	if( g_getenv( NAUTILUS_ACTIONS_DEBUG )){
-		( *st_default_log_func )( log_domain, log_level, message, user_data );
+	} else {
+		g_debug( "%s: out=%s", thisfn, out );
+		g_debug( "%s: err=%s", thisfn, err );
+		g_free( out );
+		g_free( err );
 	}
-#endif
+
+	g_free( command );
 }

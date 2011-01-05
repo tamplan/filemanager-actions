@@ -28,15 +28,15 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __CORE_NA_GSETTINGS_MIGRATE_H__
-#define __CORE_NA_GSETTINGS_MIGRATE_H__
+#ifndef __NAUTILUS_ACTIONS_CORE_NA_GCONF_MIGRATION_H__
+#define __NAUTILUS_ACTIONS_CORE_NA_GCONF_MIGRATION_H__
 
-#include "na-pivot.h"
+#include <glib.h>
 
 G_BEGIN_DECLS
 
-void na_gsettings_migrate( const NAPivot *pivot );
+void  na_gconf_migration_run( void );
 
 G_END_DECLS
 
-#endif /* __CORE_NA_GSETTINGS_MIGRATE_H__ */
+#endif /* __NAUTILUS_ACTIONS_CORE_NA_GCONF_MIGRATION_H__ */

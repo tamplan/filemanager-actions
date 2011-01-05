@@ -43,6 +43,7 @@
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
+#include <core/na-gconf-migration.h>
 #include <core/na-io-provider.h>
 #include <core/na-exporter.h>
 #include <core/na-updater.h>
@@ -166,6 +167,12 @@ main( int argc, char** argv )
 	g_type_init();
 	setlocale( LC_ALL, "" );
 	console_init_log_handler();
+
+	/* pwi 2011-01-05
+	 * run GConf migration tools before doing anything else
+	 * above all before allocating a new NAPivot
+	 */
+	na_gconf_migration_run();
 
 	context = init_options();
 
