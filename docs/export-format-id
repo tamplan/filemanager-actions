@@ -10,7 +10,7 @@ format id      module              holder            allocated
 Ask            reserved id         Nautilus-Actions  2010-02-15
 Desktop1       NA Desktop module   Nautilus-Actions  2010-07-28
 GConfSchemaV1  NA XML module       Nautilus-Actions  2010-02-15
-GConfSchemaV1  NA XML module       Nautilus-Actions  2010-02-15
+GConfSchemaV2  NA XML module       Nautilus-Actions  2010-02-15
 GConfEntry     NA XML module       Nautilus-Actions  2010-02-15
 
 Last updated: 2010, July 28th.
