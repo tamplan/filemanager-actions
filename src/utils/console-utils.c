@@ -51,7 +51,7 @@ static GLogFunc st_default_log_func = NULL;
 gchar *
 console_cmdline_get_description( void ){
 	return( g_strdup_printf( "%s.\n%s", PACKAGE_STRING,
-			_( "Bug reports are welcomed at http://bugzilla.gnome.org,"
+			_( "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions,"
 				" or you may prefer to mail to <maintainer@nautilus-actions.org>.\n" )));
 }
 

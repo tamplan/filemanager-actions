@@ -103,6 +103,9 @@
 
 2011-01-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/console-utils.c (console_cmdline_get_description):
+	Returns the full address of the page to enter a new bug in Bugzilla.
+
 	* src/core/na-gconf-migration.c:
 	* src/core/na-gconf-migration.h (na_gconf_migration_run): New function.
 
