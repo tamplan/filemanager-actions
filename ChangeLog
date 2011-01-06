@@ -1,5 +1,8 @@
 2011-01-06 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c (iabout_get_toplevel):
+	Let the About dialog get the toplevel window.
+
 	* src/nact/nact-preferences.ui:
 	* src/nact/nautilus-actions-config-tool.ui:
 	Apply patch provided by Christian Kirbach. Fix #638548.

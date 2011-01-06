@@ -192,7 +192,8 @@ static void     ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *in
 static void     update_ui_after_provider_change( NactMainWindow *window );
 static void     reload( NactMainWindow *window );
 
-static gchar   *iabout_get_application_name( NAIAbout *instance );
+static gchar     *iabout_get_application_name( NAIAbout *instance );
+static GtkWindow *iabout_get_toplevel( NAIAbout *instance );
 
 GType
 nact_main_window_get_type( void )
@@ -601,6 +602,7 @@ iabout_iface_init( NAIAboutInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->get_application_name = iabout_get_application_name;
+	iface->get_toplevel = iabout_get_toplevel;
 }
 
 static void
@@ -1632,4 +1634,13 @@ iabout_get_application_name( NAIAbout *instance )
 
 	application = base_window_get_application( BASE_WINDOW( instance ));
 	return( base_application_get_application_name( application ));
+}
+
+static GtkWindow *
+iabout_get_toplevel( NAIAbout *instance )
+{
+	g_return_val_if_fail( NA_IS_IABOUT( instance ), NULL );
+	g_return_val_if_fail( BASE_IS_WINDOW( instance ), NULL );
+
+	return( base_window_get_toplevel( BASE_WINDOW( instance )));
 }
