@@ -101,6 +101,14 @@
 	* src/nact/nautilus-actions-config-tool.ui:
 	Apply patch provided by Christian Kirbach. Fix #638548.
 
+	Use the same script to migrate items and preferences.
+
+	* README-GCONF: Document migrated and renamed preferences.
+
+	* src/utils/nautilus-actions-gconf2desktop.sh.in:
+	Rewrite migrated preferences as keyed files.
+	At last, remove the whole Nautilus-Actions tree from GConf.
+
 2011-01-05 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/utils/console-utils.c (console_cmdline_get_description):

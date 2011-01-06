@@ -54,6 +54,57 @@ Deprecating GConf
 
  2. User preferences stored in GConf
  -----------------------------------
- User preferences are automatically migrated from GConf to the target system.
+ Mandatory and user preferences are automatically migrated from GConf to the
+ target system.
+ 
+ They are renamed and reorganized:
+
+ GConf                                      Group      Key
+ -----------------------------------------  ------     --------------------------------------
+ add-capability-dialog = [720,263,384,246]  [nact]     capability-add-capability-dialog-size
+ add-scheme-dialog = [720,263,352,271]      [nact]     scheme-add-scheme-dialog-size
+ assistant-esc-confirm = true               [nact]     assistant-esc-confirm
+ assistant-esc-quit = true                  [nact]     assistant-esc-quit
+ auto-save-on = false                       [nact]     main-save-auto
+ auto-save-period = 5                       [nact]     main-save-period
+ export-assistant = [377,33,699,675]        [nact]     assistant-dialog-size
+ export-folder-uri = file:///home/pierre..  [nact]     export-last-folder-uri
+ export-format = Ask                        [nact]     export-preferred-format
+ icommand-command-chooser                   [nact]     command-command-chooser-dialog-size
+ icommand-folder-uri                        [nact]     command-command-last-folder-uri
+ icommand-legend-dialog = [673,94,474,480]  [nact]     command-legend-dialog-size
+ icommand-working-dir-dialog                [nact]     command-working-dir-chooser-dialog-size
+ icommand-working-dir-uri = file:///home..  [nact]     command-working-dir-chooser-last-folder-uri
+ icons-chooser = [425,124,839,539]          [nact]     item-icon-chooser-dialog-size
+ icons-path = file:///usr/share/icons/hi..  [nact]     item-icon-browse-last-path
+ ienvironment-show-if-running-dialog = [..  [nact]     environment-show-if-running-dialog-size
+ ienvironment-show-if-running-uri = file..  [nact]     environment-show-if-running-last-folder-uri
+ ienvironment-try-exec-dialog = [327,70,..  [nact]     environment-try-exec-dialog-size
+ ienvironment-try-exec-uri = file:///bin    [nact]     environment-show-if-running-last-folder-uri
+ ifolders-chooser = [418,86,632,573]        [nact]     folder-chooser-dialog-size
+ ifolders-path = /home/pierre/data/Pictures [nact]     folder-last-path
+ import-ask-user                            [nact]     import-ask-user-dialog-size
+ import-ask-user-last-mode                  [nact]     import-ask-user-last-mode
+ import-assistant                           [nact]     import-assistant-dialog-size
+ import-folder-uri                          [nact]     import-last-folder-uri
+ import-keep-choice                         [nact]     import-mode-keep-last-choice
+ import-mode = NoImport                     [nact]     import-preferred-mode
+ io-providers-order = [..]                  [runtime]  io-providers-order
+ iprefs-add-about-item = true               [runtime]  items-add-about-item
+ iprefs-alphabetical-order = ManualOrder    [runtime]  items-list-order
+ iprefs-create-root-menu = false            [runtime]  items-create-root-menu
+ iprefs-level-zero = [my-first-na-menu,a1-mandatory2-action3,a-gconf-action]
+                                            [runtime]  items-level-zero-order
+ iprefs-relabel-actions = false             [nact]     relabel-when-duplicate-action
+ iprefs-relabel-menus = false               [nact]     relabel-when-duplicate-menu
+ iprefs-relabel-profiles = false            [nact]     relabel-when-duplicate-profile
+ main-edit-toolbar = true                   [nact]     main-toolbar-edit-display
+ main-file-toolbar = true                   [nact]     main-toolbar-file-display
+ main-help-toolbar = true                   [nact]     main-toolbar-help-display
+ main-paned = 211                           [nact]     main-pane-width
+ main-window = [319,95,901,533]             [nact]     main-window-size
+ preferences-editor = [548,218,497,392]     [nact]     preferences-dialog-size
+ schemes = [dav|WebDAV files,file|Local files,ftp|FTP files,sftp|SSH files,smb|Windows files]
+                                            [nact]     scheme-default-list
 
 P. Wieser - Jan. 2011
