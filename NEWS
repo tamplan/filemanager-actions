@@ -1,3 +1,32 @@
+Version 3.0.6
+=============
+
+	Release date 2011-01-07
+
+	General modifications:
+
+		- Use GTK_CHECK_VERSION() macro when appropriate.
+		- Better specify that --enable-html-manuals (resp. pdf) are for user's
+		  manuals.
+		- Add ChangeLog-2010 to the distribution.
+
+	Bug fixes:
+
+		- Re-Fix #638278 - Properly quotes filenames
+		  (reported by Johan Spee).
+		- Only quote parts of filenames which are to be submitted to a shell,
+		  not those who are to be displayed.
+		- Fix #638548 - Spelling and syntax mistakes in UI strings
+		  (reported by Christian Kirbach).
+		- The About dialog is now centered relatively to the main window.
+		- The 'working directory' parameter is now honored when running an
+		  action.
+
+	New and updated translations:
+
+		- sl (Matej Urbančič, Andrej Žnidaršič)
+		- sv (Daniel Nylander)
+
 Version 3.0.5
 =============
 
