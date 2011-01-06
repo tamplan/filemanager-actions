@@ -1539,7 +1539,7 @@ Folder filters may be negated to specify for which folders your item must not ap
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="receives_default">True</property>
-                                                    <property name="tooltip_text" translatable="yes">Click to browse the filesystem in order to selec a new folder filter.</property>
+                                                    <property name="tooltip_text" translatable="yes">Click to browse the filesystem in order to select a new folder filter.</property>
                                                     <property name="image">FolderBrowseImage</property>
                                                     <property name="use_underline">True</property>
                                                   </object>
@@ -2652,7 +2652,7 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
                     <child type="tab">
                       <object class="GtkLabel" id="labelA00">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you edit some miscellaneous properties, and access to some non-modifiable informations.
+                        <property name="tooltip_text" translatable="yes">This tab lets you edit some miscellaneous properties, and access to some non-modifiable information.
 </property>
                         <property name="label" translatable="yes">P_roperties</property>
                         <property name="use_underline">True</property>
@@ -3008,7 +3008,7 @@ The existing item will not be modified.</property>
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkRadioButton" id="RenumberButton">
-                        <property name="label" translatable="yes">A_llocate a new identifiant for the imported item</property>
+                        <property name="label" translatable="yes">A_llocate a new identifier for the imported item</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
@@ -3072,7 +3072,7 @@ The existing item will not be modified.</property>
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="xpad">16</property>
-                            <property name="label" translatable="yes">The item found in the selected file will silently override the current one which has the same identifiant.
+                            <property name="label" translatable="yes">The item found in the selected file will silently override the current one which has the same identifier.
 Be warned: this mode may be dangerous. You will not be prompted another time.</property>
                             <property name="wrap">True</property>
                           </object>

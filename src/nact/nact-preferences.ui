@@ -222,7 +222,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">When a menu is copied/pasted, or duplicated, the new menu will be relabeled as 'Copy of ...'.</property>
+                                    <property name="tooltip_text" translatable="yes">When a menu is copied/pasted, or duplicated, the new menu will be relabelled as 'Copy of ...'.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -236,7 +236,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">When an action is copied/pasted, or duplicated, the new action will be relabeled as 'Copy of ...'.</property>
+                                    <property name="tooltip_text" translatable="yes">When an action is copied/pasted, or duplicated, the new action will be relabelled as 'Copy of ...'.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -250,7 +250,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">When a profile is copied/pasted, or duplicated, the new profile will be relabeled as 'Copy of ...'.</property>
+                                    <property name="tooltip_text" translatable="yes">When a profile is copied/pasted, or duplicated, the new profile will be relabelled as 'Copy of ...'.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -315,7 +315,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
-                                <property name="tooltip_text" translatable="yes">This option is only relevant when the 'Escape' key lets the user quit the assistant. When checked, a confirmation will be asked to the user in order to help prevent erroneous hits.</property>
+                                <property name="tooltip_text" translatable="yes">This option is only relevant when the 'Escape' key lets the user quit the assistant. When checked, the user will be prompted for a confirmation in order to help prevent erroneous hits of the Esc key.</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
@@ -444,7 +444,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
             <child type="tab">
               <object class="GtkLabel" id="label40">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">This tab acts on some user preferences relatively to the configuration user interface.</property>
+                <property name="tooltip_text" translatable="yes">This tab allows the user to choose custom preferences for the Nautilus-Actions Configuration Tool user interface.</property>
                 <property name="label" translatable="yes">_UI Preferences</property>
                 <property name="use_underline">True</property>
               </object>
@@ -525,7 +525,7 @@ The existing action will not be modified.</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="tooltip_text" translatable="yes">The action found in the selected file will silently override the current action which has the same identifiant.
+                                    <property name="tooltip_text" translatable="yes">The action found in the selected file will silently override the current action which has the same identifier.
 Be warned: this mode may be dangerous. You will not be prompted another time.</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
@@ -581,7 +581,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child type="tab">
               <object class="GtkLabel" id="label48">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">This tab lets you decide of some default behaviors on import operations.</property>
+                <property name="tooltip_text" translatable="yes">This tab lets you decide on the default behavior of import operations.</property>
                 <property name="label" translatable="yes">_Import</property>
                 <property name="use_underline">True</property>
               </object>
@@ -643,7 +643,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child type="tab">
               <object class="GtkLabel" id="label51">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">This tab lets you decide of some default behaviors on export operations.</property>
+                <property name="tooltip_text" translatable="yes">This tab lets you decide on the default behavior of export operations.</property>
                 <property name="label" translatable="yes">_Export</property>
                 <property name="use_underline">True</property>
               </object>
