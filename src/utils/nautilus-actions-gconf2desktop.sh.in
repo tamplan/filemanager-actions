@@ -335,7 +335,7 @@ set | grep -e '^opt_' | cut -d= -f1 | while read _name; do
 	fi
 done
 
-if [ "${opt_help}" = "yes" ]; then
+if [ "${opt_help}" = "yes" -o ${nbopt} -eq 0 ]; then
 	msg_help
 	echo ""
 	exit
