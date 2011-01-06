@@ -5,7 +5,10 @@ autogen_target=${autogen_target:-normal}
 # a nautilus-actions-x.y may remain after an aborted make distcheck
 # such a directory breaks gnome-autogen.sh generation
 # so clean it here
-find . -maxdepth 1 -type d -name 'nautilus-actions-*' | xargs rm -fr
+for d in $(find . -maxdepth 1 -type d -name 'nautilus-actions-*'); do
+	chmod -R u+w $d
+	rm -fr $d
+done
 
 [ "${autogen_target}" = "normal" ] &&
 	exec ./autogen.sh \
