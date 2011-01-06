@@ -77,6 +77,7 @@ dist_pkgdoc_DATA = \
 	ChangeLog							\
 	ChangeLog-2008						\
 	ChangeLog-2009						\
+	ChangeLog-2010						\
 	COPYING								\
 	COPYING-DOCS						\
 	INSTALL								\
