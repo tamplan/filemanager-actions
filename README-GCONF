@@ -92,7 +92,8 @@ Deprecating GConf
  import-folder-uri                          [nact]     import-last-folder-uri
  import-keep-choice                         [nact]     import-mode-keep-last-choice
  import-mode = NoImport                     [nact]     import-preferred-mode
- io-providers-order = [..]                  [runtime]  io-providers-order
+ io-providers-order = [..]                  [runtime]  io-providers-read-order
+ io-providers-order = [..]                  [nact]     io-providers-write-order
  iprefs-add-about-item = true               [runtime]  items-add-about-item
  iprefs-alphabetical-order = ManualOrder    [runtime]  items-list-order-mode
  iprefs-create-root-menu = false            [runtime]  items-create-root-menu
@@ -135,7 +136,7 @@ Deprecating GConf
  GConf                                      Group      Key
  -----------------------------------------  ------     --------------------------------------
  /apps/nautilus-actions/mandatory/all/locked
-                                            [runtime]  io-providers-all-locked
+                                            [nact]     io-providers-all-locked
  /apps/nautilus-actions/mandatory/na-desktop/locked
                                             [io-provider na-desktop] locked
  /apps/nautilus-actions/mandatory/na-gconf/locked
