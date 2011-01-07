@@ -94,6 +94,9 @@
 
 2011-01-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-core-utils.c (na_core_utils_print_version):
+	Print the compilation version of GLib2 and Gtk+ when in debug mode.
+
 	* src/utils/Makefile.am:
 	nautilus-actions-schemas is renamed as na-print-schemas,
 	and is installed in PKGLIBEXECDIR.

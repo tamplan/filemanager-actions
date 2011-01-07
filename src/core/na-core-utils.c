@@ -1030,8 +1030,11 @@ na_core_utils_print_version( void )
 	g_print( "License (see COPYING).\n" );
 	g_print( "\n" );
 
-	g_debug( "Current system runs Glib %d.%d.%d, Gtk+ %d.%d.%d",
+	g_debug( "Program has been compiled against Glib %d.%d.%d, Gtk+ %d.%d.%d",
+			GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION,
+			GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION );
+
+	g_debug( "Current system runs Glib %d.%d.%d, Gtk+ %d.%d.%d\n",
 			glib_major_version, glib_minor_version, glib_micro_version,
 			gtk_major_version, gtk_minor_version, gtk_micro_version );
-	g_debug( "%s", "" );
 }
