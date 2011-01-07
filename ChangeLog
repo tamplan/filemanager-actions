@@ -92,6 +92,12 @@
 
 	* configure.ac: Post-release bump version number.
 
+2011-01-07 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/utils/Makefile.am:
+	nautilus-actions-schemas is renamed as na-print-schemas,
+	and is installed in PKGLIBEXECDIR.
+
 2011-01-06 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-window.c (iabout_get_toplevel):

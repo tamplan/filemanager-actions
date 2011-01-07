@@ -31,7 +31,10 @@ bin_PROGRAMS = \
 	nautilus-actions-new										\
 	nautilus-actions-print										\
 	nautilus-actions-run										\
-	nautilus-actions-schemas									\
+	$(NULL)
+
+pkglibexec_PROGRAMS = \
+	na-print-schemas											\
 	$(NULL)
 
 AM_CPPFLAGS += \
@@ -93,13 +96,13 @@ nautilus_actions_run_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
-nautilus_actions_schemas_SOURCES = \
-	nautilus-actions-schemas.c									\
+na_print_schemas_SOURCES = \
+	na-print-schemas.c											\
 	console-utils.c												\
 	console-utils.h												\
 	$(NULL)
 
-nautilus_actions_schemas_LDADD = \
+na_print_schemas_LDADD = \
 	$(top_builddir)/src/core/libna-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
