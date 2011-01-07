@@ -94,6 +94,11 @@
 
 2011-01-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-pivot.c (na_pivot_register): New function.
+
+	* src/plugin-menu/nautilus-actions.c:
+	Replace NAIPivotConsumer interface with na_settings() accessors.
+
 	* src/core/na-settings.c:
 	* src/core/na-settings.h: New files.
 

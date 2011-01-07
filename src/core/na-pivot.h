@@ -79,6 +79,7 @@
 #include <api/na-object-api.h>
 
 #include "na-ipivot-consumer.h"
+#include "na-settings.h"
 
 G_BEGIN_DECLS
 
@@ -111,7 +112,7 @@ GType    na_pivot_get_type( void );
 
 /* properties
  */
-#define NAPIVOT_PROP_TREE				"na-pivot-prop-tree"
+#define NAPIVOT_PROP_TREE						"na-pivot-prop-tree"
 
 /* Loadable population
  * NACT management user interface defaults to PIVOT_LOAD_ALL
@@ -123,6 +124,8 @@ enum {
 	PIVOT_LOAD_INVALID  = 1 << 1,
 	PIVOT_LOAD_ALL      = 0xff
 };
+
+#define NA_PIVOT_RUNTIME_ITEMS_LIST_CHANGED		"na-pivot-runtime-items-list-changed"
 
 NAPivot      *na_pivot_new( void );
 void          na_pivot_dump( const NAPivot *pivot );
@@ -144,8 +147,11 @@ void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gcha
 gboolean      na_pivot_write_level_zero( const NAPivot *pivot, GList *items, GSList **messages );
 
 /* NAIPivotConsumer interface management
+ * Monitoring and preferences management
  */
 void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
+NASettings   *na_pivot_get_settings     ( NAPivot *pivot );
+void          na_pivot_register         ( NAPivot *pivot, const gchar *key, NASettingsCallback callback, gpointer user_data );
 
 /* NAPivot properties and configuration
  */

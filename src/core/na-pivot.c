@@ -52,35 +52,39 @@ struct _NAPivotClassPrivate {
 /* private instance data
  */
 struct _NAPivotPrivate {
-	gboolean  dispose_has_run;
+	gboolean    dispose_has_run;
 
-	guint     loadable_set;
+	guint       loadable_set;
 
 	/* dynamically loaded modules (extension plugins)
 	 */
-	GList    *modules;
+	GList      *modules;
+
+	/* The NASettings object
+	 */
+	NASettings *settings;
 
 	/* list of instances to be notified of configuration updates
 	 * these are called 'consumers' of NAPivot
 	 */
-	GList    *consumers;
+	GList      *consumers;
 
 	/* configuration tree of actions and menus
 	 */
-	GList    *tree;
+	GList      *tree;
 
 	/* whether to automatically reload the whole configuration tree
 	 * when a modification is detected in one of the underlying I/O
 	 * storage subsystems
 	 * defaults to FALSE
 	 */
-	gboolean  automatic_reload;
-	GTimeVal  last_event;
-	guint     event_source_id;
+	gboolean    automatic_reload;
+	GTimeVal    last_event;
+	guint       event_source_id;
 
 	/* list of monitoring objects on runtime preferences
 	 */
-	GList    *monitors;
+	GList      *monitors;
 };
 
 /* NAPivot properties
@@ -375,6 +379,8 @@ na_pivot_new( void )
 	g_debug( "%s", thisfn );
 
 	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
+
+	pivot->private->settings = na_settings_new();
 
 	return( pivot );
 }
@@ -765,6 +771,23 @@ free_consumers( GList *consumers )
 {
 	/*g_list_foreach( consumers, ( GFunc ) g_object_unref, NULL );*/
 	g_list_free( consumers );
+}
+
+/*
+ * na_pivot_register:
+ * @settings: this #NAPivot instance.
+ * @key: the key to be monitored.
+ * @callback: the function to be called when the value of the key changes.
+ * @user_data: data to be passed to the @callback function.
+ *
+ * Registers a new consumer of the monitoring of the @key.
+ *
+ * Since: 3.1.0
+ */
+void
+na_pivot_register( NAPivot *pivot, const gchar *key, NASettingsCallback callback, gpointer user_data )
+{
+
 }
 
 /*
