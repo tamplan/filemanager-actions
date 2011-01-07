@@ -34,10 +34,13 @@
 
 #include "na-gconf-migration.h"
 
+#define MIGRATION_COMMAND				PKGLIBEXECDIR "/na-gconf2key.sh -delete -nodummy"
+
 /**
  * na_gconf_migration_run:
  *
  * Migrate users actions and menus from GConf to .desktop files.
+ * Disable GConf I/O provider both for reading and writing.
  * Migrate users preferences to NASettings.
  *
  * Since: 3.1.0
@@ -46,14 +49,13 @@ void
 na_gconf_migration_run( void )
 {
 	static const gchar *thisfn = "na_gconf_migration_run";
-	gchar *command, *out, *err;
+	gchar *out, *err;
 	GError *error;
 
-	command = g_strdup_printf( "%s/nautilus-actions-gconf2desktop.sh -print %s/nautilus-actions-print -delete -nodummy", BINDIR, BINDIR );
-	g_debug( "%s: command=%s", thisfn, command );
+	g_debug( "%s: running %s", thisfn, MIGRATION_COMMAND );
 
 	error = NULL;
-	if( !g_spawn_command_line_sync( command, &out, &err, NULL, &error )){
+	if( !g_spawn_command_line_sync( MIGRATION_COMMAND, &out, &err, NULL, &error )){
 		g_warning( "%s: %s", thisfn, error->message );
 		g_error_free( error );
 		error = NULL;
@@ -64,6 +66,4 @@ na_gconf_migration_run( void )
 		g_free( out );
 		g_free( err );
 	}
-
-	g_free( command );
 }

@@ -32,9 +32,10 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
-	-DBINDIR=\"$(bindir)\"								\
 	-DPKGDATADIR=\"$(pkgdatadir)\"						\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
+	-DPKGLIBEXECDIR=\""$(pkglibexecdir)"\"				\
+	-DSYSCONFDIR=\"$(sysconfdir)\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_CORE}\"				\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
@@ -97,6 +98,8 @@ libna_core_la_SOURCES = \
 	na-pivot.h											\
 	na-selected-info.c									\
 	na-selected-info.h									\
+	na-settings.c										\
+	na-settings.h										\
 	na-updater.c										\
 	na-updater.h										\
 	na-tokens.c											\

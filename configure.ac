@@ -66,10 +66,7 @@ AC_CONFIG_FILES([
 	src/test/Makefile
 	src/utils/Makefile
 	tools/Makefile
-	src/utils/nautilus-actions-gconf2desktop.sh
 	po/Makefile.in
-],[
-	chmod a+x src/utils/nautilus-actions-gconf2desktop.sh
 ])
 
 AC_CONFIG_MACRO_DIR([m4])

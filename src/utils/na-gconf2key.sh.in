@@ -1,4 +1,4 @@
-#!/bin/ksh 
+#!/bin/sh
 # Nautilus-Actions
 # A Nautilus extension which offers configurable context menu actions.
 #
@@ -106,7 +106,6 @@ function msg_help
    --[no]version             print script version, and exit [${opt_version_def}]
    --[no]dummy               dummy execution [${opt_dummy_def}]
    --[no]verbose             runs verbosely [${opt_verbose_def}]
-   --print=/filename         full pathname of the nautilus-actions-print program [${opt_print_def}]
    --dir=/dirname            directory where the migrated objects must be stored [${opt_dir_def}]
    --[no]force               force the rewriting of an already existing item [${opt_force_def}]
    --[no]delete              delete the item after the migration [${opt_delete_def}]"
@@ -184,14 +183,10 @@ done
 
 # script_opt_verb has scanned all command-line arguments
 # in order to detect the opt_verbose;
-# reset arguments so that they can be scanned again in main script 
+# reset arguments so that they can be scanned again in main script
 set -- ${my_parms}
 
 # interpreting command-line arguments
-print_program="nautilus-actions-print"
-opt_print=
-opt_print_def="$(which ${print_program} 2>/dev/null)"
-
 opt_dir=
 [ $(id -u) -eq 0 ] && opt_dir_def="/usr" || opt_dir_def="${HOME}/.local"
 opt_dir_def="${opt_dir_def}/share/file-manager/actions"
@@ -210,6 +205,7 @@ na_package="/apps/@PACKAGE@"
 na_configurations="${na_package}/configurations"
 na_preferences="${na_package}/preferences"
 na_providers="${na_package}/providers"
+na_print_program="@bindir@/nautilus-actions-print"
 
 # loop over command line arguments
 pos=0
@@ -245,8 +241,7 @@ do
 		# these options take a mandatory argument
 		# since, we didn't find it in 'option', so it should be
 		# next word in the command line
-		--di | --dir | \
-		--p | --pr | --pri | --prin | --print)
+		--di | --dir)
 			optarg=$1
 			shift
 			;;
@@ -296,10 +291,6 @@ do
 			[ "${opt_verbose}" = "yes" ] && msg "setting opt_version to 'no'"
 			opt_version="no"
 			;;
-		--p | --pr | --pri | --prin | --print)
-			[ "${opt_verbose}" = "yes" ] && msg "setting opt_print to '${optarg}'"
-			opt_print="${optarg}"
-			;;
 		--verb | --verbo | --verbos | --verbose)
 			;;
 		--vers | --versi | --versio | --version)
@@ -325,21 +316,24 @@ do
 done
 
 # set option defaults
-set | grep -e '^opt_' | cut -d= -f1 | while read _name; do
-	if [ "$(echo ${_name} | sed 's/.*\(_orig\)/\1/')" != "_orig" ]; then
-		if [ "$(echo ${_name} | sed 's/.*\(_def\)/\1/')" != "_def" ]; then
-			_value="$(eval echo "$"${_name})"
-			eval ${_name}_orig="$(eval echo "$"${_name})"
-			if [ ${nbopt} -eq 0 -a "${_name}" = "opt_help" ]; then
-				opt_help="yes"
-				_value="yes"
-			fi
-			if [ "${_value}" = "" ]; then
-				eval ${_name}="$(eval echo "$"${_name}_def)"
-			fi
-		fi
-	fi
-done
+# does not work with /bin/sh ??
+#set | grep -e '^opt_' | cut -d= -f1 | while read _name; do
+#	if [ "$(echo ${_name} | sed 's/.*\(_def\)/\1/')" != "_def" ]; then
+#		_value="$(eval echo "$"${_name})"
+#		if [ "${_value}" = "" ]; then
+#			eval ${_name}="$(eval echo "$"${_name}_def)"
+#		fi
+#	fi
+#done
+
+opt_help=${opt_help:-${opt_help_def}}
+opt_dummy=${opt_dummy:-${opt_dummy_def}}
+opt_verbose=${opt_verbose:-${opt_verbose_def}}
+opt_version=${opt_version:-${opt_version_def}}
+
+opt_dir=${opt_dir:-${opt_dir_def}}
+opt_delete=${opt_delete:-${opt_delete_def}}
+opt_force=${opt_force:-${opt_force_def}}
 
 if [ "${opt_help}" = "yes" -o ${nbopt} -eq 0 ]; then
 	msg_help
@@ -351,14 +345,6 @@ if [ "${opt_version}" = "yes" ]; then
 	msg_version
 	echo ""
 	exit
-fi
-
-if [ "${opt_print}" = "" ]; then
-	msgerr "${print_program}: not found"
-	let errs+=1
-elif [ ! -x ${opt_print} ]; then
-	msgerr "${print_program}: not executable"
-	let errs+=1
 fi
 
 if [ ${errs} -gt 0 ]; then
@@ -411,218 +397,180 @@ for dir in $(gconftool-2 --all-dirs ${na_configurations}); do
 		while [ -e ${opt_dir}/${id}-${i}.desktop ]; do
 			let i+=1
 		done
-		command "${opt_print} --id ${id} | grep -v ${print_program} > ${opt_dir}/${id}-${i}.desktop"
+		command "${na_print_program} --id ${id} | grep -v ${na_print_program} > ${opt_dir}/${id}-${i}.desktop"
 	else
-		command "${opt_print} --id ${id} | grep -v ${print_program} > ${opt_dir}/${id}.desktop"
+		command "${na_print_program} --id ${id} | grep -v ${na_print_program} > ${opt_dir}/${id}.desktop"
 	fi
 done
+
+msg "${count} migrated items"
 
 # we are using this same script to migrate preferences to .conf files
 # mandatory preferences go to SYSCONFDIR/nautilus-actions.conf
 # while user preferences go to HOME/.config/nautilus-actions.conf
 # Note also that the GConf I/O provider is disabled both for reading
 # and writing
-[ $(id -u) -eq 0 ] && destdir=@SYSCONFDIR@ || destdir=${HOME}/.config
+[ $(id -u) -eq 0 ] && destdir=@sysconfdir@ || destdir=${HOME}/.config
 command "mkdir -p ${destdir}"
 destconf=${destdir}/@PACKAGE@.conf
 rm -f ${my_tmproot}.nact
 rm -f ${my_tmproot}.runtime
 rm -f ${my_tmproot}.zero
-nbprefs=0
 have_level_zero=0
 
 gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 	case ${key} in
 		add-capability-dialog)
-			let nbprefs+=1
 			add_pref "nact" "capability-add-capability-dialog-size" list "${value}"
 			;;
 		add-scheme-dialog)
-			let nbprefs+=1
 			add_pref "nact" "scheme-add-scheme-dialog-size" list "${value}"
 			;;
 		assistant-esc-confirm)
-			let nbprefs+=1
 			add_pref "nact" "${key}" str "${value}"
 			;;
 		assistant-esc-quit)
-			let nbprefs+=1
 			add_pref "nact" "${key}" str "${value}"
 			;;
 		auto-save-on)
-			let nbprefs+=1
 			add_pref "nact" "main-save-auto" str "${value}"
 			;;
 		auto-save-period)
-			let nbprefs+=1
 			add_pref "nact" "main-save-period" str "${value}"
 			;;
 		export-assistant)
-			let nbprefs+=1
 			add_pref "nact" "assistant-dialog-size" list "${value}"
 			;;
 		export-folder-uri)
-			let nbprefs+=1
 			add_pref "nact" "export-last-folder-uri" str "${value}"
 			;;
 		export-format)
-			let nbprefs+=1
 			add_pref "nact" "export-preferred-format" str "${value}"
 			;;
 		icommand-command-chooser)
-			let nbprefs+=1
 			add_pref "nact" "command-command-chooser-dialog-size" list "${value}"
 			;;
 		icommand-folder-uri)
-			let nbprefs+=1
 			add_pref "nact" "command-command-chooser-last-folder-uri" list "${value}"
 			;;
 		icommand-legend-dialog)
-			let nbprefs+=1
 			add_pref "nact" "command-legend-dialog-size" list "${value}"
 			;;
 		icommand-working-dir-dialog)
-			let nbprefs+=1
 			add_pref "nact" "command-working-dir-chooser-dialog-size" list "${value}"
 			;;
 		icommand-working-dir-uri)
-			let nbprefs+=1
 			add_pref "nact" "command-working-dir-chooser-last-folder-uri" str "${value}"
 			;;
 		icons-chooser)
-			let nbprefs+=1
 			add_pref "nact" "item-icon-chooser-dialog-size" list "${value}"
 			;;
 		icons-path)
-			let nbprefs+=1
 			add_pref "nact" "item-icon-browse-last-path" str "${value}"
 			;;
 		ienvironment-show-if-running-dialog)
-			let nbprefs+=1
 			add_pref "nact" "environment-show-if-running-dialog-size" list "${value}"
 			;;
 		ienvironment-show-if-running-uri)
-			let nbprefs+=1
 			add_pref "nact" "environment-show-if-running-last-folder-uri" str "${value}"
 			;;
 		ienvironment-try-exec-dialog)
-			let nbprefs+=1
 			add_pref "nact" "environment-try-exec-dialog-size" list "${value}"
 			;;
 		ienvironment-try-exec-uri)
-			let nbprefs+=1
 			add_pref "nact" "environment-show-if-running-last-folder-uri" str "${value}"
 			;;
 		ifolders-chooser)
-			let nbprefs+=1
 			add_pref "nact" "folder-chooser-dialog-size" list "${value}"
 			;;
 		ifolders-path)
-			let nbprefs+=1
 			add_pref "nact" "folder-last-path" str "${value}"
 			;;
 		import-ask-user)
-			let nbprefs+=1
 			add_pref "nact" "import-ask-user-dialog-size" list "${value}"
 			;;
 		import-ask-user-last-mode)
-			let nbprefs+=1
 			add_pref "nact" "${key}" str "${value}"
 			;;
 		import-assistant)
-			let nbprefs+=1
 			add_pref "nact" "import-assistant-dialog-size" list "${value}"
 			;;
 		import-folder-uri)
-			let nbprefs+=1
 			add_pref "nact" "import-last-folder-uri" str "${value}"
 			;;
 		import-keep-choice)
-			let nbprefs+=1
 			add_pref "nact" "import-mode-keep-last-choice" list "${value}"
 			;;
 		import-mode)
-			let nbprefs+=1
 			add_pref "nact" "import-preferred-mode" str "${value}"
 			;;
 		io-providers-order)
-			let nbprefs+=1
 			add_pref "runtime" "io-providers-order" list "${value}"
 			;;
 		iprefs-add-about-item)
-			let nbprefs+=1
 			add_pref "runtime" "items-add-about-item" str "${value}"
 			;;
 		iprefs-alphabetical-order)
-			let nbprefs+=1
-			add_pref "runtime" "items-list-order" str "${value}"
+			add_pref "runtime" "items-list-order-mode" str "${value}"
 			;;
 		iprefs-create-root-menu)
-			let nbprefs+=1
 			add_pref "runtime" "items-create-root-menu" str "${value}"
 			;;
 		iprefs-level-zero)
 			# for now, keep the level zero order as a runtime preference
 			#let have_level_zero+=1
 			#create_first_level "${value}"
-			let nbprefs+=1
 			add_pref "runtime" "items-level-zero-order" list "${value}"
 			;;
 		iprefs-relabel-actions)
-			let nbprefs+=1
 			add_pref "nact" "relabel-when-duplicate-action" str "${value}"
 			;;
 		iprefs-relabel-menus)
-			let nbprefs+=1
 			add_pref "nact" "relabel-when-duplicate-menu" str "${value}"
 			;;
 		iprefs-relabel-profiles)
-			let nbprefs+=1
 			add_pref "nact" "relabel-when-duplicate-profile" str "${value}"
 			;;
 		main-edit-toolbar)
-			let nbprefs+=1
 			add_pref "nact" "main-toolbar-edit-display" str "${value}"
 			;;
 		main-file-toolbar)
-			let nbprefs+=1
 			add_pref "nact" "main-toolbar-file-display" str "${value}"
 			;;
 		main-help-toolbar)
-			let nbprefs+=1
 			add_pref "nact" "main-toolbar-help-display" str "${value}"
 			;;
 		main-tools-toolbar)
-			let nbprefs+=1
 			add_pref "nact" "main-toolbar-tools-display" str "${value}"
 			;;
 		main-paned)
-			let nbprefs+=1
 			add_pref "nact" "main-pane-width" str "${value}"
 			;;
 		main-window)
-			let nbprefs+=1
 			add_pref "nact" "main-window-size" list "${value}"
 			;;
 		preferences-editor)
-			let nbprefs+=1
 			add_pref "nact" "preferences-dialog-size" list "${value}"
 			;;
 		schemes)
-			let nbprefs+=1
 			add_pref "nact" "scheme-default-list" list "${value}"
 			;;
 	esac
 done
+
+nbprefs=$(cat ${my_tmproot}.nact ${my_tmproot}.runtime | wc -l)
+
 if [ ${nbprefs} -gt 0 ]; then
 	cat <<! >${destconf}
 [nact]
-$(cat ${my_tmproot}.nact)
+$(sort < ${my_tmproot}.nact)
 
 [runtime]
-$(cat ${my_tmproot}.runtime)
+$(sort < ${my_tmproot}.runtime)
 !
 fi
+
+msg "${nbprefs} migrated preferences"
 
 #if [ ${have_level_zero} -gt 0 ]; then
 #	cat <<! >${opt_dir}/level-zero.directory
@@ -641,14 +589,12 @@ if [ "${opt_delete}" = "yes" -a ${count} -gt 0 ]; then
 		# nautilus-actions-delete directly removes our branch from the XML tree!
 		xml=$(find /etc -name gconf.xml.mandatory)/%gconf-tree.xml
 		path='/gconf/dir[@name="apps"]/dir[@name="@PACKAGE@"]'
-		command "$(dirname ${opt_print})/nautilus-actions-delete --path '${path}' --xml ${xml} > ${xml}2"
+		command "@pkglibexecdir@/na-delete-xmltree --path '${path}' --xml ${xml} > ${xml}2"
 		command "mv ${xml}2 ${xml}"
 	else
 		# this does not work for mandatory items
 		command "gconftool-2 --recursive-unset ${na_package}"
 	fi
 fi
-
-msg "${count} migrated items"
 
 exit

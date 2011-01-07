@@ -94,6 +94,15 @@
 
 2011-01-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	* src/utils/Makefile.am:
+	* src/utils/na-gconf2key.sh.in:
+	nautilus-actions-gconf2desktop.sh.in is renamed as na-gconf2key.sh.in,
+	and is installed in PKGLIBEXECDIR.
+
+	* src/core/Makefile.am:
+	* src/core/na-gconf-migration.c: Updated accordingly.
+
 	* src/utils/Makefile.am:
 	nautilus-actions-delete is renamed as na-delete-xmltree,
 	and is installed in PKGLIBEXECDIR.

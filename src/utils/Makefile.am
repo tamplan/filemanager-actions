@@ -37,6 +37,10 @@ pkglibexec_PROGRAMS = \
 	na-print-schemas											\
 	$(NULL)
 
+pkglibexec_SCRIPTS = \
+	na-gconf2key.sh												\
+	$(NULL)
+
 AM_CPPFLAGS += \
 	-I $(top_srcdir)											\
 	-I $(top_srcdir)/src										\
@@ -107,11 +111,21 @@ na_print_schemas_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
+do_subst = sed \
+		-e 's,[@]PACKAGE[@],$(PACKAGE),g'						\
+		-e 's,[@]PACKAGE_NAME[@],$(PACKAGE_NAME),g'				\
+		-e 's,[@]PACKAGE_VERSION[@],$(PACKAGE_VERSION),g'		\
+		-e 's,[@]sysconfdir[@],$(sysconfdir),g'					\
+		-e 's,[@]bindir[@],$(bindir),g'							\
+		-e 's,[@]libexecdir[@],$(libexecdir),g'					\
+		-e 's,[@]pkglibexecdir[@],$(pkglibexecdir),g'			\
+		$(NULL)
+
+%.sh: %.sh.in
+	$(do_subst) < $< > $@
+	chmod a+x $@
+
 CLEANFILES = \
 	$(BUILT_SOURCES)											\
-	$(bin_SCRIPTS)												\
-	$(NULL)
-
-bin_SCRIPTS = \
-	nautilus-actions-gconf2desktop.sh							\
+	$(pkglibexec_SCRIPTS)										\
 	$(NULL)
