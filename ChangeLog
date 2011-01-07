@@ -94,6 +94,10 @@
 
 2011-01-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/Makefile.am:
+	nautilus-actions-delete is renamed as na-delete-xmltree,
+	and is installed in PKGLIBEXECDIR.
+
 	* src/core/na-core-utils.c (na_core_utils_print_version):
 	Print the compilation version of GLib2 and Gtk+ when in debug mode.
 

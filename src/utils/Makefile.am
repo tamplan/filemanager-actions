@@ -27,13 +27,13 @@
 #   ... and many others (see AUTHORS)
 
 bin_PROGRAMS = \
-	nautilus-actions-delete										\
 	nautilus-actions-new										\
 	nautilus-actions-print										\
 	nautilus-actions-run										\
 	$(NULL)
 
 pkglibexec_PROGRAMS = \
+	na-delete-xmltree											\
 	na-print-schemas											\
 	$(NULL)
 
@@ -43,17 +43,6 @@ AM_CPPFLAGS += \
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"					\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_UTILS}\"					\
 	$(NAUTILUS_ACTIONS_CFLAGS)									\
-	$(NULL)
-
-nautilus_actions_delete_SOURCES = \
-	nautilus-actions-delete.c									\
-	console-utils.c												\
-	console-utils.h												\
-	$(NULL)
-
-nautilus_actions_delete_LDADD = \
-	$(top_builddir)/src/core/libna-core.la						\
-	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
 nautilus_actions_new_SOURCES = \
@@ -92,6 +81,17 @@ nautilus_actions_run_SOURCES = \
 	$(NULL)
 
 nautilus_actions_run_LDADD = \
+	$(top_builddir)/src/core/libna-core.la						\
+	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NULL)
+
+na_delete_xmltree_SOURCES = \
+	na-delete-xmltree.c											\
+	console-utils.c												\
+	console-utils.h												\
+	$(NULL)
+
+na_delete_xmltree_LDADD = \
 	$(top_builddir)/src/core/libna-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
