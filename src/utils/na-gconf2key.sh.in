@@ -524,7 +524,8 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "import-preferred-mode" str "${value}"
 			;;
 		io-providers-order)
-			add_pref "runtime" "io-providers-order" list "${value}"
+			add_pref "runtime" "io-providers-read-order" list "${value}"
+			add_pref "nact" "io-providers-write-order" list "${value}"
 			;;
 		iprefs-add-about-item)
 			add_pref "runtime" "items-add-about-item" str "${value}"
@@ -586,7 +587,7 @@ if [ $(id -u) -eq 0 ]; then
 		if [ "${bdir}" != "na-gconf" ]; then
 			value=$(gconftool-2 --get ${dir}/locked 2>/dev/null)
 			if [ "${value}" != "" ]; then
-				[ "${bdir}" = "all" ] && group="runtime" || group="io-provider ${bdir}"
+				[ "${bdir}" = "all" ] && group="nact" || group="io-provider ${bdir}"
 				[ "${bdir}" = "all" ] && key="io-providers-all-locked" || key="locked"
 				add_pref_provider "${group}" "${key}" "${value}"
 			fi
