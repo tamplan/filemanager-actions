@@ -30,8 +30,9 @@ Deprecating GConf
    by the Nautilus file-manager, or when the user runs one of the command-line
    tools nautilus-actions-new or nautilus-actions-run.
 
-   The nautilus-actions-print, nautilus-actions-delete and nautilus-actions-schemas
-   command-line tools have no effect on the migration process.
+   The nautilus-actions-print command-line tool, along with na-delete-xmltree,
+   and na-print-schemas installed in PKGLIBEXECDIR, have no effect on the
+   migration process.
 
    The new .desktop files are stored in HOME/.local/file-manager/actions.
 
@@ -41,23 +42,25 @@ Deprecating GConf
    1b. Migrating mandatory items
    -----------------------------
    The bad news is:
-   the system admin has to manually run nautilus-actions-gconf2desktop.sh script
+   the system admin has to manually run PKGLIBEXECDIR/gconf2key.sh script
    as root in order to migrate existing mandatory items to .desktop files.
 
    The new .desktop files default to be stored in /usr/share/file-manager/actions.
-   
+
    It is enough to run this script once, e.g. when installing for the first time
    a recent enough version (>= 3.1.0) of Nautilus-Actions.
    
    Command-line example:
-   # nautilus-actions-gconf2desktop.sh -delete -nodummy
+   # /usr/libexec/nautilus-actions/na-gconf2key.sh -delete -nodummy
 
  2. User preferences stored in GConf
  -----------------------------------
- Mandatory and user preferences are automatically migrated from GConf to the
- target system.
+ Mandatory and user preferences follow the same migration rules that items:
+
+ - user preferences are automatically migrated,
+ - mandatory preferences have to be manually migrated by the system admin.
  
- They are renamed and reorganized:
+ Preferences are renamed and reorganized:
 
  GConf                                      Group      Key
  -----------------------------------------  ------     --------------------------------------
@@ -91,7 +94,7 @@ Deprecating GConf
  import-mode = NoImport                     [nact]     import-preferred-mode
  io-providers-order = [..]                  [runtime]  io-providers-order
  iprefs-add-about-item = true               [runtime]  items-add-about-item
- iprefs-alphabetical-order = ManualOrder    [runtime]  items-list-order
+ iprefs-alphabetical-order = ManualOrder    [runtime]  items-list-order-mode
  iprefs-create-root-menu = false            [runtime]  items-create-root-menu
  iprefs-level-zero = [my-first-na-menu,a1-mandatory2-action3,a-gconf-action]
                                             [runtime]  items-level-zero-order
@@ -106,5 +109,36 @@ Deprecating GConf
  preferences-editor = [548,218,497,392]     [nact]     preferences-dialog-size
  schemes = [dav|WebDAV files,file|Local files,ftp|FTP files,sftp|SSH files,smb|Windows files]
                                             [nact]     scheme-default-list
+
+ User preferences for I/O providers are stored as /apps/nautilus-actions/io-providers/<provider_id>
+ keys. They are moved to [io-provider <provider_id>] group.
+
+ GConf                                                 Key
+ -----------------------------------------             --------------------------------------
+ read-at-startup                                       readable
+ writable                                              writable
+
+ 3. Sysadmin reserved mandatory keys
+ -----------------------------------
+ These are
+   /apps/nautilus-actions/mandatory/
+     all/locked
+     na-desktop/locked
+     na-gconf/locked
+
+ These keys are just ignored if they are not in the mandatory GConf pool, i.e.
+ if they happends to be eventually editable by the user.
+
+ If these keys are actually in the system mandatory GConf pool, they are renamed
+ in the following way:
+
+ GConf                                      Group      Key
+ -----------------------------------------  ------     --------------------------------------
+ /apps/nautilus-actions/mandatory/all/locked
+                                            [runtime]  io-providers-all-locked
+ /apps/nautilus-actions/mandatory/na-desktop/locked
+                                            [io-provider na-desktop] locked
+ /apps/nautilus-actions/mandatory/na-gconf/locked
+                                            [io-provider na-gconf] locked
 
 P. Wieser - Jan. 2011
