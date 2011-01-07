@@ -364,6 +364,15 @@ function add_pref
 	if [ "${_type}" = "list" ]; then
 		_newvalue="$(echo "${_value}" | sed -e 's/^\[//' -e 's/]$//' -e 's/,/;/g');"
 	fi
+
+	# make sure that GConf is at the end of the list of I/O providers
+	if [ "${_key}" = "io-providers-order" ]; then
+		if [ "$(echo ${_newvalue} | grep na-gconf)" != "" ]; then
+			typeset _v="$(echo "${_newvalue}" | sed -e 's/na-gconf//');na-gconf;"
+			_newvalue="$(echo "${_v}" | sed -e 's/;\+/;/g')"
+		fi
+	fi
+
 	echo "${_key} = ${_newvalue}" >> ${my_tmproot}.${_group}
 }
 

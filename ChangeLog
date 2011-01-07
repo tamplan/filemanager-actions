@@ -94,6 +94,9 @@
 
 2011-01-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/na-gconf2key.sh.in:
+	Make sure that GConf is at the end of the list of I/O providers.
+
 	* configure.ac:
 	* src/utils/Makefile.am:
 	* src/utils/na-gconf2key.sh.in:
