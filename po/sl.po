@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2010-12-30 21:18+0000\n"
-"PO-Revision-Date: 2011-01-03 19:23+0100\n"
-"Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
+"POT-Creation-Date: 2011-01-06 22:50+0000\n"
+"PO-Revision-Date: 2011-01-07 19:17+0100\n"
+"Last-Translator: Andrej Žnidaršič <andrej.znidarsic@gmail.com>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -28,8 +28,8 @@ msgid "Ask for a confirmation when quitting by Esc"
 msgstr "Vprašaj za potrditev ob končanju z ubežno tipko"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:3
-msgid "Define a 'Nautilus Actions' root menu"
-msgstr "Določi korenski meni programa"
+msgid "Define a 'Nautilus-Actions actions' root menu"
+msgstr "Doda predmet 'O programu' v vsebinskem meniju Nautilusa"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:4
 msgid "Defines the periodicity in minutes of the automatic save."
@@ -60,7 +60,7 @@ msgid "If TRUE, a confirmation will be requested when quitting an assistant by h
 msgstr "Izbrana možnost omogoči zahtevo po potrditvi ob končanju pomočnika s pritiskom na ubežno tipko."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:11
-msgid "If TRUE, and if the user has defined a single root menu for its actions, then an 'About Nautilus Actions' will be displayed at end of the first submenu."
+msgid "If TRUE, and if the user has defined a single root menu for its actions, then an 'About Nautilus-Actions' will be displayed at end of the first submenu."
 msgstr "Izbrana možnost omogoči prikaz 'O programu' na koncu prvega podmenija pod pogojem, da je uporabnik določil en korenski meni za njegova dejanja."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:12
@@ -72,8 +72,8 @@ msgid "If TRUE, the pending modifications will be periodically and automatically
 msgstr "Izbrana možnost določi, da bodo pridržane spremembe občasno samodejno shranjene."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:14
-msgid "If TRUE, then a 'Nautilus Actions' item will be defined in the Nautilus context menu, and will a root menu of all available actions."
-msgstr "Izbrana možnost določi 'Dejanja Nautilusa' v vsebinskem meniju Nautilusa kot korenski meni za vsa razpoložljiva dejanja."
+msgid "If TRUE, then a 'Nautilus-Actions actions' item will be defined in the Nautilus context menu, and will be the root menu of all available actions."
+msgstr "Izbrana možnost določi, da bo predmet 'Dejanja Nautilusa' določen v vsebinskem meniju Nautilusa in bo korenski meni za vsa razpoložljiva dejanja."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:15
 msgid "Import mode"
@@ -216,8 +216,8 @@ msgid "The whole configuration must be understood here as the global set and ord
 msgstr "Celotno nastavitev je treba razumeti kot splošno nastavljene in urejene menije in dejanja. Ko je ta nastavitev zaklenjena uporabnik ne more spremeniti, ustvariti ali izbrisati kateregaikoli menija ali dejanja. Vsi predmeti so le za branje. Ker je vrstni red predmetov zaklenjen, ravni nič ni mogoče spremeniti, zato uporabnik ne more ponovno urediti predmetov."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:50
-msgid "This is the preferred export format, used as a default when exporting items, or dropping them outside of the application. Possible values are: - \"GConfSchemaV1\": this used to be the historical export format. The exported file may later be imported via Import assistant of the Nautilus Actions Configuration Tool, or via the gconftool-2 --import-schema-file command-line tool. - \"GConfSchemaV2\": a lighter while still compatible schema. The exported file may later be imported via Import assistant of the Nautilus Actions Configuration Tool, or via the gconftool-2 --import-schema-file command-line tool. - \"GConfEntry\": this should be the preferred format for newly exported actions. The exported file may later be imported via Import assistant of the Nautilus Actions Configuration Tool, or via the gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at runtime for the format he wishes use."
-msgstr "To je prednostni izvozni zapis, privzeto uporabljen pri izvozu predmetov ali spuščanju zunaj programa. Mogoče vrednosti so: - \"GConfSchemaV1\": to je starejši izvozni zapis. Izvoženo datoteko je kasneje mogoče uvoziti s pomočnikom uvoza nastavitvenega orodja dejanj Nautilusa ali preko orodja ukazne vrstice gconftool-2 --import-schema-file. -\"GConfSchemaV2\": lažja, a še združljiva shema. Izvoženo datoteko je kasneje mogoče uvoziti s pomočnikom uvoza nastavitvenega orodja dejanj Nautilusa ali preko orodja ukazne vrstice gconftool-2 --import-schema-file. - \"GConfEntry\": to bi moral biti prednostni zapis za novo izvožena dejanja. Izvoženo datoteko je kasneje mogoče uvoziti s pomočnikom uvoza nastavitvenega orodja dejanj Nautilusa ali preko orodja ukazne vrstice gconftool-2 --load. - \"Ask\" "
+msgid "This is the preferred export format, used as a default when exporting items, or dropping them outside of the application. Possible values are: - \"GConfSchemaV1\": this used to be the historical export format. The exported file may later be imported via Import assistant of the Nautilus-Actions Configuration Tool, or via the gconftool-2 --import-schema-file command-line tool. - \"GConfSchemaV2\": a lighter while still compatible schema. The exported file may later be imported via Import assistant of the Nautilus-Actions Configuration Tool, or via the gconftool-2 --import-schema-file command-line tool. - \"GConfEntry\": this should be the preferred format for newly exported actions. The exported file may later be imported via Import assistant of the Nautilus-Actions Configuration Tool, or via the gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at runtime for the format he wishes use."
+msgstr "To je prednostni izvozni zapis, privzeto uporabljen pri izvozu predmetov ali spuščanju zunaj programa. Mogoče vrednosti so: - \"GConfSchemaV1\": to je starejši izvozni zapis. Izvoženo datoteko je kasneje mogoče uvoziti s pomočnikom uvoza nastavitvenega orodja dejanj Nautilusa ali preko orodja ukazne vrstice gconftool-2 --import-schema-file. -\"GConfSchemaV2\": lažja, a še združljiva shema. Izvoženo datoteko je kasneje mogoče uvoziti s pomočnikom uvoza nastavitvenega orodja dejanj Nautilusa ali preko orodja ukazne vrstice gconftool-2 --import-schema-file. - \"GConfEntry\": to bi moral biti prednostni zapis za novo izvožena dejanja. Izvoženo datoteko je kasneje mogoče uvoziti s pomočnikom uvoza nastavitvenega orodja dejanj Nautilusa ali preko orodja ukazne vrstice gconftool-2 --load. - \"Ask\": uporabnik bo ob izvajanju vprašan kateri zapis datotek želi uporabiti."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:51
 msgid "This preference indicates the preferred sort mode. Possible values are : - \"AscendingOrder\": the actions are maintained in ascending alphabetical order (historical behavior). - \"DescendingOrder\": the actions are maintained in descending alphabetical order. - \"ManualOrder\": user is free to reorder them via Nautilus-Actions configuration tool."
@@ -320,35 +320,37 @@ msgid "NAIExporter %s doesn't implement 'to_file' interface."
 msgstr "NAIExporter %s ne podpira vmesnika 'to_file'."
 
 #: ../src/core/na-iabout.c:176
-msgid "Nautilus Actions Configuration Tool is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
+msgid "Nautilus-Actions Configuration Tool is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "Nastavitveno orodje dejanj Nautilusa je prosta programska oprema; lahko ga redistribuirate in/ali spreminjate pod pogoji GNU General Public Licence kot je objavljena s Free Software Foundation; ali različico 2 Licence ali (na vašo željo) katerakoli kasnejša različica."
 
 #: ../src/core/na-iabout.c:180
-msgid "Nautilus Actions Configuration Tool is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
+msgid "Nautilus-Actions Configuration Tool is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "Nastavitveno orodje dejanj Nautilusa je distribuirano v upanju da bo uporabno, toda BREZ KAKRŠNIHKOLI ZAGOTOVIL; tudi brez impliciranih zagotovila za PRODAJO ali PRIMERNOST ZA DOLOČEN NAMEN. Oglejte si GNU General Public Licence za več podrobnosti."
 
 #: ../src/core/na-iabout.c:184
-msgid "You should have received a copy of the GNU General Public License along with Nautilus Actions Configuration Tool ; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
+msgid "You should have received a copy of the GNU General Public License along with Nautilus-Actions Configuration Tool ; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr "Skupaj s programom bi morali prejeti tudi kopijo splošnega javnega potrdila; v primeru, da kopije niste prejeli, pišite na Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
-#: ../src/core/na-iabout.c:206
+#. i10n: "Nautilus actions" here is not a typo; this does not refer to the
+#. * Nautilus-Actions product, but to the actions which are to be added to Nautilus
+#: ../src/core/na-iabout.c:208
 msgid "A graphical interface to create and edit your Nautilus actions."
 msgstr "Grafični vmesnik za ustvarjanje in urejanje dejanj Nautilusa."
 
-#: ../src/core/na-iabout.c:212
+#: ../src/core/na-iabout.c:214
 msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
 msgstr "Andrej Žnidaršič <andrej.znidarsic@gmail.com>"
 
-#: ../src/core/na-iabout.c:253
+#: ../src/core/na-iabout.c:255
 #, c-format
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009, 2010, 2011 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
 "Avtorske pravice %s 2005, Fundacija GNOME\n"
 "Avtorske pravice %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
-"Avtorske pravice %s 2009, 2010 Pierre Wieser <pwieser@trychlos.org>"
+"Avtorske pravice %s 2009, 2010, 2011  Pierre Wieser <pwieser@trychlos.org>"
 
 #: ../src/core/na-icontext-factory.c:47
 msgid "List of patterns to be matched against the selected file(s)/folder(s)"
@@ -1194,32 +1196,32 @@ msgstr ""
 "Ta način podprtosti morda zahteva prisotnost dobro nastavljenega podsistema (kot je na primer sudo).\n"
 "Privzeto prazno: ukaz bo bil izveden kot trenutni uporabnik."
 
-#: ../src/core/na-selected-info.c:757
+#: ../src/core/na-selected-info.c:824
 #, c-format
 msgid "Error when querying informations for %s URI: %s"
 msgstr "Napaka med poizvedbo podatkov za URI %s: %s"
 
-#: ../src/core/na-tokens.c:254
+#: ../src/core/na-tokens.c:228
 msgid "file:///path/to/file1.mid"
 msgstr "file:///pot/do/datoteke1.mid"
 
-#: ../src/core/na-tokens.c:255
+#: ../src/core/na-tokens.c:229
 msgid "file:///path/to/file2.jpeg"
 msgstr "file:///pot/do/datoteke2.jpeg"
 
-#: ../src/core/na-tokens.c:256
+#: ../src/core/na-tokens.c:230
 msgid "audio/x-midi"
 msgstr "zvok/x-midi"
 
-#: ../src/core/na-tokens.c:257
+#: ../src/core/na-tokens.c:231
 msgid "image/jpeg"
 msgstr "slika/jpeg"
 
-#: ../src/core/na-tokens.c:259
+#: ../src/core/na-tokens.c:233
 msgid "test.example.net"
 msgstr "preizkusni.primer.net"
 
-#: ../src/core/na-tokens.c:260
+#: ../src/core/na-tokens.c:234
 msgid "user"
 msgstr "uporabnik"
 
@@ -1284,15 +1286,15 @@ msgstr "Izvozi kot _polno datoteko sheme GConf"
 msgid ""
 "This used to be the historical export format.\n"
 "The exported schema file may later be imported via :\n"
-"- Import assistant of the Nautilus Actions Configuration Tool,\n"
-"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
 "- or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
 "To je bil zgodovinski izvozni zapis.\n"
 "Izvoženo datoteko sheme je mogoče kasneje uvoziti preko: \n"
 "- Pomočnika uvoza orodja nastavitev dejanj Nautilusa,\n"
 "- dejanja povleci in spusti v orodje nastavitev dejanj Nautilusa\n"
-"- ali preko orodja ukazne vrstice gconftool-2 --load."
+"- ali preko orodja ukazne vrstice gconftool-2 --import-schema-file."
 
 #: ../src/io-xml/naxml-formats.c:59
 msgid "Export as a _light GConf schema (v2) file"
@@ -1302,19 +1304,19 @@ msgstr "Izvozi kot _lahko datoteko sheme GConf (r2)"
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "This is the lightest schema still compatible with GConf command-line tools,\n"
-"while keeping backward compatibility with older Nautilus Actions Configuration Tool versions.\n"
+"while keeping backward compatibility with older Nautilus-Actions Configuration Tool versions.\n"
 "The exported schema file may later be imported via :\n"
-"- Import assistant of the Nautilus Actions Configuration Tool,\n"
-"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
 "- or via the gconftool-2 --import-schema-file command-line tool."
 msgstr ""
-"Ta vrsta zapisa je bila uvedena v različici 1.11.\n"
+"Ta vrsta datotek je bila uvedena v različici 1.11.\n"
 "To je najlažja shema še vedno združljiva z orodji ukazne vrstice GConf,\n"
 "pri čemer je združljiva za nazaj s starejšimi različicami orodja nastavitve Dejanj Nautilusa.\n"
-"To je bil zgodovinski izvozni zapis. Izvoženo datoteko je mogoče kasneje uvoziti preko: \n"
+"To je bil zgodovinska vrsta datotek za izvoz. Izvoženo datoteko je mogoče kasneje uvoziti preko: \n"
 "- Pomočnika uvoza orodja nastavitev dejanj Nautilusa,\n"
 "- dejanja povleci in spusti v orodje nastavitev dejanj Nautilusa\n"
-"- ali preko orodja ukazne vrstice gconftool-2 --load."
+"- ali preko orodja ukazne vrstice gconftool-2 --import-schema-file."
 
 #: ../src/io-xml/naxml-formats.c:73
 msgid "Export as a GConf _dump file"
@@ -1323,18 +1325,18 @@ msgstr "Izvozi kot datoteko _izpisa GConf"
 #: ../src/io-xml/naxml-formats.c:74
 msgid ""
 "This format has been introduced in v 1.11 serie, and should be the preferred format for newly exported items.\n"
-"It is not backward compatible with previous Nautilus Actions Configuration Tool versions,\n"
+"It is not backward compatible with previous Nautilus-Actions Configuration Tool versions,\n"
 "though it may still be imported via standard GConf command-line tools.\n"
 "The exported dump file may later be imported via :\n"
-"- Import assistant of a compatible Nautilus Actions Configuration Tool,\n"
-"- drag-n-drop into the Nautilus Actions Configuration Tool,\n"
+"- Import assistant of a compatible Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
 "- or via the gconftool-2 --load command-line tool."
 msgstr ""
-"Ta vrsta zapisa je bila uvedena v različici 1.11  in bi morala biti prednostna vrsta zapisa za novo izvožene predmete.\n"
+"Ta vrsta datotek je bila uvedena v različici 1.11  in bi morala biti prednostna vrsta zapisa za novo izvožene predmete.\n"
 "Ni združljiva za nazaj s prejšnjimi različicami orodja nastavitev dejanj Nautilusa,\n"
 "čeprav jo je morda mogoče uvoziti preko običajnih orodij ukazne vrstice GConf.\n"
 "Izvoženo datoteko je mogoče uvoziti preko:\n"
-"- pomočnika uvoza orodja nastavitev dejanj Nautilusa,\n"
+"- pomočnika uvoza združljivega orodja nastavitev dejanj Nautilusa,\n"
 "- dejanja povleci in spusti v orodje nastavitev dejanj Nautilusa\n"
 "- ali preko orodja ukazne vrstice gconftool-2 --load."
 
@@ -1392,27 +1394,27 @@ msgstr "Datoteka ni veljavna datoteka .desktop"
 msgid "Unrecognized desktop file Version '%s'"
 msgstr "Nepoznana različica namizne datoteke '%s' "
 
-#: ../src/nact/egg-desktop-file.c:958
+#: ../src/nact/egg-desktop-file.c:957
 #, c-format
 msgid "Starting %s"
 msgstr "Zaganjanje %s"
 
-#: ../src/nact/egg-desktop-file.c:1100
+#: ../src/nact/egg-desktop-file.c:1098
 #, c-format
 msgid "Application does not accept documents on command line"
 msgstr "Program ne sprejema dokumentov preko ukazne vrstice"
 
-#: ../src/nact/egg-desktop-file.c:1168
+#: ../src/nact/egg-desktop-file.c:1166
 #, c-format
 msgid "Unrecognized launch option: %d"
 msgstr "Nepoznana možnost zagona: %d"
 
-#: ../src/nact/egg-desktop-file.c:1373
+#: ../src/nact/egg-desktop-file.c:1365
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr "URI-jev dokumenta ni mogoče poslati na namizni vnos 'Type=Link'"
 
-#: ../src/nact/egg-desktop-file.c:1394
+#: ../src/nact/egg-desktop-file.c:1386
 #, c-format
 msgid "Not a launchable item"
 msgstr "Ni izvedljiv predmet"
@@ -1454,8 +1456,8 @@ msgid "Output the version number, and exit gracefully [no]"
 msgstr "Izpiši številko različice in mirno končaj [ne]"
 
 #: ../src/nact/nact-application.c:353
-msgid "Another instance of Nautilus Actions Configuration Tool is already running."
-msgstr "Primerek orodja za nastavitev dejanj Nautilusa je že zagnan."
+msgid "Another instance of Nautilus-Actions Configuration Tool is already running."
+msgstr "Drug primerek orodja za nastavitev dejanj Nautilusa je že zagnan."
 
 #. i18n: another instance is already running: second line of error message
 #: ../src/nact/nact-application.c:355
@@ -1466,8 +1468,8 @@ msgstr "Preklopite nazaj nanj."
 #. g_debug( "%s: application=%p", thisfn, ( void * ) application );
 #. i18n: this is the application name, used in window title
 #: ../src/nact/nact-application.c:413
-msgid "Nautilus Actions Configuration Tool"
-msgstr "Orodje za nastavitev dejanj Nautilusa"
+msgid "Nautilus-Actions Configuration Tool"
+msgstr "Orodje nastavitev dejanj Nautilusa"
 
 #: ../src/nact/nact-add-capability-dialog.c:72
 msgid "User is the owner of the item"
@@ -1615,11 +1617,11 @@ msgid "Not imported"
 msgstr "Ni uvoženo"
 
 #: ../src/nact/nact.desktop.in.h:1
-msgid "Add items to the Nautilus popup menu"
-msgstr "Dodaj predmete v pojavni meni Nautilusa."
+msgid "Configure items to be added to the Nautilus context menus"
+msgstr "Nastavi predmete za dodajanje v vsebinski meni Nautilusa"
 
 #: ../src/nact/nact.desktop.in.h:2
-msgid "Nautilus Actions Configuration"
+msgid "Nautilus-Actions Configuration"
 msgstr "Nastavitev dejanj Nautilusa"
 
 #. i18n: The action <label> is about to be exported
@@ -1644,19 +1646,19 @@ msgstr "_Vprašaj me"
 msgid "You will be asked for the format to choose each time an item is about to be exported."
 msgstr "Vsakič boste pred izvažanjem predmeta boste vprašani za vrsto zapisa."
 
-#: ../src/nact/nact-iaction-tab.c:631
+#: ../src/nact/nact-iaction-tab.c:625
 msgid "Caution: a label is mandatory for the action or the menu."
 msgstr "Opozorilo: oznaka dejanja ali menija je obvezna."
 
 #. i18n notes: when no icon is selected in the drop-down list
 #. i18n: label of the push button when there is not yet any shortcut
-#: ../src/nact/nact-iaction-tab.c:863
+#: ../src/nact/nact-iaction-tab.c:857
 #: ../src/nact/nact-iproperties-tab.c:53
 #: ../src/nact/nautilus-actions-config-tool.ui.h:122
 msgid "None"
 msgstr "Brez"
 
-#: ../src/nact/nact-iaction-tab.c:930
+#: ../src/nact/nact-iaction-tab.c:906
 msgid "Choosing an icon"
 msgstr "Izbiranje ikone"
 
@@ -2020,15 +2022,15 @@ msgstr "Nov profil"
 msgid "Automatically saving pending modifications..."
 msgstr "Samodejno shrani pridržane spremembe ..."
 
-#: ../src/nact/nact-main-window.c:1435
+#: ../src/nact/nact-main-window.c:1437
 msgid "Reloading a fresh list of actions requires that you give up with your current modifications."
 msgstr "S ponovnim nalaganjem svežega seznama dejanj, bodo trenutne spremembe izgubljene."
 
-#: ../src/nact/nact-main-window.c:1438
+#: ../src/nact/nact-main-window.c:1440
 msgid "Do you really want to do this ?"
 msgstr "Ali ste prepričani, da želite nadaljevati?"
 
-#: ../src/nact/nact-main-window.c:1461
+#: ../src/nact/nact-main-window.c:1463
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to reload a fresh one."
@@ -2036,11 +2038,11 @@ msgstr ""
 "Eno ali več dejanj v datotečnem sistemu je bilo spremenjenih.\n"
 "Delo je mogoče nadaljevati s trenutnim seznamom dejanj, ali pa ga osvežiti."
 
-#: ../src/nact/nact-main-window.c:1468
+#: ../src/nact/nact-main-window.c:1470
 msgid "Note that reloading a fresh list of actions requires that you give up with your current modifications."
 msgstr "S ponovnim nalaganjem svežega seznama dejanj, bodo vaše trenutne spremembe izgubljene."
 
-#: ../src/nact/nact-main-window.c:1474
+#: ../src/nact/nact-main-window.c:1476
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "Ali želite ponovno naložiti svež seznam dejanj?"
 
@@ -2108,8 +2110,8 @@ msgid "<b>Relabeling items</b>"
 msgstr "<b>Ponovno označevanje predmetov</b>"
 
 #: ../src/nact/nact-preferences.ui.h:10
-msgid "Add an 'A_bout Nautilus Actions' item in the Nautilus context menus"
-msgstr "Doda predmet 'O Dejanih Nautilusa' v Nautilusov vsebinski meni"
+msgid "Add an 'A_bout Nautilus-Actions' item in the Nautilus context menus"
+msgstr "Doda predmet 'O Dejanih Nautilusa' v Nautilusove vsebinske menije"
 
 #: ../src/nact/nact-preferences.ui.h:11
 msgid "Ask for a _confirmation when quitting the assistant on Esc key"
@@ -2160,8 +2162,8 @@ msgid "Move up the selected I/O provider in the order of priority when trying to
 msgstr "Premaknite izbranega ponudnika V/Iv vrstnem redu prednosti pri poskušanju zapisovanja novega predmeta."
 
 #: ../src/nact/nact-preferences.ui.h:23
-msgid "Nautilus Actions Preferences"
-msgstr "Možnosti Dejanj Nautilusa"
+msgid "Nautilus-Actions Preferences"
+msgstr "Možnosti dejanj Nautilusa"
 
 #: ../src/nact/nact-preferences.ui.h:24
 msgid "Periodicity :"
@@ -2181,11 +2183,11 @@ msgstr "Znova označi _profile"
 
 #: ../src/nact/nact-preferences.ui.h:28
 msgid ""
-"The action found in the selected file will silently override the current action which has the same identifiant.\n"
+"The action found in the selected file will silently override the current action which has the same identifier.\n"
 "Be warned: this mode may be dangerous. You will not be prompted another time."
 msgstr ""
 "Dejanje najdeno v izbrani datoteki bo tiho prepisalo trenutno dejanje, ki ima enako določilo.\n"
-"Pozor: Ta način je lahko nevaren. Naslednjič ne boste pozvani. "
+"Pozor: ta način je lahko nevaren. Naslednjič ne boste pozvani. "
 
 #: ../src/nact/nact-preferences.ui.h:30
 msgid ""
@@ -2196,23 +2198,23 @@ msgstr ""
 "Obstoječe dejanje ne bo spremenjeno."
 
 #: ../src/nact/nact-preferences.ui.h:32
-msgid "This option is only relevant when the 'Escape' key lets the user quit the assistant. When checked, a confirmation will be asked to the user in order to help prevent erroneous hits."
-msgstr "Ta možnost je pomembna le ko ubežna tipka uporabniku pusti končanje pomočnika. Izbrana možnost določi, da je pred končanjem pomočnika zahtevana potrditev. S tem se preprečijo neželena končanja pomočnika."
+msgid "This option is only relevant when the 'Escape' key lets the user quit the assistant. When checked, the user will be prompted for a confirmation in order to help prevent erroneous hits of the Esc key."
+msgstr "Ta možnost je pomembna le, ko ubežna tipka uporabniku pusti končanje pomočnika. Izbrana možnost določi, da je pred končanjem pomočnika zahtevana potrditev. S tem se preprečijo neželena končanja pomočnika."
 
 #: ../src/nact/nact-preferences.ui.h:33
-msgid "This tab acts on some user preferences relatively to the configuration user interface."
-msgstr "Ta zavihek deluje na nekaterih uporabniških možnostih relativno glede na nastavitev uporabniškega vmesnika."
+msgid "This tab allows the user to choose custom preferences for the Nautilus-Actions Configuration Tool user interface."
+msgstr "Ta zavihek deluje na nekaterih uporabniških možnostih relativno glede na nastavitev uporabniškega vmesnika orodja za nastavitev dejanj Nautilusa."
 
 #: ../src/nact/nact-preferences.ui.h:34
 msgid "This tab lets you choose how the actions are ordered in the displayed list as well as in the Nautilus context menu. You may also choose here how actions will be displayed in the Nautilus context menu."
 msgstr "Ta zavihek vam omogoča izbiro kako so dejanja urejena v prikazanem seznamu in v vsebinskem meniju Nautilusa. Tukaj lahko izberete tudi kako bodo nova dejanja prikazana v vsebinskem meniju Nautilusa."
 
 #: ../src/nact/nact-preferences.ui.h:35
-msgid "This tab lets you decide of some default behaviors on export operations."
+msgid "This tab lets you decide on the default behavior of export operations."
 msgstr "Ta zavihek vam omogoča odločitev nekaterih privzetih obnašanj opravil izvoza. "
 
 #: ../src/nact/nact-preferences.ui.h:36
-msgid "This tab lets you decide of some default behaviors on import operations."
+msgid "This tab lets you decide on the default behavior of import operations."
 msgstr "Ta zavihek vam omogoča odločitev nekaterih privzetih obnašanj opravil uvoza. "
 
 #: ../src/nact/nact-preferences.ui.h:37
@@ -2242,27 +2244,27 @@ msgid "What to do when pasting or duplicating an item in the tree ?"
 msgstr "Kaj storiti pri lepljenju ali podvajanju predmeta v drevesu?"
 
 #: ../src/nact/nact-preferences.ui.h:44
-msgid "When a menu is copied/pasted, or duplicated, the new menu will be relabeled as 'Copy of ...'."
+msgid "When a menu is copied/pasted, or duplicated, the new menu will be relabelled as 'Copy of ...'."
 msgstr "Ko je meni kopiran/prilepljen ali podvojen, bo nov meni označen kot 'Kopija ...'."
 
 #: ../src/nact/nact-preferences.ui.h:45
-msgid "When a profile is copied/pasted, or duplicated, the new profile will be relabeled as 'Copy of ...'."
+msgid "When a profile is copied/pasted, or duplicated, the new profile will be relabelled as 'Copy of ...'."
 msgstr "Ko je profil kopiran/prilepljen ali podvojen, bo nov profil označen kot 'Kopija ...'."
 
 #: ../src/nact/nact-preferences.ui.h:46
-msgid "When an action is copied/pasted, or duplicated, the new action will be relabeled as 'Copy of ...'."
+msgid "When an action is copied/pasted, or duplicated, the new action will be relabelled as 'Copy of ...'."
 msgstr "Ko je dejanje kopirano/prilepljeno ali podvojeno, bo novo dejanje ponovno označeno kot 'Kopija ...'."
 
 #: ../src/nact/nact-preferences.ui.h:47
 msgid ""
-"When this option is checked, an 'About Nautilus Actions' item will be added to the root Nautilus Actions menu in the Nautilus context menu.\n"
-"Note that this item will be displayed only if a unique menu is defined in the Nautilus context menu (e.g. when having checked the root 'Nautilus Actions' menu option above)."
+"When this option is checked, an 'About Nautilus-Actions' item will be added to the root Nautilus-Actions menu in the Nautilus context menu.\n"
+"Note that this item will be displayed only if a unique menu is defined in the Nautilus context menu (e.g. when having checked the root 'Nautilus-Actions' menu option above)."
 msgstr ""
 "V primeru da je ta možnost izbrana, bo korenskemu meniju Dejanja Nautilusa v vsebinskem meniju Nautilusa dodan predmet 'O Dejanjih Nautilusa'.\n"
 "Ta predmet bo prikazan le, če je v vsebinskem meniju Nautilusa določen edinstven meni (na primer pri izbiri možnosti korenskega menija 'Dejanja Nautilusa' zgoraj)."
 
 #: ../src/nact/nact-preferences.ui.h:49
-msgid "When this option is checked, menus and actions will actually be displayed as sub-items of a root 'Nautilus Actions' menu in the Nautilus context menu."
+msgid "When this option is checked, menus and actions will actually be displayed as sub-items of a root 'Nautilus-Actions' menu in the Nautilus context menu."
 msgstr "V primeru da je ta možnost izbrana, bodo meniji in dejanja prikazani kot podpredmeti korenskega menija 'Dejanja Nautilusa' v vsebinskem meniju Nautilusa."
 
 #: ../src/nact/nact-preferences.ui.h:50
@@ -2292,7 +2294,7 @@ msgid "_Ascending alphabetical order"
 msgstr "_Naraščajoči abecedni vrsti red"
 
 #: ../src/nact/nact-preferences.ui.h:58
-msgid "_Create a root 'Nautilus Actions' menu"
+msgid "_Create a root 'Nautilus-Actions' menu"
 msgstr "_Ustvari korenski meni programa"
 
 #: ../src/nact/nact-preferences.ui.h:59
@@ -2422,7 +2424,7 @@ msgstr "Profila ni mogoče spustiti tukaj, ker nadrejeni predmet ni zapisljiv"
 msgid "Unable to drop here as level zero is not writable"
 msgstr "Ni mogoče spustiti sem, ker raven nič ni zapisljiva"
 
-#: ../src/nact/nact-tree-model-dnd.c:942
+#: ../src/nact/nact-tree-model-dnd.c:945
 msgid "Some messages have occurred during drop operation."
 msgstr "Nekatera sporočila so se zgodila med dejanjem spusta."
 
@@ -2642,7 +2644,7 @@ msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
 msgstr "<span size=\"larger\"><b>Legenda paramterov</b></span>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:70
-msgid "A_llocate a new identifiant for the imported item"
+msgid "A_llocate a new identifier for the imported item"
 msgstr "D_odeli novo določilo za uvožen predmet"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:71
@@ -2710,8 +2712,8 @@ msgid "Click to add a new scheme filter."
 msgstr "Kliknite za dodajanje novega filtra shem."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:88
-msgid "Click to browse the filesystem in order to selec a new folder filter."
-msgstr "Kliknite za brskanje datotečnega sistema za izbiro filtra nove mape."
+msgid "Click to browse the filesystem in order to select a new folder filter."
+msgstr "Kliknite za brskanje po datotečnem sistemu za izbiro filtra nove mape."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:89
 msgid "Click to define the above basename filters as case sensitive."
@@ -2915,7 +2917,7 @@ msgstr "Ikona prikazana v uporabniškem vmesniku upravljalnika datotek.\n"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:149
 msgid ""
-"The item found in the selected file will silently override the current one which has the same identifiant.\n"
+"The item found in the selected file will silently override the current one which has the same identifier.\n"
 "Be warned: this mode may be dangerous. You will not be prompted another time."
 msgstr ""
 "Predmet najden v izbrani datoteki bo tiho prepisal trenutnega, ki ima enako določilo.\n"
@@ -3134,7 +3136,7 @@ msgstr ""
 "Filtre map je mogoče negirati, da določijo v katerih mapah se vaš predmet ne sme pojaviti."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:226
-msgid "This tab lets you edit some miscellaneous properties, and access to some non-modifiable informations.\n"
+msgid "This tab lets you edit some miscellaneous properties, and access to some non-modifiable information.\n"
 msgstr "Ta zavihek vam omogoča urejanje raznih lastnosti in dostop do nekaterih ne-spremenljivih podrobnosti.\n"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:228
@@ -3356,24 +3358,27 @@ msgid "username of the (first) selected URI."
 msgstr "uporabniško ime (prvega) izbranega URI-ja."
 
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
-#. i18n: label of an automagic root submenu
 #: ../src/plugin-menu/nautilus-actions.c:300
-#: ../src/plugin-menu/nautilus-actions.c:975
-msgid "Nautilus Actions"
+msgid "Nautilus-Actions"
 msgstr "Dejanja Nautilusa"
+
+#. i18n: label of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:975
+msgid "Nautilus-Actions actions"
+msgstr "Dejanja Dejanj Nautilusa"
 
 #. i18n: tooltip of an automagic root submenu
 #: ../src/plugin-menu/nautilus-actions.c:977
-msgid "A submenu which embeds the currently available Nautilus Actions extensions"
-msgstr "Podmeni, ki vključuje trenutno razpoložljive razširitve dejanj Nautilusa"
+msgid "A submenu which embeds the currently available Nautilus-Actions actions and menus"
+msgstr "Podmeni, ki vključuje trenutno razpoložljive razširitve dejanj  in menijev Nautilusa"
 
 #: ../src/plugin-menu/nautilus-actions.c:1024
-msgid "About Nautilus Actions"
+msgid "About Nautilus-Actions"
 msgstr "O programu"
 
 #: ../src/plugin-menu/nautilus-actions.c:1025
-msgid "Display information about Nautilus Actions"
-msgstr "Prikaz podrobnosti o programu"
+msgid "Display some informations about Nautilus-Actions"
+msgstr "Prikaže podrobnosti o programu"
 
 #: ../src/test/test-reader.c:49
 msgid "The URI of the file to be imported"
@@ -3578,9 +3583,11 @@ msgid "Output the schema on stdout"
 msgstr "Izhod sheme na standardnemu izpisu"
 
 #: ../src/utils/nautilus-actions-schemas.c:162
-msgid "Output the Nautilus Actions GConf schema on stdout."
+msgid "Output the Nautilus-Actions GConf schema on stdout."
 msgstr "Izhod Nautilusovih dejanj sheme GConf na  standardnemu izpisu."
 
+#~ msgid "Add items to the Nautilus popup menu"
+#~ msgstr "Dodaj predmete v pojavni meni Nautilusa."
 #~ msgid "e.g.,"
 #~ msgstr "na primer,"
 #~ msgid "A free description of your action or your menu."
