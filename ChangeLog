@@ -96,6 +96,8 @@
 
 	* src/utils/na-gconf2key.sh.in:
 	Make sure that GConf is at the end of the list of I/O providers.
+	Make sure that GConf is locked.
+	Migrate all I/O provider preferences.
 
 	* configure.ac:
 	* src/utils/Makefile.am:
