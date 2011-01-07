@@ -1,7 +1,7 @@
-nautilus-actions-gconf2desktop.sh
 nautilus-actions-new
 nautilus-actions-print
 nautilus-actions-run
 nautilus-actions-run-bindings.h
 na-delete-xmltree
+na-gconf2key.sh
 na-print-schemas
