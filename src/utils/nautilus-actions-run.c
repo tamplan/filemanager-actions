@@ -92,6 +92,7 @@ main( int argc, char** argv )
 	GList *targets;
 
 	g_type_init();
+	setlocale( LC_ALL, "" );
 	console_init_log_handler();
 
 	context = init_options();
@@ -178,6 +179,7 @@ init_options( void )
 	GOptionGroup *misc_group;
 
 	context = g_option_context_new( _( "Execute an action on the specified target." ));
+	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 
 #ifdef ENABLE_NLS
 	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
@@ -197,6 +199,7 @@ init_options( void )
 	misc_group = g_option_group_new(
 			"misc", _( "Miscellaneous options" ), _( "Miscellaneous options" ), NULL, NULL );
 	g_option_group_add_entries( misc_group, misc_entries );
+	g_option_group_set_translation_domain( misc_group, GETTEXT_PACKAGE );
 	g_option_context_add_group( context, misc_group );
 
 	return( context );

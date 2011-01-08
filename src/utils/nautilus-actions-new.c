@@ -163,6 +163,7 @@ main( int argc, char** argv )
 	gint errors;
 
 	g_type_init();
+	setlocale( LC_ALL, "" );
 	console_init_log_handler();
 
 	context = init_options();
@@ -313,10 +314,14 @@ init_options( void )
 	GOptionGroup *misc_group;
 	GOptionEntry *entries;
 
-	context = g_option_context_new( _( "Define a new action.\n\n"
-			"  The created action defaults to be written to stdout.\n"
-			"  It can also be written to an output folder, in a file later suitable for an import in NACT.\n"
-			"  Or you may choose to directly write the action into your GConf configuration." ));
+	context = g_option_context_new( _( "Define a new action." ));
+
+	g_option_context_set_summary( context, _(
+			"The created action defaults to be written to stdout.\n"
+			"It can also be written to an output folder, in a file later suitable for an import in NACT.\n"
+			"Or you may choose to directly write the action into your GConf configuration." ));
+
+	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 
 	entries = build_option_entries( st_arg_from_data_def, G_N_ELEMENTS( st_arg_from_data_def ), st_added_entries, G_N_ELEMENTS( st_added_entries ) );
 
@@ -340,11 +345,13 @@ init_options( void )
 	output_group = g_option_group_new(
 			"output", _( "Output of the program" ), _( "Choose where the program creates the action" ), NULL, NULL );
 	g_option_group_add_entries( output_group, output_entries );
+	g_option_group_set_translation_domain( output_group, GETTEXT_PACKAGE );
 	g_option_context_add_group( context, output_group );
 
 	misc_group = g_option_group_new(
 			"misc", _( "Miscellaneous options" ), _( "Miscellaneous options" ), NULL, NULL );
 	g_option_group_add_entries( misc_group, misc_entries );
+	g_option_group_set_translation_domain( misc_group, GETTEXT_PACKAGE );
 	g_option_context_add_group( context, misc_group );
 
 	return( context );

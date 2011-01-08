@@ -109,6 +109,7 @@ main( int argc, char** argv )
 	GSList *im;
 
 	g_type_init();
+	setlocale( LC_ALL, "" );
 	console_init_log_handler();
 
 	context = init_options();
@@ -159,7 +160,8 @@ init_options( void )
 	gchar *description;
 	GOptionGroup *misc_group;
 
-	context = g_option_context_new( _( "Output the Nautilus-Actions GConf schema on stdout." ));
+	context = g_option_context_new( _( "Output the Nautilus-Actions GConf schemas on stdout." ));
+	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 
 #ifdef ENABLE_NLS
 	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
@@ -179,6 +181,7 @@ init_options( void )
 	misc_group = g_option_group_new(
 			"misc", _( "Miscellaneous options" ), _( "Miscellaneous options" ), NULL, NULL );
 	g_option_group_add_entries( misc_group, misc_entries );
+	g_option_group_set_translation_domain( misc_group, GETTEXT_PACKAGE );
 	g_option_context_add_group( context, misc_group );
 
 	return( context );
@@ -345,9 +348,9 @@ attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const NADataDef *def )
 	locale_node = xmlNewChild( schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE ), NULL );
 	xmlNewProp( locale_node, BAD_CAST( "name" ), BAD_CAST( "C" ));
 
-	xmlNewChild( locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( def->short_label ));
+	xmlNewChild( locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( gettext( def->short_label )));
 
-	xmlNewChild( locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( def->long_label ));
+	xmlNewChild( locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( gettext( def->long_label )));
 
 	parent_value_node = def->localizable ? locale_node : schema_node;
 

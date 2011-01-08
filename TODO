@@ -1,8 +1,5 @@
 N-A BUGS
 ========
-- (Grumz, 2007 or before) i18n doen't works in the command line tool and for some part
-  of NACT like the scheme list, it seems..?
-
 - when error on writing, should let the item modified
 
 TODO

@@ -1,5 +1,10 @@
 2011-01-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/nautilus-actions-new.c (init_options):
+	* src/utils/nautilus-actions-run.c (init_options):
+	* src/utils/nautilus-actions-schemas.c (init_options):
+	Initialize translation domain for GOptionContext.
+
 	* src/core/na-data-boxed.c
 	(string_spec, slist_spec, bool_spec, pointer_spec, uint_spec):
 	* src/core/na-export-format.c
