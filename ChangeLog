@@ -1,5 +1,7 @@
 2011-01-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-def.h: Complete the description of the fields.
+
 	* src/core/na-io-provider.c:
 	* src/core/na-object-profile-factory.c:
 	* src/nact/nact-assistant-export.ui:

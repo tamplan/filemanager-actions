@@ -64,9 +64,9 @@ G_BEGIN_DECLS
  *                    obsoleted ones.
  * @has_property:     whether a property should be set for this variable ?
  *                    Set to FALSE for obsolete variables.
- * @short_label:      short descriptive name.
+ * @short_label:      short localizable descriptive name.
  *                    Used in GParamSpec and in schemas.
- * @long_label:       long, if not complete, description.
+ * @long_label:       long, if not complete, localizable description.
  *                    Used in GParamSpec and in schemas?
  * @type:             the elementary NAFD_TYPE_xxx data type.
  * @default_value:    the default to assign when creating a new object.
@@ -91,9 +91,9 @@ G_BEGIN_DECLS
  *                    or NULL.
  * @option_flags:     #GOptionFlags for the command-line parameter, or 0.
  * @option_arg:       the type of the option, or 0.
- * @option_label:     the description for the variable in nautilus-actions-new.
+ * @option_label:     the localizable description for the variable in nautilus-actions-new.
  *                    Defaults to @short_label if NULL.
- * @option_arg_label: the description for the argument.
+ * @option_arg_label: the localizable description for the argument.
  *
  * This structure fully describes an elementary factory data.
  * Each #NAIFactoryObject item definition may include several groups of
