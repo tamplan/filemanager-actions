@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -852,8 +853,8 @@ string_spec( const NADataDef *def )
 {
 	return( g_param_spec_string(
 			def->name,
-			def->short_label,
-			def->long_label,
+			gettext( def->short_label ),
+			gettext( def->long_label ),
 			def->default_value,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 }
@@ -1041,8 +1042,8 @@ slist_spec( const NADataDef *def )
 {
 	return( g_param_spec_pointer(
 			def->name,
-			def->short_label,
-			def->long_label,
+			gettext( def->short_label ),
+			gettext( def->long_label ),
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 }
 
@@ -1185,8 +1186,8 @@ bool_spec( const NADataDef *def )
 {
 	return( g_param_spec_boolean(
 			def->name,
-			def->short_label,
-			def->long_label,
+			gettext( def->short_label ),
+			gettext( def->long_label ),
 			na_core_utils_boolean_from_string( def->default_value ),
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 }
@@ -1277,8 +1278,8 @@ pointer_spec( const NADataDef *def )
 {
 	return( g_param_spec_pointer(
 			def->name,
-			def->short_label,
-			def->long_label,
+			gettext( def->short_label ),
+			gettext( def->long_label ),
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 }
 
@@ -1373,8 +1374,8 @@ uint_spec( const NADataDef *def )
 {
 	return( g_param_spec_uint(
 			def->name,
-			def->short_label,
-			def->long_label,
+			gettext( def->short_label ),
+			gettext( def->long_label ),
 			0,
 			UINT_MAX,
 			atoi( def->default_value ),

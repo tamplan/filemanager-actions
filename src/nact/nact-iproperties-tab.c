@@ -33,6 +33,7 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <libintl.h>
 #include <string.h>
 
 #include <api/na-object-api.h>
@@ -299,7 +300,7 @@ on_tab_updatable_selection_changed( NactIPropertiesTab *instance, gint count_sel
 		shortcut = item ? na_object_get_shortcut( item ) : g_strdup( "" );
 		if( !shortcut || !strlen( shortcut )){
 			g_free( shortcut );
-			shortcut = g_strdup( NO_SHORTCUT );
+			shortcut = g_strdup( gettext( NO_SHORTCUT ));
 		}
 		gtk_button_set_label( GTK_BUTTON( shortcut_button ), shortcut );
 		g_free( shortcut );

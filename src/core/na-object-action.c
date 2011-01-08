@@ -33,6 +33,7 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <libintl.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -653,8 +654,8 @@ na_object_action_new_with_defaults( void )
 
 	action = na_object_action_new();
 	na_object_set_new_id( action, NULL );
-	na_object_set_label( action, NEW_NAUTILUS_ACTION );
-	na_object_set_toolbar_label( action, NEW_NAUTILUS_ACTION );
+	na_object_set_label( action, gettext( NEW_NAUTILUS_ACTION ));
+	na_object_set_toolbar_label( action, gettext( NEW_NAUTILUS_ACTION ));
 	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( action ));
 
 	profile = na_object_profile_new_with_defaults();

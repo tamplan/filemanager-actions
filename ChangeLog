@@ -1,5 +1,23 @@
 2011-01-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-data-boxed.c
+	(string_spec, slist_spec, bool_spec, pointer_spec, uint_spec):
+	* src/core/na-export-format.c
+	(na_export_format_get_label, na_export_format_get_description):
+	* src/core/na-iabout.c (na_iabout_display):
+	* src/core/na-object-action.c (na_object_action_new_with_defaults):
+	* src/core/na-object-menu.c (na_object_menu_new_with_defaults):
+	* src/io-xml/naxml-writer.c (write_data_schema_v1_element):
+	* src/nact/nact-add-capability-dialog.c (on_base_runtime_init_dialog):
+	* src/nact/nact-ienvironment-tab.c (nact_ienvironment_tab_runtime_init_toplevel):
+	* src/nact/nact-iproperties-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_save_items):
+	* src/nact/nact-match-list.c (get_must_match_header, insert_new_row):
+	* src/nact/nact-tree-model-dnd.c
+	(is_drop_possible, is_drop_possible_before_iter,
+	is_drop_possible_into_dest, is_parent_accept_new_childs):
+	Use gettext() to display localized static strings.
+
 	* src/api/na-data-def.h: Complete the description of the fields.
 
 	* src/core/na-io-provider.c:

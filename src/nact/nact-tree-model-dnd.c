@@ -34,6 +34,7 @@
 
 #include <gconf/gconf-client.h>
 #include <glib/gi18n.h>
+#include <libintl.h>
 #include <string.h>
 
 #include <api/na-core-utils.h>
@@ -693,7 +694,7 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, NAObjectItem **parent
 
 		if( model->private->drag_has_profiles ){
 			nact_main_statusbar_display_with_timeout(
-						main_window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_profile );
+						main_window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 
 		} else {
 			drop_ok = TRUE;
@@ -741,7 +742,7 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainW
 		} else {
 			/* unable to drop a profile here */
 			nact_main_statusbar_display_with_timeout(
-					window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_profile );
+					window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 		}
 
 	} else if( NA_IS_OBJECT_ITEM( object )){
@@ -751,7 +752,7 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainW
 	} else {
 		/* unable to drop an action or a menu here */
 		nact_main_statusbar_display_with_timeout(
-				window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_item );
+				window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_item ));
 	}
 
 	return( drop_ok );
@@ -785,7 +786,7 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWin
 
 				} else {
 					nact_main_statusbar_display_with_timeout(
-							window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_profile );
+							window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_profile ));
 				}
 
 			} else if( NA_IS_OBJECT_MENU( object )){
@@ -794,7 +795,7 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWin
 
 			} else {
 				nact_main_statusbar_display_with_timeout(
-						window, TREE_MODEL_STATUSBAR_CONTEXT, st_refuse_drop_item );
+						window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_refuse_drop_item ));
 			}
 		}
 	}
@@ -1145,7 +1146,7 @@ is_parent_accept_new_childs( NactApplication *application, NactMainWindow *windo
 
 		} else {
 			nact_main_statusbar_display_with_timeout(
-						window, TREE_MODEL_STATUSBAR_CONTEXT, st_level_zero_not_writable );
+						window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_level_zero_not_writable ));
 		}
 
 	/* see if the parent is writable
@@ -1155,7 +1156,7 @@ is_parent_accept_new_childs( NactApplication *application, NactMainWindow *windo
 
 	} else {
 			nact_main_statusbar_display_with_timeout(
-						window, TREE_MODEL_STATUSBAR_CONTEXT, st_parent_not_writable );
+						window, TREE_MODEL_STATUSBAR_CONTEXT, gettext( st_parent_not_writable ));
 	}
 
 	return( accept_ok );

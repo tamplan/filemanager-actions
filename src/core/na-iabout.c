@@ -33,6 +33,7 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <libintl.h>
 
 #include "na-iabout.h"
 
@@ -152,8 +153,10 @@ na_iabout_display( NAIAbout *instance )
 {
 	static const gchar *thisfn = "na_iabout_display";
 	gchar *application_name;
-	gchar *icon_name, *license_i18n, *copyright;
+	gchar *icon_name, *copyright;
+	int i;
 	GtkWindow *toplevel;
+	GString *license_i18n;
 
 	static const gchar *artists[] = {
 		"Ulisse Perusin <uli.peru@gmail.com>",
@@ -198,7 +201,12 @@ na_iabout_display( NAIAbout *instance )
 
 		icon_name = na_iabout_get_icon_name();
 		copyright = na_iabout_get_copyright( FALSE );
-		license_i18n = g_strjoinv( "\n\n", license );
+		i = 0;
+		license_i18n = g_string_new( "" );
+		while( license[i] ){
+			g_string_append_printf( license_i18n, "%s\n\n", gettext( license[i] ));
+			i += 1;
+		}
 
 		gtk_show_about_dialog( toplevel,
 				"artists", artists,
@@ -208,7 +216,7 @@ na_iabout_display( NAIAbout *instance )
 				"comments", _( "A graphical interface to create and edit your Nautilus actions." ),
 				"copyright", copyright,
 				"documenters", documenters,
-				"license", license_i18n,
+				"license", license_i18n->str,
 				"logo-icon-name", icon_name,
 				"program-name", application_name,
 				"translator-credits", _( "The GNOME Translation Project <gnome-i18n@gnome.org>" ),
@@ -218,7 +226,7 @@ na_iabout_display( NAIAbout *instance )
 				NULL );
 
 		g_free( application_name );
-		g_free( license_i18n );
+		g_string_free( license_i18n, TRUE );
 		g_free( copyright );
 		g_free( icon_name );
 	}

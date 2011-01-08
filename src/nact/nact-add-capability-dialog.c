@@ -34,6 +34,7 @@
 
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
+#include <libintl.h>
 
 #include <api/na-core-utils.h>
 
@@ -386,7 +387,7 @@ on_base_runtime_init_dialog( NactAddCapabilityDialog *dialog, gpointer user_data
 			gtk_list_store_append( model, &row );
 			gtk_list_store_set( model, &row,
 					CAPABILITY_KEYWORD_COLUMN, st_caps[i].keyword,
-					CAPABILITY_DESC_COLUMN, st_caps[i].desc,
+					CAPABILITY_DESC_COLUMN, gettext( st_caps[i].desc ),
 					CAPABILITY_ALREADY_USED_COLUMN, FALSE,
 					-1 );
 		}

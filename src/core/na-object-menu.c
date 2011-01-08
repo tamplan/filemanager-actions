@@ -446,7 +446,7 @@ na_object_menu_new_with_defaults( void )
 {
 	NAObjectMenu *menu = na_object_menu_new();
 	na_object_set_new_id( menu, NULL );
-	na_object_set_label( menu, NEW_NAUTILUS_MENU );
+	na_object_set_label( menu, gettext( NEW_NAUTILUS_MENU ));
 	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( menu ));
 
 	return( menu );

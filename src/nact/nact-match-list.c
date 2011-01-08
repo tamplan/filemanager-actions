@@ -33,6 +33,7 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <libintl.h>
 
 #include <api/na-object-api.h>
 #include <api/na-core-utils.h>
@@ -846,7 +847,7 @@ get_must_match_header( guint id )
 
 	for( i = 0 ; st_match_headers[i].header_id ; ++i ){
 		if( st_match_headers[i].header_id == id ){
-			return( st_match_headers[i].header_label );
+			return( gettext( st_match_headers[i].header_label ));
 		}
 	}
 
@@ -871,7 +872,7 @@ insert_new_row( MatchListStr *data )
 	static const gchar *filter_label = N_( "new-filter" );
 	gchar *label;
 
-	label = search_for_unique_label( filter_label, data );
+	label = search_for_unique_label( gettext( filter_label ), data );
 	insert_new_row_data( data, label, FALSE, FALSE );
 	g_free( label );
 }

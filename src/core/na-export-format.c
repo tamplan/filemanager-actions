@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <libintl.h>
+
 #include "na-export-format.h"
 
 /* private class data
@@ -256,7 +258,7 @@ na_export_format_get_label( const NAExportFormat *format )
 
 	if( !format->private->dispose_has_run ){
 
-		label = g_strdup( format->private->str->label );
+		label = g_strdup( gettext( format->private->str->label ));
 	}
 
 	return( label );
@@ -280,7 +282,7 @@ na_export_format_get_description( const NAExportFormat *format )
 
 	if( !format->private->dispose_has_run ){
 
-		description = g_strdup( format->private->str->description );
+		description = g_strdup( gettext( format->private->str->description ));
 	}
 
 	return( description );

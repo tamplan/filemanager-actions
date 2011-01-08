@@ -33,6 +33,7 @@
 #endif
 
 #include <gio/gio.h>
+#include <libintl.h>
 #include <libxml/tree.h>
 #include <string.h>
 
@@ -493,8 +494,8 @@ write_data_schema_v1_element( NAXMLWriter *writer, const NADataDef *def )
 	}
 
 	xmlNewChild( writer->private->schema_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_OWNER ), BAD_CAST( PACKAGE_TARNAME ));
-	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( def->short_label ));
-	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( def->long_label ));
+	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_SHORT ), BAD_CAST( gettext( def->short_label )));
+	xmlNewChild( writer->private->locale_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_NODE_LOCALE_LONG ), BAD_CAST( gettext( def->long_label )));
 }
 
 static void

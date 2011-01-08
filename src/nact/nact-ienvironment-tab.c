@@ -33,6 +33,7 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -296,7 +297,7 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 					GTK_LIST_STORE( model ),
 					&iter,
 					ENV_BOOL_COLUMN, FALSE,
-					ENV_LABEL_COLUMN, st_envs[i].label,
+					ENV_LABEL_COLUMN, gettext( st_envs[i].label ),
 					ENV_KEYWORD_COLUMN, st_envs[i].keyword,
 					-1 );
 		}
@@ -824,7 +825,7 @@ init_selection_count_combobox( NactIEnvironmentTab *instance )
 	while( st_counts[i].sign ){
 		gtk_list_store_append( GTK_LIST_STORE( model ), &row );
 		gtk_list_store_set( GTK_LIST_STORE( model ), &row, COUNT_SIGN_COLUMN, st_counts[i].sign, -1 );
-		gtk_list_store_set( GTK_LIST_STORE( model ), &row, COUNT_LABEL_COLUMN, st_counts[i].label, -1 );
+		gtk_list_store_set( GTK_LIST_STORE( model ), &row, COUNT_LABEL_COLUMN, gettext( st_counts[i].label ), -1 );
 		i += 1;
 	}
 
