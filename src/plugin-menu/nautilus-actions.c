@@ -1009,23 +1009,33 @@ on_items_list_changed( const gchar *key, gpointer newvalue, NautilusActions *plu
 static void
 on_items_add_about_item_changed( const gchar *key, gpointer newvalue, NautilusActions *plugin )
 {
+	gboolean newbool;
+
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
 
-		plugin->private->items_add_about_item = ( gboolean ) GPOINTER_TO_UINT( newvalue );
-		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
+		newbool = ( gboolean ) GPOINTER_TO_UINT( newvalue );
+		if( newbool != plugin->private->items_add_about_item ){
+			plugin->private->items_add_about_item = newbool;
+			nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
+		}
 	}
 }
 
 static void
 on_items_create_root_menu_changed( const gchar *key, gpointer newvalue, NautilusActions *plugin )
 {
+	gboolean newbool;
+
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
 
-		plugin->private->items_create_root_menu = ( gboolean ) GPOINTER_TO_UINT( newvalue );
-		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
+		newbool = ( gboolean ) GPOINTER_TO_UINT( newvalue );
+		if( newbool != plugin->private->plugin->private->items_create_root_menu ){
+			plugin->private->items_create_root_menu = newbool;
+			nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
+		}
 	}
 }
