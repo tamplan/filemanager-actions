@@ -82,7 +82,7 @@ to extend a selection.</property>
         </child>
       </object>
       <packing>
-        <property name="title">Selecting the exported actions</property>
+        <property name="title" translatable="yes">Selecting the exported actions</property>
       </packing>
     </child>
     <child>
@@ -102,7 +102,7 @@ to extend a selection.</property>
         </child>
       </object>
       <packing>
-        <property name="title">Selecting the target folder</property>
+        <property name="title" translatable="yes">Selecting the target folder</property>
       </packing>
     </child>
     <child>
@@ -152,7 +152,7 @@ to extend a selection.</property>
         </child>
       </object>
       <packing>
-        <property name="title">Selecting the export format</property>
+        <property name="title" translatable="yes">Selecting the export format</property>
       </packing>
     </child>
     <child>

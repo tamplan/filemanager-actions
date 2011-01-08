@@ -157,6 +157,8 @@ static NADataDef data_def_profile [] = {
 					"  %m: (first) mimetype\n" \
 					"  %M: space-separated list of the mimetypes of the selected file(s)/folder(s)\n" \
 					"  %n: username of the (first) URI\n" \
+					"  %o: no-op operator which forces the singular form of execution (since 3.0.2)\n" \
+					"  %O: no-op operator which forces the plural form of execution (since 3.0.2)\n" \
 					"  %p: port number of the (first) URI\n" \
 					"  %s: scheme of the (first) URI\n" \
 					"  %u: (first) URI\n" \
@@ -211,7 +213,7 @@ static NADataDef data_def_profile [] = {
 				TRUE,
 				N_( "Execution mode" ),
 				N_( "Execution mode of the program.\n" \
-					"This may be choosen between following values:\n" \
+					"This may be chosen between following values:\n" \
 					"- Normal: starts as a standard graphical user interface\n" \
 					"- Terminal: starts the preferred terminal of the graphical environment, " \
 						"and runs the command in it\n" \
@@ -290,9 +292,7 @@ static NADataDef data_def_profile [] = {
 				N_( "Execute as user" ),
 				N_( "The user the command must be ran as. " \
 					"The user may be identified by its numeric UID or by its login.\n" \
-					"The implementation should ignore a profile defining a non-existing UID " \
-					"or login as a value for the ExecuteAs key.\n" \
-					"The implementation might require the presence of a well-configured subsystem (e.g. sudo).\n" \
+					"The profile is ignored if defined with a non-existing UID or login.\n" \
 					"Defaults to empty: the command will be executed as the current user." ),
 				NAFD_TYPE_STRING,
 				"",

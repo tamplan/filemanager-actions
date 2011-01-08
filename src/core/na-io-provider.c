@@ -1388,7 +1388,7 @@ na_io_provider_get_return_code_label( guint code )
 			break;
 
 		default:
-			label = g_strdup_printf( _( "Unknow return code (%d).\n" \
+			label = g_strdup_printf( _( "Unknown return code (%d).\n" \
 					"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org." ), code );
 			break;
 	}
