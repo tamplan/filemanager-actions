@@ -840,7 +840,7 @@ nact_main_window_get_clipboard( const NactMainWindow *window )
 /**
  * nact_main_window_get_item:
  * @window: this #NactMainWindow instance.
- * @uuid: the uuid to check for existancy.
+ * @id: the identifier to check for existancy.
  *
  * Returns: a pointer to the #NAObjectItem if it exists in the current
  * tree, or %NULL else.
@@ -851,7 +851,7 @@ nact_main_window_get_clipboard( const NactMainWindow *window )
  * Also note that the returned object may be an action, but also a menu.
  */
 NAObjectItem *
-nact_main_window_get_item( const NactMainWindow *window, const gchar *uuid )
+nact_main_window_get_item( const NactMainWindow *window, const gchar *id )
 {
 	NAObjectItem *exists;
 	NactApplication *application;
@@ -867,11 +867,11 @@ nact_main_window_get_item( const NactMainWindow *window, const gchar *uuid )
 		if( 0 ){
 			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 			updater = nact_application_get_updater( application );
-			exists = na_pivot_get_item( NA_PIVOT( updater ), uuid );
+			exists = na_pivot_get_item( NA_PIVOT( updater ), id );
 		}
 
 		if( !exists ){
-			exists = NA_OBJECT_ITEM( nact_iactions_list_bis_get_item( NACT_IACTIONS_LIST( window ), uuid ));
+			exists = NA_OBJECT_ITEM( nact_iactions_list_bis_get_item( NACT_IACTIONS_LIST( window ), id ));
 		}
 	}
 

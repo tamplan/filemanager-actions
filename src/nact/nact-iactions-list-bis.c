@@ -58,7 +58,7 @@ typedef gboolean ( *FnIterOnSelection )( NactIActionsList *, GtkTreeView *, GtkT
  */
 typedef struct {
 	NAObject *object;
-	gchar    *uuid;
+	gchar    *id;
 }
 	IdToObjectIter;
 
@@ -289,7 +289,7 @@ nact_iactions_list_bis_get_item( NactIActionsList *instance, const gchar *id )
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
 
 		ito = g_new0( IdToObjectIter, 1 );
-		ito->uuid = ( gchar * ) id;
+		ito->id = ( gchar * ) id;
 
 		nact_tree_model_iter( model, ( FnIterOnStore ) get_item_iter, ito );
 
@@ -909,7 +909,7 @@ get_item_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, IdToOb
 	gboolean found = FALSE;
 
 	id = na_object_get_id( object );
-	found = ( g_ascii_strcasecmp( id, ito->uuid ) == 0 );
+	found = ( g_ascii_strcasecmp( id, ito->id ) == 0 );
 	g_free( id );
 
 	if( found ){

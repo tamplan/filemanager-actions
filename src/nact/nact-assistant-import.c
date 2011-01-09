@@ -729,7 +729,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 {
 	static const gchar *thisfn = "nact_assistant_import_prepare_importdone";
 	gchar *text, *tmp, *text2;
-	gchar *bname, *uuid, *label;
+	gchar *bname, *id, *label;
 	GList *is;
 	GSList *im;
 	NAImporterResult *result;
@@ -767,12 +767,12 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 			tmp = g_strdup_printf( "%s\t\t%s\n", text, _( "Import OK" ));
 			g_free( text );
 			text = tmp;
-			uuid = na_object_get_id( result->imported );
+			id = na_object_get_id( result->imported );
 			label = na_object_get_label( result->imported );
 			/* i18n: this is the globally unique identifier and the label of the newly imported action */
-			text2 = g_strdup_printf( _( "UUID: %s\t%s" ), uuid, label);
+			text2 = g_strdup_printf( _( "Id.: %s\t%s" ), id, label);
 			g_free( label );
-			g_free( uuid );
+			g_free( id );
 			tmp = g_strdup_printf( "%s\t\t%s\n", text, text2 );
 			g_free( text );
 			text = tmp;

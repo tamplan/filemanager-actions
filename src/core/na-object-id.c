@@ -297,8 +297,8 @@ na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b )
  * #NAObjectAction @action. The identifier is always renumbered to be
  * suitable with the already existing profiles.
  *
- * If a #NAObjectAction or a #NAObjectMenu, a new UUID is allocated if
- * and only if @relabel is %TRUE.
+ * If a #NAObjectAction or a #NAObjectMenu, a new identifier is allocated
+ * if and only if @relabel is %TRUE.
  *
  * Actual relabeling takes place if @relabel is %TRUE, depending of the
  * user preferences.

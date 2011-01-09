@@ -1035,7 +1035,8 @@ iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter
 }
 
 /*
- * if the object, identified by its uuid, already exists, then remove it first
+ * if the object, identified by its id (historically a uuid), already exists,
+ * then remove it first
  */
 static void
 remove_if_exists( NactTreeModel *model, GtkTreeModel *store, const NAObject *object )

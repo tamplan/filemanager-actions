@@ -236,9 +236,9 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 }
 
 /*
- * new_parent is not relevant when allocating a new UUID for an action
- * or a menu ; it may safely be left as NULL though there is no gain to
- * check this
+ * new_parent is not relevant when allocating a new identifier for an
+ * action or a menu ; it may safely be left as NULL though there is no
+ * gain to check this
  */
 static gchar *
 object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )

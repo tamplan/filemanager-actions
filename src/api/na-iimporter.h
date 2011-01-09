@@ -186,8 +186,8 @@ typedef enum {
  *
  * If this function is not provided, then the #NAIImporter provider will not
  * be able to check for duplicates. In this case, the id of the imported item
- * should be systematically regenerated as a unique id (uuid), regardless of
- * the asked import mode.
+ * should be systematically regenerated as a unique id, regardless of the
+ * asked import mode.
  *
  * Returns: the already existing #NAObjectItem with same id, or %NULL.
  *
@@ -207,7 +207,7 @@ typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
  *
  * If this function is not provided, then the #NAIImporter provider will
  * not be able to ask the user. In this case, the duplicated id should be
- * systematically regenerated as a unique id (uuid).
+ * systematically regenerated as a unique id.
  *
  * Returns: the import mode choosen by the user, which must not be
  * %IMPORTER_MODE_ASK.

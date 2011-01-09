@@ -36,7 +36,6 @@
 #include <gio/gio.h>
 #include <glib/gstdio.h>
 #include <string.h>
-#include <uuid/uuid.h>
 
 #include <api/na-core-utils.h>
 

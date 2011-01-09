@@ -124,7 +124,7 @@ void      nact_iactions_list_bis_clear_selection( NactIActionsList *instance, Gt
 void      nact_iactions_list_bis_collapse_to_parent( NactIActionsList *instance );
 void      nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items, gboolean select_at_end );
 void      nact_iactions_list_bis_expand_to_first_child( NactIActionsList *instance );
-NAObject *nact_iactions_list_bis_get_item( NactIActionsList *instance, const gchar *uuid );
+NAObject *nact_iactions_list_bis_get_item( NactIActionsList *instance, const gchar *id );
 GList    *nact_iactions_list_bis_get_items( NactIActionsList *instance );
 GList    *nact_iactions_list_bis_get_selected_items( NactIActionsList *instance );
 void      nact_iactions_list_bis_insert_at_path( NactIActionsList *instance, GList *items, GtkTreePath *path );

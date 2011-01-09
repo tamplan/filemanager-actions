@@ -88,7 +88,7 @@ static void   dump( const NAIOProvider *provider );
 
 static GList *get_merged_items_list( const NAPivot *pivot, GList *providers, GSList **messages );
 static GList *build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty, NAObjectItem *parent );
-static gint   search_item( const NAObject *obj, const gchar *uuid );
+static gint   search_item( const NAObject *obj, const gchar *id );
 static GList *sort_tree( const NAPivot *pivot, GList *tree, GCompareFunc fn );
 static GList *filter_unwanted_items( const NAPivot *pivot, GList *merged );
 static GList *filter_unwanted_items_rec( GList *merged, gboolean load_disabled, gboolean load_invalid );
@@ -755,13 +755,13 @@ build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty, NAObj
 
 	if( g_slist_length( level_zero )){
 		for( ilevel = level_zero ; ilevel ; ilevel = ilevel->next ){
-			/*g_debug( "%s: uuid=%s", thisfn, ( gchar * ) ilevel->data );*/
+			/*g_debug( "%s: id=%s", thisfn, ( gchar * ) ilevel->data );*/
 			it = g_list_find_custom( *tree, ilevel->data, ( GCompareFunc ) search_item );
 			if( it ){
 				hierarchy = g_list_append( hierarchy, it->data );
 				na_object_set_parent( it->data, parent );
 
-				g_debug( "%s: uuid=%s: %s (%p) appended to hierarchy %p",
+				g_debug( "%s: id=%s: %s (%p) appended to hierarchy %p",
 						thisfn, ( gchar * ) ilevel->data, G_OBJECT_TYPE_NAME( it->data ), ( void * ) it->data, ( void * ) hierarchy );
 
 				*tree = g_list_remove_link( *tree, it );
@@ -791,17 +791,17 @@ build_hierarchy( GList **tree, GSList *level_zero, gboolean list_if_empty, NAObj
 }
 
 /*
- * returns zero when obj has the required uuid
+ * returns zero when obj has the required id
  */
 static gint
-search_item( const NAObject *obj, const gchar *uuid )
+search_item( const NAObject *obj, const gchar *id )
 {
 	gchar *obj_id;
 	gint ret = 1;
 
 	if( NA_IS_OBJECT_ITEM( obj )){
 		obj_id = na_object_get_id( obj );
-		ret = strcmp( obj_id, uuid );
+		ret = strcmp( obj_id, id );
 		g_free( obj_id );
 	}
 

@@ -1,5 +1,17 @@
 2011-01-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iimporter.h:
+	* src/core/na-io-provider.c:
+	* src/core/na-object-id.c:
+	* src/core/na-object-item.c:
+	* src/io-desktop/nadp-utils.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-iactions-list-bis.c:
+	* src/nact/nact-iactions-list.h:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-preferences.ui:
+	* src/nact/nact-tree-model.c: Remove all deprecated references to an UUID.
+
 	* po/POTFILES.in: Add src/io-desktop/nadp-formats.c file.
 
 	* src/core/na-object-profile-factory.c:
