@@ -1,5 +1,7 @@
 2011-01-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.c (display_dlg): Setup parent window.
+
 	* src/api/na-iimporter.h:
 	* src/core/na-io-provider.c:
 	* src/core/na-object-id.c:

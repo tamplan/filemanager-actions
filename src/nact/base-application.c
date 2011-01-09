@@ -1219,10 +1219,16 @@ display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButto
 	GtkWidget *dialog;
 	const gchar *name;
 	gint result;
+	GtkWindow *parent;
 
 	g_assert( BASE_IS_APPLICATION( application ));
 
-	dialog = gtk_message_dialog_new( NULL, GTK_DIALOG_MODAL, type_message, type_buttons, "%s", first );
+	parent = NULL;
+	if( application->private->main_window ){
+		parent = base_window_get_toplevel( application->private->main_window );
+	}
+
+	dialog = gtk_message_dialog_new( parent, GTK_DIALOG_MODAL, type_message, type_buttons, "%s", first );
 
 	if( second && g_utf8_strlen( second, -1 )){
 		gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), "%s", second );
