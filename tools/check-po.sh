@@ -12,14 +12,13 @@ if [ ! -r ${PO} ]; then
 fi
 
 # first, check that all .ui are in po/POTFILE.in
-
 total=0
 count=0
 errs=0
 echo ""
 echo "checking that all .ui are in ${PO}..."
-for f in $(find src -name '*.ui' | sed 's?^\./??'); do
-	if [ "$(grep -x ${f} ${PO})" != "${f}" ]; then
+for f in $(git ls-files *.ui); do
+	if [ "$(grep -xe "\[type:\s*gettext/glade]\s*${f}" ${PO})" = "" ]; then
 		echo "	${f} should be added to ${PO}"
 		let errs+=1
 	fi
@@ -29,12 +28,11 @@ echo "pass 1/5: count=${count} error(s)=${errs}"
 let total+=${errs}
 
 # second, check that all .ui in PO exist
-
 count=0
 errs=0
 echo ""
 echo "checking that all .ui from ${PO} actually exist..."
-for f in $(grep -E '\.ui$' ${PO}); do
+for f in $(grep -e '\.ui$' ${PO} | sed 's,\[type:\s*gettext/glade]\s*,,'); do
 	if [ ! -r ${f} ]; then
 		echo "	${f} should be removed from ${PO}"
 		let errs+=1
@@ -45,7 +43,6 @@ echo "pass 2/5: count=${count} error(s)=${errs}"
 let total+=${errs}
 
 # third, check that all files which use _( construct are in PO
-
 count=0
 errs=0
 echo ""
@@ -64,7 +61,6 @@ echo "pass 3/5: count=${count} error(s)=${errs}"
 let total+=${errs}
 
 # fourth, check that all files in PO actually use the _( construct
-
 count=0
 errs=0
 echo ""
@@ -81,7 +77,6 @@ echo "pass 4/5: count=${count} error(s)=${errs}"
 let total+=${errs}
 
 # last, check that all files which include gi18n.h are relevant
-
 count=0
 errs=0
 echo ""

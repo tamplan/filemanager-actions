@@ -16,6 +16,7 @@ src/core/na-object-profile-factory.c
 src/core/na-selected-info.c
 src/core/na-tokens.c
 src/io-desktop/nadp-desktop-provider.c
+src/io-desktop/nadp-formats.c
 src/io-gconf/nagp-gconf-provider.c
 src/io-xml/naxml-reader.c
 src/io-xml/naxml-formats.c

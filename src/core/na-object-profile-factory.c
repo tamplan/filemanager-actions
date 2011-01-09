@@ -131,21 +131,19 @@ static NADataDef data_def_profile [] = {
 					"item in the file manager context menu or in the toolbar.\n" \
 					"The parameters may contain some special tokens which are replaced by the " \
 					"informations provided by the file manager before starting the command:\n" \
-					"- up to version \"2.0\":\n" \
+					"- up to version 2.0:\n" \
 					"  %d: base folder of the selected file(s)\n" \
 					"  %f: the name of the selected file or the first one if several are selected\n" \
 					"  %h: hostname of the URI\n" \
 					"  %m: space-separated list of the basenames of the selected file(s)/folder(s)\n" \
 					"  %M: space-separated list of the selected file(s)/folder(s), with their full paths\n" \
-					"  %o: no-op operator which forces a singular form of execution\n" \
-					"  %O: no-op operator which forces a plural form of execution\n" \
 					"  %p: port number of the first URI\n" \
 					"  %R: space-separated list of selected URIs\n" \
 					"  %s: scheme of the URI\n" \
 					"  %u: URI\n" \
 					"  %U: username of the URI\n" \
-					"  %%: a percent sign." \
-					"- starting from version '3':\n" \
+					"  %%: a percent sign.\n" \
+					"- starting from version 3:\n" \
 					"  %b: (first) basename\n" \
 					"  %B: space-separated list of the basenames of the selected file(s)/folder(s)\n" \
 					"  %c: count the selected file(s)/folder(s)\n" \
