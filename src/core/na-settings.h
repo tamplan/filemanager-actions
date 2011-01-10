@@ -81,16 +81,18 @@ typedef struct {
 
 GType na_settings_get_type( void );
 
+#define NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS		"io-provider-read-status-fake-key"
+#define NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER		"io-providers-read-order"
 #define NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM		"items-add-about-item"
 #define NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU		"items-create-root-menu"
+#define NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER		"items-level-zero-order"
 
-NASettings *na_settings_new            ( void );
+NASettings *na_settings_new                     ( void );
 
-void        na_settings_register       ( NASettings *settings, const gchar *key, GCallback callback, gpointer user_data );
-void        na_settings_register_global( NASettings *settings, GCallback callback, gpointer user_data );
+void        na_settings_register_key_callback   ( NASettings *settings, const gchar *key, GCallback callback, gpointer user_data );
+void        na_settings_register_global_callback( NASettings *settings, GCallback callback, gpointer user_data );
 
-gboolean    na_settings_get_boolean    ( NASettings *settings, const gchar *key, gboolean *found, gboolean *global );
-gpointer    na_settings_get_value      ( NASettings *settings, const gchar *key, gboolean *found, gboolean *global );
+gboolean    na_settings_get_boolean             ( NASettings *settings, const gchar *key, gboolean *found, gboolean *global );
 
 G_END_DECLS
 

@@ -125,21 +125,20 @@ enum {
 	PIVOT_LOAD_ALL      = 0xff
 };
 
-#define NA_PIVOT_RUNTIME_ITEMS_LIST_CHANGED		"na-pivot-runtime-items-list-changed"
-
-NAPivot      *na_pivot_new( void );
+NAPivot      *na_pivot_new ( void );
 void          na_pivot_dump( const NAPivot *pivot );
 
-/* providers management of any NAIxxxxProvider interface
+/* Management of the NAIxxxxProvider interfaces
+ * As of 2.30, these are NAIIOProvider, NAIImporter, NAIExporter
  */
-GList        *na_pivot_get_providers( const NAPivot *pivot, GType type );
+GList        *na_pivot_get_providers ( const NAPivot *pivot, GType type );
 void          na_pivot_free_providers( GList *providers );
 
-/* menus/actions items management
+/* Items, menus and actions, management
  */
-NAObjectItem *na_pivot_get_item( const NAPivot *pivot, const gchar *id );
-GList        *na_pivot_get_items( const NAPivot *pivot );
-void          na_pivot_load_items( NAPivot *pivot );
+NAObjectItem *na_pivot_get_item     ( const NAPivot *pivot, const gchar *id );
+GList        *na_pivot_get_items    ( const NAPivot *pivot );
+void          na_pivot_load_items   ( NAPivot *pivot );
 void          na_pivot_set_new_items( NAPivot *pivot, GList *tree );
 
 void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  );
@@ -147,11 +146,21 @@ void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gcha
 gboolean      na_pivot_write_level_zero( const NAPivot *pivot, GList *items, GSList **messages );
 
 /* NAIPivotConsumer interface management
- * Monitoring and preferences management
+ * to be deprecated
  */
 void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
+
+/*
+ * Monitoring and preferences management
+ *
+ * NAPivot acts as a proxy for signals emitted by the NAIIOProvider providers
+ * when they detect a modification of their underlying items storage subsystems.
+ * As several to many signals may be emitted when such a modification occurs,
+ * NAPivot summarizes all these signals in an only one 'items-changed' event.
+ */
+#define PIVOT_SIGNAL_ITEMS_CHANGED				"pivot-items-changed"
+
 NASettings   *na_pivot_get_settings     ( NAPivot *pivot );
-void          na_pivot_register         ( NAPivot *pivot, const gchar *key, GCallback callback, gpointer user_data );
 
 /* NAPivot properties and configuration
  */

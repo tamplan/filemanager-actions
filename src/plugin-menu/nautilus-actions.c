@@ -71,6 +71,7 @@ struct NautilusActionsClassPrivate {
 struct NautilusActionsPrivate {
 	gboolean dispose_has_run;
 	NAPivot *pivot;
+	gulong   items_changed_handler;
 	gboolean items_add_about_item;
 	gboolean items_create_root_menu;
 };
@@ -110,10 +111,10 @@ static GList            *create_root_menu( NautilusActions *plugin, GList *nauti
 static GList            *add_about_item( NautilusActions *plugin, GList *nautilus_menu );
 static void              execute_about( NautilusMenuItem *item, NautilusActions *plugin );
 
-static void              on_items_list_changed( NautilusActions *plugin );
+static void              on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin );
 static void              on_items_add_about_item_changed( gpointer newvalue, NautilusActions *plugin );
 static void              on_items_create_root_menu_changed( gpointer newvalue, NautilusActions *plugin );
-static void              on_global_settings_changed( NautilusActions *plugin, gboolean global );
+static void              on_global_settings_changed( gboolean global, NautilusActions *plugin );
 
 GType
 nautilus_actions_get_type( void )
@@ -151,8 +152,9 @@ nautilus_actions_register_type( GTypeModule *module )
 		NULL
 	};
 
-	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 	g_assert( st_actions_type == 0 );
+
+	g_debug( "%s: module=%p", thisfn, ( void * ) module );
 
 	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NautilusActions", &info, 0 );
 
@@ -185,17 +187,15 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nautilus_actions_instance_init";
 	NautilusActions *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
-	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( instance ));
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 
 	self = NAUTILUS_ACTIONS( instance );
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-
-	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( instance ), TRUE, 0 );
 }
 
 static void
@@ -205,14 +205,12 @@ instance_constructed( GObject *object )
 	NautilusActions *self;
 	NASettings *settings;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
-
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( object ));
-	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( object ));
 
 	self = NAUTILUS_ACTIONS( object );
 
 	if( !self->private->dispose_has_run ){
+		g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 		self->private->pivot = na_pivot_new();
 
@@ -222,29 +220,35 @@ instance_constructed( GObject *object )
 		na_pivot_set_loadable( self->private->pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
 		na_pivot_load_items( self->private->pivot );
 
-		/* register against NAPivot to be notified of modifications
-		 *  of items list
+		/* register against NAPivot to be notified of items changes
 		 */
-		na_pivot_register( self->private->pivot,
-				NA_PIVOT_RUNTIME_ITEMS_LIST_CHANGED,
-				( GCallback ) on_items_list_changed, self );
+		self->private->items_changed_handler =
+				g_signal_connect(
+						self->private->pivot,
+						PIVOT_SIGNAL_ITEMS_CHANGED,
+						G_CALLBACK( on_pivot_items_changed_handler ), self );
 
 		/* register against NASettings to be notified of changes on
 		 *  our runtime preferences
 		 */
 		settings = na_pivot_get_settings( self->private->pivot );
 		self->private->items_add_about_item = na_settings_get_boolean( settings, NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
-		na_settings_register( settings,
+		/*self->private->items_add_about_item = na_settings_get_boolean( settings, NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM, &found, &global );
+		g_debug( "%s: add_about_item=%s, found=%s, global=%s", thisfn,
+				self->private->items_add_about_item ? "True":"False",
+				found ? "True":"False",
+				global ? "True":"False" );*/
+		na_settings_register_key_callback( settings,
 				NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM,
-				( GCallback ) on_items_add_about_item_changed, self );
+				G_CALLBACK( on_items_add_about_item_changed ), self );
 
 		self->private->items_create_root_menu = na_settings_get_boolean( settings, NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
-		na_settings_register( settings,
+		na_settings_register_key_callback( settings,
 				NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU,
-				( GCallback ) on_items_create_root_menu_changed, self );
+				G_CALLBACK( on_items_create_root_menu_changed ), self );
 
-		na_settings_register_global( settings,
-				( GCallback ) on_global_settings_changed, self );
+		na_settings_register_global_callback( settings,
+				G_CALLBACK( on_global_settings_changed ), self );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
@@ -267,6 +271,9 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
+		if( self->private->items_changed_handler ){
+			g_signal_handler_disconnect( self->private->pivot, self->private->items_changed_handler );
+		}
 		g_object_unref( self->private->pivot );
 
 		/* chain up to the parent class */
@@ -988,23 +995,16 @@ execute_about( NautilusMenuItem *item, NautilusActions *plugin )
 }
 
 /*
- * this is a composite callback which is called when:
- * - the content of an action or a menu is modified
- * - the i/o providers read order is changed
- * - the 'readable' status of a i/o provider is changed
- * - the level-zero order is modified
- *
- * if pivot is in automatic reload mode, then it already has reloaded
- * the items tree in the new environment
+ * signal emitted by NAPivot at the end of a burst of 'item-changed' signals
+ * from i/o providers
  */
 static void
-on_items_list_changed( NautilusActions *plugin )
+on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin )
 {
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
-
-		nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
 	}
 }
 
@@ -1042,11 +1042,32 @@ on_items_create_root_menu_changed( gpointer newvalue, NautilusActions *plugin )
 	}
 }
 
+/*
+ * this is called when one of the configuration files have been changed
+ *
+ * as NAPivot is also registered for this same event, then it reloads itself
+ * and will send a 'on_items_list_changed' event. which itself triggers
+ * the nautilus_menu_provider_emit_items_updated_signal() function.
+ *
+ * so just reload here the preferences we are monitoring
+ */
 static void
-on_global_settings_changed( NautilusActions *plugin, gboolean global )
+on_global_settings_changed( gboolean global, NautilusActions *plugin )
 {
+	NAPivot *pivot;
+	NASettings *settings;
+
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
+
+		g_debug( "nautilus_actions_on_global_settings_changed: global=%s, plugin=%p",
+				global ? "True":"False", ( void * ) plugin );
+
+		pivot = plugin->private->pivot;
+		settings = na_pivot_get_settings( pivot );
+
+		plugin->private->items_add_about_item = na_settings_get_boolean( settings, NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
+		plugin->private->items_create_root_menu = na_settings_get_boolean( settings, NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
 	}
 }

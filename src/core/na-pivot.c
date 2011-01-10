@@ -60,10 +60,6 @@ struct _NAPivotPrivate {
 	 */
 	GList      *modules;
 
-	/* The NASettings object
-	 */
-	NASettings *settings;
-
 	/* list of instances to be notified of configuration updates
 	 * these are called 'consumers' of NAPivot
 	 */
@@ -82,9 +78,9 @@ struct _NAPivotPrivate {
 	GTimeVal    last_event;
 	guint       event_source_id;
 
-	/* list of monitoring objects on runtime preferences
+	/* the preferences management
 	 */
-	GList      *monitors;
+	NASettings *settings;
 };
 
 /* NAPivot properties
@@ -93,9 +89,16 @@ enum {
 	NAPIVOT_PROP_TREE_ID = 1,
 };
 
+/* signals
+ */
+enum {
+	ITEMS_CHANGED,
+	LAST_SIGNAL
+};
 
-static GObjectClass *st_parent_class = NULL;
-static gint          st_burst_timeout = 100;		/* burst timeout in msec */
+static GObjectClass *st_parent_class           = NULL;
+static gint          st_burst_timeout          = 100;		/* burst timeout in msec */
+static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType         register_type( void );
 static void          class_init( NAPivotClass *klass );
@@ -117,8 +120,8 @@ static void          free_consumers( GList *list );
 static gboolean      on_item_changed_timeout( NAPivot *pivot );
 static gulong        time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
+#if 0
 /* NAGConf runtime preferences management */
-static void          monitor_runtime_preferences( NAPivot *pivot );
 static void          on_io_provider_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
 static void          on_mandatory_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
 static void          on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
@@ -126,6 +129,12 @@ static void          display_order_changed( NAPivot *pivot );
 static void          create_root_menu_changed( NAPivot *pivot );
 static void          display_about_changed( NAPivot *pivot );
 static void          autosave_changed( NAPivot *pivot );
+#endif
+/* NASettings monitoring */
+static void          monitor_runtime_preferences( NAPivot *pivot );
+static void          on_io_provider_read_status_changed( gpointer newvalue, NAPivot *pivot );
+static void          on_io_providers_read_order_changed( gpointer newvalue, NAPivot *pivot );
+static void          on_items_level_zero_order_changed( gpointer newvalue, NAPivot *pivot );
 
 GType
 na_pivot_get_type( void )
@@ -198,6 +207,25 @@ class_init( NAPivotClass *klass )
 	g_object_class_install_property( object_class, NAPIVOT_PROP_TREE_ID, spec );
 
 	klass->private = g_new0( NAPivotClassPrivate, 1 );
+
+	/*
+	 * NAPivot::pivot-items-changed:
+	 *
+	 * This signal is sent by NAPivot ath the end of a burst of modifications
+	 * as signaled by i/o providers.
+	 *
+	 * The signal is registered without any default handler.
+	 */
+	st_signals[ ITEMS_CHANGED ] = g_signal_new(
+				PIVOT_SIGNAL_ITEMS_CHANGED,
+				NA_PIVOT_TYPE,
+				G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+				0,									/* class offset */
+				NULL,								/* accumulator */
+				NULL,								/* accumulator data */
+				g_cclosure_marshal_VOID__VOID,
+				G_TYPE_NONE,
+				0 );
 }
 
 static void
@@ -221,7 +249,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->tree = NULL;
 	self->private->automatic_reload = FALSE;
 	self->private->event_source_id = 0;
-	self->private->monitors = NULL;
 }
 
 static void
@@ -325,9 +352,6 @@ instance_dispose( GObject *object )
 		na_object_unref_items( self->private->tree );
 		self->private->tree = NULL;
 
-		/* release the GConf monitoring */
-		na_gconf_monitor_release_monitors( self->private->monitors );
-
 		/* release the I/O Provider objects */
 		na_io_provider_terminate();
 
@@ -380,8 +404,6 @@ na_pivot_new( void )
 
 	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
 
-	pivot->private->settings = na_settings_new();
-
 	return( pivot );
 }
 
@@ -405,7 +427,7 @@ na_pivot_dump( const NAPivot *pivot )
 		g_debug( "%s:        consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
 		g_debug( "%s:             tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
 		g_debug( "%s: automatic_reload=%s", thisfn, pivot->private->automatic_reload ? "True":"False" );
-		g_debug( "%s:         monitors=%p (%d elts)", thisfn, ( void * ) pivot->private->monitors, g_list_length( pivot->private->monitors ));
+		/*g_debug( "%s:         monitors=%p (%d elts)", thisfn, ( void * ) pivot->private->monitors, g_list_length( pivot->private->monitors ));*/
 
 		for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
 			g_debug( "%s:     [%d]: %p", thisfn, i++, it->data );
@@ -663,17 +685,20 @@ on_item_changed_timeout( NAPivot *pivot )
 	 * this is up to NAPivot to send now its summarized signal
 	 * last, destroy this timeout
 	 */
-	g_debug( "%s: triggering NAIPivotConsumer interfaces", thisfn );
+	g_debug( "%s: emitting %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
+	g_signal_emit_by_name(( gpointer ) pivot, PIVOT_SIGNAL_ITEMS_CHANGED );
 
+	/* this has to be deprecated */
+	g_debug( "%s: triggering NAIPivotConsumer interfaces", thisfn );
 	if( pivot->private->automatic_reload ){
 		na_pivot_load_items( pivot );
 	}
-
 	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 		na_ipivot_consumer_notify_of_items_changed( NA_IPIVOT_CONSUMER( ic->data ));
 	}
 
 	pivot->private->event_source_id = 0;
+
 	return( FALSE );
 }
 
@@ -777,23 +802,29 @@ free_consumers( GList *consumers )
 }
 
 /*
- * na_pivot_register:
- * @settings: this #NAPivot instance.
- * @key: the key to be monitored.
- * @callback: the function to be called when the value of the key changes.
- * @user_data: data to be passed to the @callback function.
+ * na_pivot_get_settings:
+ * @pivot: this #NAPivot instance.
  *
- * Registers a new consumer of the monitoring of the @key.
+ * Returns: a pointer (not a reference) to the common #NASettings object.
+ * This pointer is owned by @pivot, and should not be released by the caller.
  *
  * Since: 3.1.0
  */
-void
-na_pivot_register( NAPivot *pivot, const gchar *key, GCallback callback, gpointer user_data )
+NASettings *
+na_pivot_get_settings( NAPivot *pivot )
 {
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
+	NASettings *settings;
+
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+
+	settings = NULL;
 
 	if( !pivot->private->dispose_has_run ){
+
+		settings = pivot->private->settings;
 	}
+
+	return( settings );
 }
 
 /*
@@ -952,39 +983,39 @@ static void
 monitor_runtime_preferences( NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_pivot_monitor_runtime_preferences";
-	GList *list = NULL;
-	gchar *path;
 
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 	g_return_if_fail( !pivot->private->dispose_has_run );
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
-	list = g_list_prepend( list,
-			na_gconf_monitor_new(
-					IPREFS_GCONF_PREFS_PATH,
-					( GConfClientNotifyFunc ) on_preferences_change,
-					pivot ));
+	/* this is the new behavior (since 3.1.0)
+	 * NASettings take itself care of maintaining the list of registered callbacks
+	 */
+	pivot->private->settings = na_settings_new();
 
-	path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, "mandatory" );
-	list = g_list_prepend( list,
-			na_gconf_monitor_new(
-					path,
-					( GConfClientNotifyFunc ) on_mandatory_prefs_changed,
-					pivot ));
-	g_free( path );
+	/* monitor the modifications of the readability status of the i/o providers
+	 * this use a fake key as this actually monitor the 'readable' key of
+	 * all known i/o providers
+	 */
+	na_settings_register_key_callback( pivot->private->settings,
+			NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS,
+			G_CALLBACK( on_io_provider_read_status_changed ), pivot );
 
-	path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, "io-providers" );
-	list = g_list_prepend( list,
-			na_gconf_monitor_new(
-					path,
-					( GConfClientNotifyFunc ) on_io_provider_prefs_changed,
-					pivot ));
-	g_free( path );
+	/* monitor the modification of the read order of the i/o providers
+	 */
+	na_settings_register_key_callback( pivot->private->settings,
+			NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER,
+			G_CALLBACK( on_io_providers_read_order_changed ), pivot );
 
-	pivot->private->monitors = list;
+	/* monitor the modification of the level-zero order
+	 */
+	na_settings_register_key_callback( pivot->private->settings,
+			NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER,
+			G_CALLBACK( on_items_level_zero_order_changed ), pivot );
 }
 
+#if 0
 static void
 on_io_provider_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
 {
@@ -1129,5 +1160,36 @@ autosave_changed( NAPivot *pivot )
 		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 			na_ipivot_consumer_notify_of_autosave_changed( NA_IPIVOT_CONSUMER( ic->data ), autosave_on, autosave_period );
 		}
+	}
+}
+#endif
+
+static void
+on_io_provider_read_status_changed( gpointer newvalue, NAPivot *pivot )
+{
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+	}
+}
+
+static void
+on_io_providers_read_order_changed( gpointer newvalue, NAPivot *pivot )
+{
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
+	}
+}
+
+static void
+on_items_level_zero_order_changed( gpointer newvalue, NAPivot *pivot )
+{
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
+
+	if( !pivot->private->dispose_has_run ){
+
 	}
 }

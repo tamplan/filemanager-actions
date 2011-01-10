@@ -33,6 +33,7 @@
 #endif
 
 #include <gio/gio.h>
+#include <string.h>
 
 #include <api/na-data-types.h>
 
@@ -75,6 +76,8 @@ static const KeyDef st_def_keys[] = {
 		{ 0 }
 };
 
+typedef void ( *global_fn )( gboolean global, void *user_data );
+
 typedef struct {
 	gchar    *key;
 	GCallback callback;
@@ -90,6 +93,7 @@ static void      instance_init( GTypeInstance *instance, gpointer klass );
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
+static KeyDef   *get_key_def( const gchar *key );
 static GKeyFile *initialize_settings( NASettings* settings, const gchar *dir, GFileMonitor **monitor, gulong *handler );
 static void      on_conf_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, NASettings *settings );
 static void      release_consumer( Consumer *consumer );
@@ -268,7 +272,7 @@ na_settings_new( void )
 }
 
 /**
- * na_settings_register:
+ * na_settings_register_key_callback:
  * @settings: this #NASettings instance.
  * @key: the key to be monitored.
  * @callback: the function to be called when the value of the key changes.
@@ -279,7 +283,7 @@ na_settings_new( void )
  * Since: 3.1.0
  */
 void
-na_settings_register( NASettings *settings, const gchar *key, GCallback callback, gpointer user_data )
+na_settings_register_key_callback( NASettings *settings, const gchar *key, GCallback callback, gpointer user_data )
 {
 	g_return_if_fail( NA_IS_SETTINGS( settings ));
 
@@ -296,7 +300,7 @@ na_settings_register( NASettings *settings, const gchar *key, GCallback callback
 }
 
 /**
- * na_settings_register_global:
+ * na_settings_register_global_callback:
  * @settings: this #NASettings instance.
  * @callback: the function to be called when the value of the key changes.
  * @user_data: data to be passed to the @callback function.
@@ -306,7 +310,7 @@ na_settings_register( NASettings *settings, const gchar *key, GCallback callback
  * Since: 3.1.0
  */
 void
-na_settings_register_global( NASettings *settings, GCallback callback, gpointer user_data )
+na_settings_register_global_callback( NASettings *settings, GCallback callback, gpointer user_data )
 {
 	g_return_if_fail( NA_IS_SETTINGS( settings ));
 
@@ -342,7 +346,11 @@ na_settings_register_global( NASettings *settings, GCallback callback, gpointer 
 gboolean
 na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found, gboolean *global )
 {
+	static const gchar *thisfn = "na_settings_get_boolean";
 	gboolean value;
+	KeyDef *key_def;
+	GError *error;
+	gboolean has_entry;
 
 	g_return_val_if_fail( NA_IS_SETTINGS( settings ), FALSE );
 
@@ -355,49 +363,67 @@ na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found
 	}
 
 	if( !settings->private->dispose_has_run ){
+		error = NULL;
+		has_entry = TRUE;
+		key_def = get_key_def( key );
 
+		if( key_def ){
+			value = g_key_file_get_boolean( settings->private->global_conf, key_def->group, key, &error );
+			if( error ){
+				has_entry = FALSE;
+				if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND ){
+					g_warning( "%s: (global) %s", thisfn, error->message );
+				}
+				g_error_free( error );
+				error = NULL;
+
+			} else {
+				if( found ){
+					*found = TRUE;
+				}
+				if( global ){
+					*global = TRUE;
+				}
+			}
+			if( !has_entry ){
+				value = g_key_file_get_boolean( settings->private->user_conf, key_def->group, key, &error );
+				if( error ){
+					if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND ){
+						g_warning( "%s: (user) %s", thisfn, error->message );
+					}
+					g_error_free( error );
+					error = NULL;
+				} else {
+					has_entry = TRUE;
+					if( found ){
+						*found = TRUE;
+					}
+				}
+			}
+			if( !has_entry ){
+				value = ( strcmp( key_def->default_value, "true" ) == 0 );
+			}
+		}
 	}
 
 	return( value );
 }
 
-/**
- * na_settings_get_value:
- * @settings: this #NASettings instance.
- * @key: the key whose value is to be returned.
- * @found: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the searched @key has been found (%TRUE), or if the returned
- *  value comes from default (%FALSE).
- * @global: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from global preferences
- *  (%TRUE), or from the user preferences (%FALSE). Global preferences
- *  are usually read-only. When the @key has not been found, @global
- *  is set to %FALSE.
- *
- * Returns: the value of the key, of its default value if not found.
- *
- * Since: 3.1.0
- */
-gpointer
-na_settings_get_value( NASettings *settings, const gchar *key, gboolean *found, gboolean *global )
+static KeyDef *
+get_key_def( const gchar *key )
 {
-	gpointer value;
+	KeyDef *found = NULL;
+	KeyDef *idef;
 
-	g_return_val_if_fail( NA_IS_SETTINGS( settings ), NULL );
-
-	value = NULL;
-	if( found ){
-		*found = FALSE;
-	}
-	if( global ){
-		*global = FALSE;
-	}
-
-	if( !settings->private->dispose_has_run ){
-
+	idef = ( KeyDef * ) st_def_keys;
+	while( idef && !found ){
+		if( !strcmp( idef->key, key )){
+			found = idef;
+		}
+		idef++;
 	}
 
-	return( value );
+	return( found );
 }
 
 /*
@@ -439,11 +465,38 @@ initialize_settings( NASettings* settings, const gchar *dir, GFileMonitor **moni
 	return( key_file );
 }
 
+/*
+ * one of the two monitored configuration files have changed on the disk
+ * we do not try to identify which keys have actually change
+ * instead we trigger each registered consumer for the 'global' event
+ */
 static void
 on_conf_changed( GFileMonitor *monitor,
 		GFile *file, GFile *other_file, GFileMonitorEvent event_type, NASettings *settings )
 {
+	GList *ic;
+	Consumer *consumer;
+	gchar *path;
+	GFile *prefix;
+	gboolean global;
+
 	g_return_if_fail( NA_IS_SETTINGS( settings ));
+
+	if( !settings->private->dispose_has_run ){
+
+		path = g_build_filename( SYSCONFDIR, "xdg", NULL );
+		prefix = g_file_new_for_path( path );
+		global = g_file_has_prefix( file, prefix );
+		g_object_unref( prefix );
+		g_free( path );
+
+		for( ic = settings->private->consumers ; ic ; ic = ic->next ){
+			consumer = ( Consumer * ) ic->data;
+			if( !consumer->key ){
+				( *( global_fn ) consumer->callback )( global, consumer->user_data );
+			}
+		}
+	}
 }
 
 /*

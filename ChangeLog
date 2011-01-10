@@ -35,6 +35,17 @@
 
 2011-01-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h:
+	Replace GConf preferences monitoring with NASettings.
+	Define new PIVOT_SIGNAL_ITEMS_CHANGED signal.
+
+	* src/core/na-settings.c:
+	* src/core/na-settings.h
+	(na_settings_register_key_callback,
+	na_settings_register_global_callback, na_settings_get_boolean):
+	New functions.
+
 	* src/api/na-iio-provider.h:
 	* src/core/na-io-provider.h: IIO_PROVIDER_SIGNAL_ITEM_CHANGED signal
 	definition is moved (and renamed) from public API to internal one.
