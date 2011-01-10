@@ -426,11 +426,11 @@ done
 msg "${count} migrated items"
 
 # we are using this same script to migrate preferences to .conf files
-# mandatory preferences go to SYSCONFDIR/nautilus-actions.conf
+# mandatory preferences go to SYSCONFDIR/xdg/nautilus-actions.conf
 # while user preferences go to HOME/.config/nautilus-actions.conf
 # Note also that the GConf I/O provider is disabled both for reading
 # and writing
-[ $(id -u) -eq 0 ] && destdir=@sysconfdir@ || destdir=${HOME}/.config
+[ $(id -u) -eq 0 ] && destdir=@sysconfdir@/xdg || destdir=${HOME}/.config
 command "mkdir -p ${destdir}"
 destconf=${destdir}/@PACKAGE@.conf
 rm -f ${my_tmproot}.nact

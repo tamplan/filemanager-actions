@@ -246,18 +246,23 @@ NASettings *
 na_settings_new( void )
 {
 	NASettings *settings;
+	gchar *dir;
 
 	settings = g_object_new( NA_SETTINGS_TYPE, NULL );
 
+	dir = g_build_filename( SYSCONFDIR, "xdg", NULL );
 	settings->private->global_conf = initialize_settings(
-			settings, SYSCONFDIR,
+			settings, dir,
 			&settings->private->global_monitor,
 			&settings->private->global_handler );
+	g_free( dir );
 
+	dir = g_build_filename( g_get_home_dir(), ".config", NULL );
 	settings->private->user_conf = initialize_settings(
-			settings, g_get_home_dir(),
+			settings, dir,
 			&settings->private->user_monitor,
 			&settings->private->user_handler );
+	g_free( dir );
 
 	return( settings );
 }

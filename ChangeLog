@@ -35,6 +35,9 @@
 
 2011-01-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-settings.c (na_settings_new):
+	* src/utils/na-gconf2key.sh.in: Global configuration file goes to /etc/xdg.
+
 	* src/core/na-pivot.c:
 	* src/core/na-pivot.h (na_pivot_register):
 	* src/core/na-settings.c:
