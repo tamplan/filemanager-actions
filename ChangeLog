@@ -37,6 +37,7 @@
 
 	* src/plugin-menu/nautilus-actions.c:
 	Implement runtime preferences monitoring.
+	No more use deprecated na_pivot_set_automatic_reload().
 
 	* src/core/na-pivot.c:
 	* src/core/na-pivot.h:

@@ -57,16 +57,6 @@ struct NautilusActionsClassPrivate {
 };
 
 /* private instance data
- *
- * Runtime modification management:
- * We have to react to some runtime environment modifications:
- *
- * - whether the items list has changed (we have to reload a new pivot)
- *   > registering for notifications against NAPivot
- *
- * - whether to add the 'About Nautilus-Actions' item
- * - whether to create a 'Nautilus-Actions actions' root menu
- *   > registering for notifications against NASettings
  */
 struct NautilusActionsPrivate {
 	gboolean dispose_has_run;
@@ -207,6 +197,17 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->dispose_has_run = FALSE;
 }
 
+/*
+ * Runtime modification management:
+ * We have to react to some runtime environment modifications:
+ *
+ * - whether the items list has changed (we have to reload a new pivot)
+ *   > registering for notifications against NAPivot
+ *
+ * - whether to add the 'About Nautilus-Actions' item
+ * - whether to create a 'Nautilus-Actions actions' root menu
+ *   > registering for notifications against NASettings
+ */
 static void
 instance_constructed( GObject *object )
 {
@@ -225,7 +226,6 @@ instance_constructed( GObject *object )
 
 		/* setup NAPivot properties before loading items
 		 */
-		na_pivot_set_automatic_reload( self->private->pivot, TRUE );
 		na_pivot_set_loadable( self->private->pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
 		na_pivot_load_items( self->private->pivot );
 
