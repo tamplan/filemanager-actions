@@ -36,6 +36,7 @@
 #include <string.h>
 
 #include <api/na-data-types.h>
+#include <api/na-core-utils.h>
 
 #include "na-settings.h"
 
@@ -49,18 +50,37 @@ struct _NASettingsClassPrivate {
  */
 struct _NASettingsPrivate {
 	gboolean  dispose_has_run;
+
+	/* the global configuration file, which handles mandatory preferences
+	 */
 	GKeyFile     *global_conf;
 	GFileMonitor *global_monitor;
 	gulong        global_handler;
+
+	/* the user configuration file
+	 */
 	GKeyFile     *user_conf;
 	GFileMonitor *user_monitor;
 	gulong        user_handler;
+
+	/* the registered consumers of monitoring events
+	 * as a list of 'Consumer' structs
+	 */
 	GList        *consumers;
+
+	/* for each monitoring key, we keep here the last known value
+	 * so that we are able to detect changes when the configuration
+	 * files is 'globally' changed
+	 * as a list of 'Entry' structs
+	 */
+	GList        *entries;
 };
 
 #define GROUP_NACT						"nact"
 #define GROUP_RUNTIME					"runtime"
 #define GROUP_IO_PROVIDER				"io-provider"
+
+#define IO_PROVIDER_READABLE			"readable"
 
 typedef struct {
 	const gchar *key;
@@ -71,9 +91,12 @@ typedef struct {
 	KeyDef;
 
 static const KeyDef st_def_keys[] = {
-		{ NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM,   GROUP_RUNTIME, NAFD_TYPE_BOOLEAN, "true" },
-		{ NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU, GROUP_RUNTIME, NAFD_TYPE_BOOLEAN, "true" },
-		{ 0 }
+	{ NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER, GROUP_RUNTIME, NAFD_TYPE_STRING_LIST, "" },
+	{ NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM,    GROUP_RUNTIME, NAFD_TYPE_BOOLEAN,     "true" },
+	{ NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU,  GROUP_RUNTIME, NAFD_TYPE_BOOLEAN,     "true" },
+	{ NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER,  GROUP_RUNTIME, NAFD_TYPE_STRING_LIST, "" },
+	{ NA_SETTINGS_RUNTIME_ITEMS_LIST_ORDER_MODE,   GROUP_RUNTIME, NAFD_TYPE_MAP,         "AscendingOrder" },
+	{ 0 }
 };
 
 typedef void ( *global_fn )( gboolean global, void *user_data );
@@ -85,6 +108,15 @@ typedef struct {
 }
 	Consumer;
 
+typedef struct {
+	gchar   *group;
+	gchar   *key;
+	void    *value;
+	gboolean global;
+	guint    type;
+}
+	Entry;
+
 static GObjectClass *st_parent_class = NULL;
 
 static GType     register_type( void );
@@ -94,9 +126,16 @@ static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
 static KeyDef   *get_key_def( const gchar *key );
+static gchar    *get_string_ex( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global );
+static GSList   *get_string_list_ex( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global );
 static GKeyFile *initialize_settings( NASettings* settings, const gchar *dir, GFileMonitor **monitor, gulong *handler );
+static void      monitor_io_provider_read_status( NASettings *settings );
+static void      monitor_io_provider_read_status_conf( NASettings *settings, GKeyFile *key_file, gboolean global );
+static void      monitor_key( NASettings *settings, const gchar *key );
+static void      monitor_key_add( NASettings *settings, const gchar *group, const gchar *key, gpointer value, gboolean global, guint type );
 static void      on_conf_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, NASettings *settings );
 static void      release_consumer( Consumer *consumer );
+static void      release_entry( Entry *entry );
 
 GType
 na_settings_get_type( void )
@@ -232,6 +271,9 @@ instance_finalize( GObject *object )
 	g_list_foreach( self->private->consumers, ( GFunc ) release_consumer, NULL );
 	g_list_free( self->private->consumers );
 
+	g_list_foreach( self->private->entries, ( GFunc ) release_entry, NULL );
+	g_list_free( self->private->entries );
+
 	g_free( self->private );
 
 	/* chain call to parent class */
@@ -295,6 +337,16 @@ na_settings_register_key_callback( NASettings *settings, const gchar *key, GCall
 		consumer->callback = callback;
 		consumer->user_data = user_data;
 		settings->private->consumers = g_list_prepend( settings->private->consumers, consumer );
+
+		if( !strcmp( key, NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS )){
+			monitor_io_provider_read_status( settings );
+
+		} else if( !strcmp( key, NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER ) ||
+					!strcmp( key, NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM ) ||
+					!strcmp( key, NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU ) ||
+					!strcmp( key, NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER )){
+			monitor_key( settings, key );
+		}
 	}
 
 }
@@ -349,6 +401,55 @@ na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found
 	static const gchar *thisfn = "na_settings_get_boolean";
 	gboolean value;
 	KeyDef *key_def;
+
+	g_return_val_if_fail( NA_IS_SETTINGS( settings ), FALSE );
+
+	value = FALSE;
+	if( found ){
+		*found = FALSE;
+	}
+	if( global ){
+		*global = FALSE;
+	}
+
+	if( !settings->private->dispose_has_run ){
+
+		key_def = get_key_def( key );
+		if( key_def ){
+			value = na_settings_get_boolean_ex( settings, key_def->group, key, key_def->default_value, found, global );
+
+		} else {
+			g_warning( "%s: no KeyDef found for key=%s", thisfn, key );
+		}
+	}
+
+	return( value );
+}
+
+/**
+ * na_settings_get_boolean_ex:
+ * @settings: this #NASettings instance.
+ * @group: the group where the @key is to be searched for.
+ * @key: the key whose value is to be returned.
+ * @default_value: as 'true' or 'false', may be %NULL which defaults to %FALSE.
+ * @found: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the searched @key has been found (%TRUE), or if the returned
+ *  value comes from default (%FALSE).
+ * @global: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the returned value has been readen from global preferences
+ *  (%TRUE), or from the user preferences (%FALSE). Global preferences
+ *  are usually read-only. When the @key has not been found, @global
+ *  is set to %FALSE.
+ *
+ * Returns: the value of the key, of its default value if not found.
+ *
+ * Since: 3.1.0
+ */
+gboolean
+na_settings_get_boolean_ex( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global )
+{
+	static const gchar *thisfn = "na_settings_get_boolean_ex";
+	gboolean value;
 	GError *error;
 	gboolean has_entry;
 
@@ -363,46 +464,95 @@ na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found
 	}
 
 	if( !settings->private->dispose_has_run ){
+
 		error = NULL;
 		has_entry = TRUE;
-		key_def = get_key_def( key );
+		value = g_key_file_get_boolean( settings->private->global_conf, group, key, &error );
+		if( error ){
+			has_entry = FALSE;
+			if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
+				g_warning( "%s: (global) %s", thisfn, error->message );
+			}
+			g_error_free( error );
+			error = NULL;
 
-		if( key_def ){
-			value = g_key_file_get_boolean( settings->private->global_conf, key_def->group, key, &error );
+		} else {
+			if( found ){
+				*found = TRUE;
+			}
+			if( global ){
+				*global = TRUE;
+			}
+		}
+		if( !has_entry ){
+			value = g_key_file_get_boolean( settings->private->user_conf, group, key, &error );
 			if( error ){
-				has_entry = FALSE;
-				if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND ){
-					g_warning( "%s: (global) %s", thisfn, error->message );
+				if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
+					g_warning( "%s: (user) %s", thisfn, error->message );
 				}
 				g_error_free( error );
 				error = NULL;
-
 			} else {
+				has_entry = TRUE;
 				if( found ){
 					*found = TRUE;
 				}
-				if( global ){
-					*global = TRUE;
-				}
 			}
-			if( !has_entry ){
-				value = g_key_file_get_boolean( settings->private->user_conf, key_def->group, key, &error );
-				if( error ){
-					if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND ){
-						g_warning( "%s: (user) %s", thisfn, error->message );
-					}
-					g_error_free( error );
-					error = NULL;
-				} else {
-					has_entry = TRUE;
-					if( found ){
-						*found = TRUE;
-					}
-				}
+		}
+		if( !has_entry ){
+			if( default_value ){
+				value = ( strcmp( default_value, "true" ) == 0 );
 			}
-			if( !has_entry ){
-				value = ( strcmp( key_def->default_value, "true" ) == 0 );
-			}
+		}
+	}
+
+	return( value );
+}
+
+/**
+ * na_settings_get_string_list:
+ * @settings: this #NASettings instance.
+ * @key: the key whose value is to be returned.
+ * @found: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the searched @key has been found (%TRUE), or if the returned
+ *  value comes from default (%FALSE).
+ * @global: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the returned value has been readen from global preferences
+ *  (%TRUE), or from the user preferences (%FALSE). Global preferences
+ *  are usually read-only. When the @key has not been found, @global
+ *  is set to %FALSE.
+ *
+ * Returns: the value of the key as a newly allocated list of strings.
+ * The returned list should be na_core_utils_slist_free() by the caller.
+ *
+ * Since: 3.1.0
+ */
+GSList *
+na_settings_get_string_list( NASettings *settings, const gchar *key, gboolean *found, gboolean *global )
+{
+	static const gchar *thisfn = "na_settings_get_string_list";
+	GSList *value;
+	KeyDef *key_def;
+
+	g_return_val_if_fail( NA_IS_SETTINGS( settings ), FALSE );
+
+	value = NULL;
+	if( found ){
+		*found = FALSE;
+	}
+	if( global ){
+		*global = FALSE;
+	}
+
+	if( !settings->private->dispose_has_run ){
+
+		key_def = get_key_def( key );
+
+		if( key_def ){
+			value = get_string_list_ex( settings, key_def->group, key, key_def->default_value, found, global );
+
+		} else {
+			g_warning( "%s: no KeyDef found for key=%s", thisfn, key );
 		}
 	}
 
@@ -424,6 +574,168 @@ get_key_def( const gchar *key )
 	}
 
 	return( found );
+}
+
+/*
+ * get_string_ex:
+ * @settings: this #NASettings instance.
+ * @key: the key whose value is to be returned.
+ * @found: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the searched @key has been found (%TRUE), or if the returned
+ *  value comes from default (%FALSE).
+ * @global: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the returned value has been readen from global preferences
+ *  (%TRUE), or from the user preferences (%FALSE). Global preferences
+ *  are usually read-only. When the @key has not been found, @global
+ *  is set to %FALSE.
+ *
+ * Returns: the value of the key as a newly allocated string which should
+ * be g_free() by the caller.
+ *
+ * Since: 3.1.0
+ */
+static gchar *
+get_string_ex( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global )
+{
+	static const gchar *thisfn = "na_settings_get_string_ex";
+	gchar *value;
+	GError *error;
+	gboolean has_entry;
+
+	g_return_val_if_fail( NA_IS_SETTINGS( settings ), NULL );
+
+	value = NULL;
+	if( found ){
+		*found = FALSE;
+	}
+	if( global ){
+		*global = FALSE;
+	}
+
+	if( !settings->private->dispose_has_run ){
+		error = NULL;
+		has_entry = TRUE;
+		value = g_key_file_get_string( settings->private->global_conf, group, key, &error );
+		if( error ){
+			has_entry = FALSE;
+			if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
+				g_warning( "%s: (global) %s", thisfn, error->message );
+			}
+			g_error_free( error );
+			error = NULL;
+
+		} else {
+			if( found ){
+				*found = TRUE;
+			}
+			if( global ){
+				*global = TRUE;
+			}
+		}
+		if( !has_entry ){
+			value = g_key_file_get_string( settings->private->user_conf, group, key, &error );
+			if( error ){
+				if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
+					g_warning( "%s: (user) %s", thisfn, error->message );
+				}
+				g_error_free( error );
+				error = NULL;
+			} else {
+				has_entry = TRUE;
+				if( found ){
+					*found = TRUE;
+				}
+			}
+		}
+		if( !has_entry ){
+			value = g_strdup( default_value );
+		}
+	}
+
+	return( value );
+}
+
+/*
+ * get_string_list_ex:
+ * @settings: this #NASettings instance.
+ * @key: the key whose value is to be returned.
+ * @found: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the searched @key has been found (%TRUE), or if the returned
+ *  value comes from default (%FALSE).
+ * @global: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the returned value has been readen from global preferences
+ *  (%TRUE), or from the user preferences (%FALSE). Global preferences
+ *  are usually read-only. When the @key has not been found, @global
+ *  is set to %FALSE.
+ *
+ * Returns: the value of the key as a newly allocated list of strings.
+ * The returned list should be na_core_utils_slist_free() by the caller.
+ *
+ * Since: 3.1.0
+ */
+static GSList *
+get_string_list_ex( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global )
+{
+	static const gchar *thisfn = "na_settings_get_string_list_ex";
+	GSList *value;
+	gchar **array;
+	GError *error;
+	gboolean has_entry;
+
+	g_return_val_if_fail( NA_IS_SETTINGS( settings ), NULL );
+
+	value = NULL;
+	if( found ){
+		*found = FALSE;
+	}
+	if( global ){
+		*global = FALSE;
+	}
+
+	if( !settings->private->dispose_has_run ){
+		error = NULL;
+		has_entry = TRUE;
+		array = g_key_file_get_string_list( settings->private->global_conf, group, key, NULL, &error );
+		if( error ){
+			has_entry = FALSE;
+			if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
+				g_warning( "%s: (global) %s", thisfn, error->message );
+			}
+			g_error_free( error );
+			error = NULL;
+
+		} else {
+			if( found ){
+				*found = TRUE;
+			}
+			if( global ){
+				*global = TRUE;
+			}
+		}
+		if( !has_entry ){
+			array = g_key_file_get_string_list( settings->private->user_conf, group, key, NULL, &error );
+			if( error ){
+				if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
+					g_warning( "%s: (user) %s", thisfn, error->message );
+				}
+				g_error_free( error );
+				error = NULL;
+			} else {
+				has_entry = TRUE;
+				if( found ){
+					*found = TRUE;
+				}
+			}
+		}
+		if( !has_entry ){
+			value = g_slist_append( NULL, g_strdup( default_value ));
+		} else {
+			value = na_core_utils_slist_from_array(( const gchar ** ) array );
+			g_strfreev( array );
+		}
+	}
+
+	return( value );
 }
 
 /*
@@ -466,9 +778,124 @@ initialize_settings( NASettings* settings, const gchar *dir, GFileMonitor **moni
 }
 
 /*
+ * this is a fake key, as we actually monitor the 'readable' status
+ * of all io-providers
+ * add to the list of monitored keys the found io-providers
+ */
+static void
+monitor_io_provider_read_status( NASettings *settings )
+{
+	monitor_io_provider_read_status_conf( settings, settings->private->global_conf, TRUE );
+
+	monitor_io_provider_read_status_conf( settings, settings->private->user_conf, FALSE );
+}
+
+static void
+monitor_io_provider_read_status_conf( NASettings *settings, GKeyFile *key_file, gboolean global )
+{
+	gchar **array;
+	gchar **idx;
+	gboolean readable;
+	gboolean found;
+
+	array = g_key_file_get_groups( key_file, NULL );
+	if( array ){
+		idx = array;
+		while( idx ){
+			if( g_str_has_prefix( *idx, "io-provider " )){
+				readable = na_settings_get_boolean_ex( settings, *idx, IO_PROVIDER_READABLE, NULL, &found, NULL );
+				if( found ){
+					monitor_key_add( settings, *idx, IO_PROVIDER_READABLE, GUINT_TO_POINTER(( guint ) readable ), global, NAFD_TYPE_BOOLEAN );
+				}
+			}
+			idx++;
+		}
+		g_strfreev( array );
+	}
+}
+
+static void
+monitor_key( NASettings *settings, const gchar *key )
+{
+	static const gchar *thisfn = "na_settings_monitor_key";
+	KeyDef *key_def;
+	gpointer value;
+	gboolean found, global;
+
+	found = FALSE;
+	key_def = get_key_def( key );
+	if( key_def ){
+		switch( key_def->data_type ){
+
+			case NAFD_TYPE_STRING:
+			case NAFD_TYPE_MAP:
+				value = get_string_ex( settings, key_def->group, key, NULL, &found, &global );
+				break;
+
+			case NAFD_TYPE_BOOLEAN:
+				value = GUINT_TO_POINTER( na_settings_get_boolean_ex( settings, key_def->group, key, NULL, &found, &global ));
+				break;
+
+			case NAFD_TYPE_STRING_LIST:
+				value = get_string_list_ex( settings, key_def->group, key, NULL, &found, &global );
+				break;
+
+			case NAFD_TYPE_LOCALE_STRING:
+			case NAFD_TYPE_POINTER:
+			case NAFD_TYPE_UINT:
+				g_warning( "%s: unmanaged data type: %s", thisfn, na_data_types_get_label( key_def->data_type ));
+				break;
+
+			default:
+				g_warning( "%s: unknown data type: %d", thisfn, key_def->data_type );
+		}
+
+	} else {
+		g_warning( "%s: no KeyDef found for key=%s", thisfn, key );
+	}
+
+	if( found ){
+		monitor_key_add( settings, key_def->group, key, value, global, key_def->data_type );
+	}
+}
+
+/* add the key if not already monitored
+ */
+static void
+monitor_key_add( NASettings *settings, const gchar *group, const gchar *key, gpointer value, gboolean global, guint type )
+{
+	GList *it;
+	gboolean found;
+	Entry *entry;
+
+	for( it=settings->private->entries, found=FALSE ; it && !found ; it=it->next ){
+		entry = ( Entry * ) it->data;
+		if( !strcmp( entry->group, group ) &&
+			!strcmp( entry->key, key ) &&
+			entry->global == global ){
+				found = TRUE;
+		}
+	}
+
+	if( !found ){
+		entry = g_new0( Entry, 1 );
+		entry->group = g_strdup( group );
+		entry->key = g_strdup( key );
+		entry->value = na_data_types_copy( value, type );
+		entry->global = global;
+		entry->type = type;
+
+		settings->private->entries = g_list_prepend( settings->private->entries, entry );
+	}
+}
+
+/*
  * one of the two monitored configuration files have changed on the disk
  * we do not try to identify which keys have actually change
  * instead we trigger each registered consumer for the 'global' event
+ *
+ * consumers which register for the 'global_conf' event are recorded
+ * with a NULL key
  */
 static void
 on_conf_changed( GFileMonitor *monitor,
@@ -508,4 +935,17 @@ release_consumer( Consumer *consumer )
 {
 	g_free( consumer->key );
 	g_free( consumer );
+}
+
+/*
+ * called from instance_finalize
+ * release the list of monitored entries
+ */
+static void
+release_entry( Entry *entry )
+{
+	g_free( entry->group );
+	g_free( entry->key );
+	na_data_types_free( entry->value, entry->type );
+	g_free( entry );
 }

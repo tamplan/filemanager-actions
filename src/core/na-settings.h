@@ -86,6 +86,7 @@ GType na_settings_get_type( void );
 #define NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM		"items-add-about-item"
 #define NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU		"items-create-root-menu"
 #define NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER		"items-level-zero-order"
+#define NA_SETTINGS_RUNTIME_ITEMS_LIST_ORDER_MODE		"items-list-order-mode"
 
 NASettings *na_settings_new                     ( void );
 
@@ -93,6 +94,8 @@ void        na_settings_register_key_callback   ( NASettings *settings, const gc
 void        na_settings_register_global_callback( NASettings *settings, GCallback callback, gpointer user_data );
 
 gboolean    na_settings_get_boolean             ( NASettings *settings, const gchar *key, gboolean *found, gboolean *global );
+gboolean    na_settings_get_boolean_ex          ( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global );
+GSList     *na_settings_get_string_list         ( NASettings *settings, const gchar *key, gboolean *found, gboolean *global );
 
 G_END_DECLS
 

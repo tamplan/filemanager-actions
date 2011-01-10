@@ -1138,7 +1138,6 @@ on_change_event_timeout( NautilusActions *plugin )
 	static const gchar *thisfn = "nautilus_actions_on_change_event_timeout";
 	GTimeVal now;
 	gulong diff;
-	GList *ic;
 	gulong timeout_usec = 1000*st_burst_timeout;
 
 	g_get_current_time( &now );

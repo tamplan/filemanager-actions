@@ -35,6 +35,18 @@
 
 2011-01-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-types.h:
+	* src/core/na-data-types.c
+	(na_data_types_copy, na_data_types_free, na_data_types_get_label):
+	New functions.
+
+	* src/core/na-settings.c
+	(monitor_io_provider_read_status, monitor_key): Register monitored keys.
+
+	* src/core/na-settings.h
+	(na_settings_get_boolean_ex, na_settings_get_string_list):
+	New functions.
+
 	* src/plugin-menu/nautilus-actions.c:
 	Implement runtime preferences monitoring.
 	No more use deprecated na_pivot_set_automatic_reload().

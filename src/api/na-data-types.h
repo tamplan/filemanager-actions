@@ -76,11 +76,17 @@ typedef enum {
 	NAFD_TYPE_BOOLEAN,
 	NAFD_TYPE_STRING_LIST,
 	NAFD_TYPE_POINTER,
-	NAFD_TYPE_UINT
+	NAFD_TYPE_UINT,
+	NAFD_TYPE_MAP
 }
 	NAFactoryDataType;
 
+gpointer     na_data_types_copy     ( gpointer value, guint type );
+void         na_data_types_free     ( gpointer value, guint type );
+
 const gchar *na_data_types_get_gconf_dump_key( guint type );
+
+const gchar *na_data_types_get_label( guint type );
 
 G_END_DECLS
 
