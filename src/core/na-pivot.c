@@ -785,9 +785,12 @@ free_consumers( GList *consumers )
  * Since: 3.1.0
  */
 void
-na_pivot_register( NAPivot *pivot, const gchar *key, NASettingsCallback callback, gpointer user_data )
+na_pivot_register( NAPivot *pivot, const gchar *key, GCallback callback, gpointer user_data )
 {
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
+	if( !pivot->private->dispose_has_run ){
+	}
 }
 
 /*

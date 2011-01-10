@@ -151,7 +151,7 @@ gboolean      na_pivot_write_level_zero( const NAPivot *pivot, GList *items, GSL
  */
 void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
 NASettings   *na_pivot_get_settings     ( NAPivot *pivot );
-void          na_pivot_register         ( NAPivot *pivot, const gchar *key, NASettingsCallback callback, gpointer user_data );
+void          na_pivot_register         ( NAPivot *pivot, const gchar *key, GCallback callback, gpointer user_data );
 
 /* NAPivot properties and configuration
  */

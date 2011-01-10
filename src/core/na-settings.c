@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <gio/gio.h>
+
 #include <api/na-data-types.h>
 
 #include "na-settings.h"
@@ -74,9 +76,9 @@ static const KeyDef st_def_keys[] = {
 };
 
 typedef struct {
-	gchar             *key;
-	NASettingsCallback callback;
-	gpointer           user_data;
+	gchar    *key;
+	GCallback callback;
+	gpointer  user_data;
 }
 	Consumer;
 
@@ -89,6 +91,7 @@ static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
 static GKeyFile *initialize_settings( NASettings* settings, const gchar *dir, GFileMonitor **monitor, gulong *handler );
+static void      on_conf_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, NASettings *settings );
 static void      release_consumer( Consumer *consumer );
 
 GType
@@ -189,7 +192,7 @@ instance_dispose( GObject *object )
 		g_key_file_free( self->private->global_conf );
 		if( self->private->global_monitor ){
 			if( self->private->global_handler ){
-				g_signal_disconnect( self->private->global_monitor, self->private->global_handler );
+				g_signal_handler_disconnect( self->private->global_monitor, self->private->global_handler );
 			}
 			g_file_monitor_cancel( self->private->global_monitor );
 			g_object_unref( self->private->global_monitor );
@@ -198,7 +201,7 @@ instance_dispose( GObject *object )
 		g_key_file_free( self->private->user_conf );
 		if( self->private->user_monitor ){
 			if( self->private->user_handler ){
-				g_signal_disconnect( self->private->user_monitor, self->private->user_handler );
+				g_signal_handler_disconnect( self->private->user_monitor, self->private->user_handler );
 			}
 			g_file_monitor_cancel( self->private->user_monitor );
 			g_object_unref( self->private->user_monitor );
@@ -271,7 +274,7 @@ na_settings_new( void )
  * Since: 3.1.0
  */
 void
-na_settings_register( NASettings *settings, const gchar *key, NASettingsCallback callback, gpointer user_data )
+na_settings_register( NASettings *settings, const gchar *key, GCallback callback, gpointer user_data )
 {
 	g_return_if_fail( NA_IS_SETTINGS( settings ));
 
@@ -285,6 +288,72 @@ na_settings_register( NASettings *settings, const gchar *key, NASettingsCallback
 		settings->private->consumers = g_list_prepend( settings->private->consumers, consumer );
 	}
 
+}
+
+/**
+ * na_settings_register_global:
+ * @settings: this #NASettings instance.
+ * @callback: the function to be called when the value of the key changes.
+ * @user_data: data to be passed to the @callback function.
+ *
+ * Registers a new consumer of the monitoring of the configuration files.
+ *
+ * Since: 3.1.0
+ */
+void
+na_settings_register_global( NASettings *settings, GCallback callback, gpointer user_data )
+{
+	g_return_if_fail( NA_IS_SETTINGS( settings ));
+
+	if( !settings->private->dispose_has_run ){
+
+		Consumer *consumer = g_new0( Consumer, 1 );
+
+		consumer->key = NULL;
+		consumer->callback = callback;
+		consumer->user_data = user_data;
+		settings->private->consumers = g_list_prepend( settings->private->consumers, consumer );
+	}
+
+}
+
+/**
+ * na_settings_get_boolean:
+ * @settings: this #NASettings instance.
+ * @key: the key whose value is to be returned.
+ * @found: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the searched @key has been found (%TRUE), or if the returned
+ *  value comes from default (%FALSE).
+ * @global: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the returned value has been readen from global preferences
+ *  (%TRUE), or from the user preferences (%FALSE). Global preferences
+ *  are usually read-only. When the @key has not been found, @global
+ *  is set to %FALSE.
+ *
+ * Returns: the value of the key, of its default value if not found.
+ *
+ * Since: 3.1.0
+ */
+gboolean
+na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found, gboolean *global )
+{
+	gboolean value;
+
+	g_return_val_if_fail( NA_IS_SETTINGS( settings ), FALSE );
+
+	value = FALSE;
+	if( found ){
+		*found = FALSE;
+	}
+	if( global ){
+		*global = FALSE;
+	}
+
+	if( !settings->private->dispose_has_run ){
+
+	}
+
+	return( value );
 }
 
 /**
@@ -312,6 +381,12 @@ na_settings_get_value( NASettings *settings, const gchar *key, gboolean *found, 
 	g_return_val_if_fail( NA_IS_SETTINGS( settings ), NULL );
 
 	value = NULL;
+	if( found ){
+		*found = FALSE;
+	}
+	if( global ){
+		*global = FALSE;
+	}
 
 	if( !settings->private->dispose_has_run ){
 
@@ -359,7 +434,8 @@ initialize_settings( NASettings* settings, const gchar *dir, GFileMonitor **moni
 	return( key_file );
 }
 
-void on_conf_changed( GFileMonitor *monitor,
+static void
+on_conf_changed( GFileMonitor *monitor,
 		GFile *file, GFile *other_file, GFileMonitorEvent event_type, NASettings *settings )
 {
 	g_return_if_fail( NA_IS_SETTINGS( settings ));

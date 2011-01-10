@@ -81,18 +81,16 @@ typedef struct {
 
 GType na_settings_get_type( void );
 
-typedef void ( *NASettingsCallback )( const gchar *key, gpointer new_value, gpointer user_data );
-
 #define NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM		"items-add-about-item"
 #define NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU		"items-create-root-menu"
 
-NASettings *na_settings_new      ( void );
+NASettings *na_settings_new            ( void );
 
-void        na_settings_register ( NASettings *settings, const gchar *key, NASettingsCallback callback, gpointer user_data );
+void        na_settings_register       ( NASettings *settings, const gchar *key, GCallback callback, gpointer user_data );
+void        na_settings_register_global( NASettings *settings, GCallback callback, gpointer user_data );
 
-#define     na_settings_get_bool ( settings, key ) (( gboolean ) GPOINTER_TO_UINT( na_settings_get_value( settings, key, NULL, NULL )))
-
-gpointer    na_settings_get_value( NASettings *settings, const gchar *key, gboolean *found, gboolean *global );
+gboolean    na_settings_get_boolean    ( NASettings *settings, const gchar *key, gboolean *found, gboolean *global );
+gpointer    na_settings_get_value      ( NASettings *settings, const gchar *key, gboolean *found, gboolean *global );
 
 G_END_DECLS
 

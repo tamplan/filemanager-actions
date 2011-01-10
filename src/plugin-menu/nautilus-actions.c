@@ -110,9 +110,10 @@ static GList            *create_root_menu( NautilusActions *plugin, GList *nauti
 static GList            *add_about_item( NautilusActions *plugin, GList *nautilus_menu );
 static void              execute_about( NautilusMenuItem *item, NautilusActions *plugin );
 
-static void              on_items_list_changed( const gchar *key, gpointer newvalue, NautilusActions *plugin );
-static void              on_items_add_about_item_changed( const gchar *key, gpointer newvalue, NautilusActions *plugin );
-static void              on_items_create_root_menu_changed( const gchar *key, gpointer newvalue, NautilusActions *plugin );
+static void              on_items_list_changed( NautilusActions *plugin );
+static void              on_items_add_about_item_changed( gpointer newvalue, NautilusActions *plugin );
+static void              on_items_create_root_menu_changed( gpointer newvalue, NautilusActions *plugin );
+static void              on_global_settings_changed( NautilusActions *plugin, gboolean global );
 
 GType
 nautilus_actions_get_type( void )
@@ -226,21 +227,24 @@ instance_constructed( GObject *object )
 		 */
 		na_pivot_register( self->private->pivot,
 				NA_PIVOT_RUNTIME_ITEMS_LIST_CHANGED,
-				( NASettingsCallback ) on_items_list_changed, self );
+				( GCallback ) on_items_list_changed, self );
 
 		/* register against NASettings to be notified of changes on
 		 *  our runtime preferences
 		 */
 		settings = na_pivot_get_settings( self->private->pivot );
-		self->private->items_add_about_item = na_settings_get_bool( settings, NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM );
+		self->private->items_add_about_item = na_settings_get_boolean( settings, NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
 		na_settings_register( settings,
 				NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM,
-				( NASettingsCallback ) on_items_add_about_item_changed, self );
+				( GCallback ) on_items_add_about_item_changed, self );
 
-		self->private->items_create_root_menu = na_settings_get_bool( settings, NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU );
+		self->private->items_create_root_menu = na_settings_get_boolean( settings, NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
 		na_settings_register( settings,
 				NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU,
-				( NASettingsCallback ) on_items_create_root_menu_changed, self );
+				( GCallback ) on_items_create_root_menu_changed, self );
+
+		na_settings_register_global( settings,
+				( GCallback ) on_global_settings_changed, self );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
@@ -990,13 +994,11 @@ execute_about( NautilusMenuItem *item, NautilusActions *plugin )
  * - the 'readable' status of a i/o provider is changed
  * - the level-zero order is modified
  *
- * there is no relevant 'newvalue' here.
- *
  * if pivot is in automatic reload mode, then it already has reloaded
  * the items tree in the new environment
  */
 static void
-on_items_list_changed( const gchar *key, gpointer newvalue, NautilusActions *plugin )
+on_items_list_changed( NautilusActions *plugin )
 {
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
@@ -1007,7 +1009,7 @@ on_items_list_changed( const gchar *key, gpointer newvalue, NautilusActions *plu
 }
 
 static void
-on_items_add_about_item_changed( const gchar *key, gpointer newvalue, NautilusActions *plugin )
+on_items_add_about_item_changed( gpointer newvalue, NautilusActions *plugin )
 {
 	gboolean newbool;
 
@@ -1024,7 +1026,7 @@ on_items_add_about_item_changed( const gchar *key, gpointer newvalue, NautilusAc
 }
 
 static void
-on_items_create_root_menu_changed( const gchar *key, gpointer newvalue, NautilusActions *plugin )
+on_items_create_root_menu_changed( gpointer newvalue, NautilusActions *plugin )
 {
 	gboolean newbool;
 
@@ -1033,9 +1035,18 @@ on_items_create_root_menu_changed( const gchar *key, gpointer newvalue, Nautilus
 	if( !plugin->private->dispose_has_run ){
 
 		newbool = ( gboolean ) GPOINTER_TO_UINT( newvalue );
-		if( newbool != plugin->private->plugin->private->items_create_root_menu ){
+		if( newbool != plugin->private->items_create_root_menu ){
 			plugin->private->items_create_root_menu = newbool;
 			nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
 		}
+	}
+}
+
+static void
+on_global_settings_changed( NautilusActions *plugin, gboolean global )
+{
+	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
+
+	if( !plugin->private->dispose_has_run ){
 	}
 }

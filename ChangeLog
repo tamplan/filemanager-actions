@@ -33,6 +33,15 @@
 
 	* configure.ac: Enable silent rules by default.
 
+2011-01-10 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h (na_pivot_register):
+	* src/core/na-settings.c:
+	* src/core/na-settings.h (na_settings_register):
+	* src/plugin-menu/nautilus-actions.c (instance_constructed):
+	Fix compilation.
+
 2011-01-09 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-application.c (display_dlg): Setup parent window.
