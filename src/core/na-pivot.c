@@ -62,6 +62,7 @@ struct _NAPivotPrivate {
 
 	/* list of instances to be notified of configuration updates
 	 * these are called 'consumers' of NAPivot
+	 * to be deprecated
 	 */
 	GList      *consumers;
 
@@ -75,6 +76,9 @@ struct _NAPivotPrivate {
 	 * defaults to FALSE
 	 */
 	gboolean    automatic_reload;
+
+	/* timeout to manage i/o providers 'item-changed' burst
+	 */
 	GTimeVal    last_event;
 	guint       event_source_id;
 
@@ -119,22 +123,6 @@ static void          free_consumers( GList *list );
 /* NAIIOProvider management */
 static gboolean      on_item_changed_timeout( NAPivot *pivot );
 static gulong        time_val_diff( const GTimeVal *recent, const GTimeVal *old );
-
-#if 0
-/* NAGConf runtime preferences management */
-static void          on_io_provider_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
-static void          on_mandatory_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
-static void          on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot );
-static void          display_order_changed( NAPivot *pivot );
-static void          create_root_menu_changed( NAPivot *pivot );
-static void          display_about_changed( NAPivot *pivot );
-static void          autosave_changed( NAPivot *pivot );
-#endif
-/* NASettings monitoring */
-static void          monitor_runtime_preferences( NAPivot *pivot );
-static void          on_io_provider_read_status_changed( gpointer newvalue, NAPivot *pivot );
-static void          on_io_providers_read_order_changed( gpointer newvalue, NAPivot *pivot );
-static void          on_items_level_zero_order_changed( gpointer newvalue, NAPivot *pivot );
 
 GType
 na_pivot_get_type( void )
@@ -265,8 +253,7 @@ instance_constructed( GObject *object )
 		g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 		self->private->modules = na_module_load_modules();
-
-		monitor_runtime_preferences( self );
+		self->private->settings = na_settings_new();
 
 		/* force class initialization and io-factory registration
 		 */
@@ -979,42 +966,6 @@ na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot )
 	return( locked );
 }
 
-static void
-monitor_runtime_preferences( NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_monitor_runtime_preferences";
-
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-	g_return_if_fail( !pivot->private->dispose_has_run );
-
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-
-	/* this is the new behavior (since 3.1.0)
-	 * NASettings take itself care of maintaining the list of registered callbacks
-	 */
-	pivot->private->settings = na_settings_new();
-
-	/* monitor the modifications of the readability status of the i/o providers
-	 * this use a fake key as this actually monitor the 'readable' key of
-	 * all known i/o providers
-	 */
-	na_settings_register_key_callback( pivot->private->settings,
-			NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS,
-			G_CALLBACK( on_io_provider_read_status_changed ), pivot );
-
-	/* monitor the modification of the read order of the i/o providers
-	 */
-	na_settings_register_key_callback( pivot->private->settings,
-			NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER,
-			G_CALLBACK( on_io_providers_read_order_changed ), pivot );
-
-	/* monitor the modification of the level-zero order
-	 */
-	na_settings_register_key_callback( pivot->private->settings,
-			NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER,
-			G_CALLBACK( on_items_level_zero_order_changed ), pivot );
-}
-
 #if 0
 static void
 on_io_provider_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
@@ -1163,33 +1114,3 @@ autosave_changed( NAPivot *pivot )
 	}
 }
 #endif
-
-static void
-on_io_provider_read_status_changed( gpointer newvalue, NAPivot *pivot )
-{
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-	}
-}
-
-static void
-on_io_providers_read_order_changed( gpointer newvalue, NAPivot *pivot )
-{
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-	}
-}
-
-static void
-on_items_level_zero_order_changed( gpointer newvalue, NAPivot *pivot )
-{
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-	}
-}
