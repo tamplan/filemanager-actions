@@ -76,8 +76,11 @@ struct NautilusActionsPrivate {
 	gboolean items_create_root_menu;
 };
 
-static GObjectClass *st_parent_class = NULL;
-static GType         st_actions_type = 0;
+static GObjectClass *st_parent_class    = NULL;
+static GType         st_actions_type    = 0;
+static GTimeVal      st_last_event;
+static guint         st_event_source_id = 0;
+static gint          st_burst_timeout   = 100;		/* burst timeout in msec */
 
 static void              class_init( NautilusActionsClass *klass );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
@@ -117,6 +120,10 @@ static void              on_items_create_root_menu_changed( gpointer newvalue, N
 static void              on_io_provider_read_status_changed( gpointer newvalue, NautilusActions *plugin );
 static void              on_io_providers_read_order_changed( gpointer newvalue, NautilusActions *plugin );
 static void              on_items_level_zero_order_changed( gpointer newvalue, NautilusActions *plugin );
+
+static void              record_change_event( NautilusActions *plugin );
+static gboolean          on_change_event_timeout( NautilusActions *plugin );
+static gulong            time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 GType
 nautilus_actions_get_type( void )
@@ -1012,7 +1019,17 @@ execute_about( NautilusMenuItem *item, NautilusActions *plugin )
 }
 
 /*
- * signal emitted by NAPivot at the end of a burst of 'item-changed' signals
+ * Not only the items list itself, but also several runtime preferences have
+ * an effect on the display of items in file manager context menu.
+ *
+ * We of course monitor here all these informations; only asking NAPivot
+ * for reloading its items when we detect the end of a burst of changes.
+ *
+ * Only when NAPivot has finished with reloading its items list, then we
+ * inform the file manager that its items list has changed.
+ */
+
+/* signal emitted by NAPivot at the end of a burst of 'item-changed' signals
  * from i/o providers
  */
 static void
@@ -1022,6 +1039,7 @@ on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin )
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
+		record_change_event( plugin );
 	}
 }
 
@@ -1037,7 +1055,7 @@ on_items_add_about_item_changed( gpointer newvalue, NautilusActions *plugin )
 		newbool = ( gboolean ) GPOINTER_TO_UINT( newvalue );
 		if( newbool != plugin->private->items_add_about_item ){
 			plugin->private->items_add_about_item = newbool;
-			nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
+			record_change_event( plugin );
 		}
 	}
 }
@@ -1054,7 +1072,7 @@ on_items_create_root_menu_changed( gpointer newvalue, NautilusActions *plugin )
 		newbool = ( gboolean ) GPOINTER_TO_UINT( newvalue );
 		if( newbool != plugin->private->items_create_root_menu ){
 			plugin->private->items_create_root_menu = newbool;
-			nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
+			record_change_event( plugin );
 		}
 	}
 }
@@ -1065,7 +1083,7 @@ on_io_provider_read_status_changed( gpointer newvalue, NautilusActions *plugin )
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
-
+		record_change_event( plugin );
 	}
 }
 
@@ -1075,7 +1093,7 @@ on_io_providers_read_order_changed( gpointer newvalue, NautilusActions *plugin )
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
-
+		record_change_event( plugin );
 	}
 }
 
@@ -1085,6 +1103,71 @@ on_items_level_zero_order_changed( gpointer newvalue, NautilusActions *plugin )
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
-
+		record_change_event( plugin );
 	}
+}
+
+/* each signal handler or settings callback calls this function
+ * so that we are sure that all change events are taken into account
+ * in our timeout management
+ *
+ * create a new event source if it does not exists yet
+ */
+static void
+record_change_event( NautilusActions *plugin )
+{
+	g_get_current_time( &st_last_event );
+
+	if( !st_event_source_id ){
+		st_event_source_id =
+			g_timeout_add( st_burst_timeout, ( GSourceFunc ) on_change_event_timeout, plugin );
+	}
+}
+
+/* this is called periodically at each 'st_burst_timeout' (100ms) interval
+ * as soon as the event source is created
+ *
+ * if the last recorded change event, whose timestamp has been set in 'st_last_event'
+ * is outside of our timeout, then we assume that the burst has finished
+ *
+ * we so reload the items, signal the file manager, and reset the event source.
+ */
+static gboolean
+on_change_event_timeout( NautilusActions *plugin )
+{
+	static const gchar *thisfn = "nautilus_actions_on_change_event_timeout";
+	GTimeVal now;
+	gulong diff;
+	GList *ic;
+	gulong timeout_usec = 1000*st_burst_timeout;
+
+	g_get_current_time( &now );
+	diff = time_val_diff( &now, &st_last_event );
+	if( diff < timeout_usec ){
+		/* continue periodic calls */
+		return( TRUE );
+	}
+
+	/* do what we have to and close the event source
+	 */
+	g_debug( "%s: timeout expired", thisfn );
+
+	na_pivot_load_items( plugin->private->pivot );
+
+	nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
+
+	st_event_source_id = 0;
+
+	return( FALSE );
+}
+
+/*
+ * returns the difference in microseconds.
+ */
+static gulong
+time_val_diff( const GTimeVal *recent, const GTimeVal *old )
+{
+	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
+	microsec += recent->tv_usec  - old->tv_usec;
+	return( microsec );
 }

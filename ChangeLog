@@ -35,6 +35,9 @@
 
 2011-01-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-menu/nautilus-actions.c:
+	Implement runtime preferences monitoring.
+
 	* src/core/na-pivot.c:
 	* src/core/na-pivot.h:
 	Replace GConf preferences monitoring with NASettings.
