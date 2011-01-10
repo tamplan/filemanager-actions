@@ -34,6 +34,8 @@
 
 #include <api/na-iio-provider.h>
 
+#include "na-io-provider.h"
+
 /* private interface data
  */
 struct _NAIIOProviderInterfacePrivate {
@@ -127,8 +129,8 @@ interface_base_init( NAIIOProviderInterface *klass )
 		klass->delete_item = NULL;
 		klass->duplicate_data = NULL;
 
-		/**
-		 * NAIIOProvider::notify-pivot:
+		/*
+		 * NAIOProvider::io-provider-item-changed:
 		 * @provider: the #NAIIOProvider which has called the
 		 *  na_iio_provider_item_changed() function.
 		 * @arg1: not used, initialized to %NULL.
@@ -138,15 +140,15 @@ interface_base_init( NAIIOProviderInterface *klass )
 		 * function.
 		 *
 		 * The signal is registered without any default handler.
-		 * Only NAPivot object is connected to it.
+		 * Typically, only NAPivot object is connected to it.
 		 */
 		st_signals[ ITEM_CHANGED ] = g_signal_new(
-					IIO_PROVIDER_SIGNAL_ITEM_CHANGED,
+					IO_PROVIDER_SIGNAL_ITEM_CHANGED,
 					NA_IIO_PROVIDER_TYPE,
-					G_SIGNAL_RUN_LAST,
-					0,
-					NULL,
-					NULL,
+					G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+					0,									/* class offset */
+					NULL,								/* accumulator */
+					NULL,								/* accumulator data */
 					g_cclosure_marshal_VOID__POINTER,
 					G_TYPE_NONE,
 					1,
@@ -191,13 +193,16 @@ do_is_able_to_write( const NAIIOProvider *instance )
  * detected a modification in one of its items (menu or action).
  *
  * This function may be triggered for each and every
- * #NAObjectItem -derived modified objects, and, at least, once
- * for a coherent set of updates.
+ * #NAObjectItem -derived modified objects, and should, at least, be
+ * triggered once for a coherent set of updates.
  *
- * When receiving this signal, the current &prodname; program will
- * automatically ask its I/O providers for a current list of menus and
- * actions, or ask the user if he is willing to reload such a current
- * list, depending of the exact running &prodname; program.
+ * When receiving this signal, the currently running program may ask for
+ * reload the current list of items, menus and actions; it may also choose
+ * to ask the user if he is willing to reload such a current list.
+ *
+ * Note that NAPivot pivot is typically the only object connected to this
+ * signal. It acts so as a filtering proxy, re-emitting its own 'items-changed'
+ * signal for a whole set of detected underlying modifications.
  *
  * Since: 2.30
  */
@@ -208,5 +213,5 @@ na_iio_provider_item_changed( const NAIIOProvider *instance )
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-	g_signal_emit_by_name(( gpointer ) instance, IIO_PROVIDER_SIGNAL_ITEM_CHANGED, NULL );
+	g_signal_emit_by_name(( gpointer ) instance, IO_PROVIDER_SIGNAL_ITEM_CHANGED, NULL );
 }

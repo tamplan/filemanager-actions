@@ -35,8 +35,9 @@
  * @short_description: The #NAIOProvider Class Definition.
  * @include: core/na-io-provider.h
  *
- * NAIOProvider is the Nautilus-Actions class which is used to manage
- * external I/O Providers which implement #NAIIOProvider interface.
+ * #NAIOProvider is the Nautilus-Actions class which is used to manage
+ * external I/O Providers which implement #NAIIOProvider interface. Each
+ * #NAIOProvider objects encapsulates one #NAIIOProvider provider.
  *
  * Internal Nautilus-Actions code should never directly call a
  * #NAIIOProvider interface method, but rather should call the
@@ -75,10 +76,15 @@ typedef struct {
 
 /* GConf preferences key
  */
-#define IO_PROVIDER_KEY_ROOT			"io-providers"
-#define IO_PROVIDER_KEY_READABLE		"read-at-startup"
-#define IO_PROVIDER_KEY_WRITABLE		"writable"
-#define IO_PROVIDER_KEY_ORDER			"io-providers-order"
+#define IO_PROVIDER_KEY_ROOT				"io-providers"
+#define IO_PROVIDER_KEY_READABLE			"read-at-startup"
+#define IO_PROVIDER_KEY_WRITABLE			"writable"
+#define IO_PROVIDER_KEY_ORDER				"io-providers-order"
+
+/* signal sent from a NAIIOProvider
+ * via the na_iio_provider_item_changed() function
+ */
+#define IO_PROVIDER_SIGNAL_ITEM_CHANGED		"io-provider-item-changed"
 
 GType          na_io_provider_get_type ( void );
 

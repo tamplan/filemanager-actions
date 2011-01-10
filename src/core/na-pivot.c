@@ -603,10 +603,11 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
  * na_pivot_item_changed_handler:
  * @provider: the #NAIIOProvider which has emitted the signal.
  * @id: the id of the changed #NAObjectItem-derived object.
+ *  As of 2.30, it is always %NULL.
  * @pivot: this #NAPivot instance.
  *
- * This handler is trigerred by IIOProviders when an action is changed
- * in their underlying storage subsystems.
+ * This handler is trigerred by #NAIIOProvider providers when an action
+ * is changed in their underlying storage subsystems.
  * We don't care of updating our internal list with each and every
  * atomic modification; instead we wait for the end of notifications
  * serie, and then reload the whole list of actions
@@ -658,7 +659,9 @@ on_item_changed_timeout( NAPivot *pivot )
 	}
 
 	/* last individual notification is older that the st_burst_timeout
-	 * so triggers the NAIIOProvider interface and destroys this timeout
+	 * we may so suppose that the burst is terminated
+	 * this is up to NAPivot to send now its summarized signal
+	 * last, destroy this timeout
 	 */
 	g_debug( "%s: triggering NAIPivotConsumer interfaces", thisfn );
 

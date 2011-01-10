@@ -322,11 +322,6 @@ GType na_iio_provider_get_type( void );
  */
 void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
 
-/* signal sent from a NAIIOProvider
- * via the na_iio_provider_item_changed() function
- */
-#define IIO_PROVIDER_SIGNAL_ITEM_CHANGED	"notify-pivot"
-
 /* Adding a new status here should imply also adding a new tooltip
  * in #na_io_provider_get_readonly_tooltip().
  */

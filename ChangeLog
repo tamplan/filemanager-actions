@@ -35,6 +35,15 @@
 
 2011-01-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iio-provider.h:
+	* src/core/na-io-provider.h: IIO_PROVIDER_SIGNAL_ITEM_CHANGED signal
+	definition is moved (and renamed) from public API to internal one.
+
+	* src/core/na-iio-provider.c (interface_base_init):
+	* src/core/na-io-provider.c (io_provider_set_provider):
+	* src/core/na-pivot.c (on_item_changed_timeout): Updated accordingly.
+
+	* src/core/na-iio-provider.c
 	* src/core/na-settings.c (na_settings_new):
 	* src/utils/na-gconf2key.sh.in: Global configuration file goes to /etc/xdg.
 

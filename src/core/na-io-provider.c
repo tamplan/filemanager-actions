@@ -463,7 +463,7 @@ io_provider_set_provider( NAIOProvider *provider, NAIIOProvider *instance, const
 	provider->private->item_changed_handler =
 			g_signal_connect(
 					instance,
-					IIO_PROVIDER_SIGNAL_ITEM_CHANGED,
+					IO_PROVIDER_SIGNAL_ITEM_CHANGED,
 					( GCallback ) na_pivot_item_changed_handler,
 					( gpointer ) pivot );
 }
