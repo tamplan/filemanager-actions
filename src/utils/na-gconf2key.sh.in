@@ -402,14 +402,14 @@ which gconftool-2 1>/dev/null 2>&1 || { msg "gconftool-2: not available"; exit 1
 # create the destination directory if it does not yet exist
 command "mkdir -p ${opt_dir} || exit 1"
 
-let count=0
+let nbitems=0
 
 # list objects in configurations/ subdir
 # each object, action or menu, is then exported in .a .desktop format
 # to be written to its .desktop file
 for dir in $(gconftool-2 --all-dirs ${na_configurations}); do
 	id=$(basename ${dir})
-	let count+=1
+	let nbitems+=1
 	[ "${opt_verbose}" = "yes" ] && msg "item=${id}"
 	if [ -e ${opt_dir}/${id}.desktop -a "${opt_force}" = "no" ]; then
 		msgwarn "${opt_dir}/${id}.desktop already exists"
@@ -423,7 +423,7 @@ for dir in $(gconftool-2 --all-dirs ${na_configurations}); do
 	fi
 done
 
-msg "${count} migrated items"
+msg "${nbitems} migrated items"
 
 # we are using this same script to migrate preferences to .conf files
 # mandatory preferences go to SYSCONFDIR/xdg/nautilus-actions.conf
@@ -440,10 +440,10 @@ rm -f ${my_tmproot}.io-provider_*
 gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 	case ${key} in
 		add-capability-dialog)
-			add_pref "nact" "capability-add-capability-dialog-size" list "${value}"
+			add_pref "nact" "capability-add-capability-wsp" list "${value}"
 			;;
 		add-scheme-dialog)
-			add_pref "nact" "scheme-add-scheme-dialog-size" list "${value}"
+			add_pref "nact" "scheme-add-scheme-wsp" list "${value}"
 			;;
 		assistant-esc-confirm)
 			add_pref "nact" "${key}" str "${value}"
@@ -458,7 +458,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "main-save-period" str "${value}"
 			;;
 		export-assistant)
-			add_pref "nact" "export-assistant-dialog-size" list "${value}"
+			add_pref "nact" "export-assistant-wsp" list "${value}"
 			;;
 		export-folder-uri)
 			add_pref "nact" "export-last-folder-uri" str "${value}"
@@ -467,52 +467,52 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "export-preferred-format" str "${value}"
 			;;
 		icommand-command-chooser)
-			add_pref "nact" "command-command-chooser-dialog-size" list "${value}"
+			add_pref "nact" "command-command-chooser-wsp" list "${value}"
 			;;
 		icommand-folder-uri)
 			add_pref "nact" "command-command-chooser-last-folder-uri" list "${value}"
 			;;
 		icommand-legend-dialog)
-			add_pref "nact" "command-legend-dialog-size" list "${value}"
+			add_pref "nact" "command-legend-wsp" list "${value}"
 			;;
 		icommand-working-dir-dialog)
-			add_pref "nact" "command-working-dir-chooser-dialog-size" list "${value}"
+			add_pref "nact" "command-working-dir-chooser-wsp" list "${value}"
 			;;
 		icommand-working-dir-uri)
 			add_pref "nact" "command-working-dir-chooser-last-folder-uri" str "${value}"
 			;;
 		icons-chooser)
-			add_pref "nact" "item-icon-chooser-dialog-size" list "${value}"
+			add_pref "nact" "item-icon-chooser-wsp" list "${value}"
 			;;
 		icons-path)
-			add_pref "nact" "item-icon-browse-last-path" str "${value}"
+			add_pref "nact" "item-icon-chooser-last-uri" str "${value}"
 			;;
 		ienvironment-show-if-running-dialog)
-			add_pref "nact" "environment-show-if-running-dialog-size" list "${value}"
+			add_pref "nact" "environment-show-if-running-wsp" list "${value}"
 			;;
 		ienvironment-show-if-running-uri)
 			add_pref "nact" "environment-show-if-running-last-folder-uri" str "${value}"
 			;;
 		ienvironment-try-exec-dialog)
-			add_pref "nact" "environment-try-exec-dialog-size" list "${value}"
+			add_pref "nact" "environment-try-exec-wsp" list "${value}"
 			;;
 		ienvironment-try-exec-uri)
 			add_pref "nact" "environment-try-exec-last-folder-uri" str "${value}"
 			;;
 		ifolders-chooser)
-			add_pref "nact" "folder-chooser-dialog-size" list "${value}"
+			add_pref "nact" "folder-chooser-wsp" list "${value}"
 			;;
 		ifolders-path)
 			add_pref "nact" "folder-last-path" str "${value}"
 			;;
 		import-ask-user)
-			add_pref "nact" "import-ask-user-dialog-size" list "${value}"
+			add_pref "nact" "import-ask-user-wsp" list "${value}"
 			;;
 		import-ask-user-last-mode)
 			add_pref "nact" "${key}" str "${value}"
 			;;
 		import-assistant)
-			add_pref "nact" "import-assistant-dialog-size" list "${value}"
+			add_pref "nact" "import-assistant-wsp" list "${value}"
 			;;
 		import-folder-uri)
 			add_pref "nact" "import-last-folder-uri" str "${value}"
@@ -564,13 +564,13 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "main-toolbar-tools-display" str "${value}"
 			;;
 		main-paned)
-			add_pref "nact" "main-pane-width" str "${value}"
+			add_pref "nact" "main-paned-width" str "${value}"
 			;;
 		main-window)
-			add_pref "nact" "main-window-size" list "${value}"
+			add_pref "nact" "main-window-wsp" list "${value}"
 			;;
 		preferences-editor)
-			add_pref "nact" "preferences-dialog-size" list "${value}"
+			add_pref "nact" "preferences-wsp" list "${value}"
 			;;
 		schemes)
 			add_pref "nact" "scheme-default-list" list "${value}"
@@ -659,6 +659,9 @@ msg "${nbprefs} migrated preferences"
 # force sync
 killall gconfd-2
 
+let count=${nbitems}+${nbprefs}
+echo "count=${count}"
+
 # at the end, we delete all package branch from GConf
 if [ "${opt_delete}" = "yes" -a ${count} -gt 0 ]; then
 	if [ $(id -u) -eq 0 ]; then
@@ -673,5 +676,8 @@ if [ "${opt_delete}" = "yes" -a ${count} -gt 0 ]; then
 		command "gconftool-2 --recursive-unset ${na_package}"
 	fi
 fi
+
+# re-force sync
+killall gconfd-2
 
 exit
