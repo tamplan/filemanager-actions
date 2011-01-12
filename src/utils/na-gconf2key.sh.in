@@ -463,6 +463,9 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 		export-ask-user)
 			add_pref "nact" "export-ask-user-wsp" list "${value}"
 			;;
+		export-ask-user-last-format)
+			add_pref "nact" "${key}" str "${value}"
+			;;
 		export-folder-uri)
 			add_pref "nact" "export-last-folder-uri" str "${value}"
 			;;

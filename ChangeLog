@@ -31,6 +31,10 @@
 
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* README-GCONF:
+	* src/core/na-settings.c:
+	* src/utils/na-gconf2key.sh.in: Add omitted 'export-ask-user-last-format' key.
+
 	* src/nact/nact-icommand-tab.c:
 	* src/nact/nact-ienvironment-tab.c: Update to new preferences.
 

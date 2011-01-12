@@ -72,6 +72,7 @@ Deprecating GConf
  auto-save-period = 5                       [nact]     main-save-period
  export-assistant = [377,33,699,675]        [nact]     export-assistant-wsp
  export-ask-user = [377,33,699,675]         [nact]     export-ask-user-wsp
+ export-ask-user-last-format = GConfEntry   [nact]     export-ask-user-last-format
  export-folder-uri = file:///home/pierre..  [nact]     export-last-folder-uri
  export-format = Ask                        [nact]     export-preferred-format
  icommand-command-chooser                   [nact]     command-command-chooser-wsp
