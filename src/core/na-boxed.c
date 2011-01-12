@@ -63,6 +63,7 @@ typedef struct {
 	void      ( *from_string )    ( NABoxed *, const gchar * );
 	void      ( *from_array )     ( NABoxed *, const gchar ** );
 	gboolean  ( *get_bool )       ( const NABoxed * );
+	gpointer  ( *get_pointer )    ( const NABoxed * );
 	GSList  * ( *get_string_list )( const NABoxed * );
 }
 	BoxedFn;
@@ -73,12 +74,14 @@ static int      string_compare( const NABoxed *a, const NABoxed *b );
 static void     string_copy( NABoxed *dest, const NABoxed *src );
 static void     string_free( NABoxed *boxed );
 static void     string_from_string( NABoxed *boxed, const gchar *string );
+static gpointer string_get_pointer( const NABoxed *boxed );
 
 static int      string_list_compare( const NABoxed *a, const NABoxed *b );
 static void     string_list_copy( NABoxed *dest, const NABoxed *src );
 static void     string_list_free( NABoxed *boxed );
 static void     string_list_from_string( NABoxed *boxed, const gchar *string );
 static void     string_list_from_array( NABoxed *boxed, const gchar **array );
+static gpointer string_list_get_pointer( const NABoxed *boxed );
 static GSList  *string_list_get_string_list( const NABoxed *boxed );
 
 static int      bool_compare( const NABoxed *a, const NABoxed *b );
@@ -86,17 +89,20 @@ static void     bool_copy( NABoxed *dest, const NABoxed *src );
 static void     bool_free( NABoxed *boxed );
 static void     bool_from_string( NABoxed *boxed, const gchar *string );
 static gboolean bool_get_bool( const NABoxed *boxed );
+static gpointer bool_get_pointer( const NABoxed *boxed );
 
 static int      uint_compare( const NABoxed *a, const NABoxed *b );
 static void     uint_copy( NABoxed *dest, const NABoxed *src );
 static void     uint_free( NABoxed *boxed );
 static void     uint_from_string( NABoxed *boxed, const gchar *string );
+static gpointer uint_get_pointer( const NABoxed *boxed );
 
 static int      uint_list_compare( const NABoxed *a, const NABoxed *b );
 static void     uint_list_copy( NABoxed *dest, const NABoxed *src );
 static void     uint_list_free( NABoxed *boxed );
 static void     uint_list_from_string( NABoxed *boxed, const gchar *string );
 static void     uint_list_from_array( NABoxed *boxed, const gchar **array );
+static gpointer uint_list_get_pointer( const NABoxed *boxed );
 
 static BoxedFn st_boxed_fn[] = {
 		{ NA_BOXED_TYPE_STRING,
@@ -107,6 +113,7 @@ static BoxedFn st_boxed_fn[] = {
 				string_from_string,
 				NULL,
 				NULL,
+				string_get_pointer,
 				NULL
 				},
 		{ NA_BOXED_TYPE_STRING_LIST,
@@ -117,6 +124,7 @@ static BoxedFn st_boxed_fn[] = {
 				string_list_from_string,
 				string_list_from_array,
 				NULL,
+				string_list_get_pointer,
 				string_list_get_string_list
 				},
 		{ NA_BOXED_TYPE_BOOLEAN,
@@ -127,6 +135,7 @@ static BoxedFn st_boxed_fn[] = {
 				bool_from_string,
 				NULL,
 				bool_get_bool,
+				bool_get_pointer,
 				NULL
 				},
 		{ NA_BOXED_TYPE_UINT,
@@ -137,6 +146,7 @@ static BoxedFn st_boxed_fn[] = {
 				uint_from_string,
 				NULL,
 				NULL,
+				uint_get_pointer,
 				NULL
 				},
 		{ NA_BOXED_TYPE_UINT_LIST,
@@ -147,6 +157,7 @@ static BoxedFn st_boxed_fn[] = {
 				uint_list_from_string,
 				uint_list_from_array,
 				NULL,
+				uint_list_get_pointer,
 				NULL
 				},
 		{ 0 }
@@ -393,6 +404,38 @@ na_boxed_get_boolean( const NABoxed *boxed )
 }
 
 /**
+ * na_boxed_get_pointer:
+ * @boxed: the #NABoxed structure.
+ *
+ * Returns: a newly allocated string list if @boxed is of %NA_BOXED_TYPE_STRING_LIST
+ * type, which should be na_core_utils_slist_free() by the caller, %FALSE else.
+ *
+ * Since: 3.1.0
+ */
+gconstpointer
+na_boxed_get_pointer( const NABoxed *boxed )
+{
+	static const gchar *thisfn = "na_boxed_get_pointer";
+	BoxedFn *fn;
+	gpointer value;
+
+	value = NULL;
+	if( boxed->is_set ){
+		fn = get_boxed_fn( boxed->type );
+		if( fn ){
+			if( fn->get_pointer ){
+				value = ( *fn->get_pointer )( boxed );
+			} else {
+				g_warning( "%s: unable to get the value: '%s' type does not provide 'get_pointer' function",
+						thisfn, fn->label );
+			}
+		}
+	}
+
+	return(( gconstpointer ) value );
+}
+
+/**
  * na_boxed_get_string_list:
  * @boxed: the #NABoxed structure.
  *
@@ -487,6 +530,12 @@ string_from_string( NABoxed *boxed, const gchar *string )
 	boxed->is_set = TRUE;
 }
 
+static gpointer
+string_get_pointer( const NABoxed *boxed )
+{
+	return( boxed->u.string );
+}
+
 /* the two string lists are equal if they have the same elements in the
  * same order
  * if not, we compare the length of the lists
@@ -564,6 +613,12 @@ string_list_from_array( NABoxed *boxed, const gchar **array )
 	boxed->is_set = TRUE;
 }
 
+static gpointer
+string_list_get_pointer( const NABoxed *boxed )
+{
+	return( boxed->u.string_list );
+}
+
 static GSList *
 string_list_get_string_list( const NABoxed *boxed )
 {
@@ -609,6 +664,12 @@ bool_get_bool( const NABoxed *boxed )
 	return( boxed->u.boolean );
 }
 
+static gpointer
+bool_get_pointer( const NABoxed *boxed )
+{
+	return( GUINT_TO_POINTER( boxed->u.boolean ));
+}
+
 static int
 uint_compare( const NABoxed *a, const NABoxed *b )
 {
@@ -639,6 +700,12 @@ uint_from_string( NABoxed *boxed, const gchar *string )
 	}
 	boxed->u.uint = string ? atoi( string ) : 0;
 	boxed->is_set = TRUE;
+}
+
+static gpointer
+uint_get_pointer( const NABoxed *boxed )
+{
+	return( GUINT_TO_POINTER( boxed->u.uint ));
 }
 
 /* compare uint list as string list:
@@ -720,4 +787,10 @@ uint_list_from_array( NABoxed *boxed, const gchar **array )
 		boxed->u.uint_list = NULL;
 	}
 	boxed->is_set = TRUE;
+}
+
+static gpointer
+uint_list_get_pointer( const NABoxed *boxed )
+{
+	return( boxed->u.uint_list );
 }

@@ -35,6 +35,11 @@
 
 	* run-autogen.sh: Add sysconfdir argument to autogen.sh
 
+	* src/api/na-boxed.h:
+	* src/core/na-boxed.c (na_boxed_get_pointer): New function.
+
+	* run-autogen.sh: Add sysconfdir argument to autogen.sh.
+
 	* src/api/na-data-types.h:
 	* src/core/na-data-types.c
 	(na_data_types_copy, na_data_types_free): Removed functions.
