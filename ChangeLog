@@ -35,6 +35,9 @@
 
 	* run-autogen.sh: Add sysconfdir argument to autogen.sh
 
+	* src/nact/nact-gtk-utils.c (nact_gtk_utils_get_pixbuf):
+	Search a pixbuf by icon theme if not found as filename or stock.
+
 	* src/nact/base-window.c:
 	* src/nact/base-window.h (base_window_peek_widget): New function.
 

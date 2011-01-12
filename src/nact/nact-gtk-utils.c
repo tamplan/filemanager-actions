@@ -188,6 +188,7 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
 	GdkPixbuf* pixbuf;
 	GError *error;
 	gint width, height;
+	GtkIconTheme *icon_theme;
 
 	error = NULL;
 	pixbuf = NULL;
@@ -201,10 +202,8 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
 		if( g_path_is_absolute( name )){
 			pixbuf = gdk_pixbuf_new_from_file_at_size( name, width, height, &error );
 			if( error ){
-				if( error->code == G_FILE_ERROR_NOENT ){
-					g_debug( "%s: gdk_pixbuf_new_from_file_at_size: name=%s, error=%s", thisfn, name, error->message );
-				} else {
-					g_warning( "%s: gdk_pixbuf_new_from_file_at_size: name=%s, error=%s", thisfn, name, error->message );
+				if( error->code != G_FILE_ERROR_NOENT ){
+					g_warning( "%s: gdk_pixbuf_new_from_file_at_size: name=%s, error=%s (%d)", thisfn, name, error->message, error->code );
 				}
 				g_error_free( error );
 				error = NULL;
@@ -221,6 +220,21 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
 #else
 			pixbuf = gtk_widget_render_icon( widget, name, size, NULL );
 #endif
+			if( !pixbuf ){
+				icon_theme = gtk_icon_theme_get_default();
+				pixbuf = gtk_icon_theme_load_icon(
+								icon_theme, name, width, GTK_ICON_LOOKUP_GENERIC_FALLBACK, &error );
+				if( error ){
+					/* it happens that the message "Icon 'xxxx' not present in theme"
+					 * is generated with a domain of 'gtk-icon-theme-error-quark' and
+					 * an error code of zero - it seems difficult to just test zero
+					 * so does not display warning, but just debug
+					 */
+					g_debug( "%s: %s (%s:%d)",
+							thisfn, error->message, g_quark_to_string( error->domain ), error->code );
+					g_error_free( error );
+				}
+			}
 		}
 	}
 
@@ -243,8 +257,11 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
 void
 nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
 {
+	static const gchar *thisfn = "nact_gtk_utils_render";
 	GdkPixbuf* pixbuf;
 	gint width, height;
+
+	g_debug( "%s: name=%s, widget=%p, size=%d", thisfn, name, ( void * ) widget, size );
 
 	if( name ){
 		pixbuf = nact_gtk_utils_get_pixbuf( name, GTK_WIDGET( widget ), size );
