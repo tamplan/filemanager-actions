@@ -677,7 +677,9 @@ content_load_keys( NASettings *settings, GList *content, KeyFile *key_file, gboo
 
 	error = NULL;
 	if( !g_key_file_load_from_file( key_file->key_file, key_file->fname, G_KEY_FILE_KEEP_COMMENTS, &error )){
-		g_warning( "%s: %s: %s", thisfn, key_file->fname, error->message );
+		if( error->code != G_FILE_ERROR_NOENT ){
+			g_warning( "%s: %s (%d) %s", thisfn, key_file->fname, error->code, error->message );
+		}
 		g_error_free( error );
 		error = NULL;
 

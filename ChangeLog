@@ -35,6 +35,9 @@
 
 	* run-autogen.sh: Add sysconfdir argument to autogen.sh
 
+	* src/core/na-settings.c (content_load_keys):
+	Do not warn if configuration file does not exist.
+
 	* src/api/na-boxed.h:
 	* src/api/na-data-boxed.h:
 	* src/api/na-data-types.h:
