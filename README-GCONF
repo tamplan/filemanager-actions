@@ -70,7 +70,7 @@ Deprecating GConf
  assistant-esc-quit = true                  [nact]     assistant-esc-quit
  auto-save-on = false                       [nact]     main-save-auto
  auto-save-period = 5                       [nact]     main-save-period
- export-assistant = [377,33,699,675]        [nact]     assistant-dialog-size
+ export-assistant = [377,33,699,675]        [nact]     export-assistant-dialog-size
  export-folder-uri = file:///home/pierre..  [nact]     export-last-folder-uri
  export-format = Ask                        [nact]     export-preferred-format
  icommand-command-chooser                   [nact]     command-command-chooser-dialog-size
@@ -83,7 +83,7 @@ Deprecating GConf
  ienvironment-show-if-running-dialog = [..  [nact]     environment-show-if-running-dialog-size
  ienvironment-show-if-running-uri = file..  [nact]     environment-show-if-running-last-folder-uri
  ienvironment-try-exec-dialog = [327,70,..  [nact]     environment-try-exec-dialog-size
- ienvironment-try-exec-uri = file:///bin    [nact]     environment-show-if-running-last-folder-uri
+ ienvironment-try-exec-uri = file:///bin    [nact]     environment-try-exec-last-folder-uri
  ifolders-chooser = [418,86,632,573]        [nact]     folder-chooser-dialog-size
  ifolders-path = /home/pierre/data/Pictures [nact]     folder-last-path
  import-ask-user                            [nact]     import-ask-user-dialog-size

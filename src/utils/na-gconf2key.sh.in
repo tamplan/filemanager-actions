@@ -458,7 +458,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "main-save-period" str "${value}"
 			;;
 		export-assistant)
-			add_pref "nact" "assistant-dialog-size" list "${value}"
+			add_pref "nact" "export-assistant-dialog-size" list "${value}"
 			;;
 		export-folder-uri)
 			add_pref "nact" "export-last-folder-uri" str "${value}"
@@ -497,7 +497,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "environment-try-exec-dialog-size" list "${value}"
 			;;
 		ienvironment-try-exec-uri)
-			add_pref "nact" "environment-show-if-running-last-folder-uri" str "${value}"
+			add_pref "nact" "environment-try-exec-last-folder-uri" str "${value}"
 			;;
 		ifolders-chooser)
 			add_pref "nact" "folder-chooser-dialog-size" list "${value}"
