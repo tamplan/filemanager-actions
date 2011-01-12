@@ -35,6 +35,9 @@
 
 	* run-autogen.sh: Add sysconfdir argument to autogen.sh
 
+	* src/nact/base-window.c:
+	* src/nact/base-window.h (base_window_peek_widget): New function.
+
 	* src/nact/nact-icon-chooser.c:
 	* src/nact/nact-icon-chooser.h:
 	* src/nact/nact-icon-chooser.ui: New files.

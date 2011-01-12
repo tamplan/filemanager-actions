@@ -82,6 +82,7 @@ GtkWindow       *base_window_get_named_toplevel( const BaseWindow *window, const
 BaseWindow      *base_window_get_parent( const BaseWindow *window );
 GtkWindow       *base_window_get_toplevel( const BaseWindow *window );
 GtkWidget       *base_window_get_widget( const BaseWindow *window, const gchar *name );
+GtkWidget       *base_window_peek_widget( GtkWindow *window, const gchar *name );
 gboolean         base_window_is_willing_to_quit( const BaseWindow *window );
 
 void             base_window_error_dlg( const BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );

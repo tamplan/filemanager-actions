@@ -823,6 +823,7 @@ base_window_get_toplevel( const BaseWindow *window )
 GtkWidget *
 base_window_get_widget( const BaseWindow *window, const gchar *name )
 {
+	static const gchar *thisfn = "base_window_get_widget";
 	GtkWindow *toplevel;
 	GtkWidget *widget = NULL;
 
@@ -832,8 +833,33 @@ base_window_get_widget( const BaseWindow *window, const gchar *name )
 		toplevel = window->private->toplevel_window;
 		widget = search_for_widget( toplevel, name );
 		if( !widget ){
-			g_warning( "%s: widget not found", name );
+			g_warning( "%s: widget not found: %s", thisfn, name );
 		}
+	}
+
+	return( widget );
+}
+
+/**
+ * base_window_peek_widget:
+ * @window: the #GtkWindow toplevel.
+ * @name: the name of the searched child.
+ *
+ * Returns: a pointer to the searched widget, or %NULL.
+ * This pointer is owned by GtkBuilder instance, and must not be
+ * released by the caller.
+ */
+GtkWidget *
+base_window_peek_widget( GtkWindow *window, const gchar *name )
+{
+	static const gchar *thisfn = "base_window_peek_widget";
+	GtkWidget *widget;
+
+	g_return_val_if_fail( GTK_IS_WINDOW( window ), NULL );
+
+	widget = search_for_widget( window, name );
+	if( !widget ){
+		g_warning( "%s: widget not found: %s", thisfn, name );
 	}
 
 	return( widget );
