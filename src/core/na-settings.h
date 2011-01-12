@@ -98,7 +98,16 @@ void        na_settings_register_key_callback   ( NASettings *settings, const gc
 
 gboolean    na_settings_get_boolean             ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
 gboolean    na_settings_get_boolean_ex          ( NASettings *settings, const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory );
+gchar      *na_settings_get_string              ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
 GSList     *na_settings_get_string_list         ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
+guint       na_settings_get_uint                ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
+GList      *na_settings_get_uint_list           ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
+
+void        na_settings_set_boolean             ( NASettings *settings, const gchar *key, gboolean value );
+void        na_settings_set_string              ( NASettings *settings, const gchar *key, gchar *value );
+void        na_settings_set_string_list         ( NASettings *settings, const gchar *key, GSList *value );
+void        na_settings_set_uint                ( NASettings *settings, const gchar *key, guint value );
+void        na_settings_set_uint_list           ( NASettings *settings, const gchar *key, GList *value );
 
 G_END_DECLS
 

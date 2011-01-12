@@ -31,6 +31,9 @@
 
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-settings.c:
+	* src/core/na-settings.h: All getters/setters are implemented.
+
 	* src/nact/base-iprefs.c: Remove GConf stuff.
 
 	* src/nact/nact-icon-chooser.c:
