@@ -131,6 +131,7 @@ static const KeyDef st_def_keys[] = {
 	{ "environment-show-if-running-last-folder-uri", GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
 	{ "environment-try-exec-wsp",                    GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
 	{ "environment-try-exec-last-folder-uri",        GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "export-ask-user-wsp",                         GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
 	{ "export-assistant-wsp",                        GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
 	{ "export-last-folder-uri",                      GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
 	{ "export-preferred-format",                     GROUP_NACT,        NA_BOXED_TYPE_STRING,      "Desktop1" },

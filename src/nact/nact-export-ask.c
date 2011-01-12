@@ -275,7 +275,7 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "export-ask-user" ));
+	return( g_strdup( "export-ask-user-wsp" ));
 }
 
 static gchar *

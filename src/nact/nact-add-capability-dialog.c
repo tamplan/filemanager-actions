@@ -302,7 +302,7 @@ nact_add_capability_dialog_run( BaseWindow *parent, GSList *capabilities )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "add-capability-dialog" ));
+	return( g_strdup( "capability-add-capability-wsp" ));
 }
 
 static gchar *

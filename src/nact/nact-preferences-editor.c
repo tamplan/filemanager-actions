@@ -259,7 +259,7 @@ nact_preferences_editor_run( BaseWindow *parent )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "preferences-editor" ));
+	return( g_strdup( "preferences-wsp" ));
 }
 
 static gchar *

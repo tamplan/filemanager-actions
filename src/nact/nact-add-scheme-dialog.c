@@ -273,7 +273,7 @@ nact_add_scheme_dialog_run( BaseWindow *parent, GSList *schemes )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "add-scheme-dialog" ));
+	return( g_strdup( "scheme-add-scheme-wsp" ));
 }
 
 static gchar *

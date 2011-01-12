@@ -276,7 +276,7 @@ nact_assistant_import_run( BaseWindow *main_window )
 static gchar *
 window_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "import-assistant" ));
+	return( g_strdup( "import-assistant-wsp" ));
 }
 
 static gchar *

@@ -136,6 +136,9 @@ enum {
 	LAST_SIGNAL
 };
 
+#define IPREFS_MAIN_WSP					"main-window-wsp"
+#define IPREFS_MAIN_PANED				"main-paned-width"
+
 static NactWindowClass *st_parent_class = NULL;
 static gint             st_signals[ LAST_SIGNAL ] = { 0 };
 
@@ -760,7 +763,7 @@ instance_dispose( GObject *window )
 
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
-		base_iprefs_set_int( BASE_WINDOW( window ), "main-paned", pos );
+		base_iprefs_set_int( BASE_WINDOW( window ), IPREFS_MAIN_PANED, pos );
 
 		for( it = self->private->deleted ; it ; it = it->next ){
 			g_debug( "nact_main_window_instance_dispose: deleted=%p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
@@ -1086,7 +1089,7 @@ base_get_toplevel_name( const BaseWindow *window )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "main-window" ));
+	return( g_strdup( IPREFS_MAIN_WSP ));
 }
 
 static gboolean
@@ -1123,7 +1126,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 
 	if( !window->private->dispose_has_run ){
 
-		pos = base_iprefs_get_int( BASE_WINDOW( window ), "main-paned" );
+		pos = base_iprefs_get_int( BASE_WINDOW( window ), IPREFS_MAIN_PANED );
 		if( pos ){
 			pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 			gtk_paned_set_position( GTK_PANED( pane ), pos );

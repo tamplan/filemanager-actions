@@ -31,6 +31,20 @@
 
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* README-GCONF:
+	* src/core/na-settings.c:
+	* src/utils/na-gconf2key.sh.in: Add 'export-ask-user-wsp' preference.
+
+	* src/nact/nact-add-capability-dialog.c (base_get_iprefs_window_id):
+	* src/nact/nact-add-scheme-dialog.c (base_get_iprefs_window_id):
+	* src/nact/nact-assistant-export.c (window_get_iprefs_window_id):
+	* src/nact/nact-assistant-import.c (window_get_iprefs_window_id):
+	* src/nact/nact-export-ask.c (base_get_iprefs_window_id):
+	* src/nact/nact-main-window.c
+	(instance_dispose, base_get_iprefs_window_id):
+	* src/nact/nact-preferences-editor.c (base_get_iprefs_window_id):
+	Update all preference names when saving/restoring window size and position.
+
 	* src/core/na-settings.c:
 	* src/core/na-settings.h: All getters/setters are implemented.
 

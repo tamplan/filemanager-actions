@@ -327,7 +327,7 @@ nact_assistant_export_run( BaseWindow *main_window )
 static gchar *
 window_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "export-assistant" ));
+	return( g_strdup( "export-assistant-wsp" ));
 }
 
 static gchar *
