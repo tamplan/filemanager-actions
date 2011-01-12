@@ -37,18 +37,17 @@
 
 typedef struct {
 	guint  type;
-	gchar *label;
 	gchar *gconf_dump_key;
 }
 	FactoryType;
 
 static FactoryType st_factory_type[] = {
-		{ NAFD_TYPE_STRING,        "string",        "string" },
-		{ NAFD_TYPE_LOCALE_STRING, "locale string", "string" },
-		{ NAFD_TYPE_BOOLEAN,       "bool",          "bool" },
-		{ NAFD_TYPE_STRING_LIST,   "string list",   "list" },
-		{ NAFD_TYPE_POINTER,       "pointer",        NULL },
-		{ NAFD_TYPE_UINT,          "uint",          "int" },
+		{ NAFD_TYPE_STRING,        "string" },
+		{ NAFD_TYPE_LOCALE_STRING, "string" },
+		{ NAFD_TYPE_BOOLEAN,       "bool" },
+		{ NAFD_TYPE_STRING_LIST,   "list" },
+		{ NAFD_TYPE_POINTER,        NULL },
+		{ NAFD_TYPE_UINT,          "int" },
 		{ 0 }
 };
 
@@ -62,6 +61,8 @@ static FactoryType st_factory_type[] = {
  * should not be released by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 const gchar *
 na_data_types_get_gconf_dump_key( guint type )
@@ -73,35 +74,6 @@ na_data_types_get_gconf_dump_key( guint type )
 	while( str->type ){
 		if( str->type == type ){
 			return( str->gconf_dump_key );
-		}
-		str++;
-	}
-
-	g_warning( "%s: unknown data type: %d", thisfn, type );
-	return( NULL );
-}
-
-/**
- * na_data_types_get_label:
- * @type: the FactoryData type.
- *
- * Returns: the label of this type.
- *
- * The returned label is owned by the factory data management system, and
- * should not be released by the caller.
- *
- * Since: 3.1.0
- */
-const gchar *
-na_data_types_get_label( guint type )
-{
-	static const gchar *thisfn = "na_data_types_get_label";
-	FactoryType *str;
-
-	str = st_factory_type;
-	while( str->type ){
-		if( str->type == type ){
-			return( str->label );
 		}
 		str++;
 	}

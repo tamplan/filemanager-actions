@@ -66,9 +66,10 @@ typedef struct {
 	gpointer  ( *get_pointer )    ( const NABoxed * );
 	GSList  * ( *get_string_list )( const NABoxed * );
 }
-	BoxedFn;
+	BoxedDef;
 
-static BoxedFn *get_boxed_fn( guint type );
+static const BoxedDef *get_boxed_def( guint type );
+static const gchar    *get_type_label( guint type );
 
 static int      string_compare( const NABoxed *a, const NABoxed *b );
 static void     string_copy( NABoxed *dest, const NABoxed *src );
@@ -104,7 +105,7 @@ static void     uint_list_from_string( NABoxed *boxed, const gchar *string );
 static void     uint_list_from_array( NABoxed *boxed, const gchar **array );
 static gpointer uint_list_get_pointer( const NABoxed *boxed );
 
-static BoxedFn st_boxed_fn[] = {
+static BoxedDef st_boxed_def[] = {
 		{ NA_BOXED_TYPE_STRING,
 				"string",
 				string_compare,
@@ -163,26 +164,51 @@ static BoxedFn st_boxed_fn[] = {
 		{ 0 }
 };
 
-static BoxedFn *
-get_boxed_fn( guint type )
+static const BoxedDef *
+get_boxed_def( guint type )
 {
-	static const gchar *thisfn = "na_boxed_get_boxed_fn";
-	int i;
-	BoxedFn *fn;
+	static const gchar *thisfn = "na_boxed_get_boxed_def";
+	BoxedDef *def;
 
-	fn = NULL;
-
-	for( i = 0 ; st_boxed_fn[i].type && !fn ; ++i ){
-		if( st_boxed_fn[i].type == type ){
-			fn = st_boxed_fn+i;
+	def = st_boxed_def;
+	while( def->type ){
+		if( def->type == type ){
+			return( def );
 		}
+		def++;
 	}
 
-	if( !fn ){
-		g_warning( "%s: unmanaged type: %d", thisfn, type );
+	g_warning( "%s: unmanaged NABoxed type: %d", thisfn, type );
+	return( NULL );
+}
+
+/*
+ * get_type_label:
+ * @type: the #NABoxed type.
+ *
+ * Returns: the label of this type.
+ *
+ * The returned label is owned by the data factory management system, and
+ * should not be released by the caller.
+ *
+ * Since: 3.1.0
+ */
+static const gchar *
+get_type_label( guint type )
+{
+	static const gchar *thisfn = "na_boxed_get_type_label";
+	BoxedDef *def;
+
+	def = st_boxed_def;
+	while( def->type ){
+		if( def->type == type ){
+			return( def->label );
+		}
+		def++;
 	}
 
-	return( fn );
+	g_warning( "%s: unmanaged NABoxed type: %d", thisfn, type );
+	return( NULL );
 }
 
 /**
@@ -199,14 +225,14 @@ int
 na_boxed_compare( const NABoxed *a, const NABoxed *b )
 {
 	static const gchar *thisfn = "na_boxed_compare";
-	BoxedFn *fn;
+	const BoxedDef *def;
 	int result;
 
 	result = 0;
 
 	if( a->type != b->type ){
 		g_warning( "%s: unable to compare: a is of type '%s' while b is of type %s",
-				thisfn, na_boxed_get_type_label( a->type ), na_boxed_get_type_label( b->type ));
+				thisfn, get_type_label( a->type ), get_type_label( b->type ));
 
 	} else if( a->is_set && !b->is_set ){
 		result = 1;
@@ -215,13 +241,13 @@ na_boxed_compare( const NABoxed *a, const NABoxed *b )
 		result = -1;
 
 	} else if( a->is_set && b->is_set ){
-		fn = get_boxed_fn( a->type );
-		if( fn ){
-			if( fn->compare ){
-				result = ( *fn->compare )( a, b );
+		def = get_boxed_def( a->type );
+		if( def ){
+			if( def->compare ){
+				result = ( *def->compare )( a, b );
 			} else {
 				g_warning( "%s: unable to compare: '%s' type does not provide 'compare' function",
-						thisfn, fn->label );
+						thisfn, def->label );
 			}
 		}
 	}
@@ -243,21 +269,21 @@ na_boxed_copy( const NABoxed *boxed )
 {
 	static const gchar *thisfn = "na_boxed_copy";
 	NABoxed *dest;
-	BoxedFn *fn;
+	const BoxedDef *def;
 
 	dest = NULL;
-	fn = get_boxed_fn( boxed->type );
-	if( fn ){
-		if( fn->copy ){
+	def = get_boxed_def( boxed->type );
+	if( def ){
+		if( def->copy ){
 			dest = g_new0( NABoxed, 1 );
 			dest->type = boxed->type;
 			dest->is_set = FALSE;
 			if( boxed->is_set ){
-				( *fn->copy )( dest, boxed );
+				( *def->copy )( dest, boxed );
 			}
 		} else {
 			g_warning( "%s: unable to copy: '%s' type does not provide 'copy' function",
-					thisfn, fn->label );
+					thisfn, def->label );
 		}
 	}
 
@@ -279,16 +305,16 @@ void
 na_boxed_free( NABoxed *boxed )
 {
 	static const gchar *thisfn = "na_boxed_free";
-	BoxedFn *fn;
+	const BoxedDef *def;
 
-	fn = get_boxed_fn( boxed->type );
-	if( fn ){
-		if( fn->free ){
-			( *fn->free )( boxed );
+	def = get_boxed_def( boxed->type );
+	if( def ){
+		if( def->free ){
+			( *def->free )( boxed );
 			g_free( boxed );
 		} else {
 			g_warning( "%s: unable to free the content: '%s' type does not provide 'free' function",
-					thisfn, fn->label );
+					thisfn, def->label );
 		}
 	}
 }
@@ -310,19 +336,19 @@ NABoxed *
 na_boxed_new_from_string( guint type, const gchar *string )
 {
 	static const gchar *thisfn = "na_boxed_new_from_string";
-	BoxedFn *fn;
+	const BoxedDef *def;
 	NABoxed *boxed;
 
 	boxed = NULL;
-	fn = get_boxed_fn( type );
-	if( fn ){
-		if( fn->from_string ){
+	def = get_boxed_def( type );
+	if( def ){
+		if( def->from_string ){
 			boxed = g_new0( NABoxed, 1 );
 			boxed->type = type;
-			( *fn->from_string )( boxed, string );
+			( *def->from_string )( boxed, string );
 		} else {
 			g_warning( "%s: unable to initialize the content: '%s' type does not provide 'from_string' function",
-					thisfn, fn->label );
+					thisfn, def->label );
 		}
 	}
 
@@ -349,22 +375,22 @@ NABoxed *
 na_boxed_new_from_string_with_sep( guint type, const gchar *string, const gchar *sep )
 {
 	static const gchar *thisfn = "na_boxed_new_from_string_with_sep";
-	BoxedFn *fn;
+	const BoxedDef *def;
 	NABoxed *boxed;
 	gchar **array;
 
 	boxed = NULL;
-	fn = get_boxed_fn( type );
-	if( fn ){
-		if( fn->from_array ){
+	def = get_boxed_def( type );
+	if( def ){
+		if( def->from_array ){
 			boxed = g_new0( NABoxed, 1 );
 			boxed->type = type;
 			array = string ? g_strsplit( string, sep, -1 ) : NULL;
-			( *fn->from_array )( boxed, ( const gchar ** ) array );
+			( *def->from_array )( boxed, ( const gchar ** ) array );
 			g_strfreev( array );
 		} else {
 			g_warning( "%s: unable to initialize the content: '%s' type does not provide 'from_array' function",
-					thisfn, fn->label );
+					thisfn, def->label );
 		}
 	}
 
@@ -384,18 +410,18 @@ gboolean
 na_boxed_get_boolean( const NABoxed *boxed )
 {
 	static const gchar *thisfn = "na_boxed_get_boolean";
-	BoxedFn *fn;
+	const BoxedDef *def;
 	gboolean value;
 
 	value = FALSE;
 	if( boxed->is_set ){
-		fn = get_boxed_fn( boxed->type );
-		if( fn ){
-			if( fn->get_bool ){
-				value = ( *fn->get_bool )( boxed );
+		def = get_boxed_def( boxed->type );
+		if( def ){
+			if( def->get_bool ){
+				value = ( *def->get_bool )( boxed );
 			} else {
 				g_warning( "%s: unable to get the value: '%s' type does not provide 'get_bool' function",
-						thisfn, fn->label );
+						thisfn, def->label );
 			}
 		}
 	}
@@ -416,18 +442,18 @@ gconstpointer
 na_boxed_get_pointer( const NABoxed *boxed )
 {
 	static const gchar *thisfn = "na_boxed_get_pointer";
-	BoxedFn *fn;
+	const BoxedDef *def;
 	gpointer value;
 
 	value = NULL;
 	if( boxed->is_set ){
-		fn = get_boxed_fn( boxed->type );
-		if( fn ){
-			if( fn->get_pointer ){
-				value = ( *fn->get_pointer )( boxed );
+		def = get_boxed_def( boxed->type );
+		if( def ){
+			if( def->get_pointer ){
+				value = ( *def->get_pointer )( boxed );
 			} else {
 				g_warning( "%s: unable to get the value: '%s' type does not provide 'get_pointer' function",
-						thisfn, fn->label );
+						thisfn, def->label );
 			}
 		}
 	}
@@ -448,52 +474,23 @@ GSList *
 na_boxed_get_string_list( const NABoxed *boxed )
 {
 	static const gchar *thisfn = "na_boxed_get_string_list";
-	BoxedFn *fn;
+	const BoxedDef *def;
 	GSList *value;
 
 	value = NULL;
 	if( boxed->is_set ){
-		fn = get_boxed_fn( boxed->type );
-		if( fn ){
-			if( fn->get_string_list ){
-				value = ( *fn->get_string_list )( boxed );
+		def = get_boxed_def( boxed->type );
+		if( def ){
+			if( def->get_string_list ){
+				value = ( *def->get_string_list )( boxed );
 			} else {
 				g_warning( "%s: unable to get the value: '%s' type does not provide 'get_string_list' function",
-						thisfn, fn->label );
+						thisfn, def->label );
 			}
 		}
 	}
 
 	return( value );
-}
-
-/**
- * na_boxed_get_type_label:
- * @type: the #NABoxed type.
- *
- * Returns: the label of this type.
- *
- * The returned label is owned by the dat factory management system, and
- * should not be released by the caller.
- *
- * Since: 3.1.0
- */
-const gchar *
-na_boxed_get_type_label( guint type )
-{
-	static const gchar *thisfn = "na_boxed_get_type_label";
-	BoxedFn *str;
-
-	str = st_boxed_fn;
-	while( str->type ){
-		if( str->type == type ){
-			return( str->label );
-		}
-		str++;
-	}
-
-	g_warning( "%s: unmanaged NABoxed type: %d", thisfn, type );
-	return( NULL );
 }
 
 static int

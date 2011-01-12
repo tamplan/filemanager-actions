@@ -35,6 +35,15 @@
 
 	* run-autogen.sh: Add sysconfdir argument to autogen.sh
 
+	* src/api/na-boxed.h:
+	* src/api/na-data-boxed.h:
+	* src/api/na-data-types.h:
+	* src/core/na-boxed.c:
+	* src/core/na-data-boxed.c:
+	* src/core/na-data-types.c:
+	Update reference documentation to deprecate NADataBoxed and NADataType
+	in favor of NABoxed.
+
 	* src/core/na-settings.c:
 	* src/core/na-settings.h: Configuration monitoring.
 

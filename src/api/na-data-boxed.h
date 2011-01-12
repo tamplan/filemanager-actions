@@ -40,31 +40,11 @@
  * The object which encapsulates an elementary data of #NAIFactoryObject.
  * A #NADataBoxed object has a type and a value.
  *
- * <refsect2>
- *  <title>Versions historic</title>
- *  <table>
- *    <title>Historic of the versions of the #NADataBoxed interface</title>
- *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
- *      <colspec colname="na-version" />
- *      <colspec colname="api-version" />
- *      <colspec colname="current" />
- *      <thead>
- *        <row>
- *          <entry>&prodname; version</entry>
- *          <entry>#NADataBoxed interface version</entry>
- *          <entry></entry>
- *        </row>
- *      </thead>
- *      <tbody>
- *        <row>
- *          <entry>since 2.30</entry>
- *          <entry>1</entry>
- *          <entry>current version</entry>
- *        </row>
- *      </tbody>
- *    </tgroup>
- *  </table>
- * </refsect2>
+ * Starting with version 3.1.0, #NAFactoryDataType is deprecated in favour
+ * of #NABoxed structure. New code should only use #NABoxed structure and
+ * accessors.
+ *
+ * Deprecated: 3.1.0
  */
 
 #include <glib-object.h>

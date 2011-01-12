@@ -69,6 +69,12 @@ G_BEGIN_DECLS
  *     So, only add new items at the end of the enum. You have been warned!
  *   </para>
  * </note>
+ *
+ * Starting with version 3.1.0, #NAFactoryDataType is deprecated in favour
+ * of #NABoxed structure. New code should only use #NABoxed structure and
+ * accessors.
+ *
+ * Deprecated: 3.1.0
  */
 typedef enum {
 	NAFD_TYPE_STRING = 1,
@@ -81,8 +87,6 @@ typedef enum {
 	NAFactoryDataType;
 
 const gchar *na_data_types_get_gconf_dump_key( guint type );
-
-const gchar *na_data_types_get_label( guint type );
 
 G_END_DECLS
 
