@@ -506,7 +506,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "folder-chooser-wsp" list "${value}"
 			;;
 		ifolders-path)
-			add_pref "nact" "folder-last-path" str "${value}"
+			add_pref "nact" "folder-last-folder-uri" str "file://${value}"
 			;;
 		import-ask-user)
 			add_pref "nact" "import-ask-user-wsp" list "${value}"

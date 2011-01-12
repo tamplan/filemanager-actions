@@ -86,7 +86,7 @@ Deprecating GConf
  ienvironment-try-exec-dialog = [327,70,..  [nact]     environment-try-exec-wsp
  ienvironment-try-exec-uri = file:///bin    [nact]     environment-try-exec-last-folder-uri
  ifolders-chooser = [418,86,632,573]        [nact]     folder-chooser-wsp
- ifolders-path = /home/pierre/data/Pictures [nact]     folder-last-path
+ ifolders-path = /home/pierre/data/Pictures [nact]     folder-last-folder-uri
  import-ask-user                            [nact]     import-ask-user-wsp
  import-ask-user-last-mode                  [nact]     import-ask-user-last-mode
  import-assistant                           [nact]     import-assistant-wsp

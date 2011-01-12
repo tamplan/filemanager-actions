@@ -57,8 +57,8 @@ struct NactIFoldersTabInterfacePrivate {
 
 #define ITAB_NAME						"folders"
 
-#define IPREFS_FOLDERS_DIALOG			"ifolders-chooser"
-#define IPREFS_FOLDERS_PATH				"ifolders-path"
+#define IPREFS_FOLDERS_WSP				"folder-chooser-wsp"
+#define IPREFS_FOLDERS_URI				"folder-last-folder-uri"
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
@@ -270,13 +270,13 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 	gtk_widget_destroy( dialog );
 #endif
 
-	gchar *path;
+	gchar *uri, *path;
 	GtkWindow *toplevel;
 	GtkWidget *dialog;
 	NactApplication *application;
 	NAUpdater *updater;
 
-	path = NULL;
+	uri = NULL;
 	toplevel = base_window_get_toplevel( window );
 
 	/* i18n: title of the FileChoose dialog when selecting an URI which
@@ -292,24 +292,26 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
 
-	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
+	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_WSP );
 
-	path = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDERS_PATH, "/" );
-	if( path && g_utf8_strlen( path, -1 )){
-		gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dialog ), path );
+	uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDERS_URI, "file:///" );
+	if( uri && g_utf8_strlen( uri, -1 )){
+		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 	}
-	g_free( path );
+	g_free( uri );
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
-		path = gtk_file_chooser_get_current_folder( GTK_FILE_CHOOSER( dialog ));
-		nact_iprefs_write_string( window, IPREFS_FOLDERS_PATH, path );
+		uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
+		nact_iprefs_write_string( window, IPREFS_FOLDERS_URI, uri );
 
+		path = g_filename_from_uri( uri, NULL, NULL );
 		nact_match_list_insert_row( window, ITAB_NAME, path, FALSE, FALSE );
-
 		g_free( path );
+
+		g_free( uri );
 	}
 
-	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_DIALOG );
+	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_WSP );
 
 	gtk_widget_destroy( dialog );
 }

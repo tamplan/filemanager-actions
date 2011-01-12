@@ -33,6 +33,13 @@
 
 	* README-GCONF:
 	* src/core/na-settings.c:
+	* src/utils/na-gconf2key.sh.in:
+	'folder-last-path' key is renamed as 'folder-last-folder-uri'.
+
+	* src/nact/nact-ifolders-tab.c: Updated accordingly.
+
+	* README-GCONF:
+	* src/core/na-settings.c:
 	* src/utils/na-gconf2key.sh.in: Add 'export-ask-user-wsp' preference.
 
 	* src/nact/nact-add-capability-dialog.c (base_get_iprefs_window_id):

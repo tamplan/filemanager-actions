@@ -136,7 +136,7 @@ static const KeyDef st_def_keys[] = {
 	{ "export-last-folder-uri",                      GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
 	{ "export-preferred-format",                     GROUP_NACT,        NA_BOXED_TYPE_STRING,      "Desktop1" },
 	{ "folder-chooser-wsp",                          GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ "folder-last-path",                            GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "folder-last-folder-uri",                      GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
 	{ "import-ask-user-wsp",                         GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
 	{ "import-ask-user-last-mode",                   GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
 	{ "import-assistant-wsp",                        GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
