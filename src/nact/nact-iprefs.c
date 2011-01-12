@@ -33,8 +33,6 @@
 #include <config.h>
 #endif
 
-#include <api/na-gconf-utils.h>
-
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
@@ -43,7 +41,7 @@
 /* private interface data
  */
 struct NactIPrefsInterfacePrivate {
-	GConfClient *client;
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 static gboolean st_initialized = FALSE;
@@ -53,8 +51,10 @@ static GType       register_type( void );
 static void        interface_base_init( NactIPrefsInterface *klass );
 static void        interface_base_finalize( NactIPrefsInterface *klass );
 
+#if 0
 static GConfValue *get_value( GConfClient *client, const gchar *path, const gchar *entry );
 static void        set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value );
+#endif
 
 GType
 nact_iprefs_get_type( void )
@@ -106,8 +106,6 @@ interface_base_init( NactIPrefsInterface *klass )
 
 		klass->private = g_new0( NactIPrefsInterfacePrivate, 1 );
 
-		klass->private->client = gconf_client_get_default();
-
 		st_initialized = TRUE;
 	}
 }
@@ -123,8 +121,6 @@ interface_base_finalize( NactIPrefsInterface *klass )
 
 		st_finalized = TRUE;
 
-		g_object_unref( klass->private->client );
-
 		g_free( klass->private );
 	}
 }
@@ -136,10 +132,11 @@ interface_base_finalize( NactIPrefsInterface *klass )
  *
  * Returns: the export format currently set as a #GQuark.
  *
- * Defaults to exporting as a GConfEntry (see. #nact-iprefs.h)
+ * Used to default to export as a GConfEntry.
+ * Starting with 3.1.0, defaults to Desktop1 (see. #nact-iprefs.h)
  *
  * Note: please take care of keeping the default value synchronized with
- * those defined in schemas.
+ * those defined in na-settings.c for 'export-preferred-format' key.
  */
 GQuark
 nact_iprefs_get_export_format( const BaseWindow *window, const gchar *name )
@@ -147,6 +144,7 @@ nact_iprefs_get_export_format( const BaseWindow *window, const gchar *name )
 	GQuark export_format;
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
 	gchar *format_str;
 
 	export_format = g_quark_from_static_string( IPREFS_EXPORT_FORMAT_DEFAULT );
@@ -157,15 +155,13 @@ nact_iprefs_get_export_format( const BaseWindow *window, const gchar *name )
 
 		application = NACT_APPLICATION( base_window_get_application( window ));
 		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+		format_str = na_settings_get_string( settings, name, NULL, NULL );
 
-		format_str = na_iprefs_read_string(
-				NA_IPREFS( updater ),
-				name,
-				IPREFS_EXPORT_FORMAT_DEFAULT );
-
-		export_format = g_quark_from_string( format_str );
-
-		g_free( format_str );
+		if( format_str ){
+			export_format = g_quark_from_string( format_str );
+			g_free( format_str );
+		}
 	}
 
 	return( export_format );
@@ -176,19 +172,23 @@ nact_iprefs_get_export_format( const BaseWindow *window, const gchar *name )
  * @window: this #BaseWindow-derived window.
  * @format: the new value to be written.
  *
- * Writes the preferred export format' to the GConf preference system.
+ * Writes the preferred export format' to the preference system.
  */
 void
 nact_iprefs_set_export_format( const BaseWindow *window, const gchar *name, GQuark format )
 {
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
+
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( st_initialized && !st_finalized ){
 
-		nact_iprefs_write_string(
-				window,
-				name,
-				g_quark_to_string( format ));
+		application = NACT_APPLICATION( base_window_get_application( window ));
+		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+		na_settings_set_string( settings, name, g_quark_to_string( format ));
 	}
 }
 
@@ -206,6 +206,7 @@ nact_iprefs_set_export_format( const BaseWindow *window, const gchar *name, GQua
 void
 nact_iprefs_migrate_key( const BaseWindow *window, const gchar *old_key, const gchar *new_key )
 {
+#if 0
 	static const gchar *thisfn = "nact_iprefs_migrate_key";
 	GConfClient *gconf_client;
 	GConfValue *value;
@@ -229,6 +230,7 @@ nact_iprefs_migrate_key( const BaseWindow *window, const gchar *old_key, const g
 		/* do not remove entries which may still be used by an older N-A version
 		 */
 	}
+#endif
 }
 
 /**
@@ -242,16 +244,19 @@ nact_iprefs_migrate_key( const BaseWindow *window, const gchar *old_key, const g
 void
 nact_iprefs_write_bool( const BaseWindow *window, const gchar *name, gboolean value )
 {
-	gchar *path;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( NACT_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
-		na_gconf_utils_write_bool( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, value, NULL );
-		g_free( path );
+		application = NACT_APPLICATION( base_window_get_application( window ));
+		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+		na_settings_set_boolean( settings, name, value );
 	}
 }
 
@@ -266,16 +271,19 @@ nact_iprefs_write_bool( const BaseWindow *window, const gchar *name, gboolean va
 void
 nact_iprefs_write_uint( const BaseWindow *window, const gchar *name, guint value )
 {
-	gchar *path;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( NACT_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
-		na_gconf_utils_write_int( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, value, NULL );
-		g_free( path );
+		application = NACT_APPLICATION( base_window_get_application( window ));
+		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+		na_settings_set_uint( settings, name, value );
 	}
 }
 
@@ -290,21 +298,23 @@ nact_iprefs_write_uint( const BaseWindow *window, const gchar *name, guint value
 void
 nact_iprefs_write_string( const BaseWindow *window, const gchar *name, const gchar *value )
 {
-	gchar *path;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( NACT_IS_IPREFS( window ));
 
 	if( st_initialized && !st_finalized ){
 
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
-
-		na_gconf_utils_write_string( NACT_IPREFS_GET_INTERFACE( window )->private->client, path, value, NULL );
-
-		g_free( path );
+		application = NACT_APPLICATION( base_window_get_application( window ));
+		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+		na_settings_set_string( settings, name, value );
 	}
 }
 
+#if 0
 static GConfValue *
 get_value( GConfClient *client, const gchar *path, const gchar *entry )
 {
@@ -351,3 +361,4 @@ set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValu
 
 	g_free( fullpath );
 }
+#endif

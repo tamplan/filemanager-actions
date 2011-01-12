@@ -31,6 +31,9 @@
 
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h: Get ride of GConf.
+
 	* README-GCONF:
 	* src/core/na-settings.c:
 	* src/utils/na-gconf2key.sh.in: Add omitted 'export-ask-user-last-format' key.

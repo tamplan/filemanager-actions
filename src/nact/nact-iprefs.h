@@ -58,26 +58,25 @@ typedef struct {
 }
 	NactIPrefsInterface;
 
-#define IPREFS_EXPORT_ITEMS_FOLDER_URI			"export-folder-uri"
-#define IPREFS_EXPORT_FORMAT					"export-format"
+#define IPREFS_EXPORT_ITEMS_FOLDER_URI			"export-last-folder-uri"
+#define IPREFS_EXPORT_FORMAT					"export-preferred-format"
 #define IPREFS_EXPORT_ASK_LAST_FORMAT			"export-ask-user-last-format"
-#define IPREFS_EXPORT_FORMAT_DEFAULT			"GConfEntry"
-#define IPREFS_IMPORT_ITEMS_FOLDER_URI			"import-folder-uri"
+#define IPREFS_IMPORT_ITEMS_FOLDER_URI			"import-last-folder-uri"
 #define IPREFS_ASSIST_ESC_QUIT					"assistant-esc-quit"
 #define IPREFS_ASSIST_ESC_CONFIRM				"assistant-esc-confirm"
 
 /* these are special export formats
  */
-enum {
-	IPREFS_EXPORT_NO_EXPORT = 1,
-	IPREFS_EXPORT_FORMAT_GCONF_SCHEMA
-};
+#define IPREFS_EXPORT_NO_EXPORT					0
+#define IPREFS_EXPORT_FORMAT_DEFAULT			"Desktop1"
 
 GType nact_iprefs_get_type( void );
 
 GQuark nact_iprefs_get_export_format( const BaseWindow *window, const gchar *pref );
 void   nact_iprefs_set_export_format( const BaseWindow *window, const gchar *pref, GQuark format );
 
+/* Obsoleted since 3.1.0 and the migration to configuration files
+ */
 void  nact_iprefs_migrate_key       ( const BaseWindow *window, const gchar *old_key, const gchar *new_key );
 
 void  nact_iprefs_write_bool        ( const BaseWindow *window, const gchar *key, gboolean value );
