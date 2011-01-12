@@ -33,34 +33,35 @@
 #include <config.h>
 #endif
 
-#include <api/na-gconf-utils.h>
-
 #include <core/na-iprefs.h>
+#include <core/na-settings.h>
 
 #include "base-iprefs.h"
+#include "nact-application.h"
 
 /* private interface data
  */
 struct BaseIPrefsInterfacePrivate {
-	GConfClient *client;
+	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
-static GType   register_type( void );
-static void    interface_base_init( BaseIPrefsInterface *klass );
-static void    interface_base_finalize( BaseIPrefsInterface *klass );
+static GType       register_type( void );
+static void        interface_base_init( BaseIPrefsInterface *klass );
+static void        interface_base_finalize( BaseIPrefsInterface *klass );
 
-static gchar  *v_iprefs_get_window_id( const BaseWindow *window );
+static gchar      *v_iprefs_get_window_id( const BaseWindow *window );
 
-static gint    read_int( BaseWindow *window, const gchar *name );
-static GSList *read_int_list( const BaseWindow *window, const gchar *key );
-static void    write_int( BaseWindow *window, const gchar *name, gint value );
-static void    write_int_list( const BaseWindow *window, const gchar *key, GSList *list );
-static void    int_list_to_position( const BaseWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height );
-static GSList *position_to_int_list( const BaseWindow *window, gint x, gint y, gint width, gint height );
-static void    free_int_list( GSList *list );
+static NASettings *get_settings( const BaseWindow *window );
+static gint        read_int( BaseWindow *window, const gchar *name );
+static GList      *read_int_list( const BaseWindow *window, const gchar *key );
+static void        write_int( BaseWindow *window, const gchar *name, gint value );
+static void        write_int_list( const BaseWindow *window, const gchar *key, GList *list );
+static void        int_list_to_position( const BaseWindow *window, GList *list, gint *x, gint *y, gint *width, gint *height );
+static GList      *position_to_int_list( const BaseWindow *window, gint x, gint y, gint width, gint height );
+static void        free_int_list( GList *list );
 
 GType
 base_iprefs_get_type( void )
@@ -111,7 +112,6 @@ interface_base_init( BaseIPrefsInterface *klass )
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( BaseIPrefsInterfacePrivate, 1 );
-		klass->private->client = gconf_client_get_default();
 
 		klass->iprefs_get_window_id = NULL;
 
@@ -129,8 +129,6 @@ interface_base_finalize( BaseIPrefsInterface *klass )
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		st_finalized = TRUE;
-
-		g_object_unref( klass->private->client );
 
 		g_free( klass->private );
 	}
@@ -179,7 +177,7 @@ void
 base_iprefs_position_named_window( const BaseWindow *window, GtkWindow *toplevel, const gchar *key )
 {
 	static const gchar *thisfn = "base_iprefs_position_named_window";
-	GSList *list;
+	GList *list;
 	gint x=0, y=0, width=0, height=0;
 	GdkDisplay *display;
 	GdkScreen *screen;
@@ -191,8 +189,8 @@ base_iprefs_position_named_window( const BaseWindow *window, GtkWindow *toplevel
 	if( st_initialized && !st_finalized ){
 
 		list = read_int_list( window, key );
-		if( list ){
 
+		if( list ){
 			int_list_to_position( window, list, &x, &y, &width, &height );
 			g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
 			free_int_list( list );
@@ -243,13 +241,17 @@ base_iprefs_save_window_position( const BaseWindow *window )
  * @key: the name of the window.
  *
  * Save size and position of the specified window.
+ *
+ * Note that the actual preference which records the size and position
+ * of the window is a list of unsigned integers, named '<key>-wsp'
+ * (for window size and position).
  */
 void
 base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *toplevel, const gchar *key )
 {
 	static const gchar *thisfn = "base_iprefs_save_named_window_position";
 	gint x, y, width, height;
-	GSList *list;
+	GList *list;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( BASE_IS_IPREFS( window ));
@@ -309,6 +311,7 @@ base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value )
 		write_int( window, name, value );
 	}
 }
+
 static gchar *
 v_iprefs_get_window_id( const BaseWindow *window )
 {
@@ -321,100 +324,57 @@ v_iprefs_get_window_id( const BaseWindow *window )
 	return( NULL );
 }
 
+/* It seems inevitable that preferences are attached to the application.
+ * Unfortunately, it does not seem possible to have a base window size and
+ * position itself. So, this BaseIPrefs interface is not really a base
+ * interface, but rather a common one, attached to the application
+ */
+static NASettings *
+get_settings( const BaseWindow *window )
+{
+	NactApplication *appli = NACT_APPLICATION( base_window_get_application( window ));
+	NAUpdater *updater = nact_application_get_updater( appli );
+	return( na_pivot_get_settings( NA_PIVOT( updater )));
+}
+
 static gint
 read_int( BaseWindow *window, const gchar *name )
 {
-	static const gchar *thisfn = "base_iprefs_read_key_int";
-	GError *error = NULL;
-	gchar *path;
-	gint value;
-
-	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
-
-	value = gconf_client_get_int( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, &error );
-
-	if( error ){
-		g_warning( "%s: name=%s, %s", thisfn, name, error->message );
-		g_error_free( error );
-	}
-
-	g_free( path );
-	return( value );
+	NASettings *settings = get_settings( window );
+	return( na_settings_get_uint( settings, name, NULL, NULL ));
 }
 
 /*
  * returns a list of int
  */
-static GSList *
+static GList *
 read_int_list( const BaseWindow *window, const gchar *key )
 {
-	static const gchar *thisfn = "base_iprefs_read_int_list";
-	GError *error = NULL;
-	gchar *path;
-	GSList *list;
-
-	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, key );
-
-	list = gconf_client_get_list(
-			BASE_IPREFS_GET_INTERFACE( window )->private->client, path, GCONF_VALUE_INT, &error );
-
-	if( error ){
-		g_warning( "%s: path=%s, error=%s", thisfn, path, error->message );
-		g_error_free( error );
-		list = NULL;
-	}
-
-	g_free( path );
-	return( list );
+	NASettings *settings = get_settings( window );
+	return( na_settings_get_uint_list( settings, key, NULL, NULL ));
 }
 
 static void
 write_int( BaseWindow *window, const gchar *name, gint value )
 {
-	static const gchar *thisfn = "base_iprefs_write_int";
-	GError *error = NULL;
-	gchar *path;
-
-	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, name );
-
-	gconf_client_set_int( BASE_IPREFS_GET_INTERFACE( window )->private->client, path, value, &error );
-
-	if( error ){
-		g_warning( "%s: name=%s, %s", thisfn, name, error->message );
-		g_error_free( error );
-	}
-
-	g_free( path );
+	NASettings *settings = get_settings( window );
+	na_settings_set_uint( settings, name, value );
 }
 
 static void
-write_int_list( const BaseWindow *window, const gchar *key, GSList *list )
+write_int_list( const BaseWindow *window, const gchar *key, GList *list )
 {
-	static const gchar *thisfn = "base_iprefs_write_int_list";
-	GError *error = NULL;
-	gchar *path;
-
-	path = g_strdup_printf( "%s/%s", IPREFS_GCONF_PREFS_PATH, key );
-
-	gconf_client_set_list(
-			BASE_IPREFS_GET_INTERFACE( window )->private->client, path, GCONF_VALUE_INT, list, &error );
-
-	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
-		g_error_free( error );
-		list = NULL;
-	}
-
-	g_free( path );
+	NASettings *settings = get_settings( window );
+	na_settings_set_uint_list( settings, key, list );
 }
 
 /*
- * extract the position of the window from the list of GConfValue
+ * extract the position of the window from the list of unsigned integers
  */
 static void
-int_list_to_position( const BaseWindow *window, GSList *list, gint *x, gint *y, gint *width, gint *height )
+int_list_to_position( const BaseWindow *window, GList *list, gint *x, gint *y, gint *width, gint *height )
 {
-	GSList *il;
+	GList *it;
 	int i;
 
 	g_assert( x );
@@ -422,33 +382,33 @@ int_list_to_position( const BaseWindow *window, GSList *list, gint *x, gint *y, 
 	g_assert( width );
 	g_assert( height );
 
-	for( il=list, i=0 ; il ; il=il->next, i+=1 ){
+	for( it=list, i=0 ; it ; it=it->next, i+=1 ){
 		switch( i ){
 			case 0:
-				*x = GPOINTER_TO_INT( il->data );
+				*x = GPOINTER_TO_UINT( it->data );
 				break;
 			case 1:
-				*y = GPOINTER_TO_INT( il->data );
+				*y = GPOINTER_TO_UINT( it->data );
 				break;
 			case 2:
-				*width = GPOINTER_TO_INT( il->data );
+				*width = GPOINTER_TO_UINT( it->data );
 				break;
 			case 3:
-				*height = GPOINTER_TO_INT( il->data );
+				*height = GPOINTER_TO_UINT( it->data );
 				break;
 		}
 	}
 }
 
-static GSList *
+static GList *
 position_to_int_list( const BaseWindow *window, gint x, gint y, gint width, gint height )
 {
-	GSList *list = NULL;
+	GList *list = NULL;
 
-	list = g_slist_append( list, GINT_TO_POINTER( x ));
-	list = g_slist_append( list, GINT_TO_POINTER( y ));
-	list = g_slist_append( list, GINT_TO_POINTER( width ));
-	list = g_slist_append( list, GINT_TO_POINTER( height ));
+	list = g_list_append( list, GUINT_TO_POINTER( x ));
+	list = g_list_append( list, GUINT_TO_POINTER( y ));
+	list = g_list_append( list, GUINT_TO_POINTER( width ));
+	list = g_list_append( list, GUINT_TO_POINTER( height ));
 
 	return( list );
 }
@@ -457,12 +417,7 @@ position_to_int_list( const BaseWindow *window, gint x, gint y, gint width, gint
  * free the list of int
  */
 static void
-free_int_list( GSList *list )
+free_int_list( GList *list )
 {
-	/*GSList *il;
-	for( il = list ; il ; il = il->next ){
-		GConfValue *value = ( GConfValue * ) il->data;
-		gconf_value_free( value );
-	}*/
-	g_slist_free( list );
+	g_list_free( list );
 }

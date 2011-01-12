@@ -31,6 +31,8 @@
 
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-iprefs.c: Remove GConf stuff.
+
 	* src/nact/nact-icon-chooser.c:
 	* src/nact/nact-icon-chooser.ui: Implement all preferences.
 
