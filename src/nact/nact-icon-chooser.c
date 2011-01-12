@@ -34,6 +34,8 @@
 
 #include <gdk/gdkkeysyms.h>
 
+#include "base-iprefs.h"
+#include "nact-application.h"
 #include "nact-gtk-utils.h"
 #include "nact-icon-chooser.h"
 
@@ -226,6 +228,8 @@ instance_dispose( GObject *dialog )
 {
 	static const gchar *thisfn = "nact_icon_chooser_instance_dispose";
 	NactIconChooser *self;
+	guint pos;
+	GtkWidget *paned;
 
 	g_return_if_fail( NACT_IS_ICON_CHOOSER( dialog ));
 
@@ -236,6 +240,10 @@ instance_dispose( GObject *dialog )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
+
+		paned = base_window_get_widget( BASE_WINDOW( self ), "IconPaned" );
+		pos = gtk_paned_get_position( GTK_PANED( paned ));
+		base_iprefs_set_int( BASE_WINDOW( self ), "item-icon-chooser-paned-width", pos );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -318,7 +326,7 @@ nact_icon_chooser_choose_icon( BaseWindow *parent, const gchar *icon_name )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "icon-chooser-dialog-size" ));
+	return( g_strdup( "item-icon-chooser-wsp" ));
 }
 
 static gchar *
@@ -429,13 +437,18 @@ static void
 on_base_runtime_init_dialog( NactIconChooser *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_icon_chooser_on_runtime_init_dialog";
+	guint pos;
+	GtkWidget *paned;
 
 	g_return_if_fail( NACT_IS_ICON_CHOOSER( editor ));
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
-	GtkDialog *dialog = GTK_DIALOG( base_window_get_toplevel( BASE_WINDOW( editor )));
-	g_debug( "%s: eeditor=%p, dialog=%p", thisfn, ( void * ) editor, ( void * ) dialog );
+	pos = base_iprefs_get_int( BASE_WINDOW( editor ), "item-icon-chooser-paned-width" );
+	if( pos ){
+		paned = base_window_get_widget( BASE_WINDOW( editor ), "IconPaned" );
+		gtk_paned_set_position( GTK_PANED( paned ), pos );
+	}
 
 	/* setup the initial icon
 	 */
@@ -496,15 +509,26 @@ static void
 fillup_icons_by_path( NactIconChooser *editor )
 {
 	GtkFileChooser *file_chooser;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
+	gchar *uri;
 
 	file_chooser = GTK_FILE_CHOOSER( base_window_get_widget( BASE_WINDOW( editor ), "FileChooser" ));
 	editor->private->path_preview = gtk_image_new();
 	gtk_file_chooser_set_preview_widget( file_chooser, editor->private->path_preview );
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
 	gtk_file_chooser_unselect_all( file_chooser );
-	/*if( window->private->path_last_selection ){
-		gtk_file_chooser_set_filename( file_chooser, window->private->path_last_selection );
-	} else*/ if( editor->private->current_icon ){
+
+	uri = na_settings_get_string( settings, "item-icon-chooser-last-uri", NULL, NULL );
+	if( uri ){
+		gtk_file_chooser_set_uri( file_chooser, uri );
+		g_free( uri );
+	} else if( editor->private->current_icon ){
 		gtk_file_chooser_set_filename( file_chooser, editor->private->current_icon );
 	}
 
@@ -798,13 +822,19 @@ on_themed_apply_triggered( NactIconChooser *editor )
 static void
 on_path_selection_changed( GtkFileChooser *file_chooser, NactIconChooser *editor )
 {
-	gchar *filename;
+	gchar *uri;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
 
-	filename = gtk_file_chooser_get_filename( file_chooser );
-	/*if( filename ){
-		g_free( window->private->path_last_selection );
-		window->private->path_last_selection = filename;
-	}*/
+	uri = gtk_file_chooser_get_uri( file_chooser );
+	if( uri ){
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+		na_settings_set_string( settings, "item-icon-chooser-last-uri", uri );
+		g_free( uri );
+	}
 }
 
 static void

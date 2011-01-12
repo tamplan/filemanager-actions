@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <requires lib="gtk+" version="2.12"/>
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkDialog" id="IconChooserDialog">
     <property name="border_width">6</property>
@@ -78,7 +78,7 @@
                           <object class="GtkHBox" id="hbox110">
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkHPaned" id="hpaned1">
+                              <object class="GtkHPaned" id="IconPaned">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <child>

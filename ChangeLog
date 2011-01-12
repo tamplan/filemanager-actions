@@ -31,6 +31,9 @@
 
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-icon-chooser.ui: Implement all preferences.
+
 	* src/utils/na-gconf2key.sh.in:
 	Renamed preferences for windows size and position '-wsp'.
 	Also delete from GConf if only preferences have been migrated.
