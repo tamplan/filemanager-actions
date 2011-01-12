@@ -35,6 +35,9 @@
 
 	* run-autogen.sh: Add sysconfdir argument to autogen.sh
 
+	* src/core/na-settings.c:
+	* src/core/na-settings.h: Configuration monitoring.
+
 	* src/plugin-menu/nautilus-actions.c:
 	Monitor all runtime preferences with only one callback.
 

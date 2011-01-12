@@ -33,9 +33,11 @@
 #endif
 
 #include <gio/gio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
-#include <api/na-data-types.h>
+#include <api/na-boxed.h>
 #include <api/na-core-utils.h>
 
 #include "na-settings.h"
@@ -46,34 +48,55 @@ struct _NASettingsClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+/* The characteristics of a configuration file.
+ * We manage two configuration files:
+ * - the global configuration file handles mandatory preferences;
+ * - the user configuration file handles.. well, user preferences.
+ */
+typedef struct {
+	gchar        *fname;
+	GKeyFile     *key_file;
+	GFileMonitor *monitor;
+	gulong        handler;
+}
+	KeyFile;
+
+/* The configuration content is handled as a GList of NAKeyValue structs.
+ * This list is loaded at initialization time, and then compared each
+ * time our file monitors signal us that a change has occured.
+ */
+typedef struct {
+	gchar   *group;
+	gchar   *key;
+	gboolean mandatory;
+	NABoxed *boxed;
+}
+	KeyValue;
+
+/* Each consumer may register a callback function which will be triggered
+ * when a key is modified.
+ * The monitored key may be a real key of the file, but also be a composite
+ * key (e.g. NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS monitors the
+ * 'readable' key of all i/o providers).
+ * Note that we actually monitor the _user_view_ of the configuration:
+ * e.g. if a key has a mandatory value in global conf, then the same
+ * key in user conf will just be ignored.
+ */
+typedef struct {
+	gchar    *monitored_key;
+	GCallback callback;
+	gpointer  user_data;
+}
+	Consumer;
+
 /* private instance data
  */
 struct _NASettingsPrivate {
-	gboolean  dispose_has_run;
-
-	/* the global configuration file, which handles mandatory preferences
-	 */
-	GKeyFile     *global_conf;
-	GFileMonitor *global_monitor;
-	gulong        global_handler;
-
-	/* the user configuration file
-	 */
-	GKeyFile     *user_conf;
-	GFileMonitor *user_monitor;
-	gulong        user_handler;
-
-	/* the registered consumers of monitoring events
-	 * as a list of 'Consumer' structs
-	 */
-	GList        *consumers;
-
-	/* for each monitoring key, we keep here the last known value
-	 * so that we are able to detect changes when the configuration
-	 * files is 'globally' changed
-	 * as a list of 'Entry' structs
-	 */
-	GList        *entries;
+	gboolean dispose_has_run;
+	KeyFile *mandatory;
+	KeyFile *user;
+	GList   *content;
+	GList   *consumers;
 };
 
 #define GROUP_NACT						"nact"
@@ -85,39 +108,66 @@ struct _NASettingsPrivate {
 typedef struct {
 	const gchar *key;
 	const gchar *group;
-	guint        data_type;				/* picked up from NADataFactory */
+	guint        type;
 	const gchar *default_value;
 }
 	KeyDef;
 
 static const KeyDef st_def_keys[] = {
-	{ NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER, GROUP_RUNTIME, NAFD_TYPE_STRING_LIST, "" },
-	{ NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM,    GROUP_RUNTIME, NAFD_TYPE_BOOLEAN,     "true" },
-	{ NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU,  GROUP_RUNTIME, NAFD_TYPE_BOOLEAN,     "true" },
-	{ NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER,  GROUP_RUNTIME, NAFD_TYPE_STRING_LIST, "" },
-	{ NA_SETTINGS_RUNTIME_ITEMS_LIST_ORDER_MODE,   GROUP_RUNTIME, NAFD_TYPE_MAP,         "AscendingOrder" },
+	{ NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER,   GROUP_RUNTIME,     NA_BOXED_TYPE_STRING_LIST, "" },
+	{ NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM,      GROUP_RUNTIME,     NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU,    GROUP_RUNTIME,     NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER,    GROUP_RUNTIME,     NA_BOXED_TYPE_STRING_LIST, "" },
+	{ NA_SETTINGS_RUNTIME_ITEMS_LIST_ORDER_MODE,     GROUP_RUNTIME,     NA_BOXED_TYPE_STRING,      "AscendingOrder" },
+	{ "assistant-esc-confirm",                       GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ "assistant-esc-quit",                          GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ "capability-add-capability-dialog-size",       GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "command-command-chooser-dialog-size",         GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "command-command-chooser-last-folder-uri",     GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "command-legend-dialog-size",                  GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "command-working-dir-chooser-dialog-size",     GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "command-working-dir-chooser-last-folder-uri", GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "environment-show-if-running-dialog-size",     GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "environment-show-if-running-last-folder-uri", GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "environment-try-exec-dialog-size",            GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "environment-try-exec-last-folder-uri",        GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "export-assistant-dialog-size",                GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "export-last-folder-uri",                      GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "export-preferred-format",                     GROUP_NACT,        NA_BOXED_TYPE_STRING,      "Desktop1" },
+	{ "folder-chooser-dialog-size",                  GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "folder-last-path",                            GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "import-ask-user-dialog-size",                 GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "import-ask-user-last-mode",                   GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "import-assistant-dialog-size",                GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "import-last-folder-uri",                      GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "import-mode-keep-last-choice",                GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ "import-preferred-mode",                       GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "io-providers-write-order",                    GROUP_NACT,        NA_BOXED_TYPE_STRING_LIST, "" },
+	{ "item-icon-browse-last-path",                  GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "item-icon-chooser-dialog-size",               GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "main-pane-width",                             GROUP_NACT,        NA_BOXED_TYPE_UINT,        "200" },
+	{ "main-save-auto",                              GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ "main-save-period",                            GROUP_NACT,        NA_BOXED_TYPE_UINT,        "5" },
+	{ "main-toolbar-edit-display",                   GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ "main-toolbar-file-display",                   GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ "main-toolbar-help-display",                   GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ "main-toolbar-tools-display",                  GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ "main-window-size",                            GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "preferences-dialog-size",                     GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "relabel-when-duplicate-action",               GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ "relabel-when-duplicate-menu",                 GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ "relabel-when-duplicate-profile",              GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ "scheme-add-scheme-dialog-size",               GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ "scheme-default-list",                         GROUP_NACT,        NA_BOXED_TYPE_STRING_LIST, "" },
+	{ IO_PROVIDER_READABLE,                          GROUP_IO_PROVIDER, NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ "writable",                                    GROUP_IO_PROVIDER, NA_BOXED_TYPE_BOOLEAN,     "true" },
 	{ 0 }
 };
 
-typedef void ( *global_fn )( gboolean global, void *user_data );
-
-typedef struct {
-	gchar    *key;
-	GCallback callback;
-	gpointer  user_data;
-}
-	Consumer;
-
-typedef struct {
-	gchar   *group;
-	gchar   *key;
-	void    *value;
-	gboolean global;
-	guint    type;
-}
-	Entry;
-
-static GObjectClass *st_parent_class = NULL;
+static GObjectClass *st_parent_class    = NULL;
+static GTimeVal      st_last_event;
+static guint         st_event_source_id = 0;
+static gint          st_burst_timeout   = 100;		/* burst timeout in msec */
 
 static GType     register_type( void );
 static void      class_init( NASettingsClass *klass );
@@ -125,17 +175,23 @@ static void      instance_init( GTypeInstance *instance, gpointer klass );
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
+static GList    *content_diff( GList *old, GList *new );
+static GList    *content_load( NASettings *settings );
+static GList    *content_load_keys( NASettings *settings, GList *content, KeyFile *key_file, gboolean mandatory );
 static KeyDef   *get_key_def( const gchar *key );
+static GSList   *get_string_list_ex( NASettings *settings, const gchar *group, const gchar *key, gboolean *found, gboolean *global );
+#if 0
 static gchar    *get_string_ex( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global );
-static GSList   *get_string_list_ex( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global );
-static GKeyFile *initialize_settings( NASettings* settings, const gchar *dir, GFileMonitor **monitor, gulong *handler );
-static void      monitor_io_provider_read_status( NASettings *settings );
-static void      monitor_io_provider_read_status_conf( NASettings *settings, GKeyFile *key_file, gboolean global );
-static void      monitor_key( NASettings *settings, const gchar *key );
-static void      monitor_key_add( NASettings *settings, const gchar *group, const gchar *key, gpointer value, gboolean global, guint type );
-static void      on_conf_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, NASettings *settings );
+#endif
+static KeyFile  *key_file_new( NASettings *settings, const gchar *dir );
+static void      on_keyfile_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, NASettings *settings );
+static gboolean  on_keyfile_changed_timeout( NASettings *settings );
+static KeyValue *peek_key_value_from_content( GList *content, const gchar *group, const gchar *key );
+static KeyValue *read_key_value_from_key_file( GKeyFile *key_file, const gchar *group, const gchar *key, const KeyDef *key_def );
 static void      release_consumer( Consumer *consumer );
-static void      release_entry( Entry *entry );
+static void      release_key_file( KeyFile *key_file );
+static void      release_key_value( KeyValue *value );
+static gulong    time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 
 GType
 na_settings_get_type( void )
@@ -207,12 +263,9 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NASettingsPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->global_conf = NULL;
-	self->private->global_monitor = NULL;
-	self->private->global_handler = 0;
-	self->private->user_conf = NULL;
-	self->private->user_monitor = NULL;
-	self->private->user_handler = 0;
+	self->private->mandatory = NULL;
+	self->private->user = NULL;
+	self->private->content = NULL;
 	self->private->consumers = NULL;
 }
 
@@ -232,23 +285,8 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_key_file_free( self->private->global_conf );
-		if( self->private->global_monitor ){
-			if( self->private->global_handler ){
-				g_signal_handler_disconnect( self->private->global_monitor, self->private->global_handler );
-			}
-			g_file_monitor_cancel( self->private->global_monitor );
-			g_object_unref( self->private->global_monitor );
-		}
-
-		g_key_file_free( self->private->user_conf );
-		if( self->private->user_monitor ){
-			if( self->private->user_handler ){
-				g_signal_handler_disconnect( self->private->user_monitor, self->private->user_handler );
-			}
-			g_file_monitor_cancel( self->private->user_monitor );
-			g_object_unref( self->private->user_monitor );
-		}
+		release_key_file( self->private->mandatory );
+		release_key_file( self->private->user );
 
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
@@ -268,11 +306,11 @@ instance_finalize( GObject *object )
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
+	g_list_foreach( self->private->content, ( GFunc ) release_key_value, NULL );
+	g_list_free( self->private->content );
+
 	g_list_foreach( self->private->consumers, ( GFunc ) release_consumer, NULL );
 	g_list_free( self->private->consumers );
-
-	g_list_foreach( self->private->entries, ( GFunc ) release_entry, NULL );
-	g_list_free( self->private->entries );
 
 	g_free( self->private );
 
@@ -297,18 +335,14 @@ na_settings_new( void )
 	settings = g_object_new( NA_SETTINGS_TYPE, NULL );
 
 	dir = g_build_filename( SYSCONFDIR, "xdg", NULL );
-	settings->private->global_conf = initialize_settings(
-			settings, dir,
-			&settings->private->global_monitor,
-			&settings->private->global_handler );
+	settings->private->mandatory = key_file_new( settings, dir );
 	g_free( dir );
 
 	dir = g_build_filename( g_get_home_dir(), ".config", NULL );
-	settings->private->user_conf = initialize_settings(
-			settings, dir,
-			&settings->private->user_monitor,
-			&settings->private->user_handler );
+	settings->private->user = key_file_new( settings, dir );
 	g_free( dir );
+
+	settings->private->content = content_load( settings );
 
 	return( settings );
 }
@@ -327,30 +361,24 @@ na_settings_new( void )
 void
 na_settings_register_key_callback( NASettings *settings, const gchar *key, GCallback callback, gpointer user_data )
 {
+	static const gchar *thisfn = "na_settings_register_key_callback";
+
 	g_return_if_fail( NA_IS_SETTINGS( settings ));
 
 	if( !settings->private->dispose_has_run ){
+		g_debug( "%s: settings=%p, key=%s, callback=%p, user_data=%p",
+				thisfn, ( void * ) settings, key, ( void * ) callback, ( void * ) user_data );
 
 		Consumer *consumer = g_new0( Consumer, 1 );
 
-		consumer->key = g_strdup( key );
+		consumer->monitored_key = g_strdup( key );
 		consumer->callback = callback;
 		consumer->user_data = user_data;
 		settings->private->consumers = g_list_prepend( settings->private->consumers, consumer );
-
-		if( !strcmp( key, NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS )){
-			monitor_io_provider_read_status( settings );
-
-		} else if( !strcmp( key, NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER ) ||
-					!strcmp( key, NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM ) ||
-					!strcmp( key, NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU ) ||
-					!strcmp( key, NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER )){
-			monitor_key( settings, key );
-		}
 	}
-
 }
 
+#if 0
 /**
  * na_settings_register_global_callback:
  * @settings: this #NASettings instance.
@@ -377,6 +405,7 @@ na_settings_register_global_callback( NASettings *settings, GCallback callback, 
 	}
 
 }
+#endif
 
 /**
  * na_settings_get_boolean:
@@ -385,20 +414,21 @@ na_settings_register_global_callback( NASettings *settings, GCallback callback, 
  * @found: if not %NULL, a pointer to a gboolean in which we will store
  *  whether the searched @key has been found (%TRUE), or if the returned
  *  value comes from default (%FALSE).
- * @global: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from global preferences
- *  (%TRUE), or from the user preferences (%FALSE). Global preferences
- *  are usually read-only. When the @key has not been found, @global
- *  is set to %FALSE.
+ * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the returned value has been readen from mandatory preferences
+ *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
+ *  been found, @mandatory is set to %FALSE.
+ *
+ * This function should only be called for unambiguous keys; the resultat
+ * is otherwise undefined (and rather unpredictable).
  *
  * Returns: the value of the key, of its default value if not found.
  *
  * Since: 3.1.0
  */
 gboolean
-na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found, gboolean *global )
+na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory )
 {
-	static const gchar *thisfn = "na_settings_get_boolean";
 	gboolean value;
 	KeyDef *key_def;
 
@@ -408,18 +438,15 @@ na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found
 	if( found ){
 		*found = FALSE;
 	}
-	if( global ){
-		*global = FALSE;
+	if( mandatory ){
+		*mandatory = FALSE;
 	}
 
 	if( !settings->private->dispose_has_run ){
 
 		key_def = get_key_def( key );
 		if( key_def ){
-			value = na_settings_get_boolean_ex( settings, key_def->group, key, key_def->default_value, found, global );
-
-		} else {
-			g_warning( "%s: no KeyDef found for key=%s", thisfn, key );
+			value = na_settings_get_boolean_ex( settings, key_def->group, key, found, mandatory );
 		}
 	}
 
@@ -431,27 +458,25 @@ na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found
  * @settings: this #NASettings instance.
  * @group: the group where the @key is to be searched for.
  * @key: the key whose value is to be returned.
- * @default_value: as 'true' or 'false', may be %NULL which defaults to %FALSE.
  * @found: if not %NULL, a pointer to a gboolean in which we will store
  *  whether the searched @key has been found (%TRUE), or if the returned
  *  value comes from default (%FALSE).
- * @global: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from global preferences
- *  (%TRUE), or from the user preferences (%FALSE). Global preferences
- *  are usually read-only. When the @key has not been found, @global
- *  is set to %FALSE.
+ * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the returned value has been readen from mandatory preferences
+ *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
+ *  been found, @mandatory is set to %FALSE.
  *
  * Returns: the value of the key, of its default value if not found.
  *
  * Since: 3.1.0
  */
 gboolean
-na_settings_get_boolean_ex( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global )
+na_settings_get_boolean_ex( NASettings *settings, const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory )
 {
-	static const gchar *thisfn = "na_settings_get_boolean_ex";
 	gboolean value;
-	GError *error;
 	gboolean has_entry;
+	KeyDef *key_def;
+	KeyValue *key_value;
 
 	g_return_val_if_fail( NA_IS_SETTINGS( settings ), FALSE );
 
@@ -459,49 +484,39 @@ na_settings_get_boolean_ex( NASettings *settings, const gchar *group, const gcha
 	if( found ){
 		*found = FALSE;
 	}
-	if( global ){
-		*global = FALSE;
+	if( mandatory ){
+		*mandatory = FALSE;
 	}
 
 	if( !settings->private->dispose_has_run ){
 
-		error = NULL;
-		has_entry = TRUE;
-		value = g_key_file_get_boolean( settings->private->global_conf, group, key, &error );
-		if( error ){
+		key_def = get_key_def( key );
+		if( key_def ){
 			has_entry = FALSE;
-			if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
-				g_warning( "%s: (global) %s", thisfn, error->message );
-			}
-			g_error_free( error );
-			error = NULL;
-
-		} else {
-			if( found ){
-				*found = TRUE;
-			}
-			if( global ){
-				*global = TRUE;
-			}
-		}
-		if( !has_entry ){
-			value = g_key_file_get_boolean( settings->private->user_conf, group, key, &error );
-			if( error ){
-				if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
-					g_warning( "%s: (user) %s", thisfn, error->message );
-				}
-				g_error_free( error );
-				error = NULL;
-			} else {
+			key_value = read_key_value_from_key_file( settings->private->mandatory->key_file, group, key, key_def );
+			if( key_value ){
 				has_entry = TRUE;
 				if( found ){
 					*found = TRUE;
 				}
+				if( mandatory ){
+					*mandatory = TRUE;
+				}
 			}
-		}
-		if( !has_entry ){
-			if( default_value ){
-				value = ( strcmp( default_value, "true" ) == 0 );
+			if( !has_entry ){
+				key_value = read_key_value_from_key_file( settings->private->user->key_file, group, key, key_def );
+				if( key_value ){
+					has_entry = TRUE;
+					if( found ){
+						*found = TRUE;
+					}
+				}
+			}
+			if( has_entry ){
+				value = na_boxed_get_boolean( key_value->boxed );
+				release_key_value( key_value );
+			} else {
+				value = ( key_def->default_value ? ( strcasecmp( key_def->default_value, "true" ) == 0 || atoi( key_def->default_value ) != 0 ) : FALSE );
 			}
 		}
 	}
@@ -516,11 +531,13 @@ na_settings_get_boolean_ex( NASettings *settings, const gchar *group, const gcha
  * @found: if not %NULL, a pointer to a gboolean in which we will store
  *  whether the searched @key has been found (%TRUE), or if the returned
  *  value comes from default (%FALSE).
- * @global: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from global preferences
- *  (%TRUE), or from the user preferences (%FALSE). Global preferences
- *  are usually read-only. When the @key has not been found, @global
- *  is set to %FALSE.
+ * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the returned value has been readen from mandatory preferences
+ *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
+ *  been found, @mandatory is set to %FALSE.
+ *
+ * This function should only be called for unambiguous keys; the resultat
+ * is otherwise undefined (and rather unpredictable).
  *
  * Returns: the value of the key as a newly allocated list of strings.
  * The returned list should be na_core_utils_slist_free() by the caller.
@@ -528,9 +545,8 @@ na_settings_get_boolean_ex( NASettings *settings, const gchar *group, const gcha
  * Since: 3.1.0
  */
 GSList *
-na_settings_get_string_list( NASettings *settings, const gchar *key, gboolean *found, gboolean *global )
+na_settings_get_string_list( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory )
 {
-	static const gchar *thisfn = "na_settings_get_string_list";
 	GSList *value;
 	KeyDef *key_def;
 
@@ -540,42 +556,253 @@ na_settings_get_string_list( NASettings *settings, const gchar *key, gboolean *f
 	if( found ){
 		*found = FALSE;
 	}
-	if( global ){
-		*global = FALSE;
+	if( mandatory ){
+		*mandatory = FALSE;
 	}
 
 	if( !settings->private->dispose_has_run ){
 
 		key_def = get_key_def( key );
-
 		if( key_def ){
-			value = get_string_list_ex( settings, key_def->group, key, key_def->default_value, found, global );
-
-		} else {
-			g_warning( "%s: no KeyDef found for key=%s", thisfn, key );
+			value = get_string_list_ex( settings, key_def->group, key, found, mandatory );
 		}
 	}
 
 	return( value );
 }
 
+/*
+ * returns a list of modified KeyValue
+ * - order in the lists is not signifiant
+ * - the mandatory flag is not signifiant
+ * - a key is modified:
+ *   > if it appears in new
+ *   > if it disappears: the value is so reset to its default
+ *   > if the value has been modified
+ *
+ * we return here a new list, with newly allocated KeyValue structs
+ * which hold the new value of each modified key
+ */
+static GList *
+content_diff( GList *old, GList *new )
+{
+	GList *diffs, *io, *in;
+	KeyValue *kold, *knew, *kdiff;
+	gboolean found;
+	KeyDef *key_def;
+
+	diffs = NULL;
+
+	for( io = old ; io ; io = io->next ){
+		kold = ( KeyValue * ) io->data;
+		found = FALSE;
+		for( in = new ; in && !found ; in = in->next ){
+			knew = ( KeyValue * ) in->data;
+			if( !strcmp( kold->group, knew->group ) && !strcmp( kold->key, knew->key )){
+				found = TRUE;
+				if( na_boxed_compare( kold->boxed, knew->boxed ) != 0 ){
+					/* a key has been modified */
+					kdiff = g_new0( KeyValue, 1 );
+					kdiff->group = g_strdup( knew->group );
+					kdiff->key = g_strdup( knew->key );
+					kdiff->mandatory = knew->mandatory;
+					kdiff->boxed = na_boxed_copy( knew->boxed );
+					diffs = g_list_prepend( diffs, kdiff );
+				}
+			}
+		}
+		if( !found ){
+			key_def = get_key_def( kold->key );
+			if( key_def ){
+				/* a key has disappeared */
+				kdiff = g_new0( KeyValue, 1 );
+				kdiff->group = g_strdup( kold->group );
+				kdiff->key = g_strdup( kold->key );
+				kdiff->mandatory = FALSE;
+				kdiff->boxed = na_boxed_new_from_string( key_def->type, key_def->default_value );
+				diffs = g_list_prepend( diffs, kdiff );
+			}
+		}
+	}
+
+	for( in = new ; in ; in = in->next ){
+		knew = ( KeyValue * ) in->data;
+		found = FALSE;
+		for( io = old ; io && !found ; io = io->next ){
+			kold = ( KeyValue * ) io->data;
+			if( !strcmp( kold->group, knew->group ) && !strcmp( kold->key, knew->key )){
+				found = TRUE;
+			}
+		}
+		if( !found ){
+			key_def = get_key_def( knew->key );
+			if( key_def ){
+				/* a key is new */
+				kdiff = g_new0( KeyValue, 1 );
+				kdiff->group = g_strdup( knew->group );
+				kdiff->key = g_strdup( knew->key );
+				kdiff->mandatory = knew->mandatory;
+				kdiff->boxed = na_boxed_copy( knew->boxed );
+				diffs = g_list_prepend( diffs, kdiff );
+			}
+		}
+	}
+
+	return( diffs );
+}
+
+/* load the content of the two configuration files (actually of _the_ configuration)
+ * taking care of not overriding mandatory preferences with user ones
+ */
+static GList *
+content_load( NASettings *settings )
+{
+	GList *content;
+
+	content = content_load_keys( settings, NULL, settings->private->mandatory, TRUE );
+	content = content_load_keys( settings, content, settings->private->user, FALSE );
+
+	return( content );
+}
+
+static GList *
+content_load_keys( NASettings *settings, GList *content, KeyFile *key_file, gboolean mandatory )
+{
+	static const gchar *thisfn = "na_settings_content_load_keys";
+	GError *error;
+	gchar **groups, **ig;
+	gchar **keys, **ik;
+	KeyValue *key_value;
+	KeyDef *key_def;
+
+	error = NULL;
+	if( !g_key_file_load_from_file( key_file->key_file, key_file->fname, G_KEY_FILE_KEEP_COMMENTS, &error )){
+		g_warning( "%s: %s: %s", thisfn, key_file->fname, error->message );
+		g_error_free( error );
+		error = NULL;
+
+	} else {
+		groups = g_key_file_get_groups( key_file->key_file, NULL );
+		ig = groups;
+		while( *ig ){
+			keys = g_key_file_get_keys( key_file->key_file, *ig, NULL, NULL );
+			ik = keys;
+			while( *ik ){
+				key_def = get_key_def( *ik );
+				if( key_def ){
+					key_value = peek_key_value_from_content( content, *ig, *ik );
+					if( !key_value ){
+						key_value = read_key_value_from_key_file( key_file->key_file, *ig, *ik, key_def );
+						if( key_value ){
+							key_value->mandatory = mandatory;
+							content = g_list_prepend( content, key_value );
+						}
+					}
+				}
+				ik++;
+			}
+			g_strfreev( keys );
+			ig++;
+		}
+		g_strfreev( groups );
+	}
+
+	return( content );
+}
+
 static KeyDef *
 get_key_def( const gchar *key )
 {
+	static const gchar *thisfn = "na_settings_get_key_def";
 	KeyDef *found = NULL;
 	KeyDef *idef;
 
 	idef = ( KeyDef * ) st_def_keys;
-	while( idef && !found ){
+	while( idef->key && !found ){
 		if( !strcmp( idef->key, key )){
 			found = idef;
 		}
 		idef++;
 	}
+	if( !found ){
+		g_warning( "%s: no KeyDef found for key=%s", thisfn, key );
+	}
 
 	return( found );
 }
 
+/*
+ * get_string_list_ex:
+ * @settings: this #NASettings instance.
+ * @group: the group name.
+ * @key: the key whose value is to be returned.
+ * @found: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the searched @key has been found (%TRUE), or if the returned
+ *  value comes from default (%FALSE).
+ * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
+ *  whether the returned value has been readen from mandatory preferences
+ *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
+ *  been found, @mandatory is set to %FALSE.
+ *
+ * Returns: the value of the key as a newly allocated list of strings.
+ * The returned list should be na_core_utils_slist_free() by the caller.
+ *
+ * Since: 3.1.0
+ */
+static GSList *
+get_string_list_ex( NASettings *settings, const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory )
+{
+	GSList *value;
+	gboolean has_entry;
+	KeyDef *key_def;
+	KeyValue *key_value;
+
+	g_return_val_if_fail( NA_IS_SETTINGS( settings ), NULL );
+
+	value = NULL;
+	if( found ){
+		*found = FALSE;
+	}
+	if( mandatory ){
+		*mandatory = FALSE;
+	}
+
+	if( !settings->private->dispose_has_run ){
+		key_def = get_key_def( key );
+		if( key_def ){
+			has_entry = FALSE;
+			key_value = read_key_value_from_key_file( settings->private->mandatory->key_file, group, key, key_def );
+			if( key_value ){
+				has_entry = TRUE;
+				if( found ){
+					*found = TRUE;
+				}
+				if( mandatory ){
+					*mandatory = TRUE;
+				}
+			}
+			if( !has_entry ){
+				key_value = read_key_value_from_key_file( settings->private->user->key_file, group, key, key_def );
+				if( key_value ){
+					has_entry = TRUE;
+					if( found ){
+						*found = TRUE;
+					}
+				}
+			}
+			if( has_entry ){
+				value = na_boxed_get_string_list( key_value->boxed );
+				release_key_value( key_value );
+			} else {
+				value = g_slist_append( NULL, g_strdup( key_def->default_value ));
+			}
+		}
+	}
+
+	return( value );
+}
+
+#if 0
 /*
  * get_string_ex:
  * @settings: this #NASettings instance.
@@ -654,239 +881,38 @@ get_string_ex( NASettings *settings, const gchar *group, const gchar *key, const
 
 	return( value );
 }
-
-/*
- * get_string_list_ex:
- * @settings: this #NASettings instance.
- * @key: the key whose value is to be returned.
- * @found: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the searched @key has been found (%TRUE), or if the returned
- *  value comes from default (%FALSE).
- * @global: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from global preferences
- *  (%TRUE), or from the user preferences (%FALSE). Global preferences
- *  are usually read-only. When the @key has not been found, @global
- *  is set to %FALSE.
- *
- * Returns: the value of the key as a newly allocated list of strings.
- * The returned list should be na_core_utils_slist_free() by the caller.
- *
- * Since: 3.1.0
- */
-static GSList *
-get_string_list_ex( NASettings *settings, const gchar *group, const gchar *key, const gchar *default_value, gboolean *found, gboolean *global )
-{
-	static const gchar *thisfn = "na_settings_get_string_list_ex";
-	GSList *value;
-	gchar **array;
-	GError *error;
-	gboolean has_entry;
-
-	g_return_val_if_fail( NA_IS_SETTINGS( settings ), NULL );
-
-	value = NULL;
-	if( found ){
-		*found = FALSE;
-	}
-	if( global ){
-		*global = FALSE;
-	}
-
-	if( !settings->private->dispose_has_run ){
-		error = NULL;
-		has_entry = TRUE;
-		array = g_key_file_get_string_list( settings->private->global_conf, group, key, NULL, &error );
-		if( error ){
-			has_entry = FALSE;
-			if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
-				g_warning( "%s: (global) %s", thisfn, error->message );
-			}
-			g_error_free( error );
-			error = NULL;
-
-		} else {
-			if( found ){
-				*found = TRUE;
-			}
-			if( global ){
-				*global = TRUE;
-			}
-		}
-		if( !has_entry ){
-			array = g_key_file_get_string_list( settings->private->user_conf, group, key, NULL, &error );
-			if( error ){
-				if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
-					g_warning( "%s: (user) %s", thisfn, error->message );
-				}
-				g_error_free( error );
-				error = NULL;
-			} else {
-				has_entry = TRUE;
-				if( found ){
-					*found = TRUE;
-				}
-			}
-		}
-		if( !has_entry ){
-			value = g_slist_append( NULL, g_strdup( default_value ));
-		} else {
-			value = na_core_utils_slist_from_array(( const gchar ** ) array );
-			g_strfreev( array );
-		}
-	}
-
-	return( value );
-}
+#endif
 
 /*
  * called from na_settings_new
  * allocate and load the key files for global and user preferences
  */
-static GKeyFile *
-initialize_settings( NASettings* settings, const gchar *dir, GFileMonitor **monitor, gulong *handler )
+static KeyFile *
+key_file_new( NASettings *settings, const gchar *dir )
 {
-	static const gchar *thisfn = "na_settings_initialize_settings";
-	GKeyFile *key_file;
+	static const gchar *thisfn = "na_settings_key_file_new";
+	KeyFile *key_file;
 	GError *error;
-	gchar *path;
 	GFile *file;
 
-	key_file = g_key_file_new();
+	key_file = g_new0( KeyFile, 1 );
+
+	key_file->key_file = g_key_file_new();
+	key_file->fname = g_strdup_printf( "%s/%s.conf", dir, PACKAGE );
 
 	error = NULL;
-	path = g_strdup_printf( "%s/%s.conf", dir, PACKAGE );
-	if( !g_key_file_load_from_file( key_file, path, G_KEY_FILE_KEEP_COMMENTS, &error )){
-		g_warning( "%s: %s", thisfn, error->message );
-		g_error_free( error );
-		error = NULL;
-	}
-
-	file = g_file_new_for_path( path );
-	*monitor = g_file_monitor_file( file, 0, NULL, &error );
+	file = g_file_new_for_path( key_file->fname );
+	key_file->monitor = g_file_monitor_file( file, 0, NULL, &error );
 	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
+		g_warning( "%s: %s: %s", thisfn, key_file->fname, error->message );
 		g_error_free( error );
 		error = NULL;
-
 	} else {
-		*handler = g_signal_connect( *monitor, "changed", ( GCallback ) on_conf_changed, settings );
+		key_file->handler = g_signal_connect( key_file->monitor, "changed", ( GCallback ) on_keyfile_changed, settings );
 	}
 	g_object_unref( file );
 
-	g_free( path );
 	return( key_file );
-}
-
-/*
- * this is a fake key, as we actually monitor the 'readable' status
- * of all io-providers
- * add to the list of monitored keys the found io-providers
- */
-static void
-monitor_io_provider_read_status( NASettings *settings )
-{
-	monitor_io_provider_read_status_conf( settings, settings->private->global_conf, TRUE );
-
-	monitor_io_provider_read_status_conf( settings, settings->private->user_conf, FALSE );
-}
-
-static void
-monitor_io_provider_read_status_conf( NASettings *settings, GKeyFile *key_file, gboolean global )
-{
-	gchar **array;
-	gchar **idx;
-	gboolean readable;
-	gboolean found;
-
-	array = g_key_file_get_groups( key_file, NULL );
-	if( array ){
-		idx = array;
-		while( idx ){
-			if( g_str_has_prefix( *idx, "io-provider " )){
-				readable = na_settings_get_boolean_ex( settings, *idx, IO_PROVIDER_READABLE, NULL, &found, NULL );
-				if( found ){
-					monitor_key_add( settings, *idx, IO_PROVIDER_READABLE, GUINT_TO_POINTER(( guint ) readable ), global, NAFD_TYPE_BOOLEAN );
-				}
-			}
-			idx++;
-		}
-		g_strfreev( array );
-	}
-}
-
-static void
-monitor_key( NASettings *settings, const gchar *key )
-{
-	static const gchar *thisfn = "na_settings_monitor_key";
-	KeyDef *key_def;
-	gpointer value;
-	gboolean found, global;
-
-	found = FALSE;
-	key_def = get_key_def( key );
-	if( key_def ){
-		switch( key_def->data_type ){
-
-			case NAFD_TYPE_STRING:
-			case NAFD_TYPE_MAP:
-				value = get_string_ex( settings, key_def->group, key, NULL, &found, &global );
-				break;
-
-			case NAFD_TYPE_BOOLEAN:
-				value = GUINT_TO_POINTER( na_settings_get_boolean_ex( settings, key_def->group, key, NULL, &found, &global ));
-				break;
-
-			case NAFD_TYPE_STRING_LIST:
-				value = get_string_list_ex( settings, key_def->group, key, NULL, &found, &global );
-				break;
-
-			case NAFD_TYPE_LOCALE_STRING:
-			case NAFD_TYPE_POINTER:
-			case NAFD_TYPE_UINT:
-				g_warning( "%s: unmanaged data type: %s", thisfn, na_data_types_get_label( key_def->data_type ));
-				break;
-
-			default:
-				g_warning( "%s: unknown data type: %d", thisfn, key_def->data_type );
-		}
-
-	} else {
-		g_warning( "%s: no KeyDef found for key=%s", thisfn, key );
-	}
-
-	if( found ){
-		monitor_key_add( settings, key_def->group, key, value, global, key_def->data_type );
-	}
-}
-
-/* add the key if not already monitored
- */
-static void
-monitor_key_add( NASettings *settings, const gchar *group, const gchar *key, gpointer value, gboolean global, guint type )
-{
-	GList *it;
-	gboolean found;
-	Entry *entry;
-
-	for( it=settings->private->entries, found=FALSE ; it && !found ; it=it->next ){
-		entry = ( Entry * ) it->data;
-		if( !strcmp( entry->group, group ) &&
-			!strcmp( entry->key, key ) &&
-			entry->global == global ){
-				found = TRUE;
-		}
-	}
-
-	if( !found ){
-		entry = g_new0( Entry, 1 );
-		entry->group = g_strdup( group );
-		entry->key = g_strdup( key );
-		entry->value = na_data_types_copy( value, type );
-		entry->global = global;
-		entry->type = type;
-
-		settings->private->entries = g_list_prepend( settings->private->entries, entry );
-	}
 }
 
 /*
@@ -898,32 +924,148 @@ monitor_key_add( NASettings *settings, const gchar *group, const gchar *key, gpo
  * with a NULL key
  */
 static void
-on_conf_changed( GFileMonitor *monitor,
+on_keyfile_changed( GFileMonitor *monitor,
 		GFile *file, GFile *other_file, GFileMonitorEvent event_type, NASettings *settings )
 {
-	GList *ic;
-	Consumer *consumer;
-	gchar *path;
-	GFile *prefix;
-	gboolean global;
-
 	g_return_if_fail( NA_IS_SETTINGS( settings ));
 
 	if( !settings->private->dispose_has_run ){
 
-		path = g_build_filename( SYSCONFDIR, "xdg", NULL );
-		prefix = g_file_new_for_path( path );
-		global = g_file_has_prefix( file, prefix );
-		g_object_unref( prefix );
-		g_free( path );
+		/* set a timeout to notify consumers at the end of the serie */
+		g_get_current_time( &st_last_event );
 
-		for( ic = settings->private->consumers ; ic ; ic = ic->next ){
-			consumer = ( Consumer * ) ic->data;
-			if( !consumer->key ){
-				( *( global_fn ) consumer->callback )( global, consumer->user_data );
-			}
+		if( !st_event_source_id ){
+			st_event_source_id =
+				g_timeout_add( st_burst_timeout, ( GSourceFunc ) on_keyfile_changed_timeout, settings );
 		}
 	}
+}
+
+static gboolean
+on_keyfile_changed_timeout( NASettings *settings )
+{
+	static const gchar *thisfn = "na_settings_on_keyfile_changed_timeout";
+	GList *new_content;
+	GList *modifs;
+	GList *ic, *im;
+	Consumer *consumer;
+	KeyValue *changed;
+	gchar *group_prefix, *key;
+	GTimeVal now;
+	gulong diff;
+	gulong timeout_usec = 1000*st_burst_timeout;
+
+	g_get_current_time( &now );
+	diff = time_val_diff( &now, &st_last_event );
+	if( diff < timeout_usec ){
+		return( TRUE );
+	}
+
+	/* last individual notification is older that the st_burst_timeout
+	 * we may so suppose that the burst is terminated
+	 */
+	new_content = content_load( settings );
+	modifs = content_diff( settings->private->content, new_content );
+	g_debug( "%s: %d modifs found", thisfn, g_list_length( modifs ));
+
+	for( ic = settings->private->consumers ; ic ; ic = ic->next ){
+		consumer = ( Consumer * ) ic->data;
+
+		group_prefix = NULL;
+		if( !strcmp( consumer->monitored_key, NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS )){
+			group_prefix = g_strdup_printf( "%s ", GROUP_IO_PROVIDER );
+			key = IO_PROVIDER_READABLE;
+		} else {
+			key = consumer->monitored_key;
+		}
+
+		for( im = modifs ; im ; im = im->next ){
+			changed = ( KeyValue * ) im->data;
+			if(( !group_prefix || g_str_has_prefix( changed->group, group_prefix )) && !strcmp( changed->key, key )){
+				( *( NASettingsKeyCallback ) consumer->callback )( changed->group, changed->key, na_boxed_get_pointer( changed->boxed ), changed->mandatory, consumer->user_data );
+			}
+		}
+
+		g_free( group_prefix );
+	}
+
+	g_list_foreach( settings->private->content, ( GFunc ) release_key_value, NULL );
+	g_list_free( settings->private->content );
+	settings->private->content = new_content;
+
+	g_list_foreach( modifs, ( GFunc ) release_key_value, NULL );
+	g_list_free( modifs );
+
+	st_event_source_id = 0;
+	return( FALSE );
+}
+
+static KeyValue *
+peek_key_value_from_content( GList *content, const gchar *group, const gchar *key )
+{
+	KeyValue *value, *found;
+	GList *ic;
+
+	found = NULL;
+	for( ic = content ; ic && !found ; ic = ic->next ){
+		value = ( KeyValue * ) ic->data;
+		if( !strcmp( value->group, group ) && !strcmp( value->key, key )){
+			found = value;
+		}
+	}
+
+	return( found );
+}
+
+static KeyValue *
+read_key_value_from_key_file( GKeyFile *key_file, const gchar *group, const gchar *key, const KeyDef *key_def )
+{
+	static const gchar *thisfn = "na_settings_read_key_value_from_key_file";
+	KeyValue *value;
+	gchar *str;
+	GError *error;
+
+	value = NULL;
+	error = NULL;
+
+	switch( key_def->type ){
+
+		case NA_BOXED_TYPE_STRING:
+		case NA_BOXED_TYPE_STRING_LIST:
+		case NA_BOXED_TYPE_UINT:
+		case NA_BOXED_TYPE_UINT_LIST:
+		case NA_BOXED_TYPE_BOOLEAN:
+			str = g_key_file_get_string( key_file, group, key, &error );
+			if( error ){
+				if( error->code != G_KEY_FILE_ERROR_KEY_NOT_FOUND && error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
+					g_warning( "%s: %s", thisfn, error->message );
+				}
+				g_error_free( error );
+			} else {
+				value = g_new0( KeyValue, 1 );
+				value->group = g_strdup( group );
+				value->key = g_strdup( key );
+				switch( key_def->type ){
+					case NA_BOXED_TYPE_STRING:
+					case NA_BOXED_TYPE_UINT:
+					case NA_BOXED_TYPE_BOOLEAN:
+						value->boxed = na_boxed_new_from_string( key_def->type, str );
+						break;
+					case NA_BOXED_TYPE_STRING_LIST:
+					case NA_BOXED_TYPE_UINT_LIST:
+						value->boxed = na_boxed_new_from_string_with_sep( key_def->type, str, ";" );
+						break;
+				}
+			}
+			g_free( str );
+			break;
+
+		default:
+			g_warning( "%s: unmanaged boxed type: %d", thisfn, key_def->type );
+			break;
+	}
+
+	return( value );
 }
 
 /*
@@ -933,19 +1075,49 @@ on_conf_changed( GFileMonitor *monitor,
 static void
 release_consumer( Consumer *consumer )
 {
-	g_free( consumer->key );
+	g_free( consumer->monitored_key );
 	g_free( consumer );
 }
 
 /*
- * called from instance_finalize
- * release the list of monitored entries
+ * called from instance_dispose
+ * release the opened and monitored GKeyFiles
  */
 static void
-release_entry( Entry *entry )
+release_key_file( KeyFile *key_file )
 {
-	g_free( entry->group );
-	g_free( entry->key );
-	na_data_types_free( entry->value, entry->type );
-	g_free( entry );
+	g_key_file_free( key_file->key_file );
+	if( key_file->monitor ){
+		if( key_file->handler ){
+			g_signal_handler_disconnect( key_file->monitor, key_file->handler );
+		}
+		g_file_monitor_cancel( key_file->monitor );
+		g_object_unref( key_file->monitor );
+	}
+	g_free( key_file->fname );
+	g_free( key_file );
+}
+
+/*
+ * called from instance_finalize
+ * release a KeyValue struct
+ */
+static void
+release_key_value( KeyValue *value )
+{
+	g_free( value->group );
+	g_free( value->key );
+	na_boxed_free( value->boxed );
+	g_free( value );
+}
+
+/*
+ * returns the difference in microseconds.
+ */
+static gulong
+time_val_diff( const GTimeVal *recent, const GTimeVal *old )
+{
+	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
+	microsec += recent->tv_usec  - old->tv_usec;
+	return( microsec );
 }
