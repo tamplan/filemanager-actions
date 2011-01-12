@@ -13,6 +13,7 @@ done
 [ "${autogen_target}" = "normal" ] &&
 	exec ./autogen.sh \
 		--prefix=$(pwd)/install \
+		--sysconfdir=/etc \
 		--with-nautilus-extdir=$(pwd)/install/lib/nautilus \
 		--disable-schemas-install \
 		--enable-gtk-doc \
@@ -38,7 +39,7 @@ done
 	LD_LIBRARY_PATH=${autogen_prefix}/lib \
 		exec ./autogen.sh \
 			--prefix=${autogen_prefix} \
+			--sysconfdir=/etc \
 			--with-nautilus-extdir=${autogen_prefix}/lib/nautilus \
-			--enable-silent-rules \
 			--disable-schemas-install \
 			$*
