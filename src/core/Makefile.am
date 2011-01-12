@@ -41,6 +41,7 @@ AM_CPPFLAGS += \
 	$(NULL)
 
 libna_core_la_SOURCES = \
+	na-boxed.c											\
 	na-core-utils.c										\
 	na-data-boxed.c										\
 	na-data-def.c										\

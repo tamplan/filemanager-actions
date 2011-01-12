@@ -38,6 +38,7 @@ api_include_HEADERS = \
 	na-ifactory-provider-provider.h						\
 	na-iio-provider.h									\
 	\
+	na-boxed.h											\
 	na-core-utils.h										\
 	na-data-boxed.h										\
 	na-data-def.h										\
