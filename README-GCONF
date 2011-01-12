@@ -74,7 +74,7 @@ Deprecating GConf
  export-folder-uri = file:///home/pierre..  [nact]     export-last-folder-uri
  export-format = Ask                        [nact]     export-preferred-format
  icommand-command-chooser                   [nact]     command-command-chooser-dialog-size
- icommand-folder-uri                        [nact]     command-command-last-folder-uri
+ icommand-folder-uri                        [nact]     command-command-chooser-last-folder-uri
  icommand-legend-dialog = [673,94,474,480]  [nact]     command-legend-dialog-size
  icommand-working-dir-dialog                [nact]     command-working-dir-chooser-dialog-size
  icommand-working-dir-uri = file:///home..  [nact]     command-working-dir-chooser-last-folder-uri
