@@ -417,9 +417,9 @@ for dir in $(gconftool-2 --all-dirs ${na_configurations}); do
 		while [ -e ${opt_dir}/${id}-${i}.desktop ]; do
 			let i+=1
 		done
-		command "${na_print_program} --id ${id} | grep -v ${na_print_program} > ${opt_dir}/${id}-${i}.desktop"
+		command "${na_print_program} --id ${id} | grep -v 'nautilus-actions-print' > ${opt_dir}/${id}-${i}.desktop"
 	else
-		command "${na_print_program} --id ${id} | grep -v ${na_print_program} > ${opt_dir}/${id}.desktop"
+		command "${na_print_program} --id ${id} | grep -v 'nautilus-actions-print' > ${opt_dir}/${id}.desktop"
 	fi
 done
 
