@@ -102,6 +102,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-ibasenames-tab.h								\
 	nact-icapabilities-tab.c							\
 	nact-icapabilities-tab.h							\
+	nact-icon-chooser.c									\
+	nact-icon-chooser.h									\
 	nact-ienvironment-tab.c								\
 	nact-ienvironment-tab.h								\
 	nact-iexecution-tab.c								\
@@ -179,6 +181,7 @@ pkgdata_DATA = \
 	nact-add-capability.ui								\
 	nact-add-scheme.ui									\
 	nact-assistant-export.ui							\
+	nact-icon-chooser.ui								\
 	nact-preferences.ui									\
 	nautilus-actions-config-tool.ui						\
 	locked.png											\
