@@ -46,7 +46,8 @@
 	* src/nact/nact-icon-chooser.ui: New files.
 	
 	* src/nact/Makefile.am:
-	* src/nact/nact-iaction-tab.c: Updated accordingly.
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nautilus-actions-config-tool.ui: Updated accordingly.
 
 	* src/core/na-settings.c (content_load_keys):
 	Do not warn if configuration file does not exist.

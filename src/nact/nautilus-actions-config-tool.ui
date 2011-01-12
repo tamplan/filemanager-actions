@@ -412,12 +412,12 @@ In this case, the defined conditions will be applied to the current folder, and 
                                                   </packing>
                                                 </child>
                                                 <child>
-                                                  <object class="GtkHBox" id="ActionIconHBox">
-                                                    <property name="visible">True</property>
-                                                    <child>
-                                                      <placeholder/>
-                                                    </child>
-                                                  </object>
+                                              <object class="GtkEntry" id="ActionIconEntry">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="tooltip_text" translatable="yes">The name of a themed icon of the filename of an image.</property>
+                                                <property name="invisible_char">●</property>
+                                              </object>
                                                   <packing>
                                                     <property name="position">1</property>
                                                   </packing>
