@@ -32,14 +32,17 @@
 #define __BASE_IPREFS_H__
 
 /**
- * SECTION: base_iprefs
- * @short_description: #BaseIPrefs interface definition.
- * @include: nact/base-iprefs.h
+ * SECTION: base-iprefs
+ * @title: BaseIPrefs
+ * @short_description: The BaseIPrefs Interface Definition
+ * @include: base-iprefs.h
  *
- * This interface cooperates with #BaseWindow to automatically
- * save, then restore, size and position of window on the display.
- * This is made possible by identifying each window by an id specific
- * to this function.
+ * This interface cooperates with #BaseWindow to automatically save and
+ * restore size and position of windows on the display.
+ *
+ * Each #BaseWindow -derived window which want take advantage of this
+ * feature may want implement this BaseIPrefs interface (but see also the
+ * BaseWindow::base-wsp property which provides this same feature).
  */
 
 #include "base-window.h"
@@ -59,8 +62,17 @@ typedef struct {
 	GTypeInterface              parent;
 	BaseIPrefsInterfacePrivate *private;
 
-	/* api */
+	/* api
+	 * deprecated: 3.1.0
+	 */
 	gchar * ( *iprefs_get_window_id )( const BaseWindow *window );
+
+	/* new api
+	 * since: 3.1.0
+	 */
+	const gchar * ( *get_wsp_id )   ( const BaseWindow *window );
+	GList       * ( *get_uint_list )( const BaseWindow *window );
+	void          ( *set_uint_list )( const BaseWindow *window, GList *list );
 }
 	BaseIPrefsInterface;
 

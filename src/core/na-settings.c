@@ -143,7 +143,7 @@ static const KeyDef st_def_keys[] = {
 	{ "import-mode-keep-last-choice",                GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
 	{ "import-preferred-mode",                       GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
 	{ "io-providers-write-order",                    GROUP_NACT,        NA_BOXED_TYPE_STRING_LIST, "" },
-	{ "item-icon-chooser-last-uri",                  GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
+	{ "item-icon-chooser-last-file-uri",             GROUP_NACT,        NA_BOXED_TYPE_STRING,      "" },
 	{ "item-icon-chooser-paned-width",               GROUP_NACT,        NA_BOXED_TYPE_UINT,        "200" },
 	{ "item-icon-chooser-wsp",                       GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
 	{ "main-paned-width",                            GROUP_NACT,        NA_BOXED_TYPE_UINT,        "200" },

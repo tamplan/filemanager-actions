@@ -485,7 +485,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "item-icon-chooser-wsp" list "${value}"
 			;;
 		icons-path)
-			add_pref "nact" "item-icon-chooser-last-uri" str "${value}"
+			add_pref "nact" "item-icon-chooser-last-file-uri" str "${value}"
 			;;
 		ienvironment-show-if-running-dialog)
 			add_pref "nact" "environment-show-if-running-wsp" list "${value}"

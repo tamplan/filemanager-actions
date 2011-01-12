@@ -81,7 +81,7 @@ typedef struct {
 
 GType na_settings_get_type( void );
 
-/* monitorable keys
+/* these keys should be monitored, at least by the Nautilus menu plugin
  */
 #define NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS		"io-provider-read-status-composite-key"
 #define NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER		"io-providers-read-order"

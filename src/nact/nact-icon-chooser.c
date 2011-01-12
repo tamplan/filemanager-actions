@@ -55,10 +55,14 @@ struct _NactIconChooserPrivate {
 	GtkWidget    *path_preview;
 };
 
+#define IPREFS_PANED_WIDTH				"item-icon-chooser-paned-width"
+#define IPREFS_LAST_URI					"item-icon-chooser-last-file-uri"
+#define IPREFS_WSP						"item-icon-chooser-wsp"
+
 #define VIEW_ICON_SIZE					GTK_ICON_SIZE_DND
 #define VIEW_ICON_DEFAULT_WIDTH			32	/* width of the GTK_ICON_SIZE_DND icon size */
 #define PREVIEW_ICON_SIZE				GTK_ICON_SIZE_DIALOG
-#define PREVIEW_ICON_WIDTH				48
+#define PREVIEW_ICON_WIDTH				64
 #define CURRENT_ICON_SIZE				GTK_ICON_SIZE_DIALOG
 
 /* column ordering in the Stock model
@@ -243,7 +247,7 @@ instance_dispose( GObject *dialog )
 
 		paned = base_window_get_widget( BASE_WINDOW( self ), "IconPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( paned ));
-		base_iprefs_set_int( BASE_WINDOW( self ), "item-icon-chooser-paned-width", pos );
+		base_iprefs_set_int( BASE_WINDOW( self ), IPREFS_PANED_WIDTH, pos );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -326,7 +330,7 @@ nact_icon_chooser_choose_icon( BaseWindow *parent, const gchar *icon_name )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "item-icon-chooser-wsp" ));
+	return( g_strdup( IPREFS_WSP ));
 }
 
 static gchar *
@@ -444,7 +448,7 @@ on_base_runtime_init_dialog( NactIconChooser *editor, gpointer user_data )
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
-	pos = base_iprefs_get_int( BASE_WINDOW( editor ), "item-icon-chooser-paned-width" );
+	pos = base_iprefs_get_int( BASE_WINDOW( editor ), IPREFS_PANED_WIDTH );
 	if( pos ){
 		paned = base_window_get_widget( BASE_WINDOW( editor ), "IconPaned" );
 		gtk_paned_set_position( GTK_PANED( paned ), pos );
@@ -524,7 +528,7 @@ fillup_icons_by_path( NactIconChooser *editor )
 
 	gtk_file_chooser_unselect_all( file_chooser );
 
-	uri = na_settings_get_string( settings, "item-icon-chooser-last-uri", NULL, NULL );
+	uri = na_settings_get_string( settings, IPREFS_LAST_URI, NULL, NULL );
 	if( uri ){
 		gtk_file_chooser_set_uri( file_chooser, uri );
 		g_free( uri );
@@ -832,7 +836,7 @@ on_path_selection_changed( GtkFileChooser *file_chooser, NactIconChooser *editor
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 		updater = nact_application_get_updater( application );
 		settings = na_pivot_get_settings( NA_PIVOT( updater ));
-		na_settings_set_string( settings, "item-icon-chooser-last-uri", uri );
+		na_settings_set_string( settings, IPREFS_LAST_URI, uri );
 		g_free( uri );
 	}
 }
