@@ -96,6 +96,13 @@ static EnvStruct st_envs[] = {
 	{ NULL }
 };
 
+/* preferences
+ */
+#define IPREFS_SHOW_IF_RUNNING_WSP		"environment-show-if-running-wsp"
+#define IPREFS_SHOW_IF_RUNNING_URI		"environment-show-if-running-last-folder-uri"
+#define IPREFS_TRY_EXEC_WSP				"environment-try-exec-wsp"
+#define IPREFS_TRY_EXEC_URI				"environment-try-exec-last-folder-uri"
+
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 static gboolean st_on_selection_change = FALSE;
@@ -749,8 +756,8 @@ on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance )
 
 	nact_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
-			_( "Choosing an executable" ), "ienvironment-try-exec-dialog",
-			entry, "ienvironment-try-exec-uri", "file:///bin" );
+			_( "Choosing an executable" ), IPREFS_TRY_EXEC_WSP,
+			entry, IPREFS_TRY_EXEC_URI, "file:///bin" );
 }
 
 static void
@@ -807,8 +814,8 @@ on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance )
 
 	nact_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
-			_( "Choosing an executable" ), "ienvironment-show-if-running-dialog",
-			entry, "ienvironment-show-if-running-uri", "file:///bin" );
+			_( "Choosing an executable" ), IPREFS_SHOW_IF_RUNNING_WSP,
+			entry, IPREFS_SHOW_IF_RUNNING_URI, "file:///bin" );
 }
 
 static void

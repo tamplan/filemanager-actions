@@ -31,7 +31,8 @@
 
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
-	* src/nact/nact-icommand-tab.c: Update to new preferences.
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-ienvironment-tab.c: Update to new preferences.
 
 	* README-GCONF:
 	* src/core/na-settings.c:
