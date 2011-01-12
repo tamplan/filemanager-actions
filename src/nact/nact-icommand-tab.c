@@ -59,13 +59,13 @@ struct NactICommandTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-/* the GConf key used to read/write size and position of auxiliary dialogs
+/* the Preferences key used to read/write size and position of auxiliary dialogs
  */
-#define IPREFS_LEGEND_DIALOG				"icommand-legend-dialog"
-#define IPREFS_COMMAND_CHOOSER				"icommand-command-chooser"
-#define IPREFS_FOLDER_URI					"icommand-folder-uri"
-#define IPREFS_WORKING_DIR_DIALOG			"icommand-working-dir-dialog"
-#define IPREFS_WORKING_DIR_URI				"icommand-working-dir-uri"
+#define IPREFS_LEGEND_WSP					"command-legend-wsp"
+#define IPREFS_COMMAND_WSP					"command-command-chooser-wsp"
+#define IPREFS_FOLDER_URI					"command-command-chooser-last-folder-uri"
+#define IPREFS_WORKING_DIR_WSP				"command-working-dir-chooser-wsp"
+#define IPREFS_WORKING_DIR_URI				"command-working-dir-chooser-last-folder-uri"
 
 /* a data set in the LegendDialog GObject
  */
@@ -193,8 +193,8 @@ nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance )
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-legend-dialog", IPREFS_LEGEND_DIALOG );
-		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-command-chooser", IPREFS_COMMAND_CHOOSER );
+		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-legend-dialog", IPREFS_LEGEND_WSP );
+		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-command-chooser", IPREFS_COMMAND_WSP );
 		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-folder-uri", IPREFS_FOLDER_URI );
 	}
 }
@@ -478,7 +478,7 @@ legend_dialog_hide( NactICommandTab *instance )
 
 	if( is_visible ){
 		g_return_if_fail( GTK_IS_WINDOW( legend_dialog ));
-		base_iprefs_save_named_window_position( BASE_WINDOW( instance ), legend_dialog, IPREFS_LEGEND_DIALOG );
+		base_iprefs_save_named_window_position( BASE_WINDOW( instance ), legend_dialog, IPREFS_LEGEND_WSP );
 		gtk_widget_hide( GTK_WIDGET( legend_dialog ));
 
 		/* set the legend button state consistent for when the dialog is
@@ -503,7 +503,7 @@ legend_dialog_show( NactICommandTab *instance )
 	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
 	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
 
-	base_iprefs_position_named_window( BASE_WINDOW( instance ), legend_dialog, IPREFS_LEGEND_DIALOG );
+	base_iprefs_position_named_window( BASE_WINDOW( instance ), legend_dialog, IPREFS_LEGEND_WSP );
 	gtk_widget_show( GTK_WIDGET( legend_dialog ));
 
 	g_object_set_data( G_OBJECT( legend_dialog ), ICOMMAND_TAB_LEGEND_VISIBLE, GINT_TO_POINTER( TRUE ));
@@ -572,7 +572,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 {
 	nact_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
-			_( "Choosing a command" ), IPREFS_COMMAND_CHOOSER,
+			_( "Choosing a command" ), IPREFS_COMMAND_WSP,
 			get_path_entry( instance ), IPREFS_FOLDER_URI, "file:///bin" );
 }
 
@@ -613,7 +613,7 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 
 		nact_gtk_utils_select_dir(
 				BASE_WINDOW( instance ),
-				_( "Choosing a working directory" ), IPREFS_WORKING_DIR_DIALOG,
+				_( "Choosing a working directory" ), IPREFS_WORKING_DIR_WSP,
 				wdir_entry, IPREFS_WORKING_DIR_URI, default_value );
 
 		g_free( default_value );
