@@ -49,23 +49,13 @@
 #include "nact-iactions-list.h"
 #include "nact-main-tab.h"
 #include "nact-iaction-tab.h"
+#include "nact-icon-chooser.h"
 
 /* private interface data
  */
 struct NactIActionTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
-
-/* columns in the icon combobox
- */
-enum {
-	ICON_STOCK_COLUMN = 0,
-	ICON_LABEL_COLUMN,
-	ICON_N_COLUMN
-};
-
-#define IPREFS_ICONS_DIALOG					"icons-chooser"
-#define IPREFS_ICONS_PATH					"icons-path"
 
 /* IActionTab properties, set against the GObject instance
  */
@@ -94,15 +84,8 @@ static void          setup_toolbar_label( NactIActionTab *instance, NAObjectItem
 static void          on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance );
 static void          toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item );
 static void          on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance );
-static GtkTreeModel *create_stock_icon_model( void );
-static void          icon_combo_list_set_layout( GtkComboBox* combo );
 static void          on_icon_browse( GtkButton *button, NactIActionTab *instance );
 static void          on_icon_changed( GtkEntry *entry, NactIActionTab *instance );
-static void          icon_preview_cb( GtkFileChooser *dialog, GtkWidget *preview );
-static gint          sort_stock_ids_by_label( gconstpointer a, gconstpointer b );
-static gchar        *strip_underscore( const gchar *text );
-static void          release_icon_combobox( NactIActionTab *instance );
-static GtkWidget    *get_icon_combo_box( NactIActionTab *instance );
 
 GType
 nact_iaction_tab_get_type( void )
@@ -184,6 +167,8 @@ interface_base_finalize( NactIActionTabInterface *klass )
  * icon is rendered for GTK_ICON_SIZE_MENU (na_object_item_get_pixbuf)
  *
  * Starting with 3.0.3, the ComboBox is dynamically created into its container.
+ * Starting with 3.1.0, the ComboBox is replaced with a GtkEntry (thanks to new
+ * Icon Chooser).
  */
 void
 nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
@@ -201,9 +186,6 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 #else
 	GtkRequisition requisition;
 #endif
-	GtkWidget *container;
-	GtkWidget *icon_combo;
-	GtkTreeModel *model;
 
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
 
@@ -222,24 +204,6 @@ nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance )
 #endif
 		gtk_widget_set_size_request( GTK_WIDGET( frame ), size, size );
 		gtk_frame_set_shadow_type( frame, GTK_SHADOW_IN );
-
-		model = create_stock_icon_model();
-
-/* GtkComboBoxEntry is deprecated from Gtk+3
- * see. http://git.gnome.org/browse/gtk+/commit/?id=9612c648176378bf237ad0e1a8c6c995b0ca7c61
- * while 'has_entry' property exists since 2.24
- */
-#if GTK_CHECK_VERSION( 2, 24, 0 )
-		icon_combo = gtk_combo_box_new_with_model_and_entry( model );
-		gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( icon_combo ), ICON_STOCK_COLUMN );
-#else
-		icon_combo = gtk_combo_box_entry_new_with_model( model, ICON_STOCK_COLUMN );
-#endif
-
-		icon_combo_list_set_layout( GTK_COMBO_BOX( icon_combo ));
-		g_object_unref( model );
-		container = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconHBox" );
-		gtk_box_pack_start( GTK_BOX( container ), icon_combo, TRUE, TRUE, 0 );
 	}
 }
 
@@ -247,7 +211,7 @@ void
 nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 {
 	static const gchar *thisfn = "nact_iaction_tab_runtime_init_toplevel";
-	GtkWidget *label_widget, *tooltip_widget, *icon_widget;
+	GtkWidget *label_widget, *tooltip_widget, *icon_entry;
 	GtkWidget *button;
 
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
@@ -317,10 +281,10 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 				"changed",
 				G_CALLBACK( on_tooltip_changed ));
 
-		icon_widget = get_icon_combo_box( instance );
+		icon_entry = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconEntry" );
 		base_window_signal_connect(
 				BASE_WINDOW( instance ),
-				G_OBJECT( gtk_bin_get_child( GTK_BIN( icon_widget ))),
+				G_OBJECT( icon_entry ),
 				"changed",
 				G_CALLBACK( on_icon_changed ));
 
@@ -356,8 +320,6 @@ nact_iaction_tab_dispose( NactIActionTab *instance )
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
-		release_icon_combobox( instance );
 	}
 }
 
@@ -505,10 +467,10 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 		g_free( tooltip );
 		nact_gtk_utils_set_editable( G_OBJECT( tooltip_widget ), editable );
 
-		icon_widget = get_icon_combo_box( instance );
+		icon_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconEntry" );
 		icon = item ? na_object_get_icon( item ) : g_strdup( "" );
 		icon = icon ? icon : g_strdup( "" );
-		gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( icon_widget ))), icon );
+		gtk_entry_set_text( GTK_ENTRY( icon_widget ), icon );
 		g_free( icon );
 		nact_gtk_utils_set_editable( G_OBJECT( icon_widget ), editable );
 
@@ -839,77 +801,34 @@ on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
 	}
 }
 
-static GtkTreeModel *
-create_stock_icon_model( void )
-{
-	GtkStockItem stock_item;
-	gchar* label;
-	GtkListStore *model;
-	GtkTreeIter row;
-	GSList *stock_list, *iter;
-	GtkIconTheme *icon_theme;
-	GtkIconInfo *icon_info;
-
-	model = gtk_list_store_new( ICON_N_COLUMN, G_TYPE_STRING, G_TYPE_STRING );
-
-	gtk_list_store_append( model, &row );
-	/* i18n notes: when no icon is selected in the drop-down list */
-	gtk_list_store_set( model, &row, ICON_STOCK_COLUMN, "", ICON_LABEL_COLUMN, _( "None" ), -1 );
-
-	stock_list = gtk_stock_list_ids();
-	icon_theme = gtk_icon_theme_get_default();
-	stock_list = g_slist_sort( stock_list, ( GCompareFunc ) sort_stock_ids_by_label );
-
-	for( iter = stock_list ; iter ; iter = iter->next ){
-		icon_info = gtk_icon_theme_lookup_icon( icon_theme, ( gchar * ) iter->data, GTK_ICON_SIZE_MENU, GTK_ICON_LOOKUP_GENERIC_FALLBACK );
-		if( icon_info ){
-			if( gtk_stock_lookup(( gchar * ) iter->data, &stock_item )){
-				gtk_list_store_append( model, &row );
-				label = strip_underscore( stock_item.label );
-				gtk_list_store_set( model, &row, ICON_STOCK_COLUMN, ( gchar * ) iter->data, ICON_LABEL_COLUMN, label, -1 );
-				g_free( label );
-			}
-			gtk_icon_info_free( icon_info );
-		}
-	}
-
-	g_slist_foreach( stock_list, ( GFunc ) g_free, NULL );
-	g_slist_free( stock_list );
-
-	return( GTK_TREE_MODEL( model ));
-}
-
-static void
-icon_combo_list_set_layout( GtkComboBox *combo )
-{
-	GtkCellRenderer *cell_renderer_pix;
-	GtkCellRenderer *cell_renderer_text;
-
-	gtk_cell_layout_clear( GTK_CELL_LAYOUT( combo ));
-
-	cell_renderer_pix = gtk_cell_renderer_pixbuf_new();
-	gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), cell_renderer_pix, FALSE );
-	gtk_cell_layout_add_attribute( GTK_CELL_LAYOUT( combo ), cell_renderer_pix, "stock-id", ICON_STOCK_COLUMN );
-
-	cell_renderer_text = gtk_cell_renderer_text_new();
-	gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), cell_renderer_text, TRUE );
-	gtk_cell_layout_add_attribute( GTK_CELL_LAYOUT( combo ), cell_renderer_text, "text", ICON_LABEL_COLUMN );
-
-	gtk_combo_box_set_active( GTK_COMBO_BOX( combo ), 0 );
-}
-
 static void
 on_icon_browse( GtkButton *button, NactIActionTab *instance )
 {
-	nact_gtk_utils_select_file_with_preview(
-			BASE_WINDOW( instance ),
-			_( "Choosing an icon" ),
-			IPREFS_ICONS_DIALOG,
-			gtk_bin_get_child( GTK_BIN( get_icon_combo_box( instance ))),
-			IPREFS_ICONS_PATH,
-			"",
-			G_CALLBACK( icon_preview_cb )
-	);
+	static const gchar *thisfn = "nact_iaction_tab_on_icon_browse";
+	NAObjectItem *item;
+	GtkWidget *icon_entry;
+	gchar *icon_name;
+	gchar *new_icon_name;
+
+	g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
+
+	g_object_get(
+			G_OBJECT( instance ),
+			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+			NULL );
+
+	if( item ){
+		icon_name = na_object_get_icon( item );
+		new_icon_name = nact_icon_chooser_choose_icon( BASE_WINDOW( instance ), icon_name );
+
+		if( g_utf8_collate( icon_name, new_icon_name ) != 0 ){
+			icon_entry = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconEntry" );
+			gtk_entry_set_text( GTK_ENTRY( icon_entry ), new_icon_name );
+		}
+
+		g_free( icon_name );
+		g_free( new_icon_name );
+	}
 }
 
 static void
@@ -940,98 +859,4 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 	 */
 	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
 	nact_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_SMALL_TOOLBAR );
-}
-
-static void
-icon_preview_cb( GtkFileChooser *dialog, GtkWidget *preview )
-{
-	char *filename;
-	GdkPixbuf *pixbuf;
-	gboolean have_preview;
-
-	filename = gtk_file_chooser_get_preview_filename( dialog );
-	pixbuf = gdk_pixbuf_new_from_file_at_size( filename, 128, 128, NULL );
-	have_preview = ( pixbuf != NULL );
-	g_free( filename );
-
-	if( have_preview ){
-		gtk_image_set_from_pixbuf( GTK_IMAGE( preview ), pixbuf );
-		g_object_unref( pixbuf );
-	}
-
-	gtk_file_chooser_set_preview_widget_active( dialog, have_preview );
-}
-
-static gint
-sort_stock_ids_by_label( gconstpointer a, gconstpointer b )
-{
-	GtkStockItem stock_item_a;
-	GtkStockItem stock_item_b;
-	gchar *label_a, *label_b;
-	gboolean is_a, is_b;
-	int retv = 0;
-
-	is_a = gtk_stock_lookup(( gchar * ) a, &stock_item_a );
-	is_b = gtk_stock_lookup(( gchar * ) b, &stock_item_b );
-
-	if( is_a && !is_b ){
-		retv = 1;
-
-	} else if( !is_a && is_b ){
-		retv = -1;
-
-	} else if( !is_a && !is_b ){
-		retv = 0;
-
-	} else {
-		label_a = strip_underscore( stock_item_a.label );
-		label_b = strip_underscore( stock_item_b.label );
-		retv = na_core_utils_str_collate( label_a, label_b );
-		g_free( label_a );
-		g_free( label_b );
-	}
-
-	return( retv );
-}
-
-static gchar *
-strip_underscore( const gchar *text )
-{
-	/* Code from gtk-demo */
-	gchar *p, *q, *result;
-
-	result = g_strdup( text );
-	p = q = result;
-	while( *p ){
-		if( *p != '_' ){
-			*q = *p;
-			q++;
-		}
-		p++;
-	}
-	*q = '\0';
-
-	return( result );
-}
-
-static void
-release_icon_combobox( NactIActionTab *instance )
-{
-	GtkWidget *combo;
-	GtkTreeModel *model;
-
-	combo = get_icon_combo_box( instance );
-	model = gtk_combo_box_get_model( GTK_COMBO_BOX( combo ));
-	gtk_list_store_clear( GTK_LIST_STORE( model ));
-}
-
-static GtkWidget *
-get_icon_combo_box( NactIActionTab *instance )
-{
-	GtkWidget *icon_box, *icon_combo;
-
-	icon_box = base_window_get_widget( BASE_WINDOW( instance ), "ActionIconHBox" );
-	icon_combo = GTK_WIDGET( gtk_container_get_children( GTK_CONTAINER( icon_box ))->data );
-
-	return( icon_combo );
 }

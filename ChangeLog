@@ -45,7 +45,8 @@
 	* src/nact/nact-icon-chooser.h:
 	* src/nact/nact-icon-chooser.ui: New files.
 	
-	* src/nact/Makefile.am: Updated accordingly.
+	* src/nact/Makefile.am:
+	* src/nact/nact-iaction-tab.c: Updated accordingly.
 
 	* src/core/na-settings.c (content_load_keys):
 	Do not warn if configuration file does not exist.
