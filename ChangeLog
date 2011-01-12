@@ -31,6 +31,11 @@
 
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-boxed.h:
+	* src/core/na-boxed.c
+	(na_boxed_get_string, na_boxed_get_uint, na_boxed_get_uint_list):
+	New functions.
+
 	* configure.ac: Enable silent rules by default.
 
 	* run-autogen.sh: Add sysconfdir argument to autogen.sh

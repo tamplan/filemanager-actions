@@ -64,7 +64,10 @@ typedef struct {
 	void      ( *from_array )     ( NABoxed *, const gchar ** );
 	gboolean  ( *get_bool )       ( const NABoxed * );
 	gpointer  ( *get_pointer )    ( const NABoxed * );
+	gchar   * ( *get_string )     ( const NABoxed * );
 	GSList  * ( *get_string_list )( const NABoxed * );
+	guint     ( *get_uint )       ( const NABoxed * );
+	GList   * ( *get_uint_list )  ( const NABoxed * );
 }
 	BoxedDef;
 
@@ -76,6 +79,7 @@ static void     string_copy( NABoxed *dest, const NABoxed *src );
 static void     string_free( NABoxed *boxed );
 static void     string_from_string( NABoxed *boxed, const gchar *string );
 static gpointer string_get_pointer( const NABoxed *boxed );
+static gchar   *string_get_string( const NABoxed *boxed );
 
 static int      string_list_compare( const NABoxed *a, const NABoxed *b );
 static void     string_list_copy( NABoxed *dest, const NABoxed *src );
@@ -97,6 +101,7 @@ static void     uint_copy( NABoxed *dest, const NABoxed *src );
 static void     uint_free( NABoxed *boxed );
 static void     uint_from_string( NABoxed *boxed, const gchar *string );
 static gpointer uint_get_pointer( const NABoxed *boxed );
+static guint    uint_get_uint( const NABoxed *boxed );
 
 static int      uint_list_compare( const NABoxed *a, const NABoxed *b );
 static void     uint_list_copy( NABoxed *dest, const NABoxed *src );
@@ -104,6 +109,7 @@ static void     uint_list_free( NABoxed *boxed );
 static void     uint_list_from_string( NABoxed *boxed, const gchar *string );
 static void     uint_list_from_array( NABoxed *boxed, const gchar **array );
 static gpointer uint_list_get_pointer( const NABoxed *boxed );
+static GList   *uint_list_get_uint_list( const NABoxed *boxed );
 
 static BoxedDef st_boxed_def[] = {
 		{ NA_BOXED_TYPE_STRING,
@@ -115,6 +121,9 @@ static BoxedDef st_boxed_def[] = {
 				NULL,
 				NULL,
 				string_get_pointer,
+				string_get_string,
+				NULL,
+				NULL,
 				NULL
 				},
 		{ NA_BOXED_TYPE_STRING_LIST,
@@ -126,7 +135,10 @@ static BoxedDef st_boxed_def[] = {
 				string_list_from_array,
 				NULL,
 				string_list_get_pointer,
-				string_list_get_string_list
+				NULL,
+				string_list_get_string_list,
+				NULL,
+				NULL
 				},
 		{ NA_BOXED_TYPE_BOOLEAN,
 				"boolean",
@@ -137,6 +149,9 @@ static BoxedDef st_boxed_def[] = {
 				NULL,
 				bool_get_bool,
 				bool_get_pointer,
+				NULL,
+				NULL,
+				NULL,
 				NULL
 				},
 		{ NA_BOXED_TYPE_UINT,
@@ -148,6 +163,9 @@ static BoxedDef st_boxed_def[] = {
 				NULL,
 				NULL,
 				uint_get_pointer,
+				NULL,
+				NULL,
+				uint_get_uint,
 				NULL
 				},
 		{ NA_BOXED_TYPE_UINT_LIST,
@@ -159,7 +177,10 @@ static BoxedDef st_boxed_def[] = {
 				uint_list_from_array,
 				NULL,
 				uint_list_get_pointer,
-				NULL
+				NULL,
+				NULL,
+				NULL,
+				uint_list_get_uint_list
 				},
 		{ 0 }
 };
@@ -414,7 +435,7 @@ na_boxed_get_boolean( const NABoxed *boxed )
 	gboolean value;
 
 	value = FALSE;
-	if( boxed->is_set ){
+	if( boxed->type == NA_BOXED_TYPE_BOOLEAN && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_bool ){
@@ -433,8 +454,7 @@ na_boxed_get_boolean( const NABoxed *boxed )
  * na_boxed_get_pointer:
  * @boxed: the #NABoxed structure.
  *
- * Returns: a newly allocated string list if @boxed is of %NA_BOXED_TYPE_STRING_LIST
- * type, which should be na_core_utils_slist_free() by the caller, %FALSE else.
+ * Returns: a const pointer to the raw data.
  *
  * Since: 3.1.0
  */
@@ -462,6 +482,38 @@ na_boxed_get_pointer( const NABoxed *boxed )
 }
 
 /**
+ * na_boxed_get_string:
+ * @boxed: the #NABoxed structure.
+ *
+ * Returns: a newly allocated string if @boxed is of %NA_BOXED_TYPE_STRING
+ * type, which should be g_free() by the caller, %FALSE else.
+ *
+ * Since: 3.1.0
+ */
+gchar *
+na_boxed_get_string( const NABoxed *boxed )
+{
+	static const gchar *thisfn = "na_boxed_get_string";
+	const BoxedDef *def;
+	gchar *value;
+
+	value = NULL;
+	if( boxed->type == NA_BOXED_TYPE_STRING && boxed->is_set ){
+		def = get_boxed_def( boxed->type );
+		if( def ){
+			if( def->get_string ){
+				value = ( *def->get_string )( boxed );
+			} else {
+				g_warning( "%s: unable to get the value: '%s' type does not provide 'get_string' function",
+						thisfn, def->label );
+			}
+		}
+	}
+
+	return( value );
+}
+
+/**
  * na_boxed_get_string_list:
  * @boxed: the #NABoxed structure.
  *
@@ -478,13 +530,76 @@ na_boxed_get_string_list( const NABoxed *boxed )
 	GSList *value;
 
 	value = NULL;
-	if( boxed->is_set ){
+	if( boxed->type == NA_BOXED_TYPE_STRING_LIST && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_string_list ){
 				value = ( *def->get_string_list )( boxed );
 			} else {
 				g_warning( "%s: unable to get the value: '%s' type does not provide 'get_string_list' function",
+						thisfn, def->label );
+			}
+		}
+	}
+
+	return( value );
+}
+
+/**
+ * na_boxed_get_uint:
+ * @boxed: the #NABoxed structure.
+ *
+ * Returns: an unsigned integer if @boxed is of %NA_BOXED_TYPE_UINT type.
+ *
+ * Since: 3.1.0
+ */
+guint
+na_boxed_get_uint( const NABoxed *boxed )
+{
+	static const gchar *thisfn = "na_boxed_get_uint";
+	const BoxedDef *def;
+	guint value;
+
+	value = 0;
+	if( boxed->type == NA_BOXED_TYPE_UINT && boxed->is_set ){
+		def = get_boxed_def( boxed->type );
+		if( def ){
+			if( def->get_uint ){
+				value = ( *def->get_uint )( boxed );
+			} else {
+				g_warning( "%s: unable to get the value: '%s' type does not provide 'get_uint' function",
+						thisfn, def->label );
+			}
+		}
+	}
+
+	return( value );
+}
+
+/**
+ * na_boxed_get_uint_list:
+ * @boxed: the #NABoxed structure.
+ *
+ * Returns: a newly allocated list if @boxed is of %NA_BOXED_TYPE_UINT_LIST
+ * type, which should be g_list_free() by the caller, %FALSE else.
+ *
+ * Since: 3.1.0
+ */
+GList *
+na_boxed_get_uint_list( const NABoxed *boxed )
+{
+	static const gchar *thisfn = "na_boxed_get_uint_list";
+	const BoxedDef *def;
+	GList *value;
+
+	value = NULL;
+	if( boxed->type == NA_BOXED_TYPE_UINT_LIST && boxed->is_set ){
+		def = get_boxed_def( boxed->type );
+		if( def ){
+			if( def->get_uint_list ){
+				value = ( *def->get_uint_list )( boxed );
+			} else {
+				g_warning( "%s: unable to get the value: '%s' type does not provide 'get_uint_list' function",
 						thisfn, def->label );
 			}
 		}
@@ -531,6 +646,12 @@ static gpointer
 string_get_pointer( const NABoxed *boxed )
 {
 	return( boxed->u.string );
+}
+
+static gchar *
+string_get_string( const NABoxed *boxed )
+{
+	return( g_strdup( boxed->u.string ));
 }
 
 /* the two string lists are equal if they have the same elements in the
@@ -705,6 +826,12 @@ uint_get_pointer( const NABoxed *boxed )
 	return( GUINT_TO_POINTER( boxed->u.uint ));
 }
 
+static guint
+uint_get_uint( const NABoxed *boxed )
+{
+	return( boxed->u.uint );
+}
+
 /* compare uint list as string list:
  * if the two list do not have the same count, then one is lesser than the other
  * if they have same count and same elements in same order, they are equal
@@ -790,4 +917,10 @@ static gpointer
 uint_list_get_pointer( const NABoxed *boxed )
 {
 	return( boxed->u.uint_list );
+}
+
+static GList *
+uint_list_get_uint_list( const NABoxed *boxed )
+{
+	return( g_list_copy( boxed->u.uint_list ));
 }

@@ -100,7 +100,10 @@ NABoxed      *na_boxed_new_from_string_with_sep( guint type, const gchar *string
 
 gboolean      na_boxed_get_boolean             ( const NABoxed *boxed );
 gconstpointer na_boxed_get_pointer             ( const NABoxed *boxed );
+gchar        *na_boxed_get_string              ( const NABoxed *boxed );
 GSList       *na_boxed_get_string_list         ( const NABoxed *boxed );
+guint         na_boxed_get_uint                ( const NABoxed *boxed );
+GList        *na_boxed_get_uint_list           ( const NABoxed *boxed );
 
 G_END_DECLS
 
