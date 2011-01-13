@@ -81,14 +81,69 @@ typedef struct {
 
 GType na_settings_get_type( void );
 
-/* these keys should be monitored, at least by the Nautilus menu plugin
+/* these keys should be monitored by the Nautilus menu plugin as they
+ * have an impact on the order or the display of items in the file manager
+ * context menus
  */
-#define NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS		"io-provider-read-status-composite-key"
-#define NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER		"io-providers-read-order"
-#define NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM		"items-add-about-item"
-#define NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU		"items-create-root-menu"
-#define NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER		"items-level-zero-order"
-#define NA_SETTINGS_RUNTIME_ITEMS_LIST_ORDER_MODE		"items-list-order-mode"
+#define NA_IPREFS_IO_PROVIDERS_READ_STATUS		"io-providers-read-status-composite-key"
+#define NA_IPREFS_ITEMS_ADD_ABOUT_ITEM			"items-add-about-item"
+#define NA_IPREFS_ITEMS_CREATE_ROOT_MENU		"items-create-root-menu"
+#define NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER		"items-level-zero-order"
+#define NA_IPREFS_ITEMS_LIST_ORDER_MODE			"items-list-order-mode"
+
+/* other keys, mainly user preferences
+ */
+#define NA_IPREFS_ASSISTANT_ESC_CONFIRM			"assistant-esc-confirm"
+#define NA_IPREFS_ASSISTANT_ESC_QUIT			"assistant-esc-quit"
+#define NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP	"capability-add-capability-wsp"
+#define NA_IPREFS_COMMAND_CHOOSER_WSP			"command-command-chooser-wsp"
+#define NA_IPREFS_COMMAND_CHOOSER_URI			"command-command-chooser-last-folder-uri"
+#define NA_IPREFS_COMMAND_LEGEND_WSP			"command-legend-wsp"
+#define NA_IPREFS_WORKING_DIR_WSP				"command-working-dir-chooser-wsp"
+#define NA_IPREFS_WORKING_DIR_URI				"command-working-dir-chooser-last-folder-uri"
+#define NA_IPREFS_SHOW_IF_RUNNING_WSP			"environment-show-if-running-wsp"
+#define NA_IPREFS_SHOW_IF_RUNNING_URI			"environment-show-if-running-last-folder-uri"
+#define NA_IPREFS_TRY_EXEC_WSP					"environment-try-exec-wsp"
+#define NA_IPREFS_TRY_EXEC_URI					"environment-try-exec-last-folder-uri"
+#define NA_IPREFS_EXPORT_ASK_USER_WSP			"export-ask-user-wsp"
+#define NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT	"export-ask-user-last-format"
+#define NA_IPREFS_EXPORT_ASSISTANT_WSP			"export-assistant-wsp"
+#define NA_IPREFS_EXPORT_ASSISTANT_URI			"export-assistant-last-folder-uri"
+#define NA_IPREFS_EXPORT_PREFERRED_FORMAT		"export-preferred-format"
+#define NA_IPREFS_FOLDER_CHOOSER_WSP			"folder-chooser-wsp"
+#define NA_IPREFS_FOLDER_CHOOSER_URI			"folder-chooser-last-folder-uri"
+#define NA_IPREFS_IMPORT_ASK_USER_WSP			"import-ask-user-wsp"
+#define NA_IPREFS_IMPORT_ASK_USER_LAST_MODE		"import-ask-user-last-mode"
+#define NA_IPREFS_IMPORT_ASSISTANT_WSP			"import-assistant-wsp"
+#define NA_IPREFS_IMPORT_ASSISTANT_URI			"import-assistant-last-folder-uri"
+#define NA_IPREFS_IMPORT_MODE_KEEP_LAST_CHOICE	"import-mode-keep-last-choice"
+#define NA_IPREFS_IMPORT_PREFERRED_MODE			"import-preferred-mode"
+#define NA_IPREFS_ICON_CHOOSER_URI				"item-icon-chooser-last-file-uri"
+#define NA_IPREFS_ICON_CHOOSER_PANED			"item-icon-chooser-paned-width"
+#define NA_IPREFS_ICON_CHOOSER_WSP				"item-icon-chooser-wsp"
+#define NA_IPREFS_IO_PROVIDERS_WRITE_ORDER		"io-providers-write-order"
+#define NA_IPREFS_MAIN_PANED					"main-paned-width"
+#define NA_IPREFS_MAIN_SAVE_AUTO				"main-save-auto"
+#define NA_IPREFS_MAIN_SAVE_PERIOD				"main-save-period"
+#define NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY		"main-toolbar-edit-display"
+#define NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY		"main-toolbar-file-display"
+#define NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY		"main-toolbar-help-display"
+#define NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY	"main-toolbar-tools-display"
+#define NA_IPREFS_MAIN_WINDOW_WSP				"main-window-wsp"
+#define NA_IPREFS_PREFERENCES_WSP				"preferences-wsp"
+#define NA_IPREFS_RELABEL_DUPLICATE_ACTION		"relabel-when-duplicate-action"
+#define NA_IPREFS_RELABEL_DUPLICATE_MENU		"relabel-when-duplicate-menu"
+#define NA_IPREFS_RELABEL_DUPLICATE_PROFILE		"relabel-when-duplicate-profile"
+#define NA_IPREFS_SCHEME_ADD_SCHEME_WSP			"scheme-add-scheme-wsp"
+#define NA_IPREFS_SCHEME_DEFAULT_LIST			"scheme-default-list"
+
+#define NA_IPREFS_IO_PROVIDER_READABLE			"readable"
+#define NA_IPREFS_IO_PROVIDER_WRITABLE			"writable"
+#define NA_IPREFS_IO_PROVIDER_GROUP				"io-provider"
+
+#define NA_IPREFS_DEFAULT_EXPORT_FORMAT			"Desktop1"
+#define NA_IPREFS_DEFAULT_IMPORT_MODE			"NoImport"
+#define NA_IPREFS_DEFAULT_LIST_ORDER_MODE		"AscendingOrder"
 
 typedef void ( *NASettingsKeyCallback )( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, void *user_data );
 
@@ -104,10 +159,13 @@ guint       na_settings_get_uint                ( NASettings *settings, const gc
 GList      *na_settings_get_uint_list           ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
 
 void        na_settings_set_boolean             ( NASettings *settings, const gchar *key, gboolean value );
-void        na_settings_set_string              ( NASettings *settings, const gchar *key, gchar *value );
-void        na_settings_set_string_list         ( NASettings *settings, const gchar *key, GSList *value );
+void        na_settings_set_string              ( NASettings *settings, const gchar *key, const gchar *value );
+void        na_settings_set_string_list         ( NASettings *settings, const gchar *key, const GSList *value );
 void        na_settings_set_uint                ( NASettings *settings, const gchar *key, guint value );
-void        na_settings_set_uint_list           ( NASettings *settings, const gchar *key, GList *value );
+void        na_settings_set_uint_list           ( NASettings *settings, const gchar *key, const GList *value );
+
+/* na_iprefs_get_io_providers() */
+GSList     *na_settings_get_groups              ( NASettings *settings );
 
 G_END_DECLS
 

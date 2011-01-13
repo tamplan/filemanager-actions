@@ -31,6 +31,9 @@
 
 2011-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-settings.c:
+	* src/core/na-settings.h: Preference names are defined as '#define' values.
+
 	* README-GCONF:
 	* src/utils/na-gconf2key.sh.in: Adjust preferences.
 
