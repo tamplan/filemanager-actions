@@ -31,6 +31,9 @@
 
 2011-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* README-GCONF:
+	* src/utils/na-gconf2key.sh.in: Adjust preferences.
+
 	* src/core/na-iprefs.c:
 	* src/core/na-iprefs.h: NAIPrefs is no more an interface.
 

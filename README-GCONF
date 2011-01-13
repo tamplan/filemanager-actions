@@ -73,7 +73,7 @@ Deprecating GConf
  export-assistant = [377,33,699,675]        [nact]     export-assistant-wsp
  export-ask-user = [377,33,699,675]         [nact]     export-ask-user-wsp
  export-ask-user-last-format = GConfEntry   [nact]     export-ask-user-last-format
- export-folder-uri = file:///home/pierre..  [nact]     export-last-folder-uri
+ export-folder-uri = file:///home/pierre..  [nact]     export-assistant-last-folder-uri
  export-format = Ask                        [nact]     export-preferred-format
  icommand-command-chooser                   [nact]     command-command-chooser-wsp
  icommand-folder-uri                        [nact]     command-command-chooser-last-folder-uri
@@ -87,14 +87,13 @@ Deprecating GConf
  ienvironment-try-exec-dialog = [327,70,..  [nact]     environment-try-exec-wsp
  ienvironment-try-exec-uri = file:///bin    [nact]     environment-try-exec-last-folder-uri
  ifolders-chooser = [418,86,632,573]        [nact]     folder-chooser-wsp
- ifolders-path = /home/pierre/data/Pictures [nact]     folder-last-folder-uri
+ ifolders-path = /home/pierre/data/Pictures [nact]     folder-chooser-last-folder-uri
  import-ask-user                            [nact]     import-ask-user-wsp
  import-ask-user-last-mode                  [nact]     import-ask-user-last-mode
  import-assistant                           [nact]     import-assistant-wsp
- import-folder-uri                          [nact]     import-last-folder-uri
+ import-folder-uri                          [nact]     import-assistant-last-folder-uri
  import-keep-choice                         [nact]     import-mode-keep-last-choice
  import-mode = NoImport                     [nact]     import-preferred-mode
- io-providers-order = [..]                  [runtime]  io-providers-read-order
  io-providers-order = [..]                  [nact]     io-providers-write-order
  iprefs-add-about-item = true               [runtime]  items-add-about-item
  iprefs-alphabetical-order = ManualOrder    [runtime]  items-list-order-mode
