@@ -10,7 +10,7 @@
 # Claude Paroz <claude@2xlibre.net>, 2006-2010.
 # Stéphane Raimbault <stephane.raimbault@gmail.com>, 2007, 2009.
 # Laurent Coudeur <laurentc@iol.ie>, 2009.
-# Bruno Brouard <annoa.b@gmail.com>, 2009-2010, 2011.
+# Bruno Brouard <annoa.b@gmail.com>, 2009-2011.
 # Cédric Felizard <cedric.felizard@gmail.com>, 2010.
 # Nicolas Repentin <nicolas@shivaserv.fr>, 2010.
 # Gérard Baylard <Geodebay@gmail.com>, 2010-2011.
@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: nautilus-actions fr\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2011-01-08 17:35+0000\n"
+"POT-Creation-Date: 2011-01-09 20:26+0000\n"
 "PO-Revision-Date: 2011-01-08 21:06+0100\n"
 "Last-Translator: Bruno Brouard <annoa.b@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -813,7 +813,7 @@ msgstr ""
 #: ../src/core/na-object-action-factory.c:171
 #: ../src/core/na-object-item-factory.c:105
 #: ../src/core/na-object-item-factory.c:129
-#: ../src/core/na-object-profile-factory.c:185
+#: ../src/core/na-object-profile-factory.c:183
 #: ../src/utils/nautilus-actions-run.c:58
 msgid "<STRING>"
 msgstr "<CHAÎNE>"
@@ -1433,7 +1433,7 @@ msgid ""
 "item in the file manager context menu or in the toolbar.\n"
 "The parameters may contain some special tokens which are replaced by the "
 "informations provided by the file manager before starting the command:\n"
-"- up to version \"2.0\":\n"
+"- up to version 2.0:\n"
 "  %d: base folder of the selected file(s)\n"
 "  %f: the name of the selected file or the first one if several are "
 "selected\n"
@@ -1442,14 +1442,13 @@ msgid ""
 "(s)\n"
 "  %M: space-separated list of the selected file(s)/folder(s), with their "
 "full paths\n"
-"  %o: no-op operator which forces a singular form of execution\n"
-"  %O: no-op operator which forces a plural form of execution\n"
 "  %p: port number of the first URI\n"
 "  %R: space-separated list of selected URIs\n"
 "  %s: scheme of the URI\n"
 "  %u: URI\n"
 "  %U: username of the URI\n"
-"  %%: a percent sign.- starting from version '3':\n"
+"  %%: a percent sign.\n"
+"- starting from version 3:\n"
 "  %b: (first) basename\n"
 "  %B: space-separated list of the basenames of the selected file(s)/folder"
 "(s)\n"
@@ -1486,7 +1485,7 @@ msgstr ""
 "Les paramètres peuvent contenir un certain nombre d'éléments spéciaux "
 "remplacés par les informations fournies par le gestionnaire de fichiers "
 "avant de lancer la commande :\n"
-"- jusqu'à la version « 2.0 » :\n"
+"- jusqu'à la version 2.0 :\n"
 "  %d : dossier de base du ou des fichiers sélectionnés\n"
 "  %f : le nom du fichier sélectionné ou du premier de la liste si plusieurs "
 "sont sélectionnés \n"
@@ -1495,16 +1494,13 @@ msgstr ""
 "dossiers sélectionnés\n"
 "  %M : liste délimitée par des espaces des fichiers/dossiers sélectionnés "
 "avec leur chemin complet\n"
-"  %o : opérateur qui force l'exécution de l'action fichier par fichier\n"
-"  %O : opérateur qui force l'exécution de l'action simultanément sur "
-"plusieurs fichiers\n"
 "  %p : numéro du port du premier URI\n"
 "  %R : liste délimitée par des espaces des URI sélectionnés\n"
 "  %s : protocole de l'URI\n"
 "  %u : URI\n"
 "  %U : nom d'utilisateur de l'URI\n"
 "  %% : le signe pourcentage.\n"
-"— à partir de la version « 3 » :\n"
+"— à partir de la version 3 :\n"
 "  %b : (premier) nom de base\n"
 "  %B : liste délimitée par des espaces des noms de base des fichiers/"
 "dossiers sélectionnés\n"
@@ -1536,11 +1532,11 @@ msgstr ""
 "sélectionnés\n"
 "  %% : un signe pourcentage."
 
-#: ../src/core/na-object-profile-factory.c:191
+#: ../src/core/na-object-profile-factory.c:189
 msgid "Working directory"
 msgstr "Répertoire de travail"
 
-#: ../src/core/na-object-profile-factory.c:192
+#: ../src/core/na-object-profile-factory.c:190
 #, c-format
 msgid ""
 "The working directory the command will be started in.\n"
@@ -1549,11 +1545,11 @@ msgstr ""
 "Le répertoire de travail dans lequel la commande sera lancée.\n"
 "La valeur par défaut est « %d »."
 
-#: ../src/core/na-object-profile-factory.c:214
+#: ../src/core/na-object-profile-factory.c:212
 msgid "Execution mode"
 msgstr "Mode d'exécution"
 
-#: ../src/core/na-object-profile-factory.c:215
+#: ../src/core/na-object-profile-factory.c:213
 msgid ""
 "Execution mode of the program.\n"
 "This may be chosen between following values:\n"
@@ -1580,11 +1576,11 @@ msgstr ""
 "affichés ; un substitut acceptable est « Terminal ».\n"
 "La valeur par défaut est « Normal »."
 
-#: ../src/core/na-object-profile-factory.c:246
+#: ../src/core/na-object-profile-factory.c:244
 msgid "Startup notify"
 msgstr "Notification de démarrage"
 
-#: ../src/core/na-object-profile-factory.c:247
+#: ../src/core/na-object-profile-factory.c:245
 msgid ""
 "Only relevant when ExecutionMode=Normal.\n"
 "Defaults to FALSE."
@@ -1592,11 +1588,11 @@ msgstr ""
 "Approprié uniquement si « ExecutionMode=Normal ».\n"
 "La valeur par défaut est FALSE."
 
-#: ../src/core/na-object-profile-factory.c:269
+#: ../src/core/na-object-profile-factory.c:267
 msgid "Startup WM Class"
 msgstr "Classe WM de démarrage"
 
-#: ../src/core/na-object-profile-factory.c:270
+#: ../src/core/na-object-profile-factory.c:268
 msgid ""
 "Only relevant when ExecutionMode=Normal.\n"
 "Defaults to empty."
@@ -1604,11 +1600,11 @@ msgstr ""
 "Approprié uniquement si « ExecutionMode=Normal ».\n"
 "La valeur par défaut est vide."
 
-#: ../src/core/na-object-profile-factory.c:292
+#: ../src/core/na-object-profile-factory.c:290
 msgid "Execute as user"
 msgstr "Exécuter en tant qu'utilisateur"
 
-#: ../src/core/na-object-profile-factory.c:293
+#: ../src/core/na-object-profile-factory.c:291
 msgid ""
 "The user the command must be ran as. The user may be identified by its "
 "numeric UID or by its login.\n"
@@ -1653,6 +1649,27 @@ msgstr "utilisateur"
 #: ../src/io-desktop/nadp-desktop-provider.c:249
 msgid "Nautilus-Actions Desktop I/O Provider"
 msgstr "Fournisseur d'E/S du bureau pour Nautilus-Actions"
+
+#: ../src/io-desktop/nadp-formats.c:47
+msgid "Export as a ._desktop file"
+msgstr "Exporter en tant que fichier .desktop"
+
+#: ../src/io-desktop/nadp-formats.c:48
+msgid ""
+"This format let you easily share your actions with others, including other "
+"desktop environments.\n"
+"The exported .desktop file may later be imported via :\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory."
+msgstr ""
+"Ce format vous permet de partager facilement vos actions avec les autres, y compris "
+"dans d'autres environnement de bureau.\n"
+"Le fichier .desktop exporté peut ensuite être importé via :\n"
+"- l'assistant d'importation de l'outil de configuration de Nautilus-"
+"Actions,\n"
+"- un glisser-déposer dans l'outil de configuration de Nautilus-Actions,\n"
+"- ou en le copiant dans un répertoire XDG_DATA_DIRS/file-manager/actions."
 
 #: ../src/io-gconf/nagp-gconf-provider.c:225
 msgid "Nautilus-Actions GConf I/O Provider"
@@ -1781,33 +1798,33 @@ msgstr ""
 "- un glisser-déposer dans l'outil de configuration Nautilus-Actions,\n"
 "- ou l'outil en ligne de commande gconftool-2 --load."
 
-#: ../src/nact/base-application.c:1292
+#: ../src/nact/base-application.c:1298
 msgid "Unable to initialize the internationalization environment."
 msgstr "Impossible d'initialiser l'environnement d'internationalisation."
 
-#: ../src/nact/base-application.c:1301
+#: ../src/nact/base-application.c:1307
 msgid "Unable to initialize the Gtk+ user interface."
 msgstr "Impossible d'initialiser l'interface utilisateur Gtk+."
 
-#: ../src/nact/base-application.c:1310
+#: ../src/nact/base-application.c:1316
 msgid "Another instance of the application is already running."
 msgstr "Une autre instance de l'application est déjà en cours d'exécution."
 
-#: ../src/nact/base-application.c:1319
+#: ../src/nact/base-application.c:1325
 msgid "No filename provided for the UI XML definition."
 msgstr "Aucun nom de fichier fourni pour la définition XML de l'UI."
 
 #. i18n: Unable to load the XML definition from <filename>
-#: ../src/nact/base-application.c:1329
+#: ../src/nact/base-application.c:1335
 #, c-format
 msgid "Unable to load the XML definition from %s."
 msgstr "Impossible de charger la définition XML à partir de %s."
 
-#: ../src/nact/base-application.c:1342
+#: ../src/nact/base-application.c:1348
 msgid "Unable to set the default icon for the application."
 msgstr "Impossible de définir l'icône par défaut pour l'application."
 
-#: ../src/nact/base-application.c:1351
+#: ../src/nact/base-application.c:1357
 msgid "Unable to get the main window of the application."
 msgstr "Impossible d'obtenir la fenêtre principale de l'application."
 
@@ -1959,7 +1976,7 @@ msgstr "<b>Protocole</b>"
 
 #: ../src/nact/nact-add-scheme.ui.h:2
 msgid "Adding a new scheme"
-msgstr "Ajouter un nouveau protocole"
+msgstr "Ajout d'un nouveau protocole"
 
 #: ../src/nact/nact-assistant-export.c:679
 msgid "About to export selected items:"
@@ -2073,8 +2090,8 @@ msgstr "L'importation a réussi"
 #. i18n: this is the globally unique identifier and the label of the newly imported action
 #: ../src/nact/nact-assistant-import.c:773
 #, c-format
-msgid "UUID: %s\t%s"
-msgstr "UUID : %s\t%s"
+msgid "Id.: %s\t%s"
+msgstr "Id. : %s\t%s"
 
 #. i18n: indicate that the file was not imported
 #: ../src/nact/nact-assistant-import.c:782
@@ -2645,8 +2662,8 @@ msgstr ""
 "configuration de Nautilus-Action, doit être ajusté manuellement."
 
 #: ../src/nact/nact-preferences.ui.h:17
-msgid "Do _not import actions whose UUID already exists"
-msgstr "_Ne pas importer d'actions dont les UUID existent déjà"
+msgid "Do _not import the item"
+msgstr "_Ne pas importer l'élément"
 
 #: ../src/nact/nact-preferences.ui.h:18
 msgid "Esc key _quits the assistant"
@@ -2706,25 +2723,24 @@ msgstr "Renommer les p_rofils"
 
 #: ../src/nact/nact-preferences.ui.h:28
 msgid ""
-"The action found in the selected file will silently override the current "
-"action which has the same identifier.\n"
-"Be warned: this mode may be dangerous. You will not be prompted another time."
+"The selected item, action or menu, will be imported with a slightly modified "
+"label indicating the renumbering.\n"
+"The currently existing item will not be modified."
 msgstr ""
-"L'action trouvée dans le fichier sélectionné écrase sans avertissement "
-"l'action actuelle qui possède le même identifiant.\n"
-"Attention : ce mode peut se révéler risqué. Vous ne serez pas prévenu à "
-"nouveau."
+"L'élément, l'action ou le menu sélectionné sera importé avec une étiquette "
+"légèrement modifiée indiquant la renumérotation.\n"
+"L'élément existant actuellement ne sera pas modifié."
 
-# BUG : Bruno the message should be in the same form as the previous one (voir ma traduction) ?
 #: ../src/nact/nact-preferences.ui.h:30
 msgid ""
-"The selected file will be imported with a slightly modified label indicating "
-"the renumbering.\n"
-"The existing action will not be modified."
+"The selected item, action or menu, will silently override the currently "
+"existing one which has the same identifier.\n"
+"Be warned: this mode may be dangerous. You will not be prompted another time."
 msgstr ""
-"L'action trouvée dans le fichier sélectionné est importée avec une étiquette "
-"légèrement modifiée indiquant la renumérotation.\n"
-"L'action existante ne sera pas modifiée."
+"L'élément, l'action ou le menu sélectionné écrasera sans "
+"avertissement l'élément existant actuel qui possède le même identifiant.\n"
+"Attention : ce mode peut se révéler risqué. Vous ne serez pas à nouveau "
+"prévenu."
 
 #: ../src/nact/nact-preferences.ui.h:32
 msgid ""
@@ -2789,21 +2805,22 @@ msgstr ""
 #: ../src/nact/nact-preferences.ui.h:39
 msgid ""
 "This used to be the historical behavior.\n"
-"The selected file will be marked as \"NOT OK\" in the Summary page.\n"
-"The existing action will not be modified."
+"The selected item, action or menu, will not be imported and will be marked "
+"as \"NOT OK\" in the Summary page.\n"
+"The currently existing item will not be modified."
 msgstr ""
 "Ce choix est conforme au comportement historique de l'application.\n"
-"L'action trouvée dans le fichier sélectionné sera marqué « NOT OK » dans la "
-"page Résumé.\n"
-"L'action existante ne sera pas modifiée."
+"L'élément, l'action ou le menu sélectionné ne sera pas importé et sera marqué "
+"« NOT OK » dans la page Résumé.\n"
+"L'élément existant actuel n'est pas modifié."
 
 #: ../src/nact/nact-preferences.ui.h:42
 msgid ""
-"What to do when an action being imported has the same UUID that an already "
-"existing one ?"
+"What to do when an item, action or menu, selected to be imported, has the "
+"same identifier that a currently existing one ?"
 msgstr ""
-"Que faire quand une action importée possède le même identifiant qu'une "
-"action existante ?"
+"Que faire quand un élément, une action ou un menu importé possède le même identifiant qu'une "
+"action existante actuellement ?"
 
 #: ../src/nact/nact-preferences.ui.h:43
 msgid "What to do when pasting or duplicating an item in the tree ?"
@@ -2891,8 +2908,11 @@ msgstr ""
 "Vous pouvez ajouter un nouveau protocole en cliquant sur le bouton « + »."
 
 #: ../src/nact/nact-preferences.ui.h:55
-msgid "You will be asked each time an imported UUID already exists."
-msgstr "Vous serez interrogé chaque fois qu'un UUID importé existe déjà."
+msgid ""
+"You will be asked each time a selected item has an already existing "
+"identifier."
+msgstr "Vous serez questionné chaque fois qu'un élément sélectionné possède "
+"un identifiant existant actuellement."
 
 #: ../src/nact/nact-preferences.ui.h:56
 msgid "_Ascending alphabetical order"
@@ -2912,24 +2932,23 @@ msgstr "_Descendre"
 
 #: ../src/nact/nact-preferences.ui.h:61
 msgid "_Export"
-msgstr "_Exporter"
+msgstr "_Exportation"
 
 #: ../src/nact/nact-preferences.ui.h:62
 msgid "_Import"
-msgstr "_Importer"
+msgstr "_Importation"
 
 #: ../src/nact/nact-preferences.ui.h:63
 msgid "_Manual order"
 msgstr "Ordre _manuel"
 
 #: ../src/nact/nact-preferences.ui.h:64
-msgid "_Override existing actions when importing with same UUID"
-msgstr ""
-"Écraser les acti_ons existantes lors d'une importation avec le même UUID"
+msgid "_Override the currently existing item with the imported one"
+msgstr "Écr_aser l'élément existant actuellement par celui qui est importé"
 
 #: ../src/nact/nact-preferences.ui.h:65
-msgid "_Renumber imported actions whose UUID already exists"
-msgstr "_Renuméroter les actions importées dont l'UUID existe déjà"
+msgid "_Renumber the imported item"
+msgstr "_Renuméroter l'élément importé"
 
 #: ../src/nact/nact-preferences.ui.h:66
 msgid "_Runtime preferences"
@@ -4445,3 +4464,4 @@ msgstr "Afficher le schéma sur stdout"
 #: ../src/utils/nautilus-actions-schemas.c:163
 msgid "Output the Nautilus-Actions GConf schemas on stdout."
 msgstr "Affiche les schémas GConf de Nautilus-Actions sur stdout."
+
