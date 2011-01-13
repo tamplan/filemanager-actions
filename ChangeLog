@@ -29,6 +29,11 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+2011-01-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h: NAIPrefs is no more an interface.
+
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-iprefs.c:

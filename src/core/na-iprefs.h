@@ -64,75 +64,29 @@
  *   It the user didn't have defined a root submenu, whether in the NACT
  *   user interface or by choosing the ad-hoc preference, the plugin
  *   doesn't provides one, and the 'About' item will not be displayed.
+ *
+ * Starting with 3.1.0, NAIPrefs interface is deprecated.
+ * Instead, this file implements all maps needed to transform an enum
+ * used in the code to and from a string stored in preferences.
  */
 
-#include <glib-object.h>
-#include <gconf/gconf-client.h>
+#include "na-pivot.h"
 
 G_BEGIN_DECLS
 
-#define NA_IPREFS_TYPE                        ( na_iprefs_get_type())
-#define NA_IPREFS( object )                   ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IPREFS_TYPE, NAIPrefs ))
-#define NA_IS_IPREFS( object )                ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPREFS_TYPE ))
-#define NA_IPREFS_GET_INTERFACE( instance )   ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPREFS_TYPE, NAIPrefsInterface ))
-
-typedef struct _NAIPrefs NAIPrefs;
-
-typedef struct _NAIPrefsInterfacePrivate NAIPrefsInterfacePrivate;
-
-typedef struct {
-	/*< private >*/
-	GTypeInterface            parent;
-	NAIPrefsInterfacePrivate *private;
-}
-	NAIPrefsInterface;
-
-/* GConf Preference keys managed by IPrefs interface
- */
-#define IPREFS_GCONF_BASEDIR				"/apps/nautilus-actions"
-#define IPREFS_GCONF_PREFERENCES			"preferences"
-#define IPREFS_GCONF_PREFS_PATH				IPREFS_GCONF_BASEDIR "/" IPREFS_GCONF_PREFERENCES
-
-#define IPREFS_LEVEL_ZERO_ITEMS				"iprefs-level-zero"
-#define IPREFS_DISPLAY_ALPHABETICAL_ORDER	"iprefs-alphabetical-order"
-#define IPREFS_CREATE_ROOT_MENU				"iprefs-create-root-menu"
-#define IPREFS_ADD_ABOUT_ITEM				"iprefs-add-about-item"
-
-#define IPREFS_RELABEL_MENUS				"iprefs-relabel-menus"
-#define IPREFS_RELABEL_ACTIONS				"iprefs-relabel-actions"
-#define IPREFS_RELABEL_PROFILES				"iprefs-relabel-profiles"
-
-#define IPREFS_IMPORT_ITEMS_IMPORT_MODE		"import-mode"
-#define IPREFS_IMPORT_KEEP_CHOICE			"import-keep-choice"
-#define IPREFS_IMPORT_ASK_LAST_MODE			"import-ask-user-last-mode"
-
-#define IPREFS_AUTOSAVE_ON					"auto-save-on"
-#define IPREFS_AUTOSAVE_PERIOD				"auto-save-period"
-
-/* alphabetical order values
+/* sort mode of the items in the file manager context menu
  */
 enum {
-	IPREFS_ORDER_ALPHA_ASCENDING = 1,
+	IPREFS_ORDER_ALPHA_ASCENDING = 1,	/* default */
 	IPREFS_ORDER_ALPHA_DESCENDING,
 	IPREFS_ORDER_MANUAL
 };
 
-GType        na_iprefs_get_type( void );
+guint na_iprefs_get_import_mode( const NAPivot *pivot, const gchar *pref );
+void  na_iprefs_set_import_mode( const NAPivot *pivot, const gchar *pref, guint mode );
 
-gint         na_iprefs_get_order_mode   ( NAIPrefs *instance );
-void         na_iprefs_set_order_mode   ( NAIPrefs *instance, gint mode );
-
-guint        na_iprefs_get_import_mode  ( GConfClient *gconf, const gchar *pref );
-void         na_iprefs_set_import_mode  ( GConfClient *gconf, const gchar *pref, guint mode );
-
-GConfClient *na_iprefs_get_gconf_client ( const NAIPrefs *instance );
-
-gboolean     na_iprefs_read_bool        ( const NAIPrefs *instance, const gchar *key, gboolean default_value );
-gchar       *na_iprefs_read_string      ( const NAIPrefs *instance, const gchar *key, const gchar *default_value );
-GSList      *na_iprefs_read_string_list ( const NAIPrefs *instance, const gchar *key, const gchar *default_value );
-guint        na_iprefs_read_uint        ( const NAIPrefs *instance, const gchar *key, guint defaut_value );
-
-gboolean     na_iprefs_write_string_list( const NAIPrefs *instance, const gchar *key, GSList *value );
+guint na_iprefs_get_order_mode ( const NAPivot *pivot );
+void  na_iprefs_set_order_mode ( const NAPivot *pivot, gint mode );
 
 G_END_DECLS
 
