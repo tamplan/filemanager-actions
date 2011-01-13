@@ -201,13 +201,13 @@ typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
  * @existing: an already existing #NAObjectItem with same id.
  * @fn_data: some data to be passed to the function.
  *
- * This function may be provided by the caller in order the #NAIImporter
- * provider be able to ask the user to know what to do in the case of a
+ * This function may be provided by the caller as a convenience way for
+ * the #NAIImporter to ask the user to know what to do in the case of a
  * duplicate id.
  *
- * If this function is not provided, then the #NAIImporter provider will
- * not be able to ask the user. In this case, the duplicated id should be
- * systematically regenerated as a unique id.
+ * If this function is not provided, and the #NAIImporter does not have
+ * any other way to ask the user, then a 'no import' policy should be
+ * preferred when managing duplicate identifiers.
  *
  * Returns: the import mode choosen by the user, which must not be
  * %IMPORTER_MODE_ASK.

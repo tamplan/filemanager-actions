@@ -34,6 +34,11 @@
 	* src/core/na-iprefs.c:
 	* src/core/na-iprefs.h: NAIPrefs is no more an interface.
 
+	* src/api/na-iimporter.h:
+	* src/core/na-importer-ask.c:
+	* src/core/na-importer-ask.h:
+	* src/core/na-importer.c: Updated accordingly.
+
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-iprefs.c:

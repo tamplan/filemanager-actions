@@ -33,16 +33,18 @@
 
 /* @title: NAImporterAsk
  * @short_description: The #NAImporterAsk Class Definition
- * @include: core/na-iimporter-ask.h
+ * @include: core/na-importer-ask.h
  *
- * This class reates and manages a dialog. It is ran each time an
- * imported action as the same ID as an existing one, and the user
+ * This class creates and manages a dialog. It is ran each time an
+ * imported action as the same Id as an existing one, and the user
  * want to be ask to known what to do with it.
  */
 
 #include <gtk/gtk.h>
 
 #include <api/na-object-item.h>
+
+#include "na-pivot.h"
 
 G_BEGIN_DECLS
 
@@ -53,7 +55,8 @@ G_BEGIN_DECLS
 #define NA_IS_IMPORTER_ASK_CLASS( klass )    ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_IMPORTER_ASK_TYPE ))
 #define NA_IMPORTER_ASK_GET_CLASS( object )  ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_IMPORTER_ASK_TYPE, NAImporterAskClass ))
 
-typedef struct _NAImporterAskPrivate      NAImporterAskPrivate;
+typedef struct _NAImporterAskPrivate         NAImporterAskPrivate;
+typedef struct _NAImporterAskClassPrivate    NAImporterAskClassPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -61,8 +64,6 @@ typedef struct {
 	NAImporterAskPrivate *private;
 }
 	NAImporterAsk;
-
-typedef struct _NAImporterAskClassPrivate NAImporterAskClassPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -72,10 +73,11 @@ typedef struct {
 	NAImporterAskClass;
 
 typedef struct {
-	GtkWindow    *parent;
-	gchar        *uri;
-	guint         count;
-	gboolean      keep_choice;
+	GtkWindow *parent;
+	gchar     *uri;
+	guint      count;
+	gboolean   keep_choice;
+	NAPivot   *pivot;
 }
 	NAImporterAskUserParms;
 

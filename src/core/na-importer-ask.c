@@ -32,11 +32,8 @@
 #include <config.h>
 #endif
 
-#include <gconf/gconf-client.h>
 #include <glib/gi18n.h>
-#include <gtk/gtk.h>
 
-#include <api/na-gconf-utils.h>
 #include <api/na-iimporter.h>
 #include <api/na-object-api.h>
 
@@ -60,7 +57,6 @@ struct _NAImporterAskPrivate {
 	NAObjectItem           *existing;
 	NAImporterAskUserParms *parms;
 	guint                   mode;
-	GConfClient            *gconf;
 	gint                    dialog_code;
 };
 
@@ -162,8 +158,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 		self->private->toplevel = GTK_WINDOW( gtk_builder_get_object( self->private->builder, "ImporterAskDialog" ));
 	}
 
-	self->private->gconf = gconf_client_get_default();
-
 	self->private->dispose_has_run = FALSE;
 }
 
@@ -183,7 +177,6 @@ instance_dispose( GObject *dialog )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_object_unref( self->private->gconf );
 		g_object_unref( self->private->builder );
 
 		/* chain up to the parent class */
@@ -258,7 +251,7 @@ na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existin
 		dialog->private->importing = ( NAObjectItem * ) importing;
 		dialog->private->existing = ( NAObjectItem * ) existing;
 		dialog->private->parms = parms;
-		dialog->private->mode = na_iprefs_get_import_mode( dialog->private->gconf, IPREFS_IMPORT_ASK_LAST_MODE );
+		dialog->private->mode = na_iprefs_get_import_mode( parms->pivot, NA_IPREFS_IMPORT_ASK_USER_LAST_MODE );
 
 		init_dialog( dialog );
 		/* toplevel is modal, not dialog
@@ -379,7 +372,6 @@ get_selected_mode( NAImporterAsk *editor )
 	guint import_mode;
 	GtkWidget *button;
 	gboolean keep;
-	gchar *path;
 
 	import_mode = IMPORTER_MODE_NO_IMPORT;
 
@@ -395,13 +387,11 @@ get_selected_mode( NAImporterAsk *editor )
 	}
 
 	editor->private->mode = import_mode;
-	na_iprefs_set_import_mode( editor->private->gconf, IPREFS_IMPORT_ASK_LAST_MODE, editor->private->mode );
+	na_iprefs_set_import_mode( editor->private->parms->pivot, NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, editor->private->mode );
 
 	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	path = gconf_concat_dir_and_key( IPREFS_GCONF_PREFS_PATH, IPREFS_IMPORT_KEEP_CHOICE );
-	na_gconf_utils_write_bool( editor->private->gconf, path, keep, NULL );
-	g_free( path );
+	na_settings_set_boolean( na_pivot_get_settings( editor->private->parms->pivot ), NA_IPREFS_IMPORT_MODE_KEEP_LAST_CHOICE, keep );
 }
 
 /*
