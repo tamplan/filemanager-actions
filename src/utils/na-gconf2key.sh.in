@@ -467,7 +467,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "${key}" str "${value}"
 			;;
 		export-folder-uri)
-			add_pref "nact" "export-assistant-last-folder-uri" str "${value}"
+			add_pref "nact" "export-assistant-lfu" str "${value}"
 			;;
 		export-format)
 			add_pref "nact" "export-preferred-format" str "${value}"
@@ -476,7 +476,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "command-command-chooser-wsp" list "${value}"
 			;;
 		icommand-folder-uri)
-			add_pref "nact" "command-command-chooser-last-folder-uri" list "${value}"
+			add_pref "nact" "command-command-chooser-lfu" list "${value}"
 			;;
 		icommand-legend-dialog)
 			add_pref "nact" "command-legend-wsp" list "${value}"
@@ -485,7 +485,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "command-working-dir-chooser-wsp" list "${value}"
 			;;
 		icommand-working-dir-uri)
-			add_pref "nact" "command-working-dir-chooser-last-folder-uri" str "${value}"
+			add_pref "nact" "command-working-dir-chooser-lfu" str "${value}"
 			;;
 		icons-chooser)
 			add_pref "nact" "item-icon-chooser-wsp" list "${value}"
@@ -497,19 +497,19 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "environment-show-if-running-wsp" list "${value}"
 			;;
 		ienvironment-show-if-running-uri)
-			add_pref "nact" "environment-show-if-running-last-folder-uri" str "${value}"
+			add_pref "nact" "environment-show-if-running-lfu" str "${value}"
 			;;
 		ienvironment-try-exec-dialog)
 			add_pref "nact" "environment-try-exec-wsp" list "${value}"
 			;;
 		ienvironment-try-exec-uri)
-			add_pref "nact" "environment-try-exec-last-folder-uri" str "${value}"
+			add_pref "nact" "environment-try-exec-lfu" str "${value}"
 			;;
 		ifolders-chooser)
 			add_pref "nact" "folder-chooser-wsp" list "${value}"
 			;;
 		ifolders-path)
-			add_pref "nact" "folder-chooser-last-folder-uri" str "file://${value}"
+			add_pref "nact" "folder-chooser-lfu" str "file://${value}"
 			;;
 		import-ask-user)
 			add_pref "nact" "import-ask-user-wsp" list "${value}"
@@ -521,7 +521,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "import-assistant-wsp" list "${value}"
 			;;
 		import-folder-uri)
-			add_pref "nact" "import-assistant-last-folder-uri" str "${value}"
+			add_pref "nact" "import-assistant-lfu" str "${value}"
 			;;
 		import-keep-choice)
 			add_pref "nact" "import-mode-keep-last-choice" list "${value}"

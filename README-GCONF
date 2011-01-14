@@ -73,25 +73,25 @@ Deprecating GConf
  export-assistant = [377,33,699,675]        [nact]     export-assistant-wsp
  export-ask-user = [377,33,699,675]         [nact]     export-ask-user-wsp
  export-ask-user-last-format = GConfEntry   [nact]     export-ask-user-last-format
- export-folder-uri = file:///home/pierre..  [nact]     export-assistant-last-folder-uri
+ export-folder-uri = file:///home/pierre..  [nact]     export-assistant-lfu
  export-format = Ask                        [nact]     export-preferred-format
  icommand-command-chooser                   [nact]     command-command-chooser-wsp
- icommand-folder-uri                        [nact]     command-command-chooser-last-folder-uri
+ icommand-folder-uri                        [nact]     command-command-chooser-lfu
  icommand-legend-dialog = [673,94,474,480]  [nact]     command-legend-wsp
  icommand-working-dir-dialog                [nact]     command-working-dir-chooser-wsp
- icommand-working-dir-uri = file:///home..  [nact]     command-working-dir-chooser-last-folder-uri
+ icommand-working-dir-uri = file:///home..  [nact]     command-working-dir-chooser-lfu
  icons-chooser = [425,124,839,539]          [nact]     item-icon-chooser-wsp
  icons-path = file:///usr/share/icons/hi..  [nact]     item-icon-chooser-last-file-uri
  ienvironment-show-if-running-dialog = [..  [nact]     environment-show-if-running-wsp
- ienvironment-show-if-running-uri = file..  [nact]     environment-show-if-running-last-folder-uri
+ ienvironment-show-if-running-uri = file..  [nact]     environment-show-if-running-lfu
  ienvironment-try-exec-dialog = [327,70,..  [nact]     environment-try-exec-wsp
- ienvironment-try-exec-uri = file:///bin    [nact]     environment-try-exec-last-folder-uri
+ ienvironment-try-exec-uri = file:///bin    [nact]     environment-try-exec-lfu
  ifolders-chooser = [418,86,632,573]        [nact]     folder-chooser-wsp
- ifolders-path = /home/pierre/data/Pictures [nact]     folder-chooser-last-folder-uri
+ ifolders-path = /home/pierre/data/Pictures [nact]     folder-chooser-lfu
  import-ask-user                            [nact]     import-ask-user-wsp
  import-ask-user-last-mode                  [nact]     import-ask-user-last-mode
  import-assistant                           [nact]     import-assistant-wsp
- import-folder-uri                          [nact]     import-assistant-last-folder-uri
+ import-folder-uri                          [nact]     import-assistant-lfu
  import-keep-choice                         [nact]     import-mode-keep-last-choice
  import-mode = NoImport                     [nact]     import-preferred-mode
  io-providers-order = [..]                  [nact]     io-providers-write-order

@@ -29,6 +29,13 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+	* README-GCONF:
+	* src/core/na-settings.h:
+	* src/utils/na-gconf2key.sh.in:
+	'-last-folder-uri' preferences are renamed as '-lfu'.
+
+	* src/core/na-settings.c: Set default values.
+
 	* src/nact/nact-gtk-utils.c:
 	* src/nact/nact-gtk-utils.h (nact_gtk_utils_select_file,
 	nact_gtk_utils_select_file_with_preview, nact_gtk_utils_select_dir):
