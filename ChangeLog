@@ -29,6 +29,12 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h (nact_iprefs_migrate_key): Remove deprecated function.
+
+	* src/nact/nact-icommand-tab.c (nact_icommand_tab_initial_load_toplevel):
+	Updated accordingly.
+
 	Global renaming of preferences.
 
 	* README-GCONF:

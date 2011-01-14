@@ -51,11 +51,6 @@ static GType       register_type( void );
 static void        interface_base_init( NactIPrefsInterface *klass );
 static void        interface_base_finalize( NactIPrefsInterface *klass );
 
-#if 0
-static GConfValue *get_value( GConfClient *client, const gchar *path, const gchar *entry );
-static void        set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value );
-#endif
-
 GType
 nact_iprefs_get_type( void )
 {
@@ -193,47 +188,6 @@ nact_iprefs_set_export_format( const BaseWindow *window, const gchar *name, GQua
 }
 
 /**
- * nact_iprefs_migrate_key:
- * @window: a #BaseWindow window.
- * @old_key: the old preference entry.
- * @new_key: the new preference entry.
- *
- * Migrates the content of an entry from an obsoleted key to a new one.
- * Removes the old key, along with the schema associated to it,
- * considering that the version which asks for this migration has
- * installed a schema corresponding to the new key.
- */
-void
-nact_iprefs_migrate_key( const BaseWindow *window, const gchar *old_key, const gchar *new_key )
-{
-#if 0
-	static const gchar *thisfn = "nact_iprefs_migrate_key";
-	GConfClient *gconf_client;
-	GConfValue *value;
-
-	g_debug( "%s: window=%p, old_key=%s, new_key=%s", thisfn, ( void * ) window, old_key, new_key );
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-
-	if( st_initialized && !st_finalized ){
-
-		gconf_client = NACT_IPREFS_GET_INTERFACE( window )->private->client;
-
-		value = get_value( gconf_client, IPREFS_GCONF_PREFS_PATH, new_key );
-		if( !value ){
-			value = get_value( gconf_client, IPREFS_GCONF_PREFS_PATH, old_key );
-			if( value ){
-				set_value( gconf_client, IPREFS_GCONF_PREFS_PATH, new_key, value );
-				gconf_value_free( value );
-			}
-		}
-
-		/* do not remove entries which may still be used by an older N-A version
-		 */
-	}
-#endif
-}
-
-/**
  * nact_iprefs_write_bool:
  * @window: this #BaseWindow-derived window.
  * @name: the preference entry.
@@ -313,52 +267,3 @@ nact_iprefs_write_string( const BaseWindow *window, const gchar *name, const gch
 		na_settings_set_string( settings, name, value );
 	}
 }
-
-#if 0
-static GConfValue *
-get_value( GConfClient *client, const gchar *path, const gchar *entry )
-{
-	static const gchar *thisfn = "na_iprefs_get_value";
-	GError *error = NULL;
-	gchar *fullpath;
-	GConfValue *value;
-
-	fullpath = gconf_concat_dir_and_key( path, entry );
-
-	value = gconf_client_get_without_default( client, fullpath, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
-		g_error_free( error );
-		if( value ){
-			gconf_value_free( value );
-			value = NULL;
-		}
-	}
-
-	g_free( fullpath );
-
-	return( value );
-}
-
-static void
-set_value( GConfClient *client, const gchar *path, const gchar *entry, GConfValue *value )
-{
-	static const gchar *thisfn = "na_iprefs_set_value";
-	GError *error = NULL;
-	gchar *fullpath;
-
-	g_return_if_fail( value );
-
-	fullpath = gconf_concat_dir_and_key( path, entry );
-
-	gconf_client_set( client, fullpath, value, &error );
-
-	if( error ){
-		g_warning( "%s: key=%s, %s", thisfn, fullpath, error->message );
-		g_error_free( error );
-	}
-
-	g_free( fullpath );
-}
-#endif

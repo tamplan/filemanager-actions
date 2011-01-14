@@ -63,10 +63,6 @@ GType nact_iprefs_get_type( void );
 GQuark nact_iprefs_get_export_format( const BaseWindow *window, const gchar *pref );
 void   nact_iprefs_set_export_format( const BaseWindow *window, const gchar *pref, GQuark format );
 
-/* Obsoleted since 3.1.0 and the migration to configuration files
- */
-void  nact_iprefs_migrate_key       ( const BaseWindow *window, const gchar *old_key, const gchar *new_key );
-
 void  nact_iprefs_write_bool        ( const BaseWindow *window, const gchar *key, gboolean value );
 void  nact_iprefs_write_uint        ( const BaseWindow *window, const gchar *key, guint value );
 void  nact_iprefs_write_string      ( const BaseWindow *window, const gchar *name, const gchar *value );

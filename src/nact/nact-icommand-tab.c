@@ -184,10 +184,6 @@ nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance )
 	if( st_initialized && !st_finalized ){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
-		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-legend-dialog", NA_IPREFS_COMMAND_LEGEND_WSP );
-		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-command-chooser", NA_IPREFS_COMMAND_CHOOSER_WSP );
-		nact_iprefs_migrate_key( BASE_WINDOW( instance ), "iconditions-folder-uri", NA_IPREFS_COMMAND_CHOOSER_URI );
 	}
 }
 

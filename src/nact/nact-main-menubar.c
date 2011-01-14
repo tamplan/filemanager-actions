@@ -60,10 +60,6 @@
 #define MENUBAR_PROP_STATUS_CONTEXT			"nact-menubar-status-context"
 #define MENUBAR_PROP_MAIN_STATUS_CONTEXT	"nact-menubar-main-status-context"
 #define MENUBAR_PROP_ACTIONS_GROUP			"nact-menubar-actions-group"
-#define MENUBAR_IPREFS_FILE_TOOLBAR			"main-file-toolbar"
-#define MENUBAR_IPREFS_EDIT_TOOLBAR			"main-edit-toolbar"
-#define MENUBAR_IPREFS_TOOLS_TOOLBAR		"main-tools-toolbar"
-#define MENUBAR_IPREFS_HELP_TOOLBAR			"main-help-toolbar"
 
 enum {
 	MENUBAR_FILE_TOOLBAR_POS = 0,
