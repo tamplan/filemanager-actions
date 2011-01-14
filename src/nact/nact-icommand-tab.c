@@ -560,7 +560,7 @@ on_path_browse( GtkButton *button, NactICommandTab *instance )
 	nact_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
 			_( "Choosing a command" ), NA_IPREFS_COMMAND_CHOOSER_WSP,
-			get_path_entry( instance ), NA_IPREFS_COMMAND_CHOOSER_URI, "file:///bin" );
+			get_path_entry( instance ), NA_IPREFS_COMMAND_CHOOSER_URI );
 }
 
 static void
@@ -601,7 +601,7 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 		nact_gtk_utils_select_dir(
 				BASE_WINDOW( instance ),
 				_( "Choosing a working directory" ), NA_IPREFS_WORKING_DIR_WSP,
-				wdir_entry, NA_IPREFS_WORKING_DIR_URI, default_value );
+				wdir_entry, NA_IPREFS_WORKING_DIR_URI );
 
 		g_free( default_value );
 	}

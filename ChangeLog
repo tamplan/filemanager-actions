@@ -29,6 +29,15 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h (nact_gtk_utils_select_file,
+	nact_gtk_utils_select_file_with_preview, nact_gtk_utils_select_dir):
+	Remove no more used default value.
+
+	* src/nact/nact-icommand-tab.c (on_path_browse, on_wdir_browse):
+	* src/nact/nact-ienvironment-tab.c (on_try_exec_browse,
+	on_show_if_running_browse): Updated accordingly.
+
 	* src/core/na-boxed.c (string_list_from_array, uint_list_from_array):
 	Do not allocate the empty last element.
 

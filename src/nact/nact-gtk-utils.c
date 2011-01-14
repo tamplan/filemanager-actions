@@ -287,8 +287,6 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
  *  its size and position.
  * @entry: the #GtkEntry which is associated with the selected file.
  * @entry_name: the name of the entry in Preferences to be readen/written.
- * @default_dir_uri: the URI of the directory which should be set if there is
- *  not yet any preference (see @entry_name)
  *
  * Opens a #GtkFileChooserDialog and let the user choose an existing file
  * -> choose and display an existing file name
@@ -301,11 +299,10 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
 void
 nact_gtk_utils_select_file( BaseWindow *window,
 				const gchar *title, const gchar *dialog_name,
-				GtkWidget *entry, const gchar *entry_name,
-				const gchar *default_dir_uri )
+				GtkWidget *entry, const gchar *entry_name )
 {
 	nact_gtk_utils_select_file_with_preview(
-			window, title, dialog_name, entry, entry_name, default_dir_uri, NULL );
+			window, title, dialog_name, entry, entry_name, NULL );
 }
 
 /**
@@ -316,8 +313,6 @@ nact_gtk_utils_select_file( BaseWindow *window,
  *  its size and position.
  * @entry: the #GtkEntry which is associated with the selected file.
  * @entry_name: the name of the entry in Preferences to be readen/written.
- * @default_dir_uri: the URI of the directory which should be set if there is
- *  not yet any preference (see @entry_name)
  * @update_preview_cb: the callback function in charge of updating the
  *  preview widget. May be NULL.
  *
@@ -333,7 +328,6 @@ void
 nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 				const gchar *title, const gchar *dialog_name,
 				GtkWidget *entry, const gchar *entry_name,
-				const gchar *default_dir_uri,
 				GCallback update_preview_cb )
 {
 	NactApplication *application;
@@ -374,8 +368,10 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 
 	} else {
 		uri = na_settings_get_string( settings, entry_name, NULL, NULL );
-		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
-		g_free( uri );
+		if( uri ){
+			gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
+			g_free( uri );
+		}
 	}
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
@@ -415,8 +411,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 void
 nact_gtk_utils_select_dir( BaseWindow *window,
 				const gchar *title, const gchar *dialog_name,
-				GtkWidget *entry, const gchar *entry_name,
-				const gchar *default_dir_uri )
+				GtkWidget *entry, const gchar *entry_name )
 {
 	NactApplication *application;
 	NAUpdater *updater;
@@ -449,8 +444,10 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 
 	} else {
 		uri = na_settings_get_string( settings, entry_name, NULL, NULL );
-		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
-		g_free( uri );
+		if( uri ){
+			gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
+			g_free( uri );
+		}
 	}
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){

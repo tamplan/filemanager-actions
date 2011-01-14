@@ -752,7 +752,7 @@ on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance )
 	nact_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
 			_( "Choosing an executable" ), NA_IPREFS_TRY_EXEC_WSP,
-			entry, NA_IPREFS_TRY_EXEC_URI, "file:///bin" );
+			entry, NA_IPREFS_TRY_EXEC_URI );
 }
 
 static void
@@ -810,7 +810,7 @@ on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance )
 	nact_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
 			_( "Choosing an executable" ), NA_IPREFS_SHOW_IF_RUNNING_WSP,
-			entry, NA_IPREFS_SHOW_IF_RUNNING_URI, "file:///bin" );
+			entry, NA_IPREFS_SHOW_IF_RUNNING_URI );
 }
 
 static void

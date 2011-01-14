@@ -57,19 +57,16 @@ void       nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSi
  */
 void       nact_gtk_utils_select_file( BaseWindow *window,
 				const gchar *title, const gchar *dialog_name,
-				GtkWidget *entry, const gchar *entry_name,
-				const gchar *default_dir_uri );
+				GtkWidget *entry, const gchar *entry_name );
 
 void       nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 				const gchar *title, const gchar *dialog_name,
 				GtkWidget *entry, const gchar *entry_name,
-				const gchar *default_dir_uri,
 				GCallback update_preview_cb );
 
 void       nact_gtk_utils_select_dir( BaseWindow *window,
 				const gchar *title, const gchar *dialog_name,
-				GtkWidget *entry, const gchar *entry_name,
-				const gchar *default_dir_uri );
+				GtkWidget *entry, const gchar *entry_name );
 
 G_END_DECLS
 
