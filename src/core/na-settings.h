@@ -120,7 +120,7 @@ GType na_settings_get_type( void );
 #define NA_IPREFS_IMPORT_ASSISTANT_URI			"import-assistant-lfu"
 #define NA_IPREFS_IMPORT_MODE_KEEP_LAST_CHOICE	"import-mode-keep-last-choice"
 #define NA_IPREFS_IMPORT_PREFERRED_MODE			"import-preferred-mode"
-#define NA_IPREFS_ICON_CHOOSER_URI				"item-icon-chooser-last-file-uri"
+#define NA_IPREFS_ICON_CHOOSER_URI				"item-icon-chooser-lfu"
 #define NA_IPREFS_ICON_CHOOSER_PANED			"item-icon-chooser-paned-width"
 #define NA_IPREFS_ICON_CHOOSER_WSP				"item-icon-chooser-wsp"
 #define NA_IPREFS_IO_PROVIDERS_WRITE_ORDER		"io-providers-write-order"

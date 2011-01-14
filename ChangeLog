@@ -29,6 +29,11 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+	* src/nact/nact-icon-chooser.c
+	(fillup_icons_by_path, on_path_selection_changed): Store last folder uri.
+
+	* src/core/na-settings.h: Preference renamed accordingly.
+
 	* README-GCONF:
 	* src/core/na-settings.h:
 	* src/utils/na-gconf2key.sh.in:

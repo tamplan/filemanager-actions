@@ -539,7 +539,7 @@ fillup_icons_by_path( NactIconChooser *editor )
 
 	uri = na_settings_get_string( settings, NA_IPREFS_ICON_CHOOSER_URI, NULL, NULL );
 	if( uri ){
-		gtk_file_chooser_set_uri( file_chooser, uri );
+		gtk_file_chooser_set_current_folder_uri( file_chooser, uri );
 		g_free( uri );
 	} else if( editor->private->current_icon ){
 		gtk_file_chooser_set_filename( file_chooser, editor->private->current_icon );
@@ -840,7 +840,7 @@ on_path_selection_changed( GtkFileChooser *file_chooser, NactIconChooser *editor
 	NAUpdater *updater;
 	NASettings *settings;
 
-	uri = gtk_file_chooser_get_uri( file_chooser );
+	uri = gtk_file_chooser_get_current_folder_uri( file_chooser );
 	if( uri ){
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 		updater = nact_application_get_updater( application );
