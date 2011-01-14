@@ -59,7 +59,7 @@ DOC_INCLUDES =
 
 DOC_FIGURES = $(patsubst C/%,%,$(shell \ls -1 C/figures/*))
 
-DOC_LINGUAS = de es sl
+DOC_LINGUAS = de es fr sl
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
