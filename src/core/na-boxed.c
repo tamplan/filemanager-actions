@@ -71,6 +71,7 @@ typedef struct {
 }
 	BoxedDef;
 
+static NABoxed        *boxed_new( void );
 static const BoxedDef *get_boxed_def( guint type );
 static const gchar    *get_type_label( guint type );
 
@@ -185,6 +186,16 @@ static BoxedDef st_boxed_def[] = {
 		{ 0 }
 };
 
+static NABoxed *
+boxed_new( void )
+{
+	NABoxed *boxed = g_new0( NABoxed, 1 );
+
+	g_debug( "na_boxed_new: boxed=%p", ( void * ) boxed );
+
+	return( boxed );
+}
+
 static const BoxedDef *
 get_boxed_def( guint type )
 {
@@ -296,7 +307,7 @@ na_boxed_copy( const NABoxed *boxed )
 	def = get_boxed_def( boxed->type );
 	if( def ){
 		if( def->copy ){
-			dest = g_new0( NABoxed, 1 );
+			dest = boxed_new();
 			dest->type = boxed->type;
 			dest->is_set = FALSE;
 			if( boxed->is_set ){
@@ -332,6 +343,7 @@ na_boxed_free( NABoxed *boxed )
 	if( def ){
 		if( def->free ){
 			( *def->free )( boxed );
+			g_debug( "na_boxed_free: boxed=%p", ( void * ) boxed );
 			g_free( boxed );
 		} else {
 			g_warning( "%s: unable to free the content: '%s' type does not provide 'free' function",
@@ -364,7 +376,7 @@ na_boxed_new_from_string( guint type, const gchar *string )
 	def = get_boxed_def( type );
 	if( def ){
 		if( def->from_string ){
-			boxed = g_new0( NABoxed, 1 );
+			boxed = boxed_new();
 			boxed->type = type;
 			( *def->from_string )( boxed, string );
 		} else {
@@ -404,7 +416,7 @@ na_boxed_new_from_string_with_sep( guint type, const gchar *string, const gchar 
 	def = get_boxed_def( type );
 	if( def ){
 		if( def->from_array ){
-			boxed = g_new0( NABoxed, 1 );
+			boxed = boxed_new();
 			boxed->type = type;
 			array = string ? g_strsplit( string, sep, -1 ) : NULL;
 			( *def->from_array )( boxed, ( const gchar ** ) array );

@@ -29,6 +29,10 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+	* src/core/na-boxed.c (boxed_new, na_boxed_copy, na_boxed_new_from_string,
+	na_boxed_new_from_string_with_sep, na_boxed_free):
+	Add debug messages when allocating/freeing a NABoxed structure.
+
 	* src/nact/nact-icommand-tab.c (on_wdir_browse):
 	Remove no more used default value.
 
