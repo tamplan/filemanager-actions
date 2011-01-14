@@ -37,7 +37,6 @@
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
-#include "nact-iprefs.h"
 #include "nact-export-format.h"
 #include "nact-schemes-list.h"
 #include "nact-providers-list.h"
@@ -419,7 +418,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 
 	/* fourth tab: export tool
 	 */
-	export_format = nact_iprefs_get_export_format( BASE_WINDOW( editor ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
+	export_format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
 	container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 	nact_export_format_select( container, export_format );
 
@@ -644,8 +643,8 @@ save_preferences( NactPreferencesEditor *editor )
 	 */
 	container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 	export_format = nact_export_format_get_selected( container );
-	nact_iprefs_set_export_format(
-			BASE_WINDOW( editor ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( export_format ));
+	na_iprefs_set_export_format(
+			NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( export_format ));
 
 	/* fifth tab: list of default schemes
 	 */

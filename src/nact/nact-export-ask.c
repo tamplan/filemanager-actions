@@ -37,9 +37,9 @@
 #include <api/na-object-api.h>
 
 #include <core/na-exporter.h>
+#include <core/na-iprefs.h>
 
 #include "nact-application.h"
-#include "nact-iprefs.h"
 #include "nact-export-format.h"
 #include "nact-export-ask.h"
 
@@ -244,26 +244,29 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item )
 {
 	static const gchar *thisfn = "nact_export_ask_run";
 	NactExportAsk *editor;
-	GQuark format;
+	NactApplication *application;
+	NAUpdater *updater;
+
+	GQuark format = ( GQuark ) IPREFS_EXPORT_NO_EXPORT;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( parent ), format );
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 
-	format = ( GQuark ) IPREFS_EXPORT_NO_EXPORT;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( parent ), format );
+	application = NACT_APPLICATION( base_window_get_application( parent ));
+	updater = nact_application_get_updater( application );
 
 	editor = export_ask_new( parent );
 
 	editor->private->parent = parent;
 	editor->private->item = item;
-	editor->private->format = nact_iprefs_get_export_format( BASE_WINDOW( parent ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT );
+	editor->private->format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT );
 
 	if( base_window_run( BASE_WINDOW( editor ))){
 
 		if( editor->private->format ){
-
 			format = editor->private->format;
-			nact_iprefs_set_export_format( BASE_WINDOW( parent ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format );
+			na_iprefs_set_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format );
 		}
 	}
 
@@ -384,15 +387,20 @@ get_export_format( NactExportAsk *editor )
 	GQuark format_quark;
 	GtkWidget *button;
 	gboolean keep;
+	NactApplication *application;
+	NAUpdater *updater;
 
 	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
 	format = nact_export_format_get_selected( container );
 	format_quark = na_export_format_get_quark( format );
 
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+	updater = nact_application_get_updater( application );
+
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	if( keep ){
-		nact_iprefs_set_export_format( BASE_WINDOW( editor ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, format_quark );
+		na_iprefs_set_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, format_quark );
 	}
 
 	return( format_quark );

@@ -164,6 +164,52 @@ na_iprefs_set_order_mode( const NAPivot *pivot, guint mode )
 	na_settings_set_string( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, order_str );
 }
 
+/**
+ * na_iprefs_get_export_format:
+ * @pivot: the #NAPivot application object.
+ * @name: name of the export format key to be readen
+ *
+ * Used to default to export as a GConfEntry.
+ * Starting with 3.1.0, defaults to Desktop1 (see. core/na-settings.h)
+ *
+ * Returns: the export format currently set as a #GQuark.
+ */
+GQuark
+na_iprefs_get_export_format( const NAPivot *pivot, const gchar *name )
+{
+	GQuark export_format;
+	NASettings *settings;
+	gchar *format_str;
+
+	export_format = g_quark_from_static_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
+
+	settings = na_pivot_get_settings( pivot );
+	format_str = na_settings_get_string( settings, name, NULL, NULL );
+
+	if( format_str ){
+		export_format = g_quark_from_string( format_str );
+		g_free( format_str );
+	}
+
+	return( export_format );
+}
+
+/**
+ * na_iprefs_set_export_format:
+ * @pivot: the #NAPivot application object.
+ * @format: the new value to be written.
+ *
+ * Writes the preferred export format' to the preference system.
+ */
+void
+na_iprefs_set_export_format( const NAPivot *pivot, const gchar *name, GQuark format )
+{
+	NASettings *settings;
+
+	settings = na_pivot_get_settings( pivot );
+	na_settings_set_string( settings, name, g_quark_to_string( format ));
+}
+
 /*
  * na_iprefs_get_io_providers:
  * @pivot: the #NAPivot application object.

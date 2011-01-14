@@ -39,7 +39,6 @@
 #include <core/na-updater.h>
 
 #include "base-iprefs.h"
-#include "nact-iprefs.h"
 #include "nact-gtk-utils.h"
 #include "nact-application.h"
 

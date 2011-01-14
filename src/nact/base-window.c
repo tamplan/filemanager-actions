@@ -39,7 +39,6 @@
 
 #include "base-application.h"
 #include "base-iprefs.h"
-#include "nact-iprefs.h"
 #include "base-window.h"
 
 /* private class data
@@ -101,7 +100,6 @@ static gboolean      st_debug_signal_connect = FALSE;
 static GType            register_type( void );
 static void             class_init( BaseWindowClass *klass );
 static void             iprefs_base_iface_init( BaseIPrefsInterface *iface );
-static void             iprefs_nact_iface_init( NactIPrefsInterface *iface );
 static void             instance_init( GTypeInstance *instance, gpointer klass );
 static void             instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void             instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -173,19 +171,11 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo iprefs_nact_iface_info = {
-		( GInterfaceInitFunc ) iprefs_nact_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "BaseWindow", &info, 0 );
 
 	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &iprefs_base_iface_info );
-
-	g_type_add_interface_static( type, NACT_IPREFS_TYPE, &iprefs_nact_iface_info );
 
 	return( type );
 }
@@ -346,14 +336,6 @@ iprefs_base_iface_init( BaseIPrefsInterface *iface )
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
 	iface->iprefs_get_window_id = v_get_iprefs_window_id;
-}
-
-static void
-iprefs_nact_iface_init( NactIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "base_window_iprefs_nact_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 }
 
 static void

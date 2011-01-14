@@ -46,7 +46,6 @@
 #include "nact-application.h"
 #include "nact-clipboard.h"
 #include "nact-iactions-list.h"
-#include "nact-iprefs.h"
 #include "nact-main-menubar-edit.h"
 #include "nact-main-statusbar.h"
 #include "nact-main-window.h"

@@ -29,6 +29,29 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h
+	(na_iprefs_get_export_format, na_iprefs_set_export_format):
+	Functions moved from src/nact/nact-iprefs.c.
+
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h: Removed files.
+
+	* src/nact/Makefile.am:
+	* src/nact/base-window.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-export-format.c:
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-main-toolbar.c:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-tree-model-dnd.c: Updated accordingly.
+
 	* src/nact/nact-iprefs.c:
 	* src/nact/nact-iprefs.h (nact_iprefs_write_bool, nact_iprefs_write_uint,
 	nact_iprefs_write_string): Remove deprecated functions.

@@ -114,8 +114,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-icommand-tab.h									\
 	nact-imimetypes-tab.c								\
 	nact-imimetypes-tab.h								\
-	nact-iprefs.c										\
-	nact-iprefs.h										\
 	nact-iproperties-tab.c								\
 	nact-iproperties-tab.h								\
 	nact-ischemes-tab.c									\

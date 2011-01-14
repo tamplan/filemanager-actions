@@ -37,7 +37,6 @@
 #include <core/na-exporter.h>
 #include <core/na-export-format.h>
 
-#include "nact-iprefs.h"
 #include "nact-export-format.h"
 
 #define EXPORT_FORMAT_PROP_OBJECT		"nact-export-format-prop-object"

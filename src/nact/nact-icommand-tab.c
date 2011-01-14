@@ -47,7 +47,6 @@
 #include "nact-application.h"
 #include "nact-main-statusbar.h"
 #include "nact-gtk-utils.h"
-#include "nact-iprefs.h"
 #include "nact-iactions-list.h"
 #include "nact-main-tab.h"
 #include "nact-icommand-tab.h"

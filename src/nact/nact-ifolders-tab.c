@@ -43,7 +43,6 @@
 #include "base-iprefs.h"
 #include "base-window.h"
 #include "nact-gtk-utils.h"
-#include "nact-iprefs.h"
 #include "nact-application.h"
 #include "nact-main-tab.h"
 #include "nact-match-list.h"

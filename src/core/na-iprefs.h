@@ -31,41 +31,9 @@
 #ifndef __CORE_NA_IPREFS_H__
 #define __CORE_NA_IPREFS_H__
 
-/* @title: NAIPrefs
- * @short_description: The #NAIPrefs Interface Definition
- * @include: core/na-iprefs.h
+/*
+ * Starting with 3.1.0, NAIPrefs interface is deprecated.
  *
- * This interface should only be implemented by #NAPivot. This is
- * because the interface stores as an implementor structure some data
- * which are only relevant for one client (e.g. GConfClient).
- *
- * Though all modules may use the public functions na_iprefs_xxx(),
- * only #NAPivot will receive update notifications, taking itself care
- * of proxying them to its identified #NAIPivotConsumers.
- *
- * Displaying the actions.
- *
- * - actions in alphabetical order:
- *
- *   Nautilus-Actions used to display the actions in alphabetical order.
- *   Starting with 1.12.x, Nautilus-Actions lets the user rearrange
- *   himself the order of its actions.
- *
- *   This option may have three values :
- *   - ascending alphabetical order (historical behavior, and default),
- *   - descending alphabetical order,
- *   - manual ordering.
- *
- * - adding a 'About Nautilus-Actions' item at end of actions: yes/no
- *
- *   When checked, an 'About Nautilus-Actions' is displayed as the last
- *   item of the root submenu of Nautilus-Actions actions.
- *
- *   It the user didn't have defined a root submenu, whether in the NACT
- *   user interface or by choosing the ad-hoc preference, the plugin
- *   doesn't provides one, and the 'About' item will not be displayed.
- *
- * Starting with 3.1.0, NAIPrefs interface is deprecated in this form.
  * Instead, this module is used as an intermediate level between actual
  * settings and the application; it so implements all maps needed to
  * transform an enum used in the code to and from a string stored in
@@ -89,6 +57,9 @@ void     na_iprefs_set_import_mode       ( const NAPivot *pivot, const gchar *pr
 
 guint    na_iprefs_get_order_mode        ( const NAPivot *pivot );
 void     na_iprefs_set_order_mode        ( const NAPivot *pivot, guint mode );
+
+GQuark   na_iprefs_get_export_format     ( const NAPivot *pivot, const gchar *pref );
+void     na_iprefs_set_export_format     ( const NAPivot *pivot, const gchar *pref, GQuark format );
 
 GSList  *na_iprefs_get_io_providers      ( const NAPivot * );
 

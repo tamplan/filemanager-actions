@@ -44,7 +44,6 @@
 
 #include "base-iprefs.h"
 #include "nact-application.h"
-#include "nact-iprefs.h"
 #include "nact-main-window.h"
 #include "nact-assistant-export.h"
 #include "nact-export-ask.h"
@@ -609,8 +608,13 @@ assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant
 	GtkWidget *content;
 	GtkWidget *container;
 	GQuark format;
+	NactApplication *application;
+	NAUpdater *updater;
 
-	format = nact_iprefs_get_export_format( BASE_WINDOW( window ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
+
 	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
 	nact_export_format_select( container, format );
 
@@ -683,9 +687,14 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	GList *items, *it;
 	NAExportFormat *format;
 	GtkLabel *confirm_label;
+	NactApplication *application;
+	NAUpdater *updater;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
 
 	/* i18n: this is the title of the confirm page of the export assistant */
 	text = g_string_new( "" );
@@ -710,7 +719,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	format = get_export_format( window );
 	label11 = na_export_format_get_label( format );
 	label21 = na_export_format_get_description( format );
-	nact_iprefs_set_export_format( BASE_WINDOW( window ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( format ));
+	na_iprefs_set_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( format ));
 	label12 = na_core_utils_str_remove_char( label11, "_" );
 	label22 = na_core_utils_str_add_prefix( "\t", label21 );
 	g_string_append_printf( text, "\n\n<b>%s</b>\n\n%s", label12, label22 );
@@ -757,7 +766,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 		str->item = NA_OBJECT_ITEM( na_object_get_origin( NA_IDUPLICABLE( ia->data )));
 
-		str->format = nact_iprefs_get_export_format( BASE_WINDOW( wnd ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
+		str->format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
 
 		if( str->format == IPREFS_EXPORT_FORMAT_ASK ){
 			str->format = nact_export_ask_user( BASE_WINDOW( wnd ), str->item );

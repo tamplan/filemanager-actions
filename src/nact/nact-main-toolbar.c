@@ -35,7 +35,6 @@
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
-#include "nact-iprefs.h"
 #include "nact-main-toolbar.h"
 
 typedef struct {

@@ -42,7 +42,6 @@
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
-#include "nact-iprefs.h"
 #include "nact-iactions-list.h"
 #include "nact-assistant-import.h"
 #include "nact-main-window.h"
