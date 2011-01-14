@@ -29,6 +29,9 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+	* src/nact/nact-icommand-tab.c (on_wdir_browse):
+	Remove no more used default value.
+
 	* src/nact/nact-icon-chooser.c
 	(fillup_icons_by_path, on_path_selection_changed): Store last folder uri.
 

@@ -587,7 +587,6 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 {
 	GtkWidget *wdir_entry;
 	NAObjectProfile *profile;
-	gchar *default_value;
 
 	g_object_get(
 			G_OBJECT( instance ),
@@ -595,15 +594,10 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 			NULL );
 
 	if( profile ){
-		default_value = na_factory_object_get_default( NA_IFACTORY_OBJECT( profile ), NAFO_DATA_WORKING_DIR );
 		wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
-
 		nact_gtk_utils_select_dir(
-				BASE_WINDOW( instance ),
-				_( "Choosing a working directory" ), NA_IPREFS_WORKING_DIR_WSP,
-				wdir_entry, NA_IPREFS_WORKING_DIR_URI );
-
-		g_free( default_value );
+				BASE_WINDOW( instance ), _( "Choosing a working directory" ),
+				NA_IPREFS_WORKING_DIR_WSP, wdir_entry, NA_IPREFS_WORKING_DIR_URI );
 	}
 }
 
