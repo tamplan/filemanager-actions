@@ -241,16 +241,17 @@ na_iprefs_get_io_providers( const NAPivot *pivot )
 	settings = na_pivot_get_settings( pivot );
 
 	write_order = na_settings_get_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
-	for( it = write_order ; it ; it = it->data ){
+	for( it = write_order ; it ; it = it->next ){
 		name = ( const gchar * ) it->data;
 		providers = g_slist_prepend( providers, g_strdup( name ));
 	}
 	na_core_utils_slist_free( write_order );
 
 	groups = na_settings_get_groups( settings );
+
 	group_prefix = g_strdup_printf( "%s ", NA_IPREFS_IO_PROVIDER_GROUP );
 	prefix_len = strlen( group_prefix );
-	for( it = groups ; it ; it = it->data ){
+	for( it = groups ; it ; it = it->next ){
 		name = ( const gchar * ) it->data;
 		if( g_str_has_prefix( name, group_prefix )){
 			providers = g_slist_prepend( providers, g_strdup( name+prefix_len ));

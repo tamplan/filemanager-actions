@@ -710,19 +710,25 @@ string_list_from_string( NABoxed *boxed, const gchar *string )
 	boxed->is_set = TRUE;
 }
 
+/* do not allocate an empty string for the last element
+ */
 static void
 string_list_from_array( NABoxed *boxed, const gchar **array )
 {
-	gchar **i;
+	gchar **i, **next;
 
 	if( boxed->is_set ){
 		string_list_free( boxed );
 	}
 	if( array ){
 		i = ( gchar ** ) array;
+		next = i+1;
 		while( *i ){
-			boxed->u.string_list = g_slist_prepend( boxed->u.string_list, g_strdup( *i ));
+			if( *next ){
+				boxed->u.string_list = g_slist_prepend( boxed->u.string_list, g_strdup( *i ));
+			}
 			i++;
+			next++;
 		}
 		boxed->u.string_list = g_slist_reverse( boxed->u.string_list );
 	} else {
@@ -892,19 +898,25 @@ uint_list_from_string( NABoxed *boxed, const gchar *string )
 	boxed->is_set = TRUE;
 }
 
+/* do not allocate an null integer for the last element
+ */
 static void
 uint_list_from_array( NABoxed *boxed, const gchar **array )
 {
-	gchar **i;
+	gchar **i, **next;
 
 	if( boxed->is_set ){
 		uint_list_free( boxed );
 	}
 	if( array ){
 		i = ( gchar ** ) array;
+		next = i+1;
 		while( *i ){
-			boxed->u.uint_list = g_list_prepend( boxed->u.uint_list, GINT_TO_POINTER( atoi( *i )));
+			if( *next ){
+				boxed->u.uint_list = g_list_prepend( boxed->u.uint_list, GINT_TO_POINTER( atoi( *i )));
+			}
 			i++;
+			next++;
 		}
 		boxed->u.uint_list = g_list_reverse( boxed->u.uint_list );
 	} else {

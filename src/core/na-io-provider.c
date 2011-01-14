@@ -938,7 +938,7 @@ load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **m
 	providers = na_io_provider_get_io_providers_list( pivot );
 
 	for( ip = providers ; ip ; ip = ip->next ){
-		provider_object = NA_IO_PROVIDER( it->data );
+		provider_object = NA_IO_PROVIDER( ip->data );
 		provider_module = provider_object->private->provider;
 
 		if( provider_module &&
@@ -960,7 +960,7 @@ load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **m
 }
 
 /*
- * recursively builds the hierarchy
+ * builds the hierarchy
  *
  * this is a recursive function which _moves_ items from input 'tree' to
  * output list.

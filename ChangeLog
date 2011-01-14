@@ -29,6 +29,13 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+	* src/core/na-boxed.c (string_list_from_array, uint_list_from_array):
+	Do not allocate the empty last element.
+
+	* src/core/na-io-provider.c (load_items_get_merged_list):
+	* src/core/na-iprefs.c (na_iprefs_get_io_providers):
+	Use the correct list pointer.
+
 	* src/core/na-iprefs.c:
 	* src/core/na-iprefs.h
 	(na_iprefs_get_export_format, na_iprefs_set_export_format):
