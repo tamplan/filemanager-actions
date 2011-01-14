@@ -11,6 +11,7 @@ for d in $(find . -maxdepth 1 -type d -name 'nautilus-actions-*'); do
 done
 
 [ "${autogen_target}" = "normal" ] &&
+	export CFLAGS="-g -O0" &&
 	exec ./autogen.sh \
 		--prefix=$(pwd)/install \
 		--sysconfdir=/etc \
