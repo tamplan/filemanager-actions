@@ -868,10 +868,9 @@ msgstr ""
 "La partie droite de la fenêtre principale affiche tout ce qui est nécessaire "
 "pour définir comment, quand et où actions et menus sont affichés."
 
-# BUG : Bruno Seulement Action
 #: C/nautilus-actions-config-tool.xml:278(term)
 msgid "Action/Menu"
-msgstr "Action"
+msgstr "Action/Menu"
 
 #: C/nautilus-actions-config-tool.xml:282(para)
 msgid ""
@@ -2542,7 +2541,7 @@ msgid ""
 "outputs a <literal>true</literal> string on its standard output."
 msgstr ""
 "Vous pouvez définir que l'action n'apparaît que si une commande "
-"donnée renvoie la chaîne <literal>TRUE</literal> sur la sortie standard."
+"donnée renvoie la chaîne <literal>true</literal> sur la sortie standard."
 
 #: C/nautilus-actions-config-tool.xml:948(para)
 msgid ""
@@ -2551,7 +2550,7 @@ msgid ""
 "stdout when it is ran."
 msgstr ""
 "Ceci permet de définir un filtre personnalisé en écrivant un petit script "
-"qui émet, ou n'émet pas, la chaîne <literal>TRUE</literal> sur la sortie "
+"qui émet, ou n'émet pas, la chaîne <literal>true</literal> sur la sortie "
 "standard quand il est lancé."
 
 #: C/nautilus-actions-config-tool.xml:953(para)
