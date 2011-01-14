@@ -36,6 +36,7 @@
 #include <glib-object.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
+#include <locale.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -93,6 +94,7 @@ main( int argc, char** argv )
 	gint errors;
 
 	g_type_init();
+	setlocale( LC_ALL, "" );
 	console_init_log_handler();
 
 	context = init_options();
@@ -158,6 +160,7 @@ init_options( void )
 	GOptionGroup *misc_group;
 
 	context = g_option_context_new( _( "Delete a XPath from a XML document." ));
+	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 
 #ifdef ENABLE_NLS
 	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
@@ -177,6 +180,7 @@ init_options( void )
 	misc_group = g_option_group_new(
 			"misc", _( "Miscellaneous options" ), _( "Miscellaneous options" ), NULL, NULL );
 	g_option_group_add_entries( misc_group, misc_entries );
+	g_option_group_set_translation_domain( misc_group, GETTEXT_PACKAGE );
 	g_option_context_add_group( context, misc_group );
 
 	return( context );

@@ -25,6 +25,9 @@
 
 2011-01-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/na-delete-xmltree.c:
+	* src/utils/nautilus-actions-print.c: Add localization code.
+
 	* src/utils/nautilus-actions-new.c:
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
