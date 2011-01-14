@@ -36,6 +36,8 @@
 
 #include <api/na-core-utils.h>
 
+#include <core/na-settings.h>
+
 #include "nact-schemes-list.h"
 #include "nact-add-scheme-dialog.h"
 
@@ -273,7 +275,7 @@ nact_add_scheme_dialog_run( BaseWindow *parent, GSList *schemes )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "scheme-add-scheme-wsp" ));
+	return( g_strdup( NA_IPREFS_SCHEME_ADD_SCHEME_WSP ));
 }
 
 static gchar *

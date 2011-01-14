@@ -592,15 +592,18 @@ if [ $(id -u) -eq 0 ]; then
 		if [ "${bdir}" != "na-gconf" ]; then
 			value=$(gconftool-2 --get ${dir}/locked 2>/dev/null)
 			if [ "${value}" != "" ]; then
-				[ "${bdir}" = "all" ] && group="nact" || group="io-provider ${bdir}"
-				[ "${bdir}" = "all" ] && key="io-providers-all-locked" || key="locked"
-				add_pref_provider "${group}" "${key}" "${value}"
+				if [ "${bdir}" = "all" ]; then
+					add_pref "runtime" "preferences-locked" str "${value}"
+					add_pref "runtime" "io-providers-locked" str "${value}"
+				elif [ "${value}" = "true" ]; then
+					add_pref_provider "io-provider ${bdir}" "readable" "false"
+					add_pref_provider "io-provider ${bdir}" "writable" "false"
+				fi
 			fi
 		fi
 	done
 	# as a security - while we are root -, we force the GConf i/o provider to be locked
 	cat <<! >${my_tmproot}.io-provider_na-gconf
-locked = true
 readable = false
 writable = false
 !

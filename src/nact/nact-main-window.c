@@ -136,9 +136,6 @@ enum {
 	LAST_SIGNAL
 };
 
-#define IPREFS_MAIN_WSP					"main-window-wsp"
-#define IPREFS_MAIN_PANED				"main-paned-width"
-
 static NactWindowClass *st_parent_class = NULL;
 static gint             st_signals[ LAST_SIGNAL ] = { 0 };
 
@@ -763,7 +760,7 @@ instance_dispose( GObject *window )
 
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
-		base_iprefs_set_int( BASE_WINDOW( window ), IPREFS_MAIN_PANED, pos );
+		base_iprefs_set_int( BASE_WINDOW( window ), NA_IPREFS_MAIN_PANED, pos );
 
 		for( it = self->private->deleted ; it ; it = it->next ){
 			g_debug( "nact_main_window_instance_dispose: deleted=%p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
@@ -1089,7 +1086,7 @@ base_get_toplevel_name( const BaseWindow *window )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( IPREFS_MAIN_WSP ));
+	return( g_strdup( NA_IPREFS_MAIN_WINDOW_WSP ));
 }
 
 static gboolean
@@ -1126,7 +1123,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 
 	if( !window->private->dispose_has_run ){
 
-		pos = base_iprefs_get_int( BASE_WINDOW( window ), IPREFS_MAIN_PANED );
+		pos = base_iprefs_get_int( BASE_WINDOW( window ), NA_IPREFS_MAIN_PANED );
 		if( pos ){
 			pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 			gtk_paned_set_position( GTK_PANED( pane ), pos );
@@ -1191,7 +1188,7 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 
 		nact_main_menubar_runtime_init( window );
 
-		order_mode = na_iprefs_get_order_mode( NA_IPREFS( updater ));
+		order_mode = na_iprefs_get_order_mode( NA_PIVOT( updater ));
 		ipivot_consumer_on_display_order_changed( NA_IPIVOT_CONSUMER( window ), order_mode );
 
 		/* fill the IActionsList at last so that all signals are connected
@@ -1493,11 +1490,14 @@ install_autosave( NactMainWindow *window )
 	guint autosave_period;
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
-	autosave_on = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_AUTOSAVE_ON, FALSE );
-	autosave_period = na_iprefs_read_uint( NA_IPREFS( updater ), IPREFS_AUTOSAVE_PERIOD, 5 );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	autosave_on = na_settings_get_boolean( settings, NA_IPREFS_MAIN_SAVE_AUTO, NULL, NULL );
+	autosave_period = na_settings_get_uint( settings, NA_IPREFS_MAIN_SAVE_PERIOD, NULL, NULL );
 
 	nact_main_menubar_file_set_autosave( window, autosave_on, autosave_period );
 }

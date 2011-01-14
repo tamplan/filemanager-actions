@@ -45,18 +45,25 @@
  * <itemizedlist>
  *  <listitem>
  *   <para>
- *    load all items at startup;
+ *    load items;
  *   </para>
  *  </listitem>
  *  <listitem>
  *   <para>
- *    create, update or delete items via the management user interface;
+ *    create, update or delete items;
  *   </para>
  *  </listitem>
  *  <listitem>
  *   <para>
  *    inform &prodname; when an item has been modified on the
  *    underlying storage subsystem.
+ *   </para>
+ *   <para>
+ *    The #NAIIOProvider interface does not define specific monitoring
+ *    methods. Instead, it is waited that the I/O provider module
+ *    automatically takes care of starting/stopping its own monitoring
+ *    at load/unload time, calling the na_iio_provider_item_changed()
+ *    function when appropriate.
  *   </para>
  *  </listitem>
  * </itemizedlist>

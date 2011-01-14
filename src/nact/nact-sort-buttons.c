@@ -213,7 +213,7 @@ enable_buttons( NactMainWindow *window )
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
-	writable = na_pivot_is_level_zero_writable( NA_PIVOT( updater ));
+	writable = na_iprefs_is_level_zero_writable( NA_PIVOT( updater ));
 
 	i = 0;
 	while( st_toggle_group[i].btn_name ){
@@ -260,7 +260,8 @@ set_new_sort_order( NactMainWindow *window, guint order_mode )
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
-		na_iprefs_set_order_mode( NA_IPREFS( updater ), order_mode );
+
+		na_iprefs_set_order_mode( NA_PIVOT( updater ), order_mode );
 	}
 }
 

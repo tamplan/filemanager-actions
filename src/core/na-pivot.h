@@ -53,7 +53,11 @@
  * This notification system is so a double-stage one :
  *
  * 1. When an I/O storage subsystem detects a change on an action, it
- *    should emit the "na-iio-provider-notify-pivot" signal to
+ *    should call the na_iio_provider_item_changed() function, which
+ *    itself will emit the "io-provider-item-changed" signal.
+ *
+ *    All these signals are catched by na_pivot_on_item_changed_handler()
+ *
  *    notify #NAPivot of this change. The user data associated with the
  *    message is the internal id of the #NAObjectItem-derived modified
  *    object.
@@ -112,23 +116,34 @@ GType    na_pivot_get_type( void );
 
 /* properties
  */
-#define NAPIVOT_PROP_TREE						"na-pivot-prop-tree"
+#define PIVOT_PROP_TREE							"pivot-prop-tree"
+
+/* signals
+ *
+ * NAPivot acts as a 'sumarrizing' proxy for signals emitted by the NAIIOProvider
+ * providers when they detect a modification of their underlying items storage
+ * subsystems.
+ * As several to many signals may be emitted when such a modification occurs,
+ * NAPivot summarizes all these signals in an only one 'items-changed' event.
+ */
+#define PIVOT_SIGNAL_ITEMS_CHANGED				"pivot-items-changed"
 
 /* Loadable population
  * NACT management user interface defaults to PIVOT_LOAD_ALL
  * N-A plugin set the loadable population to !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID
  */
-enum {
+typedef enum {
 	PIVOT_LOAD_NONE     = 0,
 	PIVOT_LOAD_DISABLED = 1 << 0,
 	PIVOT_LOAD_INVALID  = 1 << 1,
 	PIVOT_LOAD_ALL      = 0xff
-};
+}
+	NAPivotLoadableSet;
 
 NAPivot      *na_pivot_new ( void );
 void          na_pivot_dump( const NAPivot *pivot );
 
-/* Management of the NAIxxxxProvider interfaces
+/* Management of the plugins which claim to implement a Nautilus-Actions interface.
  * As of 2.30, these are NAIIOProvider, NAIImporter, NAIExporter
  */
 GList        *na_pivot_get_providers ( const NAPivot *pivot, GType type );
@@ -141,9 +156,7 @@ GList        *na_pivot_get_items    ( const NAPivot *pivot );
 void          na_pivot_load_items   ( NAPivot *pivot );
 void          na_pivot_set_new_items( NAPivot *pivot, GList *tree );
 
-void          na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  );
-
-gboolean      na_pivot_write_level_zero( const NAPivot *pivot, GList *items, GSList **messages );
+void          na_pivot_on_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  );
 
 /* NAIPivotConsumer interface management
  * to be deprecated
@@ -152,25 +165,15 @@ void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer
 
 /*
  * Monitoring and preferences management
- *
- * NAPivot acts as a proxy for signals emitted by the NAIIOProvider providers
- * when they detect a modification of their underlying items storage subsystems.
- * As several to many signals may be emitted when such a modification occurs,
- * NAPivot summarizes all these signals in an only one 'items-changed' event.
  */
-#define PIVOT_SIGNAL_ITEMS_CHANGED				"pivot-items-changed"
 
-NASettings   *na_pivot_get_settings     ( NAPivot *pivot );
+NASettings   *na_pivot_get_settings     ( const NAPivot *pivot );
 
 /* NAPivot properties and configuration
  */
 void          na_pivot_set_automatic_reload            ( NAPivot *pivot, gboolean reload );
-
-gboolean      na_pivot_is_disable_loadable             ( const NAPivot *pivot );
-gboolean      na_pivot_is_invalid_loadable             ( const NAPivot *pivot );
 void          na_pivot_set_loadable                    ( NAPivot *pivot, guint loadable );
 
-gboolean      na_pivot_is_level_zero_writable          ( const NAPivot *pivot );
 gboolean      na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot );
 
 G_END_DECLS

@@ -65,9 +65,11 @@
  *   user interface or by choosing the ad-hoc preference, the plugin
  *   doesn't provides one, and the 'About' item will not be displayed.
  *
- * Starting with 3.1.0, NAIPrefs interface is deprecated.
- * Instead, this file implements all maps needed to transform an enum
- * used in the code to and from a string stored in preferences.
+ * Starting with 3.1.0, NAIPrefs interface is deprecated in this form.
+ * Instead, this module is used as an intermediate level between actual
+ * settings and the application; it so implements all maps needed to
+ * transform an enum used in the code to and from a string stored in
+ * preferences.
  */
 
 #include "na-pivot.h"
@@ -82,11 +84,16 @@ enum {
 	IPREFS_ORDER_MANUAL
 };
 
-guint na_iprefs_get_import_mode( const NAPivot *pivot, const gchar *pref );
-void  na_iprefs_set_import_mode( const NAPivot *pivot, const gchar *pref, guint mode );
+guint    na_iprefs_get_import_mode       ( const NAPivot *pivot, const gchar *pref );
+void     na_iprefs_set_import_mode       ( const NAPivot *pivot, const gchar *pref, guint mode );
 
-guint na_iprefs_get_order_mode ( const NAPivot *pivot );
-void  na_iprefs_set_order_mode ( const NAPivot *pivot, gint mode );
+guint    na_iprefs_get_order_mode        ( const NAPivot *pivot );
+void     na_iprefs_set_order_mode        ( const NAPivot *pivot, guint mode );
+
+GSList  *na_iprefs_get_io_providers      ( const NAPivot * );
+
+gboolean na_iprefs_is_level_zero_writable( const NAPivot *pivot );
+gboolean na_iprefs_write_level_zero      ( const NAPivot *pivot, const GList *items, GSList **messages );
 
 G_END_DECLS
 

@@ -34,6 +34,7 @@
 
 #include <string.h>
 
+#include <api/na-core-utils.h>
 #include <api/na-iimporter.h>
 
 #include "na-iprefs.h"
@@ -129,7 +130,7 @@ na_iprefs_set_import_mode( const NAPivot *pivot, const gchar *pref, guint mode )
  *
  * Returns: the order mode currently set.
  */
-gint
+guint
 na_iprefs_get_order_mode( const NAPivot *pivot )
 {
 	gchar *order_mode_str;
@@ -153,7 +154,7 @@ na_iprefs_get_order_mode( const NAPivot *pivot )
  * preference system.
  */
 void
-na_iprefs_set_order_mode( const NAPivot *pivot, gint mode )
+na_iprefs_set_order_mode( const NAPivot *pivot, guint mode )
 {
 	const gchar *order_str;
 	NASettings *settings;
@@ -161,6 +162,146 @@ na_iprefs_set_order_mode( const NAPivot *pivot, gint mode )
 	settings = na_pivot_get_settings( pivot );
 	order_str = enum_map_string_from_id( st_order_mode, mode );
 	na_settings_set_string( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, order_str );
+}
+
+/*
+ * na_iprefs_get_io_providers:
+ * @pivot: the #NAPivot application object.
+ *
+ * Searches in preferences system for all mentions of an i/o provider.
+ * This does not mean in any way that the i/o provider is active,
+ * available or so, but just that is mentioned here.
+ *
+ * I/o provider identifers returned in the list are not supposed
+ * to be unique, nor sorted.
+ *
+ * Returns: a list of i/o provider identifiers found in preferences
+ * system; this list should be na_core_utils_slist_free() by the caller.
+ *
+ * since: 3.1.0
+ */
+GSList *
+na_iprefs_get_io_providers( const NAPivot *pivot )
+{
+	GSList *providers;
+	NASettings *settings;
+	GSList *write_order, *groups;
+	GSList *it;
+	const gchar *name;
+	gchar *group_prefix;
+	guint prefix_len;
+
+	providers = NULL;
+	settings = na_pivot_get_settings( pivot );
+
+	write_order = na_settings_get_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
+	for( it = write_order ; it ; it = it->data ){
+		name = ( const gchar * ) it->data;
+		providers = g_slist_prepend( providers, g_strdup( name ));
+	}
+	na_core_utils_slist_free( write_order );
+
+	groups = na_settings_get_groups( settings );
+	group_prefix = g_strdup_printf( "%s ", NA_IPREFS_IO_PROVIDER_GROUP );
+	prefix_len = strlen( group_prefix );
+	for( it = groups ; it ; it = it->data ){
+		name = ( const gchar * ) it->data;
+		if( g_str_has_prefix( name, group_prefix )){
+			providers = g_slist_prepend( providers, g_strdup( name+prefix_len ));
+		}
+	}
+	g_free( group_prefix );
+	na_core_utils_slist_free( groups );
+
+	return( providers );
+}
+
+/*
+ * na_iprefs_is_level_zero_writable:
+ * @pivot: the #NAPivot application object.
+ *
+ * The level-zero order may not be writable if:
+ * - all the configuration has been locked down by an admin
+ * - the preferences has been locked down by an admin
+ * - the level-zero order is a mandatory preference
+ * - the user configuration file is not writable.
+ *
+ * All these conditions are subject to runtime modifications. The caller
+ * should not keep the result, but rather re-call this function each time
+ * it needs this status.
+ *
+ * Each condition is also subject to race conditions. So the returned
+ * status may not be more valid when the caller tries to actually write
+ * the level-zero preference.
+ *
+ * Returns: %TRUE if we are able to update the level-zero list of items,
+ * %FALSE else.
+ *
+ * As of 3.1.0, level-zero order is written as a user preference.
+ */
+gboolean
+na_iprefs_is_level_zero_writable( const NAPivot *pivot )
+{
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+
+	if( na_pivot_is_configuration_locked_by_admin( pivot )){
+		return( FALSE );
+	}
+
+	return( TRUE );
+}
+
+/*
+ * na_iprefs_write_level_zero:
+ * @pivot: the #NAPivot application object.
+ * @items: the #GList of items whose first level is to be written.
+ * @messages: a pointer to a #GSList in which we will add happening
+ *  error messages;
+ *  the pointer may be %NULL;
+ *  if not %NULL, the #GSList must have been initialized by the
+ *  caller.
+ *
+ * Rewrite the level-zero items in GConf preferences.
+ *
+ * Returns: %TRUE if successfully written (i.e. writable, not locked,
+ * and so on), %FALSE else.
+ *
+ * @messages #GSList is only filled up in case of an error has occured.
+ * If there is no error (na_iprefs_write_level_zero() returns %TRUE), then
+ * the caller may safely assume that @messages is returned in the same
+ * state that it has been provided.
+ */
+gboolean
+na_iprefs_write_level_zero( const NAPivot *pivot, const GList *items, GSList **messages )
+{
+	static const gchar *thisfn = "na_iprefs_write_level_zero";
+	gboolean written;
+	const GList *it;
+	gchar *id;
+	GSList *content;
+
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+
+	written = FALSE;
+
+	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot);
+
+	if( na_iprefs_is_level_zero_writable( pivot )){
+
+		content = NULL;
+		for( it = items ; it ; it = it->next ){
+			id = na_object_get_id( it->data );
+			content = g_slist_prepend( content, id );
+		}
+		content = g_slist_reverse( content );
+
+		na_settings_set_string_list( na_pivot_get_settings( pivot ), NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, content );
+		written = TRUE;
+
+		na_core_utils_slist_free( content );
+	}
+
+	return( written );
 }
 
 static const gchar *
@@ -183,7 +324,7 @@ enum_map_id_from_string( const EnumMap *map, const gchar *str )
 	const EnumMap *i = map;
 
 	while( i->id ){
-		if( !strcmp( i->str == str )){
+		if( !strcmp( i->str, str )){
 			return( i->id );
 		}
 		i++;

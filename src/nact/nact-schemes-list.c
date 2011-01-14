@@ -240,10 +240,13 @@ init_view_get_default_list( SchemesListData *data )
 	GSList *list = NULL;
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
 
 	application = NACT_APPLICATION( base_window_get_application( data->window ));
 	updater = nact_application_get_updater( application );
-	list = na_iprefs_read_string_list( NA_IPREFS( updater ), "schemes", NULL );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	list = na_settings_get_string_list( settings, NA_IPREFS_SCHEME_DEFAULT_LIST, NULL, NULL );
 
 	if( !list ){
 		list = init_view_get_default_default_list( data );
@@ -468,13 +471,16 @@ nact_schemes_list_save_defaults( BaseWindow *window )
 	GSList *schemes;
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
 
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
 	schemes = get_list_schemes( treeview );
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	na_iprefs_write_string_list( NA_IPREFS( updater ), "schemes", schemes );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	na_settings_set_string_list( settings, NA_IPREFS_SCHEME_DEFAULT_LIST, schemes );
 
 	na_core_utils_slist_free( schemes );
 }

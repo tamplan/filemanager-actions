@@ -48,10 +48,10 @@ typedef struct {
 	ToolbarProps;
 
 static ToolbarProps toolbar_props[] = {
-		{ MAIN_TOOLBAR_FILE_ID , "main-file-toolbar" ,  TRUE, "ViewFileToolbarItem" , "/ui/FileToolbar" },
-		{ MAIN_TOOLBAR_EDIT_ID , "main-edit-toolbar" , FALSE, "ViewEditToolbarItem" , "/ui/EditToolbar" },
-		{ MAIN_TOOLBAR_TOOLS_ID, "main-tools-toolbar", FALSE, "ViewToolsToolbarItem", "/ui/ToolsToolbar" },
-		{ MAIN_TOOLBAR_HELP_ID , "main-help-toolbar" ,  TRUE, "ViewHelpToolbarItem" , "/ui/HelpToolbar" }
+		{ MAIN_TOOLBAR_FILE_ID , NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,   TRUE, "ViewFileToolbarItem" , "/ui/FileToolbar" },
+		{ MAIN_TOOLBAR_EDIT_ID , NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,  FALSE, "ViewEditToolbarItem" , "/ui/EditToolbar" },
+		{ MAIN_TOOLBAR_TOOLS_ID, NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY, FALSE, "ViewToolsToolbarItem", "/ui/ToolsToolbar" },
+		{ MAIN_TOOLBAR_HELP_ID , NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,   TRUE, "ViewHelpToolbarItem" , "/ui/HelpToolbar" }
 };
 
 /* defines the relative position of the main toolbars
@@ -108,7 +108,7 @@ init_toolbar( NactMainWindow *window, GtkActionGroup *group, int toolbar_id )
 	updater = nact_application_get_updater( application );
 	props = get_toolbar_properties( toolbar_id );
 	if( props ){
-		is_active = na_iprefs_read_bool( NA_IPREFS( updater ), props->prefs_key, props->displayed_per_default );
+		is_active = na_settings_get_boolean( na_pivot_get_settings( NA_PIVOT( updater )), props->prefs_key, NULL, NULL );
 		if( is_active ){
 			action = GTK_TOGGLE_ACTION( gtk_action_group_get_action( group, props->ui_item ));
 			gtk_toggle_action_set_active( action, TRUE );

@@ -38,6 +38,8 @@
 
 #include <api/na-core-utils.h>
 
+#include <core/na-settings.h>
+
 #include "nact-add-capability-dialog.h"
 
 /* private class data
@@ -302,7 +304,7 @@ nact_add_capability_dialog_run( BaseWindow *parent, GSList *capabilities )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "capability-add-capability-wsp" ));
+	return( g_strdup( NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP ));
 }
 
 static gchar *

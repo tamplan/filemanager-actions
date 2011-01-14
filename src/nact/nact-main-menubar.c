@@ -544,7 +544,7 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	mis->updater = nact_application_get_updater( application );
-	mis->is_level_zero_writable = na_pivot_is_level_zero_writable( NA_PIVOT( mis->updater ));
+	mis->is_level_zero_writable = na_iprefs_is_level_zero_writable( NA_PIVOT( mis->updater ));
 
 	mis->has_writable_providers = nact_window_has_writable_providers( NACT_WINDOW( window ));
 	g_debug( "%s: has_writable_providers=%s", thisfn, mis->has_writable_providers ? "True":"False" );

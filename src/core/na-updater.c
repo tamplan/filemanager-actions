@@ -205,9 +205,9 @@ na_updater_append_item( NAUpdater *updater, NAObjectItem *item )
 
 	if( !updater->private->dispose_has_run ){
 
-		g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+		g_object_get( G_OBJECT( updater ), PIVOT_PROP_TREE, &tree, NULL );
 		tree = g_list_append( tree, item );
-		g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, tree, NULL );
+		g_object_set( G_OBJECT( updater ), PIVOT_PROP_TREE, tree, NULL );
 	}
 }
 
@@ -232,7 +232,7 @@ na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *par
 	if( !updater->private->dispose_has_run ){
 
 		parent = NULL;
-		g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+		g_object_get( G_OBJECT( updater ), PIVOT_PROP_TREE, &tree, NULL );
 
 		if( parent_id ){
 			parent = na_pivot_get_item( NA_PIVOT( updater ), parent_id );
@@ -243,7 +243,7 @@ na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *par
 
 		} else {
 			tree = g_list_append( tree, item );
-			g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, tree, NULL );
+			g_object_set( G_OBJECT( updater ), PIVOT_PROP_TREE, tree, NULL );
 		}
 	}
 }
@@ -276,9 +276,9 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 			na_object_set_items( parent, tree );
 
 		} else {
-			g_object_get( G_OBJECT( updater ), NAPIVOT_PROP_TREE, &tree, NULL );
+			g_object_get( G_OBJECT( updater ), PIVOT_PROP_TREE, &tree, NULL );
 			tree = g_list_remove( tree, ( gconstpointer ) item );
-			g_object_set( G_OBJECT( updater ), NAPIVOT_PROP_TREE, tree, NULL );
+			g_object_set( G_OBJECT( updater ), PIVOT_PROP_TREE, tree, NULL );
 		}
 	}
 }
@@ -338,12 +338,18 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO;
 					}
-				} else if( na_io_provider_is_locked_by_admin( provider, NA_IPREFS( updater ))){
+				} else if( !na_io_provider_is_able_to_write( provider )){
+					writable = FALSE;
+					if( reason ){
+						/* TODO: found a reason */
+						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO;
+					}
+				/*} else if( na_io_provider_is_locked_by_admin( provider, NA_IPREFS( updater ))){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
-					}
-				} else if( !na_io_provider_is_user_writable( provider, NA_IPREFS( updater ))){
+					}*/
+				} else if( !na_io_provider_is_conf_writable( provider, NA_PIVOT( updater ))){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;
@@ -353,17 +359,17 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN;
 					}
-				} else if( !na_io_provider_has_write_api( provider )){
+				/*} else if( !na_io_provider_has_write_api( provider )){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_NO_API;
-					}
+					}*/
 				}
 
 			/* the get_writable_provider() api already takes above checks
 			 */
 			} else {
-				provider = na_io_provider_get_writable_provider( NA_PIVOT( updater ));
+				provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
 				if( !provider ){
 					writable = FALSE;
 					if( reason ){
@@ -404,7 +410,7 @@ na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **me
 
 		NAIOProvider *provider = na_object_get_provider( item );
 		if( !provider ){
-			provider = na_io_provider_get_writable_provider( NA_PIVOT( updater ));
+			provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
 
 			if( !provider ){
 				ret = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;

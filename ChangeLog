@@ -29,6 +29,56 @@
 	* src/utils/nautilus-actions-run.c:
 	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
 
+	Global renaming of preferences.
+
+	* README-GCONF:
+	* src/api/na-iio-provider.h:
+	* src/core/na-export-format.h:
+	* src/core/na-exporter.h:
+	* src/core/na-importer-ask.h:
+	* src/core/na-importer.c:
+	* src/core/na-io-provider.c:
+	* src/core/na-io-provider.h:
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h:
+	* src/core/na-module.c:
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h:
+	* src/core/na-settings.c:
+	* src/core/na-settings.h:
+	* src/core/na-updater.c:
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-ienvironment-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-iprefs.c:
+	* src/nact/nact-iprefs.h:
+	* src/nact/nact-main-menubar-edit.c:
+	* src/nact/nact-main-menubar-file.c:
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-toolbar.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-providers-list.c:
+	* src/nact/nact-schemes-list.c:
+	* src/nact/nact-sort-buttons.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h:
+	* src/plugin-menu/nautilus-actions.c:
+	* src/utils/na-gconf2key.sh.in:
+	* src/utils/nautilus-actions-new.c: Rename preferences.
+>>>>>>> Globally rename preferences
+
 2011-01-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-settings.c:

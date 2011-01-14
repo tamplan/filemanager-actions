@@ -38,6 +38,7 @@
 #include <api/na-core-utils.h>
 
 #include <core/na-io-provider.h>
+#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-iactions-list.h"
@@ -76,12 +77,17 @@ nact_main_menubar_file_on_update_sensitivities( NactMainWindow *window, gpointer
 	gboolean is_first_parent_writable;
 	gboolean has_modified_items;
 	GList *is;
+	NactApplication *application;
+	NAUpdater *updater;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
 
 	first_parent = mis->selected_items && g_list_length( mis->selected_items )
 			? ( NAObject * ) na_object_get_parent( mis->selected_items->data )
 			: NULL;
 	is_first_parent_writable = first_parent
-			? nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( first_parent ), NULL )
+			? na_updater_is_item_writable( mis->updater, NA_OBJECT_ITEM( first_parent ), NULL )
 			: mis->is_level_zero_writable;
 
 	has_modified_items = nact_main_window_has_modified_items( window );
@@ -129,7 +135,7 @@ nact_main_menubar_file_on_update_sensitivities( NactMainWindow *window, gpointer
 	nact_main_menubar_enable_item( window, "NewProfileItem",
 			new_profile_enabled &&
 			selected_action != NULL &&
-			nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( selected_action ), NULL ));
+			na_updater_is_item_writable( mis->updater, NA_OBJECT_ITEM( selected_action ), NULL ));
 
 	/* save enabled if at least one item has been modified
 	 * or level-zero has been resorted and is writable
@@ -310,7 +316,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	items = nact_iactions_list_bis_get_items( NACT_IACTIONS_LIST( window ));
 	messages = NULL;
 
-	if( !na_pivot_write_level_zero( NA_PIVOT( updater ), items, &messages )){
+	if( !na_iprefs_write_level_zero( NA_PIVOT( updater ), items, &messages )){
 		if( g_slist_length( messages )){
 			msg = na_core_utils_slist_join_at_end( messages, "\n" );
 		} else {

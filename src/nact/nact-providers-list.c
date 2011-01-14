@@ -32,8 +32,6 @@
 #include <config.h>
 #endif
 
-#include <gconf/gconf-client.h>
-#include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 
 #include <api/na-core-utils.h>
@@ -58,13 +56,11 @@ enum {
 	PROVIDER_N_COLUMN
 };
 
-/* some data needed when saving the list sore
+/* some data needed when saving the list store
  */
 typedef struct {
-	GList       *providers;
-	GConfClient *gconf;
-	gchar       *path;
-	GSList      *order;
+	NASettings *settings;
+	GSList     *order;
 }
 	ProvidersListSaveData;
 
@@ -184,7 +180,8 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 	NactApplication *application;
 	NAUpdater *updater;
 	GtkListStore *model;
-	GList *providers, *iter;
+	const GList *providers;
+	const GList *iter;
 	GtkTreeIter row;
 	gchar *id, *libelle;
 
@@ -192,7 +189,7 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	providers = na_io_provider_get_providers_list( NA_PIVOT( updater ));
+	providers = na_io_provider_get_io_providers_list( NA_PIVOT( updater ));
 
 	for( iter = providers ; iter ; iter = iter->next ){
 
@@ -204,7 +201,7 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 		if( !libelle || !g_utf8_strlen( libelle, -1 )){
 
 			g_free( libelle );
-			if( na_io_provider_get_provider( NA_IO_PROVIDER( iter->data ))){
+			if( na_io_provider_is_available( NA_IO_PROVIDER( iter->data ))){
 
 				/* i18n: default name when the I/O providers doesn't provide one */
 				libelle = g_strdup_printf( "<%s: %s>", id, _( "no name" ));
@@ -216,8 +213,8 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 		}
 
 		gtk_list_store_set( model, &row,
-				PROVIDER_READABLE_COLUMN, na_io_provider_is_user_readable_at_startup( NA_IO_PROVIDER( iter->data ), NA_IPREFS( updater )),
-				PROVIDER_WRITABLE_COLUMN, na_io_provider_is_user_writable( NA_IO_PROVIDER( iter->data ), NA_IPREFS( updater )),
+				PROVIDER_READABLE_COLUMN, na_io_provider_is_conf_readable( NA_IO_PROVIDER( iter->data ), NA_PIVOT( updater )),
+				PROVIDER_WRITABLE_COLUMN, na_io_provider_is_conf_writable( NA_IO_PROVIDER( iter->data ), NA_PIVOT( updater )),
 				PROVIDER_LIBELLE_COLUMN, libelle,
 				PROVIDER_ID_COLUMN, id,
 				PROVIDER_PROVIDER_COLUMN, iter->data,
@@ -290,8 +287,7 @@ init_view_select_first_row( GtkTreeView *treeview )
  * nact_providers_list_save:
  * @window: the #BaseWindow which embeds this treeview.
  *
- * Save the I/O provider status as a GConf preference,
- * and update the I/O providers list maintained by #NAIOProvider class.
+ * Save the I/O provider status as a user preference.
  */
 void
 nact_providers_list_save( BaseWindow *window )
@@ -299,21 +295,19 @@ nact_providers_list_save( BaseWindow *window )
 	static const gchar *thisfn = "nact_providers_list_save";
 	NactApplication *application;
 	NAUpdater *updater;
-	GList *providers;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	ProvidersListSaveData *plsd;
+	NASettings *settings;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	providers = na_io_provider_get_providers_list( NA_PIVOT( updater ));
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
 	plsd = g_new0( ProvidersListSaveData, 1 );
-	plsd->providers = providers;
-	plsd->gconf = na_iprefs_get_gconf_client( NA_IPREFS( updater ));
-	plsd->path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
+	plsd->settings = settings;
 	plsd->order = NULL;
 
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
@@ -321,11 +315,9 @@ nact_providers_list_save( BaseWindow *window )
 	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) providers_list_save_iter, plsd );
 
 	plsd->order = g_slist_reverse( plsd->order );
-	na_iprefs_write_string_list( NA_IPREFS( updater ), IO_PROVIDER_KEY_ORDER, plsd->order );
-	na_io_provider_reorder_providers_list( NA_PIVOT( updater ));
+	na_settings_set_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, plsd->order );
 
 	na_core_utils_slist_free( plsd->order );
-	g_free( plsd->path );
 	g_free( plsd );
 }
 
@@ -335,7 +327,7 @@ providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* i
 	gchar *id;
 	gboolean readable, writable;
 	NAIOProvider *provider;
-	gchar *key, *entry;
+	gchar *group;
 
 	gtk_tree_model_get( model, iter,
 			PROVIDER_ID_COLUMN, &id,
@@ -344,21 +336,15 @@ providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* i
 			PROVIDER_PROVIDER_COLUMN, &provider,
 			-1 );
 
-	key = gconf_concat_dir_and_key( plsd->path, id );
-
-	entry = gconf_concat_dir_and_key( key, IO_PROVIDER_KEY_READABLE );
-	na_gconf_utils_write_bool( plsd->gconf, entry, readable, NULL );
-	g_free( entry );
-
-	entry = gconf_concat_dir_and_key( key, IO_PROVIDER_KEY_WRITABLE );
-	na_gconf_utils_write_bool( plsd->gconf, entry, writable, NULL );
-	g_free( entry );
+	group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, id );
+	na_settings_set_boolean_ex( plsd->settings, group, NA_IPREFS_IO_PROVIDER_READABLE, readable );
+	na_settings_set_boolean_ex( plsd->settings, group, NA_IPREFS_IO_PROVIDER_WRITABLE, writable );
+	g_free( group );
 
 	plsd->order = g_slist_prepend( plsd->order, g_strdup( id ));
 
 	g_object_unref( provider );
 	g_free( id );
-	g_free( key );
 
 	return( FALSE ); /* don't stop looping */
 }
@@ -516,7 +502,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	g_object_set( cell, "style-set", FALSE, NULL );
 	g_object_set( cell, "foreground-set", FALSE, NULL );
 
-	if( !na_io_provider_get_provider( provider )){
+	if( !na_io_provider_is_available( provider )){
 
 		g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 		g_object_set( cell, "foreground", "grey", "foreground-set", TRUE, NULL );

@@ -225,7 +225,8 @@ na_module_dump( const NAModule *module )
  * Load availables dynamically loadable extension libraries (plugins).
  *
  * Returns: a #GList of #NAModule, each object representing a dynamically
- * loaded library.
+ * loaded library. The list should be na_module_release_modules() by the
+ * caller after use.
  */
 GList *
 na_module_load_modules( void )

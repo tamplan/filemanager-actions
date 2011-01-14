@@ -35,8 +35,6 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-gconf-monitor.h>
-#include <api/na-gconf-utils.h>
 
 #include "na-io-provider.h"
 #include "na-iprefs.h"
@@ -90,7 +88,7 @@ struct _NAPivotPrivate {
 /* NAPivot properties
  */
 enum {
-	NAPIVOT_PROP_TREE_ID = 1,
+	PIVOT_PROP_TREE_ID = 1,
 };
 
 /* signals
@@ -112,8 +110,6 @@ static void          instance_get_property( GObject *object, guint property_id, 
 static void          instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void          instance_dispose( GObject *object );
 static void          instance_finalize( GObject *object );
-
-static void          iprefs_iface_init( NAIPrefsInterface *iface );
 
 static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id );
 
@@ -154,17 +150,9 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo iprefs_iface_info = {
-		( GInterfaceInitFunc ) iprefs_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NAPivot", &info, 0 );
-
-	g_type_add_interface_static( type, NA_IPREFS_TYPE, &iprefs_iface_info );
 
 	return( type );
 }
@@ -188,11 +176,11 @@ class_init( NAPivotClass *klass )
 	object_class->finalize = instance_finalize;
 
 	spec = g_param_spec_pointer(
-			NAPIVOT_PROP_TREE,
+			PIVOT_PROP_TREE,
 			"Items tree",
 			"Hierarchical tree of items",
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NAPIVOT_PROP_TREE_ID, spec );
+	g_object_class_install_property( object_class, PIVOT_PROP_TREE_ID, spec );
 
 	klass->private = g_new0( NAPivotClassPrivate, 1 );
 
@@ -278,7 +266,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NAPIVOT_PROP_TREE_ID:
+			case PIVOT_PROP_TREE_ID:
 				g_value_set_pointer( value, self->private->tree );
 				break;
 
@@ -300,7 +288,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case NAPIVOT_PROP_TREE_ID:
+			case PIVOT_PROP_TREE_ID:
 				self->private->tree = g_value_get_pointer( value );
 				break;
 
@@ -339,8 +327,8 @@ instance_dispose( GObject *object )
 		na_object_unref_items( self->private->tree );
 		self->private->tree = NULL;
 
-		/* release the I/O Provider objects */
-		na_io_provider_terminate();
+		/* release the I/O Provider object list */
+		na_io_provider_unref_io_providers_list();
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -368,18 +356,26 @@ instance_finalize( GObject *object )
 	}
 }
 
-static void
-iprefs_iface_init( NAIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "na_pivot_iprefs_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-}
-
 /*
  * na_pivot_new:
  *
- * Returns: a newly allocated #NAPivot object.
+ * This object takes care of all items/actions/menus/providers/settings
+ * management which is required to correctly handle file manager context
+ * menus.
+ *
+ * When this object is instantiated, it automatically takes care of:
+ * - loading Nautilus-Actions dynamic modules;
+ * - initializing the preferences monitoring.
+ *
+ * Actual loading of items from i/o providers is delayed until a call
+ * to call to na_pivot_load_items() function, so that the caller is able
+ * to set its own needed #NAPivot properties (e.g. the loadable set of
+ * items).
+ *
+ * Only one #NAPivot object should be instantiated for a running application.
+ *
+ * Returns: a newly allocated #NAPivot object which should be g_object_unref()
+ * by the caller at the end of the application.
  */
 NAPivot *
 na_pivot_new( void )
@@ -569,11 +565,9 @@ na_pivot_load_items( NAPivot *pivot )
 
 		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
-		na_object_unref_items( pivot->private->tree );
-
 		messages = NULL;
-
-		pivot->private->tree = na_io_provider_read_items( pivot, &messages );
+		na_object_unref_items( pivot->private->tree );
+		pivot->private->tree = na_io_provider_load_items( pivot, pivot->private->loadable_set, &messages );
 
 		for( im = messages ; im ; im = im->next ){
 			g_warning( "%s: %s", thisfn, ( const gchar * ) im->data );
@@ -603,13 +597,12 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
 				thisfn, ( void * ) pivot, ( void * ) items, items ? g_list_length( items ) : 0 );
 
 		na_object_unref_items( pivot->private->tree );
-
 		pivot->private->tree = items;
 	}
 }
 
 /*
- * na_pivot_item_changed_handler:
+ * na_pivot_on_item_changed_handler:
  * @provider: the #NAIIOProvider which has emitted the signal.
  * @id: the id of the changed #NAObjectItem-derived object.
  *  As of 2.30, it is always %NULL.
@@ -622,9 +615,9 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
  * serie, and then reload the whole list of actions
  */
 void
-na_pivot_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  )
+na_pivot_on_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  )
 {
-	static const gchar *thisfn = "na_pivot_item_changed_handler";
+	static const gchar *thisfn = "na_pivot_on_item_changed_handler";
 
 	g_return_if_fail( NA_IS_IIO_PROVIDER( provider ));
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
@@ -701,62 +694,6 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
 }
 
 /*
- * na_pivot_write_level_zero:
- * @pivot: this #NAPivot instance.
- * @items: the #GList of items whose first level is to be written.
- * @messages: a pointer to a #GSList in which we will add happening
- *  error messages;
- *  the pointer may be %NULL;
- *  if not %NULL, the #GSList must have been initialized by the
- *  caller.
- *
- * Rewrite the level-zero items in GConf preferences.
- *
- * Returns: %TRUE if successfully written (i.e. writable, not locked,
- * and so on), %FALSE else.
- *
- * @messages #GSList is only filled up in case of an error has occured.
- * If there is no error (na_pivot_write_level_zero() returns %TRUE), then
- * the caller may safely assume that @messages is returned in the same
- * state that it has been provided.
- */
-gboolean
-na_pivot_write_level_zero( const NAPivot *pivot, GList *items, GSList **messages )
-{
-	static const gchar *thisfn = "na_pivot_write_level_zero";
-	gboolean written;
-	GList *it;
-	gchar *id;
-	GSList *content;
-
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
-
-	written = FALSE;
-
-	if( !pivot->private->dispose_has_run ){
-
-		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot);
-
-		if( na_pivot_is_level_zero_writable( pivot )){
-
-			content = NULL;
-			for( it = items ; it ; it = it->next ){
-
-				id = na_object_get_id( it->data );
-				content = g_slist_prepend( content, id );
-			}
-			content = g_slist_reverse( content );
-
-			written = na_iprefs_write_string_list( NA_IPREFS( pivot ), IPREFS_LEVEL_ZERO_ITEMS, content );
-
-			na_core_utils_slist_free( content );
-		}
-	}
-
-	return( written );
-}
-
-/*
  * na_pivot_register_consumer:
  * @pivot: this #NAPivot instance.
  * @consumer: a #NAIPivotConsumer which wishes be notified of any
@@ -798,7 +735,7 @@ free_consumers( GList *consumers )
  * Since: 3.1.0
  */
 NASettings *
-na_pivot_get_settings( NAPivot *pivot )
+na_pivot_get_settings( const NAPivot *pivot )
 {
 	NASettings *settings;
 
@@ -840,52 +777,6 @@ na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
 }
 
 /*
- * na_pivot_is_disable_loadable:
- * @pivot: this #NAPivot instance.
- *
- * Returns: %TRUE if disabled items should be loaded, %FALSE else.
- */
-gboolean
-na_pivot_is_disable_loadable( const NAPivot *pivot )
-{
-	gboolean is_loadable;
-
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
-
-	is_loadable = FALSE;
-
-	if( !pivot->private->dispose_has_run ){
-
-		is_loadable = ( pivot->private->loadable_set & PIVOT_LOAD_DISABLED );
-	}
-
-	return( is_loadable );
-}
-
-/*
- * na_pivot_is_invalid_loadable:
- * @pivot: this #NAPivot instance.
- *
- * Returns: %TRUE if invalid items should be loaded, %FALSE else.
- */
-gboolean
-na_pivot_is_invalid_loadable( const NAPivot *pivot )
-{
-	gboolean is_loadable;
-
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
-
-	is_loadable = FALSE;
-
-	if( !pivot->private->dispose_has_run ){
-
-		is_loadable = ( pivot->private->loadable_set & PIVOT_LOAD_INVALID );
-	}
-
-	return( is_loadable );
-}
-
-/*
  * na_pivot_set_loadable:
  * @pivot: this #NAPivot instance.
  * @loadable: the population of items to be loaded.
@@ -904,40 +795,6 @@ na_pivot_set_loadable( NAPivot *pivot, guint loadable )
 }
 
 /*
- * na_pivot_is_level_zero_writable:
- * @pivot: this #NAPivot instance.
- *
- * Returns: %TRUE if we are able to update the level-zero list of items,
- * %FALSE else.
- */
-gboolean
-na_pivot_is_level_zero_writable( const NAPivot *pivot )
-{
-	gboolean all_locked;
-	gboolean gconf_locked;
-	GConfClient *gconf;
-	gchar *path;
-
-	all_locked = FALSE;
-	gconf_locked = FALSE;
-
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
-
-	if( !pivot->private->dispose_has_run ){
-
-		all_locked = na_pivot_is_configuration_locked_by_admin( pivot );
-
-		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
-
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, "mandatory/io-gconf/locked" );
-		gconf_locked = na_gconf_utils_read_bool( gconf, path, FALSE, FALSE );
-		g_free( path );
-	}
-
-	return( !all_locked && !gconf_locked );
-}
-
-/*
  * na_pivot_is_configuration_locked_by_admin:
  * @pivot: this #NAPivot.
  *
@@ -948,19 +805,15 @@ gboolean
 na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot )
 {
 	gboolean locked;
-	GConfClient *gconf;
-	gchar *path;
 
-	locked = FALSE;
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), TRUE );
+
+	locked = TRUE;
 
 	if( !pivot->private->dispose_has_run ){
 
-		gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
-
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, "mandatory/all/locked" );
-		locked = na_gconf_utils_read_bool( gconf, path, FALSE, FALSE );
-		g_free( path );
+		/* TODO: na_pivot_is_configuration_locked_by_admin */
+		locked = FALSE;
 	}
 
 	return( locked );
@@ -1010,19 +863,19 @@ on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NA
 	key_entry = g_path_get_basename( key );
 	/*g_debug( "%s: key=%s", thisfn, key_entry );*/
 
-	if( !g_ascii_strcasecmp( key_entry, IPREFS_CREATE_ROOT_MENU )){
+	if( !g_ascii_strcasecmp( key_entry, NA_IPREFS_ITEMS_CREATE_ROOT_MENU )){
 		create_root_menu_changed( pivot );
 	}
 
-	if( !g_ascii_strcasecmp( key_entry, IPREFS_ADD_ABOUT_ITEM )){
+	if( !g_ascii_strcasecmp( key_entry, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM )){
 		display_about_changed( pivot );
 	}
 
-	if( !g_ascii_strcasecmp( key_entry, IPREFS_DISPLAY_ALPHABETICAL_ORDER )){
+	if( !g_ascii_strcasecmp( key_entry, NA_IPREFS_ITEMS_LIST_ORDER_MODE )){
 		display_order_changed( pivot );
 	}
 
-	if( !g_ascii_strcasecmp( key_entry, IPREFS_AUTOSAVE_ON ) || !g_ascii_strcasecmp( key_entry, IPREFS_AUTOSAVE_PERIOD )){
+	if( !g_ascii_strcasecmp( key_entry, NA_IPREFS_MAIN_SAVE_AUTO ) || !g_ascii_strcasecmp( key_entry, NA_IPREFS_MAIN_SAVE_PERIOD )){
 		autosave_changed( pivot );
 	}
 
@@ -1063,7 +916,7 @@ create_root_menu_changed( NAPivot *pivot )
 
 		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
-		should_create = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_CREATE_ROOT_MENU, FALSE );
+		should_create = na_iprefs_read_bool( NA_IPREFS( pivot ), NA_IPREFS_ITEMS_CREATE_ROOT_MENU, FALSE );
 		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 			na_ipivot_consumer_notify_of_create_root_menu_changed( NA_IPIVOT_CONSUMER( ic->data ), should_create );
 		}
@@ -1083,7 +936,7 @@ display_about_changed( NAPivot *pivot )
 
 		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
-		display_about = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_ADD_ABOUT_ITEM, TRUE );
+		display_about = na_iprefs_read_bool( NA_IPREFS( pivot ), NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, TRUE );
 
 		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 			na_ipivot_consumer_notify_of_display_about_changed( NA_IPIVOT_CONSUMER( ic->data ), display_about );
@@ -1105,8 +958,8 @@ autosave_changed( NAPivot *pivot )
 
 		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
-		autosave_on = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_AUTOSAVE_ON, FALSE );
-		autosave_period = na_iprefs_read_uint( NA_IPREFS( pivot ), IPREFS_AUTOSAVE_PERIOD, 5 );
+		autosave_on = na_iprefs_read_bool( NA_IPREFS( pivot ), NA_IPREFS_MAIN_SAVE_AUTO, FALSE );
+		autosave_period = na_iprefs_read_uint( NA_IPREFS( pivot ), NA_IPREFS_MAIN_SAVE_PERIOD, 5 );
 
 		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 			na_ipivot_consumer_notify_of_autosave_changed( NA_IPIVOT_CONSUMER( ic->data ), autosave_on, autosave_period );

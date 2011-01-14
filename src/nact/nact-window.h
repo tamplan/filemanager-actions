@@ -73,7 +73,9 @@ GType      nact_window_get_type( void );
 
 gboolean   nact_window_has_writable_providers( NactWindow *window );
 
+#if 0
 gboolean   nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item, guint *reason );
+#endif
 
 gboolean   nact_window_save_item  ( NactWindow *window, NAObjectItem *item, gchar **msgerr );
 gboolean   nact_window_delete_item( NactWindow *window, const NAObjectItem *item, gchar **msgerr );

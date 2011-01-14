@@ -38,7 +38,7 @@
 
 #include <api/na-object-api.h>
 
-#include <core/na-pivot.h>
+#include "na-pivot.h"
 
 G_BEGIN_DECLS
 

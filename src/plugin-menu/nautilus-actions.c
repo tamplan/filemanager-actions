@@ -237,34 +237,29 @@ instance_constructed( GObject *object )
 
 		/* monitor
 		 * - the changes of the readability status of the i/o providers
-		 * - the changes of the read order of the i/o providers
 		 * - the modification of the level-zero order
 		 * - whether we create a root menu
 		 * - whether we add an 'About Nautilus-Actions' item
 		 * - the preferred order mode
 		 */
 		na_settings_register_key_callback( settings,
-				NA_SETTINGS_RUNTIME_IO_PROVIDER_READ_STATUS,
+				NA_IPREFS_IO_PROVIDERS_READ_STATUS,
 				G_CALLBACK( on_runtime_preference_changed ), self );
 
 		na_settings_register_key_callback( settings,
-				NA_SETTINGS_RUNTIME_IO_PROVIDERS_READ_ORDER,
+				NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER,
 				G_CALLBACK( on_runtime_preference_changed ), self );
 
 		na_settings_register_key_callback( settings,
-				NA_SETTINGS_RUNTIME_ITEMS_LEVEL_ZERO_ORDER,
+				NA_IPREFS_ITEMS_CREATE_ROOT_MENU,
 				G_CALLBACK( on_runtime_preference_changed ), self );
 
 		na_settings_register_key_callback( settings,
-				NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU,
+				NA_IPREFS_ITEMS_ADD_ABOUT_ITEM,
 				G_CALLBACK( on_runtime_preference_changed ), self );
 
 		na_settings_register_key_callback( settings,
-				NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM,
-				G_CALLBACK( on_runtime_preference_changed ), self );
-
-		na_settings_register_key_callback( settings,
-				NA_SETTINGS_RUNTIME_ITEMS_LIST_ORDER_MODE,
+				NA_IPREFS_ITEMS_LIST_ORDER_MODE,
 				G_CALLBACK( on_runtime_preference_changed ), self );
 
 		/* chain up to the parent class */
@@ -512,12 +507,12 @@ get_menus_items( NautilusActions *plugin, guint target, GList *selection )
 
 		settings = na_pivot_get_settings( plugin->private->pivot );
 
-		items_create_root_menu = na_settings_get_boolean( settings, NA_SETTINGS_RUNTIME_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
+		items_create_root_menu = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
 		if( items_create_root_menu ){
 			menus_list = create_root_menu( plugin, menus_list );
 		}
 
-		items_add_about_item = na_settings_get_boolean( settings, NA_SETTINGS_RUNTIME_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
+		items_add_about_item = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
 		if( items_add_about_item ){
 			menus_list = add_about_item( plugin, menus_list );
 		}

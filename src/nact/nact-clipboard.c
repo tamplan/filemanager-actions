@@ -603,7 +603,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	if( index == -1 ){
 
 		*exported = g_list_prepend( *exported, ( gpointer ) action );
-		format = nact_iprefs_get_export_format( clipboard->private->window, IPREFS_EXPORT_FORMAT );
+		format = nact_iprefs_get_export_format( clipboard->private->window, NA_IPREFS_EXPORT_PREFERRED_FORMAT );
 
 		if( format == IPREFS_EXPORT_FORMAT_ASK ){
 			format = nact_export_ask_user( clipboard->private->window, NA_OBJECT_ITEM( action ));

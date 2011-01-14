@@ -72,17 +72,17 @@ static guint         ask_user_for_mode( const NAObjectItem *importing, const NAO
  * - a #NAObjectItem item if import was successfull, or %NULL
  * - a list of error messages, or %NULL.
  *
- * Returns: the last import operation code.
- */
-/*
- * Importing a list of URIs:
- * if asked mode is 'ask', then ask the user at least the first time
+ * If asked mode is 'ask', then ask the user at least the first time
  * the 'keep my choice' is active or not, depending of the last time used
  * then the 'keep my chose' is kept for other times
  * so preferences are:
  * - asked import mode (may be 'ask') -> import-mode
  * - keep my choice                   -> import-keep-choice
  * - last choosen import mode         -> import-ask-user-last-mode
+ *
+ * Returns: the last import operation code.
+ *
+ * Since: 2.30
  */
 guint
 na_importer_import_from_list( const NAPivot *pivot, NAImporterParms *parms )
@@ -151,7 +151,8 @@ import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, c
 	ask_parms.parent = parms->parent;
 	ask_parms.uri = ( gchar * ) uri;
 	ask_parms.count = g_list_length( parms->results );
-	ask_parms.keep_choice = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_IMPORT_KEEP_CHOICE, FALSE );
+	ask_parms.keep_choice = na_settings_get_boolean( na_pivot_get_settings( pivot ), NA_IPREFS_IMPORT_MODE_KEEP_LAST_CHOICE, NULL, NULL );
+	ask_parms.pivot = pivot;
 
 	memset( &provider_parms, '\0', sizeof( NAIImporterImportFromUriParms ));
 	provider_parms.version = 1;
@@ -223,15 +224,12 @@ static guint
 ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms )
 {
 	guint mode;
-	GConfClient *gconf;
 
 	if( parms->count == 0 || !parms->keep_choice ){
 		mode = na_importer_ask_user( importing, existing, parms );
 
 	} else {
-		gconf = gconf_client_get_default();
-		mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ASK_LAST_MODE );
-		g_object_unref( gconf );
+		mode = na_iprefs_get_import_mode( parms->pivot, NA_IPREFS_IMPORT_ASK_USER_LAST_MODE );
 	}
 
 	return( mode );

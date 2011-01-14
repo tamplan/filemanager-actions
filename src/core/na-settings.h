@@ -93,6 +93,8 @@ GType na_settings_get_type( void );
 
 /* other keys, mainly user preferences
  */
+#define NA_IPREFS_ADMIN_PREFERENCES_LOCKED		"preferences-locked"
+#define NA_IPREFS_ADMIN_IO_PROVIDERS_LOCKED		"io-providers-locked"
 #define NA_IPREFS_ASSISTANT_ESC_CONFIRM			"assistant-esc-confirm"
 #define NA_IPREFS_ASSISTANT_ESC_QUIT			"assistant-esc-quit"
 #define NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP	"capability-add-capability-wsp"
@@ -137,9 +139,9 @@ GType na_settings_get_type( void );
 #define NA_IPREFS_SCHEME_ADD_SCHEME_WSP			"scheme-add-scheme-wsp"
 #define NA_IPREFS_SCHEME_DEFAULT_LIST			"scheme-default-list"
 
+#define NA_IPREFS_IO_PROVIDER_GROUP				"io-provider"
 #define NA_IPREFS_IO_PROVIDER_READABLE			"readable"
 #define NA_IPREFS_IO_PROVIDER_WRITABLE			"writable"
-#define NA_IPREFS_IO_PROVIDER_GROUP				"io-provider"
 
 #define NA_IPREFS_DEFAULT_EXPORT_FORMAT			"Desktop1"
 #define NA_IPREFS_DEFAULT_IMPORT_MODE			"NoImport"
@@ -158,11 +160,12 @@ GSList     *na_settings_get_string_list         ( NASettings *settings, const gc
 guint       na_settings_get_uint                ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
 GList      *na_settings_get_uint_list           ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
 
-void        na_settings_set_boolean             ( NASettings *settings, const gchar *key, gboolean value );
-void        na_settings_set_string              ( NASettings *settings, const gchar *key, const gchar *value );
-void        na_settings_set_string_list         ( NASettings *settings, const gchar *key, const GSList *value );
-void        na_settings_set_uint                ( NASettings *settings, const gchar *key, guint value );
-void        na_settings_set_uint_list           ( NASettings *settings, const gchar *key, const GList *value );
+gboolean    na_settings_set_boolean             ( NASettings *settings, const gchar *key, gboolean value );
+gboolean    na_settings_set_boolean_ex          ( NASettings *settings, const gchar *group, const gchar *key, gboolean value );
+gboolean    na_settings_set_string              ( NASettings *settings, const gchar *key, const gchar *value );
+gboolean    na_settings_set_string_list         ( NASettings *settings, const gchar *key, const GSList *value );
+gboolean    na_settings_set_uint                ( NASettings *settings, const gchar *key, guint value );
+gboolean    na_settings_set_uint_list           ( NASettings *settings, const gchar *key, const GList *value );
 
 /* na_iprefs_get_io_providers() */
 GSList     *na_settings_get_groups              ( NASettings *settings );

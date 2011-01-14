@@ -111,6 +111,8 @@ typedef struct {
 	KeyDef;
 
 static const KeyDef st_def_keys[] = {
+	{ NA_IPREFS_ADMIN_PREFERENCES_LOCKED,      GROUP_RUNTIME,     NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_ADMIN_IO_PROVIDERS_LOCKED,     GROUP_RUNTIME,     NA_BOXED_TYPE_BOOLEAN,     "false" },
 	{ NA_IPREFS_ASSISTANT_ESC_CONFIRM,         GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
 	{ NA_IPREFS_ASSISTANT_ESC_QUIT,            GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
 	{ NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP, GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
@@ -187,9 +189,9 @@ static KeyValue *read_key_value_from_key_file( GKeyFile *key_file, const gchar *
 static void      release_consumer( Consumer *consumer );
 static void      release_key_file( KeyFile *key_file );
 static void      release_key_value( KeyValue *value );
-static void      set_key_value( NASettings *settings, const gchar *group, const gchar *key, const gchar *string );
+static gboolean  set_key_value( NASettings *settings, const gchar *group, const gchar *key, const gchar *string );
 static gulong    time_val_diff( const GTimeVal *recent, const GTimeVal *old );
-static void      write_user_key_file( NASettings *settings );
+static gboolean  write_user_key_file( NASettings *settings );
 
 GType
 na_settings_get_type( void )
@@ -657,16 +659,47 @@ na_settings_get_uint_list( NASettings *settings, const gchar *key, gboolean *fou
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
+ * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ *
  * Since: 3.1.0
  */
-void
+gboolean
 na_settings_set_boolean( NASettings *settings, const gchar *key, gboolean value )
 {
 	gchar *string;
+	gboolean ok;
 
 	string = g_strdup_printf( "%s", value ? "true" : "false" );
-	set_key_value( settings, NULL, key, string );
+	ok = set_key_value( settings, NULL, key, string );
 	g_free( string );
+
+	return( ok );
+}
+
+/**
+ * na_settings_set_boolean_ex:
+ * @settings: this #NASettings instance.
+ * @group: the group in the keyed file;
+ * @key: the key whose value is to be returned.
+ * @value: the boolean to be written.
+ *
+ * This function writes @value as a user preference.
+ *
+ * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ *
+ * Since: 3.1.0
+ */
+gboolean
+na_settings_set_boolean_ex( NASettings *settings, const gchar *group, const gchar *key, gboolean value )
+{
+	gchar *string;
+	gboolean ok;
+
+	string = g_strdup_printf( "%s", value ? "true" : "false" );
+	ok = set_key_value( settings, group, key, string );
+	g_free( string );
+
+	return( ok );
 }
 
 /**
@@ -680,12 +713,14 @@ na_settings_set_boolean( NASettings *settings, const gchar *key, gboolean value 
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
+ * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ *
  * Since: 3.1.0
  */
-void
+gboolean
 na_settings_set_string( NASettings *settings, const gchar *key, const gchar *value )
 {
-	set_key_value( settings, NULL, key, value );
+	return( set_key_value( settings, NULL, key, value ));
 }
 
 /**
@@ -699,20 +734,25 @@ na_settings_set_string( NASettings *settings, const gchar *key, const gchar *val
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
+ * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ *
  * Since: 3.1.0
  */
-void
+gboolean
 na_settings_set_string_list( NASettings *settings, const gchar *key, const GSList *value )
 {
 	GString *string;
 	const GSList *it;
+	gboolean ok;
 
 	string = g_string_new( "" );
 	for( it = value ; it ; it = it->next ){
 		g_string_append_printf( string, "%s;", ( const gchar * ) it->data );
 	}
-	set_key_value( settings, NULL, key, string->str );
+	ok = set_key_value( settings, NULL, key, string->str );
 	g_string_free( string, TRUE );
+
+	return( ok );
 }
 
 /**
@@ -726,16 +766,21 @@ na_settings_set_string_list( NASettings *settings, const gchar *key, const GSLis
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
+ * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ *
  * Since: 3.1.0
  */
-void
+gboolean
 na_settings_set_uint( NASettings *settings, const gchar *key, guint value )
 {
 	gchar *string;
+	gboolean ok;
 
 	string = g_strdup_printf( "%u", value );
-	set_key_value( settings, NULL, key, string );
+	ok = set_key_value( settings, NULL, key, string );
 	g_free( string );
+
+	return( ok );
 }
 
 /**
@@ -749,20 +794,25 @@ na_settings_set_uint( NASettings *settings, const gchar *key, guint value )
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
+ * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ *
  * Since: 3.1.0
  */
-void
+gboolean
 na_settings_set_uint_list( NASettings *settings, const gchar *key, const GList *value )
 {
 	GString *string;
 	const GList *it;
+	gboolean ok;
 
 	string = g_string_new( "" );
 	for( it = value ; it ; it = it->next ){
 		g_string_append_printf( string, "%u;", GPOINTER_TO_UINT( it->data ));
 	}
-	set_key_value( settings, NULL, key, string->str );
+	ok = set_key_value( settings, NULL, key, string->str );
 	g_string_free( string, TRUE );
+
+	return( ok );
 }
 
 /**
@@ -792,13 +842,13 @@ na_settings_get_groups( NASettings *settings )
 
 		array = g_key_file_get_groups( settings->private->mandatory->key_file, NULL );
 		if( array ){
-			groups = na_core_utils_slist_from_array( array );
+			groups = na_core_utils_slist_from_array(( const gchar ** ) array );
 			g_strfreev( array );
 		}
 
 		array = g_key_file_get_groups( settings->private->user->key_file, NULL );
 		if( array ){
-			groups = g_slist_concat( groups, na_core_utils_slist_from_array( array ));
+			groups = g_slist_concat( groups, na_core_utils_slist_from_array(( const gchar ** ) array ));
 			g_strfreev( array );
 		}
 	}
@@ -1059,7 +1109,7 @@ on_keyfile_changed_timeout( NASettings *settings )
 		group_prefix = NULL;
 		if( !strcmp( consumer->monitored_key, NA_IPREFS_IO_PROVIDERS_READ_STATUS )){
 			group_prefix = g_strdup_printf( "%s ", NA_IPREFS_IO_PROVIDER_GROUP );
-			key = NA_SETTINGS_IO_PROVIDER_READABLE;
+			key = NA_IPREFS_IO_PROVIDER_READABLE;
 		} else {
 			key = consumer->monitored_key;
 		}
@@ -1245,13 +1295,16 @@ release_key_value( KeyValue *value )
 	g_free( value );
 }
 
-static void
+static gboolean
 set_key_value( NASettings *settings, const gchar *group, const gchar *key, const gchar *string )
 {
 	KeyDef *key_def;
 	const gchar *wgroup;
+	gboolean ok;
 
-	g_return_if_fail( NA_IS_SETTINGS( settings ));
+	g_return_val_if_fail( NA_IS_SETTINGS( settings ), FALSE );
+
+	ok = FALSE;
 
 	if( !settings->private->dispose_has_run ){
 
@@ -1264,9 +1317,11 @@ set_key_value( NASettings *settings, const gchar *group, const gchar *key, const
 		}
 		if( wgroup ){
 			g_key_file_set_string( settings->private->user->key_file, wgroup, key, string );
-			write_user_key_file( settings );
+			ok = write_user_key_file( settings );
 		}
 	}
+
+	return( ok );
 }
 
 /*
@@ -1280,7 +1335,7 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
 	return( microsec );
 }
 
-static void
+static gboolean
 write_user_key_file( NASettings *settings )
 {
 	static const gchar *thisfn = "na_settings_write_user_key_file";
@@ -1303,7 +1358,7 @@ write_user_key_file( NASettings *settings )
 		}
 		g_object_unref( file );
 		g_free( data );
-		return;
+		return( FALSE );
 	}
 
 	g_output_stream_write( G_OUTPUT_STREAM( stream ), data, length, NULL, &error );
@@ -1313,7 +1368,7 @@ write_user_key_file( NASettings *settings )
 		g_object_unref( stream );
 		g_object_unref( file );
 		g_free( data );
-		return;
+		return( FALSE );
 	}
 
 	g_output_stream_close( G_OUTPUT_STREAM( stream ), NULL, &error );
@@ -1323,10 +1378,12 @@ write_user_key_file( NASettings *settings )
 		g_object_unref( stream );
 		g_object_unref( file );
 		g_free( data );
-		return;
+		return( FALSE );
 	}
 
 	g_object_unref( stream );
 	g_object_unref( file );
 	g_free( data );
+
+	return( TRUE );
 }

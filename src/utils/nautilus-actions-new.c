@@ -511,14 +511,15 @@ static gboolean
 output_to_gconf( NAObjectAction *action, GSList **msgs )
 {
 	NAUpdater *updater;
-	GList *providers;
+	const GList *providers;
 	NAIOProvider *provider;
 	guint ret;
 	gboolean code;
 
 	updater = na_updater_new();
-	providers = na_io_provider_get_providers_list( NA_PIVOT( updater ));
-	provider = na_io_provider_find_provider_by_id( providers, "na-gconf" );
+	providers = na_io_provider_get_io_providers_list( NA_PIVOT( updater ));
+	/*provider = na_io_provider_find_provider_by_id( providers, "na-gconf" );*/
+	provider = NULL;
 
 	if( provider ){
 		na_object_set_provider( action, provider );

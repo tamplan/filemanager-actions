@@ -32,7 +32,6 @@
 #include <config.h>
 #endif
 
-#include <gconf/gconf-client.h>
 #include <glib/gi18n.h>
 #include <libintl.h>
 #include <string.h>
@@ -863,7 +862,6 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	NAUpdater *updater;
 	NactMainWindow *main_window;
 	NAImporterParms parms;
-	GConfClient *gconf;
 	GList *it;
 	guint count;
 	GString *str;
@@ -897,9 +895,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	parms.parent = base_window_get_toplevel( BASE_WINDOW( main_window ));
 	parms.uris = g_slist_reverse( na_core_utils_slist_from_split( selection_data_data, "\r\n" ));
 
-	gconf = gconf_client_get_default();
-	parms.mode = na_iprefs_get_import_mode( gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
-	g_object_unref( gconf );
+	parms.mode = na_iprefs_get_import_mode( NA_PIVOT( updater ), NA_IPREFS_IMPORT_PREFERRED_MODE );
 
 	parms.check_fn = ( NAIImporterCheckFn ) is_dropped_already_exists;
 	parms.check_fn_data = main_window;
@@ -1141,7 +1137,7 @@ is_parent_accept_new_childs( NactApplication *application, NactMainWindow *windo
 	 */
 	if( parent == NULL ){
 
-		if( na_pivot_is_level_zero_writable( NA_PIVOT( updater ))){
+		if( na_iprefs_is_level_zero_writable( NA_PIVOT( updater ))){
 			accept_ok = TRUE;
 
 		} else {

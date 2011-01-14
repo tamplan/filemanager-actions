@@ -134,7 +134,7 @@ nact_main_menubar_edit_on_update_sensitivities( NactMainWindow *window, gpointer
 			if( paste_enabled ){
 				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
 				paste_enabled &= parent_item
-						? nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( parent_item ), NULL )
+						? na_updater_is_item_writable( mis->updater, NA_OBJECT_ITEM( parent_item ), NULL )
 						: mis->is_level_zero_writable;
 			}
 		} else {
@@ -161,7 +161,7 @@ nact_main_menubar_edit_on_update_sensitivities( NactMainWindow *window, gpointer
 		if( paste_into_enabled ){
 			selected_action = NA_OBJECT( mis->selected_items->data );
 			paste_into_enabled &= NA_IS_OBJECT_ACTION( selected_action );
-			paste_into_enabled &= nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( selected_action ), NULL );
+			paste_into_enabled &= na_updater_is_item_writable( mis->updater, NA_OBJECT_ITEM( selected_action ), NULL );
 		}
 	} else {
 		paste_into_enabled &= mis->has_writable_providers;
@@ -171,7 +171,7 @@ nact_main_menubar_edit_on_update_sensitivities( NactMainWindow *window, gpointer
 			if( paste_into_enabled ){
 				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
 				paste_into_enabled &= parent_item
-						? nact_window_is_item_writable( NACT_WINDOW( window ), NA_OBJECT_ITEM( parent_item ), NULL )
+						? na_updater_is_item_writable( mis->updater, NA_OBJECT_ITEM( parent_item ), NULL )
 						: mis->is_level_zero_writable;
 			}
 		} else {
@@ -642,13 +642,16 @@ nact_main_menubar_edit_is_pasted_object_relabeled( NAObject *object, NAPivot *pi
 {
 	static const gchar *thisfn = "nact_main_menubar_edit_is_pasted_object_relabeled";
 	gboolean relabel;
+	NASettings *settings;
+
+	settings = na_pivot_get_settings( pivot );
 
 	if( NA_IS_OBJECT_MENU( object )){
-		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_MENUS, FALSE );
+		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, NULL );
 	} else if( NA_IS_OBJECT_ACTION( object )){
-		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_ACTIONS, FALSE );
+		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, NULL );
 	} else if( NA_IS_OBJECT_PROFILE( object )){
-		relabel = na_iprefs_read_bool( NA_IPREFS( pivot ), IPREFS_RELABEL_PROFILES, FALSE );
+		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, NULL );
 	} else {
 		g_warning( "%s: unknown object type at %p", thisfn, ( void * ) object );
 		g_return_val_if_reached( FALSE );

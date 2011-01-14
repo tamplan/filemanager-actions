@@ -31,20 +31,35 @@
 #ifndef __CORE_NA_IO_PROVIDER_H__
 #define __CORE_NA_IO_PROVIDER_H__
 
-/* @title: NAIIOProvider
- * @short_description: The #NAIOProvider Class Definition.
+/* @title: NAIOProvider
+ * @short_description: The NAIOProvider Class Definition
  * @include: core/na-io-provider.h
  *
  * #NAIOProvider is the Nautilus-Actions class which is used to manage
  * external I/O Providers which implement #NAIIOProvider interface. Each
- * #NAIOProvider objects encapsulates one #NAIIOProvider provider.
+ * #NAIOProvider objects may (or not) encapsulates one #NAIIOProvider
+ * provider.
  *
  * Internal Nautilus-Actions code should never directly call a
  * #NAIIOProvider interface method, but rather should call the
  * corresponding NAIOProvider class method.
+ *
+ * Two preferences are used for each i/o provider:
+ * 'readable': means that the i/o provider should be readen when building
+ *  the items hierarchy
+ * 'writable': means that the i/o provider is candidate when writing a
+ *  new item; this also means that existing items are deletable.
+ *
+ * To be actually writable, a i/o provider must:
+ * - be set as 'writable' from a configuration point of view
+ *   this may or not be edited depending of this is a mandatory or user
+ *   preference
+ * - be willing to write: this is an intrisinc i/o provider attribute
+ * - be able to write: his is a runtime i/o provider property
+ *
+ * and the whole configuration must not have been locked by an admin.
  */
 
-#include "na-iprefs.h"
 #include "na-pivot.h"
 
 G_BEGIN_DECLS
@@ -56,7 +71,8 @@ G_BEGIN_DECLS
 #define NA_IS_IO_PROVIDER_CLASS( klass )    ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_IO_PROVIDER_TYPE ))
 #define NA_IO_PROVIDER_GET_CLASS( object )  ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_IO_PROVIDER_TYPE, NAIOProviderClass ))
 
-typedef struct _NAIOProviderPrivate      NAIOProviderPrivate;
+typedef struct _NAIOProviderPrivate         NAIOProviderPrivate;
+typedef struct _NAIOProviderClassPrivate    NAIOProviderClassPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -65,8 +81,6 @@ typedef struct {
 }
 	NAIOProvider;
 
-typedef struct _NAIOProviderClassPrivate NAIOProviderClassPrivate;
-
 typedef struct {
 	/*< private >*/
 	GObjectClass              parent;
@@ -74,42 +88,28 @@ typedef struct {
 }
 	NAIOProviderClass;
 
-/* GConf preferences key
- */
-#define IO_PROVIDER_KEY_ROOT				"io-providers"
-#define IO_PROVIDER_KEY_READABLE			"read-at-startup"
-#define IO_PROVIDER_KEY_WRITABLE			"writable"
-#define IO_PROVIDER_KEY_ORDER				"io-providers-order"
-
 /* signal sent from a NAIIOProvider
  * via the na_iio_provider_item_changed() function
  */
 #define IO_PROVIDER_SIGNAL_ITEM_CHANGED		"io-provider-item-changed"
 
-GType          na_io_provider_get_type ( void );
+GType         na_io_provider_get_type ( void );
 
-void           na_io_provider_terminate( void );
+NAIOProvider *na_io_provider_find_writable_io_provider( const NAPivot *pivot );
+const GList  *na_io_provider_get_io_providers_list    ( const NAPivot *pivot );
+void          na_io_provider_unref_io_providers_list  ( void );
 
-GList         *na_io_provider_get_providers_list( const NAPivot *pivot );
-void           na_io_provider_reorder_providers_list( const NAPivot *pivot );
-void           na_io_provider_dump_providers_list( GList *providers );
+gchar        *na_io_provider_get_id             ( const NAIOProvider *provider );
+gchar        *na_io_provider_get_name           ( const NAIOProvider *provider );
+gboolean      na_io_provider_is_available       ( const NAIOProvider *provider );
+gboolean      na_io_provider_is_conf_readable   ( const NAIOProvider *provider, const NAPivot *pivot );
+gboolean      na_io_provider_is_able_to_write   ( const NAIOProvider *provider );
+gboolean      na_io_provider_is_conf_writable   ( const NAIOProvider *provider, const NAPivot *pivot );
+gboolean      na_io_provider_is_willing_to_write( const NAIOProvider *provider );
 
-NAIOProvider  *na_io_provider_find_provider_by_id( GList *providers, const gchar *id );
-NAIOProvider  *na_io_provider_get_writable_provider( const NAPivot *pivot );
+GList        *na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **messages );
 
-GList         *na_io_provider_read_items( const NAPivot *pivot, GSList **messages );
-
-gchar         *na_io_provider_get_id                     ( const NAIOProvider *provider );
-gchar         *na_io_provider_get_name                   ( const NAIOProvider *provider );
-gboolean       na_io_provider_is_user_readable_at_startup( const NAIOProvider *provider, const NAIPrefs *iprefs );
-gboolean       na_io_provider_is_user_writable           ( const NAIOProvider *provider, const NAIPrefs *iprefs );
-gboolean       na_io_provider_is_locked_by_admin         ( const NAIOProvider *provider, const NAIPrefs *iprefs );
-NAIIOProvider *na_io_provider_get_provider               ( const NAIOProvider *provider );
-gboolean       na_io_provider_is_willing_to_write        ( const NAIOProvider *provider );
-gboolean       na_io_provider_is_able_to_write           ( const NAIOProvider *provider );
-gboolean       na_io_provider_has_write_api              ( const NAIOProvider *provider );
-
-gboolean       na_io_provider_are_writings_authorized    ( const NAIOProvider *provider, const NAPivot *pivot );
+/* ... */
 
 guint          na_io_provider_write_item    ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );
 guint          na_io_provider_delete_item   ( const NAIOProvider *provider, const NAObjectItem *item, GSList **messages );

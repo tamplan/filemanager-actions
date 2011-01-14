@@ -36,6 +36,7 @@
 
 #include "base-window.h"
 #include "base-keysyms.h"
+#include "nact-application.h"
 #include "nact-main-menubar.h"
 #include "nact-main-tab.h"
 #include "nact-marshal.h"
@@ -859,6 +860,8 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	IActionsListInstanceData *ialid;
 	NAObjectItem *item;
 	gboolean writable_item;
+	NactApplication *application;
+	NAUpdater *updater;
 
 	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 	g_object_unref( object );
@@ -875,7 +878,10 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		modified = na_object_is_modified( object );
 		valid = na_object_is_valid( object );
 		item = NA_IS_OBJECT_PROFILE( object ) ? na_object_get_parent( object ) : NA_OBJECT_ITEM( object );
-		writable_item = nact_window_is_item_writable( NACT_WINDOW( instance ), item, NULL );
+
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+		updater = nact_application_get_updater( application );
+		writable_item = na_updater_is_item_writable( updater, item, NULL );
 
 		if( modified ){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );

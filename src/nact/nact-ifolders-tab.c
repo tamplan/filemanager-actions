@@ -57,9 +57,6 @@ struct NactIFoldersTabInterfacePrivate {
 
 #define ITAB_NAME						"folders"
 
-#define IPREFS_FOLDERS_WSP				"folder-chooser-wsp"
-#define IPREFS_FOLDERS_URI				"folder-last-folder-uri"
-
 static gboolean st_initialized = FALSE;
 static gboolean st_finalized = FALSE;
 
@@ -275,6 +272,7 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 	GtkWidget *dialog;
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
 
 	uri = NULL;
 	toplevel = base_window_get_toplevel( window );
@@ -291,10 +289,11 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
-	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_WSP );
+	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
 
-	uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_FOLDERS_URI, "file:///" );
+	uri = na_settings_get_string( settings, NA_IPREFS_FOLDER_CHOOSER_URI, NULL, NULL );
 	if( uri && g_utf8_strlen( uri, -1 )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 	}
@@ -302,7 +301,7 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 
 	if( gtk_dialog_run( GTK_DIALOG( dialog )) == GTK_RESPONSE_ACCEPT ){
 		uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-		nact_iprefs_write_string( window, IPREFS_FOLDERS_URI, uri );
+		na_settings_set_string( settings, NA_IPREFS_FOLDER_CHOOSER_URI, uri );
 
 		path = g_filename_from_uri( uri, NULL, NULL );
 		nact_match_list_insert_row( window, ITAB_NAME, path, FALSE, FALSE );
@@ -311,7 +310,7 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 		g_free( uri );
 	}
 
-	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), IPREFS_FOLDERS_WSP );
+	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
 
 	gtk_widget_destroy( dialog );
 }

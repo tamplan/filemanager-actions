@@ -344,9 +344,11 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 	const gchar *text;
 	gchar *filename, *uri;
 	GtkWidget *preview;
+	NASettings *settings;
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 	toplevel = base_window_get_toplevel( window );
 
 	dialog = gtk_file_chooser_dialog_new(
@@ -372,7 +374,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), text );
 
 	} else {
-		uri = na_iprefs_read_string( NA_IPREFS( updater ), entry_name, default_dir_uri );
+		uri = na_settings_get_string( settings, entry_name, NULL, NULL );
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 		g_free( uri );
 	}
@@ -384,7 +386,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	nact_iprefs_write_string( window, entry_name, uri );
+	na_settings_set_string( settings, entry_name, uri );
 	g_free( uri );
 
 	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), dialog_name );
@@ -423,9 +425,11 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 	GtkWidget *dialog;
 	const gchar *text;
 	gchar *dir, *uri;
+	NASettings *settings;
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 	toplevel = base_window_get_toplevel( window );
 
 	dialog = gtk_file_chooser_dialog_new(
@@ -445,7 +449,7 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), text );
 
 	} else {
-		uri = na_iprefs_read_string( NA_IPREFS( updater ), entry_name, default_dir_uri );
+		uri = na_settings_get_string( settings, entry_name, NULL, NULL );
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 		g_free( uri );
 	}
@@ -457,7 +461,7 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	nact_iprefs_write_string( window, entry_name, uri );
+	na_settings_set_string( settings, entry_name, uri );
 	g_free( uri );
 
 	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), dialog_name );

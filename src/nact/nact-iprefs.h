@@ -58,18 +58,6 @@ typedef struct {
 }
 	NactIPrefsInterface;
 
-#define IPREFS_EXPORT_ITEMS_FOLDER_URI			"export-last-folder-uri"
-#define IPREFS_EXPORT_FORMAT					"export-preferred-format"
-#define IPREFS_EXPORT_ASK_LAST_FORMAT			"export-ask-user-last-format"
-#define IPREFS_IMPORT_ITEMS_FOLDER_URI			"import-last-folder-uri"
-#define IPREFS_ASSIST_ESC_QUIT					"assistant-esc-quit"
-#define IPREFS_ASSIST_ESC_CONFIRM				"assistant-esc-confirm"
-
-/* these are special export formats
- */
-#define IPREFS_EXPORT_NO_EXPORT					0
-#define IPREFS_EXPORT_FORMAT_DEFAULT			"Desktop1"
-
 GType nact_iprefs_get_type( void );
 
 GQuark nact_iprefs_get_export_format( const BaseWindow *window, const gchar *pref );

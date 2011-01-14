@@ -196,7 +196,7 @@ nact_window_has_writable_providers( NactWindow *window )
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
-		provider = na_io_provider_get_writable_provider( NA_PIVOT( updater ));
+		provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
 
 		if( provider ){
 			has_writables = TRUE;
@@ -206,6 +206,7 @@ nact_window_has_writable_providers( NactWindow *window )
 	return( has_writables );
 }
 
+#if 0
 /**
  * nact_window_is_item_writable:
  * @window: this #NactWindow object.
@@ -270,7 +271,7 @@ nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
 					}
-				} else if( !na_io_provider_is_user_writable( provider, NA_IPREFS( updater ))){
+				} else if( !na_io_provider_is_conf_writable( provider, NA_IPREFS( updater ))){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;
@@ -290,7 +291,7 @@ nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item
 			/* the get_writable_provider() api already takes above checks
 			 */
 			} else {
-				provider = na_io_provider_get_writable_provider( NA_PIVOT( updater ));
+				provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
 				if( !provider ){
 					writable = FALSE;
 					if( reason ){
@@ -303,6 +304,7 @@ nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item
 
 	return( writable );
 }
+#endif
 
 /**
  * nact_window_save_item:

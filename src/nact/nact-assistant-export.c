@@ -327,7 +327,7 @@ nact_assistant_export_run( BaseWindow *main_window )
 static gchar *
 window_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "export-assistant-wsp" ));
+	return( g_strdup( NA_IPREFS_EXPORT_ASSISTANT_WSP ));
 }
 
 static gchar *
@@ -349,6 +349,7 @@ on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data )
 	GtkAssistant *assistant;
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
 	gboolean esc_quit, esc_confirm;
 
 	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
@@ -365,9 +366,11 @@ on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data )
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
 	updater = nact_application_get_updater( application );
-	esc_quit = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_ASSIST_ESC_QUIT, TRUE );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	esc_quit = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
 	base_assistant_set_cancel_on_esc( BASE_ASSISTANT( dialog ), esc_quit );
-	esc_confirm = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_ASSIST_ESC_CONFIRM, TRUE );
+	esc_confirm = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 	base_assistant_set_warn_on_esc( BASE_ASSISTANT( dialog ), esc_confirm );
 }
 
@@ -504,6 +507,7 @@ assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *as
 	GtkFileChooser *chooser;
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
 	gchar *uri;
 	GtkWidget *content;
 
@@ -512,8 +516,9 @@ assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *as
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
-	uri = na_iprefs_read_string( NA_IPREFS( updater ), IPREFS_EXPORT_ITEMS_FOLDER_URI, "file:///tmp" );
+	uri = na_settings_get_string( settings, NA_IPREFS_EXPORT_ASSISTANT_URI, NULL, NULL );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( chooser ), uri );
 	}
@@ -550,6 +555,9 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	gboolean enabled;
 	NactAssistantExport *assist;
 	GtkWidget *content;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
 
 	g_debug( "%s: chooser=%p, user_data=%p", thisfn, ( void * ) chooser, ( void * ) user_data );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( user_data ));
@@ -566,7 +574,12 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 		if( enabled ){
 			g_free( assist->private->uri );
 			assist->private->uri = g_strdup( uri );
-			nact_iprefs_write_string( BASE_WINDOW( assist ), IPREFS_EXPORT_ITEMS_FOLDER_URI, uri );
+
+			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( assist )));
+			updater = nact_application_get_updater( application );
+			settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+			na_settings_set_string( settings, NA_IPREFS_EXPORT_ASSISTANT_URI, uri );
 		}
 
 		g_free( uri );
@@ -597,7 +610,7 @@ assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant
 	GtkWidget *container;
 	GQuark format;
 
-	format = nact_iprefs_get_export_format( BASE_WINDOW( window ), IPREFS_EXPORT_FORMAT );
+	format = nact_iprefs_get_export_format( BASE_WINDOW( window ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
 	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
 	nact_export_format_select( container, format );
 
@@ -697,7 +710,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	format = get_export_format( window );
 	label11 = na_export_format_get_label( format );
 	label21 = na_export_format_get_description( format );
-	nact_iprefs_set_export_format( BASE_WINDOW( window ), IPREFS_EXPORT_FORMAT, na_export_format_get_quark( format ));
+	nact_iprefs_set_export_format( BASE_WINDOW( window ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( format ));
 	label12 = na_core_utils_str_remove_char( label11, "_" );
 	label22 = na_core_utils_str_add_prefix( "\t", label21 );
 	g_string_append_printf( text, "\n\n<b>%s</b>\n\n%s", label12, label22 );
@@ -744,7 +757,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 		str->item = NA_OBJECT_ITEM( na_object_get_origin( NA_IDUPLICABLE( ia->data )));
 
-		str->format = nact_iprefs_get_export_format( BASE_WINDOW( wnd ), IPREFS_EXPORT_FORMAT );
+		str->format = nact_iprefs_get_export_format( BASE_WINDOW( wnd ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
 
 		if( str->format == IPREFS_EXPORT_FORMAT_ASK ){
 			str->format = nact_export_ask_user( BASE_WINDOW( wnd ), str->item );

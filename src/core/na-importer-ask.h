@@ -73,11 +73,11 @@ typedef struct {
 	NAImporterAskClass;
 
 typedef struct {
-	GtkWindow *parent;
-	gchar     *uri;
-	guint      count;
-	gboolean   keep_choice;
-	NAPivot   *pivot;
+	GtkWindow     *parent;
+	gchar         *uri;
+	guint          count;
+	gboolean       keep_choice;
+	const NAPivot *pivot;
 }
 	NAImporterAskUserParms;
 

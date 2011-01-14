@@ -147,7 +147,7 @@ nact_iprefs_get_export_format( const BaseWindow *window, const gchar *name )
 	NASettings *settings;
 	gchar *format_str;
 
-	export_format = g_quark_from_static_string( IPREFS_EXPORT_FORMAT_DEFAULT );
+	export_format = g_quark_from_static_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), export_format );
 

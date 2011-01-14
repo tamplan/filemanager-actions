@@ -256,14 +256,14 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item )
 
 	editor->private->parent = parent;
 	editor->private->item = item;
-	editor->private->format = nact_iprefs_get_export_format( BASE_WINDOW( parent ), IPREFS_EXPORT_ASK_LAST_FORMAT );
+	editor->private->format = nact_iprefs_get_export_format( BASE_WINDOW( parent ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT );
 
 	if( base_window_run( BASE_WINDOW( editor ))){
 
 		if( editor->private->format ){
 
 			format = editor->private->format;
-			nact_iprefs_set_export_format( BASE_WINDOW( parent ), IPREFS_EXPORT_ASK_LAST_FORMAT, format );
+			nact_iprefs_set_export_format( BASE_WINDOW( parent ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format );
 		}
 	}
 
@@ -275,7 +275,7 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "export-ask-user-wsp" ));
+	return( g_strdup( NA_IPREFS_EXPORT_ASK_USER_WSP ));
 }
 
 static gchar *
@@ -392,7 +392,7 @@ get_export_format( NactExportAsk *editor )
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	if( keep ){
-		nact_iprefs_set_export_format( BASE_WINDOW( editor ), IPREFS_EXPORT_FORMAT, format_quark );
+		nact_iprefs_set_export_format( BASE_WINDOW( editor ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, format_quark );
 	}
 
 	return( format_quark );

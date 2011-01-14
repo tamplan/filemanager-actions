@@ -53,7 +53,6 @@ struct NactPreferencesEditorClassPrivate {
  */
 struct NactPreferencesEditorPrivate {
 	gboolean     dispose_has_run;
-	GConfClient *gconf;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -174,8 +173,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED,
 			G_CALLBACK( on_base_all_widgets_showed));
 
-	self->private->gconf = gconf_client_get_default();
-
 	self->private->dispose_has_run = FALSE;
 }
 
@@ -192,8 +189,6 @@ instance_dispose( GObject *dialog )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
-
-		g_object_unref( self->private->gconf );
 
 		nact_schemes_list_dispose( BASE_WINDOW( self ));
 		nact_providers_list_dispose( BASE_WINDOW( self ));
@@ -259,7 +254,7 @@ nact_preferences_editor_run( BaseWindow *parent )
 static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
-	return( g_strdup( "preferences-wsp" ));
+	return( g_strdup( NA_IPREFS_PREFERENCES_WSP ));
 }
 
 static gchar *
@@ -317,15 +312,17 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	gboolean auto_save_on;
 	guint auto_save_period;
 	GtkAdjustment *adjustment;
+	NASettings *settings;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
 	/* first tab: runtime preferences
 	 */
-	order_mode = na_iprefs_get_order_mode( NA_IPREFS( updater ));
+	order_mode = na_iprefs_get_order_mode( NA_PIVOT( updater ));
 	switch( order_mode ){
 		case IPREFS_ORDER_ALPHA_ASCENDING:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
@@ -343,25 +340,25 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 	enable_order_mode_buttons( editor );
 
-	create_root_menu = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_CREATE_ROOT_MENU, FALSE );
+	create_root_menu = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "CreateRootMenuButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), create_root_menu );
 
-	add_about_item = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_ADD_ABOUT_ITEM, TRUE );
+	add_about_item = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), add_about_item );
 
 	/* second tab: ui preferences
 	 */
-	relabel = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_RELABEL_MENUS, FALSE );
+	relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, NULL );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 
-	relabel = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_RELABEL_ACTIONS, FALSE );
+	relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, NULL );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelActionButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 
-	relabel = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_RELABEL_PROFILES, FALSE );
+	relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, NULL );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), relabel );
 
@@ -373,15 +370,15 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 			"toggled",
 			G_CALLBACK( on_esc_quit_toggled ));
 
-	esc_quit = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_ASSIST_ESC_QUIT, TRUE );
+	esc_quit = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), esc_quit );
 	esc_quit_activated( editor, esc_quit );
 
-	esc_confirm = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_ASSIST_ESC_CONFIRM, TRUE );
+	esc_confirm = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "EscConfirmButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), esc_confirm );
 
-	auto_save_on = na_iprefs_read_bool( NA_IPREFS( updater ), IPREFS_AUTOSAVE_ON, FALSE );
+	auto_save_on = na_settings_get_boolean( settings, NA_IPREFS_MAIN_SAVE_AUTO, NULL, NULL );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSaveCheckButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), auto_save_on );
 	auto_save_activated( editor, auto_save_on );
@@ -392,14 +389,14 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 			"toggled",
 			G_CALLBACK( on_auto_save_toggled ));
 
-	auto_save_period = na_iprefs_read_uint( NA_IPREFS( updater ), IPREFS_AUTOSAVE_PERIOD, 5 );
+	auto_save_period = na_settings_get_uint( settings, NA_IPREFS_MAIN_SAVE_PERIOD, NULL, NULL );
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSavePeriodicitySpinButton" );
 	adjustment = gtk_spin_button_get_adjustment( GTK_SPIN_BUTTON( button ));
 	gtk_adjustment_configure( adjustment, auto_save_period, 1, 999, 1, 10, 0 );
 
 	/* third tab: import tool
 	 */
-	import_mode = na_iprefs_get_import_mode( editor->private->gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE );
+	import_mode = na_iprefs_get_import_mode( NA_PIVOT( updater ), NA_IPREFS_IMPORT_PREFERRED_MODE );
 	switch( import_mode ){
 		case IMPORTER_MODE_ASK:
 			button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
@@ -422,7 +419,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 
 	/* fourth tab: export tool
 	 */
-	export_format = nact_iprefs_get_export_format( BASE_WINDOW( editor ), IPREFS_EXPORT_FORMAT );
+	export_format = nact_iprefs_get_export_format( BASE_WINDOW( editor ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
 	container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 	nact_export_format_select( container, export_format );
 
@@ -532,7 +529,7 @@ enable_order_mode_buttons( NactPreferencesEditor *editor )
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
-	writable = na_pivot_is_level_zero_writable( NA_PIVOT( updater ));
+	writable = na_iprefs_is_level_zero_writable( NA_PIVOT( updater ));
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
 	gtk_widget_set_sensitive( button, writable );
@@ -560,9 +557,11 @@ save_preferences( NactPreferencesEditor *editor )
 	gboolean auto_save_on;
 	guint auto_save_period;
 	GtkAdjustment *adjustment;
+	NASettings *settings;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
 	/* first tab: runtime preferences
 	 */
@@ -581,46 +580,46 @@ save_preferences( NactPreferencesEditor *editor )
 			}
 		}
 	}
-	na_iprefs_set_order_mode( NA_IPREFS( updater ), order_mode );
+	na_iprefs_set_order_mode( NA_PIVOT( updater ), order_mode );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "CreateRootMenuButton" );
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_CREATE_ROOT_MENU, enabled );
+	na_settings_set_boolean( settings, NA_IPREFS_ITEMS_CREATE_ROOT_MENU, enabled );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AddAboutButton" );
 	enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_ADD_ABOUT_ITEM, enabled );
+	na_settings_set_boolean( settings, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, enabled );
 
 	/* second tab: runtime preferences
 	 */
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelMenuButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_RELABEL_MENUS, relabel );
+	na_settings_set_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, relabel );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelActionButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_RELABEL_ACTIONS, relabel );
+	na_settings_set_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_ACTION, relabel );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "RelabelProfileButton" );
 	relabel = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_RELABEL_PROFILES, relabel );
+	na_settings_set_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_PROFILE, relabel );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "EscCloseButton" );
 	esc_quit = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_ASSIST_ESC_QUIT, esc_quit );
+	na_settings_set_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, esc_quit );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "EscConfirmButton" );
 	esc_confirm = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_ASSIST_ESC_CONFIRM, esc_confirm );
+	na_settings_set_boolean( settings, NA_IPREFS_ASSISTANT_ESC_CONFIRM, esc_confirm );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSaveCheckButton" );
 	auto_save_on = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	nact_iprefs_write_bool( BASE_WINDOW( editor ), IPREFS_AUTOSAVE_ON, auto_save_on );
+	na_settings_set_boolean( settings, NA_IPREFS_MAIN_SAVE_AUTO, auto_save_on );
 
 	button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSavePeriodicitySpinButton" );
 	adjustment = gtk_spin_button_get_adjustment( GTK_SPIN_BUTTON( button ));
 	auto_save_period = ( guint ) gtk_adjustment_get_value( adjustment );
-	nact_iprefs_write_uint( BASE_WINDOW( editor ), IPREFS_AUTOSAVE_PERIOD, auto_save_period );
+	na_settings_set_uint( settings, NA_IPREFS_MAIN_SAVE_PERIOD, auto_save_period );
 
 	/* third tab: import tool
 	 */
@@ -639,14 +638,14 @@ save_preferences( NactPreferencesEditor *editor )
 			}
 		}
 	}
-	na_iprefs_set_import_mode( editor->private->gconf, IPREFS_IMPORT_ITEMS_IMPORT_MODE, import_mode );
+	na_iprefs_set_import_mode( NA_PIVOT( updater ), NA_IPREFS_IMPORT_PREFERRED_MODE, import_mode );
 
 	/* fourth tab: export tool
 	 */
 	container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 	export_format = nact_export_format_get_selected( container );
 	nact_iprefs_set_export_format(
-			BASE_WINDOW( editor ), IPREFS_EXPORT_FORMAT, na_export_format_get_quark( export_format ));
+			BASE_WINDOW( editor ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( export_format ));
 
 	/* fifth tab: list of default schemes
 	 */

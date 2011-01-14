@@ -129,7 +129,7 @@ Deprecating GConf
      na-gconf/locked
 
  These keys are just ignored if they are not in the mandatory GConf pool, i.e.
- if they happends to be eventually editable by the user.
+ if they happens to be eventually editable by the user.
 
  If these keys are actually in the system mandatory GConf pool, they are renamed
  in the following way:
@@ -137,10 +137,10 @@ Deprecating GConf
  GConf                                      Group      Key
  -----------------------------------------  ------     --------------------------------------
  /apps/nautilus-actions/mandatory/all/locked
-                                            [nact]     io-providers-all-locked
- /apps/nautilus-actions/mandatory/na-desktop/locked
-                                            [io-provider na-desktop] locked
- /apps/nautilus-actions/mandatory/na-gconf/locked
-                                            [io-provider na-gconf] locked
+                                            [runtime]  preferences-locked
+                                            [runtime]  io-providers-locked
+
+ /apps/nautilus-actions/mandatory/na-desktop/locked    <removed>
+ /apps/nautilus-actions/mandatory/na-gconf/locked      <removed>
 
 P. Wieser - Jan. 2011

@@ -307,7 +307,7 @@ tree_model_new( BaseWindow *window, GtkTreeView *treeview )
 	 */
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	order_mode = na_iprefs_get_order_mode( NA_IPREFS( updater ));
+	order_mode = na_iprefs_get_order_mode( NA_PIVOT( updater ));
 	nact_tree_model_display_order_change( model, order_mode );
 
 	model->private->window = window;
