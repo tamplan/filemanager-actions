@@ -747,9 +747,14 @@ instance_dispose( GObject *window )
 	GtkWidget *pane;
 	gint pos;
 	GList *it;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
 	self = NACT_MAIN_WINDOW( window );
 
 	if( !self->private->dispose_has_run ){
@@ -758,9 +763,13 @@ instance_dispose( GObject *window )
 
 		g_object_unref( self->private->clipboard );
 
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( self )));
+		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
-		base_iprefs_set_int( BASE_WINDOW( window ), NA_IPREFS_MAIN_PANED, pos );
+		na_settings_set_uint( settings, NA_IPREFS_MAIN_PANED, pos );
 
 		for( it = self->private->deleted ; it ; it = it->next ){
 			g_debug( "nact_main_window_instance_dispose: deleted=%p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
@@ -1117,13 +1126,20 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_base_initial_load_toplevel";
 	gint pos;
 	GtkWidget *pane;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
 
-	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 
-		pos = base_iprefs_get_int( BASE_WINDOW( window ), NA_IPREFS_MAIN_PANED );
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+		pos = na_settings_get_uint( settings, NA_IPREFS_MAIN_PANED, NULL, NULL );
 		if( pos ){
 			pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 			gtk_paned_set_position( GTK_PANED( pane ), pos );

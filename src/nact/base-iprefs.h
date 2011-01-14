@@ -41,8 +41,7 @@
  * restore size and position of windows on the display.
  *
  * Each #BaseWindow -derived window which want take advantage of this
- * feature may want implement this BaseIPrefs interface (but see also the
- * BaseWindow::base-wsp property which provides this same feature).
+ * feature may want implement this BaseIPrefs interface.
  */
 
 #include "base-window.h"
@@ -63,16 +62,8 @@ typedef struct {
 	BaseIPrefsInterfacePrivate *private;
 
 	/* api
-	 * deprecated: 3.1.0
 	 */
 	gchar * ( *iprefs_get_window_id )( const BaseWindow *window );
-
-	/* new api
-	 * since: 3.1.0
-	 */
-	const gchar * ( *get_wsp_id )   ( const BaseWindow *window );
-	GList       * ( *get_uint_list )( const BaseWindow *window );
-	void          ( *set_uint_list )( const BaseWindow *window, GList *list );
 }
 	BaseIPrefsInterface;
 
@@ -82,9 +73,6 @@ void  base_iprefs_position_window           ( const BaseWindow *window );
 void  base_iprefs_position_named_window     ( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );
 void  base_iprefs_save_window_position      ( const BaseWindow *window );
 void  base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );
-
-gint  base_iprefs_get_int( BaseWindow *window, const gchar *name );
-void  base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value );
 
 G_END_DECLS
 

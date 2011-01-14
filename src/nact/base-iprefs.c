@@ -55,9 +55,7 @@ static void        interface_base_finalize( BaseIPrefsInterface *klass );
 static gchar      *v_iprefs_get_window_id( const BaseWindow *window );
 
 static NASettings *get_settings( const BaseWindow *window );
-static gint        read_int( BaseWindow *window, const gchar *name );
 static GList      *read_int_list( const BaseWindow *window, const gchar *key );
-static void        write_int( BaseWindow *window, const gchar *name, gint value );
 static void        write_int_list( const BaseWindow *window, const gchar *key, GList *list );
 static void        int_list_to_position( const BaseWindow *window, GList *list, gint *x, gint *y, gint *width, gint *height );
 static GList      *position_to_int_list( const BaseWindow *window, gint x, gint y, gint width, gint height );
@@ -241,10 +239,6 @@ base_iprefs_save_window_position( const BaseWindow *window )
  * @key: the name of the window.
  *
  * Save size and position of the specified window.
- *
- * Note that the actual preference which records the size and position
- * of the window is a list of unsigned integers, named '<key>-wsp'
- * (for window size and position).
  */
 void
 base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *toplevel, const gchar *key )
@@ -267,48 +261,6 @@ base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *top
 			write_int_list( window, key, list );
 			free_int_list( list );
 		}
-	}
-}
-/**
- * base_iprefs_get_int:
- * @window: this BaseWindow-derived window.
- * @name: the entry to be readen.
- *
- * Returns: the named integer.
- */
-gint
-base_iprefs_get_int( BaseWindow *window, const gchar *name )
-{
-	gint ret = 0;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), 0 );
-	g_return_val_if_fail( BASE_IS_IPREFS( window ), 0 );
-
-	if( st_initialized && !st_finalized ){
-
-		ret = read_int( window, name );
-	}
-
-	return( ret );
-}
-
-/**
- * base_iprefs_set_int:
- * @window: this BaseWindow-derived window.
- * @name: the entry to be written.
- * @value: the integer to be set.
- *
- * Writes an integer in the GConf system.
- */
-void
-base_iprefs_set_int( BaseWindow *window, const gchar *name, gint value )
-{
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( BASE_IS_IPREFS( window ));
-
-	if( st_initialized && !st_finalized ){
-
-		write_int( window, name, value );
 	}
 }
 
@@ -337,13 +289,6 @@ get_settings( const BaseWindow *window )
 	return( na_pivot_get_settings( NA_PIVOT( updater )));
 }
 
-static gint
-read_int( BaseWindow *window, const gchar *name )
-{
-	NASettings *settings = get_settings( window );
-	return( na_settings_get_uint( settings, name, NULL, NULL ));
-}
-
 /*
  * returns a list of int
  */
@@ -352,13 +297,6 @@ read_int_list( const BaseWindow *window, const gchar *key )
 {
 	NASettings *settings = get_settings( window );
 	return( na_settings_get_uint_list( settings, key, NULL, NULL ));
-}
-
-static void
-write_int( BaseWindow *window, const gchar *name, gint value )
-{
-	NASettings *settings = get_settings( window );
-	na_settings_set_uint( settings, name, value );
 }
 
 static void
