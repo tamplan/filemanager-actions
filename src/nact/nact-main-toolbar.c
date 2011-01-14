@@ -132,6 +132,9 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 	ToolbarProps *props;
 	GtkWidget *toolbar, *hbox, *handle;
 	gulong attach_id, detach_id;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
 
 	props = get_toolbar_properties( toolbar_id );
 	if( !props ){
@@ -168,7 +171,11 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 		g_debug( "%s: ref=%d", thisfn, G_OBJECT( toolbar )->ref_count );
 	}
 
-	nact_iprefs_write_bool( BASE_WINDOW( window ), props->prefs_key, is_active );
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	na_settings_set_boolean( settings, props->prefs_key, is_active );
 }
 
 /*
