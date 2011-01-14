@@ -859,7 +859,7 @@ static int
 uint_list_compare( const NABoxed *a, const NABoxed *b )
 {
 	GList *ia, *ib;
-	gboolean diff;
+	gboolean diff = FALSE;
 
 	guint na = g_list_length( a->u.uint_list );
 	guint nb = g_list_length( b->u.uint_list );
