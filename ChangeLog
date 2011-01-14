@@ -1,3 +1,9 @@
+2011-01-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/utils/nautilus-actions-new.c:
+	* src/utils/nautilus-actions-run.c:
+	* src/utils/nautilus-actions-schemas.c: Add locale.h include.
+
 2011-01-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Enable silent rules by default.

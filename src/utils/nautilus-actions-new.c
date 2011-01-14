@@ -36,6 +36,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
+#include <locale.h>
 #include <stdlib.h>
 
 #include <api/na-core-utils.h>
