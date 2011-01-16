@@ -36,6 +36,9 @@
  * @title: GConf Misc
  * @short_description: The GConf Library Utilities
  * @include: runtime/na-gconf-utils.h
+ *
+ * Starting with Nautilus-Actions 3.1.0, GConf, whether it is used as a
+ * preference storage subsystem or as an I/O provider, is deprecated.
  */
 
 #include <gconf/gconf-client.h>

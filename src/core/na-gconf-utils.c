@@ -51,6 +51,8 @@ static gboolean    sync_gconf( GConfClient *gconf, gchar **message );
  * The returned list should be na_gconf_utils_free_subdirs() by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 GSList *
 na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
@@ -77,6 +79,8 @@ na_gconf_utils_get_subdirs( GConfClient *gconf, const gchar *path )
  * Release the list.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 void
 na_gconf_utils_free_subdirs( GSList *subdirs )
@@ -93,6 +97,8 @@ na_gconf_utils_free_subdirs( GSList *subdirs )
  * %FALSE else.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
@@ -125,6 +131,8 @@ na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
  * na_gconf_utils_free_entries().
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 GSList *
 na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
@@ -156,6 +164,8 @@ na_gconf_utils_get_entries( GConfClient *gconf, const gchar *path )
  * to %FALSE.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gboolean *value )
@@ -205,6 +215,8 @@ na_gconf_utils_get_bool_from_entries( GSList *entries, const gchar *entry, gbool
  * If @value is returned not NULL, it should be g_free() by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gchar **value )
@@ -255,6 +267,8 @@ na_gconf_utils_get_string_from_entries( GSList *entries, const gchar *entry, gch
  * by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry, GSList **value )
@@ -301,6 +315,8 @@ na_gconf_utils_get_string_list_from_entries( GSList *entries, const gchar *entry
  * Dumps the content of the entries.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 void
 na_gconf_utils_dump_entries( GSList *entries )
@@ -361,6 +377,8 @@ dump_entry( GConfEntry *entry, void *user_data )
  * Releases the provided list.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 void
 na_gconf_utils_free_entries( GSList *entries )
@@ -380,6 +398,8 @@ na_gconf_utils_free_entries( GSList *entries )
  * Returns: the required boolean value.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_schema, gboolean default_value )
@@ -411,6 +431,8 @@ na_gconf_utils_read_bool( GConfClient *gconf, const gchar *path, gboolean use_sc
  * Returns: the required integer value.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gint
 na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_schema, gint default_value )
@@ -444,6 +466,8 @@ na_gconf_utils_read_int( GConfClient *gconf, const gchar *path, gboolean use_sch
  * should be g_free() by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gchar *
 na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_schema, const gchar *default_value )
@@ -477,6 +501,8 @@ na_gconf_utils_read_string( GConfClient *gconf, const gchar *path, gboolean use_
  * The returned list must be released with na_core_utils_slist_free().
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 GSList *
 na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
@@ -513,6 +539,8 @@ na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
  * It should be g_free() by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value, gchar **message )
@@ -550,6 +578,8 @@ na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value
  * It should be g_free() by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gchar **message )
@@ -587,6 +617,8 @@ na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gch
  * It should be g_free() by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message )
@@ -624,6 +656,8 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
  * It should be g_free() by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList *value, gchar **message )
@@ -662,6 +696,8 @@ na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList 
  * Returns: %TRUE if the operation was successfull, %FALSE else.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gboolean
 na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **message )
@@ -700,6 +736,8 @@ na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **mess
  * string was not of the GConf form.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 GSList *
 na_gconf_utils_slist_from_string( const gchar *value )
@@ -735,6 +773,8 @@ na_gconf_utils_slist_from_string( const gchar *value )
  * allocated string which should be g_free() by the caller.
  *
  * Since: 2.30
+ *
+ * Deprecated: 3.1.0
  */
 gchar *
 na_gconf_utils_slist_to_string( GSList *slist )
