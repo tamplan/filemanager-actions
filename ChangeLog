@@ -23,6 +23,8 @@
 	* Makefile.am:
 	* configure.ac: configure in tools/.
 
+	* tools/check-po.sh: Rewrite to have options and messages management.
+
 	* src/utils/na-gconf2key.sh.in: Review comment.
 
 	* src/utils/Makefile.am: Add na-gconf2key.sh.in to the distributed files.
