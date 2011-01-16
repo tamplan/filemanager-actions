@@ -39,6 +39,7 @@ src/nact/nact-iaction-tab.c
 src/nact/nact-ibasenames-tab.c
 src/nact/nact-icapabilities-tab.c
 src/nact/nact-icommand-tab.c
+[type: gettext/glade] src/nact/nact-icon-chooser.ui
 src/nact/nact-ienvironment-tab.c
 src/nact/nact-ifolders-tab.c
 src/nact/nact-imimetypes-tab.c
@@ -58,6 +59,8 @@ src/nact/nact-window.c
 src/plugin-menu/nautilus-actions.c
 src/test/test-reader.c
 src/utils/console-utils.c
+src/utils/na-delete-xmltree.c
+src/utils/na-print-schemas.c
 src/utils/nautilus-actions-new.c
+src/utils/nautilus-actions-print.c
 src/utils/nautilus-actions-run.c
-src/utils/nautilus-actions-schemas.c
