@@ -339,15 +339,17 @@ na_boxed_free( NABoxed *boxed )
 	static const gchar *thisfn = "na_boxed_free";
 	const BoxedDef *def;
 
-	def = get_boxed_def( boxed->type );
-	if( def ){
-		if( def->free ){
-			( *def->free )( boxed );
-			g_debug( "na_boxed_free: boxed=%p", ( void * ) boxed );
-			g_free( boxed );
-		} else {
-			g_warning( "%s: unable to free the content: '%s' type does not provide 'free' function",
-					thisfn, def->label );
+	if( boxed ){
+		def = get_boxed_def( boxed->type );
+		if( def ){
+			if( def->free ){
+				( *def->free )( boxed );
+				g_debug( "na_boxed_free: boxed=%p", ( void * ) boxed );
+				g_free( boxed );
+			} else {
+				g_warning( "%s: unable to free the content: '%s' type does not provide 'free' function",
+						thisfn, def->label );
+			}
 		}
 	}
 }
@@ -413,14 +415,17 @@ na_boxed_new_from_string_with_sep( guint type, const gchar *string, const gchar 
 	gchar **array;
 
 	boxed = NULL;
+
 	def = get_boxed_def( type );
 	if( def ){
 		if( def->from_array ){
 			boxed = boxed_new();
 			boxed->type = type;
-			array = string ? g_strsplit( string, sep, -1 ) : NULL;
-			( *def->from_array )( boxed, ( const gchar ** ) array );
-			g_strfreev( array );
+			if( string && strlen( string )){
+				array = string ? g_strsplit( string, sep, -1 ) : NULL;
+				( *def->from_array )( boxed, ( const gchar ** ) array );
+				g_strfreev( array );
+			}
 		} else {
 			g_warning( "%s: unable to initialize the content: '%s' type does not provide 'from_array' function",
 					thisfn, def->label );
@@ -447,7 +452,7 @@ na_boxed_get_boolean( const NABoxed *boxed )
 	gboolean value;
 
 	value = FALSE;
-	if( boxed->type == NA_BOXED_TYPE_BOOLEAN && boxed->is_set ){
+	if( boxed && boxed->type == NA_BOXED_TYPE_BOOLEAN && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_bool ){
@@ -478,7 +483,7 @@ na_boxed_get_pointer( const NABoxed *boxed )
 	gpointer value;
 
 	value = NULL;
-	if( boxed->is_set ){
+	if( boxed && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_pointer ){
@@ -510,7 +515,7 @@ na_boxed_get_string( const NABoxed *boxed )
 	gchar *value;
 
 	value = NULL;
-	if( boxed->type == NA_BOXED_TYPE_STRING && boxed->is_set ){
+	if( boxed && boxed->type == NA_BOXED_TYPE_STRING && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_string ){
@@ -542,7 +547,7 @@ na_boxed_get_string_list( const NABoxed *boxed )
 	GSList *value;
 
 	value = NULL;
-	if( boxed->type == NA_BOXED_TYPE_STRING_LIST && boxed->is_set ){
+	if( boxed && boxed->type == NA_BOXED_TYPE_STRING_LIST && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_string_list ){
@@ -573,7 +578,7 @@ na_boxed_get_uint( const NABoxed *boxed )
 	guint value;
 
 	value = 0;
-	if( boxed->type == NA_BOXED_TYPE_UINT && boxed->is_set ){
+	if( boxed && boxed->type == NA_BOXED_TYPE_UINT && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_uint ){
@@ -605,7 +610,7 @@ na_boxed_get_uint_list( const NABoxed *boxed )
 	GList *value;
 
 	value = NULL;
-	if( boxed->type == NA_BOXED_TYPE_UINT_LIST && boxed->is_set ){
+	if( boxed && boxed->type == NA_BOXED_TYPE_UINT_LIST && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_uint_list ){

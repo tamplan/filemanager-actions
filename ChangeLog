@@ -25,6 +25,13 @@
 
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-boxed.c
+	(na_boxed_free): Only free a non null structure.
+	(na_boxed_new_from_string_with_sep): Do not try to split an empty string.
+	(na_boxed_get_boolean, na_boxed_get_pointer, na_boxed_get_string,
+	na_boxed_get_string_list, na_boxed_get_uint, na_boxed_get_uint_list):
+	Do not try to return a value for a null structure.
+
 	* m4/na-maintainer-mode.m4: Define a conditional when in maintainer mode.
 
 2011-01-14 Pierre Wieser <pwieser@trychlos.org>
