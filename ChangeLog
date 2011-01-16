@@ -25,6 +25,9 @@
 
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-id.c:
+	* src/core/na-object-item.c: Remove no more used instance_init debug messages.
+
 	* src/core/na-data-boxed.c:
 	* src/core/na-gconf-monitor.c:
 	* src/core/na-io-provider.c:

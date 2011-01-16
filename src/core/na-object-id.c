@@ -125,15 +125,11 @@ class_init( NAObjectIdClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_object_id_instance_init";
 	NAObjectId *self;
 
 	g_return_if_fail( NA_IS_OBJECT_ID( instance ));
 
 	self = NA_OBJECT_ID( instance );
-
-	g_debug( "%s: instance=%p (%s), klass=%p",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self->private = g_new0( NAObjectIdPrivate, 1 );
 }
@@ -156,8 +152,6 @@ instance_dispose( GObject *object )
 	self = NA_OBJECT_ID( object );
 
 	if( !self->private->dispose_has_run ){
-
-		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
