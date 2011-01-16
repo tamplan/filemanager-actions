@@ -23,6 +23,8 @@
 	* Makefile.am:
 	* configure.ac: configure in tools/.
 
+	* src/utils/nautilus-actions-print.c: Move program summary as a global def.
+
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
 	* tools/init-finalize-diff.sh: Fix the interpretation of debug messages.

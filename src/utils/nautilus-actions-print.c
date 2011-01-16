@@ -51,6 +51,9 @@ static gchar     *id               = "";
 static gchar     *format           = "";
 static gboolean   version          = FALSE;
 
+/* i18n: nautilus-actions-print program summary */
+static const gchar *program_summary = N_( "Print a menu or an action to stdout." );
+
 static GOptionEntry entries[] = {
 
 	{ "id"                   , 'i', 0, G_OPTION_ARG_STRING        , &id,
@@ -166,7 +169,7 @@ init_options( void )
 	gchar* description;
 	GOptionGroup *misc_group;
 
-	context = g_option_context_new( _( "Print a menu or an action to stdout." ));
+	context = g_option_context_new( program_summary );
 	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 
 #ifdef ENABLE_NLS
