@@ -39,4 +39,6 @@ AC_DEFUN([NA_IS_MAINTAINER_MODE],[
 		AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} -Werror"])
 		msg_maintainer_mode="enabled"
 	fi
+
+	AM_CONDITIONAL([NA_MAINTAINER_MODE], [test "${USE_MAINTAINER_MODE}" = "yes"])
 ])
