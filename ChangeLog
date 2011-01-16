@@ -1,5 +1,7 @@
 2011-01-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* run-distcheck.sh: New file.
+
 	Add a script to check completeness of header files.
 
 	* tools/.gitignore:
