@@ -96,6 +96,7 @@ typedef struct {
 GType         na_io_provider_get_type ( void );
 
 NAIOProvider *na_io_provider_find_writable_io_provider( const NAPivot *pivot );
+NAIOProvider *na_io_provider_find_io_provider_by_id   ( const NAPivot *pivot, const gchar *id );
 const GList  *na_io_provider_get_io_providers_list    ( const NAPivot *pivot );
 void          na_io_provider_unref_io_providers_list  ( void );
 

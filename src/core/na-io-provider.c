@@ -323,6 +323,37 @@ na_io_provider_find_writable_io_provider( const NAPivot *pivot )
 }
 
 /*
+ * na_io_provider_find_io_provider_by_id:
+ * @pivot: the #NAPivot instance.
+ * @id: the identifier of the searched I/O provider.
+ *
+ * Returns: the I/O provider, or NULL.
+ *
+ * The returned provider is owned by NAIOProvider class, and should not
+ * be released by the caller.
+ */
+NAIOProvider *
+na_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
+{
+	const GList *providers;
+	const GList *ip;
+	NAIOProvider *provider;
+	NAIOProvider *found;
+
+	providers = na_io_provider_get_io_providers_list( pivot );
+	found = NULL;
+
+	for( ip = providers ; ip && !found ; ip = ip->next ){
+		provider = NA_IO_PROVIDER( ip->data );
+		if( !strcmp( provider->private->id, id )){
+			found = provider;
+		}
+	}
+
+	return( found );
+}
+
+/*
  * na_io_provider_get_io_providers_list:
  * @pivot: the current #NAPivot instance.
  *
