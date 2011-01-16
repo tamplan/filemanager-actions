@@ -163,9 +163,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nadp_desktop_provider_instance_init";
 	NadpDesktopProvider *self;
 
+	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( instance ));
+
 	self = NADP_DESKTOP_PROVIDER( instance );
 
 	self->private = g_new0( NadpDesktopProviderPrivate, 1 );
@@ -180,11 +182,13 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "nadp_desktop_provider_instance_dispose";
 	NadpDesktopProvider *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( object ));
+
 	self = NADP_DESKTOP_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -200,9 +204,13 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
+	static const gchar *thisfn = "nadp_desktop_provider_instance_finalize";
 	NadpDesktopProvider *self;
 
-	g_assert( NADP_IS_DESKTOP_PROVIDER( object ));
+	g_return_if_fail( NADP_IS_DESKTOP_PROVIDER( object ));
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 	self = NADP_DESKTOP_PROVIDER( object );
 
 	g_free( self->private );

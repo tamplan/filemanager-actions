@@ -175,9 +175,11 @@ instance_init( GTypeInstance *application, gpointer klass )
 	static const gchar *thisfn = "nact_application_instance_init";
 	NactApplication *self;
 
+	g_return_if_fail( NACT_IS_APPLICATION( application ));
+
 	g_debug( "%s: application=%p (%s), klass=%p",
 			thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ), ( void * ) klass );
-	g_assert( NACT_IS_APPLICATION( application ));
+
 	self = NACT_APPLICATION( application );
 
 	self->private = g_new0( NactApplicationPrivate, 1 );
@@ -235,11 +237,13 @@ instance_dispose( GObject *application )
 	static const gchar *thisfn = "nact_application_instance_dispose";
 	NactApplication *self;
 
-	g_debug( "%s: application=%p (%s)", thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ));
 	g_return_if_fail( NACT_IS_APPLICATION( application ));
+
 	self = NACT_APPLICATION( application );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: application=%p (%s)", thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -260,8 +264,10 @@ instance_finalize( GObject *application )
 	static const gchar *thisfn = "nact_application_instance_finalize";
 	NactApplication *self;
 
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 	g_return_if_fail( NACT_IS_APPLICATION( application ));
+
+	g_debug( "%s: application=%p (%s)", thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ));
+
 	self = NACT_APPLICATION( application );
 
 	g_free( self->private );

@@ -167,9 +167,13 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
+	static const gchar *thisfn = "na_gconf_monitor_instance_finalize";
 	NAGConfMonitor *self;
 
 	g_return_if_fail( NA_IS_GCONF_MONITOR( object ));
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 	self = NA_GCONF_MONITOR( object );
 
 	g_free( self->private->path );

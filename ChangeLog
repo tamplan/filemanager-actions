@@ -25,6 +25,25 @@
 
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-data-boxed.c:
+	* src/core/na-gconf-monitor.c:
+	* src/core/na-io-provider.c:
+	* src/core/na-tokens.c:
+	* src/core/na-updater.c:
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-desktop/nadp-monitor.c:
+	* src/io-gconf/nagp-gconf-provider.c:
+	* src/io-xml/naxml-provider.c:
+	* src/nact/base-application.c:
+	* src/nact/base-builder.c:
+	* src/nact/base-window.c: 
+	* src/nact/nact-application.c:
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-window.c: Add instance_finalize debug message.
+
 	* src/core/na-core-utils.c (na_core_utils_slist_dump): Display string length.
 
 	* src/core/na-boxed.c

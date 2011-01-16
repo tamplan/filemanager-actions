@@ -141,10 +141,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NATokens *self;
 
 	g_return_if_fail( NA_IS_TOKENS( instance ));
-	self = NA_TOKENS( instance );
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
+	self = NA_TOKENS( instance );
 
 	self->private = g_new0( NATokensPrivate, 1 );
 
@@ -170,6 +171,7 @@ instance_dispose( GObject *object )
 	NATokens *self;
 
 	g_return_if_fail( NA_IS_TOKENS( object ));
+
 	self = NA_TOKENS( object );
 
 	if( !self->private->dispose_has_run ){
@@ -191,9 +193,10 @@ instance_finalize( GObject *object )
 	NATokens *self;
 
 	g_return_if_fail( NA_IS_TOKENS( object ));
-	self = NA_TOKENS( object );
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+	self = NA_TOKENS( object );
 
 	g_free( self->private->scheme );
 	g_free( self->private->username );

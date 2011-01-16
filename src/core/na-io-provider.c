@@ -167,10 +167,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	g_return_if_fail( NA_IS_IO_PROVIDER( instance ));
 
-	self = NA_IO_PROVIDER( instance );
-
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
+	self = NA_IO_PROVIDER( instance );
 
 	self->private = g_new0( NAIOProviderPrivate, 1 );
 
@@ -249,6 +249,7 @@ instance_dispose( GObject *object )
 	NAIOProvider *self;
 
 	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
+
 	self = NA_IO_PROVIDER( object );
 
 	if( !self->private->dispose_has_run ){
@@ -278,9 +279,10 @@ instance_finalize( GObject *object )
 	NAIOProvider *self;
 
 	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
-	self = NA_IO_PROVIDER( object );
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+	self = NA_IO_PROVIDER( object );
 
 	g_free( self->private->id );
 

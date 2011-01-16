@@ -635,9 +635,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nact_main_window_instance_init";
 	NactMainWindow *self;
 
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
+
 	self = NACT_MAIN_WINDOW( instance );
 
 	self->private = g_new0( NactMainWindowPrivate, 1 );
@@ -803,8 +805,10 @@ instance_finalize( GObject *window )
 	static const gchar *thisfn = "nact_main_window_instance_finalize";
 	NactMainWindow *self;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
 	self = NACT_MAIN_WINDOW( window );
 
 	g_free( self->private );

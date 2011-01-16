@@ -123,9 +123,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nadp_monitor_instance_init";
 	NadpMonitor *self;
 
+	g_return_if_fail( NADP_IS_MONITOR( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NADP_IS_MONITOR( instance ));
+
 	self = NADP_MONITOR( instance );
 
 	self->private = g_new0( NadpMonitorPrivate, 1 );
@@ -139,11 +141,13 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "nadp_monitor_instance_dispose";
 	NadpMonitor *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NADP_IS_MONITOR( object ));
+
 	self = NADP_MONITOR( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		if( self->private->handler ){
 			g_signal_handler_disconnect( self->private->monitor, self->private->handler );
@@ -169,9 +173,13 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
+	static const gchar *thisfn = "nadp_monitor_instance_finalize";
 	NadpMonitor *self;
 
-	g_assert( NADP_IS_MONITOR( object ));
+	g_return_if_fail( NADP_IS_MONITOR( object ));
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 	self = NADP_MONITOR( object );
 
 	g_free( self->private->name );

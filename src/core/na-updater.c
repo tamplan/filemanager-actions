@@ -119,10 +119,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NAUpdater *self;
 
 	g_return_if_fail( NA_IS_UPDATER( instance ));
-	self = NA_UPDATER( instance );
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
+	self = NA_UPDATER( instance );
 
 	self->private = g_new0( NAUpdaterPrivate, 1 );
 
@@ -136,6 +137,7 @@ instance_dispose( GObject *object )
 	NAUpdater *self;
 
 	g_return_if_fail( NA_IS_UPDATER( object ));
+
 	self = NA_UPDATER( object );
 
 	if( !self->private->dispose_has_run ){
@@ -158,9 +160,10 @@ instance_finalize( GObject *object )
 	NAUpdater *self;
 
 	g_return_if_fail( NA_IS_UPDATER( object ));
-	self = NA_UPDATER( object );
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+	self = NA_UPDATER( object );
 
 	g_free( self->private );
 

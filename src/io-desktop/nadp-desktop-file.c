@@ -147,11 +147,13 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "nadp_desktop_file_instance_dispose";
 	NadpDesktopFile *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NADP_IS_DESKTOP_FILE( object ));
+
 	self = NADP_DESKTOP_FILE( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -165,9 +167,13 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
+	static const gchar *thisfn = "nadp_desktop_file_instance_finalize";
 	NadpDesktopFile *self;
 
-	g_assert( NADP_IS_DESKTOP_FILE( object ));
+	g_return_if_fail( NADP_IS_DESKTOP_FILE( object ));
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 	self = NADP_DESKTOP_FILE( object );
 
 	g_free( self->private->id );

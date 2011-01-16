@@ -216,9 +216,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nact_tree_model_instance_init";
 	NactTreeModel *self;
 
+	g_return_if_fail( NACT_IS_TREE_MODEL( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NACT_IS_TREE_MODEL( instance ));
+
 	self = NACT_TREE_MODEL( instance );
 
 	self->private = g_new0( NactTreeModelPrivate, 1 );
@@ -232,8 +234,10 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "nact_tree_model_instance_dispose";
 	NactTreeModel *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 	g_return_if_fail( NACT_IS_TREE_MODEL( object ));
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 	self = NACT_TREE_MODEL( object );
 
 	if( !self->private->dispose_has_run ){
@@ -255,8 +259,10 @@ instance_finalize( GObject *object )
 	static const gchar *thisfn = "nact_tree_model_instance_finalize";
 	NactTreeModel *self;
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NACT_IS_TREE_MODEL( object ));
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
 	self = NACT_TREE_MODEL( object );
 
 	g_free( self->private );

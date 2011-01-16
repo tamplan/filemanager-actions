@@ -344,9 +344,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "base_window_instance_init";
 	BaseWindow *self;
 
+	g_return_if_fail( BASE_IS_WINDOW( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( BASE_IS_WINDOW( instance ));
+
 	self = BASE_WINDOW( instance );
 
 	self->private = g_new0( BaseWindowPrivate, 1 );
@@ -471,11 +473,13 @@ instance_dispose( GObject *window )
 	BaseWindow *self;
 	GSList *is;
 
-	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 	g_return_if_fail( BASE_IS_WINDOW( window ));
+
 	self = BASE_WINDOW( window );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		if( self->private->save_window_position ){
 			base_iprefs_save_window_position( self );
@@ -539,8 +543,10 @@ instance_finalize( GObject *window )
 	static const gchar *thisfn = "base_window_instance_finalize";
 	BaseWindow *self;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
 	self = BASE_WINDOW( window );
 
 	g_free( self->private->toplevel_name );

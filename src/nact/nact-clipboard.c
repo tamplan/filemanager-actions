@@ -185,9 +185,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NactClipboard *self;
 	GdkDisplay *display;
 
+	g_return_if_fail( NACT_IS_CLIPBOARD( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_assert( NACT_IS_CLIPBOARD( instance ));
+
 	self = NACT_CLIPBOARD( instance );
 
 	self->private = g_new0( NactClipboardPrivate, 1 );
@@ -206,11 +208,13 @@ instance_dispose( GObject *object )
 	static const gchar *thisfn = "nact_clipboard_instance_dispose";
 	NactClipboard *self;
 
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-	g_assert( NACT_IS_CLIPBOARD( object ));
+	g_return_if_fail( NACT_IS_CLIPBOARD( object ));
+
 	self = NACT_CLIPBOARD( object );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -225,14 +229,16 @@ instance_dispose( GObject *object )
 }
 
 static void
-instance_finalize( GObject *window )
+instance_finalize( GObject *instance )
 {
 	static const gchar *thisfn = "nact_clipboard_instance_finalize";
 	NactClipboard *self;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_assert( NACT_IS_CLIPBOARD( window ));
-	self = NACT_CLIPBOARD( window );
+	g_return_if_fail( NACT_IS_CLIPBOARD( instance ));
+
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+
+	self = NACT_CLIPBOARD( instance );
 
 	if( self->private->primary_data ){
 		clear_primary_clipboard( self );
@@ -243,7 +249,7 @@ instance_finalize( GObject *window )
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
-		G_OBJECT_CLASS( st_parent_class )->finalize( window );
+		G_OBJECT_CLASS( st_parent_class )->finalize( instance );
 	}
 }
 
