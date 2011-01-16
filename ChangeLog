@@ -25,6 +25,8 @@
 
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* tools/init-finalize-diff.sh: Fix the interpretation of debug messages.
+
 	* src/test/test-module.c:
 	* src/test/test-module-plugin.c: New files.
 

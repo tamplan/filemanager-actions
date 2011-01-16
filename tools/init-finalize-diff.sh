@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# A script to check that we have as many instance_dispose that instance_init
+# A script to check that we have as many instance_finalize that instance_init
 # in our debug traces.
 #
 # $1 = input file (debug log)
@@ -11,7 +11,7 @@
 
 function usage 
 {
-	echo "Usage: $0 <logfile> [display_ok=true|false]" 1>&2
+	echo "Usage: $0 <logfile> [display_ok=true|false] - default to 'false'" 1>&2
 }
 
 if [ "$1" = "" ]; then
@@ -20,13 +20,17 @@ if [ "$1" = "" ]; then
 fi
 
 if [ "${2}" = "" ]; then
-	display_ok=1
+	display_ok=0
 elif [ "${2}" = "display_ok=false" ]; then
 	display_ok=0
-elif [ "${2}" != "display_ok=true" ]; then
+elif [ "${2}" = "display_ok=true" ]; then
+	display_ok=1
+else
 	usage
 	exit 1
 fi
+
+check_for="finalize"
 
 tmp1=/tmp/$(basename $0).$$.1
 tmp2=/tmp/$(basename $0).$$.2
@@ -100,12 +104,14 @@ function is_reused
 }
 
 # get in tmp1 just the list of instance_init/instance_dispose with line numbers
-# it is kept in run order (line number order)
+# it is kept in run order (input line number order)
+# note that instance_init on a base class has the base class name
+# while instance_finalize on this same base class has the derived class name
 echo -n "Extracting and formatting relevant lines from ${1}"
 count100=0
 count500=0
 total=0
-grep -En 'instance_init|instance_dispose' ${1} | grep -vE 'quitting main window|parent=|children=|tree=|deleted=' | while read line; do
+grep -En "instance_init|instance_${check_for}" ${1} | grep -vE 'quitting main window|parent=|children=|tree=|deleted=' | while read line; do
 	let total+=1
 	let count100+=1
 	if [ ${count100} -ge 100 ]; then
@@ -118,66 +124,25 @@ grep -En 'instance_init|instance_dispose' ${1} | grep -vE 'quitting main window|
 		count500=0
 	fi
 	numline=$(echo ${line} | cut -d: -f1)
-	#echo "${numline} $(echo ${line} | cut -d' ' -f3-)" >> ${tmp1}
-	#numline=$(echo ${line} | awk '{ print $1 }')
-	fname=$(echo ${line} | awk '{ print $3 }' | sed 's/:$//')
-	address=$(echo ${line} | awk '{ print $4 }' | sed -e 's/.*=//' -e 's/,$//')
-	typename=$(echo ${line} | awk '{ print $5 }' | sed 's/[(),]*//g')
-	[ "${typename}" = "" ] && echo "warning: no type in line ${line}" 1>&2
-	prefix=$(echo ${fname} | sed 's/_instance.*$//')
-	nature=1:init
-	[ "$(echo ${fname} | grep init)" = "" ] && nature=2:disp
-	reused=$(is_reused ${address}-${prefix}-${nature})
-	#echo "address='${address}' fname='${fname}' object='${object}' typename='${typename}' numline='${numline}'" >> ${tmp3}
-	#echo -e "${numline}\t ${fname}\t ${address}\t ${typename}\t ${prefix}\t ${rang}" >> ${tmp3}
-	#echo "${numline} ${fname} ${address} ${typename} ${prefix} ${nature}" >> ${tmp3}
-	echo "${numline} ${fname} ${address} ${typename} ${prefix} ${nature} ${reused}" >> ${tmp1}
+	fn_name=$(echo ${line} | awk '{ print $3 }' | sed 's/:$//')
+	obj_address=$(echo ${line} | awk '{ print $4 }' | sed -e 's/.*=//' -e 's/,$//')
+	class=$(echo ${line} | awk '{ print $5 }' | sed 's/[(),]*//g')
+	[ "${class}" = "" ] && echo "warning: no class found in line '${line}'" 1>&2
+	prefix=$(echo ${fn_name} | sed 's/_instance.*$//')
+	nature="1:init"
+	[ "$(echo ${fn_name} | grep instance_init)" = "" ] && nature="2:final"
+	reused=$(is_reused ${obj_address}-${prefix}-${nature})
+	echo "${numline} ${fn_name} ${obj_address} ${class} ${prefix} ${nature} ${reused}" >> ${tmp1}
 done
 count=$(wc -l ${tmp1} | awk '{ print $1 }')
 echo " ${count} readen lines"
 #cat ${tmp1}
 #exit
 
-# get in tmp2 the same run-ordered lines, just with line numbers as a separated field
-#cat ${tmp1} | while read line; do
-#	numline=$(echo ${line} | cut -d: -f1)
-#	echo "${numline} $(echo ${line} | cut -d' ' -f3-)" >> ${tmp2}
-#done
-#cat ${tmp2}
-#exit
-
-# get in tmp3 the same population of lines where fields are separated to prepare the sort
-# fields in the line are yet in the same order as in tmp1 and tmp2 files
-# 1: numline
-# 2: function name
-# 3: object address
-#    (note that the same address may be reused several times in the program)
-# 4: object type name
-#    (note that instance_init of a base class use the base class name
-#    while the instance_dispose use the type name of the derived class)
-# 5: radical of function name (e.g. base_application)
-# 6: an help for the sort
-#cat ${tmp2} | while read line; do
-#	numline=$(echo ${line} | awk '{ print $1 }')
-#	fname=$(echo ${line} | awk '{ print $2 }' | sed 's/:$//')
-#	address=$(echo ${line} | awk '{ print $3}' | sed -e 's/.*=//' -e 's/,$//')
-#	typename=$(echo ${line} | awk '{ print $4 }' | sed 's/[(),]*//g')
-#	[ "${typename}" = "" ] && echo "warning: no type in line ${line}" 1>&2
-#	prefix=$(echo ${fname} | sed 's/_instance.*$//')
-#	nature=1:init
-#	[ "$(echo ${fname} | grep init)" = "" ] && nature=2:disp
-#	#echo "address='${address}' fname='${fname}' object='${object}' typename='${typename}' numline='${numline}'" >> ${tmp3}
-#	#echo -e "${numline}\t ${fname}\t ${address}\t ${typename}\t ${prefix}\t ${rang}" >> ${tmp3}
-#	#echo "${numline} ${fname} ${address} ${typename} ${prefix} ${nature}" >> ${tmp3}
-#	echo "${numline} ${fname} ${address} ${typename} ${prefix} ${nature}" >> ${tmp3}
-#done
-
-export LC_ALL=C
-
-# address, reused_count, function_prefix (should identify the class), line_number
+# sort on: reused_count, object_address, class_name, line_number
 echo "Sorting..."
 sortparms="-k7,7n -k3,3 -k5,5 -k1,1n"
-cat ${tmp1} | sort ${sortparms} > ${tmp2}
+cat ${tmp1} | LC_ALL=C sort ${sortparms} > ${tmp2}
 
 #cat ${tmp3} | sort ${sortparms}
 #exit
@@ -191,54 +156,104 @@ count_init count_warns
 str_init list_undisposed
 cat ${tmp2} | while read line; do
 	nature=$(echo ${line} | awk '{ print $6 }')
-	if [ "${line_init}" = "" -a "${nature}" != "1:init" ]; then
-		echo "warning: unwaited line: ${line}"
-		count_inc count_warns
-		continue
-	fi
-	if [ "${line_init}" = "" ]; then
-		addr_init=$(echo ${line} | awk '{ print $3 }')
-		app_init=$(echo ${line} | awk '{ print $5 }')
-		line_init="${line}"
-	else
-		addr_dispose=$(echo ${line} | awk '{ print $3 }')
-		app_dispose=$(echo ${line} | awk '{ print $5 }')
-		line_dispose="${line}"
-		if [ "${addr_dispose}" = "${addr_init}" ]; then
-			numline_init=$(echo ${line_init} | awk '{ print $1 }')
-			numline_dispose=$(echo ${line_dispose} | awk '{ print $1 }')
-			type_init=$(echo ${line_init} | awk '{ print $4 }')
-			if [ ${display_ok} -eq 1 ]; then
-				echo "${type_init} ${addr_init} (${numline_init},${numline_dispose}): OK"
-			fi
-			count_inc count_ok
-			line_init=""
+	if [ "${nature}" = "1:init" ]; then
+		if [ "${line_init}" = "" ]; then
+			# set line init
+			obj_address_init=$(echo ${line} | awk '{ print $3 }')
+			fn_prefix_init=$(echo ${line} | awk '{ print $5 }')
+			line_init="${line}"
 		else
-			nature=$(echo ${line_dispose} | awk '{ print $6 }')
-			if [ "${nature}" = "1:init" ]; then
-				if [ "$(str_grep list_undisposed ${addr_init})" = "" ]; then
-					class=$(echo ${line_init} | awk '{ print $4 }')
+			# init line being readen, but previous was also an init line
+			# say previous was an error
+			# and restart with init line being readen
+			class=$(echo ${line_init} | awk '{ print $4 }')
+			if [ "$(str_grep list_undisposed ${obj_address_init})" = "" ]; then
+				num=$(echo ${line_init} | awk '{ print $1 }')
+				echo "- unfinalized ${class} at ${obj_address_init} intialized at line ${num}"
+				str_add list_undisposed ${obj_address_init}
+				count_inc count_undisposed
+			else
+				echo "- do not record ${class} at ${obj_address_init} already counted"
+				count_inc count_undisposed_bis
+			fi
+			#
+			obj_address_init=$(echo ${line} | awk '{ print $3 }')
+			fn_prefix_init=$(echo ${line} | awk '{ print $5 }')
+			line_init="${line}"
+		fi
+	else
+		if [ "${line_init}" = "" ]; then
+			# dispose line being readen but previous was also a dispose line
+			# just signals the dispose line is an error
+			echo "warning: unwaited line: ${line}"
+			count_inc count_warns
+		else
+			# we have an init line, and are reading a dispose line
+			# test if they are for the same object
+			class=$(echo ${line} | awk '{ print $4 }')
+			obj_address_dispose=$(echo ${line} | awk '{ print $3 }')
+			fn_prefix_dispose=$(echo ${line} | awk '{ print $5 }')
+			line_dispose="${line}"
+			if [ "${obj_address_dispose}" = "${obj_address_init}" ]; then
+				numline_init=$(echo ${line_init} | awk '{ print $1 }')
+				numline_dispose=$(echo ${line_dispose} | awk '{ print $1 }')
+				type_init=$(echo ${line_init} | awk '{ print $4 }')
+				if [ ${display_ok} -eq 1 ]; then
+					echo "${type_init} ${addr_init} (${numline_init},${numline_dispose}): OK"
+				fi
+				count_inc count_ok
+				line_init=""
+			# if they are not for the same object, the two are errors
+			else
+				class=$(echo ${line_init} | awk '{ print $4 }')
+				if [ "$(str_grep list_undisposed ${obj_address_init})" = "" ]; then
 					num=$(echo ${line_init} | awk '{ print $1 }')
-					echo "- undisposed ${class} at ${addr_init} intialized at line ${num}"
-					str_add list_undisposed ${addr_init}
+					echo "- unfinalized ${class} at ${obj_address_init} intialized at line ${num}"
+					str_add list_undisposed ${obj_address_init}
 					count_inc count_undisposed
 				else
-					echo "- do not record ${class} already counted"
+					echo "- do not record ${class} at ${obj_address_init} already counted"
 					count_inc count_undisposed_bis
 				fi
-			else
-				echo "warning: not apparied line: ${line_init}"
+				#
+				echo "warning: unwaited line: ${line}"
 				count_inc count_warns
+				#
+				line_init=""
 			fi
-			addr_init=${addr_dispose}
-			app_init=${addr_dispose}
-			line_init="${line_dispose}"
 		fi
 	fi
+	echo "${line_init}">/tmp/$(basename $0).$$.line_init
 done
+# does not work because shell variables do not go out of a while loop in bash
+#if [ "${line_init}" != "" ]; then
+#	class=$(echo ${line_init} | awk '{ print $4 }')
+#	if [ "$(str_grep list_undisposed ${obj_address_init})" = "" ]; then
+#		num=$(echo ${line_init} | awk '{ print $1 }')
+#		echo "- unfinalized ${class} at ${obj_address_init} intialized at line ${num}"
+#		str_add list_undisposed ${obj_address_init}
+#		count_inc count_undisposed
+#	else
+#		echo "- do not record ${class} at ${obj_address_init} already counted"
+#		count_inc count_undisposed_bis
+#	fi
+#fi
+line_init="$(cat /tmp/$(basename $0).$$.line_init)"
+if [ "${line_init}" != "" ]; then
+	obj_address_init=$(echo "${line_init}" | awk '{ print $3 }')
+	class=$(echo "${line_init}" | awk '{ print $4 }')
+	if [ "$(str_grep list_undisposed ${obj_address_init})" = "" ]; then
+		num=$(echo "${line_init}" | awk '{ print $1 }')
+		echo "- unfinalized ${class} at ${obj_address_init} intialized at line ${num}"
+		str_add list_undisposed ${obj_address_init}
+		count_inc count_undisposed
+	else
+		echo "- do not record ${class} at ${obj_address_init} already counted"
+		count_inc count_undisposed_bis
+	fi
+fi
 
 echo ""
-echo "Objects are OK    : $(count_display count_ok)"
-echo "Undisposed objects: $(count_display count_undisposed) (not re-counted lines: $(count_display count_undisposed_bis))"
-echo "Other warnings    : $(count_display count_warns)"
-
+echo "Objects are OK     : $(count_display count_ok)"
+echo "Unfinalized objects: $(count_display count_undisposed) (not re-counted lines: $(count_display count_undisposed_bis))"
+echo "Other warnings     : $(count_display count_warns)"
