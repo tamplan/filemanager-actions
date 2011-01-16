@@ -1,3 +1,20 @@
+2011-01-16 Pierre Wieser <pwieser@trychlos.org>
+
+	Add a script to check completeness of header files.
+
+	* tools/.gitignore:
+	* tools/Makefile.am:
+	* tools/check-headers.sh: New files.
+
+	* src/test/test-include.c:
+	Renamed as tools/check-header.c and set it as ignored by git.
+
+	* src/test/.gitignore:
+	* src/test/Makefile.am: Updated accordingly.
+
+	* Makefile.am:
+	* configure.ac: configure in tools/.
+
 2011-01-14 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/utils/nautilus-actions-new.c:

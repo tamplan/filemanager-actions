@@ -65,6 +65,7 @@ AC_CONFIG_FILES([
 	src/nact/Makefile
 	src/test/Makefile
 	src/utils/Makefile
+	tools/Makefile
 	po/Makefile.in
 ])
 
