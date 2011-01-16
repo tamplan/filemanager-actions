@@ -145,10 +145,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NAModule *self;
 
 	g_return_if_fail( NA_IS_MODULE( instance ));
-	self = NA_MODULE( instance );
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
+	self = NA_MODULE( instance );
 
 	self->private = g_new0( NAModulePrivate, 1 );
 
@@ -162,6 +163,7 @@ instance_dispose( GObject *object )
 	NAModule *self;
 
 	g_return_if_fail( NA_IS_MODULE( object ));
+
 	self = NA_MODULE( object );
 
 	if( !self->private->dispose_has_run ){
@@ -183,9 +185,10 @@ instance_finalize( GObject *object )
 	NAModule *self;
 
 	g_return_if_fail( NA_IS_MODULE( object ));
-	self = NA_MODULE( object );
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+	self = NA_MODULE( object );
 
 	g_free( self->private->path );
 	g_free( self->private->name );
@@ -284,7 +287,6 @@ module_new( const gchar *fname )
 	module->private->path = g_strdup( fname );
 
 	if( !g_type_module_use( G_TYPE_MODULE( module )) || !is_a_na_plugin( module )){
-
 		g_object_unref( module );
 		return( NULL );
 	}
@@ -370,12 +372,12 @@ plugin_check( NAModule *module, const gchar *symbol, gpointer *pfn )
 }
 
 /*
- * the 'na_extension_startup' function of the plugin has been already
+ * The 'na_extension_startup' function of the plugin has been already
  * called ; the GType types the plugin provides have so already been
  * registered in the GType system
  *
- * we ask here the plugin to give us a list of these GTypes
- * for each GType, we allocate a new object of the given class
+ * We ask here the plugin to give us a list of these GTypes.
+ * For each GType, we allocate a new object of the given class
  * and keep this object in the module's list
  */
 static void
@@ -520,11 +522,13 @@ na_module_has_id( NAModule *module, const gchar *id )
 void
 na_module_release_modules( GList *modules )
 {
+	static const gchar *thisfn = "na_modules_release_modules";
 	GList *imod;
 	GList *iobj;
 
-	for( imod = modules ; imod ; imod = imod->next ){
+	g_debug( "%s: modules=%p (count=%d)", thisfn, ( void * ) modules, g_list_length( modules ));
 
+	for( imod = modules ; imod ; imod = imod->next ){
 		for( iobj = NA_MODULE( imod->data )->private->objects ; iobj ; iobj = iobj->next ){
 			g_object_unref( iobj->data );
 		}
