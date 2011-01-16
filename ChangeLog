@@ -25,6 +25,9 @@
 
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-iprefs.c
+	(base_iprefs_position_named_window): Do not force a null window size or position.
+
 	* src/core/na-settings.c
 	(na_settings_get_string_list): Do not allocate an empty string list.
 

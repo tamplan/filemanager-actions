@@ -192,7 +192,9 @@ base_iprefs_position_named_window( const BaseWindow *window, GtkWindow *toplevel
 			int_list_to_position( window, list, &x, &y, &width, &height );
 			g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
 			free_int_list( list );
+		}
 
+		if( width > 0 && height > 0 ){
 			display = gdk_display_get_default();
 			screen = gdk_display_get_screen( display, 0 );
 			screen_width = gdk_screen_get_width( screen );
