@@ -25,6 +25,8 @@
 
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-schemes-list.c: Remove gconf-client.h include.
+
 	* src/nact/base-iprefs.c
 	(base_iprefs_position_named_window): Do not force a null window size or position.
 

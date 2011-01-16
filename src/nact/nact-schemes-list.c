@@ -32,7 +32,6 @@
 #include <config.h>
 #endif
 
-#include <gconf/gconf-client.h>
 #include <glib/gi18n.h>
 
 #include <api/na-core-utils.h>
@@ -252,6 +251,7 @@ init_view_get_default_list( SchemesListData *data )
 		list = init_view_get_default_default_list( data );
 	}
 
+	na_core_utils_slist_dump( "default_list", list );
 	return( list );
 }
 
