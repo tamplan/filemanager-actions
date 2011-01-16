@@ -61,6 +61,7 @@ content_files += $(auto_created_files)
 #	--rebuild-sections
 SCAN_OPTIONS = \
 	--rebuild-types								\
+	--deprecated-guards=NA_DISABLE_DEPRECATED	\
 	$(NULL)
 
 # The directory containing the source code. Relative to $(srcdir)

@@ -23,6 +23,8 @@
 	* Makefile.am:
 	* configure.ac: configure in tools/.
 
+	* docs/reference/Makefile.am: Set the deprecation flags for gtkdoc-scan.
+
 	* tools/check-po.sh: Set the count of errors as exit code.
 
 	* po/POTFILES.in: Updated.
