@@ -111,55 +111,55 @@ typedef struct {
 	KeyDef;
 
 static const KeyDef st_def_keys[] = {
-	{ NA_IPREFS_ADMIN_PREFERENCES_LOCKED,      GROUP_RUNTIME,     NA_BOXED_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_ADMIN_IO_PROVIDERS_LOCKED,     GROUP_RUNTIME,     NA_BOXED_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_ASSISTANT_ESC_CONFIRM,         GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_ASSISTANT_ESC_QUIT,            GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP, GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_COMMAND_CHOOSER_WSP,           GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_COMMAND_CHOOSER_URI,           GROUP_NACT,        NA_BOXED_TYPE_STRING,      "file:///bin" },
-	{ NA_IPREFS_COMMAND_LEGEND_WSP,            GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_WORKING_DIR_WSP,               GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_WORKING_DIR_URI,               GROUP_NACT,        NA_BOXED_TYPE_STRING,      "file:///" },
-	{ NA_IPREFS_SHOW_IF_RUNNING_WSP,           GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_SHOW_IF_RUNNING_URI,           GROUP_NACT,        NA_BOXED_TYPE_STRING,      "file:///bin" },
-	{ NA_IPREFS_TRY_EXEC_WSP,                  GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_TRY_EXEC_URI,                  GROUP_NACT,        NA_BOXED_TYPE_STRING,      "file:///bin" },
-	{ NA_IPREFS_EXPORT_ASK_USER_WSP,           GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT,   GROUP_NACT,        NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_EXPORT_FORMAT },
-	{ NA_IPREFS_EXPORT_ASSISTANT_WSP,          GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_EXPORT_ASSISTANT_URI,          GROUP_NACT,        NA_BOXED_TYPE_STRING,      "file:///tmp" },
-	{ NA_IPREFS_EXPORT_PREFERRED_FORMAT,       GROUP_NACT,        NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_EXPORT_FORMAT },
-	{ NA_IPREFS_FOLDER_CHOOSER_WSP,            GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_FOLDER_CHOOSER_URI,            GROUP_NACT,        NA_BOXED_TYPE_STRING,      "file:///" },
-	{ NA_IPREFS_IMPORT_ASK_USER_WSP,           GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_IMPORT_ASK_USER_LAST_MODE,     GROUP_NACT,        NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_IMPORT_MODE },
-	{ NA_IPREFS_IMPORT_ASSISTANT_WSP,          GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_IMPORT_ASSISTANT_URI,          GROUP_NACT,        NA_BOXED_TYPE_STRING,      "file:///tmp" },
-	{ NA_IPREFS_IMPORT_MODE_KEEP_LAST_CHOICE,  GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_IMPORT_PREFERRED_MODE,         GROUP_NACT,        NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_IMPORT_MODE },
-	{ NA_IPREFS_IO_PROVIDERS_WRITE_ORDER,      GROUP_NACT,        NA_BOXED_TYPE_STRING_LIST, "" },
-	{ NA_IPREFS_ICON_CHOOSER_URI,              GROUP_NACT,        NA_BOXED_TYPE_STRING,      "file:///" },
-	{ NA_IPREFS_ICON_CHOOSER_PANED,            GROUP_NACT,        NA_BOXED_TYPE_UINT,        "200" },
-	{ NA_IPREFS_ICON_CHOOSER_WSP,              GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_ITEMS_ADD_ABOUT_ITEM,          GROUP_RUNTIME,     NA_BOXED_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_ITEMS_CREATE_ROOT_MENU,        GROUP_RUNTIME,     NA_BOXED_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER,        GROUP_RUNTIME,     NA_BOXED_TYPE_STRING_LIST, "" },
-	{ NA_IPREFS_ITEMS_LIST_ORDER_MODE,         GROUP_RUNTIME,     NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_LIST_ORDER_MODE },
-	{ NA_IPREFS_MAIN_PANED,                    GROUP_NACT,        NA_BOXED_TYPE_UINT,        "200" },
-	{ NA_IPREFS_MAIN_SAVE_AUTO,                GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_MAIN_SAVE_PERIOD,              GROUP_NACT,        NA_BOXED_TYPE_UINT,        "5" },
-	{ NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,     GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,     GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,     GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "true" },
-	{ NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY,    GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_MAIN_WINDOW_WSP,               GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_PREFERENCES_WSP,               GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_RELABEL_DUPLICATE_ACTION,      GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_RELABEL_DUPLICATE_MENU,        GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_RELABEL_DUPLICATE_PROFILE,     GROUP_NACT,        NA_BOXED_TYPE_BOOLEAN,     "false" },
-	{ NA_IPREFS_SCHEME_ADD_SCHEME_WSP,         GROUP_NACT,        NA_BOXED_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_SCHEME_DEFAULT_LIST,           GROUP_NACT,        NA_BOXED_TYPE_STRING_LIST, "" },
+	{ NA_IPREFS_ADMIN_PREFERENCES_LOCKED,      GROUP_RUNTIME, NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_ADMIN_IO_PROVIDERS_LOCKED,     GROUP_RUNTIME, NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_ASSISTANT_ESC_CONFIRM,         GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ NA_IPREFS_ASSISTANT_ESC_QUIT,            GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP, GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_COMMAND_CHOOSER_WSP,           GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_COMMAND_CHOOSER_URI,           GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///bin" },
+	{ NA_IPREFS_COMMAND_LEGEND_WSP,            GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_WORKING_DIR_WSP,               GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_WORKING_DIR_URI,               GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///" },
+	{ NA_IPREFS_SHOW_IF_RUNNING_WSP,           GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_SHOW_IF_RUNNING_URI,           GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///bin" },
+	{ NA_IPREFS_TRY_EXEC_WSP,                  GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_TRY_EXEC_URI,                  GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///bin" },
+	{ NA_IPREFS_EXPORT_ASK_USER_WSP,           GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT,   GROUP_NACT,    NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_EXPORT_FORMAT },
+	{ NA_IPREFS_EXPORT_ASSISTANT_WSP,          GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_EXPORT_ASSISTANT_URI,          GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///tmp" },
+	{ NA_IPREFS_EXPORT_PREFERRED_FORMAT,       GROUP_NACT,    NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_EXPORT_FORMAT },
+	{ NA_IPREFS_FOLDER_CHOOSER_WSP,            GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_FOLDER_CHOOSER_URI,            GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///" },
+	{ NA_IPREFS_IMPORT_ASK_USER_WSP,           GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_IMPORT_ASK_USER_LAST_MODE,     GROUP_NACT,    NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_IMPORT_MODE },
+	{ NA_IPREFS_IMPORT_ASSISTANT_WSP,          GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_IMPORT_ASSISTANT_URI,          GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///tmp" },
+	{ NA_IPREFS_IMPORT_MODE_KEEP_LAST_CHOICE,  GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_IMPORT_PREFERRED_MODE,         GROUP_NACT,    NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_IMPORT_MODE },
+	{ NA_IPREFS_IO_PROVIDERS_WRITE_ORDER,      GROUP_NACT,    NA_BOXED_TYPE_STRING_LIST, "" },
+	{ NA_IPREFS_ICON_CHOOSER_URI,              GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///" },
+	{ NA_IPREFS_ICON_CHOOSER_PANED,            GROUP_NACT,    NA_BOXED_TYPE_UINT,        "200" },
+	{ NA_IPREFS_ICON_CHOOSER_WSP,              GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_ITEMS_ADD_ABOUT_ITEM,          GROUP_RUNTIME, NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ NA_IPREFS_ITEMS_CREATE_ROOT_MENU,        GROUP_RUNTIME, NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER,        GROUP_RUNTIME, NA_BOXED_TYPE_STRING_LIST, "" },
+	{ NA_IPREFS_ITEMS_LIST_ORDER_MODE,         GROUP_RUNTIME, NA_BOXED_TYPE_STRING,      NA_IPREFS_DEFAULT_LIST_ORDER_MODE },
+	{ NA_IPREFS_MAIN_PANED,                    GROUP_NACT,    NA_BOXED_TYPE_UINT,        "200" },
+	{ NA_IPREFS_MAIN_SAVE_AUTO,                GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_MAIN_SAVE_PERIOD,              GROUP_NACT,    NA_BOXED_TYPE_UINT,        "5" },
+	{ NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,     GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,     GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,     GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "true" },
+	{ NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY,    GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_MAIN_WINDOW_WSP,               GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_PREFERENCES_WSP,               GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_RELABEL_DUPLICATE_ACTION,      GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_RELABEL_DUPLICATE_MENU,        GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_RELABEL_DUPLICATE_PROFILE,     GROUP_NACT,    NA_BOXED_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_SCHEME_ADD_SCHEME_WSP,         GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_SCHEME_DEFAULT_LIST,           GROUP_NACT,    NA_BOXED_TYPE_STRING_LIST, "" },
 	{ NA_IPREFS_IO_PROVIDER_READABLE,          NA_IPREFS_IO_PROVIDER_GROUP, NA_BOXED_TYPE_BOOLEAN, "true" },
 	{ NA_IPREFS_IO_PROVIDER_WRITABLE,          NA_IPREFS_IO_PROVIDER_GROUP, NA_BOXED_TYPE_BOOLEAN, "true" },
 	{ 0 }
@@ -255,10 +255,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	g_return_if_fail( NA_IS_SETTINGS( instance ));
 
-	self = NA_SETTINGS( instance );
-
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
+	self = NA_SETTINGS( instance );
 
 	self->private = g_new0( NASettingsPrivate, 1 );
 
@@ -302,9 +302,9 @@ instance_finalize( GObject *object )
 
 	g_return_if_fail( NA_IS_SETTINGS( object ));
 
-	self = NA_SETTINGS( object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	self = NA_SETTINGS( object );
 
 	g_list_foreach( self->private->content, ( GFunc ) release_key_value, NULL );
 	g_list_free( self->private->content );
@@ -329,16 +329,19 @@ instance_finalize( GObject *object )
 NASettings *
 na_settings_new( void )
 {
+	static const gchar *thisfn = "na_settings_new";
 	NASettings *settings;
 	gchar *dir;
 
 	settings = g_object_new( NA_SETTINGS_TYPE, NULL );
 
 	dir = g_build_filename( SYSCONFDIR, "xdg", NULL );
+	g_debug( "%s: reading mandatory configuration", thisfn );
 	settings->private->mandatory = key_file_new( settings, dir );
 	g_free( dir );
 
 	dir = g_build_filename( g_get_home_dir(), ".config", NULL );
+	g_debug( "%s: reading user configuration", thisfn );
 	settings->private->user = key_file_new( settings, dir );
 	g_free( dir );
 
@@ -553,7 +556,7 @@ na_settings_get_string_list( NASettings *settings, const gchar *key, gboolean *f
 
 	} else {
 		key_def = get_key_def( key );
-		if( key_def && key_def->default_value ){
+		if( key_def && key_def->default_value && strlen( key_def->default_value )){
 			value = g_slist_append( NULL, g_strdup( key_def->default_value ));
 		}
 	}
@@ -1225,6 +1228,8 @@ read_key_value_from_key_file( GKeyFile *key_file, const gchar *group, const gcha
 					g_warning( "%s: %s", thisfn, error->message );
 				}
 				g_error_free( error );
+
+			/* key exists, but may be empty */
 			} else {
 				value = g_new0( KeyValue, 1 );
 				value->group = g_strdup( group );

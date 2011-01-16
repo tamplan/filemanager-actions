@@ -25,6 +25,9 @@
 
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-settings.c
+	(na_settings_get_string_list): Do not allocate an empty string list.
+
 	* src/core/na-pivot.c (instance_dispose): Release the NASettings object.
 
 	* src/core/na-object-id.c:
