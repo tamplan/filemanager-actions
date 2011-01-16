@@ -40,6 +40,9 @@
  * This class manages the GConf monitoring.
  * It is used to monitor both the GConf provider and the GConf runtime
  * preferences.
+ *
+ * Starting with Nautilus-Actions 3.1.0, GConf, whether it is used as a
+ * preference storage subsystem or as an I/O provider, is deprecated.
  */
 
 #include <gconf/gconf-client.h>
