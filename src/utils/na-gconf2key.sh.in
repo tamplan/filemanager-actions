@@ -181,9 +181,9 @@ done
 
 [ "${opt_verbose}" = "yes" ] && msg "setting opt_verbose to 'yes'"
 
-# script_opt_verb has scanned all command-line arguments
-# in order to detect the opt_verbose;
-# reset arguments so that they can be scanned again in main script
+# we have scanned all command-line arguments in order to detect an
+# opt_verbose option;
+# reset now arguments so that they can be scanned again in main script
 set -- ${my_parms}
 
 # interpreting command-line arguments

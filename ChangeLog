@@ -23,6 +23,8 @@
 	* Makefile.am:
 	* configure.ac: configure in tools/.
 
+	* src/utils/na-gconf2key.sh.in: Review comment.
+
 	* src/utils/Makefile.am: Add na-gconf2key.sh.in to the distributed files.
 
 	* docs/reference/Makefile.am: Set the deprecation flags for gtkdoc-scan.
