@@ -48,10 +48,6 @@
 #include <core/na-exporter.h>
 #include <core/na-updater.h>
 
-#include <io-gconf/nagp-keys.h>
-
-#include <io-xml/naxml-formats.h>
-
 #include "console-utils.h"
 
 typedef struct {
@@ -84,8 +80,10 @@ static gboolean   isdir            = FALSE;
 static gboolean   accept_multiple  = FALSE;
 static gchar    **schemes_array    = NULL;
 static gchar    **folders_array    = NULL;
-static gchar     *output_dir       = NULL;
-static gboolean   output_gconf     = FALSE;
+/* output entries */
+static gboolean   output_stdout    = FALSE;
+static gboolean   output_desktop   = FALSE;
+/* misc entries */
 static gboolean   version          = FALSE;
 
 extern NADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
@@ -128,10 +126,8 @@ static GOptionEntry st_added_entries[] = {
 
 static GOptionEntry output_entries[] = {
 
-	{ "output-gconf"         , 'g', 0, G_OPTION_ARG_NONE        , &output_gconf,
-			N_( "Store the newly created action as a GConf configuration" ), NULL },
-	{ "output-dir"           , 'o', 0, G_OPTION_ARG_FILENAME    , &output_dir,
-			N_( "The path of the folder where to write the new action as a GConf dump output [default: stdout]" ), N_( "<PATH>" ) },
+	{ "stdout" , 's', 0, G_OPTION_ARG_NONE, &output_stdout,  N_("Output the new item content on stdout (default)"), NULL },
+	{ "desktop", 'd', 0, G_OPTION_ARG_NONE, &output_desktop, N_("Create the new item as a .desktop file"), NULL },
 	{ NULL }
 };
 
@@ -147,8 +143,7 @@ static GOptionEntry misc_entries[] = {
 static GOptionEntry   *build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds );
 static GOptionContext *init_options( void );
 static NAObjectAction *get_action_from_cmdline( void );
-static gboolean        output_to_dir( NAObjectAction *action, gchar *dir, GSList **msgs );
-static gboolean        output_to_gconf( NAObjectAction *action, GSList **msgs );
+static gboolean        output_to_desktop( NAObjectAction *action, GSList **msgs );
 static gboolean        output_to_stdout( const NAObjectAction *action, GSList **msgs );
 static void            exit_with_usage( void );
 
@@ -228,7 +223,7 @@ main( int argc, char** argv )
 		matchcase = TRUE;
 	}
 
-	if( output_gconf && output_dir ){
+	if( output_stdout && output_desktop ){
 		g_printerr( _( "Error: only one output option may be specified.\n" ));
 		errors += 1;
 	}
@@ -239,15 +234,8 @@ main( int argc, char** argv )
 
 	action = get_action_from_cmdline();
 
-	if( output_gconf ){
-		if( output_to_gconf( action, &msg )){
-			/* i18n: Action <action_label> written to...*/
-			g_print( _( "Action '%s' succesfully written to GConf configuration.\n" ), label );
-		}
-
-	} else if( output_dir ){
-		output_to_dir( action, output_dir, &msg );
-
+	if( output_desktop ){
+		output_to_desktop( action, &msg );
 	} else {
 		output_to_stdout( action, &msg );
 	}
@@ -324,10 +312,10 @@ init_options( void )
 
 	context = g_option_context_new( _( "Define a new action." ));
 
-	g_option_context_set_summary( context, _(
+	/*g_option_context_set_summary( context, _(
 			"The created action defaults to be written to stdout.\n"
 			"It can also be written to an output folder, in a file later suitable for an import in NACT.\n"
-			"Or you may choose to directly write the action into your GConf configuration." ));
+			"Or you may choose to directly write the action into your GConf configuration." ));*/
 
 	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 
@@ -461,65 +449,19 @@ get_action_from_cmdline( void )
 	return( action );
 }
 
-static gboolean
-output_to_dir( NAObjectAction *action, gchar *dir, GSList **msgs )
-{
-	gboolean code;
-	gboolean writable_dir;
-	gchar *msg;
-	NAUpdater *updater;
-	GQuark format;
-	gchar *fname;
-
-	code = FALSE;
-	writable_dir = FALSE;
-
-	if( na_core_utils_dir_is_writable_path( dir )){
-		writable_dir = TRUE;
-
-	} else if( g_mkdir_with_parents( dir, 0700 )){
-		/* i18n: unable to create <output_dir> dir: <strerror_message> */
-		msg = g_strdup_printf( _( "Error: unable to create %s dir: %s" ), dir, g_strerror( errno ));
-		*msgs = g_slist_append( *msgs, msg );
-
-	} else {
-		writable_dir = na_core_utils_dir_is_writable_path( dir );
-	}
-
-	if( writable_dir ){
-		updater = na_updater_new();
-		format = g_quark_from_string( NAXML_FORMAT_GCONF_ENTRY );
-		fname = na_exporter_to_file( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), dir, format, msgs );
-
-		if( fname ){
-			/* i18n: Action <action_label> written to <output_filename>...*/
-			g_print( _( "Action '%s' succesfully written to %s, and ready to be imported in NACT.\n" ), label, fname );
-			g_free( fname );
-		}
-
-		g_object_unref( updater );
-	}
-
-	return( code );
-}
-
 /*
- * initialize GConf as an I/O provider
- * then writes the action
+ * write the new item as a .desktop file
  */
 static gboolean
-output_to_gconf( NAObjectAction *action, GSList **msgs )
+output_to_desktop( NAObjectAction *action, GSList **msgs )
 {
 	NAUpdater *updater;
-	const GList *providers;
 	NAIOProvider *provider;
 	guint ret;
 	gboolean code;
 
 	updater = na_updater_new();
-	providers = na_io_provider_get_io_providers_list( NA_PIVOT( updater ));
-	/*provider = na_io_provider_find_provider_by_id( providers, "na-gconf" );*/
-	provider = NULL;
+	provider = na_io_provider_find_io_provider_by_id( NA_PIVOT( updater ), "na-desktop" );
 
 	if( provider ){
 		na_object_set_provider( action, provider );
@@ -527,7 +469,7 @@ output_to_gconf( NAObjectAction *action, GSList **msgs )
 		code = ( ret == NA_IIO_PROVIDER_CODE_OK );
 
 	} else {
-		*msgs = g_slist_append( *msgs, _( "Error: unable to find 'na-gconf' provider." ));
+		*msgs = g_slist_append( *msgs, _( "Error: unable to find 'na-desktop' i/o provider." ));
 		code = FALSE;
 	}
 
@@ -545,7 +487,7 @@ output_to_stdout( const NAObjectAction *action, GSList **msgs )
 	gchar *buffer;
 
 	updater = na_updater_new();
-	format = g_quark_from_string( NAXML_FORMAT_GCONF_ENTRY );
+	format = g_quark_from_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
 	buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), format, msgs );
 	ret = ( buffer != NULL );
 

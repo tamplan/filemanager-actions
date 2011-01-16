@@ -23,6 +23,10 @@
 	* Makefile.am:
 	* configure.ac: configure in tools/.
 
+	* src/utils/nautilus-actions-new.c: Output to stdout or as .desktop file.
+
+	* src/utils/na-print-schemas.c: Add a deprecation comment.
+
 	* src/core/na-io-provider.c:
 	* src/core/na-io-provider.h (na_io_provider_find_io_provider_by_id):
 	New function.
