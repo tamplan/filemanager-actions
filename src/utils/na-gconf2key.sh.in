@@ -604,6 +604,7 @@ if [ $(id -u) -eq 0 ]; then
 	done
 	# as a security - while we are root -, we force the GConf i/o provider to be locked
 	cat <<! >${my_tmproot}.io-provider_na-gconf
+# Starting with 3.1.0, GConf as I/O provider is deprecated
 readable = false
 writable = false
 !

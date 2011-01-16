@@ -223,7 +223,7 @@ cat ${tmp2} | while read line; do
 			fi
 		fi
 	fi
-	echo "${line_init}">/tmp/$(basename $0).$$.line_init
+	echo "${line_init}" > /tmp/$(basename $0).$$.line_init
 done
 # does not work because shell variables do not go out of a while loop in bash
 #if [ "${line_init}" != "" ]; then
