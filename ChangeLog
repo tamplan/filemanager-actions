@@ -25,6 +25,12 @@
 
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/test/test-module.c:
+	* src/test/test-module-plugin.c: New files.
+
+	* src/test/.gitignore:
+	* src/test/Makefile.am: Updated accordingly.
+	 
 	* src/nact/nact-schemes-list.c: Remove gconf-client.h include.
 
 	* src/nact/base-iprefs.c

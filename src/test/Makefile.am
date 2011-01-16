@@ -38,6 +38,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
+	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_TEST}\"				\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
@@ -64,6 +65,33 @@ test_iface_SOURCES = \
 test_iface_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
+
+if NA_MAINTAINER_MODE
+noinst_PROGRAMS += test-module
+pkglib_LTLIBRARIES = libtest_module_plugin.la
+
+test_module_SOURCES = \
+	test-module.c										\
+	$(NULL)
+
+test_module_LDADD = \
+	$(NAUTILUS_ACTIONS_LIBS)							\
+	$(NULL)
+
+libtest_module_plugin_la_SOURCES = \
+	test-module-plugin.c								\
+	$(NULL)
+
+libtest_module_plugin_la_LIBADD = \
+	$(NAUTILUS_ACTIONS_LIBS)							\
+	$(NULL)
+
+libtest_module_plugin_la_LDFLAGS = \
+	-module 											\
+	-no-undefined										\
+	-avoid-version										\
+	$(NULL)
+endif
 
 test_parse_uris_SOURCES = \
 	test-parse-uris.c									\
