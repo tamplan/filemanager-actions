@@ -311,7 +311,8 @@ na_core_utils_slist_dump( const gchar *prefix, GSList *list )
 	g_debug( "%s: list at %p has %d element(s)", thispfx, ( void * ) list, g_slist_length( list ));
 
 	for( i=list, c=0 ; i ; i=i->next ){
-		g_debug( "%s: [%2d] %s", thispfx, c++, ( gchar * ) i->data );
+		g_debug( "%s: [%2d] %s (%lu)",
+				thispfx, c++, ( gchar * ) i->data, g_utf8_strlen( ( gchar * ) i->data, -1 ));
 	}
 }
 
