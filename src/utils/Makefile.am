@@ -125,6 +125,10 @@ do_subst = sed \
 	$(do_subst) < $< > $@
 	chmod a+x $@
 
+EXTRA_DIST = \
+	na-gconf2key.sh.in											\
+	$(NULL)
+
 CLEANFILES = \
 	$(BUILT_SOURCES)											\
 	$(pkglibexec_SCRIPTS)										\
