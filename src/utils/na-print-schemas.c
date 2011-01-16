@@ -164,6 +164,10 @@ init_options( void )
 	context = g_option_context_new( _( "Output the Nautilus-Actions GConf schemas on stdout." ));
 	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 
+	g_option_context_set_summary( context, _(
+			"As of version 3.1.0, GConf as an I/O provider is deprecated.\n"
+			"This program is no more maintained." ));
+
 #ifdef ENABLE_NLS
 	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
 # ifdef HAVE_BIND_TEXTDOMAIN_CODESET
@@ -188,10 +192,11 @@ init_options( void )
 	return( context );
 }
 
+#if 0
 /*
  * writes the schema via GConfClient
  */
-/*static gboolean
+static gboolean
 write_to_gconf( gchar **msg )
 {
 	GConfClient *gconf = gconf_client_get_default();
@@ -209,9 +214,7 @@ write_to_gconf( gchar **msg )
 		write_schema( gconf, prefix_config, GCONF_VALUE_STRING, ACTION_PARAMETERS_ENTRY, ACTION_PARAMETERS_DESC_SHORT, ACTION_PARAMETERS_DESC_LONG, "", msg ) &&
 		write_schema( gconf, prefix_config, GCONF_VALUE_LIST, ACTION_BASENAMES_ENTRY, ACTION_BASENAMES_DESC_SHORT, ACTION_BASENAMES_DESC_LONG, "*", msg ) &&
 		write_schema( gconf, prefix_config, GCONF_VALUE_BOOL, ACTION_MATCHCASE_ENTRY, ACTION_MATCHCASE_DESC_SHORT, ACTION_MATCHCASE_DESC_LONG, "true", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_LIST, ACTION_MIMETYPES_ENTRY, ACTION_MIMETYPES_DESC_SHORT, ACTION_MIMETYPES_DESC_LONG, "*
-		/
-		 *", msg ) &&
+		write_schema( gconf, prefix_config, GCONF_VALUE_LIST, ACTION_MIMETYPES_ENTRY, ACTION_MIMETYPES_DESC_SHORT, ACTION_MIMETYPES_DESC_LONG, "*", msg ) &&
 		write_schema( gconf, prefix_config, GCONF_VALUE_BOOL, ACTION_ISFILE_ENTRY, ACTION_ISFILE_DESC_SHORT, ACTION_ISFILE_DESC_LONG, "true", msg ) &&
 		write_schema( gconf, prefix_config, GCONF_VALUE_BOOL, ACTION_ISDIR_ENTRY, ACTION_ISDIR_DESC_SHORT, ACTION_ISDIR_DESC_LONG, "false", msg ) &&
 		write_schema( gconf, prefix_config, GCONF_VALUE_BOOL, ACTION_MULTIPLE_ENTRY, ACTION_MULTIPLE_DESC_SHORT, ACTION_MULTIPLE_DESC_LONG, "false", msg ) &&
@@ -236,12 +239,12 @@ write_schema( GConfClient *gconf, const gchar *prefix, GConfValueType type, cons
 	GConfSchema *schema = gconf_schema_new();
 	gconf_schema_set_owner( schema, PACKAGE );
 	gconf_schema_set_type( schema, type );
-*/
+
 	/* FIXME: if we write the schema with a 'C' locale, how will it be
 	 * localized ?? but get_language_names return a list. Do we have to
 	 * write a locale for each element of the list ? for the first one ?
 	 */
-	/*gconf_schema_set_locale( schema, "C" );
+	gconf_schema_set_locale( schema, "C" );
 
 	gconf_schema_set_short_desc( schema, dshort );
 	gconf_schema_set_long_desc( schema, dlong );
@@ -281,7 +284,8 @@ write_schema( GConfClient *gconf, const gchar *prefix, GConfValueType type, cons
 	gconf_schema_free( schema );
 	g_free( path );
 	return( ret );
-}*/
+}
+#endif
 
 static int
 output_to_stdout( GSList **msgs )
