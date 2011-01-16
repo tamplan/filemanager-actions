@@ -23,6 +23,13 @@
 	* Makefile.am:
 	* configure.ac: configure in tools/.
 
+	* src/api/na-data-boxed.h:
+	* src/api/na-data-types.h:
+	* src/api/na-gconf-monitor.h:
+	* src/api/na-gconf-utils.h: Test for NA_DISABLE_DEPRECATED deprecation define.
+
+	* run-distcheck.sh: New file.
+
 	* tools/check-po.sh: Rewrite to have options and messages management.
 
 	* src/utils/na-gconf2key.sh.in: Review comment.

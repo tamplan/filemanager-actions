@@ -31,6 +31,7 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
 #define __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
 
+#ifndef NA_DISABLE_DEPRECATED
 /**
  * SECTION: gconf-utils
  * @title: GConf Misc
@@ -73,4 +74,5 @@ gchar   *na_gconf_utils_slist_to_string  ( GSList *slist );
 
 G_END_DECLS
 
+#endif /* NA_DISABLE_DEPRECATED */
 #endif /* __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__ */

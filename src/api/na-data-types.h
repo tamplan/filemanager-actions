@@ -31,6 +31,7 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
 #define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
 
+#ifndef NA_DISABLE_DEPRECATED
 /**
  * SECTION: data-type
  * @title: NADataType
@@ -90,4 +91,5 @@ const gchar *na_data_types_get_gconf_dump_key( guint type );
 
 G_END_DECLS
 
+#endif /* NA_DISABLE_DEPRECATED */
 #endif /* __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__ */

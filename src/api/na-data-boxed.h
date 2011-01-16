@@ -31,6 +31,7 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__
 #define __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__
 
+#ifndef NA_DISABLE_DEPRECATED
 /**
  * SECTION: data-boxed
  * @title: NADataBoxed
@@ -103,4 +104,5 @@ void         na_data_boxed_set_from_void  ( NADataBoxed *boxed, const void *valu
 
 G_END_DECLS
 
+#endif /* NA_DISABLE_DEPRECATED */
 #endif /* __NAUTILUS_ACTIONS_API_NA_DATA_BOXED_H__ */
