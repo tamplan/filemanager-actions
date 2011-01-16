@@ -211,10 +211,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NAPivot *self;
 
 	g_return_if_fail( NA_IS_PIVOT( instance ));
-	self = NA_PIVOT( instance );
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
+	self = NA_PIVOT( instance );
 
 	self->private = g_new0( NAPivotPrivate, 1 );
 
@@ -306,6 +307,7 @@ instance_dispose( GObject *object )
 	NAPivot *self;
 
 	g_return_if_fail( NA_IS_PIVOT( object ));
+
 	self = NA_PIVOT( object );
 
 	if( !self->private->dispose_has_run ){
@@ -327,6 +329,9 @@ instance_dispose( GObject *object )
 		na_object_unref_items( self->private->tree );
 		self->private->tree = NULL;
 
+		/* release the settings */
+		g_object_unref( self->private->settings );
+
 		/* release the I/O Provider object list */
 		na_io_provider_unref_io_providers_list();
 
@@ -344,9 +349,10 @@ instance_finalize( GObject *object )
 	NAPivot *self;
 
 	g_return_if_fail( NA_IS_PIVOT( object ));
-	self = NA_PIVOT( object );
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+	self = NA_PIVOT( object );
 
 	g_free( self->private );
 

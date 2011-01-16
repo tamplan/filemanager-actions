@@ -25,6 +25,8 @@
 
 2011-01-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-pivot.c (instance_dispose): Release the NASettings object.
+
 	* src/core/na-object-id.c:
 	* src/core/na-object-item.c: Remove no more used instance_init debug messages.
 
