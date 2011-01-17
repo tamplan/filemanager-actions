@@ -55,6 +55,7 @@ typedef struct {
 	GtkTreeView        *treeview;		/* set when allocating the data */
 	guint               mode;			/* set when creating the model */
 	BaseWindow         *window;			/* set when initializating the view */
+	gboolean            editable;
 	pf_new_selection_cb pf_on_sel_changed;
 	void               *user_data;
 }
@@ -98,6 +99,7 @@ static void             display_keyword( GtkTreeViewColumn *column, GtkCellRende
 static void             display_description( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data );
 static void             display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data, guint column_id );
 
+static gboolean         are_preferences_locked( BaseWindow *window );
 static GtkButton       *get_add_button( BaseWindow *window );
 static GtkButton       *get_remove_button( BaseWindow *window );
 static SchemesListData *get_schemes_list_data( GtkTreeView *treeview );
@@ -109,7 +111,21 @@ static SchemesListData *get_schemes_list_data( GtkTreeView *treeview );
  *  or to add a new scheme from the default list.
  *
  * Create the treeview model when initially loading the widget from
- * the UI manager. Associates the SchemesListData structure to the widget.
+ * the UI manager.
+ * Associates the SchemesListData structure to the widget.
+ *
+ * The default list of schemes is displayed in two cases:
+ * - when adding a scheme to a NAObjectItem (cf. NactISchemesTab)
+ *   so the schemes list is opened for selection
+ *
+ *   we have chosen to not allow default schemes list edition in this mode
+ *   because we do not have ok/cancel buttons; the user may start with editing
+ *   and does not have any way of cancel it
+ *
+ * - when editing the default schemes list in Preferences
+ *   so each row may be edited
+ *   edition is only allowed if preferences are not locked and default schemes
+ *   list is not a mandatory pref.
  */
 void
 nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
@@ -131,9 +147,10 @@ nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
 	gtk_tree_view_set_model( treeview, GTK_TREE_MODEL( model ));
 	g_object_unref( model );
 
+	/* scheme */
 	text_cell = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(
-			"scheme-code",
+			_( "Keyword" ),
 			text_cell,
 			"text", SCHEMES_KEYWORD_COLUMN,
 			NULL );
@@ -141,20 +158,19 @@ nact_schemes_list_create_model( GtkTreeView *treeview, guint mode )
 	gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), SCHEMES_KEYWORD_COLUMN, GTK_SORT_ASCENDING );
 	gtk_tree_view_column_set_cell_data_func(
 			column, text_cell, ( GtkTreeCellDataFunc ) display_keyword, data, NULL );
-	nact_gtk_utils_set_editable( G_OBJECT( column ), mode == SCHEMES_LIST_FOR_PREFERENCES );
 
+	/* description */
 	text_cell = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(
-			"scheme-description",
+			_( "Description" ),
 			text_cell,
 			"text", SCHEMES_DESC_COLUMN,
 			NULL );
 	gtk_tree_view_append_column( treeview, column );
 	gtk_tree_view_column_set_cell_data_func(
 			column, text_cell, ( GtkTreeCellDataFunc ) display_description, data, NULL );
-	nact_gtk_utils_set_editable( G_OBJECT( column ), mode == SCHEMES_LIST_FOR_PREFERENCES );
 
-	gtk_tree_view_set_headers_visible( treeview, FALSE );
+	gtk_tree_view_set_headers_visible( treeview, TRUE );
 
 	selection = gtk_tree_view_get_selection( treeview );
 	gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
@@ -195,6 +211,7 @@ nact_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window, pf_new_s
 
 	data = get_schemes_list_data( treeview );
 	data->window = window;
+	data->editable = ( data->mode == SCHEMES_LIST_FOR_PREFERENCES && !are_preferences_locked( window ));
 	data->pf_on_sel_changed = pf;
 	data->user_data = user_data;
 
@@ -240,18 +257,20 @@ init_view_get_default_list( SchemesListData *data )
 	NactApplication *application;
 	NAUpdater *updater;
 	NASettings *settings;
+	gboolean mandatory;
 
 	application = NACT_APPLICATION( base_window_get_application( data->window ));
 	updater = nact_application_get_updater( application );
 	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
-	list = na_settings_get_string_list( settings, NA_IPREFS_SCHEME_DEFAULT_LIST, NULL, NULL );
-
+	list = na_settings_get_string_list( settings, NA_IPREFS_SCHEME_DEFAULT_LIST, NULL, &mandatory );
 	if( !list ){
 		list = init_view_get_default_default_list( data );
 	}
-
 	na_core_utils_slist_dump( "default_list", list );
+
+	data->editable &= !mandatory;
+
 	return( list );
 }
 
@@ -287,38 +306,49 @@ init_view_connect_signals( SchemesListData *data )
 			"changed",
 			G_CALLBACK( on_selection_changed ));
 
-	if( data->mode == SCHEMES_LIST_FOR_PREFERENCES ){
-
-		column = gtk_tree_view_get_column( data->treeview, SCHEMES_KEYWORD_COLUMN );
+	column = gtk_tree_view_get_column( data->treeview, SCHEMES_KEYWORD_COLUMN );
+	nact_gtk_utils_set_editable( G_OBJECT( column ), data->editable );
+	if( data->editable ){
 		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
 				data->window,
 				G_OBJECT( renderers->data ),
 				"edited",
 				G_CALLBACK( on_keyword_edited ));
+	}
 
-		column = gtk_tree_view_get_column( data->treeview, SCHEMES_DESC_COLUMN );
+	column = gtk_tree_view_get_column( data->treeview, SCHEMES_DESC_COLUMN );
+	nact_gtk_utils_set_editable( G_OBJECT( column ), data->editable );
+	if( data->editable ){
 		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
 				data->window,
 				G_OBJECT( renderers->data ),
 				"edited",
 				G_CALLBACK( on_desc_edited ));
+	}
 
-		add_button = get_add_button( data->window );
+	add_button = get_add_button( data->window );
+	gtk_widget_set_sensitive( GTK_WIDGET( add_button ), data->editable );
+	if( data->editable ){
 		base_window_signal_connect(
 				data->window,
 				G_OBJECT( add_button ),
 				"clicked",
 				G_CALLBACK( on_add_clicked ));
+	}
 
-		remove_button = get_remove_button( data->window );
+	remove_button = get_remove_button( data->window );
+	gtk_widget_set_sensitive( GTK_WIDGET( remove_button ), data->editable );
+	if( data->editable ){
 		base_window_signal_connect(
 				data->window,
 				G_OBJECT( remove_button ),
 				"clicked",
 				G_CALLBACK( on_remove_clicked ));
+	}
 
+	if( data->editable ){
 		base_window_signal_connect(
 				data->window,
 				G_OBJECT( data->treeview ),
@@ -340,7 +370,7 @@ init_view_select_first_row( SchemesListData *data )
 }
 
 /**
- * nact_schemes_list_save_values:
+ * nact_schemes_list_setup_values:
  * @window: the #BaseWindow which embeds this treeview.
  * @schemes: a #GSList of already used schemes.
  *
@@ -406,7 +436,6 @@ nact_schemes_list_show_all( BaseWindow *window )
 		gtk_widget_hide( GTK_WIDGET( button ));
 	}
 #endif
-	gtk_widget_set_sensitive( GTK_WIDGET( button ), data->mode == SCHEMES_LIST_FOR_PREFERENCES );
 
 	button = get_remove_button( window );
 #if GTK_CHECK_VERSION( 2, 18, 0 )
@@ -418,7 +447,6 @@ nact_schemes_list_show_all( BaseWindow *window )
 		gtk_widget_hide( GTK_WIDGET( button ));
 	}
 #endif
-	gtk_widget_set_sensitive( GTK_WIDGET( button ), FALSE );
 
 	init_view_select_first_row( data );
 }
@@ -579,11 +607,12 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 
 	/*g_debug( "%s: selection=%p, window=%p", thisfn, ( void * ) selection, ( void * ) window );*/
 
-	button = get_remove_button( window );
-	gtk_widget_set_sensitive( GTK_WIDGET( button ), gtk_tree_selection_count_selected_rows( selection ) > 0);
-
 	listview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), SCHEMES_LIST_TREEVIEW ));
 	data = ( SchemesListData * ) g_object_get_data( G_OBJECT( listview ), SCHEMES_LIST_DATA );
+
+	button = get_remove_button( window );
+	gtk_widget_set_sensitive( GTK_WIDGET( button ),
+			data->editable && gtk_tree_selection_count_selected_rows( selection ) > 0);
 
 	if( data->pf_on_sel_changed ){
 		rows = gtk_tree_selection_get_selected_rows( selection, &model );
@@ -757,6 +786,22 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	if( used ){
 		g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 	}
+}
+
+static gboolean
+are_preferences_locked( BaseWindow *window )
+{
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
+	gboolean are_locked;
+
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, NULL );
+
+	return( are_locked );
 }
 
 static GtkButton *

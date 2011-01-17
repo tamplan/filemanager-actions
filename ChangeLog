@@ -6,6 +6,13 @@
 
 2011-01-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-boxed.c (na_boxed_new_from_string_with_sep):
+	Fix handling of last separator.
+
+	* src/nact/nact-schemes-list.c: Do not allow modification
+	of default schemes list if preferences are locked or property
+	mandatory.
+
 	* src/core/na-io-provider.c:
 	* src/core/na-io-provider.h (na_io_provider_is_conf_readable,
 	na_io_provider_is_conf_writable):
