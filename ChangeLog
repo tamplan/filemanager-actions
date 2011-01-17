@@ -6,6 +6,18 @@
 
 2011-01-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-io-provider.c:
+	* src/core/na-io-provider.h (na_io_provider_is_conf_readable,
+	na_io_provider_is_conf_writable):
+	Returns mandatory flag.
+	List I/O providers in write order.
+
+	* src/core/na-updater.c (na_updater_is_item_writable): Updated accordingly.
+
+	* src/nact/nact-providers-list.c: Do not allow modification of I/O
+	providers readability/writability/write order properties if
+	preferences are locked or properties mandatory.
+
 	* src/core/na-module.c (na_module_release_modules): Release the loaded module.
 
 2011-01-16 Pierre Wieser <pwieser@trychlos.org>

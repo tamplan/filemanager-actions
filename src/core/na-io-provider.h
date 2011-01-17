@@ -103,9 +103,9 @@ void          na_io_provider_unref_io_providers_list  ( void );
 gchar        *na_io_provider_get_id             ( const NAIOProvider *provider );
 gchar        *na_io_provider_get_name           ( const NAIOProvider *provider );
 gboolean      na_io_provider_is_available       ( const NAIOProvider *provider );
-gboolean      na_io_provider_is_conf_readable   ( const NAIOProvider *provider, const NAPivot *pivot );
+gboolean      na_io_provider_is_conf_readable   ( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory );
 gboolean      na_io_provider_is_able_to_write   ( const NAIOProvider *provider );
-gboolean      na_io_provider_is_conf_writable   ( const NAIOProvider *provider, const NAPivot *pivot );
+gboolean      na_io_provider_is_conf_writable   ( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory );
 gboolean      na_io_provider_is_willing_to_write( const NAIOProvider *provider );
 
 GList        *na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **messages );

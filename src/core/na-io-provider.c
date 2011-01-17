@@ -84,7 +84,8 @@ static void          dump_providers_list( GList *providers );
 static NAIOProvider *io_provider_new( const NAPivot *pivot, NAIIOProvider *module, const gchar *id );
 static GList        *io_providers_list_add_from_plugins( const NAPivot *pivot, GList *list );
 static GList        *io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list );
-static GList        *io_providers_list_add_object( const NAPivot *pivot, GList *list, NAIIOProvider *module, const gchar *id );
+static GList        *io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list );
+static GList        *io_providers_list_append_object( const NAPivot *pivot, GList *list, NAIIOProvider *module, const gchar *id );
 static gboolean      is_really_writable( const NAIOProvider *provider, const NAPivot *pivot );
 static GList        *load_items_filter_unwanted_items( const NAPivot *pivot, GList *merged, guint loadable_set );
 static GList        *load_items_filter_unwanted_items_rec( GList *merged, guint loadable_set );
@@ -357,7 +358,7 @@ na_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
  * na_io_provider_get_io_providers_list:
  * @pivot: the current #NAPivot instance.
  *
- * Build (if not already done) the unordered list of currently avialable
+ * Build (if not already done) the ordered list of currently avialable
  * NAIOProvider objects.
  *
  * A NAIOProvider object may be created:
@@ -365,7 +366,7 @@ na_io_provider_find_io_provider_by_id( const NAPivot *pivot, const gchar *id )
  *   NAIIOProvider interface;
  * - or because an i/o provider identifier has been found in preferences.
  *
- * The order of objects in this list is not relevant:
+ * The objects in this list must be in write order:
  * - when loading items, items are ordered depending of menus items list
  *   and of level zero defined order;
  * - when writing a new item, there is a 'writable-order' preference.
@@ -381,7 +382,8 @@ na_io_provider_get_io_providers_list( const NAPivot *pivot )
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	if( !st_io_providers ){
-		st_io_providers = io_providers_list_add_from_plugins( pivot, NULL );
+		st_io_providers = io_providers_list_add_from_write_order( pivot, NULL );
+		st_io_providers = io_providers_list_add_from_plugins( pivot, st_io_providers );
 		st_io_providers = io_providers_list_add_from_prefs( pivot, st_io_providers );
 	}
 
@@ -495,6 +497,8 @@ na_io_provider_is_available( const NAIOProvider *provider )
  * na_io_provider_is_conf_readable:
  * @provider: this #NAIOProvider.
  * @pivot: the #NAPivot application object.
+ * @mandatory: a pointer to a boolean which will be set to %TRUE if the
+ *  preference is mandatory; may be %NULL.
  *
  * Returns: %TRUE is this I/O provider should be read at startup, and so
  * may participate to the global list of menus and actions, %FALSE else.
@@ -506,7 +510,7 @@ na_io_provider_is_available( const NAIOProvider *provider )
  * - whether this flag has been set as mandatory by an admin.
  */
 gboolean
-na_io_provider_is_conf_readable( const NAIOProvider *provider, const NAPivot *pivot )
+na_io_provider_is_conf_readable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
 {
 	gboolean readable;
 	gchar *group;
@@ -520,7 +524,7 @@ na_io_provider_is_conf_readable( const NAIOProvider *provider, const NAPivot *pi
 
 		group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, provider->private->id );
 		readable = na_settings_get_boolean_ex(
-				na_pivot_get_settings( pivot ), group, NA_IPREFS_IO_PROVIDER_READABLE, NULL, NULL );
+				na_pivot_get_settings( pivot ), group, NA_IPREFS_IO_PROVIDER_READABLE, NULL, mandatory );
 		g_free( group );
 	}
 
@@ -564,6 +568,8 @@ na_io_provider_is_able_to_write( const NAIOProvider *provider )
  * na_io_provider_is_conf_writable:
  * @provider: this #NAIOProvider.
  * @pivot: the #NAPivot application object.
+ * @mandatory: a pointer to a boolean which will be set to %TRUE if the
+ *  preference is mandatory; may be %NULL.
  *
  * Returns: %TRUE is this I/O provider is candidate to be edited.
  *
@@ -577,7 +583,7 @@ na_io_provider_is_able_to_write( const NAIOProvider *provider )
  * NAIIOProvider module. See also is_willing_to() and is_able_to().
  */
 gboolean
-na_io_provider_is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot )
+na_io_provider_is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
 {
 	gboolean is_writable;
 	gchar *group;
@@ -591,7 +597,7 @@ na_io_provider_is_conf_writable( const NAIOProvider *provider, const NAPivot *pi
 
 		group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, provider->private->id );
 		is_writable = na_settings_get_boolean_ex(
-				na_pivot_get_settings( pivot ), group, NA_IPREFS_IO_PROVIDER_WRITABLE, NULL, NULL );
+				na_pivot_get_settings( pivot ), group, NA_IPREFS_IO_PROVIDER_WRITABLE, NULL, mandatory );
 		g_free( group );
 	}
 
@@ -803,7 +809,7 @@ io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
 		}
 
 		if( id ){
-			merged = io_providers_list_add_object( pivot, merged, provider_module, id );
+			merged = io_providers_list_append_object( pivot, merged, provider_module, id );
 			g_free( id );
 		}
 	}
@@ -832,7 +838,32 @@ io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list )
 	io_providers = na_iprefs_get_io_providers( pivot );
 	for( it = io_providers ; it ; it = it->next ){
 		id = ( const gchar * ) it->data;
-		merged = io_providers_list_add_object( pivot, merged, NULL, id );
+		merged = io_providers_list_append_object( pivot, merged, NULL, id );
+	}
+	na_core_utils_slist_free( io_providers );
+
+	return( merged );
+}
+
+/*
+ * adding from write-order means we only create NAIOProvider objects
+ * without having any ref to the underlying NAIIOProvider if it exists
+ */
+static GList *
+io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list )
+{
+	GList *merged;
+	NASettings *settings;
+	GSList *io_providers, *it;
+	const gchar *id;
+
+	merged = objects_list;
+	settings = na_pivot_get_settings( pivot );
+	io_providers = na_settings_get_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
+
+	for( it = io_providers ; it ; it = it->next ){
+		id = ( const gchar * ) it->data;
+		merged = io_providers_list_append_object( pivot, merged, NULL, id );
 	}
 	na_core_utils_slist_free( io_providers );
 
@@ -844,16 +875,20 @@ io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list )
  * if it does not have been already registered
  */
 static GList *
-io_providers_list_add_object( const NAPivot *pivot, GList *list, NAIIOProvider *module, const gchar *id )
+io_providers_list_append_object( const NAPivot *pivot, GList *list, NAIIOProvider *module, const gchar *id )
 {
 	GList *merged;
 	NAIOProvider *object;
 
 	merged = list;
+	object = peek_provider_by_id( list, id );
 
-	if( !peek_provider_by_id( list, id ) ){
+	if( !object ){
 		object = io_provider_new( pivot, module, id );
-		merged = g_list_prepend( merged, object );
+		merged = g_list_append( merged, object );
+
+	} else if( !object->private->provider && module ){
+		object->private->provider = module;
 	}
 
 	return( merged );
@@ -877,7 +912,7 @@ is_really_writable( const NAIOProvider *provider, const NAPivot *pivot )
 
 	return( na_io_provider_is_willing_to_write( provider ) &&
 			na_io_provider_is_able_to_write( provider ) &&
-			na_io_provider_is_conf_writable( provider, pivot ) &&
+			na_io_provider_is_conf_writable( provider, pivot, NULL ) &&
 			!na_pivot_is_configuration_locked_by_admin( pivot ));
 }
 
@@ -976,7 +1011,7 @@ load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **m
 
 		if( provider_module &&
 			NA_IIO_PROVIDER_GET_INTERFACE( provider_module )->read_items &&
-			na_io_provider_is_conf_readable( provider_object, pivot )){
+			na_io_provider_is_conf_readable( provider_object, pivot, NULL )){
 
 			items = NA_IIO_PROVIDER_GET_INTERFACE( provider_module )->read_items( provider_module, messages );
 

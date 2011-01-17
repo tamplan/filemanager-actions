@@ -352,7 +352,7 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
 					}*/
-				} else if( !na_io_provider_is_conf_writable( provider, NA_PIVOT( updater ))){
+				} else if( !na_io_provider_is_conf_writable( provider, NA_PIVOT( updater ), NULL )){
 					writable = FALSE;
 					if( reason ){
 						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;

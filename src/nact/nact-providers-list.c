@@ -49,7 +49,9 @@
  */
 enum {
 	PROVIDER_READABLE_COLUMN = 0,
+	PROVIDER_READABLE_MANDATORY_COLUMN,
 	PROVIDER_WRITABLE_COLUMN,
+	PROVIDER_WRITABLE_MANDATORY_COLUMN,
 	PROVIDER_LIBELLE_COLUMN,
 	PROVIDER_ID_COLUMN,
 	PROVIDER_PROVIDER_COLUMN,
@@ -80,6 +82,7 @@ static void       on_writable_toggled( GtkCellRendererToggle *renderer, gchar *p
 static void       on_up_clicked( GtkButton *button, BaseWindow *window );
 static void       on_down_clicked( GtkButton *button, BaseWindow *window );
 
+static gboolean   are_preferences_locked( BaseWindow *window );
 static void       display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, GtkTreeView *treeview );
 static GtkButton *get_up_button( BaseWindow *window );
 static GtkButton *get_down_button( BaseWindow *window );
@@ -104,18 +107,26 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 	g_debug( "%s: treeview=%p", thisfn, ( void * ) treeview );
 	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
 
-	model = gtk_list_store_new( PROVIDER_N_COLUMN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_OBJECT );
+	model = gtk_list_store_new( PROVIDER_N_COLUMN,
+			G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_OBJECT );
 	gtk_tree_view_set_model( treeview, GTK_TREE_MODEL( model ));
 	g_object_unref( model );
 
+	/* readable */
 	toggled_cell = gtk_cell_renderer_toggle_new();
 	column = gtk_tree_view_column_new_with_attributes(
-			_( "To be read" ),
+			_( "Readable" ),
 			toggled_cell,
 			"active", PROVIDER_READABLE_COLUMN,
 			NULL );
 	gtk_tree_view_append_column( treeview, column );
 
+	/* readable mandatory */
+	column = gtk_tree_view_column_new();
+	gtk_tree_view_append_column( treeview, column );
+	gtk_tree_view_column_set_visible( column, FALSE );
+
+	/* writable */
 	toggled_cell = gtk_cell_renderer_toggle_new();
 	column = gtk_tree_view_column_new_with_attributes(
 			_( "Writable" ),
@@ -124,6 +135,12 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 			NULL );
 	gtk_tree_view_append_column( treeview, column );
 
+	/* writable mandatory */
+	column = gtk_tree_view_column_new();
+	gtk_tree_view_append_column( treeview, column );
+	gtk_tree_view_column_set_visible( column, FALSE );
+
+	/* label */
 	text_cell = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes(
 			_( "I/O Provider" ),
@@ -133,12 +150,12 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 	gtk_tree_view_column_set_cell_data_func( column, text_cell, ( GtkTreeCellDataFunc ) display_label, treeview, NULL );
 	gtk_tree_view_append_column( treeview, column );
 
-	/* PROVIDER_ID_COLUMN */
+	/* id */
 	column = gtk_tree_view_column_new();
 	gtk_tree_view_append_column( treeview, column );
 	gtk_tree_view_column_set_visible( column, FALSE );
 
-	/* PROVIDER_PROVIDER_COLUMN */
+	/* provider */
 	column = gtk_tree_view_column_new();
 	gtk_tree_view_append_column( treeview, column );
 	gtk_tree_view_column_set_visible( column, FALSE );
@@ -177,6 +194,7 @@ nact_providers_list_init_view( GtkTreeView *treeview, BaseWindow *window )
 static void
 init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 {
+	static const gchar *thisfn = "nact_providers_list_init_view_setup_providers";
 	NactApplication *application;
 	NAUpdater *updater;
 	GtkListStore *model;
@@ -184,6 +202,9 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 	const GList *iter;
 	GtkTreeIter row;
 	gchar *id, *libelle;
+	gboolean readable, readable_mandatory;
+	gboolean writable, writable_mandatory;
+	NAIOProvider *provider;
 
 	model = GTK_LIST_STORE( gtk_tree_view_get_model( treeview ));
 
@@ -192,29 +213,36 @@ init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window )
 	providers = na_io_provider_get_io_providers_list( NA_PIVOT( updater ));
 
 	for( iter = providers ; iter ; iter = iter->next ){
+		provider = NA_IO_PROVIDER( iter->data );
+		id = na_io_provider_get_id( provider );
+		libelle = na_io_provider_get_name( provider );
+		readable = na_io_provider_is_conf_readable( provider, NA_PIVOT( updater ), &readable_mandatory );
+		writable = na_io_provider_is_conf_writable( provider, NA_PIVOT( updater ), &writable_mandatory );
 
-		gtk_list_store_append( model, &row );
-
-		id = na_io_provider_get_id( NA_IO_PROVIDER( iter->data ));
-		libelle = na_io_provider_get_name( NA_IO_PROVIDER( iter->data ));
+		g_debug( "%s: id=%s, readable=%s (mandatory=%s), writable=%s (mandatory=%s)",
+				thisfn, id,
+				readable ? "True":"False", readable_mandatory ? "True":"False",
+				writable ? "True":"False", writable_mandatory ? "True":"False" );
 
 		if( !libelle || !g_utf8_strlen( libelle, -1 )){
-
 			g_free( libelle );
-			if( na_io_provider_is_available( NA_IO_PROVIDER( iter->data ))){
 
+			if( na_io_provider_is_available( provider )){
 				/* i18n: default name when the I/O providers doesn't provide one */
 				libelle = g_strdup_printf( "<%s: %s>", id, _( "no name" ));
-			} else {
 
+			} else {
 				/* i18n: name displayed when the corresponding I/O provider is unavailable at runtime */
 				libelle = g_strdup_printf( "<%s: %s>", id, _( "unavailable I/O provider" ));
 			}
 		}
 
+		gtk_list_store_append( model, &row );
 		gtk_list_store_set( model, &row,
-				PROVIDER_READABLE_COLUMN, na_io_provider_is_conf_readable( NA_IO_PROVIDER( iter->data ), NA_PIVOT( updater )),
-				PROVIDER_WRITABLE_COLUMN, na_io_provider_is_conf_writable( NA_IO_PROVIDER( iter->data ), NA_PIVOT( updater )),
+				PROVIDER_READABLE_COLUMN, readable,
+				PROVIDER_READABLE_MANDATORY_COLUMN, readable_mandatory,
+				PROVIDER_WRITABLE_COLUMN, writable,
+				PROVIDER_WRITABLE_MANDATORY_COLUMN, writable_mandatory,
 				PROVIDER_LIBELLE_COLUMN, libelle,
 				PROVIDER_ID_COLUMN, id,
 				PROVIDER_PROVIDER_COLUMN, iter->data,
@@ -373,6 +401,11 @@ nact_providers_list_dispose( BaseWindow *window )
 	gtk_list_store_clear( GTK_LIST_STORE( model ));
 }
 
+/*
+ * may up/down if:
+ * - preferences are not locked
+ * - i/o providers order is not mandatory
+ */
 static void
 on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 {
@@ -381,16 +414,29 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 	GtkButton *button;
 	GtkTreePath *path;
 	gboolean may_up, may_down;
+	gboolean preferences_locked, order_mandatory;
+	GSList *write_order;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
 
 	may_up = FALSE;
 	may_down = FALSE;
 
-	if( gtk_tree_selection_get_selected( selection, &model, &iter )){
-		path = gtk_tree_model_get_path( model, &iter );
-		may_up = gtk_tree_path_prev( path );
-		gtk_tree_path_free( path );
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+	preferences_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, NULL );
+	write_order = na_settings_get_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, &order_mandatory );
 
-		may_down = gtk_tree_model_iter_next( model, &iter );
+	if( !preferences_locked &&
+		!order_mandatory &&
+		gtk_tree_selection_get_selected( selection, &model, &iter )){
+
+			path = gtk_tree_model_get_path( model, &iter );
+			may_up = gtk_tree_path_prev( path );
+			gtk_tree_path_free( path );
+			may_down = gtk_tree_model_iter_next( model, &iter );
 	}
 
 	button = get_up_button( window );
@@ -400,21 +446,47 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 	gtk_widget_set_sensitive( GTK_WIDGET( button ), may_down );
 }
 
+/*
+ * may toggle if
+ * - preferences are not locked
+ * - readable status is not mandatory
+ */
 static void
 on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWindow *window )
 {
+	static const gchar *thisfn = "nact_providers_list_on_readable_toggled";
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean state;
+	gboolean readable_mandatory;
+	gchar *id;
 
 	if( !st_on_selection_change ){
 
 		treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
 		model = gtk_tree_view_get_model( treeview );
 		if( gtk_tree_model_get_iter_from_string( model, &iter, path_string )){
-			gtk_tree_model_get( model, &iter, PROVIDER_READABLE_COLUMN, &state, -1 );
-			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, PROVIDER_READABLE_COLUMN, !state, -1 );
+			gtk_tree_model_get( model, &iter,
+					PROVIDER_READABLE_COLUMN, &state,
+					PROVIDER_ID_COLUMN, &id,
+					PROVIDER_READABLE_MANDATORY_COLUMN, &readable_mandatory,
+					-1 );
+
+			g_debug( "%s: id=%s, readable=%s (mandatory=%s)", thisfn, id,
+					state ? "True":"False", readable_mandatory ? "True":"False" );
+
+			if( readable_mandatory || are_preferences_locked( window )){
+				g_signal_handlers_block_by_func(( gpointer ) renderer, on_readable_toggled, window );
+				state = gtk_cell_renderer_toggle_get_active( renderer );
+				gtk_cell_renderer_toggle_set_active( renderer, !state );
+				g_signal_handlers_unblock_by_func(( gpointer ) renderer, on_readable_toggled, window );
+
+			} else {
+				gtk_list_store_set( GTK_LIST_STORE( model ), &iter, PROVIDER_READABLE_COLUMN, !state, -1 );
+			}
+
+			g_free( id );
 		}
 	}
 }
@@ -422,22 +494,48 @@ on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWi
 static void
 on_writable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWindow *window )
 {
+	static const gchar *thisfn = "nact_providers_list_on_writable_toggled";
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean state;
+	gboolean writable_mandatory;
+	gchar *id;
 
 	if( !st_on_selection_change ){
 
 		treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
 		model = gtk_tree_view_get_model( treeview );
 		if( gtk_tree_model_get_iter_from_string( model, &iter, path_string )){
-			gtk_tree_model_get( model, &iter, PROVIDER_WRITABLE_COLUMN, &state, -1 );
-			gtk_list_store_set( GTK_LIST_STORE( model ), &iter, PROVIDER_WRITABLE_COLUMN, !state, -1 );
+			gtk_tree_model_get( model, &iter,
+					PROVIDER_WRITABLE_COLUMN, &state,
+					PROVIDER_ID_COLUMN, &id,
+					PROVIDER_WRITABLE_MANDATORY_COLUMN, &writable_mandatory,
+					-1 );
+
+			g_debug( "%s: id=%s, writable=%s (mandatory=%s)", thisfn, id,
+					state ? "True":"False", writable_mandatory ? "True":"False" );
+
+			if( writable_mandatory || are_preferences_locked( window )){
+				g_signal_handlers_block_by_func(( gpointer ) renderer, on_writable_toggled, window );
+				state = gtk_cell_renderer_toggle_get_active( renderer );
+				gtk_cell_renderer_toggle_set_active( renderer, !state );
+				g_signal_handlers_unblock_by_func(( gpointer ) renderer, on_writable_toggled, window );
+
+			} else {
+				gtk_list_store_set( GTK_LIST_STORE( model ), &iter, PROVIDER_WRITABLE_COLUMN, !state, -1 );
+			}
+
+			g_free( id );
 		}
 	}
 }
 
+/*
+ * may up/down if:
+ * - preferences are not locked
+ * - i/o providers order is not mandatory
+ */
 static void
 on_up_clicked( GtkButton *button, BaseWindow *window )
 {
@@ -486,6 +584,22 @@ on_down_clicked( GtkButton *button, BaseWindow *window )
 		}
 		gtk_tree_iter_free( iter_next );
 	}
+}
+
+static gboolean
+are_preferences_locked( BaseWindow *window )
+{
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
+	gboolean are_locked;
+
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, NULL );
+
+	return( are_locked );
 }
 
 /*
