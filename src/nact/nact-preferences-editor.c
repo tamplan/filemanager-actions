@@ -55,6 +55,7 @@ struct NactPreferencesEditorPrivate {
 };
 
 static GObjectClass *st_parent_class = NULL;
+static guint         st_last_tab     = 0;
 
 static GType    register_type( void );
 static void     class_init( NactPreferencesEditorClass *klass );
@@ -455,7 +456,7 @@ on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data )
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
-	gtk_notebook_set_current_page( notebook, 0 );
+	gtk_notebook_set_current_page( notebook, st_last_tab );
 
 	nact_schemes_list_show_all( BASE_WINDOW( editor ));
 }
@@ -505,16 +506,20 @@ auto_save_activated( NactPreferencesEditor *editor, gboolean auto_save_activated
 static void
 on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
+	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
+	st_last_tab = gtk_notebook_get_current_page( notebook );
 
+	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static void
 on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
+	GtkNotebook *notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
+	st_last_tab = gtk_notebook_get_current_page( notebook );
 
+	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 
