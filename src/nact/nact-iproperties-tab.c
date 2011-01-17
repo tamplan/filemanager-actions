@@ -209,6 +209,13 @@ nact_iproperties_tab_runtime_init_toplevel( NactIPropertiesTab *instance )
 				G_OBJECT( button ),
 				"toggled",
 				G_CALLBACK( on_readonly_toggled ));
+
+#if 0
+		g_signal_override_class_handler( "toggled", GTK_TYPE_TOGGLE_BUTTON, G_CALLBACK( on_readonly_toggle_cb ));
+		g_signal_add_emission_hook(
+				g_signal_lookup( "toggled", GTK_TYPE_TOGGLE_BUTTON ), ( GQuark ) 0,
+				( GSignalEmissionHook ) on_readonly_toggle_hook, instance, NULL );
+#endif
 	}
 }
 
@@ -379,6 +386,21 @@ on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 	}
 }
 
+/*
+ * prevent the user to click on the button
+ * - draw-indicator property: transform the check button (TRUE) into a toggle button (FALSE)
+ * - toggled signal is of type run first
+ *   so we can only execute our user signal handler after the object signal handler
+ *   has already been executed
+ * - overriding the class handler does not work: the overriding handler is called, we
+ *   are able to distinguish between our button and others, but even stopping the signal
+ *   emission does not prevent the checkbox to be checked/unchecked
+ * - last trying to set an emission hook, but:
+ *   emission of signal "toggled" for instance `0x9ceace0' cannot be stopped from emission hook
+ *
+ * so the solution to re-toggle the button inside of the signal handler, if it is not
+ * the most elegant, seems at least working without too drawbacks
+ */
 static void
 on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 {
@@ -395,6 +417,49 @@ on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 		g_signal_handlers_unblock_by_func(( gpointer ) button, on_readonly_toggled, instance );
 	}
 }
+
+#if 0
+static void
+on_readonly_toggle_cb( GtkToggleButton *button, NactIPropertiesTab *instance )
+{
+	static const gchar *thisfn = "nact_iproperties_tab_on_readonly_toggle_cb";
+	g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
+
+	if( rdbtn != GTK_WIDGET( button )){
+		g_debug( "%s: not called for our button, calling the default handler", thisfn );
+		g_signal_chain_from_overridden_handler( button, instance );
+		return;
+	}
+
+	g_debug( "%s: called for our button, stop emission", thisfn );
+	g_signal_stop_emission_by_name( button, "toggled" );
+}
+
+static gboolean
+on_readonly_toggle_hook( GSignalInvocationHint *ihint,
+        guint n_param_values, const GValue *param_values, NactIPropertiesTab *instance )
+{
+	static const gchar *thisfn = "nact_iproperties_tab_on_readonly_toggle_hook";
+	GtkWidget *button;
+	GtkWidget *signaled_object;
+
+	g_debug( "%s: n_param=%d, instance=%p", thisfn, n_param_values, ( void * ) instance );
+
+	if( instance ){
+		signaled_object = ( GtkWidget * ) g_value_get_object( param_values );
+		if( signaled_object ){
+			button = base_window_get_widget( BASE_WINDOW( instance ), "ActionReadonlyButton" );
+			if( button == signaled_object ){
+				g_debug( "%s: called for our button, stop emission", thisfn );
+				g_signal_stop_emission_by_name( button, "toggled" );
+			}
+		}
+	}
+
+	/* stay connected */
+	return( TRUE );
+}
+#endif
 
 static void
 on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
