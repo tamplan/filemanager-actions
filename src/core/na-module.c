@@ -70,14 +70,14 @@ static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
 static NAModule *module_new( const gchar *filename );
-static gboolean  module_load( GTypeModule *gmodule );
+static gboolean  on_module_load( GTypeModule *gmodule );
 static gboolean  is_a_na_plugin( NAModule *module );
 static gboolean  plugin_check( NAModule *module, const gchar *symbol, gpointer *pfn );
 static void      register_module_types( NAModule *module );
 static void      add_module_type( NAModule *module, GType type );
 static void      object_weak_notify( NAModule *module, GObject *object );
 
-static void      module_unload( GTypeModule *gmodule );
+static void      on_module_unload( GTypeModule *gmodule );
 
 GType
 na_module_get_type( void )
@@ -132,8 +132,8 @@ class_init( NAModuleClass *klass )
 	object_class->finalize = instance_finalize;
 
 	module_class = G_TYPE_MODULE_CLASS( klass );
-	module_class->load = module_load;
-	module_class->unload = module_unload;
+	module_class->load = on_module_load;
+	module_class->unload = on_module_unload;
 
 	klass->private = g_new0( NAModuleClassPrivate, 1 );
 }
@@ -269,7 +269,6 @@ na_module_load_modules( void )
 			}
 		}
 		g_dir_close( api_dir );
-		modules = g_list_reverse( modules );
 	}
 
 	return( modules );
@@ -303,9 +302,9 @@ module_new( const gchar *fname )
  * returns: %TRUE if the module is successfully loaded
  */
 static gboolean
-module_load( GTypeModule *gmodule )
+on_module_load( GTypeModule *gmodule )
 {
-	static const gchar *thisfn = "na_module_module_load";
+	static const gchar *thisfn = "na_module_on_module_load";
 	NAModule *module;
 	gboolean loaded;
 
@@ -316,10 +315,12 @@ module_load( GTypeModule *gmodule )
 	loaded = FALSE;
 	module = NA_MODULE( gmodule );
 
-	module->private->library = g_module_open( module->private->path, G_MODULE_BIND_LAZY | G_MODULE_BIND_LOCAL );
+	module->private->library = g_module_open(
+			module->private->path, G_MODULE_BIND_LAZY | G_MODULE_BIND_LOCAL );
 
 	if( !module->private->library ){
 		g_warning( "%s: g_module_open: path=%s, error=%s", thisfn, module->private->path, g_module_error());
+
 	} else {
 		loaded = TRUE;
 	}
@@ -364,7 +365,7 @@ plugin_check( NAModule *module, const gchar *symbol, gpointer *pfn )
 
 	ok = g_module_symbol( module->private->library, symbol, pfn );
 
-	if( !ok ){
+	if( !ok || !pfn ){
 		g_debug("%s: %s: %s: symbol not found", thisfn, module->private->path, symbol );
 	}
 
@@ -394,8 +395,6 @@ register_module_types( NAModule *module )
 			add_module_type( module, types[i] );
 		}
 	}
-
-	module->private->objects = g_list_reverse( module->private->objects );
 }
 
 static void
@@ -427,9 +426,9 @@ object_weak_notify( NAModule *module, GObject *object )
  * which is itself called in na_module::instance_dispose
  */
 static void
-module_unload( GTypeModule *gmodule )
+on_module_unload( GTypeModule *gmodule )
 {
-	static const gchar *thisfn = "na_module_module_unload";
+	static const gchar *thisfn = "na_module_on_module_unload";
 	NAModule *module;
 
 	g_return_if_fail( G_IS_TYPE_MODULE( gmodule ));
@@ -457,6 +456,8 @@ module_unload( GTypeModule *gmodule )
  * @type: the serched GType.
  *
  * Returns: a list of loaded modules willing to deal with requested @type.
+ *
+ * The returned list should be na_module_free_extensions_list() by the caller.
  */
 GList *
 na_module_get_extensions_for_type( GList *modules, GType type )
@@ -475,7 +476,7 @@ na_module_get_extensions_for_type( GList *modules, GType type )
 		}
 	}
 
-	return( g_list_reverse( willing_to ));
+	return( willing_to );
 }
 
 /*
@@ -523,15 +524,20 @@ void
 na_module_release_modules( GList *modules )
 {
 	static const gchar *thisfn = "na_modules_release_modules";
+	NAModule *module;
 	GList *imod;
 	GList *iobj;
 
 	g_debug( "%s: modules=%p (count=%d)", thisfn, ( void * ) modules, g_list_length( modules ));
 
 	for( imod = modules ; imod ; imod = imod->next ){
-		for( iobj = NA_MODULE( imod->data )->private->objects ; iobj ; iobj = iobj->next ){
+		module = NA_MODULE( imod->data );
+
+		for( iobj = module->private->objects ; iobj ; iobj = iobj->next ){
 			g_object_unref( iobj->data );
 		}
+
+		g_type_module_unuse( G_TYPE_MODULE( module ));
 	}
 
 	g_list_free( modules );

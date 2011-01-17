@@ -4,6 +4,10 @@
 
 	* NEWS: Update before release.
 
+2011-01-17 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-module.c (na_module_release_modules): Release the loaded module.
+
 2011-01-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* run-distcheck.sh: New file.
