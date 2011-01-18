@@ -4,6 +4,9 @@
 
 	* NEWS: Update before release.
 
+	* src/core/na-boxed.c (na_boxed_new_from_string_with_sep):
+	Do not eat last character.
+
 	* README-GCONF:
 	* src/core/na-settings.h:
 	* src/utils/na-gconf2key.sh.in:

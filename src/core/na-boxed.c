@@ -425,7 +425,7 @@ na_boxed_new_from_string_with_sep( guint type, const gchar *string, const gchar 
 			if( string && strlen( string )){
 				sdup = g_strdup( string );
 				if( g_str_has_suffix( string, sep )){
-					sdup[strlen(sdup)-1-strlen(sep)] = '\0';
+					sdup[strlen(sdup)-strlen(sep)] = '\0';
 					sdup = g_strstrip( sdup );
 				}
 				array = g_strsplit( sdup, sep, -1 );
