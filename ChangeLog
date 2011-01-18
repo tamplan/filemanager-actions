@@ -4,6 +4,11 @@
 
 	* NEWS: Update before release.
 
+	* README-GCONF:
+	* src/core/na-settings.h:
+	* src/utils/na-gconf2key.sh.in:
+	Rename 'import-mode-keep-last-choice' as 'import-ask-user-keep-last-choice'.
+
 2011-01-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-preferences-editor.c:

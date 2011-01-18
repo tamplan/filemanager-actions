@@ -73,6 +73,7 @@ Deprecating GConf
  export-assistant = [377,33,699,675]        [nact]     export-assistant-wsp
  export-ask-user = [377,33,699,675]         [nact]     export-ask-user-wsp
  export-ask-user-last-format = GConfEntry   [nact]     export-ask-user-last-format
+                                            [nact]     export-ask-user-keep-last-choice
  export-folder-uri = file:///home/pierre..  [nact]     export-assistant-lfu
  export-format = Ask                        [nact]     export-preferred-format
  icommand-command-chooser                   [nact]     command-command-chooser-wsp
@@ -92,7 +93,7 @@ Deprecating GConf
  import-ask-user-last-mode                  [nact]     import-ask-user-last-mode
  import-assistant                           [nact]     import-assistant-wsp
  import-folder-uri                          [nact]     import-assistant-lfu
- import-keep-choice                         [nact]     import-mode-keep-last-choice
+ import-keep-choice                         [nact]     import-ask-user-keep-last-choice
  import-mode = NoImport                     [nact]     import-preferred-mode
  io-providers-order = [..]                  [nact]     io-providers-write-order
  iprefs-add-about-item = true               [runtime]  items-add-about-item
@@ -137,7 +138,7 @@ Deprecating GConf
  GConf                                      Group      Key
  -----------------------------------------  ------     --------------------------------------
  /apps/nautilus-actions/mandatory/all/locked
-                                            [runtime]  preferences-locked
+                                            [nact]     preferences-locked
                                             [runtime]  io-providers-locked
 
  /apps/nautilus-actions/mandatory/na-desktop/locked    <removed>

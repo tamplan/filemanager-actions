@@ -524,7 +524,7 @@ gconftool-2 --all-entries ${na_preferences} | while read key x value; do
 			add_pref "nact" "import-assistant-lfu" str "${value}"
 			;;
 		import-keep-choice)
-			add_pref "nact" "import-mode-keep-last-choice" list "${value}"
+			add_pref "nact" "import-ask-user-keep-last-choice" list "${value}"
 			;;
 		import-mode)
 			add_pref "nact" "import-preferred-mode" str "${value}"
