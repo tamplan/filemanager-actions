@@ -83,7 +83,7 @@ static void       on_up_clicked( GtkButton *button, BaseWindow *window );
 static void       on_down_clicked( GtkButton *button, BaseWindow *window );
 
 static gboolean   are_preferences_locked( BaseWindow *window );
-static void       display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, GtkTreeView *treeview );
+static void       display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window );
 static GtkButton *get_up_button( BaseWindow *window );
 static GtkButton *get_down_button( BaseWindow *window );
 
@@ -95,7 +95,7 @@ static GtkButton *get_down_button( BaseWindow *window );
  * the UI manager.
  */
 void
-nact_providers_list_create_model( GtkTreeView *treeview )
+nact_providers_list_create_model( BaseWindow *window, GtkTreeView *treeview )
 {
 	static const char *thisfn = "nact_providers_list_create_model";
 	GtkListStore *model;
@@ -147,7 +147,7 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 			text_cell,
 			"text", PROVIDER_LIBELLE_COLUMN,
 			NULL );
-	gtk_tree_view_column_set_cell_data_func( column, text_cell, ( GtkTreeCellDataFunc ) display_label, treeview, NULL );
+	gtk_tree_view_column_set_cell_data_func( column, text_cell, ( GtkTreeCellDataFunc ) display_label, window, NULL );
 	gtk_tree_view_append_column( treeview, column );
 
 	/* id */
@@ -168,14 +168,14 @@ nact_providers_list_create_model( GtkTreeView *treeview )
 
 /**
  * nact_providers_list_init_view:
- * @treeview: the #GtkTreeView.
  * @window: the parent #BaseWindow which embeds the view.
+ * @treeview: the #GtkTreeView.
  *
  * Connects signals at runtime initialization of the widget, and setup
  * current default values.
  */
 void
-nact_providers_list_init_view( GtkTreeView *treeview, BaseWindow *window )
+nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 {
 	static const gchar *thisfn = "nact_providers_list_init_view";
 
@@ -606,7 +606,7 @@ are_preferences_locked( BaseWindow *window )
  * unavailable provider: italic grey
  */
 static void
-display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, GtkTreeView *treeview )
+display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window )
 {
 	NAIOProvider *provider;
 	gchar *name;
@@ -617,15 +617,18 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	g_object_set( cell, "foreground-set", FALSE, NULL );
 
 	if( !na_io_provider_is_available( provider )){
-
 		g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 		g_object_set( cell, "foreground", "grey", "foreground-set", TRUE, NULL );
-
 	}
 
 	g_object_unref( provider );
 
 	g_object_set( cell, "text", name, NULL );
+
+	if( are_preferences_locked( window )){
+		g_object_set( cell, "foreground", "grey", "foreground-set", TRUE, NULL );
+	}
+
 	g_free( name );
 }
 

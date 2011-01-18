@@ -370,7 +370,7 @@ on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
 
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
-	nact_providers_list_create_model( listview );
+	nact_providers_list_create_model( BASE_WINDOW( editor ), listview );
 }
 
 static void
@@ -424,7 +424,7 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	/* sixth tab: I/O providers priorities
 	 */
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
-	nact_providers_list_init_view( listview, BASE_WINDOW( editor ));
+	nact_providers_list_init_view( BASE_WINDOW( editor ), listview );
 
 	/* dialog buttons
 	 */

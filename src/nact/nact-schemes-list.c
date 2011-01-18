@@ -779,12 +779,18 @@ static void
 display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data, guint column_id )
 {
 	gboolean used;
+	gboolean are_locked;
 
 	gtk_tree_model_get( model, iter, SCHEMES_ALREADY_USED_COLUMN, &used, -1 );
 	g_object_set( cell, "style-set", FALSE, NULL );
 
 	if( used ){
 		g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
+	}
+
+	are_locked = are_preferences_locked( data->window );
+	if( are_locked ){
+		g_object_set( cell, "foreground", "Grey", "foreground-set", TRUE, NULL );
 	}
 }
 

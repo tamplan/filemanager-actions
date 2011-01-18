@@ -37,8 +37,8 @@
 
 G_BEGIN_DECLS
 
-void    nact_providers_list_create_model( GtkTreeView *treeview );
-void    nact_providers_list_init_view( GtkTreeView *treeview, BaseWindow *window );
+void    nact_providers_list_create_model( BaseWindow *window, GtkTreeView *treeview );
+void    nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview );
 void    nact_providers_list_save( BaseWindow *window );
 void    nact_providers_list_dispose( BaseWindow *window );
 
