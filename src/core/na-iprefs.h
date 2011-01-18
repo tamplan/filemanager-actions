@@ -52,13 +52,13 @@ enum {
 	IPREFS_ORDER_MANUAL
 };
 
-guint    na_iprefs_get_import_mode       ( const NAPivot *pivot, const gchar *pref );
+guint    na_iprefs_get_import_mode       ( const NAPivot *pivot, const gchar *pref, gboolean *mandatory );
 void     na_iprefs_set_import_mode       ( const NAPivot *pivot, const gchar *pref, guint mode );
 
-guint    na_iprefs_get_order_mode        ( const NAPivot *pivot );
+guint    na_iprefs_get_order_mode        ( const NAPivot *pivot, gboolean *mandatory );
 void     na_iprefs_set_order_mode        ( const NAPivot *pivot, guint mode );
 
-GQuark   na_iprefs_get_export_format     ( const NAPivot *pivot, const gchar *pref );
+GQuark   na_iprefs_get_export_format     ( const NAPivot *pivot, const gchar *pref, gboolean *mandatory );
 void     na_iprefs_set_export_format     ( const NAPivot *pivot, const gchar *pref, GQuark format );
 
 GSList  *na_iprefs_get_io_providers      ( const NAPivot * );

@@ -67,9 +67,16 @@ enum {
 	EXPORT_FORMAT_DISPLAY_PREFERENCES,
 };
 
-void            nact_export_format_init_display( const NAPivot *pivot, GtkWidget *container, guint mode );
-void            nact_export_format_select( const GtkWidget *container, GQuark format );
-NAExportFormat *nact_export_format_get_selected( const GtkWidget *container );
+void            nact_export_format_init_display(
+						GtkWidget *container_vbox,
+						const NAPivot *pivot, guint mode, gboolean sensitive );
+
+void            nact_export_format_select      (
+						const GtkWidget *container_vbox,
+						gboolean editable, GQuark format );
+
+NAExportFormat *nact_export_format_get_selected(
+						const GtkWidget *container_vbox );
 
 G_END_DECLS
 

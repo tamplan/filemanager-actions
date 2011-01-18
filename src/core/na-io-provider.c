@@ -86,6 +86,7 @@ static GList        *io_providers_list_add_from_plugins( const NAPivot *pivot, G
 static GList        *io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list );
 static GList        *io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list );
 static GList        *io_providers_list_append_object( const NAPivot *pivot, GList *list, NAIIOProvider *module, const gchar *id );
+static void          io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, NAIIOProvider *provider_module );
 static gboolean      is_really_writable( const NAIOProvider *provider, const NAPivot *pivot );
 static GList        *load_items_filter_unwanted_items( const NAPivot *pivot, GList *merged, guint loadable_set );
 static GList        *load_items_filter_unwanted_items_rec( GList *merged, guint loadable_set );
@@ -451,14 +452,15 @@ na_io_provider_get_name( const NAIOProvider *provider )
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), name );
 
 	if( !provider->private->dispose_has_run ){
+		if( na_io_provider_is_available( provider ) &&
+			NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name ){
 
-		if( NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name ){
-			g_free( name );
-			name = NULL;
-			name = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name( provider->private->provider );
-			if( !name ){
-				g_warning( "%s: NAIIOProvider %s get_name() interface returns NULL", thisfn, provider->private->id );
-				name = g_strdup( "" );
+				g_free( name );
+				name = NULL;
+				name = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->get_name( provider->private->provider );
+				if( !name ){
+					g_warning( "%s: NAIIOProvider %s get_name() interface returns NULL", thisfn, provider->private->id );
+					name = g_strdup( "" );
 			}
 
 		} else {
@@ -703,7 +705,7 @@ na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **me
 
 	/* sort the hierarchy according to preferences
 	 */
-	order_mode = na_iprefs_get_order_mode( pivot );
+	order_mode = na_iprefs_get_order_mode( pivot, NULL );
 	switch( order_mode ){
 		case IPREFS_ORDER_ALPHA_ASCENDING:
 			hierarchy = load_items_hierarchy_sort( pivot, hierarchy, ( GCompareFunc ) na_object_id_sort_alpha_asc );
@@ -757,20 +759,21 @@ dump_providers_list( GList *providers )
 
 /*
  * allocate a new NAIOProvider object for the specified module and id
+ *
+ * id is mandatory here
+ * module may be NULL
  */
 static NAIOProvider *
 io_provider_new( const NAPivot *pivot, NAIIOProvider *module, const gchar *id )
 {
 	NAIOProvider *object;
 
+	g_return_val_if_fail( id && strlen( id ), NULL );
+
 	object = g_object_new( NA_IO_PROVIDER_TYPE, IO_PROVIDER_PROP_ID, id, NULL );
 
 	if( module ){
-		object->private->provider = g_object_ref( module );
-		object->private->item_changed_handler =
-				g_signal_connect(
-						module, IO_PROVIDER_SIGNAL_ITEM_CHANGED,
-						( GCallback ) na_pivot_on_item_changed_handler, ( gpointer ) pivot );
+		io_providers_list_set_module( pivot, object, module );
 	}
 
 	return( object );
@@ -834,12 +837,13 @@ io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list )
 	GSList *io_providers, *it;
 
 	merged = objects_list;
-
 	io_providers = na_iprefs_get_io_providers( pivot );
+
 	for( it = io_providers ; it ; it = it->next ){
 		id = ( const gchar * ) it->data;
 		merged = io_providers_list_append_object( pivot, merged, NULL, id );
 	}
+
 	na_core_utils_slist_free( io_providers );
 
 	return( merged );
@@ -847,7 +851,7 @@ io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list )
 
 /*
  * adding from write-order means we only create NAIOProvider objects
- * without having any ref to the underlying NAIIOProvider if it exists
+ * without having any pointer to the underlying NAIIOProvider (if it exists)
  */
 static GList *
 io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list )
@@ -865,6 +869,7 @@ io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_lis
 		id = ( const gchar * ) it->data;
 		merged = io_providers_list_append_object( pivot, merged, NULL, id );
 	}
+
 	na_core_utils_slist_free( io_providers );
 
 	return( merged );
@@ -887,11 +892,21 @@ io_providers_list_append_object( const NAPivot *pivot, GList *list, NAIIOProvide
 		object = io_provider_new( pivot, module, id );
 		merged = g_list_append( merged, object );
 
-	} else if( !object->private->provider && module ){
-		object->private->provider = module;
+	} else if( module && !object->private->provider ){
+		io_providers_list_set_module( pivot, object, module );
 	}
 
 	return( merged );
+}
+
+static void
+io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, NAIIOProvider *provider_module )
+{
+	provider_object->private->provider = g_object_ref( provider_module );
+	provider_object->private->item_changed_handler =
+			g_signal_connect(
+					provider_module, IO_PROVIDER_SIGNAL_ITEM_CHANGED,
+					( GCallback ) na_pivot_on_item_changed_handler, ( gpointer ) pivot );
 }
 
 /*

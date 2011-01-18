@@ -42,6 +42,10 @@
 #include "nact-gtk-utils.h"
 #include "nact-application.h"
 
+#define NACT_PROP_TOGGLE_BUTTON				"nact-prop-toggle-button"
+#define NACT_PROP_TOGGLE_HANDLER			"nact-prop-toggle-handler"
+#define NACT_PROP_TOGGLE_USER_DATA			"nact-prop-toggle-user-data"
+
 #define DEFAULT_WIDTH		22
 #define DEFAULT_HEIGHT		22
 
@@ -114,61 +118,165 @@ nact_gtk_utils_set_editable( GObject *widget, gboolean editable )
 }
 
 /**
- * nact_gtk_utils_set_initial_state:
- * @button: the #GtkToggleButton activated as initial state.
- * @func: the corresponding on_toggled function.
+ * nact_gtk_utils_radio_set_initial_state:
+ * @button: the #GtkRadioButton button which is initially active.
+ * @handler: the corresponding "toggled" handler.
+ * @user_data: the user data associated to the handler.
+ * @editable: whether this radio button group is editable.
+ * @sensitive: whether this radio button group is sensitive.
  *
- * Record on each #GtkRadioButton of the same group the characteristics
- * of those which is activated as the initial state. This is useful to handle
- * read-only radio-button.
+ * This function should be called for the button which is initially active
+ * inside of a radio button group when the radio group may happen to not be
+ * editable.
+ * This function should be called only once for the radio button group.
  *
- * As a side-effect, this initial button is set as active here.
+ * It does the following operations:
+ * - set the button as active
+ * - set other buttons of the radio button group as inactive
+ * - set all buttons of radio button group as @editable
+ *
+ * The initially active @button, along with its @handler, are recorded
+ * as properties of the radio button group (actually as properties of each
+ * radio button of the group), so that they can later be used to reset the
+ * initial state.
  */
 void
-nact_gtk_utils_set_initial_state( GtkToggleButton *button, GCallback func )
+nact_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
+		GCallback handler, void *user_data, gboolean editable, gboolean sensitive )
 {
 	GSList *group, *ig;
 	GtkRadioButton *other;
 
-	group = gtk_radio_button_get_group( GTK_RADIO_BUTTON( button ));
+	group = gtk_radio_button_get_group( button );
+
 	for( ig = group ; ig ; ig = ig->next ){
 		other = GTK_RADIO_BUTTON( ig->data );
-		g_object_set_data( G_OBJECT( other ), "nact-initial-state-button", button );
-		g_object_set_data( G_OBJECT( other ), "nact-initial-state-func", func );
+		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_BUTTON, button );
+		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_HANDLER, handler );
+		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_USER_DATA, user_data );
+		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_EDITABLE, GUINT_TO_POINTER( editable ));
+		nact_gtk_utils_set_editable( G_OBJECT( other ), editable );
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( other ), FALSE );
+		gtk_widget_set_sensitive( GTK_WIDGET( other ), sensitive );
 	}
 
-	gtk_toggle_button_set_active( button, TRUE );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 }
 
 /**
- * nact_gtk_utils_reset_initials:
- * @button: the #GtkToggleButton being toggled.
- * @func: the corresponding on_toggled function.
- * @data: data associated with the @func callback.
- * @active: wheter @button is currently being tried to get activated.
+ * nact_gtk_utils_radio_reset_initial_state:
+ * @button: the #GtkRadioButton being toggled.
+ * @handler: the corresponding "toggled" handler.
+ * @data: data associated with the @handler callback.
  *
  * When clicking on a read-only radio button, this function ensures that
- * the radio button is not modified. This function should be called only
- * when the control is read-only (not editable).
+ * the radio button is not modified. It may be called whether the radio
+ * button group is editable or not (does nothing if group is actually
+ * editable).
  */
 void
-nact_gtk_utils_reset_initial_state( GtkToggleButton *button, GCallback func, void *data, gboolean active )
+nact_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback handler )
 {
 	GtkToggleButton *initial_button;
-	GCallback initial_func;
+	GCallback initial_handler;
+	gboolean active;
+	gboolean editable;
+	gpointer user_data;
 
-	if( active ){
-		initial_button = GTK_TOGGLE_BUTTON( g_object_get_data( G_OBJECT( button ), "nact-initial-state-button" ));
-		initial_func = G_CALLBACK( g_object_get_data( G_OBJECT( button ), "nact-initial-state-func" ));
+	active = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_EDITABLE ));
 
-		g_signal_handlers_block_by_func(( gpointer ) button, func, data );
-		g_signal_handlers_block_by_func(( gpointer ) initial_button, initial_func, data );
+	if( active && !editable ){
+		initial_button = GTK_TOGGLE_BUTTON( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_BUTTON ));
+		initial_handler = G_CALLBACK( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_HANDLER ));
+		user_data = g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_USER_DATA );
 
-		gtk_toggle_button_set_active( button, FALSE );
+		if( handler ){
+			g_signal_handlers_block_by_func(( gpointer ) button, handler, user_data );
+		}
+		g_signal_handlers_block_by_func(( gpointer ) initial_button, initial_handler, user_data );
+
+		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), FALSE );
 		gtk_toggle_button_set_active( initial_button, TRUE );
 
-		g_signal_handlers_unblock_by_func(( gpointer ) initial_button, initial_func, data );
-		g_signal_handlers_unblock_by_func(( gpointer ) button, func, data );
+		g_signal_handlers_unblock_by_func(( gpointer ) initial_button, initial_handler, user_data );
+		if( handler ){
+			g_signal_handlers_unblock_by_func(( gpointer ) button, handler, user_data );
+		}
+	}
+}
+
+/**
+ * nact_gtk_utils_toggle_set_initial_state:
+ * @button: the #GtkToggleButton button.
+ * @handler: the corresponding "toggled" handler.
+ * @window: the toplevel #BaseWindow which embeds the button;
+ *  it will be passed as user_data when connecting the signal.
+ * @active: whether the check button is initially active (checked).
+ * @editable: whether this radio button group is editable.
+ * @sensitive: whether this radio button group is sensitive.
+ *
+ * This function should be called for a check button which may happen to be
+ * read-only..
+ *
+ * It does the following operations:
+ * - connect the 'toggled' handler to the button
+ * - set the button as active or inactive depending of @active
+ * - set the button as editable or not depending of @editable
+ * - set the button as sensitive or not depending of @sensitive
+ * - explictely triggers the 'toggled' handler
+ */
+void
+nact_gtk_utils_toggle_set_initial_state( BaseWindow *window,
+		const gchar *button_name, GCallback handler,
+		gboolean active, gboolean editable, gboolean sensitive )
+{
+	typedef void ( *toggle_handler )( GtkToggleButton *, BaseWindow * );
+	GtkToggleButton *button;
+
+	button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, button_name ));
+
+	if( button ){
+		base_window_signal_connect( window, G_OBJECT( button ), "toggled", handler );
+
+		g_object_set_data( G_OBJECT( button ), NACT_PROP_TOGGLE_HANDLER, handler );
+		g_object_set_data( G_OBJECT( button ), NACT_PROP_TOGGLE_USER_DATA, window );
+		g_object_set_data( G_OBJECT( button ), NACT_PROP_TOGGLE_EDITABLE, GUINT_TO_POINTER( editable ));
+
+		nact_gtk_utils_set_editable( G_OBJECT( button ), editable );
+		gtk_widget_set_sensitive( GTK_WIDGET( button ), sensitive );
+		gtk_toggle_button_set_active( button, active );
+
+		( *( toggle_handler ) handler )( button, window );
+	}
+}
+
+/**
+ * nact_gtk_utils_toggle_reset_initial_state:
+ * @button: the #GtkToggleButton check button.
+ *
+ * When clicking on a read-only check button, this function ensures that
+ * the check button is not modified. It may be called whether the button
+ * is editable or not (does nothing if button is actually editable).
+ */
+void
+nact_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button )
+{
+	gboolean editable;
+	GCallback handler;
+	gpointer user_data;
+	gboolean active;
+
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_EDITABLE ));
+
+	if( !editable ){
+		active = gtk_toggle_button_get_active( button );
+		handler = G_CALLBACK( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_HANDLER ));
+		user_data = g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_USER_DATA );
+
+		g_signal_handlers_block_by_func(( gpointer ) button, handler, user_data );
+		gtk_toggle_button_set_active( button, !active );
+		g_signal_handlers_unblock_by_func(( gpointer ) button, handler, user_data );
 	}
 }
 

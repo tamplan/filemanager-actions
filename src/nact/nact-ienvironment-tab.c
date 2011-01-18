@@ -444,31 +444,32 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		raz_desktop_listview( instance );
 
 		always_button = base_window_get_widget( BASE_WINDOW( instance ), "ShowAlwaysButton" );
-		nact_gtk_utils_set_editable( G_OBJECT( always_button ), editable );
-
 		show_button = base_window_get_widget( BASE_WINDOW( instance ), "OnlyShowButton" );
-		nact_gtk_utils_set_editable( G_OBJECT( show_button ), editable );
-
 		notshow_button = base_window_get_widget( BASE_WINDOW( instance ), "DoNotShowButton" );
-		nact_gtk_utils_set_editable( G_OBJECT( notshow_button ), editable );
 
 		desktops = context ? na_object_get_only_show_in( context ) : NULL;
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
 		gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( always_button ), context == NULL );
 
 		if( desktops && g_slist_length( desktops )){
-			nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( show_button ), G_CALLBACK( on_only_show_toggled ));
+			nact_gtk_utils_radio_set_initial_state(
+					GTK_RADIO_BUTTON( show_button ),
+					G_CALLBACK( on_only_show_toggled ), instance, editable, ( context == NULL ));
 			gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
 
 		} else {
 			desktops = context ? na_object_get_not_show_in( context ) : NULL;
 
 			if( desktops && g_slist_length( desktops )){
-				nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( notshow_button ), G_CALLBACK( on_do_not_show_toggled ));
+				nact_gtk_utils_radio_set_initial_state(
+						GTK_RADIO_BUTTON( notshow_button ),
+						G_CALLBACK( on_do_not_show_toggled ), instance, editable, ( context == NULL ));
 				gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
 
 			} else {
-				nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( always_button ), G_CALLBACK( on_show_always_toggled ));
+				nact_gtk_utils_radio_set_initial_state(
+						GTK_RADIO_BUTTON( always_button ),
+						G_CALLBACK( on_show_always_toggled ), instance, editable, ( context == NULL ));
 				gtk_widget_set_sensitive( GTK_WIDGET( listview ), FALSE );
 				desktops = NULL;
 			}
@@ -597,7 +598,8 @@ on_show_always_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 			}
 
 		} else {
-			nact_gtk_utils_reset_initial_state( toggle_button, G_CALLBACK( on_show_always_toggled ), instance, active );
+			nact_gtk_utils_radio_reset_initial_state(
+					GTK_RADIO_BUTTON( toggle_button ), G_CALLBACK( on_show_always_toggled ));
 		}
 	}
 }
@@ -635,7 +637,8 @@ on_only_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *insta
 			}
 
 		} else {
-			nact_gtk_utils_reset_initial_state( toggle_button, G_CALLBACK( on_only_show_toggled ), instance, active );
+			nact_gtk_utils_radio_reset_initial_state(
+					GTK_RADIO_BUTTON( toggle_button ), G_CALLBACK( on_only_show_toggled ));
 		}
 	}
 }
@@ -673,7 +676,8 @@ on_do_not_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 			}
 
 		} else {
-			nact_gtk_utils_reset_initial_state( toggle_button, G_CALLBACK( on_do_not_show_toggled ), instance, active );
+			nact_gtk_utils_radio_reset_initial_state(
+					GTK_RADIO_BUTTON( toggle_button ), G_CALLBACK( on_do_not_show_toggled ));
 		}
 	}
 }

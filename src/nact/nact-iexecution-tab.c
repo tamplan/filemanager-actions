@@ -293,31 +293,32 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 		st_on_selection_change = TRUE;
 
 		normal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeNormal" );
-		nact_gtk_utils_set_editable( G_OBJECT( normal_toggle ), editable );
-
 		terminal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeTerminal" );
-		nact_gtk_utils_set_editable( G_OBJECT( terminal_toggle ), editable );
-
 		embedded_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeEmbedded" );
-		nact_gtk_utils_set_editable( G_OBJECT( embedded_toggle ), editable );
-
 		display_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeDisplayOutput" );
-		nact_gtk_utils_set_editable( G_OBJECT( display_toggle ), editable );
 
 		mode = profile ? na_object_get_execution_mode( profile ) : g_strdup( "Normal" );
 		gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( normal_toggle ), profile == NULL );
 
 		if( !strcmp( mode, "Normal" )){
-			nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( normal_toggle ), G_CALLBACK( on_normal_mode_toggled ));
+			nact_gtk_utils_radio_set_initial_state(
+					GTK_RADIO_BUTTON( normal_toggle ),
+					G_CALLBACK( on_normal_mode_toggled ), instance, editable, ( profile == NULL ));
 
 		} else if( !strcmp( mode, "Terminal" )){
-			nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( terminal_toggle ), G_CALLBACK( on_terminal_mode_toggled ));
+			nact_gtk_utils_radio_set_initial_state(
+					GTK_RADIO_BUTTON( terminal_toggle ),
+					G_CALLBACK( on_terminal_mode_toggled ), instance, editable, ( profile == NULL ));
 
 		} else if( !strcmp( mode, "Embedded" )){
-			nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( embedded_toggle ), G_CALLBACK( on_embedded_mode_toggled ));
+			nact_gtk_utils_radio_set_initial_state(
+					GTK_RADIO_BUTTON( embedded_toggle ),
+					G_CALLBACK( on_embedded_mode_toggled ), instance, editable, ( profile == NULL ));
 
 		} else if( !strcmp( mode, "DisplayOutput" )){
-			nact_gtk_utils_set_initial_state( GTK_TOGGLE_BUTTON( display_toggle ), G_CALLBACK( on_display_mode_toggled ));
+			nact_gtk_utils_radio_set_initial_state(
+					GTK_RADIO_BUTTON( display_toggle ),
+					G_CALLBACK( on_display_mode_toggled ), instance, editable, ( profile == NULL ));
 
 		} else {
 			g_warning( "%s: unable to setup execution mode '%s'", thisfn, mode );
@@ -402,7 +403,7 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 			}
 
 		} else {
-			nact_gtk_utils_reset_initial_state( toggle_button, cb, instance, active );
+			nact_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), cb );
 		}
 	}
 }

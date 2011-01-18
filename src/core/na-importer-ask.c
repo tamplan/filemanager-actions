@@ -251,7 +251,7 @@ na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existin
 		dialog->private->importing = ( NAObjectItem * ) importing;
 		dialog->private->existing = ( NAObjectItem * ) existing;
 		dialog->private->parms = parms;
-		dialog->private->mode = na_iprefs_get_import_mode( parms->pivot, NA_IPREFS_IMPORT_ASK_USER_LAST_MODE );
+		dialog->private->mode = na_iprefs_get_import_mode( parms->pivot, NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL );
 
 		init_dialog( dialog );
 		/* toplevel is modal, not dialog
@@ -391,7 +391,7 @@ get_selected_mode( NAImporterAsk *editor )
 
 	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	na_settings_set_boolean( na_pivot_get_settings( editor->private->parms->pivot ), NA_IPREFS_IMPORT_MODE_KEEP_LAST_CHOICE, keep );
+	na_settings_set_boolean( na_pivot_get_settings( editor->private->parms->pivot ), NA_IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, keep );
 }
 
 /*

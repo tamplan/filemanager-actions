@@ -4,6 +4,37 @@
 
 	* NEWS: Update before release.
 
+2011-01-18 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-export-format.c (na_export_format_get_description):
+	* src/core/na-importer-ask.c (na_importer_ask_user):
+	* src/core/na-importer.c (import_from_uri):
+	* src/core/na-io-provider.c (na_io_provider_get_name):
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h (na_iprefs_get_import_mode,
+	na_iprefs_get_order_mode, na_iprefs_get_export_format):
+	* src/core/na-settings.c:
+	* src/nact/nact-assistant-export.c (on_initial_load_dialog):
+	* nact/nact-assistant-import.c (runtime_init_duplicates):
+	* src/nact/nact-clipboard.c (export_row_object):
+	* src/nact/nact-export-ask.c:
+	* nact/nact-export-format.c:
+	* src/nact/nact-export-format.h(nact_export_format_init_display):
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h (nact_gtk_utils_radio_set_initial_state,
+	nact_gtk_utils_radio_reset_initial_state,
+	nact_gtk_utils_toggle_set_initial_state,
+	nact_gtk_utils_toggle_reset_initial_state):
+	* src/nact/nact-ienvironment-tab.c
+	(on_tab_updatable_selection_changed):
+	* src/nact/nact-iexecution-tab.c (on_tab_updatable_selection_changed):
+	* src/nact/nact-main-window.c (on_base_runtime_init_toplevel):
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-preferences.ui:
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
+	* src/nact/nact-tree-model.c (tree_model_new):
+	Manage locked and mandatory preferences.
+
 	* src/core/na-boxed.c (na_boxed_new_from_string_with_sep):
 	Do not eat last character.
 

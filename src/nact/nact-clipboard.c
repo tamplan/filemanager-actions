@@ -115,7 +115,7 @@ static void   get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelec
 static void   clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *data );
 static gchar *export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder );
 static gchar *export_objects( NactClipboard *clipboard, GList *objects );
-static gchar *export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported );
+static gchar *export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported, gboolean first );
 
 static void   get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionData *selection_data, guint info, NactClipboard *clipboard );
 static void   clear_primary_clipboard( NactClipboard *clipboard );
@@ -512,7 +512,9 @@ export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 	GtkTreeIter iter;
 	NAObject *object;
 	gchar *buffer;
+	gboolean first;
 
+	first = TRUE;
 	buffer = NULL;
 	exported = NULL;
 	data = g_string_new( "" );
@@ -524,13 +526,14 @@ export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 			gtk_tree_model_get_iter( model, &iter, path );
 			gtk_tree_path_free( path );
 			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
-			buffer = export_row_object( clipboard, object, dest_folder, &exported );
+			buffer = export_row_object( clipboard, object, dest_folder, &exported, first );
 			if( buffer && strlen( buffer )){
 				data = g_string_append( data, buffer );
 				g_free( buffer );
 			}
 			g_object_unref( object );
 		}
+		first = FALSE;
 	}
 
 	g_list_free( exported );
@@ -545,19 +548,22 @@ export_objects( NactClipboard *clipboard, GList *objects )
 	GList *exported;
 	GList *iobj;
 	NAObject *object;
+	gboolean first;
 
+	first = TRUE;
 	buffer = NULL;
 	exported = NULL;
 	data = g_string_new( "" );
 
 	for( iobj = objects ; iobj ; iobj = iobj->next ){
 		object = NA_OBJECT( iobj->data );
-		buffer = export_row_object( clipboard, object, NULL, &exported );
+		buffer = export_row_object( clipboard, object, NULL, &exported, first );
 		if( buffer && strlen( buffer )){
 			data = g_string_append( data, buffer );
 			g_free( buffer );
 		}
 		g_object_unref( object );
+		first = FALSE;
 	}
 
 	g_list_free( exported );
@@ -569,7 +575,7 @@ export_objects( NactClipboard *clipboard, GList *objects )
  * else export to a new file in the target directory
  */
 static gchar *
-export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported )
+export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported, gboolean first )
 {
 	GList *subitems, *isub;
 	NactApplication *application;
@@ -588,11 +594,12 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 		subitems = na_object_get_items( object );
 
 		for( isub = subitems ; isub ; isub = isub->next ){
-			buffer = export_row_object( clipboard, isub->data, dest_folder, exported );
+			buffer = export_row_object( clipboard, isub->data, dest_folder, exported, first );
 			if( buffer && strlen( buffer )){
 				data = g_string_append( data, buffer );
 				g_free( buffer );
 			}
+			first = FALSE;
 		}
 	}
 
@@ -609,14 +616,13 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	if( index == -1 ){
 
 		*exported = g_list_prepend( *exported, ( gpointer ) action );
-		format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
+		format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
 
 		if( format == IPREFS_EXPORT_FORMAT_ASK ){
-			format = nact_export_ask_user( clipboard->private->window, NA_OBJECT_ITEM( action ));
+			format = nact_export_ask_user( clipboard->private->window, NA_OBJECT_ITEM( action ), first );
 		}
 
 		if( format != IPREFS_EXPORT_NO_EXPORT ){
-
 			if( dest_folder ){
 				fname = na_exporter_to_file( NA_PIVOT( updater ), NA_OBJECT_ITEM( action), dest_folder, format, &msgs );
 				g_free( fname );

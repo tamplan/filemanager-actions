@@ -43,10 +43,21 @@
 
 G_BEGIN_DECLS
 
+#define NACT_PROP_TOGGLE_EDITABLE			"nact-prop-toggle-editable"
+
 void       nact_gtk_utils_set_editable( GObject *widget, gboolean editable );
 
-void       nact_gtk_utils_set_initial_state  ( GtkToggleButton *button, GCallback func );
-void       nact_gtk_utils_reset_initial_state( GtkToggleButton *button, GCallback func, void *data, gboolean active );
+void       nact_gtk_utils_radio_set_initial_state  ( GtkRadioButton *button,
+				GCallback toggled_handler, void *user_data,
+				gboolean editable, gboolean sensitive );
+
+void       nact_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback toggled_handler );
+
+void       nact_gtk_utils_toggle_set_initial_state  ( BaseWindow *window,
+				const gchar *button_name, GCallback toggled_handler,
+				gboolean active, gboolean editable, gboolean sensitive );
+
+void       nact_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button );
 
 /* image utilities
  */

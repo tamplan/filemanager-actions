@@ -292,7 +292,10 @@ na_export_format_get_description( const NAExportFormat *format )
  * na_export_format_get_exporter:
  * @format: this #NAExportFormat object.
  *
- * Returns: a pointer to the #NAIExporter which providers this format.
+ * Returns: a pointer to the #NAIExporter which provides this format.
+ *
+ * The pointer is owned by NAEportFormat class, and should not be released
+ * by the caller.
  */
 NAIExporter *
 na_export_format_get_exporter( const NAExportFormat *format )

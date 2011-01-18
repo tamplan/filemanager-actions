@@ -83,6 +83,8 @@ static guint        enum_map_id_from_string( const EnumMap *map, const gchar *st
  * na_iprefs_get_import_mode:
  * @pivot: the #NAPivot application object.
  * @pref: name of the import key to be readen.
+ * @mandatory: if not %NULL, a pointer to a boolean which will receive the
+ *  mandatory property.
  *
  * This preference defines what to do when an imported item has the same
  * identifier that an already existing one. Default value is defined in
@@ -91,14 +93,14 @@ static guint        enum_map_id_from_string( const EnumMap *map, const gchar *st
  * Returns: the import mode currently set.
  */
 guint
-na_iprefs_get_import_mode( const NAPivot *pivot, const gchar *pref )
+na_iprefs_get_import_mode( const NAPivot *pivot, const gchar *pref, gboolean *mandatory )
 {
 	gchar *import_mode_str;
 	guint import_mode;
 	NASettings *settings;
 
 	settings = na_pivot_get_settings( pivot );
-	import_mode_str = na_settings_get_string( settings, pref, NULL, NULL );
+	import_mode_str = na_settings_get_string( settings, pref, NULL, mandatory );
 	import_mode = enum_map_id_from_string( st_import_mode, import_mode_str );
 	g_free( import_mode_str );
 
@@ -127,18 +129,20 @@ na_iprefs_set_import_mode( const NAPivot *pivot, const gchar *pref, guint mode )
 /*
  * na_iprefs_get_order_mode:
  * @pivot: the #NAPivot application object.
+ * @mandatory: if not %NULL, a pointer to a boolean which will receive the
+ *  mandatory property.
  *
  * Returns: the order mode currently set.
  */
 guint
-na_iprefs_get_order_mode( const NAPivot *pivot )
+na_iprefs_get_order_mode( const NAPivot *pivot, gboolean *mandatory )
 {
 	gchar *order_mode_str;
 	guint order_mode;
 	NASettings *settings;
 
 	settings = na_pivot_get_settings( pivot );
-	order_mode_str = na_settings_get_string( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, NULL, NULL );
+	order_mode_str = na_settings_get_string( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, NULL, mandatory );
 	order_mode = enum_map_id_from_string( st_order_mode, order_mode_str );
 	g_free( order_mode_str );
 
@@ -168,6 +172,8 @@ na_iprefs_set_order_mode( const NAPivot *pivot, guint mode )
  * na_iprefs_get_export_format:
  * @pivot: the #NAPivot application object.
  * @name: name of the export format key to be readen
+ * @mandatory: if not %NULL, a pointer to a boolean which will receive the
+ *  mandatory property.
  *
  * Used to default to export as a GConfEntry.
  * Starting with 3.1.0, defaults to Desktop1 (see. core/na-settings.h)
@@ -175,7 +181,7 @@ na_iprefs_set_order_mode( const NAPivot *pivot, guint mode )
  * Returns: the export format currently set as a #GQuark.
  */
 GQuark
-na_iprefs_get_export_format( const NAPivot *pivot, const gchar *name )
+na_iprefs_get_export_format( const NAPivot *pivot, const gchar *name, gboolean *mandatory )
 {
 	GQuark export_format;
 	NASettings *settings;
@@ -184,7 +190,7 @@ na_iprefs_get_export_format( const NAPivot *pivot, const gchar *name )
 	export_format = g_quark_from_static_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
 
 	settings = na_pivot_get_settings( pivot );
-	format_str = na_settings_get_string( settings, name, NULL, NULL );
+	format_str = na_settings_get_string( settings, name, NULL, mandatory );
 
 	if( format_str ){
 		export_format = g_quark_from_string( format_str );

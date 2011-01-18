@@ -42,6 +42,7 @@
 #include "nact-application.h"
 #include "nact-export-format.h"
 #include "nact-export-ask.h"
+#include "nact-gtk-utils.h"
 
 /* private class data
  */
@@ -54,8 +55,12 @@ struct NactExportAskClassPrivate {
 struct NactExportAskPrivate {
 	gboolean      dispose_has_run;
 	BaseWindow   *parent;
+	gboolean      preferences_locked;
 	NAObjectItem *item;
 	GQuark        format;
+	gboolean      format_mandatory;
+	gboolean      keep_last_choice;
+	gboolean      keep_last_choice_mandatory;
 };
 
 static BaseDialogClass *st_parent_class = NULL;
@@ -74,6 +79,7 @@ static gchar   *base_get_ui_filename( const BaseWindow *dialog );
 static void     on_base_initial_load_dialog( NactExportAsk *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactExportAsk *editor, gpointer user_data );
+static void     keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor );
 static void     on_cancel_clicked( GtkButton *button, NactExportAsk *editor );
 static void     on_ok_clicked( GtkButton *button, NactExportAsk *editor );
 static GQuark   get_export_format( NactExportAsk *editor );
@@ -146,9 +152,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nact_export_ask_instance_init";
 	NactExportAsk *self;
 
+	g_return_if_fail( NACT_IS_EXPORT_ASK( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( NACT_IS_EXPORT_ASK( instance ));
+
 	self = NACT_EXPORT_ASK( instance );
 
 	self->private = g_new0( NactExportAskPrivate, 1 );
@@ -180,11 +188,13 @@ instance_dispose( GObject *dialog )
 	static const gchar *thisfn = "nact_export_ask_instance_dispose";
 	NactExportAsk *self;
 
-	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 	g_return_if_fail( NACT_IS_EXPORT_ASK( dialog ));
+
 	self = NACT_EXPORT_ASK( dialog );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -201,8 +211,10 @@ instance_finalize( GObject *dialog )
 	static const gchar *thisfn = "nact_export_ask_instance_finalize";
 	NactExportAsk *self;
 
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 	g_return_if_fail( NACT_IS_EXPORT_ASK( dialog ));
+
+	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
+
 	self = NACT_EXPORT_ASK( dialog );
 
 	g_free( self->private );
@@ -225,6 +237,10 @@ export_ask_new( BaseWindow *parent )
 /**
  * nact_export_ask_run:
  * @parent: the NactAssistant parent of this dialog.
+ * @item: the NAObjectItem to be exported.
+ * @first: whether this is the first call of a serie.
+ *  On a first call, the user is really asked for his choice.
+ *  The next times, the 'keep-last-choice' flag will be considered.
  *
  * Initializes and runs the dialog.
  *
@@ -234,43 +250,59 @@ export_ask_new( BaseWindow *parent )
  *
  * Returns: the mode choosen by the user as a #GQuark which identifies
  * the export mode.
- * The function defaults to returning IPREFS_EXPORT_NO_EXPORT.
+ * The function defaults to returning NA_IPREFS_DEFAULT_EXPORT_FORMAT.
  *
  * When the user selects 'Keep same choice without asking me', this choice
  * becomes his new preferred export format.
  */
 GQuark
-nact_export_ask_user( BaseWindow *parent, NAObjectItem *item )
+nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 {
 	static const gchar *thisfn = "nact_export_ask_run";
 	NactExportAsk *editor;
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
+	gboolean are_locked, mandatory;
+	gboolean keep, keep_mandatory;
 
-	GQuark format = ( GQuark ) IPREFS_EXPORT_NO_EXPORT;
+	GQuark format = g_quark_from_static_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
 
 	g_return_val_if_fail( BASE_IS_WINDOW( parent ), format );
 
-	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
+	g_debug( "%s: parent=%p, item=%p (%s), first=%s",
+			thisfn, ( void * ) parent, ( void * ) item, G_OBJECT_TYPE_NAME( item ), first ? "True":"False" );
 
 	application = NACT_APPLICATION( base_window_get_application( parent ));
 	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
-	editor = export_ask_new( parent );
+	format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, &mandatory );
+	keep = na_settings_get_boolean( settings, NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, &keep_mandatory );
 
-	editor->private->parent = parent;
-	editor->private->item = item;
-	editor->private->format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT );
+	if( first || !keep ){
 
-	if( base_window_run( BASE_WINDOW( editor ))){
+		editor = export_ask_new( parent );
 
-		if( editor->private->format ){
-			format = editor->private->format;
-			na_iprefs_set_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format );
+		editor->private->format = format;
+		editor->private->format_mandatory = mandatory;
+		editor->private->keep_last_choice = keep;
+		editor->private->keep_last_choice_mandatory = keep_mandatory;
+
+		editor->private->parent = parent;
+		editor->private->item = item;
+
+		are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+		editor->private->preferences_locked = are_locked && mandatory;
+
+		if( base_window_run( BASE_WINDOW( editor ))){
+			if( editor->private->format ){
+				format = editor->private->format;
+			}
 		}
-	}
 
-	g_object_unref( editor );
+		g_object_unref( editor );
+	}
 
 	return( format );
 }
@@ -307,7 +339,7 @@ on_base_initial_load_dialog( NactExportAsk *editor, gpointer user_data )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
 	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-	nact_export_format_init_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_ASK );
+	nact_export_format_init_display( container, NA_PIVOT( updater ), EXPORT_FORMAT_DISPLAY_ASK, !editor->private->preferences_locked );
 }
 
 static void
@@ -317,7 +349,6 @@ on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data )
 	GtkWidget *container;
 	gchar *item_label, *label;
 	GtkWidget *widget;
-	GtkWidget *button;
 
 	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
@@ -337,11 +368,13 @@ on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data )
 	g_free( label );
 	g_free( item_label );
 
-	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), FALSE );
-
 	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-	nact_export_format_select( container, editor->private->format );
+	nact_export_format_select( container, !editor->private->format_mandatory, editor->private->format );
+
+	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+			"AskKeepChoiceButton", G_CALLBACK( keep_choice_on_toggled ),
+			editor->private->keep_last_choice,
+			!editor->private->keep_last_choice_mandatory, !editor->private->preferences_locked );
 
 	base_window_signal_connect_by_name(
 			BASE_WINDOW( editor ),
@@ -366,6 +399,21 @@ on_base_all_widgets_showed( NactExportAsk *editor, gpointer user_data )
 }
 
 static void
+keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor )
+{
+	gboolean editable;
+
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_EDITABLE ));
+
+	if( editable ){
+		editor->private->keep_last_choice = gtk_toggle_button_get_active( button );
+
+	} else {
+		nact_gtk_utils_toggle_reset_initial_state( button );
+	}
+}
+
+static void
 on_cancel_clicked( GtkButton *button, NactExportAsk *editor )
 {
 	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
@@ -379,16 +427,27 @@ on_ok_clicked( GtkButton *button, NactExportAsk *editor )
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 
+/*
+ * we have come here because preferred_export_format was 'Ask'
+ * in all cases, the chosen format is kept in 'ask_user_last_chosen_format'
+ * and so this will be the default format which will be proposed the next
+ * time we come here
+ * if the 'remember_my_choice' is cheecked, then we do not even ask the user
+ * but returns as soon as we enter
+ *
+ * not overrinding the preferred export format (i.e. letting it to 'Ask')
+ * let the user go back in ask dialog box the next time he will have some
+ * files to export
+ */
 static GQuark
 get_export_format( NactExportAsk *editor )
 {
 	GtkWidget *container;
 	NAExportFormat *format;
 	GQuark format_quark;
-	GtkWidget *button;
-	gboolean keep;
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
 
 	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
 	format = nact_export_format_get_selected( container );
@@ -396,12 +455,13 @@ get_export_format( NactExportAsk *editor )
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
-	button = base_window_get_widget( BASE_WINDOW( editor ), "AskKeepChoiceButton" );
-	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	if( keep ){
-		na_iprefs_set_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, format_quark );
+	if( !editor->private->keep_last_choice_mandatory ){
+		na_settings_set_boolean( settings, NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, editor->private->keep_last_choice );
 	}
+
+	na_iprefs_set_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_quark );
 
 	return( format_quark );
 }

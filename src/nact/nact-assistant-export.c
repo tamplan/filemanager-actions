@@ -81,6 +81,7 @@ struct NactAssistantExportClassPrivate {
  */
 struct NactAssistantExportPrivate {
 	gboolean  dispose_has_run;
+	gboolean  preferences_locked;
 	gchar    *uri;
 	GList    *results;
 };
@@ -350,9 +351,18 @@ on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data )
 	NAUpdater *updater;
 	NASettings *settings;
 	gboolean esc_quit, esc_confirm;
+	gboolean are_locked, mandatory;
+
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( dialog ));
 
 	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( dialog ));
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
+	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+	dialog->private->preferences_locked = are_locked && mandatory;
 
 	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
 
@@ -362,10 +372,6 @@ on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data )
 	assist_initial_load_format( dialog, assistant );
 	assist_initial_load_confirm( dialog, assistant );
 	assist_initial_load_exportdone( dialog, assistant );
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
 	esc_quit = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
 	base_assistant_set_cancel_on_esc( BASE_ASSISTANT( dialog ), esc_quit );
@@ -599,7 +605,8 @@ assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
 	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
-	nact_export_format_init_display( NA_PIVOT( updater ), container, EXPORT_FORMAT_DISPLAY_ASSISTANT );
+	nact_export_format_init_display( container,
+			NA_PIVOT( updater ), EXPORT_FORMAT_DISPLAY_ASSISTANT, !window->private->preferences_locked );
 }
 
 static void
@@ -610,13 +617,14 @@ assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant
 	GQuark format;
 	NactApplication *application;
 	NAUpdater *updater;
+	gboolean mandatory;
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
-	format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
+	format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, &mandatory );
 
 	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
-	nact_export_format_select( container, format );
+	nact_export_format_select( container, !mandatory, format );
 
 	content = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
 	gtk_assistant_set_page_complete( assistant, content, TRUE );
@@ -749,16 +757,20 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	ExportStruct *str;
 	NactApplication *application;
 	NAUpdater *updater;
+	gboolean first;
+
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( wnd ));
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
-	g_assert( NACT_IS_ASSISTANT_EXPORT( wnd ));
+
 	window = NACT_ASSISTANT_EXPORT( wnd );
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
 	actions = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
+	first = TRUE;
 
-	g_assert( window->private->uri && strlen( window->private->uri ));
+	g_return_if_fail( window->private->uri && strlen( window->private->uri ));
 
 	for( ia = actions ; ia ; ia = ia->next ){
 		str = g_new0( ExportStruct, 1 );
@@ -766,10 +778,10 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 		str->item = NA_OBJECT_ITEM( na_object_get_origin( NA_IDUPLICABLE( ia->data )));
 
-		str->format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT );
+		str->format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
 
 		if( str->format == IPREFS_EXPORT_FORMAT_ASK ){
-			str->format = nact_export_ask_user( BASE_WINDOW( wnd ), str->item );
+			str->format = nact_export_ask_user( BASE_WINDOW( wnd ), str->item, first );
 
 			if( str->format == IPREFS_EXPORT_NO_EXPORT ){
 				str->msg = g_slist_append( NULL, g_strdup( _( "Export canceled due to user action." )));
@@ -779,6 +791,8 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		if( str->format != IPREFS_EXPORT_NO_EXPORT ){
 			str->fname = na_exporter_to_file( NA_PIVOT( updater ), str->item, window->private->uri, str->format, &str->msg );
 		}
+
+		first = FALSE;
 	}
 
 	na_object_unref_selected_items( actions );

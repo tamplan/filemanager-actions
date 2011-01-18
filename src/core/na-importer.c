@@ -151,7 +151,7 @@ import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, c
 	ask_parms.parent = parms->parent;
 	ask_parms.uri = ( gchar * ) uri;
 	ask_parms.count = g_list_length( parms->results );
-	ask_parms.keep_choice = na_settings_get_boolean( na_pivot_get_settings( pivot ), NA_IPREFS_IMPORT_MODE_KEEP_LAST_CHOICE, NULL, NULL );
+	ask_parms.keep_choice = na_settings_get_boolean( na_pivot_get_settings( pivot ), NA_IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, NULL );
 	ask_parms.pivot = pivot;
 
 	memset( &provider_parms, '\0', sizeof( NAIImporterImportFromUriParms ));
@@ -229,7 +229,7 @@ ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, 
 		mode = na_importer_ask_user( importing, existing, parms );
 
 	} else {
-		mode = na_iprefs_get_import_mode( parms->pivot, NA_IPREFS_IMPORT_ASK_USER_LAST_MODE );
+		mode = na_iprefs_get_import_mode( parms->pivot, NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL );
 	}
 
 	return( mode );
