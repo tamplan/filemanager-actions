@@ -1087,6 +1087,7 @@ on_keyfile_changed_timeout( NASettings *settings )
 	GList *new_content;
 	GList *modifs;
 	GList *ic, *im;
+	gchar *value;
 	Consumer *consumer;
 	KeyValue *changed;
 	gchar *group_prefix, *key;
@@ -1105,7 +1106,13 @@ on_keyfile_changed_timeout( NASettings *settings )
 	 */
 	new_content = content_load( settings );
 	modifs = content_diff( settings->private->content, new_content );
-	g_debug( "%s: %d modifs found", thisfn, g_list_length( modifs ));
+	g_debug( "%s: %d found update(s)", thisfn, g_list_length( modifs ));
+	for( im = modifs ; im ; im = im->next ){
+		changed = ( KeyValue * ) im->data;
+		value = na_boxed_get_string( changed->boxed );
+		g_debug( "%s: key=%s, value=%s", thisfn, changed->key, value );
+		g_free( value );
+	}
 
 	for( ic = settings->private->consumers ; ic ; ic = ic->next ){
 		consumer = ( Consumer * ) ic->data;
