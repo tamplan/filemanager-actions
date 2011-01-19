@@ -106,8 +106,8 @@ function msg_help
 
 function msg_version
 {
-	pck_name=$(grep '^PACKAGE_NAME' Makefile | awk '{ print $3 }')
-	pck_version=$(grep '^PACKAGE_VERSION' Makefile | awk '{ print $3 }')
+	pck_name=$(grep '^PACKAGE_NAME' Makefile 2>/dev/null | awk '{ print $3 }')
+	pck_version=$(grep '^PACKAGE_VERSION' Makefile 2>/dev/null | awk '{ print $3 }')
 	echo "
  ${pck_name} v ${pck_version}
  Copyright (C) 2011 Pierre Wieser."
@@ -284,6 +284,12 @@ if [ "${opt_version}" = "yes" ]; then
 	msg_version
 	echo ""
 	exit
+fi
+
+if [ "$(basename $(pwd))" != "nautilus-actions" ]; then
+	msgerr "current directory is $(pwd)"
+	msg "you should change to nautilus-actions/"
+	let errs+=1
 fi
 
 if [ ${errs} -gt 0 ]; then

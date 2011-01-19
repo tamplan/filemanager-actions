@@ -105,8 +105,8 @@ function msg_help
 
 function msg_version
 {
-	pck_name=$(grep '^PACKAGE_NAME' Makefile | awk '{ print $3 }')
-	pck_version=$(grep '^PACKAGE_VERSION' Makefile | awk '{ print $3 }')
+	pck_name=$(grep '^PACKAGE_NAME' Makefile 2>/dev/null | awk '{ print $3 }')
+	pck_version=$(grep '^PACKAGE_VERSION' Makefile 2>/dev/null | awk '{ print $3 }')
 	echo "
  ${pck_name} v ${pck_version}
  Copyright (C) 2010, 2011 Pierre Wieser."
