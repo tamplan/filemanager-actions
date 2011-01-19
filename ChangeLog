@@ -1,5 +1,7 @@
 2011-01-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* tools/check-po.sh: Script rewriting.
+
 	* NEWS: Update before release.
 
 2011-01-16 Pierre Wieser <pwieser@trychlos.org>
