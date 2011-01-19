@@ -1,3 +1,31 @@
+Version 3.0.7
+=============
+
+	Release date 2011-01-19
+
+	General modifications:
+
+		- Configuration now enables silent rules by default.
+		- Add a new 'check-headers.sh' pre-release tool to check for the
+		  completeness of header files.
+		- Add a new 'run-distcheck.sh' tool to make distcheck easier.
+
+	Bug fixes:
+
+		- Fix various mistakes and mispellings reported by Fr translation team.
+		- Use gettext() to display localized static strings.
+		- Initialize translation domain for GOptionContext.
+		- Fix localizable strings.
+		- Remove deprecated references to the UUID.
+		- Setup parent window when displaying a dialog box.
+
+	New and updated translations:
+
+		- cs (Marek Cernocky, Andre Klapper, Petr Kovar)
+		- es (Daniel Mustieles)
+		- fr (Gérard Baylard, Bruno Brouard, Nicolas Repentin)
+		- sl (Matej Urbančič, Andrej Žnidaršič) 
+
 Version 3.0.6
 =============
 
