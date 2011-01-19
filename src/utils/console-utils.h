@@ -32,13 +32,20 @@
 #define __CONSOLE_UTILS_H__
 
 /**
- * SECTION: console_utils
- * @short_description: Console utility function declarations.
+ * SECTION: console-utils
+ * @title: ConsoleUtils
+ * @short_description: Console utility function declarations
  * @include: utils/console-utils.h
  */
+
+#include <glib-object.h>
+
+G_BEGIN_DECLS
 
 gchar *console_cmdline_get_description( void );
 
 void   console_init_log_handler( void );
+
+G_END_DECLS
 
 #endif /* __CONSOLE_UTILS_H__ */
