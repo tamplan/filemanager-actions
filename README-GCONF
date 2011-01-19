@@ -4,20 +4,20 @@ Deprecating GConf
  Gnome is deprecating GConf in favour of GSettings. This is the short story.
  We so have to migrate several pool of datas.
  
- Starting with 3.1.0, Nautilus-Actions is provided with the needed migrations
+ Starting with 3.1.0, Nautilus-Actions is provided with the needed migration
  tools, whether the migration may occur automatically (for users items and
  preferences), or the system admin must run a script (for mandatory items).
  
  Note that this does not break backward compatibility. The 3.1.x serie of
  Nautilus-Actions may still be run on a "old" platform. The oldest supported
- is Ubuntu 8 LTS.
+ as of January 2011 is Ubuntu 8 LTS.
 
  1. Items, menus and actions, stored in GConf backend
  ----------------------------------------------------
  Historically, actions, then menus, were stored in GConf. These are user items.
 
- A system admin is free to define mandatory menus and actions, and to store
- them in the Mandatory pool of GConf. So defined items are so available to
+ A system admin was free to define mandatory menus and actions, and to store
+ them in the Mandatory pool of GConf. Such defined items are so available to
  all users, though as read-only items.
 
    1a. Migrating user items
@@ -42,7 +42,7 @@ Deprecating GConf
    1b. Migrating mandatory items
    -----------------------------
    The bad news is:
-   the system admin has to manually run PKGLIBEXECDIR/gconf2key.sh script
+   the system admin has to manually run PKGLIBEXECDIR/na-gconf2key.sh script
    as root in order to migrate existing mandatory items to .desktop files.
 
    The new .desktop files default to be stored in /usr/share/file-manager/actions.
@@ -113,7 +113,7 @@ Deprecating GConf
  schemes = [dav|WebDAV files,file|Local files,ftp|FTP files,sftp|SSH files,smb|Windows files]
                                             [nact]     scheme-default-list
 
- User preferences for I/O providers are stored as /apps/nautilus-actions/io-providers/<provider_id>
+ User preferences for I/O providers were stored as /apps/nautilus-actions/io-providers/<provider_id>
  keys. They are moved to [io-provider <provider_id>] group.
 
  GConf                                                 Key
@@ -123,7 +123,7 @@ Deprecating GConf
 
  3. Sysadmin reserved mandatory keys
  -----------------------------------
- These are
+ These were
    /apps/nautilus-actions/mandatory/
      all/locked
      na-desktop/locked

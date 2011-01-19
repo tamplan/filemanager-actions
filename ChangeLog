@@ -1,5 +1,8 @@
 2011-01-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* README-GCONF:
+	* Makefile.am: Add README-GCONF to the distribution.
+
 	* tools/check-po.sh: Script rewriting.
 
 	* NEWS: Update before release.
