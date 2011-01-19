@@ -1,37 +1,361 @@
 #!/bin/sh
+# Nautilus-Actions
+# A Nautilus extension which offers configurable context menu actions.
 #
-# Release a new Nautilus-Actions version
+# Copyright (C) 2005 The GNOME Foundation
+# Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
+# Copyright (C) 2009, 2010, 2011 Pierre Wieser and others (see AUTHORS)
 #
+# This Program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+#
+# This Program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this Library; see the file COPYING.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place,
+# Suite 330, Boston, MA 02111-1307, USA.
+#
+# Authors:
+#   Frederic Ruaudel <grumz@grumz.net>
+#   Rodrigo Moya <rodrigo@gnome-db.org>
+#   Pierre Wieser <pwieser@trychlos.org>
+#   ... and many others (see AUTHORS)
 
-if [ ! -f configure.ac ]; then
-	echo "configure.ac not found, probably not the good current directory" 1>&2
-	exit 1
-fi
-if [ "$(basename $(pwd))" != "nautilus-actions" ]; then
-	echo "current directory is $(pwd): change to nautilus-actions" 1>&2
-	exit 1
-fi
+errs=0										# will be the exit code of the script
+my_cmd="${0}"								# e.g. "./make-ks.sh"
+my_parms="$*"								# e.g. "-host toaster"
+my_cmdline="${my_cmd} ${my_parms}"
+me="$(basename ${my_cmd})"					# e.g. "make-ks.sh"
+											# used in msg and msgerr functions
+my_tmproot="/tmp/$(echo ${me} | sed 's?\..*$??').$$"
+											# e.g. "/tmp/make-ks.1978"
 
-thisdir=$(cd $(dirname $0); pwd)
-product="$(grep -e '^PACKAGE_TARNAME' Makefile | awk '{ print $3 }')"
-version="$(grep PACKAGE_VERSION Makefile | awk '{ print $3 }')"
-tarname="${product}-${version}.tar.gz"
+# These three functions must be defined using the name() syntax in order
+# to share traps with the caller process (cf. man (1) ksh).
+#
+trap_exit()
+{
+	clear_tmpfiles
+	[ "${opt_verbose}" = "yes" -o ${errs} -gt 0 ] && msg "exiting with code ${errs}"
+	exit ${errs}
+}
 
-if [ ! -f "${tarname}" ]; then
-	echo "${tarname} not found, do you have 'make distcheck' ?" 1>&2
-	exit 1
-fi
+trap_int()
+{
+	msg "quitting on keyboard interrupt"
+	let errs+=1
+	exit
+}
 
+trap_term()
+{
+	[ "${opt_verbose}" = "yes" ] && msg "quitting on TERM signal"
+	exit
+}
+
+# setup the different trap functions
+trap 'trap_term' TERM
+trap 'trap_int'  INT
+trap 'trap_exit' EXIT
+
+function clear_tmpfiles
+{
+	\rm -f ${my_tmproot}.*
+}
+
+function msg
+{
+	typeset _eol="\n"
+	[ $# -ge 2 ] && _eol="${2}"
+	printf "[%s] %s${_eol}" ${me} "${1}"
+	return 0
+}
+
+function msgerr
+{
+	msg "error: ${1}" 1>&2
+	return $?
+}
+
+function msgwarn
+{
+	msg "warning: ${1}" 1>&2
+	return $?
+}
+
+function msg_help
+{
+	msg_version
+	echo "
+ This script releases a new Nautilus-Actions version.
+
+ Usage: ${my_cmd} [options]
+   --[no]help                print this message, and exit [${opt_help_def}]
+   --[no]version             print script version, and exit [${opt_version_def}]
+   --[no]dummy               dummy execution [${opt_dummy_def}]
+   --[no]verbose             runs verbosely [${opt_verbose_def}]
+   --tarname=<tarname>       the tarname to be released [${opt_tarname_def}]
+   --[no]stable              whether this is a stable version [${opt_stable_def}]"
+}
+
+function msg_version
+{
+	pck_name=$(grep '^PACKAGE_NAME' Makefile 2>/dev/null | awk '{ print $3 }')
+	pck_version=$(grep '^PACKAGE_VERSION' Makefile 2>/dev/null | awk '{ print $3 }')
+	echo "
+ ${pck_name} v ${pck_version}
+ Copyright (C) 2010, 2011 Pierre Wieser."
+}
+
+# initialize common command-line options
+nbopt=$#
+opt_help=
+opt_help_def="no"
+opt_dummy=
+opt_dummy_def="yes"
+opt_version=
+opt_version_def="no"
+opt_verbose=
+opt_verbose_def="no"
+
+# a first loop over command line arguments to detect verbose mode
+while :
+do
+	# break when all arguments have been read
+	case $# in
+		0)
+			break
+			;;
+	esac
+
+	# get and try to interpret the next argument
+	_option=$1
+	shift
+
+	# make all options have two hyphens
+	_orig_option=${_option}
+	case ${_option} in
+		--*)
+			;;
+		-*)
+			_option=-${_option}
+				;;
+		esac
+
+	# now process options and their argument
+	case ${_option} in
+		--noverb | --noverbo | --noverbos | --noverbose)
+			opt_verbose="no"
+			;;
+		--verb | --verbo | --verbos | --verbose)
+			opt_verbose="yes"
+				;;
+	esac
+done
+
+[ "${opt_verbose}" = "yes" ] && msg "setting opt_verbose to 'yes'"
+
+# we have scanned all command-line arguments in order to detect an
+# opt_verbose option;
+# reset now arguments so that they can be scanned again in main script
+set -- ${my_parms}
+
+# interpreting command-line arguments
+product="$(grep -e '^PACKAGE_TARNAME' Makefile 2>/dev/null | awk '{ print $3 }')"
+version="$(grep PACKAGE_VERSION Makefile 2>/dev/null | awk '{ print $3 }')"
+opt_tarname=
+opt_tarname_def="${product}-${version}.tar.gz"
+
+opt_stable=
 minor=$(echo ${version} | cut -d. -f2)
-let minor_x=${minor}/2*2
-[ ${minor} -eq ${minor_x} ] && bstable=1 || bstable=0
+let rest=${minor}%2
+[ ${rest} -eq 0 ] && opt_stable_def="yes" || opt_stable_def="no"
 
-echo -n "
-Releasing "
-[ ${bstable} -eq 1 ] && echo -n "stable" || echo -n "unstable"
-echo " ${tarname}"
+# loop over command line arguments
+pos=0
+while :
+do
+	# break when all arguments have been read
+	case $# in
+		0)
+			break
+			;;
+	esac
 
-echo -n "Are you OK to release (y/N) ? "
+	# get and try to interpret the next argument
+	option=$1
+	shift
+
+	# make all options have two hyphens
+	orig_option=${option}
+	case ${option} in
+		--*)
+			;;
+		-*)
+			option=-${option}
+			;;
+	esac
+
+	# split and extract argument for options that take one
+	case ${option} in
+		--*=*)
+			optarg=$(echo ${option} | sed -e 's/^[^=]*=//')
+			option=$(echo ${option} | sed 's/=.*//')
+			;;
+		# these options take a mandatory argument
+		# since, we didn't find it in 'option', so it should be
+		# next word in the command line
+		--t | --ta | --tar | --tarn | --tarna | --tarnam | --tarname)
+			optarg=$1
+			shift
+			;;
+	esac
+
+	# now process options and their argument
+	case ${option} in
+		--d | --du | --dum | --dumm | --dummy)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_dummy to 'yes'"
+			opt_dummy="yes"
+			;;
+		--h | --he | --hel | --help)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_help to 'yes'"
+			opt_help="yes"
+			;;
+		--nod | --nodu | --nodum | --nodumm | --nodummy)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_dummy to 'no'"
+			opt_dummy="no"
+			;;
+		--noh | --nohe | --nohel | --nohelp)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_help to 'no'"
+			opt_help="no"
+			;;
+		--nos | --nost | --nosta | --nostab | --nostabl | --nostable)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_stable to 'no'"
+			opt_stable="no"
+			;;
+		--noverb | --noverbo | --noverbos | --noverbose)
+			;;
+		--novers | --noversi | --noversio | --noversion)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_version to 'no'"
+			opt_version="no"
+			;;
+		--s | --st | --sta | --stab | --stabl | --stable)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_stable to 'yes'"
+			opt_stable="yes"
+			;;
+		--t | --ta | --tar | --tarn | --tarna | --tarnam | --tarname)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_tarname to '${optarg}'"
+			opt_tarname="${optarg}"
+			;;
+		--verb | --verbo | --verbos | --verbose)
+			;;
+		--vers | --versi | --versio | --version)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_version to 'yes'"
+			opt_version="yes"
+			;;
+		--*)
+			msgerr "unrecognized option: '${orig_option}'"
+			let errs+=1
+			;;
+		# positional parameters
+		*)
+			let pos+=1
+			#if [ ${pos} -eq 1 ]; then
+			#	[ "${opt_verbose}" = "yes" ] && msg "setting opt_output to '${option}'"
+			#	opt_output=${option}
+			#else
+				msgerr "unexpected positional parameter #${pos}: '${option}'"
+				let errs+=1
+			#fi
+			;;
+	esac
+done
+
+# set option defaults
+# does not work with /bin/sh ??
+#set | grep -e '^opt_' | cut -d= -f1 | while read _name; do
+#	if [ "$(echo ${_name} | sed 's/.*\(_def\)/\1/')" != "_def" ]; then
+#		_value="$(eval echo "$"${_name})"
+#		if [ "${_value}" = "" ]; then
+#			eval ${_name}="$(eval echo "$"${_name}_def)"
+#		fi
+#	fi
+#done
+
+opt_help=${opt_help:-${opt_help_def}}
+opt_dummy=${opt_dummy:-${opt_dummy_def}}
+opt_verbose=${opt_verbose:-${opt_verbose_def}}
+opt_version=${opt_version:-${opt_version_def}}
+
+opt_tarname=${opt_tarname:-${opt_tarname_def}}
+opt_stable=${opt_stable:-${opt_stable_def}}
+
+if [ "${opt_help}" = "yes" -o ${nbopt} -eq 0 ]; then
+	msg_help
+	echo ""
+	exit
+fi
+
+if [ "${opt_version}" = "yes" ]; then
+	msg_version
+	echo ""
+	exit
+fi
+
+if [ ! -f "${opt_tarname}" ]; then
+	msgerr "${opt_tarname} not found, do you have 'make distcheck' ?"
+	let errs+=1
+fi
+
+if [ ${errs} -gt 0 ]; then
+	msg "${errs} error(s) have been detected"
+	msg "try '${my_cmd} --help' for usage"
+	exit
+fi
+
+# returns the last return code which happens to be the eval one
+#
+function command
+{
+	typeset _cmd="${1}"
+	typeset -i _ret=0
+
+	if [ "${opt_dummy}" = "yes" -o "${opt_verbose}" = "yes" ]; then
+		typeset _prefix=""
+		[ "${opt_dummy}" = "yes" ] && _prefix="[dummy] "
+		msg "  ${_prefix}${_cmd}..." " "
+	fi
+
+	if [ "${opt_dummy}" = "no" ]; then
+		eval ${_cmd}
+	fi
+
+	if [ "${opt_verbose}" = "yes" ]; then
+		eval ${_cmd}
+		let _ret=$?
+	fi
+	
+	if [ "${opt_dummy}" = "yes" -o "${opt_verbose}" = "yes" ]; then
+		[ ${_ret} -eq 0 ] && echo "OK" || echo "NOT OK"
+	fi
+	
+	let errs+=${_ret}
+	return ${_ret}
+}
+
+# ---------------------------------------------------------------------
+# MAIN CODE
+
+[ "${opt_stable}" = "yes" ] && lib_stable="stable" || lib_stable="unstable"
+msg "releasing ${lib_stable} ${opt_tarname}"
+
+msg "  are you OK to release (y/N) ?" " "
 while [ 1 ]; do
 	read -n1 -s key
 	key=$(echo $key | tr '[:upper:]' '[:lower:]')
@@ -43,48 +367,50 @@ done
 # are we local ?
 destdir="/net/data/tarballs/${product}"
 desthost="stormy.trychlos.org"
-local=1
-[ "$(ls ${destdir} 2>/dev/null)" = "" ] && local=0
-echo " 
-Installing in ${destdir}"
+[ "$(ls ${destdir} 2>/dev/null)" = "" ] && local="no" || local="yes"
+[ "${local}" = "yes" ] && lib_desthost="" || lib_desthost="${desthost}:"
+[ "${opt_verbose}" = "yes" ] && msg "stormy tarballs repository is local: ${local}"
+
+# installing on stormy tarballs repository
+msg "installing in ${lib_desthost}${destdir}"
 cmd="mkdir -p "${destdir}""
-[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || ${cmd}
-[ ${local} -eq 0 ] && scp -v "${tarname}" "${desthost}:${destdir}/" || scp -v "${tarname}" "${destdir}/"
-cmd="sha1sum ${destdir}/${tarname} > ${destdir}/${tarname}.sha1sum"
-[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || eval "${cmd}"
-if [ "${bstable}" -eq 1 ]; then
-	echo "Updating ${destdir}/latest.tar.gz"
-	cmd="(cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz; ls -l latest.tar.gz ${tarname}*)"
-	[ ${local} -eq 0 ] && ssh ${desthost} "${cmd}" || eval "${cmd}"
+[ "${local}" = "yes" ] && command "${cmd}" || command "ssh ${desthost} '${cmd}'"
+command "scp -v "${opt_tarname}" "${lib_desthost}${destdir}/""
+cmd="sha1sum ${destdir}/${opt_tarname} > ${destdir}/${opt_tarname}.sha1sum"
+[ "${local}" = "yes" ] && command "${cmd}" || command "ssh ${desthost} '${cmd}'"
+if [ "${opt_stable}" = "yes" ]; then
+	msg "updating ${lib_desthost}${destdir}/latest.tar.gz"
+	cmd="(cd ${destdir}; rm -f latest.tar.gz; ln -s ${opt_tarname} latest.tar.gz; ls -l latest.tar.gz ${opt_tarname}*)"
+	[ "${local}" = "yes" ] && command "${cmd}" || command "ssh ${desthost} '${cmd}'"
 fi
 
-echo " 
-Installing on gnome.org"
-scp "${tarname}" pwieser@master.gnome.org:
-ssh pwieser@master.gnome.org install-module -u ${tarname}
+# installing on gnome.org
+msg "installing on gnome.org"
+command "scp "${opt_tarname}" pwieser@master.gnome.org:"
+command "ssh pwieser@master.gnome.org install-module -u ${opt_tarname}"
 
-echo " 
-Installing on kimsufi"
+# installing on kimsufi
+msg "installing on kimsufi"
 destdir="/home/www/${product}/tarballs"
-scp "${tarname}" maintainer@kimsufi:${destdir}/
-ssh maintainer@kimsufi "sha1sum ${destdir}/${tarname} > ${destdir}/${tarname}.sha1sum"
-if [ ${bstable} -eq 1 ]; then
-	echo "Updating ${destdir}/latest.tar.gz"
-	ssh maintainer@kimsufi "cd ${destdir}; rm -f latest.tar.gz; ln -s ${tarname} latest.tar.gz; ls -l latest.tar.gz ${tarname}*"
+command "scp "${opt_tarname}" maintainer@kimsufi:${destdir}/"
+command "ssh maintainer@kimsufi 'sha1sum ${destdir}/${opt_tarname} > ${destdir}/${opt_tarname}.sha1sum'"
+if [ "${opt_stable}" = "yes" ]; then
+	msg "updating kimsufi:${destdir}/latest.tar.gz"
+	command "ssh maintainer@kimsufi 'cd ${destdir}; rm -f latest.tar.gz; ln -s ${opt_tarname} latest.tar.gz; ls -l latest.tar.gz ${opt_tarname}*'"
 fi
 
-echo " 
-Tagging git"
+# tagging git
+msg "tagging git"
 tag="$(echo ${product}-${version} | tr '[:lower:]' '[:upper:]' | sed -e 's/-/_/g' -e 's/\./_/g')"
 msg="Releasing $(grep PACKAGE_NAME Makefile | awk '{ print $3 }') ${version}"
-echo "git tag -s ${tag} -m ${msg}"
-git tag -s "${tag}" -m "${msg}"
-git pull --rebase && git push && git push --tags
+msg "git tag -s ${tag} -m ${msg}"
+command "git tag -s '${tag}' -m '${msg}'"
+command "git pull --rebase && git push && git push --tags"
 
-echo "
-Compressing local git repository"
-git gc
+# compressing git local repository
+msg "compressing local git repository"
+command "git gc"
 
-echo "
-Successfully ended. You may now send your mail.
-"
+msg "Successfully ended. You may now send your mail."
+
+exit
