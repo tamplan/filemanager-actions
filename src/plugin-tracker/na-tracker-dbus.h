@@ -49,26 +49,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_TRACKER_DBUS_TYPE				( na_tracker_dbus_get_type())
-#define NA_TRACKER_DBUS( object )			( G_TYPE_CHECK_INSTANCE_CAST(( object ), NA_TRACKER_DBUS_TYPE, NATrackerDBus ))
-#define NA_TRACKER_DBUS_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST(( klass ), NA_TRACKER_DBUS_TYPE, NATrackerDBusClass ))
-#define NA_IS_TRACKER_DBUS( object )		( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NA_TRACKER_DBUS_TYPE ))
-#define NA_IS_TRACKER_DBUS_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TRACKER_DBUS_TYPE ))
-#define NA_TRACKER_DBUS_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TRACKER_DBUS_TYPE, NATrackerDBusClass ))
+#define NA_TRACKER_DBUS_TYPE                ( na_tracker_dbus_get_type())
+#define NA_TRACKER_DBUS( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), NA_TRACKER_DBUS_TYPE, NATrackerDBus ))
+#define NA_TRACKER_DBUS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), NA_TRACKER_DBUS_TYPE, NATrackerDBusClass ))
+#define NA_IS_TRACKER_DBUS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NA_TRACKER_DBUS_TYPE ))
+#define NA_IS_TRACKER_DBUS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TRACKER_DBUS_TYPE ))
+#define NA_TRACKER_DBUS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TRACKER_DBUS_TYPE, NATrackerDBusClass ))
 
-typedef struct NATrackerDBusPrivate      NATrackerDBusPrivate;
+typedef struct _NATrackerDBusPrivate        NATrackerDBusPrivate;
 
-typedef struct
-{
+typedef struct {
+	/*< private >*/
 	GObject               parent;
 	NATrackerDBusPrivate *private;
 }
 	NATrackerDBus;
 
-typedef struct NATrackerDBusClassPrivate NATrackerDBusClassPrivate;
+typedef struct _NATrackerDBusClassPrivate   NATrackerDBusClassPrivate;
 
-typedef struct
-{
+typedef struct {
+	/*< private >*/
 	GObjectClass               parent;
 	NATrackerDBusClassPrivate *private;
 }

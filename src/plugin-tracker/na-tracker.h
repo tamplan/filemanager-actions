@@ -48,26 +48,26 @@
 
 G_BEGIN_DECLS
 
-#define NA_TRACKER_TYPE					( na_tracker_get_type())
-#define NA_TRACKER( object )			( G_TYPE_CHECK_INSTANCE_CAST(( object ), NA_TRACKER_TYPE, NATracker ))
-#define NA_TRACKER_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST(( klass ), NA_TRACKER_TYPE, NATrackerClass ))
-#define NA_IS_TRACKER( object )			( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NA_TRACKER_TYPE ))
-#define NA_IS_TRACKER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TRACKER_TYPE ))
-#define NA_TRACKER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TRACKER_TYPE, NATrackerClass ))
+#define NA_TRACKER_TYPE                ( na_tracker_get_type())
+#define NA_TRACKER( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), NA_TRACKER_TYPE, NATracker ))
+#define NA_TRACKER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), NA_TRACKER_TYPE, NATrackerClass ))
+#define NA_IS_TRACKER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NA_TRACKER_TYPE ))
+#define NA_IS_TRACKER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TRACKER_TYPE ))
+#define NA_TRACKER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TRACKER_TYPE, NATrackerClass ))
 
-typedef struct NATrackerPrivate      NATrackerPrivate;
+typedef struct _NATrackerPrivate       NATrackerPrivate;
 
-typedef struct
-{
+typedef struct {
+	/*< private >*/
 	GObject           parent;
 	NATrackerPrivate *private;
 }
 	NATracker;
 
-typedef struct NATrackerClassPrivate NATrackerClassPrivate;
+typedef struct _NATrackerClassPrivate  NATrackerClassPrivate;
 
-typedef struct
-{
+typedef struct {
+	/*< private >*/
 	GObjectClass           parent;
 	NATrackerClassPrivate *private;
 }

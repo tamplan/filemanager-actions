@@ -1,7 +1,12 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-tracker/na-tracker-dbus.c:
+	* src/plugin-tracker/na-tracker-dbus.h:
+	* src/plugin-tracker/na-tracker.c:
+	* src/plugin-tracker/na-tracker.h: Cosmetic changes in src/plugin-tracker headers.
+
 	* src/plugin-menu/nautilus-actions.c:
-	* src/plugin-menu/nautilus-actions.h: Cosmetic changes in src/plugin-menu headers
+	* src/plugin-menu/nautilus-actions.h: Cosmetic changes in src/plugin-menu headers.
 
 	* src/nact/base-application.c:
 	* src/nact/base-application-class.h:

@@ -46,13 +46,13 @@
 
 /* private class data
  */
-struct NATrackerDBusClassPrivate {
+struct _NATrackerDBusClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NATrackerDBusPrivate {
+struct _NATrackerDBusPrivate {
 	gboolean  dispose_has_run;
 	GList    *selected;
 };
