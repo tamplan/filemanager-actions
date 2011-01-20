@@ -52,13 +52,13 @@
 
 /* private class data
  */
-struct NautilusActionsClassPrivate {
+struct _NautilusActionsClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NautilusActionsPrivate {
+struct _NautilusActionsPrivate {
 	gboolean dispose_has_run;
 	NAPivot *pivot;
 	gulong   items_changed_handler;

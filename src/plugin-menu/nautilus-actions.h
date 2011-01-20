@@ -52,26 +52,26 @@
 
 G_BEGIN_DECLS
 
-#define NAUTILUS_ACTIONS_TYPE					( nautilus_actions_get_type())
-#define NAUTILUS_ACTIONS( object )				( G_TYPE_CHECK_INSTANCE_CAST(( object ), NAUTILUS_ACTIONS_TYPE, NautilusActions ))
-#define NAUTILUS_ACTIONS_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST(( klass ), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass ))
-#define NAUTILUS_IS_ACTIONS( object )			( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NAUTILUS_ACTIONS_TYPE ))
-#define NAUTILUS_IS_ACTIONS_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAUTILUS_ACTIONS_TYPE ))
-#define NAUTILUS_ACTIONS_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass ))
+#define NAUTILUS_ACTIONS_TYPE                ( nautilus_actions_get_type())
+#define NAUTILUS_ACTIONS( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), NAUTILUS_ACTIONS_TYPE, NautilusActions ))
+#define NAUTILUS_ACTIONS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass ))
+#define NAUTILUS_IS_ACTIONS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NAUTILUS_ACTIONS_TYPE ))
+#define NAUTILUS_IS_ACTIONS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAUTILUS_ACTIONS_TYPE ))
+#define NAUTILUS_ACTIONS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NAUTILUS_ACTIONS_TYPE, NautilusActionsClass ))
 
-typedef struct NautilusActionsPrivate      NautilusActionsPrivate;
+typedef struct _NautilusActionsPrivate       NautilusActionsPrivate;
 
-typedef struct
-{
+typedef struct {
+	/*< private >*/
 	GObject                 parent;
 	NautilusActionsPrivate *private;
 }
 	NautilusActions;
 
-typedef struct NautilusActionsClassPrivate NautilusActionsClassPrivate;
+typedef struct _NautilusActionsClassPrivate  NautilusActionsClassPrivate;
 
-typedef struct
-{
+typedef struct {
+	/*< private >*/
 	GObjectClass                 parent;
 	NautilusActionsClassPrivate *private;
 }
