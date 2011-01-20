@@ -49,7 +49,7 @@
 
 /* private class data
  */
-struct NAXMLReaderClassPrivate {
+struct _NAXMLReaderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -73,7 +73,7 @@ typedef struct {
  * main naxml_reader_import_from_uri() function is called once for each file
  * to import. We thus have one NAXMLReader object per import operation.
  */
-struct NAXMLReaderPrivate {
+struct _NAXMLReaderPrivate {
 	gboolean                       dispose_has_run;
 
 	/* data provided by the caller

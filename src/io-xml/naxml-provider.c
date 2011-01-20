@@ -42,13 +42,13 @@
 
 /* private class data
  */
-struct NAXMLProviderClassPrivate {
+struct _NAXMLProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAXMLProviderPrivate {
+struct _NAXMLProviderPrivate {
 	gboolean dispose_has_run;
 };
 

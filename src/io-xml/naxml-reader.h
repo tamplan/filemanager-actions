@@ -51,24 +51,26 @@
 
 G_BEGIN_DECLS
 
-#define NAXML_READER_TYPE					( naxml_reader_get_type())
-#define NAXML_READER( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NAXML_READER_TYPE, NAXMLReader ))
-#define NAXML_READER_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NAXML_READER_TYPE, NAXMLReaderClass ))
-#define NAXML_IS_READER( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NAXML_READER_TYPE ))
-#define NAXML_IS_READER_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAXML_READER_TYPE ))
-#define NAXML_READER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAXML_READER_TYPE, NAXMLReaderClass ))
+#define NAXML_READER_TYPE                ( naxml_reader_get_type())
+#define NAXML_READER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NAXML_READER_TYPE, NAXMLReader ))
+#define NAXML_READER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NAXML_READER_TYPE, NAXMLReaderClass ))
+#define NAXML_IS_READER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NAXML_READER_TYPE ))
+#define NAXML_IS_READER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAXML_READER_TYPE ))
+#define NAXML_READER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NAXML_READER_TYPE, NAXMLReaderClass ))
 
-typedef struct NAXMLReaderPrivate      NAXMLReaderPrivate;
+typedef struct _NAXMLReaderPrivate       NAXMLReaderPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject             parent;
 	NAXMLReaderPrivate *private;
 }
 	NAXMLReader;
 
-typedef struct NAXMLReaderClassPrivate NAXMLReaderClassPrivate;
+typedef struct _NAXMLReaderClassPrivate  NAXMLReaderClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass             parent;
 	NAXMLReaderClassPrivate *private;
 }

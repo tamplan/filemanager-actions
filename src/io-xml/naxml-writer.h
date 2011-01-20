@@ -45,24 +45,26 @@
 
 G_BEGIN_DECLS
 
-#define NAXML_WRITER_TYPE					( naxml_writer_get_type())
-#define NAXML_WRITER( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NAXML_WRITER_TYPE, NAXMLWriter ))
-#define NAXML_WRITER_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NAXML_WRITER_TYPE, NAXMLWriterClass ))
-#define NAXML_IS_WRITER( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NAXML_WRITER_TYPE ))
-#define NAXML_IS_WRITER_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAXML_WRITER_TYPE ))
-#define NAXML_WRITER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAXML_WRITER_TYPE, NAXMLWriterClass ))
+#define NAXML_WRITER_TYPE                ( naxml_writer_get_type())
+#define NAXML_WRITER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NAXML_WRITER_TYPE, NAXMLWriter ))
+#define NAXML_WRITER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NAXML_WRITER_TYPE, NAXMLWriterClass ))
+#define NAXML_IS_WRITER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NAXML_WRITER_TYPE ))
+#define NAXML_IS_WRITER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAXML_WRITER_TYPE ))
+#define NAXML_WRITER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NAXML_WRITER_TYPE, NAXMLWriterClass ))
 
-typedef struct NAXMLWriterPrivate      NAXMLWriterPrivate;
+typedef struct _NAXMLWriterPrivate       NAXMLWriterPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject             parent;
 	NAXMLWriterPrivate *private;
 }
 	NAXMLWriter;
 
-typedef struct NAXMLWriterClassPrivate NAXMLWriterClassPrivate;
+typedef struct _NAXMLWriterClassPrivate  NAXMLWriterClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass             parent;
 	NAXMLWriterClassPrivate *private;
 }

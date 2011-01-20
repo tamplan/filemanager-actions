@@ -1,5 +1,12 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/naxml-provider.c:
+	* src/io-xml/naxml-provider.h:
+	* src/io-xml/naxml-reader.c:
+	* src/io-xml/naxml-reader.h:
+	* src/io-xml/naxml-writer.c:
+	* src/io-xml/naxml-writer.h: Cosmetic changes in src/io-xml headers.
+
 	* src/io-gconf/nagp-gconf-provider.c:
 	* src/io-gconf/nagp-gconf-provider.h: Cosmetic changes in src/io-gconf headers.
 

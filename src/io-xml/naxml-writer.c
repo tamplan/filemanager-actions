@@ -53,13 +53,13 @@ typedef struct ExportFormatFn ExportFormatFn;
 
 /* private class data
  */
-struct NAXMLWriterClassPrivate {
+struct _NAXMLWriterClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NAXMLWriterPrivate {
+struct _NAXMLWriterPrivate {
 	gboolean         dispose_has_run;
 	NAIExporter     *provider;
 	NAObjectItem    *exported;
