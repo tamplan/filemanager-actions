@@ -45,7 +45,6 @@
 #include <core/na-pivot.h>
 
 #include "base-iprefs.h"
-#include "nact-application.h"
 #include "nact-iactions-list.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
@@ -823,11 +822,12 @@ instance_finalize( GObject *window )
  * Returns a newly allocated NactMainWindow object.
  */
 NactMainWindow *
-nact_main_window_new( BaseApplication *application )
+nact_main_window_new( const NactApplication *application )
 {
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
-	return( g_object_new( NACT_MAIN_WINDOW_TYPE, BASE_WINDOW_PROP_APPLICATION, application, NULL ));
+	return( g_object_new( NACT_MAIN_WINDOW_TYPE,
+			BASE_WINDOW_PROP_APPLICATION, application, NULL ));
 }
 
 /**

@@ -119,23 +119,21 @@ typedef struct {
 	 *
 	 * This is a pure virtual method.
 	 */
-	gboolean ( *manage_options )( const BaseApplication *appli, int *code );
+	gboolean  ( *manage_options ) ( const BaseApplication *appli, int *code );
 
 	/**
-	 * run_window:
+	 * main_window_new:
 	 * @appli: this #BaseApplication -derived instance.
 	 *
 	 * This is invoked by the BaseApplication base class to let the derived
-	 * class create, run and then release its first (maybe main) window.
-	 *
-	 * When the derived class returns, then the application is supposed
-	 * willing to terminate.
+	 * class create its main window.
 	 *
 	 * This is a pure virtual method.
 	 *
-	 * Returns: the exit code of the program.
+	 * Returns: the main window of the application, as a #BaseWindow
+	 * -derived object. It may or may not having already been initialized.
 	 */
-	int      ( *run_window )    ( const BaseApplication *appli );
+	GObject * ( *main_window_new )( const BaseApplication *appli, int *code );
 
 	/**
 	 * run:

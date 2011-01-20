@@ -86,6 +86,8 @@ static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
 static gboolean appli_manage_options( const BaseApplication *application, int *code );
+static GObject *appli_main_window_new( const BaseApplication *application, int *code );
+
 static gboolean appli_initialize_unique_app( BaseApplication *application );
 static gboolean appli_initialize_application( BaseApplication *application );
 static gchar   *appli_get_application_name( BaseApplication *application );
@@ -160,6 +162,8 @@ class_init( NactApplicationClass *klass )
 
 	appli_class = BASE_APPLICATION_CLASS( klass );
 	appli_class->manage_options = appli_manage_options;
+	appli_class->main_window_new = appli_main_window_new;
+
 	appli_class->initialize_unique_app = appli_initialize_unique_app;
 	appli_class->initialize_application = appli_initialize_application;
 	appli_class->get_application_name = appli_get_application_name;
@@ -344,6 +348,35 @@ appli_manage_options( const BaseApplication *application, int *code )
 }
 
 /*
+ * create the main window
+ */
+static GObject *
+appli_main_window_new( const BaseApplication *application, int *code )
+{
+	static const gchar *thisfn = "nact_application_appli_main_window_new";
+	NactApplication *appli;
+	NactMainWindow *main_window;
+
+	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
+
+	g_debug( "%s: application=%p, code=%p", thisfn, ( void * ) application, ( void * ) code );
+
+	appli = NACT_APPLICATION( application );
+
+	appli->private->updater = na_updater_new();
+	na_pivot_set_loadable( NA_PIVOT( appli->private->updater ), PIVOT_LOAD_ALL );
+	na_pivot_load_items( NA_PIVOT( appli->private->updater ));
+
+	main_window = nact_main_window_new( appli );
+
+	na_pivot_register_consumer(
+			NA_PIVOT( appli->private->updater ),
+			NA_IPIVOT_CONSUMER( main_window ));
+
+	return( G_OBJECT( main_window ));
+}
+
+/*
  * overrided to provide a personalized error message
  */
 static gboolean
@@ -456,6 +489,7 @@ appli_get_gtkbuilder_filename( BaseApplication *application )
 static GObject *
 appli_get_main_window( BaseApplication *application )
 {
+#if 0
 	static const gchar *thisfn = "nact_application_appli_get_main_window";
 	BaseWindow *window;
 
@@ -468,4 +502,6 @@ appli_get_main_window( BaseApplication *application )
 			NA_IPIVOT_CONSUMER( window ));
 
 	return( G_OBJECT( window ));
+#endif
+	return( NULL );
 }

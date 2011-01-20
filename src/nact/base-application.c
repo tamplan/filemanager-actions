@@ -98,8 +98,11 @@ static gboolean       v_initialize_session_manager( BaseApplication *application
 static gboolean       v_initialize_unique_app( BaseApplication *application );
 static gboolean       v_initialize_ui( BaseApplication *application );
 static gboolean       v_initialize_default_icon( BaseApplication *application );
+#if 0
 static gboolean       v_initialize_application( BaseApplication *application );
-
+static void           set_initialize_application_error( BaseApplication *application );
+static gboolean       application_do_initialize_application( BaseApplication *application );
+#endif
 static int            application_do_run( BaseApplication *application );
 static gboolean       application_do_initialize( BaseApplication *application );
 static gboolean       application_do_initialize_i18n( BaseApplication *application );
@@ -110,7 +113,6 @@ static gboolean       application_do_initialize_session_manager( BaseApplication
 static gboolean       application_do_initialize_unique_app( BaseApplication *application );
 static gboolean       application_do_initialize_ui( BaseApplication *application );
 static gboolean       application_do_initialize_default_icon( BaseApplication *application );
-static gboolean       application_do_initialize_application( BaseApplication *application );
 
 static gboolean       check_for_unique_app( BaseApplication *application );
 /*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
@@ -126,7 +128,6 @@ static void           set_initialize_unique_app_error( BaseApplication *applicat
 static void           set_initialize_ui_get_fname_error( BaseApplication *application );
 static void           set_initialize_ui_add_xml_error( BaseApplication *application, const gchar *filename, GError *error );
 static void           set_initialize_default_icon_error( BaseApplication *application );
-static void           set_initialize_application_error( BaseApplication *application );
 
 GType
 base_application_get_type( void )
@@ -256,17 +257,19 @@ class_init( BaseApplicationClass *klass )
 
 	klass->private = g_new0( BaseApplicationClassPrivate, 1 );
 
+	klass->manage_options = application_do_manage_options;
+	klass->main_window_new = NULL;
+
 	klass->run = application_do_run;
 	klass->initialize = application_do_initialize;
 	klass->initialize_i18n = application_do_initialize_i18n;
 	klass->initialize_gtk = application_do_initialize_gtk;
-	klass->manage_options = application_do_manage_options;
 	klass->initialize_application_name = application_do_initialize_application_name;
 	klass->initialize_session_manager = application_do_initialize_session_manager;
 	klass->initialize_unique_app = application_do_initialize_unique_app;
 	klass->initialize_ui = application_do_initialize_ui;
 	klass->initialize_default_icon = application_do_initialize_default_icon;
-	klass->initialize_application = application_do_initialize_application;
+	klass->initialize_application = NULL;
 	klass->get_application_name = NULL;
 	klass->get_icon_name = NULL;
 	klass->get_unique_app_name = NULL;
@@ -650,38 +653,6 @@ base_application_get_ui_filename( BaseApplication *application )
 }
 
 /**
- * base_application_get_main_window:
- * @application: this #BaseApplication instance.
- *
- * Returns: a pointer to the #BaseWindow-derived object which serves as
- * the main window of the application.
- *
- * The returned pointer is owned by @application, and thus should not be
- * g_free() nor g_object_unref() by the caller.
- *
- * When first called, #BaseApplication asks for its derived class to
- * allocate a new object. This same object is then returned on
- * subsequent calls.
- */
-BaseWindow *
-base_application_get_main_window( BaseApplication *application )
-{
-	/*static const gchar *thisfn = "base_application_get_main_window";
-	g_debug( "%s: application=%p", thisfn, application );*/
-
-	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
-
-	if( !application->private->dispose_has_run ){
-		if( !application->private->main_window &&
-			BASE_APPLICATION_GET_CLASS( application )->get_main_window ){
-				application->private->main_window = BASE_WINDOW( BASE_APPLICATION_GET_CLASS( application )->get_main_window( application ));
-		}
-	}
-
-	return( application->private->main_window );
-}
-
-/**
  * base_application_message_dlg:
  * @application: this #BaseApplication instance.
  * @message: the message to be displayed.
@@ -886,6 +857,7 @@ v_initialize_default_icon( BaseApplication *application )
 	return( ok );
 }
 
+#if 0
 static gboolean
 v_initialize_application( BaseApplication *application )
 {
@@ -903,30 +875,48 @@ v_initialize_application( BaseApplication *application )
 	return( ok );
 }
 
+static void
+set_initialize_application_error( BaseApplication *application )
+{
+	application->private->exit_code = BASE_APPLICATION_ERROR_MAIN_WINDOW;
+
+	application->private->exit_message1 =
+		g_strdup( _( "Unable to get the main window of the application." ));
+}
+#endif
+
 static int
 application_do_run( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_do_run";
-	GtkWindow *wnd;
+	BaseWindow *main_window;
+	GtkWindow *gtk_toplevel;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	if( v_initialize( application )){
 
-		g_return_val_if_fail( application->private->main_window, -1 );
-		g_return_val_if_fail( BASE_IS_WINDOW( application->private->main_window ), -1 );
+		main_window = NULL;
 
-		if( base_window_init( application->private->main_window )){
+		if( BASE_APPLICATION_GET_CLASS( application )->main_window_new ){
+			main_window = ( BaseWindow * ) BASE_APPLICATION_GET_CLASS( application )->main_window_new( application, &application->private->exit_code );
+		}
 
-			wnd = base_window_get_toplevel( application->private->main_window );
-			g_assert( wnd );
-			g_assert( GTK_IS_WINDOW( wnd ));
+		if( main_window ){
+			g_return_val_if_fail( BASE_IS_WINDOW( main_window ), -1 );
 
-			if( application->private->unique_app_handle ){
-				unique_app_watch_window( application->private->unique_app_handle, wnd );
+			if( base_window_init( main_window )){
+
+				gtk_toplevel = base_window_get_toplevel( main_window );
+				g_assert( gtk_toplevel );
+				g_assert( GTK_IS_WINDOW( gtk_toplevel ));
+
+				if( application->private->unique_app_handle ){
+					unique_app_watch_window( application->private->unique_app_handle, gtk_toplevel );
+				}
+
+				base_window_run( main_window );
 			}
-
-			base_window_run( application->private->main_window );
 		}
 	}
 
@@ -951,8 +941,7 @@ application_do_initialize( BaseApplication *application )
 			v_initialize_session_manager( application ) &&
 			v_initialize_unique_app( application ) &&
 			v_initialize_ui( application ) &&
-			v_initialize_default_icon( application ) &&
-			v_initialize_application( application )
+			v_initialize_default_icon( application )
 	);
 }
 
@@ -1127,19 +1116,6 @@ application_do_initialize_default_icon( BaseApplication *application )
 	g_free( name );
 
 	return( TRUE );
-}
-
-static gboolean
-application_do_initialize_application( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_do_initialize_application";
-	BaseWindow *window;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	window = base_application_get_main_window( application );
-
-	return( window != NULL );
 }
 
 static gboolean
@@ -1352,13 +1328,4 @@ set_initialize_default_icon_error( BaseApplication *application )
 
 	application->private->exit_message1 =
 		g_strdup( _( "Unable to set the default icon for the application." ));
-}
-
-static void
-set_initialize_application_error( BaseApplication *application )
-{
-	application->private->exit_code = BASE_APPLICATION_ERROR_MAIN_WINDOW;
-
-	application->private->exit_message1 =
-		g_strdup( _( "Unable to get the main window of the application." ));
 }

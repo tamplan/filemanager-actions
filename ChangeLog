@@ -1,5 +1,12 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application-class.h (main_window_new):
+	* src/nact/base-application.c (application_do_run):
+	* src/nact/nact-application.c
+	* src/nact/nact-main-window.h (appli_main_window_new):
+	Move the creation of the main window to the main_window_new() method.
+	Remove base_application_get_main_window() function.
+
 	* src/nact/base-application-class.h (manage_options):
 	* src/nact/base-application.c:
 	* src/nact/nact-application.c: Return exit code of the program.
