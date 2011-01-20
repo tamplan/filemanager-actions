@@ -586,7 +586,9 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	updater = nact_application_get_updater( application );
-	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
+
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( model->private->window ), FALSE );
+	main_window = NACT_MAIN_WINDOW( model->private->window );
 
 	/*
 	 * NACT format (may embed profiles, or not)
@@ -677,7 +679,9 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, NAObjectItem **parent
 	drop_ok = FALSE;
 	parent_dest = NULL;
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
-	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
+
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( model->private->window ), FALSE );
+	main_window = NACT_MAIN_WINDOW( model->private->window );
 
 	/* if we can have an iter on given dest, then the dest already exists
 	 * so dropped items should be of the same type that already existing
@@ -882,7 +886,9 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	updater = nact_application_get_updater( application );
-	main_window = NACT_MAIN_WINDOW( base_application_get_main_window( BASE_APPLICATION( application )));
+
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( model->private->window ), FALSE );
+	main_window = NACT_MAIN_WINDOW( model->private->window );
 
 #if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_data = ( const gchar * ) gtk_selection_data_get_data( selection_data );

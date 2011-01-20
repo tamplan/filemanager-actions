@@ -1,5 +1,8 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-model-dnd.c (drop_inside, is_drop_possible,
+	drop_uri_list): Remove base_application_get_main_window() invocations.
+
 	* src/nact/nact-main.c: Renamed as main.c
 
 	* src/nact/Makefile.am: Updated accordingly.
