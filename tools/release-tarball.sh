@@ -31,7 +31,7 @@ errs=0										# will be the exit code of the script
 my_cmd="${0}"								# e.g. "./make-ks.sh"
 my_parms="$*"								# e.g. "-host toaster"
 my_cmdline="${my_cmd} ${my_parms}"
-me="$(basename ${my_cmd})"					# e.g. "make-ks.sh"
+me="${my_cmd##*/}"							# e.g. "make-ks.sh"
 											# used in msg and msgerr functions
 my_tmproot="/tmp/$(echo ${me} | sed 's?\..*$??').$$"
 											# e.g. "/tmp/make-ks.1978"

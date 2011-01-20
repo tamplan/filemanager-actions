@@ -32,16 +32,16 @@ fi
 
 check_for="finalize"
 
-tmp1=/tmp/$(basename $0).$$.1
-tmp2=/tmp/$(basename $0).$$.2
-tmp3=/tmp/$(basename $0).$$.3
+tmp1=/tmp/${0##*/}.$$.1
+tmp2=/tmp/${0##*/}.$$.2
+tmp3=/tmp/${0##*/}.$$.3
 
-\rm -f /tmp/$(basename $0).*
+\rm -f /tmp/${0##*/}.*
 echo ""
 
 function getftmp
 {
-	echo /tmp/$(basename $0).$$.${1}
+	echo /tmp/${0##*/}.$$.${1}
 }
 
 function str_init
@@ -84,7 +84,7 @@ function count_display
 
 function is_reused
 {
-	typeset fused=/tmp/$(basename $0).$$.reused
+	typeset fused=/tmp/${0##*/}.$$.reused
 	typeset triplet="${1}"
 	typeset -i count=0
 
@@ -223,7 +223,7 @@ cat ${tmp2} | while read line; do
 			fi
 		fi
 	fi
-	echo "${line_init}" > /tmp/$(basename $0).$$.line_init
+	echo "${line_init}" > /tmp/${0##*/}.$$.line_init
 done
 # does not work because shell variables do not go out of a while loop in bash
 #if [ "${line_init}" != "" ]; then
@@ -238,7 +238,7 @@ done
 #		count_inc count_undisposed_bis
 #	fi
 #fi
-line_init="$(cat /tmp/$(basename $0).$$.line_init)"
+line_init="$(cat /tmp/${0##*/}.$$.line_init)"
 if [ "${line_init}" != "" ]; then
 	obj_address_init=$(echo "${line_init}" | awk '{ print $3 }')
 	class=$(echo "${line_init}" | awk '{ print $4 }')

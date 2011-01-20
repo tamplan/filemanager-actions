@@ -31,7 +31,7 @@ errs=0										# will be the exit code of the script
 my_cmd="${0}"								# e.g. "./make-ks.sh"
 my_parms="$*"								# e.g. "-host toaster"
 my_cmdline="${my_cmd} ${my_parms}"
-me="$(basename ${my_cmd})"					# e.g. "make-ks.sh"
+me="${my_cmd##*/}"							# e.g. "make-ks.sh"
 											# used in msg and msgerr functions
 my_tmproot="/tmp/$(echo ${me} | sed 's?\..*$??').$$"
 											# e.g. "/tmp/make-ks.1978"
@@ -408,7 +408,7 @@ let nbitems=0
 # each object, action or menu, is then exported in .a .desktop format
 # to be written to its .desktop file
 for dir in $(gconftool-2 --all-dirs ${na_configurations}); do
-	id=$(basename ${dir})
+	id=${dir##*/}
 	let nbitems+=1
 	[ "${opt_verbose}" = "yes" ] && msg "item=${id}"
 	if [ -e ${opt_dir}/${id}.desktop -a "${opt_force}" = "no" ]; then
@@ -588,7 +588,7 @@ done
 # /apps/nautilus-actions/mandatory/<provider_id>/locked -> [io-provider <provider_id>]
 if [ $(id -u) -eq 0 ]; then
 	for dir in $(gconftool-2 --all-dirs ${na_mandatory}); do
-		bdir=$(basename ${dir})
+		bdir=${dir##*/}
 		if [ "${bdir}" != "na-gconf" ]; then
 			value=$(gconftool-2 --get ${dir}/locked 2>/dev/null)
 			if [ "${value}" != "" ]; then
@@ -613,7 +613,7 @@ fi
 # migrate io-providers keys
 # fully disabling (not reconducting its keys)
 for dir in $(gconftool-2 --all-dirs ${na_providers}); do
-	bdir=$(basename ${dir})
+	bdir=${dir##*/}
 	if [ "${bdir}" != "na-gconf" ]; then
 		gconftool-2 --all-entries ${dir} | while read key x value; do
 			case ${key} in

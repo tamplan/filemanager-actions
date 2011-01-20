@@ -1,3 +1,11 @@
+2011-01-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/utils/na-gconf2key.sh.in:
+	* tools/check-headers.sh:
+	* tools/check-po.sh:
+	* tools/init-finalize-diff.sh:
+	* tools/release-tarball.sh: Replace basename with a shell substitution.
+
 2011-01-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* tools/release-tarball.sh: Full script rewrite.
