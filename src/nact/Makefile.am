@@ -71,6 +71,7 @@ nautilus_actions_config_tool_SOURCES = \
 	egg-sm-client-xsmp.c								\
 	egg-tree-multi-dnd.c								\
 	egg-tree-multi-dnd.h								\
+	main.c												\
 	nact-add-capability-dialog.c						\
 	nact-add-capability-dialog.h						\
 	nact-add-scheme-dialog.c							\
@@ -118,7 +119,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iproperties-tab.h								\
 	nact-ischemes-tab.c									\
 	nact-ischemes-tab.h									\
-	nact-main.c											\
 	nact-main-menubar.c									\
 	nact-main-menubar.h									\
 	nact-main-menubar-edit.c							\

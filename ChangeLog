@@ -1,5 +1,9 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main.c: Renamed as main.c
+
+	* src/nact/Makefile.am: Updated accordingly.
+
 	* tools/Makefile.am: Generate the check-header.c source if it is missing.
 
 	* src/plugin-tracker/na-tracker-dbus.c:

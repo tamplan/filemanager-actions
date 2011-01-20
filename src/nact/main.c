@@ -36,6 +36,16 @@
 
 #include "nact-application.h"
 
+/*
+ * The 'configure' script may define a NA_MAINTAINER_MODE variable when
+ * the application is compiled for/in a development environment. When
+ * this variable is defined, debug messages are printed on stdout.
+ *
+ * The NAUTILUS_ACTIONS_DEBUG environment variable may be defined at
+ * execution time to display debug messages. Else, debug messages are only
+ * displayed when in maintainer mode.
+ */
+
 static void set_log_handler( void );
 static void log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data );
 
@@ -44,7 +54,7 @@ static GLogFunc st_default_log_func = NULL;
 int
 main( int argc, char *argv[] )
 {
-	NactApplication *app;
+	NactApplication *appli;
 	int ret;
 
 	set_log_handler();
@@ -55,11 +65,9 @@ main( int argc, char *argv[] )
 	 */
 	na_gconf_migration_run();
 
-	app = nact_application_new_with_args( argc, argv );
-
-	ret = base_application_run( BASE_APPLICATION( app ));
-
-	g_object_unref( app );
+	appli = nact_application_new_with_args( argc, argv );
+	ret = base_application_run( BASE_APPLICATION( appli ));
+	g_object_unref( appli );
 
 	return( ret );
 }
