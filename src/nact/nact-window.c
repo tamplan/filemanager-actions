@@ -47,13 +47,13 @@
 
 /* private class data
  */
-struct NactWindowClassPrivate {
+struct _NactWindowClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactWindowPrivate {
+struct _NactWindowPrivate {
 	gboolean dispose_has_run;
 };
 

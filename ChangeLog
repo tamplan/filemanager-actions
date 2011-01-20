@@ -1,5 +1,67 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.c:
+	* src/nact/base-application-class.h:
+	* src/nact/base-assistant.c:
+	* src/nact/base-assistant.h:
+	* src/nact/base-builder.c:
+	* src/nact/base-builder.h:
+	* src/nact/base-dialog.c:
+	* src/nact/base-dialog.h:
+	* src/nact/base-iprefs.c:
+	* src/nact/base-iprefs.h:
+	* src/nact/base-window.c:
+	* src/nact/base-window-class.h:
+	* src/nact/egg-tree-multi-dnd.h:
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-capability-dialog.h:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-add-scheme-dialog.h:
+	* src/nact/nact-application.c:
+	* src/nact/nact-application.h:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-export.h:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-assistant-import.h:
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-clipboard.h:
+	* src/nact/nact-confirm-logout.c:
+	* src/nact/nact-confirm-logout.h:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-export-ask.h:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-iactions-list.h:
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iaction-tab.h:
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-ibasenames-tab.h:
+	* src/nact/nact-icapabilities-tab.c:
+	* src/nact/nact-icapabilities-tab.h:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icommand-tab.h:
+	* src/nact/nact-icon-chooser.h:
+	* src/nact/nact-ienvironment-tab.c:
+	* src/nact/nact-ienvironment-tab.h:
+	* src/nact/nact-iexecution-tab.c:
+	* src/nact/nact-iexecution-tab.h:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-ifolders-tab.h:
+	* src/nact/nact-imimetypes-tab.c:
+	* src/nact/nact-imimetypes-tab.h:
+	* src/nact/nact-iproperties-tab.c:
+	* src/nact/nact-iproperties-tab.h:
+	* src/nact/nact-ischemes-tab.c:
+	* src/nact/nact-ischemes-tab.h:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-preferences-editor.h:
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h:
+	* src/nact/nact-tree-model-priv.h:
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h: Cosmetic changes in src/nact headers.
+
 	* src/io-xml/naxml-provider.c:
 	* src/io-xml/naxml-provider.h:
 	* src/io-xml/naxml-reader.c:

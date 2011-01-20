@@ -44,16 +44,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ICAPABILITIES_TAB_TYPE							( nact_icapabilities_tab_get_type())
-#define NACT_ICAPABILITIES_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICAPABILITIES_TAB_TYPE, NactICapabilitiesTab ))
-#define NACT_IS_ICAPABILITIES_TAB( object )					( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICAPABILITIES_TAB_TYPE ))
-#define NACT_ICAPABILITIES_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICAPABILITIES_TAB_TYPE, NactICapabilitiesTabInterface ))
+#define NACT_ICAPABILITIES_TAB_TYPE                      ( nact_icapabilities_tab_get_type())
+#define NACT_ICAPABILITIES_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICAPABILITIES_TAB_TYPE, NactICapabilitiesTab ))
+#define NACT_IS_ICAPABILITIES_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICAPABILITIES_TAB_TYPE ))
+#define NACT_ICAPABILITIES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICAPABILITIES_TAB_TYPE, NactICapabilitiesTabInterface ))
 
-typedef struct NactICapabilitiesTab                 NactICapabilitiesTab;
-
-typedef struct NactICapabilitiesTabInterfacePrivate NactICapabilitiesTabInterfacePrivate;
+typedef struct _NactICapabilitiesTab                     NactICapabilitiesTab;
+typedef struct _NactICapabilitiesTabInterfacePrivate     NactICapabilitiesTabInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                        parent;
 	NactICapabilitiesTabInterfacePrivate *private;
 }

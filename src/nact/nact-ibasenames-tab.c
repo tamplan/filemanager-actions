@@ -43,7 +43,7 @@
 
 /* private interface data
  */
-struct NactIBasenamesTabInterfacePrivate {
+struct _NactIBasenamesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 

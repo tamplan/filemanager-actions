@@ -36,13 +36,13 @@
 
 /* private class data
  */
-struct BaseDialogClassPrivate {
+struct _BaseDialogClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct BaseDialogPrivate {
+struct _BaseDialogPrivate {
 	gboolean dispose_has_run;
 };
 

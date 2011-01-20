@@ -43,13 +43,13 @@
 
 /* private class data
  */
-struct NactAddSchemeDialogClassPrivate {
+struct _NactAddSchemeDialogClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactAddSchemeDialogPrivate {
+struct _NactAddSchemeDialogPrivate {
 	gboolean dispose_has_run;
 	GSList  *already_used;
 	gchar   *scheme;

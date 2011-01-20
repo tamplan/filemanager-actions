@@ -43,27 +43,30 @@
 
 G_BEGIN_DECLS
 
-#define BASE_APPLICATION_TYPE					( base_application_get_type())
-#define BASE_APPLICATION( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_APPLICATION_TYPE, BaseApplication ))
-#define BASE_APPLICATION_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, BASE_APPLICATION_TYPE, BaseApplicationClass ))
-#define BASE_IS_APPLICATION( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_APPLICATION_TYPE ))
-#define BASE_IS_APPLICATION_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_APPLICATION_TYPE ))
-#define BASE_APPLICATION_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_APPLICATION_TYPE, BaseApplicationClass ))
+#define BASE_APPLICATION_TYPE                ( base_application_get_type())
+#define BASE_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_APPLICATION_TYPE, BaseApplication ))
+#define BASE_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_APPLICATION_TYPE, BaseApplicationClass ))
+#define BASE_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_APPLICATION_TYPE ))
+#define BASE_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_APPLICATION_TYPE ))
+#define BASE_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_APPLICATION_TYPE, BaseApplicationClass ))
 
-typedef struct BaseApplicationPrivate      BaseApplicationPrivate;
+typedef struct _BaseApplicationPrivate       BaseApplicationPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject                 parent;
 	BaseApplicationPrivate *private;
 }
 	BaseApplication;
 
-typedef struct BaseApplicationClassPrivate BaseApplicationClassPrivate;
+typedef struct _BaseApplicationClassPrivate  BaseApplicationClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass                 parent;
 	BaseApplicationClassPrivate *private;
 
+	/*< public >*/
 	/**
 	 * run:
 	 * @appli: this #BaseApplication instance.

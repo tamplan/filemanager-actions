@@ -44,16 +44,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IEXECUTION_TAB_TYPE						( nact_iexecution_tab_get_type())
-#define NACT_IEXECUTION_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IEXECUTION_TAB_TYPE, NactIExecutionTab ))
-#define NACT_IS_IEXECUTION_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IEXECUTION_TAB_TYPE ))
-#define NACT_IEXECUTION_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IEXECUTION_TAB_TYPE, NactIExecutionTabInterface ))
+#define NACT_IEXECUTION_TAB_TYPE                      ( nact_iexecution_tab_get_type())
+#define NACT_IEXECUTION_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IEXECUTION_TAB_TYPE, NactIExecutionTab ))
+#define NACT_IS_IEXECUTION_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IEXECUTION_TAB_TYPE ))
+#define NACT_IEXECUTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IEXECUTION_TAB_TYPE, NactIExecutionTabInterface ))
 
-typedef struct NactIExecutionTab                 NactIExecutionTab;
-
-typedef struct NactIExecutionTabInterfacePrivate NactIExecutionTabInterfacePrivate;
+typedef struct _NactIExecutionTab                     NactIExecutionTab;
+typedef struct _NactIExecutionTabInterfacePrivate     NactIExecutionTabInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                     parent;
 	NactIExecutionTabInterfacePrivate *private;
 }

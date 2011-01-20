@@ -46,24 +46,26 @@
 
 G_BEGIN_DECLS
 
-#define NACT_MAIN_WINDOW_TYPE					( nact_main_window_get_type())
-#define NACT_MAIN_WINDOW( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_MAIN_WINDOW_TYPE, NactMainWindow ))
-#define NACT_MAIN_WINDOW_CLASS( klass )			( G_TYPE_CHECK_CLASS_CAST( klass, NACT_MAIN_WINDOW_TYPE, NactMainWindowClass ))
-#define NACT_IS_MAIN_WINDOW( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_MAIN_WINDOW_TYPE ))
-#define NACT_IS_MAIN_WINDOW_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_MAIN_WINDOW_TYPE ))
-#define NACT_MAIN_WINDOW_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_MAIN_WINDOW_TYPE, NactMainWindowClass ))
+#define NACT_MAIN_WINDOW_TYPE                ( nact_main_window_get_type())
+#define NACT_MAIN_WINDOW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_MAIN_WINDOW_TYPE, NactMainWindow ))
+#define NACT_MAIN_WINDOW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_MAIN_WINDOW_TYPE, NactMainWindowClass ))
+#define NACT_IS_MAIN_WINDOW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_MAIN_WINDOW_TYPE ))
+#define NACT_IS_MAIN_WINDOW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_MAIN_WINDOW_TYPE ))
+#define NACT_MAIN_WINDOW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_MAIN_WINDOW_TYPE, NactMainWindowClass ))
 
-typedef struct NactMainWindowPrivate      NactMainWindowPrivate;
+typedef struct _NactMainWindowPrivate        NactMainWindowPrivate;
 
 typedef struct {
+	/*< private >*/
 	NactWindow             parent;
 	NactMainWindowPrivate *private;
 }
 	NactMainWindow;
 
-typedef struct NactMainWindowClassPrivate NactMainWindowClassPrivate;
+typedef struct _NactMainWindowClassPrivate   NactMainWindowClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	NactWindowClass             parent;
 	NactMainWindowClassPrivate *private;
 }

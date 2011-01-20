@@ -45,13 +45,13 @@
 
 /* private class data
  */
-struct NactApplicationClassPrivate {
+struct _NactApplicationClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactApplicationPrivate {
+struct _NactApplicationPrivate {
 	gboolean   dispose_has_run;
 	NAUpdater *updater;
 };

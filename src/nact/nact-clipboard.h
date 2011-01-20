@@ -47,24 +47,26 @@
 
 G_BEGIN_DECLS
 
-#define NACT_CLIPBOARD_TYPE					( nact_clipboard_get_type())
-#define NACT_CLIPBOARD( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_CLIPBOARD_TYPE, NactClipboard ))
-#define NACT_CLIPBOARD_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_CLIPBOARD_TYPE, NactClipboardClass ))
-#define NACT_IS_CLIPBOARD( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_CLIPBOARD_TYPE ))
-#define NACT_IS_CLIPBOARD_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_CLIPBOARD_TYPE ))
-#define NACT_CLIPBOARD_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_CLIPBOARD_TYPE, NactClipboardClass ))
+#define NACT_CLIPBOARD_TYPE                ( nact_clipboard_get_type())
+#define NACT_CLIPBOARD( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_CLIPBOARD_TYPE, NactClipboard ))
+#define NACT_CLIPBOARD_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_CLIPBOARD_TYPE, NactClipboardClass ))
+#define NACT_IS_CLIPBOARD( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_CLIPBOARD_TYPE ))
+#define NACT_IS_CLIPBOARD_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_CLIPBOARD_TYPE ))
+#define NACT_CLIPBOARD_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_CLIPBOARD_TYPE, NactClipboardClass ))
 
-typedef struct NactClipboardPrivate      NactClipboardPrivate;
+typedef struct _NactClipboardPrivate       NactClipboardPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject               parent;
 	NactClipboardPrivate *private;
 }
 	NactClipboard;
 
-typedef struct NactClipboardClassPrivate NactClipboardClassPrivate;
+typedef struct _NactClipboardClassPrivate  NactClipboardClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass               parent;
 	NactClipboardClassPrivate *private;
 }

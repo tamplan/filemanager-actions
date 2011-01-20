@@ -38,13 +38,13 @@
 
 /* private class data
  */
-struct BaseBuilderClassPrivate {
+struct _BaseBuilderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct BaseBuilderPrivate {
+struct _BaseBuilderPrivate {
 	gboolean  dispose_has_run;
 	GSList   *fnames;
 };

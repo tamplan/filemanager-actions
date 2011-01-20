@@ -45,13 +45,13 @@
 
 /* private class data
  */
-struct NactPreferencesEditorClassPrivate {
+struct _NactPreferencesEditorClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactPreferencesEditorPrivate {
+struct _NactPreferencesEditorPrivate {
 	gboolean dispose_has_run;
 	gboolean preferences_locked;
 

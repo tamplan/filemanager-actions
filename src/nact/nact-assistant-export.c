@@ -73,13 +73,13 @@ enum {
 
 /* private class data
  */
-struct NactAssistantExportClassPrivate {
+struct _NactAssistantExportClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactAssistantExportPrivate {
+struct _NactAssistantExportPrivate {
 	gboolean  dispose_has_run;
 	gboolean  preferences_locked;
 	gchar    *uri;

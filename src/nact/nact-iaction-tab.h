@@ -47,16 +47,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IACTION_TAB_TYPE						( nact_iaction_tab_get_type())
-#define NACT_IACTION_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IACTION_TAB_TYPE, NactIActionTab ))
-#define NACT_IS_IACTION_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IACTION_TAB_TYPE ))
-#define NACT_IACTION_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IACTION_TAB_TYPE, NactIActionTabInterface ))
+#define NACT_IACTION_TAB_TYPE                      ( nact_iaction_tab_get_type())
+#define NACT_IACTION_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IACTION_TAB_TYPE, NactIActionTab ))
+#define NACT_IS_IACTION_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IACTION_TAB_TYPE ))
+#define NACT_IACTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IACTION_TAB_TYPE, NactIActionTabInterface ))
 
-typedef struct NactIActionTab                 NactIActionTab;
-
-typedef struct NactIActionTabInterfacePrivate NactIActionTabInterfacePrivate;
+typedef struct _NactIActionTab                     NactIActionTab;
+typedef struct _NactIActionTabInterfacePrivate     NactIActionTabInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                  parent;
 	NactIActionTabInterfacePrivate *private;
 }

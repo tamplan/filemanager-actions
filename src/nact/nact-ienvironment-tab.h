@@ -48,16 +48,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IENVIRONMENT_TAB_TYPE						( nact_ienvironment_tab_get_type())
-#define NACT_IENVIRONMENT_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IENVIRONMENT_TAB_TYPE, NactIEnvironmentTab ))
-#define NACT_IS_IENVIRONMENT_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IENVIRONMENT_TAB_TYPE ))
-#define NACT_IENVIRONMENT_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IENVIRONMENT_TAB_TYPE, NactIEnvironmentTabInterface ))
+#define NACT_IENVIRONMENT_TAB_TYPE                      ( nact_ienvironment_tab_get_type())
+#define NACT_IENVIRONMENT_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IENVIRONMENT_TAB_TYPE, NactIEnvironmentTab ))
+#define NACT_IS_IENVIRONMENT_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IENVIRONMENT_TAB_TYPE ))
+#define NACT_IENVIRONMENT_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IENVIRONMENT_TAB_TYPE, NactIEnvironmentTabInterface ))
 
-typedef struct NactIEnvironmentTab                 NactIEnvironmentTab;
-
-typedef struct NactIEnvironmentTabInterfacePrivate NactIEnvironmentTabInterfacePrivate;
+typedef struct _NactIEnvironmentTab                     NactIEnvironmentTab;
+typedef struct _NactIEnvironmentTabInterfacePrivate     NactIEnvironmentTabInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                       parent;
 	NactIEnvironmentTabInterfacePrivate *private;
 }

@@ -44,16 +44,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ISCHEMES_TAB_TYPE						( nact_ischemes_tab_get_type())
-#define NACT_ISCHEMES_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ISCHEMES_TAB_TYPE, NactISchemesTab ))
-#define NACT_IS_ISCHEMES_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ISCHEMES_TAB_TYPE ))
-#define NACT_ISCHEMES_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ISCHEMES_TAB_TYPE, NactISchemesTabInterface ))
+#define NACT_ISCHEMES_TAB_TYPE                      ( nact_ischemes_tab_get_type())
+#define NACT_ISCHEMES_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ISCHEMES_TAB_TYPE, NactISchemesTab ))
+#define NACT_IS_ISCHEMES_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ISCHEMES_TAB_TYPE ))
+#define NACT_ISCHEMES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ISCHEMES_TAB_TYPE, NactISchemesTabInterface ))
 
-typedef struct NactISchemesTab                 NactISchemesTab;
-
-typedef struct NactISchemesTabInterfacePrivate NactISchemesTabInterfacePrivate;
+typedef struct _NactISchemesTab                     NactISchemesTab;
+typedef struct _NactISchemesTabInterfacePrivate     NactISchemesTabInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                   parent;
 	NactISchemesTabInterfacePrivate *private;
 }

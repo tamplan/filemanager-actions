@@ -44,7 +44,7 @@
 
 /* private interface data
  */
-struct NactICapabilitiesTabInterfacePrivate {
+struct _NactICapabilitiesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 

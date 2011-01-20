@@ -56,19 +56,20 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IACTIONS_LIST_TYPE							( nact_iactions_list_get_type())
-#define NACT_IACTIONS_LIST( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IACTIONS_LIST_TYPE, NactIActionsList ))
-#define NACT_IS_IACTIONS_LIST( object )					( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IACTIONS_LIST_TYPE ))
-#define NACT_IACTIONS_LIST_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IACTIONS_LIST_TYPE, NactIActionsListInterface ))
+#define NACT_IACTIONS_LIST_TYPE                      ( nact_iactions_list_get_type())
+#define NACT_IACTIONS_LIST( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IACTIONS_LIST_TYPE, NactIActionsList ))
+#define NACT_IS_IACTIONS_LIST( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IACTIONS_LIST_TYPE ))
+#define NACT_IACTIONS_LIST_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IACTIONS_LIST_TYPE, NactIActionsListInterface ))
 
-typedef struct NactIActionsList NactIActionsList;
-
-typedef struct NactIActionsListInterfacePrivate NactIActionsListInterfacePrivate;
+typedef struct _NactIActionsList                     NactIActionsList;
+typedef struct _NactIActionsListInterfacePrivate     NactIActionsListInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                    parent;
 	NactIActionsListInterfacePrivate *private;
 
+	/*< public >*/
 	/**
 	 * get_treeview_name:
 	 * @instance: this #NactIActionsList implementor.

@@ -46,7 +46,7 @@
 
 /* private interface data
  */
-struct NactIActionsListInterfacePrivate {
+struct _NactIActionsListInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 

@@ -48,19 +48,20 @@
 
 G_BEGIN_DECLS
 
-#define BASE_IPREFS_TYPE						( base_iprefs_get_type())
-#define BASE_IPREFS( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_IPREFS_TYPE, BaseIPrefs ))
-#define BASE_IS_IPREFS( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_IPREFS_TYPE ))
-#define BASE_IPREFS_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), BASE_IPREFS_TYPE, BaseIPrefsInterface ))
+#define BASE_IPREFS_TYPE                      ( base_iprefs_get_type())
+#define BASE_IPREFS( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_IPREFS_TYPE, BaseIPrefs ))
+#define BASE_IS_IPREFS( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_IPREFS_TYPE ))
+#define BASE_IPREFS_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), BASE_IPREFS_TYPE, BaseIPrefsInterface ))
 
-typedef struct BaseIPrefs                 BaseIPrefs;
-
-typedef struct BaseIPrefsInterfacePrivate BaseIPrefsInterfacePrivate;
+typedef struct _BaseIPrefs                    BaseIPrefs;
+typedef struct _BaseIPrefsInterfacePrivate    BaseIPrefsInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface              parent;
 	BaseIPrefsInterfacePrivate *private;
 
+	/*< public >*/
 	/* api
 	 */
 	gchar * ( *iprefs_get_window_id )( const BaseWindow *window );

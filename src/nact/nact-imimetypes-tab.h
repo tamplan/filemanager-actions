@@ -44,16 +44,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IMIMETYPES_TAB_TYPE						( nact_imimetypes_tab_get_type())
-#define NACT_IMIMETYPES_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IMIMETYPES_TAB_TYPE, NactIMimetypesTab ))
-#define NACT_IS_IMIMETYPES_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IMIMETYPES_TAB_TYPE ))
-#define NACT_IMIMETYPES_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IMIMETYPES_TAB_TYPE, NactIMimetypesTabInterface ))
+#define NACT_IMIMETYPES_TAB_TYPE                      ( nact_imimetypes_tab_get_type())
+#define NACT_IMIMETYPES_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IMIMETYPES_TAB_TYPE, NactIMimetypesTab ))
+#define NACT_IS_IMIMETYPES_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IMIMETYPES_TAB_TYPE ))
+#define NACT_IMIMETYPES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IMIMETYPES_TAB_TYPE, NactIMimetypesTabInterface ))
 
-typedef struct NactIMimetypesTab                 NactIMimetypesTab;
-
-typedef struct NactIMimetypesTabInterfacePrivate NactIMimetypesTabInterfacePrivate;
+typedef struct _NactIMimetypesTab                     NactIMimetypesTab;
+typedef struct _NactIMimetypesTabInterfacePrivate     NactIMimetypesTabInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                     parent;
 	NactIMimetypesTabInterfacePrivate *private;
 }

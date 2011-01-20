@@ -44,24 +44,26 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ADD_CAPABILITY_DIALOG_TYPE					( nact_add_capability_dialog_get_type())
-#define NACT_ADD_CAPABILITY_DIALOG( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ADD_CAPABILITY_DIALOG_TYPE, NactAddCapabilityDialog ))
-#define NACT_ADD_CAPABILITY_DIALOG_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ADD_CAPABILITY_DIALOG_TYPE, NactAddCapabilityDialogClass ))
-#define NACT_IS_ADD_CAPABILITY_DIALOG( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ADD_CAPABILITY_DIALOG_TYPE ))
-#define NACT_IS_ADD_CAPABILITY_DIALOG_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ADD_CAPABILITY_DIALOG_TYPE ))
-#define NACT_ADD_CAPABILITY_DIALOG_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ADD_CAPABILITY_DIALOG_TYPE, NactAddCapabilityDialogClass ))
+#define NACT_ADD_CAPABILITY_DIALOG_TYPE                ( nact_add_capability_dialog_get_type())
+#define NACT_ADD_CAPABILITY_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ADD_CAPABILITY_DIALOG_TYPE, NactAddCapabilityDialog ))
+#define NACT_ADD_CAPABILITY_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ADD_CAPABILITY_DIALOG_TYPE, NactAddCapabilityDialogClass ))
+#define NACT_IS_ADD_CAPABILITY_DIALOG( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ADD_CAPABILITY_DIALOG_TYPE ))
+#define NACT_IS_ADD_CAPABILITY_DIALOG_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ADD_CAPABILITY_DIALOG_TYPE ))
+#define NACT_ADD_CAPABILITY_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ADD_CAPABILITY_DIALOG_TYPE, NactAddCapabilityDialogClass ))
 
-typedef struct NactAddCapabilityDialogPrivate      NactAddCapabilityDialogPrivate;
+typedef struct _NactAddCapabilityDialogPrivate         NactAddCapabilityDialogPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseDialog                      parent;
 	NactAddCapabilityDialogPrivate *private;
 }
 	NactAddCapabilityDialog;
 
-typedef struct NactAddCapabilityDialogClassPrivate NactAddCapabilityDialogClassPrivate;
+typedef struct _NactAddCapabilityDialogClassPrivate    NactAddCapabilityDialogClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseDialogClass                      parent;
 	NactAddCapabilityDialogClassPrivate *private;
 }

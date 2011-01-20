@@ -44,16 +44,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IFOLDERS_TAB_TYPE						( nact_ifolders_tab_get_type())
-#define NACT_IFOLDERS_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IFOLDERS_TAB_TYPE, NactIFoldersTab ))
-#define NACT_IS_IFOLDERS_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IFOLDERS_TAB_TYPE ))
-#define NACT_IFOLDERS_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IFOLDERS_TAB_TYPE, NactIFoldersTabInterface ))
+#define NACT_IFOLDERS_TAB_TYPE                      ( nact_ifolders_tab_get_type())
+#define NACT_IFOLDERS_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IFOLDERS_TAB_TYPE, NactIFoldersTab ))
+#define NACT_IS_IFOLDERS_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IFOLDERS_TAB_TYPE ))
+#define NACT_IFOLDERS_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IFOLDERS_TAB_TYPE, NactIFoldersTabInterface ))
 
-typedef struct NactIFoldersTab                 NactIFoldersTab;
-
-typedef struct NactIFoldersTabInterfacePrivate NactIFoldersTabInterfacePrivate;
+typedef struct _NactIFoldersTab                     NactIFoldersTab;
+typedef struct _NactIFoldersTabInterfacePrivate     NactIFoldersTabInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                   parent;
 	NactIFoldersTabInterfacePrivate *private;
 }

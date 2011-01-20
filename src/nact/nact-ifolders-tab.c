@@ -50,7 +50,7 @@
 
 /* private interface data
  */
-struct NactIFoldersTabInterfacePrivate {
+struct _NactIFoldersTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 

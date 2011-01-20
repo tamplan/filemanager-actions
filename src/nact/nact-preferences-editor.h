@@ -44,24 +44,26 @@
 
 G_BEGIN_DECLS
 
-#define NACT_PREFERENCES_EDITOR_TYPE				( nact_preferences_editor_get_type())
-#define NACT_PREFERENCES_EDITOR( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_PREFERENCES_EDITOR_TYPE, NactPreferencesEditor ))
-#define NACT_PREFERENCES_EDITOR_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_PREFERENCES_EDITOR_TYPE, NactPreferencesEditorClass ))
-#define NACT_IS_PREFERENCES_EDITOR( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_PREFERENCES_EDITOR_TYPE ))
-#define NACT_IS_PREFERENCES_EDITOR_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_PREFERENCES_EDITOR_TYPE ))
-#define NACT_PREFERENCES_EDITOR_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_PREFERENCES_EDITOR_TYPE, NactPreferencesEditorClass ))
+#define NACT_PREFERENCES_EDITOR_TYPE                ( nact_preferences_editor_get_type())
+#define NACT_PREFERENCES_EDITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_PREFERENCES_EDITOR_TYPE, NactPreferencesEditor ))
+#define NACT_PREFERENCES_EDITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_PREFERENCES_EDITOR_TYPE, NactPreferencesEditorClass ))
+#define NACT_IS_PREFERENCES_EDITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_PREFERENCES_EDITOR_TYPE ))
+#define NACT_IS_PREFERENCES_EDITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_PREFERENCES_EDITOR_TYPE ))
+#define NACT_PREFERENCES_EDITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_PREFERENCES_EDITOR_TYPE, NactPreferencesEditorClass ))
 
-typedef struct NactPreferencesEditorPrivate NactPreferencesEditorPrivate;
+typedef struct _NactPreferencesEditorPrivate        NactPreferencesEditorPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseDialog                    parent;
 	NactPreferencesEditorPrivate *private;
 }
 	NactPreferencesEditor;
 
-typedef struct NactPreferencesEditorClassPrivate NactPreferencesEditorClassPrivate;
+typedef struct _NactPreferencesEditorClassPrivate   NactPreferencesEditorClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseDialogClass                    parent;
 	NactPreferencesEditorClassPrivate *private;
 }

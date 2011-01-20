@@ -51,15 +51,18 @@ G_BEGIN_DECLS
 #define NACT_ICON_CHOOSER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ICON_CHOOSER_TYPE, NactIconChooserClass ))
 
 typedef struct _NactIconChooserPrivate        NactIconChooserPrivate;
-typedef struct _NactIconChooserClassPrivate   NactIconChooserClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseDialog              parent;
 	NactIconChooserPrivate *private;
 }
 	NactIconChooser;
 
+typedef struct _NactIconChooserClassPrivate   NactIconChooserClassPrivate;
+
 typedef struct {
+	/*< private >*/
 	BaseDialogClass              parent;
 	NactIconChooserClassPrivate *private;
 }

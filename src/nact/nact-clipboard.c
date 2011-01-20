@@ -48,7 +48,7 @@
 
 /* private class data
  */
-struct NactClipboardClassPrivate {
+struct _NactClipboardClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
@@ -71,7 +71,7 @@ typedef struct {
 }
 	PrimaryData;
 
-struct NactClipboardPrivate {
+struct _NactClipboardPrivate {
 	gboolean      dispose_has_run;
 	BaseWindow   *window;
 	GtkClipboard *dnd;

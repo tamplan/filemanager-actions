@@ -44,7 +44,7 @@ G_BEGIN_DECLS
 
 /* private instance data
  */
-struct NactTreeModelPrivate {
+struct _NactTreeModelPrivate {
 	gboolean       dispose_has_run;
 	BaseWindow    *window;
 	GtkTreeView   *treeview;

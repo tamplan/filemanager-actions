@@ -44,16 +44,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ICOMMAND_TAB_TYPE						( nact_icommand_tab_get_type())
-#define NACT_ICOMMAND_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICOMMAND_TAB_TYPE, NactICommandTab ))
-#define NACT_IS_ICOMMAND_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICOMMAND_TAB_TYPE ))
-#define NACT_ICOMMAND_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICOMMAND_TAB_TYPE, NactICommandTabInterface ))
+#define NACT_ICOMMAND_TAB_TYPE                      ( nact_icommand_tab_get_type())
+#define NACT_ICOMMAND_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICOMMAND_TAB_TYPE, NactICommandTab ))
+#define NACT_IS_ICOMMAND_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICOMMAND_TAB_TYPE ))
+#define NACT_ICOMMAND_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICOMMAND_TAB_TYPE, NactICommandTabInterface ))
 
-typedef struct NactICommandTab                 NactICommandTab;
-
-typedef struct NactICommandTabInterfacePrivate NactICommandTabInterfacePrivate;
+typedef struct _NactICommandTab                     NactICommandTab;
+typedef struct _NactICommandTabInterfacePrivate     NactICommandTabInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                   parent;
 	NactICommandTabInterfacePrivate *private;
 }

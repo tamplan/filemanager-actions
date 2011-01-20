@@ -43,13 +43,13 @@
 
 /* private class data
  */
-struct BaseWindowClassPrivate {
+struct _BaseWindowClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct BaseWindowPrivate {
+struct _BaseWindowPrivate {
 	gboolean         dispose_has_run;
 	BaseWindow      *parent;
 	BaseApplication *application;

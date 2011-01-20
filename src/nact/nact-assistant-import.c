@@ -67,13 +67,13 @@ enum {
 
 /* private class data
  */
-struct NactAssistantImportClassPrivate {
+struct _NactAssistantImportClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactAssistantImportPrivate {
+struct _NactAssistantImportPrivate {
 	gboolean     dispose_has_run;
 	GList       *results;
 };

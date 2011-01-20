@@ -42,7 +42,7 @@
 
 /* private interface data
  */
-struct NactIMimetypesTabInterfacePrivate {
+struct _NactIMimetypesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 

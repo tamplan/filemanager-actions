@@ -75,27 +75,30 @@
 
 G_BEGIN_DECLS
 
-#define BASE_WINDOW_TYPE				( base_window_get_type())
-#define BASE_WINDOW( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_WINDOW_TYPE, BaseWindow ))
-#define BASE_WINDOW_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, BASE_WINDOW_TYPE, BaseWindowClass ))
-#define BASE_IS_WINDOW( object )		( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_WINDOW_TYPE ))
-#define BASE_IS_WINDOW_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_WINDOW_TYPE ))
-#define BASE_WINDOW_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_WINDOW_TYPE, BaseWindowClass ))
+#define BASE_WINDOW_TYPE                ( base_window_get_type())
+#define BASE_WINDOW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_WINDOW_TYPE, BaseWindow ))
+#define BASE_WINDOW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_WINDOW_TYPE, BaseWindowClass ))
+#define BASE_IS_WINDOW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_WINDOW_TYPE ))
+#define BASE_IS_WINDOW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_WINDOW_TYPE ))
+#define BASE_WINDOW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_WINDOW_TYPE, BaseWindowClass ))
 
-typedef struct BaseWindowPrivate      BaseWindowPrivate;
+typedef struct _BaseWindowPrivate       BaseWindowPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject            parent;
 	BaseWindowPrivate *private;
 }
 	BaseWindow;
 
-typedef struct BaseWindowClassPrivate BaseWindowClassPrivate;
+typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass            parent;
 	BaseWindowClassPrivate *private;
 
+	/*< public >*/
 	/**
 	 * initial_load_toplevel:
 	 * @window: this #BaseWindow instance.

@@ -41,7 +41,7 @@
 
 /* private interface data
  */
-struct BaseIPrefsInterfacePrivate {
+struct _BaseIPrefsInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 

@@ -51,27 +51,30 @@
 
 G_BEGIN_DECLS
 
-#define BASE_ASSISTANT_TYPE					( base_assistant_get_type())
-#define BASE_ASSISTANT( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_ASSISTANT_TYPE, BaseAssistant ))
-#define BASE_ASSISTANT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, BASE_ASSISTANT_TYPE, BaseAssistantClass ))
-#define BASE_IS_ASSISTANT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_ASSISTANT_TYPE ))
-#define BASE_IS_ASSISTANT_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_ASSISTANT_TYPE ))
-#define BASE_ASSISTANT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_ASSISTANT_TYPE, BaseAssistantClass ))
+#define BASE_ASSISTANT_TYPE                ( base_assistant_get_type())
+#define BASE_ASSISTANT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_ASSISTANT_TYPE, BaseAssistant ))
+#define BASE_ASSISTANT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_ASSISTANT_TYPE, BaseAssistantClass ))
+#define BASE_IS_ASSISTANT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_ASSISTANT_TYPE ))
+#define BASE_IS_ASSISTANT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_ASSISTANT_TYPE ))
+#define BASE_ASSISTANT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_ASSISTANT_TYPE, BaseAssistantClass ))
 
-typedef struct BaseAssistantPrivate      BaseAssistantPrivate;
+typedef struct _BaseAssistantPrivate       BaseAssistantPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseWindow            parent;
 	BaseAssistantPrivate *private;
 }
 	BaseAssistant;
 
-typedef struct BaseAssistantClassPrivate BaseAssistantClassPrivate;
+typedef struct _BaseAssistantClassPrivate  BaseAssistantClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseWindowClass            parent;
 	BaseAssistantClassPrivate *private;
 
+	/*< public >*/
 	/**
 	 * apply:
 	 * @window: this #BaseAssistance instance.

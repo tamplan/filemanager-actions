@@ -37,13 +37,13 @@
 
 /* private class data
  */
-struct NactConfirmLogoutClassPrivate {
+struct _NactConfirmLogoutClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactConfirmLogoutPrivate {
+struct _NactConfirmLogoutPrivate {
 	gboolean dispose_has_run;
 	gboolean willing_to_quit;
 };

@@ -48,7 +48,7 @@
 
 /* private class data
  */
-struct NactTreeModelClassPrivate {
+struct _NactTreeModelClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 

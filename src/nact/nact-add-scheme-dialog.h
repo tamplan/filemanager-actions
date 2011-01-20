@@ -44,24 +44,26 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ADD_SCHEME_DIALOG_TYPE					( nact_add_scheme_dialog_get_type())
-#define NACT_ADD_SCHEME_DIALOG( object )			( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ADD_SCHEME_DIALOG_TYPE, NactAddSchemeDialog ))
-#define NACT_ADD_SCHEME_DIALOG_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ADD_SCHEME_DIALOG_TYPE, NactAddSchemeDialogClass ))
-#define NACT_IS_ADD_SCHEME_DIALOG( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ADD_SCHEME_DIALOG_TYPE ))
-#define NACT_IS_ADD_SCHEME_DIALOG_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ADD_SCHEME_DIALOG_TYPE ))
-#define NACT_ADD_SCHEME_DIALOG_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ADD_SCHEME_DIALOG_TYPE, NactAddSchemeDialogClass ))
+#define NACT_ADD_SCHEME_DIALOG_TYPE                ( nact_add_scheme_dialog_get_type())
+#define NACT_ADD_SCHEME_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ADD_SCHEME_DIALOG_TYPE, NactAddSchemeDialog ))
+#define NACT_ADD_SCHEME_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ADD_SCHEME_DIALOG_TYPE, NactAddSchemeDialogClass ))
+#define NACT_IS_ADD_SCHEME_DIALOG( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ADD_SCHEME_DIALOG_TYPE ))
+#define NACT_IS_ADD_SCHEME_DIALOG_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ADD_SCHEME_DIALOG_TYPE ))
+#define NACT_ADD_SCHEME_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ADD_SCHEME_DIALOG_TYPE, NactAddSchemeDialogClass ))
 
-typedef struct NactAddSchemeDialogPrivate      NactAddSchemeDialogPrivate;
+typedef struct _NactAddSchemeDialogPrivate         NactAddSchemeDialogPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseDialog                  parent;
 	NactAddSchemeDialogPrivate *private;
 }
 	NactAddSchemeDialog;
 
-typedef struct NactAddSchemeDialogClassPrivate NactAddSchemeDialogClassPrivate;
+typedef struct _NactAddSchemeDialogClassPrivate    NactAddSchemeDialogClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseDialogClass                  parent;
 	NactAddSchemeDialogClassPrivate *private;
 }

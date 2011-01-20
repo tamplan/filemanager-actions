@@ -41,13 +41,13 @@
 
 /* private class data
  */
-struct BaseAssistantClassPrivate {
+struct _BaseAssistantClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct BaseAssistantPrivate {
+struct _BaseAssistantPrivate {
 	gboolean    dispose_has_run;
 	gboolean    cancel_on_escape;
 	gboolean    warn_on_escape;

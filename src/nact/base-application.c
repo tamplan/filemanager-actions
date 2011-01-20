@@ -43,13 +43,13 @@
 
 /* private class data
  */
-struct BaseApplicationClassPrivate {
+struct _BaseApplicationClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct BaseApplicationPrivate {
+struct _BaseApplicationPrivate {
 	gboolean      dispose_has_run;
 	int           argc;
 	gpointer      argv;

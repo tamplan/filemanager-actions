@@ -46,13 +46,13 @@
 
 /* private class data
  */
-struct NactExportAskClassPrivate {
+struct _NactExportAskClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactExportAskPrivate {
+struct _NactExportAskPrivate {
 	gboolean      dispose_has_run;
 	BaseWindow   *parent;
 	gboolean      preferences_locked;

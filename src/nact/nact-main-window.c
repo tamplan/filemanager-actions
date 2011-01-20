@@ -68,13 +68,13 @@
 
 /* private class data
  */
-struct NactMainWindowClassPrivate {
+struct _NactMainWindowClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NactMainWindowPrivate {
+struct _NactMainWindowPrivate {
 	gboolean         dispose_has_run;
 
 	/* TODO: this will have to be replaced with undo-manager */

@@ -44,16 +44,16 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IBASENAMES_TAB_TYPE						( nact_ibasenames_tab_get_type())
-#define NACT_IBASENAMES_TAB( object )					( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IBASENAMES_TAB_TYPE, NactIBasenamesTab ))
-#define NACT_IS_IBASENAMES_TAB( object )				( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IBASENAMES_TAB_TYPE ))
-#define NACT_IBASENAMES_TAB_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IBASENAMES_TAB_TYPE, NactIBasenamesTabInterface ))
+#define NACT_IBASENAMES_TAB_TYPE                      ( nact_ibasenames_tab_get_type())
+#define NACT_IBASENAMES_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IBASENAMES_TAB_TYPE, NactIBasenamesTab ))
+#define NACT_IS_IBASENAMES_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IBASENAMES_TAB_TYPE ))
+#define NACT_IBASENAMES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IBASENAMES_TAB_TYPE, NactIBasenamesTabInterface ))
 
-typedef struct NactIBasenamesTab                 NactIBasenamesTab;
-
-typedef struct NactIBasenamesTabInterfacePrivate NactIBasenamesTabInterfacePrivate;
+typedef struct _NactIBasenamesTab                     NactIBasenamesTab;
+typedef struct _NactIBasenamesTabInterfacePrivate     NactIBasenamesTabInterfacePrivate;
 
 typedef struct {
+	/*< private >*/
 	GTypeInterface                     parent;
 	NactIBasenamesTabInterfacePrivate *private;
 }

@@ -41,24 +41,26 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ASSISTANT_IMPORT_TYPE					( nact_assistant_import_get_type())
-#define NACT_ASSISTANT_IMPORT( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ASSISTANT_IMPORT_TYPE, NactAssistantImport ))
-#define NACT_ASSISTANT_IMPORT_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ASSISTANT_IMPORT_TYPE, NactAssistantImportClass ))
-#define NACT_IS_ASSISTANT_IMPORT( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ASSISTANT_IMPORT_TYPE ))
-#define NACT_IS_ASSISTANT_IMPORT_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ASSISTANT_IMPORT_TYPE ))
-#define NACT_ASSISTANT_IMPORT_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ASSISTANT_IMPORT_TYPE, NactAssistantImportClass ))
+#define NACT_ASSISTANT_IMPORT_TYPE                ( nact_assistant_import_get_type())
+#define NACT_ASSISTANT_IMPORT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ASSISTANT_IMPORT_TYPE, NactAssistantImport ))
+#define NACT_ASSISTANT_IMPORT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ASSISTANT_IMPORT_TYPE, NactAssistantImportClass ))
+#define NACT_IS_ASSISTANT_IMPORT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ASSISTANT_IMPORT_TYPE ))
+#define NACT_IS_ASSISTANT_IMPORT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ASSISTANT_IMPORT_TYPE ))
+#define NACT_ASSISTANT_IMPORT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ASSISTANT_IMPORT_TYPE, NactAssistantImportClass ))
 
-typedef struct NactAssistantImportPrivate NactAssistantImportPrivate;
+typedef struct _NactAssistantImportPrivate        NactAssistantImportPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseAssistant               parent;
 	NactAssistantImportPrivate *private;
 }
 	NactAssistantImport;
 
-typedef struct NactAssistantImportClassPrivate NactAssistantImportClassPrivate;
+typedef struct _NactAssistantImportClassPrivate   NactAssistantImportClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	BaseAssistantClass               parent;
 	NactAssistantImportClassPrivate *private;
 }
