@@ -93,9 +93,10 @@ enum {
 	LAST_SIGNAL
 };
 
-static GObjectClass *st_parent_class = NULL;
+static GObjectClass *st_parent_class           = NULL;
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
-static gboolean      st_debug_signal_connect = FALSE;
+static gboolean      st_debug_signal_connect   = FALSE;
+static BaseWindow   *st_first_window           = NULL;
 
 static GType            register_type( void );
 static void             class_init( BaseWindowClass *klass );
@@ -350,6 +351,13 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self = BASE_WINDOW( instance );
+
+	/* at a first glance, we may suppose that this first window is the main one
+	 * if this is not the case, we have to write some more code
+	 */
+	if( !st_first_window ){
+		st_first_window = self;
+	}
 
 	self->private = g_new0( BaseWindowPrivate, 1 );
 
@@ -1172,10 +1180,7 @@ is_main_window( BaseWindow *window )
 
 	if( !window->private->dispose_has_run ){
 
-		BaseApplication *appli = window->private->application;
-		BaseWindow *main_window = BASE_WINDOW( base_application_get_main_window( appli ));
-
-		is_main = ( main_window->private->toplevel_window == window->private->toplevel_window );
+		is_main = ( window == st_first_window );
 	}
 
 	return( is_main );
