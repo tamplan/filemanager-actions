@@ -54,6 +54,7 @@ struct _BaseApplicationPrivate {
 	int           argc;
 	gpointer      argv;
 	GOptionEntry *options;
+
 	gboolean      is_gtk_initialized;
 	UniqueApp    *unique_app_handle;
 	int           exit_code;

@@ -41,9 +41,6 @@
  * application.
  */
 
-#include <gtk/gtk.h>
-
-#include "base-application-class.h"
 #include "base-window-class.h"
 
 G_BEGIN_DECLS

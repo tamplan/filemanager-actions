@@ -71,7 +71,7 @@
 
 #include <gtk/gtk.h>
 
-#include "base-application-class.h"
+#include "base-application.h"
 
 G_BEGIN_DECLS
 

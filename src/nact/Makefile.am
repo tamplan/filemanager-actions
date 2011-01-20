@@ -50,7 +50,6 @@ BUILT_SOURCES = \
 nautilus_actions_config_tool_SOURCES = \
 	base-application.c									\
 	base-application.h									\
-	base-application-class.h							\
 	base-assistant.c									\
 	base-assistant.h									\
 	base-builder.c										\

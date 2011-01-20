@@ -1,5 +1,12 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application-class.h: Removed file.
+
+	* src/nact/Makefile.am:
+	* src/nact/base-application.h:
+	* src/nact/base-window-class.h:
+	* src/nact/base-window.h: Updated accordingly.
+
 	* src/nact/base-application-class.h (main_window_new):
 	* src/nact/base-application.c (application_do_run):
 	* src/nact/nact-application.c
