@@ -32,6 +32,7 @@
 #define __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
 
 #ifndef NA_DISABLE_DEPRECATED
+
 /**
  * SECTION: gconf-utils
  * @title: GConf Misc

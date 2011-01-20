@@ -42,14 +42,14 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_MENU_TYPE                  ( na_object_menu_get_type())
-#define NA_OBJECT_MENU( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_MENU_TYPE, NAObjectMenu ))
-#define NA_OBJECT_MENU_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_MENU_TYPE, NAObjectMenuClass ))
-#define NA_IS_OBJECT_MENU( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_MENU_TYPE ))
-#define NA_IS_OBJECT_MENU_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_MENU_TYPE ))
-#define NA_OBJECT_MENU_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_MENU_TYPE, NAObjectMenuClass ))
+#define NA_OBJECT_MENU_TYPE                ( na_object_menu_get_type())
+#define NA_OBJECT_MENU( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_MENU_TYPE, NAObjectMenu ))
+#define NA_OBJECT_MENU_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_MENU_TYPE, NAObjectMenuClass ))
+#define NA_IS_OBJECT_MENU( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_MENU_TYPE ))
+#define NA_IS_OBJECT_MENU_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_MENU_TYPE ))
+#define NA_OBJECT_MENU_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_MENU_TYPE, NAObjectMenuClass ))
 
-typedef struct _NAObjectMenuPrivate      NAObjectMenuPrivate;
+typedef struct _NAObjectMenuPrivate        NAObjectMenuPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -58,7 +58,7 @@ typedef struct {
 }
 	NAObjectMenu;
 
-typedef struct _NAObjectMenuClassPrivate NAObjectMenuClassPrivate;
+typedef struct _NAObjectMenuClassPrivate   NAObjectMenuClassPrivate;
 
 typedef struct {
 	/*< private >*/

@@ -46,14 +46,14 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_TYPE                  ( na_object_object_get_type())
-#define NA_OBJECT( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_TYPE, NAObject ))
-#define NA_OBJECT_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_TYPE, NAObjectClass ))
-#define NA_IS_OBJECT( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_TYPE ))
-#define NA_IS_OBJECT_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_TYPE ))
-#define NA_OBJECT_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_TYPE, NAObjectClass ))
+#define NA_OBJECT_TYPE                ( na_object_object_get_type())
+#define NA_OBJECT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_TYPE, NAObject ))
+#define NA_OBJECT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_TYPE, NAObjectClass ))
+#define NA_IS_OBJECT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_TYPE ))
+#define NA_IS_OBJECT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_TYPE ))
+#define NA_OBJECT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_TYPE, NAObjectClass ))
 
-typedef struct _NAObjectPrivate      NAObjectPrivate;
+typedef struct _NAObjectPrivate       NAObjectPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -62,7 +62,7 @@ typedef struct {
 }
 	NAObject;
 
-typedef struct _NAObjectClassPrivate NAObjectClassPrivate;
+typedef struct _NAObjectClassPrivate  NAObjectClassPrivate;
 
 /**
  * NAObjectClass:

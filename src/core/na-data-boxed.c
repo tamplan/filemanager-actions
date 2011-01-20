@@ -44,13 +44,13 @@
 
 /* private class data
  */
-struct NADataBoxedClassPrivate {
+struct _NADataBoxedClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NADataBoxedPrivate {
+struct _NADataBoxedPrivate {
 	gboolean      dispose_has_run;
 	NADataDef    *def ;
 	union {

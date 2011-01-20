@@ -46,14 +46,14 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_ID_TYPE                  ( na_object_id_get_type())
-#define NA_OBJECT_ID( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ID_TYPE, NAObjectId ))
-#define NA_OBJECT_ID_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ID_TYPE, NAObjectIdClass ))
-#define NA_IS_OBJECT_ID( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ID_TYPE ))
-#define NA_IS_OBJECT_ID_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ID_TYPE ))
-#define NA_OBJECT_ID_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ID_TYPE, NAObjectIdClass ))
+#define NA_OBJECT_ID_TYPE                ( na_object_id_get_type())
+#define NA_OBJECT_ID( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ID_TYPE, NAObjectId ))
+#define NA_OBJECT_ID_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ID_TYPE, NAObjectIdClass ))
+#define NA_IS_OBJECT_ID( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ID_TYPE ))
+#define NA_IS_OBJECT_ID_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ID_TYPE ))
+#define NA_OBJECT_ID_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ID_TYPE, NAObjectIdClass ))
 
-typedef struct _NAObjectIdPrivate      NAObjectIdPrivate;
+typedef struct _NAObjectIdPrivate        NAObjectIdPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -62,7 +62,7 @@ typedef struct {
 }
 	NAObjectId;
 
-typedef struct _NAObjectIdClassPrivate NAObjectIdClassPrivate;
+typedef struct _NAObjectIdClassPrivate   NAObjectIdClassPrivate;
 
 /**
  * NAObjectIdClass:
@@ -100,8 +100,8 @@ typedef struct {
 
 GType  na_object_id_get_type( void );
 
-gint   na_object_id_sort_alpha_asc ( const NAObjectId *a, const NAObjectId *b );
-gint   na_object_id_sort_alpha_desc( const NAObjectId *a, const NAObjectId *b );
+gint   na_object_id_sort_alpha_asc   ( const NAObjectId *a, const NAObjectId *b );
+gint   na_object_id_sort_alpha_desc  ( const NAObjectId *a, const NAObjectId *b );
 
 void   na_object_id_prepare_for_paste( NAObjectId *object, gboolean relabel, gboolean renumber, NAObjectId *parent );
 void   na_object_id_set_copy_of_label( NAObjectId *object );

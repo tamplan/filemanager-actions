@@ -104,14 +104,13 @@
 
 G_BEGIN_DECLS
 
-#define NA_IIO_PROVIDER_TYPE                        ( na_iio_provider_get_type())
-#define NA_IIO_PROVIDER( instance )                 ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IIO_PROVIDER_TYPE, NAIIOProvider ))
-#define NA_IS_IIO_PROVIDER( instance )              ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIO_PROVIDER_TYPE ))
-#define NA_IIO_PROVIDER_GET_INTERFACE( instance )   ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIO_PROVIDER_TYPE, NAIIOProviderInterface ))
+#define NA_IIO_PROVIDER_TYPE                      ( na_iio_provider_get_type())
+#define NA_IIO_PROVIDER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IIO_PROVIDER_TYPE, NAIIOProvider ))
+#define NA_IS_IIO_PROVIDER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIO_PROVIDER_TYPE ))
+#define NA_IIO_PROVIDER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIO_PROVIDER_TYPE, NAIIOProviderInterface ))
 
-typedef struct _NAIIOProvider                 NAIIOProvider;
-
-typedef struct _NAIIOProviderInterfacePrivate NAIIOProviderInterfacePrivate;
+typedef struct _NAIIOProvider                     NAIIOProvider;
+typedef struct _NAIIOProviderInterfacePrivate     NAIIOProviderInterfacePrivate;
 
 /**
  * NAIIOProviderInterface:

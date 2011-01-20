@@ -35,7 +35,7 @@
 
 G_BEGIN_DECLS
 
-typedef struct _NAIFactoryProvider NAIFactoryProvider;
+typedef struct _NAIFactoryProvider                     NAIFactoryProvider;
 
 G_END_DECLS
 

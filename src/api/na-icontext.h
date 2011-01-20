@@ -50,14 +50,13 @@
 
 G_BEGIN_DECLS
 
-#define NA_ICONTEXT_TYPE                       ( na_icontext_get_type())
-#define NA_ICONTEXT( instance )                ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_ICONTEXT_TYPE, NAIContext ))
-#define NA_IS_ICONTEXT( instance )             ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_ICONTEXT_TYPE ))
-#define NA_ICONTEXT_GET_INTERFACE( instance )  ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_ICONTEXT_TYPE, NAIContextInterface ))
+#define NA_ICONTEXT_TYPE                      ( na_icontext_get_type())
+#define NA_ICONTEXT( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_ICONTEXT_TYPE, NAIContext ))
+#define NA_IS_ICONTEXT( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_ICONTEXT_TYPE ))
+#define NA_ICONTEXT_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_ICONTEXT_TYPE, NAIContextInterface ))
 
-typedef struct _NAIContext                 NAIContext;
-
-typedef struct _NAIContextInterfacePrivate NAIContextInterfacePrivate;
+typedef struct _NAIContext                    NAIContext;
+typedef struct _NAIContextInterfacePrivate    NAIContextInterfacePrivate;
 
 /**
  * NAIContextInterface:

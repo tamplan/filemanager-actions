@@ -70,10 +70,10 @@
 
 G_BEGIN_DECLS
 
-#define NA_IIMPORTER_TYPE                       ( na_iimporter_get_type())
-#define NA_IIMPORTER( instance )                ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IIMPORTER_TYPE, NAIImporter ))
-#define NA_IS_IIMPORTER( instance )             ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIMPORTER_TYPE ))
-#define NA_IIMPORTER_GET_INTERFACE( instance )  ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIMPORTER_TYPE, NAIImporterInterface ))
+#define NA_IIMPORTER_TYPE                      ( na_iimporter_get_type())
+#define NA_IIMPORTER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IIMPORTER_TYPE, NAIImporter ))
+#define NA_IS_IIMPORTER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IIMPORTER_TYPE ))
+#define NA_IIMPORTER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IIMPORTER_TYPE, NAIImporterInterface ))
 
 typedef struct _NAIImporter                      NAIImporter;
 typedef struct _NAIImporterInterfacePrivate      NAIImporterInterfacePrivate;

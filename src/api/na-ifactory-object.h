@@ -83,14 +83,13 @@
 
 G_BEGIN_DECLS
 
-#define NA_IFACTORY_OBJECT_TYPE							( na_ifactory_object_get_type())
-#define NA_IFACTORY_OBJECT( instance )					( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_OBJECT_TYPE, NAIFactoryObject ))
-#define NA_IS_IFACTORY_OBJECT( instance )				( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_OBJECT_TYPE ))
-#define NA_IFACTORY_OBJECT_GET_INTERFACE( instance )	( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_OBJECT_TYPE, NAIFactoryObjectInterface ))
+#define NA_IFACTORY_OBJECT_TYPE                      ( na_ifactory_object_get_type())
+#define NA_IFACTORY_OBJECT( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_OBJECT_TYPE, NAIFactoryObject ))
+#define NA_IS_IFACTORY_OBJECT( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_OBJECT_TYPE ))
+#define NA_IFACTORY_OBJECT_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_OBJECT_TYPE, NAIFactoryObjectInterface ))
 
-typedef struct _NAIFactoryObject                 NAIFactoryObject;
-
-typedef struct _NAIFactoryObjectInterfacePrivate NAIFactoryObjectInterfacePrivate;
+typedef struct _NAIFactoryObject                     NAIFactoryObject;
+typedef struct _NAIFactoryObjectInterfacePrivate     NAIFactoryObjectInterfacePrivate;
 
 /**
  * NAIFactoryObjectInterface:
@@ -241,11 +240,8 @@ typedef struct {
 GType        na_ifactory_object_get_type( void );
 
 NADataBoxed *na_ifactory_object_get_data_boxed ( const NAIFactoryObject *object, const gchar *name );
-
 NADataGroup *na_ifactory_object_get_data_groups( const NAIFactoryObject *object );
-
 void        *na_ifactory_object_get_as_void    ( const NAIFactoryObject *object, const gchar *name );
-
 void         na_ifactory_object_set_from_void  ( NAIFactoryObject *object, const gchar *name, const void *data );
 
 G_END_DECLS

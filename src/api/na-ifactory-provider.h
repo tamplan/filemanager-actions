@@ -141,12 +141,12 @@
 
 G_BEGIN_DECLS
 
-#define NA_IFACTORY_PROVIDER_TYPE                       ( na_ifactory_provider_get_type())
-#define NA_IFACTORY_PROVIDER( instance )                ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_PROVIDER_TYPE, NAIFactoryProvider ))
-#define NA_IS_IFACTORY_PROVIDER( instance )             ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_PROVIDER_TYPE ))
-#define NA_IFACTORY_PROVIDER_GET_INTERFACE( instance )  ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_PROVIDER_TYPE, NAIFactoryProviderInterface ))
+#define NA_IFACTORY_PROVIDER_TYPE                      ( na_ifactory_provider_get_type())
+#define NA_IFACTORY_PROVIDER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_PROVIDER_TYPE, NAIFactoryProvider ))
+#define NA_IS_IFACTORY_PROVIDER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_PROVIDER_TYPE ))
+#define NA_IFACTORY_PROVIDER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_PROVIDER_TYPE, NAIFactoryProviderInterface ))
 
-typedef struct _NAIFactoryProviderInterfacePrivate NAIFactoryProviderInterfacePrivate;
+typedef struct _NAIFactoryProviderInterfacePrivate     NAIFactoryProviderInterfacePrivate;
 
 /**
  * NAIFactoryProviderInterface:

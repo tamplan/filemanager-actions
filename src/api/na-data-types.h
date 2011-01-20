@@ -32,6 +32,7 @@
 #define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
 
 #ifndef NA_DISABLE_DEPRECATED
+
 /**
  * SECTION: data-type
  * @title: NADataType

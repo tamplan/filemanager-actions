@@ -1,5 +1,23 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-boxed.h:
+	* src/api/na-data-types.h:
+	* src/api/na-gconf-monitor.h:
+	* src/api/na-gconf-utils.h:
+	* src/api/na-icontext.h:
+	* src/api/na-iduplicable.h:
+	* src/api/na-iexporter.h:
+	* src/api/na-ifactory-object.h:
+	* src/api/na-ifactory-provider.h:
+	* src/api/na-iio-provider.h:
+	* src/api/na-object-action.h:
+	* src/api/na-object.h:
+	* src/api/na-object-id.h:
+	* src/api/na-object-item.h:
+	* src/api/na-object-menu.h:
+	* src/api/na-object-profile.h:
+	* src/core/na-data-boxed.c: Cosmetic changes in src/api.
+
 	* src/utils/na-gconf2key.sh.in:
 	* tools/check-headers.sh:
 	* tools/check-po.sh:

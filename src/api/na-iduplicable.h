@@ -106,14 +106,13 @@
 
 G_BEGIN_DECLS
 
-#define NA_IDUPLICABLE_TYPE                        ( na_iduplicable_get_type())
-#define NA_IDUPLICABLE( instance )                 ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IDUPLICABLE_TYPE, NAIDuplicable ))
-#define NA_IS_IDUPLICABLE( instance )              ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IDUPLICABLE_TYPE ))
-#define NA_IDUPLICABLE_GET_INTERFACE( instance )   ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IDUPLICABLE_TYPE, NAIDuplicableInterface ))
+#define NA_IDUPLICABLE_TYPE                      ( na_iduplicable_get_type())
+#define NA_IDUPLICABLE( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IDUPLICABLE_TYPE, NAIDuplicable ))
+#define NA_IS_IDUPLICABLE( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IDUPLICABLE_TYPE ))
+#define NA_IDUPLICABLE_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IDUPLICABLE_TYPE, NAIDuplicableInterface ))
 
-typedef struct _NAIDuplicable                 NAIDuplicable;
-
-typedef struct _NAIDuplicableInterfacePrivate NAIDuplicableInterfacePrivate;
+typedef struct _NAIDuplicable                    NAIDuplicable;
+typedef struct _NAIDuplicableInterfacePrivate    NAIDuplicableInterfacePrivate;
 
 /**
  * NAIDuplicableInterface:
