@@ -44,3 +44,7 @@ check_header_LDADD = \
 	$(top_builddir)/src/core/libna-core.la						\
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
+
+# this is just a fake code to have the make behave well
+check-header.c:
+	[ -s $@ ] || echo "int main( int argc, char **argv ){ return 0; }" > $@

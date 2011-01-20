@@ -1,5 +1,7 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* tools/Makefile.am: Generate the check-header.c source if it is missing.
+
 	* src/plugin-tracker/na-tracker-dbus.c:
 	* src/plugin-tracker/na-tracker-dbus.h:
 	* src/plugin-tracker/na-tracker.c:
