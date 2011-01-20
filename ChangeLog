@@ -1,5 +1,9 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application-class.h (manage_options):
+	* src/nact/base-application.c:
+	* src/nact/nact-application.c: Return exit code of the program.
+
 	* src/nact/nact-tree-model-dnd.c
 	(drop_inside, is_drop_possible, drop_uri_list):
 	* src/nact/base-window.c (is_main):

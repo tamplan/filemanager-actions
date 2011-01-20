@@ -32,11 +32,35 @@
 #define __BASE_APPLICATION_CLASS_H__
 
 /**
- * SECTION: base_application
- * @short_description: #BaseApplication class definition.
- * @include: nact/base-application-class.h
+ * SECTION: base-application
+ * @title: BaseApplication
+ * @short_description: The Base Application application base class definition
+ * @include: base-application-class.h
  *
- * This is a pure virtual base class for Gtk+ programs.
+ * #BaseApplication is the base class for the application part of Gtk programs.
+ * It aims at providing all common services. It interacts with #BaseBuilder
+ * and #BaseWindow classes.
+ *
+ * #BaseApplication is a pure virtual class. A Gtk program should derive
+ * its own class from #BaseApplication, and instantiate it in its main()
+ * program entry point.
+ *
+ * <example>
+ *   <programlisting>
+ *     int
+ *     main( int argc, char **argv )
+ *     {
+ *         NactApplication *appli;
+ *         int code;
+ *
+ *         appli = nact_application_new_with_args( argc, argv );
+ *         code = base_appliction_run( BASE_APPLICATION( appli ));
+ *         g_object_unref( appli );
+ *
+ *         return( code );
+ *     }
+ *   </programlisting>
+ * </example>
  */
 
 #include <glib-object.h>
@@ -61,12 +85,58 @@ typedef struct {
 
 typedef struct _BaseApplicationClassPrivate  BaseApplicationClassPrivate;
 
+/**
+ * BaseApplicationClass:
+ * @manage_options: manage the command-line arguments
+ * @run_window:     open and run the first (main) window of the application.
+ *
+ * This defines the virtual method a derived class may, should or must implement.
+ */
 typedef struct {
 	/*< private >*/
 	GObjectClass                 parent;
 	BaseApplicationClassPrivate *private;
 
 	/*< public >*/
+	/**
+	 * manage_options:
+	 * @appli: this #BaseApplication -derived instance.
+	 * @code:  a pointer to an integer that the derived application may
+	 *         set as the exit code of the program if it chooses to stop
+	 *         the execution; the code set here will be ignored if execution
+	 *         is allowed to continue.
+	 *
+	 * This is invoked by the BaseApplication base class, after arguments
+	 * in the command-line have been processed by gtk_init_with_args()
+	 * function.
+	 *
+	 * This let the derived class an opportunity to manage command-line
+	 * arguments.
+	 *
+	 * The derived class should return %TRUE to continue execution,
+	 * %FALSE to stop it. In this later case only, the exit code set
+	 * in @code will be considered.
+	 *
+	 * This is a pure virtual method.
+	 */
+	gboolean ( *manage_options )( const BaseApplication *appli, int *code );
+
+	/**
+	 * run_window:
+	 * @appli: this #BaseApplication -derived instance.
+	 *
+	 * This is invoked by the BaseApplication base class to let the derived
+	 * class create, run and then release its first (maybe main) window.
+	 *
+	 * When the derived class returns, then the application is supposed
+	 * willing to terminate.
+	 *
+	 * This is a pure virtual method.
+	 *
+	 * Returns: the exit code of the program.
+	 */
+	int      ( *run_window )    ( const BaseApplication *appli );
+
 	/**
 	 * run:
 	 * @appli: this #BaseApplication instance.
@@ -153,18 +223,6 @@ typedef struct {
 	 * written to stdout.
 	 */
 	gboolean  ( *initialize_gtk )             ( BaseApplication *appli );
-
-	/**
-	 * manage_options:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Lets the application an opportunity to manage options entered
-	 * in command-line.
-	 *
-	 * Returns: %TRUE to continue initialization process,
-	 * %FALSE to stop it.
-	 */
-	gboolean  ( *manage_options )             ( BaseApplication *appli );
 
 	/**
 	 * initialize_application_name:

@@ -92,7 +92,7 @@ static void           instance_finalize( GObject *application );
 static gboolean       v_initialize( BaseApplication *application );
 static gboolean       v_initialize_i18n( BaseApplication *application );
 static gboolean       v_initialize_gtk( BaseApplication *application );
-static gboolean       v_manage_options( BaseApplication *application );
+static gboolean       v_manage_options( const BaseApplication *application, int *code );
 static gboolean       v_initialize_application_name( BaseApplication *application );
 static gboolean       v_initialize_session_manager( BaseApplication *application );
 static gboolean       v_initialize_unique_app( BaseApplication *application );
@@ -104,7 +104,7 @@ static int            application_do_run( BaseApplication *application );
 static gboolean       application_do_initialize( BaseApplication *application );
 static gboolean       application_do_initialize_i18n( BaseApplication *application );
 static gboolean       application_do_initialize_gtk( BaseApplication *application );
-static gboolean       application_do_manage_options( BaseApplication *application );
+static gboolean       application_do_manage_options( const BaseApplication *application, int *code );
 static gboolean       application_do_initialize_application_name( BaseApplication *application );
 static gboolean       application_do_initialize_session_manager( BaseApplication *application );
 static gboolean       application_do_initialize_unique_app( BaseApplication *application );
@@ -804,14 +804,14 @@ v_initialize_gtk( BaseApplication *application )
 }
 
 static gboolean
-v_manage_options( BaseApplication *application )
+v_manage_options( const BaseApplication *application, int *code )
 {
 	static const gchar *thisfn = "base_application_v_manage_options";
 	gboolean ok;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	ok = BASE_APPLICATION_GET_CLASS( application )->manage_options( application );
+	ok = BASE_APPLICATION_GET_CLASS( application )->manage_options( application, code );
 
 	return( ok );
 }
@@ -939,6 +939,7 @@ static gboolean
 application_do_initialize( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_do_initialize";
+	int code;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
@@ -946,7 +947,7 @@ application_do_initialize( BaseApplication *application )
 			v_initialize_i18n( application ) &&
 			v_initialize_application_name( application ) &&
 			v_initialize_gtk( application ) &&
-			v_manage_options( application ) &&
+			v_manage_options( application, &code ) &&
 			v_initialize_session_manager( application ) &&
 			v_initialize_unique_app( application ) &&
 			v_initialize_ui( application ) &&
@@ -1004,7 +1005,7 @@ application_do_initialize_gtk( BaseApplication *application )
 }
 
 static gboolean
-application_do_manage_options( BaseApplication *application )
+application_do_manage_options( const BaseApplication *application, int *code )
 {
 	static const gchar *thisfn = "base_application_do_manage_options";
 

@@ -85,7 +85,7 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
-static gboolean appli_manage_options( BaseApplication *application );
+static gboolean appli_manage_options( const BaseApplication *application, int *code );
 static gboolean appli_initialize_unique_app( BaseApplication *application );
 static gboolean appli_initialize_application( BaseApplication *application );
 static gchar   *appli_get_application_name( BaseApplication *application );
@@ -326,12 +326,12 @@ nact_application_get_updater( NactApplication *application )
  * overriden to manage command-line options
  */
 static gboolean
-appli_manage_options( BaseApplication *application )
+appli_manage_options( const BaseApplication *application, int *code )
 {
 	gboolean ok;
 
 	/* call parent class */
-	ok = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application );
+	ok = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application, code );
 
 	if( ok ){
 		if( st_version_opt ){
