@@ -87,14 +87,14 @@
 
 G_BEGIN_DECLS
 
-#define NA_PIVOT_TYPE                  ( na_pivot_get_type())
-#define NA_PIVOT( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_PIVOT_TYPE, NAPivot ))
-#define NA_PIVOT_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_PIVOT_TYPE, NAPivotClass ))
-#define NA_IS_PIVOT( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_PIVOT_TYPE ))
-#define NA_IS_PIVOT_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_PIVOT_TYPE ))
-#define NA_PIVOT_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_PIVOT_TYPE, NAPivotClass ))
+#define NA_PIVOT_TYPE                ( na_pivot_get_type())
+#define NA_PIVOT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_PIVOT_TYPE, NAPivot ))
+#define NA_PIVOT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_PIVOT_TYPE, NAPivotClass ))
+#define NA_IS_PIVOT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_PIVOT_TYPE ))
+#define NA_IS_PIVOT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_PIVOT_TYPE ))
+#define NA_PIVOT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_PIVOT_TYPE, NAPivotClass ))
 
-typedef struct _NAPivotPrivate      NAPivotPrivate;
+typedef struct _NAPivotPrivate       NAPivotPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -103,7 +103,7 @@ typedef struct {
 }
 	NAPivot;
 
-typedef struct _NAPivotClassPrivate NAPivotClassPrivate;
+typedef struct _NAPivotClassPrivate  NAPivotClassPrivate;
 
 typedef struct {
 	/*< private >*/

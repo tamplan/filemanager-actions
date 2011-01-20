@@ -1,5 +1,17 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-export-format.h:
+	* src/core/na-iabout.h:
+	* src/core/na-importer-ask.h:
+	* src/core/na-io-provider.h:
+	* src/core/na-ipivot-consumer.h:
+	* src/core/na-module.h:
+	* src/core/na-pivot.h:
+	* src/core/na-selected-info.h:
+	* src/core/na-settings.h:
+	* src/core/na-tokens.h:
+	* src/core/na-updater.h: Cosmetic changes in src/core headers.
+
 	* src/api/na-data-boxed.h:
 	* src/api/na-data-types.h:
 	* src/api/na-gconf-monitor.h:
@@ -16,7 +28,7 @@
 	* src/api/na-object-item.h:
 	* src/api/na-object-menu.h:
 	* src/api/na-object-profile.h:
-	* src/core/na-data-boxed.c: Cosmetic changes in src/api.
+	* src/core/na-data-boxed.c: Cosmetic changes in src/api headers.
 
 	* src/utils/na-gconf2key.sh.in:
 	* tools/check-headers.sh:

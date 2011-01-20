@@ -48,14 +48,14 @@
 
 G_BEGIN_DECLS
 
-#define NA_SELECTED_INFO_TYPE                  ( na_selected_info_get_type())
-#define NA_SELECTED_INFO( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_SELECTED_INFO_TYPE, NASelectedInfo ))
-#define NA_SELECTED_INFO_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_SELECTED_INFO_TYPE, NASelectedInfoClass ))
-#define NA_IS_SELECTED_INFO( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_SELECTED_INFO_TYPE ))
-#define NA_IS_SELECTED_INFO_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_SELECTED_INFO_TYPE ))
-#define NA_SELECTED_INFO_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_SELECTED_INFO_TYPE, NASelectedInfoClass ))
+#define NA_SELECTED_INFO_TYPE                ( na_selected_info_get_type())
+#define NA_SELECTED_INFO( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_SELECTED_INFO_TYPE, NASelectedInfo ))
+#define NA_SELECTED_INFO_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_SELECTED_INFO_TYPE, NASelectedInfoClass ))
+#define NA_IS_SELECTED_INFO( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_SELECTED_INFO_TYPE ))
+#define NA_IS_SELECTED_INFO_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_SELECTED_INFO_TYPE ))
+#define NA_SELECTED_INFO_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_SELECTED_INFO_TYPE, NASelectedInfoClass ))
 
-typedef struct _NASelectedInfoPrivate      NASelectedInfoPrivate;
+typedef struct _NASelectedInfoPrivate        NASelectedInfoPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -64,7 +64,7 @@ typedef struct {
 }
 	NASelectedInfo;
 
-typedef struct _NASelectedInfoClassPrivate NASelectedInfoClassPrivate;
+typedef struct _NASelectedInfoClassPrivate   NASelectedInfoClassPrivate;
 
 typedef struct {
 	/*< private >*/

@@ -64,15 +64,14 @@
 
 G_BEGIN_DECLS
 
-#define NA_IO_PROVIDER_TYPE                 ( na_io_provider_get_type())
-#define NA_IO_PROVIDER( object )            ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IO_PROVIDER_TYPE, NAIOProvider ))
-#define NA_IO_PROVIDER_CLASS( klass )       ( G_TYPE_CHECK_CLASS_CAST( klass, NA_IO_PROVIDER_TYPE, NAIOProviderClass ))
-#define NA_IS_IO_PROVIDER( object )         ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IO_PROVIDER_TYPE ))
-#define NA_IS_IO_PROVIDER_CLASS( klass )    ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_IO_PROVIDER_TYPE ))
-#define NA_IO_PROVIDER_GET_CLASS( object )  ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_IO_PROVIDER_TYPE, NAIOProviderClass ))
+#define NA_IO_PROVIDER_TYPE                ( na_io_provider_get_type())
+#define NA_IO_PROVIDER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IO_PROVIDER_TYPE, NAIOProvider ))
+#define NA_IO_PROVIDER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_IO_PROVIDER_TYPE, NAIOProviderClass ))
+#define NA_IS_IO_PROVIDER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IO_PROVIDER_TYPE ))
+#define NA_IS_IO_PROVIDER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_IO_PROVIDER_TYPE ))
+#define NA_IO_PROVIDER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_IO_PROVIDER_TYPE, NAIOProviderClass ))
 
-typedef struct _NAIOProviderPrivate         NAIOProviderPrivate;
-typedef struct _NAIOProviderClassPrivate    NAIOProviderClassPrivate;
+typedef struct _NAIOProviderPrivate        NAIOProviderPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -80,6 +79,8 @@ typedef struct {
 	NAIOProviderPrivate *private;
 }
 	NAIOProvider;
+
+typedef struct _NAIOProviderClassPrivate   NAIOProviderClassPrivate;
 
 typedef struct {
 	/*< private >*/

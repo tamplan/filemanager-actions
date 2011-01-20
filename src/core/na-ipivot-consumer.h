@@ -44,14 +44,13 @@
 
 G_BEGIN_DECLS
 
-#define NA_IPIVOT_CONSUMER_TYPE                        ( na_ipivot_consumer_get_type())
-#define NA_IPIVOT_CONSUMER( object )                   ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IPIVOT_CONSUMER_TYPE, NAIPivotConsumer ))
-#define NA_IS_IPIVOT_CONSUMER( object )                ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPIVOT_CONSUMER_TYPE ))
-#define NA_IPIVOT_CONSUMER_GET_INTERFACE( instance )   ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPIVOT_CONSUMER_TYPE, NAIPivotConsumerInterface ))
+#define NA_IPIVOT_CONSUMER_TYPE                      ( na_ipivot_consumer_get_type())
+#define NA_IPIVOT_CONSUMER( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IPIVOT_CONSUMER_TYPE, NAIPivotConsumer ))
+#define NA_IS_IPIVOT_CONSUMER( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IPIVOT_CONSUMER_TYPE ))
+#define NA_IPIVOT_CONSUMER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IPIVOT_CONSUMER_TYPE, NAIPivotConsumerInterface ))
 
-typedef struct _NAIPivotConsumer                 NAIPivotConsumer;
-
-typedef struct _NAIPivotConsumerInterfacePrivate NAIPivotConsumerInterfacePrivate;
+typedef struct _NAIPivotConsumer                     NAIPivotConsumer;
+typedef struct _NAIPivotConsumerInterfacePrivate     NAIPivotConsumerInterfacePrivate;
 
 typedef struct {
 	/*< private >*/

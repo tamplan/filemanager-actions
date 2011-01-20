@@ -48,15 +48,14 @@
 
 G_BEGIN_DECLS
 
-#define NA_IMPORTER_ASK_TYPE                 ( na_importer_ask_get_type())
-#define NA_IMPORTER_ASK( object )            ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IMPORTER_ASK_TYPE, NAImporterAsk ))
-#define NA_IMPORTER_ASK_CLASS( klass )       ( G_TYPE_CHECK_CLASS_CAST( klass, NA_IMPORTER_ASK_TYPE, NAImporterAskClass ))
-#define NA_IS_IMPORTER_ASK( object )         ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IMPORTER_ASK_TYPE ))
-#define NA_IS_IMPORTER_ASK_CLASS( klass )    ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_IMPORTER_ASK_TYPE ))
-#define NA_IMPORTER_ASK_GET_CLASS( object )  ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_IMPORTER_ASK_TYPE, NAImporterAskClass ))
+#define NA_IMPORTER_ASK_TYPE                ( na_importer_ask_get_type())
+#define NA_IMPORTER_ASK( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IMPORTER_ASK_TYPE, NAImporterAsk ))
+#define NA_IMPORTER_ASK_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_IMPORTER_ASK_TYPE, NAImporterAskClass ))
+#define NA_IS_IMPORTER_ASK( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IMPORTER_ASK_TYPE ))
+#define NA_IS_IMPORTER_ASK_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_IMPORTER_ASK_TYPE ))
+#define NA_IMPORTER_ASK_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_IMPORTER_ASK_TYPE, NAImporterAskClass ))
 
-typedef struct _NAImporterAskPrivate         NAImporterAskPrivate;
-typedef struct _NAImporterAskClassPrivate    NAImporterAskClassPrivate;
+typedef struct _NAImporterAskPrivate        NAImporterAskPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -64,6 +63,8 @@ typedef struct {
 	NAImporterAskPrivate *private;
 }
 	NAImporterAsk;
+
+typedef struct _NAImporterAskClassPrivate   NAImporterAskClassPrivate;
 
 typedef struct {
 	/*< private >*/

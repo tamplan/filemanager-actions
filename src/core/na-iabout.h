@@ -44,14 +44,13 @@
 
 G_BEGIN_DECLS
 
-#define NA_IABOUT_TYPE                        ( na_iabout_get_type())
-#define NA_IABOUT( object )                   ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IABOUT_TYPE, NAIAbout ))
-#define NA_IS_IABOUT( object )                ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IABOUT_TYPE ))
-#define NA_IABOUT_GET_INTERFACE( instance )   ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IABOUT_TYPE, NAIAboutInterface ))
+#define NA_IABOUT_TYPE                      ( na_iabout_get_type())
+#define NA_IABOUT( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_IABOUT_TYPE, NAIAbout ))
+#define NA_IS_IABOUT( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_IABOUT_TYPE ))
+#define NA_IABOUT_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IABOUT_TYPE, NAIAboutInterface ))
 
-typedef struct _NAIAbout                 NAIAbout;
-
-typedef struct _NAIAboutInterfacePrivate NAIAboutInterfacePrivate;
+typedef struct _NAIAbout                    NAIAbout;
+typedef struct _NAIAboutInterfacePrivate    NAIAboutInterfacePrivate;
 
 typedef struct {
 	/*< private >*/
