@@ -1,5 +1,12 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h:
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-desktop/nadp-desktop-provider.h:
+	* src/io-desktop/nadp-monitor.c:
+	* src/io-desktop/nadp-monitor.h: Cosmetic changes in src/io-desktop headers.
+
 	* src/core/na-export-format.h:
 	* src/core/na-iabout.h:
 	* src/core/na-importer-ask.h:

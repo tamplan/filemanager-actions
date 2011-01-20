@@ -38,13 +38,13 @@
 
 /* private class data
  */
-struct NadpMonitorClassPrivate {
+struct _NadpMonitorClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NadpMonitorPrivate {
+struct _NadpMonitorPrivate {
 	gboolean             dispose_has_run;
 	NadpDesktopProvider *provider;
 	gchar               *name;

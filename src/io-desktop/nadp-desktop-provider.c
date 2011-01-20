@@ -46,7 +46,7 @@
 
 /* private class data
  */
-struct NadpDesktopProviderClassPrivate {
+struct _NadpDesktopProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 

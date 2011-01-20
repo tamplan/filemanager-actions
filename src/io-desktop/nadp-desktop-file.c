@@ -43,13 +43,13 @@
 
 /* private class data
  */
-struct NadpDesktopFileClassPrivate {
+struct _NadpDesktopFileClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
 /* private instance data
  */
-struct NadpDesktopFilePrivate {
+struct _NadpDesktopFilePrivate {
 	gboolean   dispose_has_run;
 	gchar     *id;
 	gchar     *uri;

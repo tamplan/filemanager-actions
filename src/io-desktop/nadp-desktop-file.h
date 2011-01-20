@@ -45,24 +45,26 @@
 
 G_BEGIN_DECLS
 
-#define NADP_DESKTOP_FILE_TYPE					( nadp_desktop_file_get_type())
-#define NADP_DESKTOP_FILE( object )				( G_TYPE_CHECK_INSTANCE_CAST( object, NADP_DESKTOP_FILE_TYPE, NadpDesktopFile ))
-#define NADP_DESKTOP_FILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_CAST( klass, NADP_DESKTOP_FILE_TYPE, NadpDesktopFileClass ))
-#define NADP_IS_DESKTOP_FILE( object )			( G_TYPE_CHECK_INSTANCE_TYPE( object, NADP_DESKTOP_FILE_TYPE ))
-#define NADP_IS_DESKTOP_FILE_CLASS( klass )		( G_TYPE_CHECK_CLASS_TYPE(( klass ), NADP_DESKTOP_FILE_TYPE ))
-#define NADP_DESKTOP_FILE_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NADP_DESKTOP_FILE_TYPE, NadpDesktopFileClass ))
+#define NADP_DESKTOP_FILE_TYPE                ( nadp_desktop_file_get_type())
+#define NADP_DESKTOP_FILE( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NADP_DESKTOP_FILE_TYPE, NadpDesktopFile ))
+#define NADP_DESKTOP_FILE_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NADP_DESKTOP_FILE_TYPE, NadpDesktopFileClass ))
+#define NADP_IS_DESKTOP_FILE( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NADP_DESKTOP_FILE_TYPE ))
+#define NADP_IS_DESKTOP_FILE_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NADP_DESKTOP_FILE_TYPE ))
+#define NADP_DESKTOP_FILE_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NADP_DESKTOP_FILE_TYPE, NadpDesktopFileClass ))
 
-typedef struct NadpDesktopFilePrivate NadpDesktopFilePrivate;
+typedef struct _NadpDesktopFilePrivate        NadpDesktopFilePrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject                 parent;
 	NadpDesktopFilePrivate *private;
 }
 	NadpDesktopFile;
 
-typedef struct NadpDesktopFileClassPrivate NadpDesktopFileClassPrivate;
+typedef struct _NadpDesktopFileClassPrivate   NadpDesktopFileClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass                 parent;
 	NadpDesktopFileClassPrivate *private;
 }
