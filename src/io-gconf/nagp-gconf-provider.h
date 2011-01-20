@@ -56,27 +56,29 @@ G_BEGIN_DECLS
 #define NAGP_IS_GCONF_PROVIDER_CLASS( klass )	( G_TYPE_CHECK_CLASS_TYPE(( klass ), NAGP_GCONF_PROVIDER_TYPE ))
 #define NAGP_GCONF_PROVIDER_GET_CLASS( object )	( G_TYPE_INSTANCE_GET_CLASS(( object ), NAGP_GCONF_PROVIDER_TYPE, NagpGConfProviderClass ))
 
-typedef struct NagpGConfProviderPrivate      NagpGConfProviderPrivate;
-
 /* private instance data
  */
-struct NagpGConfProviderPrivate {
+typedef struct _NagpGConfProviderPrivate {
+	/*< private >*/
 	gboolean     dispose_has_run;
 	GConfClient *gconf;
 	GList       *monitors;
 	guint        event_source_id;
 	GTimeVal     last_event;
-};
+}
+	NagpGConfProviderPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObject                   parent;
 	NagpGConfProviderPrivate *private;
 }
 	NagpGConfProvider;
 
-typedef struct NagpGConfProviderClassPrivate NagpGConfProviderClassPrivate;
+typedef struct _NagpGConfProviderClassPrivate   NagpGConfProviderClassPrivate;
 
 typedef struct {
+	/*< private >*/
 	GObjectClass                   parent;
 	NagpGConfProviderClassPrivate *private;
 }

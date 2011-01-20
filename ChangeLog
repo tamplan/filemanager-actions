@@ -1,5 +1,8 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-gconf-provider.c:
+	* src/io-gconf/nagp-gconf-provider.h: Cosmetic changes in src/io-gconf headers.
+
 	* src/io-desktop/nadp-desktop-file.c:
 	* src/io-desktop/nadp-desktop-file.h:
 	* src/io-desktop/nadp-desktop-provider.c:

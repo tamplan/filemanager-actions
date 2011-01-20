@@ -46,7 +46,7 @@
 
 /* private class data
  */
-struct NagpGConfProviderClassPrivate {
+struct _NagpGConfProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
