@@ -340,19 +340,29 @@ nact_application_get_updater( NactApplication *application )
 static gboolean
 appli_manage_options( const BaseApplication *application, int *code )
 {
-	gboolean ok;
+	static const gchar *thisfn = "nact_application_appli_manage_options";
+	gboolean ret;
 
-	/* call parent class */
-	ok = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application, code );
+	g_return_val_if_fail( NACT_IS_APPLICATION( application ), FALSE );
 
-	if( ok ){
-		if( st_version_opt ){
-			na_core_utils_print_version();
-			ok = FALSE;
-		}
+	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
+
+	ret = TRUE;
+
+	if( st_version_opt ){
+		na_core_utils_print_version();
+		ret = FALSE;
+	}
+	if( ret && st_non_unique_opt ){
+		g_object_set( G_OBJECT( application ), BASE_PROP_UNIQUE_APP_NAME, "", NULL );
 	}
 
-	return( ok );
+	/* call parent class */
+	if( ret && BASE_APPLICATION_CLASS( st_parent_class )->manage_options ){
+		ret = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application, code );
+	}
+
+	return( ret );
 }
 
 /*
@@ -367,7 +377,7 @@ appli_main_window_new( const BaseApplication *application, int *code )
 
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
-	g_debug( "%s: application=%p, code=%p", thisfn, ( void * ) application, ( void * ) code );
+	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
 
 	appli = NACT_APPLICATION( application );
 

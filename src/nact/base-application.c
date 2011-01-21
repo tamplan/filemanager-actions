@@ -106,18 +106,16 @@ static void           instance_finalize( GObject *application );
 static gboolean       appli_initialize_i18n( BaseApplication *application, int *code );
 static gboolean       appli_initialize_application_name( BaseApplication *application, int *code );
 static gboolean       appli_initialize_application_icon( BaseApplication *application, int *code );
+static gboolean       appli_initialize_gtk( BaseApplication *application, int *code );
+static gboolean       appli_initialize_manage_options( const BaseApplication *application, int *code );
 
 static gboolean       v_initialize( BaseApplication *application );
-static gboolean       v_initialize_gtk( BaseApplication *application );
-static gboolean       v_manage_options( const BaseApplication *application, int *code );
 static gboolean       v_initialize_session_manager( BaseApplication *application );
 static gboolean       v_initialize_unique_app( BaseApplication *application );
 static gboolean       v_initialize_ui( BaseApplication *application );
 
 static int            application_do_run( BaseApplication *application );
 static gboolean       application_do_initialize( BaseApplication *application );
-static gboolean       application_do_initialize_gtk( BaseApplication *application );
-static gboolean       application_do_manage_options( const BaseApplication *application, int *code );
 static gboolean       application_do_initialize_session_manager( BaseApplication *application );
 static gboolean       application_do_initialize_unique_app( BaseApplication *application );
 static gboolean       application_do_initialize_ui( BaseApplication *application );
@@ -129,8 +127,6 @@ static void           client_quit_cb( EggSMClient *client, BaseApplication *appl
 static void           client_quit_requested_cb( EggSMClient *client, BaseApplication *application );
 static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
 static void           display_error_message( BaseApplication *application );
-static gboolean       init_with_args( BaseApplication *application, int *argc, char ***argv, GOptionEntry *entries );
-static void           set_initialize_gtk_error( BaseApplication *application );
 static void           set_initialize_unique_app_error( BaseApplication *application );
 static void           set_initialize_ui_get_fname_error( BaseApplication *application );
 static void           set_initialize_ui_add_xml_error( BaseApplication *application, const gchar *filename, GError *error );
@@ -289,12 +285,11 @@ class_init( BaseApplicationClass *klass )
 
 	klass->private = g_new0( BaseApplicationClassPrivate, 1 );
 
-	klass->manage_options = application_do_manage_options;
+	klass->manage_options = NULL;
 	klass->main_window_new = NULL;
 
 	klass->run = application_do_run;
 	klass->initialize = application_do_initialize;
-	klass->initialize_gtk = application_do_initialize_gtk;
 	klass->initialize_session_manager = application_do_initialize_session_manager;
 	klass->initialize_unique_app = application_do_initialize_unique_app;
 	klass->initialize_ui = application_do_initialize_ui;
@@ -565,10 +560,10 @@ base_application_run( BaseApplication *application )
 
 		if( appli_initialize_i18n( application, &code ) &&
 			appli_initialize_application_name( application, &code ) &&
-			appli_initialize_application_icon( application, &code ) &&
-				v_initialize( application ) /*
 			appli_initialize_gtk( application, &code ) &&
 			appli_initialize_manage_options( application, &code ) &&
+			appli_initialize_application_icon( application, &code ) &&
+				v_initialize( application ) /*
 			appli_initialize_session_manager( application, &code ) &&
 			appli_initialize_unique_app( application, &code ) &&
 			appli_initialize_builder( application, &code ) &&
@@ -616,6 +611,55 @@ appli_initialize_application_name( BaseApplication *application, int *code )
 	g_free( name );
 
 	return( TRUE );
+}
+
+static gboolean
+appli_initialize_gtk( BaseApplication *application, int *code )
+{
+	static const gchar *thisfn = "base_application_appli_initialize_gtk";
+	gboolean ret;
+	char *parameter_string;
+	GError *error;
+
+	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
+
+	if( application->private->options ){
+		parameter_string = g_strdup( g_get_application_name());
+		error = NULL;
+		ret = gtk_init_with_args(
+				&application->private->argc, ( char *** ) &application->private->argv,
+				parameter_string, application->private->options, GETTEXT_PACKAGE, &error );
+
+		if( error ){
+			g_warning( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+			ret = FALSE;
+		}
+
+		g_free( parameter_string );
+
+	} else {
+		ret = gtk_init_check( &application->private->argc, ( char *** ) &application->private->argv );
+	}
+
+	return( ret );
+}
+
+static gboolean
+appli_initialize_manage_options( const BaseApplication *application, int *code )
+{
+	static const gchar *thisfn = "base_application_appli_initialize_manage_options";
+	gboolean ret;
+
+	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
+
+	ret = TRUE;
+
+	if( BASE_APPLICATION_GET_CLASS( application )->manage_options ){
+		ret = BASE_APPLICATION_GET_CLASS( application )->manage_options( application, code );
+	}
+
+	return( ret );
 }
 
 static gboolean
@@ -827,39 +871,6 @@ v_initialize( BaseApplication *application )
 }
 
 static gboolean
-v_initialize_gtk( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_initialize_gtk";
-	gboolean ok;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	ok = BASE_APPLICATION_GET_CLASS( application )->initialize_gtk( application );
-
-	if( ok ){
-		application->private->is_gtk_initialized = TRUE;
-
-	} else {
-		set_initialize_gtk_error( application );
-	}
-
-	return( ok );
-}
-
-static gboolean
-v_manage_options( const BaseApplication *application, int *code )
-{
-	static const gchar *thisfn = "base_application_v_manage_options";
-	gboolean ok;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	ok = BASE_APPLICATION_GET_CLASS( application )->manage_options( application, code );
-
-	return( ok );
-}
-
-static gboolean
 v_initialize_session_manager( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_session_manager";
@@ -943,58 +954,14 @@ static gboolean
 application_do_initialize( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_do_initialize";
-	int code;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	return(
-			v_initialize_gtk( application ) &&
-			v_manage_options( application, &code ) &&
 			v_initialize_session_manager( application ) &&
 			v_initialize_unique_app( application ) &&
 			v_initialize_ui( application )
 	);
-}
-
-static gboolean
-application_do_initialize_gtk( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_do_initialize_gtk";
-	int argc;
-	gpointer argv;
-	gboolean ret;
-	GOptionEntry *options;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	g_object_get( G_OBJECT( application ),
-			BASE_PROP_ARGC, &argc,
-			BASE_PROP_ARGV, &argv,
-			BASE_PROP_OPTIONS, &options,
-			NULL );
-
-	if( options ){
-		ret = init_with_args( application, &argc, ( char *** ) &argv, options );
-	} else {
-		ret = gtk_init_check( &argc, ( char *** ) &argv );
-	}
-
-	if( ret ){
-		application->private->argc = argc;
-		application->private->argv = argv;
-	}
-
-	return( ret );
-}
-
-static gboolean
-application_do_manage_options( const BaseApplication *application, int *code )
-{
-	static const gchar *thisfn = "base_application_do_manage_options";
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	return( TRUE );
 }
 
 static gboolean
@@ -1204,38 +1171,6 @@ display_error_message( BaseApplication *application )
 			}
 		}
 	}
-}
-
-static gboolean
-init_with_args( BaseApplication *application, int *argc, char ***argv, GOptionEntry *entries )
-{
-	static const gchar *thisfn = "base_application_init_with_args";
-	gboolean ret;
-	char *parameter_string;
-	GError *error;
-
-	parameter_string = g_strdup( g_get_application_name());
-	error = NULL;
-
-	ret = gtk_init_with_args( argc, argv, parameter_string, entries, GETTEXT_PACKAGE, &error );
-	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
-		g_error_free( error );
-		ret = FALSE;
-	}
-
-	g_free( parameter_string );
-
-	return( ret );
-}
-
-static void
-set_initialize_gtk_error( BaseApplication *application )
-{
-	application->private->exit_code = BASE_APPLICATION_ERROR_GTK;
-
-	application->private->exit_message1 =
-		g_strdup( _( "Unable to initialize the Gtk+ user interface." ));
 }
 
 static void

@@ -7,7 +7,7 @@
 	* src/nact/base-application.c:
 	* src/nact/base-application.h
 	(initialize_i18n, initialize_application_name, get_application_name,
-	initialize_default_icon, get_icon_name):
+	initialize_default_icon, get_icon_name, initialize_gtk):
 	Remove virtual methods.
 
 	* src/nact/nact-application.c

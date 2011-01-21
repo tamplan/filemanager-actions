@@ -190,29 +190,6 @@ typedef struct {
 	gboolean  ( *initialize )                 ( BaseApplication *appli );
 
 	/**
-	 * initialize_gtk:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Initializes the Gtk+ GUI interface.
-	 *
-	 * This function must have been successfully called to be able to
-	 * display error message in a graphical dialog box rather than as
-	 * a character-style stdout message.
-	 *
-	 * Returns: %TRUE if OK, %FALSE if Gtk+ has been unable to
-	 * initialize the GUI interface.
-	 *
-	 * The base class implementation defaults to gtk_init_check(). The
-	 * derived class may want override it, for example if it wants
-	 * parse some command-line parameters.
-	 *
-	 * If failed, the base class implementation sets #exit_code to
-	 * %APPLICATION_ERROR_GTK, and prepares a short #exit_message to be
-	 * written to stdout.
-	 */
-	gboolean  ( *initialize_gtk )             ( BaseApplication *appli );
-
-	/**
 	 * initialize_unique_app:
 	 * @appli: this #BaseApplication instance.
 	 *
