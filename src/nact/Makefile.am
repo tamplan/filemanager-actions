@@ -61,7 +61,6 @@ nautilus_actions_config_tool_SOURCES = \
 	base-keysyms.h										\
 	base-window.c										\
 	base-window.h										\
-	base-window-class.h									\
 	egg-desktop-file.c									\
 	egg-desktop-file.h									\
 	egg-sm-client.c										\
