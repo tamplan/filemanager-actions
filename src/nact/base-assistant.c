@@ -575,7 +575,7 @@ assistant_do_cancel( BaseAssistant *window, GtkAssistant *assistant )
 		( window->private->warn_on_escape && window->private->escape_key_pressed )){
 
 			first = g_strdup( _( "Are you sure you want to quit this assistant ?" ));
-			ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, NULL );
+			ok = base_window_display_yesno_dlg( BASE_WINDOW( window ), first, NULL );
 			g_free( first );
 	}
 

@@ -236,9 +236,8 @@ nact_main_menubar_edit_on_cut( GtkAction *gtk_action, NactMainWindow *window )
 
 	if( non_deletables ){
 		gchar *second = na_core_utils_slist_join_at_end( non_deletables, "\n" );
-		base_window_error_dlg(
+		base_window_display_error_dlg(
 				BASE_WINDOW( window ),
-				GTK_MESSAGE_INFO,
 				_( "Not all items have been cut as following ones are not modifiable:" ),
 				second );
 		g_free( second );
@@ -486,9 +485,8 @@ nact_main_menubar_edit_on_delete( GtkAction *gtk_action, NactMainWindow *window 
 
 	if( non_deletables ){
 		gchar *second = na_core_utils_slist_join_at_end( non_deletables, "\n" );
-		base_window_error_dlg(
+		base_window_display_error_dlg(
 				BASE_WINDOW( window ),
-				GTK_MESSAGE_INFO,
 				_( "Not all items have been deleted as following ones are not modifiable:" ),
 				second );
 		g_free( second );

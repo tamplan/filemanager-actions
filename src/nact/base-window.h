@@ -241,9 +241,6 @@ void             base_window_display_error_dlg  ( const BaseWindow *parent, cons
 gboolean         base_window_display_yesno_dlg  ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
 void             base_window_display_message_dlg( const BaseWindow *parent, GSList *message );
 
-void             base_window_error_dlg( const BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );
-gboolean         base_window_yesno_dlg( const BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second );
-
 gulong           base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
 gulong           base_window_signal_connect_after( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
 gulong           base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const gchar *signal, GCallback fn );

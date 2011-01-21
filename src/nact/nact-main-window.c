@@ -1469,7 +1469,7 @@ confirm_for_giveup_from_menu( NactMainWindow *window )
 
 		second = g_strdup( _( "Do you really want to do this ?" ));
 
-		reload_ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+		reload_ok = base_window_display_yesno_dlg( BASE_WINDOW( window ), first, second );
 
 		g_free( second );
 		g_free( first );
@@ -1505,7 +1505,7 @@ confirm_for_giveup_from_pivot( NactMainWindow *window )
 
 	second = g_strdup( _( "Do you want to reload a fresh list of actions ?" ));
 
-	reload_ok = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+	reload_ok = base_window_display_yesno_dlg( BASE_WINDOW( window ), first, second );
 
 	g_free( second );
 	g_free( first );

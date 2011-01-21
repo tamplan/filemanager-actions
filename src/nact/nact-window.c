@@ -465,7 +465,7 @@ nact_window_warn_modified( NactWindow *window )
 		first = g_strdup_printf( _( "Some items have been modified." ));
 		second = g_strdup( _( "Are you sure you want to quit without saving them ?" ));
 
-		confirm = base_window_yesno_dlg( BASE_WINDOW( window ), GTK_MESSAGE_QUESTION, first, second );
+		confirm = base_window_display_yesno_dlg( BASE_WINDOW( window ), first, second );
 
 		g_free( second );
 		g_free( first );

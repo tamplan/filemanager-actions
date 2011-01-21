@@ -1,7 +1,15 @@
 2011-01-21 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-window.c:
-	* src/nact/base-window.h: Remove unused properties.
+	* src/nact/base-window.h:
+	Remove unused properties.
+	(base_window_error_dlg, base_window_yesno_dlg): Removed functions.
+
+	* src/nact/base-assistant.c:
+	* src/nact/nact-main-menubar-edit.c:
+	* src/nact/nact-main-menubar-file.c:
+	* src/nact/nact-main-window.c
+	* src/nact/nact-window.c: Updated accordingly.
 
 	* src/nact/base-window-class.h: Removed file.
 

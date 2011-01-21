@@ -322,7 +322,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 		} else {
 			msg = g_strdup( gettext( st_level_zero_write ));
 		}
-		base_window_error_dlg( BASE_WINDOW( window ), GTK_MESSAGE_ERROR, gettext( st_save_error ), msg );
+		base_window_display_error_dlg( BASE_WINDOW( window ), gettext( st_save_error ), msg );
 		g_free( msg );
 		na_core_utils_slist_free( messages );
 		return;
@@ -340,7 +340,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 		} else {
 			msg = g_strdup( gettext( st_delete_error ));
 		}
-		base_window_error_dlg( BASE_WINDOW( window ), GTK_MESSAGE_ERROR, gettext( st_save_error ), msg );
+		base_window_display_error_dlg( BASE_WINDOW( window ), gettext( st_save_error ), msg );
 		g_free( msg );
 		na_core_utils_slist_free( messages );
 		return;
@@ -373,7 +373,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 
 	if( g_slist_length( messages )){
 		msg = na_core_utils_slist_join_at_end( messages, "\n" );
-		base_window_error_dlg( BASE_WINDOW( window ), GTK_MESSAGE_WARNING, gettext( st_save_warning ), msg );
+		base_window_display_error_dlg( BASE_WINDOW( window ), gettext( st_save_warning ), msg );
 		g_free( msg );
 		na_core_utils_slist_free( messages );
 	}

@@ -1303,7 +1303,7 @@ search_for_child_widget( GtkContainer *container, const gchar *name )
 void
 base_window_display_error_dlg( const BaseWindow *parent, const gchar *primary, const gchar *secondary )
 {
-	display_dlg( parent, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, primary, secondary );
+	display_dlg( parent, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, primary, secondary );
 }
 
 /**
@@ -1323,7 +1323,7 @@ base_window_display_yesno_dlg( const BaseWindow *parent, const gchar *primary, c
 {
 	gint result;
 
-	result = display_dlg( parent, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, primary, secondary );
+	result = display_dlg( parent, GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO, primary, secondary );
 
 	return( result == GTK_RESPONSE_YES );
 }
@@ -1378,18 +1378,6 @@ display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsTy
 	gtk_widget_destroy( dialog );
 
 	return( result );
-}
-
-void
-base_window_error_dlg( const BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary )
-{
-	base_window_display_error_dlg( window, primary, secondary );
-}
-
-gboolean
-base_window_yesno_dlg( const BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second )
-{
-	return( base_window_display_yesno_dlg( window, first, second ));
 }
 
 /**
