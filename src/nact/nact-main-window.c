@@ -135,7 +135,10 @@ enum {
 	LAST_SIGNAL
 };
 
-static NactWindowClass *st_parent_class = NULL;
+static const gchar     *st_xmlui_filename         = PKGDATADIR "/nautilus-actions-config-tool.ui";
+static const gchar     *st_xmlui_toplevel         = "MainWindow";
+
+static NactWindowClass *st_parent_class           = NULL;
 static gint             st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType    register_type( void );
@@ -824,10 +827,17 @@ instance_finalize( GObject *window )
 NactMainWindow *
 nact_main_window_new( const NactApplication *application )
 {
+	NactMainWindow *window;
+
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
-	return( g_object_new( NACT_MAIN_WINDOW_TYPE,
-			BASE_PROP_APPLICATION, application, NULL ));
+	window = g_object_new( NACT_MAIN_WINDOW_TYPE,
+			BASE_PROP_APPLICATION,    application,
+			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+			BASE_PROP_TOPLEVEL_NAME,  st_xmlui_toplevel,
+			NULL );
+
+	return( window );
 }
 
 /**

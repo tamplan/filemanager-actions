@@ -1,5 +1,8 @@
 2011-01-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c (nact_main_window_new):
+	Initialize the main window with XML UI properties.
+
 	* src/nact/base-window.c:
 	* src/nact/base-window.h: Rename initialization properties.
 
