@@ -209,20 +209,23 @@ typedef struct {
 #define BASE_PROP_HAS_OWN_BUILDER				"base-window-has-own-builder"
 #define BASE_PROP_TOPLEVEL_NAME					"base-window-toplevel-name"
 
-/* signals defined in this class
+/**
+ * Signals defined by the BaseWindow class.
  *
  * All signals of this class have the same behavior:
  * - the message is sent to all derived classes, which are free to
- *   connect to the signal in order to implement their own code
+ *   connect to the signal in order to implement their own code;
  * - finally, the default class handler points to a virtual function
  * - the virtual function actually tries to call the actual function
- *   as possibly implemented by the derived class
+ *   as possibly implemented by the derived class;
+ * - each virtual method in a derived class should call the virtual
+ *   method of its parent class if it exists;
  * - if no derived class has implemented the virtual function, the call
- *   fall back to doing nothing at all
+ *   fall back to doing nothing at all.
  */
-#define BASE_WINDOW_SIGNAL_INITIAL_LOAD				"nact-base-window-initial-load"
-#define BASE_WINDOW_SIGNAL_RUNTIME_INIT				"nact-base-window-runtime-init"
-#define BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED		"nact-base-window-all-widgets-showed"
+#define BASE_SIGNAL_INITIALIZE_GTK				"base-window-initialize-gtk"
+#define BASE_SIGNAL_INITIALIZE_WINDOW			"base-window-initialize-window"
+#define BASE_SIGNAL_ALL_WIDGETS_SHOWED			"base-window-all-widgets-showed"
 
 GType base_window_get_type( void );
 

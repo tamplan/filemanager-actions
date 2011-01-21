@@ -265,7 +265,7 @@ class_init( BaseWindowClass *klass )
 	 */
 	st_signals[ INITIAL_LOAD ] =
 		g_signal_new_class_handler(
-				BASE_WINDOW_SIGNAL_INITIAL_LOAD,
+				BASE_SIGNAL_INITIALIZE_GTK,
 				G_TYPE_FROM_CLASS( klass ),
 				G_SIGNAL_RUN_LAST,
 				G_CALLBACK( v_initial_load_toplevel ),
@@ -285,7 +285,7 @@ class_init( BaseWindowClass *klass )
 	 */
 	st_signals[ RUNTIME_INIT ] =
 		g_signal_new_class_handler(
-				BASE_WINDOW_SIGNAL_RUNTIME_INIT,
+				BASE_SIGNAL_INITIALIZE_WINDOW,
 				G_TYPE_FROM_CLASS( klass ),
 				G_SIGNAL_RUN_LAST,
 				G_CALLBACK( v_runtime_init_toplevel ),
@@ -308,7 +308,7 @@ class_init( BaseWindowClass *klass )
 	 */
 	st_signals[ ALL_WIDGETS_SHOWED ] =
 		g_signal_new_class_handler(
-				BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED,
+				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
 				G_TYPE_FROM_CLASS( klass ),
 				G_SIGNAL_RUN_LAST,
 				G_CALLBACK( v_all_widgets_showed ),
@@ -359,7 +359,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	base_window_signal_connect(
 			self,
 			G_OBJECT( instance ),
-			BASE_WINDOW_SIGNAL_RUNTIME_INIT,
+			BASE_SIGNAL_INITIALIZE_WINDOW,
 			G_CALLBACK( on_runtime_init_toplevel ));
 }
 
@@ -584,7 +584,7 @@ base_window_init( BaseWindow *window )
 					g_return_val_if_fail( GTK_IS_WINDOW( window->private->gtk_toplevel ), FALSE );
 
 					if( !is_gtk_toplevel_initialized( window, window->private->gtk_toplevel )){
-						g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_INITIAL_LOAD, NULL );
+						g_signal_emit_by_name( window, BASE_SIGNAL_INITIALIZE_GTK, NULL );
 						set_gtk_toplevel_initialized( window, window->private->gtk_toplevel, TRUE );
 					}
 
@@ -726,10 +726,10 @@ base_window_run( BaseWindow *window )
 			g_return_val_if_fail( GTK_IS_WINDOW( window->private->gtk_toplevel ), BASE_EXIT_CODE_START_FAIL );
 
 			g_debug( "%s: window=%p", thisfn, ( void * ) window );
-			g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_RUNTIME_INIT, NULL );
+			g_signal_emit_by_name( window, BASE_SIGNAL_INITIALIZE_WINDOW, NULL );
 
 			gtk_widget_show_all( GTK_WIDGET( window->private->gtk_toplevel ));
-			g_signal_emit_by_name( window, BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED, NULL );
+			g_signal_emit_by_name( window, BASE_SIGNAL_ALL_WIDGETS_SHOWED, NULL );
 
 			if( is_main_window( window )){
 				if( GTK_IS_DIALOG( window->private->gtk_toplevel )){

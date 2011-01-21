@@ -649,19 +649,19 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
 			G_OBJECT( instance ),
-			BASE_WINDOW_SIGNAL_INITIAL_LOAD,
+			BASE_SIGNAL_INITIALIZE_GTK,
 			G_CALLBACK( on_base_initial_load_toplevel ));
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
 			G_OBJECT( instance ),
-			BASE_WINDOW_SIGNAL_RUNTIME_INIT,
+			BASE_SIGNAL_INITIALIZE_WINDOW,
 			G_CALLBACK( on_base_runtime_init_toplevel ));
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
 			G_OBJECT( instance ),
-			BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED,
+			BASE_SIGNAL_ALL_WIDGETS_SHOWED,
 			G_CALLBACK( on_base_all_widgets_showed ));
 
 	base_window_signal_connect(
