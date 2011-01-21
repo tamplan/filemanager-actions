@@ -926,14 +926,14 @@ import_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *toggle_b
 static void
 on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
+	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static void
 on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
+	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 

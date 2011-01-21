@@ -376,7 +376,7 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddSchemeDi
 static void
 on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *dialog )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( dialog ));
+	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( dialog ));
 
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
@@ -427,7 +427,7 @@ try_for_send_ok( NactAddSchemeDialog *dialog )
 static void
 send_ok( NactAddSchemeDialog *dialog )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( dialog ));
+	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( dialog ));
 
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }

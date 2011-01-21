@@ -491,7 +491,7 @@ on_runtime_init( BaseAssistant *window, gpointer user_data )
 
 	if( !window->private->dispose_has_run ){
 
-		toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
+		toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
 		g_assert( GTK_IS_ASSISTANT( toplevel ));
 
 		base_window_signal_connect(
@@ -542,7 +542,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseAssistant *assi
 			assistant->private->cancel_on_escape ){
 
 				assistant->private->escape_key_pressed = TRUE;
-				toplevel = base_window_get_toplevel( BASE_WINDOW( assistant ));
+				toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( assistant ));
 				g_signal_emit_by_name( toplevel, "cancel", toplevel );
 				stop = TRUE;
 		}

@@ -235,7 +235,7 @@ int              base_window_run( BaseWindow *window );
 BaseApplication *base_window_get_application( const BaseWindow *window );
 GtkWindow       *base_window_get_named_toplevel( const BaseWindow *window, const gchar *name );
 BaseWindow      *base_window_get_parent( const BaseWindow *window );
-GtkWindow       *base_window_get_toplevel( const BaseWindow *window );
+GtkWindow       *base_window_get_gtk_toplevel( const BaseWindow *window );
 GtkWidget       *base_window_get_widget( const BaseWindow *window, const gchar *name );
 GtkWidget       *base_window_peek_widget( GtkWindow *window, const gchar *name );
 gboolean         base_window_is_willing_to_quit( const BaseWindow *window );

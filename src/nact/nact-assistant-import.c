@@ -317,7 +317,7 @@ on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data )
 
 	if( !dialog->private->dispose_has_run ){
 
-		assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
+		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( dialog )));
 
 		runtime_init_intro( dialog, assistant );
 		runtime_init_file_selector( dialog, assistant );
@@ -389,7 +389,7 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	GtkWidget *content;
 
 	g_assert( NACT_IS_ASSISTANT_IMPORT( user_data ));
-	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( user_data )));
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( user_data )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_FILES_SELECTION ){
 
@@ -686,7 +686,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	memset( &import_parms, '\0', sizeof( NAImporterParms ));
 
 	g_object_get( G_OBJECT( wnd ), BASE_PROP_PARENT, &main_window, NULL );
-	import_parms.parent = base_window_get_toplevel( main_window );
+	import_parms.parent = base_window_get_gtk_toplevel( main_window );
 
 	chooser = base_window_get_widget( BASE_WINDOW( window ), "ImportFileChooser" );
 	import_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));

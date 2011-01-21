@@ -462,7 +462,7 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddCapabili
 static void
 on_cancel_clicked( GtkButton *button, NactAddCapabilityDialog *dialog )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( dialog ));
+	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( dialog ));
 
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
@@ -569,7 +569,7 @@ try_for_send_ok( NactAddCapabilityDialog *dialog )
 static void
 send_ok( NactAddCapabilityDialog *dialog )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( dialog ));
+	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( dialog ));
 
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }

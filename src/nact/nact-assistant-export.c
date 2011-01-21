@@ -364,7 +364,7 @@ on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data )
 	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 	dialog->private->preferences_locked = are_locked && mandatory;
 
-	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( dialog )));
 
 	assist_initial_load_intro( dialog, assistant );
 	assist_initial_load_actions_list( dialog, assistant );
@@ -388,7 +388,7 @@ on_runtime_init_dialog( NactAssistantExport *dialog, gpointer user_data )
 	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( dialog ));
 
-	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( dialog )));
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( dialog )));
 
 	base_window_signal_connect(
 			BASE_WINDOW( dialog ),
@@ -474,7 +474,7 @@ on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected
 	GtkWidget *content;
 
 	g_assert( NACT_IS_ASSISTANT_EXPORT( instance ));
-	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( instance )));
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( instance )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_ACTIONS_SELECTION ){
 
@@ -568,7 +568,7 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	g_assert( NACT_IS_ASSISTANT_EXPORT( user_data ));
 	assist = NACT_ASSISTANT_EXPORT( user_data );
 
-	assistant = GTK_ASSISTANT( base_window_get_toplevel( BASE_WINDOW( assist )));
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( assist )));
 	pos = gtk_assistant_get_current_page( assistant );
 	if( pos == ASSIST_PAGE_FOLDER_SELECTION ){
 

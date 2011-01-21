@@ -1408,7 +1408,7 @@ setup_dialog_title( NactMainWindow *window )
 		title = tmp;
 	}
 
-	toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
+	toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
 	gtk_window_set_title( toplevel, title );
 	g_free( title );
 }
@@ -1675,5 +1675,5 @@ iabout_get_toplevel( NAIAbout *instance )
 	g_return_val_if_fail( NA_IS_IABOUT( instance ), NULL );
 	g_return_val_if_fail( BASE_IS_WINDOW( instance ), NULL );
 
-	return( base_window_get_toplevel( BASE_WINDOW( instance )));
+	return( base_window_get_gtk_toplevel( BASE_WINDOW( instance )));
 }

@@ -274,7 +274,7 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 	NASettings *settings;
 
 	uri = NULL;
-	toplevel = base_window_get_toplevel( window );
+	toplevel = base_window_get_gtk_toplevel( window );
 
 	/* i18n: title of the FileChoose dialog when selecting an URI which
 	 * will be compare to Nautilus 'current_folder'

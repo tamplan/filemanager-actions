@@ -1,6 +1,29 @@
 2011-01-21 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-window.c:
+	* src/nact/base-window.h (base_window_get_toplevel):
+	Renamed as base_window_get_gtk_toplevel().
+
+	* src/nact/base-application.c:
+	* src/nact/base-assistant.c:
+	* src/nact/base-iprefs.c:
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-confirm-logout.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-match-list.c:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-tree-model-dnd.c: Updated accordingly.
+
+	* src/nact/base-window.c:
 	* src/nact/base-window.h: Rename signal defines.
 
 	* src/nact/base-assistant.c:

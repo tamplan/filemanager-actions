@@ -300,7 +300,7 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 		}
 	}
 
-	toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
+	toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
 	accel_group = gtk_ui_manager_get_accel_group( ui_manager );
 	gtk_window_add_accel_group( toplevel, accel_group );
 

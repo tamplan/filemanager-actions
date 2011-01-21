@@ -487,7 +487,7 @@ legend_dialog_show( NactICommandTab *instance )
 	legend_dialog = get_legend_dialog( instance );
 	gtk_window_set_deletable( legend_dialog, FALSE );
 
-	toplevel = base_window_get_toplevel( BASE_WINDOW( instance ));
+	toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( instance ));
 	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
 
 	base_iprefs_position_named_window( BASE_WINDOW( instance ), legend_dialog, NA_IPREFS_COMMAND_LEGEND_WSP );

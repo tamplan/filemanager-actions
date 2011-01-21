@@ -460,7 +460,7 @@ base_application_run( BaseApplication *application )
 				g_return_val_if_fail( BASE_IS_WINDOW( application->private->main_window ), BASE_EXIT_CODE_START_FAIL );
 
 				if( base_window_init( application->private->main_window )){
-					gtk_toplevel = base_window_get_toplevel( application->private->main_window );
+					gtk_toplevel = base_window_get_gtk_toplevel( application->private->main_window );
 					g_return_val_if_fail( gtk_toplevel, BASE_EXIT_CODE_START_FAIL );
 					g_return_val_if_fail( GTK_IS_WINDOW( gtk_toplevel ), BASE_EXIT_CODE_START_FAIL );
 

@@ -450,7 +450,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
 	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-	toplevel = base_window_get_toplevel( window );
+	toplevel = base_window_get_gtk_toplevel( window );
 
 	dialog = gtk_file_chooser_dialog_new(
 			title,
@@ -532,7 +532,7 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
 	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-	toplevel = base_window_get_toplevel( window );
+	toplevel = base_window_get_gtk_toplevel( window );
 
 	dialog = gtk_file_chooser_dialog_new(
 			title,

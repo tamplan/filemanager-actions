@@ -358,6 +358,6 @@ close_dialog( NactConfirmLogout *editor, gboolean willing_to )
 
 	editor->private->willing_to_quit = willing_to;
 
-	toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
+	toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }

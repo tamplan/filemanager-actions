@@ -364,7 +364,7 @@ on_base_initial_load_dialog( NactIconChooser *editor, gpointer user_data )
 	/* destroy event
 	 * there is here that we are going to release our stores
 	 */
-	GtkDialog *dialog = GTK_DIALOG( base_window_get_toplevel( BASE_WINDOW( editor )));
+	GtkDialog *dialog = GTK_DIALOG( base_window_get_gtk_toplevel( BASE_WINDOW( editor )));
 	g_signal_connect( G_OBJECT( dialog ), "destroy", G_CALLBACK( on_destroy ), NULL );
 }
 
@@ -477,7 +477,7 @@ on_base_runtime_init_dialog( NactIconChooser *editor, gpointer user_data )
 	 */
 	base_window_signal_connect(
 					BASE_WINDOW( editor ),
-					G_OBJECT( base_window_get_toplevel( BASE_WINDOW( editor ))),
+					G_OBJECT( base_window_get_gtk_toplevel( BASE_WINDOW( editor ))),
 					"key-press-event",
 					G_CALLBACK( on_key_pressed_event ));
 
@@ -573,14 +573,14 @@ on_base_all_widgets_showed( NactIconChooser *editor, gpointer user_data )
 static void
 on_cancel_clicked( GtkButton *button, NactIconChooser *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
+	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_CLOSE );
 }
 
 static void
 on_ok_clicked( GtkButton *button, NactIconChooser *editor )
 {
-	GtkWindow *toplevel = base_window_get_toplevel( BASE_WINDOW( editor ));
+	GtkWindow *toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( editor ));
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 

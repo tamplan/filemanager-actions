@@ -835,7 +835,7 @@ base_window_get_parent( const BaseWindow *window )
 }
 
 /**
- * base_window_get_toplevel:
+ * base_window_get_gtk_toplevel:
  * @window: this #BaseWindow instance..
  *
  * Returns the top-level GtkWindow attached to this BaseWindow object.
@@ -844,7 +844,7 @@ base_window_get_parent( const BaseWindow *window )
  * #GtkWindow.
  */
 GtkWindow *
-base_window_get_toplevel( const BaseWindow *window )
+base_window_get_gtk_toplevel( const BaseWindow *window )
 {
 	GtkWindow *toplevel = NULL;
 
@@ -1127,7 +1127,7 @@ window_do_initial_load_toplevel( BaseWindow *window, gpointer user_data )
 		if( window->private->parent ){
 
 			g_assert( BASE_IS_WINDOW( window->private->parent ));
-			parent_toplevel = base_window_get_toplevel( BASE_WINDOW( window->private->parent ));
+			parent_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window->private->parent ));
 			g_debug( "%s: toplevel=%p, parent_toplevel=%p", thisfn, ( void * ) window->private->gtk_toplevel, ( void * ) parent_toplevel );
 			gtk_window_set_transient_for( window->private->gtk_toplevel, parent_toplevel );
 		}
@@ -1362,7 +1362,7 @@ display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsTy
 
 	gtk_parent = NULL;
 	if( parent ){
-		gtk_parent = base_window_get_toplevel( parent );
+		gtk_parent = base_window_get_gtk_toplevel( parent );
 	}
 
 	dialog = gtk_message_dialog_new( gtk_parent, GTK_DIALOG_MODAL, type_message, type_buttons, "%s", primary );

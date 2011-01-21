@@ -153,7 +153,7 @@ base_iprefs_position_window( const BaseWindow *window )
 
 		key = v_iprefs_get_window_id( window );
 		if( key ){
-			toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
+			toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
 			base_iprefs_position_named_window( window, toplevel, key );
 			g_free( key );
 		}
@@ -227,7 +227,7 @@ base_iprefs_save_window_position( const BaseWindow *window )
 
 		key = v_iprefs_get_window_id( window );
 		if( key ){
-			toplevel = base_window_get_toplevel( BASE_WINDOW( window ));
+			toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
 			base_iprefs_save_named_window_position( window, toplevel, key );
 			g_free( key );
 		}
