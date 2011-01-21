@@ -227,10 +227,10 @@ typedef struct {
 #define BASE_SIGNAL_INITIALIZE_WINDOW			"base-window-initialize-window"
 #define BASE_SIGNAL_ALL_WIDGETS_SHOWED			"base-window-all-widgets-showed"
 
-GType base_window_get_type( void );
+GType            base_window_get_type( void );
 
 gboolean         base_window_init( BaseWindow *window );
-int              base_window_run( BaseWindow *window );
+int              base_window_run ( BaseWindow *window );
 
 BaseApplication *base_window_get_application         ( const BaseWindow *window );
 BaseWindow      *base_window_get_parent              ( const BaseWindow *window );
