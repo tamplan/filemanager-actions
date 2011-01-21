@@ -92,8 +92,6 @@ static void     instance_finalize( GObject *application );
 static gboolean appli_manage_options( const BaseApplication *application, int *code );
 static GObject *appli_main_window_new( const BaseApplication *application, int *code );
 
-static gchar   *appli_get_gtkbuilder_filename( BaseApplication *application );
-
 GType
 nact_application_get_type( void )
 {
@@ -161,8 +159,6 @@ class_init( NactApplicationClass *klass )
 	appli_class = BASE_APPLICATION_CLASS( klass );
 	appli_class->manage_options = appli_manage_options;
 	appli_class->main_window_new = appli_main_window_new;
-
-	appli_class->get_ui_filename = appli_get_gtkbuilder_filename;
 }
 
 static void
@@ -386,10 +382,4 @@ nact_application_get_updater( NactApplication *application )
 	}
 
 	return( updater );
-}
-
-static gchar *
-appli_get_gtkbuilder_filename( BaseApplication *application )
-{
-	return( g_strdup( PKGDATADIR "/nautilus-actions-config-tool.ui" ));
 }

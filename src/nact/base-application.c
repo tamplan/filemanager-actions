@@ -741,38 +741,6 @@ base_application_get_builder( const BaseApplication *application )
 }
 
 /**
- * base_application_get_ui_filename:
- * @application: this #BaseApplication instance.
- *
- * Asks the #BaseApplication-derived class for the filename of the file
- * which contains the XML definition of the user interface.
- *
- * Defaults to empty.
- *
- * Returns: a newly allocated string to be g_free() by the caller.
- */
-gchar *
-base_application_get_ui_filename( BaseApplication *application )
-{
-	/*static const gchar *thisfn = "base_application_get_ui_filename";
-	g_debug( "%s: icon=%p", thisfn, application );*/
-	gchar *name = NULL;
-
-	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
-
-	if( !application->private->dispose_has_run ){
-		if( BASE_APPLICATION_GET_CLASS( application )->get_ui_filename ){
-			name = BASE_APPLICATION_GET_CLASS( application )->get_ui_filename( application );
-
-		} else {
-			name = g_strdup( "" );
-		}
-	}
-
-	return( name );
-}
-
-/**
  * base_application_message_dlg:
  * @application: this #BaseApplication instance.
  * @message: the message to be displayed.

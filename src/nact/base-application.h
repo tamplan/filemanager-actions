@@ -135,23 +135,6 @@ typedef struct {
 	 * -derived object. It may or may not have already been initialized.
 	 */
 	GObject * ( *main_window_new )( const BaseApplication *appli, int *code );
-
-	/**
-	 * get_ui_filename:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Asks the derived class for the filename of the XML definition of
-	 * the user interface. This XML definition must be suitable in order
-	 * to be loaded via GtkBuilder.
-	 *
-	 * No default is provided by the base class. If the base class does
-	 * not provide one, then the program stops and exits with the code
-	 * %APPLICATION_ERROR_UI_FNAME.
-	 *
-	 * Returns: the filename of the XML definition, to be g_free() by
-	 * the caller.
-	 */
-	gchar *   ( *get_ui_filename )                 ( BaseApplication *appli );
 }
 	BaseApplicationClass;
 
@@ -181,7 +164,11 @@ typedef enum {
 	BASE_EXIT_CODE_ARGS,
 	BASE_EXIT_CODE_UNIQUE_APP,
 	BASE_EXIT_CODE_MAIN_WINDOW,
-	BASE_EXIT_CODE_USER_APP
+	/*
+	 * BaseApplication -derived class may use program return codes
+	 * starting with this value
+	 */
+	BASE_EXIT_CODE_USER_APP = 32
 }
 	BaseExitCode;
 
@@ -191,8 +178,6 @@ int          base_application_run( BaseApplication *application );
 
 gchar       *base_application_get_application_name( const BaseApplication *application );
 BaseBuilder *base_application_get_builder         ( const BaseApplication *application );
-
-gchar       *base_application_get_ui_filename( BaseApplication *application );
 
 void         base_application_message_dlg( BaseApplication *application, GSList *message );
 void         base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
