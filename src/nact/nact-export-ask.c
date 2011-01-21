@@ -231,7 +231,7 @@ instance_finalize( GObject *dialog )
 static NactExportAsk *
 export_ask_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_EXPORT_ASK_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_EXPORT_ASK_TYPE, BASE_PROP_PARENT, parent, NULL ));
 }
 
 /**

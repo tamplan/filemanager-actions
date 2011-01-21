@@ -305,7 +305,7 @@ instance_finalize( GObject *window )
 static NactAssistantExport *
 assist_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_ASSISTANT_EXPORT_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_ASSISTANT_EXPORT_TYPE, BASE_PROP_PARENT, parent, NULL ));
 }
 
 /**
@@ -319,7 +319,7 @@ nact_assistant_export_run( BaseWindow *main_window )
 	NactAssistantExport *assist;
 
 	assist = assist_new( main_window );
-	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );
+	g_object_set( G_OBJECT( assist ), BASE_PROP_HAS_OWN_BUILDER, TRUE, NULL );
 
 	base_window_run( BASE_WINDOW( assist ));
 }

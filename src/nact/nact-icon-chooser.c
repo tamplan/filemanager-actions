@@ -286,7 +286,7 @@ instance_finalize( GObject *dialog )
 static NactIconChooser *
 icon_chooser_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_ICON_CHOOSER_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_ICON_CHOOSER_TYPE, BASE_PROP_PARENT, parent, NULL ));
 }
 
 /**

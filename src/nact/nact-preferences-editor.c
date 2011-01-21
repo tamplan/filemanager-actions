@@ -292,7 +292,7 @@ preferences_editor_new( BaseWindow *parent )
 	NASettings *settings;
 	gboolean are_locked, mandatory;
 
-	editor = NACT_PREFERENCES_EDITOR( g_object_new( NACT_PREFERENCES_EDITOR_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
+	editor = NACT_PREFERENCES_EDITOR( g_object_new( NACT_PREFERENCES_EDITOR_TYPE, BASE_PROP_PARENT, parent, NULL ));
 
 	application = NACT_APPLICATION( base_window_get_application( parent ));
 	updater = nact_application_get_updater( application );

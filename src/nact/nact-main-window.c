@@ -827,7 +827,7 @@ nact_main_window_new( const NactApplication *application )
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
 	return( g_object_new( NACT_MAIN_WINDOW_TYPE,
-			BASE_WINDOW_PROP_APPLICATION, application, NULL ));
+			BASE_PROP_APPLICATION, application, NULL ));
 }
 
 /**

@@ -51,16 +51,23 @@ struct _BaseWindowClassPrivate {
  */
 struct _BaseWindowPrivate {
 	gboolean         dispose_has_run;
+
+	/* properties
+	 */
 	BaseWindow      *parent;
 	BaseApplication *application;
+	gchar           *xmlui_filename;
+	gboolean         has_own_builder;
 	gchar           *toplevel_name;
+
+	/* internals
+	 */
 	GtkWindow       *toplevel_window;
+
 	gboolean         initialized;
 	GSList          *signals;
 	gboolean         save_window_position;
-	gboolean         has_own_builder;
 	BaseBuilder     *builder;
-	gchar           *ui_filename;
 };
 
 /* connected signal, to be disconnected at NactWindow dispose
@@ -74,14 +81,19 @@ typedef struct {
 /* instance properties
  */
 enum {
-	BASE_WINDOW_PROP_PARENT_ID = 1,
-	BASE_WINDOW_PROP_APPLICATION_ID,
-	BASE_WINDOW_PROP_TOPLEVEL_NAME_ID,
+	BASE_PROP_0,
+
+	BASE_PROP_PARENT_ID,
+	BASE_PROP_APPLICATION_ID,
+	BASE_PROP_XMLUI_FILENAME_ID,
+	BASE_PROP_HAS_OWN_BUILDER_ID,
+	BASE_PROP_TOPLEVEL_NAME_ID,
+
 	BASE_WINDOW_PROP_TOPLEVEL_WIDGET_ID,
 	BASE_WINDOW_PROP_INITIALIZED_ID,
 	BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID,
-	BASE_WINDOW_PROP_HAS_OWN_BUILDER_ID,
-	BASE_WINDOW_PROP_XML_UI_FILENAME_ID
+
+	BASE_PROP_N_PROPERTIES
 };
 
 /* signals defined in BaseWindow, to be used in all derived classes
@@ -199,26 +211,50 @@ class_init( BaseWindowClass *klass )
 	object_class->get_property = instance_get_property;
 	object_class->set_property = instance_set_property;
 
-	spec = g_param_spec_pointer(
-			BASE_WINDOW_PROP_PARENT,
-			"BaseWindow parent pointer",
-			"A pointer (not a reference) to the BaseWindow parent of this BaseWindow",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_WINDOW_PROP_PARENT_ID, spec );
+	g_object_class_install_property( object_class, BASE_PROP_PARENT_ID,
+			g_param_spec_pointer(
+					BASE_PROP_PARENT,
+					_( "Parent BaseWindow" ),
+					_( "A pointer (not a reference) to the BaseWindow parent of this BaseWindow" ),
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	spec = g_param_spec_pointer(
-			BASE_WINDOW_PROP_APPLICATION,
-			"BaseApplication pointer",
-			"A pointer (not a reference) to the BaseApplication object",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_WINDOW_PROP_APPLICATION_ID, spec );
+	g_object_class_install_property( object_class, BASE_PROP_APPLICATION_ID,
+			g_param_spec_pointer(
+				BASE_PROP_APPLICATION,
+				_( "BaseApplication" ),
+				_( "A pointer (not a reference) to the BaseApplication instance" ),
+				G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	spec = g_param_spec_string(
-			BASE_WINDOW_PROP_TOPLEVEL_NAME,
-			"Internal toplevel name",
-			"The internal name in GtkBuilder of the toplevel window", "",
+	g_object_class_install_property( object_class, BASE_PROP_XMLUI_FILENAME_ID,
+			g_param_spec_string(
+					BASE_PROP_XMLUI_FILENAME,
+					_( "XML UI filename" ),
+					_( "The filename which contains the XML UI definition" ),
+					"",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, BASE_PROP_HAS_OWN_BUILDER_ID,
+			g_param_spec_boolean(
+					BASE_PROP_HAS_OWN_BUILDER,
+					_( "Has its own GtkBuilder" ),
+					_( "Whether this BaseWindow reallocates a new GtkBuilder each time it is opened" ),
+					FALSE,
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, BASE_PROP_TOPLEVEL_NAME_ID,
+			g_param_spec_string(
+					BASE_PROP_TOPLEVEL_NAME,
+					_( "Toplevel name" ),
+					_( "The internal GtkBuildable name of the toplevel window" ),
+					"",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	spec = g_param_spec_boolean(
+			BASE_WINDOW_PROP_SAVE_WINDOW_POSITION,
+			"Save window size and position on dispose",
+			"Whether the size and position of the window must be saved as a GConf preference", FALSE,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_WINDOW_PROP_TOPLEVEL_NAME_ID, spec );
+	g_object_class_install_property( object_class, BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID, spec );
 
 	spec = g_param_spec_pointer(
 			BASE_WINDOW_PROP_TOPLEVEL_WIDGET,
@@ -233,27 +269,6 @@ class_init( BaseWindowClass *klass )
 			"Has base_window_init be run", FALSE,
 			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
 	g_object_class_install_property( object_class, BASE_WINDOW_PROP_INITIALIZED_ID, spec );
-
-	spec = g_param_spec_boolean(
-			BASE_WINDOW_PROP_SAVE_WINDOW_POSITION,
-			"Save window size and position on dispose",
-			"Whether the size and position of the window must be saved as a GConf preference", FALSE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID, spec );
-
-	spec = g_param_spec_boolean(
-			BASE_WINDOW_PROP_HAS_OWN_BUILDER,
-			"Does this have its own GtkBuilder",
-			"Whether this BaseWindow reallocates a new GtkBuilder each time it is opened", FALSE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_WINDOW_PROP_HAS_OWN_BUILDER_ID, spec );
-
-	spec = g_param_spec_string(
-			BASE_WINDOW_PROP_XML_UI_FILENAME,
-			"Specific XML UI filename",
-			"The filename which contains the XML UI definition", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_WINDOW_PROP_XML_UI_FILENAME_ID, spec );
 
 	klass->private = g_new0( BaseWindowClassPrivate, 1 );
 
@@ -384,15 +399,23 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case BASE_WINDOW_PROP_PARENT_ID:
+			case BASE_PROP_PARENT_ID:
 				g_value_set_pointer( value, self->private->parent );
 				break;
 
-			case BASE_WINDOW_PROP_APPLICATION_ID:
+			case BASE_PROP_APPLICATION_ID:
 				g_value_set_pointer( value, self->private->application );
 				break;
 
-			case BASE_WINDOW_PROP_TOPLEVEL_NAME_ID:
+			case BASE_PROP_XMLUI_FILENAME_ID:
+				g_value_set_string( value, self->private->xmlui_filename );
+				break;
+
+			case BASE_PROP_HAS_OWN_BUILDER_ID:
+				g_value_set_boolean( value, self->private->has_own_builder );
+				break;
+
+			case BASE_PROP_TOPLEVEL_NAME_ID:
 				g_value_set_string( value, self->private->toplevel_name );
 				break;
 
@@ -406,14 +429,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 
 			case BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID:
 				g_value_set_boolean( value, self->private->save_window_position );
-				break;
-
-			case BASE_WINDOW_PROP_HAS_OWN_BUILDER_ID:
-				g_value_set_boolean( value, self->private->has_own_builder );
-				break;
-
-			case BASE_WINDOW_PROP_XML_UI_FILENAME_ID:
-				g_value_set_string( value, self->private->ui_filename );
 				break;
 
 			default:
@@ -434,15 +449,24 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case BASE_WINDOW_PROP_PARENT_ID:
+			case BASE_PROP_PARENT_ID:
 				self->private->parent = g_value_get_pointer( value );
 				break;
 
-			case BASE_WINDOW_PROP_APPLICATION_ID:
+			case BASE_PROP_APPLICATION_ID:
 				self->private->application = g_value_get_pointer( value );
 				break;
 
-			case BASE_WINDOW_PROP_TOPLEVEL_NAME_ID:
+			case BASE_PROP_XMLUI_FILENAME_ID:
+				g_free( self->private->xmlui_filename );
+				self->private->xmlui_filename = g_value_dup_string( value );
+				break;
+
+			case BASE_PROP_HAS_OWN_BUILDER_ID:
+				self->private->has_own_builder = g_value_get_boolean( value );
+				break;
+
+			case BASE_PROP_TOPLEVEL_NAME_ID:
 				g_free( self->private->toplevel_name );
 				self->private->toplevel_name = g_value_dup_string( value );
 				break;
@@ -457,15 +481,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 
 			case BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID:
 				self->private->save_window_position = g_value_get_boolean( value );
-				break;
-
-			case BASE_WINDOW_PROP_HAS_OWN_BUILDER_ID:
-				self->private->has_own_builder = g_value_get_boolean( value );
-				break;
-
-			case BASE_WINDOW_PROP_XML_UI_FILENAME_ID:
-				g_free( self->private->ui_filename );
-				self->private->ui_filename = g_value_dup_string( value );
 				break;
 
 			default:
@@ -559,7 +574,7 @@ instance_finalize( GObject *window )
 	self = BASE_WINDOW( window );
 
 	g_free( self->private->toplevel_name );
-	g_free( self->private->ui_filename );
+	g_free( self->private->xmlui_filename );
 
 	g_free( self->private );
 
@@ -1011,13 +1026,13 @@ v_get_toplevel_name( const BaseWindow *window )
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
-	g_object_get( G_OBJECT( window ), BASE_WINDOW_PROP_TOPLEVEL_NAME, &name, NULL );
+	g_object_get( G_OBJECT( window ), BASE_PROP_TOPLEVEL_NAME, &name, NULL );
 
 	if( !name || !strlen( name )){
 		if( BASE_WINDOW_GET_CLASS( window )->get_toplevel_name ){
 			name = BASE_WINDOW_GET_CLASS( window )->get_toplevel_name( window );
 			if( name && strlen( name )){
-				g_object_set( G_OBJECT( window ), BASE_WINDOW_PROP_TOPLEVEL_NAME, name, NULL );
+				g_object_set( G_OBJECT( window ), BASE_PROP_TOPLEVEL_NAME, name, NULL );
 			}
 		}
 	}

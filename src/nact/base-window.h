@@ -45,15 +45,19 @@
 
 G_BEGIN_DECLS
 
-/* instance properties
+/**
+ * Properties defined by the BaseWindow class.
+ * They should be provided at object instanciation time.
  */
-#define BASE_WINDOW_PROP_PARENT						"base-window-parent"
-#define BASE_WINDOW_PROP_APPLICATION				"base-window-application"
-#define BASE_WINDOW_PROP_TOPLEVEL_NAME				"base-window-toplevel-name"
+#define BASE_PROP_PARENT						"base-window-parent"
+#define BASE_PROP_APPLICATION					"base-window-application"
+#define BASE_PROP_XMLUI_FILENAME				"base-window-xmlui-filename"
+#define BASE_PROP_HAS_OWN_BUILDER				"base-window-has-own-builder"
+#define BASE_PROP_TOPLEVEL_NAME					"base-window-toplevel-name"
+
 #define BASE_WINDOW_PROP_TOPLEVEL_WIDGET			"base-window-toplevel-widget"
 #define BASE_WINDOW_PROP_INITIALIZED				"base-window-is-initialized"
 #define BASE_WINDOW_PROP_SAVE_WINDOW_POSITION		"base-window-save-window-position"
-#define BASE_WINDOW_PROP_HAS_OWN_BUILDER			"base-window-has-own-builder"
 #define BASE_WINDOW_PROP_XML_UI_FILENAME			"base-window-xml-ui-filename"
 
 /* signals defined in this class

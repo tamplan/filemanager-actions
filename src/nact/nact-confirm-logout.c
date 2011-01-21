@@ -216,7 +216,7 @@ instance_finalize( GObject *dialog )
 static NactConfirmLogout *
 confirm_logout_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_CONFIRM_LOGOUT_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_CONFIRM_LOGOUT_TYPE, BASE_PROP_PARENT, parent, NULL ));
 }
 
 /**

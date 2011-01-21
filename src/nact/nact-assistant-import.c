@@ -252,7 +252,7 @@ instance_finalize( GObject *window )
 static NactAssistantImport *
 assist_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE, BASE_WINDOW_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE, BASE_PROP_PARENT, parent, NULL ));
 }
 
 /**
@@ -267,7 +267,7 @@ nact_assistant_import_run( BaseWindow *main_window )
 	NactAssistantImport *assist;
 
 	assist = assist_new( main_window );
-	g_object_set( G_OBJECT( assist ), BASE_WINDOW_PROP_HAS_OWN_BUILDER, TRUE, NULL );
+	g_object_set( G_OBJECT( assist ), BASE_PROP_HAS_OWN_BUILDER, TRUE, NULL );
 
 	base_window_run( BASE_WINDOW( assist ));
 }
@@ -685,7 +685,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	imported_items = NULL;
 	memset( &import_parms, '\0', sizeof( NAImporterParms ));
 
-	g_object_get( G_OBJECT( wnd ), BASE_WINDOW_PROP_PARENT, &main_window, NULL );
+	g_object_get( G_OBJECT( wnd ), BASE_PROP_PARENT, &main_window, NULL );
 	import_parms.parent = base_window_get_toplevel( main_window );
 
 	chooser = base_window_get_widget( BASE_WINDOW( window ), "ImportFileChooser" );
