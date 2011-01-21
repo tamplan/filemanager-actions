@@ -93,7 +93,6 @@ static GObject *appli_main_window_new( const BaseApplication *application, int *
 
 static gboolean appli_initialize_application( BaseApplication *application );
 static gchar   *appli_get_gtkbuilder_filename( BaseApplication *application );
-static GObject *appli_get_main_window( BaseApplication *application );
 
 GType
 nact_application_get_type( void )
@@ -165,7 +164,6 @@ class_init( NactApplicationClass *klass )
 
 	appli_class->initialize_application = appli_initialize_application;
 	appli_class->get_ui_filename = appli_get_gtkbuilder_filename;
-	appli_class->get_main_window = appli_get_main_window;
 }
 
 static void
@@ -306,30 +304,6 @@ nact_application_new_with_args( int argc, char **argv )
 	return( application );
 }
 
-/**
- * nact_application_get_updater:
- * @application: this NactApplication object.
- *
- * Returns a pointer on the #NAUpdater object.
- *
- * The returned pointer is owned by the #NactApplication object.
- * It should not be g_free() not g_object_unref() by the caller.
- */
-NAUpdater *
-nact_application_get_updater( NactApplication *application )
-{
-	NAUpdater *updater = NULL;
-
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
-
-	if( !application->private->dispose_has_run ){
-
-		updater = application->private->updater;
-	}
-
-	return( updater );
-}
-
 /*
  * overriden to manage command-line options
  */
@@ -390,36 +364,29 @@ appli_main_window_new( const BaseApplication *application, int *code )
 	return( G_OBJECT( main_window ));
 }
 
-# if 0
-/*
- * overrided to provide a personalized error message
+/**
+ * nact_application_get_updater:
+ * @application: this NactApplication object.
+ *
+ * Returns a pointer on the #NAUpdater object.
+ *
+ * The returned pointer is owned by the #NactApplication object.
+ * It should not be g_free() not g_object_unref() by the caller.
  */
-static gboolean
-appli_initialize_unique_app( BaseApplication *application )
+NAUpdater *
+nact_application_get_updater( NactApplication *application )
 {
-	gboolean ok;
-	gchar *msg1, *msg2;
+	NAUpdater *updater = NULL;
 
-	/* call parent class */
-	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_unique_app( application );
+	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
-	if( !ok ){
-		msg1 = g_strdup( _( "Another instance of Nautilus-Actions Configuration Tool is already running." ));
-		/* i18n: another instance is already running: second line of error message */
-		msg2 = g_strdup( _( "Please switch back to it." ));
+	if( !application->private->dispose_has_run ){
 
-		g_object_set( G_OBJECT( application ),
-				BASE_APPLICATION_PROP_EXIT_MESSAGE1, msg1,
-				BASE_APPLICATION_PROP_EXIT_MESSAGE2, msg2,
-				NULL );
-
-		g_free( msg2 );
-		g_free( msg1 );
+		updater = application->private->updater;
 	}
 
-	return( ok );
+	return( updater );
 }
-#endif
 
 /*
  * Overrided to complete the initialization of the application:
@@ -461,28 +428,4 @@ static gchar *
 appli_get_gtkbuilder_filename( BaseApplication *application )
 {
 	return( g_strdup( PKGDATADIR "/nautilus-actions-config-tool.ui" ));
-}
-
-/*
- * this should be called only once as base class is supposed to keep
- * the pointer to the main BaseWindow window as a property
- */
-static GObject *
-appli_get_main_window( BaseApplication *application )
-{
-#if 0
-	static const gchar *thisfn = "nact_application_appli_get_main_window";
-	BaseWindow *window;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	window = BASE_WINDOW( nact_main_window_new( application ));
-
-	na_pivot_register_consumer(
-			NA_PIVOT( nact_application_get_updater( NACT_APPLICATION( application ))),
-			NA_IPIVOT_CONSUMER( window ));
-
-	return( G_OBJECT( window ));
-#endif
-	return( NULL );
 }

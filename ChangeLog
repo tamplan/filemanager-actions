@@ -12,7 +12,7 @@
 	(initialize_i18n, initialize_application_name, get_application_name,
 	initialize_default_icon, get_icon_name, initialize_gtk,
 	initialize_session_manager, get_unique_app_name, initialize_ui,
-	initialize_unique_app, initialize, run): Remove virtual methods.
+	initialize_unique_app, initialize, run, get_main_window): Remove virtual methods.
 
 	* src/nact/nact-application.c (appli_get_application_name,
 	appli_get_icon_name, appli_get_unique_app_name):  Removed functions.

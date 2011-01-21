@@ -177,16 +177,6 @@ typedef struct {
 	 * the caller.
 	 */
 	gchar *   ( *get_ui_filename )                 ( BaseApplication *appli );
-
-	/**
-	 * get_main_window:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Returns: a pointer to the #BaseWindow-derived main window of the
-	 * application. This pointer is owned by the @appli, and should not
-	 * be g_free() not g_object_unref() by the caller.
-	 */
-	GObject * ( *get_main_window )            ( BaseApplication *appli );
 }
 	BaseApplicationClass;
 
