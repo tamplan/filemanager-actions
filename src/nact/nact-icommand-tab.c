@@ -431,7 +431,7 @@ get_legend_button( NactICommandTab *instance )
 static GtkWindow *
 get_legend_dialog( NactICommandTab *instance )
 {
-	return( base_window_get_named_toplevel( BASE_WINDOW( instance ), "LegendDialog" ));
+	return( base_window_get_gtk_toplevel_by_name( BASE_WINDOW( instance ), "LegendDialog" ));
 }
 
 static GtkWidget *

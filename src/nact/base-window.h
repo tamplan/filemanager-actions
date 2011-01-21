@@ -233,7 +233,7 @@ gboolean         base_window_init( BaseWindow *window );
 int              base_window_run( BaseWindow *window );
 
 BaseApplication *base_window_get_application( const BaseWindow *window );
-GtkWindow       *base_window_get_named_toplevel( const BaseWindow *window, const gchar *name );
+GtkWindow       *base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *name );
 BaseWindow      *base_window_get_parent( const BaseWindow *window );
 GtkWindow       *base_window_get_gtk_toplevel( const BaseWindow *window );
 GtkWidget       *base_window_get_widget( const BaseWindow *window, const gchar *name );

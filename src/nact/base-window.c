@@ -785,7 +785,7 @@ base_window_get_application( const BaseWindow *window )
 }
 
 /**
- * base_window_get_named_toplevel:
+ * base_window_get_gtk_toplevel_by_name:
  * @window: this #BaseWindow instance.
  * @name: the name of the searched GtkWindow.
  *
@@ -798,7 +798,7 @@ base_window_get_application( const BaseWindow *window )
  * #GtkWindow.
  */
 GtkWindow *
-base_window_get_named_toplevel( const BaseWindow *window, const gchar *name )
+base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *name )
 {
 	GtkWindow *toplevel = NULL;
 
