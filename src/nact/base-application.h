@@ -270,19 +270,6 @@ typedef struct {
 	gboolean  ( *initialize_ui )              ( BaseApplication *appli );
 
 	/**
-	 * initialize_default_icon:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Initializes the default icon for the application.
-	 *
-	 * Returns: %TRUE if the default icon has been successfully set for
-	 * the application, %FALSE else.
-	 *
-	 * The base class implementation always returns %TRUE.
-	 */
-	gboolean  ( *initialize_default_icon )    ( BaseApplication *appli );
-
-	/**
 	 * initialize_application:
 	 * @appli: this #BaseApplication instance.
 	 *
@@ -305,21 +292,6 @@ typedef struct {
 	 * short #exit_message to be displayed in a dialog box.
 	 */
 	gboolean  ( *initialize_application )     ( BaseApplication *appli );
-
-	/**
-	 * get_icon_name:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Asks the derived class for the name of the default icon.
-	 *
-	 * It is typically used as the icon of the main window.
-	 *
-	 * No default is provided by the base class.
-	 *
-	 * Returns: the default icon name for the application, to be
-	 * g_free() by the caller.
-	 */
-	gchar *   ( *get_icon_name )              ( BaseApplication *appli );
 
 	/**
 	 * get_unique_app_name:
@@ -453,7 +425,6 @@ gchar       *base_application_get_application_name( const BaseApplication *appli
  */
 #define BASE_APPLICATION_PROP_MAIN_WINDOW			"base-application-main-window"
 
-gchar       *base_application_get_icon_name( BaseApplication *application );
 gchar       *base_application_get_unique_app_name( BaseApplication *application );
 gchar       *base_application_get_ui_filename( BaseApplication *application );
 BaseBuilder *base_application_get_builder( BaseApplication *application );

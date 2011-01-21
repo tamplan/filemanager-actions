@@ -1,12 +1,17 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-application.c:
+	* src/nact/base-application.h (base_application_get_icon_name):
+	Removed function.
+
+	* src/nact/base-application.c:
 	* src/nact/base-application.h
-	(initialize_i18n, initialize_application_name, get_application_name):
+	(initialize_i18n, initialize_application_name, get_application_name,
+	initialize_default_icon, get_icon_name):
 	Remove virtual methods.
 
-	* src/nact/nact-application.c (appli_get_application_name):
-	Removed function.
+	* src/nact/nact-application.c
+	(appli_get_application_name, appli_get_icon_name): Removed functions.
 
 	* src/nact/nact-application.c (nact_application_new_with_args):
 	Make NactApplication initializes with these new properties.

@@ -93,7 +93,6 @@ static GObject *appli_main_window_new( const BaseApplication *application, int *
 
 static gboolean appli_initialize_unique_app( BaseApplication *application );
 static gboolean appli_initialize_application( BaseApplication *application );
-static gchar   *appli_get_icon_name( BaseApplication *application );
 static gchar   *appli_get_unique_app_name( BaseApplication *application );
 static gchar   *appli_get_gtkbuilder_filename( BaseApplication *application );
 static GObject *appli_get_main_window( BaseApplication *application );
@@ -168,7 +167,6 @@ class_init( NactApplicationClass *klass )
 
 	appli_class->initialize_unique_app = appli_initialize_unique_app;
 	appli_class->initialize_application = appli_initialize_application;
-	appli_class->get_icon_name = appli_get_icon_name;
 	appli_class->get_unique_app_name = appli_get_unique_app_name;
 	appli_class->get_ui_filename = appli_get_gtkbuilder_filename;
 	appli_class->get_main_window = appli_get_main_window;
@@ -449,16 +447,6 @@ appli_initialize_application( BaseApplication *application )
 	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_application( application );
 
 	return( ok );
-}
-
-static gchar *
-appli_get_icon_name( BaseApplication *application )
-{
-	static const gchar *thisfn = "nact_application_appli_get_icon_name";
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	return( na_iabout_get_icon_name());
 }
 
 static gchar *
