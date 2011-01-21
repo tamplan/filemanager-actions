@@ -1,5 +1,8 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.c:
+	* src/nact/base-application.h: Define new properties.
+
 	* src/nact/base-application-class.h: Removed file.
 
 	* src/nact/Makefile.am:

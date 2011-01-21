@@ -295,9 +295,9 @@ nact_application_new_with_args( int argc, char **argv )
 	return(
 			g_object_new(
 					NACT_APPLICATION_TYPE,
-					BASE_APPLICATION_PROP_ARGC, argc,
-					BASE_APPLICATION_PROP_ARGV, argv,
-					BASE_APPLICATION_PROP_OPTIONS, st_entries,
+					BASE_PROP_ARGC, argc,
+					BASE_PROP_ARGV, argv,
+					BASE_PROP_OPTIONS, st_entries,
 					NULL )
 	);
 }

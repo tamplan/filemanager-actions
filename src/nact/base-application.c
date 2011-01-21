@@ -51,9 +51,15 @@ struct _BaseApplicationClassPrivate {
  */
 struct _BaseApplicationPrivate {
 	gboolean      dispose_has_run;
+
+	/* properties
+	 */
 	int           argc;
-	gpointer      argv;
+	GStrv         argv;
 	GOptionEntry *options;
+	gchar        *application_name;
+	gchar        *icon_name;
+	gchar        *unique_app_name;
 
 	gboolean      is_gtk_initialized;
 	UniqueApp    *unique_app_handle;
@@ -68,16 +74,23 @@ struct _BaseApplicationPrivate {
 /* instance properties
  */
 enum {
-	BASE_APPLICATION_PROP_ARGC_ID = 1,
-	BASE_APPLICATION_PROP_ARGV_ID,
-	BASE_APPLICATION_PROP_OPTIONS_ID,
+	BASE_PROP_0,
+
+	BASE_PROP_ARGC_ID,
+	BASE_PROP_ARGV_ID,
+	BASE_PROP_OPTIONS_ID,
+	BASE_PROP_APPLICATION_NAME_ID,
+	BASE_PROP_ICON_NAME_ID,
+	BASE_PROP_UNIQUE_APP_NAME_ID,
 	BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID,
 	BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID,
 	BASE_APPLICATION_PROP_EXIT_CODE_ID,
 	BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID,
 	BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID,
 	BASE_APPLICATION_PROP_BUILDER_ID,
-	BASE_APPLICATION_PROP_MAIN_WINDOW_ID
+	BASE_APPLICATION_PROP_MAIN_WINDOW_ID,
+
+	BASE_PROP_N_PROPERTIES
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -186,26 +199,52 @@ class_init( BaseApplicationClass *klass )
 	object_class->get_property = instance_get_property;
 	object_class->set_property = instance_set_property;
 
-	spec = g_param_spec_int(
-			BASE_APPLICATION_PROP_ARGC,
-			"Command-line arguments count",
-			"Command-line arguments count", 0, 65535, 0,
-			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_ARGC_ID, spec );
+	g_object_class_install_property( object_class, BASE_PROP_ARGC_ID,
+			g_param_spec_int(
+					BASE_PROP_ARGC,
+					_( "Arguments count" ),
+					_( "The count of command-line arguments" ),
+					0, 65535, 0,
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	spec = g_param_spec_pointer(
-			BASE_APPLICATION_PROP_ARGV,
-			"Command-line arguments",
-			"A pointer to command-line arguments",
-			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_ARGV_ID, spec );
+	g_object_class_install_property( object_class, BASE_PROP_ARGV_ID,
+			g_param_spec_boxed(
+					BASE_PROP_ARGV,
+					_( "Arguments" ),
+					_( "The array of command-line arguments" ),
+					G_TYPE_STRV,
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	spec = g_param_spec_pointer(
-			BASE_APPLICATION_PROP_OPTIONS,
-			"Command-line options",
-			"A pointer to command-line options",
-			G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_OPTIONS_ID, spec );
+	g_object_class_install_property( object_class, BASE_PROP_OPTIONS_ID,
+			g_param_spec_pointer(
+					BASE_PROP_OPTIONS,
+					_( "Option entries" ),
+					_( "The array of command-line option definitions" ),
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, BASE_PROP_APPLICATION_NAME_ID,
+			g_param_spec_string(
+					BASE_PROP_APPLICATION_NAME,
+					_( "Application name" ),
+					_( "The name of the application" ),
+					"",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, BASE_PROP_ICON_NAME_ID,
+			g_param_spec_string(
+					BASE_PROP_ICON_NAME,
+					_( "Icon name" ),
+					_( "The name of the icon of the application" ),
+					"",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, BASE_PROP_UNIQUE_APP_NAME_ID,
+			g_param_spec_string(
+					BASE_PROP_UNIQUE_APP_NAME,
+					_( "UniqueApp name" ),
+					_( "The Unique name of the application" ),
+					"",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	spec = g_param_spec_boolean(
 			BASE_APPLICATION_PROP_IS_GTK_INITIALIZED,
@@ -308,16 +347,28 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case BASE_APPLICATION_PROP_ARGC_ID:
+			case BASE_PROP_ARGC_ID:
 				g_value_set_int( value, self->private->argc );
 				break;
 
-			case BASE_APPLICATION_PROP_ARGV_ID:
-				g_value_set_pointer( value, self->private->argv );
+			case BASE_PROP_ARGV_ID:
+				g_value_set_boxed( value, self->private->argv );
 				break;
 
-			case BASE_APPLICATION_PROP_OPTIONS_ID:
+			case BASE_PROP_OPTIONS_ID:
 				g_value_set_pointer( value, self->private->options );
+				break;
+
+			case BASE_PROP_APPLICATION_NAME_ID:
+				g_value_set_string( value, self->private->application_name );
+				break;
+
+			case BASE_PROP_ICON_NAME_ID:
+				g_value_set_string( value, self->private->icon_name );
+				break;
+
+			case BASE_PROP_UNIQUE_APP_NAME_ID:
+				g_value_set_string( value, self->private->unique_app_name );
 				break;
 
 			case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
@@ -366,16 +417,32 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case BASE_APPLICATION_PROP_ARGC_ID:
+			case BASE_PROP_ARGC_ID:
 				self->private->argc = g_value_get_int( value );
 				break;
 
-			case BASE_APPLICATION_PROP_ARGV_ID:
-				self->private->argv = g_value_get_pointer( value );
+			case BASE_PROP_ARGV_ID:
+				g_boxed_free( G_TYPE_STRV, self->private->argv );
+				self->private->argv = g_value_dup_boxed( value );
 				break;
 
-			case BASE_APPLICATION_PROP_OPTIONS_ID:
+			case BASE_PROP_OPTIONS_ID:
 				self->private->options = g_value_get_pointer( value );
+				break;
+
+			case BASE_PROP_APPLICATION_NAME_ID:
+				g_free( self->private->application_name );
+				self->private->application_name = g_value_dup_string( value );
+				break;
+
+			case BASE_PROP_ICON_NAME_ID:
+				g_free( self->private->icon_name );
+				self->private->icon_name = g_value_dup_string( value );
+				break;
+
+			case BASE_PROP_UNIQUE_APP_NAME_ID:
+				g_free( self->private->unique_app_name );
+				self->private->unique_app_name = g_value_dup_string( value );
 				break;
 
 			case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
@@ -461,6 +528,10 @@ instance_finalize( GObject *application )
 	g_debug( "%s: application=%p (%s)", thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ));
 
 	self = BASE_APPLICATION( application );
+
+	g_free( self->private->application_name );
+	g_free( self->private->icon_name );
+	g_free( self->private->unique_app_name );
 
 	g_free( self->private->exit_message1 );
 	g_free( self->private->exit_message2 );
@@ -975,9 +1046,9 @@ application_do_initialize_gtk( BaseApplication *application )
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	g_object_get( G_OBJECT( application ),
-			BASE_APPLICATION_PROP_ARGC, &argc,
-			BASE_APPLICATION_PROP_ARGV, &argv,
-			BASE_APPLICATION_PROP_OPTIONS, &options,
+			BASE_PROP_ARGC, &argc,
+			BASE_PROP_ARGV, &argv,
+			BASE_PROP_OPTIONS, &options,
 			NULL );
 
 	if( options ){

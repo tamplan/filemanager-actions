@@ -405,6 +405,24 @@ typedef struct {
 }
 	BaseApplicationClass;
 
+/**
+ * Properties defined by the BaseApplication class.
+ * They should be provided at object instantiation time.
+ *
+ * @BASE_PROP_ARGC:             count of arguments in command-line.
+ * @BASE_PROP_ARGV:             array of command-line arguments.
+ * @BASE_PROP_OPTIONS:          array of command-line options descriptions.
+ * @BASE_PROP_APPLICATION_NAME: application name.
+ * @BASE_PROP_ICON_NAME:        icon name.
+ * @BASE_PROP_UNIQUE_APP_NAME:  unique name of the application (if apply)
+ */
+#define BASE_PROP_ARGC						"base-application-argc"
+#define BASE_PROP_ARGV						"base-application-argv"
+#define BASE_PROP_OPTIONS					"base-application-options"
+#define BASE_PROP_APPLICATION_NAME			"base-application-name"
+#define BASE_PROP_ICON_NAME					"base-application-icon-name"
+#define BASE_PROP_UNIQUE_APP_NAME			"base-application-unique-app-name"
+
 enum {
 	BASE_APPLICATION_ERROR_I18N = 1,		/* i18n initialization error */
 	BASE_APPLICATION_ERROR_GTK,				/* gtk+ initialization error */
@@ -414,24 +432,6 @@ enum {
 	BASE_APPLICATION_ERROR_UI_LOAD,			/* unable to load the XML definition of the UI */
 	BASE_APPLICATION_ERROR_DEFAULT_ICON		/* unable to set default icon */
 };
-
-/**
- * @BASE_APPLICATION_PROP_ARGC: count of arguments in command-line.
- * @BASE_APPLICATION_PROP_ARGV: list of command-line arguments
- *
- * These two variables must be provided before running the
- * initialization process ; they are required in order to correctly
- * initialize the Gtk+ user interface.
- */
-#define BASE_APPLICATION_PROP_ARGC					"base-application-argc"
-#define BASE_APPLICATION_PROP_ARGV					"base-application-argv"
-
-/**
- * @BASE_APPLICATION_PROP_OPTIONS: command-line options.
- *
- * Can be provided at instanciation time only.
- */
-#define BASE_APPLICATION_PROP_OPTIONS				"base-application-options"
 
 /**
  * @BASE_APPLICATION_PROP_IS_GTK_INITIALIZED: set to %TRUE after
