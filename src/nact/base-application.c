@@ -58,12 +58,15 @@ struct _BaseApplicationPrivate {
 	GStrv         argv;
 	GOptionEntry *options;
 	gchar        *application_name;
+	gchar        *description;
 	gchar        *icon_name;
 	gchar        *unique_app_name;
 
 	/* internals
 	 */
 	EggSMClient  *sm_client;
+	gulong        sm_client_quit_handler_id;
+	gulong        sm_client_quit_requested_handler_id;
 	BaseBuilder  *builder;
 	BaseWindow   *main_window;
 	UniqueApp    *unique_app_handle;
@@ -83,6 +86,7 @@ enum {
 	BASE_PROP_ARGV_ID,
 	BASE_PROP_OPTIONS_ID,
 	BASE_PROP_APPLICATION_NAME_ID,
+	BASE_PROP_DESCRIPTION_ID,
 	BASE_PROP_ICON_NAME_ID,
 	BASE_PROP_UNIQUE_APP_NAME_ID,
 	BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID,
@@ -106,8 +110,6 @@ static void           instance_set_property( GObject *object, guint property_id,
 static void           instance_dispose( GObject *application );
 static void           instance_finalize( GObject *application );
 
-static gboolean       appli_initialize_i18n( BaseApplication *application, int *code );
-static gboolean       appli_initialize_application_name( BaseApplication *application, int *code );
 static gboolean       appli_initialize_gtk( BaseApplication *application, int *code );
 static gboolean       appli_initialize_manage_options( const BaseApplication *application, int *code );
 static gboolean       appli_initialize_unique_app( BaseApplication *application, int *code );
@@ -117,8 +119,7 @@ static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand 
 static gboolean       appli_initialize_session_manager( BaseApplication *application, int *code );
 static void           session_manager_client_quit_cb( EggSMClient *client, BaseApplication *application );
 static void           session_manager_client_quit_requested_cb( EggSMClient *client, BaseApplication *application );
-static gboolean       appli_initialize_application_icon( BaseApplication *application, int *code );
-static gboolean       appli_initialize_builder( BaseApplication *application, int *code );
+static gboolean       appli_initialize_base_application( BaseApplication *application, int *code );
 
 static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
 #if 0
@@ -204,7 +205,7 @@ class_init( BaseApplicationClass *klass )
 					BASE_PROP_OPTIONS,
 					_( "Option entries" ),
 					_( "The array of command-line option definitions" ),
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_APPLICATION_NAME_ID,
 			g_param_spec_string(
@@ -212,7 +213,15 @@ class_init( BaseApplicationClass *klass )
 					_( "Application name" ),
 					_( "The name of the application" ),
 					"",
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, BASE_PROP_DESCRIPTION_ID,
+			g_param_spec_string(
+					BASE_PROP_DESCRIPTION,
+					_( "Description" ),
+					_( "A short description to be displayed in the first line of --help output" ),
+					"",
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_ICON_NAME_ID,
 			g_param_spec_string(
@@ -220,7 +229,7 @@ class_init( BaseApplicationClass *klass )
 					_( "Icon name" ),
 					_( "The name of the icon of the application" ),
 					"",
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_UNIQUE_APP_NAME_ID,
 			g_param_spec_string(
@@ -330,6 +339,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_string( value, self->private->application_name );
 				break;
 
+			case BASE_PROP_DESCRIPTION_ID:
+				g_value_set_string( value, self->private->description );
+				break;
+
 			case BASE_PROP_ICON_NAME_ID:
 				g_value_set_string( value, self->private->icon_name );
 				break;
@@ -402,6 +415,11 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			case BASE_PROP_APPLICATION_NAME_ID:
 				g_free( self->private->application_name );
 				self->private->application_name = g_value_dup_string( value );
+				break;
+
+			case BASE_PROP_DESCRIPTION_ID:
+				g_free( self->private->description );
+				self->private->description = g_value_dup_string( value );
 				break;
 
 			case BASE_PROP_ICON_NAME_ID:
@@ -545,14 +563,11 @@ base_application_run( BaseApplication *application )
 		code = BASE_EXIT_CODE_OK;
 		application->private->main_window = NULL;
 
-		if( appli_initialize_i18n( application, &code ) &&
-			appli_initialize_application_name( application, &code ) &&
-			appli_initialize_gtk( application, &code ) &&
+		if( appli_initialize_gtk( application, &code ) &&
 			appli_initialize_manage_options( application, &code ) &&
 			appli_initialize_unique_app( application, &code ) &&
 			appli_initialize_session_manager( application, &code ) &&
-			appli_initialize_application_icon( application, &code ) &&
-			appli_initialize_builder( application, &code )){
+			appli_initialize_base_application( application, &code )){
 
 
 			if( BASE_APPLICATION_GET_CLASS( application )->main_window_new ){
@@ -582,13 +597,25 @@ base_application_run( BaseApplication *application )
 	return( code );
 }
 
+/*
+ * pre-gtk initialization
+ *
+ * Returns: %TRUE to continue the execution, %FALSE to temrinate the program.
+ * The program exit code will be taken from @code.
+ */
 static gboolean
-appli_initialize_i18n( BaseApplication *application, int *code )
+appli_initialize_gtk( BaseApplication *application, int *code )
 {
-	static const gchar *thisfn = "base_application_appli_initialize_i18n";
+	static const gchar *thisfn = "base_application_appli_initialize_gtk";
+	gchar *name;
+	gboolean ret;
+	char *parameter_string;
+	GError *error;
 
 	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
 
+	/* initialize i18n
+	 */
 #ifdef ENABLE_NLS
 	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
 # ifdef HAVE_BIND_TEXTDOMAIN_CODESET
@@ -599,49 +626,29 @@ appli_initialize_i18n( BaseApplication *application, int *code )
 
 	gtk_set_locale();
 
-	return( TRUE );
-}
-
-static gboolean
-appli_initialize_application_name( BaseApplication *application, int *code )
-{
-	static const gchar *thisfn = "base_application_appli_initialize_application_name";
-	gchar *name;
-
-	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
-
+	/* setup default Gtk+ application name
+	 * must have been set at instanciationtime by the derived class
+	 */
 	name = base_application_get_application_name( application );
 	if( name && g_utf8_strlen( name, -1 )){
 		g_set_application_name( name );
 	}
 	g_free( name );
 
-	return( TRUE );
-}
-
-static gboolean
-appli_initialize_gtk( BaseApplication *application, int *code )
-{
-	static const gchar *thisfn = "base_application_appli_initialize_gtk";
-	gboolean ret;
-	char *parameter_string;
-	GError *error;
-
-	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
-
+	/* manage command-line arguments
+	 */
 	if( application->private->options ){
 		parameter_string = g_strdup( g_get_application_name());
 		error = NULL;
 		ret = gtk_init_with_args(
 				&application->private->argc, ( char *** ) &application->private->argv,
 				parameter_string, application->private->options, GETTEXT_PACKAGE, &error );
-
 		if( error ){
 			g_warning( "%s: %s", thisfn, error->message );
 			g_error_free( error );
 			ret = FALSE;
+			*code = BASE_EXIT_CODE_ARGS;
 		}
-
 		g_free( parameter_string );
 
 	} else {
@@ -743,11 +750,13 @@ appli_initialize_session_manager( BaseApplication *application, int *code )
 	egg_sm_client_startup();
 	g_debug( "%s: sm_client=%p", thisfn, ( void * ) application->private->sm_client );
 
-	g_signal_connect( application->private->sm_client,
-	        "quit-requested", G_CALLBACK( session_manager_client_quit_requested_cb ), application );
+	application->private->sm_client_quit_handler_id =
+			g_signal_connect( application->private->sm_client,
+					"quit-requested", G_CALLBACK( session_manager_client_quit_requested_cb ), application );
 
-	g_signal_connect( application->private->sm_client,
-	        "quit", G_CALLBACK( session_manager_client_quit_cb ), application );
+	application->private->sm_client_quit_requested_handler_id =
+			g_signal_connect( application->private->sm_client,
+					"quit", G_CALLBACK( session_manager_client_quit_cb ), application );
 
 	return( TRUE );
 }
@@ -761,9 +770,9 @@ session_manager_client_quit_cb( EggSMClient *client, BaseApplication *applicatio
 
 	g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
 
-	if( application->private->main_window &&
-		BASE_IS_WINDOW( application->private->main_window )){
+	if( application->private->main_window ){
 
+			g_return_if_fail( BASE_IS_WINDOW( application->private->main_window ));
 			g_object_unref( application->private->main_window );
 			application->private->main_window = NULL;
 	}
@@ -779,9 +788,9 @@ session_manager_client_quit_requested_cb( EggSMClient *client, BaseApplication *
 
 	g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
 
-	if( application->private->main_window &&
-		BASE_IS_WINDOW( application->private->main_window )){
+	if( application->private->main_window ){
 
+			g_return_if_fail( BASE_IS_WINDOW( application->private->main_window ));
 			willing_to = base_window_is_willing_to_quit( application->private->main_window );
 	}
 
@@ -789,28 +798,22 @@ session_manager_client_quit_requested_cb( EggSMClient *client, BaseApplication *
 }
 
 static gboolean
-appli_initialize_application_icon( BaseApplication *application, int *code )
+appli_initialize_base_application( BaseApplication *application, int *code )
 {
-	static const gchar *thisfn = "base_application_appli_initialize_application_icon";
+	static const gchar *thisfn = "base_application_appli_initialize_base_application";
 
 	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
 
+	/* setup default application icon
+	 */
 	if( application->private->icon_name &&
 		g_utf8_strlen( application->private->icon_name, -1 )){
 
 			gtk_window_set_default_icon_name( application->private->icon_name );
 	}
 
-	return( TRUE );
-}
-
-static gboolean
-appli_initialize_builder( BaseApplication *application, int *code )
-{
-	static const gchar *thisfn = "base_application_appli_initialize_builder";
-
-	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
-
+	/* allocate the common BaseBuilder instance
+	 */
 	application->private->builder = base_builder_new();
 
 	return( TRUE );

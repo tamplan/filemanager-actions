@@ -119,7 +119,6 @@ typedef struct {
 	 * parent method, to give it a chance to manage its own options.
 	 *
 	 * Returns: %TRUE to continue execution, %FALSE to stop it.
-	 * In this later case only, the exit code set in @code will be considered.
 	 */
 	gboolean  ( *manage_options ) ( const BaseApplication *appli, int *code );
 
@@ -133,7 +132,7 @@ typedef struct {
 	 * This is a pure virtual method.
 	 *
 	 * Returns: the main window of the application, as a #BaseWindow
-	 * -derived object. It may or may not having already been initialized.
+	 * -derived object. It may or may not have already been initialized.
 	 */
 	GObject * ( *main_window_new )( const BaseApplication *appli, int *code );
 
@@ -164,6 +163,7 @@ typedef struct {
  * @BASE_PROP_ARGV:             array of command-line arguments.
  * @BASE_PROP_OPTIONS:          array of command-line options descriptions.
  * @BASE_PROP_APPLICATION_NAME: application name.
+ * @BASE_PROP_DESCRIPTION:      short description.
  * @BASE_PROP_ICON_NAME:        icon name.
  * @BASE_PROP_UNIQUE_APP_NAME:  unique name of the application (if apply)
  */
@@ -171,12 +171,14 @@ typedef struct {
 #define BASE_PROP_ARGV						"base-application-argv"
 #define BASE_PROP_OPTIONS					"base-application-options"
 #define BASE_PROP_APPLICATION_NAME			"base-application-name"
+#define BASE_PROP_DESCRIPTION				"base-application-description"
 #define BASE_PROP_ICON_NAME					"base-application-icon-name"
 #define BASE_PROP_UNIQUE_APP_NAME			"base-application-unique-app-name"
 
 typedef enum {
 	BASE_EXIT_CODE_START_FAIL = -1,
 	BASE_EXIT_CODE_OK = 0,
+	BASE_EXIT_CODE_ARGS,
 	BASE_EXIT_CODE_UNIQUE_APP,
 	BASE_EXIT_CODE_MAIN_WINDOW,
 

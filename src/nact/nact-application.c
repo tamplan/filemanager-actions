@@ -68,6 +68,7 @@ static gboolean     st_non_unique_opt = FALSE;
 static gboolean     st_version_opt    = FALSE;
 
 static const gchar *st_application_name = N_( "Nautilus-Actions Configuration Tool" );
+static const gchar *st_description      = N_( "A user interface to edit your own contextual actions" );
 static const gchar *st_unique_app_name  = "org.nautilus-actions.ConfigurationTool";
 
 static GOptionEntry st_option_entries[] = {
@@ -293,6 +294,7 @@ nact_application_new_with_args( int argc, char **argv )
 			BASE_PROP_ARGV,             argv,
 			BASE_PROP_OPTIONS,          st_option_entries,
 			BASE_PROP_APPLICATION_NAME, gettext( st_application_name ),
+			BASE_PROP_DESCRIPTION,      gettext( st_description ),
 			BASE_PROP_ICON_NAME,        icon_name,
 			BASE_PROP_UNIQUE_APP_NAME,  st_unique_app_name,
 			NULL );
