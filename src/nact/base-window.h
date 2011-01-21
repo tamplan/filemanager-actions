@@ -209,11 +209,6 @@ typedef struct {
 #define BASE_PROP_HAS_OWN_BUILDER				"base-window-has-own-builder"
 #define BASE_PROP_TOPLEVEL_NAME					"base-window-toplevel-name"
 
-#define BASE_WINDOW_PROP_TOPLEVEL_WIDGET			"base-window-toplevel-widget"
-#define BASE_WINDOW_PROP_INITIALIZED				"base-window-is-initialized"
-#define BASE_WINDOW_PROP_SAVE_WINDOW_POSITION		"base-window-save-window-position"
-#define BASE_WINDOW_PROP_XML_UI_FILENAME			"base-window-xml-ui-filename"
-
 /* signals defined in this class
  *
  * All signals of this class have the same behavior:

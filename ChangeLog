@@ -1,5 +1,8 @@
 2011-01-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-window.c:
+	* src/nact/base-window.h: Remove unused properties.
+
 	* src/nact/base-window-class.h: Removed file.
 
 	* src/nact/base-window.h:

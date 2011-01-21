@@ -89,10 +89,6 @@ enum {
 	BASE_PROP_HAS_OWN_BUILDER_ID,
 	BASE_PROP_TOPLEVEL_NAME_ID,
 
-	BASE_WINDOW_PROP_TOPLEVEL_WIDGET_ID,
-	BASE_WINDOW_PROP_INITIALIZED_ID,
-	BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID,
-
 	BASE_PROP_N_PROPERTIES
 };
 
@@ -200,7 +196,6 @@ class_init( BaseWindowClass *klass )
 {
 	static const gchar *thisfn = "base_window_class_init";
 	GObjectClass *object_class;
-	GParamSpec *spec;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -249,27 +244,6 @@ class_init( BaseWindowClass *klass )
 					_( "The internal GtkBuildable name of the toplevel window" ),
 					"",
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
-
-	spec = g_param_spec_boolean(
-			BASE_WINDOW_PROP_SAVE_WINDOW_POSITION,
-			"Save window size and position on dispose",
-			"Whether the size and position of the window must be saved as a GConf preference", FALSE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID, spec );
-
-	spec = g_param_spec_pointer(
-			BASE_WINDOW_PROP_TOPLEVEL_WIDGET,
-			"Main GtkWindow pointer",
-			"A pointer to the main GtkWindow toplevel managed by this BaseWindow instance",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_WINDOW_PROP_TOPLEVEL_WIDGET_ID, spec );
-
-	spec = g_param_spec_boolean(
-			BASE_WINDOW_PROP_INITIALIZED,
-			"Has base_window_init be run",
-			"Has base_window_init be run", FALSE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_WINDOW_PROP_INITIALIZED_ID, spec );
 
 	klass->private = g_new0( BaseWindowClassPrivate, 1 );
 
@@ -420,18 +394,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_string( value, self->private->toplevel_name );
 				break;
 
-			case BASE_WINDOW_PROP_TOPLEVEL_WIDGET_ID:
-				g_value_set_pointer( value, self->private->gtk_toplevel );
-				break;
-
-			case BASE_WINDOW_PROP_INITIALIZED_ID:
-				g_value_set_boolean( value, self->private->initialized );
-				break;
-
-			case BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID:
-				g_value_set_boolean( value, self->private->save_window_position );
-				break;
-
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -470,18 +432,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			case BASE_PROP_TOPLEVEL_NAME_ID:
 				g_free( self->private->toplevel_name );
 				self->private->toplevel_name = g_value_dup_string( value );
-				break;
-
-			case BASE_WINDOW_PROP_TOPLEVEL_WIDGET_ID:
-				self->private->gtk_toplevel = g_value_get_pointer( value );
-				break;
-
-			case BASE_WINDOW_PROP_INITIALIZED_ID:
-				self->private->initialized = g_value_get_boolean( value );
-				break;
-
-			case BASE_WINDOW_PROP_SAVE_WINDOW_POSITION_ID:
-				self->private->save_window_position = g_value_get_boolean( value );
 				break;
 
 			default:
