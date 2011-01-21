@@ -135,6 +135,7 @@ static void             set_toplevel_initialized( BaseWindow *window, GtkWindow 
 static void             setup_builder( BaseWindow *window );
 
 static void             record_connected_signal( BaseWindow *window, GObject *instance, gulong handler_id );
+static gint             display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *primary, const gchar *secondary );
 
 GType
 base_window_get_type( void )
@@ -645,7 +646,7 @@ base_window_init( BaseWindow *window )
  *
  * Runs the window.
  */
-gboolean
+int
 base_window_run( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_run";
@@ -704,7 +705,7 @@ base_window_run( BaseWindow *window )
 		}
 	}
 
-	return( run_ok );
+	return( run_ok ? BASE_EXIT_CODE_OK : BASE_EXIT_CODE_MAIN_WINDOW );
 }
 
 /**
@@ -1310,6 +1311,49 @@ setup_builder( BaseWindow *window )
 
 		g_free( fname );
 	}
+}
+
+/**
+ * base_window_display_error_dlg:
+ * @parent: the #BaseWindow parent, may be %NULL.
+ * @primary: the primary message.
+ * @secondary: the secondary message.
+ *
+ * Display an error dialog box, with a 'OK' button only.
+ *
+ * if @secondary is not null, then @primary is displayed as a bold title.
+ */
+void
+base_window_display_error_dlg( const BaseWindow *parent, const gchar *primary, const gchar *secondary )
+{
+	display_dlg( parent, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, primary, secondary );
+}
+
+static gint
+display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *primary, const gchar *secondary )
+{
+	GtkWindow *gtk_parent;
+	GtkWidget *dialog;
+	gint result;
+
+	gtk_parent = NULL;
+	if( parent ){
+		gtk_parent = base_window_get_toplevel( parent );
+	}
+
+	dialog = gtk_message_dialog_new( gtk_parent, GTK_DIALOG_MODAL, type_message, type_buttons, "%s", primary );
+
+	if( secondary && g_utf8_strlen( secondary, -1 )){
+		gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), "%s", secondary );
+	}
+
+	g_object_set( G_OBJECT( dialog ) , "title", g_get_application_name(), NULL );
+
+	result = gtk_dialog_run( GTK_DIALOG( dialog ));
+
+	gtk_widget_destroy( dialog );
+
+	return( result );
 }
 
 void

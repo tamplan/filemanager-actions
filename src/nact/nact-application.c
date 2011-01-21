@@ -91,9 +91,7 @@ static void     instance_finalize( GObject *application );
 static gboolean appli_manage_options( const BaseApplication *application, int *code );
 static GObject *appli_main_window_new( const BaseApplication *application, int *code );
 
-static gboolean appli_initialize_unique_app( BaseApplication *application );
 static gboolean appli_initialize_application( BaseApplication *application );
-static gchar   *appli_get_unique_app_name( BaseApplication *application );
 static gchar   *appli_get_gtkbuilder_filename( BaseApplication *application );
 static GObject *appli_get_main_window( BaseApplication *application );
 
@@ -165,9 +163,7 @@ class_init( NactApplicationClass *klass )
 	appli_class->manage_options = appli_manage_options;
 	appli_class->main_window_new = appli_main_window_new;
 
-	appli_class->initialize_unique_app = appli_initialize_unique_app;
 	appli_class->initialize_application = appli_initialize_application;
-	appli_class->get_unique_app_name = appli_get_unique_app_name;
 	appli_class->get_ui_filename = appli_get_gtkbuilder_filename;
 	appli_class->get_main_window = appli_get_main_window;
 }
@@ -300,7 +296,7 @@ nact_application_new_with_args( int argc, char **argv )
 			BASE_PROP_ARGC,             argc,
 			BASE_PROP_ARGV,             argv,
 			BASE_PROP_OPTIONS,          st_option_entries,
-			BASE_PROP_APPLICATION_NAME, st_application_name,
+			BASE_PROP_APPLICATION_NAME, gettext( st_application_name ),
 			BASE_PROP_ICON_NAME,        icon_name,
 			BASE_PROP_UNIQUE_APP_NAME,  st_unique_app_name,
 			NULL );
@@ -394,6 +390,7 @@ appli_main_window_new( const BaseApplication *application, int *code )
 	return( G_OBJECT( main_window ));
 }
 
+# if 0
 /*
  * overrided to provide a personalized error message
  */
@@ -422,6 +419,7 @@ appli_initialize_unique_app( BaseApplication *application )
 
 	return( ok );
 }
+#endif
 
 /*
  * Overrided to complete the initialization of the application:
@@ -457,20 +455,6 @@ appli_initialize_application( BaseApplication *application )
 	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_application( application );
 
 	return( ok );
-}
-
-static gchar *
-appli_get_unique_app_name( BaseApplication *application )
-{
-	static const gchar *thisfn = "nact_application_appli_get_unique_app_name";
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	if( st_non_unique_opt ){
-		return( g_strdup( "" ));
-	}
-
-	return( g_strdup( "org.nautilus-actions.ConfigurationTool" ));
 }
 
 static gchar *

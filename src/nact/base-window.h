@@ -72,7 +72,7 @@ G_BEGIN_DECLS
 #define BASE_WINDOW_SIGNAL_ALL_WIDGETS_SHOWED		"nact-base-window-all-widgets-showed"
 
 gboolean         base_window_init( BaseWindow *window );
-gboolean         base_window_run( BaseWindow *window );
+int              base_window_run( BaseWindow *window );
 
 BaseApplication *base_window_get_application( const BaseWindow *window );
 GtkWindow       *base_window_get_named_toplevel( const BaseWindow *window, const gchar *name );
@@ -82,6 +82,7 @@ GtkWidget       *base_window_get_widget( const BaseWindow *window, const gchar *
 GtkWidget       *base_window_peek_widget( GtkWindow *window, const gchar *name );
 gboolean         base_window_is_willing_to_quit( const BaseWindow *window );
 
+void             base_window_display_error_dlg( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
 void             base_window_error_dlg( const BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );
 gboolean         base_window_yesno_dlg( const BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second );
 

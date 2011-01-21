@@ -138,105 +138,6 @@ typedef struct {
 	GObject * ( *main_window_new )( const BaseApplication *appli, int *code );
 
 	/**
-	 * run:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Starts and runs the application.
-	 *
-	 * Returns: an %int code suitable as an exit code for the program.
-	 *
-	 * Overriding this function should be very seldomly needed.
-	 *
-	 * Base class implementation takes care of creating, initializing,
-	 * and running the main window. It blocks until the end of the
-	 * program.
-	 */
-	int       ( *run )                        ( BaseApplication *appli );
-
-	/**
-	 * initialize:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Initializes the program.
-	 *
-	 * If this function successfully returns, the program is supposed
-	 * to be able to successfully run the main window.
-	 *
-	 * Returns: %TRUE if all initialization is complete and the program
-	 * can be ran.
-	 *
-	 * Returning %FALSE means that something has gone wrong in the
-	 * initialization process, thus preventing the application to
-	 * actually be ran. Aside of returning %FALSE, the responsible
-	 * code may also have setup #exit_code and #exit_message.
-	 *
-	 * When overriding this function, and unless you want have a whole
-	 * new initialization process, you should call the base class
-	 * implementation.
-	 *
-	 * From the base class implementation point of view, this function
-	 * leads the global initialization process of the program. It
-	 * actually calls a suite of elementary initialization virtual
-	 * functions which may themselves be individually overriden by the
-	 * derived class.
-	 *
-	 * Each individual function should return %TRUE in order to
-	 * continue with the initialization process, or %FALSE to stop it.
-	 *
-	 * In other words, the base class implementation considers that the
-	 * application is correctly initialized if and only if all
-	 * individual initialization virtual functions have returned %TRUE.
-	 */
-	gboolean  ( *initialize )                 ( BaseApplication *appli );
-
-	/**
-	 * initialize_unique_app:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * If relevant, checks if an instance of the application is already
-	 * running.
-	 *
-	 * Returns: %TRUE if the initialization process can continue,
-	 * %FALSE if the application asked for to be unique and another
-	 * instance is already running.
-	 *
-	 * If failed, this function sets #exit_code to
-	 * %APPLICATION_ERROR_UNIQUE_APP, and prepares a short #exit_message
-	 * to be displayed in a dialog box.
-	 *
-	 * The base class implementation asks the #BaseApplication-derived
-	 * class for a DBus unique name. If not empty, it then allocates a
-	 * UniqueApp object, delegating it the actual check for the unicity
-	 * of the application instance.
-	 *
-	 * If another instance is already running, the base class
-	 * implementation sets #exit_code to APPLICATION_ERROR_UNIQUE_APP,
-	 * and prepares a short #exit_message to be displayed in a dialog
-	 * box.
-	 */
-	gboolean  ( *initialize_unique_app )      ( BaseApplication *appli );
-
-	/**
-	 * initialize_ui:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Loads and initializes the XML file which contains the description
-	 * of the user interface of the application.
-	 *
-	 * Returns: %TRUE if the UI description has been successfully
-	 * loaded, %FALSE else.
-	 *
-	 * If failed, this function sets #exit_code to %APPLICATION_ERROR_UI,
-	 * and prepares a short #exit_message to be displayed in a dialog
-	 * box.
-	 *
-	 * The base class implementation asks the #BaseApplication-derived
-	 * class for the XML filename. If not empty, it then loads it, and
-	 * initializes a corresponding GtkBuilder object.
-	 */
-	gboolean  ( *initialize_ui )              ( BaseApplication *appli );
-
-	/**
 	 * initialize_application:
 	 * @appli: this #BaseApplication instance.
 	 *
@@ -259,26 +160,6 @@ typedef struct {
 	 * short #exit_message to be displayed in a dialog box.
 	 */
 	gboolean  ( *initialize_application )     ( BaseApplication *appli );
-
-	/**
-	 * get_unique_app_name:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Asks the derived class for the UniqueApp name of this application.
-	 *
-	 * A UniqueApp name is typically of the form
-	 * "com.mydomain.MyApplication.MyName". It is registered in DBus
-	 * system by each running instance of the application, and is then
-	 * used to check if another instance of the application is already
-	 * running.
-	 *
-	 * No default is provided by the base class, which means that the
-	 * base class defaults to not check for another instance.
-	 *
-	 * Returns: the UniqueApp name of the application, to be g_free()
-	 * by the caller.
-	 */
-	gchar *   ( *get_unique_app_name )             ( BaseApplication *appli );
 
 	/**
 	 * get_ui_filename:
@@ -330,11 +211,9 @@ typedef struct {
 typedef enum {
 	BASE_EXIT_CODE_START_FAIL = -1,
 	BASE_EXIT_CODE_OK = 0,
+	BASE_EXIT_CODE_UNIQUE_APP,
+	BASE_EXIT_CODE_MAIN_WINDOW,
 
-	BASE_APPLICATION_ERROR_I18N = 1,		/* i18n initialization error */
-	BASE_APPLICATION_ERROR_GTK,				/* gtk+ initialization error */
-	BASE_APPLICATION_ERROR_MAIN_WINDOW,		/* unable to obtain the main window */
-	BASE_APPLICATION_ERROR_UNIQUE_APP,		/* another instance is running */
 	BASE_APPLICATION_ERROR_UI_FNAME,		/* empty XML filename */
 	BASE_APPLICATION_ERROR_UI_LOAD,			/* unable to load the XML definition of the UI */
 	BASE_APPLICATION_ERROR_DEFAULT_ICON		/* unable to set default icon */
@@ -392,7 +271,6 @@ gchar       *base_application_get_application_name( const BaseApplication *appli
  */
 #define BASE_APPLICATION_PROP_MAIN_WINDOW			"base-application-main-window"
 
-gchar       *base_application_get_unique_app_name( BaseApplication *application );
 gchar       *base_application_get_ui_filename( BaseApplication *application );
 BaseBuilder *base_application_get_builder( BaseApplication *application );
 

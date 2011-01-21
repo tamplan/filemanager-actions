@@ -110,28 +110,22 @@ static gboolean       appli_initialize_i18n( BaseApplication *application, int *
 static gboolean       appli_initialize_application_name( BaseApplication *application, int *code );
 static gboolean       appli_initialize_gtk( BaseApplication *application, int *code );
 static gboolean       appli_initialize_manage_options( const BaseApplication *application, int *code );
+static gboolean       appli_initialize_unique_app( BaseApplication *application, int *code );
+#if 0
+static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );
+#endif
 static gboolean       appli_initialize_session_manager( BaseApplication *application, int *code );
 static void           session_manager_client_quit_cb( EggSMClient *client, BaseApplication *application );
 static void           session_manager_client_quit_requested_cb( EggSMClient *client, BaseApplication *application );
 static gboolean       appli_initialize_application_icon( BaseApplication *application, int *code );
-
-static gboolean       v_initialize( BaseApplication *application );
-static gboolean       v_initialize_unique_app( BaseApplication *application );
-static gboolean       v_initialize_ui( BaseApplication *application );
-
-static int            application_do_run( BaseApplication *application );
-static gboolean       application_do_initialize( BaseApplication *application );
-static gboolean       application_do_initialize_unique_app( BaseApplication *application );
-static gboolean       application_do_initialize_ui( BaseApplication *application );
-
-static gboolean       check_for_unique_app( BaseApplication *application );
-/*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
+static gboolean       appli_initialize_builder( BaseApplication *application, int *code );
 
 static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
+#if 0
 static void           display_error_message( BaseApplication *application );
-static void           set_initialize_unique_app_error( BaseApplication *application );
 static void           set_initialize_ui_get_fname_error( BaseApplication *application );
 static void           set_initialize_ui_add_xml_error( BaseApplication *application, const gchar *filename, GError *error );
+#endif
 
 GType
 base_application_get_type( void )
@@ -289,15 +283,6 @@ class_init( BaseApplicationClass *klass )
 
 	klass->manage_options = NULL;
 	klass->main_window_new = NULL;
-
-	klass->run = application_do_run;
-	klass->initialize = application_do_initialize;
-	klass->initialize_unique_app = application_do_initialize_unique_app;
-	klass->initialize_ui = application_do_initialize_ui;
-	klass->initialize_application = NULL;
-	klass->get_unique_app_name = NULL;
-	klass->get_ui_filename = NULL;
-	klass->get_main_window = NULL;
 }
 
 static void
@@ -316,7 +301,6 @@ instance_init( GTypeInstance *application, gpointer klass )
 	self->private = g_new0( BaseApplicationPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->exit_code = 0;
 }
 
 static void
@@ -549,6 +533,7 @@ base_application_run( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_run";
 	int code;
+	GtkWindow *gtk_toplevel;
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), BASE_EXIT_CODE_START_FAIL );
 
@@ -558,19 +543,39 @@ base_application_run( BaseApplication *application )
 		g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 		code = BASE_EXIT_CODE_OK;
+		application->private->main_window = NULL;
 
 		if( appli_initialize_i18n( application, &code ) &&
 			appli_initialize_application_name( application, &code ) &&
 			appli_initialize_gtk( application, &code ) &&
 			appli_initialize_manage_options( application, &code ) &&
+			appli_initialize_unique_app( application, &code ) &&
 			appli_initialize_session_manager( application, &code ) &&
 			appli_initialize_application_icon( application, &code ) &&
-				v_initialize( application ) /*
-			appli_initialize_unique_app( application, &code ) &&
-			appli_initialize_builder( application, &code ) &&
-			appli_initialize_first_window( application, &code )*/){
+			appli_initialize_builder( application, &code )){
 
-				code = application_do_run( application );
+
+			if( BASE_APPLICATION_GET_CLASS( application )->main_window_new ){
+				application->private->main_window = ( BaseWindow * ) BASE_APPLICATION_GET_CLASS( application )->main_window_new( application, &application->private->exit_code );
+			} else {
+				code = BASE_EXIT_CODE_MAIN_WINDOW;
+			}
+
+			if( application->private->main_window ){
+				g_return_val_if_fail( BASE_IS_WINDOW( application->private->main_window ), BASE_EXIT_CODE_START_FAIL );
+
+				if( base_window_init( application->private->main_window )){
+					gtk_toplevel = base_window_get_toplevel( application->private->main_window );
+					g_return_val_if_fail( gtk_toplevel, BASE_EXIT_CODE_START_FAIL );
+					g_return_val_if_fail( GTK_IS_WINDOW( gtk_toplevel ), BASE_EXIT_CODE_START_FAIL );
+
+					if( application->private->unique_app_handle ){
+						unique_app_watch_window( application->private->unique_app_handle, gtk_toplevel );
+					}
+
+					code = base_window_run( application->private->main_window );
+				}
+			}
 		}
 	}
 
@@ -664,6 +669,69 @@ appli_initialize_manage_options( const BaseApplication *application, int *code )
 }
 
 static gboolean
+appli_initialize_unique_app( BaseApplication *application, int *code )
+{
+	static const gchar *thisfn = "base_application_appli_initialize_unique_app";
+	gboolean ret;
+	gboolean is_first;
+	gchar *msg;
+
+	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
+
+	ret = TRUE;
+
+	if( application->private->unique_app_name &&
+		strlen( application->private->unique_app_name )){
+
+			application->private->unique_app_handle = unique_app_new( application->private->unique_app_name, NULL );
+			is_first = unique_app_is_running( application->private->unique_app_handle );
+
+			if( !is_first ){
+				unique_app_send_message( application->private->unique_app_handle, UNIQUE_ACTIVATE, NULL );
+				/* i18n: application name */
+				msg = g_strdup_printf(
+						_( "Another instance of %s is already running.\n"
+							"Please switch back to it." ), application->private->application_name );
+				base_window_display_error_dlg( NULL, _( "The application is not unique" ), msg );
+				g_free( msg );
+				ret = FALSE;
+				*code = BASE_EXIT_CODE_UNIQUE_APP;
+#if 0
+			/* default from libunique is actually to activate the first window
+			 * so we rely on the default..
+			 */
+			} else {
+				g_signal_connect( application->private->unique_app_handle,
+						"message-received", G_CALLBACK( on_unique_message_received ), application );
+#endif
+			}
+	}
+
+	return( ret );
+}
+
+#if 0
+static UniqueResponse
+on_unique_message_received(
+		UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data )
+{
+	static const gchar *thisfn = "base_application_check_for_unique_app";
+	UniqueResponse resp = UNIQUE_RESPONSE_OK;
+
+	switch( command ){
+		case UNIQUE_ACTIVATE:
+			g_debug( "%s: received message UNIQUE_ACTIVATE", thisfn );
+			break;
+		default:
+			resp = UNIQUE_RESPONSE_PASSTHROUGH;
+			break;
+	}
+
+	return( resp );
+}
+#endif
+
+static gboolean
 appli_initialize_session_manager( BaseApplication *application, int *code )
 {
 	static const gchar *thisfn = "base_application_do_initialize_session_manager";
@@ -736,6 +804,18 @@ appli_initialize_application_icon( BaseApplication *application, int *code )
 	return( TRUE );
 }
 
+static gboolean
+appli_initialize_builder( BaseApplication *application, int *code )
+{
+	static const gchar *thisfn = "base_application_appli_initialize_builder";
+
+	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
+
+	application->private->builder = base_builder_new();
+
+	return( TRUE );
+}
+
 /**
  * base_application_get_application_name:
  * @application: this #BaseApplication instance.
@@ -778,37 +858,6 @@ base_application_get_builder( BaseApplication *application )
 	}
 
 	return( builder );
-}
-
-/**
- * base_application_get_unique_app_name:
- * @application: this #BaseApplication instance.
- *
- * Asks the #BaseApplication-derived class for its UniqueApp name if any.
- *
- * Defaults to empty.
- *
- * Returns: a newly allocated string to be g_free() by the caller.
- */
-gchar *
-base_application_get_unique_app_name( BaseApplication *application )
-{
-	/*static const gchar *thisfn = "base_application_get_unique_app_name";
-	g_debug( "%s: icon=%p", thisfn, application );*/
-	gchar *name = NULL;
-
-	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
-
-	if( !application->private->dispose_has_run ){
-		if( BASE_APPLICATION_GET_CLASS( application )->get_unique_app_name ){
-			name = BASE_APPLICATION_GET_CLASS( application )->get_unique_app_name( application );
-
-		} else {
-			name = g_strdup( "" );
-		}
-	}
-
-	return( name );
 }
 
 /**
@@ -918,115 +967,7 @@ base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, c
 	return( ret );
 }
 
-static gboolean
-v_initialize( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_initialize";
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	return( BASE_APPLICATION_GET_CLASS( application )->initialize( application ));
-}
-
-static gboolean
-v_initialize_unique_app( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_initialize_unique_app";
-	gboolean ok;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	ok = BASE_APPLICATION_GET_CLASS( application )->initialize_unique_app( application );
-
-	if( !ok ){
-		set_initialize_unique_app_error( application );
-	}
-
-	return( ok );
-}
-
-static gboolean
-v_initialize_ui( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_initialize_ui";
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	return( BASE_APPLICATION_GET_CLASS( application )->initialize_ui( application ));
-}
-
-static int
-application_do_run( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_do_run";
-	GtkWindow *gtk_toplevel;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	if( v_initialize( application )){
-
-		application->private->main_window = NULL;
-
-		if( BASE_APPLICATION_GET_CLASS( application )->main_window_new ){
-			application->private->main_window = ( BaseWindow * ) BASE_APPLICATION_GET_CLASS( application )->main_window_new( application, &application->private->exit_code );
-		}
-
-		if( application->private->main_window ){
-			g_return_val_if_fail( BASE_IS_WINDOW( application->private->main_window ), -1 );
-
-			if( base_window_init( application->private->main_window )){
-
-				gtk_toplevel = base_window_get_toplevel( application->private->main_window );
-				g_assert( gtk_toplevel );
-				g_assert( GTK_IS_WINDOW( gtk_toplevel ));
-
-				if( application->private->unique_app_handle ){
-					unique_app_watch_window( application->private->unique_app_handle, gtk_toplevel );
-				}
-
-				base_window_run( application->private->main_window );
-			}
-		}
-	}
-
-	display_error_message( application );
-
-	return( application->private->exit_code );
-}
-
-static gboolean
-application_do_initialize( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_do_initialize";
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	return(
-			v_initialize_unique_app( application ) &&
-			v_initialize_ui( application )
-	);
-}
-
-static gboolean
-application_do_initialize_unique_app( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_do_initialize_unique_app";
-	gboolean ret = TRUE;
-	gchar *name;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	name = base_application_get_unique_app_name( application );
-
-	if( name && strlen( name )){
-		application->private->unique_app_handle = unique_app_new( name, NULL );
-		ret = check_for_unique_app( application );
-	}
-
-	g_free( name );
-	return( ret );
-}
-
+#if 0
 static gboolean
 application_do_initialize_ui( BaseApplication *application )
 {
@@ -1057,55 +998,7 @@ application_do_initialize_ui( BaseApplication *application )
 	g_free( name );
 	return( ret );
 }
-
-static gboolean
-check_for_unique_app( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_check_for_unique_app";
-	gboolean is_first = TRUE;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-	g_assert( BASE_IS_APPLICATION( application ));
-
-	if( unique_app_is_running( application->private->unique_app_handle )){
-
-		is_first = FALSE;
-
-		unique_app_send_message( application->private->unique_app_handle, UNIQUE_ACTIVATE, NULL );
-
-	/* default from libunique is actually to activate the first window
-	 * so we rely on the default..
-	 */
-	/*} else {
-		g_signal_connect(
-				application->private->unique,
-				"message-received",
-				G_CALLBACK( on_unique_message_received ),
-				application
-		);*/
-	}
-
-	return( is_first );
-}
-
-/*static UniqueResponse
-on_unique_message_received(
-		UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data )
-{
-	static const gchar *thisfn = "base_application_check_for_unique_app";
-	UniqueResponse resp = UNIQUE_RESPONSE_OK;
-
-	switch( command ){
-		case UNIQUE_ACTIVATE:
-			g_debug( "%s: received message UNIQUE_ACTIVATE", thisfn );
-			break;
-		default:
-			resp = UNIQUE_RESPONSE_PASSTHROUGH;
-			break;
-	}
-
-	return( resp );
-}*/
+#endif
 
 static gint
 display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second )
@@ -1139,6 +1032,7 @@ display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButto
 	return( result );
 }
 
+#if 0
 static void
 display_error_message( BaseApplication *application )
 {
@@ -1158,15 +1052,6 @@ display_error_message( BaseApplication *application )
 			}
 		}
 	}
-}
-
-static void
-set_initialize_unique_app_error( BaseApplication *application )
-{
-	application->private->exit_code = BASE_APPLICATION_ERROR_UNIQUE_APP;
-
-	application->private->exit_message1 =
-		g_strdup( _( "Another instance of the application is already running." ));
 }
 
 static void
@@ -1191,3 +1076,4 @@ set_initialize_ui_add_xml_error( BaseApplication *application, const gchar *file
 		application->private->exit_message2 = g_strdup( error->message );
 	}
 }
+#endif
