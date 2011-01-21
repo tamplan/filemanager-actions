@@ -138,30 +138,6 @@ typedef struct {
 	GObject * ( *main_window_new )( const BaseApplication *appli, int *code );
 
 	/**
-	 * initialize_application:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Initializes the derived-class application.
-	 *
-	 * When this function successfully returns, the #BaseApplication
-	 * instance must have a valid pointer to the #BaseWindow-derived
-	 * object which will be used as a main window for the application.
-	 *
-	 * Returns: %TRUE if at least all mandatory informations have been
-	 * collected, %FALSE else.
-	 *
-	 * The base class implementation asks the derived class to
-	 * allocates and provides the BaseWindow-derived object which will
-	 * be the main window of the application
-	 * (cf. get_main_window()). This step is mandatory.
-	 *
-	 * If failed, this function sets #exit_code to the value which is
-	 * pertinent depending of the missing information, and prepares a
-	 * short #exit_message to be displayed in a dialog box.
-	 */
-	gboolean  ( *initialize_application )     ( BaseApplication *appli );
-
-	/**
 	 * get_ui_filename:
 	 * @appli: this #BaseApplication instance.
 	 *

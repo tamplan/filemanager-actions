@@ -91,7 +91,6 @@ static void     instance_finalize( GObject *application );
 static gboolean appli_manage_options( const BaseApplication *application, int *code );
 static GObject *appli_main_window_new( const BaseApplication *application, int *code );
 
-static gboolean appli_initialize_application( BaseApplication *application );
 static gchar   *appli_get_gtkbuilder_filename( BaseApplication *application );
 
 GType
@@ -162,7 +161,6 @@ class_init( NactApplicationClass *klass )
 	appli_class->manage_options = appli_manage_options;
 	appli_class->main_window_new = appli_main_window_new;
 
-	appli_class->initialize_application = appli_initialize_application;
 	appli_class->get_ui_filename = appli_get_gtkbuilder_filename;
 }
 
@@ -386,42 +384,6 @@ nact_application_get_updater( NactApplication *application )
 	}
 
 	return( updater );
-}
-
-/*
- * Overrided to complete the initialization of the application:
- * - allocate the #NApivot here, so that it will be available when the
- *   #NactMainWindow will require it
- * - do not register #NactApplication as a NAIPivotConsumer as this is
- *   essentially the NactMainwindow which will receive and deal with
- *   NAPivot notification messages
- *
- * At last, let the base class do its work, i.e. creating the main window.
- *
- * When the pivot will be empty, NAIDuplicable signals must yet be
- * recorded in the system. Done here because :
- * - I don't want do this in NAPivot which is also used by the plugin,
- * - this is the last place where I'm pretty sure NAObject has not yet
- *   been registered.
- * So we allocate a new NAObject-derived object to be sure the interface
- * is correctly initialized.
- */
-static gboolean
-appli_initialize_application( BaseApplication *application )
-{
-	static const gchar *thisfn = "nact_application_appli_initialize_application";
-	gboolean ok;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	NACT_APPLICATION( application )->private->updater = na_updater_new();
-	na_pivot_set_loadable( NA_PIVOT( NACT_APPLICATION( application )->private->updater ), PIVOT_LOAD_ALL );
-	na_pivot_load_items( NA_PIVOT( NACT_APPLICATION( application )->private->updater ));
-
-	/* call parent class */
-	ok = BASE_APPLICATION_CLASS( st_parent_class )->initialize_application( application );
-
-	return( ok );
 }
 
 static gchar *

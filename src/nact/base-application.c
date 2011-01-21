@@ -66,9 +66,9 @@ struct _BaseApplicationPrivate {
 	EggSMClient  *sm_client;
 	BaseBuilder  *builder;
 	BaseWindow   *main_window;
+	UniqueApp    *unique_app_handle;
 
 	gboolean      is_gtk_initialized;
-	UniqueApp    *unique_app_handle;
 	int           exit_code;
 	gchar        *exit_message1;
 	gchar        *exit_message2;
