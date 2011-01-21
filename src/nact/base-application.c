@@ -104,26 +104,27 @@ static void           instance_dispose( GObject *application );
 static void           instance_finalize( GObject *application );
 
 static gboolean       appli_initialize_i18n( BaseApplication *application, int *code );
+static gboolean       appli_initialize_application_name( BaseApplication *application, int *code );
 
 static gboolean       v_initialize( BaseApplication *application );
 static gboolean       v_initialize_gtk( BaseApplication *application );
 static gboolean       v_manage_options( const BaseApplication *application, int *code );
-static gboolean       v_initialize_application_name( BaseApplication *application );
 static gboolean       v_initialize_session_manager( BaseApplication *application );
 static gboolean       v_initialize_unique_app( BaseApplication *application );
 static gboolean       v_initialize_ui( BaseApplication *application );
 static gboolean       v_initialize_default_icon( BaseApplication *application );
 #if 0
+static gboolean       v_initialize_application_name( BaseApplication *application );
 static gboolean       v_initialize_application( BaseApplication *application );
 static void           set_initialize_application_error( BaseApplication *application );
 static gboolean       application_do_initialize_application( BaseApplication *application );
 static void           set_initialize_i18n_error( BaseApplication *application );
+static gboolean       application_do_initialize_application_name( BaseApplication *application );
 #endif
 static int            application_do_run( BaseApplication *application );
 static gboolean       application_do_initialize( BaseApplication *application );
 static gboolean       application_do_initialize_gtk( BaseApplication *application );
 static gboolean       application_do_manage_options( const BaseApplication *application, int *code );
-static gboolean       application_do_initialize_application_name( BaseApplication *application );
 static gboolean       application_do_initialize_session_manager( BaseApplication *application );
 static gboolean       application_do_initialize_unique_app( BaseApplication *application );
 static gboolean       application_do_initialize_ui( BaseApplication *application );
@@ -303,13 +304,11 @@ class_init( BaseApplicationClass *klass )
 	klass->run = application_do_run;
 	klass->initialize = application_do_initialize;
 	klass->initialize_gtk = application_do_initialize_gtk;
-	klass->initialize_application_name = application_do_initialize_application_name;
 	klass->initialize_session_manager = application_do_initialize_session_manager;
 	klass->initialize_unique_app = application_do_initialize_unique_app;
 	klass->initialize_ui = application_do_initialize_ui;
 	klass->initialize_default_icon = application_do_initialize_default_icon;
 	klass->initialize_application = NULL;
-	klass->get_application_name = NULL;
 	klass->get_icon_name = NULL;
 	klass->get_unique_app_name = NULL;
 	klass->get_ui_filename = NULL;
@@ -576,8 +575,8 @@ base_application_run( BaseApplication *application )
 		code = BASE_EXIT_CODE_OK;
 
 		if( appli_initialize_i18n( application, &code ) &&
-				v_initialize( application ) /*
 			appli_initialize_application_name( application, &code ) &&
+				v_initialize( application ) /*
 			appli_initialize_gtk( application, &code ) &&
 			appli_initialize_manage_options( application, &code ) &&
 			appli_initialize_session_manager( application, &code ) &&
@@ -585,6 +584,8 @@ base_application_run( BaseApplication *application )
 			appli_initialize_default_icon( application, &code ) &&
 			appli_initialize_builder( application, &code ) &&
 			appli_initialize_first_window( application, &code )*/){
+
+				code = application_do_run( application );
 		}
 	}
 
@@ -596,7 +597,7 @@ appli_initialize_i18n( BaseApplication *application, int *code )
 {
 	static const gchar *thisfn = "base_application_appli_initialize_i18n";
 
-	g_debug( "%s: application=%p, code=%p", thisfn, ( void * ) application, ( void * ) code );
+	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
 
 #ifdef ENABLE_NLS
 	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
@@ -611,33 +612,40 @@ appli_initialize_i18n( BaseApplication *application, int *code )
 	return( TRUE );
 }
 
+static gboolean
+appli_initialize_application_name( BaseApplication *application, int *code )
+{
+	static const gchar *thisfn = "base_application_appli_initialize_application_name";
+	gchar *name;
+
+	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
+
+	name = base_application_get_application_name( application );
+	if( name && g_utf8_strlen( name, -1 )){
+		g_set_application_name( name );
+	}
+	g_free( name );
+
+	return( TRUE );
+}
+
 /**
  * base_application_get_application_name:
  * @application: this #BaseApplication instance.
  *
- * Asks the #BaseApplication-derived class for its localized
- * application name.
- *
- * Defaults to empty.
- *
- * Returns: a newly allocated string to be g_free() by the caller.
+ * Returns: the application name as a newly allocated string which should
+ * be be g_free() by the caller.
  */
 gchar *
-base_application_get_application_name( BaseApplication *application )
+base_application_get_application_name( const BaseApplication *application )
 {
-	/*static const gchar *thisfn = "base_application_get_application_name";
-	g_debug( "%s: application=%p", thisfn, application );*/
 	gchar *name = NULL;
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
 
 	if( !application->private->dispose_has_run ){
-		if( BASE_APPLICATION_GET_CLASS( application )->get_application_name ){
-			name = BASE_APPLICATION_GET_CLASS( application )->get_application_name( application );
 
-		} else {
-			name = g_strdup( "" );
-		}
+		name = g_strdup( application->private->application_name );
 	}
 
 	return( name );
@@ -878,19 +886,6 @@ v_manage_options( const BaseApplication *application, int *code )
 }
 
 static gboolean
-v_initialize_application_name( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_initialize_application_name";
-	gboolean ok;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	ok = BASE_APPLICATION_GET_CLASS( application )->initialize_application_name( application );
-
-	return( ok );
-}
-
-static gboolean
 v_initialize_session_manager( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_session_manager";
@@ -948,6 +943,20 @@ v_initialize_default_icon( BaseApplication *application )
 }
 
 #if 0
+
+static gboolean
+v_initialize_application_name( BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_v_initialize_application_name";
+	gboolean ok;
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	ok = BASE_APPLICATION_GET_CLASS( application )->initialize_application_name( application );
+
+	return( ok );
+}
+
 static gboolean
 v_initialize_application( BaseApplication *application )
 {
@@ -1033,7 +1042,6 @@ application_do_initialize( BaseApplication *application )
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	return(
-			v_initialize_application_name( application ) &&
 			v_initialize_gtk( application ) &&
 			v_manage_options( application, &code ) &&
 			v_initialize_session_manager( application ) &&
@@ -1080,23 +1088,6 @@ application_do_manage_options( const BaseApplication *application, int *code )
 	static const gchar *thisfn = "base_application_do_manage_options";
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	return( TRUE );
-}
-
-static gboolean
-application_do_initialize_application_name( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_do_initialize_application_name";
-	gchar *name;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	name = base_application_get_application_name( application );
-	if( name && g_utf8_strlen( name, -1 )){
-		g_set_application_name( name );
-	}
-	g_free( name );
 
 	return( TRUE );
 }

@@ -1,5 +1,13 @@
 2011-01-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.c:
+	* src/nact/base-application.h
+	(initialize_i18n, initialize_application_name, get_application_name):
+	Remove virtual methods.
+
+	* src/nact/nact-application.c (appli_get_application_name):
+	Removed function.
+
 	* src/nact/nact-application.c (nact_application_new_with_args):
 	Make NactApplication initializes with these new properties.
 

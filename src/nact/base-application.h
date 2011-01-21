@@ -213,14 +213,6 @@ typedef struct {
 	gboolean  ( *initialize_gtk )             ( BaseApplication *appli );
 
 	/**
-	 * initialize_application_name:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Initializes the name of the application.
-	 */
-	gboolean  ( *initialize_application_name )( BaseApplication *appli );
-
-	/**
 	 * initialize_unique_app:
 	 * @appli: this #BaseApplication instance.
 	 *
@@ -313,21 +305,6 @@ typedef struct {
 	 * short #exit_message to be displayed in a dialog box.
 	 */
 	gboolean  ( *initialize_application )     ( BaseApplication *appli );
-
-	/**
-	 * get_application_name:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Asks the derived class for the application name.
-	 *
-	 * It is typically used as the primary title of the main window.
-	 *
-	 * If not provided by the derived class, application name defaults
-	 * to empty.
-	 *
-	 * Returns: the application name, to be g_free() by the caller.
-	 */
-	gchar *   ( *get_application_name )       ( BaseApplication *appli );
 
 	/**
 	 * get_icon_name:
@@ -425,6 +402,12 @@ typedef enum {
 }
 	BaseExitCode;
 
+GType        base_application_get_type( void );
+
+int          base_application_run( BaseApplication *application );
+
+gchar       *base_application_get_application_name( const BaseApplication *application );
+
 /**
  * @BASE_APPLICATION_PROP_IS_GTK_INITIALIZED: set to %TRUE after
  * successfully returning from the application_initialize_gtk() virtual
@@ -470,11 +453,6 @@ typedef enum {
  */
 #define BASE_APPLICATION_PROP_MAIN_WINDOW			"base-application-main-window"
 
-GType        base_application_get_type( void );
-
-int          base_application_run( BaseApplication *application );
-
-gchar       *base_application_get_application_name( BaseApplication *application );
 gchar       *base_application_get_icon_name( BaseApplication *application );
 gchar       *base_application_get_unique_app_name( BaseApplication *application );
 gchar       *base_application_get_ui_filename( BaseApplication *application );
