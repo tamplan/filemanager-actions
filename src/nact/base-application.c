@@ -61,14 +61,17 @@ struct _BaseApplicationPrivate {
 	gchar        *icon_name;
 	gchar        *unique_app_name;
 
+	/* internals
+	 */
+	EggSMClient  *sm_client;
+	BaseBuilder  *builder;
+	BaseWindow   *main_window;
+
 	gboolean      is_gtk_initialized;
 	UniqueApp    *unique_app_handle;
 	int           exit_code;
 	gchar        *exit_message1;
 	gchar        *exit_message2;
-	BaseBuilder  *builder;
-	BaseWindow   *main_window;
-	EggSMClient  *sm_client;
 };
 
 /* instance properties
@@ -105,26 +108,25 @@ static void           instance_finalize( GObject *application );
 
 static gboolean       appli_initialize_i18n( BaseApplication *application, int *code );
 static gboolean       appli_initialize_application_name( BaseApplication *application, int *code );
-static gboolean       appli_initialize_application_icon( BaseApplication *application, int *code );
 static gboolean       appli_initialize_gtk( BaseApplication *application, int *code );
 static gboolean       appli_initialize_manage_options( const BaseApplication *application, int *code );
+static gboolean       appli_initialize_session_manager( BaseApplication *application, int *code );
+static void           session_manager_client_quit_cb( EggSMClient *client, BaseApplication *application );
+static void           session_manager_client_quit_requested_cb( EggSMClient *client, BaseApplication *application );
+static gboolean       appli_initialize_application_icon( BaseApplication *application, int *code );
 
 static gboolean       v_initialize( BaseApplication *application );
-static gboolean       v_initialize_session_manager( BaseApplication *application );
 static gboolean       v_initialize_unique_app( BaseApplication *application );
 static gboolean       v_initialize_ui( BaseApplication *application );
 
 static int            application_do_run( BaseApplication *application );
 static gboolean       application_do_initialize( BaseApplication *application );
-static gboolean       application_do_initialize_session_manager( BaseApplication *application );
 static gboolean       application_do_initialize_unique_app( BaseApplication *application );
 static gboolean       application_do_initialize_ui( BaseApplication *application );
 
 static gboolean       check_for_unique_app( BaseApplication *application );
 /*static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );*/
 
-static void           client_quit_cb( EggSMClient *client, BaseApplication *application );
-static void           client_quit_requested_cb( EggSMClient *client, BaseApplication *application );
 static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
 static void           display_error_message( BaseApplication *application );
 static void           set_initialize_unique_app_error( BaseApplication *application );
@@ -290,7 +292,6 @@ class_init( BaseApplicationClass *klass )
 
 	klass->run = application_do_run;
 	klass->initialize = application_do_initialize;
-	klass->initialize_session_manager = application_do_initialize_session_manager;
 	klass->initialize_unique_app = application_do_initialize_unique_app;
 	klass->initialize_ui = application_do_initialize_ui;
 	klass->initialize_application = NULL;
@@ -562,9 +563,9 @@ base_application_run( BaseApplication *application )
 			appli_initialize_application_name( application, &code ) &&
 			appli_initialize_gtk( application, &code ) &&
 			appli_initialize_manage_options( application, &code ) &&
+			appli_initialize_session_manager( application, &code ) &&
 			appli_initialize_application_icon( application, &code ) &&
 				v_initialize( application ) /*
-			appli_initialize_session_manager( application, &code ) &&
 			appli_initialize_unique_app( application, &code ) &&
 			appli_initialize_builder( application, &code ) &&
 			appli_initialize_first_window( application, &code )*/){
@@ -660,6 +661,63 @@ appli_initialize_manage_options( const BaseApplication *application, int *code )
 	}
 
 	return( ret );
+}
+
+static gboolean
+appli_initialize_session_manager( BaseApplication *application, int *code )
+{
+	static const gchar *thisfn = "base_application_do_initialize_session_manager";
+
+	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
+
+	egg_sm_client_set_mode( EGG_SM_CLIENT_MODE_NO_RESTART );
+	application->private->sm_client = egg_sm_client_get();
+	egg_sm_client_startup();
+	g_debug( "%s: sm_client=%p", thisfn, ( void * ) application->private->sm_client );
+
+	g_signal_connect( application->private->sm_client,
+	        "quit-requested", G_CALLBACK( session_manager_client_quit_requested_cb ), application );
+
+	g_signal_connect( application->private->sm_client,
+	        "quit", G_CALLBACK( session_manager_client_quit_cb ), application );
+
+	return( TRUE );
+}
+
+static void
+session_manager_client_quit_cb( EggSMClient *client, BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_session_manager_client_quit_cb";
+
+	g_return_if_fail( BASE_IS_APPLICATION( application ));
+
+	g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
+
+	if( application->private->main_window &&
+		BASE_IS_WINDOW( application->private->main_window )){
+
+			g_object_unref( application->private->main_window );
+			application->private->main_window = NULL;
+	}
+}
+
+static void
+session_manager_client_quit_requested_cb( EggSMClient *client, BaseApplication *application )
+{
+	static const gchar *thisfn = "base_application_session_manager_client_quit_requested_cb";
+	gboolean willing_to = TRUE;
+
+	g_return_if_fail( BASE_IS_APPLICATION( application ));
+
+	g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
+
+	if( application->private->main_window &&
+		BASE_IS_WINDOW( application->private->main_window )){
+
+			willing_to = base_window_is_willing_to_quit( application->private->main_window );
+	}
+
+	egg_sm_client_will_quit( client, willing_to );
 }
 
 static gboolean
@@ -871,19 +929,6 @@ v_initialize( BaseApplication *application )
 }
 
 static gboolean
-v_initialize_session_manager( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_initialize_session_manager";
-	gboolean ok;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	ok = BASE_APPLICATION_GET_CLASS( application )->initialize_session_manager( application );
-
-	return( ok );
-}
-
-static gboolean
 v_initialize_unique_app( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_unique_app";
@@ -914,25 +959,24 @@ static int
 application_do_run( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_do_run";
-	BaseWindow *main_window;
 	GtkWindow *gtk_toplevel;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	if( v_initialize( application )){
 
-		main_window = NULL;
+		application->private->main_window = NULL;
 
 		if( BASE_APPLICATION_GET_CLASS( application )->main_window_new ){
-			main_window = ( BaseWindow * ) BASE_APPLICATION_GET_CLASS( application )->main_window_new( application, &application->private->exit_code );
+			application->private->main_window = ( BaseWindow * ) BASE_APPLICATION_GET_CLASS( application )->main_window_new( application, &application->private->exit_code );
 		}
 
-		if( main_window ){
-			g_return_val_if_fail( BASE_IS_WINDOW( main_window ), -1 );
+		if( application->private->main_window ){
+			g_return_val_if_fail( BASE_IS_WINDOW( application->private->main_window ), -1 );
 
-			if( base_window_init( main_window )){
+			if( base_window_init( application->private->main_window )){
 
-				gtk_toplevel = base_window_get_toplevel( main_window );
+				gtk_toplevel = base_window_get_toplevel( application->private->main_window );
 				g_assert( gtk_toplevel );
 				g_assert( GTK_IS_WINDOW( gtk_toplevel ));
 
@@ -940,7 +984,7 @@ application_do_run( BaseApplication *application )
 					unique_app_watch_window( application->private->unique_app_handle, gtk_toplevel );
 				}
 
-				base_window_run( main_window );
+				base_window_run( application->private->main_window );
 			}
 		}
 	}
@@ -958,38 +1002,9 @@ application_do_initialize( BaseApplication *application )
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	return(
-			v_initialize_session_manager( application ) &&
 			v_initialize_unique_app( application ) &&
 			v_initialize_ui( application )
 	);
-}
-
-static gboolean
-application_do_initialize_session_manager( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_do_initialize_session_manager";
-	gboolean ret = TRUE;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	egg_sm_client_set_mode( EGG_SM_CLIENT_MODE_NO_RESTART );
-	application->private->sm_client = egg_sm_client_get();
-	egg_sm_client_startup();
-	g_debug( "%s: sm_client=%p", thisfn, ( void * ) application->private->sm_client );
-
-	g_signal_connect(
-			application->private->sm_client,
-	        "quit-requested",
-	        G_CALLBACK( client_quit_requested_cb ),
-	        application );
-
-	g_signal_connect(
-			application->private->sm_client,
-	        "quit",
-	        G_CALLBACK( client_quit_cb ),
-	        application );
-
-	return( ret );
 }
 
 static gboolean
@@ -1091,34 +1106,6 @@ on_unique_message_received(
 
 	return( resp );
 }*/
-
-static void
-client_quit_cb( EggSMClient *client, BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_client_quit_cb";
-
-	g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
-
-	if( BASE_IS_WINDOW( application->private->main_window )){
-		g_object_unref( application->private->main_window );
-		application->private->main_window = NULL;
-	}
-}
-
-static void
-client_quit_requested_cb( EggSMClient *client, BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_client_quit_requested_cb";
-	gboolean willing_to = TRUE;
-
-	g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
-
-	if( BASE_IS_WINDOW( application->private->main_window )){
-		willing_to = base_window_is_willing_to_quit( application->private->main_window );
-	}
-
-	egg_sm_client_will_quit( client, willing_to );
-}
 
 static gint
 display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second )
