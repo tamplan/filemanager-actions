@@ -766,6 +766,8 @@ base_window_run( BaseWindow *window )
 
 	if( !window->private->dispose_has_run ){
 
+		run_ok = window->private->initialized;
+
 		if( !window->private->initialized ){
 			run_ok = base_window_init( window );
 		}
@@ -1286,7 +1288,7 @@ load_named_toplevel( const BaseWindow *window, const gchar *name )
 
 	if( !toplevel ){
 		msg = g_strdup_printf( _( "Unable to load %s XML definition." ), name );
-		base_application_error_dlg( window->private->application, GTK_MESSAGE_ERROR, msg, NULL );
+		base_window_display_error_dlg( window, msg, NULL );
 		g_free( msg );
 	}
 
@@ -1354,6 +1356,53 @@ base_window_display_error_dlg( const BaseWindow *parent, const gchar *primary, c
 	display_dlg( parent, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, primary, secondary );
 }
 
+/**
+ * base_window_display_yesno_dlg:
+ * @parent: the #BaseWindow parent, may be %NULL.
+ * @primary: the primary message.
+ * @secondary: the secondary message.
+ *
+ * Display a warning dialog box, with a 'OK' button only.
+ *
+ * if @secondary is not null, then @primary is displayed as a bold title.
+ *
+ * Returns: %TRUE if the user has clicked 'Yes', %FALSE else.
+ */
+gboolean
+base_window_display_yesno_dlg( const BaseWindow *parent, const gchar *primary, const gchar *secondary )
+{
+	gint result;
+
+	result = display_dlg( parent, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, primary, secondary );
+
+	return( result == GTK_RESPONSE_YES );
+}
+
+/**
+ * base_window_display_message_dlg:
+ * @parent: the #BaseWindow parent, may be %NULL.
+ * @message: the message to be displayed.
+ *
+ * Displays an information dialog with only an OK button.
+ */
+void
+base_window_display_message_dlg( const BaseWindow *parent, GSList *msg )
+{
+	GString *string;
+	GSList *im;
+
+	string = g_string_new( "" );
+	for( im = msg ; im ; im = im->next ){
+		if( g_utf8_strlen( string->str, -1 )){
+			string = g_string_append( string, "\n" );
+		}
+		string = g_string_append( string, ( gchar * ) im->data );
+	}
+	display_dlg( parent, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, string->str, NULL );
+
+	g_string_free( string, TRUE );
+}
+
 static gint
 display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *primary, const gchar *secondary )
 {
@@ -1384,26 +1433,13 @@ display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsTy
 void
 base_window_error_dlg( const BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary )
 {
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-
-	if( !window->private->dispose_has_run ){
-
-		base_application_error_dlg( window->private->application, type, primary, secondary );
-	}
+	base_window_display_error_dlg( window, primary, secondary );
 }
 
 gboolean
 base_window_yesno_dlg( const BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second )
 {
-	gboolean yesno = FALSE;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
-
-	if( !window->private->dispose_has_run ){
-		yesno = base_application_yesno_dlg( window->private->application, type, first, second );
-	}
-
-	return( yesno );
+	return( base_window_display_yesno_dlg( window, first, second ));
 }
 
 /**

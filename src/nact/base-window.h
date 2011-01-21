@@ -86,7 +86,10 @@ GtkWidget       *base_window_get_widget( const BaseWindow *window, const gchar *
 GtkWidget       *base_window_peek_widget( GtkWindow *window, const gchar *name );
 gboolean         base_window_is_willing_to_quit( const BaseWindow *window );
 
-void             base_window_display_error_dlg( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
+void             base_window_display_error_dlg  ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
+gboolean         base_window_display_yesno_dlg  ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
+void             base_window_display_message_dlg( const BaseWindow *parent, GSList *message );
+
 void             base_window_error_dlg( const BaseWindow *window, GtkMessageType type, const gchar *primary, const gchar *secondary );
 gboolean         base_window_yesno_dlg( const BaseWindow *window, GtkMessageType type, const gchar *first, const gchar *second );
 

@@ -33,7 +33,6 @@
 #endif
 
 #include <glib/gi18n.h>
-#include <glib/gprintf.h>
 #include <string.h>
 #include <unique/unique.h>
 
@@ -108,13 +107,6 @@ static gboolean       appli_initialize_session_manager( BaseApplication *applica
 static void           session_manager_client_quit_cb( EggSMClient *client, BaseApplication *application );
 static void           session_manager_client_quit_requested_cb( EggSMClient *client, BaseApplication *application );
 static gboolean       appli_initialize_base_application( BaseApplication *application, int *code );
-
-static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
-#if 0
-static void           display_error_message( BaseApplication *application );
-static void           set_initialize_ui_get_fname_error( BaseApplication *application );
-static void           set_initialize_ui_add_xml_error( BaseApplication *application, const gchar *filename, GError *error );
-#endif
 
 GType
 base_application_get_type( void )
@@ -373,6 +365,16 @@ instance_dispose( GObject *application )
 			g_object_unref( self->private->builder );
 		}
 
+		if( self->private->sm_client_quit_handler_id &&
+			g_signal_handler_is_connected( self->private->sm_client, self->private->sm_client_quit_handler_id )){
+				g_signal_handler_disconnect( self->private->sm_client, self->private->sm_client_quit_handler_id  );
+		}
+
+		if( self->private->sm_client_quit_requested_handler_id &&
+			g_signal_handler_is_connected( self->private->sm_client, self->private->sm_client_quit_requested_handler_id )){
+				g_signal_handler_disconnect( self->private->sm_client, self->private->sm_client_quit_requested_handler_id  );
+		}
+
 		if( self->private->sm_client ){
 			g_object_unref( self->private->sm_client );
 		}
@@ -466,7 +468,10 @@ base_application_run( BaseApplication *application )
 						unique_app_watch_window( application->private->unique_app_handle, gtk_toplevel );
 					}
 
+					g_debug( "%s: invoking base_window_run", thisfn );
 					code = base_window_run( application->private->main_window );
+				} else {
+					g_debug( "%s: base_window_init has returned FALSE", thisfn );
 				}
 			}
 		}
@@ -739,189 +744,3 @@ base_application_get_builder( const BaseApplication *application )
 
 	return( builder );
 }
-
-/**
- * base_application_message_dlg:
- * @application: this #BaseApplication instance.
- * @message: the message to be displayed.
- *
- * Displays a dialog with only an OK button.
- */
-void
-base_application_message_dlg( BaseApplication *application, GSList *msg )
-{
-	GString *string;
-	GSList *im;
-
-	if( !application->private->dispose_has_run ){
-
-		string = g_string_new( "" );
-		for( im = msg ; im ; im = im->next ){
-			if( g_utf8_strlen( string->str, -1 )){
-				string = g_string_append( string, "\n" );
-			}
-			string = g_string_append( string, ( gchar * ) im->data );
-		}
-		display_dlg( application, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, string->str, NULL );
-
-		g_string_free( string, TRUE );
-	}
-}
-
-/**
- * base_application_error_dlg:
- * @application: this #BaseApplication instance.
- * @type:
- * @primary: a first message.
- * @secondaru: a second message.
- *
- * Displays an error dialog with only an OK button.
- */
-void
-base_application_error_dlg( BaseApplication *application,
-							GtkMessageType type,
-							const gchar *first,
-							const gchar *second )
-{
-	if( !application->private->dispose_has_run ){
-		display_dlg( application, type, GTK_BUTTONS_OK, first, second );
-	}
-}
-
-/**
- * base_application_yesno_dlg:
- * @application: this #BaseApplication instance.
- * @type:
- * @primary: a first message.
- * @secondaru: a second message.
- *
- * Displays a choice dialog, with Yes and No buttons.
- * No button is the default.
- *
- * Returns: %TRUE if user has clicked on Yes button, %FALSE else.
- */
-gboolean
-base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second )
-{
-	gboolean ret = FALSE;
-	gint result;
-
-	if( !application->private->dispose_has_run ){
-
-		result = display_dlg( application, type, GTK_BUTTONS_YES_NO, first, second );
-		ret = ( result == GTK_RESPONSE_YES );
-	}
-
-	return( ret );
-}
-
-#if 0
-static gboolean
-application_do_initialize_ui( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_do_initialize_ui";
-	gboolean ret = TRUE;
-	GError *error = NULL;
-	gchar *name;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	name = base_application_get_ui_filename( application );
-
-	if( !name || !strlen( name )){
-		ret = FALSE;
-		set_initialize_ui_get_fname_error( application );
-
-	} else {
-		application->private->builder = base_builder_new();
-		if( !base_builder_add_from_file( application->private->builder, name, &error )){
-			ret = FALSE;
-			set_initialize_ui_add_xml_error( application, name, error );
-			if( error ){
-				g_error_free( error );
-			}
-		}
-	}
-
-	g_free( name );
-	return( ret );
-}
-#endif
-
-static gint
-display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second )
-{
-	GtkWidget *dialog;
-	const gchar *name;
-	gint result;
-	GtkWindow *parent;
-
-	g_assert( BASE_IS_APPLICATION( application ));
-
-	parent = NULL;
-	if( application->private->main_window ){
-		parent = base_window_get_toplevel( application->private->main_window );
-	}
-
-	dialog = gtk_message_dialog_new( parent, GTK_DIALOG_MODAL, type_message, type_buttons, "%s", first );
-
-	if( second && g_utf8_strlen( second, -1 )){
-		gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dialog ), "%s", second );
-	}
-
-	name = g_get_application_name();
-
-	g_object_set( G_OBJECT( dialog ) , "title", name, NULL );
-
-	result = gtk_dialog_run( GTK_DIALOG( dialog ));
-
-	gtk_widget_destroy( dialog );
-
-	return( result );
-}
-
-#if 0
-static void
-display_error_message( BaseApplication *application )
-{
-	if( application->private->exit_message1 && g_utf8_strlen( application->private->exit_message1, -1 )){
-
-		if( application->private->is_gtk_initialized ){
-			base_application_error_dlg(
-					application,
-					GTK_MESSAGE_INFO,
-					application->private->exit_message1,
-					application->private->exit_message2 );
-
-		} else {
-			g_printf( "%s\n", application->private->exit_message1 );
-			if( application->private->exit_message2 && g_utf8_strlen( application->private->exit_message2, -1 )){
-				g_printf( "%s\n", application->private->exit_message2 );
-			}
-		}
-	}
-}
-
-static void
-set_initialize_ui_get_fname_error( BaseApplication *application )
-{
-	application->private->exit_code = BASE_APPLICATION_ERROR_UI_FNAME;
-
-	application->private->exit_message1 =
-		g_strdup( _( "No filename provided for the UI XML definition." ));
-}
-
-static void
-set_initialize_ui_add_xml_error( BaseApplication *application, const gchar *filename, GError *error )
-{
-	application->private->exit_code = BASE_APPLICATION_ERROR_UI_LOAD;
-
-	application->private->exit_message1 =
-		/* i18n: Unable to load the XML definition from <filename> */
-		g_strdup_printf( _( "Unable to load the XML definition from %s." ), filename );
-
-	if( error && error->message ){
-		application->private->exit_message2 = g_strdup( error->message );
-	}
-}
-#endif

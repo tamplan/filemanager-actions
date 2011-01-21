@@ -179,10 +179,6 @@ int          base_application_run( BaseApplication *application );
 gchar       *base_application_get_application_name( const BaseApplication *application );
 BaseBuilder *base_application_get_builder         ( const BaseApplication *application );
 
-void         base_application_message_dlg( BaseApplication *application, GSList *message );
-void         base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
-gboolean     base_application_yesno_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
-
 G_END_DECLS
 
 #endif /* __BASE_APPLICATION_H__ */

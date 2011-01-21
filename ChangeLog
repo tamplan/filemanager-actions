@@ -1,6 +1,16 @@
 2011-01-21 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-application.c:
+	* src/nact/base-application.h (base_application_message_dlg,
+	base_application_error_dlg, base_application_yesno_dlg):
+	Functions are moved to BaseWindow class.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h
+	(base_window_display_yesno_dlg, base_window_display_message_dlg):
+	New functions.
+
+	* src/nact/base-application.c:
 	* src/nact/base-application.h
 	(base_application_get_ui_filename): Removed function.
 	(get_ui_filename): Removed virtual method.
