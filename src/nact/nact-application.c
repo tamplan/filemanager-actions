@@ -33,7 +33,7 @@
 #endif
 
 #include <glib/gi18n.h>
-#include <gtk/gtk.h>
+#include <libintl.h>
 
 #include <api/na-core-utils.h>
 
@@ -67,7 +67,10 @@ enum {
 static gboolean     st_non_unique_opt = FALSE;
 static gboolean     st_version_opt    = FALSE;
 
-static GOptionEntry st_entries[] = {
+static const gchar *st_application_name = N_( "Nautilus-Actions Configuration Tool" );
+static const gchar *st_unique_app_name  = "org.nautilus-actions.ConfigurationTool";
+
+static GOptionEntry st_option_entries[] = {
 	{ "non-unique", 'n', 0, G_OPTION_ARG_NONE, &st_non_unique_opt,
 			N_( "Set it to run multiple instances of the program [unique]" ), NULL },
 	{ "version"   , 'v', 0, G_OPTION_ARG_NONE, &st_version_opt,
@@ -292,14 +295,23 @@ instance_finalize( GObject *application )
 NactApplication *
 nact_application_new_with_args( int argc, char **argv )
 {
-	return(
-			g_object_new(
-					NACT_APPLICATION_TYPE,
-					BASE_PROP_ARGC, argc,
-					BASE_PROP_ARGV, argv,
-					BASE_PROP_OPTIONS, st_entries,
-					NULL )
-	);
+	NactApplication *application;
+	gchar *icon_name;
+
+	icon_name = na_iabout_get_icon_name();
+
+	application = g_object_new( NACT_APPLICATION_TYPE,
+			BASE_PROP_ARGC,             argc,
+			BASE_PROP_ARGV,             argv,
+			BASE_PROP_OPTIONS,          st_option_entries,
+			BASE_PROP_APPLICATION_NAME, st_application_name,
+			BASE_PROP_ICON_NAME,        icon_name,
+			BASE_PROP_UNIQUE_APP_NAME,  st_unique_app_name,
+			NULL );
+
+	g_free( icon_name );
+
+	return( application );
 }
 
 /**

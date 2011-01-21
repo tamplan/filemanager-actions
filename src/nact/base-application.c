@@ -422,7 +422,9 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 				break;
 
 			case BASE_PROP_ARGV_ID:
-				g_boxed_free( G_TYPE_STRV, self->private->argv );
+				if( self->private->argv ){
+					g_boxed_free( G_TYPE_STRV, self->private->argv );
+				}
 				self->private->argv = g_value_dup_boxed( value );
 				break;
 
