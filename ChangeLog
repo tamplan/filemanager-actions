@@ -3,6 +3,7 @@
 	* src/nact/base-application.c:
 	* src/nact/base-application.h:
 	Define new 'base-application-description' property.
+	Remove unused properties.
 
 	* src/nact/nact-application.c (nact_application_new):
 	Make use of the new property at instanciation time.

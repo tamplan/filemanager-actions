@@ -70,11 +70,6 @@ struct _BaseApplicationPrivate {
 	BaseBuilder  *builder;
 	BaseWindow   *main_window;
 	UniqueApp    *unique_app_handle;
-
-	gboolean      is_gtk_initialized;
-	int           exit_code;
-	gchar        *exit_message1;
-	gchar        *exit_message2;
 };
 
 /* instance properties
@@ -89,13 +84,6 @@ enum {
 	BASE_PROP_DESCRIPTION_ID,
 	BASE_PROP_ICON_NAME_ID,
 	BASE_PROP_UNIQUE_APP_NAME_ID,
-	BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID,
-	BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID,
-	BASE_APPLICATION_PROP_EXIT_CODE_ID,
-	BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID,
-	BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID,
-	BASE_APPLICATION_PROP_BUILDER_ID,
-	BASE_APPLICATION_PROP_MAIN_WINDOW_ID,
 
 	BASE_PROP_N_PROPERTIES
 };
@@ -172,7 +160,6 @@ class_init( BaseApplicationClass *klass )
 {
 	static const gchar *thisfn = "base_application_class_init";
 	GObjectClass *object_class;
-	GParamSpec *spec;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -239,55 +226,6 @@ class_init( BaseApplicationClass *klass )
 					"",
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	spec = g_param_spec_boolean(
-			BASE_APPLICATION_PROP_IS_GTK_INITIALIZED,
-			"Gtk+ initialization flag",
-			"Has Gtk+ be initialized ?", FALSE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID, spec );
-
-	spec = g_param_spec_pointer(
-			BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE,
-			"UniqueApp object pointer",
-			"A reference to the UniqueApp object if any",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID, spec );
-
-	spec = g_param_spec_int(
-			BASE_APPLICATION_PROP_EXIT_CODE,
-			"Exit code",
-			"Exit code of the application", 0, 65535, 0,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_EXIT_CODE_ID, spec );
-
-	spec = g_param_spec_string(
-			BASE_APPLICATION_PROP_EXIT_MESSAGE1,
-			"Error message",
-			"First line of the error message displayed when exit_code not nul", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID, spec );
-
-	spec = g_param_spec_string(
-			BASE_APPLICATION_PROP_EXIT_MESSAGE2,
-			"Error message",
-			"Second line of the error message displayed when exit_code not nul", "",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID, spec );
-
-	spec = g_param_spec_pointer(
-			BASE_APPLICATION_PROP_BUILDER,
-			"UI object pointer",
-			"A reference to the UI definition from GtkBuilder",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_BUILDER_ID, spec );
-
-	spec = g_param_spec_pointer(
-			BASE_APPLICATION_PROP_MAIN_WINDOW,
-			"Main BaseWindow object",
-			"A reference to the main BaseWindow object",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, BASE_APPLICATION_PROP_MAIN_WINDOW_ID, spec );
-
 	klass->private = g_new0( BaseApplicationClassPrivate, 1 );
 
 	klass->manage_options = NULL;
@@ -351,34 +289,6 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_string( value, self->private->unique_app_name );
 				break;
 
-			case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
-				g_value_set_boolean( value, self->private->is_gtk_initialized );
-				break;
-
-			case BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID:
-				g_value_set_pointer( value, self->private->unique_app_handle );
-				break;
-
-			case BASE_APPLICATION_PROP_EXIT_CODE_ID:
-				g_value_set_int( value, self->private->exit_code );
-				break;
-
-			case BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID:
-				g_value_set_string( value, self->private->exit_message1 );
-				break;
-
-			case BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID:
-				g_value_set_string( value, self->private->exit_message2 );
-				break;
-
-			case BASE_APPLICATION_PROP_BUILDER_ID:
-				g_value_set_pointer( value, self->private->builder );
-				break;
-
-			case BASE_APPLICATION_PROP_MAIN_WINDOW_ID:
-				g_value_set_pointer( value, self->private->main_window );
-				break;
-
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -430,36 +340,6 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			case BASE_PROP_UNIQUE_APP_NAME_ID:
 				g_free( self->private->unique_app_name );
 				self->private->unique_app_name = g_value_dup_string( value );
-				break;
-
-			case BASE_APPLICATION_PROP_IS_GTK_INITIALIZED_ID:
-				self->private->is_gtk_initialized = g_value_get_boolean( value );
-				break;
-
-			case BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE_ID:
-				self->private->unique_app_handle = g_value_get_pointer( value );
-				break;
-
-			case BASE_APPLICATION_PROP_EXIT_CODE_ID:
-				self->private->exit_code = g_value_get_int( value );
-				break;
-
-			case BASE_APPLICATION_PROP_EXIT_MESSAGE1_ID:
-				g_free( self->private->exit_message1 );
-				self->private->exit_message1 = g_value_dup_string( value );
-				break;
-
-			case BASE_APPLICATION_PROP_EXIT_MESSAGE2_ID:
-				g_free( self->private->exit_message2 );
-				self->private->exit_message2 = g_value_dup_string( value );
-				break;
-
-			case BASE_APPLICATION_PROP_BUILDER_ID:
-				self->private->builder = g_value_get_pointer( value );
-				break;
-
-			case BASE_APPLICATION_PROP_MAIN_WINDOW_ID:
-				self->private->main_window = g_value_get_pointer( value );
 				break;
 
 			default:
@@ -520,9 +400,6 @@ instance_finalize( GObject *application )
 	g_free( self->private->icon_name );
 	g_free( self->private->unique_app_name );
 
-	g_free( self->private->exit_message1 );
-	g_free( self->private->exit_message2 );
-
 	g_free( self->private );
 
 	/* chain call to parent class */
@@ -571,7 +448,8 @@ base_application_run( BaseApplication *application )
 
 
 			if( BASE_APPLICATION_GET_CLASS( application )->main_window_new ){
-				application->private->main_window = ( BaseWindow * ) BASE_APPLICATION_GET_CLASS( application )->main_window_new( application, &application->private->exit_code );
+				application->private->main_window =
+						( BaseWindow * ) BASE_APPLICATION_GET_CLASS( application )->main_window_new( application, &code );
 			} else {
 				code = BASE_EXIT_CODE_MAIN_WINDOW;
 			}
@@ -848,15 +726,14 @@ base_application_get_application_name( const BaseApplication *application )
  * Returns: the default #BaseBuilder object for the application.
  */
 BaseBuilder *
-base_application_get_builder( BaseApplication *application )
+base_application_get_builder( const BaseApplication *application )
 {
-	/*static const gchar *thisfn = "base_application_get_application_name";
-	g_debug( "%s: application=%p", thisfn, application );*/
 	BaseBuilder *builder = NULL;
 
 	g_return_val_if_fail( BASE_IS_APPLICATION( application ), NULL );
 
 	if( !application->private->dispose_has_run ){
+
 		builder = application->private->builder;
 	}
 

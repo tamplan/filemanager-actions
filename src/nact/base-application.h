@@ -181,10 +181,7 @@ typedef enum {
 	BASE_EXIT_CODE_ARGS,
 	BASE_EXIT_CODE_UNIQUE_APP,
 	BASE_EXIT_CODE_MAIN_WINDOW,
-
-	BASE_APPLICATION_ERROR_UI_FNAME,		/* empty XML filename */
-	BASE_APPLICATION_ERROR_UI_LOAD,			/* unable to load the XML definition of the UI */
-	BASE_APPLICATION_ERROR_DEFAULT_ICON		/* unable to set default icon */
+	BASE_EXIT_CODE_USER_APP
 }
 	BaseExitCode;
 
@@ -193,54 +190,9 @@ GType        base_application_get_type( void );
 int          base_application_run( BaseApplication *application );
 
 gchar       *base_application_get_application_name( const BaseApplication *application );
-
-/**
- * @BASE_APPLICATION_PROP_IS_GTK_INITIALIZED: set to %TRUE after
- * successfully returning from the application_initialize_gtk() virtual
- * function.
- *
- * While this flag is not %TRUE, error messages are printed to
- * stdout. When %TRUE, error messages are displayed with a dialog
- * box.
- */
-#define BASE_APPLICATION_PROP_IS_GTK_INITIALIZED	"base-application-is-gtk-initialized"
-
-/**
- * @BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE: the UniqueApp object allocated
- * if the derived-class has provided a UniqueApp name (see
- * #application_get_unique_app_name). Rather for internal use.
- */
-#define BASE_APPLICATION_PROP_UNIQUE_APP_HANDLE		"base-application-unique-app-handle"
-
-/**
- * @BASE_APPLICATION_PROP_EXIT_CODE: the code which will be returned by the
- * program to the operating system.
- * @BASE_APPLICATION_PROP_EXIT_MESSAGE1:
- * @BASE_APPLICATION_PROP_EXIT_MESSAGE2: the message which will be displayed
- * at program terminaison if @BASE_APPLICATION_PROP_EXIT_CODE is not zero.
- * When in graphical mode, the first line is displayed as bold.
- *
- * See @BASE_APPLICATION_PROP_IS_GTK_INITIALIZED for how the
- * @BASE_APPLICATION_PROP_EXIT_MESSAGE is actually displayed.
- */
-#define BASE_APPLICATION_PROP_EXIT_CODE				"base-application-exit-code"
-#define BASE_APPLICATION_PROP_EXIT_MESSAGE1			"base-application-exit-message1"
-#define BASE_APPLICATION_PROP_EXIT_MESSAGE2			"base-application-exit-message2"
-
-/**
- * @BASE_APPLICATION_PROP_BUILDER: the #BaseBuilder object allocated to
- * handle the user interface XML definition. Rather for internal use.
- */
-#define BASE_APPLICATION_PROP_BUILDER				"base-application-builder"
-
-/**
- * @BASE_APPLICATION_PROP_MAIN_WINDOW: as its name says: a pointer to the
- * #BaseWindow-derived main window of the application.
- */
-#define BASE_APPLICATION_PROP_MAIN_WINDOW			"base-application-main-window"
+BaseBuilder *base_application_get_builder         ( const BaseApplication *application );
 
 gchar       *base_application_get_ui_filename( BaseApplication *application );
-BaseBuilder *base_application_get_builder( BaseApplication *application );
 
 void         base_application_message_dlg( BaseApplication *application, GSList *message );
 void         base_application_error_dlg( BaseApplication *application, GtkMessageType type, const gchar *first, const gchar *second );
