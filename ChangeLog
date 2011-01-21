@@ -1,6 +1,12 @@
 2011-01-21 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-window.c:
+	* src/nact/base-window.h (base_window_peek_widget):
+	Renamed as base_window_get_widget_from_gtk().
+
+	* src/nact/nact-icon-chooser.c: Updated accordingly.
+
+	* src/nact/base-window.c:
 	* src/nact/base-window.h (base_window_get_named_toplevel):
 	Renamed as base_window_get_gtk_toplevel_by_name().
 

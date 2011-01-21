@@ -890,7 +890,7 @@ base_window_get_widget( const BaseWindow *window, const gchar *name )
 }
 
 /**
- * base_window_peek_widget:
+ * base_window_get_widget_from_gtk:
  * @window: the #GtkWindow toplevel.
  * @name: the name of the searched child.
  *
@@ -899,9 +899,9 @@ base_window_get_widget( const BaseWindow *window, const gchar *name )
  * released by the caller.
  */
 GtkWidget *
-base_window_peek_widget( GtkWindow *window, const gchar *name )
+base_window_get_widget_from_gtk( GtkWindow *window, const gchar *name )
 {
-	static const gchar *thisfn = "base_window_peek_widget";
+	static const gchar *thisfn = "base_window_get_widget_from_gtk";
 	GtkWidget *widget;
 
 	g_return_val_if_fail( GTK_IS_WINDOW( window ), NULL );

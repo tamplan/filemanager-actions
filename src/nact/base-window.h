@@ -232,21 +232,22 @@ GType base_window_get_type( void );
 gboolean         base_window_init( BaseWindow *window );
 int              base_window_run( BaseWindow *window );
 
-BaseApplication *base_window_get_application( const BaseWindow *window );
+BaseApplication *base_window_get_application         ( const BaseWindow *window );
+BaseWindow      *base_window_get_parent              ( const BaseWindow *window );
+GtkWindow       *base_window_get_gtk_toplevel        ( const BaseWindow *window );
 GtkWindow       *base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *name );
-BaseWindow      *base_window_get_parent( const BaseWindow *window );
-GtkWindow       *base_window_get_gtk_toplevel( const BaseWindow *window );
-GtkWidget       *base_window_get_widget( const BaseWindow *window, const gchar *name );
-GtkWidget       *base_window_peek_widget( GtkWindow *window, const gchar *name );
-gboolean         base_window_is_willing_to_quit( const BaseWindow *window );
+GtkWidget       *base_window_get_widget              ( const BaseWindow *window, const gchar *name );
+GtkWidget       *base_window_get_widget_from_gtk     ( GtkWindow *window, const gchar *name );
 
-void             base_window_display_error_dlg  ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
-gboolean         base_window_display_yesno_dlg  ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
-void             base_window_display_message_dlg( const BaseWindow *parent, GSList *message );
+gboolean         base_window_is_willing_to_quit      ( const BaseWindow *window );
 
-gulong           base_window_signal_connect( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
-gulong           base_window_signal_connect_after( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
-gulong           base_window_signal_connect_by_name( BaseWindow *window, const gchar *name, const gchar *signal, GCallback fn );
+void             base_window_display_error_dlg       ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
+gboolean         base_window_display_yesno_dlg       ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
+void             base_window_display_message_dlg     ( const BaseWindow *parent, GSList *message );
+
+gulong           base_window_signal_connect          ( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
+gulong           base_window_signal_connect_after    ( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn );
+gulong           base_window_signal_connect_by_name  ( BaseWindow *window, const gchar *name, const gchar *signal, GCallback fn );
 gulong           base_window_signal_connect_with_data( BaseWindow *window, GObject *instance, const gchar *signal, GCallback fn, void *user_data );
 
 G_END_DECLS
