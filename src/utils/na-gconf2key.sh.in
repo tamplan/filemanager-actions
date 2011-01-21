@@ -666,10 +666,10 @@ msg "${nbprefs} migrated preferences"
 #fi
 
 # force sync
-killall gconfd-2
+killall gconfd-2 2>/dev/null
 
 let count=${nbitems}+${nbprefs}
-echo "count=${count}"
+#echo "count=${count}"
 
 # at the end, we delete all package branch from GConf
 if [ "${opt_delete}" = "yes" -a ${count} -gt 0 ]; then
@@ -687,6 +687,6 @@ if [ "${opt_delete}" = "yes" -a ${count} -gt 0 ]; then
 fi
 
 # re-force sync
-killall gconfd-2
+killall gconfd-2 2>/dev/null
 
 exit
