@@ -103,8 +103,9 @@ static void           instance_set_property( GObject *object, guint property_id,
 static void           instance_dispose( GObject *application );
 static void           instance_finalize( GObject *application );
 
+static gboolean       appli_initialize_i18n( BaseApplication *application, int *code );
+
 static gboolean       v_initialize( BaseApplication *application );
-static gboolean       v_initialize_i18n( BaseApplication *application );
 static gboolean       v_initialize_gtk( BaseApplication *application );
 static gboolean       v_manage_options( const BaseApplication *application, int *code );
 static gboolean       v_initialize_application_name( BaseApplication *application );
@@ -116,10 +117,10 @@ static gboolean       v_initialize_default_icon( BaseApplication *application );
 static gboolean       v_initialize_application( BaseApplication *application );
 static void           set_initialize_application_error( BaseApplication *application );
 static gboolean       application_do_initialize_application( BaseApplication *application );
+static void           set_initialize_i18n_error( BaseApplication *application );
 #endif
 static int            application_do_run( BaseApplication *application );
 static gboolean       application_do_initialize( BaseApplication *application );
-static gboolean       application_do_initialize_i18n( BaseApplication *application );
 static gboolean       application_do_initialize_gtk( BaseApplication *application );
 static gboolean       application_do_manage_options( const BaseApplication *application, int *code );
 static gboolean       application_do_initialize_application_name( BaseApplication *application );
@@ -136,7 +137,6 @@ static void           client_quit_requested_cb( EggSMClient *client, BaseApplica
 static gint           display_dlg( BaseApplication *application, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *first, const gchar *second );
 static void           display_error_message( BaseApplication *application );
 static gboolean       init_with_args( BaseApplication *application, int *argc, char ***argv, GOptionEntry *entries );
-static void           set_initialize_i18n_error( BaseApplication *application );
 static void           set_initialize_gtk_error( BaseApplication *application );
 static void           set_initialize_unique_app_error( BaseApplication *application );
 static void           set_initialize_ui_get_fname_error( BaseApplication *application );
@@ -302,7 +302,6 @@ class_init( BaseApplicationClass *klass )
 
 	klass->run = application_do_run;
 	klass->initialize = application_do_initialize;
-	klass->initialize_i18n = application_do_initialize_i18n;
 	klass->initialize_gtk = application_do_initialize_gtk;
 	klass->initialize_application_name = application_do_initialize_application_name;
 	klass->initialize_session_manager = application_do_initialize_session_manager;
@@ -548,7 +547,7 @@ instance_finalize( GObject *application )
 
 /**
  * base_application_run:
- * @application: this #BaseApplication instance.
+ * @application: this #BaseApplication -derived instance.
  *
  * Starts and runs the application.
  * Takes care of creating, initializing, and running the main window.
@@ -565,17 +564,51 @@ int
 base_application_run( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_run";
-	int code = -1;
+	int code;
 
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+	g_return_val_if_fail( BASE_IS_APPLICATION( application ), BASE_EXIT_CODE_START_FAIL );
 
-	g_return_val_if_fail( BASE_IS_APPLICATION( application ), -1 );
+	code = BASE_EXIT_CODE_START_FAIL;
 
 	if( !application->private->dispose_has_run ){
-		code = BASE_APPLICATION_GET_CLASS( application )->run( application );
+		g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+		code = BASE_EXIT_CODE_OK;
+
+		if( appli_initialize_i18n( application, &code ) &&
+				v_initialize( application ) /*
+			appli_initialize_application_name( application, &code ) &&
+			appli_initialize_gtk( application, &code ) &&
+			appli_initialize_manage_options( application, &code ) &&
+			appli_initialize_session_manager( application, &code ) &&
+			appli_initialize_unique_app( application, &code ) &&
+			appli_initialize_default_icon( application, &code ) &&
+			appli_initialize_builder( application, &code ) &&
+			appli_initialize_first_window( application, &code )*/){
+		}
 	}
 
 	return( code );
+}
+
+static gboolean
+appli_initialize_i18n( BaseApplication *application, int *code )
+{
+	static const gchar *thisfn = "base_application_appli_initialize_i18n";
+
+	g_debug( "%s: application=%p, code=%p", thisfn, ( void * ) application, ( void * ) code );
+
+#ifdef ENABLE_NLS
+	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
+# ifdef HAVE_BIND_TEXTDOMAIN_CODESET
+	bind_textdomain_codeset( GETTEXT_PACKAGE, "UTF-8" );
+# endif
+	textdomain( GETTEXT_PACKAGE );
+#endif
+
+	gtk_set_locale();
+
+	return( TRUE );
 }
 
 /**
@@ -812,23 +845,6 @@ v_initialize( BaseApplication *application )
 }
 
 static gboolean
-v_initialize_i18n( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_v_initialize_i18n";
-	gboolean ok;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	ok = BASE_APPLICATION_GET_CLASS( application )->initialize_i18n( application );
-
-	if( !ok ){
-		set_initialize_i18n_error( application );
-	}
-
-	return( ok );
-}
-
-static gboolean
 v_initialize_gtk( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_v_initialize_gtk";
@@ -950,6 +966,15 @@ v_initialize_application( BaseApplication *application )
 }
 
 static void
+set_initialize_i18n_error( BaseApplication *application )
+{
+	application->private->exit_code = BASE_APPLICATION_ERROR_I18N;
+
+	application->private->exit_message1 =
+		g_strdup( _( "Unable to initialize the internationalization environment." ));
+}
+
+static void
 set_initialize_application_error( BaseApplication *application )
 {
 	application->private->exit_code = BASE_APPLICATION_ERROR_MAIN_WINDOW;
@@ -1008,7 +1033,6 @@ application_do_initialize( BaseApplication *application )
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	return(
-			v_initialize_i18n( application ) &&
 			v_initialize_application_name( application ) &&
 			v_initialize_gtk( application ) &&
 			v_manage_options( application, &code ) &&
@@ -1017,23 +1041,6 @@ application_do_initialize( BaseApplication *application )
 			v_initialize_ui( application ) &&
 			v_initialize_default_icon( application )
 	);
-}
-
-static gboolean
-application_do_initialize_i18n( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_do_initialize_i18n";
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-#ifdef ENABLE_NLS
-	bindtextdomain( GETTEXT_PACKAGE, GNOMELOCALEDIR );
-# ifdef HAVE_BIND_TEXTDOMAIN_CODESET
-	bind_textdomain_codeset( GETTEXT_PACKAGE, "UTF-8" );
-# endif
-	textdomain( GETTEXT_PACKAGE );
-#endif
-	return( TRUE );
 }
 
 static gboolean
@@ -1343,15 +1350,6 @@ init_with_args( BaseApplication *application, int *argc, char ***argv, GOptionEn
 	g_free( parameter_string );
 
 	return( ret );
-}
-
-static void
-set_initialize_i18n_error( BaseApplication *application )
-{
-	application->private->exit_code = BASE_APPLICATION_ERROR_I18N;
-
-	application->private->exit_message1 =
-		g_strdup( _( "Unable to initialize the internationalization environment." ));
 }
 
 static void

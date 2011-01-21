@@ -190,18 +190,6 @@ typedef struct {
 	gboolean  ( *initialize )                 ( BaseApplication *appli );
 
 	/**
-	 * initialize_i18n:
-	 * @appli: this #BaseApplication instance.
-	 *
-	 * Initializes the i18n context.
-	 *
-	 * Returns: %TRUE if OK, %FALSE else.
-	 *
-	 * The base class implementation always returns %TRUE.
-	 */
-	gboolean  ( *initialize_i18n )            ( BaseApplication *appli );
-
-	/**
 	 * initialize_gtk:
 	 * @appli: this #BaseApplication instance.
 	 *
@@ -423,7 +411,10 @@ typedef struct {
 #define BASE_PROP_ICON_NAME					"base-application-icon-name"
 #define BASE_PROP_UNIQUE_APP_NAME			"base-application-unique-app-name"
 
-enum {
+typedef enum {
+	BASE_EXIT_CODE_START_FAIL = -1,
+	BASE_EXIT_CODE_OK = 0,
+
 	BASE_APPLICATION_ERROR_I18N = 1,		/* i18n initialization error */
 	BASE_APPLICATION_ERROR_GTK,				/* gtk+ initialization error */
 	BASE_APPLICATION_ERROR_MAIN_WINDOW,		/* unable to obtain the main window */
@@ -431,7 +422,8 @@ enum {
 	BASE_APPLICATION_ERROR_UI_FNAME,		/* empty XML filename */
 	BASE_APPLICATION_ERROR_UI_LOAD,			/* unable to load the XML definition of the UI */
 	BASE_APPLICATION_ERROR_DEFAULT_ICON		/* unable to set default icon */
-};
+}
+	BaseExitCode;
 
 /**
  * @BASE_APPLICATION_PROP_IS_GTK_INITIALIZED: set to %TRUE after
