@@ -574,7 +574,7 @@ appli_initialize_unique_app( BaseApplication *application, int *code )
 		strlen( application->private->unique_app_name )){
 
 			application->private->unique_app_handle = unique_app_new( application->private->unique_app_name, NULL );
-			is_first = unique_app_is_running( application->private->unique_app_handle );
+			is_first = !unique_app_is_running( application->private->unique_app_handle );
 
 			if( !is_first ){
 				unique_app_send_message( application->private->unique_app_handle, UNIQUE_ACTIVATE, NULL );
