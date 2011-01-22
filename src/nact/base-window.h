@@ -102,7 +102,7 @@ typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
  * @get_toplevel_name:
  * @get_iprefs_window_id:
  * @get_ui_filename:
- * @is_willing_to_quit:
+ * @is_willing_to_quit:    asks if the window is willing to quit
  *
  * This defines the virtual method a derived class may, should or must implement.
  */
@@ -218,14 +218,18 @@ typedef struct {
 	 * is_willing_to_quit:
 	 * @window: this #BaseWindow instance.
 	 *
-	 * Asks the derived class for the filename of the XML definition of
-	 * the user interface for this window. This XML definition must be
-	 * suitable in order to be loaded via GtkBuilder.
+	 * Invoked (e.g. by the session manager) when the application
+	 * has been asked for to terminate itself.
 	 *
-	 * Defaults to application UI filename.
+	 * The BaseWindow class takes care of successively invoking the
+	 * is_willing_to_quit() method of each derived class, starting from
+	 * the topmost derived class, up to the BaseWindow itself.
 	 *
-	 * Returns: the filename of the XML definition, to be g_free() by
-	 * the caller.
+	 * As soon as one of these method returns %FALSE, the loop is
+	 * stopped.
+	 *
+	 * The derived method should return %TRUE if it is willing to quit,
+	 * %FALSE else.
 	 */
 	gboolean ( *is_willing_to_quit )   ( const BaseWindow *window );
 }

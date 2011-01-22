@@ -2,11 +2,11 @@
 
 	* src/nact/base-window.c (on_initialize_gtk_toplevel_class_handler,
 	on_initialize_base_window_class_handler,
-	on_all_widgets_showed_class_handler):
+	on_all_widgets_showed_class_handler, base_window_is_willing_to_quit):
 	Succssively invoke all derived class methods.
 
 	* src/nact/base-window.h (initial_load_toplevel, runtime_init_toplevel,
-	@all_widgets_showed): Update comments.
+	all_widgets_showed, is_willing_to_quit): Update comments.
 
 	* src/nact/base-application.c (appli_initialize_manage_options):
 	Successively invoke all derived class methods.

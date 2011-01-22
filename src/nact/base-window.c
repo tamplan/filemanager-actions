@@ -888,15 +888,19 @@ base_window_get_widget( const BaseWindow *window, const gchar *name )
 gboolean
 base_window_is_willing_to_quit( const BaseWindow *window )
 {
-	gboolean willing_to = TRUE;
+	gboolean willing_to;
+	GObjectClass *class;
 
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), willing_to );
+	willing_to = TRUE;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), TRUE );
 
 	if( !window->private->dispose_has_run ){
 
-		if( BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit ){
-
-			willing_to = BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit( window );
+		for( class = G_OBJECT_GET_CLASS( window ) ; willing_to && BASE_IS_WINDOW_CLASS( class ) ; class = g_type_class_peek_parent( class )){
+			if( BASE_WINDOW_CLASS( class )->is_willing_to_quit ){
+				willing_to = BASE_WINDOW_CLASS( class )->is_willing_to_quit( window );
+			}
 		}
 	}
 
