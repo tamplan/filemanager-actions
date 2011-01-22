@@ -95,7 +95,7 @@ typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
 /**
  * BaseWindowClass:
  * @initialize_gtk_toplevel: initialize the toplevel GtkWindow
- * @runtime_init_toplevel:   initialize the BaseWindow
+ * @initialize_base_window:  initialize the BaseWindow
  * @all_widgets_showed:      all widgets have been showed
  * @dialog_response:
  * @delete_event:
@@ -128,9 +128,8 @@ typedef struct {
 	void     ( *initialize_gtk_toplevel )( BaseWindow *window, GtkWindow *toplevel );
 
 	/**
-	 * runtime_init_toplevel:
+	 * initialize_base_window:
 	 * @window: this #BaseWindow instance.
-	 * @user_data: not used
 	 *
 	 * Invoked after the GtkWindow toplevel has been initialized, before
 	 * actually dsplaying the widget, and after all connected handlers
@@ -142,12 +141,11 @@ typedef struct {
 	 * The BaseWindow base class implementation of this method, which is
 	 * so called last, reset last size and position of the window.
 	 */
-	void     ( *runtime_init_toplevel )  ( BaseWindow *window, gpointer user_data );
+	void     ( *initialize_base_window ) ( BaseWindow *window );
 
 	/**
 	 * all_widgets_showed:
 	 * @window: this #BaseWindow instance.
-	 * @user_data: not used
 	 *
 	 * Invoked at the end of initialization process, after all connected
 	 * handlers have themselves run.
@@ -155,7 +153,7 @@ typedef struct {
 	 * The derived class should invoke the virtual method of its parent class
 	 * at the end of its processing.
 	 */
-	void     ( *all_widgets_showed )   ( BaseWindow *window, gpointer user_data );
+	void     ( *all_widgets_showed )     ( BaseWindow *window );
 
 	/**
 	 * dialog_response:

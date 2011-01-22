@@ -124,12 +124,13 @@ static gboolean         is_gtk_toplevel_initialized( const BaseWindow *window, G
 static void             set_gtk_toplevel_initialized( const BaseWindow *window, GtkWindow *gtk_toplevel, gboolean init );
 static void             on_initialize_gtk_toplevel_class_handler( BaseWindow *window, GtkWindow *toplevel );
 static void             do_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *toplevel );
-static void             on_initialize_base_window_class_handler( BaseWindow *window, gpointer user_data );
-static void             do_initialize_base_window( BaseWindow *window, gpointer user_data );
-static void             on_all_widgets_showed_class_handler( BaseWindow *window, gpointer user_data );
 
 /* run
  */
+static void             on_initialize_base_window_class_handler( BaseWindow *window );
+static void             do_initialize_base_window( BaseWindow *window );
+static void             on_all_widgets_showed_class_handler( BaseWindow *window );
+
 static gboolean         is_main_window( BaseWindow *window );
 
 static gboolean         on_delete_event( GtkWidget *widget, GdkEvent *event, BaseWindow *window );
@@ -245,7 +246,7 @@ class_init( BaseWindowClass *klass )
 	klass->private = g_new0( BaseWindowClassPrivate, 1 );
 
 	klass->initialize_gtk_toplevel = do_initialize_gtk_toplevel;
-	klass->runtime_init_toplevel = do_initialize_base_window;
+	klass->initialize_base_window = do_initialize_base_window;
 	klass->all_widgets_showed = NULL;
 	klass->dialog_response = window_do_dialog_response;
 	klass->delete_event = window_do_delete_event;
@@ -288,10 +289,9 @@ class_init( BaseWindowClass *klass )
 				G_CALLBACK( on_initialize_base_window_class_handler ),
 				NULL,
 				NULL,
-				g_cclosure_marshal_VOID__POINTER,
+				g_cclosure_marshal_VOID__VOID,
 				G_TYPE_NONE,
-				1,
-				G_TYPE_POINTER );
+				0 );
 
 	/**
 	 * nact-signal-base-window-all-widgets-showed:
@@ -311,10 +311,9 @@ class_init( BaseWindowClass *klass )
 				G_CALLBACK( on_all_widgets_showed_class_handler ),
 				NULL,
 				NULL,
-				g_cclosure_marshal_VOID__POINTER,
+				g_cclosure_marshal_VOID__VOID,
 				G_TYPE_NONE,
-				1,
-				G_TYPE_POINTER );
+				0 );
 }
 
 static void
@@ -726,60 +725,6 @@ do_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *toplevel )
 	}
 }
 
-/*
- * default class handler for "nact-signal-base-window-runtime-init" message
- * -> does nothing here
- */
-static void
-on_initialize_base_window_class_handler( BaseWindow *window, gpointer user_data )
-{
-	static const gchar *thisfn = "base_window_on_initialize_base_window_class_handler";
-
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-
-	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-
-	if( !window->private->dispose_has_run ){
-
-		if( BASE_WINDOW_GET_CLASS( window )->runtime_init_toplevel ){
-			BASE_WINDOW_GET_CLASS( window )->runtime_init_toplevel( window, user_data );
-		}
-	}
-}
-
-static void
-do_initialize_base_window( BaseWindow *window, gpointer user_data )
-{
-	static const gchar *thisfn = "base_window_do_initialize_base_window";
-
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-
-	g_debug( "%s: window=%p, user_data=%p, parent_window=%p",
-			thisfn, ( void * ) window, ( void * ) user_data, ( void * ) window->private->parent );
-
-	if( !window->private->dispose_has_run ){
-
-		base_iprefs_position_window( window );
-	}
-}
-
-static void
-on_all_widgets_showed_class_handler( BaseWindow *window, gpointer user_data )
-{
-	static const gchar *thisfn = "base_window_on_all_widgets_showed_class_handler";
-
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-
-	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-
-	if( !window->private->dispose_has_run ){
-
-		if( BASE_WINDOW_GET_CLASS( window )->all_widgets_showed ){
-			BASE_WINDOW_GET_CLASS( window )->all_widgets_showed( window, user_data );
-		}
-	}
-}
-
 /**
  * base_window_run:
  * @window: this #BaseWindow object.
@@ -811,10 +756,10 @@ base_window_run( BaseWindow *window )
 			g_return_val_if_fail( GTK_IS_WINDOW( window->private->gtk_toplevel ), BASE_EXIT_CODE_START_FAIL );
 
 			g_debug( "%s: window=%p", thisfn, ( void * ) window );
-			g_signal_emit_by_name( window, BASE_SIGNAL_INITIALIZE_WINDOW, NULL );
+			g_signal_emit_by_name( window, BASE_SIGNAL_INITIALIZE_WINDOW );
 
 			gtk_widget_show_all( GTK_WIDGET( window->private->gtk_toplevel ));
-			g_signal_emit_by_name( window, BASE_SIGNAL_ALL_WIDGETS_SHOWED, NULL );
+			g_signal_emit_by_name( window, BASE_SIGNAL_ALL_WIDGETS_SHOWED );
 
 			if( is_main_window( window )){
 				if( GTK_IS_DIALOG( window->private->gtk_toplevel )){
@@ -842,6 +787,59 @@ base_window_run( BaseWindow *window )
 	}
 
 	return( run_ok ? BASE_EXIT_CODE_OK : BASE_EXIT_CODE_MAIN_WINDOW );
+}
+
+/*
+ * default class handler for "nact-signal-base-window-runtime-init" message
+ * -> does nothing here
+ */
+static void
+on_initialize_base_window_class_handler( BaseWindow *window )
+{
+	static const gchar *thisfn = "base_window_on_initialize_base_window_class_handler";
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	if( !window->private->dispose_has_run ){
+
+		if( BASE_WINDOW_GET_CLASS( window )->initialize_base_window ){
+			BASE_WINDOW_GET_CLASS( window )->initialize_base_window( window );
+		}
+	}
+}
+
+static void
+do_initialize_base_window( BaseWindow *window )
+{
+	static const gchar *thisfn = "base_window_do_initialize_base_window";
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	if( !window->private->dispose_has_run ){
+
+		base_iprefs_position_window( window );
+	}
+}
+
+static void
+on_all_widgets_showed_class_handler( BaseWindow *window )
+{
+	static const gchar *thisfn = "base_window_on_all_widgets_showed_class_handler";
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	if( !window->private->dispose_has_run ){
+
+		if( BASE_WINDOW_GET_CLASS( window )->all_widgets_showed ){
+			BASE_WINDOW_GET_CLASS( window )->all_widgets_showed( window );
+		}
+	}
 }
 
 static gboolean

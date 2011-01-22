@@ -2,6 +2,11 @@
 
 	* src/nact/base-window.c:
 	* src/nact/base-window.h
+	(runtime_init_toplevel): Renamed as initialize_base_window().
+	(class_init): Fix cclosure_marshall for signals without argument.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h
 	(get_toplevel_name, get_ui_filename): Removed virtual functions.
 
 	* src/nact/nact-add-capability-dialog.c:
