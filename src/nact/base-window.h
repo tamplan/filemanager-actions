@@ -118,7 +118,7 @@ typedef struct {
 	 * @user_data: not used
 	 *
 	 * Invoked when the toplevel GtkWindow is allocated for the firt time
-	 * by the GtkBuilder.
+	 * by the GtkBuilder, after all connected handlers have themselves run.
 	 *
 	 * The BaseWindow class takes care of successively invoking the
 	 * initial_load_toplevel() method of each derived class, starting from
@@ -133,6 +133,18 @@ typedef struct {
 	/**
 	 * runtime_init_toplevel:
 	 * @window: this #BaseWindow instance.
+	 * @user_data: not used
+	 *
+	 * Invoked after the GtkWindow toplevel has been initialized, before
+	 * actually dsplaying the widget, and after all connected handlers
+	 * have themselves run.
+	 *
+	 * The BaseWindow class takes care of successively invoking the
+	 * runtime_init_toplevel() method of each derived class, starting from
+	 * the topmost derived class, up to the BaseWindow itself.
+	 *
+	 * The BaseWindow base class implementation of this method, which is
+	 * so called last, reset last size and position of the window.
 	 */
 	void              ( *runtime_init_toplevel )( BaseWindow *window, gpointer user_data );
 

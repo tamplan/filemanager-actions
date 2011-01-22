@@ -1,9 +1,11 @@
 2011-01-22 Pierre Wieser <pwieser@trychlos.org>
 
-	* src/nact/base-window.c (on_initialize_gtk_toplevel_class_handler):
+	* src/nact/base-window.c (on_initialize_gtk_toplevel_class_handler,
+	on_initialize_base_window_class_handler):
 	Succssively invoke all derived class methods.
 
-	* src/nact/base-window.h (initial_load_toplevel): Update comment.
+	* src/nact/base-window.h (initial_load_toplevel, runtime_init_toplevel):
+	Update comments.
 
 	* src/nact/base-application.c (appli_initialize_manage_options):
 	Successively invoke all derived class methods.
