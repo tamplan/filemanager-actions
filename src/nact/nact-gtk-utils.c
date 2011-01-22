@@ -49,6 +49,8 @@
 #define DEFAULT_WIDTH		22
 #define DEFAULT_HEIGHT		22
 
+static GtkWidget *search_for_child_widget( GtkContainer *container, const gchar *name );
+
 /**
  * nact_gtk_utils_set_editable:
  * @widget: the #GtkWdiget.
@@ -571,4 +573,66 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), dialog_name );
 
 	gtk_widget_destroy( dialog );
+}
+
+/**
+ * nact_gtk_utils_get_widget_by_name:
+ * @toplevel: the #GtkWindow toplevel.
+ * @name: the name of the searched child.
+ *
+ * Returns: a pointer to the named widget which is a child of @toplevel,
+ * or %NULL. the returned pointer is owned by #GtkBuilder instance, and
+ * should not be released by the caller.
+ */
+GtkWidget *
+nact_gtk_utils_get_widget_by_name( GtkWindow *toplevel, const gchar *name )
+{
+	static const gchar *thisfn = "nact_gtk_utils_get_widget_by_name";
+	GtkWidget *widget = NULL;
+
+	g_return_val_if_fail( GTK_IS_WINDOW( toplevel ), NULL );
+
+	widget = search_for_child_widget( GTK_CONTAINER( toplevel ), name );
+
+	if( !widget ){
+		g_warning( "%s: widget not found: %s", thisfn, name );
+
+	} else {
+		g_return_val_if_fail( GTK_IS_WIDGET( widget ), NULL );
+	}
+
+	return( widget );
+}
+
+static GtkWidget *
+search_for_child_widget( GtkContainer *container, const gchar *name )
+{
+	GList *children = gtk_container_get_children( container );
+	GList *ic;
+	GtkWidget *found = NULL;
+	GtkWidget *child;
+	const gchar *child_name;
+
+	for( ic = children ; ic ; ic = ic->next ){
+		if( GTK_IS_WIDGET( ic->data )){
+			child = GTK_WIDGET( ic->data );
+			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
+			if( child_name && strlen( child_name )){
+				/*g_debug( "%s: child=%s", thisfn, child_name );*/
+				if( !g_ascii_strcasecmp( name, child_name )){
+					found = child;
+					break;
+
+				} else if( GTK_IS_CONTAINER( child )){
+					found = search_for_child_widget( GTK_CONTAINER( child ), name );
+					if( found ){
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	g_list_free( children );
+	return( found );
 }

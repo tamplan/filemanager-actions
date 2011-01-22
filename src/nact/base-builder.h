@@ -74,13 +74,11 @@ typedef struct {
 
 GType        base_builder_get_type( void );
 
-BaseBuilder *base_builder_new     ( void );
+BaseBuilder *base_builder_new( void );
 
-gboolean     base_builder_add_from_file           ( BaseBuilder *builder, const gchar *filename, GError **error );
+gboolean     base_builder_add_from_file( BaseBuilder *builder, const gchar *filename, GError **error );
 
-GtkWindow   *base_builder_get_toplevel_by_name( BaseBuilder *builder, const gchar *name );
-
-/*GtkWidget   *base_builder_get_gtk_widget_by_name  ( BaseBuilder *builder, GtkWindow *toplevel, const gchar *name );*/
+GtkWindow   *base_builder_get_toplevel_by_name( const BaseBuilder *builder, const gchar *name );
 
 G_END_DECLS
 

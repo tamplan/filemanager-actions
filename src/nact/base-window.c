@@ -40,6 +40,7 @@
 #include "base-application.h"
 #include "base-iprefs.h"
 #include "base-window.h"
+#include "nact-gtk-utils.h"
 
 /* private class data
  */
@@ -139,9 +140,6 @@ static gboolean         window_do_delete_event( BaseWindow *window, GtkWindow *t
 static gboolean         window_do_is_willing_to_quit( const BaseWindow *window );
 
 static gboolean         is_main_window( BaseWindow *window );
-static GtkWidget       *search_for_widget( GtkWindow *toplevel, const gchar *name );
-static GtkWidget       *search_for_child_widget( GtkContainer *container, const gchar *name );
-static GtkWindow       *load_named_toplevel( const BaseWindow *window, const gchar *name );
 
 static void             record_connected_signal( BaseWindow *window, GObject *instance, gulong handler_id );
 static gint             display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *primary, const gchar *secondary );
@@ -819,15 +817,16 @@ base_window_get_parent( const BaseWindow *window )
 GtkWindow *
 base_window_get_gtk_toplevel( const BaseWindow *window )
 {
-	GtkWindow *toplevel = NULL;
+	GtkWindow *gtk_toplevel = NULL;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
 	if( !window->private->dispose_has_run ){
-		toplevel = window->private->gtk_toplevel;
+
+		gtk_toplevel = window->private->gtk_toplevel;
 	}
 
-	return( toplevel );
+	return( gtk_toplevel );
 }
 
 /**
@@ -846,15 +845,16 @@ base_window_get_gtk_toplevel( const BaseWindow *window )
 GtkWindow *
 base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *name )
 {
-	GtkWindow *toplevel = NULL;
+	GtkWindow *gtk_toplevel = NULL;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
 	if( !window->private->dispose_has_run ){
-		toplevel = load_named_toplevel( window, name );
+
+		gtk_toplevel = base_builder_get_toplevel_by_name( window->private->builder, name );
 	}
 
-	return( toplevel );
+	return( gtk_toplevel );
 }
 
 /**
@@ -872,43 +872,13 @@ base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *nam
 GtkWidget *
 base_window_get_widget( const BaseWindow *window, const gchar *name )
 {
-	static const gchar *thisfn = "base_window_get_widget";
-	GtkWindow *toplevel;
 	GtkWidget *widget = NULL;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
 	if( !window->private->dispose_has_run ){
-		toplevel = window->private->gtk_toplevel;
-		widget = search_for_widget( toplevel, name );
-		if( !widget ){
-			g_warning( "%s: widget not found: %s", thisfn, name );
-		}
-	}
 
-	return( widget );
-}
-
-/**
- * base_window_get_widget_from_gtk:
- * @window: the #GtkWindow toplevel.
- * @name: the name of the searched child.
- *
- * Returns: a pointer to the searched widget, or %NULL.
- * This pointer is owned by GtkBuilder instance, and must not be
- * released by the caller.
- */
-GtkWidget *
-base_window_get_widget_from_gtk( GtkWindow *window, const gchar *name )
-{
-	static const gchar *thisfn = "base_window_get_widget_from_gtk";
-	GtkWidget *widget;
-
-	g_return_val_if_fail( GTK_IS_WINDOW( window ), NULL );
-
-	widget = search_for_widget( window, name );
-	if( !widget ){
-		g_warning( "%s: widget not found: %s", thisfn, name );
+		widget = nact_gtk_utils_get_widget_by_name( window->private->gtk_toplevel, name );
 	}
 
 	return( widget );
@@ -1215,79 +1185,6 @@ is_main_window( BaseWindow *window )
 	}
 
 	return( is_main );
-}
-
-static GtkWindow *
-load_named_toplevel( const BaseWindow *window, const gchar *name )
-{
-	GtkWindow *toplevel = NULL;
-	BaseApplication *application;
-	BaseBuilder *builder;
-	gchar *msg;
-
-	if( window->private->builder ){
-		g_return_val_if_fail( BASE_IS_BUILDER( window->private->builder ), NULL );
-		toplevel = base_builder_get_toplevel_by_name( window->private->builder, name );
-	}
-
-	if( !toplevel ){
-		application = base_window_get_application( window );
-		builder = base_application_get_builder( application );
-		toplevel = base_builder_get_toplevel_by_name( builder, name );
-	}
-
-	if( !toplevel ){
-		msg = g_strdup_printf( _( "Unable to load %s XML definition." ), name );
-		base_window_display_error_dlg( window, msg, NULL );
-		g_free( msg );
-	}
-
-	return( toplevel );
-}
-
-static GtkWidget *
-search_for_widget( GtkWindow *toplevel, const gchar *name )
-{
-	GtkWidget *widget = NULL;
-
-	widget = search_for_child_widget( GTK_CONTAINER( toplevel ) , name );
-
-	g_return_val_if_fail( GTK_IS_WIDGET( widget ) || !widget, NULL );
-
-	return( widget );
-}
-
-static GtkWidget *
-search_for_child_widget( GtkContainer *container, const gchar *name )
-{
-	GList *children = gtk_container_get_children( container );
-	GList *ic;
-	GtkWidget *found = NULL;
-	GtkWidget *child;
-	const gchar *child_name;
-
-	for( ic = children ; ic ; ic = ic->next ){
-		if( GTK_IS_WIDGET( ic->data )){
-			child = GTK_WIDGET( ic->data );
-			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
-			if( child_name && strlen( child_name )){
-				/*g_debug( "%s: child=%s", thisfn, child_name );*/
-				if( !g_ascii_strcasecmp( name, child_name )){
-					found = child;
-					break;
-
-				} else if( GTK_IS_CONTAINER( child )){
-					found = search_for_child_widget( GTK_CONTAINER( child ), name );
-					if( found ){
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	g_list_free( children );
-	return( found );
 }
 
 /**

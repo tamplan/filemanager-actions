@@ -32,12 +32,11 @@
 #define __NACT_GTK_UTILS_H__
 
 /**
- * SECTION: nact_gtk_utils
- * @short_description: Gtk helper functions.
- * @include: nact/nact-gtk-utils.h
+ * SECTION: nact-gtk-utils
+ * @title: NactGtkUtils
+ * @short_description: Gtk helper functions
+ * @include: nact-gtk-utils.h
  */
-
-#include <gtk/gtk.h>
 
 #include "base-window.h"
 
@@ -78,6 +77,10 @@ void       nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 void       nact_gtk_utils_select_dir( BaseWindow *window,
 				const gchar *title, const gchar *dialog_name,
 				GtkWidget *entry, const gchar *entry_name );
+
+/* GtkWidget
+ */
+GtkWidget *nact_gtk_utils_get_widget_by_name( GtkWindow *toplevel, const gchar *name );
 
 G_END_DECLS
 

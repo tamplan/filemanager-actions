@@ -237,7 +237,6 @@ BaseWindow      *base_window_get_parent              ( const BaseWindow *window 
 GtkWindow       *base_window_get_gtk_toplevel        ( const BaseWindow *window );
 GtkWindow       *base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *name );
 GtkWidget       *base_window_get_widget              ( const BaseWindow *window, const gchar *name );
-GtkWidget       *base_window_get_widget_from_gtk     ( GtkWindow *window, const gchar *name );
 
 gboolean         base_window_is_willing_to_quit      ( const BaseWindow *window );
 

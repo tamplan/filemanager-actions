@@ -1,5 +1,19 @@
 2011-01-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-builder.c:
+	* src/nact/base-builder.h (base_builder_get_toplevel_by_name):
+	Use a const BaseBuilder as argument;
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h (base_window_get_widget_from_gtk):
+	Removed function.
+
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-gtk-utils.h (nact_gtk_utils_get_widget_by_name):
+	New function.
+
+	* src/nact/nact-icon-chooser.c (on_destroy): Updated accordingly.
+
 	* src/nact/base-application.c (appli_initialize_unique_app):
 	Fix reverse test.
 

@@ -230,6 +230,21 @@ base_builder_add_from_file( BaseBuilder *builder, const gchar *filename, GError 
 	return( ret );
 }
 
+static gboolean
+already_loaded( BaseBuilder *builder, const gchar *filename )
+{
+	gboolean loaded = FALSE;
+	GSList *it;
+
+	for( it = builder->private->fnames ; it && !loaded ; it = it->next ){
+		if( !na_core_utils_str_collate(( const gchar * ) it->data, filename )){
+			loaded = TRUE;
+		}
+	}
+
+	return( loaded );
+}
+
 /**
  * base_builder_get_toplevel_by_name:
  * @builder: this #BaseBuilder object.
@@ -243,7 +258,7 @@ base_builder_add_from_file( BaseBuilder *builder, const gchar *filename, GError 
  * g_free() nor g_object_unref() by the caller.
  */
 GtkWindow *
-base_builder_get_toplevel_by_name( BaseBuilder *builder, const gchar *name )
+base_builder_get_toplevel_by_name( const BaseBuilder *builder, const gchar *name )
 {
 	GtkWindow *toplevel = NULL;
 
@@ -261,19 +276,4 @@ base_builder_get_toplevel_by_name( BaseBuilder *builder, const gchar *name )
 	}
 
 	return( toplevel );
-}
-
-static gboolean
-already_loaded( BaseBuilder *builder, const gchar *filename )
-{
-	gboolean loaded = FALSE;
-	GSList *it;
-
-	for( it = builder->private->fnames ; it && !loaded ; it = it->next ){
-		if( !na_core_utils_str_collate(( const gchar * ) it->data, filename )){
-			loaded = TRUE;
-		}
-	}
-
-	return( loaded );
 }
