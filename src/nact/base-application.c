@@ -399,6 +399,7 @@ instance_finalize( GObject *application )
 	self = BASE_APPLICATION( application );
 
 	g_free( self->private->application_name );
+	g_free( self->private->description );
 	g_free( self->private->icon_name );
 	g_free( self->private->unique_app_name );
 
@@ -546,13 +547,16 @@ appli_initialize_manage_options( const BaseApplication *application, int *code )
 {
 	static const gchar *thisfn = "base_application_appli_initialize_manage_options";
 	gboolean ret;
+	GObjectClass *class;
 
 	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
 
 	ret = TRUE;
 
-	if( BASE_APPLICATION_GET_CLASS( application )->manage_options ){
-		ret = BASE_APPLICATION_GET_CLASS( application )->manage_options( application, code );
+	for( class = G_OBJECT_GET_CLASS( application ) ; ret && BASE_IS_APPLICATION_CLASS( class ) ; class = g_type_class_peek_parent( class )){
+		if( BASE_APPLICATION_CLASS( class )->manage_options ){
+			ret = BASE_APPLICATION_CLASS( class )->manage_options( application, code );
+		}
 	}
 
 	return( ret );

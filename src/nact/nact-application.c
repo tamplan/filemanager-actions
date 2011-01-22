@@ -323,11 +323,6 @@ appli_manage_options( const BaseApplication *application, int *code )
 		g_object_set( G_OBJECT( application ), BASE_PROP_UNIQUE_APP_NAME, "", NULL );
 	}
 
-	/* call parent class */
-	if( ret && BASE_APPLICATION_CLASS( st_parent_class )->manage_options ){
-		ret = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application, code );
-	}
-
 	return( ret );
 }
 

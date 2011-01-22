@@ -1,5 +1,12 @@
 2011-01-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.c (appli_initialize_manage_options):
+	Successively invoke all derived class methods.
+
+	* src/nact/base-application.h (manage_options): Update comment.
+
+	* src/nact/nact-application.c (appli_manage_options): Updated accordingly.
+
 	* src/nact/base-builder.c:
 	* src/nact/base-builder.h (base_builder_get_toplevel_by_name):
 	Use a const BaseBuilder as argument;

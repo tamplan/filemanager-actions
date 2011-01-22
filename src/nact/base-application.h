@@ -115,8 +115,12 @@ typedef struct {
 	 * This let the derived class an opportunity to manage command-line
 	 * arguments.
 	 *
-	 * If it does not dected an error, the derived class should call the
-	 * parent method, to give it a chance to manage its own options.
+	 * The BaseApplication base class takes care of successively invoking
+	 * all manage_options() methods of derived classes, from the topmost
+	 * derived class up to the BaseApplication base class, while each methods
+	 * returns %TRUE.
+	 *
+	 * In other words, it stops this loop as soon as a method returns %FALSE.
 	 *
 	 * Returns: %TRUE to continue execution, %FALSE to stop it.
 	 */
@@ -129,7 +133,8 @@ typedef struct {
 	 * This is invoked by the BaseApplication base class to let the derived
 	 * class do its own initializations and create its main window.
 	 *
-	 * This is a pure virtual method.
+	 * This is a pure virtual method. Only the most derived class
+	 * main_window_new() method is invoked.
 	 *
 	 * Returns: the main window of the application, as a #BaseWindow
 	 * -derived object. It may or may not have already been initialized.
