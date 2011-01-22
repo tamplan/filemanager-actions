@@ -94,7 +94,7 @@ typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
 
 /**
  * BaseWindowClass:
- * @initial_load_toplevel:
+ * @initial_load_toplevel: initialize the toplevel GtkWindow
  * @runtime_init_toplevel:
  * @all_widgets_showed:
  * @dialog_response:
@@ -115,6 +115,18 @@ typedef struct {
 	/**
 	 * initial_load_toplevel:
 	 * @window: this #BaseWindow instance.
+	 * @user_data: not used
+	 *
+	 * Invoked when the toplevel GtkWindow is allocated for the firt time
+	 * by the GtkBuilder.
+	 *
+	 * The BaseWindow class takes care of successively invoking the
+	 * initial_load_toplevel() method of each derived class, starting from
+	 * the topmost derived class, up to the BaseWindow itself.
+	 *
+	 * The BaseWindow base class implementation of this method, which is
+	 * so called last, set this GtkWindow toplevel window transient for
+	 * its parent window.
 	 */
 	void              ( *initial_load_toplevel )( BaseWindow *window, gpointer user_data );
 
@@ -213,15 +225,17 @@ typedef struct {
  * Signals defined by the BaseWindow class.
  *
  * All signals of this class have the same behavior:
+ *
  * - the message is sent to all derived classes, which are free to
  *   connect to the signal in order to implement their own code;
- * - finally, the default class handler points to a virtual function
- * - the virtual function actually tries to call the actual function
- *   as possibly implemented by the derived class;
- * - each virtual method in a derived class should call the virtual
- *   method of its parent class if it exists;
- * - if no derived class has implemented the virtual function, the call
- *   fall back to doing nothing at all.
+ *
+ * - finally, the default class handler points to a function
+ *   which successively invokes the corresponding virtual method of each
+ *   derived class.
+ *
+ * This way, each class is free to choose to implement the action, either
+ * as a signal handler or as a virtual method if it is a class derived from
+ * BaseWindow.
  */
 #define BASE_SIGNAL_INITIALIZE_GTK				"base-window-initialize-gtk"
 #define BASE_SIGNAL_INITIALIZE_WINDOW			"base-window-initialize-window"
