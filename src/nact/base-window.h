@@ -95,8 +95,8 @@ typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
 /**
  * BaseWindowClass:
  * @initial_load_toplevel: initialize the toplevel GtkWindow
- * @runtime_init_toplevel:
- * @all_widgets_showed:
+ * @runtime_init_toplevel: initialize the BaseWindow
+ * @all_widgets_showed:    all widgets have been showed
  * @dialog_response:
  * @delete_event:
  * @get_toplevel_name:
@@ -128,7 +128,7 @@ typedef struct {
 	 * so called last, set this GtkWindow toplevel window transient for
 	 * its parent window.
 	 */
-	void              ( *initial_load_toplevel )( BaseWindow *window, gpointer user_data );
+	void     ( *initial_load_toplevel )( BaseWindow *window, gpointer user_data );
 
 	/**
 	 * runtime_init_toplevel:
@@ -146,19 +146,27 @@ typedef struct {
 	 * The BaseWindow base class implementation of this method, which is
 	 * so called last, reset last size and position of the window.
 	 */
-	void              ( *runtime_init_toplevel )( BaseWindow *window, gpointer user_data );
+	void     ( *runtime_init_toplevel )( BaseWindow *window, gpointer user_data );
 
 	/**
 	 * all_widgets_showed:
 	 * @window: this #BaseWindow instance.
+	 * @user_data: not used
+	 *
+	 * Invoked at the end of initialization process, after all connected
+	 * handlers have themselves run.
+	 *
+	 * The BaseWindow class takes care of successively invoking the
+	 * all_widgets_showed() method of each derived class, starting from
+	 * the topmost derived class, up to the BaseWindow itself.
 	 */
-	void              ( *all_widgets_showed )   ( BaseWindow *window, gpointer user_data );
+	void     ( *all_widgets_showed )   ( BaseWindow *window, gpointer user_data );
 
 	/**
 	 * dialog_response:
 	 * @window: this #BaseWindow instance.
 	 */
-	gboolean          ( *dialog_response )      ( GtkDialog *dialog, gint code, BaseWindow *window );
+	gboolean ( *dialog_response )      ( GtkDialog *dialog, gint code, BaseWindow *window );
 
 	/**
 	 * delete_event:
@@ -169,7 +177,7 @@ typedef struct {
 	 * can so implement the virtual function, without having to take
 	 * care of the signal itself.
 	 */
-	gboolean          ( *delete_event )         ( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
+	gboolean ( *delete_event )         ( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
 
 	/**
 	 * window_get_toplevel_name:
@@ -177,7 +185,7 @@ typedef struct {
 	 *
 	 * Pure virtual function.
 	 */
-	gchar *           ( *get_toplevel_name )    ( const BaseWindow *window );
+	gchar *  ( *get_toplevel_name )    ( const BaseWindow *window );
 
 	/**
 	 * get_iprefs_window_id:
@@ -189,7 +197,7 @@ typedef struct {
 	 * This delegates to #BaseWindow-derived classes the NactIPrefs
 	 * interface virtual function.
 	 */
-	gchar *           ( *get_iprefs_window_id ) ( const BaseWindow *window );
+	gchar *  ( *get_iprefs_window_id ) ( const BaseWindow *window );
 
 	/**
 	 * get_ui_filename:
@@ -204,7 +212,7 @@ typedef struct {
 	 * Returns: the filename of the XML definition, to be g_free() by
 	 * the caller.
 	 */
-	gchar *           ( *get_ui_filename )      ( const BaseWindow *window );
+	gchar *  ( *get_ui_filename )      ( const BaseWindow *window );
 
 	/**
 	 * is_willing_to_quit:
@@ -219,7 +227,7 @@ typedef struct {
 	 * Returns: the filename of the XML definition, to be g_free() by
 	 * the caller.
 	 */
-	gboolean          ( *is_willing_to_quit )   ( const BaseWindow *window );
+	gboolean ( *is_willing_to_quit )   ( const BaseWindow *window );
 }
 	BaseWindowClass;
 

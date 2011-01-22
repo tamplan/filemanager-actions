@@ -127,13 +127,12 @@ static void             on_initialize_gtk_toplevel_class_handler( BaseWindow *wi
 static void             do_initialize_gtk_toplevel( BaseWindow *window, gpointer user_data );
 static void             on_initialize_base_window_class_handler( BaseWindow *window, gpointer user_data );
 static void             do_initialize_base_window( BaseWindow *window, gpointer user_data );
+static void             on_all_widgets_showed_class_handler( BaseWindow *window, gpointer user_data );
 
-static void             v_all_widgets_showed( BaseWindow *window, gpointer user_data );
 static gboolean         v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 static gchar           *v_get_toplevel_name( const BaseWindow *window );
 static gchar           *v_get_iprefs_window_id( const BaseWindow *window );
 
-static void             window_do_all_widgets_showed( BaseWindow *window, gpointer user_data );
 static gboolean         window_do_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 static gboolean         window_do_delete_event( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
 static gboolean         window_do_is_willing_to_quit( const BaseWindow *window );
@@ -246,7 +245,7 @@ class_init( BaseWindowClass *klass )
 
 	klass->initial_load_toplevel = do_initialize_gtk_toplevel;
 	klass->runtime_init_toplevel = do_initialize_base_window;
-	klass->all_widgets_showed = window_do_all_widgets_showed;
+	klass->all_widgets_showed = NULL;
 	klass->dialog_response = window_do_dialog_response;
 	klass->delete_event = window_do_delete_event;
 	klass->get_toplevel_name = NULL;
@@ -308,7 +307,7 @@ class_init( BaseWindowClass *klass )
 				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
 				G_TYPE_FROM_CLASS( klass ),
 				G_SIGNAL_RUN_LAST,
-				G_CALLBACK( v_all_widgets_showed ),
+				G_CALLBACK( on_all_widgets_showed_class_handler ),
 				NULL,
 				NULL,
 				g_cclosure_marshal_VOID__POINTER,
@@ -1025,20 +1024,21 @@ do_initialize_base_window( BaseWindow *window, gpointer user_data )
 }
 
 static void
-v_all_widgets_showed( BaseWindow *window, gpointer user_data )
+on_all_widgets_showed_class_handler( BaseWindow *window, gpointer user_data )
 {
-	static const gchar *thisfn = "base_window_v_all_widgets_showed";
+	static const gchar *thisfn = "base_window_on_all_widgets_showed_class_handler";
+	GObjectClass *class;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
 
-		if( BASE_WINDOW_GET_CLASS( window )->all_widgets_showed ){
-			BASE_WINDOW_GET_CLASS( window )->all_widgets_showed( window, user_data );
-
-		} else {
-			window_do_all_widgets_showed( window, user_data );
+		for( class = G_OBJECT_GET_CLASS( window ) ; BASE_IS_WINDOW_CLASS( class ) ; class = g_type_class_peek_parent( class )){
+			if( BASE_WINDOW_CLASS( class )->all_widgets_showed ){
+				BASE_WINDOW_CLASS( class )->all_widgets_showed( window, user_data );
+			}
 		}
 	}
 }
@@ -1101,19 +1101,6 @@ v_get_iprefs_window_id( const BaseWindow *window )
 	}
 
 	return( id );
-}
-
-static void
-window_do_all_widgets_showed( BaseWindow *window, gpointer user_data )
-{
-	static const gchar *thisfn = "base_window_do_all_widgets_showed";
-
-	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-
-	if( !window->private->dispose_has_run ){
-		/* nothing to do here */
-	}
 }
 
 /*
