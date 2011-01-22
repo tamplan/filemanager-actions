@@ -90,8 +90,10 @@ struct _NactPreferencesEditorPrivate {
 	/* sixth tab: i/o providers */
 };
 
-static GObjectClass *st_parent_class = NULL;
-static guint         st_last_tab     = 0;
+static const gchar  *st_xmlui_filename = PKGDATADIR "/nact-preferences.ui";
+
+static GObjectClass *st_parent_class   = NULL;
+static guint         st_last_tab       = 0;
 
 static GType    register_type( void );
 static void     class_init( NactPreferencesEditorClass *klass );
@@ -103,7 +105,6 @@ static NactPreferencesEditor *preferences_editor_new( BaseWindow *parent );
 
 static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
 static gchar   *base_get_dialog_name( const BaseWindow *window );
-static gchar   *base_get_ui_filename( const BaseWindow *dialog );
 static void     on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data );
@@ -199,7 +200,6 @@ class_init( NactPreferencesEditorClass *klass )
 	base_class->dialog_response = base_dialog_response;
 	base_class->get_toplevel_name = base_get_dialog_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
-	base_class->get_ui_filename = base_get_ui_filename;
 }
 
 static void
@@ -292,7 +292,11 @@ preferences_editor_new( BaseWindow *parent )
 	NASettings *settings;
 	gboolean are_locked, mandatory;
 
-	editor = NACT_PREFERENCES_EDITOR( g_object_new( NACT_PREFERENCES_EDITOR_TYPE, BASE_PROP_PARENT, parent, NULL ));
+	editor = NACT_PREFERENCES_EDITOR(
+			g_object_new( NACT_PREFERENCES_EDITOR_TYPE,
+					BASE_PROP_PARENT,         parent,
+					BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+					NULL ));
 
 	application = NACT_APPLICATION( base_window_get_application( parent ));
 	updater = nact_application_get_updater( application );
@@ -337,12 +341,6 @@ static gchar *
 base_get_dialog_name( const BaseWindow *window )
 {
 	return( g_strdup( "PreferencesDialog" ));
-}
-
-static gchar *
-base_get_ui_filename( const BaseWindow *dialog )
-{
-	return( g_strdup( PKGDATADIR "/nact-preferences.ui" ));
 }
 
 static void

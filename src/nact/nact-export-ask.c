@@ -63,7 +63,9 @@ struct _NactExportAskPrivate {
 	gboolean      keep_last_choice_mandatory;
 };
 
-static BaseDialogClass *st_parent_class = NULL;
+static const gchar     *st_xmlui_filename = PKGDATADIR "/nact-assistant-export.ui";
+
+static BaseDialogClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactExportAskClass *klass );
@@ -75,7 +77,6 @@ static NactExportAsk *export_ask_new( BaseWindow *parent );
 
 static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
 static gchar   *base_get_dialog_name( const BaseWindow *window );
-static gchar   *base_get_ui_filename( const BaseWindow *dialog );
 static void     on_base_initial_load_dialog( NactExportAsk *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactExportAsk *editor, gpointer user_data );
@@ -143,7 +144,6 @@ class_init( NactExportAskClass *klass )
 	base_class->dialog_response = base_dialog_response;
 	base_class->get_toplevel_name = base_get_dialog_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
-	base_class->get_ui_filename = base_get_ui_filename;
 }
 
 static void
@@ -231,7 +231,10 @@ instance_finalize( GObject *dialog )
 static NactExportAsk *
 export_ask_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_EXPORT_ASK_TYPE, BASE_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_EXPORT_ASK_TYPE,
+			BASE_PROP_PARENT,         parent,
+			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+			NULL ));
 }
 
 /**
@@ -317,12 +320,6 @@ static gchar *
 base_get_dialog_name( const BaseWindow *window )
 {
 	return( g_strdup( "ExportAskDialog" ));
-}
-
-static gchar *
-base_get_ui_filename( const BaseWindow *dialog )
-{
-	return( g_strdup( PKGDATADIR "/nact-assistant-export.ui" ));
 }
 
 static void

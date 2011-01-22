@@ -1,6 +1,16 @@
 2011-01-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-window.c:
+	* src/nact/base-window.h (get_ui_filename): Removed virtual function.
+
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-preferences-editor.c: Updated accordingly.
+
+	* src/nact/base-window.c:
 	* src/nact/base-window.h:
 	Revert commits dfb26ec5, 1991b3b7 and 4d0c43bb due to new virtual method
 	handling paradigm.

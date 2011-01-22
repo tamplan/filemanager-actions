@@ -252,7 +252,6 @@ class_init( BaseWindowClass *klass )
 	klass->delete_event = window_do_delete_event;
 	klass->get_toplevel_name = NULL;
 	klass->get_iprefs_window_id = NULL;
-	klass->get_ui_filename = NULL;
 	klass->is_willing_to_quit = NULL;
 
 	/**
@@ -610,6 +609,8 @@ setup_builder( const BaseWindow *window )
 	GError *error = NULL;
 	gchar *msg;
 
+	ret = TRUE;
+
 	/* allocate a dedicated BaseBuilder or use the common one
 	 */
 	if( window->private->has_own_builder ){
@@ -619,28 +620,17 @@ setup_builder( const BaseWindow *window )
 		window->private->builder = base_application_get_builder( window->private->application );
 	}
 
-	/* use the xml ui filename provided as a construction property
-	 * or ask the window for it
-	 */
-	if(( !window->private->xmlui_filename || !g_utf8_strlen( window->private->xmlui_filename, -1 )) &&
-		BASE_WINDOW_GET_CLASS( window )->get_ui_filename ){
-
-			g_free( window->private->xmlui_filename );
-			window->private->xmlui_filename = BASE_WINDOW_GET_CLASS( window )->get_ui_filename( window );
-	}
-
 	/* load the XML definition from the UI file
 	 */
-	ret = FALSE;
-	if( window->private->xmlui_filename && g_utf8_strlen( window->private->xmlui_filename, -1 )){
-		if( base_builder_add_from_file( window->private->builder, window->private->xmlui_filename, &error )){
-			ret = TRUE;
-		} else {
+	if( window->private->xmlui_filename &&
+		g_utf8_strlen( window->private->xmlui_filename, -1 ) &&
+		!base_builder_add_from_file( window->private->builder, window->private->xmlui_filename, &error )){
+
 			msg = g_strdup_printf( _( "Unable to load %s UI XML definition: %s" ), window->private->xmlui_filename, error->message );
 			base_window_display_error_dlg( NULL, thisfn, msg );
 			g_free( msg );
 			g_error_free( error );
-		}
+			ret = FALSE;
 	}
 
 	return( ret );

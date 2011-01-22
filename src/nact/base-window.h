@@ -101,7 +101,6 @@ typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
  * @delete_event:
  * @get_toplevel_name:
  * @get_iprefs_window_id:
- * @get_ui_filename:
  * @is_willing_to_quit:    asks if the window is willing to quit
  *
  * This defines the virtual method a derived class may, should or must implement.
@@ -195,21 +194,6 @@ typedef struct {
 	 * interface virtual function.
 	 */
 	gchar *  ( *get_iprefs_window_id ) ( const BaseWindow *window );
-
-	/**
-	 * get_ui_filename:
-	 * @window: this #BaseWindow instance.
-	 *
-	 * Asks the derived class for the filename of the XML definition of
-	 * the user interface for this window. This XML definition must be
-	 * suitable in order to be loaded via GtkBuilder.
-	 *
-	 * Defaults to application UI filename.
-	 *
-	 * Returns: the filename of the XML definition, to be g_free() by
-	 * the caller.
-	 */
-	gchar *  ( *get_ui_filename )      ( const BaseWindow *window );
 
 	/**
 	 * is_willing_to_quit:

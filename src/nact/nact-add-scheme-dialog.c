@@ -55,7 +55,9 @@ struct _NactAddSchemeDialogPrivate {
 	gchar   *scheme;
 };
 
-static GObjectClass *st_parent_class = NULL;
+static const gchar  *st_xmlui_filename = PKGDATADIR "/nact-add-scheme.ui";
+
+static GObjectClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactAddSchemeDialogClass *klass );
@@ -67,7 +69,6 @@ static NactAddSchemeDialog *add_scheme_dialog_new( BaseWindow *parent );
 
 static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
 static gchar   *base_get_dialog_name( const BaseWindow *window );
-static gchar   *base_get_ui_filename( const BaseWindow *dialog );
 static void     on_base_initial_load_dialog( NactAddSchemeDialog *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactAddSchemeDialog *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactAddSchemeDialog *editor, gpointer user_data );
@@ -138,7 +139,6 @@ class_init( NactAddSchemeDialogClass *klass )
 	base_class->dialog_response = base_dialog_response;
 	base_class->get_toplevel_name = base_get_dialog_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
-	base_class->get_ui_filename = base_get_ui_filename;
 }
 
 static void
@@ -235,7 +235,10 @@ instance_finalize( GObject *dialog )
 static NactAddSchemeDialog *
 add_scheme_dialog_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_ADD_SCHEME_DIALOG_TYPE, BASE_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_ADD_SCHEME_DIALOG_TYPE,
+			BASE_PROP_PARENT,         parent,
+			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+			NULL ));
 }
 
 /**
@@ -282,12 +285,6 @@ static gchar *
 base_get_dialog_name( const BaseWindow *window )
 {
 	return( g_strdup( "AddSchemeDialog" ));
-}
-
-static gchar *
-base_get_ui_filename( const BaseWindow *dialog )
-{
-	return( g_strdup( PKGDATADIR "/nact-add-scheme.ui" ));
 }
 
 static void
