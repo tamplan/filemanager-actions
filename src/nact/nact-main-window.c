@@ -168,7 +168,7 @@ static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NA
 static gchar   *base_get_toplevel_name( const BaseWindow *window );
 static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
 static gboolean base_is_willing_to_quit( const BaseWindow *window );
-static void     on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data );
+static void     on_base_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *toplevel );
 static void     on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data );
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
@@ -395,6 +395,7 @@ class_init( NactMainWindowClass *klass )
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
+	base_class->initialize_gtk_toplevel = on_base_initialize_gtk_toplevel;
 	base_class->get_toplevel_name = base_get_toplevel_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
 	base_class->is_willing_to_quit = base_is_willing_to_quit;
@@ -645,12 +646,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NACT_MAIN_WINDOW( instance );
 
 	self->private = g_new0( NactMainWindowPrivate, 1 );
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initial_load_toplevel ));
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -1135,9 +1130,10 @@ base_is_willing_to_quit( const BaseWindow *window )
  * is the same than quitting the application
  */
 static void
-on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
+on_base_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *toplevel )
 {
-	static const gchar *thisfn = "nact_main_window_on_base_initial_load_toplevel";
+	static const gchar *thisfn = "nact_main_window_on_base_initialize_gtk_toplevel";
+	NactMainWindow *main_window;
 	gint pos;
 	GtkWidget *pane;
 	NactApplication *application;
@@ -1146,22 +1142,24 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	if( !window->private->dispose_has_run ){
-		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+	main_window = NACT_MAIN_WINDOW( window );
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	if( !main_window->private->dispose_has_run ){
+		g_debug( "%s: window=%p, toplevel=%p", thisfn, ( void * ) window, ( void * ) toplevel );
+
+		application = NACT_APPLICATION( base_window_get_application( window ));
 		updater = nact_application_get_updater( application );
 		settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
 		pos = na_settings_get_uint( settings, NA_IPREFS_MAIN_PANED, NULL, NULL );
 		if( pos ){
-			pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
+			pane = base_window_get_widget( window, "MainPaned" );
 			gtk_paned_set_position( GTK_PANED( pane ), pos );
 		}
 
 		nact_iactions_list_set_management_mode( NACT_IACTIONS_LIST( window ), IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
 		nact_iactions_list_initial_load_toplevel( NACT_IACTIONS_LIST( window ));
-		nact_sort_buttons_initial_load( window );
+		nact_sort_buttons_initial_load( main_window );
 
 		nact_iaction_tab_initial_load_toplevel( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_initial_load_toplevel( NACT_ICOMMAND_TAB( window ));
@@ -1174,7 +1172,7 @@ on_base_initial_load_toplevel( NactMainWindow *window, gpointer user_data )
 		nact_iexecution_tab_initial_load_toplevel( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_initial_load_toplevel( NACT_IPROPERTIES_TAB( window ));
 
-		nact_main_statusbar_initial_load_toplevel( window );
+		nact_main_statusbar_initial_load_toplevel( main_window );
 	}
 }
 
