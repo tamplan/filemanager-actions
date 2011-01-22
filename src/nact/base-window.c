@@ -135,7 +135,6 @@ static gboolean         is_main_window( BaseWindow *window );
 static gboolean         on_delete_event( GtkWidget *widget, GdkEvent *event, BaseWindow *window );
 
 static gboolean         v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
-static gchar           *v_get_toplevel_name( const BaseWindow *window );
 static gchar           *v_get_iprefs_window_id( const BaseWindow *window );
 
 static gboolean         window_do_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
@@ -250,7 +249,6 @@ class_init( BaseWindowClass *klass )
 	klass->all_widgets_showed = NULL;
 	klass->dialog_response = window_do_dialog_response;
 	klass->delete_event = window_do_delete_event;
-	klass->get_toplevel_name = NULL;
 	klass->get_iprefs_window_id = NULL;
 	klass->is_willing_to_quit = NULL;
 
@@ -639,30 +637,24 @@ setup_builder( const BaseWindow *window )
 static gboolean
 load_gtk_toplevel( const BaseWindow *window )
 {
-	gchar *toplevel_name;
 	GtkWindow *gtk_toplevel;
 	gchar *msg;
 
-	/* we should only test for the construction property toplevel_name
-	 * during the transition, also asks the derived class
-	 */
-	toplevel_name = v_get_toplevel_name( window );
 	gtk_toplevel = NULL;
 
-	if( toplevel_name ){
-		if( strlen( toplevel_name )){
+	if( window->private->toplevel_name ){
+		if( strlen( window->private->toplevel_name )){
 			g_return_val_if_fail( BASE_IS_BUILDER( window->private->builder ), FALSE );
-			gtk_toplevel = base_builder_get_toplevel_by_name( window->private->builder, toplevel_name );
+			gtk_toplevel = base_builder_get_toplevel_by_name( window->private->builder, window->private->toplevel_name );
 
 			if( !gtk_toplevel ){
-				msg = g_strdup_printf( _( "Unable to load %s dialog definition." ), toplevel_name );
+				msg = g_strdup_printf( _( "Unable to load %s dialog definition." ), window->private->toplevel_name );
 				base_window_display_error_dlg( NULL, msg, NULL );
 				g_free( msg );
 			}
 		}
 	}
 
-	g_free( toplevel_name );
 	window->private->gtk_toplevel = gtk_toplevel;
 
 	return( gtk_toplevel != NULL );
@@ -1073,27 +1065,6 @@ v_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
 	}
 
 	return( stop );
-}
-
-static gchar *
-v_get_toplevel_name( const BaseWindow *window )
-{
-	gchar *name = NULL;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
-
-	g_object_get( G_OBJECT( window ), BASE_PROP_TOPLEVEL_NAME, &name, NULL );
-
-	if( !name || !strlen( name )){
-		if( BASE_WINDOW_GET_CLASS( window )->get_toplevel_name ){
-			name = BASE_WINDOW_GET_CLASS( window )->get_toplevel_name( window );
-			if( name && strlen( name )){
-				g_object_set( G_OBJECT( window ), BASE_PROP_TOPLEVEL_NAME, name, NULL );
-			}
-		}
-	}
-
-	return( name );
 }
 
 static gchar *

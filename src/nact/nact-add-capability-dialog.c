@@ -81,6 +81,7 @@ static CapabilityTextStruct st_caps[] = {
 };
 
 static const gchar  *st_xmlui_filename = PKGDATADIR "/nact-add-capability.ui";
+static const gchar  *st_toplevel_name  = "AddCapabilityDialog";
 
 static GObjectClass *st_parent_class   = NULL;
 
@@ -93,7 +94,6 @@ static void     instance_finalize( GObject *dialog );
 static NactAddCapabilityDialog *add_capability_dialog_new( BaseWindow *parent );
 
 static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
-static gchar   *base_get_dialog_name( const BaseWindow *window );
 static void     on_base_initial_load_dialog( NactAddCapabilityDialog *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactAddCapabilityDialog *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactAddCapabilityDialog *editor, gpointer user_data );
@@ -166,7 +166,6 @@ class_init( NactAddCapabilityDialogClass *klass )
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->dialog_response = base_dialog_response;
-	base_class->get_toplevel_name = base_get_dialog_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
 }
 
@@ -267,6 +266,7 @@ add_capability_dialog_new( BaseWindow *parent )
 	return( g_object_new( NACT_ADD_CAPABILITY_DIALOG_TYPE,
 			BASE_PROP_PARENT,         parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 			NULL ));
 }
 
@@ -308,12 +308,6 @@ static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
 	return( g_strdup( NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP ));
-}
-
-static gchar *
-base_get_dialog_name( const BaseWindow *window )
-{
-	return( g_strdup( "AddCapabilityDialog" ));
 }
 
 static void

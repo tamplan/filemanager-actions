@@ -54,7 +54,9 @@ enum {
 	BTN_SAVE_AND_QUIT
 };
 
-static BaseDialogClass *st_parent_class = NULL;
+static const gchar     *st_toplevel_name  = "ConfirmLogoutDialog";
+
+static BaseDialogClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactConfirmLogoutClass *klass );
@@ -64,7 +66,6 @@ static void     instance_finalize( GObject *dialog );
 
 static NactConfirmLogout *confirm_logout_new( BaseWindow *parent );
 
-static gchar   *base_get_dialog_name( const BaseWindow *window );
 static void     on_base_initial_load_dialog( NactConfirmLogout *editor, gpointer user_data );
 static void     on_base_runtime_init_dialog( NactConfirmLogout *editor, gpointer user_data );
 static void     on_base_all_widgets_showed( NactConfirmLogout *editor, gpointer user_data );
@@ -131,7 +132,6 @@ class_init( NactConfirmLogoutClass *klass )
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->dialog_response = base_dialog_response;
-	base_class->get_toplevel_name = base_get_dialog_name;
 }
 
 static void
@@ -216,7 +216,10 @@ instance_finalize( GObject *dialog )
 static NactConfirmLogout *
 confirm_logout_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_CONFIRM_LOGOUT_TYPE, BASE_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_CONFIRM_LOGOUT_TYPE,
+			BASE_PROP_PARENT,        parent,
+			BASE_PROP_TOPLEVEL_NAME, st_toplevel_name,
+			NULL ));
 }
 
 /**
@@ -243,12 +246,6 @@ nact_confirm_logout_run( NactMainWindow *parent )
 	g_object_unref( editor );
 
 	return( willing_to );
-}
-
-static gchar *
-base_get_dialog_name( const BaseWindow *window )
-{
-	return( g_strdup( "ConfirmLogoutDialog" ));
 }
 
 static void

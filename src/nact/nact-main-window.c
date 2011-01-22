@@ -136,7 +136,7 @@ enum {
 };
 
 static const gchar     *st_xmlui_filename         = PKGDATADIR "/nautilus-actions-config-tool.ui";
-static const gchar     *st_xmlui_toplevel         = "MainWindow";
+static const gchar     *st_toplevel_name          = "MainWindow";
 
 static NactWindowClass *st_parent_class           = NULL;
 static gint             st_signals[ LAST_SIGNAL ] = { 0 };
@@ -165,7 +165,6 @@ static void     instance_finalize( GObject *application );
 
 static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
 
-static gchar   *base_get_toplevel_name( const BaseWindow *window );
 static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
 static gboolean base_is_willing_to_quit( const BaseWindow *window );
 static void     on_base_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *toplevel );
@@ -396,7 +395,6 @@ class_init( NactMainWindowClass *klass )
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->initialize_gtk_toplevel = on_base_initialize_gtk_toplevel;
-	base_class->get_toplevel_name = base_get_toplevel_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
 	base_class->is_willing_to_quit = base_is_willing_to_quit;
 
@@ -829,7 +827,7 @@ nact_main_window_new( const NactApplication *application )
 	window = g_object_new( NACT_MAIN_WINDOW_TYPE,
 			BASE_PROP_APPLICATION,    application,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
-			BASE_PROP_TOPLEVEL_NAME,  st_xmlui_toplevel,
+			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 			NULL );
 
 	return( window );
@@ -1093,12 +1091,6 @@ actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater
 	}
 
 	return( delete_ok );
-}
-
-static gchar *
-base_get_toplevel_name( const BaseWindow *window )
-{
-	return( g_strdup( "MainWindow" ));
 }
 
 static gchar *

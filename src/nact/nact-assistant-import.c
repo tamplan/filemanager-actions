@@ -78,7 +78,9 @@ struct _NactAssistantImportPrivate {
 	GList       *results;
 };
 
-static BaseAssistantClass *st_parent_class = NULL;
+static const gchar        *st_toplevel_name  = "ImportAssistant";
+
+static BaseAssistantClass *st_parent_class   = NULL;
 
 static GType         register_type( void );
 static void          class_init( NactAssistantImportClass *klass );
@@ -89,7 +91,6 @@ static void          instance_finalize( GObject *application );
 static NactAssistantImport *assist_new( BaseWindow *parent );
 
 static gchar        *window_get_iprefs_window_id( const BaseWindow *window );
-static gchar        *window_get_dialog_name( const BaseWindow *dialog );
 
 static void          on_initial_load_dialog( NactAssistantImport *dialog, gpointer user_data );
 static void          on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data );
@@ -165,7 +166,6 @@ class_init( NactAssistantImportClass *klass )
 	klass->private = g_new0( NactAssistantImportClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_toplevel_name = window_get_dialog_name;
 	base_class->get_iprefs_window_id = window_get_iprefs_window_id;
 
 	assist_class = BASE_ASSISTANT_CLASS( klass );
@@ -252,7 +252,10 @@ instance_finalize( GObject *window )
 static NactAssistantImport *
 assist_new( BaseWindow *parent )
 {
-	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE, BASE_PROP_PARENT, parent, NULL ));
+	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE,
+			BASE_PROP_PARENT,        parent,
+			BASE_PROP_TOPLEVEL_NAME, st_toplevel_name,
+			NULL ));
 }
 
 /**
@@ -267,7 +270,10 @@ nact_assistant_import_run( BaseWindow *main_window )
 	NactAssistantImport *assist;
 
 	assist = assist_new( main_window );
-	g_object_set( G_OBJECT( assist ), BASE_PROP_HAS_OWN_BUILDER, TRUE, NULL );
+	g_object_set( G_OBJECT( assist ),
+			BASE_PROP_HAS_OWN_BUILDER, TRUE,
+			BASE_PROP_TOPLEVEL_NAME,   st_toplevel_name,
+			NULL );
 
 	base_window_run( BASE_WINDOW( assist ));
 }
@@ -276,12 +282,6 @@ static gchar *
 window_get_iprefs_window_id( const BaseWindow *window )
 {
 	return( g_strdup( NA_IPREFS_IMPORT_ASSISTANT_WSP ));
-}
-
-static gchar *
-window_get_dialog_name( const BaseWindow *dialog )
-{
-	return( g_strdup( "ImportAssistant" ));
 }
 
 static void

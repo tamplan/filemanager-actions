@@ -90,6 +90,7 @@ enum {
 };
 
 static const gchar     *st_xmlui_filename = PKGDATADIR "/nact-icon-chooser.ui";
+static const gchar     *st_toplevel_name  = "IconChooserDialog";
 
 static BaseDialogClass *st_parent_class   = NULL;
 
@@ -102,7 +103,6 @@ static void          instance_finalize( GObject *dialog );
 static NactIconChooser *icon_chooser_new( BaseWindow *parent );
 
 static gchar        *base_get_iprefs_window_id( const BaseWindow *window );
-static gchar        *base_get_dialog_name( const BaseWindow *window );
 static void          on_base_initial_load_dialog( NactIconChooser *editor, gpointer user_data );
 static void          do_initialize_themed_icons( NactIconChooser *editor );
 static void          do_initialize_icons_by_path( NactIconChooser *editor );
@@ -182,7 +182,6 @@ class_init( NactIconChooserClass *klass )
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->dialog_response = base_dialog_response;
-	base_class->get_toplevel_name = base_get_dialog_name;
 	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
 }
 
@@ -289,6 +288,7 @@ icon_chooser_new( BaseWindow *parent )
 	return( g_object_new( NACT_ICON_CHOOSER_TYPE,
 			BASE_PROP_PARENT,         parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 			NULL ));
 }
 
@@ -336,12 +336,6 @@ static gchar *
 base_get_iprefs_window_id( const BaseWindow *window )
 {
 	return( g_strdup( NA_IPREFS_ICON_CHOOSER_WSP ));
-}
-
-static gchar *
-base_get_dialog_name( const BaseWindow *window )
-{
-	return( g_strdup( "IconChooserDialog" ));
 }
 
 static void

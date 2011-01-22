@@ -95,6 +95,7 @@ typedef struct {
 	ExportStruct;
 
 static const gchar        *st_xmlui_filename = PKGDATADIR "/nact-assistant-export.ui";
+static const gchar        *st_toplevel_name  = "ExportAssistant";
 
 static BaseAssistantClass *st_parent_class   = NULL;
 
@@ -108,7 +109,6 @@ static void            instance_finalize( GObject *application );
 static NactAssistantExport *assist_new( BaseWindow *parent );
 
 static gchar          *window_get_iprefs_window_id( const BaseWindow *window );
-static gchar          *window_get_toplevel_name( const BaseWindow *dialog );
 
 static void            on_initial_load_dialog( NactAssistantExport *dialog, gpointer user_data );
 static void            on_runtime_init_dialog( NactAssistantExport *dialog, gpointer user_data );
@@ -208,7 +208,6 @@ class_init( NactAssistantExportClass *klass )
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->get_iprefs_window_id = window_get_iprefs_window_id;
-	base_class->get_toplevel_name = window_get_toplevel_name;
 
 	assist_class = BASE_ASSISTANT_CLASS( klass );
 	assist_class->apply = assistant_apply;
@@ -308,6 +307,7 @@ assist_new( BaseWindow *parent )
 	return( g_object_new( NACT_ASSISTANT_EXPORT_TYPE,
 			BASE_PROP_PARENT,         parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 			NULL ));
 }
 
@@ -331,12 +331,6 @@ static gchar *
 window_get_iprefs_window_id( const BaseWindow *window )
 {
 	return( g_strdup( NA_IPREFS_EXPORT_ASSISTANT_WSP ));
-}
-
-static gchar *
-window_get_toplevel_name( const BaseWindow *dialog )
-{
-	return( g_strdup( "ExportAssistant" ));
 }
 
 static void

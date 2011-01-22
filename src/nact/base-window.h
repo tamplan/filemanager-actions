@@ -99,7 +99,6 @@ typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
  * @all_widgets_showed:      all widgets have been showed
  * @dialog_response:
  * @delete_event:
- * @get_toplevel_name:
  * @get_iprefs_window_id:
  * @is_willing_to_quit:    asks if the window is willing to quit
  *
@@ -174,14 +173,6 @@ typedef struct {
 	 * care of the signal itself.
 	 */
 	gboolean ( *delete_event )         ( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
-
-	/**
-	 * window_get_toplevel_name:
-	 * @window: this #BaseWindow instance.
-	 *
-	 * Pure virtual function.
-	 */
-	gchar *  ( *get_toplevel_name )    ( const BaseWindow *window );
 
 	/**
 	 * get_iprefs_window_id:
