@@ -1,5 +1,12 @@
 2011-01-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.c (appli_initialize_manage_options):
+	* src/nact/base-application.h (manage_options):
+	* src/nact/nact-application.c (appli_manage_options):
+	Revert commit 3acf600874.
+
+	* src/test/test-virtuals.c: Do some more tests on virtual methods.
+
 	* src/nact/base-window.c (on_initialize_gtk_toplevel_class_handler,
 	on_initialize_base_window_class_handler,
 	on_all_widgets_showed_class_handler, base_window_is_willing_to_quit):

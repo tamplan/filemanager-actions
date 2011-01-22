@@ -113,14 +113,9 @@ typedef struct {
 	 * function.
 	 *
 	 * This let the derived class an opportunity to manage command-line
-	 * arguments.
-	 *
-	 * The BaseApplication base class takes care of successively invoking
-	 * all manage_options() methods of derived classes, from the topmost
-	 * derived class up to the BaseApplication base class, while each methods
-	 * returns %TRUE.
-	 *
-	 * In other words, it stops this loop as soon as a method returns %FALSE.
+	 * arguments. Unless it decides to stop the execution of the program,
+	 * the derived class should call the parent class method in order to
+	 * let it manage its own options.
 	 *
 	 * Returns: %TRUE to continue execution, %FALSE to stop it.
 	 */
