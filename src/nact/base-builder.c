@@ -231,7 +231,7 @@ base_builder_add_from_file( BaseBuilder *builder, const gchar *filename, GError 
 }
 
 /**
- * base_builder_load_named_toplevel:
+ * base_builder_get_toplevel_by_name:
  * @builder: this #BaseBuilder object.
  * @name: the name of the searched toplevel window.
  *
@@ -243,7 +243,7 @@ base_builder_add_from_file( BaseBuilder *builder, const gchar *filename, GError 
  * g_free() nor g_object_unref() by the caller.
  */
 GtkWindow *
-base_builder_load_named_toplevel( BaseBuilder *builder, const gchar *name )
+base_builder_get_toplevel_by_name( BaseBuilder *builder, const gchar *name )
 {
 	GtkWindow *toplevel = NULL;
 

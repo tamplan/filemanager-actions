@@ -663,7 +663,7 @@ load_gtk_toplevel( const BaseWindow *window )
 	if( toplevel_name ){
 		if( strlen( toplevel_name )){
 			g_return_val_if_fail( BASE_IS_BUILDER( window->private->builder ), FALSE );
-			gtk_toplevel = base_builder_load_named_toplevel( window->private->builder, toplevel_name );
+			gtk_toplevel = base_builder_get_toplevel_by_name( window->private->builder, toplevel_name );
 
 			if( !gtk_toplevel ){
 				msg = g_strdup_printf( _( "Unable to load %s dialog definition." ), toplevel_name );
@@ -785,33 +785,6 @@ base_window_get_application( const BaseWindow *window )
 }
 
 /**
- * base_window_get_gtk_toplevel_by_name:
- * @window: this #BaseWindow instance.
- * @name: the name of the searched GtkWindow.
- *
- * Returns: the named top-level GtkWindow.
- *
- * This is just a convenience function to be able to open quickly a
- * window (e.g. Legend dialog).
- *
- * The caller may close the window by g_object_unref()-ing the returned
- * #GtkWindow.
- */
-GtkWindow *
-base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *name )
-{
-	GtkWindow *toplevel = NULL;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
-
-	if( !window->private->dispose_has_run ){
-		toplevel = load_named_toplevel( window, name );
-	}
-
-	return( toplevel );
-}
-
-/**
  * base_window_get_parent:
  * @window: this #BaseWindow instance..
  *
@@ -852,6 +825,33 @@ base_window_get_gtk_toplevel( const BaseWindow *window )
 
 	if( !window->private->dispose_has_run ){
 		toplevel = window->private->gtk_toplevel;
+	}
+
+	return( toplevel );
+}
+
+/**
+ * base_window_get_gtk_toplevel_by_name:
+ * @window: this #BaseWindow instance.
+ * @name: the name of the searched GtkWindow.
+ *
+ * Returns: the named top-level GtkWindow.
+ *
+ * This is just a convenience function to be able to open quickly a
+ * window (e.g. Legend dialog).
+ *
+ * The caller may close the window by g_object_unref()-ing the returned
+ * #GtkWindow.
+ */
+GtkWindow *
+base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *name )
+{
+	GtkWindow *toplevel = NULL;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	if( !window->private->dispose_has_run ){
+		toplevel = load_named_toplevel( window, name );
 	}
 
 	return( toplevel );
@@ -1227,13 +1227,13 @@ load_named_toplevel( const BaseWindow *window, const gchar *name )
 
 	if( window->private->builder ){
 		g_return_val_if_fail( BASE_IS_BUILDER( window->private->builder ), NULL );
-		toplevel = base_builder_load_named_toplevel( window->private->builder, name );
+		toplevel = base_builder_get_toplevel_by_name( window->private->builder, name );
 	}
 
 	if( !toplevel ){
 		application = base_window_get_application( window );
 		builder = base_application_get_builder( application );
-		toplevel = base_builder_load_named_toplevel( builder, name );
+		toplevel = base_builder_get_toplevel_by_name( builder, name );
 	}
 
 	if( !toplevel ){
