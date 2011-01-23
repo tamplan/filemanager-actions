@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
 "POT-Creation-Date: 2011-01-21 18:47+0000\n"
-"PO-Revision-Date: 2011-01-23 15:10+0100\n"
+"PO-Revision-Date: 2011-01-23 17:57+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -324,7 +324,6 @@ msgstr ""
 "puede reordenar los elementos."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:50
-#, fuzzy
 #| msgid ""
 #| "This is the preferred export format, used as a default when exporting "
 #| "items, or dropping them outside of the application. Possible values are: "
@@ -520,7 +519,6 @@ msgid "NAIExporter %s doesn't implement 'to_file' interface."
 msgstr "NAIEXporter %s no implementa la interfaz «to_file»."
 
 #: ../src/core/na-iabout.c:179
-#, fuzzy
 #| msgid ""
 #| "Nautilus Actions Configuration Tool is free software; you can "
 #| "redistribute it and/or modify it under the terms of the GNU General "
@@ -533,13 +531,12 @@ msgid ""
 "or (at your option) any later version."
 msgstr ""
 "La herramienta de configuración de las acciones de Nautilus es software "
-"libre: usted puede redistribuirlo y/o modificarlo bajo los términos de la "
-"Licencia Pública General GNU publicada por la Fundación para el Software "
-"Libre, ya sea la versión 2 de la Licencia, o (a su elección) cualquier "
-"versión posterior."
+"libre: puede redistribuirla y/o modificarla bajo los términos de la Licencia "
+"Pública General GNU publicada por la Fundación para el Software Libre, ya "
+"sea la versión 2 de la Licencia, o (a su elección) cualquier versión "
+"posterior."
 
 #: ../src/core/na-iabout.c:183
-#, fuzzy
 #| msgid ""
 #| "Nautilus Actions Configuration Tool is distributed in the hope that it "
 #| "will be useful, but WITHOUT ANY WARRANTY; without even the implied "
@@ -558,7 +555,6 @@ msgstr ""
 "información más detallada."
 
 #: ../src/core/na-iabout.c:187
-#, fuzzy
 #| msgid ""
 #| "You should have received a copy of the GNU General Public License along "
 #| "with Nautilus Actions Configuration Tool ; if not, write to the Free "
@@ -687,7 +683,6 @@ msgstr ""
 
 #. i18n: wildcard character '*' is taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:131
-#, fuzzy
 #| msgid ""
 #| "A pattern to be matched against mimetypes of selected file(s)/folder(s). "
 #| "May include wildcards (* or ?). You must set one option for each pattern "
@@ -698,8 +693,8 @@ msgid ""
 "you need"
 msgstr ""
 "Un patrón para coincidir con los tipos MIME de el(los) archivo(s)/carpeta(s) "
-"seleccionada(s). Puede incluir comodines (* o ?). Debe establecer una opción "
-"por cada patrón que necesite."
+"seleccionada(s). Puede incluir comodines «*». Debe establecer una opción por "
+"cada patrón que necesite."
 
 #: ../src/core/na-icontext-factory.c:170
 msgid "Whether the profile applies to files"
@@ -707,7 +702,6 @@ msgstr "Indica si el perfil se aplica a archivos"
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:172
-#, fuzzy
 #| msgid ""
 #| "Set to 'true' if the selection can have files, to 'false' otherwise.\n"
 #| "This setting is tied in with the 'isdir' setting. The valid combinations "
@@ -737,11 +731,11 @@ msgstr ""
 "contrario.\n"
 "Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones "
 "válidas son:\n"
-"isfile=TRUE e isdir=FALSE: la selección sólo puede contener archivos\n"
-"isfile=FALSE e isdir=TRUE: la selección sólo pude contener carpetas\n"
-"isfile=TRUE e isdir=TRUE: la selección contiene tanto archivos como "
+"isfile='true' e isdir='false': la selección sólo puede contener archivos\n"
+"isfile='false' e isdir='true': la selección sólo pude contener carpetas\n"
+"isfile='true' e isdir='true': la selección contiene tanto archivos como "
 "carpetas\n"
-"isfile=FALSE e isdir=FALSE: combinación inválida (su configuración nunca "
+"isfile='false' e isdir='false': combinación inválida (su configuración nunca "
 "aparecerá).\n"
 "Esto obviamente sólo se aplica cuando existe una selección.\n"
 "Lo predeterminado es cierto."
@@ -752,7 +746,6 @@ msgstr "Indica si el perfil se aplica a carpetas"
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:203
-#, fuzzy
 #| msgid ""
 #| "Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
 #| "This setting is tied in with the 'isfile' setting. The valid combinations "
@@ -782,11 +775,11 @@ msgstr ""
 "contrario.\n"
 "Este ajuste está relacionada con el ajuste «isfile». Las combinaciones "
 "válidas son:\n"
-"isfile=TRUE e isdir=FALSE: la selección sólo puede contener archivos\n"
-"isfile=FALSE e isdir=TRUE: la selección sólo pude contener carpetas\n"
-"isfile=TRUE e isdir=TRUE: la selección contiene tanto archivos como "
+"isfile='true' e isdir='false': la selección sólo puede contener archivos\n"
+"isfile='false' e isdir='true': la selección sólo pude contener carpetas\n"
+"isfile='true' e isdir='true': la selección contiene tanto archivos como "
 "carpetas\n"
-"isfile=FALSE e isdir=FALSE: combinación inválida (su configuración nunca "
+"isfile='false' e isdir='false': combinación inválida (su configuración nunca "
 "aparecerá).\n"
 "Esto obviamente sólo se aplica cuando existe una selección.\n"
 "Lo predeterminado es falso."
@@ -945,7 +938,6 @@ msgstr "Intentar exec"
 
 #. i18n: TryExec is a keyword of the specification, it is not translatable
 #: ../src/core/na-icontext-factory.c:400
-#, fuzzy
 #| msgid ""
 #| "Note that, when specified, only the presence and the executability status "
 #| "of the specified file are checked.\n"
@@ -961,8 +953,8 @@ msgid ""
 msgstr ""
 "Note que, cuando se especifica, sólo se comprueban los estados de presencia "
 "y ejecutabilidad del archivo especificado.\n"
-"Los parámetros pueden aparecer en el valor TryExec y se sustituirán durante "
-"la ejecución.\n"
+"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán "
+"durante la ejecución.\n"
 "Lo predeterminado es satisfactorio."
 
 #: ../src/core/na-icontext-factory.c:424
@@ -971,7 +963,6 @@ msgstr "Mostrar si está registrado"
 
 #. i18n: ShowIfRegistered is a keyword of the specification, it is not translatable
 #: ../src/core/na-icontext-factory.c:426
-#, fuzzy
 #| msgid ""
 #| "The well-known name of a DBus service.\n"
 #| "The item will be candidate if the named service is registered on session "
@@ -987,10 +978,10 @@ msgid ""
 "at runtime.\n"
 "Defaults to successful."
 msgstr ""
-"El nombre conocido de un servicio de D-Bus.\n"
+"El nombre conocido de un servicio de DBus.\n"
 "El elemento será candidato si el nombre del servicio está registrado en la "
 "sesión de D-Bus al ejecutarlo.\n"
-"Los parámetros pueden aparecer en el valor ShowIfRegistered, y se "
+"Los parámetros pueden aparecer en el valor «ShowIfRegistered», y se "
 "sustituirán durante la ejecución.\n"
 "Lo predeterminado es satisfactorio."
 
@@ -1000,7 +991,6 @@ msgstr "Mostrar si es cierto"
 
 #. i18n: ShowIfTrue is a keyword of the specification, it is not translatable
 #: ../src/core/na-icontext-factory.c:452
-#, fuzzy
 #| msgid ""
 #| "A command which, when executed, should output a string on stdout.\n"
 #| "The item will be candidate if the outputed string is equal to \"true\".\n"
@@ -1017,7 +1007,7 @@ msgstr ""
 "Un comando que, al ejecutarlo, debería mostrar una cadena de salida en "
 "stdout.\n"
 "El elemento será candidato si la cadena de salida es igual a «true».\n"
-"Los parámetros pueden aparecer en el valor ShowIfTrue y se sustituirán "
+"Los parámetros pueden aparecer en el valor «ShowIfTrue» y se sustituirán "
 "durante la ejecución.\n"
 "Lo predeterminado es satisfactorio."
 
@@ -1027,7 +1017,6 @@ msgstr "Mostrar si está en ejecución"
 
 #. i18n: ShowIfRunning is a keyword of the specification, it is not translatable
 #: ../src/core/na-icontext-factory.c:478
-#, fuzzy
 #| msgid ""
 #| "The name of a process.\n"
 #| "The item will be candidate if the process name is found in memory at "
@@ -1057,7 +1046,6 @@ msgstr "Prestaciones"
 #. i18n: 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' are all keywords
 #. *  of the specification, they are not translatable
 #: ../src/core/na-icontext-factory.c:505
-#, fuzzy
 #| msgid ""
 #| "A list of capabilities each item of the selection must satisfy in order "
 #| "the item be candidate.\n"
@@ -1087,13 +1075,13 @@ msgstr ""
 "satisfacer para que el elemento sea un candidato.\n"
 "Las capacidades se pueden negar.\n"
 "Las capacidades se deben seleccionar entre las siguientes predefinidas:\n"
-"* Propietario: el usuario actual es el propietario de los elementos "
+"* «Owner»: el usuario actual es el propietario de los elementos "
 "seleccionados\n"
-"* Legible: el usuario puede leer los elementos seleccionados (probablemente "
-"más útil cuando está negada)\n"
-"* Escribible: el usuario puede escribir los elementos seleccionados\n"
-"* Ejecutable: el usuario puede ejecutar los elementos seleccionados\n"
-"* Local: los elementos seleccionados son locales\n"
+"* «Readable»: el usuario puede leer los elementos seleccionados "
+"(probablemente más útil cuando está negada)\n"
+"* «Writable»: el usuario puede escribir los elementos seleccionados\n"
+"* «Executable»: el usuario puede ejecutar los elementos seleccionados\n"
+"* «Local»: los elementos seleccionados son locales\n"
 "Lo predeterminado es una lista vacía."
 
 #: ../src/core/na-iimporter.c:232
@@ -1156,23 +1144,23 @@ msgstr "Elemento ya existente"
 
 #: ../src/core/na-importer-ask.ui.h:2
 msgid "Do _not import the action"
-msgstr ""
+msgstr "_No importar la acción"
 
 #: ../src/core/na-importer-ask.ui.h:3
 msgid "Import the action, _renumbering it"
-msgstr ""
+msgstr "Importar la acción, _reenumerándola"
 
 #: ../src/core/na-importer-ask.ui.h:4
 msgid "Re_member my choice in future import operations"
-msgstr ""
+msgstr "R_ecordar mi elección para futuras operaciones"
 
 #: ../src/core/na-importer-ask.ui.h:5
 msgid "What should I do with this ?"
-msgstr ""
+msgstr "¿Qué debo hacer con esto?"
 
 #: ../src/core/na-importer-ask.ui.h:6
 msgid "_Override the existing action"
-msgstr ""
+msgstr "_Sobreescribir la acción existente"
 
 #: ../src/core/na-io-provider.c:1598
 msgid "Item is read-only."
@@ -1240,7 +1228,7 @@ msgid "Unable to delete configuration."
 msgstr "No se pudo eliminar la configuración."
 
 #: ../src/core/na-io-provider.c:1680
-#, fuzzy, c-format
+#, c-format
 #| msgid ""
 #| "Unknow return code (%d).\n"
 #| "Please, be kind enough to fill out a bug report on http://bugzilla.gnome."
@@ -1249,8 +1237,8 @@ msgid ""
 "Unknown return code (%d).\n"
 "Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
 msgstr ""
-"Se desconoce el código devuelto (%d).\n"
-"Rellene un informe de error en http://bugzilla.gnome.org."
+"Código devuelto desconocido (%d).\n"
+"Por favor, rellene un informe de error en http://bugzilla.gnome.org."
 
 #. i18n: default label for a new action
 #: ../src/core/na-object-action.c:60
@@ -1685,7 +1673,6 @@ msgid "Execution mode"
 msgstr "Modo de ejecución"
 
 #: ../src/core/na-object-profile-factory.c:213
-#, fuzzy
 #| msgid ""
 #| "Execution mode of the program.\n"
 #| "This may be choosen between following values:\n"
@@ -1813,10 +1800,9 @@ msgid "Nautilus-Actions Desktop I/O Provider"
 msgstr "Proveedor de E/S para el escritorio de las Acciones de Nautilus"
 
 #: ../src/io-desktop/nadp-formats.c:47
-#, fuzzy
 #| msgid "Export as a GConf _dump file"
 msgid "Export as a ._desktop file"
-msgstr "Exportar como un _volcado de archivo de GConf"
+msgstr "Exportar como un archivo ._desktop"
 
 #: ../src/io-desktop/nadp-formats.c:48
 #, fuzzy
