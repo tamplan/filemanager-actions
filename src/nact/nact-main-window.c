@@ -1112,6 +1112,11 @@ base_is_willing_to_quit( const BaseWindow *window )
 		willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
 	}
 
+	/* call parent class */
+	if( willing_to && BASE_APPLICATION_CLASS( st_parent_class )->is_willing_to_quit ){
+		willing_to = BASE_APPLICATION_CLASS( st_parent_class )->is_willing_to_quit( window );
+	}
+
 	return( willing_to );
 }
 
@@ -1165,6 +1170,11 @@ on_base_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *toplevel )
 		nact_iproperties_tab_initial_load_toplevel( NACT_IPROPERTIES_TAB( window ));
 
 		nact_main_statusbar_initial_load_toplevel( main_window );
+
+		/* call parent class */
+		if( ret && BASE_APPLICATION_CLASS( st_parent_class )->initialize_gtk_toplevel ){
+			ret = BASE_APPLICATION_CLASS( st_parent_class )->initialize_gtk_toplevel( window, toplevel );
+		}
 	}
 }
 

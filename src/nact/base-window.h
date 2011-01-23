@@ -159,7 +159,7 @@ typedef struct {
 	 * dialog_response:
 	 * @window: this #BaseWindow instance.
 	 */
-	gboolean ( *dialog_response )      ( GtkDialog *dialog, gint code, BaseWindow *window );
+	gboolean ( *dialog_response )        ( GtkDialog *dialog, gint code, BaseWindow *window );
 
 	/**
 	 * delete_event:
@@ -170,7 +170,7 @@ typedef struct {
 	 * can so implement the virtual function, without having to take
 	 * care of the signal itself.
 	 */
-	gboolean ( *delete_event )         ( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
+	gboolean ( *delete_event )           ( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
 
 	/**
 	 * get_iprefs_window_id:
@@ -182,7 +182,7 @@ typedef struct {
 	 * This delegates to #BaseWindow-derived classes the NactIPrefs
 	 * interface virtual function.
 	 */
-	gchar *  ( *get_iprefs_window_id ) ( const BaseWindow *window );
+	gchar *  ( *get_iprefs_window_id )   ( const BaseWindow *window );
 
 	/**
 	 * is_willing_to_quit:
@@ -191,17 +191,14 @@ typedef struct {
 	 * Invoked (e.g. by the session manager) when the application
 	 * has been asked for to terminate itself.
 	 *
-	 * The BaseWindow class takes care of successively invoking the
-	 * is_willing_to_quit() method of each derived class, starting from
-	 * the topmost derived class, up to the BaseWindow itself.
-	 *
-	 * As soon as one of these method returns %FALSE, the loop is
-	 * stopped.
+	 * Unless the derived class is not willing to quit, it should call
+	 * its parent class method, in order to give it a chance to also
+	 * refuse the termination of the application.
 	 *
 	 * The derived method should return %TRUE if it is willing to quit,
 	 * %FALSE else.
 	 */
-	gboolean ( *is_willing_to_quit )   ( const BaseWindow *window );
+	gboolean ( *is_willing_to_quit )     ( const BaseWindow *window );
 }
 	BaseWindowClass;
 

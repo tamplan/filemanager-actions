@@ -66,7 +66,7 @@ struct _BaseWindowPrivate {
 	GtkWindow       *gtk_toplevel;
 	gboolean         initialized;
 
-	GSList          *signals;
+	GList           *signals;
 	gboolean         save_window_position;
 	BaseBuilder     *builder;
 };
@@ -77,7 +77,7 @@ typedef struct {
 	gpointer instance;
 	gulong   handler_id;
 }
-	BaseWindowRecordedSignal;
+	RecordedSignal;
 
 /* instance properties
  */
@@ -436,7 +436,7 @@ instance_dispose( GObject *window )
 {
 	static const gchar *thisfn = "base_window_instance_dispose";
 	BaseWindow *self;
-	GSList *is;
+	GList *is;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
@@ -453,7 +453,7 @@ instance_dispose( GObject *window )
 		/* signals must be deconnected before quitting main loop
 		 */
 		for( is = self->private->signals ; is ; is = is->next ){
-			BaseWindowRecordedSignal *str = ( BaseWindowRecordedSignal * ) is->data;
+			RecordedSignal *str = ( RecordedSignal * ) is->data;
 			if( g_signal_handler_is_connected( str->instance, str->handler_id )){
 				g_signal_handler_disconnect( str->instance, str->handler_id );
 				if( st_debug_signal_connect ){
@@ -462,7 +462,7 @@ instance_dispose( GObject *window )
 			}
 			g_free( str );
 		}
-		g_slist_free( self->private->signals );
+		g_list_free( self->private->signals );
 
 		if( is_main_window( BASE_WINDOW( window ))){
 			g_debug( "%s: quitting main window", thisfn );
@@ -1005,10 +1005,8 @@ base_window_is_willing_to_quit( const BaseWindow *window )
 
 	if( !window->private->dispose_has_run ){
 
-		for( class = G_OBJECT_GET_CLASS( window ) ; willing_to && BASE_IS_WINDOW_CLASS( class ) ; class = g_type_class_peek_parent( class )){
-			if( BASE_WINDOW_CLASS( class )->is_willing_to_quit ){
-				willing_to = BASE_WINDOW_CLASS( class )->is_willing_to_quit( window );
-			}
+		if( BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit ){
+			BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit( window );
 		}
 	}
 
@@ -1279,10 +1277,10 @@ record_connected_signal( BaseWindow *window, GObject *instance, gulong handler_i
 {
 	static const gchar *thisfn = "base_window_record_connected_signal";
 
-	BaseWindowRecordedSignal *str = g_new0( BaseWindowRecordedSignal, 1 );
+	RecordedSignal *str = g_new0( RecordedSignal, 1 );
 	str->instance = instance;
 	str->handler_id = handler_id;
-	window->private->signals = g_slist_prepend( window->private->signals, str );
+	window->private->signals = g_list_prepend( window->private->signals, str );
 
 	if( st_debug_signal_connect ){
 		g_debug( "%s: connecting signal handler %p:%lu", thisfn, ( void * ) instance, handler_id );

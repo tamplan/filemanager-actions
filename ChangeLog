@@ -1,5 +1,13 @@
 2011-01-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-window.c: Handles the recorded signals in a GList.
+
+	* src/nact/base-window.h (is_willing_to_quit): Fix the comment.
+
+	* src/nact/nact-main-window.c
+	(base_is_willing_to_quit, on_base_initialize_gtk_toplevel):
+	Calls the parent class method if willing to quit.
+
 	* src/nact/nact-window.c:
 	* src/nact/nact-window.h
 	(nact_window_is_item_writable): Remove unused function.
