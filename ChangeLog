@@ -1,5 +1,9 @@
 2011-01-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h
+	(nact_window_is_item_writable): Remove unused function.
+
 	* src/nact/base-window.c:
 	* src/nact/base-window.h
 	(runtime_init_toplevel): Renamed as initialize_base_window().

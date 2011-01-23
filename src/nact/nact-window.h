@@ -32,12 +32,14 @@
 #define __NACT_WINDOW_H__
 
 /**
- * SECTION: nact_window
- * @short_description: #NactWindow class definition.
- * @include: nact/nact-window.h
+ * SECTION: nact-window
+ * @title: NactWindow
+ * @short_description: The NactWindow base class definition.
+ * @include: nact-window.h
  *
  * This class is derived from BaseWindow class.
- * It is a common base class for all Nautilus-Actions window documents.
+ * It is a common base class for all Nautilus-Actions window documents
+ * (aka main frame windows).
  */
 
 #include <api/na-object-item.h>
@@ -74,10 +76,6 @@ typedef struct {
 GType      nact_window_get_type( void );
 
 gboolean   nact_window_has_writable_providers( NactWindow *window );
-
-#if 0
-gboolean   nact_window_is_item_writable( const NactWindow *window, const NAObjectItem *item, guint *reason );
-#endif
 
 gboolean   nact_window_save_item  ( NactWindow *window, NAObjectItem *item, gchar **msgerr );
 gboolean   nact_window_delete_item( NactWindow *window, const NAObjectItem *item, gchar **msgerr );
