@@ -402,7 +402,7 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
  * -> choose and display an existing file name
  * -> record the dirname URI.
  *
- * If the user validates its selection, the choosen file pathname will be
+ * If the user validates its selection, the chosen file pathname will be
  * written in the @entry #GtkEntry, while the corresponding dirname
  * URI will be written as @entry_name in Preferences.
  */
@@ -430,7 +430,7 @@ nact_gtk_utils_select_file( BaseWindow *window,
  * -> choose and display an existing file name
  * -> record the dirname URI.
  *
- * If the user validates its selection, the choosen file pathname will be
+ * If the user validates its selection, the chosen file pathname will be
  * written in the @entry #GtkEntry, while the corresponding dirname
  * URI will be written as @entry_name in Preferences.
  */
@@ -514,7 +514,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
  * -> choose and display an existing dir name
  * -> record the dirname URI of this dir name.
  *
- * If the user validates its selection, the choosen file pathname will be
+ * If the user validates its selection, the chosen file pathname will be
  * written in the @entry #GtkEntry, while the corresponding dirname
  * URI will be written as @entry_name in Preferences.
  */

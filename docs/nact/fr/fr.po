@@ -3048,7 +3048,7 @@ msgid "Focus on the execution mode frame."
 msgstr "Détail de l'encadré concernant le mode d'exécution."
 
 #: C/nautilus-actions-config-tool.xml:150(para)
-msgid "The execution mode of your command may be choosen between following values:"
+msgid "The execution mode of your command may be chosen between following values:"
 msgstr ""
 "Le mode d'exécution de la commande peut être choisi parmi les valeurs "
 "suivantes :"

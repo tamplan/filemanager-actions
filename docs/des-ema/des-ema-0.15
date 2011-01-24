@@ -353,7 +353,7 @@ Defaults to base directory of the current selection, which happens to be the val
 <tr valign="top">
 <td><?php code( "ExecutionMode" ); ?></td>
 <td>Execution mode of the program.<br />
-This may be choosen between following values:
+This may be chosen between following values:
 <ul>
 <li><?php code( "Normal" ); ?>: Starts as a standard graphical user interface</li>
 <li><?php code( "Terminal" ); ?>: Starts the preferred terminal of the graphical environment, and runs the command in it</li>
@@ -727,7 +727,7 @@ Defaults to "<?php code( "/" ); ?>".</td>
 <td>A list of capabilities each item of the selection must satisfy in order the item be candidate.<br />
 Capabilities may be negated.<br />
 Please note that each element of the specified list must be considered as ANDed, i.e. if we have "<?php code( "Capabilities=Readable;Writable;!Local" ); ?>", then each element of the selection must be both readable AND writable AND not local.<br />
-Capabilities have to be choosen between following predefined ones:
+Capabilities have to be chosen between following predefined ones:
 <ul>
 <li>"<?php code( "Owner" ); ?>": current user is the owner of the selected items</li>
 <li>"<?php code( "Readable" ); ?>": selected items are readable by user (probably more usefull when negated)</li>
@@ -1131,7 +1131,7 @@ The <?php code( "level-zero.directory" ); ?> file may be searched for in <?php c
 Not finding a <?php code( "level-zero.directory" ); ?> file should not prevent actions or menus to be displayed. Instead, they just would be displayed in an unspecified, implementation-dependent, order.
 </p>
 <p>
-The name "<?php code( "level-zero.directory" ); ?>" is choosen to not risk any collision with regular <?php desktop(); ?> files.
+The name "<?php code( "level-zero.directory" ); ?>" is chosen to not risk any collision with regular <?php desktop(); ?> files.
 </p>
 
 <!-- ----------------------------------------------------------------------------- -->

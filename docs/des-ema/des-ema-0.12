@@ -24,7 +24,7 @@ function directory(){
 This specification aims to define a common format for user actions, allowing creators to share their actions between common environments.
 </p>
 <p>
-The <?php desktop(); ?> file has been choosen as the common format for these actions.
+The <?php desktop(); ?> file has been chosen as the common format for these actions.
 </p>
 <p>
 As we would reuse the <a href="http://www.freedesktop.org/" target="_blank">freedesktop.org</a> <a href="http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html" target="_blank"> Desktop Entry Specification</a> (DES), we have to derive this specification to suit our needs.
@@ -348,7 +348,7 @@ Defaults to base directory of the current selection, which happens to be the val
 <tr valign="top">
 <td><?php code( "ExecutionMode" ); ?></td>
 <td>Execution mode of the program.<br />
-This may be choosen between following values:
+This may be chosen between following values:
 <ul>
 <li><?php code( "Normal" ); ?>: Starts as a standard graphical user interface</li>
 <li><?php code( "Terminal" ); ?>: Starts the preferred terminal of the graphical environment, and runs the command in it</li>
@@ -530,9 +530,9 @@ When an element of the string list is negated, it must be considered as an AND c
 <p>Example:</p>
 <blockquote>
  <p>
- The line &laquo;&nbsp;<?php code( "MimeTypes = image/*; video/*;" ); ?>&nbsp;&raquo; must be readen as &laquo;&nbsp;condition is met if each file in the current selection has a mimetype of "<?php code( "image/*" ); ?>" or of "<?php code( "video/*" ); ?>"&nbsp;&raquo;
+ The line &laquo;&nbsp;<?php code( "MimeTypes = image/*; video/*;" ); ?>&nbsp;&raquo; must be read as &laquo;&nbsp;condition is met if each file in the current selection has a mimetype of "<?php code( "image/*" ); ?>" or of "<?php code( "video/*" ); ?>"&nbsp;&raquo;
   </p>
-  <p>And the line &laquo;&nbsp;<?php code( "MimeTypes = image/*; video/*; !image/bmp" ); ?>&nbsp;&raquo; must be readen as &laquo;&nbsp;condition is met if each file in the current selection has a mimetype of "<?php code( "image/*" ); ?>" or of "<?php code( "video/*" ); ?>", but must not have the "<?php code( "image/bmp" ); ?>" mimetype&nbsp;&raquo;.
+  <p>And the line &laquo;&nbsp;<?php code( "MimeTypes = image/*; video/*; !image/bmp" ); ?>&nbsp;&raquo; must be read as &laquo;&nbsp;condition is met if each file in the current selection has a mimetype of "<?php code( "image/*" ); ?>" or of "<?php code( "video/*" ); ?>", but must not have the "<?php code( "image/bmp" ); ?>" mimetype&nbsp;&raquo;.
   </p>
 </blockquote>
 
@@ -716,7 +716,7 @@ Defaults to "<?php code( "/" ); ?>".</td>
 <td>A list of capabilities each item of the selection must satisfy in order the item be candidate.<br />
 Capabilities may be negated.<br />
 Please note that each element of the specified list must be considered as ANDed, i.e. if we have "<?php code( "Capabilities=Readable;Writable;!Local" ); ?>", then each element of the selection must be both readable AND writable AND not local.<br />
-Capabilities have to be choosen between following predefined ones:
+Capabilities have to be chosen between following predefined ones:
 <ul>
 <li>"<?php code( "Owner" ); ?>": current user is the owner of selected items</li>
 <li>"<?php code( "Readable" ); ?>": selected items are readable by user (probably more usefull when negated)</li>
@@ -799,7 +799,7 @@ Example:
   The basename used is those of the first item of the selected items list as provided by the file manager. There is only a small chance that it would be those of the first visually selected item, and there is contrarily great chances that it would not be predictable at all.
   </p>
   <p>
-   Even if the choosen parameter is the same for all selected items, the behavior is the identical.<br />
+   Even if the chosen parameter is the same for all selected items, the behavior is the identical.<br />
    If the <?php code( "Exec" ); ?> key is "<?php code( "echo %d %B" ); ?>", then the following commands will be run:<br />
        "<?php code( "echo /data pierre paul jacques" ); ?>"<br />
        "<?php code( "echo /data pierre paul jacques" ); ?>"<br />
@@ -969,7 +969,7 @@ The <?php code( "level-zero.directory" ); ?> file may be searched for in <?php c
 Not finding a <?php code( "level-zero.directory" ); ?> file should not prevent actions or menus to be displayed. Instead, they just would be displayed in an unspecified, implementation-dependant, order.
 </p>
 <p>
-The name "<?php code( "level-zero.directory" ); ?>" is choosen to not risk any collision with regular <?php desktop(); ?> files.
+The name "<?php code( "level-zero.directory" ); ?>" is chosen to not risk any collision with regular <?php desktop(); ?> files.
 </p>
 
 <!-- ----------------------------------------------------------------------------- -->

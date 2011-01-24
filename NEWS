@@ -1026,7 +1026,7 @@ Version 1.10.1
 		The "profile" feature has been developed by Frederic Ruaudel
 		(previous maintainer and original author of Nautilus-actions).
 		It has been included in the intermediate version 1.9x without
-		having thoroughly tested ; I have choosen to left it in this
+		having thoroughly tested ; I have chosen to left it in this
 		version to not create backward compatibility problems for the
 		users of these distributions, but be warned : use with caution.
 

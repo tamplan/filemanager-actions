@@ -192,7 +192,7 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 
 /*
  * actually writes the item to the existing NadpDesktopFile
- * as we have choosen to take advantage of data factory management system
+ * as we have chosen to take advantage of data factory management system
  * we do not need to enumerate each and every elementary data
  *
  * As we want keep comments between through multiple updates, we cannot

@@ -162,8 +162,8 @@ Possible values are:
       <owner>nautilus-actions</owner>
       <type>string</type>
       <locale name="C">
-        <short>Last import mode choosen by the user</short>
-        <long>Last import mode choosen by the user when he is asked for in import mode. Possible values are:
+        <short>Last import mode chosen by the user</short>
+        <long>Last import mode chosen by the user when he is asked for in import mode. Possible values are:
 - "NoImport": do not import an action whose UUID already exists,
 - "Renumber": allocate a new UUID if the imported UUID already exists,
 - "Override": override the existing action with the imported one.</long>
@@ -199,8 +199,8 @@ Possible values are:
       <owner>nautilus-actions</owner>
       <type>bool</type>
       <locale name="C">
-        <short>Keep last choosen import mode</short>
-        <long>Whether the import system should reuse the last choosen import mode.</long>
+        <short>Keep last chosen import mode</short>
+        <long>Whether the import system should reuse the last chosen import mode.</long>
       </locale>
       <default>false</default>
     </schema>
@@ -211,7 +211,7 @@ Possible values are:
       <type>string</type>
       <locale name="C">
         <short>Import mode</short>
-        <long>Last import mode choosen in the Import assistant. Possible values are :
+        <long>Last import mode chosen in the Import assistant. Possible values are :
 - "NoImport": do not import an action whose UUID already exists,
 - "Renumber": allocate a new UUID if the imported UUID already exists,
 - "Override": override the existing action with the imported one,

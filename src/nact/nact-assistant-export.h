@@ -45,7 +45,7 @@
  *    <key>/schemas/apps/nautilus-actions/..../uuid/label</key>
  *    <applyto>/apps/..../label</applyto>
  *
- * I don't know why Frederic had choosen to export as schema. But this
+ * I don't know why Frederic had chosen to export as schema. But this
  * implies that :
  * - if all actions are imported via gconftool-2 --install-schema-file,
  *   then the schema will be repeated once for each imported action (as

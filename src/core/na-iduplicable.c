@@ -304,7 +304,7 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
  * na_iduplicable_check_status() is not, as itself, recursive.
  * That is, the modification and validity status are only set on the
  * specified object.
- * #NAObject implementation has choosen to handle itself the recursivity:
+ * #NAObject implementation has chosen to handle itself the recursivity:
  * na_object_check_status() so first check status for childs, before
  * calling this function.
  *

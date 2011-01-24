@@ -259,12 +259,12 @@ nact_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, Gt
 /**
  * nact_tree_model_dnd_imulti_drag_source_drag_data_get:
  * @context: contains
- *  - the suggested action, as choosen by the drop site,
+ *  - the suggested action, as chosen by the drop site,
  *    between those we have provided in imulti_drag_source_get_drag_actions()
  *  - the target folder (XDS protocol)
  * @selection_data:
  * @rows: list of row references which are to be dropped
- * @info: the suggested format, as choosen by the drop site, between those
+ * @info: the suggested format, as chosen by the drop site, between those
  *  we have provided in imulti_drag_source_get_target_list()
  *
  * This function is called when we release the selected items onto the

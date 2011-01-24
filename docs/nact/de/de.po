@@ -2739,7 +2739,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:150(para)
 msgid ""
-"The execution mode of your command may be choosen between following values:"
+"The execution mode of your command may be chosen between following values:"
 msgstr ""
 "Der Ausführungsmodus Ihres Befehls kann aus folgenden Werten gewählt werden:"
 

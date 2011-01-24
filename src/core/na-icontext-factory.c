@@ -504,7 +504,7 @@ NADataDef data_def_conditions [] = {
 				 *  of the specification, they are not translatable */
 				N_( "A list of capabilities each item of the selection must satisfy in order for the item to be candidate.\n" \
 					"Capabilities may be negated.\n" \
-					"Capabilities have to be choosen between following predefined ones:\n" \
+					"Capabilities have to be chosen between following predefined ones:\n" \
 					"- 'Owner': current user is the owner of selected items\n" \
 					"- 'Readable': selected items are readable by user (probably more usefull when negated)\n" \
 					"- 'Writable': selected items are writable by user\n" \

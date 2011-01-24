@@ -251,7 +251,7 @@ export_ask_new( BaseWindow *parent )
  * when the set export format is 'Ask me'. Each exported file runs this
  * dialog, unless the user selects the 'keep same choice' box.
  *
- * Returns: the mode choosen by the user as a #GQuark which identifies
+ * Returns: the mode chosen by the user as a #GQuark which identifies
  * the export mode.
  * The function defaults to returning NA_IPREFS_DEFAULT_EXPORT_FORMAT.
  *

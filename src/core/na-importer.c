@@ -69,7 +69,7 @@ static guint         ask_user_for_mode( const NAObjectItem *importing, const NAO
  * Each import operation will have its corresponding newly allocated
  * #NAImporterResult structure which will contain:
  * - the imported URI
- * - a #NAObjectItem item if import was successfull, or %NULL
+ * - a #NAObjectItem item if import was successful, or %NULL
  * - a list of error messages, or %NULL.
  *
  * If asked mode is 'ask', then ask the user at least the first time
@@ -78,7 +78,7 @@ static guint         ask_user_for_mode( const NAObjectItem *importing, const NAO
  * so preferences are:
  * - asked import mode (may be 'ask') -> import-mode
  * - keep my choice                   -> import-keep-choice
- * - last choosen import mode         -> import-ask-user-last-mode
+ * - last chosen import mode         -> import-ask-user-last-mode
  *
  * Returns: the last import operation code.
  *

@@ -209,7 +209,7 @@ typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
  * any other way to ask the user, then a 'no import' policy should be
  * preferred when managing duplicate identifiers.
  *
- * Returns: the import mode choosen by the user, which must not be
+ * Returns: the import mode chosen by the user, which must not be
  * %IMPORTER_MODE_ASK.
  *
  * Since: 2.30

@@ -667,7 +667,7 @@ na_settings_get_uint_list( NASettings *settings, const gchar *key, gboolean *fou
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
- * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
  * Since: 3.1.0
  */
@@ -693,7 +693,7 @@ na_settings_set_boolean( NASettings *settings, const gchar *key, gboolean value 
  *
  * This function writes @value as a user preference.
  *
- * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
  * Since: 3.1.0
  */
@@ -721,7 +721,7 @@ na_settings_set_boolean_ex( NASettings *settings, const gchar *group, const gcha
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
- * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
  * Since: 3.1.0
  */
@@ -742,7 +742,7 @@ na_settings_set_string( NASettings *settings, const gchar *key, const gchar *val
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
- * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
  * Since: 3.1.0
  */
@@ -774,7 +774,7 @@ na_settings_set_string_list( NASettings *settings, const gchar *key, const GSLis
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
- * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
  * Since: 3.1.0
  */
@@ -802,7 +802,7 @@ na_settings_set_uint( NASettings *settings, const gchar *key, guint value )
  * This function should only be called for unambiguous keys; the resultat
  * is otherwise undefined (and rather unpredictable).
  *
- * Returns: %TRUE is the writing has been successfull, %FALSE else.
+ * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
  * Since: 3.1.0
  */
