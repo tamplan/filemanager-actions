@@ -899,6 +899,10 @@ io_providers_list_append_object( const NAPivot *pivot, GList *list, NAIIOProvide
 	return( merged );
 }
 
+/*
+ * when a IIOProvider plugin is associated with the NAIOProvider object,
+ * we connect the NAPivot callback to the 'item-changed' signal
+ */
 static void
 io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, NAIIOProvider *provider_module )
 {

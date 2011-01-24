@@ -55,7 +55,7 @@
  *   this may or not be edited depending of this is a mandatory or user
  *   preference
  * - be willing to write: this is an intrisinc i/o provider attribute
- * - be able to write: his is a runtime i/o provider property
+ * - be able to write: this is a runtime i/o provider property
  *
  * and the whole configuration must not have been locked by an admin.
  */

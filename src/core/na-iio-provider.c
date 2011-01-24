@@ -133,14 +133,13 @@ interface_base_init( NAIIOProviderInterface *klass )
 		 * NAIOProvider::io-provider-item-changed:
 		 * @provider: the #NAIIOProvider which has called the
 		 *  na_iio_provider_item_changed() function.
-		 * @arg1: not used, initialized to %NULL.
 		 *
 		 * This signal is not meant to be directly sent by a plugin.
 		 * Instead, the plugin should call the na_iio_provider_item_changed()
 		 * function.
 		 *
 		 * The signal is registered without any default handler.
-		 * Typically, only NAPivot object is connected to it.
+		 * Typically, only the NAPivot object is connected to it.
 		 */
 		st_signals[ ITEM_CHANGED ] = g_signal_new(
 					IO_PROVIDER_SIGNAL_ITEM_CHANGED,
@@ -149,10 +148,9 @@ interface_base_init( NAIIOProviderInterface *klass )
 					0,									/* class offset */
 					NULL,								/* accumulator */
 					NULL,								/* accumulator data */
-					g_cclosure_marshal_VOID__POINTER,
+					g_cclosure_marshal_VOID__VOID,
 					G_TYPE_NONE,
-					1,
-					G_TYPE_POINTER );
+					0 );
 
 		st_initialized = TRUE;
 	}
@@ -213,5 +211,5 @@ na_iio_provider_item_changed( const NAIIOProvider *instance )
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-	g_signal_emit_by_name(( gpointer ) instance, IO_PROVIDER_SIGNAL_ITEM_CHANGED, NULL );
+	g_signal_emit_by_name(( gpointer ) instance, IO_PROVIDER_SIGNAL_ITEM_CHANGED );
 }

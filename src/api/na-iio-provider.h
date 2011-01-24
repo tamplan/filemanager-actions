@@ -62,7 +62,7 @@
  *    The #NAIIOProvider interface does not define specific monitoring
  *    methods. Instead, it is waited that the I/O provider module
  *    automatically takes care of starting/stopping its own monitoring
- *    at load/unload time, calling the na_iio_provider_item_changed()
+ *    services at load/unload time, calling the na_iio_provider_item_changed()
  *    function when appropriate.
  *   </para>
  *  </listitem>
@@ -324,7 +324,8 @@ GType na_iio_provider_get_type( void );
 
 /* This function is to be called by the I/O provider when it detects
  * that an object has been modified in its underlying storage
- * subsystem. It eventually ends up by sending a messages to the consumers.
+ * subsystem. It eventually ends up by sending a messages to its
+ * registered consumers.
  */
 void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
 

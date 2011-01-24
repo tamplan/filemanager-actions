@@ -610,8 +610,6 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
 /*
  * na_pivot_on_item_changed_handler:
  * @provider: the #NAIIOProvider which has emitted the signal.
- * @id: the id of the changed #NAObjectItem-derived object.
- *  As of 2.30, it is always %NULL.
  * @pivot: this #NAPivot instance.
  *
  * This handler is trigerred by #NAIIOProvider providers when an action
@@ -621,7 +619,7 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
  * serie, and then reload the whole list of actions
  */
 void
-na_pivot_on_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPivot *pivot  )
+na_pivot_on_item_changed_handler( NAIIOProvider *provider, NAPivot *pivot  )
 {
 	static const gchar *thisfn = "na_pivot_on_item_changed_handler";
 
@@ -630,7 +628,7 @@ na_pivot_on_item_changed_handler( NAIIOProvider *provider, const gchar *id, NAPi
 
 	if( !pivot->private->dispose_has_run ){
 
-		g_debug( "%s: provider=%p, id=%s, pivot=%p", thisfn, ( void * ) provider, id, ( void * ) pivot );
+		g_debug( "%s: provider=%p, pivot=%p", thisfn, ( void * ) provider, ( void * ) pivot );
 
 		/* set a timeout to notify clients at the end of the serie */
 		g_get_current_time( &pivot->private->last_event );

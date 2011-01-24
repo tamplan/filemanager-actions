@@ -1,3 +1,16 @@
+2011-01-24 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-iio-provider.h:
+	* src/core/na-io-provider.c:
+	* src/core/na-io-provider.h: Fix comments.
+
+	* src/core/na-iio-provider.c (interface_base_init):
+	The 'item-changed' signal actually does not send any argument.
+
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h (na_pivot_on_item_changed_handler):
+	Updated accordingly.
+
 2011-01-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-window.c: Handles the recorded signals in a GList.
