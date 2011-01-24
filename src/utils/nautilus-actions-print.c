@@ -59,6 +59,7 @@ static GOptionEntry entries[] = {
 	{ "id"                   , 'i', 0, G_OPTION_ARG_STRING        , &id,
 			N_( "The identifiant of the menu or the action to be printed" ), N_( "<STRING>" ) },
 	{ "format"               , 'f', 0, G_OPTION_ARG_STRING,     &format,
+	/* i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable */
 			N_( "An export format [Desktop1]" ), N_( "<STRING>" ) },
 	{ NULL }
 };

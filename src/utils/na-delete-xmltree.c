@@ -223,7 +223,7 @@ delete_path( const gchar *xmlfile, const xmlChar *xpathExpr )
 	/* Evaluate xpath expression */
 	xpathObj = xmlXPathEvalExpression( xpathExpr, xpathCtx );
 	if( xpathObj == NULL ){
-		g_printerr( _( "Error: unable to evaluate xpath expression '%s'\n" ), xpathExpr );
+		g_printerr( _( "Error: unable to evaluate XPath expression '%s'\n" ), xpathExpr );
 		xmlXPathFreeContext( xpathCtx );
 		xmlFreeDoc( doc );
 		return;

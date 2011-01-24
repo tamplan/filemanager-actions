@@ -1,5 +1,10 @@
 2011-01-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nautilus-actions-config-tool.ui:
+	* src/utils/na-delete-xmltree.c:
+	* src/utils/nautilus-actions-print.c:
+	Fix string errors reported by fr translation team.
+
 	* src/api/na-timeout.h:
 	* src/core/na-timeout.c: New files.
 
