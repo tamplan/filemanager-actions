@@ -42,6 +42,7 @@
  */
 
 #include <api/na-object-item.h>
+#include <api/na-timeout.h>
 
 #include "nadp-desktop-file.h"
 
@@ -58,10 +59,9 @@ G_BEGIN_DECLS
  */
 typedef struct _NadpDesktopProviderPrivate {
 	/*< private >*/
-	gboolean dispose_has_run;
-	GList   *monitors;
-	GTimeVal last_event;
-	guint    event_source_id;
+	gboolean  dispose_has_run;
+	GList    *monitors;
+	NATimeout timeout;
 }
 	NadpDesktopProviderPrivate;
 

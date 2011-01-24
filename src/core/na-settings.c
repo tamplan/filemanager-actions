@@ -39,6 +39,7 @@
 
 #include <api/na-boxed.h>
 #include <api/na-core-utils.h>
+#include <api/na-timeout.h>
 
 #include "na-settings.h"
 
@@ -92,11 +93,12 @@ typedef struct {
 /* private instance data
  */
 struct _NASettingsPrivate {
-	gboolean dispose_has_run;
-	KeyFile *mandatory;
-	KeyFile *user;
-	GList   *content;
-	GList   *consumers;
+	gboolean  dispose_has_run;
+	KeyFile  *mandatory;
+	KeyFile  *user;
+	GList    *content;
+	GList    *consumers;
+	NATimeout timeout;
 };
 
 #define GROUP_NACT						"nact"
@@ -167,8 +169,6 @@ static const KeyDef st_def_keys[] = {
 };
 
 static GObjectClass *st_parent_class    = NULL;
-static GTimeVal      st_last_event;
-static guint         st_event_source_id = 0;
 static gint          st_burst_timeout   = 100;		/* burst timeout in msec */
 
 static GType     register_type( void );
@@ -183,7 +183,7 @@ static GList    *content_load_keys( NASettings *settings, GList *content, KeyFil
 static KeyDef   *get_key_def( const gchar *key );
 static KeyFile  *key_file_new( NASettings *settings, const gchar *dir );
 static void      on_keyfile_changed( GFileMonitor *monitor, GFile *file, GFile *other_file, GFileMonitorEvent event_type, NASettings *settings );
-static gboolean  on_keyfile_changed_timeout( NASettings *settings );
+static void      on_keyfile_changed_timeout( NASettings *settings );
 static KeyValue *peek_key_value_from_content( GList *content, const gchar *group, const gchar *key );
 static KeyValue *read_key_value( NASettings *settings, const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory );
 static KeyValue *read_key_value_from_key_file( GKeyFile *key_file, const gchar *group, const gchar *key, const KeyDef *key_def );
@@ -191,7 +191,6 @@ static void      release_consumer( Consumer *consumer );
 static void      release_key_file( KeyFile *key_file );
 static void      release_key_value( KeyValue *value );
 static gboolean  set_key_value( NASettings *settings, const gchar *group, const gchar *key, const gchar *string );
-static gulong    time_val_diff( const GTimeVal *recent, const GTimeVal *old );
 static gboolean  write_user_key_file( NASettings *settings );
 
 GType
@@ -268,6 +267,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->user = NULL;
 	self->private->content = NULL;
 	self->private->consumers = NULL;
+
+	self->private->timeout.timeout = st_burst_timeout;
+	self->private->timeout.handler = ( NATimeoutFunc ) on_keyfile_changed_timeout;
+	self->private->timeout.user_data = self;
+	self->private->timeout.source_id = 0;
 }
 
 static void
@@ -1070,17 +1074,11 @@ on_keyfile_changed( GFileMonitor *monitor,
 
 	if( !settings->private->dispose_has_run ){
 
-		/* set a timeout to notify consumers at the end of the serie */
-		g_get_current_time( &st_last_event );
-
-		if( !st_event_source_id ){
-			st_event_source_id =
-				g_timeout_add( st_burst_timeout, ( GSourceFunc ) on_keyfile_changed_timeout, settings );
-		}
+		na_timeout_event( &settings->private->timeout );
 	}
 }
 
-static gboolean
+static void
 on_keyfile_changed_timeout( NASettings *settings )
 {
 	static const gchar *thisfn = "na_settings_on_keyfile_changed_timeout";
@@ -1091,15 +1089,6 @@ on_keyfile_changed_timeout( NASettings *settings )
 	Consumer *consumer;
 	KeyValue *changed;
 	gchar *group_prefix, *key;
-	GTimeVal now;
-	gulong diff;
-	gulong timeout_usec = 1000*st_burst_timeout;
-
-	g_get_current_time( &now );
-	diff = time_val_diff( &now, &st_last_event );
-	if( diff < timeout_usec ){
-		return( TRUE );
-	}
 
 	/* last individual notification is older that the st_burst_timeout
 	 * we may so suppose that the burst is terminated
@@ -1141,9 +1130,6 @@ on_keyfile_changed_timeout( NASettings *settings )
 
 	g_list_foreach( modifs, ( GFunc ) release_key_value, NULL );
 	g_list_free( modifs );
-
-	st_event_source_id = 0;
-	return( FALSE );
 }
 
 static KeyValue *
@@ -1335,17 +1321,6 @@ set_key_value( NASettings *settings, const gchar *group, const gchar *key, const
 	}
 
 	return( ok );
-}
-
-/*
- * returns the difference in microseconds.
- */
-static gulong
-time_val_diff( const GTimeVal *recent, const GTimeVal *old )
-{
-	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
-	microsec += recent->tv_usec  - old->tv_usec;
-	return( microsec );
 }
 
 static gboolean

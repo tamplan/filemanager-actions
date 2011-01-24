@@ -42,6 +42,7 @@
 
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
+#include <api/na-timeout.h>
 
 #include <core/na-pivot.h>
 #include <core/na-iabout.h>
@@ -59,15 +60,14 @@ struct _NautilusActionsClassPrivate {
 /* private instance data
  */
 struct _NautilusActionsPrivate {
-	gboolean dispose_has_run;
-	NAPivot *pivot;
-	gulong   items_changed_handler;
+	gboolean  dispose_has_run;
+	NAPivot  *pivot;
+	gulong    items_changed_handler;
+	NATimeout timeout;
 };
 
 static GObjectClass *st_parent_class    = NULL;
 static GType         st_actions_type    = 0;
-static GTimeVal      st_last_event;
-static guint         st_event_source_id = 0;
 static gint          st_burst_timeout   = 100;		/* burst timeout in msec */
 
 static void              class_init( NautilusActionsClass *klass );
@@ -104,9 +104,7 @@ static void              execute_about( NautilusMenuItem *item, NautilusActions 
 
 static void              on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin );
 static void              on_runtime_preference_changed( const gchar *group, const gchar *key, gconstpointer newvalue, gboolean mandatory, NautilusActions *plugin );
-static void              record_change_event( NautilusActions *plugin );
-static gboolean          on_change_event_timeout( NautilusActions *plugin );
-static gulong            time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+static void              on_change_event_timeout( NautilusActions *plugin );
 
 GType
 nautilus_actions_get_type( void )
@@ -188,6 +186,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+	self->private->timeout.timeout = st_burst_timeout;
+	self->private->timeout.handler = ( NATimeoutFunc ) on_change_event_timeout;
+	self->private->timeout.user_data = self;
+	self->private->timeout.source_id = 0;
 }
 
 /*
@@ -1034,7 +1036,8 @@ on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin )
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
-		record_change_event( plugin );
+
+		na_timeout_event( &plugin->private->timeout );
 	}
 }
 
@@ -1044,24 +1047,8 @@ on_runtime_preference_changed( const gchar *group, const gchar *key, gconstpoint
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
-		record_change_event( plugin );
-	}
-}
 
-/* each signal handler or settings callback calls this function
- * so that we are sure that all change events are taken into account
- * in our timeout management
- *
- * create a new event source if it does not exists yet
- */
-static void
-record_change_event( NautilusActions *plugin )
-{
-	g_get_current_time( &st_last_event );
-
-	if( !st_event_source_id ){
-		st_event_source_id =
-			g_timeout_add( st_burst_timeout, ( GSourceFunc ) on_change_event_timeout, plugin );
+		na_timeout_event( &plugin->private->timeout );
 	}
 }
 
@@ -1073,41 +1060,15 @@ record_change_event( NautilusActions *plugin )
  *
  * we so reload the items, signal the file manager, and reset the event source.
  */
-static gboolean
+static void
 on_change_event_timeout( NautilusActions *plugin )
 {
 	static const gchar *thisfn = "nautilus_actions_on_change_event_timeout";
-	GTimeVal now;
-	gulong diff;
-	gulong timeout_usec = 1000*st_burst_timeout;
-
-	g_get_current_time( &now );
-	diff = time_val_diff( &now, &st_last_event );
-	if( diff < timeout_usec ){
-		/* continue periodic calls */
-		return( TRUE );
-	}
 
 	/* do what we have to and close the event source
 	 */
 	g_debug( "%s: timeout expired", thisfn );
 
 	na_pivot_load_items( plugin->private->pivot );
-
 	nautilus_menu_provider_emit_items_updated_signal( NAUTILUS_MENU_PROVIDER( plugin ));
-
-	st_event_source_id = 0;
-
-	return( FALSE );
-}
-
-/*
- * returns the difference in microseconds.
- */
-static gulong
-time_val_diff( const GTimeVal *recent, const GTimeVal *old )
-{
-	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
-	microsec += recent->tv_usec  - old->tv_usec;
-	return( microsec );
 }

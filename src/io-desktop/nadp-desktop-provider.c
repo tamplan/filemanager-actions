@@ -77,8 +77,7 @@ static guint                    iexporter_get_version( const NAIExporter *export
 static gchar                   *iexporter_get_name( const NAIExporter *exporter );
 static const NAIExporterFormat *iexporter_get_formats( const NAIExporter *exporter );
 
-static gboolean                 on_monitor_timeout( NadpDesktopProvider *provider );
-static gulong                   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+static void                     on_monitor_timeout( NadpDesktopProvider *provider );
 
 GType
 nadp_desktop_provider_get_type( void )
@@ -174,6 +173,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->dispose_has_run = FALSE;
 	self->private->monitors = NULL;
+	self->private->timeout.timeout = st_burst_timeout;
+	self->private->timeout.handler = ( NATimeoutFunc ) on_monitor_timeout;
+	self->private->timeout.user_data = self;
+	self->private->timeout.source_id = 0;
 }
 
 static void
@@ -362,12 +365,7 @@ nadp_desktop_provider_on_monitor_event( NadpDesktopProvider *provider )
 
 	if( !provider->private->dispose_has_run ){
 
-		g_get_current_time( &provider->private->last_event );
-
-		if( !provider->private->event_source_id ){
-			provider->private->event_source_id =
-				g_timeout_add( st_burst_timeout, ( GSourceFunc ) on_monitor_timeout, provider );
-		}
+		na_timeout_event( &provider->private->timeout );
 	}
 }
 
@@ -390,19 +388,10 @@ nadp_desktop_provider_release_monitors( NadpDesktopProvider *provider )
 	}
 }
 
-static gboolean
+static void
 on_monitor_timeout( NadpDesktopProvider *provider )
 {
 	static const gchar *thisfn = "nadp_desktop_provider_on_monitor_timeout";
-	GTimeVal now;
-	gulong diff;
-	gulong timeout_usec = 1000*st_burst_timeout;
-
-	g_get_current_time( &now );
-	diff = time_val_diff( &now, &provider->private->last_event );
-	if( diff < timeout_usec ){
-		return( TRUE );
-	}
 
 	/* last individual notification is older that the st_burst_timeout
 	 * so triggers the NAIIOProvider interface and destroys this timeout
@@ -411,17 +400,4 @@ on_monitor_timeout( NadpDesktopProvider *provider )
 			thisfn, ( void * ) provider, G_OBJECT_TYPE_NAME( provider ));
 
 	na_iio_provider_item_changed( NA_IIO_PROVIDER( provider ));
-	provider->private->event_source_id = 0;
-	return( FALSE );
-}
-
-/*
- * returns the difference in microseconds.
- */
-static gulong
-time_val_diff( const GTimeVal *recent, const GTimeVal *old )
-{
-	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
-	microsec += recent->tv_usec  - old->tv_usec;
-	return( microsec );
 }

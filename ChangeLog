@@ -1,5 +1,17 @@
 2011-01-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-timeout.h:
+	* src/core/na-timeout.c: New files.
+
+	* src/api/Makefile.am:
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/core/na-pivot.c (on_item_changed_timeout):
+	* src/core/na-settings.c (on_keyfile_changed_timeout):
+	* src/io-desktop/nadp-desktop-provider.c (on_monitor_timeout):
+	* src/plugin-menu/nautilus-actions.c (on_change_event_timeout):
+	Take advantage of new NATimeout convenience structure.
+
 	* src/api/na-iio-provider.h:
 	* src/core/na-io-provider.c:
 	* src/core/na-io-provider.h: Fix comments.

@@ -101,10 +101,11 @@ libna_core_la_SOURCES = \
 	na-selected-info.h									\
 	na-settings.c										\
 	na-settings.h										\
-	na-updater.c										\
-	na-updater.h										\
+	na-timeout.c										\
 	na-tokens.c											\
 	na-tokens.h											\
+	na-updater.c										\
+	na-updater.h										\
 	$(NULL)
 
 libna_core_la_LIBADD = \

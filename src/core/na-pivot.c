@@ -35,6 +35,7 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-timeout.h>
 
 #include "na-io-provider.h"
 #include "na-iprefs.h"
@@ -77,8 +78,7 @@ struct _NAPivotPrivate {
 
 	/* timeout to manage i/o providers 'item-changed' burst
 	 */
-	GTimeVal    last_event;
-	guint       event_source_id;
+	NATimeout   change_timeout;
 
 	/* the preferences management
 	 */
@@ -117,8 +117,7 @@ static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, cons
 static void          free_consumers( GList *list );
 
 /* NAIIOProvider management */
-static gboolean      on_item_changed_timeout( NAPivot *pivot );
-static gulong        time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+static void          on_item_changed_timeout( NAPivot *pivot );
 
 GType
 na_pivot_get_type( void )
@@ -225,7 +224,13 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->consumers = NULL;
 	self->private->tree = NULL;
 	self->private->automatic_reload = FALSE;
-	self->private->event_source_id = 0;
+
+	/* initialize timeout parameters for 'item-changed' handler
+	 */
+	self->private->change_timeout.timeout = st_burst_timeout;
+	self->private->change_timeout.handler = ( NATimeoutFunc ) on_item_changed_timeout;
+	self->private->change_timeout.user_data = self;
+	self->private->change_timeout.source_id = 0;
 }
 
 static void
@@ -627,52 +632,30 @@ na_pivot_on_item_changed_handler( NAIIOProvider *provider, NAPivot *pivot  )
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	if( !pivot->private->dispose_has_run ){
-
 		g_debug( "%s: provider=%p, pivot=%p", thisfn, ( void * ) provider, ( void * ) pivot );
 
-		/* set a timeout to notify clients at the end of the serie */
-		g_get_current_time( &pivot->private->last_event );
-
-		if( !pivot->private->event_source_id ){
-			pivot->private->event_source_id =
-				g_timeout_add( st_burst_timeout, ( GSourceFunc ) on_item_changed_timeout, pivot );
-		}
+		na_timeout_event( &pivot->private->change_timeout );
 	}
 }
 
 /*
- * this timer is set when we receive the first event of a serie
- * we continue to loop until last event is older that our burst timeout
- *
- * there is no race condition here as we are not multithreaded
- * or .. is there ?
+ * this callback is triggered after having received a first 'item-changed' event,
+ * and having received no more event during a 'st_burst_timeout' period; we can
+ * so suppose that the burst if modification events is terminated
+ * this is up to NAPivot to send now its summarized signal
  */
-static gboolean
+static void
 on_item_changed_timeout( NAPivot *pivot )
 {
 	static const gchar *thisfn = "na_pivot_on_item_changed_timeout";
-	GTimeVal now;
-	gulong diff;
 	GList *ic;
-	gulong timeout_usec = 1000*st_burst_timeout;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
+	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
-	g_get_current_time( &now );
-	diff = time_val_diff( &now, &pivot->private->last_event );
-	if( diff < timeout_usec ){
-		return( TRUE );
-	}
-
-	/* last individual notification is older that the st_burst_timeout
-	 * we may so suppose that the burst is terminated
-	 * this is up to NAPivot to send now its summarized signal
-	 * last, destroy this timeout
-	 */
 	g_debug( "%s: emitting %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
 	g_signal_emit_by_name(( gpointer ) pivot, PIVOT_SIGNAL_ITEMS_CHANGED );
 
-	/* this has to be deprecated */
+	/* this has to be deprecated.. or not ?? */
 	g_debug( "%s: triggering NAIPivotConsumer interfaces", thisfn );
 	if( pivot->private->automatic_reload ){
 		na_pivot_load_items( pivot );
@@ -680,21 +663,6 @@ on_item_changed_timeout( NAPivot *pivot )
 	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 		na_ipivot_consumer_notify_of_items_changed( NA_IPIVOT_CONSUMER( ic->data ));
 	}
-
-	pivot->private->event_source_id = 0;
-
-	return( FALSE );
-}
-
-/*
- * returns the difference in microseconds.
- */
-static gulong
-time_val_diff( const GTimeVal *recent, const GTimeVal *old )
-{
-	gulong microsec = 1000000 * ( recent->tv_sec - old->tv_sec );
-	microsec += recent->tv_usec  - old->tv_usec;
-	return( microsec );
 }
 
 /*
