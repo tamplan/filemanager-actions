@@ -997,7 +997,6 @@ gboolean
 base_window_is_willing_to_quit( const BaseWindow *window )
 {
 	gboolean willing_to;
-	GObjectClass *class;
 
 	willing_to = TRUE;
 
