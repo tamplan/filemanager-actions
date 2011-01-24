@@ -32,20 +32,12 @@
 #define __PLUGIN_MENU_NAUTILUS_ACTIONS_H__
 
 /**
- * SECTION: nautilus_actions
- * @short_description: #NautilusActions class definition.
- * @include: plugin/nautilus-actions.h
+ * SECTION: nautilus-actions
+ * @title: NautilusActions
+ * @short_description: The NautilusActions plugin class definition
+ * @include: plugin-menu/nautilus-actions.h
  *
- * There is only one NautilusActions object in the process.
- *
- * As a Nautilus extension, it is initialized when the module is loaded
- * by the file manager at startup time.
- *
- * In the nautilus-actions-config UI, it is initialized when the program
- * is loaded.
- *
- * The NautilusActions object maintains the list of currently defined
- * actions in its private area.
+ * This is the class which handles the file manager menu plugin.
  */
 
 #include <glib-object.h>

@@ -1,5 +1,9 @@
 2011-01-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-menu/nautilus-actions.c:
+	* src/plugin-menu/nautilus-actions.h:
+	Takes advantage of the new NASettings signal notification system.
+
 	* src/core/na-pivot.c:
 	* src/core/na-pivot.h: Review the notification system.
 

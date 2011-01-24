@@ -63,7 +63,8 @@ struct _NautilusActionsPrivate {
 	gboolean  dispose_has_run;
 	NAPivot  *pivot;
 	gulong    items_changed_handler;
-	NATimeout timeout;
+	gulong    settings_changed_handler;
+	NATimeout change_timeout;
 };
 
 static GObjectClass *st_parent_class    = NULL;
@@ -103,7 +104,7 @@ static GList            *add_about_item( NautilusActions *plugin, GList *nautilu
 static void              execute_about( NautilusMenuItem *item, NautilusActions *plugin );
 
 static void              on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin );
-static void              on_runtime_preference_changed( const gchar *group, const gchar *key, gconstpointer newvalue, gboolean mandatory, NautilusActions *plugin );
+static void              on_settings_runtime_changed_handler( NASettings *settings, NautilusActions *plugin );
 static void              on_change_event_timeout( NautilusActions *plugin );
 
 GType
@@ -186,10 +187,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->timeout.timeout = st_burst_timeout;
-	self->private->timeout.handler = ( NATimeoutFunc ) on_change_event_timeout;
-	self->private->timeout.user_data = self;
-	self->private->timeout.source_id = 0;
+	self->private->change_timeout.timeout = st_burst_timeout;
+	self->private->change_timeout.handler = ( NATimeoutFunc ) on_change_event_timeout;
+	self->private->change_timeout.user_data = self;
+	self->private->change_timeout.source_id = 0;
 }
 
 /*
@@ -237,32 +238,13 @@ instance_constructed( GObject *object )
 		 */
 		settings = na_pivot_get_settings( self->private->pivot );
 
-		/* monitor
-		 * - the changes of the readability status of the i/o providers
-		 * - the modification of the level-zero order
-		 * - whether we create a root menu
-		 * - whether we add an 'About Nautilus-Actions' item
-		 * - the preferred order mode
+		/* register against NASettings to be notified of runtime preferences changes
 		 */
-		na_settings_register_key_callback( settings,
-				NA_IPREFS_IO_PROVIDERS_READ_STATUS,
-				G_CALLBACK( on_runtime_preference_changed ), self );
-
-		na_settings_register_key_callback( settings,
-				NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER,
-				G_CALLBACK( on_runtime_preference_changed ), self );
-
-		na_settings_register_key_callback( settings,
-				NA_IPREFS_ITEMS_CREATE_ROOT_MENU,
-				G_CALLBACK( on_runtime_preference_changed ), self );
-
-		na_settings_register_key_callback( settings,
-				NA_IPREFS_ITEMS_ADD_ABOUT_ITEM,
-				G_CALLBACK( on_runtime_preference_changed ), self );
-
-		na_settings_register_key_callback( settings,
-				NA_IPREFS_ITEMS_LIST_ORDER_MODE,
-				G_CALLBACK( on_runtime_preference_changed ), self );
+		self->private->settings_changed_handler =
+				g_signal_connect(
+						settings,
+						SETTINGS_SIGNAL_RUNTIME_CHANGE,
+						G_CALLBACK( on_settings_runtime_changed_handler ), self );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
@@ -1037,36 +1019,33 @@ on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin )
 
 	if( !plugin->private->dispose_has_run ){
 
-		na_timeout_event( &plugin->private->timeout );
+		na_timeout_event( &plugin->private->change_timeout );
 	}
 }
 
+/* signal emitted by NASettings at the end of a burst of 'changed' signals
+ * on runtime preferences which may affect the way file manager displays
+ * its context menus
+ */
 static void
-on_runtime_preference_changed( const gchar *group, const gchar *key, gconstpointer newvalue, gboolean mandatory, NautilusActions *plugin )
+on_settings_runtime_changed_handler( NASettings *settings, NautilusActions *plugin )
 {
+	g_return_if_fail( NA_IS_SETTINGS( settings ));
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){
 
-		na_timeout_event( &plugin->private->timeout );
+		na_timeout_event( &plugin->private->change_timeout );
 	}
 }
 
-/* this is called periodically at each 'st_burst_timeout' (100ms) interval
- * as soon as the event source is created
- *
- * if the last recorded change event, whose timestamp has been set in 'st_last_event'
- * is outside of our timeout, then we assume that the burst has finished
- *
- * we so reload the items, signal the file manager, and reset the event source.
+/*
+ * automatically reloads the items, then signal the file manager.
  */
 static void
 on_change_event_timeout( NautilusActions *plugin )
 {
 	static const gchar *thisfn = "nautilus_actions_on_change_event_timeout";
-
-	/* do what we have to and close the event source
-	 */
 	g_debug( "%s: timeout expired", thisfn );
 
 	na_pivot_load_items( plugin->private->pivot );
