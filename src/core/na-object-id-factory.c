@@ -38,15 +38,15 @@
 
 NADataDef data_def_id [] = {
 
-	/* this data is marked non readable / non writable as it has to be readen
-	 * written specifically when serializing / unserializing items
+	/* this data is marked non readable / non writable as it has to be read
+	 * written specifically when serializing / deserializing items
 	 */
 	{ NAFO_DATA_ID,
 				FALSE,
 				FALSE,
 				TRUE,
-				"NAObjectId identifiant",
-				"Internal identifiant of the NAObjectId object. " \
+				"NAObjectId identifier",
+				"Internal identifier of the NAObjectId object. " \
 				"Historically a UUID used as a GConf directory (thus ASCII, case insensitive), " \
 				"it is also the basename of the .desktop file (thus UTF-8, case sensitive).",
 				NAFD_TYPE_STRING,

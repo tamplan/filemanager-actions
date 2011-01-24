@@ -44,7 +44,7 @@ static gboolean    sync_gconf( GConfClient *gconf, gchar **message );
 /**
  * na_gconf_utils_get_subdirs:
  * @gconf: a GConfClient instance.
- * @path: a full path to be readen.
+ * @path: a full path to be read.
  *
  * Returns: a list of full path subdirectories.
  *
@@ -120,7 +120,7 @@ na_gconf_utils_has_entry( GSList *entries, const gchar *entry )
 /**
  * na_gconf_utils_get_entries:
  * @gconf: a  GConfClient instance.
- * @path: a full path to be readen.
+ * @path: a full path to be read.
  *
  * Loads all the key=value pairs of the specified key.
  *
@@ -533,7 +533,7 @@ na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
  *
  * Writes a boolean at the given @path.
  *
- * Returns: %TRUE if the writing has been successfull, %FALSE else.
+ * Returns: %TRUE if the writing has been successful, %FALSE else.
  *
  * If returned not NULL, the @message contains an error message.
  * It should be g_free() by the caller.
@@ -572,7 +572,7 @@ na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value
  *
  * Writes an integer at the given @path.
  *
- * Returns: %TRUE if the writing has been successfull, %FALSE else.
+ * Returns: %TRUE if the writing has been successful, %FALSE else.
  *
  * If returned not NULL, the @message contains an error message.
  * It should be g_free() by the caller.
@@ -611,7 +611,7 @@ na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gch
  *
  * Writes a string at the given @path.
  *
- * Returns: %TRUE if the writing has been successfull, %FALSE else.
+ * Returns: %TRUE if the writing has been successful, %FALSE else.
  *
  * If returned not NULL, the @message contains an error message.
  * It should be g_free() by the caller.
@@ -650,7 +650,7 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
  *
  * Writes a list of strings at the given @path.
  *
- * Returns: %TRUE if the writing has been successfull, %FALSE else.
+ * Returns: %TRUE if the writing has been successful, %FALSE else.
  *
  * If returned not NULL, the @message contains an error message.
  * It should be g_free() by the caller.
@@ -693,7 +693,7 @@ na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList 
  *
  * Removes an entry from user preferences.
  *
- * Returns: %TRUE if the operation was successfull, %FALSE else.
+ * Returns: %TRUE if the operation was successful, %FALSE else.
  *
  * Since: 2.30
  *

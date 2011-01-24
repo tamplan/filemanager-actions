@@ -82,7 +82,7 @@ static guint        enum_map_id_from_string( const EnumMap *map, const gchar *st
 /*
  * na_iprefs_get_import_mode:
  * @pivot: the #NAPivot application object.
- * @pref: name of the import key to be readen.
+ * @pref: name of the import key to be read.
  * @mandatory: if not %NULL, a pointer to a boolean which will receive the
  *  mandatory property.
  *
@@ -171,7 +171,7 @@ na_iprefs_set_order_mode( const NAPivot *pivot, guint mode )
 /**
  * na_iprefs_get_export_format:
  * @pivot: the #NAPivot application object.
- * @name: name of the export format key to be readen
+ * @name: name of the export format key to be read
  * @mandatory: if not %NULL, a pointer to a boolean which will receive the
  *  mandatory property.
  *
@@ -224,7 +224,7 @@ na_iprefs_set_export_format( const NAPivot *pivot, const gchar *name, GQuark for
  * This does not mean in any way that the i/o provider is active,
  * available or so, but just that is mentioned here.
  *
- * I/o provider identifers returned in the list are not supposed
+ * I/o provider identifiers returned in the list are not supposed
  * to be unique, nor sorted.
  *
  * Returns: a list of i/o provider identifiers found in preferences

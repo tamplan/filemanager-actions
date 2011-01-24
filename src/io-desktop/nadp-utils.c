@@ -100,7 +100,7 @@ nadp_utils_uri_delete( const gchar *uri )
  * Returns: %TRUE if the file is writable, %FALSE else.
  *
  * Please note that this type of test is subject to race conditions,
- * as the file may become unwritable after a successfull test,
+ * as the file may become unwritable after a successful test,
  * but before the caller has been able to actually write into it.
  *
  * There is no "super-test". Just try...

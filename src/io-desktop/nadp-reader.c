@@ -584,7 +584,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 }
 
 /*
- * called when each NAIFactoryObject object has been readen
+ * called when each NAIFactoryObject object has been read
  */
 void
 nadp_reader_ifactory_provider_read_done( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *serializable, GSList **messages )

@@ -40,7 +40,7 @@
 
 NADataDef data_def_item [] = {
 
-	/* this data is marked as non readable as it has to be readen specifically
+	/* this data is marked as non readable as it has to be read specifically
 	 * in order to be able to create the corresponding NAObjectItem-derived
 	 * object
 	 * it is not writable as different I/O providers may have different values

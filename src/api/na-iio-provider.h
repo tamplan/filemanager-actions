@@ -229,18 +229,18 @@ typedef struct {
 	 *
 	 * The 'able_to_write' property is a runtime one.
 	 * When returning %TRUE, the I/O provider insures that it has
-	 * sucessfully checked that it was able to write some things
+	 * successfully checked that it was able to write some things
 	 * down to its storage subsystems.
 	 *
-	 * The 'able_to_write' property is independant of the
+	 * The 'able_to_write' property is independent of the
 	 * 'willing_to_write' above, though it is only checked if the
 	 * I/O provider is actually willing to write.
 	 *
 	 * This condition is only relevant when trying to define new items,
 	 * to see if a willing_to provider is actually able to do write
 	 * operations. It it not relevant for updating/deleting already
-	 * existings items as they have already checked their own runtime
-	 * writability status when readen from the storage subsystems.
+	 * existing items as they have already checked their own runtime
+	 * writability status when read from the storage subsystems.
 	 *
 	 * Note that even if this property is %TRUE, there is yet many
 	 * reasons for not being able to update/delete existing items or
@@ -264,7 +264,7 @@ typedef struct {
 	 *
 	 * Writes a new @item.
 	 *
-	 * There is no update_item function ; it is the responsability
+	 * There is no update_item function ; it is the responsibility
 	 * of the provider to delete the previous version of an item before
 	 * actually writing the new one.
 	 *
@@ -272,7 +272,7 @@ typedef struct {
 	 * %FALSE in is_willing_to_write() method above.
 	 *
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the write operation
-	 * was successfull, or another code depending of the detected error.
+	 * was successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
 	 */
@@ -291,7 +291,7 @@ typedef struct {
 	 * %FALSE in is_willing_to_write() method above.
 	 *
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the delete operation was
-	 * successfull, or another code depending of the detected error.
+	 * successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
 	 */
@@ -312,7 +312,7 @@ typedef struct {
 	 * data which may have been attached to a #NAObjectItem -derived object.
 	 *
 	 * Returns: %NA_IIO_PROVIDER_CODE_OK if the duplicate operation was
-	 * successfull, or another code depending of the detected error.
+	 * successful, or another code depending of the detected error.
 	 *
 	 * Since: 2.30
 	 */
@@ -334,7 +334,7 @@ void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
  */
 /**
  * NAIIOProviderWritabilityStatus:
- * @NA_IIO_PROVIDER_STATUS_UNDETERMINED:             undertermined.
+ * @NA_IIO_PROVIDER_STATUS_UNDETERMINED:             undetermined.
  * @NA_IIO_PROVIDER_STATUS_WRITABLE:                 the item is writable.
  * @NA_IIO_PROVIDER_STATUS_ITEM_READONLY:            the item is read-only.
  * @NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO:  the provider is not willing to write this item,

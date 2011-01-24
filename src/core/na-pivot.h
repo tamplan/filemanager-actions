@@ -48,7 +48,7 @@
  *
  * Each I/O storage provider should monitor modifications/deletions of
  * actions, and advertize this #NAPivot, which itself will then
- * advertize any registered consumers.
+ * advertise any registered consumers.
  *
  * This notification system is so a double-stage one :
  *
@@ -71,7 +71,7 @@
  *    updates.
  *
  * 2. When #NAPivot has successfully updated its list of actions, it
- *    notifies its consumers in order they update themselves.
+ *    notifies its consumers so they update themselves.
  *
  *    Note that #NAPivot tries to factorize notification messages, and
  *    to notify its consumers only once even if it has itself received
@@ -120,7 +120,7 @@ GType    na_pivot_get_type( void );
 
 /* signals
  *
- * NAPivot acts as a 'sumarrizing' proxy for signals emitted by the NAIIOProvider
+ * NAPivot acts as a 'summarizing' proxy for signals emitted by the NAIIOProvider
  * providers when they detect a modification of their underlying items storage
  * subsystems.
  * As several to many signals may be emitted when such a modification occurs,

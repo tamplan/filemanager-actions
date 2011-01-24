@@ -327,7 +327,7 @@ ifactory_object_is_valid( const NAIFactoryObject *object )
 }
 
 /*
- * at this time, we don't yet have readen the profiles as this will be
+ * at this time, we don't yet have read the profiles as this will be
  * done in ifactory_provider_read_done - we so just be able to deal with
  * action-specific properties (not check for profiles consistency)
  */
@@ -406,7 +406,7 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
  *  any data found in data_def_action_v1 (defined in na-object-action-factory.c)
  *  is obsoleted and moved to a new profile
  *
- * actions readen from .desktop already have iversion=3 (cf. desktop_read_start)
+ * actions read from .desktop already have iversion=3 (cf. desktop_read_start)
  * and v1 actions may only come from xml or gconf
  *
  * returns TRUE if this actually was a v1 action which has been converted to v2

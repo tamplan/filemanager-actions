@@ -1006,7 +1006,7 @@ load_items_filter_unwanted_items_rec( GList *hierarchy, guint loadable_set )
 }
 
 /*
- * returns a concatened flat list of readen actions / menus
+ * returns a concatened flat list of read actions / menus
  * we take care here of:
  * - i/o providers which appear unavailable at runtime
  * - i/o providers marked as unreadable

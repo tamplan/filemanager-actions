@@ -423,7 +423,7 @@ na_settings_register_global_callback( NASettings *settings, GCallback callback, 
  *  whether the searched @key has been found (%TRUE), or if the returned
  *  value comes from default (%FALSE).
  * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from mandatory preferences
+ *  whether the returned value has been read from mandatory preferences
  *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
  *  been found, @mandatory is set to %FALSE.
  *
@@ -449,7 +449,7 @@ na_settings_get_boolean( NASettings *settings, const gchar *key, gboolean *found
  *  whether the searched @key has been found (%TRUE), or if the returned
  *  value comes from default (%FALSE).
  * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from mandatory preferences
+ *  whether the returned value has been read from mandatory preferences
  *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
  *  been found, @mandatory is set to %FALSE.
  *
@@ -489,7 +489,7 @@ na_settings_get_boolean_ex( NASettings *settings, const gchar *group, const gcha
  *  whether the searched @key has been found (%TRUE), or if the returned
  *  value comes from default (%FALSE).
  * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from mandatory preferences
+ *  whether the returned value has been read from mandatory preferences
  *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
  *  been found, @mandatory is set to %FALSE.
  *
@@ -533,7 +533,7 @@ na_settings_get_string( NASettings *settings, const gchar *key, gboolean *found,
  *  whether the searched @key has been found (%TRUE), or if the returned
  *  value comes from default (%FALSE).
  * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from mandatory preferences
+ *  whether the returned value has been read from mandatory preferences
  *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
  *  been found, @mandatory is set to %FALSE.
  *
@@ -577,7 +577,7 @@ na_settings_get_string_list( NASettings *settings, const gchar *key, gboolean *f
  *  whether the searched @key has been found (%TRUE), or if the returned
  *  value comes from default (%FALSE).
  * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from mandatory preferences
+ *  whether the returned value has been read from mandatory preferences
  *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
  *  been found, @mandatory is set to %FALSE.
  *
@@ -620,7 +620,7 @@ na_settings_get_uint( NASettings *settings, const gchar *key, gboolean *found, g
  *  whether the searched @key has been found (%TRUE), or if the returned
  *  value comes from default (%FALSE).
  * @mandatory: if not %NULL, a pointer to a gboolean in which we will store
- *  whether the returned value has been readen from mandatory preferences
+ *  whether the returned value has been read from mandatory preferences
  *  (%TRUE), or from the user preferences (%FALSE). When the @key has not
  *  been found, @mandatory is set to %FALSE.
  *

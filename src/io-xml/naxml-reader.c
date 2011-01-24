@@ -608,7 +608,7 @@ read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile
  * this callback function is called by NAIFactoryObject once for each
  * serializable data for the object
  *
- * Note that some nodes may be readen twice because of multiple definition
+ * Note that some nodes may be read twice because of multiple definition
  * of the same data (e.g. icon which exists in localized and unlocalized
  * versions). So do not remove dealt-with nodes here
  */
@@ -737,7 +737,7 @@ read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, 
 }
 
 /*
- * all serializable data of the object has been readen
+ * all serializable data of the object has been read
  */
 void
 naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  )
@@ -770,7 +770,7 @@ naxml_reader_read_done( const NAIFactoryProvider *provider, void *reader_data, c
 }
 
 /*
- * just having readen this NAObjectItem
+ * just having read this NAObjectItem
  * so deals with unlocalized/localized icon name/path
  */
 static void
@@ -890,7 +890,7 @@ read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
 }
 
 /*
- * just having readen this NAObjectProfile
+ * just having read this NAObjectProfile
  * so deals with unlocalized/localized desc-name
  */
 static void

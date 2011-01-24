@@ -970,10 +970,10 @@ na_core_utils_file_exists( const gchar *uri )
 /**
  * na_core_utils_file_load_from_uri:
  * @uri: the URI the file must be loaded from.
- * @length: a pointer to the length of the readen content.
+ * @length: a pointer to the length of the read content.
  *
  * Loads the file into a newly allocated buffer, and set up the length of the
- * readen content if not %NULL.
+ * read content if not %NULL.
  *
  * Returns: the newly allocated buffer which contains the file content, or %NULL.
  * This buffer should be g_free() by the caller.

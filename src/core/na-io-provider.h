@@ -45,7 +45,7 @@
  * corresponding NAIOProvider class method.
  *
  * Two preferences are used for each i/o provider:
- * 'readable': means that the i/o provider should be readen when building
+ * 'readable': means that the i/o provider should be read when building
  *  the items hierarchy
  * 'writable': means that the i/o provider is candidate when writing a
  *  new item; this also means that existing items are deletable.

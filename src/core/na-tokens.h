@@ -60,7 +60,7 @@
  * %B: space-separated list of basenames
  * %c: count of selected items
  * %d: (first) base directory
- * %D: space-separated list of base directory of each selected items
+ * %D: space-separated list of base directory of each selected item
  * %f: (first) file name
  * %F: space-separated list of selected file names
  * %h: hostname of the (first) URI

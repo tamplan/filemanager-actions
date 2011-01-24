@@ -396,7 +396,7 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
  * @dialog_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
  * @entry: the #GtkEntry which is associated with the selected file.
- * @entry_name: the name of the entry in Preferences to be readen/written.
+ * @entry_name: the name of the entry in Preferences to be read/written.
  *
  * Opens a #GtkFileChooserDialog and let the user choose an existing file
  * -> choose and display an existing file name
@@ -422,7 +422,7 @@ nact_gtk_utils_select_file( BaseWindow *window,
  * @dialog_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
  * @entry: the #GtkEntry which is associated with the selected file.
- * @entry_name: the name of the entry in Preferences to be readen/written.
+ * @entry_name: the name of the entry in Preferences to be read/written.
  * @update_preview_cb: the callback function in charge of updating the
  *  preview widget. May be NULL.
  *
@@ -506,7 +506,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
  * @dialog_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
  * @entry: the #GtkEntry which is associated with the field.
- * @entry_name: the name of the entry in Preferences to be readen/written.
+ * @entry_name: the name of the entry in Preferences to be read/written.
  * @default_dir_uri: the URI of the directory which should be set in there is
  *  not yet any preference (see @entry_name)
  *

@@ -716,12 +716,12 @@ na_object_item_unref_items_rec( GList *items )
  * na_object_item_deals_with_version:
  * @item: this #NAObjectItem -derived object.
  *
- * Just after the @item has been readen from NAIFactoryProvider, setup
+ * Just after the @item has been read from NAIFactoryProvider, setup
  * the version. This is needed because some conversions may occur in
  * this object.
  *
  * Note that there is only some 2.x versions where the version string
- * was not systematically written. If @item has been readen from a
+ * was not systematically written. If @item has been read from a
  * .desktop file, then iversion is already set to (at least) 3.
  *
  * Since: 2.30

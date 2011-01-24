@@ -662,7 +662,7 @@ nadp_desktop_file_remove_profile( const NadpDesktopFile *ndf, const gchar *profi
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
  * @default_value: value to be set if key has not been found.
  *
- * Returns: the readen value, or the default value if the entry has not
+ * Returns: the read value, or the default value if the entry has not
  * been found in the given group.
  */
 gboolean
@@ -711,7 +711,7 @@ nadp_desktop_file_get_boolean( const NadpDesktopFile *ndf, const gchar *group, c
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
  * @default_value: value to be set if key has not been found.
  *
- * Returns: the readen value, or the default value if the entry has not
+ * Returns: the read value, or the default value if the entry has not
  * been found in the given group.
  */
 gchar *
@@ -757,7 +757,7 @@ nadp_desktop_file_get_locale_string( const NadpDesktopFile *ndf, const gchar *gr
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
  * @default_value: value to be set if key has not been found.
  *
- * Returns: the readen value, or the default value if the entry has not
+ * Returns: the read value, or the default value if the entry has not
  * been found in the given group.
  */
 gchar *
@@ -808,7 +808,7 @@ nadp_desktop_file_get_string( const NadpDesktopFile *ndf, const gchar *group, co
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
  * @default_value: value to be set if key has not been found.
  *
- * Returns: the readen value, or the default value if the entry has not
+ * Returns: the read value, or the default value if the entry has not
  * been found in the given group.
  */
 GSList *
@@ -860,7 +860,7 @@ nadp_desktop_file_get_string_list( const NadpDesktopFile *ndf, const gchar *grou
  * @key_found: set to %TRUE if the key has been found, to %FALSE else.
  * @default_value: value to be set if key has not been found.
  *
- * Returns: the readen value, or the default value if the entry has not
+ * Returns: the read value, or the default value if the entry has not
  * been found in the given group.
  */
 guint

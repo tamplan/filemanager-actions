@@ -740,7 +740,7 @@ write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIt
  * Set the @value with the current content of the #NADataBoxed attached
  * to @name.
  *
- * This is to be readen as "set value from data element".
+ * This is to be read as "set value from data element".
  */
 void
 na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *name, GValue *value )

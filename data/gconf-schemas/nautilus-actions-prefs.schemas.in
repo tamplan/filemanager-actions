@@ -428,7 +428,7 @@ As the order of items is also locked, the level zero itself cannot be modified, 
       <type>bool</type>
       <locale name="C">
         <short>Whether the GConf I/O provider is locked</short>
-        <long>When set to true (most probably as a mandatory key), this prevents all items, menus and actions, readen from GConf to being modified in NACT.</long>
+        <long>When set to true (most probably as a mandatory key), this prevents all items, menus and actions, read from GConf to being modified in NACT.</long>
       </locale>
       <default>false</default>
     </schema>
@@ -439,7 +439,7 @@ As the order of items is also locked, the level zero itself cannot be modified, 
       <type>bool</type>
       <locale name="C">
         <short>Whether the Desktop I/O provider is locked</short>
-        <long>When set to true (most probably as a mandatory key), this prevents all items, menus and actions, readen from .desktop files to being modified in NACT.</long>
+        <long>When set to true (most probably as a mandatory key), this prevents all items, menus and actions, read from .desktop files to being modified in NACT.</long>
       </locale>
       <default>false</default>
     </schema>

@@ -1,5 +1,45 @@
 2011-01-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* data/gconf-schemas/nautilus-actions-prefs.schemas.in:
+	* docs/des-ema/des-ema-0.15:
+	* docs/nact/C/nact-conditions.xml:
+	* docs/nact/C/nact-menus.xml:
+	* src/api/na-extension.h:
+	* src/api/na-ifactory-provider.h:
+	* src/api/na-iio-provider.h:
+	* src/api/na-object.h:
+	* src/core/na-core-utils.c:
+	* src/core/na-factory-object.c:
+	* src/core/na-gconf-utils.c:
+	* src/core/na-icontext-factory.c:
+	* src/core/na-icontext.c:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-io-provider.c:
+	* src/core/na-io-provider.h:
+	* src/core/na-iprefs.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id-factory.c:
+	* src/core/na-object-id.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-item.c:
+	* src/core/na-pivot.h:
+	* src/core/na-settings.c:
+	* src/core/na-settings.h:
+	* src/core/na-tokens.h:
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-reader.c:
+	* src/io-desktop/nadp-utils.c:
+	* src/io-gconf/nagp-reader.c:
+	* src/io-xml/naxml-reader.c:
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	* src/plugin-menu/nautilus-actions.c:
+	* src/utils/nautilus-actions-new.c:
+	* src/utils/nautilus-actions-run.c:
+	* tools/check-headers.sh:
+	* tools/init-finalize-diff.sh:
+	Apply patch provided by Christian Kirbach. Fix #640216.
+
 	* src/nact/nautilus-actions-config-tool.ui:
 	* src/utils/na-delete-xmltree.c:
 	* src/utils/nautilus-actions-print.c:

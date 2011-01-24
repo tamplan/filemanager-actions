@@ -95,7 +95,7 @@ function msg_help
 	echo "
  This script checks for header files consistency and completeness.
  It ensures that each header files itself includes the set of prequisite
- header files in order the tested header be auto-sufficent.
+ header files so that the tested header is auto-sufficent.
 
  Usage: ${my_cmd} [options]
    --[no]help                print this message, and exit [${opt_help_def}]

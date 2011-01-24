@@ -135,7 +135,7 @@ grep -En "instance_init|instance_${check_for}" ${1} | grep -vE 'quitting main wi
 	echo "${numline} ${fn_name} ${obj_address} ${class} ${prefix} ${nature} ${reused}" >> ${tmp1}
 done
 count=$(wc -l ${tmp1} | awk '{ print $1 }')
-echo " ${count} readen lines"
+echo " ${count} lines read"
 #cat ${tmp1}
 #exit
 
@@ -163,9 +163,9 @@ cat ${tmp2} | while read line; do
 			fn_prefix_init=$(echo ${line} | awk '{ print $5 }')
 			line_init="${line}"
 		else
-			# init line being readen, but previous was also an init line
+			# init line being read, but previous was also an init line
 			# say previous was an error
-			# and restart with init line being readen
+			# and restart with init line being read
 			class=$(echo ${line_init} | awk '{ print $4 }')
 			if [ "$(str_grep list_undisposed ${obj_address_init})" = "" ]; then
 				num=$(echo ${line_init} | awk '{ print $1 }')
@@ -183,7 +183,7 @@ cat ${tmp2} | while read line; do
 		fi
 	else
 		if [ "${line_init}" = "" ]; then
-			# dispose line being readen but previous was also a dispose line
+			# dispose line being read but previous was also a dispose line
 			# just signals the dispose line is an error
 			echo "warning: unwaited line: ${line}"
 			count_inc count_warns

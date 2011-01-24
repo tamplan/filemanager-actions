@@ -47,7 +47,7 @@
  * - per-user configuration is HOME/.config/nautilus-actions.conf
  *
  * Each setting has so its own read-only attribute, whether it
- * has been readen from the global configuration or from the
+ * has been read from the global configuration or from the
  * per-user one.
  */
 

@@ -17,7 +17,7 @@
   </para>
   <para>
     As an action, the exact place where a new menu will be inserted
-    depends of the current sort order:
+    depends on the current sort order:
   </para>
   <variablelist>
     <varlistentry>

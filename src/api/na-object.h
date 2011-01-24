@@ -139,7 +139,7 @@ typedef struct {
 	 *
 	 * Checks @object for validity.
 	 *
-	 * A NAObject is valid if its internal identifiant is set.
+	 * A NAObject is valid if its internal identifier is set.
 	 *
 	 * Each derived class should take care of implementing this function
 	 * when relevant. NAObject class will take care of calling this

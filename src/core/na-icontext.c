@@ -295,7 +295,7 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
  * na_icontext_read_done:
  * @context: the #NAIContext to be prepared.
  *
- * Prepares the specified #NAIContext just after it has been readen.
+ * Prepares the specified #NAIContext just after it has been read.
  *
  * <itemizedlist>
  *   <listitem>

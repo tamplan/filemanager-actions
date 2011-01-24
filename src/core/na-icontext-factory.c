@@ -48,7 +48,7 @@ NADataDef data_def_conditions [] = {
 				/* i18n: wildcard characters '*' and '?' should be considered as literalls,
 				 *  and not be translated */
 				N_( "A list of strings with joker '*' or '?' to be matched against the name(s) " \
-					"of the selected file(s)/folder(s). Each selected items must match at least " \
+					"of the selected file(s)/folder(s). Each selected item must match at least " \
 					"one of the filename patterns for the action or the menu be candidate to " \
 					"display.\n" \
 					"This obviously only applies when there is a selection.\n" \
@@ -110,7 +110,7 @@ NADataDef data_def_conditions [] = {
 				N_( "List of patterns to be matched against the mimetypes of the selected file(s)/folder(s)" ),
 				/* i18n: wildcard character '*' is taken literally, and should not be translated */
 				N_( "A list of strings with joker '*' to be matched against the mimetypes of the " \
-					"selected file(s)/folder(s). Each selected items must match at least one of " \
+					"selected file(s)/folder(s). Each selected item must match at least one of " \
 					"the mimetype patterns for the action to appear.\n" \
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to '*/*'." ),
@@ -502,7 +502,7 @@ NADataDef data_def_conditions [] = {
 				N_( "Capabilities" ),
 				/* i18n: 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' are all keywords
 				 *  of the specification, they are not translatable */
-				N_( "A list of capabilities each item of the selection must satisfy in order the item be candidate.\n" \
+				N_( "A list of capabilities each item of the selection must satisfy in order for the item to be candidate.\n" \
 					"Capabilities may be negated.\n" \
 					"Capabilities have to be choosen between following predefined ones:\n" \
 					"- 'Owner': current user is the owner of selected items\n" \

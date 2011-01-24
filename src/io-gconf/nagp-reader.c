@@ -67,7 +67,7 @@ static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key
 /*
  * nagp_iio_provider_read_items:
  *
- * Note that whatever be the version of the readen action, it will be
+ * Note that whatever be the version of the read action, it will be
  * stored as a #NAObjectAction and its set of #NAObjectProfile of the same,
  * latest, version of these classes.
  */

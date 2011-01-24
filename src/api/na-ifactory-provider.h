@@ -89,7 +89,7 @@
  *
  * Without this interface, each and every I/O provider must,
  * for example when reading an item, have the list of data to be
- * readen for each item, then read each individual data, then
+ * read for each item, then read each individual data, then
  * organize them in a I/O structure..
  * Each time a new data is added to an object, as e.g. a new condition,
  * then all available I/O providers must be updated: read the data,
@@ -183,7 +183,7 @@ typedef struct {
 	 * @reader: this #NAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance, as provided
 	 *  when na_ifactory_provider_read_item() was called.
-	 * @object: the #NAIFactoryObject object which comes to be readen.
+	 * @object: the #NAIFactoryObject object which comes to be read.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
@@ -205,7 +205,7 @@ typedef struct {
 	 *
 	 * This method must be implemented in order any data be read.
 	 *
-	 * Returns: a newly allocated NADataBoxed which contains the readen value.
+	 * Returns: a newly allocated NADataBoxed which contains the read value.
 	 * Should return %NULL if data is not found.
 	 *
 	 * Since: 2.30
@@ -217,11 +217,11 @@ typedef struct {
 	 * @reader: this #NAIFactoryProvider instance.
 	 * @reader_data: the data associated to this instance, as provided
 	 *  when na_ifactory_provider_read_item() was called.
-	 * @object: the #NAIFactoryObject object which comes to be readen.
+	 * @object: the #NAIFactoryObject object which comes to be read.
 	 * @messages: a pointer to a #GSList list of strings; the provider
 	 *  may append messages to this list, but shouldn't reinitialize it.
 	 *
-	 * API called by #NAIFactoryObject when all data have been readen.
+	 * API called by #NAIFactoryObject when all data have been read.
 	 * Implementor may take advantage of this to do some cleanup.
 	 *
 	 * Since: 2.30

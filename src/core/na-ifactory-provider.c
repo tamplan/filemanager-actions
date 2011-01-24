@@ -166,7 +166,7 @@ ifactory_provider_get_version( const NAIFactoryProvider *instance )
  * <example>
  *   <programlisting>
  *     &lcomment;
- *      * allocate the object to be readen
+ *      * allocate the object to be read
  *      &rcomment;
  *     NAObjectItem *item = NA_OBJECT_ITEM( na_object_action_new());
  *     &lcomment;

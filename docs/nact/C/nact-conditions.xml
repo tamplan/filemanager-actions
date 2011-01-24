@@ -2,7 +2,7 @@
   <title>Defining the conditions</title>
   <para>
     Whether your action will eventually be displayed in &nautilus; file manager
-    context menus or in its toolbar depends of the conditions you will have
+    context menus or in its toolbar depends on the conditions you will have
     defined for it.
   </para>
   <para>
@@ -121,7 +121,7 @@
       </listitem>
       <listitem>
         <para>
-          When disactivated, filters are considered as case insensitive,
+          When deactivated, filters are considered as case insensitive,
           which means that <filename>/my/file</filename> and
           <filename>/My/File</filename> filenames are considered the same
           name.
@@ -384,7 +384,7 @@
           <listitem>
             <para>
               Or click on
-              <guibutton>Browse</guibutton> to select a folder on the filesystem.
+              <guibutton>Browse</guibutton> to select a folder on the file system.
             </para>
           </listitem>
         </itemizedlist>
@@ -404,7 +404,7 @@
     <para>
       By default, the folder-based condition is just one
       &laquosp;<literal>must match one of /</literal>&spraquo; condition.
-      As <literal>/</literal> is always the top of an Unix-like filesystem,
+      As <literal>/</literal> is always the top of an Unix-like file system,
       then all selected items always match this condition.
     </para>
     <note>
@@ -508,7 +508,7 @@
                     <imagedata fileref="figures/nact-new-scheme.png" format="PNG"/>
                   </imageobject>
                   <textobject>
-                    <phrase>Show the list of predefined schemess.</phrase>
+                    <phrase>Show the list of predefined schemes.</phrase>
                   </textobject>
                   <caption>
                     <para>Selecting a scheme among predefined defaults</para>
@@ -551,7 +551,7 @@
       Capabilities are some properties that a file may exhibit to the user.
     </para>
     <para>
-      But the <literal>Local</literal> capability, all others are dependant
+      But the <literal>Local</literal> capability, all others are dependent
       of the user who executes the command.
     </para>
     <para>

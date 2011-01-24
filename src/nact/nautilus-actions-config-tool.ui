@@ -1152,7 +1152,7 @@ Leave the field empty to run the command as the current user.</property>
                                           <object class="GtkScrolledWindow" id="scrolledwindow12">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="tooltip_text" translatable="yes">This list lets you determines for which basenames the currently selected item will be displayed in the Nautilus context menu.
+                                            <property name="tooltip_text" translatable="yes">This list lets you determine for which basenames the currently selected item will be displayed in the Nautilus context menu.
 Basenames may use '*' and '?' wildcards.
 Basenames may be negated to specify for which basenames your item must not appear.</property>
                                             <property name="hscrollbar_policy">automatic</property>
@@ -1267,7 +1267,7 @@ Basenames may be negated to specify for which basenames your item must not appea
                     <child type="tab">
                       <object class="GtkLabel" id="label400">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determines for which basenames the currently selected item will be displayed in the Nautilus context menu.
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine for which basenames the currently selected item will be displayed in the Nautilus context menu.
 Basenames may be negated to specify for which basenames your item must not appear.</property>
                         <property name="label" translatable="yes">_Basenames</property>
                         <property name="use_underline">True</property>
@@ -1319,7 +1319,7 @@ Basenames may be negated to specify for which basenames your item must not appea
                                           <object class="GtkScrolledWindow" id="scrolledwindow8">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="tooltip_text" translatable="yes">This list lets you determines for which mimetypes the currently selected item will be displayed in the Nautilus context menu.
+                                            <property name="tooltip_text" translatable="yes">This list lets you determine for which mimetypes the currently selected item will be displayed in the Nautilus context menu.
 Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.
 Mimetypes may be negated to specify for which type of objects your item must not appear.</property>
                                             <property name="hscrollbar_policy">automatic</property>
@@ -1415,7 +1415,7 @@ Mimetypes may be negated to specify for which type of objects your item must not
                     <child type="tab">
                       <object class="GtkLabel" id="label500">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determines for which mimetypes the currently selected item will be displayed in the Nautilus context menu.
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine for which mimetypes the currently selected item will be displayed in the Nautilus context menu.
 Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.
 Mimetypes may be negated to specify for which type of objects your item must not appear.</property>
                         <property name="label" translatable="yes">_Mimetypes</property>
@@ -1468,7 +1468,7 @@ Mimetypes may be negated to specify for which type of objects your item must not
                                           <object class="GtkScrolledWindow" id="scrolledwindow2">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="tooltip_text" translatable="yes">This list lets you determine where (in which folders) the currently selected files must be found in order the item be displayed in the Nautilus context menu.
+                                            <property name="tooltip_text" translatable="yes">This list lets you determine where (in which folders) the currently selected files must be found in order for the item to be displayed in the Nautilus context menu.
 Folders may use '*' or '?' wildcards.
 Folder filters may be negated to specify for which folders your item must not appear.</property>
                                             <property name="hscrollbar_policy">automatic</property>
@@ -1590,7 +1590,7 @@ Folder filters may be negated to specify for which folders your item must not ap
                     <child type="tab">
                       <object class="GtkLabel" id="label600">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determines where (in which folders) the currently selected files must be found in order the item be displayed in the Nautilus context menu.
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine where (in which folders) the currently selected files must be found in order for the item to be displayed in the Nautilus context menu.
 Folder filters may be negated to specify for which folders your item must not appear.</property>
                         <property name="label" translatable="yes">_Folders</property>
                         <property name="use_underline">True</property>
@@ -1642,7 +1642,7 @@ Folder filters may be negated to specify for which folders your item must not ap
                                           <object class="GtkScrolledWindow" id="scrolledwindow4">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="tooltip_text" translatable="yes">This list lets you determine which schemes the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+                                            <property name="tooltip_text" translatable="yes">This list lets you determine which schemes the currently selected files must satisfy in order for the item to be displayed in the Nautilus context menu.
 Filters may be negated to specify for which schemes your item must not appear.</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
@@ -1766,7 +1766,7 @@ Filters may be negated to specify for which schemes your item must not appear.</
                     <child type="tab">
                       <object class="GtkLabel" id="label700">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determine which schemes the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine which schemes the currently selected files must satisfy in order for the item to be displayed in the Nautilus context menu.
 Filters may be negated to specify for which schemes your item must not appear.</property>
                         <property name="label" translatable="yes">_Schemes</property>
                         <property name="use_underline">True</property>
@@ -1818,7 +1818,7 @@ Filters may be negated to specify for which schemes your item must not appear.</
                                           <object class="GtkScrolledWindow" id="scrolledwindow10">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="tooltip_text" translatable="yes">This list lets you determine which capabilities the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+                                            <property name="tooltip_text" translatable="yes">This list lets you determine which capabilities the currently selected files must satisfy in order for the item to be displayed in the Nautilus context menu.
 Capabilities may be negated to specify for which capabilities your item must not appear.</property>
                                             <property name="hscrollbar_policy">automatic</property>
                                             <property name="vscrollbar_policy">automatic</property>
@@ -1913,7 +1913,7 @@ Capabilities may be negated to specify for which capabilities your item must not
                     <child type="tab">
                       <object class="GtkLabel" id="label800">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determine which capabilities the currently selected files must satisfy in order the item be displayed in the Nautilus context menu.
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine which capabilities the currently selected files must satisfy in order for the item to be displayed in the Nautilus context menu.
 Filters may be negated to specify for which capabilities your item must not appear.</property>
                         <property name="label" translatable="yes">Ca_pabilities</property>
                         <property name="use_underline">True</property>
@@ -2345,7 +2345,7 @@ This may be used for example for testing the presence of a prerequisite daemon.<
                     <child type="tab">
                       <object class="GtkLabel" id="label900">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you determine some advanced conditions the currently selected files must satisfy in order the item be displayed in the file manager context menu.</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you determine some advanced conditions the currently selected files must satisfy in order for the item to be displayed in the file manager context menu.</property>
                         <property name="label" translatable="yes">_Environment</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -2620,7 +2620,7 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
                     <child type="tab">
                       <object class="GtkLabel" id="labelA00">
                         <property name="visible">True</property>
-                        <property name="tooltip_text" translatable="yes">This tab lets you edit some miscellaneous properties, and access to some non-modifiable information.</property>
+                        <property name="tooltip_text" translatable="yes">This tab lets you edit some miscellaneous properties, and access some non-modifiable information.</property>
                         <property name="label" translatable="yes">P_roperties</property>
                         <property name="use_underline">True</property>
                       </object>

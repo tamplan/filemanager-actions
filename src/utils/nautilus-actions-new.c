@@ -354,7 +354,7 @@ init_options( void )
 }
 
 /*
- * allocate a new action, and fill it with values readen from command-line
+ * allocate a new action, and fill it with values read from command-line
  */
 static NAObjectAction *
 get_action_from_cmdline( void )

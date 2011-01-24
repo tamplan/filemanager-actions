@@ -526,7 +526,7 @@ get_menus_items( NautilusActions *plugin, guint target, GList *selection )
 /*
  * create a copy of the tree where almost all fields which may embed
  * parameters have been expanded
- * here, 'almost' should be readen as:
+ * here, 'almost' should be read as:
  * - all displayable fields, or fields which may have an impact on the display
  *   (e.g. label, tooltip, icon name)
  * - all fields which we do not need later

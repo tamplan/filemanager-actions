@@ -57,7 +57,7 @@ static gboolean   version          = FALSE;
 static GOptionEntry entries[] = {
 
 	{ "id"                   , 'i', 0, G_OPTION_ARG_STRING        , &id,
-			N_( "The internal identifiant of the action to be launched" ), N_( "<STRING>" ) },
+			N_( "The internal identifier of the action to be launched" ), N_( "<STRING>" ) },
 	{ "target"               , 't', 0, G_OPTION_ARG_FILENAME_ARRAY, &targets_array,
 			N_( "A target, file or folder, for the action. More than one options may be specified" ), N_( "<URI>" ) },
 	{ NULL }

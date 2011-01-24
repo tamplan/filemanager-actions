@@ -198,7 +198,7 @@ G_BEGIN_DECLS
  *   </programlisting>
  * </example>
  *
- * Returns: %TRUE if the initialization is successfull, %FALSE else.
+ * Returns: %TRUE if the initialization is successful, %FALSE else.
  * In this later case, the library is unloaded and no more considered.
  *
  * Since: 2.30
@@ -279,7 +279,7 @@ guint    na_extension_list_types ( const GType **types );
  * This function is called by Nautilus-Actions when it is about to
  * shutdown itself.
  *
- * The dynamicaly loaded library may take advantage of this call to
+ * The dynamically loaded library may take advantage of this call to
  * release any resource, handle, and so on, it may have previously
  * allocated.
  *
