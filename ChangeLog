@@ -1,5 +1,12 @@
 2011-01-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h: Review the notification system.
+
+	* src/core/na-settings.c:
+	* src/core/na-settings.h:
+	Add a signal notification to the existing callback pregistration system.
+
 	* data/gconf-schemas/nautilus-actions-prefs.schemas.in:
 	* docs/des-ema/des-ema-0.15:
 	* docs/nact/C/nact-conditions.xml:

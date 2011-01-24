@@ -43,12 +43,23 @@
  * - a per-user configuration.
  *
  * The configuration is implemented as keyed files:
- * - global configuration is sysconfdir/nautilus-actions.conf
+ * - global configuration is sysconfdir/xdg/nautilus-actions.conf
  * - per-user configuration is HOME/.config/nautilus-actions.conf
  *
- * Each setting has so its own read-only attribute, whether it
+ * Each setting may so have its own read-only attribute, whether it
  * has been read from the global configuration or from the
  * per-user one.
+ *
+ * NASettings class implements two notification systems:
+ *
+ * a) a per-key system, which relies on a callback pre-registration;
+ *    see na_settings_register_key_callback() function;
+ * b) a per-usage system, which relies on the usage of the changed
+ *    key; see signal descriptions.
+ *
+ * The consumer of change notifications will choose the most accurate
+ * system for its needs, e.g. whether it requires to have an exact list
+ * of modified keys, or not.
  */
 
 #include <glib-object.h>
@@ -148,6 +159,20 @@ GType na_settings_get_type( void );
 #define NA_IPREFS_DEFAULT_EXPORT_FORMAT				"Desktop1"
 #define NA_IPREFS_DEFAULT_IMPORT_MODE				"NoImport"
 #define NA_IPREFS_DEFAULT_LIST_ORDER_MODE			"AscendingOrder"
+
+/* signals
+ *
+ * NASettings monitors, and so is able to send messages about, two sort
+ * of changes:
+ * - runtime preferences change, which group all changes which may have
+ *   an effect on the display in file manager context menus;
+ * - user interface preferences change, which have only an effect on the
+ *   NACT configuration tool
+ *
+ * These two signals are a summarization of individual changes.
+ */
+#define SETTINGS_SIGNAL_RUNTIME_CHANGE				"settings-runtime-change"
+#define SETTINGS_SIGNAL_UI_CHANGE					"settings-ui-change"
 
 typedef void ( *NASettingsKeyCallback )( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, void *user_data );
 

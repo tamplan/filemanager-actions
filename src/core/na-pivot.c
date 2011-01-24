@@ -117,7 +117,7 @@ static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, cons
 static void          free_consumers( GList *list );
 
 /* NAIIOProvider management */
-static void          on_item_changed_timeout( NAPivot *pivot );
+static void          on_items_changed_timeout( NAPivot *pivot );
 
 GType
 na_pivot_get_type( void )
@@ -186,7 +186,7 @@ class_init( NAPivotClass *klass )
 	/*
 	 * NAPivot::pivot-items-changed:
 	 *
-	 * This signal is sent by NAPivot ath the end of a burst of modifications
+	 * This signal is sent by NAPivot at the end of a burst of modifications
 	 * as signaled by i/o providers.
 	 *
 	 * The signal is registered without any default handler.
@@ -228,7 +228,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	/* initialize timeout parameters for 'item-changed' handler
 	 */
 	self->private->change_timeout.timeout = st_burst_timeout;
-	self->private->change_timeout.handler = ( NATimeoutFunc ) on_item_changed_timeout;
+	self->private->change_timeout.handler = ( NATimeoutFunc ) on_items_changed_timeout;
 	self->private->change_timeout.user_data = self;
 	self->private->change_timeout.source_id = 0;
 }
@@ -619,9 +619,13 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
  *
  * This handler is trigerred by #NAIIOProvider providers when an action
  * is changed in their underlying storage subsystems.
+ *
+ * The NAIIOProvider is supposed to have itself already summarized
+ * a minima its own burst of notifications.
+ *
  * We don't care of updating our internal list with each and every
  * atomic modification; instead we wait for the end of notifications
- * serie, and then reload the whole list of actions
+ * serie, and then signal our consumers.
  */
 void
 na_pivot_on_item_changed_handler( NAIIOProvider *provider, NAPivot *pivot  )
@@ -645,15 +649,17 @@ na_pivot_on_item_changed_handler( NAIIOProvider *provider, NAPivot *pivot  )
  * this is up to NAPivot to send now its summarized signal
  */
 static void
-on_item_changed_timeout( NAPivot *pivot )
+on_items_changed_timeout( NAPivot *pivot )
 {
-	static const gchar *thisfn = "na_pivot_on_item_changed_timeout";
-	GList *ic;
+	static const gchar *thisfn = "na_pivot_on_items_changed_timeout";
 
 	g_return_if_fail( NA_IS_PIVOT( pivot ));
 
 	g_debug( "%s: emitting %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
 	g_signal_emit_by_name(( gpointer ) pivot, PIVOT_SIGNAL_ITEMS_CHANGED );
+
+#if 0
+	GList *ic;
 
 	/* this has to be deprecated.. or not ?? */
 	g_debug( "%s: triggering NAIPivotConsumer interfaces", thisfn );
@@ -663,6 +669,7 @@ on_item_changed_timeout( NAPivot *pivot )
 	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 		na_ipivot_consumer_notify_of_items_changed( NA_IPIVOT_CONSUMER( ic->data ));
 	}
+#endif
 }
 
 /*
@@ -727,13 +734,13 @@ na_pivot_get_settings( const NAPivot *pivot )
  * na_pivot_set_automatic_reload:
  * @pivot: this #NAPivot instance.
  * @reload: whether this #NAPivot instance should automatically reload
- * its list of actions when I/O providers advertize it of a
+ * its list of actions when I/O providers advertise it of a
  * modification.
  *
  * Sets the automatic reload flag.
  *
  * Note that even if the #NAPivot instance is not authorized to
- * automatically reload its list of actions when it is advertized of
+ * automatically reload its list of actions when it is advertised of
  * a modification by one of the I/O providers, it always sends an
  * ad-hoc notification to its consumers.
  */

@@ -42,41 +42,35 @@
  *
  * With this newly allocated #NAPivot object, the consuming program
  * is then able to ask for loading the items.
- * 		na_pivot_load_items( pivot, PIVOT_LOADABLE_SET );
+ * 		na_pivot_set_loadable( pivot, PIVOT_LOADABLE_SET );
+ * 		na_pivot_load_items( pivot );
  *
  * Notification system.
  *
- * Each I/O storage provider should monitor modifications/deletions of
- * actions, and advertize this #NAPivot, which itself will then
- * advertise any registered consumers.
+ * The NAPivot object acts as a sort of "summarizing relay" for notification
+ * messages sent by I/O storage providers:
  *
- * This notification system is so a double-stage one :
+ * - When an I/O storage subsystem detects a change on an item it manages,
+ *   action or menu, it is first supposed to do its best effort in order
+ *   to summarize its notifications messages;
  *
- * 1. When an I/O storage subsystem detects a change on an action, it
- *    should call the na_iio_provider_item_changed() function, which
- *    itself will emit the "io-provider-item-changed" signal.
+ * - At the end of this first stage of summarization, the I/O provider
+ *   should call the na_iio_provider_item_changed() function, which
+ *   itself will emit the "io-provider-item-changed" signal.
+ *   This is done so that an external I/O provider does not have to know
+ *   anything with the signal name, but has only to take care of calling
+ *   a function of the NAIIOProvider API.
  *
- *    All these signals are catched by na_pivot_on_item_changed_handler()
+ * - The emitted signal is catched by na_pivot_on_item_changed_handler(),
+ *   which was connected when the I/O provider plugin was associated with
+ *   the NAIOProvider object.
  *
- *    notify #NAPivot of this change. The user data associated with the
- *    message is the internal id of the #NAObjectItem-derived modified
- *    object.
+ * - The NAPivot object receives these notifications originating from all
+ *   loaded I/O providers, itself summarizes them, and only then notify its
+ *   consumers with only one message for a whole set of modifications.
  *
- *    When this signal is received, #NAPivot updates accordingly the
- *    list of actions it maintains.
- *
- *    It is up to the I/O storage provider to decide if it sends a
- *    message for each and every one detected modification, or if it
- *    sends only one message for a whole, maybe coherent, set of
- *    updates.
- *
- * 2. When #NAPivot has successfully updated its list of actions, it
- *    notifies its consumers so they update themselves.
- *
- *    Note that #NAPivot tries to factorize notification messages, and
- *    to notify its consumers only once even if it has itself received
- *    many elementary notifications from the underlying I/O storage
- *    subsystems.
+ * It is eventually up to the consumer to connect to this signal, and
+ * choose itself whether to reload items or not.
  */
 
 #include <api/na-iio-provider.h>
@@ -120,9 +114,10 @@ GType    na_pivot_get_type( void );
 
 /* signals
  *
- * NAPivot acts as a 'summarizing' proxy for signals emitted by the NAIIOProvider
- * providers when they detect a modification of their underlying items storage
- * subsystems.
+ * NAPivot acts as a 'summarizing' proxy for signals emitted by the
+ * NAIIOProvider providers when they detect a modification in their
+ * underlying items storage subsystems.
+ *
  * As several to many signals may be emitted when such a modification occurs,
  * NAPivot summarizes all these signals in an only one 'items-changed' event.
  */
