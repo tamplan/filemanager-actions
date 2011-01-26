@@ -260,6 +260,7 @@ already_loaded( BaseBuilder *builder, const gchar *filename )
 GtkWindow *
 base_builder_get_toplevel_by_name( const BaseBuilder *builder, const gchar *name )
 {
+	static const gchar *thisfn = "base_builder_get_toplevel_by_name";
 	GtkWindow *toplevel = NULL;
 
 	g_return_val_if_fail( BASE_IS_BUILDER( builder ), NULL );
@@ -272,6 +273,8 @@ base_builder_get_toplevel_by_name( const BaseBuilder *builder, const gchar *name
 
 		if( toplevel ){
 			g_return_val_if_fail( GTK_IS_WINDOW( toplevel ), NULL );
+		} else {
+			na_core_utils_slist_dump( thisfn, builder->private->fnames );
 		}
 	}
 
