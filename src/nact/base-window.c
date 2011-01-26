@@ -610,6 +610,7 @@ setup_builder( const BaseWindow *window )
 
 	/* allocate a dedicated BaseBuilder or use the common one
 	 */
+	g_debug( "%s: has_own_builder=%s", thisfn, window->private->has_own_builder ? "True":"False" );
 	if( window->private->has_own_builder ){
 		window->private->builder = base_builder_new();
 	} else {
@@ -619,6 +620,7 @@ setup_builder( const BaseWindow *window )
 
 	/* load the XML definition from the UI file
 	 */
+	g_debug( "%s: xmlui_filename=%s", thisfn, window->private->xmlui_filename );
 	if( window->private->xmlui_filename &&
 		g_utf8_strlen( window->private->xmlui_filename, -1 ) &&
 		!base_builder_add_from_file( window->private->builder, window->private->xmlui_filename, &error )){
@@ -630,6 +632,7 @@ setup_builder( const BaseWindow *window )
 			ret = FALSE;
 	}
 
+	g_debug( "%s: ret=%s", thisfn, ret ? "True":"False" );
 	return( ret );
 }
 
