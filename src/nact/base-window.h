@@ -134,7 +134,7 @@ typedef struct {
 	 * @window: this #BaseWindow instance.
 	 *
 	 * Invoked after the GtkWindow toplevel has been initialized, before
-	 * actually dsplaying the widget, and after all connected handlers
+	 * actually displaying the widget, and after all connected handlers
 	 * have themselves run.
 	 *
 	 * The derived class should invoke the virtual method of its parent class
@@ -181,8 +181,8 @@ typedef struct {
 	 * Asks the derived class for the string which must be used to
 	 * store last size and position of the window in GConf preferences.
 	 *
-	 * This delegates to #BaseWindow-derived classes the NactIPrefs
-	 * interface virtual function.
+	 * This delegates to #BaseWindow-derived classes the BaseIPrefs
+	 * interface method.
 	 */
 	gchar *  ( *get_iprefs_window_id )   ( const BaseWindow *window );
 
@@ -222,9 +222,9 @@ typedef struct {
  * - the message is sent to all derived classes, which are free to
  *   connect to the signal in order to implement their own code;
  *
- * - finally, the default class handler points to a function
- *   which successively invokes the corresponding virtual method of each
- *   derived class.
+ * - finally, the default class handler invokes the corresponding
+ *   virtual method of the derived class. The derived class should
+ *   call the parent class method at the end of its implementation.
  *
  * This way, each class is free to choose to implement the action, either
  * as a signal handler or as a virtual method if it is a class derived from
