@@ -186,6 +186,10 @@ base_iprefs_position_named_window( const BaseWindow *window, GtkWindow *toplevel
 
 	if( st_initialized && !st_finalized ){
 
+		g_debug( "%s: window=%p (%s), toplevel=%p (%s), key=%s",
+				thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ),
+				( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ), key );
+
 		list = read_int_list( window, key );
 
 		if( list ){
