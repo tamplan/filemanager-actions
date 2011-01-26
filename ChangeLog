@@ -1,5 +1,8 @@
 2011-01-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-import.c (assist_new):
+	Reload the common XML UI file into the private builder.
+
 	* src/nact/base-dialog.c:
 	* src/nact/base-dialog.h:
 	* src/nact/base-window.h: Do some code and comments cleanup.

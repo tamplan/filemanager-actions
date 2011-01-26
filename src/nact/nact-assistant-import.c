@@ -78,6 +78,7 @@ struct _NactAssistantImportPrivate {
 	GList       *results;
 };
 
+static const gchar        *st_xmlui_filename = PKGDATADIR "/nautilus-actions-config-tool.ui";
 static const gchar        *st_toplevel_name  = "ImportAssistant";
 
 static BaseAssistantClass *st_parent_class   = NULL;
@@ -253,8 +254,10 @@ static NactAssistantImport *
 assist_new( BaseWindow *parent )
 {
 	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE,
-			BASE_PROP_PARENT,        parent,
-			BASE_PROP_TOPLEVEL_NAME, st_toplevel_name,
+			BASE_PROP_PARENT,          parent,
+			BASE_PROP_HAS_OWN_BUILDER, TRUE,
+			BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
+			BASE_PROP_TOPLEVEL_NAME,   st_toplevel_name,
 			NULL ));
 }
 
@@ -270,10 +273,6 @@ nact_assistant_import_run( BaseWindow *main_window )
 	NactAssistantImport *assist;
 
 	assist = assist_new( main_window );
-	g_object_set( G_OBJECT( assist ),
-			BASE_PROP_HAS_OWN_BUILDER, TRUE,
-			BASE_PROP_TOPLEVEL_NAME,   st_toplevel_name,
-			NULL );
 
 	base_window_run( BASE_WINDOW( assist ));
 }
