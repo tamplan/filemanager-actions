@@ -58,6 +58,23 @@ enum {
 	PROVIDER_N_COLUMN
 };
 
+/* data attached to the treeview widget on gtk toplevel initialization
+ * at this time, only treeview is set
+ * at base window initialization time, the current window is associated
+ */
+typedef struct {
+	/* set when creating the model (on_initialize_gtk_toplevel)
+	 */
+	GtkTreeView        *treeview;
+
+	/* set when initializing the view (on_initialize_base_window)
+	 */
+	BaseWindow         *window;
+	gboolean            preferences_locked;
+	gboolean            editable;
+}
+	ProvidersListData;
+
 /* some data needed when saving the list store
  */
 typedef struct {
@@ -66,36 +83,38 @@ typedef struct {
 }
 	ProvidersListSaveData;
 
+#define PROVIDERS_LIST_DATA				"nact-providers-list-data"
 #define PROVIDERS_LIST_TREEVIEW			"nact-providers-list-treeview"
 
 static gboolean st_on_selection_change = FALSE;
 
-static void       init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window );
-static void       init_view_connect_signals( GtkTreeView *treeview, BaseWindow *window );
-static void       init_view_select_first_row( GtkTreeView *treeview );
+static void               init_view_setup_providers( GtkTreeView *treeview, BaseWindow *window );
+static void               init_view_connect_signals( GtkTreeView *treeview, BaseWindow *window );
+static void               init_view_select_first_row( GtkTreeView *treeview );
 
-static gboolean   providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, ProvidersListSaveData *plsd );
+static gboolean           providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, ProvidersListSaveData *plsd );
 
-static void       on_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
-static void       on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window );
-static void       on_writable_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window );
-static void       on_up_clicked( GtkButton *button, BaseWindow *window );
-static void       on_down_clicked( GtkButton *button, BaseWindow *window );
+static void               on_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
+static void               on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window );
+static void               on_writable_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window );
+static void               on_up_clicked( GtkButton *button, BaseWindow *window );
+static void               on_down_clicked( GtkButton *button, BaseWindow *window );
 
-static gboolean   are_preferences_locked( BaseWindow *window );
-static void       display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window );
-static GtkButton *get_up_button( BaseWindow *window );
-static GtkButton *get_down_button( BaseWindow *window );
+static gboolean           are_preferences_locked( BaseWindow *window );
+static void               display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, ProvidersListData *data );
+static GtkButton         *get_up_button( BaseWindow *window );
+static GtkButton         *get_down_button( BaseWindow *window );
+static ProvidersListData *get_providers_list_data( GtkTreeView *treeview );
 
 /**
- * nact_providers_list_create_providers_list:
+ * nact_providers_list_create_model:
  * @treeview: the #GtkTreeView.
  *
  * Create the treeview model when initially loading the widget from
  * the UI manager.
  */
 void
-nact_providers_list_create_model( BaseWindow *window, GtkTreeView *treeview )
+nact_providers_list_create_model( GtkTreeView *treeview )
 {
 	static const char *thisfn = "nact_providers_list_create_model";
 	GtkListStore *model;
@@ -103,9 +122,13 @@ nact_providers_list_create_model( BaseWindow *window, GtkTreeView *treeview )
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *text_cell;
 	GtkTreeSelection *selection;
+	ProvidersListData *data;
+
+	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
 
 	g_debug( "%s: treeview=%p", thisfn, ( void * ) treeview );
-	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
+
+	data = get_providers_list_data( treeview );
 
 	model = gtk_list_store_new( PROVIDER_N_COLUMN,
 			G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_OBJECT );
@@ -147,7 +170,7 @@ nact_providers_list_create_model( BaseWindow *window, GtkTreeView *treeview )
 			text_cell,
 			"text", PROVIDER_LIBELLE_COLUMN,
 			NULL );
-	gtk_tree_view_column_set_cell_data_func( column, text_cell, ( GtkTreeCellDataFunc ) display_label, window, NULL );
+	gtk_tree_view_column_set_cell_data_func( column, text_cell, ( GtkTreeCellDataFunc ) display_label, data, NULL );
 	gtk_tree_view_append_column( treeview, column );
 
 	/* id */
@@ -178,12 +201,18 @@ void
 nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 {
 	static const gchar *thisfn = "nact_providers_list_init_view";
+	ProvidersListData *data;
 
-	g_debug( "%s: treeview=%p, window=%p", thisfn, ( void * ) treeview, ( void * ) window );
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
 
+	g_debug( "%s: treeview=%p, window=%p", thisfn, ( void * ) treeview, ( void * ) window );
+
 	g_object_set_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW, treeview );
+
+	data = get_providers_list_data( treeview );
+	data->window = window;
+	data->preferences_locked = are_preferences_locked( window );
 
 	init_view_setup_providers( treeview, window );
 	init_view_connect_signals( treeview, window );
@@ -420,6 +449,9 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 	NAUpdater *updater;
 	NASettings *settings;
 
+	g_debug( "nact_providers_list_on_selection_changed: selection=%p, window=%p (%s)",
+			( void * ) selection, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
 	may_up = FALSE;
 	may_down = FALSE;
 
@@ -594,6 +626,8 @@ are_preferences_locked( BaseWindow *window )
 	NASettings *settings;
 	gboolean are_locked;
 
+	g_debug( "nact_providers_list_are_preferences_locked: window=%p (%s)", ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
 	settings = na_pivot_get_settings( NA_PIVOT( updater ));
@@ -606,7 +640,7 @@ are_preferences_locked( BaseWindow *window )
  * unavailable provider: italic grey
  */
 static void
-display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, BaseWindow *window )
+display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, ProvidersListData *data )
 {
 	NAIOProvider *provider;
 	gchar *name;
@@ -625,7 +659,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 
 	g_object_set( cell, "text", name, NULL );
 
-	if( are_preferences_locked( window )){
+	if( data->preferences_locked ){
 		g_object_set( cell, "foreground", "grey", "foreground-set", TRUE, NULL );
 	}
 
@@ -650,4 +684,20 @@ get_down_button( BaseWindow *window )
 	button = GTK_BUTTON( base_window_get_widget( window, "ProviderButtonDown" ));
 
 	return( button );
+}
+
+static ProvidersListData *
+get_providers_list_data( GtkTreeView *treeview )
+{
+	ProvidersListData *data;
+
+	data = ( ProvidersListData * ) g_object_get_data( G_OBJECT( treeview ), PROVIDERS_LIST_DATA );
+
+	if( data == NULL ){
+		data = g_new0( ProvidersListData, 1 );
+		g_object_set_data( G_OBJECT( treeview ), PROVIDERS_LIST_DATA, data );
+		data->treeview = treeview;
+	}
+
+	return( data );
 }
