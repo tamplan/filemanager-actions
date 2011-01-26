@@ -4,6 +4,9 @@
 	* src/nact/nact-providers-list.h (nact_providers_list_create_model):
 	Do not initialize the widgets with the future BaseWindow.
 
+	* src/nact/nact-preferences-editor.c (preferences_editor_new):
+	Updated accordingly.
+
 	* src/nact/nact-schemes-list.c: Only ask for preferences once.
 
 	* src/nact/nact-assistant-import.c (assist_new):

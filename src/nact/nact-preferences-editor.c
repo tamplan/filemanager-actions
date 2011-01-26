@@ -91,7 +91,7 @@ struct _NactPreferencesEditorPrivate {
 };
 
 static const gchar  *st_xmlui_filename = PKGDATADIR "/nact-preferences.ui";
-static const gchar  *st_toplevel_name  = "ExportAssistant";
+static const gchar  *st_toplevel_name  = "PreferencesDialog";
 
 static GObjectClass *st_parent_class   = NULL;
 static guint         st_last_tab       = 0;
@@ -285,11 +285,14 @@ instance_finalize( GObject *dialog )
 static NactPreferencesEditor *
 preferences_editor_new( BaseWindow *parent )
 {
+	static const gchar *thisfn = "nact_preferences_editor_new";
 	NactPreferencesEditor *editor;
 	NactApplication *application;
 	NAUpdater *updater;
 	NASettings *settings;
 	gboolean are_locked, mandatory;
+
+	g_debug( "%s: parent=%p (%s)", thisfn, ( void * ) parent, G_OBJECT_TYPE_NAME( parent ));
 
 	editor = NACT_PREFERENCES_EDITOR(
 			g_object_new( NACT_PREFERENCES_EDITOR_TYPE,
@@ -304,8 +307,8 @@ preferences_editor_new( BaseWindow *parent )
 
 	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 	editor->private->preferences_locked = are_locked && mandatory;
-	g_debug( "nact_preferences_editor_new: are_locked=%s, mandatory=%s",
-			are_locked ? "True":"False", mandatory ? "True":"False" );
+	g_debug( "%s: are_locked=%s, mandatory=%s",
+			thisfn, are_locked ? "True":"False", mandatory ? "True":"False" );
 
 	return( editor );
 }
@@ -362,7 +365,7 @@ on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
 
 	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
-	nact_providers_list_create_model( BASE_WINDOW( editor ), listview );
+	nact_providers_list_create_model( listview );
 }
 
 static void
