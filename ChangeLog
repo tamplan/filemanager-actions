@@ -1,5 +1,7 @@
 2011-01-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-schemes-list.c: Only ask for preferences once.
+
 	* src/nact/nact-assistant-import.c (assist_new):
 	Reload the common XML UI file into the private builder.
 

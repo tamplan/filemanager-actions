@@ -52,9 +52,15 @@
  * at this time, window is set
  */
 typedef struct {
-	GtkTreeView        *treeview;		/* set when allocating the data */
-	guint               mode;			/* set when creating the model */
-	BaseWindow         *window;			/* set when initializating the view */
+	/* set when creating the model (on_initialize_gtk_toplevel)
+	 */
+	GtkTreeView        *treeview;
+	guint               mode;
+
+	/* set when initializing the view (on_initialize_base_window)
+	 */
+	BaseWindow         *window;
+	gboolean            preferences_locked;
 	gboolean            editable;
 	pf_new_selection_cb pf_on_sel_changed;
 	void               *user_data;
@@ -211,7 +217,8 @@ nact_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window, pf_new_s
 
 	data = get_schemes_list_data( treeview );
 	data->window = window;
-	data->editable = ( data->mode == SCHEMES_LIST_FOR_PREFERENCES && !are_preferences_locked( window ));
+	data->preferences_locked = are_preferences_locked( window );
+	data->editable = ( data->mode == SCHEMES_LIST_FOR_PREFERENCES && !data->preferences_locked );
 	data->pf_on_sel_changed = pf;
 	data->user_data = user_data;
 
@@ -779,7 +786,6 @@ static void
 display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data, guint column_id )
 {
 	gboolean used;
-	gboolean are_locked;
 
 	gtk_tree_model_get( model, iter, SCHEMES_ALREADY_USED_COLUMN, &used, -1 );
 	g_object_set( cell, "style-set", FALSE, NULL );
@@ -788,8 +794,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 	}
 
-	are_locked = are_preferences_locked( data->window );
-	if( are_locked ){
+	if( data->preferences_locked ){
 		g_object_set( cell, "foreground", "Grey", "foreground-set", TRUE, NULL );
 	}
 }
@@ -797,10 +802,14 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 static gboolean
 are_preferences_locked( BaseWindow *window )
 {
+	static const gchar *thisfn = "nact_schemes_list_are_preferences_locked";
 	NactApplication *application;
 	NAUpdater *updater;
 	NASettings *settings;
 	gboolean are_locked;
+
+
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
