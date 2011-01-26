@@ -1,7 +1,8 @@
 2011-01-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-dialog.c:
-	* src/nact/base-dialog.h: Do some code and comments cleanup.
+	* src/nact/base-dialog.h:
+	* src/nact/base-window.h: Do some code and comments cleanup.
 
 	* src/nact/base-builder.c (base_builder_get_toplevel_by_name):
 	* src/nact/base-iprefs.c (base_iprefs_position_named_window):

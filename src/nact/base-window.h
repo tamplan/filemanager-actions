@@ -67,7 +67,9 @@
  *   Another work-around could have be to let the IActionsList
  *   interface asks from the actual widget name to its implementor...
  *
- *   Sharing a same XML UI definition file implies sharing the same builder.
+ * Note also that having its own builder implies loading in it the required
+ * XML file which holds the needed UI definition, and so even it this
+ * same XML file has already been load in the common builder.
  */
 
 #include "base-application.h"
