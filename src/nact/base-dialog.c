@@ -48,11 +48,11 @@ struct _BaseDialogPrivate {
 
 static BaseWindowClass *st_parent_class = NULL;
 
-static GType      register_type( void );
-static void       class_init( BaseDialogClass *klass );
-static void       instance_init( GTypeInstance *instance, gpointer klass );
-static void       instance_dispose( GObject *application );
-static void       instance_finalize( GObject *application );
+static GType register_type( void );
+static void  class_init( BaseDialogClass *klass );
+static void  instance_init( GTypeInstance *instance, gpointer klass );
+static void  instance_dispose( GObject *application );
+static void  instance_finalize( GObject *application );
 
 GType
 base_dialog_get_type( void )
@@ -114,9 +114,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "base_dialog_instance_init";
 	BaseDialog *self;
 
+	g_return_if_fail( BASE_IS_DIALOG( instance ));
+
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
-	g_return_if_fail( BASE_IS_DIALOG( instance ));
+
 	self = BASE_DIALOG( instance );
 
 	self->private = g_new0( BaseDialogPrivate, 1 );
@@ -130,11 +132,13 @@ instance_dispose( GObject *window )
 	static const gchar *thisfn = "base_dialog_instance_dispose";
 	BaseDialog *self;
 
-	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 	g_return_if_fail( BASE_IS_DIALOG( window ));
+
 	self = BASE_DIALOG( window );
 
 	if( !self->private->dispose_has_run ){
+
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -151,8 +155,10 @@ instance_finalize( GObject *window )
 	static const gchar *thisfn = "base_dialog_instance_finalize";
 	BaseDialog *self;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( BASE_IS_DIALOG( window ));
+
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
 	self = BASE_DIALOG( window );
 
 	g_free( self->private );
