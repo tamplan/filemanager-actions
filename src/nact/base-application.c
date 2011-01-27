@@ -471,8 +471,10 @@ base_application_run( BaseApplication *application )
 
 					g_debug( "%s: invoking base_window_run", thisfn );
 					code = base_window_run( application->private->main_window );
+
 				} else {
 					g_debug( "%s: base_window_init has returned FALSE", thisfn );
+					code = BASE_EXIT_CODE_INIT_FAIL;
 				}
 			}
 		}

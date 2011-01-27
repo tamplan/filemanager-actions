@@ -64,16 +64,10 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static NactConfirmLogout *confirm_logout_new( BaseWindow *parent );
-
-static void     on_base_initial_load_dialog( NactConfirmLogout *editor, gpointer user_data );
-static void     on_base_runtime_init_dialog( NactConfirmLogout *editor, gpointer user_data );
-static void     on_base_all_widgets_showed( NactConfirmLogout *editor, gpointer user_data );
+static void     on_base_initialize_base_window( NactConfirmLogout *editor );
 static void     on_quit_without_saving_clicked( GtkButton *button, NactConfirmLogout *editor );
 static void     on_cancel_clicked( GtkButton *button, NactConfirmLogout *editor );
 static void     on_save_and_quit_clicked( GtkButton *button, NactConfirmLogout *editor );
-
-static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 static void     close_dialog( NactConfirmLogout *editor, gboolean willing_to );
 
 GType
@@ -118,7 +112,6 @@ class_init( NactConfirmLogoutClass *klass )
 {
 	static const gchar *thisfn = "nact_confirm_logout_class_init";
 	GObjectClass *object_class;
-	BaseWindowClass *base_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -129,9 +122,6 @@ class_init( NactConfirmLogoutClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactConfirmLogoutClassPrivate, 1 );
-
-	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->dialog_response = base_dialog_response;
 }
 
 static void
@@ -147,23 +137,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactConfirmLogoutPrivate, 1 );
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initial_load_dialog ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_runtime_init_dialog ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_ALL_WIDGETS_SHOWED,
-			G_CALLBACK( on_base_all_widgets_showed));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -207,21 +182,6 @@ instance_finalize( GObject *dialog )
 	}
 }
 
-/*
- * Returns a newly allocated NactConfirmLogout object.
- *
- * @parent: the BaseWindow parent of this dialog (usually, the main
- * toplevel window of the application).
- */
-static NactConfirmLogout *
-confirm_logout_new( BaseWindow *parent )
-{
-	return( g_object_new( NACT_CONFIRM_LOGOUT_TYPE,
-			BASE_PROP_PARENT,        parent,
-			BASE_PROP_TOPLEVEL_NAME, st_toplevel_name,
-			NULL ));
-}
-
 /**
  * nact_confirm_logout_run:
  * @parent: the NactMainWindow parent of this dialog
@@ -233,62 +193,46 @@ gboolean
 nact_confirm_logout_run( NactMainWindow *parent )
 {
 	static const gchar *thisfn = "nact_confirm_logout_run";
-	NactConfirmLogout *editor;
+	NactConfirmLogout *dialog;
 	gboolean willing_to;
 
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( parent ), TRUE );
+
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
-	g_return_val_if_fail( BASE_IS_WINDOW( parent ), TRUE );
 
-	editor = confirm_logout_new( BASE_WINDOW( parent ));
+	dialog = g_object_new( NACT_CONFIRM_LOGOUT_TYPE,
+			BASE_PROP_PARENT,        parent,
+			BASE_PROP_TOPLEVEL_NAME, st_toplevel_name,
+			NULL );
 
-	base_window_run( BASE_WINDOW( editor ));
-	willing_to = editor->private->willing_to_quit;
-	g_object_unref( editor );
+	base_window_run( BASE_WINDOW( dialog ));
+
+	willing_to = dialog->private->willing_to_quit;
+
+	g_object_unref( dialog );
 
 	return( willing_to );
 }
 
 static void
-on_base_initial_load_dialog( NactConfirmLogout *editor, gpointer user_data )
+on_base_initialize_base_window( NactConfirmLogout *dialog )
 {
-	static const gchar *thisfn = "nact_confirm_logout_on_initial_load_dialog";
+	static const gchar *thisfn = "nact_confirm_logout_on_base_initialize_base_window";
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( editor ));
-}
+	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( dialog ));
 
-static void
-on_base_runtime_init_dialog( NactConfirmLogout *editor, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_confirm_logout_on_runtime_init_dialog";
+	if( !dialog->private->dispose_has_run ){
+		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
+		base_window_signal_connect_by_name( BASE_WINDOW( dialog ),
+				"QuitNoSaveButton", "clicked", G_CALLBACK( on_quit_without_saving_clicked ));
 
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ),
-			"QuitNoSaveButton",
-			"clicked",
-			G_CALLBACK( on_quit_without_saving_clicked ));
+		base_window_signal_connect_by_name( BASE_WINDOW( dialog ),
+				"CancelQuitButton", "clicked", G_CALLBACK( on_cancel_clicked ));
 
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ),
-			"CancelQuitButton",
-			"clicked",
-			G_CALLBACK( on_cancel_clicked ));
-
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ),
-			"SaveQuitButton",
-			"clicked",
-			G_CALLBACK( on_save_and_quit_clicked ));
-}
-
-static void
-on_base_all_widgets_showed( NactConfirmLogout *editor, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_confirm_logout_on_all_widgets_showed";
-
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
+		base_window_signal_connect_by_name( BASE_WINDOW( dialog ),
+				"SaveQuitButton", "clicked", G_CALLBACK( on_save_and_quit_clicked ));
+	}
 }
 
 static void
@@ -323,26 +267,6 @@ on_save_and_quit_clicked( GtkButton *button, NactConfirmLogout *editor )
 	nact_main_menubar_file_save_items( main_window );
 
 	close_dialog( editor, TRUE );
-}
-
-static gboolean
-base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_confirm_logout_on_dialog_response";
-	NactConfirmLogout *editor;
-
-	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, ( void * ) dialog, code, ( void * ) window );
-	g_assert( NACT_IS_CONFIRM_LOGOUT( window ));
-	editor = NACT_CONFIRM_LOGOUT( window );
-
-	switch( code ){
-		case GTK_RESPONSE_CLOSE:
-
-			return( TRUE );
-			break;
-	}
-
-	return( FALSE );
 }
 
 static void

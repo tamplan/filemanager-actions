@@ -74,17 +74,13 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static NactExportAsk *export_ask_new( BaseWindow *parent );
-
-static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
-static void     on_base_initial_load_dialog( NactExportAsk *editor, gpointer user_data );
-static void     on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data );
-static void     on_base_all_widgets_showed( NactExportAsk *editor, gpointer user_data );
+static void     on_base_initialize_gtk_toplevel( NactExportAsk *editor, GtkDialog *toplevel );
+static void     on_base_initialize_base_window( NactExportAsk *editor );
+static gchar   *on_base_get_wsp_id( const BaseWindow *window );
 static void     keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor );
 static void     on_cancel_clicked( GtkButton *button, NactExportAsk *editor );
 static void     on_ok_clicked( GtkButton *button, NactExportAsk *editor );
 static GQuark   get_export_format( NactExportAsk *editor );
-static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
 
 GType
 nact_export_ask_get_type( void )
@@ -141,8 +137,7 @@ class_init( NactExportAskClass *klass )
 	klass->private = g_new0( NactExportAskClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->dialog_response = base_dialog_response;
-	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
+	base_class->get_wsp_id = on_base_get_wsp_id;
 }
 
 static void
@@ -160,23 +155,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactExportAskPrivate, 1 );
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initial_load_dialog ));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_runtime_init_dialog ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_ALL_WIDGETS_SHOWED,
-			G_CALLBACK( on_base_all_widgets_showed));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -192,7 +175,6 @@ instance_dispose( GObject *dialog )
 	self = NACT_EXPORT_ASK( dialog );
 
 	if( !self->private->dispose_has_run ){
-
 		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
 		self->private->dispose_has_run = TRUE;
@@ -224,21 +206,8 @@ instance_finalize( GObject *dialog )
 	}
 }
 
-/*
- * Returns a newly allocated NactExportAsk object.
- */
-static NactExportAsk *
-export_ask_new( BaseWindow *parent )
-{
-	return( g_object_new( NACT_EXPORT_ASK_TYPE,
-			BASE_PROP_PARENT,         parent,
-			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
-			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
-			NULL ));
-}
-
 /**
- * nact_export_ask_run:
+ * nact_export_ask_user:
  * @parent: the NactAssistant parent of this dialog.
  * @item: the NAObjectItem to be exported.
  * @first: whether this is the first call of a serie.
@@ -261,7 +230,7 @@ export_ask_new( BaseWindow *parent )
 GQuark
 nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 {
-	static const gchar *thisfn = "nact_export_ask_run";
+	static const gchar *thisfn = "nact_export_ask_user";
 	NactExportAsk *editor;
 	NactApplication *application;
 	NAUpdater *updater;
@@ -285,7 +254,11 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 
 	if( first || !keep ){
 
-		editor = export_ask_new( parent );
+		editor = g_object_new( NACT_EXPORT_ASK_TYPE,
+				BASE_PROP_PARENT,         parent,
+				BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+				BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
+				NULL );
 
 		editor->private->format = format;
 		editor->private->format_mandatory = mandatory;
@@ -298,10 +271,8 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 		are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 		editor->private->preferences_locked = are_locked && mandatory;
 
-		if( base_window_run( BASE_WINDOW( editor ))){
-			if( editor->private->format ){
-				format = editor->private->format;
-			}
+		if( base_window_run( BASE_WINDOW( editor )) == GTK_RESPONSE_OK ){
+			format = get_export_format( editor );
 		}
 
 		g_object_unref( editor );
@@ -310,83 +281,76 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 	return( format );
 }
 
-static gchar *
-base_get_iprefs_window_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_EXPORT_ASK_USER_WSP ));
-}
-
 static void
-on_base_initial_load_dialog( NactExportAsk *editor, gpointer user_data )
+on_base_initialize_gtk_toplevel( NactExportAsk *editor, GtkDialog *toplevel )
 {
-	static const gchar *thisfn = "nact_export_ask_on_initial_load_dialog";
+	static const gchar *thisfn = "nact_export_ask_on_base_initialize_gtk_toplevel";
 	NactApplication *application;
 	NAUpdater *updater;
 	GtkWidget *container;
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-	updater = nact_application_get_updater( application );
-	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-	nact_export_format_init_display( container, NA_PIVOT( updater ), EXPORT_FORMAT_DISPLAY_ASK, !editor->private->preferences_locked );
+	if( !editor->private->dispose_has_run ){
+		g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
+
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+		updater = nact_application_get_updater( application );
+		container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+
+		nact_export_format_init_display( container,
+				NA_PIVOT( updater ), EXPORT_FORMAT_DISPLAY_ASK, !editor->private->preferences_locked );
+	}
 }
 
 static void
-on_base_runtime_init_dialog( NactExportAsk *editor, gpointer user_data )
+on_base_initialize_base_window( NactExportAsk *editor )
 {
-	static const gchar *thisfn = "nact_export_ask_on_runtime_init_dialog";
+	static const gchar *thisfn = "nact_export_ask_on_base_initialize_base_window";
 	GtkWidget *container;
 	gchar *item_label, *label;
 	GtkWidget *widget;
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
 
-	item_label = na_object_get_label( editor->private->item );
+	if( !editor->private->dispose_has_run ){
+		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
 
-	if( NA_IS_OBJECT_ACTION( editor->private->item )){
-		/* i18n: The action <label> is about to be exported */
-		label = g_strdup_printf( _( "The action \"%s\" is about to be exported." ), item_label );
-	} else {
-		/* i18n: The menu <label> is about to be exported */
-		label = g_strdup_printf( _( "The menu \"%s\" is about to be exported." ), item_label );
+		item_label = na_object_get_label( editor->private->item );
+
+		if( NA_IS_OBJECT_ACTION( editor->private->item )){
+			/* i18n: The action <label> is about to be exported */
+			label = g_strdup_printf( _( "The action \"%s\" is about to be exported." ), item_label );
+		} else {
+			/* i18n: The menu <label> is about to be exported */
+			label = g_strdup_printf( _( "The menu \"%s\" is about to be exported." ), item_label );
+		}
+
+		widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportAskLabel1" );
+		gtk_label_set_text( GTK_LABEL( widget ), label );
+		g_free( label );
+		g_free( item_label );
+
+		container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+		nact_export_format_select( container, !editor->private->format_mandatory, editor->private->format );
+
+		nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+				"AskKeepChoiceButton", G_CALLBACK( keep_choice_on_toggled ),
+				editor->private->keep_last_choice,
+				!editor->private->keep_last_choice_mandatory, !editor->private->preferences_locked );
+
+		base_window_signal_connect_by_name( BASE_WINDOW( editor ),
+				"CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
+
+		base_window_signal_connect_by_name( BASE_WINDOW( editor ),
+				"OKButton", "clicked", G_CALLBACK( on_ok_clicked ));
 	}
-
-	widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportAskLabel1" );
-	gtk_label_set_text( GTK_LABEL( widget ), label );
-	g_free( label );
-	g_free( item_label );
-
-	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-	nact_export_format_select( container, !editor->private->format_mandatory, editor->private->format );
-
-	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
-			"AskKeepChoiceButton", G_CALLBACK( keep_choice_on_toggled ),
-			editor->private->keep_last_choice,
-			!editor->private->keep_last_choice_mandatory, !editor->private->preferences_locked );
-
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ),
-			"CancelButton",
-			"clicked",
-			G_CALLBACK( on_cancel_clicked ));
-
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ),
-			"OKButton",
-			"clicked",
-			G_CALLBACK( on_ok_clicked ));
 }
 
-static void
-on_base_all_widgets_showed( NactExportAsk *editor, gpointer user_data )
+static gchar *
+on_base_get_wsp_id( const BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_export_ask_on_all_widgets_showed";
-
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
+	return( g_strdup( NA_IPREFS_EXPORT_ASK_USER_WSP ));
 }
 
 static void
@@ -455,33 +419,4 @@ get_export_format( NactExportAsk *editor )
 	na_iprefs_set_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_quark );
 
 	return( format_quark );
-}
-
-static gboolean
-base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_export_ask_on_dialog_response";
-	NactExportAsk *editor;
-
-	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, ( void * ) dialog, code, ( void * ) window );
-	g_assert( NACT_IS_EXPORT_ASK( window ));
-	editor = NACT_EXPORT_ASK( window );
-
-	switch( code ){
-		case GTK_RESPONSE_NONE:
-		case GTK_RESPONSE_DELETE_EVENT:
-		case GTK_RESPONSE_CLOSE:
-		case GTK_RESPONSE_CANCEL:
-
-			editor->private->format = 0;
-			return( TRUE );
-			break;
-
-		case GTK_RESPONSE_OK:
-			editor->private->format = get_export_format( editor );
-			return( TRUE );
-			break;
-	}
-
-	return( FALSE );
 }

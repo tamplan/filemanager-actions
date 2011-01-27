@@ -62,9 +62,17 @@ typedef struct {
 	BaseIPrefsInterfacePrivate *private;
 
 	/*< public >*/
-	/* api
+	/**
+	 * get_wsp_id:
+	 * @window: the #BaseWindow which implements this interface.
+	 *
+	 * Invoked when we need the string which holds the size and position
+	 * of the window in the user preferences.
+	 *
+	 * The implementation should returns a newly allocated ASCII string
+	 * which will be g_free() by #BaseIPrefs internals.
 	 */
-	gchar * ( *iprefs_get_window_id )( const BaseWindow *window );
+	gchar * ( *get_wsp_id )( const BaseWindow *window );
 }
 	BaseIPrefsInterface;
 

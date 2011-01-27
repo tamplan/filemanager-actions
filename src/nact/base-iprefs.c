@@ -52,7 +52,7 @@ static GType       register_type( void );
 static void        interface_base_init( BaseIPrefsInterface *klass );
 static void        interface_base_finalize( BaseIPrefsInterface *klass );
 
-static gchar      *v_iprefs_get_window_id( const BaseWindow *window );
+static gchar      *get_wsp_id( const BaseWindow *window );
 
 static NASettings *get_settings( const BaseWindow *window );
 static GList      *read_int_list( const BaseWindow *window, const gchar *key );
@@ -111,7 +111,7 @@ interface_base_init( BaseIPrefsInterface *klass )
 
 		klass->private = g_new0( BaseIPrefsInterfacePrivate, 1 );
 
-		klass->iprefs_get_window_id = NULL;
+		klass->get_wsp_id = NULL;
 
 		st_initialized = TRUE;
 	}
@@ -151,7 +151,7 @@ base_iprefs_position_window( const BaseWindow *window )
 
 	if( st_initialized && !st_finalized ){
 
-		key = v_iprefs_get_window_id( window );
+		key = get_wsp_id( window );
 		if( key ){
 			toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
 			base_iprefs_position_named_window( window, toplevel, key );
@@ -229,7 +229,7 @@ base_iprefs_save_window_position( const BaseWindow *window )
 
 	if( st_initialized && !st_finalized ){
 
-		key = v_iprefs_get_window_id( window );
+		key = get_wsp_id( window );
 		if( key ){
 			toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
 			base_iprefs_save_named_window_position( window, toplevel, key );
@@ -271,12 +271,12 @@ base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *top
 }
 
 static gchar *
-v_iprefs_get_window_id( const BaseWindow *window )
+get_wsp_id( const BaseWindow *window )
 {
 	g_return_val_if_fail( BASE_IS_IPREFS( window ), NULL );
 
-	if( BASE_IPREFS_GET_INTERFACE( window )->iprefs_get_window_id ){
-		return( BASE_IPREFS_GET_INTERFACE( window )->iprefs_get_window_id( window ));
+	if( BASE_IPREFS_GET_INTERFACE( window )->get_wsp_id ){
+		return( BASE_IPREFS_GET_INTERFACE( window )->get_wsp_id( window ));
 	}
 
 	return( NULL );

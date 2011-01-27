@@ -48,11 +48,16 @@ struct _BaseDialogPrivate {
 
 static BaseWindowClass *st_parent_class = NULL;
 
-static GType register_type( void );
-static void  class_init( BaseDialogClass *klass );
-static void  instance_init( GTypeInstance *instance, gpointer klass );
-static void  instance_dispose( GObject *application );
-static void  instance_finalize( GObject *application );
+static GType    register_type( void );
+static void     class_init( BaseDialogClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *application );
+static void     instance_finalize( GObject *application );
+
+static int      do_run( BaseWindow *window, GtkWindow *toplevel );
+static gboolean terminate_dialog( BaseDialog *window, GtkDialog *toplevel, int *code );
+static void     dialog_cancel( BaseDialog *window );
+static void     dialog_ok( BaseDialog *window );
 
 GType
 base_dialog_get_type( void )
@@ -96,6 +101,7 @@ class_init( BaseDialogClass *klass )
 {
 	static const gchar *thisfn = "base_dialog_class_init";
 	GObjectClass *object_class;
+	BaseWindowClass *base_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -104,6 +110,9 @@ class_init( BaseDialogClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
+
+	base_class = BASE_WINDOW_CLASS( klass );
+	base_class->run = do_run;
 
 	klass->private = g_new0( BaseDialogClassPrivate, 1 );
 }
@@ -166,5 +175,76 @@ instance_finalize( GObject *window )
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( window );
+	}
+}
+
+/*
+ * returns the response ID of the dialog box
+ */
+static int
+do_run( BaseWindow *window, GtkWindow *toplevel )
+{
+	static const gchar *thisfn = "base_dialog_do_run";
+	int code;
+
+	g_return_val_if_fail( BASE_IS_DIALOG( window ), BASE_EXIT_CODE_PROGRAM );
+	g_return_val_if_fail( GTK_IS_DIALOG( toplevel ), BASE_EXIT_CODE_PROGRAM );
+
+	code = BASE_EXIT_CODE_INIT_FAIL;
+
+	if( !BASE_DIALOG( window )->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s), toplevel=%p (%s), starting gtk_dialog_run",
+				thisfn,
+				( void * ) window, G_OBJECT_TYPE_NAME( window ),
+				( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ));
+		do {
+			code = gtk_dialog_run( GTK_DIALOG( toplevel ));
+		}
+		while( !terminate_dialog( BASE_DIALOG( window ), GTK_DIALOG( toplevel ), &code ));
+	}
+
+	return( code );
+}
+
+/*
+ * returns %TRUE to quit the dialog loop
+ */
+static gboolean
+terminate_dialog( BaseDialog *window, GtkDialog *toplevel, int *code )
+{
+	gboolean quit = FALSE;
+
+	switch( *code ){
+		case GTK_RESPONSE_NONE:
+		case GTK_RESPONSE_DELETE_EVENT:
+		case GTK_RESPONSE_CLOSE:
+		case GTK_RESPONSE_CANCEL:
+			dialog_cancel( window );
+			*code = GTK_RESPONSE_CANCEL;
+			quit = TRUE;
+			break;
+
+		case GTK_RESPONSE_OK:
+			dialog_ok( window );
+			quit = TRUE;
+			break;
+	}
+
+	return( quit );
+}
+
+static void
+dialog_cancel( BaseDialog *window )
+{
+	if( BASE_DIALOG_GET_CLASS( window )->cancel ){
+		BASE_DIALOG_GET_CLASS( window )->cancel( window );
+	}
+}
+
+static void
+dialog_ok( BaseDialog *window )
+{
+	if( BASE_DIALOG_GET_CLASS( window )->ok ){
+		BASE_DIALOG_GET_CLASS( window )->ok( window );
 	}
 }

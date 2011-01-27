@@ -156,7 +156,6 @@ static void     iexecution_tab_iface_init( NactIExecutionTabInterface *iface );
 static void     iproperties_tab_iface_init( NactIPropertiesTabInterface *iface );
 static void     iabout_iface_init( NAIAboutInterface *iface );
 static void     ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
-static void     iprefs_base_iface_init( BaseIPrefsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -165,11 +164,12 @@ static void     instance_finalize( GObject *application );
 
 static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
 
-static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
-static gboolean base_is_willing_to_quit( const BaseWindow *window );
 static void     on_base_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *toplevel );
-static void     on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data );
-static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
+static void     on_base_initialize_base_window( NactMainWindow *window );
+static gchar   *on_base_get_wsp_id( const BaseWindow *window );
+static void     on_base_all_widgets_showed( NactMainWindow *window );
+
+static gboolean base_is_willing_to_quit( const BaseWindow *window );
 
 static void     on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
 static void     on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
@@ -304,12 +304,6 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo iprefs_base_iface_info = {
-		( GInterfaceInitFunc ) iprefs_base_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( NACT_WINDOW_TYPE, "NactMainWindow", &info, 0 );
@@ -339,8 +333,6 @@ register_type( void )
 	g_type_add_interface_static( type, NA_IABOUT_TYPE, &iabout_iface_info );
 
 	g_type_add_interface_static( type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
-
-	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &iprefs_base_iface_info );
 
 	return( type );
 }
@@ -395,7 +387,7 @@ class_init( NactMainWindowClass *klass )
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->initialize_gtk_toplevel = on_base_initialize_gtk_toplevel;
-	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
+	base_class->get_wsp_id = on_base_get_wsp_id;
 	base_class->is_willing_to_quit = base_is_willing_to_quit;
 
 	/**
@@ -623,14 +615,6 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 }
 
 static void
-iprefs_base_iface_init( BaseIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "nact_main_window_iprefs_base_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-}
-
-static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_main_window_instance_init";
@@ -645,23 +629,14 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactMainWindowPrivate, 1 );
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_runtime_init_toplevel ));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_ALL_WIDGETS_SHOWED,
-			G_CALLBACK( on_base_all_widgets_showed ));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
-			G_CALLBACK( on_tab_updatable_item_updated ));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_updatable_item_updated ));
 
 	self->private->dispose_has_run = FALSE;
 
@@ -750,11 +725,10 @@ instance_dispose( GObject *window )
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
-
 	self = NACT_MAIN_WINDOW( window );
 
 	if( !self->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -1093,35 +1067,6 @@ actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater
 	return( delete_ok );
 }
 
-static gchar *
-base_get_iprefs_window_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_MAIN_WINDOW_WSP ));
-}
-
-static gboolean
-base_is_willing_to_quit( const BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_main_window_is_willing_to_quit";
-	gboolean willing_to;
-
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	willing_to = TRUE;
-	if( nact_main_window_has_modified_items( NACT_MAIN_WINDOW( window ))){
-		willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
-	}
-
-	/* call parent class */
-	if( willing_to ){
-		if( BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit ){
-			willing_to = BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit( window );
-		}
-	}
-
-	return( willing_to );
-}
-
 /*
  * note that for this NactMainWindow, on_initial_load_toplevel and
  * on_runtime_init_toplevel are equivalent, as there is only one
@@ -1181,26 +1126,23 @@ on_base_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *toplevel )
 }
 
 static void
-on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
+on_base_initialize_base_window( NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_on_base_runtime_init_toplevel";
+	static const gchar *thisfn = "nact_main_window_on_base_initialize_base_window";
 	NactApplication *application;
 	NAUpdater *updater;
 	GList *tree;
 	gint order_mode;
 
-	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 		window->private->clipboard = nact_clipboard_new( BASE_WINDOW( window ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_iactions_list_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_iactions_list_selection_changed ));
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
@@ -1230,26 +1172,25 @@ on_base_runtime_init_toplevel( NactMainWindow *window, gpointer user_data )
 
 		/* this to update the title when an item is modified
 		 */
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				IACTIONS_LIST_SIGNAL_STATUS_CHANGED,
-				G_CALLBACK( on_iactions_list_status_changed ));
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_STATUS_CHANGED, G_CALLBACK( on_iactions_list_status_changed ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
-				G_CALLBACK( on_main_window_level_zero_order_changed ));
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, G_CALLBACK( on_main_window_level_zero_order_changed ));
 	}
 }
 
+static gchar *
+on_base_get_wsp_id( const BaseWindow *window )
+{
+	return( g_strdup( NA_IPREFS_MAIN_WINDOW_WSP ));
+}
+
 static void
-on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
+on_base_all_widgets_showed( NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_all_widgets_showed";
 
-	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( window ));
 	g_return_if_fail( NACT_IS_IACTION_TAB( window ));
@@ -1263,6 +1204,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( window ));
 
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 		raz_main_properties( window );
 
@@ -1282,6 +1224,29 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 
 		install_autosave( window );
 	}
+}
+
+static gboolean
+base_is_willing_to_quit( const BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_is_willing_to_quit";
+	gboolean willing_to;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	willing_to = TRUE;
+	if( nact_main_window_has_modified_items( NACT_MAIN_WINDOW( window ))){
+		willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
+	}
+
+	/* call parent class */
+	if( willing_to ){
+		if( BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit ){
+			willing_to = BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit( window );
+		}
+	}
+
+	return( willing_to );
 }
 
 static void

@@ -164,6 +164,8 @@ typedef enum {
 	BASE_EXIT_CODE_ARGS,
 	BASE_EXIT_CODE_UNIQUE_APP,
 	BASE_EXIT_CODE_MAIN_WINDOW,
+	BASE_EXIT_CODE_INIT_FAIL,
+	BASE_EXIT_CODE_PROGRAM,
 	/*
 	 * BaseApplication -derived class may use program return codes
 	 * starting with this value

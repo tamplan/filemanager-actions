@@ -100,19 +100,19 @@ static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_dispose( GObject *dialog );
 static void          instance_finalize( GObject *dialog );
 
-static NactIconChooser *icon_chooser_new( BaseWindow *parent );
-
-static gchar        *base_get_iprefs_window_id( const BaseWindow *window );
-static void          on_base_initial_load_dialog( NactIconChooser *editor, gpointer user_data );
+static void          on_base_initialize_gtk_toplevel( NactIconChooser *editor, GtkDialog *toplevel );
 static void          do_initialize_themed_icons( NactIconChooser *editor );
 static void          do_initialize_icons_by_path( NactIconChooser *editor );
-static void          on_base_runtime_init_dialog( NactIconChooser *editor, gpointer user_data );
+static void          on_base_initialize_base_window( NactIconChooser *editor );
 static void          fillup_themed_icons( NactIconChooser *editor );
 static void          fillup_icons_by_path( NactIconChooser *editor );
-static void          on_base_all_widgets_showed( NactIconChooser *editor, gpointer user_data );
+static gchar        *on_base_get_wsp_id( const BaseWindow *window );
+static void          on_base_all_widgets_showed( NactIconChooser *editor );
+
 static void          on_cancel_clicked( GtkButton *button, NactIconChooser *editor );
 static void          on_ok_clicked( GtkButton *button, NactIconChooser *editor );
-static gboolean      base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static void          on_dialog_cancel( BaseDialog *dialog );
+
 static void          on_current_icon_changed( const NactIconChooser *editor );
 static gboolean      on_destroy( GtkWidget *widget, GdkEvent *event, void *foo );
 static gboolean      on_icon_view_button_press_event( GtkWidget *widget, GdkEventButton *event, NactIconChooser *editor );
@@ -169,6 +169,7 @@ class_init( NactIconChooserClass *klass )
 	static const gchar *thisfn = "nact_icon_chooser_class_init";
 	GObjectClass *object_class;
 	BaseWindowClass *base_class;
+	BaseDialogClass *dialog_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -181,8 +182,10 @@ class_init( NactIconChooserClass *klass )
 	klass->private = g_new0( NactIconChooserClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->dialog_response = base_dialog_response;
-	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
+	base_class->get_wsp_id = on_base_get_wsp_id;
+
+	dialog_class = BASE_DIALOG_CLASS( klass );
+	dialog_class->cancel = on_dialog_cancel;
 }
 
 static void
@@ -200,23 +203,14 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactIconChooserPrivate, 1 );
 
-	base_window_signal_connect(
-			BASE_WINDOW( self ),
-			G_OBJECT( self ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initial_load_dialog ));
+	base_window_signal_connect( BASE_WINDOW( self ),
+			G_OBJECT( self ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( self ),
-			G_OBJECT( self ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_runtime_init_dialog ));
+	base_window_signal_connect( BASE_WINDOW( self ),
+			G_OBJECT( self ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( self ),
-			G_OBJECT( self ),
-			BASE_SIGNAL_ALL_WIDGETS_SHOWED,
-			G_CALLBACK( on_base_all_widgets_showed));
+	base_window_signal_connect( BASE_WINDOW( self ),
+			G_OBJECT( self ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -234,11 +228,10 @@ instance_dispose( GObject *dialog )
 
 	g_return_if_fail( NACT_IS_ICON_CHOOSER( dialog ));
 
-	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
-
 	self = NACT_ICON_CHOOSER( dialog );
 
 	if( !self->private->dispose_has_run ){
+		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -265,7 +258,7 @@ instance_finalize( GObject *dialog )
 
 	g_return_if_fail( NACT_IS_ICON_CHOOSER( dialog ));
 
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
+	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
 	self = NACT_ICON_CHOOSER( dialog );
 
@@ -277,19 +270,6 @@ instance_finalize( GObject *dialog )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( dialog );
 	}
-}
-
-/*
- * Returns a newly allocated NactIconChooser object.
- */
-static NactIconChooser *
-icon_chooser_new( BaseWindow *parent )
-{
-	return( g_object_new( NACT_ICON_CHOOSER_TYPE,
-			BASE_PROP_PARENT,         parent,
-			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
-			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
-			NULL ));
 }
 
 /**
@@ -316,13 +296,18 @@ nact_icon_chooser_choose_icon( BaseWindow *parent, const gchar *icon_name )
 
 	g_debug( "%s: parent=%p, icon_name=%s", thisfn, ( void * ) parent, icon_name );
 
-	editor = icon_chooser_new( parent );
+	editor = g_object_new( NACT_ICON_CHOOSER_TYPE,
+			BASE_PROP_PARENT,         parent,
+			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
+			NULL );
+
 	editor->private->main_window = parent;
 	editor->private->initial_icon = icon_name;
 
 	new_name = g_strdup( editor->private->initial_icon );
 
-	if( base_window_run( BASE_WINDOW( editor ))){
+	if( base_window_run( BASE_WINDOW( editor )) == GTK_RESPONSE_OK ){
 		g_free( new_name );
 		new_name = g_strdup( editor->private->current_icon );
 	}
@@ -332,31 +317,27 @@ nact_icon_chooser_choose_icon( BaseWindow *parent, const gchar *icon_name )
 	return( new_name );
 }
 
-static gchar *
-base_get_iprefs_window_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_ICON_CHOOSER_WSP ));
-}
-
 static void
-on_base_initial_load_dialog( NactIconChooser *editor, gpointer user_data )
+on_base_initialize_gtk_toplevel( NactIconChooser *editor, GtkDialog *toplevel )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_initial_load_dialog";
+	static const gchar *thisfn = "nact_icon_chooser_on_base_initialize_gtk_toplevel";
 
 	g_return_if_fail( NACT_IS_ICON_CHOOSER( editor ));
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
+	if( !editor->private->dispose_has_run ){
+		g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
 
-	/* initialize the notebook
-	 */
-	do_initialize_themed_icons( editor );
-	do_initialize_icons_by_path( editor );
+		/* initialize the notebook
+		 */
+		do_initialize_themed_icons( editor );
+		do_initialize_icons_by_path( editor );
 
-	/* destroy event
-	 * there is here that we are going to release our stores
-	 */
-	GtkDialog *dialog = GTK_DIALOG( base_window_get_gtk_toplevel( BASE_WINDOW( editor )));
-	g_signal_connect( G_OBJECT( dialog ), "destroy", G_CALLBACK( on_destroy ), NULL );
+		/* destroy event
+		 * this is here that we are going to release our stores
+		 */
+		GtkDialog *dialog = GTK_DIALOG( base_window_get_gtk_toplevel( BASE_WINDOW( editor )));
+		g_signal_connect( G_OBJECT( dialog ), "destroy", G_CALLBACK( on_destroy ), NULL );
+	}
 }
 
 /*
@@ -431,9 +412,9 @@ do_initialize_icons_by_path( NactIconChooser *editor )
 }
 
 static void
-on_base_runtime_init_dialog( NactIconChooser *editor, gpointer user_data )
+on_base_initialize_base_window( NactIconChooser *editor )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_runtime_init_dialog";
+	static const gchar *thisfn = "nact_icon_chooser_on_base_initialize_base_window";
 	guint pos;
 	GtkWidget *paned;
 	NactApplication *application;
@@ -442,43 +423,43 @@ on_base_runtime_init_dialog( NactIconChooser *editor, gpointer user_data )
 
 	g_return_if_fail( NACT_IS_ICON_CHOOSER( editor ));
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
+	if( !editor->private->dispose_has_run ){
+		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
-	pos = na_settings_get_uint( settings, NA_IPREFS_ICON_CHOOSER_PANED, NULL, NULL );
-	if( pos ){
-		paned = base_window_get_widget( BASE_WINDOW( editor ), "IconPaned" );
-		gtk_paned_set_position( GTK_PANED( paned ), pos );
+		pos = na_settings_get_uint( settings, NA_IPREFS_ICON_CHOOSER_PANED, NULL, NULL );
+		if( pos ){
+			paned = base_window_get_widget( BASE_WINDOW( editor ), "IconPaned" );
+			gtk_paned_set_position( GTK_PANED( paned ), pos );
+		}
+
+		/* setup the initial icon
+		 */
+		editor->private->current_icon = g_strdup( editor->private->initial_icon );
+		on_current_icon_changed( editor );
+
+		/* fillup the icon stores
+		 */
+		fillup_themed_icons( editor );
+		fillup_icons_by_path( editor );
+
+		/*  intercept Escape key: we do not quit on Esc.
+		 */
+		base_window_signal_connect( BASE_WINDOW( editor ),
+				G_OBJECT( base_window_get_gtk_toplevel( BASE_WINDOW( editor ))),
+				"key-press-event", G_CALLBACK( on_key_pressed_event ));
+
+		/* OK/Cancel buttons
+		 */
+		base_window_signal_connect_by_name(
+				BASE_WINDOW( editor ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
+
+		base_window_signal_connect_by_name(
+				BASE_WINDOW( editor ), "OKButton", "clicked", G_CALLBACK( on_ok_clicked ));
 	}
-
-	/* setup the initial icon
-	 */
-	editor->private->current_icon = g_strdup( editor->private->initial_icon );
-	on_current_icon_changed( editor );
-
-	/* fillup the icon stores
-	 */
-	fillup_themed_icons( editor );
-	fillup_icons_by_path( editor );
-
-	/*  intercept Escape key: we do not quit on Esc.
-	 */
-	base_window_signal_connect(
-					BASE_WINDOW( editor ),
-					G_OBJECT( base_window_get_gtk_toplevel( BASE_WINDOW( editor ))),
-					"key-press-event",
-					G_CALLBACK( on_key_pressed_event ));
-
-	/* OK/Cancel buttons
-	 */
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ), "CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
-
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ), "OKButton", "clicked", G_CALLBACK( on_ok_clicked ));
 }
 
 static void
@@ -538,6 +519,7 @@ fillup_icons_by_path( NactIconChooser *editor )
 
 	base_window_signal_connect(
 				BASE_WINDOW( editor ), G_OBJECT( file_chooser ), "selection-changed", G_CALLBACK( on_path_selection_changed ));
+
 	base_window_signal_connect(
 				BASE_WINDOW( editor ), G_OBJECT( file_chooser ), "update-preview", G_CALLBACK( on_path_update_preview ));
 
@@ -545,20 +527,28 @@ fillup_icons_by_path( NactIconChooser *editor )
 				BASE_WINDOW( editor ), "PathApplyButton", "clicked", G_CALLBACK( on_path_apply_button_clicked ));
 }
 
-static void
-on_base_all_widgets_showed( NactIconChooser *editor, gpointer user_data )
+static gchar *
+on_base_get_wsp_id( const BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_all_widgets_showed";
+	return( g_strdup( NA_IPREFS_ICON_CHOOSER_WSP ));
+}
+
+static void
+on_base_all_widgets_showed( NactIconChooser *editor )
+{
+	static const gchar *thisfn = "nact_icon_chooser_on_base_all_widgets_showed";
 	GtkWidget *about_button;
 
 	g_return_if_fail( NACT_IS_ICON_CHOOSER( editor ));
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
+	if( !editor->private->dispose_has_run ){
+		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
 
-	/* hide about button not used here
-	 */
-	about_button = base_window_get_widget( BASE_WINDOW( editor ), "AboutButton" );
-	gtk_widget_hide( about_button );
+		/* hide about button not used here
+		 */
+		about_button = base_window_get_widget( BASE_WINDOW( editor ), "AboutButton" );
+		gtk_widget_hide( about_button );
+	}
 }
 
 static void
@@ -575,35 +565,22 @@ on_ok_clicked( GtkButton *button, NactIconChooser *editor )
 	gtk_dialog_response( GTK_DIALOG( toplevel ), GTK_RESPONSE_OK );
 }
 
-static gboolean
-base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
+static void
+on_dialog_cancel( BaseDialog *dialog )
 {
-	static const gchar *thisfn = "nact_icon_chooser_on_dialog_response";
+	static const gchar *thisfn = "nact_icon_chooser_on_dialog_cancel";
 	NactIconChooser *editor;
 
-	g_return_val_if_fail( NACT_IS_ICON_CHOOSER( window ), FALSE );
+	g_return_if_fail( NACT_IS_ICON_CHOOSER( dialog ));
 
-	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, ( void * ) dialog, code, ( void * ) window );
+	editor = NACT_ICON_CHOOSER( dialog );
 
-	editor = NACT_ICON_CHOOSER( window );
+	if( !editor->private->dispose_has_run ){
+		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
-	switch( code ){
-		case GTK_RESPONSE_NONE:
-		case GTK_RESPONSE_DELETE_EVENT:
-		case GTK_RESPONSE_CLOSE:
-		case GTK_RESPONSE_CANCEL:
-
-			g_free( editor->private->current_icon );
-			editor->private->current_icon = g_strdup( editor->private->initial_icon );
-			return( TRUE );
-			break;
-
-		case GTK_RESPONSE_OK:
-			return( TRUE );
-			break;
+		g_free( editor->private->current_icon );
+		editor->private->current_icon = g_strdup( editor->private->initial_icon );
 	}
-
-	return( FALSE );
 }
 
 /*

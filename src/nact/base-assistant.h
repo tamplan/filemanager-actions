@@ -69,6 +69,13 @@ typedef struct {
 
 typedef struct _BaseAssistantClassPrivate  BaseAssistantClassPrivate;
 
+/**
+ * BaseAssistantClass:
+ * @apply:   apply the result of the assistant.
+ * @prepare: prepare a page to be displayed.
+ *
+ * This defines the virtual method a derived class may, should or must implement.
+ */
 typedef struct {
 	/*< private >*/
 	BaseWindowClass            parent;
@@ -77,65 +84,35 @@ typedef struct {
 	/*< public >*/
 	/**
 	 * apply:
-	 * @window: this #BaseAssistance instance.
+	 * @window: this #BaseAssistant instance.
+	 * @assistant: the #GtkAssistant toplevel.
+	 *
+	 * Invoked when the user has clicked on the 'Apply' button.
 	 */
 	void ( *apply )  ( BaseAssistant *window, GtkAssistant *assistant );
 
 	/**
-	 * cancel:
-	 * @window: this #BaseAssistance instance.
-	 */
-	void ( *cancel ) ( BaseAssistant *window, GtkAssistant *assistant );
-
-	/**
-	 * close:
-	 * @window: this #BaseAssistance instance.
-	 */
-	void ( *close )  ( BaseAssistant *window, GtkAssistant *assistant );
-
-	/**
 	 * prepare:
 	 * @window: this #BaseAssistance instance.
+	 * @assistant: the #GtkAssistant toplevel.
+	 *
+	 * Invoked when the Gtk+ runtime is preparing a page.
+	 *
+	 * The #BaseAssistant class makes sure that the apply() method has
+	 * been triggered before preparing the 'Summary' page.
 	 */
 	void ( *prepare )( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 }
 	BaseAssistantClass;
 
 /**
- * %BASE_ASSISTANT_PROP_CANCEL_ON_ESCAPE:
- *
- * Does the assistant cancel its execution when the user hits the
- * 'Escape' key ?
- *
- * Defaults to %FALSE.
+ * Properties defined by the BaseAssistant class.
+ * They should be provided at object instanciation time.
  */
-#define BASE_ASSISTANT_PROP_CANCEL_ON_ESCAPE	"base-assistant-cancel-on-escape"
-
-/**
- * %BASE_ASSISTANT_PROP_WARN_ON_ESCAPE:
- *
- * Does the user be warned when he/she quits the assistant by hitting
- * the 'Escape' key ? This is only used when previous property
- * %BASE_ASSISTANT_PROP_CANCEL_ON_ESCAPE is set to %TRUE.
- *
- * Defaults to %FALSE.
- */
-#define BASE_ASSISTANT_PROP_WARN_ON_ESCAPE		"base-assistant-warn-on-escape"
-
-/**
- * %BASE_ASSISTANT_PROP_WARN_ON_CANCEL:
- *
- * Does the user be warned when he/she cancels the assistant ?
- *
- * Defaults to %FALSE.
- */
-#define BASE_ASSISTANT_PROP_WARN_ON_CANCEL		"base-assistant-warn-on-cancel"
+#define BASE_PROP_QUIT_ON_ESCAPE				"base-assistant-quit-on-escape"
+#define BASE_PROP_WARN_ON_ESCAPE				"base-assistant-warn-on-escape"
 
 GType base_assistant_get_type( void );
-
-void  base_assistant_set_cancel_on_esc( BaseAssistant *window, gboolean cancel );
-void  base_assistant_set_warn_on_esc( BaseAssistant *window, gboolean warn_esc );
-void  base_assistant_set_warn_on_cancel( BaseAssistant *window, gboolean warn_cancel );
 
 G_END_DECLS
 

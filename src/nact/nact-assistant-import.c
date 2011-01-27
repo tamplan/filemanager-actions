@@ -89,12 +89,8 @@ static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_dispose( GObject *application );
 static void          instance_finalize( GObject *application );
 
-static NactAssistantImport *assist_new( BaseWindow *parent );
-
-static gchar        *window_get_iprefs_window_id( const BaseWindow *window );
-
-static void          on_initial_load_dialog( NactAssistantImport *dialog, gpointer user_data );
-static void          on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data );
+static void          on_base_initialize_base_window( NactAssistantImport *dialog );
+static gchar        *on_base_get_wsp_id( const BaseWindow *window );
 static void          runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant );
 static void          runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant );
 static void          on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
@@ -167,7 +163,7 @@ class_init( NactAssistantImportClass *klass )
 	klass->private = g_new0( NactAssistantImportClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_iprefs_window_id = window_get_iprefs_window_id;
+	base_class->get_wsp_id = on_base_get_wsp_id;
 
 	assist_class = BASE_ASSISTANT_CLASS( klass );
 	assist_class->apply = assistant_apply;
@@ -191,17 +187,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->results = NULL;
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_initial_load_dialog ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_runtime_init_dialog ));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -236,7 +223,7 @@ instance_finalize( GObject *window )
 
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( window ));
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 	self = NACT_ASSISTANT_IMPORT( window );
 
@@ -250,17 +237,6 @@ instance_finalize( GObject *window )
 	}
 }
 
-static NactAssistantImport *
-assist_new( BaseWindow *parent )
-{
-	return( g_object_new( NACT_ASSISTANT_IMPORT_TYPE,
-			BASE_PROP_PARENT,          parent,
-			BASE_PROP_HAS_OWN_BUILDER, TRUE,
-			BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
-			BASE_PROP_TOPLEVEL_NAME,   st_toplevel_name,
-			NULL ));
-}
-
 /**
  * nact_assistant_import_run:
  * @main: the #NactMainWindow parent window of this assistant.
@@ -270,51 +246,43 @@ assist_new( BaseWindow *parent )
 void
 nact_assistant_import_run( BaseWindow *main_window )
 {
-	NactAssistantImport *assist;
-
-	assist = assist_new( main_window );
-
-	base_window_run( BASE_WINDOW( assist ));
-}
-
-static gchar *
-window_get_iprefs_window_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_IMPORT_ASSISTANT_WSP ));
-}
-
-static void
-on_initial_load_dialog( NactAssistantImport *dialog, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_assistant_import_on_initial_load_dialog";
+	NactAssistantImport *assistant;
 	NactApplication *application;
 	NAUpdater *updater;
 	NASettings *settings;
 	gboolean esc_quit, esc_confirm;
 
-	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( dialog ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( main_window ));
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
+	application = NACT_APPLICATION( base_window_get_application( main_window ));
 	updater = nact_application_get_updater( application );
 	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
 	esc_quit = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
-	base_assistant_set_cancel_on_esc( BASE_ASSISTANT( dialog ), esc_quit );
 	esc_confirm = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
-	base_assistant_set_warn_on_esc( BASE_ASSISTANT( dialog ), esc_confirm );
+
+	assistant = g_object_new( NACT_ASSISTANT_IMPORT_TYPE,
+			BASE_PROP_PARENT,          main_window,
+			BASE_PROP_HAS_OWN_BUILDER, TRUE,
+			BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
+			BASE_PROP_TOPLEVEL_NAME,   st_toplevel_name,
+			BASE_PROP_QUIT_ON_ESCAPE,  esc_quit,
+			BASE_PROP_WARN_ON_ESCAPE,  esc_confirm,
+			NULL );
+
+	base_window_run( BASE_WINDOW( assistant ));
 }
 
 static void
-on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data )
+on_base_initialize_base_window( NactAssistantImport *dialog )
 {
-	static const gchar *thisfn = "nact_assistant_import_on_runtime_init_dialog";
+	static const gchar *thisfn = "nact_assistant_import_on_base_initialize_base_window";
 	GtkAssistant *assistant;
 
-	g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
+		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
 		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( dialog )));
 
@@ -322,6 +290,12 @@ on_runtime_init_dialog( NactAssistantImport *dialog, gpointer user_data )
 		runtime_init_file_selector( dialog, assistant );
 		runtime_init_duplicates( dialog, assistant );
 	}
+}
+
+static gchar *
+on_base_get_wsp_id( const BaseWindow *window )
+{
+	return( g_strdup( NA_IPREFS_IMPORT_ASSISTANT_WSP ));
 }
 
 static void
@@ -833,8 +807,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	na_iprefs_set_import_mode( NA_PIVOT( updater ), NA_IPREFS_IMPORT_PREFERRED_MODE, mode );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
-	base_assistant_set_warn_on_cancel( BASE_ASSISTANT( window ), FALSE );
-	base_assistant_set_warn_on_esc( BASE_ASSISTANT( window ), FALSE );
+	g_object_set( G_OBJECT( window ), BASE_PROP_WARN_ON_ESCAPE, FALSE, NULL );
 }
 
 static void

@@ -1,3 +1,40 @@
+2011-01-28 Pierre Wieser <pwieser@trychlos.org>
+
+	Whole refactoring of BaseWindow / BaseAssistant / BaseDialog
+
+	* src/nact/base-application.c:
+	* src/nact/base-application.h: Add new exit codes.
+
+	* src/nact/base-assistant.c:
+	* src/nact/base-assistant.h:
+	Remove 'warn-on-cancel' unused property.
+	(base_assistant_set_cancel_on_esc, base_assistant_set_warn_on_esc):
+	Remove unused functions.
+	Implement run() virtual method.
+
+	* src/nact/base-dialog.c:
+	* src/nact/base-dialog.h:
+	Implement run() virtual method.
+	Define new cancel() and ok() virtual methods.
+
+	* src/nact/base-iprefs.c:
+	* src/nact/base-iprefs.h (iprefs_get_window_id): Renamed as get_wsp_id().
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h
+	(dialog_response, delete_event): Remove no more used virtual methods.
+	(run): Define new virtual method.
+
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-confirm-logout.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-preferences-editor.c: Updated accordingly.
+
 2011-01-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-providers-list.c:

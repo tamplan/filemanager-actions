@@ -39,8 +39,6 @@
  *
  * This class is derived from BaseWindow class, and serves as a base
  * class for all Nautilus-Actions dialogs.
- *
- * As of version 3.1.0, this base class does nothing.
  */
 
 #include "base-window.h"
@@ -65,10 +63,34 @@ typedef struct {
 
 typedef struct _BaseDialogClassPrivate  BaseDialogClassPrivate;
 
+/**
+ * BaseDialogClass:
+ * @cancel: the dialog box is not validated.
+ * @ok:     the dialog box is validated.
+ *
+ * This defines the virtual method a derived class may, should or must implement.
+ */
 typedef struct {
 	/*< private >*/
 	BaseWindowClass         parent;
 	BaseDialogClassPrivate *private;
+
+	/*< public >*/
+	/**
+	 * cancel:
+	 * @dialog: this #BaseDialog instance.
+	 *
+	 * Invoked when the dialog box is closed without having been validated.
+	 */
+	void ( *cancel )( BaseDialog *dialog );
+
+	/**
+	 * ok:
+	 * @dialog: this #BaseDialog instance.
+	 *
+	 * Invoked when the dialog box is validated.
+	 */
+	void ( *ok )    ( BaseDialog *dialog );
 }
 	BaseDialogClass;
 

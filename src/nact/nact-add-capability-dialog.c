@@ -91,12 +91,10 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static NactAddCapabilityDialog *add_capability_dialog_new( BaseWindow *parent );
-
-static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
-static void     on_base_initial_load_dialog( NactAddCapabilityDialog *editor, gpointer user_data );
-static void     on_base_runtime_init_dialog( NactAddCapabilityDialog *editor, gpointer user_data );
-static void     on_base_all_widgets_showed( NactAddCapabilityDialog *editor, gpointer user_data );
+static void     on_base_initialize_gtk_toplevel( NactAddCapabilityDialog *editor, GtkDialog *toplevel );
+static void     on_base_initialize_base_window( NactAddCapabilityDialog *editor );
+static gchar   *on_base_get_wsp_id( const BaseWindow *window );
+static void     on_base_all_widgets_showed( NactAddCapabilityDialog *editor );
 static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddCapabilityDialog *editor );
 static void     on_cancel_clicked( GtkButton *button, NactAddCapabilityDialog *editor );
 static void     on_ok_clicked( GtkButton *button, NactAddCapabilityDialog *editor );
@@ -107,8 +105,7 @@ static void     display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell,
 static gboolean setup_values_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList *capabilities );
 static void     try_for_send_ok( NactAddCapabilityDialog *dialog );
 static void     send_ok( NactAddCapabilityDialog *dialog );
-static void     validate_dialog( NactAddCapabilityDialog *editor );
-static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static void     on_dialog_ok( BaseDialog *dialog );
 
 GType
 nact_add_capability_dialog_get_type( void )
@@ -153,6 +150,7 @@ class_init( NactAddCapabilityDialogClass *klass )
 	static const gchar *thisfn = "nact_add_capability_dialog_class_init";
 	GObjectClass *object_class;
 	BaseWindowClass *base_class;
+	BaseDialogClass *dialog_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -165,8 +163,10 @@ class_init( NactAddCapabilityDialogClass *klass )
 	klass->private = g_new0( NactAddCapabilityDialogClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->dialog_response = base_dialog_response;
-	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
+	base_class->get_wsp_id = on_base_get_wsp_id;
+
+	dialog_class = BASE_DIALOG_CLASS( klass );
+	dialog_class->ok = on_dialog_ok;
 }
 
 static void
@@ -176,28 +176,21 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NactAddCapabilityDialog *self;
 
 	g_return_if_fail( NACT_IS_ADD_CAPABILITY_DIALOG( instance ));
+
 	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+
 	self = NACT_ADD_CAPABILITY_DIALOG( instance );
 
 	self->private = g_new0( NactAddCapabilityDialogPrivate, 1 );
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initial_load_dialog ));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_runtime_init_dialog ));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_ALL_WIDGETS_SHOWED,
-			G_CALLBACK( on_base_all_widgets_showed));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed));
 
 	self->private->dispose_has_run = FALSE;
 	self->private->capability = NULL;
@@ -213,10 +206,11 @@ instance_dispose( GObject *dialog )
 	GtkTreeSelection *selection;
 
 	g_return_if_fail( NACT_IS_ADD_CAPABILITY_DIALOG( dialog ));
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
+
 	self = NACT_ADD_CAPABILITY_DIALOG( dialog );
 
 	if( !self->private->dispose_has_run ){
+		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -240,7 +234,9 @@ instance_finalize( GObject *dialog )
 	NactAddCapabilityDialog *self;
 
 	g_return_if_fail( NACT_IS_ADD_CAPABILITY_DIALOG( dialog ));
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
+
+	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
+
 	self = NACT_ADD_CAPABILITY_DIALOG( dialog );
 
 	na_core_utils_slist_free( self->private->already_used );
@@ -252,22 +248,6 @@ instance_finalize( GObject *dialog )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( dialog );
 	}
-}
-
-/*
- * Returns a newly allocated NactAddCapabilityDialog object.
- *
- * @parent: the BaseWindow parent of this dialog (usually, the main
- * toplevel window of the application).
- */
-static NactAddCapabilityDialog *
-add_capability_dialog_new( BaseWindow *parent )
-{
-	return( g_object_new( NACT_ADD_CAPABILITY_DIALOG_TYPE,
-			BASE_PROP_PARENT,         parent,
-			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
-			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
-			NULL ));
 }
 
 /**
@@ -292,28 +272,28 @@ nact_add_capability_dialog_run( BaseWindow *parent, GSList *capabilities )
 
 	g_return_val_if_fail( BASE_IS_WINDOW( parent ), NULL );
 
-	dialog = add_capability_dialog_new( parent );
+	dialog = g_object_new( NACT_ADD_CAPABILITY_DIALOG_TYPE,
+					BASE_PROP_PARENT,         parent,
+					BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+					BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
+					NULL );
+
 	dialog->private->already_used = na_core_utils_slist_duplicate( capabilities );
+	capability = NULL;
 
-	base_window_run( BASE_WINDOW( dialog ));
-
-	capability = g_strdup( dialog->private->capability );
+	if( base_window_run( BASE_WINDOW( dialog )) == GTK_RESPONSE_OK ){
+		capability = g_strdup( dialog->private->capability );
+	}
 
 	g_object_unref( dialog );
 
 	return( capability );
 }
 
-static gchar *
-base_get_iprefs_window_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP ));
-}
-
 static void
-on_base_initial_load_dialog( NactAddCapabilityDialog *dialog, gpointer user_data )
+on_base_initialize_gtk_toplevel( NactAddCapabilityDialog *dialog, GtkDialog *toplevel )
 {
-	static const gchar *thisfn = "nact_add_capability_dialog_on_initial_load_dialog";
+	static const gchar *thisfn = "nact_add_capability_dialog_on_base_initialize_gtk_toplevel";
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeViewColumn *column;
@@ -323,7 +303,7 @@ on_base_initial_load_dialog( NactAddCapabilityDialog *dialog, gpointer user_data
 	g_return_if_fail( NACT_IS_ADD_CAPABILITY_DIALOG( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
+		g_debug( "%s: dialog=%p, toplevel=%p", thisfn, ( void * ) dialog, ( void * ) toplevel );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( dialog ), "CapabilitiesTreeView" ));
 
@@ -360,9 +340,9 @@ on_base_initial_load_dialog( NactAddCapabilityDialog *dialog, gpointer user_data
 }
 
 static void
-on_base_runtime_init_dialog( NactAddCapabilityDialog *dialog, gpointer user_data )
+on_base_initialize_base_window( NactAddCapabilityDialog *dialog )
 {
-	static const gchar *thisfn = "nact_add_capability_dialog_on_runtime_init_dialog";
+	static const gchar *thisfn = "nact_add_capability_dialog_on_base_initialize_base_window";
 	GtkTreeView *listview;
 	GtkListStore *model;
 	GtkTreeIter row;
@@ -371,7 +351,7 @@ on_base_runtime_init_dialog( NactAddCapabilityDialog *dialog, gpointer user_data
 	g_return_if_fail( NACT_IS_ADD_CAPABILITY_DIALOG( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
+		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( dialog ), "CapabilitiesTreeView" ));
 		model = GTK_LIST_STORE( gtk_tree_view_get_model( listview ));
@@ -388,36 +368,30 @@ on_base_runtime_init_dialog( NactAddCapabilityDialog *dialog, gpointer user_data
 		gtk_tree_model_foreach( GTK_TREE_MODEL( model ), ( GtkTreeModelForeachFunc ) setup_values_iter, dialog->private->already_used );
 
 		/* catch double-click */
-		base_window_signal_connect(
-				BASE_WINDOW( dialog ),
-				G_OBJECT( listview ),
-				"button-press-event",
-				G_CALLBACK( on_button_press_event ));
+		base_window_signal_connect( BASE_WINDOW( dialog ),
+				G_OBJECT( listview ), "button-press-event", G_CALLBACK( on_button_press_event ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( dialog ),
-				G_OBJECT( gtk_tree_view_get_selection( listview )),
-				"changed",
-				G_CALLBACK( on_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( dialog ),
+				G_OBJECT( gtk_tree_view_get_selection( listview )), "changed", G_CALLBACK( on_selection_changed ));
 
-		base_window_signal_connect_by_name(
-				BASE_WINDOW( dialog ),
-				"CancelButton",
-				"clicked",
-				G_CALLBACK( on_cancel_clicked ));
+		base_window_signal_connect_by_name( BASE_WINDOW( dialog ),
+				"CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
 
-		base_window_signal_connect_by_name(
-				BASE_WINDOW( dialog ),
-				"OKButton",
-				"clicked",
-				G_CALLBACK( on_ok_clicked ));
+		base_window_signal_connect_by_name( BASE_WINDOW( dialog ),
+				"OKButton", "clicked", G_CALLBACK( on_ok_clicked ));
 	}
 }
 
-static void
-on_base_all_widgets_showed( NactAddCapabilityDialog *dialog, gpointer user_data )
+static gchar *
+on_base_get_wsp_id( const BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_add_capability_dialog_on_all_widgets_showed";
+	return( g_strdup( NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP ));
+}
+
+static void
+on_base_all_widgets_showed( NactAddCapabilityDialog *dialog )
+{
+	static const gchar *thisfn = "nact_add_capability_dialog_on_base_all_widgets_showed";
 	GtkTreeView *listview;
 	GtkTreePath *path;
 	GtkTreeSelection *selection;
@@ -425,8 +399,7 @@ on_base_all_widgets_showed( NactAddCapabilityDialog *dialog, gpointer user_data 
 	g_return_if_fail( NACT_IS_ADD_CAPABILITY_DIALOG( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
-
-		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
+		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( dialog ), "CapabilitiesTreeView" ));
 		path = gtk_tree_path_new_first();
@@ -566,8 +539,9 @@ send_ok( NactAddCapabilityDialog *dialog )
 }
 
 static void
-validate_dialog( NactAddCapabilityDialog *dialog )
+on_dialog_ok( BaseDialog *dialog )
 {
+	NactAddCapabilityDialog *editor;
 	GtkTreeView *listview;
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
@@ -575,42 +549,15 @@ validate_dialog( NactAddCapabilityDialog *dialog )
 	GtkTreePath *path;
 	GtkTreeIter iter;
 
-	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( dialog ), "CapabilitiesTreeView" ));
+	editor = NACT_ADD_CAPABILITY_DIALOG( dialog );
+
+	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "CapabilitiesTreeView" ));
 	selection = gtk_tree_view_get_selection( listview );
 	rows = gtk_tree_selection_get_selected_rows( selection, &model );
 
 	if( g_list_length( rows ) == 1 ){
 		path = ( GtkTreePath * ) rows->data;
 		gtk_tree_model_get_iter( model, &iter, path );
-		gtk_tree_model_get( model, &iter, CAPABILITY_KEYWORD_COLUMN, &dialog->private->capability, -1 );
+		gtk_tree_model_get( model, &iter, CAPABILITY_KEYWORD_COLUMN, &editor->private->capability, -1 );
 	}
-}
-
-static gboolean
-base_dialog_response( GtkDialog *dialog_box, gint code, BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_add_capability_dialog_on_dialog_response";
-	NactAddCapabilityDialog *dialog;
-
-	g_return_val_if_fail( NACT_IS_ADD_CAPABILITY_DIALOG( window ), FALSE );
-
-	dialog = NACT_ADD_CAPABILITY_DIALOG( window );
-
-	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog_box=%p, code=%d, window=%p", thisfn, ( void * ) dialog_box, code, ( void * ) window );
-
-		switch( code ){
-			case GTK_RESPONSE_OK:
-				validate_dialog( dialog );
-
-			case GTK_RESPONSE_NONE:
-			case GTK_RESPONSE_DELETE_EVENT:
-			case GTK_RESPONSE_CLOSE:
-			case GTK_RESPONSE_CANCEL:
-				return( TRUE );
-				break;
-		}
-	}
-
-	return( FALSE );
 }

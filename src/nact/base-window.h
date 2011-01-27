@@ -99,10 +99,9 @@ typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
  * @initialize_gtk_toplevel: initialize the toplevel GtkWindow
  * @initialize_base_window:  initialize the BaseWindow
  * @all_widgets_showed:      all widgets have been showed
- * @dialog_response:
- * @delete_event:
- * @get_iprefs_window_id:
- * @is_willing_to_quit:    asks if the window is willing to quit
+ * @run:                     run the dialog box loop
+ * @iprefs_get_window_id:    returns the string which handles size and position preferences
+ * @is_willing_to_quit:      asks if the window is willing to quit
  *
  * This defines the virtual method a derived class may, should or must implement.
  */
@@ -146,6 +145,20 @@ typedef struct {
 	void     ( *initialize_base_window ) ( BaseWindow *window );
 
 	/**
+	 * get_wsp_id:
+	 * @window: this #BaseWindow instance.
+	 *
+	 * Asks the derived class for the string which must be used to
+	 * store last size and position of the window in user preferences.
+	 *
+	 * The returned string will be g_free() by the BaseIPrefs internals.
+	 *
+	 * This delegates to #BaseWindow -derived classes the BaseIPrefs
+	 * interface method.
+	 */
+	gchar *  ( *get_wsp_id )             ( const BaseWindow *window );
+
+	/**
 	 * all_widgets_showed:
 	 * @window: this #BaseWindow instance.
 	 *
@@ -158,33 +171,20 @@ typedef struct {
 	void     ( *all_widgets_showed )     ( BaseWindow *window );
 
 	/**
-	 * dialog_response:
+	 * run:
 	 * @window: this #BaseWindow instance.
-	 */
-	gboolean ( *dialog_response )        ( GtkDialog *dialog, gint code, BaseWindow *window );
-
-	/**
-	 * delete_event:
-	 * @window: this #BaseWindow instance.
+	 * @dialog: the toplevel #GtkWindow.
 	 *
-	 * The #BaseWindow class connects to the "delete-event" signal,
-	 * and transforms it into a virtual function. The derived class
-	 * can so implement the virtual function, without having to take
-	 * care of the signal itself.
-	 */
-	gboolean ( *delete_event )           ( BaseWindow *window, GtkWindow *toplevel, GdkEvent *event );
-
-	/**
-	 * get_iprefs_window_id:
-	 * @window: this #BaseWindow instance.
+	 * Invoked when it is time to run the main loop for the toplevel.
 	 *
-	 * Asks the derived class for the string which must be used to
-	 * store last size and position of the window in GConf preferences.
+	 * The #BaseWindow class makes sure that the #GtkWindow toplevel and
+	 * the #BaseWindow window have both been initialized.
 	 *
-	 * This delegates to #BaseWindow-derived classes the BaseIPrefs
-	 * interface method.
+	 * The #BaseWindow class defaults to do nothing.
+	 *
+	 * Returns: the exit code of the program if it is the main window.
 	 */
-	gchar *  ( *get_iprefs_window_id )   ( const BaseWindow *window );
+	int      ( *run )                    ( BaseWindow *window, GtkWindow *toplevel );
 
 	/**
 	 * is_willing_to_quit:

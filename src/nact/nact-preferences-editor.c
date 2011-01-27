@@ -102,12 +102,10 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static NactPreferencesEditor *preferences_editor_new( BaseWindow *parent );
-
-static gchar   *base_get_iprefs_window_id( const BaseWindow *window );
-static void     on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data );
-static void     on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data );
-static void     on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data );
+static void     on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *toplevel );
+static void     on_base_initialize_base_window( NactPreferencesEditor *editor );
+static gchar   *on_base_get_wsp_id( const BaseWindow *window );
+static void     on_base_all_widgets_showed( NactPreferencesEditor *editor );
 static void     order_mode_setup( NactPreferencesEditor *editor, NAPivot *pivot );
 static void     order_mode_on_alpha_asc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
 static void     order_mode_on_alpha_desc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
@@ -140,7 +138,7 @@ static void     on_cancel_clicked( GtkButton *button, NactPreferencesEditor *edi
 static void     on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     save_preferences( NactPreferencesEditor *editor );
 
-static gboolean base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
+static void     on_dialog_ok( BaseDialog *dialog );
 
 GType
 nact_preferences_editor_get_type( void )
@@ -185,6 +183,7 @@ class_init( NactPreferencesEditorClass *klass )
 	static const gchar *thisfn = "nact_preferences_editor_class_init";
 	GObjectClass *object_class;
 	BaseWindowClass *base_class;
+	BaseDialogClass *dialog_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -197,8 +196,10 @@ class_init( NactPreferencesEditorClass *klass )
 	klass->private = g_new0( NactPreferencesEditorClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->dialog_response = base_dialog_response;
-	base_class->get_iprefs_window_id = base_get_iprefs_window_id;
+	base_class->get_wsp_id = on_base_get_wsp_id;
+
+	dialog_class = BASE_DIALOG_CLASS( klass );
+	dialog_class->ok = on_dialog_ok;
 }
 
 static void
@@ -207,29 +208,22 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	static const gchar *thisfn = "nact_preferences_editor_instance_init";
 	NactPreferencesEditor *self;
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ));
+
+	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+
 	self = NACT_PREFERENCES_EDITOR( instance );
 
 	self->private = g_new0( NactPreferencesEditorPrivate, 1 );
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initial_load_dialog ));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_runtime_init_dialog ));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_ALL_WIDGETS_SHOWED,
-			G_CALLBACK( on_base_all_widgets_showed));
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -240,11 +234,12 @@ instance_dispose( GObject *dialog )
 	static const gchar *thisfn = "nact_preferences_editor_instance_dispose";
 	NactPreferencesEditor *self;
 
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
+
 	self = NACT_PREFERENCES_EDITOR( dialog );
 
 	if( !self->private->dispose_has_run ){
+		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -264,8 +259,10 @@ instance_finalize( GObject *dialog )
 	static const gchar *thisfn = "nact_preferences_editor_instance_finalize";
 	NactPreferencesEditor *self;
 
-	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
+
+	g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
+
 	self = NACT_PREFERENCES_EDITOR( dialog );
 
 	g_free( self->private );
@@ -274,43 +271,6 @@ instance_finalize( GObject *dialog )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( dialog );
 	}
-}
-
-/*
- * Returns a newly allocated NactPreferencesEditor object.
- *
- * @parent: the BaseWindow parent of this dialog (usually, the main
- * toplevel window of the application).
- */
-static NactPreferencesEditor *
-preferences_editor_new( BaseWindow *parent )
-{
-	static const gchar *thisfn = "nact_preferences_editor_new";
-	NactPreferencesEditor *editor;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
-	gboolean are_locked, mandatory;
-
-	g_debug( "%s: parent=%p (%s)", thisfn, ( void * ) parent, G_OBJECT_TYPE_NAME( parent ));
-
-	editor = NACT_PREFERENCES_EDITOR(
-			g_object_new( NACT_PREFERENCES_EDITOR_TYPE,
-					BASE_PROP_PARENT,         parent,
-					BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
-					BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
-					NULL ));
-
-	application = NACT_APPLICATION( base_window_get_application( parent ));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
-	editor->private->preferences_locked = are_locked && mandatory;
-	g_debug( "%s: are_locked=%s, mandatory=%s",
-			thisfn, are_locked ? "True":"False", mandatory ? "True":"False" );
-
-	return( editor );
 }
 
 /**
@@ -325,25 +285,43 @@ nact_preferences_editor_run( BaseWindow *parent )
 {
 	static const gchar *thisfn = "nact_preferences_editor_run";
 	NactPreferencesEditor *editor;
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
+	gboolean are_locked, mandatory;
+	GtkNotebook *notebook;
 
-	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 	g_return_if_fail( BASE_IS_WINDOW( parent ));
 
-	editor = preferences_editor_new( parent );
+	g_debug( "%s: parent=%p (%s)", thisfn, ( void * ) parent, G_OBJECT_TYPE_NAME( parent ));
+
+	editor = g_object_new( NACT_PREFERENCES_EDITOR_TYPE,
+					BASE_PROP_PARENT,         parent,
+					BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
+					BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
+					NULL );
+
+	application = NACT_APPLICATION( base_window_get_application( parent ));
+	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+	editor->private->preferences_locked = are_locked && mandatory;
+	g_debug( "%s: are_locked=%s, mandatory=%s",
+			thisfn, are_locked ? "True":"False", mandatory ? "True":"False" );
 
 	base_window_run( BASE_WINDOW( editor ));
-}
 
-static gchar *
-base_get_iprefs_window_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_PREFERENCES_WSP ));
+	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
+	st_last_tab = gtk_notebook_get_current_page( notebook );
+
+	g_object_unref( editor );
 }
 
 static void
-on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
+on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *toplevel )
 {
-	static const gchar *thisfn = "nact_preferences_editor_on_initial_load_dialog";
+	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_gtk_toplevel";
 	NactApplication *application;
 	NAUpdater *updater;
 	GtkWidget *container;
@@ -351,27 +329,29 @@ on_base_initial_load_dialog( NactPreferencesEditor *editor, gpointer user_data )
 
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
+	if( !editor->private->dispose_has_run ){
+		g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-	updater = nact_application_get_updater( application );
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+		updater = nact_application_get_updater( application );
 
-	container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-	nact_export_format_init_display(
-			container, NA_PIVOT( updater ),
-			EXPORT_FORMAT_DISPLAY_PREFERENCES, !editor->private->preferences_locked );
+		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
+		nact_export_format_init_display(
+				container, NA_PIVOT( updater ),
+				EXPORT_FORMAT_DISPLAY_PREFERENCES, !editor->private->preferences_locked );
 
-	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
-	nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
+		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
+		nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
 
-	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
-	nact_providers_list_create_model( listview );
+		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
+		nact_providers_list_create_model( listview );
+	}
 }
 
 static void
-on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
+on_base_initialize_base_window( NactPreferencesEditor *editor )
 {
-	static const gchar *thisfn = "nact_preferences_editor_on_runtime_init_dialog";
+	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_base_window";
 	NactApplication *application;
 	NAUpdater *updater;
 	NASettings *settings;
@@ -380,75 +360,84 @@ on_base_runtime_init_dialog( NactPreferencesEditor *editor, gpointer user_data )
 	GtkTreeView *listview;
 	GtkWidget *ok_button;
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
+	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+	if( !editor->private->dispose_has_run ){
+		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
 
-	/* first tab: runtime preferences
-	 */
-	order_mode_setup( editor, NA_PIVOT( updater ));
-	root_menu_setup( editor, settings );
-	about_item_setup( editor, settings );
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
+		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
-	/* second tab: ui preferences
-	 */
-	relabel_menu_setup( editor, settings );
-	relabel_action_setup( editor, settings );
-	relabel_profile_setup( editor, settings );
-	esc_quit_setup( editor, settings );
-	esc_confirm_setup( editor, settings );
-	auto_save_setup( editor, settings );
+		/* first tab: runtime preferences
+		 */
+		order_mode_setup( editor, NA_PIVOT( updater ));
+		root_menu_setup( editor, settings );
+		about_item_setup( editor, settings );
 
-	/* third tab: import mode
-	 */
-	import_mode_setup( editor, NA_PIVOT( updater ));
+		/* second tab: ui preferences
+		 */
+		relabel_menu_setup( editor, settings );
+		relabel_action_setup( editor, settings );
+		relabel_profile_setup( editor, settings );
+		esc_quit_setup( editor, settings );
+		esc_confirm_setup( editor, settings );
+		auto_save_setup( editor, settings );
 
-	/* fourth tab: export format
-	 */
-	export_format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, &editor->private->export_format_mandatory );
-	container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-	nact_export_format_select( container, !editor->private->export_format_mandatory, export_format );
+		/* third tab: import mode
+		 */
+		import_mode_setup( editor, NA_PIVOT( updater ));
 
-	/* fifth tab: default schemes
-	 */
-	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
-	nact_schemes_list_init_view( listview, BASE_WINDOW( editor ), NULL, NULL );
+		/* fourth tab: export format
+		 */
+		export_format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, &editor->private->export_format_mandatory );
+		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
+		nact_export_format_select( container, !editor->private->export_format_mandatory, export_format );
 
-	/* sixth tab: I/O providers priorities
-	 */
-	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
-	nact_providers_list_init_view( BASE_WINDOW( editor ), listview );
+		/* fifth tab: default schemes
+		 */
+		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
+		nact_schemes_list_init_view( listview, BASE_WINDOW( editor ), NULL, NULL );
 
-	/* dialog buttons
-	 */
-	base_window_signal_connect_by_name(
-			BASE_WINDOW( editor ),
-			"CancelButton",
-			"clicked",
-			G_CALLBACK( on_cancel_clicked ));
+		/* sixth tab: I/O providers priorities
+		 */
+		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
+		nact_providers_list_init_view( BASE_WINDOW( editor ), listview );
 
-	ok_button = base_window_get_widget( BASE_WINDOW( editor ), "OKButton" );
-	base_window_signal_connect(
-			BASE_WINDOW( editor ),
-			G_OBJECT( ok_button ),
-			"clicked",
-			G_CALLBACK( on_ok_clicked ));
-	nact_gtk_utils_set_editable( G_OBJECT( ok_button ), !editor->private->preferences_locked );
+		/* dialog buttons
+		 */
+		base_window_signal_connect_by_name( BASE_WINDOW( editor ),
+				"CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
+
+		ok_button = base_window_get_widget( BASE_WINDOW( editor ), "OKButton" );
+		base_window_signal_connect( BASE_WINDOW( editor ),
+				G_OBJECT( ok_button ), "clicked", G_CALLBACK( on_ok_clicked ));
+		nact_gtk_utils_set_editable( G_OBJECT( ok_button ), !editor->private->preferences_locked );
+	}
+}
+
+static gchar *
+on_base_get_wsp_id( const BaseWindow *window )
+{
+	return( g_strdup( NA_IPREFS_PREFERENCES_WSP ));
 }
 
 static void
-on_base_all_widgets_showed( NactPreferencesEditor *editor, gpointer user_data )
+on_base_all_widgets_showed( NactPreferencesEditor *editor )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_all_widgets_showed";
 	GtkNotebook *notebook;
 
-	g_debug( "%s: editor=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
-	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
-	gtk_notebook_set_current_page( notebook, st_last_tab );
+	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
 
-	nact_schemes_list_show_all( BASE_WINDOW( editor ));
+	if( !editor->private->dispose_has_run ){
+		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
+
+		notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
+		gtk_notebook_set_current_page( notebook, st_last_tab );
+
+		nact_schemes_list_show_all( BASE_WINDOW( editor ));
+	}
 }
 
 /*
@@ -1007,42 +996,10 @@ save_preferences( NactPreferencesEditor *editor )
 	}
 }
 
-static gboolean
-base_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
+static void
+on_dialog_ok( BaseDialog *dialog )
 {
-	static const gchar *thisfn = "nact_preferences_editor_on_dialog_response";
-	NactPreferencesEditor *editor;
-	gboolean stop;
-	GtkNotebook *notebook;
+	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
 
-	g_return_val_if_fail( NACT_IS_PREFERENCES_EDITOR( window ), FALSE );
-
-	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, ( void * ) dialog, code, ( void * ) window );
-
-	stop = FALSE;
-	editor = NACT_PREFERENCES_EDITOR( window );
-
-	switch( code ){
-		case GTK_RESPONSE_NONE:
-		case GTK_RESPONSE_DELETE_EVENT:
-		case GTK_RESPONSE_CLOSE:
-		case GTK_RESPONSE_CANCEL:
-
-			stop = TRUE;
-			break;
-
-		case GTK_RESPONSE_OK:
-			save_preferences( editor );
-			stop = TRUE;
-			break;
-	}
-
-	if( stop ){
-		notebook = GTK_NOTEBOOK( base_window_get_widget( window, "PreferencesNotebook" ));
-		st_last_tab = gtk_notebook_get_current_page( notebook );
-		g_object_unref( editor );
-	}
-
-
-	return( stop );
+	save_preferences( NACT_PREFERENCES_EDITOR( dialog ));
 }
