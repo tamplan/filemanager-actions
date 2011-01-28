@@ -1273,6 +1273,8 @@ read_key_value_from_key_file( GKeyFile *key_file, const gchar *group, const gcha
 	gchar *str;
 	GError *error;
 
+	g_debug( "%s: group=%s, key=%s", thisfn, group, key );
+
 	value = NULL;
 	error = NULL;
 

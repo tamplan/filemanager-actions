@@ -51,9 +51,8 @@ void nact_main_menubar_file_on_new_profile( GtkAction *action, NactMainWindow *w
 void nact_main_menubar_file_on_save       ( GtkAction *action, NactMainWindow *window );
 void nact_main_menubar_file_on_quit       ( GtkAction *action, NactMainWindow *window );
 
-void nact_main_menubar_file_save_items  ( NactMainWindow *window );
-
-void nact_main_menubar_file_set_autosave( NactMainWindow *window, gboolean enabled, guint period );
+void nact_main_menubar_file_save_items      ( NactMainWindow *window );
+void nact_main_menubar_file_install_autosave( NactMainWindow *window );
 
 G_END_DECLS
 

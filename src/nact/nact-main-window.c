@@ -184,10 +184,8 @@ static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer 
 
 static gboolean confirm_for_giveup_from_menu( NactMainWindow *window );
 static gboolean confirm_for_giveup_from_pivot( NactMainWindow *window );
-static void     install_autosave( NactMainWindow *window );
-static void     ipivot_consumer_on_autosave_changed( NAIPivotConsumer *instance, gboolean enabled, guint period );
 static void     ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data );
-static void     ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode );
+static void     on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactMainWindow *window );
 static void     ipivot_consumer_on_io_provider_prefs_changed( NAIPivotConsumer *instance );
 static void     ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance );
 static void     update_ui_after_provider_change( NactMainWindow *window );
@@ -605,10 +603,10 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->on_autosave_changed = ipivot_consumer_on_autosave_changed;
+	iface->on_autosave_changed = NULL;
 	iface->on_create_root_menu_changed = NULL;
 	iface->on_display_about_changed = NULL;
-	iface->on_display_order_changed = ipivot_consumer_on_display_order_changed;
+	iface->on_display_order_changed = NULL;
 	iface->on_io_provider_prefs_changed = ipivot_consumer_on_io_provider_prefs_changed;
 	iface->on_items_changed = ipivot_consumer_on_items_changed;
 	iface->on_mandatory_prefs_changed = ipivot_consumer_on_mandatory_prefs_changed;
@@ -1131,8 +1129,8 @@ on_base_initialize_base_window( NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_window_on_base_initialize_base_window";
 	NactApplication *application;
 	NAUpdater *updater;
+	NASettings *settings;
 	GList *tree;
-	gint order_mode;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -1146,6 +1144,8 @@ on_base_initialize_base_window( NactMainWindow *window )
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
+		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
 		tree = na_pivot_get_items( NA_PIVOT( updater ));
 		g_debug( "%s: pivot_tree=%p", thisfn, ( void * ) tree );
 
@@ -1162,8 +1162,7 @@ on_base_initialize_base_window( NactMainWindow *window )
 
 		nact_main_menubar_runtime_init( window );
 
-		order_mode = na_iprefs_get_order_mode( NA_PIVOT( updater ), NULL );
-		ipivot_consumer_on_display_order_changed( NA_IPIVOT_CONSUMER( window ), order_mode );
+		na_settings_register_key_callback( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), window );
 
 		/* fill the IActionsList at last so that all signals are connected
 		 */
@@ -1177,6 +1176,9 @@ on_base_initialize_base_window( NactMainWindow *window )
 
 		base_window_signal_connect( BASE_WINDOW( window ),
 				G_OBJECT( window ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, G_CALLBACK( on_main_window_level_zero_order_changed ));
+
+		nact_main_menubar_file_install_autosave( window );
+
 	}
 }
 
@@ -1221,8 +1223,6 @@ on_base_all_widgets_showed( NactMainWindow *window )
 
 		nact_iactions_list_all_widgets_showed( NACT_IACTIONS_LIST( window ));
 		nact_sort_buttons_all_widgets_showed( window );
-
-		install_autosave( window );
 	}
 }
 
@@ -1480,25 +1480,6 @@ confirm_for_giveup_from_pivot( NactMainWindow *window )
 	return( reload_ok );
 }
 
-static void
-install_autosave( NactMainWindow *window )
-{
-	gboolean autosave_on;
-	guint autosave_period;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-	autosave_on = na_settings_get_boolean( settings, NA_IPREFS_MAIN_SAVE_AUTO, NULL, NULL );
-	autosave_period = na_settings_get_uint( settings, NA_IPREFS_MAIN_SAVE_PERIOD, NULL, NULL );
-
-	nact_main_menubar_file_set_autosave( window, autosave_on, autosave_period );
-}
-
 /*
  * called by NAPivot because this window implements the IIOConsumer
  * interface, i.e. it wish to be advertised when the list of actions
@@ -1530,48 +1511,40 @@ ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data
 }
 
 /*
- * called by NAPivot via NAIPivotConsumer whenever the
- * autosave preferences have been modified.
+ * NASettings callback for a change on NA_IPREFS_ITEMS_LIST_ORDER_MODE key
  */
 static void
-ipivot_consumer_on_autosave_changed( NAIPivotConsumer *instance, gboolean enabled, guint period )
+on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_autosave_changed";
-
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
-	g_debug( "%s: instance=%p, enabled=%s, period=%d",
-			thisfn, ( void * ) instance, enabled ? "True":"False", period );
-
-	nact_main_menubar_file_set_autosave( NACT_MAIN_WINDOW( instance ), enabled, period );
-}
-
-/*
- * called by NAPivot via NAIPivotConsumer whenever the
- * "sort in alphabetical order" preference is modified.
- */
-static void
-ipivot_consumer_on_display_order_changed( NAIPivotConsumer *instance, gint order_mode )
-{
-	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_display_order_changed";
+	static const gchar *thisfn = "nact_main_window_on_settings_order_mode_changed";
+	const gchar *order_mode_str;
+	guint order_mode;
 	NactApplication *application;
 	NAUpdater *updater;
 	GList *tree;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
-	g_debug( "%s: instance=%p, order_mode=%d", thisfn, ( void * ) instance, order_mode );
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( instance ), order_mode );
-	nact_sort_buttons_display_order_change( NACT_MAIN_WINDOW( instance ), order_mode );
+	if( !window->private->dispose_has_run ){
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-	updater = nact_application_get_updater( application );
-	tree = na_pivot_get_items( NA_PIVOT( updater ));
+		order_mode_str = ( const gchar * ) new_value;
+		order_mode = na_iprefs_get_order_mode_by_label( order_mode_str );
 
-	if( g_list_length( tree )){
-		g_signal_emit_by_name(
-				NACT_MAIN_WINDOW( instance ),
-				MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
-				GINT_TO_POINTER( TRUE ));
+		g_debug( "%s: group=%s, key=%s, order_mode=%u (%s), mandatory=%s, window=%p (%s)",
+				thisfn, group, key, order_mode, order_mode_str,
+				mandatory ? "True":"False", ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
+		nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( window ), order_mode );
+		nact_sort_buttons_display_order_change( window, order_mode );
+
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		updater = nact_application_get_updater( application );
+		tree = na_pivot_get_items( NA_PIVOT( updater ));
+
+		if( g_list_length( tree )){
+			g_signal_emit_by_name( window,
+					MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
+		}
 	}
 }
 

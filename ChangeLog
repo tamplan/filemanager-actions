@@ -1,5 +1,15 @@
 2011-01-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c:
+	(NAIPivotConsumer->on_display_order_changed):
+	Moved to on_settings_order_mode_changed() function.
+	(NAIPivotConsumer->on_autosave_changed):
+	Moved to nact_main_menubar_file_install_autosave() new function.
+
+	* src/nact/nact-main-menubar-file.c:
+	* src/nact/nact-main-menubar-file.h
+	(nact_main_menubar_file_install_autosave): New function.
+
 	* src/core/na-iprefs.c:
 	* src/core/na-iprefs.h (na_iprefs_get_order_mode_by_label):
 	New function.

@@ -36,6 +36,7 @@
 #include <libintl.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-timeout.h>
 
 #include <core/na-io-provider.h>
 #include <core/na-iprefs.h>
@@ -46,7 +47,8 @@
 #include "nact-main-tab.h"
 #include "nact-main-menubar-file.h"
 
-static guint  st_event_autosave   = 0;
+static NATimeout st_autosave_prefs_timeout = { 0 };
+static guint     st_event_autosave         = 0;
 
 static gchar *st_save_error       = N_( "Save error" );
 static gchar *st_save_warning     = N_( "Some items may not have been saved" );
@@ -54,6 +56,8 @@ static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items 
 static gchar *st_delete_error     = N_( "Some items cannot have been deleted" );
 
 static gboolean save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages );
+static void     on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer new_value, gpointer user_data );
+static void     on_autosave_prefs_timeout( NactMainWindow *window );
 static gboolean autosave_callback( NactMainWindow *window );
 static void     autosave_destroyed( NactMainWindow *window );
 
@@ -489,17 +493,58 @@ nact_main_menubar_file_on_quit( GtkAction *gtk_action, NactMainWindow *window )
 }
 
 /**
- * nact_main_menubar_file_set_autosave:
+ * nact_main_menubar_file_install_autosave:
  * @window: the #NactMainWindow main window.
- * @enabled: whether the autosave feature is enabled.
- * @period: autosave periodicity in minutes.
  *
- * Setup or disabled the autosave feature.
+ * Setup the autosave feature and initialize its monitoring.
  */
 void
-nact_main_menubar_file_set_autosave( NactMainWindow *window, gboolean enabled, guint period )
+nact_main_menubar_file_install_autosave( NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_file_set_autosave";
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	st_autosave_prefs_timeout.timeout = 100;
+	st_autosave_prefs_timeout.handler = ( NATimeoutFunc ) on_autosave_prefs_timeout;
+	st_autosave_prefs_timeout.user_data = window;
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	na_settings_register_key_callback( settings, NA_IPREFS_MAIN_SAVE_AUTO, G_CALLBACK( on_autosave_prefs_changed ), NULL );
+	na_settings_register_key_callback( settings, NA_IPREFS_MAIN_SAVE_PERIOD, G_CALLBACK( on_autosave_prefs_changed ), NULL );
+
+	on_autosave_prefs_timeout( window );
+}
+
+static void
+on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer new_value, gpointer user_data )
+{
+	na_timeout_event( &st_autosave_prefs_timeout );
+}
+
+static void
+on_autosave_prefs_timeout( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_menubar_file_on_autosave_prefs_timeout";
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
+	gboolean autosave_on;
+	guint autosave_period;
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	autosave_on = na_settings_get_boolean( settings, NA_IPREFS_MAIN_SAVE_AUTO, NULL, NULL );
+	autosave_period = na_settings_get_uint( settings, NA_IPREFS_MAIN_SAVE_PERIOD, NULL, NULL );
 
 	if( st_event_autosave ){
 		if( !g_source_remove( st_event_autosave )){
@@ -508,10 +553,10 @@ nact_main_menubar_file_set_autosave( NactMainWindow *window, gboolean enabled, g
 		st_event_autosave = 0;
 	}
 
-	if( enabled ){
+	if( autosave_on ){
 		st_event_autosave = g_timeout_add_seconds_full(
 				G_PRIORITY_DEFAULT,
-				period * 60,
+				autosave_period * 60,
 				( GSourceFunc ) autosave_callback,
 				window,
 				( GDestroyNotify ) autosave_destroyed );
