@@ -853,7 +853,7 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 				bname = na_selected_info_get_basename( NA_SELECTED_INFO( it->data ));
 				bname_utf8 = g_filename_to_utf8( bname, -1, NULL, NULL, NULL );
 				if( !matchcase ){
-					tmp = g_ascii_strdown( bname_utf8, g_utf8_strlen( bname_utf8, -1 ));
+					tmp = g_utf8_strdown( bname_utf8, -1 );
 					g_free( bname_utf8 );
 					bname_utf8 = tmp;
 				}
@@ -862,7 +862,7 @@ is_candidate_for_basenames( const NAIContext *object, guint target, GList *files
 				for( ib = basenames ; ib && ok ; ib = ib->next ){
 					pattern = matchcase ?
 						g_strdup(( gchar * ) ib->data ) :
-						g_ascii_strdown(( gchar * ) ib->data, strlen(( gchar * ) ib->data ));
+						g_utf8_strdown(( gchar * ) ib->data, -1 );
 					positive = is_positive_assertion( pattern );
 					pattern_utf8 = g_filename_to_utf8( positive ? pattern : pattern+1, -1, NULL, NULL, NULL );
 
