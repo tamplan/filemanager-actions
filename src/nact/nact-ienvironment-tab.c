@@ -215,7 +215,6 @@ nact_ienvironment_tab_initial_load_toplevel( NactIEnvironmentTab *instance )
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
-
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		init_selection_count_combobox( instance );
@@ -234,8 +233,6 @@ void
 nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 {
 	static const gchar *thisfn = "nact_ienvironment_tab_runtime_init_toplevel";
-	GtkWidget *selcount_ope, *selcount_int;
-	GtkWidget *button, *entry;
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -246,7 +243,6 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
-
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		base_window_signal_connect(
@@ -255,40 +251,20 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		selcount_ope = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountSigneCombobox" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( selcount_ope ),
-				"changed",
-				G_CALLBACK( on_selcount_ope_changed ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"SelectionCountSigneCombobox", "changed", G_CALLBACK( on_selcount_ope_changed ));
 
-		selcount_int = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountNumberEntry" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( selcount_int ),
-				"changed",
-				G_CALLBACK( on_selcount_int_changed ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"SelectionCountNumberEntry", "changed", G_CALLBACK( on_selcount_int_changed ));
 
-		button = base_window_get_widget( BASE_WINDOW( instance ), "ShowAlwaysButton" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( button ),
-				"toggled",
-				G_CALLBACK( on_show_always_toggled ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"ShowAlwaysButton", "toggled", G_CALLBACK( on_show_always_toggled ));
 
-		button = base_window_get_widget( BASE_WINDOW( instance ), "OnlyShowButton" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( button ),
-				"toggled",
-				G_CALLBACK( on_only_show_toggled ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"OnlyShowButton", "toggled", G_CALLBACK( on_only_show_toggled ));
 
-		button = base_window_get_widget( BASE_WINDOW( instance ), "DoNotShowButton" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( button ),
-				"toggled",
-				G_CALLBACK( on_do_not_show_toggled ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"DoNotShowButton", "toggled", G_CALLBACK( on_do_not_show_toggled ));
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
 		model = gtk_tree_view_get_model( listview );
@@ -306,54 +282,26 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 
 		column = gtk_tree_view_get_column( listview, ENV_BOOL_COLUMN );
 		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( renderers->data ),
-				"toggled",
-				G_CALLBACK( on_desktop_toggled ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( renderers->data ), "toggled", G_CALLBACK( on_desktop_toggled ));
 
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"TryExecEntry", "changed", G_CALLBACK( on_try_exec_changed ));
 
-		entry = base_window_get_widget( BASE_WINDOW( instance ), "TryExecEntry" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( entry ),
-				"changed",
-				G_CALLBACK( on_try_exec_changed ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"TryExecButton", "clicked", G_CALLBACK( on_try_exec_browse ));
 
-		button = base_window_get_widget( BASE_WINDOW( instance ), "TryExecButton" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( button ),
-				"clicked",
-				G_CALLBACK( on_try_exec_browse ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"ShowIfRegisteredEntry", "changed", G_CALLBACK( on_show_if_registered_changed ));
 
-		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRegisteredEntry" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( entry ),
-				"changed",
-				G_CALLBACK( on_show_if_registered_changed ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"ShowIfTrueEntry", "changed", G_CALLBACK( on_show_if_true_changed ));
 
-		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfTrueEntry" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( entry ),
-				"changed",
-				G_CALLBACK( on_show_if_true_changed ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"ShowIfRunningEntry", "changed", G_CALLBACK( on_show_if_running_changed ));
 
-		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningEntry" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( entry ),
-				"changed",
-				G_CALLBACK( on_show_if_running_changed ));
-
-		button = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningButton" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( button ),
-				"clicked",
-				G_CALLBACK( on_show_if_running_browse ));
+		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
+				"ShowIfRunningButton", "clicked", G_CALLBACK( on_show_if_running_browse ));
 	}
 }
 
@@ -365,7 +313,6 @@ nact_ienvironment_tab_all_widgets_showed( NactIEnvironmentTab *instance )
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
-
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	}
 }
@@ -414,7 +361,6 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
-
 		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 
 		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
