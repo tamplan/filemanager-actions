@@ -82,6 +82,8 @@ libna_core_la_SOURCES = \
 	na-ipivot-consumer.h								\
 	na-iprefs.c											\
 	na-iprefs.h											\
+	na-marshal.c										\
+	na-marshal.h										\
 	na-module.c											\
 	na-module.h											\
 	na-object.c											\
@@ -124,4 +126,17 @@ pkgdata_DATA = \
 
 EXTRA_DIST = \
 	$(pkgdata_DATA)										\
+	na-marshal											\
+	$(NULL)
+
+na-marshal.c: na-marshal.h
+	echo "#include \"na-marshal.h\"" > $@
+	glib-genmarshal --prefix=na_cclosure_marshal --body na-marshal >> $@
+
+na-marshal.h: na-marshal
+	glib-genmarshal --prefix=na_cclosure_marshal --header na-marshal > $@
+
+CLEANFILES = \
+	na-marshal.c										\
+	na-marshal.h										\
 	$(NULL)

@@ -1,5 +1,13 @@
 2011-01-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/Makefile.am: Generate na_cclosure_masharl functions.
+
+	* src/core/na-settings.c:
+	* src/core/na-settings.h: No more try to summarize notifications here.
+
+	* src/plugin-menu/nautilus-actions.c (instance_constructed):
+	Register NASettings callbacks on the runtime keys.
+
 	* src/nact/nact-main-window.c:
 	(NAIPivotConsumer->on_display_order_changed):
 	Moved to on_settings_order_mode_changed() function.

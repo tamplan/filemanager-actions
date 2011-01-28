@@ -104,7 +104,7 @@ static GList            *add_about_item( NautilusActions *plugin, GList *nautilu
 static void              execute_about( NautilusMenuItem *item, NautilusActions *plugin );
 
 static void              on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin );
-static void              on_settings_runtime_changed_handler( NASettings *settings, NautilusActions *plugin );
+static void              on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NautilusActions *plugin );
 static void              on_change_event_timeout( NautilusActions *plugin );
 
 GType
@@ -228,23 +228,26 @@ instance_constructed( GObject *object )
 		/* register against NAPivot to be notified of items changes
 		 */
 		self->private->items_changed_handler =
-				g_signal_connect(
-						self->private->pivot,
-						PIVOT_SIGNAL_ITEMS_CHANGED,
-						G_CALLBACK( on_pivot_items_changed_handler ), self );
+				g_signal_connect( self->private->pivot,
+						PIVOT_SIGNAL_ITEMS_CHANGED, G_CALLBACK( on_pivot_items_changed_handler ), self );
 
 		/* register against NASettings to be notified of changes on
 		 *  our runtime preferences
+		 * because we only monitor here four runtime keys, we prefer the
+		 * callback way that the signal one
 		 */
 		settings = na_pivot_get_settings( self->private->pivot );
 
-		/* register against NASettings to be notified of runtime preferences changes
-		 */
-		self->private->settings_changed_handler =
-				g_signal_connect(
-						settings,
-						SETTINGS_SIGNAL_RUNTIME_CHANGE,
-						G_CALLBACK( on_settings_runtime_changed_handler ), self );
+		na_settings_register_key_callback( settings,
+				NA_IPREFS_IO_PROVIDERS_READ_STATUS, G_CALLBACK( on_settings_key_changed_handler ), self );
+		na_settings_register_key_callback( settings,
+				NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, G_CALLBACK( on_settings_key_changed_handler ), self );
+		na_settings_register_key_callback( settings,
+				NA_IPREFS_ITEMS_CREATE_ROOT_MENU, G_CALLBACK( on_settings_key_changed_handler ), self );
+		na_settings_register_key_callback( settings,
+				NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, G_CALLBACK( on_settings_key_changed_handler ), self );
+		na_settings_register_key_callback( settings,
+				NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_key_changed_handler ), self );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
@@ -1023,14 +1026,13 @@ on_pivot_items_changed_handler( NAPivot *pivot, NautilusActions *plugin )
 	}
 }
 
-/* signal emitted by NASettings at the end of a burst of 'changed' signals
+/* callback triggered by NASettings at the end of a burst of 'changed' signals
  * on runtime preferences which may affect the way file manager displays
  * its context menus
  */
 static void
-on_settings_runtime_changed_handler( NASettings *settings, NautilusActions *plugin )
+on_settings_key_changed_handler( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NautilusActions *plugin )
 {
-	g_return_if_fail( NA_IS_SETTINGS( settings ));
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
 
 	if( !plugin->private->dispose_has_run ){

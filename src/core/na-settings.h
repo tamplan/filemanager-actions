@@ -50,16 +50,10 @@
  * has been read from the global configuration or from the
  * per-user one.
  *
- * NASettings class implements two notification systems:
- *
- * a) a per-key system, which relies on a callback pre-registration;
- *    see na_settings_register_key_callback() function;
- * b) a per-usage system, which relies on the usage of the changed
- *    key; see signal descriptions.
- *
- * The consumer of change notifications will choose the most accurate
- * system for its needs, e.g. whether it requires to have an exact list
- * of modified keys, or not.
+ * NASettings class monitors the whole configuration.
+ * A client may be informed of a modification of the value of a key either by
+ * pre-registering a callback on this key (see na_settings_register_key_callback()
+ * function), or by connecting to and filtering the notification signal.
  */
 
 #include <glib-object.h>
@@ -93,15 +87,11 @@ typedef struct {
 
 GType na_settings_get_type( void );
 
-/* these keys should be monitored by the Nautilus menu plugin as they
- * have an impact on the order or the display of items in the file manager
- * context menus
+/* This is a composite key;
+ * by registering a callback on this key, a client may be informed of any
+ * modification regarding the readability status of the i/o providers.
  */
 #define NA_IPREFS_IO_PROVIDERS_READ_STATUS			"io-providers-read-status-composite-key"
-#define NA_IPREFS_ITEMS_ADD_ABOUT_ITEM				"items-add-about-item"
-#define NA_IPREFS_ITEMS_CREATE_ROOT_MENU			"items-create-root-menu"
-#define NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER			"items-level-zero-order"
-#define NA_IPREFS_ITEMS_LIST_ORDER_MODE				"items-list-order-mode"
 
 /* other keys, mainly user preferences
  */
@@ -137,6 +127,10 @@ GType na_settings_get_type( void );
 #define NA_IPREFS_ICON_CHOOSER_PANED				"item-icon-chooser-paned-width"
 #define NA_IPREFS_ICON_CHOOSER_WSP					"item-icon-chooser-wsp"
 #define NA_IPREFS_IO_PROVIDERS_WRITE_ORDER			"io-providers-write-order"
+#define NA_IPREFS_ITEMS_ADD_ABOUT_ITEM				"items-add-about-item"
+#define NA_IPREFS_ITEMS_CREATE_ROOT_MENU			"items-create-root-menu"
+#define NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER			"items-level-zero-order"
+#define NA_IPREFS_ITEMS_LIST_ORDER_MODE				"items-list-order-mode"
 #define NA_IPREFS_MAIN_PANED						"main-paned-width"
 #define NA_IPREFS_MAIN_SAVE_AUTO					"main-save-auto"
 #define NA_IPREFS_MAIN_SAVE_PERIOD					"main-save-period"
@@ -160,25 +154,17 @@ GType na_settings_get_type( void );
 #define NA_IPREFS_DEFAULT_IMPORT_MODE				"NoImport"
 #define NA_IPREFS_DEFAULT_LIST_ORDER_MODE			"AscendingOrder"
 
-/* signals
- *
- * NASettings monitors, and so is able to send messages about, two sort
- * of changes:
- * - runtime preferences change, which group all changes which may have
- *   an effect on the display in file manager context menus;
- * - user interface preferences change, which have only an effect on the
- *   NACT configuration tool
- *
- * These two signals are a summarization of individual changes.
+/* pre-registration of a callback
  */
-#define SETTINGS_SIGNAL_RUNTIME_CHANGE				"settings-runtime-change"
-#define SETTINGS_SIGNAL_UI_CHANGE					"settings-ui-change"
-
 typedef void ( *NASettingsKeyCallback )( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, void *user_data );
 
-NASettings *na_settings_new                     ( void );
-
 void        na_settings_register_key_callback   ( NASettings *settings, const gchar *key, GCallback callback, gpointer user_data );
+
+/* signal sent when the value of a key changes
+ */
+#define SETTINGS_SIGNAL_KEY_CHANGED				"settings-key-changed"
+
+NASettings *na_settings_new                     ( void );
 
 gboolean    na_settings_get_boolean             ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
 gboolean    na_settings_get_boolean_ex          ( NASettings *settings, const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory );
@@ -194,7 +180,8 @@ gboolean    na_settings_set_string_list         ( NASettings *settings, const gc
 gboolean    na_settings_set_uint                ( NASettings *settings, const gchar *key, guint value );
 gboolean    na_settings_set_uint_list           ( NASettings *settings, const gchar *key, const GList *value );
 
-/* na_iprefs_get_io_providers() */
+/* na_iprefs_get_io_providers()
+ */
 GSList     *na_settings_get_groups              ( NASettings *settings );
 
 G_END_DECLS
