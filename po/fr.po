@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: nautilus-actions fr\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2011-01-24 22:35+0000\n"
+"POT-Creation-Date: 2011-01-28 00:00+0000\n"
 "PO-Revision-Date: 2011-01-08 21:06+0100\n"
 "Last-Translator: Bruno Brouard <annoa.b@gmail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -1830,7 +1830,7 @@ msgstr "Nom de l'application"
 msgid "The name of the application"
 msgstr "Le nom de l'application"
 
-#: ../src/nact/base-application.c:200 ../src/nact/nact-schemes-list.c:165
+#: ../src/nact/base-application.c:200 ../src/nact/nact-schemes-list.c:171
 msgid "Description"
 msgstr "Description"
 
@@ -1856,7 +1856,7 @@ msgstr "Nom unique"
 msgid "The Unique name of the application"
 msgstr "Le nom unique de l'application"
 
-#: ../src/nact/base-application.c:584
+#: ../src/nact/base-application.c:586
 #, c-format
 msgid ""
 "Another instance of %s is already running.\n"
@@ -1865,65 +1865,84 @@ msgstr ""
 "Une autre instance de %s est déjà en cours d'exécution.\n"
 "Basculez vers celle-ci."
 
-#: ../src/nact/base-application.c:586
+#: ../src/nact/base-application.c:588
 msgid "The application is not unique"
 msgstr "L'application n'est pas unique"
 
-#: ../src/nact/base-assistant.c:577
+#: ../src/nact/base-assistant.c:157
+msgid "Quit on Escape"
+msgstr "Quitter sur Échap."
+
+#: ../src/nact/base-assistant.c:158
+msgid "Does the assistant should 'Quit' when the user hits the Escape key ?"
+msgstr "L'assistant doit-il « Quitter » lorsque l'utilisateur appuie sur la touche Échap ?"
+
+#: ../src/nact/base-assistant.c:165
+msgid "Warn on Escape"
+msgstr "Avertir sur Échap."
+
+# BUG : bad english : "Should the user confirm ..."
+#: ../src/nact/base-assistant.c:166
+msgid ""
+"Does the user should confirm when quitting the assistant on Escape key ?"
+msgstr ""
+"L'utilisateur doit-il confirmer sa volonté de quitter lors d'un appui sur la touche Échap ?"
+
+#: ../src/nact/base-assistant.c:475
 msgid "Are you sure you want to quit this assistant ?"
 msgstr "Voulez-vous vraiment quitter cet assistant ?"
 
-#: ../src/nact/base-window.c:211
+#: ../src/nact/base-window.c:206
 msgid "Parent BaseWindow"
 msgstr "Parent BaseWindow"
 
-#: ../src/nact/base-window.c:212
+#: ../src/nact/base-window.c:207
 msgid "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
 msgstr ""
 "Un pointeur (et non une référence) vers le parent BaseWindow de cette "
 "BaseWindow"
 
-#: ../src/nact/base-window.c:218
+#: ../src/nact/base-window.c:213
 msgid "BaseApplication"
 msgstr "BaseApplication"
 
-#: ../src/nact/base-window.c:219
+#: ../src/nact/base-window.c:214
 msgid "A pointer (not a reference) to the BaseApplication instance"
 msgstr "Un pointeur (et non une référence) vers l'instance BaseApplication"
 
-#: ../src/nact/base-window.c:225
+#: ../src/nact/base-window.c:220
 msgid "XML UI filename"
 msgstr "Nom du fichier XML de l'UI"
 
-#: ../src/nact/base-window.c:226
+#: ../src/nact/base-window.c:221
 msgid "The filename which contains the XML UI definition"
 msgstr "Le nom du fichier qui contient la définition XML de l'UI"
 
-#: ../src/nact/base-window.c:233
+#: ../src/nact/base-window.c:228
 msgid "Has its own GtkBuilder"
 msgstr "Possède son propre GtkBuilder"
 
-#: ../src/nact/base-window.c:234
+#: ../src/nact/base-window.c:229
 msgid ""
 "Whether this BaseWindow reallocates a new GtkBuilder each time it is opened"
 msgstr ""
 "Indique si cette BaseWindow réalloue un nouveau GtkBuilder à chaque fois "
 "qu'elle est ouverte"
 
-#: ../src/nact/base-window.c:241
+#: ../src/nact/base-window.c:236
 msgid "Toplevel name"
 msgstr "Nom du Toplevel"
 
-#: ../src/nact/base-window.c:242
+#: ../src/nact/base-window.c:237
 msgid "The internal GtkBuildable name of the toplevel window"
 msgstr "Le nom interne du GtkBuildable de la fenêtre toplevel"
 
-#: ../src/nact/base-window.c:626
+#: ../src/nact/base-window.c:619
 #, c-format
 msgid "Unable to load %s UI XML definition: %s"
 msgstr "Impossible de charger la définition XML de l'UI %s : %s"
 
-#: ../src/nact/base-window.c:650
+#: ../src/nact/base-window.c:644
 #, c-format
 msgid "Unable to load %s dialog definition."
 msgstr "Impossible de charger la définition de la boîte de dialogue %s."
@@ -2033,7 +2052,7 @@ msgid "Item is local"
 msgstr "L'élément est local"
 
 #. i18n: add a comment when a capability is already used by current item
-#: ../src/nact/nact-add-capability-dialog.c:525
+#: ../src/nact/nact-add-capability-dialog.c:498
 #, c-format
 msgid "%s (already inserted)"
 msgstr "%s (déjà inséré)"
@@ -2054,29 +2073,29 @@ msgstr "<b>Protocole</b>"
 msgid "Adding a new scheme"
 msgstr "Ajout d'un nouveau protocole"
 
-#: ../src/nact/nact-assistant-export.c:700
+#: ../src/nact/nact-assistant-export.c:698
 msgid "About to export selected items:"
 msgstr "Sur le point d'exporter les éléments sélectionnés :"
 
-#: ../src/nact/nact-assistant-export.c:714
+#: ../src/nact/nact-assistant-export.c:712
 msgid "Into the destination folder:"
 msgstr "Dans le dossier de destination :"
 
-#: ../src/nact/nact-assistant-export.c:778
+#: ../src/nact/nact-assistant-export.c:776
 msgid "Export canceled due to user action."
 msgstr "L'exportation a été annulée par l'utilisateur."
 
 #. i18n: result of the export assistant
-#: ../src/nact/nact-assistant-export.c:812
+#: ../src/nact/nact-assistant-export.c:810
 msgid "Selected actions have been proceeded :"
 msgstr "Les actions sélectionnées ont été traitées :"
 
 #. i18n: action as been successfully exported to <filename>
-#: ../src/nact/nact-assistant-export.c:831
+#: ../src/nact/nact-assistant-export.c:829
 msgid "Successfully exported as"
 msgstr "Exportation réussie dans"
 
-#: ../src/nact/nact-assistant-export.c:854
+#: ../src/nact/nact-assistant-export.c:852
 msgid "You may not have write permissions on selected folder."
 msgstr ""
 "Vous n'avez peut-être pas la permission d'écriture dans le dossier "
@@ -2149,28 +2168,28 @@ msgid "Which format should I choose to export it ?"
 msgstr "Quel format choisir à l'exportation ?"
 
 #. i18n: the title of the confirm page of the import assistant
-#: ../src/nact/nact-assistant-import.c:561
+#: ../src/nact/nact-assistant-import.c:534
 msgid "About to import selected files:"
 msgstr "Sur le point d'importer les fichiers sélectionnés :"
 
 #. i18n: result of the import assistant
-#: ../src/nact/nact-assistant-import.c:766
+#: ../src/nact/nact-assistant-import.c:739
 msgid "Selected files have been proceeded :"
 msgstr "Les fichiers sélectionnés ont été traités :"
 
 #. i18n: indicate that the file has been successfully imported
-#: ../src/nact/nact-assistant-import.c:785
+#: ../src/nact/nact-assistant-import.c:758
 msgid "Import OK"
 msgstr "L'importation a réussi"
 
 #. i18n: this is the globally unique identifier and the label of the newly imported action
-#: ../src/nact/nact-assistant-import.c:791
+#: ../src/nact/nact-assistant-import.c:764
 #, c-format
 msgid "Id.: %s\t%s"
 msgstr "Id. : %s\t%s"
 
 #. i18n: indicate that the file was not imported
-#: ../src/nact/nact-assistant-import.c:800
+#: ../src/nact/nact-assistant-import.c:773
 msgid "Not imported"
 msgstr "Non importé"
 
@@ -2183,13 +2202,13 @@ msgid "Nautilus-Actions Configuration"
 msgstr "Configuration de Nautilus-Actions"
 
 #. i18n: The action <label> is about to be exported
-#: ../src/nact/nact-export-ask.c:351
+#: ../src/nact/nact-export-ask.c:323
 #, c-format
 msgid "The action \"%s\" is about to be exported."
 msgstr "L'action « %s » est sur le point d'être exportée."
 
 #. i18n: The menu <label> is about to be exported
-#: ../src/nact/nact-export-ask.c:354
+#: ../src/nact/nact-export-ask.c:326
 #, c-format
 msgid "The menu \"%s\" is about to be exported."
 msgstr "Le menu « %s » est sur le point d'être exporté."
@@ -2603,7 +2622,7 @@ msgstr "Nouveau profil"
 msgid "Automatically saving pending modifications..."
 msgstr "Enregistrement automatique des modifications en attente..."
 
-#: ../src/nact/nact-main-window.c:1469
+#: ../src/nact/nact-main-window.c:1434
 msgid ""
 "Reloading a fresh list of actions requires that you give up with your "
 "current modifications."
@@ -2611,11 +2630,11 @@ msgstr ""
 "Si vous rechargez une nouvelle liste d'actions, toutes les modifications "
 "actuelles seront perdues."
 
-#: ../src/nact/nact-main-window.c:1472
+#: ../src/nact/nact-main-window.c:1437
 msgid "Do you really want to do this ?"
 msgstr "Voulez-vous vraiment continuer ?"
 
-#: ../src/nact/nact-main-window.c:1495
+#: ../src/nact/nact-main-window.c:1460
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
@@ -2625,7 +2644,7 @@ msgstr ""
 "Vous pouvez soit continuer de travailler sur la liste actuelle des actions, "
 "soit recharger une liste actualisée."
 
-#: ../src/nact/nact-main-window.c:1502
+#: ../src/nact/nact-main-window.c:1467
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
@@ -2633,7 +2652,7 @@ msgstr ""
 "Notez que si vous rechargez une nouvelle liste d'actions, toutes les "
 "modifications actuelles seront perdues."
 
-#: ../src/nact/nact-main-window.c:1508
+#: ../src/nact/nact-main-window.c:1473
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "Souhaitez-vous recharger une liste d'actions actualisée ?"
 
@@ -3055,69 +3074,69 @@ msgstr "_Monter"
 msgid "minutes"
 msgstr "minutes"
 
-#: ../src/nact/nact-providers-list.c:118
+#: ../src/nact/nact-providers-list.c:141
 msgid "Readable"
 msgstr "Lisible"
 
-#: ../src/nact/nact-providers-list.c:132
+#: ../src/nact/nact-providers-list.c:155
 msgid "Writable"
 msgstr "Modifiable"
 
-#: ../src/nact/nact-providers-list.c:146
+#: ../src/nact/nact-providers-list.c:169
 msgid "I/O Provider"
 msgstr "Fournisseur d'E/S"
 
 #. i18n: default name when the I/O providers doesn't provide one
-#: ../src/nact/nact-providers-list.c:232
+#: ../src/nact/nact-providers-list.c:261
 msgid "no name"
 msgstr "sans nom"
 
 #. i18n: name displayed when the corresponding I/O provider is unavailable at runtime
-#: ../src/nact/nact-providers-list.c:236
+#: ../src/nact/nact-providers-list.c:265
 msgid "unavailable I/O provider"
 msgstr "fournisseur d'E/S indisponible"
 
-#: ../src/nact/nact-schemes-list.c:153
+#: ../src/nact/nact-schemes-list.c:159
 msgid "Keyword"
 msgstr "Mot-clé"
 
 #. i18n notes : description of 'file' scheme
-#: ../src/nact/nact-schemes-list.c:283
+#: ../src/nact/nact-schemes-list.c:290
 msgid "Local files"
 msgstr "Fichiers locaux"
 
 #. i18n notes : description of 'sftp' scheme
-#: ../src/nact/nact-schemes-list.c:285
+#: ../src/nact/nact-schemes-list.c:292
 msgid "SSH files"
 msgstr "Fichiers SSH"
 
 #. i18n notes : description of 'smb' scheme
-#: ../src/nact/nact-schemes-list.c:287
+#: ../src/nact/nact-schemes-list.c:294
 msgid "Windows files"
 msgstr "Fichiers Windows"
 
 #. i18n notes : description of 'ftp' scheme
-#: ../src/nact/nact-schemes-list.c:289
+#: ../src/nact/nact-schemes-list.c:296
 msgid "FTP files"
 msgstr "Fichiers FTP"
 
 #. i18n notes : description of 'dav' scheme
-#: ../src/nact/nact-schemes-list.c:291
+#: ../src/nact/nact-schemes-list.c:298
 msgid "WebDAV files"
 msgstr "Fichiers WebDAV"
 
 #. i18n: add a comment when a scheme is already used by current item
-#: ../src/nact/nact-schemes-list.c:400
+#: ../src/nact/nact-schemes-list.c:407
 #, c-format
 msgid "%s (already used)"
 msgstr "%s (déjà utilisé)"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../src/nact/nact-schemes-list.c:724
+#: ../src/nact/nact-schemes-list.c:731
 msgid "new-scheme"
 msgstr "nouveau-protocole"
 
-#: ../src/nact/nact-schemes-list.c:725
+#: ../src/nact/nact-schemes-list.c:732
 msgid "New scheme description"
 msgstr "Description du nouveau protocole"
 
@@ -4610,27 +4629,3 @@ msgstr "Erreur : impossible d'obtenir un serveur mandataire pour le service %s"
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Erreur lors de l'appel à GetSelectedPaths : %s"
 
-#~ msgid "Unable to load %s XML definition."
-#~ msgstr "Impossible de charger la définition XML de %s."
-
-#~ msgid "Unable to initialize the internationalization environment."
-#~ msgstr "Impossible d'initialiser l'environnement d'internationalisation."
-
-#~ msgid "Unable to initialize the Gtk+ user interface."
-#~ msgstr "Impossible d'initialiser l'interface utilisateur Gtk+."
-
-#~ msgid "Unable to load the XML definition from %s."
-#~ msgstr "Impossible de charger la définition XML à partir de %s."
-
-#~ msgid "Unable to get the main window of the application."
-#~ msgstr "Impossible d'obtenir la fenêtre principale de l'application."
-
-#~ msgid ""
-#~ "Another instance of Nautilus-Actions Configuration Tool is already "
-#~ "running."
-#~ msgstr ""
-#~ "Une autre instance de l'outil de configuration de Nautilus-Actions est "
-#~ "déjà lancée."
-
-#~ msgid "Please switch back to it."
-#~ msgstr "Basculez vers celle-ci."
