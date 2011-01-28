@@ -150,6 +150,26 @@ na_iprefs_get_order_mode( const NAPivot *pivot, gboolean *mandatory )
 }
 
 /*
+ * na_iprefs_get_order_mode_by_label:
+ * @label: the label.
+ *
+ * This function converts a label (e.g. 'ManualOrder') stored in user preferences
+ * into the corresponding integer internally used. This is needed e.g. when
+ * monitoring the preferences changes.
+ *
+ * Returns: the order mode currently set.
+ */
+guint
+na_iprefs_get_order_mode_by_label( const gchar *label )
+{
+	guint order_mode;
+
+	order_mode = enum_map_id_from_string( st_order_mode, label );
+
+	return( order_mode );
+}
+
+/*
  * na_iprefs_set_order_mode:
  * @pivot: the #NAPivot application object.
  * @mode: the new value to be written.
