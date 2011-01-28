@@ -98,9 +98,9 @@ typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
  * BaseWindowClass:
  * @initialize_gtk_toplevel: initialize the toplevel GtkWindow
  * @initialize_base_window:  initialize the BaseWindow
+ * @get_wsp_id:              returns the string which handles size and position preferences
  * @all_widgets_showed:      all widgets have been showed
  * @run:                     run the dialog box loop
- * @iprefs_get_window_id:    returns the string which handles size and position preferences
  * @is_willing_to_quit:      asks if the window is willing to quit
  *
  * This defines the virtual method a derived class may, should or must implement.

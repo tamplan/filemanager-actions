@@ -132,9 +132,6 @@ static void     on_all_widgets_showed_class_handler( BaseWindow *window );
 static gboolean do_run( BaseWindow *window, GtkWindow *toplevel );
 static gboolean is_main_window( BaseWindow *window );
 static gboolean on_delete_event( GtkWidget *widget, GdkEvent *event, BaseWindow *window );
-#if 0
-static gboolean on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window );
-#endif
 
 static void     record_connected_signal( BaseWindow *window, GObject *instance, gulong handler_id );
 static gint     display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *primary, const gchar *secondary );
@@ -1079,36 +1076,6 @@ base_window_is_willing_to_quit( const BaseWindow *window )
 
 	return( willing_to );
 }
-
-/*
- * this is the handler for the 'response' message when the main window is
- * actually a GtkDialog
- *
- * we default to quit the dialog loop
- */
-#if 0
-static gboolean
-on_dialog_response( GtkDialog *dialog, gint code, BaseWindow *window )
-{
-	static const gchar *thisfn = "base_window_on_dialog_response";
-	gboolean stop = FALSE;
-
-	g_debug( "%s: dialog=%p, code=%d, window=%p", thisfn, ( void * ) dialog, code, ( void * ) window );
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
-
-	if( !window->private->dispose_has_run ){
-
-		if( BASE_WINDOW_GET_CLASS( window )->dialog_response ){
-			stop = BASE_WINDOW_GET_CLASS( window )->dialog_response( window, dialog, code );
-
-		} else {
-			stop = TRUE;
-		}
-	}
-
-	return( stop );
-}
-#endif
 
 /**
  * base_window_display_error_dlg:
