@@ -400,7 +400,7 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		if( desktops && g_slist_length( desktops )){
 			nact_gtk_utils_radio_set_initial_state(
 					GTK_RADIO_BUTTON( show_button ),
-					G_CALLBACK( on_only_show_toggled ), instance, editable, ( context == NULL ));
+					G_CALLBACK( on_only_show_toggled ), instance, editable, ( context != NULL ));
 			gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
 
 		} else {
@@ -409,13 +409,13 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 			if( desktops && g_slist_length( desktops )){
 				nact_gtk_utils_radio_set_initial_state(
 						GTK_RADIO_BUTTON( notshow_button ),
-						G_CALLBACK( on_do_not_show_toggled ), instance, editable, ( context == NULL ));
+						G_CALLBACK( on_do_not_show_toggled ), instance, editable, ( context != NULL ));
 				gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
 
 			} else {
 				nact_gtk_utils_radio_set_initial_state(
 						GTK_RADIO_BUTTON( always_button ),
-						G_CALLBACK( on_show_always_toggled ), instance, editable, ( context == NULL ));
+						G_CALLBACK( on_show_always_toggled ), instance, editable, ( context != NULL ));
 				gtk_widget_set_sensitive( GTK_WIDGET( listview ), FALSE );
 				desktops = NULL;
 			}
