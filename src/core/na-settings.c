@@ -1170,11 +1170,11 @@ on_keyfile_changed_timeout( NASettings *settings )
 			g_free( group_prefix );
 		}
 
-		g_debug( "%s: sending signal for group=%s, key=%s", thisfn, changed->group, changed->def->key );
+		/*g_debug( "%s: sending signal for group=%s, key=%s", thisfn, changed->group, changed->def->key );
 		g_signal_emit_by_name( settings,
 				SETTINGS_SIGNAL_KEY_CHANGED,
 				g_strdup( changed->group ),
-				g_strdup( changed->def->key ), na_boxed_copy( changed->boxed ), changed->mandatory );
+				g_strdup( changed->def->key ), na_boxed_copy( changed->boxed ), changed->mandatory );*/
 	}
 
 	g_list_foreach( settings->private->content, ( GFunc ) release_key_value, NULL );

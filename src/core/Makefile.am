@@ -129,12 +129,12 @@ EXTRA_DIST = \
 	na-marshal											\
 	$(NULL)
 
+na-marshal.h: na-marshal
+	glib-genmarshal --prefix=na_cclosure_marshal --header na-marshal > $@
+
 na-marshal.c: na-marshal.h
 	echo "#include \"na-marshal.h\"" > $@
 	glib-genmarshal --prefix=na_cclosure_marshal --body na-marshal >> $@
-
-na-marshal.h: na-marshal
-	glib-genmarshal --prefix=na_cclosure_marshal --header na-marshal > $@
 
 CLEANFILES = \
 	na-marshal.c										\

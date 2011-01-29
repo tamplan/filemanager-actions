@@ -41,7 +41,6 @@
 
 G_BEGIN_DECLS
 
-void  nact_sort_buttons_initial_load                 ( NactMainWindow *window );
 void  nact_sort_buttons_runtime_init                 ( NactMainWindow *window );
 void  nact_sort_buttons_all_widgets_showed           ( NactMainWindow *window );
 void  nact_sort_buttons_enable_buttons               ( NactMainWindow *window, gboolean enable );

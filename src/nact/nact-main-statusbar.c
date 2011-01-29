@@ -51,15 +51,15 @@ static gboolean      display_timeout( StatusbarTimeoutDisplayStruct *stds );
 static void          display_timeout_free( StatusbarTimeoutDisplayStruct *stds );
 
 /**
- * nact_main_statusbar_initial_load_toplevel:
+ * nact_main_statusbar_initialize_gtk_toplevel:
  * @window: the #NactMainWindow.
  *
  * Initial loading of the UI.
  */
 void
-nact_main_statusbar_initial_load_toplevel( NactMainWindow *window )
+nact_main_statusbar_initialize_gtk_toplevel( NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_statusbar_initial_load_toplevel";
+	static const gchar *thisfn = "nact_main_statusbar_initialize_gtk_toplevel";
 	gint width, height;
 	GtkStatusbar *bar;
 	GtkFrame *frame;

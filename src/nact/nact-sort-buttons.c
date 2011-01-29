@@ -67,20 +67,6 @@ static ToggleGroup st_toggle_group [] = {
 };
 
 /**
- * nact_sort_buttons_initial_load:
- * @window: the #NactMainWindow.
- *
- * Initial loading of the UI. This is done only once.
- */
-void
-nact_sort_buttons_initial_load( NactMainWindow *window )
-{
-	static const gchar *thisfn = "nact_sort_buttons_initial_load";
-
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-}
-
-/**
  * nact_sort_buttons_runtime_init:
  * @window: the #NactMainWindow.
  *

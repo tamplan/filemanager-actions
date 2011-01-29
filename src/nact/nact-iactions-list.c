@@ -182,7 +182,8 @@ interface_base_init( NactIActionsListInterface *klass )
 		 * selection has changed in the treeview.
 		 *
 		 * It is not just a proxy, as we add a list of currently selected
-		 * objects as user_data (see #nact_iactions_list_on_treeview_selection_changed()).
+		 * objects as signal data
+		 * (see nact_iactions_list_on_treeview_selection_changed()).
 		 *
 		 * Note that IActionsList is itself connected to this signal,
 		 * in order to convert the signal to an interface API
@@ -859,9 +860,11 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	gboolean valid = TRUE;
 	IActionsListInstanceData *ialid;
 	NAObjectItem *item;
+#if 0
 	gboolean writable_item;
 	NactApplication *application;
 	NAUpdater *updater;
+#endif
 
 	gtk_tree_model_get( model, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 	g_object_unref( object );
@@ -879,10 +882,6 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		valid = na_object_is_valid( object );
 		item = NA_IS_OBJECT_PROFILE( object ) ? na_object_get_parent( object ) : NA_OBJECT_ITEM( object );
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-		updater = nact_application_get_updater( application );
-		writable_item = na_updater_is_item_writable( updater, item, NULL );
-
 		if( modified ){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 		}
@@ -891,7 +890,12 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
 		}
 
+#if 0
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+		updater = nact_application_get_updater( application );
+		writable_item = na_updater_is_item_writable( updater, item, NULL );
 		g_object_set( cell, "editable", writable_item, NULL );
+#endif
 	}
 
 	g_object_set( cell, "text", label, NULL );

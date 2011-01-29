@@ -32,11 +32,20 @@
 #define __NACT_MAIN_WINDOW_H__
 
 /**
- * SECTION: nact_main_window
- * @short_description: #NactMainWindow class definition.
- * @include: nact/nact-main-window.h
+ * SECTION: main-window
+ * @title: NactMainWindow
+ * @short_description: The Main Window class definition
+ * @include: nact-main-window.h
  *
- * This class is derived from BaseWindow and manages the main window.
+ * This class is derived from NactWindow and manages the main window.
+ *
+ * It embeds:
+ * - the menubar,
+ * - the toolbar,
+ * - a button bar with sort buttons,
+ * - the hierarchical list of items,
+ * - a notebook which displays the content of the current item,
+ * - a status bar.
  */
 
 #include <api/na-object-item.h>

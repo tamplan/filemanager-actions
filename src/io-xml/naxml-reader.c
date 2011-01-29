@@ -338,7 +338,7 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFrom
 	code = reader_parse_xmldoc( reader );
 
 	if( code == IMPORTER_CODE_OK ){
-		g_assert( NA_IS_OBJECT_ITEM( reader->private->parms->imported ));
+		g_return_val_if_fail( NA_IS_OBJECT_ITEM( reader->private->parms->imported ), IMPORTER_CODE_PROGRAM_ERROR );
 		code = manage_import_mode( reader );
 	}
 
@@ -1377,7 +1377,9 @@ publish_undealt_nodes( NAXMLReader *reader )
 
 		if( !g_list_find( reader->private->dealt, node )){
 			text = xmlNodeGetContent( node );
-			na_core_utils_slist_add_message( &reader->private->parms->messages, WARN_UNDEALT_NODE, ( const gchar * ) text, node->line );
+			g_debug( "test=%s, line=%d", ( const gchar * ) text, node->line );
+			na_core_utils_slist_add_message(
+					&reader->private->parms->messages, WARN_UNDEALT_NODE, ( const gchar * ) text, node->line );
 			xmlFree( text );
 		}
 	}
