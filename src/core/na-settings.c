@@ -1144,7 +1144,7 @@ on_keyfile_changed_timeout( NASettings *settings )
 #endif
 
 	/* for each modification found,
-	 * - check consumers and triggers callback if apply
+	 * - check if a consumer has registered for this key, and triggers callback if apply
 	 * - send a notification message
 	 */
 	for( im = modifs ; im ; im = im->next ){
@@ -1162,25 +1162,29 @@ on_keyfile_changed_timeout( NASettings *settings )
 			}
 
 			if(( !group_prefix || g_str_has_prefix( changed->group, group_prefix )) && !strcmp( changed->def->key, key )){
-				( *( NASettingsKeyCallback ) consumer->callback )
-						( changed->group, changed->def->key,
-								na_boxed_get_pointer( changed->boxed ), changed->mandatory, consumer->user_data );
+				( *( NASettingsKeyCallback ) consumer->callback )(
+						changed->group,
+						changed->def->key,
+						na_boxed_get_pointer( changed->boxed ),
+						changed->mandatory,
+						consumer->user_data );
 			}
 
 			g_free( group_prefix );
 		}
 
-		/*g_debug( "%s: sending signal for group=%s, key=%s", thisfn, changed->group, changed->def->key );
+		g_debug( "%s: sending signal for group=%s, key=%s", thisfn, changed->group, changed->def->key );
 		g_signal_emit_by_name( settings,
 				SETTINGS_SIGNAL_KEY_CHANGED,
-				g_strdup( changed->group ),
-				g_strdup( changed->def->key ), na_boxed_copy( changed->boxed ), changed->mandatory );*/
+				changed->group, changed->def->key, changed->boxed, changed->mandatory );
 	}
 
+	g_debug( "%s: releasing content", thisfn );
 	g_list_foreach( settings->private->content, ( GFunc ) release_key_value, NULL );
 	g_list_free( settings->private->content );
 	settings->private->content = new_content;
 
+	g_debug( "%s: releasing modifs", thisfn );
 	g_list_foreach( modifs, ( GFunc ) release_key_value, NULL );
 	g_list_free( modifs );
 }
@@ -1189,9 +1193,7 @@ static void
 on_key_changed_final_handler( NASettings *settings, gchar *group, gchar *key, NABoxed *new_value, gboolean mandatory )
 {
 	g_debug( "na_settings_on_key_changed_final_handler: group=%s, key=%s", group, key );
-	g_free( group );
-	g_free( key );
-	na_boxed_free( new_value );
+	na_boxed_dump( new_value );
 }
 
 static KeyValue *

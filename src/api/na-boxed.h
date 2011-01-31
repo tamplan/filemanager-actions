@@ -94,6 +94,7 @@ typedef struct _NABoxed NABoxed;
 
 int           na_boxed_compare                 ( const NABoxed *a, const NABoxed *b );
 NABoxed      *na_boxed_copy                    ( const NABoxed *value );
+void          na_boxed_dump                    ( const NABoxed *value );
 void          na_boxed_free                    ( NABoxed *value );
 NABoxed      *na_boxed_new_from_string         ( guint type, const gchar *string );
 NABoxed      *na_boxed_new_from_string_with_sep( guint type, const gchar *string, const gchar *sep );

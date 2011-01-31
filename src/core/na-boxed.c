@@ -59,6 +59,7 @@ typedef struct {
 	const gchar *label;
 	int       ( *compare )        ( const NABoxed *, const NABoxed * );
 	void      ( *copy )           ( NABoxed *, const NABoxed * );
+	gchar   * ( *dump )           ( const NABoxed * );
 	void      ( *free )           ( NABoxed * );
 	void      ( *from_string )    ( NABoxed *, const gchar * );
 	void      ( *from_array )     ( NABoxed *, const gchar ** );
@@ -77,6 +78,7 @@ static const gchar    *get_type_label( guint type );
 
 static int      string_compare( const NABoxed *a, const NABoxed *b );
 static void     string_copy( NABoxed *dest, const NABoxed *src );
+static gchar   *string_dump( const NABoxed *boxed );
 static void     string_free( NABoxed *boxed );
 static void     string_from_string( NABoxed *boxed, const gchar *string );
 static gpointer string_get_pointer( const NABoxed *boxed );
@@ -84,6 +86,7 @@ static gchar   *string_get_string( const NABoxed *boxed );
 
 static int      string_list_compare( const NABoxed *a, const NABoxed *b );
 static void     string_list_copy( NABoxed *dest, const NABoxed *src );
+static gchar   *string_list_dump( const NABoxed *boxed );
 static void     string_list_free( NABoxed *boxed );
 static void     string_list_from_string( NABoxed *boxed, const gchar *string );
 static void     string_list_from_array( NABoxed *boxed, const gchar **array );
@@ -92,6 +95,7 @@ static GSList  *string_list_get_string_list( const NABoxed *boxed );
 
 static int      bool_compare( const NABoxed *a, const NABoxed *b );
 static void     bool_copy( NABoxed *dest, const NABoxed *src );
+static gchar   *bool_dump( const NABoxed *boxed );
 static void     bool_free( NABoxed *boxed );
 static void     bool_from_string( NABoxed *boxed, const gchar *string );
 static gboolean bool_get_bool( const NABoxed *boxed );
@@ -99,6 +103,7 @@ static gpointer bool_get_pointer( const NABoxed *boxed );
 
 static int      uint_compare( const NABoxed *a, const NABoxed *b );
 static void     uint_copy( NABoxed *dest, const NABoxed *src );
+static gchar   *uint_dump( const NABoxed *boxed );
 static void     uint_free( NABoxed *boxed );
 static void     uint_from_string( NABoxed *boxed, const gchar *string );
 static gpointer uint_get_pointer( const NABoxed *boxed );
@@ -106,6 +111,7 @@ static guint    uint_get_uint( const NABoxed *boxed );
 
 static int      uint_list_compare( const NABoxed *a, const NABoxed *b );
 static void     uint_list_copy( NABoxed *dest, const NABoxed *src );
+static gchar   *uint_list_dump( const NABoxed *boxed );
 static void     uint_list_free( NABoxed *boxed );
 static void     uint_list_from_string( NABoxed *boxed, const gchar *string );
 static void     uint_list_from_array( NABoxed *boxed, const gchar **array );
@@ -117,6 +123,7 @@ static BoxedDef st_boxed_def[] = {
 				"string",
 				string_compare,
 				string_copy,
+				string_dump,
 				string_free,
 				string_from_string,
 				NULL,
@@ -131,6 +138,7 @@ static BoxedDef st_boxed_def[] = {
 				"ascii strings list",
 				string_list_compare,
 				string_list_copy,
+				string_list_dump,
 				string_list_free,
 				string_list_from_string,
 				string_list_from_array,
@@ -145,6 +153,7 @@ static BoxedDef st_boxed_def[] = {
 				"boolean",
 				bool_compare,
 				bool_copy,
+				bool_dump,
 				bool_free,
 				bool_from_string,
 				NULL,
@@ -159,6 +168,7 @@ static BoxedDef st_boxed_def[] = {
 				"unsigned integer",
 				uint_compare,
 				uint_copy,
+				uint_dump,
 				uint_free,
 				uint_from_string,
 				NULL,
@@ -173,6 +183,7 @@ static BoxedDef st_boxed_def[] = {
 				"unsigned integers list",
 				uint_list_compare,
 				uint_list_copy,
+				uint_list_dump,
 				uint_list_free,
 				uint_list_from_string,
 				uint_list_from_array,
@@ -262,26 +273,34 @@ na_boxed_compare( const NABoxed *a, const NABoxed *b )
 
 	result = 0;
 
-	if( a->type != b->type ){
-		g_warning( "%s: unable to compare: a is of type '%s' while b is of type %s",
-				thisfn, get_type_label( a->type ), get_type_label( b->type ));
+	if( a && b ){
+		if( a->type != b->type ){
+			g_warning( "%s: unable to compare: a is of type '%s' while b is of type %s",
+					thisfn, get_type_label( a->type ), get_type_label( b->type ));
 
-	} else if( a->is_set && !b->is_set ){
-		result = 1;
+		} else if( a->is_set && !b->is_set ){
+			result = 1;
 
-	} else if( !a->is_set && b->is_set ){
-		result = -1;
+		} else if( !a->is_set && b->is_set ){
+			result = -1;
 
-	} else if( a->is_set && b->is_set ){
-		def = get_boxed_def( a->type );
-		if( def ){
-			if( def->compare ){
-				result = ( *def->compare )( a, b );
-			} else {
-				g_warning( "%s: unable to compare: '%s' type does not provide 'compare' function",
-						thisfn, def->label );
+		} else if( a->is_set && b->is_set ){
+			def = get_boxed_def( a->type );
+			if( def ){
+				if( def->compare ){
+					result = ( *def->compare )( a, b );
+				} else {
+					g_warning( "%s: unable to compare: '%s' type does not provide 'compare' function",
+							thisfn, def->label );
+				}
 			}
 		}
+
+	} else if( !a ){
+		result = -1;
+
+	} else if( !b ){
+		result = 1;
 	}
 
 	return( result );
@@ -304,22 +323,57 @@ na_boxed_copy( const NABoxed *boxed )
 	const BoxedDef *def;
 
 	dest = NULL;
-	def = get_boxed_def( boxed->type );
-	if( def ){
-		if( def->copy ){
-			dest = boxed_new();
-			dest->type = boxed->type;
-			dest->is_set = FALSE;
-			if( boxed->is_set ){
-				( *def->copy )( dest, boxed );
+	if( boxed ){
+		def = get_boxed_def( boxed->type );
+		if( def ){
+			if( def->copy ){
+				dest = boxed_new();
+				dest->type = boxed->type;
+				dest->is_set = FALSE;
+				if( boxed->is_set ){
+					( *def->copy )( dest, boxed );
+				}
+			} else {
+				g_warning( "%s: unable to copy: '%s' type does not provide 'copy' function",
+						thisfn, def->label );
 			}
-		} else {
-			g_warning( "%s: unable to copy: '%s' type does not provide 'copy' function",
-					thisfn, def->label );
 		}
 	}
 
 	return( dest );
+}
+
+/**
+ * na_boxed_dump:
+ * @boxed: the #NABoxed box to be dumped.
+ *
+ * Dumps the @boxed box.
+ *
+ * Since: 3.1.0
+ */
+void
+na_boxed_dump( const NABoxed *boxed )
+{
+	static const gchar *thisfn = "na_boxed_dump";
+	const BoxedDef *def;
+	gchar *str;
+
+	if( boxed ){
+		def = get_boxed_def( boxed->type );
+		if( def ){
+			if( def->dump ){
+				str = ( boxed->is_set ) ?  ( *def->dump )( boxed ) : NULL;
+				g_debug( "%s: boxed=%p, type=%u, is_set=%s, value=%s",
+						thisfn, ( void * ) boxed, boxed->type, boxed->is_set ? "True":"False", str );
+				g_free( str );
+			} else {
+				g_warning( "%s: unable to dump: '%s' type does not provide 'dump' function",
+						thisfn, def->label );
+			}
+		}
+	} else {
+		g_debug( "%s: boxed=(null)", thisfn );
+	}
 }
 
 /**
@@ -648,6 +702,12 @@ string_copy( NABoxed *dest, const NABoxed *src )
 	dest->is_set = TRUE;
 }
 
+static gchar *
+string_dump( const NABoxed *boxed )
+{
+	return( g_strdup( boxed->u.string ));
+}
+
 static void
 string_free( NABoxed *boxed )
 {
@@ -714,6 +774,12 @@ string_list_copy( NABoxed *dest, const NABoxed *src )
 	}
 	dest->u.string_list = na_core_utils_slist_duplicate( src->u.string_list );
 	dest->is_set = TRUE;
+}
+
+static gchar *
+string_list_dump( const NABoxed *boxed )
+{
+	return( na_core_utils_slist_join_at_end( boxed->u.string_list, "," ));
 }
 
 static void
@@ -783,6 +849,12 @@ bool_copy( NABoxed *dest, const NABoxed *src )
 	dest->is_set = TRUE;
 }
 
+static gchar *
+bool_dump( const NABoxed *boxed )
+{
+	return( g_strdup( boxed->u.boolean ? "True":"False" ));
+}
+
 static void
 bool_free( NABoxed *boxed )
 {
@@ -825,6 +897,12 @@ uint_copy( NABoxed *dest, const NABoxed *src )
 {
 	dest->u.uint = src->u.uint;
 	dest->is_set = TRUE;
+}
+
+static gchar *
+uint_dump( const NABoxed *boxed )
+{
+	return( g_strdup_printf( "%u", boxed->u.uint ));
 }
 
 static void
@@ -896,6 +974,23 @@ uint_list_copy( NABoxed *dest, const NABoxed *src )
 	}
 	dest->u.uint_list = g_list_reverse( dest->u.uint_list );
 	dest->is_set = TRUE;
+}
+
+static gchar *
+uint_list_dump( const NABoxed *boxed )
+{
+	GString *str;
+	GList *i;
+
+	str = g_string_new( "" );
+	for( i = boxed->u.uint_list ; i ; i = i->next ){
+		if( strlen( str->str )){
+			str = g_string_append( str, "," );
+		}
+		g_string_append_printf( str, "%u", ( guint ) i->data );
+	}
+
+	return( g_string_free( str, FALSE ));
 }
 
 static void

@@ -1,3 +1,14 @@
+2011-01-31 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-boxed.h:
+	* src/core/na-boxed.c (na_boxed_dump): New function.
+
+	* src/core/na-settings.c (on_keyfile_changed_timeout): Fix segfault.
+
+	* src/nact/nact-preferences-editor.c (on_dialog_ok): Spare a function.
+
+	* src/core/na-marshal: New file.
+
 2011-01-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/Makefile.am: Generate na_cclosure_masharl functions.

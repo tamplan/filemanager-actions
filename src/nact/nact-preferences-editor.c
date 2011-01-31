@@ -136,8 +136,6 @@ static void     import_mode_on_noimport_toggled( GtkToggleButton *togglebutton, 
 static void     import_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *togglebutton, GCallback cb, guint import_mode );
 static void     on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void     on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
-static void     save_preferences( NactPreferencesEditor *editor );
-
 static void     on_dialog_ok( BaseDialog *dialog );
 
 GType
@@ -922,13 +920,18 @@ on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor )
 }
 
 static void
-save_preferences( NactPreferencesEditor *editor )
+on_dialog_ok( BaseDialog *dialog )
 {
+	NactPreferencesEditor *editor;
 	NactApplication *application;
 	NAUpdater *updater;
 	NASettings *settings;
 	GtkWidget *container;
 	NAExportFormat *export_format;
+
+	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
+
+	editor = NACT_PREFERENCES_EDITOR( dialog );
 
 	if( !editor->private->preferences_locked ){
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
@@ -994,12 +997,4 @@ save_preferences( NactPreferencesEditor *editor )
 		 */
 		nact_providers_list_save( BASE_WINDOW( editor ));
 	}
-}
-
-static void
-on_dialog_ok( BaseDialog *dialog )
-{
-	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
-
-	save_preferences( NACT_PREFERENCES_EDITOR( dialog ));
 }
