@@ -1,5 +1,16 @@
 2011-01-31 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar.c (nact_main_menubar_enable_item):
+	Renamed as nact_menubar_enable_item() and moved to private resources.
+
+	* src/nact/nact-main-menubar-edit.c:
+	* src/nact/nact-main-menubar-file.c:
+	* src/nact/nact-main-menubar-help.c:
+	* src/nact/nact-main-menubar-tools.c:
+	* src/nact/nact-main-menubar-view.c:
+	* src/nact/nact-menubar-priv.h:
+	* src/nact/nact-menubar.h: Updated accordingly.
+
 	Move MenubarIndicatorsStruct structure to private instance data
 
 	* src/nact/nact-menubar-priv.h: New file.

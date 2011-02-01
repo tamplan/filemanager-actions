@@ -48,7 +48,7 @@
 void
 nact_main_menubar_help_on_update_sensitivities( NactMenubar *bar )
 {
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "HelpItem", TRUE );
+	nact_menubar_enable_item( bar, "HelpItem", TRUE );
 	/* about always enabled */
 }
 

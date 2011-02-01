@@ -104,8 +104,8 @@ nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
 	 * we must have at least one writable provider
 	 */
 	new_item_enabled = is_first_parent_writable && bar->private->has_writable_providers;
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "NewMenuItem", new_item_enabled );
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "NewActionItem", new_item_enabled );
+	nact_menubar_enable_item( bar, "NewMenuItem", new_item_enabled );
+	nact_menubar_enable_item( bar, "NewActionItem", new_item_enabled );
 
 	/* new profile enabled if selection is relative to only one writable action
 	 * i.e. contains profile(s) of the same action, or only contains one action
@@ -137,7 +137,7 @@ nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
 			}
 		}
 	}
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "NewProfileItem",
+	nact_menubar_enable_item( bar, "NewProfileItem",
 			new_profile_enabled &&
 			selected_action != NULL &&
 			na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( selected_action ), NULL ));
@@ -145,7 +145,7 @@ nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
 	/* save enabled if at least one item has been modified
 	 * or level-zero has been resorted and is writable
 	 */
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "SaveItem",
+	nact_menubar_enable_item( bar, "SaveItem",
 			has_modified_items || ( bar->private->level_zero_order_changed && bar->private->is_level_zero_writable ));
 
 	/* quit always enabled */

@@ -92,7 +92,6 @@ NactMenubar *nact_menubar_new     ( BaseWindow *window );
 /* *** */
 gboolean nact_main_menubar_is_level_zero_order_changed( const NactMainWindow *window );
 void     nact_main_menubar_open_popup( NactMainWindow *window, GdkEventButton *event );
-void     nact_main_menubar_enable_item( NactMainWindow *window, const gchar *name, gboolean enabled );
 /* *** */
 
 G_END_DECLS

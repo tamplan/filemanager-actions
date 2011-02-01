@@ -54,8 +54,8 @@ nact_main_menubar_view_on_update_sensitivities( NactMenubar *bar )
 
 	/* expand all/collapse all requires at least one item in the list */
 	count_list = bar->private->list_menus + bar->private->list_actions + bar->private->list_profiles;
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "ExpandAllItem", count_list > 0 );
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "CollapseAllItem", count_list > 0 );
+	nact_menubar_enable_item( bar, "ExpandAllItem", count_list > 0 );
+	nact_menubar_enable_item( bar, "CollapseAllItem", count_list > 0 );
 }
 
 /**

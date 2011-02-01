@@ -97,12 +97,12 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
 		}
 	}
 	cut_enabled &= are_parents_writable;
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "CutItem", cut_enabled );
+	nact_menubar_enable_item( bar, "CutItem", cut_enabled );
 
 	/* copy only requires a non-empty selection */
 	copy_enabled = bar->private->treeview_has_focus || bar->private->popup_handler;
 	copy_enabled &= bar->private->count_selected > 0;
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "CopyItem", copy_enabled );
+	nact_menubar_enable_item( bar, "CopyItem", copy_enabled );
 
 	/* paste enabled if
 	 * - clipboard is not empty
@@ -142,7 +142,7 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
 			paste_enabled &= bar->private->is_level_zero_writable;
 		}
 	}
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "PasteItem", paste_enabled );
+	nact_menubar_enable_item( bar, "PasteItem", paste_enabled );
 
 	/* paste into enabled if
 	 * - clipboard is not empty
@@ -179,7 +179,7 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
 			paste_into_enabled &= bar->private->is_level_zero_writable;
 		}
 	}
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "PasteIntoItem", paste_into_enabled );
+	nact_menubar_enable_item( bar, "PasteIntoItem", paste_into_enabled );
 
 	/* duplicate items will be duplicated besides each one
 	 * selection must be non-empty
@@ -187,14 +187,14 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
 	 * -> so this is the same than cut
 	 */
 	duplicate_enabled = cut_enabled;
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "DuplicateItem", duplicate_enabled );
+	nact_menubar_enable_item( bar, "DuplicateItem", duplicate_enabled );
 
 	/* delete is same that cut
 	 * but items themselves must be writable (because physically deleted)
 	 * this will be checked on delete activated
 	 */
 	delete_enabled = cut_enabled;
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "DeleteItem", delete_enabled );
+	nact_menubar_enable_item( bar, "DeleteItem", delete_enabled );
 
 	/* reload items always enabled */
 

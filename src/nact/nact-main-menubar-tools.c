@@ -49,10 +49,10 @@ void
 nact_main_menubar_tools_on_update_sensitivities( NactMenubar *bar )
 {
 	/* import item enabled if at least one writable provider */
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "ImportItem", bar->private->has_writable_providers );
+	nact_menubar_enable_item( bar, "ImportItem", bar->private->has_writable_providers );
 
 	/* export item enabled if IActionsList store contains actions */
-	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "ExportItem", bar->private->have_exportables );
+	nact_menubar_enable_item( bar, "ExportItem", bar->private->have_exportables );
 }
 
 /**

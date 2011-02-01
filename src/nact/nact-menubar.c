@@ -745,22 +745,23 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 }
 
 /**
- * nact_main_menubar_enable_item:
- * @window: the #NactMainWindow main application window.
+ * nact_menubar_enable_item:
+ * @bar: this #NactMenubar instance.
  * @name: the name of the item in a menu.
  * @enabled: whether this item should be enabled or not.
  *
  * Enable/disable an item in an menu.
  */
 void
-nact_main_menubar_enable_item( NactMainWindow *window, const gchar *name, gboolean enabled )
+nact_menubar_enable_item( const NactMenubar *bar, const gchar *name, gboolean enabled )
 {
 	GtkAction *action;
 
-	BAR_WINDOW_VOID( window );
+	if( !bar->private->dispose_has_run ){
 
-	action = gtk_action_group_get_action( bar->private->action_group, name );
-	gtk_action_set_sensitive( action, enabled );
+		action = gtk_action_group_get_action( bar->private->action_group, name );
+		gtk_action_set_sensitive( action, enabled );
+	}
 }
 
 static void

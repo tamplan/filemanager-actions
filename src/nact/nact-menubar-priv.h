@@ -45,6 +45,7 @@
 G_BEGIN_DECLS
 
 struct _NactMenubarPrivate {
+	/*< private >*/
 	gboolean        dispose_has_run;
 	BaseWindow     *window;
 	GtkUIManager   *ui_manager;
@@ -87,6 +88,10 @@ struct _NactMenubarPrivate {
 		g_return_val_if_fail( BASE_IS_WINDOW( window ), value ); \
 		NactMenubar *bar = ( NactMenubar * ) g_object_get_data( G_OBJECT( window ), WINDOW_DATA_MENUBAR ); \
 		g_return_val_if_fail( NACT_IS_MENUBAR( bar ), value );
+
+/* These functions should only be called from a nact-menubar-derived file
+ */
+void nact_menubar_enable_item( const NactMenubar *bar, const gchar *name, gboolean enabled );
 
 G_END_DECLS
 
