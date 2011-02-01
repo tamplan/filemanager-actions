@@ -143,10 +143,10 @@ static void
 on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, int toolbar_id )
 {
 	gboolean is_active;
-	GtkUIManager *ui_manager;
+
+	BAR_WINDOW_VOID( window );
 
 	is_active = gtk_toggle_action_get_active( action );
-	ui_manager = ( GtkUIManager * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_UI_MANAGER );
 
-	nact_main_toolbar_activate( window, toolbar_id, ui_manager, is_active );
+	nact_main_toolbar_activate( window, toolbar_id, nact_menubar_get_ui_manager( bar ), is_active );
 }

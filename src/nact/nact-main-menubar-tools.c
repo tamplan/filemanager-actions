@@ -34,7 +34,6 @@
 
 #include "nact-assistant-export.h"
 #include "nact-assistant-import.h"
-#include "nact-main-menubar.h"
 #include "nact-main-menubar-tools.h"
 
 /**

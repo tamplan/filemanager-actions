@@ -36,7 +36,6 @@
 
 #include "nact-iactions-list.h"
 #include "nact-clipboard.h"
-#include "nact-main-menubar.h"
 #include "nact-main-menubar-maintainer.h"
 
 /**

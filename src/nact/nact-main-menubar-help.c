@@ -34,7 +34,6 @@
 
 #include <core/na-iabout.h>
 
-#include "nact-main-menubar.h"
 #include "nact-main-menubar-help.h"
 
 /**

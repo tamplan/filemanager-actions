@@ -34,6 +34,9 @@
 
 #include <glib/gi18n.h>
 
+#include "nact-menubar.h"
+
+/* *** */
 #include <api/na-object-api.h>
 #include <api/na-core-utils.h>
 
@@ -48,7 +51,7 @@
 #include "nact-main-statusbar.h"
 #include "nact-main-toolbar.h"
 #include "nact-main-tab.h"
-#include "nact-main-menubar.h"
+#include "nact-menubar.h"
 #include "nact-main-menubar-file.h"
 #include "nact-main-menubar-edit.h"
 #include "nact-main-menubar-view.h"
@@ -57,30 +60,12 @@
 #include "nact-main-menubar-help.h"
 #include "nact-sort-buttons.h"
 
-#define MENUBAR_PROP_STATUS_CONTEXT			"nact-menubar-status-context"
-#define MENUBAR_PROP_MAIN_STATUS_CONTEXT	"nact-menubar-main-status-context"
-#define MENUBAR_PROP_ACTIONS_GROUP			"nact-menubar-actions-group"
-
 enum {
 	MENUBAR_FILE_TOOLBAR_POS = 0,
 	MENUBAR_EDIT_TOOLBAR_POS,
 	MENUBAR_TOOLS_TOOLBAR_POS,
 	MENUBAR_HELP_TOOLBAR_POS
 };
-
-/* GtkActivatable
- * gtk_action_get_tooltip() is only available starting with Gtk 2.16
- * until this is a required level, we must have some code to do the
- * same thing
- */
-#undef NA_HAS_GTK_ACTIVATABLE
-#if GTK_CHECK_VERSION( 2,16,0 )
-	#define NA_HAS_GTK_ACTIVATABLE
-#endif
-
-#ifndef NA_HAS_GTK_ACTIVATABLE
-#define MENUBAR_PROP_ITEM_ACTION			"nact-menubar-item-action"
-#endif
 
 static void     on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles );
 static void     on_iactions_list_selection_changed( NactMainWindow *window, GList *selected );
@@ -90,13 +75,21 @@ static void     on_iactions_list_status_changed( NactMainWindow *window, gpointe
 static void     on_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
 static void     on_update_sensitivities( NactMainWindow *window, gpointer user_data );
 
-static gboolean on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
-static void     on_destroy_callback( gpointer data );
-static void     on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window );
-static void     on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window );
 static void     on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow *window );
-static void     on_proxy_connect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window );
-static void     on_proxy_disconnect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window );
+/* *** */
+
+/* private class data
+ */
+struct _NactMenubarClassPrivate {
+	void *empty;						/* so that gcc -pedantic is happy */
+};
+
+struct _NactMenubarPrivate {
+	gboolean        dispose_has_run;
+	BaseWindow     *window;
+	GtkUIManager   *ui_manager;
+	GtkActionGroup *action_group;
+};
 
 static const GtkActionEntry entries[] = {
 
@@ -225,21 +218,200 @@ static const GtkToggleActionEntry toolbar_entries[] = {
 				G_CALLBACK( nact_main_menubar_view_on_toolbar_help ), FALSE },
 };
 
-/**
- * nact_main_menubar_runtime_init:
- * @window: the #NactMainWindow to which the menubar is attached.
- *
- * Creates the menubar.
- * Connects to all possible signals which may have an impact on action
- * sensitivities.
+/* GtkActivatable
+ * gtk_action_get_tooltip() is only available starting with Gtk 2.16
+ * until this is a required level, we must have some code to do the
+ * same thing
  */
-void
-nact_main_menubar_runtime_init( NactMainWindow *window )
+#undef NA_HAS_GTK_ACTIVATABLE
+#if GTK_CHECK_VERSION( 2,16,0 )
+	#define NA_HAS_GTK_ACTIVATABLE
+#endif
+
+#ifndef NA_HAS_GTK_ACTIVATABLE
+#define MENUBAR_PROP_ITEM_ACTION			"menubar-item-action"
+#endif
+
+#define MENUBAR_PROP_STATUS_CONTEXT			"menubar-status-context"
+#define MENUBAR_PROP_MAIN_STATUS_CONTEXT	"menubar-main-status-context"
+
+static const gchar  *st_ui_menubar_actions    = PKGDATADIR "/nautilus-actions-config-tool.actions";
+static const gchar  *st_ui_maintainer_actions = PKGDATADIR "/nautilus-actions-maintainer.actions";
+
+static GObjectClass *st_parent_class          = NULL;
+
+static GType    register_type( void );
+static void     class_init( NactMenubarClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *application );
+static void     instance_finalize( GObject *application );
+
+static void     on_base_initialize_window( BaseWindow *window, gpointer user_data );
+static void     on_ui_manager_proxy_connect( GtkUIManager *ui_manager, GtkAction *action, GtkWidget *proxy, BaseWindow *window );
+static void     on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window );
+static void     on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window );
+static void     on_finalize_window( NactMenubar *bar, GObject *window );
+
+GType
+nact_menubar_get_type( void )
 {
-	static const gchar *thisfn = "nact_main_menubar_init";
-	GtkActionGroup *action_group;
-	GtkUIManager *ui_manager;
-	GError *error = NULL;
+	static GType type = 0;
+
+	if( !type ){
+		type = register_type();
+	}
+
+	return( type );
+}
+
+static GType
+register_type( void )
+{
+	static const gchar *thisfn = "nact_menubar_register_type";
+	GType type;
+
+	static GTypeInfo info = {
+		sizeof( NactMenubarClass ),
+		( GBaseInitFunc ) NULL,
+		( GBaseFinalizeFunc ) NULL,
+		( GClassInitFunc ) class_init,
+		NULL,
+		NULL,
+		sizeof( NactMenubar ),
+		0,
+		( GInstanceInitFunc ) instance_init
+	};
+
+	g_debug( "%s", thisfn );
+
+	type = g_type_register_static( G_TYPE_OBJECT, "NactMenubar", &info, 0 );
+
+	return( type );
+}
+
+static void
+class_init( NactMenubarClass *klass )
+{
+	static const gchar *thisfn = "nact_menubar_class_init";
+	GObjectClass *object_class;
+
+	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+
+	st_parent_class = g_type_class_peek_parent( klass );
+
+	object_class = G_OBJECT_CLASS( klass );
+	object_class->dispose = instance_dispose;
+	object_class->finalize = instance_finalize;
+
+	klass->private = g_new0( NactMenubarClassPrivate, 1 );
+}
+
+static void
+instance_init( GTypeInstance *instance, gpointer klass )
+{
+	static const gchar *thisfn = "nact_menubar_instance_init";
+	NactMenubar *self;
+
+	g_return_if_fail( NACT_IS_MENUBAR( instance ));
+
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
+	self = NACT_MENUBAR( instance );
+
+	self->private = g_new0( NactMenubarPrivate, 1 );
+
+	self->private->dispose_has_run = FALSE;
+}
+
+static void
+instance_dispose( GObject *object )
+{
+	static const gchar *thisfn = "nact_menubar_instance_dispose";
+	NactMenubar *self;
+
+	g_return_if_fail( NACT_IS_MENUBAR( object ));
+
+	self = NACT_MENUBAR( object );
+
+	if( !self->private->dispose_has_run ){
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+		self->private->dispose_has_run = TRUE;
+
+		g_object_unref( self->private->action_group );
+		g_object_unref( self->private->ui_manager );
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( object );
+		}
+	}
+}
+
+static void
+instance_finalize( GObject *instance )
+{
+	static const gchar *thisfn = "nact_menubar_instance_finalize";
+	NactMenubar *self;
+	MenubarIndicatorsStruct *mis;
+
+	g_return_if_fail( NACT_IS_MENUBAR( instance ));
+
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+
+	self = NACT_MENUBAR( instance );
+
+	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( self->private->window ), MENUBAR_PROP_INDICATORS );
+	g_free( mis );
+
+	g_free( self->private );
+
+	/* chain call to parent class */
+	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
+		G_OBJECT_CLASS( st_parent_class )->finalize( instance );
+	}
+}
+
+/**
+ * nact_menubar_new:
+ * @window: the main window which embeds the menubar, usually the #NactMainWindow.
+ *
+ * The created menubar attachs itself to the @window; it also connect a weak
+ * reference to this same @window, thus automatically g_object_unref() -ing
+ * itself at @window finalization time.
+ *
+ * The menubar also takes advantage of #BaseWindow messages to initialize
+ * its Gtk widgets.
+ *
+ * Returns: a new #NactMenubar object.
+ */
+NactMenubar *
+nact_menubar_new( BaseWindow *window )
+{
+	NactMenubar *bar;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
+
+	bar = g_object_new( NACT_MENUBAR_TYPE, NULL );
+
+	bar->private->window = window;
+
+	base_window_signal_connect( window,
+			G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_window ));
+
+	g_object_weak_ref( G_OBJECT( window ), ( GWeakNotify ) on_finalize_window, bar );
+
+	g_object_set_data( G_OBJECT( window ), WINDOW_DATA_MENUBAR, bar );
+
+	return( bar );
+}
+
+static void
+on_base_initialize_window( BaseWindow *window, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_menubar_on_base_initialize_window";
+	GError *error;
 	guint merge_id;
 	GtkAccelGroup *accel_group;
 	GtkWidget *menubar, *vbox;
@@ -247,141 +419,197 @@ nact_main_menubar_runtime_init( NactMainWindow *window )
 	MenubarIndicatorsStruct *mis;
 	gboolean has_maintainer_menu;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	BAR_WINDOW_VOID( window );
 
-	/* create the menubar:
-	 * - create action group, and insert list of actions in it
-	 * - create ui_manager, and insert action group in it
-	 * - merge inserted actions group with ui xml definition
-	 * - install accelerators in the main window
-	 * - pack menu bar in the main window
-	 */
-	ui_manager = gtk_ui_manager_new();
-	g_object_set_data_full( G_OBJECT( window ), MENUBAR_PROP_UI_MANAGER, ui_manager, ( GDestroyNotify ) on_destroy_callback );
-	g_debug( "%s: ui_manager=%p", thisfn, ( void * ) ui_manager );
+	if( !bar->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s), user_data=%p", thisfn,
+				( void * ) window, G_OBJECT_TYPE_NAME( window ), ( void * ) user_data );
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( ui_manager ),
-			"connect-proxy",
-			G_CALLBACK( on_proxy_connect ));
+		/* create the menubar:
+		 * - create action group, and insert list of actions in it
+		 * - create the ui manager, and insert action group in it
+		 * - merge inserted actions group with ui xml definition
+		 * - install accelerators in the main window
+		 * - pack menu bar in the main window
+		 *
+		 * "disconnect-proxy" signal is never triggered.
+		 */
+		bar->private->ui_manager = gtk_ui_manager_new();
+		g_debug( "%s: ui_manager=%p", thisfn, ( void * ) bar->private->ui_manager );
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( ui_manager ),
-			"disconnect-proxy",
-			G_CALLBACK( on_proxy_disconnect ));
+		base_window_signal_connect( window,
+				G_OBJECT( bar->private->ui_manager ),
+				"connect-proxy", G_CALLBACK( on_ui_manager_proxy_connect ));
 
-	action_group = gtk_action_group_new( "MenubarActions" );
-	g_object_set_data_full( G_OBJECT( window ), MENUBAR_PROP_ACTIONS_GROUP, action_group, ( GDestroyNotify ) on_destroy_callback );
-	g_debug( "%s: action_group=%p", thisfn, ( void * ) action_group );
+		bar->private->action_group = gtk_action_group_new( "MenubarActions" );
+		g_debug( "%s: action_group=%p", thisfn, ( void * ) bar->private->action_group );
 
-	gtk_action_group_set_translation_domain( action_group, GETTEXT_PACKAGE );
-	gtk_action_group_add_actions( action_group, entries, G_N_ELEMENTS( entries ), window );
-	gtk_action_group_add_toggle_actions( action_group, toolbar_entries, G_N_ELEMENTS( toolbar_entries ), window );
-	gtk_ui_manager_insert_action_group( ui_manager, action_group, 0 );
+		gtk_action_group_set_translation_domain( bar->private->action_group, GETTEXT_PACKAGE );
+		gtk_action_group_add_actions( bar->private->action_group, entries, G_N_ELEMENTS( entries ), window );
+		gtk_action_group_add_toggle_actions( bar->private->action_group, toolbar_entries, G_N_ELEMENTS( toolbar_entries ), window );
+		gtk_ui_manager_insert_action_group( bar->private->ui_manager, bar->private->action_group, 0 );
 
-	merge_id = gtk_ui_manager_add_ui_from_file( ui_manager, PKGDATADIR "/nautilus-actions-config-tool.actions", &error );
-	if( merge_id == 0 || error ){
-		g_warning( "%s: error=%s", thisfn, error->message );
-		g_error_free( error );
-	}
-
-	has_maintainer_menu = FALSE;
-#ifdef NA_MAINTAINER_MODE
-	has_maintainer_menu = TRUE;
-#endif
-
-	if( has_maintainer_menu ){
-		merge_id = gtk_ui_manager_add_ui_from_file( ui_manager, PKGDATADIR "/nautilus-actions-maintainer.actions", &error );
+		error = NULL;
+		merge_id = gtk_ui_manager_add_ui_from_file( bar->private->ui_manager, st_ui_menubar_actions, &error );
 		if( merge_id == 0 || error ){
 			g_warning( "%s: error=%s", thisfn, error->message );
 			g_error_free( error );
 		}
+
+		has_maintainer_menu = FALSE;
+#ifdef NA_MAINTAINER_MODE
+		has_maintainer_menu = TRUE;
+#endif
+
+		if( has_maintainer_menu ){
+			error = NULL;
+			merge_id = gtk_ui_manager_add_ui_from_file( bar->private->ui_manager, st_ui_maintainer_actions, &error );
+			if( merge_id == 0 || error ){
+				g_warning( "%s: error=%s", thisfn, error->message );
+				g_error_free( error );
+			}
+		}
+
+		toplevel = base_window_get_gtk_toplevel( window );
+		accel_group = gtk_ui_manager_get_accel_group( bar->private->ui_manager );
+		gtk_window_add_accel_group( toplevel, accel_group );
+
+		menubar = gtk_ui_manager_get_widget( bar->private->ui_manager, "/ui/MainMenubar" );
+		vbox = base_window_get_widget( window, "MenubarVBox" );
+		gtk_box_pack_start( GTK_BOX( vbox ), menubar, FALSE, FALSE, 0 );
+
+		/* this creates a submenu in the toolbar */
+		/*gtk_container_add( GTK_CONTAINER( vbox ), toolbar );*/
+
+		base_window_signal_connect( window,
+				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED, G_CALLBACK( on_iactions_list_count_updated ));
+
+		base_window_signal_connect( window,
+				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_iactions_list_selection_changed ));
+
+		base_window_signal_connect( window,
+				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_FOCUS_IN, G_CALLBACK( on_iactions_list_focus_in ));
+
+		base_window_signal_connect( window,
+				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_FOCUS_OUT, G_CALLBACK( on_iactions_list_focus_out ));
+
+		base_window_signal_connect( window,
+				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_STATUS_CHANGED, G_CALLBACK( on_iactions_list_status_changed ));
+
+		base_window_signal_connect( window,
+				G_OBJECT( window ), MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, G_CALLBACK( on_update_sensitivities ));
+
+		base_window_signal_connect( window,
+				G_OBJECT( window ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, G_CALLBACK( on_level_zero_order_changed ));
+
+		mis = g_new0( MenubarIndicatorsStruct, 1 );
+		g_object_set_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS, mis );
+
+		nact_main_toolbar_init(( NactMainWindow * ) window, bar->private->action_group );
+	}
+}
+
+/*
+ * action: GtkAction, GtkToggleAction
+ * proxy:  GtkImageMenuItem, GtkCheckMenuItem, GtkToolButton
+ */
+static void
+on_ui_manager_proxy_connect( GtkUIManager *ui_manager, GtkAction *action, GtkWidget *proxy, BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_menubar_on_ui_manager_proxy_connect";
+
+	g_debug( "%s: ui_manager=%p (%s), action=%p (%s), proxy=%p (%s), window=%p (%s)",
+			thisfn,
+			( void * ) ui_manager, G_OBJECT_TYPE_NAME( ui_manager ),
+			( void * ) action, G_OBJECT_TYPE_NAME( action ),
+			( void * ) proxy, G_OBJECT_TYPE_NAME( proxy ),
+			( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
+	if( GTK_IS_MENU_ITEM( proxy )){
+
+		base_window_signal_connect( window,
+				G_OBJECT( proxy ), "select", G_CALLBACK( on_menu_item_selected ));
+
+		base_window_signal_connect( window,
+				G_OBJECT( proxy ), "deselect", G_CALLBACK( on_menu_item_deselected ));
+
+#ifndef NA_HAS_GTK_ACTIVATABLE
+		g_object_set_data( G_OBJECT( proxy ), MENUBAR_PROP_ITEM_ACTION, action );
+#endif
+	}
+}
+
+/*
+ * gtk_activatable_get_related_action() and gtk_action_get_tooltip()
+ * are only available starting with Gtk 2.16
+ */
+static void
+on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window )
+{
+	GtkAction *action;
+	gchar *tooltip;
+
+	/*g_debug( "nact_main_menubar_on_menu_item_selected: proxy=%p (%s), window=%p (%s)",
+			( void * ) proxy, G_OBJECT_TYPE_NAME( proxy ),
+			( void * ) window, G_OBJECT_TYPE_NAME( window ));*/
+
+	tooltip = NULL;
+
+#ifdef NA_HAS_GTK_ACTIVATABLE
+	action = gtk_activatable_get_related_action( GTK_ACTIVATABLE( proxy ));
+	if( action ){
+		tooltip = ( gchar * ) gtk_action_get_tooltip( action );
+	}
+#else
+	action = GTK_ACTION( g_object_get_data( G_OBJECT( proxy ), MENUBAR_PROP_ITEM_ACTION ));
+	if( action ){
+		g_object_get( G_OBJECT( action ), "tooltip", &tooltip, NULL );
+	}
+#endif
+
+	if( tooltip ){
+		nact_main_statusbar_display_status( window, MENUBAR_PROP_STATUS_CONTEXT, tooltip );
 	}
 
-	toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
-	accel_group = gtk_ui_manager_get_accel_group( ui_manager );
-	gtk_window_add_accel_group( toplevel, accel_group );
+#ifndef NA_HAS_GTK_ACTIVATABLE
+	g_free( tooltip );
+#endif
+}
 
-	menubar = gtk_ui_manager_get_widget( ui_manager, "/ui/MainMenubar" );
-	vbox = base_window_get_widget( BASE_WINDOW( window ), "MenubarVBox" );
-	gtk_box_pack_start( GTK_BOX( vbox ), menubar, FALSE, FALSE, 0 );
+static void
+on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window )
+{
+	nact_main_statusbar_hide_status( window, MENUBAR_PROP_STATUS_CONTEXT );
+}
 
-	/* this creates a submenu in the toolbar */
-	/*gtk_container_add( GTK_CONTAINER( vbox ), toolbar );*/
+/*
+ * triggered just before the NactMainWindow is finalized
+ */
+static void
+on_finalize_window( NactMenubar *bar, GObject *window )
+{
+	static const gchar *thisfn = "nact_menubar_on_finalize_window";
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( toplevel ),
-			"delete-event",
-			G_CALLBACK( on_delete_event ));
+	g_return_if_fail( NACT_IS_MENUBAR( bar ));
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( window ),
-			IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED,
-			G_CALLBACK( on_iactions_list_count_updated ));
+	g_debug( "%s: bar=%p (%s), window=%p", thisfn,
+			( void * ) bar, G_OBJECT_TYPE_NAME( bar ), ( void * ) window );
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( window ),
-			IACTIONS_LIST_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_iactions_list_selection_changed ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( window ),
-			IACTIONS_LIST_SIGNAL_FOCUS_IN,
-			G_CALLBACK( on_iactions_list_focus_in ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( window ),
-			IACTIONS_LIST_SIGNAL_FOCUS_OUT,
-			G_CALLBACK( on_iactions_list_focus_out ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( window ),
-			IACTIONS_LIST_SIGNAL_STATUS_CHANGED,
-			G_CALLBACK( on_iactions_list_status_changed ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( window ),
-			MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES,
-			G_CALLBACK( on_update_sensitivities ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( window ),
-			MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
-			G_CALLBACK( on_level_zero_order_changed ));
-
-	mis = g_new0( MenubarIndicatorsStruct, 1 );
-	g_object_set_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS, mis );
-
-	nact_main_toolbar_init( window, action_group );
+	g_object_unref( bar );
 }
 
 /**
- * nact_main_menubar_dispose:
- * @window: this #NactMainWindow window.
+ * nact_menubar_get_ui_manager:
+ * @bar: this #NactMenubar instance.
  *
- * Release internally allocated resources.
+ * Returns: the attached GtkUIManager.
  */
-void
-nact_main_menubar_dispose( NactMainWindow *window )
+GtkUIManager *
+nact_menubar_get_ui_manager( const NactMenubar *bar )
 {
-	static const gchar *thisfn = "nact_main_menubar_dispose";
-	MenubarIndicatorsStruct *mis;
+	g_return_val_if_fail( NACT_IS_MENUBAR( bar ), NULL );
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	g_free( mis );
+	return( bar->private->dispose_has_run ? NULL : bar->private->ui_manager );
 }
 
 /**
@@ -410,12 +638,12 @@ nact_main_menubar_is_level_zero_order_changed( const NactMainWindow *window )
 void
 nact_main_menubar_open_popup( NactMainWindow *instance, GdkEventButton *event )
 {
-	GtkUIManager *ui_manager;
 	GtkWidget *menu;
 	MenubarIndicatorsStruct *mis;
 
-	ui_manager = ( GtkUIManager * ) g_object_get_data( G_OBJECT( instance ), MENUBAR_PROP_UI_MANAGER );
-	menu = gtk_ui_manager_get_widget( ui_manager, "/ui/Popup" );
+	BAR_WINDOW_VOID( instance );
+
+	menu = gtk_ui_manager_get_widget( bar->private->ui_manager, "/ui/Popup" );
 
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( instance ), MENUBAR_PROP_INDICATORS );
 	mis->popup_handler = g_signal_connect( menu, "selection-done", G_CALLBACK( on_popup_selection_done ), instance );
@@ -571,83 +799,12 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 void
 nact_main_menubar_enable_item( NactMainWindow *window, const gchar *name, gboolean enabled )
 {
-	GtkActionGroup *group;
 	GtkAction *action;
 
-	group = g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_ACTIONS_GROUP );
-	action = gtk_action_group_get_action( group, name );
+	BAR_WINDOW_VOID( window );
+
+	action = gtk_action_group_get_action( bar->private->action_group, name );
 	gtk_action_set_sensitive( action, enabled );
-}
-
-static gboolean
-on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window )
-{
-	static const gchar *thisfn = "nact_main_menubar_on_delete_event";
-
-	g_debug( "%s: toplevel=%p, event=%p, window=%p",
-			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) window );
-
-	nact_main_menubar_file_on_quit( NULL, window );
-
-	return( TRUE );
-}
-
-/*
- * this callback is declared when attaching ui_manager and actions_group
- * as data to the window ; it is so triggered on NactMainWindow::finalize()
- */
-static void
-on_destroy_callback( gpointer data )
-{
-	static const gchar *thisfn = "nact_main_menubar_on_destroy_callback";
-
-	g_debug( "%s: data=%p (%s)", thisfn,
-			( void * ) data, G_OBJECT_TYPE_NAME( data ));
-
-	g_object_unref( G_OBJECT( data ));
-}
-
-/*
- * gtk_activatable_get_related_action() and gtk_action_get_tooltip()
- * are only available starting with Gtk 2.16
- */
-static void
-on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window )
-{
-	GtkAction *action;
-	gchar *tooltip;
-
-	/*g_debug( "nact_main_menubar_on_menu_item_selected: proxy=%p (%s), window=%p (%s)",
-			( void * ) proxy, G_OBJECT_TYPE_NAME( proxy ),
-			( void * ) window, G_OBJECT_TYPE_NAME( window ));*/
-
-	tooltip = NULL;
-
-#ifdef NA_HAS_GTK_ACTIVATABLE
-	action = gtk_activatable_get_related_action( GTK_ACTIVATABLE( proxy ));
-	if( action ){
-		tooltip = ( gchar * ) gtk_action_get_tooltip( action );
-	}
-#else
-	action = GTK_ACTION( g_object_get_data( G_OBJECT( proxy ), MENUBAR_PROP_ITEM_ACTION ));
-	if( action ){
-		g_object_get( G_OBJECT( action ), "tooltip", &tooltip, NULL );
-	}
-#endif
-
-	if( tooltip ){
-		nact_main_statusbar_display_status( window, MENUBAR_PROP_STATUS_CONTEXT, tooltip );
-	}
-
-#ifndef NA_HAS_GTK_ACTIVATABLE
-	g_free( tooltip );
-#endif
-}
-
-static void
-on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window )
-{
-	nact_main_statusbar_hide_status( window, MENUBAR_PROP_STATUS_CONTEXT );
 }
 
 static void
@@ -661,42 +818,4 @@ on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow *window )
 	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 	g_signal_handler_disconnect( menushell, mis->popup_handler );
 	mis->popup_handler = ( gulong ) 0;
-}
-
-static void
-on_proxy_connect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window )
-{
-	static const gchar *thisfn = "nact_main_menubar_on_proxy_connect";
-
-	g_debug( "%s: action_group=%p (%s), action=%p (%s), proxy=%p (%s), window=%p (%s)",
-			thisfn,
-			( void * ) action_group, G_OBJECT_TYPE_NAME( action_group ),
-			( void * ) action, G_OBJECT_TYPE_NAME( action ),
-			( void * ) proxy, G_OBJECT_TYPE_NAME( proxy ),
-			( void * ) window, G_OBJECT_TYPE_NAME( window ));
-
-	if( GTK_IS_MENU_ITEM( proxy )){
-
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( proxy ),
-				"select",
-				G_CALLBACK( on_menu_item_selected ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( proxy ),
-				"deselect",
-				G_CALLBACK( on_menu_item_deselected ));
-
-#ifndef NA_HAS_GTK_ACTIVATABLE
-		g_object_set_data( G_OBJECT( proxy ), MENUBAR_PROP_ITEM_ACTION, action );
-#endif
-	}
-}
-
-static void
-on_proxy_disconnect( GtkActionGroup *action_group, GtkAction *action, GtkWidget *proxy, NactMainWindow *window )
-{
-	/* signal handlers will be automagically disconnected on BaseWindow::dispose */
 }

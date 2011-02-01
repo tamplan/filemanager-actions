@@ -1,5 +1,22 @@
 2011-01-31 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-menubar.c:
+	* src/nact/nact-main-menubar.h: Renamed as nact-menubar.{c,h}.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-iactions-list.c:
+	* src/nact/nact-main-menubar-edit.h:
+	* src/nact/nact-main-menubar-file.h:
+	* src/nact/nact-main-menubar-help.c:
+	* src/nact/nact-main-menubar-help.h:
+	* src/nact/nact-main-menubar-maintainer.c:
+	* src/nact/nact-main-menubar-maintainer.h:
+	* src/nact/nact-main-menubar-tools.c:
+	* src/nact/nact-main-menubar-tools.h:
+	* src/nact/nact-main-menubar-view.c:
+	* src/nact/nact-main-menubar-view.h:
+	* src/nact/nact-main-window.c: Updated accordingly.
+
 	* src/api/na-boxed.h:
 	* src/core/na-boxed.c (na_boxed_dump): New function.
 

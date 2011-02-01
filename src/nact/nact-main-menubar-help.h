@@ -37,9 +37,7 @@
  * @include: nact/nact-main-menubar-help.h
  */
 
-#include <gtk/gtk.h>
-
-#include "nact-main-menubar.h"
+#include "nact-menubar.h"
 
 G_BEGIN_DECLS
 

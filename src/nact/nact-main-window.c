@@ -57,11 +57,11 @@
 #include "nact-iexecution-tab.h"
 #include "nact-iproperties-tab.h"
 #include "nact-main-tab.h"
-#include "nact-main-menubar.h"
 #include "nact-main-menubar-file.h"
 #include "nact-main-statusbar.h"
 #include "nact-marshal.h"
 #include "nact-main-window.h"
+#include "nact-menubar.h"
 #include "nact-confirm-logout.h"
 #include "nact-sort-buttons.h"
 
@@ -166,10 +166,10 @@ static void     instance_set_property( GObject *object, guint property_id, const
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
-static void     on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel );
-static void     on_base_initialize_base_window( NactMainWindow *window );
+static void     on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data );
+static void     on_base_initialize_base_window( NactMainWindow *window, gpointer user_data );
 static gchar   *on_base_get_wsp_id( const BaseWindow *window );
-static void     on_base_all_widgets_showed( NactMainWindow *window );
+static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
 static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
 
@@ -197,6 +197,8 @@ static void     reload( NactMainWindow *window );
 
 static gchar     *iabout_get_application_name( NAIAbout *instance );
 static GtkWindow *iabout_get_toplevel( NAIAbout *instance );
+
+static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
 
 GType
 nact_main_window_get_type( void )
@@ -763,7 +765,6 @@ instance_dispose( GObject *window )
 		nact_ienvironment_tab_dispose( NACT_IENVIRONMENT_TAB( window ));
 		nact_iexecution_tab_dispose( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_dispose( NACT_IPROPERTIES_TAB( window ));
-		nact_main_menubar_dispose( self );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -808,24 +809,27 @@ nact_main_window_new( const NactApplication *application )
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 			NULL );
 
+	nact_menubar_new( BASE_WINDOW( window ));
+
 	return( window );
 }
 
 /*
- * note that for this NactMainWindow, on_baseinitialize_gtk_toplevel() and
+ * note that for this NactMainWindow, on_base_initialize_gtk_toplevel() and
  * on_base_initialize_base_window() are roughly equivalent, as there is only
  * one occurrence on this window in the application: closing this window
  * is the same than quitting the application
  */
 static void
-on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel )
+on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_initialize_gtk_toplevel";
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
-		g_debug( "%s: window=%p, toplevel=%p", thisfn, ( void * ) window, ( void * ) toplevel );
+		g_debug( "%s: window=%p, toplevel=%p, user_data=%p",
+				thisfn, ( void * ) window, ( void * ) toplevel, ( void * ) user_data );
 
 		nact_iactions_list_set_management_mode( NACT_IACTIONS_LIST( window ), IACTIONS_LIST_MANAGEMENT_MODE_EDITION );
 		nact_iactions_list_initial_load_toplevel( NACT_IACTIONS_LIST( window ));
@@ -846,7 +850,7 @@ on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel )
 }
 
 static void
-on_base_initialize_base_window( NactMainWindow *window )
+on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_initialize_base_window";
 	NactApplication *application;
@@ -859,7 +863,7 @@ on_base_initialize_base_window( NactMainWindow *window )
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
-		g_debug( "%s: window=%p", thisfn, ( void * ) window );
+		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
@@ -890,8 +894,6 @@ on_base_initialize_base_window( NactMainWindow *window )
 		nact_iexecution_tab_runtime_init_toplevel( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_runtime_init_toplevel( NACT_IPROPERTIES_TAB( window ));
 
-		nact_main_menubar_runtime_init( window );
-
 		na_settings_register_key_callback( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), window );
 
 		/* fill the IActionsList at last so that all signals are connected
@@ -907,8 +909,9 @@ on_base_initialize_base_window( NactMainWindow *window )
 		base_window_signal_connect( BASE_WINDOW( window ),
 				G_OBJECT( window ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, G_CALLBACK( on_main_window_level_zero_order_changed ));
 
-		nact_main_menubar_file_install_autosave( window );
-
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( base_window_get_gtk_toplevel( BASE_WINDOW( window ))),
+				"delete-event", G_CALLBACK( on_delete_event ));
 	}
 }
 
@@ -919,7 +922,7 @@ on_base_get_wsp_id( const BaseWindow *window )
 }
 
 static void
-on_base_all_widgets_showed( NactMainWindow *window )
+on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_all_widgets_showed";
 
@@ -936,7 +939,7 @@ on_base_all_widgets_showed( NactMainWindow *window )
 	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( window ));
 
 	if( !window->private->dispose_has_run ){
-		g_debug( "%s: window=%p", thisfn, ( void * ) window );
+		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 
 		raz_main_properties( window );
 
@@ -1606,4 +1609,22 @@ iabout_get_toplevel( NAIAbout *instance )
 	g_return_val_if_fail( BASE_IS_WINDOW( instance ), NULL );
 
 	return( base_window_get_gtk_toplevel( BASE_WINDOW( instance )));
+}
+
+/*
+ * triggered when the user clicks on the top right [X] button
+ * returns %TRUE to stop the signal to be propagated (which would cause the
+ * window to be destroyed); instead we gracefully quit the application
+ */
+static gboolean
+on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_on_delete_event";
+
+	g_debug( "%s: toplevel=%p, event=%p, window=%p",
+			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) window );
+
+	nact_main_menubar_file_on_quit( NULL, window );
+
+	return( TRUE );
 }

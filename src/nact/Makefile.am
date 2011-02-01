@@ -117,8 +117,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iproperties-tab.h								\
 	nact-ischemes-tab.c									\
 	nact-ischemes-tab.h									\
-	nact-main-menubar.c									\
-	nact-main-menubar.h									\
 	nact-main-menubar-edit.c							\
 	nact-main-menubar-edit.h							\
 	nact-main-menubar-file.c							\
@@ -141,6 +139,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-main-window.h									\
 	nact-match-list.c									\
 	nact-match-list.h									\
+	nact-menubar.c										\
+	nact-menubar.h										\
 	nact-preferences-editor.c							\
 	nact-preferences-editor.h							\
 	nact-providers-list.c								\
