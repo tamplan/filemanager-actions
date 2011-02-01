@@ -94,7 +94,7 @@ struct _NactMainWindowPrivate {
 	 */
 	NAObjectItem    *selected_item;
 	gboolean         editable;
-	gint             reason;
+	guint            reason;
 
 	/**
 	 * Currently selected profile.

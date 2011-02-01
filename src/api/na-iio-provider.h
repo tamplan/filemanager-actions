@@ -334,30 +334,30 @@ void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
  */
 /**
  * NAIIOProviderWritabilityStatus:
- * @NA_IIO_PROVIDER_STATUS_UNDETERMINED:             undetermined.
- * @NA_IIO_PROVIDER_STATUS_WRITABLE:                 the item is writable.
- * @NA_IIO_PROVIDER_STATUS_ITEM_READONLY:            the item is read-only.
- * @NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO:  the provider is not willing to write this item,
- *                                                   or doest not implement the required interface.
- * @NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND:        the provider has not been found.
- * @NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN: the provider has been locked by the administrator.
- * @NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER:  the provider has been locked by the user.
- * @NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN: the whole configuration has been locked
- *                                                        by the administrator.
- * @NA_IIO_PROVIDER_STATUS_NO_API:                   no API has been found.
+ * @NA_IIO_PROVIDER_STATUS_WRITABLE:          item and i/o provider are writable.
+ * @NA_IIO_PROVIDER_STATUS_UNAVAILABLE:       unavailable i/o provider.
+ * @NA_IIO_PROVIDER_STATUS_INCOMPLETE_API:    i/o provider has an incomplete write api.
+ * @NA_IIO_PROVIDER_STATUS_NOT_WILLING_TO:    i/o provider is not willing to write.
+ * @NA_IIO_PROVIDER_STATUS_NOT_ABLE_TO:       i/o provider is not able to write.
+ * @NA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:   i/o provider has been locked by the administrator.
+ * @NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER:    i/o provider has been locked by the user.
+ * @NA_IIO_PROVIDER_STATUS_ITEM_READONLY:     item is read-only.
+ * @NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND: no writable i/o provider found.
+ * @NA_IIO_PROVIDER_STATUS_UNDETERMINED:      unknwon reason (and probably a bug).
  *
  * The reasons for which an item may not be writable.
  */
 typedef enum {
-	NA_IIO_PROVIDER_STATUS_UNDETERMINED = 0,
-	NA_IIO_PROVIDER_STATUS_WRITABLE,
+	NA_IIO_PROVIDER_STATUS_WRITABLE = 0,
+	NA_IIO_PROVIDER_STATUS_UNAVAILABLE,
+	NA_IIO_PROVIDER_STATUS_INCOMPLETE_API,
+	NA_IIO_PROVIDER_STATUS_NOT_WILLING_TO,
+	NA_IIO_PROVIDER_STATUS_NOT_ABLE_TO,
+	NA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN,
+	NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER,
 	NA_IIO_PROVIDER_STATUS_ITEM_READONLY,
-	NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO,
 	NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND,
-	NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN,
-	NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER,
-	NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN,
-	NA_IIO_PROVIDER_STATUS_NO_API,
+	NA_IIO_PROVIDER_STATUS_UNDETERMINED,
 	/*< private >*/
 	NA_IIO_PROVIDER_STATUS_LAST,
 }

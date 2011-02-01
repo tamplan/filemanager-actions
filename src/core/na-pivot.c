@@ -773,31 +773,6 @@ na_pivot_set_loadable( NAPivot *pivot, guint loadable )
 	}
 }
 
-/*
- * na_pivot_is_configuration_locked_by_admin:
- * @pivot: this #NAPivot.
- *
- * Returns: %TRUE if the whole configuration has been locked by an
- * administrator, %FALSE else.
- */
-gboolean
-na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot )
-{
-	gboolean locked;
-
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), TRUE );
-
-	locked = TRUE;
-
-	if( !pivot->private->dispose_has_run ){
-
-		/* TODO: na_pivot_is_configuration_locked_by_admin */
-		locked = FALSE;
-	}
-
-	return( locked );
-}
-
 #if 0
 static void
 on_io_provider_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )

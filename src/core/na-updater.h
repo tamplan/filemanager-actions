@@ -80,7 +80,7 @@ void       na_updater_remove_item( NAUpdater *updater, NAObject *item );
 
 /* read from / write to the physical storage subsystem
  */
-gboolean   na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, gint *reason );
+gboolean   na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, guint *reason );
 guint      na_updater_write_item      ( const NAUpdater *updater, NAObjectItem *item, GSList **messages );
 guint      na_updater_delete_item     ( const NAUpdater *updater, const NAObjectItem *item, GSList **messages );
 

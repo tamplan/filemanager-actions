@@ -55,6 +55,8 @@ struct _NAIOProviderPrivate {
 	gchar         *id;
 	NAIIOProvider *provider;
 	gulong         item_changed_handler;
+	gboolean       writable;
+	guint          reason;
 };
 
 /* NAIOProvider properties
@@ -65,17 +67,20 @@ enum {
 
 #define IO_PROVIDER_PROP_ID				"na-io-provider-prop-id"
 
+static const gchar  *st_enter_bug    = N_( "Please, be kind enough to fill out a bug report on "
+											"https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions." );
+
 static GObjectClass *st_parent_class = NULL;
 static GList        *st_io_providers = NULL;
 
-static GType  register_type( void );
-static void   class_init( NAIOProviderClass *klass );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_constructed( GObject *object );
-static void   instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void   instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void   instance_dispose( GObject *object );
-static void   instance_finalize( GObject *object );
+static GType         register_type( void );
+static void          class_init( NAIOProviderClass *klass );
+static void          instance_init( GTypeInstance *instance, gpointer klass );
+static void          instance_constructed( GObject *object );
+static void          instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void          instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void          instance_dispose( GObject *object );
+static void          instance_finalize( GObject *object );
 
 #if 0
 static void          dump( const NAIOProvider *provider );
@@ -87,7 +92,8 @@ static GList        *io_providers_list_add_from_prefs( const NAPivot *pivot, GLi
 static GList        *io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list );
 static GList        *io_providers_list_append_object( const NAPivot *pivot, GList *list, NAIIOProvider *module, const gchar *id );
 static void          io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, NAIIOProvider *provider_module );
-static gboolean      is_really_writable( const NAIOProvider *provider, const NAPivot *pivot );
+static gboolean      is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory );
+static gboolean      is_finally_writable( const NAIOProvider *provider, const NAPivot *pivot, guint *reason );
 static GList        *load_items_filter_unwanted_items( const NAPivot *pivot, GList *merged, guint loadable_set );
 static GList        *load_items_filter_unwanted_items_rec( GList *merged, guint loadable_set );
 static GList        *load_items_get_merged_list( const NAPivot *pivot, guint loadable_set, GSList **messages );
@@ -180,6 +186,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->id = NULL;
 	self->private->provider = NULL;
 	self->private->item_changed_handler = 0;
+	self->private->writable = FALSE;
+	self->private->reason = NA_IIO_PROVIDER_STATUS_UNAVAILABLE;
 }
 
 static void
@@ -313,15 +321,15 @@ na_io_provider_find_writable_io_provider( const NAPivot *pivot )
 	NAIOProvider *provider;
 
 	providers = na_io_provider_get_io_providers_list( pivot );
-	provider = NULL;
 
-	for( ip = providers ; ip && !provider ; ip = ip->next ){
-		if( is_really_writable( NA_IO_PROVIDER( ip->data ), pivot )){
-			provider = NA_IO_PROVIDER( ip->data );
+	for( ip = providers ; ip ; ip = ip->next ){
+		provider = ( NAIOProvider * ) ip->data;
+		if( provider->private->writable ){
+			return( provider );
 		}
 	}
 
-	return( provider );
+	return( NULL );
 }
 
 /*
@@ -534,39 +542,6 @@ na_io_provider_is_conf_readable( const NAIOProvider *provider, const NAPivot *pi
 }
 
 /*
- * na_io_provider_is_able_to_write:
- * @provider: this #NAIOProvider.
- *
- * Whether the NAIIOProvider is able to write is a runtime condition.
- *
- * Returns: %TRUE is this I/O provider is able to write.
- */
-gboolean
-na_io_provider_is_able_to_write( const NAIOProvider *provider )
-{
-	gboolean is_able_to;
-
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
-
-	is_able_to = FALSE;
-
-	if( !provider->private->dispose_has_run ){
-
-		if( provider->private->provider ){
-
-			g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider->private->provider ), FALSE );
-
-			if( NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write ){
-
-				is_able_to = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write( provider->private->provider );
-			}
-		}
-	}
-
-	return( is_able_to );
-}
-
-/*
  * na_io_provider_is_conf_writable:
  * @provider: this #NAIOProvider.
  * @pivot: the #NAPivot application object.
@@ -588,7 +563,6 @@ gboolean
 na_io_provider_is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
 {
 	gboolean is_writable;
-	gchar *group;
 
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
@@ -597,52 +571,40 @@ na_io_provider_is_conf_writable( const NAIOProvider *provider, const NAPivot *pi
 
 	if( !provider->private->dispose_has_run ){
 
-		group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, provider->private->id );
-		is_writable = na_settings_get_boolean_ex(
-				na_pivot_get_settings( pivot ), group, NA_IPREFS_IO_PROVIDER_WRITABLE, NULL, mandatory );
-		g_free( group );
+		is_writable = is_conf_writable( provider, pivot, mandatory );
 	}
 
 	return( is_writable );
 }
 
-/*
- * na_io_provider_is_willing_to_write:
+/**
+ * na_io_provider_is_finally_writable:
  * @provider: this #NAIOProvider.
+ * @reason: if not %NULL, a pointer to a guint which will hold the reason.
  *
- * The 'willing_to_write' property is an intrinsic attribute of the NAIIOProvider
- * module. It depends on:
- * - whether it provides a 'willing_to_write' api which returns %TRUE (defaults
- *   to %FALSE)
- * - whether it has the needed API (is_able_to_write, write_item, delete_item)
- *
- * Returns: %TRUE is this I/O provider is willing to write.
+ * Returns: the current writability status of this I/O provider.
  */
 gboolean
-na_io_provider_is_willing_to_write( const NAIOProvider *provider )
+na_io_provider_is_finally_writable( const NAIOProvider *provider, guint *reason )
 {
-	gboolean is_willing_to;
+	gboolean is_writable;
 
+	if( reason ){
+		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
+	}
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
 
-	is_willing_to = FALSE;
+	is_writable = FALSE;
 
-	if( !provider->private->dispose_has_run &&
-		provider->private->provider ){
+	if( !provider->private->dispose_has_run ){
 
-		g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider->private->provider ), FALSE );
-
-		if( NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write &&
-			NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write( provider->private->provider )){
-
-			is_willing_to =
-					NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write &&
-					NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item &&
-					NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item;
+		is_writable = provider->private->writable;
+		if( reason ){
+			*reason = provider->private->reason;
 		}
 	}
 
-	return( is_willing_to );
+	return( is_writable );
 }
 
 /*
@@ -907,32 +869,82 @@ static void
 io_providers_list_set_module( const NAPivot *pivot, NAIOProvider *provider_object, NAIIOProvider *provider_module )
 {
 	provider_object->private->provider = g_object_ref( provider_module );
+
 	provider_object->private->item_changed_handler =
 			g_signal_connect(
 					provider_module, IO_PROVIDER_SIGNAL_ITEM_CHANGED,
 					( GCallback ) na_pivot_on_item_changed_handler, ( gpointer ) pivot );
+
+	provider_object->private->writable =
+			is_finally_writable( provider_object, pivot, &provider_object->private->reason );
+}
+
+static gboolean
+is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *mandatory )
+{
+	gchar *group;
+	gboolean is_writable;
+
+	group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, provider->private->id );
+	is_writable = na_settings_get_boolean_ex(
+			na_pivot_get_settings( pivot ), group, NA_IPREFS_IO_PROVIDER_WRITABLE, NULL, mandatory );
+	g_free( group );
+
+	return( is_writable );
 }
 
 /*
- * is_really_writable:
- * @provider: the #NAIOProvider provider.
- * @pivot: the #NAPivot instance.
- *
- * Returns: %TRUE if the @provider will be able to write proposed items,
- * %FALSE else.
- *
- * Note thay almost all checked conditions are themselves subject to race
- * conditions. Unless that (!), the caller can be (almost) sure that writings
- * will be possible when this function returns %TRUE.
+ * Evaluate the writability status for this I/O provider at load time
+ * This same status may later be reevaluated on demand.
  */
 static gboolean
-is_really_writable( const NAIOProvider *provider, const NAPivot *pivot )
+is_finally_writable( const NAIOProvider *provider, const NAPivot *pivot, guint *reason )
 {
+	gboolean writable;
+	gboolean is_writable, mandatory;
 
-	return( na_io_provider_is_willing_to_write( provider ) &&
-			na_io_provider_is_able_to_write( provider ) &&
-			na_io_provider_is_conf_writable( provider, pivot, NULL ) &&
-			!na_pivot_is_configuration_locked_by_admin( pivot ));
+	g_return_val_if_fail( reason, FALSE );
+
+	writable = FALSE;
+	*reason = NA_IIO_PROVIDER_STATUS_UNAVAILABLE;
+
+	if( provider->private->provider && NA_IS_IIO_PROVIDER( provider->private->provider )){
+
+		writable = TRUE;
+		*reason = NA_IIO_PROVIDER_STATUS_WRITABLE;
+
+		if( !NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write ||
+			!NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write ||
+			!NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item ||
+			!NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item ){
+
+				writable = FALSE;
+				*reason = NA_IIO_PROVIDER_STATUS_INCOMPLETE_API;
+
+		} else if( !NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_willing_to_write( provider->private->provider )){
+
+				writable = FALSE;
+				*reason = NA_IIO_PROVIDER_STATUS_NOT_WILLING_TO;
+
+		} else if( !NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->is_able_to_write( provider->private->provider )){
+
+				writable = FALSE;
+				*reason = NA_IIO_PROVIDER_STATUS_NOT_ABLE_TO;
+
+		} else {
+			is_writable = is_conf_writable( provider, pivot, &mandatory );
+			if( !is_writable ){
+				writable = FALSE;
+				if( mandatory ){
+					*reason = NA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN;
+				} else {
+					*reason = NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER;
+				}
+			}
+		}
+	}
+
+	return( writable );
 }
 
 static GList *
@@ -1154,324 +1166,6 @@ peek_provider_by_id( const GList *providers, const gchar *id )
 	return( provider );
 }
 
-#if 0
-/*
- * @priority: the internal ids of IO providers in descending order of
- * priority for writing new elements, as a string list
- *
- * build the static list of I/O providers, depending of setup of NAPivot
- * doing required initializations
- */
-static void
-setup_io_providers( const NAPivot *pivot, GSList *priority )
-{
-	GList *ordered_providers;
-	GList *merged_providers;
-	GList *all_providers;
-
-	g_return_if_fail( st_io_providers == NULL );
-
-	/* allocate the ordered list */
-	ordered_providers = allocate_ordered_providers( priority );
-
-	/* merge with available I/O providers */
-	merged_providers = merge_available_io_providers( pivot, ordered_providers );
-
-	/* add providers found in prefs */
-	all_providers = add_io_providers_from_prefs( pivot, merged_providers );
-
-	st_io_providers = all_providers;
-}
-
-static GList *
-allocate_ordered_providers( GSList *priority )
-{
-	GSList *ip;
-	NAIOProvider *provider;
-	GList *providers;
-
-	providers = NULL;
-
-	for( ip = priority ; ip ; ip = ip->next ){
-
-		provider = g_object_new( NA_IO_PROVIDER_TYPE, IO_PROVIDER_PROP_ID, ( const gchar * ) ip->data, NULL );
-		providers = g_list_prepend( providers, provider );
-	}
-
-	return( g_list_reverse( providers ));
-}
-
-/*
- * merge the ordered list of I/O providers (which have only Id)
- * with those found available at runtime
- */
-static GList *
-merge_available_io_providers( const NAPivot *pivot, GList *ordered )
-{
-	static const gchar *thisfn = "na_io_provider_merge_available_io_providers";
-	GList *merged;
-	GList *module_objects, *im;
-	gchar *id;
-	NAIOProvider *provider;
-
-	merged = ordered;
-
-	module_objects = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
-	for( im = module_objects ; im ; im = im->next ){
-
-		id = NULL;
-		if( NA_IIO_PROVIDER_GET_INTERFACE( NA_IIO_PROVIDER( im->data ))->get_id ){
-			id = NA_IIO_PROVIDER_GET_INTERFACE( NA_IIO_PROVIDER( im->data ))->get_id( NA_IIO_PROVIDER( im->data ));
-
-		} else {
-			g_warning( "%s: NAIIOProvider %p doesn't support get_id() interface", thisfn, ( void * ) im->data );
-		}
-
-		provider = NULL;
-		if( id ){
-			provider = na_io_provider_find_provider_by_id( merged, id );
-
-			if( !provider ){
-				g_debug( "%s: no provider already allocated in ordered list for id=%s", thisfn, id );
-				provider = g_object_new( NA_IO_PROVIDER_TYPE, IO_PROVIDER_PROP_ID, id, NULL );
-				merged = g_list_append( merged, provider );
-
-			} else {
-				g_debug( "%s: found NAIOProvider=%p (NAIIOProvider=%p) for id=%s",
-						thisfn, ( void * ) provider, ( void * ) im->data, id );
-			}
-
-			io_provider_set_provider( provider, NA_IIO_PROVIDER( im->data ), pivot );
-
-			g_free( id );
-		}
-	}
-
-	na_pivot_free_providers( module_objects );
-
-	return( merged );
-}
-
-static void
-io_provider_set_provider( NAIOProvider *provider, NAIIOProvider *instance, const NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_io_provider_set_provider";
-
-	g_return_if_fail( NA_IS_IO_PROVIDER( provider ));
-	g_return_if_fail( NA_IS_IIO_PROVIDER( instance ));
-
-	provider->private->provider = g_object_ref( instance );
-
-	if( NA_IIO_PROVIDER_GET_INTERFACE( instance )->get_name ){
-		provider->private->name = NA_IIO_PROVIDER_GET_INTERFACE( instance )->get_name( instance );
-	} else {
-		g_warning( "%s: NAIIOProvider %p doesn't support get_name() interface", thisfn, ( void * ) instance );
-	}
-
-	provider->private->item_changed_handler =
-			g_signal_connect(
-					instance,
-					IO_PROVIDER_SIGNAL_ITEM_CHANGED,
-					( GCallback ) na_pivot_item_changed_handler,
-					( gpointer ) pivot );
-}
-
-static GList *
-add_io_providers_from_prefs( const NAPivot *pivot, GList *runtime_providers )
-{
-	gchar *path, *id;
-	GSList *ids, *iid;
-	GList *providers;
-	NAIOProvider *provider;
-
-	providers = runtime_providers;
-	path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
-	gconf = na_iprefs_get_gconf_client( NA_IPREFS( pivot ));
-
-	ids = na_gconf_utils_get_subdirs( gconf, path );
-
-	for( iid = ids ; iid ; iid = iid->next ){
-		id = g_path_get_basename(( const gchar * ) iid->data );
-		provider = na_io_provider_find_provider_by_id( providers, id );
-
-		if( !provider ){
-			provider = g_object_new( NA_IO_PROVIDER_TYPE, IO_PROVIDER_PROP_ID, id, NULL );
-			providers = g_list_append( providers, provider );
-		}
-
-		g_free( id );
-	}
-
-	na_gconf_utils_free_subdirs( ids );
-	g_free( path );
-
-	return( providers );
-}
-
-/*
- * na_io_provider_reorder_providers_list:
- * @pivot: the #NAPivot instance of the application.
- *
- * Reorder our global list of #NAIOProviders,after the user has reordered
- * them in user preferences.
- */
-void
-na_io_provider_reorder_providers_list( const NAPivot *pivot )
-{
-	GSList *order, *io;
-	GList *new_list;
-	NAIOProvider *provider;
-
-	new_list = NULL;
-	order = na_iprefs_read_string_list( NA_IPREFS( pivot ), IO_PROVIDER_KEY_ORDER, NULL );
-
-	for( io = order ; io ; io = io->next ){
-		provider = na_io_provider_find_provider_by_id( st_io_providers, ( const gchar * ) io->data );
-		if( provider ){
-			st_io_providers = g_list_remove( st_io_providers, provider );
-			new_list = g_list_prepend( new_list, provider );
-		}
-	}
-
-	st_io_providers = g_list_reverse( new_list );
-
-	na_core_utils_slist_free( order );
-}
-
-/*
- * na_io_provider_is_user_readable_at_startup:
- * @provider: this #NAIOProvider.
- * @iprefs: an implementor of the #NAIPrefs interface.
- *
- * Returns: %TRUE is this I/O provider should be read at startup, and so
- * may participate to the global list of menus and actions.
- *
- * This is a user preference.
- * If the preference is not recorded, then it defaults to %TRUE.
- * This means that the user may adjust its personal configuration to
- * fully ignore menu/action items from a NAIIOProvider, just by setting
- * the corresponding flag to %FALSE.
- */
-gboolean
-na_io_provider_is_user_readable_at_startup( const NAIOProvider *provider, const NAIPrefs *iprefs )
-{
-	gboolean to_be_read;
-	GConfClient *gconf;
-	gchar *path, *key, *entry;
-
-	to_be_read = FALSE;
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( NA_IS_IPREFS( iprefs ), FALSE );
-
-	if( !provider->private->dispose_has_run ){
-
-		gconf = na_iprefs_get_gconf_client( iprefs );
-
-		path = gconf_concat_dir_and_key( IPREFS_GCONF_BASEDIR, IO_PROVIDER_KEY_ROOT );
-		key = gconf_concat_dir_and_key( path, provider->private->id );
-		entry = gconf_concat_dir_and_key( key, NA_IPREFS_IO_PROVIDER_READABLE );
-
-		to_be_read = na_gconf_utils_read_bool( gconf, entry, FALSE, TRUE );
-
-		g_free( entry );
-		g_free( key );
-		g_free( path );
-	}
-
-	return( to_be_read );
-}
-
-/*
- * na_io_provider_find_provider_by_id:
- * @providers: the current list of #NAIOProvider.
- * @id: the searched internal id.
- *
- * Returns: the searched #NAIOProvider, or %NULL if not found.
- *
- * The returned object is owned by #NAIOProvider class, and should not
- * be g_object_unref() by the user.
- */
-NAIOProvider *
-na_io_provider_find_provider_by_id( GList *providers, const gchar *id )
-{
-	NAIOProvider *provider;
-	GList *ip;
-
-	provider = NULL;
-
-	for( ip = providers ; ip && !provider ; ip = ip->next ){
-
-		if( !strcmp( NA_IO_PROVIDER( ip->data )->private->id, id )){
-
-			provider = NA_IO_PROVIDER( ip->data );
-		}
-	}
-
-	return( provider );
-}
-
-/*
- * na_io_provider_is_locked_by_admin:
- * @provider: this #NAIOProvider.
- * @iprefs: an implementor of the #NAIPrefs interface.
- *
- * Returns: %TRUE is this I/O provider has been locked by an admin.
- */
-gboolean
-na_io_provider_is_locked_by_admin( const NAIOProvider *provider, const NAIPrefs *iprefs )
-{
-	gboolean locked;
-	GConfClient *gconf;
-	gchar *path;
-
-	locked = FALSE;
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), FALSE );
-	g_return_val_if_fail( NA_IS_IPREFS( iprefs ), FALSE );
-
-	if( !provider->private->dispose_has_run ){
-
-		gconf = na_iprefs_get_gconf_client( iprefs );
-
-		path = g_strdup_printf( "%s/mandatory/%s/locked", IPREFS_GCONF_BASEDIR, provider->private->id );
-
-		locked = na_gconf_utils_read_bool( gconf, path, FALSE, FALSE );
-
-		g_free( path );
-	}
-
-	return( locked );
-}
-
-/*
- * na_io_provider_has_write_api:
- * @provider: this #NAIOProvider.
- *
- * Returns: %TRUE is the NAIIOProvider implements write and delete api.
- */
-gboolean
-na_io_provider_has_write_api( const NAIOProvider *provider )
-{
-	gboolean has_api;
-
-	has_api = FALSE;
-	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), has_api );
-
-	if( !provider->private->dispose_has_run ){
-
-		if( provider->private->provider ){
-
-			g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider->private->provider ), FALSE );
-
-			has_api =
-					NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item &&
-					NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item;
-		}
-	}
-
-	return( has_api );
-}
-#endif
-
 /*
  * na_io_provider_write_item:
  * @provider: this #NAIOProvider object.
@@ -1503,6 +1197,7 @@ na_io_provider_write_item( const NAIOProvider *provider, const NAObjectItem *ite
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider->private->provider ), ret );
+	g_return_val_if_fail( NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item, ret );
 
 	ret = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item( provider->private->provider, item, messages );
 
@@ -1535,6 +1230,7 @@ na_io_provider_delete_item( const NAIOProvider *provider, const NAObjectItem *it
 	g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), ret );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
 	g_return_val_if_fail( NA_IS_IIO_PROVIDER( provider->private->provider ), ret );
+	g_return_val_if_fail( NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item, ret );
 
 	ret = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->delete_item( provider->private->provider, item, messages );
 
@@ -1598,42 +1294,46 @@ na_io_provider_get_readonly_tooltip( guint reason )
 	tooltip = NULL;
 
 	switch( reason ){
-		case NA_IIO_PROVIDER_STATUS_ITEM_READONLY:
-			tooltip = g_strdup( _( "Item is read-only." ));
+		/* item is writable, so tooltip is empty */
+		case NA_IIO_PROVIDER_STATUS_WRITABLE:
+			tooltip = g_strdup( "" );
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO:
+		case NA_IIO_PROVIDER_STATUS_UNAVAILABLE:
+			tooltip = g_strdup( _( "Unavailable I/O provider." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_INCOMPLETE_API:
+			tooltip = g_strdup( _( "I/O provider implementation lacks of required API." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_NOT_WILLING_TO:
 			tooltip = g_strdup( _( "I/O provider is not willing to write." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_NOT_ABLE_TO:
+			tooltip = g_strdup( _( "I/O provider announces itself as unable to write." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_LOCKED_BY_ADMIN:
+			tooltip = g_strdup( _( "I/O provider has been locked down by an administrator." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER:
+			tooltip = g_strdup( _( "I/O provider has been locked down by the user." ));
+			break;
+
+		case NA_IIO_PROVIDER_STATUS_ITEM_READONLY:
+			tooltip = g_strdup( _( "Item is read-only." ));
 			break;
 
 		case NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND:
 			tooltip = g_strdup( _( "No writable I/O provider found." ));
 			break;
 
-		case NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN:
-			tooltip = g_strdup( _( "I/O provider has been locked down by an administrator." ));
-			break;
-
-		case NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER:
-			tooltip = g_strdup( _( "I/O provider has been locked down by the user." ));
-			break;
-
-		case NA_IIO_PROVIDER_STATUS_NO_API:
-			tooltip = g_strdup( _( "I/O provider implementation lacks of required API." ));
-			break;
-
-		case NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN:
-			tooltip = g_strdup( _( "The whole configuration has been locked down by an administrator." ));
-			break;
-
-		/* item is writable, so tooltip is empty */
-		case 0:
-			tooltip = g_strdup( "" );
-			break;
-
 		default:
-			tooltip = g_strdup_printf( _( "Item is not writable for an unknown reason (%d).\n" \
-					"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org." ), reason );
+			tooltip = g_strdup_printf(
+					_( "Item is not writable for an unknown reason (%d).\n%s" ), reason, st_enter_bug );
 			break;
 	}
 
@@ -1660,8 +1360,7 @@ na_io_provider_get_return_code_label( guint code )
 			break;
 
 		case NA_IIO_PROVIDER_CODE_PROGRAM_ERROR:
-			label = g_strdup( _( "Program flow error.\n" \
-					"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org." ));
+			label = g_strdup_printf( _( "Program flow error.\n%s" ), st_enter_bug );
 			break;
 
 		case NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN:
@@ -1681,8 +1380,7 @@ na_io_provider_get_return_code_label( guint code )
 			break;
 
 		default:
-			label = g_strdup_printf( _( "Unknown return code (%d).\n" \
-					"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org." ), code );
+			label = g_strdup_printf( _( "Unknown return code (%d).\n%s" ), code, st_enter_bug );
 			break;
 	}
 

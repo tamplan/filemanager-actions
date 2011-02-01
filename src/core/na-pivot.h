@@ -169,8 +169,6 @@ NASettings   *na_pivot_get_settings     ( const NAPivot *pivot );
 void          na_pivot_set_automatic_reload            ( NAPivot *pivot, gboolean reload );
 void          na_pivot_set_loadable                    ( NAPivot *pivot, guint loadable );
 
-gboolean      na_pivot_is_configuration_locked_by_admin( const NAPivot *pivot );
-
 G_END_DECLS
 
 #endif /* __CORE_NA_PIVOT_H__ */

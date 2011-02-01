@@ -299,12 +299,14 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
  * - the item must not be itself in a read-only store, which has been
  *   checked when first reading it
  * - the provider must be willing (resp. able) to write
- * - the provider must not has been locked by the admin
- * - the writability of the provider must not have been removed by the user
- * - the whole configuration must not have been locked by the admin.
+ * - the provider must not has been locked by the admin, nor by the user
+ *
+ * Note that this function does not consider if the item is to be written
+ * at the level zero of the tree, which may be a mandatory preference
+ * (i.e. locked by an admin), and so make this item unwritable.
  */
 gboolean
-na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, gint *reason )
+na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, guint *reason )
 {
 	gboolean writable;
 	NAIOProvider *provider;
@@ -324,6 +326,13 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
 			*reason = NA_IIO_PROVIDER_STATUS_WRITABLE;
 		}
 
+		/* Writability status of the item has been determined at load time
+		 * (cf. e.g. io-desktop/nadp-reader.c:read_done_item_is_writable()).
+		 * Though I'm plenty conscious that this status is subject to many
+		 * changes during the life of the item (e.g. by modifying permissions
+		 * on the underlying store), it is just simpler to not reevaluate
+		 * this status each time we need it
+		 */
 		if( writable ){
 			if( na_object_is_readonly( item )){
 				writable = FALSE;
@@ -336,38 +345,7 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
 		if( writable ){
 			provider = na_object_get_provider( item );
 			if( provider ){
-				if( !na_io_provider_is_willing_to_write( provider )){
-					writable = FALSE;
-					if( reason ){
-						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO;
-					}
-				} else if( !na_io_provider_is_able_to_write( provider )){
-					writable = FALSE;
-					if( reason ){
-						/* TODO: found a reason */
-						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_NOT_WILLING_TO;
-					}
-				/*} else if( na_io_provider_is_locked_by_admin( provider, NA_IPREFS( updater ))){
-					writable = FALSE;
-					if( reason ){
-						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_ADMIN;
-					}*/
-				} else if( !na_io_provider_is_conf_writable( provider, NA_PIVOT( updater ), NULL )){
-					writable = FALSE;
-					if( reason ){
-						*reason = NA_IIO_PROVIDER_STATUS_PROVIDER_LOCKED_BY_USER;
-					}
-				} else if( na_pivot_is_configuration_locked_by_admin( NA_PIVOT( updater ))){
-					writable = FALSE;
-					if( reason ){
-						*reason = NA_IIO_PROVIDER_STATUS_CONFIGURATION_LOCKED_BY_ADMIN;
-					}
-				/*} else if( !na_io_provider_has_write_api( provider )){
-					writable = FALSE;
-					if( reason ){
-						*reason = NA_IIO_PROVIDER_STATUS_NO_API;
-					}*/
-				}
+				writable = na_io_provider_is_finally_writable( provider, reason );
 
 			/* the get_writable_provider() api already takes above checks
 			 */
@@ -401,7 +379,6 @@ guint
 na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **messages )
 {
 	guint ret;
-	gint reason;
 
 	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
@@ -412,24 +389,14 @@ na_updater_write_item( const NAUpdater *updater, NAObjectItem *item, GSList **me
 	if( !updater->private->dispose_has_run ){
 
 		NAIOProvider *provider = na_object_get_provider( item );
+
 		if( !provider ){
 			provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
-
-			if( !provider ){
-				ret = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
-
-			} else {
-				na_object_set_provider( item, provider );
-			}
+			g_return_val_if_fail( provider, NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND );
 		}
 
 		if( provider ){
-			if( !na_updater_is_item_writable( updater, item, &reason )){
-				ret = ( guint ) reason;
-
-			} else {
-				ret = na_io_provider_write_item( provider, item, messages );
-			}
+			ret = na_io_provider_write_item( provider, item, messages );
 		}
 	}
 
@@ -454,7 +421,6 @@ guint
 na_updater_delete_item( const NAUpdater *updater, const NAObjectItem *item, GSList **messages )
 {
 	guint ret;
-	gint reason;
 
 	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
 
@@ -465,18 +431,9 @@ na_updater_delete_item( const NAUpdater *updater, const NAObjectItem *item, GSLi
 	if( !updater->private->dispose_has_run ){
 
 		NAIOProvider *provider = na_object_get_provider( item );
-		if( provider ){
+		g_return_val_if_fail( provider, ret );
 
-			if( !na_updater_is_item_writable( updater, item, &reason )){
-				ret = ( guint ) reason;
-
-			} else {
-				ret = na_io_provider_delete_item( provider, item, messages );
-			}
-
-		} else {
-			ret = NA_IIO_PROVIDER_CODE_OK;
-		}
+		ret = na_io_provider_delete_item( provider, item, messages );
 	}
 
 	return( ret );

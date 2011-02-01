@@ -509,7 +509,7 @@ get_deletables( NAUpdater *updater, GList *selected, GSList **non_deletables )
 	GList *it;
 	GList *subitems;
 	GSList *sub_deletables;
-	gint reason;
+	guint reason;
 
 	to_delete = NULL;
 	for( it = selected ; it ; it = it->next ){
@@ -542,7 +542,7 @@ get_deletables_rec( NAUpdater *updater, GList *tree )
 	GSList *msgs;
 	GList *it;
 	GList *subitems;
-	gint reason;
+	guint reason;
 
 	msgs = NULL;
 	for( it = tree ; it ; it = it->next ){
