@@ -1141,8 +1141,7 @@ is_parent_accept_new_childs( NactApplication *application, NactMainWindow *windo
 	 * ensure that level zero is writable
 	 */
 	if( parent == NULL ){
-
-		if( na_iprefs_is_level_zero_writable( NA_PIVOT( updater ))){
+		if( na_updater_is_level_zero_writable( updater )){
 			accept_ok = TRUE;
 
 		} else {

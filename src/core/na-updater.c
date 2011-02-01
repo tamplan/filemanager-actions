@@ -32,10 +32,12 @@
 #include <config.h>
 #endif
 
+#include <api/na-core-utils.h>
 #include <api/na-gconf-utils.h>
 #include <api/na-object-api.h>
 
 #include "na-io-provider.h"
+#include "na-settings.h"
 #include "na-updater.h"
 
 /* private class data
@@ -47,7 +49,8 @@ struct _NAUpdaterClassPrivate {
 /* private instance data
  */
 struct _NAUpdaterPrivate {
-	gboolean           dispose_has_run;
+	gboolean dispose_has_run;
+	gboolean is_level_zero_writable;
 };
 
 static NAPivotClass *st_parent_class = NULL;
@@ -57,6 +60,8 @@ static void     class_init( NAUpdaterClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
+
+static gboolean is_level_zero_writable( const NAUpdater *updater );
 
 GType
 na_updater_get_type( void )
@@ -188,7 +193,53 @@ na_updater_new( void )
 
 	updater = g_object_new( NA_UPDATER_TYPE, NULL );
 
+	updater->private->is_level_zero_writable = is_level_zero_writable( updater );
+
 	return( updater );
+}
+
+/*
+ * na_updater_is_level_zero_writable:
+ * @updater: the #NAUpdater application object.
+ *
+ * As of 3.1.0, level-zero order is written as a user preference.
+ *
+ * This function only considers the case of the level zero itself.
+ * It does not take into account whether the i/o provider (if any)
+ * is writable, or if the item iself is not read only.
+ *
+ * Returns: %TRUE if we are able to update the level-zero list of items,
+ * %FALSE else.
+ */
+gboolean
+na_updater_is_level_zero_writable( const NAUpdater *updater )
+{
+	gboolean is_writable;
+
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
+
+	is_writable = FALSE;
+
+	if( !updater->private->dispose_has_run ){
+
+		is_writable = updater->private->is_level_zero_writable;
+	}
+
+	return( is_writable );
+}
+
+static gboolean
+is_level_zero_writable( const NAUpdater *updater )
+{
+	GSList *level_zero;
+	gboolean mandatory;
+
+	level_zero = na_settings_get_string_list(
+			na_pivot_get_settings( NA_PIVOT( updater )), NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, &mandatory );
+
+	na_core_utils_slist_free( level_zero );
+
+	return( !mandatory );
 }
 
 /*

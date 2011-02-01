@@ -502,6 +502,7 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 		 */
 		application = NACT_APPLICATION( base_window_get_application( bar->private->window ));
 		bar->private->updater = nact_application_get_updater( application );
+		bar->private->is_level_zero_writable = na_updater_is_level_zero_writable( bar->private->updater );
 
 		/* connect to all signal which may have an influence on the menu
 		 * items sensitivity
@@ -703,9 +704,9 @@ on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 		first = ( NAObject *) selected->data;
 		if( first ){
 			if( NA_IS_OBJECT_PROFILE( first )){
-				first = na_object_get_parent( first );
+				first = NA_OBJECT( na_object_get_parent( first ));
 			}
-			first = na_object_get_parent( first );
+			first = NA_OBJECT( na_object_get_parent( first ));
 #if 0
 			bar->private->is_parent_writable = first ? na_object_is_writable( first ) : is_level_zero_writable();
 #endif
@@ -773,8 +774,6 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	BAR_WINDOW_VOID( window );
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-
-	bar->private->is_level_zero_writable = na_iprefs_is_level_zero_writable( NA_PIVOT( bar->private->updater ));
 
 	bar->private->has_writable_providers = nact_window_has_writable_providers( NACT_WINDOW( window ));
 	g_debug( "%s: has_writable_providers=%s", thisfn, bar->private->has_writable_providers ? "True":"False" );

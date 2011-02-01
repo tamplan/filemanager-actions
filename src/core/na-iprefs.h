@@ -64,7 +64,6 @@ void     na_iprefs_set_export_format      ( const NAPivot *pivot, const gchar *p
 
 GSList  *na_iprefs_get_io_providers       ( const NAPivot * );
 
-gboolean na_iprefs_is_level_zero_writable ( const NAPivot *pivot );
 gboolean na_iprefs_write_level_zero       ( const NAPivot *pivot, const GList *items, GSList **messages );
 
 G_END_DECLS

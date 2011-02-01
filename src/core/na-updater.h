@@ -72,6 +72,10 @@ GType      na_updater_get_type( void );
 
 NAUpdater *na_updater_new( void );
 
+/* writability status
+ */
+gboolean   na_updater_is_level_zero_writable( const NAUpdater *updater );
+
 /* update the tree in memory
  */
 void       na_updater_append_item( NAUpdater *updater, NAObjectItem *item );

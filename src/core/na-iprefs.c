@@ -290,41 +290,6 @@ na_iprefs_get_io_providers( const NAPivot *pivot )
 }
 
 /*
- * na_iprefs_is_level_zero_writable:
- * @pivot: the #NAPivot application object.
- *
- * The level-zero order may not be writable if:
- * - all the configuration has been locked down by an admin
- * - the preferences has been locked down by an admin
- * - the level-zero order is a mandatory preference
- * - the user configuration file is not writable.
- *
- * All these conditions are subject to runtime modifications. The caller
- * should not keep the result, but rather re-call this function each time
- * it needs this status.
- *
- * Each condition is also subject to race conditions. So the returned
- * status may not be more valid when the caller tries to actually write
- * the level-zero preference.
- *
- * Returns: %TRUE if we are able to update the level-zero list of items,
- * %FALSE else.
- *
- * As of 3.1.0, level-zero order is written as a user preference.
- */
-gboolean
-na_iprefs_is_level_zero_writable( const NAPivot *pivot )
-{
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
-
-	if( na_pivot_is_configuration_locked_by_admin( pivot )){
-		return( FALSE );
-	}
-
-	return( TRUE );
-}
-
-/*
  * na_iprefs_write_level_zero:
  * @pivot: the #NAPivot application object.
  * @items: the #GList of items whose first level is to be written.
@@ -359,20 +324,17 @@ na_iprefs_write_level_zero( const NAPivot *pivot, const GList *items, GSList **m
 
 	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot);
 
-	if( na_iprefs_is_level_zero_writable( pivot )){
-
-		content = NULL;
-		for( it = items ; it ; it = it->next ){
-			id = na_object_get_id( it->data );
-			content = g_slist_prepend( content, id );
-		}
-		content = g_slist_reverse( content );
-
-		na_settings_set_string_list( na_pivot_get_settings( pivot ), NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, content );
-		written = TRUE;
-
-		na_core_utils_slist_free( content );
+	content = NULL;
+	for( it = items ; it ; it = it->next ){
+		id = na_object_get_id( it->data );
+		content = g_slist_prepend( content, id );
 	}
+	content = g_slist_reverse( content );
+
+	written = na_settings_set_string_list(
+			na_pivot_get_settings( pivot ), NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, content );
+
+	na_core_utils_slist_free( content );
 
 	return( written );
 }

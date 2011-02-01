@@ -55,6 +55,7 @@ struct _NactMenubarPrivate {
 	NAUpdater      *updater;
 
 	gboolean        is_parent_writable;
+	gboolean        is_level_zero_writable;
 
 	/* *** */
 	gint            selected_menus;
@@ -72,7 +73,6 @@ struct _NactMenubarPrivate {
 	gboolean        level_zero_order_changed;
 	gulong          popup_handler;
 
-	gboolean        is_level_zero_writable;
 	gboolean        has_writable_providers;
 	guint           count_selected;
 	GList          *selected_items;

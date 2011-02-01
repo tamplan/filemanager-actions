@@ -199,7 +199,7 @@ enable_buttons( NactMainWindow *window )
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	updater = nact_application_get_updater( application );
-	writable = na_iprefs_is_level_zero_writable( NA_PIVOT( updater ));
+	writable = na_updater_is_level_zero_writable( updater );
 
 	i = 0;
 	while( st_toggle_group[i].btn_name ){
