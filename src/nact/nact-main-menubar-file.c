@@ -46,6 +46,7 @@
 #include "nact-main-statusbar.h"
 #include "nact-main-tab.h"
 #include "nact-main-menubar-file.h"
+#include "nact-menubar-priv.h"
 
 static NATimeout st_autosave_prefs_timeout = { 0 };
 static guint     st_event_autosave         = 0;
@@ -70,7 +71,7 @@ static void     autosave_destroyed( NactMainWindow *window );
  * Update sensitivity of items of the File menu.
  */
 void
-nact_main_menubar_file_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis )
+nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
 {
 	static const gchar *thisfn = "nact_main_menubar_file_on_update_sensitivities";
 	gboolean new_item_enabled;
@@ -84,17 +85,17 @@ nact_main_menubar_file_on_update_sensitivities( NactMainWindow *window, gpointer
 	NactApplication *application;
 	NAUpdater *updater;
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	application = NACT_APPLICATION( base_window_get_application( bar->private->window ));
 	updater = nact_application_get_updater( application );
 
-	first_parent = mis->selected_items && g_list_length( mis->selected_items )
-			? ( NAObject * ) na_object_get_parent( mis->selected_items->data )
+	first_parent = bar->private->selected_items && g_list_length( bar->private->selected_items )
+			? ( NAObject * ) na_object_get_parent( bar->private->selected_items->data )
 			: NULL;
 	is_first_parent_writable = first_parent
-			? na_updater_is_item_writable( mis->updater, NA_OBJECT_ITEM( first_parent ), NULL )
-			: mis->is_level_zero_writable;
+			? na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( first_parent ), NULL )
+			: bar->private->is_level_zero_writable;
 
-	has_modified_items = nact_main_window_has_modified_items( window );
+	has_modified_items = nact_main_window_has_modified_items( NACT_MAIN_WINDOW( bar->private->window ));
 	g_debug( "%s: has_modified_items=%s", thisfn, has_modified_items ? "True":"False" );
 
 	/* new menu / new action
@@ -102,9 +103,9 @@ nact_main_menubar_file_on_update_sensitivities( NactMainWindow *window, gpointer
 	 * parent of the first selected row must be writable
 	 * we must have at least one writable provider
 	 */
-	new_item_enabled = is_first_parent_writable && mis->has_writable_providers;
-	nact_main_menubar_enable_item( window, "NewMenuItem", new_item_enabled );
-	nact_main_menubar_enable_item( window, "NewActionItem", new_item_enabled );
+	new_item_enabled = is_first_parent_writable && bar->private->has_writable_providers;
+	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "NewMenuItem", new_item_enabled );
+	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "NewActionItem", new_item_enabled );
 
 	/* new profile enabled if selection is relative to only one writable action
 	 * i.e. contains profile(s) of the same action, or only contains one action
@@ -112,7 +113,7 @@ nact_main_menubar_file_on_update_sensitivities( NactMainWindow *window, gpointer
 	 */
 	new_profile_enabled = TRUE;
 	selected_action = NULL;
-	for( is = mis->selected_items ; is ; is = is->next ){
+	for( is = bar->private->selected_items ; is ; is = is->next ){
 
 		if( NA_IS_OBJECT_MENU( is->data )){
 			new_profile_enabled = FALSE;
@@ -136,16 +137,16 @@ nact_main_menubar_file_on_update_sensitivities( NactMainWindow *window, gpointer
 			}
 		}
 	}
-	nact_main_menubar_enable_item( window, "NewProfileItem",
+	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "NewProfileItem",
 			new_profile_enabled &&
 			selected_action != NULL &&
-			na_updater_is_item_writable( mis->updater, NA_OBJECT_ITEM( selected_action ), NULL ));
+			na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( selected_action ), NULL ));
 
 	/* save enabled if at least one item has been modified
 	 * or level-zero has been resorted and is writable
 	 */
-	nact_main_menubar_enable_item( window, "SaveItem",
-			has_modified_items || ( mis->level_zero_order_changed && mis->is_level_zero_writable ));
+	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "SaveItem",
+			has_modified_items || ( bar->private->level_zero_order_changed && bar->private->is_level_zero_writable ));
 
 	/* quit always enabled */
 }
@@ -297,14 +298,13 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	GList *items, *it;
 	NactApplication *application;
 	NAUpdater *updater;
-	MenubarIndicatorsStruct *mis;
 	gchar *label;
 	GList *new_pivot;
 	NAObjectItem *duplicate;
 	GSList *messages;
 	gchar *msg;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	BAR_WINDOW_VOID( window );
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
@@ -332,8 +332,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 		return;
 	}
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	mis->level_zero_order_changed = FALSE;
+	bar->private->level_zero_order_changed = FALSE;
 
 	/* remove deleted items
 	 * so that new actions with same id do not risk to be deleted later

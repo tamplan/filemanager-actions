@@ -35,6 +35,7 @@
 #include "nact-assistant-export.h"
 #include "nact-assistant-import.h"
 #include "nact-main-menubar-tools.h"
+#include "nact-menubar-priv.h"
 
 /**
  * nact_main_menubar_tools_on_update_sensitivities:
@@ -45,13 +46,13 @@
  * Update sensitivities on the Tools menu.
  */
 void
-nact_main_menubar_tools_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis )
+nact_main_menubar_tools_on_update_sensitivities( NactMenubar *bar )
 {
 	/* import item enabled if at least one writable provider */
-	nact_main_menubar_enable_item( window, "ImportItem", mis->has_writable_providers );
+	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "ImportItem", bar->private->has_writable_providers );
 
 	/* export item enabled if IActionsList store contains actions */
-	nact_main_menubar_enable_item( window, "ExportItem", mis->have_exportables );
+	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "ExportItem", bar->private->have_exportables );
 }
 
 /**

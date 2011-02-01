@@ -47,7 +47,7 @@
  * Update sensitivities on the Maintainer menu.
  */
 void
-nact_main_menubar_maintainer_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis )
+nact_main_menubar_maintainer_on_update_sensitivities( NactMenubar *bar )
 {
 }
 

@@ -35,6 +35,7 @@
 #include "nact-iactions-list.h"
 #include "nact-main-toolbar.h"
 #include "nact-main-menubar-view.h"
+#include "nact-menubar-priv.h"
 
 static void on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, int toolbar_id );
 
@@ -47,14 +48,14 @@ static void on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *
  * Update sensitivity of items of the View menu.
  */
 void
-nact_main_menubar_view_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis )
+nact_main_menubar_view_on_update_sensitivities( NactMenubar *bar )
 {
 	guint count_list;
 
 	/* expand all/collapse all requires at least one item in the list */
-	count_list = mis->list_menus + mis->list_actions + mis->list_profiles;
-	nact_main_menubar_enable_item( window, "ExpandAllItem", count_list > 0 );
-	nact_main_menubar_enable_item( window, "CollapseAllItem", count_list > 0 );
+	count_list = bar->private->list_menus + bar->private->list_actions + bar->private->list_profiles;
+	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "ExpandAllItem", count_list > 0 );
+	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "CollapseAllItem", count_list > 0 );
 }
 
 /**
@@ -148,5 +149,5 @@ on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, int 
 
 	is_active = gtk_toggle_action_get_active( action );
 
-	nact_main_toolbar_activate( window, toolbar_id, nact_menubar_get_ui_manager( bar ), is_active );
+	nact_main_toolbar_activate( window, toolbar_id, bar->private->ui_manager, is_active );
 }

@@ -55,8 +55,6 @@
 #include "base-window.h"
 
 /* *** */
-#include <api/na-object.h>
-#include <core/na-updater.h>
 #include "nact-main-window.h"
 /* *** */
 
@@ -87,52 +85,11 @@ typedef struct {
 }
 	NactMenubarClass;
 
-/* Convenience macros to get a NactMenubar from a BaseWindow
- */
-#define WINDOW_DATA_MENUBAR						"window-data-menubar"
-#define BAR_WINDOW_VOID( window ) \
-		g_return_if_fail( BASE_IS_WINDOW( window )); \
-		NactMenubar *bar = ( NactMenubar * ) g_object_get_data( G_OBJECT( window ), WINDOW_DATA_MENUBAR ); \
-		g_return_if_fail( NACT_IS_MENUBAR( bar ));
+GType        nact_menubar_get_type( void );
 
-GType         nact_menubar_get_type( void );
-
-NactMenubar  *nact_menubar_new     ( BaseWindow *window );
-
-GtkUIManager *nact_menubar_get_ui_manager( const NactMenubar *bar );
+NactMenubar *nact_menubar_new     ( BaseWindow *window );
 
 /* *** */
-/* this structure is updated each time the user interacts in the
- * interface ; it is then used to update action sensitivities
- */
-typedef struct {
-	gint       selected_menus;
-	gint       selected_actions;
-	gint       selected_profiles;
-	gint       clipboard_menus;
-	gint       clipboard_actions;
-	gint       clipboard_profiles;
-	gint       list_menus;
-	gint       list_actions;
-	gint       list_profiles;
-	gboolean   is_modified;
-	gboolean   have_exportables;
-	gboolean   treeview_has_focus;
-	gboolean   level_zero_order_changed;
-	gulong     popup_handler;
-
-	/* set by the nact_main_menubar_on_update_sensitivities() function itself
-	 */
-	gboolean   is_level_zero_writable;
-	gboolean   has_writable_providers;
-	guint      count_selected;
-	GList     *selected_items;
-	NAUpdater *updater;
-}
-	MenubarIndicatorsStruct;
-
-#define MENUBAR_PROP_INDICATORS				"nact-menubar-indicators"
-
 gboolean nact_main_menubar_is_level_zero_order_changed( const NactMainWindow *window );
 void     nact_main_menubar_open_popup( NactMainWindow *window, GdkEventButton *event );
 void     nact_main_menubar_enable_item( NactMainWindow *window, const gchar *name, gboolean enabled );

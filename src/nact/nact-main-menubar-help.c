@@ -35,6 +35,7 @@
 #include <core/na-iabout.h>
 
 #include "nact-main-menubar-help.h"
+#include "nact-menubar-priv.h"
 
 /**
  * nact_main_menubar_help_on_update_sensitivities:
@@ -45,9 +46,9 @@
  * Update sensitivities on the Help menu.
  */
 void
-nact_main_menubar_help_on_update_sensitivities( NactMainWindow *window, gpointer user_data, MenubarIndicatorsStruct *mis )
+nact_main_menubar_help_on_update_sensitivities( NactMenubar *bar )
 {
-	nact_main_menubar_enable_item( window, "HelpItem", TRUE );
+	nact_main_menubar_enable_item( NACT_MAIN_WINDOW( bar->private->window ), "HelpItem", TRUE );
 	/* about always enabled */
 }
 

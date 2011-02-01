@@ -141,6 +141,7 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-match-list.h									\
 	nact-menubar.c										\
 	nact-menubar.h										\
+	nact-menubar-priv.h									\
 	nact-preferences-editor.c							\
 	nact-preferences-editor.h							\
 	nact-providers-list.c								\

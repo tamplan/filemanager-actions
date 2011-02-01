@@ -35,6 +35,7 @@
 #include <glib/gi18n.h>
 
 #include "nact-menubar.h"
+#include "nact-menubar-priv.h"
 
 /* *** */
 #include <api/na-object-api.h>
@@ -82,13 +83,6 @@ static void     on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow 
  */
 struct _NactMenubarClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
-};
-
-struct _NactMenubarPrivate {
-	gboolean        dispose_has_run;
-	BaseWindow     *window;
-	GtkUIManager   *ui_manager;
-	GtkActionGroup *action_group;
 };
 
 static const GtkActionEntry entries[] = {
@@ -354,16 +348,12 @@ instance_finalize( GObject *instance )
 {
 	static const gchar *thisfn = "nact_menubar_instance_finalize";
 	NactMenubar *self;
-	MenubarIndicatorsStruct *mis;
 
 	g_return_if_fail( NACT_IS_MENUBAR( instance ));
 
 	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	self = NACT_MENUBAR( instance );
-
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( self->private->window ), MENUBAR_PROP_INDICATORS );
-	g_free( mis );
 
 	g_free( self->private );
 
@@ -416,7 +406,6 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 	GtkAccelGroup *accel_group;
 	GtkWidget *menubar, *vbox;
 	GtkWindow *toplevel;
-	MenubarIndicatorsStruct *mis;
 	gboolean has_maintainer_menu;
 
 	BAR_WINDOW_VOID( window );
@@ -501,9 +490,6 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 
 		base_window_signal_connect( window,
 				G_OBJECT( window ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, G_CALLBACK( on_level_zero_order_changed ));
-
-		mis = g_new0( MenubarIndicatorsStruct, 1 );
-		g_object_set_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS, mis );
 
 		nact_main_toolbar_init(( NactMainWindow * ) window, bar->private->action_group );
 	}
@@ -599,20 +585,6 @@ on_finalize_window( NactMenubar *bar, GObject *window )
 }
 
 /**
- * nact_menubar_get_ui_manager:
- * @bar: this #NactMenubar instance.
- *
- * Returns: the attached GtkUIManager.
- */
-GtkUIManager *
-nact_menubar_get_ui_manager( const NactMenubar *bar )
-{
-	g_return_val_if_fail( NACT_IS_MENUBAR( bar ), NULL );
-
-	return( bar->private->dispose_has_run ? NULL : bar->private->ui_manager );
-}
-
-/**
  * nact_main_menubar_is_level_zero_order_changed:
  * @window: the #NactMainWindow main window.
  *
@@ -621,11 +593,8 @@ nact_menubar_get_ui_manager( const NactMenubar *bar )
 gboolean
 nact_main_menubar_is_level_zero_order_changed( const NactMainWindow *window )
 {
-	MenubarIndicatorsStruct *mis;
-
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-
-	return( mis->level_zero_order_changed );
+	BAR_WINDOW_VALUE( window, FALSE );
+	return( bar->private->level_zero_order_changed );
 }
 
 /**
@@ -639,14 +608,12 @@ void
 nact_main_menubar_open_popup( NactMainWindow *instance, GdkEventButton *event )
 {
 	GtkWidget *menu;
-	MenubarIndicatorsStruct *mis;
 
 	BAR_WINDOW_VOID( instance );
 
 	menu = gtk_ui_manager_get_widget( bar->private->ui_manager, "/ui/Popup" );
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( instance ), MENUBAR_PROP_INDICATORS );
-	mis->popup_handler = g_signal_connect( menu, "selection-done", G_CALLBACK( on_popup_selection_done ), instance );
+	bar->private->popup_handler = g_signal_connect( menu, "selection-done", G_CALLBACK( on_popup_selection_done ), instance );
 
 	g_signal_emit_by_name( instance, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 
@@ -660,19 +627,18 @@ nact_main_menubar_open_popup( NactMainWindow *instance, GdkEventButton *event )
 static void
 on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles )
 {
-	MenubarIndicatorsStruct *mis;
 	gchar *status;
 
+	BAR_WINDOW_VOID( window );
+
 	g_debug( "nact_main_menubar_on_iactions_list_count_updated: menus=%u, actions=%u, profiles=%u", menus, actions, profiles );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	mis->list_menus = menus;
-	mis->list_actions = actions;
-	mis->list_profiles = profiles;
-	mis->have_exportables = ( mis->list_menus + mis->list_actions > 0 );
+	bar->private->list_menus = menus;
+	bar->private->list_actions = actions;
+	bar->private->list_profiles = profiles;
+	bar->private->have_exportables = ( bar->private->list_menus + bar->private->list_actions > 0 );
 
-	nact_sort_buttons_enable_buttons( window, mis->list_menus + mis->list_actions > 0 );
+	nact_sort_buttons_enable_buttons( window, bar->private->list_menus + bar->private->list_actions > 0 );
 
 	/* i18n: note the space at the beginning of the sentence */
 	status = g_strdup_printf( _( " %d menu(s), %d action(s), %d profile(s) are currently loaded" ), menus, actions, profiles );
@@ -688,19 +654,17 @@ on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions
 static void
 on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 {
-	MenubarIndicatorsStruct *mis;
+	BAR_WINDOW_VOID( window );
 
 	g_debug( "nact_main_menubar_on_iactions_list_selection_changed: selected=%p (count=%d)",
 			( void * ) selected, g_list_length( selected ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	mis->selected_menus = 0;
-	mis->selected_actions = 0;
-	mis->selected_profiles = 0;
-	na_object_item_count_items( selected, &mis->selected_menus, &mis->selected_actions, &mis->selected_profiles, FALSE );
+	bar->private->selected_menus = 0;
+	bar->private->selected_actions = 0;
+	bar->private->selected_profiles = 0;
+	na_object_item_count_items( selected, &bar->private->selected_menus, &bar->private->selected_actions, &bar->private->selected_profiles, FALSE );
 	g_debug( "nact_main_menubar_on_iactions_list_selection_changed: menus=%d, actions=%d, profiles=%d",
-			mis->selected_menus, mis->selected_actions, mis->selected_profiles );
+			bar->private->selected_menus, bar->private->selected_actions, bar->private->selected_profiles );
 
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
@@ -708,26 +672,22 @@ on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 static void
 on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data )
 {
-	MenubarIndicatorsStruct *mis;
+	BAR_WINDOW_VOID( window );
 
 	g_debug( "nact_main_menubar_on_iactions_list_focus_in" );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	mis->treeview_has_focus = TRUE;
+	bar->private->treeview_has_focus = TRUE;
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
 static void
 on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data )
 {
-	MenubarIndicatorsStruct *mis;
+	BAR_WINDOW_VOID( window );
 
 	g_debug( "nact_main_menubar_on_iactions_list_focus_out" );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	mis->treeview_has_focus = FALSE;
+	bar->private->treeview_has_focus = FALSE;
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
@@ -735,6 +695,7 @@ static void
 on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data )
 {
 	g_debug( "nact_main_menubar_on_iactions_list_status_changed" );
+
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
@@ -743,14 +704,11 @@ on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data )
 static void
 on_level_zero_order_changed( NactMainWindow *window, gpointer user_data )
 {
-	MenubarIndicatorsStruct *mis;
-
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	BAR_WINDOW_VOID( window );
 
 	g_debug( "nact_main_menubar_on_level_zero_order_changed: change=%s", user_data ? "True":"False" );
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	mis->level_zero_order_changed = GPOINTER_TO_INT( user_data );
+	bar->private->level_zero_order_changed = GPOINTER_TO_INT( user_data );
 	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 }
 
@@ -759,33 +717,31 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_update_sensitivities";
 	NactApplication *application;
-	MenubarIndicatorsStruct *mis;
+
+	BAR_WINDOW_VOID( window );
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	mis->updater = nact_application_get_updater( application );
-	mis->is_level_zero_writable = na_iprefs_is_level_zero_writable( NA_PIVOT( mis->updater ));
+	bar->private->updater = nact_application_get_updater( application );
+	bar->private->is_level_zero_writable = na_iprefs_is_level_zero_writable( NA_PIVOT( bar->private->updater ));
 
-	mis->has_writable_providers = nact_window_has_writable_providers( NACT_WINDOW( window ));
-	g_debug( "%s: has_writable_providers=%s", thisfn, mis->has_writable_providers ? "True":"False" );
+	bar->private->has_writable_providers = nact_window_has_writable_providers( NACT_WINDOW( window ));
+	g_debug( "%s: has_writable_providers=%s", thisfn, bar->private->has_writable_providers ? "True":"False" );
 
-	mis->selected_items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
-	mis->count_selected = mis->selected_items ? g_list_length( mis->selected_items ) : 0;
-	g_debug( "%s: count_selected=%d", thisfn, mis->count_selected );
+	bar->private->selected_items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
+	bar->private->count_selected = bar->private->selected_items ? g_list_length( bar->private->selected_items ) : 0;
+	g_debug( "%s: count_selected=%d", thisfn, bar->private->count_selected );
 
-	nact_main_menubar_file_on_update_sensitivities( window, user_data, mis );
-	nact_main_menubar_edit_on_update_sensitivities( window, user_data, mis );
-	nact_main_menubar_view_on_update_sensitivities( window, user_data, mis );
-	nact_main_menubar_tools_on_update_sensitivities( window, user_data, mis );
-	nact_main_menubar_maintainer_on_update_sensitivities( window, user_data, mis );
-	nact_main_menubar_help_on_update_sensitivities( window, user_data, mis );
+	nact_main_menubar_file_on_update_sensitivities( bar );
+	nact_main_menubar_edit_on_update_sensitivities( bar );
+	nact_main_menubar_view_on_update_sensitivities( bar );
+	nact_main_menubar_tools_on_update_sensitivities( bar );
+	nact_main_menubar_maintainer_on_update_sensitivities( bar );
+	nact_main_menubar_help_on_update_sensitivities( bar );
 
-	na_object_unref_selected_items( mis->selected_items );
-	mis->selected_items = NULL;
+	na_object_unref_selected_items( bar->private->selected_items );
+	bar->private->selected_items = NULL;
 }
 
 /**
@@ -811,11 +767,11 @@ static void
 on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_popup_selection_done";
-	MenubarIndicatorsStruct *mis;
+
+	BAR_WINDOW_VOID( window );
 
 	g_debug( "%s", thisfn );
 
-	mis = ( MenubarIndicatorsStruct * ) g_object_get_data( G_OBJECT( window ), MENUBAR_PROP_INDICATORS );
-	g_signal_handler_disconnect( menushell, mis->popup_handler );
-	mis->popup_handler = ( gulong ) 0;
+	g_signal_handler_disconnect( menushell, bar->private->popup_handler );
+	bar->private->popup_handler = ( gulong ) 0;
 }
