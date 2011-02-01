@@ -42,6 +42,8 @@
 
 #include <core/na-updater.h>
 
+#include "base-window.h"
+
 G_BEGIN_DECLS
 
 struct _NactMenubarPrivate {
@@ -50,7 +52,11 @@ struct _NactMenubarPrivate {
 	BaseWindow     *window;
 	GtkUIManager   *ui_manager;
 	GtkActionGroup *action_group;
+	NAUpdater      *updater;
 
+	gboolean        is_parent_writable;
+
+	/* *** */
 	gint            selected_menus;
 	gint            selected_actions;
 	gint            selected_profiles;
@@ -66,14 +72,16 @@ struct _NactMenubarPrivate {
 	gboolean        level_zero_order_changed;
 	gulong          popup_handler;
 
-	/* set by the nact_main_menubar_on_update_sensitivities() function itself
-	 */
 	gboolean        is_level_zero_writable;
 	gboolean        has_writable_providers;
 	guint           count_selected;
 	GList          *selected_items;
-	NAUpdater      *updater;
+	/* *** */
 };
+
+/* Signal emitted by the NactMenubar object on itself
+ */
+#define MENUBAR_SIGNAL_UPDATE_SENSITIVITIES		"menubar-signal-update-sensitivities"
 
 /* Convenience macros to get a NactMenubar from a BaseWindow
  */

@@ -99,7 +99,7 @@ nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
 	g_debug( "%s: has_modified_items=%s", thisfn, has_modified_items ? "True":"False" );
 
 	/* new menu / new action
-	 * new item will be inserted just before beginning of selection
+	 * new item will be inserted just before the beginning of selection
 	 * parent of the first selected row must be writable
 	 * we must have at least one writable provider
 	 */

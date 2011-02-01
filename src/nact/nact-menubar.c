@@ -34,11 +34,13 @@
 
 #include <glib/gi18n.h>
 
+#include <api/na-object-api.h>
+
+#include "nact-application.h"
 #include "nact-menubar.h"
 #include "nact-menubar-priv.h"
 
 /* *** */
-#include <api/na-object-api.h>
 #include <api/na-core-utils.h>
 
 #include <core/na-factory-object.h>
@@ -46,37 +48,19 @@
 #include <core/na-ipivot-consumer.h>
 #include <core/na-io-provider.h>
 
-#include "nact-application.h"
 #include "nact-iactions-list.h"
 #include "nact-clipboard.h"
 #include "nact-main-statusbar.h"
 #include "nact-main-toolbar.h"
 #include "nact-main-tab.h"
-#include "nact-menubar.h"
 #include "nact-main-menubar-file.h"
 #include "nact-main-menubar-edit.h"
 #include "nact-main-menubar-view.h"
 #include "nact-main-menubar-tools.h"
 #include "nact-main-menubar-maintainer.h"
 #include "nact-main-menubar-help.h"
+#include "nact-menubar.h"
 #include "nact-sort-buttons.h"
-
-enum {
-	MENUBAR_FILE_TOOLBAR_POS = 0,
-	MENUBAR_EDIT_TOOLBAR_POS,
-	MENUBAR_TOOLS_TOOLBAR_POS,
-	MENUBAR_HELP_TOOLBAR_POS
-};
-
-static void     on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles );
-static void     on_iactions_list_selection_changed( NactMainWindow *window, GList *selected );
-static void     on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data );
-static void     on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data );
-static void     on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data );
-static void     on_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
-static void     on_update_sensitivities( NactMainWindow *window, gpointer user_data );
-
-static void     on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow *window );
 /* *** */
 
 /* private class data
@@ -84,6 +68,10 @@ static void     on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow 
 struct _NactMenubarClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
+
+/* private instance data is externalized in nact-menubar-priv.h
+ * in order to be avaible to all nact-menubar-derived files.
+ */
 
 static const GtkActionEntry entries[] = {
 
@@ -229,10 +217,18 @@ static const GtkToggleActionEntry toolbar_entries[] = {
 #define MENUBAR_PROP_STATUS_CONTEXT			"menubar-status-context"
 #define MENUBAR_PROP_MAIN_STATUS_CONTEXT	"menubar-main-status-context"
 
-static const gchar  *st_ui_menubar_actions    = PKGDATADIR "/nautilus-actions-config-tool.actions";
-static const gchar  *st_ui_maintainer_actions = PKGDATADIR "/nautilus-actions-maintainer.actions";
+/* signals
+ */
+enum {
+	UPDATE_SENSITIVITIES,
+	LAST_SIGNAL
+};
 
-static GObjectClass *st_parent_class          = NULL;
+static const gchar  *st_ui_menubar_actions     = PKGDATADIR "/nautilus-actions-config-tool.actions";
+static const gchar  *st_ui_maintainer_actions  = PKGDATADIR "/nautilus-actions-maintainer.actions";
+
+static gint          st_signals[ LAST_SIGNAL ] = { 0 };
+static GObjectClass *st_parent_class           = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactMenubarClass *klass );
@@ -244,7 +240,17 @@ static void     on_base_initialize_window( BaseWindow *window, gpointer user_dat
 static void     on_ui_manager_proxy_connect( GtkUIManager *ui_manager, GtkAction *action, GtkWidget *proxy, BaseWindow *window );
 static void     on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window );
 static void     on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window );
-static void     on_finalize_window( NactMenubar *bar, GObject *window );
+static void     on_finalizing_window( NactMenubar *bar, GObject *window );
+
+static void     on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles );
+static void     on_iactions_list_selection_changed( NactMainWindow *window, GList *selected );
+static void     on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data );
+static void     on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data );
+static void     on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data );
+static void     on_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
+static void     on_update_sensitivities( NactMainWindow *window, gpointer user_data );
+
+static void     on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow *window );
 
 GType
 nact_menubar_get_type( void )
@@ -296,6 +302,28 @@ class_init( NactMenubarClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
+
+	/**
+	 * NactMenubar::menubar-signal-update-sensitivities
+	 *
+	 * This signal is emitted by the NactMenubar object on itself when
+	 * menu items sensitivities have to be refreshed.
+	 *
+	 * Signal arg.: None
+	 *
+	 * Handler prototype:
+	 * void ( *handler )( NactMenubar *bar, gpointer user_data );
+	 */
+	st_signals[ UPDATE_SENSITIVITIES ] = g_signal_new(
+			MENUBAR_SIGNAL_UPDATE_SENSITIVITIES,
+			NACT_MENUBAR_TYPE,
+			G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+			0,					/* no default handler */
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__VOID,
+			G_TYPE_NONE,
+			0 );
 
 	klass->private = g_new0( NactMenubarClassPrivate, 1 );
 }
@@ -390,7 +418,7 @@ nact_menubar_new( BaseWindow *window )
 	base_window_signal_connect( window,
 			G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_window ));
 
-	g_object_weak_ref( G_OBJECT( window ), ( GWeakNotify ) on_finalize_window, bar );
+	g_object_weak_ref( G_OBJECT( window ), ( GWeakNotify ) on_finalizing_window, bar );
 
 	g_object_set_data( G_OBJECT( window ), WINDOW_DATA_MENUBAR, bar );
 
@@ -407,6 +435,7 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 	GtkWidget *menubar, *vbox;
 	GtkWindow *toplevel;
 	gboolean has_maintainer_menu;
+	NactApplication *application;
 
 	BAR_WINDOW_VOID( window );
 
@@ -449,7 +478,6 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 #ifdef NA_MAINTAINER_MODE
 		has_maintainer_menu = TRUE;
 #endif
-
 		if( has_maintainer_menu ){
 			error = NULL;
 			merge_id = gtk_ui_manager_add_ui_from_file( bar->private->ui_manager, st_ui_maintainer_actions, &error );
@@ -470,6 +498,14 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 		/* this creates a submenu in the toolbar */
 		/*gtk_container_add( GTK_CONTAINER( vbox ), toolbar );*/
 
+		/* initialize the private data
+		 */
+		application = NACT_APPLICATION( base_window_get_application( bar->private->window ));
+		bar->private->updater = nact_application_get_updater( application );
+
+		/* connect to all signal which may have an influence on the menu
+		 * items sensitivity
+		 */
 		base_window_signal_connect( window,
 				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED, G_CALLBACK( on_iactions_list_count_updated ));
 
@@ -572,9 +608,9 @@ on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window )
  * triggered just before the NactMainWindow is finalized
  */
 static void
-on_finalize_window( NactMenubar *bar, GObject *window )
+on_finalizing_window( NactMenubar *bar, GObject *window )
 {
-	static const gchar *thisfn = "nact_menubar_on_finalize_window";
+	static const gchar *thisfn = "nact_menubar_on_finalizing_window";
 
 	g_return_if_fail( NACT_IS_MENUBAR( bar ));
 
@@ -649,15 +685,32 @@ on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions
 }
 
 /*
- * when the selection changes in IActionsList, see what is selected
+ * when the selection changes in the tree view, see what is selected
+ * - check if the parent of the first selected item is writable
+ *   (File:New menu/New action)
  */
 static void
 on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 {
+	NAObject *first;
+
 	BAR_WINDOW_VOID( window );
 
 	g_debug( "nact_main_menubar_on_iactions_list_selection_changed: selected=%p (count=%d)",
 			( void * ) selected, g_list_length( selected ));
+
+	if( selected ){
+		first = ( NAObject *) selected->data;
+		if( first ){
+			if( NA_IS_OBJECT_PROFILE( first )){
+				first = na_object_get_parent( first );
+			}
+			first = na_object_get_parent( first );
+#if 0
+			bar->private->is_parent_writable = first ? na_object_is_writable( first ) : is_level_zero_writable();
+#endif
+		}
+	}
 
 	bar->private->selected_menus = 0;
 	bar->private->selected_actions = 0;
@@ -716,14 +769,11 @@ static void
 on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_menubar_on_update_sensitivities";
-	NactApplication *application;
 
 	BAR_WINDOW_VOID( window );
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	bar->private->updater = nact_application_get_updater( application );
 	bar->private->is_level_zero_writable = na_iprefs_is_level_zero_writable( NA_PIVOT( bar->private->updater ));
 
 	bar->private->has_writable_providers = nact_window_has_writable_providers( NACT_WINDOW( window ));

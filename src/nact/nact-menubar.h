@@ -37,7 +37,7 @@
  * @short_description: The Menubar class definition
  * @include: nact-menubar.h
  *
- * This is a convenience which embeds the menubar of the application.
+ * This is a convenience class which embeds the menubar of the application.
  *
  * There is one object (because there is one menubar). It is created by
  * the main window at initialization time. It attachs itself to the window,
@@ -50,6 +50,12 @@
  * at instanciation time. The caller (usually a #NactMainWindow) should take
  * care to connect itself to this signal before creating the #NactMenubar
  * object if it wants its callback be triggered first.
+ *
+ * The #NactMenubar object maintains as private data the indicators needed
+ * in order to rightly update menu items sensitivity.
+ * It is up to the application to update these indicators.
+ * Each time an indicator is updated, it triggers an update of all relevant
+ * menu items sensitivities.
  */
 
 #include "base-window.h"
