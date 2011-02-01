@@ -49,13 +49,20 @@ G_BEGIN_DECLS
 struct _NactMenubarPrivate {
 	/*< private >*/
 	gboolean        dispose_has_run;
+
+	/* set at instanciation time
+	 */
 	BaseWindow     *window;
+
+	/* set at initialization time
+	 */
 	GtkUIManager   *ui_manager;
 	GtkActionGroup *action_group;
 	NAUpdater      *updater;
+	gboolean        is_level_zero_writable;
+	gboolean        has_writable_providers;
 
 	gboolean        is_parent_writable;
-	gboolean        is_level_zero_writable;
 
 	/* *** */
 	gint            selected_menus;
@@ -73,7 +80,6 @@ struct _NactMenubarPrivate {
 	gboolean        level_zero_order_changed;
 	gulong          popup_handler;
 
-	gboolean        has_writable_providers;
 	guint           count_selected;
 	GList          *selected_items;
 	/* *** */

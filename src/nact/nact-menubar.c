@@ -503,6 +503,8 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 		application = NACT_APPLICATION( base_window_get_application( bar->private->window ));
 		bar->private->updater = nact_application_get_updater( application );
 		bar->private->is_level_zero_writable = na_updater_is_level_zero_writable( bar->private->updater );
+		bar->private->has_writable_providers =
+				( na_io_provider_find_writable_io_provider( NA_PIVOT( bar->private->updater )) != NULL );
 
 		/* connect to all signal which may have an influence on the menu
 		 * items sensitivity
@@ -774,9 +776,6 @@ on_update_sensitivities( NactMainWindow *window, gpointer user_data )
 	BAR_WINDOW_VOID( window );
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
-
-	bar->private->has_writable_providers = nact_window_has_writable_providers( NACT_WINDOW( window ));
-	g_debug( "%s: has_writable_providers=%s", thisfn, bar->private->has_writable_providers ? "True":"False" );
 
 	bar->private->selected_items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
 	bar->private->count_selected = bar->private->selected_items ? g_list_length( bar->private->selected_items ) : 0;

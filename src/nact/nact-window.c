@@ -181,38 +181,6 @@ instance_finalize( GObject *window )
 }
 
 /**
- * nact_window_has_writable_providers:
- * @window: this #NactWindow instance.
- *
- * Returns: %TRUE if at least one I/O provider is writable, %FALSE else.
- */
-gboolean
-nact_window_has_writable_providers( NactWindow *window )
-{
-	gboolean has_writables;
-	NactApplication *application;
-	NAUpdater *updater;
-	NAIOProvider *provider;
-
-	has_writables = FALSE;
-
-	g_return_val_if_fail( NACT_IS_WINDOW( window ), has_writables );
-
-	if( !window->private->dispose_has_run ){
-
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		updater = nact_application_get_updater( application );
-		provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
-
-		if( provider ){
-			has_writables = TRUE;
-		}
-	}
-
-	return( has_writables );
-}
-
-/**
  * nact_window_save_item:
  * @window: this #NactWindow instance.
  * @item: the #NAObjectItem to be saved.

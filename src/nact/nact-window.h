@@ -75,8 +75,6 @@ typedef struct {
 
 GType      nact_window_get_type( void );
 
-gboolean   nact_window_has_writable_providers( NactWindow *window );
-
 gboolean   nact_window_save_item  ( NactWindow *window, NAObjectItem *item, gchar **msgerr );
 gboolean   nact_window_delete_item( NactWindow *window, const NAObjectItem *item, gchar **msgerr );
 

@@ -1,5 +1,12 @@
 2011-02-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-window.c:
+	* src/nact/nact-window.h (nact_window_has_writable_providers):
+	Removed function.
+
+	* src/nact/nact-menubar-priv.h:
+	* src/nact/nact-menubar.c: Updated accordingly.
+
 	* src/core/na-iprefs.c:
 	* src/core/na-iprefs.h (na_iprefs_is_level_zero_writable):
 	Moved to NAUpdater class.
