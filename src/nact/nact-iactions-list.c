@@ -167,7 +167,7 @@ interface_base_init( NactIActionsListInterface *klass )
 				0,						/* no default handler */
 				NULL,
 				NULL,
-				nact_marshal_VOID__INT_INT_INT,
+				nact_cclosure_marshal_VOID__INT_INT_INT,
 				G_TYPE_NONE,
 				3,
 				G_TYPE_INT,
@@ -256,7 +256,7 @@ interface_base_init( NactIActionsListInterface *klass )
 				G_CALLBACK( free_column_edited_callback ),
 				NULL,
 				NULL,
-				nact_marshal_VOID__POINTER_POINTER_INT,
+				nact_cclosure_marshal_VOID__POINTER_POINTER_INT,
 				G_TYPE_NONE,
 				3,
 				G_TYPE_POINTER,

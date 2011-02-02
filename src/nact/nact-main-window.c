@@ -457,7 +457,7 @@ class_init( NactMainWindowClass *klass )
 			0,					/* no default handler */
 			NULL,
 			NULL,
-			nact_marshal_VOID__POINTER_BOOLEAN,
+			nact_cclosure_marshal_VOID__POINTER_BOOLEAN,
 			G_TYPE_NONE,
 			2,
 			G_TYPE_POINTER,

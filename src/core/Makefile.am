@@ -40,6 +40,11 @@ AM_CPPFLAGS += \
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
+BUILT_SOURCES = \
+	na-marshal.c										\
+	na-marshal.h										\
+	$(NULL)
+
 libna_core_la_SOURCES = \
 	na-boxed.c											\
 	na-core-utils.c										\
@@ -82,8 +87,6 @@ libna_core_la_SOURCES = \
 	na-ipivot-consumer.h								\
 	na-iprefs.c											\
 	na-iprefs.h											\
-	na-marshal.c										\
-	na-marshal.h										\
 	na-module.c											\
 	na-module.h											\
 	na-object.c											\
@@ -108,7 +111,15 @@ libna_core_la_SOURCES = \
 	na-tokens.h											\
 	na-updater.c										\
 	na-updater.h										\
+	$(BUILT_SOURCES)									\
 	$(NULL)
+
+na-marshal.h: na-marshal.def $(GLIB_GENMARSHAL)
+	$(GLIB_GENMARSHAL) $< --header --prefix=na_cclosure_marshal > $@
+
+na-marshal.c: na-marshal.def $(GLIB_GENMARSHAL)
+	echo "#include \"na-marshal.h\"" > $@
+	$(GLIB_GENMARSHAL) $< --body --prefix=na_cclosure_marshal >> $@
 
 libna_core_la_LIBADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
@@ -124,19 +135,11 @@ pkgdata_DATA = \
 	na-importer-ask.ui									\
 	$(NULL)
 
-EXTRA_DIST = \
-	$(pkgdata_DATA)										\
-	na-marshal											\
+CLEANFILES = \
+	$(BUILT_SOURCES)									\
 	$(NULL)
 
-na-marshal.h: na-marshal
-	glib-genmarshal --prefix=na_cclosure_marshal --header na-marshal > $@
-
-na-marshal.c: na-marshal.h
-	echo "#include \"na-marshal.h\"" > $@
-	glib-genmarshal --prefix=na_cclosure_marshal --body na-marshal >> $@
-
-CLEANFILES = \
-	na-marshal.c										\
-	na-marshal.h										\
+EXTRA_DIST = \
+	$(pkgdata_DATA)										\
+	na-marshal.def										\
 	$(NULL)

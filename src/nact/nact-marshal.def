@@ -1,0 +1,8 @@
+# NactIActionsList::nact-iactions-list-count-updated
+VOID:INT,INT,INT
+#
+# NactIActionsList::nact-iactions-list-column-edited
+VOID:POINTER,POINTER,INT
+#
+# NactMainWindow::nact-tab-updatable-item-updated
+VOID:POINTER,BOOLEAN

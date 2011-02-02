@@ -1,2 +1,2 @@
-# settings-key-changed signal
+# NASettings::settings-key-changed
 VOID:STRING,STRING,POINTER,BOOLEAN

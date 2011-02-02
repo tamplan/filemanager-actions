@@ -160,12 +160,12 @@ nautilus_actions_config_tool_SOURCES = \
 	$(BUILT_SOURCES)									\
 	$(NULL)
 
-nact-marshal.h: nact-marshal.list $(GLIB_GENMARSHAL)
-	$(GLIB_GENMARSHAL) $< --header --prefix=nact_marshal > $@
+nact-marshal.h: nact-marshal.def $(GLIB_GENMARSHAL)
+	$(GLIB_GENMARSHAL) $< --header --prefix=nact_cclosure_marshal > $@
 
-nact-marshal.c: nact-marshal.list $(GLIB_GENMARSHAL)
+nact-marshal.c: nact-marshal.def $(GLIB_GENMARSHAL)
 	echo "#include \"nact-marshal.h\"" > $@ && \
-	$(GLIB_GENMARSHAL) $< --body --prefix=nact_marshal >> $@
+	$(GLIB_GENMARSHAL) $< --body --prefix=nact_cclosure_marshal >> $@
 
 nautilus_actions_config_tool_LDADD = \
 	$(top_builddir)/src/core/libna-core.la				\
