@@ -38,7 +38,7 @@
 
 #include "nact-application.h"
 #include "nact-export-format.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-schemes-list.h"
 #include "nact-providers-list.h"
 #include "nact-preferences-editor.h"
@@ -407,7 +407,7 @@ on_base_initialize_base_window( NactPreferencesEditor *editor )
 		ok_button = base_window_get_widget( BASE_WINDOW( editor ), "OKButton" );
 		base_window_signal_connect( BASE_WINDOW( editor ),
 				G_OBJECT( ok_button ), "clicked", G_CALLBACK( on_ok_clicked ));
-		nact_gtk_utils_set_editable( G_OBJECT( ok_button ), !editor->private->preferences_locked );
+		base_gtk_utils_set_editable( G_OBJECT( ok_button ), !editor->private->preferences_locked );
 	}
 }
 
@@ -475,7 +475,7 @@ order_mode_setup( NactPreferencesEditor *editor, NAPivot *pivot )
 			break;
 	}
 
-	nact_gtk_utils_radio_set_initial_state(
+	base_gtk_utils_radio_set_initial_state(
 			GTK_RADIO_BUTTON( active_button ),
 			active_handler, editor, editable, !editor->private->preferences_locked );
 }
@@ -512,7 +512,7 @@ order_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *toggle_bu
 			editor->private->order_mode = order_mode;
 		}
 	} else {
-		nact_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), cb );
+		base_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), cb );
 	}
 }
 
@@ -527,7 +527,7 @@ root_menu_setup( NactPreferencesEditor *editor, NASettings *settings )
 	editor->private->root_menu = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, &editor->private->root_menu_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->root_menu_mandatory;
 
-	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 			"CreateRootMenuButton", G_CALLBACK( root_menu_on_toggled ),
 			editor->private->root_menu, editable, !editor->private->preferences_locked );
 }
@@ -543,7 +543,7 @@ root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 		editor->private->root_menu = gtk_toggle_button_get_active( button );
 
 	} else {
-		nact_gtk_utils_toggle_reset_initial_state( button );
+		base_gtk_utils_toggle_reset_initial_state( button );
 	}
 }
 
@@ -558,7 +558,7 @@ about_item_setup( NactPreferencesEditor *editor, NASettings *settings )
 	editor->private->about_item = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, &editor->private->about_item_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->about_item_mandatory;
 
-	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 			"AddAboutButton", G_CALLBACK( about_item_on_toggled ),
 			editor->private->about_item, editable, !editor->private->preferences_locked );
 }
@@ -574,7 +574,7 @@ about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 		editor->private->about_item = gtk_toggle_button_get_active( button );
 
 	} else {
-		nact_gtk_utils_toggle_reset_initial_state( button );
+		base_gtk_utils_toggle_reset_initial_state( button );
 	}
 }
 
@@ -589,7 +589,7 @@ relabel_menu_setup( NactPreferencesEditor *editor, NASettings *settings )
 	editor->private->relabel_menu = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, &editor->private->relabel_menu_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->relabel_menu_mandatory;
 
-	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 			"RelabelMenuButton", G_CALLBACK( relabel_menu_on_toggled ),
 			editor->private->relabel_menu, editable, !editor->private->preferences_locked );
 }
@@ -605,7 +605,7 @@ relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor 
 		editor->private->relabel_menu = gtk_toggle_button_get_active( button );
 
 	} else {
-		nact_gtk_utils_toggle_reset_initial_state( button );
+		base_gtk_utils_toggle_reset_initial_state( button );
 	}
 }
 
@@ -620,7 +620,7 @@ relabel_action_setup( NactPreferencesEditor *editor, NASettings *settings )
 	editor->private->relabel_action = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, &editor->private->relabel_action_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->relabel_action_mandatory;
 
-	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 			"RelabelActionButton", G_CALLBACK( relabel_action_on_toggled ),
 			editor->private->relabel_action, editable, !editor->private->preferences_locked );
 }
@@ -636,7 +636,7 @@ relabel_action_on_toggled( GtkToggleButton *button, NactPreferencesEditor *edito
 		editor->private->relabel_action = gtk_toggle_button_get_active( button );
 
 	} else {
-		nact_gtk_utils_toggle_reset_initial_state( button );
+		base_gtk_utils_toggle_reset_initial_state( button );
 	}
 }
 
@@ -651,7 +651,7 @@ relabel_profile_setup( NactPreferencesEditor *editor, NASettings *settings )
 	editor->private->relabel_profile = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, &editor->private->relabel_profile_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->relabel_profile_mandatory;
 
-	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 			"RelabelProfileButton", G_CALLBACK( relabel_profile_on_toggled ),
 			editor->private->relabel_profile, editable, !editor->private->preferences_locked );
 }
@@ -667,7 +667,7 @@ relabel_profile_on_toggled( GtkToggleButton *button, NactPreferencesEditor *edit
 		editor->private->relabel_profile = gtk_toggle_button_get_active( button );
 
 	} else {
-		nact_gtk_utils_toggle_reset_initial_state( button );
+		base_gtk_utils_toggle_reset_initial_state( button );
 	}
 }
 
@@ -682,7 +682,7 @@ esc_quit_setup( NactPreferencesEditor *editor, NASettings *settings )
 	editor->private->esc_quit = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, &editor->private->esc_quit_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->esc_quit_mandatory;
 
-	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 			"EscCloseButton", G_CALLBACK( esc_quit_on_toggled ),
 			editor->private->esc_quit, editable, !editor->private->preferences_locked );
 }
@@ -701,7 +701,7 @@ esc_quit_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 		gtk_widget_set_sensitive( confirm_button, editor->private->esc_quit );
 
 	} else {
-		nact_gtk_utils_toggle_reset_initial_state( button );
+		base_gtk_utils_toggle_reset_initial_state( button );
 	}
 }
 
@@ -717,7 +717,7 @@ esc_confirm_setup( NactPreferencesEditor *editor, NASettings *settings )
 	editor->private->esc_confirm = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, &editor->private->esc_confirm_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->esc_confirm_mandatory;
 
-	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 			"EscConfirmButton", G_CALLBACK( esc_confirm_on_toggled ),
 			editor->private->esc_confirm, editable, !editor->private->preferences_locked );
 }
@@ -733,7 +733,7 @@ esc_confirm_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 		editor->private->esc_confirm = gtk_toggle_button_get_active( button );
 
 	} else {
-		nact_gtk_utils_toggle_reset_initial_state( button );
+		base_gtk_utils_toggle_reset_initial_state( button );
 	}
 }
 
@@ -762,7 +762,7 @@ auto_save_setup( NactPreferencesEditor *editor, NASettings *settings )
 			G_OBJECT( spin_button ), "value-changed", G_CALLBACK( auto_save_period_on_change_value ));
 
 	editable = !editor->private->preferences_locked && !editor->private->auto_save_mandatory;
-	nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 			"AutoSaveCheckButton", G_CALLBACK( auto_save_on_toggled ),
 			editor->private->auto_save, editable, !editor->private->preferences_locked );
 }
@@ -780,7 +780,7 @@ auto_save_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 		editor->private->auto_save = gtk_toggle_button_get_active( button );
 
 	} else {
-		nact_gtk_utils_toggle_reset_initial_state( button );
+		base_gtk_utils_toggle_reset_initial_state( button );
 	}
 
 	sensitive = editor->private->auto_save && !editor->private->preferences_locked;
@@ -849,7 +849,7 @@ import_mode_setup( NactPreferencesEditor *editor, NAPivot *pivot )
 			break;
 	}
 
-	nact_gtk_utils_radio_set_initial_state(
+	base_gtk_utils_radio_set_initial_state(
 			GTK_RADIO_BUTTON( active_button ),
 			active_handler, editor, editable, !editor->private->preferences_locked );
 }
@@ -892,7 +892,7 @@ import_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *toggle_b
 			editor->private->import_mode = import_mode;
 		}
 	} else {
-		nact_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), cb );
+		base_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), cb );
 	}
 }
 

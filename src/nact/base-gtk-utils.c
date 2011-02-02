@@ -32,14 +32,12 @@
 #include <config.h>
 #endif
 
-#include <glib.h>
 #include <string.h>
 
 #include <core/na-iprefs.h>
 #include <core/na-updater.h>
 
-#include "base-iprefs.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-application.h"
 
 #define NACT_PROP_TOGGLE_BUTTON				"nact-prop-toggle-button"
@@ -49,10 +47,181 @@
 #define DEFAULT_WIDTH		22
 #define DEFAULT_HEIGHT		22
 
-static GtkWidget *search_for_child_widget( GtkContainer *container, const gchar *name );
+static NASettings *get_settings( const BaseWindow *window );
+static GList      *read_int_list( const BaseWindow *window, const gchar *key );
+static void        write_int_list( const BaseWindow *window, const gchar *key, GList *list );
+static void        int_list_to_position( const BaseWindow *window, GList *list, gint *x, gint *y, gint *width, gint *height );
+static GList      *position_to_int_list( const BaseWindow *window, gint x, gint y, gint width, gint height );
+static void        free_int_list( GList *list );
+
+static GtkWidget  *search_for_child_widget( GtkContainer *container, const gchar *name );
 
 /**
- * nact_gtk_utils_set_editable:
+ * base_gtk_utils_position_window:
+ * @window: this #BaseWindow-derived window.
+ * @wsp_name: the string which handles the window size and position in user preferences.
+ *
+ * Position the specified window on the screen.
+ *
+ * A window position is stored as a list of integers "x,y,width,height".
+ */
+void
+base_gtk_utils_restore_window_position( const BaseWindow *window, const gchar *wsp_name )
+{
+	static const gchar *thisfn = "base_gtk_utils_restore_window_position";
+	GtkWindow *toplevel;
+	GList *list;
+	gint x=0, y=0, width=0, height=0;
+	GdkDisplay *display;
+	GdkScreen *screen;
+	gint screen_width, screen_height;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( wsp_name && strlen( wsp_name ));
+
+	toplevel = base_window_get_gtk_toplevel( window );
+
+	g_debug( "%s: window=%p (%s), toplevel=%p (%s), wsp_name=%s",
+			thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ),
+			( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ), wsp_name );
+
+	list = read_int_list( window, wsp_name );
+
+	if( list ){
+		int_list_to_position( window, list, &x, &y, &width, &height );
+		g_debug( "%s: wsp_name=%s, x=%d, y=%d, width=%d, height=%d", thisfn, wsp_name, x, y, width, height );
+		free_int_list( list );
+	}
+
+	if( width > 0 && height > 0 ){
+		display = gdk_display_get_default();
+		screen = gdk_display_get_screen( display, 0 );
+		screen_width = gdk_screen_get_width( screen );
+		screen_height = gdk_screen_get_height( screen );
+
+		if(( x+width < screen_width ) && ( y+height < screen_height )){
+			gtk_window_move( toplevel, x, y );
+			gtk_window_resize( toplevel, width, height );
+		}
+	}
+}
+
+/**
+ * base_gtk_utils_save_window_position:
+ * @window: this #BaseWindow-derived window.
+ * @wsp_name: the string which handles the window size and position in user preferences.
+ *
+ * Save the size and position of the specified window.
+ */
+void
+base_gtk_utils_save_window_position( const BaseWindow *window, const gchar *wsp_name )
+{
+	static const gchar *thisfn = "base_gtk_utils_save_window_position";
+	GtkWindow *toplevel;
+	gint x, y, width, height;
+	GList *list;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+	g_return_if_fail( wsp_name && strlen( wsp_name ));
+
+	toplevel = base_window_get_gtk_toplevel( window );
+	g_return_if_fail( GTK_IS_WINDOW( toplevel ));
+
+	gtk_window_get_position( toplevel, &x, &y );
+	gtk_window_get_size( toplevel, &width, &height );
+	g_debug( "%s: wsp_name=%s, x=%d, y=%d, width=%d, height=%d", thisfn, wsp_name, x, y, width, height );
+
+	list = position_to_int_list( window, x, y, width, height );
+	write_int_list( window, wsp_name, list );
+	free_int_list( list );
+}
+
+/* It seems inevitable that preferences are attached to the application.
+ * Unfortunately, it does not seem possible to have a base window size and
+ * position itself. So, this BaseIPrefs interface is not really a base
+ * interface, but rather a common one, attached to the application
+ */
+static NASettings *
+get_settings( const BaseWindow *window )
+{
+	NactApplication *appli = NACT_APPLICATION( base_window_get_application( window ));
+	NAUpdater *updater = nact_application_get_updater( appli );
+	return( na_pivot_get_settings( NA_PIVOT( updater )));
+}
+
+/*
+ * returns a list of int
+ */
+static GList *
+read_int_list( const BaseWindow *window, const gchar *key )
+{
+	NASettings *settings = get_settings( window );
+	return( na_settings_get_uint_list( settings, key, NULL, NULL ));
+}
+
+static void
+write_int_list( const BaseWindow *window, const gchar *key, GList *list )
+{
+	NASettings *settings = get_settings( window );
+	na_settings_set_uint_list( settings, key, list );
+}
+
+/*
+ * extract the position of the window from the list of unsigned integers
+ */
+static void
+int_list_to_position( const BaseWindow *window, GList *list, gint *x, gint *y, gint *width, gint *height )
+{
+	GList *it;
+	int i;
+
+	g_assert( x );
+	g_assert( y );
+	g_assert( width );
+	g_assert( height );
+
+	for( it=list, i=0 ; it ; it=it->next, i+=1 ){
+		switch( i ){
+			case 0:
+				*x = GPOINTER_TO_UINT( it->data );
+				break;
+			case 1:
+				*y = GPOINTER_TO_UINT( it->data );
+				break;
+			case 2:
+				*width = GPOINTER_TO_UINT( it->data );
+				break;
+			case 3:
+				*height = GPOINTER_TO_UINT( it->data );
+				break;
+		}
+	}
+}
+
+static GList *
+position_to_int_list( const BaseWindow *window, gint x, gint y, gint width, gint height )
+{
+	GList *list = NULL;
+
+	list = g_list_append( list, GUINT_TO_POINTER( x ));
+	list = g_list_append( list, GUINT_TO_POINTER( y ));
+	list = g_list_append( list, GUINT_TO_POINTER( width ));
+	list = g_list_append( list, GUINT_TO_POINTER( height ));
+
+	return( list );
+}
+
+/*
+ * free the list of int
+ */
+static void
+free_int_list( GList *list )
+{
+	g_list_free( list );
+}
+
+/**
+ * base_gtk_utils_set_editable:
  * @widget: the #GtkWdiget.
  * @editable: whether the @widget is editable or not.
  *
@@ -63,7 +232,7 @@ static GtkWidget *search_for_child_widget( GtkContainer *container, const gchar 
  * deprecated in Gtk+-3.0)
  */
 void
-nact_gtk_utils_set_editable( GObject *widget, gboolean editable )
+base_gtk_utils_set_editable( GObject *widget, gboolean editable )
 {
 	GList *renderers, *irender;
 
@@ -120,7 +289,7 @@ nact_gtk_utils_set_editable( GObject *widget, gboolean editable )
 }
 
 /**
- * nact_gtk_utils_radio_set_initial_state:
+ * base_gtk_utils_radio_set_initial_state:
  * @button: the #GtkRadioButton button which is initially active.
  * @handler: the corresponding "toggled" handler.
  * @user_data: the user data associated to the handler.
@@ -143,7 +312,7 @@ nact_gtk_utils_set_editable( GObject *widget, gboolean editable )
  * initial state.
  */
 void
-nact_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
+base_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 		GCallback handler, void *user_data, gboolean editable, gboolean sensitive )
 {
 	GSList *group, *ig;
@@ -157,7 +326,7 @@ nact_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_HANDLER, handler );
 		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_USER_DATA, user_data );
 		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_EDITABLE, GUINT_TO_POINTER( editable ));
-		nact_gtk_utils_set_editable( G_OBJECT( other ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( other ), editable );
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( other ), FALSE );
 		gtk_widget_set_sensitive( GTK_WIDGET( other ), sensitive );
 	}
@@ -166,7 +335,7 @@ nact_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 }
 
 /**
- * nact_gtk_utils_radio_reset_initial_state:
+ * base_gtk_utils_radio_reset_initial_state:
  * @button: the #GtkRadioButton being toggled.
  * @handler: the corresponding "toggled" handler.
  * @data: data associated with the @handler callback.
@@ -177,7 +346,7 @@ nact_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
  * editable).
  */
 void
-nact_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback handler )
+base_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback handler )
 {
 	GtkToggleButton *initial_button;
 	GCallback initial_handler;
@@ -209,7 +378,7 @@ nact_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback hand
 }
 
 /**
- * nact_gtk_utils_toggle_set_initial_state:
+ * base_gtk_utils_toggle_set_initial_state:
  * @button: the #GtkToggleButton button.
  * @handler: the corresponding "toggled" handler.
  * @window: the toplevel #BaseWindow which embeds the button;
@@ -229,7 +398,7 @@ nact_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback hand
  * - explictely triggers the 'toggled' handler
  */
 void
-nact_gtk_utils_toggle_set_initial_state( BaseWindow *window,
+base_gtk_utils_toggle_set_initial_state( BaseWindow *window,
 		const gchar *button_name, GCallback handler,
 		gboolean active, gboolean editable, gboolean sensitive )
 {
@@ -245,7 +414,7 @@ nact_gtk_utils_toggle_set_initial_state( BaseWindow *window,
 		g_object_set_data( G_OBJECT( button ), NACT_PROP_TOGGLE_USER_DATA, window );
 		g_object_set_data( G_OBJECT( button ), NACT_PROP_TOGGLE_EDITABLE, GUINT_TO_POINTER( editable ));
 
-		nact_gtk_utils_set_editable( G_OBJECT( button ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 		gtk_widget_set_sensitive( GTK_WIDGET( button ), sensitive );
 		gtk_toggle_button_set_active( button, active );
 
@@ -254,7 +423,7 @@ nact_gtk_utils_toggle_set_initial_state( BaseWindow *window,
 }
 
 /**
- * nact_gtk_utils_toggle_reset_initial_state:
+ * base_gtk_utils_toggle_reset_initial_state:
  * @button: the #GtkToggleButton check button.
  *
  * When clicking on a read-only check button, this function ensures that
@@ -262,7 +431,7 @@ nact_gtk_utils_toggle_set_initial_state( BaseWindow *window,
  * is editable or not (does nothing if button is actually editable).
  */
 void
-nact_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button )
+base_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button )
 {
 	gboolean editable;
 	GCallback handler;
@@ -291,9 +460,9 @@ nact_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button )
  * Returns a pixbuf for the given widget.
  */
 GdkPixbuf *
-nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize size )
+base_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize size )
 {
-	static const gchar *thisfn = "nact_gtk_utils_get_pixbuf";
+	static const gchar *thisfn = "base_gtk_utils_get_pixbuf";
 	GdkPixbuf* pixbuf;
 	GError *error;
 	gint width, height;
@@ -364,16 +533,16 @@ nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
  * Displays the (maybe themed) image on the given widget.
  */
 void
-nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
+base_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
 {
-	static const gchar *thisfn = "nact_gtk_utils_render";
+	static const gchar *thisfn = "base_gtk_utils_render";
 	GdkPixbuf* pixbuf;
 	gint width, height;
 
 	g_debug( "%s: name=%s, widget=%p, size=%d", thisfn, name, ( void * ) widget, size );
 
 	if( name ){
-		pixbuf = nact_gtk_utils_get_pixbuf( name, GTK_WIDGET( widget ), size );
+		pixbuf = base_gtk_utils_get_pixbuf( name, GTK_WIDGET( widget ), size );
 
 	} else {
 		if( !gtk_icon_size_lookup( size, &width, &height )){
@@ -390,7 +559,7 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
 }
 
 /**
- * nact_gtk_utils_select_file:
+ * base_gtk_utils_select_file:
  * @window: the #BaseWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
  * @wsp_name: the name of the dialog box in Preferences to read/write
@@ -407,16 +576,16 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
  * URI will be written as @entry_name in Preferences.
  */
 void
-nact_gtk_utils_select_file( BaseWindow *window,
+base_gtk_utils_select_file( BaseWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name )
 {
-	nact_gtk_utils_select_file_with_preview(
+	base_gtk_utils_select_file_with_preview(
 			window, title, wsp_name, entry, entry_name, NULL );
 }
 
 /**
- * nact_gtk_utils_select_file_with_preview:
+ * base_gtk_utils_select_file_with_preview:
  * @window: the #BaseWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
  * @wsp_name: the name of the dialog box in Preferences to read/write
@@ -435,7 +604,7 @@ nact_gtk_utils_select_file( BaseWindow *window,
  * URI will be written as @entry_name in Preferences.
  */
 void
-nact_gtk_utils_select_file_with_preview( BaseWindow *window,
+base_gtk_utils_select_file_with_preview( BaseWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name,
 				GCallback update_preview_cb )
@@ -469,7 +638,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 		g_signal_connect( dialog, "update-preview", update_preview_cb, preview );
 	}
 
-	base_iprefs_restore_window_position( window, wsp_name );
+	base_gtk_utils_restore_window_position( window, wsp_name );
 
 	text = gtk_entry_get_text( GTK_ENTRY( entry ));
 
@@ -494,13 +663,13 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 	na_settings_set_string( settings, entry_name, uri );
 	g_free( uri );
 
-	base_iprefs_save_window_position( window, wsp_name );
+	base_gtk_utils_save_window_position( window, wsp_name );
 
 	gtk_widget_destroy( dialog );
 }
 
 /**
- * nact_gtk_utils_select_dir:
+ * base_gtk_utils_select_dir:
  * @window: the #BaseWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
  * @wsp_name: the name of the dialog box in Preferences to read/write
@@ -519,7 +688,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
  * URI will be written as @entry_name in Preferences.
  */
 void
-nact_gtk_utils_select_dir( BaseWindow *window,
+base_gtk_utils_select_dir( BaseWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name )
 {
@@ -545,7 +714,7 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 			NULL
 			);
 
-	base_iprefs_restore_window_position( window, wsp_name );
+	base_gtk_utils_restore_window_position( window, wsp_name );
 
 	text = gtk_entry_get_text( GTK_ENTRY( entry ));
 
@@ -570,13 +739,13 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 	na_settings_set_string( settings, entry_name, uri );
 	g_free( uri );
 
-	base_iprefs_save_window_position( window, wsp_name );
+	base_gtk_utils_save_window_position( window, wsp_name );
 
 	gtk_widget_destroy( dialog );
 }
 
 /**
- * nact_gtk_utils_get_widget_by_name:
+ * base_gtk_utils_get_widget_by_name:
  * @toplevel: the #GtkWindow toplevel.
  * @name: the name of the searched child.
  *
@@ -585,9 +754,9 @@ nact_gtk_utils_select_dir( BaseWindow *window,
  * should not be released by the caller.
  */
 GtkWidget *
-nact_gtk_utils_get_widget_by_name( GtkWindow *toplevel, const gchar *name )
+base_gtk_utils_get_widget_by_name( GtkWindow *toplevel, const gchar *name )
 {
-	static const gchar *thisfn = "nact_gtk_utils_get_widget_by_name";
+	static const gchar *thisfn = "base_gtk_utils_get_widget_by_name";
 	GtkWidget *widget = NULL;
 
 	g_return_val_if_fail( GTK_IS_WINDOW( toplevel ), NULL );

@@ -42,7 +42,7 @@
 
 #include <core/na-settings.h>
 
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-ienvironment-tab.h"
 
@@ -380,10 +380,10 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		g_free( sel_count );
 
 		combo = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountSigneCombobox" );
-		nact_gtk_utils_set_editable( G_OBJECT( combo ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( combo ), editable );
 
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountNumberEntry" );
-		nact_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 
 		/* desktop environment
 		 */
@@ -398,7 +398,7 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( always_button ), context == NULL );
 
 		if( desktops && g_slist_length( desktops )){
-			nact_gtk_utils_radio_set_initial_state(
+			base_gtk_utils_radio_set_initial_state(
 					GTK_RADIO_BUTTON( show_button ),
 					G_CALLBACK( on_only_show_toggled ), instance, editable, ( context != NULL ));
 			gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
@@ -407,13 +407,13 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 			desktops = context ? na_object_get_not_show_in( context ) : NULL;
 
 			if( desktops && g_slist_length( desktops )){
-				nact_gtk_utils_radio_set_initial_state(
+				base_gtk_utils_radio_set_initial_state(
 						GTK_RADIO_BUTTON( notshow_button ),
 						G_CALLBACK( on_do_not_show_toggled ), instance, editable, ( context != NULL ));
 				gtk_widget_set_sensitive( GTK_WIDGET( listview ), TRUE );
 
 			} else {
-				nact_gtk_utils_radio_set_initial_state(
+				base_gtk_utils_radio_set_initial_state(
 						GTK_RADIO_BUTTON( always_button ),
 						G_CALLBACK( on_show_always_toggled ), instance, editable, ( context != NULL ));
 				gtk_widget_set_sensitive( GTK_WIDGET( listview ), FALSE );
@@ -430,34 +430,34 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 		text = text && strlen( text ) ? text : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), text );
 		g_free( text );
-		nact_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 
 		browse_button = base_window_get_widget( BASE_WINDOW( instance ), "TryExecButton" );
-		nact_gtk_utils_set_editable( G_OBJECT( browse_button ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( browse_button ), editable );
 
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRegisteredEntry" );
 		text = context ? na_object_get_show_if_registered( context ) : g_strdup( "" );
 		text = text && strlen( text ) ? text : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), text );
 		g_free( text );
-		nact_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfTrueEntry" );
 		text = context ? na_object_get_show_if_true( context ) : g_strdup( "" );
 		text = text && strlen( text ) ? text : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), text );
 		g_free( text );
-		nact_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningEntry" );
 		text = context ? na_object_get_show_if_running( context ) : g_strdup( "" );
 		text = text && strlen( text ) ? text : g_strdup( "" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), text );
 		g_free( text );
-		nact_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 
 		browse_button = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningButton" );
-		nact_gtk_utils_set_editable( G_OBJECT( browse_button ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( browse_button ), editable );
 
 		st_on_selection_change = FALSE;
 
@@ -544,7 +544,7 @@ on_show_always_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 			}
 
 		} else {
-			nact_gtk_utils_radio_reset_initial_state(
+			base_gtk_utils_radio_reset_initial_state(
 					GTK_RADIO_BUTTON( toggle_button ), G_CALLBACK( on_show_always_toggled ));
 		}
 	}
@@ -583,7 +583,7 @@ on_only_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *insta
 			}
 
 		} else {
-			nact_gtk_utils_radio_reset_initial_state(
+			base_gtk_utils_radio_reset_initial_state(
 					GTK_RADIO_BUTTON( toggle_button ), G_CALLBACK( on_only_show_toggled ));
 		}
 	}
@@ -622,7 +622,7 @@ on_do_not_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 			}
 
 		} else {
-			nact_gtk_utils_radio_reset_initial_state(
+			base_gtk_utils_radio_reset_initial_state(
 					GTK_RADIO_BUTTON( toggle_button ), G_CALLBACK( on_do_not_show_toggled ));
 		}
 	}
@@ -699,7 +699,7 @@ on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance )
 
 	entry = base_window_get_widget( BASE_WINDOW( instance ), "TryExecEntry" );
 
-	nact_gtk_utils_select_file(
+	base_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
 			_( "Choosing an executable" ), NA_IPREFS_TRY_EXEC_WSP,
 			entry, NA_IPREFS_TRY_EXEC_URI );
@@ -757,7 +757,7 @@ on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance )
 
 	entry = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningEntry" );
 
-	nact_gtk_utils_select_file(
+	base_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
 			_( "Choosing an executable" ), NA_IPREFS_SHOW_IF_RUNNING_WSP,
 			entry, NA_IPREFS_SHOW_IF_RUNNING_URI );

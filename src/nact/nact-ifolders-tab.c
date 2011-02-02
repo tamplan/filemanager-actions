@@ -40,9 +40,8 @@
 
 #include <core/na-iprefs.h>
 
-#include "base-iprefs.h"
 #include "base-window.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-application.h"
 #include "nact-main-tab.h"
 #include "nact-match-list.h"
@@ -235,7 +234,7 @@ on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_select
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
 	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
-	nact_gtk_utils_set_editable( G_OBJECT( button ), editable );
+	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }
 
 static void
@@ -290,7 +289,7 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 	updater = nact_application_get_updater( application );
 	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
-	base_iprefs_restore_window_position( window, NA_IPREFS_FOLDER_CHOOSER_WSP );
+	base_gtk_utils_restore_window_position( window, NA_IPREFS_FOLDER_CHOOSER_WSP );
 
 	uri = na_settings_get_string( settings, NA_IPREFS_FOLDER_CHOOSER_URI, NULL, NULL );
 	if( uri && g_utf8_strlen( uri, -1 )){
@@ -309,7 +308,7 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 		g_free( uri );
 	}
 
-	base_iprefs_save_window_position( window, NA_IPREFS_FOLDER_CHOOSER_WSP );
+	base_gtk_utils_save_window_position( window, NA_IPREFS_FOLDER_CHOOSER_WSP );
 
 	gtk_widget_destroy( dialog );
 }

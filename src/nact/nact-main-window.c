@@ -32,10 +32,8 @@
 #include <config.h>
 #endif
 
-#include <stdlib.h>
-
 #include <glib/gi18n.h>
-#include <gtk/gtk.h>
+#include <stdlib.h>
 
 #include <api/na-object-api.h>
 
@@ -44,7 +42,6 @@
 #include <core/na-iprefs.h>
 #include <core/na-pivot.h>
 
-#include "base-iprefs.h"
 #include "nact-iactions-list.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"

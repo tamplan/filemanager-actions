@@ -41,7 +41,7 @@
 
 #include "base-keysyms.h"
 #include "nact-application.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-schemes-list.h"
 
@@ -314,7 +314,7 @@ init_view_connect_signals( SchemesListData *data )
 			G_CALLBACK( on_selection_changed ));
 
 	column = gtk_tree_view_get_column( data->treeview, SCHEMES_KEYWORD_COLUMN );
-	nact_gtk_utils_set_editable( G_OBJECT( column ), data->editable );
+	base_gtk_utils_set_editable( G_OBJECT( column ), data->editable );
 	if( data->editable ){
 		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(
@@ -325,7 +325,7 @@ init_view_connect_signals( SchemesListData *data )
 	}
 
 	column = gtk_tree_view_get_column( data->treeview, SCHEMES_DESC_COLUMN );
-	nact_gtk_utils_set_editable( G_OBJECT( column ), data->editable );
+	base_gtk_utils_set_editable( G_OBJECT( column ), data->editable );
 	if( data->editable ){
 		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
 		base_window_signal_connect(

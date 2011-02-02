@@ -33,9 +33,8 @@
 #endif
 
 #include "base-keysyms.h"
-#include "base-iprefs.h"
 #include "nact-application.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-icon-chooser.h"
 
 /* private class data
@@ -587,7 +586,7 @@ on_current_icon_changed( const NactIconChooser *editor )
 	GtkLabel *label;
 
 	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( editor ), "IconImage" ));
-	nact_gtk_utils_render( editor->private->current_icon, image, CURRENT_ICON_SIZE );
+	base_gtk_utils_render( editor->private->current_icon, image, CURRENT_ICON_SIZE );
 
 	if( editor->private->current_icon ){
 		if( g_path_is_absolute( editor->private->current_icon )){
@@ -615,7 +614,7 @@ on_destroy( GtkWidget *widget, GdkEvent *event, void *foo )
 
 	/* clear the various models
 	 */
-	context_view = GTK_TREE_VIEW( nact_gtk_utils_get_widget_by_name( GTK_WINDOW( widget ), "ThemedTreeView" ));
+	context_view = GTK_TREE_VIEW( base_gtk_utils_get_widget_by_name( GTK_WINDOW( widget ), "ThemedTreeView" ));
 	context_store = GTK_LIST_STORE( gtk_tree_view_get_model( context_view ));
 
 	if( gtk_tree_model_get_iter_first( GTK_TREE_MODEL( context_store ), &context_iter )){
@@ -749,7 +748,7 @@ on_themed_icon_changed( GtkIconView *icon_view, NactIconChooser *editor )
 					-1 );
 
 			preview_image = base_window_get_widget( BASE_WINDOW( editor ), "ThemedIconImage" );
-			nact_gtk_utils_render( label, GTK_IMAGE( preview_image ), PREVIEW_ICON_SIZE );
+			base_gtk_utils_render( label, GTK_IMAGE( preview_image ), PREVIEW_ICON_SIZE );
 			preview_label = base_window_get_widget( BASE_WINDOW( editor ), "ThemedIconName" );
 			gtk_label_set_text( GTK_LABEL( preview_label ), label );
 

@@ -32,15 +32,13 @@
 #include <config.h>
 #endif
 
-#include <glib.h>
 #include <glib/gi18n.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "base-application.h"
-#include "base-iprefs.h"
 #include "base-window.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 
 /* private class data
  */
@@ -109,7 +107,6 @@ static BaseWindow   *st_first_window           = NULL;
 
 static GType    register_type( void );
 static void     class_init( BaseWindowClass *klass );
-static void     iprefs_base_iface_init( BaseIPrefsInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -167,17 +164,9 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo iprefs_base_iface_info = {
-		( GInterfaceInitFunc ) iprefs_base_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "BaseWindow", &info, 0 );
-
-	g_type_add_interface_static( type, BASE_IPREFS_TYPE, &iprefs_base_iface_info );
 
 	return( type );
 }
@@ -316,14 +305,6 @@ class_init( BaseWindowClass *klass )
 }
 
 static void
-iprefs_base_iface_init( BaseIPrefsInterface *iface )
-{
-	static const gchar *thisfn = "base_window_iprefs_base_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-}
-
-static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "base_window_instance_init";
@@ -451,7 +432,7 @@ instance_dispose( GObject *window )
 
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-		base_iprefs_save_window_position( self, self->private->wsp_name );
+		base_gtk_utils_save_window_position( self, self->private->wsp_name );
 
 		/* signals must be deconnected before quitting main loop
 		 */
@@ -813,7 +794,7 @@ do_initialize_base_window( BaseWindow *window )
 
 	if( !window->private->dispose_has_run ){
 
-		base_iprefs_restore_window_position( window, window->private->wsp_name );
+		base_gtk_utils_restore_window_position( window, window->private->wsp_name );
 	}
 }
 
@@ -1021,7 +1002,7 @@ base_window_get_widget( const BaseWindow *window, const gchar *name )
 
 	if( !window->private->dispose_has_run ){
 
-		widget = nact_gtk_utils_get_widget_by_name( window->private->gtk_toplevel, name );
+		widget = base_gtk_utils_get_widget_by_name( window->private->gtk_toplevel, name );
 	}
 
 	return( widget );

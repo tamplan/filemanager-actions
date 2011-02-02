@@ -33,7 +33,6 @@
 #endif
 
 #include <glib/gi18n.h>
-#include <gtk/gtk.h>
 #include <string.h>
 
 #include <api/na-core-utils.h>
@@ -42,7 +41,6 @@
 #include <core/na-iprefs.h>
 #include <core/na-exporter.h>
 
-#include "base-iprefs.h"
 #include "nact-application.h"
 #include "nact-main-window.h"
 #include "nact-assistant-export.h"

@@ -38,7 +38,7 @@
 #include <core/na-export-format.h>
 
 #include "nact-export-format.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 
 typedef struct {
 	GtkWidget      *container_vbox;
@@ -271,7 +271,7 @@ select_default_iter( GtkWidget *vbox, void *quark_ptr )
 	}
 
 	if( button ){
-		nact_gtk_utils_radio_set_initial_state( button,
+		base_gtk_utils_radio_set_initial_state( button,
 				G_CALLBACK( export_format_on_toggled ), vbox_data, editable, sensitive );
 	}
 }
@@ -292,7 +292,7 @@ export_format_on_toggled( GtkToggleButton *toggle_button, VBoxData *vbox_data )
 			g_object_set_data( G_OBJECT( vbox_data->container_vbox ), EXPORT_FORMAT_PROP_CONTAINER_FORMAT, GUINT_TO_POINTER( format ));
 		}
 	} else {
-		nact_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), NULL );
+		base_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), NULL );
 	}
 }
 

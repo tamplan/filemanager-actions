@@ -40,7 +40,7 @@
 
 #include <core/na-io-provider.h>
 
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-iproperties-tab.h"
 #include "nact-main-tab.h"
 
@@ -270,14 +270,14 @@ on_tab_updatable_selection_changed( NactIPropertiesTab *instance, gint count_sel
 		enabled_button = get_enabled_button( instance );
 		enabled_item = item ? na_object_is_enabled( NA_OBJECT_ITEM( item )) : FALSE;
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( enabled_button ), enabled_item );
-		nact_gtk_utils_set_editable( G_OBJECT( enabled_button ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( enabled_button ), editable );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionDescriptionText" );
 		buffer = gtk_text_view_get_buffer( GTK_TEXT_VIEW( label_widget ));
 		label = item ? na_object_get_description( item ) : g_strdup( "" );
 		gtk_text_buffer_set_text( buffer, label, -1 );
 		g_free( label );
-		nact_gtk_utils_set_editable( G_OBJECT( label_widget ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( label_widget ), editable );
 
 		shortcut_button = base_window_get_widget( BASE_WINDOW( instance ), "SuggestedShortcutButton" );
 		shortcut = item ? na_object_get_shortcut( item ) : g_strdup( "" );
@@ -287,7 +287,7 @@ on_tab_updatable_selection_changed( NactIPropertiesTab *instance, gint count_sel
 		}
 		gtk_button_set_label( GTK_BUTTON( shortcut_button ), shortcut );
 		g_free( shortcut );
-		nact_gtk_utils_set_editable( G_OBJECT( shortcut_button ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( shortcut_button ), editable );
 
 		/* TODO: don't know how to edit a shortcut for now */
 		gtk_widget_set_sensitive( shortcut_button, FALSE );
@@ -297,7 +297,7 @@ on_tab_updatable_selection_changed( NactIPropertiesTab *instance, gint count_sel
 		 */
 		readonly_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "ActionReadonlyButton" ));
 		gtk_toggle_button_set_active( readonly_button, item ? na_object_is_readonly( item ) : FALSE );
-		nact_gtk_utils_set_editable( G_OBJECT( readonly_button ), FALSE );
+		base_gtk_utils_set_editable( G_OBJECT( readonly_button ), FALSE );
 
 		label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemID" );
 		label = item ? na_object_get_id( item ) : g_strdup( "" );

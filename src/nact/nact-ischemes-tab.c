@@ -37,7 +37,7 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-match-list.h"
 #include "nact-add-scheme-dialog.h"
@@ -228,7 +228,7 @@ on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
 	button = base_window_get_widget( window, "AddFromDefaultButton" );
-	nact_gtk_utils_set_editable( G_OBJECT( button ), editable );
+	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }
 
 static void

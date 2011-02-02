@@ -40,7 +40,7 @@
 
 #include "nact-application.h"
 #include "nact-clipboard.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-iactions-list.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-dnd.h"
@@ -887,7 +887,7 @@ display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, con
 
 	if( NA_IS_OBJECT_ITEM( object )){
 		gchar *icon_name = na_object_get_icon( object );
-		GdkPixbuf *icon = nact_gtk_utils_get_pixbuf( icon_name, GTK_WIDGET( treeview ), GTK_ICON_SIZE_MENU );
+		GdkPixbuf *icon = base_gtk_utils_get_pixbuf( icon_name, GTK_WIDGET( treeview ), GTK_ICON_SIZE_MENU );
 		gtk_tree_store_set( model, iter, IACTIONS_LIST_ICON_COLUMN, icon, -1 );
 		g_object_unref( icon );
 	}

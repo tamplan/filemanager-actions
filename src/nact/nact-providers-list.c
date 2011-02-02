@@ -42,7 +42,7 @@
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-providers-list.h"
 
 /* column ordering

@@ -43,10 +43,9 @@
 #include <core/na-tokens.h>
 
 #include "base-window.h"
-#include "base-iprefs.h"
 #include "nact-application.h"
 #include "nact-main-statusbar.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-iactions-list.h"
 #include "nact-main-tab.h"
 #include "nact-icommand-tab.h"
@@ -373,7 +372,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		gtk_entry_set_text( GTK_ENTRY( label_entry ), label );
 		g_free( label );
 		gtk_widget_set_sensitive( label_entry, profile != NULL );
-		nact_gtk_utils_set_editable( G_OBJECT( label_entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( label_entry ), editable );
 
 		path_entry = get_path_entry( instance );
 		path = profile ? na_object_get_path( profile ) : g_strdup( "" );
@@ -381,11 +380,11 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		gtk_entry_set_text( GTK_ENTRY( path_entry ), path );
 		g_free( path );
 		gtk_widget_set_sensitive( path_entry, profile != NULL );
-		nact_gtk_utils_set_editable( G_OBJECT( path_entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( path_entry ), editable );
 
 		path_button = get_path_button( instance );
 		gtk_widget_set_sensitive( GTK_WIDGET( path_button ), profile != NULL );
-		nact_gtk_utils_set_editable( G_OBJECT( path_button ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( path_button ), editable );
 
 		parameters_entry = get_parameters_entry( instance );
 		parameters = profile ? na_object_get_parameters( profile ) : g_strdup( "" );
@@ -393,7 +392,7 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		gtk_entry_set_text( GTK_ENTRY( parameters_entry ), parameters );
 		g_free( parameters );
 		gtk_widget_set_sensitive( parameters_entry, profile != NULL );
-		nact_gtk_utils_set_editable( G_OBJECT( parameters_entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( parameters_entry ), editable );
 
 		legend_button = get_legend_button( instance );
 		gtk_widget_set_sensitive( GTK_WIDGET( legend_button ), profile != NULL );
@@ -406,11 +405,11 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 		gtk_entry_set_text( GTK_ENTRY( wdir_entry ), wdir );
 		g_free( wdir );
 		gtk_widget_set_sensitive( wdir_entry, profile != NULL );
-		nact_gtk_utils_set_editable( G_OBJECT( wdir_entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( wdir_entry ), editable );
 
 		wdir_button = GTK_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "CommandWorkingDirectoryButton" ));
 		gtk_widget_set_sensitive( GTK_WIDGET( wdir_button ), profile != NULL );
-		nact_gtk_utils_set_editable( G_OBJECT( wdir_button ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( wdir_button ), editable );
 
 		st_on_selection_change = FALSE;
 	}
@@ -465,7 +464,7 @@ legend_dialog_hide( NactICommandTab *instance )
 
 	if( is_visible ){
 		g_return_if_fail( GTK_IS_WINDOW( legend_dialog ));
-		base_iprefs_save_window_position( BASE_WINDOW( instance ), NA_IPREFS_COMMAND_LEGEND_WSP );
+		base_gtk_utils_save_window_position( BASE_WINDOW( instance ), NA_IPREFS_COMMAND_LEGEND_WSP );
 		gtk_widget_hide( GTK_WIDGET( legend_dialog ));
 
 		/* set the legend button state consistent for when the dialog is
@@ -490,7 +489,7 @@ legend_dialog_show( NactICommandTab *instance )
 	toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( instance ));
 	gtk_window_set_transient_for( GTK_WINDOW( legend_dialog ), toplevel );
 
-	base_iprefs_restore_window_position( BASE_WINDOW( instance ), NA_IPREFS_COMMAND_LEGEND_WSP );
+	base_gtk_utils_restore_window_position( BASE_WINDOW( instance ), NA_IPREFS_COMMAND_LEGEND_WSP );
 	gtk_widget_show( GTK_WIDGET( legend_dialog ));
 
 	g_object_set_data( G_OBJECT( legend_dialog ), ICOMMAND_TAB_LEGEND_VISIBLE, GINT_TO_POINTER( TRUE ));
@@ -557,7 +556,7 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 static void
 on_path_browse( GtkButton *button, NactICommandTab *instance )
 {
-	nact_gtk_utils_select_file(
+	base_gtk_utils_select_file(
 			BASE_WINDOW( instance ),
 			_( "Choosing a command" ), NA_IPREFS_COMMAND_CHOOSER_WSP,
 			get_path_entry( instance ), NA_IPREFS_COMMAND_CHOOSER_URI );
@@ -595,7 +594,7 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 
 	if( profile ){
 		wdir_entry = base_window_get_widget( BASE_WINDOW( instance ), "WorkingDirectoryEntry" );
-		nact_gtk_utils_select_dir(
+		base_gtk_utils_select_dir(
 				BASE_WINDOW( instance ), _( "Choosing a working directory" ),
 				NA_IPREFS_WORKING_DIR_WSP, wdir_entry, NA_IPREFS_WORKING_DIR_URI );
 	}

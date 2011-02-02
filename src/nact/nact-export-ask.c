@@ -42,7 +42,7 @@
 #include "nact-application.h"
 #include "nact-export-format.h"
 #include "nact-export-ask.h"
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 
 /* private class data
  */
@@ -331,7 +331,7 @@ on_base_initialize_base_window( NactExportAsk *editor )
 		container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
 		nact_export_format_select( container, !editor->private->format_mandatory, editor->private->format );
 
-		nact_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
+		base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 				"AskKeepChoiceButton", G_CALLBACK( keep_choice_on_toggled ),
 				editor->private->keep_last_choice,
 				!editor->private->keep_last_choice_mandatory, !editor->private->preferences_locked );
@@ -355,7 +355,7 @@ keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor )
 		editor->private->keep_last_choice = gtk_toggle_button_get_active( button );
 
 	} else {
-		nact_gtk_utils_toggle_reset_initial_state( button );
+		base_gtk_utils_toggle_reset_initial_state( button );
 	}
 }
 

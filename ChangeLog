@@ -1,5 +1,34 @@
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	Rename nact-gtk-utils to base-gtk-utils and merge base-iprefs into it
+
+	* src/nact/base-iprefs.c:
+	* src/nact/base-iprefs.c: Removed files.
+
+	* src/nact/Makefile.am:
+	* src/nact/base-gtk-utils.c:
+	* src/nact/base-gtk-utils.h:
+	* src/nact/base-window.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-export-format.c:
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-ienvironment-tab.c:
+	* src/nact/nact-iexecution-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-iproperties-tab.c:
+	* src/nact/nact-ischemes-tab.c:
+	* src/nact/nact-main-statusbar.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-match-list.c:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-providers-list.c:
+	* src/nact/nact-schemes-list.c:
+	* src/nact/nact-tree-model.c: Updated accordingly.
+
 	Convert the get_wp_id() BaseIPrefsInterface method to "base-window-wsp-name"
 	BaseWindow property
 

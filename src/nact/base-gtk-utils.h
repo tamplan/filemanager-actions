@@ -28,60 +28,65 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_GTK_UTILS_H__
-#define __NACT_GTK_UTILS_H__
+#ifndef __BASE_GTK_UTILS_H__
+#define __BASE_GTK_UTILS_H__
 
 /**
- * SECTION: nact-gtk-utils
- * @title: NactGtkUtils
+ * SECTION: base-gtk-utils
+ * @title: BaseGtkUtils
  * @short_description: Gtk helper functions
- * @include: nact-gtk-utils.h
+ * @include: base-gtk-utils.h
  */
 
 #include "base-window.h"
 
 G_BEGIN_DECLS
 
+/* window size and position
+ */
+void       base_gtk_utils_restore_window_position( const BaseWindow *window, const gchar *wsp_name );
+void       base_gtk_utils_save_window_position   ( const BaseWindow *window, const gchar *wsp_name );
+
 #define NACT_PROP_TOGGLE_EDITABLE			"nact-prop-toggle-editable"
 
-void       nact_gtk_utils_set_editable( GObject *widget, gboolean editable );
+void       base_gtk_utils_set_editable( GObject *widget, gboolean editable );
 
-void       nact_gtk_utils_radio_set_initial_state  ( GtkRadioButton *button,
+void       base_gtk_utils_radio_set_initial_state  ( GtkRadioButton *button,
 				GCallback toggled_handler, void *user_data,
 				gboolean editable, gboolean sensitive );
 
-void       nact_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback toggled_handler );
+void       base_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback toggled_handler );
 
-void       nact_gtk_utils_toggle_set_initial_state  ( BaseWindow *window,
+void       base_gtk_utils_toggle_set_initial_state ( BaseWindow *window,
 				const gchar *button_name, GCallback toggled_handler,
 				gboolean active, gboolean editable, gboolean sensitive );
 
-void       nact_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button );
+void       base_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button );
 
 /* image utilities
  */
-GdkPixbuf *nact_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize size );
-void       nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size );
+GdkPixbuf *base_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize size );
+void       base_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size );
 
 /* standard dialog boxes
  */
-void       nact_gtk_utils_select_file( BaseWindow *window,
-				const gchar *title, const gchar *dialog_name,
+void       base_gtk_utils_select_file( BaseWindow *window,
+				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name );
 
-void       nact_gtk_utils_select_file_with_preview( BaseWindow *window,
-				const gchar *title, const gchar *dialog_name,
+void       base_gtk_utils_select_file_with_preview( BaseWindow *window,
+				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name,
 				GCallback update_preview_cb );
 
-void       nact_gtk_utils_select_dir( BaseWindow *window,
-				const gchar *title, const gchar *dialog_name,
+void       base_gtk_utils_select_dir( BaseWindow *window,
+				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name );
 
 /* GtkWidget
  */
-GtkWidget *nact_gtk_utils_get_widget_by_name( GtkWindow *toplevel, const gchar *name );
+GtkWidget *base_gtk_utils_get_widget_by_name( GtkWindow *toplevel, const gchar *name );
 
 G_END_DECLS
 
-#endif /* __NACT_GTK_UTILS_H__ */
+#endif /* __BASE_GTK_UTILS_H__ */

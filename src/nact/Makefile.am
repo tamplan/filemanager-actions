@@ -56,8 +56,8 @@ nautilus_actions_config_tool_SOURCES = \
 	base-builder.h										\
 	base-dialog.c										\
 	base-dialog.h										\
-	base-iprefs.c										\
-	base-iprefs.h										\
+	base-gtk-utils.c									\
+	base-gtk-utils.h									\
 	base-keysyms.h										\
 	base-window.c										\
 	base-window.h										\
@@ -88,8 +88,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-export-ask.h									\
 	nact-export-format.c								\
 	nact-export-format.h								\
-	nact-gtk-utils.c									\
-	nact-gtk-utils.h									\
 	nact-iactions-list.c								\
 	nact-iactions-list.h								\
 	nact-iactions-list-bis.c							\

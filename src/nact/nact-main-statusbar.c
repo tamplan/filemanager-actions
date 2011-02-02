@@ -34,7 +34,7 @@
 
 #include <core/na-io-provider.h>
 
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-main-statusbar.h"
 
 typedef struct {
@@ -229,7 +229,7 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean readonly, gint 
 	}
 
 	if( set_pixbuf ){
-		nact_gtk_utils_render( NULL, image, GTK_ICON_SIZE_MENU );
+		base_gtk_utils_render( NULL, image, GTK_ICON_SIZE_MENU );
 	}
 }
 

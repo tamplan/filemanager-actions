@@ -36,7 +36,7 @@
 
 #include <api/na-object-api.h>
 
-#include "nact-gtk-utils.h"
+#include "base-gtk-utils.h"
 #include "nact-main-tab.h"
 #include "nact-iexecution-tab.h"
 
@@ -262,22 +262,22 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 		gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( normal_toggle ), profile == NULL );
 
 		if( !strcmp( mode, "Normal" )){
-			nact_gtk_utils_radio_set_initial_state(
+			base_gtk_utils_radio_set_initial_state(
 					GTK_RADIO_BUTTON( normal_toggle ),
 					G_CALLBACK( on_normal_mode_toggled ), instance, editable, ( profile != NULL ));
 
 		} else if( !strcmp( mode, "Terminal" )){
-			nact_gtk_utils_radio_set_initial_state(
+			base_gtk_utils_radio_set_initial_state(
 					GTK_RADIO_BUTTON( terminal_toggle ),
 					G_CALLBACK( on_terminal_mode_toggled ), instance, editable, ( profile != NULL ));
 
 		} else if( !strcmp( mode, "Embedded" )){
-			nact_gtk_utils_radio_set_initial_state(
+			base_gtk_utils_radio_set_initial_state(
 					GTK_RADIO_BUTTON( embedded_toggle ),
 					G_CALLBACK( on_embedded_mode_toggled ), instance, editable, ( profile != NULL ));
 
 		} else if( !strcmp( mode, "DisplayOutput" )){
-			nact_gtk_utils_radio_set_initial_state(
+			base_gtk_utils_radio_set_initial_state(
 					GTK_RADIO_BUTTON( display_toggle ),
 					G_CALLBACK( on_display_mode_toggled ), instance, editable, ( profile != NULL ));
 
@@ -289,19 +289,19 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 
 		notify = profile ? na_object_get_startup_notify( profile ) : FALSE;
 		notify_check = base_window_get_widget( BASE_WINDOW( instance ), "StartupNotifyButton" );
-		nact_gtk_utils_set_editable( G_OBJECT( notify_check ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( notify_check ), editable );
 		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( notify_check ), notify );
 
 		class = profile ? na_object_get_startup_class( profile ) : g_strdup( "" );
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), class );
-		nact_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 		g_free( class );
 
 		user = profile ? na_object_get_execute_as( profile ) : g_strdup( "" );
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "ExecuteAsEntry" );
 		gtk_entry_set_text( GTK_ENTRY( entry ), user );
-		nact_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 		g_free( user );
 
 		st_on_selection_change = FALSE;
@@ -364,7 +364,7 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 			}
 
 		} else {
-			nact_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), cb );
+			base_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), cb );
 		}
 	}
 }
