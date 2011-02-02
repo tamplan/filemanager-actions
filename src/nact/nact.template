@@ -1,3 +1,0 @@
-#!/bin/sh
-
-%%%DATA_DIR%%%/nautilus-actions-config.py $*
