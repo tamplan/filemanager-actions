@@ -59,12 +59,6 @@ struct _NAPivotPrivate {
 	 */
 	GList      *modules;
 
-	/* list of instances to be notified of configuration updates
-	 * these are called 'consumers' of NAPivot
-	 * to be deprecated
-	 */
-	GList      *consumers;
-
 	/* configuration tree of actions and menus
 	 */
 	GList      *tree;
@@ -105,9 +99,6 @@ static void          instance_dispose( GObject *object );
 static void          instance_finalize( GObject *object );
 
 static NAObjectItem *get_item_from_tree( const NAPivot *pivot, GList *tree, const gchar *id );
-
-/* NAIPivotConsumer management */
-static void          free_consumers( GList *list );
 
 /* NAIIOProvider management */
 static void          on_items_changed_timeout( NAPivot *pivot );
@@ -214,7 +205,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->dispose_has_run = FALSE;
 	self->private->loadable_set = PIVOT_LOAD_NONE;
 	self->private->modules = NULL;
-	self->private->consumers = NULL;
 	self->private->tree = NULL;
 
 	/* initialize timeout parameters for 'item-changed' handler
@@ -317,10 +307,6 @@ instance_dispose( GObject *object )
 		na_module_release_modules( self->private->modules );
 		self->private->modules = NULL;
 
-		/* release list of NAIPivotConsumers */
-		free_consumers( self->private->consumers );
-		self->private->consumers = NULL;
-
 		/* release item tree */
 		g_debug( "%s: tree=%p, count=%u", thisfn, ( void * ) self->private->tree, g_list_length( self->private->tree ));
 		na_object_unref_items( self->private->tree );
@@ -410,7 +396,6 @@ na_pivot_dump( const NAPivot *pivot )
 
 		g_debug( "%s: loadable_set=%d", thisfn, pivot->private->loadable_set );
 		g_debug( "%s:      modules=%p (%d elts)", thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));
-		g_debug( "%s:    consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
 		g_debug( "%s:         tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
 		/*g_debug( "%s:     monitors=%p (%d elts)", thisfn, ( void * ) pivot->private->monitors, g_list_length( pivot->private->monitors ));*/
 
@@ -648,48 +633,6 @@ on_items_changed_timeout( NAPivot *pivot )
 
 	g_debug( "%s: emitting %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
 	g_signal_emit_by_name(( gpointer ) pivot, PIVOT_SIGNAL_ITEMS_CHANGED );
-
-#if 0
-	GList *ic;
-
-	/* this has to be deprecated.. or not ?? */
-	g_debug( "%s: triggering NAIPivotConsumer interfaces", thisfn );
-	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-		na_ipivot_consumer_notify_of_items_changed( NA_IPIVOT_CONSUMER( ic->data ));
-	}
-#endif
-}
-
-/*
- * na_pivot_register_consumer:
- * @pivot: this #NAPivot instance.
- * @consumer: a #NAIPivotConsumer which wishes be notified of any
- * modification of an action or a menu in any of the underlying I/O
- * storage subsystems.
- *
- * Registers a new consumer to be notified of configuration modification.
- */
-void
-na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer )
-{
-	static const gchar *thisfn = "na_pivot_register_consumer";
-
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-	g_return_if_fail( NA_IS_IPIVOT_CONSUMER( consumer ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		g_debug( "%s: pivot=%p, consumer=%p", thisfn, ( void * ) pivot, ( void * ) consumer );
-
-		pivot->private->consumers = g_list_prepend( pivot->private->consumers, ( gpointer ) consumer );
-	}
-}
-
-static void
-free_consumers( GList *consumers )
-{
-	/*g_list_foreach( consumers, ( GFunc ) g_object_unref, NULL );*/
-	g_list_free( consumers );
 }
 
 /*
@@ -735,152 +678,3 @@ na_pivot_set_loadable( NAPivot *pivot, guint loadable )
 		pivot->private->loadable_set = loadable;
 	}
 }
-
-#if 0
-static void
-on_io_provider_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
-{
-	GList *ic;
-
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-			na_ipivot_consumer_notify_of_io_provider_prefs_changed( NA_IPIVOT_CONSUMER( ic->data ));
-		}
-	}
-}
-
-static void
-on_mandatory_prefs_changed( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
-{
-	GList *ic;
-
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-			na_ipivot_consumer_notify_of_mandatory_prefs_changed( NA_IPIVOT_CONSUMER( ic->data ));
-		}
-	}
-}
-
-static void
-on_preferences_change( GConfClient *client, guint cnxn_id, GConfEntry *entry, NAPivot *pivot )
-{
-	/*static const gchar *thisfn = "na_pivot_on_preferences_change";*/
-	const gchar *key;
-	gchar *key_entry;
-
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	key = gconf_entry_get_key( entry );
-	key_entry = g_path_get_basename( key );
-	/*g_debug( "%s: key=%s", thisfn, key_entry );*/
-
-	if( !g_ascii_strcasecmp( key_entry, NA_IPREFS_ITEMS_CREATE_ROOT_MENU )){
-		create_root_menu_changed( pivot );
-	}
-
-	if( !g_ascii_strcasecmp( key_entry, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM )){
-		display_about_changed( pivot );
-	}
-
-	if( !g_ascii_strcasecmp( key_entry, NA_IPREFS_ITEMS_LIST_ORDER_MODE )){
-		display_order_changed( pivot );
-	}
-
-	if( !g_ascii_strcasecmp( key_entry, NA_IPREFS_MAIN_SAVE_AUTO ) || !g_ascii_strcasecmp( key_entry, NA_IPREFS_MAIN_SAVE_PERIOD )){
-		autosave_changed( pivot );
-	}
-
-	g_free( key_entry );
-}
-
-static void
-display_order_changed( NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_display_order_changed";
-	GList *ic;
-	gint order_mode;
-
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-
-		order_mode = na_iprefs_get_order_mode( NA_IPREFS( pivot ));
-
-		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-			na_ipivot_consumer_notify_of_display_order_changed( NA_IPIVOT_CONSUMER( ic->data ), order_mode );
-		}
-	}
-}
-
-static void
-create_root_menu_changed( NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_create_root_menu_changed";
-	GList *ic;
-	gboolean should_create;
-
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-
-		should_create = na_iprefs_read_bool( NA_IPREFS( pivot ), NA_IPREFS_ITEMS_CREATE_ROOT_MENU, FALSE );
-		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-			na_ipivot_consumer_notify_of_create_root_menu_changed( NA_IPIVOT_CONSUMER( ic->data ), should_create );
-		}
-	}
-}
-
-static void
-display_about_changed( NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_display_about_changed";
-	GList *ic;
-	gboolean display_about;
-
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-
-		display_about = na_iprefs_read_bool( NA_IPREFS( pivot ), NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, TRUE );
-
-		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-			na_ipivot_consumer_notify_of_display_about_changed( NA_IPIVOT_CONSUMER( ic->data ), display_about );
-		}
-	}
-}
-
-static void
-autosave_changed( NAPivot *pivot )
-{
-	static const gchar *thisfn = "na_pivot_autosave_changed";
-	GList *ic;
-	gboolean autosave_on;
-	guint autosave_period;
-
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
-
-		autosave_on = na_iprefs_read_bool( NA_IPREFS( pivot ), NA_IPREFS_MAIN_SAVE_AUTO, FALSE );
-		autosave_period = na_iprefs_read_uint( NA_IPREFS( pivot ), NA_IPREFS_MAIN_SAVE_PERIOD, 5 );
-
-		for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
-			na_ipivot_consumer_notify_of_autosave_changed( NA_IPIVOT_CONSUMER( ic->data ), autosave_on, autosave_period );
-		}
-	}
-}
-#endif

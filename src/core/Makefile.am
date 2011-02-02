@@ -83,8 +83,6 @@ libna_core_la_SOURCES = \
 	na-importer.h										\
 	na-importer-ask.c									\
 	na-importer-ask.h									\
-	na-ipivot-consumer.c								\
-	na-ipivot-consumer.h								\
 	na-iprefs.c											\
 	na-iprefs.h											\
 	na-module.c											\

@@ -38,7 +38,6 @@
 #include <api/na-core-utils.h>
 
 #include <core/na-iabout.h>
-#include <core/na-ipivot-consumer.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"
@@ -351,10 +350,6 @@ appli_main_window_new( const BaseApplication *application, int *code )
 	na_pivot_set_loadable( NA_PIVOT( appli->private->updater ), PIVOT_LOAD_ALL );
 
 	main_window = nact_main_window_new( appli );
-
-	na_pivot_register_consumer(
-			NA_PIVOT( appli->private->updater ),
-			NA_IPIVOT_CONSUMER( main_window ));
 
 	return( G_OBJECT( main_window ));
 }

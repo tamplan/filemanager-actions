@@ -262,10 +262,6 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	/* get ride of notification messages of I/O providers
-	 */
-	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( window ), FALSE, 0 );
-
 	/* always write the level zero list of items as the first save phase
 	 * and reset the corresponding modification flag
 	 */
@@ -344,10 +340,6 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	if( !new_pivot ){
 		g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
 	}
-
-	/* restore NAPivot notifications
-	 */
-	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( window ), TRUE, 2000 );
 }
 
 /*

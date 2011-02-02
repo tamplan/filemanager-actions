@@ -76,7 +76,6 @@
 #include <api/na-iio-provider.h>
 #include <api/na-object-api.h>
 
-#include "na-ipivot-consumer.h"
 #include "na-settings.h"
 
 G_BEGIN_DECLS
@@ -139,7 +138,7 @@ NAPivot      *na_pivot_new ( void );
 void          na_pivot_dump( const NAPivot *pivot );
 
 /* Management of the plugins which claim to implement a Nautilus-Actions interface.
- * As of 2.30, these are NAIIOProvider, NAIImporter, NAIExporter
+ * As of 2.30, these may be NAIIOProvider, NAIImporter or NAIExporter
  */
 GList        *na_pivot_get_providers ( const NAPivot *pivot, GType type );
 void          na_pivot_free_providers( GList *providers );
@@ -153,15 +152,8 @@ void          na_pivot_set_new_items( NAPivot *pivot, GList *tree );
 
 void          na_pivot_on_item_changed_handler( NAIIOProvider *provider, NAPivot *pivot  );
 
-/* NAIPivotConsumer interface management
- * to be deprecated
+/* Monitoring and preferences management
  */
-void          na_pivot_register_consumer( NAPivot *pivot, const NAIPivotConsumer *consumer );
-
-/*
- * Monitoring and preferences management
- */
-
 NASettings   *na_pivot_get_settings     ( const NAPivot *pivot );
 
 /* NAPivot properties and configuration

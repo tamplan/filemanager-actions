@@ -38,7 +38,6 @@
 #include <api/na-object-api.h>
 
 #include <core/na-iabout.h>
-#include <core/na-ipivot-consumer.h>
 #include <core/na-iprefs.h>
 #include <core/na-pivot.h>
 
@@ -159,7 +158,6 @@ static void     ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface
 static void     iexecution_tab_iface_init( NactIExecutionTabInterface *iface );
 static void     iproperties_tab_iface_init( NactIPropertiesTabInterface *iface );
 static void     iabout_iface_init( NAIAboutInterface *iface );
-static void     ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -193,9 +191,6 @@ static gchar   *iactions_list_get_treeview_name( NactIActionsList *instance );
 static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display );
 
 static void     on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactMainWindow *window );
-static void     ipivot_consumer_on_io_provider_prefs_changed( NAIPivotConsumer *instance );
-static void     ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance );
-static void     update_ui_after_provider_change( NactMainWindow *window );
 
 static gchar     *iabout_get_application_name( NAIAbout *instance );
 static GtkWindow *iabout_get_toplevel( NAIAbout *instance );
@@ -303,12 +298,6 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo ipivot_consumer_iface_info = {
-		( GInterfaceInitFunc ) ipivot_consumer_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( NACT_WINDOW_TYPE, "NactMainWindow", &info, 0 );
@@ -336,8 +325,6 @@ register_type( void )
 	g_type_add_interface_static( type, NACT_IPROPERTIES_TAB_TYPE, &iproperties_tab_iface_info );
 
 	g_type_add_interface_static( type, NA_IABOUT_TYPE, &iabout_iface_info );
-
-	g_type_add_interface_static( type, NA_IPIVOT_CONSUMER_TYPE, &ipivot_consumer_iface_info );
 
 	return( type );
 }
@@ -603,22 +590,6 @@ iabout_iface_init( NAIAboutInterface *iface )
 }
 
 static void
-ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
-{
-	static const gchar *thisfn = "nact_main_window_ipivot_consumer_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->on_autosave_changed = NULL;
-	iface->on_create_root_menu_changed = NULL;
-	iface->on_display_about_changed = NULL;
-	iface->on_display_order_changed = NULL;
-	iface->on_io_provider_prefs_changed = ipivot_consumer_on_io_provider_prefs_changed;
-	iface->on_items_changed = NULL;
-	iface->on_mandatory_prefs_changed = ipivot_consumer_on_mandatory_prefs_changed;
-}
-
-static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_main_window_instance_init";
@@ -634,8 +605,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactMainWindowPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-
-	na_ipivot_consumer_allow_notify( NA_IPIVOT_CONSUMER( instance ), TRUE, 0 );
 }
 
 static void
@@ -1598,29 +1567,6 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 			g_signal_emit_by_name( window,
 					MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
 		}
-	}
-}
-
-static void
-ipivot_consumer_on_io_provider_prefs_changed( NAIPivotConsumer *instance )
-{
-	update_ui_after_provider_change( NACT_MAIN_WINDOW( instance ));
-}
-
-static void
-ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance )
-{
-	update_ui_after_provider_change( NACT_MAIN_WINDOW( instance ));
-}
-
-static void
-update_ui_after_provider_change( NactMainWindow *window )
-{
-	nact_sort_buttons_level_zero_writability_change( window );
-
-	if( window->private->selected_item ){
-		setup_writability_status( window );
-		g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_SELECTION_CHANGED, GINT_TO_POINTER( 1 ));
 	}
 }
 

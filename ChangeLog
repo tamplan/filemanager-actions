@@ -1,5 +1,18 @@
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	Deprecate NAIPivotConsumer interface
+
+	* src/core/na-ipivot-consumer.c:
+	* src/core/na-ipivot-consumer.h: Removed files.
+
+	* src/core/Makefile.am:
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h:
+	* src/nact/nact-application.c:
+	* src/nact/nact-main-menubar-file.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-menubar.c: Updated accordingly.
+
 	* src/core/na-pivot.c:
 	* src/core/na-pivot.h
 	(na_pivot_set_automatic_reload): Remove unused function.

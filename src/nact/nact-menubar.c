@@ -45,7 +45,6 @@
 
 #include <core/na-factory-object.h>
 #include <core/na-iprefs.h>
-#include <core/na-ipivot-consumer.h>
 #include <core/na-io-provider.h>
 
 #include "nact-iactions-list.h"
