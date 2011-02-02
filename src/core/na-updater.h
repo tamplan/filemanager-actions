@@ -74,6 +74,7 @@ NAUpdater *na_updater_new( void );
 
 /* writability status
  */
+gboolean   na_updater_are_preferences_locked( const NAUpdater *updater );
 gboolean   na_updater_is_item_writable      ( const NAUpdater *updater, const NAObjectItem *item, guint *reason );
 gboolean   na_updater_is_level_zero_writable( const NAUpdater *updater );
 

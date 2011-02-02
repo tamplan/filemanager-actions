@@ -50,6 +50,7 @@ struct _NAUpdaterClassPrivate {
  */
 struct _NAUpdaterPrivate {
 	gboolean dispose_has_run;
+	gboolean are_preferences_locked;
 	gboolean is_level_zero_writable;
 };
 
@@ -61,6 +62,7 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
+static gboolean are_preferences_locked( const NAUpdater *updater );
 static gboolean is_level_zero_writable( const NAUpdater *updater );
 static void     set_writability_status( NAObjectItem *item, const NAUpdater *updater );
 
@@ -194,9 +196,34 @@ na_updater_new( void )
 
 	updater = g_object_new( NA_UPDATER_TYPE, NULL );
 
+	updater->private->are_preferences_locked = are_preferences_locked( updater );
 	updater->private->is_level_zero_writable = is_level_zero_writable( updater );
 
 	return( updater );
+}
+
+/*
+ * na_updater_are_preferences_locked:
+ * @updater: the #NAUpdater application object.
+ *
+ * Returns: %TRUE if preferences have been globally locked down by an
+ * admin, %FALSE else.
+ */
+gboolean
+na_updater_are_preferences_locked( const NAUpdater *updater )
+{
+	gboolean are_locked;
+
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), TRUE );
+
+	are_locked = TRUE;
+
+	if( !updater->private->dispose_has_run ){
+
+		are_locked = updater->private->are_preferences_locked;
+	}
+
+	return( are_locked );
 }
 
 /*
@@ -282,6 +309,9 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
  * @updater: the #NAUpdater application object.
  *
  * As of 3.1.0, level-zero order is written as a user preference.
+ * This function so considers if the level_zero is a mandatory
+ * preference, and to be writable, if preferences are globally
+ * locked.
  *
  * This function only considers the case of the level zero itself.
  * It does not take into account whether the i/o provider (if any)
@@ -301,10 +331,23 @@ na_updater_is_level_zero_writable( const NAUpdater *updater )
 
 	if( !updater->private->dispose_has_run ){
 
-		is_writable = updater->private->is_level_zero_writable;
+		is_writable =
+				updater->private->is_level_zero_writable && !updater->private->are_preferences_locked;
 	}
 
 	return( is_writable );
+}
+
+static gboolean
+are_preferences_locked( const NAUpdater *updater )
+{
+	gboolean are_locked;
+	NASettings *settings;
+
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, NULL );
+
+	return( are_locked );
 }
 
 static gboolean
