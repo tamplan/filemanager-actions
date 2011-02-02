@@ -509,11 +509,20 @@ void
 nact_iactions_list_all_widgets_showed( NactIActionsList *instance )
 {
 	static const gchar *thisfn = "nact_iactions_list_all_widgets_showed";
+	gboolean profiles_are_displayed;
+	IActionsListInstanceData *ialid;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
 	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
+
+		ialid = nact_iactions_list_priv_get_instance_data( instance );
+		profiles_are_displayed = are_profiles_displayed( instance, ialid );
+
+		if( profiles_are_displayed ){
+			nact_iactions_list_priv_send_list_count_updated_signal( instance, ialid );
+		}
 
 		nact_iactions_list_bis_select_first_row( instance );
 	}
@@ -669,6 +678,7 @@ nact_iactions_list_fill( NactIActionsList *instance, GList *items )
 
 		ialid = nact_iactions_list_priv_get_instance_data( instance );
 		profiles_are_displayed = are_profiles_displayed( instance, ialid );
+		g_debug( "%s: profiles_are_displayed:%s", thisfn, profiles_are_displayed ? "True":"False" );
 
 		ialid->selection_changed_allowed = FALSE;
 		nact_tree_model_fill( model, items, profiles_are_displayed );

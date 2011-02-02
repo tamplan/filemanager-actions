@@ -69,34 +69,20 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
 	gboolean paste_into_enabled;
 	gboolean duplicate_enabled;
 	gboolean delete_enabled;
-	GList *is;
 	NAObject *parent_item;
 	NAObject *selected_action;
 	NAObject *selected_item;
-	gboolean are_parents_writable;
 	gboolean is_clipboard_empty;
 
 	is_clipboard_empty = ( bar->private->clipboard_menus + bar->private->clipboard_actions + bar->private->clipboard_profiles == 0 );
 
 	/* cut requires a non-empty selection
+	 * and that the selection is writable
 	 * and that all parents are writable (as implies a delete operation)
 	 */
 	cut_enabled = bar->private->treeview_has_focus || bar->private->popup_handler;
 	cut_enabled &= bar->private->count_selected > 0;
-	are_parents_writable = TRUE;
-	for( is = bar->private->selected_items ; is ; is = is->next ){
-		parent_item = ( NAObject * ) na_object_get_parent( is->data );
-		if( parent_item ){
-			if( !na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( parent_item ), NULL )){
-				are_parents_writable = FALSE;
-				break;
-			}
-		} else if( !bar->private->is_level_zero_writable ){
-			are_parents_writable = FALSE;
-			break;
-		}
-	}
-	cut_enabled &= are_parents_writable;
+	cut_enabled &= bar->private->are_parents_writable;
 	nact_menubar_enable_item( bar, "CutItem", cut_enabled );
 
 	/* copy only requires a non-empty selection */
@@ -119,25 +105,11 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
 	paste_enabled &= bar->private->count_selected <= 1;
 	if( bar->private->clipboard_profiles ){
 		paste_enabled &= bar->private->count_selected == 1;
-		if( paste_enabled ){
-			selected_action = NA_OBJECT(
-					NA_IS_OBJECT_PROFILE( bar->private->selected_items->data )
-							? na_object_get_parent( bar->private->selected_items->data )
-							: bar->private->selected_items->data );
-			paste_enabled &= NA_IS_OBJECT_ACTION( selected_action );
-			paste_enabled &= na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( selected_action ), NULL );
-		}
+		paste_enabled &= bar->private->is_action_writable;
 	} else {
 		paste_enabled &= bar->private->has_writable_providers;
 		if( bar->private->count_selected ){
-			selected_item = NA_OBJECT( bar->private->selected_items->data );
-			paste_enabled &= NA_IS_OBJECT_ITEM( selected_item );
-			if( paste_enabled ){
-				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
-				paste_enabled &= parent_item
-						? na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( parent_item ), NULL )
-						: bar->private->is_level_zero_writable;
-			}
+			paste_enabled &= bar->private->is_parent_writable;
 		} else {
 			paste_enabled &= bar->private->is_level_zero_writable;
 		}
@@ -162,7 +134,7 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
 		if( paste_into_enabled ){
 			selected_action = NA_OBJECT( bar->private->selected_items->data );
 			paste_into_enabled &= NA_IS_OBJECT_ACTION( selected_action );
-			paste_into_enabled &= na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( selected_action ), NULL );
+			paste_into_enabled &= na_object_is_finally_writable( selected_action, NULL );
 		}
 	} else {
 		paste_into_enabled &= bar->private->has_writable_providers;
@@ -172,7 +144,7 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
 			if( paste_into_enabled ){
 				parent_item = ( NAObject * ) na_object_get_parent( selected_item );
 				paste_into_enabled &= parent_item
-						? na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( parent_item ), NULL )
+						? na_object_is_finally_writable( parent_item, NULL )
 						: bar->private->is_level_zero_writable;
 			}
 		} else {

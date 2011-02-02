@@ -880,9 +880,6 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 		base_window_signal_connect( BASE_WINDOW( window ),
 				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_iactions_list_selection_changed ));
 
-		tree = na_pivot_get_items( NA_PIVOT( updater ));
-		g_debug( "%s: pivot_tree=%p", thisfn, ( void * ) tree );
-
 		nact_iaction_tab_runtime_init_toplevel( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_runtime_init_toplevel( NACT_ICOMMAND_TAB( window ));
 		nact_ibasenames_tab_runtime_init_toplevel( NACT_IBASENAMES_TAB( window ));
@@ -898,7 +895,12 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 
 		/* fill the IActionsList at last so that all signals are connected
 		 */
+		tree = na_updater_load_items( updater );
+		g_debug( "%s: pivot_tree=%p", thisfn, ( void * ) tree );
 		nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
+
+		/* other initializations
+		 */
 		nact_sort_buttons_runtime_init( window );
 
 		/* this to update the title when an item is modified
@@ -1570,6 +1572,7 @@ reload( NactMainWindow *window )
 	static const gchar *thisfn = "nact_main_window_reload";
 	NactApplication *application;
 	NAUpdater *updater;
+	GList *tree;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -1584,8 +1587,8 @@ reload( NactMainWindow *window )
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		updater = nact_application_get_updater( application );
-		na_pivot_load_items( NA_PIVOT( updater ));
-		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), na_pivot_get_items( NA_PIVOT( updater )));
+		tree = na_updater_load_items( updater );
+		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), tree );
 		nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
 	}
 }

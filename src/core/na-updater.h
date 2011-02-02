@@ -74,6 +74,7 @@ NAUpdater *na_updater_new( void );
 
 /* writability status
  */
+gboolean   na_updater_is_item_writable      ( const NAUpdater *updater, const NAObjectItem *item, guint *reason );
 gboolean   na_updater_is_level_zero_writable( const NAUpdater *updater );
 
 /* update the tree in memory
@@ -84,9 +85,9 @@ void       na_updater_remove_item( NAUpdater *updater, NAObject *item );
 
 /* read from / write to the physical storage subsystem
  */
-gboolean   na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, guint *reason );
-guint      na_updater_write_item      ( const NAUpdater *updater, NAObjectItem *item, GSList **messages );
-guint      na_updater_delete_item     ( const NAUpdater *updater, const NAObjectItem *item, GSList **messages );
+GList     *na_updater_load_items ( NAUpdater *updater );
+guint      na_updater_write_item ( const NAUpdater *updater, NAObjectItem *item, GSList **messages );
+guint      na_updater_delete_item( const NAUpdater *updater, const NAObjectItem *item, GSList **messages );
 
 G_END_DECLS
 

@@ -86,6 +86,7 @@ nact_iactions_list_priv_get_instance_data( NactIActionsList *instance )
 void
 nact_iactions_list_priv_send_list_count_updated_signal( NactIActionsList *instance, IActionsListInstanceData *ialid )
 {
+	g_debug( "nact_iactions_list_priv_send_list_count_updated_signal: emitting signal %s", IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED );
 	g_signal_emit_by_name( instance,
 							IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED,
 							ialid->menus, ialid->actions, ialid->profiles );

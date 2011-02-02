@@ -538,7 +538,7 @@ object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data )
 void
 na_object_object_dump( const NAObject *object )
 {
-	GList *childs, *ic;
+	GList *children, *ic;
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
@@ -548,8 +548,8 @@ na_object_object_dump( const NAObject *object )
 
 		if( NA_IS_OBJECT_ITEM( object )){
 
-			childs = na_object_get_items( object );
-			for( ic = childs ; ic ; ic = ic->next ){
+			children = na_object_get_items( object );
+			for( ic = children ; ic ; ic = ic->next ){
 
 				na_object_dump( ic->data );
 			}

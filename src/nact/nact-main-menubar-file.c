@@ -75,25 +75,7 @@ nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
 {
 	static const gchar *thisfn = "nact_main_menubar_file_on_update_sensitivities";
 	gboolean new_item_enabled;
-	gboolean new_profile_enabled;
-	NAObject *first_parent;
-	NAObject *selected_action;
-	NAObject *parent_item;
-	gboolean is_first_parent_writable;
 	gboolean has_modified_items;
-	GList *is;
-	NactApplication *application;
-	NAUpdater *updater;
-
-	application = NACT_APPLICATION( base_window_get_application( bar->private->window ));
-	updater = nact_application_get_updater( application );
-
-	first_parent = bar->private->selected_items && g_list_length( bar->private->selected_items )
-			? ( NAObject * ) na_object_get_parent( bar->private->selected_items->data )
-			: NULL;
-	is_first_parent_writable = first_parent
-			? na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( first_parent ), NULL )
-			: bar->private->is_level_zero_writable;
 
 	has_modified_items = nact_main_window_has_modified_items( NACT_MAIN_WINDOW( bar->private->window ));
 	g_debug( "%s: has_modified_items=%s", thisfn, has_modified_items ? "True":"False" );
@@ -103,7 +85,7 @@ nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
 	 * parent of the first selected row must be writable
 	 * we must have at least one writable provider
 	 */
-	new_item_enabled = is_first_parent_writable && bar->private->has_writable_providers;
+	new_item_enabled = bar->private->is_parent_writable && bar->private->has_writable_providers;
 	nact_menubar_enable_item( bar, "NewMenuItem", new_item_enabled );
 	nact_menubar_enable_item( bar, "NewActionItem", new_item_enabled );
 
@@ -111,36 +93,8 @@ nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
 	 * i.e. contains profile(s) of the same action, or only contains one action
 	 * action must be writable
 	 */
-	new_profile_enabled = TRUE;
-	selected_action = NULL;
-	for( is = bar->private->selected_items ; is ; is = is->next ){
-
-		if( NA_IS_OBJECT_MENU( is->data )){
-			new_profile_enabled = FALSE;
-			break;
-
-		} else if( NA_IS_OBJECT_ACTION( is->data )){
-			if( !selected_action ){
-				selected_action = NA_OBJECT( is->data );
-			} else if( selected_action != is->data ){
-				new_profile_enabled = FALSE;
-				break;
-			}
-
-		} else if( NA_IS_OBJECT_PROFILE( is->data )){
-			parent_item = NA_OBJECT( na_object_get_parent( is->data ));
-			if( !selected_action ){
-				selected_action = parent_item;
-			} else if( selected_action != parent_item ){
-				new_profile_enabled = FALSE;
-				break;
-			}
-		}
-	}
 	nact_menubar_enable_item( bar, "NewProfileItem",
-			new_profile_enabled &&
-			selected_action != NULL &&
-			na_updater_is_item_writable( bar->private->updater, NA_OBJECT_ITEM( selected_action ), NULL ));
+			bar->private->enable_new_profile && bar->private->is_action_writable );
 
 	/* save enabled if at least one item has been modified
 	 * or level-zero has been resorted and is writable

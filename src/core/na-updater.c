@@ -62,6 +62,7 @@ static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
 static gboolean is_level_zero_writable( const NAUpdater *updater );
+static void     set_writability_status( NAObjectItem *item, const NAUpdater *updater );
 
 GType
 na_updater_get_type( void )
@@ -196,6 +197,84 @@ na_updater_new( void )
 	updater->private->is_level_zero_writable = is_level_zero_writable( updater );
 
 	return( updater );
+}
+
+/*
+ * na_updater_is_item_writable:
+ * @updater: this #NAUpdater object.
+ * @item: the #NAObjectItem to be written.
+ * @reason: the reason for why @item may not be writable.
+ *
+ * Returns: %TRUE: if @item is actually writable, given the current
+ * status of its provider, %FALSE else.
+ *
+ * For an item be actually writable:
+ * - the item must not be itself in a read-only store, which has been
+ *   checked when first reading it
+ * - the provider must be willing (resp. able) to write
+ * - the provider must not has been locked by the admin, nor by the user
+ *
+ * Note that this function does not consider if the item is to be written
+ * at the level zero of the tree, which may be a mandatory preference
+ * (i.e. locked by an admin), and so make this item unwritable.
+ */
+gboolean
+na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, guint *reason )
+{
+	gboolean writable;
+	NAIOProvider *provider;
+
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+
+	writable = FALSE;
+	if( reason ){
+		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
+	}
+
+	if( !updater->private->dispose_has_run ){
+
+		writable = TRUE;
+		if( reason ){
+			*reason = NA_IIO_PROVIDER_STATUS_WRITABLE;
+		}
+
+		/* Writability status of the item has been determined at load time
+		 * (cf. e.g. io-desktop/nadp-reader.c:read_done_item_is_writable()).
+		 * Though I'm plenty conscious that this status is subject to many
+		 * changes during the life of the item (e.g. by modifying permissions
+		 * on the underlying store), it is just simpler to not reevaluate
+		 * this status each time we need it
+		 */
+		if( writable ){
+			if( na_object_is_readonly( item )){
+				writable = FALSE;
+				if( reason ){
+					*reason = NA_IIO_PROVIDER_STATUS_ITEM_READONLY;
+				}
+			}
+		}
+
+		if( writable ){
+			provider = na_object_get_provider( item );
+			if( provider ){
+				writable = na_io_provider_is_finally_writable( provider, reason );
+
+			/* the get_writable_provider() api already takes above checks
+			 */
+			} else {
+				provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
+				if( !provider ){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
+					}
+				}
+			}
+		}
+	}
+
+	return( writable );
 }
 
 /*
@@ -338,81 +417,48 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 }
 
 /*
- * na_updater_is_item_writable:
- * @updater: this #NAUpdater object.
- * @item: the #NAObjectItem to be written.
- * @reason: the reason for why @item may not be writable.
+ * na_updater_load_items:
+ * @updater: this #NAUpdater instance.
  *
- * Returns: %TRUE: if @item is actually writable, given the current
- * status of its provider, %FALSE else.
+ * Loads the items, updating simultaneously their writability status.
  *
- * For an item be actually writable:
- * - the item must not be itself in a read-only store, which has been
- *   checked when first reading it
- * - the provider must be willing (resp. able) to write
- * - the provider must not has been locked by the admin, nor by the user
+ * Returns: a pointer (not a ref) on the loaded tree.
  *
- * Note that this function does not consider if the item is to be written
- * at the level zero of the tree, which may be a mandatory preference
- * (i.e. locked by an admin), and so make this item unwritable.
+ * Since: 3.1.0
  */
-gboolean
-na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, guint *reason )
+GList *
+na_updater_load_items( NAUpdater *updater )
 {
-	gboolean writable;
-	NAIOProvider *provider;
+	GList *tree;
 
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), NULL );
 
-	writable = FALSE;
-	if( reason ){
-		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
-	}
+	tree = NULL;
 
 	if( !updater->private->dispose_has_run ){
 
-		writable = TRUE;
-		if( reason ){
-			*reason = NA_IIO_PROVIDER_STATUS_WRITABLE;
-		}
-
-		/* Writability status of the item has been determined at load time
-		 * (cf. e.g. io-desktop/nadp-reader.c:read_done_item_is_writable()).
-		 * Though I'm plenty conscious that this status is subject to many
-		 * changes during the life of the item (e.g. by modifying permissions
-		 * on the underlying store), it is just simpler to not reevaluate
-		 * this status each time we need it
-		 */
-		if( writable ){
-			if( na_object_is_readonly( item )){
-				writable = FALSE;
-				if( reason ){
-					*reason = NA_IIO_PROVIDER_STATUS_ITEM_READONLY;
-				}
-			}
-		}
-
-		if( writable ){
-			provider = na_object_get_provider( item );
-			if( provider ){
-				writable = na_io_provider_is_finally_writable( provider, reason );
-
-			/* the get_writable_provider() api already takes above checks
-			 */
-			} else {
-				provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
-				if( !provider ){
-					writable = FALSE;
-					if( reason ){
-						*reason = NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND;
-					}
-				}
-			}
-		}
+		na_pivot_load_items( NA_PIVOT( updater ));
+		tree = na_pivot_get_items( NA_PIVOT( updater ));
+		g_list_foreach( tree, ( GFunc ) set_writability_status, ( gpointer ) updater );
 	}
 
-	return( writable );
+	return( tree );
+}
+
+static void
+set_writability_status( NAObjectItem *item, const NAUpdater *updater )
+{
+	gboolean writable;
+	guint reason;
+	GList *children;
+
+	writable = na_updater_is_item_writable( updater, item, &reason );
+	na_object_set_writability_status( item, writable, reason );
+
+	if( NA_IS_OBJECT_MENU( item )){
+		children = na_object_get_items( item );
+		g_list_foreach( children, ( GFunc ) set_writability_status, ( gpointer ) updater );
+	}
 }
 
 /*

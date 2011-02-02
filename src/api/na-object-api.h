@@ -135,6 +135,9 @@ G_BEGIN_DECLS
 #define na_object_unref_items( tree )                   na_object_item_unref_items( tree )
 #define na_object_unref_selected_items( tree )          na_object_item_unref_items_rec( tree )
 
+#define na_object_is_finally_writable( obj, r )			na_object_item_is_finally_writable( NA_OBJECT_ITEM( obj ), ( r ))
+#define na_object_set_writability_status( obj, w, r )	na_object_item_set_writability_status( NA_OBJECT_ITEM( obj ), ( w ), ( r ))
+
 /* NAObjectAction
  */
 #define na_object_get_version( obj )                    (( gchar * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_VERSION ))

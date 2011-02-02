@@ -110,6 +110,9 @@ void        na_object_item_unref_items_rec( GList *items );
 void        na_object_item_deals_with_version    ( NAObjectItem *item );
 void        na_object_item_rebuild_children_slist( NAObjectItem *item );
 
+gboolean    na_object_item_is_finally_writable   ( const NAObjectItem *item, guint *reason );
+void        na_object_item_set_writability_status( NAObjectItem *item, gboolean writable, guint reason );
+
 G_END_DECLS
 
 #endif /* __NAUTILUS_ACTIONS_API_NA_OBJECT_ITEM_H__ */

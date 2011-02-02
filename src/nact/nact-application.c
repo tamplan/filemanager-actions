@@ -349,7 +349,6 @@ appli_main_window_new( const BaseApplication *application, int *code )
 
 	appli->private->updater = na_updater_new();
 	na_pivot_set_loadable( NA_PIVOT( appli->private->updater ), PIVOT_LOAD_ALL );
-	na_pivot_load_items( NA_PIVOT( appli->private->updater ));
 
 	main_window = nact_main_window_new( appli );
 

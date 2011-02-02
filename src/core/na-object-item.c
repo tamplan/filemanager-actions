@@ -57,9 +57,16 @@ struct _NAObjectItemPrivate {
 	/* dynamically set when reading the item from the I/O storage
 	 * subsystem; may be reset from FALSE to TRUE if a write operation
 	 * has returned an error.
-	 * defaults to FALSE for snew, not yet written to a provider, item
+	 * defaults to FALSE for new, not yet written to a provider, item
 	 */
 	gboolean   readonly;
+
+	/* set at load time
+	 * takes into account the above 'readonly' status as well as the i/o
+	 * provider writability status - does not consider the level-zero case
+	 */
+	gboolean   writable;
+	guint      reason;
 };
 
 static NAObjectIdClass *st_parent_class = NULL;
@@ -71,6 +78,7 @@ static void   instance_dispose( GObject *object );
 static void   instance_finalize( GObject *object );
 
 static void   object_copy( NAObject*target, const NAObject *source, gboolean recursive );
+static void   object_dump( const NAObject *object );
 
 static gchar *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
@@ -130,7 +138,7 @@ class_init( NAObjectItemClass *klass )
 	object_class->finalize = instance_finalize;
 
 	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->dump = NULL;
+	naobject_class->dump = object_dump;
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = NULL;
@@ -202,15 +210,18 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 {
 	static const gchar *thisfn = "na_object_item_object_copy";
 	void *provider;
+	NAObjectItem *dest, *src;
 
 	g_return_if_fail( NA_IS_OBJECT_ITEM( target ));
 	g_return_if_fail( NA_IS_OBJECT_ITEM( source ));
 
-	if( !NA_OBJECT_ITEM( target )->private->dispose_has_run &&
-		!NA_OBJECT_ITEM( source )->private->dispose_has_run ){
+	dest = NA_OBJECT_ITEM( target );
+	src = NA_OBJECT_ITEM( source );
+
+	if( !dest->private->dispose_has_run && !src->private->dispose_has_run ){
 
 		if( recursive ){
-			copy_children( NA_OBJECT_ITEM( target ), NA_OBJECT_ITEM( source ));
+			copy_children( dest, src );
 		}
 
 		provider = na_object_get_provider( source );
@@ -226,6 +237,29 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 				na_io_provider_duplicate_data( NA_IO_PROVIDER( provider ), NA_OBJECT_ITEM( target ), NA_OBJECT_ITEM( source ), NULL );
 			}
 		}
+
+		dest->private->readonly = src->private->readonly;
+		dest->private->writable = src->private->writable;
+		dest->private->reason = src->private->reason;
+	}
+}
+
+static void
+object_dump( const NAObject *object )
+{
+	static const gchar *thisfn = "na_object_item_object_dump";
+	NAObjectItem *item;
+
+	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+
+	item = NA_OBJECT_ITEM( object );
+
+	if( !item->private->dispose_has_run ){
+
+		g_debug( "%s: provider_data=%p", thisfn, ( void * ) item->private->provider_data );
+		g_debug( "%s:      readonly=%s", thisfn, item->private->readonly ? "True":"False" );
+		g_debug( "%s:      writable=%s", thisfn, item->private->writable ? "True":"False" );
+		g_debug( "%s:        reason=%u", thisfn, item->private->reason );
 	}
 }
 
@@ -812,4 +846,58 @@ copy_children( NAObjectItem *target, const NAObjectItem *source )
 
 	tgt_children = g_list_reverse( tgt_children );
 	na_object_set_items( target, tgt_children );
+}
+
+/**
+ * na_object_item_is_finally_writable:
+ * @item: this #NAObjectItem -derived object.
+ * @reason: if not %NULL, a pointer to a guint which will hold the reason code.
+ *
+ * Returns: the writability status of the @item.
+ *
+ * Since: 3.1.0
+ */
+gboolean
+na_object_item_is_finally_writable( const NAObjectItem *item, guint *reason )
+{
+	gboolean writable;
+
+	if( reason ){
+		*reason = NA_IIO_PROVIDER_STATUS_UNDETERMINED;
+	}
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
+
+	writable = FALSE;
+
+	if( !item->private->dispose_has_run ){
+
+		writable = item->private->writable;
+		if( reason ){
+			*reason = item->private->reason;
+		}
+	}
+
+	return( writable );
+}
+
+/**
+ * na_object_item_set_writability_status:
+ * @item: this #NAObjectItem -derived object.
+ * @writable: whether the item is finally writable.
+ * @reason: the reason code.
+ *
+ * Set the writability status of the @item.
+ *
+ * Since: 3.1.0
+ */
+void
+na_object_item_set_writability_status( NAObjectItem *item, gboolean writable, guint reason )
+{
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( !item->private->dispose_has_run ){
+
+		item->private->writable = writable;
+		item->private->reason = reason;
+	}
 }

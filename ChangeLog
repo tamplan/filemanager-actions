@@ -1,5 +1,32 @@
 2011-02-01 Pierre Wieser <pwieser@trychlos.org>
 
+	Review menu items sensitivity updates
+
+	* src/api/na-object-api.h
+	(na_object_is_finally_writable, na_object_set_writability_status): New macros.
+
+	* src/api/na-object-item.h:
+	* src/core/na-object-item.c
+	(na_object_item_is_finally_writable, na_object_item_set_writability_status):
+	New functions.
+
+	* src/core/na-updater.c:
+	* src/core/na-updater.h (na_updater_load_items): New function.
+
+	* src/nact/nact-application.c (appli_main_window_new):
+	* /src/nact/nact-main-window.c (on_base_initialize_base_window):
+	No more load items when instanciating the main window, but when
+	initializing it.
+
+	* src/nact/nact-iactions-list.c (nact_iactions_list_all_widgets_showed):
+	Send the IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED message to update the menubar.
+
+	* src/nact/nact-main-menubar-edit.c (nact_main_menubar_edit_on_update_sensitivities):
+	* src/nact/nact-main-menubar-file.c (nact_main_menubar_file_on_update_sensitivities):
+	* src/nact/nact-menubar-priv.h:
+	* src/nact/nact-menubar.c (on_iactions_list_selection_changed):
+	Rely on indicators pre-computed on selection changes.
+
 	* src/nact/nact-window.c:
 	* src/nact/nact-window.h (nact_window_has_writable_providers):
 	Removed function.

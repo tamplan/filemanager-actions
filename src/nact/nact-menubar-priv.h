@@ -62,7 +62,13 @@ struct _NactMenubarPrivate {
 	gboolean        is_level_zero_writable;
 	gboolean        has_writable_providers;
 
-	gboolean        is_parent_writable;
+	/* set when the selection changes
+	 */
+	guint           count_selected;
+	gboolean        is_parent_writable;		/* new menu/new action/paste menu or action */
+	gboolean        enable_new_profile;		/* new profile/paste a profile */
+	gboolean        is_action_writable;
+	gboolean        are_parents_writable;	/* cut/delete */
 
 	/* *** */
 	gint            selected_menus;
@@ -80,7 +86,6 @@ struct _NactMenubarPrivate {
 	gboolean        level_zero_order_changed;
 	gulong          popup_handler;
 
-	guint           count_selected;
 	GList          *selected_items;
 	/* *** */
 };

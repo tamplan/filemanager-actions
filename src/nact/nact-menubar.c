@@ -689,29 +689,93 @@ on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions
 
 /*
  * when the selection changes in the tree view, see what is selected
- * - check if the parent of the first selected item is writable
- *   (File:New menu/New action)
  */
 static void
 on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 {
+	static const gchar *thisfn = "nact_menubar_on_iactions_list_selection_changed";
 	NAObject *first;
+	NAObject *selected_action;
+	GList *is;
 
 	BAR_WINDOW_VOID( window );
 
-	g_debug( "nact_main_menubar_on_iactions_list_selection_changed: selected=%p (count=%d)",
-			( void * ) selected, g_list_length( selected ));
+	g_debug( "%s: selected=%p (count=%d)", thisfn, ( void * ) selected, g_list_length( selected ));
+
+	bar->private->count_selected = g_list_length( selected );
 
 	if( selected ){
+		/* check if the parent of the first selected item is writable
+		 * (File: New menu/New action)
+		 * (Edit: Paste menu or action)
+		 */
 		first = ( NAObject *) selected->data;
 		if( first ){
 			if( NA_IS_OBJECT_PROFILE( first )){
 				first = NA_OBJECT( na_object_get_parent( first ));
 			}
-			first = NA_OBJECT( na_object_get_parent( first ));
-#if 0
-			bar->private->is_parent_writable = first ? na_object_is_writable( first ) : is_level_zero_writable();
-#endif
+			first = ( NAObject * ) na_object_get_parent( first );
+			bar->private->is_parent_writable = first ? na_object_is_finally_writable( first, NULL ) : bar->private->is_level_zero_writable;
+		}
+		/* check is only an action is selected, or only profile(s) of a same action
+		 * (File: New profile)
+		 * (Edit: Paste a profile)
+		 */
+		bar->private->enable_new_profile = TRUE;
+		selected_action = NULL;
+		for( is = selected ; is ; is = is->next ){
+
+			if( NA_IS_OBJECT_MENU( is->data )){
+				bar->private->enable_new_profile = FALSE;
+				break;
+
+			} else if( NA_IS_OBJECT_ACTION( is->data )){
+				if( !selected_action ){
+					selected_action = NA_OBJECT( is->data );
+				} else {
+					bar->private->enable_new_profile = FALSE;
+					break;
+				}
+
+			} else if( NA_IS_OBJECT_PROFILE( is->data )){
+				first = NA_OBJECT( na_object_get_parent( is->data ));
+				if( !selected_action ){
+					selected_action = first;
+				} else if( selected_action != first ){
+					bar->private->enable_new_profile = FALSE;
+					break;
+				}
+			}
+		}
+		if( !selected_action ){
+			bar->private->enable_new_profile = FALSE;
+		} else {
+			bar->private->is_action_writable = na_object_is_finally_writable( selected_action, NULL );
+		}
+		/* check that selection is not empty and that each selected item is writable
+		 * and that all parents are writable
+		 * if some selection is at level zero, then it must be writable
+		 * (Edit: Cut/Delete)
+		 */
+		bar->private->are_parents_writable = TRUE;
+		for( is = selected ; is ; is = is->next ){
+			gchar *label = na_object_get_label( is->data );
+			gboolean writable = na_object_is_finally_writable( is->data, NULL );
+			g_debug( "%s: label=%s, writable=%s", thisfn, label, writable ? "True":"False" );
+			if( !na_object_is_finally_writable( is->data, NULL )){
+				bar->private->are_parents_writable = FALSE;
+				break;
+			}
+			first = ( NAObject * ) na_object_get_parent( is->data );
+			if( first ){
+				if( !na_object_is_finally_writable( first, NULL )){
+					bar->private->are_parents_writable = FALSE;
+					break;
+				}
+			} else if( !bar->private->is_level_zero_writable ){
+				bar->private->are_parents_writable = FALSE;
+				break;
+			}
 		}
 	}
 
