@@ -112,6 +112,7 @@ static const KeyDef st_def_keys[] = {
 	{ NA_IPREFS_COMMAND_CHOOSER_WSP,              GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
 	{ NA_IPREFS_COMMAND_CHOOSER_URI,              GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///bin" },
 	{ NA_IPREFS_COMMAND_LEGEND_WSP,               GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_CONFIRM_LOGOUT_WSP,               GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
 	{ NA_IPREFS_WORKING_DIR_WSP,                  GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },
 	{ NA_IPREFS_WORKING_DIR_URI,                  GROUP_NACT,    NA_BOXED_TYPE_STRING,      "file:///" },
 	{ NA_IPREFS_SHOW_IF_RUNNING_WSP,              GROUP_NACT,    NA_BOXED_TYPE_UINT_LIST,   "" },

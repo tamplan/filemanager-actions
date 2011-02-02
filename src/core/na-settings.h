@@ -103,6 +103,7 @@ GType na_settings_get_type( void );
 #define NA_IPREFS_COMMAND_CHOOSER_WSP				"command-command-chooser-wsp"
 #define NA_IPREFS_COMMAND_CHOOSER_URI				"command-command-chooser-lfu"
 #define NA_IPREFS_COMMAND_LEGEND_WSP				"command-legend-wsp"
+#define NA_IPREFS_CONFIRM_LOGOUT_WSP				"confirm-logout-wsp"
 #define NA_IPREFS_WORKING_DIR_WSP					"command-working-dir-chooser-wsp"
 #define NA_IPREFS_WORKING_DIR_URI					"command-working-dir-chooser-lfu"
 #define NA_IPREFS_SHOW_IF_RUNNING_WSP				"environment-show-if-running-wsp"

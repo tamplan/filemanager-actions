@@ -60,6 +60,7 @@ struct _BaseWindowPrivate {
 	gchar           *xmlui_filename;
 	gboolean         has_own_builder;
 	gchar           *toplevel_name;
+	gchar           *wsp_name;
 
 	/* internals
 	 */
@@ -87,6 +88,7 @@ enum {
 	BASE_PROP_XMLUI_FILENAME_ID,
 	BASE_PROP_HAS_OWN_BUILDER_ID,
 	BASE_PROP_TOPLEVEL_NAME_ID,
+	BASE_PROP_WSP_NAME_ID,
 
 	BASE_PROP_N_PROPERTIES
 };
@@ -127,7 +129,6 @@ static void     do_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *tople
  */
 static void     on_initialize_base_window_class_handler( BaseWindow *window );
 static void     do_initialize_base_window( BaseWindow *window );
-static gchar   *get_wsp_id( const BaseWindow *window );
 static void     on_all_widgets_showed_class_handler( BaseWindow *window );
 static gboolean do_run( BaseWindow *window, GtkWindow *toplevel );
 static gboolean is_main_window( BaseWindow *window );
@@ -235,11 +236,18 @@ class_init( BaseWindowClass *klass )
 					"",
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
+	g_object_class_install_property( object_class, BASE_PROP_WSP_NAME_ID,
+			g_param_spec_string(
+					BASE_PROP_WSP_NAME,
+					_( "WSP name" ),
+					_( "The string which handles the window size and position in user preferences" ),
+					"",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
 	klass->private = g_new0( BaseWindowClassPrivate, 1 );
 
 	klass->initialize_gtk_toplevel = do_initialize_gtk_toplevel;
 	klass->initialize_base_window = do_initialize_base_window;
-	klass->get_wsp_id = NULL;
 	klass->all_widgets_showed = NULL;
 	klass->run = do_run;
 	klass->is_willing_to_quit = NULL;
@@ -313,8 +321,6 @@ iprefs_base_iface_init( BaseIPrefsInterface *iface )
 	static const gchar *thisfn = "base_window_iprefs_base_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_wsp_id = get_wsp_id;
 }
 
 static void
@@ -374,6 +380,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_string( value, self->private->toplevel_name );
 				break;
 
+			case BASE_PROP_WSP_NAME_ID:
+				g_value_set_string( value, self->private->wsp_name );
+				break;
+
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -414,6 +424,11 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 				self->private->toplevel_name = g_value_dup_string( value );
 				break;
 
+			case BASE_PROP_WSP_NAME_ID:
+				g_free( self->private->wsp_name );
+				self->private->wsp_name = g_value_dup_string( value );
+				break;
+
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -436,7 +451,7 @@ instance_dispose( GObject *window )
 
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-		base_iprefs_save_window_position( self );
+		base_iprefs_save_window_position( self, self->private->wsp_name );
 
 		/* signals must be deconnected before quitting main loop
 		 */
@@ -760,31 +775,6 @@ base_window_run( BaseWindow *window )
 			if( BASE_WINDOW_GET_CLASS( window )->run ){
 				code = BASE_WINDOW_GET_CLASS( window )->run( window, window->private->gtk_toplevel );
 			}
-
-#if 0
-			if( is_main_window( window )){
-				if( GTK_IS_DIALOG( window->private->gtk_toplevel )){
-					g_signal_connect( G_OBJECT( window->private->gtk_toplevel ), "response", G_CALLBACK( on_dialog_response ), window );
-				} else {
-					g_signal_connect( G_OBJECT( window->private->gtk_toplevel ), "delete-event", G_CALLBACK( on_delete_event ), window );
-				}
-
-				g_debug( "%s: application=%p, starting gtk_main", thisfn, ( void * ) window->private->application );
-				gtk_main();
-
-			} else if( GTK_IS_ASSISTANT( window->private->gtk_toplevel )){
-				g_debug( "%s: starting gtk_main", thisfn );
-				gtk_main();
-
-			} else {
-				g_return_val_if_fail( GTK_IS_DIALOG( window->private->gtk_toplevel ), code );
-				g_debug( "%s: starting gtk_dialog_run", thisfn );
-				do {
-					code = gtk_dialog_run( GTK_DIALOG( toplevel ));
-				}
-				while( !on_dialog_response( GTK_DIALOG( toplevel ), code, window ));
-			}
-#endif
 		}
 	}
 
@@ -823,25 +813,8 @@ do_initialize_base_window( BaseWindow *window )
 
 	if( !window->private->dispose_has_run ){
 
-		base_iprefs_position_window( window );
+		base_iprefs_restore_window_position( window, window->private->wsp_name );
 	}
-}
-
-static gchar *
-get_wsp_id( const BaseWindow *window )
-{
-	gchar *id = NULL;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
-
-	if( !window->private->dispose_has_run ){
-
-		if( BASE_WINDOW_GET_CLASS( window )->get_wsp_id ){
-			id = BASE_WINDOW_GET_CLASS( window )->get_wsp_id( window );
-		}
-	}
-
-	return( id );
 }
 
 static void
@@ -903,10 +876,15 @@ is_main_window( BaseWindow *window )
 }
 
 /*
- * handler of "delete-event" message connected on the main window Gtk toplevel
- * our own function does nothing, and let the signal be propagated
+ * Handler of "delete-event" message connected on the main window Gtk toplevel
+ *
+ * Our own function does nothing, and let the signal be propagated
  * it so ends up in the default class handler for this signal
- * which just destroys the toplevel
+ * which just destroys the toplevel.
+ *
+ * The main window should really connect to this signal and stop its
+ * propagation, at least if it does not want the user be able to abruptly
+ * terminate the application.
  */
 static gboolean
 on_delete_event( GtkWidget *toplevel, GdkEvent *event, BaseWindow *window )

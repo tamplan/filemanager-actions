@@ -57,6 +57,7 @@ struct _NactAddSchemeDialogPrivate {
 
 static const gchar  *st_xmlui_filename = PKGDATADIR "/nact-add-scheme.ui";
 static const gchar  *st_toplevel_name  = "AddSchemeDialog";
+static const gchar  *st_wsp_name       = NA_IPREFS_SCHEME_ADD_SCHEME_WSP;
 
 static GObjectClass *st_parent_class   = NULL;
 
@@ -68,7 +69,6 @@ static void     instance_finalize( GObject *dialog );
 
 static void     on_base_initialize_gtk_toplevel( NactAddSchemeDialog *editor, GtkDialog *toplevel );
 static void     on_base_initialize_base_window( NactAddSchemeDialog *editor );
-static gchar   *on_base_get_wsp_id( const BaseWindow *window );
 static void     on_base_all_widgets_showed( NactAddSchemeDialog *editor );
 static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddSchemeDialog *dialog );
 static void     on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *editor );
@@ -120,7 +120,6 @@ class_init( NactAddSchemeDialogClass *klass )
 {
 	static const gchar *thisfn = "nact_add_scheme_dialog_class_init";
 	GObjectClass *object_class;
-	BaseWindowClass *base_class;
 	BaseDialogClass *dialog_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -132,9 +131,6 @@ class_init( NactAddSchemeDialogClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactAddSchemeDialogClassPrivate, 1 );
-
-	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_wsp_id = on_base_get_wsp_id;
 
 	dialog_class = BASE_DIALOG_CLASS( klass );
 	dialog_class->ok = on_dialog_ok;
@@ -248,6 +244,7 @@ nact_add_scheme_dialog_run( BaseWindow *parent, GSList *schemes )
 			BASE_PROP_PARENT,         parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
+			BASE_PROP_WSP_NAME,       st_wsp_name,
 			NULL );
 
 	dialog->private->already_used = na_core_utils_slist_duplicate( schemes );
@@ -315,12 +312,6 @@ on_base_initialize_base_window( NactAddSchemeDialog *dialog )
 				"clicked",
 				G_CALLBACK( on_ok_clicked ));
 	}
-}
-
-static gchar *
-on_base_get_wsp_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_SCHEME_ADD_SCHEME_WSP ));
 }
 
 static void

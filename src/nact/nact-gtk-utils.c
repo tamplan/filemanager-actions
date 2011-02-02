@@ -393,7 +393,7 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
  * nact_gtk_utils_select_file:
  * @window: the #BaseWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
- * @dialog_name: the name of the dialog box in Preferences to read/write
+ * @wsp_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
  * @entry: the #GtkEntry which is associated with the selected file.
  * @entry_name: the name of the entry in Preferences to be read/written.
@@ -408,18 +408,18 @@ nact_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
  */
 void
 nact_gtk_utils_select_file( BaseWindow *window,
-				const gchar *title, const gchar *dialog_name,
+				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name )
 {
 	nact_gtk_utils_select_file_with_preview(
-			window, title, dialog_name, entry, entry_name, NULL );
+			window, title, wsp_name, entry, entry_name, NULL );
 }
 
 /**
  * nact_gtk_utils_select_file_with_preview:
  * @window: the #BaseWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
- * @dialog_name: the name of the dialog box in Preferences to read/write
+ * @wsp_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
  * @entry: the #GtkEntry which is associated with the selected file.
  * @entry_name: the name of the entry in Preferences to be read/written.
@@ -436,7 +436,7 @@ nact_gtk_utils_select_file( BaseWindow *window,
  */
 void
 nact_gtk_utils_select_file_with_preview( BaseWindow *window,
-				const gchar *title, const gchar *dialog_name,
+				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name,
 				GCallback update_preview_cb )
 {
@@ -469,7 +469,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 		g_signal_connect( dialog, "update-preview", update_preview_cb, preview );
 	}
 
-	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), dialog_name );
+	base_iprefs_restore_window_position( window, wsp_name );
 
 	text = gtk_entry_get_text( GTK_ENTRY( entry ));
 
@@ -494,7 +494,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
 	na_settings_set_string( settings, entry_name, uri );
 	g_free( uri );
 
-	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), dialog_name );
+	base_iprefs_save_window_position( window, wsp_name );
 
 	gtk_widget_destroy( dialog );
 }
@@ -503,7 +503,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
  * nact_gtk_utils_select_dir:
  * @window: the #BaseWindow which will be the parent of the dialog box.
  * @title: the title of the dialog box.
- * @dialog_name: the name of the dialog box in Preferences to read/write
+ * @wsp_name: the name of the dialog box in Preferences to read/write
  *  its size and position.
  * @entry: the #GtkEntry which is associated with the field.
  * @entry_name: the name of the entry in Preferences to be read/written.
@@ -520,7 +520,7 @@ nact_gtk_utils_select_file_with_preview( BaseWindow *window,
  */
 void
 nact_gtk_utils_select_dir( BaseWindow *window,
-				const gchar *title, const gchar *dialog_name,
+				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name )
 {
 	NactApplication *application;
@@ -545,7 +545,7 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 			NULL
 			);
 
-	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), dialog_name );
+	base_iprefs_restore_window_position( window, wsp_name );
 
 	text = gtk_entry_get_text( GTK_ENTRY( entry ));
 
@@ -570,7 +570,7 @@ nact_gtk_utils_select_dir( BaseWindow *window,
 	na_settings_set_string( settings, entry_name, uri );
 	g_free( uri );
 
-	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), dialog_name );
+	base_iprefs_save_window_position( window, wsp_name );
 
 	gtk_widget_destroy( dialog );
 }

@@ -96,6 +96,7 @@ typedef struct {
 
 static const gchar        *st_xmlui_filename = PKGDATADIR "/nact-assistant-export.ui";
 static const gchar        *st_toplevel_name  = "ExportAssistant";
+static const gchar        *st_wsp_name       = NA_IPREFS_EXPORT_ASSISTANT_WSP;
 
 static BaseAssistantClass *st_parent_class   = NULL;
 
@@ -108,7 +109,6 @@ static void            instance_finalize( GObject *application );
 
 static void            on_base_initialize_gtk_toplevel( NactAssistantExport *dialog, GtkAssistant *toplevel );
 static void            on_base_initialize_base_window( NactAssistantExport *dialog );
-static gchar          *on_base_get_wsp_id( const BaseWindow *window );
 static void            on_base_all_widgets_showed( NactAssistantExport *dialog );
 
 static void            assist_initial_load_intro( NactAssistantExport *window, GtkAssistant *assistant );
@@ -190,7 +190,6 @@ class_init( NactAssistantExportClass *klass )
 {
 	static const gchar *thisfn = "nact_assistant_export_class_init";
 	GObjectClass *object_class;
-	BaseWindowClass *base_class;
 	BaseAssistantClass *assist_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -202,9 +201,6 @@ class_init( NactAssistantExportClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactAssistantExportClassPrivate, 1 );
-
-	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_wsp_id = on_base_get_wsp_id;
 
 	assist_class = BASE_ASSISTANT_CLASS( klass );
 	assist_class->apply = assistant_apply;
@@ -322,6 +318,7 @@ nact_assistant_export_run( BaseWindow *main_window )
 			BASE_PROP_HAS_OWN_BUILDER, TRUE,
 			BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,   st_toplevel_name,
+			BASE_PROP_WSP_NAME,        st_wsp_name,
 			BASE_PROP_QUIT_ON_ESCAPE,  esc_quit,
 			BASE_PROP_WARN_ON_ESCAPE,  esc_confirm,
 			NULL );
@@ -382,12 +379,6 @@ on_base_initialize_base_window( NactAssistantExport *dialog )
 		assist_runtime_init_confirm( dialog, assistant );
 		assist_runtime_init_exportdone( dialog, assistant );
 	}
-}
-
-static gchar *
-on_base_get_wsp_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_EXPORT_ASSISTANT_WSP ));
 }
 
 static void

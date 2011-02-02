@@ -55,6 +55,7 @@ enum {
 };
 
 static const gchar     *st_toplevel_name  = "ConfirmLogoutDialog";
+static const gchar     *st_wsp_name       = NA_IPREFS_CONFIRM_LOGOUT_WSP;
 
 static BaseDialogClass *st_parent_class   = NULL;
 
@@ -203,6 +204,7 @@ nact_confirm_logout_run( NactMainWindow *parent )
 	dialog = g_object_new( NACT_CONFIRM_LOGOUT_TYPE,
 			BASE_PROP_PARENT,        parent,
 			BASE_PROP_TOPLEVEL_NAME, st_toplevel_name,
+			BASE_PROP_WSP_NAME,      st_wsp_name,
 			NULL );
 
 	base_window_run( BASE_WINDOW( dialog ));

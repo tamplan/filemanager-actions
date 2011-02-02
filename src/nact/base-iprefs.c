@@ -33,6 +33,8 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include <core/na-iprefs.h>
 #include <core/na-settings.h>
 
@@ -51,8 +53,6 @@ static gboolean st_finalized = FALSE;
 static GType       register_type( void );
 static void        interface_base_init( BaseIPrefsInterface *klass );
 static void        interface_base_finalize( BaseIPrefsInterface *klass );
-
-static gchar      *get_wsp_id( const BaseWindow *window );
 
 static NASettings *get_settings( const BaseWindow *window );
 static GList      *read_int_list( const BaseWindow *window, const gchar *key );
@@ -111,8 +111,6 @@ interface_base_init( BaseIPrefsInterface *klass )
 
 		klass->private = g_new0( BaseIPrefsInterfacePrivate, 1 );
 
-		klass->get_wsp_id = NULL;
-
 		st_initialized = TRUE;
 	}
 }
@@ -135,46 +133,17 @@ interface_base_finalize( BaseIPrefsInterface *klass )
 /**
  * base_iprefs_position_window:
  * @window: this #BaseWindow-derived window.
+ * @wsp_name: the string which handles the window size and position in user preferences.
  *
  * Position the specified window on the screen.
  *
  * A window position is stored as a list of integers "x,y,width,height".
  */
 void
-base_iprefs_position_window( const BaseWindow *window )
+base_iprefs_restore_window_position( const BaseWindow *window, const gchar *wsp_name )
 {
+	static const gchar *thisfn = "base_iprefs_restore_window_position";
 	GtkWindow *toplevel;
-	gchar *key;
-
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( BASE_IS_IPREFS( window ));
-
-	if( st_initialized && !st_finalized ){
-
-		key = get_wsp_id( window );
-		if( key ){
-			toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
-			base_iprefs_position_named_window( window, toplevel, key );
-			g_free( key );
-		}
-	}
-}
-
-/**
- * base_iprefs_position_named_window:
- * @window: this #BaseWindow-derived window.
- * @toplevel: the toplevel #GtkWindow whose size and position are to be
- * set.
- * @key: the string id of this toplevel.
- *
- * Positions the specified window on the screen, maximizing it by the
- * actual current screen size. Note that this is a rough approximation
- * as some of the screen is reserved by deskbars and so...
- */
-void
-base_iprefs_position_named_window( const BaseWindow *window, GtkWindow *toplevel, const gchar *key )
-{
-	static const gchar *thisfn = "base_iprefs_position_named_window";
 	GList *list;
 	gint x=0, y=0, width=0, height=0;
 	GdkDisplay *display;
@@ -182,32 +151,31 @@ base_iprefs_position_named_window( const BaseWindow *window, GtkWindow *toplevel
 	gint screen_width, screen_height;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( BASE_IS_IPREFS( window ));
+	g_return_if_fail( wsp_name && strlen( wsp_name ));
 
-	if( st_initialized && !st_finalized ){
+	toplevel = base_window_get_gtk_toplevel( window );
 
-		g_debug( "%s: window=%p (%s), toplevel=%p (%s), key=%s",
-				thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ),
-				( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ), key );
+	g_debug( "%s: window=%p (%s), toplevel=%p (%s), wsp_name=%s",
+			thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ),
+			( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ), wsp_name );
 
-		list = read_int_list( window, key );
+	list = read_int_list( window, wsp_name );
 
-		if( list ){
-			int_list_to_position( window, list, &x, &y, &width, &height );
-			g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
-			free_int_list( list );
-		}
+	if( list ){
+		int_list_to_position( window, list, &x, &y, &width, &height );
+		g_debug( "%s: wsp_name=%s, x=%d, y=%d, width=%d, height=%d", thisfn, wsp_name, x, y, width, height );
+		free_int_list( list );
+	}
 
-		if( width > 0 && height > 0 ){
-			display = gdk_display_get_default();
-			screen = gdk_display_get_screen( display, 0 );
-			screen_width = gdk_screen_get_width( screen );
-			screen_height = gdk_screen_get_height( screen );
+	if( width > 0 && height > 0 ){
+		display = gdk_display_get_default();
+		screen = gdk_display_get_screen( display, 0 );
+		screen_width = gdk_screen_get_width( screen );
+		screen_height = gdk_screen_get_height( screen );
 
-			if(( x+width < screen_width ) && ( y+height < screen_height )){
-				gtk_window_move( toplevel, x, y );
-				gtk_window_resize( toplevel, width, height );
-			}
+		if(( x+width < screen_width ) && ( y+height < screen_height )){
+			gtk_window_move( toplevel, x, y );
+			gtk_window_resize( toplevel, width, height );
 		}
 	}
 }
@@ -215,71 +183,31 @@ base_iprefs_position_named_window( const BaseWindow *window, GtkWindow *toplevel
 /**
  * base_iprefs_save_window_position:
  * @window: this #BaseWindow-derived window.
+ * @wsp_name: the string which handles the window size and position in user preferences.
  *
  * Save the size and position of the specified window.
  */
 void
-base_iprefs_save_window_position( const BaseWindow *window )
+base_iprefs_save_window_position( const BaseWindow *window, const gchar *wsp_name )
 {
+	static const gchar *thisfn = "base_iprefs_save_window_position";
 	GtkWindow *toplevel;
-	gchar *key;
-
-	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( BASE_IS_IPREFS( window ));
-
-	if( st_initialized && !st_finalized ){
-
-		key = get_wsp_id( window );
-		if( key ){
-			toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window ));
-			base_iprefs_save_named_window_position( window, toplevel, key );
-			g_free( key );
-		}
-	}
-}
-
-/**
- * base_iprefs_save_named_window_position:
- * @window: this #BaseWindow-derived window.
- * @toplevel: the #GtkWindow whose size and position are to be saved.
- * @key: the name of the window.
- *
- * Save size and position of the specified window.
- */
-void
-base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *toplevel, const gchar *key )
-{
-	static const gchar *thisfn = "base_iprefs_save_named_window_position";
 	gint x, y, width, height;
 	GList *list;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( BASE_IS_IPREFS( window ));
+	g_return_if_fail( wsp_name && strlen( wsp_name ));
 
-	if( st_initialized && !st_finalized ){
+	toplevel = base_window_get_gtk_toplevel( window );
+	g_return_if_fail( GTK_IS_WINDOW( toplevel ));
 
-		if( GTK_IS_WINDOW( toplevel )){
-			gtk_window_get_position( toplevel, &x, &y );
-			gtk_window_get_size( toplevel, &width, &height );
-			g_debug( "%s: key=%s, x=%d, y=%d, width=%d, height=%d", thisfn, key, x, y, width, height );
+	gtk_window_get_position( toplevel, &x, &y );
+	gtk_window_get_size( toplevel, &width, &height );
+	g_debug( "%s: wsp_name=%s, x=%d, y=%d, width=%d, height=%d", thisfn, wsp_name, x, y, width, height );
 
-			list = position_to_int_list( window, x, y, width, height );
-			write_int_list( window, key, list );
-			free_int_list( list );
-		}
-	}
-}
-
-static gchar *
-get_wsp_id( const BaseWindow *window )
-{
-	g_return_val_if_fail( BASE_IS_IPREFS( window ), NULL );
-
-	if( BASE_IPREFS_GET_INTERFACE( window )->get_wsp_id ){
-		return( BASE_IPREFS_GET_INTERFACE( window )->get_wsp_id( window ));
-	}
-
-	return( NULL );
+	list = position_to_int_list( window, x, y, width, height );
+	write_int_list( window, wsp_name, list );
+	free_int_list( list );
 }
 
 /* It seems inevitable that preferences are attached to the application.

@@ -91,6 +91,7 @@ enum {
 
 static const gchar     *st_xmlui_filename = PKGDATADIR "/nact-icon-chooser.ui";
 static const gchar     *st_toplevel_name  = "IconChooserDialog";
+static const gchar     *st_wsp_name       = NA_IPREFS_ICON_CHOOSER_WSP;
 
 static BaseDialogClass *st_parent_class   = NULL;
 
@@ -106,7 +107,6 @@ static void          do_initialize_icons_by_path( NactIconChooser *editor );
 static void          on_base_initialize_base_window( NactIconChooser *editor );
 static void          fillup_themed_icons( NactIconChooser *editor );
 static void          fillup_icons_by_path( NactIconChooser *editor );
-static gchar        *on_base_get_wsp_id( const BaseWindow *window );
 static void          on_base_all_widgets_showed( NactIconChooser *editor );
 
 static void          on_cancel_clicked( GtkButton *button, NactIconChooser *editor );
@@ -168,7 +168,6 @@ class_init( NactIconChooserClass *klass )
 {
 	static const gchar *thisfn = "nact_icon_chooser_class_init";
 	GObjectClass *object_class;
-	BaseWindowClass *base_class;
 	BaseDialogClass *dialog_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -180,9 +179,6 @@ class_init( NactIconChooserClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactIconChooserClassPrivate, 1 );
-
-	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_wsp_id = on_base_get_wsp_id;
 
 	dialog_class = BASE_DIALOG_CLASS( klass );
 	dialog_class->cancel = on_dialog_cancel;
@@ -300,6 +296,7 @@ nact_icon_chooser_choose_icon( BaseWindow *parent, const gchar *icon_name )
 			BASE_PROP_PARENT,         parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
+			BASE_PROP_WSP_NAME,       st_wsp_name,
 			NULL );
 
 	editor->private->main_window = parent;
@@ -517,20 +514,14 @@ fillup_icons_by_path( NactIconChooser *editor )
 		gtk_file_chooser_set_filename( file_chooser, editor->private->current_icon );
 	}
 
-	base_window_signal_connect(
-				BASE_WINDOW( editor ), G_OBJECT( file_chooser ), "selection-changed", G_CALLBACK( on_path_selection_changed ));
+	base_window_signal_connect( BASE_WINDOW( editor ),
+			G_OBJECT( file_chooser ), "selection-changed", G_CALLBACK( on_path_selection_changed ));
 
-	base_window_signal_connect(
-				BASE_WINDOW( editor ), G_OBJECT( file_chooser ), "update-preview", G_CALLBACK( on_path_update_preview ));
+	base_window_signal_connect( BASE_WINDOW( editor ),
+			G_OBJECT( file_chooser ), "update-preview", G_CALLBACK( on_path_update_preview ));
 
-	base_window_signal_connect_by_name(
-				BASE_WINDOW( editor ), "PathApplyButton", "clicked", G_CALLBACK( on_path_apply_button_clicked ));
-}
-
-static gchar *
-on_base_get_wsp_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_ICON_CHOOSER_WSP ));
+	base_window_signal_connect_by_name( BASE_WINDOW( editor ),
+			"PathApplyButton", "clicked", G_CALLBACK( on_path_apply_button_clicked ));
 }
 
 static void

@@ -92,6 +92,7 @@ struct _NactPreferencesEditorPrivate {
 
 static const gchar  *st_xmlui_filename = PKGDATADIR "/nact-preferences.ui";
 static const gchar  *st_toplevel_name  = "PreferencesDialog";
+static const gchar  *st_wsp_name       = NA_IPREFS_PREFERENCES_WSP;
 
 static GObjectClass *st_parent_class   = NULL;
 static guint         st_last_tab       = 0;
@@ -104,7 +105,6 @@ static void     instance_finalize( GObject *dialog );
 
 static void     on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *toplevel );
 static void     on_base_initialize_base_window( NactPreferencesEditor *editor );
-static gchar   *on_base_get_wsp_id( const BaseWindow *window );
 static void     on_base_all_widgets_showed( NactPreferencesEditor *editor );
 static void     order_mode_setup( NactPreferencesEditor *editor, NAPivot *pivot );
 static void     order_mode_on_alpha_asc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
@@ -180,7 +180,6 @@ class_init( NactPreferencesEditorClass *klass )
 {
 	static const gchar *thisfn = "nact_preferences_editor_class_init";
 	GObjectClass *object_class;
-	BaseWindowClass *base_class;
 	BaseDialogClass *dialog_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -192,9 +191,6 @@ class_init( NactPreferencesEditorClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactPreferencesEditorClassPrivate, 1 );
-
-	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_wsp_id = on_base_get_wsp_id;
 
 	dialog_class = BASE_DIALOG_CLASS( klass );
 	dialog_class->ok = on_dialog_ok;
@@ -297,6 +293,7 @@ nact_preferences_editor_run( BaseWindow *parent )
 					BASE_PROP_PARENT,         parent,
 					BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 					BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
+					BASE_PROP_WSP_NAME,       st_wsp_name,
 					NULL );
 
 	application = NACT_APPLICATION( base_window_get_application( parent ));
@@ -412,12 +409,6 @@ on_base_initialize_base_window( NactPreferencesEditor *editor )
 				G_OBJECT( ok_button ), "clicked", G_CALLBACK( on_ok_clicked ));
 		nact_gtk_utils_set_editable( G_OBJECT( ok_button ), !editor->private->preferences_locked );
 	}
-}
-
-static gchar *
-on_base_get_wsp_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_PREFERENCES_WSP ));
 }
 
 static void

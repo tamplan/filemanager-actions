@@ -141,6 +141,7 @@ enum {
 
 static const gchar     *st_xmlui_filename         = PKGDATADIR "/nautilus-actions-config-tool.ui";
 static const gchar     *st_toplevel_name          = "MainWindow";
+static const gchar     *st_wsp_name               = NA_IPREFS_MAIN_WINDOW_WSP;
 
 static NactWindowClass *st_parent_class           = NULL;
 static gint             st_signals[ LAST_SIGNAL ] = { 0 };
@@ -168,7 +169,6 @@ static void     instance_finalize( GObject *application );
 
 static void     on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data );
 static void     on_base_initialize_base_window( NactMainWindow *window, gpointer user_data );
-static gchar   *on_base_get_wsp_id( const BaseWindow *window );
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
 static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
@@ -390,7 +390,6 @@ class_init( NactMainWindowClass *klass )
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
 	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_wsp_id = on_base_get_wsp_id;
 	base_class->is_willing_to_quit = base_is_willing_to_quit;
 
 	/**
@@ -807,6 +806,7 @@ nact_main_window_new( const NactApplication *application )
 			BASE_PROP_APPLICATION,    application,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
+			BASE_PROP_WSP_NAME,       st_wsp_name,
 			NULL );
 
 	nact_menubar_new( BASE_WINDOW( window ));
@@ -915,12 +915,6 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 				G_OBJECT( base_window_get_gtk_toplevel( BASE_WINDOW( window ))),
 				"delete-event", G_CALLBACK( on_delete_event ));
 	}
-}
-
-static gchar *
-on_base_get_wsp_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_MAIN_WINDOW_WSP ));
 }
 
 static void

@@ -60,28 +60,15 @@ typedef struct {
 	/*< private >*/
 	GTypeInterface              parent;
 	BaseIPrefsInterfacePrivate *private;
-
-	/*< public >*/
-	/**
-	 * get_wsp_id:
-	 * @window: the #BaseWindow which implements this interface.
-	 *
-	 * Invoked when we need the string which holds the size and position
-	 * of the window in the user preferences.
-	 *
-	 * The implementation should returns a newly allocated ASCII string
-	 * which will be g_free() by #BaseIPrefs internals.
-	 */
-	gchar * ( *get_wsp_id )( const BaseWindow *window );
 }
 	BaseIPrefsInterface;
 
 GType base_iprefs_get_type( void );
 
-void  base_iprefs_position_window           ( const BaseWindow *window );
-void  base_iprefs_position_named_window     ( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );
-void  base_iprefs_save_window_position      ( const BaseWindow *window );
-void  base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );
+void  base_iprefs_restore_window_position   ( const BaseWindow *window, const gchar *wsp_name );
+/*void  base_iprefs_position_named_window     ( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );*/
+void  base_iprefs_save_window_position      ( const BaseWindow *window, const gchar *wsp_name );
+/*void  base_iprefs_save_named_window_position( const BaseWindow *window, GtkWindow *toplevel, const gchar *name );*/
 
 G_END_DECLS
 

@@ -1,5 +1,33 @@
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	Convert the get_wp_id() BaseIPrefsInterface method to "base-window-wsp-name"
+	BaseWindow property
+
+	* src/core/na-settings.c:
+	* src/core/na-settings.h: New NA_IPREFS_CONFIRM_LOGOUT_WSP user preference.
+
+	* src/nact/base-iprefs.c:
+	* src/nact/base-iprefs.h
+	(base_iprefs_position_named_window, base_iprefs_save_named_window_position):
+	Removed functions.
+	(get_wsp_id): Remove interface method.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h: New BASE_PROP_WSP_NAME BaseWindow property.
+
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-confirm-logout.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-gtk-utils.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-preferences-editor.c: Updated accordingly.
+
 	* src/core/na-updater.c:
 	* src/core/na-updater.h (na_updater_are_preferences_locked): New function.
 

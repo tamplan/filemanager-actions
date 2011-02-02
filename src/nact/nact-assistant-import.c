@@ -80,6 +80,7 @@ struct _NactAssistantImportPrivate {
 
 static const gchar        *st_xmlui_filename = PKGDATADIR "/nautilus-actions-config-tool.ui";
 static const gchar        *st_toplevel_name  = "ImportAssistant";
+static const gchar        *st_wsp_name       = NA_IPREFS_IMPORT_ASSISTANT_WSP;
 
 static BaseAssistantClass *st_parent_class   = NULL;
 
@@ -90,7 +91,6 @@ static void          instance_dispose( GObject *application );
 static void          instance_finalize( GObject *application );
 
 static void          on_base_initialize_base_window( NactAssistantImport *dialog );
-static gchar        *on_base_get_wsp_id( const BaseWindow *window );
 static void          runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant );
 static void          runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant );
 static void          on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
@@ -149,7 +149,6 @@ class_init( NactAssistantImportClass *klass )
 {
 	static const gchar *thisfn = "nact_assistant_import_class_init";
 	GObjectClass *object_class;
-	BaseWindowClass *base_class;
 	BaseAssistantClass *assist_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -161,9 +160,6 @@ class_init( NactAssistantImportClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactAssistantImportClassPrivate, 1 );
-
-	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_wsp_id = on_base_get_wsp_id;
 
 	assist_class = BASE_ASSISTANT_CLASS( klass );
 	assist_class->apply = assistant_apply;
@@ -266,6 +262,7 @@ nact_assistant_import_run( BaseWindow *main_window )
 			BASE_PROP_HAS_OWN_BUILDER, TRUE,
 			BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,   st_toplevel_name,
+			BASE_PROP_WSP_NAME,        st_wsp_name,
 			BASE_PROP_QUIT_ON_ESCAPE,  esc_quit,
 			BASE_PROP_WARN_ON_ESCAPE,  esc_confirm,
 			NULL );
@@ -290,12 +287,6 @@ on_base_initialize_base_window( NactAssistantImport *dialog )
 		runtime_init_file_selector( dialog, assistant );
 		runtime_init_duplicates( dialog, assistant );
 	}
-}
-
-static gchar *
-on_base_get_wsp_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_IMPORT_ASSISTANT_WSP ));
 }
 
 static void

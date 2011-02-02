@@ -98,7 +98,6 @@ typedef struct _BaseWindowClassPrivate  BaseWindowClassPrivate;
  * BaseWindowClass:
  * @initialize_gtk_toplevel: initialize the toplevel GtkWindow
  * @initialize_base_window:  initialize the BaseWindow
- * @get_wsp_id:              returns the string which handles size and position preferences
  * @all_widgets_showed:      all widgets have been showed
  * @run:                     run the dialog box loop
  * @is_willing_to_quit:      asks if the window is willing to quit
@@ -143,20 +142,6 @@ typedef struct {
 	 * so called last, reset last size and position of the window.
 	 */
 	void     ( *initialize_base_window ) ( BaseWindow *window );
-
-	/**
-	 * get_wsp_id:
-	 * @window: this #BaseWindow instance.
-	 *
-	 * Asks the derived class for the string which must be used to
-	 * store last size and position of the window in user preferences.
-	 *
-	 * The returned string will be g_free() by the BaseIPrefs internals.
-	 *
-	 * This delegates to #BaseWindow -derived classes the BaseIPrefs
-	 * interface method.
-	 */
-	gchar *  ( *get_wsp_id )             ( const BaseWindow *window );
 
 	/**
 	 * all_widgets_showed:
@@ -213,6 +198,7 @@ typedef struct {
 #define BASE_PROP_XMLUI_FILENAME				"base-window-xmlui-filename"
 #define BASE_PROP_HAS_OWN_BUILDER				"base-window-has-own-builder"
 #define BASE_PROP_TOPLEVEL_NAME					"base-window-toplevel-name"
+#define BASE_PROP_WSP_NAME						"base-window-wsp-name"
 
 /**
  * Signals defined by the BaseWindow class.

@@ -290,7 +290,7 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 	updater = nact_application_get_updater( application );
 	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
-	base_iprefs_position_named_window( window, GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
+	base_iprefs_restore_window_position( window, NA_IPREFS_FOLDER_CHOOSER_WSP );
 
 	uri = na_settings_get_string( settings, NA_IPREFS_FOLDER_CHOOSER_URI, NULL, NULL );
 	if( uri && g_utf8_strlen( uri, -1 )){
@@ -309,7 +309,7 @@ on_browse_folder_clicked( GtkButton *button, BaseWindow *window )
 		g_free( uri );
 	}
 
-	base_iprefs_save_named_window_position( window, GTK_WINDOW( dialog ), NA_IPREFS_FOLDER_CHOOSER_WSP );
+	base_iprefs_save_window_position( window, NA_IPREFS_FOLDER_CHOOSER_WSP );
 
 	gtk_widget_destroy( dialog );
 }

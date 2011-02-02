@@ -65,6 +65,7 @@ struct _NactExportAskPrivate {
 
 static const gchar     *st_xmlui_filename = PKGDATADIR "/nact-assistant-export.ui";
 static const gchar     *st_toplevel_name  = "ExportAskDialog";
+static const gchar     *st_wsp_name       = NA_IPREFS_EXPORT_ASK_USER_WSP;
 
 static BaseDialogClass *st_parent_class   = NULL;
 
@@ -76,7 +77,6 @@ static void     instance_finalize( GObject *dialog );
 
 static void     on_base_initialize_gtk_toplevel( NactExportAsk *editor, GtkDialog *toplevel );
 static void     on_base_initialize_base_window( NactExportAsk *editor );
-static gchar   *on_base_get_wsp_id( const BaseWindow *window );
 static void     keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor );
 static void     on_cancel_clicked( GtkButton *button, NactExportAsk *editor );
 static void     on_ok_clicked( GtkButton *button, NactExportAsk *editor );
@@ -124,7 +124,6 @@ class_init( NactExportAskClass *klass )
 {
 	static const gchar *thisfn = "nact_export_ask_class_init";
 	GObjectClass *object_class;
-	BaseWindowClass *base_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -135,9 +134,6 @@ class_init( NactExportAskClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactExportAskClassPrivate, 1 );
-
-	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->get_wsp_id = on_base_get_wsp_id;
 }
 
 static void
@@ -258,6 +254,7 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 				BASE_PROP_PARENT,         parent,
 				BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 				BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
+				BASE_PROP_WSP_NAME,       st_wsp_name,
 				NULL );
 
 		editor->private->format = format;
@@ -345,12 +342,6 @@ on_base_initialize_base_window( NactExportAsk *editor )
 		base_window_signal_connect_by_name( BASE_WINDOW( editor ),
 				"OKButton", "clicked", G_CALLBACK( on_ok_clicked ));
 	}
-}
-
-static gchar *
-on_base_get_wsp_id( const BaseWindow *window )
-{
-	return( g_strdup( NA_IPREFS_EXPORT_ASK_USER_WSP ));
 }
 
 static void
