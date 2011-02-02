@@ -1,5 +1,14 @@
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h
+	(na_pivot_set_automatic_reload): Remove unused function.
+
+	* src/test/test-reader.c: Updated accordingly.
+
+	* src/nact/nact-main-window.c (instance_constructed):
+	Connect to PIVOT_SIGNAL_ITEMS_CHANGED signal.
+
 	Rename nact-gtk-utils to base-gtk-utils and merge base-iprefs into it
 
 	* src/nact/base-iprefs.c:

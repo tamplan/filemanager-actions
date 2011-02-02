@@ -73,6 +73,8 @@ struct _NactMainWindowClassPrivate {
 struct _NactMainWindowPrivate {
 	gboolean         dispose_has_run;
 
+	NAUpdater       *updater;
+
 	/* TODO: this will have to be replaced with undo-manager */
 	GList           *deleted;
 
@@ -161,6 +163,7 @@ static void     ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void     instance_constructed( GObject *application );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
@@ -168,9 +171,15 @@ static void     on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWind
 static void     on_base_initialize_base_window( NactMainWindow *window, gpointer user_data );
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
-static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
+static void     on_pivot_items_changed( NAUpdater *updater, NactMainWindow *window );
+static gboolean confirm_for_giveup_from_pivot( const NactMainWindow *window );
+static gboolean confirm_for_giveup_from_menu( const NactMainWindow *window );
+static void     reload_items( NactMainWindow *window );
 
 static gboolean base_is_willing_to_quit( const BaseWindow *window );
+static gboolean on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
+
+static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
 
 static void     on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
 static void     on_iactions_list_selection_changed( NactIActionsList *instance, GSList *selected_items );
@@ -183,19 +192,14 @@ static gchar   *iactions_list_get_treeview_name( NactIActionsList *instance );
 
 static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display );
 
-static gboolean confirm_for_giveup_from_menu( NactMainWindow *window );
-static gboolean confirm_for_giveup_from_pivot( NactMainWindow *window );
-static void     ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data );
 static void     on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactMainWindow *window );
 static void     ipivot_consumer_on_io_provider_prefs_changed( NAIPivotConsumer *instance );
 static void     ipivot_consumer_on_mandatory_prefs_changed( NAIPivotConsumer *instance );
 static void     update_ui_after_provider_change( NactMainWindow *window );
-static void     reload( NactMainWindow *window );
 
 static gchar     *iabout_get_application_name( NAIAbout *instance );
 static GtkWindow *iabout_get_toplevel( NAIAbout *instance );
 
-static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
 
 GType
 nact_main_window_get_type( void )
@@ -351,10 +355,11 @@ class_init( NactMainWindowClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
-	object_class->dispose = instance_dispose;
-	object_class->finalize = instance_finalize;
 	object_class->set_property = instance_set_property;
 	object_class->get_property = instance_get_property;
+	object_class->constructed = instance_constructed;
+	object_class->dispose = instance_dispose;
+	object_class->finalize = instance_finalize;
 
 	spec = g_param_spec_pointer(
 			TAB_UPDATABLE_PROP_SELECTED_ITEM,
@@ -609,7 +614,7 @@ ipivot_consumer_iface_init( NAIPivotConsumerInterface *iface )
 	iface->on_display_about_changed = NULL;
 	iface->on_display_order_changed = NULL;
 	iface->on_io_provider_prefs_changed = ipivot_consumer_on_io_provider_prefs_changed;
-	iface->on_items_changed = ipivot_consumer_on_items_changed;
+	iface->on_items_changed = NULL;
 	iface->on_mandatory_prefs_changed = ipivot_consumer_on_mandatory_prefs_changed;
 }
 
@@ -627,18 +632,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NACT_MAIN_WINDOW( instance );
 
 	self->private = g_new0( NactMainWindowPrivate, 1 );
-
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
-
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
-
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed ));
-
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_updatable_item_updated ));
 
 	self->private->dispose_has_run = FALSE;
 
@@ -709,6 +702,47 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
+		}
+	}
+}
+
+static void
+instance_constructed( GObject *window )
+{
+	static const gchar *thisfn = "nact_main_window_instance_constructed";
+	NactMainWindow *self;
+	NactApplication *application;
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	self = NACT_MAIN_WINDOW( window );
+
+	if( !self->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
+
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
+
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed ));
+
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+		self->private->updater = nact_application_get_updater( application );
+
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( self->private->updater ), PIVOT_SIGNAL_ITEMS_CHANGED, G_CALLBACK( on_pivot_items_changed ));
+
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_updatable_item_updated ));
+
+		nact_menubar_new( BASE_WINDOW( window ));
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
+			G_OBJECT_CLASS( st_parent_class )->dispose( window );
 		}
 	}
 }
@@ -805,8 +839,6 @@ nact_main_window_new( const NactApplication *application )
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 			BASE_PROP_WSP_NAME,       st_wsp_name,
 			NULL );
-
-	nact_menubar_new( BASE_WINDOW( window ));
 
 	return( window );
 }
@@ -961,11 +993,14 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 NactClipboard *
 nact_main_window_get_clipboard( const NactMainWindow *window )
 {
-	NactClipboard *clipboard = NULL;
+	NactClipboard *clipboard;
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), NULL );
 
+	clipboard = NULL;
+
 	if( !window->private->dispose_has_run ){
+
 		clipboard = window->private->clipboard;
 	}
 
@@ -1011,6 +1046,178 @@ nact_main_window_get_item( const NactMainWindow *window, const gchar *id )
 	}
 
 	return( exists );
+}
+
+/**
+ * nact_main_window_reload:
+ * @window: this #NactMainWindow instance.
+ *
+ * Refresh the list of items.
+ * If there is some non-yet saved modifications, a confirmation is
+ * required before giving up with them.
+ */
+void
+nact_main_window_reload( NactMainWindow *window )
+{
+	gboolean reload_ok;
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+
+		reload_ok = confirm_for_giveup_from_menu( window );
+
+		if( reload_ok ){
+			reload_items( window );
+		}
+	}
+}
+
+/*
+ * The handler of the signal sent by NAPivot when items have been modified
+ * in the underlying storage subsystems
+ */
+static void
+on_pivot_items_changed( NAUpdater *updater, NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_on_pivot_items_changed";
+	gboolean reload_ok;
+
+	g_return_if_fail( NA_IS_UPDATER( updater ));
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+		g_debug( "%s: updater=%p (%s), window=%p (%s)", thisfn,
+				( void * ) updater, G_OBJECT_TYPE_NAME( updater ), ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
+		reload_ok = confirm_for_giveup_from_pivot( window );
+
+		if( reload_ok ){
+			reload_items( window );
+		}
+	}
+}
+
+/*
+ * informs the user that the actions in underlying storage subsystem
+ * have changed, and propose for reloading
+ *
+ */
+static gboolean
+confirm_for_giveup_from_pivot( const NactMainWindow *window )
+{
+	gboolean reload_ok;
+	gchar *first, *second;
+
+	first = g_strdup(
+				_( "One or more actions have been modified in the filesystem.\n"
+					"You could keep to work with your current list of actions, "
+					"or you may want to reload a fresh one." ));
+
+	if( nact_main_window_has_modified_items( window )){
+
+		gchar *tmp = g_strdup_printf( "%s\n\n%s", first,
+				_( "Note that reloading a fresh list of actions requires "
+					"that you give up with your current modifications." ));
+		g_free( first );
+		first = tmp;
+	}
+
+	second = g_strdup( _( "Do you want to reload a fresh list of actions ?" ));
+
+	reload_ok = base_window_display_yesno_dlg( BASE_WINDOW( window ), first, second );
+
+	g_free( second );
+	g_free( first );
+
+	return( reload_ok );
+}
+
+/*
+ * requires a confirmation from the user when is has asked for reloading
+ * the actions via the Edit menu
+ */
+static gboolean
+confirm_for_giveup_from_menu( const NactMainWindow *window )
+{
+	gboolean reload_ok = TRUE;
+	gchar *first, *second;
+
+	if( nact_main_window_has_modified_items( window )){
+
+		first = g_strdup(
+					_( "Reloading a fresh list of actions requires "
+						"that you give up with your current modifications." ));
+
+		second = g_strdup( _( "Do you really want to do this ?" ));
+
+		reload_ok = base_window_display_yesno_dlg( BASE_WINDOW( window ), first, second );
+
+		g_free( second );
+		g_free( first );
+	}
+
+	return( reload_ok );
+}
+
+static void
+reload_items( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_reload";
+	GList *tree;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	window->private->selected_item = NULL;
+	window->private->selected_profile = NULL;
+
+	na_object_unref_items( window->private->deleted );
+	window->private->deleted = NULL;
+
+	tree = na_updater_load_items( window->private->updater );
+	nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), tree );
+	nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
+}
+
+static gboolean
+base_is_willing_to_quit( const BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_is_willing_to_quit";
+	gboolean willing_to;
+
+	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+	willing_to = TRUE;
+	if( nact_main_window_has_modified_items( NACT_MAIN_WINDOW( window ))){
+		willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
+	}
+
+	/* call parent class */
+	if( willing_to ){
+		if( BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit ){
+			willing_to = BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit( window );
+		}
+	}
+
+	return( willing_to );
+}
+
+/*
+ * triggered when the user clicks on the top right [X] button
+ * returns %TRUE to stop the signal to be propagated (which would cause the
+ * window to be destroyed); instead we gracefully quit the application
+ */
+static gboolean
+on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_on_delete_event";
+
+	g_debug( "%s: toplevel=%p, event=%p, window=%p",
+			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) window );
+
+	nact_main_menubar_file_on_quit( NULL, window );
+
+	return( TRUE );
 }
 
 /**
@@ -1084,31 +1291,6 @@ nact_main_window_move_to_deleted( NactMainWindow *window, GList *items )
 
 		window->private->deleted = g_list_concat( window->private->deleted, items );
 		g_debug( "%s: main_deleted has %d items", thisfn, g_list_length( window->private->deleted ));
-	}
-}
-
-/**
- * nact_main_window_reload:
- * @window: this #NactMainWindow instance.
- *
- * Refresh the list of items.
- * If there is some non-yet saved modifications, a confirmation is
- * required before giving up with them.
- */
-void
-nact_main_window_reload( NactMainWindow *window )
-{
-	gboolean reload_ok;
-
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	if( !window->private->dispose_has_run ){
-
-		reload_ok = confirm_for_giveup_from_menu( window );
-
-		if( reload_ok ){
-			reload( window );
-		}
 	}
 }
 
@@ -1210,29 +1392,6 @@ actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater
 	}
 
 	return( delete_ok );
-}
-
-static gboolean
-base_is_willing_to_quit( const BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_main_window_is_willing_to_quit";
-	gboolean willing_to;
-
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	willing_to = TRUE;
-	if( nact_main_window_has_modified_items( NACT_MAIN_WINDOW( window ))){
-		willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
-	}
-
-	/* call parent class */
-	if( willing_to ){
-		if( BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit ){
-			willing_to = BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit( window );
-		}
-	}
-
-	return( willing_to );
 }
 
 static void
@@ -1405,98 +1564,6 @@ on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gbool
 }
 
 /*
- * requires a confirmation from the user when is has asked for reloading
- * the actions via the Edit menu
- */
-static gboolean
-confirm_for_giveup_from_menu( NactMainWindow *window )
-{
-	gboolean reload_ok = TRUE;
-	gchar *first, *second;
-
-	if( nact_main_window_has_modified_items( window )){
-
-		first = g_strdup(
-					_( "Reloading a fresh list of actions requires "
-						"that you give up with your current modifications." ));
-
-		second = g_strdup( _( "Do you really want to do this ?" ));
-
-		reload_ok = base_window_display_yesno_dlg( BASE_WINDOW( window ), first, second );
-
-		g_free( second );
-		g_free( first );
-	}
-
-	return( reload_ok );
-}
-
-/*
- * informs the user that the actions in underlying storage subsystem
- * have changed, and propose for reloading
- *
- */
-static gboolean
-confirm_for_giveup_from_pivot( NactMainWindow *window )
-{
-	gboolean reload_ok;
-	gchar *first, *second;
-
-	first = g_strdup(
-				_( "One or more actions have been modified in the filesystem.\n"
-					"You could keep to work with your current list of actions, "
-					"or you may want to reload a fresh one." ));
-
-	if( nact_main_window_has_modified_items( window )){
-
-		gchar *tmp = g_strdup_printf( "%s\n\n%s", first,
-				_( "Note that reloading a fresh list of actions requires "
-					"that you give up with your current modifications." ));
-		g_free( first );
-		first = tmp;
-	}
-
-	second = g_strdup( _( "Do you want to reload a fresh list of actions ?" ));
-
-	reload_ok = base_window_display_yesno_dlg( BASE_WINDOW( window ), first, second );
-
-	g_free( second );
-	g_free( first );
-
-	return( reload_ok );
-}
-
-/*
- * called by NAPivot because this window implements the IIOConsumer
- * interface, i.e. it wish to be advertised when the list of actions
- * changes in the underlying I/O storage subsystem (typically, when we
- * save the modifications)
- *
- * note that we only reload the full list of actions when asking for a
- * reset - saving is handled on a per-action basis.
- */
-static void
-ipivot_consumer_on_items_changed( NAIPivotConsumer *instance, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_main_window_ipivot_consumer_on_items_changed";
-	NactMainWindow *window;
-	gboolean reload_ok;
-
-	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
-	window = NACT_MAIN_WINDOW( instance );
-
-	if( !window->private->dispose_has_run ){
-
-		reload_ok = confirm_for_giveup_from_pivot( window );
-
-		if( reload_ok ){
-			reload( window );
-		}
-	}
-}
-
-/*
  * NASettings callback for a change on NA_IPREFS_ITEMS_LIST_ORDER_MODE key
  */
 static void
@@ -1557,33 +1624,6 @@ update_ui_after_provider_change( NactMainWindow *window )
 	}
 }
 
-static void
-reload( NactMainWindow *window )
-{
-	static const gchar *thisfn = "nact_main_window_reload";
-	NactApplication *application;
-	NAUpdater *updater;
-	GList *tree;
-
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	if( !window->private->dispose_has_run ){
-
-		window->private->selected_item = NULL;
-		window->private->selected_profile = NULL;
-
-		na_object_unref_items( window->private->deleted );
-		window->private->deleted = NULL;
-
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		updater = nact_application_get_updater( application );
-		tree = na_updater_load_items( updater );
-		nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), tree );
-		nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
-	}
-}
-
 static gchar *
 iabout_get_application_name( NAIAbout *instance )
 {
@@ -1603,22 +1643,4 @@ iabout_get_toplevel( NAIAbout *instance )
 	g_return_val_if_fail( BASE_IS_WINDOW( instance ), NULL );
 
 	return( base_window_get_gtk_toplevel( BASE_WINDOW( instance )));
-}
-
-/*
- * triggered when the user clicks on the top right [X] button
- * returns %TRUE to stop the signal to be propagated (which would cause the
- * window to be destroyed); instead we gracefully quit the application
- */
-static gboolean
-on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window )
-{
-	static const gchar *thisfn = "nact_main_window_on_delete_event";
-
-	g_debug( "%s: toplevel=%p, event=%p, window=%p",
-			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) window );
-
-	nact_main_menubar_file_on_quit( NULL, window );
-
-	return( TRUE );
 }

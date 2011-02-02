@@ -73,12 +73,8 @@ main( int argc, char **argv )
 	check_options( argc, argv, context );
 
 	NAPivot *pivot = na_pivot_new();
-	/* for test */
-	/*na_pivot_register_consumer( pivot, NA_IPIVOT_CONSUMER( self ));*/
-	na_pivot_set_automatic_reload( pivot, TRUE );
 	na_pivot_set_loadable( pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
 	na_pivot_load_items( pivot );
-	/* for test - end */
 
 	parms.parent = NULL;
 	parms.uris = g_slist_prepend( NULL, uri );

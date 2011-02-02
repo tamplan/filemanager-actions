@@ -69,13 +69,6 @@ struct _NAPivotPrivate {
 	 */
 	GList      *tree;
 
-	/* whether to automatically reload the whole configuration tree
-	 * when a modification is detected in one of the underlying I/O
-	 * storage subsystems
-	 * defaults to FALSE
-	 */
-	gboolean    automatic_reload;
-
 	/* timeout to manage i/o providers 'item-changed' burst
 	 */
 	NATimeout   change_timeout;
@@ -223,7 +216,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->modules = NULL;
 	self->private->consumers = NULL;
 	self->private->tree = NULL;
-	self->private->automatic_reload = FALSE;
 
 	/* initialize timeout parameters for 'item-changed' handler
 	 */
@@ -416,12 +408,11 @@ na_pivot_dump( const NAPivot *pivot )
 
 	if( !pivot->private->dispose_has_run ){
 
-		g_debug( "%s:     loadable_set=%d", thisfn, pivot->private->loadable_set );
-		g_debug( "%s:          modules=%p (%d elts)", thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));
-		g_debug( "%s:        consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
-		g_debug( "%s:             tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
-		g_debug( "%s: automatic_reload=%s", thisfn, pivot->private->automatic_reload ? "True":"False" );
-		/*g_debug( "%s:         monitors=%p (%d elts)", thisfn, ( void * ) pivot->private->monitors, g_list_length( pivot->private->monitors ));*/
+		g_debug( "%s: loadable_set=%d", thisfn, pivot->private->loadable_set );
+		g_debug( "%s:      modules=%p (%d elts)", thisfn, ( void * ) pivot->private->modules, g_list_length( pivot->private->modules ));
+		g_debug( "%s:    consumers=%p (%d elts)", thisfn, ( void * ) pivot->private->consumers, g_list_length( pivot->private->consumers ));
+		g_debug( "%s:         tree=%p (%d elts)", thisfn, ( void * ) pivot->private->tree, g_list_length( pivot->private->tree ));
+		/*g_debug( "%s:     monitors=%p (%d elts)", thisfn, ( void * ) pivot->private->monitors, g_list_length( pivot->private->monitors ));*/
 
 		for( it = pivot->private->tree, i = 0 ; it ; it = it->next ){
 			g_debug( "%s:     [%d]: %p", thisfn, i++, it->data );
@@ -663,9 +654,6 @@ on_items_changed_timeout( NAPivot *pivot )
 
 	/* this has to be deprecated.. or not ?? */
 	g_debug( "%s: triggering NAIPivotConsumer interfaces", thisfn );
-	if( pivot->private->automatic_reload ){
-		na_pivot_load_items( pivot );
-	}
 	for( ic = pivot->private->consumers ; ic ; ic = ic->next ){
 		na_ipivot_consumer_notify_of_items_changed( NA_IPIVOT_CONSUMER( ic->data ));
 	}
@@ -728,31 +716,6 @@ na_pivot_get_settings( const NAPivot *pivot )
 	}
 
 	return( settings );
-}
-
-/*
- * na_pivot_set_automatic_reload:
- * @pivot: this #NAPivot instance.
- * @reload: whether this #NAPivot instance should automatically reload
- * its list of actions when I/O providers advertise it of a
- * modification.
- *
- * Sets the automatic reload flag.
- *
- * Note that even if the #NAPivot instance is not authorized to
- * automatically reload its list of actions when it is advertised of
- * a modification by one of the I/O providers, it always sends an
- * ad-hoc notification to its consumers.
- */
-void
-na_pivot_set_automatic_reload( NAPivot *pivot, gboolean reload )
-{
-	g_return_if_fail( NA_IS_PIVOT( pivot ));
-
-	if( !pivot->private->dispose_has_run ){
-
-		pivot->private->automatic_reload = reload;
-	}
 }
 
 /*

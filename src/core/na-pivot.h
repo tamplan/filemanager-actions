@@ -166,8 +166,7 @@ NASettings   *na_pivot_get_settings     ( const NAPivot *pivot );
 
 /* NAPivot properties and configuration
  */
-void          na_pivot_set_automatic_reload            ( NAPivot *pivot, gboolean reload );
-void          na_pivot_set_loadable                    ( NAPivot *pivot, guint loadable );
+void          na_pivot_set_loadable     ( NAPivot *pivot, guint loadable );
 
 G_END_DECLS
 
