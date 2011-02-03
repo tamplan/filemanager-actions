@@ -82,7 +82,6 @@ typedef struct {
 	NactMainWindowClass;
 
 #define MAIN_WINDOW_SIGNAL_SELECTION_CHANGED			"main-window-selection-changed"
-#define MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES	"main-window-update-sensitivities"
 #define MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED		"main-window-level-zero-order-changed"
 
 GType           nact_main_window_get_type( void );
@@ -96,7 +95,7 @@ void            nact_main_window_move_to_deleted   ( NactMainWindow *window, GLi
 void            nact_main_window_reload            ( NactMainWindow *window );
 gboolean        nact_main_window_remove_deleted    ( NactMainWindow *window, GSList **messages );
 
-void            nact_main_window_quit              ( NactMainWindow *window );
+gboolean        nact_main_window_quit              ( NactMainWindow *window );
 
 G_END_DECLS
 

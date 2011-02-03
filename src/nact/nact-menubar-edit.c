@@ -42,7 +42,6 @@
 #include "nact-application.h"
 #include "nact-iactions-list.h"
 #include "nact-main-tab.h"
-#include "nact-main-menubar-edit.h"
 #include "nact-menubar-priv.h"
 #include "nact-preferences-editor.h"
 
@@ -53,7 +52,7 @@ static gchar  *add_non_deletable_msg( const NAObjectItem *item, gint reason );
 static void    update_clipboard_counters( NactMainWindow *window );
 
 /**
- * nact_main_menubar_edit_on_update_sensitivities:
+ * nact_menubar_edit_on_update_sensitivities:
  * @window: the #NactMainWindow main window.
  * user_data: the data passed to the function via the signal.
  * @mis: the #MenubarIndicatorsStruct struct.
@@ -61,7 +60,7 @@ static void    update_clipboard_counters( NactMainWindow *window );
  * Update sensitivity of items of the Edit menu.
  */
 void
-nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
+nact_menubar_edit_on_update_sensitivities( const NactMenubar *bar )
 {
 	gboolean cut_enabled;
 	gboolean copy_enabled;
@@ -174,7 +173,7 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
 }
 
 /**
- * nact_main_menubar_edit_on_cut:
+ * nact_menubar_edit_on_cut:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
@@ -186,9 +185,9 @@ nact_main_menubar_edit_on_update_sensitivities( NactMenubar *bar )
  * - (tree) remove selected items, unreffing objects
  */
 void
-nact_main_menubar_edit_on_cut( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_edit_on_cut( GtkAction *gtk_action, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_edit_on_cut";
+	static const gchar *thisfn = "nact_menubar_edit_on_cut";
 	NactApplication *application;
 	NAUpdater *updater;
 	GList *items;
@@ -229,7 +228,7 @@ nact_main_menubar_edit_on_cut( GtkAction *gtk_action, NactMainWindow *window )
 }
 
 /**
- * nact_main_menubar_edit_on_copy:
+ * nact_menubar_edit_on_copy:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
@@ -241,11 +240,13 @@ nact_main_menubar_edit_on_cut( GtkAction *gtk_action, NactMainWindow *window )
  * - (menu) refresh actions sensitivy (as selection doesn't change)
  */
 void
-nact_main_menubar_edit_on_copy( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_edit_on_copy( GtkAction *gtk_action, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_edit_on_copy";
+	static const gchar *thisfn = "nact_menubar_edit_on_copy";
 	GList *items;
 	NactClipboard *clipboard;
+
+	BAR_WINDOW_VOID( window );
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
@@ -257,11 +258,11 @@ nact_main_menubar_edit_on_copy( GtkAction *gtk_action, NactMainWindow *window )
 	update_clipboard_counters( window );
 	na_object_unref_selected_items( items );
 
-	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 }
 
 /**
- * nact_main_menubar_edit_on_paste:
+ * nact_menubar_edit_on_paste:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
@@ -277,9 +278,9 @@ nact_main_menubar_edit_on_copy( GtkAction *gtk_action, NactMainWindow *window )
  * - (menu) unreffing the copy got from clipboard
  */
 void
-nact_main_menubar_edit_on_paste( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_edit_on_paste( GtkAction *gtk_action, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_edit_on_paste";
+	static const gchar *thisfn = "nact_menubar_edit_on_paste";
 	GList *items;
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
@@ -292,7 +293,7 @@ nact_main_menubar_edit_on_paste( GtkAction *gtk_action, NactMainWindow *window )
 }
 
 /**
- * nact_main_menubar_edit_on_paste_into:
+ * nact_menubar_edit_on_paste_into:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
@@ -308,9 +309,9 @@ nact_main_menubar_edit_on_paste( GtkAction *gtk_action, NactMainWindow *window )
  * - (menu) unreffing the copy got from clipboard
  */
 void
-nact_main_menubar_edit_on_paste_into( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_edit_on_paste_into( GtkAction *gtk_action, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_edit_on_paste_into";
+	static const gchar *thisfn = "nact_menubar_edit_on_paste_into";
 	GList *items;
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
@@ -325,7 +326,7 @@ nact_main_menubar_edit_on_paste_into( GtkAction *gtk_action, NactMainWindow *win
 static GList *
 prepare_for_paste( NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_edit_prepare_for_paste";
+	static const gchar *thisfn = "nact_menubar_edit_prepare_for_paste";
 	GList *items, *it;
 	NactClipboard *clipboard;
 	NAObjectAction *action;
@@ -364,7 +365,7 @@ prepare_for_paste( NactMainWindow *window )
 }
 
 /**
- * nact_main_menubar_edit_on_duplicate:
+ * nact_menubar_edit_on_duplicate:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
@@ -376,9 +377,9 @@ prepare_for_paste( NactMainWindow *window )
  * items just besides the original ones...
  */
 void
-nact_main_menubar_edit_on_duplicate( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_edit_on_duplicate( GtkAction *gtk_action, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_edit_on_duplicate";
+	static const gchar *thisfn = "nact_menubar_edit_on_duplicate";
 	NactApplication *application;
 	NAUpdater *updater;
 	NAObjectAction *action;
@@ -419,7 +420,7 @@ nact_main_menubar_edit_on_duplicate( GtkAction *gtk_action, NactMainWindow *wind
 }
 
 /**
- * nact_main_menubar_edit_on_delete:
+ * nact_menubar_edit_on_delete:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
@@ -436,9 +437,9 @@ nact_main_menubar_edit_on_duplicate( GtkAction *gtk_action, NactMainWindow *wind
  * this branch itself be deleted
  */
 void
-nact_main_menubar_edit_on_delete( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_edit_on_delete( GtkAction *gtk_action, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_edit_on_delete";
+	static const gchar *thisfn = "nact_menubar_edit_on_delete";
 	NactApplication *application;
 	NAUpdater *updater;
 	GList *items;
@@ -565,34 +566,34 @@ update_clipboard_counters( NactMainWindow *window )
 	bar->private->clipboard_actions = bar->private->selected_actions;
 	bar->private->clipboard_profiles = bar->private->selected_profiles;
 
-	g_debug( "nact_main_menubar_update_clipboard_counters: menus=%d, actions=%d, profiles=%d",
+	g_debug( "nact_menubar_update_clipboard_counters: menus=%d, actions=%d, profiles=%d",
 			bar->private->clipboard_menus, bar->private->clipboard_actions, bar->private->clipboard_profiles );
 
-	g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 }
 
 /**
- * nact_main_menubar_edit_on_reload:
+ * nact_menubar_edit_on_reload:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
  * Reload items from I/O storage subsystems.
  */
 void
-nact_main_menubar_edit_on_reload( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_edit_on_reload( GtkAction *gtk_action, NactMainWindow *window )
 {
 	nact_main_window_reload( window );
 }
 
 /**
- * nact_main_menubar_edit_on_preferences:
+ * nact_menubar_edit_on_preferences:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
  * Edit preferences.
  */
 void
-nact_main_menubar_edit_on_prefererences( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_edit_on_prefererences( GtkAction *gtk_action, NactMainWindow *window )
 {
 	nact_preferences_editor_run( BASE_WINDOW( window ));
 }

@@ -28,8 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NACT_MENUBAR__PRIV_H__
-#define __NACT_MENUBAR__PRIV_H__
+#ifndef __NACT_MENUBAR_PRIV_H__
+#define __NACT_MENUBAR_PRIV_H__
 
 /*
  * SECTION: nact-menubar-priv
@@ -42,7 +42,7 @@
 
 #include <core/na-updater.h>
 
-#include "base-window.h"
+#include "nact-menubar.h"
 
 G_BEGIN_DECLS
 
@@ -65,6 +65,7 @@ struct _NactMenubarPrivate {
 	/* set when the selection changes
 	 */
 	guint           count_selected;
+	GList          *selected_items;
 	gboolean        is_parent_writable;		/* new menu/new action/paste menu or action */
 	gboolean        enable_new_profile;		/* new profile/paste a profile */
 	gboolean        is_action_writable;
@@ -85,8 +86,6 @@ struct _NactMenubarPrivate {
 	gboolean        treeview_has_focus;
 	gboolean        level_zero_order_changed;
 	gulong          popup_handler;
-
-	GList          *selected_items;
 	/* *** */
 };
 
@@ -112,6 +111,54 @@ struct _NactMenubarPrivate {
  */
 void nact_menubar_enable_item( const NactMenubar *bar, const gchar *name, gboolean enabled );
 
+void nact_menubar_edit_on_update_sensitivities( const NactMenubar *bar );
+
+void nact_menubar_edit_on_cut          ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_edit_on_copy         ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_edit_on_paste        ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_edit_on_paste_into   ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_edit_on_duplicate    ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_edit_on_delete       ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_edit_on_reload       ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_edit_on_prefererences( GtkAction *action, NactMainWindow *window );
+
+void nact_menubar_file_on_update_sensitivities( const NactMenubar *bar );
+
+void nact_menubar_file_on_new_menu   ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_file_on_new_action ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_file_on_new_profile( GtkAction *action, NactMainWindow *window );
+void nact_menubar_file_on_save       ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_file_on_quit       ( GtkAction *action, NactMainWindow *window );
+
+void nact_menubar_file_save_items      ( NactMainWindow *window );
+void nact_menubar_file_install_autosave( NactMainWindow *window );
+
+void nact_menubar_help_on_update_sensitivities( const NactMenubar *bar );
+
+void nact_menubar_help_on_help ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_help_on_about( GtkAction *action, NactMainWindow *window );
+
+void nact_menubar_maintainer_on_update_sensitivities( const NactMenubar *bar );
+
+void nact_menubar_maintainer_on_dump_selection       ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, NactMainWindow *window );
+void nact_menubar_maintainer_on_list_modified_items  ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_maintainer_on_dump_clipboard       ( GtkAction *action, NactMainWindow *window );
+
+void nact_menubar_tools_on_update_sensitivities( const NactMenubar *bar );
+
+void nact_menubar_tools_on_import( GtkAction *action, NactMainWindow *window );
+void nact_menubar_tools_on_export( GtkAction *action, NactMainWindow *window );
+
+void nact_menubar_view_on_update_sensitivities( const NactMenubar *bar );
+
+void nact_menubar_view_on_expand_all   ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_view_on_collapse_all ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_view_on_toolbar_file ( GtkToggleAction *action, NactMainWindow *window );
+void nact_menubar_view_on_toolbar_edit ( GtkToggleAction *action, NactMainWindow *window );
+void nact_menubar_view_on_toolbar_tools( GtkToggleAction *action, NactMainWindow *window );
+void nact_menubar_view_on_toolbar_help ( GtkToggleAction *action, NactMainWindow *window );
+
 G_END_DECLS
 
-#endif /* __NACT_MENUBAR__PRIV_H__ */
+#endif /* __NACT_MENUBAR_PRIV_H__ */

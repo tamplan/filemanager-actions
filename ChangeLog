@@ -1,5 +1,17 @@
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	Refactoring of menubar files:
+	- nact-main-menubar-*.c are renamed as nact-menubar-*.c.
+	- nact-main-menubar-*.h are removed.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-confirm-logout.c:
+	* src/nact/nact-iactions-list.c: Updated accordingly.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h: Remove MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES
+	which is replaced by NactMenubar internal MENUBAR_SIGNAL_UPDATE_SENSITIVITIES one.
+
 	Termination of the main window is managed in NactMainWindow.
 
 	* src/nact/nact-main-window.c:

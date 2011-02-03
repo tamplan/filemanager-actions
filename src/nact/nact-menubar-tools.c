@@ -34,11 +34,10 @@
 
 #include "nact-assistant-export.h"
 #include "nact-assistant-import.h"
-#include "nact-main-menubar-tools.h"
 #include "nact-menubar-priv.h"
 
 /**
- * nact_main_menubar_tools_on_update_sensitivities:
+ * nact_menubar_tools_on_update_sensitivities:
  * @window: the #NactMainWindow main application window.
  * @user_data: user data ?
  * @mis: the #MenubarIndicatorsStruct structure.
@@ -46,7 +45,7 @@
  * Update sensitivities on the Tools menu.
  */
 void
-nact_main_menubar_tools_on_update_sensitivities( NactMenubar *bar )
+nact_menubar_tools_on_update_sensitivities( const NactMenubar *bar )
 {
 	/* import item enabled if at least one writable provider */
 	nact_menubar_enable_item( bar, "ImportItem", bar->private->has_writable_providers );
@@ -56,27 +55,27 @@ nact_main_menubar_tools_on_update_sensitivities( NactMenubar *bar )
 }
 
 /**
- * nact_main_menubar_tools_on_import:
+ * nact_menubar_tools_on_import:
  * @action: the #GtkAction of the item.
  * @window: the #NactMainWindow main application window.
  *
  * Triggers the "Tools/Import assitant" item.
  */
 void
-nact_main_menubar_tools_on_import( GtkAction *action, NactMainWindow *window )
+nact_menubar_tools_on_import( GtkAction *action, NactMainWindow *window )
 {
 	nact_assistant_import_run( BASE_WINDOW( window ));
 }
 
 /**
- * nact_main_menubar_tools_on_export:
+ * nact_menubar_tools_on_export:
  * @action: the #GtkAction of the item.
  * @window: the #NactMainWindow main application window.
  *
  * Triggers the "Tools/Export assistant" item.
  */
 void
-nact_main_menubar_tools_on_export( GtkAction *action, NactMainWindow *window )
+nact_menubar_tools_on_export( GtkAction *action, NactMainWindow *window )
 {
 	nact_assistant_export_run( BASE_WINDOW( window ));
 }

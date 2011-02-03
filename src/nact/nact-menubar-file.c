@@ -45,7 +45,6 @@
 #include "nact-iactions-list.h"
 #include "nact-main-statusbar.h"
 #include "nact-main-tab.h"
-#include "nact-main-menubar-file.h"
 #include "nact-menubar-priv.h"
 
 static NATimeout st_autosave_prefs_timeout = { 0 };
@@ -63,7 +62,7 @@ static gboolean autosave_callback( NactMainWindow *window );
 static void     autosave_destroyed( NactMainWindow *window );
 
 /**
- * nact_main_menubar_file_on_update_sensitivities:
+ * nact_menubar_file_on_update_sensitivities:
  * @window: the #NactMainWindow main window.
  * user_data: the data passed to the function via the signal.
  * @mis: the #MenubarIndicatorsStruct struct.
@@ -71,9 +70,9 @@ static void     autosave_destroyed( NactMainWindow *window );
  * Update sensitivity of items of the File menu.
  */
 void
-nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
+nact_menubar_file_on_update_sensitivities( const NactMenubar *bar )
 {
-	static const gchar *thisfn = "nact_main_menubar_file_on_update_sensitivities";
+	static const gchar *thisfn = "nact_menubar_file_on_update_sensitivities";
 	gboolean new_item_enabled;
 	gboolean has_modified_items;
 
@@ -106,14 +105,14 @@ nact_main_menubar_file_on_update_sensitivities( NactMenubar *bar )
 }
 
 /**
- * nact_main_menubar_file_on_new_menu:
+ * nact_menubar_file_on_new_menu:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
  * Triggers File / New menu item.
  */
 void
-nact_main_menubar_file_on_new_menu( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_file_on_new_menu( GtkAction *gtk_action, NactMainWindow *window )
 {
 	NAObjectMenu *menu;
 	GList *items;
@@ -129,14 +128,14 @@ nact_main_menubar_file_on_new_menu( GtkAction *gtk_action, NactMainWindow *windo
 }
 
 /**
- * nact_main_menubar_file_on_new_action:
+ * nact_menubar_file_on_new_action:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
  * Triggers File / New action item.
  */
 void
-nact_main_menubar_file_on_new_action( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_file_on_new_action( GtkAction *gtk_action, NactMainWindow *window )
 {
 	NAObjectAction *action;
 	GList *items;
@@ -152,14 +151,14 @@ nact_main_menubar_file_on_new_action( GtkAction *gtk_action, NactMainWindow *win
 }
 
 /**
- * nact_main_menubar_file_on_new_profile:
+ * nact_menubar_file_on_new_profile:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
  * Triggers File / New profile item.
  */
 void
-nact_main_menubar_file_on_new_profile( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_file_on_new_profile( GtkAction *gtk_action, NactMainWindow *window )
 {
 	NAObjectAction *action;
 	NAObjectProfile *profile;
@@ -191,7 +190,7 @@ nact_main_menubar_file_on_new_profile( GtkAction *gtk_action, NactMainWindow *wi
 }
 
 /**
- * nact_main_menubar_file_on_save:
+ * nact_menubar_file_on_save:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
@@ -200,28 +199,28 @@ nact_main_menubar_file_on_new_profile( GtkAction *gtk_action, NactMainWindow *wi
  * Saving is not only saving modified items, but also saving hierarchy
  * (and order if alpha order is not set).
  *
- * This is the same function that nact_main_menubar_file_save_items(), just with
+ * This is the same function that nact_menubar_file_save_items(), just with
  * different arguments.
  */
 void
-nact_main_menubar_file_on_save( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_file_on_save( GtkAction *gtk_action, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_file_on_save";
+	static const gchar *thisfn = "nact_menubar_file_on_save";
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	nact_main_menubar_file_save_items( window );
+	nact_menubar_file_save_items( window );
 }
 
 /**
- * nact_main_menubar_file_save_items:
+ * nact_menubar_file_save_items:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
  * Save items.
- * This is the same function that nact_main_menubar_file_on_save(), just
+ * This is the same function that nact_menubar_file_on_save(), just
  * with different arguments.
  *
  * Synopsis:
@@ -246,9 +245,9 @@ nact_main_menubar_file_on_save( GtkAction *gtk_action, NactMainWindow *window )
  * - idem if some items cannot be actually rewritten...
  */
 void
-nact_main_menubar_file_save_items( NactMainWindow *window )
+nact_menubar_file_save_items( NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_file_save_items";
+	static const gchar *thisfn = "nact_menubar_file_save_items";
 	GList *items, *it;
 	NactApplication *application;
 	NAUpdater *updater;
@@ -338,7 +337,7 @@ nact_main_menubar_file_save_items( NactMainWindow *window )
 	 * sensibilities on check status - so force it there
 	 */
 	if( !new_pivot ){
-		g_signal_emit_by_name( window, MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES, NULL );
+		g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 	}
 }
 
@@ -415,16 +414,16 @@ save_item( NactMainWindow *window, NAUpdater *updater, NAObjectItem *item, GSLis
 }
 
 /**
- * nact_main_menubar_file_on_quit:
+ * nact_menubar_file_on_quit:
  * @gtk_action: the #GtkAction action.
  * @window: the #NactMainWindow main window.
  *
  * Triggers the File / Quit item.
  */
 void
-nact_main_menubar_file_on_quit( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_file_on_quit( GtkAction *gtk_action, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_file_on_quit";
+	static const gchar *thisfn = "nact_menubar_file_on_quit";
 
 	g_debug( "%s: item=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ) || gtk_action == NULL );
@@ -433,13 +432,13 @@ nact_main_menubar_file_on_quit( GtkAction *gtk_action, NactMainWindow *window )
 }
 
 /**
- * nact_main_menubar_file_install_autosave:
+ * nact_menubar_file_install_autosave:
  * @window: the #NactMainWindow main window.
  *
  * Setup the autosave feature and initialize its monitoring.
  */
 void
-nact_main_menubar_file_install_autosave( NactMainWindow *window )
+nact_menubar_file_install_autosave( NactMainWindow *window )
 {
 	NactApplication *application;
 	NAUpdater *updater;
@@ -470,7 +469,7 @@ on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer n
 static void
 on_autosave_prefs_timeout( NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_file_on_autosave_prefs_timeout";
+	static const gchar *thisfn = "nact_menubar_file_on_autosave_prefs_timeout";
 	NactApplication *application;
 	NAUpdater *updater;
 	NASettings *settings;
@@ -507,10 +506,10 @@ static gboolean
 autosave_callback( NactMainWindow *window )
 {
 	const gchar *context = "autosave-context";
-	g_debug( "nact_main_menubar_file_autosave_callback" );
+	g_debug( "nact_menubar_file_autosave_callback" );
 
 	nact_main_statusbar_display_status( window, context, _( "Automatically saving pending modifications..." ));
-	nact_main_menubar_file_save_items( window );
+	nact_menubar_file_save_items( window );
 	nact_main_statusbar_hide_status( window, context );
 
 	return( TRUE );
@@ -519,5 +518,5 @@ autosave_callback( NactMainWindow *window )
 static void
 autosave_destroyed( NactMainWindow *window )
 {
-	g_debug( "nact_main_menubar_file_autosave_destroyed" );
+	g_debug( "nact_menubar_file_autosave_destroyed" );
 }

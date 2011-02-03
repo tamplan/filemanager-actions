@@ -53,7 +53,6 @@
 #include "nact-iexecution-tab.h"
 #include "nact-iproperties-tab.h"
 #include "nact-main-tab.h"
-#include "nact-main-menubar-file.h"
 #include "nact-main-statusbar.h"
 #include "nact-marshal.h"
 #include "nact-main-window.h"
@@ -132,7 +131,6 @@ enum {
 	PROVIDER_CHANGED,
 	SELECTION_CHANGED,
 	ITEM_UPDATED,
-	UPDATE_SENSITIVITIES,
 	ORDER_CHANGED,
 	LAST_SIGNAL
 };
@@ -450,24 +448,6 @@ class_init( NactMainWindowClass *klass )
 			2,
 			G_TYPE_POINTER,
 			G_TYPE_BOOLEAN );
-
-	/**
-	 * main-window-update-sensitivities:
-	 *
-	 * This signal is emitted each time a user interaction may led the
-	 * action sensitivities to be updated.
-	 */
-	st_signals[ UPDATE_SENSITIVITIES ] = g_signal_new(
-			MAIN_WINDOW_SIGNAL_UPDATE_ACTION_SENSITIVITIES,
-			G_TYPE_OBJECT,
-			G_SIGNAL_RUN_LAST,
-			0,					/* no default handler */
-			NULL,
-			NULL,
-			g_cclosure_marshal_VOID__POINTER,
-			G_TYPE_NONE,
-			1,
-			G_TYPE_POINTER );
 
 	/**
 	 * main-window-level-zero-order-changed:
@@ -1152,15 +1132,19 @@ nact_main_window_quit( NactMainWindow *window )
 	gboolean has_modified;
 	gboolean terminated;
 
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
 
 	terminated = FALSE;
-	has_modified = nact_main_window_has_modified_items( window );
 
-	if( !has_modified || nact_window_warn_modified( NACT_WINDOW( window ))){
-		g_object_unref( window );
-		terminated = TRUE;
+	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
+		has_modified = nact_main_window_has_modified_items( window );
+
+		if( !has_modified || nact_window_warn_modified( NACT_WINDOW( window ))){
+			g_object_unref( window );
+			terminated = TRUE;
+		}
 	}
 
 	return( terminated );
@@ -1245,7 +1229,7 @@ nact_main_window_has_modified_items( const NactMainWindow *window )
 		g_debug( "%s: has_modified=%s", thisfn, has_modified ? "True":"False" );
 	}
 
-	return( count_deleted > 0 || has_modified || nact_main_menubar_is_level_zero_order_changed( window ));
+	return( count_deleted > 0 || has_modified || nact_menubar_is_level_zero_order_changed( window ));
 }
 
 /**

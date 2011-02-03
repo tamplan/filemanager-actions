@@ -115,18 +115,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-iproperties-tab.h								\
 	nact-ischemes-tab.c									\
 	nact-ischemes-tab.h									\
-	nact-main-menubar-edit.c							\
-	nact-main-menubar-edit.h							\
-	nact-main-menubar-file.c							\
-	nact-main-menubar-file.h							\
-	nact-main-menubar-help.c							\
-	nact-main-menubar-help.h							\
-	nact-main-menubar-maintainer.c						\
-	nact-main-menubar-maintainer.h						\
-	nact-main-menubar-tools.c							\
-	nact-main-menubar-tools.h							\
-	nact-main-menubar-view.c							\
-	nact-main-menubar-view.h							\
 	nact-main-statusbar.c								\
 	nact-main-statusbar.h								\
 	nact-main-tab.c										\
@@ -140,6 +128,12 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-menubar.c										\
 	nact-menubar.h										\
 	nact-menubar-priv.h									\
+	nact-menubar-edit.c									\
+	nact-menubar-file.c									\
+	nact-menubar-help.c									\
+	nact-menubar-maintainer.c							\
+	nact-menubar-tools.c								\
+	nact-menubar-view.c									\
 	nact-preferences-editor.c							\
 	nact-preferences-editor.h							\
 	nact-providers-list.c								\

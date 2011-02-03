@@ -93,11 +93,13 @@ typedef struct {
 
 GType        nact_menubar_get_type( void );
 
-NactMenubar *nact_menubar_new     ( BaseWindow *window );
+NactMenubar *nact_menubar_new       ( BaseWindow *window );
+
+void         nact_menubar_open_popup( BaseWindow *window, GdkEventButton *event );
+void         nact_menubar_save_items( BaseWindow *window );
 
 /* *** */
-gboolean nact_main_menubar_is_level_zero_order_changed( const NactMainWindow *window );
-void     nact_main_menubar_open_popup( NactMainWindow *window, GdkEventButton *event );
+gboolean nact_menubar_is_level_zero_order_changed( const NactMainWindow *window );
 /* *** */
 
 G_END_DECLS

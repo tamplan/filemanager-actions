@@ -34,11 +34,10 @@
 
 #include <core/na-iabout.h>
 
-#include "nact-main-menubar-help.h"
 #include "nact-menubar-priv.h"
 
 /**
- * nact_main_menubar_help_on_update_sensitivities:
+ * nact_menubar_help_on_update_sensitivities:
  * @window: the #NactMainWindow main application window.
  * @user_data: user data ?
  * @mis: the #MenubarIndicatorsStruct structure.
@@ -46,23 +45,23 @@
  * Update sensitivities on the Help menu.
  */
 void
-nact_main_menubar_help_on_update_sensitivities( NactMenubar *bar )
+nact_menubar_help_on_update_sensitivities( const NactMenubar *bar )
 {
 	nact_menubar_enable_item( bar, "HelpItem", TRUE );
 	/* about always enabled */
 }
 
 /**
- * nact_main_menubar_help_on_help:
+ * nact_menubar_help_on_help:
  * @action: the #GtkAction of the item.
  * @window: the #NactMainWindow main application window.
  *
  * Triggers the "Help/Help" item.
  */
 void
-nact_main_menubar_help_on_help( GtkAction *action, NactMainWindow *window )
+nact_menubar_help_on_help( GtkAction *action, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_menubar_help_on_help";
+	static const gchar *thisfn = "nact_menubar_help_on_help";
 	GError *error;
 
 	error = NULL;
@@ -74,14 +73,14 @@ nact_main_menubar_help_on_help( GtkAction *action, NactMainWindow *window )
 }
 
 /**
- * nact_main_menubar_help_on_about:
+ * nact_menubar_help_on_about:
  * @action: the #GtkAction of the item.
  * @window: the #NactMainWindow main application window.
  *
  * Triggers the "Help/About" item.
  */
 void
-nact_main_menubar_help_on_about( GtkAction *action, NactMainWindow *window )
+nact_menubar_help_on_about( GtkAction *action, NactMainWindow *window )
 {
 	na_iabout_display( NA_IABOUT( window ));
 }

@@ -36,10 +36,10 @@
 
 #include "nact-iactions-list.h"
 #include "nact-clipboard.h"
-#include "nact-main-menubar-maintainer.h"
+#include "nact-menubar-priv.h"
 
 /**
- * nact_main_menubar_maintainer_on_update_sensitivities:
+ * nact_menubar_maintainer_on_update_sensitivities:
  * @window: the #NactMainWindow main application window.
  * @user_data: user data ?
  * @mis: the #MenubarIndicatorsStruct structure.
@@ -47,19 +47,19 @@
  * Update sensitivities on the Maintainer menu.
  */
 void
-nact_main_menubar_maintainer_on_update_sensitivities( NactMenubar *bar )
+nact_menubar_maintainer_on_update_sensitivities( const NactMenubar *bar )
 {
 }
 
 /**
- * nact_main_menubar_maintainer_on_dump_selection:
+ * nact_menubar_maintainer_on_dump_selection:
  * @action: the #GtkAction of the item.
  * @window: the #NactMainWindow main application window.
  *
  * Triggers the "Maintainer/Dump selection" item.
  */
 void
-nact_main_menubar_maintainer_on_dump_selection( GtkAction *action, NactMainWindow *window )
+nact_menubar_maintainer_on_dump_selection( GtkAction *action, NactMainWindow *window )
 {
 	GList *items, *it;
 
@@ -72,40 +72,40 @@ nact_main_menubar_maintainer_on_dump_selection( GtkAction *action, NactMainWindo
 }
 
 /**
- * nact_main_menubar_maintainer_on_brief_tree_store_dump:
+ * nact_menubar_maintainer_on_brief_tree_store_dump:
  * @action: the #GtkAction of the item.
  * @window: the #NactMainWindow main application window.
  *
  * Triggers the "Maintainer/Brief treestore dump" item.
  */
 void
-nact_main_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, NactMainWindow *window )
+nact_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, NactMainWindow *window )
 {
 	nact_iactions_list_brief_tree_dump( NACT_IACTIONS_LIST( window ));
 }
 
 /**
- * nact_main_menubar_maintainer_on_list_modified_items:
+ * nact_menubar_maintainer_on_list_modified_items:
  * @action: the #GtkAction of the item.
  * @window: the #NactMainWindow main application window.
  *
  * Triggers the "Maintainer/List modified items" item.
  */
 void
-nact_main_menubar_maintainer_on_list_modified_items( GtkAction *action, NactMainWindow *window )
+nact_menubar_maintainer_on_list_modified_items( GtkAction *action, NactMainWindow *window )
 {
 	nact_iactions_list_bis_list_modified_items( NACT_IACTIONS_LIST( window ));
 }
 
 /**
- * nact_main_menubar_maintainer_on_dump_clipboard:
+ * nact_menubar_maintainer_on_dump_clipboard:
  * @action: the #GtkAction of the item.
  * @window: the #NactMainWindow main application window.
  *
  * Triggers the "Maintainer/Dump clipboard" item.
  */
 void
-nact_main_menubar_maintainer_on_dump_clipboard( GtkAction *action, NactMainWindow *window )
+nact_menubar_maintainer_on_dump_clipboard( GtkAction *action, NactMainWindow *window )
 {
 	nact_clipboard_dump( nact_main_window_get_clipboard( window ));
 }

@@ -1298,10 +1298,11 @@ open_popup( NactIActionsList *instance, GdkEventButton *event )
 	GtkTreePath *path;
 
 	treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
+
 	if( gtk_tree_view_get_path_at_pos( treeview, event->x, event->y, &path, NULL, NULL, NULL )){
 		model = gtk_tree_view_get_model( treeview );
 		nact_iactions_list_bis_select_row_at_path( instance, treeview, model, path );
 		gtk_tree_path_free( path );
-		nact_main_menubar_open_popup( NACT_MAIN_WINDOW( instance ), event );
+		nact_menubar_open_popup( BASE_WINDOW( instance ), event );
 	}
 }
