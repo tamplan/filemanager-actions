@@ -710,8 +710,8 @@ instance_constructed( GObject *window )
 		nact_menubar_new( BASE_WINDOW( window ));
 
 		/* chain up to the parent class */
-		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
-			G_OBJECT_CLASS( st_parent_class )->dispose( window );
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( window );
 		}
 	}
 }
@@ -724,8 +724,6 @@ instance_dispose( GObject *window )
 	GtkWidget *pane;
 	gint pos;
 	GList *it;
-	NactApplication *application;
-	NAUpdater *updater;
 	NASettings *settings;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -739,9 +737,7 @@ instance_dispose( GObject *window )
 
 		g_object_unref( self->private->clipboard );
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( self )));
-		updater = nact_application_get_updater( application );
-		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+		settings = na_pivot_get_settings( NA_PIVOT( self->private->updater ));
 
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
@@ -851,8 +847,6 @@ static void
 on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_initialize_base_window";
-	NactApplication *application;
-	NAUpdater *updater;
 	NASettings *settings;
 	guint pos;
 	GtkWidget *pane;
@@ -863,9 +857,7 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		updater = nact_application_get_updater( application );
-		settings = na_pivot_get_settings( NA_PIVOT( updater ));
+		settings = na_pivot_get_settings( NA_PIVOT( window->private->updater ));
 
 		pos = na_settings_get_uint( settings, NA_IPREFS_MAIN_PANED, NULL, NULL );
 		if( pos ){
@@ -893,7 +885,7 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 
 		/* fill the IActionsList at last so that all signals are connected
 		 */
-		tree = na_updater_load_items( updater );
+		tree = na_updater_load_items( window->private->updater );
 		g_debug( "%s: pivot_tree=%p", thisfn, ( void * ) tree );
 		nact_iactions_list_runtime_init_toplevel( NACT_IACTIONS_LIST( window ), tree );
 
@@ -993,8 +985,6 @@ NAObjectItem *
 nact_main_window_get_item( const NactMainWindow *window, const gchar *id )
 {
 	NAObjectItem *exists;
-	NactApplication *application;
-	NAUpdater *updater;
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
 
@@ -1004,9 +994,7 @@ nact_main_window_get_item( const NactMainWindow *window, const gchar *id )
 
 		/* leave here this dead code, in case I change of opinion later */
 		if( 0 ){
-			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-			updater = nact_application_get_updater( application );
-			exists = na_pivot_get_item( NA_PIVOT( updater ), id );
+			exists = na_pivot_get_item( NA_PIVOT( window->private->updater ), id );
 		}
 
 		if( !exists ){
@@ -1286,8 +1274,6 @@ gboolean
 nact_main_window_remove_deleted( NactMainWindow *window, GSList **messages )
 {
 	gboolean delete_ok = TRUE;
-	NactApplication *application;
-	NAUpdater *updater;
 	GList *it;
 	NAObject *item;
 	GList *not_deleted;
@@ -1296,13 +1282,11 @@ nact_main_window_remove_deleted( NactMainWindow *window, GSList **messages )
 
 	if( !window->private->dispose_has_run ){
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		updater = nact_application_get_updater( application );
 		not_deleted = NULL;
 
 		for( it = window->private->deleted ; it ; it = it->next ){
 			item = NA_OBJECT( it->data );
-			delete_ok = actually_delete_item( window, item, updater, &not_deleted, messages );
+			delete_ok = actually_delete_item( window, item, window->private->updater, &not_deleted, messages );
 		}
 
 		na_object_unref_items( window->private->deleted );
@@ -1497,14 +1481,9 @@ setup_dialog_title( NactMainWindow *window )
 static void
 setup_writability_status( NactMainWindow *window )
 {
-	NactApplication *application;
-	NAUpdater *updater;
-
 	g_return_if_fail( NA_IS_OBJECT_ITEM( window->private->selected_item ));
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	window->private->editable = na_updater_is_item_writable( updater, window->private->selected_item, &window->private->reason );
+	window->private->editable = na_updater_is_item_writable( window->private->updater, window->private->selected_item, &window->private->reason );
 	nact_main_statusbar_set_locked( window, !window->private->editable, window->private->reason );
 }
 
@@ -1541,8 +1520,6 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 	static const gchar *thisfn = "nact_main_window_on_settings_order_mode_changed";
 	const gchar *order_mode_str;
 	guint order_mode;
-	NactApplication *application;
-	NAUpdater *updater;
 	GList *tree;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -1559,9 +1536,7 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 		nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( window ), order_mode );
 		nact_sort_buttons_display_order_change( window, order_mode );
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		updater = nact_application_get_updater( application );
-		tree = na_pivot_get_items( NA_PIVOT( updater ));
+		tree = na_pivot_get_items( NA_PIVOT( window->private->updater ));
 
 		if( g_list_length( tree )){
 			g_signal_emit_by_name( window,

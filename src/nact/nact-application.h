@@ -74,7 +74,7 @@ GType            nact_application_get_type( void );
 
 NactApplication *nact_application_new_with_args( int argc, char **argv );
 
-NAUpdater       *nact_application_get_updater( NactApplication *application );
+NAUpdater       *nact_application_get_updater( const NactApplication *application );
 
 G_END_DECLS
 

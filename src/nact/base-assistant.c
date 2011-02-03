@@ -157,7 +157,7 @@ class_init( BaseAssistantClass *klass )
 					_( "Quit on Escape" ),
 					_( "Does the assistant should 'Quit' when the user hits the Escape key ?" ),
 					FALSE,
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_WARN_ON_ESCAPE_ID,
 			g_param_spec_boolean(
@@ -165,7 +165,7 @@ class_init( BaseAssistantClass *klass )
 					_( "Warn on Escape" ),
 					_( "Does the user should confirm when quitting the assistant on Escape key ?" ),
 					FALSE,
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	base_class = BASE_WINDOW_CLASS( klass );
 	base_class->run = do_run;

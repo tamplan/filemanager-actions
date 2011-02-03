@@ -1,5 +1,15 @@
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.c (class_init):
+	* src/nact/base-assistant.c (class_init):
+	* src/nact/base-window.c (class_init):
+	* src/nact/nact-main-window.c (instance_constructed):
+	Setup construction properties.
+
+	* src/nact/nact-application.c:
+	* src/nact/nact-application.h (nact_application_get_updater):
+	Set NactApplication as a const argument.
+
 	Deprecate NAIPivotConsumer interface
 
 	* src/core/na-ipivot-consumer.c:

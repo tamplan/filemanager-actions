@@ -110,8 +110,9 @@ static void     class_init( BaseWindowClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void     instance_dispose( GObject *application );
-static void     instance_finalize( GObject *application );
+static void     instance_constructed( GObject *window );
+static void     instance_dispose( GObject *window );
+static void     instance_finalize( GObject *window );
 
 /* initialization process
  */
@@ -182,24 +183,25 @@ class_init( BaseWindowClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
-	object_class->dispose = instance_dispose;
-	object_class->finalize = instance_finalize;
 	object_class->get_property = instance_get_property;
 	object_class->set_property = instance_set_property;
+	object_class->constructed = instance_constructed;
+	object_class->dispose = instance_dispose;
+	object_class->finalize = instance_finalize;
 
 	g_object_class_install_property( object_class, BASE_PROP_PARENT_ID,
 			g_param_spec_pointer(
 					BASE_PROP_PARENT,
 					_( "Parent BaseWindow" ),
 					_( "A pointer (not a reference) to the BaseWindow parent of this BaseWindow" ),
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_APPLICATION_ID,
 			g_param_spec_pointer(
-				BASE_PROP_APPLICATION,
-				_( "BaseApplication" ),
-				_( "A pointer (not a reference) to the BaseApplication instance" ),
-				G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					BASE_PROP_APPLICATION,
+					_( "BaseApplication" ),
+					_( "A pointer (not a reference) to the BaseApplication instance" ),
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_XMLUI_FILENAME_ID,
 			g_param_spec_string(
@@ -207,7 +209,7 @@ class_init( BaseWindowClass *klass )
 					_( "XML UI filename" ),
 					_( "The filename which contains the XML UI definition" ),
 					"",
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_HAS_OWN_BUILDER_ID,
 			g_param_spec_boolean(
@@ -215,7 +217,7 @@ class_init( BaseWindowClass *klass )
 					_( "Has its own GtkBuilder" ),
 					_( "Whether this BaseWindow reallocates a new GtkBuilder each time it is opened" ),
 					FALSE,
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_TOPLEVEL_NAME_ID,
 			g_param_spec_string(
@@ -223,7 +225,7 @@ class_init( BaseWindowClass *klass )
 					_( "Toplevel name" ),
 					_( "The internal GtkBuildable name of the toplevel window" ),
 					"",
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_WSP_NAME_ID,
 			g_param_spec_string(
@@ -231,7 +233,7 @@ class_init( BaseWindowClass *klass )
 					_( "WSP name" ),
 					_( "The string which handles the window size and position in user preferences" ),
 					"",
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	klass->private = g_new0( BaseWindowClassPrivate, 1 );
 
@@ -318,7 +320,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = BASE_WINDOW( instance );
 
 	/* at a first glance, we may suppose that this first window is the main one
-	 * if this is not the case, we have to write some more code
+	 * if this is not the case, we would have to write some more code
 	 */
 	if( !st_first_window ){
 		st_first_window = self;
@@ -418,6 +420,28 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 }
 
 static void
+instance_constructed( GObject *window )
+{
+	static const gchar *thisfn = "base_window_instance_constructed";
+	BaseWindow *self;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	self = BASE_WINDOW( window );
+
+	if( !self->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
+		g_debug( "%s: application=%p", thisfn, ( void * ) self->private->application );
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( window );
+		}
+	}
+}
+
+static void
 instance_dispose( GObject *window )
 {
 	static const gchar *thisfn = "base_window_instance_dispose";
@@ -429,7 +453,6 @@ instance_dispose( GObject *window )
 	self = BASE_WINDOW( window );
 
 	if( !self->private->dispose_has_run ){
-
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		base_gtk_utils_save_window_position( self, self->private->wsp_name );
@@ -540,7 +563,7 @@ base_window_init( BaseWindow *window )
 	if( !window->private->dispose_has_run &&
 		!window->private->initialized ){
 
-		g_debug( "%s: window=%p", thisfn, ( void * ) window );
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		if( !window->private->application ){
 			g_return_val_if_fail( window->private->parent, FALSE );
@@ -675,9 +698,10 @@ on_initialize_gtk_toplevel_class_handler( BaseWindow *window, GtkWindow *topleve
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	g_debug( "%s: window=%p, toplevel=%p", thisfn, ( void * ) window, ( void * ) toplevel );
-
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s), toplevel=%p (%s)", thisfn,
+				( void * ) window, G_OBJECT_TYPE_NAME( window ),
+				( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ));
 
 		if( BASE_WINDOW_GET_CLASS( window )->initialize_gtk_toplevel ){
 			BASE_WINDOW_GET_CLASS( window )->initialize_gtk_toplevel( window, toplevel );
@@ -695,16 +719,14 @@ do_initialize_gtk_toplevel( BaseWindow *window, GtkWindow *toplevel )
 	g_return_if_fail( GTK_IS_WINDOW( toplevel ));
 	g_return_if_fail( toplevel == window->private->gtk_toplevel );
 
-	g_debug( "%s: window=%p, toplevel=%p", thisfn, ( void * ) window, ( void * ) toplevel );
-
 	if( !window->private->dispose_has_run ){
-
-		g_debug( "%s: parent=%p (%s)", thisfn,
+		g_debug( "%s: window=%p (%s), toplevel=%p (%s), parent=%p (%s)", thisfn,
+				( void * ) window, G_OBJECT_TYPE_NAME( window ),
+				( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ),
 				( void * ) window->private->parent,
 				window->private->parent ? G_OBJECT_TYPE_NAME( window->private->parent ) : "null" );
 
 		if( window->private->parent ){
-
 			g_return_if_fail( BASE_IS_WINDOW( window->private->parent ));
 			parent_gtk_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( window->private->parent ));
 			gtk_window_set_transient_for( toplevel, parent_gtk_toplevel );
@@ -745,7 +767,7 @@ base_window_run( BaseWindow *window )
 
 		} else {
 			g_return_val_if_fail( GTK_IS_WINDOW( window->private->gtk_toplevel ), code );
-			g_debug( "%s: window=%p", thisfn, ( void * ) window );
+			g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 			code = BASE_EXIT_CODE_OK;
 			g_signal_emit_by_name( window, BASE_SIGNAL_INITIALIZE_WINDOW );
@@ -773,9 +795,8 @@ on_initialize_base_window_class_handler( BaseWindow *window )
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		if( BASE_WINDOW_GET_CLASS( window )->initialize_base_window ){
 			BASE_WINDOW_GET_CLASS( window )->initialize_base_window( window );
@@ -790,9 +811,8 @@ do_initialize_base_window( BaseWindow *window )
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		base_gtk_utils_restore_window_position( window, window->private->wsp_name );
 	}
@@ -805,9 +825,8 @@ on_all_widgets_showed_class_handler( BaseWindow *window )
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		if( BASE_WINDOW_GET_CLASS( window )->all_widgets_showed ){
 			BASE_WINDOW_GET_CLASS( window )->all_widgets_showed( window );
@@ -875,8 +894,9 @@ on_delete_event( GtkWidget *toplevel, GdkEvent *event, BaseWindow *window )
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
 
-	g_debug( "%s: toplevel=%p, event=%p, window=%p",
-			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) window );
+	g_debug( "%s: toplevel=%p (%s), event=%p, window=%p (%s)",
+			thisfn, ( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ),
+			( void * ) event, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 	return( stop );
 }

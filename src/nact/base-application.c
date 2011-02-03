@@ -169,7 +169,7 @@ class_init( BaseApplicationClass *klass )
 					_( "Arguments count" ),
 					_( "The count of command-line arguments" ),
 					0, 65535, 0,
-					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_ARGV_ID,
 			g_param_spec_boxed(
@@ -177,14 +177,14 @@ class_init( BaseApplicationClass *klass )
 					_( "Arguments" ),
 					_( "The array of command-line arguments" ),
 					G_TYPE_STRV,
-					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_OPTIONS_ID,
 			g_param_spec_pointer(
 					BASE_PROP_OPTIONS,
 					_( "Option entries" ),
 					_( "The array of command-line option definitions" ),
-					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_APPLICATION_NAME_ID,
 			g_param_spec_string(
@@ -192,7 +192,7 @@ class_init( BaseApplicationClass *klass )
 					_( "Application name" ),
 					_( "The name of the application" ),
 					"",
-					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_DESCRIPTION_ID,
 			g_param_spec_string(
@@ -200,7 +200,7 @@ class_init( BaseApplicationClass *klass )
 					_( "Description" ),
 					_( "A short description to be displayed in the first line of --help output" ),
 					"",
-					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_ICON_NAME_ID,
 			g_param_spec_string(
@@ -208,7 +208,7 @@ class_init( BaseApplicationClass *klass )
 					_( "Icon name" ),
 					_( "The name of the icon of the application" ),
 					"",
-					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_UNIQUE_APP_NAME_ID,
 			g_param_spec_string(
@@ -216,7 +216,7 @@ class_init( BaseApplicationClass *klass )
 					_( "UniqueApp name" ),
 					_( "The Unique name of the application" ),
 					"",
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	klass->private = g_new0( BaseApplicationClassPrivate, 1 );
 
@@ -509,8 +509,6 @@ appli_initialize_gtk( BaseApplication *application, int *code )
 # endif
 	textdomain( GETTEXT_PACKAGE );
 #endif
-
-	gtk_set_locale();
 
 	/* setup default Gtk+ application name
 	 * must have been set at instanciationtime by the derived class

@@ -364,7 +364,7 @@ appli_main_window_new( const BaseApplication *application, int *code )
  * It should not be g_free() not g_object_unref() by the caller.
  */
 NAUpdater *
-nact_application_get_updater( NactApplication *application )
+nact_application_get_updater( const NactApplication *application )
 {
 	NAUpdater *updater = NULL;
 
