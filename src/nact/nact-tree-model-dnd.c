@@ -46,7 +46,6 @@
 #include "nact-application.h"
 #include "nact-clipboard.h"
 #include "nact-iactions-list.h"
-#include "nact-main-menubar-edit.h"
 #include "nact-main-statusbar.h"
 #include "nact-main-window.h"
 #include "nact-tree-model.h"
@@ -628,7 +627,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 					g_list_free( deletable );
 				}
 
-				relabel = nact_main_menubar_edit_is_pasted_object_relabeled( inserted, NA_PIVOT( updater ));
+				relabel = na_updater_should_pasted_be_relabeled( updater, inserted );
 				na_object_prepare_for_paste( inserted, relabel, copy_data, parent );
 				object_list = g_list_prepend( object_list, inserted );
 				g_debug( "%s: dropped=%s", thisfn, na_object_get_label( inserted ));

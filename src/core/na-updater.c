@@ -459,6 +459,41 @@ na_updater_remove_item( NAUpdater *updater, NAObject *item )
 	}
 }
 
+/**
+ * na_updater_should_pasted_be_relabeled:
+ * @updater: this #NAUpdater instance.
+ * @object: the considered #NAObject-derived object.
+ *
+ * Whether the specified object should be relabeled when pasted ?
+ *
+ * Returns: %TRUE if the object should be relabeled, %FALSE else.
+ */
+gboolean
+na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const NAObject *item )
+{
+	static const gchar *thisfn = "na_updater_should_pasted_be_relabeled";
+	gboolean relabel;
+	NASettings *settings;
+
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+
+	if( NA_IS_OBJECT_MENU( item )){
+		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, NULL );
+
+	} else if( NA_IS_OBJECT_ACTION( item )){
+		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, NULL );
+
+	} else if( NA_IS_OBJECT_PROFILE( item )){
+		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, NULL );
+
+	} else {
+		g_warning( "%s: unknown item type at %p", thisfn, ( void * ) item );
+		g_return_val_if_reached( FALSE );
+	}
+
+	return( relabel );
+}
+
 /*
  * na_updater_load_items:
  * @updater: this #NAUpdater instance.

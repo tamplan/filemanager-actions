@@ -352,7 +352,7 @@ prepare_for_paste( NactMainWindow *window )
 			}
 		}
 
-		relabel = nact_main_menubar_edit_is_pasted_object_relabeled( NA_OBJECT( it->data ), NA_PIVOT( updater ));
+		relabel = na_updater_should_pasted_be_relabeled( updater, NA_OBJECT( it->data ));
 		na_object_prepare_for_paste( it->data, relabel, renumber, action );
 		na_object_check_status( it->data );
 	}
@@ -406,7 +406,7 @@ nact_main_menubar_edit_on_duplicate( GtkAction *gtk_action, NactMainWindow *wind
 			action = NA_OBJECT_ACTION( na_object_get_parent( it->data ));
 		}
 
-		relabel = nact_main_menubar_edit_is_pasted_object_relabeled( obj, NA_PIVOT( updater ));
+		relabel = na_updater_should_pasted_be_relabeled( updater, obj );
 		na_object_prepare_for_paste( obj, relabel, TRUE, action );
 		na_object_set_origin( obj, NULL );
 		na_object_check_status( obj );
@@ -595,36 +595,4 @@ void
 nact_main_menubar_edit_on_prefererences( GtkAction *gtk_action, NactMainWindow *window )
 {
 	nact_preferences_editor_run( BASE_WINDOW( window ));
-}
-
-/**
- * nact_main_menubar_edit_is_pasted_object_relabeled:
- * @object: the considered #NAObject-derived object.
- * @pivot: the #NAPivot instance.
- *
- * Whether the specified object should be relabeled when pasted ?
- *
- * Returns: %TRUE if the object should be relabeled, %FALSE else.
- */
-gboolean
-nact_main_menubar_edit_is_pasted_object_relabeled( NAObject *object, NAPivot *pivot )
-{
-	static const gchar *thisfn = "nact_main_menubar_edit_is_pasted_object_relabeled";
-	gboolean relabel;
-	NASettings *settings;
-
-	settings = na_pivot_get_settings( pivot );
-
-	if( NA_IS_OBJECT_MENU( object )){
-		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, NULL );
-	} else if( NA_IS_OBJECT_ACTION( object )){
-		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, NULL );
-	} else if( NA_IS_OBJECT_PROFILE( object )){
-		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, NULL );
-	} else {
-		g_warning( "%s: unknown object type at %p", thisfn, ( void * ) object );
-		g_return_val_if_reached( FALSE );
-	}
-
-	return( relabel );
 }

@@ -84,6 +84,8 @@ void       na_updater_append_item( NAUpdater *updater, NAObjectItem *item );
 void       na_updater_insert_item( NAUpdater *updater, NAObjectItem *item, const gchar *parent_id, gint pos );
 void       na_updater_remove_item( NAUpdater *updater, NAObject *item );
 
+gboolean   na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const NAObject *item );
+
 /* read from / write to the physical storage subsystem
  */
 GList     *na_updater_load_items ( NAUpdater *updater );

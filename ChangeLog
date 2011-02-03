@@ -1,5 +1,14 @@
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-updater.c:
+	* src/core/na-updater.h (na_updater_should_pasted_be_relabeled): New function.
+
+	* src/nact/nact-main-menubar-edit.c:
+	* src/nact/nact-main-menubar-edit.h
+	(nact_main_menubar_edit_is_pasted_object_relabeled): Removed function.
+
+	* src/nact/nact-tree-model-dnd.c (drop_inside): Updated accordingly.
+
 	* src/nact/base-application.c (class_init):
 	* src/nact/base-assistant.c (class_init):
 	* src/nact/base-window.c (class_init):

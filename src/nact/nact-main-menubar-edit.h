@@ -52,8 +52,6 @@ void     nact_main_menubar_edit_on_delete       ( GtkAction *action, NactMainWin
 void     nact_main_menubar_edit_on_reload       ( GtkAction *action, NactMainWindow *window );
 void     nact_main_menubar_edit_on_prefererences( GtkAction *action, NactMainWindow *window );
 
-gboolean nact_main_menubar_edit_is_pasted_object_relabeled( NAObject *object, NAPivot *pivot );
-
 G_END_DECLS
 
 #endif /* __NACT_NACT_MENUBAR_EDIT_H__ */
