@@ -960,7 +960,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), imported, dest );
 	nact_tree_model_dump( model );
 
-	na_object_unref_items( imported );
+	na_object_free_items( imported );
 	na_core_utils_slist_free( parms.uris );
 
 	for( it = parms.results ; it ; it = it->next ){

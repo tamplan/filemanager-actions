@@ -726,7 +726,7 @@ instance_dispose( GObject *window )
 		for( it = self->private->deleted ; it ; it = it->next ){
 			g_debug( "nact_main_window_instance_dispose: deleted=%p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
 		}
-		na_object_unref_items( self->private->deleted );
+		na_object_free_items( self->private->deleted );
 
 		nact_iactions_list_dispose( NACT_IACTIONS_LIST( window ));
 		nact_sort_buttons_dispose( self );
@@ -1108,8 +1108,7 @@ reload_items( NactMainWindow *window )
 	window->private->selected_item = NULL;
 	window->private->selected_profile = NULL;
 
-	na_object_unref_items( window->private->deleted );
-	window->private->deleted = NULL;
+	window->private->deleted = na_object_free_items( window->private->deleted );
 
 	tree = na_updater_load_items( window->private->updater );
 	nact_iactions_list_fill( NACT_IACTIONS_LIST( window ), tree );
@@ -1189,6 +1188,29 @@ on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window )
 	nact_main_window_quit( window );
 
 	return( TRUE );
+}
+
+/**
+ * nact_main_window_get_current_items:
+ * @window: this #NactMainWindow instance.
+ *
+ * Returns: The current content of the items tree view.
+ */
+GList *
+nact_main_window_get_current_items( const NactMainWindow *window )
+{
+	GList *items;
+
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), NULL );
+
+	items = NULL;
+
+	if( !window->private->dispose_has_run ){
+
+		items = nact_iactions_list_bis_get_items( NACT_IACTIONS_LIST( window ));
+	}
+
+	return( items );
 }
 
 /**
@@ -1303,14 +1325,13 @@ nact_main_window_remove_deleted( NactMainWindow *window, GSList **messages )
 			delete_ok = actually_delete_item( window, item, window->private->updater, &not_deleted, messages );
 		}
 
-		na_object_unref_items( window->private->deleted );
-		window->private->deleted = NULL;
+		window->private->deleted = na_object_free_items( window->private->deleted );
 
 		setup_dialog_title( window );
 
 		if( g_list_length( not_deleted )){
 			nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), not_deleted, NULL );
-			na_object_unref_items( not_deleted );
+			na_object_free_items( not_deleted );
 		}
 	}
 

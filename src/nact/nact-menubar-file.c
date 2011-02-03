@@ -124,7 +124,7 @@ nact_menubar_file_on_new_menu( GtkAction *gtk_action, NactMainWindow *window )
 	na_object_check_status( menu );
 	items = g_list_prepend( NULL, menu );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_unref_items( items );
+	na_object_free_items( items );
 }
 
 /**
@@ -147,7 +147,7 @@ nact_menubar_file_on_new_action( GtkAction *gtk_action, NactMainWindow *window )
 	na_object_check_status( action );
 	items = g_list_prepend( NULL, action );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_unref_items( items );
+	na_object_free_items( items );
 }
 
 /**
@@ -186,7 +186,7 @@ nact_menubar_file_on_new_profile( GtkAction *gtk_action, NactMainWindow *window 
 
 	items = g_list_prepend( NULL, profile );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-	na_object_unref_items( items );
+	na_object_free_items( items );
 }
 
 /**

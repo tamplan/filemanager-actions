@@ -621,7 +621,7 @@ na_io_provider_is_finally_writable( const NAIOProvider *provider, guint *reason 
  * in display order. This tree contains #NAObjectMenu menus, along with
  * #NAObjectAction actions and their #NAObjectProfile profiles.
  *
- * The returned list should be na_object_unref_items() by the caller.
+ * The returned list should be na_object_free_items().
  */
 GList *
 na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **messages )

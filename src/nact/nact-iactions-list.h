@@ -48,6 +48,11 @@
  *   refilled on demand.
  *   Counters are then incremented in nact_iactions_list_insert() and
  *   nact_iactions_list_delete() functions.
+ *
+ * As of 3.1.0, the IActionsList interface is going to be replaced
+ * by a NactItemsTreeView class, itself derived from NactTreeView.
+ * During the transition phase, the interface stays being initialized
+ * as well as the two classes are instanciated.
  */
 
 #include <gtk/gtk.h>

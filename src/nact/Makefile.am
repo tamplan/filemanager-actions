@@ -147,6 +147,8 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-tree-model-dnd.c								\
 	nact-tree-model-dnd.h								\
 	nact-tree-model-priv.h								\
+	nact-tree-view.c									\
+	nact-tree-view.h									\
 	nact-window.c										\
 	nact-window.h										\
 	$(BUILT_SOURCES)									\

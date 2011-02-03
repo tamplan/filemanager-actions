@@ -68,27 +68,27 @@ typedef gboolean ( *HierarchyIterFunc )( GObjectClass *class, const NAObject *ob
 
 static GObjectClass *st_parent_class   = NULL;
 
-static GType          register_type( void );
-static void           class_init( NAObjectClass *klass );
-static void           instance_init( GTypeInstance *instance, gpointer klass );
-static void           instance_dispose( GObject *object );
-static void           instance_finalize( GObject *object );
+static GType    register_type( void );
+static void     class_init( NAObjectClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
 
-static void           object_dump( const NAObject *object );
+static void     object_dump( const NAObject *object );
 
-static void           iduplicable_iface_init( NAIDuplicableInterface *iface );
-static void           iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
-static gboolean       iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
-static gboolean       iduplicable_are_equal_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
-static gboolean       iduplicable_is_valid( const NAIDuplicable *object );
-static gboolean       iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
+static void     iduplicable_iface_init( NAIDuplicableInterface *iface );
+static void     iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
+static gboolean iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
+static gboolean iduplicable_are_equal_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
+static gboolean iduplicable_is_valid( const NAIDuplicable *object );
+static gboolean iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
 
-static void           push_modified_status_up( const NAObject *object, gboolean is_modified );
-static gboolean       object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data );
-static gboolean       dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *user_data );
-static void           dump_tree( GList *tree, gint level );
-static void           iter_on_class_hierarchy( const NAObject *object, HierarchyIterFunc pfn, void *user_data );
-static GList         *build_class_hierarchy( const NAObject *object );
+static void     push_modified_status_up( const NAObject *object, gboolean is_modified );
+static gboolean object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data );
+static gboolean dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *user_data );
+static void     dump_tree( GList *tree, gint level );
+static void     iter_on_class_hierarchy( const NAObject *object, HierarchyIterFunc pfn, void *user_data );
+static GList   *build_class_hierarchy( const NAObject *object );
 
 GType
 na_object_object_get_type( void )
@@ -609,8 +609,8 @@ dump_tree( GList *tree, gint level )
 {
 	GString *prefix;
 	gint i;
-	GList *subitems, *it;
-	gchar *id;
+	GList *it;
+	const NAObject *object;
 	gchar *label;
 
 	prefix = g_string_new( "" );
@@ -619,16 +619,14 @@ dump_tree( GList *tree, gint level )
 	}
 
 	for( it = tree ; it ; it = it->next ){
-		id = na_object_get_id( it->data );
-		label = na_object_get_label( it->data );
-		g_debug( "na_object_dump_tree: %s%p (%s) %s \"%s\"",
-				prefix->str, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), id, label );
-		g_free( id );
+		object = ( const NAObject * ) it->data;
+		label = na_object_get_label( object );
+		g_debug( "na_object_dump_tree: %s%p (%s, ref_count=%u) '%s'", prefix->str,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count, label );
 		g_free( label );
 
-		if( NA_IS_OBJECT_ITEM( it->data )){
-			subitems = na_object_get_items( it->data );
-			dump_tree( subitems, level+1 );
+		if( NA_IS_OBJECT_ITEM( object )){
+			dump_tree( na_object_get_items( object ), level+1 );
 		}
 	}
 
@@ -680,34 +678,23 @@ na_object_object_reset_origin( NAObject *object, const NAObject *origin )
  * Recursively ref the @object and all its children, incrementing their
  * reference_count by 1.
  *
- * Returns: a reference on the @pbject.
+ * Returns: a reference on the @object.
  *
  * Since: 2.30
  */
 NAObject *
 na_object_object_ref( NAObject *object )
 {
-	NAObject *ref = NULL;
-	GList *children, *ic;
+	NAObject *ref;
 
 	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
 
+	ref = NULL;
+
 	if( !object->private->dispose_has_run ){
 
-		g_debug( "na_object_object_ref: object=%p (%s, ref_count=%d)",
-				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
-
 		if( NA_IS_OBJECT_ITEM( object )){
-
-			children = na_object_get_items( object );
-
-			for( ic = children ; ic ; ic = ic->next ){
-				/*
-				g_debug( "na_object_object_ref: child=%p (%s, ref_count=%d)",
-							( void * ) ic->data, G_OBJECT_TYPE_NAME( ic->data ), G_OBJECT( ic->data )->ref_count );
-							*/
-				na_object_ref( ic->data );
-			}
+			g_list_foreach( na_object_get_items( object ), ( GFunc ) na_object_object_ref, NULL );
 		}
 
 		ref = g_object_ref( object );
@@ -728,27 +715,13 @@ na_object_object_ref( NAObject *object )
 void
 na_object_object_unref( NAObject *object )
 {
-	GList *children;
-	GList *ic, *icnext;
-
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	if( !object->private->dispose_has_run ){
 
-		g_debug( "na_object_object_unref: object=%p (%s, ref_count=%d)",
-				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
-
 		if( NA_IS_OBJECT_ITEM( object )){
-			children = na_object_get_items( object );
-
-			for( ic = children ; ic ; ic = icnext ){
-				icnext = ic->next;
-				g_object_unref( ic->data );
-			}
+			g_list_foreach( na_object_get_items( object ), ( GFunc ) na_object_object_unref, NULL );
 		}
-
-		/*g_debug( "na_object_object_unref:about_to_unref: object=%p (%s, ref_count=%d)",
-				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );*/
 
 		g_object_unref( object );
 	}

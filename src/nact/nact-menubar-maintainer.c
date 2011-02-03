@@ -68,7 +68,7 @@ nact_menubar_maintainer_on_dump_selection( GtkAction *action, NactMainWindow *wi
 		na_object_dump( it->data );
 	}
 
-	na_object_unref_selected_items( items );
+	na_object_free_items( items );
 }
 
 /**

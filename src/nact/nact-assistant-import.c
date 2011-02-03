@@ -680,7 +680,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	 */
 	imported_items = g_list_reverse( imported_items );
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( main_window ), imported_items, NULL );
-	na_object_unref_items( imported_items );
+	na_object_free_items( imported_items );
 }
 
 static NAObjectItem *

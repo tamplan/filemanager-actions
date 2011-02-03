@@ -90,6 +90,7 @@ NactMainWindow *nact_main_window_new( const NactApplication *application );
 
 NactClipboard  *nact_main_window_get_clipboard     ( const NactMainWindow *window );
 NAObjectItem   *nact_main_window_get_item          ( const NactMainWindow *window, const gchar *id );
+GList          *nact_main_window_get_current_items ( const NactMainWindow *window );
 gboolean        nact_main_window_has_modified_items( const NactMainWindow *window );
 void            nact_main_window_move_to_deleted   ( NactMainWindow *window, GList *items );
 void            nact_main_window_reload            ( NactMainWindow *window );

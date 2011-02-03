@@ -224,7 +224,7 @@ nact_menubar_edit_on_cut( GtkAction *gtk_action, NactMainWindow *window )
 		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete, TRUE );
 	}
 
-	na_object_unref_selected_items( items );
+	na_object_free_items( items );
 }
 
 /**
@@ -256,7 +256,7 @@ nact_menubar_edit_on_copy( GtkAction *gtk_action, NactMainWindow *window )
 	clipboard = nact_main_window_get_clipboard( window );
 	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
 	update_clipboard_counters( window );
-	na_object_unref_selected_items( items );
+	na_object_free_items( items );
 
 	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 }
@@ -288,7 +288,7 @@ nact_menubar_edit_on_paste( GtkAction *gtk_action, NactMainWindow *window )
 	items = prepare_for_paste( window );
 	if( items ){
 		nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-		na_object_unref_items( items );
+		na_object_free_items( items );
 	}
 }
 
@@ -319,7 +319,7 @@ nact_menubar_edit_on_paste_into( GtkAction *gtk_action, NactMainWindow *window )
 	items = prepare_for_paste( window );
 	if( items ){
 		nact_iactions_list_bis_insert_into( NACT_IACTIONS_LIST( window ), items );
-		na_object_unref_items( items );
+		na_object_free_items( items );
 	}
 }
 
@@ -413,10 +413,10 @@ nact_menubar_edit_on_duplicate( GtkAction *gtk_action, NactMainWindow *window )
 		na_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );
 		nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
-		na_object_unref_items( dup );
+		na_object_free_items( dup );
 	}
 
-	na_object_unref_selected_items( items );
+	na_object_free_items( items );
 }
 
 /**
@@ -472,7 +472,7 @@ nact_menubar_edit_on_delete( GtkAction *gtk_action, NactMainWindow *window )
 		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete, TRUE );
 	}
 
-	na_object_unref_selected_items( items );
+	na_object_free_items( items );
 }
 
 static GList *

@@ -487,7 +487,7 @@ get_menus_items( NautilusActions *plugin, guint target, GList *selection )
 
 	menus_list = build_nautilus_menus( plugin, copy_tree, target, selection, tokens );
 
-	na_object_unref_items( copy_tree );
+	na_object_free_items( copy_tree );
 	g_object_unref( tokens );
 
 	if( target != ITEM_TARGET_TOOLBAR ){

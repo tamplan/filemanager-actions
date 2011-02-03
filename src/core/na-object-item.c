@@ -164,7 +164,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_object_item_instance_dispose";
 	NAObjectItem *self;
 	GList *children;
 
@@ -177,9 +176,8 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		children = na_object_get_items( self );
-		g_debug( "%s: children=%p (count=%d)", thisfn, ( void * ) children, g_list_length( children ));
 		na_object_set_items( self, NULL );
-		na_object_unref_items( children );
+		na_object_free_items( children );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -708,42 +706,41 @@ na_object_item_count_items( GList *items, gint *menus, gint *actions, gint *prof
 }
 
 /**
- * na_object_item_unref_items:
+ * na_object_item_copyref_items:
  * @items: a list of #NAObject -derived items.
  *
- * Unref only the first level the #NAObject of the list, freeing the list at last.
+ * Creates a copy of the provided list, recursively incrementing the
+ * reference count of NAObjects.
  *
- * This is rather only used by NAPivot.
+ * Returns: the new list, which should be na_object_free_items() by the
+ * caller.
  *
- * Since: 2.30
+ * Since: 3.1.0
  */
-void
-na_object_item_unref_items( GList *items )
+GList *
+na_object_item_copyref_items( GList *items )
 {
-	g_list_foreach( items, ( GFunc ) g_object_unref, NULL );
-	g_list_free( items );
+	GList *copy = g_list_copy( items );
+	g_list_foreach( copy, ( GFunc ) na_object_object_ref, NULL );
+	return( copy );
 }
 
 /**
- * na_object_item_unref_items_rec:
+ * na_object_item_free_items:
  * @items: a list of #NAObject -derived items.
  *
- * Recursively unref the #NAObject's of the list, freeing the list at last.
+ * Free the items list.
  *
- * This is heavily used by NACT.
+ * Returns: a %NULL pointer.
  *
- * Since: 2.30
+ * Since: 3.1.0
  */
-void
-na_object_item_unref_items_rec( GList *items )
+GList *
+na_object_item_free_items( GList *items )
 {
-	GList *it;
-
-	for( it = items ; it ; it = it->next ){
-		na_object_unref( it->data );
-	}
-
+	g_list_foreach( items, ( GFunc ) na_object_object_unref, NULL );
 	g_list_free( items );
+	return( NULL );
 }
 
 /**

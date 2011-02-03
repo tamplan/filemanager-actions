@@ -45,11 +45,11 @@ src/nact/nact-ifolders-tab.c
 src/nact/nact-imimetypes-tab.c
 src/nact/nact-iproperties-tab.c
 src/nact/nact-ischemes-tab.c
-src/nact/nact-main-menubar.c
-src/nact/nact-main-menubar-edit.c
-src/nact/nact-main-menubar-file.c
 src/nact/nact-main-window.c
 src/nact/nact-match-list.c
+src/nact/nact-menubar.c
+src/nact/nact-menubar-edit.c
+src/nact/nact-menubar-file.c
 [type: gettext/glade] src/nact/nact-preferences.ui
 src/nact/nact-providers-list.c
 src/nact/nact-schemes-list.c

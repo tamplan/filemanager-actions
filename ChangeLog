@@ -1,5 +1,81 @@
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h (nact_tree_model_get_items):
+	* src/nact/nact-tree-view.c:
+	* src/nact/nact-tree-view.h (nact_tree_view_get_items): New functions.
+
+	Allow an items list to be referenced in a new list.
+
+	* src/api/na-object-api.h (na_object_ref_items): New macro.
+
+	* src/api/na-object-item.h:
+	* src/core/na-object-item.c (na_object_item_ref_items): New function.
+
+	* src/nact/nact-assistant-export.c
+	(instance_dispose, on_tree_view_selection_changed): Updated accordingly.
+
+	Review NAObject reference management
+
+	* src/api/na-object-api.h
+	(na_object_unref_items, na_object_unref_items_rec): Removed macros.
+	(na_object_free_items): New macro.
+
+	* src/api/na-object-item.h:
+	* src/core/na-object-item.c
+	(na_object_item_unref_items, na_object_item_unref_items_rec): Removed functions.
+	(na_object_item_free_items): New function.
+
+	* src/core/na-io-provider.c (na_io_provider_load_items):
+	* src/core/na-object.c (na_object_object_ref, na_object_object_unref):
+	* src/core/na-pivot.c (instance_dispose, na_pivot_load_items,
+	na_pivot_set_new_items):
+	* src/nact/nact-assistant-import.c (assistant_apply):
+	* src/nact/nact-iactions-list-bis.c (nact_iactions_list_bis_get_items):
+	* src/nact/nact-iactions-list.c (free_items_callback):
+	* src/nact/nact-main-menubar-edit.c (nact_main_menubar_edit_on_cut,
+	nact_main_menubar_edit_on_copy, nact_main_menubar_edit_on_paste,
+	nact_main_menubar_edit_on_paste_into,
+	nact_main_menubar_edit_on_duplicate, nact_main_menubar_edit_on_delete):
+	* src/nact/nact-main-menubar-file.c
+	(nact_main_menubar_file_on_new_menu,
+	nact_main_menubar_file_on_new_action,
+	nact_main_menubar_file_on_new_profile):
+	* src/nact/nact-main-menubar-maintainer.c
+	(nact_main_menubar_maintainer_on_dump_selection):
+	* src/nact/nact-main-menubar.c (on_update_sensitivities):
+	* src/nact/nact-main-window.c (instance_dispose,
+	nact_main_window_remove_deleted, reload):
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
+	* src/nact/nact-tree-model.c (fill_tree_store):
+	* src/nact/nact-tree-view.c (on_selection_changed_cleanup_handler):
+	* src/plugin-menu/nautilus-actions.c (get_menus_items): Updated
+	accordingl
+	* src/nact/nact-main-menubar-maintainer.c
+	(nact_main_menubar_maintainer_on_dump_selection):
+	* src/nact/nact-main-menubar.c (on_update_sensitivities):
+	* src/nact/nact-main-window.c (instance_dispose,
+	nact_main_window_remove_deleted, reload):
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
+	* src/nact/nact-tree-model.c (fill_tree_store):
+	* src/nact/nact-tree-view.c (on_selection_changed_cleanup_handler):
+	* src/plugin-menu/nautilus-actions.c (get_menus_items):
+	Updated accordingly.
+
+	New NactTreeView convenience class
+
+	* src/nact/nact-tree-view.c:
+	* src/nact/nact-tree-view.h: New files.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-iactions-list-priv.c:
+	* src/nact/nact-iactions-list.h:
+	* src/nact/nact-marshal.list:
+	* src/nact/nact-tree-model.c: Updated accordingly.
+
+2011-02-02 Pierre Wieser <pwieser@trychlos.org>
+
 	Refactoring of menubar files:
 	- nact-main-menubar-*.c are renamed as nact-menubar-*.c.
 	- nact-main-menubar-*.h are removed.

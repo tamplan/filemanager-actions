@@ -1,3 +1,6 @@
+# NactTreeView:: signals
+VOID:POINTER,POINTER
+#
 # NactIActionsList::nact-iactions-list-count-updated
 VOID:INT,INT,INT
 #

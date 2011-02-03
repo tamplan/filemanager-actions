@@ -102,8 +102,9 @@ static NactTreeModel *tree_model_new( BaseWindow *window, GtkTreeView *treeview 
 static void           append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
 static void           display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, const NAObject *object );
 static gboolean       dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpStruct *ntm );
-static void           fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, NAObject *object, gboolean only_actions, GtkTreeIter *parent );
+static void           fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, NAObject *object, GtkTreeIter *parent );
 static gboolean       filter_visible( GtkTreeModel *store, GtkTreeIter *iter, NactTreeModel *model );
+static gboolean       get_items_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items );
 static void           iter_on_store( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *parent, FnIterOnStore fn, gpointer user_data );
 static gboolean       iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter, FnIterOnStore fn, gpointer user_data );
 static void           remove_if_exists( NactTreeModel *model, GtkTreeModel *store, const NAObject *object );
@@ -296,7 +297,6 @@ tree_model_new( BaseWindow *window, GtkTreeView *treeview )
 
 	g_debug( "%s: window=%p, treeview=%p", thisfn, ( void * ) window, ( void * ) treeview );
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
-	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( window ), NULL );
 	g_return_val_if_fail( GTK_IS_TREE_VIEW( treeview ), NULL );
 
 	ts_model = gtk_tree_store_new(
@@ -346,7 +346,6 @@ nact_tree_model_initial_load( BaseWindow *window, GtkTreeView *treeview )
 
 	g_debug( "%s: window=%p, treeview=%p", thisfn, ( void * ) window, ( void * ) treeview );
 	g_return_if_fail( BASE_IS_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IACTIONS_LIST( window ));
 	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
 
 	model = tree_model_new( window, treeview );
@@ -615,10 +614,36 @@ nact_tree_model_fill( NactTreeModel *model, GList *items, gboolean are_profiles_
 		for( it = items ; it ; it = it->next ){
 			duplicate = ( NAObject * ) na_object_duplicate( it->data );
 			na_object_check_status( duplicate );
-			fill_tree_store( ts_model, model->private->treeview, duplicate, are_profiles_displayed, NULL );
+			fill_tree_store( ts_model, model->private->treeview, duplicate, NULL );
 			na_object_unref( duplicate );
 		}
 	}
+}
+
+/**
+ * nact_tree_model_get_items:
+ * @model: this #NactTreeModel object.
+ *
+ * Returns: the content of the current store as a newly allocated list
+ * which should be na_object_free_items() by the caller.
+ */
+GList *
+nact_tree_model_get_items( NactTreeModel *model )
+{
+	GList *items;
+	GtkTreeStore *store;
+
+	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), NULL );
+
+	items = NULL;
+
+	if( !model->private->dispose_has_run ){
+
+		store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
+		iter_on_store( model, GTK_TREE_MODEL( store ), NULL, ( FnIterOnStore ) get_items_iter, &items );
+	}
+
+	return( items );
 }
 
 /**
@@ -925,8 +950,7 @@ dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpSt
 }
 
 static void
-fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
-					NAObject *object, gboolean are_profiles_displayed, GtkTreeIter *parent )
+fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, NAObject *object, GtkTreeIter *parent )
 {
 	static const gchar *thisfn = "nact_tree_model_fill_tree_store";
 	GList *subitems, *it;
@@ -941,7 +965,7 @@ fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview,
 		append_item( model, treeview, parent, &iter, object );
 		subitems = na_object_get_items( object );
 		for( it = subitems ; it ; it = it->next ){
-			fill_tree_store( model, treeview, it->data, are_profiles_displayed, &iter );
+			fill_tree_store( model, treeview, it->data, &iter );
 		}
 
 	} else {
@@ -998,6 +1022,20 @@ filter_visible( GtkTreeModel *store, GtkTreeIter *iter, NactTreeModel *model )
 	return( FALSE );
 }
 
+/*
+ * builds the tree by iterating on the store
+ */
+static gboolean
+get_items_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, GList **items )
+{
+	if( gtk_tree_path_get_depth( path ) == 1 ){
+		*items = g_list_prepend( *items, na_object_ref( object ));
+	}
+
+	/* don't stop iteration */
+	return( FALSE );
+}
+
 static void
 iter_on_store( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *parent, FnIterOnStore fn, gpointer user_data )
 {
@@ -1019,18 +1057,17 @@ iter_on_store_item( NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter
 	GtkTreePath *path;
 	gboolean stop;
 
-	gtk_tree_model_get( store, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 	/* unreffing as soon as we got the pointer so that the ref count is
 	 * unchanged in dump_store
 	 */
+	gtk_tree_model_get( store, iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 	g_object_unref( object );
+
 	g_debug( "nact_tree_model_iter_on_store_item: object=%p (%s, ref_count=%d)",
 			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 
 	path = gtk_tree_model_get_path( store, iter );
-
 	stop = ( *fn )( model, path, object, user_data );
-
 	gtk_tree_path_free( path );
 
 	if( !stop ){

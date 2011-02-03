@@ -34,6 +34,7 @@
 
 #include "base-window.h"
 #include "nact-iactions-list-priv.h"
+#include "nact-tree-view.h"
 
 #define IACTIONS_LIST_DATA_INSTANCE		"nact-iactions-list-instance-data"
 
@@ -60,17 +61,28 @@ nact_iactions_list_priv_get_actions_list_treeview( NactIActionsList *instance )
  * @instance: this #NactIActionsList interface.
  *
  * Returns a pointer to the data associated to this instance of the interface.
+ *
+ * During the transition phase (refactoring of IActionsList interface to
+ * TreeView class), the function tests if a TreeView is defined in this
+ * instance. If yes, then it asks the object to fillup out structure with
+ * its own data.
  */
 IActionsListInstanceData *
 nact_iactions_list_priv_get_instance_data( NactIActionsList *instance )
 {
 	IActionsListInstanceData *ialid;
+	NactTreeView *view;
 
 	ialid = ( IActionsListInstanceData * ) g_object_get_data( G_OBJECT( instance ), IACTIONS_LIST_DATA_INSTANCE );
 
 	if( !ialid ){
 		ialid = g_new0( IActionsListInstanceData, 1 );
 		g_object_set_data( G_OBJECT( instance ), IACTIONS_LIST_DATA_INSTANCE, ialid );
+	}
+
+	view = ( NactTreeView * ) g_object_get_data( G_OBJECT( instance ), "window-data-tree-view" );
+	if( view && NACT_IS_TREE_VIEW( view )){
+		nact_tree_view_setup_ialid( view, ialid );
 	}
 
 	return( ialid );

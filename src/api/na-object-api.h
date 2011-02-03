@@ -132,8 +132,8 @@ G_BEGIN_DECLS
 
 #define na_object_get_items_count( obj )                na_object_item_get_items_count( NA_OBJECT_ITEM( obj ))
 #define na_object_count_items( list, cm, ca, cp, brec ) na_object_item_count_items( list, ( cm ), ( ca ), ( cp ), ( brec ))
-#define na_object_unref_items( tree )                   na_object_item_unref_items( tree )
-#define na_object_unref_selected_items( tree )          na_object_item_unref_items_rec( tree )
+#define na_object_copyref_items( tree )                 na_object_item_copyref_items( tree )
+#define na_object_free_items( tree )                    na_object_item_free_items( tree )
 
 #define na_object_is_finally_writable( obj, r )			na_object_item_is_finally_writable( NA_OBJECT_ITEM( obj ), ( r ))
 #define na_object_set_writability_status( obj, w, r )	na_object_item_set_writability_status( NA_OBJECT_ITEM( obj ), ( w ), ( r ))

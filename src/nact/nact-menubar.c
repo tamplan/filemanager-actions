@@ -34,25 +34,15 @@
 
 #include <glib/gi18n.h>
 
-#include <api/na-object-api.h>
-
-#include "nact-application.h"
-#include "nact-menubar-priv.h"
-
-/* *** */
-#include <api/na-core-utils.h>
-
-#include <core/na-factory-object.h>
-#include <core/na-iprefs.h>
 #include <core/na-io-provider.h>
 
-#include "nact-iactions-list.h"
-#include "nact-clipboard.h"
+#include "nact-application.h"
 #include "nact-main-statusbar.h"
 #include "nact-main-toolbar.h"
 #include "nact-main-tab.h"
+#include "nact-menubar-priv.h"
 #include "nact-sort-buttons.h"
-/* *** */
+#include "nact-iactions-list.h"
 
 /* private class data
  */
@@ -704,17 +694,10 @@ on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 	g_debug( "%s: selected=%p (count=%d)", thisfn, ( void * ) selected, g_list_length( selected ));
 
 	bar->private->count_selected = g_list_length( selected );
-#if 0
 	if( bar->private->selected_items ){
 		bar->private->selected_items = na_object_free_items( bar->private->selected_items );
 	}
-	bar->private->selected_items = na_object_ref_items( selected );
-#else
-	if( bar->private->selected_items ){
-		na_object_unref_selected_items( bar->private->selected_items );
-	}
-	bar->private->selected_items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
-#endif
+	bar->private->selected_items = na_object_copyref_items( selected );
 
 	if( selected ){
 		/* check if the parent of the first selected item is writable

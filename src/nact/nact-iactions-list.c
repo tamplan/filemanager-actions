@@ -291,7 +291,7 @@ free_items_callback( NactIActionsList *instance, GList *items )
 	g_debug( "nact_iactions_list_free_items_callback: selection=%p (%d items)",
 			( void * ) items, g_list_length( items ));
 
-	na_object_unref_selected_items( items );
+	na_object_free_items( items );
 }
 
 static void

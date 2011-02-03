@@ -341,7 +341,7 @@ nact_iactions_list_bis_get_items( NactIActionsList *instance )
  * We acquire here a new reference on objects corresponding to actually
  * selected rows, and their childs.
  *
- * The caller may safely call na_object_free_items_list() on the
+ * The caller may safely call na_object_free_items() on the
  * returned list.
  */
 GList *

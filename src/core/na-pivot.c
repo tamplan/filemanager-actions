@@ -308,9 +308,10 @@ instance_dispose( GObject *object )
 		self->private->modules = NULL;
 
 		/* release item tree */
-		g_debug( "%s: tree=%p, count=%u", thisfn, ( void * ) self->private->tree, g_list_length( self->private->tree ));
-		na_object_unref_items( self->private->tree );
-		self->private->tree = NULL;
+		g_debug( "%s: tree=%p (count=%u)", thisfn,
+				( void * ) self->private->tree, g_list_length( self->private->tree ));
+		na_object_dump_tree( self->private->tree );
+		self->private->tree = na_object_free_items( self->private->tree );
 
 		/* release the settings */
 		g_object_unref( self->private->settings );
@@ -553,7 +554,7 @@ na_pivot_load_items( NAPivot *pivot )
 		g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot );
 
 		messages = NULL;
-		na_object_unref_items( pivot->private->tree );
+		na_object_free_items( pivot->private->tree );
 		pivot->private->tree = na_io_provider_load_items( pivot, pivot->private->loadable_set, &messages );
 
 		for( im = messages ; im ; im = im->next ){
@@ -569,7 +570,8 @@ na_pivot_load_items( NAPivot *pivot )
  * @pivot: this #NAPivot instance.
  * @tree: the new tree of items.
  *
- * Replace the current list with this one.
+ * Replace the current list with this one, acquiring the full ownership
+ * of the provided @tree.
  */
 void
 na_pivot_set_new_items( NAPivot *pivot, GList *items )
@@ -583,7 +585,7 @@ na_pivot_set_new_items( NAPivot *pivot, GList *items )
 		g_debug( "%s: pivot=%p, items=%p (count=%d)",
 				thisfn, ( void * ) pivot, ( void * ) items, items ? g_list_length( items ) : 0 );
 
-		na_object_unref_items( pivot->private->tree );
+		na_object_free_items( pivot->private->tree );
 		pivot->private->tree = items;
 	}
 }
