@@ -96,6 +96,8 @@ void            nact_main_window_move_to_deleted   ( NactMainWindow *window, GLi
 void            nact_main_window_reload            ( NactMainWindow *window );
 gboolean        nact_main_window_remove_deleted    ( NactMainWindow *window, GSList **messages );
 
+void            nact_main_window_quit              ( NactMainWindow *window );
+
 G_END_DECLS
 
 #endif /* __NACT_MAIN_WINDOW_H__ */

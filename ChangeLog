@@ -1,5 +1,14 @@
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	Termination of the main window is managed in NactMainWindow.
+
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h (nact_main_window_quit): New function.
+
+	* src/nact/nact-main-menubar-file.c: Updated accordingly.
+
+	Move a NASettings getter to NAUpdater
+
 	* src/core/na-updater.c:
 	* src/core/na-updater.h (na_updater_should_pasted_be_relabeled): New function.
 

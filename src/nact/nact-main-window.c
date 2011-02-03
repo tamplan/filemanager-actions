@@ -1136,6 +1136,36 @@ reload_items( NactMainWindow *window )
 	nact_iactions_list_bis_select_first_row( NACT_IACTIONS_LIST( window ));
 }
 
+/**
+ * nact_main_window_quit:
+ * @window: the #NactMainWindow main window.
+ *
+ * Quit the window, thus terminating the application.
+ *
+ * Returns: %TRUE if the application will terminate, and the @window object
+ * is no more valid; %FALSE if the application will continue to run.
+ */
+gboolean
+nact_main_window_quit( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_quit";
+	gboolean has_modified;
+	gboolean terminated;
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
+	terminated = FALSE;
+	has_modified = nact_main_window_has_modified_items( window );
+
+	if( !has_modified || nact_window_warn_modified( NACT_WINDOW( window ))){
+		g_object_unref( window );
+		terminated = TRUE;
+	}
+
+	return( terminated );
+}
+
 static gboolean
 base_is_willing_to_quit( const BaseWindow *window )
 {
@@ -1172,7 +1202,7 @@ on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window )
 	g_debug( "%s: toplevel=%p, event=%p, window=%p",
 			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) window );
 
-	nact_main_menubar_file_on_quit( NULL, window );
+	nact_main_window_quit( window );
 
 	return( TRUE );
 }

@@ -425,16 +425,11 @@ void
 nact_main_menubar_file_on_quit( GtkAction *gtk_action, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_main_menubar_file_on_quit";
-	gboolean has_modified;
 
 	g_debug( "%s: item=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ) || gtk_action == NULL );
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	has_modified = nact_main_window_has_modified_items( window );
-	if( !has_modified || nact_window_warn_modified( NACT_WINDOW( window ))){
-		g_object_unref( window );
-	}
+	nact_main_window_quit( window );
 }
 
 /**
