@@ -184,7 +184,7 @@ typedef struct {
 }
 	NAIDuplicableInterface;
 
-#define NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED	"status-changed"
+#define NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED	"iduplicable-status-changed"
 
 GType          na_iduplicable_get_type( void );
 

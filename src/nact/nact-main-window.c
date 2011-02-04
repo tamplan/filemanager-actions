@@ -133,6 +133,7 @@ enum {
 	PROVIDER_CHANGED,
 	ITEM_UPDATED,
 	ORDER_CHANGED,
+	SELECTION_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -169,6 +170,7 @@ static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer use
 
 static void     on_tree_view_modified_count_changed( NactMainWindow *window, NactTreeView *view, guint count, gpointer user_data );
 static void     on_tree_view_selection_changed( NactMainWindow *window, NactTreeView *view, GList *selected_items, gpointer user_data );
+static void     on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items );
 static void     raz_selection_properties( NactMainWindow *window );
 static void     setup_current_selection( NactMainWindow *window, NAObjectId *selected_row );
 static void     setup_dialog_title( NactMainWindow *window );
@@ -430,6 +432,35 @@ class_init( NactMainWindowClass *klass )
 			G_TYPE_NONE,
 			1,
 			G_TYPE_POINTER );
+
+	/**
+	 * NactMainWindow::main-selection-changed:
+	 *
+	 * This signal is emitted on the window parent each time the selection
+	 * has changed in the treeview, after having set the current item/profile/
+	 * context properties.
+	 *
+	 * This way, we are sure that notebook edition tabs which required to
+	 * have a current item/profile/context will have it, whenever they have
+	 * connected to the 'selection-changed' signal.
+	 *
+	 * Signal args:
+	 * - a #GList of currently selected #NAObjectItems.
+	 *
+	 * Handler prototype:
+	 * void ( *handler )( BaseWindow *window, GList *selected, gpointer user_data );
+	 */
+	st_signals[ SELECTION_CHANGED ] = g_signal_new_class_handler(
+			MAIN_SIGNAL_SELECTION_CHANGED,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_CLEANUP,
+			G_CALLBACK( on_selection_changed_cleanup_handler ),
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER );
 }
 
 static void
@@ -623,6 +654,10 @@ instance_constructed( GObject *window )
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
+		/* first connect to BaseWindow signals
+		 * so that convenience objects instanciated later will have this same signal
+		 * triggered after the one of NactMainWindow
+		 */
 		base_window_signal_connect( BASE_WINDOW( window ),
 				G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
 
@@ -644,6 +679,9 @@ instance_constructed( GObject *window )
 		/* create the tree view which will create itself its own tree model
 		 */
 		self->private->items_view = nact_tree_view_new( BASE_WINDOW( window ), "ActionsList", TREE_MODE_EDITION );
+
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
 
 		base_window_signal_connect( BASE_WINDOW( window ),
 				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_COUNT_CHANGED, G_CALLBACK( on_tree_view_modified_count_changed ));
@@ -806,9 +844,6 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 			pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 			gtk_paned_set_position( GTK_PANED( pane ), pos );
 		}
-
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
 
 		nact_iaction_tab_runtime_init_toplevel( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_runtime_init_toplevel( NACT_ICOMMAND_TAB( window ));
@@ -991,7 +1026,25 @@ on_tree_view_selection_changed( NactMainWindow *window, NactTreeView *view, GLis
 		}
 
 		setup_dialog_title( window );
+
+		g_signal_emit_by_name( G_OBJECT( window ),
+				MAIN_SIGNAL_SELECTION_CHANGED, na_object_copyref_items( selected_items ));
 	}
+}
+
+/*
+ * cleanup handler for our MAIN_SIGNAL_SELECTION_CHANGED signal
+ */
+static void
+on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items )
+{
+	static const gchar *thisfn = "nact_mainw_window_on_selection_changed_cleanup_handler";
+
+	g_debug( "%s: window=%p, selected_items=%p (count=%u)",
+			thisfn, ( void * ) window,
+			( void * ) selected_items, g_list_length( selected_items ));
+
+	na_object_free_items( selected_items );
 }
 
 static void

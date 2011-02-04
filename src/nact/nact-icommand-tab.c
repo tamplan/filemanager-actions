@@ -71,7 +71,7 @@ static void       interface_base_init( NactICommandTabInterface *klass );
 static void       interface_base_finalize( NactICommandTabInterface *klass );
 
 static void       on_tree_view_content_changed( NactICommandTab *instance, NactTreeView *view, NAObject *object, gpointer user_data );
-static void       on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected );
+static void       on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpointer user_data );
 
 static GtkWidget *get_label_entry( NactICommandTab *instance );
 static GtkButton *get_legend_button( NactICommandTab *instance );
@@ -261,11 +261,8 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 				"clicked",
 				G_CALLBACK( on_wdir_browse ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		base_window_signal_connect( BASE_WINDOW( instance ),
 				G_OBJECT( instance ), TREE_SIGNAL_CONTENT_CHANGED, G_CALLBACK( on_tree_view_content_changed ));
@@ -337,9 +334,9 @@ on_tree_view_content_changed( NactICommandTab *instance, NactTreeView *view, NAO
 }
 
 static void
-on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected )
+on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_icommand_tab_on_tab_updatable_selection_changed";
+	static const gchar *thisfn = "nact_icommand_tab_on_main_selection_changed";
 	NAObjectProfile *profile;
 	gboolean editable;
 	gboolean enable_tab;
@@ -351,8 +348,8 @@ on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_select
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
+		g_debug( "%s: instance=%p, selected_items=%p (count=%d)",
+				thisfn, ( void * ) instance, ( void * ) selected_items, g_list_length( selected_items ));
 
 		g_object_get(
 				G_OBJECT( instance ),

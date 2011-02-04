@@ -525,7 +525,7 @@ export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 		if( path ){
 			gtk_tree_model_get_iter( model, &iter, path );
 			gtk_tree_path_free( path );
-			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+			gtk_tree_model_get( model, &iter, TREE_COLUMN_NAOBJECT, &object, -1 );
 			buffer = export_row_object( clipboard, object, dest_folder, &exported, first );
 			if( buffer && strlen( buffer )){
 				data = g_string_append( data, buffer );

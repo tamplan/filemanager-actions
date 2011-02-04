@@ -76,15 +76,6 @@ typedef struct {
 }
 	NactTreeModelClass;
 
-/* column ordering of the tree view
- */
-enum {
-	IACTIONS_LIST_ICON_COLUMN = 0,
-	IACTIONS_LIST_LABEL_COLUMN,
-	IACTIONS_LIST_NAOBJECT_COLUMN,
-	IACTIONS_LIST_N_COLUMN
-};
-
 /**
  * Column ordering in the tree view
  */
@@ -104,18 +95,18 @@ enum {
 	TREE_LIST_ALL = 0xff,
 };
 
-/* iter on tree store
- */
-typedef gboolean ( *FnIterOnStore )( const NactTreeModel *, GtkTreePath *, NAObject *, gpointer );
-
 GType          nact_tree_model_get_type( void );
 
 NactTreeModel *nact_tree_model_new( BaseWindow *window, GtkTreeView *view, NactTreeMode mode );
 
-void           nact_tree_model_fill( NactTreeModel *model, GList *items );
+void           nact_tree_model_fill       ( NactTreeModel *model, GList *items );
+GtkTreePath   *nact_tree_model_insert     ( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
+GtkTreePath   *nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
 
 NAObjectItem  *nact_tree_model_get_item_by_id( const NactTreeModel *model, const gchar *id );
 GList         *nact_tree_model_get_items     ( const NactTreeModel *model, guint mode );
+NAObject      *nact_tree_model_object_at_path( const NactTreeModel *model, GtkTreePath *path );
+GtkTreePath   *nact_tree_model_object_to_path( const NactTreeModel *model, const NAObject *object );
 
 /* find an item
  * get items (all, selected, modified)
@@ -124,12 +115,9 @@ GList         *nact_tree_model_get_items     ( const NactTreeModel *model, guint
  */
 
 /* *** */
-void         nact_tree_model_display( NactTreeModel *model, NAObject *object );
+/*void         nact_tree_model_display( NactTreeModel *model, NAObject *object );*/
 void         nact_tree_model_display_order_change( NactTreeModel *model, gint order_mode );
-GtkTreePath *nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
-GtkTreePath *nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
-void         nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );
-NAObject    *nact_tree_model_object_at_path( NactTreeModel *model, GtkTreePath *path );
+/*void         nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );*/
 GtkTreePath *nact_tree_model_remove( NactTreeModel *model, NAObject *object );
 /* *** */
 

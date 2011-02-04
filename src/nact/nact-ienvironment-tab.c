@@ -106,7 +106,7 @@ static GType    register_type( void );
 static void     interface_base_init( NactIEnvironmentTabInterface *klass );
 static void     interface_base_finalize( NactIEnvironmentTabInterface *klass );
 
-static void     on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_selected );
+static void     on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items, gpointer user_data );
 
 static void     on_selcount_ope_changed( GtkComboBox *combo, NactIEnvironmentTab *instance );
 static void     on_selcount_int_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
@@ -245,11 +245,8 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 	if( st_initialized && !st_finalized ){
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
 				"SelectionCountSigneCombobox", "changed", G_CALLBACK( on_selcount_ope_changed ));
@@ -342,9 +339,9 @@ nact_ienvironment_tab_dispose( NactIEnvironmentTab *instance )
 }
 
 static void
-on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_selected )
+on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_ienvironment_tab_on_tab_updatable_selection_changed";
+	static const gchar *thisfn = "nact_ienvironment_tab_on_main_selection_changed";
 	NAIContext *context;
 	gboolean editable;
 	gboolean enable_tab;
@@ -361,7 +358,8 @@ on_tab_updatable_selection_changed( NactIEnvironmentTab *instance, gint count_se
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
-		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
+		g_debug( "%s: instance=%p, selected_items=%p (count=%d)",
+				thisfn, ( void * ) instance, ( void * ) selected_items, g_list_length( selected_items ));
 
 		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
 

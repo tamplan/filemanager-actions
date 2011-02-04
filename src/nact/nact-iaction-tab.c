@@ -67,7 +67,7 @@ static void          interface_base_init( NactIActionTabInterface *klass );
 static void          interface_base_finalize( NactIActionTabInterface *klass );
 
 static void          on_tree_view_content_changed( NactIActionTab *instance, NactTreeView *view, NAObject *object, gpointer user_data );
-static void          on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selected );
+static void          on_main_selection_changed( NactIActionTab *instance, GList *selected_items, gpointer user_data );
 
 static void          on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance );
 static void          on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance );
@@ -217,11 +217,8 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		base_window_signal_connect( BASE_WINDOW( instance ),
 				G_OBJECT( instance ), TREE_SIGNAL_CONTENT_CHANGED, G_CALLBACK( on_tree_view_content_changed ));
@@ -364,9 +361,10 @@ on_tree_view_content_changed( NactIActionTab *instance, NactTreeView *view, NAOb
 }
 
 static void
-on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selected )
+on_main_selection_changed( NactIActionTab *instance, GList *selected_items, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_tab_updatable_selection_changed";
+	static const gchar *thisfn = "nact_iaction_tab_on_main_selection_changed";
+	guint count_selected;
 	gboolean enable_tab;
 	NAObjectItem *item;
 	gboolean editable;
@@ -383,6 +381,7 @@ on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selecte
 
 	if( st_initialized && !st_finalized ){
 
+		count_selected = g_list_length( selected_items );
 		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
 
 		enable_tab = ( count_selected == 1 );

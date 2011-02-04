@@ -266,6 +266,7 @@ iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
 static gboolean
 iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 {
+	static const gchar *thisfn = "na_object_iduplicable_are_equal";
 	gboolean are_equal;
 	HierarchyIter *str;
 
@@ -276,6 +277,8 @@ iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 
 	if( !NA_OBJECT( a )->private->dispose_has_run &&
 		!NA_OBJECT( b )->private->dispose_has_run ){
+
+		g_debug( "%s: a=%p (%s), b=%p", thisfn, ( void * ) a, G_OBJECT_TYPE_NAME( a ), ( void * ) b );
 
 		if( NA_IS_IFACTORY_OBJECT( a )){
 			are_equal = na_factory_object_are_equal( NA_IFACTORY_OBJECT( a ), NA_IFACTORY_OBJECT( b ));
@@ -316,14 +319,12 @@ iduplicable_is_valid( const NAIDuplicable *object )
 	gboolean is_valid;
 	HierarchyIter *str;
 
-	g_debug( "%s: object=%p (%s)",
-			thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
 	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
 
 	is_valid = FALSE;
 
 	if( !NA_OBJECT( object )->private->dispose_has_run ){
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		if( NA_IS_IFACTORY_OBJECT( object )){
 			is_valid = na_factory_object_is_valid( NA_IFACTORY_OBJECT( object ));
@@ -374,7 +375,7 @@ iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter
  *      +- valid_status = v_is_valid( object )             -> interface <structfield>NAObjectClass::is_valid</structfield>
  *
  * Note that the recursivity is managed here, so that we can be sure
- * that edition status of childs is actually checked before those of
+ * that edition status of children is actually checked before those of
  * the parent.
  *
  * Since: 2.30
@@ -383,22 +384,14 @@ void
 na_object_object_check_status( const NAObject *object )
 {
 	static const gchar *thisfn = "na_object_object_check_status";
-	GList *children, *ic;
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	if( !object->private->dispose_has_run ){
-
-		g_debug( "%s: object=%p (%s)",
-				thisfn,
-				( void * ) object, G_OBJECT_TYPE_NAME( object ));
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		if( NA_IS_OBJECT_ITEM( object )){
-			children = na_object_get_items( object );
-
-			for( ic = children ; ic ; ic = ic->next ){
-				na_object_check_status( ic->data );
-			}
+			g_list_foreach( na_object_get_items( object ), ( GFunc ) na_object_object_check_status, NULL );
 		}
 
 		na_iduplicable_check_status( NA_IDUPLICABLE( object ));

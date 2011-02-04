@@ -57,7 +57,7 @@ static GType   register_type( void );
 static void    interface_base_init( NactICapabilitiesTabInterface *klass );
 static void    interface_base_finalize( NactICapabilitiesTabInterface *klass );
 
-static void    on_tab_updatable_selection_changed( NactICapabilitiesTab *instance, gint count_selected );
+static void    on_main_selection_changed( NactICapabilitiesTab *instance, GList *selected_items, gpointer user_data );
 
 static void    on_add_clicked( GtkButton *button, BaseWindow *window );
 static GSList *get_capabilities( NAIContext *context );
@@ -172,11 +172,8 @@ nact_icapabilities_tab_runtime_init_toplevel( NactICapabilitiesTab *instance )
 
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 	}
 }
 
@@ -209,9 +206,9 @@ nact_icapabilities_tab_dispose( NactICapabilitiesTab *instance )
 }
 
 static void
-on_tab_updatable_selection_changed( NactICapabilitiesTab *instance, gint count_selected )
+on_main_selection_changed( NactICapabilitiesTab *instance, GList *selected_items, gpointer user_data )
 {
-	nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, count_selected );
+	nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, g_list_length( selected_items ));
 }
 
 static void

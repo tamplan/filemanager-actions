@@ -55,7 +55,7 @@ static GType   register_type( void );
 static void    interface_base_init( NactIMimetypesTabInterface *klass );
 static void    interface_base_finalize( NactIMimetypesTabInterface *klass );
 
-static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
+static void    on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
 
 static GSList *get_mimetypes( void *context );
 static void    set_mimetypes( void *context, GSList *filters );
@@ -182,11 +182,8 @@ nact_imimetypes_tab_runtime_init_toplevel( NactIMimetypesTab *instance )
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 	}
@@ -227,9 +224,9 @@ nact_imimetypes_tab_dispose( NactIMimetypesTab *instance )
 }
 
 static void
-on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
+on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
 {
-	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
+	nact_match_list_on_selection_changed( window, ITAB_NAME, g_list_length( selected_items ));
 }
 
 static GSList *

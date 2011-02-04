@@ -493,11 +493,14 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 gboolean
 na_factory_object_is_valid( const NAIFactoryObject *object )
 {
+	static const gchar *thisfn = "na_factory_object_is_valid";
 	gboolean is_valid;
 	NADataGroup *groups;
 	GList *list, *iv;
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), FALSE );
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 	is_valid = TRUE;
@@ -855,15 +858,11 @@ na_factory_object_set_from_void( NAIFactoryObject *object, const gchar *name, co
 static NADataGroup *
 v_get_groups( const NAIFactoryObject *object )
 {
-	NADataGroup *groups;
-
-	groups = NULL;
-
 	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
-		groups = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object );
+		return( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object ));
 	}
 
-	return( groups );
+	return( NULL );
 }
 
 static void
@@ -891,15 +890,11 @@ v_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
 static gboolean
 v_is_valid( const NAIFactoryObject *object )
 {
-	gboolean is_valid;
-
-	is_valid = TRUE;
-
 	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid ){
-		is_valid = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid( object );
+		return( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid( object ));
 	}
 
-	return( is_valid );
+	return( FALSE );
 }
 
 static void

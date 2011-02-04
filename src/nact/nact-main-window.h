@@ -80,7 +80,8 @@ typedef struct {
 }
 	NactMainWindowClass;
 
-#define MAIN_WINDOW_SIGNAL_SELECTION_CHANGED			"main-window-selection-changed"
+#define MAIN_SIGNAL_SELECTION_CHANGED					"main-selection-changed"
+
 #define MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED		"main-window-level-zero-order-changed"
 
 GType           nact_main_window_get_type( void );

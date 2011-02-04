@@ -54,7 +54,7 @@ static GType    register_type( void );
 static void     interface_base_init( NactIExecutionTabInterface *klass );
 static void     interface_base_finalize( NactIExecutionTabInterface *klass );
 
-static void     on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_selected );
+static void     on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, gpointer user_data );
 
 static void     on_normal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
 static void     on_terminal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
@@ -168,7 +168,7 @@ nact_iexecution_tab_runtime_init_toplevel( NactIExecutionTab *instance )
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		base_window_signal_connect( BASE_WINDOW( instance ),
-				G_OBJECT( instance ), MAIN_WINDOW_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tab_updatable_selection_changed ));
+				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
 				"ExecutionModeNormal", "toggled", G_CALLBACK( on_normal_mode_toggled ));
@@ -224,9 +224,9 @@ nact_iexecution_tab_dispose( NactIExecutionTab *instance )
 }
 
 static void
-on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_selected )
+on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_on_tab_updatable_selection_changed";
+	static const gchar *thisfn = "nact_iexecution_tab_on_main_selection_changed";
 	NAObjectProfile *profile;
 	gboolean editable;
 	gboolean enable_tab;
@@ -240,7 +240,8 @@ on_tab_updatable_selection_changed( NactIExecutionTab *instance, gint count_sele
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
 	if( st_initialized && !st_finalized ){
-		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
+		g_debug( "%s: instance=%p, selected_items=%p (count=%d)",
+				thisfn, ( void * ) instance, ( void * ) selected_items, g_list_length( selected_items ));
 
 		g_object_get(
 				G_OBJECT( instance ),

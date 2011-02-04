@@ -62,7 +62,7 @@ static GType   register_type( void );
 static void    interface_base_init( NactIFoldersTabInterface *klass );
 static void    interface_base_finalize( NactIFoldersTabInterface *klass );
 
-static void    on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_selected );
+static void    on_main_selection_changed( NactIFoldersTab *instance, GList *selected_items, gpointer user_data );
 
 static void    on_browse_folder_clicked( GtkButton *button, BaseWindow *window );
 static GSList *get_folders( void *context );
@@ -178,11 +178,8 @@ nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance )
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 
@@ -224,12 +221,14 @@ nact_ifolders_tab_dispose( NactIFoldersTab *instance )
 }
 
 static void
-on_tab_updatable_selection_changed( NactIFoldersTab *instance, gint count_selected )
+on_main_selection_changed( NactIFoldersTab *instance, GList *selected_items, gpointer user_data )
 {
+	guint count_selected;
 	NAIContext *context;
 	gboolean editable;
 	GtkWidget *button;
 
+	count_selected = g_list_length( selected_items );
 	nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, count_selected );
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );

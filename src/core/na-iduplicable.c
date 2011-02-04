@@ -46,7 +46,6 @@ typedef struct {
 	NAIDuplicable *origin;
 	gboolean       modified;
 	gboolean       valid;
-	gulong         status_changed_handler_id;
 }
 	DuplicableStr;
 
@@ -74,8 +73,8 @@ static gboolean       v_is_valid( const NAIDuplicable *object );
 
 static DuplicableStr *get_duplicable_str( const NAIDuplicable *object );
 
-static void           status_changed_handler( NAIDuplicable *instance, gpointer user_data );
-static void           propagate_signal_to_consumers( const gchar *signal, NAIDuplicable *instance, gpointer user_data );
+static void           on_status_changed_class_handler( NAIDuplicable *instance );
+static void           propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal );
 static void           release_signal_consumers( GList *consumers );
 
 GType
@@ -139,18 +138,25 @@ interface_base_init( NAIDuplicableInterface *klass )
 		 *
 		 * This signal is emitted by #NAIDuplicable when the modification
 		 * or the validity status of an object has been modified.
+		 *
+		 * The default class handler propagates the signal to registered
+		 * consumers.
+		 *
+		 * Signal args: None
+		 *
+		 * Handler prototype:
+		 * void ( *handler )( NAIDuplicable *duplicable, gpointer user_data );
 		 */
-		st_signals[ STATUS_CHANGED ] = g_signal_new(
+		st_signals[ STATUS_CHANGED ] = g_signal_new_class_handler(
 				NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED,
 				G_TYPE_OBJECT,
 				G_SIGNAL_RUN_LAST,
-				0,						/* no default handler */
+				G_CALLBACK( on_status_changed_class_handler ),
 				NULL,
 				NULL,
-				g_cclosure_marshal_VOID__POINTER,
+				g_cclosure_marshal_VOID__VOID,
 				G_TYPE_NONE,
-				1,
-				G_TYPE_POINTER );
+				0 );
 
 		st_interface = klass;
 
@@ -193,10 +199,6 @@ na_iduplicable_dispose( const NAIDuplicable *object )
 	if( st_initialized && !st_finalized ){
 
 		str = get_duplicable_str( object );
-
-		if( g_signal_handler_is_connected(( gpointer ) object, str->status_changed_handler_id )){
-			g_signal_handler_disconnect(( gpointer ) object, str->status_changed_handler_id );
-		}
 
 		g_free( str );
 	}
@@ -331,7 +333,7 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 		changed = FALSE;
 
 		if( str->origin ){
-			g_debug( "%s: origin=%p (%s)", thisfn, ( void * ) str->origin, G_OBJECT_TYPE_NAME( str->origin ));
+			g_debug( "%s: vs. origin=%p (%s)", thisfn, ( void * ) str->origin, G_OBJECT_TYPE_NAME( str->origin ));
 			g_return_if_fail( NA_IS_IDUPLICABLE( str->origin ));
 			str->modified = !v_are_equal( str->origin, object );
 
@@ -362,7 +364,7 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 		}
 
 		if( changed ){
-			g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED, object );
+			g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED );
 		}
 
 #if 0
@@ -509,7 +511,7 @@ na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )
 
 		if( str->modified != modified ){
 			str->modified = modified;
-			g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED, object );
+			g_signal_emit_by_name( G_OBJECT( object ), NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED );
 		}
 	}
 }
@@ -565,20 +567,18 @@ na_iduplicable_register_consumer( GObject *consumer )
 }
 
 static void
-status_changed_handler( NAIDuplicable *instance, gpointer user_data )
+on_status_changed_class_handler( NAIDuplicable *instance )
 {
-	/*g_debug( "na_iduplicable_propagate_modified_changed: instance=%p (%s), user_data=%p (%s)",
-			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) user_data, G_OBJECT_TYPE_NAME( user_data ));*/
+	/*
+	static const gchar *thisfn = "na_iduplicable_on_status_changed_class_handler";
+	g_debug( "%s: instance=%p (%s)", thisfn,  ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	*/
 
-	propagate_signal_to_consumers( NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED, instance, user_data );
+	propagate_signal_to_consumers( instance, NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED );
 }
 
-/*
- * note that propagating the signal to consumers re-triggers
- */
 static void
-propagate_signal_to_consumers( const gchar *signal, NAIDuplicable *instance, gpointer user_data )
+propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal )
 {
 	static const gchar *thisfn = "na_iduplicable_propagate_signals_to_consumers";
 	GList *ic;
@@ -586,11 +586,10 @@ propagate_signal_to_consumers( const gchar *signal, NAIDuplicable *instance, gpo
 	g_return_if_fail( st_interface );
 
 	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: signal=%s, instance=%p, user_data=%p", thisfn, signal, ( void * ) instance, ( void * ) user_data );
+		g_debug( "%s: instance=%p, signal=%s", thisfn, ( void * ) instance, signal );
 
 		for( ic = st_interface->private->consumers ; ic ; ic = ic->next ){
-			g_signal_emit_by_name( ic->data, signal, user_data );
+			g_signal_emit_by_name( ic->data, signal );
 		}
 	}
 }
@@ -614,12 +613,6 @@ get_duplicable_str( const NAIDuplicable *object )
 		str->origin = NULL;
 		str->modified = FALSE;
 		str->valid = TRUE;
-
-		str->status_changed_handler_id = g_signal_connect(
-				G_OBJECT( object ),
-				NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED,
-				G_CALLBACK( status_changed_handler ),
-				( gpointer ) object );
 
 		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE, str );
 	}

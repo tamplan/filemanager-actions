@@ -32,7 +32,10 @@
 #include <config.h>
 #endif
 
+#include <api/na-object-api.h>
+
 #include "nact-tree-ieditable.h"
+#include "nact-tree-model.h"
 
 /* private interface data
  */
@@ -43,7 +46,8 @@ struct _NactTreeIEditableInterfacePrivate {
 /* data attached to the NactTreeView
  */
 typedef struct {
-	guint nb_modified;
+	GtkTreeView *treeview;
+	guint        count_modified;
 }
 	IEditableData;
 
@@ -56,7 +60,12 @@ static GType          register_type( void );
 static void           interface_base_init( NactTreeIEditableInterface *klass );
 static void           interface_base_finalize( NactTreeIEditableInterface *klass );
 
+static void           do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *insert_path, GList **list_parents );
+static NAObject      *do_insert_into_first( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *insert_path, GtkTreePath **new_path );
+static GtkTreePath   *get_selection_first_path( GtkTreeView *treeview );
 static IEditableData *get_instance_data( NactTreeIEditable *view );
+static void           increment_counters( NactTreeIEditable *view, IEditableData *ied, GList *items );
+static void           increment_counters_modified( NAObject *object, IEditableData *ied );
 
 GType
 nact_tree_ieditable_get_type( void )
@@ -124,21 +133,304 @@ interface_base_finalize( NactTreeIEditableInterface *klass )
 }
 
 /**
- * nact_tree_ieditable_view_constructed:
- * @view: the #NactTreeView which implements this interface.
- * @window: the #BaseWindow which embeds the @view.
+ * nact_tree_ieditable_initialize:
+ * @instance: the #NactTreeView which implements this interface.
+ * @treeview: the embedded #GtkTreeView tree view.
+ * @window: the #BaseWindow which embeds the @instance.
  *
  * Initialize the interface, mainly connecting to signals of interest.
  */
 void
-nact_tree_ieditable_on_view_constructed( NactTreeView *view, BaseWindow *window )
+nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treeview, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_tree_ieditable_on_view_constructed";
+	static const gchar *thisfn = "nact_tree_ieditable_initialize";
 	IEditableData *ied;
 
-	g_debug( "%s: view=%p, window=%p", thisfn, ( void * ) view, ( void * ) window );
+	g_debug( "%s: instance=%p, window=%p", thisfn, ( void * ) instance, ( void * ) window );
 
-	ied = get_instance_data( NACT_TREE_IEDITABLE( view ));
+	ied = get_instance_data( instance );
+	ied->treeview = treeview;
+}
+
+/**
+ * nact_tree_ieditable_insert_at_path:
+ * @instance: this #NactTreeIEditable instance.
+ * @items: a list of items to be inserted (e.g. from a paste).
+ * @path: insertion path.
+ *
+ * Inserts the provided @items list in the treeview.
+ *
+ * This function takes care of repositionning a new selection if
+ * possible, and refilter the display model.
+ */
+void
+nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, GtkTreePath *insert_path )
+{
+	static const gchar *thisfn = "nact_tree_ieditable_insert_at_path";
+	IEditableData *ied;
+	GtkTreeModel *model;
+	GList *parents;
+
+	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
+
+	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
+		g_debug( "%s: instance=%p, items=%p (count=%d)",
+			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
+
+		ied = get_instance_data( instance );
+		model = gtk_tree_view_get_model( ied->treeview );
+		g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+
+		do_insert_items( ied->treeview, model, items, insert_path, &parents );
+
+		g_list_foreach( parents, ( GFunc ) na_object_object_check_status, NULL );
+		g_list_free( parents );
+
+		increment_counters( instance, ied, items );
+
+		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+		nact_tree_view_select_row_at_path( NACT_TREE_VIEW( instance ), insert_path );
+	}
+}
+
+/**
+ * nact_tree_ieditable_insert_items:
+ * @instance: this #NactTreeIEditable instance.
+ * @items: a list of items to be inserted (e.g. from a paste).
+ * @sibling: the #NAObject besides which the insertion should occurs;
+ *  this is mainly used for inserting duplicated items besides each of
+ *  original ones; may be %NULL.
+ *
+ * Inserts the provided @items list just before the @sibling object,
+ * or at the current position in the treeview if @sibling is %NULL.
+ *
+ * The provided @items list is supposed to be homogeneous, i.e. referes
+ * to only profiles, or only actions or menus.
+ *
+ * If the @items list contains profiles, they can only be inserted
+ * into an action, or before another profile.
+ *
+ * If new item is a #NAObjectMenu or a #NAObjectAction, it will be inserted
+ * before the current action or menu.
+ *
+ * This function takes care of repositionning a new selection (if possible)
+ * on the lastly inserted item, and to refresh the display.
+ */
+void
+nact_tree_ieditable_insert_items( NactTreeIEditable *instance, GList *items, NAObject *sibling )
+{
+	static const gchar *thisfn = "nact_tree_ieditable_insert_items";
+	IEditableData *ied;
+	GtkTreeModel *model;
+	GtkTreePath *insert_path;
+	NAObject *object, *parent;
+
+	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
+
+	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
+		g_debug( "%s: instance=%p, items=%p (count=%d), sibling=%p",
+				thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ), ( void * ) sibling );
+
+		insert_path = NULL;
+		ied = get_instance_data( instance );
+		model = gtk_tree_view_get_model( ied->treeview );
+		g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+
+		if( sibling ){
+			insert_path = nact_tree_model_object_to_path( NACT_TREE_MODEL( model ), sibling );
+
+		} else {
+			insert_path = get_selection_first_path( ied->treeview );
+			object = nact_tree_model_object_at_path( NACT_TREE_MODEL( model ), insert_path );
+			g_debug( "%s: current object at insertion path is %p", thisfn, ( void * ) object );
+
+			/* as a particular case, insert a new profile _into_ current action
+			 */
+			if( NA_IS_OBJECT_ACTION( object ) && NA_IS_OBJECT_PROFILE( items->data )){
+				nact_tree_ieditable_insert_items_into( instance, items );
+				gtk_tree_path_free( insert_path );
+				return;
+			}
+
+			/* insert a new NAObjectItem before current NAObjectItem
+			 */
+			if( NA_IS_OBJECT_PROFILE( object ) && NA_IS_OBJECT_ITEM( items->data )){
+				parent = ( NAObject * ) na_object_get_parent( object );
+				gtk_tree_path_free( insert_path );
+				insert_path = nact_tree_model_object_to_path( NACT_TREE_MODEL( model ), parent );
+			}
+		}
+
+		nact_tree_ieditable_insert_at_path( instance, items, insert_path );
+		gtk_tree_path_free( insert_path );
+	}
+}
+
+/**
+ * nact_tree_ieditable_insert_items_into:
+ * @instance: this #NactTreeIEditable instance.
+ * @items: a list of items to be inserted (e.g. from a paste).
+ *
+ * Inserts the provided @items list as first children of the current item.
+ *
+ * The provided @items list is supposed to be homogeneous, i.e. referes
+ * to only profiles, or only actions or menus.
+ *
+ * If the @items list contains only profiles, they can only be inserted
+ * into an action, and the profiles will eventually be renumbered.
+ *
+ * If new item is a #NAObjectMenu or a #NAObjectAction, it will be inserted
+ * as first children of the current menu.
+ *
+ * This function takes care of repositionning a new selection as the
+ * last inserted item, and refilter the display model.
+ */
+void
+nact_tree_ieditable_insert_items_into( NactTreeIEditable *instance, GList *items )
+{
+	static const gchar *thisfn = "nact_tree_ieditable_insert_items_into";
+	IEditableData *ied;
+	GtkTreeModel *model;
+	GtkTreePath *insert_path;
+	GtkTreePath *new_path;
+	NAObject *parent;
+
+	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
+
+	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
+		g_debug( "%s: instance=%p, items=%p (count=%d)",
+			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
+
+		insert_path = NULL;
+		ied = get_instance_data( instance );
+		model = gtk_tree_view_get_model( ied->treeview );
+		insert_path = get_selection_first_path( ied->treeview );
+
+		increment_counters( instance, ied, items );
+
+		parent = do_insert_into_first( ied->treeview, model, items, insert_path, &new_path );
+
+		na_object_check_status( parent );
+
+		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+		nact_tree_view_select_row_at_path( NACT_TREE_VIEW( instance ), new_path );
+
+		gtk_tree_path_free( new_path );
+		gtk_tree_path_free( insert_path );
+	}
+}
+
+static void
+do_insert_items( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *insert_path, GList **list_parents )
+{
+	static const gchar *thisfn = "nact_tree_ieditable_do_insert_items";
+	GList *reversed;
+	GList *it;
+	GList *subitems;
+	NAObject *obj_parent;
+	gpointer updatable;
+	GtkTreePath *inserted_path;
+
+	obj_parent = NULL;
+	if( list_parents ){
+		*list_parents = NULL;
+	}
+
+	reversed = g_list_reverse( g_list_copy( items ));
+
+	for( it = reversed ; it ; it = it->next ){
+		inserted_path = nact_tree_model_insert( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ), insert_path, &obj_parent );
+
+		g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
+				( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
+
+		if( list_parents ){
+			updatable = obj_parent ? obj_parent : it->data;
+			if( !g_list_find( *list_parents, updatable )){
+				*list_parents = g_list_prepend( *list_parents, updatable );
+			}
+		}
+
+		/* recursively insert subitems
+		 */
+		if( NA_IS_OBJECT_ITEM( it->data ) && na_object_get_items_count( it->data )){
+			subitems = na_object_get_items( it->data );
+			do_insert_into_first( treeview, model, subitems, inserted_path, NULL );
+		}
+
+		gtk_tree_path_free( inserted_path );
+	}
+
+	g_list_free( reversed );
+}
+
+static NAObject *
+do_insert_into_first( GtkTreeView *treeview, GtkTreeModel *model, GList *items, GtkTreePath *insert_path, GtkTreePath **new_path )
+{
+	static const gchar *thisfn = "nact_tree_ieditable_do_insert_into_first";
+	GList *copy;
+	GList *last;
+	NAObject *parent;
+	gchar *insert_path_str;
+	GtkTreePath *inserted_path;
+	GList *subitems;
+
+	insert_path_str = gtk_tree_path_to_string( insert_path );
+	g_debug( "%s: treeview=%p, model=%p, items=%p (count=%d), insert_path=%p (%s), new_path=%p",
+			thisfn,
+			( void * ) treeview, ( void * ) model, ( void * ) items, g_list_length( items ),
+			( void * ) insert_path, insert_path_str, ( void * ) new_path );
+	g_free( insert_path_str );
+
+	parent = NULL;
+	copy = g_list_copy( items );
+	last = g_list_last( copy );
+	copy = g_list_remove_link( copy, last );
+
+	inserted_path = nact_tree_model_insert_into( NACT_TREE_MODEL( model ), NA_OBJECT( last->data ), insert_path, &parent );
+	gtk_tree_view_expand_to_path( treeview, inserted_path );
+
+	/* recursively insert subitems
+	 */
+	if( NA_IS_OBJECT_ITEM( last->data ) && na_object_get_items_count( last->data )){
+		subitems = na_object_get_items( last->data );
+		do_insert_into_first( treeview, model, subitems, inserted_path, NULL );
+	}
+
+	do_insert_items( treeview, model, copy, inserted_path, NULL );
+
+	if( new_path ){
+		*new_path = gtk_tree_path_copy( inserted_path );
+	}
+
+	g_list_free( copy );
+	gtk_tree_path_free( inserted_path );
+
+	return( parent );
+}
+
+static GtkTreePath *
+get_selection_first_path( GtkTreeView *treeview )
+{
+	GtkTreeSelection *selection;
+	GList *selected;
+	GtkTreePath *path;
+
+	path = NULL;
+	selection = gtk_tree_view_get_selection( treeview );
+	selected = gtk_tree_selection_get_selected_rows( selection, NULL );
+
+	if( selected ){
+		path = gtk_tree_path_copy(( GtkTreePath * ) selected->data );
+
+	} else {
+		path = gtk_tree_path_new_from_string( "0" );
+	}
+
+	g_list_foreach( selected, ( GFunc ) gtk_tree_path_free, NULL );
+	g_list_free( selected );
+
+	return( path );
 }
 
 static IEditableData *
@@ -156,1056 +448,531 @@ get_instance_data( NactTreeIEditable *view )
 	return( ied );
 }
 
-#if 0
-/* when iterating through a selection
- */
-typedef struct {
-	gboolean has_menu_or_action;
-}
-	SelectionIter;
-
-/* signals
- */
-enum {
-	LIST_COUNT_UPDATED,
-	SELECTION_CHANGED,
-	FOCUS_IN,
-	FOCUS_OUT,
-	COLUMN_EDITED,
-	STATUS_CHANGED,
-	LAST_SIGNAL
-};
-
-static gint     st_signals[ LAST_SIGNAL ] = { 0 };
-
-static void     free_items_callback( NactTreeIEditable *instance, GList *items );
-static void     free_column_edited_callback( NactTreeIEditable *instance, NAObject *object, gchar *text, gint column );
-
-static gboolean are_profiles_displayed( NactTreeIEditable *instance, TreeIEditableInstanceData *ialid );
-static void     display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactTreeIEditable *instance );
-static gboolean filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactTreeIEditable *instance );
-static gboolean filter_selection_is_homogeneous( GtkTreeSelection *selection, NAObject *object );
-static void     filter_selection_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, SelectionIter *str );
-static gboolean filter_selection_has_menu_or_action( GtkTreeSelection *selection );
-static gboolean filter_selection_is_implicitely_selected( NAObject *object );
-static void     filter_selection_set_implicitely_selected_childs( NAObject *object, gboolean select );
-static gboolean have_dnd_mode( NactTreeIEditable *instance, TreeIEditableInstanceData *ialid );
-static gboolean have_filter_selection_mode( NactTreeIEditable *instance, TreeIEditableInstanceData *ialid );
-static void     inline_edition( NactTreeIEditable *instance );
-static gboolean is_iduplicable_proxy( NactTreeIEditable *instance, TreeIEditableInstanceData *ialid );
-static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactTreeIEditable *instance );
-static void     on_edition_status_changed( NactTreeIEditable *instance, NAIDuplicable *object );
-static gboolean on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactTreeIEditable *instance );
-static gboolean on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactTreeIEditable *instance );
-static gboolean on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactTreeIEditable *instance );
-static void     on_label_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, NactTreeIEditable *instance );
-static void     on_tab_updatable_item_updated( NactTreeIEditable *instance, NAObject *object, gboolean force_display );
-static void     open_popup( NactTreeIEditable *instance, GdkEventButton *event );
-
 static void
-free_items_callback( NactTreeIEditable *instance, GList *items )
+increment_counters( NactTreeIEditable *view, IEditableData *ied, GList *items )
 {
-	g_debug( "nact_tree_ieditable_free_items_callback: selection=%p (%d items)",
-			( void * ) items, g_list_length( items ));
+	static const gchar *thisfn = "nact_tre_ieditablet_increment_counters";
+	guint modified_prev;
+	gint menus, actions, profiles;
+	BaseWindow *window;
 
-	na_object_free_items( items );
+	g_debug( "%s: view=%p, ied=%p, items=%p (count=%d)",
+			thisfn, ( void * ) view, ( void * ) ied, ( void * ) items, items ? g_list_length( items ) : 0 );
+
+	menus = 0;
+	actions = 0;
+	profiles = 0;
+	na_object_item_count_items( items, &menus, &actions, &profiles, TRUE );
+	window = nact_tree_view_get_window( NACT_TREE_VIEW( view ));
+	g_signal_emit_by_name( G_OBJECT( window ), TREE_SIGNAL_COUNT_CHANGED, view, FALSE, menus, actions, profiles );
+
+	modified_prev = ied->count_modified;
+	g_list_foreach( items, ( GFunc ) increment_counters_modified, ied );
+	if( ied->count_modified != modified_prev ){
+		g_signal_emit_by_name( G_OBJECT( window ), TREE_SIGNAL_MODIFIED_COUNT_CHANGED, view, ied->count_modified );
+	}
 }
 
 static void
-free_column_edited_callback( NactTreeIEditable *instance, NAObject *object, gchar *text, gint column )
+increment_counters_modified( NAObject *object, IEditableData *ied )
 {
-	static const gchar *thisfn = "nact_tree_ieditable_free_column_edited_callback";
-
-	g_debug( "%s: instance=%p, object=%p (%s), text=%s, column=%d",
-			thisfn, ( void * ) instance, ( void * ) object, G_OBJECT_TYPE_NAME( object ), text, column );
-
-	g_free( text );
-}
-
-/**
- * nact_tree_ieditable_initial_load_toplevel:
- * @instance: this #NactTreeIEditable *instance.
- *
- * Allocates and initializes the ActionsList widget.
- *
- * GtkTreeView is created with NactTreeModel model
- * NactTreeModel
- *   implements EggTreeMultiDragSourceIface
- *   is derived from GtkTreeModelFilter
- *     GtkTreeModelFilter is built on top of GtkTreeStore
- *
- * Please note that management mode for the list should have been set
- * before calling this function.
- */
-void
-nact_tree_ieditable_initial_load_toplevel( NactTreeIEditable *instance )
-{
-	static const gchar *thisfn = "nact_tree_ieditable_initial_load_toplevel";
-	GtkWidget *label;
-	GtkTreeView *treeview;
-	GtkTreeViewColumn *column;
-	GtkCellRenderer *renderer;
-	TreeIEditableInstanceData *ialid;
-
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-		ialid->selection_changed_allowed = FALSE;
-
-		/* associates the ActionsList to the label */
-		label = base_window_get_widget( BASE_WINDOW( instance ), "ActionsListLabel" );
-		gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( treeview ));
-
-		nact_tree_model_initial_load( BASE_WINDOW( instance ), treeview );
-		gtk_tree_view_set_enable_tree_lines( treeview, TRUE );
-
-		/* create visible columns on the tree view
-		 */
-		/* icon: no header */
-		column = gtk_tree_view_column_new_with_attributes(
-				"icon",
-				gtk_cell_renderer_pixbuf_new(),
-				"pixbuf", TREE_IEDITABLE_ICON_COLUMN,
-				NULL );
-		gtk_tree_view_append_column( treeview, column );
-
-		renderer = gtk_cell_renderer_text_new();
-		column = gtk_tree_view_column_new_with_attributes(
-				"label",
-				renderer,
-				"text", TREE_IEDITABLE_LABEL_COLUMN,
-				NULL );
-		gtk_tree_view_column_set_sort_column_id( column, TREE_IEDITABLE_LABEL_COLUMN );
-		gtk_tree_view_column_set_cell_data_func(
-				column, renderer, ( GtkTreeCellDataFunc ) display_label, instance, NULL );
-		gtk_tree_view_append_column( treeview, column );
-	}
-}
-
-/**
- * nact_tree_ieditable_runtime_init_toplevel:
- * @window: this #NactTreeIEditable *instance.
- * @items: list of #NAObject actions and menus as provided by #NAPivot.
- *
- * Allocates and initializes the ActionsList widget.
- */
-void
-nact_tree_ieditable_runtime_init_toplevel( NactTreeIEditable *instance, GList *items )
-{
-	static const gchar *thisfn = "nact_tree_ieditable_runtime_init_toplevel";
-	GtkTreeView *treeview;
-	NactTreeModel *model;
-	gboolean have_dnd;
-	gboolean have_filter_selection;
-	gboolean is_proxy;
-	GtkTreeSelection *selection;
-	TreeIEditableInstanceData *ialid;
-	GtkTreeViewColumn *column;
-	GList *renderers;
-
-	g_debug( "%s: instance=%p, items=%p (%d items)",
-			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-
-		ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-		ialid->selection_changed_allowed = FALSE;
-		have_dnd = have_dnd_mode( instance, ialid );
-		have_filter_selection = have_filter_selection_mode( instance, ialid );
-
-		if( have_filter_selection ){
-			selection = gtk_tree_view_get_selection( treeview );
-			gtk_tree_selection_set_select_function( selection, ( GtkTreeSelectionFunc ) filter_selection, instance, NULL );
-		}
-
-		nact_tree_model_runtime_init( model, have_dnd );
-
-		/* set up selection control */
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( gtk_tree_view_get_selection( treeview )),
-				"changed",
-				G_CALLBACK( nact_tree_ieditable_on_treeview_selection_changed ));
-
-		/* catch press 'Enter' */
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( treeview ),
-				"key-press-event",
-				G_CALLBACK( on_key_pressed_event ));
-
-		/* catch double-click */
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( treeview ),
-				"button-press-event",
-				G_CALLBACK( on_button_press_event ));
-
-		/* updates the treeview display when an item is modified */
-		ialid->tab_updated_handler = base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
-				G_CALLBACK( on_tab_updatable_item_updated ));
-
-		/* enable/disable edit menu item accelerators depending of
-		 * which widget has the focus */
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( treeview ),
-				"focus-in-event",
-				G_CALLBACK( on_focus_in ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( treeview ),
-				"focus-out-event",
-				G_CALLBACK( on_focus_out ));
-
-		/* label edition: inform the corresponding tab */
-		column = gtk_tree_view_get_column( treeview, TREE_IEDITABLE_LABEL_COLUMN );
-		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( renderers->data ),
-				"edited",
-				G_CALLBACK( on_label_edited ));
-
-		/* records NactTreeIEditable as a proxy for edition status
-		 * modification */
-		is_proxy = is_iduplicable_proxy( instance, ialid );
-		if( is_proxy ){
-			na_iduplicable_register_consumer( G_OBJECT( instance ));
-
-			base_window_signal_connect(
-					BASE_WINDOW( instance ),
-					G_OBJECT( instance ),
-					NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED,
-					G_CALLBACK( on_edition_status_changed ));
-		}
-
-		/* fill the model after having connected the signals
-		 * so that callbacks are triggered at last
-		 */
-		nact_tree_ieditable_fill( instance, items );
-
-		/* force the treeview to have the focus at start
-		 */
-		gtk_widget_grab_focus( GTK_WIDGET( treeview ));
-	}
-}
-
-/**
- * nact_tree_ieditable_all_widgets_showed:
- * @window: this #NactTreeIEditable *instance.
- */
-void
-nact_tree_ieditable_all_widgets_showed( NactTreeIEditable *instance )
-{
-	static const gchar *thisfn = "nact_tree_ieditable_all_widgets_showed";
-	gboolean profiles_are_displayed;
-	TreeIEditableInstanceData *ialid;
-
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-		profiles_are_displayed = are_profiles_displayed( instance, ialid );
-
-		if( profiles_are_displayed ){
-			nact_tree_ieditable_priv_send_list_count_updated_signal( instance, ialid );
-		}
-
-		nact_tree_ieditable_bis_select_first_row( instance );
-	}
-}
-
-/**
- * nact_tree_ieditable_dispose:
- * @window: this #NactTreeIEditable *instance.
- */
-void
-nact_tree_ieditable_dispose( NactTreeIEditable *instance )
-{
-	static const gchar *thisfn = "nact_tree_ieditable_dispose";
-	GtkTreeView *treeview;
-	NactTreeModel *model;
-	TreeIEditableInstanceData *ialid;
-
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-
-		ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-		g_list_free( ialid->modified_items );
-		ialid->modified_items = NULL;
-
-		ialid->selection_changed_allowed = FALSE;
-		nact_tree_model_dispose( model );
-
-		g_free( ialid );
-	}
-}
-
-/**
- * nact_tree_ieditable_brief_tree_dump:
- * @instance: this #NactTreeIEditable implementation.
- *
- * Brief dump of the tree store content.
- */
-void
-nact_tree_ieditable_brief_tree_dump( NactTreeIEditable *instance )
-{
-	GtkTreeView *treeview;
-	NactTreeModel *model;
-
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-		nact_tree_model_dump( model );
-	}
-}
-
-/**
- * nact_tree_ieditable_collapse_all:
- * @instance: this #NactTreeIEditable implementation.
- *
- * Collapse all the tree hierarchy.
- */
-void
-nact_tree_ieditable_collapse_all( NactTreeIEditable *instance )
-{
-	static const gchar *thisfn = "nact_tree_ieditable_collapse_all";
-	GtkTreeView *treeview;
-
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		gtk_tree_view_collapse_all( treeview );
-	}
-}
-
-/**
- * nact_tree_ieditable_display_order_change:
- * @instance: this #NactTreeIEditable implementation.
- * @order_mode: the new order mode.
- *
- * Setup the new order mode.
- */
-void
-nact_tree_ieditable_display_order_change( NactTreeIEditable *instance, gint order_mode )
-{
-	GtkTreeView *treeview;
-	NactTreeModel *model;
-
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-		nact_tree_model_display_order_change( model, order_mode );
-	}
-}
-
-/**
- * nact_tree_ieditable_expand_all:
- * @instance: this #NactTreeIEditable implementation.
- *
- * Expand all the tree hierarchy.
- */
-void
-nact_tree_ieditable_expand_all( NactTreeIEditable *instance )
-{
-	static const gchar *thisfn = "nact_tree_ieditable_expand_all";
-	GtkTreeView *treeview;
-
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		gtk_tree_view_expand_all( treeview );
-	}
-}
-
-/**
- * nact_tree_ieditable_fill:
- * @instance: this #NactTreeIEditable instance.
- *
- * Fill the listbox with the provided list of items.
- *
- * Menus are expanded, profiles are not.
- * The selection is reset to the first line of the tree, if there is one.
- */
-void
-nact_tree_ieditable_fill( NactTreeIEditable *instance, GList *items )
-{
-	static const gchar *thisfn = "nact_tree_ieditable_fill";
-	GtkTreeView *treeview;
-	NactTreeModel *model;
-	gboolean profiles_are_displayed;
-	TreeIEditableInstanceData *ialid;
-
-	g_debug( "%s: instance=%p, items=%p", thisfn, ( void * ) instance, ( void * ) items );
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-
-		nact_tree_ieditable_bis_clear_selection( instance, treeview );
-
-		ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-		profiles_are_displayed = are_profiles_displayed( instance, ialid );
-		g_debug( "%s: profiles_are_displayed:%s", thisfn, profiles_are_displayed ? "True":"False" );
-
-		ialid->selection_changed_allowed = FALSE;
-		nact_tree_model_fill( model, items, profiles_are_displayed );
-		ialid->selection_changed_allowed = TRUE;
-
-		g_list_free( ialid->modified_items );
-		ialid->modified_items = NULL;
-
-		g_signal_emit_by_name(
-				instance,
-				MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
-				GINT_TO_POINTER( FALSE ));
-
-		ialid->menus = 0;
-		ialid->actions = 0;
-		ialid->profiles = 0;
-
-		if( profiles_are_displayed ){
-			na_object_item_count_items( items, &ialid->menus, &ialid->actions, &ialid->profiles, TRUE );
-			nact_tree_ieditable_priv_send_list_count_updated_signal( instance, ialid );
-		}
-	}
-}
-
-/**
- * nact_tree_ieditable_get_management_mode:
- * @instance: this #NactTreeIEditable instance.
- *
- * Returns: the current management mode of the list.
- */
-gint
-nact_tree_ieditable_get_management_mode( NactTreeIEditable *instance )
-{
-	gint mode = 0;
-	TreeIEditableInstanceData *ialid;
-
-	g_return_val_if_fail( NACT_IS_TREE_IEDITABLE( instance ), 0 );
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-		mode = ialid->management_mode;
-	}
-
-	return( mode );
-}
-
-/**
- * nact_tree_ieditable_has_modified_items:
- * @window: this #NactTreeIEditable instance.
- *
- * Returns: %TRUE if at least there is one modified item in the list.
- */
-gboolean
-nact_tree_ieditable_has_modified_items( NactTreeIEditable *instance )
-{
-	gboolean has_modified = FALSE;
-	/*GtkTreeView *treeview;
-	NactTreeModel *model;*/
-	TreeIEditableInstanceData *ialid;
-
-	g_return_val_if_fail( NACT_IS_TREE_IEDITABLE( instance ), FALSE );
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-		has_modified = ( g_list_length( ialid->modified_items ) > 0 );
-
-		/*treeview = get_actions_list_treeview( instance );
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-		nact_tree_model_iter( model, ( FnIterOnStore ) has_modified_iter, &has_modified );*/
-	}
-
-	return( has_modified );
-}
-
-/**
- * nact_tree_ieditable_on_treeview_selection_changed:
- * @selection: current selection.
- * @instance: this instance of the #NactTreeIEditable interface.
- *
- * This is our handler for "changed" signal emitted by the treeview.
- * The handler is inhibited while filling the list (usually only at
- * runtime init), and while deleting a selection.
- */
-void
-nact_tree_ieditable_on_treeview_selection_changed( GtkTreeSelection *selection, NactTreeIEditable *instance )
-{
-	GList *selected_items;
-	TreeIEditableInstanceData *ialid;
-
-	ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-	if( ialid->selection_changed_allowed ){
-
-		g_debug( "nact_tree_ieditable_on_treeview_selection_changed" );
-		g_signal_handler_block( instance, ialid->tab_updated_handler );
-
-		selected_items = nact_tree_ieditable_bis_get_selected_items( instance );
-		g_debug( "nact_tree_ieditable_on_treeview_selection_changed: selection=%p (%d items)", ( void * ) selected_items, g_list_length( selected_items ));
-		g_signal_emit_by_name( instance, TREE_IEDITABLE_SIGNAL_SELECTION_CHANGED, selected_items );
-
-		g_signal_handler_unblock( instance, ialid->tab_updated_handler );
-
-		/* selection list is freed in cleanup handler for the signal */
-	}
-}
-
-/**
- * nact_tree_ieditable_remove_rec:
- * @list: list of modified objects.
- * @object: the object to be removed from the list.
- *
- * When removing from modified list an object which is no more modified,
- * then all subitems of the object have also to be removed
- *
- * Returns: the updated list.
- */
-GList *
-nact_tree_ieditable_remove_rec( GList *list, NAObject *object )
-{
-	GList *subitems, *it;
-
 	if( NA_IS_OBJECT_ITEM( object )){
-		subitems = na_object_get_items( object );
-		for( it = subitems ; it ; it = it->next ){
-			list = nact_tree_ieditable_remove_rec( list, it->data );
+		if( !na_object_get_provider( object )){
+			ied->count_modified += 1;
 		}
 	}
-
-	list = g_list_remove( list, object );
-
-	return( list );
 }
-
-/**
- * nact_tree_ieditable_set_management_mode:
- * @instance: this #NactTreeIEditable instance.
- * @mode: management mode.
- *
- * Set the management mode for this @instance.
- *
- * For the two known modes (edition mode, export mode), we also allow
- * multiple selection in the list.
- */
-void
-nact_tree_ieditable_set_management_mode( NactTreeIEditable *instance, gint mode )
-{
-	GtkTreeView *treeview;
-	GtkTreeSelection *selection;
-	gboolean multiple;
-	TreeIEditableInstanceData *ialid;
-
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-
-	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-
-		ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-		ialid->management_mode = mode;
-
-		multiple = ( mode == TREE_IEDITABLE_MANAGEMENT_MODE_EDITION ||
-						mode == TREE_IEDITABLE_MANAGEMENT_MODE_EXPORT );
-
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		selection = gtk_tree_view_get_selection( treeview );
-		gtk_tree_selection_set_mode( selection, multiple ? GTK_SELECTION_MULTIPLE : GTK_SELECTION_SINGLE );
-	}
-}
-
-static gboolean
-are_profiles_displayed( NactTreeIEditable *instance, TreeIEditableInstanceData *ialid )
-{
-	gboolean display;
-
-	display = ( ialid->management_mode == TREE_IEDITABLE_MANAGEMENT_MODE_EDITION );
-
-	return( display );
-}
-
-/*
- * item modified: italic
- * item not saveable (invalid): red
- */
-static void
-display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactTreeIEditable *instance )
-{
-	NAObject *object;
-	gchar *label;
-	gboolean modified = FALSE;
-	gboolean valid = TRUE;
-	TreeIEditableInstanceData *ialid;
-	NAObjectItem *item;
-#if 0
-	gboolean writable_item;
-	NactApplication *application;
-	NAUpdater *updater;
-#endif
-
-	gtk_tree_model_get( model, iter, TREE_IEDITABLE_NAOBJECT_COLUMN, &object, -1 );
-	g_object_unref( object );
-	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-	label = na_object_get_label( object );
-	g_object_set( cell, "style-set", FALSE, NULL );
-	g_object_set( cell, "foreground-set", FALSE, NULL );
-	/*g_debug( "nact_tree_ieditable_display_label: %s %s", G_OBJECT_TYPE_NAME( object ), label );*/
-
-	if( ialid->management_mode == TREE_IEDITABLE_MANAGEMENT_MODE_EDITION ){
-
-		modified = na_object_is_modified( object );
-		valid = na_object_is_valid( object );
-		item = NA_IS_OBJECT_PROFILE( object ) ? na_object_get_parent( object ) : NA_OBJECT_ITEM( object );
-
-		if( modified ){
-			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
-		}
-
-		if( !valid ){
-			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
-		}
 
 #if 0
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
-		updater = nact_application_get_updater( application );
-		writable_item = na_updater_is_item_writable( updater, item, NULL );
-		g_object_set( cell, "editable", writable_item, NULL );
-#endif
-	}
 
-	g_object_set( cell, "text", label, NULL );
-	g_free( label );
-}
+/* iter on selection prototype
+ */
+typedef gboolean ( *FnIterOnSelection )( NactIActionsList *, GtkTreeView *, GtkTreeModel *, GtkTreeIter *, NAObject *, gpointer );
 
-/*
- * rationale: it is very difficult to copy anything in the clipboard,
- * and to hope that this will be easily copyable anywhere after.
- * We know how to insert profiles, or how to insert actions or menus,
- * but not how nor where to insert e.g. a mix selection.
+/**
+ * nact_iactions_list_bis_clear_selection:
+ * @instance: this instance of the #NactIActionsList interface.
+ * @treeview: the #GtkTreeView.
  *
- * So a selection must first be homogeneous, i.e. it only contains
- * explicitely selected profiles _or_ menus or actions (and their childs).
+ * Clears the current selection.
+ */
+void
+nact_iactions_list_bis_clear_selection( NactIActionsList *instance, GtkTreeView *treeview )
+{
+	GtkTreeSelection *selection;
+
+	selection = gtk_tree_view_get_selection( treeview );
+	gtk_tree_selection_unselect_all( selection );
+}
+
+/**
+ * nact_iactions_list_bis_collapse_to_parent:
+ * @instance: this instance of the #NactIActionsList interface.
  *
- * To simplify the selection management while letting the user actually
- * select almost anything, we are doing following assumptions:
- * - when the user selects one row, all childs are also automatically
- *   selected ; visible childs are setup so that they are known as
- *   'indirectly' selected
- * - when a row is set as 'indirectly' selected, user cannot select
- *   nor unselect it (sort of readonly or mandatory implied selection)
- *   while the parent stays itself selected
+ * On left arrow, if we are on a first child, then collapse and go to
+ * the parent.
  */
-static gboolean
-filter_selection( GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, NactTreeIEditable *instance )
+void
+nact_iactions_list_bis_collapse_to_parent( NactIActionsList *instance )
 {
-	static const gchar *thisfn = "nact_tree_ieditable_filter_selection";
-	GList *selected_paths;
-	GtkTreeIter iter;
-	NAObject *object;
-
-	gtk_tree_model_get_iter( model, &iter, path );
-	gtk_tree_model_get( model, &iter, TREE_IEDITABLE_NAOBJECT_COLUMN, &object, -1 );
-	g_return_val_if_fail( object, FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT_ID( object ), FALSE );
-	g_object_unref( object );
-
-	/* if there is not yet any selection, then anything is allowed
-	 */
-	selected_paths = gtk_tree_selection_get_selected_rows( selection, NULL );
-	if( !selected_paths || !g_list_length( selected_paths )){
-		/*g_debug( "%s: current selection is empty: allowing this one", thisfn );*/
-		filter_selection_set_implicitely_selected_childs( object, !path_currently_selected );
-		return( TRUE );
-	}
-
-	/* if the object at the row is already 'implicitely' selected, i.e.
-	 * selected because of the selection of one of its parents, then
-	 * nothing is allowed
-	 */
-	if( filter_selection_is_implicitely_selected( object )){
-		g_debug( "%s: implicitely selected item: selection not allowed", thisfn );
-		return( FALSE );
-	}
-
-	/* object at the row is not 'implicitely' selected: we may so select
-	 * or unselect it while the selection stays homogeneous
-	 * (rather we set its childs to the corresponding implied status)
-	 */
-	if( path_currently_selected ||
-		filter_selection_is_homogeneous( selection, object )){
-
-			filter_selection_set_implicitely_selected_childs( object, !path_currently_selected );
-	}
-	return( TRUE );
-}
-
-/*
- * does the selection stay homogeneous when adding this object ?
- */
-static gboolean
-filter_selection_is_homogeneous( GtkTreeSelection *selection, NAObject *object )
-{
-	gboolean homogeneous;
-
-	if( filter_selection_has_menu_or_action( selection )){
-		homogeneous = !NA_IS_OBJECT_PROFILE( object );
-	} else {
-		homogeneous = NA_IS_OBJECT_PROFILE( object );
-	}
-
-	return( homogeneous );
-}
-
-static gboolean
-filter_selection_has_menu_or_action( GtkTreeSelection *selection )
-{
-	gboolean has_menu_or_action;
-	SelectionIter *str;
-
-	has_menu_or_action = FALSE;
-	str = g_new0( SelectionIter, 1 );
-	str->has_menu_or_action = has_menu_or_action;
-	gtk_tree_selection_selected_foreach( selection, ( GtkTreeSelectionForeachFunc ) filter_selection_iter, str );
-	has_menu_or_action = str->has_menu_or_action;
-	g_free( str );
-
-	return( has_menu_or_action );
-}
-
-static void
-filter_selection_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, SelectionIter *str )
-{
-	NAObject *object;
-
-	gtk_tree_model_get( model, iter, TREE_IEDITABLE_NAOBJECT_COLUMN, &object, -1 );
-
-	if( NA_IS_OBJECT_ITEM( object )){
-		str->has_menu_or_action = TRUE;
-	}
-
-	g_object_unref( object );
-}
-
-static gboolean
-filter_selection_is_implicitely_selected( NAObject *object )
-{
-	gboolean selected;
-
-	selected = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( object), "nact-implicit-selection" ));
-
-	return( selected );
-}
-
-/*
- * the object is being selected (resp. unselected)
- * recursively set the 'implicit selection' flag for all its childs
- */
-static void
-filter_selection_set_implicitely_selected_childs( NAObject *object, gboolean select )
-{
-	GList *childs, *ic;
-
-	if( NA_IS_OBJECT_ITEM( object )){
-		childs = na_object_get_items( object );
-		for( ic = childs ; ic ; ic = ic->next ){
-			g_object_set_data( G_OBJECT( ic->data ), "nact-implicit-selection", GUINT_TO_POINTER(( guint ) select ));
-			filter_selection_set_implicitely_selected_childs( NA_OBJECT( ic->data ), select );
-		}
-	}
-}
-
-static gboolean
-have_dnd_mode( NactTreeIEditable *instance, TreeIEditableInstanceData *ialid )
-{
-	gboolean have_dnd;
-
-	have_dnd = ( ialid->management_mode == TREE_IEDITABLE_MANAGEMENT_MODE_EDITION );
-
-	return( have_dnd );
-}
-
-static gboolean
-have_filter_selection_mode( NactTreeIEditable *instance, TreeIEditableInstanceData *ialid )
-{
-	gboolean have_filter;
-
-	have_filter = ( ialid->management_mode == TREE_IEDITABLE_MANAGEMENT_MODE_EDITION );
-
-	return( have_filter );
-}
-
-/*
- * triggered by 'F2' key
- * only in edition mode
- */
-static void
-inline_edition( NactTreeIEditable *instance )
-{
-	static const gchar *thisfn = "nact_tree_ieditable_inline_edition";
-	TreeIEditableInstanceData *ialid;
+	static const gchar *thisfn = "nact_iactions_list_bis_collapse_to_parent";
+	IActionsListInstanceData *ialid;
 	GtkTreeView *treeview;
 	GtkTreeSelection *selection;
+	GtkTreeModel *model;
 	GList *listrows;
 	GtkTreePath *path;
-	GtkTreeViewColumn *column;
+	gint *indices;
+	GtkTreePath *parent_path;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
-	ialid = nact_tree_ieditable_priv_get_instance_data( instance );
-	if( ialid->management_mode == TREE_IEDITABLE_MANAGEMENT_MODE_EDITION ){
+	ialid = nact_iactions_list_priv_get_instance_data( instance );
+	if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
 
+		treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
+		selection = gtk_tree_view_get_selection( treeview );
+		listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+		if( g_list_length( listrows ) == 1 ){
+
+			path = ( GtkTreePath * ) listrows->data;
+			/*g_debug( "%s: path_depth=%d", thisfn, gtk_tree_path_get_depth( path ));*/
+			if( gtk_tree_path_get_depth( path ) > 1 ){
+
+				indices = gtk_tree_path_get_indices( path );
+				if( indices[ gtk_tree_path_get_depth( path )-1 ] == 0 ){
+
+					parent_path = gtk_tree_path_copy( path );
+					gtk_tree_path_up( parent_path );
+					nact_iactions_list_bis_select_row_at_path( instance, treeview, model, parent_path );
+					gtk_tree_view_collapse_row( treeview, parent_path );
+					gtk_tree_path_free( parent_path );
+				}
+			}
+		}
+
+		g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+		g_list_free( listrows );
+	}
+}
+
+/**
+ * nact_iactions_list_bis_delete:
+ * @window: this #NactIActionsList instance.
+ * @list: list of #NAObject to be deleted.
+ *
+ * Deletes the specified list from the underlying tree store.
+ *
+ * This function takes care of repositionning a new selection if
+ * possible, and refilter the display model.
+ */
+void
+nact_iactions_list_bis_delete( NactIActionsList *instance, GList *items, gboolean select_at_end )
+{
+	static const gchar *thisfn = "nact_iactions_list_bis_delete";
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreePath *path = NULL;
+	GList *it;
+	IActionsListInstanceData *ialid;
+
+	g_debug( "%s: instance=%p, items=%p (count=%d), select_at_end=%s",
+			thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ), select_at_end ? "True":"False" );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
+
+		treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
+		model = gtk_tree_view_get_model( treeview );
+
+		ialid = nact_iactions_list_priv_get_instance_data( instance );
 		ialid->selection_changed_allowed = FALSE;
 
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
+		decrement_counters( instance, ialid, items );
+
+		for( it = items ; it ; it = it->next ){
+			if( path ){
+				gtk_tree_path_free( path );
+			}
+
+			path = nact_tree_model_remove( NACT_TREE_MODEL( model ), NA_OBJECT( it->data ));
+
+			ialid->modified_items = nact_iactions_list_remove_rec( ialid->modified_items, NA_OBJECT( it->data ));
+
+			g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
+					( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
+		}
+
+		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));
+
+		ialid->selection_changed_allowed = TRUE;
+
+		if( path ){
+			if( select_at_end ){
+				nact_iactions_list_bis_select_row_at_path( instance, treeview, model, path );
+			}
+			gtk_tree_path_free( path );
+		}
+	}
+}
+
+/**
+ * nact_iactions_list_bis_expand_to_first_child:
+ * @instance: this #NactIActionsList interface.
+ *
+ * On right arrow, expand the parent if it has childs, and select the
+ * first child.
+ */
+void
+nact_iactions_list_bis_expand_to_first_child( NactIActionsList *instance )
+{
+	static const gchar *thisfn = "nact_iactions_list_bis_expand_to_first_child";
+	IActionsListInstanceData *ialid;
+	GtkTreeView *treeview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GList *listrows;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	GtkTreePath *child_path;
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	ialid = nact_iactions_list_priv_get_instance_data( instance );
+	if( ialid->management_mode == IACTIONS_LIST_MANAGEMENT_MODE_EDITION ){
+		treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
 		selection = gtk_tree_view_get_selection( treeview );
-		listrows = gtk_tree_selection_get_selected_rows( selection, NULL );
+		listrows = gtk_tree_selection_get_selected_rows( selection, &model );
 
 		if( g_list_length( listrows ) == 1 ){
 			path = ( GtkTreePath * ) listrows->data;
-			column = gtk_tree_view_get_column( treeview, TREE_IEDITABLE_LABEL_COLUMN );
-			gtk_tree_view_set_cursor( treeview, path, column, TRUE );
+			gtk_tree_model_get_iter( model, &iter, path );
+			if( gtk_tree_model_iter_has_child( model, &iter )){
+				child_path = gtk_tree_path_copy( path );
+				gtk_tree_path_append_index( child_path, 0 );
+				gtk_tree_view_expand_row( treeview, child_path, FALSE );
+				nact_iactions_list_bis_select_row_at_path( instance, treeview, model, child_path );
+				gtk_tree_path_free( child_path );
+			}
+		}
+
+		g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+		g_list_free( listrows );
+	}
+}
+
+/**
+ * nact_iactions_list_bis_get_selected_items:
+ * @window: this #NactIActionsList instance.
+ *
+ * Returns: the currently selected rows as a list of #NAObjects.
+ *
+ * We acquire here a new reference on objects corresponding to actually
+ * selected rows, and their childs.
+ *
+ * The caller may safely call na_object_free_items() on the
+ * returned list.
+ */
+GList *
+nact_iactions_list_bis_get_selected_items( NactIActionsList *instance )
+{
+	GList *items = NULL;
+	GtkTreeView *treeview;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GList *it, *listrows;
+	NAObject *object;
+	GtkTreePath *path;
+
+	g_return_val_if_fail( NACT_IS_IACTIONS_LIST( instance ), NULL );
+
+	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
+
+		treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
+		selection = gtk_tree_view_get_selection( treeview );
+		listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+
+		for( it = listrows ; it ; it = it->next ){
+			path = ( GtkTreePath * ) it->data;
+			gtk_tree_model_get_iter( model, &iter, path );
+			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+			g_debug( "nact_iactions_list_get_selected_items: object=%p", ( void * ) object );
+			items = g_list_prepend( items, na_object_ref( object ));
+			g_object_unref( object );
 		}
 
 		g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
 		g_list_free( listrows );
 
-		ialid->selection_changed_allowed = TRUE;
+		items = g_list_reverse( items );
+	}
+
+	return( items );
+}
+
+/**
+ * nact_iactions_list_bis_list_modified_items:
+ * @instance: this #NactIActionsList instance.
+ *
+ * Dumps the modified items list.
+ */
+void
+nact_iactions_list_bis_list_modified_items( NactIActionsList *instance )
+{
+	static const gchar *thisfn = "nact_iactions_list_bis_list_modified_items";
+	IActionsListInstanceData *ialid;
+	GList *it;
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+
+	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
+
+		ialid = nact_iactions_list_priv_get_instance_data( instance );
+
+		g_debug( "%s: raw list", thisfn );
+		for( it = ialid->modified_items ; it ; it = it->next ){
+			g_debug( "%s: %p (%s)", thisfn, ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
+		}
+
+		g_debug( "%s: detailed list", thisfn );
+		for( it = ialid->modified_items ; it ; it = it->next ){
+			na_object_dump( it->data );
+		}
 	}
 }
 
-static gboolean
-is_iduplicable_proxy( NactTreeIEditable *instance, TreeIEditableInstanceData *ialid )
+/**
+ * nact_iactions_list_bis_remove_modified:
+ * @instance: this #NactIActionsList instance.
+ *
+ * Removes the saved item from the modified items list.
+ */
+void
+nact_iactions_list_bis_remove_modified( NactIActionsList *instance, const NAObjectItem *item )
 {
-	gboolean is_proxy;
+	IActionsListInstanceData *ialid;
 
-	is_proxy = ( ialid->management_mode == TREE_IEDITABLE_MANAGEMENT_MODE_EDITION );
-	g_debug( "nact_tree_ieditable_is_iduplicable_proxy: is_proxy=%s", is_proxy ? "True":"False" );
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
 
-	return( is_proxy );
+	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
+
+		ialid = nact_iactions_list_priv_get_instance_data( instance );
+		ialid->modified_items = g_list_remove( ialid->modified_items, item );
+
+		if( g_list_length( ialid->modified_items ) == 0 ){
+			g_list_free( ialid->modified_items );
+			ialid->modified_items = NULL;
+		}
+	}
 }
 
-static gboolean
-on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactTreeIEditable *instance )
+/**
+ * nact_iactions_list_bis_toggle_collapse:
+ * @instance: this #NactIActionsList interface.
+ *
+ * Toggle or collapse the current subtree.
+ */
+void
+nact_iactions_list_bis_toggle_collapse( NactIActionsList *instance )
 {
-	/*static const gchar *thisfn = "nact_tree_ieditable_v_on_button_pres_event";
-	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );*/
+	int toggle = TOGGLE_UNDEFINED;
 
-	gboolean stop = FALSE;
+	iter_on_selection( instance, ( FnIterOnSelection ) toggle_collapse_iter, &toggle );
+}
 
-	/* double-click of left button */
-	if( event->type == GDK_2BUTTON_PRESS && event->button == 1 ){
-		nact_tree_ieditable_bis_toggle_collapse( instance );
-		stop = TRUE;
+/**
+ * nact_iactions_list_bis_toggle_collapse_object:
+ * @instance: the current instance of the #NactIActionsList interface.
+ * @item: the item to be toggled/collapsed.
+ *
+ * Collapse / expand if actions has more than one profile.
+ */
+void
+nact_iactions_list_bis_toggle_collapse_object( NactIActionsList *instance, const NAObject *item )
+{
+	static const gchar *thisfn = "nact_iactions_list_bis_toggle_collapse";
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	gboolean iterok, stop;
+	NAObject *iter_object;
+
+	g_return_if_fail( NACT_IS_IACTIONS_LIST( instance ));
+	g_return_if_fail( NA_IS_OBJECT_ITEM( item ));
+
+	if( st_iactions_list_initialized && !st_iactions_list_finalized ){
+
+		treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
+		model = gtk_tree_view_get_model( treeview );
+		iterok = gtk_tree_model_get_iter_first( model, &iter );
+		stop = FALSE;
+
+		while( iterok && !stop ){
+
+			gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &iter_object, -1 );
+			if( iter_object == item ){
+
+				if( na_object_get_items_count( item ) > 1 ){
+
+					GtkTreePath *path = gtk_tree_model_get_path( model, &iter );
+
+					if( gtk_tree_view_row_expanded( GTK_TREE_VIEW( treeview ), path )){
+						gtk_tree_view_collapse_row( GTK_TREE_VIEW( treeview ), path );
+						g_debug( "%s: action=%p collapsed", thisfn, ( void * ) item );
+
+					} else {
+						gtk_tree_view_expand_row( GTK_TREE_VIEW( treeview ), path, TRUE );
+						g_debug( "%s: action=%p expanded", thisfn, ( void * ) item );
+					}
+
+					gtk_tree_path_free( path );
+				}
+				stop = TRUE;
+			}
+
+			g_object_unref( iter_object );
+			iterok = gtk_tree_model_iter_next( model, &iter );
+		}
 	}
-
-	/* single click on right button */
-	if( event->type == GDK_BUTTON_PRESS && event->button == 3 ){
-		open_popup( instance, event );
-		stop = TRUE;
-	}
-
-	return( stop );
 }
 
 static void
-on_edition_status_changed( NactTreeIEditable *instance, NAIDuplicable *object )
+decrement_counters( NactIActionsList *instance, IActionsListInstanceData *ialid, GList *items )
+{
+	static const gchar *thisfn = "nact_iactions_list_decrement_counters";
+	gint menus, actions, profiles;
+
+	g_debug( "%s: instance=%p, ialid=%p, items=%p",
+			thisfn, ( void * ) instance, ( void * ) ialid, ( void * ) items );
+
+	menus = 0;
+	actions = 0;
+	profiles = 0;
+	na_object_item_count_items( items, &menus, &actions, &profiles, TRUE );
+
+	ialid->menus -= menus;
+	ialid->actions -= actions;
+	ialid->profiles -= profiles;
+
+	nact_iactions_list_priv_send_list_count_updated_signal( instance, ialid );
+}
+
+/*
+ * when expanding a selected row which has childs
+ */
+static void
+extend_selection_to_childs( NactIActionsList *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreeIter *parent )
+{
+	GtkTreeSelection *selection;
+	GtkTreeIter iter;
+	gboolean ok;
+
+	selection = gtk_tree_view_get_selection( treeview );
+
+	ok = gtk_tree_model_iter_children( model, &iter, parent );
+
+	while( ok ){
+		GtkTreePath *path = gtk_tree_model_get_path( model, &iter );
+		gtk_tree_selection_select_path( selection, path );
+		gtk_tree_path_free( path );
+		ok = gtk_tree_model_iter_next( model, &iter );
+	}
+}
+
+static void
+iter_on_selection( NactIActionsList *instance, FnIterOnSelection fn_iter, gpointer user_data )
 {
 	GtkTreeView *treeview;
-	NactTreeModel *model;
-	TreeIEditableInstanceData *ialid;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GList *listrows, *ipath;
+	GtkTreePath *path;
+	GtkTreeIter iter;
+	NAObject *object;
+	gboolean stop = FALSE;
 
-	ialid = nact_tree_ieditable_priv_get_instance_data( instance );
+	treeview = nact_iactions_list_priv_get_actions_list_treeview( instance );
+	selection = gtk_tree_view_get_selection( treeview );
+	listrows = gtk_tree_selection_get_selected_rows( selection, &model );
+	listrows = g_list_reverse( listrows );
 
-	g_debug( "nact_tree_ieditable_on_edition_status_changed: instance=%p, object=%p (%s)",
-			( void * ) instance,
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	for( ipath = listrows ; !stop && ipath ; ipath = ipath->next ){
 
-	g_return_if_fail( NA_IS_OBJECT( object ));
+		path = ( GtkTreePath * ) ipath->data;
+		gtk_tree_model_get_iter( model, &iter, path );
+		gtk_tree_model_get( model, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
 
-	treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-	nact_tree_model_display( model, NA_OBJECT( object ));
+		stop = fn_iter( instance, treeview, model, &iter, object, user_data );
 
-	if( na_object_is_modified( object )){
-		if( !g_list_find( ialid->modified_items, object )){
-			ialid->modified_items = g_list_prepend( ialid->modified_items, object );
+		g_object_unref( object );
+	}
+
+	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
+	g_list_free( listrows );
+}
+
+static gboolean
+toggle_collapse_iter( NactIActionsList *instance,
+						GtkTreeView *treeview,
+						GtkTreeModel *model,
+						GtkTreeIter *iter,
+						NAObject *object,
+						gpointer user_data )
+{
+	guint count;
+	guint *toggle;
+
+	toggle = ( guint * ) user_data;
+
+	if( NA_IS_OBJECT_ITEM( object )){
+
+		GtkTreePath *path = gtk_tree_model_get_path( model, iter );
+
+		if( NA_IS_OBJECT_ITEM( object )){
+			count = na_object_get_items_count( object );
+
+			if(( count > 1 && NA_IS_OBJECT_ACTION( object )) ||
+				( count > 0 && NA_IS_OBJECT_MENU( object ))){
+
+				toggle_collapse_row( treeview, path, toggle );
+			}
+		}
+
+		gtk_tree_path_free( path );
+
+		/* do not extend selection */
+		if( *toggle == TOGGLE_EXPAND && FALSE ){
+			extend_selection_to_childs( instance, treeview, model, iter );
+		}
+	}
+
+	/* do not stop iteration */
+	return( FALSE );
+}
+
+/*
+ * toggle mode can be undefined, collapse or expand
+ * it is set on the first row
+ */
+static void
+toggle_collapse_row( GtkTreeView *treeview, GtkTreePath *path, guint *toggle )
+{
+	if( *toggle == TOGGLE_UNDEFINED ){
+		*toggle = gtk_tree_view_row_expanded( treeview, path ) ? TOGGLE_COLLAPSE : TOGGLE_EXPAND;
+	}
+
+	if( *toggle == TOGGLE_COLLAPSE ){
+		if( gtk_tree_view_row_expanded( treeview, path )){
+			gtk_tree_view_collapse_row( treeview, path );
 		}
 	} else {
-		ialid->modified_items = nact_tree_ieditable_remove_rec( ialid->modified_items, NA_OBJECT( object ));
-	}
-
-	/* do not send status-changed signal while filling the tree
-	 */
-	if( ialid->selection_changed_allowed ){
-		g_signal_emit_by_name( instance, TREE_IEDITABLE_SIGNAL_STATUS_CHANGED, NULL );
-	}
-}
-
-/*
- * focus is monitored to avoid an accelerator being pressed while on a tab
- * triggers an unwaited operation on the list
- * e.g. when editing an entry field on the tab, pressing Del should _not_
- * delete current row in the list !
- */
-static gboolean
-on_focus_in( GtkWidget *widget, GdkEventFocus *event, NactTreeIEditable *instance )
-{
-	/*static const gchar *thisfn = "nact_tree_ieditable_on_focus_in";*/
-	gboolean stop = FALSE;
-
-	/*g_debug( "%s: widget=%p, event=%p, instance=%p", thisfn, ( void * ) widget, ( void * ) event, ( void * ) instance );*/
-	g_signal_emit_by_name( instance, TREE_IEDITABLE_SIGNAL_FOCUS_IN, instance );
-
-	return( stop );
-}
-
-static gboolean
-on_focus_out( GtkWidget *widget, GdkEventFocus *event, NactTreeIEditable *instance )
-{
-	/*static const gchar *thisfn = "nact_tree_ieditable_on_focus_out";*/
-	gboolean stop = FALSE;
-
-	/*g_debug( "%s: widget=%p, event=%p, instance=%p", thisfn, ( void * ) widget, ( void * ) event, ( void * ) instance );*/
-	g_signal_emit_by_name( instance, TREE_IEDITABLE_SIGNAL_FOCUS_OUT, instance );
-
-	return( stop );
-}
-
-static gboolean
-on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, NactTreeIEditable *instance )
-{
-	/*static const gchar *thisfn = "nact_tree_ieditable_v_on_key_pressed_event";
-	g_debug( "%s: widget=%p, event=%p, user_data=%p", thisfn, widget, event, user_data );*/
-	gboolean stop = FALSE;
-
-	if( event->keyval == NACT_KEY_Return || event->keyval == NACT_KEY_KP_Enter ){
-		nact_tree_ieditable_bis_toggle_collapse( instance );
-		stop = TRUE;
-	}
-
-	if( event->keyval == NACT_KEY_F2 ){
-		inline_edition( instance );
-		stop = TRUE;
-	}
-
-	if( event->keyval == NACT_KEY_Right ){
-		nact_tree_ieditable_bis_expand_to_first_child( instance );
-		stop = TRUE;
-	}
-
-	if( event->keyval == NACT_KEY_Left ){
-		nact_tree_ieditable_bis_collapse_to_parent( instance );
-		stop = TRUE;
-	}
-
-	return( stop );
-}
-
-/*
- * path: path of the edited row, as a string
- * text: new text
- *
- * - inform tabs so that they can update their fields
- *   data = object_at_row + new_label
- *   this will trigger set the object content, and other updates
- */
-static void
-on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, NactTreeIEditable *instance )
-{
-	GtkTreeView *treeview;
-	NactTreeModel *model;
-	NAObject *object;
-	GtkTreePath *path;
-	gchar *new_text;
-
-	treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-	path = gtk_tree_path_new_from_string( path_str );
-	object = nact_tree_model_object_at_path( model, path );
-	new_text = g_strdup( text );
-
-	g_signal_emit_by_name( instance, TREE_IEDITABLE_SIGNAL_COLUMN_EDITED, object, new_text, TREE_IEDITABLE_LABEL_COLUMN );
-}
-
-/*
- * an item has been updated in one of the tabs
- * update the treeview to reflects its new edition status
- */
-static void
-on_tab_updatable_item_updated( NactTreeIEditable *instance, NAObject *object, gboolean force_display )
-{
-	static const gchar *thisfn = "nact_tree_ieditable_on_tab_updatable_item_updated";
-	GtkTreeView *treeview;
-	GtkTreeModel *model;
-
-	g_debug( "%s: instance=%p, object=%p (%s), force_display=%s", thisfn,
-			( void * ) instance, ( void * ) object, G_OBJECT_TYPE_NAME( object ),
-			force_display ? "True":"False" );
-	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
-	g_return_if_fail( NA_IS_OBJECT( object ));
-	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
-
-	if( object ){
-		treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-		model = gtk_tree_view_get_model( treeview );
-		if( !na_object_check_status_up( object ) && force_display ){
-			on_edition_status_changed( instance, NA_IDUPLICABLE( object ));
+		if( !gtk_tree_view_row_expanded( treeview, path )){
+			gtk_tree_view_expand_row( treeview, path, TRUE );
 		}
-	}
-}
-
-static void
-open_popup( NactTreeIEditable *instance, GdkEventButton *event )
-{
-	GtkTreeView *treeview;
-	GtkTreeModel *model;
-	GtkTreePath *path;
-
-	treeview = nact_tree_ieditable_priv_get_actions_list_treeview( instance );
-
-	if( gtk_tree_view_get_path_at_pos( treeview, event->x, event->y, &path, NULL, NULL, NULL )){
-		model = gtk_tree_view_get_model( treeview );
-		nact_tree_ieditable_bis_select_row_at_path( instance, treeview, model, path );
-		gtk_tree_path_free( path );
-		nact_menubar_open_popup( BASE_WINDOW( instance ), event );
 	}
 }
 #endif

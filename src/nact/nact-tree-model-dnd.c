@@ -49,6 +49,7 @@
 #include "nact-main-window.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-priv.h"
+#include "nact-tree-ieditable.h"
 
 /*
  * call once egg_tree_multi_drag_add_drag_support( treeview ) at init time (before gtk_main)
@@ -455,7 +456,7 @@ nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *dr
 
 			path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
 			gtk_tree_model_get_iter( store, &iter, path );
-			gtk_tree_model_get( store, &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+			gtk_tree_model_get( store, &iter, TREE_COLUMN_NAOBJECT, &object, -1 );
 
 			if( NA_IS_OBJECT_PROFILE( object )){
 				model->private->drag_has_profiles = TRUE;
@@ -610,7 +611,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 		path = gtk_tree_row_reference_get_path(( GtkTreeRowReference * ) it->data );
 		if( path ){
 			if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path )){
-				gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &current, -1 );
+				gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, TREE_COLUMN_NAOBJECT, &current, -1 );
 				g_object_unref( current );
 
 				if( copy_data ){
@@ -732,7 +733,7 @@ is_drop_possible_before_iter( NactTreeModel *model, GtkTreeIter *iter, NactMainW
 	drop_ok = FALSE;
 	*parent = NULL;
 
-	gtk_tree_model_get( GTK_TREE_MODEL( model ), iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+	gtk_tree_model_get( GTK_TREE_MODEL( model ), iter, TREE_COLUMN_NAOBJECT, &object, -1 );
 	g_object_unref( object );
 	g_debug( "%s: current object at dest is %s", thisfn, G_OBJECT_TYPE_NAME( object ));
 
@@ -777,7 +778,7 @@ is_drop_possible_into_dest( NactTreeModel *model, GtkTreePath *dest, NactMainWin
 
 	if( gtk_tree_path_up( path )){
 		if( gtk_tree_model_get_iter( GTK_TREE_MODEL( model ), &iter, path )){
-			gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, IACTIONS_LIST_NAOBJECT_COLUMN, &object, -1 );
+			gtk_tree_model_get( GTK_TREE_MODEL( model ), &iter, TREE_COLUMN_NAOBJECT, &object, -1 );
 			g_object_unref( object );
 			g_debug( "%s: current object at parent dest is %s", thisfn, G_OBJECT_TYPE_NAME( object ));
 
@@ -872,6 +873,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	GSList *im;
 	GList *imported;
 	const gchar *selection_data_data;
+	NactTreeView *view;
 
 	gchar *dest_str = gtk_tree_path_to_string( dest );
 	g_debug( "%s: model=%p, dest=%p (%s), selection_data=%p",
@@ -959,10 +961,8 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		drop_done = TRUE;
 	}
 
-#if 0
-	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), imported, dest );
-	nact_tree_model_dump( model );
-#endif
+	view = nact_main_window_get_items_view( main_window );
+	nact_tree_ieditable_insert_at_path( NACT_TREE_IEDITABLE( view ), imported, dest );
 
 	na_object_free_items( imported );
 	na_core_utils_slist_free( parms.uris );

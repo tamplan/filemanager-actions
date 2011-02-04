@@ -44,6 +44,7 @@
 #include "nact-application.h"
 #include "nact-assistant-import.h"
 #include "nact-main-window.h"
+#include "nact-tree-ieditable.h"
 
 /* Import Assistant
  *
@@ -639,6 +640,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	NAImporterResult *result;
 	NactApplication *application;
 	NAUpdater *updater;
+	NactTreeView *items_view;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( wnd ));
 
@@ -676,11 +678,14 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	/* then insert the list
 	 * assuring that actions will be inserted in the same order as uris
+	 *
+	 * the tree view (and its underlying tree store) takes a new reference
+	 * on the inserted objects; the pointers so remain valid even after
+	 * having released the imported_items list
 	 */
 	imported_items = g_list_reverse( imported_items );
-#if 0
-	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( main_window ), imported_items, NULL );
-#endif
+	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
+	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), imported_items, NULL );
 	na_object_free_items( imported_items );
 }
 

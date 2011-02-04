@@ -57,7 +57,7 @@ static GType   register_type( void );
 static void    interface_base_init( NactIBasenamesTabInterface *klass );
 static void    interface_base_finalize( NactIBasenamesTabInterface *klass );
 
-static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
+static void    on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
 
 static void    on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window );
 static GSList *get_basenames( void *context );
@@ -186,11 +186,8 @@ nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance )
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesMatchcaseButton" );
 		base_window_signal_connect(
@@ -238,8 +235,9 @@ nact_ibasenames_tab_dispose( NactIBasenamesTab *instance )
 }
 
 static void
-on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
+on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
 {
+	guint count_selected;
 	NAIContext *context;
 	gboolean editable;
 	GtkToggleButton *matchcase_button;
@@ -247,6 +245,7 @@ on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
 
 	if( st_initialized && !st_finalized ){
 
+		count_selected = g_list_length( selected_items );
 		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
 
 		st_on_selection_change = TRUE;

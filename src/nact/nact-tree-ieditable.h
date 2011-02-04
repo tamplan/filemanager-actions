@@ -47,7 +47,9 @@
  * The modified count is fully recomputed after a save.
  */
 
-#include "nact-tree-view.h"
+#include <api/na-object.h>
+
+#include "base-window.h"
 
 G_BEGIN_DECLS
 
@@ -68,16 +70,13 @@ typedef struct {
 
 GType nact_tree_ieditable_get_type( void );
 
-void  nact_tree_ieditable_on_view_constructed( NactTreeView *view, BaseWindow *window );
+void  nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treeview, BaseWindow *window );
+
+void  nact_tree_ieditable_insert_at_path   ( NactTreeIEditable *instance, GList *items, GtkTreePath *path );
+void  nact_tree_ieditable_insert_items     ( NactTreeIEditable *instance, GList *items, NAObject *sibling );
+void  nact_tree_ieditable_insert_items_into( NactTreeIEditable *instance, GList *items );
 
 #if 0
-/* signals
- */
-#define TREE_IEDITABLE_SIGNAL_LIST_COUNT_UPDATED			"nact-iactions-list-count-updated"
-#define TREE_IEDITABLE_SIGNAL_FOCUS_IN					"nact-iactions-list-focus-in"
-#define TREE_IEDITABLE_SIGNAL_FOCUS_OUT					"nact-iactions-list-focus-out"
-#define TREE_IEDITABLE_SIGNAL_COLUMN_EDITED				"nact-iactions-list-column-edited"
-#define TREE_IEDITABLE_SIGNAL_STATUS_CHANGED				"nact-iactions-list-status-changed"
 
 void      nact_tree_ieditable_initial_load_toplevel( NactTreeIEditable *instance );
 void      nact_tree_ieditable_runtime_init_toplevel( NactTreeIEditable *instance, GList *actions );
@@ -102,9 +101,6 @@ void      nact_tree_ieditable_bis_expand_to_first_child( NactTreeIEditable *inst
 NAObject *nact_tree_ieditable_bis_get_item( NactTreeIEditable *instance, const gchar *id );
 GList    *nact_tree_ieditable_bis_get_items( NactTreeIEditable *instance );
 GList    *nact_tree_ieditable_bis_get_selected_items( NactTreeIEditable *instance );
-void      nact_tree_ieditable_bis_insert_at_path( NactTreeIEditable *instance, GList *items, GtkTreePath *path );
-void      nact_tree_ieditable_bis_insert_items( NactTreeIEditable *instance, GList *items, NAObject *sibling );
-void      nact_tree_ieditable_bis_insert_into( NactTreeIEditable *instance, GList *items );
 void      nact_tree_ieditable_bis_list_modified_items( NactTreeIEditable *instance );
 void      nact_tree_ieditable_bis_remove_modified( NactTreeIEditable *instance, const NAObjectItem *item );
 void      nact_tree_ieditable_bis_select_first_row( NactTreeIEditable *instance );

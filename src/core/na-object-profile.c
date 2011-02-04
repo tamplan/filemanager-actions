@@ -321,12 +321,11 @@ ifactory_object_get_groups( const NAIFactoryObject *instance )
 static gboolean
 ifactory_object_is_valid( const NAIFactoryObject *object )
 {
-	static const gchar *thisfn = "na_object_profile_ifactory_object_is_valid: object";
-
-	g_debug( "%s: object=%p (%s)",
-			thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	static const gchar *thisfn = "na_object_profile_ifactory_object_is_valid";
 
 	g_return_val_if_fail( NA_IS_OBJECT_PROFILE( object ), FALSE );
+
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	return( profile_is_valid( NA_OBJECT_PROFILE( object )));
 }

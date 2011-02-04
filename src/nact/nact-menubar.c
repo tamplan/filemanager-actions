@@ -351,6 +351,10 @@ instance_dispose( GObject *object )
 		g_object_unref( self->private->action_group );
 		g_object_unref( self->private->ui_manager );
 
+		if( self->private->selected_items ){
+			self->private->selected_items = na_object_free_items( self->private->selected_items );
+		}
+
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
@@ -716,6 +720,9 @@ on_tree_view_focus_out( BaseWindow *window, NactTreeView *view, gpointer user_da
 
 /*
  * when the selection changes in the tree view, see what is selected
+ *
+ * It happens that this function is triggered after all tabs have already
+ * dealt with the MAIN_SIGNAL_SELECTION_CHANGED signal
  */
 static void
 on_tree_view_selection_changed( BaseWindow *window, NactTreeView *view, GList *selected, gpointer user_data )
@@ -727,95 +734,104 @@ on_tree_view_selection_changed( BaseWindow *window, NactTreeView *view, GList *s
 
 	BAR_WINDOW_VOID( window );
 
-	g_debug( "%s: selected=%p (count=%d)", thisfn, ( void * ) selected, g_list_length( selected ));
+	g_debug( "%s: selected_items=%p (count=%d)", thisfn, ( void * ) selected, g_list_length( selected ));
 
 	bar->private->count_selected = g_list_length( selected );
+
 	if( bar->private->selected_items ){
 		bar->private->selected_items = na_object_free_items( bar->private->selected_items );
 	}
 	bar->private->selected_items = na_object_copyref_items( selected );
 
+	/* check if the parent of the first selected item is writable
+	 * (File: New menu/New action)
+	 * (Edit: Paste menu or action)
+	 */
+	first = NULL;
 	if( selected ){
-		/* check if the parent of the first selected item is writable
-		 * (File: New menu/New action)
-		 * (Edit: Paste menu or action)
-		 */
 		first = ( NAObject *) selected->data;
-		if( first ){
-			if( NA_IS_OBJECT_PROFILE( first )){
-				first = NA_OBJECT( na_object_get_parent( first ));
-			}
-			first = ( NAObject * ) na_object_get_parent( first );
-			bar->private->is_parent_writable = first ? na_object_is_finally_writable( first, NULL ) : bar->private->is_level_zero_writable;
+		if( NA_IS_OBJECT_PROFILE( first )){
+			first = NA_OBJECT( na_object_get_parent( first ));
 		}
-		/* check is only an action is selected, or only profile(s) of a same action
-		 * (File: New profile)
-		 * (Edit: Paste a profile)
-		 */
-		bar->private->enable_new_profile = TRUE;
-		selected_action = NULL;
-		for( is = selected ; is ; is = is->next ){
+		first = ( NAObject * ) na_object_get_parent( first );
+	}
+	if( first ){
+		bar->private->is_parent_writable = na_object_is_finally_writable( first, NULL );
+	} else {
+		bar->private->is_parent_writable = bar->private->is_level_zero_writable;
+	}
 
-			if( NA_IS_OBJECT_MENU( is->data )){
+	/* check is only an action is selected, or only profile(s) of a same action
+	 * (File: New profile)
+	 * (Edit: Paste a profile)
+	 */
+	bar->private->enable_new_profile = TRUE;
+	selected_action = NULL;
+	for( is = selected ; is ; is = is->next ){
+
+		if( NA_IS_OBJECT_MENU( is->data )){
+			bar->private->enable_new_profile = FALSE;
+			break;
+
+		} else if( NA_IS_OBJECT_ACTION( is->data )){
+			if( !selected_action ){
+				selected_action = NA_OBJECT( is->data );
+			} else {
 				bar->private->enable_new_profile = FALSE;
 				break;
+			}
 
-			} else if( NA_IS_OBJECT_ACTION( is->data )){
-				if( !selected_action ){
-					selected_action = NA_OBJECT( is->data );
-				} else {
-					bar->private->enable_new_profile = FALSE;
-					break;
-				}
-
-			} else if( NA_IS_OBJECT_PROFILE( is->data )){
-				first = NA_OBJECT( na_object_get_parent( is->data ));
-				if( !selected_action ){
-					selected_action = first;
-				} else if( selected_action != first ){
-					bar->private->enable_new_profile = FALSE;
-					break;
-				}
+		} else if( NA_IS_OBJECT_PROFILE( is->data )){
+			first = NA_OBJECT( na_object_get_parent( is->data ));
+			if( !selected_action ){
+				selected_action = first;
+			} else if( selected_action != first ){
+				bar->private->enable_new_profile = FALSE;
+				break;
 			}
 		}
-		if( !selected_action ){
-			bar->private->enable_new_profile = FALSE;
-		} else {
-			bar->private->is_action_writable = na_object_is_finally_writable( selected_action, NULL );
+	}
+	if( selected_action ){
+		bar->private->is_action_writable = na_object_is_finally_writable( selected_action, NULL );
+	} else {
+		bar->private->enable_new_profile = FALSE;
+	}
+
+	/* check that selection is not empty and that each selected item is writable
+	 * and that all parents are writable
+	 * if some selection is at level zero, then it must be writable
+	 * (Edit: Cut/Delete)
+	 */
+	bar->private->are_parents_writable = TRUE;
+	for( is = selected ; is ; is = is->next ){
+		gchar *label = na_object_get_label( is->data );
+		gboolean writable = na_object_is_finally_writable( is->data, NULL );
+		g_debug( "%s: label=%s, writable=%s", thisfn, label, writable ? "True":"False" );
+		if( !na_object_is_finally_writable( is->data, NULL )){
+			bar->private->are_parents_writable = FALSE;
+			break;
 		}
-		/* check that selection is not empty and that each selected item is writable
-		 * and that all parents are writable
-		 * if some selection is at level zero, then it must be writable
-		 * (Edit: Cut/Delete)
-		 */
-		bar->private->are_parents_writable = TRUE;
-		for( is = selected ; is ; is = is->next ){
-			gchar *label = na_object_get_label( is->data );
-			gboolean writable = na_object_is_finally_writable( is->data, NULL );
-			g_debug( "%s: label=%s, writable=%s", thisfn, label, writable ? "True":"False" );
-			if( !na_object_is_finally_writable( is->data, NULL )){
+		first = ( NAObject * ) na_object_get_parent( is->data );
+		if( first ){
+			if( !na_object_is_finally_writable( first, NULL )){
 				bar->private->are_parents_writable = FALSE;
 				break;
 			}
-			first = ( NAObject * ) na_object_get_parent( is->data );
-			if( first ){
-				if( !na_object_is_finally_writable( first, NULL )){
-					bar->private->are_parents_writable = FALSE;
-					break;
-				}
-			} else if( !bar->private->is_level_zero_writable ){
-				bar->private->are_parents_writable = FALSE;
-				break;
-			}
+		} else if( !bar->private->is_level_zero_writable ){
+			bar->private->are_parents_writable = FALSE;
+			break;
 		}
 	}
 
 	bar->private->selected_menus = 0;
 	bar->private->selected_actions = 0;
 	bar->private->selected_profiles = 0;
-	na_object_item_count_items( selected, &bar->private->selected_menus, &bar->private->selected_actions, &bar->private->selected_profiles, FALSE );
-	g_debug( "nact_menubar_on_iactions_list_selection_changed: menus=%d, actions=%d, profiles=%d",
-			bar->private->selected_menus, bar->private->selected_actions, bar->private->selected_profiles );
+	if( selected ){
+		na_object_item_count_items( selected, &bar->private->selected_menus, &bar->private->selected_actions, &bar->private->selected_profiles, FALSE );
+		g_debug( "%s: selected_menus=%d, selected_actions=%d, selected_profiles=%d",
+				thisfn,
+				bar->private->selected_menus, bar->private->selected_actions, bar->private->selected_profiles );
+	}
 
 	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 }

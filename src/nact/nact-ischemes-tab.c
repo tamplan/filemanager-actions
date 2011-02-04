@@ -58,7 +58,7 @@ static GType   register_type( void );
 static void    interface_base_init( NactISchemesTabInterface *klass );
 static void    interface_base_finalize( NactISchemesTabInterface *klass );
 
-static void    on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected );
+static void    on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
 
 static void    on_add_from_defaults( GtkButton *button, BaseWindow *window );
 static GSList *get_schemes( void *context );
@@ -174,11 +174,8 @@ nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance )
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tab_updatable_selection_changed ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 
@@ -218,13 +215,13 @@ nact_ischemes_tab_dispose( NactISchemesTab *instance )
 }
 
 static void
-on_tab_updatable_selection_changed( BaseWindow *window, gint count_selected )
+on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
 {
 	NAIContext *context;
 	gboolean editable;
 	GtkWidget *button;
 
-	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
+	nact_match_list_on_selection_changed( window, ITAB_NAME, g_list_length( selected_items ));
 
 	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
 	button = base_window_get_widget( window, "AddFromDefaultButton" );

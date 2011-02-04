@@ -39,6 +39,7 @@
 #include "nact-marshal.h"
 #include "nact-tree-view.h"
 #include "nact-tree-model.h"
+#include "nact-tree-ieditable.h"
 
 /* private class data
  */
@@ -120,6 +121,7 @@ static GObjectClass *st_parent_class           = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactTreeViewClass *klass );
+static void     tree_ieditable_iface_init( NactTreeIEditableInterface *iface );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -138,13 +140,13 @@ static void     on_treeview_selection_changed( GtkTreeSelection *selection, Base
 static void     on_content_changed_cleanup_handler( BaseWindow *window, NactTreeView *view, NAObject *edited );
 static void     on_selection_changed_cleanup_handler( BaseWindow *window, NactTreeView *view, GList *selected_items );
 static void     clear_selection( NactTreeView *view );
+static void     display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactTreeView *view );
 static void     extend_selection_to_children( NactTreeView *view, GtkTreeModel *model, GtkTreeIter *parent );
 static GList   *get_selected_items( NactTreeView *view );
 static void     iter_on_selection( NactTreeView *view, FnIterOnSelection fn_iter, gpointer user_data );
 static void     navigate_to_child( NactTreeView *view );
 static void     navigate_to_parent( NactTreeView *view );
 static void     open_popup( BaseWindow *window, NactTreeView *view, GdkEventButton *event );
-static void     select_row_at_path( NactTreeView *view, GtkTreePath *path );
 static void     select_row_at_path_by_string( NactTreeView *view, const gchar *path );
 static void     toggle_collapse( NactTreeView *view );
 static gboolean toggle_collapse_iter( NactTreeView *view, GtkTreeModel *model, GtkTreeIter *iter, NAObject *object, gpointer user_data );
@@ -181,9 +183,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo tree_ieditable_iface_info = {
+		( GInterfaceInitFunc ) tree_ieditable_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NactTreeView", &info, 0 );
+
+	g_type_add_interface_static( type, NACT_TREE_IEDITABLE_TYPE, &tree_ieditable_iface_info );
 
 	return( type );
 }
@@ -428,6 +438,14 @@ class_init( NactTreeViewClass *klass )
 }
 
 static void
+tree_ieditable_iface_init( NactTreeIEditableInterface *iface )
+{
+	static const gchar *thisfn = "nact_main_window_tree_ieditable_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+}
+
+static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_tree_view_instance_init";
@@ -615,6 +633,7 @@ on_base_initialize_gtk( BaseWindow *window, GtkWindow *toplevel, gpointer user_d
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
 	GtkTreeSelection *selection;
+	GList *renderers;
 
 	VIEW_WINDOW_VOID( window );
 
@@ -657,6 +676,16 @@ on_base_initialize_gtk( BaseWindow *window, GtkWindow *toplevel, gpointer user_d
 		/* misc properties
 		 */
 		gtk_tree_view_set_enable_tree_lines( treeview, TRUE );
+
+		if( view->private->mode == TREE_MODE_EDITION ){
+			nact_tree_ieditable_initialize( NACT_TREE_IEDITABLE( view ), treeview, window );
+
+			column = gtk_tree_view_get_column( treeview, TREE_COLUMN_LABEL );
+			renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
+			renderer = GTK_CELL_RENDERER( renderers->data );
+			gtk_tree_view_column_set_cell_data_func(
+					column, renderer, ( GtkTreeCellDataFunc ) display_label, view, NULL );
+		}
 	}
 }
 
@@ -978,6 +1007,92 @@ nact_tree_view_get_items( const NactTreeView *view )
 	return( items );
 }
 
+/**
+ * nact_tree_view_get_window:
+ * @view: this #NactTreeView instance.
+ *
+ * Returns: the #BaseWindow.
+ */
+BaseWindow *
+nact_tree_view_get_window( const NactTreeView *view )
+{
+	BaseWindow *window;
+
+	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), NULL );
+
+	window = NULL;
+
+	if( !view->private->dispose_has_run ){
+
+		window = view->private->window;
+	}
+
+	return( window );
+}
+
+/**
+ * nact_tree_view_select_row_at_path:
+ *
+ *
+ * Select the row at the required path, or the immediate previous, or
+ * the next following, or eventually the immediate parent.
+ *
+ * If nothing can be selected (and notify is allowed), at least send a
+ * message with an empty selection.
+ */
+void
+nact_tree_view_select_row_at_path( NactTreeView *view, GtkTreePath *path )
+{
+	static const gchar *thisfn = "nact_tree_view_select_row_at_path";
+	gchar *path_str;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	gboolean something = FALSE;
+
+	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
+
+	if( !view->private->dispose_has_run ){
+
+		path_str = gtk_tree_path_to_string( path );
+		g_debug( "%s: view=%p, path=%s", thisfn, ( void * ) view, path_str );
+		g_free( path_str );
+
+		if( path ){
+			gtk_tree_view_expand_to_path( view->private->tree_view, path );
+			model = gtk_tree_view_get_model( view->private->tree_view );
+
+			if( gtk_tree_model_get_iter( model, &iter, path )){
+				gtk_tree_view_set_cursor( view->private->tree_view, path, NULL, FALSE );
+				something = TRUE;
+
+			} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
+				gtk_tree_view_set_cursor( view->private->tree_view, path, NULL, FALSE );
+				something = TRUE;
+
+			} else {
+				gtk_tree_path_next( path );
+				if( gtk_tree_model_get_iter( model, &iter, path )){
+					gtk_tree_view_set_cursor( view->private->tree_view, path, NULL, FALSE );
+					something = TRUE;
+
+				} else if( gtk_tree_path_get_depth( path ) > 1 &&
+							gtk_tree_path_up( path ) &&
+							gtk_tree_model_get_iter( model, &iter, path )){
+
+								gtk_tree_view_set_cursor( view->private->tree_view, path, NULL, FALSE );
+								something = TRUE;
+				}
+			}
+		}
+
+		if( !something ){
+			if( view->private->notify_allowed ){
+				g_signal_emit_by_name( view->private->window, TREE_SIGNAL_SELECTION_CHANGED, view, NULL );
+			}
+		}
+	}
+}
+
 static void
 clear_selection( NactTreeView *view )
 {
@@ -985,6 +1100,48 @@ clear_selection( NactTreeView *view )
 
 	selection = gtk_tree_view_get_selection( view->private->tree_view );
 	gtk_tree_selection_unselect_all( selection );
+}
+
+/*
+ * item modified: italic
+ * item not saveable (invalid): red
+ */
+static void
+display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactTreeView *view )
+{
+	NAObject *object;
+	gchar *label;
+	gboolean modified = FALSE;
+	gboolean valid = TRUE;
+	NAObjectItem *item;
+
+	g_return_if_fail( view->private->mode == TREE_MODE_EDITION );
+
+	gtk_tree_model_get( model, iter, TREE_COLUMN_NAOBJECT, &object, -1 );
+
+	if( object ){
+		g_object_unref( object );
+		g_return_if_fail( NA_IS_OBJECT( object ));
+
+		label = na_object_get_label( object );
+		g_object_set( cell, "style-set", FALSE, NULL );
+		g_object_set( cell, "foreground-set", FALSE, NULL );
+
+		modified = na_object_is_modified( object );
+		valid = na_object_is_valid( object );
+		item = NA_IS_OBJECT_PROFILE( object ) ? na_object_get_parent( object ) : NA_OBJECT_ITEM( object );
+
+		if( modified ){
+			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
+		}
+
+		if( !valid ){
+			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
+		}
+
+		g_object_set( cell, "text", label, NULL );
+		g_free( label );
+	}
 }
 
 /*
@@ -1115,7 +1272,7 @@ navigate_to_child( NactTreeView *view )
 			if( gtk_tree_model_iter_has_child( model, &iter )){
 				child_path = gtk_tree_path_copy( path );
 				gtk_tree_path_append_index( child_path, 0 );
-				select_row_at_path( view, child_path );
+				nact_tree_view_select_row_at_path( view, child_path );
 				gtk_tree_path_free( child_path );
 			}
 		}
@@ -1157,7 +1314,7 @@ navigate_to_parent( NactTreeView *view )
 		} else if( gtk_tree_path_get_depth( path ) > 1 ){
 			parent_path = gtk_tree_path_copy( path );
 			gtk_tree_path_up( parent_path );
-			select_row_at_path( view, parent_path );
+			nact_tree_view_select_row_at_path( view, parent_path );
 			gtk_tree_path_free( parent_path );
 		}
 	}
@@ -1172,66 +1329,11 @@ open_popup( BaseWindow *window, NactTreeView *view, GdkEventButton *event )
 	GtkTreePath *path;
 
 	if( gtk_tree_view_get_path_at_pos( view->private->tree_view, event->x, event->y, &path, NULL, NULL, NULL )){
-		select_row_at_path( view, path );
+		nact_tree_view_select_row_at_path( view, path );
 		gtk_tree_path_free( path );
 	}
 
 	g_signal_emit_by_name( window, TREE_SIGNAL_CONTEXT_MENU, view, event );
-}
-
-/*
- * Select the row at the required path, or the immediate previous, or
- * the next following, or eventually the immediate parent.
- *
- * If nothing can be selected (and notify is allowed), at least send a
- * message with an empty selection.
- */
-static void
-select_row_at_path( NactTreeView *view, GtkTreePath *path )
-{
-	static const gchar *thisfn = "nact_tree_view_select_row_at_path";
-	gchar *path_str;
-	GtkTreeIter iter;
-	GtkTreeModel *model;
-	gboolean something = FALSE;
-
-	path_str = gtk_tree_path_to_string( path );
-	g_debug( "%s: view=%p, path=%s", thisfn, ( void * ) view, path_str );
-	g_free( path_str );
-
-	if( path ){
-		gtk_tree_view_expand_to_path( view->private->tree_view, path );
-		model = gtk_tree_view_get_model( view->private->tree_view );
-
-		if( gtk_tree_model_get_iter( model, &iter, path )){
-			gtk_tree_view_set_cursor( view->private->tree_view, path, NULL, FALSE );
-			something = TRUE;
-
-		} else if( gtk_tree_path_prev( path ) && gtk_tree_model_get_iter( model, &iter, path )){
-			gtk_tree_view_set_cursor( view->private->tree_view, path, NULL, FALSE );
-			something = TRUE;
-
-		} else {
-			gtk_tree_path_next( path );
-			if( gtk_tree_model_get_iter( model, &iter, path )){
-				gtk_tree_view_set_cursor( view->private->tree_view, path, NULL, FALSE );
-				something = TRUE;
-
-			} else if( gtk_tree_path_get_depth( path ) > 1 &&
-						gtk_tree_path_up( path ) &&
-						gtk_tree_model_get_iter( model, &iter, path )){
-
-							gtk_tree_view_set_cursor( view->private->tree_view, path, NULL, FALSE );
-							something = TRUE;
-			}
-		}
-	}
-
-	if( !something ){
-		if( view->private->notify_allowed ){
-			g_signal_emit_by_name( view->private->window, TREE_SIGNAL_SELECTION_CHANGED, view, NULL );
-		}
-	}
 }
 
 static void
@@ -1240,7 +1342,7 @@ select_row_at_path_by_string( NactTreeView *view, const gchar *path_str )
 	GtkTreePath *path;
 
 	path = gtk_tree_path_new_from_string( path_str );
-	select_row_at_path( view, path );
+	nact_tree_view_select_row_at_path( view, path );
 	gtk_tree_path_free( path );
 }
 
