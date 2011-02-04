@@ -126,8 +126,6 @@ static void           iter_on_store( const NactTreeModel *model, GtkTreeModel *s
 static gboolean       iter_on_store_item( const NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter, FnIterOnStore fn, gpointer user_data );
 static void           remove_if_exists( NactTreeModel *model, GtkTreeModel *store, const NAObject *object );
 static gboolean       remove_items( GtkTreeStore *store, GtkTreeIter *iter );
-/*static gboolean       search_for_object( NactTreeModel *model, GtkTreeModel *store, const NAObject *object, GtkTreeIter *iter );
-static gboolean       search_for_object_iter( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmFindObject *ntm );*/
 static gint           sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data );
 
 GType
@@ -501,6 +499,51 @@ nact_tree_model_display_order_change( NactTreeModel *model, gint order_mode )
 }
 
 /**
+ * nact_tree_model_delete:
+ * @model: this #NactTreeModel instance.
+ * @object: the #NAObject to be deleted.
+ *
+ * Recursively deletes the specified object.
+ *
+ * Returns: a path which may be suitable for the next selection.
+ */
+GtkTreePath *
+nact_tree_model_delete( NactTreeModel *model, NAObject *object )
+{
+	GtkTreePath *path;
+	static const gchar *thisfn = "nact_tree_model_delete";
+	GtkTreeIter iter;
+	GtkTreeStore *store;
+	NAObjectItem *parent;
+
+	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), NULL );
+
+	path = NULL;
+
+	if( !model->private->dispose_has_run ){
+		g_debug( "%s: model=%p, object=%p (%s)",
+				thisfn, ( void * ) model, ( void * ) object, object ? G_OBJECT_TYPE_NAME( object ) : "null" );
+
+		path = nact_tree_model_object_to_path( model, object );
+
+		if( path != NULL ){
+			gtk_tree_path_free( path );
+			store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
+			parent = na_object_get_parent( object );
+			g_debug( "%s: object=%p, parent=%p", thisfn, ( void * ) object, ( void * ) parent );
+			if( parent ){
+				na_object_remove_item( parent, object );
+				na_object_check_status( parent );
+			}
+			gtk_tree_model_get_iter( GTK_TREE_MODEL( store ), &iter, path );
+			remove_items( store, &iter );
+		}
+	}
+
+	return( path );
+}
+
+/**
  * nact_tree_model_fill:
  * @model: this #NactTreeModel instance.
  * @ŧreeview: the #GtkTreeView widget.
@@ -825,71 +868,6 @@ nact_tree_model_object_to_path( const NactTreeModel *model, const NAObject *obje
 	}
 
 	return( nfo.path );
-}
-
-#if 0
-/**
- * nact_tree_model_iter:
- * @model: this #NactTreeModel instance.
- */
-void
-nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data )
-{
-	GtkTreeStore *store;
-
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
-
-	if( !model->private->dispose_has_run ){
-
-		store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
-		iter_on_store( model, GTK_TREE_MODEL( store ), NULL, fn, user_data );
-	}
-}
-#endif
-
-/**
- * nact_tree_model_remove:
- * @model: this #NactTreeModel instance.
- * @object: the #NAObject to be deleted.
- *
- * Recursively deletes the specified object.
- *
- * Returns: a path which may be suitable for the next selection.
- */
-GtkTreePath *
-nact_tree_model_remove( NactTreeModel *model, NAObject *object )
-{
-	GtkTreePath *path;
-	static const gchar *thisfn = "nact_tree_model_remove";
-	GtkTreeIter iter;
-	GtkTreeStore *store;
-	NAObjectItem *parent;
-
-	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), NULL );
-
-	path = NULL;
-
-	if( !model->private->dispose_has_run ){
-		g_debug( "%s: model=%p, object=%p (%s)",
-				thisfn, ( void * ) model, ( void * ) object, object ? G_OBJECT_TYPE_NAME( object ) : "null" );
-
-		path = nact_tree_model_object_to_path( model, object );
-
-		if( path != NULL ){
-			gtk_tree_path_free( path );
-			store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
-			parent = na_object_get_parent( object );
-			g_debug( "%s: object=%p, parent=%p", thisfn, ( void * ) object, ( void * ) parent );
-			if( parent ){
-				na_object_remove_item( parent, object );
-				na_object_check_status_up( parent );
-			}
-			gtk_tree_model_get_iter( GTK_TREE_MODEL( store ), &iter, path );
-			remove_items( store, &iter );
-		}
-	}
-
-	return( path );
 }
 
 static void

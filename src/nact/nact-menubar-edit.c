@@ -43,6 +43,7 @@
 #include "nact-main-tab.h"
 #include "nact-menubar-priv.h"
 #include "nact-preferences-editor.h"
+#include "nact-tree-ieditable.h"
 
 static GList  *prepare_for_paste( BaseWindow *window );
 static GList  *get_deletables( NAUpdater *updater, GList *tree, GSList **not_deletable );
@@ -191,6 +192,7 @@ nact_menubar_edit_on_cut( GtkAction *gtk_action, BaseWindow *window )
 	NactClipboard *clipboard;
 	GList *to_delete;
 	GSList *non_deletables;
+	NactTreeView *view;
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
@@ -216,9 +218,8 @@ nact_menubar_edit_on_cut( GtkAction *gtk_action, BaseWindow *window )
 		clipboard = nact_main_window_get_clipboard( NACT_MAIN_WINDOW( window ));
 		nact_clipboard_primary_set( clipboard, to_delete, CLIPBOARD_MODE_CUT );
 		update_clipboard_counters( window );
-#if 0
-		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete, TRUE );
-#endif
+		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TRUE );
 	}
 
 	na_object_free_items( items );
@@ -279,14 +280,15 @@ nact_menubar_edit_on_paste( GtkAction *gtk_action, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_menubar_edit_on_paste";
 	GList *items;
+	NactTreeView *view;
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 
 	items = prepare_for_paste( window );
+
 	if( items ){
-#if 0
-		nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), items, NULL );
-#endif
+		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( view ), items, NULL );
 		na_object_free_items( items );
 	}
 }
@@ -312,14 +314,14 @@ nact_menubar_edit_on_paste_into( GtkAction *gtk_action, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_menubar_edit_on_paste_into";
 	GList *items;
+	NactTreeView *view;
 
 	g_debug( "%s: gtk_action=%p, window=%p", thisfn, ( void * ) gtk_action, ( void * ) window );
 
 	items = prepare_for_paste( window );
 	if( items ){
-#if 0
-		nact_iactions_list_bis_insert_into( NACT_IACTIONS_LIST( window ), items );
-#endif
+		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+		nact_tree_ieditable_insert_items_into( NACT_TREE_IEDITABLE( window ), items );
 		na_object_free_items( items );
 	}
 }
@@ -383,6 +385,7 @@ nact_menubar_edit_on_duplicate( GtkAction *gtk_action, BaseWindow *window )
 	GList *dup;
 	NAObject *obj;
 	gboolean relabel;
+	NactTreeView *view;
 
 	BAR_WINDOW_VOID( window );
 
@@ -408,9 +411,8 @@ nact_menubar_edit_on_duplicate( GtkAction *gtk_action, BaseWindow *window )
 		na_object_set_origin( obj, NULL );
 		na_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );
-#if 0
-		nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), dup, it->data );
-#endif
+		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( window ), dup, it->data );
 		na_object_free_items( dup );
 	}
 
@@ -441,6 +443,7 @@ nact_menubar_edit_on_delete( GtkAction *gtk_action, BaseWindow *window )
 	GList *items;
 	GList *to_delete;
 	GSList *non_deletables;
+	NactTreeView *view;
 
 	BAR_WINDOW_VOID( window );
 
@@ -463,10 +466,9 @@ nact_menubar_edit_on_delete( GtkAction *gtk_action, BaseWindow *window )
 	}
 
 	if( to_delete ){
-		nact_main_window_move_to_deleted( NACT_MAIN_WINDOW( window ), to_delete );
-#if 0
-		nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( window ), to_delete, TRUE );
-#endif
+		/*nact_main_window_move_to_deleted( NACT_MAIN_WINDOW( window ), to_delete );*/
+		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TRUE );
 	}
 
 	na_object_free_items( items );

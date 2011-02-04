@@ -172,10 +172,7 @@ nact_main_statusbar_display_with_timeout( NactMainWindow *window, const gchar *c
 void
 nact_main_statusbar_hide_status( NactMainWindow *window, const gchar *context )
 {
-	static const gchar *thisfn = "nact_main_statusbar_hide_status";
 	GtkStatusbar *bar;
-
-	g_debug( "%s: window=%p, context=%s", thisfn, ( void * ) window, context );
 
 	bar = get_statusbar( window );
 

@@ -736,8 +736,22 @@ on_tree_view_selection_changed( BaseWindow *window, NactTreeView *view, GList *s
 
 	g_debug( "%s: selected_items=%p (count=%d)", thisfn, ( void * ) selected, g_list_length( selected ));
 
+	/* count the items
+	 */
 	bar->private->count_selected = g_list_length( selected );
 
+	bar->private->selected_menus = 0;
+	bar->private->selected_actions = 0;
+	bar->private->selected_profiles = 0;
+	if( selected ){
+		na_object_item_count_items( selected, &bar->private->selected_menus, &bar->private->selected_actions, &bar->private->selected_profiles, FALSE );
+		g_debug( "%s: selected_menus=%d, selected_actions=%d, selected_profiles=%d",
+				thisfn,
+				bar->private->selected_menus, bar->private->selected_actions, bar->private->selected_profiles );
+	}
+
+	/* take a ref of the list of selected items
+	 */
 	if( bar->private->selected_items ){
 		bar->private->selected_items = na_object_free_items( bar->private->selected_items );
 	}
@@ -803,34 +817,28 @@ on_tree_view_selection_changed( BaseWindow *window, NactTreeView *view, GList *s
 	 * (Edit: Cut/Delete)
 	 */
 	bar->private->are_parents_writable = TRUE;
-	for( is = selected ; is ; is = is->next ){
-		gchar *label = na_object_get_label( is->data );
-		gboolean writable = na_object_is_finally_writable( is->data, NULL );
-		g_debug( "%s: label=%s, writable=%s", thisfn, label, writable ? "True":"False" );
-		if( !na_object_is_finally_writable( is->data, NULL )){
-			bar->private->are_parents_writable = FALSE;
-			break;
-		}
-		first = ( NAObject * ) na_object_get_parent( is->data );
-		if( first ){
-			if( !na_object_is_finally_writable( first, NULL )){
+	if( selected ){
+		for( is = selected ; is ; is = is->next ){
+			gchar *label = na_object_get_label( is->data );
+			gboolean writable = na_object_is_finally_writable( is->data, NULL );
+			g_debug( "%s: label=%s, writable=%s", thisfn, label, writable ? "True":"False" );
+			if( !na_object_is_finally_writable( is->data, NULL )){
 				bar->private->are_parents_writable = FALSE;
 				break;
 			}
-		} else if( !bar->private->is_level_zero_writable ){
-			bar->private->are_parents_writable = FALSE;
-			break;
+			first = ( NAObject * ) na_object_get_parent( is->data );
+			if( first ){
+				if( !na_object_is_finally_writable( first, NULL )){
+					bar->private->are_parents_writable = FALSE;
+					break;
+				}
+			} else if( !bar->private->is_level_zero_writable ){
+				bar->private->are_parents_writable = FALSE;
+				break;
+			}
 		}
-	}
-
-	bar->private->selected_menus = 0;
-	bar->private->selected_actions = 0;
-	bar->private->selected_profiles = 0;
-	if( selected ){
-		na_object_item_count_items( selected, &bar->private->selected_menus, &bar->private->selected_actions, &bar->private->selected_profiles, FALSE );
-		g_debug( "%s: selected_menus=%d, selected_actions=%d, selected_profiles=%d",
-				thisfn,
-				bar->private->selected_menus, bar->private->selected_actions, bar->private->selected_profiles );
+	} else {
+		bar->private->are_parents_writable = bar->private->is_level_zero_writable;
 	}
 
 	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );

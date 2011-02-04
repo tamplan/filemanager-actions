@@ -99,6 +99,7 @@ GType          nact_tree_model_get_type( void );
 
 NactTreeModel *nact_tree_model_new( BaseWindow *window, GtkTreeView *view, NactTreeMode mode );
 
+GtkTreePath   *nact_tree_model_delete     ( NactTreeModel *model, NAObject *object );
 void           nact_tree_model_fill       ( NactTreeModel *model, GList *items );
 GtkTreePath   *nact_tree_model_insert     ( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
 GtkTreePath   *nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
@@ -118,7 +119,6 @@ GtkTreePath   *nact_tree_model_object_to_path( const NactTreeModel *model, const
 /*void         nact_tree_model_display( NactTreeModel *model, NAObject *object );*/
 void         nact_tree_model_display_order_change( NactTreeModel *model, gint order_mode );
 /*void         nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );*/
-GtkTreePath *nact_tree_model_remove( NactTreeModel *model, NAObject *object );
 /* *** */
 
 G_END_DECLS

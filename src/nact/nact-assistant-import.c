@@ -668,7 +668,6 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		result = ( NAImporterResult * ) it->data;
 
 		if( result->imported ){
-			na_object_check_status( result->imported );
 			imported_items = g_list_prepend( imported_items, result->imported );
 		}
 	}

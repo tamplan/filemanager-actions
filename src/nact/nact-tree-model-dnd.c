@@ -953,17 +953,15 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 
 	g_string_free( str, TRUE );
 
-	/* check status of newly imported items, and insert them in the list view
+	/* insert newly imported items in the list view
 	 */
-	for( it = imported ; it ; it = it->next ){
-		na_object_check_status( it->data );
-		na_object_dump( it->data );
-		drop_done = TRUE;
+	if( imported ){
+		na_object_dump_tree( imported );
+		view = nact_main_window_get_items_view( main_window );
+		nact_tree_ieditable_insert_at_path( NACT_TREE_IEDITABLE( view ), imported, dest );
 	}
 
-	view = nact_main_window_get_items_view( main_window );
-	nact_tree_ieditable_insert_at_path( NACT_TREE_IEDITABLE( view ), imported, dest );
-
+	drop_done = TRUE;
 	na_object_free_items( imported );
 	na_core_utils_slist_free( parms.uris );
 

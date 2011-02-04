@@ -72,31 +72,20 @@ GType nact_tree_ieditable_get_type( void );
 
 void  nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treeview, BaseWindow *window );
 
+void  nact_tree_ieditable_delete           ( NactTreeIEditable *instance, GList *items, gboolean select_at_end );
 void  nact_tree_ieditable_insert_at_path   ( NactTreeIEditable *instance, GList *items, GtkTreePath *path );
 void  nact_tree_ieditable_insert_items     ( NactTreeIEditable *instance, GList *items, NAObject *sibling );
 void  nact_tree_ieditable_insert_items_into( NactTreeIEditable *instance, GList *items );
 
 #if 0
-
-void      nact_tree_ieditable_initial_load_toplevel( NactTreeIEditable *instance );
-void      nact_tree_ieditable_runtime_init_toplevel( NactTreeIEditable *instance, GList *actions );
-void      nact_tree_ieditable_all_widgets_showed( NactTreeIEditable *instance );
-void      nact_tree_ieditable_dispose( NactTreeIEditable *instance );
-
 void      nact_tree_ieditable_brief_tree_dump( NactTreeIEditable *instance );
-void      nact_tree_ieditable_collapse_all( NactTreeIEditable *instance );
 void      nact_tree_ieditable_display_order_change( NactTreeIEditable *instance, gint order_mode );
-void      nact_tree_ieditable_expand_all( NactTreeIEditable *instance );
-void      nact_tree_ieditable_fill( NactTreeIEditable *instance, GList *items );
 gint      nact_tree_ieditable_get_management_mode( NactTreeIEditable *instance );
 gboolean  nact_tree_ieditable_has_modified_items( NactTreeIEditable *instance );
-void      nact_tree_ieditable_on_treeview_selection_changed( GtkTreeSelection *selection, NactTreeIEditable *instance );
 GList    *nact_tree_ieditable_remove_rec( GList *list, NAObject *object );
-void      nact_tree_ieditable_set_management_mode( NactTreeIEditable *instance, gint mode );
 
 void      nact_tree_ieditable_bis_clear_selection( NactTreeIEditable *instance, GtkTreeView *treeview );
 void      nact_tree_ieditable_bis_collapse_to_parent( NactTreeIEditable *instance );
-void      nact_tree_ieditable_bis_delete( NactTreeIEditable *instance, GList *items, gboolean select_at_end );
 void      nact_tree_ieditable_bis_expand_to_first_child( NactTreeIEditable *instance );
 NAObject *nact_tree_ieditable_bis_get_item( NactTreeIEditable *instance, const gchar *id );
 GList    *nact_tree_ieditable_bis_get_items( NactTreeIEditable *instance );
