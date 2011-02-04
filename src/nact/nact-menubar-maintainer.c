@@ -34,13 +34,13 @@
 
 #include <api/na-object-api.h>
 
-#include "nact-iactions-list.h"
 #include "nact-clipboard.h"
 #include "nact-menubar-priv.h"
+#include "nact-main-window.h"
 
 /**
  * nact_menubar_maintainer_on_update_sensitivities:
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  * @user_data: user data ?
  * @mis: the #MenubarIndicatorsStruct structure.
  *
@@ -54,58 +54,65 @@ nact_menubar_maintainer_on_update_sensitivities( const NactMenubar *bar )
 /**
  * nact_menubar_maintainer_on_dump_selection:
  * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  *
  * Triggers the "Maintainer/Dump selection" item.
  */
 void
-nact_menubar_maintainer_on_dump_selection( GtkAction *action, NactMainWindow *window )
+nact_menubar_maintainer_on_dump_selection( GtkAction *action, BaseWindow *window )
 {
-	GList *items, *it;
+	GList *items;
 
-	items = nact_iactions_list_bis_get_selected_items( NACT_IACTIONS_LIST( window ));
-	for( it = items ; it ; it = it->next ){
-		na_object_dump( it->data );
-	}
+	BAR_WINDOW_VOID( window );
 
+	items = na_object_copyref_items( bar->private->selected_items );
+	na_object_dump_tree( items );
 	na_object_free_items( items );
 }
 
 /**
  * nact_menubar_maintainer_on_brief_tree_store_dump:
  * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  *
  * Triggers the "Maintainer/Brief treestore dump" item.
  */
 void
-nact_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, NactMainWindow *window )
+nact_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, BaseWindow *window )
 {
-	nact_iactions_list_brief_tree_dump( NACT_IACTIONS_LIST( window ));
+	NactTreeView *items_view;
+	GList *items;
+
+	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+	items = nact_tree_view_get_items( items_view );
+	na_object_dump_tree( items );
+	na_object_free_items( items );
 }
 
 /**
  * nact_menubar_maintainer_on_list_modified_items:
  * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  *
  * Triggers the "Maintainer/List modified items" item.
  */
 void
-nact_menubar_maintainer_on_list_modified_items( GtkAction *action, NactMainWindow *window )
+nact_menubar_maintainer_on_list_modified_items( GtkAction *action, BaseWindow *window )
 {
+#if 0
 	nact_iactions_list_bis_list_modified_items( NACT_IACTIONS_LIST( window ));
+#endif
 }
 
 /**
  * nact_menubar_maintainer_on_dump_clipboard:
  * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  *
  * Triggers the "Maintainer/Dump clipboard" item.
  */
 void
-nact_menubar_maintainer_on_dump_clipboard( GtkAction *action, NactMainWindow *window )
+nact_menubar_maintainer_on_dump_clipboard( GtkAction *action, BaseWindow *window )
 {
-	nact_clipboard_dump( nact_main_window_get_clipboard( window ));
+	nact_clipboard_dump( nact_main_window_get_clipboard( NACT_MAIN_WINDOW( window )));
 }

@@ -48,7 +48,7 @@ enum {
 	MAIN_TOOLBAR_HELP_ID,
 };
 
-void nact_main_toolbar_init( NactMainWindow *window, GtkActionGroup *group );
+void nact_main_toolbar_init( BaseWindow *window, GtkActionGroup *group );
 void nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager *manager, gboolean active );
 
 G_END_DECLS

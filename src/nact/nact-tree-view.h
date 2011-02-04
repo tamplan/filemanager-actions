@@ -40,6 +40,8 @@
  * This is a convenience class to manage a read-only items tree view.
  */
 
+#include <api/na-object-item.h>
+
 #include "base-window.h"
 
 G_BEGIN_DECLS
@@ -73,44 +75,43 @@ typedef struct {
  * Properties defined by the NactTreeView class.
  * They should be provided at object instantiation time.
  *
- * @TREE_PROP_WINDOW:           the BaseWindow parent.
- * @TREE_PROP_WIDGET_NAME:      the widget name.
- * @TREE_PROP_HAVE_DND:         whether drag and drop is implemented.
- * @TREE_PROP_DISPLAY_PROFILES: whether profiles are displayed.
+ * @TREE_PROP_WINDOW:      the BaseWindow parent.
+ * @TREE_PROP_WIDGET_NAME: the widget name.
+ * @TREE_PROP_MODE:        management mode.
  */
 #define TREE_PROP_WINDOW					"tree-prop-window"
 #define TREE_PROP_WIDGET_NAME				"tree-prop-widget-name"
-#define TREE_PROP_HAVE_DND					"tree-prop-have-dnd"
-#define TREE_PROP_DISPLAY_PROFILES			"tree-prop-display-profiles"
-
-/**
- * Column ordering in the tree view
- */
-enum {
-	TREE_COLUMN_ICON = 0,
-	TREE_COLUMN_LABEL,
-	TREE_COLUMN_NAOBJECT,
-	TREE_N_COLUMN
-};
+#define TREE_PROP_MODE						"tree-prop-mode"
 
 /**
  * Signals emitted by the NactTreeView instance.
  */
 #define TREE_SIGNAL_CONTENT_CHANGED			"tree-signal-content-changed"
+#define TREE_SIGNAL_CONTEXT_MENU			"tree-signal-open-popup"
+#define TREE_SIGNAL_COUNT_CHANGED			"tree-signal-count-changed"
+#define TREE_SIGNAL_FOCUS_IN				"tree-signal-focus-in"
+#define TREE_SIGNAL_FOCUS_OUT				"tree-signal-focus-out"
+#define TREE_SIGNAL_MODIFIED_COUNT_CHANGED	"tree-signal-modified-count-changed"
 #define TREE_SIGNAL_SELECTION_CHANGED		"tree-signal-selection-changed"
+
+typedef enum {
+	TREE_MODE_EDITION = 0,
+	TREE_MODE_SELECTION,
+	/*< private >*/
+	TREE_MODE_N_MODES
+}
+	NactTreeMode;
 
 GType         nact_tree_view_get_type( void );
 
-NactTreeView *nact_tree_view_new( BaseWindow *window, const gchar *treeview_name );
+NactTreeView *nact_tree_view_new( BaseWindow *window, const gchar *treeview_name, NactTreeMode mode );
 
 void          nact_tree_view_fill     ( NactTreeView *view, GList *items );
-GList        *nact_tree_view_get_items( NactTreeView *view );
 
-/* special transition phase
- */
-#include "nact-iactions-list-priv.h"
-
-void nact_tree_view_setup_ialid( const NactTreeView *view, IActionsListInstanceData *ialid );
+void          nact_tree_view_collapse_all  ( const NactTreeView *view );
+void          nact_tree_view_expand_all    ( const NactTreeView *view );
+NAObjectItem *nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id );
+GList        *nact_tree_view_get_items     ( const NactTreeView *view );
 
 G_END_DECLS
 

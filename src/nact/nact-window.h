@@ -80,8 +80,6 @@ gboolean   nact_window_delete_item( NactWindow *window, const NAObjectItem *item
 
 void       nact_window_count_level_zero_items( GList *items, guint *actions, guint *profiles, guint *menus );
 
-gboolean   nact_window_warn_modified( NactWindow *window );
-
 G_END_DECLS
 
 #endif /* __NACT_WINDOW_H__ */

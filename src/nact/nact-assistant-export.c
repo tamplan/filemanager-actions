@@ -296,7 +296,7 @@ nact_assistant_export_run( BaseWindow *main_window )
 			BASE_PROP_WARN_ON_ESCAPE,  esc_confirm,
 			NULL );
 
-	assistant->private->items_view = nact_tree_view_new( BASE_WINDOW( assistant ), "ActionsList" );
+	assistant->private->items_view = nact_tree_view_new( BASE_WINDOW( assistant ), "ActionsList", TREE_MODE_SELECTION );
 
 	base_window_run( BASE_WINDOW( assistant ));
 }
@@ -356,6 +356,7 @@ on_base_all_widgets_showed( NactAssistantExport *dialog, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_on_base_all_widgets_showed";
 	NactMainWindow *main_window;
+	NactTreeView *main_items_view;
 	GList *items;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( dialog ));
@@ -367,7 +368,8 @@ on_base_all_widgets_showed( NactAssistantExport *dialog, gpointer user_data )
 		 * have connected their signal handlers
 		 */
 		main_window = NACT_MAIN_WINDOW( base_window_get_parent( BASE_WINDOW( dialog )));
-		items = nact_main_window_get_current_items( main_window );
+		main_items_view = nact_main_window_get_items_view( main_window );
+		items = nact_tree_view_get_items( main_items_view );
 		nact_tree_view_fill( dialog->private->items_view, items );
 	}
 }

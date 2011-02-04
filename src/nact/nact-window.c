@@ -310,34 +310,3 @@ nact_window_count_level_zero_items( GList *items, guint *actions, guint *profile
 		}
 	}
 }
-
-/**
- * nact_window_warn_modified:
- * @window: this #NactWindow instance.
- *
- * Emits a warning if the action has been modified.
- *
- * Returns: %TRUE if the user confirms he wants to quit.
- */
-gboolean
-nact_window_warn_modified( NactWindow *window )
-{
-	gboolean confirm = FALSE;
-	gchar *first;
-	gchar *second;
-
-	g_return_val_if_fail( NACT_IS_WINDOW( window ), FALSE );
-
-	if( !window->private->dispose_has_run ){
-
-		first = g_strdup_printf( _( "Some items have been modified." ));
-		second = g_strdup( _( "Are you sure you want to quit without saving them ?" ));
-
-		confirm = base_window_display_yesno_dlg( BASE_WINDOW( window ), first, second );
-
-		g_free( second );
-		g_free( first );
-	}
-
-	return( confirm );
-}

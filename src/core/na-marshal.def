@@ -1,2 +1,2 @@
-# NASettings::settings-key-changed
+# NASettings:: SETTINGS_SIGNAL_KEY_CHANGED
 VOID:STRING,STRING,POINTER,BOOLEAN

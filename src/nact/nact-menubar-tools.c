@@ -38,7 +38,7 @@
 
 /**
  * nact_menubar_tools_on_update_sensitivities:
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  * @user_data: user data ?
  * @mis: the #MenubarIndicatorsStruct structure.
  *
@@ -57,12 +57,12 @@ nact_menubar_tools_on_update_sensitivities( const NactMenubar *bar )
 /**
  * nact_menubar_tools_on_import:
  * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  *
  * Triggers the "Tools/Import assitant" item.
  */
 void
-nact_menubar_tools_on_import( GtkAction *action, NactMainWindow *window )
+nact_menubar_tools_on_import( GtkAction *action, BaseWindow *window )
 {
 	nact_assistant_import_run( BASE_WINDOW( window ));
 }
@@ -70,12 +70,12 @@ nact_menubar_tools_on_import( GtkAction *action, NactMainWindow *window )
 /**
  * nact_menubar_tools_on_export:
  * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  *
  * Triggers the "Tools/Export assistant" item.
  */
 void
-nact_menubar_tools_on_export( GtkAction *action, NactMainWindow *window )
+nact_menubar_tools_on_export( GtkAction *action, BaseWindow *window )
 {
 	nact_assistant_export_run( BASE_WINDOW( window ));
 }

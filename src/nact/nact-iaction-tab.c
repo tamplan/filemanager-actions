@@ -44,7 +44,6 @@
 #include "nact-application.h"
 #include "nact-main-statusbar.h"
 #include "base-gtk-utils.h"
-#include "nact-iactions-list.h"
 #include "nact-main-tab.h"
 #include "nact-iaction-tab.h"
 #include "nact-icon-chooser.h"
@@ -67,7 +66,7 @@ static GType         register_type( void );
 static void          interface_base_init( NactIActionTabInterface *klass );
 static void          interface_base_finalize( NactIActionTabInterface *klass );
 
-static void          on_iactions_list_column_edited( NactIActionTab *instance, NAObject *object, gchar *text, gint column );
+static void          on_tree_view_content_changed( NactIActionTab *instance, NactTreeView *view, NAObject *object, gpointer user_data );
 static void          on_tab_updatable_selection_changed( NactIActionTab *instance, gint count_selected );
 
 static void          on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance );
@@ -224,11 +223,8 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				IACTIONS_LIST_SIGNAL_COLUMN_EDITED,
-				G_CALLBACK( on_iactions_list_column_edited ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), TREE_SIGNAL_CONTENT_CHANGED, G_CALLBACK( on_tree_view_content_changed ));
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" );
 		base_window_signal_connect(
@@ -349,9 +345,10 @@ nact_iaction_tab_has_label( NactIActionTab *instance )
 }
 
 static void
-on_iactions_list_column_edited( NactIActionTab *instance, NAObject *object, gchar *text, gint column )
+on_tree_view_content_changed( NactIActionTab *instance, NactTreeView *view, NAObject *object, gpointer user_data )
 {
 	GtkWidget *label_widget;
+	gchar *label;
 
 	g_return_if_fail( NACT_IS_IACTION_TAB( instance ));
 
@@ -359,7 +356,9 @@ on_iactions_list_column_edited( NactIActionTab *instance, NAObject *object, gcha
 
 		if( object && NA_IS_OBJECT_ITEM( object )){
 			label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionMenuLabelEntry" );
-			gtk_entry_set_text( GTK_ENTRY( label_widget ), text );
+			label = na_object_get_label( object );
+			gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
+			g_free( label );
 		}
 	}
 }

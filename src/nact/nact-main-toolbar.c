@@ -63,7 +63,7 @@ static int toolbar_pos[] = {
 		MAIN_TOOLBAR_HELP_ID
 };
 
-static void          init_toolbar( NactMainWindow *window, GtkActionGroup *group, int toolbar_id );
+static void          init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id );
 static void          reorder_toolbars( GtkHBox *hbox, int toolbar_id, GtkWidget *handle );
 static void          on_handle_finalize( gpointer data, GObject *handle );
 static void          on_attach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
@@ -82,7 +82,7 @@ static ToolbarProps *get_toolbar_properties( int toolbar_id );
  * toolbar.
  */
 void
-nact_main_toolbar_init( NactMainWindow *window, GtkActionGroup *group )
+nact_main_toolbar_init( BaseWindow *window, GtkActionGroup *group )
 {
 	static const gchar *thisfn = "nact_main_toolbar_init";
 	int i;
@@ -95,7 +95,7 @@ nact_main_toolbar_init( NactMainWindow *window, GtkActionGroup *group )
 }
 
 static void
-init_toolbar( NactMainWindow *window, GtkActionGroup *group, int toolbar_id )
+init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id )
 {
 	NactApplication *application;
 	NAUpdater *updater;
@@ -103,7 +103,7 @@ init_toolbar( NactMainWindow *window, GtkActionGroup *group, int toolbar_id )
 	gboolean is_active;
 	GtkToggleAction *action;
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
 	props = get_toolbar_properties( toolbar_id );
 	if( props ){

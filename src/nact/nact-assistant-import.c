@@ -42,7 +42,6 @@
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
-#include "nact-iactions-list.h"
 #include "nact-assistant-import.h"
 #include "nact-main-window.h"
 
@@ -679,7 +678,9 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	 * assuring that actions will be inserted in the same order as uris
 	 */
 	imported_items = g_list_reverse( imported_items );
+#if 0
 	nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( main_window ), imported_items, NULL );
+#endif
 	na_object_free_items( imported_items );
 }
 
@@ -687,6 +688,7 @@ static NAObjectItem *
 check_for_existence( const NAObjectItem *item, NactMainWindow *window )
 {
 	static const gchar *thisfn = "nact_assistant_import_check_for_existence";
+	NactTreeView *items_view;
 	NAObjectItem *exists;
 	gchar *importing_id;
 
@@ -694,7 +696,8 @@ check_for_existence( const NAObjectItem *item, NactMainWindow *window )
 	g_debug( "%s: item=%p (%s), importing_id=%s",
 			thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ), importing_id );
 
-	exists = nact_main_window_get_item( window, importing_id );
+	items_view = nact_main_window_get_items_view( window );
+	exists = nact_tree_view_get_item_by_id( items_view, importing_id );
 
 	g_free( importing_id );
 

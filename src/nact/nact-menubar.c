@@ -42,7 +42,7 @@
 #include "nact-main-tab.h"
 #include "nact-menubar-priv.h"
 #include "nact-sort-buttons.h"
-#include "nact-iactions-list.h"
+#include "nact-tree-view.h"
 
 /* private class data
  */
@@ -219,19 +219,25 @@ static void     instance_finalize( GObject *application );
 
 static void     on_base_initialize_window( BaseWindow *window, gpointer user_data );
 static void     on_ui_manager_proxy_connect( GtkUIManager *ui_manager, GtkAction *action, GtkWidget *proxy, BaseWindow *window );
-static void     on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window );
-static void     on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window );
+static void     on_menu_item_selected( GtkMenuItem *proxy, BaseWindow *window );
+static void     on_menu_item_deselected( GtkMenuItem *proxy, BaseWindow *window );
+
+static void     on_tree_view_open_context_menu( BaseWindow *window, NactTreeView *view, GdkEventButton *event, gpointer user_data );
+static void     on_popup_selection_done( GtkMenuShell *menushell, BaseWindow *window );
+static void     on_tree_view_count_changed( BaseWindow *window, NactTreeView *view, gboolean reset, guint menus, guint actions, guint profiles );
+static void     on_tree_view_focus_in( BaseWindow *window, NactTreeView *view, gpointer user_data );
+static void     on_tree_view_focus_out( BaseWindow *window, NactTreeView *view, gpointer user_data );
+static void     on_tree_view_modified_count_changed( BaseWindow *window, NactTreeView *view, guint count, gpointer user_data );
+static void     on_tree_view_selection_changed( BaseWindow *window, NactTreeView *view, GList *selected, gpointer user_data );
+
+static void     on_update_sensitivities( NactMenubar *bar, BaseWindow *window );
+
 static void     on_finalizing_window( NactMenubar *bar, GObject *window );
 
-static void     on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles );
-static void     on_iactions_list_selection_changed( NactMainWindow *window, GList *selected );
-static void     on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data );
-static void     on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data );
-static void     on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data );
-static void     on_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
-static void     on_update_sensitivities( NactMenubar *bar, NactMainWindow *window );
-
-static void     on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow *window );
+#if 0
+static void     on_iactions_list_status_changed( BaseWindow *window, gpointer user_data );
+static void     on_level_zero_order_changed( BaseWindow *window, gpointer user_data );
+#endif
 
 GType
 nact_menubar_get_type( void )
@@ -374,7 +380,7 @@ instance_finalize( GObject *instance )
 
 /**
  * nact_menubar_new:
- * @window: the main window which embeds the menubar, usually the #NactMainWindow.
+ * @window: the main window which embeds the menubar, usually the #BaseWindow.
  *
  * The created menubar attachs itself to the @window; it also connect a weak
  * reference to this same @window, thus automatically g_object_unref() -ing
@@ -491,27 +497,35 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 		 * items sensitivity
 		 */
 		base_window_signal_connect( window,
-				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_LIST_COUNT_UPDATED, G_CALLBACK( on_iactions_list_count_updated ));
+				G_OBJECT( window ), TREE_SIGNAL_CONTEXT_MENU, G_CALLBACK( on_tree_view_open_context_menu ));
 
 		base_window_signal_connect( window,
-				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_iactions_list_selection_changed ));
+				G_OBJECT( window ), TREE_SIGNAL_COUNT_CHANGED, G_CALLBACK( on_tree_view_count_changed ));
 
 		base_window_signal_connect( window,
-				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_FOCUS_IN, G_CALLBACK( on_iactions_list_focus_in ));
+				G_OBJECT( window ), TREE_SIGNAL_FOCUS_IN, G_CALLBACK( on_tree_view_focus_in ));
 
 		base_window_signal_connect( window,
-				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_FOCUS_OUT, G_CALLBACK( on_iactions_list_focus_out ));
+				G_OBJECT( window ), TREE_SIGNAL_FOCUS_OUT, G_CALLBACK( on_tree_view_focus_out ));
 
+		base_window_signal_connect( window,
+				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_COUNT_CHANGED, G_CALLBACK( on_tree_view_modified_count_changed ));
+
+		base_window_signal_connect( window,
+				G_OBJECT( window ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
+
+#if 0
 		base_window_signal_connect( window,
 				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_STATUS_CHANGED, G_CALLBACK( on_iactions_list_status_changed ));
 
 		base_window_signal_connect( window,
 				G_OBJECT( window ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, G_CALLBACK( on_level_zero_order_changed ));
+#endif
 
 		base_window_signal_connect( window,
 				G_OBJECT( bar ), MENUBAR_SIGNAL_UPDATE_SENSITIVITIES, G_CALLBACK( on_update_sensitivities ));
 
-		nact_main_toolbar_init(( NactMainWindow * ) window, bar->private->action_group );
+		nact_main_toolbar_init( window, bar->private->action_group );
 	}
 }
 
@@ -550,7 +564,7 @@ on_ui_manager_proxy_connect( GtkUIManager *ui_manager, GtkAction *action, GtkWid
  * are only available starting with Gtk 2.16
  */
 static void
-on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window )
+on_menu_item_selected( GtkMenuItem *proxy, BaseWindow *window )
 {
 	GtkAction *action;
 	gchar *tooltip;
@@ -574,7 +588,7 @@ on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window )
 #endif
 
 	if( tooltip ){
-		nact_main_statusbar_display_status( window, MENUBAR_PROP_STATUS_CONTEXT, tooltip );
+		nact_main_statusbar_display_status( NACT_MAIN_WINDOW( window ), MENUBAR_PROP_STATUS_CONTEXT, tooltip );
 	}
 
 #ifndef NA_HAS_GTK_ACTIVATABLE
@@ -583,20 +597,16 @@ on_menu_item_selected( GtkMenuItem *proxy, NactMainWindow *window )
 }
 
 static void
-on_menu_item_deselected( GtkMenuItem *proxy, NactMainWindow *window )
+on_menu_item_deselected( GtkMenuItem *proxy, BaseWindow *window )
 {
-	nact_main_statusbar_hide_status( window, MENUBAR_PROP_STATUS_CONTEXT );
+	nact_main_statusbar_hide_status( NACT_MAIN_WINDOW( window ), MENUBAR_PROP_STATUS_CONTEXT );
 }
 
-/**
- * nact_menubar_open_popup:
- * @window: this #NactMainWindow window.
- * @event: the mouse event.
- *
+/*
  * Opens a popup menu.
  */
-void
-nact_menubar_open_popup( BaseWindow *window, GdkEventButton *event )
+static void
+on_tree_view_open_context_menu( BaseWindow *window, NactTreeView *view, GdkEventButton *event, gpointer user_data )
 {
 	GtkWidget *menu;
 
@@ -605,76 +615,102 @@ nact_menubar_open_popup( BaseWindow *window, GdkEventButton *event )
 	menu = gtk_ui_manager_get_widget( bar->private->ui_manager, "/ui/Popup" );
 	bar->private->popup_handler =
 			g_signal_connect( menu, "selection-done", G_CALLBACK( on_popup_selection_done ), window );
-	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
+
 	gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, event->button, event->time );
 }
 
-/**
- * nact_menubar_save_items:
- * @window: the #NactMainWindow
- */
-void
-nact_menubar_save_items( BaseWindow *window )
-{
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	nact_menubar_file_save_items( NACT_MAIN_WINDOW( window ));
-}
-
-/*
- * triggered just before the NactMainWindow is finalized
- */
 static void
-on_finalizing_window( NactMenubar *bar, GObject *window )
+on_popup_selection_done(GtkMenuShell *menushell, BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_menubar_on_finalizing_window";
+	static const gchar *thisfn = "nact_menubar_on_popup_selection_done";
 
-	g_return_if_fail( NACT_IS_MENUBAR( bar ));
+	BAR_WINDOW_VOID( window );
 
-	g_debug( "%s: bar=%p (%s), window=%p", thisfn,
-			( void * ) bar, G_OBJECT_TYPE_NAME( bar ), ( void * ) window );
+	g_debug( "%s", thisfn );
 
-	g_object_unref( bar );
-}
-
-/**
- * nact_menubar_is_level_zero_order_changed:
- * @window: the #NactMainWindow main window.
- *
- * Returns: %TRUE if the level zero has changed, %FALSE else.
- */
-gboolean
-nact_menubar_is_level_zero_order_changed( const NactMainWindow *window )
-{
-	BAR_WINDOW_VALUE( window, FALSE );
-	return( bar->private->level_zero_order_changed );
+	g_signal_handler_disconnect( menushell, bar->private->popup_handler );
+	bar->private->popup_handler = ( gulong ) 0;
 }
 
 /*
- * when the IActionsList is refilled, update our internal counters so
+ * when the tree view is refilled, update our internal counters so
  * that we are knowing if we have some exportables
  */
 static void
-on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions, gint profiles )
+on_tree_view_count_changed( BaseWindow *window,
+		NactTreeView *view, gboolean reset, guint menus, guint actions, guint profiles )
 {
+	static const gchar *thisfn = "nact_menubar_on_tree_view_count_changed";
 	gchar *status;
 
 	BAR_WINDOW_VOID( window );
 
-	g_debug( "nact_menubar_on_iactions_list_count_updated: menus=%u, actions=%u, profiles=%u", menus, actions, profiles );
+	g_debug( "%s: window=%p, view=%p, reset=%s, menus=%u, actions=%u, profiles=%u",
+			thisfn, ( void * ) window, ( void * ) view, reset ? "True":"False", menus, actions, profiles );
 
-	bar->private->list_menus = menus;
-	bar->private->list_actions = actions;
-	bar->private->list_profiles = profiles;
-	bar->private->have_exportables = ( bar->private->list_menus + bar->private->list_actions > 0 );
+	if( reset ){
+		bar->private->count_menus = menus;
+		bar->private->count_actions = actions;
+		bar->private->count_profiles = profiles;
 
-	nact_sort_buttons_enable_buttons( window, bar->private->list_menus + bar->private->list_actions > 0 );
+	} else {
+		bar->private->count_menus += menus;
+		bar->private->count_actions += actions;
+		bar->private->count_profiles += profiles;
+	}
+
+	bar->private->have_exportables = ( bar->private->count_menus + bar->private->count_actions > 0 );
+
+	nact_sort_buttons_enable_buttons( window, bar->private->count_menus + bar->private->count_actions > 0 );
 
 	/* i18n: note the space at the beginning of the sentence */
-	status = g_strdup_printf( _( " %d menu(s), %d action(s), %d profile(s) are currently loaded" ), menus, actions, profiles );
-	nact_main_statusbar_display_status( window, MENUBAR_PROP_MAIN_STATUS_CONTEXT, status );
+	status = g_strdup_printf(
+			_( " %d menu(s), %d action(s), %d profile(s) are currently loaded" ),
+			bar->private->count_menus, bar->private->count_actions, bar->private->count_profiles );
+	nact_main_statusbar_display_status( NACT_MAIN_WINDOW( window ), MENUBAR_PROP_MAIN_STATUS_CONTEXT, status );
 	g_free( status );
 
+	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
+}
+
+/*
+ * the count of modified NAObjectItem has changed
+ */
+static void
+on_tree_view_modified_count_changed( BaseWindow *window, NactTreeView *view, guint count, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_menubar_on_tree_view_modified_count_changed";
+
+	g_debug( "%s: window=%p, view=%p, count=%d, user_data=%p",
+			thisfn, ( void * ) window, ( void * ) view, count, ( void * ) user_data );
+
+	BAR_WINDOW_VOID( window );
+
+	if( !bar->private->dispose_has_run ){
+
+		bar->private->count_modified = count;
+	}
+}
+
+static void
+on_tree_view_focus_in( BaseWindow *window, NactTreeView *view, gpointer user_data )
+{
+	BAR_WINDOW_VOID( window );
+
+	g_debug( "nact_menubar_on_tree_view_focus_in" );
+
+	bar->private->treeview_has_focus = TRUE;
+	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
+}
+
+static void
+on_tree_view_focus_out( BaseWindow *window, NactTreeView *view, gpointer user_data )
+{
+	BAR_WINDOW_VOID( window );
+
+	g_debug( "nact_menubar_on_tree_view_focus_out" );
+
+	bar->private->treeview_has_focus = FALSE;
 	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 }
 
@@ -682,9 +718,9 @@ on_iactions_list_count_updated( NactMainWindow *window, gint menus, gint actions
  * when the selection changes in the tree view, see what is selected
  */
 static void
-on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
+on_tree_view_selection_changed( BaseWindow *window, NactTreeView *view, GList *selected, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_menubar_on_iactions_list_selection_changed";
+	static const gchar *thisfn = "nact_menubar_on_tree_view_selection_changed";
 	NAObject *first;
 	NAObject *selected_action;
 	GList *is;
@@ -785,50 +821,7 @@ on_iactions_list_selection_changed( NactMainWindow *window, GList *selected )
 }
 
 static void
-on_iactions_list_focus_in( NactMainWindow *window, gpointer user_data )
-{
-	BAR_WINDOW_VOID( window );
-
-	g_debug( "nact_menubar_on_iactions_list_focus_in" );
-
-	bar->private->treeview_has_focus = TRUE;
-	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
-}
-
-static void
-on_iactions_list_focus_out( NactMainWindow *window, gpointer user_data )
-{
-	BAR_WINDOW_VOID( window );
-
-	g_debug( "nact_menubar_on_iactions_list_focus_out" );
-
-	bar->private->treeview_has_focus = FALSE;
-	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
-}
-
-static void
-on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data )
-{
-	g_debug( "nact_menubar_on_iactions_list_status_changed" );
-
-	BAR_WINDOW_VOID( window );
-
-	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
-}
-
-static void
-on_level_zero_order_changed( NactMainWindow *window, gpointer user_data )
-{
-	BAR_WINDOW_VOID( window );
-
-	g_debug( "nact_menubar_on_level_zero_order_changed: change=%s", user_data ? "True":"False" );
-
-	bar->private->level_zero_order_changed = GPOINTER_TO_INT( user_data );
-	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
-}
-
-static void
-on_update_sensitivities( NactMenubar *bar, NactMainWindow *window )
+on_update_sensitivities( NactMenubar *bar, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_menubar_on_update_sensitivities";
 
@@ -862,15 +855,64 @@ nact_menubar_enable_item( const NactMenubar *bar, const gchar *name, gboolean en
 	}
 }
 
-static void
-on_popup_selection_done(GtkMenuShell *menushell, NactMainWindow *window )
+/**
+ * nact_menubar_save_items:
+ * @window: the #BaseWindow
+ */
+void
+nact_menubar_save_items( BaseWindow *window )
 {
-	static const gchar *thisfn = "nact_menubar_on_popup_selection_done";
+	nact_menubar_file_save_items( window );
+}
+
+/*
+ * triggered just before the BaseWindow is finalized
+ */
+static void
+on_finalizing_window( NactMenubar *bar, GObject *window )
+{
+	static const gchar *thisfn = "nact_menubar_on_finalizing_window";
+
+	g_return_if_fail( NACT_IS_MENUBAR( bar ));
+
+	g_debug( "%s: bar=%p (%s), window=%p", thisfn,
+			( void * ) bar, G_OBJECT_TYPE_NAME( bar ), ( void * ) window );
+
+	g_object_unref( bar );
+}
+
+#if 0
+/**
+ * nact_menubar_is_level_zero_order_changed:
+ * @window: the #BaseWindow main window.
+ *
+ * Returns: %TRUE if the level zero has changed, %FALSE else.
+ */
+gboolean
+nact_menubar_is_level_zero_order_changed( const BaseWindow *window )
+{
+	BAR_WINDOW_VALUE( window, FALSE );
+	return( bar->private->level_zero_order_changed );
+}
+
+static void
+on_iactions_list_status_changed( BaseWindow *window, gpointer user_data )
+{
+	g_debug( "nact_menubar_on_iactions_list_status_changed" );
 
 	BAR_WINDOW_VOID( window );
 
-	g_debug( "%s", thisfn );
-
-	g_signal_handler_disconnect( menushell, bar->private->popup_handler );
-	bar->private->popup_handler = ( gulong ) 0;
+	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 }
+
+static void
+on_level_zero_order_changed( BaseWindow *window, gpointer user_data )
+{
+	BAR_WINDOW_VOID( window );
+
+	g_debug( "nact_menubar_on_level_zero_order_changed: change=%s", user_data ? "True":"False" );
+
+	bar->private->level_zero_order_changed = GPOINTER_TO_INT( user_data );
+	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
+}
+#endif

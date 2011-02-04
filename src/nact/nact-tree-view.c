@@ -40,8 +40,6 @@
 #include "nact-tree-view.h"
 #include "nact-tree-model.h"
 
-#include "nact-iactions-list.h"
-
 /* private class data
  */
 struct _NactTreeViewClassPrivate {
@@ -51,19 +49,18 @@ struct _NactTreeViewClassPrivate {
 /* private instance data
  */
 struct _NactTreeViewPrivate {
-	gboolean     dispose_has_run;
+	gboolean       dispose_has_run;
 
 	/* properties set at instanciation time
 	 */
-	BaseWindow  *window;
-	gchar       *widget_name;
-	gboolean     have_dnd;
-	gboolean     display_profiles;
+	BaseWindow    *window;
+	gchar         *widget_name;
+	guint          mode;
 
 	/* runtime data
 	 */
-	GtkTreeView *tree_view;
-	gboolean     notify_allowed;
+	GtkTreeView   *tree_view;
+	gboolean       notify_allowed;
 };
 
 /* instance properties
@@ -73,8 +70,7 @@ enum {
 
 	TREE_PROP_WINDOW_ID,
 	TREE_PROP_WIDGET_NAME_ID,
-	TREE_PROP_HAVE_DND_ID,
-	TREE_PROP_DISPLAY_PROFILES_ID,
+	TREE_PROP_MODE_ID,
 
 	TREE_PROP_N_PROPERTIES
 };
@@ -83,6 +79,11 @@ enum {
  */
 enum {
 	CONTENT_CHANGED,
+	CONTEXT_MENU,
+	COUNT_CHANGED,
+	FOCUS_IN,
+	FOCUS_OUT,
+	MODIFIED_COUNT,
 	SELECTION_CHANGED,
 	LAST_SIGNAL
 };
@@ -129,6 +130,9 @@ static void     instance_finalize( GObject *application );
 static void     on_base_initialize_gtk( BaseWindow *window, GtkWindow *toplevel, gpointer user_data );
 static void     on_base_initialize_view( BaseWindow *window, gpointer user_data );
 static void     on_base_all_widgets_showed( BaseWindow *window, gpointer user_data );
+static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, BaseWindow *window );
+static gboolean on_focus_in( GtkWidget *widget, GdkEventFocus *event, BaseWindow *window );
+static gboolean on_focus_out( GtkWidget *widget, GdkEventFocus *event, BaseWindow *window );
 static gboolean on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window );
 static void     on_treeview_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
 static void     on_content_changed_cleanup_handler( BaseWindow *window, NactTreeView *view, NAObject *edited );
@@ -139,6 +143,7 @@ static GList   *get_selected_items( NactTreeView *view );
 static void     iter_on_selection( NactTreeView *view, FnIterOnSelection fn_iter, gpointer user_data );
 static void     navigate_to_child( NactTreeView *view );
 static void     navigate_to_parent( NactTreeView *view );
+static void     open_popup( BaseWindow *window, NactTreeView *view, GdkEventButton *event );
 static void     select_row_at_path( NactTreeView *view, GtkTreePath *path );
 static void     select_row_at_path_by_string( NactTreeView *view, const gchar *path );
 static void     toggle_collapse( NactTreeView *view );
@@ -215,21 +220,15 @@ class_init( NactTreeViewClass *klass )
 					"",
 					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	g_object_class_install_property( object_class, TREE_PROP_HAVE_DND_ID,
-			g_param_spec_boolean(
-					TREE_PROP_HAVE_DND,
-					"Have DnD",
-					"Whether Drag and Drop operations are implemented",
-					FALSE,
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
-
-	g_object_class_install_property( object_class, TREE_PROP_DISPLAY_PROFILES_ID,
-			g_param_spec_boolean(
-					TREE_PROP_DISPLAY_PROFILES,
-					"Display profiles",
-					"Whether actions profiles are displayed",
-					FALSE,
-					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+	g_object_class_install_property( object_class, TREE_PROP_MODE_ID,
+			g_param_spec_uint(
+					TREE_PROP_MODE,
+					"Management mode",
+					"Management mode of the tree view, selection or edition",
+					0,
+					TREE_MODE_N_MODES,
+					TREE_MODE_SELECTION,
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	/**
 	 * NactTreeView::tree-signal-content-changed:
@@ -258,6 +257,147 @@ class_init( NactTreeViewClass *klass )
 			G_TYPE_NONE,
 			2,
 			G_TYPE_POINTER, G_TYPE_POINTER );
+
+	/**
+	 * NactTreeView::tree-signal-open-popup
+	 *
+	 * This signal is emitted on the BaseWindow parent when the user right
+	 * clicks on the tree view.
+	 *
+	 * Signal args:
+	 * - a pointer on the view
+	 * - the GdkEvent.
+	 *
+	 * Handler prototype:
+	 * void ( *handler )( BaseWindow *window, NactTreeView *view, GdkEvent *event, gpointer user_data );
+	 */
+	st_signals[ CONTEXT_MENU ] = g_signal_new(
+			TREE_SIGNAL_CONTEXT_MENU,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,
+			NULL,
+			NULL,
+			nact_cclosure_marshal_VOID__POINTER_POINTER,
+			G_TYPE_NONE,
+			2,
+			G_TYPE_POINTER, G_TYPE_POINTER );
+
+	/**
+	 * NactTreeView::tree-signal-count-changed:
+	 *
+	 * This signal is emitted on BaseWindow parent when the count of items
+	 * has changed in the underlying tree store.
+	 *
+	 *   Counting rows is needed to maintain action sensitivities in the
+	 *   menubar : at least 'Tools\Export' menu item depends if we have
+	 *   exportables, i.e. at least one menu or action.
+	 *   Also, the total count of menu/actions/profiles is displayed in the
+	 *   statusbar.
+	 *
+	 *   Rows are first counted when the treeview is primarily filled, or
+	 *   refilled on demand. Counters are then incremented (resp. decremented)
+	 *   when inserting or pasting (resp. deleting) rows in the list.
+	 *
+	 * Signal args:
+	 * - a pointer on the view
+	 * - reset if %TRUE, add if %FALSE
+	 * - menus count/increment (may be negative)
+	 * - actions count/increment (may be negative)
+	 * - profiles count/increment (may be negative)
+	 *
+	 * Handler prototype:
+	 * void ( *handler )( BaseWindow *window, NactTreeView *view, gboolean reset,
+	 *                    guint menus_count, guint actions_count, guint profiles_count, gpointer user_data );
+	 */
+	st_signals[ COUNT_CHANGED ] = g_signal_new(
+			TREE_SIGNAL_COUNT_CHANGED,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,						/* no default handler */
+			NULL,
+			NULL,
+			nact_cclosure_marshal_VOID__POINTER_BOOLEAN_INT_INT_INT,
+			G_TYPE_NONE,
+			5,
+			G_TYPE_POINTER, G_TYPE_BOOLEAN, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT );
+
+	/**
+	 * NactTreeView::tree-signal-focus-in:
+	 *
+	 * This signal is emitted on the BaseWindow when the view gains the
+	 * focus. In particular, edition menu is disabled outside of the treeview.
+	 *
+	 * Signal args:
+	 * - a pointer on the view
+	 *
+	 * Handler prototype:
+	 * void ( *handler )( BaseWindow *window, NactTreeView *view, gpointer user_data )
+	 */
+	st_signals[ FOCUS_IN ] = g_signal_new(
+			TREE_SIGNAL_FOCUS_IN,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER );
+
+	/**
+	 * NactTreeView::tree-signal-focus-out:
+	 *
+	 * This signal is emitted on the BaseWindow when the view loses the
+	 * focus. In particular, edition menu is disabled outside of the treeview.
+	 *
+	 * Signal args:
+	 * - a pointer on the view
+	 *
+	 * Handler prototype:
+	 * void ( *handler )( BaseWindow *window, NactTreeView *view, gpointer user_data )
+	 */
+	st_signals[ FOCUS_OUT ] = g_signal_new(
+			TREE_SIGNAL_FOCUS_OUT,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,
+			NULL,
+			NULL,
+			g_cclosure_marshal_VOID__POINTER,
+			G_TYPE_NONE,
+			1,
+			G_TYPE_POINTER );
+
+	/**
+	 * NactTreeView::tree-signal-modified-count-changed:
+	 *
+	 * This signal is emitted on the BaseWindow when the view detects that
+	 * the count of modified NAObjectItems has changed.
+	 * The signal is actually emitted by the NactTreeIEditable interface
+	 * which takes care of all edition features.
+	 *
+	 * Having the order of items at level zero changed counts for one.
+	 *
+	 * Signal args:
+	 * - a pointer on the view
+	 * - the new count of modified items
+	 *
+	 * Handler prototype:
+	 * void ( *handler )( BaseWindow *window, NactTreeView *view, guint count, gpointer user_data )
+	 */
+	st_signals[ MODIFIED_COUNT ] = g_signal_new(
+			TREE_SIGNAL_MODIFIED_COUNT_CHANGED,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,
+			NULL,
+			NULL,
+			nact_cclosure_marshal_VOID__POINTER_INT,
+			G_TYPE_NONE,
+			2,
+			G_TYPE_POINTER, G_TYPE_INT );
 
 	/**
 	 * NactTreeView::tree-signal-selection-changed:
@@ -324,12 +464,8 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_string( value, self->private->widget_name );
 				break;
 
-			case TREE_PROP_HAVE_DND_ID:
-				g_value_set_boolean( value, self->private->have_dnd );
-				break;
-
-			case TREE_PROP_DISPLAY_PROFILES_ID:
-				g_value_set_boolean( value, self->private->display_profiles );
+			case TREE_PROP_MODE_ID:
+				g_value_set_uint( value, self->private->mode );
 				break;
 
 			default:
@@ -359,12 +495,8 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 				self->private->widget_name = g_value_dup_string( value );
 				break;
 
-			case TREE_PROP_HAVE_DND_ID:
-				self->private->have_dnd = g_value_get_boolean( value );
-				break;
-
-			case TREE_PROP_DISPLAY_PROFILES_ID:
-				self->private->display_profiles = g_value_get_boolean( value );
+			case TREE_PROP_MODE_ID:
+				self->private->mode = g_value_get_uint( value );
 				break;
 
 			default:
@@ -411,7 +543,6 @@ instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "nact_tree_view_instance_dispose";
 	NactTreeView *self;
-	NactTreeModel *model;
 
 	g_return_if_fail( NACT_IS_TREE_VIEW( object ));
 
@@ -421,9 +552,6 @@ instance_dispose( GObject *object )
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
-
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( self->private->tree_view ));
-		nact_tree_model_dispose( model );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -458,19 +586,21 @@ instance_finalize( GObject *instance )
  * nact_tree_view_new:
  * @window: the BaseWindow which embeds the tree view.
  * @treeview_name: the GtkTreeView widget name.
+ * @mode: management mode.
  *
  * Returns: a newly allocated NactTreeView object, which will be owned
  * by the caller. It is useless to unref it as it will automatically
  * auto-destroys itself at @window finalization.
  */
 NactTreeView *
-nact_tree_view_new( BaseWindow *window, const gchar *treeview_name )
+nact_tree_view_new( BaseWindow *window, const gchar *treeview_name, NactTreeMode mode )
 {
 	NactTreeView *view;
 
 	view = g_object_new( NACT_TREE_VIEW_TYPE,
 			TREE_PROP_WINDOW,      window,
 			TREE_PROP_WIDGET_NAME, treeview_name,
+			TREE_PROP_MODE,        mode,
 			NULL );
 
 	return( view );
@@ -495,13 +625,11 @@ on_base_initialize_gtk( BaseWindow *window, GtkWindow *toplevel, gpointer user_d
 	if( !view->private->dispose_has_run ){
 
 		treeview = GTK_TREE_VIEW( base_window_get_widget( window, view->private->widget_name ));
+		nact_tree_model_new( window, treeview, view->private->mode );
 
 		/* associates the ItemsView to the label */
 		label = base_window_get_widget( window, "ActionsListLabel" );
 		gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( treeview ));
-
-		nact_tree_model_initial_load( window, treeview );
-		gtk_tree_view_set_enable_tree_lines( treeview, TRUE );
 
 		/* create visible columns on the tree view
 		 */
@@ -525,6 +653,10 @@ on_base_initialize_gtk( BaseWindow *window, GtkWindow *toplevel, gpointer user_d
 		 */
 		selection = gtk_tree_view_get_selection( treeview );
 		gtk_tree_selection_set_mode( selection, GTK_SELECTION_MULTIPLE );
+
+		/* misc properties
+		 */
+		gtk_tree_view_set_enable_tree_lines( treeview, TRUE );
 	}
 }
 
@@ -533,7 +665,6 @@ on_base_initialize_view( BaseWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_tree_view_on_base_initialize_view";
 	GtkTreeView *treeview;
-	NactTreeModel *model;
 	GtkTreeSelection *selection;
 
 	VIEW_WINDOW_VOID( window );
@@ -546,10 +677,7 @@ on_base_initialize_view( BaseWindow *window, gpointer user_data )
 		treeview = GTK_TREE_VIEW( base_window_get_widget( window, view->private->widget_name ));
 		view->private->tree_view = treeview;
 
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( treeview ));
-		nact_tree_model_runtime_init( model, view->private->have_dnd );
-
-		/* set up selection control */
+		/* monitors the selection */
 		selection = gtk_tree_view_get_selection( treeview );
 		base_window_signal_connect( window,
 				G_OBJECT( selection ), "changed", G_CALLBACK( on_treeview_selection_changed ));
@@ -557,6 +685,17 @@ on_base_initialize_view( BaseWindow *window, gpointer user_data )
 		/* expand/collapse with the keyboard */
 		base_window_signal_connect( window,
 				G_OBJECT( treeview ), "key-press-event", G_CALLBACK( on_key_pressed_event ));
+
+		/* monitors whether the focus is on the view */
+		base_window_signal_connect( window,
+				G_OBJECT( treeview ), "focus-in-event", G_CALLBACK( on_focus_in ));
+
+		base_window_signal_connect( window,
+				G_OBJECT( treeview ), "focus-out-event", G_CALLBACK( on_focus_out ));
+
+		/* monitors mouse events */
+		base_window_signal_connect( window,
+				G_OBJECT( treeview ), "button-press-event", G_CALLBACK( on_button_press_event ));
 	}
 }
 
@@ -579,6 +718,52 @@ on_base_all_widgets_showed( BaseWindow *window, gpointer user_data )
 		view->private->notify_allowed = TRUE;
 		select_row_at_path_by_string( view, "0" );
 	}
+}
+
+static gboolean
+on_button_press_event( GtkWidget *widget, GdkEventButton *event, BaseWindow *window )
+{
+	gboolean stop = FALSE;
+
+	VIEW_WINDOW_VALUE( window, FALSE );
+
+	/* single click on right button */
+	if( event->type == GDK_BUTTON_PRESS && event->button == 3 ){
+		open_popup( window, view, event );
+		stop = TRUE;
+	}
+
+	return( stop );
+}
+
+/*
+ * focus is monitored to avoid an accelerator being pressed while on a tab
+ * triggers an unwaited operation on the list
+ * e.g. when editing an entry field on the tab, pressing Del should _not_
+ * delete current row in the list!
+ */
+static gboolean
+on_focus_in( GtkWidget *widget, GdkEventFocus *event, BaseWindow *window )
+{
+	gboolean stop = FALSE;
+
+	VIEW_WINDOW_VALUE( window, FALSE );
+
+	g_signal_emit_by_name( window, TREE_SIGNAL_FOCUS_IN, view );
+
+	return( stop );
+}
+
+static gboolean
+on_focus_out( GtkWidget *widget, GdkEventFocus *event, BaseWindow *window )
+{
+	gboolean stop = FALSE;
+
+	VIEW_WINDOW_VALUE( window, FALSE );
+
+	g_signal_emit_by_name( window, TREE_SIGNAL_FOCUS_OUT, view );
+
+	return( stop );
 }
 
 static gboolean
@@ -676,6 +861,7 @@ nact_tree_view_fill( NactTreeView *view, GList *items )
 	static const gchar *thisfn = "nact_tree_view_fill";
 	NactTreeModel *model;
 	gboolean prev;
+	gint nb_menus, nb_actions, nb_profiles;
 
 	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
 
@@ -687,13 +873,83 @@ nact_tree_view_fill( NactTreeView *view, GList *items )
 		prev = view->private->notify_allowed;
 		view->private->notify_allowed = FALSE;
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
-		nact_tree_model_fill( model, items, view->private->display_profiles );
+		nact_tree_model_fill( model, items );
 		view->private->notify_allowed = prev;
 
 		if( view->private->notify_allowed ){
 			g_signal_emit_by_name( view->private->window, TREE_SIGNAL_CONTENT_CHANGED, view, NULL );
+
+			nb_menus = nb_actions = nb_profiles = 0;
+			na_object_item_count_items( items, &nb_menus, &nb_actions, &nb_profiles, TRUE );
+			g_signal_emit_by_name( view->private->window,
+					TREE_SIGNAL_COUNT_CHANGED, view, TRUE, nb_menus, nb_actions, nb_profiles );
 		}
+
+		select_row_at_path_by_string( view, "0" );
 	}
+}
+
+/**
+ * nact_tree_view_collapse_all:
+ * @view: this #NactTreeView instance.
+ *
+ * Collapse all the tree hierarchy.
+ */
+void
+nact_tree_view_collapse_all( const NactTreeView *view )
+{
+	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
+
+	if( !view->private->dispose_has_run ){
+
+		gtk_tree_view_collapse_all( view->private->tree_view );
+	}
+}
+
+/**
+ * nact_tree_view_expand_all:
+ * @view: this #NactTreeView instance.
+ *
+ * Collapse all the tree hierarchy.
+ */
+void
+nact_tree_view_expand_all( const NactTreeView *view )
+{
+	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
+
+	if( !view->private->dispose_has_run ){
+
+		gtk_tree_view_expand_all( view->private->tree_view );
+	}
+}
+
+/**
+ * nact_tree_view_get_item_by_id:
+ * @view: this #NactTreeView instance.
+ * @id: the searched #NAObjectItem.
+ *
+ * Returns: a pointer on the searched #NAObjectItem if it exists, or %NULL.
+ *
+ * The returned pointer is owned by the underlying tree store, and should
+ * not be released by the caller.
+ */
+NAObjectItem *
+nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id )
+{
+	NAObjectItem *item;
+	NactTreeModel *model;
+
+	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), NULL );
+
+	item = NULL;
+
+	if( !view->private->dispose_has_run ){
+
+		model = NACT_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
+		item = nact_tree_model_get_item_by_id( model, id );
+	}
+
+	return( item );
 }
 
 /**
@@ -704,7 +960,7 @@ nact_tree_view_fill( NactTreeView *view, GList *items )
  * which should be na_object_free_items() by the caller.
  */
 GList *
-nact_tree_view_get_items( NactTreeView *view )
+nact_tree_view_get_items( const NactTreeView *view )
 {
 	GList *items;
 	NactTreeModel *model;
@@ -716,7 +972,7 @@ nact_tree_view_get_items( NactTreeView *view )
 	if( !view->private->dispose_has_run ){
 
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
-		items = nact_tree_model_get_items( model );
+		items = nact_tree_model_get_items( model, TREE_LIST_ALL );
 	}
 
 	return( items );
@@ -910,6 +1166,19 @@ navigate_to_parent( NactTreeView *view )
 	g_list_free( listrows );
 }
 
+static void
+open_popup( BaseWindow *window, NactTreeView *view, GdkEventButton *event )
+{
+	GtkTreePath *path;
+
+	if( gtk_tree_view_get_path_at_pos( view->private->tree_view, event->x, event->y, &path, NULL, NULL, NULL )){
+		select_row_at_path( view, path );
+		gtk_tree_path_free( path );
+	}
+
+	g_signal_emit_by_name( window, TREE_SIGNAL_CONTEXT_MENU, view, event );
+}
+
 /*
  * Select the row at the required path, or the immediate previous, or
  * the next following, or eventually the immediate parent.
@@ -1052,21 +1321,4 @@ on_finalizing_window( NactTreeView *view, GObject *window )
 			thisfn, ( void * ) view, G_OBJECT_TYPE_NAME( view ), ( void * ) window );
 
 	g_object_unref( view );
-}
-
-void
-nact_tree_view_setup_ialid( const NactTreeView *view, IActionsListInstanceData *ialid )
-{
-	g_return_if_fail( NACT_IS_TREE_VIEW( view ));
-
-	if( !view->private->dispose_has_run ){
-
-		ialid->management_mode = IACTIONS_LIST_MANAGEMENT_MODE_EXPORT;
-		/*ialid->menus;*/
-		/*ialid->actions;*/
-		/*ialid->profiles;*/
-		ialid->selection_changed_allowed = view->private->notify_allowed;
-		/*ialid->tab_updated_handler;*/
-		/*ialid->modified_items;*/
-	}
 }

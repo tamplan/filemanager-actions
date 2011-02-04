@@ -46,7 +46,6 @@
 #include "nact-application.h"
 #include "nact-main-statusbar.h"
 #include "base-gtk-utils.h"
-#include "nact-iactions-list.h"
 #include "nact-main-tab.h"
 #include "nact-icommand-tab.h"
 #include "nact-ischemes-tab.h"
@@ -71,7 +70,7 @@ static GType      register_type( void );
 static void       interface_base_init( NactICommandTabInterface *klass );
 static void       interface_base_finalize( NactICommandTabInterface *klass );
 
-static void       on_iactions_list_column_edited( NactICommandTab *instance, NAObject *object, gchar *text, gint column );
+static void       on_tree_view_content_changed( NactICommandTab *instance, NactTreeView *view, NAObject *object, gpointer user_data );
 static void       on_tab_updatable_selection_changed( NactICommandTab *instance, gint count_selected );
 
 static GtkWidget *get_label_entry( NactICommandTab *instance );
@@ -268,11 +267,8 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 				MAIN_WINDOW_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tab_updatable_selection_changed ));
 
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( instance ),
-				IACTIONS_LIST_SIGNAL_COLUMN_EDITED,
-				G_CALLBACK( on_iactions_list_column_edited ));
+		base_window_signal_connect( BASE_WINDOW( instance ),
+				G_OBJECT( instance ), TREE_SIGNAL_CONTENT_CHANGED, G_CALLBACK( on_tree_view_content_changed ));
 
 		/* allocate a static fake NATokens object which will be user to build
 		 * the example label - this object will be unreffed on dispose
@@ -322,9 +318,10 @@ nact_icommand_tab_dispose( NactICommandTab *instance )
 }
 
 static void
-on_iactions_list_column_edited( NactICommandTab *instance, NAObject *object, gchar *text, gint column )
+on_tree_view_content_changed( NactICommandTab *instance, NactTreeView *view, NAObject *object, gpointer user_data )
 {
 	GtkWidget *label_widget;
+	gchar *label;
 
 	g_return_if_fail( NACT_IS_ICOMMAND_TAB( instance ));
 
@@ -332,7 +329,9 @@ on_iactions_list_column_edited( NactICommandTab *instance, NAObject *object, gch
 
 		if( NA_IS_OBJECT_PROFILE( object )){
 			label_widget = get_label_entry( instance );
-			gtk_entry_set_text( GTK_ENTRY( label_widget ), text );
+			label = na_object_get_label( object );
+			gtk_entry_set_text( GTK_ENTRY( label_widget ), label );
+			g_free( label );
 		}
 	}
 }

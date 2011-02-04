@@ -71,6 +71,26 @@ struct _NactMenubarPrivate {
 	gboolean        is_action_writable;
 	gboolean        are_parents_writable;	/* cut/delete */
 
+	/* set when the count of modified NAObjectItem changes
+	 * this is a NactTreeIEditable-driven count
+	 */
+	guint           count_modified;
+
+	/* set on focus in/out
+	 */
+	gboolean        treeview_has_focus;
+
+	/* opening a contextual popup menu
+	 */
+	gulong          popup_handler;
+
+	/* set when total count of items changes
+	 */
+	gint            count_menus;
+	gint            count_actions;
+	gint            count_profiles;
+	gboolean        have_exportables;
+
 	/* *** */
 	gint            selected_menus;
 	gint            selected_actions;
@@ -78,14 +98,7 @@ struct _NactMenubarPrivate {
 	gint            clipboard_menus;
 	gint            clipboard_actions;
 	gint            clipboard_profiles;
-	gint            list_menus;
-	gint            list_actions;
-	gint            list_profiles;
-	gboolean        is_modified;
-	gboolean        have_exportables;
-	gboolean        treeview_has_focus;
 	gboolean        level_zero_order_changed;
-	gulong          popup_handler;
 	/* *** */
 };
 
@@ -113,51 +126,51 @@ void nact_menubar_enable_item( const NactMenubar *bar, const gchar *name, gboole
 
 void nact_menubar_edit_on_update_sensitivities( const NactMenubar *bar );
 
-void nact_menubar_edit_on_cut          ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_edit_on_copy         ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_edit_on_paste        ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_edit_on_paste_into   ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_edit_on_duplicate    ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_edit_on_delete       ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_edit_on_reload       ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_edit_on_prefererences( GtkAction *action, NactMainWindow *window );
+void nact_menubar_edit_on_cut          ( GtkAction *action, BaseWindow *window );
+void nact_menubar_edit_on_copy         ( GtkAction *action, BaseWindow *window );
+void nact_menubar_edit_on_paste        ( GtkAction *action, BaseWindow *window );
+void nact_menubar_edit_on_paste_into   ( GtkAction *action, BaseWindow *window );
+void nact_menubar_edit_on_duplicate    ( GtkAction *action, BaseWindow *window );
+void nact_menubar_edit_on_delete       ( GtkAction *action, BaseWindow *window );
+void nact_menubar_edit_on_reload       ( GtkAction *action, BaseWindow *window );
+void nact_menubar_edit_on_prefererences( GtkAction *action, BaseWindow *window );
 
 void nact_menubar_file_on_update_sensitivities( const NactMenubar *bar );
 
-void nact_menubar_file_on_new_menu   ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_file_on_new_action ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_file_on_new_profile( GtkAction *action, NactMainWindow *window );
-void nact_menubar_file_on_save       ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_file_on_quit       ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_file_on_new_menu   ( GtkAction *action, BaseWindow *window );
+void nact_menubar_file_on_new_action ( GtkAction *action, BaseWindow *window );
+void nact_menubar_file_on_new_profile( GtkAction *action, BaseWindow *window );
+void nact_menubar_file_on_save       ( GtkAction *action, BaseWindow *window );
+void nact_menubar_file_on_quit       ( GtkAction *action, BaseWindow *window );
 
-void nact_menubar_file_save_items      ( NactMainWindow *window );
-void nact_menubar_file_install_autosave( NactMainWindow *window );
+void nact_menubar_file_save_items      ( BaseWindow *window );
+void nact_menubar_file_install_autosave( BaseWindow *window );
 
 void nact_menubar_help_on_update_sensitivities( const NactMenubar *bar );
 
-void nact_menubar_help_on_help ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_help_on_about( GtkAction *action, NactMainWindow *window );
+void nact_menubar_help_on_help ( GtkAction *action, BaseWindow *window );
+void nact_menubar_help_on_about( GtkAction *action, BaseWindow *window );
 
 void nact_menubar_maintainer_on_update_sensitivities( const NactMenubar *bar );
 
-void nact_menubar_maintainer_on_dump_selection       ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, NactMainWindow *window );
-void nact_menubar_maintainer_on_list_modified_items  ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_maintainer_on_dump_clipboard       ( GtkAction *action, NactMainWindow *window );
+void nact_menubar_maintainer_on_dump_selection       ( GtkAction *action, BaseWindow *window );
+void nact_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, BaseWindow *window );
+void nact_menubar_maintainer_on_list_modified_items  ( GtkAction *action, BaseWindow *window );
+void nact_menubar_maintainer_on_dump_clipboard       ( GtkAction *action, BaseWindow *window );
 
 void nact_menubar_tools_on_update_sensitivities( const NactMenubar *bar );
 
-void nact_menubar_tools_on_import( GtkAction *action, NactMainWindow *window );
-void nact_menubar_tools_on_export( GtkAction *action, NactMainWindow *window );
+void nact_menubar_tools_on_import( GtkAction *action, BaseWindow *window );
+void nact_menubar_tools_on_export( GtkAction *action, BaseWindow *window );
 
 void nact_menubar_view_on_update_sensitivities( const NactMenubar *bar );
 
-void nact_menubar_view_on_expand_all   ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_view_on_collapse_all ( GtkAction *action, NactMainWindow *window );
-void nact_menubar_view_on_toolbar_file ( GtkToggleAction *action, NactMainWindow *window );
-void nact_menubar_view_on_toolbar_edit ( GtkToggleAction *action, NactMainWindow *window );
-void nact_menubar_view_on_toolbar_tools( GtkToggleAction *action, NactMainWindow *window );
-void nact_menubar_view_on_toolbar_help ( GtkToggleAction *action, NactMainWindow *window );
+void nact_menubar_view_on_expand_all   ( GtkAction *action, BaseWindow *window );
+void nact_menubar_view_on_collapse_all ( GtkAction *action, BaseWindow *window );
+void nact_menubar_view_on_toolbar_file ( GtkToggleAction *action, BaseWindow *window );
+void nact_menubar_view_on_toolbar_edit ( GtkToggleAction *action, BaseWindow *window );
+void nact_menubar_view_on_toolbar_tools( GtkToggleAction *action, BaseWindow *window );
+void nact_menubar_view_on_toolbar_help ( GtkToggleAction *action, BaseWindow *window );
 
 G_END_DECLS
 

@@ -1,3 +1,11 @@
+2011-02-03 Pierre Wieser <pwieser@trychlos.org>
+
+	In the process of replacing NactIActionsList interface with:
+	- the NactTreeView class
+	- plus the NactTreeIEditable interface.
+
+	Almost all NACT files modified. Compilation is OK.
+
 2011-02-02 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-tree-model.c:

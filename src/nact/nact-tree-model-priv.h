@@ -38,6 +38,7 @@
 #define __NACT_TREE_MODEL_PRIV_H__
 
 #include "base-window.h"
+#include "egg-tree-multi-dnd.h"
 #include "nact-clipboard.h"
 
 G_BEGIN_DECLS
@@ -46,17 +47,45 @@ G_BEGIN_DECLS
  */
 struct _NactTreeModelPrivate {
 	gboolean       dispose_has_run;
+
+	/* data set at instanciation time
+	 */
 	BaseWindow    *window;
 	GtkTreeView   *treeview;
-	gboolean       have_dnd;
-	gboolean       are_profiles_displayed;
+	guint          mode;
 	NactClipboard *clipboard;
+
+	/* runtime data
+	 */
 	gboolean       drag_has_profiles;
 	gboolean       drag_highlight;		/* defined for on_drag_motion handler */
 	gboolean       drag_drop;			/* defined for on_drag_motion handler */
 };
 
+/* the NactTreeModel is attached to the BaseWindow which embeds the NactTreeView
+ */
+#define WINDOW_DATA_TREE_MODEL			"window-data-tree-model"
+
+#define WINDOW_MODEL_VOID( window ) \
+	g_return_if_fail( BASE_IS_WINDOW( window )); \
+	NactTreeModel *model = ( NactTreeModel * ) g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_MODEL ); \
+	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+
 #define TREE_MODEL_STATUSBAR_CONTEXT	"nact-tree-model-statusbar-context"
+
+gboolean       nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, GtkSelectionData  *selection_data );
+gboolean       nact_tree_model_dnd_idrag_dest_row_drop_possible( GtkTreeDragDest *drag_dest, GtkTreePath *dest_path, GtkSelectionData *selection_data );
+
+gboolean       nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *drag_source, GdkDragContext *context, GtkSelectionData *selection_data, GList *path_list, guint info );
+gboolean       nact_tree_model_dnd_imulti_drag_source_drag_data_delete( EggTreeMultiDragSource *drag_source, GList *path_list );
+GdkDragAction  nact_tree_model_dnd_imulti_drag_source_get_drag_actions( EggTreeMultiDragSource *drag_source );
+GtkTargetList *nact_tree_model_dnd_imulti_drag_source_get_format_list( EggTreeMultiDragSource *drag_source );
+gboolean       nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *drag_source, GList *path_list );
+
+void           nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, BaseWindow *window );
+/*gboolean       on_drag_motion( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, BaseWindow *window );*/
+/*gboolean       on_drag_drop( GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, BaseWindow *window );*/
+void           nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, BaseWindow *window );
 
 G_END_DECLS
 

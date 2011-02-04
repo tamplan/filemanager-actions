@@ -88,11 +88,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-export-ask.h									\
 	nact-export-format.c								\
 	nact-export-format.h								\
-	nact-iactions-list.c								\
-	nact-iactions-list.h								\
-	nact-iactions-list-bis.c							\
-	nact-iactions-list-priv.c							\
-	nact-iactions-list-priv.h							\
 	nact-iaction-tab.c									\
 	nact-iaction-tab.h									\
 	nact-ibasenames-tab.c								\
@@ -142,11 +137,12 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-schemes-list.h									\
 	nact-sort-buttons.c									\
 	nact-sort-buttons.h									\
+	nact-tree-ieditable.c								\
+	nact-tree-ieditable.h								\
 	nact-tree-model.c									\
 	nact-tree-model.h									\
-	nact-tree-model-dnd.c								\
-	nact-tree-model-dnd.h								\
 	nact-tree-model-priv.h								\
+	nact-tree-model-dnd.c								\
 	nact-tree-view.c									\
 	nact-tree-view.h									\
 	nact-window.c										\

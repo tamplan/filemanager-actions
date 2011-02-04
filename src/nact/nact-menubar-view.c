@@ -32,15 +32,14 @@
 #include <config.h>
 #endif
 
-#include "nact-iactions-list.h"
 #include "nact-main-toolbar.h"
 #include "nact-menubar-priv.h"
 
-static void on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, int toolbar_id );
+static void on_view_toolbar_activated( GtkToggleAction *action, BaseWindow *window, int toolbar_id );
 
 /**
  * nact_menubar_view_on_update_sensitivities:
- * @window: the #NactMainWindow main window.
+ * @window: the #BaseWindow main window.
  * user_data: the data passed to the function via the signal.
  * @mis: the #MenubarIndicatorsStruct struct.
  *
@@ -52,7 +51,7 @@ nact_menubar_view_on_update_sensitivities( const NactMenubar *bar )
 	guint count_list;
 
 	/* expand all/collapse all requires at least one item in the list */
-	count_list = bar->private->list_menus + bar->private->list_actions + bar->private->list_profiles;
+	count_list = bar->private->count_menus + bar->private->count_actions + bar->private->count_profiles;
 	nact_menubar_enable_item( bar, "ExpandAllItem", count_list > 0 );
 	nact_menubar_enable_item( bar, "CollapseAllItem", count_list > 0 );
 }
@@ -60,38 +59,44 @@ nact_menubar_view_on_update_sensitivities( const NactMenubar *bar )
 /**
  * nact_menubar_view_on_expand_all:
  * @gtk_action: the #GtkAction action.
- * @window: the #NactMainWindow main window.
+ * @window: the #BaseWindow main window.
  *
  * Triggers View / Expand all item.
  */
 void
-nact_menubar_view_on_expand_all( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_view_on_expand_all( GtkAction *gtk_action, BaseWindow *window )
 {
-	nact_iactions_list_expand_all( NACT_IACTIONS_LIST( window ));
+	NactTreeView *items_view;
+
+	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+	nact_tree_view_expand_all( items_view );
 }
 
 /**
  * nact_menubar_view_on_collapse_all:
  * @gtk_action: the #GtkAction action.
- * @window: the #NactMainWindow main window.
+ * @window: the #BaseWindow main window.
  *
  * Triggers View / Collapse all item.
  */
 void
-nact_menubar_view_on_collapse_all( GtkAction *gtk_action, NactMainWindow *window )
+nact_menubar_view_on_collapse_all( GtkAction *gtk_action, BaseWindow *window )
 {
-	nact_iactions_list_collapse_all( NACT_IACTIONS_LIST( window ));
+	NactTreeView *items_view;
+
+	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+	nact_tree_view_collapse_all( items_view );
 }
 
 /**
  * nact_menubar_view_on_toolbar_file:
  * @gtk_action: the #GtkAction action.
- * @window: the #NactMainWindow main window.
+ * @window: the #BaseWindow main window.
  *
  * Triggers View / Toolbar / File item.
  */
 void
-nact_menubar_view_on_toolbar_file( GtkToggleAction *action, NactMainWindow *window )
+nact_menubar_view_on_toolbar_file( GtkToggleAction *action, BaseWindow *window )
 {
 	/*on_view_toolbar_activated( action, window, MENUBAR_IPREFS_FILE_TOOLBAR, "/ui/FileToolbar", MENUBAR_FILE_TOOLBAR_POS );*/
 	on_view_toolbar_activated( action, window, MAIN_TOOLBAR_FILE_ID );
@@ -100,12 +105,12 @@ nact_menubar_view_on_toolbar_file( GtkToggleAction *action, NactMainWindow *wind
 /**
  * nact_menubar_view_on_toolbar_edit:
  * @gtk_action: the #GtkAction action.
- * @window: the #NactMainWindow main window.
+ * @window: the #BaseWindow main window.
  *
  * Triggers View / Toolbar / Edit item.
  */
 void
-nact_menubar_view_on_toolbar_edit( GtkToggleAction *action, NactMainWindow *window )
+nact_menubar_view_on_toolbar_edit( GtkToggleAction *action, BaseWindow *window )
 {
 	/*on_view_toolbar_activated( action, window, MENUBAR_IPREFS_EDIT_TOOLBAR, "/ui/EditToolbar", MENUBAR_EDIT_TOOLBAR_POS );*/
 	on_view_toolbar_activated( action, window, MAIN_TOOLBAR_EDIT_ID );
@@ -114,12 +119,12 @@ nact_menubar_view_on_toolbar_edit( GtkToggleAction *action, NactMainWindow *wind
 /**
  * nact_menubar_view_on_toolbar_tools:
  * @gtk_action: the #GtkAction action.
- * @window: the #NactMainWindow main window.
+ * @window: the #BaseWindow main window.
  *
  * Triggers View / Toolbar / Tools item.
  */
 void
-nact_menubar_view_on_toolbar_tools( GtkToggleAction *action, NactMainWindow *window )
+nact_menubar_view_on_toolbar_tools( GtkToggleAction *action, BaseWindow *window )
 {
 	/*on_view_toolbar_activated( action, window, MENUBAR_IPREFS_TOOLS_TOOLBAR, "/ui/ToolsToolbar", MENUBAR_TOOLS_TOOLBAR_POS );*/
 	on_view_toolbar_activated( action, window, MAIN_TOOLBAR_TOOLS_ID );
@@ -128,19 +133,19 @@ nact_menubar_view_on_toolbar_tools( GtkToggleAction *action, NactMainWindow *win
 /**
  * nact_menubar_view_on_toolbar_help:
  * @gtk_action: the #GtkAction action.
- * @window: the #NactMainWindow main window.
+ * @window: the #BaseWindow main window.
  *
  * Triggers View / Toolbar / Help item.
  */
 void
-nact_menubar_view_on_toolbar_help( GtkToggleAction *action, NactMainWindow *window )
+nact_menubar_view_on_toolbar_help( GtkToggleAction *action, BaseWindow *window )
 {
 	/*on_view_toolbar_activated( action, window, MENUBAR_IPREFS_HELP_TOOLBAR, "/ui/HelpToolbar", MENUBAR_HELP_TOOLBAR_POS );*/
 	on_view_toolbar_activated( action, window, MAIN_TOOLBAR_HELP_ID );
 }
 
 static void
-on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, int toolbar_id )
+on_view_toolbar_activated( GtkToggleAction *action, BaseWindow *window, int toolbar_id )
 {
 	gboolean is_active;
 
@@ -148,5 +153,5 @@ on_view_toolbar_activated( GtkToggleAction *action, NactMainWindow *window, int 
 
 	is_active = gtk_toggle_action_get_active( action );
 
-	nact_main_toolbar_activate( window, toolbar_id, bar->private->ui_manager, is_active );
+	nact_main_toolbar_activate( NACT_MAIN_WINDOW( window ), toolbar_id, bar->private->ui_manager, is_active );
 }

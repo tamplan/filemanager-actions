@@ -50,10 +50,10 @@ static gboolean st_in_toggle      = FALSE;
 static gboolean st_enable_buttons = FALSE;
 static gint     st_last_active    = -1;
 
-static void enable_buttons( NactMainWindow *window );
-static void on_toggle_button_toggled( GtkToggleButton *button, NactMainWindow *window );
-static void set_new_sort_order( NactMainWindow *window, guint order_mode );
-static void display_sort_order( NactMainWindow *window, guint order_mode );
+static void enable_buttons( BaseWindow *window );
+static void on_toggle_button_toggled( GtkToggleButton *button, BaseWindow *window );
+static void set_new_sort_order( BaseWindow *window, guint order_mode );
+static void display_sort_order( BaseWindow *window, guint order_mode );
 static gint toggle_group_get_active( ToggleGroup *group, BaseWindow *window );
 static gint toggle_group_get_for_mode( ToggleGroup *group, guint mode );
 static void toggle_group_set_active( ToggleGroup *group, BaseWindow *window, gint idx );
@@ -68,7 +68,7 @@ static ToggleGroup st_toggle_group [] = {
 
 /**
  * nact_sort_buttons_runtime_init:
- * @window: the #NactMainWindow.
+ * @window: the #BaseWindow.
  *
  * Initialization of the UI each time it is displayed.
  *
@@ -78,7 +78,7 @@ static ToggleGroup st_toggle_group [] = {
  * - enabled (sensitive) if level zero is writable
  */
 void
-nact_sort_buttons_runtime_init( NactMainWindow *window )
+nact_sort_buttons_runtime_init( BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_sort_buttons_runtime_init";
 	GtkToggleButton *button;
@@ -104,13 +104,13 @@ nact_sort_buttons_runtime_init( NactMainWindow *window )
 
 /**
  * nact_sort_buttons_all_widgets_showed:
- * @window: the #NactMainWindow.
+ * @window: the #BaseWindow.
  *
  * Called when all the widgets are showed after end of all runtime
  * initializations.
  */
 void
-nact_sort_buttons_all_widgets_showed( NactMainWindow *window )
+nact_sort_buttons_all_widgets_showed( BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_sort_buttons_all_widgets_showed";
 
@@ -121,7 +121,7 @@ nact_sort_buttons_all_widgets_showed( NactMainWindow *window )
 
 /**
  * nact_sort_buttons_enable_buttons:
- * @window: the #NactMainWindow.
+ * @window: the #BaseWindow.
  * @enable: whether we wish enable or disable these sort buttons.
  *
  * Enable or disable the sort buttons, while keeping relevant with
@@ -131,7 +131,7 @@ nact_sort_buttons_all_widgets_showed( NactMainWindow *window )
  * the sort buttons, typically when there is no record to sort.
  */
 void
-nact_sort_buttons_enable_buttons( NactMainWindow *window, gboolean enable )
+nact_sort_buttons_enable_buttons( BaseWindow *window, gboolean enable )
 {
 	static const gchar *thisfn = "nact_sort_buttons_enable_buttons";
 
@@ -143,12 +143,12 @@ nact_sort_buttons_enable_buttons( NactMainWindow *window, gboolean enable )
 
 /**
  * nact_sort_buttons_dispose:
- * @window: the #NactMainWindow.
+ * @window: the #BaseWindow.
  *
  * The main window is disposed.
  */
 void
-nact_sort_buttons_dispose( NactMainWindow *window )
+nact_sort_buttons_dispose( BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_sort_buttons_dispose";
 
@@ -157,13 +157,13 @@ nact_sort_buttons_dispose( NactMainWindow *window )
 
 /**
  * nact_sort_buttons_display_order_change:
- * @window: the #NactMainWindow.
+ * @window: the #BaseWindow.
  * @order_mode: the new order mode.
  *
- * Relayed via NactMainWindow, this is a NAIPivotConsumer notification.
+ * Relayed via BaseWindow, this is a NAIPivotConsumer notification.
  */
 void
-nact_sort_buttons_display_order_change( NactMainWindow *window, guint order_mode )
+nact_sort_buttons_display_order_change( BaseWindow *window, guint order_mode )
 {
 	static const gchar *thisfn = "nact_sort_buttons_display_order_change";
 
@@ -174,12 +174,12 @@ nact_sort_buttons_display_order_change( NactMainWindow *window, guint order_mode
 
 /**
  * nact_sort_buttons_level_zero_writability_change:
- * @window: the #NactMainWindow.
+ * @window: the #BaseWindow.
  *
- * Relayed via NactMainWindow, this is a NAIPivotConsumer notification.
+ * Relayed via BaseWindow, this is a NAIPivotConsumer notification.
  */
 void
-nact_sort_buttons_level_zero_writability_change( NactMainWindow *window )
+nact_sort_buttons_level_zero_writability_change( BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_sort_buttons_level_zero_writability_change";
 
@@ -189,7 +189,7 @@ nact_sort_buttons_level_zero_writability_change( NactMainWindow *window )
 }
 
 static void
-enable_buttons( NactMainWindow *window )
+enable_buttons( BaseWindow *window )
 {
 	NactApplication *application;
 	NAUpdater *updater;
@@ -210,7 +210,7 @@ enable_buttons( NactMainWindow *window )
 }
 
 static void
-on_toggle_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *window )
+on_toggle_button_toggled( GtkToggleButton *toggled_button, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_sort_buttons_on_toggle_button_toggled";
 	gint ibtn, iprev;
@@ -235,7 +235,7 @@ on_toggle_button_toggled( GtkToggleButton *toggled_button, NactMainWindow *windo
 }
 
 static void
-set_new_sort_order( NactMainWindow *window, guint order_mode )
+set_new_sort_order( BaseWindow *window, guint order_mode )
 {
 	static const gchar *thisfn = "nact_sort_buttons_set_new_sort_order";
 	NactApplication *application;
@@ -257,7 +257,7 @@ set_new_sort_order( NactMainWindow *window, guint order_mode )
  * do nothing if new button and previous button are the sames
  */
 static void
-display_sort_order( NactMainWindow *window, guint order_mode )
+display_sort_order( BaseWindow *window, guint order_mode )
 {
 	static const gchar *thisfn = "nact_sort_buttons_display_sort_order";
 	gint iprev, inew;

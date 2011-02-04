@@ -987,7 +987,7 @@ uint_list_dump( const NABoxed *boxed )
 		if( strlen( str->str )){
 			str = g_string_append( str, "," );
 		}
-		g_string_append_printf( str, "%u", ( guint ) i->data );
+		g_string_append_printf( str, "%u", GPOINTER_TO_UINT( i->data ));
 	}
 
 	return( g_string_free( str, FALSE ));

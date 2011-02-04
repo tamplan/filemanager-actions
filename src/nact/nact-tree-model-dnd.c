@@ -45,11 +45,9 @@
 
 #include "nact-application.h"
 #include "nact-clipboard.h"
-#include "nact-iactions-list.h"
 #include "nact-main-statusbar.h"
 #include "nact-main-window.h"
 #include "nact-tree-model.h"
-#include "nact-tree-model-dnd.h"
 #include "nact-tree-model-priv.h"
 
 /*
@@ -623,7 +621,9 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 				} else {
 					inserted = na_object_ref( current );
 					deletable = g_list_prepend( NULL, inserted );
+#if 0
 					nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( main_window ), deletable, FALSE );
+#endif
 					g_list_free( deletable );
 				}
 
@@ -637,7 +637,9 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	}
 	object_list = g_list_reverse( object_list );
 
+#if 0
 	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
+#endif
 
 	if( gtk_tree_path_get_depth( new_dest ) == 1 ){
 		g_signal_emit_by_name( main_window, MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
@@ -957,8 +959,10 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		drop_done = TRUE;
 	}
 
+#if 0
 	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), imported, dest );
 	nact_tree_model_dump( model );
+#endif
 
 	na_object_free_items( imported );
 	na_core_utils_slist_free( parms.uris );
@@ -974,8 +978,11 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 static NAObjectItem *
 is_dropped_already_exists( const NAObjectItem *importing, const NactMainWindow *window )
 {
+	NactTreeView *items_view;
+
 	gchar *id = na_object_get_id( importing );
-	NAObjectItem *exists = nact_main_window_get_item( window, id );
+	items_view = nact_main_window_get_items_view( window );
+	NAObjectItem *exists = nact_tree_view_get_item_by_id( items_view, id );
 	g_free( id );
 
 	return( exists );

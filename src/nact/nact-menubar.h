@@ -60,10 +60,6 @@
 
 #include "base-window.h"
 
-/* *** */
-#include "nact-main-window.h"
-/* *** */
-
 G_BEGIN_DECLS
 
 #define NACT_MENUBAR_TYPE                ( nact_menubar_get_type())
@@ -95,11 +91,10 @@ GType        nact_menubar_get_type( void );
 
 NactMenubar *nact_menubar_new       ( BaseWindow *window );
 
-void         nact_menubar_open_popup( BaseWindow *window, GdkEventButton *event );
 void         nact_menubar_save_items( BaseWindow *window );
 
 /* *** */
-gboolean nact_menubar_is_level_zero_order_changed( const NactMainWindow *window );
+gboolean nact_menubar_is_level_zero_order_changed( const BaseWindow *window );
 /* *** */
 
 G_END_DECLS

@@ -38,7 +38,7 @@
 
 /**
  * nact_menubar_help_on_update_sensitivities:
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  * @user_data: user data ?
  * @mis: the #MenubarIndicatorsStruct structure.
  *
@@ -54,12 +54,12 @@ nact_menubar_help_on_update_sensitivities( const NactMenubar *bar )
 /**
  * nact_menubar_help_on_help:
  * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  *
  * Triggers the "Help/Help" item.
  */
 void
-nact_menubar_help_on_help( GtkAction *action, NactMainWindow *window )
+nact_menubar_help_on_help( GtkAction *action, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_menubar_help_on_help";
 	GError *error;
@@ -75,12 +75,12 @@ nact_menubar_help_on_help( GtkAction *action, NactMainWindow *window )
 /**
  * nact_menubar_help_on_about:
  * @action: the #GtkAction of the item.
- * @window: the #NactMainWindow main application window.
+ * @window: the #BaseWindow main application window.
  *
  * Triggers the "Help/About" item.
  */
 void
-nact_menubar_help_on_about( GtkAction *action, NactMainWindow *window )
+nact_menubar_help_on_about( GtkAction *action, BaseWindow *window )
 {
 	na_iabout_display( NA_IABOUT( window ));
 }
