@@ -218,7 +218,7 @@ on_add_clicked( GtkButton *button, BaseWindow *window )
 	GSList *capabilities;
 	gchar *new_cap;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), NULL );
+	g_object_get( G_OBJECT( window ), MAIN_PROP_CONTEXT, &context, NULL );
 
 	if( context ){
 		capabilities = nact_match_list_get_rows( window, ITAB_NAME );

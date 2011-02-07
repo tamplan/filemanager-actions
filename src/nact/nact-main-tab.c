@@ -90,37 +90,3 @@ nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
 
 	return( is_sensitive );
 }
-
-/**
- * nact_main_tab_get_context:
- * @window: the #NactMainWindow.
- * @editable: if not %NULL, will be set with the current editability
- *  status of the returned #NAIContext (or of its parent).
- *
- * Returns: the current relevant #NAIContext, or %NULL.
- */
-NAIContext *
-nact_main_tab_get_context( NactMainWindow *window, gboolean *editable )
-{
-	NAObjectItem *item;
-	NAObjectProfile *profile;
-	NAIContext *context;
-	gboolean status;
-
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), NULL );
-
-	g_object_get(
-			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			TAB_UPDATABLE_PROP_EDITABLE, &status,
-			NULL );
-
-	context = profile ? NA_ICONTEXT( profile ) : ( NAIContext * ) item;
-
-	if( editable ){
-		*editable = status;
-	}
-
-	return( context );
-}

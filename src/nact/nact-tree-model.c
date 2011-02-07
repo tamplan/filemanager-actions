@@ -584,7 +584,7 @@ nact_tree_model_fill( NactTreeModel *model, GList *items )
 }
 
 /**
- * nact_tree_model_insert:
+ * nact_tree_model_insert_before:
  * @model: this #NactTreeModel instance.
  * @object: a #NAObject-derived object to be inserted.
  * @path: the #GtkTreePath which specifies the insertion path.
@@ -600,9 +600,9 @@ nact_tree_model_fill( NactTreeModel *model, GList *items )
  * asked insertion path if tree is sorted.
  */
 GtkTreePath *
-nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent )
+nact_tree_model_insert_before( NactTreeModel *model, const NAObject *object, GtkTreePath *path )
 {
-	static const gchar *thisfn = "nact_tree_model_insert";
+	static const gchar *thisfn = "nact_tree_model_insert_before";
 	GtkTreeModel *store;
 	gchar *path_str;
 	GtkTreeIter iter;
@@ -616,11 +616,11 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 	gboolean has_sibling;
 
 	path_str = gtk_tree_path_to_string( path );
-	g_debug( "%s: model=%p, object=%p (%s, ref_count=%d), path=%p (%s), parent=%p",
+	g_debug( "%s: model=%p, object=%p (%s, ref_count=%d), path=%p (%s)",
 			thisfn,
 			( void * ) model,
 			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count,
-			( void * ) path, path_str, ( void * ) parent );
+			( void * ) path, path_str );
 	g_free( path_str );
 	g_return_val_if_fail( NACT_IS_TREE_MODEL( model ), NULL );
 	g_return_val_if_fail( NA_IS_OBJECT( object ), NULL );
@@ -655,10 +655,6 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 			gtk_tree_model_get( store, &parent_iter, TREE_COLUMN_NAOBJECT, &parent_obj, -1 );
 			g_object_unref( parent_obj );
 
-			if( parent && !*parent ){
-				*parent = parent_obj;
-			}
-
 			if( has_sibling ){
 				na_object_insert_item( parent_obj, object, sibling_obj );
 			} else {
@@ -684,13 +680,18 @@ nact_tree_model_insert( NactTreeModel *model, const NAObject *object, GtkTreePat
 
 /**
  * nact_tree_model_insert_into:
- * @model:
- * @object:
- * @path:
- * @parent:
+ * @model: this #NactTreeModel instance.
+ * @object: the #NAObject to be inserted.
+ * @path: the wished #GtkTreePath path.
+ *
+ * Insert the @object at ou near the wished @path, and attaches the object
+ * to its new parent.
+ *
+ * Returns the actual insertion path, wchich should be gtk_tree_path_free()
+ * by the caller.
  */
 GtkTreePath *
-nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent )
+nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTreePath *path )
 {
 	static const gchar *thisfn = "nact_tree_model_insert_into";
 	GtkTreeModel *store;
@@ -698,6 +699,7 @@ nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTr
 	GtkTreeIter parent_iter;
 	GtkTreePath *new_path;
 	gchar *path_str;
+	NAObject *parent;
 
 	path_str = gtk_tree_path_to_string( path );
 	g_debug( "%s: model=%p, object=%p (%s, ref_count=%d), path=%p (%s), parent=%p",
@@ -721,11 +723,11 @@ nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTr
 			g_free( path_str );
 			return( NULL );
 		}
-		gtk_tree_model_get( store, &parent_iter, TREE_COLUMN_NAOBJECT, parent, -1 );
-		g_object_unref( *parent );
 
-		na_object_insert_item( *parent, object, NULL );
-		na_object_set_parent( object, *parent );
+		gtk_tree_model_get( store, &parent_iter, TREE_COLUMN_NAOBJECT, &parent, -1 );
+		g_object_unref( parent );
+		na_object_insert_item( parent, object, NULL );
+		na_object_set_parent( object, parent );
 
 		gtk_tree_store_insert_after( GTK_TREE_STORE( store ), &iter, &parent_iter, NULL );
 		gtk_tree_store_set( GTK_TREE_STORE( store ), &iter, TREE_COLUMN_NAOBJECT, object, -1 );
@@ -796,6 +798,7 @@ nact_tree_model_get_items( const NactTreeModel *model, guint mode )
 		ngi.items = NULL;
 		store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 		iter_on_store( model, GTK_TREE_MODEL( store ), NULL, ( FnIterOnStore ) get_items_iter, &ngi );
+		items = ngi.items;
 	}
 
 	return( items );

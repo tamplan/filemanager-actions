@@ -223,7 +223,10 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer u
 
 	nact_match_list_on_selection_changed( window, ITAB_NAME, g_list_length( selected_items ));
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
+	g_object_get( G_OBJECT( window ),
+			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+			NULL );
+
 	button = base_window_get_widget( window, "AddFromDefaultButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }
@@ -235,7 +238,7 @@ on_add_from_defaults( GtkButton *button, BaseWindow *window )
 	gchar *new_scheme;
 	NAIContext *context;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), NULL );
+	g_object_get( G_OBJECT( window ), MAIN_PROP_CONTEXT, &context, NULL );
 	g_return_if_fail( context );
 
 	schemes = nact_match_list_get_rows( window, ITAB_NAME );

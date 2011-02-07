@@ -231,7 +231,10 @@ on_main_selection_changed( NactIFoldersTab *instance, GList *selected_items, gpo
 	count_selected = g_list_length( selected_items );
 	nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, count_selected );
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+	g_object_get( G_OBJECT( instance ),
+			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+			NULL );
+
 	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }

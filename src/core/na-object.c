@@ -83,7 +83,8 @@ static gboolean iduplicable_are_equal_iter( GObjectClass *class, const NAObject 
 static gboolean iduplicable_is_valid( const NAIDuplicable *object );
 static gboolean iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
 
-static void     push_modified_status_up( const NAObject *object, gboolean is_modified );
+static void     check_status_down_rec( const NAObject *object );
+static void     check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was_valid );
 static gboolean object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data );
 static gboolean dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *user_data );
 static void     dump_tree( GList *tree, gint level );
@@ -359,16 +360,16 @@ iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter
 }
 
 /**
- * na_object_object_check_status:
+ * na_object_object_check_status_rec:
  * @object: the #NAObject -derived object to be checked.
  *
- * Recursively checks for the edition status of @object and its childs
+ * Recursively checks for the edition status of @object and its children
  * (if any).
  *
  * Internally set some properties which may be requested later. This
  * two-steps check-request let us optimize some work in the UI.
  *
- * na_object_object_check_status( object )
+ * na_object_object_check_status_rec( object )
  *  +- na_iduplicable_check_status( object )
  *      +- get_origin( object )
  *      +- modified_status = v_are_equal( origin, object ) -> interface <structfield>NAObjectClass::are_equal</structfield>
@@ -378,94 +379,69 @@ iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter
  * that edition status of children is actually checked before those of
  * the parent.
  *
+ * As of 3.1.0:
+ * - when the modification status of a NAObjectProfile changes, then its
+ *   NAObjectAction parent is rechecked;
+ * - when the validity status of an object is changed, then its parent is
+ *   also rechecked.
+ *
  * Since: 2.30
  */
 void
-na_object_object_check_status( const NAObject *object )
+na_object_object_check_status_rec( const NAObject *object )
 {
-	static const gchar *thisfn = "na_object_object_check_status";
+	static const gchar *thisfn = "na_object_object_check_status_rec";
+	gboolean was_modified, was_valid;
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	if( !object->private->dispose_has_run ){
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-		if( NA_IS_OBJECT_ITEM( object )){
-			g_list_foreach( na_object_get_items( object ), ( GFunc ) na_object_object_check_status, NULL );
-		}
-
-		na_iduplicable_check_status( NA_IDUPLICABLE( object ));
-	}
-}
-
-/**
- * na_object_object_check_status_up:
- * @object: the object at the start of the hierarchy.
- *
- * Checks for modification and validity status of the @object, its
- * parent, the parent of its parent, etc. up to the top of the hierarchy.
- *
- * Checking the modification of any of the status should be more
- * efficient that systematically force the display of the item.
- *
- * Returns: %TRUE if at least one of the status has changed, %FALSE else.
- *
- * Since: 2.30
- */
-gboolean
-na_object_object_check_status_up( const NAObject *object )
-{
-	gboolean changed;
-	gboolean was_modified, is_modified;
-	gboolean was_valid, is_valid;
-	NAObjectItem *parent;
-
-	g_return_val_if_fail( NA_OBJECT( object ), FALSE );
-
-	changed = FALSE;
-
-	if( !object->private->dispose_has_run ){
-
 		was_modified = na_object_is_modified( object );
 		was_valid = na_object_is_valid( object );
-
-		na_iduplicable_check_status( NA_IDUPLICABLE( object ));
-
-		is_modified = na_object_is_modified( object );
-		is_valid = na_object_is_valid( object );
-
-		/* if a child becomes modified, then we can safely push this 'modified'
-		 * status up to all its parent hierarchy
-		 */
-		if( !was_modified && is_modified ){
-			push_modified_status_up( object, is_modified );
-		}
-
-		/* but if a child becomes non modified, or its validity status changes,
-		 * then we have to recompute these status for all the parent hierarchy
-		 */
-		changed = (( was_valid && !is_valid ) ||
-				( !was_valid && is_valid ) ||
-				( was_modified && !is_modified ));
-
-		if( changed ){
-			parent = na_object_get_parent( object );
-			if( parent ){
-				na_object_check_status_up( parent );
-			}
-		}
+		check_status_down_rec( object );
+		check_status_up_rec( object, was_modified, was_valid );
 	}
-
-	return( changed );
 }
 
+/*
+ * recursively checks the status downstream
+ */
 static void
-push_modified_status_up( const NAObject *object, gboolean is_modified )
+check_status_down_rec( const NAObject *object )
 {
-	NAObject *parent = ( NAObject * ) na_object_get_parent( object );
-	if( parent ){
-		na_iduplicable_set_modified( NA_IDUPLICABLE( parent ), is_modified );
-		push_modified_status_up( parent, is_modified );
+	if( NA_IS_OBJECT_ITEM( object )){
+		g_list_foreach( na_object_get_items( object ), ( GFunc ) check_status_down_rec, NULL );
+	}
+
+	na_iduplicable_check_status( NA_IDUPLICABLE( object ));
+}
+
+/*
+ * if the status appears changed, then rechecks the parent
+ * recurse upstream while there is a parent, and its status changes
+ */
+static void
+check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was_valid )
+{
+	gboolean is_modified, is_valid;
+	NAObjectItem *parent;
+
+	is_modified = na_object_is_modified( object );
+	is_valid = na_object_is_valid( object );
+
+	if(( NA_IS_OBJECT_PROFILE( object ) && was_modified != is_modified ) ||
+			was_valid != is_valid ){
+
+			parent = na_object_get_parent( object );
+
+			if( parent ){
+				was_modified = na_object_is_modified( parent );
+				was_valid = na_object_is_valid( parent );
+				na_iduplicable_check_status( NA_IDUPLICABLE( parent ));
+				check_status_up_rec( NA_OBJECT( parent ), was_modified, was_valid );
+			}
 	}
 }
 
@@ -521,7 +497,7 @@ object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data )
  *
  * The recursivity is dealt with here because, if we would let
  * #NAObjectItem do this, the dump of #NAObjectItem -derived object
- * would be splitted, childs being inserted inside.
+ * would be splitted, children being inserted inside.
  *
  * na_object_dump() doesn't modify the reference count of the dumped
  * object.

@@ -73,58 +73,69 @@ struct _NactMainWindowPrivate {
 
 	NAUpdater       *updater;
 
-	/* TODO: this will have to be replaced with undo-manager */
-	GList           *deleted;
-
 	/**
-	 * Currently selected action or menu.
+	 * Current action or menu.
 	 *
 	 * This is the action or menu which is displayed in tabs Action/Menu
 	 * and Properties ; it may be different of the exact row being currently
 	 * selected, e.g. when a sub-profile is edited.
 	 *
-	 * Can be null, and this implies that @selected_profile is also null,
-	 * e.g. when the list is empty or in case of multiple selection.
+	 * Can be null, and this implies that @current_profile is also null,
+	 * e.g. when the list is empty or in the case of a multiple selection.
 	 *
-	 * 'editable' property is computed on selection change;
-	 * This is the real writability status of the item at this time.
+	 * 'editable' property is set on selection change;
+	 * This is the actual current writability status of the item at this time.
 	 */
-	NAObjectItem    *selected_item;
+	NAObjectItem    *current_item;
 	gboolean         editable;
 	guint            reason;
 
 	/**
-	 * Currently selected profile.
+	 * Current profile.
 	 *
 	 * This is the profile which is displayed in tab Command;
-	 * it may be different of the exact row being currently selected.
+	 * it may be different of the exact row being currently selected,
+	 * e.g. when an action with only one profile is selected.
 	 *
-	 * Can be null if @selected_item is a menu, or an action with more
-	 * than one profile and action is selected, or an action without
-	 * any profile, or the list is empty, or in case of multiple selection.
+	 * Can be null if @current_item is a menu, or an action with more
+	 * than one profile is selected, or the list is empty, or in the
+	 * case of a multiple selection.
 	 *
 	 * In other words, it is not null if:
 	 * a) a profile is selected,
 	 * b) an action is selected and it has exactly one profile.
 	 */
-	NAObjectProfile *selected_profile;
+	NAObjectProfile *current_profile;
 
 	/**
-	 * Some convenience objects.
+	 * Current context.
+	 *
+	 * This is the #NAIContext data which corresponds to @current_profile
+	 * or @current_item, depending of which one is actually selected.
+	 */
+	NAIContext      *current_context;
+
+	/**
+	 * Some convenience objects and data.
 	 */
 	NactTreeView    *items_view;
 	NactClipboard   *clipboard;
 	guint            count_modified;
 };
 
-/* action properties
- * these are set when selection changes as an optimization try
+/* properties set against the main window
+ * these are set on selection changes
  */
 enum {
-	PROP_EDITED_ITEM = 1,
-	PROP_EDITED_PROFILE,
-	PROP_EDITABLE,
-	PROP_REASON
+	MAIN_PROP_0 = 0,
+
+	MAIN_PROP_ITEM_ID,
+	MAIN_PROP_PROFILE_ID,
+	MAIN_PROP_CONTEXT_ID,
+	MAIN_PROP_EDITABLE_ID,
+	MAIN_PROP_REASON_ID,
+
+	MAIN_PROP_N_PROPERTIES
 };
 
 /* signals
@@ -185,8 +196,8 @@ static gboolean on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainW
 static gboolean warn_modified( NactMainWindow *window );
 
 /* *** */
-static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
 #if 0
+static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
 static void     on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
 #endif
 static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display );
@@ -326,7 +337,6 @@ class_init( NactMainWindowClass *klass )
 	static const gchar *thisfn = "nact_main_window_class_init";
 	GObjectClass *object_class;
 	BaseWindowClass *base_class;
-	GParamSpec *spec;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -339,33 +349,40 @@ class_init( NactMainWindowClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	spec = g_param_spec_pointer(
-			TAB_UPDATABLE_PROP_SELECTED_ITEM,
-			"Edited NAObjectItem",
-			"A pointer to the edited NAObjectItem, an action or a menu",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_EDITED_ITEM, spec );
+	g_object_class_install_property( object_class, MAIN_PROP_ITEM_ID,
+			g_param_spec_pointer(
+					MAIN_PROP_ITEM,
+					"Edited NAObjectItem",
+					"A pointer to the edited NAObjectItem, an action or a menu",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	spec = g_param_spec_pointer(
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE,
-			"Edited NAObjectProfile",
-			"A pointer to the edited NAObjectProfile",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_EDITED_PROFILE, spec );
+	g_object_class_install_property( object_class, MAIN_PROP_PROFILE_ID,
+			g_param_spec_pointer(
+					MAIN_PROP_PROFILE,
+					"Edited NAObjectProfile",
+					"A pointer to the edited NAObjectProfile",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	spec = g_param_spec_boolean(
-			TAB_UPDATABLE_PROP_EDITABLE,
-			"Editable item ?",
-			"Whether the item will be able to be updated against its I/O provider", FALSE,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_EDITABLE, spec );
+	g_object_class_install_property( object_class, MAIN_PROP_CONTEXT_ID,
+			g_param_spec_pointer(
+					MAIN_PROP_CONTEXT,
+					"Current NAIContext",
+					"The currently edited NAIContext",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	spec = g_param_spec_int(
-			TAB_UPDATABLE_PROP_REASON,
-			"No edition reason",
-			"Why is this item not editable", 0, 255, 0,
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PROP_REASON, spec );
+	g_object_class_install_property( object_class, MAIN_PROP_EDITABLE_ID,
+			g_param_spec_boolean(
+					MAIN_PROP_EDITABLE,
+					"Editable item ?",
+					"Whether the item will be able to be updated against its I/O provider", FALSE,
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, MAIN_PROP_REASON_ID,
+			g_param_spec_int(
+					MAIN_PROP_REASON,
+					"No edition reason",
+					"Why is this item not editable", 0, 255, 0,
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
 
@@ -583,19 +600,23 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case PROP_EDITED_ITEM:
-				g_value_set_pointer( value, self->private->selected_item );
+			case MAIN_PROP_ITEM_ID:
+				g_value_set_pointer( value, self->private->current_item );
 				break;
 
-			case PROP_EDITED_PROFILE:
-				g_value_set_pointer( value, self->private->selected_profile );
+			case MAIN_PROP_PROFILE_ID:
+				g_value_set_pointer( value, self->private->current_profile );
 				break;
 
-			case PROP_EDITABLE:
+			case MAIN_PROP_CONTEXT_ID:
+				g_value_set_pointer( value, self->private->current_context );
+				break;
+
+			case MAIN_PROP_EDITABLE_ID:
 				g_value_set_boolean( value, self->private->editable );
 				break;
 
-			case PROP_REASON:
+			case MAIN_PROP_REASON_ID:
 				g_value_set_int( value, self->private->reason );
 				break;
 
@@ -617,19 +638,23 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
-			case PROP_EDITED_ITEM:
-				self->private->selected_item = g_value_get_pointer( value );
+			case MAIN_PROP_ITEM_ID:
+				self->private->current_item = g_value_get_pointer( value );
 				break;
 
-			case PROP_EDITED_PROFILE:
-				self->private->selected_profile = g_value_get_pointer( value );
+			case MAIN_PROP_PROFILE_ID:
+				self->private->current_profile = g_value_get_pointer( value );
 				break;
 
-			case PROP_EDITABLE:
+			case MAIN_PROP_CONTEXT_ID:
+				self->private->current_context = g_value_get_pointer( value );
+				break;
+
+			case MAIN_PROP_EDITABLE_ID:
 				self->private->editable = g_value_get_boolean( value );
 				break;
 
-			case PROP_REASON:
+			case MAIN_PROP_REASON_ID:
 				self->private->reason = g_value_get_int( value );
 				break;
 
@@ -707,7 +732,6 @@ instance_dispose( GObject *window )
 	NactMainWindow *self;
 	GtkWidget *pane;
 	gint pos;
-	GList *it;
 	NASettings *settings;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -726,11 +750,6 @@ instance_dispose( GObject *window )
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		na_settings_set_uint( settings, NA_IPREFS_MAIN_PANED, pos );
-
-		for( it = self->private->deleted ; it ; it = it->next ){
-			g_debug( "nact_main_window_instance_dispose: deleted=%p (%s)", ( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ));
-		}
-		na_object_free_items( self->private->deleted );
 
 		nact_sort_buttons_dispose( BASE_WINDOW( self ));
 
@@ -1050,8 +1069,9 @@ on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items 
 static void
 raz_selection_properties( NactMainWindow *window )
 {
-	window->private->selected_item = NULL;
-	window->private->selected_profile = NULL;
+	window->private->current_item = NULL;
+	window->private->current_profile = NULL;
+	window->private->current_context = NULL;
 	window->private->editable = FALSE;
 	window->private->reason = 0;
 
@@ -1069,19 +1089,21 @@ setup_current_selection( NactMainWindow *window, NAObjectId *selected_row )
 	GList *profiles;
 
 	if( NA_IS_OBJECT_PROFILE( selected_row )){
-		window->private->selected_profile = NA_OBJECT_PROFILE( selected_row );
-		window->private->selected_item = NA_OBJECT_ITEM( na_object_get_parent( selected_row ));
+		window->private->current_profile = NA_OBJECT_PROFILE( selected_row );
+		window->private->current_context = NA_ICONTEXT( selected_row );
+		window->private->current_item = NA_OBJECT_ITEM( na_object_get_parent( selected_row ));
 
 	} else {
 		g_return_if_fail( NA_IS_OBJECT_ITEM( selected_row ));
-		window->private->selected_item = NA_OBJECT_ITEM( selected_row );
+		window->private->current_item = NA_OBJECT_ITEM( selected_row );
+		window->private->current_context = NA_ICONTEXT( selected_row );
 
 		if( NA_IS_OBJECT_ACTION( selected_row )){
 			nb_profiles = na_object_get_items_count( selected_row );
 
 			if( nb_profiles == 1 ){
 				profiles = na_object_get_items( selected_row );
-				window->private->selected_profile = NA_OBJECT_PROFILE( profiles->data );
+				window->private->current_profile = NA_OBJECT_PROFILE( profiles->data );
 			}
 		}
 	}
@@ -1108,8 +1130,8 @@ setup_dialog_title( NactMainWindow *window )
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 	title = base_application_get_application_name( BASE_APPLICATION( application ));
 
-	if( window->private->selected_item ){
-		label = na_object_get_label( window->private->selected_item );
+	if( window->private->current_item ){
+		label = na_object_get_label( window->private->current_item );
 		tmp = g_strdup_printf( "%s - %s", label, title );
 		g_free( label );
 		g_free( title );
@@ -1130,9 +1152,9 @@ setup_dialog_title( NactMainWindow *window )
 static void
 setup_writability_status( NactMainWindow *window )
 {
-	g_return_if_fail( NA_IS_OBJECT_ITEM( window->private->selected_item ));
+	g_return_if_fail( NA_IS_OBJECT_ITEM( window->private->current_item ));
 
-	window->private->editable = na_updater_is_item_writable( window->private->updater, window->private->selected_item, &window->private->reason );
+	window->private->editable = na_updater_is_item_writable( window->private->updater, window->private->current_item, &window->private->reason );
 	nact_main_statusbar_set_locked( window, !window->private->editable, window->private->reason );
 }
 
@@ -1232,8 +1254,6 @@ reload_items( NactMainWindow *window )
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	raz_selection_properties( window );
-
-	window->private->deleted = na_object_free_items( window->private->deleted );
 
 	tree = na_updater_load_items( window->private->updater );
 	nact_tree_view_fill( window->private->items_view, tree );
@@ -1337,6 +1357,7 @@ warn_modified( NactMainWindow *window )
 	return( confirm );
 }
 
+#if 0
 /**
  * nact_main_window_move_to_deleted:
  * @window: this #NactMainWindow instance.
@@ -1467,7 +1488,6 @@ actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater
 	return( delete_ok );
 }
 
-#if 0
 static void
 on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_data )
 {

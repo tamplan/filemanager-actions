@@ -361,7 +361,9 @@ on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items,
 		g_debug( "%s: instance=%p, selected_items=%p (count=%d)",
 				thisfn, ( void * ) instance, ( void * ) selected_items, g_list_length( selected_items ));
 
-		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+		g_object_get( G_OBJECT( instance ),
+				MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+				NULL );
 
 		enable_tab = ( context != NULL );
 		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT, enable_tab );
@@ -487,7 +489,7 @@ on_selection_count_changed( NactIEnvironmentTab *instance )
 	gchar *selcount;
 
 	if( !st_on_selection_change ){
-		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+		g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 
 		if( context ){
 			selcount = get_selection_count_selection( instance );
@@ -525,7 +527,9 @@ on_show_always_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 			( void * ) toggle_button, gtk_toggle_button_get_active( toggle_button ) ? "True":"False",
 			( void * ) instance );
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+	g_object_get( G_OBJECT( instance ),
+			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+			NULL );
 
 	if( context ){
 		active = gtk_toggle_button_get_active( toggle_button );
@@ -562,7 +566,9 @@ on_only_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *insta
 			( void * ) toggle_button, gtk_toggle_button_get_active( toggle_button ) ? "True":"False",
 			( void * ) instance );
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+	g_object_get( G_OBJECT( instance ),
+			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+			NULL );
 
 	if( context ){
 		active = gtk_toggle_button_get_active( toggle_button );
@@ -601,7 +607,9 @@ on_do_not_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 			( void * ) toggle_button, gtk_toggle_button_get_active( toggle_button ) ? "True":"False",
 			( void * ) instance );
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), &editable );
+	g_object_get( G_OBJECT( instance ),
+			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+			NULL );
 
 	if( context ){
 		active = gtk_toggle_button_get_active( toggle_button );
@@ -643,7 +651,9 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *wi
 	g_debug( "%s: renderer=%p, path=%s, window=%p", thisfn, ( void * ) renderer, path, ( void * ) window );
 
 	if( !st_on_selection_change ){
-		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
+		g_object_get( G_OBJECT( window ),
+				MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+				NULL );
 
 		if( context ){
 			if( editable ){
@@ -681,7 +691,7 @@ on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	NAIContext *context;
 	const gchar *text;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 
 	if( context ){
 		text = gtk_entry_get_text( entry );
@@ -709,7 +719,7 @@ on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	NAIContext *context;
 	const gchar *text;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 
 	if( context ){
 		text = gtk_entry_get_text( entry );
@@ -724,7 +734,7 @@ on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	NAIContext *context;
 	const gchar *text;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 
 	if( context ){
 		text = gtk_entry_get_text( entry );
@@ -739,7 +749,7 @@ on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	NAIContext *context;
 	const gchar *text;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( instance ), NULL );
+	g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 
 	if( context ){
 		text = gtk_entry_get_text( entry );

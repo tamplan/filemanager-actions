@@ -69,7 +69,7 @@
  *    <para>
  *     Check for edition status, which positions modification and validity
  *     status, is not recursive ; it is the responsability of the
- *     implementation to check for edition status of childs of object..
+ *     implementation to check for edition status of children of object..
  *    </para>
  *   </listitem>
  *  </itemizedlist>
@@ -184,7 +184,8 @@ typedef struct {
 }
 	NAIDuplicableInterface;
 
-#define NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED	"iduplicable-status-changed"
+#define IDUPLICABLE_SIGNAL_MODIFIED_CHANGED		"iduplicable-modified-changed"
+#define IDUPLICABLE_SIGNAL_VALID_CHANGED		"iduplicable-valid-changed"
 
 GType          na_iduplicable_get_type( void );
 

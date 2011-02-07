@@ -245,8 +245,8 @@ on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, g
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				MAIN_PROP_PROFILE, &profile,
+				MAIN_PROP_EDITABLE, &editable,
 				NULL );
 
 		enable_tab = ( profile != NULL );
@@ -344,8 +344,8 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			MAIN_PROP_PROFILE, &profile,
+			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
 	if( profile ){
@@ -379,8 +379,8 @@ on_startup_notify_toggled( GtkToggleButton *toggle_button, NactIExecutionTab *in
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			MAIN_PROP_PROFILE, &profile,
+			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
 	if( profile ){
@@ -406,7 +406,7 @@ on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+			MAIN_PROP_PROFILE, &profile,
 			NULL );
 
 	if( profile ){
@@ -424,7 +424,7 @@ on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+			MAIN_PROP_PROFILE, &profile,
 			NULL );
 
 	if( profile ){

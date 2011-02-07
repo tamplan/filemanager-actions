@@ -331,7 +331,9 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
 	g_return_if_fail( data != NULL );
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &data->editable_item );
+	g_object_get( G_OBJECT( window ),
+			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &data->editable_item,
+			NULL );
 
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( data->window ), data->tab_id, enable_tab );
@@ -470,7 +472,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 
 	g_return_if_fail( data->editable_filter );
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
+	g_object_get( G_OBJECT( data->window ), MAIN_PROP_CONTEXT, &context, NULL );
 	g_return_if_fail( NA_IS_ICONTEXT( context ));
 
 	model = gtk_tree_view_get_model( data->listview );
@@ -593,7 +595,7 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 
 	if( data->editable_item ){
 		if( !active ){
-			context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
+			g_object_get( G_OBJECT( data->window ), MAIN_PROP_CONTEXT, &context, NULL );
 			g_return_if_fail( NA_IS_ICONTEXT( context ));
 
 			set_match_status( path_str, TRUE, FALSE, data );
@@ -645,7 +647,7 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 
 	if( data->editable_item ){
 		if( !active ){
-			context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
+			g_object_get( G_OBJECT( data->window ), MAIN_PROP_CONTEXT, &context, NULL );
 			g_return_if_fail( NA_IS_ICONTEXT( context ));
 
 			set_match_status( path_str, FALSE, TRUE, data );
@@ -693,7 +695,7 @@ add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix )
 	GSList *filters;
 	gchar *to_add;
 
-	context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
+	g_object_get( G_OBJECT( data->window ), MAIN_PROP_CONTEXT, &context, NULL );
 
 	if( context ){
 		filters = ( *data->pget )( context );
@@ -746,7 +748,7 @@ delete_current_row( MatchListStr *data )
 
 		delete_row_at_path( data->listview, model, path );
 
-		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( data->window ), NULL );
+		g_object_get( G_OBJECT( data->window ), MAIN_PROP_CONTEXT, &context, NULL );
 
 		if( context ){
 			filters = ( *data->pget )( context );

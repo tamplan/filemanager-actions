@@ -353,8 +353,8 @@ on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpo
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
-				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				MAIN_PROP_PROFILE, &profile,
+				MAIN_PROP_EDITABLE, &editable,
 				NULL );
 
 		enable_tab = ( profile != NULL );
@@ -500,7 +500,7 @@ on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 	if( !st_on_selection_change ){
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+				MAIN_PROP_PROFILE, &profile,
 				NULL );
 
 		if( profile ){
@@ -538,7 +538,7 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 	if( !st_on_selection_change ){
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+				MAIN_PROP_PROFILE, &profile,
 				NULL );
 
 		if( profile ){
@@ -566,7 +566,7 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 	if( !st_on_selection_change ){
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+				MAIN_PROP_PROFILE, &profile,
 				NULL );
 
 		if( profile ){
@@ -585,7 +585,7 @@ on_wdir_browse( GtkButton *button, NactICommandTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+			MAIN_PROP_PROFILE, &profile,
 			NULL );
 
 	if( profile ){
@@ -604,7 +604,7 @@ on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 	if( !st_on_selection_change ){
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_PROFILE, &profile,
+				MAIN_PROP_PROFILE, &profile,
 				NULL );
 
 		if( profile ){

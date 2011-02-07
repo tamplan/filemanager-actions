@@ -391,8 +391,8 @@ on_main_selection_changed( NactIActionTab *instance, GList *selected_items, gpoi
 
 		g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			MAIN_PROP_ITEM, &item,
+			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
 		target_selection =
@@ -491,8 +491,8 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 		g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			MAIN_PROP_ITEM, &item,
+			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
 		g_debug( "%s: item=%p (%s), editable=%s",
@@ -529,8 +529,8 @@ on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 		g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-			TAB_UPDATABLE_PROP_EDITABLE, &editable,
+			MAIN_PROP_ITEM, &item,
+			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
 		g_debug( "%s: item=%p (%s), editable=%s",
@@ -571,7 +571,7 @@ check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label )
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+				MAIN_PROP_ITEM, &item,
 				NULL );
 
 		if( item && g_utf8_strlen( label, -1 ) == 0 ){
@@ -595,7 +595,7 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+			MAIN_PROP_ITEM, &item,
 			NULL );
 
 	if( item ){
@@ -645,8 +645,8 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				MAIN_PROP_ITEM, &item,
+				MAIN_PROP_EDITABLE, &editable,
 				NULL );
 
 		g_debug( "%s: item=%p (%s), editable=%s",
@@ -686,8 +686,8 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				MAIN_PROP_ITEM, &item,
+				MAIN_PROP_EDITABLE, &editable,
 				NULL );
 
 		g_debug( "%s: item=%p (%s), editable=%s",
@@ -757,7 +757,7 @@ on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+			MAIN_PROP_ITEM, &item,
 			NULL );
 
 	if( item && NA_IS_OBJECT_ACTION( item )){
@@ -788,7 +788,7 @@ on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+			MAIN_PROP_ITEM, &item,
 			NULL );
 
 	if( item ){
@@ -810,7 +810,7 @@ on_icon_browse( GtkButton *button, NactIActionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+			MAIN_PROP_ITEM, &item,
 			NULL );
 
 	if( item ){
@@ -841,7 +841,7 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+			MAIN_PROP_ITEM, &item,
 			NULL );
 
 	if( item ){

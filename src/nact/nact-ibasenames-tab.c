@@ -246,7 +246,10 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer u
 	if( st_initialized && !st_finalized ){
 
 		count_selected = g_list_length( selected_items );
-		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
+
+		g_object_get( G_OBJECT( window ),
+				MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+				NULL );
 
 		st_on_selection_change = TRUE;
 
@@ -269,7 +272,9 @@ on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window )
 	gboolean matchcase;
 
 	if( !st_on_selection_change ){
-		context = nact_main_tab_get_context( NACT_MAIN_WINDOW( window ), &editable );
+		g_object_get( G_OBJECT( window ),
+				MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+				NULL );
 
 		if( context ){
 			matchcase = gtk_toggle_button_get_active( button );

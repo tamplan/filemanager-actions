@@ -740,9 +740,6 @@ on_tree_view_selection_changed( BaseWindow *window, NactTreeView *view, GList *s
 	 */
 	bar->private->count_selected = g_list_length( selected );
 
-	bar->private->selected_menus = 0;
-	bar->private->selected_actions = 0;
-	bar->private->selected_profiles = 0;
 	if( selected ){
 		na_object_item_count_items( selected, &bar->private->selected_menus, &bar->private->selected_actions, &bar->private->selected_profiles, FALSE );
 		g_debug( "%s: selected_menus=%d, selected_actions=%d, selected_profiles=%d",

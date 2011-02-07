@@ -99,10 +99,10 @@ GType          nact_tree_model_get_type( void );
 
 NactTreeModel *nact_tree_model_new( BaseWindow *window, GtkTreeView *view, NactTreeMode mode );
 
-GtkTreePath   *nact_tree_model_delete     ( NactTreeModel *model, NAObject *object );
-void           nact_tree_model_fill       ( NactTreeModel *model, GList *items );
-GtkTreePath   *nact_tree_model_insert     ( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
-GtkTreePath   *nact_tree_model_insert_into( NactTreeModel *model, const NAObject *object, GtkTreePath *path, NAObject **parent );
+GtkTreePath   *nact_tree_model_delete       ( NactTreeModel *model, NAObject *object );
+void           nact_tree_model_fill         ( NactTreeModel *model, GList *items );
+GtkTreePath   *nact_tree_model_insert_before( NactTreeModel *model, const NAObject *object, GtkTreePath *path );
+GtkTreePath   *nact_tree_model_insert_into  ( NactTreeModel *model, const NAObject *object, GtkTreePath *path );
 
 NAObjectItem  *nact_tree_model_get_item_by_id( const NactTreeModel *model, const gchar *id );
 GList         *nact_tree_model_get_items     ( const NactTreeModel *model, guint mode );

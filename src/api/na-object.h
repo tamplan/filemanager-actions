@@ -40,6 +40,9 @@
  * This is the base class of all our data object hierarchy. #NAObject is
  * supposed to be used as a pure virtual base class, i.e. should only be
  * derived.
+ *
+ * All the API described here is rather private. External code should
+ * use the API described in <na-object-api.h>.
  */
 
 #include <glib-object.h>
@@ -159,8 +162,7 @@ typedef struct {
 
 GType     na_object_object_get_type( void );
 
-void      na_object_object_check_status   ( const NAObject *object );
-gboolean  na_object_object_check_status_up( const NAObject *object );
+void      na_object_object_check_status_rec( const NAObject *object );
 
 void      na_object_object_reset_origin   ( NAObject *object, const NAObject *origin );
 

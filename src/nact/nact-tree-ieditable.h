@@ -71,11 +71,12 @@ typedef struct {
 GType nact_tree_ieditable_get_type( void );
 
 void  nact_tree_ieditable_initialize( NactTreeIEditable *instance, GtkTreeView *treeview, BaseWindow *window );
+void  nact_tree_ieditable_terminate ( NactTreeIEditable *instance );
 
-void  nact_tree_ieditable_delete           ( NactTreeIEditable *instance, GList *items, gboolean select_at_end );
-void  nact_tree_ieditable_insert_at_path   ( NactTreeIEditable *instance, GList *items, GtkTreePath *path );
-void  nact_tree_ieditable_insert_items     ( NactTreeIEditable *instance, GList *items, NAObject *sibling );
-void  nact_tree_ieditable_insert_items_into( NactTreeIEditable *instance, GList *items );
+void  nact_tree_ieditable_delete        ( NactTreeIEditable *instance, GList *items, gboolean select_at_end );
+void  nact_tree_ieditable_insert_items  ( NactTreeIEditable *instance, GList *items, NAObject *sibling );
+void  nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, GtkTreePath *path );
+void  nact_tree_ieditable_insert_into   ( NactTreeIEditable *instance, GList *items );
 
 #if 0
 void      nact_tree_ieditable_brief_tree_dump( NactTreeIEditable *instance );

@@ -127,7 +127,7 @@ static void          drop_inside_move_dest( NactTreeModel *model, GList *rows, G
 static gboolean      drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data );
 static NAObjectItem *is_dropped_already_exists( const NAObjectItem *importing, const NactMainWindow *window );
 static char         *get_xds_atom_value( GdkDragContext *context );
-static gboolean      is_parent_accept_new_childs( NactApplication *application, NactMainWindow *window, NAObjectItem *parent );
+static gboolean      is_parent_accept_new_children( NactApplication *application, NactMainWindow *window, NAObjectItem *parent );
 static guint         target_atom_to_id( GdkAtom atom );
 
 /**
@@ -713,7 +713,7 @@ is_drop_possible( NactTreeModel *model, GtkTreePath *dest, NAObjectItem **parent
 	}
 
 	if( drop_ok ){
-		drop_ok = is_parent_accept_new_childs( application, main_window, parent_dest );
+		drop_ok = is_parent_accept_new_children( application, main_window, parent_dest );
 	}
 
 	if( drop_ok && parent ){
@@ -1133,7 +1133,7 @@ get_xds_atom_value( GdkDragContext *context )
  * to register the new child
  */
 static gboolean
-is_parent_accept_new_childs( NactApplication *application, NactMainWindow *window, NAObjectItem *parent )
+is_parent_accept_new_children( NactApplication *application, NactMainWindow *window, NAObjectItem *parent )
 {
 	gboolean accept_ok;
 	NAUpdater *updater;

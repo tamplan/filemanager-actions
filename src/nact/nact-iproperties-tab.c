@@ -245,8 +245,8 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				MAIN_PROP_ITEM, &item,
+				MAIN_PROP_EDITABLE, &editable,
 				NULL );
 
 		g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
@@ -344,8 +344,8 @@ on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 	if( !st_on_selection_change ){
 		g_object_get(
 				G_OBJECT( instance ),
-				TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
-				TAB_UPDATABLE_PROP_EDITABLE, &editable,
+				MAIN_PROP_ITEM, &item,
+				MAIN_PROP_EDITABLE, &editable,
 				NULL );
 
 		if( item && NA_IS_OBJECT_ITEM( item )){
@@ -452,7 +452,7 @@ on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+			MAIN_PROP_ITEM, &item,
 			NULL );
 
 	if( item ){
@@ -471,7 +471,7 @@ on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance )
 
 	g_object_get(
 			G_OBJECT( instance ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &item,
+			MAIN_PROP_ITEM, &item,
 			NULL );
 
 	if( item ){

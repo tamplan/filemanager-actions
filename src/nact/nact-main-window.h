@@ -80,7 +80,19 @@ typedef struct {
 }
 	NactMainWindowClass;
 
-#define MAIN_SIGNAL_SELECTION_CHANGED					"main-selection-changed"
+/**
+ * Signals emitted by the main window
+ */
+#define MAIN_SIGNAL_SELECTION_CHANGED		"main-selection-changed"
+
+/**
+ * Properties set against the main window
+ */
+#define MAIN_PROP_ITEM						"main-current-item"
+#define MAIN_PROP_PROFILE					"main-current-profile"
+#define MAIN_PROP_CONTEXT					"main-current-context"
+#define MAIN_PROP_EDITABLE					"main-editable"
+#define MAIN_PROP_REASON					"main-reason"
 
 #define MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED		"main-window-level-zero-order-changed"
 
@@ -91,11 +103,9 @@ NactMainWindow *nact_main_window_new           ( const NactApplication *applicat
 NactClipboard  *nact_main_window_get_clipboard ( const NactMainWindow *window );
 NactTreeView   *nact_main_window_get_items_view( const NactMainWindow *window );
 
-void            nact_main_window_move_to_deleted   ( NactMainWindow *window, GList *items );
-void            nact_main_window_reload            ( NactMainWindow *window );
-gboolean        nact_main_window_remove_deleted    ( NactMainWindow *window, GSList **messages );
+void            nact_main_window_reload( NactMainWindow *window );
 
-gboolean        nact_main_window_quit              ( NactMainWindow *window );
+gboolean        nact_main_window_quit  ( NactMainWindow *window );
 
 G_END_DECLS
 

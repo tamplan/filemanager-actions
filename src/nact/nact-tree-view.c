@@ -571,6 +571,8 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
+		nact_tree_ieditable_terminate( NACT_TREE_IEDITABLE( self ));
+
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
@@ -907,11 +909,9 @@ nact_tree_view_fill( NactTreeView *view, GList *items )
 
 		if( view->private->notify_allowed ){
 			g_signal_emit_by_name( view->private->window, TREE_SIGNAL_CONTENT_CHANGED, view, NULL );
-
-			nb_menus = nb_actions = nb_profiles = 0;
-			na_object_item_count_items( items, &nb_menus, &nb_actions, &nb_profiles, TRUE );
-			g_signal_emit_by_name( view->private->window,
-					TREE_SIGNAL_COUNT_CHANGED, view, TRUE, nb_menus, nb_actions, nb_profiles );
+			na_object_count_items( items, &nb_menus, &nb_actions, &nb_profiles );
+			g_signal_emit_by_name( view->private->window, TREE_SIGNAL_COUNT_CHANGED, view, TRUE, nb_menus, nb_actions, nb_profiles );
+			g_signal_emit_by_name( view->private->window, TREE_SIGNAL_MODIFIED_COUNT_CHANGED, view, 0 );
 		}
 
 		select_row_at_path_by_string( view, "0" );
@@ -1005,29 +1005,6 @@ nact_tree_view_get_items( const NactTreeView *view )
 	}
 
 	return( items );
-}
-
-/**
- * nact_tree_view_get_window:
- * @view: this #NactTreeView instance.
- *
- * Returns: the #BaseWindow.
- */
-BaseWindow *
-nact_tree_view_get_window( const NactTreeView *view )
-{
-	BaseWindow *window;
-
-	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), NULL );
-
-	window = NULL;
-
-	if( !view->private->dispose_has_run ){
-
-		window = view->private->window;
-	}
-
-	return( window );
 }
 
 /**
@@ -1145,7 +1122,7 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 }
 
 /*
- * when expanding a selected row which has childs
+ * when expanding a selected row which has children
  */
 static void
 extend_selection_to_children( NactTreeView *view, GtkTreeModel *model, GtkTreeIter *parent )

@@ -112,7 +112,6 @@ void          nact_tree_view_collapse_all  ( const NactTreeView *view );
 void          nact_tree_view_expand_all    ( const NactTreeView *view );
 NAObjectItem *nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id );
 GList        *nact_tree_view_get_items     ( const NactTreeView *view );
-BaseWindow   *nact_tree_view_get_window    ( const NactTreeView *view );
 
 void          nact_tree_view_select_row_at_path( NactTreeView *view, GtkTreePath *path );
 

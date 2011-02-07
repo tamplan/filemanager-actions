@@ -1,3 +1,33 @@
+2011-02-07 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-iduplicable.h:
+	* src/core/na-iduplicable.c:
+	Deprecate NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED signal.
+	Define new IDUPLICABLE_SIGNAL_MODIFIED_CHANGED and IDUPLICABLE_SIGNAL_VALID_CHANGED.
+
+	* src/api/na-object-api.h:
+	* src/core/na-object.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object-item.h:
+	Deprecated na_object_check_status_up macro.
+	Merge na_object_item_check_status() and na_object_item_check_status_up().
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-icapabilities-tab.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-ienvironment-tab.c:
+	* src/nact/nact-iexecution-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-iproperties-tab.c:
+	* src/nact/nact-ischemes-tab.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h:
+	* src/nact/nact-match-list.c: Properties are renamed.
+
+	* src/nact/nact-main-tab.c:
+	* src/nact/nact-main-tab.h (nact_main_tab_get_context): Removed function.
+
 2011-02-03 Pierre Wieser <pwieser@trychlos.org>
 
 	In the process of replacing NactIActionsList interface with:

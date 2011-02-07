@@ -177,6 +177,15 @@ nact_menubar_edit_on_update_sensitivities( const NactMenubar *bar )
  * @gtk_action: the #GtkAction action.
  * @window: the #BaseWindow main window.
  *
+ * Cut objects are installed both in the clipboard and in the deleted list.
+ * Parent pointer is reset to %NULL.
+ * Old parent status is re-checked by the tree model delete operation.
+ * When pasting later these cut objects:
+ * - the first time, we paste the very same object, removing it from the
+ *   deleted list, attaching it to a new parent
+ *   the object itself is not modified, but the parent is.
+ * - the following times, we paste a copy of this object with a new identifier
+ *
  * cuts the visible selection
  * - (tree) get new refs on selected items
  * - (main) add selected items to main list of deleted,
@@ -214,7 +223,6 @@ nact_menubar_edit_on_cut( GtkAction *gtk_action, BaseWindow *window )
 	}
 
 	if( to_delete ){
-		nact_main_window_move_to_deleted( NACT_MAIN_WINDOW( window ), to_delete );
 		clipboard = nact_main_window_get_clipboard( NACT_MAIN_WINDOW( window ));
 		nact_clipboard_primary_set( clipboard, to_delete, CLIPBOARD_MODE_CUT );
 		update_clipboard_counters( window );
@@ -321,7 +329,7 @@ nact_menubar_edit_on_paste_into( GtkAction *gtk_action, BaseWindow *window )
 	items = prepare_for_paste( window );
 	if( items ){
 		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
-		nact_tree_ieditable_insert_items_into( NACT_TREE_IEDITABLE( window ), items );
+		nact_tree_ieditable_insert_into( NACT_TREE_IEDITABLE( window ), items );
 		na_object_free_items( items );
 	}
 }
@@ -348,7 +356,7 @@ prepare_for_paste( BaseWindow *window )
 
 		if( NA_IS_OBJECT_PROFILE( it->data )){
 			if( !action ){
-				g_object_get( G_OBJECT( window ), TAB_UPDATABLE_PROP_SELECTED_ITEM, &action, NULL );
+				g_object_get( G_OBJECT( window ), MAIN_PROP_ITEM, &action, NULL );
 				g_return_val_if_fail( NA_IS_OBJECT_ACTION( action ), NULL );
 			}
 		}
@@ -466,7 +474,6 @@ nact_menubar_edit_on_delete( GtkAction *gtk_action, BaseWindow *window )
 	}
 
 	if( to_delete ){
-		/*nact_main_window_move_to_deleted( NACT_MAIN_WINDOW( window ), to_delete );*/
 		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
 		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TRUE );
 	}

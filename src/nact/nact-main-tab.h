@@ -43,13 +43,6 @@
  * Here as defined signals and properties common to all tabs.
  */
 
-/* properties set against the GObject instance
- */
-#define TAB_UPDATABLE_PROP_SELECTED_ITEM				"nact-tab-updatable-selected-item"
-#define TAB_UPDATABLE_PROP_SELECTED_PROFILE				"nact-tab-updatable-selected-profile"
-#define TAB_UPDATABLE_PROP_EDITABLE						"nact-tab-updatable-editable"
-#define TAB_UPDATABLE_PROP_REASON						"nact-tab-updatable-reason"
-
 /* signals
  */
 #define TAB_UPDATABLE_SIGNAL_ITEM_UPDATED				"nact-tab-updatable-item-updated"
@@ -73,8 +66,6 @@ enum {
 
 void        nact_main_tab_enable_page    ( NactMainWindow *window, gint page, gboolean enabled );
 gboolean    nact_main_tab_is_page_enabled( NactMainWindow *window, gint page );
-
-NAIContext *nact_main_tab_get_context    ( NactMainWindow *window, gboolean *editable );
 
 G_END_DECLS
 

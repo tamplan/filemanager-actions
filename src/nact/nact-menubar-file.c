@@ -52,7 +52,9 @@ static guint     st_event_autosave         = 0;
 static gchar *st_save_error       = N_( "Save error" );
 static gchar *st_save_warning     = N_( "Some items may not have been saved" );
 static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items list" );
+#if 0
 static gchar *st_delete_error     = N_( "Some items cannot have been deleted" );
+#endif
 
 static gboolean save_item( BaseWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages );
 static void     on_autosave_prefs_changed( const gchar *group, const gchar *key, gconstpointer new_value, gpointer user_data );
@@ -167,7 +169,7 @@ nact_menubar_file_on_new_profile( GtkAction *gtk_action, BaseWindow *window )
 
 	g_object_get(
 			G_OBJECT( window ),
-			TAB_UPDATABLE_PROP_SELECTED_ITEM, &action,
+			MAIN_PROP_ITEM, &action,
 			NULL );
 
 	profile = na_object_profile_new_with_defaults();
@@ -283,6 +285,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 	/* remove deleted items
 	 * so that new actions with same id do not risk to be deleted later
 	 */
+#if 0
 	if( !nact_main_window_remove_deleted( NACT_MAIN_WINDOW( window ), &messages )){
 		if( g_slist_length( messages )){
 			msg = na_core_utils_slist_join_at_end( messages, "\n" );
@@ -294,6 +297,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 		na_core_utils_slist_free( messages );
 		return;
 	}
+#endif
 
 	/* recursively save the modified items
 	 * check is useless here if item was not modified, but not very costly;

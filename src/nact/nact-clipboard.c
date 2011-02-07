@@ -685,7 +685,7 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 			clear_primary_clipboard( clipboard );
 		}
 
-		na_object_count_items( items,
+		na_object_item_count_items( items,
 				( gint * ) &user_data->nb_menus,
 				( gint * ) &user_data->nb_actions,
 				( gint * ) &user_data->nb_profiles,

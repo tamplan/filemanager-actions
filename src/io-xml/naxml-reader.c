@@ -474,8 +474,8 @@ iter_on_root_children( NAXMLReader *reader, xmlNode *root )
  * this first pass is also used to check nodes
  *
  * - for each node, check that
- *   > 'schema/entry' childs are in the list of known schema/entry child nodes
- *   > 'schema/entry' childs appear only once per node
+ *   > 'schema/entry' children are in the list of known schema/entry child nodes
+ *   > 'schema/entry' children appear only once per node
  *     -> this requires a per-node 'found' flag which is reset for each node
  *   > schema has an 'applyto' child node
  *     -> only checkable at the end of the schema
