@@ -70,7 +70,7 @@ static GType      register_type( void );
 static void       interface_base_init( NactICommandTabInterface *klass );
 static void       interface_base_finalize( NactICommandTabInterface *klass );
 
-static void       on_tree_view_content_changed( NactICommandTab *instance, NactTreeView *view, NAObject *object, gpointer user_data );
+static void       on_tree_view_content_changed( NactICommandTab *instance, NAObject *object, gpointer user_data );
 static void       on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpointer user_data );
 
 static GtkWidget *get_label_entry( NactICommandTab *instance );
@@ -315,7 +315,7 @@ nact_icommand_tab_dispose( NactICommandTab *instance )
 }
 
 static void
-on_tree_view_content_changed( NactICommandTab *instance, NactTreeView *view, NAObject *object, gpointer user_data )
+on_tree_view_content_changed( NactICommandTab *instance, NAObject *object, gpointer user_data )
 {
 	GtkWidget *label_widget;
 	gchar *label;

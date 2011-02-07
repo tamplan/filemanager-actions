@@ -113,7 +113,7 @@ static void            on_base_all_widgets_showed( NactAssistantExport *dialog, 
 static void            assist_runtime_init_intro( NactAssistantExport *window, GtkAssistant *assistant );
 
 static void            assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *assistant );
-static void            on_tree_view_selection_changed( NactAssistantExport *window, NactTreeView *view, GList *selected_items, gpointer user_data );
+static void            on_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data );
 static void            assist_initial_load_target_folder( NactAssistantExport *window, GtkAssistant *assistant );
 static void            assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *assistant );
 static GtkFileChooser *get_folder_chooser( NactAssistantExport *window );
@@ -396,7 +396,7 @@ assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *ass
 }
 
 static void
-on_tree_view_selection_changed( NactAssistantExport *instance, NactTreeView *view, GList *selected_items, gpointer user_data )
+on_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_on_tree_view_selection_changed";
 	GtkAssistant *assistant;
@@ -404,22 +404,22 @@ on_tree_view_selection_changed( NactAssistantExport *instance, NactTreeView *vie
 	gboolean enabled;
 	GtkWidget *content;
 
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( instance ));
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 
-	g_debug( "%s: instance=%p, view=%p, selected_items=%p (count=%d), user_data=%p",
-			thisfn, ( void * ) instance, ( void * ) view,
+	g_debug( "%s: window=%p, selected_items=%p (count=%d), user_data=%p",
+			thisfn, ( void * ) window,
 			( void * ) selected_items, g_list_length( selected_items ), ( void * ) user_data );
 
-	if( instance->private->selected_items ){
-		instance->private->selected_items = na_object_free_items( instance->private->selected_items );
+	if( window->private->selected_items ){
+		window->private->selected_items = na_object_free_items( window->private->selected_items );
 	}
 
-	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( instance )));
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
 	pos = gtk_assistant_get_current_page( assistant );
 
 	if( pos == ASSIST_PAGE_ACTIONS_SELECTION ){
 		enabled = ( g_list_length( selected_items ) > 0 );
-		instance->private->selected_items = na_object_copyref_items( selected_items );
+		window->private->selected_items = na_object_copyref_items( selected_items );
 		content = gtk_assistant_get_nth_page( assistant, pos );
 		gtk_assistant_set_page_complete( assistant, content, enabled );
 		gtk_assistant_update_buttons_state( assistant );

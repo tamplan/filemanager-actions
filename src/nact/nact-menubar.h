@@ -56,6 +56,8 @@
  * It is up to the application to update these indicators.
  * Each time an indicator is updated, it triggers an update of all relevant
  * menu items sensitivities.
+ *
+ * Toolbar and sort buttons are also driven by this menubar.
  */
 
 #include "base-window.h"

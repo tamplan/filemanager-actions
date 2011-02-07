@@ -222,13 +222,13 @@ static void     on_ui_manager_proxy_connect( GtkUIManager *ui_manager, GtkAction
 static void     on_menu_item_selected( GtkMenuItem *proxy, BaseWindow *window );
 static void     on_menu_item_deselected( GtkMenuItem *proxy, BaseWindow *window );
 
-static void     on_tree_view_open_context_menu( BaseWindow *window, NactTreeView *view, GdkEventButton *event, gpointer user_data );
+static void     on_tree_view_open_context_menu( BaseWindow *window, GdkEventButton *event, gpointer user_data );
 static void     on_popup_selection_done( GtkMenuShell *menushell, BaseWindow *window );
-static void     on_tree_view_count_changed( BaseWindow *window, NactTreeView *view, gboolean reset, guint menus, guint actions, guint profiles );
-static void     on_tree_view_focus_in( BaseWindow *window, NactTreeView *view, gpointer user_data );
-static void     on_tree_view_focus_out( BaseWindow *window, NactTreeView *view, gpointer user_data );
-static void     on_tree_view_modified_count_changed( BaseWindow *window, NactTreeView *view, guint count, gpointer user_data );
-static void     on_tree_view_selection_changed( BaseWindow *window, NactTreeView *view, GList *selected, gpointer user_data );
+static void     on_tree_view_count_changed( BaseWindow *window, gboolean reset, guint menus, guint actions, guint profiles );
+static void     on_tree_view_focus_in( BaseWindow *window, gpointer user_data );
+static void     on_tree_view_focus_out( BaseWindow *window, gpointer user_data );
+static void     on_tree_view_modified_count_changed( BaseWindow *window, guint count, gpointer user_data );
+static void     on_tree_view_selection_changed( BaseWindow *window, GList *selected, gpointer user_data );
 
 static void     on_update_sensitivities( NactMenubar *bar, BaseWindow *window );
 
@@ -350,6 +350,7 @@ instance_dispose( GObject *object )
 
 		g_object_unref( self->private->action_group );
 		g_object_unref( self->private->ui_manager );
+		g_object_unref( self->private->sort_buttons );
 
 		if( self->private->selected_items ){
 			self->private->selected_items = na_object_free_items( self->private->selected_items );
@@ -384,7 +385,7 @@ instance_finalize( GObject *instance )
 
 /**
  * nact_menubar_new:
- * @window: the main window which embeds the menubar, usually the #BaseWindow.
+ * @window: the window which embeds the menubar, usually the #NactMainWindow.
  *
  * The created menubar attachs itself to the @window; it also connect a weak
  * reference to this same @window, thus automatically g_object_unref() -ing
@@ -405,6 +406,7 @@ nact_menubar_new( BaseWindow *window )
 	bar = g_object_new( NACT_MENUBAR_TYPE, NULL );
 
 	bar->private->window = window;
+	bar->private->sort_buttons = nact_sort_buttons_new( window );
 
 	base_window_signal_connect( window,
 			G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_window ));
@@ -529,6 +531,7 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 		base_window_signal_connect( window,
 				G_OBJECT( bar ), MENUBAR_SIGNAL_UPDATE_SENSITIVITIES, G_CALLBACK( on_update_sensitivities ));
 
+		nact_menubar_file_initialize( bar );
 		nact_main_toolbar_init( window, bar->private->action_group );
 	}
 }
@@ -610,7 +613,7 @@ on_menu_item_deselected( GtkMenuItem *proxy, BaseWindow *window )
  * Opens a popup menu.
  */
 static void
-on_tree_view_open_context_menu( BaseWindow *window, NactTreeView *view, GdkEventButton *event, gpointer user_data )
+on_tree_view_open_context_menu( BaseWindow *window, GdkEventButton *event, gpointer user_data )
 {
 	GtkWidget *menu;
 
@@ -641,16 +644,15 @@ on_popup_selection_done(GtkMenuShell *menushell, BaseWindow *window )
  * that we are knowing if we have some exportables
  */
 static void
-on_tree_view_count_changed( BaseWindow *window,
-		NactTreeView *view, gboolean reset, guint menus, guint actions, guint profiles )
+on_tree_view_count_changed( BaseWindow *window, gboolean reset, guint menus, guint actions, guint profiles )
 {
 	static const gchar *thisfn = "nact_menubar_on_tree_view_count_changed";
 	gchar *status;
 
 	BAR_WINDOW_VOID( window );
 
-	g_debug( "%s: window=%p, view=%p, reset=%s, menus=%u, actions=%u, profiles=%u",
-			thisfn, ( void * ) window, ( void * ) view, reset ? "True":"False", menus, actions, profiles );
+	g_debug( "%s: window=%p, reset=%s, menus=%u, actions=%u, profiles=%u",
+			thisfn, ( void * ) window, reset ? "True":"False", menus, actions, profiles );
 
 	if( reset ){
 		bar->private->count_menus = menus;
@@ -665,7 +667,9 @@ on_tree_view_count_changed( BaseWindow *window,
 
 	bar->private->have_exportables = ( bar->private->count_menus + bar->private->count_actions > 0 );
 
+#if 0
 	nact_sort_buttons_enable_buttons( window, bar->private->count_menus + bar->private->count_actions > 0 );
+#endif
 
 	/* i18n: note the space at the beginning of the sentence */
 	status = g_strdup_printf(
@@ -681,23 +685,24 @@ on_tree_view_count_changed( BaseWindow *window,
  * the count of modified NAObjectItem has changed
  */
 static void
-on_tree_view_modified_count_changed( BaseWindow *window, NactTreeView *view, guint count, gpointer user_data )
+on_tree_view_modified_count_changed( BaseWindow *window, guint count, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_menubar_on_tree_view_modified_count_changed";
 
-	g_debug( "%s: window=%p, view=%p, count=%d, user_data=%p",
-			thisfn, ( void * ) window, ( void * ) view, count, ( void * ) user_data );
+	g_debug( "%s: window=%p, count=%d, user_data=%p",
+			thisfn, ( void * ) window, count, ( void * ) user_data );
 
 	BAR_WINDOW_VOID( window );
 
 	if( !bar->private->dispose_has_run ){
 
 		bar->private->count_modified = count;
+		g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 	}
 }
 
 static void
-on_tree_view_focus_in( BaseWindow *window, NactTreeView *view, gpointer user_data )
+on_tree_view_focus_in( BaseWindow *window, gpointer user_data )
 {
 	BAR_WINDOW_VOID( window );
 
@@ -708,7 +713,7 @@ on_tree_view_focus_in( BaseWindow *window, NactTreeView *view, gpointer user_dat
 }
 
 static void
-on_tree_view_focus_out( BaseWindow *window, NactTreeView *view, gpointer user_data )
+on_tree_view_focus_out( BaseWindow *window, gpointer user_data )
 {
 	BAR_WINDOW_VOID( window );
 
@@ -725,7 +730,7 @@ on_tree_view_focus_out( BaseWindow *window, NactTreeView *view, gpointer user_da
  * dealt with the MAIN_SIGNAL_SELECTION_CHANGED signal
  */
 static void
-on_tree_view_selection_changed( BaseWindow *window, NactTreeView *view, GList *selected, gpointer user_data )
+on_tree_view_selection_changed( BaseWindow *window, GList *selected, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_menubar_on_tree_view_selection_changed";
 	NAObject *first;

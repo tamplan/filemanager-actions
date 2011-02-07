@@ -1,19 +1,5 @@
-# NactTreeView:: TREE_SIGNAL_CONTENT_CHANGED
-# NactTreeView:: TREE_SIGNAL_CONTEXT_MENU
-# NactTreeView:: TREE_SIGNAL_SELECTION_CHANGED
-VOID:POINTER,POINTER
-#
-# NactTreeView:: TREE_SIGNAL_MODIFIED_COUNT_CHANGED
-VOID:POINTER,INT
-#
 # NactTreeView:: TREE_SIGNAL_COUNT_CHANGED
-VOID:POINTER,BOOLEAN,INT,INT,INT
-#
-# NactIActionsList::nact-iactions-list-count-updated
-VOID:INT,INT,INT
-#
-# NactIActionsList::nact-iactions-list-column-edited
-VOID:POINTER,POINTER,INT
+VOID:BOOLEAN,INT,INT,INT
 #
 # NactMainWindow::nact-tab-updatable-item-updated
 VOID:POINTER,BOOLEAN

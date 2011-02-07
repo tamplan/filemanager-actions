@@ -75,13 +75,15 @@ typedef struct {
  * Properties defined by the NactTreeView class.
  * They should be provided at object instantiation time.
  *
- * @TREE_PROP_WINDOW:      the BaseWindow parent.
- * @TREE_PROP_WIDGET_NAME: the widget name.
- * @TREE_PROP_MODE:        management mode.
+ * @TREE_PROP_WINDOW:         the BaseWindow parent.
+ * @TREE_PROP_WIDGET_NAME:    the widget name.
+ * @TREE_PROP_MODE:           management mode.
+ * @TREE_PROP_NOTIFY_ALLOWED: whether notifications are allowed.
  */
 #define TREE_PROP_WINDOW					"tree-prop-window"
 #define TREE_PROP_WIDGET_NAME				"tree-prop-widget-name"
 #define TREE_PROP_MODE						"tree-prop-mode"
+#define TREE_PROP_NOTIFY_ALLOWED			"tree-prop-notify-allowed"
 
 /**
  * Signals emitted by the NactTreeView instance.
@@ -108,10 +110,12 @@ NactTreeView *nact_tree_view_new( BaseWindow *window, const gchar *treeview_name
 
 void          nact_tree_view_fill     ( NactTreeView *view, GList *items );
 
-void          nact_tree_view_collapse_all  ( const NactTreeView *view );
-void          nact_tree_view_expand_all    ( const NactTreeView *view );
-NAObjectItem *nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id );
-GList        *nact_tree_view_get_items     ( const NactTreeView *view );
+gboolean      nact_tree_view_are_notify_allowed( const NactTreeView *view );
+
+void          nact_tree_view_collapse_all      ( const NactTreeView *view );
+void          nact_tree_view_expand_all        ( const NactTreeView *view );
+NAObjectItem *nact_tree_view_get_item_by_id    ( const NactTreeView *view, const gchar *id );
+GList        *nact_tree_view_get_items         ( const NactTreeView *view );
 
 void          nact_tree_view_select_row_at_path( NactTreeView *view, GtkTreePath *path );
 

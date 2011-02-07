@@ -270,8 +270,8 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
 		 * (cf. e.g. io-desktop/nadp-reader.c:read_done_item_is_writable()).
 		 * Though I'm plenty conscious that this status is subject to many
 		 * changes during the life of the item (e.g. by modifying permissions
-		 * on the underlying store), it is just simpler to not reevaluate
-		 * this status each time we need it
+		 * on the underlying store), it is just more efficient to not reevaluate
+		 * this status each time we need it, and enough for our needs..
 		 */
 		if( writable ){
 			if( na_object_is_readonly( item )){
@@ -287,7 +287,7 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
 			if( provider ){
 				writable = na_io_provider_is_finally_writable( provider, reason );
 
-			/* the get_writable_provider() api already takes above checks
+			/* the get_writable_provider() api already takes care of above checks
 			 */
 			} else {
 				provider = na_io_provider_find_writable_io_provider( NA_PIVOT( updater ));
@@ -308,10 +308,13 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
  * na_updater_is_level_zero_writable:
  * @updater: the #NAUpdater application object.
  *
- * As of 3.1.0, level-zero order is written as a user preference.
- * This function so considers if the level_zero is a mandatory
- * preference, and to be writable, if preferences are globally
- * locked.
+ * As of 3.1.0, level-zero is written as a user preference.
+ *
+ * This function considers that the level_zero is writable if it is not
+ * a mandatory preference.
+ * Whether preferences themselves are or not globally locked is not
+ * considered here (as imho, level zero is not really and semantically
+ * part of user preferences).
  *
  * This function only considers the case of the level zero itself.
  * It does not take into account whether the i/o provider (if any)
@@ -331,8 +334,7 @@ na_updater_is_level_zero_writable( const NAUpdater *updater )
 
 	if( !updater->private->dispose_has_run ){
 
-		is_writable =
-				updater->private->is_level_zero_writable && !updater->private->are_preferences_locked;
+		is_writable = updater->private->is_level_zero_writable;
 	}
 
 	return( is_writable );
@@ -342,12 +344,13 @@ static gboolean
 are_preferences_locked( const NAUpdater *updater )
 {
 	gboolean are_locked;
+	gboolean mandatory;
 	NASettings *settings;
 
 	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, NULL );
+	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 
-	return( are_locked );
+	return( are_locked && mandatory );
 }
 
 static gboolean
@@ -507,6 +510,7 @@ na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const NAObject 
 GList *
 na_updater_load_items( NAUpdater *updater )
 {
+	static const gchar *thisfn = "na_updater_load_items";
 	GList *tree;
 
 	g_return_val_if_fail( NA_IS_UPDATER( updater ), NULL );
@@ -514,6 +518,7 @@ na_updater_load_items( NAUpdater *updater )
 	tree = NULL;
 
 	if( !updater->private->dispose_has_run ){
+		g_debug( "%s: updater=%p (%s)", thisfn, ( void * ) updater, G_OBJECT_TYPE_NAME( updater ));
 
 		na_pivot_load_items( NA_PIVOT( updater ));
 		tree = na_pivot_get_items( NA_PIVOT( updater ));

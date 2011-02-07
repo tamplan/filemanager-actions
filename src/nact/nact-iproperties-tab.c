@@ -338,10 +338,10 @@ on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 	gboolean enabled;
 	gboolean editable;
 
-	g_debug( "%s: button=%p, instance=%p, on_selection_change=%s",
-			thisfn, ( void * ) button, ( void * ) instance, st_on_selection_change ? "True":"False" );
-
 	if( !st_on_selection_change ){
+		g_debug( "%s: button=%p, instance=%p, on_selection_change=%s",
+				thisfn, ( void * ) button, ( void * ) instance, st_on_selection_change ? "True":"False" );
+
 		g_object_get(
 				G_OBJECT( instance ),
 				MAIN_PROP_ITEM, &item,
@@ -385,10 +385,10 @@ on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 	static const gchar *thisfn = "nact_iproperties_tab_on_readonly_toggled";
 	gboolean active;
 
-	g_debug( "%s: button=%p, instance=%p, on_selection_change=%s",
-			thisfn, ( void * ) button, ( void * ) instance, st_on_selection_change ? "True":"False" );
-
 	if( !st_on_selection_change ){
+		g_debug( "%s: button=%p, instance=%p, on_selection_change=%s",
+				thisfn, ( void * ) button, ( void * ) instance, st_on_selection_change ? "True":"False" );
+
 		active = gtk_toggle_button_get_active( button );
 
 		g_signal_handlers_block_by_func(( gpointer ) button, on_readonly_toggled, instance );
@@ -482,12 +482,9 @@ on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance )
 static void
 display_provider_name( NactIPropertiesTab *instance, NAObjectItem *item )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_display_provider_name";
 	GtkWidget *label_widget;
 	gchar *label;
 	NAIOProvider *provider;
-
-	g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
 
 	label_widget = base_window_get_widget( BASE_WINDOW( instance ), "ActionItemProvider" );
 	label = NULL;

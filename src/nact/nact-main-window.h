@@ -46,6 +46,75 @@
  * - the hierarchical list of items,
  * - a notebook which displays the content of the current item,
  * - a status bar.
+ *
+ * NactApplication    NactMainWindow    NactTreeView    NactTreeModel   NactMenubar
+ *  |
+ *  +- nact_main_window_new()
+ *  |   |
+ *  |   +----- connect to base-init-gtk-toplevel
+ *  |   |                 base-init-window
+ *  |   |                 base-all-widgets-showed
+ *  |   |                 pivot-items-changed
+ *  |   |                 tab-item-updated
+ *  |   |
+ *  |   +----- nact_tree_view_new()
+ *  |   |       |
+ *  |   |       +-------------- connect to base-init-gtk-toplevel
+ *  |   |                                  base-init-window
+ *  |   |                                  base-all-widgets-showed
+ *  |   |
+ *  |   +----- connect to tree-selection-changed
+ *  |   |                 tree-modified-count-changed
+ *  |   |
+ *  |   +----- nact_menubar_new()
+ *  |           |
+ *  |           +---------------------------------------------------- connect to base-init-window
+ *  |
+ * emit 'base-init-gtk-toplevel'
+ *  |
+ *  +--------- init gtk toplevel in each tab
+ *  |          init gtk toplevel in statusbar
+ *  |
+ *  +-------------------------- nact_tree_model_new()
+ *  |                            |
+ *  |                            +------------------- connect to base-init-window
+ *  |                                                 attach the model to the view
+ * emit 'base-init-window'
+ *  |
+ *  +--------- init runtime window in each tab
+ *  |          init sort buttons
+ *  |          connect to delete-event
+ *  |
+ *  +-------------------------- connect to treeview events
+ *  |                           nact_tree_ieditable_initialize()
+ *  |                            |
+ *  |                            +-- register as iduplicable consumer
+ *  |                                connect to iduplicable signals
+ *  |
+ *  +------------------------------------------------ connect to dnd events
+ *  |
+ *  +---------------------------------------------------------------- instanciate UI manager
+ *  |                                                                 connect to tree signals
+ * emit 'base-all-widgets-showed'
+ *  |
+ *  +--------- na_updater_load_items()
+ *  |           |
+ *  |           +-- check and set items modification/validity status
+ *  |           |    +-> which generates lot of iduplicable events
+ *  |           |
+ *  |           +-- check and set items writability status
+ *  |
+ *  +--------- na_tree_view_fill()
+ *  |           +-> which generates lot of selection-changed events
+ *  |
+ *  |          all widgets showed on all tab
+ *  |          all widgets showed on sort buttons
+ *  |
+ *  +-------------------------- grab focus
+ *  |                           allow notifications
+ *  |                           select first row (if any)
+ *  |
+ * [X] End of initialization process
  */
 
 #include "nact-application.h"

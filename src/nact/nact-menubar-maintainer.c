@@ -40,9 +40,7 @@
 
 /**
  * nact_menubar_maintainer_on_update_sensitivities:
- * @window: the #BaseWindow main application window.
- * @user_data: user data ?
- * @mis: the #MenubarIndicatorsStruct structure.
+ * @bar: this #NactMenubar object.
  *
  * Update sensitivities on the Maintainer menu.
  */

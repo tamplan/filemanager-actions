@@ -179,8 +179,8 @@ static void     on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWind
 static void     on_base_initialize_base_window( NactMainWindow *window, gpointer user_data );
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
-static void     on_tree_view_modified_count_changed( NactMainWindow *window, NactTreeView *view, guint count, gpointer user_data );
-static void     on_tree_view_selection_changed( NactMainWindow *window, NactTreeView *view, GList *selected_items, gpointer user_data );
+static void     on_tree_view_modified_count_changed( NactMainWindow *window, guint count, gpointer user_data );
+static void     on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, gpointer user_data );
 static void     on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items );
 static void     raz_selection_properties( NactMainWindow *window );
 static void     setup_current_selection( NactMainWindow *window, NAObjectId *selected_row );
@@ -189,7 +189,7 @@ static void     setup_writability_status( NactMainWindow *window );
 static void     on_pivot_items_changed( NAUpdater *updater, NactMainWindow *window );
 static gboolean confirm_for_giveup_from_pivot( const NactMainWindow *window );
 static gboolean confirm_for_giveup_from_menu( const NactMainWindow *window );
-static void     reload_items( NactMainWindow *window );
+static void     load_or_reload_items( NactMainWindow *window );
 
 static gboolean base_is_willing_to_quit( const BaseWindow *window );
 static gboolean on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
@@ -751,8 +751,6 @@ instance_dispose( GObject *window )
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		na_settings_set_uint( settings, NA_IPREFS_MAIN_PANED, pos );
 
-		nact_sort_buttons_dispose( BASE_WINDOW( self ));
-
 		nact_iaction_tab_dispose( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_dispose( NACT_ICOMMAND_TAB( window ));
 		nact_ibasenames_tab_dispose( NACT_IBASENAMES_TAB( window ));
@@ -877,10 +875,6 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 
 		na_settings_register_key_callback( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), window );
 
-		/* other initializations
-		 */
-		nact_sort_buttons_runtime_init( BASE_WINDOW( window ));
-
 		/* terminate the application by clicking the top right [X] button
 		 */
 		base_window_signal_connect( BASE_WINDOW( window ),
@@ -893,7 +887,6 @@ static void
 on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_all_widgets_showed";
-	GList *tree;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 	g_return_if_fail( NACT_IS_IACTION_TAB( window ));
@@ -909,13 +902,6 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 
-		raz_selection_properties( window );
-
-		/* fill the items tree view at last so that all signals are connected
-		 */
-		tree = na_updater_load_items( window->private->updater );
-		nact_tree_view_fill( window->private->items_view, tree );
-
 		nact_iaction_tab_all_widgets_showed( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_all_widgets_showed( NACT_ICOMMAND_TAB( window ));
 		nact_ibasenames_tab_all_widgets_showed( NACT_IBASENAMES_TAB( window ));
@@ -927,7 +913,7 @@ on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
 		nact_iexecution_tab_all_widgets_showed( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_all_widgets_showed( NACT_IPROPERTIES_TAB( window ));
 
-		nact_sort_buttons_all_widgets_showed( BASE_WINDOW( window ));
+		load_or_reload_items( window );
 	}
 }
 
@@ -997,7 +983,7 @@ nact_main_window_reload( NactMainWindow *window )
 		reload_ok = confirm_for_giveup_from_menu( window );
 
 		if( reload_ok ){
-			reload_items( window );
+			load_or_reload_items( window );
 		}
 	}
 }
@@ -1006,16 +992,17 @@ nact_main_window_reload( NactMainWindow *window )
  * the count of modified NAObjectItem has changed
  */
 static void
-on_tree_view_modified_count_changed( NactMainWindow *window, NactTreeView *view, guint count, gpointer user_data )
+on_tree_view_modified_count_changed( NactMainWindow *window, guint count, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_tree_view_modified_count_changed";
 
-	g_debug( "%s: window=%p, view=%p, count=%d, user_data=%p",
-			thisfn, ( void * ) window, ( void * ) view, count, ( void * ) user_data );
+	g_debug( "%s: window=%p, count=%d, user_data=%p",
+			thisfn, ( void * ) window, count, ( void * ) user_data );
 
 	if( !window->private->dispose_has_run ){
 
 		window->private->count_modified = count;
+		setup_dialog_title( window );
 	}
 }
 
@@ -1023,18 +1010,17 @@ on_tree_view_modified_count_changed( NactMainWindow *window, NactTreeView *view,
  * tree view selection has changed
  */
 static void
-on_tree_view_selection_changed( NactMainWindow *window, NactTreeView *view, GList *selected_items, gpointer user_data )
+on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_tree_view_selection_changed";
 	guint count;
 
 	count = g_list_length( selected_items );
 
-	g_debug( "%s: window=%p, view=%p, selected_items=%p (count=%d), user_data=%p",
-			thisfn, ( void * ) window, ( void * ) view,
-			( void * ) selected_items, count, ( void * ) user_data );
-
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p, selected_items=%p (count=%d), user_data=%p",
+				thisfn, ( void * ) window,
+				( void * ) selected_items, count, ( void * ) user_data );
 
 		raz_selection_properties( window );
 
@@ -1178,7 +1164,7 @@ on_pivot_items_changed( NAUpdater *updater, NactMainWindow *window )
 		reload_ok = confirm_for_giveup_from_pivot( window );
 
 		if( reload_ok ){
-			reload_items( window );
+			load_or_reload_items( window );
 		}
 	}
 }
@@ -1246,9 +1232,9 @@ confirm_for_giveup_from_menu( const NactMainWindow *window )
 }
 
 static void
-reload_items( NactMainWindow *window )
+load_or_reload_items( NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_reload";
+	static const gchar *thisfn = "nact_main_window_load_or_reload_items";
 	GList *tree;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
@@ -1257,6 +1243,8 @@ reload_items( NactMainWindow *window )
 
 	tree = na_updater_load_items( window->private->updater );
 	nact_tree_view_fill( window->private->items_view, tree );
+
+	g_debug( "%s: end of tree view filling", thisfn );
 }
 
 /**
@@ -1495,25 +1483,22 @@ on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_d
 
 	setup_dialog_title( window );
 }
-
-static void
-on_iactions_list_status_changed( NactMainWindow *window, gpointer user_data )
-{
-	g_debug( "nact_main_window_on_iactions_list_status_changed" );
-
-	setup_dialog_title( window );
-}
 #endif
 
 static void
 on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display )
 {
-	/*static const gchar *thisfn = "nact_main_window_on_tab_updatable_item_updated";*/
+	static const gchar *thisfn = "nact_main_window_on_tab_updatable_item_updated";
 
-	/*g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );*/
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p, user_data=%p, force_display=%s",
+				thisfn, ( void * ) window, ( void * ) user_data, force_display ? "True":"False" );
+
+		if( window->private->current_item ){
+			na_object_check_status( window->private->current_item );
+		}
 	}
 }
 
@@ -1541,8 +1526,8 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 
 #if 0
 		nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( window ), order_mode );
-#endif
 		nact_sort_buttons_display_order_change( BASE_WINDOW( window ), order_mode );
+#endif
 
 		tree = na_pivot_get_items( NA_PIVOT( window->private->updater ));
 

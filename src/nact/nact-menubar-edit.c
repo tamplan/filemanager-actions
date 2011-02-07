@@ -53,9 +53,7 @@ static void    update_clipboard_counters( BaseWindow *window );
 
 /**
  * nact_menubar_edit_on_update_sensitivities:
- * @window: the #BaseWindow main window.
- * user_data: the data passed to the function via the signal.
- * @mis: the #MenubarIndicatorsStruct struct.
+ * @bar: this #NactMenubar object.
  *
  * Update sensitivity of items of the Edit menu.
  */

@@ -66,7 +66,7 @@ static GType         register_type( void );
 static void          interface_base_init( NactIActionTabInterface *klass );
 static void          interface_base_finalize( NactIActionTabInterface *klass );
 
-static void          on_tree_view_content_changed( NactIActionTab *instance, NactTreeView *view, NAObject *object, gpointer user_data );
+static void          on_tree_view_content_changed( NactIActionTab *instance, NAObject *object, gpointer user_data );
 static void          on_main_selection_changed( NactIActionTab *instance, GList *selected_items, gpointer user_data );
 
 static void          on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance );
@@ -342,7 +342,7 @@ nact_iaction_tab_has_label( NactIActionTab *instance )
 }
 
 static void
-on_tree_view_content_changed( NactIActionTab *instance, NactTreeView *view, NAObject *object, gpointer user_data )
+on_tree_view_content_changed( NactIActionTab *instance, NAObject *object, gpointer user_data )
 {
 	GtkWidget *label_widget;
 	gchar *label;
@@ -486,7 +486,6 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 	gboolean editable;
 
 	if( !st_on_selection_change ){
-
 		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
 
 		g_object_get(
@@ -524,7 +523,6 @@ on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance )
 	gboolean editable;
 
 	if( !st_on_selection_change ){
-
 		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
 
 		g_object_get(
@@ -590,24 +588,29 @@ check_for_label( NactIActionTab *instance, GtkEntry *entry, const gchar *label )
 static void
 on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 {
+	static const gchar *thisfn = "nact_iaction_tab_on_label_changed";
 	NAObjectItem *item;
 	const gchar *label;
 
-	g_object_get(
-			G_OBJECT( instance ),
-			MAIN_PROP_ITEM, &item,
-			NULL );
+	if( !st_on_selection_change ){
+		g_debug( "%s: entry=%p, instance=%p", thisfn, ( void * ) entry, ( void * ) instance );
 
-	if( item ){
-		label = gtk_entry_get_text( entry );
-		na_object_set_label( item, label );
-		check_for_label( instance, entry, label );
+		g_object_get(
+				G_OBJECT( instance ),
+				MAIN_PROP_ITEM, &item,
+				NULL );
 
-		if( NA_IS_OBJECT_ACTION( item )){
-			setup_toolbar_label( instance, item, label );
+		if( item ){
+			label = gtk_entry_get_text( entry );
+			na_object_set_label( item, label );
+			check_for_label( instance, entry, label );
+
+			if( NA_IS_OBJECT_ACTION( item )){
+				setup_toolbar_label( instance, item, label );
+			}
+
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, TRUE );
 		}
-
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, TRUE );
 	}
 }
 
@@ -640,7 +643,6 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 	gboolean editable;
 
 	if( !st_on_selection_change ){
-
 		g_debug( "%s: button=%p, instance=%p", thisfn, ( void * ) button, ( void * ) instance );
 
 		g_object_get(
@@ -752,19 +754,24 @@ setup_toolbar_label( NactIActionTab *instance, NAObjectItem *item, const gchar *
 static void
 on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance )
 {
+	static const gchar *thisfn = "nact_iaction_tab_on_toolbar_label_changed";
 	NAObjectItem *item;
 	const gchar *label;
 
-	g_object_get(
-			G_OBJECT( instance ),
-			MAIN_PROP_ITEM, &item,
-			NULL );
+	if( !st_on_selection_change ){
+		g_debug( "%s: entry=%p, instance=%p", thisfn, ( void * ) entry, ( void * ) instance );
 
-	if( item && NA_IS_OBJECT_ACTION( item )){
-		label = gtk_entry_get_text( entry );
-		na_object_set_toolbar_label( NA_OBJECT_ACTION( item ), label );
+		g_object_get(
+				G_OBJECT( instance ),
+				MAIN_PROP_ITEM, &item,
+				NULL );
 
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+		if( item && NA_IS_OBJECT_ACTION( item )){
+			label = gtk_entry_get_text( entry );
+			na_object_set_toolbar_label( NA_OBJECT_ACTION( item ), label );
+
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+		}
 	}
 }
 
@@ -784,16 +791,21 @@ toolbar_label_set_sensitive( NactIActionTab *instance, NAObjectItem *item )
 static void
 on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
 {
+	static const gchar *thisfn = "nact_iaction_tab_on_tooltip_changed";
 	NAObjectItem *item;
 
-	g_object_get(
-			G_OBJECT( instance ),
-			MAIN_PROP_ITEM, &item,
-			NULL );
+	if( !st_on_selection_change ){
+		g_debug( "%s: entry=%p, instance=%p", thisfn, ( void * ) entry, ( void * ) instance );
 
-	if( item ){
-		na_object_set_tooltip( item, gtk_entry_get_text( entry ));
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+		g_object_get(
+				G_OBJECT( instance ),
+				MAIN_PROP_ITEM, &item,
+				NULL );
+
+		if( item ){
+			na_object_set_tooltip( item, gtk_entry_get_text( entry ));
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+		}
 	}
 }
 
@@ -835,24 +847,26 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 	NAObjectItem *item;
 	const gchar *icon_name;
 
-	g_debug( "%s: entry=%p, instance=%p", thisfn, ( void * ) icon_entry, ( void * ) instance );
+	if( !st_on_selection_change ){
+		g_debug( "%s: entry=%p, instance=%p", thisfn, ( void * ) icon_entry, ( void * ) instance );
 
-	icon_name = NULL;
+		icon_name = NULL;
 
-	g_object_get(
-			G_OBJECT( instance ),
-			MAIN_PROP_ITEM, &item,
-			NULL );
+		g_object_get(
+				G_OBJECT( instance ),
+				MAIN_PROP_ITEM, &item,
+				NULL );
 
-	if( item ){
-		icon_name = gtk_entry_get_text( icon_entry );
-		na_object_set_icon( item, icon_name );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, TRUE );
+		if( item ){
+			icon_name = gtk_entry_get_text( icon_entry );
+			na_object_set_icon( item, icon_name );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, TRUE );
+		}
+
+		/* icon_name may be null if there is no current item
+		 * in such a case, we blank the image
+		 */
+		image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
+		base_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_SMALL_TOOLBAR );
 	}
-
-	/* icon_name may be null if there is no current item
-	 * in such a case, we blank the image
-	 */
-	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
-	base_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_SMALL_TOOLBAR );
 }

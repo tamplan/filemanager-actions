@@ -34,6 +34,8 @@
 
 #include <api/na-iduplicable.h>
 
+#include "na-marshal.h"
+
 /* private interface data
  */
 struct _NAIDuplicableInterfacePrivate {
@@ -74,9 +76,9 @@ static gboolean       v_is_valid( const NAIDuplicable *object );
 
 static DuplicableStr *get_duplicable_str( const NAIDuplicable *object );
 
-static void           on_modified_changed_class_handler( NAIDuplicable *instance, gboolean is_modified );
-static void           on_valid_changed_class_handler( NAIDuplicable *instance, gboolean is_valid );
-static void           propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal, gboolean new_status );
+static void           on_modified_changed_class_handler( NAIDuplicable *instance, GObject *object, gboolean is_modified );
+static void           on_valid_changed_class_handler( NAIDuplicable *instance, GObject *object, gboolean is_valid );
+static void           propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal, GObject *object, gboolean new_status );
 static void           release_signal_consumers( GList *consumers );
 
 GType
@@ -147,7 +149,13 @@ interface_base_init( NAIDuplicableInterface *klass )
 		 * Signal args: New modification status
 		 *
 		 * Handler prototype:
-		 * void ( *handler )( NAIDuplicable *duplicable, gboolean is_modified, gpointer user_data );
+		 * void ( *handler )( NAIDuplicable *duplicable, NAObject *object, gboolean is_modified, gpointer user_data );
+		 *
+		 * When the signal is first emitted, thus on NAIDuplicable, @duplicable
+		 * and @object are pointers to the same address. This duplication is
+		 * relevant when propagating the signal to customer, as the signal is
+		 * emitted on the customer itself, while we still need the @object
+		 * pointer.
 		 */
 		st_signals[ MODIFIED_CHANGED ] = g_signal_new_class_handler(
 				IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,
@@ -156,10 +164,10 @@ interface_base_init( NAIDuplicableInterface *klass )
 				G_CALLBACK( on_modified_changed_class_handler ),
 				NULL,
 				NULL,
-				g_cclosure_marshal_VOID__BOOLEAN,
+				na_cclosure_marshal_VOID__POINTER_BOOLEAN,
 				G_TYPE_NONE,
-				1,
-				G_TYPE_BOOLEAN );
+				2,
+				G_TYPE_POINTER, G_TYPE_BOOLEAN );
 
 		/**
 		 * NAIDuplicable::valid-changed:
@@ -170,10 +178,16 @@ interface_base_init( NAIDuplicableInterface *klass )
 		 * The default class handler propagates the signal to registered
 		 * consumers.
 		 *
-		 * Signal args: Newvalidity status
+		 * Signal args: New validity status
 		 *
 		 * Handler prototype:
-		 * void ( *handler )( NAIDuplicable *duplicable, gboolean is_valid, gpointer user_data );
+		 * void ( *handler )( NAIDuplicable *duplicable, NAObject *object, gboolean is_valid, gpointer user_data );
+		 *
+		 * When the signal is first emitted, thus on NAIDuplicable, @duplicable
+		 * and @object are pointers to the same address. This duplication is
+		 * relevant when propagating the signal to customer, as the signal is
+		 * emitted on the customer itself, while we still need the @object
+		 * pointer.
 		 */
 		st_signals[ VALID_CHANGED ] = g_signal_new_class_handler(
 				IDUPLICABLE_SIGNAL_VALID_CHANGED,
@@ -182,10 +196,10 @@ interface_base_init( NAIDuplicableInterface *klass )
 				G_CALLBACK( on_valid_changed_class_handler ),
 				NULL,
 				NULL,
-				g_cclosure_marshal_VOID__BOOLEAN,
+				na_cclosure_marshal_VOID__POINTER_BOOLEAN,
 				G_TYPE_NONE,
-				1,
-				G_TYPE_BOOLEAN );
+				2,
+				G_TYPE_POINTER, G_TYPE_BOOLEAN );
 
 		st_interface = klass;
 
@@ -371,7 +385,7 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 		if( was_modified != str->modified ){
 			g_debug( "%s: %p (%s) status changed to modified=%s",
 					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ), str->modified ? "True":"False" );
-			g_signal_emit_by_name( G_OBJECT( object ), IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, str->modified );
+			g_signal_emit_by_name( G_OBJECT( object ), IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, object, str->modified );
 		}
 
 		str->valid = v_is_valid( object );
@@ -379,7 +393,7 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 		if( was_valid != str->valid ){
 			g_debug( "%s: %p (%s) status changed to valid=%s",
 					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ), str->valid ? "True":"False" );
-			g_signal_emit_by_name( G_OBJECT( object ), IDUPLICABLE_SIGNAL_VALID_CHANGED, str->valid );
+			g_signal_emit_by_name( G_OBJECT( object ), IDUPLICABLE_SIGNAL_VALID_CHANGED, object, str->valid );
 		}
 	}
 }
@@ -572,19 +586,23 @@ na_iduplicable_register_consumer( GObject *consumer )
 }
 
 static void
-on_modified_changed_class_handler( NAIDuplicable *instance, gboolean is_modified )
+on_modified_changed_class_handler( NAIDuplicable *instance, GObject *object, gboolean is_modified )
 {
-	propagate_signal_to_consumers( instance, IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, is_modified );
+	if( NA_IS_IDUPLICABLE( instance )){
+		propagate_signal_to_consumers( instance, IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, object, is_modified );
+	}
 }
 
 static void
-on_valid_changed_class_handler( NAIDuplicable *instance, gboolean is_valid )
+on_valid_changed_class_handler( NAIDuplicable *instance, GObject *object, gboolean is_valid )
 {
-	propagate_signal_to_consumers( instance, IDUPLICABLE_SIGNAL_VALID_CHANGED, is_valid );
+	if( NA_IS_IDUPLICABLE( instance )){
+		propagate_signal_to_consumers( instance, IDUPLICABLE_SIGNAL_VALID_CHANGED, object, is_valid );
+	}
 }
 
 static void
-propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal, gboolean new_status )
+propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal, GObject *object, gboolean new_status )
 {
 	static const gchar *thisfn = "na_iduplicable_propagate_signals_to_consumers";
 	GList *ic;
@@ -595,7 +613,7 @@ propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal, gbo
 		g_debug( "%s: instance=%p, signal=%s", thisfn, ( void * ) instance, signal );
 
 		for( ic = st_interface->private->consumers ; ic ; ic = ic->next ){
-			g_signal_emit_by_name( ic->data, signal, new_status );
+			g_signal_emit_by_name( ic->data, signal, object, new_status );
 		}
 	}
 }

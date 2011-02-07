@@ -39,9 +39,7 @@ static void on_view_toolbar_activated( GtkToggleAction *action, BaseWindow *wind
 
 /**
  * nact_menubar_view_on_update_sensitivities:
- * @window: the #BaseWindow main window.
- * user_data: the data passed to the function via the signal.
- * @mis: the #MenubarIndicatorsStruct struct.
+ * @bar: this #NactMenubar object.
  *
  * Update sensitivity of items of the View menu.
  */

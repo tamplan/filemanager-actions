@@ -32,21 +32,54 @@
 #define __NACT_SORT_BUTTONS_H__
 
 /**
- * SECTION: nact_sort_buttons
- * @short_description: Manage the sort buttons in the main window.
- * @include: nact/nact-sort-buttons.h
+ * SECTION: nact-sort-buttons
+ * @title: NactSortButtons
+ * @short_description: The Sort Buttons class definition
+ * @include: nact-sort-buttons.h
+ *
+ * A convenience class to manager sort buttons in the user interface.
+ *
+ * The sort order mode is monitored, so that buttons automatically display
+ * the right order mode if it is modified by another way (e.g. from
+ * Preferences editor).
+ *
+ * Modifying the sort order mode requires that:
+ * - level zero is writable (see NAUpdater)
+ * - preferences are not locked (see NAUpdater)
+ * - sort order mode is not a mandatory preference.
  */
 
 #include "base-window.h"
 
 G_BEGIN_DECLS
 
-void  nact_sort_buttons_runtime_init                 ( BaseWindow *window );
-void  nact_sort_buttons_all_widgets_showed           ( BaseWindow *window );
-void  nact_sort_buttons_enable_buttons               ( BaseWindow *window, gboolean enable );
-void  nact_sort_buttons_dispose                      ( BaseWindow *window );
-void  nact_sort_buttons_display_order_change         ( BaseWindow *window, guint order_mode );
-void  nact_sort_buttons_level_zero_writability_change( BaseWindow *window );
+#define NACT_SORT_BUTTONS_TYPE                ( nact_sort_buttons_get_type())
+#define NACT_SORT_BUTTONS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_SORT_BUTTONS_TYPE, NactSortButtons ))
+#define NACT_SORT_BUTTONS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_SORT_BUTTONS_TYPE, NactSortButtonsClass ))
+#define NACT_IS_SORT_BUTTONS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_SORT_BUTTONS_TYPE ))
+#define NACT_IS_SORT_BUTTONS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_SORT_BUTTONS_TYPE ))
+#define NACT_SORT_BUTTONS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_SORT_BUTTONS_TYPE, NactSortButtonsClass ))
+
+typedef struct _NactSortButtonsPrivate        NactSortButtonsPrivate;
+
+typedef struct {
+	/*< private >*/
+	GObject                 parent;
+	NactSortButtonsPrivate *private;
+}
+	NactSortButtons;
+
+typedef struct _NactSortButtonsClassPrivate   NactSortButtonsClassPrivate;
+
+typedef struct {
+	/*< private >*/
+	GObjectClass                 parent;
+	NactSortButtonsClassPrivate *private;
+}
+	NactSortButtonsClass;
+
+GType            nact_sort_buttons_get_type( void );
+NactSortButtons *nact_sort_buttons_new     ( BaseWindow *window );
 
 G_END_DECLS
 
