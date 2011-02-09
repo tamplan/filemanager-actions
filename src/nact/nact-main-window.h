@@ -163,8 +163,6 @@ typedef struct {
 #define MAIN_PROP_EDITABLE					"main-editable"
 #define MAIN_PROP_REASON					"main-reason"
 
-#define MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED		"main-window-level-zero-order-changed"
-
 GType           nact_main_window_get_type( void );
 
 NactMainWindow *nact_main_window_new           ( const NactApplication *application );

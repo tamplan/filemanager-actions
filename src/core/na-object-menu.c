@@ -70,6 +70,7 @@ static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
 static void         object_copy( NAObject *target, const NAObject *source, gboolean recursive );
+static void         object_dump( const NAObject *object );
 static gboolean     object_is_valid( const NAObject *object );
 
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
@@ -159,8 +160,8 @@ class_init( NAObjectMenuClass *klass )
 	object_class->finalize = instance_finalize;
 
 	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->dump = NULL;
 	naobject_class->copy = object_copy;
+	naobject_class->dump = object_dump;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = object_is_valid;
 
@@ -262,6 +263,29 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 		!NA_OBJECT_MENU( source )->private->dispose_has_run ){
 
 		na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
+	}
+}
+
+static void
+object_dump( const NAObject *object )
+{
+	static const char *thisfn = "na_object_menu_object_dump";
+	NAObjectMenu *self;
+
+	g_return_if_fail( NA_IS_OBJECT_MENU( object ));
+
+	self = NA_OBJECT_MENU( object );
+
+	if( !self->private->dispose_has_run ){
+		g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+
+		/* chain up to the parent class */
+		if( NA_OBJECT_CLASS( st_parent_class )->dump ){
+			NA_OBJECT_CLASS( st_parent_class )->dump( object );
+		}
+
+		g_debug( "+- end of dump" );
 	}
 }
 

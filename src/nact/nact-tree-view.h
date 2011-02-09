@@ -80,21 +80,22 @@ typedef struct {
  * @TREE_PROP_MODE:           management mode.
  * @TREE_PROP_NOTIFY_ALLOWED: whether notifications are allowed.
  */
-#define TREE_PROP_WINDOW					"tree-prop-window"
-#define TREE_PROP_WIDGET_NAME				"tree-prop-widget-name"
-#define TREE_PROP_MODE						"tree-prop-mode"
-#define TREE_PROP_NOTIFY_ALLOWED			"tree-prop-notify-allowed"
+#define TREE_PROP_WINDOW						"tree-prop-window"
+#define TREE_PROP_WIDGET_NAME					"tree-prop-widget-name"
+#define TREE_PROP_MODE							"tree-prop-mode"
+#define TREE_PROP_NOTIFY_ALLOWED				"tree-prop-notify-allowed"
 
 /**
  * Signals emitted by the NactTreeView instance.
  */
-#define TREE_SIGNAL_CONTENT_CHANGED			"tree-signal-content-changed"
-#define TREE_SIGNAL_CONTEXT_MENU			"tree-signal-open-popup"
-#define TREE_SIGNAL_COUNT_CHANGED			"tree-signal-count-changed"
-#define TREE_SIGNAL_FOCUS_IN				"tree-signal-focus-in"
-#define TREE_SIGNAL_FOCUS_OUT				"tree-signal-focus-out"
-#define TREE_SIGNAL_MODIFIED_COUNT_CHANGED	"tree-signal-modified-count-changed"
-#define TREE_SIGNAL_SELECTION_CHANGED		"tree-signal-selection-changed"
+#define TREE_SIGNAL_CONTENT_CHANGED				"tree-signal-content-changed"
+#define TREE_SIGNAL_CONTEXT_MENU				"tree-signal-open-popup"
+#define TREE_SIGNAL_COUNT_CHANGED				"tree-signal-count-changed"
+#define TREE_SIGNAL_FOCUS_IN					"tree-signal-focus-in"
+#define TREE_SIGNAL_FOCUS_OUT					"tree-signal-focus-out"
+#define TREE_SIGNAL_LEVEL_ZERO_CHANGED			"tree-signal-level-zero-changed"
+#define TREE_SIGNAL_MODIFIED_STATUS_CHANGED		"tree-signal-modified-status-changed"
+#define TREE_SIGNAL_SELECTION_CHANGED			"tree-signal-selection-changed"
 
 typedef enum {
 	TREE_MODE_EDITION = 0,
@@ -104,6 +105,12 @@ typedef enum {
 }
 	NactTreeMode;
 
+/**
+ * The NactTreeView is attached to the parent BaseWindow via a GObject data.
+ * Only NactTreeIEditable interface should use it.
+ */
+#define WINDOW_DATA_TREE_VIEW					"window-data-tree-view"
+
 GType         nact_tree_view_get_type( void );
 
 NactTreeView *nact_tree_view_new( BaseWindow *window, const gchar *treeview_name, NactTreeMode mode );
@@ -111,6 +118,7 @@ NactTreeView *nact_tree_view_new( BaseWindow *window, const gchar *treeview_name
 void          nact_tree_view_fill     ( NactTreeView *view, GList *items );
 
 gboolean      nact_tree_view_are_notify_allowed( const NactTreeView *view );
+void          nact_tree_view_set_notify_allowed( NactTreeView *view, gboolean allow );
 
 void          nact_tree_view_collapse_all      ( const NactTreeView *view );
 void          nact_tree_view_expand_all        ( const NactTreeView *view );

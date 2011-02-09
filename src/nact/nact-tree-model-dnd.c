@@ -551,17 +551,6 @@ nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, Bas
  *
  * Returns: %TRUE if the specified rows were successfully inserted at
  * the given dest, %FALSE else.
- *
- * The dest path is computed based on the current appearance of the list
- * Drop should so occurs inside an inchanged list to keep a valid path
- * in the case of a move, this leads to :
- *  1) marks dragged items as 'to be deleted'
- *  2) insert new dropped items
- *  3) remove 'to be deleted' items
- * -> not an easy idea as we want modify the id of all the dragged
- *    hierarchy
- *
- * adjusting the path: quid if the target dest is not at the same level
  */
 static gboolean
 drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selection_data )
@@ -581,12 +570,14 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	GtkTreeIter iter;
 	GList *deletable;
 	gboolean relabel;
+	NactTreeView *items_view;
 
 	application = NACT_APPLICATION( base_window_get_application( model->private->window ));
 	updater = nact_application_get_updater( application );
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( model->private->window ), FALSE );
 	main_window = NACT_MAIN_WINDOW( model->private->window );
+	items_view = nact_main_window_get_items_view( main_window );
 
 	/*
 	 * NACT format (may embed profiles, or not)
@@ -618,17 +609,16 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 					inserted = ( NAObject * ) na_object_duplicate( current );
 					na_object_set_origin( inserted, NULL );
 					na_object_check_status( inserted );
+					relabel = na_updater_should_pasted_be_relabeled( updater, inserted );
 
 				} else {
 					inserted = na_object_ref( current );
 					deletable = g_list_prepend( NULL, inserted );
-#if 0
-					nact_iactions_list_bis_delete( NACT_IACTIONS_LIST( main_window ), deletable, FALSE );
-#endif
+					nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( items_view ), deletable, TREE_OPE_MOVE );
 					g_list_free( deletable );
+					relabel = FALSE;
 				}
 
-				relabel = na_updater_should_pasted_be_relabeled( updater, inserted );
 				na_object_prepare_for_paste( inserted, relabel, copy_data, parent );
 				object_list = g_list_prepend( object_list, inserted );
 				g_debug( "%s: dropped=%s", thisfn, na_object_get_label( inserted ));
@@ -638,16 +628,9 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 	}
 	object_list = g_list_reverse( object_list );
 
-#if 0
-	nact_iactions_list_bis_insert_at_path( NACT_IACTIONS_LIST( main_window ), object_list, new_dest );
-#endif
+	nact_tree_ieditable_insert_at_path( NACT_TREE_IEDITABLE( items_view ), object_list, new_dest );
 
-	if( gtk_tree_path_get_depth( new_dest ) == 1 ){
-		g_signal_emit_by_name( main_window, MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
-	}
-
-	g_list_foreach( object_list, ( GFunc ) na_object_object_unref, NULL );
-	g_list_free( object_list );
+	na_object_free_items( object_list );
 	gtk_tree_path_free( new_dest );
 
 	g_list_foreach( rows, ( GFunc ) gtk_tree_row_reference_free, NULL );

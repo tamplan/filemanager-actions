@@ -73,10 +73,10 @@ struct _NactMenubarPrivate {
 	gboolean         is_action_writable;
 	gboolean         are_parents_writable;		/* cut/delete */
 
-	/* set when the count of modified NAObjectItem changes
-	 * this is a NactTreeIEditable-driven count
+	/* set when the count of modified or deleted NAObjectItem changes
+	 * or when the lever zero is changed
 	 */
-	guint            count_modified;
+	gboolean         is_tree_modified;
 
 	/* set on focus in/out
 	 */
@@ -100,7 +100,6 @@ struct _NactMenubarPrivate {
 	gint            clipboard_menus;
 	gint            clipboard_actions;
 	gint            clipboard_profiles;
-	gboolean        level_zero_order_changed;
 	/* *** */
 };
 

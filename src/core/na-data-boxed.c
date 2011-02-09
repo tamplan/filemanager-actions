@@ -333,7 +333,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_data_boxed_instance_dispose";
 	NADataBoxed *self;
 
 	g_return_if_fail( NA_IS_DATA_BOXED( object ));
@@ -341,11 +340,6 @@ instance_dispose( GObject *object )
 	self = NA_DATA_BOXED( object );
 
 	if( !self->private->dispose_has_run ){
-
-		g_debug( "%s: object=%p (%s), name=%s",
-				thisfn,
-				( void * ) object, G_OBJECT_TYPE_NAME( object ),
-				NA_DATA_BOXED( object )->private->def->name );
 
 		self->private->dispose_has_run = TRUE;
 

@@ -52,17 +52,8 @@ struct _NAObjectItemClassPrivate {
 struct _NAObjectItemPrivate {
 	gboolean   dispose_has_run;
 
-	void      *provider_data;
-
-	/* dynamically set when reading the item from the I/O storage
-	 * subsystem; may be reset from FALSE to TRUE if a write operation
-	 * has returned an error.
-	 * defaults to FALSE for new, not yet written to a provider, item
-	 */
-	gboolean   readonly;
-
 	/* set at load time
-	 * takes into account the above 'readonly' status as well as the i/o
+	 * takes into account the runtime 'readonly' status as well as the i/o
 	 * provider writability status - does not consider the level-zero case
 	 */
 	gboolean   writable;
@@ -238,7 +229,6 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 			}
 		}
 
-		dest->private->readonly = src->private->readonly;
 		dest->private->writable = src->private->writable;
 		dest->private->reason = src->private->reason;
 	}
@@ -256,10 +246,13 @@ object_dump( const NAObject *object )
 
 	if( !item->private->dispose_has_run ){
 
-		g_debug( "%s: provider_data=%p", thisfn, ( void * ) item->private->provider_data );
-		g_debug( "%s:      readonly=%s", thisfn, item->private->readonly ? "True":"False" );
-		g_debug( "%s:      writable=%s", thisfn, item->private->writable ? "True":"False" );
-		g_debug( "%s:        reason=%u", thisfn, item->private->reason );
+		g_debug( "| %s:      writable=%s", thisfn, item->private->writable ? "True":"False" );
+		g_debug( "| %s:        reason=%u", thisfn, item->private->reason );
+
+		/* chain up to the parent class */
+		if( NA_OBJECT_CLASS( st_parent_class )->dump ){
+			NA_OBJECT_CLASS( st_parent_class )->dump( object );
+		}
 	}
 }
 

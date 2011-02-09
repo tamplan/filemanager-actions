@@ -86,7 +86,6 @@ static gboolean iduplicable_is_valid_iter( GObjectClass *class, const NAObject *
 static void     check_status_down_rec( const NAObject *object );
 static void     check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was_valid );
 static gboolean object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data );
-static gboolean dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *user_data );
 static void     dump_tree( GList *tree, gint level );
 static void     iter_on_class_hierarchy( const NAObject *object, HierarchyIterFunc pfn, void *user_data );
 static GList   *build_class_hierarchy( const NAObject *object );
@@ -152,14 +151,12 @@ class_init( NAObjectClass *klass )
 	object_class->finalize = instance_finalize;
 
 	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->dump = NULL;
+	naobject_class->dump = object_dump;
 	naobject_class->copy = NULL;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = NULL;
 
 	klass->private = g_new0( NAObjectClassPrivate, 1 );
-
-	klass->dump = object_dump;
 }
 
 static void
@@ -189,7 +186,6 @@ instance_dispose( GObject *object )
 	self = NA_OBJECT( object );
 
 	if( !self->private->dispose_has_run ){
-
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
@@ -230,15 +226,13 @@ instance_finalize( GObject *object )
 static void
 object_dump( const NAObject *object )
 {
-	static const char *thisfn = "na_object_do_dump";
+	if( !object->private->dispose_has_run ){
 
-	g_debug( "%s: object=%p (%s, ref_count=%d)", thisfn,
-			( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
+		na_iduplicable_dump( NA_IDUPLICABLE( object ));
 
-	na_iduplicable_dump( NA_IDUPLICABLE( object ));
-
-	if( NA_IS_IFACTORY_OBJECT( object )){
-		na_factory_object_dump( NA_IFACTORY_OBJECT( object ));
+		if( NA_IS_IFACTORY_OBJECT( object )){
+			na_factory_object_dump( NA_IFACTORY_OBJECT( object ));
+		}
 	}
 }
 
@@ -516,10 +510,9 @@ na_object_object_dump( const NAObject *object )
 		na_object_dump_norec( object );
 
 		if( NA_IS_OBJECT_ITEM( object )){
-
 			children = na_object_get_items( object );
-			for( ic = children ; ic ; ic = ic->next ){
 
+			for( ic = children ; ic ; ic = ic->next ){
 				na_object_dump( ic->data );
 			}
 		}
@@ -542,21 +535,10 @@ na_object_object_dump_norec( const NAObject *object )
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	if( !object->private->dispose_has_run ){
-
-		iter_on_class_hierarchy( object, ( HierarchyIterFunc ) &dump_class_hierarchy_iter, NULL );
+		if( NA_OBJECT_GET_CLASS( object )->dump ){
+			NA_OBJECT_GET_CLASS( object )->dump( object );
+		}
 	}
-}
-
-static gboolean
-dump_class_hierarchy_iter( GObjectClass *class, const NAObject *object, void *user_data )
-{
-	gboolean stop = FALSE;
-
-	if( NA_OBJECT_CLASS( class )->dump ){
-		NA_OBJECT_CLASS( class )->dump( object );
-	}
-
-	return( stop );
 }
 
 /**

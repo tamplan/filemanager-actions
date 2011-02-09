@@ -230,6 +230,8 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
+		g_object_unref( self->private->items_view );
+
 		if( self->private->selected_items ){
 			self->private->selected_items = na_object_free_items( self->private->selected_items );
 		}

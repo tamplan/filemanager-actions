@@ -574,11 +574,10 @@ na_factory_object_dump( const NAIFactoryObject *object )
 	length += 1;
 
 	for( it = list ; it ; it = it->next ){
-		/*na_data_boxed_dump( NA_DATA_BOXED( it->data ));*/
 		NADataBoxed *boxed = NA_DATA_BOXED( it->data );
 		NADataDef *def = na_data_boxed_get_data_def( boxed );
 		gchar *value = na_data_boxed_get_as_string( boxed );
-		g_debug( "%s: %*s=%s", thisfn, length, def->name+l_prefix, value );
+		g_debug( "| %s: %*s=%s", thisfn, length, def->name+l_prefix, value );
 		g_free( value );
 	}
 }

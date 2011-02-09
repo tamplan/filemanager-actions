@@ -119,8 +119,8 @@ struct _NactMainWindowPrivate {
 	 * Some convenience objects and data.
 	 */
 	NactTreeView    *items_view;
+	gboolean         is_tree_modified;
 	NactClipboard   *clipboard;
-	guint            count_modified;
 };
 
 /* properties set against the main window
@@ -179,7 +179,7 @@ static void     on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWind
 static void     on_base_initialize_base_window( NactMainWindow *window, gpointer user_data );
 static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
-static void     on_tree_view_modified_count_changed( NactMainWindow *window, guint count, gpointer user_data );
+static void     on_tree_view_modified_status_changed( NactMainWindow *window, gboolean is_modified, gpointer user_data );
 static void     on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, gpointer user_data );
 static void     on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items );
 static void     raz_selection_properties( NactMainWindow *window );
@@ -352,22 +352,22 @@ class_init( NactMainWindowClass *klass )
 	g_object_class_install_property( object_class, MAIN_PROP_ITEM_ID,
 			g_param_spec_pointer(
 					MAIN_PROP_ITEM,
-					"Edited NAObjectItem",
-					"A pointer to the edited NAObjectItem, an action or a menu",
+					"Current NAObjectItem",
+					"A pointer to the currently edited NAObjectItem, an action or a menu",
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_PROFILE_ID,
 			g_param_spec_pointer(
 					MAIN_PROP_PROFILE,
-					"Edited NAObjectProfile",
-					"A pointer to the edited NAObjectProfile",
+					"Current NAObjectProfile",
+					"A pointer to the currently edited NAObjectProfile",
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_CONTEXT_ID,
 			g_param_spec_pointer(
 					MAIN_PROP_CONTEXT,
 					"Current NAIContext",
-					"The currently edited NAIContext",
+					"A pointer to the currently edited NAIContext",
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_EDITABLE_ID,
@@ -431,24 +431,6 @@ class_init( NactMainWindowClass *klass )
 			2,
 			G_TYPE_POINTER,
 			G_TYPE_BOOLEAN );
-
-	/**
-	 * main-window-level-zero-order-changed:
-	 *
-	 * This signal is emitted each time a user interaction may led the
-	 * action sensitivities to be updated.
-	 */
-	st_signals[ ORDER_CHANGED ] = g_signal_new(
-			MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED,
-			G_TYPE_OBJECT,
-			G_SIGNAL_RUN_LAST,
-			0,					/* no default handler */
-			NULL,
-			NULL,
-			g_cclosure_marshal_VOID__POINTER,
-			G_TYPE_NONE,
-			1,
-			G_TYPE_POINTER );
 
 	/**
 	 * NactMainWindow::main-selection-changed:
@@ -709,7 +691,7 @@ instance_constructed( GObject *window )
 				G_OBJECT( window ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
 
 		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_COUNT_CHANGED, G_CALLBACK( on_tree_view_modified_count_changed ));
+				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_STATUS_CHANGED, G_CALLBACK( on_tree_view_modified_status_changed ));
 
 		/* create the menubar
 		 * it will create itself toolbar and statusbar
@@ -743,6 +725,7 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
+		g_object_unref( self->private->items_view );
 		g_object_unref( self->private->clipboard );
 
 		settings = na_pivot_get_settings( NA_PIVOT( self->private->updater ));
@@ -989,19 +972,19 @@ nact_main_window_reload( NactMainWindow *window )
 }
 
 /*
- * the count of modified NAObjectItem has changed
+ * the modification status of the items view has changed
  */
 static void
-on_tree_view_modified_count_changed( NactMainWindow *window, guint count, gpointer user_data )
+on_tree_view_modified_status_changed( NactMainWindow *window, gboolean is_modified, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_on_tree_view_modified_count_changed";
+	static const gchar *thisfn = "nact_main_window_on_tree_view_modified_status_changed";
 
-	g_debug( "%s: window=%p, count=%d, user_data=%p",
-			thisfn, ( void * ) window, count, ( void * ) user_data );
+	g_debug( "%s: window=%p, is_modified=%s, user_data=%p",
+			thisfn, ( void * ) window, is_modified ? "True":"False", ( void * ) user_data );
 
 	if( !window->private->dispose_has_run ){
 
-		window->private->count_modified = count;
+		window->private->is_tree_modified = is_modified;
 		setup_dialog_title( window );
 	}
 }
@@ -1043,7 +1026,7 @@ on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, g
 static void
 on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items )
 {
-	static const gchar *thisfn = "nact_mainw_window_on_selection_changed_cleanup_handler";
+	static const gchar *thisfn = "nact_main_window_on_selection_changed_cleanup_handler";
 
 	g_debug( "%s: window=%p, selected_items=%p (count=%u)",
 			thisfn, ( void * ) window,
@@ -1124,7 +1107,7 @@ setup_dialog_title( NactMainWindow *window )
 		title = tmp;
 	}
 
-	if( window->private->count_modified > 0 ){
+	if( window->private->is_tree_modified ){
 		tmp = g_strdup_printf( "*%s", title );
 		g_free( title );
 		title = tmp;
@@ -1185,7 +1168,7 @@ confirm_for_giveup_from_pivot( const NactMainWindow *window )
 					"You could keep to work with your current list of actions, "
 					"or you may want to reload a fresh one." ));
 
-	if( window->private->count_modified > 0 ){
+	if( window->private->is_tree_modified){
 
 		gchar *tmp = g_strdup_printf( "%s\n\n%s", first,
 				_( "Note that reloading a fresh list of actions requires "
@@ -1214,7 +1197,7 @@ confirm_for_giveup_from_menu( const NactMainWindow *window )
 	gboolean reload_ok = TRUE;
 	gchar *first, *second;
 
-	if( window->private->count_modified > 0 ){
+	if( window->private->is_tree_modified ){
 
 		first = g_strdup(
 					_( "Reloading a fresh list of actions requires "
@@ -1269,7 +1252,7 @@ nact_main_window_quit( NactMainWindow *window )
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-		if( window->private->count_modified == 0  || warn_modified( window )){
+		if( !window->private->is_tree_modified  || warn_modified( window )){
 			g_object_unref( window );
 			terminated = TRUE;
 		}
@@ -1287,7 +1270,8 @@ base_is_willing_to_quit( const BaseWindow *window )
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 	willing_to = TRUE;
-	if( NACT_MAIN_WINDOW( window )->private->count_modified > 0 ){
+
+	if( NACT_MAIN_WINDOW( window )->private->is_tree_modified ){
 		willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
 	}
 
@@ -1532,8 +1516,7 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
 		tree = na_pivot_get_items( NA_PIVOT( window->private->updater ));
 
 		if( g_list_length( tree )){
-			g_signal_emit_by_name( window,
-					MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, GINT_TO_POINTER( TRUE ));
+			g_signal_emit_by_name( window, TREE_SIGNAL_LEVEL_ZERO_CHANGED );
 		}
 	}
 }

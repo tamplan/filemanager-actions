@@ -88,10 +88,8 @@ typedef struct {
 	 *
 	 * Dumps via g_debug the content of the object.
 	 *
-	 * NAObject class takes care of calling this function for each
-	 * derived class, starting from topmost base class up to most-
-	 * derived one. Each derived class has so only to take care of
-	 * dumping its own data.
+	 * The derived class should call its parent class at the end of the
+	 * dump of its own datas.
 	 *
 	 * Since: 2.30
 	 */

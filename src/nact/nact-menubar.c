@@ -224,20 +224,15 @@ static void     on_menu_item_deselected( GtkMenuItem *proxy, BaseWindow *window 
 
 static void     on_tree_view_open_context_menu( BaseWindow *window, GdkEventButton *event, gpointer user_data );
 static void     on_popup_selection_done( GtkMenuShell *menushell, BaseWindow *window );
-static void     on_tree_view_count_changed( BaseWindow *window, gboolean reset, guint menus, guint actions, guint profiles );
+static void     on_tree_view_count_changed( BaseWindow *window, gboolean reset, gint menus, gint actions, gint profiles );
 static void     on_tree_view_focus_in( BaseWindow *window, gpointer user_data );
 static void     on_tree_view_focus_out( BaseWindow *window, gpointer user_data );
-static void     on_tree_view_modified_count_changed( BaseWindow *window, guint count, gpointer user_data );
+static void     on_tree_view_modified_status_changed( BaseWindow *window, gboolean is_modified, gpointer user_data );
 static void     on_tree_view_selection_changed( BaseWindow *window, GList *selected, gpointer user_data );
 
 static void     on_update_sensitivities( NactMenubar *bar, BaseWindow *window );
 
 static void     on_finalizing_window( NactMenubar *bar, GObject *window );
-
-#if 0
-static void     on_iactions_list_status_changed( BaseWindow *window, gpointer user_data );
-static void     on_level_zero_order_changed( BaseWindow *window, gpointer user_data );
-#endif
 
 GType
 nact_menubar_get_type( void )
@@ -515,18 +510,10 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 				G_OBJECT( window ), TREE_SIGNAL_FOCUS_OUT, G_CALLBACK( on_tree_view_focus_out ));
 
 		base_window_signal_connect( window,
-				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_COUNT_CHANGED, G_CALLBACK( on_tree_view_modified_count_changed ));
+				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_STATUS_CHANGED, G_CALLBACK( on_tree_view_modified_status_changed ));
 
 		base_window_signal_connect( window,
 				G_OBJECT( window ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
-
-#if 0
-		base_window_signal_connect( window,
-				G_OBJECT( window ), IACTIONS_LIST_SIGNAL_STATUS_CHANGED, G_CALLBACK( on_iactions_list_status_changed ));
-
-		base_window_signal_connect( window,
-				G_OBJECT( window ), MAIN_WINDOW_SIGNAL_LEVEL_ZERO_ORDER_CHANGED, G_CALLBACK( on_level_zero_order_changed ));
-#endif
 
 		base_window_signal_connect( window,
 				G_OBJECT( bar ), MENUBAR_SIGNAL_UPDATE_SENSITIVITIES, G_CALLBACK( on_update_sensitivities ));
@@ -644,14 +631,14 @@ on_popup_selection_done(GtkMenuShell *menushell, BaseWindow *window )
  * that we are knowing if we have some exportables
  */
 static void
-on_tree_view_count_changed( BaseWindow *window, gboolean reset, guint menus, guint actions, guint profiles )
+on_tree_view_count_changed( BaseWindow *window, gboolean reset, gint menus, gint actions, gint profiles )
 {
 	static const gchar *thisfn = "nact_menubar_on_tree_view_count_changed";
 	gchar *status;
 
 	BAR_WINDOW_VOID( window );
 
-	g_debug( "%s: window=%p, reset=%s, menus=%u, actions=%u, profiles=%u",
+	g_debug( "%s: window=%p, reset=%s, menus=%d, actions=%d, profiles=%d",
 			thisfn, ( void * ) window, reset ? "True":"False", menus, actions, profiles );
 
 	if( reset ){
@@ -667,10 +654,6 @@ on_tree_view_count_changed( BaseWindow *window, gboolean reset, guint menus, gui
 
 	bar->private->have_exportables = ( bar->private->count_menus + bar->private->count_actions > 0 );
 
-#if 0
-	nact_sort_buttons_enable_buttons( window, bar->private->count_menus + bar->private->count_actions > 0 );
-#endif
-
 	/* i18n: note the space at the beginning of the sentence */
 	status = g_strdup_printf(
 			_( " %d menu(s), %d action(s), %d profile(s) are currently loaded" ),
@@ -679,26 +662,6 @@ on_tree_view_count_changed( BaseWindow *window, gboolean reset, guint menus, gui
 	g_free( status );
 
 	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
-}
-
-/*
- * the count of modified NAObjectItem has changed
- */
-static void
-on_tree_view_modified_count_changed( BaseWindow *window, guint count, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_menubar_on_tree_view_modified_count_changed";
-
-	g_debug( "%s: window=%p, count=%d, user_data=%p",
-			thisfn, ( void * ) window, count, ( void * ) user_data );
-
-	BAR_WINDOW_VOID( window );
-
-	if( !bar->private->dispose_has_run ){
-
-		bar->private->count_modified = count;
-		g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
-	}
 }
 
 static void
@@ -721,6 +684,26 @@ on_tree_view_focus_out( BaseWindow *window, gpointer user_data )
 
 	bar->private->treeview_has_focus = FALSE;
 	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
+}
+
+/*
+ * the count of modified NAObjectItem has changed
+ */
+static void
+on_tree_view_modified_status_changed( BaseWindow *window, gboolean is_modified, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_menubar_on_tree_view_modified_status_changed";
+
+	g_debug( "%s: window=%p, is_modified=%s, user_data=%p",
+			thisfn, ( void * ) window, is_modified ? "True":"False", ( void * ) user_data );
+
+	BAR_WINDOW_VOID( window );
+
+	if( !bar->private->dispose_has_run ){
+
+		bar->private->is_tree_modified = is_modified;
+		g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
+	}
 }
 
 /*
@@ -928,17 +911,6 @@ on_iactions_list_status_changed( BaseWindow *window, gpointer user_data )
 
 	BAR_WINDOW_VOID( window );
 
-	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
-}
-
-static void
-on_level_zero_order_changed( BaseWindow *window, gpointer user_data )
-{
-	BAR_WINDOW_VOID( window );
-
-	g_debug( "nact_menubar_on_level_zero_order_changed: change=%s", user_data ? "True":"False" );
-
-	bar->private->level_zero_order_changed = GPOINTER_TO_INT( user_data );
 	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 }
 #endif

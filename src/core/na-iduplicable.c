@@ -242,8 +242,8 @@ na_iduplicable_dispose( const NAIDuplicable *object )
 	if( st_initialized && !st_finalized ){
 
 		str = get_duplicable_str( object );
-
 		g_free( str );
+		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE, NULL );
 	}
 }
 
@@ -273,9 +273,9 @@ na_iduplicable_dump( const NAIDuplicable *object )
 
 		str = get_duplicable_str( object );
 
-		g_debug( "%s:   origin=%p", thisfn, ( void * ) str->origin );
-		g_debug( "%s: modified=%s", thisfn, str->modified ? "True" : "False" );
-		g_debug( "%s:    valid=%s", thisfn, str->valid ? "True" : "False" );
+		g_debug( "| %s:   origin=%p", thisfn, ( void * ) str->origin );
+		g_debug( "| %s: modified=%s", thisfn, str->modified ? "True" : "False" );
+		g_debug( "| %s:    valid=%s", thisfn, str->valid ? "True" : "False" );
 	}
 }
 

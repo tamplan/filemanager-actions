@@ -1230,3 +1230,24 @@ record_connected_signal( BaseWindow *window, GObject *instance, gulong handler_i
 		g_debug( "%s: connecting signal handler %p:%lu", thisfn, ( void * ) instance, handler_id );
 	}
 }
+
+void
+base_window_signal_disconnect( BaseWindow *window, gulong handler_id )
+{
+	GList *it;
+
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+
+		for( it = window->private->signals ; it ; it = it->next ){
+			RecordedSignal *str = ( RecordedSignal * ) it->data;
+
+			if( str->handler_id == handler_id ){
+				g_signal_handler_disconnect( str->instance, str->handler_id );
+				window->private->signals = g_list_delete_link( window->private->signals, it );
+				g_free( str );
+			}
+		}
+	}
+}

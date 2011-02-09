@@ -382,7 +382,8 @@ on_main_selection_changed( NactIActionTab *instance, GList *selected_items, gpoi
 	if( st_initialized && !st_finalized ){
 
 		count_selected = g_list_length( selected_items );
-		g_debug( "%s: instance=%p, count_selected=%d", thisfn, ( void * ) instance, count_selected );
+		g_debug( "%s: instance=%p, selected_items=%p (count=%u)",
+				thisfn, ( void * ) instance, ( void * ) selected_items, count_selected );
 
 		enable_tab = ( count_selected == 1 );
 		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );

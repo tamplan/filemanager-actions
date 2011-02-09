@@ -104,7 +104,7 @@ nact_menubar_file_on_update_sensitivities( const NactMenubar *bar )
 	/* save enabled if at least one item has been modified
 	 * or level-zero has been resorted and is writable
 	 */
-	nact_menubar_enable_item( bar, "SaveItem", ( bar->private->count_modified > 0 ));
+	nact_menubar_enable_item( bar, "SaveItem", ( bar->private->is_tree_modified ));
 
 	/* quit always enabled */
 }
@@ -290,8 +290,6 @@ nact_menubar_file_save_items( BaseWindow *window )
 		return;
 	}
 
-	bar->private->level_zero_order_changed = FALSE;
-
 	/* remove deleted items
 	 * so that new actions with same id do not risk to be deleted later
 	 */
@@ -344,12 +342,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 	na_pivot_set_new_items( NA_PIVOT( bar->private->updater ), g_list_reverse( new_pivot ));
 	g_list_free( items );
 
-	/* when new_pivot is empty, then there has been no chance of updating
-	 * sensibilities on check status - so force it there
-	 */
-	if( !new_pivot ){
-		g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
-	}
+	g_signal_emit_by_name( window, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, FALSE );
 }
 
 /*

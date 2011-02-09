@@ -114,7 +114,6 @@ class_init( NAObjectIdClass *klass )
 	object_class->finalize = instance_finalize;
 
 	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->dump = NULL;
 	naobject_class->copy = NULL;
 	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = object_is_valid;

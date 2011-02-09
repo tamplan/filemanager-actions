@@ -225,7 +225,7 @@ nact_menubar_edit_on_cut( GtkAction *gtk_action, BaseWindow *window )
 		nact_clipboard_primary_set( clipboard, to_delete, CLIPBOARD_MODE_CUT );
 		update_clipboard_counters( window );
 		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
-		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TRUE );
+		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
 	}
 
 	na_object_free_items( items );
@@ -473,7 +473,7 @@ nact_menubar_edit_on_delete( GtkAction *gtk_action, BaseWindow *window )
 
 	if( to_delete ){
 		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
-		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TRUE );
+		nact_tree_ieditable_delete( NACT_TREE_IEDITABLE( view ), to_delete, TREE_OPE_DELETE );
 	}
 
 	na_object_free_items( items );

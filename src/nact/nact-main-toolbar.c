@@ -141,7 +141,7 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 	}
 
 	toolbar = gtk_ui_manager_get_widget( ui_manager, props->ui_path );
-	g_debug( "%s: toolbar=%p, path=%s, ref=%d", thisfn, ( void * ) toolbar, props->ui_path, G_OBJECT( toolbar )->ref_count );
+	g_debug( "%s: toolbar=%p, path=%s, ref_count=%d", thisfn, ( void * ) toolbar, props->ui_path, G_OBJECT( toolbar )->ref_count );
 	hbox = base_window_get_widget( BASE_WINDOW( window ), "ToolbarHBox" );
 
 	if( is_active ){
@@ -157,7 +157,6 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 		gtk_container_add( GTK_CONTAINER( hbox ), handle );
 		reorder_toolbars( GTK_HBOX( hbox ), toolbar_id, handle );
 		gtk_widget_show_all( handle );
-		g_debug( "%s: ref=%d", thisfn, G_OBJECT( toolbar )->ref_count );
 
 	} else {
 		handle = ( GtkWidget * ) g_object_get_data( G_OBJECT( toolbar ), "nact-main-toolbar-handle" );
@@ -167,7 +166,6 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 		g_signal_handler_disconnect( handle, attach_id );
 		gtk_container_remove( GTK_CONTAINER( handle ), toolbar );
 		gtk_container_remove( GTK_CONTAINER( hbox ), handle );
-		g_debug( "%s: ref=%d", thisfn, G_OBJECT( toolbar )->ref_count );
 	}
 
 	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
