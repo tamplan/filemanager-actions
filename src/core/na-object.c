@@ -670,13 +670,13 @@ na_object_object_ref( NAObject *object )
 void
 na_object_object_unref( NAObject *object )
 {
-	if( NA_IS_OBJECT( object )){
-		if( !object->private->dispose_has_run ){
-			if( NA_IS_OBJECT_ITEM( object )){
-				g_list_foreach( na_object_get_items( object ), ( GFunc ) na_object_object_unref, NULL );
-			}
-			g_object_unref( object );
+	g_return_if_fail( NA_IS_OBJECT( object ));
+
+	if( !object->private->dispose_has_run ){
+		if( NA_IS_OBJECT_ITEM( object )){
+			g_list_foreach( na_object_get_items( object ), ( GFunc ) na_object_object_unref, NULL );
 		}
+		g_object_unref( object );
 	}
 }
 

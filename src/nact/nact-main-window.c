@@ -740,7 +740,6 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
-		g_object_unref( self->private->items_view );
 		g_object_unref( self->private->clipboard );
 		g_object_unref( self->private->menubar );
 
@@ -760,6 +759,11 @@ instance_dispose( GObject *window )
 		nact_ienvironment_tab_dispose( NACT_IENVIRONMENT_TAB( window ));
 		nact_iexecution_tab_dispose( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_dispose( NACT_IPROPERTIES_TAB( window ));
+
+		/* unref items view at last as gtk_tree_model_store_clear() will
+		 * finalize all objects, thus invaliditing all our references
+		 */
+		g_object_unref( self->private->items_view );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
