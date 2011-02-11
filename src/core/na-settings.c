@@ -429,35 +429,6 @@ na_settings_register_key_callback( NASettings *settings, const gchar *key, GCall
 	}
 }
 
-#if 0
-/**
- * na_settings_register_global_callback:
- * @settings: this #NASettings instance.
- * @callback: the function to be called when the value of the key changes.
- * @user_data: data to be passed to the @callback function.
- *
- * Registers a new consumer of the monitoring of the configuration files.
- *
- * Since: 3.1.0
- */
-void
-na_settings_register_global_callback( NASettings *settings, GCallback callback, gpointer user_data )
-{
-	g_return_if_fail( NA_IS_SETTINGS( settings ));
-
-	if( !settings->private->dispose_has_run ){
-
-		Consumer *consumer = g_new0( Consumer, 1 );
-
-		consumer->key = NULL;
-		consumer->callback = callback;
-		consumer->user_data = user_data;
-		settings->private->consumers = g_list_prepend( settings->private->consumers, consumer );
-	}
-
-}
-#endif
-
 /**
  * na_settings_get_boolean:
  * @settings: this #NASettings instance.

@@ -281,7 +281,7 @@ on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window )
 
 			if( editable ){
 				na_object_set_matchcase( context, matchcase );
-				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 
 			} else {
 				g_signal_handlers_block_by_func(( gpointer ) button, on_matchcase_toggled, window );

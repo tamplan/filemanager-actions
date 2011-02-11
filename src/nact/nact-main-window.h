@@ -115,11 +115,66 @@
  *  |                           select first row (if any)
  *  |
  * [X] End of initialization process
+ *
+ * Signals, their rules and uses
+ * =============================
+ * TREE_SIGNAL_SELECTION_CHANGED
+ *   The signal is sent on the BaseWindow by the tree view each time the selection
+ *   changes.
+ *   Args:
+ *   - the list of selected items, may be NULL.
+ *   Consumers:
+ *   - the main window updates its 'current' properties, then send the
+ *     MAIN_SIGNAL_SELECTION_CHANGED signal
+ *   - the menubar updates its indicator depending of the current selection
+ *
+ * MAIN_SIGNAL_SELECTION_CHANGED
+ *   The signal is sent on the BaseWindow by the main window when the selection has
+ *   changed. 'current' main window properties have been set to reflect this new
+ *   selection.
+ *   Args:
+ *   - the list of selected items, may be NULL.
+ *   Consumers:
+ *   - All tabs should take advantage of this signal to enable/disable their
+ *     page, setup the content of their widgets, and so on.
+ *
+ * TAB_UPDATABLE_SIGNAL_ITEM_UPDATED
+ *   The signal is sent on the BaseWindow each time a widget is updated; the widget
+ *   callback must setup the edited object with the new value, and then should call
+ *   this signal with a flag indicating if the tree display should be refreshed now.
+ *   Args:
+ *   - an OR-ed list of modified flags, or 0 if not relevant
+ *   Consumers are:
+ *   - the main window checks the modification/validity status of the object
+ *   - if the 'refresh tree display' flag is set, then the tree model refreshes
+ *     the current row with current label and icon, then flags current row as
+ *     modified
+ *
+ * MAIN_SIGNAL_ITEM_UPDATED
+ *   The signal is sent on the BaseWindow after a data has been modified elsewhere
+ *   that in a tab: either the label the label has been edited inline in the tree
+ *   view, or a new i/o provider has been identified. The relevant NAObject has
+ *   been updated accordingly.
+ *   Args:
+ *   - an OR-ed list of modified flags, or 0 if not relevant
+ *   Consumers are:
+ *   - IActionTab and ICommandTab should update their label widgets
+ *   - IPropertiesTab updates its provider label
+ *
+ * TREE_SIGNAL_FOCUS_IN
+ * TREE_SIGNAL_FOCUS_OUT
+ * TREE_SIGNAL_CONTEXT_MENU
+ * TREE_SIGNAL_COUNT_CHANGED
+ * TREE_SIGNAL_LEVEL_ZERO_CHANGED
+ * TREE_SIGNAL_MODIFIED_STATUS_CHANGED
+ *
+ * TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED
+ *
+ * Object
  */
 
 #include "nact-application.h"
 #include "nact-clipboard.h"
-#include "nact-window.h"
 #include "nact-tree-view.h"
 
 G_BEGIN_DECLS
@@ -135,7 +190,7 @@ typedef struct _NactMainWindowPrivate        NactMainWindowPrivate;
 
 typedef struct {
 	/*< private >*/
-	NactWindow             parent;
+	BaseWindow             parent;
 	NactMainWindowPrivate *private;
 }
 	NactMainWindow;
@@ -144,7 +199,7 @@ typedef struct _NactMainWindowClassPrivate   NactMainWindowClassPrivate;
 
 typedef struct {
 	/*< private >*/
-	NactWindowClass             parent;
+	BaseWindowClass             parent;
 	NactMainWindowClassPrivate *private;
 }
 	NactMainWindowClass;
@@ -152,7 +207,19 @@ typedef struct {
 /**
  * Signals emitted by the main window
  */
+#define MAIN_SIGNAL_ITEM_UPDATED			"main-item-updated"
 #define MAIN_SIGNAL_SELECTION_CHANGED		"main-selection-changed"
+
+/**
+ * The data which, when modified, should be redisplayed asap.
+ * This is used by MAIN_SIGNAL_ITEM_UPDATED and TAB_UPDATABLE_SIGNAL_ITEM_UPDATED
+ * signals.
+ */
+enum {
+	MAIN_DATA_LABEL    = 1<<0,
+	MAIN_DATA_ICON     = 1<<1,
+	MAIN_DATA_PROVIDER = 1<<2,
+};
 
 /**
  * Properties set against the main window
@@ -170,9 +237,9 @@ NactMainWindow *nact_main_window_new           ( const NactApplication *applicat
 NactClipboard  *nact_main_window_get_clipboard ( const NactMainWindow *window );
 NactTreeView   *nact_main_window_get_items_view( const NactMainWindow *window );
 
-void            nact_main_window_reload( NactMainWindow *window );
-
-gboolean        nact_main_window_quit  ( NactMainWindow *window );
+void            nact_main_window_reload      ( NactMainWindow *window );
+void            nact_main_window_block_reload( NactMainWindow *window );
+gboolean        nact_main_window_quit        ( NactMainWindow *window );
 
 G_END_DECLS
 

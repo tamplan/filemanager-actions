@@ -82,7 +82,6 @@ enum {
 /* signals
  */
 enum {
-	CONTENT_CHANGED,
 	CONTEXT_MENU,
 	COUNT_CHANGED,
 	FOCUS_IN,
@@ -128,7 +127,6 @@ static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event,
 static gboolean on_focus_in( GtkWidget *widget, GdkEventFocus *event, BaseWindow *window );
 static gboolean on_focus_out( GtkWidget *widget, GdkEventFocus *event, BaseWindow *window );
 static gboolean on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window );
-static void     on_content_changed_cleanup_handler( BaseWindow *window, NAObject *edited );
 static void     on_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
 static void     on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items );
 static void     clear_selection( NactTreeView *view );
@@ -241,33 +239,6 @@ class_init( NactTreeViewClass *klass )
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	/**
-	 * NactTreeView::tree-signal-content-changed:
-	 *
-	 * This signal is emitted on the BaseWindow parent when the content
-	 * of the tree changes. It may change in two occurrences:
-	 * - the whole model is refilled with a new items list;
-	 * - a row is edited.
-	 *
-	 * Signal args:
-	 * - a pointer on the edited NAObject element, or NULL if the whole
-	 *   list has changed.
-	 *
-	 * Handler prototype:
-	 * void ( *handler )( BaseWindow *window, NAObject *edited, gpointer user_data );
-	 */
-	st_signals[ CONTENT_CHANGED ] = g_signal_new_class_handler(
-			TREE_SIGNAL_CONTENT_CHANGED,
-			G_TYPE_OBJECT,
-			G_SIGNAL_RUN_CLEANUP,
-			G_CALLBACK( on_content_changed_cleanup_handler ),
-			NULL,
-			NULL,
-			g_cclosure_marshal_VOID__POINTER,
-			G_TYPE_NONE,
-			1,
-			G_TYPE_POINTER );
-
-	/**
 	 * NactTreeView::tree-signal-open-popup
 	 *
 	 * This signal is emitted on the BaseWindow parent when the user right
@@ -377,12 +348,15 @@ class_init( NactTreeViewClass *klass )
 	 * NactTreeView::tree-signal-level-zero-changed:
 	 *
 	 * This signal is emitted on the BaseWindow each time the level zero
-	 * has changed.
+	 * has changed because an item has been removed or inserted, or when
+	 * the level zero has been saved.
 	 *
-	 * Signal args: none
+	 * Signal args:
+	 * - whether the level zero has changed (%TRUE), or comes to be saved
+	 *   (%FALSE).
 	 *
 	 * Handler prototype:
-	 * void ( *handler )( BaseWindow *window, gpointer user_data );
+	 * void ( *handler )( BaseWindow *window, gboolean is_modified, gpointer user_data );
 	 */
 	st_signals[ LEVEL_ZERO_CHANGED ] = g_signal_new(
 			TREE_SIGNAL_LEVEL_ZERO_CHANGED,
@@ -391,9 +365,10 @@ class_init( NactTreeViewClass *klass )
 			0,					/* no default handler */
 			NULL,
 			NULL,
-			g_cclosure_marshal_VOID__VOID,
+			g_cclosure_marshal_VOID__BOOLEAN,
 			G_TYPE_NONE,
-			0 );
+			1,
+			G_TYPE_BOOLEAN );
 
 	/**
 	 * NactTreeView::tree-signal-modified-status-changed:
@@ -847,17 +822,6 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
 }
 
 /*
- * cleanup handler for our TREE_SIGNAL_CONTENT_CHANGED signal
- */
-static void
-on_content_changed_cleanup_handler( BaseWindow *window, NAObject *edited )
-{
-	static const gchar *thisfn = "nact_tree_view_on_content_changed_cleanup_handler";
-
-	g_debug( "%s: window=%p, edited=%p", thisfn, ( void * ) window, ( void * ) edited );
-}
-
-/*
  * handles the "changed" signal emitted on the GtkTreeSelection
  */
 static void
@@ -1043,8 +1007,23 @@ nact_tree_view_get_item_by_id( const NactTreeView *view, const gchar *id )
 GList *
 nact_tree_view_get_items( const NactTreeView *view )
 {
+	return( nact_tree_view_get_items_ex( view, TREE_LIST_ALL ));
+}
+
+/**
+ * nact_tree_view_get_items_ex:
+ * @view: this #NactTreeView instance.
+ * @mode: the list content
+ *
+ * Returns: the content of the current tree as a newly allocated list
+ * which should be na_object_free_items() by the caller.
+ */
+GList *
+nact_tree_view_get_items_ex( const NactTreeView *view, guint mode )
+{
 	GList *items;
 	NactTreeModel *model;
+	GList *deleted;
 
 	g_return_val_if_fail( NACT_IS_TREE_VIEW( view ), NULL );
 
@@ -1052,8 +1031,18 @@ nact_tree_view_get_items( const NactTreeView *view )
 
 	if( !view->private->dispose_has_run ){
 
+		deleted = NULL;
+
+		if( view->private->mode == TREE_MODE_EDITION ){
+			if( mode & TREE_LIST_DELETED ){
+				deleted = nact_tree_ieditable_get_deleted( NACT_TREE_IEDITABLE( view ));
+			}
+		}
+
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
-		items = nact_tree_model_get_items( model, TREE_LIST_ALL );
+		items = nact_tree_model_get_items( model, mode );
+
+		items = g_list_concat( items, deleted );
 	}
 
 	return( items );

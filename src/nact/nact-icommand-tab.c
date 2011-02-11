@@ -265,7 +265,7 @@ nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance )
 				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		base_window_signal_connect( BASE_WINDOW( instance ),
-				G_OBJECT( instance ), TREE_SIGNAL_CONTENT_CHANGED, G_CALLBACK( on_tree_view_content_changed ));
+				G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tree_view_content_changed ));
 
 		/* allocate a static fake NATokens object which will be user to build
 		 * the example label - this object will be unreffed on dispose
@@ -506,7 +506,7 @@ on_label_changed( GtkEntry *entry, NactICommandTab *instance )
 		if( profile ){
 			label = gtk_entry_get_text( entry );
 			na_object_set_label( profile, label );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, TRUE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, MAIN_DATA_LABEL );
 		}
 	}
 }
@@ -543,7 +543,7 @@ on_parameters_changed( GtkEntry *entry, NactICommandTab *instance )
 
 		if( profile ){
 			na_object_set_parameters( profile, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
 			update_example_label( instance, profile );
 		}
 	}
@@ -571,7 +571,7 @@ on_path_changed( GtkEntry *entry, NactICommandTab *instance )
 
 		if( profile ){
 			na_object_set_path( profile, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
 			update_example_label( instance, profile );
 		}
 	}
@@ -609,7 +609,7 @@ on_wdir_changed( GtkEntry *entry, NactICommandTab *instance )
 
 		if( profile ){
 			na_object_set_working_dir( profile, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
 		}
 	}
 }

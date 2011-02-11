@@ -88,7 +88,6 @@ typedef struct {
 /**
  * Signals emitted by the NactTreeView instance.
  */
-#define TREE_SIGNAL_CONTENT_CHANGED				"tree-signal-content-changed"
 #define TREE_SIGNAL_CONTEXT_MENU				"tree-signal-open-popup"
 #define TREE_SIGNAL_COUNT_CHANGED				"tree-signal-count-changed"
 #define TREE_SIGNAL_FOCUS_IN					"tree-signal-focus-in"
@@ -104,6 +103,16 @@ typedef enum {
 	TREE_MODE_N_MODES
 }
 	NactTreeMode;
+
+/**
+ * When getting a list of items; these indcators may be OR-ed.
+ */
+enum {
+	TREE_LIST_SELECTED = 1<<0,
+	TREE_LIST_MODIFIED = 1<<1,
+	TREE_LIST_ALL      = 1<<7,
+	TREE_LIST_DELETED  = 1<<8,
+};
 
 /**
  * The NactTreeView is attached to the parent BaseWindow via a GObject data.
@@ -124,6 +133,7 @@ void          nact_tree_view_collapse_all      ( const NactTreeView *view );
 void          nact_tree_view_expand_all        ( const NactTreeView *view );
 NAObjectItem *nact_tree_view_get_item_by_id    ( const NactTreeView *view, const gchar *id );
 GList        *nact_tree_view_get_items         ( const NactTreeView *view );
+GList        *nact_tree_view_get_items_ex      ( const NactTreeView *view, guint mode );
 
 void          nact_tree_view_select_row_at_path( NactTreeView *view, GtkTreePath *path );
 

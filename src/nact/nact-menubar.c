@@ -232,8 +232,6 @@ static void     on_tree_view_selection_changed( BaseWindow *window, GList *selec
 
 static void     on_update_sensitivities( NactMenubar *bar, BaseWindow *window );
 
-static void     on_finalizing_window( NactMenubar *bar, GObject *window );
-
 GType
 nact_menubar_get_type( void )
 {
@@ -405,8 +403,6 @@ nact_menubar_new( BaseWindow *window )
 
 	base_window_signal_connect( window,
 			G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_window ));
-
-	g_object_weak_ref( G_OBJECT( window ), ( GWeakNotify ) on_finalizing_window, bar );
 
 	g_object_set_data( G_OBJECT( window ), WINDOW_DATA_MENUBAR, bar );
 
@@ -873,44 +869,3 @@ nact_menubar_save_items( BaseWindow *window )
 {
 	nact_menubar_file_save_items( window );
 }
-
-/*
- * triggered just before the BaseWindow is finalized
- */
-static void
-on_finalizing_window( NactMenubar *bar, GObject *window )
-{
-	static const gchar *thisfn = "nact_menubar_on_finalizing_window";
-
-	g_return_if_fail( NACT_IS_MENUBAR( bar ));
-
-	g_debug( "%s: bar=%p (%s), window=%p", thisfn,
-			( void * ) bar, G_OBJECT_TYPE_NAME( bar ), ( void * ) window );
-
-	g_object_unref( bar );
-}
-
-#if 0
-/**
- * nact_menubar_is_level_zero_order_changed:
- * @window: the #BaseWindow main window.
- *
- * Returns: %TRUE if the level zero has changed, %FALSE else.
- */
-gboolean
-nact_menubar_is_level_zero_order_changed( const BaseWindow *window )
-{
-	BAR_WINDOW_VALUE( window, FALSE );
-	return( bar->private->level_zero_order_changed );
-}
-
-static void
-on_iactions_list_status_changed( BaseWindow *window, gpointer user_data )
-{
-	g_debug( "nact_menubar_on_iactions_list_status_changed" );
-
-	BAR_WINDOW_VOID( window );
-
-	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
-}
-#endif

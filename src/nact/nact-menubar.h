@@ -40,8 +40,7 @@
  * This is a convenience class which embeds the menubar of the application.
  *
  * There is one object (because there is one menubar). It is created by
- * the main window at initialization time. It attachs itself to the window,
- * and destroys itself - via a weak ref - when the window is finalizing.
+ * the main window at initialization time.
  *
  * Attaching the object to the window let us connect easily to all 'window'-
  * class messages, thus reducing the count of needed public functions.

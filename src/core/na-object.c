@@ -661,20 +661,22 @@ na_object_object_ref( NAObject *object )
  * Recursively unref the @object and all its children, decrementing their
  * reference_count by 1.
  *
+ * Note that we may want to free a copy+ref of a list of items whichy have
+ * had already disposed (which is probably a bug somewhere). So first test
+ * is the object is still alive.
+ *
  * Since: 2.30
  */
 void
 na_object_object_unref( NAObject *object )
 {
-	g_return_if_fail( NA_IS_OBJECT( object ));
-
-	if( !object->private->dispose_has_run ){
-
-		if( NA_IS_OBJECT_ITEM( object )){
-			g_list_foreach( na_object_get_items( object ), ( GFunc ) na_object_object_unref, NULL );
+	if( NA_IS_OBJECT( object )){
+		if( !object->private->dispose_has_run ){
+			if( NA_IS_OBJECT_ITEM( object )){
+				g_list_foreach( na_object_get_items( object ), ( GFunc ) na_object_object_unref, NULL );
+			}
+			g_object_unref( object );
 		}
-
-		g_object_unref( object );
 	}
 }
 

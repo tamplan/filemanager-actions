@@ -530,7 +530,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 	na_core_utils_slist_free( filters );
 	g_free( old_text );
 
-	g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+	g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 }
 
 static gboolean
@@ -615,7 +615,7 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 			na_core_utils_slist_free( filters );
 			g_free( filter );
 
-			g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+			g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 		}
 	} else {
 		g_signal_handlers_block_by_func(( gpointer ) cell_renderer, on_must_match_toggled, data );
@@ -666,7 +666,7 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 			na_core_utils_slist_free( filters );
 			g_free( filter );
 
-			g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+			g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 		}
 	} else {
 		g_signal_handlers_block_by_func(( gpointer ) cell_renderer, on_must_not_match_toggled, data );
@@ -704,7 +704,7 @@ add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix )
 		( *data->pset )( context, filters );
 		na_core_utils_slist_free( filters );
 
-		g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }
 
@@ -761,7 +761,7 @@ delete_current_row( MatchListStr *data )
 				( *data->pset )( context, filters );
 				na_core_utils_slist_free( filters );
 
-				g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+				g_signal_emit_by_name( G_OBJECT( data->window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 			}
 		}
 

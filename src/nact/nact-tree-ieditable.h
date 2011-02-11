@@ -83,30 +83,15 @@ void     nact_tree_ieditable_initialize    ( NactTreeIEditable *instance, GtkTre
 void     nact_tree_ieditable_terminate     ( NactTreeIEditable *instance );
 
 void     nact_tree_ieditable_delete        ( NactTreeIEditable *instance, GList *items, TreeIEditableDeleteOpe ope );
+gboolean nact_tree_ieditable_remove_deleted( NactTreeIEditable *instance, GSList **messages );
+GList   *nact_tree_ieditable_get_deleted   ( NactTreeIEditable *instance );
+
 void     nact_tree_ieditable_insert_items  ( NactTreeIEditable *instance, GList *items, NAObject *sibling );
 void     nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, GtkTreePath *path );
 void     nact_tree_ieditable_insert_into   ( NactTreeIEditable *instance, GList *items );
 
-#if 0
-void      nact_tree_ieditable_brief_tree_dump( NactTreeIEditable *instance );
-void      nact_tree_ieditable_display_order_change( NactTreeIEditable *instance, gint order_mode );
-gint      nact_tree_ieditable_get_management_mode( NactTreeIEditable *instance );
-gboolean  nact_tree_ieditable_has_modified_items( NactTreeIEditable *instance );
-GList    *nact_tree_ieditable_remove_rec( GList *list, NAObject *object );
-
-void      nact_tree_ieditable_bis_clear_selection( NactTreeIEditable *instance, GtkTreeView *treeview );
-void      nact_tree_ieditable_bis_collapse_to_parent( NactTreeIEditable *instance );
-void      nact_tree_ieditable_bis_expand_to_first_child( NactTreeIEditable *instance );
-NAObject *nact_tree_ieditable_bis_get_item( NactTreeIEditable *instance, const gchar *id );
-GList    *nact_tree_ieditable_bis_get_items( NactTreeIEditable *instance );
-GList    *nact_tree_ieditable_bis_get_selected_items( NactTreeIEditable *instance );
-void      nact_tree_ieditable_bis_list_modified_items( NactTreeIEditable *instance );
-void      nact_tree_ieditable_bis_remove_modified( NactTreeIEditable *instance, const NAObjectItem *item );
-void      nact_tree_ieditable_bis_select_first_row( NactTreeIEditable *instance );
-void      nact_tree_ieditable_bis_select_row_at_path( NactTreeIEditable *instance, GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
-void      nact_tree_ieditable_bis_toggle_collapse( NactTreeIEditable *instance );
-void      nact_tree_ieditable_bis_toggle_collapse_object( NactTreeIEditable *instance, const NAObject *item );
-#endif
+void     nact_tree_ieditable_dump_modified         ( const NactTreeIEditable *instance );
+gboolean nact_tree_ieditable_is_level_zero_modified( const NactTreeIEditable *instance );
 
 G_END_DECLS
 

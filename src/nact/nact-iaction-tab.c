@@ -221,7 +221,7 @@ nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance )
 				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		base_window_signal_connect( BASE_WINDOW( instance ),
-				G_OBJECT( instance ), TREE_SIGNAL_CONTENT_CHANGED, G_CALLBACK( on_tree_view_content_changed ));
+				G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tree_view_content_changed ));
 
 		button = base_window_get_widget( BASE_WINDOW( instance ), "ActionTargetSelectionButton" );
 		base_window_signal_connect(
@@ -504,7 +504,7 @@ on_target_selection_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 			if( editable ){
 				na_object_set_target_selection( item, is_target );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
 
 			} else {
 				g_signal_handlers_block_by_func(( gpointer ) button, on_target_selection_toggled, instance );
@@ -541,7 +541,7 @@ on_target_location_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 			if( editable ){
 				na_object_set_target_location( item, is_target );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
 
 			} else {
 				g_signal_handlers_block_by_func(( gpointer ) button, on_target_location_toggled, instance );
@@ -610,7 +610,7 @@ on_label_changed( GtkEntry *entry, NactIActionTab *instance )
 				setup_toolbar_label( instance, item, label );
 			}
 
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, TRUE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, MAIN_DATA_LABEL );
 		}
 	}
 }
@@ -661,7 +661,7 @@ on_target_toolbar_toggled( GtkToggleButton *button, NactIActionTab *instance )
 
 			if( editable ){
 				na_object_set_target_toolbar( item, is_target );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
 				toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( item ));
 				toolbar_label_set_sensitive( instance, NA_OBJECT_ITEM( item ));
 
@@ -710,7 +710,7 @@ on_toolbar_same_label_toggled( GtkToggleButton *button, NactIActionTab *instance
 					g_free( label );
 				}
 
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
 				toolbar_same_label_set_sensitive( instance, NA_OBJECT_ITEM( item ));
 				toolbar_label_set_sensitive( instance, NA_OBJECT_ITEM( item ));
 
@@ -771,7 +771,7 @@ on_toolbar_label_changed( GtkEntry *entry, NactIActionTab *instance )
 			label = gtk_entry_get_text( entry );
 			na_object_set_toolbar_label( NA_OBJECT_ACTION( item ), label );
 
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
 		}
 	}
 }
@@ -805,7 +805,7 @@ on_tooltip_changed( GtkEntry *entry, NactIActionTab *instance )
 
 		if( item ){
 			na_object_set_tooltip( item, gtk_entry_get_text( entry ));
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
 		}
 	}
 }
@@ -846,28 +846,32 @@ on_icon_changed( GtkEntry *icon_entry, NactIActionTab *instance )
 	static const gchar *thisfn = "nact_iaction_tab_on_icon_changed";
 	GtkImage *image;
 	NAObjectItem *item;
-	const gchar *icon_name;
+	gchar *icon_name;
 
-	if( !st_on_selection_change ){
-		g_debug( "%s: entry=%p, instance=%p", thisfn, ( void * ) icon_entry, ( void * ) instance );
+	g_debug( "%s: entry=%p, instance=%p", thisfn, ( void * ) icon_entry, ( void * ) instance );
 
-		icon_name = NULL;
+	icon_name = NULL;
 
-		g_object_get(
-				G_OBJECT( instance ),
-				MAIN_PROP_ITEM, &item,
-				NULL );
+	g_object_get(
+			G_OBJECT( instance ),
+			MAIN_PROP_ITEM, &item,
+			NULL );
 
-		if( item ){
-			icon_name = gtk_entry_get_text( icon_entry );
+	if( item ){
+		if( !st_on_selection_change ){
+			icon_name = g_strdup( gtk_entry_get_text( icon_entry ));
 			na_object_set_icon( item, icon_name );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, TRUE );
-		}
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, MAIN_DATA_ICON );
 
-		/* icon_name may be null if there is no current item
-		 * in such a case, we blank the image
-		 */
-		image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
-		base_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_SMALL_TOOLBAR );
+		} else {
+			icon_name = na_object_get_icon( item );
+		}
 	}
+
+	/* icon_name may be null if there is no current item
+	 * in such a case, we blank the image
+	 */
+	image = GTK_IMAGE( base_window_get_widget( BASE_WINDOW( instance ), "ActionIconImage" ));
+	base_gtk_utils_render( icon_name, image, GTK_ICON_SIZE_SMALL_TOOLBAR );
+	g_free( icon_name );
 }

@@ -37,6 +37,7 @@
 #include "nact-clipboard.h"
 #include "nact-menubar-priv.h"
 #include "nact-main-window.h"
+#include "nact-tree-ieditable.h"
 
 /**
  * nact_menubar_maintainer_on_update_sensitivities:
@@ -97,9 +98,10 @@ nact_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, BaseWindow 
 void
 nact_menubar_maintainer_on_list_modified_items( GtkAction *action, BaseWindow *window )
 {
-#if 0
-	nact_iactions_list_bis_list_modified_items( NACT_IACTIONS_LIST( window ));
-#endif
+	NactTreeView *items_view;
+
+	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
+	nact_tree_ieditable_dump_modified( NACT_TREE_IEDITABLE( items_view ));
 }
 
 /**

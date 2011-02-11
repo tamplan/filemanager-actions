@@ -53,9 +53,7 @@ static guint     st_event_autosave         = 0;
 static gchar *st_save_error       = N_( "Save error" );
 static gchar *st_save_warning     = N_( "Some items may not have been saved" );
 static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items list" );
-#if 0
-static gchar *st_delete_error     = N_( "Some items cannot have been deleted" );
-#endif
+static gchar *st_delete_error     = N_( "Some items have not be deleted" );
 
 static gboolean save_item( BaseWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages );
 static void     install_autosave( NactMenubar *bar );
@@ -261,7 +259,6 @@ nact_menubar_file_save_items( BaseWindow *window )
 	static const gchar *thisfn = "nact_menubar_file_save_items";
 	NactTreeView *items_view;
 	GList *items, *it;
-	gchar *label;
 	GList *new_pivot;
 	NAObjectItem *duplicate;
 	GSList *messages;
@@ -276,25 +273,30 @@ nact_menubar_file_save_items( BaseWindow *window )
 	 */
 	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
 	items = nact_tree_view_get_items( items_view );
+	na_object_dump_tree( items );
 	messages = NULL;
 
-	if( !na_iprefs_write_level_zero( NA_PIVOT( bar->private->updater ), items, &messages )){
-		if( g_slist_length( messages )){
-			msg = na_core_utils_slist_join_at_end( messages, "\n" );
-		} else {
-			msg = g_strdup( gettext( st_level_zero_write ));
+	if( nact_tree_ieditable_is_level_zero_modified( NACT_TREE_IEDITABLE( items_view ))){
+		if( !na_iprefs_write_level_zero( NA_PIVOT( bar->private->updater ), items, &messages )){
+			if( g_slist_length( messages )){
+				msg = na_core_utils_slist_join_at_end( messages, "\n" );
+			} else {
+				msg = g_strdup( gettext( st_level_zero_write ));
+			}
+			base_window_display_error_dlg( window, gettext( st_save_error ), msg );
+			g_free( msg );
+			na_core_utils_slist_free( messages );
 		}
-		base_window_display_error_dlg( window, gettext( st_save_error ), msg );
-		g_free( msg );
-		na_core_utils_slist_free( messages );
-		return;
+
+	} else {
+		g_signal_emit_by_name( window, TREE_SIGNAL_LEVEL_ZERO_CHANGED, FALSE );
 	}
 
 	/* remove deleted items
 	 * so that new actions with same id do not risk to be deleted later
+	 * not deleted items are reinserted in the tree
 	 */
-#if 0
-	if( !nact_main_window_remove_deleted( NACT_MAIN_WINDOW( window ), &messages )){
+	if( !nact_tree_ieditable_remove_deleted( NACT_TREE_IEDITABLE( items_view ), &messages )){
 		if( g_slist_length( messages )){
 			msg = na_core_utils_slist_join_at_end( messages, "\n" );
 		} else {
@@ -303,9 +305,11 @@ nact_menubar_file_save_items( BaseWindow *window )
 		base_window_display_error_dlg( window, gettext( st_save_error ), msg );
 		g_free( msg );
 		na_core_utils_slist_free( messages );
-		return;
+
+	} else {
+		na_object_free_items( items );
+		items = nact_tree_view_get_items( items_view );
 	}
-#endif
 
 	/* recursively save the modified items
 	 * check is useless here if item was not modified, but not very costly;
@@ -316,16 +320,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 	messages = NULL;
 
 	for( it = items ; it ; it = it->next ){
-		label = na_object_get_label( it->data );
-		g_debug( "%s saving item %s %p (%s), modified=%s",
-				thisfn,
-				G_OBJECT_TYPE_NAME( it->data ),
-				( void * ) it->data, label,
-				na_object_is_modified( it->data ) ? "True":"False" );
-		g_free( label );
-
 		save_item( window, bar->private->updater, NA_OBJECT_ITEM( it->data ), &messages );
-
 		duplicate = NA_OBJECT_ITEM( na_object_duplicate( it->data ));
 		na_object_reset_origin( it->data, duplicate );
 		na_object_check_status( it->data );
@@ -340,79 +335,57 @@ nact_menubar_file_save_items( BaseWindow *window )
 	}
 
 	na_pivot_set_new_items( NA_PIVOT( bar->private->updater ), g_list_reverse( new_pivot ));
-	g_list_free( items );
-
+	na_object_free_items( items );
+	nact_main_window_block_reload( NACT_MAIN_WINDOW( window ));
 	g_signal_emit_by_name( window, TREE_SIGNAL_MODIFIED_STATUS_CHANGED, FALSE );
 }
 
 /*
  * iterates here on each and every NAObjectItem row stored in the tree
- *
- * do not deal with profiles as they are directly managed by the action
- * they are attached to
- *
- * level zero order has already been saved from tree store order, so that
- * we actually do not care of the exact order of level zero NAPivot items
- *
- * saving means recursively save modified NAObjectItem, simultaneously
- * reproducing the new item in NAPivot
- *  +- A
- *  |  +- B
- *  |  |  +- C
- *  |  |  |  +- D
- *  |  |  |  +- E
- *  |  |  +- F
- *  |  +- G
- *  +- H
- *  |  +- ...
- *  save order: A-B-C-D-E-F-G-H (first parent, then children)
  */
 static gboolean
 save_item( BaseWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages )
 {
+	static const gchar *thisfn = "nact_menubar_file_save_item";
 	gboolean ret;
 	NAIOProvider *provider_before;
 	NAIOProvider *provider_after;
 	GList *subitems, *it;
-	gchar *msg;
+	gchar *label;
+	guint save_ret;
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
 	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
 
 	ret = TRUE;
-	provider_before = na_object_get_provider( item );
-
-	if( na_object_is_modified( item )){
-		ret = FALSE;
-		msg = NULL;
-
-		if( nact_window_save_item( NACT_WINDOW( window ), item, &msg )){
-
-			if( NA_IS_OBJECT_ACTION( item )){
-				na_object_reset_last_allocated( item );
-			}
-
-#if 0
-			nact_iactions_list_bis_remove_modified( NACT_IACTIONS_LIST( window ), item );
-#endif
-
-			provider_after = na_object_get_provider( item );
-			if( provider_after != provider_before ){
-				g_signal_emit_by_name( window, TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED, item );
-			}
-
-		} else {
-			/* TODO:
-			 * add the error message to the GSList
-			 */
-		}
-	}
 
 	if( NA_IS_OBJECT_MENU( item )){
 		subitems = na_object_get_items( item );
 		for( it = subitems ; it ; it = it->next ){
 			ret &= save_item( window, updater, NA_OBJECT_ITEM( it->data ), messages );
+		}
+	}
+
+	provider_before = na_object_get_provider( item );
+
+	if( na_object_is_modified( item )){
+		label = na_object_get_label( item );
+		g_debug( "%s: saving %p (%s) '%s'", thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ), label );
+		g_free( label );
+
+		save_ret = na_updater_write_item( updater, item, messages );
+		ret = ( save_ret == NA_IIO_PROVIDER_CODE_OK );
+
+		if( ret ){
+			if( NA_IS_OBJECT_ACTION( item )){
+				na_object_reset_last_allocated( item );
+			}
+
+			provider_after = na_object_get_provider( item );
+			if( provider_after != provider_before ){
+				g_signal_emit_by_name( window, MAIN_SIGNAL_ITEM_UPDATED, item, MAIN_DATA_PROVIDER );
+			}
 		}
 	}
 

@@ -46,7 +46,6 @@
 /* signals
  */
 #define TAB_UPDATABLE_SIGNAL_ITEM_UPDATED				"nact-tab-updatable-item-updated"
-#define TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED			"nact-tab-updatable-provider-changed"
 
 /* notebook tabs
  */

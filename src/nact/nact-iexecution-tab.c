@@ -361,7 +361,7 @@ execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *toggle_butt
 				widget = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
 				gtk_widget_set_sensitive( widget, is_normal );
 
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
 			}
 
 		} else {
@@ -388,7 +388,7 @@ on_startup_notify_toggled( GtkToggleButton *toggle_button, NactIExecutionTab *in
 
 		if( editable ){
 			na_object_set_startup_notify( profile, active );
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
 
 		} else {
 			g_signal_handlers_block_by_func(( gpointer ) toggle_button, on_startup_notify_toggled, instance );
@@ -412,7 +412,7 @@ on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance )
 	if( profile ){
 		text = gtk_entry_get_text( entry );
 		na_object_set_startup_class( profile, text );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
 	}
 }
 
@@ -430,6 +430,6 @@ on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance )
 	if( profile ){
 		text = gtk_entry_get_text( entry );
 		na_object_set_execute_as( profile, text );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, FALSE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
 	}
 }

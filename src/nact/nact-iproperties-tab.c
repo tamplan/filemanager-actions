@@ -62,7 +62,7 @@ static void       interface_base_init( NactIPropertiesTabInterface *klass );
 static void       interface_base_finalize( NactIPropertiesTabInterface *klass );
 
 static void       on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, gpointer user_data );
-static void       on_tab_updatable_provider_changed( NactIPropertiesTab *instance, NAObjectItem *item );
+static void       on_main_item_updated( NactIPropertiesTab *instance, NAObjectItem *item, guint data, gpointer user_data );
 
 static GtkButton *get_enabled_button( NactIPropertiesTab *instance );
 static void       on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
@@ -168,7 +168,7 @@ nact_iproperties_tab_runtime_init_toplevel( NactIPropertiesTab *instance )
 				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 
 		base_window_signal_connect( BASE_WINDOW( instance ),
-				G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED, G_CALLBACK( on_tab_updatable_provider_changed ));
+				G_OBJECT( instance ), MAIN_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_main_item_updated ));
 
 		enabled_button = get_enabled_button( instance );
 		base_window_signal_connect( BASE_WINDOW( instance ),
@@ -313,14 +313,16 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 }
 
 static void
-on_tab_updatable_provider_changed( NactIPropertiesTab *instance, NAObjectItem *item )
+on_main_item_updated( NactIPropertiesTab *instance, NAObjectItem *item, guint data, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_on_tab_updatable_provider_changed";
+	static const gchar *thisfn = "nact_iproperties_tab_on_main_item_updated";
 
 	if( st_initialized && !st_finalized ){
-		g_debug( "%s: instance=%p, item=%p", thisfn, ( void * ) instance, ( void * ) item );
-
-		display_provider_name( instance, item );
+		if( data & MAIN_DATA_PROVIDER ){
+			g_debug( "%s: instance=%p, item=%p, data=%u, user_data=%p",
+					thisfn, ( void * ) instance, ( void * ) item, data, ( void * ) user_data );
+			display_provider_name( instance, item );
+		}
 	}
 }
 
@@ -353,7 +355,7 @@ on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 
 			if( editable ){
 				na_object_set_enabled( item, enabled );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
 
 			} else {
 				g_signal_handlers_block_by_func(( gpointer ) button, on_enabled_toggled, instance );
@@ -460,7 +462,7 @@ on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance )
 		gtk_text_buffer_get_end_iter( buffer, &end );
 		text = gtk_text_buffer_get_text( buffer, &start, &end, TRUE );
 		na_object_set_description( item, text );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, FALSE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, item, 0 );
 	}
 }
 
@@ -475,7 +477,7 @@ on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance )
 			NULL );
 
 	if( item ){
-		/*g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, FALSE );*/
+		/*g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, edited, 0 );*/
 	}
 }
 

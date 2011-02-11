@@ -41,6 +41,7 @@
 #include "nact-application.h"
 #include "nact-clipboard.h"
 #include "base-gtk-utils.h"
+#include "nact-main-tab.h"
 #include "nact-tree-model.h"
 #include "nact-tree-model-priv.h"
 
@@ -101,32 +102,35 @@ extern guint          tree_model_dnd_dest_formats_count;
 
 static GtkTreeModelFilterClass *st_parent_class = NULL;
 
-static GType          register_type( void );
-static void           class_init( NactTreeModelClass *klass );
-static void           imulti_drag_source_init( EggTreeMultiDragSourceIface *iface );
-static void           idrag_dest_init( GtkTreeDragDestIface *iface );
-static void           instance_init( GTypeInstance *instance, gpointer klass );
-static void           instance_dispose( GObject *model );
-static void           instance_finalize( GObject *model );
+static GType    register_type( void );
+static void     class_init( NactTreeModelClass *klass );
+static void     imulti_drag_source_init( EggTreeMultiDragSourceIface *iface );
+static void     idrag_dest_init( GtkTreeDragDestIface *iface );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *model );
+static void     instance_finalize( GObject *model );
 
-static void           on_initialize_model( BaseWindow *window, gpointer user_data );
+static void     on_initialize_model( BaseWindow *window, gpointer user_data );
+static void     on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactTreeModel *model );
+static void     on_tab_updatable_item_updated( BaseWindow *window, NAIContext *context, guint data, gpointer user_data );
 
-static void           append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
-static void           display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, const NAObject *object );
+static void     append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
+static void     display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, const NAObject *object );
+static void     display_order_change( NactTreeModel *model, gint order_mode );
 #if 0
-static void           dump( NactTreeModel *model );
-static gboolean       dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpStruct *ntm );
+static void     dump( NactTreeModel *model );
+static gboolean dump_store( NactTreeModel *model, GtkTreePath *path, NAObject *object, ntmDumpStruct *ntm );
 #endif
-static void           fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, NAObject *object, GtkTreeIter *parent );
-static gboolean       filter_visible( GtkTreeModel *store, GtkTreeIter *iter, NactTreeModel *model );
-static gboolean       find_item_iter( NactTreeModel *model, GtkTreeStore *store, GtkTreePath *path, NAObject *object, ntmFindId *nfo );
-static gboolean       find_object_iter( NactTreeModel *model, GtkTreeStore *store, GtkTreePath *path, NAObject *object, ntmFindObject *nfo );
-static gboolean       get_items_iter( const NactTreeModel *model, GtkTreeStore *store, GtkTreePath *path, NAObject *object, ntmGetItems *ngi );
-static void           iter_on_store( const NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *parent, FnIterOnStore fn, gpointer user_data );
-static gboolean       iter_on_store_item( const NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter, FnIterOnStore fn, gpointer user_data );
-static void           remove_if_exists( NactTreeModel *model, GtkTreeModel *store, const NAObject *object );
-static gboolean       delete_items_rec( GtkTreeStore *store, GtkTreeIter *iter );
-static gint           sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data );
+static void     fill_tree_store( GtkTreeStore *model, GtkTreeView *treeview, NAObject *object, GtkTreeIter *parent );
+static gboolean filter_visible( GtkTreeModel *store, GtkTreeIter *iter, NactTreeModel *model );
+static gboolean find_item_iter( NactTreeModel *model, GtkTreeStore *store, GtkTreePath *path, NAObject *object, ntmFindId *nfo );
+static gboolean find_object_iter( NactTreeModel *model, GtkTreeStore *store, GtkTreePath *path, NAObject *object, ntmFindObject *nfo );
+static gboolean get_items_iter( const NactTreeModel *model, GtkTreeStore *store, GtkTreePath *path, NAObject *object, ntmGetItems *ngi );
+static void     iter_on_store( const NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *parent, FnIterOnStore fn, gpointer user_data );
+static gboolean iter_on_store_item( const NactTreeModel *model, GtkTreeModel *store, GtkTreeIter *iter, FnIterOnStore fn, gpointer user_data );
+static void     remove_if_exists( NactTreeModel *model, GtkTreeModel *store, const NAObject *object );
+static gboolean delete_items_rec( GtkTreeStore *store, GtkTreeIter *iter );
+static gint     sort_actions_list( GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer user_data );
 
 GType
 nact_tree_model_get_type( void )
@@ -327,7 +331,7 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
 	order_mode = na_iprefs_get_order_mode( NA_PIVOT( updater ), NULL );
-	nact_tree_model_display_order_change( model, order_mode );
+	display_order_change( model, order_mode );
 
 	/* setup instanciation time data
 	 */
@@ -353,15 +357,13 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 
 /*
  * on_initialize_model:
- * @model: this #NactTreeModel instance.
- * @have_dnd: whether the tree model must implement drag and drop
- * interfaces.
+ * @window: the #BaseWindow which embeds the tree view.
+ * @user_data: not used (this same @window).
  *
  * Initializes the tree model.
  *
  * We use drag and drop:
- * - inside of treeview, for duplicating items, or moving items between
- *   menus
+ * - inside of treeview, for duplicating items, or moving items between menus
  * - from treeview to the outside world (e.g. Nautilus) to export actions
  * - from outside world (e.g. Nautilus) to import actions
  */
@@ -369,6 +371,9 @@ static void
 on_initialize_model( BaseWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_tree_model_on_initialize_model";
+	NactApplication *application;
+	NAUpdater *updater;
+	NASettings *settings;
 
 	WINDOW_MODEL_VOID( window );
 
@@ -401,94 +406,72 @@ on_initialize_model( BaseWindow *window, gpointer user_data )
 
 			base_window_signal_connect( window,
 					G_OBJECT( model->private->treeview ), "drag-end", G_CALLBACK( nact_tree_model_dnd_on_drag_end ));
+
+			application = NACT_APPLICATION( base_window_get_application( window ));
+			updater = nact_application_get_updater( application );
+			settings = na_pivot_get_settings( NA_PIVOT( updater ));
+			na_settings_register_key_callback( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), model );
+
+			base_window_signal_connect( window,
+					G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_updatable_item_updated ));
 		}
 	}
 }
 
-#if 0
-/**
- * nact_tree_model_display:
- * @model: this #NactTreeModel instance.
- * @object: the object whose display is to be refreshed.
- *
- * Refresh the display of a #NAObject.
+/*
+ * NASettings callback for a change on NA_IPREFS_ITEMS_LIST_ORDER_MODE key
  */
-void
-nact_tree_model_display( NactTreeModel *model, NAObject *object )
+static void
+on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactTreeModel *model )
 {
-	static const gchar *thisfn = "nact_tree_model_display";
+	static const gchar *thisfn = "nact_tree_model_on_settings_order_mode_changed";
+	const gchar *order_mode_str;
+	guint order_mode;
+
+	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+
+	if( !model->private->dispose_has_run ){
+
+		order_mode_str = ( const gchar * ) new_value;
+		order_mode = na_iprefs_get_order_mode_by_label( order_mode_str );
+
+		g_debug( "%s: group=%s, key=%s, order_mode=%u (%s), mandatory=%s, model=%p (%s)",
+				thisfn, group, key, order_mode, order_mode_str,
+				mandatory ? "True":"False", ( void * ) model, G_OBJECT_TYPE_NAME( model ));
+
+		display_order_change( model, order_mode );
+	}
+}
+
+/*
+ * if force_display is true, then refresh the display of the view
+ */
+static void
+on_tab_updatable_item_updated( BaseWindow *window, NAIContext *context, guint data, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_tree_model_on_tab_updatable_item_updated";
+	NactTreeModel *model;
+	GtkTreePath *path;
 	GtkTreeStore *store;
 	GtkTreeIter iter;
-	GtkTreePath *path;
 
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
-
-	g_debug( "%s: model=%p (%s), object=%p (%s)",
-			thisfn,
-			( void * ) model, G_OBJECT_TYPE_NAME( model ),
-			( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	model = NACT_TREE_MODEL( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_MODEL ));
 
 	if( !model->private->dispose_has_run ){
+		g_debug( "%s: window=%p, context=%p (%s), data=%u, user_data=%p",
+				thisfn, ( void * ) window, ( void * ) context, G_OBJECT_TYPE_NAME( context ),
+				data, ( void * ) user_data );
 
-		store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
-
-		if( search_for_object( model, GTK_TREE_MODEL( store ), object, &iter )){
-			display_item( store, model->private->treeview, &iter, object );
-			path = gtk_tree_model_get_path( GTK_TREE_MODEL( store ), &iter );
-			gtk_tree_model_row_changed( GTK_TREE_MODEL( store ), path, &iter );
-			gtk_tree_path_free( path );
-		}
-
-		/*gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( model ));*/
-	}
-}
-#endif
-
-/**
- * nact_tree_model_display_order_change:
- * @model: this #NactTreeModel.
- * @order_mode: the new order mode.
- *
- * Setup the new order mode.
- */
-void
-nact_tree_model_display_order_change( NactTreeModel *model, gint order_mode )
-{
-	GtkTreeStore *store;
-
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
-
-	if( !model->private->dispose_has_run ){
-
-		store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
-		g_object_set_data( G_OBJECT( store ), TREE_MODEL_ORDER_MODE, GINT_TO_POINTER( order_mode ));
-
-		switch( order_mode ){
-
-			case IPREFS_ORDER_ALPHA_ASCENDING:
-
-				gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( store ),
-						TREE_COLUMN_LABEL, GTK_SORT_ASCENDING );
-
-				gtk_tree_sortable_set_sort_func( GTK_TREE_SORTABLE( store ),
-						TREE_COLUMN_LABEL, ( GtkTreeIterCompareFunc ) sort_actions_list, NULL, NULL );
-				break;
-
-			case IPREFS_ORDER_ALPHA_DESCENDING:
-
-				gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( store ),
-						TREE_COLUMN_LABEL, GTK_SORT_DESCENDING );
-
-				gtk_tree_sortable_set_sort_func( GTK_TREE_SORTABLE( store ),
-						TREE_COLUMN_LABEL, ( GtkTreeIterCompareFunc ) sort_actions_list, NULL, NULL );
-				break;
-
-			case IPREFS_ORDER_MANUAL:
-			default:
-
-				gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( store ),
-						GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, 0 );
-				break;
+		if( data & ( MAIN_DATA_LABEL | MAIN_DATA_ICON )){
+			path = nact_tree_model_object_to_path( model, ( NAObject * ) context );
+			if( path ){
+				store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
+				if( gtk_tree_model_get_iter( GTK_TREE_MODEL( store ), &iter, path )){
+					display_item( store, model->private->treeview, &iter, ( NAObject * ) context );
+					gtk_tree_model_row_changed( GTK_TREE_MODEL( store ), path, &iter );
+				}
+				gtk_tree_path_free( path );
+			}
 		}
 	}
 }
@@ -800,7 +783,7 @@ nact_tree_model_get_items( const NactTreeModel *model, guint mode )
 	items = NULL;
 
 	if( !model->private->dispose_has_run ){
-		g_debug( "%s: model=%p, mode=%x", thisfn, ( void * ) model, mode );
+		g_debug( "%s: model=%p, mode=0x%xh", thisfn, ( void * ) model, mode );
 
 		ngi.mode = mode;
 		ngi.items = NULL;
@@ -904,6 +887,55 @@ display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, con
 		GdkPixbuf *icon = base_gtk_utils_get_pixbuf( icon_name, GTK_WIDGET( treeview ), GTK_ICON_SIZE_MENU );
 		gtk_tree_store_set( model, iter, TREE_COLUMN_ICON, icon, -1 );
 		g_object_unref( icon );
+	}
+}
+
+/*
+ * nact_tree_model_display_order_change:
+ * @model: this #NactTreeModel.
+ * @order_mode: the new order mode.
+ *
+ * Setup the new order mode.
+ */
+static void
+display_order_change( NactTreeModel *model, gint order_mode )
+{
+	GtkTreeStore *store;
+
+	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+
+	if( !model->private->dispose_has_run ){
+
+		store = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
+		g_object_set_data( G_OBJECT( store ), TREE_MODEL_ORDER_MODE, GINT_TO_POINTER( order_mode ));
+
+		switch( order_mode ){
+
+			case IPREFS_ORDER_ALPHA_ASCENDING:
+
+				gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( store ),
+						TREE_COLUMN_LABEL, GTK_SORT_ASCENDING );
+
+				gtk_tree_sortable_set_sort_func( GTK_TREE_SORTABLE( store ),
+						TREE_COLUMN_LABEL, ( GtkTreeIterCompareFunc ) sort_actions_list, NULL, NULL );
+				break;
+
+			case IPREFS_ORDER_ALPHA_DESCENDING:
+
+				gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( store ),
+						TREE_COLUMN_LABEL, GTK_SORT_DESCENDING );
+
+				gtk_tree_sortable_set_sort_func( GTK_TREE_SORTABLE( store ),
+						TREE_COLUMN_LABEL, ( GtkTreeIterCompareFunc ) sort_actions_list, NULL, NULL );
+				break;
+
+			case IPREFS_ORDER_MANUAL:
+			default:
+
+				gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( store ),
+						GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, 0 );
+				break;
+		}
 	}
 }
 
@@ -1072,7 +1104,7 @@ find_object_iter( NactTreeModel *model, GtkTreeStore *store, GtkTreePath *path, 
 static gboolean
 get_items_iter( const NactTreeModel *model, GtkTreeStore *store, GtkTreePath *path, NAObject *object, ntmGetItems *ngi )
 {
-	if( ngi->mode == TREE_LIST_ALL ){
+	if( ngi->mode & TREE_LIST_ALL ){
 		if( gtk_tree_path_get_depth( path ) == 1 ){
 			ngi->items = g_list_prepend( ngi->items, na_object_ref( object ));
 		}

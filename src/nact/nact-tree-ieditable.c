@@ -77,7 +77,7 @@ static void           on_label_edited( GtkCellRendererText *renderer, const gcha
 static void           on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
 static void           on_object_modified_status_changed( NactTreeIEditable *view, NAObject *object, gboolean new_status, BaseWindow *window );
 static void           on_object_valid_status_changed( NactTreeIEditable *view, NAObject *object, gboolean new_status, BaseWindow *window );
-static void           on_tree_view_level_zero_changed( BaseWindow *window, gpointer user_data );
+static void           on_tree_view_level_zero_changed( BaseWindow *window, gboolean is_modified, gpointer user_data );
 static void           on_tree_view_modified_status_changed( BaseWindow *window, gboolean is_modified, gpointer user_data );
 static void           add_to_deleted_rec( IEditableData *ied, NAObject *object );
 static void           decrement_counters( NactTreeIEditable *view, IEditableData *ialid, GList *items );
@@ -267,7 +267,6 @@ on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gch
 	IEditableData *ied;
 	NAObject *object;
 	GtkTreePath *path;
-	gchar *new_text;
 
 	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
 
@@ -275,9 +274,9 @@ on_label_edited( GtkCellRendererText *renderer, const gchar *path_str, const gch
 		ied = ( IEditableData * ) g_object_get_data( G_OBJECT( items_view ), VIEW_DATA_IEDITABLE );
 		path = gtk_tree_path_new_from_string( path_str );
 		object = nact_tree_model_object_at_path( ied->model, path );
-		new_text = g_strdup( text );
+		na_object_set_label( object, text );
 
-		g_signal_emit_by_name( window, TREE_SIGNAL_CONTENT_CHANGED, object );
+		g_signal_emit_by_name( window, MAIN_SIGNAL_ITEM_UPDATED, object );
 	}
 }
 
@@ -357,10 +356,10 @@ on_object_valid_status_changed( NactTreeIEditable *instance, NAObject *object, g
 }
 
 /*
- * order of items at level zero of the tree has changed
+ * order or list of items at level zero of the tree has changed
  */
 static void
-on_tree_view_level_zero_changed( BaseWindow *window, gpointer user_data )
+on_tree_view_level_zero_changed( BaseWindow *window, gboolean is_modified, gpointer user_data )
 {
 	NactTreeView *items_view;
 	IEditableData *ied;
@@ -369,7 +368,7 @@ on_tree_view_level_zero_changed( BaseWindow *window, gpointer user_data )
 	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
 	ied = get_instance_data( NACT_TREE_IEDITABLE( items_view ));
 	prev_status = get_modification_status( ied );
-	ied->level_zero_changed = TRUE;
+	ied->level_zero_changed = is_modified;
 
 	if( nact_tree_view_are_notify_allowed( items_view )){
 		status = get_modification_status( ied );
@@ -454,7 +453,7 @@ nact_tree_ieditable_delete( NactTreeIEditable *instance, GList *items, TreeIEdit
 			if( parent ){
 				na_object_check_status( parent );
 			} else {
-				g_signal_emit_by_name( ied->window, TREE_SIGNAL_LEVEL_ZERO_CHANGED );
+				g_signal_emit_by_name( ied->window, TREE_SIGNAL_LEVEL_ZERO_CHANGED, TRUE );
 			}
 
 			/* record the deleted item in the 'deleted' list,
@@ -470,6 +469,8 @@ nact_tree_ieditable_delete( NactTreeIEditable *instance, GList *items, TreeIEdit
 
 		gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( ied->model ));
 
+		nact_tree_view_set_notify_allowed( NACT_TREE_VIEW( instance ), TRUE );
+
 		if( path ){
 			if( ope == TREE_OPE_DELETE ){
 				nact_tree_view_select_row_at_path( NACT_TREE_VIEW( instance ), path );
@@ -482,8 +483,6 @@ nact_tree_ieditable_delete( NactTreeIEditable *instance, GList *items, TreeIEdit
 			g_signal_emit_by_name( G_OBJECT( ied->window ), TREE_SIGNAL_MODIFIED_STATUS_CHANGED, status );
 
 		}
-
-		nact_tree_view_set_notify_allowed( NACT_TREE_VIEW( instance ), TRUE );
 	}
 }
 
@@ -537,6 +536,104 @@ decrement_counters( NactTreeIEditable *view, IEditableData *ied, GList *items )
 	actions *= -1;
 	profiles *= -1;
 	g_signal_emit_by_name( G_OBJECT( ied->window ), TREE_SIGNAL_COUNT_CHANGED, FALSE, menus, actions, profiles );
+}
+
+/**
+ * nact_tree_ieditable_remove_deleted:
+ * @instance: this #NactTreeIEditable *instance.
+ * @messages: a pointer to a #GSList of error messages.
+ *
+ * Actually removes the deleted items from the underlying I/O storage subsystem.
+ *
+ * @messages #GSList is only filled up in case of an error has occured.
+ * If there is no error (nact_tree_ieditable_remove_deleted() returns %TRUE),
+ * then the caller may safely assume that @messages is returned in the
+ * same state that it has been provided.
+ *
+ * Returns: %TRUE if all candidate items have been successfully deleted,
+ * %FALSE else.
+ */
+gboolean
+nact_tree_ieditable_remove_deleted( NactTreeIEditable *instance, GSList **messages )
+{
+	static const gchar *thisfn = "nact_tree_ieditable_remove_deleted";
+	gboolean delete_ok;
+	IEditableData *ied;
+	GList *it;
+	NAObjectItem *item;
+	GList *not_deleted;
+	guint delete_ret;
+
+	g_return_val_if_fail( NACT_IS_TREE_IEDITABLE( instance ), TRUE );
+
+	delete_ok = TRUE;
+
+	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
+
+		ied = get_instance_data( instance );
+		not_deleted = NULL;
+
+		for( it = ied->deleted ; it ; it = it->next ){
+			item = NA_OBJECT_ITEM( it->data );
+			g_debug( "%s: item=%p (%s)", thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
+			na_object_dump_norec( item );
+
+			delete_ret = na_updater_delete_item( ied->updater, item, messages );
+			delete_ok = ( delete_ret == NA_IIO_PROVIDER_CODE_OK );
+
+			if( !delete_ok ){
+				not_deleted = g_list_prepend( not_deleted, na_object_ref( item ));
+
+#if 0
+			} else {
+				origin = ( NAObject * ) na_object_get_origin( item );
+				if( origin ){
+					na_updater_remove_item( updater, origin );
+					g_object_unref( origin );
+				}
+#endif
+			}
+		}
+
+		ied->deleted = na_object_free_items( ied->deleted );
+
+		/* items that we cannot delete are reinserted in the tree view
+		 * in the state they were when they were deleted
+		 * (i.e. possibly modified)
+		 */
+		if( not_deleted ){
+			nact_tree_ieditable_insert_items( instance, not_deleted, NULL );
+			na_object_free_items( not_deleted );
+		}
+	}
+
+	return( delete_ok );
+}
+
+/**
+ * nact_tree_ieditable_get_deleted:
+ * @instance: this #NactTreeIEditable *instance.
+ *
+ * Returns: a copy of the 'deleted' list, which should be na_object_free_items()
+ * by the caller.
+ */
+GList *
+nact_tree_ieditable_get_deleted( NactTreeIEditable *instance )
+{
+	GList *deleted;
+	IEditableData *ied;
+
+	g_return_val_if_fail( NACT_IS_TREE_IEDITABLE( instance ), NULL );
+
+	deleted = NULL;
+
+	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
+
+		ied = get_instance_data( instance );
+		deleted = na_object_copyref_items( ied->deleted );
+	}
+
+	return( deleted );
 }
 
 /**
@@ -649,7 +746,7 @@ nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, G
 			for( it = items ; it ; it = it->next ){
 				na_object_check_status( it->data );
 			}
-			ied->level_zero_changed = TRUE;
+			g_signal_emit_by_name( ied->window, TREE_SIGNAL_LEVEL_ZERO_CHANGED, TRUE );
 		}
 
 		/* post insertion
@@ -826,24 +923,54 @@ increment_counters( NactTreeIEditable *view, IEditableData *ied, GList *items )
 	g_signal_emit_by_name( G_OBJECT( ied->window ), TREE_SIGNAL_COUNT_CHANGED, FALSE, menus, actions, profiles );
 }
 
-#if 0
-static void
-increment_counters_modified( NAObject *object, IEditableData *ied )
+/**
+ * nact_tree_ieditable_dump_modified:
+ * @instance: this #NactTreeIEditable *instance.
+ *
+ * Dump informations about modified items.
+ */
+void
+nact_tree_ieditable_dump_modified( const NactTreeIEditable *instance )
 {
-	gboolean writable;
-	guint reason;
+	static const gchar *thisfn = "nact_tree_ieditable_dump_modified";
+	IEditableData *ied;
 
-	if( NA_IS_OBJECT_ITEM( object )){
+	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
 
-		if( !na_object_get_provider( object )){
-			ied->count_modified += 1;
-		}
+	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
 
-		writable = na_updater_is_item_writable( ied->updater, NA_OBJECT_ITEM( object ), &reason );
-		na_object_set_writability_status( object, writable, reason );
+		ied = get_instance_data(( NactTreeIEditable * ) instance );
+
+		g_debug( "%s:      count_deleted=%u", thisfn, g_list_length( ied->deleted ));
+		g_debug( "%s:     count_modified=%u", thisfn, ied->count_modified );
+		g_debug( "%s: level_zero_changed=%s", thisfn, ied->level_zero_changed ? "True":"False" );
 	}
 }
-#endif
+
+/**
+ * nact_tree_ieditable_is_level_zero_modified:
+ * @instance: this #NactTreeIEditable *instance.
+ *
+ * Returns: %TRUE if the level zero must be saved, %FALSE else.
+ */
+gboolean
+nact_tree_ieditable_is_level_zero_modified( const NactTreeIEditable *instance )
+{
+	IEditableData *ied;
+	gboolean is_modified;
+
+	g_return_val_if_fail( NACT_IS_TREE_IEDITABLE( instance ), FALSE );
+
+	is_modified = FALSE;
+
+	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
+
+		ied = get_instance_data(( NactTreeIEditable * ) instance );
+		is_modified = ied->level_zero_changed;
+	}
+
+	return( is_modified );
+}
 
 static GtkTreePath *
 get_selection_first_path( GtkTreeView *treeview )

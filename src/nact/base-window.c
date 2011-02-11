@@ -458,13 +458,16 @@ instance_dispose( GObject *window )
 		base_gtk_utils_save_window_position( self, self->private->wsp_name );
 
 		/* signals must be deconnected before quitting main loop
+		 * (if objects are still alive)
 		 */
 		for( is = self->private->signals ; is ; is = is->next ){
 			RecordedSignal *str = ( RecordedSignal * ) is->data;
-			if( g_signal_handler_is_connected( str->instance, str->handler_id )){
-				g_signal_handler_disconnect( str->instance, str->handler_id );
-				if( st_debug_signal_connect ){
-					g_debug( "%s: disconnecting signal handler %p:%lu", thisfn, str->instance, str->handler_id );
+			if( G_IS_OBJECT( str->instance )){
+				if( g_signal_handler_is_connected( str->instance, str->handler_id )){
+					g_signal_handler_disconnect( str->instance, str->handler_id );
+					if( st_debug_signal_connect ){
+						g_debug( "%s: disconnecting signal handler %p:%lu", thisfn, str->instance, str->handler_id );
+					}
 				}
 			}
 			g_free( str );

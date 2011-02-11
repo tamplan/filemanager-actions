@@ -232,8 +232,6 @@ instance_dispose( GObject *object )
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-		na_object_dump( object );
-
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */

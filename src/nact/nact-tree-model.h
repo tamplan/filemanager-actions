@@ -86,15 +86,6 @@ enum {
 	TREE_N_COLUMN
 };
 
-/**
- * When getting a list of items; these indcators may be OR-ed.
- */
-enum {
-	TREE_LIST_SELECTED = 1<<0,
-	TREE_LIST_MODIFIED = 1<<1,
-	TREE_LIST_ALL = 0xff,
-};
-
 GType          nact_tree_model_get_type( void );
 
 NactTreeModel *nact_tree_model_new( BaseWindow *window, GtkTreeView *view, NactTreeMode mode );
@@ -108,18 +99,6 @@ NAObjectItem  *nact_tree_model_get_item_by_id( const NactTreeModel *model, const
 GList         *nact_tree_model_get_items     ( const NactTreeModel *model, guint mode );
 NAObject      *nact_tree_model_object_at_path( const NactTreeModel *model, GtkTreePath *path );
 GtkTreePath   *nact_tree_model_object_to_path( const NactTreeModel *model, const NAObject *object );
-
-/* find an item
- * get items (all, selected, modified)
- * remove a list of items
- * insert a list of items (here, inside)
- */
-
-/* *** */
-/*void         nact_tree_model_display( NactTreeModel *model, NAObject *object );*/
-void         nact_tree_model_display_order_change( NactTreeModel *model, gint order_mode );
-/*void         nact_tree_model_iter( NactTreeModel *model, FnIterOnStore fn, gpointer user_data );*/
-/* *** */
 
 G_END_DECLS
 

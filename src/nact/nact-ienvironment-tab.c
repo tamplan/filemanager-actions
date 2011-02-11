@@ -496,7 +496,7 @@ on_selection_count_changed( NactIEnvironmentTab *instance )
 			na_object_set_selection_count( context, selcount );
 			g_free( selcount );
 
-			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+			g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 		}
 	}
 }
@@ -542,7 +542,7 @@ on_show_always_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 				raz_desktop_listview( instance );
 				na_object_set_only_show_in( context, NULL );
 				na_object_set_not_show_in( context, NULL );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 			}
 
 		} else {
@@ -583,7 +583,7 @@ on_only_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *insta
 
 			} else {
 				na_object_set_only_show_in( context, NULL );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 			}
 
 		} else {
@@ -624,7 +624,7 @@ on_do_not_show_toggled( GtkToggleButton *toggle_button, NactIEnvironmentTab *ins
 
 			} else {
 				na_object_set_not_show_in( context, NULL );
-				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+				g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 			}
 
 		} else {
@@ -672,7 +672,7 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *wi
 					na_object_set_not_desktop( context, desktop, !state );
 				}
 
-				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+				g_signal_emit_by_name( G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 
 				g_free( desktop );
 
@@ -696,7 +696,7 @@ on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	if( context ){
 		text = gtk_entry_get_text( entry );
 		na_object_set_try_exec( context, text );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }
 
@@ -724,7 +724,7 @@ on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	if( context ){
 		text = gtk_entry_get_text( entry );
 		na_object_set_show_if_registered( context, text );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }
 
@@ -739,7 +739,7 @@ on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	if( context ){
 		text = gtk_entry_get_text( entry );
 		na_object_set_show_if_true( context, text );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }
 
@@ -754,7 +754,7 @@ on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance )
 	if( context ){
 		text = gtk_entry_get_text( entry );
 		na_object_set_show_if_running( context, text );
-		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, FALSE );
+		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, context, 0 );
 	}
 }
 

@@ -36,6 +36,7 @@
 #include <stdlib.h>
 
 #include <api/na-object-api.h>
+#include <api/na-timeout.h>
 
 #include <core/na-iabout.h>
 #include <core/na-iprefs.h>
@@ -121,6 +122,10 @@ struct _NactMainWindowPrivate {
 	NactTreeView    *items_view;
 	gboolean         is_tree_modified;
 	NactClipboard   *clipboard;
+	NactMenubar     *menubar;
+
+	gulong           pivot_handler_id;
+	NATimeout        pivot_timeout;
 };
 
 /* properties set against the main window
@@ -141,9 +146,8 @@ enum {
 /* signals
  */
 enum {
-	PROVIDER_CHANGED,
-	ITEM_UPDATED,
-	ORDER_CHANGED,
+	MAIN_ITEM_UPDATED,
+	TAB_ITEM_UPDATED,
 	SELECTION_CHANGED,
 	LAST_SIGNAL
 };
@@ -152,56 +156,56 @@ static const gchar     *st_xmlui_filename         = PKGDATADIR "/nautilus-action
 static const gchar     *st_toplevel_name          = "MainWindow";
 static const gchar     *st_wsp_name               = NA_IPREFS_MAIN_WINDOW_WSP;
 
-static NactWindowClass *st_parent_class           = NULL;
+static gint             st_burst_timeout          = 2500;		/* burst timeout in msec */
+static BaseWindowClass *st_parent_class           = NULL;
 static gint             st_signals[ LAST_SIGNAL ] = { 0 };
 
-static GType    register_type( void );
-static void     class_init( NactMainWindowClass *klass );
-static void     iaction_tab_iface_init( NactIActionTabInterface *iface );
-static void     icommand_tab_iface_init( NactICommandTabInterface *iface );
-static void     ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface );
-static void     imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface );
-static void     ifolders_tab_iface_init( NactIFoldersTabInterface *iface );
-static void     ischemes_tab_iface_init( NactISchemesTabInterface *iface );
-static void     icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface );
-static void     ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface );
-static void     iexecution_tab_iface_init( NactIExecutionTabInterface *iface );
-static void     iproperties_tab_iface_init( NactIPropertiesTabInterface *iface );
-static void     iabout_iface_init( NAIAboutInterface *iface );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void     instance_constructed( GObject *application );
-static void     instance_dispose( GObject *application );
-static void     instance_finalize( GObject *application );
+static GType      register_type( void );
+static void       class_init( NactMainWindowClass *klass );
+static void       iaction_tab_iface_init( NactIActionTabInterface *iface );
+static void       icommand_tab_iface_init( NactICommandTabInterface *iface );
+static void       ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface );
+static void       imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface );
+static void       ifolders_tab_iface_init( NactIFoldersTabInterface *iface );
+static void       ischemes_tab_iface_init( NactISchemesTabInterface *iface );
+static void       icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface );
+static void       ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface );
+static void       iexecution_tab_iface_init( NactIExecutionTabInterface *iface );
+static void       iproperties_tab_iface_init( NactIPropertiesTabInterface *iface );
+static void       iabout_iface_init( NAIAboutInterface *iface );
+static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void       instance_constructed( GObject *application );
+static void       instance_dispose( GObject *application );
+static void       instance_finalize( GObject *application );
 
-static void     on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data );
-static void     on_base_initialize_base_window( NactMainWindow *window, gpointer user_data );
-static void     on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
+static void       on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data );
+static void       on_base_initialize_base_window( NactMainWindow *window, gpointer user_data );
+static void       on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
 
-static void     on_tree_view_modified_status_changed( NactMainWindow *window, gboolean is_modified, gpointer user_data );
-static void     on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, gpointer user_data );
-static void     on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items );
-static void     raz_selection_properties( NactMainWindow *window );
-static void     setup_current_selection( NactMainWindow *window, NAObjectId *selected_row );
-static void     setup_dialog_title( NactMainWindow *window );
-static void     setup_writability_status( NactMainWindow *window );
-static void     on_pivot_items_changed( NAUpdater *updater, NactMainWindow *window );
-static gboolean confirm_for_giveup_from_pivot( const NactMainWindow *window );
-static gboolean confirm_for_giveup_from_menu( const NactMainWindow *window );
-static void     load_or_reload_items( NactMainWindow *window );
+static void       on_block_items_changed_timeout( NactMainWindow *window );
+static void       on_tree_view_modified_status_changed( NactMainWindow *window, gboolean is_modified, gpointer user_data );
+static void       on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, gpointer user_data );
+static void       on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items );
+static void       on_tab_updatable_item_updated( NactMainWindow *window, NAIContext *context, guint data, gpointer user_data );
+static void       raz_selection_properties( NactMainWindow *window );
+static void       setup_current_selection( NactMainWindow *window, NAObjectId *selected_row );
+static void       setup_dialog_title( NactMainWindow *window );
+static void       setup_writability_status( NactMainWindow *window );
 
-static gboolean base_is_willing_to_quit( const BaseWindow *window );
-static gboolean on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
-static gboolean warn_modified( NactMainWindow *window );
+/* items have changed */
+static void       on_pivot_items_changed( NAUpdater *updater, NactMainWindow *window );
+static gboolean   confirm_for_giveup_from_pivot( const NactMainWindow *window );
+static gboolean   confirm_for_giveup_from_menu( const NactMainWindow *window );
+static void       load_or_reload_items( NactMainWindow *window );
 
-/* *** */
-#if 0
-static gboolean actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages );
-static void     on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_data );
-#endif
-static void     on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display );
-static void     on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactMainWindow *window );
+/* application termination */
+static gboolean   base_is_willing_to_quit( const BaseWindow *window );
+static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
+static gboolean   warn_modified( NactMainWindow *window );
+
+/* NAIAbout interface */
 static gchar     *iabout_get_application_name( NAIAbout *instance );
 static GtkWindow *iabout_get_toplevel( NAIAbout *instance );
 
@@ -304,7 +308,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NACT_WINDOW_TYPE, "NactMainWindow", &info, 0 );
+	type = g_type_register_static( BASE_WINDOW_TYPE, "NactMainWindow", &info, 0 );
 
 	g_type_add_interface_static( type, NACT_IACTION_TAB_TYPE, &iaction_tab_iface_info );
 
@@ -390,24 +394,27 @@ class_init( NactMainWindowClass *klass )
 	base_class->is_willing_to_quit = base_is_willing_to_quit;
 
 	/**
-	 * nact-tab-updatable-provider-changed:
+	 * NactMainWindow::main-item-updated:
 	 *
-	 * This signal is emitted at save time, when we are noticing that
-	 * the save operation has led to a modification of the I/O provider.
-	 * This signal may be caught by a tab in order to display the
-	 * new provider's name.
+	 * This signal is emitted on the BaseWindow when the item has been modified
+	 * elsewhere that in a tab. The tabs should so update accordingly their
+	 * widgets.
+	 *
+	 * Args:
+	 * - an OR-ed list of the modified data, or 0 if not relevant.
 	 */
-	st_signals[ PROVIDER_CHANGED ] = g_signal_new(
-			TAB_UPDATABLE_SIGNAL_PROVIDER_CHANGED,
+	st_signals[ MAIN_ITEM_UPDATED ] = g_signal_new(
+			MAIN_SIGNAL_ITEM_UPDATED,
 			G_TYPE_OBJECT,
 			G_SIGNAL_RUN_LAST,
 			0,					/* no default handler */
 			NULL,
 			NULL,
-			g_cclosure_marshal_VOID__POINTER,
+			nact_cclosure_marshal_VOID__POINTER_UINT,
 			G_TYPE_NONE,
-			1,
-			G_TYPE_POINTER );
+			2,
+			G_TYPE_POINTER,
+			G_TYPE_UINT );
 
 	/**
 	 * nact-tab-updatable-item-updated:
@@ -415,22 +422,25 @@ class_init( NactMainWindowClass *klass )
 	 * This signal is emitted by the notebook tabs, when any property
 	 * of an item has been modified.
 	 *
+	 * Args:
+	 * - an OR-ed list of the modified data, or 0 if not relevant.
+	 *
 	 * This main window is rather the only consumer of this message,
 	 * does its tricks (title, etc.), and then reforward an item-updated
 	 * message to IActionsList.
 	 */
-	st_signals[ ITEM_UPDATED ] = g_signal_new(
+	st_signals[ TAB_ITEM_UPDATED ] = g_signal_new(
 			TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
 			G_TYPE_OBJECT,
 			G_SIGNAL_RUN_LAST,
 			0,					/* no default handler */
 			NULL,
 			NULL,
-			nact_cclosure_marshal_VOID__POINTER_BOOLEAN,
+			nact_cclosure_marshal_VOID__POINTER_UINT,
 			G_TYPE_NONE,
 			2,
 			G_TYPE_POINTER,
-			G_TYPE_BOOLEAN );
+			G_TYPE_UINT );
 
 	/**
 	 * NactMainWindow::main-selection-changed:
@@ -569,6 +579,13 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactMainWindowPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+
+	/* initialize timeout parameters when blocking 'pivot-items-changed' handler
+	 */
+	self->private->pivot_timeout.timeout = st_burst_timeout;
+	self->private->pivot_timeout.handler = ( NATimeoutFunc ) on_block_items_changed_timeout;
+	self->private->pivot_timeout.user_data = self;
+	self->private->pivot_timeout.source_id = 0;
 }
 
 static void
@@ -677,7 +694,7 @@ instance_constructed( GObject *window )
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		self->private->updater = nact_application_get_updater( application );
 
-		base_window_signal_connect( BASE_WINDOW( window ),
+		self->private->pivot_handler_id = base_window_signal_connect( BASE_WINDOW( window ),
 				G_OBJECT( self->private->updater ), PIVOT_SIGNAL_ITEMS_CHANGED, G_CALLBACK( on_pivot_items_changed ));
 
 		base_window_signal_connect( BASE_WINDOW( window ),
@@ -693,11 +710,9 @@ instance_constructed( GObject *window )
 		base_window_signal_connect( BASE_WINDOW( window ),
 				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_STATUS_CHANGED, G_CALLBACK( on_tree_view_modified_status_changed ));
 
-		/* create the menubar
-		 * it will create itself toolbar and statusbar
+		/* create the menubar and other convenience objects
 		 */
-		nact_menubar_new( BASE_WINDOW( window ));
-
+		self->private->menubar = nact_menubar_new( BASE_WINDOW( window ));
 		self->private->clipboard = nact_clipboard_new( BASE_WINDOW( window ));
 
 		/* chain up to the parent class */
@@ -727,6 +742,7 @@ instance_dispose( GObject *window )
 
 		g_object_unref( self->private->items_view );
 		g_object_unref( self->private->clipboard );
+		g_object_unref( self->private->menubar );
 
 		settings = na_pivot_get_settings( NA_PIVOT( self->private->updater ));
 
@@ -856,8 +872,6 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 		nact_iexecution_tab_runtime_init_toplevel( NACT_IEXECUTION_TAB( window ));
 		nact_iproperties_tab_runtime_init_toplevel( NACT_IPROPERTIES_TAB( window ));
 
-		na_settings_register_key_callback( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), window );
-
 		/* terminate the application by clicking the top right [X] button
 		 */
 		base_window_signal_connect( BASE_WINDOW( window ),
@@ -971,6 +985,38 @@ nact_main_window_reload( NactMainWindow *window )
 	}
 }
 
+/**
+ * nact_main_window_block_reload:
+ * @window: this #NactMainWindow instance.
+ *
+ * Temporarily blocks the handling of pivot-items-changed signal.
+ */
+void
+nact_main_window_block_reload( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_block_reload";
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+
+		g_debug( "%s: blocking %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
+		g_signal_handler_block( window->private->updater, window->private->pivot_handler_id );
+		na_timeout_event( &window->private->pivot_timeout );
+	}
+}
+
+static void
+on_block_items_changed_timeout( NactMainWindow *window )
+{
+	static const gchar *thisfn = "nact_main_window_on_block_items_changed_timeout";
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	g_debug( "%s: unblocking %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
+	g_signal_handler_unblock( window->private->updater, window->private->pivot_handler_id );
+}
+
 /*
  * the modification status of the items view has changed
  */
@@ -1036,6 +1082,24 @@ on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items 
 }
 
 static void
+on_tab_updatable_item_updated( NactMainWindow *window, NAIContext *context, guint data, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_main_window_on_tab_updatable_item_updated";
+
+	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p, context=%p (%s), data=%u, user_data=%p",
+				thisfn, ( void * ) window, ( void * ) context, G_OBJECT_TYPE_NAME( context ),
+				data, ( void * ) user_data );
+
+		if( context ){
+			na_object_check_status( context );
+		}
+	}
+}
+
+static void
 raz_selection_properties( NactMainWindow *window )
 {
 	window->private->current_item = NULL;
@@ -1093,6 +1157,7 @@ setup_dialog_title( NactMainWindow *window )
 	gchar *title;
 	gchar *label;
 	gchar *tmp;
+	gboolean is_modified;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
@@ -1101,14 +1166,9 @@ setup_dialog_title( NactMainWindow *window )
 
 	if( window->private->current_item ){
 		label = na_object_get_label( window->private->current_item );
-		tmp = g_strdup_printf( "%s - %s", label, title );
+		is_modified = na_object_is_modified( window->private->current_item );
+		tmp = g_strdup_printf( "%s%s - %s", is_modified ? "*" : "", label, title );
 		g_free( label );
-		g_free( title );
-		title = tmp;
-	}
-
-	if( window->private->is_tree_modified ){
-		tmp = g_strdup_printf( "*%s", title );
 		g_free( title );
 		title = tmp;
 	}
@@ -1142,7 +1202,8 @@ on_pivot_items_changed( NAUpdater *updater, NactMainWindow *window )
 
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: updater=%p (%s), window=%p (%s)", thisfn,
-				( void * ) updater, G_OBJECT_TYPE_NAME( updater ), ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+				( void * ) updater, G_OBJECT_TYPE_NAME( updater ),
+				( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		reload_ok = confirm_for_giveup_from_pivot( window );
 
@@ -1327,198 +1388,6 @@ warn_modified( NactMainWindow *window )
 	g_free( first );
 
 	return( confirm );
-}
-
-#if 0
-/**
- * nact_main_window_move_to_deleted:
- * @window: this #NactMainWindow instance.
- * @items: list of deleted objects.
- *
- * Adds the given list to the deleted one.
- *
- * Note that we move the ref from @items list to our own deleted list.
- * So that the caller should not try to na_object_free_items_list() the
- * provided list.
- */
-void
-nact_main_window_move_to_deleted( NactMainWindow *window, GList *items )
-{
-	static const gchar *thisfn = "nact_main_window_move_to_deleted";
-	GList *it;
-
-	g_debug( "%s: window=%p, items=%p (%d items)",
-			thisfn, ( void * ) window, ( void * ) items, g_list_length( items ));
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	if( !window->private->dispose_has_run ){
-
-		for( it = items ; it ; it = it->next ){
-			g_debug( "%s: %p (%s, ref_count=%d)", thisfn,
-					( void * ) it->data, G_OBJECT_TYPE_NAME( it->data ), G_OBJECT( it->data )->ref_count );
-		}
-
-		window->private->deleted = g_list_concat( window->private->deleted, items );
-		g_debug( "%s: main_deleted has %d items", thisfn, g_list_length( window->private->deleted ));
-	}
-}
-
-/**
- * nact_main_window_remove_deleted:
- * @window: this #NactMainWindow instance.
- * @messages: a pointer to a #GSList of error messages.
- *
- * Removes the deleted items from the underlying I/O storage subsystem.
- *
- * Each item of <structfield>NactMainWindow::private::deleted</structfield>
- * #GList may actually itself be a tree (e.g. a #NAObjectMenu). The embedded
- * items will be recursivelly removed, starting from the root.
- *
- * Returns: %TRUE if all candidate items have been successfully deleted,
- * %FALSE else.
- *
- * @messages #GSList is only filled up in case of an error has occured.
- * If there is no error (nact_main_window_remove_deleted() returns %TRUE),
- * then the caller may safely assume that @messages is returned in the
- * same state that it has been provided.
- */
-gboolean
-nact_main_window_remove_deleted( NactMainWindow *window, GSList **messages )
-{
-	gboolean delete_ok = TRUE;
-	GList *it;
-	NAObject *item;
-	GList *not_deleted;
-
-	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
-
-	if( !window->private->dispose_has_run ){
-
-		not_deleted = NULL;
-
-		for( it = window->private->deleted ; it ; it = it->next ){
-			item = NA_OBJECT( it->data );
-			delete_ok = actually_delete_item( window, item, window->private->updater, &not_deleted, messages );
-		}
-
-		window->private->deleted = na_object_free_items( window->private->deleted );
-
-		setup_dialog_title( window );
-
-#if 0
-		if( g_list_length( not_deleted )){
-			nact_iactions_list_bis_insert_items( NACT_IACTIONS_LIST( window ), not_deleted, NULL );
-			na_object_free_items( not_deleted );
-		}
-#endif
-	}
-
-	return( delete_ok );
-}
-
-/*
- * If the deleted item is a profile, then do nothing because the parent
- * action has been marked as modified when the profile has been deleted,
- * and thus updated in the storage subsystem as well as in the pivot
- */
-static gboolean
-actually_delete_item( NactMainWindow *window, NAObject *item, NAUpdater *updater, GList **not_deleted, GSList **messages )
-{
-	gboolean delete_ok = TRUE;
-	GList *items, *it;
-	NAObject *origin;
-	gchar *msg;
-
-	g_debug( "nact_main_window_actually_delete_item: item=%p (%s)",
-			( void * ) item, G_OBJECT_TYPE_NAME( item ));
-
-	if( NA_IS_OBJECT_ITEM( item )){
-		msg = NULL;
-		delete_ok = nact_window_delete_item( NACT_WINDOW( window ), NA_OBJECT_ITEM( item ), &msg );
-
-		if( !delete_ok ){
-			*messages = g_slist_append( *messages, msg );
-			*not_deleted = g_list_append( *not_deleted, na_object_ref( item ));
-			g_free( msg );
-
-		} else if( NA_IS_OBJECT_MENU( item )){
-			items = na_object_get_items( item );
-			for( it = items ; delete_ok && it ; it = it->next ){
-				delete_ok &= actually_delete_item( window, NA_OBJECT( it->data ), updater, not_deleted, messages );
-			}
-		}
-
-		if( delete_ok ){
-			origin = ( NAObject * ) na_object_get_origin( item );
-			if( origin ){
-				na_updater_remove_item( updater, origin );
-				g_object_unref( origin );
-			}
-		}
-	}
-
-	return( delete_ok );
-}
-
-static void
-on_main_window_level_zero_order_changed( NactMainWindow *window, gpointer user_data )
-{
-	g_debug( "nact_main_window_on_main_window_level_zero_order_changed" );
-
-	setup_dialog_title( window );
-}
-#endif
-
-static void
-on_tab_updatable_item_updated( NactMainWindow *window, gpointer user_data, gboolean force_display )
-{
-	static const gchar *thisfn = "nact_main_window_on_tab_updatable_item_updated";
-
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	if( !window->private->dispose_has_run ){
-		g_debug( "%s: window=%p, user_data=%p, force_display=%s",
-				thisfn, ( void * ) window, ( void * ) user_data, force_display ? "True":"False" );
-
-		if( window->private->current_item ){
-			na_object_check_status( window->private->current_item );
-		}
-	}
-}
-
-/*
- * NASettings callback for a change on NA_IPREFS_ITEMS_LIST_ORDER_MODE key
- */
-static void
-on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactMainWindow *window )
-{
-	static const gchar *thisfn = "nact_main_window_on_settings_order_mode_changed";
-	const gchar *order_mode_str;
-	guint order_mode;
-	GList *tree;
-
-	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-
-	if( !window->private->dispose_has_run ){
-
-		order_mode_str = ( const gchar * ) new_value;
-		order_mode = na_iprefs_get_order_mode_by_label( order_mode_str );
-
-		g_debug( "%s: group=%s, key=%s, order_mode=%u (%s), mandatory=%s, window=%p (%s)",
-				thisfn, group, key, order_mode, order_mode_str,
-				mandatory ? "True":"False", ( void * ) window, G_OBJECT_TYPE_NAME( window ));
-
-#if 0
-		nact_iactions_list_display_order_change( NACT_IACTIONS_LIST( window ), order_mode );
-		nact_sort_buttons_display_order_change( BASE_WINDOW( window ), order_mode );
-#endif
-
-		tree = na_pivot_get_items( NA_PIVOT( window->private->updater ));
-
-		if( g_list_length( tree )){
-			g_signal_emit_by_name( window, TREE_SIGNAL_LEVEL_ZERO_CHANGED );
-		}
-	}
 }
 
 static gchar *
