@@ -800,22 +800,29 @@ on_tree_view_selection_changed( BaseWindow *window, GList *selected, gpointer us
 	bar->private->are_parents_writable = TRUE;
 	if( selected ){
 		for( is = selected ; is ; is = is->next ){
-			gchar *label = na_object_get_label( is->data );
-			gboolean writable = na_object_is_finally_writable( is->data, NULL );
+			first = ( NAObject * ) is->data;
+			if( NA_IS_OBJECT_PROFILE( is->data )){
+				first = NA_OBJECT( na_object_get_parent( is->data ));
+			}
+			gchar *label = na_object_get_label( first );
+			gboolean writable = na_object_is_finally_writable( first, NULL );
 			g_debug( "%s: label=%s, writable=%s", thisfn, label, writable ? "True":"False" );
-			if( !na_object_is_finally_writable( is->data, NULL )){
+			g_free( label );
+			if( !writable ){
 				bar->private->are_parents_writable = FALSE;
 				break;
 			}
-			first = ( NAObject * ) na_object_get_parent( is->data );
-			if( first ){
-				if( !na_object_is_finally_writable( first, NULL )){
+			if( NA_IS_OBJECT_ITEM( is->data )){
+				first = ( NAObject * ) na_object_get_parent( is->data );
+				if( first ){
+					if( !na_object_is_finally_writable( first, NULL )){
+						bar->private->are_parents_writable = FALSE;
+						break;
+					}
+				} else if( !bar->private->is_level_zero_writable ){
 					bar->private->are_parents_writable = FALSE;
 					break;
 				}
-			} else if( !bar->private->is_level_zero_writable ){
-				bar->private->are_parents_writable = FALSE;
-				break;
 			}
 		}
 	} else {
