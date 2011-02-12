@@ -483,7 +483,7 @@ read_start_profile_attach_profile( const NAIFactoryProvider *provider, NAObjectP
 NADataBoxed *
 nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_value";
+	static const gchar *thisfn = "nadp_reader_ifactory_provider_read_data";
 	NADataBoxed *boxed;
 	gboolean found;
 	NadpReaderData *nrd;
@@ -493,13 +493,6 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 	gboolean bool_value;
 	GSList *slist_value;
 	guint uint_value;
-
-	/*g_debug( "%s: reader=%p (%s), reader_data=%p, def=%p (%s), messages=%p",
-			thisfn,
-			( void * ) reader, G_OBJECT_TYPE_NAME( reader ),
-			( void * ) reader_data,
-			( void * ) def, def->name,
-			( void * ) messages );*/
 
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( reader ), NULL );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( reader ), NULL );
@@ -546,7 +539,6 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 
 				case NAFD_TYPE_BOOLEAN:
 					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, def->desktop_entry, &found, na_core_utils_boolean_from_string( def->default_value ));
-					g_debug( "%s: name=%s, found=%s, value=%s", thisfn, def->name, found ? "True":"False", bool_value ? "True":"False" );
 					if( found ){
 						boxed = na_data_boxed_new( def );
 						na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( bool_value ));

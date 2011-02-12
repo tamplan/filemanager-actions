@@ -1127,7 +1127,6 @@ setup_current_selection( NactMainWindow *window, NAObjectId *selected_row )
 
 	if( NA_IS_OBJECT_PROFILE( selected_row )){
 		window->private->current_profile = NA_OBJECT_PROFILE( selected_row );
-		window->private->current_context = NA_ICONTEXT( selected_row );
 		window->private->current_item = NA_OBJECT_ITEM( na_object_get_parent( selected_row ));
 
 	} else {
@@ -1141,6 +1140,7 @@ setup_current_selection( NactMainWindow *window, NAObjectId *selected_row )
 			if( nb_profiles == 1 ){
 				profiles = na_object_get_items( selected_row );
 				window->private->current_profile = NA_OBJECT_PROFILE( profiles->data );
+				window->private->current_context = NA_ICONTEXT( profiles->data );
 			}
 		}
 	}

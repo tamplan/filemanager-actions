@@ -448,20 +448,28 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
 static gboolean
 convert_pre_v3_parameters( NAObjectProfile *profile )
 {
+	static const gchar *thisfn = "na_object_profile_convert_pre_v3_parameters";
 	gboolean path_changed, parms_changed;
+	gchar *before;
 
 	gchar *path = na_object_get_path( profile );
+	before = g_strdup( path );
 	path_changed = convert_pre_v3_parameters_str( path );
 	if( path_changed ){
 		na_object_set_path( profile, path );
+		g_debug( "%s: path=%s changed to %s", thisfn, before, path );
 	}
+	g_free( before );
 	g_free( path );
 
 	gchar *parms = na_object_get_parameters( profile );
+	before = g_strdup( parms );
 	parms_changed = convert_pre_v3_parameters_str( parms );
 	if( parms_changed ){
 		na_object_set_parameters( profile, parms );
+		g_debug( "%s: parameters=%s changed to %s", thisfn, before, parms );
 	}
+	g_free( before );
 	g_free( parms );
 
 	return( path_changed || parms_changed );
@@ -470,7 +478,6 @@ convert_pre_v3_parameters( NAObjectProfile *profile )
 static gboolean
 convert_pre_v3_parameters_str( gchar *str )
 {
-	static const gchar *thisfn = "na_object_profile_convert_pre_v3_parameters_str";
 	gboolean changed;
 	gchar *iter = str;
 
@@ -479,7 +486,6 @@ convert_pre_v3_parameters_str( gchar *str )
 			strlen( iter ) > 0 &&
 			( iter = g_strstr_len( iter, strlen( iter ), "%" )) != NULL ){
 
-		g_debug( "%s: iter[1]='%c'", thisfn, iter[1] );
 		switch( iter[1] ){
 
 			/* as a special optimization case, "%d/%f" parameters
@@ -541,13 +547,15 @@ convert_pre_v3_parameters_str( gchar *str )
 static gboolean
 convert_pre_v3_multiple( NAObjectProfile *profile )
 {
+	static const gchar *thisfn = "na_object_profile_convert_pre_v3_multiple";
 	gboolean accept_multiple;
 	gchar *selection_count;
 
 	accept_multiple = na_object_is_multiple( profile );
 	selection_count = g_strdup( accept_multiple ? ">0" : "=1" );
 	na_object_set_selection_count( profile, selection_count );
-	g_debug( "na_object_profile_convert_pre_v3_multiple: set selection_count=%s", selection_count );
+	g_debug( "%s: accept_multiple=%s changed to selection_count= %s",
+			thisfn, accept_multiple ? "True":"False", selection_count );
 	g_free( selection_count );
 
 	return( TRUE );
@@ -564,15 +572,23 @@ convert_pre_v3_multiple( NAObjectProfile *profile )
 static gboolean
 convert_pre_v3_isfiledir( NAObjectProfile *profile )
 {
+	static const gchar *thisfn = "na_object_profile_convert_pre_v3_isfiledir";
+	gboolean is_all_mimetypes;
 	gboolean converted;
 	gboolean isfile, isdir;
 	GSList *mimetypes;
+	GSList *before_list;
+	gchar *before_str, *after_str;
 
 	converted = FALSE;
 
-	if( na_icontext_is_all_mimetypes( NA_ICONTEXT( profile ))){
+	is_all_mimetypes =  na_icontext_is_all_mimetypes( NA_ICONTEXT( profile ));
+	g_debug( "%s: is_all_mimetypes=%s", thisfn, is_all_mimetypes ? "True":"False" );
+
+	if( is_all_mimetypes ){
 		converted = TRUE;
 		mimetypes = NULL;
+		before_list = na_object_get_mimetypes( profile );
 
 		isfile = na_object_is_file( profile );
 		isdir = na_object_is_dir( profile );
@@ -596,15 +612,23 @@ convert_pre_v3_isfiledir( NAObjectProfile *profile )
 				/* not files nor dir: this is an invalid case -> do not modify
 				 * mimetypes
 				 */
+				g_warning( "%s: is_dir=False, is_file=False is invalid", thisfn );
 				converted = FALSE;
 			}
 		}
 
 		if( converted ){
 			na_object_set_mimetypes( profile, mimetypes );
+
+			before_str = na_core_utils_slist_join_at_end( before_list, ";" );
+			after_str = na_core_utils_slist_join_at_end( mimetypes, ";" );
+			g_debug( "%s; mimetypes=[%s] changed to [%s]", thisfn, before_str, after_str );
+			g_free( after_str );
+			g_free( before_str );
 		}
 
 		na_core_utils_slist_free( mimetypes );
+		na_core_utils_slist_free( before_list );
 	}
 
 	return( converted );

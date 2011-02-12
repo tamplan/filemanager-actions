@@ -54,14 +54,14 @@ struct _NAIContextInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized   = FALSE;
+static const gchar *st_mimetype_all    = "*/*";
+
+static gboolean     st_initialized     = FALSE;
+static gboolean     st_finalized       = FALSE;
 
 static GType    register_type( void );
 static void     interface_base_init( NAIContextInterface *klass );
 static void     interface_base_finalize( NAIContextInterface *klass );
-
-static void     convert_allfiles_mimetype( NAIContext *context );
 
 static gboolean v_is_candidate( NAIContext *object, guint target, GList *selection );
 
@@ -262,6 +262,7 @@ na_icontext_is_valid( const NAIContext *context )
 gboolean
 na_icontext_is_all_mimetypes( const NAIContext *context )
 {
+	static const gchar *thisfn = "na_icontext_is_all_mimetypes";
 	gboolean is_all;
 	GSList *mimetypes, *im;
 
@@ -272,18 +273,20 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
 
 	for( im = mimetypes ; im ; im = im->next ){
 		if( !im->data || !strlen( im->data )){
+			g_warning( "%s: empty mimetype for context=%p", thisfn, ( void * ) context );
 			continue;
 		}
 		const gchar *imtype = ( const gchar * ) im->data;
 		if( !strcmp( imtype, "*" ) ||
-			!strcmp( imtype, "*/*" ) ||
+			!strcmp( imtype, st_mimetype_all ) ||
+			!strcmp( imtype, "*/all" ) ||
 			!strcmp( imtype, "all" ) ||
 			!strcmp( imtype, "all/*" ) ||
 			!strcmp( imtype, "all/all" )){
 				continue;
 		}
 		is_all = FALSE;
-		break;
+		/* do not break here so that we are able to check all mimetypes */
 	}
 
 	na_core_utils_slist_free( mimetypes );
@@ -316,8 +319,6 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
 void
 na_icontext_read_done( NAIContext *context )
 {
-	convert_allfiles_mimetype( context );
-
 	na_object_set_all_mimetypes( context, na_icontext_is_all_mimetypes( context ));
 }
 
@@ -414,6 +415,9 @@ na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *
 	na_core_utils_slist_free( folders );
 }
 
+#if 0
+static const gchar *st_mimetype_notdir = "!inode/directory";
+
 /*
  * Convert 'all/allfiles' mimetype to 'all/all' + 'file' scheme.
  * This takes into account
@@ -423,45 +427,48 @@ na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *
 static void
 convert_allfiles_mimetype( NAIContext *context )
 {
-	GSList *mimetypes, *im;
-	GSList *schemes;
-	gchar *tmp;
-	gboolean modified;
+	static const gchar *thisfn = "na_icontext_convert_allfiles_mimetype";
+	GSList *mimetypes, *im, *new_mimetypes;
+	const gchar *prev_type;
 
-	modified = FALSE;
 	mimetypes = na_object_get_mimetypes( context );
-	schemes = na_object_get_schemes( context );
+	new_mimetypes = NULL;
+	prev_type = NULL;
 
 	for( im = mimetypes ; im ; im = im->next ){
 		if( !im->data || !strlen( im->data )){
 			continue;
 		}
 
-		gchar *imtype = ( gchar * ) im->data;
-		gboolean positive = is_positive_assertion( imtype );
-		guint i = ( positive ? 0 : 1 );
+		const gchar *imtype = ( const gchar * ) im->data;
 
-		if( !strcmp( imtype+i, "allfiles" ) ||
-			!strcmp( imtype+i, "allfiles/*" ) ||
-			!strcmp( imtype+i, "allfiles/all" ) ||
-			!strcmp( imtype+i, "all/allfiles" )){
+		if( !strcmp( imtype, "allfiles" ) ||
+			!strcmp( imtype, "*/allfiles" ) ||
+			!strcmp( imtype, "allfiles/*" ) ||
+			!strcmp( imtype, "allfiles/all" ) ||
+			!strcmp( imtype, "all/allfiles" )){
 
-				g_free( im->data );
-				im->data = g_strdup( "all/all" );
-				tmp = g_strdup_printf( "%sfile", positive ? "" : "!" );
-				schemes = g_slist_prepend( schemes, tmp );
-				modified = TRUE;
+				new_mimetypes = g_slist_prepend( new_mimetypes, g_strdup( st_mimetype_all ));
+				new_mimetypes = g_slist_prepend( new_mimetypes, g_strdup( st_mimetype_notdir ));
+				prev_type = imtype;
+
+		} else if( strcmp( imtype, st_mimetype_all ) && strcmp( imtype, st_mimetype_notdir )){
+
+				new_mimetypes = g_slist_prepend( new_mimetypes, g_strdup( imtype ));
 		}
 	}
 
-	if( modified ){
-		na_object_set_mimetypes( context, mimetypes );
-		na_object_set_schemes( context, schemes );
+	if( mimetypes ){
+		if( prev_type ){
+			g_debug( "%s: changing %s to %s;%s", thisfn, prev_type, st_mimetype_all, st_mimetype_notdir );
+		}
+		na_object_set_mimetypes( context, g_slist_reverse( new_mimetypes ));
 	}
 
 	na_core_utils_slist_free( mimetypes );
-	na_core_utils_slist_free( schemes );
+	na_core_utils_slist_free( new_mimetypes );
 }
+#endif
 
 static gboolean
 v_is_candidate( NAIContext *context, guint target, GList *selection )
@@ -798,7 +805,7 @@ is_mimetype_of( const gchar *mimetype, const gchar *fgroup, const gchar *fsubgro
 	gboolean is_type_of;
 	gchar *mgroup, *msubgroup;
 
-	if( !strcmp( mimetype, "*" ) || !strcmp( mimetype, "*/*" )){
+	if( !strcmp( mimetype, "*" ) || !strcmp( mimetype, st_mimetype_all )){
 		return( TRUE );
 	}
 

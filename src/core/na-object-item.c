@@ -152,6 +152,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self = NA_OBJECT_ITEM( instance );
 
 	self->private = g_new0( NAObjectItemPrivate, 1 );
+
+	self->private->dispose_has_run = FALSE;
+	self->private->writable = TRUE;
+	self->private->reason = 0;
 }
 
 static void

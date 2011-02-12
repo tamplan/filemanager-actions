@@ -42,7 +42,7 @@
  * derived.
  *
  * All the API described here is rather private. External code should
- * use the API described in <na-object-api.h>.
+ * use the API described in <filename>nautilus-actions/na-object-api.h</filename>.
  */
 
 #include <glib-object.h>
