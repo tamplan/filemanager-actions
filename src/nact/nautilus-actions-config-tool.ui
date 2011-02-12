@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
@@ -208,7 +208,7 @@
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="tooltip_text" translatable="yes">The label of the item in the file manager context menus.</property>
-                                                <property name="invisible_char">●</property>
+                                                <property name="invisible_char">&#x25CF;</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
@@ -307,7 +307,7 @@ In this case, the defined conditions will be applied to the current folder, and 
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="tooltip_text" translatable="yes">The label displayed in the file manager toolbar.</property>
-                                                <property name="invisible_char">●</property>
+                                                <property name="invisible_char">&#x25CF;</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
@@ -378,7 +378,7 @@ In this case, the defined conditions will be applied to the current folder, and 
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="tooltip_text" translatable="yes">The tooltip displayed in the file manager user interface.</property>
-                                                <property name="invisible_char">●</property>
+                                                <property name="invisible_char">&#x25CF;</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
@@ -412,12 +412,12 @@ In this case, the defined conditions will be applied to the current folder, and 
                                                   </packing>
                                                 </child>
                                                 <child>
-                                              <object class="GtkEntry" id="ActionIconEntry">
-                                                <property name="visible">True</property>
-                                                <property name="can_focus">True</property>
-                                                <property name="tooltip_text" translatable="yes">The name of a themed icon or the filename of an image.</property>
-                                                <property name="invisible_char">●</property>
-                                              </object>
+                                                  <object class="GtkEntry" id="ActionIconEntry">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">True</property>
+                                                    <property name="tooltip_text" translatable="yes">The name of a themed icon or the filename of an image.</property>
+                                                    <property name="invisible_char">&#x25CF;</property>
+                                                  </object>
                                                   <packing>
                                                     <property name="position">1</property>
                                                   </packing>
@@ -532,7 +532,7 @@ In this case, the defined conditions will be applied to the current folder, and 
                                           <object class="GtkEntry" id="ProfileLabelEntry">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="position">1</property>
@@ -612,7 +612,7 @@ In this case, the defined conditions will be applied to the current folder, and 
                                             <property name="can_focus">True</property>
                                             <property name="tooltip_text" translatable="yes">The path of the command.
 If this is not an absolute path, then the PATH environment variable at execution time will be considered.</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -641,7 +641,7 @@ If this is not an absolute path, then the PATH environment variable at execution
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="tooltip_text" translatable="yes">The parameters of the command.</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -689,7 +689,7 @@ If this is not an absolute path, then the PATH environment variable at execution
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="tooltip_text" translatable="yes">The default working directory the command should be started in.</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -998,7 +998,7 @@ Only relevant when chosen execution mode is Normal.</property>
                                             <property name="tooltip_text" translatable="yes">When specified, this should be the name of a WM class of at least one window of the run command.
 See the Startup Notification Protocol Specification for more details.
 Only relevant when chosen execution mode is Normal.</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -1066,7 +1066,7 @@ Only relevant when chosen execution mode is Normal.</property>
                                             <property name="tooltip_text" translatable="yes">Enter here the user the command should be ran as.
 The user may be defined by his numeric UID or his login name.
 Leave the field empty to run the command as the current user.</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="position">1</property>
@@ -1690,7 +1690,7 @@ Filters may be negated to specify for which schemes your item must not appear.</
                                                 </child>
                                                 <child>
                                                   <object class="GtkButton" id="AddFromDefaultButton">
-                                                    <property name="label" translatable="yes">C_ommon...</property>
+                                                    <property name="label" translatable="yes">De_faults...</property>
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="receives_default">True</property>
@@ -1979,7 +1979,7 @@ If the current selection does not match this condition, then the item will not b
                                           <object class="GtkEntry" id="SelectionCountNumberEntry">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                             <property name="width_chars">5</property>
                                           </object>
                                           <packing>
@@ -2184,7 +2184,7 @@ First choose on the left if the item depends of a particular desktop environment
                                             <property name="can_focus">True</property>
                                             <property name="tooltip_text" translatable="yes">This is an advanced condition based on the presence of an executable file on the file system.
 This may be used for example to test for a prerequisite package.</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -2225,7 +2225,7 @@ This may be used for example to test for a prerequisite package.</property>
                                             <property name="can_focus">True</property>
                                             <property name="tooltip_text" translatable="yes">This is an advanced condition based on the presence of a particular service on the D-Bus system.
 This may be used for example for testing that a prerequisite service is currently available.</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -2253,7 +2253,7 @@ This may be used for example for testing that a prerequisite service is currentl
                                             <property name="tooltip_text" translatable="yes">This is an advanced condition based on a runtime result.
 Enter here a command which is able to display the exact "true" string on its standard output.
 This may be used for example for testing a complex condition.</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -2281,7 +2281,7 @@ This may be used for example for testing a complex condition.</property>
                                             <property name="tooltip_text" translatable="yes">This is an advanced condition based on the presence of a running binary.
 Note that only the basename of the binary is checked, not its dirname nor its parameters.
 This may be used for example for testing the presence of a prerequisite daemon.</property>
-                                            <property name="invisible_char">●</property>
+                                            <property name="invisible_char">&#x25CF;</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -2683,6 +2683,9 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
     <property name="title" translatable="yes">Importing actions</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <placeholder/>
     </child>
@@ -3965,39 +3968,39 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="label4"/>
-      <widget name="CommandParametersLabel"/>
-      <widget name="CommandPathLabel"/>
       <widget name="ProfileLabelLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="label4"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandLegendButton"/>
       <widget name="CommandPathButton"/>
+      <widget name="CommandLegendButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionMenuLabelLabel"/>
-      <widget name="ActionToolbarLabelLabel"/>
-      <widget name="ActionTooltipLabel"/>
       <widget name="ActionIconLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionMenuLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
     <widgets>
-      <widget name="label43"/>
-      <widget name="label44"/>
       <widget name="label45"/>
+      <widget name="label44"/>
+      <widget name="label43"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
     <widgets>
-      <widget name="label18"/>
-      <widget name="label39"/>
-      <widget name="label49"/>
       <widget name="label19"/>
+      <widget name="label49"/>
+      <widget name="label39"/>
+      <widget name="label18"/>
     </widgets>
   </object>
 </interface>
