@@ -97,7 +97,6 @@ AC_DEFUN([_CHECK_FOR_HTML_MANUALS],[
 
 	AC_SUBST([WITH_DB2HTML],[${with_db2html}])
 	AC_SUBST([WITH_GDT],[${with_gdt}])
-
 	AM_CONDITIONAL([ENABLE_HTML_MANUALS], [test "x${enable_html_manuals}" != "xno"])
 ])
 

@@ -111,10 +111,8 @@ AC_SUBST([GETTEXT_PACKAGE])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
 AM_GLIB_GNU_GETTEXT
 
-# GConf support
-AC_PATH_PROG([GCONFTOOL],[gconftool-2],[no])
-AM_GCONF_SOURCE_2
-AC_DEFINE_UNQUOTED([HAVE_GCONF],[1],[Whether we compile against the GConf library])
+# Have and want GConf support ?
+NA_CHECK_FOR_GCONF
 
 # note that requiring through pkg-config the version number of the
 # nautilus-extension library actually returns the version number of
@@ -191,10 +189,6 @@ AC_DEFINE_UNQUOTED([NA_CONFIG_OPTIONS],["$0 ${config_options}"],["Configure opti
 
 AC_OUTPUT
 
-if test "x${enable_schemas_install}" = "xno"; then
-	msg_schemas_install="disabled"; else
-	msg_schemas_install="enabled in ${GCONF_SCHEMA_FILE_DIR}"
-fi
 msg_gtk_doc=`if test "x${enable_gtk_doc}" = "xno"; then echo "disabled"; else echo "enabled"; fi`
 msg_gtk_version=""
 if test "${have_gtk3}" = "yes"; then msg_gtk_version="Gtk+ 3.0"; 
@@ -207,6 +201,7 @@ $as_echo "
 	Nautilus extensions directory   ${with_nautilus_extdir}
 	Gtk+ version                    ${msg_gtk_version}
 	Default I/O provider            ${with_default_io_provider}
+	GConf enabled                   ${enable_gconf}
 	GConf schemas installation      ${msg_schemas_install}
 	Maintainer mode                 ${msg_maintainer_mode}
 	API Reference generation        ${msg_gtk_doc}

@@ -26,6 +26,8 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
+if HAVE_GCONF
+
 schemas_in_files = \
 	nautilus-actions-prefs.schemas.in					\
 	nautilus-actions-confs.schemas.in					\
@@ -34,7 +36,7 @@ schemas_in_files = \
 schemas_files = $(schemas_in_files:.schemas.in=.schemas)
 
 nautilus-actions-confs.schemas.in:
-	$(top_srcdir)/src/utils/nautilus-actions-schemas -s > $@
+	$(top_srcdir)/src/utils/na-print-schemas -s > $@
 
 schemasdir = $(pkgdatadir)/gconf-schemas
 
@@ -73,3 +75,5 @@ uninstall-hook:
 			GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-uninstall-rule $$p; \
 		done \
 	fi
+
+endif
