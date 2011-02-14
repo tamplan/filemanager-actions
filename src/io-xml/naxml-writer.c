@@ -521,7 +521,7 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 	gchar *object_id;
 	gchar *value_str;
 
-	value_str = na_data_boxed_get_as_string( boxed );
+	value_str = na_boxed_get_string( NA_BOXED( boxed ));
 
 	/* boolean value must be lowercase
 	 */
@@ -623,7 +623,7 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxe
 	gchar *entry;
 	gchar *value_str;
 
-	value_str = na_data_boxed_get_as_string( boxed );
+	value_str = na_boxed_get_string( NA_BOXED( boxed ));
 
 	/* boolean value must be lowercase
 	 */
@@ -666,13 +666,15 @@ write_data_dump_element( NAXMLWriter *writer, const NADataDef *def, const NAData
 		value_list_node = xmlNewChild( value_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_LIST ), NULL );
 		xmlNewProp( value_list_node, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_LIST_PARM_TYPE ), BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING ));
 		value_list_value_node = xmlNewChild( value_list_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE ), NULL );
-		list = ( GSList * ) na_data_boxed_get_as_void( boxed );
+		list = ( GSList * ) na_boxed_get_as_void( NA_BOXED( boxed ));
 
 		for( is = list ; is ; is = is->next ){
 			encoded_content = xmlEncodeSpecialChars( writer->private->doc, BAD_CAST(( gchar * ) is->data ));
 			xmlNewChild( value_list_value_node, NULL, BAD_CAST( NAXML_KEY_DUMP_NODE_VALUE_TYPE_STRING ), encoded_content );
 			xmlFree( encoded_content );
 		}
+
+		na_core_utils_slist_free( list );
 
 	} else {
 		encoded_content = xmlEncodeSpecialChars( writer->private->doc, BAD_CAST( value_str ));

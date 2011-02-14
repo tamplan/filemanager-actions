@@ -523,7 +523,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					str_value = nadp_desktop_file_get_locale_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( found ){
 						boxed = na_data_boxed_new( def );
-						na_data_boxed_set_from_void( boxed, str_value );
+						na_boxed_set_from_void( NA_BOXED( boxed ), str_value );
 					}
 					g_free( str_value );
 					break;
@@ -532,7 +532,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					str_value = nadp_desktop_file_get_string( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( found ){
 						boxed = na_data_boxed_new( def );
-						na_data_boxed_set_from_void( boxed, str_value );
+						na_boxed_set_from_void( NA_BOXED( boxed ), str_value );
 					}
 					g_free( str_value );
 					break;
@@ -541,7 +541,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					bool_value = nadp_desktop_file_get_boolean( nrd->ndf, group, def->desktop_entry, &found, na_core_utils_boolean_from_string( def->default_value ));
 					if( found ){
 						boxed = na_data_boxed_new( def );
-						na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( bool_value ));
+						na_boxed_set_from_void( NA_BOXED( boxed ), GUINT_TO_POINTER( bool_value ));
 					}
 					break;
 
@@ -549,7 +549,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					slist_value = nadp_desktop_file_get_string_list( nrd->ndf, group, def->desktop_entry, &found, def->default_value );
 					if( found ){
 						boxed = na_data_boxed_new( def );
-						na_data_boxed_set_from_void( boxed, slist_value );
+						na_boxed_set_from_void( NA_BOXED( boxed ), slist_value );
 					}
 					na_core_utils_slist_free( slist_value );
 					break;
@@ -558,7 +558,7 @@ nadp_reader_ifactory_provider_read_data( const NAIFactoryProvider *reader, void 
 					uint_value = nadp_desktop_file_get_uint( nrd->ndf, group, def->desktop_entry, &found, atoi( def->default_value ));
 					if( found ){
 						boxed = na_data_boxed_new( def );
-						na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( uint_value ));
+						na_boxed_set_from_void( NA_BOXED( boxed ), GUINT_TO_POINTER( uint_value ));
 					}
 					break;
 

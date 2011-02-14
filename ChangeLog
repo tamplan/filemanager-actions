@@ -1,8 +1,18 @@
 2011-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	No more use deprecated functions
+
+	* src/core/na-factory-object.c:
+	* src/io-desktop/nadp-reader.c:
+	* src/io-desktop/nadp-writer.c:
+	* src/io-gconf/nagp-reader.c:
+	* src/io-gconf/nagp-writer.c:
+	* src/io-xml/naxml-reader.c:
+	* src/io-xml/naxml-writer.c: Updated accordingly.
+
 	NADataBoxed class now derives from NABoxed
 
-	* * src/api/na-boxed.h:
+	* src/api/na-boxed.h:
 	* src/api/na-data-boxed.h:
 	* src/api/na-data-types.h:
 	* src/core/na-boxed.c:

@@ -726,7 +726,7 @@ read_data_boxed_from_node( NAXMLReader *reader, xmlChar *path, xmlNode *parent, 
 		if( reader->private->root_node_str->fn_get_value ){
 			value = ( *reader->private->root_node_str->fn_get_value )( reader, parent, def );
 			boxed = na_data_boxed_new( def );
-			na_data_boxed_set_from_string( boxed, value );
+			na_boxed_set_from_string( NA_BOXED( boxed ), value );
 			g_free( value );
 		}
 	}
