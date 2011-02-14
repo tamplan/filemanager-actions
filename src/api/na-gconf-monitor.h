@@ -32,7 +32,6 @@
 #define __NAUTILUS_ACTIONS_API_NA_GCONF_MONITOR_H__
 
 #ifndef NA_DISABLE_DEPRECATED
-
 /**
  * SECTION: gconf-monitor
  * @title: NAGConfMonitor

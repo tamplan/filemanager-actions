@@ -1,5 +1,14 @@
 2011-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	Only GConf writing operations are marked deprecated
+
+	* src/api/na-gconf-monitor.h:
+	* src/api/na-gconf-utils.h:
+	* src/core/na-gconf-monitor.c:
+	* src/core/na-gconf-utils.c:
+	* src/io-gconf/nagp-writer.c:
+	* src/io-gconf/nagp-writer.h: Updated accordingly.
+
 	No more use deprecated functions
 
 	* src/core/na-factory-object.c:

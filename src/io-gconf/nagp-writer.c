@@ -46,8 +46,10 @@
 #include "nagp-writer.h"
 #include "nagp-keys.h"
 
+#ifndef NA_DISABLE_DEPRECATED
 static void write_start_write_type( NagpGConfProvider *provider, NAObjectItem *item );
 static void write_start_write_version( NagpGConfProvider *provider, NAObjectItem *item );
+#endif
 
 /*
  * API function: should only be called through NAIIOProvider interface
@@ -55,7 +57,11 @@ static void write_start_write_version( NagpGConfProvider *provider, NAObjectItem
 gboolean
 nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 {
+#ifndef NA_DISABLE_DEPRECATED
 	return( TRUE );
+#else
+	return( FALSE );
+#endif
 }
 
 /*
@@ -72,6 +78,7 @@ nagp_iio_provider_is_willing_to_write( const NAIIOProvider *provider )
 gboolean
 nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 {
+#ifndef NA_DISABLE_DEPRECATED
 	static const gchar *thisfn = "nagp_iio_provider_is_able_to_write";
 	static const gchar *path = "/apps/nautilus-actions/foo";
 	NagpGConfProvider *self;
@@ -108,8 +115,12 @@ nagp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 
 	g_debug( "%s: provider=%p, able_to=%s", thisfn, ( void * ) provider, able_to ? "True":"False" );
 	return( able_to );
+#else
+	return( FALSE );
+#endif
 }
 
+#ifndef NA_DISABLE_DEPRECATED
 /*
  * update an existing item or write a new one
  * in all cases, it is much more easy to delete the existing  entries
@@ -383,3 +394,4 @@ nagp_writer_write_done( const NAIFactoryProvider *writer, void *writer_data,
 {
 	return( NA_IIO_PROVIDER_CODE_OK );
 }
+#endif /* NA_DISABLE_DEPRECATED */

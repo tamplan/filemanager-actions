@@ -34,6 +34,8 @@
 
 #include <api/na-gconf-monitor.h>
 
+#ifndef NA_DISABLE_DEPRECATED
+
 /* private class data
  */
 struct _NAGConfMonitorClassPrivate {
@@ -306,3 +308,5 @@ release_monitor( NAGConfMonitor *monitor )
 		}
 	}
 }
+
+#endif /* NA_DISABLE_DEPRECATED */

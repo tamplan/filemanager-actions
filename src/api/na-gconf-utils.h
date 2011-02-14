@@ -31,8 +31,6 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
 #define __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
 
-#ifndef NA_DISABLE_DEPRECATED
-
 /**
  * SECTION: gconf-utils
  * @title: GConf Misc
@@ -63,17 +61,19 @@ gint     na_gconf_utils_read_int         ( GConfClient *gconf, const gchar *path
 gchar   *na_gconf_utils_read_string      ( GConfClient *gconf, const gchar *path, gboolean use_schema, const gchar *default_value );
 GSList  *na_gconf_utils_read_string_list ( GConfClient *gconf, const gchar *path );
 
+/* Writing in GConf is deprecated since 3.1.0
+ */
+#ifndef NA_DISABLE_DEPRECATED
 gboolean na_gconf_utils_write_bool       ( GConfClient *gconf, const gchar *path, gboolean value, gchar **message );
 gboolean na_gconf_utils_write_int        ( GConfClient *gconf, const gchar *path, gint value, gchar **message );
 gboolean na_gconf_utils_write_string     ( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message );
 gboolean na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList *value, gchar **message );
-
 gboolean na_gconf_utils_remove_entry     ( GConfClient *gconf, const gchar *path, gchar **message );
+#endif /* NA_DISABLE_DEPRECATED */
 
 GSList  *na_gconf_utils_slist_from_string( const gchar *value );
 gchar   *na_gconf_utils_slist_to_string  ( GSList *slist );
 
 G_END_DECLS
 
-#endif /* NA_DISABLE_DEPRECATED */
 #endif /* __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__ */
