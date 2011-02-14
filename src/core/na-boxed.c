@@ -37,6 +37,7 @@
 #include <strings.h>
 
 #include <api/na-boxed.h>
+#include <api/na-data-types.h>
 #include <api/na-core-utils.h>
 
 /* private structure data
@@ -119,7 +120,7 @@ static gpointer uint_list_get_pointer( const NABoxed *boxed );
 static GList   *uint_list_get_uint_list( const NABoxed *boxed );
 
 static BoxedDef st_boxed_def[] = {
-		{ NA_BOXED_TYPE_STRING,
+		{ NA_DATA_TYPE_STRING,
 				"string",
 				string_compare,
 				string_copy,
@@ -134,7 +135,7 @@ static BoxedDef st_boxed_def[] = {
 				NULL,
 				NULL
 				},
-		{ NA_BOXED_TYPE_STRING_LIST,
+		{ NA_DATA_TYPE_STRING_LIST,
 				"ascii strings list",
 				string_list_compare,
 				string_list_copy,
@@ -149,7 +150,7 @@ static BoxedDef st_boxed_def[] = {
 				NULL,
 				NULL
 				},
-		{ NA_BOXED_TYPE_BOOLEAN,
+		{ NA_DATA_TYPE_BOOLEAN,
 				"boolean",
 				bool_compare,
 				bool_copy,
@@ -164,7 +165,7 @@ static BoxedDef st_boxed_def[] = {
 				NULL,
 				NULL
 				},
-		{ NA_BOXED_TYPE_UINT,
+		{ NA_DATA_TYPE_UINT,
 				"unsigned integer",
 				uint_compare,
 				uint_copy,
@@ -179,7 +180,7 @@ static BoxedDef st_boxed_def[] = {
 				uint_get_uint,
 				NULL
 				},
-		{ NA_BOXED_TYPE_UINT_LIST,
+		{ NA_DATA_TYPE_UINT_LIST,
 				"unsigned integers list",
 				uint_list_compare,
 				uint_list_copy,
@@ -500,7 +501,7 @@ na_boxed_new_from_string_with_sep( guint type, const gchar *string, const gchar 
  * na_boxed_get_boolean:
  * @boxed: the #NABoxed structure.
  *
- * Returns: the boolean value if @boxed is of %NA_BOXED_TYPE_BOOLEAN type,
+ * Returns: the boolean value if @boxed is of %NA_DATA_TYPE_BOOLEAN type,
  * %FALSE else.
  *
  * Since: 3.1.0
@@ -513,7 +514,7 @@ na_boxed_get_boolean( const NABoxed *boxed )
 	gboolean value;
 
 	value = FALSE;
-	if( boxed && boxed->type == NA_BOXED_TYPE_BOOLEAN && boxed->is_set ){
+	if( boxed && boxed->type == NA_DATA_TYPE_BOOLEAN && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_bool ){
@@ -563,7 +564,7 @@ na_boxed_get_pointer( const NABoxed *boxed )
  * na_boxed_get_string:
  * @boxed: the #NABoxed structure.
  *
- * Returns: a newly allocated string if @boxed is of %NA_BOXED_TYPE_STRING
+ * Returns: a newly allocated string if @boxed is of %NA_DATA_TYPE_STRING
  * type, which should be g_free() by the caller, %FALSE else.
  *
  * Since: 3.1.0
@@ -576,7 +577,7 @@ na_boxed_get_string( const NABoxed *boxed )
 	gchar *value;
 
 	value = NULL;
-	if( boxed && boxed->type == NA_BOXED_TYPE_STRING && boxed->is_set ){
+	if( boxed && boxed->type == NA_DATA_TYPE_STRING && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_string ){
@@ -595,7 +596,7 @@ na_boxed_get_string( const NABoxed *boxed )
  * na_boxed_get_string_list:
  * @boxed: the #NABoxed structure.
  *
- * Returns: a newly allocated string list if @boxed is of %NA_BOXED_TYPE_STRING_LIST
+ * Returns: a newly allocated string list if @boxed is of %NA_DATA_TYPE_STRING_LIST
  * type, which should be na_core_utils_slist_free() by the caller, %FALSE else.
  *
  * Since: 3.1.0
@@ -608,7 +609,7 @@ na_boxed_get_string_list( const NABoxed *boxed )
 	GSList *value;
 
 	value = NULL;
-	if( boxed && boxed->type == NA_BOXED_TYPE_STRING_LIST && boxed->is_set ){
+	if( boxed && boxed->type == NA_DATA_TYPE_STRING_LIST && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_string_list ){
@@ -627,7 +628,7 @@ na_boxed_get_string_list( const NABoxed *boxed )
  * na_boxed_get_uint:
  * @boxed: the #NABoxed structure.
  *
- * Returns: an unsigned integer if @boxed is of %NA_BOXED_TYPE_UINT type.
+ * Returns: an unsigned integer if @boxed is of %NA_DATA_TYPE_UINT type.
  *
  * Since: 3.1.0
  */
@@ -639,7 +640,7 @@ na_boxed_get_uint( const NABoxed *boxed )
 	guint value;
 
 	value = 0;
-	if( boxed && boxed->type == NA_BOXED_TYPE_UINT && boxed->is_set ){
+	if( boxed && boxed->type == NA_DATA_TYPE_UINT && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_uint ){
@@ -658,7 +659,7 @@ na_boxed_get_uint( const NABoxed *boxed )
  * na_boxed_get_uint_list:
  * @boxed: the #NABoxed structure.
  *
- * Returns: a newly allocated list if @boxed is of %NA_BOXED_TYPE_UINT_LIST
+ * Returns: a newly allocated list if @boxed is of %NA_DATA_TYPE_UINT_LIST
  * type, which should be g_list_free() by the caller, %FALSE else.
  *
  * Since: 3.1.0
@@ -671,7 +672,7 @@ na_boxed_get_uint_list( const NABoxed *boxed )
 	GList *value;
 
 	value = NULL;
-	if( boxed && boxed->type == NA_BOXED_TYPE_UINT_LIST && boxed->is_set ){
+	if( boxed && boxed->type == NA_DATA_TYPE_UINT_LIST && boxed->is_set ){
 		def = get_boxed_def( boxed->type );
 		if( def ){
 			if( def->get_uint_list ){

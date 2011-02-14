@@ -47,49 +47,6 @@
 
 G_BEGIN_DECLS
 
-/**
- * NABoxedType:
- * @NA_BOXED_TYPE_STRING:        an ASCII string
- * @NA_BOXED_TYPE_LOCALE_STRING: a localized UTF-8 string
- * @NA_BOXED_TYPE_BOOLEAN:       a boolean
- * @NA_BOXED_TYPE_STRING_LIST:   a list of ASCII strings
- * @NA_BOXED_TYPE_POINTER:       a ( void * ) pointer
- * @NA_BOXED_TYPE_UINT:          an unsigned integer
- * @NA_BOXED_TYPE_UINT_LIST:     a list of unsigned integers
- *
- * Each #NABoxed structure is typed at creation time with one of these
- * elementary types. A #NABoxed structure as so at least a defined type,
- * even if it does not yet have a value.
- *
- * <note>
- *   <para>
- * Please note that this enumeration may be compiled in by the extensions.
- * They must so remain fixed, unless you want see strange effects (e.g.
- * an extension has been compiled with %NA_BOXED_TYPE_STRING = 2, while
- * you have inserted another element, making it to 3 !) - or you know what
- * you are doing...
- *   </para>
- *   <para>
- *     So, only add new items at the end of the enum. You have been warned!
- *   </para>
- * </note>
- *
- * Since: 3.1.0
- */
-typedef enum {
-	NA_BOXED_TYPE_STRING = 1,
-	NA_BOXED_TYPE_LOCALE_STRING,
-	NA_BOXED_TYPE_BOOLEAN,
-	NA_BOXED_TYPE_STRING_LIST,
-	NA_BOXED_TYPE_POINTER,
-	NA_BOXED_TYPE_UINT,
-	NA_BOXED_TYPE_UINT_LIST,
-	/*< private >*/
-	/* the count of defined NABoxed types */
-	NA_BOXED_TYPE_N
-}
-	NABoxedType;
-
 typedef struct _NABoxed NABoxed;
 
 int           na_boxed_compare                 ( const NABoxed *a, const NABoxed *b );

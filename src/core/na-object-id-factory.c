@@ -49,7 +49,7 @@ NADataDef data_def_id [] = {
 				"Internal identifier of the NAObjectId object. " \
 				"Historically a UUID used as a GConf directory (thus ASCII, case insensitive), " \
 				"it is also the basename of the .desktop file (thus UTF-8, case sensitive).",
-				NAFD_TYPE_STRING,
+				NA_DATA_TYPE_STRING,
 				NULL,
 				FALSE,
 				TRUE,
@@ -73,7 +73,7 @@ NADataDef data_def_id [] = {
 				TRUE,
 				"NAObjectId Parent",
 				"The NAObjectItem which is the parent of this object.",
-				NAFD_TYPE_POINTER,
+				NA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,
 				FALSE,

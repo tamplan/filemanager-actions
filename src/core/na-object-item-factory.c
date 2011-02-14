@@ -60,7 +60,7 @@ NADataDef data_def_item [] = {
 					"- 'Action',\n" \
 					"- 'Menu'.\n" \
 					"The value is case sensitive and must not be localized." ),
-				NAFD_TYPE_STRING,
+				NA_DATA_TYPE_STRING,
 				NULL,
 				FALSE,
 				FALSE,
@@ -88,7 +88,7 @@ NADataDef data_def_item [] = {
 				N_( "The label of the menu item that will appear in the file manager context " \
 					"menu when the selection matches the appearance condition settings.\n" \
 					"It is also used as a default for the toolbar label of an action." ),
-				NAFD_TYPE_LOCALE_STRING,
+				NA_DATA_TYPE_LOCALE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -112,7 +112,7 @@ NADataDef data_def_item [] = {
 				N_( "The tooltip of the menu item that will appear in the file manager " \
 					"statusbar when the user points to the file manager context menu item " \
 					"with his/her mouse." ),
-				NAFD_TYPE_LOCALE_STRING,
+				NA_DATA_TYPE_LOCALE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -137,7 +137,7 @@ NADataDef data_def_item [] = {
 					"in the file manager context menu when the selection matches the appearance " \
 					"conditions settings.\n" \
 					"May be the localized name of a themed icon, or a full path to any appropriate image." ),
-				NAFD_TYPE_LOCALE_STRING,
+				NA_DATA_TYPE_LOCALE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -161,7 +161,7 @@ NADataDef data_def_item [] = {
 				FALSE,
 				"Unlocalized icon name or path",
 				NULL,
-				NAFD_TYPE_STRING,
+				NA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				FALSE,
@@ -184,7 +184,7 @@ NADataDef data_def_item [] = {
 				N_( "Description relative to the item" ),
 				N_( "Some text which explains the goal of the menu or the action.\n" \
 					"May be used, e.g. when displaying available items on a web site." ),
-				NAFD_TYPE_LOCALE_STRING,
+				NA_DATA_TYPE_LOCALE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -211,7 +211,7 @@ NADataDef data_def_item [] = {
 					"an already existing shortcut to define this one.\n" \
 					"The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n" \
 					"Defaults to empty." ),
-				NAFD_TYPE_STRING,
+				NA_DATA_TYPE_STRING,
 				"",
 				FALSE,
 				TRUE,
@@ -235,7 +235,7 @@ NADataDef data_def_item [] = {
 				TRUE,
 				"Subitems",
 				"List of subitems objects",
-				NAFD_TYPE_POINTER,
+				NA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,
 				FALSE,			/* not copyable */
@@ -263,7 +263,7 @@ NADataDef data_def_item [] = {
 					"if the item is a menu, or profiles if the item is an action.\n" \
 					"If this list doesn't exist or is empty for an action or a menu, " \
 					"subitems are attached in the order of the read operations." ),
-				NAFD_TYPE_STRING_LIST,
+				NA_DATA_TYPE_STRING_LIST,
 				NULL,
 				FALSE,
 				FALSE,
@@ -287,7 +287,7 @@ NADataDef data_def_item [] = {
 				N_( "If the or the menu action is disabled, it will never appear in the " \
 					"file manager context menu.\n" \
 					"Defaults to TRUE." ),
-				NAFD_TYPE_BOOLEAN,
+				NA_DATA_TYPE_BOOLEAN,
 				"true",
 				FALSE,
 				TRUE,
@@ -317,7 +317,7 @@ NADataDef data_def_item [] = {
 				"as this also depend of parameters set by user and administrator. " \
 				"Also, a property initially set to FALSE when first unserializing may be set to" \
 				"TRUE if an eccor occurs on a later write operation.",
-				NAFD_TYPE_BOOLEAN,
+				NA_DATA_TYPE_BOOLEAN,
 				"false",
 				FALSE,
 				TRUE,
@@ -341,7 +341,7 @@ NADataDef data_def_item [] = {
 				TRUE,
 				"I/O provider",
 				"A pointer to the NAIOProvider object.",
-				NAFD_TYPE_POINTER,
+				NA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,
 				TRUE,
@@ -368,7 +368,7 @@ NADataDef data_def_item [] = {
 				TRUE,
 				"I/O provider data",
 				"A pointer to some NAIOProvider specific data.",
-				NAFD_TYPE_POINTER,
+				NA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,
 				FALSE,
@@ -401,7 +401,7 @@ NADataDef data_def_item [] = {
 				TRUE,
 				N_( "Version of the format" ),
 				N_( "The version of the configuration format that will be used to manage backward compatibility." ),
-				NAFD_TYPE_UINT,
+				NA_DATA_TYPE_UINT,
 				"3",
 				FALSE,
 				TRUE,

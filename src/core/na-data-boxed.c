@@ -165,7 +165,7 @@ static void        uint_set_from_value( NADataBoxed *boxed, const GValue *value 
 static void        uint_set_from_void( NADataBoxed *boxed, const void *value );
 
 static DataBoxedFn st_data_boxed_fn[] = {
-		{ NAFD_TYPE_STRING,
+		{ NA_DATA_TYPE_STRING,
 				string_spec,
 				string_free,
 				string_dump,
@@ -180,7 +180,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				string_set_from_value,
 				string_set_from_void
 				},
-		{ NAFD_TYPE_LOCALE_STRING,
+		{ NA_DATA_TYPE_LOCALE_STRING,
 				string_spec,
 				string_free,
 				string_dump,
@@ -195,7 +195,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				string_set_from_value,
 				string_set_from_void
 				},
-		{ NAFD_TYPE_STRING_LIST,
+		{ NA_DATA_TYPE_STRING_LIST,
 				slist_spec,
 				slist_free,
 				slist_dump,
@@ -210,7 +210,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				slist_set_from_value,
 				slist_set_from_void
 				},
-		{ NAFD_TYPE_BOOLEAN,
+		{ NA_DATA_TYPE_BOOLEAN,
 				bool_spec,
 				bool_free,
 				bool_dump,
@@ -225,7 +225,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				bool_set_from_value,
 				bool_set_from_void
 				},
-		{ NAFD_TYPE_POINTER,
+		{ NA_DATA_TYPE_POINTER,
 				pointer_spec,
 				pointer_free,
 				pointer_dump,
@@ -240,7 +240,7 @@ static DataBoxedFn st_data_boxed_fn[] = {
 				pointer_set_from_value,
 				pointer_set_from_void
 				},
-		{ NAFD_TYPE_UINT,
+		{ NA_DATA_TYPE_UINT,
 				uint_spec,
 				uint_free,
 				uint_dump,
@@ -682,8 +682,8 @@ na_data_boxed_get_as_string( const NADataBoxed *boxed )
  *
  * Returns: the content of the @boxed.
  *
- * If of type NAFD_TYPE_STRING, NAFD_TYPE_LOCALE_STRING OR
- * NAFD_TYPE_STRING_LIST, then the content is returned in a newly
+ * If of type NA_DATA_TYPE_STRING, NA_DATA_TYPE_LOCALE_STRING OR
+ * NA_DATA_TYPE_STRING_LIST, then the content is returned in a newly
  * allocated value, which should be released by the caller.
  *
  * Since: 2.30

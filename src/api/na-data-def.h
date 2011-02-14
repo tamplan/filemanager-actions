@@ -68,7 +68,7 @@ G_BEGIN_DECLS
  *                    Used in GParamSpec and in schemas.
  * @long_label:       long, if not complete, localizable description.
  *                    Used in GParamSpec and in schemas?
- * @type:             the elementary NAFD_TYPE_xxx data type.
+ * @type:             the elementary NA_DATA_TYPE_xxx data type.
  * @default_value:    the default to assign when creating a new object.
  *                    This default is also displayed in command-line help
  *                    of nautilus-actions-new utility.

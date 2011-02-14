@@ -28,10 +28,8 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifndef __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
-#define __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__
-
-#ifndef NA_DISABLE_DEPRECATED
+#ifndef __NAUTILUS_ACTIONS_API_NA_DATA_TYPES_H__
+#define __NAUTILUS_ACTIONS_API_NA_DATA_TYPES_H__
 
 /**
  * SECTION: data-type
@@ -45,25 +43,27 @@
 G_BEGIN_DECLS
 
 /**
- * NAFactoryDataType:
- * @NAFD_TYPE_STRING:        an ASCII string
- * @NAFD_TYPE_LOCALE_STRING: a localized UTF-8 string
- * @NAFD_TYPE_BOOLEAN:       a boolean
- *                           can be initialized with "true" or "false" (case insensitive)
- * @NAFD_TYPE_STRING_LIST:   a list of ASCII strings
- * @NAFD_TYPE_POINTER:       a ( void * ) pointer
- *                           should be initialized to NULL
- * @NAFD_TYPE_UINT:          an unsigned integer
+ * NADataType:
+ * @NA_DATA_TYPE_POINTER:       a ( void * ) pointer
+ * @NA_DATA_TYPE_STRING:        an ASCII string
+ * @NA_DATA_TYPE_STRING_LIST:   a list of ASCII strings
+ * @NA_DATA_TYPE_LOCALE_STRING: a localized UTF-8 string
+ * @NA_DATA_TYPE_BOOLEAN:       a boolean
+ *                              can be initialized with "true" or "false" (case insensitive)
+ * @NA_DATA_TYPE_UINT:          an unsigned integer
+ * @NA_DATA_TYPE_UINT_LIST:     a list of unsigned integers
  *
- * Each elementary factory data must be typed as one of these
- * IFactoryProvider implementations should provide a primitive for reading
+ * Each elementary data which would take advantage of #NABoxed facilities
+ * should be typed at instanciation time.
+ *
+ * #NAIFactoryProvider implementations should provide a primitive for reading
  * (resp. writing) a value for each of these elementary data types.
  *
  * <note>
  *   <para>
  * Please note that this enumeration may be compiled in by the extensions.
- * They must so remain fixed, unless you want see strange effects (e.g.
- * an extension has been compiled with %NAFD_TYPE_STRING = 2, while you
+ * They must so remain fixed, unless you are prepared to see strange effects
+ * (e.g. an extension has been compiled with %NA_DATA_TYPE_STRING = 2, while you
  * have inserted another element, making it to 3 !) - or you know what
  * you are doing...
  *   </para>
@@ -72,25 +72,24 @@ G_BEGIN_DECLS
  *   </para>
  * </note>
  *
- * Starting with version 3.1.0, #NAFactoryDataType is deprecated in favour
- * of #NABoxed structure. New code should only use #NABoxed structure and
- * accessors.
- *
- * Deprecated: 3.1.0
+ * Since: 2.30
  */
 typedef enum {
-	NAFD_TYPE_STRING = 1,
-	NAFD_TYPE_LOCALE_STRING,
-	NAFD_TYPE_BOOLEAN,
-	NAFD_TYPE_STRING_LIST,
-	NAFD_TYPE_POINTER,
-	NAFD_TYPE_UINT
+	NA_DATA_TYPE_POINTER = 1,
+	NA_DATA_TYPE_STRING,
+	NA_DATA_TYPE_STRING_LIST,
+	NA_DATA_TYPE_LOCALE_STRING,
+	NA_DATA_TYPE_BOOLEAN,
+	NA_DATA_TYPE_UINT,
+	NA_DATA_TYPE_UINT_LIST,
+	/*< private >*/
+	/* count of defined types */
+	NA_DATA_TYPE_N
 }
-	NAFactoryDataType;
+	NADataType;
 
 const gchar *na_data_types_get_gconf_dump_key( guint type );
 
 G_END_DECLS
 
-#endif /* NA_DISABLE_DEPRECATED */
-#endif /* __NAUTILUS_ACTIONS_API_NA_FACTORY_DATA_TYPES_H__ */
+#endif /* __NAUTILUS_ACTIONS_API_NA_DATA_TYPES_H__ */

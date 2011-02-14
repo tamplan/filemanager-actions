@@ -312,7 +312,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 
 		switch( def->type ){
 
-			case NAFD_TYPE_STRING:
+			case NA_DATA_TYPE_STRING:
 				str_value = na_data_boxed_get_as_string( boxed );
 				na_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
@@ -322,7 +322,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 				g_free( str_value );
 				break;
 
-			case NAFD_TYPE_LOCALE_STRING:
+			case NA_DATA_TYPE_LOCALE_STRING:
 				str_value = na_data_boxed_get_as_string( boxed );
 				na_gconf_utils_write_string( gconf, path, str_value, &msg );
 				if( msg ){
@@ -332,7 +332,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 				g_free( str_value );
 				break;
 
-			case NAFD_TYPE_BOOLEAN:
+			case NA_DATA_TYPE_BOOLEAN:
 				bool_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
 				na_gconf_utils_write_bool( gconf, path, bool_value, &msg );
 				if( msg ){
@@ -341,7 +341,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 				}
 				break;
 
-			case NAFD_TYPE_STRING_LIST:
+			case NA_DATA_TYPE_STRING_LIST:
 				slist_value = ( GSList * ) na_data_boxed_get_as_void( boxed );
 				na_gconf_utils_write_string_list( gconf, path, slist_value, &msg );
 				if( msg ){
@@ -351,7 +351,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 				na_core_utils_slist_free( slist_value );
 				break;
 
-			case NAFD_TYPE_UINT:
+			case NA_DATA_TYPE_UINT:
 				uint_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
 				na_gconf_utils_write_int( gconf, path, uint_value, &msg );
 				if( msg ){

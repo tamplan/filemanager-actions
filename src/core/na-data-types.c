@@ -38,16 +38,18 @@
 typedef struct {
 	guint  type;
 	gchar *gconf_dump_key;
+	gchar *gconf_secondary_key;
 }
 	FactoryType;
 
 static FactoryType st_factory_type[] = {
-		{ NAFD_TYPE_STRING,        "string" },
-		{ NAFD_TYPE_LOCALE_STRING, "string" },
-		{ NAFD_TYPE_BOOLEAN,       "bool" },
-		{ NAFD_TYPE_STRING_LIST,   "list" },
-		{ NAFD_TYPE_POINTER,        NULL },
-		{ NAFD_TYPE_UINT,          "int" },
+		{ NA_DATA_TYPE_POINTER,        NULL,    NULL },
+		{ NA_DATA_TYPE_STRING,        "string", NULL },
+		{ NA_DATA_TYPE_STRING_LIST,   "list",   "string" },
+		{ NA_DATA_TYPE_LOCALE_STRING, "string", NULL },
+		{ NA_DATA_TYPE_BOOLEAN,       "bool",   NULL },
+		{ NA_DATA_TYPE_UINT,          "int",    NULL },
+		{ NA_DATA_TYPE_UINT_LIST,     "list",   "int" },
 		{ 0 }
 };
 
@@ -61,8 +63,6 @@ static FactoryType st_factory_type[] = {
  * should not be released by the caller.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 const gchar *
 na_data_types_get_gconf_dump_key( guint type )

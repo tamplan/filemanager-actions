@@ -366,26 +366,26 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 
 		switch( def->type ){
 
-			case NAFD_TYPE_STRING:
-			case NAFD_TYPE_LOCALE_STRING:
+			case NA_DATA_TYPE_STRING:
+			case NA_DATA_TYPE_LOCALE_STRING:
 				str_value = na_gconf_utils_read_string( provider->private->gconf, entry_path, TRUE, NULL );
 				g_debug( "%s: entry=%s, value=%s", thisfn, def->gconf_entry, str_value );
 				na_data_boxed_set_from_string( boxed, str_value );
 				g_free( str_value );
 				break;
 
-			case NAFD_TYPE_BOOLEAN:
+			case NA_DATA_TYPE_BOOLEAN:
 				bool_value = na_gconf_utils_read_bool( provider->private->gconf, entry_path, TRUE, FALSE );
 				na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( bool_value ));
 				break;
 
-			case NAFD_TYPE_STRING_LIST:
+			case NA_DATA_TYPE_STRING_LIST:
 				slist_value = na_gconf_utils_read_string_list( provider->private->gconf, entry_path );
 				na_data_boxed_set_from_void( boxed, slist_value );
 				na_core_utils_slist_free( slist_value );
 				break;
 
-			case NAFD_TYPE_UINT:
+			case NA_DATA_TYPE_UINT:
 				int_value = na_gconf_utils_read_int( provider->private->gconf, entry_path, TRUE, 0 );
 				na_data_boxed_set_from_void( boxed, GUINT_TO_POINTER( int_value ));
 				break;

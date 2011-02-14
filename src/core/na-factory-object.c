@@ -766,8 +766,8 @@ na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *nam
  *
  * Returns: the searched value.
  *
- * If the type of the value is NAFD_TYPE_STRING, NAFD_TYPE_LOCALE_STRING,
- * or NAFD_TYPE_STRING_LIST, then the returned value is a newly allocated
+ * If the type of the value is NA_DATA_TYPE_STRING, NA_DATA_TYPE_LOCALE_STRING,
+ * or NA_DATA_TYPE_STRING_LIST, then the returned value is a newly allocated
  * one and should be g_free() (resp. na_core_utils_slist_free()) by the
  * caller.
  */

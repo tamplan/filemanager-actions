@@ -514,7 +514,7 @@ nadp_writer_ifactory_provider_write_data(
 
 			switch( def->type ){
 
-				case NAFD_TYPE_STRING:
+				case NA_DATA_TYPE_STRING:
 					str_value = na_data_boxed_get_as_string( boxed );
 
 					if( !strcmp( def->name, NAFO_DATA_PATH )){
@@ -529,24 +529,24 @@ nadp_writer_ifactory_provider_write_data(
 					g_free( str_value );
 					break;
 
-				case NAFD_TYPE_LOCALE_STRING:
+				case NA_DATA_TYPE_LOCALE_STRING:
 					str_value = na_data_boxed_get_as_string( boxed );
 					nadp_desktop_file_set_locale_string( ndf, group_name, def->desktop_entry, str_value );
 					g_free( str_value );
 					break;
 
-				case NAFD_TYPE_BOOLEAN:
+				case NA_DATA_TYPE_BOOLEAN:
 					bool_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
 					nadp_desktop_file_set_boolean( ndf, group_name, def->desktop_entry, bool_value );
 					break;
 
-				case NAFD_TYPE_STRING_LIST:
+				case NA_DATA_TYPE_STRING_LIST:
 					slist_value = ( GSList * ) na_data_boxed_get_as_void( boxed );
 					nadp_desktop_file_set_string_list( ndf, group_name, def->desktop_entry, slist_value );
 					na_core_utils_slist_free( slist_value );
 					break;
 
-				case NAFD_TYPE_UINT:
+				case NA_DATA_TYPE_UINT:
 					uint_value = GPOINTER_TO_UINT( na_data_boxed_get_as_void( boxed ));
 					nadp_desktop_file_set_uint( ndf, group_name, def->desktop_entry, uint_value );
 					break;
