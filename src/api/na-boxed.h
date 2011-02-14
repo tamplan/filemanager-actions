@@ -47,14 +47,37 @@
 
 G_BEGIN_DECLS
 
-typedef struct _NABoxed NABoxed;
+#define NA_BOXED_TYPE                ( na_boxed_get_type())
+#define NA_BOXED( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_BOXED_TYPE, NABoxed ))
+#define NA_BOXED_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_BOXED_TYPE, NABoxedClass ))
+#define NA_IS_BOXED( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_BOXED_TYPE ))
+#define NA_IS_BOXED_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_BOXED_TYPE ))
+#define NA_BOXED_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_BOXED_TYPE, NABoxedClass ))
+
+typedef struct _NABoxedPrivate       NABoxedPrivate;
+
+typedef struct {
+	/*< private >*/
+	GObject         parent;
+	NABoxedPrivate *private;
+}
+	NABoxed;
+
+typedef struct _NABoxedClassPrivate  NABoxedClassPrivate;
+
+typedef struct {
+	/*< private >*/
+	GObjectClass         parent;
+	NABoxedClassPrivate *private;
+}
+	NABoxedClass;
+
+GType         na_boxed_get_type                ( void );
 
 int           na_boxed_compare                 ( const NABoxed *a, const NABoxed *b );
 NABoxed      *na_boxed_copy                    ( const NABoxed *value );
 void          na_boxed_dump                    ( const NABoxed *value );
-void          na_boxed_free                    ( NABoxed *value );
 NABoxed      *na_boxed_new_from_string         ( guint type, const gchar *string );
-NABoxed      *na_boxed_new_from_string_with_sep( guint type, const gchar *string, const gchar *sep );
 
 gboolean      na_boxed_get_boolean             ( const NABoxed *boxed );
 gconstpointer na_boxed_get_pointer             ( const NABoxed *boxed );

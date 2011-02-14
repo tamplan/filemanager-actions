@@ -1,5 +1,10 @@
 2011-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-boxed.h:
+	* src/core/na-boxed.c: Convert to the NABoxed class.
+
+	* src/core/na-settings.c: Updated accordingly.
+
 	* src/api/na-data-boxed.h:
 	* src/core/na-data-boxed.c: NADataBoxed class is no more deprecated.
 

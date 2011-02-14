@@ -1271,11 +1271,9 @@ read_key_value_from_key_file( GKeyFile *key_file, const gchar *group, const gcha
 					case NA_DATA_TYPE_STRING:
 					case NA_DATA_TYPE_UINT:
 					case NA_DATA_TYPE_BOOLEAN:
-						value->boxed = na_boxed_new_from_string( key_def->type, str );
-						break;
 					case NA_DATA_TYPE_STRING_LIST:
 					case NA_DATA_TYPE_UINT_LIST:
-						value->boxed = na_boxed_new_from_string_with_sep( key_def->type, str, ";" );
+						value->boxed = na_boxed_new_from_string( key_def->type, str );
 						break;
 				}
 			}
@@ -1328,7 +1326,7 @@ static void
 release_key_value( KeyValue *value )
 {
 	g_free(( gpointer ) value->group );
-	na_boxed_free( value->boxed );
+	g_object_unref( value->boxed );
 	g_free( value );
 }
 
