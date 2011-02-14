@@ -1,5 +1,8 @@
 2011-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-boxed.h:
+	* src/core/na-data-boxed.c: NADataBoxed class is no more deprecated.
+
 	Merge NABoxed and NADataBoxed data type definitions.
 	Data type are remaned as NA_DATA_TYPE.
 

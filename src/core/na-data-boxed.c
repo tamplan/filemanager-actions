@@ -407,8 +407,6 @@ get_data_boxed_fn( guint type )
  * Returns: a #GParamSpec structure.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 GParamSpec *
 na_data_boxed_get_param_spec( const NADataDef *def )
@@ -437,8 +435,6 @@ na_data_boxed_get_param_spec( const NADataDef *def )
  * Returns: a newly allocated #NADataBoxed.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 NADataBoxed *
 na_data_boxed_new( const NADataDef *def )
@@ -462,8 +458,6 @@ na_data_boxed_new( const NADataDef *def )
  * Should never be %NULL.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 NADataDef *
 na_data_boxed_get_data_def( const NADataBoxed *boxed )
@@ -490,8 +484,6 @@ na_data_boxed_get_data_def( const NADataBoxed *boxed )
  * Returns: %TRUE if the two boxeds are equal, %FALSE else.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 gboolean
 na_data_boxed_are_equal( const NADataBoxed *a, const NADataBoxed *b )
@@ -530,8 +522,6 @@ na_data_boxed_are_equal( const NADataBoxed *a, const NADataBoxed *b )
  * %FALSE else.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 gboolean
 na_data_boxed_is_default( const NADataBoxed *boxed )
@@ -564,8 +554,6 @@ na_data_boxed_is_default( const NADataBoxed *boxed )
  * Returns: %TRUE if the boxed is valid, %FALSE else.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 gboolean
 na_data_boxed_is_valid( const NADataBoxed *boxed )
@@ -598,8 +586,6 @@ na_data_boxed_is_valid( const NADataBoxed *boxed )
  * Dump the content of @boxed.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 void
 na_data_boxed_dump( const NADataBoxed *boxed )
@@ -625,8 +611,6 @@ na_data_boxed_dump( const NADataBoxed *boxed )
  * -> value is unchanged.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 void
 na_data_boxed_set_data_def( NADataBoxed *boxed, const NADataDef *new_def )
@@ -649,8 +633,6 @@ na_data_boxed_set_data_def( NADataBoxed *boxed, const NADataDef *new_def )
  * should be g_free() by the caller.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 gchar *
 na_data_boxed_get_as_string( const NADataBoxed *boxed )
@@ -687,8 +669,6 @@ na_data_boxed_get_as_string( const NADataBoxed *boxed )
  * allocated value, which should be released by the caller.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 void *
 na_data_boxed_get_as_void( const NADataBoxed *boxed )
@@ -722,8 +702,6 @@ na_data_boxed_get_as_void( const NADataBoxed *boxed )
  * Setup @value with the content of the @boxed.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 void
 na_data_boxed_get_as_value( const NADataBoxed *boxed, GValue *value )
@@ -752,8 +730,6 @@ na_data_boxed_get_as_value( const NADataBoxed *boxed, GValue *value )
  * Copy value from @value to @boxed.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 void
 na_data_boxed_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *value )
@@ -787,8 +763,6 @@ na_data_boxed_set_from_boxed( NADataBoxed *boxed, const NADataBoxed *value )
  * Evaluates the @value and set it to the @boxed.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 void
 na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value )
@@ -820,8 +794,6 @@ na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value )
  * Evaluates the @value and set it to the @boxed.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 void
 na_data_boxed_set_from_value( NADataBoxed *boxed, const GValue *value )
@@ -853,8 +825,6 @@ na_data_boxed_set_from_value( NADataBoxed *boxed, const GValue *value )
  * Evaluates the @value and set it to the @boxed.
  *
  * Since: 2.30
- *
- * Deprecated: 3.1.0
  */
 void
 na_data_boxed_set_from_void( NADataBoxed *boxed, const void *value )
