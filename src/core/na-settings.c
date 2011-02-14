@@ -907,7 +907,7 @@ content_diff( GList *old, GList *new )
 			knew = ( KeyValue * ) in->data;
 			if( !strcmp( kold->group, knew->group ) && ( gpointer ) kold->def == ( gpointer ) knew->def ){
 				found = TRUE;
-				if( na_boxed_compare( kold->boxed, knew->boxed ) != 0 ){
+				if( !na_boxed_are_equal( kold->boxed, knew->boxed )){
 					/* a key has been modified */
 					kdiff = g_new0( KeyValue, 1 );
 					kdiff->group = g_strdup( knew->group );

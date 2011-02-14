@@ -483,7 +483,7 @@ nadp_writer_ifactory_provider_write_data(
 	static const gchar *thisfn = "nadp_writer_ifactory_provider_write_data";
 	NadpDesktopFile *ndf;
 	guint code;
-	NADataDef *def;
+	const NADataDef *def;
 	gchar *profile_id;
 	gchar *group_name;
 	gchar *str_value;

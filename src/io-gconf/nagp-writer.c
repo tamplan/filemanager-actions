@@ -275,7 +275,7 @@ nagp_writer_write_data( const NAIFactoryProvider *provider, void *writer_data,
 {
 	static const gchar *thisfn = "nagp_writer_write_data";
 	guint code;
-	NADataDef *def;
+	const NADataDef *def;
 	gchar *this_id;
 	gchar *this_path, *path;
 	gchar *msg;

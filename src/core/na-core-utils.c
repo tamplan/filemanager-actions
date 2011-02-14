@@ -58,7 +58,9 @@ static gboolean info_dir_is_writable( GFile *file, const gchar *path );
 gboolean
 na_core_utils_boolean_from_string( const gchar *string )
 {
-	return( g_ascii_strcasecmp( string, "true" ) == 0 );
+	if( !string ) return( FALSE );
+
+	return( g_ascii_strcasecmp( string, "true" ) == 0 || atoi( string ) != 0 );
 }
 
 /**

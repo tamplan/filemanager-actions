@@ -1,5 +1,21 @@
 2011-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	NADataBoxed class now derives from NABoxed
+
+	* * src/api/na-boxed.h:
+	* src/api/na-data-boxed.h:
+	* src/api/na-data-types.h:
+	* src/core/na-boxed.c:
+	* src/core/na-core-utils.c:
+	* src/core/na-data-boxed.c:
+	* src/core/na-data-types.c:
+	* src/core/na-factory-object.c:
+	* src/core/na-ifactory-object.c:
+	* src/core/na-settings.c:
+	* src/io-desktop/nadp-writer.c:
+	* src/io-gconf/nagp-writer.c:
+	* src/io-xml/naxml-writer.c: Updated accordingly.
+
 	* src/api/na-boxed.h:
 	* src/core/na-boxed.c: Convert to the NABoxed class.
 

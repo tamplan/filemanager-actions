@@ -40,15 +40,19 @@
  * The object which encapsulates an elementary data of #NAIFactoryObject.
  * A #NADataBoxed object has a type and a value.
  *
- * Starting with version 3.1.0, #NAFactoryDataType is deprecated in favour
- * of #NABoxed structure. New code should only use #NABoxed structure and
- * accessors.
+ * #NADataBoxed class is derived from #NABoxed one, and implements the same
+ * types that those defined in na-data-types.h.
  *
- * Deprecated: 3.1.0
+ * Additionally, #NADataBoxed class holds the #NADataDef data definition
+ * suitable for a #NAFactoryObject object. It such provides default value
+ * and validity status.
+ *
+ * Since: 2.30
  */
 
 #include <glib-object.h>
 
+#include "na-boxed.h"
 #include "na-data-def.h"
 
 G_BEGIN_DECLS
@@ -64,7 +68,7 @@ typedef struct _NADataBoxedPrivate        NADataBoxedPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObject             parent;
+	NABoxed             parent;
 	NADataBoxedPrivate *private;
 }
 	NADataBoxed;
@@ -73,33 +77,36 @@ typedef struct _NADataBoxedClassPrivate   NADataBoxedClassPrivate;
 
 typedef struct {
 	/*< private >*/
-	GObjectClass             parent;
+	NABoxedClass             parent;
 	NADataBoxedClassPrivate *private;
 }
 	NADataBoxedClass;
 
-GType        na_data_boxed_get_type( void );
+GType            na_data_boxed_get_type( void );
 
-GParamSpec  *na_data_boxed_get_param_spec ( const NADataDef *def );
+NADataBoxed     *na_data_boxed_new            ( const NADataDef *def );
 
-NADataBoxed *na_data_boxed_new            ( const NADataDef *def );
+const NADataDef *na_data_boxed_get_data_def   ( const NADataBoxed *boxed );
+void             na_data_boxed_set_data_def   ( NADataBoxed *boxed, const NADataDef *def );
 
-NADataDef   *na_data_boxed_get_data_def   ( const NADataBoxed *boxed );
-gboolean     na_data_boxed_are_equal      ( const NADataBoxed *a, const NADataBoxed *b );
-gboolean     na_data_boxed_is_default     ( const NADataBoxed *boxed );
-gboolean     na_data_boxed_is_valid       ( const NADataBoxed *boxed );
-void         na_data_boxed_dump           ( const NADataBoxed *boxed );
+GParamSpec      *na_data_boxed_get_param_spec ( const NADataDef *def );
 
-void         na_data_boxed_set_data_def   ( NADataBoxed *boxed, const NADataDef *def );
+gboolean         na_data_boxed_is_default     ( const NADataBoxed *boxed );
+gboolean         na_data_boxed_is_valid       ( const NADataBoxed *boxed );
 
-gchar       *na_data_boxed_get_as_string  ( const NADataBoxed *boxed );
-void        *na_data_boxed_get_as_void    ( const NADataBoxed *boxed );
-void         na_data_boxed_get_as_value   ( const NADataBoxed *boxed, GValue *value );
-
-void         na_data_boxed_set_from_boxed ( NADataBoxed *boxed, const NADataBoxed *value );
-void         na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value );
-void         na_data_boxed_set_from_value ( NADataBoxed *boxed, const GValue *value );
-void         na_data_boxed_set_from_void  ( NADataBoxed *boxed, const void *value );
+/* These functions are deprecated starting with 3.1.0
+ */
+#ifndef NA_DISABLE_DEPRECATED
+gboolean         na_data_boxed_are_equal      ( const NADataBoxed *a, const NADataBoxed *b );
+void             na_data_boxed_dump           ( const NADataBoxed *boxed );
+gchar           *na_data_boxed_get_as_string  ( const NADataBoxed *boxed );
+void            *na_data_boxed_get_as_void    ( const NADataBoxed *boxed );
+void             na_data_boxed_get_as_value   ( const NADataBoxed *boxed, GValue *value );
+void             na_data_boxed_set_from_boxed ( NADataBoxed *boxed, const NADataBoxed *value );
+void             na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value );
+void             na_data_boxed_set_from_value ( NADataBoxed *boxed, const GValue *value );
+void             na_data_boxed_set_from_void  ( NADataBoxed *boxed, const void *value );
+#endif /* NA_DISABLE_DEPRECATED */
 
 G_END_DECLS
 

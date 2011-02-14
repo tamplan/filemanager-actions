@@ -44,12 +44,12 @@ G_BEGIN_DECLS
 
 /**
  * NADataType:
+ * @NA_DATA_TYPE_BOOLEAN:       a boolean
+ *                              can be initialized with "true" or "false" (case insensitive)
  * @NA_DATA_TYPE_POINTER:       a ( void * ) pointer
  * @NA_DATA_TYPE_STRING:        an ASCII string
  * @NA_DATA_TYPE_STRING_LIST:   a list of ASCII strings
  * @NA_DATA_TYPE_LOCALE_STRING: a localized UTF-8 string
- * @NA_DATA_TYPE_BOOLEAN:       a boolean
- *                              can be initialized with "true" or "false" (case insensitive)
  * @NA_DATA_TYPE_UINT:          an unsigned integer
  * @NA_DATA_TYPE_UINT_LIST:     a list of unsigned integers
  *
@@ -75,11 +75,11 @@ G_BEGIN_DECLS
  * Since: 2.30
  */
 typedef enum {
-	NA_DATA_TYPE_POINTER = 1,
+	NA_DATA_TYPE_BOOLEAN = 1,
+	NA_DATA_TYPE_POINTER,
 	NA_DATA_TYPE_STRING,
 	NA_DATA_TYPE_STRING_LIST,
 	NA_DATA_TYPE_LOCALE_STRING,
-	NA_DATA_TYPE_BOOLEAN,
 	NA_DATA_TYPE_UINT,
 	NA_DATA_TYPE_UINT_LIST,
 	/*< private >*/

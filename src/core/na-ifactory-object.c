@@ -168,7 +168,7 @@ na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *
 
 		for( ip = list ; ip ; ip = ip->next ){
 			NADataBoxed *boxed = NA_DATA_BOXED( ip->data );
-			NADataDef *def = na_data_boxed_get_data_def( boxed );
+			const NADataDef *def = na_data_boxed_get_data_def( boxed );
 
 			if( !strcmp( def->name, name )){
 				return( boxed );

@@ -449,7 +449,7 @@ guint
 naxml_writer_write_data( const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages )
 {
 	NAXMLWriter *writer;
-	NADataDef *def;
+	const NADataDef *def;
 
 	/*NADataDef *def = na_data_boxed_get_data_def( boxed );
 	g_debug( "naxml_writer_write_data: def=%s", def->name );*/

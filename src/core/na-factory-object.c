@@ -365,7 +365,7 @@ na_factory_object_move_boxed( NAIFactoryObject *target, const NAIFactoryObject *
 
 			attach_boxed_to_object( target, boxed );
 
-			NADataDef *src_def = na_data_boxed_get_data_def( boxed );
+			const NADataDef *src_def = na_data_boxed_get_data_def( boxed );
 			NADataDef *tgt_def = na_factory_object_get_data_def( target, src_def->name );
 			na_data_boxed_set_data_def( boxed, tgt_def );
 		}
@@ -398,7 +398,7 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 	for( isrc = src_list ; isrc ; isrc = isrc->next ){
 
 		NADataBoxed *src_boxed = NA_DATA_BOXED( isrc->data );
-		NADataDef *def = na_data_boxed_get_data_def( src_boxed );
+		const NADataDef *def = na_data_boxed_get_data_def( src_boxed );
 
 		if( def->copyable ){
 			NADataBoxed *tgt_boxed = na_ifactory_object_get_data_boxed( target, def->name );
@@ -436,18 +436,14 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 	for( ia = a_list ; ia && are_equal ; ia = ia->next ){
 
 		NADataBoxed *a_boxed = NA_DATA_BOXED( ia->data );
-		NADataDef *a_def = na_data_boxed_get_data_def( a_boxed );
+		const NADataDef *a_def = na_data_boxed_get_data_def( a_boxed );
 		if( a_def->comparable ){
 
 			NADataBoxed *b_boxed = na_ifactory_object_get_data_boxed( b, a_def->name );
 			if( b_boxed ){
-				are_equal = na_data_boxed_are_equal( a_boxed, b_boxed );
+				are_equal = na_boxed_are_equal( NA_BOXED( a_boxed ), NA_BOXED( b_boxed ));
 				if( !are_equal ){
 					g_debug( "%s: %s not equal as %s different", thisfn, G_OBJECT_TYPE_NAME( a ), a_def->name );
-					g_debug( "%s: a=", thisfn );
-					na_data_boxed_dump( a_boxed );
-					g_debug( "%s: b=", thisfn );
-					na_data_boxed_dump( b_boxed );
 				}
 
 			} else {
@@ -460,12 +456,12 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 	for( ib = b_list ; ib && are_equal ; ib = ib->next ){
 
 		NADataBoxed *b_boxed = NA_DATA_BOXED( ib->data );
-		NADataDef *b_def = na_data_boxed_get_data_def( b_boxed );
+		const NADataDef *b_def = na_data_boxed_get_data_def( b_boxed );
 		if( b_def->comparable ){
 
 			NADataBoxed *a_boxed = na_ifactory_object_get_data_boxed( a, b_def->name );
 			if( a_boxed ){
-				are_equal = na_data_boxed_are_equal( a_boxed, b_boxed );
+				are_equal = na_boxed_are_equal( NA_BOXED( a_boxed ), NA_BOXED( b_boxed ));
 				if( !are_equal ){
 					g_debug( "%s: %s not equal as %s different", thisfn, G_OBJECT_TYPE_NAME( a ), b_def->name );
 				}
@@ -566,7 +562,7 @@ na_factory_object_dump( const NAIFactoryObject *object )
 
 	for( it = list ; it ; it = it->next ){
 		NADataBoxed *boxed = NA_DATA_BOXED( it->data );
-		NADataDef *def = na_data_boxed_get_data_def( boxed );
+		const NADataDef *def = na_data_boxed_get_data_def( boxed );
 		length = MAX( length, strlen( def->name ));
 	}
 
@@ -575,7 +571,7 @@ na_factory_object_dump( const NAIFactoryObject *object )
 
 	for( it = list ; it ; it = it->next ){
 		NADataBoxed *boxed = NA_DATA_BOXED( it->data );
-		NADataDef *def = na_data_boxed_get_data_def( boxed );
+		const NADataDef *def = na_data_boxed_get_data_def( boxed );
 		gchar *value = na_data_boxed_get_as_string( boxed );
 		g_debug( "| %s: %*s=%s", thisfn, length, def->name+l_prefix, value );
 		g_free( value );
@@ -723,7 +719,7 @@ na_factory_object_write_item( NAIFactoryObject *object, const NAIFactoryProvider
 static gboolean
 write_data_iter( const NAIFactoryObject *object, NADataBoxed *boxed, NafoWriteIter *iter )
 {
-	NADataDef *def = na_data_boxed_get_data_def( boxed );
+	const NADataDef *def = na_data_boxed_get_data_def( boxed );
 
 	if( def->writable ){
 		iter->code = na_factory_provider_write_data( iter->writer, iter->writer_data, object, boxed, iter->messages );

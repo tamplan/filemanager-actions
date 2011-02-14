@@ -72,19 +72,27 @@ typedef struct {
 }
 	NABoxedClass;
 
-GType         na_boxed_get_type                ( void );
+GType         na_boxed_get_type       ( void );
+void          na_boxed_set_type       ( NABoxed *boxed, guint type );
 
-int           na_boxed_compare                 ( const NABoxed *a, const NABoxed *b );
-NABoxed      *na_boxed_copy                    ( const NABoxed *value );
-void          na_boxed_dump                    ( const NABoxed *value );
-NABoxed      *na_boxed_new_from_string         ( guint type, const gchar *string );
+gboolean      na_boxed_are_equal      ( const NABoxed *a, const NABoxed *b );
+NABoxed      *na_boxed_copy           ( const NABoxed *value );
+void          na_boxed_dump           ( const NABoxed *value );
+NABoxed      *na_boxed_new_from_string( guint type, const gchar *string );
 
-gboolean      na_boxed_get_boolean             ( const NABoxed *boxed );
-gconstpointer na_boxed_get_pointer             ( const NABoxed *boxed );
-gchar        *na_boxed_get_string              ( const NABoxed *boxed );
-GSList       *na_boxed_get_string_list         ( const NABoxed *boxed );
-guint         na_boxed_get_uint                ( const NABoxed *boxed );
-GList        *na_boxed_get_uint_list           ( const NABoxed *boxed );
+gboolean      na_boxed_get_boolean    ( const NABoxed *boxed );
+gconstpointer na_boxed_get_pointer    ( const NABoxed *boxed );
+gchar        *na_boxed_get_string     ( const NABoxed *boxed );
+GSList       *na_boxed_get_string_list( const NABoxed *boxed );
+guint         na_boxed_get_uint       ( const NABoxed *boxed );
+GList        *na_boxed_get_uint_list  ( const NABoxed *boxed );
+void          na_boxed_get_as_value   ( const NABoxed *boxed, GValue *value );
+void         *na_boxed_get_as_void    ( const NABoxed *boxed );
+
+void          na_boxed_set_from_boxed ( NABoxed *boxed, const NABoxed *value );
+void          na_boxed_set_from_string( NABoxed *boxed, const gchar *value );
+void          na_boxed_set_from_value ( NABoxed *boxed, const GValue *value );
+void          na_boxed_set_from_void  ( NABoxed *boxed, const void *value );
 
 G_END_DECLS
 
