@@ -312,8 +312,10 @@ on_object_modified_status_changed( NactTreeIEditable *instance, NAObject *object
 	gboolean prev_status, status;
 
 	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
-		g_debug( "%s: instance=%p, is_modified=%s, window=%p",
-				thisfn, ( void * ) instance, is_modified ? "True":"False", ( void * ) window );
+		g_debug( "%s: instance=%p, object=%p (%s), is_modified=%s, window=%p",
+				thisfn, ( void * ) instance,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), is_modified ? "True":"False",
+				( void * ) window );
 
 		ied = ( IEditableData * ) g_object_get_data( G_OBJECT( instance ), VIEW_DATA_IEDITABLE );
 		prev_status = get_modification_status( ied );

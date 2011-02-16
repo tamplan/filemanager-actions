@@ -354,7 +354,7 @@ NADataDef data_def_conditions [] = {
 				N_( "Only show in environment" ),
 				N_( "Defaults to all." ),
 				NA_DATA_TYPE_STRING_LIST,
-				NULL,
+				"",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -376,7 +376,7 @@ NADataDef data_def_conditions [] = {
 				N_( "Not show in environment" ),
 				N_( "Defaults to none." ),
 				NA_DATA_TYPE_STRING_LIST,
-				NULL,
+				"",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -402,7 +402,7 @@ NADataDef data_def_conditions [] = {
 					"Parameters may appear in 'TryExec' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				NA_DATA_TYPE_STRING,
-				NULL,
+				"",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -428,7 +428,7 @@ NADataDef data_def_conditions [] = {
 					"Parameters may appear in 'ShowIfRegistered' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				NA_DATA_TYPE_STRING,
-				NULL,
+				"",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -454,7 +454,7 @@ NADataDef data_def_conditions [] = {
 					"Parameters may appear in 'ShowIfTrue' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				NA_DATA_TYPE_STRING,
-				NULL,
+				"",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -480,7 +480,7 @@ NADataDef data_def_conditions [] = {
 					"Parameters may appear in 'ShowIfRunning' value, and will be substituted at runtime.\n" \
 					"Defaults to successful." ),
 				NA_DATA_TYPE_STRING,
-				NULL,
+				"",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -512,7 +512,7 @@ NADataDef data_def_conditions [] = {
 					"- 'Local': selected items are local.\n" \
 					"Defaults to empty list." ),
 				NA_DATA_TYPE_STRING_LIST,
-				NULL,
+				"",
 				FALSE,
 				TRUE,
 				TRUE,

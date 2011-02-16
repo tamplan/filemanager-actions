@@ -50,7 +50,7 @@ NADataDef data_def_id [] = {
 				"Historically a UUID used as a GConf directory (thus ASCII, case insensitive), " \
 				"it is also the basename of the .desktop file (thus UTF-8, case sensitive).",
 				NA_DATA_TYPE_STRING,
-				NULL,
+				"",
 				FALSE,
 				TRUE,
 				TRUE,

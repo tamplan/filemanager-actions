@@ -1,5 +1,16 @@
 2011-02-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-factory-object.c (na_factory_object_are_equal):
+	* src/nact/nact-tree-ieditable.c (on_object_modified_status_changed):
+	Improve debug messages.
+
+	* src/core/na-icontext-factory.c:
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-id-factory.c: Set missing default values.
+
+	* src/core/na-object-action.c (ifactory_object_are_equal):
+	An action is modified as soon as at least one profile is modified.
+
 	* src/core/na-icontext-factory.c: Fix string list regression
 
 	* src/core/na-boxed.c: Fix regression when setting values.

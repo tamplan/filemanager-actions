@@ -54,7 +54,7 @@ static NADataDef data_def_action [] = {
 				"Version of the format",
 				"The version of the configuration format that will be used to manage backward compatibility.",
 				NA_DATA_TYPE_STRING,
-				NULL,
+				"",
 				FALSE,
 				TRUE,
 				TRUE,

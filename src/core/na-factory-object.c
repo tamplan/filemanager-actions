@@ -325,11 +325,8 @@ na_factory_object_set_defaults( NAIFactoryObject *object )
 static gboolean
 set_defaults_iter( NADataDef *def, NafoDefaultIter *data )
 {
-	NADataBoxed *boxed;
-	gboolean is_null;
+	NADataBoxed *boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
 
-	is_null = TRUE;
-	boxed = na_ifactory_object_get_data_boxed( data->object, def->name );
 	if( !boxed ){
 		boxed = na_data_boxed_new( def );
 		attach_boxed_to_object( data->object, boxed );
@@ -415,8 +412,8 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 
 /*
  * na_factory_object_are_equal:
- * @a: the first #NAIFactoryObject instance.
- * @b: the second #NAIFactoryObject isntance.
+ * @a: the first (original) #NAIFactoryObject instance.
+ * @b: the second (current) #NAIFactoryObject isntance.
  *
  * Returns: %TRUE if @a is equal to @b, %FALSE else.
  */
@@ -448,7 +445,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 
 			} else {
 				are_equal = FALSE;
-				g_debug( "%s: %s not equal as %s not set", thisfn, G_OBJECT_TYPE_NAME( a ), a_def->name );
+				g_debug( "%s: %s not equal as %s has disappeared", thisfn, G_OBJECT_TYPE_NAME( a ), a_def->name );
 			}
 		}
 	}
@@ -460,15 +457,9 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 		if( b_def->comparable ){
 
 			NADataBoxed *a_boxed = na_ifactory_object_get_data_boxed( a, b_def->name );
-			if( a_boxed ){
-				are_equal = na_boxed_are_equal( NA_BOXED( a_boxed ), NA_BOXED( b_boxed ));
-				if( !are_equal ){
-					g_debug( "%s: %s not equal as %s different", thisfn, G_OBJECT_TYPE_NAME( a ), b_def->name );
-				}
-
-			} else {
+			if( !a_boxed ){
 				are_equal = FALSE;
-				g_debug( "%s: %s not equal as %s not set", thisfn, G_OBJECT_TYPE_NAME( a ), b_def->name );
+				g_debug( "%s: %s not equal as %s was not set", thisfn, G_OBJECT_TYPE_NAME( a ), b_def->name );
 			}
 		}
 	}

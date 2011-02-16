@@ -335,10 +335,27 @@ ifactory_object_get_groups( const NAIFactoryObject *instance )
 	return( action_data_groups );
 }
 
+/*
+ * @a is the original object
+ * @b is the current one
+ *
+ * Even if they have both the same children list, the current action is
+ * considered modified as soon as one of its profile is itself modified.
+ */
 static gboolean
 ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
 {
-	return( na_object_item_are_equal( NA_OBJECT_ITEM( a ), NA_OBJECT_ITEM( b )));
+	GList *it;
+
+	if( na_object_item_are_equal( NA_OBJECT_ITEM( a ), NA_OBJECT_ITEM( b ))){
+		for( it = na_object_get_items( b ) ; it ; it = it->next ){
+			if( na_object_is_modified( it->data )){
+				return( FALSE );
+			}
+		}
+	}
+
+	return( TRUE );
 }
 
 static gboolean
