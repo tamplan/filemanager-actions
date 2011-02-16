@@ -541,6 +541,7 @@ na_boxed_copy( const NABoxed *boxed )
 	dest = boxed_new( boxed->private->def );
 	if( boxed->private->is_set ){
 		( *boxed->private->def->copy )( dest, boxed );
+		dest->private->is_set = TRUE;
 	}
 
 	return( dest );
@@ -601,6 +602,7 @@ na_boxed_new_from_string( guint type, const gchar *string )
 
 	boxed = boxed_new( def );
 	( *def->from_string )( boxed, string );
+	boxed->private->is_set = TRUE;
 
 	return( boxed );
 }
@@ -816,8 +818,11 @@ na_boxed_set_from_boxed( NABoxed *boxed, const NABoxed *value )
 	g_return_if_fail( boxed->private->def );
 	g_return_if_fail( boxed->private->def == value->private->def );
 	g_return_if_fail( boxed->private->def->copy );
+	g_return_if_fail( boxed->private->def->free );
 
+	( *boxed->private->def->free )( boxed );
 	( *boxed->private->def->copy )( boxed, value );
+	boxed->private->is_set = TRUE;
 }
 
 /**
@@ -835,9 +840,12 @@ na_boxed_set_from_string( NABoxed *boxed, const gchar *value )
 	g_return_if_fail( NA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def );
+	g_return_if_fail( boxed->private->def->free );
 	g_return_if_fail( boxed->private->def->from_string );
 
+	( *boxed->private->def->free )( boxed );
 	( *boxed->private->def->from_string )( boxed, value );
+	boxed->private->is_set = TRUE;
 }
 
 /**
@@ -855,9 +863,12 @@ na_boxed_set_from_value( NABoxed *boxed, const GValue *value )
 	g_return_if_fail( NA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def );
-	g_return_if_fail( boxed->private->def->from_string );
+	g_return_if_fail( boxed->private->def->free );
+	g_return_if_fail( boxed->private->def->from_value );
 
+	( *boxed->private->def->free )( boxed );
 	( *boxed->private->def->from_value )( boxed, value );
+	boxed->private->is_set = TRUE;
 }
 
 /**
@@ -875,9 +886,12 @@ na_boxed_set_from_void( NABoxed *boxed, const void *value )
 	g_return_if_fail( NA_IS_BOXED( boxed ));
 	g_return_if_fail( boxed->private->dispose_has_run == FALSE );
 	g_return_if_fail( boxed->private->def );
-	g_return_if_fail( boxed->private->def->from_string );
+	g_return_if_fail( boxed->private->def->free );
+	g_return_if_fail( boxed->private->def->from_void );
 
+	( *boxed->private->def->free )( boxed );
 	( *boxed->private->def->from_void )( boxed, value );
+	boxed->private->is_set = TRUE;
 }
 
 static gboolean
@@ -890,7 +904,6 @@ static void
 bool_copy( NABoxed *dest, const NABoxed *src )
 {
 	dest->private->u.boolean = src->private->u.boolean;
-	dest->private->is_set = TRUE;
 }
 
 static void
@@ -903,11 +916,7 @@ bool_free( NABoxed *boxed )
 static void
 bool_from_string( NABoxed *boxed, const gchar *string )
 {
-	if( boxed->private->is_set ){
-		bool_free( boxed );
-	}
 	boxed->private->u.boolean = na_core_utils_boolean_from_string( string );
-	boxed->private->is_set = TRUE;
 }
 
 static void
@@ -1019,17 +1028,19 @@ pointer_to_void( const NABoxed *boxed )
 static gboolean
 string_are_equal( const NABoxed *a, const NABoxed *b )
 {
-	return( strcmp( a->private->u.string, b->private->u.string ) == 0 );
+	if( a->private->u.string && b->private->u.string ){
+		return( strcmp( a->private->u.string, b->private->u.string ) == 0 );
+	}
+	if( !a->private->u.string && !b->private->u.string ){
+		return( TRUE );
+	}
+	return( FALSE );
 }
 
 static void
 string_copy( NABoxed *dest, const NABoxed *src )
 {
-	if( dest->private->is_set ){
-		string_free( dest );
-	}
 	dest->private->u.string = g_strdup( src->private->u.string );
-	dest->private->is_set = TRUE;
 }
 
 static void
@@ -1043,35 +1054,23 @@ string_free( NABoxed *boxed )
 static void
 string_from_string( NABoxed *boxed, const gchar *string )
 {
-	if( boxed->private->is_set ){
-		string_free( boxed );
-	}
-	boxed->private->u.string = string ? g_strdup( string ) : NULL;
-	boxed->private->is_set = TRUE;
+	boxed->private->u.string = g_strdup( string ? string : "" );
 }
 
 static void
 string_from_value( NABoxed *boxed, const GValue *value )
 {
-	if( boxed->private->is_set ){
-		string_free( boxed );
-	}
 	if( g_value_get_string( value )){
 		boxed->private->u.string = g_value_dup_string( value );
+	} else {
+		boxed->private->u.string = g_strdup( "" );
 	}
-	boxed->private->is_set = TRUE;
 }
 
 static void
 string_from_void( NABoxed *boxed, const void *value )
 {
-	if( boxed->private->is_set ){
-		string_free( boxed );
-	}
-	if( value ){
-		boxed->private->u.string = g_strdup(( const gchar * ) value );
-	}
-	boxed->private->is_set = TRUE;
+	boxed->private->u.string = g_strdup( value ? ( const gchar * ) value : "" );
 }
 
 static gconstpointer
@@ -1149,10 +1148,6 @@ string_list_from_string( NABoxed *boxed, const gchar *string )
 	gchar **array;
 	gchar **i;
 
-	if( boxed->private->is_set ){
-		string_list_free( boxed );
-	}
-
 	array = string_to_array( string );
 
 	if( array ){
@@ -1167,31 +1162,22 @@ string_list_from_string( NABoxed *boxed, const gchar *string )
 	}
 
 	g_strfreev( array );
-	boxed->private->is_set = TRUE;
 }
 
 static void
 string_list_from_value( NABoxed *boxed, const GValue *value )
 {
-	if( boxed->private->is_set ){
-		string_list_free( boxed );
-	}
 	if( g_value_get_pointer( value )){
 		boxed->private->u.string_list = na_core_utils_slist_duplicate( g_value_get_pointer( value ));
 	}
-	boxed->private->is_set = TRUE;
 }
 
 static void
 string_list_from_void( NABoxed *boxed, const void *value )
 {
-	if( boxed->private->is_set ){
-		string_list_free( boxed );
-	}
 	if( value ){
 		boxed->private->u.string_list = na_core_utils_slist_duplicate(( GSList * ) value );
 	}
-	boxed->private->is_set = TRUE;
 }
 
 static gconstpointer
@@ -1278,31 +1264,19 @@ uint_free( NABoxed *boxed )
 static void
 uint_from_string( NABoxed *boxed, const gchar *string )
 {
-	if( boxed->private->is_set ){
-		uint_free( boxed );
-	}
 	boxed->private->u.uint = string ? atoi( string ) : 0;
-	boxed->private->is_set = TRUE;
 }
 
 static void
 uint_from_value( NABoxed *boxed, const GValue *value )
 {
-	if( boxed->private->is_set ){
-		uint_free( boxed );
-	}
 	boxed->private->u.uint = g_value_get_uint( value );
-	boxed->private->is_set = TRUE;
 }
 
 static void
 uint_from_void( NABoxed *boxed, const void *value )
 {
-	if( boxed->private->is_set ){
-		uint_free( boxed );
-	}
 	boxed->private->u.uint = GPOINTER_TO_UINT( value );
-	boxed->private->is_set = TRUE;
 }
 
 static gconstpointer
@@ -1365,15 +1339,11 @@ uint_list_copy( NABoxed *dest, const NABoxed *src )
 {
 	GList *isrc;
 
-	if( dest->private->is_set ){
-		uint_list_free( dest );
-	}
 	dest->private->u.uint_list = NULL;
 	for( isrc = src->private->u.uint_list ; isrc ; isrc = isrc->next ){
 		dest->private->u.uint_list = g_list_prepend( dest->private->u.uint_list, isrc->data );
 	}
 	dest->private->u.uint_list = g_list_reverse( dest->private->u.uint_list );
-	dest->private->is_set = TRUE;
 }
 
 static void
@@ -1390,10 +1360,6 @@ uint_list_from_string( NABoxed *boxed, const gchar *string )
 	gchar **array;
 	gchar **i;
 
-	if( boxed->private->is_set ){
-		uint_list_free( boxed );
-	}
-
 	array = string_to_array( string );
 
 	if( array ){
@@ -1408,31 +1374,22 @@ uint_list_from_string( NABoxed *boxed, const gchar *string )
 	}
 
 	g_strfreev( array );
-	boxed->private->is_set = TRUE;
 }
 
 static void
 uint_list_from_value( NABoxed *boxed, const GValue *value )
 {
-	if( boxed->private->is_set ){
-		uint_list_free( boxed );
-	}
 	if( g_value_get_pointer( value )){
 		boxed->private->u.uint_list = g_list_copy( g_value_get_pointer( value ));
 	}
-	boxed->private->is_set = TRUE;
 }
 
 static void
 uint_list_from_void( NABoxed *boxed, const void *value )
 {
-	if( boxed->private->is_set ){
-		uint_list_free( boxed );
-	}
 	if( value ){
 		boxed->private->u.uint_list = g_list_copy(( GList * ) value );
 	}
-	boxed->private->is_set = TRUE;
 }
 
 static gconstpointer
