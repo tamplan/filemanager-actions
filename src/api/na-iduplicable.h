@@ -199,9 +199,12 @@ gboolean       na_iduplicable_is_valid    ( const NAIDuplicable *object );
 gboolean       na_iduplicable_is_modified ( const NAIDuplicable *object );
 
 void           na_iduplicable_set_origin  ( NAIDuplicable *object, const NAIDuplicable *origin );
-void           na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified );
 
 void           na_iduplicable_register_consumer( GObject *consumer );
+
+#ifndef NA_DISABLE_DEPRECATED
+void           na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified );
+#endif
 
 G_END_DECLS
 

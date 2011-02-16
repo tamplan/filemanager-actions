@@ -1,5 +1,11 @@
 2011-02-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-object-api.h (na_object_set_modified): Deprecated macro.
+
+	* src/api/na-iduplicable.h:
+	* src/core/na-iduplicable.c (na_iduplicable_set_modified):
+	Deprecated function.
+
 	* src/core/na-factory-object.c (na_factory_object_are_equal):
 	* src/nact/nact-tree-ieditable.c (on_object_modified_status_changed):
 	Improve debug messages.
