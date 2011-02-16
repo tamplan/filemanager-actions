@@ -512,6 +512,7 @@ na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
 	}
 }
 
+#ifndef NA_DISABLE_DEPRECATED
 /**
  * na_iduplicable_set_modified:
  * @object: the #NAIDuplicable object whose modification status is to be set.
@@ -536,6 +537,7 @@ na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )
 		str->modified = modified;
 	}
 }
+#endif /* NA_DISABLE_DEPRECATED */
 
 static void
 v_copy( NAIDuplicable *target, const NAIDuplicable *source )

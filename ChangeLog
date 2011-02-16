@@ -1,5 +1,11 @@
 2011-02-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-data-boxed.h:
+	* src/api/na-gconf-utils.h:
+	* src/core/na-data-boxed.c:
+	* src/core/na-iduplicable.c:
+	* src/io-gconf/nagp-gconf-provider.c: Do not compile deprecated functions.
+
 	* configure.ac:
 	* m4/na-maintainer-mode.m4: Add --enable-deprecated configure option.
 

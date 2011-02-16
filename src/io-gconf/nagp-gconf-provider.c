@@ -52,7 +52,10 @@ struct _NagpGConfProviderClassPrivate {
 
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
+
+#ifndef NA_DISABLE_DEPRECATED
 static gint          st_burst_timeout = 100;		/* burst timeout in msec */
+#endif
 
 static void     class_init( NagpGConfProviderClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
@@ -67,10 +70,12 @@ static guint    iio_provider_get_version( const NAIIOProvider *provider );
 static void     ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
 static guint    ifactory_provider_get_version( const NAIFactoryProvider *provider );
 
+#ifndef NA_DISABLE_DEPRECATED
 static GList   *install_monitors( NagpGConfProvider *provider );
 static void     config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
 static gboolean config_path_changed_trigger_interface( NagpGConfProvider *provider );
 static gulong   time_val_diff( const GTimeVal *recent, const GTimeVal *old );
+#endif
 
 GType
 nagp_gconf_provider_get_type( void )
@@ -151,7 +156,10 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private->dispose_has_run = FALSE;
 
 	self->private->gconf = gconf_client_get_default();
+
+#ifndef NA_DISABLE_DEPRECATED
 	self->private->monitors = install_monitors( self );
+#endif
 }
 
 static void
@@ -170,8 +178,10 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
+#ifndef NA_DISABLE_DEPRECATED
 		/* release the GConf monitoring */
 		na_gconf_monitor_release_monitors( self->private->monitors );
+#endif
 
 		/* release the GConf connexion */
 		g_object_unref( self->private->gconf );
@@ -216,8 +226,13 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	iface->read_items = nagp_iio_provider_read_items;
 	iface->is_willing_to_write = nagp_iio_provider_is_willing_to_write;
 	iface->is_able_to_write = nagp_iio_provider_is_able_to_write;
+#ifndef NA_DISABLE_DEPRECATED
 	iface->write_item = nagp_iio_provider_write_item;
 	iface->delete_item = nagp_iio_provider_delete_item;
+#else
+	iface->write_item = NULL;
+	iface->delete_item = NULL;
+#endif
 	iface->duplicate_data = NULL;
 }
 
@@ -250,9 +265,15 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 	iface->read_start = nagp_reader_read_start;
 	iface->read_data = nagp_reader_read_data;
 	iface->read_done = nagp_reader_read_done;
+#ifndef NA_DISABLE_DEPRECATED
 	iface->write_start = nagp_writer_write_start;
 	iface->write_data = nagp_writer_write_data;
 	iface->write_done = nagp_writer_write_done;
+#else
+	iface->write_start = NULL;
+	iface->write_data = NULL;
+	iface->write_done = NULL;
+#endif
 }
 
 static guint
@@ -261,6 +282,7 @@ ifactory_provider_get_version( const NAIFactoryProvider *provider )
 	return( 1 );
 }
 
+#ifndef NA_DISABLE_DEPRECATED
 static GList *
 install_monitors( NagpGConfProvider *provider )
 {
@@ -390,3 +412,4 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
 	microsec += recent->tv_usec  - old->tv_usec;
 	return( microsec );
 }
+#endif /* NA_DISABLE_DEPRECATED */

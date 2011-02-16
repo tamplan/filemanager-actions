@@ -70,10 +70,9 @@ gboolean na_gconf_utils_write_int        ( GConfClient *gconf, const gchar *path
 gboolean na_gconf_utils_write_string     ( GConfClient *gconf, const gchar *path, const gchar *value, gchar **message );
 gboolean na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList *value, gchar **message );
 gboolean na_gconf_utils_remove_entry     ( GConfClient *gconf, const gchar *path, gchar **message );
-#endif /* NA_DISABLE_DEPRECATED */
-
 GSList  *na_gconf_utils_slist_from_string( const gchar *value );
 gchar   *na_gconf_utils_slist_to_string  ( GSList *slist );
+#endif /* NA_DISABLE_DEPRECATED */
 
 G_END_DECLS
 
