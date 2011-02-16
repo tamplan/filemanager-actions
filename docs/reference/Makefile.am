@@ -56,12 +56,21 @@ core_headers = $(patsubst $(top_srcdir)/src/core/%,%,$(shell \ls -1 $(top_srcdir
 content_files = $(shell \ls -1 *.xml)
 content_files += $(auto_created_files)
 
+if !HAVE_GCONF
+ignore_headers = "--ignore-headers=na-gconf-monitor.h"
+else
+if !ENABLE_DEPRECATED
+ignore_headers = "--ignore-headers=na-gconf-monitor.h"
+endif
+endif
+
 # Extra options to supply to gtkdoc-scan
 #	--ignore-headers="config.h devkit-disks-daemon-glue.h"
 #	--rebuild-sections
 SCAN_OPTIONS = \
 	--rebuild-types								\
 	--deprecated-guards=NA_DISABLE_DEPRECATED	\
+	$(ignore_headers)							\
 	$(NULL)
 
 # The directory containing the source code. Relative to $(srcdir)
@@ -86,14 +95,14 @@ IGNORE_HFILES = \
 
 # CFLAGS and LDFLAGS for compiling scan program.
 # Only needed if $(DOC_MODULE).types is non-empty.
-AM_CPPFLAGS = \
+AM_CPPFLAGS += \
 	-I $(top_srcdir)/src						\
 	$(NAUTILUS_ACTIONS_CFLAGS)					\
 	$(NULL)
 
 core_libdir = $(top_builddir)/src/core/.libs
 
-AM_LDFLAGS = \
+AM_LDFLAGS += \
 	$(NAUTILUS_ACTIONS_LIBS)					\
 	$(core_libdir)/libna-core.so				\
 	$(NULL)
@@ -152,6 +161,7 @@ version_dir.xml: version.xml
 	cat version.xml | $(SED) 's?^\([[:alnum:]]\.[[:alnum:]]\).*?\1?' > version_dir.xml
 
 CLEANFILES += \
+	$(DOC_MODULE).types							\
 	version_dir.xml								\
 	$(NULL)
 

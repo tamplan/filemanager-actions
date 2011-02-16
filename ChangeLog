@@ -1,5 +1,8 @@
 2011-02-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/reference/Makefile.am:
+	Do not documente NAGconfMonitor class when deprecated symbols are disabled.
+
 	* src/api/na-data-boxed.h:
 	* src/api/na-gconf-utils.h:
 	* src/core/na-data-boxed.c:
