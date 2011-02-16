@@ -1,5 +1,7 @@
 2011-02-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext-factory.c: Fix string list regression
+
 	* src/core/na-boxed.c: Fix regression when setting values.
 
 	* src/core/na-selected-info.c (query_file_attributes):

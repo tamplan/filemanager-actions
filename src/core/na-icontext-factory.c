@@ -45,7 +45,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				N_( "List of patterns to be matched against the selected file(s)/folder(s)" ),
-				/* i18n: wildcard characters '*' and '?' should be considered as literalls,
+				/* i18n: wildcard characters '*' and '?' should be considered as literals,
 				 *  and not be translated */
 				N_( "A list of strings with joker '*' or '?' to be matched against the name(s) " \
 					"of the selected file(s)/folder(s). Each selected item must match at least " \
@@ -54,7 +54,7 @@ NADataDef data_def_conditions [] = {
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to '*'." ),
 				NA_DATA_TYPE_STRING_LIST,
-				"[*]",
+				"*",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -115,7 +115,7 @@ NADataDef data_def_conditions [] = {
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to '*/*'." ),
 				NA_DATA_TYPE_STRING_LIST,
-				"[*/*]",
+				"*/*",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -279,7 +279,7 @@ NADataDef data_def_conditions [] = {
 					"or when targeting the special 'x-nautilus-desktop' scheme.\n" \
 					"Defaults to 'file'." ),
 				NA_DATA_TYPE_STRING_LIST,
-				"[*]",
+				"*",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -305,7 +305,7 @@ NADataDef data_def_conditions [] = {
 					"All folders 'under' the specified path are considered valid.\n" \
 					"Defaults to '/'." ),
 				NA_DATA_TYPE_STRING_LIST,
-				"[/]",
+				"/",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -501,7 +501,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				N_( "Capabilities" ),
 				/* i18n: 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' are all keywords
-				 *  of the specification, they are not translatable */
+				 *  of the specification; they are not translatable */
 				N_( "A list of capabilities each item of the selection must satisfy in order for the item to be candidate.\n" \
 					"Capabilities may be negated.\n" \
 					"Capabilities have to be chosen between following predefined ones:\n" \
