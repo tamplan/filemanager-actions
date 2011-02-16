@@ -47,6 +47,7 @@ DISTCHECK_CONFIGURE_FLAGS = \
 DISTCHECK_CONFIGURE_FLAGS += \
 	--enable-silent-rules				\
 	--enable-as-needed					\
+	--enable-deprecated					\
 	--disable-schemas-install			\
 	--disable-scrollkeeper				\
 	--enable-gtk-doc					\
