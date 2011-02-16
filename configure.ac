@@ -111,6 +111,9 @@ AC_SUBST([GETTEXT_PACKAGE])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
 AM_GLIB_GNU_GETTEXT
 
+# Enable deprecated functions ?
+NA_ENABLE_DEPRECATED
+
 # Have and want GConf support ?
 NA_CHECK_FOR_GCONF
 
@@ -151,8 +154,10 @@ AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
 # check for gtk-doc
-# Starting with gtk-doc 1.15, multiple source dirs are directly handled
-# by gtk-doc.make
+# - starting with gtk-doc 1.15, multiple source dirs are directly handled
+#   by gtk-doc.make
+# - API documentation should not be built (would be incomplete) when deprecated
+#   symbols are not enabled
 GTK_DOC_CHECK([1.10],[--flavour no-tmpl])
 have_gtk_doc_115="no"
 if test "x${enable_gtk_doc}" = "xyes"; then
@@ -161,6 +166,9 @@ if test "x${enable_gtk_doc}" = "xyes"; then
 	AC_MSG_RESULT([${have_gtk_doc_115}])
 fi
 AM_CONDITIONAL([HAVE_GTK_DOC_115], [test x$have_gtk_doc_115 = xyes])
+if test "x${enable_gtk_doc}" = "xyes" -a "${enable_deprecated}" = "no"; then
+	AC_MSG_WARN([API documentation will be incomplete as deprecated symbols are disabled])
+fi
 
 # defines log domains when in maintainer mode
 NA_LOG_DOMAINS
@@ -201,6 +209,7 @@ $as_echo "
 	Nautilus extensions directory   ${with_nautilus_extdir}
 	Gtk+ version                    ${msg_gtk_version}
 	Default I/O provider            ${with_default_io_provider}
+	Enable deprecated functions     ${enable_deprecated}
 	GConf enabled                   ${enable_gconf}
 	GConf schemas installation      ${msg_schemas_install}
 	Maintainer mode                 ${msg_maintainer_mode}

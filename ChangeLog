@@ -1,5 +1,8 @@
 2011-02-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	* m4/na-maintainer-mode.m4: Add --enable-deprecated configure option.
+
 	* src/api/na-object-api.h (na_object_set_modified): Deprecated macro.
 
 	* src/api/na-iduplicable.h:

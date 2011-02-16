@@ -42,3 +42,22 @@ AC_DEFUN([NA_IS_MAINTAINER_MODE],[
 
 	AM_CONDITIONAL([NA_MAINTAINER_MODE], [test "${USE_MAINTAINER_MODE}" = "yes"])
 ])
+
+AC_DEFUN([NA_ENABLE_DEPRECATED],[
+	AC_ARG_ENABLE(
+		[deprecated],
+		AC_HELP_STRING(
+			[--enable-deprecated],
+			[whether to enable deprecated functions @<:@no@:>@]
+		),
+	[enable_deprecated=$enableval],
+	[enable_deprecated="no"]
+	)
+
+	if test "${enable_deprecated}" = "no"; then
+		AC_DEFINE([NA_DISABLE_DEPRECATED],[1],[Define to 1 if deprecated functions should be disabled])
+		AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} ${NA_DISABLE_DEPRECATED}"])
+	fi
+
+	AM_CONDITIONAL([ENABLE_DEPRECATED], [test "${enable_deprecated}" = "yes"])
+])
