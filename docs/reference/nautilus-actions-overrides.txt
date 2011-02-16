@@ -15,3 +15,9 @@
  const NAObjectItem *existing
  void *fn_data 
 </FUNCTION>
+
+<FUNCTION>
+<NAME>NATimeoutFunc</NAME>
+<RETURNS>void</RETURNS>
+ void *user_data 
+</FUNCTION>

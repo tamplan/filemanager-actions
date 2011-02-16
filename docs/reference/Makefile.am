@@ -57,10 +57,10 @@ content_files = $(shell \ls -1 *.xml)
 content_files += $(auto_created_files)
 
 if !HAVE_GCONF
-ignore_headers = "--ignore-headers=na-gconf-monitor.h"
+ignore_headers = na-gconf-monitor.h
 else
 if !ENABLE_DEPRECATED
-ignore_headers = "--ignore-headers=na-gconf-monitor.h"
+ignore_headers = na-gconf-monitor.h
 endif
 endif
 
@@ -70,7 +70,6 @@ endif
 SCAN_OPTIONS = \
 	--rebuild-types								\
 	--deprecated-guards=NA_DISABLE_DEPRECATED	\
-	$(ignore_headers)							\
 	$(NULL)
 
 # The directory containing the source code. Relative to $(srcdir)
@@ -91,6 +90,7 @@ endif
 # Headers to ignore
 IGNORE_HFILES = \
 	$(core_headers)								\
+	$(ignore_headers)							\
 	$(NULL)
 
 # CFLAGS and LDFLAGS for compiling scan program.

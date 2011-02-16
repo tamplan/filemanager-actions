@@ -16,9 +16,22 @@ done
 		--sysconfdir=/etc \
 		--with-nautilus-extdir=$(pwd)/install/lib/nautilus \
 		--disable-schemas-install \
+		--disable-deprecated \
+		--disable-gtk-doc \
+		--disable-html-manuals \
+		--disable-pdf-manuals \
+		$*
+
+# 'doc' mode: enable deprecated, manuals and gtk-doc
+[ "${autogen_target}" = "doc" ] &&
+	exec ./autogen.sh \
+		--prefix=$(pwd)/install \
+		--sysconfdir=/etc \
+		--with-nautilus-extdir=$(pwd)/install/lib/nautilus \
+		--disable-schemas-install \
+		--enable-deprecated \
 		--enable-gtk-doc \
 		--enable-gtk-doc-pdf \
-		--disable-scrollkeeper \
 		--enable-html-manuals \
 		--enable-pdf-manuals \
 		$*

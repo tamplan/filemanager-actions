@@ -139,6 +139,45 @@ NAIFactoryObjectInterfacePrivate
 </SECTION>
 
 # ---------------------------------------------------------------------
+# NABoxed — The Data Base Class Definition
+
+<SECTION>
+<FILE>boxed</FILE>
+NA_BOXED_TYPE
+NA_BOXED
+NA_IS_BOXED
+NABoxed
+na_boxed_set_type
+na_boxed_are_equal
+na_boxed_copy
+na_boxed_dump
+na_boxed_get_boolean
+na_boxed_get_pointer
+na_boxed_get_string
+na_boxed_get_string_list
+na_boxed_get_uint
+na_boxed_get_uint_list
+na_boxed_get_as_value
+na_boxed_get_as_void
+na_boxed_new_from_string
+na_boxed_set_from_boxed
+na_boxed_set_from_string
+na_boxed_set_from_value
+na_boxed_set_from_void
+
+<SUBSECTION Standard>
+na_boxed_get_type
+NA_BOXED_CLASS
+NA_IS_BOXED_CLASS
+NA_BOXED_GET_CLASS
+NABoxedClass
+
+<SUBSECTION Private>
+NABoxedPrivate
+NABoxedClassPrivate
+</SECTION>
+
+# ---------------------------------------------------------------------
 # NADataBoxed — The Elementary Data Class Definition
 
 <SECTION>
@@ -180,7 +219,7 @@ NADataBoxedClassPrivate
 
 <SECTION>
 <FILE>data-type</FILE>
-NAFactoryDataType
+NADataType
 na_data_types_get_gconf_dump_key
 </SECTION>
 
@@ -268,8 +307,6 @@ NA_OBJECT
 NA_IS_OBJECT
 NAObject
 NAObjectClass
-na_object_object_check_status
-na_object_object_check_status_up
 na_object_object_reset_origin
 na_object_object_ref
 na_object_object_unref
@@ -277,6 +314,7 @@ na_object_object_copy
 na_object_object_dump
 na_object_object_dump_norec
 na_object_object_dump_tree
+na_object_object_check_status_rec
 na_object_object_get_hierarchy
 na_object_free_hierarchy
 na_object_object_debug_invalid
@@ -332,6 +370,8 @@ NA_IS_OBJECT_ITEM
 NAObjectItem
 NAItemTarget
 na_object_item_are_equal
+na_object_item_is_finally_writable
+na_object_item_set_writability_status
 na_object_item_get_item
 na_object_item_get_position
 na_object_item_append_item
@@ -340,8 +380,8 @@ na_object_item_insert_item
 na_object_item_remove_item
 na_object_item_get_items_count
 na_object_item_count_items
-na_object_item_unref_items
-na_object_item_unref_items_rec
+na_object_item_copyref_items
+na_object_item_free_items
 na_object_item_rebuild_children_slist
 na_object_item_deals_with_version
 
@@ -446,7 +486,8 @@ NA_IS_IDUPLICABLE
 NA_IDUPLICABLE_GET_INTERFACE
 NAIDuplicable
 NAIDuplicableInterface
-NA_IDUPLICABLE_SIGNAL_STATUS_CHANGED
+IDUPLICABLE_SIGNAL_MODIFIED_CHANGED
+IDUPLICABLE_SIGNAL_VALID_CHANGED
 na_iduplicable_dispose
 na_iduplicable_dump
 na_iduplicable_duplicate
@@ -497,12 +538,14 @@ na_icontext_get_type
 <FILE>object-api</FILE>
 na_object_duplicate
 na_object_check_status
-na_object_check_status_up
 na_object_get_origin
 na_object_is_valid
 na_object_is_modified
 na_object_set_origin
+na_object_set_modified
 na_object_reset_origin
+na_object_set_writability_status
+na_object_is_finally_writable
 na_object_copy
 na_object_dump
 na_object_dump_norec
@@ -554,8 +597,8 @@ na_object_insert_item
 na_object_remove_item
 na_object_get_items_count
 na_object_count_items
-na_object_unref_items
-na_object_unref_selected_items
+na_object_copyref_items
+na_object_free_items
 na_object_get_version
 na_object_is_target_selection
 na_object_is_target_location
@@ -713,4 +756,14 @@ na_core_utils_file_delete
 na_core_utils_file_exists
 na_core_utils_file_load_from_uri
 na_core_utils_print_version
+</SECTION>
+
+# ---------------------------------------------------------------------
+# Timeout convenience structure 
+
+<SECTION>
+<FILE>timeout</FILE>
+NATimeout
+NATimeoutFunc
+na_timeout_event
 </SECTION>

@@ -519,7 +519,6 @@ na_gconf_utils_read_string_list( GConfClient *gconf, const gchar *path )
  * It should be g_free() by the caller.
  *
  * Since: 2.30
- *
  * Deprecated: 3.1.0
  */
 gboolean
@@ -558,7 +557,6 @@ na_gconf_utils_write_bool( GConfClient *gconf, const gchar *path, gboolean value
  * It should be g_free() by the caller.
  *
  * Since: 2.30
- *
  * Deprecated: 3.1.0
  */
 gboolean
@@ -597,7 +595,6 @@ na_gconf_utils_write_int( GConfClient *gconf, const gchar *path, gint value, gch
  * It should be g_free() by the caller.
  *
  * Since: 2.30
- *
  * Deprecated: 3.1.0
  */
 gboolean
@@ -636,7 +633,6 @@ na_gconf_utils_write_string( GConfClient *gconf, const gchar *path, const gchar 
  * It should be g_free() by the caller.
  *
  * Since: 2.30
- *
  * Deprecated: 3.1.0
  */
 gboolean
@@ -676,7 +672,6 @@ na_gconf_utils_write_string_list( GConfClient *gconf, const gchar *path, GSList 
  * Returns: %TRUE if the operation was successful, %FALSE else.
  *
  * Since: 2.30
- *
  * Deprecated: 3.1.0
  */
 gboolean
@@ -703,7 +698,6 @@ na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **mess
 
 	return( ret );
 }
-#endif /* NA_DISABLE_DEPRECATED */
 
 /**
  * na_gconf_utils_slist_from_string:
@@ -717,7 +711,6 @@ na_gconf_utils_remove_entry( GConfClient *gconf, const gchar *path, gchar **mess
  * string was not of the GConf form.
  *
  * Since: 2.30
- *
  * Deprecated: 3.1.0
  */
 GSList *
@@ -754,7 +747,6 @@ na_gconf_utils_slist_from_string( const gchar *value )
  * allocated string which should be g_free() by the caller.
  *
  * Since: 2.30
- *
  * Deprecated: 3.1.0
  */
 gchar *
@@ -777,6 +769,7 @@ na_gconf_utils_slist_to_string( GSList *slist )
 
 	return( g_string_free( str, FALSE ));
 }
+#endif /* NA_DISABLE_DEPRECATED */
 
 static GConfValue *
 read_value( GConfClient *gconf, const gchar *path, gboolean use_schema, GConfValueType type )

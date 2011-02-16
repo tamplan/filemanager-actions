@@ -203,7 +203,6 @@ instance_finalize( GObject *object )
  * triggeering the @handler in case of modifications.
  *
  * Since: 2.30
- *
  * Deprecated: 3.1.0
  */
 NAGConfMonitor *
@@ -272,7 +271,6 @@ install_monitor( NAGConfMonitor *monitor )
  * Release allocated monitors.
  *
  * Since: 2.30
- *
  * Deprecated: 3.1.0
  */
 void

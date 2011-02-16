@@ -68,6 +68,6 @@ na_gconf_migration_run( void )
 		g_free( err );
 	}
 #else
-	g_debug( "%s: GConf support is disabled, no migration" );
+	g_debug( "%s: GConf support is disabled, no migration", thisfn );
 #endif /* HAVE_GCONF */
 }

@@ -76,8 +76,8 @@ GType         na_boxed_get_type       ( void );
 void          na_boxed_set_type       ( NABoxed *boxed, guint type );
 
 gboolean      na_boxed_are_equal      ( const NABoxed *a, const NABoxed *b );
-NABoxed      *na_boxed_copy           ( const NABoxed *value );
-void          na_boxed_dump           ( const NABoxed *value );
+NABoxed      *na_boxed_copy           ( const NABoxed *boxed );
+void          na_boxed_dump           ( const NABoxed *boxed );
 NABoxed      *na_boxed_new_from_string( guint type, const gchar *string );
 
 gboolean      na_boxed_get_boolean    ( const NABoxed *boxed );

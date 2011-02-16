@@ -47,6 +47,14 @@
 
 G_BEGIN_DECLS
 
+/**
+ * NATimeoutFunc:
+ * @user_data: data to be passed to the callback function.
+ *
+ * Prototype of the callback function.
+ *
+ * Since: 3.1.0
+ */
 typedef void ( *NATimeoutFunc )( void *user_data );
 
 /**
@@ -54,7 +62,6 @@ typedef void ( *NATimeoutFunc )( void *user_data );
  * @timeout:   (i) timeout configurable parameter (ms)
  * @handler:   (i) handler function
  * @user_data: (i) user data
- * @private:   private data
  *
  * This structure let the user (i.e. the code which uses it) manage functions
  * which should only be called after some time of inactivity, which is typically
@@ -62,7 +69,7 @@ typedef void ( *NATimeoutFunc )( void *user_data );
  *
  * The structure is supposed to be initialized at construction time with
  * @timeout in milliseconds, @handler and @user_data input parameters.
- * The @private pointer identifier must be set to %NULL.
+ * The private data should be set to %NULL.
  *
  * Such a structure must be allocated for each managed event.
  *

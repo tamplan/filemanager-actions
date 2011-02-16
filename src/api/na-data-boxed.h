@@ -44,7 +44,7 @@
  * types that those defined in na-data-types.h.
  *
  * Additionally, #NADataBoxed class holds the #NADataDef data definition
- * suitable for a #NAFactoryObject object. It such provides default value
+ * suitable for a NAFactoryObject object. It such provides default value
  * and validity status.
  *
  * Since: 2.30
