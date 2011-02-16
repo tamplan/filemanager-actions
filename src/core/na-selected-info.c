@@ -62,6 +62,7 @@ struct _NASelectedInfoPrivate {
 	gboolean       can_write;
 	gboolean       can_execute;
 	gchar         *owner;
+	gboolean       attributes_are_set;
 };
 
 
@@ -76,7 +77,7 @@ static void            instance_finalize( GObject *object );
 static void            dump( const NASelectedInfo *nsi );
 static NASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
 static NASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg );
-static gboolean        query_file_attributes( NASelectedInfo *info, GFile *location, gchar **errmsg );
+static void            query_file_attributes( NASelectedInfo *info, GFile *location, gchar **errmsg );
 
 GType
 na_selected_info_get_type( void )
@@ -670,19 +671,20 @@ dump( const NASelectedInfo *nsi )
 {
 	static const gchar *thisfn = "na_selected_info_dump";
 
-	g_debug( "%s:         uri=%s", thisfn, nsi->private->uri );
-	g_debug( "%s:    mimetype=%s", thisfn, nsi->private->mimetype );
-	g_debug( "%s:    filename=%s", thisfn, nsi->private->filename );
-	g_debug( "%s:     dirname=%s", thisfn, nsi->private->dirname );
-	g_debug( "%s:    basename=%s", thisfn, nsi->private->basename );
-	g_debug( "%s:    hostname=%s", thisfn, nsi->private->hostname );
-	g_debug( "%s:    username=%s", thisfn, nsi->private->username );
-	g_debug( "%s:      scheme=%s", thisfn, nsi->private->scheme );
-	g_debug( "%s:        port=%d", thisfn, nsi->private->port );
-	g_debug( "%s:    can_read=%s", thisfn, nsi->private->can_read ? "True":"False" );
-	g_debug( "%s:   can_write=%s", thisfn, nsi->private->can_write ? "True":"False" );
-	g_debug( "%s: can_execute=%s", thisfn, nsi->private->can_execute ? "True":"False" );
-	g_debug( "%s:       owner=%s", thisfn, nsi->private->owner );
+	g_debug( "%s:                uri=%s", thisfn, nsi->private->uri );
+	g_debug( "%s:           mimetype=%s", thisfn, nsi->private->mimetype );
+	g_debug( "%s:           filename=%s", thisfn, nsi->private->filename );
+	g_debug( "%s:            dirname=%s", thisfn, nsi->private->dirname );
+	g_debug( "%s:           basename=%s", thisfn, nsi->private->basename );
+	g_debug( "%s:           hostname=%s", thisfn, nsi->private->hostname );
+	g_debug( "%s:           username=%s", thisfn, nsi->private->username );
+	g_debug( "%s:             scheme=%s", thisfn, nsi->private->scheme );
+	g_debug( "%s:               port=%d", thisfn, nsi->private->port );
+	g_debug( "%s:           can_read=%s", thisfn, nsi->private->can_read ? "True":"False" );
+	g_debug( "%s:          can_write=%s", thisfn, nsi->private->can_write ? "True":"False" );
+	g_debug( "%s:        can_execute=%s", thisfn, nsi->private->can_execute ? "True":"False" );
+	g_debug( "%s:              owner=%s", thisfn, nsi->private->owner );
+	g_debug( "%s: attributes_are_set=%s", thisfn, nsi->private->attributes_are_set ? "True":"False" );
 }
 
 static NASelectedInfo *
@@ -791,19 +793,15 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 	na_gnome_vfs_uri_free( vfs );
 
 	location = g_file_new_for_uri( uri );
-	if( query_file_attributes( info, location, errmsg )){
-		dump( info );
-
-	} else {
-		g_object_unref( info );
-		info = NULL;
-	}
+	query_file_attributes( info, location, errmsg );
 	g_object_unref( location );
+
+	dump( info );
 
 	return( info );
 }
 
-static gboolean
+static void
 query_file_attributes( NASelectedInfo *nsi, GFile *location, gchar **errmsg )
 {
 	static const gchar *thisfn = "na_selected_info_query_file_attributes";
@@ -827,7 +825,7 @@ query_file_attributes( NASelectedInfo *nsi, GFile *location, gchar **errmsg )
 			g_warning( "%s: g_file_query_info: %s", thisfn, error->message );
 		}
 		g_error_free( error );
-		return( FALSE );
+		return;
 	}
 
 	if( !nsi->private->mimetype ){
@@ -842,7 +840,7 @@ query_file_attributes( NASelectedInfo *nsi, GFile *location, gchar **errmsg )
 
 	nsi->private->owner = g_strdup( g_file_info_get_attribute_as_string( info, G_FILE_ATTRIBUTE_OWNER_USER ));
 
-	g_object_unref( info );
+	nsi->private->attributes_are_set = TRUE;
 
-	return( TRUE );
+	g_object_unref( info );
 }

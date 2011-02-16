@@ -1,3 +1,9 @@
+2011-02-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-selected-info.c (query_file_attributes):
+	Keep selection info even when unable to query attributes.
+	Fix #641464.
+
 2011-02-15 Pierre Wieser <pwieser@trychlos.org>
 
 	Do not compile with GConf library when disabled
