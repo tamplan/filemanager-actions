@@ -31,6 +31,7 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
 #define __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__
 
+#ifdef HAVE_GCONF
 /**
  * SECTION: gconf-utils
  * @title: GConf Misc
@@ -76,4 +77,5 @@ gchar   *na_gconf_utils_slist_to_string  ( GSList *slist );
 
 G_END_DECLS
 
+#endif /* HAVE_GCONF */
 #endif /* __NAUTILUS_ACTIONS_API_NA_GCONF_UTILS_H__ */

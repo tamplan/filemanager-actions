@@ -169,6 +169,7 @@ static guint         reader_parse_xmldoc( NAXMLReader *reader );
 static guint         iter_on_root_children( NAXMLReader *reader, xmlNode *root );
 static guint         iter_on_list_children( NAXMLReader *reader, xmlNode *first );
 
+static gchar        *slist_to_string( GSList *slist );
 static gchar        *build_key_node_list( NAXMLKeyStr *strlist );
 static gchar        *build_root_node_list( void );
 static gchar        *get_value_from_child_node( xmlNode *node, const gchar *child );
@@ -1227,7 +1228,7 @@ dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 					}
 				}
 			}
-			string = na_gconf_utils_slist_to_string( slist );
+			string = slist_to_string( slist );
 			na_core_utils_slist_free( slist );
 			break;
 
@@ -1237,6 +1238,27 @@ dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 	}
 
 	return( string );
+}
+
+static gchar *
+slist_to_string( GSList *slist )
+{
+	GSList *is;
+	GString *str = g_string_new( "[" );
+	gboolean first;
+
+	first = TRUE;
+	for( is = slist ; is ; is = is->next ){
+		if( !first ){
+			str = g_string_append( str, "," );
+		}
+		str = g_string_append( str, ( const gchar * ) is->data );
+		first = FALSE;
+	}
+
+	str = g_string_append( str, "]" );
+
+	return( g_string_free( str, FALSE ));
 }
 
 static gchar *

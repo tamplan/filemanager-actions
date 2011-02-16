@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#ifdef HAVE_GCONF
+
 #include <string.h>
 
 #include <api/na-core-utils.h>
@@ -830,3 +832,5 @@ sync_gconf( GConfClient *gconf, gchar **message )
 	return( ret );
 }
 #endif /* NA_DISABLE_DEPRECATED */
+
+#endif /* HAVE_GCONF */

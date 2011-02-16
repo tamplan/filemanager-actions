@@ -33,12 +33,7 @@ bin_PROGRAMS = \
 	$(NULL)
 
 pkglibexec_PROGRAMS = \
-	na-delete-xmltree											\
 	na-print-schemas											\
-	$(NULL)
-
-pkglibexec_SCRIPTS = \
-	na-gconf2key.sh												\
 	$(NULL)
 
 AM_CPPFLAGS += \
@@ -89,6 +84,32 @@ nautilus_actions_run_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
+na_print_schemas_SOURCES = \
+	na-print-schemas.c											\
+	console-utils.c												\
+	console-utils.h												\
+	$(NULL)
+
+na_print_schemas_LDADD = \
+	$(top_builddir)/src/core/libna-core.la						\
+	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NULL)
+
+EXTRA_DIST = \
+	na-gconf2key.sh.in											\
+	$(NULL)
+
+CLEANFILES = \
+	$(BUILT_SOURCES)											\
+	$(NULL)
+
+# If GConf support is enabled, then also build the migration tools
+
+if HAVE_GCONF
+pkglibexec_PROGRAMS += \
+	na-delete-xmltree											\
+	$(NULL)
+
 na_delete_xmltree_SOURCES = \
 	na-delete-xmltree.c											\
 	console-utils.c												\
@@ -100,15 +121,8 @@ na_delete_xmltree_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)									\
 	$(NULL)
 
-na_print_schemas_SOURCES = \
-	na-print-schemas.c											\
-	console-utils.c												\
-	console-utils.h												\
-	$(NULL)
-
-na_print_schemas_LDADD = \
-	$(top_builddir)/src/core/libna-core.la						\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+pkglibexec_SCRIPTS = \
+	na-gconf2key.sh												\
 	$(NULL)
 
 do_subst = sed \
@@ -125,11 +139,7 @@ do_subst = sed \
 	$(do_subst) < $< > $@
 	chmod a+x $@
 
-EXTRA_DIST = \
-	na-gconf2key.sh.in											\
-	$(NULL)
-
-CLEANFILES = \
-	$(BUILT_SOURCES)											\
+CLEANFILES += \
 	$(pkglibexec_SCRIPTS)										\
 	$(NULL)
+endif

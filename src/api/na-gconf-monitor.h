@@ -31,6 +31,7 @@
 #ifndef __NAUTILUS_ACTIONS_API_NA_GCONF_MONITOR_H__
 #define __NAUTILUS_ACTIONS_API_NA_GCONF_MONITOR_H__
 
+#ifdef HAVE_GCONF
 #ifndef NA_DISABLE_DEPRECATED
 /**
  * SECTION: gconf-monitor
@@ -84,4 +85,5 @@ void            na_gconf_monitor_release_monitors( GList *monitors );
 G_END_DECLS
 
 #endif /* NA_DISABLE_DEPRECATED */
+#endif /* HAVE_GCONF */
 #endif /* __NAUTILUS_ACTIONS_API_NA_GCONF_MONITOR_H__ */

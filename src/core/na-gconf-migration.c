@@ -49,6 +49,7 @@ void
 na_gconf_migration_run( void )
 {
 	static const gchar *thisfn = "na_gconf_migration_run";
+#ifdef HAVE_GCONF
 	gchar *out, *err;
 	GError *error;
 
@@ -66,4 +67,7 @@ na_gconf_migration_run( void )
 		g_free( out );
 		g_free( err );
 	}
+#else
+	g_debug( "%s: GConf support is disabled, no migration" );
+#endif /* HAVE_GCONF */
 }

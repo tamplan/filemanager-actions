@@ -26,6 +26,8 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
+if HAVE_GCONF
+
 pkglib_LTLIBRARIES = libna-io-gconf.la
 
 AM_CPPFLAGS += \
@@ -56,3 +58,5 @@ libna_io_gconf_la_LDFLAGS = \
 	-no-undefined										\
 	-avoid-version										\
 	$(NULL)
+
+endif

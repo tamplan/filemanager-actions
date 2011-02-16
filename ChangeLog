@@ -1,3 +1,16 @@
+2011-02-15 Pierre Wieser <pwieser@trychlos.org>
+
+	Do not compile with GConf library when disabled
+
+	* src/api/na-gconf-monitor.h:
+	* src/api/na-gconf-utils.h:
+	* src/core/na-gconf-migration.c:
+	* src/core/na-gconf-monitor.c:
+	* src/core/na-gconf-utils.c:
+	* src/io-gconf/Makefile.am:
+	* src/io-xml/naxml-reader.c:
+	* src/utils/Makefile.am: Updated accordingly.
+
 2011-02-14 Pierre Wieser <pwieser@trychlos.org>
 
 	Add --enable-gconf configure argument
