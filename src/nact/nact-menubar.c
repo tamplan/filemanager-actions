@@ -150,6 +150,9 @@ static const GtkActionEntry entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting the DumpClipboard item */
 				N_( "Dump the content of the clipboard object" ),
 				G_CALLBACK( nact_menubar_maintainer_on_dump_clipboard ) },
+		{ "FunctionTest", NULL, "_Test a function", NULL,
+				"Test a function (see nact-menubar-maintainer.c",
+				G_CALLBACK( nact_menubar_maintainer_on_test_function ) },
 
 		{ "HelpItem" , GTK_STOCK_HELP, N_( "Contents" ), "F1",
 				/* i18n: tooltip displayed in the status bar when selecting the Help item */

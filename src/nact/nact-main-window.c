@@ -201,7 +201,7 @@ static gboolean   confirm_for_giveup_from_menu( const NactMainWindow *window );
 static void       load_or_reload_items( NactMainWindow *window );
 
 /* application termination */
-static gboolean   base_is_willing_to_quit( const BaseWindow *window );
+static gboolean   on_base_is_willing_to_quit( const BaseWindow *window, gconstpointer user_data );
 static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
 static gboolean   warn_modified( NactMainWindow *window );
 
@@ -340,7 +340,6 @@ class_init( NactMainWindowClass *klass )
 {
 	static const gchar *thisfn = "nact_main_window_class_init";
 	GObjectClass *object_class;
-	BaseWindowClass *base_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -389,9 +388,6 @@ class_init( NactMainWindowClass *klass )
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
-
-	base_class = BASE_WINDOW_CLASS( klass );
-	base_class->is_willing_to_quit = base_is_willing_to_quit;
 
 	/**
 	 * NactMainWindow::main-item-updated:
@@ -881,6 +877,11 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 		base_window_signal_connect( BASE_WINDOW( window ),
 				G_OBJECT( base_window_get_gtk_toplevel( BASE_WINDOW( window ))),
 				"delete-event", G_CALLBACK( on_delete_event ));
+
+		/* is willing to quit ?
+		 */
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), BASE_SIGNAL_WILLING_TO_QUIT, G_CALLBACK( on_base_is_willing_to_quit ));
 	}
 }
 
@@ -1326,24 +1327,26 @@ nact_main_window_quit( NactMainWindow *window )
 	return( terminated );
 }
 
+/*
+ * signal handler
+ * should return %FALSE if it is not willing to quit
+ * this will also stop the emission of the signal (i.e. the first FALSE wins)
+ */
 static gboolean
-base_is_willing_to_quit( const BaseWindow *window )
+on_base_is_willing_to_quit( const BaseWindow *window, gconstpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_is_willing_to_quit";
+	static const gchar *thisfn = "nact_main_window_on_base_is_willing_to_quit";
 	gboolean willing_to;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), TRUE );
 
 	willing_to = TRUE;
 
-	if( NACT_MAIN_WINDOW( window )->private->is_tree_modified ){
-		willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
-	}
+	if( !NACT_MAIN_WINDOW( window )->private->dispose_has_run ){
+		g_debug( "%s (virtual): window=%p", thisfn, ( void * ) window );
 
-	/* call parent class */
-	if( willing_to ){
-		if( BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit ){
-			willing_to = BASE_WINDOW_CLASS( st_parent_class )->is_willing_to_quit( window );
+		if( NACT_MAIN_WINDOW( window )->private->is_tree_modified ){
+			willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
 		}
 	}
 

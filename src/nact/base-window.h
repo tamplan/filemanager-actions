@@ -203,7 +203,7 @@ typedef struct {
 /**
  * Signals defined by the BaseWindow class.
  *
- * All signals of this class have the same behavior:
+ * All signals of this class share the same behavior:
  *
  * - the message is sent to all derived classes, which are free to
  *   connect to the signal in order to implement their own code;
@@ -219,6 +219,7 @@ typedef struct {
 #define BASE_SIGNAL_INITIALIZE_GTK				"base-window-initialize-gtk"
 #define BASE_SIGNAL_INITIALIZE_WINDOW			"base-window-initialize-window"
 #define BASE_SIGNAL_ALL_WIDGETS_SHOWED			"base-window-all-widgets-showed"
+#define BASE_SIGNAL_WILLING_TO_QUIT				"base-window-willing-to-quit"
 
 GType            base_window_get_type( void );
 

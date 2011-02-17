@@ -1,3 +1,12 @@
+2011-02-17 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-window.h:
+	* src/nact/base-window.c (class_init):
+	Defines a new 'base-window-willing-to-quit' stop-with-accumulator signal.
+
+	* src/nact/nact-main-window.c:
+	Connect to the signal instead of implementing a virtual method.
+
 2011-02-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-iduplicable.c (interface_base_init):

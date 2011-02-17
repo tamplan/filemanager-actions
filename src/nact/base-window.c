@@ -39,6 +39,7 @@
 #include "base-application.h"
 #include "base-window.h"
 #include "base-gtk-utils.h"
+#include "nact-marshal.h"
 
 /* private class data
  */
@@ -97,6 +98,7 @@ enum {
 	INITIALIZE_GTK,
 	INITIALIZE_BASE,
 	ALL_WIDGETS_SHOWED,
+	WILLING_TO_QUIT,
 	LAST_SIGNAL
 };
 
@@ -131,8 +133,10 @@ static void     on_all_widgets_showed_class_handler( BaseWindow *window );
 static gboolean do_run( BaseWindow *window, GtkWindow *toplevel );
 static gboolean is_main_window( BaseWindow *window );
 static gboolean on_delete_event( GtkWidget *widget, GdkEvent *event, BaseWindow *window );
+static gboolean on_is_willing_to_quit_class_handler( BaseWindow *window );
 
 static void     record_connected_signal( BaseWindow *window, GObject *instance, gulong handler_id );
+static gboolean signal_accumulator_false_handled( GSignalInvocationHint *hint, GValue *return_accu, const GValue *handler_return, gpointer dummy);
 static gint     display_dlg( const BaseWindow *parent, GtkMessageType type_message, GtkButtonsType type_buttons, const gchar *primary, const gchar *secondary );
 
 GType
@@ -303,6 +307,45 @@ class_init( BaseWindowClass *klass )
 				NULL,
 				g_cclosure_marshal_VOID__VOID,
 				G_TYPE_NONE,
+				0 );
+
+	/**
+	 * BaseWindow::base-window-willing-to-quit:
+	 *
+	 * The signal is emitted when the application is about to terminate,
+	 * to determine if all BaseWindow-derived windows are actually willing
+	 * to quit.
+	 *
+	 * If the window is not willing to quit, then the user handler should
+	 * return %FALSE to stop the signal emission.
+	 *
+	 * Returning %TRUE will let the signal be emitted to other connected
+	 * handlers, eventually authorizing the application to terminate.
+	 *
+	 * Notes about GLib signals.
+	 *
+	 * If the signal is defined as G_SIGNAL_RUN_CLEANUP, then the object
+	 * handler does not participate to the return value of the signal
+	 * (accumulator is not called). More this object handler is triggered
+	 * unconditionnally, event if a user handler has returned %FALSE to
+	 * stop the emission.
+	 *
+	 * Contrarily, if the signal is defined as G_SIGNAL_RUN_LAST, then the
+	 * object handler returned value is taken into account by the accumulator,
+	 * and can participate to the return value for the signal. If a user
+	 * handler returns FALSE to stop the emission, then the object handler
+	 * will not be triggered.
+	 */
+	st_signals[ WILLING_TO_QUIT ] =
+		g_signal_new_class_handler(
+				BASE_SIGNAL_WILLING_TO_QUIT,
+				G_TYPE_FROM_CLASS( klass ),
+				G_SIGNAL_RUN_LAST,
+				G_CALLBACK( on_is_willing_to_quit_class_handler ),
+				( GSignalAccumulator ) signal_accumulator_false_handled,
+				NULL,
+				nact_cclosure_marshal_BOOLEAN__VOID,
+				G_TYPE_BOOLEAN,
 				0 );
 }
 
@@ -879,7 +922,7 @@ is_main_window( BaseWindow *window )
 }
 
 /*
- * Handler of "delete-event" message connected on the main window Gtk toplevel
+ * Handler of BASE_SIGNAL_WILLING_TO_QUIT signal
  *
  * Our own function does nothing, and let the signal be propagated
  * it so ends up in the default class handler for this signal
@@ -1043,6 +1086,45 @@ base_window_get_widget( const BaseWindow *window, const gchar *name )
 gboolean
 base_window_is_willing_to_quit( const BaseWindow *window )
 {
+	static const gchar *thisfn = "base_window_is_willing_to_quit";
+	gboolean willing_to_quit;
+	GValue instance_params = {0};
+	GValue return_value = {0};
+
+	willing_to_quit = TRUE;
+
+	g_return_val_if_fail( BASE_IS_WINDOW( window ), TRUE );
+
+	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p", thisfn, ( void * ) window );
+
+		g_value_init( &instance_params, G_TYPE_FROM_INSTANCE( window ));
+		g_value_set_instance( &instance_params, ( gpointer ) window );
+
+		g_value_init( &return_value, G_TYPE_BOOLEAN );
+		g_value_set_boolean( &return_value, TRUE );
+
+		g_signal_emitv( &instance_params, st_signals[WILLING_TO_QUIT], 0, &return_value );
+
+		willing_to_quit = g_value_get_boolean( &return_value );
+	}
+
+	return( willing_to_quit );
+}
+
+/*
+ * Handler of BASE_SIGNAL_WILLING_TO_QUIT message connected on the main window Gtk toplevel
+ *
+ * As other BaseWindow signals, the default object handler converts the
+ *  signal to a virtual method.
+ *
+ * Main window should handle this signal in order to trap application termination,
+ * returning %FALSE if it is not willing to quit.
+ */
+static gboolean
+on_is_willing_to_quit_class_handler( BaseWindow *window )
+{
+	static const gchar *thisfn = "base_window_on_is_willing_to_quit_class_handler";
 	gboolean willing_to;
 
 	willing_to = TRUE;
@@ -1050,13 +1132,33 @@ base_window_is_willing_to_quit( const BaseWindow *window )
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), TRUE );
 
 	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
 		if( BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit ){
-			BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit( window );
+			willing_to = BASE_WINDOW_GET_CLASS( window )->is_willing_to_quit( window );
 		}
 	}
 
 	return( willing_to );
+}
+
+/*
+ * the first handler which returns FALSE stops the emission
+ * this is used on BASE_SIGNAL_WILLING_TO_QUIT signal
+ */
+static gboolean
+signal_accumulator_false_handled( GSignalInvocationHint *hint, GValue *return_accu, const GValue *handler_return, gpointer dummy)
+{
+	static const gchar *thisfn = "base_window_signal_accumulator_false_handled";
+	gboolean continue_emission;
+	gboolean willing_to_quit;
+
+	willing_to_quit = g_value_get_boolean( handler_return );
+	g_value_set_boolean( return_accu, willing_to_quit );
+	continue_emission = willing_to_quit;
+
+	g_debug( "%s: willing_to handler returns %s", thisfn, willing_to_quit ? "True":"False" );
+	return( continue_emission );
 }
 
 /**

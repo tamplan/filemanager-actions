@@ -116,3 +116,13 @@ nact_menubar_maintainer_on_dump_clipboard( GtkAction *action, BaseWindow *window
 {
 	nact_clipboard_dump( nact_main_window_get_clipboard( NACT_MAIN_WINDOW( window )));
 }
+
+/*
+ * Test a miscellaneous function
+ */
+void
+nact_menubar_maintainer_on_test_function( GtkAction *action, BaseWindow *window )
+{
+	gboolean is_willing = base_window_is_willing_to_quit( BASE_WINDOW( window ));
+	g_debug( "nact_menubar_maintainer_on_test_function: willing_to=%s", is_willing ? "True":"False" );
+}

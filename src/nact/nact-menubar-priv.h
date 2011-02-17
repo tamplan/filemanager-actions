@@ -158,6 +158,7 @@ void nact_menubar_maintainer_on_dump_selection       ( GtkAction *action, BaseWi
 void nact_menubar_maintainer_on_brief_tree_store_dump( GtkAction *action, BaseWindow *window );
 void nact_menubar_maintainer_on_list_modified_items  ( GtkAction *action, BaseWindow *window );
 void nact_menubar_maintainer_on_dump_clipboard       ( GtkAction *action, BaseWindow *window );
+void nact_menubar_maintainer_on_test_function        ( GtkAction *action, BaseWindow *window );
 
 void nact_menubar_tools_on_update_sensitivities( const NactMenubar *bar );
 
