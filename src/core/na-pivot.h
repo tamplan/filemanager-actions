@@ -109,6 +109,7 @@ GType    na_pivot_get_type( void );
 
 /* properties
  */
+#define PIVOT_PROP_LOADABLE						"pivot-prop-loadable"
 #define PIVOT_PROP_TREE							"pivot-prop-tree"
 
 /* signals

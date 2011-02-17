@@ -75,7 +75,13 @@ struct _NAPivotPrivate {
 /* NAPivot properties
  */
 enum {
-	PIVOT_PROP_TREE_ID = 1,
+	PRIVOT_PROP_0,
+
+	PIVOT_PROP_LOADABLE_ID,
+	PIVOT_PROP_TREE_ID,
+
+	/* count of properties */
+	PIVOT_PROP_N
 };
 
 /* signals
@@ -145,7 +151,6 @@ class_init( NAPivotClass *klass )
 {
 	static const gchar *thisfn = "na_pivot_class_init";
 	GObjectClass *object_class;
-	GParamSpec *spec;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -158,12 +163,20 @@ class_init( NAPivotClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	spec = g_param_spec_pointer(
-			PIVOT_PROP_TREE,
-			"Items tree",
-			"Hierarchical tree of items",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, PIVOT_PROP_TREE_ID, spec );
+	g_object_class_install_property( object_class, PIVOT_PROP_LOADABLE_ID,
+			g_param_spec_uint(
+					PIVOT_PROP_LOADABLE,
+					"Loadable set",
+					"The set of loadble items",
+					0, 255, 0,
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, PIVOT_PROP_TREE_ID,
+			g_param_spec_pointer(
+					PIVOT_PROP_TREE,
+					"Items tree",
+					"Hierarchical tree of items",
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	klass->private = g_new0( NAPivotClassPrivate, 1 );
 
@@ -254,6 +267,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
+			case PIVOT_PROP_LOADABLE_ID:
+				g_value_set_uint( value, self->private->loadable_set );
+				break;
+
 			case PIVOT_PROP_TREE_ID:
 				g_value_set_pointer( value, self->private->tree );
 				break;
@@ -276,6 +293,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	if( !self->private->dispose_has_run ){
 
 		switch( property_id ){
+			case PIVOT_PROP_LOADABLE_ID:
+				self->private->loadable_set = g_value_get_uint( value );
+				break;
+
 			case PIVOT_PROP_TREE_ID:
 				self->private->tree = g_value_get_pointer( value );
 				break;

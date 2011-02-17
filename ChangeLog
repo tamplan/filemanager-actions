@@ -1,5 +1,8 @@
 2011-02-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-pivot.h:
+	* src/core/na-pivot.c: Define new 'pivot-prop-loadable' property.
+
 	* src/nact/base-window.h:
 	* src/nact/base-window.c (class_init):
 	Defines a new 'base-window-willing-to-quit' stop-with-accumulator signal.
