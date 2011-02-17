@@ -1,5 +1,10 @@
 2011-02-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-iduplicable.c (interface_base_init):
+	* src/core/na-settings.c (class_init):
+	* src/nact/base-window.c (class_init):
+	Use G_SIGNAL_RUN_CLEANUP signal flag when an object handler is defined.
+
 	* docs/reference/Makefile.am:
 	* src/nact/Makefile.am:
 	* run-distcheck.sh: Fix make distcheck.

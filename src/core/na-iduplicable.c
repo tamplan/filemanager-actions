@@ -160,7 +160,7 @@ interface_base_init( NAIDuplicableInterface *klass )
 		st_signals[ MODIFIED_CHANGED ] = g_signal_new_class_handler(
 				IDUPLICABLE_SIGNAL_MODIFIED_CHANGED,
 				G_TYPE_OBJECT,
-				G_SIGNAL_RUN_LAST,
+				G_SIGNAL_RUN_CLEANUP,
 				G_CALLBACK( on_modified_changed_class_handler ),
 				NULL,
 				NULL,
@@ -192,7 +192,7 @@ interface_base_init( NAIDuplicableInterface *klass )
 		st_signals[ VALID_CHANGED ] = g_signal_new_class_handler(
 				IDUPLICABLE_SIGNAL_VALID_CHANGED,
 				G_TYPE_OBJECT,
-				G_SIGNAL_RUN_LAST,
+				G_SIGNAL_RUN_CLEANUP,
 				G_CALLBACK( on_valid_changed_class_handler ),
 				NULL,
 				NULL,

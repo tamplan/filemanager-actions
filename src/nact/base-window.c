@@ -255,7 +255,7 @@ class_init( BaseWindowClass *klass )
 		g_signal_new_class_handler(
 				BASE_SIGNAL_INITIALIZE_GTK,
 				G_TYPE_FROM_CLASS( klass ),
-				G_SIGNAL_RUN_LAST,
+				G_SIGNAL_RUN_CLEANUP,
 				G_CALLBACK( on_initialize_gtk_toplevel_class_handler ),
 				NULL,
 				NULL,
@@ -275,7 +275,7 @@ class_init( BaseWindowClass *klass )
 		g_signal_new_class_handler(
 				BASE_SIGNAL_INITIALIZE_WINDOW,
 				G_TYPE_FROM_CLASS( klass ),
-				G_SIGNAL_RUN_LAST,
+				G_SIGNAL_RUN_CLEANUP,
 				G_CALLBACK( on_initialize_base_window_class_handler ),
 				NULL,
 				NULL,
@@ -297,7 +297,7 @@ class_init( BaseWindowClass *klass )
 		g_signal_new_class_handler(
 				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
 				G_TYPE_FROM_CLASS( klass ),
-				G_SIGNAL_RUN_LAST,
+				G_SIGNAL_RUN_CLEANUP,
 				G_CALLBACK( on_all_widgets_showed_class_handler ),
 				NULL,
 				NULL,

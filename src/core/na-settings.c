@@ -281,7 +281,7 @@ class_init( NASettingsClass *klass )
 	st_signals[ KEY_CHANGED ] = g_signal_new_class_handler(
 				SETTINGS_SIGNAL_KEY_CHANGED,
 				NA_SETTINGS_TYPE,
-				G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+				G_SIGNAL_RUN_CLEANUP | G_SIGNAL_ACTION,
 				G_CALLBACK( on_key_changed_final_handler ),
 				NULL,								/* accumulator */
 				NULL,								/* accumulator data */
