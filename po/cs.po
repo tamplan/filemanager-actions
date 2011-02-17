@@ -5,15 +5,15 @@
 #
 # Tomas Kyjovsky <tomas.kyjovsky@mail.muni.cz>, 2006.
 # Petr Kovar <pknbe@volny.cz>, 2010.
-# Marek Černocký <marek@manet.cz>, 2009 – 2011.
+# Marek Černocký <marek@manet.cz>, 2009, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2011-01-28 00:00+0000\n"
-"PO-Revision-Date: 2011-01-28 19:39+0100\n"
+"POT-Creation-Date: 2011-02-14 23:52+0000\n"
+"PO-Revision-Date: 2011-02-17 07:54+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1025,86 +1025,105 @@ msgstr "Co by se mělo s tímto dělat?"
 msgid "_Override the existing action"
 msgstr "_Přepsat existující akci"
 
-#: ../src/core/na-io-provider.c:1602
-msgid "Item is read-only."
-msgstr "Položka je pouze ke čtení"
+#: ../src/core/na-io-provider.c:70
+#| msgid ""
+#| "Program flow error.\n"
+#| "Please, be kind enough to fill out a bug report on http://bugzilla.gnome."
+#| "org."
+msgid ""
+"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
+"org/enter_bug.cgi?product=nautilus-actions."
+msgstr ""
+"Buďte tak laskavi a vyplňte chybové hlášení na https://bugzilla.gnome.org/"
+"enter_bug.cgi?product=nautilus-actions."
 
-#: ../src/core/na-io-provider.c:1606
-msgid "I/O provider is not willing to write."
-msgstr "Zprostředkovatel V/V nedovoluje zápis."
+#: ../src/core/na-io-provider.c:1303
+#| msgid "unavailable I/O provider"
+msgid "Unavailable I/O provider."
+msgstr "Nedostupný zprostředkovatel V/V."
 
-#: ../src/core/na-io-provider.c:1610
-msgid "No writable I/O provider found."
-msgstr "Nebyl nalezen žádný zprostředkovatel zapisovatelného V/V."
-
-#: ../src/core/na-io-provider.c:1614
-msgid "I/O provider has been locked down by an administrator."
-msgstr "Zprostředkovatel V/V byl uzamčen správcem."
-
-#: ../src/core/na-io-provider.c:1618
-msgid "I/O provider has been locked down by the user."
-msgstr "Zprostředkovatel V/V byl uzamčen uživatelem."
-
-#: ../src/core/na-io-provider.c:1622
+#: ../src/core/na-io-provider.c:1307
 msgid "I/O provider implementation lacks of required API."
 msgstr "Implementace zprostředkovatele V/V postrádá požadované API."
 
-#: ../src/core/na-io-provider.c:1626
-msgid "The whole configuration has been locked down by an administrator."
-msgstr "Celé nastavení bylo uzamknuto správcem."
+#: ../src/core/na-io-provider.c:1311
+msgid "I/O provider is not willing to write."
+msgstr "Zprostředkovatel V/V nedovoluje zápis."
 
-#: ../src/core/na-io-provider.c:1635
+#: ../src/core/na-io-provider.c:1315
+#| msgid "I/O provider is not willing to write."
+msgid "I/O provider announces itself as unable to write."
+msgstr "Zprostředkovatel V/V o sobě uvedl, že neumožňuje zápis."
+
+#: ../src/core/na-io-provider.c:1319
+msgid "I/O provider has been locked down by an administrator."
+msgstr "Zprostředkovatel V/V byl uzamčen správcem."
+
+#: ../src/core/na-io-provider.c:1323
+msgid "I/O provider has been locked down by the user."
+msgstr "Zprostředkovatel V/V byl uzamčen uživatelem."
+
+#: ../src/core/na-io-provider.c:1327
+msgid "Item is read-only."
+msgstr "Položka je pouze ke čtení"
+
+#: ../src/core/na-io-provider.c:1331
+msgid "No writable I/O provider found."
+msgstr "Nebyl nalezen žádný zprostředkovatel zapisovatelného V/V."
+
+#: ../src/core/na-io-provider.c:1336
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
-"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+"%s"
 msgstr ""
-"Položka není z nějakého neznámého důvodu zapisovatelná (%d).\n"
-"Věnujte prosím chvíli času nahlášení chyby na http://bugzilla.gnome.org."
+"Položka není z neznámého důvodu zapisovatelná (%d).\n"
+"%s"
 
-#: ../src/core/na-io-provider.c:1659
+#: ../src/core/na-io-provider.c:1359
 msgid "OK."
 msgstr "OK."
 
-#: ../src/core/na-io-provider.c:1663
+#: ../src/core/na-io-provider.c:1363
+#, c-format
 msgid ""
 "Program flow error.\n"
-"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+"%s"
 msgstr ""
 "Chyba běhu programu.\n"
-"Věnujte prosím chvíli času nahlášení chyby na http://bugzilla.gnome.org."
+"%s"
 
-#: ../src/core/na-io-provider.c:1668
+#: ../src/core/na-io-provider.c:1367
 msgid "The I/O provider is not willing to do that."
 msgstr "Zprostředkovatel V/V toto neumožňuje."
 
-#: ../src/core/na-io-provider.c:1672
+#: ../src/core/na-io-provider.c:1371
 msgid "Write error in I/O provider."
 msgstr "Chyba zápisu ve zprostředkovateli V/V."
 
-#: ../src/core/na-io-provider.c:1676
+#: ../src/core/na-io-provider.c:1375
 msgid "Unable to delete GConf schemas."
 msgstr "Nelze smazat schémata GConf."
 
-#: ../src/core/na-io-provider.c:1680
+#: ../src/core/na-io-provider.c:1379
 msgid "Unable to delete configuration."
 msgstr "Nelze smazat nastavení."
 
-#: ../src/core/na-io-provider.c:1684
+#: ../src/core/na-io-provider.c:1383
 #, c-format
 msgid ""
 "Unknown return code (%d).\n"
-"Please, be kind enough to fill out a bug report on http://bugzilla.gnome.org."
+"%s"
 msgstr ""
 "Neznámý návratový kód (%d).\n"
-"Věnujte prosím chvíli času nahlášení chyby na http://bugzilla.gnome.org."
+"%s"
 
 #. i18n: default label for a new action
 #: ../src/core/na-object-action.c:60
 msgid "New Nautilus action"
 msgstr "Nová akce Nautilus"
 
-#: ../src/core/na-object-action.c:448
+#: ../src/core/na-object-action.c:471
 msgid "Profile automatically created from pre-v2 action"
 msgstr "Profil automaticky vytvořen z akce pre-v2"
 
@@ -1178,7 +1197,7 @@ msgstr ""
 "kontextové nabídky."
 
 #. i18n: copied items have a label as 'Copy of original label'
-#: ../src/core/na-object-id.c:363
+#: ../src/core/na-object-id.c:362
 #, c-format
 msgid "Copy of %s"
 msgstr "Kopie položky %s"
@@ -1330,7 +1349,7 @@ msgid "New Nautilus menu"
 msgstr "Nová nabídka aplikace Nautilus"
 
 #. i18n: label for the default profile
-#: ../src/core/na-object-profile.c:733
+#: ../src/core/na-object-profile.c:780
 msgid "Default profile"
 msgstr "Výchozí profil"
 
@@ -1772,7 +1791,7 @@ msgstr "Jedinečný název aplikace"
 msgid "The Unique name of the application"
 msgstr "Jedinečný název aplikace"
 
-#: ../src/nact/base-application.c:586
+#: ../src/nact/base-application.c:584
 #, c-format
 msgid ""
 "Another instance of %s is already running.\n"
@@ -1781,7 +1800,7 @@ msgstr ""
 "Již běží jiná instance aplikace %s.\n"
 "Přepněte se prosím nazpět do ní."
 
-#: ../src/nact/base-application.c:588
+#: ../src/nact/base-application.c:586
 msgid "The application is not unique"
 msgstr "Aplikace není jedinečná"
 
@@ -1798,65 +1817,75 @@ msgid "Warn on Escape"
 msgstr "Při stisku Esc varovat"
 
 #: ../src/nact/base-assistant.c:166
-#| msgid "Ask for a _confirmation when quitting the assistant on Esc key"
 msgid ""
 "Does the user should confirm when quitting the assistant on Escape key ?"
-msgstr "Dotázat se uživatele na potvrzení při ukončení průvodce klávesou Escape?"
+msgstr ""
+"Dotázat se uživatele na potvrzení při ukončení průvodce klávesou Escape?"
 
 #: ../src/nact/base-assistant.c:475
 msgid "Are you sure you want to quit this assistant ?"
 msgstr "Opravdu chcete ukončit tohoto průvodce?"
 
-#: ../src/nact/base-window.c:206
+#: ../src/nact/base-window.c:195
 msgid "Parent BaseWindow"
 msgstr "Rodič BaseWindow"
 
-#: ../src/nact/base-window.c:207
+#: ../src/nact/base-window.c:196
 msgid "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
 msgstr ""
 "Ukazatel (ne odkaz) na rodičovský objekt BaseWindow tohoto objektu BaseWindow"
 
-#: ../src/nact/base-window.c:213
+#: ../src/nact/base-window.c:202
 msgid "BaseApplication"
 msgstr "BaseApplication"
 
-#: ../src/nact/base-window.c:214
+#: ../src/nact/base-window.c:203
 msgid "A pointer (not a reference) to the BaseApplication instance"
 msgstr "Ukazatel (ne odkaz) na instanci objektu BaseApplikacation"
 
-#: ../src/nact/base-window.c:220
+#: ../src/nact/base-window.c:209
 msgid "XML UI filename"
 msgstr "Soubor s XML uživatelského rozhraní"
 
-#: ../src/nact/base-window.c:221
+#: ../src/nact/base-window.c:210
 msgid "The filename which contains the XML UI definition"
 msgstr "Název souboru, který obsahuje definici XML uživatelského rozhraní"
 
-#: ../src/nact/base-window.c:228
+#: ../src/nact/base-window.c:217
 msgid "Has its own GtkBuilder"
 msgstr "Má svůj vlastní GtkBuilder"
 
-#: ../src/nact/base-window.c:229
+#: ../src/nact/base-window.c:218
 msgid ""
 "Whether this BaseWindow reallocates a new GtkBuilder each time it is opened"
 msgstr ""
 "Zda tento objekt BaseWindow realokuje pokaždé, když je otevřen, nový "
 "GtkBuilder"
 
-#: ../src/nact/base-window.c:236
+#: ../src/nact/base-window.c:225
 msgid "Toplevel name"
 msgstr "Název nejvyšší úrovně"
 
-#: ../src/nact/base-window.c:237
+#: ../src/nact/base-window.c:226
 msgid "The internal GtkBuildable name of the toplevel window"
 msgstr "Interní název GtkBuildable pro okno nejvyšší úrovně"
 
-#: ../src/nact/base-window.c:619
+#: ../src/nact/base-window.c:233
+#| msgid "no name"
+msgid "WSP name"
+msgstr "Název WSP"
+
+#: ../src/nact/base-window.c:234
+msgid ""
+"The string which handles the window size and position in user preferences"
+msgstr "Řetězec, který řídí velikost a polohu okna v uživatelských předvolbách"
+
+#: ../src/nact/base-window.c:638
 #, c-format
 msgid "Unable to load %s UI XML definition: %s"
 msgstr "Nelze načíst definici uživatelského rozhraní v XML %s: %s"
 
-#: ../src/nact/base-window.c:644
+#: ../src/nact/base-window.c:663
 #, c-format
 msgid "Unable to load %s dialog definition."
 msgstr "Nelze načíst definici dialogového okna %s."
@@ -1926,19 +1955,19 @@ msgstr "Volby správy sezení:"
 msgid "Show session management options"
 msgstr "Zobrazit volby správy sezení"
 
-#: ../src/nact/nact-application.c:70
+#: ../src/nact/nact-application.c:69 ../src/nact/nact.desktop.in.h:2
 msgid "Nautilus-Actions Configuration Tool"
 msgstr "Nástroj nastavení Akce-Nautilus"
 
-#: ../src/nact/nact-application.c:71
+#: ../src/nact/nact-application.c:70
 msgid "A user interface to edit your own contextual actions"
 msgstr "Uživatelské rozhraní na úpravu vašich vlastních kontextových akcí"
 
-#: ../src/nact/nact-application.c:76
+#: ../src/nact/nact-application.c:75
 msgid "Set it to run multiple instances of the program [unique]"
 msgstr "Nastavte, pokud chcete spustit více instancí programu [unique]"
 
-#: ../src/nact/nact-application.c:78
+#: ../src/nact/nact-application.c:77
 msgid "Output the version number, and exit gracefully [no]"
 msgstr "Vypsat číslo verze a elegantně skončit [ne]"
 
@@ -1963,7 +1992,7 @@ msgid "Item is local"
 msgstr "Položka je místní"
 
 #. i18n: add a comment when a capability is already used by current item
-#: ../src/nact/nact-add-capability-dialog.c:498
+#: ../src/nact/nact-add-capability-dialog.c:489
 #, c-format
 msgid "%s (already inserted)"
 msgstr "%s (již vložen)"
@@ -1984,29 +2013,29 @@ msgstr "<b>Schéma</b>"
 msgid "Adding a new scheme"
 msgstr "Přidávání nového schématu"
 
-#: ../src/nact/nact-assistant-export.c:698
+#: ../src/nact/nact-assistant-export.c:616
 msgid "About to export selected items:"
 msgstr "Budou exportovány vybrané položky:"
 
-#: ../src/nact/nact-assistant-export.c:712
+#: ../src/nact/nact-assistant-export.c:628
 msgid "Into the destination folder:"
 msgstr "Do cílové složky:"
 
-#: ../src/nact/nact-assistant-export.c:776
+#: ../src/nact/nact-assistant-export.c:691
 msgid "Export canceled due to user action."
 msgstr "Export na základě uživatelovy akce zrušen."
 
 #. i18n: result of the export assistant
-#: ../src/nact/nact-assistant-export.c:810
+#: ../src/nact/nact-assistant-export.c:723
 msgid "Selected actions have been proceeded :"
 msgstr "Vybrané akce byly zpracovány:"
 
 #. i18n: action as been successfully exported to <filename>
-#: ../src/nact/nact-assistant-export.c:829
+#: ../src/nact/nact-assistant-export.c:742
 msgid "Successfully exported as"
 msgstr "Úspěšně exportováno jako"
 
-#: ../src/nact/nact-assistant-export.c:852
+#: ../src/nact/nact-assistant-export.c:765
 msgid "You may not have write permissions on selected folder."
 msgstr "Možná nemáte oprávnění k zápisu do vybrané složky."
 
@@ -2074,28 +2103,28 @@ msgid "Which format should I choose to export it ?"
 msgstr "Který formát by se měl zvolit pro export tohoto?"
 
 #. i18n: the title of the confirm page of the import assistant
-#: ../src/nact/nact-assistant-import.c:534
+#: ../src/nact/nact-assistant-import.c:525
 msgid "About to import selected files:"
 msgstr "Budou importovány vybrané soubory:"
 
 #. i18n: result of the import assistant
-#: ../src/nact/nact-assistant-import.c:739
+#: ../src/nact/nact-assistant-import.c:737
 msgid "Selected files have been proceeded :"
 msgstr "Vybrané soubory byly zpracovány:"
 
 #. i18n: indicate that the file has been successfully imported
-#: ../src/nact/nact-assistant-import.c:758
+#: ../src/nact/nact-assistant-import.c:756
 msgid "Import OK"
 msgstr "Import v pořádku"
 
 #. i18n: this is the globally unique identifier and the label of the newly imported action
-#: ../src/nact/nact-assistant-import.c:764
+#: ../src/nact/nact-assistant-import.c:762
 #, c-format
 msgid "Id.: %s\t%s"
 msgstr "ID: %s\t%s"
 
 #. i18n: indicate that the file was not imported
-#: ../src/nact/nact-assistant-import.c:773
+#: ../src/nact/nact-assistant-import.c:771
 msgid "Not imported"
 msgstr "Import neproběhl"
 
@@ -2104,18 +2133,14 @@ msgid "Configure items to be added to the Nautilus context menus"
 msgstr ""
 "Přidat položky, které budou přidány do kontextové nabídky aplikace Nautilus"
 
-#: ../src/nact/nact.desktop.in.h:2
-msgid "Nautilus-Actions Configuration"
-msgstr "Nastavení Akce-Nautilus"
-
 #. i18n: The action <label> is about to be exported
-#: ../src/nact/nact-export-ask.c:323
+#: ../src/nact/nact-export-ask.c:320
 #, c-format
 msgid "The action \"%s\" is about to be exported."
 msgstr "Má být exportována akce „%s“."
 
 #. i18n: The menu <label> is about to be exported
-#: ../src/nact/nact-export-ask.c:326
+#: ../src/nact/nact-export-ask.c:323
 #, c-format
 msgid "The menu \"%s\" is about to be exported."
 msgstr "Má být exportována nabídka „%s“."
@@ -2133,7 +2158,7 @@ msgstr ""
 "Na volbu formátu budete dotázáni pokaždé, když bude nějaká položka "
 "exportována."
 
-#: ../src/nact/nact-iaction-tab.c:586
+#: ../src/nact/nact-iaction-tab.c:582
 msgid "Caution: a label is mandatory for the action or the menu."
 msgstr "Upozornění: popisek je pro akci nebo nabídku povinný."
 
@@ -2145,15 +2170,15 @@ msgstr "Filtr základního názvu"
 msgid "Capability filter"
 msgstr "Filtr schopností"
 
-#: ../src/nact/nact-icommand-tab.c:562
+#: ../src/nact/nact-icommand-tab.c:557
 msgid "Choosing a command"
 msgstr "Výběr příkazu"
 
-#: ../src/nact/nact-icommand-tab.c:599
+#: ../src/nact/nact-icommand-tab.c:594
 msgid "Choosing a working directory"
 msgstr "Výběr pracovní složky"
 
-#: ../src/nact/nact-icommand-tab.c:658
+#: ../src/nact/nact-icommand-tab.c:653
 msgid "Ex.:"
 msgstr "Např.:"
 
@@ -2201,19 +2226,19 @@ msgstr "Pracovní postředí XFCE"
 msgid "Legacy systems"
 msgstr "Dřívější systémy"
 
-#: ../src/nact/nact-ienvironment-tab.c:758
-#: ../src/nact/nact-ienvironment-tab.c:816
+#: ../src/nact/nact-ienvironment-tab.c:712
+#: ../src/nact/nact-ienvironment-tab.c:770
 msgid "Choosing an executable"
 msgstr "Výběr spustitelného programu"
 
-#: ../src/nact/nact-ifolders-tab.c:166
+#: ../src/nact/nact-ifolders-tab.c:165
 msgid "Folder filter"
 msgstr "Filtr složky"
 
 #. i18n: title of the FileChoose dialog when selecting an URI which
 #. * will be compare to Nautilus 'current_folder'
 #.
-#: ../src/nact/nact-ifolders-tab.c:251 ../src/nact/nact-ifolders-tab.c:282
+#: ../src/nact/nact-ifolders-tab.c:252 ../src/nact/nact-ifolders-tab.c:283
 msgid "Select a folder"
 msgstr "Výběr složky"
 
@@ -2227,20 +2252,20 @@ msgstr "Filtr typu MIME"
 msgid "None"
 msgstr "Žádná"
 
-#: ../src/nact/nact-iproperties-tab.c:287
+#: ../src/nact/nact-iproperties-tab.c:265
 msgid "Me_nu"
 msgstr "_Nabídka"
 
-#: ../src/nact/nact-iproperties-tab.c:288
+#: ../src/nact/nact-iproperties-tab.c:266
 msgid "<b>Menu editable properties</b>"
 msgstr "<b>Upravitelné vlastnosti nabídky</b>"
 
-#: ../src/nact/nact-iproperties-tab.c:290
+#: ../src/nact/nact-iproperties-tab.c:268
 #: ../src/nact/nautilus-actions-config-tool.ui.h:221
 msgid "_Action"
 msgstr "_Akce"
 
-#: ../src/nact/nact-iproperties-tab.c:291
+#: ../src/nact/nact-iproperties-tab.c:269
 #: ../src/nact/nautilus-actions-config-tool.ui.h:52
 msgid "<b>Action editable properties</b>"
 msgstr "<b>Upravitelné vlastnosti akce</b>"
@@ -2249,289 +2274,7 @@ msgstr "<b>Upravitelné vlastnosti akce</b>"
 msgid "Scheme filter"
 msgstr "Filtr schématu"
 
-#: ../src/nact/nact-main-menubar.c:103 ../src/nact/nact-main-menubar.c:210
-msgid "_File"
-msgstr "_Soubor"
-
-#: ../src/nact/nact-main-menubar.c:104 ../src/nact/nact-main-menubar.c:214
-msgid "_Edit"
-msgstr "_Upravit"
-
-#: ../src/nact/nact-main-menubar.c:105
-msgid "_View"
-msgstr "_Zobrazit"
-
-#: ../src/nact/nact-main-menubar.c:106
-msgid "_Toolbars"
-msgstr "Lišty nás_trojů"
-
-#: ../src/nact/nact-main-menubar.c:107 ../src/nact/nact-main-menubar.c:218
-msgid "_Tools"
-msgstr "Nás_troje"
-
-#: ../src/nact/nact-main-menubar.c:108
-msgid "_Maintainer"
-msgstr "_Správce"
-
-#: ../src/nact/nact-main-menubar.c:109 ../src/nact/nact-main-menubar.c:222
-msgid "_Help"
-msgstr "_Nápověda"
-
-#: ../src/nact/nact-main-menubar.c:111
-msgid "New _menu"
-msgstr "Nová na_bídka"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
-#: ../src/nact/nact-main-menubar.c:113
-msgid "Insert a new menu at the current position"
-msgstr "Vložit na současné místo novou nabídku"
-
-#: ../src/nact/nact-main-menubar.c:115
-msgid "_New action"
-msgstr "_Nová akce"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'New action' item
-#: ../src/nact/nact-main-menubar.c:117
-msgid "Define a new action"
-msgstr "Definovat novou akci"
-
-#: ../src/nact/nact-main-menubar.c:119
-msgid "New _profile"
-msgstr "Nový _profil"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
-#: ../src/nact/nact-main-menubar.c:121
-msgid "Define a new profile attached to the current action"
-msgstr "Definovat nový profil připojený k současné akci"
-
-#. i18n: tooltip displayed in the status bar when selecting 'Save' item
-#: ../src/nact/nact-main-menubar.c:125
-msgid ""
-"Record all the modified actions. Invalid actions will be silently ignored"
-msgstr ""
-"Zaznamenat všechny změněné akce. Neplatné akce budou v tichosti ignorovány"
-
-#. i18n: tooltip displayed in the status bar when selecting 'Quit' item
-#: ../src/nact/nact-main-menubar.c:129
-msgid "Quit the application"
-msgstr "Ukončit aplikaci"
-
-#. i18n: tooltip displayed in the status bar when selecting the Cut item
-#: ../src/nact/nact-main-menubar.c:133
-msgid "Cut the selected item(s) to the clipboard"
-msgstr "Vyjmout vybranou položku či položky do schránky"
-
-#. i18n: tooltip displayed in the status bar when selecting the Copy item
-#: ../src/nact/nact-main-menubar.c:137
-msgid "Copy the selected item(s) to the clipboard"
-msgstr "Kopírovat vybranou položku či položky do schránky"
-
-#. i18n: tooltip displayed in the status bar when selecting the Paste item
-#: ../src/nact/nact-main-menubar.c:141
-msgid "Insert the content of the clipboard just before the current position"
-msgstr "Vložit obsah schránky těsně před současnou pozici"
-
-#: ../src/nact/nact-main-menubar.c:143
-msgid "Paste _into"
-msgstr "Vložit _do"
-
-#. i18n: tooltip displayed in the status bar when selecting the Paste Into item
-#: ../src/nact/nact-main-menubar.c:145
-msgid "Insert the content of the clipboard as first child of the current item"
-msgstr "Vložit obsah schránky jako prvního potomka současné položky"
-
-#: ../src/nact/nact-main-menubar.c:147
-msgid "D_uplicate"
-msgstr "Vytvořit _kopii"
-
-#. i18n: tooltip displayed in the status bar when selecting the Duplicate item
-#: ../src/nact/nact-main-menubar.c:149
-msgid "Duplicate the selected item(s)"
-msgstr "Vytvořit kopii vybrané položky či položek"
-
-#. i18n: tooltip displayed in the status bar when selecting the Delete item
-#: ../src/nact/nact-main-menubar.c:153
-msgid "Delete the selected item(s)"
-msgstr "Smazat vybranou položku či položky"
-
-#: ../src/nact/nact-main-menubar.c:155
-msgid "_Reload the items"
-msgstr "_Znovu načíst položky"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
-#: ../src/nact/nact-main-menubar.c:157
-msgid ""
-"Cancel your current modifications and reload the initial list of menus and "
-"actions"
-msgstr "Zrušit své současné změny a znovu načíst původní seznam nabídek a akcí"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
-#: ../src/nact/nact-main-menubar.c:161
-msgid "Edit your preferences"
-msgstr "Upravit své předvolby"
-
-#: ../src/nact/nact-main-menubar.c:163
-msgid "_Expand all"
-msgstr "_Rozbalit vše"
-
-#. i18n: tooltip displayed in the status bar when selecting the Expand all item
-#: ../src/nact/nact-main-menubar.c:165
-msgid "Entirely expand the items hierarchy"
-msgstr "Úplně rozbalit hierarchii položek"
-
-#: ../src/nact/nact-main-menubar.c:167
-msgid "_Collapse all"
-msgstr "_Sbalit vše"
-
-#. i18n: tooltip displayed in the status bar when selecting the Collapse all item
-#: ../src/nact/nact-main-menubar.c:169
-msgid "Entirely collapse the items hierarchy"
-msgstr "Úplně sbalit hierarchii položek"
-
-#: ../src/nact/nact-main-menubar.c:172
-msgid "_Import assistant..."
-msgstr "Průvodce _importem…"
-
-#. i18n: tooltip displayed in the status bar when selecting the Import item
-#: ../src/nact/nact-main-menubar.c:174
-msgid ""
-"Import one or more actions from external (XML) files into your configuration"
-msgstr ""
-"Import jedné nebo více akcí z externích souborů (XML) do vašeho nastavení"
-
-#: ../src/nact/nact-main-menubar.c:176
-msgid "E_xport assistant..."
-msgstr "Průvodce e_xportem…"
-
-#. i18n: tooltip displayed in the status bar when selecting the Export item
-#: ../src/nact/nact-main-menubar.c:178
-msgid ""
-"Export one or more actions from your configuration to external XML files"
-msgstr "Eport jedné nebo více akcí z vašeho nastavení do externích souborů XML"
-
-#: ../src/nact/nact-main-menubar.c:181
-msgid "_Dump the selection"
-msgstr "_Výpis výběru"
-
-#. i18n: tooltip displayed in the status bar when selecting the Dump selection item
-#: ../src/nact/nact-main-menubar.c:183
-msgid "Recursively dump selected items"
-msgstr "Vypsat vybrané položky včetně podřízených"
-
-#: ../src/nact/nact-main-menubar.c:185
-msgid "_Brief tree store dump"
-msgstr "Stručný výpis s_tromu úložiště"
-
-#. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
-#: ../src/nact/nact-main-menubar.c:187
-msgid "Briefly dump the tree store"
-msgstr "Vypsat stručný strom úložiště"
-
-#: ../src/nact/nact-main-menubar.c:189
-msgid "_List modified items"
-msgstr "_Seznam změněných položek"
-
-#. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
-#: ../src/nact/nact-main-menubar.c:191
-msgid "List the modified items"
-msgstr "Vypsat seznam změněných položek"
-
-#: ../src/nact/nact-main-menubar.c:193
-msgid "_Dump the clipboard"
-msgstr "_Výpis schránky"
-
-#. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
-#: ../src/nact/nact-main-menubar.c:195
-msgid "Dump the content of the clipboard object"
-msgstr "Vypsat obsah objektu schránky"
-
-#: ../src/nact/nact-main-menubar.c:198
-msgid "Contents"
-msgstr "Obsah"
-
-#. i18n: tooltip displayed in the status bar when selecting the Help item
-#: ../src/nact/nact-main-menubar.c:200
-msgid "Display help about this program"
-msgstr "Zobrazit nápovědu k tomuto programu"
-
-#. i18n: tooltip displayed in the status bar when selecting the About item
-#: ../src/nact/nact-main-menubar.c:204
-msgid "Display informations about this program"
-msgstr "Zobrazit informace o tomto programu"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
-#: ../src/nact/nact-main-menubar.c:212
-msgid "Display the File toolbar"
-msgstr "Zobrazit lištu nástrojů Soubor"
-
-#. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
-#: ../src/nact/nact-main-menubar.c:216
-msgid "Display the Edit toolbar"
-msgstr "Zobrazit lištu nástrojů Upravit"
-
-#. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
-#: ../src/nact/nact-main-menubar.c:220
-msgid "Display the Tools toolbar"
-msgstr "Zobrazit lištu nástrojů Nástroje"
-
-#. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
-#: ../src/nact/nact-main-menubar.c:224
-msgid "Display the Help toolbar"
-msgstr "Zobrazit lištu nástrojů Nápověda"
-
-#. i18n: note the space at the beginning of the sentence
-#: ../src/nact/nact-main-menubar.c:450
-#, c-format
-msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
-msgstr "Nyní je načteno %d nabídek, %d akcí, %d profilů"
-
-#: ../src/nact/nact-main-menubar-edit.c:241
-msgid "Not all items have been cut as following ones are not modifiable:"
-msgstr ""
-"Nebyly vyjmuty všechny položky, protože následující z nich nelze upravovat:"
-
-#: ../src/nact/nact-main-menubar-edit.c:490
-msgid "Not all items have been deleted as following ones are not modifiable:"
-msgstr ""
-"Nebyly vymazány všechny položky, protože následující z nich nelze upravovat:"
-
-#: ../src/nact/nact-main-menubar-file.c:51
-msgid "Save error"
-msgstr "Chyba ukládání"
-
-#: ../src/nact/nact-main-menubar-file.c:52
-msgid "Some items may not have been saved"
-msgstr "Některé položky možná nebyly uloženy"
-
-#: ../src/nact/nact-main-menubar-file.c:53
-msgid "Unable to rewrite the level-zero items list"
-msgstr "Nelze znovu zapsat seznam položek nulté úrovně"
-
-#: ../src/nact/nact-main-menubar-file.c:54
-msgid "Some items cannot have been deleted"
-msgstr "Některé položky nemohly být smazány"
-
-#: ../src/nact/nact-main-menubar-file.c:219
-msgid "New profile"
-msgstr "Nový profil"
-
-#: ../src/nact/nact-main-menubar-file.c:527
-msgid "Automatically saving pending modifications..."
-msgstr "Automatické ukládání nevyřízených změn…"
-
-#: ../src/nact/nact-main-window.c:1434
-msgid ""
-"Reloading a fresh list of actions requires that you give up with your "
-"current modifications."
-msgstr ""
-"Znovu načtení aktuálního seznamu akcí předpokládá, že se vzdáte svých "
-"současných změn."
-
-#: ../src/nact/nact-main-window.c:1437
-msgid "Do you really want to do this ?"
-msgstr "Skutečně to chcete?"
-
-#: ../src/nact/nact-main-window.c:1460
+#: ../src/nact/nact-main-window.c:1232
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
@@ -2541,7 +2284,7 @@ msgstr ""
 "Můžete buď pokračovat v práci se svým současným seznamem akcí nebo můžete "
 "znovu načíst aktuální seznam."
 
-#: ../src/nact/nact-main-window.c:1467
+#: ../src/nact/nact-main-window.c:1239
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
@@ -2549,9 +2292,30 @@ msgstr ""
 "Upozorňujeme, že znovu načtení aktuálního seznamu akcí předpokládá, že se "
 "vzdáte svých současných změn."
 
-#: ../src/nact/nact-main-window.c:1473
+#: ../src/nact/nact-main-window.c:1245
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "Chcete znovu načíst aktuální seznam akcí?"
+
+#: ../src/nact/nact-main-window.c:1268
+msgid ""
+"Reloading a fresh list of actions requires that you give up with your "
+"current modifications."
+msgstr ""
+"Znovu načtení aktuálního seznamu akcí předpokládá, že se vzdáte svých "
+"současných změn."
+
+#: ../src/nact/nact-main-window.c:1271
+msgid "Do you really want to do this ?"
+msgstr "Skutečně to chcete?"
+
+#: ../src/nact/nact-main-window.c:1386
+#, c-format
+msgid "Some items have been modified."
+msgstr "Některé položky byly změněny."
+
+#: ../src/nact/nact-main-window.c:1387
+msgid "Are you sure you want to quit without saving them ?"
+msgstr "Opravdu chcete skončit bez jejich uložení?"
 
 #: ../src/nact/nact-match-list.c:64
 msgid "Must match one of"
@@ -2566,7 +2330,7 @@ msgstr "Musí se shodovat se všemi z"
 msgid "Must not match any of"
 msgstr "Nesmí se schodovat se žádnou z"
 
-#: ../src/nact/nact-match-list.c:494
+#: ../src/nact/nact-match-list.c:496
 #, c-format
 msgid ""
 "'%s' filter already exists in the list.\n"
@@ -2576,9 +2340,279 @@ msgstr ""
 "Zadejte prosím jiný."
 
 #. i18n notes : new filter for a new row in a match/no match list
-#: ../src/nact/nact-match-list.c:872
+#: ../src/nact/nact-match-list.c:874
 msgid "new-filter"
 msgstr "nový-filtr"
+
+#: ../src/nact/nact-menubar.c:59 ../src/nact/nact-menubar.c:166
+msgid "_File"
+msgstr "_Soubor"
+
+#: ../src/nact/nact-menubar.c:60 ../src/nact/nact-menubar.c:170
+msgid "_Edit"
+msgstr "_Upravit"
+
+#: ../src/nact/nact-menubar.c:61
+msgid "_View"
+msgstr "_Zobrazit"
+
+#: ../src/nact/nact-menubar.c:62
+msgid "_Toolbars"
+msgstr "Lišty nás_trojů"
+
+#: ../src/nact/nact-menubar.c:63 ../src/nact/nact-menubar.c:174
+msgid "_Tools"
+msgstr "Nás_troje"
+
+#: ../src/nact/nact-menubar.c:64
+msgid "_Maintainer"
+msgstr "_Správce"
+
+#: ../src/nact/nact-menubar.c:65 ../src/nact/nact-menubar.c:178
+msgid "_Help"
+msgstr "_Nápověda"
+
+#: ../src/nact/nact-menubar.c:67
+msgid "New _menu"
+msgstr "Nová na_bídka"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
+#: ../src/nact/nact-menubar.c:69
+msgid "Insert a new menu at the current position"
+msgstr "Vložit na současné místo novou nabídku"
+
+#: ../src/nact/nact-menubar.c:71
+msgid "_New action"
+msgstr "_Nová akce"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New action' item
+#: ../src/nact/nact-menubar.c:73
+msgid "Define a new action"
+msgstr "Definovat novou akci"
+
+#: ../src/nact/nact-menubar.c:75
+msgid "New _profile"
+msgstr "Nový _profil"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
+#: ../src/nact/nact-menubar.c:77
+msgid "Define a new profile attached to the current action"
+msgstr "Definovat nový profil připojený k současné akci"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Save' item
+#: ../src/nact/nact-menubar.c:81
+msgid ""
+"Record all the modified actions. Invalid actions will be silently ignored"
+msgstr ""
+"Zaznamenat všechny změněné akce. Neplatné akce budou v tichosti ignorovány"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Quit' item
+#: ../src/nact/nact-menubar.c:85
+msgid "Quit the application"
+msgstr "Ukončit aplikaci"
+
+#. i18n: tooltip displayed in the status bar when selecting the Cut item
+#: ../src/nact/nact-menubar.c:89
+msgid "Cut the selected item(s) to the clipboard"
+msgstr "Vyjmout vybranou položku či položky do schránky"
+
+#. i18n: tooltip displayed in the status bar when selecting the Copy item
+#: ../src/nact/nact-menubar.c:93
+msgid "Copy the selected item(s) to the clipboard"
+msgstr "Kopírovat vybranou položku či položky do schránky"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste item
+#: ../src/nact/nact-menubar.c:97
+msgid "Insert the content of the clipboard just before the current position"
+msgstr "Vložit obsah schránky těsně před současnou pozici"
+
+#: ../src/nact/nact-menubar.c:99
+msgid "Paste _into"
+msgstr "Vložit _do"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste Into item
+#: ../src/nact/nact-menubar.c:101
+msgid "Insert the content of the clipboard as first child of the current item"
+msgstr "Vložit obsah schránky jako prvního potomka současné položky"
+
+#: ../src/nact/nact-menubar.c:103
+msgid "D_uplicate"
+msgstr "Vytvořit _kopii"
+
+#. i18n: tooltip displayed in the status bar when selecting the Duplicate item
+#: ../src/nact/nact-menubar.c:105
+msgid "Duplicate the selected item(s)"
+msgstr "Vytvořit kopii vybrané položky či položek"
+
+#. i18n: tooltip displayed in the status bar when selecting the Delete item
+#: ../src/nact/nact-menubar.c:109
+msgid "Delete the selected item(s)"
+msgstr "Smazat vybranou položku či položky"
+
+#: ../src/nact/nact-menubar.c:111
+msgid "_Reload the items"
+msgstr "_Znovu načíst položky"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
+#: ../src/nact/nact-menubar.c:113
+msgid ""
+"Cancel your current modifications and reload the initial list of menus and "
+"actions"
+msgstr "Zrušit své současné změny a znovu načíst původní seznam nabídek a akcí"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
+#: ../src/nact/nact-menubar.c:117
+msgid "Edit your preferences"
+msgstr "Upravit své předvolby"
+
+#: ../src/nact/nact-menubar.c:119
+msgid "_Expand all"
+msgstr "_Rozbalit vše"
+
+#. i18n: tooltip displayed in the status bar when selecting the Expand all item
+#: ../src/nact/nact-menubar.c:121
+msgid "Entirely expand the items hierarchy"
+msgstr "Úplně rozbalit hierarchii položek"
+
+#: ../src/nact/nact-menubar.c:123
+msgid "_Collapse all"
+msgstr "_Sbalit vše"
+
+#. i18n: tooltip displayed in the status bar when selecting the Collapse all item
+#: ../src/nact/nact-menubar.c:125
+msgid "Entirely collapse the items hierarchy"
+msgstr "Úplně sbalit hierarchii položek"
+
+#: ../src/nact/nact-menubar.c:128
+msgid "_Import assistant..."
+msgstr "Průvodce _importem…"
+
+#. i18n: tooltip displayed in the status bar when selecting the Import item
+#: ../src/nact/nact-menubar.c:130
+msgid ""
+"Import one or more actions from external (XML) files into your configuration"
+msgstr ""
+"Import jedné nebo více akcí z externích souborů (XML) do vašeho nastavení"
+
+#: ../src/nact/nact-menubar.c:132
+msgid "E_xport assistant..."
+msgstr "Průvodce e_xportem…"
+
+#. i18n: tooltip displayed in the status bar when selecting the Export item
+#: ../src/nact/nact-menubar.c:134
+msgid ""
+"Export one or more actions from your configuration to external XML files"
+msgstr "Eport jedné nebo více akcí z vašeho nastavení do externích souborů XML"
+
+#: ../src/nact/nact-menubar.c:137
+msgid "_Dump the selection"
+msgstr "_Výpis výběru"
+
+#. i18n: tooltip displayed in the status bar when selecting the Dump selection item
+#: ../src/nact/nact-menubar.c:139
+msgid "Recursively dump selected items"
+msgstr "Vypsat vybrané položky včetně podřízených"
+
+#: ../src/nact/nact-menubar.c:141
+msgid "_Brief tree store dump"
+msgstr "Stručný výpis s_tromu úložiště"
+
+#. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
+#: ../src/nact/nact-menubar.c:143
+msgid "Briefly dump the tree store"
+msgstr "Vypsat stručný strom úložiště"
+
+#: ../src/nact/nact-menubar.c:145
+msgid "_List modified items"
+msgstr "_Seznam změněných položek"
+
+#. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
+#: ../src/nact/nact-menubar.c:147
+msgid "List the modified items"
+msgstr "Vypsat seznam změněných položek"
+
+#: ../src/nact/nact-menubar.c:149
+msgid "_Dump the clipboard"
+msgstr "_Výpis schránky"
+
+#. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
+#: ../src/nact/nact-menubar.c:151
+msgid "Dump the content of the clipboard object"
+msgstr "Vypsat obsah objektu schránky"
+
+#: ../src/nact/nact-menubar.c:154
+msgid "Contents"
+msgstr "Obsah"
+
+#. i18n: tooltip displayed in the status bar when selecting the Help item
+#: ../src/nact/nact-menubar.c:156
+msgid "Display help about this program"
+msgstr "Zobrazit nápovědu k tomuto programu"
+
+#. i18n: tooltip displayed in the status bar when selecting the About item
+#: ../src/nact/nact-menubar.c:160
+msgid "Display informations about this program"
+msgstr "Zobrazit informace o tomto programu"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
+#: ../src/nact/nact-menubar.c:168
+msgid "Display the File toolbar"
+msgstr "Zobrazit lištu nástrojů Soubor"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
+#: ../src/nact/nact-menubar.c:172
+msgid "Display the Edit toolbar"
+msgstr "Zobrazit lištu nástrojů Upravit"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
+#: ../src/nact/nact-menubar.c:176
+msgid "Display the Tools toolbar"
+msgstr "Zobrazit lištu nástrojů Nástroje"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
+#: ../src/nact/nact-menubar.c:180
+msgid "Display the Help toolbar"
+msgstr "Zobrazit lištu nástrojů Nápověda"
+
+#: ../src/nact/nact-menubar.c:655
+#, c-format
+msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
+msgstr "Nyní je načteno %d nabídek, %d akcí, %d profilů"
+
+#: ../src/nact/nact-menubar-edit.c:217
+msgid "Not all items have been cut as following ones are not modifiable:"
+msgstr ""
+"Nebyly vyjmuty všechny položky, protože následující z nich nelze upravovat:"
+
+#: ../src/nact/nact-menubar-edit.c:468
+msgid "Not all items have been deleted as following ones are not modifiable:"
+msgstr ""
+"Nebyly vymazány všechny položky, protože následující z nich nelze upravovat:"
+
+#: ../src/nact/nact-menubar-file.c:53
+msgid "Save error"
+msgstr "Chyba ukládání"
+
+#: ../src/nact/nact-menubar-file.c:54
+msgid "Some items may not have been saved"
+msgstr "Některé položky možná nebyly uloženy"
+
+#: ../src/nact/nact-menubar-file.c:55
+msgid "Unable to rewrite the level-zero items list"
+msgstr "Nelze znovu zapsat seznam položek nulté úrovně"
+
+#: ../src/nact/nact-menubar-file.c:56
+#| msgid "Some items cannot have been deleted"
+msgid "Some items have not be deleted"
+msgstr "Některé položky nemohly být smazány"
+
+#: ../src/nact/nact-menubar-file.c:185
+msgid "New profile"
+msgstr "Nový profil"
+
+#: ../src/nact/nact-menubar-file.c:480
+msgid "Automatically saving pending modifications..."
+msgstr "Automatické ukládání nevyřízených změn…"
 
 #: ../src/nact/nact-preferences.ui.h:1
 msgid "<b>Activation and priority</b>"
@@ -2593,8 +2627,9 @@ msgid "<b>Auto-save</b>"
 msgstr "<b>Automatické ukládání</b>"
 
 #: ../src/nact/nact-preferences.ui.h:4
-msgid "<b>Common schemes</b>"
-msgstr "<b>Běžná schémata</b>"
+#| msgid "<b>Common schemes</b>"
+msgid "<b>Default schemes</b>"
+msgstr "<b>Výchozí schémata</b>"
 
 #: ../src/nact/nact-preferences.ui.h:5
 msgid "<b>Export format</b>"
@@ -2881,15 +2916,21 @@ msgstr ""
 "průvodce. Jinak je ukončení průvodce možné je stiskem tlačítka „Zrušit“."
 
 #: ../src/nact/nact-preferences.ui.h:52
+#| msgid ""
+#| "You may define here any number of schemes. They will be proposed as "
+#| "available schemes when defining conditions for an action.\n"
+#| "If the list becomes empty, NACT will automatically refill in with a "
+#| "default list.\n"
+#| "You can add a new scheme by clicking on the '+' button."
 msgid ""
-"You may define here any number of schemes. They will be proposed as "
-"available schemes when defining conditions for an action.\n"
-"If the list becomes empty, NACT will automatically refill in with a default "
-"list.\n"
+"You may define here any number of schemes. They will be proposed as default "
+"schemes when defining conditions for an action.\n"
+"If the list becomes empty, NACT will automatically refill in with this "
+"default list.\n"
 "You can add a new scheme by clicking on the '+' button."
 msgstr ""
 "Zde můžete definovat libovolný počet schémat. Ta pak budou navrhována jako "
-"dostupná schémata, když se definují podmínky pro akce.\n"
+"výchozí schémata, když se definují podmínky pro akce.\n"
 "Pokud ponecháte seznam prázdný, Nástroj nastavení Akce-Nautilus jej "
 "automaticky vyplní výchozím seznamem.\n"
 "Nové schéma můžete přidat kliknutím na tlačítko „+“."
@@ -3025,34 +3066,61 @@ msgstr "nové-schéma"
 msgid "New scheme description"
 msgstr "Popis nového schématu"
 
-#: ../src/nact/nact-tree-model-dnd.c:119
+#: ../src/nact/nact-tree-model-dnd.c:117
 msgid "Unable to drop a profile here"
 msgstr "Zde nelze profil odstranit"
 
-#: ../src/nact/nact-tree-model-dnd.c:120
+#: ../src/nact/nact-tree-model-dnd.c:118
 msgid "Unable to drop an action or a menu here"
 msgstr "Zde nelze akci nebo nabídku odstranit"
 
-#: ../src/nact/nact-tree-model-dnd.c:121
+#: ../src/nact/nact-tree-model-dnd.c:119
 msgid "Unable to drop here as parent is not writable"
 msgstr "Zde nelze odstranit, protože do rodiče nelze zapisovat"
 
-#: ../src/nact/nact-tree-model-dnd.c:122
+#: ../src/nact/nact-tree-model-dnd.c:120
 msgid "Unable to drop here as level zero is not writable"
 msgstr "Zde nelze odstranit, protože do této úrovně nelze zapisovat"
 
-#: ../src/nact/nact-tree-model-dnd.c:947
+#: ../src/nact/nact-tree-model-dnd.c:933
 msgid "Some messages have occurred during drop operation."
 msgstr "Během operace odstraňování byly zaznamenány nějaké zprávy."
 
-#: ../src/nact/nact-window.c:365
-#, c-format
-msgid "Some items have been modified."
-msgstr "Některé položky byly změněny."
+#. i18n: this is a class name and should not be translated
+#: ../src/nact/nact-tree-view.c:211
+#| msgid "Parent BaseWindow"
+msgid "BaseWindow"
+msgstr "Rodič BaseWindow"
 
-#: ../src/nact/nact-window.c:366
-msgid "Are you sure you want to quit without saving them ?"
-msgstr "Opravdu chcete skončit bez jejich uložení?"
+#: ../src/nact/nact-tree-view.c:212
+#| msgid "Parent BaseWindow"
+msgid "The BaseWindow parent"
+msgstr "Rodič BaseWindow"
+
+#: ../src/nact/nact-tree-view.c:218
+msgid "Widget name"
+msgstr "Název Widgetu"
+
+#: ../src/nact/nact-tree-view.c:219
+msgid "The name of GtkTreeView widget"
+msgstr "Název widgetu GtkTreeView"
+
+#: ../src/nact/nact-tree-view.c:226
+msgid "Management mode"
+msgstr "Režim správy"
+
+#: ../src/nact/nact-tree-view.c:227
+msgid "Management mode of the tree view, selection or edition"
+msgstr "Režim správy stromového zobrazení, výběru nebo úpravy"
+
+#: ../src/nact/nact-tree-view.c:236
+msgid "Allow notify"
+msgstr "Povolit oznamování"
+
+#: ../src/nact/nact-tree-view.c:237
+#| msgid "Whether the selection may be multiple"
+msgid "Whether notifications are allowed"
+msgstr "Zda je povoleno oznamování"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:1
 msgid "(first) URI."
@@ -3295,14 +3363,10 @@ msgid "Brow_se..."
 msgstr "Procháze_t…"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:78
-msgid "C_ommon..."
-msgstr "_Běžná…"
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:79
 msgid "Ca_pabilities"
 msgstr "Scho_pnosti"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:80
+#: ../src/nact/nautilus-actions-config-tool.ui.h:79
 msgid ""
 "Check the box to enable this item.\n"
 "If unchecked, then the item will never appear in the file manager context "
@@ -3312,62 +3376,67 @@ msgstr ""
 "Pokud zaškrtnuto není, položka se nikdy neobjeví v kontextové nabídce nebo "
 "panelu nástrojů správce souborů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:82
+#: ../src/nact/nautilus-actions-config-tool.ui.h:81
 msgid "Click to add a new basename filter."
 msgstr "Kliknutím přidáte nový filtr základních názvů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:83
+#: ../src/nact/nautilus-actions-config-tool.ui.h:82
 msgid "Click to add a new capability filter."
 msgstr "Kliknutím přidáte nový filtr schopností."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:84
+#: ../src/nact/nautilus-actions-config-tool.ui.h:83
 msgid "Click to add a new folder filter."
 msgstr "Kliknutím přidáte nový filtr složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:85
+#: ../src/nact/nautilus-actions-config-tool.ui.h:84
 msgid "Click to add a new mimetype filter."
 msgstr "Kliknutím přidáte nový filtr typů MIME."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:86
+#: ../src/nact/nautilus-actions-config-tool.ui.h:85
 msgid "Click to add a new scheme filter."
 msgstr "Kliknutím přidáte nový filtr schémat."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:87
+#: ../src/nact/nautilus-actions-config-tool.ui.h:86
 msgid "Click to browse the filesystem in order to select a new folder filter."
 msgstr ""
 "Klikněte, abyste mohli procházet souborový systém kvůli výběru nového filtru "
 "složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:88
+#: ../src/nact/nautilus-actions-config-tool.ui.h:87
 msgid "Click to define the above basename filters as case sensitive."
 msgstr ""
 "Kliknutím určíte, že předchozí filtr základních názvů má rozlišovat velikost "
 "písmen."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:89
+#: ../src/nact/nautilus-actions-config-tool.ui.h:88
 msgid "Click to remove the current basename filter."
 msgstr "Kliknutím odstraníte aktuální filtr základních názvů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:90
+#: ../src/nact/nautilus-actions-config-tool.ui.h:89
 msgid "Click to remove the current capability."
 msgstr "Kliknutím odstraníte aktuální schopnost."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:91
+#: ../src/nact/nautilus-actions-config-tool.ui.h:90
 msgid "Click to remove the current folder filter."
 msgstr "Kliknutím odstraníte aktuální filtr složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:92
+#: ../src/nact/nautilus-actions-config-tool.ui.h:91
 msgid "Click to remove the current mimetype filter."
 msgstr "Kliknutím odstraníte aktuální filtr typů MIME."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:93
+#: ../src/nact/nautilus-actions-config-tool.ui.h:92
 msgid "Click to remove the current scheme filter."
 msgstr "Kliknutím odstraníte aktuální filtr schémat."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:94
+#: ../src/nact/nautilus-actions-config-tool.ui.h:93
 msgid "Click to select a new scheme filter among default schemes."
 msgstr ""
 "Klikněte, abyste mohli vybrat nový filtr schémat mezi výchozími schématy."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:94
+#| msgid "Defaults to all."
+msgid "De_faults..."
+msgstr "Vých_ozí…"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:95
 msgid "Display item in _location context menu"
@@ -4176,17 +4245,17 @@ msgid "username of the (first) selected URI."
 msgstr "jméno uživatele (první) vybrané adresy URI."
 
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
-#: ../src/plugin-menu/nautilus-actions.c:331
+#: ../src/plugin-menu/nautilus-actions.c:334
 msgid "Nautilus-Actions"
 msgstr "Akce-Nautilus"
 
 #. i18n: label of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:923
+#: ../src/plugin-menu/nautilus-actions.c:926
 msgid "Nautilus-Actions actions"
 msgstr "Akce aplikace Akce-Nautilus"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:925
+#: ../src/plugin-menu/nautilus-actions.c:928
 msgid ""
 "A submenu which embeds the currently available Nautilus-Actions actions and "
 "menus"
@@ -4194,11 +4263,11 @@ msgstr ""
 "Podnabídka, která vkládá aktuálně dostupné akce a nabídky aplikace Akce-"
 "Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:972
+#: ../src/plugin-menu/nautilus-actions.c:975
 msgid "About Nautilus-Actions"
 msgstr "O aplikaci Akce-Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:973
+#: ../src/plugin-menu/nautilus-actions.c:976
 msgid "Display some informations about Nautilus-Actions"
 msgstr "Zobrazit informace o aplikaci Akce-Nautilus"
 
@@ -4217,11 +4286,11 @@ msgstr "<URI>"
 msgid "Output the version number"
 msgstr "Vypsat číslo verze"
 
-#: ../src/test/test-reader.c:112
+#: ../src/test/test-reader.c:108
 msgid "Import a file."
 msgstr "Importovat soubor."
 
-#: ../src/test/test-reader.c:126
+#: ../src/test/test-reader.c:122
 msgid ""
 "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
 "mail to <maintainer@nautilus-actions.org>.\n"
@@ -4229,14 +4298,14 @@ msgstr ""
 "Hlášení chyb budou vítána na http://bugzilla.gnome.org, případně je můžete "
 "zaslat na e-mail <maintainer@nautilus-actions.org>.\n"
 
-#: ../src/test/test-reader.c:134 ../src/utils/na-delete-xmltree.c:181
+#: ../src/test/test-reader.c:130 ../src/utils/na-delete-xmltree.c:181
 #: ../src/utils/na-print-schemas.c:187 ../src/utils/nautilus-actions-new.c:348
 #: ../src/utils/nautilus-actions-print.c:192
 #: ../src/utils/nautilus-actions-run.c:208
 msgid "Miscellaneous options"
 msgstr "Různorodé přepínače"
 
-#: ../src/test/test-reader.c:155 ../src/utils/na-delete-xmltree.c:111
+#: ../src/test/test-reader.c:151 ../src/utils/na-delete-xmltree.c:111
 #: ../src/utils/na-print-schemas.c:127 ../src/utils/nautilus-actions-new.c:183
 #: ../src/utils/nautilus-actions-print.c:108
 #: ../src/utils/nautilus-actions-run.c:117
@@ -4244,12 +4313,12 @@ msgstr "Různorodé přepínače"
 msgid "Syntax error: %s\n"
 msgstr "Syntaktická chyba: %s\n"
 
-#: ../src/test/test-reader.c:170
+#: ../src/test/test-reader.c:166
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Chyba: adresa URI je povinná.\n"
 
-#: ../src/test/test-reader.c:182 ../src/utils/na-delete-xmltree.c:195
+#: ../src/test/test-reader.c:178 ../src/utils/na-delete-xmltree.c:195
 #: ../src/utils/na-print-schemas.c:373 ../src/utils/nautilus-actions-new.c:510
 #: ../src/utils/nautilus-actions-print.c:250
 #: ../src/utils/nautilus-actions-run.c:428
@@ -4468,6 +4537,31 @@ msgstr "Chyba: nelze získat proxy ke službě %s"
 #, c-format
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Chyba při volání GetSelectedPaths: %s"
+
+#~ msgid "The whole configuration has been locked down by an administrator."
+#~ msgstr "Celé nastavení bylo uzamknuto správcem."
+
+#~ msgid ""
+#~ "Item is not writable for an unknown reason (%d).\n"
+#~ "Please, be kind enough to fill out a bug report on http://bugzilla.gnome."
+#~ "org."
+#~ msgstr ""
+#~ "Položka není z nějakého neznámého důvodu zapisovatelná (%d).\n"
+#~ "Věnujte prosím chvíli času nahlášení chyby na http://bugzilla.gnome.org."
+
+#~ msgid ""
+#~ "Unknown return code (%d).\n"
+#~ "Please, be kind enough to fill out a bug report on http://bugzilla.gnome."
+#~ "org."
+#~ msgstr ""
+#~ "Neznámý návratový kód (%d).\n"
+#~ "Věnujte prosím chvíli času nahlášení chyby na http://bugzilla.gnome.org."
+
+#~ msgid "Nautilus-Actions Configuration"
+#~ msgstr "Nastavení Akce-Nautilus"
+
+#~ msgid "C_ommon..."
+#~ msgstr "_Běžná…"
 
 #~ msgid "Unable to load %s XML definition."
 #~ msgstr "Nelze načíst definici XML %s."
