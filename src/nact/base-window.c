@@ -39,7 +39,7 @@
 #include "base-application.h"
 #include "base-window.h"
 #include "base-gtk-utils.h"
-#include "nact-marshal.h"
+#include "base-marshal.h"
 
 /* private class data
  */

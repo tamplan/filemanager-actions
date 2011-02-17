@@ -42,6 +42,7 @@
 #include <core/na-iprefs.h>
 #include <core/na-pivot.h>
 
+#include "base-marshal.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
 #include "nact-ibasenames-tab.h"
@@ -54,7 +55,6 @@
 #include "nact-iproperties-tab.h"
 #include "nact-main-tab.h"
 #include "nact-main-statusbar.h"
-#include "nact-marshal.h"
 #include "nact-main-window.h"
 #include "nact-menubar.h"
 #include "nact-tree-view.h"

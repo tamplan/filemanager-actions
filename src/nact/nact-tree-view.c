@@ -37,8 +37,8 @@
 #include <api/na-object-api.h>
 
 #include "base-keysyms.h"
+#include "base-marshal.h"
 #include "nact-application.h"
-#include "nact-marshal.h"
 #include "nact-tree-view.h"
 #include "nact-tree-model.h"
 #include "nact-tree-ieditable.h"
