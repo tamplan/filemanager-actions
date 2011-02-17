@@ -116,6 +116,9 @@ AC_DEFUN([_AC_NA_ARG_GCONF],[
 ])
 
 AC_DEFUN([_AC_NA_CHECK_GCONF],[
+	AC_MSG_CHECKING([whether GConf is enabled])
+	AC_MSG_RESULT([${enable_gconf}])
+
 	if test "${enable_gconf}" = "auto"; then
 		AC_PATH_PROG([GCONFTOOL],[gconftool-2],[no])
 		if test "${GCONFTOOL}" = "no"; then

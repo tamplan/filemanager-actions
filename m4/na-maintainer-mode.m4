@@ -32,6 +32,8 @@ dnl define NA_MAINTAINER_MODE
 
 AC_DEFUN([NA_IS_MAINTAINER_MODE],[
 	msg_maintainer_mode="disabled"
+	AC_MSG_CHECKING([whether enabling maintainer mode])
+	AC_MSG_RESULT([${USE_MAINTAINER_MODE}])
 
 	if test "${USE_MAINTAINER_MODE}" = "yes"; then
 		AC_DEFINE([NA_MAINTAINER_MODE],[1],[Define to 1 if we are in maintainer mode])
@@ -53,6 +55,9 @@ AC_DEFUN([NA_ENABLE_DEPRECATED],[
 	[enable_deprecated=$enableval],
 	[enable_deprecated="no"]
 	)
+
+	AC_MSG_CHECKING([whether deprecated symbols should be enabled])
+	AC_MSG_RESULT([${enable_deprecated}])
 
 	if test "${enable_deprecated}" = "no"; then
 		AC_DEFINE([NA_DISABLE_DEPRECATED],[1],[Define to 1 if deprecated functions should be disabled])
