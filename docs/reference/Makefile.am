@@ -95,14 +95,14 @@ IGNORE_HFILES = \
 
 # CFLAGS and LDFLAGS for compiling scan program.
 # Only needed if $(DOC_MODULE).types is non-empty.
-AM_CPPFLAGS += \
+AM_CPPFLAGS = \
 	-I $(top_srcdir)/src						\
 	$(NAUTILUS_ACTIONS_CFLAGS)					\
 	$(NULL)
 
 core_libdir = $(top_builddir)/src/core/.libs
 
-AM_LDFLAGS += \
+AM_LDFLAGS = \
 	$(NAUTILUS_ACTIONS_LIBS)					\
 	$(core_libdir)/libna-core.so				\
 	$(NULL)

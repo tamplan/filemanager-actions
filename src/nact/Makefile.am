@@ -191,5 +191,5 @@ CLEANFILES = \
 EXTRA_DIST = \
 	$(applications_in_files)							\
 	$(pkgdata_DATA)										\
-	nact-marshal.list									\
+	nact-marshal.def									\
 	$(NULL)
