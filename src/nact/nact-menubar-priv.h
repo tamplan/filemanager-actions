@@ -71,7 +71,8 @@ struct _NactMenubarPrivate {
 	gboolean         is_parent_writable;		/* new menu/new action/paste menu or action */
 	gboolean         enable_new_profile;		/* new profile/paste a profile */
 	gboolean         is_action_writable;
-	gboolean         are_parents_writable;		/* cut/delete */
+	gboolean         are_parents_writable;		/* duplicate */
+	gboolean         are_items_writable;		/* cut/delete */
 
 	/* set when the count of modified or deleted NAObjectItem changes
 	 * or when the lever zero is changed

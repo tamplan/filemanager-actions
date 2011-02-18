@@ -56,6 +56,11 @@ static void    update_clipboard_counters( BaseWindow *window );
  * @bar: this #NactMenubar object.
  *
  * Update sensitivity of items of the Edit menu.
+ *
+ * Each action (cut, copy, delete, etc.) takes itself care of whether it
+ * can safely apply to all the selection or not. The action can at least
+ * assume that at least one item will be a valid candidate (this is the
+ * Menubar rule).
  */
 void
 nact_menubar_edit_on_update_sensitivities( const NactMenubar *bar )
@@ -74,12 +79,14 @@ nact_menubar_edit_on_update_sensitivities( const NactMenubar *bar )
 	is_clipboard_empty = ( bar->private->clipboard_menus + bar->private->clipboard_actions + bar->private->clipboard_profiles == 0 );
 
 	/* cut requires a non-empty selection
-	 * and that the selection is writable
+	 * and that the selection is writable (can be modified, i.e. is not read-only)
 	 * and that all parents are writable (as implies a delete operation)
 	 */
-	cut_enabled = bar->private->treeview_has_focus || bar->private->popup_handler;
-	cut_enabled &= bar->private->count_selected > 0;
-	cut_enabled &= bar->private->are_parents_writable;
+	duplicate_enabled = bar->private->treeview_has_focus || bar->private->popup_handler;
+	duplicate_enabled &= bar->private->count_selected > 0;
+	duplicate_enabled &= bar->private->are_parents_writable;
+	cut_enabled = duplicate_enabled;
+	cut_enabled &= bar->private->are_items_writable;
 	nact_menubar_enable_item( bar, "CutItem", cut_enabled );
 
 	/* copy only requires a non-empty selection */
@@ -153,9 +160,7 @@ nact_menubar_edit_on_update_sensitivities( const NactMenubar *bar )
 	/* duplicate items will be duplicated besides each one
 	 * selection must be non-empty
 	 * each parent must be writable
-	 * -> so this is the same than cut
 	 */
-	duplicate_enabled = cut_enabled;
 	nact_menubar_enable_item( bar, "DuplicateItem", duplicate_enabled );
 
 	/* delete is same that cut

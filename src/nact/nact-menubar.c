@@ -710,6 +710,12 @@ on_tree_view_modified_status_changed( BaseWindow *window, gboolean is_modified, 
  *
  * It happens that this function is triggered after all tabs have already
  * dealt with the MAIN_SIGNAL_SELECTION_CHANGED signal
+ *
+ * We are trying to precompute here all indicators which are needed to
+ * make actions sensitive. As a multiple selection may have multiple
+ * sort of indicators, we assure here that at least one item will be a
+ * valid candidate to the target action, the action taking care itself
+ * of applying to valid candidates, and rejecting the others.
  */
 static void
 on_tree_view_selection_changed( BaseWindow *window, GList *selected, gpointer user_data )
@@ -717,6 +723,7 @@ on_tree_view_selection_changed( BaseWindow *window, GList *selected, gpointer us
 	static const gchar *thisfn = "nact_menubar_on_tree_view_selection_changed";
 	NAObject *first;
 	NAObject *selected_action;
+	NAObject *row, *parent;
 	GList *is;
 
 	BAR_WINDOW_VOID( window );
@@ -800,36 +807,26 @@ on_tree_view_selection_changed( BaseWindow *window, GList *selected, gpointer us
 	 * if some selection is at level zero, then it must be writable
 	 * (Edit: Cut/Delete)
 	 */
-	bar->private->are_parents_writable = TRUE;
 	if( selected ){
+		bar->private->are_parents_writable = TRUE;
+		bar->private->are_items_writable = TRUE;
 		for( is = selected ; is ; is = is->next ){
-			first = ( NAObject * ) is->data;
-			if( NA_IS_OBJECT_PROFILE( is->data )){
-				first = NA_OBJECT( na_object_get_parent( is->data ));
+			row = ( NAObject * ) is->data;
+			if( NA_IS_OBJECT_PROFILE( row )){
+				row = NA_OBJECT( na_object_get_parent( row ));
 			}
-			gchar *label = na_object_get_label( first );
-			gboolean writable = na_object_is_finally_writable( first, NULL );
+			gchar *label = na_object_get_label( row );
+			gboolean writable = na_object_is_finally_writable( row, NULL );
 			g_debug( "%s: label=%s, writable=%s", thisfn, label, writable ? "True":"False" );
 			g_free( label );
-			if( !writable ){
-				bar->private->are_parents_writable = FALSE;
-				break;
-			}
-			if( NA_IS_OBJECT_ITEM( is->data )){
-				first = ( NAObject * ) na_object_get_parent( is->data );
-				if( first ){
-					if( !na_object_is_finally_writable( first, NULL )){
-						bar->private->are_parents_writable = FALSE;
-						break;
-					}
-				} else if( !bar->private->is_level_zero_writable ){
-					bar->private->are_parents_writable = FALSE;
-					break;
-				}
+			bar->private->are_items_writable &= writable;
+			parent = ( NAObject * ) na_object_get_parent( row );
+			if( parent ){
+				bar->private->are_parents_writable &= na_object_is_finally_writable( parent, NULL );
+			} else {
+				bar->private->are_parents_writable &= bar->private->is_level_zero_writable;
 			}
 		}
-	} else {
-		bar->private->are_parents_writable = bar->private->is_level_zero_writable;
 	}
 
 	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
