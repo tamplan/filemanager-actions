@@ -332,7 +332,7 @@ nact_menubar_edit_on_paste_into( GtkAction *gtk_action, BaseWindow *window )
 	items = prepare_for_paste( window );
 	if( items ){
 		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
-		nact_tree_ieditable_insert_into( NACT_TREE_IEDITABLE( window ), items );
+		nact_tree_ieditable_insert_into( NACT_TREE_IEDITABLE( view ), items );
 		na_object_free_items( items );
 	}
 }
@@ -423,7 +423,7 @@ nact_menubar_edit_on_duplicate( GtkAction *gtk_action, BaseWindow *window )
 		na_object_check_status( obj );
 		dup = g_list_prepend( NULL, obj );
 		view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
-		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( window ), dup, it->data );
+		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( view ), dup, it->data );
 		na_object_free_items( dup );
 	}
 
