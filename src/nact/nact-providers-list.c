@@ -100,7 +100,6 @@ static void               on_writable_toggled( GtkCellRendererToggle *renderer, 
 static void               on_up_clicked( GtkButton *button, BaseWindow *window );
 static void               on_down_clicked( GtkButton *button, BaseWindow *window );
 
-static gboolean           are_preferences_locked( BaseWindow *window );
 static void               display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, ProvidersListData *data );
 static GtkButton         *get_up_button( BaseWindow *window );
 static GtkButton         *get_down_button( BaseWindow *window );
@@ -202,6 +201,8 @@ nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 {
 	static const gchar *thisfn = "nact_providers_list_init_view";
 	ProvidersListData *data;
+	NactApplication *application;
+	NAUpdater *updater;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( GTK_IS_TREE_VIEW( treeview ));
@@ -212,7 +213,9 @@ nact_providers_list_init_view( BaseWindow *window, GtkTreeView *treeview )
 
 	data = get_providers_list_data( treeview );
 	data->window = window;
-	data->preferences_locked = are_preferences_locked( window );
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	updater = nact_application_get_updater( application );
+	data->preferences_locked = na_updater_are_preferences_locked( updater );
 
 	init_view_setup_providers( treeview, window );
 	init_view_connect_signals( treeview, window );
@@ -443,11 +446,13 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 	GtkButton *button;
 	GtkTreePath *path;
 	gboolean may_up, may_down;
-	gboolean preferences_locked, order_mandatory;
+	gboolean order_mandatory;
 	GSList *write_order;
 	NactApplication *application;
 	NAUpdater *updater;
 	NASettings *settings;
+	ProvidersListData *data;
+	GtkTreeView *treeview;
 
 	g_debug( "nact_providers_list_on_selection_changed: selection=%p, window=%p (%s)",
 			( void * ) selection, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
@@ -455,13 +460,15 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 	may_up = FALSE;
 	may_down = FALSE;
 
+	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
+	data = get_providers_list_data( treeview );
+
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
 	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-	preferences_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, NULL );
 	write_order = na_settings_get_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, &order_mandatory );
 
-	if( !preferences_locked &&
+	if( !data->preferences_locked &&
 		!order_mandatory &&
 		gtk_tree_selection_get_selected( selection, &model, &iter )){
 
@@ -487,6 +494,7 @@ static void
 on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_providers_list_on_readable_toggled";
+	ProvidersListData *data;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -508,7 +516,9 @@ on_readable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWi
 			g_debug( "%s: id=%s, readable=%s (mandatory=%s)", thisfn, id,
 					state ? "True":"False", readable_mandatory ? "True":"False" );
 
-			if( readable_mandatory || are_preferences_locked( window )){
+			data = get_providers_list_data( treeview );
+
+			if( readable_mandatory || data->preferences_locked ){
 				g_signal_handlers_block_by_func(( gpointer ) renderer, on_readable_toggled, window );
 				state = gtk_cell_renderer_toggle_get_active( renderer );
 				gtk_cell_renderer_toggle_set_active( renderer, !state );
@@ -528,6 +538,7 @@ on_writable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWi
 {
 	static const gchar *thisfn = "nact_providers_list_on_writable_toggled";
 	GtkTreeView *treeview;
+	ProvidersListData *data;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	gboolean state;
@@ -548,7 +559,9 @@ on_writable_toggled( GtkCellRendererToggle *renderer, gchar *path_string, BaseWi
 			g_debug( "%s: id=%s, writable=%s (mandatory=%s)", thisfn, id,
 					state ? "True":"False", writable_mandatory ? "True":"False" );
 
-			if( writable_mandatory || are_preferences_locked( window )){
+			data = get_providers_list_data( treeview );
+
+			if( writable_mandatory || data->preferences_locked ){
 				g_signal_handlers_block_by_func(( gpointer ) renderer, on_writable_toggled, window );
 				state = gtk_cell_renderer_toggle_get_active( renderer );
 				gtk_cell_renderer_toggle_set_active( renderer, !state );
@@ -616,24 +629,6 @@ on_down_clicked( GtkButton *button, BaseWindow *window )
 		}
 		gtk_tree_iter_free( iter_next );
 	}
-}
-
-static gboolean
-are_preferences_locked( BaseWindow *window )
-{
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
-	gboolean are_locked;
-
-	g_debug( "nact_providers_list_are_preferences_locked: window=%p (%s)", ( void * ) window, G_OBJECT_TYPE_NAME( window ));
-
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, NULL );
-
-	return( are_locked );
 }
 
 /*

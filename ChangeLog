@@ -1,5 +1,9 @@
 2011-02-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-providers-list.c:
+	* src/nact/nact-schemes-list.c: Does not recompute if preferences are
+	locked, but use na_updater_are_preferences_locked() function.
+
 	* src/api/na-iio-provider.h:
 	Define new reason when the level zero is not writable.
 

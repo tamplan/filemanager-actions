@@ -105,7 +105,6 @@ static void             display_keyword( GtkTreeViewColumn *column, GtkCellRende
 static void             display_description( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data );
 static void             display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, SchemesListData *data, guint column_id );
 
-static gboolean         are_preferences_locked( BaseWindow *window );
 static GtkButton       *get_add_button( BaseWindow *window );
 static GtkButton       *get_remove_button( BaseWindow *window );
 static SchemesListData *get_schemes_list_data( GtkTreeView *treeview );
@@ -204,6 +203,8 @@ nact_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window, pf_new_s
 {
 	static const gchar *thisfn = "nact_schemes_list_init_view";
 	SchemesListData *data;
+	NactApplication *application;
+	NAUpdater *updater;
 
 	g_debug( "%s: treeview=%p, window=%p",
 			thisfn,
@@ -217,7 +218,9 @@ nact_schemes_list_init_view( GtkTreeView *treeview, BaseWindow *window, pf_new_s
 
 	data = get_schemes_list_data( treeview );
 	data->window = window;
-	data->preferences_locked = are_preferences_locked( window );
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	updater = nact_application_get_updater( application );
+	data->preferences_locked = na_updater_are_preferences_locked( updater );
 	data->editable = ( data->mode == SCHEMES_LIST_FOR_PREFERENCES && !data->preferences_locked );
 	data->pf_on_sel_changed = pf;
 	data->user_data = user_data;
@@ -797,26 +800,6 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	if( data->preferences_locked ){
 		g_object_set( cell, "foreground", "Grey", "foreground-set", TRUE, NULL );
 	}
-}
-
-static gboolean
-are_preferences_locked( BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_schemes_list_are_preferences_locked";
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
-	gboolean are_locked;
-
-
-	g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
-
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, NULL );
-
-	return( are_locked );
 }
 
 static GtkButton *
