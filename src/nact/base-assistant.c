@@ -155,7 +155,7 @@ class_init( BaseAssistantClass *klass )
 			g_param_spec_boolean(
 					BASE_PROP_QUIT_ON_ESCAPE,
 					_( "Quit on Escape" ),
-					_( "Does the assistant should 'Quit' when the user hits the Escape key ?" ),
+					_( "Should the assistant 'Quit' when the user hits Escape ?" ),
 					FALSE,
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
@@ -163,7 +163,7 @@ class_init( BaseAssistantClass *klass )
 			g_param_spec_boolean(
 					BASE_PROP_WARN_ON_ESCAPE,
 					_( "Warn on Escape" ),
-					_( "Does the user should confirm when quitting the assistant on Escape key ?" ),
+					_( "Should the user be asked to confirm when exiting the assistant via Escape ?" ),
 					FALSE,
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
