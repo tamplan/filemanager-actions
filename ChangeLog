@@ -1,5 +1,13 @@
 2011-02-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-object-api.h (na_object_set_isfile, na_object_set_isdir,
+	na_object_set_multiple): Deprecated functions.
+
+	* src/core/na-icontext-factory.c (is_file, is_dir, accept_multiple):
+	Deprecated data.
+
+	* src/utils/nautilus-actions-new.c: Updated accordingly.
+
 	* src/nact/nact-providers-list.c:
 	* src/nact/nact-schemes-list.c: Does not recompute if preferences are
 	locked, but use na_updater_are_preferences_locked() function.

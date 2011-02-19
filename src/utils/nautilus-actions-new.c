@@ -367,6 +367,7 @@ get_action_from_cmdline( void )
 	GSList *schemes;
 	GSList *folders;
 	gboolean toolbar_same_label;
+	gchar *selection_count;
 
 	action = na_object_action_new_with_defaults();
 	profile = NA_OBJECT_PROFILE(( GList * ) na_object_get_items( action )->data );
@@ -406,8 +407,18 @@ get_action_from_cmdline( void )
 
 	na_object_set_matchcase( profile, matchcase );
 
-	i = 0;
 	mimetypes = NULL;
+	if( !isfile && !isdir ){
+		isfile = TRUE;
+	}
+	if( isfile && isdir ){
+		mimetypes = g_slist_prepend( mimetypes, g_strdup( "*/*" ));
+	} else if( isfile ){
+		mimetypes = g_slist_prepend( mimetypes, g_strdup( "all/allfiles" ));
+	} else {
+		mimetypes = g_slist_prepend( mimetypes, g_strdup( "inode/directory" ));
+	}
+	i = 0;
 	while( mimetypes_array != NULL && mimetypes_array[i] != NULL ){
 		mimetypes = g_slist_append( mimetypes, g_strdup( mimetypes_array[i] ));
 		i++;
@@ -417,12 +428,12 @@ get_action_from_cmdline( void )
 		na_core_utils_slist_free( mimetypes );
 	}
 
-	if( !isfile && !isdir ){
-		isfile = TRUE;
+	selection_count = g_strdup( "=1" );
+	if( accept_multiple ){
+		g_free( selection_count );
+		selection_count = g_strdup( ">0" );
 	}
-	na_object_set_isfile( profile, isfile );
-	na_object_set_isdir( profile, isdir );
-	na_object_set_multiple( profile, accept_multiple );
+	na_object_set_selection_count( profile, selection_count );
 
 	i = 0;
 	schemes = NULL;

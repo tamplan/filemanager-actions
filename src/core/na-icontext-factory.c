@@ -163,11 +163,14 @@ NADataDef data_def_conditions [] = {
 				NULL,
 				NULL },
 
+	/* this is obsoleted starting with 2.30-newdata (released as 2.31.x serie)
+	 * and replaced by mimetypes
+	 */
 	{ NAFO_DATA_ISFILE,
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "Whether the profile applies to files" ),
+				N_( "Whether the profile applies to files (deprecated option, see mimetypes)" ),
 				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "Set to 'true' if the selection can have files, to 'false' otherwise.\n" \
 					"This setting is tied in with the 'isdir' setting. The valid combinations are: \n" \
@@ -198,7 +201,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "Whether the profile applies to folders" ),
+				N_( "Whether the profile applies to folders (deprecated option, see mimetypes)" ),
 				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "Set to 'true' if the selection can have folders, to 'false' otherwise.\n" \
 					"This setting is tied in with the 'isfile' setting. The valid combinations are: \n" \
@@ -232,7 +235,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				FALSE,
 				FALSE,
-				N_( "Whether the selection may be multiple" ),
+				N_( "Whether the selection may be multiple (deprecated option, see selection count)" ),
 				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "If you need more than one files or folders to be selected, set this " \
 					"key to 'true'. If you want just one file or folder, set it to 'false'.\n" \
