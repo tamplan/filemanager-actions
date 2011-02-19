@@ -118,6 +118,8 @@ void
 nact_menubar_file_on_new_menu( GtkAction *gtk_action, BaseWindow *window )
 {
 	NAObjectMenu *menu;
+	NactApplication *application;
+	NAUpdater *updater;
 	NactTreeView *items_view;
 	GList *items;
 
@@ -126,6 +128,9 @@ nact_menubar_file_on_new_menu( GtkAction *gtk_action, BaseWindow *window )
 
 	menu = na_object_menu_new_with_defaults();
 	na_object_check_status( menu );
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	updater = nact_application_get_updater( application );
+	na_updater_check_item_writability_status( updater, NA_OBJECT_ITEM( menu ));
 	items = g_list_prepend( NULL, menu );
 	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );
@@ -143,6 +148,8 @@ void
 nact_menubar_file_on_new_action( GtkAction *gtk_action, BaseWindow *window )
 {
 	NAObjectAction *action;
+	NactApplication *application;
+	NAUpdater *updater;
 	NactTreeView *items_view;
 	GList *items;
 
@@ -151,6 +158,9 @@ nact_menubar_file_on_new_action( GtkAction *gtk_action, BaseWindow *window )
 
 	action = na_object_action_new_with_defaults();
 	na_object_check_status( action );
+	application = NACT_APPLICATION( base_window_get_application( window ));
+	updater = nact_application_get_updater( application );
+	na_updater_check_item_writability_status( updater, NA_OBJECT_ITEM( action ));
 	items = g_list_prepend( NULL, action );
 	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( window ));
 	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), items, NULL );

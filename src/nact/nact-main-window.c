@@ -1188,7 +1188,7 @@ setup_writability_status( NactMainWindow *window )
 {
 	g_return_if_fail( NA_IS_OBJECT_ITEM( window->private->current_item ));
 
-	window->private->editable = na_updater_check_item_writability_status( window->private->updater, window->private->current_item, &window->private->reason );
+	window->private->editable = na_object_is_finally_writable( window->private->current_item, &window->private->reason );
 	nact_main_statusbar_set_locked( window, !window->private->editable, window->private->reason );
 }
 

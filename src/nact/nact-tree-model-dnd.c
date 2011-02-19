@@ -921,6 +921,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 
 		if( result->imported ){
 			imported = g_list_prepend( imported, result->imported );
+			na_updater_check_item_writability_status( updater, result->imported );
 		}
 	}
 
@@ -1138,7 +1139,7 @@ is_parent_accept_new_children( NactApplication *application, NactMainWindow *win
 
 	/* see if the parent is writable
 	 */
-	} else if( na_updater_check_item_writability_status( updater, parent, NULL )){
+	} else if( na_object_is_finally_writable( parent, NULL )){
 		accept_ok = TRUE;
 
 	} else {

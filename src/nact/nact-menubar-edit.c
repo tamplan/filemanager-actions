@@ -496,7 +496,7 @@ get_deletables( NAUpdater *updater, GList *selected, GSList **non_deletables )
 	to_delete = NULL;
 	for( it = selected ; it ; it = it->next ){
 
-		if( !na_updater_check_item_writability_status( updater, NA_OBJECT_ITEM( it->data ), &reason )){
+		if( !na_object_is_finally_writable( it->data, &reason )){
 			*non_deletables = g_slist_prepend(
 					*non_deletables, add_non_deletable_msg( NA_OBJECT_ITEM( it->data ), reason ));
 			continue;
@@ -529,7 +529,7 @@ get_deletables_rec( NAUpdater *updater, GList *tree )
 	msgs = NULL;
 	for( it = tree ; it ; it = it->next ){
 
-		if( !na_updater_check_item_writability_status( updater, NA_OBJECT_ITEM( it->data ), &reason )){
+		if( !na_object_is_finally_writable( it->data, &reason )){
 			msgs = g_slist_prepend(
 					msgs, add_non_deletable_msg( NA_OBJECT_ITEM( it->data ), reason ));
 			continue;
