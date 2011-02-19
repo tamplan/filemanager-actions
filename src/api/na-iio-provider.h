@@ -343,6 +343,7 @@ void  na_iio_provider_item_changed ( const NAIIOProvider *instance );
  * @NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER:    i/o provider has been locked by the user.
  * @NA_IIO_PROVIDER_STATUS_ITEM_READONLY:     item is read-only.
  * @NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND: no writable i/o provider found.
+ * @NA_IIO_PROVIDER_STATUS_LEVEL_ZERO:        level zero is not writable.
  * @NA_IIO_PROVIDER_STATUS_UNDETERMINED:      unknwon reason (and probably a bug).
  *
  * The reasons for which an item may not be writable.
@@ -357,6 +358,7 @@ typedef enum {
 	NA_IIO_PROVIDER_STATUS_LOCKED_BY_USER,
 	NA_IIO_PROVIDER_STATUS_ITEM_READONLY,
 	NA_IIO_PROVIDER_STATUS_NO_PROVIDER_FOUND,
+	NA_IIO_PROVIDER_STATUS_LEVEL_ZERO,
 	NA_IIO_PROVIDER_STATUS_UNDETERMINED,
 	/*< private >*/
 	NA_IIO_PROVIDER_STATUS_LAST,

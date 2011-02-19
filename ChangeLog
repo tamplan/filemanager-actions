@@ -1,5 +1,17 @@
 2011-02-19 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iio-provider.h:
+	Define new reason when the level zero is not writable.
+
+	* src/core/na-updater.c:
+	* src/core/na-updater.h (na_updater_is_item_writable):
+	Renamed as na_updater_check_item_writability_status.
+
+	* src/nact/nact-main-window.c (setup_writability_status):
+	* src/nact/nact-menubar-edit.c (get_deletables):
+	* src/nact/nact-tree-model-dnd.c (is_parent_accept_new_children):
+	Updated accordingly.
+
 	* src/nact/base-assistant.c (class_init):
 	Apply patch provided by Christian Kirback. Fix #640920.
 

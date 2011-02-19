@@ -202,6 +202,33 @@ na_updater_new( void )
 	return( updater );
 }
 
+static gboolean
+are_preferences_locked( const NAUpdater *updater )
+{
+	gboolean are_locked;
+	gboolean mandatory;
+	NASettings *settings;
+
+	settings = na_pivot_get_settings( NA_PIVOT( updater ));
+	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+
+	return( are_locked && mandatory );
+}
+
+static gboolean
+is_level_zero_writable( const NAUpdater *updater )
+{
+	GSList *level_zero;
+	gboolean mandatory;
+
+	level_zero = na_settings_get_string_list(
+			na_pivot_get_settings( NA_PIVOT( updater )), NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, &mandatory );
+
+	na_core_utils_slist_free( level_zero );
+
+	return( !mandatory );
+}
+
 /*
  * na_updater_are_preferences_locked:
  * @updater: the #NAUpdater application object.
@@ -227,7 +254,43 @@ na_updater_are_preferences_locked( const NAUpdater *updater )
 }
 
 /*
- * na_updater_is_item_writable:
+ * na_updater_is_level_zero_writable:
+ * @updater: the #NAUpdater application object.
+ *
+ * As of 3.1.0, level-zero is written as a user preference.
+ *
+ * This function considers that the level_zero is writable if it is not
+ * a mandatory preference.
+ * Whether preferences themselves are or not globally locked is not
+ * considered here (as imho, level zero is not really and semantically
+ * part of user preferences).
+ *
+ * This function only considers the case of the level zero itself.
+ * It does not take into account whether the i/o provider (if any)
+ * is writable, or if the item iself is not read only.
+ *
+ * Returns: %TRUE if we are able to update the level-zero list of items,
+ * %FALSE else.
+ */
+gboolean
+na_updater_is_level_zero_writable( const NAUpdater *updater )
+{
+	gboolean is_writable;
+
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
+
+	is_writable = FALSE;
+
+	if( !updater->private->dispose_has_run ){
+
+		is_writable = updater->private->is_level_zero_writable;
+	}
+
+	return( is_writable );
+}
+
+/*
+ * na_updater_check_item_writability_status:
  * @updater: this #NAUpdater object.
  * @item: the #NAObjectItem to be written.
  * @reason: the reason for why @item may not be writable.
@@ -241,15 +304,14 @@ na_updater_are_preferences_locked( const NAUpdater *updater )
  * - the provider must be willing (resp. able) to write
  * - the provider must not has been locked by the admin, nor by the user
  *
- * Note that this function does not consider if the item is to be written
- * at the level zero of the tree, which may be a mandatory preference
- * (i.e. locked by an admin), and so make this item unwritable.
+ * If the item does not have a parent, the the level zero must be writable.
  */
 gboolean
-na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item, guint *reason )
+na_updater_check_item_writability_status( const NAUpdater *updater, const NAObjectItem *item, guint *reason )
 {
 	gboolean writable;
 	NAIOProvider *provider;
+	NAObjectItem *parent;
 
 	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), FALSE );
@@ -299,72 +361,23 @@ na_updater_is_item_writable( const NAUpdater *updater, const NAObjectItem *item,
 				}
 			}
 		}
+
+		/* if needed, the level zero must be writable
+		 */
+		if( writable ){
+			parent = ( NAObjectItem * ) na_object_get_parent( item );
+			if( !parent ){
+				if( updater->private->is_level_zero_writable ){
+					writable = FALSE;
+					if( reason ){
+						*reason = NA_IIO_PROVIDER_STATUS_LEVEL_ZERO;
+					}
+				}
+			}
+		}
 	}
 
 	return( writable );
-}
-
-/*
- * na_updater_is_level_zero_writable:
- * @updater: the #NAUpdater application object.
- *
- * As of 3.1.0, level-zero is written as a user preference.
- *
- * This function considers that the level_zero is writable if it is not
- * a mandatory preference.
- * Whether preferences themselves are or not globally locked is not
- * considered here (as imho, level zero is not really and semantically
- * part of user preferences).
- *
- * This function only considers the case of the level zero itself.
- * It does not take into account whether the i/o provider (if any)
- * is writable, or if the item iself is not read only.
- *
- * Returns: %TRUE if we are able to update the level-zero list of items,
- * %FALSE else.
- */
-gboolean
-na_updater_is_level_zero_writable( const NAUpdater *updater )
-{
-	gboolean is_writable;
-
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), FALSE );
-
-	is_writable = FALSE;
-
-	if( !updater->private->dispose_has_run ){
-
-		is_writable = updater->private->is_level_zero_writable;
-	}
-
-	return( is_writable );
-}
-
-static gboolean
-are_preferences_locked( const NAUpdater *updater )
-{
-	gboolean are_locked;
-	gboolean mandatory;
-	NASettings *settings;
-
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
-
-	return( are_locked && mandatory );
-}
-
-static gboolean
-is_level_zero_writable( const NAUpdater *updater )
-{
-	GSList *level_zero;
-	gboolean mandatory;
-
-	level_zero = na_settings_get_string_list(
-			na_pivot_get_settings( NA_PIVOT( updater )), NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, &mandatory );
-
-	na_core_utils_slist_free( level_zero );
-
-	return( !mandatory );
 }
 
 /*
@@ -535,7 +548,7 @@ set_writability_status( NAObjectItem *item, const NAUpdater *updater )
 	guint reason;
 	GList *children;
 
-	writable = na_updater_is_item_writable( updater, item, &reason );
+	writable = na_updater_check_item_writability_status( updater, item, &reason );
 	na_object_set_writability_status( item, writable, reason );
 
 	if( NA_IS_OBJECT_MENU( item )){
