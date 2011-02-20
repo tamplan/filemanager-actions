@@ -1,3 +1,8 @@
+2011-02-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-data-boxed.c (string_is_default, string_list_is_default,
+	locale_is_default): Fix default value test.
+
 2011-02-19 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-object-api.h (na_object_set_isfile, na_object_set_isdir,

@@ -672,7 +672,7 @@ string_is_default( const NADataBoxed *boxed )
 	gboolean is_default = FALSE;
 	gchar *value = na_boxed_get_string( NA_BOXED( boxed ));
 
-	if( boxed->private->data_def->default_value ){
+	if( boxed->private->data_def->default_value && strlen( boxed->private->data_def->default_value )){
 		if( value && strlen( value )){
 			/* default value is not null and string has something */
 			is_default = ( strcmp( value, boxed->private->data_def->default_value ) == 0 );
@@ -682,7 +682,7 @@ string_is_default( const NADataBoxed *boxed )
 			is_default = FALSE;
 		}
 
-	} else if( value ){
+	} else if( value && strlen( value )){
 		/* default value is null, but string has something */
 		is_default = FALSE;
 
@@ -728,7 +728,7 @@ string_list_is_default( const NADataBoxed *boxed )
 	gboolean is_default = FALSE;
 	gchar *value = na_boxed_get_string( NA_BOXED( boxed ));
 
-	if( boxed->private->data_def->default_value ){
+	if( boxed->private->data_def->default_value && strlen( boxed->private->data_def->default_value )){
 		if( value && strlen( value )){
 			is_default = ( strcmp( value, boxed->private->data_def->default_value ) == 0 );
 		} else {
@@ -736,7 +736,6 @@ string_list_is_default( const NADataBoxed *boxed )
 		}
 	} else if( value && strlen( value )){
 		is_default = FALSE;
-
 	} else {
 		is_default = TRUE;
 	}
@@ -767,7 +766,7 @@ locale_is_default( const NADataBoxed *boxed )
 	gboolean is_default = FALSE;
 	gchar *value = na_boxed_get_string( NA_BOXED( boxed ));
 
-	if( boxed->private->data_def->default_value ){
+	if( boxed->private->data_def->default_value && g_utf8_strlen( boxed->private->data_def->default_value, -1 )){
 		if( value && strlen( value )){
 			/* default value is not null and string has something */
 			is_default = ( na_core_utils_str_collate( value, boxed->private->data_def->default_value ) == 0 );
@@ -776,7 +775,7 @@ locale_is_default( const NADataBoxed *boxed )
 			/* default value is not null, but string is null */
 			is_default = FALSE;
 		}
-	} else if( value ){
+	} else if( value && g_utf8_strlen( value, -1 )){
 		/* default value is null, but string has something */
 		is_default = FALSE;
 
