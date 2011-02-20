@@ -2,13 +2,13 @@
 # Spanish translation for nautilus-actions.
 # Copyright (C) 2010 nautilus-actions's COPYRIGHT HOLDER
 # This file is distributed under the same license as the nautilus-actions package.
-# Jorge González <jorgegonz@svn.gnome.org>, 2010.
+# Jorge González <jorgegonz@svn.gnome.org>, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2010-08-30 20:01+0000\n"
-"PO-Revision-Date: 2010-08-31 05:21+0200\n"
+"POT-Creation-Date: 2011-01-24 20:24+0000\n"
+"PO-Revision-Date: 2011-02-20 16:42+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,26 +20,35 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:61(None)
+#| msgid ""
+#| "@@image: 'figures/nact-main-empty.png'; "
+#| "md5=7d8fe72399d32ddc6cb5fc72d93dbc53"
 msgid ""
-"@@image: 'figures/nact-main-empty.png'; md5=7d8fe72399d32ddc6cb5fc72d93dbc53"
+"@@image: 'figures/nact-main-empty.png'; md5=b64794a0eca4282ca9bbc0928e67cdc1"
 msgstr ""
-"@@image: 'figures/nact-main-empty.png'; md5=7d8fe72399d32ddc6cb5fc72d93dbc53"
+"@@image: 'figures/nact-main-empty.png'; md5=b64794a0eca4282ca9bbc0928e67cdc1"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:468(None)
+#| msgid ""
+#| "@@image: 'figures/nact-action-tab.png'; "
+#| "md5=704e25649a62fa033ed5d5c6bee0cac0"
 msgid ""
-"@@image: 'figures/nact-action-tab.png'; md5=704e25649a62fa033ed5d5c6bee0cac0"
+"@@image: 'figures/nact-action-tab.png'; md5=b832a6d5cc1fca67d275d16875a46a35"
 msgstr ""
-"@@image: 'figures/nact-action-tab.png'; md5=704e25649a62fa033ed5d5c6bee0cac0"
+"@@image: 'figures/nact-action-tab.png'; md5=b832a6d5cc1fca67d275d16875a46a35"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:573(None)
+#| msgid ""
+#| "@@image: 'figures/nact-command-tab.png'; "
+#| "md5=39876130a8265a1f96d469a6f9bbc11d"
 msgid ""
-"@@image: 'figures/nact-command-tab.png'; md5=39876130a8265a1f96d469a6f9bbc11d"
+"@@image: 'figures/nact-command-tab.png'; md5=82d43a701026be1df7543e4f3b57344a"
 msgstr ""
-"@@image: 'figures/nact-command-tab.png'; md5=39876130a8265a1f96d469a6f9bbc11d"
+"@@image: 'figures/nact-command-tab.png'; md5=82d43a701026be1df7543e4f3b57344a"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -64,38 +73,50 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:36(None)
+#| msgid ""
+#| "@@image: 'figures/nact-basenames-tab.png'; "
+#| "md5=2ad61dab20785e088e95c2fbec86aec8"
 msgid ""
 "@@image: 'figures/nact-basenames-tab.png'; "
-"md5=2ad61dab20785e088e95c2fbec86aec8"
+"md5=a677b7c26d8e5892359d2b823ec9aa77"
 msgstr ""
 "@@image: 'figures/nact-basenames-tab.png'; "
-"md5=2ad61dab20785e088e95c2fbec86aec8"
+"md5=a677b7c26d8e5892359d2b823ec9aa77"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:161(None)
+#| msgid ""
+#| "@@image: 'figures/nact-mimetypes-tab.png'; "
+#| "md5=93a04e11270bb8c81e5f29ce331c9244"
 msgid ""
 "@@image: 'figures/nact-mimetypes-tab.png'; "
-"md5=93a04e11270bb8c81e5f29ce331c9244"
+"md5=683b1441b168dc40d95b4dc71e986fed"
 msgstr ""
 "@@image: 'figures/nact-mimetypes-tab.png'; "
-"md5=93a04e11270bb8c81e5f29ce331c9244"
+"md5=683b1441b168dc40d95b4dc71e986fed"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:324(None)
+#| msgid ""
+#| "@@image: 'figures/nact-folders-tab.png'; "
+#| "md5=829d7051cb1576e5464c57ec504db2ba"
 msgid ""
-"@@image: 'figures/nact-folders-tab.png'; md5=829d7051cb1576e5464c57ec504db2ba"
+"@@image: 'figures/nact-folders-tab.png'; md5=3dfba07973e18241c1705608fcc469d7"
 msgstr ""
-"@@image: 'figures/nact-folders-tab.png'; md5=829d7051cb1576e5464c57ec504db2ba"
+"@@image: 'figures/nact-folders-tab.png'; md5=3dfba07973e18241c1705608fcc469d7"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:436(None)
+#| msgid ""
+#| "@@image: 'figures/nact-schemes-tab.png'; "
+#| "md5=cc3fb4f20a57fc2ff0c44e8f676e570d"
 msgid ""
-"@@image: 'figures/nact-schemes-tab.png'; md5=cc3fb4f20a57fc2ff0c44e8f676e570d"
+"@@image: 'figures/nact-schemes-tab.png'; md5=792709e70cb13d75ef169e0b84af9faf"
 msgstr ""
-"@@image: 'figures/nact-schemes-tab.png'; md5=cc3fb4f20a57fc2ff0c44e8f676e570d"
+"@@image: 'figures/nact-schemes-tab.png'; md5=792709e70cb13d75ef169e0b84af9faf"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -108,12 +129,15 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:571(None)
+#| msgid ""
+#| "@@image: 'figures/nact-capabilities-tab.png'; "
+#| "md5=3b92e1d7c1a6bb22e6f825bfb701a1b9"
 msgid ""
 "@@image: 'figures/nact-capabilities-tab.png'; "
-"md5=3b92e1d7c1a6bb22e6f825bfb701a1b9"
+"md5=4e129d55d940837de481036c75f996f9"
 msgstr ""
 "@@image: 'figures/nact-capabilities-tab.png'; "
-"md5=3b92e1d7c1a6bb22e6f825bfb701a1b9"
+"md5=4e129d55d940837de481036c75f996f9"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -128,12 +152,15 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:696(None)
+#| msgid ""
+#| "@@image: 'figures/nact-environment-tab.png'; "
+#| "md5=78a4db15429970284058d1343079c3b5"
 msgid ""
 "@@image: 'figures/nact-environment-tab.png'; "
-"md5=78a4db15429970284058d1343079c3b5"
+"md5=bd2eeb5011c9e250b665615a67f20378"
 msgstr ""
 "@@image: 'figures/nact-environment-tab.png'; "
-"md5=78a4db15429970284058d1343079c3b5"
+"md5=bd2eeb5011c9e250b665615a67f20378"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -178,10 +205,13 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:30(None)
+#| msgid ""
+#| "@@image: 'figures/nact-execution-tab.png'; "
+#| "md5=2f5f1ede74095be8bfeb668cfd70715e"
 msgid ""
-"@@image: 'figures/nact-legend.png'; md5=3a8e6d9ba5fe34cfb2ed6546393e644b"
+"@@image: 'figures/nact-legend.png'; md5=1f1f51f9cd75c4b07be485cb606ed518"
 msgstr ""
-"@@image: 'figures/nact-legend.png'; md5=3a8e6d9ba5fe34cfb2ed6546393e644b"
+"@@image: 'figures/nact-legend.png'; md5=1f1f51f9cd75c4b07be485cb606ed518"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -196,12 +226,15 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:120(None)
+#| msgid ""
+#| "@@image: 'figures/nact-execution-tab.png'; "
+#| "md5=2f5f1ede74095be8bfeb668cfd70715e"
 msgid ""
 "@@image: 'figures/nact-execution-tab.png'; "
-"md5=2f5f1ede74095be8bfeb668cfd70715e"
+"md5=91f6f3084821d65ab8996ab3c8f7e40b"
 msgstr ""
 "@@image: 'figures/nact-execution-tab.png'; "
-"md5=2f5f1ede74095be8bfeb668cfd70715e"
+"md5=91f6f3084821d65ab8996ab3c8f7e40b"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -246,62 +279,80 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:19(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-runtime.png'; "
+#| "md5=eb1637772fe5d28c366dbb0ab4ce07e3"
 msgid ""
 "@@image: 'figures/nact-preferences-runtime.png'; "
-"md5=eb1637772fe5d28c366dbb0ab4ce07e3"
+"md5=3de8680a8e14cc3bf54ff758eab09cae"
 msgstr ""
 "@@image: 'figures/nact-preferences-runtime.png'; "
-"md5=eb1637772fe5d28c366dbb0ab4ce07e3"
+"md5=3de8680a8e14cc3bf54ff758eab09cae"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:39(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-ui.png'; "
+#| "md5=b34600efa6f62ea3b57cf631e96aefab"
 msgid ""
 "@@image: 'figures/nact-preferences-ui.png'; "
-"md5=b34600efa6f62ea3b57cf631e96aefab"
+"md5=8c43c6e25a988eca467da265440186b0"
 msgstr ""
 "@@image: 'figures/nact-preferences-ui.png'; "
-"md5=b34600efa6f62ea3b57cf631e96aefab"
+"md5=8c43c6e25a988eca467da265440186b0"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:59(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-import.png'; "
+#| "md5=f4126ecd0eeae1aebf3506a24cdfd740"
 msgid ""
 "@@image: 'figures/nact-preferences-import.png'; "
-"md5=f4126ecd0eeae1aebf3506a24cdfd740"
+"md5=c8e3f15ace586b71eb307c4b4e671286"
 msgstr ""
 "@@image: 'figures/nact-preferences-import.png'; "
-"md5=f4126ecd0eeae1aebf3506a24cdfd740"
+"md5=c8e3f15ace586b71eb307c4b4e671286"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:81(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-export.png'; "
+#| "md5=8f49f5b7910a83e7152e6af5e878cc84"
 msgid ""
 "@@image: 'figures/nact-preferences-export.png'; "
-"md5=8f49f5b7910a83e7152e6af5e878cc84"
+"md5=88b44647039215cec13907b9a8ee6547"
 msgstr ""
 "@@image: 'figures/nact-preferences-export.png'; "
-"md5=8f49f5b7910a83e7152e6af5e878cc84"
+"md5=88b44647039215cec13907b9a8ee6547"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:103(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-schemes.png'; "
+#| "md5=575374d045861d8dc1febab827f09b8e"
 msgid ""
 "@@image: 'figures/nact-preferences-schemes.png'; "
-"md5=575374d045861d8dc1febab827f09b8e"
+"md5=620cd83d16b79831e9e45869b5bd20b8"
 msgstr ""
 "@@image: 'figures/nact-preferences-schemes.png'; "
-"md5=575374d045861d8dc1febab827f09b8e"
+"md5=620cd83d16b79831e9e45869b5bd20b8"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:125(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-io-providers.png'; "
+#| "md5=edefe4c9d9cf5f568d36b4c2ed3e044b"
 msgid ""
 "@@image: 'figures/nact-preferences-io-providers.png'; "
-"md5=edefe4c9d9cf5f568d36b4c2ed3e044b"
+"md5=a7a6abe76d3d2195adb520b4a33e86a3"
 msgstr ""
 "@@image: 'figures/nact-preferences-io-providers.png'; "
-"md5=edefe4c9d9cf5f568d36b4c2ed3e044b"
+"md5=a7a6abe76d3d2195adb520b4a33e86a3"
 
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid ""
@@ -360,6 +411,8 @@ msgstr "pwieser@trychlos.org"
 #: C/nautilus-actions-config-tool.xml:74(revnumber)
 msgid "Nautilus-Actions Configuration Tool User's Manual v 3.0"
 msgstr ""
+"Manual del usuario de la herramienta de configuración de Nautilus-Actions v "
+"3.0"
 
 #: C/nautilus-actions-config-tool.xml:75(date)
 msgid "August 2010"
@@ -482,7 +535,7 @@ msgstr "Nautilus"
 
 #: C/nautilus-actions-config-tool.xml:0(productname)
 msgid "Nautilus-Actions"
-msgstr ""
+msgstr "Nautilus-Actions"
 
 #: C/nautilus-actions-config-tool.xml:73(title)
 msgid "Introduction"
@@ -1046,8 +1099,8 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:529(para)
 msgid ""
-"Select <userinput>gtk-about</userinput> in the <guilabel>Icon</guilabel> "
-"drop-down list."
+"Select <inlinegraphic fileref=\"figures/stock-icon-about.png\"/> in the "
+"<guilabel>Icon</guilabel> drop-down list."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:533(para)
@@ -1133,8 +1186,8 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:623(para)
 msgid ""
-"Enter <userinput>--info --text=\"%c selected item(s): %U\"</userinput> in "
-"the <guilabel>Parameters</guilabel> entry box."
+"Enter <userinput>--info --text='%c selected item(s): %U'</userinput> in the "
+"<guilabel>Parameters</guilabel> entry box."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:628(para)
@@ -1197,8 +1250,8 @@ msgstr "Zenity"
 
 #: C/nautilus-actions-config-tool.xml:691(phrase)
 msgid ""
-"Shows the result of the execution of your first action. This is <placeholder-"
-"1/> dialog box, displaying the URI of the selected item."
+"Shows the result of the execution of your first action. This is "
+"<placeholder-1/> dialog box, displaying the URI of the selected item."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:152(title)
@@ -1212,7 +1265,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:3(para)
 msgid ""
 "Whether your action will eventually be displayed in <productname>Nautilus</"
-"productname> file manager context menus or in its toolbar depends of the "
+"productname> file manager context menus or in its toolbar depends on the "
 "conditions you will have defined for it."
 msgstr ""
 
@@ -1262,11 +1315,12 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:47(para)
 msgid ""
 "In fact, basename-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order you action be candidate "
-"regarding of these basename-based conditions, each element of the selection "
-"must be valid for all the listed conditions: the basename of each element "
-"must match at least one of the defined « must match one of » patterns, and "
-"must not match any of the defined « must not match any of » patterns."
+"of » and « must not match any of » patterns. In order you action be "
+"candidate regarding of these basename-based conditions, each element of the "
+"selection must be valid for all the listed conditions: the basename of each "
+"element must match at least one of the defined « must match one of » "
+"patterns, and must not match any of the defined « must not match any of » "
+"patterns."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:56(para)
@@ -1324,8 +1378,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:393(para)
 #: C/nautilus-actions-config-tool.xml:531(para)
 msgid ""
-"Indicates whether this a « must match one of » or a « must not match any of » "
-"condition."
+"Indicates whether this a « must match one of » or a « must not match any "
+"of » condition."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:100(para)
@@ -1357,7 +1411,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:123(para)
 msgid ""
-"When disactivated, filters are considered as case insensitive, which means "
+"When deactivated, filters are considered as case insensitive, which means "
 "that <filename>/my/file</filename> and <filename>/My/File</filename> "
 "filenames are considered the same name."
 msgstr ""
@@ -1407,11 +1461,12 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:172(para)
 msgid ""
 "In fact, mimetype-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order you action be candidate "
-"regarding of these mimetype-based conditions, each element of the selection "
-"must be valid for all the listed conditions: the mimetype of each element "
-"must match at least one of the defined « must match one of » patterns, and "
-"must not match any of the defined « must not match any of » patterns."
+"of » and « must not match any of » patterns. In order you action be "
+"candidate regarding of these mimetype-based conditions, each element of the "
+"selection must be valid for all the listed conditions: the mimetype of each "
+"element must match at least one of the defined « must match one of » "
+"patterns, and must not match any of the defined « must not match any of » "
+"patterns."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:185(para)
@@ -1455,7 +1510,7 @@ msgid ""
 "literal> mimetype."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:237(para)
+#: C/nautilus-actions-config-tool.xml:235(para)
 msgid ""
 "The <literal>*/subgroup</literal> string is not accepted as a valid wildcard."
 msgstr ""
@@ -1464,8 +1519,8 @@ msgstr ""
 msgid ""
 "By default, the mimetype-based condition is just one « <literal>must match "
 "one of */*</literal> » condition. As all mimetypes always match the "
-"« <literal>*/*</literal> », this just means that mimetypes are not considered "
-"as relevant for the action."
+"« <literal>*/*</literal> », this just means that mimetypes are not "
+"considered as relevant for the action."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:264(title)
@@ -1533,12 +1588,12 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:335(para)
 msgid ""
-"In fact, folder-based conditions are built as a list of « must match one of » "
-"and « must not match any of » patterns. In order you action be candidate "
-"regarding of these folder-based conditions, each element of the selection "
-"must be valid for all the listed conditions: each element must located in "
-"one of the defined « must match one of » folders, and must not match any of "
-"the defined « must not match any of » folders."
+"In fact, folder-based conditions are built as a list of « must match one "
+"of » and « must not match any of » patterns. In order you action be "
+"candidate regarding of these folder-based conditions, each element of the "
+"selection must be valid for all the listed conditions: each element must "
+"located in one of the defined « must match one of » folders, and must not "
+"match any of the defined « must not match any of » folders."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:348(para)
@@ -1565,15 +1620,15 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:385(para)
 msgid ""
-"Or click on <guibutton>Browse</guibutton> to select a folder on the "
-"filesystem."
+"Or click on <guibutton>Browse</guibutton> to select a folder on the file "
+"system."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:404(para)
 msgid ""
 "By default, the folder-based condition is just one « <literal>must match one "
 "of /</literal> » condition. As <literal>/</literal> is always the top of an "
-"Unix-like filesystem, then all selected items always match this condition."
+"Unix-like file system, then all selected items always match this condition."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:411(para)
@@ -1615,12 +1670,13 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:447(para)
 msgid ""
-"In fact, scheme-based conditions are built as a list of « must match one of » "
-"and « must not match any of » patterns. In order you action be candidate "
-"regarding of these scheme-based conditions, each element of the selection "
-"must be valid for all the listed conditions: the scheme of each element must "
-"match at least one of the defined « must match one of » patterns, and must "
-"not match any of the defined « must not match any of » patterns."
+"In fact, scheme-based conditions are built as a list of « must match one "
+"of » and « must not match any of » patterns. In order you action be "
+"candidate regarding of these scheme-based conditions, each element of the "
+"selection must be valid for all the listed conditions: the scheme of each "
+"element must match at least one of the defined « must match one of » "
+"patterns, and must not match any of the defined « must not match any of » "
+"patterns."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:460(para)
@@ -1658,7 +1714,7 @@ msgid "Selecting a scheme among predefined defaults"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:511(phrase)
-msgid "Show the list of predefined schemess."
+msgid "Show the list of predefined schemes."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:519(para)
@@ -1691,7 +1747,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:553(para)
 msgid ""
-"But the <literal>Local</literal> capability, all others are dependant of the "
+"But the <literal>Local</literal> capability, all others are dependent of the "
 "user who executes the command."
 msgstr ""
 
@@ -1718,12 +1774,12 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:582(para)
 msgid ""
 "In fact, capability-based conditions are built as a list of « must match all "
-"of » and « must not match any of » patterns. In order you action be candidate "
-"regarding of these capability-based conditions, each element of the "
-"selection must be valid for all the listed conditions: the capability of "
+"of » and « must not match any of » patterns. In order you action be "
+"candidate regarding of these capability-based conditions, each element of "
+"the selection must be valid for all the listed conditions: the capability of "
 "each element must match each of the defined « must match all of » "
-"capabilities, and must not match any of the defined « must not match any of » "
-"ones."
+"capabilities, and must not match any of the defined « must not match any "
+"of » ones."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:595(para)
@@ -1780,8 +1836,8 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:655(para)
 msgid ""
-"Indicates whether this a « must match all of » or a « must not match any of » "
-"condition."
+"Indicates whether this a « must match all of » or a « must not match any "
+"of » condition."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:659(para)
@@ -1911,9 +1967,9 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:761(para)
 msgid ""
-"The selection count defaults to « <literal>Count &gt; (strictly greater than) "
-"0</literal> », which means that the action will be candidate to be displayed "
-"as soon as at least one item is selected in the file manager."
+"The selection count defaults to « <literal>Count &gt; (strictly greater "
+"than) 0</literal> », which means that the action will be candidate to be "
+"displayed as soon as at least one item is selected in the file manager."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:770(title)
@@ -2605,7 +2661,7 @@ msgstr ""
 msgid ""
 "Actually, <productname>Nautilus-Actions</productname> automatically handles "
 "these two behaviors, depending of the form and the order of the parameters "
-"in the comamnd arguments."
+"in the command arguments."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:303(para)
@@ -2689,9 +2745,10 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:394(entry)
 #: C/nautilus-actions-config-tool.xml:408(entry)
 #: C/nautilus-actions-config-tool.xml:429(entry)
-#: C/nautilus-actions-config-tool.xml:464(entry)
+#: C/nautilus-actions-config-tool.xml:450(entry)
 #: C/nautilus-actions-config-tool.xml:478(entry)
 #: C/nautilus-actions-config-tool.xml:492(entry)
+#: C/nautilus-actions-config-tool.xml:506(entry)
 msgid "singular"
 msgstr ""
 
@@ -2707,9 +2764,10 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:403(entry)
 #: C/nautilus-actions-config-tool.xml:417(entry)
 #: C/nautilus-actions-config-tool.xml:438(entry)
-#: C/nautilus-actions-config-tool.xml:473(entry)
+#: C/nautilus-actions-config-tool.xml:459(entry)
 #: C/nautilus-actions-config-tool.xml:487(entry)
 #: C/nautilus-actions-config-tool.xml:501(entry)
+#: C/nautilus-actions-config-tool.xml:515(entry)
 msgid "plural"
 msgstr ""
 
@@ -2724,9 +2782,9 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:388(entry)
 #: C/nautilus-actions-config-tool.xml:423(entry)
 #: C/nautilus-actions-config-tool.xml:444(entry)
-#: C/nautilus-actions-config-tool.xml:451(entry)
-#: C/nautilus-actions-config-tool.xml:458(entry)
-#: C/nautilus-actions-config-tool.xml:507(entry)
+#: C/nautilus-actions-config-tool.xml:465(entry)
+#: C/nautilus-actions-config-tool.xml:472(entry)
+#: C/nautilus-actions-config-tool.xml:521(entry)
 msgid "irrelevant"
 msgstr ""
 
@@ -2795,155 +2853,173 @@ msgid "username of the (first) URI"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:448(literal)
-msgid "%p"
-msgstr "%p"
+#| msgid "%"
+msgid "%o"
+msgstr "%o"
 
 #: C/nautilus-actions-config-tool.xml:449(entry)
-msgid "port number of the (first) URI"
+msgid "no-op operator which forces a singular form of execution"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:455(literal)
-msgid "%s"
-msgstr "%s"
+#| msgid "%"
+msgid "%O"
+msgstr "%O"
 
 #: C/nautilus-actions-config-tool.xml:456(entry)
-msgid "scheme of the (first) URI"
+msgid "no-op operator which forces a plural form of execution"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:462(literal)
-msgid "%u"
-msgstr "%u"
+msgid "%p"
+msgstr "%p"
 
 #: C/nautilus-actions-config-tool.xml:463(entry)
-msgid "(first) URI"
+msgid "port number of the (first) URI"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:469(literal)
-msgid "%U"
-msgstr "%U"
+msgid "%s"
+msgstr "%s"
 
 #: C/nautilus-actions-config-tool.xml:470(entry)
-msgid "space-separated list of selected URIs"
+msgid "scheme of the (first) URI"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:476(literal)
-msgid "%w"
-msgstr "%w"
+msgid "%u"
+msgstr "%u"
 
 #: C/nautilus-actions-config-tool.xml:477(entry)
-msgid "(first) basename without the extension"
+msgid "(first) URI"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:483(literal)
-msgid "%W"
-msgstr "%W"
+msgid "%U"
+msgstr "%U"
 
 #: C/nautilus-actions-config-tool.xml:484(entry)
-msgid "space-separated list of basenames without their extension"
+msgid "space-separated list of selected URIs"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:490(literal)
-msgid "%x"
-msgstr "%x"
+msgid "%w"
+msgstr "%w"
 
 #: C/nautilus-actions-config-tool.xml:491(entry)
-msgid "(first) extension"
+msgid "(first) basename without the extension"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:497(literal)
-msgid "%X"
-msgstr "%X"
+msgid "%W"
+msgstr "%W"
 
 #: C/nautilus-actions-config-tool.xml:498(entry)
-msgid "space-separated list of extensions"
+msgid "space-separated list of basenames without their extension"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:504(literal)
+msgid "%x"
+msgstr "%x"
+
+#: C/nautilus-actions-config-tool.xml:505(entry)
+msgid "(first) extension"
+msgstr ""
+
+#: C/nautilus-actions-config-tool.xml:511(literal)
+msgid "%X"
+msgstr "%X"
+
+#: C/nautilus-actions-config-tool.xml:512(entry)
+msgid "space-separated list of extensions"
+msgstr ""
+
+#: C/nautilus-actions-config-tool.xml:518(literal)
 msgid "%%"
 msgstr "%%"
 
-#: C/nautilus-actions-config-tool.xml:505(literal)
+#: C/nautilus-actions-config-tool.xml:519(literal)
 msgid "%"
 msgstr "%"
 
-#: C/nautilus-actions-config-tool.xml:505(entry)
+#: C/nautilus-actions-config-tool.xml:519(entry)
 msgid "the « <placeholder-1/> » character"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:514(title)
+#: C/nautilus-actions-config-tool.xml:528(title)
 msgid "Usage of singular <abbrev>vs.</abbrev> plural forms"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:515(para)
+#: C/nautilus-actions-config-tool.xml:529(para)
 msgid ""
 "Say the current folder is <filename>/data</filename>, and the current "
 "selection contains the three files <filename>pierre</filename>, "
 "<filename>paul</filename> and <filename>jacques</filename>."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:522(title)
+#: C/nautilus-actions-config-tool.xml:536(title)
 msgid "If we have requested <command>echo %b</command>,"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:525(para)
-#: C/nautilus-actions-config-tool.xml:558(para)
+#: C/nautilus-actions-config-tool.xml:539(para)
+#: C/nautilus-actions-config-tool.xml:572(para)
 msgid "then the following commands will be successively run:"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:530(command)
+#: C/nautilus-actions-config-tool.xml:544(command)
 msgid "echo pierre"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:531(command)
+#: C/nautilus-actions-config-tool.xml:545(command)
 msgid "echo paul"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:532(command)
+#: C/nautilus-actions-config-tool.xml:546(command)
 msgid "echo jacques"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:534(para)
+#: C/nautilus-actions-config-tool.xml:548(para)
 msgid ""
 "This is because <literal>%b</literal> marks a <emphasis>singular</emphasis> "
 "parameter. The command is the run once for each of the selected items."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:539(title)
+#: C/nautilus-actions-config-tool.xml:553(title)
 msgid "Contrarily, if we have requester <command>echo %B</command>,"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:542(para)
+#: C/nautilus-actions-config-tool.xml:556(para)
 msgid "then the following command will be run:"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:547(command)
+#: C/nautilus-actions-config-tool.xml:561(command)
 msgid "echo pierre paul jacques"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:549(para)
+#: C/nautilus-actions-config-tool.xml:563(para)
 msgid ""
 "This is because <literal>%B</literal> marks a a <emphasis>plural</emphasis> "
 "parameter. The command is then run only once, with the list of selected "
 "items as arguments."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:555(title)
+#: C/nautilus-actions-config-tool.xml:569(title)
 msgid "If we have requested <command>echo %b %B</command>,"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:563(command)
+#: C/nautilus-actions-config-tool.xml:577(command)
 msgid "echo pierre pierre paul jacques"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:564(command)
+#: C/nautilus-actions-config-tool.xml:578(command)
 msgid "echo paul pierre paul jacques"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:565(command)
+#: C/nautilus-actions-config-tool.xml:579(command)
 msgid "echo jacques pierre paul jacques"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:567(para)
+#: C/nautilus-actions-config-tool.xml:581(para)
 msgid ""
 "This is because the first <emphasis>relevant</emphasis> parameter is "
 "<literal>%b</literal>, and so the command is run once for each selected "
@@ -2952,19 +3028,19 @@ msgid ""
 "arguments to the executed command."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:575(title)
+#: C/nautilus-actions-config-tool.xml:589(title)
 msgid "And if we have requested <literal>echo %B %b</literal>,"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:578(para)
+#: C/nautilus-actions-config-tool.xml:592(para)
 msgid "then the following commands will be run:"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:583(command)
+#: C/nautilus-actions-config-tool.xml:597(command)
 msgid "echo pierre paul jacques pierre"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:585(para)
+#: C/nautilus-actions-config-tool.xml:599(para)
 msgid ""
 "This is because the first <emphasis>relevant</emphasis> parameter here is "
 "<literal>%B</literal>. The command is then run only once, replacing <literal>"
@@ -3111,7 +3187,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:18(para)
 msgid ""
-"As an action, the exact place where a new menu will be inserted depends of "
+"As an action, the exact place where a new menu will be inserted depends on "
 "the current sort order:"
 msgstr ""
 
@@ -4219,3 +4295,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:0(None)
 msgid "translator-credits"
 msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2010"
+
+#~ msgid ""
+#~ "@@image: 'figures/nact-legend.png'; md5=3a8e6d9ba5fe34cfb2ed6546393e644b"
+#~ msgstr ""
+#~ "@@image: 'figures/nact-legend.png'; md5=3a8e6d9ba5fe34cfb2ed6546393e644b"
