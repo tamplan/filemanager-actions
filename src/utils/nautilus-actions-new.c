@@ -84,6 +84,11 @@ static gchar    **folders_array    = NULL;
 static gchar     *selection_count  = "";
 static gchar    **onlyshow_array   = NULL;
 static gchar    **notshow_array    = NULL;
+static gchar     *try_exec         = "";
+static gchar     *show_registered  = "";
+static gchar     *show_true        = "";
+static gchar     *show_running     = "";
+static gchar    **capability_array = NULL;
 /* output entries */
 static gboolean   output_stdout    = FALSE;
 static gboolean   output_desktop   = FALSE;
@@ -94,27 +99,32 @@ extern NADataGroup action_data_groups[];			/* defined in na-object-action-factor
 extern NADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
 
 static const ArgFromDataDef st_arg_from_data_def[] = {
-		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_LABEL,            &label },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_TOOLTIP,          &tooltip },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ICON,             &icon },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ENABLED,          &enabled },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_SELECTION, &target_selection },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_LOCATION,  &target_location },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_TOOLBAR,   &target_toolbar },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TOOLBAR_LABEL,    &label_toolbar },
-		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PATH,             &command },
-		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PARAMETERS,       &parameters },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_BASENAMES,        &basenames_array },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MATCHCASE,        &matchcase },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MIMETYPES,        &mimetypes_array },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISFILE,           &isfile },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISDIR,            &isdir },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MULTIPLE,         &accept_multiple },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SCHEMES,          &schemes_array },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_FOLDERS,          &folders_array },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SELECTION_COUNT,  &selection_count },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ONLY_SHOW,        &onlyshow_array },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_NOT_SHOW,         &notshow_array },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_LABEL,              &label },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_TOOLTIP,            &tooltip },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ICON,               &icon },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ENABLED,            &enabled },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_SELECTION,   &target_selection },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_LOCATION,    &target_location },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_TOOLBAR,     &target_toolbar },
+		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TOOLBAR_LABEL,      &label_toolbar },
+		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PATH,               &command },
+		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PARAMETERS,         &parameters },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_BASENAMES,          &basenames_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MATCHCASE,          &matchcase },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MIMETYPES,          &mimetypes_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISFILE,             &isfile },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISDIR,              &isdir },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MULTIPLE,           &accept_multiple },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SCHEMES,            &schemes_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_FOLDERS,            &folders_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SELECTION_COUNT,    &selection_count },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ONLY_SHOW,          &onlyshow_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_NOT_SHOW,           &notshow_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_TRY_EXEC,           &try_exec },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SHOW_IF_REGISTERED, &show_registered },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SHOW_IF_TRUE,       &show_true },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SHOW_IF_RUNNING,    &show_running },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_CAPABILITITES,      &capability_array },
 		{ NULL }
 };
 
@@ -395,6 +405,7 @@ get_action_from_cmdline( void )
 	gchar *msg;
 	GSList *only_show_in;
 	GSList *not_show_in;
+	GSList *capabilities;
 
 	action = na_object_action_new_with_defaults();
 	profile = NA_OBJECT_PROFILE(( GList * ) na_object_get_items( action )->data );
@@ -517,6 +528,43 @@ get_action_from_cmdline( void )
 		if( not_show_in && g_slist_length( not_show_in )){
 			na_object_set_not_show_in( profile, not_show_in );
 			na_core_utils_slist_free( not_show_in );
+		}
+	}
+
+	if( try_exec && strlen( try_exec )){
+		na_object_set_try_exec( profile, try_exec );
+	}
+
+	if( show_registered && strlen( show_registered )){
+		na_object_set_show_if_registered( profile, show_registered );
+	}
+
+	if( show_true && strlen( show_true )){
+		na_object_set_show_if_true( profile, show_true );
+	}
+
+	if( show_running && strlen( show_running )){
+		na_object_set_show_if_running( profile, show_running );
+	}
+
+	if( capability_array ){
+		capabilities = NULL;
+		for( i = 0 ; capability_array[i] && strlen( capability_array[i] ) ; ++i ){
+			const gchar *cap = ( const gchar * ) capability_array[i];
+			/* 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' */
+			if( strcmp( cap, "Owner" ) &&
+				strcmp( cap, "Readable" ) &&
+				strcmp( cap, "Writable" ) &&
+				strcmp( cap, "Executable" ) &&
+				strcmp( cap, "Local" )){
+					g_warning( "%s: unknown capability", cap );
+			}  else {
+				capabilities = g_slist_append( capabilities, g_strdup( capability_array[i] ));
+			}
+		}
+		if( capabilities && g_slist_length( capabilities )){
+			na_object_set_capabilities( profile, capabilities );
+			na_core_utils_slist_free( capabilities );
 		}
 	}
 

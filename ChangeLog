@@ -1,5 +1,12 @@
 2011-02-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext-factory.c (NAFO_DATA_TRY_EXEC,
+	NAFO_DATA_SHOW_IF_REGISTERED, NAFO_DATA_SHOW_IF_TRUE,
+	NAFO_DATA_SHOW_IF_RUNNING, NAFO_DATA_CAPABILITITES): Fix options definition.
+
+	* src/utils/nautilus-actions-new.c: Add try-exec, show-if-registered,
+	show-if-true, show-if-running and capability options.
+	
 	* src/core/na-icontext-factory.c (NAFO_DATA_SCHEMES, NAFO_DATA_FOLDERS,
 	NAFO_DATA_SELECTION_COUNT, NAFO_DATA_ONLY_SHOW, NAFO_DATA_NOT_SHOW):
 	* src/core/na-object-action-factory.c (NAFO_DATA_TARGET_SELECTION,
