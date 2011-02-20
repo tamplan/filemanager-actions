@@ -170,7 +170,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "Whether the profile applies to files (deprecated option, see mimetypes)" ),
+				N_( "Whether the profile applies to files (deprecated option, see mimetype)" ),
 				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "Set to 'true' if the selection can have files, to 'false' otherwise.\n" \
 					"This setting is tied in with the 'isdir' setting. The valid combinations are: \n" \
@@ -201,7 +201,7 @@ NADataDef data_def_conditions [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "Whether the profile applies to folders (deprecated option, see mimetypes)" ),
+				N_( "Whether the profile applies to folders (deprecated option, see mimetype)" ),
 				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "Set to 'true' if the selection can have folders, to 'false' otherwise.\n" \
 					"This setting is tied in with the 'isfile' setting. The valid combinations are: \n" \
@@ -250,8 +250,8 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				"accept-multiple-files",
 				NULL,
-				0,
-				NULL,
+				'u',
+				"accept-multiple",
 				0,
 				G_OPTION_ARG_NONE,
 				NULL,
@@ -343,10 +343,10 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				"selection-count",
 				"SelectionCount",
+				'c',
+				"selection-count",
 				0,
-				NULL,
-				0,
-				G_OPTION_ARG_NONE,
+				G_OPTION_ARG_STRING,
 				NULL,
 				NULL },
 

@@ -80,6 +80,7 @@ static gboolean   isdir            = FALSE;
 static gboolean   accept_multiple  = FALSE;
 static gchar    **schemes_array    = NULL;
 static gchar    **folders_array    = NULL;
+static gchar     *selection_count  = "";
 /* output entries */
 static gboolean   output_stdout    = FALSE;
 static gboolean   output_desktop   = FALSE;
@@ -108,6 +109,7 @@ static const ArgFromDataDef st_arg_from_data_def[] = {
 		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MULTIPLE,         &accept_multiple },
 		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SCHEMES,          &schemes_array },
 		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_FOLDERS,          &folders_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SELECTION_COUNT,  &selection_count },
 		{ NULL }
 };
 
@@ -138,7 +140,8 @@ static GOptionEntry misc_entries[] = {
 	{ NULL }
 };
 
-#define CANNOT_BOTH		_( "Error: '%s' and '%s' options cannot both be specified.\n" )
+#define CANNOT_BOTH		_( "Error: '%s' and '%s' options cannot both be specified\n" )
+#define DEPRECATED		_( "'%s' option is deprecated, see %s\n" )
 
 static GOptionEntry   *build_option_entries( const ArgFromDataDef *defs, guint nbdefs, const GOptionEntry *adds, guint nbadds );
 static GOptionContext *init_options( void );
@@ -221,6 +224,11 @@ main( int argc, char** argv )
 		errors += 1;
 	} else if( !nocase ){
 		matchcase = TRUE;
+	}
+
+	if( accept_multiple && strlen( selection_count )){
+		g_printerr( CANNOT_BOTH, "--accept-multiple", "--selection-count" );
+		errors += 1;
 	}
 
 	if( output_stdout && output_desktop ){
@@ -367,7 +375,7 @@ get_action_from_cmdline( void )
 	GSList *schemes;
 	GSList *folders;
 	gboolean toolbar_same_label;
-	gchar *selection_count;
+	gchar *msg;
 
 	action = na_object_action_new_with_defaults();
 	profile = NA_OBJECT_PROFILE(( GList * ) na_object_get_items( action )->data );
@@ -408,6 +416,16 @@ get_action_from_cmdline( void )
 	na_object_set_matchcase( profile, matchcase );
 
 	mimetypes = NULL;
+	if( isfile ){
+		msg = g_strdup_printf( DEPRECATED, "accept-files", "mimetype" );
+		g_warning( "%s", msg );
+		g_free( msg );
+	}
+	if( isdir ){
+		msg = g_strdup_printf( DEPRECATED, "accept-dirs", "mimetype" );
+		g_warning( "%s", msg );
+		g_free( msg );
+	}
 	if( !isfile && !isdir ){
 		isfile = TRUE;
 	}
@@ -428,12 +446,15 @@ get_action_from_cmdline( void )
 		na_core_utils_slist_free( mimetypes );
 	}
 
-	selection_count = g_strdup( "=1" );
 	if( accept_multiple ){
-		g_free( selection_count );
+		msg = g_strdup_printf( DEPRECATED, "accept-multiple", "selection-count" );
+		g_warning( "%s", msg );
+		g_free( msg );
 		selection_count = g_strdup( ">0" );
 	}
-	na_object_set_selection_count( profile, selection_count );
+	if( strlen( selection_count )){
+		na_object_set_selection_count( profile, selection_count );
+	}
 
 	i = 0;
 	schemes = NULL;

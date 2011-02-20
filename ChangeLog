@@ -1,5 +1,10 @@
 2011-02-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext-factory.c
+	(NAFO_DATA_SELECTION_COUNT): Fix option definition.
+
+	* src/utils/nautilus-actions-new.c: Add selection-count option.
+
 	* src/core/na-data-boxed.c (string_is_default, string_list_is_default,
 	locale_is_default): Fix default value test.
 
