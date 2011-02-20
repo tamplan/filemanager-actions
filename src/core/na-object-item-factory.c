@@ -283,7 +283,7 @@ NADataDef data_def_item [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "Whether the action or the menu is enabled (default)" ),
+				N_( "Whether the action or the menu is enabled" ),
 				N_( "If the or the menu action is disabled, it will never appear in the " \
 					"file manager context menu.\n" \
 					"Defaults to TRUE." ),
@@ -300,7 +300,7 @@ NADataDef data_def_item [] = {
 				"enabled",
 				0,
 				G_OPTION_ARG_NONE,
-				NULL,
+				N_( "Whether the action or the menu is enabled [enabled]" ),
 				NULL },
 
 	/* dynamic data, so non readable / non writable

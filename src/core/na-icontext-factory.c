@@ -293,7 +293,7 @@ NADataDef data_def_conditions [] = {
 				's',
 				"scheme",
 				0,
-				G_OPTION_ARG_STRING,
+				G_OPTION_ARG_STRING_ARRAY,
 				N_( "A valid GIO scheme where the selected file(s)/folder(s) should be located. " \
 					"You must set one option for each scheme you need" ),
 				/* i18n: "<STRING>" is just an abbreviation for "a string", so is tranlatable */
@@ -319,7 +319,7 @@ NADataDef data_def_conditions [] = {
 				'r',
 				"folder",
 				0,
-				G_OPTION_ARG_STRING,
+				G_OPTION_ARG_STRING_ARRAY,
 				N_( "The path of a (parent) directory for which the item will be displayed. " \
 					"You must set one option for each folder you need" ),
 				/* i18n: "<PATH>" is just an abbreviation for "a folder path", so is tranlatable */
@@ -347,8 +347,9 @@ NADataDef data_def_conditions [] = {
 				"selection-count",
 				0,
 				G_OPTION_ARG_STRING,
-				NULL,
-				NULL },
+				N_( "Selection count relation [>0]" ),
+				/* i18n: "<EXPR>" is just an abbreviation for "an expression", so is tranlatable */
+				N_( "<EXPR>" ) },
 
 	{ NAFO_DATA_ONLY_SHOW,
 				TRUE,
@@ -365,12 +366,14 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				"only-show-in",
 				"OnlyShowIn",
+				'y',
+				"only-show-in",
 				0,
-				NULL,
-				0,
-				G_OPTION_ARG_NONE,
-				NULL,
-				NULL },
+				G_OPTION_ARG_STRING_ARRAY,
+				N_( "The name of an only desktop environment where the item must be displayed. " \
+					"You must set one option for each environment you want" ),
+				/* i18n: "<DESKTOP>" is just a placeholder for "a desktop name", so is tranlatable */
+				N_( "<DESKTOP>" ) },
 
 	{ NAFO_DATA_NOT_SHOW,
 				TRUE,
@@ -387,12 +390,14 @@ NADataDef data_def_conditions [] = {
 				FALSE,
 				"not-show-in",
 				"NotShowIn",
+				'Y',
+				"not-show-in",
 				0,
-				NULL,
-				0,
-				G_OPTION_ARG_NONE,
-				NULL,
-				NULL },
+				G_OPTION_ARG_STRING_ARRAY,
+				N_( "The name of a desktop environment where the item must not be displayed. " \
+					"You must set one option for each environment you want" ),
+				/* i18n: "<DESKTOP>" is just a placeholder for "a desktop name", so is tranlatable */
+				N_( "<DESKTOP>" ) },
 
 	{ NAFO_DATA_TRY_EXEC,
 				TRUE,

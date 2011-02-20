@@ -66,6 +66,7 @@ static gboolean   disabled         = FALSE;
 static gboolean   target_selection = FALSE;
 static gboolean   target_location  = FALSE;
 static gboolean   nocontext        = FALSE;
+static gboolean   nolocation       = FALSE;
 static gboolean   target_toolbar   = FALSE;
 static gboolean   notoolbar        = FALSE;
 static gchar     *label_toolbar    = "";
@@ -81,6 +82,8 @@ static gboolean   accept_multiple  = FALSE;
 static gchar    **schemes_array    = NULL;
 static gchar    **folders_array    = NULL;
 static gchar     *selection_count  = "";
+static gchar    **onlyshow_array   = NULL;
+static gchar    **notshow_array    = NULL;
 /* output entries */
 static gboolean   output_stdout    = FALSE;
 static gboolean   output_desktop   = FALSE;
@@ -110,6 +113,8 @@ static const ArgFromDataDef st_arg_from_data_def[] = {
 		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SCHEMES,          &schemes_array },
 		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_FOLDERS,          &folders_array },
 		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SELECTION_COUNT,  &selection_count },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ONLY_SHOW,        &onlyshow_array },
+		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_NOT_SHOW,         &notshow_array },
 		{ NULL }
 };
 
@@ -118,7 +123,9 @@ static GOptionEntry st_added_entries[] = {
 	{ "disabled"             , 'E', 0, G_OPTION_ARG_NONE        , &disabled,
 			N_( "Set it if the item should be disabled at creation" ), NULL },
 	{ "nocontext"            , 'C', 0, G_OPTION_ARG_NONE        , &nocontext,
-			N_( "Set it if the item doesn't target the context menu" ), NULL },
+			N_( "Set it if the item doesn't target the selection context menu" ), NULL },
+	{ "nolocation"           , 'T', 0, G_OPTION_ARG_NONE        , &nolocation,
+			N_( "Set it if the item doesn't target the location context menu" ), NULL },
 	{ "notoolbar"            , 'O', 0, G_OPTION_ARG_NONE        , &notoolbar,
 			N_( "Set it if the item doesn't target the toolbar" ), NULL },
 	{ "nocase"               , 'A', 0, G_OPTION_ARG_NONE        , &nocase,
@@ -214,6 +221,11 @@ main( int argc, char** argv )
 		target_selection = TRUE;
 	}
 
+	if( target_location && nolocation ){
+		g_printerr( CANNOT_BOTH, "--location", "--nolocation" );
+		errors += 1;
+	}
+
 	if( target_toolbar && notoolbar ){
 		g_printerr( CANNOT_BOTH, "--toolbar", "--notoolbar" );
 		errors += 1;
@@ -228,6 +240,11 @@ main( int argc, char** argv )
 
 	if( accept_multiple && strlen( selection_count )){
 		g_printerr( CANNOT_BOTH, "--accept-multiple", "--selection-count" );
+		errors += 1;
+	}
+
+	if( onlyshow_array && notshow_array ){
+		g_printerr( CANNOT_BOTH, "--only-show-in", "--not-show-in" );
 		errors += 1;
 	}
 
@@ -320,10 +337,10 @@ init_options( void )
 
 	context = g_option_context_new( _( "Define a new action." ));
 
-	/*g_option_context_set_summary( context, _(
+	g_option_context_set_summary( context, _(
 			"The created action defaults to be written to stdout.\n"
 			"It can also be written to an output folder, in a file later suitable for an import in NACT.\n"
-			"Or you may choose to directly write the action into your GConf configuration." ));*/
+			"Or you may choose to directly write the action into your Nautilus-Actions configuration." ));
 
 	g_option_context_set_translation_domain( context, GETTEXT_PACKAGE );
 
@@ -376,6 +393,8 @@ get_action_from_cmdline( void )
 	GSList *folders;
 	gboolean toolbar_same_label;
 	gchar *msg;
+	GSList *only_show_in;
+	GSList *not_show_in;
 
 	action = na_object_action_new_with_defaults();
 	profile = NA_OBJECT_PROFILE(( GList * ) na_object_get_items( action )->data );
@@ -389,6 +408,7 @@ get_action_from_cmdline( void )
 	}
 	na_object_set_enabled( action, enabled );
 	na_object_set_target_selection( action, target_selection );
+	na_object_set_target_location( action, target_location );
 	na_object_set_target_toolbar( action, target_toolbar );
 
 	toolbar_same_label = FALSE;
@@ -476,6 +496,28 @@ get_action_from_cmdline( void )
 	if( folders && g_slist_length( folders )){
 		na_object_set_folders( profile, folders );
 		na_core_utils_slist_free( folders );
+	}
+
+	if( onlyshow_array ){
+		only_show_in = NULL;
+		for( i = 0 ; onlyshow_array[i] && strlen( onlyshow_array[i] ) ; ++i ){
+			only_show_in = g_slist_append( only_show_in, g_strdup( onlyshow_array[i] ));
+		}
+		if( only_show_in && g_slist_length( only_show_in )){
+			na_object_set_only_show_in( profile, only_show_in );
+			na_core_utils_slist_free( only_show_in );
+		}
+	}
+
+	if( notshow_array ){
+		not_show_in = NULL;
+		for( i = 0 ; notshow_array[i] && strlen( notshow_array[i] ) ; ++i ){
+			not_show_in = g_slist_append( not_show_in, g_strdup( notshow_array[i] ));
+		}
+		if( not_show_in && g_slist_length( not_show_in )){
+			na_object_set_not_show_in( profile, not_show_in );
+			na_core_utils_slist_free( not_show_in );
+		}
 	}
 
 	return( action );

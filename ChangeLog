@@ -1,5 +1,14 @@
 2011-02-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext-factory.c (NAFO_DATA_SCHEMES, NAFO_DATA_FOLDERS,
+	NAFO_DATA_SELECTION_COUNT, NAFO_DATA_ONLY_SHOW, NAFO_DATA_NOT_SHOW):
+	* src/core/na-object-action-factory.c (NAFO_DATA_TARGET_SELECTION,
+	NAFO_DATA_TARGET_LOCATION, NAFO_DATA_TARGET_TOOLBAR):
+	* src/core/na-object-item-factory.c (NAFO_DATA_ENABLED):
+	Fix options definition.
+
+	* src/utils/nautilus-actions-new.c: Add only-show-in and not-show-in options.
+
 	* src/core/na-icontext-factory.c
 	(NAFO_DATA_SELECTION_COUNT): Fix option definition.
 

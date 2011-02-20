@@ -73,7 +73,7 @@ static NADataDef data_def_action [] = {
 				TRUE,
 				TRUE,
 				TRUE,
-				N_( "Targets the selection context menu (default)" ),
+				N_( "Targets the selection context menu" ),
 				N_( "Whether the action targets the selection file manager context menus.\n" \
 					"This used to be the historical behavior.\n" \
 					"Note that menus are always potential candidate to the display in " \
@@ -92,7 +92,7 @@ static NADataDef data_def_action [] = {
 				"selection",
 				0,
 				G_OPTION_ARG_NONE,
-				NULL,
+				N_( "Targets the selection context menu [true]" ),
 				NULL },
 
 	{ NAFO_DATA_TARGET_LOCATION,
@@ -118,7 +118,7 @@ static NADataDef data_def_action [] = {
 				"location",
 				0,
 				G_OPTION_ARG_NONE,
-				NULL,
+				N_( "Targets the location context menu [false]" ),
 				NULL },
 
 	{ NAFO_DATA_TARGET_TOOLBAR,
@@ -143,7 +143,7 @@ static NADataDef data_def_action [] = {
 				"toolbar",
 				0,
 				G_OPTION_ARG_NONE,
-				NULL,
+				N_( "Targets the toolbar [false]" ),
 				NULL },
 
 	{ NAFO_DATA_TOOLBAR_LABEL,
