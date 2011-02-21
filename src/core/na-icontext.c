@@ -54,8 +54,6 @@ struct _NAIContextInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-static const gchar *st_mimetype_all    = "*/*";
-
 static gboolean     st_initialized     = FALSE;
 static gboolean     st_finalized       = FALSE;
 
@@ -73,8 +71,9 @@ static gboolean     is_candidate_for_show_if_registered( const NAIContext *objec
 static gboolean     is_candidate_for_show_if_true( const NAIContext *object, guint target, GList *files );
 static gboolean     is_candidate_for_show_if_running( const NAIContext *object, guint target, GList *files );
 static gboolean     is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files );
-static gboolean     is_mimetype_of( const gchar *file_type, const gchar *group, const gchar *subgroup );
-static void         split_mimetype( const gchar *mimetype, gchar **group, gchar **subgroup );
+static gboolean     is_all_mimetype( const gchar *mimetype );
+static gboolean     is_file_mimetype( const gchar *mimetype );
+static gboolean     is_mimetype_of( const gchar *file_type, const gchar *ftype, gboolean is_regular );
 static gboolean     is_candidate_for_basenames( const NAIContext *object, guint target, GList *files );
 static gboolean     is_candidate_for_selection_count( const NAIContext *object, guint target, GList *files );
 static gboolean     is_candidate_for_schemes( const NAIContext *object, guint target, GList *files );
@@ -266,7 +265,7 @@ na_icontext_check_mimetypes( const NAIContext *context )
 	gboolean is_all;
 	GSList *mimetypes, *im;
 
-	g_return_val_if_fail( NA_IS_ICONTEXT( context ), FALSE );
+	g_return_if_fail( NA_IS_ICONTEXT( context ));
 
 	is_all = TRUE;
 	mimetypes = na_object_get_mimetypes( context );
@@ -277,13 +276,8 @@ na_icontext_check_mimetypes( const NAIContext *context )
 			continue;
 		}
 		const gchar *imtype = ( const gchar * ) im->data;
-		if( !strcmp( imtype, "*" ) ||
-			!strcmp( imtype, st_mimetype_all ) ||
-			!strcmp( imtype, "*/all" ) ||
-			!strcmp( imtype, "all" ) ||
-			!strcmp( imtype, "all/*" ) ||
-			!strcmp( imtype, "all/all" )){
-				continue;
+		if( is_all_mimetype( imtype )){
+			continue;
 		}
 		is_all = FALSE;
 		/* do not break here so that we are able to check all mimetypes */
@@ -409,61 +403,6 @@ na_icontext_replace_folder( NAIContext *context, const gchar *old, const gchar *
 	na_object_set_folders( context, folders );
 	na_core_utils_slist_free( folders );
 }
-
-#if 0
-static const gchar *st_mimetype_notdir = "!inode/directory";
-
-/*
- * Convert 'all/allfiles' mimetype to 'all/all' + 'file' scheme.
- * This takes into account
- * - all/allfiles, allfiles, allfiles/ * and allfiles/all
- * - negated assertions.
- */
-static void
-convert_allfiles_mimetype( NAIContext *context )
-{
-	static const gchar *thisfn = "na_icontext_convert_allfiles_mimetype";
-	GSList *mimetypes, *im, *new_mimetypes;
-	const gchar *prev_type;
-
-	mimetypes = na_object_get_mimetypes( context );
-	new_mimetypes = NULL;
-	prev_type = NULL;
-
-	for( im = mimetypes ; im ; im = im->next ){
-		if( !im->data || !strlen( im->data )){
-			continue;
-		}
-
-		const gchar *imtype = ( const gchar * ) im->data;
-
-		if( !strcmp( imtype, "allfiles" ) ||
-			!strcmp( imtype, "*/allfiles" ) ||
-			!strcmp( imtype, "allfiles/*" ) ||
-			!strcmp( imtype, "allfiles/all" ) ||
-			!strcmp( imtype, "all/allfiles" )){
-
-				new_mimetypes = g_slist_prepend( new_mimetypes, g_strdup( st_mimetype_all ));
-				new_mimetypes = g_slist_prepend( new_mimetypes, g_strdup( st_mimetype_notdir ));
-				prev_type = imtype;
-
-		} else if( strcmp( imtype, st_mimetype_all ) && strcmp( imtype, st_mimetype_notdir )){
-
-				new_mimetypes = g_slist_prepend( new_mimetypes, g_strdup( imtype ));
-		}
-	}
-
-	if( mimetypes ){
-		if( prev_type ){
-			g_debug( "%s: changing %s to %s;%s", thisfn, prev_type, st_mimetype_all, st_mimetype_notdir );
-		}
-		na_object_set_mimetypes( context, g_slist_reverse( new_mimetypes ));
-	}
-
-	na_core_utils_slist_free( mimetypes );
-	na_core_utils_slist_free( new_mimetypes );
-}
-#endif
 
 static gboolean
 v_is_candidate( NAIContext *context, guint target, GList *selection )
@@ -812,23 +751,22 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 		GList *it;
 
 		for( it = files ; it && ok ; it = it->next ){
-			gchar *ftype, *fgroup, *fsubgroup;
-			gboolean match, positive;
+			gchar *ftype;
+			gboolean regular, match, positive;
 
 			match = FALSE;
 			ftype = na_selected_info_get_mime_type( NA_SELECTED_INFO( it->data ));
+			regular = na_selected_info_is_regular( NA_SELECTED_INFO( it->data ));
 
 			if( ftype ){
-				split_mimetype( ftype, &fgroup, &fsubgroup );
-
 				for( im = mimetypes ; im && ok ; im = im->next ){
 					const gchar *imtype = ( const gchar * ) im->data;
 					positive = is_positive_assertion( imtype );
 
 					if( !positive || !match ){
-						if( is_mimetype_of( positive ? imtype : imtype+1, fgroup, fsubgroup )){
-							g_debug( "%s: condition=%s, positive=%s, ftype=%s, fgroup=%s, fsubgroup=%s, matched",
-									thisfn, imtype, positive ? "True":"False", ftype, fgroup, fsubgroup );
+						if( is_mimetype_of( positive ? imtype : imtype+1, ftype, regular )){
+							g_debug( "%s: condition=%s, positive=%s, ftype=%s, matched",
+									thisfn, imtype, positive ? "True":"False", ftype );
 							if( positive ){
 								match = TRUE;
 							} else {
@@ -847,13 +785,11 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 
 			} else {
 				gchar *uri = na_selected_info_get_uri( NA_SELECTED_INFO( it->data ));
-				g_debug( "%s: null mimetype found for %s", thisfn, uri );
+				g_warning( "%s: null mimetype found for %s", thisfn, uri );
 				g_free( uri );
 				ok = FALSE;
 			}
 
-			g_free( fsubgroup );
-			g_free( fgroup );
 			g_free( ftype );
 		}
 
@@ -863,73 +799,65 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 	return( ok );
 }
 
+static gboolean
+is_all_mimetype( const gchar *mimetype )
+{
+	return( !strcmp( mimetype, "*" ) ||
+			!strcmp( mimetype, "*/*" ) ||
+			!strcmp( mimetype, "*/all" ) ||	/* should be considered as invalid */
+			!strcmp( mimetype, "all" ) ||
+			!strcmp( mimetype, "all/*" ) ||
+			!strcmp( mimetype, "all/all" ));
+}
+
+static gboolean
+is_file_mimetype( const gchar *mimetype )
+{
+	return( !strcmp( mimetype, "allfiles" ) ||
+			!strcmp( mimetype, "*/allfiles" ) ||	/* should be considered as invalid */
+			!strcmp( mimetype, "allfiles/*" ) ||
+			!strcmp( mimetype, "allfiles/all" ) ||
+			!strcmp( mimetype, "all/allfiles" ));
+}
+
 /*
  * does the file fgroup/fsubgroup have a mimetype which is 'a sort of'
  *  mimetype specified one ?
  * for example, "image/jpeg" is clearly a sort of "image/ *"
- * but how to check if "msword/xml" is a sort of "application/xml" ??
+ *
+ * content type if the same as the mime type in *nix;
+ * this is not true on Win32 platforms
  */
 static gboolean
-is_mimetype_of( const gchar *mimetype, const gchar *fgroup, const gchar *fsubgroup )
+is_mimetype_of( const gchar *mimetype, const gchar *ftype, gboolean is_regular )
 {
 	static const gchar *thisfn = "na_icontext_is_mimetype_of";
 	gboolean is_type_of;
-	gchar *mgroup, *msubgroup;
-	gchar *file_type;
 	gchar *file_content_type, *def_content_type;
-	gboolean is_a;
 
-	file_type = g_strdup_printf( "%s/%s", fgroup, fsubgroup );
-	file_content_type = g_content_type_from_mime_type( file_type );
-	if( !file_content_type ){
-		g_debug( "%s: mimetype=%s content_type=null", thisfn, file_type );
-	}
-	def_content_type = g_content_type_from_mime_type( mimetype );
-	if( !def_content_type ){
-		g_debug( "%s: mimetype=%s content_type=null", thisfn, mimetype );
-	}
-	if( file_content_type && def_content_type ){
-		is_a = g_content_type_is_a( file_content_type, def_content_type );
-		g_debug( "%s: def_mimetype=%s content_type=%s file_mimetype=%s content_type=%s is_a=%s",
-				thisfn, mimetype, def_content_type, file_type, file_content_type,
-				is_a ? "True":"False" );
-	}
-
-	g_free( file_type );
-	g_free( file_content_type );
-	g_free( def_content_type );
-
-	if( !strcmp( mimetype, "*" ) || !strcmp( mimetype, st_mimetype_all )){
+	if( is_all_mimetype( mimetype )){
 		return( TRUE );
 	}
 
-	split_mimetype( mimetype, &mgroup, &msubgroup );
-
-	is_type_of = ( strcmp( fgroup, mgroup ) == 0 );
-	if( is_type_of ){
-		if( strcmp( msubgroup, "*" ) != 0 ){
-			is_type_of = ( strcmp( fsubgroup, msubgroup ) == 0 );
-		}
+	if( is_file_mimetype( mimetype ) && is_regular ){
+		return( TRUE );
 	}
 
-	g_free( mgroup );
-	g_free( msubgroup );
+	is_type_of = FALSE;
+	file_content_type = g_content_type_from_mime_type( ftype );
+	def_content_type = g_content_type_from_mime_type( mimetype );
+
+	if( file_content_type && def_content_type ){
+		is_type_of = g_content_type_is_a( file_content_type, def_content_type );
+		g_debug( "%s: def_mimetype=%s content_type=%s file_mimetype=%s content_type=%s is_a=%s",
+				thisfn, mimetype, def_content_type, ftype, file_content_type,
+				is_type_of ? "True":"False" );
+	}
+
+	g_free( file_content_type );
+	g_free( def_content_type );
 
 	return( is_type_of );
-}
-
-/*
- * split the given mimetype to its group and subgroup components
- */
-static void
-split_mimetype( const gchar *mimetype, gchar **group, gchar **subgroup )
-{
-	GSList *slist = na_core_utils_slist_from_split( mimetype, "/" );
-	GSList *is = slist;
-	*group = g_strdup(( const gchar * ) is->data );
-	is = is->next;
-	*subgroup = g_strdup(( const gchar * ) is->data );
-	na_core_utils_slist_free( slist );
 }
 
 static gboolean
@@ -1277,19 +1205,58 @@ is_valid_basenames( const NAIContext *object )
 	return( valid );
 }
 
+/*
+ * check
+ *  that the list is not empty
+ *  that there is not empty item
+ *  that no mimetype is coded as '* / something'
+ */
 static gboolean
 is_valid_mimetypes( const NAIContext *object )
 {
+	static const gchar *thisfn = "na_icontext_is_valid_mimetypes";
 	gboolean valid;
-	GSList *mimetypes;
+	GSList *mimetypes, *it;
+	guint count_ok, count_errs;
+	const gchar *imtype;
 
 	mimetypes = na_object_get_mimetypes( object );
-	valid = mimetypes && g_slist_length( mimetypes ) > 0;
-	na_core_utils_slist_free( mimetypes );
+	count_ok = 0;
+	count_errs = 0;
+
+	for( it = mimetypes ; it ; it = it->next ){
+		imtype = ( const gchar * ) it->data;
+
+		if( !imtype || !strlen( imtype )){
+			g_warning( "%s: null or empty mimetype", thisfn );
+			count_errs +=1;
+			continue;
+		}
+
+		if( imtype[0] == '*' ){
+			if( imtype[1] ){
+				if( imtype[1] != '/' ){
+					g_warning( "%s: invalid mimetype: %s", thisfn, imtype );
+					count_errs +=1;
+					continue;
+				}
+				if( imtype[2] && imtype[2] != '*' ){
+					g_warning( "%s: invalid mimetype: %s", thisfn, imtype );
+					count_errs +=1;
+					continue;
+				}
+			}
+		}
+		count_ok += 1;
+	}
+
+	valid = ( count_ok > 0 && count_errs == 0 );
 
 	if( !valid ){
 		na_object_debug_invalid( object, "mimetypes" );
 	}
+
+	na_core_utils_slist_free( mimetypes );
 
 	return( valid );
 }

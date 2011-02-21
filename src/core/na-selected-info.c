@@ -527,6 +527,29 @@ na_selected_info_is_directory( const NASelectedInfo *nsi )
 }
 
 /*
+ * na_selected_info_is_regular:
+ * @nsi: this #NASelectedInfo object.
+ *
+ * Returns: %TRUE if the item is a regular file, %FALSE else.
+ */
+gboolean
+na_selected_info_is_regular( const NASelectedInfo *nsi )
+{
+	gboolean is_regular;
+
+	g_return_val_if_fail( NA_IS_SELECTED_INFO( nsi ), FALSE );
+
+	is_regular = FALSE;
+
+	if( !nsi->private->dispose_has_run ){
+
+		is_regular = ( nsi->private->file_type == G_FILE_TYPE_REGULAR );
+	}
+
+	return( is_regular );
+}
+
+/*
  * na_selected_info_is_executable:
  * @nsi: this #NASelectedInfo object.
  *
