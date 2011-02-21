@@ -543,6 +543,7 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 
 	if( !environment ){
 		environment = get_running_environment();
+		g_debug( "%s: found %s desktop", thisfn, environment );
 	}
 
 	if( only_in && g_slist_length( only_in )){
@@ -578,39 +579,46 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 static const gchar *
 get_running_environment( void )
 {
+	static const gchar *thisfn = "na_icontext_get_running_environment";
 	const gchar *value;
 	gchar *output_str, *error_str;
 	gint exit_status;
+	GError *error;
 	gboolean ok;
 
 	value = g_getenv( "KDE_FULL_SESSION" );
-	if( !strcmp( value, "true" )){
+	if( value && !strcmp( value, "true" )){
 		return( DESKTOP_KDE );
 	}
 
 	value = g_getenv( "GNOME_DESKTOP_SESSION_ID" );
-	if( strlen( value )){
+	if( value && strlen( value )){
 		return( DESKTOP_GNOME );
 	}
 
 	output_str = NULL;
 	error_str = NULL;
+	error = NULL;
 	if( g_spawn_command_line_sync(
 			"dbus-send --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.GetNameOwner string:org.gnome.SessionManager",
-			&output_str, &error_str, &exit_status, NULL )){
+			&output_str, &error_str, &exit_status, &error )){
 		ok = ( exit_status == 0 && output_str && strlen( output_str ) && ( !error_str || !strlen( error_str )));
 		g_free( output_str );
 		g_free( error_str );
 		if( ok ){
 			return( DESKTOP_GNOME );
 		}
-
+	}
+	if( error ){
+		g_warning( "%s: dbus-send: %s", thisfn, error->message );
+		g_error_free( error );
 	}
 
 	output_str = NULL;
 	error_str = NULL;
+	error = NULL;
 	if( g_spawn_command_line_sync(
-			"xprop -root _DT_SAVE_MODE", &output_str, &error_str, &exit_status, NULL )){
+			"xprop -root _DT_SAVE_MODE", &output_str, &error_str, &exit_status, &error )){
 		ok = ( exit_status == 0 && output_str && strlen( output_str ) && ( !error_str || !strlen( error_str )));
 		if( ok ){
 			ok = ( g_strstr_len( output_str, -1, "xfce" ) != NULL );
@@ -620,6 +628,10 @@ get_running_environment( void )
 		if( ok ){
 			return( DESKTOP_XFCE );
 		}
+	}
+	if( error ){
+		g_warning( "%s: xprop: %s", thisfn, error->message );
+		g_error_free( error );
 	}
 
 	/* do not know how to identify ROX or LXFCE environments
@@ -856,16 +868,40 @@ is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files
 }
 
 /*
- * does the file fgroup/fsubgrop have a mimetype which is 'a sort of'
+ * does the file fgroup/fsubgroup have a mimetype which is 'a sort of'
  *  mimetype specified one ?
  * for example, "image/jpeg" is clearly a sort of "image/ *"
- * but how to check to see if "msword/xml" is a sort of "application/xml" ??
+ * but how to check if "msword/xml" is a sort of "application/xml" ??
  */
 static gboolean
 is_mimetype_of( const gchar *mimetype, const gchar *fgroup, const gchar *fsubgroup )
 {
+	static const gchar *thisfn = "na_icontext_is_mimetype_of";
 	gboolean is_type_of;
 	gchar *mgroup, *msubgroup;
+	gchar *file_type;
+	gchar *file_content_type, *def_content_type;
+	gboolean is_a;
+
+	file_type = g_strdup_printf( "%s/%s", fgroup, fsubgroup );
+	file_content_type = g_content_type_from_mime_type( file_type );
+	if( !file_content_type ){
+		g_debug( "%s: mimetype=%s content_type=null", thisfn, file_type );
+	}
+	def_content_type = g_content_type_from_mime_type( mimetype );
+	if( !def_content_type ){
+		g_debug( "%s: mimetype=%s content_type=null", thisfn, mimetype );
+	}
+	if( file_content_type && def_content_type ){
+		is_a = g_content_type_is_a( file_content_type, def_content_type );
+		g_debug( "%s: def_mimetype=%s content_type=%s file_mimetype=%s content_type=%s is_a=%s",
+				thisfn, mimetype, def_content_type, file_type, file_content_type,
+				is_a ? "True":"False" );
+	}
+
+	g_free( file_type );
+	g_free( file_content_type );
+	g_free( def_content_type );
 
 	if( !strcmp( mimetype, "*" ) || !strcmp( mimetype, st_mimetype_all )){
 		return( TRUE );
