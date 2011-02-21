@@ -62,20 +62,21 @@ struct _NAObjectItemPrivate {
 
 static NAObjectIdClass *st_parent_class = NULL;
 
-static GType   register_type( void );
-static void    class_init( NAObjectItemClass *klass );
-static void    instance_init( GTypeInstance *instance, gpointer klass );
-static void    instance_dispose( GObject *object );
-static void    instance_finalize( GObject *object );
+static GType    register_type( void );
+static void     class_init( NAObjectItemClass *klass );
+static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_dispose( GObject *object );
+static void     instance_finalize( GObject *object );
 
-static void    object_copy( NAObject*target, const NAObject *source, gboolean recursive );
-static void    object_dump( const NAObject *object );
+static void     object_dump( const NAObject *object );
+static void     object_copy( NAObject*target, const NAObject *source, gboolean recursive );
+static gboolean object_are_equal( const NAObject *a, const NAObject *b );
 
-static gchar  *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
+static gchar   *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
-static void    count_items_rec( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
-static GSList *get_children_slist( const NAObjectItem *item );
-static void    copy_children( NAObjectItem *target, const NAObjectItem *source );
+static void     count_items_rec( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
+static GSList  *get_children_slist( const NAObjectItem *item );
+static void     copy_children( NAObjectItem *target, const NAObjectItem *source );
 
 GType
 na_object_item_get_type( void )
@@ -133,7 +134,7 @@ class_init( NAObjectItemClass *klass )
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
 	naobject_class->copy = object_copy;
-	naobject_class->are_equal = NULL;
+	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = NULL;
 
 	naobjectid_class = NA_OBJECT_ID_CLASS( klass );
@@ -201,6 +202,28 @@ instance_finalize( GObject *object )
 }
 
 static void
+object_dump( const NAObject *object )
+{
+	static const gchar *thisfn = "na_object_item_object_dump";
+	NAObjectItem *item;
+
+	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+
+	item = NA_OBJECT_ITEM( object );
+
+	if( !item->private->dispose_has_run ){
+
+		g_debug( "| %s:      writable=%s", thisfn, item->private->writable ? "True":"False" );
+		g_debug( "| %s:        reason=%u", thisfn, item->private->reason );
+
+		/* chain up to the parent class */
+		if( NA_OBJECT_CLASS( st_parent_class )->dump ){
+			NA_OBJECT_CLASS( st_parent_class )->dump( object );
+		}
+	}
+}
+
+static void
 object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 {
 	static const gchar *thisfn = "na_object_item_object_copy";
@@ -238,26 +261,61 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 	}
 }
 
-static void
-object_dump( const NAObject *object )
+/*
+ * object_are_equal:
+ * @a: the first (original) #NAObjectItem instance.
+ * @b: the second #NAObjectItem instance.
+ *
+ * This function participates to the #na_iduplicable_check_status() stack,
+ * and is triggered after all comparable elementary data (in #NAIFactoryObject
+ * sense) have already been successfully compared.
+ *
+ * We have to deal here with the subitems: comparing children by their ids
+ * between @a and @b.
+ *
+ * Returns: %TRUE if @a is equal to @b.
+ */
+static gboolean
+object_are_equal( const NAObject *a, const NAObject *b )
 {
-	static const gchar *thisfn = "na_object_item_object_dump";
-	NAObjectItem *item;
+	static const gchar *thisfn = "na_object_item_object_are_equal";
+	gboolean are_equal;
+	NAObjectItem *origin, *duplicate;
+	GSList *a_slist, *b_slist;
+	gchar *a_list, *b_list;
 
-	g_return_if_fail( NA_IS_OBJECT_ITEM( object ));
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( a ), FALSE );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( b ), FALSE );
 
-	item = NA_OBJECT_ITEM( object );
+	are_equal = FALSE;
+	origin = NA_OBJECT_ITEM( a );
+	duplicate = NA_OBJECT_ITEM( b );
 
-	if( !item->private->dispose_has_run ){
+	if( !origin->private->dispose_has_run &&
+		!duplicate->private->dispose_has_run ){
 
-		g_debug( "| %s:      writable=%s", thisfn, item->private->writable ? "True":"False" );
-		g_debug( "| %s:        reason=%u", thisfn, item->private->reason );
+		g_debug( "%s: a=%p, b=%p", thisfn, ( void * ) a, ( void * ) b );
 
-		/* chain up to the parent class */
-		if( NA_OBJECT_CLASS( st_parent_class )->dump ){
-			NA_OBJECT_CLASS( st_parent_class )->dump( object );
-		}
+		a_slist = get_children_slist( origin );
+		a_list = na_core_utils_slist_join_at_end( a_slist, ";" );
+		na_core_utils_slist_free( a_slist );
+
+		b_slist = get_children_slist( duplicate );
+		b_list = na_core_utils_slist_join_at_end( b_slist, ";" );
+		na_core_utils_slist_free( b_slist );
+
+		are_equal = ( strcmp( a_list, b_list ) == 0 );
+
+		g_free( a_list );
+		g_free( b_list );
 	}
+
+	/* chain call to parent class */
+	if( NA_OBJECT_CLASS( st_parent_class )->are_equal ){
+		are_equal &= NA_OBJECT_CLASS( st_parent_class )->are_equal( a, b );
+	}
+
+	return( are_equal );
 }
 
 /*
@@ -291,58 +349,6 @@ object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent )
 	}
 
 	return( new_uuid );
-}
-
-/**
- * na_object_item_are_equal:
- * @a: the first (original) #NAObjectItem instance.
- * @b: the second #NAObjectItem instance.
- *
- * This function participates to the #na_iduplicable_check_status() stack,
- * and is triggered after all comparable elementary data (in #NAIFactoryObject
- * sense) have already been successfully compared.
- *
- * We have to deal here with the subitems: comparing children by their ids
- * between @a and @b.
- *
- * Note that, when called from na_object_check_status, the status of children
- * have already been checked, and so we should be able to rely on them.
- *
- * Returns: %TRUE if @a is equal to @b.
- *
- * Since: 2.30
- */
-gboolean
-na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b )
-{
-	/*static const gchar *thisfn = "na_object_item_are_equal";*/
-	gboolean equal;
-	GSList *a_slist, *b_slist;
-	gchar *a_list, *b_list;
-
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( a ), FALSE );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( b ), FALSE );
-
-	equal = FALSE;
-
-	if( !NA_OBJECT_ITEM( a )->private->dispose_has_run &&
-		!NA_OBJECT_ITEM( b )->private->dispose_has_run ){
-
-		a_slist = get_children_slist( a );
-		a_list = na_core_utils_slist_join_at_end( a_slist, ";" );
-		na_core_utils_slist_free( a_slist );
-
-		b_slist = get_children_slist( b );
-		b_list = na_core_utils_slist_join_at_end( b_slist, ";" );
-		na_core_utils_slist_free( b_slist );
-
-		equal = ( strcmp( a_list, b_list ) == 0 );
-
-		g_free( a_list );
-		g_free( b_list );
-	}
-
-	return( equal );
 }
 
 /**

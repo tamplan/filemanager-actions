@@ -76,7 +76,6 @@ static gboolean     object_is_valid( const NAObject *object );
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
@@ -160,9 +159,8 @@ class_init( NAObjectMenuClass *klass )
 	object_class->finalize = instance_finalize;
 
 	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->copy = object_copy;
 	naobject_class->dump = object_dump;
-	naobject_class->are_equal = NULL;
+	naobject_class->copy = object_copy;
 	naobject_class->is_valid = object_is_valid;
 
 	klass->private = g_new0( NAObjectMenuClassPrivate, 1 );
@@ -306,10 +304,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
-	iface->copy = NULL;
-	iface->are_equal = ifactory_object_are_equal;
 	iface->is_valid = ifactory_object_is_valid;
-	iface->read_start = NULL;
 	iface->read_done = ifactory_object_read_done;
 	iface->write_start = ifactory_object_write_start;
 	iface->write_done = ifactory_object_write_done;
@@ -325,12 +320,6 @@ static NADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( menu_data_groups );
-}
-
-static gboolean
-ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
-{
-	return( na_object_item_are_equal( NA_OBJECT_ITEM( a ), NA_OBJECT_ITEM( b )));
 }
 
 static gboolean

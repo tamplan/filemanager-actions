@@ -120,6 +120,9 @@ typedef struct {
 	 *
 	 * Compares the two objects.
 	 *
+	 * When testing for the modification status of an object, @a stands for
+	 * the original object, while @b stands for the duplicated one.
+	 *
 	 * Each derived class should take care of implementing this function
 	 * when relevant. NAObject class will take care of calling this
 	 * function for each class of the hierarchy, starting from topmost

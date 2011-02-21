@@ -79,12 +79,12 @@ static void     object_dump( const NAObject *object );
 static void     iduplicable_iface_init( NAIDuplicableInterface *iface );
 static void     iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
 static gboolean iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
-static gboolean iduplicable_are_equal_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
 static gboolean iduplicable_is_valid( const NAIDuplicable *object );
 static gboolean iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
 
 static void     check_status_down_rec( const NAObject *object );
 static void     check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was_valid );
+static gboolean v_are_equal( const NAObject *a, const NAObject *b );
 static gboolean object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data );
 static void     dump_tree( GList *tree, gint level );
 static void     iter_on_class_hierarchy( const NAObject *object, HierarchyIterFunc pfn, void *user_data );
@@ -263,7 +263,6 @@ iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 {
 	static const gchar *thisfn = "na_object_iduplicable_are_equal";
 	gboolean are_equal;
-	HierarchyIter *str;
 
 	g_return_val_if_fail( NA_IS_OBJECT( a ), FALSE );
 	g_return_val_if_fail( NA_IS_OBJECT( b ), FALSE );
@@ -275,36 +274,16 @@ iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 
 		g_debug( "%s: a=%p (%s), b=%p", thisfn, ( void * ) a, G_OBJECT_TYPE_NAME( a ), ( void * ) b );
 
+		are_equal = TRUE;
+
 		if( NA_IS_IFACTORY_OBJECT( a )){
-			are_equal = na_factory_object_are_equal( NA_IFACTORY_OBJECT( a ), NA_IFACTORY_OBJECT( b ));
-
-		} else {
-			str = g_new0( HierarchyIter, 1 );
-			str->object = NA_OBJECT( b );
-			str->result = FALSE;
-
-			iter_on_class_hierarchy( NA_OBJECT( a ), ( HierarchyIterFunc ) &iduplicable_are_equal_iter, str );
-
-			are_equal = str->result;
-
-			g_free( str );
+			are_equal &= na_factory_object_are_equal( NA_IFACTORY_OBJECT( a ), NA_IFACTORY_OBJECT( b ));
 		}
+
+		are_equal &= v_are_equal( NA_OBJECT( a ), NA_OBJECT( b ));
 	}
 
 	return( are_equal );
-}
-
-static gboolean
-iduplicable_are_equal_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str )
-{
-	gboolean stop = FALSE;
-
-	if( NA_OBJECT_CLASS( class )->are_equal ){
-		str->result = NA_OBJECT_CLASS( class )->are_equal( a, str->object );
-		stop = !str->result;
-	}
-
-	return( stop );
 }
 
 static gboolean
@@ -366,7 +345,19 @@ iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter
  * na_object_object_check_status_rec( object )
  *  +- na_iduplicable_check_status( object )
  *      +- get_origin( object )
- *      +- modified_status = v_are_equal( origin, object ) -> interface <structfield>NAObjectClass::are_equal</structfield>
+ *      +- modified_status = v_are_equal( origin, object )
+ *         +-> interface <structfield>NAObjectClass::are_equal</structfield>
+ *             which happens to be iduplicable_are_equal( a, b )
+ *              +- v_are_equal( a, b )
+ *                  +- NAObjectAction::are_equal()
+ *                      +- na_factory_object_are_equal()
+ *                      +- check NAObjectActionPrivate data
+ *                      +- call parent class
+ *                         +- NAObjectItem::are_equal()
+ *                             +- check NAObjectItemPrivate data
+ *                             +- call parent class
+ *                                 +- NAObjectId::are_equal()
+ *
  *      +- valid_status = v_is_valid( object )             -> interface <structfield>NAObjectClass::is_valid</structfield>
  *
  * Note that the recursivity is managed here, so that we can be sure
@@ -437,6 +428,16 @@ check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was
 				check_status_up_rec( NA_OBJECT( parent ), was_modified, was_valid );
 			}
 	}
+}
+
+static gboolean
+v_are_equal( const NAObject *a, const NAObject *b )
+{
+	if( NA_OBJECT_GET_CLASS( a )->are_equal ){
+		return( NA_OBJECT_GET_CLASS( a )->are_equal( a, b ));
+	}
+
+	return( TRUE );
 }
 
 /**

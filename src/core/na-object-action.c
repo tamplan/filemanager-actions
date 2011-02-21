@@ -72,14 +72,14 @@ static void         instance_set_property( GObject *object, guint property_id, c
 static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
-static void         object_copy( NAObject *target, const NAObject *source, gboolean recursive );
 static void         object_dump( const NAObject *object );
+static void         object_copy( NAObject *target, const NAObject *source, gboolean recursive );
+static gboolean     object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean     object_is_valid( const NAObject *object );
 
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static gboolean     ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b );
 static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
@@ -169,9 +169,9 @@ class_init( NAObjectActionClass *klass )
 	object_class->finalize = instance_finalize;
 
 	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->copy = object_copy;
 	naobject_class->dump = object_dump;
-	naobject_class->are_equal = NULL;
+	naobject_class->copy = object_copy;
+	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
 
 	klass->private = g_new0( NAObjectActionClassPrivate, 1 );
@@ -262,19 +262,6 @@ instance_finalize( GObject *object )
 }
 
 static void
-object_copy( NAObject *target, const NAObject *source, gboolean recursive )
-{
-	g_return_if_fail( NA_IS_OBJECT_ACTION( target ));
-	g_return_if_fail( NA_IS_OBJECT_ACTION( source ));
-
-	if( !NA_OBJECT_ACTION( target )->private->dispose_has_run &&
-		!NA_OBJECT_ACTION( source )->private->dispose_has_run ){
-
-		na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
-	}
-}
-
-static void
 object_dump( const NAObject *object )
 {
 	static const char *thisfn = "na_object_action_object_dump";
@@ -297,6 +284,51 @@ object_dump( const NAObject *object )
 	}
 }
 
+static void
+object_copy( NAObject *target, const NAObject *source, gboolean recursive )
+{
+	g_return_if_fail( NA_IS_OBJECT_ACTION( target ));
+	g_return_if_fail( NA_IS_OBJECT_ACTION( source ));
+
+	if( !NA_OBJECT_ACTION( target )->private->dispose_has_run &&
+		!NA_OBJECT_ACTION( source )->private->dispose_has_run ){
+
+		na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
+	}
+}
+
+/*
+ * @a is the original object
+ * @b is the current one
+ *
+ * Even if they have both the same children list, the current action is
+ * considered modified as soon as one of its profile is itself modified.
+ */
+static gboolean
+object_are_equal( const NAObject *a, const NAObject *b )
+{
+	static const gchar *thisfn = "na_object_action_object_are_equal";
+	GList *it;
+	gboolean are_equal;
+
+	g_debug( "%s: a=%p, b=%p", thisfn, ( void * ) a, ( void * ) b );
+
+	for( it = na_object_get_items( b ) ; it ; it = it->next ){
+		if( na_object_is_modified( it->data )){
+			return( FALSE );
+		}
+	}
+
+	are_equal = TRUE;
+
+	/* chain call to parent class */
+	if( NA_OBJECT_CLASS( st_parent_class )->are_equal ){
+		are_equal &= NA_OBJECT_CLASS( st_parent_class )->are_equal( a, b );
+	}
+
+	return( are_equal );
+}
+
 static gboolean
 object_is_valid( const NAObject *object )
 {
@@ -314,10 +346,7 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
-	iface->copy = NULL;
-	iface->are_equal = ifactory_object_are_equal;
 	iface->is_valid = ifactory_object_is_valid;
-	iface->read_start = NULL;
 	iface->read_done = ifactory_object_read_done;
 	iface->write_start = ifactory_object_write_start;
 	iface->write_done = ifactory_object_write_done;
@@ -333,29 +362,6 @@ static NADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( action_data_groups );
-}
-
-/*
- * @a is the original object
- * @b is the current one
- *
- * Even if they have both the same children list, the current action is
- * considered modified as soon as one of its profile is itself modified.
- */
-static gboolean
-ifactory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
-{
-	GList *it;
-
-	if( na_object_item_are_equal( NA_OBJECT_ITEM( a ), NA_OBJECT_ITEM( b ))){
-		for( it = na_object_get_items( b ) ; it ; it = it->next ){
-			if( na_object_is_modified( it->data )){
-				return( FALSE );
-			}
-		}
-	}
-
-	return( TRUE );
 }
 
 static gboolean

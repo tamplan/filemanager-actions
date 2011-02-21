@@ -429,6 +429,8 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 	a_list = g_object_get_data( G_OBJECT( a ), NA_IFACTORY_OBJECT_PROP_DATA );
 	b_list = g_object_get_data( G_OBJECT( b ), NA_IFACTORY_OBJECT_PROP_DATA );
 
+	g_debug( "%s: a=%p, b=%p", thisfn, ( void * ) a, ( void * ) b );
+
 	are_equal = TRUE;
 	for( ia = a_list ; ia && are_equal ; ia = ia->next ){
 
@@ -464,9 +466,7 @@ na_factory_object_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *
 		}
 	}
 
-	if( are_equal ){
-		are_equal = v_are_equal( a, b );
-	}
+	are_equal &= v_are_equal( a, b );
 
 	return( are_equal );
 }

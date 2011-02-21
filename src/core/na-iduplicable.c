@@ -365,7 +365,6 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
 	if( st_initialized && !st_finalized ){
-
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		str = get_duplicable_str( object );

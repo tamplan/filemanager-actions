@@ -92,8 +92,6 @@ typedef enum {
 
 GType       na_object_item_get_type( void );
 
-gboolean    na_object_item_are_equal( const NAObjectItem *a, const NAObjectItem *b );
-
 NAObjectId *na_object_item_get_item    ( const NAObjectItem *item, const gchar *id );
 gint        na_object_item_get_position( const NAObjectItem *item, const NAObjectId *child );
 void        na_object_item_append_item ( NAObjectItem *item, const NAObjectId *child );

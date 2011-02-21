@@ -170,9 +170,8 @@ class_init( NAObjectProfileClass *klass )
 	object_class->finalize = instance_finalize;
 
 	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->copy = object_copy;
 	naobject_class->dump = object_dump;
-	naobject_class->are_equal = NULL;
+	naobject_class->copy = object_copy;
 	naobject_class->is_valid = object_is_valid;
 
 	naobjectid_class = NA_OBJECT_ID_CLASS( klass );
@@ -321,12 +320,8 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
-	iface->copy = NULL;
-	iface->are_equal = NULL;
 	iface->is_valid = ifactory_object_is_valid;
-	iface->read_start = NULL;
 	iface->read_done = ifactory_object_read_done;
-	iface->write_start = NULL;
 	iface->write_done = ifactory_object_write_done;
 }
 

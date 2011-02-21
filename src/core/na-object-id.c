@@ -115,7 +115,6 @@ class_init( NAObjectIdClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->copy = NULL;
-	naobject_class->are_equal = NULL;
 	naobject_class->is_valid = object_is_valid;
 
 	klass->private = g_new0( NAObjectIdClassPrivate, 1 );
