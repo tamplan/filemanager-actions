@@ -457,11 +457,9 @@ get_action_from_cmdline( void )
 		g_warning( "%s", msg );
 		g_free( msg );
 	}
-	if( isfile && isdir ){
-		mimetypes = g_slist_prepend( mimetypes, g_strdup( "*/*" ));
-	} else if( isfile ){
+	if( isfile && !isdir ){
 		mimetypes = g_slist_prepend( mimetypes, g_strdup( "all/allfiles" ));
-	} else {
+	} else if( isdir && !isfile ){
 		mimetypes = g_slist_prepend( mimetypes, g_strdup( "inode/directory" ));
 	}
 	i = 0;
