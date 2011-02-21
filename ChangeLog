@@ -1,5 +1,7 @@
 2011-02-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c (get_running_environment): New function.
+
 	* src/utils/na-print-schemas.c: Also display menu schemas.
 
 	* src/core/na-icontext-factory.c (NAFO_DATA_ISFILE, NAFO_DATA_ISDIR):

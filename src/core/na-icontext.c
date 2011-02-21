@@ -59,35 +59,36 @@ static const gchar *st_mimetype_all    = "*/*";
 static gboolean     st_initialized     = FALSE;
 static gboolean     st_finalized       = FALSE;
 
-static GType    register_type( void );
-static void     interface_base_init( NAIContextInterface *klass );
-static void     interface_base_finalize( NAIContextInterface *klass );
+static GType        register_type( void );
+static void         interface_base_init( NAIContextInterface *klass );
+static void         interface_base_finalize( NAIContextInterface *klass );
 
-static gboolean v_is_candidate( NAIContext *object, guint target, GList *selection );
+static gboolean     v_is_candidate( NAIContext *object, guint target, GList *selection );
 
-static gboolean is_candidate_for_target( const NAIContext *object, guint target, GList *files );
-static gboolean is_candidate_for_show_in( const NAIContext *object, guint target, GList *files );
-static gboolean is_candidate_for_try_exec( const NAIContext *object, guint target, GList *files );
-static gboolean is_candidate_for_show_if_registered( const NAIContext *object, guint target, GList *files );
-static gboolean is_candidate_for_show_if_true( const NAIContext *object, guint target, GList *files );
-static gboolean is_candidate_for_show_if_running( const NAIContext *object, guint target, GList *files );
-static gboolean is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files );
-static gboolean is_mimetype_of( const gchar *file_type, const gchar *group, const gchar *subgroup );
-static void     split_mimetype( const gchar *mimetype, gchar **group, gchar **subgroup );
-static gboolean is_candidate_for_basenames( const NAIContext *object, guint target, GList *files );
-static gboolean is_candidate_for_selection_count( const NAIContext *object, guint target, GList *files );
-static gboolean is_candidate_for_schemes( const NAIContext *object, guint target, GList *files );
-static gboolean is_compatible_scheme( const gchar *pattern, const gchar *scheme );
-static gboolean is_candidate_for_folders( const NAIContext *object, guint target, GList *files );
-static gboolean is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_target( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_show_in( const NAIContext *object, guint target, GList *files );
+static const gchar *get_running_environment( void );
+static gboolean     is_candidate_for_try_exec( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_show_if_registered( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_show_if_true( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_show_if_running( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_mimetypes( const NAIContext *object, guint target, GList *files );
+static gboolean     is_mimetype_of( const gchar *file_type, const gchar *group, const gchar *subgroup );
+static void         split_mimetype( const gchar *mimetype, gchar **group, gchar **subgroup );
+static gboolean     is_candidate_for_basenames( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_selection_count( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_schemes( const NAIContext *object, guint target, GList *files );
+static gboolean     is_compatible_scheme( const gchar *pattern, const gchar *scheme );
+static gboolean     is_candidate_for_folders( const NAIContext *object, guint target, GList *files );
+static gboolean     is_candidate_for_capabilities( const NAIContext *object, guint target, GList *files );
 
-static gboolean is_valid_basenames( const NAIContext *object );
-static gboolean is_valid_mimetypes( const NAIContext *object );
-static gboolean is_valid_isfiledir( const NAIContext *object );
-static gboolean is_valid_schemes( const NAIContext *object );
-static gboolean is_valid_folders( const NAIContext *object );
+static gboolean     is_valid_basenames( const NAIContext *object );
+static gboolean     is_valid_mimetypes( const NAIContext *object );
+static gboolean     is_valid_isfiledir( const NAIContext *object );
+static gboolean     is_valid_schemes( const NAIContext *object );
+static gboolean     is_valid_folders( const NAIContext *object );
 
-static gboolean is_positive_assertion( const gchar *assertion );
+static gboolean     is_positive_assertion( const gchar *assertion );
 
 /**
  * na_icontext_get_type:
@@ -538,17 +539,16 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 	gboolean ok = TRUE;
 	GSList *only_in = na_object_get_only_show_in( object );
 	GSList *not_in = na_object_get_not_show_in( object );
-	gchar *environment;
+	static const gchar *environment = NULL;
 
-	/* TODO: how-to get current running environment ? */
-	environment = g_strdup( "GNOME" );
+	if( !environment ){
+		environment = get_running_environment();
+	}
 
-	if( environment && strlen( environment )){
-		if( only_in && g_slist_length( only_in )){
-			ok = ( na_core_utils_slist_count( only_in, environment ) > 0 );
-		} else if( not_in && g_slist_length( not_in )){
-			ok = ( na_core_utils_slist_count( not_in, environment ) == 0 );
-		}
+	if( only_in && g_slist_length( only_in )){
+		ok = ( na_core_utils_slist_count( only_in, environment ) > 0 );
+	} else if( not_in && g_slist_length( not_in )){
+		ok = ( na_core_utils_slist_count( not_in, environment ) == 0 );
 	}
 
 	if( !ok ){
@@ -559,11 +559,73 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 		g_free( only_str );
 	}
 
-	g_free( environment );
 	na_core_utils_slist_free( not_in );
 	na_core_utils_slist_free( only_in );
 
 	return( ok );
+}
+
+/*
+ * Have asked on xdg-list how to identify the currently running desktop environment
+ * (see)
+ * For now, just reproduce the xdg-open algorythm from xdg-utils 1.0
+ */
+#define DESKTOP_KDE   "KDE"
+#define DESKTOP_GNOME "GNOME"
+#define DESKTOP_XFCE  "XFCE"
+#define DESKTOP_OLD   "Old"
+
+static const gchar *
+get_running_environment( void )
+{
+	const gchar *value;
+	gchar *output_str, *error_str;
+	gint exit_status;
+	gboolean ok;
+
+	value = g_getenv( "KDE_FULL_SESSION" );
+	if( !strcmp( value, "true" )){
+		return( DESKTOP_KDE );
+	}
+
+	value = g_getenv( "GNOME_DESKTOP_SESSION_ID" );
+	if( strlen( value )){
+		return( DESKTOP_GNOME );
+	}
+
+	output_str = NULL;
+	error_str = NULL;
+	if( g_spawn_command_line_sync(
+			"dbus-send --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.GetNameOwner string:org.gnome.SessionManager",
+			&output_str, &error_str, &exit_status, NULL )){
+		ok = ( exit_status == 0 && output_str && strlen( output_str ) && ( !error_str || !strlen( error_str )));
+		g_free( output_str );
+		g_free( error_str );
+		if( ok ){
+			return( DESKTOP_GNOME );
+		}
+
+	}
+
+	output_str = NULL;
+	error_str = NULL;
+	if( g_spawn_command_line_sync(
+			"xprop -root _DT_SAVE_MODE", &output_str, &error_str, &exit_status, NULL )){
+		ok = ( exit_status == 0 && output_str && strlen( output_str ) && ( !error_str || !strlen( error_str )));
+		if( ok ){
+			ok = ( g_strstr_len( output_str, -1, "xfce" ) != NULL );
+		}
+		g_free( output_str );
+		g_free( error_str );
+		if( ok ){
+			return( DESKTOP_XFCE );
+		}
+	}
+
+	/* do not know how to identify ROX or LXFCE environments
+	 * other desktops are identified as 'Old' (legacy systems)
+	 */
+	return( DESKTOP_OLD );
 }
 
 /*
