@@ -272,7 +272,7 @@ na_icontext_check_mimetypes( const NAIContext *context )
 
 	for( im = mimetypes ; im ; im = im->next ){
 		if( !im->data || !strlen( im->data )){
-			g_warning( "%s: empty mimetype for context=%p", thisfn, ( void * ) context );
+			g_debug( "%s: empty mimetype for context=%p", thisfn, ( void * ) context );
 			continue;
 		}
 		const gchar *imtype = ( const gchar * ) im->data;
@@ -1228,7 +1228,7 @@ is_valid_mimetypes( const NAIContext *object )
 		imtype = ( const gchar * ) it->data;
 
 		if( !imtype || !strlen( imtype )){
-			g_warning( "%s: null or empty mimetype", thisfn );
+			g_debug( "%s: null or empty mimetype", thisfn );
 			count_errs +=1;
 			continue;
 		}
@@ -1236,12 +1236,12 @@ is_valid_mimetypes( const NAIContext *object )
 		if( imtype[0] == '*' ){
 			if( imtype[1] ){
 				if( imtype[1] != '/' ){
-					g_warning( "%s: invalid mimetype: %s", thisfn, imtype );
+					g_debug( "%s: invalid mimetype: %s", thisfn, imtype );
 					count_errs +=1;
 					continue;
 				}
 				if( imtype[2] && imtype[2] != '*' ){
-					g_warning( "%s: invalid mimetype: %s", thisfn, imtype );
+					g_debug( "%s: invalid mimetype: %s", thisfn, imtype );
 					count_errs +=1;
 					continue;
 				}
