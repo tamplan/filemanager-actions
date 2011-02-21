@@ -317,6 +317,21 @@ na_icontext_check_mimetypes( const NAIContext *context )
 }
 
 /**
+ * na_icontext_copy:
+ * @context: the target #NAIContext context.
+ * @source: the source #NAIContext context.
+ *
+ * Copy specific data from @source to @context.
+ *
+ * Since: 3.1.0
+ */
+void
+na_icontext_copy( NAIContext *context, const NAIContext *source )
+{
+	/* nothing to do for now */
+}
+
+/**
  * na_icontext_read_done:
  * @context: the #NAIContext to be prepared.
  *

@@ -259,6 +259,11 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 
 		dest->private->writable = src->private->writable;
 		dest->private->reason = src->private->reason;
+
+		/* chain up to the parent class */
+		if( NA_OBJECT_CLASS( st_parent_class )->copy ){
+			NA_OBJECT_CLASS( st_parent_class )->copy( target, source, recursive );
+		}
 	}
 }
 

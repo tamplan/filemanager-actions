@@ -69,7 +69,6 @@ static void         instance_set_property( GObject *object, guint property_id, c
 static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
-static void         object_copy( NAObject *target, const NAObject *source, gboolean recursive );
 static void         object_dump( const NAObject *object );
 
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
@@ -155,7 +154,6 @@ class_init( NAObjectMenuClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
-	naobject_class->copy = object_copy;
 
 	klass->private = g_new0( NAObjectMenuClassPrivate, 1 );
 
@@ -242,19 +240,6 @@ instance_finalize( GObject *object )
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
-	}
-}
-
-static void
-object_copy( NAObject *target, const NAObject *source, gboolean recursive )
-{
-	g_return_if_fail( NA_IS_OBJECT_MENU( target ));
-	g_return_if_fail( NA_IS_OBJECT_MENU( source ));
-
-	if( !NA_OBJECT_MENU( target )->private->dispose_has_run &&
-		!NA_OBJECT_MENU( source )->private->dispose_has_run ){
-
-		na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
 	}
 }
 

@@ -101,8 +101,8 @@ gboolean na_icontext_is_valid        ( const NAIContext *context );
 
 void     na_icontext_check_mimetypes ( const NAIContext *context );
 
+void     na_icontext_copy            ( NAIContext *context, const NAIContext *source );
 void     na_icontext_read_done       ( NAIContext *context );
-
 void     na_icontext_set_scheme      ( NAIContext *context, const gchar *scheme, gboolean selected );
 void     na_icontext_set_only_desktop( NAIContext *context, const gchar *desktop, gboolean selected );
 void     na_icontext_set_not_desktop ( NAIContext *context, const gchar *desktop, gboolean selected );

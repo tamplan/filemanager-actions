@@ -73,7 +73,6 @@ static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
 static void         object_dump( const NAObject *object );
-static void         object_copy( NAObject *target, const NAObject *source, gboolean recursive );
 static gboolean     object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean     object_is_valid( const NAObject *object );
 
@@ -168,7 +167,6 @@ class_init( NAObjectActionClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
-	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
 	naobject_class->is_valid = object_is_valid;
 
@@ -279,19 +277,6 @@ object_dump( const NAObject *object )
 		}
 
 		g_debug( "+- end of dump" );
-	}
-}
-
-static void
-object_copy( NAObject *target, const NAObject *source, gboolean recursive )
-{
-	g_return_if_fail( NA_IS_OBJECT_ACTION( target ));
-	g_return_if_fail( NA_IS_OBJECT_ACTION( source ));
-
-	if( !NA_OBJECT_ACTION( target )->private->dispose_has_run &&
-		!NA_OBJECT_ACTION( source )->private->dispose_has_run ){
-
-		na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
 	}
 }
 

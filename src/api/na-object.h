@@ -170,13 +170,11 @@ void      na_object_object_reset_origin   ( NAObject *object, const NAObject *or
 NAObject *na_object_object_ref  ( NAObject *object );
 void      na_object_object_unref( NAObject *object );
 
-void      na_object_object_copy      ( NAObject *target, const NAObject *source, gboolean recursive );
-
 void      na_object_object_dump      ( const NAObject *object );
 void      na_object_object_dump_norec( const NAObject *object );
 void      na_object_object_dump_tree ( GList *tree );
 
-GList    *na_object_object_get_hierarchy( const NAObject *object );
+GList    *na_object_get_hierarchy( const NAObject *object );
 void      na_object_free_hierarchy( GList *hierarchy );
 
 void      na_object_object_debug_invalid( const NAObject *object, const gchar *reason );

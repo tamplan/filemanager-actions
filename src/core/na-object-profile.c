@@ -73,7 +73,6 @@ static void         instance_set_property( GObject *object, guint property_id, c
 static void         instance_dispose( GObject *object );
 static void         instance_finalize( GObject *object );
 
-static void         object_copy( NAObject *target, const NAObject *source, gboolean recursive );
 static void         object_dump( const NAObject *object );
 static gboolean     object_is_valid( const NAObject *object );
 
@@ -169,7 +168,6 @@ class_init( NAObjectProfileClass *klass )
 
 	naobject_class = NA_OBJECT_CLASS( klass );
 	naobject_class->dump = object_dump;
-	naobject_class->copy = object_copy;
 	naobject_class->is_valid = object_is_valid;
 
 	naobjectid_class = NA_OBJECT_ID_CLASS( klass );
@@ -266,19 +264,6 @@ instance_finalize( GObject *object )
 }
 
 static void
-object_copy( NAObject *target, const NAObject *source, gboolean recursive )
-{
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( target ));
-	g_return_if_fail( NA_IS_OBJECT_PROFILE( source ));
-
-	if( !NA_OBJECT_PROFILE( target )->private->dispose_has_run &&
-		!NA_OBJECT_PROFILE( source )->private->dispose_has_run ){
-
-		na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
-	}
-}
-
-static void
 object_dump( const NAObject *object )
 {
 	static const char *thisfn = "na_object_profile_object_dump";
@@ -317,11 +302,11 @@ object_is_valid( const NAObject *object )
 		g_debug( "%s: profile=%p (%s)", thisfn, ( void * ) profile, G_OBJECT_TYPE_NAME( profile ));
 
 		is_valid = is_valid_path_parameters( profile );
-	}
 
-	/* chain up to the parent class */
-	if( NA_OBJECT_CLASS( st_parent_class )->is_valid ){
-		is_valid &= NA_OBJECT_CLASS( st_parent_class )->is_valid( object );
+		/* chain up to the parent class */
+		if( NA_OBJECT_CLASS( st_parent_class )->is_valid ){
+			is_valid &= NA_OBJECT_CLASS( st_parent_class )->is_valid( object );
+		}
 	}
 
 	return( is_valid );
