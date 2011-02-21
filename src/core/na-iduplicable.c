@@ -553,7 +553,7 @@ v_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 		return( NA_IDUPLICABLE_GET_INTERFACE( a )->are_equal( a, b ));
 	}
 
-	return( FALSE );
+	return( TRUE );
 }
 
 static gboolean
@@ -563,7 +563,7 @@ v_is_valid( const NAIDuplicable *object )
 		return( NA_IDUPLICABLE_GET_INTERFACE( object )->is_valid( object ));
 	}
 
-	return( FALSE );
+	return( TRUE );
 }
 
 /**

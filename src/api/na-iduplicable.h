@@ -159,6 +159,9 @@ typedef struct {
 	 * care itself of calling each function in the class hierarchy,
 	 * from topmost base class to most-derived one.
 	 *
+	 * When testing for the modification status of an object, @a stands for
+	 * the original object, while @b stands for the duplicated one.
+	 *
 	 * Returns: TRUE if @a and @b are identical, FALSE else.
 	 *
 	 * Since: 2.30
