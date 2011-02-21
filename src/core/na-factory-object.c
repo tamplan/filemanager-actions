@@ -492,7 +492,7 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
 	is_valid = TRUE;
 
-	/* mndatory data must be set
+	/* mandatory data must be set
 	 */
 	NafoValidIter iter_data;
 	iter_data.object = ( NAIFactoryObject * ) object;
@@ -508,9 +508,7 @@ na_factory_object_is_valid( const NAIFactoryObject *object )
 		is_valid = na_data_boxed_is_valid( NA_DATA_BOXED( iv->data ));
 	}
 
-	if( is_valid ){
-		is_valid = v_is_valid( object );
-	}
+	is_valid &= v_is_valid( object );
 
 	return( is_valid );
 }
@@ -862,15 +860,11 @@ v_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
 static gboolean
 v_are_equal( const NAIFactoryObject *a, const NAIFactoryObject *b )
 {
-	gboolean are_equal;
-
-	are_equal = TRUE;
-
 	if( NA_IFACTORY_OBJECT_GET_INTERFACE( a )->are_equal ){
-		are_equal = NA_IFACTORY_OBJECT_GET_INTERFACE( a )->are_equal( a, b );
+		return( NA_IFACTORY_OBJECT_GET_INTERFACE( a )->are_equal( a, b ));
 	}
 
-	return( are_equal );
+	return( TRUE );
 }
 
 static gboolean
@@ -880,7 +874,7 @@ v_is_valid( const NAIFactoryObject *object )
 		return( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->is_valid( object ));
 	}
 
-	return( FALSE );
+	return( TRUE );
 }
 
 static void

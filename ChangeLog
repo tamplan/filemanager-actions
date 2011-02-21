@@ -1,5 +1,19 @@
 2011-02-21 Pierre Wieser <pwieser@trychlos.org>
 
+	Rewrite validity status check stack
+
+	* src/api/na-icontext.h:
+	* src/core/na-icontext.c (na_icontext_are_equal): New function.
+
+	* src/core/na-factory-object.c (na_factory_object_is_valid):
+	* src/core/na-object.c (iduplicable_is_valid):
+	* src/core/na-object-id.c (object_is_valid):
+	* src/core/na-object-id-factory.c:
+	* src/core/na-object-item.c (object_is_valid):
+	* src/core/na-object-action.c (object_is_valid):
+	* src/core/na-object-profile.c (object_is_valid):
+	* src/core/na-object-menu.c (object_is_valid): Updated accordingly.
+
 	Rewrite modification status check stack
 
 	* src/api/na-object-item.h:

@@ -54,7 +54,7 @@ NADataDef data_def_id [] = {
 				FALSE,
 				TRUE,
 				TRUE,
-				TRUE,
+				TRUE,			/* mandatory */
 				FALSE,
 				NULL,
 				NULL,

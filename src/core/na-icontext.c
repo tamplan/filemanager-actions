@@ -168,6 +168,31 @@ interface_base_finalize( NAIContextInterface *klass )
 }
 
 /**
+ * na_icontext_are_equal:
+ * @a: the (original) #NAIContext context.
+ * @b: the (duplicated) #NAIContext context to be checked.
+ *
+ * Returns: %TRUE if this @a and @b are equal, %FALSE else.
+ *
+ * Since: 3.1.0
+ */
+gboolean
+na_icontext_are_equal( const NAIContext *a, const NAIContext *b )
+{
+	static const gchar *thisfn = "na_icontext_are_equal";
+	gboolean are_equal;
+
+	g_return_val_if_fail( NA_IS_ICONTEXT( a ), FALSE );
+	g_return_val_if_fail( NA_IS_ICONTEXT( b ), FALSE );
+
+	g_debug( "%s: a=%p, b=%p", thisfn, ( void * ) a, ( void * ) b );
+
+	are_equal = TRUE;
+
+	return( are_equal );
+}
+
+/**
  * na_icontext_is_candidate:
  * @context: a #NAIContext to be checked.
  * @target: the current target.
@@ -221,7 +246,7 @@ na_icontext_is_candidate( const NAIContext *context, guint target, GList *select
 
 /**
  * na_icontext_is_valid:
- * @context: the #NAObjectProfile to be checked.
+ * @context: the #NAIContext to be checked.
  *
  * Returns: %TRUE if this @context is valid, %FALSE else.
  *
@@ -236,9 +261,12 @@ na_icontext_is_candidate( const NAIContext *context, guint target, GList *select
 gboolean
 na_icontext_is_valid( const NAIContext *context )
 {
+	static const gchar *thisfn = "na_icontext_is_valid";
 	gboolean is_valid;
 
 	g_return_val_if_fail( NA_IS_ICONTEXT( context ), FALSE );
+
+	g_debug( "%s: context=%p (%s)", thisfn, ( void * ) context, G_OBJECT_TYPE_NAME( context ));
 
 	is_valid =
 		is_valid_basenames( context ) &&

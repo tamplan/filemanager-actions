@@ -71,6 +71,7 @@ static void     instance_finalize( GObject *object );
 static void     object_dump( const NAObject *object );
 static void     object_copy( NAObject*target, const NAObject *source, gboolean recursive );
 static gboolean object_are_equal( const NAObject *a, const NAObject *b );
+static gboolean object_is_valid( const NAObject *object );
 
 static gchar   *object_id_new_id( const NAObjectId *item, const NAObjectId *new_parent );
 
@@ -135,7 +136,7 @@ class_init( NAObjectItemClass *klass )
 	naobject_class->dump = object_dump;
 	naobject_class->copy = object_copy;
 	naobject_class->are_equal = object_are_equal;
-	naobject_class->is_valid = NULL;
+	naobject_class->is_valid = object_is_valid;
 
 	naobjectid_class = NA_OBJECT_ID_CLASS( klass );
 	naobjectid_class->new_id = object_id_new_id;
@@ -316,6 +317,51 @@ object_are_equal( const NAObject *a, const NAObject *b )
 	}
 
 	return( are_equal );
+}
+
+/*
+ * must have at least one valid subitem
+ */
+static gboolean
+object_is_valid( const NAObject *object )
+{
+	static const gchar *thisfn = "na_object_item_object_is_valid";
+	gboolean is_valid;
+	NAObjectItem *item;
+	GList *children, *ic;
+	gint valid_children;
+
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( object ), FALSE );
+
+	is_valid = FALSE;
+	item = NA_OBJECT_ITEM( object );
+
+	if( !item->private->dispose_has_run ){
+		g_debug( "%s: item=%p (%s)", thisfn, ( void * ) item, G_OBJECT_TYPE_NAME( item ));
+
+		is_valid = TRUE;
+
+		valid_children = 0;
+		children = na_object_get_items( item );
+		for( ic = children ; ic && !valid_children ; ic = ic->next ){
+			if( na_object_is_valid( ic->data )){
+				valid_children += 1;
+			}
+		}
+
+		is_valid &= ( valid_children > 0 );
+
+		if( !is_valid ){
+			na_object_debug_invalid( item, "no valid child" );
+		}
+	}
+
+	/* chain up to the parent class */
+	if( NA_OBJECT_CLASS( st_parent_class )->is_valid ){
+		is_valid &= NA_OBJECT_CLASS( st_parent_class )->is_valid( object );
+	}
+
+	return( is_valid );
 }
 
 /*

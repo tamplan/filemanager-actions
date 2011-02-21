@@ -80,7 +80,6 @@ static gboolean     object_is_valid( const NAObject *object );
 static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
-static gboolean     ifactory_object_is_valid( const NAIFactoryObject *object );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
@@ -93,7 +92,6 @@ static void         read_done_deals_with_toolbar_label( NAIFactoryObject *instan
 
 static guint        write_done_write_profiles( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static gboolean     object_object_is_valid( const NAObjectAction *action );
 static gboolean     is_valid_label( const NAObjectAction *action );
 static gboolean     is_valid_toolbar_label( const NAObjectAction *action );
 
@@ -332,9 +330,39 @@ object_are_equal( const NAObject *a, const NAObject *b )
 static gboolean
 object_is_valid( const NAObject *object )
 {
+	static const gchar *thisfn = "na_object_action_object_is_valid";
+	gboolean is_valid;
+	NAObjectAction *action;
+
 	g_return_val_if_fail( NA_IS_OBJECT_ACTION( object ), FALSE );
 
-	return( object_object_is_valid( NA_OBJECT_ACTION( object )));
+	is_valid = FALSE;
+	action = NA_OBJECT_ACTION( object );
+
+	if( !action->private->dispose_has_run ){
+		g_debug( "%s: action=%p (%s)", thisfn, ( void * ) action, G_OBJECT_TYPE_NAME( action ));
+
+		is_valid = TRUE;
+
+		if( na_object_is_target_toolbar( action )){
+			is_valid &= is_valid_toolbar_label( action );
+		}
+
+		if( na_object_is_target_selection( action ) || na_object_is_target_location( action )){
+			is_valid &= is_valid_label( action );
+		}
+
+		if( !is_valid ){
+			na_object_debug_invalid( action, "no valid profile" );
+		}
+	}
+
+	/* chain up to the parent class */
+	if( NA_OBJECT_CLASS( st_parent_class )->is_valid ){
+		is_valid &= NA_OBJECT_CLASS( st_parent_class )->is_valid( object );
+	}
+
+	return( is_valid );
 }
 
 static void
@@ -346,7 +374,6 @@ ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
-	iface->is_valid = ifactory_object_is_valid;
 	iface->read_done = ifactory_object_read_done;
 	iface->write_start = ifactory_object_write_start;
 	iface->write_done = ifactory_object_write_done;
@@ -362,14 +389,6 @@ static NADataGroup *
 ifactory_object_get_groups( const NAIFactoryObject *instance )
 {
 	return( action_data_groups );
-}
-
-static gboolean
-ifactory_object_is_valid( const NAIFactoryObject *object )
-{
-	g_return_val_if_fail( NA_IS_OBJECT_ACTION( object ), FALSE );
-
-	return( object_object_is_valid( NA_OBJECT_ACTION( object )));
 }
 
 /*
@@ -559,49 +578,6 @@ write_done_write_profiles( NAIFactoryObject *instance, const NAIFactoryProvider 
 	}
 
 	return( code );
-}
-
-static gboolean
-object_object_is_valid( const NAObjectAction *action )
-{
-	gboolean is_valid;
-	GList *profiles, *ip;
-	gint valid_profiles;
-
-	is_valid = FALSE;
-
-	if( !action->private->dispose_has_run ){
-
-		is_valid = TRUE;
-
-		if( is_valid ){
-			if( na_object_is_target_toolbar( action )){
-				is_valid = is_valid_toolbar_label( action );
-			}
-		}
-
-		if( is_valid ){
-			if( na_object_is_target_selection( action )){
-				is_valid = is_valid_label( action );
-			}
-		}
-
-		if( is_valid ){
-			valid_profiles = 0;
-			profiles = na_object_get_items( action );
-			for( ip = profiles ; ip && !valid_profiles ; ip = ip->next ){
-				if( na_object_is_valid( ip->data )){
-					valid_profiles += 1;
-				}
-			}
-			is_valid = ( valid_profiles > 0 );
-			if( !is_valid ){
-				na_object_debug_invalid( action, "no valid profile" );
-			}
-		}
-	}
-
-	return( is_valid );
 }
 
 static gboolean

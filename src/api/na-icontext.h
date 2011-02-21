@@ -95,6 +95,7 @@ typedef struct {
 
 GType    na_icontext_get_type( void );
 
+gboolean na_icontext_are_equal       ( const NAIContext *a, const NAIContext *b );
 gboolean na_icontext_is_candidate    ( const NAIContext *context, guint target, GList *selection );
 gboolean na_icontext_is_valid        ( const NAIContext *context );
 

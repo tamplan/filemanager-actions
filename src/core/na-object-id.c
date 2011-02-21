@@ -57,8 +57,6 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
-static gboolean object_is_valid( const NAObject *object );
-
 static gchar   *v_new_id( const NAObjectId *object, const NAObjectId *new_parent );
 
 GType
@@ -103,7 +101,6 @@ class_init( NAObjectIdClass *klass )
 {
 	static const gchar *thisfn = "na_object_id_class_init";
 	GObjectClass *object_class;
-	NAObjectClass *naobject_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -112,10 +109,6 @@ class_init( NAObjectIdClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-
-	naobject_class = NA_OBJECT_CLASS( klass );
-	naobject_class->copy = NULL;
-	naobject_class->is_valid = object_is_valid;
 
 	klass->private = g_new0( NAObjectIdClassPrivate, 1 );
 }
@@ -185,26 +178,6 @@ instance_finalize( GObject *object )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
-}
-
-/*
- * a NAObjectId is valid if it has a non-null id
- */
-static gboolean
-object_is_valid( const NAObject *object )
-{
-	gboolean is_valid;
-	gchar *id;
-
-	is_valid = TRUE;
-
-	if( is_valid ){
-		id = na_object_get_id( object );
-		is_valid = ( id != NULL && strlen( id ) > 0 );
-		g_free( id );
-	}
-
-	return( is_valid );
 }
 
 /**

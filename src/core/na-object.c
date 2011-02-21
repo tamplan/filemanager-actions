@@ -80,11 +80,11 @@ static void     iduplicable_iface_init( NAIDuplicableInterface *iface );
 static void     iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
 static gboolean iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
 static gboolean iduplicable_is_valid( const NAIDuplicable *object );
-static gboolean iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str );
 
 static void     check_status_down_rec( const NAObject *object );
 static void     check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was_valid );
 static gboolean v_are_equal( const NAObject *a, const NAObject *b );
+static gboolean v_is_valid( const NAObject *a );
 static gboolean object_copy_iter( GObjectClass *class, const NAObject *source, CopyIter *data );
 static void     dump_tree( GList *tree, gint level );
 static void     iter_on_class_hierarchy( const NAObject *object, HierarchyIterFunc pfn, void *user_data );
@@ -280,6 +280,10 @@ iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b )
 			are_equal &= na_factory_object_are_equal( NA_IFACTORY_OBJECT( a ), NA_IFACTORY_OBJECT( b ));
 		}
 
+		if( NA_IS_ICONTEXT( a )){
+			are_equal &= na_icontext_are_equal( NA_ICONTEXT( a ), NA_ICONTEXT( b ));
+		}
+
 		are_equal &= v_are_equal( NA_OBJECT( a ), NA_OBJECT( b ));
 	}
 
@@ -291,7 +295,6 @@ iduplicable_is_valid( const NAIDuplicable *object )
 {
 	static const gchar *thisfn = "na_object_iduplicable_is_valid";
 	gboolean is_valid;
-	HierarchyIter *str;
 
 	g_return_val_if_fail( NA_IS_OBJECT( object ), FALSE );
 
@@ -300,36 +303,20 @@ iduplicable_is_valid( const NAIDuplicable *object )
 	if( !NA_OBJECT( object )->private->dispose_has_run ){
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
+		is_valid = TRUE;
+
 		if( NA_IS_IFACTORY_OBJECT( object )){
-			is_valid = na_factory_object_is_valid( NA_IFACTORY_OBJECT( object ));
-
-		} else {
-			g_debug( "%s: object=%p (%s): iterating on class hierarchy",
-					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
-			str = g_new0( HierarchyIter, 1 );
-			str->result = TRUE;
-			iter_on_class_hierarchy( NA_OBJECT( object ), ( HierarchyIterFunc ) &iduplicable_is_valid_iter, str );
-			is_valid = str->result;
-			g_free( str );
+			is_valid &= na_factory_object_is_valid( NA_IFACTORY_OBJECT( object ));
 		}
+
+		if( NA_IS_ICONTEXT( object )){
+			is_valid &= na_icontext_is_valid( NA_ICONTEXT( object ));
+		}
+
+		is_valid &= v_is_valid( NA_OBJECT( object ));
 	}
 
 	return( is_valid );
-}
-
-static gboolean
-iduplicable_is_valid_iter( GObjectClass *class, const NAObject *a, HierarchyIter *str )
-{
-	gboolean stop = FALSE;
-
-	if( NA_OBJECT_CLASS( class )->is_valid ){
-
-		str->result = NA_OBJECT_CLASS( class )->is_valid( a );
-		stop = !str->result;
-	}
-
-	return( stop );
 }
 
 /**
@@ -435,6 +422,16 @@ v_are_equal( const NAObject *a, const NAObject *b )
 {
 	if( NA_OBJECT_GET_CLASS( a )->are_equal ){
 		return( NA_OBJECT_GET_CLASS( a )->are_equal( a, b ));
+	}
+
+	return( TRUE );
+}
+
+static gboolean
+v_is_valid( const NAObject *a )
+{
+	if( NA_OBJECT_GET_CLASS( a )->is_valid ){
+		return( NA_OBJECT_GET_CLASS( a )->is_valid( a ));
 	}
 
 	return( TRUE );
