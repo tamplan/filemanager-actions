@@ -97,7 +97,8 @@ GType    na_icontext_get_type( void );
 
 gboolean na_icontext_is_candidate    ( const NAIContext *context, guint target, GList *selection );
 gboolean na_icontext_is_valid        ( const NAIContext *context );
-gboolean na_icontext_is_all_mimetypes( const NAIContext *context );
+
+void     na_icontext_check_mimetypes ( const NAIContext *context );
 
 void     na_icontext_read_done       ( NAIContext *context );
 

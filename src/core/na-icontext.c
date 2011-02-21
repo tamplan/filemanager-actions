@@ -251,17 +251,18 @@ na_icontext_is_valid( const NAIContext *context )
 }
 
 /**
- * na_icontext_is_all_mimetypes:
+ * na_icontext_check_mimetypes:
  * @context: the #NAIContext object to be checked.
  *
- * Returns: %TRUE if this @context is valid for all mimetypes, %FALSE else.
+ * Check the current list of mimetypes to see if it covers all mimetypes,
+ * or all regular files, or something else.
  *
  * Since: 2.30
  */
-gboolean
-na_icontext_is_all_mimetypes( const NAIContext *context )
+void
+na_icontext_check_mimetypes( const NAIContext *context )
 {
-	static const gchar *thisfn = "na_icontext_is_all_mimetypes";
+	static const gchar *thisfn = "na_icontext_check_mimetypes";
 	gboolean is_all;
 	GSList *mimetypes, *im;
 
@@ -288,9 +289,9 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
 		/* do not break here so that we are able to check all mimetypes */
 	}
 
-	na_core_utils_slist_free( mimetypes );
+	na_object_set_all_mimetypes( context, is_all );
 
-	return( is_all );
+	na_core_utils_slist_free( mimetypes );
 }
 
 /**
@@ -300,11 +301,6 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
  * Prepares the specified #NAIContext just after it has been read.
  *
  * <itemizedlist>
- *   <listitem>
- *     <para>
- *       This converts a 'all/allfiles' mimetype to 'all/all' + 'file' scheme.
- *     </para>
- *   </listitem>
  *   <listitem>
  *     <para>
  *       This setup an internal flag when mimetypes is like 'all/all'
@@ -318,7 +314,7 @@ na_icontext_is_all_mimetypes( const NAIContext *context )
 void
 na_icontext_read_done( NAIContext *context )
 {
-	na_object_set_all_mimetypes( context, na_icontext_is_all_mimetypes( context ));
+	na_object_check_mimetypes( context );
 }
 
 /**

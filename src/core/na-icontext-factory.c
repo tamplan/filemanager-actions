@@ -134,12 +134,14 @@ NADataDef data_def_conditions [] = {
 				/* i18n: "<EXPR>" is just an abbreviation for "an expression", so is tranlatable */
 				N_( "<EXPR>" ) },
 
-	/* a runtime boolean set to TRUE if we detect that the previous string list
-	 * just cover all mimetypes - this let us optimize the check for candidate
-	 * in the menu plugin
-	 * when FALSE, than we have to check each and every mimetype :(
+	/* A runtime boolean set to TRUE if we detect that the previous string list
+	 * just cover all mimetypes: this let us optimize the check for candidates
+	 * in the menu plugin.
+	 * When FALSE, than we have to check each and every mimetype :(
+	 * This value is set when loading a pre-v3 profile, and then reset each time
+	 * we update the list of mimetypes.
 	 */
-	{ NAFO_DATA_ALL_MIMETYPES,
+	{ NAFO_DATA_MIMETYPES_IS_ALL,
 				FALSE,
 				FALSE,
 				TRUE,

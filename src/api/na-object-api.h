@@ -182,10 +182,12 @@ G_BEGIN_DECLS
 
 /* NAIContext
  */
+#define na_object_check_mimetypes( obj )                na_icontext_check_mimetypes( NA_ICONTEXT( obj ))
+
 #define na_object_get_basenames( obj )                  (( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_BASENAMES ))
 #define na_object_get_matchcase( obj )                  (( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MATCHCASE )))
 #define na_object_get_mimetypes( obj )                  (( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES ))
-#define na_object_get_all_mimetypes( obj )              (( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ALL_MIMETYPES )))
+#define na_object_get_all_mimetypes( obj )              (( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES_IS_ALL )))
 #define na_object_get_folders( obj )                    (( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_FOLDERS ))
 #define na_object_get_schemes( obj )                    (( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SCHEMES ))
 #define na_object_get_only_show_in( obj )               (( GSList * ) na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ONLY_SHOW ))
@@ -200,7 +202,7 @@ G_BEGIN_DECLS
 #define na_object_set_basenames( obj, bnames )          na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_BASENAMES, ( const void * )( bnames ))
 #define na_object_set_matchcase( obj, match )           na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MATCHCASE, ( const void * ) GUINT_TO_POINTER( match ))
 #define na_object_set_mimetypes( obj, types )           na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES, ( const void * )( types ))
-#define na_object_set_all_mimetypes( obj, all )         na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ALL_MIMETYPES, ( const void * ) GUINT_TO_POINTER( all ))
+#define na_object_set_all_mimetypes( obj, all )         na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MIMETYPES_IS_ALL, ( const void * ) GUINT_TO_POINTER( all ))
 #define na_object_set_folders( obj, folders )           na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_FOLDERS, ( const void * )( folders ))
 #define na_object_replace_folder( obj, old, new )       na_icontext_replace_folder( NA_ICONTEXT( obj ), ( const gchar * )( old ), ( const gchar * )( new ))
 #define na_object_set_scheme( obj, scheme, add )        na_icontext_set_scheme( NA_ICONTEXT( obj ), ( const gchar * )( scheme ), ( add ))
