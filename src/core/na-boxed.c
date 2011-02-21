@@ -1153,12 +1153,12 @@ string_list_from_string( NABoxed *boxed, const gchar *string )
 	if( array ){
 		i = ( gchar ** ) array;
 		while( *i ){
-			boxed->private->u.string_list = g_slist_prepend( boxed->private->u.string_list, g_strdup( *i ));
+			if( !na_core_utils_slist_count( boxed->private->u.string_list, ( const gchar * )( *i ))){
+				boxed->private->u.string_list = g_slist_prepend( boxed->private->u.string_list, g_strdup( *i ));
+			}
 			i++;
 		}
 		boxed->private->u.string_list = g_slist_reverse( boxed->private->u.string_list );
-	} else {
-		boxed->private->u.string_list = NULL;
 	}
 
 	g_strfreev( array );
@@ -1167,16 +1167,20 @@ string_list_from_string( NABoxed *boxed, const gchar *string )
 static void
 string_list_from_value( NABoxed *boxed, const GValue *value )
 {
-	if( g_value_get_pointer( value )){
-		boxed->private->u.string_list = na_core_utils_slist_duplicate( g_value_get_pointer( value ));
-	}
+	string_list_from_void( boxed, ( const void * ) g_value_get_pointer( value ));
 }
 
 static void
 string_list_from_void( NABoxed *boxed, const void *value )
 {
-	if( value ){
-		boxed->private->u.string_list = na_core_utils_slist_duplicate(( GSList * ) value );
+	GSList *value_slist;
+	GSList *it;
+
+	value_slist = ( GSList * ) value;
+	for( it = value_slist ; it ; it = it->next ){
+		if( !na_core_utils_slist_count( boxed->private->u.string_list, ( const gchar * ) it->data )){
+			boxed->private->u.string_list = g_slist_prepend( boxed->private->u.string_list, g_strdup(( const gchar * ) it->data ));
+		}
 	}
 }
 

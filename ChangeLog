@@ -1,5 +1,8 @@
 2011-02-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-boxed.c (string_list_from_string,
+	string_list_from_value, string_list_from_void): Check for duplicates.
+
 	* src/utils/nautilus-actions-new.c: Fix default mimetype.
 
 	* src/core/na-icontext.c (get_running_environment): New function.
