@@ -103,11 +103,8 @@ typedef struct {
 	 *
 	 * Copies data and properties from @source to @target.
 	 *
-	 * Each derived class should take care of implementing this function
-	 * when relevant. NAObject class will take care of calling this
-	 * function for each class of the hierarchy, starting from topmost
-	 * base class up to the most-derived one. Each class has so only to
-	 * take care of dumping its own data.
+	 * The derived class should call its parent class at the end of the
+	 * copy of its own datas.
 	 *
 	 * Since: 2.30
 	 */
@@ -123,12 +120,9 @@ typedef struct {
 	 * When testing for the modification status of an object, @a stands for
 	 * the original object, while @b stands for the duplicated one.
 	 *
-	 * Each derived class should take care of implementing this function
-	 * when relevant. NAObject class will take care of calling this
-	 * function for each class of the hierarchy, starting from topmost
-	 * base class up to the most-derived one, at least while result
-	 * stays at TRUE.
-	 * As soon as a difference is detected, the calling sequence will
+	 * As long as no difference is detected, the derived class should call
+	 * its parent class at the end of its comparison.
+	 * As soon as a difference is detected, the calling sequence should
 	 * be stopped, and the result returned.
 	 *
 	 * Returns: TRUE if @a and @b are identical, FALSE else.
@@ -145,13 +139,10 @@ typedef struct {
 	 *
 	 * A NAObject is valid if its internal identifier is set.
 	 *
-	 * Each derived class should take care of implementing this function
-	 * when relevant. NAObject class will take care of calling this
-	 * function for each class of the hierarchy, starting from topmost
-	 * base class up to the most-derived one, at least while result
-	 * stays at TRUE.
-	 * As soon as a difference is detected, the calling sequence will
-	 * be stopped, and the result returned.
+	 * As long as the item is valid, the derived class should call its parent
+	 * at the end of its checks.
+	 * As soon as an error is detected, the calling sequence should be stopped,
+	 * and the result returned.
 	 *
 	 * Returns: TRUE if @object is valid, FALSE else.
 	 *
@@ -174,8 +165,10 @@ void      na_object_object_dump      ( const NAObject *object );
 void      na_object_object_dump_norec( const NAObject *object );
 void      na_object_object_dump_tree ( GList *tree );
 
+#ifndef NA_DISABLE_DEPRECATED
 GList    *na_object_get_hierarchy( const NAObject *object );
 void      na_object_free_hierarchy( GList *hierarchy );
+#endif
 
 void      na_object_object_debug_invalid( const NAObject *object, const gchar *reason );
 

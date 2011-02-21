@@ -69,7 +69,6 @@ static void     v_copy( NAObject *target, const NAObject *source, gboolean recur
 static gboolean v_are_equal( const NAObject *a, const NAObject *b );
 static gboolean v_is_valid( const NAObject *a );
 static void     dump_tree( GList *tree, gint level );
-static GList   *build_class_hierarchy( const NAObject *object );
 
 GType
 na_object_object_get_type( void )
@@ -647,6 +646,7 @@ na_object_object_unref( NAObject *object )
 	}
 }
 
+#ifndef NA_DISABLE_DEPRECATED
 /*
  * build the class hierarchy
  * returns a list of GObjectClass, which starts with NAObject,
@@ -680,6 +680,7 @@ build_class_hierarchy( const NAObject *object )
  * from the topmost base class, to the most-derived one.
  *
  * Since: 2.30
+ * Deprecated: 3.1.0
  */
 GList *
 na_object_get_hierarchy( const NAObject *object )
@@ -706,12 +707,14 @@ na_object_get_hierarchy( const NAObject *object )
  * Releases the #NAObject hierarchy.
  *
  * Since: 2.30
+ * Deprecated: 3.1.0
  */
 void
 na_object_free_hierarchy( GList *hierarchy )
 {
 	g_list_free( hierarchy );
 }
+#endif /* NA_DISABLE_DEPRECATED */
 
 /**
  * na_object_object_debug_invalid:

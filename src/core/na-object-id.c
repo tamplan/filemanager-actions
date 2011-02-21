@@ -380,27 +380,11 @@ na_object_id_set_new_id( NAObjectId *object, const NAObjectId *new_parent )
 static gchar *
 v_new_id( const NAObjectId *object, const NAObjectId *new_parent )
 {
-	gchar *new_id;
-	GList *hierarchy, *ih;
-	gboolean found;
+	gchar *new_id = NULL;
 
-	found = FALSE;
-	new_id = NULL;
-	hierarchy = g_list_reverse( na_object_get_hierarchy( NA_OBJECT( object )));
-	/*g_debug( "na_object_id_most_derived_id: object=%p (%s)",
-					( void * ) object, G_OBJECT_TYPE_NAME( object ));*/
-
-	for( ih = hierarchy ; ih && !found ; ih = ih->next ){
-		if( NA_OBJECT_ID_CLASS( ih->data )->new_id ){
-			new_id = NA_OBJECT_ID_CLASS( ih->data )->new_id( object, new_parent );
-			found = TRUE;
-		}
-		if( G_OBJECT_CLASS_TYPE( ih->data ) == NA_OBJECT_ID_TYPE ){
-			break;
-		}
+	if( NA_OBJECT_ID_GET_CLASS( object )->new_id ){
+		new_id = NA_OBJECT_ID_GET_CLASS( object )->new_id( object, new_parent );
 	}
-
-	na_object_free_hierarchy( hierarchy );
 
 	return( new_id );
 }
