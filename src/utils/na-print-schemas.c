@@ -50,42 +50,23 @@
 
 #include "console-utils.h"
 
-typedef struct {
-	NADataGroup *group;
-	gchar       *group_name;
-	gchar       *data_name;
-}
-	SchemaFromDataDef;
-
+extern NADataGroup menu_data_groups[];				/* defined in na-object-menu-factory.c */
 extern NADataGroup action_data_groups[];			/* defined in na-object-action-factory.c */
 extern NADataGroup profile_data_groups[];			/* defined in na-object-profile-factory.c */
 
-static const SchemaFromDataDef st_schema_from_data_def[] = {
-		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_LABEL },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_TOOLTIP },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ICON },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ITEM_GROUP,       NAFO_DATA_ENABLED },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_SELECTION },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TARGET_TOOLBAR },
-		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TOOLBAR_LABEL },
-		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PATH },
-		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PARAMETERS },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_BASENAMES },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MATCHCASE },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MIMETYPES },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISFILE },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_ISDIR },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MULTIPLE },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_SCHEMES },
-		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_FOLDERS },
-		{ NULL }
-};
-
+static gboolean   output_action = FALSE;
+static gboolean   output_menu   = FALSE;
 static gboolean   output_stdout = FALSE;
 static gboolean   version       = FALSE;
 
 static GOptionEntry entries[] = {
-	{ "stdout" , 's', 0, G_OPTION_ARG_NONE, &output_stdout, N_("Output the schema on stdout"), NULL },
+	{ "stdout",  's', 0, G_OPTION_ARG_NONE, &output_stdout, N_("Output the schema on stdout"), NULL },
+	{ NULL }
+};
+
+static GOptionEntry type_entries[] = {
+	{ "action",  'a', 0, G_OPTION_ARG_NONE, &output_action, N_("Output the action schemas [default]"), NULL },
+	{ "menu",    'm', 0, G_OPTION_ARG_NONE, &output_menu,   N_("Output the menu schemas"), NULL },
 	{ NULL }
 };
 
@@ -95,7 +76,8 @@ static GOptionEntry misc_entries[] = {
 };
 
 static GOptionContext *init_options( void );
-static int             output_to_stdout( GSList **msgs );
+static NADataGroup    *build_full_action_group( void );
+static int             output_to_stdout( NADataGroup *groups, GSList **msgs );
 static void            attach_schema_node( xmlDocPtr doc, xmlNodePtr list_node, const NADataDef *data_def );
 static void            exit_with_usage( void );
 
@@ -108,6 +90,7 @@ main( int argc, char** argv )
 	GError *error = NULL;
 	GSList *msgs = NULL;
 	GSList *im;
+	NADataGroup *full_action_groups = NULL;
 
 	g_type_init();
 	setlocale( LC_ALL, "" );
@@ -134,8 +117,20 @@ main( int argc, char** argv )
 		exit( status );
 	}
 
+	if( !output_action && !output_menu ){
+		output_action = TRUE;
+	}
+	if( output_action ){
+		full_action_groups = build_full_action_group();
+	}
+
 	if( output_stdout ){
-		status = output_to_stdout( &msgs );
+		if( output_action ){
+			status = output_to_stdout( full_action_groups, &msgs );
+		}
+		if( output_menu ){
+			status = output_to_stdout( menu_data_groups, &msgs );
+		}
 	}
 
 	if( msgs ){
@@ -159,6 +154,7 @@ init_options( void )
 {
 	GOptionContext *context;
 	gchar *description;
+	GOptionGroup *type_group;
 	GOptionGroup *misc_group;
 
 	context = g_option_context_new( _( "Output the Nautilus-Actions GConf schemas on stdout." ));
@@ -183,6 +179,12 @@ init_options( void )
 	g_option_context_set_description( context, description );
 	g_free( description );
 
+	type_group = g_option_group_new(
+			"type", _( "Type options" ), _( "Type options" ), NULL, NULL );
+	g_option_group_add_entries( type_group, type_entries );
+	g_option_group_set_translation_domain( type_group, GETTEXT_PACKAGE );
+	g_option_context_add_group( context, type_group );
+
 	misc_group = g_option_group_new(
 			"misc", _( "Miscellaneous options" ), _( "Miscellaneous options" ), NULL, NULL );
 	g_option_group_add_entries( misc_group, misc_entries );
@@ -192,133 +194,60 @@ init_options( void )
 	return( context );
 }
 
-#if 0
 /*
- * writes the schema via GConfClient
+ * build a NADataGroup array with action and profile definitions
+ * so that the action schemas also include profile ones
  */
-static gboolean
-write_to_gconf( gchar **msg )
+static NADataGroup *
+build_full_action_group( void )
 {
-	GConfClient *gconf = gconf_client_get_default();
+	guint i, action_count, profile_count;
+	NADataGroup *group;
 
-	gchar *prefix_config = g_strdup_printf( "%s%s", NAUTILUS_ACTIONS_GCONF_SCHEMASDIR, NA_GCONF_CONFIG_PATH );
-	gchar *prefix_prefs = g_strdup_printf( "%s%s/%s", NAUTILUS_ACTIONS_GCONF_SCHEMASDIR, NAUTILUS_ACTIONS_GCONF_BASEDIR, NA_GCONF_PREFERENCES );
+	for( action_count = 0 ; action_data_groups[action_count].group ; ++action_count )
+		;
+	for( profile_count = 0 ; profile_data_groups[profile_count].group ; ++profile_count )
+		;
+	group = g_new0( NADataGroup, 1+action_count+profile_count );
 
-	gboolean ret =
-		write_schema( gconf, prefix_config, GCONF_VALUE_STRING, ACTION_VERSION_ENTRY, ACTION_VERSION_DESC_SHORT, ACTION_VERSION_DESC_LONG, NAUTILUS_ACTIONS_CONFIG_VERSION, msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_STRING, ACTION_LABEL_ENTRY, ACTION_LABEL_DESC_SHORT, ACTION_LABEL_DESC_LONG, "", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_STRING, ACTION_TOOLTIP_ENTRY, ACTION_TOOLTIP_DESC_SHORT, ACTION_TOOLTIP_DESC_LONG, "", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_STRING, ACTION_ICON_ENTRY, ACTION_ICON_DESC_SHORT, ACTION_ICON_DESC_LONG, "", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_STRING, ACTION_PROFILE_LABEL_ENTRY, ACTION_PROFILE_NAME_DESC_SHORT, ACTION_PROFILE_NAME_DESC_LONG, NA_ACTION_PROFILE_DEFAULT_LABEL, msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_STRING, ACTION_PATH_ENTRY, ACTION_PATH_DESC_SHORT, ACTION_PATH_DESC_LONG, "", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_STRING, ACTION_PARAMETERS_ENTRY, ACTION_PARAMETERS_DESC_SHORT, ACTION_PARAMETERS_DESC_LONG, "", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_LIST, ACTION_BASENAMES_ENTRY, ACTION_BASENAMES_DESC_SHORT, ACTION_BASENAMES_DESC_LONG, "*", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_BOOL, ACTION_MATCHCASE_ENTRY, ACTION_MATCHCASE_DESC_SHORT, ACTION_MATCHCASE_DESC_LONG, "true", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_LIST, ACTION_MIMETYPES_ENTRY, ACTION_MIMETYPES_DESC_SHORT, ACTION_MIMETYPES_DESC_LONG, "*", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_BOOL, ACTION_ISFILE_ENTRY, ACTION_ISFILE_DESC_SHORT, ACTION_ISFILE_DESC_LONG, "true", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_BOOL, ACTION_ISDIR_ENTRY, ACTION_ISDIR_DESC_SHORT, ACTION_ISDIR_DESC_LONG, "false", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_BOOL, ACTION_MULTIPLE_ENTRY, ACTION_MULTIPLE_DESC_SHORT, ACTION_MULTIPLE_DESC_LONG, "false", msg ) &&
-		write_schema( gconf, prefix_config, GCONF_VALUE_LIST, ACTION_SCHEMES_ENTRY, ACTION_SCHEMES_DESC_SHORT, ACTION_SCHEMES_DESC_LONG, "file", msg );
-
-	g_free( prefix_prefs );
-	g_free( prefix_config );
-
-	gconf_client_suggest_sync( gconf, NULL );
-	g_object_unref( gconf );
-	return( ret );
-}
-
-static gboolean
-write_schema( GConfClient *gconf, const gchar *prefix, GConfValueType type, const gchar *entry, const gchar *dshort, const gchar *dlong, const gchar *default_value, gchar **message )
-{
-	gchar *path = g_strdup_printf( "%s/%s", prefix, entry );
-	g_debug( "write_schema: path=%s", path );
-	gboolean ret = TRUE;
-	GError *error = NULL;
-
-	GConfSchema *schema = gconf_schema_new();
-	gconf_schema_set_owner( schema, PACKAGE );
-	gconf_schema_set_type( schema, type );
-
-	/* FIXME: if we write the schema with a 'C' locale, how will it be
-	 * localized ?? but get_language_names return a list. Do we have to
-	 * write a locale for each element of the list ? for the first one ?
-	 */
-	gconf_schema_set_locale( schema, "C" );
-
-	gconf_schema_set_short_desc( schema, dshort );
-	gconf_schema_set_long_desc( schema, dlong );
-
-
-	GConfValue *value = NULL;
-	if( type == GCONF_VALUE_LIST ){
-		gconf_schema_set_list_type( schema, GCONF_VALUE_STRING );
-
-		GConfValue *first = gconf_value_new_from_string( GCONF_VALUE_STRING, default_value, &error );
-		GSList *list = NULL;
-		list = g_slist_append( list, first );
-		value = gconf_value_new( GCONF_VALUE_LIST );
-		gconf_value_set_list_type( value, GCONF_VALUE_STRING );
-		gconf_value_set_list( value, list );
-		g_slist_free( list );
-
-	} else {
-		value = gconf_value_new_from_string( type, default_value, &error );
-		if( error ){
-			*message = g_strdup( error->message );
-			g_error_free( error );
-			ret = FALSE;
-		}
+	for( i = action_count = 0 ; action_data_groups[action_count].group ; ++action_count, ++i ){
+		memcpy( group+i, action_data_groups+action_count, sizeof( NADataGroup ));
+	}
+	for( profile_count = 0 ; profile_data_groups[profile_count].group ; ++profile_count, ++i ){
+		memcpy( group+i, profile_data_groups+profile_count, sizeof( NADataGroup ));
 	}
 
-	if( ret ){
-		gconf_schema_set_default_value( schema, value );
-
-		if( !gconf_client_set_schema( gconf, path, schema, &error )){
-			*message = g_strdup( error->message );
-			g_error_free( error );
-			ret = FALSE;
-		}
-	}
-
-	gconf_schema_free( schema );
-	g_free( path );
-	return( ret );
+	return( group );
 }
-#endif
 
 static int
-output_to_stdout( GSList **msgs )
+output_to_stdout( NADataGroup *groups, GSList **msgs )
 {
-	static const gchar *thisfn = "nautilus_actions_schemas_output_to_stdout";
 	xmlDocPtr doc;
 	xmlNodePtr root_node;
 	xmlNodePtr list_node;
 	xmlChar *text;
 	int textlen;
-	SchemaFromDataDef *isch;
-	const NADataDef *data_def;
+	guint ig, id;
+	GSList *displayed = NULL;
 
 	doc = xmlNewDoc( BAD_CAST( "1.0" ));
 
 	root_node = xmlNewNode( NULL, BAD_CAST( NAXML_KEY_SCHEMA_ROOT ));
 	xmlDocSetRootElement( doc, root_node );
-
 	list_node = xmlNewChild( root_node, NULL, BAD_CAST( NAXML_KEY_SCHEMA_LIST ), NULL );
 
-	isch = ( SchemaFromDataDef * ) st_schema_from_data_def;
-	while( isch->group ){
-		data_def = na_data_def_get_data_def( isch->group, isch->group_name, isch->data_name );
-
-		if( data_def ){
-			attach_schema_node( doc, list_node, data_def );
-
-		} else {
-			g_warning( "%s: group=%s, name=%s: unable to find NADataDef structure", thisfn, isch->group_name, isch->data_name );
+	for( ig = 0 ; groups[ig].group ; ++ig ){
+		for( id = 0 ; groups[ig].def[id].name ; ++id ){
+			if( groups[ig].def[id].writable ){
+				if( !na_core_utils_slist_count( displayed, groups[ig].def[id].name )){
+					displayed = g_slist_prepend( displayed, groups[ig].def[id].name );
+					attach_schema_node( doc, list_node, ( const NADataDef * ) groups[ig].def+id );
+				}
+			}
 		}
-
-		isch++;
 	}
+
 	xmlDocDumpFormatMemoryEnc( doc, &text, &textlen, "UTF-8", 1 );
 	g_printf( "%s\n", ( const char * ) text );
 
