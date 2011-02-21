@@ -1132,7 +1132,6 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 	gchar *label;
 	gboolean modified = FALSE;
 	gboolean valid = TRUE;
-	NAObjectItem *item;
 
 	g_return_if_fail( view->private->mode == TREE_MODE_EDITION );
 
@@ -1147,13 +1146,11 @@ display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *m
 		g_object_set( cell, "foreground-set", FALSE, NULL );
 
 		modified = na_object_is_modified( object );
-		valid = na_object_is_valid( object );
-		item = NA_IS_OBJECT_PROFILE( object ) ? na_object_get_parent( object ) : NA_OBJECT_ITEM( object );
-
 		if( modified ){
 			g_object_set( cell, "style", PANGO_STYLE_ITALIC, "style-set", TRUE, NULL );
 		}
 
+		valid = na_object_is_valid( object );
 		if( !valid ){
 			g_object_set( cell, "foreground", "Red", "foreground-set", TRUE, NULL );
 		}
