@@ -84,7 +84,6 @@ static gboolean     is_candidate_for_capabilities( const NAIContext *object, gui
 
 static gboolean     is_valid_basenames( const NAIContext *object );
 static gboolean     is_valid_mimetypes( const NAIContext *object );
-static gboolean     is_valid_isfiledir( const NAIContext *object );
 static gboolean     is_valid_schemes( const NAIContext *object );
 static gboolean     is_valid_folders( const NAIContext *object );
 
@@ -245,7 +244,6 @@ na_icontext_is_valid( const NAIContext *context )
 	is_valid =
 		is_valid_basenames( context ) &&
 		is_valid_mimetypes( context ) &&
-		is_valid_isfiledir( context ) &&
 		is_valid_schemes( context ) &&
 		is_valid_folders( context );
 
@@ -574,6 +572,8 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 #define DESKTOP_KDE   "KDE"
 #define DESKTOP_GNOME "GNOME"
 #define DESKTOP_XFCE  "XFCE"
+#define DESKTOP_ROX   "ROX"
+#define DESKTOP_LXDE  "LXDE"
 #define DESKTOP_OLD   "Old"
 
 static const gchar *
@@ -634,8 +634,8 @@ get_running_environment( void )
 		g_error_free( error );
 	}
 
-	/* do not know how to identify ROX or LXFCE environments
-	 * other desktops are identified as 'Old' (legacy systems)
+	/* do not know how to identify ROX or LXDE (Hong Jen Yee <pcman.tw (at) gmail.com>)
+	 * environments; so other desktops are just identified as 'Old' (legacy systems)
 	 */
 	return( DESKTOP_OLD );
 }
@@ -1293,24 +1293,6 @@ is_valid_mimetypes( const NAIContext *object )
 
 	if( !valid ){
 		na_object_debug_invalid( object, "mimetypes" );
-	}
-
-	return( valid );
-}
-
-static gboolean
-is_valid_isfiledir( const NAIContext *object )
-{
-	gboolean valid;
-	gboolean isfile, isdir;
-
-	isfile = na_object_is_file( object );
-	isdir = na_object_is_dir( object );
-
-	valid = isfile || isdir;
-
-	if( !valid ){
-		na_object_debug_invalid( object, "isfiledir" );
 	}
 
 	return( valid );
