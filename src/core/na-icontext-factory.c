@@ -168,7 +168,7 @@ NADataDef data_def_conditions [] = {
 	 */
 	{ NAFO_DATA_ISFILE,
 				TRUE,
-				TRUE,
+				FALSE,
 				TRUE,
 				N_( "Whether the profile applies to files (deprecated option, see mimetype)" ),
 				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
@@ -199,7 +199,7 @@ NADataDef data_def_conditions [] = {
 
 	{ NAFO_DATA_ISDIR,
 				TRUE,
-				TRUE,
+				FALSE,
 				TRUE,
 				N_( "Whether the profile applies to folders (deprecated option, see mimetype)" ),
 				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */

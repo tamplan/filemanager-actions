@@ -1,5 +1,8 @@
 2011-02-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext-factory.c (NAFO_DATA_ISFILE, NAFO_DATA_ISDIR):
+	Data are deprecated and not writable.
+
 	* src/utils/nautilus-actions-new.c: Mimetypes default to */*.
 
 2011-02-20 Pierre Wieser <pwieser@trychlos.org>
