@@ -457,9 +457,6 @@ get_action_from_cmdline( void )
 		g_warning( "%s", msg );
 		g_free( msg );
 	}
-	if( !isfile && !isdir ){
-		isfile = TRUE;
-	}
 	if( isfile && isdir ){
 		mimetypes = g_slist_prepend( mimetypes, g_strdup( "*/*" ));
 	} else if( isfile ){
