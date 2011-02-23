@@ -1,5 +1,10 @@
 2011-02-23 Pierre Wieser <pwieser@trychlos.org>
 
+	Move Nautilus-Actions configuration files to nautilus-actions/ subdir
+
+	* src/core/na-settings.c (na_settings_new):
+	* src/utils/na-gconf2key.sh.in: Updated accordingly.
+
 	Implement execution mode property
 
 	* m4/na-check-for-gtk.m4: Check for Gio-unix.

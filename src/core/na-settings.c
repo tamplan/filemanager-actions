@@ -384,12 +384,12 @@ na_settings_new( void )
 
 	settings = g_object_new( NA_SETTINGS_TYPE, NULL );
 
-	dir = g_build_filename( SYSCONFDIR, "xdg", NULL );
+	dir = g_build_filename( SYSCONFDIR, "xdg", PACKAGE, NULL );
 	g_debug( "%s: reading mandatory configuration", thisfn );
 	settings->private->mandatory = key_file_new( settings, dir );
 	g_free( dir );
 
-	dir = g_build_filename( g_get_home_dir(), ".config", NULL );
+	dir = g_build_filename( g_get_home_dir(), ".config", PACKAGE, NULL );
 	g_debug( "%s: reading user configuration", thisfn );
 	settings->private->user = key_file_new( settings, dir );
 	g_free( dir );

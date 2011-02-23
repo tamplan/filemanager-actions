@@ -431,6 +431,7 @@ msg "${nbitems} migrated items"
 # Note also that the GConf I/O provider is disabled both for reading
 # and writing
 [ $(id -u) -eq 0 ] && destdir=@sysconfdir@/xdg || destdir=${HOME}/.config
+destdir=${destdir}/@PACKAGE@
 command "mkdir -p ${destdir}"
 destconf=${destdir}/@PACKAGE@.conf
 rm -f ${my_tmproot}.nact
