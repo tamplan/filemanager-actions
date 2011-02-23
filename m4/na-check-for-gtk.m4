@@ -90,6 +90,7 @@ AC_DEFUN([_AC_NA_CHECK_FOR_GTK3],[
 		if test "${have_UNIQUE}" != "yes"; then
 			have_gtk3="no"
 		else 
+			NA_CHECK_MODULE([GIO_UNIX],[gio-unix-3.0])
 			NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${GTK3_CFLAGS}"
 			NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${GTK3_LIBS}"
 		fi
@@ -107,6 +108,7 @@ AC_DEFUN([_AC_NA_CHECK_FOR_GTK2],[
 		if test "${have_UNIQUE}" != "yes"; then
 			have_gtk2="no"
 		else 
+			NA_CHECK_MODULE([GIO_UNIX],[gio-unix-2.0])
 			NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${GTK2_CFLAGS}"
 			NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${GTK2_LIBS}"
 		fi

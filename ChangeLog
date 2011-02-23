@@ -1,3 +1,13 @@
+2011-02-23 Pierre Wieser <pwieser@trychlos.org>
+
+	Implement execution mode property
+
+	* m4/na-check-for-gtk.m4: Check for Gio-unix.
+
+	* src/core/na-object-profile-factory.c: Improve translation comment.
+
+	* src/core/na-tokens.c (execute_action_command): Display output.
+
 2011-02-21 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-object.h:

@@ -32,7 +32,9 @@
 #include <config.h>
 #endif
 
+#include <gio/gunixinputstream.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include <string.h>
 
 #include <api/na-core-utils.h>
@@ -74,6 +76,7 @@ static void      instance_init( GTypeInstance *instance, gpointer klass );
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
+static gchar    *display_output_get_content( int fd );
 static void      execute_action_command( gchar *command, const NAObjectProfile *profile );
 static gboolean  is_singular_exec( const NATokens *tokens, const gchar *exec );
 static gchar    *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted );
@@ -389,44 +392,139 @@ na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile
 }
 
 static void
+display_output( const gchar *command, int fd_stdout, int fd_stderr )
+{
+	GtkWidget *dialog;
+	gchar *std_output, *std_error;
+
+	dialog = gtk_message_dialog_new_with_markup(
+			NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "<b>%s</b>", _( "Output of the run command" ));
+	g_object_set( G_OBJECT( dialog ) , "title", PACKAGE_NAME, NULL );
+
+	std_output = display_output_get_content( fd_stdout );
+	std_error = display_output_get_content( fd_stderr );
+
+	gtk_message_dialog_format_secondary_markup( GTK_MESSAGE_DIALOG( dialog ),
+			"<b>%s</b>\n%s\n\n<b>%s</b>\n%s\n\n<b>%s</b>\n%s\n\n",
+					_( "Run command:" ), command,
+					_( "Standard output:" ), std_output,
+					_( "Standard error:" ), std_error );
+
+	gtk_dialog_run( GTK_DIALOG( dialog ));
+	gtk_widget_destroy( dialog );
+
+	g_free( std_output );
+	g_free( std_error );
+}
+
+static gchar *
+display_output_get_content( int fd )
+{
+	static const gchar *thisfn = "na_tokens_display_output_get_content";
+	GInputStream *stream;
+	GString *string;
+	gchar buf[1024];
+	GError *error;
+	gchar *msg;
+
+	string = g_string_new( "" );
+	memset( buf, '\0', sizeof( buf ));
+
+	if( fd > 0 ){
+		stream = g_unix_input_stream_new( fd, TRUE );
+		error = NULL;
+
+		while( g_input_stream_read( stream, buf, sizeof( buf )-1, NULL, &error )){
+			string = g_string_append( string, buf );
+			memset( buf, '\0', sizeof( buf ));
+		}
+		if( error ){
+			g_warning( "%s: g_input_stream_read: %s", thisfn, error->message );
+			g_error_free( error );
+		}
+		g_input_stream_close( stream, NULL, NULL );
+	}
+
+	msg = g_locale_to_utf8( string->str, -1, NULL, NULL, NULL );
+	g_string_free( string, TRUE );
+
+	return( msg );
+}
+
+/*
+ * Execution environment:
+ * - preferred terminal
+ *   GConf: /desktop/gnome/applications/terminal/exec = gnome-terminal
+ *          /desktop/gnome/applications/terminal/exec_arg = -x
+ *   DConf: ?
+ * - whether the file-manager accept embedded execution ?
+ */
+static void
 execute_action_command( gchar *command, const NAObjectProfile *profile )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action_command";
+	static const gchar *bin_sh = "/bin/sh -c ";
 	GError *error;
+	gchar *execution_mode, *run_command, *quoted;
 	gchar **argv;
 	gint argc;
 	gchar *wdir;
 	GPid child_pid;
+	gint child_stdout, child_stderr;
 
-	g_debug( "%s: command=%s, profile=%p", thisfn, command, ( void * ) profile );
+	g_debug( "%s: profile=%p", thisfn, ( void * ) profile );
 
 	error = NULL;
+	execution_mode = na_object_get_execution_mode( profile );
 
-	if( !g_shell_parse_argv( command, &argc, &argv, &error )){
-		g_warning( "%s: %s", thisfn, error->message );
+	if( !strcmp( execution_mode, "Normal" )){
+		run_command = g_strdup( command );
+
+	} else if( strncmp( command, bin_sh, strlen( bin_sh ))){
+		quoted = g_shell_quote( command );
+		run_command = g_strconcat( bin_sh, quoted, NULL );
+		g_free( quoted );
+
+	} else {
+		run_command = g_strdup( command );
+	}
+
+	if( !g_shell_parse_argv( run_command, &argc, &argv, &error )){
+		g_warning( "%s: g_shell_parse_argv: %s", thisfn, error->message );
 		g_error_free( error );
 
 	} else {
 		wdir = na_object_get_working_dir( profile );
-		g_debug( "%s: wdir=%s", thisfn, wdir );
+		g_debug( "%s: run_command=%s, wdir=%s", thisfn, run_command, wdir );
 
-		g_spawn_async( wdir,
+		g_spawn_async_with_pipes( wdir,
 				argv,
 				NULL,
-				G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL,
+				G_SPAWN_SEARCH_PATH,
 				NULL,
 				NULL,
 				&child_pid,
+				NULL,
+				&child_stdout,
+				&child_stderr,
 				&error );
 		if( error ){
-			g_warning( "%s: %s", thisfn, error->message );
+			g_warning( "%s: g_spawn_async_with_pipes: %s", thisfn, error->message );
 			g_error_free( error );
+
+		} else {
+			g_spawn_close_pid( child_pid );
+			if( !strcmp( execution_mode, "DisplayOutput" )){
+				display_output( run_command, child_stdout, child_stderr );
+			}
 		}
 
-		g_spawn_close_pid( child_pid );
 		g_free( wdir );
 		g_strfreev( argv );
 	}
+
+	g_free( run_command );
+	g_free( execution_mode );
 }
 
 /*
