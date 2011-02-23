@@ -47,7 +47,7 @@ done
 #   unique-1.0.pc:Requires: gtk+-2.0
 
 [ "${autogen_target}" = "jhbuild" ] &&
-	export autogen_prefix=${HOME}/.local/jhbuild &&
+	export autogen_prefix=${HOME}/data/jhbuild/run &&
 	PKG_CONFIG_PATH=${autogen_prefix}/lib/pkgconfig \
 	LD_LIBRARY_PATH=${autogen_prefix}/lib \
 		exec ./autogen.sh \
