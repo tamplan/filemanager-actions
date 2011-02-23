@@ -1,5 +1,8 @@
 2011-02-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-selected-info.c (instance_init, instance_finalize):
+	Improve debug messages.
+
 	* src/core/na-icontext.c: 
 	* src/nact/nact-ienvironment-tab.c: Improve list of desktop environments
 	(see http://standards.freedesktop.org/menu-spec/latest/apb.html).

@@ -140,10 +140,11 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	NASelectedInfo *self;
 
 	g_return_if_fail( NA_IS_SELECTED_INFO( instance ));
-	self = NA_SELECTED_INFO( instance );
 
 	g_debug( "%s: instance=%p (%s), klass=%p",
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
+
+	self = NA_SELECTED_INFO( instance );
 
 	self->private = g_new0( NASelectedInfoPrivate, 1 );
 
@@ -161,7 +162,6 @@ instance_dispose( GObject *object )
 	self = NA_SELECTED_INFO( object );
 
 	if( !self->private->dispose_has_run ){
-
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
@@ -180,9 +180,10 @@ instance_finalize( GObject *object )
 	NASelectedInfo *self;
 
 	g_return_if_fail( NA_IS_SELECTED_INFO( object ));
+
 	self = NA_SELECTED_INFO( object );
 
-	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	g_free( self->private->uri );
 	g_free( self->private->filename );
