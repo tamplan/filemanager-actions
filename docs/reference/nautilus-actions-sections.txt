@@ -281,7 +281,7 @@ NA_FACTORY_OBJECT_CONDITIONS_GROUP
 NAFO_DATA_BASENAMES
 NAFO_DATA_MATCHCASE
 NAFO_DATA_MIMETYPES
-NAFO_DATA_ALL_MIMETYPES
+NAFO_DATA_MIMETYPES_IS_ALL
 NAFO_DATA_ISFILE
 NAFO_DATA_ISDIR
 NAFO_DATA_MULTIPLE
@@ -310,12 +310,11 @@ NAObjectClass
 na_object_object_reset_origin
 na_object_object_ref
 na_object_object_unref
-na_object_object_copy
 na_object_object_dump
 na_object_object_dump_norec
 na_object_object_dump_tree
 na_object_object_check_status_rec
-na_object_object_get_hierarchy
+na_object_get_hierarchy
 na_object_free_hierarchy
 na_object_object_debug_invalid
 
@@ -369,7 +368,6 @@ NA_OBJECT_ITEM
 NA_IS_OBJECT_ITEM
 NAObjectItem
 NAItemTarget
-na_object_item_are_equal
 na_object_item_is_finally_writable
 na_object_item_set_writability_status
 na_object_item_get_item
@@ -516,9 +514,11 @@ NA_ICONTEXT_GET_INTERFACE
 NAIContext
 NAIContextInterfacePrivate
 NAIContextInterface
+na_icontext_are_equal
+na_icontext_check_mimetypes
+na_icontext_copy
 na_icontext_is_candidate
 na_icontext_is_valid
-na_icontext_is_all_mimetypes
 na_icontext_read_done
 na_icontext_set_scheme
 na_icontext_set_only_desktop
@@ -546,11 +546,10 @@ na_object_set_modified
 na_object_reset_origin
 na_object_set_writability_status
 na_object_is_finally_writable
-na_object_copy
+na_object_check_mimetypes
 na_object_dump
 na_object_dump_norec
 na_object_dump_tree
-na_object_get_hierarchy
 na_object_ref
 na_object_unref
 na_object_debug_invalid
@@ -629,9 +628,6 @@ na_object_get_execute_as
 na_object_set_path
 na_object_set_parameters
 na_object_set_working_dir
-na_object_set_isfile
-na_object_set_isdir
-na_object_set_multiple
 na_object_set_execution_mode
 na_object_set_startup_notify
 na_object_set_startup_class

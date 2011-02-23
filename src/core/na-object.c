@@ -333,33 +333,51 @@ iduplicable_is_valid( const NAIDuplicable *object )
  * Internally set some properties which may be requested later. This
  * two-steps check-request let us optimize some work in the UI.
  *
+ * <literallayout>
  * na_object_object_check_status_rec( object )
  *  +- na_iduplicable_check_status( object )
  *      +- get_origin( object )
  *      +- modified_status = v_are_equal( origin, object )
- *         +-> interface <structfield>NAObjectClass::are_equal</structfield>
- *             which happens to be iduplicable_are_equal( a, b )
- *              +- v_are_equal( a, b )
- *                  +- NAObjectAction::are_equal()
- *                      +- na_factory_object_are_equal()
- *                      +- check NAObjectActionPrivate data
- *                      +- call parent class
- *                         +- NAObjectItem::are_equal()
- *                             +- check NAObjectItemPrivate data
- *                             +- call parent class
- *                                 +- NAObjectId::are_equal()
- *
+ *      |  +-> interface <structfield>NAObjectClass::are_equal</structfield>
+ *      |      which happens to be iduplicable_are_equal( a, b )
+ *      |       +- v_are_equal( a, b )
+ *      |           +- NAObjectAction::are_equal()
+ *      |               +- na_factory_object_are_equal()
+ *      |               +- check NAObjectActionPrivate data
+ *      |               +- call parent class
+ *      |                  +- NAObjectItem::are_equal()
+ *      |                      +- check NAObjectItemPrivate data
+ *      |                      +- call parent class
+ *      |                          +- NAObjectId::are_equal()
+ *      |
  *      +- valid_status = v_is_valid( object )             -> interface <structfield>NAObjectClass::is_valid</structfield>
+ * </literallayout>
  *
- * Note that the recursivity is managed here, so that we can be sure
- * that edition status of children is actually checked before those of
- * the parent.
+ *   Note that the recursivity is managed here, so that we can be sure
+ *   that edition status of children is actually checked before those of
+ *   the parent.
  *
- * As of 3.1.0:
- * - when the modification status of a NAObjectProfile changes, then its
- *   NAObjectAction parent is rechecked;
- * - when the validity status of an object is changed, then its parent is
- *   also rechecked.
+ * <formalpara>
+ *  <title>
+ *   As of 3.1.0:
+ *  </title>
+ *  <para>
+ *   <itemizedlist>
+ *    <listitem>
+ *     <para>
+ *      when the modification status of a NAObjectProfile changes, then its
+ *      NAObjectAction parent is rechecked;
+ *     </para>
+ *    </listitem>
+ *    <listitem>
+ *     <para>
+ *      when the validity status of an object is changed, then its parent is
+ *      also rechecked.
+ *     </para>
+ *    </listitem>
+ *   </itemizedlist>
+ *  </para>
+ * </formalpara>
  *
  * Since: 2.30
  */
