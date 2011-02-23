@@ -83,7 +83,10 @@ static gchar            *iabout_get_application_name( NAIAbout *instance );
 static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
 static GList            *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 static GList            *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
+
+#ifdef HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS
 static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
+#endif
 
 static GList            *get_menus_items( NautilusActions *plugin, guint target, GList *selection );
 static GList            *expand_tokens( GList *tree, NATokens *tokens );
@@ -180,7 +183,8 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( instance ));
 
-	g_debug( "%s: instance=%p, klass=%p", thisfn, ( void * ) instance, ( void * ) klass );
+	g_debug( "%s: instance=%p (%s), klass=%p",
+			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self = NAUTILUS_ACTIONS( instance );
 
@@ -300,23 +304,6 @@ instance_finalize( GObject *object )
 	}
 }
 
-/*
- * This function notifies Nautilus file manager that the context menu
- * items may have changed, and that it should reload them.
- *
- * Patch has been provided by Frederic Ruaudel, the initial author of
- * Nautilus-Actions, and applied on Nautilus 2.15.4 development branch
- * on 2006-06-16. It was released with Nautilus 2.16.0
- */
-#ifndef HAVE_NAUTILUS_MENU_PROVIDER_EMIT_ITEMS_UPDATED_SIGNAL
-static void nautilus_menu_provider_emit_items_updated_signal (NautilusMenuProvider *provider)
-{
-	/* -> fake function for backward compatibility
-	 * -> do nothing
-	 */
-}
-#endif
-
 static void
 iabout_iface_init( NAIAboutInterface *iface )
 {
@@ -343,7 +330,10 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 
 	iface->get_file_items = menu_provider_get_file_items;
 	iface->get_background_items = menu_provider_get_background_items;
+
+#ifdef HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS
 	iface->get_toolbar_items = menu_provider_get_toolbar_items;
+#endif
 }
 
 /*
@@ -436,10 +426,13 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 	return( nautilus_menus_list );
 }
 
+#ifdef HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS
 /*
  * as of 2.26, this function is only called for folders, but for the
  * desktop (x-nautilus-desktop:///) which seems to be only called by
  * get_background_items ; also, only actions (not menus) are displayed
+ *
+ * the API is removed starting with Nautilus 2.91.90
  */
 static GList *
 menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder )
@@ -468,6 +461,7 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 
 	return( nautilus_menus_list );
 }
+#endif
 
 static GList *
 get_menus_items( NautilusActions *plugin, guint target, GList *selection )

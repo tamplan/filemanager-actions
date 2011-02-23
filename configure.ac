@@ -153,6 +153,9 @@ NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.8])
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
+# starting with 2.91.90, Nautilus no more allows extensions to add toolbar items
+AC_CHECK_FUNCS([nautilus_menu_provider_get_toolbar_items])
+
 # check for gtk-doc
 # - starting with gtk-doc 1.15, multiple source dirs are directly handled
 #   by gtk-doc.make

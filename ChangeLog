@@ -1,5 +1,9 @@
 2011-02-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	* src/plugin-menu/nautilus-actions.c:
+	Check for nautilus_menu_provider_get_toolbar_items() function.
+
 	* src/core/na-selected-info.c (instance_init, instance_finalize):
 	Improve debug messages.
 
