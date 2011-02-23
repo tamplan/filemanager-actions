@@ -92,6 +92,7 @@ typedef struct {
 static EnvStruct st_envs[] = {
 	{ "GNOME", N_( "GNOME desktop" ) },
 	{ "KDE",   N_( "KDE desktop" ) },
+	{ "LXDE",  N_( "LXDE desktop" ) },
 	{ "ROX",   N_( "ROX desktop" ) },
 	{ "XFCE",  N_( "XFCE desktop" ) },
 	{ "Old",   N_( "Legacy systems" ) },

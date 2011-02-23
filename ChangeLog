@@ -1,5 +1,9 @@
 2011-02-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c: 
+	* src/nact/nact-ienvironment-tab.c: Improve list of desktop environments
+	(see http://standards.freedesktop.org/menu-spec/latest/apb.html).
+
 	Move Nautilus-Actions configuration files to nautilus-actions/ subdir
 
 	* src/core/na-settings.c (na_settings_new):

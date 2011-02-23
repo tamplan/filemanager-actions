@@ -544,14 +544,14 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 
 /*
  * Have asked on xdg-list how to identify the currently running desktop environment
- * (see)
+ * (see http://standards.freedesktop.org/menu-spec/latest/apb.html)
  * For now, just reproduce the xdg-open algorythm from xdg-utils 1.0
  */
-#define DESKTOP_KDE   "KDE"
 #define DESKTOP_GNOME "GNOME"
-#define DESKTOP_XFCE  "XFCE"
-#define DESKTOP_ROX   "ROX"
+#define DESKTOP_KDE   "KDE"
 #define DESKTOP_LXDE  "LXDE"
+#define DESKTOP_ROX   "ROX"
+#define DESKTOP_XFCE  "XFCE"
 #define DESKTOP_OLD   "Old"
 
 static const gchar *
