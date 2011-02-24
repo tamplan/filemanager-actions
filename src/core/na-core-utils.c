@@ -41,7 +41,7 @@
 
 #include <api/na-core-utils.h>
 
-#include "na-iabout.h"
+#include "na-about.h"
 
 static GSList  *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
 static gboolean info_dir_is_writable( GFile *file, const gchar *path );
@@ -1024,7 +1024,7 @@ na_core_utils_print_version( void )
 
 	g_print( "\n" );
 	g_print( "%s (%s) v %s\n", g_get_prgname(), PACKAGE_NAME, PACKAGE_VERSION );
-	copyright = na_iabout_get_copyright( TRUE );
+	copyright = na_about_get_copyright( TRUE );
 	g_print( "%s\n", copyright );
 	g_free( copyright );
 

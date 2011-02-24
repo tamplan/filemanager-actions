@@ -28,57 +28,27 @@
  *   ... and many others (see AUTHORS)
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#ifndef __CORE_NA_ABOUT_H__
+#define __CORE_NA_ABOUT_H__
 
-#include <core/na-about.h>
-
-#include "nact-menubar-priv.h"
-
-/**
- * nact_menubar_help_on_update_sensitivities:
- * @bar: this #NactMenubar object.
+/* @title NAAbout
+ * @short_description: The #NAAbout API
+ * @include: runtime/na-about.h
  *
- * Update sensitivities on the Help menu.
+ * These functions displays the 'About Nautilus-Actions' dialog box,
+ * and provides contant informations about the application.
  */
-void
-nact_menubar_help_on_update_sensitivities( const NactMenubar *bar )
-{
-	nact_menubar_enable_item( bar, "HelpItem", TRUE );
-	/* about always enabled */
-}
 
-/**
- * nact_menubar_help_on_help:
- * @action: the #GtkAction of the item.
- * @window: the #BaseWindow main application window.
- *
- * Triggers the "Help/Help" item.
- */
-void
-nact_menubar_help_on_help( GtkAction *action, BaseWindow *window )
-{
-	static const gchar *thisfn = "nact_menubar_help_on_help";
-	GError *error;
+#include <gtk/gtk.h>
 
-	error = NULL;
-	gtk_show_uri( NULL, "ghelp:nautilus-actions-config-tool", GDK_CURRENT_TIME, &error );
-	if( error ){
-		g_warning( "%s: %s", thisfn, error->message );
-		g_error_free( error );
-	}
-}
+G_BEGIN_DECLS
 
-/**
- * nact_menubar_help_on_about:
- * @action: the #GtkAction of the item.
- * @window: the #BaseWindow main application window.
- *
- * Triggers the "Help/About" item.
- */
-void
-nact_menubar_help_on_about( GtkAction *action, BaseWindow *window )
-{
-	na_about_display( base_window_get_gtk_toplevel( window ));
-}
+void   na_about_display( GtkWindow *parent );
+
+gchar *na_about_get_application_name( void );
+gchar *na_about_get_icon_name( void );
+gchar *na_about_get_copyright( gboolean console );
+
+G_END_DECLS
+
+#endif /* __CORE_NA_IABOUT_H__ */

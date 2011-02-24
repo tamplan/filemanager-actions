@@ -37,7 +37,7 @@
 
 #include <api/na-core-utils.h>
 
-#include <core/na-iabout.h>
+#include <core/na-about.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"
@@ -282,7 +282,7 @@ nact_application_new_with_args( int argc, char **argv )
 	NactApplication *application;
 	gchar *icon_name;
 
-	icon_name = na_iabout_get_icon_name();
+	icon_name = na_about_get_icon_name();
 
 	application = g_object_new( NACT_APPLICATION_TYPE,
 			BASE_PROP_ARGC,             argc,

@@ -45,7 +45,7 @@
 #include <api/na-timeout.h>
 
 #include <core/na-pivot.h>
-#include <core/na-iabout.h>
+#include <core/na-about.h>
 #include <core/na-selected-info.h>
 #include <core/na-tokens.h>
 
@@ -79,9 +79,6 @@ static void              instance_init( GTypeInstance *instance, gpointer klass 
 static void              instance_constructed( GObject *object );
 static void              instance_dispose( GObject *object );
 static void              instance_finalize( GObject *object );
-
-static void              iabout_iface_init( NAIAboutInterface *iface );
-static gchar            *iabout_get_application_name( NAIAbout *instance );
 
 static void              menu_provider_iface_init( NautilusMenuProviderIface *iface );
 static GList            *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
@@ -143,12 +140,6 @@ nautilus_actions_register_type( GTypeModule *module )
 		NULL
 	};
 
-	static const GInterfaceInfo iabout_iface_info = {
-		( GInterfaceInitFunc ) iabout_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_assert( st_actions_type == 0 );
 
 	g_debug( "%s: module=%p", thisfn, ( void * ) module );
@@ -156,8 +147,6 @@ nautilus_actions_register_type( GTypeModule *module )
 	st_actions_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NautilusActions", &info, 0 );
 
 	g_type_module_add_interface( module, st_actions_type, NAUTILUS_TYPE_MENU_PROVIDER, &menu_provider_iface_info );
-
-	g_type_module_add_interface( module, st_actions_type, NA_IABOUT_TYPE, &iabout_iface_info );
 }
 
 static void
@@ -307,23 +296,6 @@ instance_finalize( GObject *object )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
-}
-
-static void
-iabout_iface_init( NAIAboutInterface *iface )
-{
-	static const gchar *thisfn = "nautilus_actions_iabout_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_application_name = iabout_get_application_name;
-}
-
-static gchar *
-iabout_get_application_name( NAIAbout *instance )
-{
-	/* i18n: title of the About dialog box, when seen from Nautilus file manager */
-	return( g_strdup( _( "Nautilus-Actions" )));
 }
 
 gboolean
@@ -937,7 +909,7 @@ create_root_menu( NautilusActions *plugin, GList *menu )
 		return( NULL );
 	}
 
-	icon = na_iabout_get_icon_name();
+	icon = na_about_get_icon_name();
 	root_item = nautilus_menu_item_new( "NautilusActionsExtensions",
 				/* i18n: label of an automagic root submenu */
 				_( "Nautilus-Actions actions" ),
@@ -986,7 +958,7 @@ add_about_item( NautilusActions *plugin, GList *menu )
 	}
 
 	if( have_root_menu ){
-		icon = na_iabout_get_icon_name();
+		icon = na_about_get_icon_name();
 
 		about_item = nautilus_menu_item_new( "AboutNautilusActions",
 					_( "About Nautilus-Actions" ),
@@ -1012,9 +984,8 @@ static void
 execute_about( NautilusMenuItem *item, NautilusActions *plugin )
 {
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( plugin ));
-	g_return_if_fail( NA_IS_IABOUT( plugin ));
 
-	na_iabout_display( NA_IABOUT( plugin ));
+	na_about_display( NULL );
 }
 
 /*

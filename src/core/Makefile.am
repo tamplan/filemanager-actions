@@ -46,6 +46,8 @@ BUILT_SOURCES = \
 	$(NULL)
 
 libna_core_la_SOURCES = \
+	na-about.c											\
+	na-about.h											\
 	na-boxed.c											\
 	na-core-utils.c										\
 	na-data-boxed.c										\
@@ -67,8 +69,6 @@ libna_core_la_SOURCES = \
 	na-gnome-vfs-uri.h									\
 	na-gtk-utils.c										\
 	na-gtk-utils.h										\
-	na-iabout.c											\
-	na-iabout.h											\
 	na-icontext.c										\
 	na-icontext-factory.c								\
 	na-iduplicable.c									\

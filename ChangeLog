@@ -1,4 +1,17 @@
-2011-02-23 Pierre Wieser <pwieser@trychlos.org>
+2011-02-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-iabout.c: Renamed as src/core/na-about.c.
+	* src/core/na-iabout.h: Renamed as src/core/na-about.h.
+	NAIAbout is no more an interface, but just a set of functions.
+
+	* src/core/Makefile.am:
+	* src/core/na-core-utils.c (na_core_utils_print_version):
+	* src/nact/nact-application.c (nact_application_new_with_args):
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-menubar-help.c (nact_menubar_help_on_about):
+	* src/plugin-menu/nautilus-actions.c (execute_about): Updated accordingly.
+
+2011-02-24 Pierre Wieser <pwieser@trychlos.org>
 
 	Improve ExecutionMode implementation by defining a new user preference
 
@@ -15,6 +28,8 @@
 
 	* src/utils/nautilus-actions-run.c:
 	* po/POTFILES.in: Updated accordingly.
+
+2011-02-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-settings.c:
 	* src/core/na-settings.h: Define a new NA_IPREFS_PLUGIN_LOG user preference.

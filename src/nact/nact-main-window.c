@@ -38,7 +38,6 @@
 #include <api/na-object-api.h>
 #include <api/na-timeout.h>
 
-#include <core/na-iabout.h>
 #include <core/na-iprefs.h>
 #include <core/na-pivot.h>
 
@@ -172,7 +171,6 @@ static void       icapabilities_tab_iface_init( NactICapabilitiesTabInterface *i
 static void       ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface );
 static void       iexecution_tab_iface_init( NactIExecutionTabInterface *iface );
 static void       iproperties_tab_iface_init( NactIPropertiesTabInterface *iface );
-static void       iabout_iface_init( NAIAboutInterface *iface );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -204,10 +202,6 @@ static void       load_or_reload_items( NactMainWindow *window );
 static gboolean   on_base_is_willing_to_quit( const BaseWindow *window, gconstpointer user_data );
 static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
 static gboolean   warn_modified( NactMainWindow *window );
-
-/* NAIAbout interface */
-static gchar     *iabout_get_application_name( NAIAbout *instance );
-static GtkWindow *iabout_get_toplevel( NAIAbout *instance );
 
 
 GType
@@ -300,12 +294,6 @@ register_type( void )
 		NULL
 	};
 
-	static const GInterfaceInfo iabout_iface_info = {
-		( GInterfaceInitFunc ) iabout_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( BASE_WINDOW_TYPE, "NactMainWindow", &info, 0 );
@@ -329,8 +317,6 @@ register_type( void )
 	g_type_add_interface_static( type, NACT_IEXECUTION_TAB_TYPE, &iexecution_tab_iface_info );
 
 	g_type_add_interface_static( type, NACT_IPROPERTIES_TAB_TYPE, &iproperties_tab_iface_info );
-
-	g_type_add_interface_static( type, NA_IABOUT_TYPE, &iabout_iface_info );
 
 	return( type );
 }
@@ -546,17 +532,6 @@ iproperties_tab_iface_init( NactIPropertiesTabInterface *iface )
 	static const gchar *thisfn = "nact_main_window_iproperties_tab_iface_init";
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-}
-
-static void
-iabout_iface_init( NAIAboutInterface *iface )
-{
-	static const gchar *thisfn = "nact_main_window_iabout_iface_init";
-
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-	iface->get_application_name = iabout_get_application_name;
-	iface->get_toplevel = iabout_get_toplevel;
 }
 
 static void
@@ -1395,25 +1370,4 @@ warn_modified( NactMainWindow *window )
 	g_free( first );
 
 	return( confirm );
-}
-
-static gchar *
-iabout_get_application_name( NAIAbout *instance )
-{
-	BaseApplication *application;
-
-	g_return_val_if_fail( NA_IS_IABOUT( instance ), NULL );
-	g_return_val_if_fail( BASE_IS_WINDOW( instance ), NULL );
-
-	application = base_window_get_application( BASE_WINDOW( instance ));
-	return( base_application_get_application_name( application ));
-}
-
-static GtkWindow *
-iabout_get_toplevel( NAIAbout *instance )
-{
-	g_return_val_if_fail( NA_IS_IABOUT( instance ), NULL );
-	g_return_val_if_fail( BASE_IS_WINDOW( instance ), NULL );
-
-	return( base_window_get_gtk_toplevel( BASE_WINDOW( instance )));
 }
