@@ -53,6 +53,5 @@ done
 		exec ./autogen.sh \
 			--prefix=${autogen_prefix} \
 			--sysconfdir=/etc \
-			--with-nautilus-extdir=${autogen_prefix}/lib/nautilus \
 			--disable-schemas-install \
 			$*
