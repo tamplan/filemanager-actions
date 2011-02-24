@@ -77,7 +77,11 @@ static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
 static gchar    *display_output_get_content( int fd );
-static void      execute_action_command( gchar *command, const NAObjectProfile *profile );
+static void      execute_action_command( const NASettings *settings, gchar *command, const NAObjectProfile *profile );
+static gchar    *get_command_execution_display_output( const NASettings *settings, const gchar *command );
+static gchar    *get_command_execution_embedded( const NASettings *settings, const gchar *command );
+static gchar    *get_command_execution_normal( const NASettings *settings, const gchar *command );
+static gchar    *get_command_execution_terminal( const NASettings *settings, const gchar *command );
 static gboolean  is_singular_exec( const NATokens *tokens, const gchar *exec );
 static gchar    *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted );
 static GString  *quote_string( GString *input, const gchar *name, gboolean quoted );
@@ -360,7 +364,7 @@ na_tokens_parse_for_display( const NATokens *tokens, const gchar *string, gboole
  * Execute the given action, regarding the context described by @tokens.
  */
 void
-na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile )
+na_tokens_execute_action( const NATokens *tokens, const NASettings *settings, const NAObjectProfile *profile )
 {
 	gchar *path, *parameters, *exec;
 	gboolean singular;
@@ -378,13 +382,13 @@ na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile
 	if( singular ){
 		for( i = 0 ; i < tokens->private->count ; ++i ){
 			command = parse_singular( tokens, exec, i, FALSE, TRUE );
-			execute_action_command( command, profile );
+			execute_action_command( settings, command, profile );
 			g_free( command );
 		}
 
 	} else {
 		command = parse_singular( tokens, exec, 0, FALSE, TRUE );
-		execute_action_command( command, profile );
+		execute_action_command( settings, command, profile );
 		g_free( command );
 	}
 
@@ -453,19 +457,17 @@ display_output_get_content( int fd )
 
 /*
  * Execution environment:
- * - preferred terminal
- *   GConf: /desktop/gnome/applications/terminal/exec = gnome-terminal
- *          /desktop/gnome/applications/terminal/exec_arg = -x
- *   DConf: ?
- * - whether the file-manager accept embedded execution ?
+ * - Normal: just execute the specified command
+ * - Terminal: use the user preference to have a terminal which stays openeded
+ * - Embedded: id. Terminal
+ * - DisplayOutput: execute in a shell
  */
 static void
-execute_action_command( gchar *command, const NAObjectProfile *profile )
+execute_action_command( const NASettings *settings, gchar *command, const NAObjectProfile *profile )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action_command";
-	static const gchar *bin_sh = "/bin/sh -c ";
 	GError *error;
-	gchar *execution_mode, *run_command, *quoted;
+	gchar *execution_mode, *run_command;
 	gchar **argv;
 	gint argc;
 	gchar *wdir;
@@ -475,56 +477,118 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 	g_debug( "%s: profile=%p", thisfn, ( void * ) profile );
 
 	error = NULL;
+	run_command = NULL;
 	execution_mode = na_object_get_execution_mode( profile );
 
 	if( !strcmp( execution_mode, "Normal" )){
-		run_command = g_strdup( command );
+		run_command = get_command_execution_normal( settings, command );
 
-	} else if( strncmp( command, bin_sh, strlen( bin_sh ))){
+	} else if( !strcmp( execution_mode, "Terminal" )){
+		run_command = get_command_execution_terminal( settings, command );
+
+	} else if( !strcmp( execution_mode, "Embedded" )){
+		run_command = get_command_execution_embedded( settings, command );
+
+	} else if( !strcmp( execution_mode, "DisplayOutput" )){
+		run_command = get_command_execution_display_output( settings, command );
+
+	} else {
+		g_warning( "%s: unknown execution mode: %s", thisfn, execution_mode );
+	}
+
+	if( run_command ){
+		if( !g_shell_parse_argv( run_command, &argc, &argv, &error )){
+			g_warning( "%s: g_shell_parse_argv: %s", thisfn, error->message );
+			g_error_free( error );
+
+		} else {
+			wdir = na_object_get_working_dir( profile );
+			g_debug( "%s: run_command=%s, wdir=%s", thisfn, run_command, wdir );
+
+			g_spawn_async_with_pipes( wdir,
+					argv,
+					NULL,
+					G_SPAWN_SEARCH_PATH,
+					NULL,
+					NULL,
+					&child_pid,
+					NULL,
+					&child_stdout,
+					&child_stderr,
+					&error );
+			if( error ){
+				g_warning( "%s: g_spawn_async_with_pipes: %s", thisfn, error->message );
+				g_error_free( error );
+
+			} else {
+				g_spawn_close_pid( child_pid );
+
+				if( !strcmp( execution_mode, "DisplayOutput" )){
+					display_output( run_command, child_stdout, child_stderr );
+				}
+			}
+
+			g_free( wdir );
+			g_strfreev( argv );
+		}
+
+		g_free( run_command );
+	}
+
+	g_free( execution_mode );
+}
+
+static gchar *
+get_command_execution_display_output( const NASettings *settings, const gchar *command )
+{
+	static const gchar *bin_sh = "/bin/sh -c ";
+	return( na_tokens_command_from_terminal_prefix( bin_sh, command ));
+}
+
+static gchar *
+get_command_execution_embedded( const NASettings *settings, const gchar *command )
+{
+	return( get_command_execution_terminal( settings, command ));
+}
+
+static gchar *
+get_command_execution_normal( const NASettings *settings, const gchar *command )
+{
+	return( g_strdup( command ));
+}
+
+static gchar *
+get_command_execution_terminal( const NASettings *settings, const gchar *command )
+{
+	gchar *run_command;
+	gchar *prefix;
+
+	prefix = na_settings_get_string(( NASettings * ) settings, NA_IPREFS_TERMINAL_PREFIX, NULL, NULL );
+	run_command = na_tokens_command_from_terminal_prefix( prefix, command );
+	g_free( prefix );
+
+	return( run_command );
+}
+
+/**
+ * na_tokens_command_from_terminal_prefix:
+ */
+gchar *
+na_tokens_command_from_terminal_prefix( const gchar *prefix, const gchar *command )
+{
+	gchar *run_command;
+	gchar *quoted;
+
+	if( prefix && strlen( prefix ) && strncmp( command, prefix, strlen( prefix ))){
 		quoted = g_shell_quote( command );
-		run_command = g_strconcat( bin_sh, quoted, NULL );
+		run_command = g_strconcat( prefix, " ", quoted, NULL );
 		g_free( quoted );
 
 	} else {
 		run_command = g_strdup( command );
 	}
 
-	if( !g_shell_parse_argv( run_command, &argc, &argv, &error )){
-		g_warning( "%s: g_shell_parse_argv: %s", thisfn, error->message );
-		g_error_free( error );
-
-	} else {
-		wdir = na_object_get_working_dir( profile );
-		g_debug( "%s: run_command=%s, wdir=%s", thisfn, run_command, wdir );
-
-		g_spawn_async_with_pipes( wdir,
-				argv,
-				NULL,
-				G_SPAWN_SEARCH_PATH,
-				NULL,
-				NULL,
-				&child_pid,
-				NULL,
-				&child_stdout,
-				&child_stderr,
-				&error );
-		if( error ){
-			g_warning( "%s: g_spawn_async_with_pipes: %s", thisfn, error->message );
-			g_error_free( error );
-
-		} else {
-			g_spawn_close_pid( child_pid );
-			if( !strcmp( execution_mode, "DisplayOutput" )){
-				display_output( run_command, child_stdout, child_stderr );
-			}
-		}
-
-		g_free( wdir );
-		g_strfreev( argv );
-	}
-
-	g_free( run_command );
-	g_free( execution_mode );
+	return( run_command );
 }
 
 /*

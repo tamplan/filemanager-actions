@@ -916,7 +916,7 @@ execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 	g_debug( "%s: item=%p, profile=%p", thisfn, ( void * ) item, ( void * ) profile );
 
 	tokens = NA_TOKENS( g_object_get_data( G_OBJECT( item ), "nautilus-actions-tokens" ));
-	na_tokens_execute_action( tokens, profile );
+	na_tokens_execute_action( tokens, na_pivot_get_settings( st_plugin->private->pivot ), profile );
 }
 
 /*

@@ -82,6 +82,8 @@
 
 #include <api/na-object-profile.h>
 
+#include "na-settings.h"
+
 G_BEGIN_DECLS
 
 #define NA_TOKENS_TYPE                ( na_tokens_get_type())
@@ -115,8 +117,9 @@ NATokens *na_tokens_new_for_example   ( void );
 NATokens *na_tokens_new_from_selection( GList *selection );
 
 gchar    *na_tokens_parse_for_display ( const NATokens *tokens, const gchar *string, gboolean utf8 );
+void      na_tokens_execute_action    ( const NATokens *tokens, const NASettings *settings, const NAObjectProfile *profile );
 
-void      na_tokens_execute_action    ( const NATokens *tokens, const NAObjectProfile *profile );
+gchar    *na_tokens_command_from_terminal_prefix( const gchar *prefix, const gchar *command );
 
 G_END_DECLS
 

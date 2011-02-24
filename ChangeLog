@@ -1,5 +1,21 @@
 2011-02-23 Pierre Wieser <pwieser@trychlos.org>
 
+	Improve ExecutionMode implementation by defining a new user preference
+
+	* src/core/na-settings.c:
+	* src/core/na-settings.h: Define new NA_IPREFS_TERMINAL_PREFIX user preference.
+
+	* src/core/na-tokens.c:
+	* src/core/na-tokens.h
+	(na_tokens_command_from_terminal_prefix): New function.
+	(na_tokens_execute_action): New NASettings parameter.
+
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-preferences.ui: Let the user edit the preference.
+
+	* src/utils/nautilus-actions-run.c:
+	* po/POTFILES.in: Updated accordingly.
+
 	* src/core/na-settings.c:
 	* src/core/na-settings.h: Define a new NA_IPREFS_PLUGIN_LOG user preference.
 

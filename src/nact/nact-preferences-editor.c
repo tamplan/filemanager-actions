@@ -32,9 +32,12 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include <api/na-iimporter.h>
 
 #include <core/na-iprefs.h>
+#include <core/na-tokens.h>
 
 #include "nact-application.h"
 #include "nact-export-format.h"
@@ -63,7 +66,11 @@ struct _NactPreferencesEditorPrivate {
 	gboolean about_item;
 	gboolean about_item_mandatory;
 
-	/* second tab: ui preferences */
+	/* second tab: runtime execution */
+	gchar   *terminal_prefix;
+	gboolean terminal_prefix_mandatory;
+
+	/* third tab: ui preferences */
 	gboolean relabel_menu;
 	gboolean relabel_menu_mandatory;
 	gboolean relabel_action;
@@ -79,15 +86,15 @@ struct _NactPreferencesEditorPrivate {
 	guint    auto_save_period;
 	gboolean auto_save_period_mandatory;
 
-	/* third tab: import mode */
+	/* fourth tab: import mode */
 	guint    import_mode;
 	gboolean import_mode_mandatory;
 
-	/* fourth tab: export format */
+	/* fifth tab: export format */
 	gboolean export_format_mandatory;
 
-	/* fifth tab: default list of available schemes */
-	/* sixth tab: i/o providers */
+	/* sixth tab: default list of available schemes */
+	/* seventh tab: i/o providers */
 };
 
 static const gchar  *st_xmlui_filename = PKGDATADIR "/nact-preferences.ui";
@@ -115,6 +122,8 @@ static void     root_menu_setup( NactPreferencesEditor *editor, NASettings *sett
 static void     root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void     about_item_setup( NactPreferencesEditor *editor, NASettings *settings );
 static void     about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void     terminal_prefix_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     terminal_prefix_on_changed( GtkEntry *entry, NactPreferencesEditor *editor );
 static void     relabel_menu_setup( NactPreferencesEditor *editor, NASettings *settings );
 static void     relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void     relabel_action_setup( NactPreferencesEditor *editor, NASettings *settings );
@@ -370,7 +379,11 @@ on_base_initialize_base_window( NactPreferencesEditor *editor )
 		root_menu_setup( editor, settings );
 		about_item_setup( editor, settings );
 
-		/* second tab: ui preferences
+		/* second tab: runtime execution
+		 */
+		terminal_prefix_setup( editor, settings );
+
+		/* third tab: ui preferences
 		 */
 		relabel_menu_setup( editor, settings );
 		relabel_action_setup( editor, settings );
@@ -379,22 +392,22 @@ on_base_initialize_base_window( NactPreferencesEditor *editor )
 		esc_confirm_setup( editor, settings );
 		auto_save_setup( editor, settings );
 
-		/* third tab: import mode
+		/* fourth tab: import mode
 		 */
 		import_mode_setup( editor, NA_PIVOT( updater ));
 
-		/* fourth tab: export format
+		/* fifth tab: export format
 		 */
 		export_format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, &editor->private->export_format_mandatory );
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 		nact_export_format_select( container, !editor->private->export_format_mandatory, export_format );
 
-		/* fifth tab: default schemes
+		/* sixth tab: default schemes
 		 */
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
 		nact_schemes_list_init_view( listview, BASE_WINDOW( editor ), NULL, NULL );
 
-		/* sixth tab: I/O providers priorities
+		/* seventh tab: I/O providers priorities
 		 */
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
 		nact_providers_list_init_view( BASE_WINDOW( editor ), listview );
@@ -579,7 +592,58 @@ about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 }
 
 /*
- * add an about item
+ * terminal prefix
+ */
+static void
+terminal_prefix_setup( NactPreferencesEditor *editor, NASettings *settings )
+{
+	gboolean editable;
+	GtkWidget *entry;
+
+	editor->private->terminal_prefix = na_settings_get_string( settings, NA_IPREFS_TERMINAL_PREFIX, NULL, &editor->private->terminal_prefix_mandatory );
+	editable = !editor->private->preferences_locked && !editor->private->terminal_prefix_mandatory;
+
+	entry = base_window_get_widget( BASE_WINDOW( editor ), "TerminalPrefixEntry" );
+	gtk_entry_set_text( GTK_ENTRY( entry ), editor->private->terminal_prefix );
+	gtk_widget_set_sensitive( entry, !editor->private->preferences_locked );
+	base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+
+	terminal_prefix_on_changed( GTK_ENTRY( entry ), editor );
+
+	base_window_signal_connect( BASE_WINDOW( editor ),
+			G_OBJECT( entry ), "changed", G_CALLBACK( terminal_prefix_on_changed ));
+}
+
+static void
+terminal_prefix_on_changed( GtkEntry *entry, NactPreferencesEditor *editor )
+{
+	gboolean editable;
+	gchar *example_label;
+	gchar *example_markup;
+	GtkWidget *example_widget;
+
+	editable = !editor->private->preferences_locked && !editor->private->terminal_prefix_mandatory;
+
+	if( editable ){
+		g_free( editor->private->terminal_prefix );
+		editor->private->terminal_prefix = g_strdup( gtk_entry_get_text( entry ));
+
+		example_widget = base_window_get_widget( BASE_WINDOW( editor ), "TerminalPrefixExample" );
+		example_label = na_tokens_command_from_terminal_prefix( editor->private->terminal_prefix, "ls -l" );
+
+		/* i18n: command-line example: Ex.: gnome-terminal -c "ls -l" */
+		example_markup = g_markup_printf_escaped(
+				"<i><b><span size=\"small\">%s %s</span></b></i>", _( "Ex.:" ), example_label );
+
+		gtk_label_set_label( GTK_LABEL( example_widget ), example_markup );
+
+		g_free( example_label );
+		g_free( example_markup );
+	}
+}
+
+/*
+ * relabel copied/paster menu ?
  */
 static void
 relabel_menu_setup( NactPreferencesEditor *editor, NASettings *settings )
@@ -941,7 +1005,13 @@ on_dialog_ok( BaseDialog *dialog )
 			na_settings_set_boolean( settings, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, editor->private->about_item );
 		}
 
-		/* second tab: runtime preferences
+		/* second tab: runtime execution
+		 */
+		if( !editor->private->terminal_prefix_mandatory ){
+			na_settings_set_string( settings, NA_IPREFS_TERMINAL_PREFIX, editor->private->terminal_prefix );
+		}
+
+		/* third tab: ui preferences
 		 */
 		if( !editor->private->relabel_menu_mandatory ){
 			na_settings_set_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, editor->private->relabel_menu );
@@ -965,13 +1035,13 @@ on_dialog_ok( BaseDialog *dialog )
 			na_settings_set_uint( settings, NA_IPREFS_MAIN_SAVE_PERIOD, editor->private->auto_save_period );
 		}
 
-		/* third tab: import mode
+		/* fourth tab: import mode
 		 */
 		if( !editor->private->import_mode_mandatory ){
 			na_iprefs_set_import_mode( NA_PIVOT( updater ), NA_IPREFS_IMPORT_PREFERRED_MODE, editor->private->import_mode );
 		}
 
-		/* fourth tab: export format
+		/* fifth tab: export format
 		 */
 		if( !editor->private->export_format_mandatory ){
 			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
@@ -980,11 +1050,11 @@ on_dialog_ok( BaseDialog *dialog )
 					NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( export_format ));
 		}
 
-		/* fifth tab: list of default schemes
+		/* sixth tab: list of default schemes
 		 */
 		nact_schemes_list_save_defaults( BASE_WINDOW( editor ));
 
-		/* sixth tab: priorities of I/O providers
+		/* seventh tab: priorities of I/O providers
 		 */
 		nact_providers_list_save( BASE_WINDOW( editor ));
 	}

@@ -147,6 +147,7 @@ GType na_settings_get_type( void );
 #define NA_IPREFS_RELABEL_DUPLICATE_PROFILE			"relabel-when-duplicate-profile"
 #define NA_IPREFS_SCHEME_ADD_SCHEME_WSP				"scheme-add-scheme-wsp"
 #define NA_IPREFS_SCHEME_DEFAULT_LIST				"scheme-default-list"
+#define NA_IPREFS_TERMINAL_PREFIX					"terminal-prefix"
 
 #define NA_IPREFS_IO_PROVIDER_GROUP					"io-provider"
 #define NA_IPREFS_IO_PROVIDER_READABLE				"readable"
