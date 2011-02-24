@@ -1,5 +1,8 @@
 2011-02-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Bump Nautilus required version to 2.16
+	for having nautilus_menu_provider_emit_items_updated_signal() function.
+
 	* configure.ac:
 	* src/plugin-menu/nautilus-actions.c:
 	Check for nautilus_menu_provider_get_toolbar_items() function.

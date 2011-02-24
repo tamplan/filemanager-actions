@@ -126,9 +126,6 @@ NA_CHECK_FOR_GCONF
 # GLib >= 2.16: GVFS/GIO
 # Gtk  >= 2.12: GtkBuilder
 #
-# [configure.ac, nautilus-actions.c] remove test for
-# 	nautilus_menu_provider_emit_items_updated_signal() when Gnome >= 2.16
-#
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 if test "${PKG_CONFIG}" = "no"; then
 	AC_MSG_ERROR([You need to install pkg-config])
@@ -142,13 +139,14 @@ NA_CHECK_FOR_GTK
 dnl aclocal complains if the comma is not just after the square bracket
 NA_CHECK_MODULE([DBUS],              [dbus-glib-1])
 NA_CHECK_MODULE([GCONF],             [gconf-2.0 >= 2.8.0])
+NA_CHECK_MODULE([GIO_UNIX],          [gio-unix-2.0])
 NA_CHECK_MODULE([GMODULE],           [gmodule-2.0 >= ${glib_required}])
 NA_CHECK_MODULE([GLIB],              [glib-2.0 >= ${glib_required}])
 NA_CHECK_MODULE([GTOP],              [libgtop-2.0 >= 2.23.1])
 NA_CHECK_MODULE([LIBXML],            [libxml-2.0 >= 2.6])
 NA_CHECK_MODULE([SM],                [sm >= 1.0])
 NA_CHECK_MODULE([UUID],              [uuid])
-NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.8])
+NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.16])
 
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
