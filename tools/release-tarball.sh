@@ -375,7 +375,7 @@ desthost="stormy.trychlos.org"
 msg "installing in ${lib_desthost}${destdir}"
 cmd="mkdir -p "${destdir}""
 [ "${local}" = "yes" ] && command "${cmd}" || command "ssh ${desthost} '${cmd}'"
-command "scp -v "${opt_tarname}" "${lib_desthost}${destdir}/""
+command "scp "${opt_tarname}" "${lib_desthost}${destdir}/""
 cmd="sha1sum ${destdir}/${opt_tarname} > ${destdir}/${opt_tarname}.sha1sum"
 [ "${local}" = "yes" ] && command "${cmd}" || command "ssh ${desthost} '${cmd}'"
 if [ "${opt_stable}" = "yes" ]; then
