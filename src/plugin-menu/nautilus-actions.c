@@ -67,9 +67,12 @@ struct _NautilusActionsPrivate {
 	NATimeout change_timeout;
 };
 
-static GObjectClass *st_parent_class    = NULL;
-static GType         st_actions_type    = 0;
-static gint          st_burst_timeout   = 100;		/* burst timeout in msec */
+static GObjectClass    *st_parent_class  = NULL;
+static GType            st_actions_type  = 0;
+static gint             st_burst_timeout = 100;		/* burst timeout in msec */
+
+/* used in order to be able to get settings from the module */
+static NautilusActions *st_plugin        = NULL;
 
 static void              class_init( NautilusActionsClass *klass );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
@@ -187,6 +190,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self = NAUTILUS_ACTIONS( instance );
+	st_plugin = self;
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 
@@ -273,6 +277,7 @@ instance_dispose( GObject *object )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
+		st_plugin = NULL;
 
 		if( self->private->items_changed_handler ){
 			g_signal_handler_disconnect( self->private->pivot, self->private->items_changed_handler );
@@ -319,6 +324,24 @@ iabout_get_application_name( NAIAbout *instance )
 {
 	/* i18n: title of the About dialog box, when seen from Nautilus file manager */
 	return( g_strdup( _( "Nautilus-Actions" )));
+}
+
+gboolean
+nautilus_action_is_log_enabled( void )
+{
+	gboolean log_ok;
+	NASettings *settings;
+
+	log_ok = FALSE;
+
+	if( st_plugin ){
+		g_return_val_if_fail( NAUTILUS_IS_ACTIONS( st_plugin ), FALSE );
+
+		settings = na_pivot_get_settings( st_plugin->private->pivot );
+		log_ok = na_settings_get_boolean( settings, NA_IPREFS_PLUGIN_LOG, NULL, NULL );
+	}
+
+	return( log_ok );
 }
 
 static void

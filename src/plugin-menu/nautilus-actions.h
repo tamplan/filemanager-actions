@@ -69,8 +69,10 @@ typedef struct {
 }
 	NautilusActionsClass;
 
-GType nautilus_actions_get_type     ( void );
-void  nautilus_actions_register_type( GTypeModule *module );
+GType    nautilus_actions_get_type     ( void );
+void     nautilus_actions_register_type( GTypeModule *module );
+
+gboolean nautilus_action_is_log_enabled( void );
 
 G_END_DECLS
 

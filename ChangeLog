@@ -1,5 +1,15 @@
 2011-02-23 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-settings.c:
+	* src/core/na-settings.h: Define a new NA_IPREFS_PLUGIN_LOG user preference.
+
+	* src/plugin-menu/nautilus-actions.c:
+	* src/plugin-menu/nautilus-actions.h (nautilus_action_is_log_enabled):
+	New function.
+
+	* src/plugin-menu/nautilus-module.c (log_handler): Send debug trace to
+	syslog if the NA_IPREFS_PLUGIN_LOG preference is set.
+
 	* configure.ac: Bump Nautilus required version to 2.16
 	for having nautilus_menu_provider_emit_items_updated_signal() function.
 
