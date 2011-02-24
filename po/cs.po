@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2011-02-21 21:37+0000\n"
-"PO-Revision-Date: 2011-02-23 19:05+0100\n"
+"POT-Creation-Date: 2011-02-23 23:55+0000\n"
+"PO-Revision-Date: 2011-02-24 18:28+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -632,7 +632,6 @@ msgstr ""
 "potřebujete, musíte nastavit tento přepínač zvlášť"
 
 #: ../src/core/na-icontext-factory.c:175
-#| msgid "Whether the profile applies to folders"
 msgid "Whether the profile applies to files (deprecated option, see mimetype)"
 msgstr "Zda se profil použije na soubory (zastaralý přepínač, viz mimetype)"
 
@@ -663,7 +662,6 @@ msgstr ""
 "Výchozí je „zapnuto“."
 
 #: ../src/core/na-icontext-factory.c:206
-#| msgid "Whether the profile applies to folders"
 msgid ""
 "Whether the profile applies to folders (deprecated option, see mimetype)"
 msgstr "Zda se profil použije na složky (zastaralý přepínač, viz mimetype)"
@@ -695,7 +693,6 @@ msgstr ""
 "Výchozí je „vypnuto“."
 
 #: ../src/core/na-icontext-factory.c:240
-#| msgid "Whether the selection may be multiple"
 msgid ""
 "Whether the selection may be multiple (deprecated option, see selection "
 "count)"
@@ -832,7 +829,6 @@ msgstr ""
 "Výchozí je „>0“."
 
 #: ../src/core/na-icontext-factory.c:352
-#| msgid "Operator of the selection count relation"
 msgid "Selection count relation [>0]"
 msgstr "Operátor vztahu k počtu vybraných [>0]"
 
@@ -845,9 +841,6 @@ msgid "Defaults to all."
 msgstr "Výchozí jsou všechny."
 
 #: ../src/core/na-icontext-factory.c:375
-#| msgid ""
-#| "The path of a (parent) directory for which the item will be displayed. "
-#| "You must set one option for each folder you need"
 msgid ""
 "The name of an only desktop environment where the item must be displayed. "
 "You must set one option for each environment you want"
@@ -869,9 +862,6 @@ msgid "Defaults to none."
 msgstr "Výchozí je žádný."
 
 #: ../src/core/na-icontext-factory.c:399
-#| msgid ""
-#| "The path of a (parent) directory for which the item will be displayed. "
-#| "You must set one option for each folder you need"
 msgid ""
 "The name of a desktop environment where the item must not be displayed. You "
 "must set one option for each environment you want"
@@ -928,7 +918,6 @@ msgstr "Název služby, která musí být registrována v sezení DBus"
 
 #: ../src/core/na-icontext-factory.c:455 ../src/core/na-icontext-factory.c:508
 #: ../src/core/na-icontext-factory.c:541
-#| msgid "<PATH|NAME>"
 msgid "<NAME>"
 msgstr "<NÁZEV>"
 
@@ -1191,12 +1180,11 @@ msgstr ""
 msgid "New Nautilus action"
 msgstr "Nová akce Nautilus"
 
-#: ../src/core/na-object-action.c:513
+#: ../src/core/na-object-action.c:498
 msgid "Profile automatically created from pre-v2 action"
 msgstr "Profil automaticky vytvořen z akce pre-v2"
 
 #: ../src/core/na-object-action-factory.c:76
-#| msgid "Targets the location context menu"
 msgid "Targets the selection context menu"
 msgstr "Cíle kontextové nabídky výběru"
 
@@ -1215,7 +1203,6 @@ msgstr ""
 "Výchozí je ZAPNUTO."
 
 #: ../src/core/na-object-action-factory.c:95
-#| msgid "Targets the selection context menu (default)"
 msgid "Targets the selection context menu [true]"
 msgstr "Cíle kontextové nabídky výběru [pravda]"
 
@@ -1238,7 +1225,6 @@ msgstr ""
 "Výchozí je ZAPNUTO."
 
 #: ../src/core/na-object-action-factory.c:121
-#| msgid "Targets the location context menu"
 msgid "Targets the location context menu [false]"
 msgstr "Cíle kontextové nabídky místa [nepravda]"
 
@@ -1259,7 +1245,6 @@ msgstr ""
 "Výchozí je VYPNUTO."
 
 #: ../src/core/na-object-action-factory.c:146
-#| msgid "Targets the toolbar"
 msgid "Targets the toolbar [false]"
 msgstr "Cíle lišty nástrojů [nepravda]"
 
@@ -1402,7 +1387,6 @@ msgstr ""
 "podřízené položky se připojí v pořadí, v jakém budou postupně načítány."
 
 #: ../src/core/na-object-item-factory.c:286
-#| msgid "Whether the action or the menu is enabled (default)"
 msgid "Whether the action or the menu is enabled"
 msgstr "Zda je akce nebo nabídka povolena"
 
@@ -1417,7 +1401,6 @@ msgstr ""
 "Výchozí je ZAPNUTO."
 
 #: ../src/core/na-object-item-factory.c:303
-#| msgid "Whether the action or the menu is enabled (default)"
 msgid "Whether the action or the menu is enabled [enabled]"
 msgstr "Zda je akce nebo nabídka povolena [povolena]"
 
@@ -1439,7 +1422,7 @@ msgid "New Nautilus menu"
 msgstr "Nová nabídka aplikace Nautilus"
 
 #. i18n: label for the default profile
-#: ../src/core/na-object-profile.c:765
+#: ../src/core/na-object-profile.c:750
 msgid "Default profile"
 msgstr "Výchozí profil"
 
@@ -1584,7 +1567,8 @@ msgstr ""
 msgid "Execution mode"
 msgstr "Režim provádění"
 
-#: ../src/core/na-object-profile-factory.c:213
+#. i18n: 'Normal', 'Terminal', 'Embedded' and 'DisplayOutput' are non-translatable keywords
+#: ../src/core/na-object-profile-factory.c:214
 msgid ""
 "Execution mode of the program.\n"
 "This may be chosen between following values:\n"
@@ -1610,11 +1594,11 @@ msgstr ""
 "přijatelné náhradní řešení je Terminal.\n"
 "Výchozí je „Normal“."
 
-#: ../src/core/na-object-profile-factory.c:244
+#: ../src/core/na-object-profile-factory.c:245
 msgid "Startup notify"
 msgstr "Oznámení spuštění"
 
-#: ../src/core/na-object-profile-factory.c:245
+#: ../src/core/na-object-profile-factory.c:246
 msgid ""
 "Only relevant when ExecutionMode=Normal.\n"
 "Defaults to FALSE."
@@ -1622,11 +1606,11 @@ msgstr ""
 "Má význam, jen když je nastaveno ExecutionMode=Normal.\n"
 "Výchozí hodnota je VYPNUTO."
 
-#: ../src/core/na-object-profile-factory.c:267
+#: ../src/core/na-object-profile-factory.c:268
 msgid "Startup WM Class"
 msgstr "Třída spouštěného správce oken"
 
-#: ../src/core/na-object-profile-factory.c:268
+#: ../src/core/na-object-profile-factory.c:269
 msgid ""
 "Only relevant when ExecutionMode=Normal.\n"
 "Defaults to empty."
@@ -1634,11 +1618,11 @@ msgstr ""
 "Má význam, jen když je nastaveno ExecutionMode=Normal.\n"
 "Výchozí hodnota je prázdná."
 
-#: ../src/core/na-object-profile-factory.c:290
+#: ../src/core/na-object-profile-factory.c:291
 msgid "Execute as user"
 msgstr "Provádět jako uživatel"
 
-#: ../src/core/na-object-profile-factory.c:291
+#: ../src/core/na-object-profile-factory.c:292
 msgid ""
 "The user the command must be ran as. The user may be identified by its "
 "numeric UID or by its login.\n"
@@ -1651,34 +1635,53 @@ msgstr ""
 "ignorován.\n"
 "Výchozí je prázdný: tj. příkaz bude spuštěn pod aktuálním uživatelem."
 
-#: ../src/core/na-selected-info.c:845
+#: ../src/core/na-selected-info.c:846
 #, c-format
 msgid "Error when querying informations for %s URI: %s"
 msgstr "Chyba při dotazování na informace pro adresu URI %s: %s"
 
-#: ../src/core/na-tokens.c:231
+#: ../src/core/na-tokens.c:234
 msgid "file:///path/to/file1.mid"
 msgstr "file:///cesta/k/souboru1.mid"
 
-#: ../src/core/na-tokens.c:232
+#: ../src/core/na-tokens.c:235
 msgid "file:///path/to/file2.jpeg"
 msgstr "file:///cesta/k/souboru2.jpeg"
 
-#: ../src/core/na-tokens.c:233
+#: ../src/core/na-tokens.c:236
 msgid "audio/x-midi"
 msgstr "audio/x-midi"
 
-#: ../src/core/na-tokens.c:234
+#: ../src/core/na-tokens.c:237
 msgid "image/jpeg"
 msgstr "image/jpeg"
 
-#: ../src/core/na-tokens.c:236
+#: ../src/core/na-tokens.c:239
 msgid "test.example.net"
 msgstr "test.priklad.cz"
 
-#: ../src/core/na-tokens.c:237
+#: ../src/core/na-tokens.c:240
 msgid "user"
 msgstr "uživatel"
+
+#: ../src/core/na-tokens.c:401
+#| msgid "Output of the program"
+msgid "Output of the run command"
+msgstr "Výstup spuštěného příkazu"
+
+#: ../src/core/na-tokens.c:409
+#| msgid "Choosing a command"
+msgid "Run command:"
+msgstr "Spustit příkaz:"
+
+#: ../src/core/na-tokens.c:410
+msgid "Standard output:"
+msgstr "Standardní výstup:"
+
+#: ../src/core/na-tokens.c:411
+#| msgid "Save error"
+msgid "Standard error:"
+msgstr "Standardní chybový výstup:"
 
 #: ../src/io-desktop/nadp-desktop-provider.c:260
 msgid "Nautilus-Actions Desktop I/O Provider"
@@ -1899,7 +1902,6 @@ msgid "Quit on Escape"
 msgstr "Při stisku Esc ukončit"
 
 #: ../src/nact/base-assistant.c:158
-#| msgid "Does the assistant should 'Quit' when the user hits the Escape key ?"
 msgid "Should the assistant 'Quit' when the user hits Escape ?"
 msgstr "Měly by se průvodce ukončit, když uživatel stiskne klávesu Escape?"
 
@@ -1908,8 +1910,6 @@ msgid "Warn on Escape"
 msgstr "Při stisku Esc varovat"
 
 #: ../src/nact/base-assistant.c:166
-#| msgid ""
-#| "Does the user should confirm when quitting the assistant on Escape key ?"
 msgid ""
 "Should the user be asked to confirm when exiting the assistant via Escape ?"
 msgstr ""
@@ -2307,19 +2307,24 @@ msgid "KDE desktop"
 msgstr "Pracovní prostředí KDE"
 
 #: ../src/nact/nact-ienvironment-tab.c:95
+#| msgid "KDE desktop"
+msgid "LXDE desktop"
+msgstr "Pracovní prostředí LXDE"
+
+#: ../src/nact/nact-ienvironment-tab.c:96
 msgid "ROX desktop"
 msgstr "Pracovní prostředí ROX"
 
-#: ../src/nact/nact-ienvironment-tab.c:96
+#: ../src/nact/nact-ienvironment-tab.c:97
 msgid "XFCE desktop"
 msgstr "Pracovní postředí XFCE"
 
-#: ../src/nact/nact-ienvironment-tab.c:97
+#: ../src/nact/nact-ienvironment-tab.c:98
 msgid "Legacy systems"
 msgstr "Dřívější systémy"
 
-#: ../src/nact/nact-ienvironment-tab.c:712
-#: ../src/nact/nact-ienvironment-tab.c:770
+#: ../src/nact/nact-ienvironment-tab.c:713
+#: ../src/nact/nact-ienvironment-tab.c:771
 msgid "Choosing an executable"
 msgstr "Výběr spustitelného programu"
 
@@ -4325,17 +4330,17 @@ msgid "username of the (first) selected URI."
 msgstr "jméno uživatele (první) vybrané adresy URI."
 
 #. i18n: title of the About dialog box, when seen from Nautilus file manager
-#: ../src/plugin-menu/nautilus-actions.c:334
+#: ../src/plugin-menu/nautilus-actions.c:321
 msgid "Nautilus-Actions"
 msgstr "Akce-Nautilus"
 
 #. i18n: label of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:926
+#: ../src/plugin-menu/nautilus-actions.c:920
 msgid "Nautilus-Actions actions"
 msgstr "Akce aplikace Akce-Nautilus"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:928
+#: ../src/plugin-menu/nautilus-actions.c:922
 msgid ""
 "A submenu which embeds the currently available Nautilus-Actions actions and "
 "menus"
@@ -4343,11 +4348,11 @@ msgstr ""
 "Podnabídka, která vkládá aktuálně dostupné akce a nabídky aplikace Akce-"
 "Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:975
+#: ../src/plugin-menu/nautilus-actions.c:969
 msgid "About Nautilus-Actions"
 msgstr "O aplikaci Akce-Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:976
+#: ../src/plugin-menu/nautilus-actions.c:970
 msgid "Display some informations about Nautilus-Actions"
 msgstr "Zobrazit informace o aplikaci Akce-Nautilus"
 
@@ -4458,12 +4463,10 @@ msgid "Output the schema on stdout"
 msgstr "Vypsat schéma na standardní výstup"
 
 #: ../src/utils/na-print-schemas.c:68
-#| msgid "Output the schema on stdout"
 msgid "Output the action schemas [default]"
 msgstr "Vypsat schémata akcí [výchozí]"
 
 #: ../src/utils/na-print-schemas.c:69
-#| msgid "Output the schema on stdout"
 msgid "Output the menu schemas"
 msgstr "Vypsat schémata nabídek"
 
@@ -4488,12 +4491,10 @@ msgid "Set it if the item should be disabled at creation"
 msgstr "Nastavte, pokud má být položka po vytvoření zakázaná"
 
 #: ../src/utils/nautilus-actions-new.c:136
-#| msgid "Set it if the item doesn't target the context menu"
 msgid "Set it if the item doesn't target the selection context menu"
 msgstr "Nastavte, pokud cílem položky není kontextová nabídka výběru"
 
 #: ../src/utils/nautilus-actions-new.c:138
-#| msgid "Set it if the item doesn't target the context menu"
 msgid "Set it if the item doesn't target the location context menu"
 msgstr "Nastavte, pokud cílem položky není kontextová nabídka umístění"
 
@@ -4515,7 +4516,6 @@ msgstr "Vytvořit novou položku jako soubor .desktop"
 
 #: ../src/utils/nautilus-actions-new.c:160
 #, c-format
-#| msgid "Error: '%s' and '%s' options cannot both be specified.\n"
 msgid "Error: '%s' and '%s' options cannot both be specified\n"
 msgstr "Chyba: přepínače „%s“ a „%s“ nelze zadat naráz\n"
 
@@ -4539,12 +4539,6 @@ msgid "Define a new action."
 msgstr "Definovat novou akci."
 
 #: ../src/utils/nautilus-actions-new.c:351
-#| msgid ""
-#| "The created action defaults to be written to stdout.\n"
-#| "It can also be written to an output folder, in a file later suitable for "
-#| "an import in NACT.\n"
-#| "Or you may choose to directly write the action into your GConf "
-#| "configuration."
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
