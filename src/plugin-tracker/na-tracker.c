@@ -259,7 +259,10 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 
 	iface->get_background_items = menu_provider_get_background_items;
 	iface->get_file_items = menu_provider_get_file_items;
+
+#ifdef HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS
 	iface->get_toolbar_items = NULL;
+#endif
 }
 
 static GList *
