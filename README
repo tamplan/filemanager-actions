@@ -23,11 +23,16 @@ Nautilus-Actions components.
       Nautilus selection, and sends it in response to a DBus request. 
 
   - Command-line utilities:
-    . nautilus-actions-new lets you create new actions from the command-line.
-    . nautilus-actions-schemas prints the full GConf schema on stdout.
-    . nautilus-actions-run lets you execute a predefined action, taking
-      into account the current Nautilus selection via a DBus call to the
-      libnautilus-actions-tracker plugin.
+    a) installed in PREFIX/bin:
+       . nautilus-actions-new lets you create new actions from the command-line;
+       . nautilus-actions-run lets you execute a predefined action, taking
+         into account the current Nautilus selection via a DBus call to the
+         libnautilus-actions-tracker plugin;
+    b) installed in PKGLIBEXECDIR:
+       . na-print-schemas prints the full GConf schemas on stdout;
+       . na-delete-xmltree deletes a tree from a XML file;
+       . na-gconf2keys.sh migrates menus, actions and user preferences from
+         GConf to files.
 
 Nautilus-Actions plugins.
 

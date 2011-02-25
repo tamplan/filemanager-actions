@@ -1,3 +1,65 @@
+Version 3.1.0
+=============
+
+	Release date 2011-02-25
+
+	General modifications:
+
+		- Migrate menus, actions (resp. user preferences) from GConf to .desktop
+		  files (resp. keyed files). Please read README-GCNF.
+		- nautilus-actions-schemas in renamed as na-print-schemas and installed
+		  in PKGLIBEXECDIR.
+		- Two new executables na-delete-xmltree and na-gconf2keys.sh are also
+		  installed in PKGLIBEXECDIR.
+		- New user preferences are installed respectively as
+		  SYSCONFDIR/xdg/nautilus-actions/nautilus-actions.conf and
+		  ~/.config/nautilus-actions/nautilus-actions.conf.
+		- Implement a new icon chooser, which lets the user select a themed
+		  icon or an icon by path.
+		- Preferences dialog is now reopened on the last used tab.
+		- Define a new NATimeout public structure.
+		- Add --enable-gconf configure option, defaulting to "auto".
+		- Add --enable-deprecated configure option, defaulting to "no".
+		- nautilus-actions-new now implements all available properties.
+		- Currently running desktop environment is not detected at runtime
+		  when not specified as a user preference.
+		- Plugin menu can now be debugged from a user preference.
+		- Implements ExecutionMode (in a terminal, display output).
+		- Disable not yet implemented fields in NACT.
+
+	Internal modifications:
+
+		- Lot of code rewriting:
+		  . define all GConf writing functions as deprecated;
+		  . NactIActionsList interface is moved to NactTreeView class plus
+		    NactTreeIEditable interface;
+		  . user preferences are managed via a NASettings singleton;
+		  . BaseApplication and BaseWindow;
+		  . NactMenubar: new convenience class;
+		  . fully deprecate NAIPivotConsumer interface;
+		  . NactSortButtons: new convenience class;
+		  . NADataBoxed now derives from new NABoxed class;
+		  . modification stack;
+		  . validity stack;
+		  . writability stack;
+
+	Bug fixes:
+
+		- Fix various mistakes and mispellings reported by Fr translation team.
+		- Fix #640216: string errors reported by Christian Kirbach.
+		- Fix #640920: string errors reported by Christian Kirbach.
+		- Fix case insensitive comparison reported by Johan Spee.
+		- No more try to convert all/allfiles to something else.
+
+	New and updated translations:
+
+		- cs (Marek Cernocky)
+		- de (Mario Blättermann, Christian Kirbach) 
+		- es (Jorge González)
+		- fr (Bruno Brouard)
+		- nb (Kjartan Maraas)
+		- sl (Matej Urbančič, Andrej Žnidaršič) 
+
 Version 3.0.7
 =============
 

@@ -1,5 +1,9 @@
 2011-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS:
+	* README:
+	* README-GCONF: Update before releasing.
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c (na_core_utils_str_subst): New function.
 
