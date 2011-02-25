@@ -941,8 +941,10 @@ An acceptable fallback is running in the standard terminal.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkFrame" id="frame320">
+                              <object class="GtkFrame" id="StartupModeFrame">
                                 <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">Note: this is not yet implemented in Nautilus-Actions.
+</property>
                                 <property name="label_xalign">0</property>
                                 <property name="shadow_type">in</property>
                                 <child>
@@ -1030,8 +1032,9 @@ Only relevant when chosen execution mode is Normal.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkFrame" id="frame330">
+                              <object class="GtkFrame" id="UserFrame">
                                 <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">Note: this is not yet implemented in Nautilus-Actions.</property>
                                 <property name="label_xalign">0</property>
                                 <property name="shadow_type">in</property>
                                 <child>
@@ -2459,7 +2462,8 @@ If unchecked, then the item will never appear in the file manager context menus 
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="receives_default">True</property>
-                                                <property name="tooltip_text" translatable="yes">Enter here the keyboard touch combination you suggest as a shortcut to your action.</property>
+                                                <property name="tooltip_text" translatable="yes">Enter here the keyboard touch combination you suggest as a shortcut to your action.
+Note: this is not yet implemented in Nautilus-Actions.</property>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>
@@ -2683,6 +2687,9 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
     <property name="title" translatable="yes">Importing actions</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <placeholder/>
     </child>
@@ -3968,39 +3975,39 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
   </object>
   <object class="GtkSizeGroup" id="CommandLabelSizeGroup">
     <widgets>
-      <widget name="ProfileLabelLabel"/>
-      <widget name="CommandPathLabel"/>
-      <widget name="CommandParametersLabel"/>
       <widget name="label4"/>
+      <widget name="CommandParametersLabel"/>
+      <widget name="CommandPathLabel"/>
+      <widget name="ProfileLabelLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="CommandButtonSizeGroup">
     <widgets>
-      <widget name="CommandPathButton"/>
       <widget name="CommandLegendButton"/>
+      <widget name="CommandPathButton"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ActionLabelSizeGroup">
     <widgets>
-      <widget name="ActionIconLabel"/>
-      <widget name="ActionTooltipLabel"/>
-      <widget name="ActionToolbarLabelLabel"/>
       <widget name="ActionMenuLabelLabel"/>
+      <widget name="ActionToolbarLabelLabel"/>
+      <widget name="ActionTooltipLabel"/>
+      <widget name="ActionIconLabel"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="ExecutionModeSizeGroup">
     <widgets>
-      <widget name="label45"/>
-      <widget name="label44"/>
       <widget name="label43"/>
+      <widget name="label44"/>
+      <widget name="label45"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup" id="PropertiesLabelSizeGroup">
     <widgets>
-      <widget name="label19"/>
-      <widget name="label49"/>
-      <widget name="label39"/>
       <widget name="label18"/>
+      <widget name="label39"/>
+      <widget name="label49"/>
+      <widget name="label19"/>
     </widgets>
   </object>
 </interface>

@@ -233,7 +233,7 @@ on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, g
 	gchar *mode;
 	GtkWidget *normal_toggle, *terminal_toggle, *embedded_toggle, *display_toggle;
 	gboolean notify;
-	GtkWidget *notify_check;
+	GtkWidget *notify_check, *frame;
 	gchar *class, *user;
 	GtkWidget *entry;
 
@@ -288,6 +288,9 @@ on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, g
 
 		g_free( mode );
 
+		frame = base_window_get_widget( BASE_WINDOW( instance ), "StartupModeFrame" );
+		gtk_widget_set_sensitive( frame, FALSE );
+
 		notify = profile ? na_object_get_startup_notify( profile ) : FALSE;
 		notify_check = base_window_get_widget( BASE_WINDOW( instance ), "StartupNotifyButton" );
 		base_gtk_utils_set_editable( G_OBJECT( notify_check ), editable );
@@ -298,6 +301,9 @@ on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, g
 		gtk_entry_set_text( GTK_ENTRY( entry ), class );
 		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 		g_free( class );
+
+		frame = base_window_get_widget( BASE_WINDOW( instance ), "UserFrame" );
+		gtk_widget_set_sensitive( frame, FALSE );
 
 		user = profile ? na_object_get_execute_as( profile ) : g_strdup( "" );
 		entry = base_window_get_widget( BASE_WINDOW( instance ), "ExecuteAsEntry" );

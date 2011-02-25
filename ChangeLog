@@ -1,5 +1,11 @@
 2011-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iexecution-tab.c (on_main_selection_changed):
+	Disable not implemented frames.
+
+	* src/nact/nautilus-actions-config-tool.ui:
+	Add a tooltip comment on not yet implemented fields.
+
 	* src/core/na-icontext.c (is_candidate_for_show_in):
 	First try desktop from user preferences.
 
