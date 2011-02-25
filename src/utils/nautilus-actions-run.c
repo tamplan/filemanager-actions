@@ -70,15 +70,13 @@ static GOptionEntry misc_entries[] = {
 	{ NULL }
 };
 
-static NAPivot *st_pivot = NULL;
-
 static GOptionContext  *init_options( void );
 static NAObjectAction  *get_action( const gchar *id );
 static GList           *targets_from_selection( void );
 static GList           *targets_from_commandline( void );
 static GList           *get_selection_from_strv( const gchar **strv, gboolean has_mimetype );
 static NAObjectProfile *get_profile_for_targets( NAObjectAction *action, GList *targets );
-static void             execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets, const NASettings *settings );
+static void             execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets );
 static void             dump_targets( GList *targets );
 static void             exit_with_usage( void );
 
@@ -172,7 +170,7 @@ main( int argc, char** argv )
 	}
 	g_debug( "%s: profile %p found", thisfn, ( void * ) profile );
 
-	execute_action( action, profile, targets, na_pivot_get_settings( st_pivot ));
+	execute_action( action, profile, targets );
 
 	na_selected_info_free_list( targets );
 	exit( status );
@@ -221,15 +219,16 @@ init_options( void )
 static NAObjectAction *
 get_action( const gchar *id )
 {
+	NAPivot *pivot;
 	NAObjectAction *action;
 
 	action = NULL;
 
-	st_pivot = na_pivot_new();
-	na_pivot_set_loadable( st_pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
-	na_pivot_load_items( st_pivot );
+	pivot = na_pivot_new();
+	na_pivot_set_loadable( pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
+	na_pivot_load_items( pivot );
 
-	action = ( NAObjectAction * ) na_pivot_get_item( st_pivot, id );
+	action = ( NAObjectAction * ) na_pivot_get_item( pivot, id );
 
 	if( !action ){
 		g_printerr( _( "Error: action '%s' doesn't exist.\n" ), id );
@@ -392,13 +391,13 @@ get_profile_for_targets( NAObjectAction *action, GList *targets )
 }
 
 static void
-execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets, const NASettings *settings )
+execute_action( NAObjectAction *action, NAObjectProfile *profile, GList *targets )
 {
 	/*static const gchar *thisfn = "nautilus_action_run_execute_action";*/
 	NATokens *tokens;
 
 	tokens = na_tokens_new_from_selection( targets );
-	na_tokens_execute_action( tokens, settings, profile );
+	na_tokens_execute_action( tokens, profile );
 }
 
 /*

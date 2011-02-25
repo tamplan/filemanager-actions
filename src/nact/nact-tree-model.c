@@ -307,8 +307,6 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 	static const gchar *thisfn = "nact_tree_model_new";
 	GtkTreeStore *ts_model;
 	NactTreeModel *model;
-	NactApplication *application;
-	NAUpdater *updater;
 	gint order_mode;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
@@ -328,9 +326,7 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 
 	/* initialize the sortable interface
 	 */
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
-	order_mode = na_iprefs_get_order_mode( NA_PIVOT( updater ), NULL );
+	order_mode = na_iprefs_get_order_mode( NULL );
 	display_order_change( model, order_mode );
 
 	/* setup instanciation time data
@@ -371,9 +367,6 @@ static void
 on_initialize_model( BaseWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_tree_model_on_initialize_model";
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 
 	WINDOW_MODEL_VOID( window );
 
@@ -407,10 +400,7 @@ on_initialize_model( BaseWindow *window, gpointer user_data )
 			base_window_signal_connect( window,
 					G_OBJECT( model->private->treeview ), "drag-end", G_CALLBACK( nact_tree_model_dnd_on_drag_end ));
 
-			application = NACT_APPLICATION( base_window_get_application( window ));
-			updater = nact_application_get_updater( application );
-			settings = na_pivot_get_settings( NA_PIVOT( updater ));
-			na_settings_register_key_callback( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), model );
+			na_settings_register_key_callback( NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), model );
 
 			base_window_signal_connect( window,
 					G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_updatable_item_updated ));

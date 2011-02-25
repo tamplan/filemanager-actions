@@ -42,6 +42,7 @@
 
 #include "na-gnome-vfs-uri.h"
 #include "na-selected-info.h"
+#include "na-settings.h"
 #include "na-tokens.h"
 
 /* private class data
@@ -77,11 +78,11 @@ static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
 static gchar    *display_output_get_content( int fd );
-static void      execute_action_command( const NASettings *settings, gchar *command, const NAObjectProfile *profile );
-static gchar    *get_command_execution_display_output( const NASettings *settings, const gchar *command );
-static gchar    *get_command_execution_embedded( const NASettings *settings, const gchar *command );
-static gchar    *get_command_execution_normal( const NASettings *settings, const gchar *command );
-static gchar    *get_command_execution_terminal( const NASettings *settings, const gchar *command );
+static void      execute_action_command( gchar *command, const NAObjectProfile *profile );
+static gchar    *get_command_execution_display_output( const gchar *command );
+static gchar    *get_command_execution_embedded( const gchar *command );
+static gchar    *get_command_execution_normal( const gchar *command );
+static gchar    *get_command_execution_terminal( const gchar *command );
 static gboolean  is_singular_exec( const NATokens *tokens, const gchar *exec );
 static gchar    *parse_singular( const NATokens *tokens, const gchar *input, guint i, gboolean utf8, gboolean quoted );
 static GString  *quote_string( GString *input, const gchar *name, gboolean quoted );
@@ -364,7 +365,7 @@ na_tokens_parse_for_display( const NATokens *tokens, const gchar *string, gboole
  * Execute the given action, regarding the context described by @tokens.
  */
 void
-na_tokens_execute_action( const NATokens *tokens, const NASettings *settings, const NAObjectProfile *profile )
+na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile )
 {
 	gchar *path, *parameters, *exec;
 	gboolean singular;
@@ -382,13 +383,13 @@ na_tokens_execute_action( const NATokens *tokens, const NASettings *settings, co
 	if( singular ){
 		for( i = 0 ; i < tokens->private->count ; ++i ){
 			command = parse_singular( tokens, exec, i, FALSE, TRUE );
-			execute_action_command( settings, command, profile );
+			execute_action_command( command, profile );
 			g_free( command );
 		}
 
 	} else {
 		command = parse_singular( tokens, exec, 0, FALSE, TRUE );
-		execute_action_command( settings, command, profile );
+		execute_action_command( command, profile );
 		g_free( command );
 	}
 
@@ -463,7 +464,7 @@ display_output_get_content( int fd )
  * - DisplayOutput: execute in a shell
  */
 static void
-execute_action_command( const NASettings *settings, gchar *command, const NAObjectProfile *profile )
+execute_action_command( gchar *command, const NAObjectProfile *profile )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action_command";
 	GError *error;
@@ -481,16 +482,16 @@ execute_action_command( const NASettings *settings, gchar *command, const NAObje
 	execution_mode = na_object_get_execution_mode( profile );
 
 	if( !strcmp( execution_mode, "Normal" )){
-		run_command = get_command_execution_normal( settings, command );
+		run_command = get_command_execution_normal( command );
 
 	} else if( !strcmp( execution_mode, "Terminal" )){
-		run_command = get_command_execution_terminal( settings, command );
+		run_command = get_command_execution_terminal( command );
 
 	} else if( !strcmp( execution_mode, "Embedded" )){
-		run_command = get_command_execution_embedded( settings, command );
+		run_command = get_command_execution_embedded( command );
 
 	} else if( !strcmp( execution_mode, "DisplayOutput" )){
-		run_command = get_command_execution_display_output( settings, command );
+		run_command = get_command_execution_display_output( command );
 
 	} else {
 		g_warning( "%s: unknown execution mode: %s", thisfn, execution_mode );
@@ -539,31 +540,31 @@ execute_action_command( const NASettings *settings, gchar *command, const NAObje
 }
 
 static gchar *
-get_command_execution_display_output( const NASettings *settings, const gchar *command )
+get_command_execution_display_output( const gchar *command )
 {
 	static const gchar *bin_sh = "/bin/sh -c ";
 	return( na_tokens_command_from_terminal_prefix( bin_sh, command ));
 }
 
 static gchar *
-get_command_execution_embedded( const NASettings *settings, const gchar *command )
+get_command_execution_embedded( const gchar *command )
 {
-	return( get_command_execution_terminal( settings, command ));
+	return( get_command_execution_terminal( command ));
 }
 
 static gchar *
-get_command_execution_normal( const NASettings *settings, const gchar *command )
+get_command_execution_normal( const gchar *command )
 {
 	return( g_strdup( command ));
 }
 
 static gchar *
-get_command_execution_terminal( const NASettings *settings, const gchar *command )
+get_command_execution_terminal( const gchar *command )
 {
 	gchar *run_command;
 	gchar *prefix;
 
-	prefix = na_settings_get_string(( NASettings * ) settings, NA_IPREFS_TERMINAL_PREFIX, NULL, NULL );
+	prefix = na_settings_get_string( NA_IPREFS_TERMINAL_PREFIX, NULL, NULL );
 	run_command = na_tokens_command_from_terminal_prefix( prefix, command );
 	g_free( prefix );
 

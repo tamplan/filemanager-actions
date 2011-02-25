@@ -97,17 +97,13 @@ nact_main_toolbar_init( BaseWindow *window, GtkActionGroup *group )
 static void
 init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id )
 {
-	NactApplication *application;
-	NAUpdater *updater;
 	ToolbarProps *props;
 	gboolean is_active;
 	GtkToggleAction *action;
 
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
 	props = get_toolbar_properties( toolbar_id );
 	if( props ){
-		is_active = na_settings_get_boolean( na_pivot_get_settings( NA_PIVOT( updater )), props->prefs_key, NULL, NULL );
+		is_active = na_settings_get_boolean( props->prefs_key, NULL, NULL );
 		if( is_active ){
 			action = GTK_TOGGLE_ACTION( gtk_action_group_get_action( group, props->ui_item ));
 			gtk_toggle_action_set_active( action, TRUE );
@@ -131,9 +127,6 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 	ToolbarProps *props;
 	GtkWidget *toolbar, *hbox, *handle;
 	gulong attach_id, detach_id;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 
 	props = get_toolbar_properties( toolbar_id );
 	if( !props ){
@@ -168,11 +161,7 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 		gtk_container_remove( GTK_CONTAINER( hbox ), handle );
 	}
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-	na_settings_set_boolean( settings, props->prefs_key, is_active );
+	na_settings_set_boolean( props->prefs_key, is_active );
 }
 
 /*

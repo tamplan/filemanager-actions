@@ -81,7 +81,6 @@ static guint        enum_map_id_from_string( const EnumMap *map, const gchar *st
 
 /*
  * na_iprefs_get_import_mode:
- * @pivot: the #NAPivot application object.
  * @pref: name of the import key to be read.
  * @mandatory: if not %NULL, a pointer to a boolean which will receive the
  *  mandatory property.
@@ -93,14 +92,12 @@ static guint        enum_map_id_from_string( const EnumMap *map, const gchar *st
  * Returns: the import mode currently set.
  */
 guint
-na_iprefs_get_import_mode( const NAPivot *pivot, const gchar *pref, gboolean *mandatory )
+na_iprefs_get_import_mode( const gchar *pref, gboolean *mandatory )
 {
 	gchar *import_mode_str;
 	guint import_mode;
-	NASettings *settings;
 
-	settings = na_pivot_get_settings( pivot );
-	import_mode_str = na_settings_get_string( settings, pref, NULL, mandatory );
+	import_mode_str = na_settings_get_string( pref, NULL, mandatory );
 	import_mode = enum_map_id_from_string( st_import_mode, import_mode_str );
 	g_free( import_mode_str );
 
@@ -109,40 +106,34 @@ na_iprefs_get_import_mode( const NAPivot *pivot, const gchar *pref, gboolean *ma
 
 /*
  * na_iprefs_set_import_mode:
- * @pivot: the #NAPivot application object.
  * @pref: name of the import key to be written.
  * @mode: the new value to be written.
  *
  * Writes the current status of 'import mode' to the preferences system.
  */
 void
-na_iprefs_set_import_mode( const NAPivot *pivot, const gchar *pref, guint mode )
+na_iprefs_set_import_mode( const gchar *pref, guint mode )
 {
 	const gchar *import_str;
-	NASettings *settings;
 
-	settings = na_pivot_get_settings( pivot );
 	import_str = enum_map_string_from_id( st_import_mode, mode );
-	na_settings_set_string( settings, pref, import_str );
+	na_settings_set_string( pref, import_str );
 }
 
 /*
  * na_iprefs_get_order_mode:
- * @pivot: the #NAPivot application object.
  * @mandatory: if not %NULL, a pointer to a boolean which will receive the
  *  mandatory property.
  *
  * Returns: the order mode currently set.
  */
 guint
-na_iprefs_get_order_mode( const NAPivot *pivot, gboolean *mandatory )
+na_iprefs_get_order_mode( gboolean *mandatory )
 {
 	gchar *order_mode_str;
 	guint order_mode;
-	NASettings *settings;
 
-	settings = na_pivot_get_settings( pivot );
-	order_mode_str = na_settings_get_string( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, NULL, mandatory );
+	order_mode_str = na_settings_get_string( NA_IPREFS_ITEMS_LIST_ORDER_MODE, NULL, mandatory );
 	order_mode = enum_map_id_from_string( st_order_mode, order_mode_str );
 	g_free( order_mode_str );
 
@@ -171,26 +162,22 @@ na_iprefs_get_order_mode_by_label( const gchar *label )
 
 /*
  * na_iprefs_set_order_mode:
- * @pivot: the #NAPivot application object.
  * @mode: the new value to be written.
  *
  * Writes the current status of 'alphabetical order' to the GConf
  * preference system.
  */
 void
-na_iprefs_set_order_mode( const NAPivot *pivot, guint mode )
+na_iprefs_set_order_mode( guint mode )
 {
 	const gchar *order_str;
-	NASettings *settings;
 
-	settings = na_pivot_get_settings( pivot );
 	order_str = enum_map_string_from_id( st_order_mode, mode );
-	na_settings_set_string( settings, NA_IPREFS_ITEMS_LIST_ORDER_MODE, order_str );
+	na_settings_set_string( NA_IPREFS_ITEMS_LIST_ORDER_MODE, order_str );
 }
 
 /**
  * na_iprefs_get_export_format:
- * @pivot: the #NAPivot application object.
  * @name: name of the export format key to be read
  * @mandatory: if not %NULL, a pointer to a boolean which will receive the
  *  mandatory property.
@@ -201,16 +188,14 @@ na_iprefs_set_order_mode( const NAPivot *pivot, guint mode )
  * Returns: the export format currently set as a #GQuark.
  */
 GQuark
-na_iprefs_get_export_format( const NAPivot *pivot, const gchar *name, gboolean *mandatory )
+na_iprefs_get_export_format( const gchar *name, gboolean *mandatory )
 {
 	GQuark export_format;
-	NASettings *settings;
 	gchar *format_str;
 
 	export_format = g_quark_from_static_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
 
-	settings = na_pivot_get_settings( pivot );
-	format_str = na_settings_get_string( settings, name, NULL, mandatory );
+	format_str = na_settings_get_string( name, NULL, mandatory );
 
 	if( format_str ){
 		export_format = g_quark_from_string( format_str );
@@ -222,18 +207,14 @@ na_iprefs_get_export_format( const NAPivot *pivot, const gchar *name, gboolean *
 
 /**
  * na_iprefs_set_export_format:
- * @pivot: the #NAPivot application object.
  * @format: the new value to be written.
  *
  * Writes the preferred export format' to the preference system.
  */
 void
-na_iprefs_set_export_format( const NAPivot *pivot, const gchar *name, GQuark format )
+na_iprefs_set_export_format( const gchar *name, GQuark format )
 {
-	NASettings *settings;
-
-	settings = na_pivot_get_settings( pivot );
-	na_settings_set_string( settings, name, g_quark_to_string( format ));
+	na_settings_set_string( name, g_quark_to_string( format ));
 }
 
 /*
@@ -253,10 +234,9 @@ na_iprefs_set_export_format( const NAPivot *pivot, const gchar *name, GQuark for
  * since: 3.1.0
  */
 GSList *
-na_iprefs_get_io_providers( const NAPivot *pivot )
+na_iprefs_get_io_providers( void )
 {
 	GSList *providers;
-	NASettings *settings;
 	GSList *write_order, *groups;
 	GSList *it;
 	const gchar *name;
@@ -264,16 +244,15 @@ na_iprefs_get_io_providers( const NAPivot *pivot )
 	guint prefix_len;
 
 	providers = NULL;
-	settings = na_pivot_get_settings( pivot );
 
-	write_order = na_settings_get_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
+	write_order = na_settings_get_string_list( NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
 	for( it = write_order ; it ; it = it->next ){
 		name = ( const gchar * ) it->data;
 		providers = g_slist_prepend( providers, g_strdup( name ));
 	}
 	na_core_utils_slist_free( write_order );
 
-	groups = na_settings_get_groups( settings );
+	groups = na_settings_get_groups();
 
 	group_prefix = g_strdup_printf( "%s ", NA_IPREFS_IO_PROVIDER_GROUP );
 	prefix_len = strlen( group_prefix );
@@ -291,7 +270,6 @@ na_iprefs_get_io_providers( const NAPivot *pivot )
 
 /*
  * na_iprefs_write_level_zero:
- * @pivot: the #NAPivot application object.
  * @items: the #GList of items whose first level is to be written.
  * @messages: a pointer to a #GSList in which we will add happening
  *  error messages;
@@ -310,29 +288,23 @@ na_iprefs_get_io_providers( const NAPivot *pivot )
  * state that it has been provided.
  */
 gboolean
-na_iprefs_write_level_zero( const NAPivot *pivot, const GList *items, GSList **messages )
+na_iprefs_write_level_zero( const GList *items, GSList **messages )
 {
-	static const gchar *thisfn = "na_iprefs_write_level_zero";
 	gboolean written;
 	const GList *it;
 	gchar *id;
 	GSList *content;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), FALSE );
-
 	written = FALSE;
-
-	g_debug( "%s: pivot=%p", thisfn, ( void * ) pivot);
-
 	content = NULL;
+
 	for( it = items ; it ; it = it->next ){
 		id = na_object_get_id( it->data );
 		content = g_slist_prepend( content, id );
 	}
 	content = g_slist_reverse( content );
 
-	written = na_settings_set_string_list(
-			na_pivot_get_settings( pivot ), NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, content );
+	written = na_settings_set_string_list( NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, content );
 
 	na_core_utils_slist_free( content );
 

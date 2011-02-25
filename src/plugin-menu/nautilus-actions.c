@@ -67,12 +67,9 @@ struct _NautilusActionsPrivate {
 	NATimeout change_timeout;
 };
 
-static GObjectClass    *st_parent_class  = NULL;
-static GType            st_actions_type  = 0;
-static gint             st_burst_timeout = 100;		/* burst timeout in msec */
-
-/* used in order to be able to get settings from the module */
-static NautilusActions *st_plugin        = NULL;
+static GObjectClass *st_parent_class  = NULL;
+static GType         st_actions_type  = 0;
+static gint          st_burst_timeout = 100;		/* burst timeout in msec */
 
 static void              class_init( NautilusActionsClass *klass );
 static void              instance_init( GTypeInstance *instance, gpointer klass );
@@ -179,7 +176,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self = NAUTILUS_ACTIONS( instance );
-	st_plugin = self;
 
 	self->private = g_new0( NautilusActionsPrivate, 1 );
 
@@ -206,7 +202,6 @@ instance_constructed( GObject *object )
 {
 	static const gchar *thisfn = "nautilus_actions_instance_constructed";
 	NautilusActions *self;
-	NASettings *settings;
 
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( object ));
 
@@ -233,17 +228,15 @@ instance_constructed( GObject *object )
 		 * because we only monitor here four runtime keys, we prefer the
 		 * callback way that the signal one
 		 */
-		settings = na_pivot_get_settings( self->private->pivot );
-
-		na_settings_register_key_callback( settings,
+		na_settings_register_key_callback(
 				NA_IPREFS_IO_PROVIDERS_READ_STATUS, G_CALLBACK( on_settings_key_changed_handler ), self );
-		na_settings_register_key_callback( settings,
+		na_settings_register_key_callback(
 				NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, G_CALLBACK( on_settings_key_changed_handler ), self );
-		na_settings_register_key_callback( settings,
+		na_settings_register_key_callback(
 				NA_IPREFS_ITEMS_CREATE_ROOT_MENU, G_CALLBACK( on_settings_key_changed_handler ), self );
-		na_settings_register_key_callback( settings,
+		na_settings_register_key_callback(
 				NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, G_CALLBACK( on_settings_key_changed_handler ), self );
-		na_settings_register_key_callback( settings,
+		na_settings_register_key_callback(
 				NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_key_changed_handler ), self );
 
 		/* chain up to the parent class */
@@ -266,7 +259,6 @@ instance_dispose( GObject *object )
 	if( !self->private->dispose_has_run ){
 
 		self->private->dispose_has_run = TRUE;
-		st_plugin = NULL;
 
 		if( self->private->items_changed_handler ){
 			g_signal_handler_disconnect( self->private->pivot, self->private->items_changed_handler );
@@ -301,19 +293,7 @@ instance_finalize( GObject *object )
 gboolean
 nautilus_action_is_log_enabled( void )
 {
-	gboolean log_ok;
-	NASettings *settings;
-
-	log_ok = FALSE;
-
-	if( st_plugin ){
-		g_return_val_if_fail( NAUTILUS_IS_ACTIONS( st_plugin ), FALSE );
-
-		settings = na_pivot_get_settings( st_plugin->private->pivot );
-		log_ok = na_settings_get_boolean( settings, NA_IPREFS_PLUGIN_LOG, NULL, NULL );
-	}
-
-	return( log_ok );
+	return( na_settings_get_boolean( NA_IPREFS_PLUGIN_LOG, NULL, NULL ));
 }
 
 static void
@@ -464,7 +444,6 @@ get_menus_items( NautilusActions *plugin, guint target, GList *selection )
 	GList *menus_list;
 	NATokens *tokens;
 	GList *pivot_tree, *copy_tree;
-	NASettings *settings;
 	gboolean items_add_about_item;
 	gboolean items_create_root_menu;
 
@@ -481,14 +460,12 @@ get_menus_items( NautilusActions *plugin, guint target, GList *selection )
 
 	if( target != ITEM_TARGET_TOOLBAR ){
 
-		settings = na_pivot_get_settings( plugin->private->pivot );
-
-		items_create_root_menu = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
+		items_create_root_menu = na_settings_get_boolean( NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
 		if( items_create_root_menu ){
 			menus_list = create_root_menu( plugin, menus_list );
 		}
 
-		items_add_about_item = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
+		items_add_about_item = na_settings_get_boolean( NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
 		if( items_add_about_item ){
 			menus_list = add_about_item( plugin, menus_list );
 		}
@@ -888,7 +865,7 @@ execute_action( NautilusMenuItem *item, NAObjectProfile *profile )
 	g_debug( "%s: item=%p, profile=%p", thisfn, ( void * ) item, ( void * ) profile );
 
 	tokens = NA_TOKENS( g_object_get_data( G_OBJECT( item ), "nautilus-actions-tokens" ));
-	na_tokens_execute_action( tokens, na_pivot_get_settings( st_plugin->private->pivot ), profile );
+	na_tokens_execute_action( tokens, profile );
 }
 
 /*

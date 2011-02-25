@@ -616,7 +616,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	if( index == -1 ){
 
 		*exported = g_list_prepend( *exported, ( gpointer ) action );
-		format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
+		format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
 
 		if( format == IPREFS_EXPORT_FORMAT_ASK ){
 			format = nact_export_ask_user( clipboard->private->window, NA_OBJECT_ITEM( action ), first );

@@ -243,19 +243,12 @@ void
 nact_assistant_import_run( BaseWindow *main_window )
 {
 	NactAssistantImport *assistant;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	gboolean esc_quit, esc_confirm;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( main_window ));
 
-	application = NACT_APPLICATION( base_window_get_application( main_window ));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-	esc_quit = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
-	esc_confirm = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
+	esc_quit = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
+	esc_confirm = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 
 	assistant = g_object_new( NACT_ASSISTANT_IMPORT_TYPE,
 			BASE_PROP_PARENT,          main_window,
@@ -307,9 +300,6 @@ static void
 runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_import_runtime_init_file_selector";
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	GtkWidget *page;
 	GtkWidget *chooser;
 	gchar *uri;
@@ -319,12 +309,8 @@ runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
 	chooser = base_window_get_widget( BASE_WINDOW( window ), "ImportFileChooser" );
-	uri = na_settings_get_string( settings, NA_IPREFS_IMPORT_ASSISTANT_URI, NULL, NULL );
+	uri = na_settings_get_string( NA_IPREFS_IMPORT_ASSISTANT_URI, NULL, NULL );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( chooser ), uri );
 	}
@@ -342,9 +328,6 @@ runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant
 static void
 on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 {
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	GtkAssistant *assistant;
 	gint pos;
 	GSList *uris;
@@ -361,12 +344,8 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 		enabled = has_readable_files( uris );
 
 		if( enabled ){
-			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( user_data )));
-			updater = nact_application_get_updater( application );
-			settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
 			folder = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( chooser ));
-			na_settings_set_string( settings, NA_IPREFS_IMPORT_ASSISTANT_URI, folder );
+			na_settings_set_string( NA_IPREFS_IMPORT_ASSISTANT_URI, folder );
 			g_free( folder );
 		}
 
@@ -440,15 +419,10 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 	static const gchar *thisfn = "nact_assistant_import_runtime_init_duplicates";
 	GtkWidget *page;
 	guint mode;
-	NactApplication *application;
-	NAUpdater *updater;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-
-	mode = na_iprefs_get_import_mode( NA_PIVOT( updater ), NA_IPREFS_IMPORT_PREFERRED_MODE, NULL );
+	mode = na_iprefs_get_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL );
 	set_import_mode( window, mode );
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
@@ -724,14 +698,9 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	GtkTextTag *title_tag;
 	GtkTextIter start, end;
 	gint title_len;
-	NactApplication *application;
-	NAUpdater *updater;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
 
 	/* i18n: result of the import assistant */
 	text = g_strdup( _( "Selected files have been proceeded :" ));
@@ -802,7 +771,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	g_object_unref( title_tag );
 
 	mode = get_import_mode( window );
-	na_iprefs_set_import_mode( NA_PIVOT( updater ), NA_IPREFS_IMPORT_PREFERRED_MODE, mode );
+	na_iprefs_set_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, mode );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	g_object_set( G_OBJECT( window ), BASE_PROP_WARN_ON_ESCAPE, FALSE, NULL );

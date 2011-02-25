@@ -700,7 +700,6 @@ instance_dispose( GObject *window )
 	NactMainWindow *self;
 	GtkWidget *pane;
 	gint pos;
-	NASettings *settings;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -714,11 +713,9 @@ instance_dispose( GObject *window )
 		g_object_unref( self->private->clipboard );
 		g_object_unref( self->private->menubar );
 
-		settings = na_pivot_get_settings( NA_PIVOT( self->private->updater ));
-
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
-		na_settings_set_uint( settings, NA_IPREFS_MAIN_PANED, pos );
+		na_settings_set_uint( NA_IPREFS_MAIN_PANED, pos );
 
 		nact_iaction_tab_dispose( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_dispose( NACT_ICOMMAND_TAB( window ));
@@ -819,7 +816,6 @@ static void
 on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_initialize_base_window";
-	NASettings *settings;
 	guint pos;
 	GtkWidget *pane;
 
@@ -828,9 +824,7 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 
-		settings = na_pivot_get_settings( NA_PIVOT( window->private->updater ));
-
-		pos = na_settings_get_uint( settings, NA_IPREFS_MAIN_PANED, NULL, NULL );
+		pos = na_settings_get_uint( NA_IPREFS_MAIN_PANED, NULL, NULL );
 		if( pos ){
 			pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 			gtk_paned_set_position( GTK_PANED( pane ), pos );

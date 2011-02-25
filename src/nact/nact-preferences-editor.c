@@ -129,34 +129,34 @@ static void     instance_finalize( GObject *dialog );
 static void     on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *toplevel );
 static void     on_base_initialize_base_window( NactPreferencesEditor *editor );
 static void     on_base_all_widgets_showed( NactPreferencesEditor *editor );
-static void     order_mode_setup( NactPreferencesEditor *editor, NAPivot *pivot );
+static void     order_mode_setup( NactPreferencesEditor *editor );
 static void     order_mode_on_alpha_asc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
 static void     order_mode_on_alpha_desc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
 static void     order_mode_on_manual_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
 static void     order_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *togglebutton, GCallback cb, guint order_mode );
-static void     root_menu_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     root_menu_setup( NactPreferencesEditor *editor );
 static void     root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     about_item_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     about_item_setup( NactPreferencesEditor *editor );
 static void     about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     terminal_prefix_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     terminal_prefix_setup( NactPreferencesEditor *editor );
 static void     terminal_prefix_on_changed( GtkEntry *entry, NactPreferencesEditor *editor );
 static void     desktop_create_model( NactPreferencesEditor *editor );
-static void     desktop_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     desktop_setup( NactPreferencesEditor *editor );
 static void     desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor );
-static void     relabel_menu_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     relabel_menu_setup( NactPreferencesEditor *editor );
 static void     relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     relabel_action_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     relabel_action_setup( NactPreferencesEditor *editor );
 static void     relabel_action_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     relabel_profile_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     relabel_profile_setup( NactPreferencesEditor *editor );
 static void     relabel_profile_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     esc_quit_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     esc_quit_setup( NactPreferencesEditor *editor );
 static void     esc_quit_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     esc_confirm_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     esc_confirm_setup( NactPreferencesEditor *editor );
 static void     esc_confirm_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     auto_save_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     auto_save_setup( NactPreferencesEditor *editor );
 static void     auto_save_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void     auto_save_period_on_change_value( GtkSpinButton *spinbutton, NactPreferencesEditor *editor );
-static void     import_mode_setup( NactPreferencesEditor *editor, NAPivot *pivot );
+static void     import_mode_setup( NactPreferencesEditor *editor );
 static void     import_mode_on_ask_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
 static void     import_mode_on_override_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
 static void     import_mode_on_renumber_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
@@ -307,9 +307,6 @@ nact_preferences_editor_run( BaseWindow *parent )
 {
 	static const gchar *thisfn = "nact_preferences_editor_run";
 	NactPreferencesEditor *editor;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	gboolean are_locked, mandatory;
 	GtkNotebook *notebook;
 
@@ -324,11 +321,7 @@ nact_preferences_editor_run( BaseWindow *parent )
 					BASE_PROP_WSP_NAME,       st_wsp_name,
 					NULL );
 
-	application = NACT_APPLICATION( base_window_get_application( parent ));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+	are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 	editor->private->preferences_locked = are_locked && mandatory;
 	g_debug( "%s: are_locked=%s, mandatory=%s",
 			thisfn, are_locked ? "True":"False", mandatory ? "True":"False" );
@@ -377,9 +370,6 @@ static void
 on_base_initialize_base_window( NactPreferencesEditor *editor )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_base_window";
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	GtkWidget *container;
 	GQuark export_format;
 	GtkTreeView *listview;
@@ -390,37 +380,33 @@ on_base_initialize_base_window( NactPreferencesEditor *editor )
 	if( !editor->private->dispose_has_run ){
 		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-		updater = nact_application_get_updater( application );
-		settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
 		/* first tab: runtime preferences
 		 */
-		order_mode_setup( editor, NA_PIVOT( updater ));
-		root_menu_setup( editor, settings );
-		about_item_setup( editor, settings );
+		order_mode_setup( editor );
+		root_menu_setup( editor );
+		about_item_setup( editor );
 
 		/* second tab: runtime execution
 		 */
-		terminal_prefix_setup( editor, settings );
-		desktop_setup( editor, settings );
+		terminal_prefix_setup( editor );
+		desktop_setup( editor );
 
 		/* third tab: ui preferences
 		 */
-		relabel_menu_setup( editor, settings );
-		relabel_action_setup( editor, settings );
-		relabel_profile_setup( editor, settings );
-		esc_quit_setup( editor, settings );
-		esc_confirm_setup( editor, settings );
-		auto_save_setup( editor, settings );
+		relabel_menu_setup( editor );
+		relabel_action_setup( editor );
+		relabel_profile_setup( editor );
+		esc_quit_setup( editor );
+		esc_confirm_setup( editor );
+		auto_save_setup( editor );
 
 		/* fourth tab: import mode
 		 */
-		import_mode_setup( editor, NA_PIVOT( updater ));
+		import_mode_setup( editor );
 
 		/* fifth tab: export format
 		 */
-		export_format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, &editor->private->export_format_mandatory );
+		export_format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, &editor->private->export_format_mandatory );
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 		nact_export_format_select( container, !editor->private->export_format_mandatory, export_format );
 
@@ -475,14 +461,14 @@ on_base_all_widgets_showed( NactPreferencesEditor *editor )
  * then the radio group is sensitive, but not editable.
  */
 static void
-order_mode_setup( NactPreferencesEditor *editor, NAPivot *pivot )
+order_mode_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *alpha_asc_button, *alpha_desc_button, *manual_button;
 	GtkWidget *active_button;
 	GCallback active_handler;
 
-	editor->private->order_mode = na_iprefs_get_order_mode( pivot, &editor->private->order_mode_mandatory );
+	editor->private->order_mode = na_iprefs_get_order_mode( &editor->private->order_mode_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->order_mode_mandatory;
 
 	alpha_asc_button = base_window_get_widget( BASE_WINDOW( editor ), "OrderAlphaAscButton" );
@@ -555,11 +541,11 @@ order_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *toggle_bu
  * create a root menu
  */
 static void
-root_menu_setup( NactPreferencesEditor *editor, NASettings *settings )
+root_menu_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->root_menu = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, &editor->private->root_menu_mandatory );
+	editor->private->root_menu = na_settings_get_boolean( NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, &editor->private->root_menu_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->root_menu_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -586,11 +572,11 @@ root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
  * add an about item
  */
 static void
-about_item_setup( NactPreferencesEditor *editor, NASettings *settings )
+about_item_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->about_item = na_settings_get_boolean( settings, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, &editor->private->about_item_mandatory );
+	editor->private->about_item = na_settings_get_boolean( NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, &editor->private->about_item_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->about_item_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -618,12 +604,12 @@ about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
  * the prefix to add to the command when execution mode is 'Terminal'
  */
 static void
-terminal_prefix_setup( NactPreferencesEditor *editor, NASettings *settings )
+terminal_prefix_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *entry;
 
-	editor->private->terminal_prefix = na_settings_get_string( settings, NA_IPREFS_TERMINAL_PREFIX, NULL, &editor->private->terminal_prefix_mandatory );
+	editor->private->terminal_prefix = na_settings_get_string( NA_IPREFS_TERMINAL_PREFIX, NULL, &editor->private->terminal_prefix_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->terminal_prefix_mandatory;
 
 	entry = base_window_get_widget( BASE_WINDOW( editor ), "TerminalPrefixEntry" );
@@ -714,7 +700,7 @@ desktop_create_model( NactPreferencesEditor *editor )
 }
 
 static void
-desktop_setup( NactPreferencesEditor *editor, NASettings *settings )
+desktop_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *combo;
@@ -722,7 +708,7 @@ desktop_setup( NactPreferencesEditor *editor, NASettings *settings )
 	guint i;
 	gint found;
 
-	editor->private->desktop = na_settings_get_string( settings, NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
+	editor->private->desktop = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->desktop_mandatory;
 
 	combo = base_window_get_widget( BASE_WINDOW( editor ), "DesktopComboBox" );
@@ -768,11 +754,11 @@ desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor )
  * relabel copied/paster menu ?
  */
 static void
-relabel_menu_setup( NactPreferencesEditor *editor, NASettings *settings )
+relabel_menu_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->relabel_menu = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, &editor->private->relabel_menu_mandatory );
+	editor->private->relabel_menu = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, &editor->private->relabel_menu_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->relabel_menu_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -799,11 +785,11 @@ relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor 
  * add an about item
  */
 static void
-relabel_action_setup( NactPreferencesEditor *editor, NASettings *settings )
+relabel_action_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->relabel_action = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, &editor->private->relabel_action_mandatory );
+	editor->private->relabel_action = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, &editor->private->relabel_action_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->relabel_action_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -830,11 +816,11 @@ relabel_action_on_toggled( GtkToggleButton *button, NactPreferencesEditor *edito
  * add an about item
  */
 static void
-relabel_profile_setup( NactPreferencesEditor *editor, NASettings *settings )
+relabel_profile_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->relabel_profile = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, &editor->private->relabel_profile_mandatory );
+	editor->private->relabel_profile = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, &editor->private->relabel_profile_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->relabel_profile_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -861,11 +847,11 @@ relabel_profile_on_toggled( GtkToggleButton *button, NactPreferencesEditor *edit
  * whether Esc key quits the assistants
  */
 static void
-esc_quit_setup( NactPreferencesEditor *editor, NASettings *settings )
+esc_quit_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->esc_quit = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, &editor->private->esc_quit_mandatory );
+	editor->private->esc_quit = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, &editor->private->esc_quit_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->esc_quit_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -896,11 +882,11 @@ esc_quit_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
  * on 'Esc' key
  */
 static void
-esc_confirm_setup( NactPreferencesEditor *editor, NASettings *settings )
+esc_confirm_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 
-	editor->private->esc_confirm = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, &editor->private->esc_confirm_mandatory );
+	editor->private->esc_confirm = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, &editor->private->esc_confirm_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->esc_confirm_mandatory;
 
 	base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
@@ -927,17 +913,17 @@ esc_confirm_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
  * add an about item
  */
 static void
-auto_save_setup( NactPreferencesEditor *editor, NASettings *settings )
+auto_save_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *spin_button;
 	GtkAdjustment *adjustment;
 
 	g_debug( "nact_preferences_editor_auto_save_setup" );
-	editor->private->auto_save = na_settings_get_boolean( settings, NA_IPREFS_MAIN_SAVE_AUTO, NULL, &editor->private->auto_save_mandatory );
+	editor->private->auto_save = na_settings_get_boolean( NA_IPREFS_MAIN_SAVE_AUTO, NULL, &editor->private->auto_save_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->auto_save_mandatory;
 
-	editor->private->auto_save_period = na_settings_get_uint( settings, NA_IPREFS_MAIN_SAVE_PERIOD, NULL, &editor->private->auto_save_period_mandatory );
+	editor->private->auto_save_period = na_settings_get_uint( NA_IPREFS_MAIN_SAVE_PERIOD, NULL, &editor->private->auto_save_period_mandatory );
 	spin_button = base_window_get_widget( BASE_WINDOW( editor ), "AutoSavePeriodicitySpinButton" );
 	adjustment = gtk_spin_button_get_adjustment( GTK_SPIN_BUTTON( spin_button ));
 	gtk_adjustment_configure( adjustment, editor->private->auto_save_period, 1, 999, 1, 10, 0 );
@@ -992,7 +978,7 @@ auto_save_period_on_change_value( GtkSpinButton *spinbutton, NactPreferencesEdit
  * preferred import mode
  */
 static void
-import_mode_setup( NactPreferencesEditor *editor, NAPivot *pivot )
+import_mode_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *ask_button, *override_button, *renumber_button, *noimport_button;
@@ -1000,7 +986,7 @@ import_mode_setup( NactPreferencesEditor *editor, NAPivot *pivot )
 	GCallback active_handler;
 
 	editor->private->import_mode = na_iprefs_get_import_mode(
-			pivot, NA_IPREFS_IMPORT_PREFERRED_MODE, &editor->private->import_mode_mandatory );
+			NA_IPREFS_IMPORT_PREFERRED_MODE, &editor->private->import_mode_mandatory );
 	editable = !editor->private->preferences_locked && !editor->private->import_mode_mandatory;
 
 	ask_button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
@@ -1100,9 +1086,6 @@ static void
 on_dialog_ok( BaseDialog *dialog )
 {
 	NactPreferencesEditor *editor;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	GtkWidget *container;
 	NAExportFormat *export_format;
 
@@ -1111,59 +1094,56 @@ on_dialog_ok( BaseDialog *dialog )
 	editor = NACT_PREFERENCES_EDITOR( dialog );
 
 	if( !editor->private->preferences_locked ){
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-		updater = nact_application_get_updater( application );
-		settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
 		/* first tab: runtime preferences
 		 */
 		if( !editor->private->order_mode_mandatory ){
-			na_iprefs_set_order_mode( NA_PIVOT( updater ), editor->private->order_mode );
+			na_iprefs_set_order_mode( editor->private->order_mode );
 		}
 		if( !editor->private->root_menu_mandatory ){
-			na_settings_set_boolean( settings, NA_IPREFS_ITEMS_CREATE_ROOT_MENU, editor->private->root_menu );
+			na_settings_set_boolean( NA_IPREFS_ITEMS_CREATE_ROOT_MENU, editor->private->root_menu );
 		}
 		if( !editor->private->about_item_mandatory ){
-			na_settings_set_boolean( settings, NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, editor->private->about_item );
+			na_settings_set_boolean( NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, editor->private->about_item );
 		}
 
 		/* second tab: runtime execution
 		 */
 		if( !editor->private->terminal_prefix_mandatory ){
-			na_settings_set_string( settings, NA_IPREFS_TERMINAL_PREFIX, editor->private->terminal_prefix );
+			na_settings_set_string( NA_IPREFS_TERMINAL_PREFIX, editor->private->terminal_prefix );
 		}
 		if( !editor->private->desktop_mandatory ){
-			na_settings_set_string( settings, NA_IPREFS_DESKTOP_ENVIRONMENT, editor->private->desktop );
+			na_settings_set_string( NA_IPREFS_DESKTOP_ENVIRONMENT, editor->private->desktop );
 		}
 
 		/* third tab: ui preferences
 		 */
 		if( !editor->private->relabel_menu_mandatory ){
-			na_settings_set_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, editor->private->relabel_menu );
+			na_settings_set_boolean( NA_IPREFS_RELABEL_DUPLICATE_MENU, editor->private->relabel_menu );
 		}
 		if( !editor->private->relabel_action_mandatory ){
-			na_settings_set_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_ACTION, editor->private->relabel_action );
+			na_settings_set_boolean( NA_IPREFS_RELABEL_DUPLICATE_ACTION, editor->private->relabel_action );
 		}
 		if( !editor->private->relabel_profile_mandatory ){
-			na_settings_set_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_PROFILE, editor->private->relabel_profile );
+			na_settings_set_boolean( NA_IPREFS_RELABEL_DUPLICATE_PROFILE, editor->private->relabel_profile );
 		}
 		if( !editor->private->esc_quit_mandatory ){
-			na_settings_set_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, editor->private->esc_quit );
+			na_settings_set_boolean( NA_IPREFS_ASSISTANT_ESC_QUIT, editor->private->esc_quit );
 		}
 		if( !editor->private->esc_confirm_mandatory ){
-			na_settings_set_boolean( settings, NA_IPREFS_ASSISTANT_ESC_CONFIRM, editor->private->esc_confirm );
+			na_settings_set_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, editor->private->esc_confirm );
 		}
 		if( !editor->private->auto_save_mandatory ){
-			na_settings_set_boolean( settings, NA_IPREFS_MAIN_SAVE_AUTO, editor->private->auto_save );
+			na_settings_set_boolean( NA_IPREFS_MAIN_SAVE_AUTO, editor->private->auto_save );
 		}
 		if( !editor->private->auto_save_period_mandatory ){
-			na_settings_set_uint( settings, NA_IPREFS_MAIN_SAVE_PERIOD, editor->private->auto_save_period );
+			na_settings_set_uint( NA_IPREFS_MAIN_SAVE_PERIOD, editor->private->auto_save_period );
 		}
 
 		/* fourth tab: import mode
 		 */
 		if( !editor->private->import_mode_mandatory ){
-			na_iprefs_set_import_mode( NA_PIVOT( updater ), NA_IPREFS_IMPORT_PREFERRED_MODE, editor->private->import_mode );
+			na_iprefs_set_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, editor->private->import_mode );
 		}
 
 		/* fifth tab: export format
@@ -1171,8 +1151,7 @@ on_dialog_ok( BaseDialog *dialog )
 		if( !editor->private->export_format_mandatory ){
 			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 			export_format = nact_export_format_get_selected( container );
-			na_iprefs_set_export_format(
-					NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( export_format ));
+			na_iprefs_set_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( export_format ));
 		}
 
 		/* sixth tab: list of default schemes

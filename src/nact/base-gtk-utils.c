@@ -47,9 +47,6 @@
 #define DEFAULT_WIDTH		22
 #define DEFAULT_HEIGHT		22
 
-static NASettings *get_settings( const BaseWindow *window );
-static GList      *read_int_list( const BaseWindow *window, const gchar *key );
-static void        write_int_list( const BaseWindow *window, const gchar *key, GList *list );
 static void        int_list_to_position( const BaseWindow *window, GList *list, gint *x, gint *y, gint *width, gint *height );
 static GList      *position_to_int_list( const BaseWindow *window, gint x, gint y, gint width, gint height );
 static void        free_int_list( GList *list );
@@ -83,7 +80,7 @@ base_gtk_utils_restore_window_position( const BaseWindow *window, const gchar *w
 			thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ),
 			( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ), wsp_name );
 
-	list = read_int_list( window, wsp_name );
+	list = na_settings_get_uint_list( wsp_name, NULL, NULL );
 
 	if( list ){
 		int_list_to_position( window, list, &x, &y, &width, &height );
@@ -130,38 +127,8 @@ base_gtk_utils_save_window_position( const BaseWindow *window, const gchar *wsp_
 	g_debug( "%s: wsp_name=%s, x=%d, y=%d, width=%d, height=%d", thisfn, wsp_name, x, y, width, height );
 
 	list = position_to_int_list( window, x, y, width, height );
-	write_int_list( window, wsp_name, list );
+	na_settings_set_uint_list( wsp_name, list );
 	free_int_list( list );
-}
-
-/* It seems inevitable that preferences are attached to the application.
- * Unfortunately, it does not seem possible to have a base window size and
- * position itself. So, this BaseIPrefs interface is not really a base
- * interface, but rather a common one, attached to the application
- */
-static NASettings *
-get_settings( const BaseWindow *window )
-{
-	NactApplication *appli = NACT_APPLICATION( base_window_get_application( window ));
-	NAUpdater *updater = nact_application_get_updater( appli );
-	return( na_pivot_get_settings( NA_PIVOT( updater )));
-}
-
-/*
- * returns a list of int
- */
-static GList *
-read_int_list( const BaseWindow *window, const gchar *key )
-{
-	NASettings *settings = get_settings( window );
-	return( na_settings_get_uint_list( settings, key, NULL, NULL ));
-}
-
-static void
-write_int_list( const BaseWindow *window, const gchar *key, GList *list )
-{
-	NASettings *settings = get_settings( window );
-	na_settings_set_uint_list( settings, key, list );
 }
 
 /*
@@ -614,11 +581,9 @@ base_gtk_utils_select_file_with_preview( BaseWindow *window,
 	const gchar *text;
 	gchar *filename, *uri;
 	GtkWidget *preview;
-	NASettings *settings;
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 	toplevel = base_window_get_gtk_toplevel( window );
 
 	dialog = gtk_file_chooser_dialog_new(
@@ -644,7 +609,7 @@ base_gtk_utils_select_file_with_preview( BaseWindow *window,
 		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), text );
 
 	} else {
-		uri = na_settings_get_string( settings, entry_name, NULL, NULL );
+		uri = na_settings_get_string( entry_name, NULL, NULL );
 		if( uri ){
 			gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 			g_free( uri );
@@ -658,7 +623,7 @@ base_gtk_utils_select_file_with_preview( BaseWindow *window,
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	na_settings_set_string( settings, entry_name, uri );
+	na_settings_set_string( entry_name, uri );
 	g_free( uri );
 
 	base_gtk_utils_save_window_position( window, wsp_name );
@@ -696,11 +661,9 @@ base_gtk_utils_select_dir( BaseWindow *window,
 	GtkWidget *dialog;
 	const gchar *text;
 	gchar *dir, *uri;
-	NASettings *settings;
 
 	application = NACT_APPLICATION( base_window_get_application( window ));
 	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 	toplevel = base_window_get_gtk_toplevel( window );
 
 	dialog = gtk_file_chooser_dialog_new(
@@ -720,7 +683,7 @@ base_gtk_utils_select_dir( BaseWindow *window,
 		gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dialog ), text );
 
 	} else {
-		uri = na_settings_get_string( settings, entry_name, NULL, NULL );
+		uri = na_settings_get_string( entry_name, NULL, NULL );
 		if( uri ){
 			gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( dialog ), uri );
 			g_free( uri );
@@ -734,7 +697,7 @@ base_gtk_utils_select_dir( BaseWindow *window,
 	  }
 
 	uri = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( dialog ));
-	na_settings_set_string( settings, entry_name, uri );
+	na_settings_set_string( entry_name, uri );
 	g_free( uri );
 
 	base_gtk_utils_save_window_position( window, wsp_name );

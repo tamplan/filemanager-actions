@@ -253,7 +253,6 @@ on_base_initialize_buttons( BaseWindow *window, gpointer user_data )
 	static const gchar *thisfn = "nact_sort_buttons_on_base_initialize_buttons";
 	NactSortButtons *sort_buttons;
 	gint i;
-	NASettings *settings;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
@@ -268,8 +267,7 @@ on_base_initialize_buttons( BaseWindow *window, gpointer user_data )
 				G_OBJECT( st_toggle_group[i].button ), "toggled", G_CALLBACK( on_toggle_button_toggled ));
 	}
 
-	settings = na_pivot_get_settings( NA_PIVOT( sort_buttons->private->updater ));
-	na_settings_register_key_callback( settings,
+	na_settings_register_key_callback(
 			NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), sort_buttons );
 
 	/* for now, disable the sort buttons
@@ -311,8 +309,7 @@ on_toggle_button_toggled( GtkToggleButton *toggled_button, BaseWindow *window )
 				}
 				gtk_toggle_button_set_active( toggled_button, TRUE );
 				sort_buttons->private->active = ibtn;
-				na_iprefs_set_order_mode(
-						NA_PIVOT( sort_buttons->private->updater ), st_toggle_group[ibtn].order_mode );
+				na_iprefs_set_order_mode( st_toggle_group[ibtn].order_mode );
 			}
 
 			sort_buttons->private->toggling = FALSE;
@@ -404,7 +401,7 @@ enable_buttons( const NactSortButtons *sort_buttons, gboolean enabled )
 	}
 
 	if( finally_enabled && sort_buttons->private->active == -1 ){
-		order_mode = na_iprefs_get_order_mode( NA_PIVOT( sort_buttons->private->updater ), NULL );
+		order_mode = na_iprefs_get_order_mode( NULL );
 		i = toggle_group_get_from_mode( order_mode );
 		gtk_toggle_button_set_active( st_toggle_group[i].button, TRUE );
 	}

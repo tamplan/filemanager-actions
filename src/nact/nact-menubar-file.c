@@ -287,7 +287,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 	messages = NULL;
 
 	if( nact_tree_ieditable_is_level_zero_modified( NACT_TREE_IEDITABLE( items_view ))){
-		if( !na_iprefs_write_level_zero( NA_PIVOT( bar->private->updater ), items, &messages )){
+		if( !na_iprefs_write_level_zero( items, &messages )){
 			if( g_slist_length( messages )){
 				msg = na_core_utils_slist_join_at_end( messages, "\n" );
 			} else {
@@ -429,16 +429,12 @@ nact_menubar_file_on_quit( GtkAction *gtk_action, BaseWindow *window )
 static void
 install_autosave( NactMenubar *bar )
 {
-	NASettings *settings;
-
 	st_autosave_prefs_timeout.timeout = 100;
 	st_autosave_prefs_timeout.handler = ( NATimeoutFunc ) on_autosave_prefs_timeout;
 	st_autosave_prefs_timeout.user_data = bar;
 
-	settings = na_pivot_get_settings( NA_PIVOT( bar->private->updater ));
-
-	na_settings_register_key_callback( settings, NA_IPREFS_MAIN_SAVE_AUTO, G_CALLBACK( on_autosave_prefs_changed ), NULL );
-	na_settings_register_key_callback( settings, NA_IPREFS_MAIN_SAVE_PERIOD, G_CALLBACK( on_autosave_prefs_changed ), NULL );
+	na_settings_register_key_callback( NA_IPREFS_MAIN_SAVE_AUTO, G_CALLBACK( on_autosave_prefs_changed ), NULL );
+	na_settings_register_key_callback( NA_IPREFS_MAIN_SAVE_PERIOD, G_CALLBACK( on_autosave_prefs_changed ), NULL );
 
 	on_autosave_prefs_timeout( bar );
 }
@@ -453,16 +449,13 @@ static void
 on_autosave_prefs_timeout( NactMenubar *bar )
 {
 	static const gchar *thisfn = "nact_menubar_file_on_autosave_prefs_timeout";
-	NASettings *settings;
 	gboolean autosave_on;
 	guint autosave_period;
 
 	g_return_if_fail( NACT_IS_MENUBAR( bar ));
 
-	settings = na_pivot_get_settings( NA_PIVOT( bar->private->updater ));
-
-	autosave_on = na_settings_get_boolean( settings, NA_IPREFS_MAIN_SAVE_AUTO, NULL, NULL );
-	autosave_period = na_settings_get_uint( settings, NA_IPREFS_MAIN_SAVE_PERIOD, NULL, NULL );
+	autosave_on = na_settings_get_boolean( NA_IPREFS_MAIN_SAVE_AUTO, NULL, NULL );
+	autosave_period = na_settings_get_uint( NA_IPREFS_MAIN_SAVE_PERIOD, NULL, NULL );
 
 	if( st_event_autosave ){
 		if( !g_source_remove( st_event_autosave )){

@@ -54,38 +54,14 @@
  * A client may be informed of a modification of the value of a key either by
  * pre-registering a callback on this key (see na_settings_register_key_callback()
  * function), or by connecting to and filtering the notification signal.
+ *
+ * #NASettings class defines a singleton object, which allocates itself
+ * when needed
  */
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
-
-#define NA_SETTINGS_TYPE                ( na_settings_get_type())
-#define NA_SETTINGS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_SETTINGS_TYPE, NASettings ))
-#define NA_SETTINGS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_SETTINGS_TYPE, NASettingsClass ))
-#define NA_IS_SETTINGS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_SETTINGS_TYPE ))
-#define NA_IS_SETTINGS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_SETTINGS_TYPE ))
-#define NA_SETTINGS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_SETTINGS_TYPE, NASettingsClass ))
-
-typedef struct _NASettingsPrivate       NASettingsPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObject            parent;
-	NASettingsPrivate *private;
-}
-	NASettings;
-
-typedef struct _NASettingsClassPrivate  NASettingsClassPrivate;
-
-typedef struct {
-	/*< private >*/
-	GObjectClass            parent;
-	NASettingsClassPrivate *private;
-}
-	NASettingsClass;
-
-GType na_settings_get_type( void );
 
 /* This is a composite key;
  * by registering a callback on this key, a client may be informed of any
@@ -162,31 +138,31 @@ GType na_settings_get_type( void );
  */
 typedef void ( *NASettingsKeyCallback )( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, void *user_data );
 
-void        na_settings_register_key_callback   ( NASettings *settings, const gchar *key, GCallback callback, gpointer user_data );
+void        na_settings_register_key_callback( const gchar *key, GCallback callback, gpointer user_data );
 
 /* signal sent when the value of a key changes
  */
 #define SETTINGS_SIGNAL_KEY_CHANGED				"settings-key-changed"
 
-NASettings *na_settings_new                     ( void );
+void      na_settings_free                 ( void );
 
-gboolean    na_settings_get_boolean             ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
-gboolean    na_settings_get_boolean_ex          ( NASettings *settings, const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory );
-gchar      *na_settings_get_string              ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
-GSList     *na_settings_get_string_list         ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
-guint       na_settings_get_uint                ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
-GList      *na_settings_get_uint_list           ( NASettings *settings, const gchar *key, gboolean *found, gboolean *mandatory );
+gboolean  na_settings_get_boolean          ( const gchar *key, gboolean *found, gboolean *mandatory );
+gboolean  na_settings_get_boolean_ex       ( const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory );
+gchar    *na_settings_get_string           ( const gchar *key, gboolean *found, gboolean *mandatory );
+GSList   *na_settings_get_string_list      ( const gchar *key, gboolean *found, gboolean *mandatory );
+guint     na_settings_get_uint             ( const gchar *key, gboolean *found, gboolean *mandatory );
+GList    *na_settings_get_uint_list        ( const gchar *key, gboolean *found, gboolean *mandatory );
 
-gboolean    na_settings_set_boolean             ( NASettings *settings, const gchar *key, gboolean value );
-gboolean    na_settings_set_boolean_ex          ( NASettings *settings, const gchar *group, const gchar *key, gboolean value );
-gboolean    na_settings_set_string              ( NASettings *settings, const gchar *key, const gchar *value );
-gboolean    na_settings_set_string_list         ( NASettings *settings, const gchar *key, const GSList *value );
-gboolean    na_settings_set_uint                ( NASettings *settings, const gchar *key, guint value );
-gboolean    na_settings_set_uint_list           ( NASettings *settings, const gchar *key, const GList *value );
+gboolean  na_settings_set_boolean          ( const gchar *key, gboolean value );
+gboolean  na_settings_set_boolean_ex       ( const gchar *group, const gchar *key, gboolean value );
+gboolean  na_settings_set_string           ( const gchar *key, const gchar *value );
+gboolean  na_settings_set_string_list      ( const gchar *key, const GSList *value );
+gboolean  na_settings_set_uint             ( const gchar *key, guint value );
+gboolean  na_settings_set_uint_list        ( const gchar *key, const GList *value );
 
 /* na_iprefs_get_io_providers()
  */
-GSList     *na_settings_get_groups              ( NASettings *settings );
+GSList   *na_settings_get_groups           ( void );
 
 G_END_DECLS
 

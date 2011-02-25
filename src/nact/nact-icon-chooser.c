@@ -219,9 +219,6 @@ instance_dispose( GObject *dialog )
 	NactIconChooser *self;
 	guint pos;
 	GtkWidget *paned;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 
 	g_return_if_fail( NACT_IS_ICON_CHOOSER( dialog ));
 
@@ -232,13 +229,9 @@ instance_dispose( GObject *dialog )
 
 		self->private->dispose_has_run = TRUE;
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( self )));
-		updater = nact_application_get_updater( application );
-		settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
 		paned = base_window_get_widget( BASE_WINDOW( self ), "IconPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( paned ));
-		na_settings_set_uint( settings, NA_IPREFS_ICON_CHOOSER_PANED, pos );
+		na_settings_set_uint( NA_IPREFS_ICON_CHOOSER_PANED, pos );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -415,20 +408,13 @@ on_base_initialize_base_window( NactIconChooser *editor )
 	static const gchar *thisfn = "nact_icon_chooser_on_base_initialize_base_window";
 	guint pos;
 	GtkWidget *paned;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 
 	g_return_if_fail( NACT_IS_ICON_CHOOSER( editor ));
 
 	if( !editor->private->dispose_has_run ){
 		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-		updater = nact_application_get_updater( application );
-		settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-		pos = na_settings_get_uint( settings, NA_IPREFS_ICON_CHOOSER_PANED, NULL, NULL );
+		pos = na_settings_get_uint( NA_IPREFS_ICON_CHOOSER_PANED, NULL, NULL );
 		if( pos ){
 			paned = base_window_get_widget( BASE_WINDOW( editor ), "IconPaned" );
 			gtk_paned_set_position( GTK_PANED( paned ), pos );
@@ -492,22 +478,15 @@ static void
 fillup_icons_by_path( NactIconChooser *editor )
 {
 	GtkFileChooser *file_chooser;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	gchar *uri;
 
 	file_chooser = GTK_FILE_CHOOSER( base_window_get_widget( BASE_WINDOW( editor ), "FileChooser" ));
 	editor->private->path_preview = gtk_image_new();
 	gtk_file_chooser_set_preview_widget( file_chooser, editor->private->path_preview );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
 	gtk_file_chooser_unselect_all( file_chooser );
 
-	uri = na_settings_get_string( settings, NA_IPREFS_ICON_CHOOSER_URI, NULL, NULL );
+	uri = na_settings_get_string( NA_IPREFS_ICON_CHOOSER_URI, NULL, NULL );
 	if( uri ){
 		gtk_file_chooser_set_current_folder_uri( file_chooser, uri );
 		g_free( uri );
@@ -796,16 +775,10 @@ static void
 on_path_selection_changed( GtkFileChooser *file_chooser, NactIconChooser *editor )
 {
 	gchar *uri;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 
 	uri = gtk_file_chooser_get_current_folder_uri( file_chooser );
 	if( uri ){
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-		updater = nact_application_get_updater( application );
-		settings = na_pivot_get_settings( NA_PIVOT( updater ));
-		na_settings_set_string( settings, NA_IPREFS_ICON_CHOOSER_URI, uri );
+		na_settings_set_string( NA_IPREFS_ICON_CHOOSER_URI, uri );
 		g_free( uri );
 	}
 }

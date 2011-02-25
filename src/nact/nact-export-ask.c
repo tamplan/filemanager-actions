@@ -228,9 +228,6 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 {
 	static const gchar *thisfn = "nact_export_ask_user";
 	NactExportAsk *editor;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	gboolean are_locked, mandatory;
 	gboolean keep, keep_mandatory;
 
@@ -241,12 +238,8 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 	g_debug( "%s: parent=%p, item=%p (%s), first=%s",
 			thisfn, ( void * ) parent, ( void * ) item, G_OBJECT_TYPE_NAME( item ), first ? "True":"False" );
 
-	application = NACT_APPLICATION( base_window_get_application( parent ));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-	format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, &mandatory );
-	keep = na_settings_get_boolean( settings, NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, &keep_mandatory );
+	format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, &mandatory );
+	keep = na_settings_get_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, &keep_mandatory );
 
 	if( first || !keep ){
 
@@ -265,7 +258,7 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 		editor->private->parent = parent;
 		editor->private->item = item;
 
-		are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+		are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 		editor->private->preferences_locked = are_locked && mandatory;
 
 		if( base_window_run( BASE_WINDOW( editor )) == GTK_RESPONSE_OK ){
@@ -391,23 +384,16 @@ get_export_format( NactExportAsk *editor )
 	GtkWidget *container;
 	NAExportFormat *format;
 	GQuark format_quark;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 
 	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
 	format = nact_export_format_get_selected( container );
 	format_quark = na_export_format_get_quark( format );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
 	if( !editor->private->keep_last_choice_mandatory ){
-		na_settings_set_boolean( settings, NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, editor->private->keep_last_choice );
+		na_settings_set_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, editor->private->keep_last_choice );
 	}
 
-	na_iprefs_set_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_quark );
+	na_iprefs_set_export_format( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_quark );
 
 	return( format_quark );
 }

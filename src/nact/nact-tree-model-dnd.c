@@ -886,7 +886,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	parms.parent = base_window_get_gtk_toplevel( BASE_WINDOW( main_window ));
 	parms.uris = g_slist_reverse( na_core_utils_slist_from_split( selection_data_data, "\r\n" ));
 
-	parms.mode = na_iprefs_get_import_mode( NA_PIVOT( updater ), NA_IPREFS_IMPORT_PREFERRED_MODE, NULL );
+	parms.mode = na_iprefs_get_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL );
 
 	parms.check_fn = ( NAIImporterCheckFn ) is_dropped_already_exists;
 	parms.check_fn_data = main_window;

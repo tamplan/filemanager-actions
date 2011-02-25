@@ -153,10 +153,6 @@ void          na_pivot_set_new_items( NAPivot *pivot, GList *tree );
 
 void          na_pivot_on_item_changed_handler( NAIIOProvider *provider, NAPivot *pivot  );
 
-/* Monitoring and preferences management
- */
-NASettings   *na_pivot_get_settings     ( const NAPivot *pivot );
-
 /* NAPivot properties and configuration
  */
 void          na_pivot_set_loadable     ( NAPivot *pivot, guint loadable );

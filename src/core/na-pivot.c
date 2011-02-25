@@ -66,10 +66,6 @@ struct _NAPivotPrivate {
 	/* timeout to manage i/o providers 'item-changed' burst
 	 */
 	NATimeout   change_timeout;
-
-	/* the preferences management
-	 */
-	NASettings *settings;
 };
 
 /* NAPivot properties
@@ -242,7 +238,6 @@ instance_constructed( GObject *object )
 		g_debug( "%s: object=%p", thisfn, ( void * ) object );
 
 		self->private->modules = na_module_load_modules();
-		self->private->settings = na_settings_new();
 
 		/* force class initialization and io-factory registration
 		 */
@@ -335,7 +330,7 @@ instance_dispose( GObject *object )
 		self->private->tree = na_object_free_items( self->private->tree );
 
 		/* release the settings */
-		g_object_unref( self->private->settings );
+		na_settings_free();
 
 		/* release the I/O Provider object list */
 		na_io_provider_unref_io_providers_list();
@@ -656,32 +651,6 @@ on_items_changed_timeout( NAPivot *pivot )
 
 	g_debug( "%s: emitting %s signal", thisfn, PIVOT_SIGNAL_ITEMS_CHANGED );
 	g_signal_emit_by_name(( gpointer ) pivot, PIVOT_SIGNAL_ITEMS_CHANGED );
-}
-
-/*
- * na_pivot_get_settings:
- * @pivot: this #NAPivot instance.
- *
- * Returns: a pointer (not a reference) to the common #NASettings object.
- * This pointer is owned by @pivot, and should not be released by the caller.
- *
- * Since: 3.1.0
- */
-NASettings *
-na_pivot_get_settings( const NAPivot *pivot )
-{
-	NASettings *settings;
-
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
-
-	settings = NULL;
-
-	if( !pivot->private->dispose_has_run ){
-
-		settings = pivot->private->settings;
-	}
-
-	return( settings );
 }
 
 /*

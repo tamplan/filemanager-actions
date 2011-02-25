@@ -207,10 +207,8 @@ are_preferences_locked( const NAUpdater *updater )
 {
 	gboolean are_locked;
 	gboolean mandatory;
-	NASettings *settings;
 
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-	are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+	are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 
 	return( are_locked && mandatory );
 }
@@ -221,8 +219,7 @@ is_level_zero_writable( const NAUpdater *updater )
 	GSList *level_zero;
 	gboolean mandatory;
 
-	level_zero = na_settings_get_string_list(
-			na_pivot_get_settings( NA_PIVOT( updater )), NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, &mandatory );
+	level_zero = na_settings_get_string_list( NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, &mandatory );
 
 	na_core_utils_slist_free( level_zero );
 
@@ -477,18 +474,15 @@ na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const NAObject 
 {
 	static const gchar *thisfn = "na_updater_should_pasted_be_relabeled";
 	gboolean relabel;
-	NASettings *settings;
-
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
 
 	if( NA_IS_OBJECT_MENU( item )){
-		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, NULL );
+		relabel = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_MENU, NULL, NULL );
 
 	} else if( NA_IS_OBJECT_ACTION( item )){
-		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, NULL );
+		relabel = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_ACTION, NULL, NULL );
 
 	} else if( NA_IS_OBJECT_PROFILE( item )){
-		relabel = na_settings_get_boolean( settings, NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, NULL );
+		relabel = na_settings_get_boolean( NA_IPREFS_RELABEL_DUPLICATE_PROFILE, NULL, NULL );
 
 	} else {
 		g_warning( "%s: unknown item type at %p", thisfn, ( void * ) item );

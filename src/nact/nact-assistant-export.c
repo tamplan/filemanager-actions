@@ -274,19 +274,12 @@ void
 nact_assistant_export_run( BaseWindow *main_window )
 {
 	NactAssistantExport *assistant;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	gboolean esc_quit, esc_confirm;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( main_window ));
 
-	application = NACT_APPLICATION( base_window_get_application( main_window ));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-	esc_quit = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
-	esc_confirm = na_settings_get_boolean( settings, NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
+	esc_quit = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
+	esc_confirm = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 
 	assistant = g_object_new( NACT_ASSISTANT_EXPORT_TYPE,
 			BASE_PROP_PARENT,          main_window,
@@ -307,9 +300,6 @@ static void
 on_base_initialize_gtk_toplevel( NactAssistantExport *dialog, GtkAssistant *assistant, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_on_base_initialize_gtk_toplevel";
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	gboolean are_locked, mandatory;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( dialog ));
@@ -318,11 +308,7 @@ on_base_initialize_gtk_toplevel( NactAssistantExport *dialog, GtkAssistant *assi
 		g_debug( "%s: dialog=%p, assistant=%p, user_data=%p",
 				thisfn, ( void * ) dialog, ( void * ) assistant, ( void * ) user_data );
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( dialog )));
-		updater = nact_application_get_updater( application );
-		settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-		are_locked = na_settings_get_boolean( settings, NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+		are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 		dialog->private->preferences_locked = are_locked && mandatory;
 
 		assist_initial_load_target_folder( dialog, assistant );
@@ -440,20 +426,13 @@ static void
 assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *assistant )
 {
 	GtkFileChooser *chooser;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	gchar *uri;
 	GtkWidget *content;
 
 	chooser = get_folder_chooser( window );
 	gtk_file_chooser_unselect_all( chooser );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-	uri = na_settings_get_string( settings, NA_IPREFS_EXPORT_ASSISTANT_URI, NULL, NULL );
+	uri = na_settings_get_string( NA_IPREFS_EXPORT_ASSISTANT_URI, NULL, NULL );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( chooser ), uri );
 	}
@@ -487,9 +466,6 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 	gboolean enabled;
 	NactAssistantExport *assist;
 	GtkWidget *content;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 
 	g_debug( "%s: chooser=%p, user_data=%p", thisfn, ( void * ) chooser, ( void * ) user_data );
 	g_assert( NACT_IS_ASSISTANT_EXPORT( user_data ));
@@ -506,12 +482,7 @@ on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 		if( enabled ){
 			g_free( assist->private->uri );
 			assist->private->uri = g_strdup( uri );
-
-			application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( assist )));
-			updater = nact_application_get_updater( application );
-			settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
-			na_settings_set_string( settings, NA_IPREFS_EXPORT_ASSISTANT_URI, uri );
+			na_settings_set_string( NA_IPREFS_EXPORT_ASSISTANT_URI, uri );
 		}
 
 		g_free( uri );
@@ -542,13 +513,9 @@ assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant
 	GtkWidget *content;
 	GtkWidget *container;
 	GQuark format;
-	NactApplication *application;
-	NAUpdater *updater;
 	gboolean mandatory;
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, &mandatory );
+	format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, &mandatory );
 
 	container = base_window_get_widget( BASE_WINDOW( window ), "AssistantExportFormatVBox" );
 	nact_export_format_select( container, !mandatory, format );
@@ -602,14 +569,9 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	GList *it;
 	NAExportFormat *format;
 	GtkLabel *confirm_label;
-	NactApplication *application;
-	NAUpdater *updater;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
 
 	/* i18n: this is the title of the confirm page of the export assistant */
 	text = g_string_new( "" );
@@ -632,7 +594,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	format = get_export_format( window );
 	label11 = na_export_format_get_label( format );
 	label21 = na_export_format_get_description( format );
-	na_iprefs_set_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( format ));
+	na_iprefs_set_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( format ));
 	label12 = na_core_utils_str_remove_char( label11, "_" );
 	label22 = na_core_utils_str_add_prefix( "\t", label21 );
 	g_string_append_printf( text, "\n\n<b>%s</b>\n\n%s", label12, label22 );
@@ -682,7 +644,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 		str->item = NA_OBJECT_ITEM( na_object_get_origin( NA_IDUPLICABLE( ia->data )));
 
-		str->format = na_iprefs_get_export_format( NA_PIVOT( updater ), NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
+		str->format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
 
 		if( str->format == IPREFS_EXPORT_FORMAT_ASK ){
 			str->format = nact_export_ask_user( BASE_WINDOW( wnd ), str->item, first );

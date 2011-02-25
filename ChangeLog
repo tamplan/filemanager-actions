@@ -1,5 +1,39 @@
 2011-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	NASettings is now a private singleton which allocates itself when needed.
+	Preference are so available anywhere without requiring an object.
+
+	* src/core/na-importer-ask.c (na_importer_ask_user):
+	* src/core/na-importer.c (import_from_uri):
+	* src/core/na-io-provider.c (na_io_provider_is_conf_readable):
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h:
+	* src/core/na-pivot.c (instance_constructed, instance_dispose):
+	* src/core/na-pivot.h (na_pivot_get_settings):
+	* src/core/na-settings.c:
+	* src/core/na-settings.h:
+	* src/core/na-tokens.c:
+	* src/core/na-tokens.h(na_tokens_execute_action):
+	* src/core/na-updater.c (are_preferences_locked):
+	* src/nact/base-gtk-utils.c:
+	* src/nact/nact-assistant-export.c (nact_assistant_export_run):
+	* src/nact/nact-assistant-import.c (nact_assistant_import_run):
+	* src/nact/nact-clipboard.c (export_row_object):
+	* src/nact/nact-export-ask.c (nact_export_ask_user):
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-ifolders-tab.c (on_browse_folder_clicked):
+	* src/nact/nact-main-toolbar.c (nact_main_toolbar_init):
+	* src/nact/nact-main-window.c (on_base_initialize_base_window):
+	* src/nact/nact-menubar-file.c (nact_menubar_file_save_items):
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-providers-list.c (nact_providers_list_save):
+	* src/nact/nact-schemes-list.c (init_view_get_default_list):
+	* src/nact/nact-sort-buttons.c (on_base_initialize_buttons):
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
+	* src/nact/nact-tree-model.c (nact_tree_model_new):
+	* src/plugin-menu/nautilus-actions.c:
+	* src/utils/nautilus-actions-run.c: Updated accordingly.
+
 	Current desktop environment can be a user preference
 
 	* src/core/na-desktop-environment.c:

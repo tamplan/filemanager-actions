@@ -52,19 +52,19 @@ enum {
 	IPREFS_ORDER_MANUAL
 };
 
-guint    na_iprefs_get_import_mode        ( const NAPivot *pivot, const gchar *pref, gboolean *mandatory );
-void     na_iprefs_set_import_mode        ( const NAPivot *pivot, const gchar *pref, guint mode );
+guint    na_iprefs_get_import_mode        ( const gchar *pref, gboolean *mandatory );
+void     na_iprefs_set_import_mode        ( const gchar *pref, guint mode );
 
-guint    na_iprefs_get_order_mode         ( const NAPivot *pivot, gboolean *mandatory );
+guint    na_iprefs_get_order_mode         ( gboolean *mandatory );
 guint    na_iprefs_get_order_mode_by_label( const gchar *label );
-void     na_iprefs_set_order_mode         ( const NAPivot *pivot, guint mode );
+void     na_iprefs_set_order_mode         ( guint mode );
 
-GQuark   na_iprefs_get_export_format      ( const NAPivot *pivot, const gchar *pref, gboolean *mandatory );
-void     na_iprefs_set_export_format      ( const NAPivot *pivot, const gchar *pref, GQuark format );
+GQuark   na_iprefs_get_export_format      ( const gchar *pref, gboolean *mandatory );
+void     na_iprefs_set_export_format      ( const gchar *pref, GQuark format );
 
-GSList  *na_iprefs_get_io_providers       ( const NAPivot * );
+GSList  *na_iprefs_get_io_providers       ( void );
 
-gboolean na_iprefs_write_level_zero       ( const NAPivot *pivot, const GList *items, GSList **messages );
+gboolean na_iprefs_write_level_zero       ( const GList *items, GSList **messages );
 
 G_END_DECLS
 

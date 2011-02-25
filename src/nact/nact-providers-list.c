@@ -78,7 +78,6 @@ typedef struct {
 /* some data needed when saving the list store
  */
 typedef struct {
-	NASettings *settings;
 	GSList     *order;
 }
 	ProvidersListSaveData;
@@ -353,21 +352,13 @@ void
 nact_providers_list_save( BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_providers_list_save";
-	NactApplication *application;
-	NAUpdater *updater;
 	GtkTreeView *treeview;
 	GtkTreeModel *model;
 	ProvidersListSaveData *plsd;
-	NASettings *settings;
 
 	g_debug( "%s: window=%p", thisfn, ( void * ) window );
 
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-
 	plsd = g_new0( ProvidersListSaveData, 1 );
-	plsd->settings = settings;
 	plsd->order = NULL;
 
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
@@ -375,7 +366,7 @@ nact_providers_list_save( BaseWindow *window )
 	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) providers_list_save_iter, plsd );
 
 	plsd->order = g_slist_reverse( plsd->order );
-	na_settings_set_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, plsd->order );
+	na_settings_set_string_list( NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, plsd->order );
 
 	na_core_utils_slist_free( plsd->order );
 	g_free( plsd );
@@ -397,8 +388,8 @@ providers_list_save_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* i
 			-1 );
 
 	group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, id );
-	na_settings_set_boolean_ex( plsd->settings, group, NA_IPREFS_IO_PROVIDER_READABLE, readable );
-	na_settings_set_boolean_ex( plsd->settings, group, NA_IPREFS_IO_PROVIDER_WRITABLE, writable );
+	na_settings_set_boolean_ex( group, NA_IPREFS_IO_PROVIDER_READABLE, readable );
+	na_settings_set_boolean_ex( group, NA_IPREFS_IO_PROVIDER_WRITABLE, writable );
 	g_free( group );
 
 	plsd->order = g_slist_prepend( plsd->order, g_strdup( id ));
@@ -448,9 +439,6 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 	gboolean may_up, may_down;
 	gboolean order_mandatory;
 	GSList *write_order;
-	NactApplication *application;
-	NAUpdater *updater;
-	NASettings *settings;
 	ProvidersListData *data;
 	GtkTreeView *treeview;
 
@@ -463,10 +451,7 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
 	data = get_providers_list_data( treeview );
 
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
-	settings = na_pivot_get_settings( NA_PIVOT( updater ));
-	write_order = na_settings_get_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, &order_mandatory );
+	write_order = na_settings_get_string_list( NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, &order_mandatory );
 
 	if( !data->preferences_locked &&
 		!order_mandatory &&

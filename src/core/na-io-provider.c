@@ -533,8 +533,7 @@ na_io_provider_is_conf_readable( const NAIOProvider *provider, const NAPivot *pi
 	if( !provider->private->dispose_has_run ){
 
 		group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, provider->private->id );
-		readable = na_settings_get_boolean_ex(
-				na_pivot_get_settings( pivot ), group, NA_IPREFS_IO_PROVIDER_READABLE, NULL, mandatory );
+		readable = na_settings_get_boolean_ex( group, NA_IPREFS_IO_PROVIDER_READABLE, NULL, mandatory );
 		g_free( group );
 	}
 
@@ -643,8 +642,7 @@ na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **me
 
 	/* build the items hierarchy
 	 */
-	level_zero = na_settings_get_string_list(
-			na_pivot_get_settings( pivot ), NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, NULL );
+	level_zero = na_settings_get_string_list( NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, NULL, NULL );
 
 	hierarchy = load_items_hierarchy_build( &flat, level_zero, TRUE, NULL );
 
@@ -658,7 +656,7 @@ na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **me
 
 	if( flat || !level_zero || !g_slist_length( level_zero )){
 		g_debug( "%s: rewriting level-zero", thisfn );
-		if( !na_iprefs_write_level_zero( pivot, hierarchy, messages )){
+		if( !na_iprefs_write_level_zero( hierarchy, messages )){
 			g_warning( "%s: unable to update level-zero", thisfn );
 		}
 	}
@@ -667,7 +665,7 @@ na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **me
 
 	/* sort the hierarchy according to preferences
 	 */
-	order_mode = na_iprefs_get_order_mode( pivot, NULL );
+	order_mode = na_iprefs_get_order_mode( NULL );
 	switch( order_mode ){
 		case IPREFS_ORDER_ALPHA_ASCENDING:
 			hierarchy = load_items_hierarchy_sort( pivot, hierarchy, ( GCompareFunc ) na_object_id_sort_alpha_asc );
@@ -799,7 +797,7 @@ io_providers_list_add_from_prefs( const NAPivot *pivot, GList *objects_list )
 	GSList *io_providers, *it;
 
 	merged = objects_list;
-	io_providers = na_iprefs_get_io_providers( pivot );
+	io_providers = na_iprefs_get_io_providers();
 
 	for( it = io_providers ; it ; it = it->next ){
 		id = ( const gchar * ) it->data;
@@ -819,13 +817,11 @@ static GList *
 io_providers_list_add_from_write_order( const NAPivot *pivot, GList *objects_list )
 {
 	GList *merged;
-	NASettings *settings;
 	GSList *io_providers, *it;
 	const gchar *id;
 
 	merged = objects_list;
-	settings = na_pivot_get_settings( pivot );
-	io_providers = na_settings_get_string_list( settings, NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
+	io_providers = na_settings_get_string_list( NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
 
 	for( it = io_providers ; it ; it = it->next ){
 		id = ( const gchar * ) it->data;
@@ -886,8 +882,7 @@ is_conf_writable( const NAIOProvider *provider, const NAPivot *pivot, gboolean *
 	gboolean is_writable;
 
 	group = g_strdup_printf( "%s %s", NA_IPREFS_IO_PROVIDER_GROUP, provider->private->id );
-	is_writable = na_settings_get_boolean_ex(
-			na_pivot_get_settings( pivot ), group, NA_IPREFS_IO_PROVIDER_WRITABLE, NULL, mandatory );
+	is_writable = na_settings_get_boolean_ex( group, NA_IPREFS_IO_PROVIDER_WRITABLE, NULL, mandatory );
 	g_free( group );
 
 	return( is_writable );
