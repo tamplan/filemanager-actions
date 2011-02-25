@@ -278,6 +278,80 @@ This prefix should be so that the terminal is kept opened after the execution.</
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkFrame" id="frame720">
+                    <property name="visible">True</property>
+                    <property name="border_width">6</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">in</property>
+                    <child>
+                      <object class="GtkAlignment" id="alignment720">
+                        <property name="visible">True</property>
+                        <property name="left_padding">12</property>
+                        <child>
+                          <object class="GtkVBox" id="vbox721">
+                            <property name="visible">True</property>
+                            <property name="border_width">6</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkTable" id="table721">
+                                <property name="visible">True</property>
+                                <property name="n_rows">2</property>
+                                <property name="n_columns">2</property>
+                                <property name="column_spacing">4</property>
+                                <property name="row_spacing">4</property>
+                                <child>
+                                  <object class="GtkLabel" id="label721">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Running _desktop environment :</property>
+                                    <property name="use_underline">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="x_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkComboBox" id="DesktopComboBox">
+                                    <property name="visible">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label720">
+                        <property name="visible">True</property>
+                        <property name="xpad">5</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Desktop environment&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
                   <placeholder/>
                 </child>
               </object>
@@ -289,7 +363,7 @@ This prefix should be so that the terminal is kept opened after the execution.</
               <object class="GtkLabel" id="label700">
                 <property name="visible">True</property>
                 <property name="tooltip_text" translatable="yes">This tab lets you specify parameters needed for. some execution modes.</property>
-                <property name="label" translatable="yes">E_xecution</property>
+                <property name="label" translatable="yes">Runtime E_xecution</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -1077,5 +1151,11 @@ You can add a new scheme by clicking on the '+' button.</property>
       <action-widget response="0">CancelButton</action-widget>
       <action-widget response="0">OKButton</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkSizeGroup" id="RuntimeExecutionLabel">
+    <widgets>
+      <widget name="label711"/>
+      <widget name="label721"/>
+    </widgets>
   </object>
 </interface>

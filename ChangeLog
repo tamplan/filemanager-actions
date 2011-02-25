@@ -1,5 +1,24 @@
 2011-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	Current desktop environment can be a user preference
+
+	* src/core/na-desktop-environment.c:
+	* src/core/na-desktop-environment.h: New files.
+
+	* po/POTFILES.in:
+	* src/core/Makefile.am:
+	* src/core/na-icontext.c (is_candidate_for_show_in):
+	* nact/nact-ienvironment-tab.c
+	(nact_ienvironment_tab_runtime_init_toplevel): Updated accordingly.
+
+	* src/core/na-settings.c:
+	* src/core/na-settings.h:
+	Define new NA_IPREFS_DESKTOP_ENVIRONMENT user preference.
+	(set_key_value): Setting a NULL string actually removes the key.
+
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-preferences.ui: Let the user choose his desktop.
+
 	* src/core/na-iabout.c: Renamed as src/core/na-about.c.
 	* src/core/na-iabout.h: Renamed as src/core/na-about.h.
 	NAIAbout is no more an interface, but just a set of functions.

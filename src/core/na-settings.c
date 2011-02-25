@@ -114,6 +114,7 @@ static const KeyDef st_def_keys[] = {
 	{ NA_IPREFS_COMMAND_CHOOSER_URI,              GROUP_NACT,    NA_DATA_TYPE_STRING,      "file:///bin" },
 	{ NA_IPREFS_COMMAND_LEGEND_WSP,               GROUP_NACT,    NA_DATA_TYPE_UINT_LIST,   "" },
 	{ NA_IPREFS_CONFIRM_LOGOUT_WSP,               GROUP_NACT,    NA_DATA_TYPE_UINT_LIST,   "" },
+	{ NA_IPREFS_DESKTOP_ENVIRONMENT,              GROUP_RUNTIME, NA_DATA_TYPE_STRING,      "" },
 	{ NA_IPREFS_WORKING_DIR_WSP,                  GROUP_NACT,    NA_DATA_TYPE_UINT_LIST,   "" },
 	{ NA_IPREFS_WORKING_DIR_URI,                  GROUP_NACT,    NA_DATA_TYPE_STRING,      "file:///" },
 	{ NA_IPREFS_SHOW_IF_RUNNING_WSP,              GROUP_NACT,    NA_DATA_TYPE_UINT_LIST,   "" },
@@ -1335,9 +1336,11 @@ release_key_value( KeyValue *value )
 static gboolean
 set_key_value( NASettings *settings, const gchar *group, const gchar *key, const gchar *string )
 {
+	static const gchar *thisfn = "na_settings_set_key_value";
 	KeyDef *key_def;
 	const gchar *wgroup;
 	gboolean ok;
+	GError *error;
 
 	g_return_val_if_fail( NA_IS_SETTINGS( settings ), FALSE );
 
@@ -1353,8 +1356,21 @@ set_key_value( NASettings *settings, const gchar *group, const gchar *key, const
 			}
 		}
 		if( wgroup ){
-			g_key_file_set_string( settings->private->user->key_file, wgroup, key, string );
-			ok = write_user_key_file( settings );
+			ok = TRUE;
+
+			if( string ){
+				g_key_file_set_string( settings->private->user->key_file, wgroup, key, string );
+
+			} else {
+				error = NULL;
+				ok = g_key_file_remove_key( settings->private->user->key_file, wgroup, key, &error );
+				if( error ){
+					g_warning( "%s: g_key_file_remove_key: %s", thisfn, error->message );
+					g_error_free( error );
+				}
+			}
+
+			ok &= write_user_key_file( settings );
 		}
 	}
 

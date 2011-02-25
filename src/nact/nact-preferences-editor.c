@@ -33,9 +33,11 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <libintl.h>
 
 #include <api/na-iimporter.h>
 
+#include <core/na-desktop-environment.h>
 #include <core/na-iprefs.h>
 #include <core/na-tokens.h>
 
@@ -69,6 +71,8 @@ struct _NactPreferencesEditorPrivate {
 	/* second tab: runtime execution */
 	gchar   *terminal_prefix;
 	gboolean terminal_prefix_mandatory;
+	gchar   *desktop;
+	gboolean desktop_mandatory;
 
 	/* third tab: ui preferences */
 	gboolean relabel_menu;
@@ -97,12 +101,24 @@ struct _NactPreferencesEditorPrivate {
 	/* seventh tab: i/o providers */
 };
 
-static const gchar  *st_xmlui_filename = PKGDATADIR "/nact-preferences.ui";
-static const gchar  *st_toplevel_name  = "PreferencesDialog";
-static const gchar  *st_wsp_name       = NA_IPREFS_PREFERENCES_WSP;
+/* column ordering in the desktop environment combobox
+ */
+enum {
+	DESKTOP_ID_COLUMN = 0,
+	DESKTOP_LABEL_COLUMN = 0,
+	DESKTOP_N_COLUMN
+};
 
-static GObjectClass *st_parent_class   = NULL;
-static guint         st_last_tab       = 0;
+/* i18n: the user is not willing to identify his current desktop environment,
+ *       and prefers rely onthe runtime detection */
+static const NADesktopEnv st_no_desktop     = { "None", N_( "Rely on runtime detection" ) };
+
+static const gchar       *st_xmlui_filename = PKGDATADIR "/nact-preferences.ui";
+static const gchar       *st_toplevel_name  = "PreferencesDialog";
+static const gchar       *st_wsp_name       = NA_IPREFS_PREFERENCES_WSP;
+
+static GObjectClass      *st_parent_class   = NULL;
+static guint              st_last_tab       = 0;
 
 static GType    register_type( void );
 static void     class_init( NactPreferencesEditorClass *klass );
@@ -124,6 +140,9 @@ static void     about_item_setup( NactPreferencesEditor *editor, NASettings *set
 static void     about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void     terminal_prefix_setup( NactPreferencesEditor *editor, NASettings *settings );
 static void     terminal_prefix_on_changed( GtkEntry *entry, NactPreferencesEditor *editor );
+static void     desktop_create_model( NactPreferencesEditor *editor );
+static void     desktop_setup( NactPreferencesEditor *editor, NASettings *settings );
+static void     desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor );
 static void     relabel_menu_setup( NactPreferencesEditor *editor, NASettings *settings );
 static void     relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void     relabel_action_setup( NactPreferencesEditor *editor, NASettings *settings );
@@ -339,6 +358,8 @@ on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *tople
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
 		updater = nact_application_get_updater( application );
 
+		desktop_create_model( editor );
+
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 		nact_export_format_init_display(
 				container, NA_PIVOT( updater ),
@@ -382,6 +403,7 @@ on_base_initialize_base_window( NactPreferencesEditor *editor )
 		/* second tab: runtime execution
 		 */
 		terminal_prefix_setup( editor, settings );
+		desktop_setup( editor, settings );
 
 		/* third tab: ui preferences
 		 */
@@ -593,6 +615,7 @@ about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 
 /*
  * terminal prefix
+ * the prefix to add to the command when execution mode is 'Terminal'
  */
 static void
 terminal_prefix_setup( NactPreferencesEditor *editor, NASettings *settings )
@@ -639,6 +662,105 @@ terminal_prefix_on_changed( GtkEntry *entry, NactPreferencesEditor *editor )
 
 		g_free( example_label );
 		g_free( example_markup );
+	}
+}
+
+/*
+ * desktop environment
+ * for OnlyShowIn and NotshowIn contexts
+ */
+static void
+desktop_create_model( NactPreferencesEditor *editor )
+{
+	GtkWidget *combo;
+	GtkListStore *model;
+	GtkCellRenderer *text_cell;
+	const NADesktopEnv *desktops;
+	guint i;
+	GtkTreeIter row;
+
+	combo = base_window_get_widget( BASE_WINDOW( editor ), "DesktopComboBox" );
+	model = gtk_list_store_new( DESKTOP_N_COLUMN, G_TYPE_STRING, G_TYPE_STRING );
+	gtk_combo_box_set_model( GTK_COMBO_BOX( combo ), GTK_TREE_MODEL( model ));
+	g_object_unref( model );
+
+	/* id */
+	text_cell = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), text_cell, FALSE );
+	gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( combo ), text_cell, "text", 0, NULL );
+	gtk_cell_renderer_set_visible( GTK_CELL_RENDERER( text_cell ), FALSE );
+
+	/* label */
+	text_cell = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), text_cell, TRUE );
+	gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( combo ), text_cell, "text", 0, NULL );
+	gtk_cell_renderer_set_visible( GTK_CELL_RENDERER( text_cell ), TRUE );
+
+	gtk_list_store_append( model, &row );
+	gtk_list_store_set( model, &row,
+			DESKTOP_ID_COLUMN, st_no_desktop.id,
+			DESKTOP_LABEL_COLUMN, gettext( st_no_desktop.label ),
+			-1 );
+
+	desktops = na_desktop_environment_get_known_list();
+
+	for( i = 0 ; desktops[i].id ; ++i ){
+		gtk_list_store_append( model, &row );
+		gtk_list_store_set( model, &row,
+				DESKTOP_ID_COLUMN, desktops[i].id,
+				DESKTOP_LABEL_COLUMN, gettext( desktops[i].label ),
+				-1 );
+	}
+}
+
+static void
+desktop_setup( NactPreferencesEditor *editor, NASettings *settings )
+{
+	gboolean editable;
+	GtkWidget *combo;
+	const NADesktopEnv *desktops;
+	guint i;
+	gint found;
+
+	editor->private->desktop = na_settings_get_string( settings, NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
+	editable = !editor->private->preferences_locked && !editor->private->desktop_mandatory;
+
+	combo = base_window_get_widget( BASE_WINDOW( editor ), "DesktopComboBox" );
+	found = -1;
+
+	if( editor->private->desktop && strlen( editor->private->desktop )){
+		desktops = na_desktop_environment_get_known_list();
+		for( i = 0 ; desktops[i].id && found == -1 ; ++i ){
+			if( !strcmp( desktops[i].id, editor->private->desktop )){
+				found = 1+i;
+			}
+		}
+	}
+
+	gtk_combo_box_set_active( GTK_COMBO_BOX( combo ), found );
+
+	base_window_signal_connect( BASE_WINDOW( editor ),
+			G_OBJECT( combo ), "changed", G_CALLBACK( desktop_on_changed ));
+}
+
+static void
+desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor )
+{
+	gboolean editable;
+	gint active;
+	const NADesktopEnv *desktops;
+
+	editable = !editor->private->preferences_locked && !editor->private->desktop_mandatory;
+
+	if( editable ){
+		g_free( editor->private->desktop );
+		editor->private->desktop = NULL;
+
+		active = gtk_combo_box_get_active( combo );
+		if( active > 0 ){
+			desktops = na_desktop_environment_get_known_list();
+			editor->private->desktop = g_strdup( desktops[active-1].id );
+		}
 	}
 }
 
@@ -1009,6 +1131,9 @@ on_dialog_ok( BaseDialog *dialog )
 		 */
 		if( !editor->private->terminal_prefix_mandatory ){
 			na_settings_set_string( settings, NA_IPREFS_TERMINAL_PREFIX, editor->private->terminal_prefix );
+		}
+		if( !editor->private->desktop_mandatory ){
+			na_settings_set_string( settings, NA_IPREFS_DESKTOP_ENVIRONMENT, editor->private->desktop );
 		}
 
 		/* third tab: ui preferences

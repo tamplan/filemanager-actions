@@ -1,6 +1,7 @@
 data/gconf-schemas/nautilus-actions-prefs.schemas.in
 src/core/na-exporter.c
-src/core/na-iabout.c
+src/core/na-about.c
+src/core/na-desktop-environment.c
 src/core/na-icontext-factory.c
 src/core/na-iimporter.c
 src/core/na-importer-ask.c

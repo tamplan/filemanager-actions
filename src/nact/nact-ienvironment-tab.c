@@ -40,6 +40,7 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
+#include <core/na-desktop-environment.h>
 #include <core/na-settings.h>
 
 #include "base-gtk-utils.h"
@@ -81,22 +82,6 @@ enum {
 	ENV_LABEL_COLUMN,
 	ENV_KEYWORD_COLUMN,
 	N_COLUMN
-};
-
-typedef struct {
-	gchar *keyword;
-	gchar *label;
-}
-	EnvStruct;
-
-static EnvStruct st_envs[] = {
-	{ "GNOME", N_( "GNOME desktop" ) },
-	{ "KDE",   N_( "KDE desktop" ) },
-	{ "LXDE",  N_( "LXDE desktop" ) },
-	{ "ROX",   N_( "ROX desktop" ) },
-	{ "XFCE",  N_( "XFCE desktop" ) },
-	{ "Old",   N_( "Legacy systems" ) },
-	{ NULL }
 };
 
 static gboolean st_initialized = FALSE;
@@ -240,6 +225,7 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	guint i;
+	const NADesktopEnv *desktops;
 
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
@@ -267,14 +253,16 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
 		model = gtk_tree_view_get_model( listview );
 
-		for( i = 0 ; st_envs[i].keyword ; ++i ){
+		desktops = na_desktop_environment_get_known_list();
+
+		for( i = 0 ; desktops[i].id ; ++i ){
 			gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
 			gtk_list_store_set(
 					GTK_LIST_STORE( model ),
 					&iter,
 					ENV_BOOL_COLUMN, FALSE,
-					ENV_LABEL_COLUMN, gettext( st_envs[i].label ),
-					ENV_KEYWORD_COLUMN, st_envs[i].keyword,
+					ENV_LABEL_COLUMN, gettext( desktops[i].label ),
+					ENV_KEYWORD_COLUMN, desktops[i].id,
 					-1 );
 		}
 

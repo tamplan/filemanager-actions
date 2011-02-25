@@ -45,6 +45,7 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
+#include "na-desktop-environment.h"
 #include "na-gnome-vfs-uri.h"
 #include "na-selected-info.h"
 
@@ -65,7 +66,6 @@ static gboolean     v_is_candidate( NAIContext *object, guint target, GList *sel
 
 static gboolean     is_candidate_for_target( const NAIContext *object, guint target, GList *files );
 static gboolean     is_candidate_for_show_in( const NAIContext *object, guint target, GList *files );
-static const gchar *get_running_environment( void );
 static gboolean     is_candidate_for_try_exec( const NAIContext *object, guint target, GList *files );
 static gboolean     is_candidate_for_show_if_registered( const NAIContext *object, guint target, GList *files );
 static gboolean     is_candidate_for_show_if_true( const NAIContext *object, guint target, GList *files );
@@ -518,7 +518,7 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 	static const gchar *environment = NULL;
 
 	if( !environment ){
-		environment = get_running_environment();
+		environment = na_desktop_environment_detect_running_desktop();
 		g_debug( "%s: found %s desktop", thisfn, environment );
 	}
 
@@ -540,82 +540,6 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 	na_core_utils_slist_free( only_in );
 
 	return( ok );
-}
-
-/*
- * Have asked on xdg-list how to identify the currently running desktop environment
- * (see http://standards.freedesktop.org/menu-spec/latest/apb.html)
- * For now, just reproduce the xdg-open algorythm from xdg-utils 1.0
- */
-#define DESKTOP_GNOME "GNOME"
-#define DESKTOP_KDE   "KDE"
-#define DESKTOP_LXDE  "LXDE"
-#define DESKTOP_ROX   "ROX"
-#define DESKTOP_XFCE  "XFCE"
-#define DESKTOP_OLD   "Old"
-
-static const gchar *
-get_running_environment( void )
-{
-	static const gchar *thisfn = "na_icontext_get_running_environment";
-	const gchar *value;
-	gchar *output_str, *error_str;
-	gint exit_status;
-	GError *error;
-	gboolean ok;
-
-	value = g_getenv( "KDE_FULL_SESSION" );
-	if( value && !strcmp( value, "true" )){
-		return( DESKTOP_KDE );
-	}
-
-	value = g_getenv( "GNOME_DESKTOP_SESSION_ID" );
-	if( value && strlen( value )){
-		return( DESKTOP_GNOME );
-	}
-
-	output_str = NULL;
-	error_str = NULL;
-	error = NULL;
-	if( g_spawn_command_line_sync(
-			"dbus-send --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.GetNameOwner string:org.gnome.SessionManager",
-			&output_str, &error_str, &exit_status, &error )){
-		ok = ( exit_status == 0 && output_str && strlen( output_str ) && ( !error_str || !strlen( error_str )));
-		g_free( output_str );
-		g_free( error_str );
-		if( ok ){
-			return( DESKTOP_GNOME );
-		}
-	}
-	if( error ){
-		g_warning( "%s: dbus-send: %s", thisfn, error->message );
-		g_error_free( error );
-	}
-
-	output_str = NULL;
-	error_str = NULL;
-	error = NULL;
-	if( g_spawn_command_line_sync(
-			"xprop -root _DT_SAVE_MODE", &output_str, &error_str, &exit_status, &error )){
-		ok = ( exit_status == 0 && output_str && strlen( output_str ) && ( !error_str || !strlen( error_str )));
-		if( ok ){
-			ok = ( g_strstr_len( output_str, -1, "xfce" ) != NULL );
-		}
-		g_free( output_str );
-		g_free( error_str );
-		if( ok ){
-			return( DESKTOP_XFCE );
-		}
-	}
-	if( error ){
-		g_warning( "%s: xprop: %s", thisfn, error->message );
-		g_error_free( error );
-	}
-
-	/* do not know how to identify ROX or LXDE (Hong Jen Yee <pcman.tw (at) gmail.com>)
-	 * environments; so other desktops are just identified as 'Old' (legacy systems)
-	 */
-	return( DESKTOP_OLD );
 }
 
 /*

@@ -53,6 +53,8 @@ libna_core_la_SOURCES = \
 	na-data-boxed.c										\
 	na-data-def.c										\
 	na-data-types.c										\
+	na-desktop-environment.c							\
+	na-desktop-environment.h							\
 	na-exporter.c										\
 	na-exporter.h										\
 	na-export-format.c									\
