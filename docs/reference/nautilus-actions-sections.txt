@@ -728,6 +728,7 @@ na_core_utils_str_collate
 na_core_utils_str_remove_char
 na_core_utils_str_remove_suffix
 na_core_utils_str_split_first_word
+na_core_utils_str_subst
 na_core_utils_slist_add_message
 na_core_utils_slist_duplicate
 na_core_utils_slist_dump

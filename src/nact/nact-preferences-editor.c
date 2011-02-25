@@ -69,8 +69,8 @@ struct _NactPreferencesEditorPrivate {
 	gboolean about_item_mandatory;
 
 	/* second tab: runtime execution */
-	gchar   *terminal_prefix;
-	gboolean terminal_prefix_mandatory;
+	gchar   *terminal_pattern;
+	gboolean terminal_pattern_mandatory;
 	gchar   *desktop;
 	gboolean desktop_mandatory;
 
@@ -138,8 +138,8 @@ static void     root_menu_setup( NactPreferencesEditor *editor );
 static void     root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void     about_item_setup( NactPreferencesEditor *editor );
 static void     about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     terminal_prefix_setup( NactPreferencesEditor *editor );
-static void     terminal_prefix_on_changed( GtkEntry *entry, NactPreferencesEditor *editor );
+static void     terminal_pattern_setup( NactPreferencesEditor *editor );
+static void     terminal_pattern_on_changed( GtkEntry *entry, NactPreferencesEditor *editor );
 static void     desktop_create_model( NactPreferencesEditor *editor );
 static void     desktop_setup( NactPreferencesEditor *editor );
 static void     desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor );
@@ -388,7 +388,7 @@ on_base_initialize_base_window( NactPreferencesEditor *editor )
 
 		/* second tab: runtime execution
 		 */
-		terminal_prefix_setup( editor );
+		terminal_pattern_setup( editor );
 		desktop_setup( editor );
 
 		/* third tab: ui preferences
@@ -600,45 +600,46 @@ about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor )
 }
 
 /*
- * terminal prefix
- * the prefix to add to the command when execution mode is 'Terminal'
+ * terminal command
+ * the command when execution mode is 'Terminal'
+ * should have a 'COMMAND' keyword inside
  */
 static void
-terminal_prefix_setup( NactPreferencesEditor *editor )
+terminal_pattern_setup( NactPreferencesEditor *editor )
 {
 	gboolean editable;
 	GtkWidget *entry;
 
-	editor->private->terminal_prefix = na_settings_get_string( NA_IPREFS_TERMINAL_PREFIX, NULL, &editor->private->terminal_prefix_mandatory );
-	editable = !editor->private->preferences_locked && !editor->private->terminal_prefix_mandatory;
+	editor->private->terminal_pattern = na_settings_get_string( NA_IPREFS_TERMINAL_PATTERN, NULL, &editor->private->terminal_pattern_mandatory );
+	editable = !editor->private->preferences_locked && !editor->private->terminal_pattern_mandatory;
 
 	entry = base_window_get_widget( BASE_WINDOW( editor ), "TerminalPrefixEntry" );
-	gtk_entry_set_text( GTK_ENTRY( entry ), editor->private->terminal_prefix );
+	gtk_entry_set_text( GTK_ENTRY( entry ), editor->private->terminal_pattern );
 	gtk_widget_set_sensitive( entry, !editor->private->preferences_locked );
 	base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 
-	terminal_prefix_on_changed( GTK_ENTRY( entry ), editor );
+	terminal_pattern_on_changed( GTK_ENTRY( entry ), editor );
 
 	base_window_signal_connect( BASE_WINDOW( editor ),
-			G_OBJECT( entry ), "changed", G_CALLBACK( terminal_prefix_on_changed ));
+			G_OBJECT( entry ), "changed", G_CALLBACK( terminal_pattern_on_changed ));
 }
 
 static void
-terminal_prefix_on_changed( GtkEntry *entry, NactPreferencesEditor *editor )
+terminal_pattern_on_changed( GtkEntry *entry, NactPreferencesEditor *editor )
 {
 	gboolean editable;
 	gchar *example_label;
 	gchar *example_markup;
 	GtkWidget *example_widget;
 
-	editable = !editor->private->preferences_locked && !editor->private->terminal_prefix_mandatory;
+	editable = !editor->private->preferences_locked && !editor->private->terminal_pattern_mandatory;
 
 	if( editable ){
-		g_free( editor->private->terminal_prefix );
-		editor->private->terminal_prefix = g_strdup( gtk_entry_get_text( entry ));
+		g_free( editor->private->terminal_pattern );
+		editor->private->terminal_pattern = g_strdup( gtk_entry_get_text( entry ));
 
 		example_widget = base_window_get_widget( BASE_WINDOW( editor ), "TerminalPrefixExample" );
-		example_label = na_tokens_command_from_terminal_prefix( editor->private->terminal_prefix, "ls -l" );
+		example_label = na_tokens_command_for_terminal( editor->private->terminal_pattern, "ls -l" );
 
 		/* i18n: command-line example: Ex.: gnome-terminal -c "ls -l" */
 		example_markup = g_markup_printf_escaped(
@@ -1109,8 +1110,8 @@ on_dialog_ok( BaseDialog *dialog )
 
 		/* second tab: runtime execution
 		 */
-		if( !editor->private->terminal_prefix_mandatory ){
-			na_settings_set_string( NA_IPREFS_TERMINAL_PREFIX, editor->private->terminal_prefix );
+		if( !editor->private->terminal_pattern_mandatory ){
+			na_settings_set_string( NA_IPREFS_TERMINAL_PATTERN, editor->private->terminal_pattern );
 		}
 		if( !editor->private->desktop_mandatory ){
 			na_settings_set_string( NA_IPREFS_DESKTOP_ENVIRONMENT, editor->private->desktop );

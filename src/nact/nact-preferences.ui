@@ -210,8 +210,8 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                             <child>
                               <object class="GtkTable" id="table711">
                                 <property name="visible">True</property>
-                                <property name="tooltip_text" translatable="yes">Specify here the command to add as a prefix of the action path and parameters when the action is to be executed in a terminal.
-This prefix should be so that the terminal is kept opened after the execution.</property>
+                                <property name="tooltip_text" translatable="yes">Specify here the command to run and keep opened a terminal.
+This command should include a 'COMMAND' keyword, which will be substituted at runtime with the action path and parameters.</property>
                                 <property name="n_rows">2</property>
                                 <property name="n_columns">2</property>
                                 <property name="column_spacing">4</property>
@@ -220,7 +220,7 @@ This prefix should be so that the terminal is kept opened after the execution.</
                                   <object class="GtkLabel" id="label711">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
-                                    <property name="label" translatable="yes">_Command prefix :</property>
+                                    <property name="label" translatable="yes">_Command pattern :</property>
                                     <property name="use_underline">True</property>
                                   </object>
                                   <packing>
@@ -1154,8 +1154,8 @@ You can add a new scheme by clicking on the '+' button.</property>
   </object>
   <object class="GtkSizeGroup" id="RuntimeExecutionLabel">
     <widgets>
-      <widget name="label711"/>
       <widget name="label721"/>
+      <widget name="label711"/>
     </widgets>
   </object>
 </interface>

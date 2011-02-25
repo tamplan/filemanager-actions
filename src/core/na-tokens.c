@@ -542,8 +542,8 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 static gchar *
 get_command_execution_display_output( const gchar *command )
 {
-	static const gchar *bin_sh = "/bin/sh -c ";
-	return( na_tokens_command_from_terminal_prefix( bin_sh, command ));
+	static const gchar *bin_sh = "/bin/sh -c \"%s\"";
+	return( na_tokens_command_for_terminal( bin_sh, command ));
 }
 
 static gchar *
@@ -562,27 +562,32 @@ static gchar *
 get_command_execution_terminal( const gchar *command )
 {
 	gchar *run_command;
-	gchar *prefix;
+	gchar *pattern;
 
-	prefix = na_settings_get_string( NA_IPREFS_TERMINAL_PREFIX, NULL, NULL );
-	run_command = na_tokens_command_from_terminal_prefix( prefix, command );
-	g_free( prefix );
+	pattern = na_settings_get_string( NA_IPREFS_TERMINAL_PATTERN, NULL, NULL );
+	run_command = na_tokens_command_for_terminal( pattern, command );
+	g_free( pattern );
 
 	return( run_command );
 }
 
 /**
- * na_tokens_command_from_terminal_prefix:
+ * na_tokens_command_for_terminal:
+ * @pattern: the command pattern; should include a 'COMMAND' keyword
+ * @command: the command to be actually run in the terminal
+ *
+ * Returns: the command to be run, as a newly allocated string which should
+ * be g_free() by the caller.
  */
 gchar *
-na_tokens_command_from_terminal_prefix( const gchar *prefix, const gchar *command )
+na_tokens_command_for_terminal( const gchar *pattern, const gchar *command )
 {
 	gchar *run_command;
 	gchar *quoted;
 
-	if( prefix && strlen( prefix ) && strncmp( command, prefix, strlen( prefix ))){
+	if( pattern && strlen( pattern )){
 		quoted = g_shell_quote( command );
-		run_command = g_strconcat( prefix, " ", quoted, NULL );
+		run_command = na_core_utils_str_subst( pattern, "COMMAND", quoted );
 		g_free( quoted );
 
 	} else {

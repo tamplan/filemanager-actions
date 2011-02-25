@@ -252,6 +252,38 @@ na_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **
 	}
 }
 
+/**
+ * na_core_utils_str_subst:
+ * @pattern: the pattern.
+ * @key: the key string to be substituted.
+ * @subst: the string which will replace @key.
+ *
+ * Returns: a copy of @pattern where the first occurrence of @key has been
+ * substituted with @subst, as a newly allocated string which should be
+ * g_free() by the caller.
+ *
+ * Returns: a copy of @pattern if @key is not found in @pattern.
+ */
+gchar *
+na_core_utils_str_subst( const gchar *pattern, const gchar *key, const gchar *subst )
+{
+	GString *result;
+	gchar *found;
+
+	result = g_string_new( "" );
+	found = g_strstr_len( pattern, -1, key );
+	if( found ){
+		result = g_string_append_len( result, pattern, ( gssize )( found - pattern ));
+		result = g_string_append( result, subst );
+		result = g_string_append( result, found + g_utf8_strlen( key, -1 ));
+
+	} else {
+		result = g_string_append( result, pattern );
+	}
+
+	return( g_string_free( result, FALSE ));
+}
+
 void
 na_core_utils_slist_add_message( GSList **messages, const gchar *format, ... )
 {

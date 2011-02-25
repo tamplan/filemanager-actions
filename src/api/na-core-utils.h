@@ -53,6 +53,7 @@ int      na_core_utils_str_collate( const gchar *str1, const gchar *str2 );
 gchar   *na_core_utils_str_remove_char( const gchar *string, const gchar *to_remove );
 gchar   *na_core_utils_str_remove_suffix( const gchar *string, const gchar *suffix );
 void     na_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **other );
+gchar   *na_core_utils_str_subst( const gchar *pattern, const gchar *key, const gchar *subst );
 
 /* some functions to get or set GSList list of strings
  */

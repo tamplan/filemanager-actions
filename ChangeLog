@@ -1,5 +1,20 @@
 2011-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_str_subst): New function.
+
+	* src/core/na-settings.c:
+	* src/core/na-settings.h:
+	Rename "terminal-prefix" user preference as "terminal-pattern".
+
+	* src/core/na-tokens.c:
+	* src/core/na-tokens.h (na_tokens_command_from_terminal_prefix):
+	Renamed as na_tokens_command_for_terminal().
+
+	* docs/reference/nautilus-actions-sections.txt:
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-preferences.ui: Updated accordingly.
+
 	* src/nact/nact-iexecution-tab.c (on_main_selection_changed):
 	Disable not implemented frames.
 
