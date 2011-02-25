@@ -83,10 +83,6 @@ void       base_gtk_utils_select_dir( BaseWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name );
 
-/* GtkWidget
- */
-GtkWidget *base_gtk_utils_get_widget_by_name( GtkWindow *toplevel, const gchar *name );
-
 G_END_DECLS
 
 #endif /* __BASE_GTK_UTILS_H__ */

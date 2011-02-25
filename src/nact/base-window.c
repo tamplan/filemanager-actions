@@ -36,6 +36,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <core/na-gtk-utils.h>
+
 #include "base-application.h"
 #include "base-window.h"
 #include "base-gtk-utils.h"
@@ -1068,7 +1070,7 @@ base_window_get_widget( const BaseWindow *window, const gchar *name )
 
 	if( !window->private->dispose_has_run ){
 
-		widget = base_gtk_utils_get_widget_by_name( window->private->gtk_toplevel, name );
+		widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( window->private->gtk_toplevel ), name );
 	}
 
 	return( widget );

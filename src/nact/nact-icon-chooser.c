@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <core/na-gtk-utils.h>
+
 #include "base-keysyms.h"
 #include "nact-application.h"
 #include "base-gtk-utils.h"
@@ -614,7 +616,7 @@ on_destroy( GtkWidget *widget, GdkEvent *event, void *foo )
 
 	/* clear the various models
 	 */
-	context_view = GTK_TREE_VIEW( base_gtk_utils_get_widget_by_name( GTK_WINDOW( widget ), "ThemedTreeView" ));
+	context_view = GTK_TREE_VIEW( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( widget ), "ThemedTreeView" ));
 	context_store = GTK_LIST_STORE( gtk_tree_view_get_model( context_view ));
 
 	if( gtk_tree_model_get_iter_first( GTK_TREE_MODEL( context_store ), &context_iter )){

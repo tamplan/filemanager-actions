@@ -33,7 +33,7 @@
 
 /* @title: GTK+
  * @short_description: The Gtk+ Library Utilities.
- * @include: nautilus-action/na-core-utils.h
+ * @include: core/na-gtk-utils.h
  */
 
 #include <gtk/gtk.h>
