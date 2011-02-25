@@ -48,6 +48,7 @@
 #include "na-desktop-environment.h"
 #include "na-gnome-vfs-uri.h"
 #include "na-selected-info.h"
+#include "na-settings.h"
 
 /* private interface data
  */
@@ -515,10 +516,17 @@ is_candidate_for_show_in( const NAIContext *object, guint target, GList *files )
 	gboolean ok = TRUE;
 	GSList *only_in = na_object_get_only_show_in( object );
 	GSList *not_in = na_object_get_not_show_in( object );
-	static const gchar *environment = NULL;
+	static gchar *environment = NULL;
 
+	/* there is a memory leak here when desktop comes from user preferences
+	 * because it is never freed (because it may come from runtime detection)
+	 * but this occurs only once..
+	 */
 	if( !environment ){
-		environment = na_desktop_environment_detect_running_desktop();
+		environment = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, NULL );
+		if( !environment || !strlen( environment )){
+			environment = ( gchar * ) na_desktop_environment_detect_running_desktop();
+		}
 		g_debug( "%s: found %s desktop", thisfn, environment );
 	}
 

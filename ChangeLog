@@ -1,5 +1,8 @@
 2011-02-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c (is_candidate_for_show_in):
+	First try desktop from user preferences.
+
 	NASettings is now a private singleton which allocates itself when needed.
 	Preference are so available anywhere without requiring an object.
 
