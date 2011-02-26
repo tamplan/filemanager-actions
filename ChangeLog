@@ -1,5 +1,7 @@
 2011-02-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Pre-release udate.
+
 	* src/core/na-settings.c:
 	* src/core/na-settings.h: NA_IPREFS_PLUGIN_MENU_LOG user preference renamed.
 
