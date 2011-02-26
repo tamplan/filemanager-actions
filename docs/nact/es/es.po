@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2011-01-24 20:24+0000\n"
-"PO-Revision-Date: 2011-02-20 16:42+0100\n"
+"POT-Creation-Date: 2011-01-16 17:18+0000\n"
+"PO-Revision-Date: 2011-02-26 16:04+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid ""
 "@@image: 'figures/nact-main-empty.png'; md5=b64794a0eca4282ca9bbc0928e67cdc1"
 msgstr ""
-"@@image: 'figures/nact-main-empty.png'; md5=b64794a0eca4282ca9bbc0928e67cdc1"
+"@@image: 'figures/nact-main-empty.png'; md5=7d8fe72399d32ddc6cb5fc72d93dbc53"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -37,7 +37,7 @@ msgstr ""
 msgid ""
 "@@image: 'figures/nact-action-tab.png'; md5=b832a6d5cc1fca67d275d16875a46a35"
 msgstr ""
-"@@image: 'figures/nact-action-tab.png'; md5=b832a6d5cc1fca67d275d16875a46a35"
+"@@image: 'figures/nact-action-tab.png'; md5=704e25649a62fa033ed5d5c6bee0cac0"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -48,7 +48,7 @@ msgstr ""
 msgid ""
 "@@image: 'figures/nact-command-tab.png'; md5=82d43a701026be1df7543e4f3b57344a"
 msgstr ""
-"@@image: 'figures/nact-command-tab.png'; md5=82d43a701026be1df7543e4f3b57344a"
+"@@image: 'figures/nact-command-tab.png'; md5=39876130a8265a1f96d469a6f9bbc11d"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -81,7 +81,7 @@ msgid ""
 "md5=a677b7c26d8e5892359d2b823ec9aa77"
 msgstr ""
 "@@image: 'figures/nact-basenames-tab.png'; "
-"md5=a677b7c26d8e5892359d2b823ec9aa77"
+"md5=2ad61dab20785e088e95c2fbec86aec8"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -94,7 +94,7 @@ msgid ""
 "md5=683b1441b168dc40d95b4dc71e986fed"
 msgstr ""
 "@@image: 'figures/nact-mimetypes-tab.png'; "
-"md5=683b1441b168dc40d95b4dc71e986fed"
+"md5=93a04e11270bb8c81e5f29ce331c9244"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -105,7 +105,7 @@ msgstr ""
 msgid ""
 "@@image: 'figures/nact-folders-tab.png'; md5=3dfba07973e18241c1705608fcc469d7"
 msgstr ""
-"@@image: 'figures/nact-folders-tab.png'; md5=3dfba07973e18241c1705608fcc469d7"
+"@@image: 'figures/nact-folders-tab.png'; md5=829d7051cb1576e5464c57ec504db2ba"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -116,7 +116,7 @@ msgstr ""
 msgid ""
 "@@image: 'figures/nact-schemes-tab.png'; md5=792709e70cb13d75ef169e0b84af9faf"
 msgstr ""
-"@@image: 'figures/nact-schemes-tab.png'; md5=792709e70cb13d75ef169e0b84af9faf"
+"@@image: 'figures/nact-schemes-tab.png'; md5=cc3fb4f20a57fc2ff0c44e8f676e570d"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -137,7 +137,7 @@ msgid ""
 "md5=4e129d55d940837de481036c75f996f9"
 msgstr ""
 "@@image: 'figures/nact-capabilities-tab.png'; "
-"md5=4e129d55d940837de481036c75f996f9"
+"md5=3b92e1d7c1a6bb22e6f825bfb701a1b9"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -160,7 +160,7 @@ msgid ""
 "md5=bd2eeb5011c9e250b665615a67f20378"
 msgstr ""
 "@@image: 'figures/nact-environment-tab.png'; "
-"md5=bd2eeb5011c9e250b665615a67f20378"
+"md5=78a4db15429970284058d1343079c3b5"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -211,7 +211,8 @@ msgstr ""
 msgid ""
 "@@image: 'figures/nact-legend.png'; md5=1f1f51f9cd75c4b07be485cb606ed518"
 msgstr ""
-"@@image: 'figures/nact-legend.png'; md5=1f1f51f9cd75c4b07be485cb606ed518"
+"@@image: 'figures/nact-execution-tab.png'; "
+"md5=2f5f1ede74095be8bfeb668cfd70715e"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -234,7 +235,7 @@ msgid ""
 "md5=91f6f3084821d65ab8996ab3c8f7e40b"
 msgstr ""
 "@@image: 'figures/nact-execution-tab.png'; "
-"md5=91f6f3084821d65ab8996ab3c8f7e40b"
+"md5=2f5f1ede74095be8bfeb668cfd70715e"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -287,7 +288,7 @@ msgid ""
 "md5=3de8680a8e14cc3bf54ff758eab09cae"
 msgstr ""
 "@@image: 'figures/nact-preferences-runtime.png'; "
-"md5=3de8680a8e14cc3bf54ff758eab09cae"
+"md5=eb1637772fe5d28c366dbb0ab4ce07e3"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -300,7 +301,7 @@ msgid ""
 "md5=8c43c6e25a988eca467da265440186b0"
 msgstr ""
 "@@image: 'figures/nact-preferences-ui.png'; "
-"md5=8c43c6e25a988eca467da265440186b0"
+"md5=b34600efa6f62ea3b57cf631e96aefab"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -313,7 +314,7 @@ msgid ""
 "md5=c8e3f15ace586b71eb307c4b4e671286"
 msgstr ""
 "@@image: 'figures/nact-preferences-import.png'; "
-"md5=c8e3f15ace586b71eb307c4b4e671286"
+"md5=f4126ecd0eeae1aebf3506a24cdfd740"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -326,7 +327,7 @@ msgid ""
 "md5=88b44647039215cec13907b9a8ee6547"
 msgstr ""
 "@@image: 'figures/nact-preferences-export.png'; "
-"md5=88b44647039215cec13907b9a8ee6547"
+"md5=8f49f5b7910a83e7152e6af5e878cc84"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -339,7 +340,7 @@ msgid ""
 "md5=620cd83d16b79831e9e45869b5bd20b8"
 msgstr ""
 "@@image: 'figures/nact-preferences-schemes.png'; "
-"md5=620cd83d16b79831e9e45869b5bd20b8"
+"md5=575374d045861d8dc1febab827f09b8e"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -352,7 +353,7 @@ msgid ""
 "md5=a7a6abe76d3d2195adb520b4a33e86a3"
 msgstr ""
 "@@image: 'figures/nact-preferences-io-providers.png'; "
-"md5=a7a6abe76d3d2195adb520b4a33e86a3"
+"md5=edefe4c9d9cf5f568d36b4c2ed3e044b"
 
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid ""
@@ -411,7 +412,7 @@ msgstr "pwieser@trychlos.org"
 #: C/nautilus-actions-config-tool.xml:74(revnumber)
 msgid "Nautilus-Actions Configuration Tool User's Manual v 3.0"
 msgstr ""
-"Manual del usuario de la herramienta de configuración de Nautilus-Actions v "
+"Manual del usuario de la herramienta de configuración de Nautilus-Actions v "
 "3.0"
 
 #: C/nautilus-actions-config-tool.xml:75(date)
@@ -1265,7 +1266,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:3(para)
 msgid ""
 "Whether your action will eventually be displayed in <productname>Nautilus</"
-"productname> file manager context menus or in its toolbar depends on the "
+"productname> file manager context menus or in its toolbar depends of the "
 "conditions you will have defined for it."
 msgstr ""
 
@@ -1411,7 +1412,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:123(para)
 msgid ""
-"When deactivated, filters are considered as case insensitive, which means "
+"When disactivated, filters are considered as case insensitive, which means "
 "that <filename>/my/file</filename> and <filename>/My/File</filename> "
 "filenames are considered the same name."
 msgstr ""
@@ -1620,15 +1621,15 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:385(para)
 msgid ""
-"Or click on <guibutton>Browse</guibutton> to select a folder on the file "
-"system."
+"Or click on <guibutton>Browse</guibutton> to select a folder on the "
+"filesystem."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:404(para)
 msgid ""
 "By default, the folder-based condition is just one « <literal>must match one "
 "of /</literal> » condition. As <literal>/</literal> is always the top of an "
-"Unix-like file system, then all selected items always match this condition."
+"Unix-like filesystem, then all selected items always match this condition."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:411(para)
@@ -1714,7 +1715,7 @@ msgid "Selecting a scheme among predefined defaults"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:511(phrase)
-msgid "Show the list of predefined schemes."
+msgid "Show the list of predefined schemess."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:519(para)
@@ -1747,7 +1748,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:553(para)
 msgid ""
-"But the <literal>Local</literal> capability, all others are dependent of the "
+"But the <literal>Local</literal> capability, all others are dependant of the "
 "user who executes the command."
 msgstr ""
 
@@ -2521,7 +2522,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:150(para)
 msgid ""
-"The execution mode of your command may be chosen between following values:"
+"The execution mode of your command may be choosen between following values:"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:156(term)
@@ -2968,15 +2969,15 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:544(command)
 msgid "echo pierre"
-msgstr ""
+msgstr "echo pedro"
 
 #: C/nautilus-actions-config-tool.xml:545(command)
 msgid "echo paul"
-msgstr ""
+msgstr "echo pablo"
 
 #: C/nautilus-actions-config-tool.xml:546(command)
 msgid "echo jacques"
-msgstr ""
+msgstr "echo juan"
 
 #: C/nautilus-actions-config-tool.xml:548(para)
 msgid ""
@@ -2994,7 +2995,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:561(command)
 msgid "echo pierre paul jacques"
-msgstr ""
+msgstr "echo pedro pablo juan"
 
 #: C/nautilus-actions-config-tool.xml:563(para)
 msgid ""
@@ -3187,7 +3188,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:18(para)
 msgid ""
-"As an action, the exact place where a new menu will be inserted depends on "
+"As an action, the exact place where a new menu will be inserted depends of "
 "the current sort order:"
 msgstr ""
 
@@ -3692,6 +3693,9 @@ msgid ""
 "or a portion of it, either copied verbatim, or with modifications and/or "
 "translated into another language."
 msgstr ""
+"Una <quote>Versión Modificada</quote> del Documento significa cualquier "
+"trabajo que contenga el Documento o una porción del mismo, ya sea una copia "
+"literal o con modificaciones y/o traducciones a otro idioma."
 
 #: C/nautilus-actions-config-tool.xml:58(simpara)
 msgid ""
@@ -4294,7 +4298,7 @@ msgstr ""
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/nautilus-actions-config-tool.xml:0(None)
 msgid "translator-credits"
-msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2010"
+msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2010, 2011"
 
 #~ msgid ""
 #~ "@@image: 'figures/nact-legend.png'; md5=3a8e6d9ba5fe34cfb2ed6546393e644b"
