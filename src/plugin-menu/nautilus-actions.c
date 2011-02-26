@@ -290,12 +290,6 @@ instance_finalize( GObject *object )
 	}
 }
 
-gboolean
-nautilus_action_is_log_enabled( void )
-{
-	return( na_settings_get_boolean( NA_IPREFS_PLUGIN_LOG, NULL, NULL ));
-}
-
 static void
 menu_provider_iface_init( NautilusMenuProviderIface *iface )
 {

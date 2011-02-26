@@ -72,8 +72,6 @@ typedef struct {
 GType    nautilus_actions_get_type     ( void );
 void     nautilus_actions_register_type( GTypeModule *module );
 
-gboolean nautilus_action_is_log_enabled( void );
-
 G_END_DECLS
 
 #endif /* __PLUGIN_MENU_NAUTILUS_ACTIONS_H__ */

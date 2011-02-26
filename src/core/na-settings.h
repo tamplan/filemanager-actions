@@ -118,7 +118,7 @@ G_BEGIN_DECLS
 #define NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY		"main-toolbar-tools-display"
 #define NA_IPREFS_MAIN_WINDOW_WSP					"main-window-wsp"
 #define NA_IPREFS_PREFERENCES_WSP					"preferences-wsp"
-#define NA_IPREFS_PLUGIN_LOG						"log-enabled"
+#define NA_IPREFS_PLUGIN_MENU_LOG					"plugin-menu-log-enabled"
 #define NA_IPREFS_RELABEL_DUPLICATE_ACTION			"relabel-when-duplicate-action"
 #define NA_IPREFS_RELABEL_DUPLICATE_MENU			"relabel-when-duplicate-menu"
 #define NA_IPREFS_RELABEL_DUPLICATE_PROFILE			"relabel-when-duplicate-profile"

@@ -39,6 +39,7 @@
 #include <libnautilus-extension/nautilus-extension-types.h>
 
 #include <core/na-gconf-migration.h>
+#include <core/na-settings.h>
 
 #include "nautilus-actions.h"
 
@@ -117,11 +118,26 @@ nautilus_module_shutdown( void )
 /*
  * a log handler that we install when in development mode in order to be
  * able to log plugin runtime
+ *
+ * enabling log in the plugin menu at runtime requires a Nautilus restart
+ * (because we need to run in the code, which embeds g_debug instructions,
+ *  and we have to do so before the log handler be set, or we will run
+ *  into a deep stack recursion)
  */
 static void
 set_log_handler( void )
 {
-	st_default_log_func = g_log_set_default_handler(( GLogFunc ) log_handler, NULL );
+	gboolean is_log_enabled;
+
+#ifdef NA_MAINTAINER_MODE
+	is_log_enabled = TRUE;
+#else
+	is_log_enabled =
+			g_getenv( NAUTILUS_ACTIONS_DEBUG ) ||
+			na_settings_get_boolean( NA_IPREFS_PLUGIN_MENU_LOG, NULL, NULL );
+#endif
+
+	st_default_log_func = g_log_set_default_handler(( GLogFunc ) log_handler, GUINT_TO_POINTER( is_log_enabled ));
 }
 
 /*
@@ -135,21 +151,19 @@ static void
 log_handler( const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data )
 {
 	gchar *tmp;
+	gboolean is_log_enabled;
 
-	tmp = g_strdup( "" );
-	if( log_domain && strlen( log_domain )){
-		g_free( tmp );
-		tmp = g_strdup_printf( "[%s] ", log_domain );
-	}
+	is_log_enabled = ( gboolean ) GPOINTER_TO_UINT( user_data );
 
-#ifdef NA_MAINTAINER_MODE
-	/*( *st_default_log_func )( log_domain, log_level, message, user_data );*/
-	syslog( LOG_USER | LOG_DEBUG, "%s%s", tmp, message );
-#else
-	if( g_getenv( NAUTILUS_ACTIONS_DEBUG ) || nautilus_actions_is_log_enabled()){
+	if( is_log_enabled ){
+		tmp = g_strdup( "" );
+
+		if( log_domain && strlen( log_domain )){
+			g_free( tmp );
+			tmp = g_strdup_printf( "[%s] ", log_domain );
+		}
+
 		syslog( LOG_USER | LOG_DEBUG, "%s%s", tmp, message );
+		g_free( tmp );
 	}
-#endif
-
-	g_free( tmp );
 }

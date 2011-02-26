@@ -177,7 +177,7 @@ static const KeyDef st_def_keys[] = {
 	{ NA_IPREFS_MAIN_TOOLBAR_TOOLS_DISPLAY,       GROUP_NACT,    NA_DATA_TYPE_BOOLEAN,     "false" },
 	{ NA_IPREFS_MAIN_WINDOW_WSP,                  GROUP_NACT,    NA_DATA_TYPE_UINT_LIST,   "" },
 	{ NA_IPREFS_PREFERENCES_WSP,                  GROUP_NACT,    NA_DATA_TYPE_UINT_LIST,   "" },
-	{ NA_IPREFS_PLUGIN_LOG,                       GROUP_RUNTIME, NA_DATA_TYPE_BOOLEAN,     "false" },
+	{ NA_IPREFS_PLUGIN_MENU_LOG,                  GROUP_RUNTIME, NA_DATA_TYPE_BOOLEAN,     "false" },
 	{ NA_IPREFS_RELABEL_DUPLICATE_ACTION,         GROUP_NACT,    NA_DATA_TYPE_BOOLEAN,     "false" },
 	{ NA_IPREFS_RELABEL_DUPLICATE_MENU,           GROUP_NACT,    NA_DATA_TYPE_BOOLEAN,     "false" },
 	{ NA_IPREFS_RELABEL_DUPLICATE_PROFILE,        GROUP_NACT,    NA_DATA_TYPE_BOOLEAN,     "false" },
@@ -404,7 +404,7 @@ instance_finalize( GObject *object )
 /**
  * na_settings_new:
  *
- * Returns: a new #NASettings object which should be g_object_unref()
+ * Allocates a new #NASettings object which should be na_settings_free()
  * by the caller.
  */
 static void
