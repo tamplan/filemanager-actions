@@ -1,5 +1,7 @@
 2011-02-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Post-release bump version.
+
 	* NEWS: Pre-release udate.
 
 	* src/core/na-settings.c:
