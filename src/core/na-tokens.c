@@ -69,6 +69,16 @@ struct _NATokensPrivate {
 	gchar   *scheme;
 };
 
+/*  the structure passed to the callback which waits for the end of the child
+ */
+typedef struct {
+	gchar   *command;
+	gboolean is_output_displayed;
+	gint     child_stdout;
+	gint     child_stderr;
+}
+	ChildStr;
+
 static GObjectClass *st_parent_class = NULL;
 
 static GType     register_type( void );
@@ -77,6 +87,8 @@ static void      instance_init( GTypeInstance *instance, gpointer klass );
 static void      instance_dispose( GObject *object );
 static void      instance_finalize( GObject *object );
 
+static void      child_watch_fn( GPid pid, gint status, ChildStr *child_str );
+static void      display_output( const gchar *command, int fd_stdout, int fd_stderr );
 static gchar    *display_output_get_content( int fd );
 static void      execute_action_command( gchar *command, const NAObjectProfile *profile );
 static gchar    *get_command_execution_display_output( const gchar *command );
@@ -397,6 +409,20 @@ na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile
 }
 
 static void
+child_watch_fn( GPid pid, gint status, ChildStr *child_str )
+{
+	static const gchar *thisfn = "na_tokens_child_watch_fn";
+
+	g_debug( "%s: pid=%u, status=%d", thisfn, ( guint ) pid, status );
+	g_spawn_close_pid( pid );
+	if( child_str->is_output_displayed ){
+		display_output( child_str->command, child_str->child_stdout, child_str->child_stderr );
+	}
+	g_free( child_str->command );
+	g_free( child_str );
+}
+
+static void
 display_output( const gchar *command, int fd_stdout, int fd_stderr )
 {
 	GtkWidget *dialog;
@@ -473,12 +499,14 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 	gint argc;
 	gchar *wdir;
 	GPid child_pid;
-	gint child_stdout, child_stderr;
+	ChildStr *child_str;
 
 	g_debug( "%s: profile=%p", thisfn, ( void * ) profile );
 
 	error = NULL;
 	run_command = NULL;
+	child_str = g_new0( ChildStr, 1 );
+	child_pid = ( GPid ) 0;
 	execution_mode = na_object_get_execution_mode( profile );
 
 	if( !strcmp( execution_mode, "Normal" )){
@@ -491,6 +519,7 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 		run_command = get_command_execution_embedded( command );
 
 	} else if( !strcmp( execution_mode, "DisplayOutput" )){
+		child_str->is_output_displayed = TRUE;
 		run_command = get_command_execution_display_output( command );
 
 	} else {
@@ -498,6 +527,8 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 	}
 
 	if( run_command ){
+		child_str->command = g_strdup( run_command );
+
 		if( !g_shell_parse_argv( run_command, &argc, &argv, &error )){
 			g_warning( "%s: g_shell_parse_argv: %s", thisfn, error->message );
 			g_error_free( error );
@@ -506,27 +537,44 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 			wdir = na_object_get_working_dir( profile );
 			g_debug( "%s: run_command=%s, wdir=%s", thisfn, run_command, wdir );
 
-			g_spawn_async_with_pipes( wdir,
-					argv,
-					NULL,
-					G_SPAWN_SEARCH_PATH,
-					NULL,
-					NULL,
-					&child_pid,
-					NULL,
-					&child_stdout,
-					&child_stderr,
-					&error );
-			if( error ){
-				g_warning( "%s: g_spawn_async_with_pipes: %s", thisfn, error->message );
-				g_error_free( error );
+			/* it appears that at least mplayer does not support g_spawn_async_with_pipes
+			 * (at least when notrun in '-quiet' mode) while, e.g., totem and vlc rightly
+			 * support this function
+			 * So only use g_spawn_async_with_pipes when we really need to get back
+			 * the content of output and error streams
+			 * See https://bugzilla.gnome.org/show_bug.cgi?id=644289.
+			 */
+			if( child_str->is_output_displayed ){
+				g_spawn_async_with_pipes( wdir,
+						argv,
+						NULL,
+						G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD,
+						NULL,
+						NULL,
+						&child_pid,
+						NULL,
+						&child_str->child_stdout,
+						&child_str->child_stderr,
+						&error );
 
 			} else {
-				g_spawn_close_pid( child_pid );
+				g_spawn_async( wdir,
+						argv,
+						NULL,
+						G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD,
+						NULL,
+						NULL,
+						&child_pid,
+						&error );
+			}
 
-				if( !strcmp( execution_mode, "DisplayOutput" )){
-					display_output( run_command, child_stdout, child_stderr );
-				}
+			if( error ){
+				g_warning( "%s: g_spawn_async: %s", thisfn, error->message );
+				g_error_free( error );
+				child_pid = ( GPid ) 0;
+
+			} else {
+				g_child_watch_add( child_pid, ( GChildWatchFunc ) child_watch_fn, child_str );
 			}
 
 			g_free( wdir );
@@ -537,12 +585,17 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 	}
 
 	g_free( execution_mode );
+
+	if( child_pid == ( GPid ) 0 ){
+		g_free( child_str->command );
+		g_free( child_str );
+	}
 }
 
 static gchar *
 get_command_execution_display_output( const gchar *command )
 {
-	static const gchar *bin_sh = "/bin/sh -c \"%s\"";
+	static const gchar *bin_sh = "/bin/sh -c COMMAND";
 	return( na_tokens_command_for_terminal( bin_sh, command ));
 }
 

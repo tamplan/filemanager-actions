@@ -1,3 +1,10 @@
+2011-03-11 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-tokens.c (execute_action_command):
+	Only use g_spawn_async_with_pipes when required by execution mode
+	(work-around for #644289).
+	Do not close child pid before the end of the child process.
+
 2011-02-26 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Post-release bump version.
