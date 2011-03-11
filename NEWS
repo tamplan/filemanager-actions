@@ -1,3 +1,21 @@
+Version 3.1.2
+=============
+
+	Release date 2011-03-11
+
+	Bug fixes:
+
+		- Work-around for #644289 reported by scape@web.de
+		  mplayer started via action freezes up afer short time.
+		- Fix DisplayOutput execution mode.
+
+	New and updated translations:
+
+		- cs (Marek Černocký)
+		- de (Mario Blättermann)
+		- es (Jorge González, Sylvia Sánchez)
+		- sl (Matej Urbančič, Andrej Žnidaršič)
+
 Version 3.1.1
 =============
 

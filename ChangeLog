@@ -1,5 +1,7 @@
 2011-03-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Pre-release update.
+
 	* src/core/na-tokens.c (execute_action_command):
 	Only use g_spawn_async_with_pipes when required by execution mode
 	(work-around for #644289).
