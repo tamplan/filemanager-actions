@@ -26,6 +26,11 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
+# Test programs are only relevant for the maintainer and his own tests
+# Do not build them in a release
+
+if NA_MAINTAINER_MODE
+
 noinst_PROGRAMS = \
 	test-reader											\
 	test-iface											\
@@ -117,3 +122,6 @@ test_virtuals_without_test_SOURCES = \
 test_virtuals_without_test_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
+
+endif
+#if NA_MAINTAINER_MODE
