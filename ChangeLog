@@ -2,6 +2,9 @@
 
 	* src/test/Makefile.am: Do not build test programs in release mode.
 
+	* docs/nact/C/nact-sorting.xml:
+	* docs/nact/C/nautilus-actions-config-tool.xml: Fix some typos.
+
 	* docs/nact/C/articleinfo.xml:
 	Convert to *nix-like file.
 	Update manual copyright.

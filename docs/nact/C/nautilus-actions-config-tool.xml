@@ -5,11 +5,11 @@
   <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
   <!ENTITY appnamex "Nautilus-Actions Configuration Tool">
   <!ENTITY appname "<application>&appnamex;</application>">
-  <!ENTITY appversion "3.0">
+  <!ENTITY appversion "3.1">
 
   <!-- revision number and release date of this manual -->
-  <!ENTITY manrevision "3.0">
-  <!ENTITY mandate "August 2010">
+  <!ENTITY manrevision "3.1">
+  <!ENTITY mandate "March 2011">
 
   <!-- product name used -->
   <!ENTITY nautilus "<productname>Nautilus</productname>">
@@ -208,15 +208,15 @@
     </para>
     <para>
       To find more information about &prodname;, please visit the
-      <ulink url="http://www.nautilus-actions.org/" type="http">
-      &prodname; website</ulink>.
+      <ulink url="http://www.nautilus-actions.org/" type="http"></ulink>
+      &prodname; website.
     </para>
     <para>
-      To report a bug or make a suggestion regarding the &prodname;,
+      To report a bug or make a suggestion regarding &prodname;,
       the &appname; or this manual, follow the directions in the
       <ulink url="ghelp:user-guide#feedback" type="help">GNOME Feedback Page</ulink>,
       or you may prefer, at your convenience, directly open a bug
-      or a request for enhancement to
+      or a request for enhancement in
       <ulink
        url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions"
        type="http">Bugzilla website</ulink>.
