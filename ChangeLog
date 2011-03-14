@@ -2,6 +2,10 @@
 
 	* src/test/Makefile.am: Do not build test programs in release mode.
 
+	* docs/nact/C/articleinfo.xml:
+	Convert to *nix-like file.
+	Update manual copyright.
+
 	* docs/nact/C/figures/nact-desktop-environment-frame.png:
 	* docs/nact/C/figures/nact-execution-environment-frame.png:
 	* docs/nact/C/figures/nact-preferences-export.png:
