@@ -2,6 +2,33 @@
 
 	* src/test/Makefile.am: Do not build test programs in release mode.
 
+	* docs/nact/C/figures/nact-desktop-environment-frame.png:
+	* docs/nact/C/figures/nact-execution-environment-frame.png:
+	* docs/nact/C/figures/nact-preferences-export.png:
+	* docs/nact/C/figures/nact-preferences-import.png:
+	* docs/nact/C/figures/nact-preferences-io-providers.png:
+	* docs/nact/C/figures/nact-preferences-runtime.png:
+	* docs/nact/C/figures/nact-preferences-schemes.png:
+	* docs/nact/C/figures/nact-preferences-ui.png:
+	* docs/nact/C/figures/nact-schemes-tab.png:
+	* docs/nact/C/figures/nact-target-location.png:
+	* docs/nact/C/figures/nact-working-directory-frame.png:
+	* docs/nact/C/figures/nact-export-done.png:
+	* docs/nact/C/figures/nact-export-format.png:
+	* docs/nact/C/figures/nact-export-home.png:
+	* docs/nact/C/figures/nact-export-items.png:
+	* docs/nact/C/figures/nact-export-summary.png:
+	* docs/nact/C/figures/nact-export-target.png:
+	* docs/nact/C/figures/nact-import-done.png:
+	* docs/nact/C/figures/nact-import-files.png:
+	* docs/nact/C/figures/nact-import-home.png:
+	* docs/nact/C/figures/nact-import-mode.png:
+	* docs/nact/C/figures/nact-import-resultat.png:
+	* docs/nact/C/figures/nact-import-summary.png:
+	* docs/nact/C/figures/nact-preferences-desktop.png:
+	* docs/nact/C/figures/nact-preferences-execution.png:
+	Updated and new screenshots for version 3.1.
+
 2011-03-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Post-release version bump.
