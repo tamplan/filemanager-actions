@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=nautilus-actions&component=general\n"
-"POT-Creation-Date: 2011-02-27 12:27+0000\n"
-"PO-Revision-Date: 2011-03-13 10:46+0100\n"
+"product=nautilus-actions&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2011-03-13 18:05+0000\n"
+"PO-Revision-Date: 2011-03-17 09:55+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -131,13 +131,6 @@ msgid "Last import mode chosen by the user"
 msgstr "Último modo de importación elegido por el usuario"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:22
-#, fuzzy
-#| msgid ""
-#| "Last import mode choosen by the user when he is asked for in import mode. "
-#| "Possible values are: - \"NoImport\": do not import an action whose UUID "
-#| "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
-#| "already exists, - \"Override\": override the existing action with the "
-#| "imported one."
 msgid ""
 "Last import mode chosen by the user when he is asked for in import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
@@ -147,19 +140,12 @@ msgid ""
 msgstr ""
 "El último modo de importación que eligió el usuario al preguntarle el modo "
 "de importación. Los valores posibles son: «NoImport» (no importar) para no "
-"importar una acción cuyo UUID ya existe; «Renumber» (renumerar) para "
+"importar una acción cuyo UUID ya existe; «Renumber» (reenumerar) para "
 "reservar un UUID nuevo si el UUID importado ya existe; "
 "«Override» (sobreescribir) para sobreescribir la acción existente con la "
 "importada."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:23
-#, fuzzy
-#| msgid ""
-#| "Last import mode choosen in the Import assistant. Possible values are : - "
-#| "\"NoImport\": do not import an action whose UUID already exists, - "
-#| "\"Renumber\": allocate a new UUID if the imported UUID already exists, - "
-#| "\"Override\": override the existing action with the imported one, - \"Ask"
-#| "\": ask the user each time."
 msgid ""
 "Last import mode chosen in the Import assistant. Possible values are : - "
 "\"NoImport\": do not import an action whose UUID already exists, - \"Renumber"
@@ -169,9 +155,9 @@ msgid ""
 msgstr ""
 "El último modo de importación elegido en el asistente de importación. Los "
 "valores posibles son: «NoImport» (no importar) para no importar una acción "
-"cuyo UUID ya existe; «Renumber» (renumerar) para reservar un UUID nuevo si "
-"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir "
-"la acción existente con la importada; «Ask» (preguntar) para preguntar al "
+"cuyo UUID ya existe; «Renumber» (reenumerar) para reservar un UUID nuevo si "
+"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir la "
+"acción existente con la importada; «Ask» (preguntar) para preguntar al "
 "usuario cada vez."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:24
@@ -389,11 +375,6 @@ msgstr ""
 "encontrados como una lista plana."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:53
-#, fuzzy
-#| msgid ""
-#| "When set to true (most probably as a mandatory key), this prevents all "
-#| "items, menus and actions, readen from .desktop files to being modified in "
-#| "NACT."
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, read from .desktop files to being modified in NACT."
@@ -403,10 +384,6 @@ msgstr ""
 "Nautilus, leídos en archivos .desktop."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:54
-#, fuzzy
-#| msgid ""
-#| "When set to true (most probably as a mandatory key), this prevents all "
-#| "items, menus and actions, readen from GConf to being modified in NACT."
 msgid ""
 "When set to true (most probably as a mandatory key), this prevents all "
 "items, menus and actions, read from GConf to being modified in NACT."
@@ -464,8 +441,6 @@ msgid "Whether the auto-save feature should be activated"
 msgstr "Indica si el guardado automático debería estar activado"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
-#, fuzzy
-#| msgid "Whether the import system should reuse the last choosen import mode."
 msgid "Whether the import system should reuse the last chosen import mode."
 msgstr ""
 "Indica si el sistema de importación debe reusar el último método de "
@@ -617,14 +592,6 @@ msgstr ""
 #. i18n: wildcard characters '*' and '?' should be considered as literals,
 #. *  and not be translated
 #: ../src/core/na-icontext-factory.c:50
-#, fuzzy
-#| msgid ""
-#| "A list of strings with joker '*' or '?' to be matched against the name(s) "
-#| "of the selected file(s)/folder(s). Each selected items must match at "
-#| "least one of the filename patterns for the action or the menu be "
-#| "candidate to display.\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to '*'."
 msgid ""
 "A list of strings with joker '*' or '?' to be matched against the name(s) of "
 "the selected file(s)/folder(s). Each selected item must match at least one "
@@ -637,7 +604,7 @@ msgstr ""
 "carpetas seleccionados. Cada elemento seleccionado debe coincidir al menos "
 "con uno de los patrones para que aparezca la acción o con el candidato del "
 "menú que mostrar.\n"
-"Esto, ovbiamente, sólo se aplica cuando existe una selección.\n"
+"Esto, obviamente, sólo se aplica cuando existe una selección.\n"
 "Lo predeterminado es «*»."
 
 #. i18n: wildcard characters '*' and '?' should be considered as literalls,
@@ -693,13 +660,6 @@ msgstr ""
 
 #. i18n: wildcard character '*' is taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:112
-#, fuzzy
-#| msgid ""
-#| "A list of strings with joker '*' to be matched against the mimetypes of "
-#| "the selected file(s)/folder(s). Each selected items must match at least "
-#| "one of the mimetype patterns for the action to appear.\n"
-#| "This obviously only applies when there is a selection.\n"
-#| "Defaults to '*/*'."
 msgid ""
 "A list of strings with joker '*' to be matched against the mimetypes of the "
 "selected file(s)/folder(s). Each selected item must match at least one of "
@@ -726,10 +686,10 @@ msgstr ""
 "cada patrón que necesite."
 
 #: ../src/core/na-icontext-factory.c:175
-#, fuzzy
-#| msgid "Whether the profile applies to folders"
 msgid "Whether the profile applies to files (deprecated option, see mimetype)"
-msgstr "Indica si el perfil se aplica a carpetas"
+msgstr ""
+"Indica si el perfil se aplica a archivos (opción obsoleta, ver los tipos "
+"MIME)"
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:177
@@ -748,8 +708,8 @@ msgid ""
 msgstr ""
 "Establecer a cierto si la selección puede tener archivos, a falso en el caso "
 "contrario.\n"
-"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones "
-"válidas son:\n"
+"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones válidas "
+"son:\n"
 "isfile='true' e isdir='false': la selección sólo puede contener archivos\n"
 "isfile='false' e isdir='true': la selección sólo pude contener carpetas\n"
 "isfile='true' e isdir='true': la selección contiene tanto archivos como "
@@ -760,11 +720,11 @@ msgstr ""
 "Lo predeterminado es cierto."
 
 #: ../src/core/na-icontext-factory.c:206
-#, fuzzy
-#| msgid "Whether the profile applies to folders"
 msgid ""
 "Whether the profile applies to folders (deprecated option, see mimetype)"
-msgstr "Indica si el perfil se aplica a carpetas"
+msgstr ""
+"Indica si el perfil se aplica a carpetas (opción obsoleta, ver los tipos "
+"MIME)"
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:208
@@ -795,12 +755,12 @@ msgstr ""
 "Lo predeterminado es falso."
 
 #: ../src/core/na-icontext-factory.c:240
-#, fuzzy
-#| msgid "Whether the selection may be multiple"
 msgid ""
 "Whether the selection may be multiple (deprecated option, see selection "
 "count)"
-msgstr "Indica si la selección puede ser múltiple"
+msgstr ""
+"Indica si la selección puede ser múltiple (opción obsoleta, ver selección de "
+"conteo)"
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:242
@@ -996,8 +956,8 @@ msgid ""
 msgstr ""
 "Note que, cuando se especifica, sólo se comprueban los estados de presencia "
 "y ejecutabilidad del archivo especificado.\n"
-"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán "
-"durante la ejecución.\n"
+"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán durante "
+"la ejecución.\n"
 "Lo predeterminado es satisfactorio."
 
 #: ../src/core/na-icontext-factory.c:427
@@ -1833,44 +1793,44 @@ msgstr ""
 msgid "Error when querying informations for %s URI: %s"
 msgstr "Error al preguntar información para el URI %s: %s"
 
-#: ../src/core/na-tokens.c:239
+#: ../src/core/na-tokens.c:251
 msgid "file:///path/to/file1.mid"
 msgstr "file:///ruta/al/archivo1.mid"
 
-#: ../src/core/na-tokens.c:240
+#: ../src/core/na-tokens.c:252
 msgid "file:///path/to/file2.jpeg"
 msgstr "file:///ruta/al/archivo2.jpeg"
 
-#: ../src/core/na-tokens.c:241
+#: ../src/core/na-tokens.c:253
 msgid "audio/x-midi"
 msgstr "audio/x-midi"
 
-#: ../src/core/na-tokens.c:242
+#: ../src/core/na-tokens.c:254
 msgid "image/jpeg"
 msgstr "image/jpeg"
 
-#: ../src/core/na-tokens.c:244
+#: ../src/core/na-tokens.c:256
 msgid "test.example.net"
 msgstr "prueba.ejemplo.net"
 
-#: ../src/core/na-tokens.c:245
+#: ../src/core/na-tokens.c:257
 msgid "user"
 msgstr "usuario"
 
-#: ../src/core/na-tokens.c:406
+#: ../src/core/na-tokens.c:432
 msgid "Output of the run command"
 msgstr "Salida del programa ejecutado"
 
-#: ../src/core/na-tokens.c:414
+#: ../src/core/na-tokens.c:440
 msgid "Run command:"
 msgstr "Ejecutar comando:"
 
-#: ../src/core/na-tokens.c:415
+#: ../src/core/na-tokens.c:441
 msgid "Standard output:"
 msgstr "Salida estándar:"
 
 # Save lo traduzco por saltear porque guardar no parece tener mucho sentido ¿no?
-#: ../src/core/na-tokens.c:416
+#: ../src/core/na-tokens.c:442
 msgid "Standard error:"
 msgstr "Error estándar:"
 
@@ -5564,8 +5524,7 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 
 #~ msgid "Value '%s' already set: new value ignored at line %d."
 #~ msgstr ""
-#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea "
-#~ "%d."
+#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea %d."
 
 #~ msgid "Action label not found."
 #~ msgstr "No se encontró la etiqueta de acción."
@@ -5702,20 +5661,20 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ msgid ""
 #~ "This config file is more recent than this version of Nautilus-actions can "
 #~ "support. Please upgrade Nautilus-actions to the latest version if you "
-#~ "want to be able to import it (File version: %s (max supported version : "
-#~ "%s))"
+#~ "want to be able to import it (File version: %s (max supported version : %"
+#~ "s))"
 #~ msgstr ""
 #~ "Este archivo de configuración es más reciente de lo que esta versión de "
 #~ "Nautilus-actions soporta. Si quiere importarlo actualice Nautilus-actions "
-#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: "
-#~ "%s))"
+#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: %"
+#~ "s))"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
-#~ "%s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
+#~ "s)%s"
 #~ msgid_plural ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing keys: "
-#~ "%s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing keys: %"
+#~ "s)%s"
 #~ msgstr[0] ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)%s"
@@ -5724,15 +5683,15 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "actions (faltan las claves: %s)%s"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
-#~ "%s)"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
+#~ "s)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (root node is <"
-#~ "%s> instead of <%s>)"
+#~ "This XML file is not a valid Nautilus-actions config file (root node is <%"
+#~ "s> instead of <%s>)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (el nodo raíz es <%s> en vez de <%s>)"
@@ -5929,8 +5888,8 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "common choice. You can add a new scheme by clicking on the '+' button."
 #~ msgstr ""
 #~ "Seleccione la clase de archivos donde quiere que su acción aparezca. Si "
-#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la "
-#~ "opción más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
+#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la opción "
+#~ "más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
 
 #~ msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 #~ msgstr ""
