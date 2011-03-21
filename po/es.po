@@ -4,6 +4,7 @@
 # Francisco Javier F. Serrador <serrador@cvs.gnome.org>, 2005, 2006.
 # Bryan Alberto Baron Chinchilla <bachinchi@gmail.com>, 2010.
 # Jorge González <jorgegonz@svn.gnome.org>, 2008, 2010, 2011.
+# Jesse Avilés <jesseaviles@gmail.com>, 2011.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 #
 msgid ""
@@ -11,8 +12,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-03-13 18:05+0000\n"
-"PO-Revision-Date: 2011-03-17 09:55+0100\n"
+"POT-Creation-Date: 2011-03-19 00:28+0000\n"
+"PO-Revision-Date: 2011-03-21 21:31+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -156,8 +157,8 @@ msgstr ""
 "El último modo de importación elegido en el asistente de importación. Los "
 "valores posibles son: «NoImport» (no importar) para no importar una acción "
 "cuyo UUID ya existe; «Renumber» (reenumerar) para reservar un UUID nuevo si "
-"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir la "
-"acción existente con la importada; «Ask» (preguntar) para preguntar al "
+"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir "
+"la acción existente con la importada; «Ask» (preguntar) para preguntar al "
 "usuario cada vez."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:24
@@ -708,8 +709,8 @@ msgid ""
 msgstr ""
 "Establecer a cierto si la selección puede tener archivos, a falso en el caso "
 "contrario.\n"
-"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones válidas "
-"son:\n"
+"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones "
+"válidas son:\n"
 "isfile='true' e isdir='false': la selección sólo puede contener archivos\n"
 "isfile='false' e isdir='true': la selección sólo pude contener carpetas\n"
 "isfile='true' e isdir='true': la selección contiene tanto archivos como "
@@ -894,7 +895,7 @@ msgstr ""
 
 #: ../src/core/na-icontext-factory.c:352
 msgid "Selection count relation [>0]"
-msgstr ""
+msgstr "Selección de la relación de conteo [>0]"
 
 #: ../src/core/na-icontext-factory.c:360
 msgid "Only show in environment"
@@ -905,10 +906,6 @@ msgid "Defaults to all."
 msgstr "A todo de forma predeterminada."
 
 #: ../src/core/na-icontext-factory.c:375
-#, fuzzy
-#| msgid ""
-#| "The path of a (parent) directory for which the item will be displayed. "
-#| "You must set one option for each folder you need"
 msgid ""
 "The name of an only desktop environment where the item must be displayed. "
 "You must set one option for each environment you want"
@@ -930,16 +927,12 @@ msgid "Defaults to none."
 msgstr "A nada de forma predeterminada."
 
 #: ../src/core/na-icontext-factory.c:399
-#, fuzzy
-#| msgid ""
-#| "The path of a (parent) directory for which the item will be displayed. "
-#| "You must set one option for each folder you need"
 msgid ""
 "The name of a desktop environment where the item must not be displayed. You "
 "must set one option for each environment you want"
 msgstr ""
-"La ruta de una carpeta (padre) para la cual el elemento se mostrará. Debe "
-"establecer una opción para cada carpeta que necesite."
+"El nombre de un entorno del escritorio donde no se debe mostrar el elemento. "
+"Debe establecer una opción por cada entorno que quiera."
 
 #: ../src/core/na-icontext-factory.c:408
 msgid "Try exec"
@@ -956,13 +949,13 @@ msgid ""
 msgstr ""
 "Note que, cuando se especifica, sólo se comprueban los estados de presencia "
 "y ejecutabilidad del archivo especificado.\n"
-"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán durante "
-"la ejecución.\n"
+"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán "
+"durante la ejecución.\n"
 "Lo predeterminado es satisfactorio."
 
 #: ../src/core/na-icontext-factory.c:427
 msgid "the path to a file whose executability is to be checked"
-msgstr ""
+msgstr "la ruta a un archivo cuya ejecutabilidad se va a revisar"
 
 #: ../src/core/na-icontext-factory.c:435
 msgid "Show if registered"
@@ -988,6 +981,7 @@ msgstr ""
 #: ../src/core/na-icontext-factory.c:454
 msgid "The name of a service which must be registered on session DBus"
 msgstr ""
+"El nombre de un servicio el cual debe estar registrado en la sesión DBus"
 
 #: ../src/core/na-icontext-factory.c:455 ../src/core/na-icontext-factory.c:508
 #: ../src/core/na-icontext-factory.c:541
@@ -1017,7 +1011,7 @@ msgstr ""
 #. i18n: 'true' is to be taken as a literal, must not be translated
 #: ../src/core/na-icontext-factory.c:481
 msgid "The path to a command which will display the 'true' string"
-msgstr ""
+msgstr "La ruta a un comando que presentará la cadena «true»"
 
 #: ../src/core/na-icontext-factory.c:488
 msgid "Show if running"
@@ -1042,7 +1036,7 @@ msgstr ""
 
 #: ../src/core/na-icontext-factory.c:507
 msgid "The name of a binary which must be running"
-msgstr ""
+msgstr "El nombre de un binario que está en ejecución"
 
 #: ../src/core/na-icontext-factory.c:514
 msgid "Capabilities"
@@ -1082,6 +1076,8 @@ msgid ""
 "The name of a capability the selection must meet. May be 'Owner', "
 "'Readable', 'Writable', 'Executable' or 'Local'"
 msgstr ""
+"El nombre de una de las prestaciones que la selección debe satisfacer. Puede "
+"ser «Owner», «Readable», «Writable», «Executable» o «Local»."
 
 #: ../src/core/na-iimporter.c:232
 msgid ""
@@ -1277,10 +1273,8 @@ msgstr ""
 "Lo predeterminado es cierto."
 
 #: ../src/core/na-object-action-factory.c:95
-#, fuzzy
-#| msgid "Targets the selection context menu (default)"
 msgid "Targets the selection context menu [true]"
-msgstr "Su objetivo es el menú contextual de selección (predeterminado)"
+msgstr "Su objetivo es el menú contextual de selección [true]"
 
 #: ../src/core/na-object-action-factory.c:102
 msgid "Targets the location context menu"
@@ -1302,10 +1296,8 @@ msgstr ""
 "Lo predeterminado es falso."
 
 #: ../src/core/na-object-action-factory.c:121
-#, fuzzy
-#| msgid "Targets the location context menu"
 msgid "Targets the location context menu [false]"
-msgstr "Su objetivo es el objetivo del menú contextual"
+msgstr "Su objetivo es el objetivo del menú contextual [false]"
 
 #: ../src/core/na-object-action-factory.c:128
 msgid "Targets the toolbar"
@@ -5524,7 +5516,8 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 
 #~ msgid "Value '%s' already set: new value ignored at line %d."
 #~ msgstr ""
-#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea %d."
+#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea "
+#~ "%d."
 
 #~ msgid "Action label not found."
 #~ msgstr "No se encontró la etiqueta de acción."
@@ -5661,20 +5654,20 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ msgid ""
 #~ "This config file is more recent than this version of Nautilus-actions can "
 #~ "support. Please upgrade Nautilus-actions to the latest version if you "
-#~ "want to be able to import it (File version: %s (max supported version : %"
-#~ "s))"
+#~ "want to be able to import it (File version: %s (max supported version : "
+#~ "%s))"
 #~ msgstr ""
 #~ "Este archivo de configuración es más reciente de lo que esta versión de "
 #~ "Nautilus-actions soporta. Si quiere importarlo actualice Nautilus-actions "
-#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: %"
-#~ "s))"
+#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: "
+#~ "%s))"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
-#~ "s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
+#~ "%s)%s"
 #~ msgid_plural ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing keys: %"
-#~ "s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing keys: "
+#~ "%s)%s"
 #~ msgstr[0] ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)%s"
@@ -5683,15 +5676,15 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "actions (faltan las claves: %s)%s"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
-#~ "s)"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
+#~ "%s)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (root node is <%"
-#~ "s> instead of <%s>)"
+#~ "This XML file is not a valid Nautilus-actions config file (root node is <"
+#~ "%s> instead of <%s>)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (el nodo raíz es <%s> en vez de <%s>)"
@@ -5888,8 +5881,8 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "common choice. You can add a new scheme by clicking on the '+' button."
 #~ msgstr ""
 #~ "Seleccione la clase de archivos donde quiere que su acción aparezca. Si "
-#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la opción "
-#~ "más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
+#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la "
+#~ "opción más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
 
 #~ msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 #~ msgstr ""
