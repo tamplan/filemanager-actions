@@ -5,6 +5,7 @@
 # Bryan Alberto Baron Chinchilla <bachinchi@gmail.com>, 2010.
 # Jorge González <jorgegonz@svn.gnome.org>, 2008, 2010, 2011.
 # Jesse Avilés <jesseaviles@gmail.com>, 2011.
+# Javier Mazorra Rodríguez <mazi.debian@gmail.com>, 2011.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 #
 msgid ""
@@ -12,8 +13,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-03-19 00:28+0000\n"
-"PO-Revision-Date: 2011-03-21 21:31+0100\n"
+"POT-Creation-Date: 2011-03-30 17:49+0000\n"
+"PO-Revision-Date: 2011-04-06 10:43+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -157,8 +158,8 @@ msgstr ""
 "El último modo de importación elegido en el asistente de importación. Los "
 "valores posibles son: «NoImport» (no importar) para no importar una acción "
 "cuyo UUID ya existe; «Renumber» (reenumerar) para reservar un UUID nuevo si "
-"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir "
-"la acción existente con la importada; «Ask» (preguntar) para preguntar al "
+"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir la "
+"acción existente con la importada; «Ask» (preguntar) para preguntar al "
 "usuario cada vez."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:24
@@ -709,8 +710,8 @@ msgid ""
 msgstr ""
 "Establecer a cierto si la selección puede tener archivos, a falso en el caso "
 "contrario.\n"
-"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones "
-"válidas son:\n"
+"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones válidas "
+"son:\n"
 "isfile='true' e isdir='false': la selección sólo puede contener archivos\n"
 "isfile='false' e isdir='true': la selección sólo pude contener carpetas\n"
 "isfile='true' e isdir='true': la selección contiene tanto archivos como "
@@ -949,8 +950,8 @@ msgid ""
 msgstr ""
 "Note que, cuando se especifica, sólo se comprueban los estados de presencia "
 "y ejecutabilidad del archivo especificado.\n"
-"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán "
-"durante la ejecución.\n"
+"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán durante "
+"la ejecución.\n"
 "Lo predeterminado es satisfactorio."
 
 #: ../src/core/na-icontext-factory.c:427
@@ -1317,10 +1318,8 @@ msgstr ""
 "Lo predeterminado es FALSO."
 
 #: ../src/core/na-object-action-factory.c:146
-#, fuzzy
-#| msgid "Targets the toolbar"
 msgid "Targets the toolbar [false]"
-msgstr "Su objetivo es la barra de herramientas"
+msgstr "Su objetivo es la barra de herramientas [false]"
 
 #: ../src/core/na-object-action-factory.c:153
 msgid "Label of the toolbar item"
@@ -1464,10 +1463,8 @@ msgstr ""
 "se adjuntan en el orden de lectura de las operaciones."
 
 #: ../src/core/na-object-item-factory.c:286
-#, fuzzy
-#| msgid "Whether the action or the menu is enabled (default)"
 msgid "Whether the action or the menu is enabled"
-msgstr "Indica si la acción o el menú está activado (predeterminado)"
+msgstr "Indica si la acción o el menú está activado"
 
 #: ../src/core/na-object-item-factory.c:287
 msgid ""
@@ -1480,10 +1477,8 @@ msgstr ""
 "Lo predeterminado es cierto («TRUE»)."
 
 #: ../src/core/na-object-item-factory.c:303
-#, fuzzy
-#| msgid "Whether the action or the menu is enabled (default)"
 msgid "Whether the action or the menu is enabled [enabled]"
-msgstr "Indica si la acción o el menú está activado (predeterminado)"
+msgstr "Indica si la acción o el menú está activado [enabled]"
 
 #: ../src/core/na-object-item-factory.c:402
 msgid "Version of the format"
@@ -1538,52 +1533,6 @@ msgstr "Los parámetros del comando"
 
 #. too long string for iso c: (max=509)
 #: ../src/core/na-object-profile-factory.c:130
-#, fuzzy
-#| msgid ""
-#| "The parameters of the command to be executed when the user selects the "
-#| "menu item in the file manager context menu or in the toolbar.\n"
-#| "The parameters may contain some special tokens which are replaced by the "
-#| "informations provided by the file manager before starting the command:\n"
-#| "- up to version \"2.0\":\n"
-#| "  %d: base folder of the selected file(s)\n"
-#| "  %f: the name of the selected file or the first one if several are "
-#| "selected\n"
-#| "  %h: hostname of the URI\n"
-#| "  %m: space-separated list of the basenames of the selected file(s)/folder"
-#| "(s)\n"
-#| "  %M: space-separated list of the selected file(s)/folder(s), with their "
-#| "full paths\n"
-#| "  %p: port number of the first URI\n"
-#| "  %R: space-separated list of selected URIs\n"
-#| "  %s: scheme of the URI\n"
-#| "  %u: URI\n"
-#| "  %U: username of the URI\n"
-#| "  %%: a percent sign.- starting from version '3':\n"
-#| "  %b: (first) basename\n"
-#| "  %B: space-separated list of the basenames of the selected file(s)/folder"
-#| "(s)\n"
-#| "  %c: count the selected file(s)/folder(s)\n"
-#| "  %d: (first) base directory\n"
-#| "  %D: space-separated list of base directories of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %f: (first) filename\n"
-#| "  %F: space-separated list of the filenames of the selected file(s)/folder"
-#| "(s)\n"
-#| "  %h: hostname of the (first) URI\n"
-#| "  %m: (first) mimetype\n"
-#| "  %M: space-separated list of the mimetypes of the selected file(s)/folder"
-#| "(s)\n"
-#| "  %n: username of the (first) URI\n"
-#| "  %p: port number of the (first) URI\n"
-#| "  %s: scheme of the (first) URI\n"
-#| "  %u: (first) URI\n"
-#| "  %U: space-separated list of the URIs of the selected file(s)/folder(s)\n"
-#| "  %w: (first) basename without the extension\n"
-#| "  %W: space-separated list of basenames without the extension\n"
-#| "  %x: (first) extension\n"
-#| "  %X: space-separated list of the extensions of the selected file(s)/"
-#| "folder(s)\n"
-#| "  %%: a percent sign."
 msgid ""
 "The parameters of the command to be executed when the user selects the menu "
 "item in the file manager context menu or in the toolbar.\n"
@@ -1635,17 +1584,17 @@ msgid ""
 "(s)\n"
 "  %%: a percent sign."
 msgstr ""
-"Los parámetros del comando para iniciar cuando el usuario seleccione el "
+"Los parámetros del comando que iniciar cuando el usuario seleccione el "
 "elemento del menú en el menú contextual o la barra de herramientas del "
 "gestor de archivos.\n"
-"Los parámetros pueden contener algunos tokens especiales que se reemplazan "
+"Los parámetros pueden contener algunos símbolos especiales que se reemplazan "
 "por información proporcionada por el gestor de archivos antes de iniciar el "
 "comando:\n"
 "- hasta la versión «2.0»:\n"
 "  %d: carpeta base de los archivos seleccionados\n"
 "  %f: el nombre del archivo seleccionado o el del primer archivo si hay "
 "varios seleccionados\n"
-"  %h : nombre de host del URI\n"
+"  %h : nombre de servidor del URI\n"
 "  %m: lista de los nombres base de los archivos/carpetas seleccionados "
 "separados por un espacio\n"
 "  %M: lista de los archivos/carpetas seleccionados con su ruta completa "
@@ -1655,21 +1604,26 @@ msgstr ""
 "  %s: esquema del URI\n"
 "  %u: URI\n"
 "  %U: nombre de usuario del URI\n"
-"  %%: un signo de porcentaje.- comenzando por la versión «3»:\n"
+"  %%: un signo de porcentaje.\n"
+"- a partir de la versión «3»:\n"
 "  %b: (primer) nombre base\n"
 "  %B: lista separada por espacios de los nombres base de los archivos/"
 "carpetas seleccionados\n"
 "  %c: contar los archivos/carpetas seleccionadas\n"
 "  %d: (primera) carpeta base\n"
-"  %D: lista separada por espacios de las carpetas base para los  los "
-"archivos/carpetas seleccionadas\n"
+"  %D: lista separada por espacios de las carpetas base para los archivos/"
+"carpetas seleccionadas\n"
 "  %f: (primer) nombre de archivo\n"
 "  %F: lista separada por espacios de los archivos/carpetas seleccionadas\n"
 "  %h: nombre del servidor del (primer) URI\n"
 "  %m: (primer) tipo MIME\n"
 "  %M: lista separada por espacios de los tipos MIME de los archivos/carpetas "
 "seleccionadas\n"
-"  %n: nombre del usuario del (primer) URI\n"
+"  %n: nombre de usuario del (primer) URI\n"
+"  %o: operador de no operación que fuerza la forma singular de ejecución "
+"(desde 3.0.2)\n"
+"  %O: operador de no operación que fuerza la forma plural de ejecución "
+"(desde 3.0.2)\n"
 "  %p: número de puerto del (primer) URI\n"
 "  %s: esquema del (primer) URI\n"
 "  %u: (primer) URI\n"
@@ -1679,7 +1633,7 @@ msgstr ""
 "  %x: (primera) extensión\n"
 "  %X: lista separada por espacios de las extensiones de los archivos/"
 "carpetas seleccionadas\n"
-"  %%: un símbolo de porcentaje"
+"  %%: un símbolo de porcentaje."
 
 #: ../src/core/na-object-profile-factory.c:189
 msgid "Working directory"
@@ -2076,14 +2030,13 @@ msgstr "El nombre del icono de la aplicación"
 
 # UniqueApp, ¿es un nombre o se traduce?
 #: ../src/nact/base-application.c:216
+#, fuzzy
 msgid "UniqueApp name"
-msgstr ""
+msgstr "Nombre de UniqueApp"
 
 #: ../src/nact/base-application.c:217
-#, fuzzy
-#| msgid "Quit the application"
 msgid "The Unique name of the application"
-msgstr "Salir de la aplicación"
+msgstr "El nombre único de la aplicación"
 
 #: ../src/nact/base-application.c:584
 #, c-format
@@ -2100,15 +2053,15 @@ msgstr "Esta aplicación no es única"
 
 #: ../src/nact/base-assistant.c:157
 msgid "Quit on Escape"
-msgstr ""
+msgstr "Salir al pulsar «Escape»"
 
 #: ../src/nact/base-assistant.c:158
 msgid "Should the assistant 'Quit' when the user hits Escape ?"
-msgstr ""
+msgstr "¿Debería el asistente «Salir» al pulsar «Escape» el usuario?"
 
 #: ../src/nact/base-assistant.c:165
 msgid "Warn on Escape"
-msgstr ""
+msgstr "Advertir al pulsar «Escape»"
 
 #: ../src/nact/base-assistant.c:166
 msgid ""
@@ -2132,9 +2085,8 @@ msgstr ""
 
 #: ../src/nact/base-window.c:208
 #, fuzzy
-#| msgid "Quit the application"
 msgid "BaseApplication"
-msgstr "Salir de la aplicación"
+msgstr "BaseApplication"
 
 #: ../src/nact/base-window.c:209
 #, fuzzy
@@ -2144,7 +2096,7 @@ msgstr "Ya se está ejecutando otra instancia de la aplicación."
 
 #: ../src/nact/base-window.c:215
 msgid "XML UI filename"
-msgstr ""
+msgstr "Nombre del archivo XML de la IU"
 
 #: ../src/nact/base-window.c:216
 #, fuzzy
@@ -5516,8 +5468,7 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 
 #~ msgid "Value '%s' already set: new value ignored at line %d."
 #~ msgstr ""
-#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea "
-#~ "%d."
+#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea %d."
 
 #~ msgid "Action label not found."
 #~ msgstr "No se encontró la etiqueta de acción."
@@ -5654,20 +5605,20 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ msgid ""
 #~ "This config file is more recent than this version of Nautilus-actions can "
 #~ "support. Please upgrade Nautilus-actions to the latest version if you "
-#~ "want to be able to import it (File version: %s (max supported version : "
-#~ "%s))"
+#~ "want to be able to import it (File version: %s (max supported version : %"
+#~ "s))"
 #~ msgstr ""
 #~ "Este archivo de configuración es más reciente de lo que esta versión de "
 #~ "Nautilus-actions soporta. Si quiere importarlo actualice Nautilus-actions "
-#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: "
-#~ "%s))"
+#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: %"
+#~ "s))"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
-#~ "%s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
+#~ "s)%s"
 #~ msgid_plural ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing keys: "
-#~ "%s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing keys: %"
+#~ "s)%s"
 #~ msgstr[0] ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)%s"
@@ -5676,15 +5627,15 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "actions (faltan las claves: %s)%s"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
-#~ "%s)"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
+#~ "s)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (root node is <"
-#~ "%s> instead of <%s>)"
+#~ "This XML file is not a valid Nautilus-actions config file (root node is <%"
+#~ "s> instead of <%s>)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (el nodo raíz es <%s> en vez de <%s>)"
@@ -5881,8 +5832,8 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "common choice. You can add a new scheme by clicking on the '+' button."
 #~ msgstr ""
 #~ "Seleccione la clase de archivos donde quiere que su acción aparezca. Si "
-#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la "
-#~ "opción más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
+#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la opción "
+#~ "más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
 
 #~ msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 #~ msgstr ""
