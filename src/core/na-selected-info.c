@@ -787,7 +787,6 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 {
 	GFile *location;
 	NAGnomeVFSURI *vfs;
-	GError *error;
 
 	NASelectedInfo *info = g_object_new( NA_SELECTED_INFO_TYPE, NULL );
 
@@ -796,27 +795,30 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 		info->private->mimetype = g_strdup( mimetype );
 	}
 
+	/* pwi 2011-05-18
+	 * Filename and dirname should be taken from the GFile location, itself taken
+	 * from the URI, so that we have dir='/home/pierre/.gvfs/sftp on stormy.trychlos.org/etc'
+	 * Taking filename and dirname from URI just gives '/etc'
+	 * see #650523
+	 */
+	location = g_file_new_for_uri( uri );
+	info->private->filename = g_file_get_path( location );
+
 	vfs = g_new0( NAGnomeVFSURI, 1 );
 	na_gnome_vfs_uri_parse( vfs, uri );
-	error = NULL;
-	info->private->filename = g_filename_from_uri( uri, NULL, &error );
-	if( error ){
-		g_debug( "new_from_uri: uri='%s', error=%s", uri, error->message );
-		g_error_free( error );
-	}
 	if( !info->private->filename ){
 		g_debug( "new_from_uri: uri='%s', filename=NULL, setting it to '%s'", uri, vfs->path );
 		info->private->filename = g_strdup( vfs->path );
 	}
-	info->private->dirname = g_path_get_dirname( info->private->filename );
+
 	info->private->basename = g_path_get_basename( info->private->filename );
+	info->private->dirname = g_path_get_dirname( info->private->filename );
 	info->private->hostname = g_strdup( vfs->host_name );
 	info->private->username = g_strdup( vfs->user_name );
 	info->private->scheme = g_strdup( vfs->scheme );
 	info->private->port = vfs->host_port;
 	na_gnome_vfs_uri_free( vfs );
 
-	location = g_file_new_for_uri( uri );
 	query_file_attributes( info, location, errmsg );
 	g_object_unref( location );
 
