@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 # Nautilus-Actions
 # A Nautilus extension which offers configurable context menu actions.
 #
