@@ -133,6 +133,12 @@
       </listitem>
     </itemizedlist>
     <para>
+      Removing a defined basename-based condition is as simple as selecting
+      it, and pressing <keycap>Del</keycap> (or clicking on 
+      <guibutton><inlinegraphic fileref="figures/remove.png"/></guibutton>
+      button).
+    </para>
+    <para>
       By default, the basename-based condition is just one
       &laquosp;<literal>must match one of *</literal>&spraquo; condition.
       As all basenames always match the &asterisk;
@@ -253,6 +259,12 @@
         </para>
       </listitem>
     </orderedlist>
+    <para>
+      Removing a defined mimetype-based condition is as simple as selecting
+      it, and pressing <keycap>Del</keycap> (or clicking on 
+      <guibutton><inlinegraphic fileref="figures/remove.png"/></guibutton>
+      button).
+    </para>
     <para>
       By default, the mimetype-based condition is just one
       &laquosp;<literal>must match one of */*</literal>&spraquo; condition.
@@ -402,6 +414,12 @@
       </listitem>
     </orderedlist>
     <para>
+      Removing a defined folder-based condition is as simple as selecting
+      it, and pressing <keycap>Del</keycap> (or clicking on 
+      <guibutton><inlinegraphic fileref="figures/remove.png"/></guibutton>
+      button).
+    </para>
+    <para>
       By default, the folder-based condition is just one
       &laquosp;<literal>must match one of /</literal>&spraquo; condition.
       As <literal>/</literal> is always the top of an Unix-like file system,
@@ -539,6 +557,12 @@
       </listitem>
     </orderedlist>
     <para>
+      Removing a defined scheme-based condition is as simple as selecting
+      it, and pressing <keycap>Del</keycap> (or clicking on 
+      <guibutton><inlinegraphic fileref="figures/remove.png"/></guibutton>
+      button).
+    </para>
+    <para>
       By default, the scheme-based condition is just one
       &laquosp;<literal>must match one of *</literal>&spraquo; condition,
       which means that schemes are not relevant for this action.
@@ -663,6 +687,12 @@
         </para>
       </listitem>
     </orderedlist>
+    <para>
+      Removing a defined capability-based condition is as simple as selecting
+      it, and pressing <keycap>Del</keycap> (or clicking on 
+      <guibutton><inlinegraphic fileref="figures/remove.png"/></guibutton>
+      button).
+    </para>
     <para>
       By default, the capability-based condition list is empty. This means
       that capabilities are not relevant for this action.
