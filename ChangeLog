@@ -1,5 +1,7 @@
 2011-05-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* nautilus-actions.doap: Update download page and mailing list infos.
+
 	* configure.ac: Post release version bump.
 
 2011-05-19 Pierre Wieser <pwieser@trychlos.org>

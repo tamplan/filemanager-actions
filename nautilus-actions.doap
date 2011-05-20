@@ -19,9 +19,11 @@
 
   <homepage rdf:resource="http://www.nautilus-actions.org" />
 
+  <download-page rdf:resource="http://www.nautilus-actions.org/downloads" />
+
   <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=nautilus-actions" />
 
-  <mailing-list rdf:resource="http://pwi.dyndns.biz/mailman/listinfo/nautilus-actions-dev" />
+  <mailing-list rdf:resource="http://mailman.nautilus-actions.org/listinfo" />
 
   <maintainer>
     <foaf:Person>
