@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 # Nautilus-Actions
 # A Nautilus extension which offers configurable context menu actions.
 #
@@ -64,12 +64,12 @@ trap 'trap_term' TERM
 trap 'trap_int'  INT
 trap 'trap_exit' EXIT
 
-function clear_tmpfiles
+clear_tmpfiles()
 {
 	\rm -f ${my_tmproot}.*
 }
 
-function msg
+msg()
 {
 	typeset _eol="\n"
 	[ $# -ge 2 ] && _eol="${2}"
@@ -77,19 +77,19 @@ function msg
 	return 0
 }
 
-function msgerr
+msgerr()
 {
 	msg "error: ${1}" 1>&2
 	return $?
 }
 
-function msgwarn
+msgwarn()
 {
 	msg "warning: ${1}" 1>&2
 	return $?
 }
 
-function msg_help
+msg_help()
 {
 	msg_version
 	echo "
@@ -104,7 +104,7 @@ function msg_help
    --[no]stable              whether this is a stable version [${opt_stable_def}]"
 }
 
-function msg_version
+msg_version()
 {
 	pck_name=$(grep '^PACKAGE_NAME' Makefile 2>/dev/null | awk '{ print $3 }')
 	pck_version=$(grep '^PACKAGE_VERSION' Makefile 2>/dev/null | awk '{ print $3 }')
@@ -321,7 +321,7 @@ fi
 
 # returns the last return code which happens to be the eval one
 #
-function command
+command()
 {
 	typeset _cmd="${1}"
 	typeset -i _ret=0
@@ -387,7 +387,7 @@ fi
 # installing on gnome.org
 msg "installing on gnome.org"
 command "scp "${opt_tarname}" pwieser@master.gnome.org:"
-command "ssh pwieser@master.gnome.org install-module -u ${opt_tarname}"
+command "ssh pwieser@master.gnome.org ftpadmin install --unattended ${opt_tarname}"
 
 # installing on kimsufi
 msg "installing on kimsufi"

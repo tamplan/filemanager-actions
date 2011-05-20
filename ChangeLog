@@ -1,5 +1,7 @@
 2011-05-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* tools/release-tarball.sh: Use new Gnome release script ftpadmin.
+
 	* nautilus-actions.doap: Update download page and mailing list infos.
 
 	* configure.ac: Post release version bump.
