@@ -1,25 +1,51 @@
 N-A BUGS
 ========
 - when error on writing, should let the item modified
+  2010-12-14: delete process improved, restoring not deleted items
+
+- 2011-05-20: if an action is selected on mimetype, scheme is not checked
+  (e.g. an action is displayed on sftp even is scheme is file)
 
 TODO
 ====
-- 2010-06-20: is_candidate_for_show_in: get current environment
+- 2011-02-21: implement startup mode
+
+- 2011-02-21: implement execute as user
 
 - 2010-06-17: implement shortcut button in NactIPropertiesTab page
 
 - 2010-08-09: in v1.x until ??, %f used to be the basename!!
 
-- 2010-08-12: NACT user's manual: review notes against tips:
-  when do we should use each of them ?
+- 2010-12-13: gtk-doc: Building HTML
+  warning: failed to load external entity "../xml/annotation-glossary.xml"
+
+- 2010-12-30: gtk-doc 1.15
+  "Use of uninitialized value within %DeclarationTypes in lc at /usr/bin/gtkdoc-mkdb line 929"
+  when building XML
+
+- 2011-02-07: is_level_zero_writable: should be monitored
+  for now, is only evaluated when NAUpdater is instanciated
+
+- 2011-02-07: are_preferences_locked: should be monitored
+  for now, is only evaluated when NAUpdater is instanciated
+
+- 2011-02-12: should we have a NAKeyFile shared between i/o-desktop and settings ?
+
+- 2011-02-23: implement item separator
+
+- 2011-02-23: desktop environment
+  accept a default at compile time
+  accept as a runtime user preference (may be mandatory)
+
+- 2011-03-11: importing two actions, deleting them before having saved them, and then
+  save the whole (because it is yet marked as modified - why ?)
+  -> save error, some items have not been deleted
+     the two items are restored, marked as not modified, are found actually written in the disk!!
 
 N-A ENHANCEMENTS
 ================
 - allow users to upload/download actions directly from a web repository
   (REST services ?)
-
-- 2010-07-27: while editing a new filter, making it duplicate, try to keep editing
-  instead of terminating the edition and letting the old value
 
 - 2010-08-10: non-notification delay after save should be a preference
 
@@ -29,17 +55,10 @@ N-A ENHANCEMENTS
 
 - 2010-09-30: export format and d&d format should be separated preferences
 
-- let the user edit the current default schemes when adding from defaults for a #NAIContext
-
 - 2010-06-17: ui enhancement
   all edition (entry, buttons, etc.) fields should have a small emblem when read-only.
 
 - add a 'why this item is invalid'
-
-- nact-iactions-list.c: display_label
-  the 'editable' cell property should be set only once, instead of at each redraw
-  and more because we also compute this on selection change
-  what we should do: compute once, and monitor to only change when needed
 
 - enhancement.ui: review toolbars layout
   so that detacheable toolbars do not take so such big extra space
@@ -57,16 +76,13 @@ N-A ENHANCEMENTS
 
 - enhancement.config: na_pivot_is_level_zero_writable:
   the provider which hosts the level-zero list of items should be a configuration option
+  (current is GConf)
 
 - DBus service: list current I/O providers
 
 - DBus service: import/export an action or a menu
 
 - nact: new action assistant
-
-- nautilus-actions-new:
-  give same defaults that when creating an action in NACT
-  choose the target I/O provider
 
 - export: add a overwrite page: what to do if file already exists ?
 
@@ -80,21 +96,13 @@ N-A ENHANCEMENTS
 
 - undo manager (at least Ctrl-Z)
 
-- in GConf, for v4, have conditions in a subfolder
-  configurations/
-    id/
-       properties/
-       conditions/
-       profiles/
-          profile-un/
-            properties/
-            conditions/
-            command/
-
 - 2010-08-20: add an item in the context menu to explain why other actions
   are not displayed
 
-- 2010-11-24: ui.enhancement: have a preview when choosing an icon
+- export-ask: the keep last choice check box should be as editable that export format
+
+- 2011-05-20: should have an option to run in debug mode and dump whole configuration
+  so that a user can click on a button, and then send a zipped log to the maintainer
 
 OTHER ENHANCEMENTS
 ==================
@@ -108,6 +116,11 @@ OTHER ENHANCEMENTS
 
 OTHER BUGS
 ==========
+- 2011-02-21: nautilus: calls menu_provider_get_file_items() api each time we are
+  activating a menu; as the call is made without any indication about the currently
+  activated item, we have no other option than just recreate the menu; this is
+  very expensive in computation time
+
 - GLib bug for g_utf8_collate_key_for_filename()
   (see the 26 exported actions, and the screenshot of Nautilus view)
 
@@ -129,14 +142,17 @@ OTHER BUGS
   (which are actually package developers) to provide any html, pdf, ...
   targets
 
-- gnome-doc-util: should only distribute symlinks instead of plain files
-  for missing translated figures
+- 2010-12-13: --enable-gtk-doc-pdf does not generate a pdf, but should
 
-- gnome-doc-utils-stylesheets-0.20.1: should manage 'termdef'
+- 2011-02-23: it seems that Nautilus 2.30.1 calls get_file_items even when are 
+  opening a submenu ?
+
+- 2011-02-23: also it seems that Nautilus 2.30.1 free our menus (probably because 
+  it is an item of its own menu), but not recursively the items of this menu.
 
 NOTES
 =====
-- Note about the schemas in Nautilus-Actions:
+- Note about the schemas in Nautilus Actions:
   a) actions are identified by uuid
   b) so, all GConf keys have a path with the uuid of the action
   c) I'm not willing to write a schema for each and every uuid
