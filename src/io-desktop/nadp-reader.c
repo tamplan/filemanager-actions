@@ -375,7 +375,6 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterI
 				ndf, &parms->messages );
 
 		if( parms->imported ){
-			code = IMPORTER_CODE_OK;
 			g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms->imported ), IMPORTER_CODE_NOT_WILLING_TO );
 
 			/* remove the weak reference on desktop file set by 'item_from_desktop_file'
@@ -402,6 +401,7 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterI
 
 		if( code != IMPORTER_CODE_OK ){
 			if( parms->imported ){
+				g_debug( "%s: unreffing imported item %p as na_iimporter_manage_import_mode didn't return IMPORTER_CODE_OK", thisfn, parms->imported );
 				g_object_unref( parms->imported );
 				parms->imported = NULL;
 			}

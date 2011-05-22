@@ -1,3 +1,17 @@
+2011-05-22 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-iimporter.c (na_iimporter_manage_import_mode):
+	Setup default values.
+
+	* src/io-desktop/nadp-reader.c (nadp_reader_iimporter_import_from_uri):
+	Add trace message before unreffing the imported object.
+
+	* src/nact/nact-assistant-import.c (assistant_apply):
+	Do not try to import an empty list.
+
+	* src/nact/nact-tree-ieditable.c (nact_tree_ieditable_insert_items):
+	Check for non empty list.
+
 2011-05-20 Pierre Wieser <pwieser@trychlos.org>
 
 	* tools/release-tarball.sh: Use new Gnome release script ftpadmin.

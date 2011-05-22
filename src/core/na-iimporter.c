@@ -168,7 +168,8 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
 
 	if( iimporter_initialized && !iimporter_finalized ){
 
-		g_debug( "%s: importer=%p, parms=%p", thisfn, ( void * ) importer, ( void * ) parms );
+		g_debug( "%s: importer=%p (%s), parms=%p", thisfn,
+				( void * ) importer, G_OBJECT_TYPE_NAME( importer), ( void * ) parms );
 
 		if( NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri ){
 			code = NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri( importer, parms );
@@ -213,6 +214,7 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
 guint
 na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
 {
+	static const gchar *thisfn = "na_iimporter_manage_import_mode";
 	guint code;
 	NAObjectItem *exists;
 	guint mode;
@@ -223,6 +225,8 @@ na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
 	code = IMPORTER_CODE_OK;
 	exists = NULL;
 	mode = 0;
+	parms->exist = FALSE;
+	parms->import_mode = parms->asked_mode;
 
 	if( parms->check_fn ){
 		exists = ( *parms->check_fn )( parms->imported, parms->check_fn_data );
@@ -232,6 +236,8 @@ na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )
 		na_core_utils_slist_add_message( &parms->messages, "%s", _( "Item was renumbered because the caller did not provide any check function." ));
 		parms->import_mode = IMPORTER_MODE_RENUMBER;
 	}
+
+	g_debug( "%s: exists=%p", thisfn, exists );
 
 	if( exists ){
 		parms->exist = TRUE;

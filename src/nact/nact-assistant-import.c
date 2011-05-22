@@ -606,7 +606,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_import_assistant_apply";
 	NactAssistantImport *window;
-	NAImporterParms import_parms;
+	NAImporterParms importer_parms;
 	GtkWidget *chooser;
 	BaseWindow *main_window;
 	GList *it;
@@ -622,32 +622,29 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	window = NACT_ASSISTANT_IMPORT( wnd );
 
 	imported_items = NULL;
-	memset( &import_parms, '\0', sizeof( NAImporterParms ));
+	memset( &importer_parms, '\0', sizeof( NAImporterParms ));
 
 	g_object_get( G_OBJECT( wnd ), BASE_PROP_PARENT, &main_window, NULL );
-	import_parms.parent = base_window_get_gtk_toplevel( main_window );
-
+	importer_parms.parent = base_window_get_gtk_toplevel( main_window );
 	chooser = base_window_get_widget( BASE_WINDOW( window ), "ImportFileChooser" );
-	import_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
-	import_parms.mode = get_import_mode( window );
-
-	import_parms.check_fn = ( NAIImporterCheckFn ) check_for_existence;
-	import_parms.check_fn_data = main_window;
-
+	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
+	importer_parms.mode = get_import_mode( window );
+	importer_parms.check_fn = ( NAIImporterCheckFn ) check_for_existence;
+	importer_parms.check_fn_data = main_window;
 	application = NACT_APPLICATION( base_window_get_application( main_window ));
 	updater = nact_application_get_updater( application );
-	na_importer_import_from_list( NA_PIVOT( updater ), &import_parms );
 
-	for( it = import_parms.results ; it ; it = it->next ){
+	na_importer_import_from_list( NA_PIVOT( updater ), &importer_parms );
+
+	for( it = importer_parms.results ; it ; it = it->next ){
 		result = ( NAImporterResult * ) it->data;
-
 		if( result->imported ){
 			imported_items = g_list_prepend( imported_items, result->imported );
 		}
 	}
 
-	na_core_utils_slist_free( import_parms.uris );
-	window->private->results = import_parms.results;
+	na_core_utils_slist_free( importer_parms.uris );
+	window->private->results = importer_parms.results;
 
 	/* then insert the list
 	 * assuring that actions will be inserted in the same order as uris
@@ -656,10 +653,12 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	 * on the inserted objects; the pointers so remain valid even after
 	 * having released the imported_items list
 	 */
-	imported_items = g_list_reverse( imported_items );
-	items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
-	nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), imported_items, NULL );
-	na_object_free_items( imported_items );
+	if( imported_items ){
+		imported_items = g_list_reverse( imported_items );
+		items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
+		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), imported_items, NULL );
+		na_object_free_items( imported_items );
+	}
 }
 
 static NAObjectItem *

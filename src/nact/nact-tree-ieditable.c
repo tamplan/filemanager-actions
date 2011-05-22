@@ -670,6 +670,7 @@ nact_tree_ieditable_insert_items( NactTreeIEditable *instance, GList *items, NAO
 	NAObject *object, *parent;
 
 	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
+	g_return_if_fail( items );
 
 	if( st_tree_ieditable_initialized && !st_tree_ieditable_finalized ){
 		g_debug( "%s: instance=%p, items=%p (count=%d), sibling=%p",
