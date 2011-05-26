@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-04-06 17:31+0000\n"
-"PO-Revision-Date: 2011-04-22 13:17+0200\n"
+"POT-Creation-Date: 2011-04-22 11:27+0000\n"
+"PO-Revision-Date: 2011-05-26 11:22+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -159,8 +159,8 @@ msgstr ""
 "El último modo de importación elegido en el asistente de importación. Los "
 "valores posibles son: «NoImport» (no importar) para no importar una acción "
 "cuyo UUID ya existe; «Renumber» (reenumerar) para reservar un UUID nuevo si "
-"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir "
-"la acción existente con la importada; «Ask» (preguntar) para preguntar al "
+"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir la "
+"acción existente con la importada; «Ask» (preguntar) para preguntar al "
 "usuario cada vez."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:24
@@ -711,8 +711,8 @@ msgid ""
 msgstr ""
 "Establecer a cierto si la selección puede tener archivos, a falso en el caso "
 "contrario.\n"
-"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones "
-"válidas son:\n"
+"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones válidas "
+"son:\n"
 "isfile='true' e isdir='false': la selección sólo puede contener archivos\n"
 "isfile='false' e isdir='true': la selección sólo pude contener carpetas\n"
 "isfile='true' e isdir='true': la selección contiene tanto archivos como "
@@ -824,7 +824,7 @@ msgstr ""
 "Se pueden usar todos los esquemas de su gestor de archivos favorito.\n"
 "Esto obviamente sólo se aplica cuando existe una selección, o cuando se "
 "selecciona el esquema especial «x-nautilus-desktop».\n"
-"Lo predetermina es «file»."
+"Lo predeterminado es «file»."
 
 #: ../src/core/na-icontext-factory.c:299
 msgid ""
@@ -893,7 +893,7 @@ msgstr ""
 "sección.\n"
 "Esta es una cadena de la forma «{'<'|'='|'>'} número».\n"
 "Ejemplos de cadenas válidas son: «=0», «> 1», «< 10».\n"
-"Lo predetermina es «> 0»."
+"Lo predeterminado es «> 0»."
 
 #: ../src/core/na-icontext-factory.c:352
 msgid "Selection count relation [>0]"
@@ -951,8 +951,8 @@ msgid ""
 msgstr ""
 "Note que, cuando se especifica, sólo se comprueban los estados de presencia "
 "y ejecutabilidad del archivo especificado.\n"
-"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán "
-"durante la ejecución.\n"
+"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán durante "
+"la ejecución.\n"
 "Lo predeterminado es satisfactorio."
 
 #: ../src/core/na-icontext-factory.c:427
@@ -3046,13 +3046,12 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nact-preferences.ui.h:45
-#, fuzzy
 #| msgid ""
 #| "This tab lets you decide on the default behavior of export operations."
 msgid "This tab lets you specify parameters needed for. some execution modes."
 msgstr ""
-"Esta pestaña le permite decidir sobre el comportamiento por defecto de las "
-"operaciones de exportación."
+"Esta pestaña le permite especificar parámetros necesarios para algunos modos "
+"de ejecución."
 
 #: ../src/nact/nact-preferences.ui.h:46
 msgid ""
@@ -3063,7 +3062,6 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nact-preferences.ui.h:49
-#, fuzzy
 #| msgid ""
 #| "The action \"%s\" imported from \"%s\" has the same identifiant than the "
 #| "already existing \"%s\"."
@@ -3071,18 +3069,20 @@ msgid ""
 "What to do when an item, action or menu, selected to be imported, has the "
 "same identifier that a currently existing one ?"
 msgstr ""
-"La acción importada «%s» de «%s» tiene el mismo identificador que la ya "
-"existente «%s»."
+"¿Qué hacer cuando un elemento, acción o menú, seleccionado para importarse, "
+"tiene el mismo identificador que uno ya existente?"
 
 #: ../src/nact/nact-preferences.ui.h:50
 msgid "What to do when pasting or duplicating an item in the tree ?"
-msgstr ""
+msgstr "¿Qué hacer al pegar o duplicar un elemento en el árbol?"
 
 #: ../src/nact/nact-preferences.ui.h:51
 msgid ""
 "When a menu is copied/pasted, or duplicated, the new menu will be relabelled "
 "as 'Copy of ...'."
 msgstr ""
+"Cuando un menú se copia/pega o se duplica, el nuevo menú se reetiquetará "
+"como «Copia de…»."
 
 #: ../src/nact/nact-preferences.ui.h:52
 msgid ""
@@ -3112,7 +3112,6 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nact-preferences.ui.h:57
-#, fuzzy
 #| msgid ""
 #| "If TRUE, the pending modifications will be periodically and automatically "
 #| "saved."
@@ -3120,8 +3119,8 @@ msgid ""
 "When this option is checked, pending modification will be periodically and "
 "automatically saved."
 msgstr ""
-"Si es cierto las modificaciones pendientes serán periódica y automáticamente "
-"guardadas."
+"Cuando esta opción está marcada, las modificaciones pendientes se guardarán "
+"periódica y automáticamente."
 
 #: ../src/nact/nact-preferences.ui.h:58
 msgid ""
@@ -3140,7 +3139,6 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nact-preferences.ui.h:62
-#, fuzzy
 #| msgid ""
 #| "You will be asked for the format to choose each time an item is about to "
 #| "be exported."
@@ -3148,24 +3146,22 @@ msgid ""
 "You will be asked each time a selected item has an already existing "
 "identifier."
 msgstr ""
-"Se le preguntará el formato que elegir cada vez que un elemento se va a "
-"exportar."
+"Se le preguntará cada vez que un elemento seleccionado ya tenga un "
+"identificador que exista."
 
 #: ../src/nact/nact-preferences.ui.h:63
 msgid "_Ascending alphabetical order"
 msgstr "Orden alfabético _ascendente"
 
 #: ../src/nact/nact-preferences.ui.h:65
-#, fuzzy
 #| msgid "_Command"
 msgid "_Command pattern :"
-msgstr "_Comando"
+msgstr "Patrón del _comando:"
 
 #: ../src/nact/nact-preferences.ui.h:66
-#, fuzzy
 #| msgid "Define a 'Nautilus Actions' root menu"
 msgid "_Create a root 'Nautilus-Actions' menu"
-msgstr "Definir un menú raíz para «Acciones de Nautilus»"
+msgstr "_Crear un menú raíz «Acciones de Nautilus»"
 
 #: ../src/nact/nact-preferences.ui.h:67
 msgid "_Descending alphabetical order"
@@ -3185,13 +3181,12 @@ msgstr "_Importar"
 
 #: ../src/nact/nact-preferences.ui.h:71
 msgid "_Manual order"
-msgstr ""
+msgstr "_Orden manual:"
 
 #: ../src/nact/nact-preferences.ui.h:72
-#, fuzzy
 #| msgid "_Override the existing item"
 msgid "_Override the currently existing item with the imported one"
-msgstr "_Sobreescribir el elemento existente"
+msgstr "_Sobreescribir el elemento existente con el importado"
 
 #: ../src/nact/nact-preferences.ui.h:73
 msgid "_Renumber the imported item"
@@ -3342,10 +3337,9 @@ msgid "Allow notify"
 msgstr "Permitir notificaciones"
 
 #: ../src/nact/nact-tree-view.c:237
-#, fuzzy
 #| msgid "Whether the action is enabled"
 msgid "Whether notifications are allowed"
-msgstr "Indica si la acción está activada"
+msgstr "Indica si se permiten las notificaciones"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:1
 msgid "(first) URI."
@@ -3357,7 +3351,7 @@ msgstr "(primera) carpeta base."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:3
 msgid "(first) basename without the extension."
-msgstr ""
+msgstr "(primer) nombre base sin la extensión."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:4
 msgid "(first) basename."
@@ -3491,7 +3485,7 @@ msgstr "<b>Aparece si ela selección contiene</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:54
 msgid "<b>Basenames conditions</b>"
-msgstr ""
+msgstr "<b>Condiciones de nombres base</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:55
 msgid "<b>Capabilities conditions</b>"
@@ -3519,23 +3513,21 @@ msgstr "<b>Condiciones de carpetas</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:62
 msgid "<b>Mimetypes conditions</b>"
-msgstr ""
+msgstr "<b>Condiciones de tipos MIME</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:63
-#, fuzzy
 #| msgid "<b>Nautilus Menu Item</b>"
 msgid "<b>Nautilus Item</b>"
-msgstr "<b>Elemento del menú de Nautilus</b>"
+msgstr "<b>Elemento de Nautilus</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:64
 msgid "<b>Profile</b>"
 msgstr "<b>Perfil</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:65
-#, fuzzy
 #| msgid "<b>Menu editable properties</b>"
 msgid "<b>Read-only properties</b>"
-msgstr "<b>Propiedades editables del menú</b>"
+msgstr "<b>Propiedades de sólo lectura</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:66
 msgid "<b>Schemes conditions</b>"
@@ -3575,22 +3567,19 @@ msgid "Appears if the name is _registered on D-Bus :"
 msgstr "Aparece si el nombre está _registrado en D-BUS:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:75
-#, fuzzy
 #| msgid "_Browse"
 msgid "B_rowse..."
-msgstr "_Examinar"
+msgstr "_Examinar…"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:76
-#, fuzzy
 #| msgid "_Browse"
 msgid "Bro_wse..."
-msgstr "_Examinar"
+msgstr "E_xaminar…"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:77
-#, fuzzy
 #| msgid "_Browse"
 msgid "Brow_se..."
-msgstr "_Examinar"
+msgstr "Ex_aminar…"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:78
 #, fuzzy
@@ -3717,10 +3706,9 @@ msgid "E_nabled"
 msgstr "_Activado"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:101
-#, fuzzy
 #| msgid "Execution mode"
 msgid "E_xecution"
-msgstr "Modo de ejecución"
+msgstr "_Ejecución"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:102
 msgid "End of session"
@@ -3747,7 +3735,6 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:109
-#| msgid "Execute as user"
 msgid "Execute as _user :"
 msgstr "Ejecutar como _usuario:"
 
@@ -4245,14 +4232,11 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:224
-#, fuzzy
 #| msgid ""
 #| "You will be asked for the format to choose each time an item is about to "
 #| "be exported."
 msgid "You will be asked each time an imported ID already exists."
-msgstr ""
-"Se le preguntará el formato que elegir cada vez que un elemento se va a "
-"exportar."
+msgstr "Se le preguntará cada vez que un ID importado ya existe."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:226
 msgid "_Always appears"
@@ -4507,9 +4491,6 @@ msgid "Try %s --help for usage.\n"
 msgstr "Pruebe %s --help para ver su uso.\n"
 
 #: ../src/utils/console-utils.c:54
-#| msgid ""
-#| "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer "
-#| "to mail to <maintainer@nautilus-actions.org>.\n"
 msgid ""
 "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions,\n"
@@ -4520,24 +4501,22 @@ msgstr ""
 "<maintainer@nautilus-actions.org>.\n"
 
 #: ../src/utils/na-delete-xmltree.c:69
-#, fuzzy
 #| msgid "The URI of the file to be imported"
 msgid "The XPath to the tree to be deleted"
-msgstr "El URI del archivo para importar"
+msgstr "El XPath del árbol que eliminar"
 
 #: ../src/utils/na-delete-xmltree.c:71
 msgid "The filename of the XML backend"
 msgstr "El nombre de archivo del «backend» XML"
 
 #: ../src/utils/na-delete-xmltree.c:126
-#, fuzzy, c-format
+#, c-format
 #| msgid "Error: uri is mandatory.\n"
 msgid "Error: a XPath is mandatory.\n"
-msgstr "Error: es obligatorio un URL.\n"
+msgstr "Error: es obligatorio un XPath.\n"
 
 #: ../src/utils/na-delete-xmltree.c:131
 #, c-format
-#| msgid "Error: an action label is mandatory.\n"
 msgid "Error: a XML filename is mandatory.\n"
 msgstr "Error: es obligatorio un nombre de archivo XML.\n"
 
@@ -4547,7 +4526,6 @@ msgstr "Borrar una XPath de un documento XML"
 
 #: ../src/utils/na-delete-xmltree.c:211
 #, c-format
-#| msgid "Error: unable to create %s dir: %s"
 msgid "Error: unable to parse file '%s'\n"
 msgstr "Error: no se pudo analizar el archivo «%s»\n"
 
@@ -5413,8 +5391,7 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 
 #~ msgid "Value '%s' already set: new value ignored at line %d."
 #~ msgstr ""
-#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea "
-#~ "%d."
+#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea %d."
 
 #~ msgid "Action label not found."
 #~ msgstr "No se encontró la etiqueta de acción."
@@ -5551,20 +5528,20 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ msgid ""
 #~ "This config file is more recent than this version of Nautilus-actions can "
 #~ "support. Please upgrade Nautilus-actions to the latest version if you "
-#~ "want to be able to import it (File version: %s (max supported version : "
-#~ "%s))"
+#~ "want to be able to import it (File version: %s (max supported version : %"
+#~ "s))"
 #~ msgstr ""
 #~ "Este archivo de configuración es más reciente de lo que esta versión de "
 #~ "Nautilus-actions soporta. Si quiere importarlo actualice Nautilus-actions "
-#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: "
-#~ "%s))"
+#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: %"
+#~ "s))"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
-#~ "%s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
+#~ "s)%s"
 #~ msgid_plural ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing keys: "
-#~ "%s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing keys: %"
+#~ "s)%s"
 #~ msgstr[0] ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)%s"
@@ -5573,15 +5550,15 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "actions (faltan las claves: %s)%s"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
-#~ "%s)"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
+#~ "s)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (root node is <"
-#~ "%s> instead of <%s>)"
+#~ "This XML file is not a valid Nautilus-actions config file (root node is <%"
+#~ "s> instead of <%s>)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (el nodo raíz es <%s> en vez de <%s>)"
@@ -5778,8 +5755,8 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "common choice. You can add a new scheme by clicking on the '+' button."
 #~ msgstr ""
 #~ "Seleccione la clase de archivos donde quiere que su acción aparezca. Si "
-#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la "
-#~ "opción más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
+#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la opción "
+#~ "más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
 
 #~ msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 #~ msgstr ""
