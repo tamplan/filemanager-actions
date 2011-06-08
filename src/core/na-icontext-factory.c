@@ -171,7 +171,7 @@ NADataDef data_def_conditions [] = {
 	{ NAFO_DATA_ISFILE,
 				TRUE,
 				FALSE,
-				TRUE,
+				FALSE,
 				N_( "Whether the profile applies to files (deprecated option, see mimetype)" ),
 				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "Set to 'true' if the selection can have files, to 'false' otherwise.\n" \
@@ -202,7 +202,7 @@ NADataDef data_def_conditions [] = {
 	{ NAFO_DATA_ISDIR,
 				TRUE,
 				FALSE,
-				TRUE,
+				FALSE,
 				N_( "Whether the profile applies to folders (deprecated option, see mimetype)" ),
 				/* i18n: 'true' and 'false' values are taken literally, and should not be translated */
 				N_( "Set to 'true' if the selection can have folders, to 'false' otherwise.\n" \
@@ -284,7 +284,7 @@ NADataDef data_def_conditions [] = {
 					"or when targeting the special 'x-nautilus-desktop' scheme.\n" \
 					"Defaults to 'file'." ),
 				NA_DATA_TYPE_STRING_LIST,
-				"*",
+				"file",
 				FALSE,
 				TRUE,
 				TRUE,

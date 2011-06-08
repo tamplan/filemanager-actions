@@ -352,6 +352,7 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFrom
 
 	if( code == IMPORTER_CODE_OK ){
 		publish_undealt_nodes( reader );
+		na_object_dump( reader->private->parms->imported );
 	}
 
 	g_object_unref( reader );

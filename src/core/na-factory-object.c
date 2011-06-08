@@ -751,10 +751,10 @@ na_factory_object_get_as_value( const NAIFactoryObject *object, const gchar *nam
  *
  * Returns: the searched value.
  *
- * If the type of the value is NA_DATA_TYPE_STRING, NA_DATA_TYPE_LOCALE_STRING,
- * or NA_DATA_TYPE_STRING_LIST, then the returned value is a newly allocated
- * one and should be g_free() (resp. na_core_utils_slist_free()) by the
- * caller.
+ * If the type of the value is NA_DATA_TYPE_STRING or NA_DATA_TYPE_LOCALE_STRING
+ * (resp. NA_DATA_TYPE_STRING_LIST), then the returned value is a newly allocated
+ * string (resp. GSList) and should be g_free() (resp. na_core_utils_slist_free())
+ * by the caller.
  */
 void *
 na_factory_object_get_as_void( const NAIFactoryObject *object, const gchar *name )
@@ -772,6 +772,25 @@ na_factory_object_get_as_void( const NAIFactoryObject *object, const gchar *name
 	}
 
 	return( value );
+}
+
+/*
+ * na_factory_object_is_set:
+ * @object: this #NAIFactoryObject instance.
+ * @name: the elementary data whose value is to be tested.
+ *
+ * Returns: %TRUE if the value is set (may be %NULL), %FALSE else.
+ */
+gboolean
+na_factory_object_is_set( const NAIFactoryObject *object, const gchar *name )
+{
+	NADataBoxed *boxed;
+
+	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), FALSE );
+
+	boxed = na_ifactory_object_get_data_boxed( object, name );
+
+	return( boxed != NULL );
 }
 
 /*

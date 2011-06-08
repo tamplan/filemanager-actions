@@ -61,6 +61,10 @@ struct _NAObjectProfilePrivate {
 
 #define PROFILE_NAME_PREFIX					"profile-"
 
+#define na_object_is_file( obj )			(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISFILE )))
+#define na_object_is_dir( obj )				(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_ISDIR )))
+#define na_object_is_multiple( obj )		(( gboolean ) GPOINTER_TO_UINT( na_ifactory_object_get_as_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_MULTIPLE )))
+
 extern NADataGroup profile_data_groups [];	/* defined in na-item-profile-factory.c */
 
 static NAObjectIdClass *st_parent_class = NULL;
@@ -344,7 +348,9 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 	NAObjectAction *action;
 	guint iversion;
 
-	g_debug( "%s: profile=%p", thisfn, ( void * ) instance );
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+	na_factory_object_dump( instance );
 
 	/* converts pre-v3 data
 	 */
@@ -354,9 +360,12 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 
 	if( iversion < 3 ){
 		na_object_profile_convert_v2_to_last( NA_OBJECT_PROFILE( instance ));
-	}
 
-	read_done_ending( NA_OBJECT_PROFILE( instance ));
+	/* must be always called, but is called when converting profile, anyway
+	 */
+	} else {
+		read_done_ending( NA_OBJECT_PROFILE( instance ));
+	}
 }
 
 static guint
@@ -577,7 +586,13 @@ convert_pre_v3_isfiledir( NAObjectProfile *profile )
 		mimetypes = NULL;
 		before_list = na_object_get_mimetypes( profile );
 
-		isfile = na_object_is_file( profile );
+		/* this is needed because na_object_is_file() does not return the default
+		 * value when the data is not set (see #651911)
+		 */
+		isfile = TRUE;
+		if( na_factory_object_is_set( NA_IFACTORY_OBJECT( profile ), NAFO_DATA_ISFILE )){
+			isfile = na_object_is_file( profile );
+		}
 		isdir = na_object_is_dir( profile );
 
 		if( isfile ){
@@ -633,11 +648,17 @@ read_done_ending( NAObjectProfile *profile )
 	 */
 	na_icontext_read_done( NA_ICONTEXT( profile ));
 
-	/* last, set other action defaults
+	/* last, set profile defaults
 	 */
 	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
 }
 
+/*
+ * GConf used to store command path and parameters as two separated fields
+ * Desktop store them as one field
+ * NACT displays and edits them as two fields (this let us have Browse and Legend buttons)
+ * => so we definitively keep them as separated boxed in our internal objects
+ */
 static void
 split_path_parameters( NAObjectProfile *profile )
 {
@@ -757,7 +778,11 @@ na_object_profile_new_with_defaults( void )
  * na_object_profile_convert_v2_to_last:
  * @profile: the #NAObjectProfile profile to be converted.
  *
- * Converts to v3 a @profile which has just been created from a pre-v2 action.
+ * Converts a v2 profile to the last version, setting the defaults as needed.
+ *
+ * This is called after having converted a pre-v2 action on the newly created
+ * profile, or just after having read a v2 profile.
+ * In all situations, defaults are supposed to have been set.
  *
  * Since: 2.30
  */

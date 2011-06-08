@@ -68,6 +68,7 @@ guint        na_factory_object_write_item       ( NAIFactoryObject *object, cons
 
 void        *na_factory_object_get_as_void      ( const NAIFactoryObject *object, const gchar *name );
 void         na_factory_object_get_as_value     ( const NAIFactoryObject *object, const gchar *name, GValue *value );
+gboolean     na_factory_object_is_set           ( const NAIFactoryObject *object, const gchar *name );
 
 void         na_factory_object_set_from_value   ( NAIFactoryObject *object, const gchar *name, const GValue *value );
 void         na_factory_object_set_from_void    ( NAIFactoryObject *object, const gchar *name, const void *data );

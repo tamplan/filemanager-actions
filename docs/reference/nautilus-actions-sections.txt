@@ -618,9 +618,6 @@ na_object_attach_profile
 na_object_get_path
 na_object_get_parameters
 na_object_get_working_dir
-na_object_is_file
-na_object_is_dir
-na_object_is_multiple
 na_object_get_execution_mode
 na_object_get_startup_notify
 na_object_get_startup_class

@@ -105,6 +105,7 @@ nadp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 
 		if( item ){
 			items = g_list_prepend( items, item );
+			na_object_dump( item );
 		}
 	}
 

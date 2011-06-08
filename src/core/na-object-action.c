@@ -86,8 +86,8 @@ static guint        ifactory_object_write_done( NAIFactoryObject *instance, cons
 static void         icontext_iface_init( NAIContextInterface *iface );
 static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
 
-static gboolean     read_done_convert_v1_to_last( NAIFactoryObject *instance );
-static void         read_done_deals_with_toolbar_label( NAIFactoryObject *instance );
+static NAObjectProfile *read_done_convert_v1_to_v2( NAIFactoryObject *instance );
+static void             read_done_deals_with_toolbar_label( NAIFactoryObject *instance );
 
 static guint        write_done_write_profiles( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
@@ -378,24 +378,28 @@ ifactory_object_get_groups( const NAIFactoryObject *instance )
 
 /*
  * at this time, we don't yet have read the profiles as this will be
- * done in ifactory_provider_read_done - we so just be able to deal with
+ * triggered by ifactory_provider_read_done - we so just be able to deal with
  * action-specific properties (not check for profiles consistency)
  */
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
 	guint iversion;
+	NAObjectProfile *profile;
 
 	g_debug( "na_object_action_ifactory_object_read_done: instance=%p", ( void * ) instance );
 
+	na_factory_object_dump( instance );
+
 	na_object_item_deals_with_version( NA_OBJECT_ITEM( instance ));
 
-	/* may attach a new profile if we detect a pre-v2 action
+	/* should attach a new profile if we detect a pre-v2 action
 	 * the v1_to_v2 conversion must be followed by a v2_to_v3 one
 	 */
 	iversion = na_object_get_iversion( instance );
 	if( iversion < 2 ){
-		read_done_convert_v1_to_last( instance );
+		profile = read_done_convert_v1_to_v2( instance );
+		na_object_profile_convert_v2_to_last( profile );
 	}
 
 	/* deals with obsoleted data, i.e. data which may have been written in the past
@@ -407,9 +411,7 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 	 */
 	na_icontext_read_done( NA_ICONTEXT( instance ));
 
-	na_object_dump( instance );
-
-	/* last, set other action defaults
+	/* last, set action defaults
 	 */
 	na_factory_object_set_defaults( instance );
 }
@@ -451,18 +453,17 @@ icontext_is_candidate( NAIContext *object, guint target, GList *selection )
 }
 
 /*
- * do we have a pre-v2 action ?
- *  it is be identified by an version = "1.x"
+ * if we have a pre-v2 action
  *  any data found in data_def_action_v1 (defined in na-object-action-factory.c)
- *  is obsoleted and moved to a new profile
+ *  is obsoleted and should be moved to a new profile
  *
  * actions read from .desktop already have iversion=3 (cf. desktop_read_start)
- * and v1 actions may only come from xml or gconf
+ * so v1 actions may only come from xml or gconf
  *
- * returns TRUE if this actually was a v1 action which has been converted to v2
+ * returns the newly defined profile
  */
-static gboolean
-read_done_convert_v1_to_last( NAIFactoryObject *instance )
+static NAObjectProfile *
+read_done_convert_v1_to_v2( NAIFactoryObject *instance )
 {
 	static const gchar *thisfn = "na_object_action_read_done_read_done_convert_v1_to_last";
 	GList *to_move;
@@ -478,17 +479,13 @@ read_done_convert_v1_to_last( NAIFactoryObject *instance )
 	def = data_def_action_v1;
 
 	while( def->name ){
-		boxed = na_ifactory_object_get_data_boxed( instance , def->name );
+		boxed = na_ifactory_object_get_data_boxed( instance, def->name );
 		if( boxed ){
 			g_debug( "%s: boxed=%p (%s) marked to be moved from action body to profile",
 							 thisfn, ( void * ) boxed, def->name );
 			to_move = g_list_prepend( to_move, boxed );
 		}
 		def++;
-	}
-
-	if( !to_move ){
-		return( FALSE );
 	}
 
 	/* now create a new profile
@@ -498,16 +495,12 @@ read_done_convert_v1_to_last( NAIFactoryObject *instance )
 	na_object_set_label( profile, _( "Profile automatically created from pre-v2 action" ));
 	na_object_attach_profile( instance, profile );
 
-	if( to_move ){
-		for( ibox = to_move ; ibox ; ibox = ibox->next ){
-			na_factory_object_move_boxed(
-					NA_IFACTORY_OBJECT( profile ), instance, NA_DATA_BOXED( ibox->data ));
-		}
+	for( ibox = to_move ; ibox ; ibox = ibox->next ){
+		na_factory_object_move_boxed(
+				NA_IFACTORY_OBJECT( profile ), instance, NA_DATA_BOXED( ibox->data ));
 	}
 
-	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( profile ));
-	na_object_profile_convert_v2_to_last( profile );
-	return( TRUE );
+	return( profile );
 }
 
 /*

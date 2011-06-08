@@ -95,6 +95,7 @@ nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 			item = read_item( self, ( const gchar * ) ip->data, messages );
 			if( item ){
 				items_list = g_list_prepend( items_list, item );
+				na_object_dump( item );
 			}
 		}
 
@@ -357,11 +358,11 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 	gint int_value;
 
 	boxed = NULL;
+	boxed = na_data_boxed_new( def );
 	have_entry = na_gconf_utils_has_entry( reader_data->entries, def->gconf_entry );
 	g_debug( "%s: entry=%s, have_entry=%s", thisfn, def->gconf_entry, have_entry ? "True":"False" );
 
 	if( have_entry ){
-		boxed = na_data_boxed_new( def );
 		gchar *entry_path = gconf_concat_dir_and_key( path, def->gconf_entry );
 
 		switch( def->type ){

@@ -295,13 +295,17 @@ ifactory_object_get_groups( const NAIFactoryObject *instance )
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )
 {
+	g_debug( "na_object_menu_ifactory_object_read_done: instance=%p", ( void * ) instance );
+
+	na_factory_object_dump( instance );
+
 	na_object_item_deals_with_version( NA_OBJECT_ITEM( instance ));
 
 	/* prepare the context after the reading
 	 */
 	na_icontext_read_done( NA_ICONTEXT( instance ));
 
-	/* last, set other menu defaults
+	/* last, set menu defaults
 	 */
 	na_factory_object_set_defaults( instance );
 }

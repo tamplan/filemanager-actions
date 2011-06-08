@@ -1,3 +1,33 @@
+2011-06-08 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-object-api.h:
+	* docs/reference/nautilus-actions-sections.txt
+	(na_object_is_file, na_object_is_dir, na_object_is_multiple):
+	Macros are moved from the official API as deprecated.
+
+	* src/core/na-icontext-factory.c
+	(ISFILE, ISDIR): No more declare properties for deprecated data.
+	(SCHEMES): Declare 'file' as the default.
+
+	* src/core/na-factory-object.c:
+	* src/core/na-factory-object.h (na_factory_object_is_set): New function.
+
+	* src/core/na-object-action.c (ifactory_object_read_done):
+	Dump the rough read data.
+	First create a v2 profile before converting it to last version.
+
+	* src/core/na-object-menu.c (ifactory_object_read_done):
+	Dump the rough read data.
+
+	* src/core/na-object-profile.c
+	(ifactory_object_read_done): Dump the rough read data.
+	(convert_pre_v3_isfiledir): Test if 'isfile' is set before using it.
+
+	* src/io-desktop/nadp-reader.c (nadp_iio_provider_read_items):
+	* src/io-gconf/nagp-reader.c (nagp_iio_provider_read_items):
+	* src/io-xml/naxml-reader.c (naxml_reader_import_from_uri):
+	Dump the whole read item, maybe after conversion.
+
 2011-05-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-iimporter.c (na_iimporter_manage_import_mode):
