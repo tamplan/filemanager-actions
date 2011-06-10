@@ -442,8 +442,11 @@ get_boxed_def( guint type )
 }
 
 /*
- * converts a string to an array of string
- * the last separator, if any, is not counted
+ * converts a string to an array of strings
+ * accepts both:
+ * - a semi-comma-separated list of strings (the last separator, if any, is not counted)
+ * - a comma-separated list of strings between square brackets (à la GConf)
+ *
  */
 static gchar **
 string_to_array( const gchar *string )
@@ -454,12 +457,25 @@ string_to_array( const gchar *string )
 	array = NULL;
 
 	if( string && strlen( string )){
-		sdup = g_strdup( string );
-		if( g_str_has_suffix( string, LIST_SEPARATOR )){
-			sdup[strlen(sdup)-1] = '\0';
+		sdup = g_strstrip( g_strdup( string ));
+
+		/* GConf-style string list [value,value]
+		 */
+		if( sdup[0] == '[' && sdup[strlen(sdup)-1] == ']' ){
+			sdup[0] = ' ';
+			sdup[strlen(sdup)-1] = ' ';
 			sdup = g_strstrip( sdup );
+			array = g_strsplit( sdup, ",", -1 );
+
+		/* semi-comma-separated list of strings
+		 */
+		} else {
+			if( g_str_has_suffix( string, LIST_SEPARATOR )){
+				sdup[strlen(sdup)-1] = ' ';
+				sdup = g_strstrip( sdup );
+			}
+			array = g_strsplit( sdup, LIST_SEPARATOR, -1 );
 		}
-		array = g_strsplit( sdup, LIST_SEPARATOR, -1 );
 		g_free( sdup );
 	}
 
@@ -1142,6 +1158,11 @@ string_list_free( NABoxed *boxed )
 	boxed->private->is_set = FALSE;
 }
 
+/*
+ * accept string list both:
+ * - as a semi-comma-separated list of strings
+ * - as a comma-separated list of string, between two square brackets (à la GConf)
+ */
 static void
 string_list_from_string( NABoxed *boxed, const gchar *string )
 {

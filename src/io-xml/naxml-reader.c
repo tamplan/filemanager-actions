@@ -1184,7 +1184,7 @@ dump_check_for_type( NAXMLReader *reader, xmlNode *key_node )
 }
 
 /*
- * string list is converted to GSList, then to a GConf string
+ * string list is converted to GSList, then to a NABoxed string list 'value;value'
  */
 static gchar *
 dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
@@ -1241,23 +1241,24 @@ dump_read_value( NAXMLReader *reader, xmlNode *node, const NADataDef *def )
 	return( string );
 }
 
+/*
+ * NABoxed accepts a string list as a semi-comma-separated list of strings
+ */
 static gchar *
 slist_to_string( GSList *slist )
 {
 	GSList *is;
-	GString *str = g_string_new( "[" );
+	GString *str = g_string_new( "" );
 	gboolean first;
 
 	first = TRUE;
 	for( is = slist ; is ; is = is->next ){
 		if( !first ){
-			str = g_string_append( str, "," );
+			str = g_string_append( str, ";" );
 		}
 		str = g_string_append( str, ( const gchar * ) is->data );
 		first = FALSE;
 	}
-
-	str = g_string_append( str, "]" );
 
 	return( g_string_free( str, FALSE ));
 }

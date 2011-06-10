@@ -1,5 +1,12 @@
 2011-06-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-boxed.c (string_to_array):
+	Accepts now both semi-comma-separated list of strings and
+	comma-separated between square brackets (à la GConf) from string lists.
+
+	* src/io-xml/naxml-reader.c (slist_to_string):
+	Formats string list as a semi-comma-separated list of strings for NABoxed.
+
 	* src/utils/na-gconf2key.sh.in: No more obsolete the GConf reading,
 	as it may sometimes be needed to re-migrate a newly inserted item.
 
