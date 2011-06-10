@@ -1,5 +1,8 @@
 2011-06-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/na-gconf2key.sh.in: No more obsolete the GConf reading,
+	as it may sometimes be needed to re-migrate a newly inserted item.
+
 	* src/io-gconf/nagp-reader.c (get_boxed_from_path):
 	Only allocate a new box when a non-null value has been read.
 
