@@ -319,6 +319,9 @@ dump_entry( GConfEntry *entry, void *user_data )
 	static const gchar *thisfn = "na_gconf_utils_dump_entry";
 	gchar *str = NULL;
 	gboolean str_free = FALSE;
+	GSList *value_list, *it;
+	GConfValueType type_list;
+	GString *string;
 
 	gchar *key = g_path_get_basename( gconf_entry_get_key( entry ));
 	GConfValue *value = gconf_entry_get_value( entry );
@@ -341,6 +344,27 @@ dump_entry( GConfEntry *entry, void *user_data )
 
 			case GCONF_VALUE_BOOL:
 				str = g_strdup_printf( "%s", gconf_value_get_bool( value ) ? "True":"False" );
+				str_free = TRUE;
+				break;
+
+			case GCONF_VALUE_LIST:
+				type_list = gconf_value_get_list_type( value );
+				value_list = gconf_value_get_list( value );
+				switch( type_list ){
+					case GCONF_VALUE_STRING:
+						string = g_string_new( "[" );
+						for( it = value_list ; it ; it = it->next ){
+							if( g_utf8_strlen( string->str, -1 ) > 1 ){
+								string = g_string_append( string, "," );
+							}
+							string = g_string_append( string, ( const gchar * ) gconf_value_get_string( it->data ));
+						}
+						string = g_string_append( string, "]" );
+						str = g_string_free( string, FALSE );
+						break;
+					default:
+						str = g_strdup( "(undetermined value)" );
+				}
 				str_free = TRUE;
 				break;
 

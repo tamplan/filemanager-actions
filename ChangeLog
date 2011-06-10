@@ -1,3 +1,7 @@
+2011-06-10 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-gconf-utils.c (dump_entry): Also dump list values.
+
 2011-06-08 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-object-api.h:
