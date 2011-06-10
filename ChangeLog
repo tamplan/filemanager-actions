@@ -1,5 +1,8 @@
 2011-06-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-settings.c (read_key_value_from_key_file):
+	Also dump the value read from a key file.
+
 	* src/core/na-gconf-utils.c (dump_entry): Also dump list values.
 
 2011-06-08 Pierre Wieser <pwieser@trychlos.org>

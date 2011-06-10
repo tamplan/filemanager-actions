@@ -1260,10 +1260,9 @@ read_key_value_from_key_file( GKeyFile *key_file, const gchar *group, const gcha
 	gchar *str;
 	GError *error;
 
-	g_debug( "%s: group=%s, key=%s", thisfn, group, key );
-
 	value = NULL;
 	error = NULL;
+	str = NULL;
 
 	switch( key_def->type ){
 
@@ -1294,13 +1293,22 @@ read_key_value_from_key_file( GKeyFile *key_file, const gchar *group, const gcha
 						break;
 				}
 			}
-			g_free( str );
 			break;
 
 		default:
-			g_warning( "%s: unmanaged boxed type: %d", thisfn, key_def->type );
-			break;
+			g_warning( "%s: group=%s, key=%s - unmanaged boxed type: %d", thisfn, group, key, key_def->type );
+			return( NULL );
 	}
+
+#ifdef NA_MAINTAINER_MODE
+	if( value ){
+		g_debug( "%s: group=%s, key=%s value=%s", thisfn, group, key, str );
+	} else {
+		g_debug( "%s: group=%s, key=%s not found", thisfn, group, key );
+	}
+#endif
+
+	g_free( str );
 
 	return( value );
 }
