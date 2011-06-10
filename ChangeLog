@@ -1,5 +1,8 @@
 2011-06-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-reader.c (get_boxed_from_path):
+	Only allocate a new box when a non-null value has been read.
+
 	* src/core/na-settings.c (read_key_value_from_key_file):
 	Also dump the value read from a key file.
 

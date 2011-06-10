@@ -74,7 +74,7 @@ static gboolean      is_key_writable( NagpGConfProvider *gconf, const gchar *key
 GList *
 nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_iio_provider_read_items";
+	static const gchar *thisfn = "nagp_reader_nagp_iio_provider_read_items";
 	NagpGConfProvider *self;
 	GList *items_list = NULL;
 	GSList *listpath, *ip;
@@ -112,7 +112,7 @@ nagp_iio_provider_read_items( const NAIIOProvider *provider, GSList **messages )
 static NAObjectItem *
 read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 {
-	static const gchar *thisfn = "nagp_gconf_provider_read_item";
+	static const gchar *thisfn = "nagp_reader_read_item";
 	NAObjectItem *item;
 	gchar *full_path;
 	gchar *type;
@@ -129,7 +129,7 @@ read_item( NagpGConfProvider *provider, const gchar *path, GSList **messages )
 	g_free( full_path );
 	item = NULL;
 
-	/* a menu may have 'Action' or 'Menu' type ; defaults to Action
+	/* an item may have 'Action' or 'Menu' type; defaults to Action
 	 */
 	if( !type || !strlen( type ) || !strcmp( type, NAGP_VALUE_TYPE_ACTION )){
 		item = NA_OBJECT_ITEM( na_object_action_new());
@@ -358,19 +358,18 @@ get_boxed_from_path( const NagpGConfProvider *provider, const gchar *path, Reade
 	gint int_value;
 
 	boxed = NULL;
-	boxed = na_data_boxed_new( def );
 	have_entry = na_gconf_utils_has_entry( reader_data->entries, def->gconf_entry );
 	g_debug( "%s: entry=%s, have_entry=%s", thisfn, def->gconf_entry, have_entry ? "True":"False" );
 
 	if( have_entry ){
 		gchar *entry_path = gconf_concat_dir_and_key( path, def->gconf_entry );
+		boxed = na_data_boxed_new( def );
 
 		switch( def->type ){
 
 			case NA_DATA_TYPE_STRING:
 			case NA_DATA_TYPE_LOCALE_STRING:
 				str_value = na_gconf_utils_read_string( provider->private->gconf, entry_path, TRUE, NULL );
-				g_debug( "%s: entry=%s, value=%s", thisfn, def->gconf_entry, str_value );
 				na_boxed_set_from_string( NA_BOXED( boxed ), str_value );
 				g_free( str_value );
 				break;
