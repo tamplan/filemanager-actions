@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-05-26 18:14+0000\n"
-"PO-Revision-Date: 2011-06-04 10:24+0200\n"
+"POT-Creation-Date: 2011-06-04 08:26+0000\n"
+"PO-Revision-Date: 2011-06-23 20:02+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -3727,16 +3727,12 @@ msgid "Id. :"
 msgstr "Id. :"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:112
-#, fuzzy
-#| msgid "Import mode"
 msgid "Import is done"
-msgstr "Modo de importación"
+msgstr "Importación terminada"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:113
-#, fuzzy
-#| msgid "Import new configurations"
 msgid "Importing actions"
-msgstr "Importar configuraciones nuevas"
+msgstr "Importando acciones"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:114
 msgid "In a _terminal"
@@ -3747,10 +3743,8 @@ msgid "Item may appear depending of the desktop environment."
 msgstr "El elemento puede aparecer dependiendo del entorno del escritorio."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:116
-#, fuzzy
-#| msgid "Item is local"
 msgid "Items _list :"
-msgstr "El elemento es local"
+msgstr "_Lista de elementos:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:117
 msgid "Just a label to remind you why you have created this profile."
@@ -3801,10 +3795,8 @@ msgid "Sort the list in descending alphabetical order."
 msgstr "Ordenar la lista en orden alfabético descendente."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:131
-#, fuzzy
-#| msgid "Startup WM Class"
 msgid "Startup Window Manager _class :"
-msgstr "Clase WM de inicio"
+msgstr "_Clase de inicio del administrador de ventanas:"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:132
 msgid "Suggested _shortcut :"
@@ -3821,10 +3813,14 @@ msgid ""
 "output streams will be displayed.\n"
 "An acceptable fallback is running in the standard terminal."
 msgstr ""
+"El comando se ejecutará en una terminal.\n"
+"La terminal se cerrará al terminar la ejecución; se mostrarán los flujos de "
+"error estándar y de salida.\n"
+"Se está ejecutando una alternativa aceptable en la terminal estándar."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:138
 msgid "The command will be started as a standard graphical user interface."
-msgstr ""
+msgstr "El comando se iniciará como una interfaz gráfica de usuario estándar."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:139
 msgid ""
@@ -3869,14 +3865,9 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:145
-#, fuzzy
-#| msgid ""
-#| "The working directory the command will be started in.\n"
-#| "Defaults to \"%d\"."
 msgid "The default working directory the command should be started in."
 msgstr ""
-"El directorio de trabajo en el que se iniciará el comando.\n"
-"Lo predeterminado es «%d»."
+"La carpeta de trabajo predeterminada en la que se debe iniciar el comando."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:146
 msgid "The icon displayed in the file manager user interface."
@@ -3891,16 +3882,16 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:149
-#, fuzzy
-#| msgid "Display the File toolbar"
 msgid "The label displayed in the file manager toolbar."
-msgstr "Mostrar la barra de herramientas de Archivo"
+msgstr ""
+"La etiqueta mostrada en la barra de herramientas del administrador de "
+"archivos."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:150
-#, fuzzy
-#| msgid "Icon of the menu item in the Nautilus popup menu"
 msgid "The label of the item in the file manager context menus."
-msgstr "Icono del elemento en el menú contextual de Nautilus"
+msgstr ""
+"La etiqueta del elemento en los menús contextuales del administrador de "
+"archivos."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:151
 #, fuzzy
@@ -3909,10 +3900,8 @@ msgid "The name of a themed icon or the filename of an image."
 msgstr "Icono del elemento en el menú contextual de Nautilus"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:152
-#, fuzzy
-#| msgid "The parameters of the command"
 msgid "The parameters of the command."
-msgstr "Los parámetros del comando"
+msgstr "Los parámetros del comando."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:153
 msgid ""
@@ -3931,6 +3920,7 @@ msgstr ""
 #: ../src/nact/nautilus-actions-config-tool.ui.h:157
 msgid "The tooltip displayed in the file manager user interface."
 msgstr ""
+"El consejo mostrado en la interfaz del usuario de administrador de archivos."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:158
 msgid ""
@@ -4143,65 +4133,44 @@ msgid ""
 msgstr ""
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:215
-#, fuzzy
-#| msgid ""
-#| "The icon of the menu item that will appear next to the label in the file "
-#| "manager context menu when the selection matches the appearance conditions "
-#| "settings.\n"
-#| "May be the localized name of a themed icon, or a full path to any "
-#| "appropriate image."
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "context menu when the selection is empty.\n"
 "In this case, the defined conditions will be applied to the current "
 "displayed folder."
 msgstr ""
-"El icono del elemento del menú que aparecerá junto a la etiqueta en el menú "
-"emergente del gestor de archivos cuando la selección coincida con los "
-"ajustes de las condiciones de aparición.\n"
-"Puede ser el nombre localizado de un icono del tema, o una ruta completa a "
-"cualquier imagen apropiada."
+"Cuando está activada, el elemento será candidato a mostrarse en el menú "
+"contextual cuando la selección este vacía.\n"
+"En este caso, las condiciones definidas se aplicarán a la carpeta que se "
+"esté mostrando."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:217
-#, fuzzy
-#| msgid ""
-#| "If the action is disabled, it will never appear in the Nautilus context "
-#| "menu."
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "context menu, with a non-empty selection."
 msgstr ""
-"Si se desactiva la acción, nunca aparece en el menú contextual de Nautilus."
+"Cuando está activada, el elemento será candidato para mostrarse en el menú "
+"contextual del administrador de archivos, con una selección no vacía."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:218
-#, fuzzy
-#| msgid ""
-#| "Whether the action is candidate to be displayed in file manager toolbar.\n"
-#| "This only applies to current location.\n"
-#| "Note that menus are never displayed in the toolbar.\n"
-#| "Defaults to FALSE."
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "toolbar.\n"
 "In this case, the defined conditions will be applied to the current folder, "
 "and do not depend of the possible current selection."
 msgstr ""
-"Indica si la acción es candidata para mostrarse en la barra de herramientas "
-"del gestor de archivos.\n"
-"Esto sólo se aplica en la ubicación actual.\n"
-"Note que los menús nunca se muestra en la barra de herramientas.\n"
-"Lo predeterminado es FALSO."
+"Cuando está activada, el elemento es candidato para mostrarse en la barra de "
+"herramientas del administrador de archivos.\n"
+"En este caso, las condiciones definidas se aplicarán a la carpeta actual, y "
+"no dependerán de la posible selección actual."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:220
-#, fuzzy
-#| msgid ""
-#| "If the action is disabled, it will never appear in the Nautilus context "
-#| "menu."
 msgid ""
 "When checked, the label displayed in the toolbar will be the same that the "
 "one displayed in the context menus."
 msgstr ""
-"Si se desactiva la acción, nunca aparece en el menú contextual de Nautilus."
+"Cuando está activada, la etiqueta mostrada en la barra de herramientas será "
+"la misma que la que se muestra en los menús contextuales."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:221
 msgid ""
@@ -4392,14 +4361,11 @@ msgstr "Acciones de las Acciones de Nautilus"
 
 #. i18n: tooltip of an automagic root submenu
 #: ../src/plugin-menu/nautilus-actions.c:888
-#, fuzzy
-#| msgid ""
-#| "A submenu which embeds the currently available Nautilus Actions extensions"
 msgid ""
 "A submenu which embeds the currently available Nautilus-Actions actions and "
 "menus"
 msgstr ""
-"Un submenú que se empotra en las extensiones disponibles actualmente de las "
+"Un submenú que contiene las acciones y los menús disponibles actualmente de "
 "Acciones de Nautilus"
 
 #: ../src/plugin-menu/nautilus-actions.c:935
@@ -4407,10 +4373,8 @@ msgid "About Nautilus-Actions"
 msgstr "Acerca de las Acciones de Nautilus"
 
 #: ../src/plugin-menu/nautilus-actions.c:936
-#, fuzzy
-#| msgid "Display information about Nautilus Actions"
 msgid "Display some informations about Nautilus-Actions"
-msgstr "Mostrar información acerca de las acciones de Nautilus"
+msgstr "Mostrar información acerca de Acciones de Nautilus"
 
 #: ../src/test/test-reader.c:49
 msgid "The URI of the file to be imported"
@@ -4540,7 +4504,7 @@ msgstr ""
 
 #: ../src/utils/na-print-schemas.c:183
 msgid "Type options"
-msgstr ""
+msgstr "Escriba las opciones"
 
 #: ../src/utils/nautilus-actions-new.c:134
 msgid "Set it if the item should be disabled at creation"
