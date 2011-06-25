@@ -3,13 +3,14 @@
 # Copyright (C) 2010 nautilus-actions's COPYRIGHT HOLDER
 # This file is distributed under the same license as the nautilus-actions package.
 # Jorge González <jorgegonz@svn.gnome.org>, 2010, 2011.
+# Maria Majadas <alixis82@gmail.com>, 2011.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2011-02-26 15:09+0000\n"
-"PO-Revision-Date: 2011-03-30 16:55+0200\n"
+"POT-Creation-Date: 2011-06-23 18:05+0000\n"
+"PO-Revision-Date: 2011-06-24 17:47+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +75,7 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:161(None)
+#: C/nautilus-actions-config-tool.xml:167(None)
 msgid ""
 "@@image: 'figures/nact-mimetypes-tab.png'; "
 "md5=683b1441b168dc40d95b4dc71e986fed"
@@ -84,7 +85,7 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:324(None)
+#: C/nautilus-actions-config-tool.xml:336(None)
 msgid ""
 "@@image: 'figures/nact-folders-tab.png'; md5=3dfba07973e18241c1705608fcc469d7"
 msgstr ""
@@ -92,15 +93,18 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:436(None)
+#: C/nautilus-actions-config-tool.xml:454(None)
+#| msgid ""
+#| "@@image: 'figures/nact-schemes-tab.png'; "
+#| "md5=792709e70cb13d75ef169e0b84af9faf"
 msgid ""
-"@@image: 'figures/nact-schemes-tab.png'; md5=792709e70cb13d75ef169e0b84af9faf"
+"@@image: 'figures/nact-schemes-tab.png'; md5=2990d21d86053fcc588586bef88455a7"
 msgstr ""
-"@@image: 'figures/nact-schemes-tab.png'; md5=cc3fb4f20a57fc2ff0c44e8f676e570d"
+"@@image: 'figures/nact-schemes-tab.png'; md5=2990d21d86053fcc588586bef88455a7"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:508(None)
+#: C/nautilus-actions-config-tool.xml:526(None)
 msgid ""
 "@@image: 'figures/nact-new-scheme.png'; md5=c1d8af2ef9f3dde1ed27192afcc90aae"
 msgstr ""
@@ -108,7 +112,7 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:571(None)
+#: C/nautilus-actions-config-tool.xml:595(None)
 msgid ""
 "@@image: 'figures/nact-capabilities-tab.png'; "
 "md5=4e129d55d940837de481036c75f996f9"
@@ -118,7 +122,7 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:632(None)
+#: C/nautilus-actions-config-tool.xml:656(None)
 msgid ""
 "@@image: 'figures/nact-new-capability.png'; "
 "md5=debff65192d70528900c7fe272a65289"
@@ -128,7 +132,7 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:696(None)
+#: C/nautilus-actions-config-tool.xml:726(None)
 msgid ""
 "@@image: 'figures/nact-environment-tab.png'; "
 "md5=bd2eeb5011c9e250b665615a67f20378"
@@ -138,7 +142,7 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:720(None)
+#: C/nautilus-actions-config-tool.xml:750(None)
 msgid ""
 "@@image: 'figures/nact-selection-count-frame.png'; "
 "md5=9c220e5e56b07498d3521a294dc1c3e8"
@@ -148,33 +152,42 @@ msgstr ""
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:807(None)
+#: C/nautilus-actions-config-tool.xml:837(None)
+#| msgid ""
+#| "@@image: 'figures/nact-desktop-environment-frame.png'; "
+#| "md5=894799cd2be3ada24efc5f22d3af55e5"
 msgid ""
 "@@image: 'figures/nact-desktop-environment-frame.png'; "
-"md5=894799cd2be3ada24efc5f22d3af55e5"
+"md5=7b94f73800a9ee0a1ad2abc030181aee"
 msgstr ""
 "@@image: 'figures/nact-desktop-environment-frame.png'; "
-"md5=894799cd2be3ada24efc5f22d3af55e5"
+"md5=7b94f73800a9ee0a1ad2abc030181aee"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:875(None)
+#: C/nautilus-actions-config-tool.xml:905(None)
+#| msgid ""
+#| "@@image: 'figures/nact-execution-environment-frame.png'; "
+#| "md5=ca88ff8a5716c6e75dc0e7d5723cd65c"
 msgid ""
 "@@image: 'figures/nact-execution-environment-frame.png'; "
-"md5=ca88ff8a5716c6e75dc0e7d5723cd65c"
+"md5=5646b43f8419939d3924468365d6d50b"
 msgstr ""
 "@@image: 'figures/nact-execution-environment-frame.png'; "
-"md5=ca88ff8a5716c6e75dc0e7d5723cd65c"
+"md5=5646b43f8419939d3924468365d6d50b"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:8(None)
+#| msgid ""
+#| "@@image: 'figures/nact-target-location.png'; "
+#| "md5=dcb2b46d9a533972f29563df3bf278a3"
 msgid ""
 "@@image: 'figures/nact-target-location.png'; "
-"md5=dcb2b46d9a533972f29563df3bf278a3"
+"md5=6d0d008f37ffd0d739e8d2dd075139a1"
 msgstr ""
 "@@image: 'figures/nact-target-location.png'; "
-"md5=dcb2b46d9a533972f29563df3bf278a3"
+"md5=6d0d008f37ffd0d739e8d2dd075139a1"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -188,12 +201,15 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:80(None)
+#| msgid ""
+#| "@@image: 'figures/nact-working-directory-frame.png'; "
+#| "md5=265b03db89b119d9bc02d0a02dfe87c0"
 msgid ""
 "@@image: 'figures/nact-working-directory-frame.png'; "
-"md5=265b03db89b119d9bc02d0a02dfe87c0"
+"md5=4c1784dbce4f2b90fcbc145c6ca8b319"
 msgstr ""
 "@@image: 'figures/nact-working-directory-frame.png'; "
-"md5=265b03db89b119d9bc02d0a02dfe87c0"
+"md5=4c1784dbce4f2b90fcbc145c6ca8b319"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -248,62 +264,106 @@ msgstr ""
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:19(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-ui.png'; "
+#| "md5=8c43c6e25a988eca467da265440186b0"
 msgid ""
 "@@image: 'figures/nact-preferences-runtime.png'; "
-"md5=3de8680a8e14cc3bf54ff758eab09cae"
+"md5=392c4a5ce1edda2a70f63754e84f8285"
 msgstr ""
 "@@image: 'figures/nact-preferences-runtime.png'; "
-"md5=eb1637772fe5d28c366dbb0ab4ce07e3"
+"md5=392c4a5ce1edda2a70f63754e84f8285"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
 #: C/nautilus-actions-config-tool.xml:39(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-ui.png'; "
+#| "md5=8c43c6e25a988eca467da265440186b0"
+msgid ""
+"@@image: 'figures/nact-preferences-execution.png'; "
+"md5=e118b4a3be2a58149d496d9435e16d4e"
+msgstr ""
+"@@image: 'figures/nact-preferences-execution.png'; "
+"md5=e118b4a3be2a58149d496d9435e16d4e"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/nautilus-actions-config-tool.xml:56(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-runtime.png'; "
+#| "md5=3de8680a8e14cc3bf54ff758eab09cae"
+msgid ""
+"@@image: 'figures/nact-preferences-desktop.png'; "
+"md5=0d60e04fab28da60c49bc33ce08084e0"
+msgstr ""
+"@@image: 'figures/nact-preferences-desktop.png'; "
+"md5=0d60e04fab28da60c49bc33ce08084e0"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/nautilus-actions-config-tool.xml:76(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-ui.png'; "
+#| "md5=8c43c6e25a988eca467da265440186b0"
 msgid ""
 "@@image: 'figures/nact-preferences-ui.png'; "
-"md5=8c43c6e25a988eca467da265440186b0"
+"md5=3f28a5a6301ffbd23919e0c82200d035"
 msgstr ""
 "@@image: 'figures/nact-preferences-ui.png'; "
-"md5=b34600efa6f62ea3b57cf631e96aefab"
+"md5=3f28a5a6301ffbd23919e0c82200d035"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:59(None)
+#: C/nautilus-actions-config-tool.xml:96(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-import.png'; "
+#| "md5=c8e3f15ace586b71eb307c4b4e671286"
 msgid ""
 "@@image: 'figures/nact-preferences-import.png'; "
-"md5=c8e3f15ace586b71eb307c4b4e671286"
+"md5=e48b50fb6c688884c406864710218a7f"
 msgstr ""
 "@@image: 'figures/nact-preferences-import.png'; "
-"md5=f4126ecd0eeae1aebf3506a24cdfd740"
+"md5=e48b50fb6c688884c406864710218a7f"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:81(None)
+#: C/nautilus-actions-config-tool.xml:118(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-export.png'; "
+#| "md5=88b44647039215cec13907b9a8ee6547"
 msgid ""
 "@@image: 'figures/nact-preferences-export.png'; "
-"md5=88b44647039215cec13907b9a8ee6547"
+"md5=4921aaea14bb4b3daf8da9386fbcf8dd"
 msgstr ""
 "@@image: 'figures/nact-preferences-export.png'; "
-"md5=8f49f5b7910a83e7152e6af5e878cc84"
+"md5=4921aaea14bb4b3daf8da9386fbcf8dd"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:103(None)
+#: C/nautilus-actions-config-tool.xml:140(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-schemes.png'; "
+#| "md5=620cd83d16b79831e9e45869b5bd20b8"
 msgid ""
 "@@image: 'figures/nact-preferences-schemes.png'; "
-"md5=620cd83d16b79831e9e45869b5bd20b8"
+"md5=6b2de84a0678027d367b96840832b583"
 msgstr ""
 "@@image: 'figures/nact-preferences-schemes.png'; "
-"md5=575374d045861d8dc1febab827f09b8e"
+"md5=6b2de84a0678027d367b96840832b583"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
-#: C/nautilus-actions-config-tool.xml:125(None)
+#: C/nautilus-actions-config-tool.xml:162(None)
+#| msgid ""
+#| "@@image: 'figures/nact-preferences-io-providers.png'; "
+#| "md5=a7a6abe76d3d2195adb520b4a33e86a3"
 msgid ""
 "@@image: 'figures/nact-preferences-io-providers.png'; "
-"md5=a7a6abe76d3d2195adb520b4a33e86a3"
+"md5=3af6d0db9f6dced48daaeb848af6d0af"
 msgstr ""
 "@@image: 'figures/nact-preferences-io-providers.png'; "
-"md5=edefe4c9d9cf5f568d36b4c2ed3e044b"
+"md5=3af6d0db9f6dced48daaeb848af6d0af"
 
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid ""
@@ -316,12 +376,16 @@ msgstr ""
 msgid "2010"
 msgstr "2010"
 
-#: C/nautilus-actions-config-tool.xml:6(holder)
+#: C/nautilus-actions-config-tool.xml:6(year)
+msgid "2011"
+msgstr "2011"
+
+#: C/nautilus-actions-config-tool.xml:7(holder)
 msgid "Pierre Wieser"
 msgstr "Pierre Wieser"
 
-#: C/nautilus-actions-config-tool.xml:10(para)
-#: C/nautilus-actions-config-tool.xml:74(para)
+#: C/nautilus-actions-config-tool.xml:11(para)
+#: C/nautilus-actions-config-tool.xml:75(para)
 msgid ""
 "<productname>Nautilus-Actions</productname> is a <productname>Nautilus</"
 "productname> extension whose principal function is to allow the user to add "
@@ -335,7 +399,7 @@ msgstr ""
 "archivos. Estas acciones se puede organizar en menús y submenús, y se puede "
 "exportar y compartir con otros entornos de escritorio."
 
-#: C/nautilus-actions-config-tool.xml:16(para)
+#: C/nautilus-actions-config-tool.xml:17(para)
 msgid ""
 "This manual describes the <application>Nautilus-Actions Configuration Tool</"
 "application> user interface, and explains how you may configure your menus "
@@ -347,38 +411,38 @@ msgstr ""
 "configurar sus menús y sus acciones, haciendo que se muestren y se apliquen "
 "dependiendo de condiciones específicas."
 
-#: C/nautilus-actions-config-tool.xml:23(releaseinfo)
+#: C/nautilus-actions-config-tool.xml:24(releaseinfo)
 msgid ""
-"This manual describes version 3.0 of Nautilus-Actions Configuration Tool."
+"This manual describes version 3.1 of Nautilus-Actions Configuration Tool."
 msgstr ""
-"Este manual describe la versión 3.0 de la Herramienta de configuración de "
-"acciones de Nautilus."
+"Este manual describe la versión 3.1 de la Herramienta de configuración de "
+"Acciones de Nautilus."
 
-#: C/nautilus-actions-config-tool.xml:28(publishername)
+#: C/nautilus-actions-config-tool.xml:29(publishername)
 msgid "GNOME Documentation Project"
 msgstr "Proyecto de documentación de GNOME"
 
-#: C/nautilus-actions-config-tool.xml:33(firstname)
+#: C/nautilus-actions-config-tool.xml:34(firstname)
 msgid "Pierre"
 msgstr "Pierre"
 
-#: C/nautilus-actions-config-tool.xml:34(surname)
+#: C/nautilus-actions-config-tool.xml:35(surname)
 msgid "Wieser"
 msgstr "Wieser"
 
-#: C/nautilus-actions-config-tool.xml:35(email)
+#: C/nautilus-actions-config-tool.xml:36(email)
 msgid "pwieser@trychlos.org"
 msgstr "pwieser@trychlos.org"
 
 #: C/nautilus-actions-config-tool.xml:74(revnumber)
-msgid "Nautilus-Actions Configuration Tool User's Manual v 3.0"
+msgid "Nautilus-Actions Configuration Tool User's Manual v 3.1"
 msgstr ""
-"Manual del usuario de la herramienta de configuración de Nautilus-Actions v "
-"3.0"
+"Manual del usuario de la herramienta de configuración de Acciones de "
+"Nautilus v3.1"
 
 #: C/nautilus-actions-config-tool.xml:75(date)
-msgid "August 2010"
-msgstr "Agosto de 2010"
+msgid "May 2011"
+msgstr "Mayo de 2011"
 
 #: C/nautilus-actions-config-tool.xml:77(para)
 msgid "Pierre Wieser <email>pwieser@trychlos.org</email>"
@@ -499,11 +563,11 @@ msgstr "Nautilus"
 msgid "Nautilus-Actions"
 msgstr "Nautilus-Actions"
 
-#: C/nautilus-actions-config-tool.xml:73(title)
+#: C/nautilus-actions-config-tool.xml:74(title)
 msgid "Introduction"
 msgstr "Introducción"
 
-#: C/nautilus-actions-config-tool.xml:80(para)
+#: C/nautilus-actions-config-tool.xml:81(para)
 msgid ""
 "The <application>Nautilus-Actions Configuration Tool</application> "
 "application is the user interface which lets you precisely configure how, "
@@ -515,7 +579,7 @@ msgstr ""
 "cómo, dónde y cuándo deberán aparecer sus acciones en los menús contextuales "
 "de <productname>Nautilus</productname> y cómo se ejecutarán."
 
-#: C/nautilus-actions-config-tool.xml:85(para)
+#: C/nautilus-actions-config-tool.xml:86(para)
 msgid ""
 "<application>Nautilus-Actions Configuration Tool</application> provides the "
 "following features:"
@@ -523,52 +587,54 @@ msgstr ""
 "La <application>Herramienta de configuración de acciones de Nautilus</"
 "application> proporciona las siguientes características:"
 
-#: C/nautilus-actions-config-tool.xml:90(para)
+#: C/nautilus-actions-config-tool.xml:91(para)
 msgid "Define and configure actions from scratch."
 msgstr "Definir y configurar acciones desde cero."
 
-#: C/nautilus-actions-config-tool.xml:93(para)
+#: C/nautilus-actions-config-tool.xml:94(para)
 msgid "Organize actions into menus, submenus and so on."
-msgstr ""
+msgstr "Organizar acciones en los menús, submenús, etc..."
 
-#: C/nautilus-actions-config-tool.xml:96(para)
+#: C/nautilus-actions-config-tool.xml:97(para)
 msgid "Import and export actions and menus from and to outside world."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:100(para)
+#: C/nautilus-actions-config-tool.xml:101(para)
 msgid ""
 "<productname>Nautilus-Actions</productname> also comes with additional "
 "features such as:"
 msgstr ""
+"<productname>Acciones de Nautilus</productname> también tiene "
+"características adicionales como:"
 
-#: C/nautilus-actions-config-tool.xml:105(para)
+#: C/nautilus-actions-config-tool.xml:106(para)
 msgid ""
 "A <productname>Nautilus</productname> plugin which exports in real time to D-"
 "Bus the currently selected files."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:111(para)
+#: C/nautilus-actions-config-tool.xml:112(para)
 msgid "A command-line program which is able to run any action."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:114(para)
+#: C/nautilus-actions-config-tool.xml:115(para)
 msgid ""
 "Associated with the D-Bus interface, this program lets the user run any "
 "action from a keyboard shortcut, applying this action to the item(s) "
 "currently selected in the file manager."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:121(para)
+#: C/nautilus-actions-config-tool.xml:122(para)
 msgid "A command-line program which is able to create a new action."
 msgstr "Un programa de línea de comandos capaz de crear una acción nueva."
 
-#: C/nautilus-actions-config-tool.xml:126(para)
+#: C/nautilus-actions-config-tool.xml:127(para)
 msgid ""
 "All these features are more thoroughly described in the global "
 "<productname>Nautilus-Actions</productname> documentation."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:143(title)
+#: C/nautilus-actions-config-tool.xml:144(title)
 msgid "Getting Started"
 msgstr "Inicio"
 
@@ -812,23 +878,23 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:253(para)
 msgid "Invalid items are displayed in red color."
-msgstr ""
+msgstr "Los elementos no válidos se muestran en color rojo."
 
 #: C/nautilus-actions-config-tool.xml:256(para)
 msgid "Modified items are displayed in italic characters."
-msgstr ""
+msgstr "Los elementos modificados se muestran en caracteres en cursiva."
 
 #: C/nautilus-actions-config-tool.xml:262(term)
 msgid "Sort buttons"
-msgstr ""
+msgstr "Ordenar botones"
 
 #: C/nautilus-actions-config-tool.xml:264(para)
 msgid "Three buttons allow you to toggle between sort modes."
-msgstr ""
+msgstr "Tres botones le permiten conmutar entre de modos de ordenación."
 
 #: C/nautilus-actions-config-tool.xml:270(term)
 msgid "Properties tabs."
-msgstr ""
+msgstr "Pestañas de propiedades."
 
 #: C/nautilus-actions-config-tool.xml:272(para)
 msgid ""
@@ -838,7 +904,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:278(term)
 msgid "Action/Menu"
-msgstr ""
+msgstr "Acción/Menú"
 
 #: C/nautilus-actions-config-tool.xml:282(para)
 msgid ""
@@ -855,6 +921,7 @@ msgstr "Comando"
 #: C/nautilus-actions-config-tool.xml:293(para)
 msgid "Specify which command to execute, and which parameters pass to it."
 msgstr ""
+"Especifique qué comando quiere ejecutar, y qué parámetros quiere pasarle."
 
 #: C/nautilus-actions-config-tool.xml:300(term)
 msgid "Execution"
@@ -862,11 +929,11 @@ msgstr "Ejecución"
 
 #: C/nautilus-actions-config-tool.xml:304(para)
 msgid "Specify how the command should be executed."
-msgstr ""
+msgstr "Especifique como quiere ejecutar el comando."
 
 #: C/nautilus-actions-config-tool.xml:310(term)
 msgid "Basenames"
-msgstr ""
+msgstr "Nombres base"
 
 #: C/nautilus-actions-config-tool.xml:314(para)
 msgid ""
@@ -963,20 +1030,24 @@ msgid ""
 "In this example, we are going to create an action which displays some pretty "
 "informations about the current selection."
 msgstr ""
+"En este ejemplo, se va a mostrar una acción que muestre algunas "
+"informaciones sobre la selección actual."
 
 #: C/nautilus-actions-config-tool.xml:417(title)
 msgid "Checking for prerequisites"
-msgstr ""
+msgstr "Comprobando los prerrequisitos"
 
 #: C/nautilus-actions-config-tool.xml:418(para)
 msgid "This action will require <productname>Zenity</productname>."
-msgstr ""
+msgstr "Esta acción requiere <productname>Zenity</productname>."
 
 #: C/nautilus-actions-config-tool.xml:422(para)
 msgid ""
 "<productname>Zenity</productname> is a program which will allow you to "
 "create a graphical user interface from a command-line."
 msgstr ""
+"<productname>Zenity</productname> es un programa que le permite crear una "
+"interfaz gráfica de usuario desde la linea de comandos."
 
 #: C/nautilus-actions-config-tool.xml:426(para)
 msgid ""
@@ -1008,6 +1079,8 @@ msgid ""
 "A new action is inserted in the items list, and its properties are displayed "
 "in the tabs on the right pane."
 msgstr ""
+"Se inserta una acción nueva en la lista de elementos, y sus propiedades se "
+"muestran en las pestañas del panel derecho."
 
 #: C/nautilus-actions-config-tool.xml:459(para)
 msgid ""
@@ -1243,7 +1316,7 @@ msgid ""
 "1/> dialog box, displaying the URI of the selected item."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:152(title)
+#: C/nautilus-actions-config-tool.xml:153(title)
 msgid "Using <application>Nautilus-Actions Configuration Tool</application>"
 msgstr ""
 "Usar la <application>Herramienta de configuración de acciones de Nautilus</"
@@ -1314,10 +1387,10 @@ msgid ""
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:56(para)
-#: C/nautilus-actions-config-tool.xml:181(para)
-#: C/nautilus-actions-config-tool.xml:344(para)
-#: C/nautilus-actions-config-tool.xml:456(para)
-#: C/nautilus-actions-config-tool.xml:591(para)
+#: C/nautilus-actions-config-tool.xml:187(para)
+#: C/nautilus-actions-config-tool.xml:356(para)
+#: C/nautilus-actions-config-tool.xml:474(para)
+#: C/nautilus-actions-config-tool.xml:615(para)
 msgid ""
 "If at least one element of the selection does not match all the defined "
 "conditions, then your action will not be displayed."
@@ -1336,17 +1409,17 @@ msgid "Defining a new basename-based condition involves two steps."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:71(para)
-#: C/nautilus-actions-config-tool.xml:197(para)
-#: C/nautilus-actions-config-tool.xml:361(para)
-#: C/nautilus-actions-config-tool.xml:471(para)
-#: C/nautilus-actions-config-tool.xml:606(para)
+#: C/nautilus-actions-config-tool.xml:203(para)
+#: C/nautilus-actions-config-tool.xml:373(para)
+#: C/nautilus-actions-config-tool.xml:489(para)
+#: C/nautilus-actions-config-tool.xml:630(para)
 msgid "Define the new condition filter."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:76(para)
-#: C/nautilus-actions-config-tool.xml:202(para)
-#: C/nautilus-actions-config-tool.xml:366(para)
-#: C/nautilus-actions-config-tool.xml:476(para)
+#: C/nautilus-actions-config-tool.xml:208(para)
+#: C/nautilus-actions-config-tool.xml:378(para)
+#: C/nautilus-actions-config-tool.xml:494(para)
 msgid ""
 "Press <keycap>Insert</keycap> or click on <guibutton><inlinegraphic fileref="
 "\"figures/add.png\"/></guibutton> button to insert a new condition filter"
@@ -1364,18 +1437,18 @@ msgid ""
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:96(para)
-#: C/nautilus-actions-config-tool.xml:246(para)
-#: C/nautilus-actions-config-tool.xml:393(para)
-#: C/nautilus-actions-config-tool.xml:531(para)
+#: C/nautilus-actions-config-tool.xml:252(para)
+#: C/nautilus-actions-config-tool.xml:405(para)
+#: C/nautilus-actions-config-tool.xml:549(para)
 msgid ""
 "Indicates whether this a « must match one of » or a « must not match any of » "
 "condition."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:100(para)
-#: C/nautilus-actions-config-tool.xml:249(para)
-#: C/nautilus-actions-config-tool.xml:397(para)
-#: C/nautilus-actions-config-tool.xml:534(para)
+#: C/nautilus-actions-config-tool.xml:255(para)
+#: C/nautilus-actions-config-tool.xml:409(para)
+#: C/nautilus-actions-config-tool.xml:552(para)
 msgid ""
 "Click on the <guilabel>Must match one of</guilabel> or <guilabel>Must not "
 "match any of</guilabel> radio button in the same row to set the "
@@ -1414,18 +1487,25 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:135(para)
 msgid ""
+"Removing a defined basename-based condition is as simple as selecting it, "
+"and pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
+"fileref=\"figures/remove.png\"/></guibutton> button)."
+msgstr ""
+
+#: C/nautilus-actions-config-tool.xml:141(para)
+msgid ""
 "By default, the basename-based condition is just one « <literal>must match "
 "one of *</literal> » condition. As all basenames always match the "
 "« <literal>*</literal> » condition, this just means that basename-based "
 "conditions are not considered as relevant for the action."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:145(title)
-#: C/nautilus-actions-config-tool.xml:157(title)
+#: C/nautilus-actions-config-tool.xml:151(title)
+#: C/nautilus-actions-config-tool.xml:163(title)
 msgid "Mimetype-based conditions"
 msgstr "Condiciones basadas en tipos MIME"
 
-#: C/nautilus-actions-config-tool.xml:146(para)
+#: C/nautilus-actions-config-tool.xml:152(para)
 msgid ""
 "You may decide that your action will appear depending on the mimetypes of "
 "the items currently selected in the file-manager: you may define that each "
@@ -1434,21 +1514,21 @@ msgid ""
 "sort of mimetype."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:152(para)
+#: C/nautilus-actions-config-tool.xml:158(para)
 msgid ""
 "Click on the <guilabel>Mimetypes</guilabel> tab to show the page which will "
 "permit you to configure your mimetype-based conditions."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:164(phrase)
+#: C/nautilus-actions-config-tool.xml:170(phrase)
 msgid "Shows the tab which lets you define mimetype-based conditions."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:167(para)
+#: C/nautilus-actions-config-tool.xml:173(para)
 msgid "The mimetype-based conditions tab"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:172(para)
+#: C/nautilus-actions-config-tool.xml:178(para)
 msgid ""
 "In fact, mimetype-based conditions are built as a list of « must match one "
 "of » and « must not match any of » patterns. In order you action be candidate "
@@ -1458,7 +1538,7 @@ msgid ""
 "must not match any of the defined « must not match any of » patterns."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:185(para)
+#: C/nautilus-actions-config-tool.xml:191(para)
 msgid ""
 "When targeting the selection context menu, your mimetype-based conditions "
 "will be checked against the currently selected items. When targeting the "
@@ -1467,44 +1547,51 @@ msgid ""
 "the well known « inode/directory » mimetype."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:192(para)
+#: C/nautilus-actions-config-tool.xml:198(para)
 msgid "Defining a new mimetype-based condition involves two steps."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:209(para)
+#: C/nautilus-actions-config-tool.xml:215(para)
 msgid ""
 "Edit the newly inserted condition filter to the mimetype you want match."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:212(para)
+#: C/nautilus-actions-config-tool.xml:218(para)
 msgid ""
 "A mimetype must be defined as a <literal>group/subgroup</literal> expression."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:217(para)
+#: C/nautilus-actions-config-tool.xml:223(para)
 msgid ""
 "The « <literal>*</literal> » wildcard is supported only in some situations:"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:222(para)
+#: C/nautilus-actions-config-tool.xml:228(para)
 msgid ""
 "The « <literal>*/*</literal> » expression matches all mimetypes. As a "
 "convenient shortcut, the « <literal>*</literal> » literal is also accepted "
 "for this same purpose."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:229(para)
+#: C/nautilus-actions-config-tool.xml:235(para)
 msgid ""
 "A <literal>group/*</literal> string matches all subgroups of <literal>group</"
 "literal> mimetype."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:235(para)
+#: C/nautilus-actions-config-tool.xml:241(para)
 msgid ""
 "The <literal>*/subgroup</literal> string is not accepted as a valid wildcard."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:256(para)
+#: C/nautilus-actions-config-tool.xml:262(para)
+msgid ""
+"Removing a defined mimetype-based condition is as simple as selecting it, "
+"and pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
+"fileref=\"figures/remove.png\"/></guibutton> button)."
+msgstr ""
+
+#: C/nautilus-actions-config-tool.xml:268(para)
 msgid ""
 "By default, the mimetype-based condition is just one « <literal>must match "
 "one of */*</literal> » condition. As all mimetypes always match the "
@@ -1512,40 +1599,40 @@ msgid ""
 "as relevant for the action."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:264(title)
+#: C/nautilus-actions-config-tool.xml:276(title)
 msgid "Example of usual mimetypes"
 msgstr "Ejemplo de tipos MIME habituales"
 
-#: C/nautilus-actions-config-tool.xml:267(term)
+#: C/nautilus-actions-config-tool.xml:279(term)
 msgid "all/all"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:271(para)
+#: C/nautilus-actions-config-tool.xml:283(para)
 msgid "Matches all items."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:277(term)
+#: C/nautilus-actions-config-tool.xml:289(term)
 msgid "all/allfiles"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:281(para)
+#: C/nautilus-actions-config-tool.xml:293(para)
 msgid "Matches all regular files."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:287(term)
+#: C/nautilus-actions-config-tool.xml:299(term)
 msgid "inode/directory"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:291(para)
+#: C/nautilus-actions-config-tool.xml:303(para)
 msgid "Matches only directories."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:301(title)
-#: C/nautilus-actions-config-tool.xml:320(title)
+#: C/nautilus-actions-config-tool.xml:313(title)
+#: C/nautilus-actions-config-tool.xml:332(title)
 msgid "Folder-based conditions"
 msgstr "Condiciones basadas en carpetas"
 
-#: C/nautilus-actions-config-tool.xml:302(para)
+#: C/nautilus-actions-config-tool.xml:314(para)
 msgid ""
 "You may decide that your action will appear depending on the directory the "
 "items currently selected in the file-manager are located in: you may define "
@@ -1554,28 +1641,28 @@ msgid ""
 "can be located in some other hierarchy."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:310(para)
+#: C/nautilus-actions-config-tool.xml:322(para)
 msgid ""
 "A folder-based condition must be understood as the specification of the "
 "hierarchy in which the currently examined item should (or should not) stay: "
 "this is a pattern on the dirname of the element."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:315(para)
+#: C/nautilus-actions-config-tool.xml:327(para)
 msgid ""
 "Click on the <guilabel>Folders</guilabel> tab to show the page which will "
 "permit you to configure your folder-based conditions."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:327(phrase)
+#: C/nautilus-actions-config-tool.xml:339(phrase)
 msgid "Shows the tab which lets you define folder-based conditions."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:330(para)
+#: C/nautilus-actions-config-tool.xml:342(para)
 msgid "The folder-based conditions tab"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:335(para)
+#: C/nautilus-actions-config-tool.xml:347(para)
 msgid ""
 "In fact, folder-based conditions are built as a list of « must match one of » "
 "and « must not match any of » patterns. In order you action be candidate "
@@ -1585,7 +1672,7 @@ msgid ""
 "the defined « must not match any of » folders."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:348(para)
+#: C/nautilus-actions-config-tool.xml:360(para)
 msgid ""
 "When targeting the selection context menu, your folder-based conditions will "
 "be checked against the dirname of each currently selected items. When "
@@ -1593,44 +1680,51 @@ msgid ""
 "conditions will be checked against the current location."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:356(para)
+#: C/nautilus-actions-config-tool.xml:368(para)
 msgid "Defining a new folder-based condition involves two steps."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:373(para)
+#: C/nautilus-actions-config-tool.xml:385(para)
 msgid "Edit the newly inserted condition filter to the folder you want match."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:377(para)
+#: C/nautilus-actions-config-tool.xml:389(para)
 msgid ""
 "The « <literal>*</literal> » and « <literal>?</literal> » characters are "
 "accepted as wildcards at any level of the defined folder filter."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:385(para)
+#: C/nautilus-actions-config-tool.xml:397(para)
 msgid ""
 "Or click on <guibutton>Browse</guibutton> to select a folder on the file "
 "system."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:404(para)
+#: C/nautilus-actions-config-tool.xml:416(para)
+msgid ""
+"Removing a defined folder-based condition is as simple as selecting it, and "
+"pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
+"fileref=\"figures/remove.png\"/></guibutton> button)."
+msgstr ""
+
+#: C/nautilus-actions-config-tool.xml:422(para)
 msgid ""
 "By default, the folder-based condition is just one « <literal>must match one "
 "of /</literal> » condition. As <literal>/</literal> is always the top of an "
 "Unix-like file system, then all selected items always match this condition."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:411(para)
+#: C/nautilus-actions-config-tool.xml:429(para)
 msgid ""
 "If you target a <productname>Windows</productname> system, then this default "
 "value may not be what you actually want."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:419(title)
+#: C/nautilus-actions-config-tool.xml:437(title)
 msgid "Scheme-base-conditions"
 msgstr "Condiciones basadas en esquemas"
 
-#: C/nautilus-actions-config-tool.xml:420(para)
+#: C/nautilus-actions-config-tool.xml:438(para)
 msgid ""
 "You may decide that your action will appear depending on the schemes of the "
 "URIs of the items currently selected in the file-manager: you may define "
@@ -1639,25 +1733,25 @@ msgid ""
 "scheme."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:427(para)
+#: C/nautilus-actions-config-tool.xml:445(para)
 msgid ""
 "Click on the <guilabel>Schemes</guilabel> tab to show the page which will "
 "permit you to configure your scheme-based conditions."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:432(title)
+#: C/nautilus-actions-config-tool.xml:450(title)
 msgid "Scheme-based conditions"
 msgstr "Condiciones basadas en esquemas"
 
-#: C/nautilus-actions-config-tool.xml:439(phrase)
+#: C/nautilus-actions-config-tool.xml:457(phrase)
 msgid "Shows the tab which lets you define scheme-based conditions."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:442(para)
+#: C/nautilus-actions-config-tool.xml:460(para)
 msgid "The scheme-based conditions tab"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:447(para)
+#: C/nautilus-actions-config-tool.xml:465(para)
 msgid ""
 "In fact, scheme-based conditions are built as a list of « must match one of » "
 "and « must not match any of » patterns. In order you action be candidate "
@@ -1667,7 +1761,7 @@ msgid ""
 "not match any of the defined « must not match any of » patterns."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:460(para)
+#: C/nautilus-actions-config-tool.xml:478(para)
 msgid ""
 "When targeting the selection context menu, your scheme-based conditions will "
 "be checked against the currently selected items. When targeting the location "
@@ -1675,91 +1769,98 @@ msgid ""
 "against the scheme of the current location."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:466(para)
+#: C/nautilus-actions-config-tool.xml:484(para)
 msgid "Defining a new scheme-based condition involves two steps."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:483(para)
+#: C/nautilus-actions-config-tool.xml:501(para)
 msgid "Edit the newly inserted condition filter to the scheme you want match."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:487(para)
+#: C/nautilus-actions-config-tool.xml:505(para)
 msgid ""
 "Scheme-based conditions only accept « <literal>*</literal> » wildcard, which "
 "stands for « any scheme »."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:494(para)
+#: C/nautilus-actions-config-tool.xml:512(para)
 msgid ""
 "Or click on <guibutton>Common</guibutton> to select a scheme among those "
 "predefined in <menuchoice><guimenu>Edit</guimenu><guimenuitem>Preferences</"
 "guimenuitem></menuchoice>."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:504(title)
-#: C/nautilus-actions-config-tool.xml:514(para)
+#: C/nautilus-actions-config-tool.xml:522(title)
+#: C/nautilus-actions-config-tool.xml:532(para)
 msgid "Selecting a scheme among predefined defaults"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:511(phrase)
+#: C/nautilus-actions-config-tool.xml:529(phrase)
 msgid "Show the list of predefined schemes."
 msgstr "Muestra la lista de esquemas predefinidos."
 
-#: C/nautilus-actions-config-tool.xml:519(para)
+#: C/nautilus-actions-config-tool.xml:537(para)
 msgid ""
 "A new scheme may only be selected here if it is not already defined as a "
 "scheme filter."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:523(para)
+#: C/nautilus-actions-config-tool.xml:541(para)
 msgid ""
 "To select a new scheme, click <guibutton>OK</guibutton>, or double-click on "
 "the desired row."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:541(para)
+#: C/nautilus-actions-config-tool.xml:559(para)
+msgid ""
+"Removing a defined scheme-based condition is as simple as selecting it, and "
+"pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
+"fileref=\"figures/remove.png\"/></guibutton> button)."
+msgstr ""
+
+#: C/nautilus-actions-config-tool.xml:565(para)
 msgid ""
 "By default, the scheme-based condition is just one « <literal>must match one "
 "of *</literal> » condition, which means that schemes are not relevant for "
 "this action."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:549(title)
-#: C/nautilus-actions-config-tool.xml:567(title)
+#: C/nautilus-actions-config-tool.xml:573(title)
+#: C/nautilus-actions-config-tool.xml:591(title)
 msgid "Capability-based conditions"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:550(para)
+#: C/nautilus-actions-config-tool.xml:574(para)
 msgid "Capabilities are some properties that a file may exhibit to the user."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:553(para)
+#: C/nautilus-actions-config-tool.xml:577(para)
 msgid ""
 "But the <literal>Local</literal> capability, all others are dependent of the "
 "user who executes the command."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:557(para)
+#: C/nautilus-actions-config-tool.xml:581(para)
 msgid ""
 "You may so decide that your action will appear, or not, depending on the "
 "capabilities of the selected item(s) <abbrev>vs.</abbrev> the current user."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:562(para)
+#: C/nautilus-actions-config-tool.xml:586(para)
 msgid ""
 "Click on the <guilabel>Capabilities</guilabel> tab to show the page which "
 "will permit you to configure your capability-based conditions."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:574(phrase)
+#: C/nautilus-actions-config-tool.xml:598(phrase)
 msgid "Shows the tab which lets you define capability-based conditions."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:577(para)
+#: C/nautilus-actions-config-tool.xml:601(para)
 msgid "The capability-based conditions tab"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:582(para)
+#: C/nautilus-actions-config-tool.xml:606(para)
 msgid ""
 "In fact, capability-based conditions are built as a list of « must match all "
 "of » and « must not match any of » patterns. In order you action be candidate "
@@ -1770,7 +1871,7 @@ msgid ""
 "ones."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:595(para)
+#: C/nautilus-actions-config-tool.xml:619(para)
 msgid ""
 "When targeting the selection context menu, your capability-based conditions "
 "will be checked against the currently selected items. When targeting the "
@@ -1778,136 +1879,143 @@ msgid ""
 "be checked against those of of the current location."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:601(para)
+#: C/nautilus-actions-config-tool.xml:625(para)
 msgid "Defining a new capability-based condition involves two steps."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:611(para)
+#: C/nautilus-actions-config-tool.xml:635(para)
 msgid "Press <keycap>Insert</keycap> to insert a new condition filter"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:616(para)
+#: C/nautilus-actions-config-tool.xml:640(para)
 msgid ""
 "Edit the newly inserted condition filter to the capability you want match."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:621(para)
+#: C/nautilus-actions-config-tool.xml:645(para)
 msgid ""
 "Or click on <guibutton><inlinegraphic fileref=\"figures/add.png\"/></"
 "guibutton> to open the <guilabel>Adding a new capability</guilabel> dialog "
 "box."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:628(title)
+#: C/nautilus-actions-config-tool.xml:652(title)
 msgid "Managed capabilities"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:635(phrase)
+#: C/nautilus-actions-config-tool.xml:659(phrase)
 msgid "Shows the list of managed capabilities."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:638(para)
+#: C/nautilus-actions-config-tool.xml:662(para)
 msgid "The list of managed capabilities"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:643(para)
+#: C/nautilus-actions-config-tool.xml:667(para)
 msgid ""
 "A new capability may only be selected here if it is not already defined as a "
 "capability filter."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:647(para)
+#: C/nautilus-actions-config-tool.xml:671(para)
 msgid ""
 "To select a new capability, click <guibutton>OK</guibutton>, or double-click "
 "on the desired row."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:655(para)
+#: C/nautilus-actions-config-tool.xml:679(para)
 msgid ""
 "Indicates whether this a « must match all of » or a « must not match any of » "
 "condition."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:659(para)
+#: C/nautilus-actions-config-tool.xml:683(para)
 msgid ""
 "Click on the <guilabel>Must match all of</guilabel> or <guilabel>Must not "
 "match any of</guilabel> radio button in the same row to set the "
 "corresponding condition."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:666(para)
+#: C/nautilus-actions-config-tool.xml:690(para)
+msgid ""
+"Removing a defined capability-based condition is as simple as selecting it, "
+"and pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
+"fileref=\"figures/remove.png\"/></guibutton> button)."
+msgstr ""
+
+#: C/nautilus-actions-config-tool.xml:696(para)
 msgid ""
 "By default, the capability-based condition list is empty. This means that "
 "capabilities are not relevant for this action."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:673(title)
+#: C/nautilus-actions-config-tool.xml:703(title)
 msgid "Selection count condition"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:674(para)
+#: C/nautilus-actions-config-tool.xml:704(para)
 msgid ""
 "You may define that your action will only appear if the current selection in "
 "the file manager has some precise count, or some precise relation with a "
 "given count."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:680(title)
+#: C/nautilus-actions-config-tool.xml:710(title)
 msgid "A selection count use case"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:681(para)
+#: C/nautilus-actions-config-tool.xml:711(para)
 msgid ""
 "If your action consists in displaying the differences between two files, you "
 "may define here « <literal>Count = (equal to) 2</literal> »."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:687(para)
-#: C/nautilus-actions-config-tool.xml:794(para)
-#: C/nautilus-actions-config-tool.xml:862(para)
+#: C/nautilus-actions-config-tool.xml:717(para)
+#: C/nautilus-actions-config-tool.xml:824(para)
+#: C/nautilus-actions-config-tool.xml:892(para)
 msgid ""
 "Click on the <guilabel>Environment</guilabel> tab to show the page which "
 "will permit you to configure your environment-based conditions."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:692(title)
+#: C/nautilus-actions-config-tool.xml:722(title)
 msgid "Environment-based conditions"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:699(phrase)
+#: C/nautilus-actions-config-tool.xml:729(phrase)
 msgid ""
 "Shows the tab which lets you define environment-based conditions. This "
 "include the selection count configuration, the desktop selection, along with "
 "the runtime filters."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:706(para)
+#: C/nautilus-actions-config-tool.xml:736(para)
 msgid "The environment-based conditions tab"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:711(para)
+#: C/nautilus-actions-config-tool.xml:741(para)
 msgid ""
 "The selection count condition is defined in the <guilabel>Appears if "
 "selection contains</guilabel> frame."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:716(title)
-#: C/nautilus-actions-config-tool.xml:728(para)
+#: C/nautilus-actions-config-tool.xml:746(title)
+#: C/nautilus-actions-config-tool.xml:758(para)
 msgid "Selection count condition frame"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:724(guilabel)
+#: C/nautilus-actions-config-tool.xml:754(guilabel)
 msgid "Appears if selection contains"
 msgstr "Aparece si la selección contiene"
 
-#: C/nautilus-actions-config-tool.xml:723(phrase)
-#: C/nautilus-actions-config-tool.xml:810(phrase)
-#: C/nautilus-actions-config-tool.xml:878(phrase)
+#: C/nautilus-actions-config-tool.xml:753(phrase)
+#: C/nautilus-actions-config-tool.xml:840(phrase)
+#: C/nautilus-actions-config-tool.xml:908(phrase)
 #: C/nautilus-actions-config-tool.xml:270(phrase)
 msgid "Focus on the <placeholder-1/> frame."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:733(para)
+#: C/nautilus-actions-config-tool.xml:763(para)
 msgid ""
 "When targeting the selection context menu, the count condition defined here "
 "will be checked against the count of currently selected items. When "
@@ -1915,129 +2023,131 @@ msgid ""
 "be checked against zero because there is no selected item in this case."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:740(para)
+#: C/nautilus-actions-config-tool.xml:770(para)
 msgid "To define a selection count condition:"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:745(para)
+#: C/nautilus-actions-config-tool.xml:775(para)
 msgid ""
 "Select in the <guilabel>Count</guilabel> drop-down list the operator you "
 "want apply to the selection count:"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:750(literal)
+#: C/nautilus-actions-config-tool.xml:780(literal)
 msgid "&lt;"
 msgstr "&lt;"
 
-#: C/nautilus-actions-config-tool.xml:750(termdef)
+#: C/nautilus-actions-config-tool.xml:780(termdef)
 msgid "(strictly less than)"
 msgstr "(estrictamente menor que)"
 
-#: C/nautilus-actions-config-tool.xml:751(literal)
+#: C/nautilus-actions-config-tool.xml:781(literal)
 msgid "="
 msgstr "="
 
-#: C/nautilus-actions-config-tool.xml:751(termdef)
+#: C/nautilus-actions-config-tool.xml:781(termdef)
 msgid "(equal to)"
 msgstr "(igual a)"
 
-#: C/nautilus-actions-config-tool.xml:752(literal)
+#: C/nautilus-actions-config-tool.xml:782(literal)
 msgid "&gt;"
 msgstr "&gt;"
 
-#: C/nautilus-actions-config-tool.xml:752(termdef)
+#: C/nautilus-actions-config-tool.xml:782(termdef)
 msgid "(strictly greather than)"
 msgstr "(estrictamente mayor que)"
 
-#: C/nautilus-actions-config-tool.xml:756(para)
+#: C/nautilus-actions-config-tool.xml:786(para)
 msgid "Enter the reference count you wish."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:761(para)
+#: C/nautilus-actions-config-tool.xml:791(para)
 msgid ""
 "The selection count defaults to « <literal>Count &gt; (strictly greater than) "
 "0</literal> », which means that the action will be candidate to be displayed "
 "as soon as at least one item is selected in the file manager."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:770(title)
+#: C/nautilus-actions-config-tool.xml:800(title)
+#: C/nautilus-actions-config-tool.xml:52(title)
+#: C/nautilus-actions-config-tool.xml:62(para)
 msgid "Desktop selection"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:771(para)
+#: C/nautilus-actions-config-tool.xml:801(para)
 msgid "You may define that your action:"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:776(para)
+#: C/nautilus-actions-config-tool.xml:806(para)
 msgid "will always appear,"
 msgstr "aparecerá siempre,"
 
-#: C/nautilus-actions-config-tool.xml:781(para)
+#: C/nautilus-actions-config-tool.xml:811(para)
 msgid "or will only appear in some given desktop environments,"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:786(para)
+#: C/nautilus-actions-config-tool.xml:816(para)
 msgid "or will not appear in some given desktop environments."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:791(para)
+#: C/nautilus-actions-config-tool.xml:821(para)
 msgid "Only one choice between these three items is possible."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:798(para)
+#: C/nautilus-actions-config-tool.xml:828(para)
 msgid ""
 "The desktop selection is defined in the <guilabel>Desktop environment</"
 "guilabel> frame."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:803(title)
-#: C/nautilus-actions-config-tool.xml:815(para)
+#: C/nautilus-actions-config-tool.xml:833(title)
+#: C/nautilus-actions-config-tool.xml:845(para)
 msgid "Desktop selection frame"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:811(guilabel)
+#: C/nautilus-actions-config-tool.xml:841(guilabel)
 msgid "Desktop environment"
 msgstr "Entorno de escritorio"
 
-#: C/nautilus-actions-config-tool.xml:820(para)
+#: C/nautilus-actions-config-tool.xml:850(para)
 msgid "To define the desktop environment condition:"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:825(para)
+#: C/nautilus-actions-config-tool.xml:855(para)
 msgid "First select the type of filter:"
 msgstr "Primero seleccione el tipo de filtro:"
 
-#: C/nautilus-actions-config-tool.xml:829(member)
+#: C/nautilus-actions-config-tool.xml:859(member)
 msgid ""
 "does your action should always appear, regarding of the desktop environment ?"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:831(member)
+#: C/nautilus-actions-config-tool.xml:861(member)
 msgid "does your action should only appear in some desktop environment(s) ?"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:833(member)
+#: C/nautilus-actions-config-tool.xml:863(member)
 msgid "does your action should never appear in some desktop environment(s) ?"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:838(para)
+#: C/nautilus-actions-config-tool.xml:868(para)
 msgid ""
 "If your action should not always appear, then select the relevant desktop "
 "environment(s) in the listbox in the right side."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:845(para)
+#: C/nautilus-actions-config-tool.xml:875(para)
 msgid ""
 "The targeted desktop environment condition defaults to « <literal>Always "
 "appear</literal> », which means that the action will be candidate to be "
 "displayed regarding of the current desktop environment."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:854(title)
+#: C/nautilus-actions-config-tool.xml:884(title)
 msgid "Executable found condition"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:855(para)
+#: C/nautilus-actions-config-tool.xml:885(para)
 msgid ""
 "You may define that your action will only appear if some prerequisite "
 "package is installed on your system. This is checked here by specifying that "
@@ -2045,124 +2155,124 @@ msgid ""
 "must be present on the filesystem, and executable."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:866(para)
+#: C/nautilus-actions-config-tool.xml:896(para)
 msgid ""
 "The executable found condition is defined in the <guilabel>Execution "
 "environment</guilabel> frame."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:871(title)
-#: C/nautilus-actions-config-tool.xml:883(para)
+#: C/nautilus-actions-config-tool.xml:901(title)
+#: C/nautilus-actions-config-tool.xml:913(para)
 msgid "Execution environment frame"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:879(guilabel)
+#: C/nautilus-actions-config-tool.xml:909(guilabel)
 msgid "Execution environment"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:888(para)
+#: C/nautilus-actions-config-tool.xml:918(para)
 msgid ""
 "To define the relevant file, enter its full filename in the "
 "<guilabel>Appears if the file is executable</guilabel> entry box, or click "
 "on <guibutton>Browse</guibutton> to select a file on the filesystem."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:894(para)
-#: C/nautilus-actions-config-tool.xml:923(para)
-#: C/nautilus-actions-config-tool.xml:958(para)
-#: C/nautilus-actions-config-tool.xml:995(para)
+#: C/nautilus-actions-config-tool.xml:924(para)
+#: C/nautilus-actions-config-tool.xml:953(para)
+#: C/nautilus-actions-config-tool.xml:988(para)
+#: C/nautilus-actions-config-tool.xml:1025(para)
 msgid ""
 "Leave the field empty if this condition is not relevant for your action."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:899(para)
+#: C/nautilus-actions-config-tool.xml:929(para)
 msgid ""
 "You may embed some parameters in the searched filename. These parameters "
 "will be dynamically substituted at runtime with values which will depend of "
 "currently selected item(s)."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:908(title)
+#: C/nautilus-actions-config-tool.xml:938(title)
 msgid "D-Bus registration condition"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:909(para)
+#: C/nautilus-actions-config-tool.xml:939(para)
 msgid ""
 "You may define that your action will only appear if some given name is "
 "registered on D-Bus system at runtime."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:913(para)
 #: C/nautilus-actions-config-tool.xml:943(para)
-#: C/nautilus-actions-config-tool.xml:977(para)
+#: C/nautilus-actions-config-tool.xml:973(para)
+#: C/nautilus-actions-config-tool.xml:1007(para)
 msgid ""
 "Click on the <guilabel>Environment</guilabel> tab to show the page which "
 "will permit you to configure your environment-based conditions, and focus on "
 "<guilabel>Execution environment</guilabel> frame."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:918(para)
+#: C/nautilus-actions-config-tool.xml:948(para)
 msgid ""
 "To define the relevant name, enter it in the <guilabel>Appears if the name "
 "is registered on D-Bus</guilabel> entry box."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:928(para)
-#: C/nautilus-actions-config-tool.xml:1000(para)
+#: C/nautilus-actions-config-tool.xml:958(para)
+#: C/nautilus-actions-config-tool.xml:1030(para)
 msgid ""
 "You may embed some parameters in the searched name. These parameters will be "
 "dynamically substituted at runtime with values which will depend of "
 "currently selected item(s)."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:937(title)
+#: C/nautilus-actions-config-tool.xml:967(title)
 msgid "Customized condition"
 msgstr "Condición personalizada"
 
-#: C/nautilus-actions-config-tool.xml:938(para)
+#: C/nautilus-actions-config-tool.xml:968(para)
 msgid ""
 "You may define that your action will only appear if some given command "
 "outputs a <literal>true</literal> string on its standard output."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:948(para)
+#: C/nautilus-actions-config-tool.xml:978(para)
 msgid ""
 "This lets you define your own customized condition filter, by writing a "
 "small script which outputs, or not, the <literal>true</literal> string on "
 "stdout when it is ran."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:953(para)
+#: C/nautilus-actions-config-tool.xml:983(para)
 msgid ""
 "To define the command, enter it in the <guilabel>Appears if the command "
 "outputs \"true\"</guilabel> entry box."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:963(para)
+#: C/nautilus-actions-config-tool.xml:993(para)
 msgid ""
 "You may embed some parameters in the executed filename or its options. These "
 "parameters will be dynamically substituted at runtime with values which will "
 "depend of currently selected item(s)."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:972(title)
+#: C/nautilus-actions-config-tool.xml:1002(title)
 msgid "Running process condition"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:973(para)
+#: C/nautilus-actions-config-tool.xml:1003(para)
 msgid ""
 "You may define that your action will only appear if some given binary is "
 "currently running."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:982(para)
+#: C/nautilus-actions-config-tool.xml:1012(para)
 msgid ""
 "To define the binary, enter its name in the <guilabel>Appears if the binary "
 "is running</guilabel> entry box, or click on <guibutton>Browse</guibutton> "
 "to select a file on the filesystem."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:989(para)
+#: C/nautilus-actions-config-tool.xml:1019(para)
 msgid ""
 "Even if you enter here the full filename of a binary, only its basename will "
 "be searched for in the processes list at runtime."
@@ -3277,7 +3387,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:63(para)
 #: C/nautilus-actions-config-tool.xml:88(para)
-msgid "Or edit your corresponding preference."
+msgid "Or edit the corresponding preference."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:71(title)
@@ -3410,59 +3520,73 @@ msgid "Shows the tab which lets you define runtime preferences."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:33(title)
+#: C/nautilus-actions-config-tool.xml:35(title)
+#: C/nautilus-actions-config-tool.xml:45(para)
+msgid "Runtime execution preferences"
+msgstr "Preferencias de tiempo de ejecución"
+
+#: C/nautilus-actions-config-tool.xml:42(phrase)
+msgid "Shows the tab which lets you define runtime execution preferences."
+msgstr ""
+
+#: C/nautilus-actions-config-tool.xml:59(phrase)
+msgid "Let the user explicitely configure the current desktop."
+msgstr ""
+
+#: C/nautilus-actions-config-tool.xml:70(title)
 msgid "User interface preferences"
 msgstr "Preferencias de la interfaz de usuario"
 
-#: C/nautilus-actions-config-tool.xml:35(title)
-#: C/nautilus-actions-config-tool.xml:45(para)
+#: C/nautilus-actions-config-tool.xml:72(title)
+#: C/nautilus-actions-config-tool.xml:82(para)
 msgid "UI preferences"
 msgstr "Preferencias de la IU"
 
-#: C/nautilus-actions-config-tool.xml:42(phrase)
+#: C/nautilus-actions-config-tool.xml:79(phrase)
 msgid "Shows the tab which lets you define UI preferences."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:53(title)
-#: C/nautilus-actions-config-tool.xml:55(title)
-#: C/nautilus-actions-config-tool.xml:65(para)
+#: C/nautilus-actions-config-tool.xml:90(title)
+#: C/nautilus-actions-config-tool.xml:92(title)
+#: C/nautilus-actions-config-tool.xml:102(para)
 msgid "Import preferences"
 msgstr "Preferencias de importación"
 
-#: C/nautilus-actions-config-tool.xml:62(phrase)
+#: C/nautilus-actions-config-tool.xml:99(phrase)
 msgid "Shows the tab which lets you define import preferences."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:75(title)
-#: C/nautilus-actions-config-tool.xml:77(title)
-#: C/nautilus-actions-config-tool.xml:87(para)
+#: C/nautilus-actions-config-tool.xml:112(title)
+#: C/nautilus-actions-config-tool.xml:114(title)
+#: C/nautilus-actions-config-tool.xml:124(para)
 msgid "Export preferences"
 msgstr "Preferencias de exportación"
 
-#: C/nautilus-actions-config-tool.xml:84(phrase)
+#: C/nautilus-actions-config-tool.xml:121(phrase)
 msgid "Shows the tab which lets you define export preferences."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:97(title)
-#: C/nautilus-actions-config-tool.xml:99(title)
-#: C/nautilus-actions-config-tool.xml:109(para)
+#: C/nautilus-actions-config-tool.xml:134(title)
+#: C/nautilus-actions-config-tool.xml:136(title)
+#: C/nautilus-actions-config-tool.xml:146(para)
 msgid "Schemes preferences"
 msgstr "Preferencias de esquemas"
 
-#: C/nautilus-actions-config-tool.xml:106(phrase)
+#: C/nautilus-actions-config-tool.xml:143(phrase)
 msgid "Shows the tab which lets you define schemes preferences."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:119(title)
-#: C/nautilus-actions-config-tool.xml:121(title)
-#: C/nautilus-actions-config-tool.xml:131(para)
+#: C/nautilus-actions-config-tool.xml:156(title)
+#: C/nautilus-actions-config-tool.xml:158(title)
+#: C/nautilus-actions-config-tool.xml:168(para)
 msgid "I/O providers preferences"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:128(phrase)
+#: C/nautilus-actions-config-tool.xml:165(phrase)
 msgid "Shows the tab which lets you define I/O providers preferences."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:170(title)
+#: C/nautilus-actions-config-tool.xml:171(title)
 msgid "Miscellaneous informations"
 msgstr ""
 
@@ -3477,7 +3601,7 @@ msgid ""
 "<application>Nautilus-Actions Configuration Tool</application>"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:181(title)
+#: C/nautilus-actions-config-tool.xml:182(title)
 msgid "Known Bugs and Limitations"
 msgstr "Errores conocidos y limitaciones"
 
@@ -3563,11 +3687,11 @@ msgid ""
 "manager does not allow its plugins to define separators in the context menu."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:195(title)
+#: C/nautilus-actions-config-tool.xml:196(title)
 msgid "About <application>Nautilus-Actions Configuration Tool</application>"
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:196(para)
+#: C/nautilus-actions-config-tool.xml:197(para)
 msgid ""
 "The first version of <productname>Nautilus-Actions</productname> was "
 "initially written by Frederic Ruaudel (<email>grumz@grumz.net</email>) and "
@@ -3576,28 +3700,28 @@ msgid ""
 "(<email>pwieser@trychlos.org</email>)."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:203(para)
+#: C/nautilus-actions-config-tool.xml:204(para)
 msgid ""
 "Artwork is due to courtesy of Ulisse Perusin (<email>uli.peru@gmail.com</"
 "email>) and DragonArtz (<ulink url=\"http://www.dragonartz.net/\" type=\"http"
 "\">http://www.dragonartz.net</ulink>)."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:209(para)
+#: C/nautilus-actions-config-tool.xml:210(para)
 msgid ""
 "To find more information about <productname>Nautilus-Actions</productname>, "
 "please visit the <ulink url=\"http://www.nautilus-actions.org/\" type=\"http"
-"\"><productname>Nautilus-Actions</productname> website</ulink>."
+"\"/><productname>Nautilus-Actions</productname> website."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:214(para)
+#: C/nautilus-actions-config-tool.xml:215(para)
 msgid ""
-"To report a bug or make a suggestion regarding the <productname>Nautilus-"
+"To report a bug or make a suggestion regarding <productname>Nautilus-"
 "Actions</productname>, the <application>Nautilus-Actions Configuration Tool</"
 "application> or this manual, follow the directions in the <ulink url=\"ghelp:"
 "user-guide#feedback\" type=\"help\">GNOME Feedback Page</ulink>, or you may "
 "prefer, at your convenience, directly open a bug or a request for "
-"enhancement to <ulink url=\"https://bugzilla.gnome.org/enter_bug.cgi?"
+"enhancement in <ulink url=\"https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions\" type=\"http\">Bugzilla website</ulink>."
 msgstr ""
 
@@ -4294,6 +4418,9 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:0(None)
 msgid "translator-credits"
 msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2010, 2011"
+
+#~ msgid "August 2010"
+#~ msgstr "Agosto de 2010"
 
 #~ msgid ""
 #~ "@@image: 'figures/nact-legend.png'; md5=3a8e6d9ba5fe34cfb2ed6546393e644b"
