@@ -8,7 +8,7 @@
             <imagedata fileref="figures/nact-target-location.png" format="PNG" />
           </imageobject>
           <textobject>
-            <phrase>Shows the three fields which lets you configure the target of your action.</phrase>
+            <phrase>Shows the three fields which let you configure the target of your action.</phrase>
           </textobject>
           <caption>
             <para>Target configuration</para>
@@ -31,8 +31,8 @@
     <title>Targeting the selection context menu</title>
     <para>
       When <guilabel>Display item in selection context menu</guilabel>
-      is checked, then your action will be candidate to be displayed in 
-      &nautilus; context menu as soon as at least one item is selected in 
+      is checked, then your action will be a candidate to be displayed in 
+      &nautilus;' context menu as soon as at least one item is selected in 
       the file manager. Your action will so deal with currently selected
       item(s).In order to be
       actually displayed, all the conditions defined in
@@ -42,8 +42,8 @@
     <tip>
       <para>
         When an action targets the selection context menu, and is actually 
-        displayed in &nautilus; context menu, then it is also displayed
-        in &nautilus; <guimenu>Edit</guimenu> menu.
+        displayed in &nautilus;' context menu, then it is also displayed
+        in &nautilus;' <guimenu>Edit</guimenu> menu.
       </para>
     </tip>
     <para>
@@ -55,8 +55,8 @@
     <title>Targeting the location context menu</title>
     <para>
       When <guilabel>Display item in location context menu</guilabel> checkbox
-      is activated, then your action will be candidate to be displayed in 
-      &nautilus; context menu when the file manager selection is empty.
+      is activated, then your action will be a candidate to be displayed in 
+      &nautilus;' context menu when the file manager selection is empty.
       Your action will so deal with currently displayed location.
       In order to be
       actually displayed, all the conditions defined in
@@ -66,8 +66,8 @@
     <tip>
       <para>
         When an action targets the location context menu, and is actually 
-        displayed in &nautilus; context menu, then it is also displayed
-        in &nautilus; <guimenu>File</guimenu> menu.
+        displayed in &nautilus;' context menu, then it is also displayed
+        in &nautilus;' <guimenu>File</guimenu> menu.
       </para>
     </tip>
   </sect3>
@@ -76,8 +76,8 @@
     <title>Targeting the toolbar</title>
     <para>
       When <guilabel>Display item in the toolbar</guilabel> checkbox
-      is activated, then your action will be candidate to be displayed in 
-      &nautilus; toolbar.
+      is activated, then your action will be a candidate to be displayed in 
+      &nautilus;' toolbar.
     </para>
     <para>
       Actions displayed in the toolbar only deal with the location which
@@ -95,7 +95,7 @@
       <title>If your action is to be displayed in a context menu</title>
       <para>
         Whether it is the selection context menu or the location
-        context menu, and both in &nautilus; context menus and in 
+        context menu, and both in &nautilus;' context menus and in 
         <guimenu>File</guimenu> or <guimenu>Edit</guimenu> menus, it
         will be displayed as
       </para>
@@ -129,7 +129,7 @@
       <para>
         You may embed some parameters in the label, the icon name or the tooltip.
         These parameters will be dynamically substituted at runtime with values
-        which will depend of currently selected item(s). 
+        which will depend on currently selected item(s). 
       </para>
     </tip>
 
@@ -166,26 +166,26 @@
     </note>
     <tip>
       <para>
-        The toolbar label defaults to the same label than
+        The toolbar label defaults to the same label as
         those used in menus. By unchecking the
         <guilabel>Use same label for icon in the toolbar</guilabel>
-        checkbox, then you can define a label specific to the
-        toolbar, usually shorter that those defined for the menus.
+        checkbox you can define a label specific to the
+        toolbar, which is usually shorter that those defined for the menus.
       </para>
     </tip>
     <tip>
       <para>
         You may embed some parameters in the toolbar label, the icon name or the tooltip.
         These parameters will be dynamically substituted at runtime with values
-        which will depend of currently selected item(s). 
+        which will depend on currently selected item(s). 
       </para>
     </tip>
 
     <formalpara>
       <title>Defining several targets</title>
       <para>
-        An action may target both the selection context menu, the location context
-        menu and the toolbar, or one or more among these.
+        An action may target the selection context menu, the location context
+        menu and the toolbar, or one or more of these.
       </para>
     </formalpara>
 

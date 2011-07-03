@@ -1,3 +1,11 @@
+2011-07-03 Pierre Wieser <pwieser@trychlos.org>
+
+	* docs/nact/C/nact-conditions.xml:
+	* docs/nact/C/nact-execution.xml:
+	* docs/nact/C/nact-where.xml:
+	Fix #652664 - [doc] couple of spelling and improvement suggestions;
+	patch provided by Christian Kirbach.
+
 2011-06-10 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-boxed.c (string_to_array):

@@ -47,7 +47,7 @@
     <para>
       In fact, basename-based conditions are built as a list of
       &must_match; and &must_not_match;
-      patterns. In order you action be candidate regarding of these basename-based
+      patterns. In order for your action to be a candidate regarding these basename-based
       conditions, each element of the selection must be valid for all the listed
       conditions: the basename of each element must match at least one of the defined
       &must_match; patterns, and must not match any of
@@ -178,7 +178,7 @@
     <para>
       In fact, mimetype-based conditions are built as a list of
       &must_match; and &must_not_match; patterns.
-      In order you action be candidate regarding of these mimetype-based
+      In order for your action to be a candidate regarding these mimetype-based
       conditions, each element of the selection must be valid for all the listed
       conditions: the mimetype of each element must match at least one of the defined
       &must_match; patterns, and must not match any of
@@ -347,9 +347,9 @@
     <para>
       In fact, folder-based conditions are built as a list of
       &must_match; and &must_not_match; patterns.
-      In order you action be candidate regarding of these folder-based
+      In order for your action to be a candidate regarding these folder-based
       conditions, each element of the selection must be valid for all the
-      listed conditions: each element must located in one of the defined
+      listed conditions: each element must be located in one of the defined
       &must_match; folders, and must not match any of the defined
       &must_not_match; folders.
     </para>
@@ -465,7 +465,7 @@
     <para>
       In fact, scheme-based conditions are built as a list of
       &must_match; and &must_not_match; patterns.
-      In order you action be candidate regarding of these scheme-based
+      In order for your action to be a candidate regarding these scheme-based
       conditions, each element of the selection must be valid for all the
       listed conditions: the scheme of each element must match at least one
       of the defined &must_match; patterns, and must not match any of
@@ -606,7 +606,7 @@
     <para>
       In fact, capability-based conditions are built as a list of
       &laquosp;must match all of&spraquo; and &must_not_match; patterns.
-      In order you action be candidate regarding of these capability-based
+      In order for your action to be a candidate regarding these capability-based
       conditions, each element of the selection must be valid for all the
       listed conditions: the capability of each element must match each
       of the defined &laquosp;must match all of&spraquo; capabilities,
@@ -779,7 +779,7 @@
         <simplelist type="vert">
           <member><literal>&lt;</literal> <termdef>(strictly less than)</termdef></member>
           <member><literal>=</literal> <termdef>(equal to)</termdef></member>
-          <member><literal>&gt;</literal> <termdef>(strictly greather than)</termdef></member>
+          <member><literal>&gt;</literal> <termdef>(strictly greater than)</termdef></member>
         </simplelist>
       </listitem>
       <listitem>
@@ -791,7 +791,7 @@
     <para>
       The selection count defaults to
       &laquosp;<literal>Count > (strictly greater than) 0</literal>&spraquo;,
-      which means that the action will be candidate to be displayed
+      which means that the action will be a candidate to be displayed
       as soon as at least one item is selected in the file manager.
     </para>
   </sect3>
@@ -875,7 +875,7 @@
     <para>
       The targeted desktop environment condition defaults to
       &laquosp;<literal>Always appear</literal>&spraquo;,
-      which means that the action will be candidate to be displayed
+      which means that the action will be a candidate to be displayed
       regarding of the current desktop environment.
     </para>
   </sect3>
@@ -887,7 +887,7 @@
       prerequisite package is installed on your system. This is
       checked here by specifying that a specific file, known or
       at least supposed to be provided by the package, must be
-      present on the filesystem, and executable.
+      present on the file system, and executable.
     </para>
     <para>
       Click on the <guilabel>Environment</guilabel> tab to show the page
@@ -919,7 +919,7 @@
       To define the relevant file, enter its full filename in the
       <guilabel>Appears if the file is executable</guilabel> entry
       box, or click on <guibutton>Browse</guibutton> to select a file
-      on the filesystem.
+      on the file system.
     </para>
     <para>
       Leave the field empty if this condition is not relevant for
@@ -929,7 +929,7 @@
       <para>
         You may embed some parameters in the searched filename.
         These parameters will be dynamically substituted at runtime with values
-        which will depend of currently selected item(s). 
+        which will depend on currently selected item(s). 
       </para>
     </tip>
   </sect3>
@@ -938,7 +938,7 @@
     <title>D-Bus registration condition</title>
     <para>
       You may define that your action will only appear if some given
-      name is registered on D-Bus system at runtime.
+      name is registered on the D-Bus system at runtime.
     </para>
     <para>
       Click on the <guilabel>Environment</guilabel> tab to show the page
@@ -958,7 +958,7 @@
       <para>
         You may embed some parameters in the searched name.
         These parameters will be dynamically substituted at runtime with values
-        which will depend of currently selected item(s). 
+        which will depend on currently selected item(s). 
       </para>
     </tip>
   </sect3>
@@ -993,7 +993,7 @@
       <para>
         You may embed some parameters in the executed filename or its options.
         These parameters will be dynamically substituted at runtime with values
-        which will depend of currently selected item(s). 
+        which will depend on currently selected item(s). 
       </para>
     </tip>
   </sect3>
@@ -1013,7 +1013,7 @@
       To define the binary, enter its name in the
       <guilabel>Appears if the binary is running</guilabel>
       entry box, or click on <guibutton>Browse</guibutton> to select
-      a file on the filesystem.
+      a file on the file system.
     </para>
     <note>
       <para>
@@ -1030,7 +1030,7 @@
       <para>
         You may embed some parameters in the searched name.
         These parameters will be dynamically substituted at runtime with values
-        which will depend of currently selected item(s). 
+        which will depend on currently selected item(s). 
       </para>
     </tip>
   </sect3>

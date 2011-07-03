@@ -1,10 +1,10 @@
 <sect2 id="usage-execution">
-  <title>What the action should it execute ?</title>
+  <title>What action should be executed ?</title>
   <para>
-    You most probably want your action eventually ends up with
+    You most probably want that your action eventually ends up in
     executing something. And, as a matter of fact, having something
     to execute is one of the few conditions which are required
-    in order an action be considered as valid.
+    for an action to be considered as valid.
   </para>
   <para>
     As we have already seen, the command to be executed is configured
@@ -13,7 +13,7 @@
   <para>
     This command may take arguments, which themselves may embed
     parameters. These parameters will be expanded at runtime,
-    with values which will depend of currently selected item(s).
+    with values which will depend on currently selected item(s).
   </para>
 
   <sect3 id="usage-execution-parameters">
@@ -94,23 +94,23 @@
     </para>
     <para>
       In the particular case of the <literal>%d</literal> parameter,
-      which is the &laquosp;<guilabel>first</guilabel>&spraquo; selected item
-      is not very important: we are rather sure that all selected items
+      the &laquosp;<guilabel>first</guilabel>&spraquo; selected item
+      is not very important because it is very likely that all selected items
       are located in the same base directory.
     </para>
   </sect3>
 
   <sect3 id="usage-execution-how">
-    <title>How the action should it be executed ?</title>
+    <title>How should the action be executed ?</title>
     <para>
-      Apart from configuring the conditions the selection must met in
+      Apart from configuring the conditions, the selection must met in
       order your action be displayed in file manager menus, &prodname;
       allows you to configure how exactly your command will be
       executed.
     </para>
     <para>
       Click on the <guilabel>Execution</guilabel> tab to show the page
-      which will permit you to configure the execution of your command.
+      which configures the execution of your command.
     </para>
     <figure id="nact-FIG-execution">
       <title>Configuration of the execution modes</title>
@@ -277,7 +277,7 @@
       </figure>
       <para>
         Enter in the <guilabel>Execute as user</guilabel> entry box the username
-        or the <acronym>UID</acronym> of the user your command must be ran as.
+        or the <acronym>UID</acronym> of the user your command will be run as.
       </para>
       <para>
         If you do not enter anything in this field, then the command will be
@@ -286,14 +286,14 @@
     </sect4>
 
     <sect4 id="usage-execution-how-singular">
-      <title>Multiple execution</title>
+      <title>Multiple executions</title>
       <para>
-        You may want your command be executed once, giving it the list of
+        You may want your command be executed once, providing it the list of
         selected items as argument.
       </para>
       <para>
         Or you may prefer your command be repeated for each selected item,
-        giving to each execution a different item as argument.
+        providing a different item as argument for each execution.
       </para>
       <para>
         Actually, &prodname; automatically handles these two behaviors,
