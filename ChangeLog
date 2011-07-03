@@ -1,5 +1,7 @@
 2011-07-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Update before releasing.
+
 	* TODO: Update before releasing.
 
 	* src/utils/na-gconf2key.sh.in:	Update comment.
