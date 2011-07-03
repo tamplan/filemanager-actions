@@ -6,6 +6,20 @@ N-A BUGS
 - 2011-05-20: if an action is selected on mimetype, scheme is not checked
   (e.g. an action is displayed on sftp even is scheme is file)
 
+- 2011-06-10: when importing an action, ensure that there is at least
+  one default profile (an action without any profile is possible when
+  importing a xml file)
+
+- 2011-06-10: importing an action from a dump file creates two profiles instead of one
+  one with [profile-1] and the other with profile-1
+
+- 2011-06-10: string list imported from schemas are imported wih the square brackets []
+
+Plan de test: NACT should be able to import all types of actions and menus,
+kindly fixing small errors.
+- from 1.4.1 (version 1.1): an action from GConf or as a schemas
+- from 1.12 (version 2.0), an action from GConf, or as one of the three possible export format.
+
 TODO
 ====
 - 2011-02-21: implement startup mode
@@ -41,6 +55,12 @@ TODO
   save the whole (because it is yet marked as modified - why ?)
   -> save error, some items have not been deleted
      the two items are restored, marked as not modified, are found actually written in the disk!!
+
+- 2011-06-08: when getting an elementary data, we should get the default value if it is not set
+  to determine if a value is set, have a na_object_is_data_set (see na_object_item_deals_with_version)
+  this should let us get ride of na_factory_object_set_defaults() function
+
+- 2011-06-08: get ride of NADataBoxed ?
 
 N-A ENHANCEMENTS
 ================
