@@ -1,5 +1,7 @@
 2011-07-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/na-gconf2key.sh.in:	Update comment.
+
 	* docs/nact/C/nact-conditions.xml:
 	* docs/nact/C/nact-execution.xml:
 	* docs/nact/C/nact-where.xml:

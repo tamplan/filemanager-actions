@@ -428,8 +428,8 @@ msg "${nbitems} migrated items"
 # we are using this same script to migrate preferences to .conf files
 # mandatory preferences go to SYSCONFDIR/xdg/nautilus-actions.conf
 # while user preferences go to HOME/.config/nautilus-actions.conf
-# Note also that the GConf I/O provider is disabled both for reading
-# and writing
+# Note also that the GConf I/O provider will be disabled for writings
+# after this migration
 [ $(id -u) -eq 0 ] && destdir=@sysconfdir@/xdg || destdir=${HOME}/.config
 destdir=${destdir}/@PACKAGE@
 command "mkdir -p ${destdir}"
