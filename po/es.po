@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-06-04 08:26+0000\n"
-"PO-Revision-Date: 2011-06-23 20:02+0200\n"
+"POT-Creation-Date: 2011-06-23 18:05+0000\n"
+"PO-Revision-Date: 2011-07-10 12:22+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -3037,6 +3037,8 @@ msgid ""
 "This tab lets you decide whether the I/O providers are enabled or not, and "
 "in which order they will be tried when writing a new item."
 msgstr ""
+"Esta pestaña le permite decidir si los proveedores de E/S están activados o "
+"no, y en qué orden se probarán al escribir un elemento nuevo."
 
 #: ../src/nact/nact-preferences.ui.h:44
 msgid ""
@@ -3699,6 +3701,8 @@ msgid ""
 "Enter here a free text which may be used (e.g. in a Web service or in a "
 "search tool) to describe your item."
 msgstr ""
+"Escriba aquí el texto libre que usar (ej. en un servicio web o en una "
+"herramienta de búsqueda) para describir su elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:104
 msgid ""
@@ -3706,6 +3710,8 @@ msgid ""
 "action.\n"
 "Note: this is not yet implemented in Nautilus-Actions."
 msgstr ""
+"Escriba aquí la combinación de teclas sugeria como atajo para su acción.\n"
+"Nota: esto no está todavía implementado en Acciones de Nautilus"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:106
 msgid ""
@@ -3826,7 +3832,7 @@ msgstr "El comando se iniciará como una interfaz gráfica de usuario estándar.
 msgid ""
 "The command will be started in the preferred terminal of the graphical "
 "environment."
-msgstr ""
+msgstr "El comando se iniciará en la terminal preferida del entorno gráfico."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:140
 msgid ""
@@ -3909,6 +3915,9 @@ msgid ""
 "If this is not an absolute path, then the PATH environment variable at "
 "execution time will be considered."
 msgstr ""
+"La ruta del comando.\n"
+"Si no es una ruta absoluta, se considerará la variable de entorno PATH en "
+"tiempo de ejecución."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:155
 msgid ""
@@ -3927,12 +3936,16 @@ msgid ""
 "This advanced tab lets you precisely define how your command will be "
 "executed."
 msgstr ""
+"Esta pestaña avanzada le permite definir de manera precisa cómo se ejecutará "
+"su comando."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:159
 msgid ""
 "This assistant will guide you through the process of importing items, "
 "actions or menus."
 msgstr ""
+"El asistente le guiará durante el proceso de importar elementos, acciones o "
+"menús."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:160
 msgid ""
@@ -3940,6 +3953,9 @@ msgid ""
 "There may be multiple reasons for why an item cannot be edited. See your "
 "User's Manual."
 msgstr ""
+"Esta casilla está marcada si el elemento no se puede editar.\n"
+"Puede haber varias razones por las que un elemento un se puede editar. "
+"Consulte el manual del usuario."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:162
 msgid ""
@@ -3955,6 +3971,10 @@ msgid ""
 "If the current selection does not match this condition, then the item will "
 "not be displayed in the file manager context menus or toolbar."
 msgstr ""
+"Esta es una condición avanzada basada en el conteo de la selección actual.\n"
+"Si la selección actual no coincide con esta condición, el elemento no se "
+"mostrará en los menús contextuales ni en la barra de herramientas del gestor "
+"de archivos."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:167
 msgid ""
@@ -4076,6 +4096,8 @@ msgid ""
 "This tab lets you determine the main characteristics of the currently "
 "selected item."
 msgstr ""
+"Esta pestaña le permite determinad las características principales del "
+"elemento seleccionado actualmente."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:200
 msgid ""
@@ -4108,6 +4130,8 @@ msgid ""
 "This tab lets you edit some miscellaneous properties, and access some non-"
 "modifiable information."
 msgstr ""
+"Esta pestaña le permite editar diferentes propiedades, y acceder a cierta "
+"información no modificable."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:207
 msgid ""
