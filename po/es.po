@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-06-23 18:05+0000\n"
-"PO-Revision-Date: 2011-07-10 12:22+0200\n"
+"POT-Creation-Date: 2011-07-10 10:23+0000\n"
+"PO-Revision-Date: 2011-07-14 14:16+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1252,7 +1252,7 @@ msgstr ""
 msgid "New Nautilus action"
 msgstr "Acción de Nautilus nueva"
 
-#: ../src/core/na-object-action.c:498
+#: ../src/core/na-object-action.c:495
 msgid "Profile automatically created from pre-v2 action"
 msgstr "Perfil creado automáticamente desde la acción pre-v2"
 
@@ -1500,7 +1500,7 @@ msgid "New Nautilus menu"
 msgstr "Menú de Nautilus nuevo"
 
 #. i18n: label for the default profile
-#: ../src/core/na-object-profile.c:750
+#: ../src/core/na-object-profile.c:771
 msgid "Default profile"
 msgstr "Perfil predeterminado"
 
@@ -3557,7 +3557,7 @@ msgstr "<span size=\"larger\"><b>Leyenda de parámetros</b></span>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:70
 msgid "A_llocate a new identifier for the imported item"
-msgstr ""
+msgstr "A_signar un identificador nuevo al elemento importado"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:71
 msgid "Appears if the _binary is running :"
@@ -3719,6 +3719,10 @@ msgid ""
 "The user may be defined by his numeric UID or his login name.\n"
 "Leave the field empty to run the command as the current user."
 msgstr ""
+"Escriba aquí el usuario con el que se debería ejecutar el comando.\n"
+"El usuario se debe definir por su UDI numérico o su nombre de inicio de "
+"sesión.\n"
+"Deje el campo en blanco para ejecutar el comando con el usuario actual."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:109
 msgid "Execute as _user :"
@@ -3840,6 +3844,10 @@ msgid ""
 "capabilities of the 'Must match all of' column, while not matching any "
 "capability of the 'Must not match any of' column."
 msgstr ""
+"El elemento actual aparecerá si cada elemento de la selección coincide con "
+"todas las posibilidades de la columna «Debe coincidir con todas», y no "
+"coincide con ninguna de las posibilidades de la columna «No debe coincidir "
+"con ninguna de»."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:141
 msgid ""
@@ -3847,6 +3855,10 @@ msgid ""
 "selection matches one filter of the 'Must match one of' column, while not "
 "matching any of the filters of the 'Must not match any of' column."
 msgstr ""
+"El elemento actual aparecerá si el nombre base de cada elemento de la "
+"selección coincide con un filtro de la columna «Debe coincidir con una de» y "
+"no coincide con ningún filtro de la columna «No debe coincidir con ninguna "
+"de»."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:142
 msgid ""
@@ -3855,6 +3867,10 @@ msgid ""
 "column, while not being one or inside one of the 'Must not match any of' "
 "column."
 msgstr ""
+"El elemento actual aparecerá si la ubicación de elemento de la selección es "
+"una o está dentro de una de las rutas de la columna «Debe coincidir con una "
+"de», y no se una o estar dentro de una de las de la columna «No debe "
+"coincidir con ninguna de»."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:143
 msgid ""
@@ -3862,6 +3878,10 @@ msgid ""
 "selection matches one filter of the 'Must match one of' column, while not "
 "matching any of the filters of the 'Must not match any of' column."
 msgstr ""
+"El elemento actual aparecerá si el tipo MIME de cada elemento de la "
+"selección coincide con un filtro de la columna «Debe coincidir con una de» y "
+"no coincide con ningún filtro de la columna «No debe coincidir con ninguna "
+"de»."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:144
 msgid ""
@@ -3869,6 +3889,10 @@ msgid ""
 "matches one of the 'Must match one of' column, while not matching any of the "
 "'Must not match any of' column."
 msgstr ""
+"El elemento actual aparecerá si el esquema de cada elemento de la selección "
+"coincide con una opción de la columna «Debe coincidir con una de» y no "
+"coincide con ninguna de las opciones de la columna «No debe coincidir con "
+"ninguna de»."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:145
 msgid "The default working directory the command should be started in."
@@ -3886,6 +3910,9 @@ msgid ""
 "which has the same identifier.\n"
 "Be warned: this mode may be dangerous. You will not be prompted another time."
 msgstr ""
+"El elemento encontrado en el archivo seleccionado reemplazará "
+"silenciosamente al elemento actual que tiene el mismo identificador.\n"
+"Advertencia: este modo puede ser peligroso. No se le preguntará otra vez."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:149
 msgid "The label displayed in the file manager toolbar."
@@ -3900,10 +3927,9 @@ msgstr ""
 "archivos."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:151
-#, fuzzy
 #| msgid "Icon of the menu item in the Nautilus popup menu"
 msgid "The name of a themed icon or the filename of an image."
-msgstr "Icono del elemento en el menú contextual de Nautilus"
+msgstr "El nombre de un icono del tema o el nombre de archivo de una imagen."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:152
 msgid "The parameters of the command."
@@ -3925,6 +3951,9 @@ msgid ""
 "the renumbering.\n"
 "The existing item will not be modified."
 msgstr ""
+"El archivo seleccionado se importará con una etiqueta modificada ligeramente "
+"indicando la renumeración.\n"
+"El elemento existente no se modificará."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:157
 msgid "The tooltip displayed in the file manager user interface."
@@ -3964,6 +3993,9 @@ msgid ""
 "its standard output.\n"
 "This may be used for example for testing a complex condition."
 msgstr ""
+"Esta es una condición avanzada basada en un resultado en tiempo de "
+"ejecución.\n"
+"Escriba aquí un comando que sea capaz"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:165
 msgid ""
@@ -3983,6 +4015,10 @@ msgid ""
 "This may be used for example for testing that a prerequisite service is "
 "currently available."
 msgstr ""
+"Esta es una condición avanzada basada en la presencia de un determinado "
+"servicio en el sistema D-Bus.\n"
+"Esto se puede usar como ejemplo para comprobar que un servicio requerido "
+"está actualmente disponible."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:169
 msgid ""
@@ -3992,6 +4028,12 @@ msgid ""
 "This may be used for example for testing the presence of a prerequisite "
 "daemon."
 msgstr ""
+"Esta es una condición avanzada basada en la presencia de un binario en "
+"ejecución.\n"
+"Tenga en cuenta que sólo se comprueba el nombre base del binario, no su ruta "
+"ni sus parámetros.\n"
+"Esto se puede usar como ejemplo para comprobar la presencia de un demonio "
+"requerido."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:172
 msgid ""
@@ -3999,6 +4041,10 @@ msgid ""
 "the file system.\n"
 "This may be used for example to test for a prerequisite package."
 msgstr ""
+"Esta es una condición avanzada basada en la presencia de un archivo "
+"ejecutable en el sistema de archivos.\n"
+"Esto se puede usar como ejemplo para comprobar la presencia de un paquete "
+"requerido."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:174
 msgid ""
@@ -4006,6 +4052,11 @@ msgid ""
 "First choose on the left if the item depends of a particular desktop "
 "environment, then select on the right the adequate desktop environment."
 msgstr ""
+"Esta es una condición avanzada basada en el entorno de escritorio en "
+"ejecución.\n"
+"Primero elija en la parte izquierda si el elemento depende de un entorno de "
+"escritorio en particular, y seleccione en la parte derecha el entorno de "
+"escritorio adecuado."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:176
 msgid ""
@@ -4015,6 +4066,11 @@ msgid ""
 "Basenames may be negated to specify for which basenames your item must not "
 "appear."
 msgstr ""
+"Esta lista le permite determinar para qué nombres base se mostrará el "
+"elemento seleccionado actualmente en el menú contextual de Nautilus.\n"
+"Los nombres base deben usar los comodines «*» o «?».\n"
+"Los nombres base se pueden negar para especificar para qué nombres base no "
+"deben aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:179
 msgid ""
@@ -4024,6 +4080,12 @@ msgid ""
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
+"Esta lista le permite determinar para qué tipos MIME se mostrará el elemento "
+"seleccionado actualmente en el menú contextual de Nautilus.\n"
+"Los tipos MIME se deben especificar como «*», «/*», «grupo/*» o «grupo/"
+"subgrupo».\n"
+"Los tipos MIME se pueden negar para especificar para qué tipo de objetos no "
+"deben aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:182
 msgid ""
@@ -4034,6 +4096,12 @@ msgid ""
 "Folder filters may be negated to specify for which folders your item must "
 "not appear."
 msgstr ""
+"Esta lista le permite determinar dónde (en qué carpetas) se deben encontrar "
+"los archivos seleccionados actualmente para que el elemento se muestre en el "
+"menú contextual de Nautilus.\n"
+"Las carpetas deben usar los comodines «*» o «?».\n"
+"Los filtros de carpetas se pueden negar para especificar para qué carpetas "
+"no deben aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:185
 msgid ""
@@ -4043,6 +4111,11 @@ msgid ""
 "Capabilities may be negated to specify for which capabilities your item must "
 "not appear."
 msgstr ""
+"Esta lista le permite determinar qué prestaciones de los archivos "
+"seleccionados actualmente se deben cumplir para que el elemento se muestre "
+"en el menú contextual de Nautilus.\n"
+"Las prestaciones se pueden negar para especificar para qué prestaciones no "
+"debe aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:187
 msgid ""
@@ -4051,6 +4124,11 @@ msgid ""
 "Filters may be negated to specify for which schemes your item must not "
 "appear."
 msgstr ""
+"Esta lista le permite determinar qué esquemas deben cumplir los archivos "
+"seleccionados actualmente para que el elemento se muestre en el menú "
+"contextual de Nautilus.\n"
+"Los filtros se pueden negar para especificar para qué esquemas no debe "
+"aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:189
 msgid ""
@@ -4058,6 +4136,9 @@ msgid ""
 "allow a terminal to be ran inside of it.\n"
 "An acceptable fallback is running in the standard terminal."
 msgstr ""
+"Esta opción hace que se use una característica especial del gestor de "
+"archivos, que podría permitir a una terminal ejecutarse dentro de él.\n"
+"Un modo alternativo aceptable es ejecutar en la terminal estándar."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:191
 msgid ""
@@ -4066,6 +4147,10 @@ msgid ""
 "Defining several profiles lets you have several commands, each applying with "
 "a different set of conditions."
 msgstr ""
+"Esta pestaña le permite elegir qué comando se ejecutará, junto con sus "
+"parámetros.\n"
+"Definir varios perfiles le permite tener varios comandos, aplicando a cada "
+"uno diferentes conjuntos de condiciones."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:193
 msgid ""
@@ -4074,6 +4159,10 @@ msgid ""
 "Basenames may be negated to specify for which basenames your item must not "
 "appear."
 msgstr ""
+"Esta pestaña le permite determinar para qué nombres base se mostrará el "
+"elemento seleccionado actualmente en el menú contextual de Nautilus.\n"
+"Los nombres base se pueden negar para especificar para qué nombres base no "
+"debe aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:195
 msgid ""
@@ -4083,6 +4172,12 @@ msgid ""
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
+"Esta pestaña le permite determinar para qué tipos MIME se mostrará el "
+"elemento seleccionado actualmente en el menú contextual de Nautilus.\n"
+"Los tipos MIME se deben especificar como «*», «/*», «grupo/*» o «grupo/"
+"subgrupo».\n"
+"Los tipos MIME se pueden negar para especificar para qué tipo de objetos no "
+"deben aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:198
 msgid ""
@@ -4090,13 +4185,16 @@ msgid ""
 "files must satisfy in order for the item to be displayed in the file manager "
 "context menu."
 msgstr ""
+"Esta pestaña le permite determinar algunas condiciones avanzadas que los "
+"archivos seleccionados actualmente deben cumplir para que el elemento se "
+"muestre en el menú contextual del gestor de archivos."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:199
 msgid ""
 "This tab lets you determine the main characteristics of the currently "
 "selected item."
 msgstr ""
-"Esta pestaña le permite determinad las características principales del "
+"Esta pestaña le permite determinar las características principales del "
 "elemento seleccionado actualmente."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:200
@@ -4107,6 +4205,11 @@ msgid ""
 "Folder filters may be negated to specify for which folders your item must "
 "not appear."
 msgstr ""
+"Esta pestaña le permite determinar dónde (en qué carpetas) se deben "
+"encontrar los archivos seleccionados actualmente para que el elemento se "
+"muestre en el menú contextual de Nautilus.\n"
+"Los filtros de carpetas se pueden negar para especificar para qué carpetas "
+"no debe aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:202
 msgid ""
@@ -4116,6 +4219,11 @@ msgid ""
 "Filters may be negated to specify for which capabilities your item must not "
 "appear."
 msgstr ""
+"Esta pestaña le permite determinar qué prestaciones de los archivos "
+"seleccionados actualmente se deben cumplir para que el elemento se muestre "
+"en el menú contextual de Nautilus.\n"
+"Las prestaciones se pueden negar para especificar para qué prestaciones no "
+"debe aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:204
 msgid ""
@@ -4124,6 +4232,11 @@ msgid ""
 "Filters may be negated to specify for which schemes your item must not "
 "appear."
 msgstr ""
+"Esta pestaña le permite determinar qué esquemas deben cumplir los archivos "
+"seleccionados actualmente para que el elemento se muestre en el menú "
+"contextual de Nautilus.\n"
+"Los filtros se pueden negar para especificar para qué esquemas no debe "
+"aparecer el elemento."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:206
 msgid ""
@@ -4139,6 +4252,9 @@ msgid ""
 "The selected file will be marked as \"NOT OK\" in the Summary page.\n"
 "The existing item will not be modified."
 msgstr ""
+"Este ha sido el comportamiento hasta ahora.\n"
+"El archivo seleccionado se marcará como «INCORRECTO» en el índice.\n"
+"No se modificará el objeto existente."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:210
 msgid "Toolti_p :"
@@ -4155,6 +4271,11 @@ msgid ""
 "See the Startup Notification Protocol Specification for more details.\n"
 "Only relevant when chosen execution mode is Normal."
 msgstr ""
+"Cuando está activada, se sabe que el comando «ejecutar» enviará un mensaje "
+"«quitar» al entorno de escritorio.\n"
+"Consulte la especificación del protocolo de notificaciones al inicio para "
+"obtener más detalles.\n"
+"Sólo es relevante cuando se elije del modo «normal» de ejecución."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:215
 msgid ""
@@ -4203,6 +4324,11 @@ msgid ""
 "See the Startup Notification Protocol Specification for more details.\n"
 "Only relevant when chosen execution mode is Normal."
 msgstr ""
+"Cuando está especificada, debería ser el nombre de una clase WM de al menos "
+"una ventana del comando ejecutado.\n"
+"Consulte la especificación del protocolo de notificaciones al inicio para "
+"obtener más detalles.\n"
+"Sólo es relevante cuando se elije del modo «normal» de ejecución."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:224
 msgid "You will be asked each time an imported ID already exists."
@@ -4314,11 +4440,11 @@ msgstr "nombre del servidor del (primer) URI seleccionado."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:254
 msgid "no-op operator which forces a plural form of execution."
-msgstr ""
+msgstr "operador de no operación que fuerza una forma plural de ejecución."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:255
 msgid "no-op operator which forces a singular form of execution."
-msgstr ""
+msgstr "operador de no operación que fuerza una forma singular de ejecución."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:256
 msgid "port number of the (first) selected URI."
