@@ -1,3 +1,8 @@
+2011-07-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* configure.ac: Fix test for nautilus_menu_provider_get_toolbar_items().
+	Fix #655237 - Toolbar icons are not created.
+
 2011-07-03 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Post-release version bump.
