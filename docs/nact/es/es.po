@@ -4,13 +4,14 @@
 # This file is distributed under the same license as the nautilus-actions package.
 # Jorge González <jorgegonz@svn.gnome.org>, 2010, 2011.
 # Maria Majadas <alixis82@gmail.com>, 2011.
+# Juan Matías Olmos <colonizare@yahoo.com.ar>, 2011.
 # Daniel Mustieles <daniel.mustieles@gmail.com>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2011-07-25 20:24+0000\n"
-"PO-Revision-Date: 2011-08-13 12:24+0200\n"
+"POT-Creation-Date: 2011-09-15 14:46+0000\n"
+"PO-Revision-Date: 2011-09-27 10:33+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -535,7 +536,7 @@ msgid ""
 "where and when your actions should appear in <productname>Nautilus</"
 "productname> context menus, and how they will be executed."
 msgstr ""
-"La aplicación <application>Herramienta de configuración de acciones de "
+"La aplicación <application>Herramienta de configuración de las acciones de "
 "Nautilus</application> es la interfaz de usuario que le permite configurar "
 "cómo, dónde y cuándo deberán aparecer sus acciones en los menús contextuales "
 "de <productname>Nautilus</productname> y cómo se ejecutarán."
@@ -578,7 +579,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:112(para)
 msgid "A command-line program which is able to run any action."
-msgstr ""
+msgstr "Un programa de línea de comandos capaz de ejecutar cualquier acción."
 
 #: C/nautilus-actions-config-tool.xml:115(para)
 msgid ""
@@ -586,6 +587,9 @@ msgid ""
 "action from a keyboard shortcut, applying this action to the item(s) "
 "currently selected in the file manager."
 msgstr ""
+"Asociado con la interfaz D-Bus, este programa permite al usuario ejecutar "
+"cualquier acción desde un atajo de teclado, aplicando esta acción a los "
+"elementos seleccionados actualmente en el gestor de archivos."
 
 #: C/nautilus-actions-config-tool.xml:122(para)
 msgid "A command-line program which is able to create a new action."
@@ -596,6 +600,8 @@ msgid ""
 "All these features are more thoroughly described in the global "
 "<productname>Nautilus-Actions</productname> documentation."
 msgstr ""
+"Todas estas características se explican ampliamente en la documentación "
+"global de <productname>Acciones de Nautilus</productname>."
 
 #: C/nautilus-actions-config-tool.xml:144(title)
 msgid "Getting Started"
@@ -604,14 +610,16 @@ msgstr "Inicio"
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid "Starting <application>Nautilus-Actions Configuration Tool</application>"
 msgstr ""
+"Iniciar la <application>Herramienta de configuración de las acciones de "
+"Nautilus</application>"
 
 #: C/nautilus-actions-config-tool.xml:3(para)
 msgid ""
 "You can start <application>Nautilus-Actions Configuration Tool</application> "
 "in the following ways:"
 msgstr ""
-"Puede iniciar la <application>Herramienta de configuración de acciones de "
-"Nautilus</application> de las siguientes maneras:"
+"Puede iniciar la <application>Herramienta de configuración de las acciones "
+"de Nautilus</application> de las siguientes maneras:"
 
 #: C/nautilus-actions-config-tool.xml:8(term)
 msgid "<guimenu>System</guimenu> menu"
@@ -623,6 +631,10 @@ msgid ""
 "Feel</guisubmenu><guimenuitem>Nautilus-Actions Configuration Tool</"
 "guimenuitem></menuchoice>."
 msgstr ""
+"Elija <menuchoice><guisubmenu>Preferencias</"
+"guisubmenu><guisubmenu>Visualización y comportamiento</"
+"guisubmenu><guimenuitem>Herramienta de configuración de las acciones de "
+"Nautilus</guimenuitem></menuchoice>."
 
 #: C/nautilus-actions-config-tool.xml:21(term)
 msgid "Command line"
@@ -633,7 +645,7 @@ msgid ""
 "To start <application>Nautilus-Actions Configuration Tool</application> from "
 "a command line, type the following command:"
 msgstr ""
-"Para iniciar la <application>Herramienta de configuración de acciones de "
+"Para iniciar la <application>Herramienta de configuración de las acciones de "
 "Nautilus</application> desde una línea de comandos, escriba lo siguiente:"
 
 #: C/nautilus-actions-config-tool.xml:27(filename)
@@ -664,18 +676,20 @@ msgid ""
 "When you start <application>Nautilus-Actions Configuration Tool</"
 "application>, the following window is displayed."
 msgstr ""
-"Cuando inicia la <application>Herramienta de configuración de acciones de "
-"Nautilus</application>, se muestra la siguiente ventana."
+"Cuando inicia la <application>Herramienta de configuración de las acciones "
+"de Nautilus</application>, se muestra la siguiente ventana."
 
 #: C/nautilus-actions-config-tool.xml:57(title)
 msgid ""
 "<application>Nautilus-Actions Configuration Tool</application> Start Up "
 "Window"
 msgstr ""
+"Ventana de inicio de la <application>Herramienta de configuración de las "
+"acciones de Nautilus</application>"
 
 #: C/nautilus-actions-config-tool.xml:0(application)
 msgid "Nautilus-Actions Configuration Tool"
-msgstr "Herramienta de configuración de acciones de Nautilus"
+msgstr "Herramienta de configuración de las acciones de Nautilus"
 
 #: C/nautilus-actions-config-tool.xml:64(phrase)
 msgid ""
@@ -683,12 +697,18 @@ msgid ""
 "an empty items list in the left, several disabled properties tabs, and "
 "statusbar."
 msgstr ""
+"Muestra la ventana principal de <placeholder-1/>. Contiene barra de menú, "
+"barra de herramientas, área de visualización, una lista de elementos vacía a "
+"la izquierda, varias pestañas de propiedades desactivadas y una barra de "
+"estado."
 
 #: C/nautilus-actions-config-tool.xml:72(para)
 msgid ""
 "The empty <application>Nautilus-Actions Configuration Tool</application> "
 "main window"
 msgstr ""
+"La ventana principal de la <application>Herramienta de configuración de las "
+"acciones de Nautilus</application> vacía."
 
 #. Include any descriptions of the GUI immediately after the screenshot
 #.            of the main UI, for example, the items on the menubar and on the toolbar.
@@ -698,7 +718,7 @@ msgid ""
 "The <application>Nautilus-Actions Configuration Tool</application> main "
 "window contains the following elements:"
 msgstr ""
-"La ventana principal de la <application>Herramienta de configuración de "
+"La ventana principal de la <application>Herramienta de configuración de las "
 "acciones de Nautilus</application> contiene los siguientes elementos:"
 
 #: C/nautilus-actions-config-tool.xml:87(term)
@@ -711,7 +731,7 @@ msgid ""
 "<application>Nautilus-Actions Configuration Tool</application>."
 msgstr ""
 "Los menús de la barra de menús contienen todos los comandos que necesita "
-"usar en la <application>Herramienta de configuración de acciones de "
+"usar en la <application>Herramienta de configuración de las acciones de "
 "Nautilus</application>."
 
 #: C/nautilus-actions-config-tool.xml:93(para)
@@ -821,6 +841,9 @@ msgid ""
 "choices in the <menuchoice><guimenu>View</guimenu><guimenuitem>Toolbars</"
 "guimenuitem></menuchoice> submenu."
 msgstr ""
+"Se pueden mostrar varias barras de herramientas debajo de la barra de menú, "
+"dependiendo de las elecciones del submenú <menuchoice><guimenu>Ver</"
+"guimenu><guimenuitem>Barras de herramientas</guimenuitem></menuchoice>."
 
 #: C/nautilus-actions-config-tool.xml:242(term)
 msgid "Items list."
@@ -834,7 +857,7 @@ msgid ""
 msgstr ""
 "La lista de la izquierda de la ventana principal contiene todos los "
 "elementos, ya sean acciones o menús, actualmente disponibles para editarlos "
-"en la <application>Herramienta de configuración de acciones de Nautilus</"
+"en la <application>Herramienta de configuración de las acciones de Nautilus</"
 "application>."
 
 #: C/nautilus-actions-config-tool.xml:249(para)
@@ -912,6 +935,9 @@ msgid ""
 "Define the basename filters the <productname>Nautilus</productname> "
 "selection must satisfy in order the action or menu be candidate for display."
 msgstr ""
+"Defina los filtros de nombres base que debe cumplir la selección de "
+"<productname>Nautilus</productname> antes de mostrarse la acción o menú "
+"candidato."
 
 #: C/nautilus-actions-config-tool.xml:321(term)
 msgid "Mimetypes"
@@ -922,6 +948,9 @@ msgid ""
 "Define the mimetype filters the <productname>Nautilus</productname> "
 "selection must satisfy in order the action or menu be candidate for display."
 msgstr ""
+"Defina los filtros de tipos MIME que debe cumplir la selección de "
+"<productname>Nautilus</productname> antes de mostrarse la acción o menú "
+"candidato."
 
 #: C/nautilus-actions-config-tool.xml:332(term)
 msgid "Folders"
@@ -932,6 +961,9 @@ msgid ""
 "Define the folder filters the <productname>Nautilus</productname> selection "
 "must satisfy in order the action or menu be candidate for display."
 msgstr ""
+"Defina los filtros de carpetas que debe cumplir la selección de "
+"<productname>Nautilus</productname> antes de mostrarse la acción o menú "
+"candidato."
 
 #: C/nautilus-actions-config-tool.xml:343(term)
 msgid "Schemes"
@@ -942,6 +974,9 @@ msgid ""
 "Define the scheme filters the <productname>Nautilus</productname> selection "
 "must satisfy in order the action or menu be candidate for display."
 msgstr ""
+"Defina los filtros de esquemas que debe cumplir la selección de "
+"<productname>Nautilus</productname> antes de mostrarse la acción o menú "
+"candidato."
 
 #: C/nautilus-actions-config-tool.xml:354(term)
 msgid "Capabilities"
@@ -952,6 +987,9 @@ msgid ""
 "Define the capability filters the <productname>Nautilus</productname> "
 "selection must satisfy in order the action or menu be candidate for display."
 msgstr ""
+"Defina los filtros de prestaciones que debe cumplir la selección de "
+"<productname>Nautilus</productname> antes de mostrarse la acción o menú "
+"candidato."
 
 #: C/nautilus-actions-config-tool.xml:365(term)
 msgid "Environment"
@@ -962,6 +1000,9 @@ msgid ""
 "Define some environment conditions the <productname>Nautilus</productname> "
 "selection must satisfy in order the action or menu be candidate for display."
 msgstr ""
+"Defina alguna condición de entorno que debe cumplir la selección de "
+"<productname>Nautilus</productname> antes de mostrarse la acción o menú "
+"candidato."
 
 #: C/nautilus-actions-config-tool.xml:376(term)
 msgid "Properties"
@@ -988,12 +1029,16 @@ msgid ""
 "When no relevant information is to be displayed, the statusbar displays the "
 "count of loaded menus, actions and profiles."
 msgstr ""
+"Cuando no hay información relevante para mostrar, la barra de estado muestra "
+"la cuenta de menús, acciones y perfiles cargados."
 
 #: C/nautilus-actions-config-tool.xml:399(para)
 msgid ""
 "The « read-only » icon <inlinegraphic fileref=\"figures/read-only.png\"/> is "
 "displayed in the right of the statusbar when appropriate."
 msgstr ""
+"El icono de «sólo lectura» <inlinegraphic fileref=\"figures/read-only.png\"/> "
+"se mostrará a la derecha de la barra de estado cuando sea apropiado."
 
 #: C/nautilus-actions-config-tool.xml:411(title)
 msgid "Creating your first action"
@@ -1004,8 +1049,8 @@ msgid ""
 "In this example, we are going to create an action which displays some pretty "
 "informations about the current selection."
 msgstr ""
-"En este ejemplo, se va a mostrar una acción que muestre algunas "
-"informaciones sobre la selección actual."
+"En este ejemplo, se va a mostrar una acción que muestre alguna información "
+"sobre la selección actual."
 
 #: C/nautilus-actions-config-tool.xml:417(title)
 msgid "Checking for prerequisites"
@@ -1055,7 +1100,7 @@ msgid ""
 "A new action is inserted in the items list, and its properties are displayed "
 "in the tabs on the right pane."
 msgstr ""
-"Se inserta una acción nueva en la lista de elementos, y sus propiedades se "
+"Se inserta una acción nueva en la lista de elementos y sus propiedades se "
 "muestran en las pestañas del panel derecho."
 
 #: C/nautilus-actions-config-tool.xml:459(para)
@@ -1063,25 +1108,31 @@ msgid ""
 "The label of the currently edited action (this one) is added to the "
 "application name in the title bar."
 msgstr ""
+"La etiqueta de la acción editada actualmente (ésta misma) se añade al nombre "
+"de la aplicación en la barra de título."
 
 #: C/nautilus-actions-config-tool.xml:464(title)
 #: C/nautilus-actions-config-tool.xml:476(para)
 msgid "Default properties of a new action"
-msgstr ""
+msgstr "Propiedades predeterminadas de una acción nueva"
 
 #: C/nautilus-actions-config-tool.xml:471(phrase)
 msgid "Shows the default properties of a newly created action."
-msgstr ""
+msgstr "Muestra las propiedades predeterminadas de una acción nueva."
 
 #: C/nautilus-actions-config-tool.xml:481(para)
 msgid ""
 "In the <guilabel>Items list</guilabel>, the new action is displayed in "
 "italic characters."
 msgstr ""
+"En la <guilabel>Lista de elementos</guilabel>, la acción nueva se muestra "
+"con los caracteres en cursiva."
 
 #: C/nautilus-actions-config-tool.xml:484(para)
 msgid "Italics are used as a reminder that the item has not yet been saved."
 msgstr ""
+"Las cursivas se utilizan como recordatorio de que el elemento aún no se ha "
+"guardado."
 
 #: C/nautilus-actions-config-tool.xml:487(para)
 msgid ""
@@ -1089,22 +1140,29 @@ msgid ""
 "(« <literal>*</literal> ») comes to prefix the application name in the title "
 "bar."
 msgstr ""
+"Como otro recordatorio de que hay algunas modificaciones pendientes, un "
+"asterisco (« <literal>*</literal> ») precede al nombre de la aplicación en la "
+"barra de título."
 
 #: C/nautilus-actions-config-tool.xml:493(title)
 msgid "Qualifying your new action"
-msgstr ""
+msgstr "Calificar su acción nueva"
 
 #: C/nautilus-actions-config-tool.xml:494(para)
 msgid ""
 "It merely consists of choosing how your action will be displayed in the file "
 "manager context menu."
 msgstr ""
+"Simplemente consiste en elegir cómo su acción se mostrará en el menú "
+"contextual del gestor de archivos."
 
 #: C/nautilus-actions-config-tool.xml:501(para)
 msgid ""
 "Enter <userinput>My first action</userinput> in the <guilabel>Context label</"
 "guilabel> entry box."
 msgstr ""
+"Escriba <userinput>Mi primera acción</userinput> en el caja de entrada "
+"<guilabel>Etiqueta de contexto</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:505(para)
 msgid ""
@@ -1288,8 +1346,8 @@ msgstr "Zenity"
 
 #: C/nautilus-actions-config-tool.xml:691(phrase)
 msgid ""
-"Shows the result of the execution of your first action. This is "
-"<placeholder-1/> dialog box, displaying the URI of the selected item."
+"Shows the result of the execution of your first action. This is <placeholder-"
+"1/> dialog box, displaying the URI of the selected item."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:153(title)
@@ -1355,8 +1413,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:47(para)
 msgid ""
 "In fact, basename-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these basename-based conditions, each element of the "
+"of » and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these basename-based conditions, each element of the "
 "selection must be valid for all the listed conditions: the basename of each "
 "element must match at least one of the defined « must match one of » "
 "patterns, and must not match any of the defined « must not match any of » "
@@ -1418,8 +1476,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:405(para)
 #: C/nautilus-actions-config-tool.xml:549(para)
 msgid ""
-"Indicates whether this a « must match one of » or a « must not match any "
-"of » condition."
+"Indicates whether this a « must match one of » or a « must not match any of » "
+"condition."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:100(para)
@@ -1508,8 +1566,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:178(para)
 msgid ""
 "In fact, mimetype-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these mimetype-based conditions, each element of the "
+"of » and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these mimetype-based conditions, each element of the "
 "selection must be valid for all the listed conditions: the mimetype of each "
 "element must match at least one of the defined « must match one of » "
 "patterns, and must not match any of the defined « must not match any of » "
@@ -1573,8 +1631,8 @@ msgstr ""
 msgid ""
 "By default, the mimetype-based condition is just one « <literal>must match "
 "one of */*</literal> » condition. As all mimetypes always match the "
-"« <literal>*/*</literal> », this just means that mimetypes are not "
-"considered as relevant for the action."
+"« <literal>*/*</literal> », this just means that mimetypes are not considered "
+"as relevant for the action."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:276(title)
@@ -1642,9 +1700,9 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:347(para)
 msgid ""
-"In fact, folder-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these folder-based conditions, each element of the "
+"In fact, folder-based conditions are built as a list of « must match one of » "
+"and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these folder-based conditions, each element of the "
 "selection must be valid for all the listed conditions: each element must be "
 "located in one of the defined « must match one of » folders, and must not "
 "match any of the defined « must not match any of » folders."
@@ -1731,9 +1789,9 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:465(para)
 msgid ""
-"In fact, scheme-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these scheme-based conditions, each element of the "
+"In fact, scheme-based conditions are built as a list of « must match one of » "
+"and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these scheme-based conditions, each element of the "
 "selection must be valid for all the listed conditions: the scheme of each "
 "element must match at least one of the defined « must match one of » "
 "patterns, and must not match any of the defined « must not match any of » "
@@ -1842,12 +1900,12 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:606(para)
 msgid ""
 "In fact, capability-based conditions are built as a list of « must match all "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these capability-based conditions, each element of the "
+"of » and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these capability-based conditions, each element of the "
 "selection must be valid for all the listed conditions: the capability of "
 "each element must match each of the defined « must match all of » "
-"capabilities, and must not match any of the defined « must not match any "
-"of » ones."
+"capabilities, and must not match any of the defined « must not match any of » "
+"ones."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:619(para)
@@ -1904,8 +1962,8 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:679(para)
 msgid ""
-"Indicates whether this a « must match all of » or a « must not match any "
-"of » condition."
+"Indicates whether this a « must match all of » or a « must not match any of » "
+"condition."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:683(para)
@@ -2042,8 +2100,8 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:791(para)
 msgid ""
-"The selection count defaults to « <literal>Count &gt; (strictly greater "
-"than) 0</literal> », which means that the action will be a candidate to be "
+"The selection count defaults to « <literal>Count &gt; (strictly greater than) "
+"0</literal> », which means that the action will be a candidate to be "
 "displayed as soon as at least one item is selected in the file manager."
 msgstr ""
 
@@ -2556,8 +2614,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:95(para)
 msgid ""
 "In the particular case of the <literal>%d</literal> parameter, the "
-"« <guilabel>first</guilabel> » selected item is not very important because "
-"it is very likely that all selected items are located in the same base "
+"« <guilabel>first</guilabel> » selected item is not very important because it "
+"is very likely that all selected items are located in the same base "
 "directory."
 msgstr ""
 
