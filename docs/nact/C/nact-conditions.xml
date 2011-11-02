@@ -856,11 +856,11 @@
           First select the type of filter:
         </para>
         <simplelist type="vert">
-          <member>does your action should always appear, regardless of
+          <member>should your action always appear, regardless of
            the desktop environment ?</member>
-          <member>does your action should only appear in some desktop
+          <member>should your action only appear in some desktop
            environment(s) ?</member>
-          <member>does your action should never appear in some
+          <member>should your action never appear in some
            desktop environment(s) ?</member>
         </simplelist>
       </listitem>

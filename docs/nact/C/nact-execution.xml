@@ -56,7 +56,7 @@
         visual selection you may
         have done in the file manager window. And, in fact, which is the
         &laquosp;<guilabel>first</guilabel>&spraquo; selected item in a
-        multiple selection is absolutly undefined and rather unpredictable.
+        multiple selection is absolutely undefined and rather unpredictable.
       </para>
     </note>
   </sect3>
@@ -288,11 +288,11 @@
     <sect4 id="usage-execution-how-singular">
       <title>Multiple executions</title>
       <para>
-        You may want your command be executed once, providing it the list of
+        You may want your command to be executed once, providing it the list of
         selected items as argument.
       </para>
       <para>
-        Or you may prefer your command be repeated for each selected item,
+        Or you may prefer your command to be repeated for each selected item,
         providing a different item as argument for each execution.
       </para>
       <para>
@@ -301,7 +301,7 @@
         arguments.
       </para>
       <para>
-        Though some parameters are not sensible to the count of the
+        Though some parameters are not depending on the count of the
         selection (<abbrev>e.g.</abbrev> &laquosp;<literal>%c</literal>&spraquo;,
         the selection count itself), most have two declensions:
       </para>

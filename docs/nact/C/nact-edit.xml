@@ -8,9 +8,12 @@
     <title>Cut/Delete</title>
     <para>
       Deletion applies to current selection.
-      When the current selection covers all profiles of an action, the
-      delete action really delete the selected profiles, leaving the action
-      as invalid if all profiles were selected.
+    </para>
+    <para>
+      Be warned that selecting and deleting all profiles of an action
+      will leave this action without any profile, so in an invalid state.
+      The name of the action will be written with red (because it is
+      invalid) and italic (because it has been modified) characters.
     </para>
   </sect3>
 
@@ -19,7 +22,7 @@
     <para>
       Multiple selection is possible in &appname;.
       You can extend the current selection
-      by pressing the touch <keycap>Ctrl</keycap> or <keycap>Shift</keycap>
+      by pressing <keycap>Ctrl</keycap> or <keycap>Shift</keycap>
       while selecting an item to add to the selection.
     </para>
     <para>
@@ -30,9 +33,10 @@
     </para>
     <para>
       Note that selecting any row means also selecting children of this row.
-      These childs are said &laquosp;implicitely selected&spraquo;:
+      These children are said &laquosp;implicitely selected&spraquo;:
       they will be part of next edition operations, but are not considered
-      when verifying if selection is homogeneous. Also, they cannot be unselected.
+      when verifying if selection is homogeneous.
+      Also, they cannot be explicitely selected (nor unselected).
     </para>
   </sect3>
 </sect2>

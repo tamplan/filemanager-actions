@@ -1,9 +1,16 @@
 2011-11-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/nact/C/nact-conditions.xml:
+	* docs/nact/C/nact-edit.xml:
+	* docs/nact/C/nact-execution.xml:
+	* docs/nact/C/nact-menus.xml:
+	* docs/nact/C/nact-profiles.xml:
+	Apply patch provided by Christian Kirbach.
+	Fix #661498 reported by Christian Kirbach.
+
 	* docs/nact/C/nact-conditions.xml: Replace 'regarding' with
 	'regardless'.
-	From https://bugzilla.gnome.org/show_bug.cgi?id=660399, reported by
-	Gabor Karsay.
+	From #660399, reported by Gabor Karsay.
 
 2011-11-02 Pierre Wieser <pwieser@trychlos.org>
 
