@@ -1,3 +1,7 @@
+2011-11-05 Pierre Wieser <pwieser@trychlos.org>
+
+	* run-autogen.sh, run-distcheck.sh: Defines a special 'distcheck' mode.
+
 2011-11-02 Pierre Wieser <pwieser@trychlos.org>
 
 	* docs/nact/C/nact-conditions.xml:

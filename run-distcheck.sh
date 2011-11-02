@@ -1,6 +1,6 @@
 #!/bin/sh
 
-autogen_target=doc ./run-autogen.sh &&
+autogen_target=distcheck ./run-autogen.sh &&
 make clean &&
 make &&
 make install &&

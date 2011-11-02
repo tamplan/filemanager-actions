@@ -36,6 +36,20 @@ done
 		--enable-pdf-manuals \
 		$*
 
+# 'distcheck' mode: disable deprecated, enable manuals and gtk-doc
+[ "${autogen_target}" = "distcheck" ] &&
+	exec ./autogen.sh \
+		--prefix=$(pwd)/install \
+		--sysconfdir=/etc \
+		--with-nautilus-extdir=$(pwd)/install/lib/nautilus \
+		--disable-schemas-install \
+		--disable-deprecated \
+		--enable-gtk-doc \
+		--enable-gtk-doc-pdf \
+		--enable-html-manuals \
+		--enable-pdf-manuals \
+		$*
+
 # Build with Gtk+ 3 (actually a 2.97.x unstable version)
 # installed in ~/.local/jhbuild
 #
@@ -45,7 +59,7 @@ done
 # $ grep gtk+-2.0 /usr/lib/pkgconfig/*
 #   libnautilus-extension.pc:Requires: glib-2.0 gio-2.0 gtk+-2.0
 #   unique-1.0.pc:Requires: gtk+-2.0
-
+#
 [ "${autogen_target}" = "jhbuild" ] &&
 	export autogen_prefix=${HOME}/data/jhbuild/run &&
 	PKG_CONFIG_PATH=${autogen_prefix}/lib/pkgconfig \
