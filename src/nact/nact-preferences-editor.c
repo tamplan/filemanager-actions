@@ -703,14 +703,12 @@ desktop_create_model( NactPreferencesEditor *editor )
 static void
 desktop_setup( NactPreferencesEditor *editor )
 {
-	gboolean editable;
 	GtkWidget *combo;
 	const NADesktopEnv *desktops;
 	guint i;
 	gint found;
 
 	editor->private->desktop = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
-	editable = !editor->private->preferences_locked && !editor->private->desktop_mandatory;
 
 	combo = base_window_get_widget( BASE_WINDOW( editor ), "DesktopComboBox" );
 	found = -1;

@@ -38,7 +38,6 @@
 #include <core/na-updater.h>
 
 #include "base-gtk-utils.h"
-#include "nact-application.h"
 
 #define NACT_PROP_TOGGLE_BUTTON				"nact-prop-toggle-button"
 #define NACT_PROP_TOGGLE_HANDLER			"nact-prop-toggle-handler"
@@ -574,16 +573,12 @@ base_gtk_utils_select_file_with_preview( BaseWindow *window,
 				GtkWidget *entry, const gchar *entry_name,
 				GCallback update_preview_cb )
 {
-	NactApplication *application;
-	NAUpdater *updater;
 	GtkWindow *toplevel;
 	GtkWidget *dialog;
 	const gchar *text;
 	gchar *filename, *uri;
 	GtkWidget *preview;
 
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
 	toplevel = base_window_get_gtk_toplevel( window );
 
 	dialog = gtk_file_chooser_dialog_new(
@@ -655,15 +650,11 @@ base_gtk_utils_select_dir( BaseWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name )
 {
-	NactApplication *application;
-	NAUpdater *updater;
 	GtkWindow *toplevel;
 	GtkWidget *dialog;
 	const gchar *text;
 	gchar *dir, *uri;
 
-	application = NACT_APPLICATION( base_window_get_application( window ));
-	updater = nact_application_get_updater( application );
 	toplevel = base_window_get_gtk_toplevel( window );
 
 	dialog = gtk_file_chooser_dialog_new(

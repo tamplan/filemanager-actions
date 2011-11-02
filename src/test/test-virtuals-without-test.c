@@ -225,11 +225,9 @@ static void
 first_instance_dispose( GObject *instance )
 {
 	static const gchar *thisfn = "first_instance_dispose";
-	PwiFirst *self;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_assert( PWI_IS_FIRST( instance ));
-	self = PWI_FIRST( instance );
 
 	/* chain up to the parent class */
 	G_OBJECT_CLASS( st_first_parent_class )->dispose( instance );
@@ -388,11 +386,9 @@ static void
 first_second_instance_dispose( GObject *instance )
 {
 	static const gchar *thisfn = "first_second_instance_dispose";
-	PwiFirstSecond *self;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_assert( PWI_IS_FIRST_SECOND( instance ));
-	self = PWI_FIRST_SECOND( instance );
 
 	/* chain up to the parent class */
 	G_OBJECT_CLASS( st_first_second_parent_class )->dispose( instance );
@@ -520,11 +516,9 @@ static void
 first_second_three_instance_dispose( GObject *instance )
 {
 	static const gchar *thisfn = "first_second_three_instance_dispose";
-	PwiFirstSecondThree *self;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 	g_assert( PWI_IS_FIRST_SECOND_THREE( instance ));
-	self = PWI_FIRST_SECOND_THREE( instance );
 
 	/* chain up to the parent class */
 	G_OBJECT_CLASS( st_first_second_three_parent_class )->dispose( instance );

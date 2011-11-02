@@ -198,13 +198,11 @@ nact_main_statusbar_set_locked( NactMainWindow *window, gboolean readonly, gint 
 	GtkStatusbar *bar;
 	GtkFrame *frame;
 	GtkImage *image;
-	GdkPixbuf *pixbuf;
 	gchar *tooltip;
 	gboolean set_pixbuf;
 
 	g_debug( "%s: window=%p, readonly=%s, reason=%d", thisfn, ( void * ) window, readonly ? "True":"False", reason );
 
-	pixbuf = NULL;
 	set_pixbuf = TRUE;
 	bar = get_statusbar( window );
 	frame = GTK_FRAME( base_window_get_widget( BASE_WINDOW( window ), "ActionLockedFrame" ));

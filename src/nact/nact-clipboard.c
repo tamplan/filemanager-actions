@@ -287,7 +287,6 @@ nact_clipboard_dnd_set( NactClipboard *clipboard, guint target, GList *rows, con
 {
 	static const gchar *thisfn = "nact_clipboard_dnd_set";
 	NactClipboardDndData *data;
-	GtkTreeModel *model;
 	GList *it;
 
 	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
@@ -301,8 +300,6 @@ nact_clipboard_dnd_set( NactClipboard *clipboard, guint target, GList *rows, con
 		data->folder = g_strdup( folder );
 		data->rows = NULL;
 		data->copy = copy_data;
-
-		model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) rows->data );
 
 		for( it = rows ; it ; it = it->next ){
 			data->rows = g_list_append(
@@ -337,7 +334,6 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
 	GList *rows = NULL;
 	GtkSelectionData *selection;
 	NactClipboardDndData *data;
-	GtkTreeModel *model;
 	GList *it;
 
 	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
@@ -361,8 +357,6 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
 			data = ( NactClipboardDndData * ) selection->data;
 #endif
 			if( data->target == NACT_XCHANGE_FORMAT_NACT ){
-
-				model = gtk_tree_row_reference_get_model(( GtkTreeRowReference * ) data->rows->data );
 
 				for( it = data->rows ; it ; it = it->next ){
 					rows = g_list_append( rows,

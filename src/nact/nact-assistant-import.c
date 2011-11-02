@@ -524,13 +524,11 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 static gint
 get_import_mode( NactAssistantImport *window )
 {
-	GtkToggleButton *no_import_button;
 	GtkToggleButton *renumber_button;
 	GtkToggleButton *override_button;
 	GtkToggleButton *ask_button;
 	gint mode;
 
-	no_import_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ));
 	renumber_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ));
 	override_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ));
 	ask_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ));

@@ -1,3 +1,15 @@
+2011-11-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/io-desktop/nadp-writer.c (nadp_iio_provider_is_able_to_write):
+	* src/nact/base-gtk-utils.c (base_gtk_utils_select_file_with_preview):
+	* src/nact/nact-assistant-import.c (prepare_confirm):
+	* src/nact/nact-clipboard.c (nact_clipboard_dnd_set):
+	* src/nact/nact-main-statusbar.c (nact_main_statusbar_set_locked):
+	* src/nact/nact-preferences-editor.c (desktop_setup):
+	* src/nact/nact-providers-list.c (on_selection_changed):
+	* src/test/test-virtuals-without-test.c (first_instance_dispose):
+	Remove set but unused variables.
+
 2011-07-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Fix test for nautilus_menu_provider_get_toolbar_items().

@@ -438,7 +438,6 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 	GtkTreePath *path;
 	gboolean may_up, may_down;
 	gboolean order_mandatory;
-	GSList *write_order;
 	ProvidersListData *data;
 	GtkTreeView *treeview;
 
@@ -447,11 +446,11 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 
 	may_up = FALSE;
 	may_down = FALSE;
+	/* TODO */
+	order_mandatory = FALSE;
 
 	treeview = GTK_TREE_VIEW( g_object_get_data( G_OBJECT( window ), PROVIDERS_LIST_TREEVIEW ));
 	data = get_providers_list_data( treeview );
-
-	write_order = na_settings_get_string_list( NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, &order_mandatory );
 
 	if( !data->preferences_locked &&
 		!order_mandatory &&

@@ -94,12 +94,10 @@ nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 	static const gchar *thisfn = "nadp_writer_iio_provider_is_able_to_write";
 	gboolean able_to;
 	gchar *userdir;
-	GSList *messages;
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( provider ), FALSE );
 
 	able_to = FALSE;
-	messages = NULL;
 
 	userdir = nadp_xdg_dirs_get_user_data_dir();
 
