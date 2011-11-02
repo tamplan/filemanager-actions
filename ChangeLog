@@ -1,5 +1,12 @@
 2011-11-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/nact/C/nact-conditions.xml: Replace 'regarding' with
+	'regardless'.
+	From https://bugzilla.gnome.org/show_bug.cgi?id=660399, reported by
+	Gabor Karsay.
+
+2011-11-02 Pierre Wieser <pwieser@trychlos.org>
+
 	* src/io-desktop/nadp-writer.c (nadp_iio_provider_is_able_to_write):
 	* src/nact/base-gtk-utils.c (base_gtk_utils_select_file_with_preview):
 	* src/nact/nact-assistant-import.c (prepare_confirm):

@@ -856,7 +856,7 @@
           First select the type of filter:
         </para>
         <simplelist type="vert">
-          <member>does your action should always appear, regarding of
+          <member>does your action should always appear, regardless of
            the desktop environment ?</member>
           <member>does your action should only appear in some desktop
            environment(s) ?</member>
@@ -876,7 +876,7 @@
       The targeted desktop environment condition defaults to
       &laquosp;<literal>Always appear</literal>&spraquo;,
       which means that the action will be a candidate to be displayed
-      regarding of the current desktop environment.
+      regardless of the current desktop environment.
     </para>
   </sect3>
 
