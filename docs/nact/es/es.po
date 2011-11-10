@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2011-09-15 14:46+0000\n"
-"PO-Revision-Date: 2011-09-27 10:33+0200\n"
+"POT-Creation-Date: 2011-11-05 18:28+0000\n"
+"PO-Revision-Date: 2011-11-10 16:01+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1169,6 +1169,9 @@ msgid ""
 "The <guilabel>Context label</guilabel> entry box contains the label of the "
 "action as you want it to be displayed in the file manager context menu."
 msgstr ""
+"El cuadro de texto <guilabel>Etiqueta de contexto</guilabel> contiene la "
+"etiqueta de la acción que se quiere mostrar en el menú contextual del gestor "
+"de archivos."
 
 #: C/nautilus-actions-config-tool.xml:510(para)
 msgid ""
@@ -1178,30 +1181,44 @@ msgid ""
 "guilabel> and will never be candidate to be displayed in the file manager "
 "context menus."
 msgstr ""
+"La etiqueta es una propiedad obligatoria de la acción. Si se encuentra "
+"vacía, entonces la <productname>Herramienta de configuración de las acciones "
+"de Nautilus</productname> considerará no válida la acción: se mostrará en "
+"rojo en la <guilabel>Lista de elementos</guilabel> y nunca será candidata a "
+"mostrarse en el menú contextual del gestor de archivos."
 
 #: C/nautilus-actions-config-tool.xml:519(para)
 msgid ""
 "Enter <userinput>This will execute an action with some parameters</"
 "userinput> in the <guilabel>Tooltip</guilabel> entry box."
 msgstr ""
+"Escriba <userinput>Esto ejecutará una acción con algunos parámetros</"
+"userinput> en el cuadro de texto <guilabel>Consejo</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:523(para)
 msgid ""
 "The <guilabel>Tooltip</guilabel> entry box contains the text you want to be "
 "displayed as a short help to your action."
 msgstr ""
+"El cuadro de texto <guilabel>Consejo</guilabel> contiene el texto que quiere "
+"mostrar como una ayuda breve sobre la acción."
 
 #: C/nautilus-actions-config-tool.xml:529(para)
 msgid ""
 "Select <inlinegraphic fileref=\"figures/stock-icon-about.png\"/> in the "
 "<guilabel>Icon</guilabel> drop-down list."
 msgstr ""
+"Seleccione <inlinegraphic fileref=\"figures/stock-icon-about.png\"/> en la "
+"lista desplegable <guilabel>Icono</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:533(para)
 msgid ""
 "The <guilabel>Icon</guilabel> selection defines the icon which will be "
 "associated with your action in file manager context menus and in the toolbar."
 msgstr ""
+"La selección del <guilabel>Icono</guilabel> determina el icono que se "
+"asociará con su acción en el menú contextual del gestor de archivos y en la "
+"barra de tareas."
 
 #: C/nautilus-actions-config-tool.xml:538(para)
 msgid "You have two ways of choosing the icon associated to your action:"
@@ -1211,12 +1228,16 @@ msgstr "Tiene dos formas de elegir el icono asociado a su acción:"
 msgid ""
 "Click on the <guilabel>Icon</guilabel> drop-down list to select an icon."
 msgstr ""
+"Pulse sobre la lista desplegable <guilabel>Icono</guilabel> para seleccionar "
+"un icono."
 
 #: C/nautilus-actions-config-tool.xml:548(para)
 msgid ""
 "Click on <guibutton>Browse</guibutton> to search for an image in the "
 "filesystem."
 msgstr ""
+"Pulse sobre <guibutton>Examinar</guibutton> para buscar una imagen en el "
+"sistema de archivos."
 
 #: C/nautilus-actions-config-tool.xml:557(title)
 msgid "Specifying the command to be executed"
@@ -1227,6 +1248,8 @@ msgid ""
 "When you will select your action in the file manager context menu, this "
 "command will be executed, with arguments of your choice."
 msgstr ""
+"Cuando se seleccione su acción en el menú contextual del gestor de archivos, "
+"este comando se ejecutará con los argumentos de su elección."
 
 #: C/nautilus-actions-config-tool.xml:564(para)
 msgid ""
@@ -1239,7 +1262,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:569(title)
 #: C/nautilus-actions-config-tool.xml:584(para)
 msgid "Command page"
-msgstr ""
+msgstr "Pestaña «Comando»"
 
 #: C/nautilus-actions-config-tool.xml:576(phrase)
 msgid ""
@@ -1247,18 +1270,26 @@ msgid ""
 "command to be executed along with its parameters, and the configuration of "
 "the starting working directory."
 msgstr ""
+"Muestra la pestaña «Comando». Esta pestaña contiene el nombre del perfil, el "
+"comando que se ejecutará con sus argumentos y la configuración de la carpeta "
+"de trabajo inicial."
 
 #: C/nautilus-actions-config-tool.xml:591(para)
 msgid ""
 "Enter <userinput>zenity</userinput> in the <guilabel>Path</guilabel> entry "
 "box."
 msgstr ""
+"Escriba <userinput>zenity</userinput> en el cuadro de texto <guilabel>Ruta</"
+"guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:595(para)
 msgid ""
 "The <guilabel>Path</guilabel> entry box defines the command which will be "
 "executed when you will select your action in the file manager context menu."
 msgstr ""
+"El cuadro de texto <guilabel>Ruta</guilabel> establece el comando que se "
+"ejecutará cuando seleccione su acción en el menú contextual del gestor de "
+"archivos."
 
 #: C/nautilus-actions-config-tool.xml:600(para)
 msgid "You have two ways of defining the command to be executed:"
@@ -1266,19 +1297,23 @@ msgstr "Tiene dos formas de definir el comando que ejecutar:"
 
 #: C/nautilus-actions-config-tool.xml:605(para)
 msgid "Enter it in the <guilabel>Path</guilabel> entry box."
-msgstr ""
+msgstr "Escríbalo en el cuadro de texto <guilabel>Ruta</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:610(para)
 msgid ""
 "Click on <guibutton>Browse</guibutton> to select the executable file on the "
 "filesystem."
 msgstr ""
+"Pulse sobre <guibutton>Examinar</guibutton> para seleccionar un archivo "
+"ejecutable en el sistema de archivos."
 
 #: C/nautilus-actions-config-tool.xml:616(para)
 msgid ""
 "If the command you enter does not have an absolute path, then it will be "
 "searched for in the <envar>PATH</envar> variable at execution time."
 msgstr ""
+"Si el comando que escriba con contiene una ruta absoluta, se buscará en la "
+"variable <envar>PATH</envar> en tiempo de ejecución."
 
 #: C/nautilus-actions-config-tool.xml:623(para)
 msgid ""
@@ -2156,17 +2191,23 @@ msgid "First select the type of filter:"
 msgstr "Primero seleccione el tipo de filtro:"
 
 #: C/nautilus-actions-config-tool.xml:859(member)
+#, fuzzy
+#| msgid "or will only appear in some given desktop environments,"
 msgid ""
-"does your action should always appear, regarding of the desktop environment ?"
-msgstr ""
+"should your action always appear, regardless of the desktop environment ?"
+msgstr "o aparecerá sólo en algunos entornos de escritorio,"
 
 #: C/nautilus-actions-config-tool.xml:861(member)
-msgid "does your action should only appear in some desktop environment(s) ?"
-msgstr ""
+#, fuzzy
+#| msgid "or will only appear in some given desktop environments,"
+msgid "should your action only appear in some desktop environment(s) ?"
+msgstr "o aparecerá sólo en algunos entornos de escritorio,"
 
 #: C/nautilus-actions-config-tool.xml:863(member)
-msgid "does your action should never appear in some desktop environment(s) ?"
-msgstr ""
+#, fuzzy
+#| msgid "or will not appear in some given desktop environments."
+msgid "should your action never appear in some desktop environment(s) ?"
+msgstr "o no aparecerá en algunos entornos de escritorio."
 
 #: C/nautilus-actions-config-tool.xml:868(para)
 msgid ""
@@ -2178,7 +2219,7 @@ msgstr ""
 msgid ""
 "The targeted desktop environment condition defaults to « <literal>Always "
 "appear</literal> », which means that the action will be a candidate to be "
-"displayed regarding of the current desktop environment."
+"displayed regardless of the current desktop environment."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:884(title)
@@ -2578,7 +2619,7 @@ msgid ""
 "In particular, it has <emphasis>nothing to do</emphasis> with the visual "
 "selection you may have done in the file manager window. And, in fact, which "
 "is the « <guilabel>first</guilabel> » selected item in a multiple selection "
-"is absolutly undefined and rather unpredictable."
+"is absolutely undefined and rather unpredictable."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:65(title)
@@ -2792,14 +2833,14 @@ msgstr "Selección múltiple"
 
 #: C/nautilus-actions-config-tool.xml:290(para)
 msgid ""
-"You may want your command be executed once, providing it the list of "
+"You may want your command to be executed once, providing it the list of "
 "selected items as argument."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:294(para)
 msgid ""
-"Or you may prefer your command be repeated for each selected item, providing "
-"a different item as argument for each execution."
+"Or you may prefer your command to be repeated for each selected item, "
+"providing a different item as argument for each execution."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:298(para)
@@ -2811,7 +2852,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:303(para)
 msgid ""
-"Though some parameters are not sensible to the count of the selection "
+"Though some parameters are not depending on the count of the selection "
 "(<abbrev>e.g.</abbrev> « <literal>%c</literal> », the selection count "
 "itself), most have two declensions:"
 msgstr ""
@@ -3298,12 +3339,12 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:79(para)
 msgid ""
-"Cut the profile to be moved, select the profile before which you want yout "
+"Cut the profile to be moved, select the profile before which you want your "
 "cut profile to be inserted, and paste it."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:85(para)
-msgid "Cick on the profile to be moved, and drag it to its right place."
+msgid "Click on the profile to be moved, and drag it to its right place."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:2(title)
@@ -3312,8 +3353,8 @@ msgstr "Organizar acciones en menús"
 
 #: C/nautilus-actions-config-tool.xml:3(para)
 msgid ""
-"As your list of actions will grow, you most probably will want organize them "
-"into menus, submenus, and so on."
+"As your list of actions will grow, you most probably will want to organize "
+"them into menus, submenus, and so on."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:7(para)
@@ -3470,25 +3511,32 @@ msgid "Cut/Delete"
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:9(para)
+#, fuzzy
+#| msgid "Delete the current selection."
+msgid "Deletion applies to current selection."
+msgstr "Eliminar la selección actual."
+
+#: C/nautilus-actions-config-tool.xml:12(para)
 msgid ""
-"Deletion applies to current selection. When the current selection covers all "
-"profiles of an action, the delete action really delete the selected "
-"profiles, leaving the action as invalid if all profiles were selected."
+"Be warned that selecting and deleting all profiles of an action will leave "
+"this action without any profile, so in an invalid state. The name of the "
+"action will be written with red (because it is invalid) and italic (because "
+"it has been modified) characters."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:18(title)
+#: C/nautilus-actions-config-tool.xml:21(title)
 msgid "Multiple selection"
 msgstr "Selección múltiple"
 
-#: C/nautilus-actions-config-tool.xml:19(para)
+#: C/nautilus-actions-config-tool.xml:22(para)
 msgid ""
 "Multiple selection is possible in <application>Nautilus-Actions "
 "Configuration Tool</application>. You can extend the current selection by "
-"pressing the touch <keycap>Ctrl</keycap> or <keycap>Shift</keycap> while "
-"selecting an item to add to the selection."
+"pressing <keycap>Ctrl</keycap> or <keycap>Shift</keycap> while selecting an "
+"item to add to the selection."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:25(para)
+#: C/nautilus-actions-config-tool.xml:28(para)
 msgid ""
 "<application>Nautilus-Actions Configuration Tool</application> only accepts "
 "homogeneous multiple selections. That is, you may select one or more "
@@ -3498,12 +3546,12 @@ msgid ""
 "know where to paste such a selection."
 msgstr ""
 
-#: C/nautilus-actions-config-tool.xml:31(para)
+#: C/nautilus-actions-config-tool.xml:34(para)
 msgid ""
 "Note that selecting any row means also selecting children of this row. These "
-"childs are said « implicitely selected »: they will be part of next edition "
+"children are said « implicitely selected »: they will be part of next edition "
 "operations, but are not considered when verifying if selection is "
-"homogeneous. Also, they cannot be unselected."
+"homogeneous. Also, they cannot be explicitely selected (nor unselected)."
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:2(title)
