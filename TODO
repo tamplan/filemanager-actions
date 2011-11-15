@@ -15,6 +15,13 @@ N-A BUGS
 
 - 2011-06-10: string list imported from schemas are imported wih the square brackets []
 
+- 2011-11-15: an action with one profile - if the action has a property set to empty
+  'folders=' and the profile does not have the property set, then set_defaults on the
+  profile set the default property (here, 'folders=/') instead of taking the action
+  value. On the UI, updating an action's property means updating the current profile.
+  This is ok as long as the action is also set  (...) there is one profile and the
+  action's property was not the default
+
 Plan de test: NACT should be able to import all types of actions and menus,
 kindly fixing small errors.
 - from 1.4.1 (version 1.1): an action from GConf or as a schemas
