@@ -1,3 +1,9 @@
+2011-11-15 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-export-format.c:
+	* src/nact/nact-main-toolbar.c:
+	Get ride of deprecated GtkHBox and GtkVBox.
+
 2011-11-05 Pierre Wieser <pwieser@trychlos.org>
 
 	* run-autogen.sh, run-distcheck.sh: Defines a special 'distcheck' mode.

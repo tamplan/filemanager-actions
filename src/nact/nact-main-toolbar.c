@@ -64,7 +64,7 @@ static int toolbar_pos[] = {
 };
 
 static void          init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id );
-static void          reorder_toolbars( GtkHBox *hbox, int toolbar_id, GtkWidget *handle );
+static void          reorder_toolbars( GtkWidget *hbox, int toolbar_id, GtkWidget *handle );
 static void          on_handle_finalize( gpointer data, GObject *handle );
 static void          on_attach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
 static void          on_detach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
@@ -148,7 +148,7 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 		g_object_weak_ref( G_OBJECT( handle ), ( GWeakNotify ) on_handle_finalize, NULL );
 		gtk_container_add( GTK_CONTAINER( handle ), toolbar );
 		gtk_container_add( GTK_CONTAINER( hbox ), handle );
-		reorder_toolbars( GTK_HBOX( hbox ), toolbar_id, handle );
+		reorder_toolbars( hbox, toolbar_id, handle );
 		gtk_widget_show_all( handle );
 
 	} else {
@@ -169,7 +169,7 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
  * so that the relative positions of toolbars are respected in hbox
  */
 static void
-reorder_toolbars( GtkHBox *hbox, int toolbar_id, GtkWidget *handle )
+reorder_toolbars( GtkWidget *hbox, int toolbar_id, GtkWidget *handle )
 {
 	int this_canonic_rel_pos;
 	int i;

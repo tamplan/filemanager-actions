@@ -40,6 +40,16 @@
 #include "nact-export-format.h"
 #include "base-gtk-utils.h"
 
+/*
+ * As of Gtk 3.2.0, GtkHBox and GtkVBox are deprecated. It is adviced
+ * to replace them with a GtkGrid.
+ * In this dialog box, we have a glade-defined VBox, said 'container_vbox',
+ * in which we dynamically embed the radio buttons as a hierarchy of
+ * VBoxes and HBoxes.
+ * While it is still possible to keep the glade-defined VBoxes, we will
+ * stay stuck with our VBox 'container_vbox', replacing only dynamically
+ * allocated GtkHBoxes and GtkVBoxes with one GtkGrid.
+ */
 typedef struct {
 	GtkWidget      *container_vbox;
 	GtkRadioButton *button;
@@ -58,7 +68,7 @@ typedef struct {
 
 static const NAIExporterFormat st_ask_str = { "Ask", ASKME_LABEL, ASKME_DESCRIPTION };
 
-static void draw_in_vbox( GtkWidget *container_vbox, const NAExportFormat *format, guint mode, gint id );
+static void draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gint id );
 static void format_weak_notify( VBoxData *vbox_data, GObject *vbox );
 static void select_default_iter( GtkWidget *widget, void *quark_ptr );
 static void export_format_on_toggled( GtkToggleButton *toggle_button, VBoxData *vbox_data );
@@ -82,6 +92,7 @@ nact_export_format_init_display( GtkWidget *container_vbox, const NAPivot *pivot
 	static const gchar *thisfn = "nact_export_format_init_display";
 	GList *formats, *ifmt;
 	NAExportFormat *format;
+	GtkWidget *container;
 
 	g_debug( "%s: container_vbox=%p, pivot=%p, mode=%u, sensitive=%s",
 			thisfn, ( void * ) container_vbox, ( void * ) pivot, mode,
@@ -89,8 +100,16 @@ nact_export_format_init_display( GtkWidget *container_vbox, const NAPivot *pivot
 
 	formats = na_exporter_get_formats( pivot );
 
+#if GTK_CHECK_VERSION( 3, 2, 0 )
+	container = gtk_grid_new();
+	gtk_box_pack_start( GTK_BOX( container_vbox ), container, FALSE, TRUE, 0 );
+	gtk_grid_set_row_spacing( GTK_GRID( container ), 6 );
+#else
+	container = container_vbox;
+#endif
+
 	for( ifmt = formats ; ifmt ; ifmt = ifmt->next ){
-		draw_in_vbox( container_vbox, NA_EXPORT_FORMAT( ifmt->data ), mode, -1 );
+		draw_in_vbox( container, NA_EXPORT_FORMAT( ifmt->data ), mode, -1 );
 	}
 
 	na_exporter_free_formats( formats );
@@ -107,7 +126,7 @@ nact_export_format_init_display( GtkWidget *container_vbox, const NAPivot *pivot
 		case EXPORT_FORMAT_DISPLAY_PREFERENCES:
 		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
 			format = na_export_format_new( &st_ask_str, NULL );
-			draw_in_vbox( container_vbox, format, mode, IPREFS_EXPORT_FORMAT_ASK );
+			draw_in_vbox( container, format, mode, IPREFS_EXPORT_FORMAT_ASK );
 			g_object_unref( format );
 			break;
 
@@ -120,38 +139,62 @@ nact_export_format_init_display( GtkWidget *container_vbox, const NAPivot *pivot
 }
 
 /*
- * container_box
- *  +- vbox                 new
- *  |   +- radio button     new
- *  |   +- hbox             new
- *  |   |   +- description  new
+ * container used to be a glade-defined GtkVBox in which we dynamically
+ * add for each mode:
+ *  +- vbox
+ *  |   +- radio button
+ *  |   +- hbox
+ *  |   |   +- description (assistant mode only)
+ *
+ *  Starting with Gtk 3.2, container is a GtkGrid attached to the
+ *  glade-defined GtkVBox. For each mode, we are defining:
+ *  +- grid
+ *  |   +- radio button
+ *  |   +- description (assistant mode only)
+ *
+ *  id=-1 but for the 'Ask me' mode
  */
 static void
-draw_in_vbox( GtkWidget *container_vbox, const NAExportFormat *format, guint mode, gint id )
+draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gint id )
 {
 	static GtkRadioButton *first_button = NULL;
-	GtkVBox *vbox;
+	GtkWidget *container_mode;
 	gchar *description;
-	GtkHBox *hbox;
 	GtkRadioButton *button;
 	guint size, spacing;
+#if ! GTK_CHECK_VERSION( 3, 2, 0 )
+	GtkWidget *hbox;
+#endif
 	gchar *markup, *label;
 	GtkLabel *desc_label;
 	VBoxData *vbox_data;
 
-	vbox = GTK_VBOX( gtk_vbox_new( FALSE, 0 ));
-	gtk_box_pack_start( GTK_BOX( container_vbox ), GTK_WIDGET( vbox ), FALSE, TRUE, 0 );
+#if GTK_CHECK_VERSION( 3, 2, 0 )
+	/* create a grid container which will embed two lines */
+	container_mode = gtk_grid_new();
+	gtk_grid_attach_next_to( GTK_GRID( container ), container_mode, NULL, GTK_POS_BOTTOM, 1, 2 );
+#else
+	/* create a vbox which will embed two children */
+	container_mode = gtk_vbox_new( FALSE, 0 );
+	gtk_box_pack_start( GTK_BOX( container ), container_mode, FALSE, TRUE, 0 );
+	g_object_set( G_OBJECT( container_mode ), "spacing", 6, NULL );
+#endif
 	description = na_export_format_get_description( format );
-	g_object_set( G_OBJECT( vbox ), "tooltip-text", description, NULL );
-	g_object_set( G_OBJECT( vbox ), "spacing", 6, NULL );
+	g_object_set( G_OBJECT( container_mode ), "tooltip-text", description, NULL );
 
+	/* first line/children is the radio button
+	 */
 	button = GTK_RADIO_BUTTON( gtk_radio_button_new( NULL ));
 	if( first_button ){
 		g_object_set( G_OBJECT( button ), "group", first_button, NULL );
 	} else {
 		first_button = button;
 	}
-	gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( button ), FALSE, TRUE, 0 );
+#if GTK_CHECK_VERSION( 3, 2, 0 )
+	gtk_grid_attach( GTK_GRID( container_mode ), GTK_WIDGET( button ), 0, 0, 1, 1 );
+#else
+	gtk_box_pack_start( GTK_BOX( container_mode ), GTK_WIDGET( button ), FALSE, TRUE, 0 );
+#endif
 
 	label = NULL;
 	markup = NULL;
@@ -172,7 +215,7 @@ draw_in_vbox( GtkWidget *container_vbox, const NAExportFormat *format, guint mod
 			label = na_export_format_get_label( format );
 			markup = g_markup_printf_escaped( "<b>%s</b>", label );
 			gtk_label_set_markup( radio_label, markup );
-			gtk_container_vbox_add( GTK_CONTAINER( button ), GTK_WIDGET( radio_label ));
+			gtk_container_add( GTK_CONTAINER( button ), GTK_WIDGET( radio_label ));
 			break;*/
 	}
 
@@ -180,9 +223,6 @@ draw_in_vbox( GtkWidget *container_vbox, const NAExportFormat *format, guint mod
 	switch( mode ){
 
 		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
-			hbox = GTK_HBOX( gtk_hbox_new( TRUE, 0 ));
-			gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox ), FALSE, TRUE, 0 );
-
 			gtk_widget_style_get( GTK_WIDGET( button ), "indicator-size", &size, NULL );
 			gtk_widget_style_get( GTK_WIDGET( button ), "indicator-spacing", &spacing, NULL );
 			size += 2*spacing;
@@ -190,17 +230,28 @@ draw_in_vbox( GtkWidget *container_vbox, const NAExportFormat *format, guint mod
 			desc_label = GTK_LABEL( gtk_label_new( description ));
 			g_object_set( G_OBJECT( desc_label ), "xpad", size, NULL );
 			g_object_set( G_OBJECT( desc_label ), "xalign", 0, NULL );
+
+#if GTK_CHECK_VERSION( 3, 2, 0 )
+			gtk_grid_attach( GTK_GRID( container_mode ), GTK_WIDGET( desc_label ), 0, 1, 1, 1 );
+#else
+			hbox = gtk_hbox_new( TRUE, 0 );
+			gtk_box_pack_start( GTK_BOX( container_mode ), hbox, FALSE, TRUE, 0 );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( desc_label ), TRUE, TRUE, 4 );
+#endif
 			break;
 	}
 
 	vbox_data = g_new0( VBoxData, 1 );
-	vbox_data->container_vbox = container_vbox;
+#if GTK_CHECK_VERSION( 3, 2, 0 )
+	vbox_data->container_vbox = gtk_widget_get_parent( container );
+#else
+	vbox_data->container_vbox = container;
+#endif
 	vbox_data->button = button;
 	vbox_data->format = g_object_ref(( gpointer ) format );
 
-	g_object_set_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_VBOX_DATA, vbox_data );
-	g_object_weak_ref( G_OBJECT( vbox ), ( GWeakNotify ) format_weak_notify, ( gpointer ) vbox_data );
+	g_object_set_data( G_OBJECT( container_mode ), EXPORT_FORMAT_PROP_VBOX_DATA, vbox_data );
+	g_object_weak_ref( G_OBJECT( container_mode ), ( GWeakNotify ) format_weak_notify, ( gpointer ) vbox_data );
 
 	g_free( markup );
 	g_free( label );
@@ -234,6 +285,10 @@ format_weak_notify( VBoxData *vbox_data, GObject *vbox )
  * Data for each format has been set on the new embedding vbox, previously
  * created in nact_export_format_init_display(). We are iterating on these
  * vbox to setup the initially active radio button.
+ *
+ * Starting with Gtk 3.2.0, the 'container_vbox' no more contains GtkVBoxes,
+ * but a grid (one column, n rows) whose each row contains itself one grid
+ * for each mode.
  */
 void
 nact_export_format_select( const GtkWidget *container_vbox, gboolean editable, GQuark format )
@@ -244,8 +299,11 @@ nact_export_format_select( const GtkWidget *container_vbox, gboolean editable, G
 	gtk_container_foreach( GTK_CONTAINER( container_vbox ), ( GtkCallback ) select_default_iter, GUINT_TO_POINTER( format ));
 }
 
+/*
+ * container_mode is a GtkVBox, or a GtkGrid starting with Gtk 3.2
+ */
 static void
-select_default_iter( GtkWidget *vbox, void *quark_ptr )
+select_default_iter( GtkWidget *container_mode, void *quark_ptr )
 {
 	VBoxData *vbox_data;
 	GQuark format_quark;
@@ -253,7 +311,7 @@ select_default_iter( GtkWidget *vbox, void *quark_ptr )
 	gboolean editable, sensitive;
 
 	vbox_data = ( VBoxData * )
-			g_object_get_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_VBOX_DATA );
+			g_object_get_data( G_OBJECT( container_mode ), EXPORT_FORMAT_PROP_VBOX_DATA );
 
 	editable = ( gboolean ) GPOINTER_TO_UINT(
 			g_object_get_data( G_OBJECT( vbox_data->container_vbox ), EXPORT_FORMAT_PROP_CONTAINER_EDITABLE ));
@@ -317,13 +375,16 @@ nact_export_format_get_selected( const GtkWidget *container_vbox )
 	return( format );
 }
 
+/*
+ * container_mode is a GtkVBox, or a GtkGrid starting with Gtk 3.2
+ */
 static void
-get_selected_iter( GtkWidget *vbox, NAExportFormat **format )
+get_selected_iter( GtkWidget *container_mode, NAExportFormat **format )
 {
 	VBoxData *vbox_data;
 
 	if( !( *format  )){
-		vbox_data = ( VBoxData * ) g_object_get_data( G_OBJECT( vbox ), EXPORT_FORMAT_PROP_VBOX_DATA );
+		vbox_data = ( VBoxData * ) g_object_get_data( G_OBJECT( container_mode ), EXPORT_FORMAT_PROP_VBOX_DATA );
 		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( vbox_data->button ))){
 			*format = vbox_data->format;
 		}
