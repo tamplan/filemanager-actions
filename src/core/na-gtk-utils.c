@@ -56,8 +56,11 @@ na_gtk_utils_search_for_child_widget( GtkContainer *container, const gchar *name
 
 		if( GTK_IS_WIDGET( ic->data )){
 			child = GTK_WIDGET( ic->data );
+#if GTK_CHECK_VERSION( 2, 20, 0 )
 			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
-
+#else
+			child_name = gtk_widget_get_name( child );
+#endif
 			if( child_name && strlen( child_name )){
 				/*g_debug( "%s: child=%s", thisfn, child_name );*/
 
@@ -75,3 +78,54 @@ na_gtk_utils_search_for_child_widget( GtkContainer *container, const gchar *name
 	g_list_free( children );
 	return( found );
 }
+
+#ifdef NA_MAINTAINER_MODE
+static void
+dump_children( GtkContainer *container, int level )
+{
+	static const gchar *thisfn = "na_gtk_utils_dump_children";
+	GList *children = gtk_container_get_children( container );
+	GList *ic;
+	GtkWidget *child;
+	const gchar *child_name;
+	GString *prefix;
+	int i;
+
+	prefix = g_string_new( "" );
+	for( i = 0 ; i < level ; ++i ){
+		g_string_append_printf( prefix, "%s", "|  " );
+	}
+
+	for( ic = children ; ic ; ic = ic->next ){
+
+		if( GTK_IS_WIDGET( ic->data )){
+			child = GTK_WIDGET( ic->data );
+#if GTK_CHECK_VERSION( 2, 20, 0 )
+			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
+#else
+			child_name = gtk_widget_get_name( child );
+#endif
+			if( child_name && strlen( child_name )){
+				g_debug( "%s: %s%s\t%s", thisfn, prefix->str, G_OBJECT_TYPE_NAME( child ), child_name );
+
+				if( GTK_IS_CONTAINER( child )){
+					dump_children( GTK_CONTAINER( child ), level+1 );
+				}
+			}
+		}
+	}
+
+	g_list_free( children );
+	g_string_free( prefix, TRUE );
+}
+
+void
+na_gtk_utils_dump_children( GtkContainer *container )
+{
+	static const gchar *thisfn = "na_gtk_utils_dump_children";
+
+	g_debug( "%s: container=%p", thisfn, container );
+
+	dump_children( container, 0 );
+}
+#endif

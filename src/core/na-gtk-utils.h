@@ -42,6 +42,10 @@ G_BEGIN_DECLS
 
 GtkWidget *na_gtk_utils_search_for_child_widget( GtkContainer *container, const gchar *name );
 
+#ifdef NA_MAINTAINER_MODE
+void       na_gtk_utils_dump_children          ( GtkContainer *container );
+#endif
+
 G_END_DECLS
 
 #endif /* __CORE_API_NA_GTK_UTILS_H__ */

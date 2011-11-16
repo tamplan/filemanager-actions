@@ -879,6 +879,10 @@ on_all_widgets_showed_class_handler( BaseWindow *window )
 		if( BASE_WINDOW_GET_CLASS( window )->all_widgets_showed ){
 			BASE_WINDOW_GET_CLASS( window )->all_widgets_showed( window );
 		}
+
+#ifdef NA_MAINTAINER_MODE
+		base_window_dump_children( BASE_WINDOW( window ));
+#endif
 	}
 }
 
@@ -948,6 +952,25 @@ on_delete_event( GtkWidget *toplevel, GdkEvent *event, BaseWindow *window )
 
 	return( stop );
 }
+
+#ifdef NA_MAINTAINER_MODE
+/*
+ * base_window_dump_children:
+ * @window: this #BaseWindow instance.
+ *
+ * Displays the known children of this window.
+ */
+void
+base_window_dump_children( const BaseWindow *window )
+{
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	if( !window->private->dispose_has_run ){
+
+		na_gtk_utils_dump_children( GTK_CONTAINER( window->private->gtk_toplevel ));
+	}
+}
+#endif
 
 /**
  * base_window_get_application:

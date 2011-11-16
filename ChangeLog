@@ -1,5 +1,11 @@
 2011-11-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-window.c:
+	* src/nact/base-window.h (base_window_dump_children): New function.
+
+	* src/core/na-gtk-utils.c:
+	* src/core/na-gtk-utils.h (na_gtk_utils_dump_children): New function.
+
 	* docs/nact/C/nact-conditions.xml:
 	* docs/nact/C/nact-edit.xml:
 	* docs/nact/C/nact-execution.xml:
