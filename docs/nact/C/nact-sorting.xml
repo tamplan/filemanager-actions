@@ -70,8 +70,14 @@
   <sect3 id="usage-sorting-manual">
     <title>Manually organizing your actions and menus</title>
     <para>
-      In this mode, a new action or a new menu will be inserted just before
-      the current action or menu, inside of the same parent if apply. 
+      When items are manually sorted in the list, new items are usually
+      inserted just at the current position.
+    </para>
+    <para>
+      There is nonetheless the case where an action is
+      selected, and not expanded (or has currently only one profile).
+      Inserting a new profile will not insert it before the action,
+      but inside of the action. 
     </para>
     <para>
       To choose this mode:

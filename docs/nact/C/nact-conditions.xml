@@ -575,8 +575,8 @@
       Capabilities are some properties that a file may exhibit to the user.
     </para>
     <para>
-      But the <literal>Local</literal> capability, all others are dependent
-      of the user who executes the command.
+      But except for the <literal>Local</literal> capability, all others
+      depend on the user who executes the command.
     </para>
     <para>
       You may so decide that your action will appear, or not, depending

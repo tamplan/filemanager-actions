@@ -11,9 +11,9 @@
     </para>
     <para>
       Be warned that selecting and deleting all profiles of an action
-      will leave this action without any profile, so in an invalid state.
-      The name of the action will be written with red (because it is
-      invalid) and italic (because it has been modified) characters.
+      leaves it without any profile, so in an invalid state.
+      The name of the action will be written in red (because it is
+      invalid) italic (because it has been modified) characters.
     </para>
   </sect3>
 

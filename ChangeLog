@@ -1,3 +1,14 @@
+2011-11-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* docs/nact/C/nact-conditions.xml:
+	* docs/nact/C/nact-edit.xml:
+	* docs/nact/C/nact-execution.xml:
+	* docs/nact/C/nact-profiles.xml:
+	* docs/nact/C/nact-sorting.xml:
+	* src/nact/nact-assistant-import.c:
+	Fix with advices of Christian Kirbach.
+	Fix #660399, reported by Christian Kirbach.
+
 2011-11-15 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-export-format.c:
