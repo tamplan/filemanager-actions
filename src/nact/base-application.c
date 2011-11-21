@@ -511,7 +511,7 @@ appli_initialize_gtk( BaseApplication *application, int *code )
 #endif
 
 	/* setup default Gtk+ application name
-	 * must have been set at instanciationtime by the derived class
+	 * must have been set at instanciation time by the derived class
 	 */
 	name = base_application_get_application_name( application );
 	if( name && g_utf8_strlen( name, -1 )){

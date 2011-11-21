@@ -1,5 +1,7 @@
 2011-11-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.c (appli_initialize_gtk): Fix a typo.
+
 	* src/core/na-gtk-utils.c (na_gtk_utils_dump_children):
 	Increment the level of the first child of the hierarchy.
 
