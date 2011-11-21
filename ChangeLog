@@ -1,5 +1,8 @@
 2011-11-21 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-gtk-utils.c (na_gtk_utils_dump_children):
+	Increment the level of the first child of the hierarchy.
+
 	* run-autogen.sh: Be able to run from another directory.
 
 2011-11-16 Pierre Wieser <pwieser@trychlos.org>

@@ -81,9 +81,8 @@ na_gtk_utils_search_for_child_widget( GtkContainer *container, const gchar *name
 
 #ifdef NA_MAINTAINER_MODE
 static void
-dump_children( GtkContainer *container, int level )
+dump_children( const gchar *thisfn, GtkContainer *container, int level )
 {
-	static const gchar *thisfn = "na_gtk_utils_dump_children";
 	GList *children = gtk_container_get_children( container );
 	GList *ic;
 	GtkWidget *child;
@@ -92,7 +91,7 @@ dump_children( GtkContainer *container, int level )
 	int i;
 
 	prefix = g_string_new( "" );
-	for( i = 0 ; i < level ; ++i ){
+	for( i = 0 ; i <= level ; ++i ){
 		g_string_append_printf( prefix, "%s", "|  " );
 	}
 
@@ -109,7 +108,7 @@ dump_children( GtkContainer *container, int level )
 				g_debug( "%s: %s%s\t%s", thisfn, prefix->str, G_OBJECT_TYPE_NAME( child ), child_name );
 
 				if( GTK_IS_CONTAINER( child )){
-					dump_children( GTK_CONTAINER( child ), level+1 );
+					dump_children( thisfn, GTK_CONTAINER( child ), level+1 );
 				}
 			}
 		}
@@ -126,6 +125,6 @@ na_gtk_utils_dump_children( GtkContainer *container )
 
 	g_debug( "%s: container=%p", thisfn, container );
 
-	dump_children( container, 0 );
+	dump_children( thisfn, container, 0 );
 }
 #endif
