@@ -1,6 +1,7 @@
 #!/bin/sh
 
 autogen_target=${autogen_target:-normal}
+srcdir=$(cd ${0%/*}; pwd)
 
 # a nautilus-actions-x.y may remain after an aborted make distcheck
 # such a directory breaks gnome-autogen.sh generation
@@ -11,7 +12,7 @@ for d in $(find . -maxdepth 1 -type d -name 'nautilus-actions-*'); do
 done
 
 [ "${autogen_target}" = "normal" ] &&
-	exec ./autogen.sh \
+	exec ${srcdir}/autogen.sh \
 		--prefix=$(pwd)/install \
 		--sysconfdir=/etc \
 		--with-nautilus-extdir=$(pwd)/install/lib/nautilus \
@@ -24,7 +25,7 @@ done
 
 # 'doc' mode: enable deprecated, manuals and gtk-doc
 [ "${autogen_target}" = "doc" ] &&
-	exec ./autogen.sh \
+	exec ${srcdir}/autogen.sh \
 		--prefix=$(pwd)/install \
 		--sysconfdir=/etc \
 		--with-nautilus-extdir=$(pwd)/install/lib/nautilus \
@@ -38,7 +39,7 @@ done
 
 # 'distcheck' mode: disable deprecated, enable manuals and gtk-doc
 [ "${autogen_target}" = "distcheck" ] &&
-	exec ./autogen.sh \
+	exec ${srcdir}/autogen.sh \
 		--prefix=$(pwd)/install \
 		--sysconfdir=/etc \
 		--with-nautilus-extdir=$(pwd)/install/lib/nautilus \

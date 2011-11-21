@@ -1,3 +1,7 @@
+2011-11-21 Pierre Wieser <pwieser@trychlos.org>
+
+	* run-autogen.sh: Be able to run from another directory.
+
 2011-11-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-window.c:
