@@ -40,6 +40,7 @@
 
 #include <core/na-importer.h>
 #include <core/na-iprefs.h>
+#include <core/na-gtk-utils.h>
 
 #include "nact-application.h"
 #include "nact-assistant-import.h"
@@ -75,6 +76,7 @@ struct _NactAssistantImportClassPrivate {
  */
 struct _NactAssistantImportPrivate {
 	gboolean     dispose_has_run;
+	GtkWidget   *file_chooser;
 	GList       *results;
 };
 
@@ -96,7 +98,7 @@ static void          runtime_init_file_selector( NactAssistantImport *window, Gt
 static void          on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
 static gboolean      has_readable_files( GSList *uris );
 static void          runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant );
-static void          set_import_mode( NactAssistantImport *window, gint mode );
+static void          set_import_mode( GtkAssistant *assistant, gint mode );
 
 static void          assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 static void          prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
@@ -106,6 +108,8 @@ static void          assistant_apply( BaseAssistant *window, GtkAssistant *assis
 static NAObjectItem *check_for_existence( const NAObjectItem *, NactMainWindow *window );
 static void          prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
 static void          free_results( GList *list );
+
+static GtkWidget    *find_widget_from_page( GtkWidget *page, const gchar *name );
 
 GType
 nact_assistant_import_get_type( void )
@@ -296,6 +300,10 @@ runtime_init_intro( NactAssistantImport *window, GtkAssistant *assistant )
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
 
+/*
+ * Starting with Gtk 3.2, the widgets of the page are no more attached
+ * to the GtkAssistant, but only to the page.
+ */
 static void
 runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant )
 {
@@ -305,11 +313,15 @@ runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant
 	gchar *uri;
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FILES_SELECTION );
+	g_return_if_fail( GTK_IS_CONTAINER( page ));
 
-	g_debug( "%s: window=%p, assistant=%p, page=%p",
-			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
+	chooser = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "ImportFileChooser" );
+	g_return_if_fail( GTK_IS_FILE_CHOOSER( chooser ));
 
-	chooser = base_window_get_widget( BASE_WINDOW( window ), "ImportFileChooser" );
+	g_debug( "%s: window=%p, assistant=%p, page=%p, chooser=%p",
+			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page, ( void * ) chooser );
+
+
 	uri = na_settings_get_string( NA_IPREFS_IMPORT_ASSISTANT_URI, NULL, NULL );
 	if( uri && strlen( uri )){
 		gtk_file_chooser_set_current_folder_uri( GTK_FILE_CHOOSER( chooser ), uri );
@@ -323,11 +335,12 @@ runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant
 			G_CALLBACK( on_file_selection_changed ));
 
 	gtk_assistant_set_page_complete( assistant, page, FALSE );
+	window->private->file_chooser = chooser;
 }
-
 static void
 on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 {
+	static const gchar *thisfn = "nact_assistant_import_on_file_selection_changed";
 	GtkAssistant *assistant;
 	gint pos;
 	GSList *uris;
@@ -344,8 +357,16 @@ on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data )
 		enabled = has_readable_files( uris );
 
 		if( enabled ){
+			/*
+			 * if user has selected the 'Recently used' place in the file chooser,
+			 * then the current folder uri is null
+			 * (Gtk+ 3.2.0, don't know before...)
+			 */
 			folder = gtk_file_chooser_get_current_folder_uri( GTK_FILE_CHOOSER( chooser ));
-			na_settings_set_string( NA_IPREFS_IMPORT_ASSISTANT_URI, folder );
+			g_debug( "%s: current folder uri=%s", thisfn, folder );
+			if( folder && strlen( folder )){
+				na_settings_set_string( NA_IPREFS_IMPORT_ASSISTANT_URI, folder );
+			}
 			g_free( folder );
 		}
 
@@ -420,42 +441,46 @@ runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 	GtkWidget *page;
 	guint mode;
 
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
+	g_debug( "%s: window=%p, assistant=%p",
+			thisfn, ( void * ) window, ( void * ) assistant );
 
 	mode = na_iprefs_get_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL );
-	set_import_mode( window, mode );
+	set_import_mode( assistant, mode );
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
 
 static void
-set_import_mode( NactAssistantImport *window, gint mode )
+set_import_mode( GtkAssistant *assistant, gint mode )
 {
-	GtkToggleButton *button;
+	GtkWidget *page;
+	GtkWidget *button;
+
+	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
+	g_return_if_fail( GTK_IS_CONTAINER( page ));
 
 	switch( mode ){
 		case IMPORTER_MODE_ASK:
-			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ));
-			gtk_toggle_button_set_active( button, TRUE );
+			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "AskButton" );
 			break;
 
 		case IMPORTER_MODE_RENUMBER:
-			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ));
-			gtk_toggle_button_set_active( button, TRUE );
+			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "RenumberButton" );
 			break;
 
 		case IMPORTER_MODE_OVERRIDE:
-			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ));
-			gtk_toggle_button_set_active( button, TRUE );
+			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "OverrideButton" );
 			break;
 
 		case IMPORTER_MODE_NO_IMPORT:
 		default:
-			button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ));
-			gtk_toggle_button_set_active( button, TRUE );
+			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "NoImportButton" );
 			break;
 	}
+
+	g_return_if_fail( GTK_IS_TOGGLE_BUTTON( button ));
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 }
 
 static void
@@ -488,7 +513,6 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 {
 	static const gchar *thisfn = "nact_assistant_import_prepare_confirm";
 	gchar *text, *tmp;
-	GtkWidget *chooser;
 	GSList *uris, *is;
 	GtkLabel *confirm_label;
 
@@ -501,8 +525,7 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	g_free( text );
 	text = tmp;
 
-	chooser = base_window_get_widget( BASE_WINDOW( window ), "ImportFileChooser" );
-	uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
+	uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));
 
 	for( is = uris ; is ; is = is->next ){
 		tmp = g_strdup_printf( "%s\t%s\n", text, ( gchar * ) is->data );
@@ -514,7 +537,7 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	g_free( text );
 	text = tmp;
 
-	confirm_label = GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AssistantImportConfirmLabel" ));
+	confirm_label = GTK_LABEL( find_widget_from_page( page, "AssistantImportConfirmLabel" ));
 	gtk_label_set_markup( confirm_label, text );
 	g_free( text );
 
@@ -524,16 +547,25 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 static gint
 get_import_mode( NactAssistantImport *window )
 {
+	GtkAssistant *assistant;
+	GtkWidget *page;
 	GtkToggleButton *renumber_button;
 	GtkToggleButton *override_button;
 	GtkToggleButton *ask_button;
 	gint mode;
 
-	renumber_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ));
-	override_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ));
-	ask_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ));
-
 	mode = IMPORTER_MODE_NO_IMPORT;
+
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
+	g_return_val_if_fail( GTK_IS_ASSISTANT( assistant ), mode );
+
+	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
+	g_return_val_if_fail( GTK_IS_CONTAINER( page ), mode );
+
+	renumber_button = GTK_TOGGLE_BUTTON( find_widget_from_page( page, "RenumberButton" ));
+	override_button = GTK_TOGGLE_BUTTON( find_widget_from_page( page, "OverrideButton" ));
+	ask_button = GTK_TOGGLE_BUTTON( find_widget_from_page( page, "AskButton" ));
+
 	if( gtk_toggle_button_get_active( renumber_button )){
 		mode = IMPORTER_MODE_RENUMBER;
 
@@ -551,6 +583,8 @@ static gchar *
 add_import_mode( NactAssistantImport *window, const gchar *text )
 {
 	gint mode;
+	GtkAssistant *assistant;
+	GtkWidget *page;
 	gchar *label1, *label2, *label3;
 	gchar *result;
 
@@ -559,25 +593,31 @@ add_import_mode( NactAssistantImport *window, const gchar *text )
 	label2 = NULL;
 	result = NULL;
 
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
+	g_return_val_if_fail( GTK_IS_ASSISTANT( assistant ), NULL );
+
+	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
+	g_return_val_if_fail( GTK_IS_CONTAINER( page ), NULL );
+
 	switch( mode ){
 		case IMPORTER_MODE_NO_IMPORT:
-			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "NoImportButton" ))), "_" );
-			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "NoImportLabel"))));
+			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( find_widget_from_page( page, "NoImportButton" ))), "_" );
+			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( find_widget_from_page( page, "NoImportLabel"))));
 			break;
 
 		case IMPORTER_MODE_RENUMBER:
-			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "RenumberButton" ))), "_" );
-			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "RenumberLabel"))));
+			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( find_widget_from_page( page, "RenumberButton" ))), "_" );
+			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( find_widget_from_page( page, "RenumberLabel"))));
 			break;
 
 		case IMPORTER_MODE_OVERRIDE:
-			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "OverrideButton" ))), "_" );
-			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "OverrideLabel"))));
+			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( find_widget_from_page( page, "OverrideButton" ))), "_" );
+			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( find_widget_from_page( page, "OverrideLabel"))));
 			break;
 
 		case IMPORTER_MODE_ASK:
-			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( base_window_get_widget( BASE_WINDOW( window ), "AskButton" ))), "_" );
-			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( base_window_get_widget( BASE_WINDOW( window ), "AskLabel"))));
+			label1 = na_core_utils_str_remove_char( gtk_button_get_label( GTK_BUTTON( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "AskButton" ))), "_" );
+			label2 = g_strdup( gtk_label_get_text( GTK_LABEL( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "AskLabel"))));
 			break;
 
 		default:
@@ -605,7 +645,6 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	static const gchar *thisfn = "nact_assistant_import_assistant_apply";
 	NactAssistantImport *window;
 	NAImporterParms importer_parms;
-	GtkWidget *chooser;
 	BaseWindow *main_window;
 	GList *it;
 	GList *imported_items;
@@ -624,8 +663,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	g_object_get( G_OBJECT( wnd ), BASE_PROP_PARENT, &main_window, NULL );
 	importer_parms.parent = base_window_get_gtk_toplevel( main_window );
-	chooser = base_window_get_widget( BASE_WINDOW( window ), "ImportFileChooser" );
-	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( chooser ));
+	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));
 	importer_parms.mode = get_import_mode( window );
 	importer_parms.check_fn = ( NAIImporterCheckFn ) check_for_existence;
 	importer_parms.check_fn_data = main_window;
@@ -752,7 +790,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		text = tmp;
 	}
 
-	summary_textview = GTK_TEXT_VIEW( base_window_get_widget( BASE_WINDOW( window ), "AssistantImportSummaryTextView" ));
+	summary_textview = GTK_TEXT_VIEW( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "AssistantImportSummaryTextView" ));
 	summary_buffer = gtk_text_view_get_buffer( summary_textview );
 	gtk_text_buffer_set_text( summary_buffer, text, -1 );
 	g_free( text );
@@ -784,4 +822,16 @@ free_results( GList *list )
 	}
 
 	g_list_free( list );
+}
+
+static GtkWidget *
+find_widget_from_page( GtkWidget *page, const gchar *name )
+{
+	GtkWidget *widget;
+
+	g_return_val_if_fail( GTK_IS_CONTAINER( page ), NULL );
+
+	widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), name );
+
+	return( widget );
 }
