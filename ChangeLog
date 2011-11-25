@@ -1,5 +1,11 @@
 2011-11-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* run-autogen.sh:
+	Rename 'autogen_target' variable to 'target'.
+	Remove distcheck target as doc is enough to build manuals.
+
+	* run-distcheck.sh: Update to new 'target' variable and 'doc' target.
+
 	* docs/reference/Makefile.am:
 	gtk-doc is no more a mandatory package.
 	Requires gtk-doc 1.15 to take advantage of new source option.
