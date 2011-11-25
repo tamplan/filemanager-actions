@@ -91,7 +91,6 @@ AC_PROG_MAKE_SET
 
 # Gnome stuff
 GNOME_COMMON_INIT
-GNOME_DOC_INIT
 GNOME_MAINTAINER_MODE_DEFINES
 NA_LINK_AS_NEEDED
 NA_GNOME_COMPILE_WARNINGS([],[-ansi -Wno-overlength-strings -Wformat=2])
@@ -156,17 +155,20 @@ AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 #   by gtk-doc.make
 # - API documentation should not be built (would be incomplete) when deprecated
 #   symbols are not enabled
-GTK_DOC_CHECK([1.10],[--flavour no-tmpl])
-have_gtk_doc_115="no"
-if test "x${enable_gtk_doc}" = "xyes"; then
-	AC_MSG_CHECKING([for gtk-doc >= 1.15])
-	PKG_CHECK_EXISTS([gtk-doc >= 1.15],[have_gtk_doc_115="yes"],[have_gtk_doc_115="no"])
-	AC_MSG_RESULT([${have_gtk_doc_115}])
-fi
-AM_CONDITIONAL([HAVE_GTK_DOC_115], [test x$have_gtk_doc_115 = xyes])
+m4_ifdef([GTK_DOC_CHECK], [
+GTK_DOC_CHECK([1.15],[--flavour no-tmpl])
+],[
+AM_CONDITIONAL([ENABLE_GTK_DOC], false)
+])
 if test "x${enable_gtk_doc}" = "xyes" -a "${enable_deprecated}" = "no"; then
 	AC_MSG_WARN([API documentation will be incomplete as deprecated symbols are disabled])
 fi
+
+m4_ifdef([GNOME_DOC_INIT], [
+GNOME_DOC_INIT
+][
+AM_CONDITIONAL([HAVE_GNOME_DOC_UTILS], false)
+])
 
 # defines log domains when in maintainer mode
 NA_LOG_DOMAINS

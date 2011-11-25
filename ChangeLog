@@ -1,5 +1,7 @@
 2011-11-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: gtk-doc and gnome-doc-utils are no more mandatory packages.
+
 	* Makefile.am:
 	No more try to rebuild manuals when making distcheck.
 	Move gnome-doc-utils.make and gtk-doc.make to MAINTAINERCLEANFILES target.
