@@ -1,5 +1,7 @@
 2011-11-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/nact/Makefile.am: Fully review the NACT User's Manual build.
+
 	* configure.ac: gtk-doc and gnome-doc-utils are no more mandatory packages.
 
 	* Makefile.am:
