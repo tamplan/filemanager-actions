@@ -38,22 +38,20 @@ SUBDIRS = \
 	tools								\
 	$(NULL)
 
-# a foo directory so that make distcheck has a vpath which is prefixed
-# with a make variable, instead of hardcoded as returned by pkg-config
+# - a foo directory so that make distcheck has a vpath which is prefixed
+#   with a make variable, instead of hardcoded as returned by pkg-config
+# - do not try to install schemas when making distcheck
+# - do not rebuild manuals
 DISTCHECK_CONFIGURE_FLAGS = \
-	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck'
-
-# do not try to install schemas when making distcheck
-DISTCHECK_CONFIGURE_FLAGS += \
+	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck' \
 	--enable-silent-rules				\
 	--enable-as-needed					\
-	--enable-deprecated					\
 	--disable-schemas-install			\
+	--disable-deprecated				\
 	--disable-scrollkeeper				\
-	--enable-gtk-doc					\
-	--enable-gtk-doc-pdf				\
-	--enable-html-manuals				\
-	--enable-pdf-manuals				\
+	--disable-gtk-doc					\
+	--disable-html-manuals				\
+	--disable-pdf-manuals				\
 	$(NULL)
 
 EXTRA_DIST = \
@@ -65,11 +63,17 @@ EXTRA_DIST = \
 	$(NULL)
 
 DISTCLEANFILES = \
-	gnome-doc-utils.make				\
-	gtk-doc.make						\
 	intltool-extract					\
 	intltool-merge						\
 	intltool-update						\
+	$(NULL)
+
+# Though the Gnome doc says to add these files to DISTCLEANFILES, the
+# Automake manual states that distclean target should not remove any
+# distributed files (but leave a clean distribution)  
+MAINTAINERCLEANFILES = \
+	gnome-doc-utils.make				\
+	gtk-doc.make						\
 	$(NULL)
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@

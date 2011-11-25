@@ -1,5 +1,9 @@
 2011-11-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* Makefile.am:
+	No more try to rebuild manuals when making distcheck.
+	Move gnome-doc-utils.make and gtk-doc.make to MAINTAINERCLEANFILES target.
+
 	* run-autogen.sh:
 	Rename 'autogen_target' variable to 'target'.
 	Remove distcheck target as doc is enough to build manuals.
