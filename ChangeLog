@@ -1,5 +1,9 @@
 2011-11-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/reference/Makefile.am:
+	gtk-doc is no more a mandatory package.
+	Requires gtk-doc 1.15 to take advantage of new source option.
+
 	* docs/reference/nautilus-actions-docs.xml: Bump copyright year.
 
 2011-11-21 Pierre Wieser <pwieser@trychlos.org>
