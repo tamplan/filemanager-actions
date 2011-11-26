@@ -743,14 +743,11 @@ nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, G
 		actual_path = do_insert_before( ied, items, insert_path );
 
 		parent = na_object_get_parent( items->data );
-		g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 		if( parent ){
 			na_object_check_status( parent );
 		} else {
 			for( it = items ; it ; it = it->next ){
-				g_debug( "%s: checking %p", thisfn, ( void * ) it->data );
 				na_object_check_status( it->data );
-				na_object_dump( it->data );
 			}
 			g_signal_emit_by_name( ied->window, TREE_SIGNAL_LEVEL_ZERO_CHANGED, TRUE );
 		}
@@ -863,7 +860,9 @@ do_insert_before( IEditableData *ied, GList *items, GtkTreePath *asked_path )
 		}
 	}
 
+	/* an l-value here is useless, but makes gcc happy */
 	items = g_list_reverse( reversed );
+
 	return( actual_path );
 }
 
