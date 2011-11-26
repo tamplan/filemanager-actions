@@ -489,7 +489,7 @@ string_to_array( const gchar *string )
  *
  * Set the type of the just-allocated @boxed object.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_boxed_set_type( NABoxed *boxed, guint type )
@@ -508,7 +508,7 @@ na_boxed_set_type( NABoxed *boxed, guint type )
  *
  * Returns: %TRUE if @a and @b are equal, %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_boxed_are_equal( const NABoxed *a, const NABoxed *b )
@@ -542,7 +542,7 @@ na_boxed_are_equal( const NABoxed *a, const NABoxed *b )
  * Returns: a copy of @boxed, as a newly allocated #NABoxed which should
  * be g_object_unref() by the caller.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 NABoxed *
 na_boxed_copy( const NABoxed *boxed )
@@ -569,7 +569,7 @@ na_boxed_copy( const NABoxed *boxed )
  *
  * Dumps the @boxed box.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_boxed_dump( const NABoxed *boxed )
@@ -603,7 +603,7 @@ na_boxed_dump( const NABoxed *boxed )
  * by the caller, or %NULL if the type is unknowned, or does not provide
  * the 'from_string' function.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 NABoxed *
 na_boxed_new_from_string( guint type, const gchar *string )
@@ -630,7 +630,7 @@ na_boxed_new_from_string( guint type, const gchar *string )
  * Returns: the boolean value if @boxed is of %NA_DATA_TYPE_BOOLEAN type,
  * %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_boxed_get_boolean( const NABoxed *boxed )
@@ -655,7 +655,7 @@ na_boxed_get_boolean( const NABoxed *boxed )
  * Returns: a const pointer to the data if @boxed is of %NA_DATA_TYPE_POINTER
  * type, %NULL else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gconstpointer
 na_boxed_get_pointer( const NABoxed *boxed )
@@ -679,7 +679,7 @@ na_boxed_get_pointer( const NABoxed *boxed )
  * Returns: a newly allocated string if @boxed is of %NA_DATA_TYPE_STRING
  * type, which should be g_free() by the caller, %NULL else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gchar *
 na_boxed_get_string( const NABoxed *boxed )
@@ -703,7 +703,7 @@ na_boxed_get_string( const NABoxed *boxed )
  * Returns: a newly allocated string list if @boxed is of %NA_DATA_TYPE_STRING_LIST
  * type, which should be na_core_utils_slist_free() by the caller, %NULL else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 GSList *
 na_boxed_get_string_list( const NABoxed *boxed )
@@ -728,7 +728,7 @@ na_boxed_get_string_list( const NABoxed *boxed )
  * Returns: an unsigned integer if @boxed is of %NA_DATA_TYPE_UINT type,
  * zero else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 guint
 na_boxed_get_uint( const NABoxed *boxed )
@@ -753,7 +753,7 @@ na_boxed_get_uint( const NABoxed *boxed )
  * Returns: a newly allocated list if @boxed is of %NA_DATA_TYPE_UINT_LIST
  * type, which should be g_list_free() by the caller, %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 GList *
 na_boxed_get_uint_list( const NABoxed *boxed )
@@ -778,7 +778,7 @@ na_boxed_get_uint_list( const NABoxed *boxed )
  *
  * Setup @value with the content of the @boxed.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_boxed_get_as_value( const NABoxed *boxed, GValue *value )
@@ -802,7 +802,7 @@ na_boxed_get_as_value( const NABoxed *boxed, GValue *value )
  * is returned in a newly allocated value, which should be g_free() (resp.
  * g_free(), na_core_utils_slist_free(), g_list_free()) by the caller.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void *
 na_boxed_get_as_void( const NABoxed *boxed )
@@ -822,7 +822,7 @@ na_boxed_get_as_void( const NABoxed *boxed )
  *
  * Copy value from @value to @boxed.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_boxed_set_from_boxed( NABoxed *boxed, const NABoxed *value )
@@ -848,7 +848,7 @@ na_boxed_set_from_boxed( NABoxed *boxed, const NABoxed *value )
  *
  * Evaluates the @value and set it to the @boxed.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_boxed_set_from_string( NABoxed *boxed, const gchar *value )
@@ -871,7 +871,7 @@ na_boxed_set_from_string( NABoxed *boxed, const gchar *value )
  *
  * Evaluates the @value and set it to the @boxed.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_boxed_set_from_value( NABoxed *boxed, const GValue *value )
@@ -894,7 +894,7 @@ na_boxed_set_from_value( NABoxed *boxed, const GValue *value )
  *
  * Evaluates the @value and set it to the @boxed.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_boxed_set_from_void( NABoxed *boxed, const void *value )

@@ -40,7 +40,7 @@
  * The NABoxed structure is a way of handling various types of data in an
  * opaque structure.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 
 #include <glib-object.h>

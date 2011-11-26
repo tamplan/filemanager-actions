@@ -500,7 +500,7 @@ na_updater_should_pasted_be_relabeled( const NAUpdater *updater, const NAObject 
  *
  * Returns: a pointer (not a ref) on the loaded tree.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 GList *
 na_updater_load_items( NAUpdater *updater )

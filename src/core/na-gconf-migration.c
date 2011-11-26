@@ -43,7 +43,7 @@
  * Disable GConf I/O provider both for reading and writing.
  * Migrate users preferences to NASettings.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_gconf_migration_run( void )

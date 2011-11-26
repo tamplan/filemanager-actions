@@ -698,7 +698,7 @@ build_class_hierarchy( const NAObject *object )
  * from the topmost base class, to the most-derived one.
  *
  * Since: 2.30
- * Deprecated: 3.1.0
+ * Deprecated: 3.1
  */
 GList *
 na_object_get_hierarchy( const NAObject *object )
@@ -725,7 +725,7 @@ na_object_get_hierarchy( const NAObject *object )
  * Releases the #NAObject hierarchy.
  *
  * Since: 2.30
- * Deprecated: 3.1.0
+ * Deprecated: 3.1
  */
 void
 na_object_free_hierarchy( GList *hierarchy )

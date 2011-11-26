@@ -40,7 +40,7 @@
  * The NATimeout structure is a convenience structure to manage timeout
  * functions.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 
 #include <glib-object.h>
@@ -53,7 +53,7 @@ G_BEGIN_DECLS
  *
  * Prototype of the callback function.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 typedef void ( *NATimeoutFunc )( void *user_data );
 
@@ -78,7 +78,7 @@ typedef void ( *NATimeoutFunc )( void *user_data );
  * will be triggered as soon as no event will be recorded after @timeout
  * milliseconds of inactivity.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 typedef struct {
 	/*< public >*/

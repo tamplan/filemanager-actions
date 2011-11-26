@@ -175,7 +175,7 @@ interface_base_finalize( NAIContextInterface *klass )
  *
  * Returns: %TRUE if this @a and @b are equal, %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_icontext_are_equal( const NAIContext *a, const NAIContext *b )
@@ -324,7 +324,7 @@ na_icontext_check_mimetypes( const NAIContext *context )
  *
  * Copy specific data from @source to @context.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_icontext_copy( NAIContext *context, const NAIContext *source )

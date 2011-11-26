@@ -231,7 +231,7 @@ na_iprefs_set_export_format( const gchar *name, GQuark format )
  * Returns: a list of i/o provider identifiers found in preferences
  * system; this list should be na_core_utils_slist_free() by the caller.
  *
- * since: 3.1.0
+ * Since: 3.1
  */
 GSList *
 na_iprefs_get_io_providers( void )

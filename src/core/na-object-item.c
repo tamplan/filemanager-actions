@@ -712,7 +712,7 @@ count_items_rec( GList *items, gint *menus, gint *actions, gint *profiles, gbool
  * Returns: the new list, which should be na_object_free_items() by the
  * caller.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 GList *
 na_object_item_copyref_items( GList *items )
@@ -730,7 +730,7 @@ na_object_item_copyref_items( GList *items )
  *
  * Returns: a %NULL pointer.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 GList *
 na_object_item_free_items( GList *items )
@@ -858,7 +858,7 @@ copy_children( NAObjectItem *target, const NAObjectItem *source )
  *
  * Returns: the writability status of the @item.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_object_item_is_finally_writable( const NAObjectItem *item, guint *reason )
@@ -891,7 +891,7 @@ na_object_item_is_finally_writable( const NAObjectItem *item, guint *reason )
  *
  * Set the writability status of the @item.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_object_item_set_writability_status( NAObjectItem *item, gboolean writable, guint reason )

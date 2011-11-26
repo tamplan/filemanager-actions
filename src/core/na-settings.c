@@ -451,7 +451,7 @@ na_settings_free( void )
  *
  * Registers a new consumer of the monitoring of the @key.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 void
 na_settings_register_key_callback( const gchar *key, GCallback callback, gpointer user_data )
@@ -486,7 +486,7 @@ na_settings_register_key_callback( const gchar *key, GCallback callback, gpointe
  *
  * Returns: the value of the key, of its default value if not found.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_settings_get_boolean( const gchar *key, gboolean *found, gboolean *mandatory )
@@ -508,7 +508,7 @@ na_settings_get_boolean( const gchar *key, gboolean *found, gboolean *mandatory 
  *
  * Returns: the value of the key, of its default value if not found.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_settings_get_boolean_ex( const gchar *group, const gchar *key, gboolean *found, gboolean *mandatory )
@@ -551,7 +551,7 @@ na_settings_get_boolean_ex( const gchar *group, const gchar *key, gboolean *foun
  * Returns: the value of the key as a newly allocated string, which should
  * be g_free() by the caller.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gchar *
 na_settings_get_string( const gchar *key, gboolean *found, gboolean *mandatory )
@@ -594,7 +594,7 @@ na_settings_get_string( const gchar *key, gboolean *found, gboolean *mandatory )
  * Returns: the value of the key as a newly allocated list of strings.
  * The returned list should be na_core_utils_slist_free() by the caller.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 GSList *
 na_settings_get_string_list( const gchar *key, gboolean *found, gboolean *mandatory )
@@ -636,7 +636,7 @@ na_settings_get_string_list( const gchar *key, gboolean *found, gboolean *mandat
  *
  * Returns: the value of the key.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 guint
 na_settings_get_uint( const gchar *key, gboolean *found, gboolean *mandatory )
@@ -679,7 +679,7 @@ na_settings_get_uint( const gchar *key, gboolean *found, gboolean *mandatory )
  * Returns: the value of the key as a newly allocated list of uints.
  * The returned list should be g_list_free() by the caller.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 GList *
 na_settings_get_uint_list( const gchar *key, gboolean *found, gboolean *mandatory )
@@ -717,7 +717,7 @@ na_settings_get_uint_list( const gchar *key, gboolean *found, gboolean *mandator
  *
  * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_settings_set_boolean( const gchar *key, gboolean value )
@@ -742,7 +742,7 @@ na_settings_set_boolean( const gchar *key, gboolean value )
  *
  * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_settings_set_boolean_ex( const gchar *group, const gchar *key, gboolean value )
@@ -769,7 +769,7 @@ na_settings_set_boolean_ex( const gchar *group, const gchar *key, gboolean value
  *
  * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_settings_set_string( const gchar *key, const gchar *value )
@@ -789,7 +789,7 @@ na_settings_set_string( const gchar *key, const gchar *value )
  *
  * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_settings_set_string_list( const gchar *key, const GSList *value )
@@ -820,7 +820,7 @@ na_settings_set_string_list( const gchar *key, const GSList *value )
  *
  * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_settings_set_uint( const gchar *key, guint value )
@@ -847,7 +847,7 @@ na_settings_set_uint( const gchar *key, guint value )
  *
  * Returns: %TRUE is the writing has been successful, %FALSE else.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 gboolean
 na_settings_set_uint_list( const gchar *key, const GList *value )
@@ -876,7 +876,7 @@ na_settings_set_uint_list( const gchar *key, const GList *value )
  * known i/o providers from preferences. We do not care of returning unique
  * or sorted group names.
  *
- * Since: 3.1.0
+ * Since: 3.1
  */
 GSList *
 na_settings_get_groups( void )

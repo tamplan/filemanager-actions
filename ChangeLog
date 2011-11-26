@@ -1,5 +1,21 @@
 2011-11-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-boxed.h:
+	* src/api/na-timeout.h:
+	* src/core/na-boxed.c:
+	* src/core/na-data-boxed.c:
+	* src/core/na-gconf-migration.c:
+	* src/core/na-gconf-monitor.c:
+	* src/core/na-gconf-utils.c:
+	* src/core/na-icontext.c:
+	* src/core/na-iduplicable.c:
+	* src/core/na-iprefs.c:
+	* src/core/na-object-item.c:
+	* src/core/na-object.c:
+	* src/core/na-settings.c:
+	* src/core/na-updater.c: Only reference minor version in 'Since:' and
+	'Deprecated' comments.
+
 	* run-autogen.sh: Change development installation directory to _install.
 
 	* configure.ac: gtk-doc and gnome-doc-utils are no more mandatory packages.

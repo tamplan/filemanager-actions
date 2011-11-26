@@ -520,7 +520,7 @@ na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
  * Sets the new modified of a duplicated #NAIDuplicable.
  *
  * Since: 2.30
- * Deprecated: 3.1.0
+ * Deprecated: 3.1
  */
 void
 na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )

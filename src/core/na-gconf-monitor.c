@@ -203,7 +203,7 @@ instance_finalize( GObject *object )
  * triggeering the @handler in case of modifications.
  *
  * Since: 2.30
- * Deprecated: 3.1.0
+ * Deprecated: 3.1
  */
 NAGConfMonitor *
 na_gconf_monitor_new( const gchar *path, GConfClientNotifyFunc handler, gpointer user_data )
@@ -271,7 +271,7 @@ install_monitor( NAGConfMonitor *monitor )
  * Release allocated monitors.
  *
  * Since: 2.30
- * Deprecated: 3.1.0
+ * Deprecated: 3.1
  */
 void
 na_gconf_monitor_release_monitors( GList *monitors )
