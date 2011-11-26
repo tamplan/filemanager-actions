@@ -1,3 +1,7 @@
+2011-11-26 Pierre Wieser <pwieser@trychlos.org>
+
+	* Makefile.am: Explicitely disable scrollkeeper here when making distcheck.
+
 2011-11-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* docs/nact/Makefile.am: Fully review the NACT User's Manual build.

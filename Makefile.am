@@ -38,17 +38,20 @@ SUBDIRS = \
 	tools								\
 	$(NULL)
 
-# - a foo directory so that make distcheck has a vpath which is prefixed
-#   with a make variable, instead of hardcoded as returned by pkg-config
+# - nautilus-extdir is a foo directory so that make distcheck has a vpath
+#   which is prefixed with a make variable, instead of hardcoded as returned
+#   by pkg-config
 # - do not try to install schemas when making distcheck
 # - do not rebuild manuals
+# - GNOME_DOC_DEFINES tries to disable scrollkeeper, but the set is
+#   overriden but this one
 DISTCHECK_CONFIGURE_FLAGS = \
 	--with-nautilus-extdir='$${libdir}/nautilus/extensions-2.0-distcheck' \
 	--enable-silent-rules				\
 	--enable-as-needed					\
+	--disable-scrollkeeper				\
 	--disable-schemas-install			\
 	--disable-deprecated				\
-	--disable-scrollkeeper				\
 	--disable-gtk-doc					\
 	--disable-html-manuals				\
 	--disable-pdf-manuals				\
