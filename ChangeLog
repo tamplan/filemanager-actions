@@ -1,5 +1,8 @@
 2011-11-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c (nadp_desktop_file_new_from_uri):
+	Slightly optimize code.
+
 	* src/core/na-importer.c (na_importer_import_from_list): Fix comments.
 
 	* src/io-xml/naxml-reader.c (naxml_reader_import_from_uri): Do not return

@@ -285,17 +285,16 @@ nadp_desktop_file_new_from_uri( const gchar *uri )
 
 	error = NULL;
 	g_key_file_load_from_data( ndf->private->key_file, data, length, G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS, &error );
+	g_free( data );
+
 	if( error ){
 		if( error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
 			g_warning( "%s: %s", thisfn, error->message );
 		}
 		g_error_free( error );
 		g_object_unref( ndf );
-		g_free( data );
 		return( NULL );
 	}
-
-	g_free( data );
 
 	if( !check_key_file( ndf )){
 		g_object_unref( ndf );
