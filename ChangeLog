@@ -1,5 +1,10 @@
 2011-11-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: gtk-doc and gnome-doc-utils are no more mandatory packages.
+
+	m4_ifdef is not a good way to test if these packages are available, as the
+	m4 files default ot be distributed.
+
 	* Makefile.am: Explicitely disable scrollkeeper here when making distcheck.
 
 2011-11-25 Pierre Wieser <pwieser@trychlos.org>

@@ -151,24 +151,21 @@ AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
 # check for gtk-doc
+# - starting with N-A 3.1.5, gtk-doc is no more required when one want compile
+#   the tarball distribution (i.e. without regenerating reference manuals)
 # - starting with gtk-doc 1.15, multiple source dirs are directly handled
 #   by gtk-doc.make
 # - API documentation should not be built (would be incomplete) when deprecated
 #   symbols are not enabled
-m4_ifdef([GTK_DOC_CHECK], [
 GTK_DOC_CHECK([1.15],[--flavour no-tmpl])
-],[
-AM_CONDITIONAL([ENABLE_GTK_DOC], false)
-])
-if test "x${enable_gtk_doc}" = "xyes" -a "${enable_deprecated}" = "no"; then
+if test "${enable_gtk_doc}" = "yes" -a "${enable_deprecated}" = "no"; then
 	AC_MSG_WARN([API documentation will be incomplete as deprecated symbols are disabled])
 fi
 
-m4_ifdef([GNOME_DOC_INIT], [
-GNOME_DOC_INIT
-][
-AM_CONDITIONAL([HAVE_GNOME_DOC_UTILS], false)
-])
+# check for gnome-doc-utils
+# - starting with N-A 3.1.5, gnome-doc-utils is no more required when one want
+#   compile the tarball distribution (i.e. without regenerating users's manuals)
+GNOME_DOC_INIT(,,[gdu_cv_have_gdu=no])
 
 # defines log domains when in maintainer mode
 NA_LOG_DOMAINS
