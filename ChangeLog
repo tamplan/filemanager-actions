@@ -1,5 +1,11 @@
 2011-11-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-importer.c (na_importer_import_from_list): Fix comments.
+
+	* src/io-xml/naxml-reader.c (naxml_reader_import_from_uri): Do not return
+	any error message if we do not identify at least a well-formed document
+	with a known root node.
+
 	* src/api/na-boxed.h:
 	* src/api/na-timeout.h:
 	* src/core/na-boxed.c:

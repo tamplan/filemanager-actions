@@ -66,19 +66,21 @@ static guint         ask_user_for_mode( const NAObjectItem *importing, const NAO
  * providers until the first which respond something different from
  * "not_willing_to" code.
  *
+ * #parms.uris contains a list of URIs to import.
+ *
  * Each import operation will have its corresponding newly allocated
  * #NAImporterResult structure which will contain:
  * - the imported URI
  * - a #NAObjectItem item if import was successful, or %NULL
  * - a list of error messages, or %NULL.
  *
- * If asked mode is 'ask', then ask the user at least the first time
- * the 'keep my choice' is active or not, depending of the last time used
- * then the 'keep my chose' is kept for other times
- * so preferences are:
+ * If asked mode is 'ask', then ask the user at least the first time;
+ * the 'keep my choice' is active or not, depending of the last time used,
+ * then the 'keep my chose' is kept for other times.
+ * So preferences are:
  * - asked import mode (may be 'ask') -> import-mode
  * - keep my choice                   -> import-keep-choice
- * - last chosen import mode         -> import-ask-user-last-mode
+ * - last chosen import mode          -> import-ask-user-last-mode
  *
  * Returns: the last import operation code.
  *

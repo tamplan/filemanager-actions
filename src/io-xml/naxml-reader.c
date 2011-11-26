@@ -152,8 +152,6 @@ static RootNodeStr st_root_node_str[] = {
 #define ERR_NODE_UNKNOWN			_( "Unknown element %s found at line %d while waiting for %s." )
 /* i18n: do not translate keywords 'Action' nor 'Menu' */
 #define ERR_NODE_UNKNOWN_TYPE		_( "Unknown type %s found at line %d, while waiting for Action or Menu." )
-#define ERR_ROOT_UNKNOWN			_( "Invalid XML root element %s found at line %d while waiting for %s." )
-#define ERR_XMLDOC_UNABLE_TOPARSE	_( "Unable to parse XML file: %s." )
 #define WARN_UNDEALT_NODE			_( "Node %s at line %d has not been dealt with." )
 
 static void          read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile );
@@ -316,6 +314,10 @@ reader_new( void )
  * Imports an item.
  *
  * Returns: the import operation code.
+ *
+ * If we not found at least a well-formed XML document with a known root node,
+ *  then we do not return any error message at all, but just the 'unwilling to'
+ *  code.
  */
 guint
 naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFromUriParms *parms )
@@ -361,8 +363,14 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFrom
 }
 
 /*
- * check that the file is a valid XML document
+ * This is only used when trying to import an item from an URI.
+ *
+ * Check that the file is a valid XML document
  * and that the root node can be identified as a schema or a dump
+ *
+ * At import time, it is worthless to say that there is, e.g. a badly formed
+ * xml file, as we even not sure that we are trying to import a .xml.
+ * So just keep ride of error messages here.
  */
 static guint
 reader_parse_xmldoc( NAXMLReader *reader )
@@ -375,8 +383,6 @@ reader_parse_xmldoc( NAXMLReader *reader )
 
 	if( !doc ){
 		xmlErrorPtr error = xmlGetLastError();
-		na_core_utils_slist_add_message( &reader->private->parms->messages,
-				ERR_XMLDOC_UNABLE_TOPARSE, error->message );
 		xmlResetError( error );
 		code = IMPORTER_CODE_NOT_WILLING_TO;
 
@@ -397,10 +403,9 @@ reader_parse_xmldoc( NAXMLReader *reader )
 
 		if( !found ){
 			gchar *node_list = build_root_node_list();
-			na_core_utils_slist_add_message( &reader->private->parms->messages,
-						ERR_ROOT_UNKNOWN,
-						( const char * ) root_node->name, root_node->line, node_list );
 			g_free( node_list );
+			na_core_utils_slist_free( reader->private->parms->messages );
+			reader->private->parms->messages = NULL;
 			code = IMPORTER_CODE_NOT_WILLING_TO;
 		}
 
@@ -412,7 +417,13 @@ reader_parse_xmldoc( NAXMLReader *reader )
 }
 
 /*
- * parse a XML tree
+ * Parse an XML tree when importing an URI.
+ *
+ * We are almost sure here that the imported file is a well-formed XML document,
+ * with a known root document node. Starting from here,we should no more return
+ * a 'unwilling to' code, but an error one.
+ *
+ * Check that:
  * - must have one child on the named 'first_child' key (others are warned)
  * - then iter on child nodes of this previous first named which must ne 'next_child'
  */
@@ -464,6 +475,8 @@ iter_on_root_children( NAXMLReader *reader, xmlNode *root )
 }
 
 /*
+ * Parse an XML tree when importing an URI.
+ *
  * iter on 'schema/entry' element nodes
  * each node should correspond to an elementary data of the imported item
  * other nodes are warned (and ignored)
