@@ -22,6 +22,7 @@ configure
 depcomp
 gnome-doc-utils.make
 gtk-doc.make
+_install/
 install/
 install-sh
 intltool-extract.in
