@@ -1,5 +1,7 @@
 2011-11-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* run-autogen.sh: Change development installation directory to _install.
+
 	* configure.ac: gtk-doc and gnome-doc-utils are no more mandatory packages.
 
 	m4_ifdef is not a good way to test if these packages are available, as the
