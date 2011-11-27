@@ -104,12 +104,11 @@ dump_children( const gchar *thisfn, GtkContainer *container, int level )
 #else
 			child_name = gtk_widget_get_name( child );
 #endif
-			if( child_name && strlen( child_name )){
-				g_debug( "%s: %s%s\t%s", thisfn, prefix->str, G_OBJECT_TYPE_NAME( child ), child_name );
+			g_debug( "%s: %s%s\t%p %s",
+					thisfn, prefix->str, G_OBJECT_TYPE_NAME( child ), ( void * ) child, child_name );
 
-				if( GTK_IS_CONTAINER( child )){
-					dump_children( thisfn, GTK_CONTAINER( child ), level+1 );
-				}
+			if( GTK_IS_CONTAINER( child )){
+				dump_children( thisfn, GTK_CONTAINER( child ), level+1 );
 			}
 		}
 	}
