@@ -743,18 +743,6 @@ If this is not an absolute path, then the PATH environment variable at execution
                                         <child>
                                           <placeholder/>
                                         </child>
-                                        <child>
-                                          <placeholder/>
-                                        </child>
-                                        <child>
-                                          <placeholder/>
-                                        </child>
-                                        <child>
-                                          <placeholder/>
-                                        </child>
-                                        <child>
-                                          <placeholder/>
-                                        </child>
                                       </object>
                                     </child>
                                   </object>
