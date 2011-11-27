@@ -1,5 +1,8 @@
 2011-11-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-export-format.c (nact_export_format_init_display):
+	Remove the useless intermediate GtkGrid.
+
 	* src/nact/nact-assistant-export.ui: Let the format selection be scrolled.
 
 	* src/core/na-gtk-utils.c (dump_children):
