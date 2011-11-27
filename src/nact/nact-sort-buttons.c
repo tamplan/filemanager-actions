@@ -223,9 +223,6 @@ nact_sort_buttons_new( BaseWindow *window )
 	base_window_signal_connect( window,
 			G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_buttons ));
 
-	base_window_signal_connect( window,
-			G_OBJECT( window ), TREE_SIGNAL_COUNT_CHANGED, G_CALLBACK( on_tree_view_count_changed ));
-
 	g_object_set_data( G_OBJECT( window ), WINDOW_DATA_SORT_BUTTONS, obj );
 
 	obj->private->window = window;
@@ -257,6 +254,9 @@ on_base_initialize_buttons( BaseWindow *window, gpointer user_data )
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+
+	base_window_signal_connect( window,
+			G_OBJECT( window ), TREE_SIGNAL_COUNT_CHANGED, G_CALLBACK( on_tree_view_count_changed ));
 
 	sort_buttons = NACT_SORT_BUTTONS( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_SORT_BUTTONS ));
 

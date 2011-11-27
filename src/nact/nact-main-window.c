@@ -671,16 +671,6 @@ instance_constructed( GObject *window )
 		base_window_signal_connect( BASE_WINDOW( window ),
 				G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_updatable_item_updated ));
 
-		/* create the tree view which will create itself its own tree model
-		 */
-		self->private->items_view = nact_tree_view_new( BASE_WINDOW( window ), "ActionsList", TREE_MODE_EDITION );
-
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
-
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_STATUS_CHANGED, G_CALLBACK( on_tree_view_modified_status_changed ));
-
 		/* create the menubar and other convenience objects
 		 */
 		self->private->menubar = nact_menubar_new( BASE_WINDOW( window ));
@@ -790,6 +780,7 @@ static void
 on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_main_window_on_base_initialize_gtk_toplevel";
+	GtkWidget *tree_parent;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -797,6 +788,22 @@ on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gp
 		g_debug( "%s: window=%p, toplevel=%p, user_data=%p",
 				thisfn, ( void * ) window, ( void * ) toplevel, ( void * ) user_data );
 
+		/* create the tree view which will create itself its own tree model
+		 */
+		tree_parent = base_window_get_widget( BASE_WINDOW( window ), "MainVBox" );
+		g_debug( "%s: tree_parent=%p (%s)", thisfn, ( void * ) tree_parent, G_OBJECT_TYPE_NAME( tree_parent ));
+		window->private->items_view = nact_tree_view_new(
+				BASE_WINDOW( window ), GTK_CONTAINER( tree_parent ),
+				"ActionsList", TREE_MODE_EDITION );
+
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
+
+		base_window_signal_connect( BASE_WINDOW( window ),
+				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_STATUS_CHANGED, G_CALLBACK( on_tree_view_modified_status_changed ));
+
+		/* then initialize notebook
+		 */
 		nact_iaction_tab_initial_load_toplevel( NACT_IACTION_TAB( window ));
 		nact_icommand_tab_initial_load_toplevel( NACT_ICOMMAND_TAB( window ));
 		nact_ibasenames_tab_initial_load_toplevel( NACT_IBASENAMES_TAB( window ));

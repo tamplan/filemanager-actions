@@ -1,5 +1,21 @@
 2011-11-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* nact/nact-tree-view.h:
+	* nact/nact-tree-view.c: Define parent property.
+
+	* nact/nact-tree-view.c (on_tree_view_realized):
+	Delay all signal connection until the widget be actually realized.
+
+	* src/nact/nact-sort-buttons.c (on_base_initialize_buttons):
+	Delay the connection to the NactTreeView signal until we are sure the
+	widget is realized.
+
+	* src/nact/nact-main-window.c (on_base_initialize_gtk_toplevel):
+	Delay the initialization of the NactTreeView until the Gtk toplevel has
+	been loaded from XML Glade file.
+
+	* src/nact/nact-assistant-export.c: Adapt to gtk3.
+
 	* src/nact/nact-export-format.c (nact_export_format_init_display):
 	Remove the useless intermediate GtkGrid.
 

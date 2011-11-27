@@ -75,12 +75,14 @@ typedef struct {
  * Properties defined by the NactTreeView class.
  * They should be provided at object instantiation time.
  *
- * @TREE_PROP_WINDOW:         the BaseWindow parent.
- * @TREE_PROP_WIDGET_NAME:    the widget name.
+ * @TREE_PROP_WINDOW:         the BaseWindow.
+ * @TREE_PROP_PARENT:         the widget which is parent of this tree view.
+ * @TREE_PROP_WIDGET_NAME:    the tree view widget name.
  * @TREE_PROP_MODE:           management mode.
  * @TREE_PROP_NOTIFY_ALLOWED: whether notifications are allowed.
  */
 #define TREE_PROP_WINDOW						"tree-prop-window"
+#define TREE_PROP_PARENT						"tree-prop-parent"
 #define TREE_PROP_WIDGET_NAME					"tree-prop-widget-name"
 #define TREE_PROP_MODE							"tree-prop-mode"
 #define TREE_PROP_NOTIFY_ALLOWED				"tree-prop-notify-allowed"
@@ -122,7 +124,7 @@ enum {
 
 GType         nact_tree_view_get_type( void );
 
-NactTreeView *nact_tree_view_new( BaseWindow *window, const gchar *treeview_name, NactTreeMode mode );
+NactTreeView *nact_tree_view_new( BaseWindow *window, GtkContainer *parent, const gchar *treeview_name, NactTreeMode mode );
 
 void          nact_tree_view_fill     ( NactTreeView *view, GList *items );
 
