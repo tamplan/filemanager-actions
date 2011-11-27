@@ -87,17 +87,33 @@ base_gtk_utils_restore_window_position( const BaseWindow *window, const gchar *w
 		free_int_list( list );
 	}
 
-	if( width > 0 && height > 0 ){
-		display = gdk_display_get_default();
-		screen = gdk_display_get_screen( display, 0 );
-		screen_width = gdk_screen_get_width( screen );
-		screen_height = gdk_screen_get_height( screen );
+	x = MAX( 1, x );
+	y = MAX( 1, y );
+	width = MAX( 1, width );
+	height = MAX( 1, height );
 
-		if(( x+width < screen_width ) && ( y+height < screen_height )){
-			gtk_window_move( toplevel, x, y );
-			gtk_window_resize( toplevel, width, height );
-		}
-	}
+	display = gdk_display_get_default();
+	screen = gdk_display_get_screen( display, 0 );
+	screen_width = gdk_screen_get_width( screen );
+	screen_height = gdk_screen_get_height( screen );
+
+	/* very dirty hack based on the assumption that Gnome 2.x has a bottom
+	 * and a top panel bars, while Gnome 3.x only has one.
+	 * Don't know how to get usable height of screen, and don't bother today.
+	 */
+	screen_height -= DEFAULT_HEIGHT;
+#if ! GTK_CHECK_VERSION( 3, 0, 0 )
+	screen_height -= DEFAULT_HEIGHT;
+#endif
+
+	width = MIN( width, screen_width-x );
+	height = MIN( height, screen_height-y );
+
+	g_debug( "%s: wsp_name=%s, screen=(%d,%d), x=%d, y=%d, width=%d, height=%d",
+			thisfn, wsp_name, screen_width, screen_height, x, y, width, height );
+
+	gtk_window_move( toplevel, x, y );
+	gtk_window_resize( toplevel, width, height );
 }
 
 /**

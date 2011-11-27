@@ -1,5 +1,8 @@
 2011-11-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-gtk-utils.c (base_gtk_utils_restore_window_position):
+	Limit the window size, maximizing with the screen size.
+
 	* nact/nact-tree-view.h:
 	* nact/nact-tree-view.c: Define parent property.
 
