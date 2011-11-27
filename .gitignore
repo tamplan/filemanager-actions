@@ -35,6 +35,8 @@ mkinstalldirs
 stamp-h1
 *~
 *.stamp
+*.ce
+*.he
 *.o
 *.la
 *.lo
