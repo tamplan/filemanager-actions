@@ -1,5 +1,7 @@
 2011-11-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.ui: Let the format selection be scrolled.
+
 	* src/core/na-gtk-utils.c (dump_children):
 	Also dump the address of the child widget.
 	Also dump children which do not have a name (dynamically allocated).
