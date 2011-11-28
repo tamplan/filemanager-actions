@@ -174,7 +174,6 @@ static gchar        *get_value_from_child_node( xmlNode *node, const gchar *chil
 static gchar        *get_value_from_child_child_node( xmlNode *node, const gchar *first, const gchar *second );
 static gboolean      is_profile_path( NAXMLReader *reader, xmlChar *text );
 static guint         manage_import_mode( NAXMLReader *reader );
-static void          publish_undealt_nodes( NAXMLReader *reader );
 static void          reset_node_data( NAXMLReader *reader );
 static xmlNode      *search_for_child_node( xmlNode *node, const gchar *key );
 static int           strxcmp( const xmlChar *a, const char *b );
@@ -341,23 +340,19 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFrom
 	code = reader_parse_xmldoc( reader );
 
 	if( code == IMPORTER_CODE_OK ){
-		g_return_val_if_fail( NA_IS_OBJECT_ITEM( reader->private->parms->imported ), IMPORTER_CODE_PROGRAM_ERROR );
+		g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms->imported ), IMPORTER_CODE_PROGRAM_ERROR );
 		code = manage_import_mode( reader );
 	}
 
-	if( code != IMPORTER_CODE_OK ){
-		if( reader->private->parms->imported ){
-			g_object_unref( reader->private->parms->imported );
-			reader->private->parms->imported = NULL;
-		}
-	}
+	g_object_unref( reader );
 
 	if( code == IMPORTER_CODE_OK ){
-		publish_undealt_nodes( reader );
-		na_object_dump( reader->private->parms->imported );
-	}
+		na_object_dump( parms->imported );
 
-	g_object_unref( reader );
+	} else if( parms->imported ){
+		g_object_unref( parms->imported );
+		parms->imported = NULL;
+	}
 
 	return( code );
 }
@@ -419,13 +414,16 @@ reader_parse_xmldoc( NAXMLReader *reader )
 /*
  * Parse an XML tree when importing an URI.
  *
- * We are almost sure here that the imported file is a well-formed XML document,
- * with a known root document node. Starting from here,we should no more return
- * a 'unwilling to' code, but an error one.
+ * We are almost sure here that the imported file is a well-formed XML
+ * document, with a known root document node. Starting from here,we should
+ * no more return a 'unwilling to' code, but an error one.
  *
  * Check that:
  * - must have one child on the named 'first_child' key (others are warned)
- * - then iter on child nodes of this previous first named which must ne 'next_child'
+ * - then iter on child nodes of this previous first named which must be
+ * 'next_child'
+ * e.g. for a <gconfentryfile> root node, we must have one and only one
+ * <entrylist> child.
  */
 static guint
 iter_on_root_children( NAXMLReader *reader, xmlNode *root )
@@ -1397,29 +1395,9 @@ manage_import_mode( NAXMLReader *reader )
 
 	reader->private->parms->exist = parms.exist;
 	reader->private->parms->import_mode = parms.import_mode;
+	reader->private->parms->messages = parms.messages;
 
 	return( code );
-}
-
-static void
-publish_undealt_nodes( NAXMLReader *reader )
-{
-	GList *iter;
-	xmlChar *text;
-
-	g_debug( "naxml_reader_publish_undealt_nodes: count=%d", g_list_length( reader->private->nodes ));
-
-	for( iter = reader->private->nodes ; iter ; iter = iter->next ){
-		xmlNode *node = ( xmlNode * ) iter->data;
-
-		if( !g_list_find( reader->private->dealt, node )){
-			text = xmlNodeGetContent( node );
-			g_debug( "test=%s, line=%d", ( const gchar * ) text, node->line );
-			na_core_utils_slist_add_message(
-					&reader->private->parms->messages, WARN_UNDEALT_NODE, ( const gchar * ) text, node->line );
-			xmlFree( text );
-		}
-	}
 }
 
 /*

@@ -1,5 +1,9 @@
 2011-11-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/naxml-reader.c
+	(publish_undealt_nodes): Removed useless (and buggy) function.
+	(manage_import_mode): Returns all messages to the caller.
+
 	* src/io-desktop/nadp-reader.c (nadp_reader_iimporter_import_from_uri):
 	Returns all messages to the caller.
 
