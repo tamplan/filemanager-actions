@@ -195,10 +195,10 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
  *         <para>the id doesn't already exist</para>
  *       </listitem>
  *       <listitem>
- *         <para>the id already exist, but import mode is renumber</para>
+ *         <para>or the id already exists, but import mode is renumber</para>
  *       </listitem>
  *       <listitem>
- *         <para>the id already exists, but import mode is override</para>
+ *         <para>or the id already exists, but import mode is override</para>
  *       </listitem>
  *     </itemizedlist>
  *   </listitem>
