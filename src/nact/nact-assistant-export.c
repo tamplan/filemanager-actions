@@ -424,7 +424,8 @@ static void
 assist_initial_load_target_folder( NactAssistantExport *window, GtkAssistant *assistant )
 {
 	GtkFileChooser *chooser = get_folder_chooser( window );
-	gtk_file_chooser_set_action( GTK_FILE_CHOOSER( chooser ), GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER );
+	gtk_file_chooser_set_action( GTK_FILE_CHOOSER( chooser ), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER );
+	gtk_file_chooser_set_create_folders( GTK_FILE_CHOOSER( chooser ), TRUE );
 	gtk_file_chooser_set_select_multiple( GTK_FILE_CHOOSER( chooser ), FALSE );
 }
 

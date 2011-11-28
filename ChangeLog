@@ -1,5 +1,8 @@
 2011-11-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.c (assist_initial_load_target_folder):
+	Get ride of the superfluous 'name' entry field when selecting the folder.
+
 	* src/nact/nact-export-ask.c (nact_export_ask_user):
 	Actually do not export the item if the user cancels the operation.
 
