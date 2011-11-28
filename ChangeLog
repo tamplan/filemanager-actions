@@ -1,5 +1,9 @@
 2011-11-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* run-autogen.sh:
+	* run-distcheck.sh: Review in order to be able to build several guests
+	from a common single source tree.
+
 	* src/nact/nact-assistant-export.c (assist_initial_load_target_folder):
 	Get ride of the superfluous 'name' entry field when selecting the folder.
 
