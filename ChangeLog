@@ -1,3 +1,8 @@
+2011-11-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/io-desktop/nadp-reader.c (nadp_reader_iimporter_import_from_uri):
+	Returns all messages to the caller.
+
 2011-11-27 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-gtk-utils.c (base_gtk_utils_restore_window_position):

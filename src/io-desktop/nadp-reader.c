@@ -398,6 +398,7 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterI
 
 			parms->exist = manage_parms.exist;
 			parms->import_mode = manage_parms.import_mode;
+			parms->messages = manage_parms.messages;
 		}
 
 		if( code != IMPORTER_CODE_OK ){
