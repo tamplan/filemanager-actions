@@ -1,5 +1,8 @@
 2011-11-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-export-ask.c (nact_export_ask_user):
+	Actually do not export the item if the user cancels the operation.
+
 	* src/io-desktop/nadp-desktop-file.c (nadp_desktop_file_new_from_uri):
 	Only display debug messages (try to minimize warnings on import).
 

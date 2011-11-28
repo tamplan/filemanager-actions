@@ -230,6 +230,7 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 	NactExportAsk *editor;
 	gboolean are_locked, mandatory;
 	gboolean keep, keep_mandatory;
+	int code;
 
 	GQuark format = g_quark_from_static_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
 
@@ -254,15 +255,23 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 		editor->private->format_mandatory = mandatory;
 		editor->private->keep_last_choice = keep;
 		editor->private->keep_last_choice_mandatory = keep_mandatory;
-
 		editor->private->parent = parent;
 		editor->private->item = item;
 
 		are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 		editor->private->preferences_locked = are_locked && mandatory;
 
-		if( base_window_run( BASE_WINDOW( editor )) == GTK_RESPONSE_OK ){
-			format = get_export_format( editor );
+		code = base_window_run( BASE_WINDOW( editor ));
+		switch( code ){
+			case GTK_RESPONSE_OK:
+				format = get_export_format( editor );
+				break;
+
+			case GTK_RESPONSE_CANCEL:
+			/* base_dialog::do_run only returns OK or CANCEL */
+			default:
+				format = IPREFS_EXPORT_NO_EXPORT;
+				break;
 		}
 
 		g_object_unref( editor );
