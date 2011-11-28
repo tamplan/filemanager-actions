@@ -1,5 +1,7 @@
 2011-11-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* nact/nact-export-format.c (draw_in_vbox): Use gtk_misc functions.
+
 	* run-autogen.sh:
 	* run-distcheck.sh: Review in order to be able to build several guests
 	from a common single source tree.

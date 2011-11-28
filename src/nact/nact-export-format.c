@@ -154,6 +154,8 @@ draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gi
 	gchar *description;
 	GtkRadioButton *button;
 	guint size, spacing;
+	gint  ypad;
+	gfloat yalign;
 #if ! GTK_CHECK_VERSION( 3, 2, 0 )
 	GtkWidget *hbox;
 #endif
@@ -219,7 +221,10 @@ draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gi
 			size += 2*spacing;
 
 			desc_label = GTK_LABEL( gtk_label_new( description ));
-			g_object_set( G_OBJECT( desc_label ), "xpad", size, NULL );
+			gtk_misc_get_padding( GTK_MISC( desc_label ), NULL, &ypad );
+			gtk_misc_set_padding( GTK_MISC( desc_label ), size, ypad );
+			gtk_misc_get_alignment( GTK_MISC( desc_label ), NULL, &yalign );
+			gtk_misc_set_alignment( GTK_MISC( desc_label ), 0, yalign );
 
 #if GTK_CHECK_VERSION( 3, 2, 0 )
 			gtk_grid_attach( GTK_GRID( container_mode ), GTK_WIDGET( desc_label ), 0, 1, 1, 1 );
@@ -227,7 +232,6 @@ draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gi
 			hbox = gtk_hbox_new( TRUE, 0 );
 			gtk_box_pack_start( GTK_BOX( container_mode ), hbox, FALSE, TRUE, 0 );
 			gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( desc_label ), TRUE, TRUE, 4 );
-			g_object_set( G_OBJECT( desc_label ), "xalign", 0, NULL );
 #endif
 			break;
 	}
