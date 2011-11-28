@@ -1,5 +1,9 @@
 2011-11-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-importer-ask.c:
+	* src/core/na-importer-ask.ui: Make NAImporterAsk normally answer to
+	response codes, and quit on Esc.
+
 	* nact/nact-export-format.c (draw_in_vbox): Use gtk_misc functions.
 
 	* run-autogen.sh:

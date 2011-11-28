@@ -57,7 +57,6 @@ struct _NAImporterAskPrivate {
 	NAObjectItem           *existing;
 	NAImporterAskUserParms *parms;
 	guint                   mode;
-	gint                    dialog_code;
 };
 
 static GtkDialogClass *st_parent_class = NULL;
@@ -71,8 +70,8 @@ static void       instance_finalize( GObject *dialog );
 static NAImporterAsk *import_ask_new();
 
 static void       init_dialog( NAImporterAsk *editor );
-static void       on_cancel_clicked( GtkButton *button, NAImporterAsk *editor );
-static void       on_ok_clicked( GtkButton *button, NAImporterAsk *editor );
+/*static void       on_cancel_clicked( GtkButton *button, NAImporterAsk *editor );
+static void       on_ok_clicked( GtkButton *button, NAImporterAsk *editor );*/
 static void       get_selected_mode( NAImporterAsk *editor );
 static gboolean   on_dialog_response( NAImporterAsk *editor, gint code );
 
@@ -325,45 +324,11 @@ init_dialog( NAImporterAsk *editor )
 	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), editor->private->parms->keep_choice );
 
-	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "OKButton" );
-	g_signal_connect(
-			G_OBJECT( button ),
-			"clicked",
-			G_CALLBACK( on_ok_clicked ),
-			editor );
-
-	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "CancelButton" );
-	g_signal_connect(
-			G_OBJECT( button ),
-			"clicked",
-			G_CALLBACK( on_cancel_clicked ),
-			editor );
-
 	if( editor->private->parms->parent ){
 		gtk_window_set_transient_for( editor->private->toplevel, editor->private->parms->parent );
 	}
 
 	gtk_widget_show_all( GTK_WIDGET( editor->private->toplevel ));
-}
-
-static void
-on_cancel_clicked( GtkButton *button, NAImporterAsk *editor )
-{
-	g_debug( "na_importer_ask_on_cancel_clicked" );
-
-	editor->private->dialog_code = GTK_RESPONSE_CANCEL;
-
-	gtk_dialog_response( GTK_DIALOG( editor ), GTK_RESPONSE_CANCEL );
-}
-
-static void
-on_ok_clicked( GtkButton *button, NAImporterAsk *editor )
-{
-	g_debug( "na_importer_ask_on_ok_clicked" );
-
-	editor->private->dialog_code = GTK_RESPONSE_OK;
-
-	gtk_dialog_response( GTK_DIALOG( editor ), GTK_RESPONSE_OK );
 }
 
 static void
@@ -394,10 +359,6 @@ get_selected_mode( NAImporterAsk *editor )
 	na_settings_set_boolean( NA_IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, keep );
 }
 
-/*
- * very curiously, the code sent by on_cancel_clicked() and
- * on_ok_clicked() arrives here at zero ! we so rely on a private one !
- */
 static gboolean
 on_dialog_response( NAImporterAsk *editor, gint code )
 {
@@ -407,7 +368,10 @@ on_dialog_response( NAImporterAsk *editor, gint code )
 
 	g_debug( "%s: editor=%p, code=%d", thisfn, ( void * ) editor, code );
 
-	switch( editor->private->dialog_code ){
+	switch( code ){
+		case GTK_RESPONSE_NONE:
+		case GTK_RESPONSE_DELETE_EVENT:
+		case GTK_RESPONSE_CLOSE:
 		case GTK_RESPONSE_CANCEL:
 			editor->private->mode = IMPORTER_MODE_NO_IMPORT;
 			return( TRUE );
@@ -416,11 +380,6 @@ on_dialog_response( NAImporterAsk *editor, gint code )
 		case GTK_RESPONSE_OK:
 			get_selected_mode( editor );
 			return( TRUE );
-			break;
-
-		case GTK_RESPONSE_NONE:
-		case GTK_RESPONSE_DELETE_EVENT:
-		case GTK_RESPONSE_CLOSE:
 			break;
 	}
 
