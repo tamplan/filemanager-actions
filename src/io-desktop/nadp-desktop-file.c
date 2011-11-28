@@ -289,7 +289,7 @@ nadp_desktop_file_new_from_uri( const gchar *uri )
 
 	if( error ){
 		if( error->code != G_KEY_FILE_ERROR_GROUP_NOT_FOUND ){
-			g_warning( "%s: %s", thisfn, error->message );
+			g_debug( "%s: %s", thisfn, error->message );
 		}
 		g_error_free( error );
 		g_object_unref( ndf );
@@ -447,7 +447,7 @@ check_key_file( NadpDesktopFile *ndf )
 	/* start group must be [Desktop Entry] */
 	start_group = g_key_file_get_start_group( ndf->private->key_file );
 	if( strcmp( start_group, NADP_GROUP_DESKTOP )){
-		g_warning( "%s: %s: invalid start group, found %s, waited for %s",
+		g_debug( "%s: %s: invalid start group, found %s, waited for %s",
 				thisfn, ndf->private->uri, start_group, NADP_GROUP_DESKTOP );
 		ret = FALSE;
 	}
@@ -456,13 +456,13 @@ check_key_file( NadpDesktopFile *ndf )
 	if( ret ){
 		has_key = g_key_file_has_key( ndf->private->key_file, start_group, NADP_KEY_HIDDEN, &error );
 		if( error ){
-			g_warning( "%s: %s: %s", thisfn, ndf->private->uri, error->message );
+			g_debug( "%s: %s: %s", thisfn, ndf->private->uri, error->message );
 			ret = FALSE;
 
 		} else if( has_key ){
 			hidden = g_key_file_get_boolean( ndf->private->key_file, start_group, NADP_KEY_HIDDEN, &error );
 			if( error ){
-				g_warning( "%s: %s: %s", thisfn, ndf->private->uri, error->message );
+				g_debug( "%s: %s: %s", thisfn, ndf->private->uri, error->message );
 				ret = FALSE;
 
 			} else if( hidden ){
