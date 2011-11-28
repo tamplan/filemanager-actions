@@ -628,7 +628,7 @@ add_import_mode( NactAssistantImport *window, const gchar *text )
 		label3 = na_core_utils_str_add_prefix( "\t", label2 );
 		g_free( label2 );
 
-		result = g_strdup_printf( "%s\n\n<b>%s</b>\n\n%s", text, label1, label3 );
+		result = g_strdup_printf( "%s\n<b>%s</b>\n\n%s", text, label1, label3 );
 		g_free( label3 );
 		g_free( label1 );
 	}
