@@ -89,7 +89,7 @@ NADataDef data_def_item [] = {
 					"menu when the selection matches the appearance condition settings.\n" \
 					"It is also used as a default for the toolbar label of an action." ),
 				NA_DATA_TYPE_LOCALE_STRING,
-				"",
+				N_( "Empty label" ),
 				FALSE,
 				TRUE,
 				TRUE,

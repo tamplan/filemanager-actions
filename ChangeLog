@@ -1,5 +1,8 @@
 2011-11-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-object-item-factory.c:
+	Do not let a read or imported item go until the UI with an empty label.
+
 	* src/io-xml/naxml-reader.c (schema_parse_schema_content):
 	Only search for identifier in <applyto> schema key.
 
