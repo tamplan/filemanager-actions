@@ -279,7 +279,7 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 	item = NULL;
 	type = nadp_desktop_file_get_file_type( ndf );
 
-	if( !type || !strlen( type ) || !strcmp( type, NADP_VALUE_TYPE_ACTION )){
+	if( !strcmp( type, NADP_VALUE_TYPE_ACTION )){
 		item = NA_IFACTORY_OBJECT( na_object_action_new());
 
 	} else if( !strcmp( type, NADP_VALUE_TYPE_MENU )){

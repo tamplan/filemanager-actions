@@ -1,5 +1,9 @@
 2011-11-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c (check_key_file):
+	- Do not even try to read zero byte length files.
+	- Check Type key before trying to import the file.
+
 	* src/core/na-importer-ask.c:
 	* src/core/na-importer-ask.ui: Make NAImporterAsk normally answer to
 	response codes, and quit on Esc.

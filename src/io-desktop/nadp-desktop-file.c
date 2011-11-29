@@ -53,6 +53,7 @@ struct _NadpDesktopFilePrivate {
 	gboolean   dispose_has_run;
 	gchar     *id;
 	gchar     *uri;
+	gchar     *type;
 	GKeyFile  *key_file;
 };
 
@@ -178,6 +179,7 @@ instance_finalize( GObject *object )
 
 	g_free( self->private->id );
 	g_free( self->private->uri );
+	g_free( self->private->type );
 
 	if( self->private->key_file ){
 		g_key_file_free( self->private->key_file );
@@ -280,10 +282,14 @@ nadp_desktop_file_new_from_uri( const gchar *uri )
 	g_debug( "%s: uri=%s", thisfn, uri );
 	g_return_val_if_fail( uri && g_utf8_strlen( uri, -1 ), ndf );
 
-	ndf = ndf_new( uri );
 	data = na_core_utils_file_load_from_uri( uri, &length );
+	if( !length ){
+		g_debug( "%s: file is empty", thisfn );
+		return( NULL );
+	}
 
 	error = NULL;
+	ndf = ndf_new( uri );
 	g_key_file_load_from_data( ndf->private->key_file, data, length, G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS, &error );
 	g_free( data );
 
@@ -439,6 +445,7 @@ check_key_file( NadpDesktopFile *ndf )
 	gchar *start_group;
 	gboolean has_key;
 	gboolean hidden;
+	gchar *type;
 	GError *error;
 
 	ret = TRUE;
@@ -472,6 +479,42 @@ check_key_file( NadpDesktopFile *ndf )
 		}
 	}
 
+	/* must have no Type (which defaults to Action)
+	 * or a known one (Action or Menu)
+	 */
+	if( ret ){
+		type = NULL;
+		has_key = g_key_file_has_key( ndf->private->key_file, start_group, NADP_KEY_TYPE, &error );
+		if( error ){
+			g_debug( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+			ret = FALSE;
+
+		} else if( has_key ){
+			type = g_key_file_get_string( ndf->private->key_file, start_group, NADP_KEY_TYPE, &error );
+			if( error ){
+				g_debug( "%s: %s", thisfn, error->message );
+				g_free( type );
+				g_error_free( error );
+				ret = FALSE;
+			}
+		}
+		if( ret ){
+			if( !type || !strlen( type )){
+				type = g_strdup( NADP_VALUE_TYPE_ACTION );
+
+			} else if( strcmp( type, NADP_VALUE_TYPE_MENU ) && strcmp( type, NADP_VALUE_TYPE_ACTION )){
+				g_debug( "%s: unmanaged type: %s", thisfn, type );
+				g_free( type );
+				ret = FALSE;
+			}
+		}
+		if( ret ){
+			g_return_val_if_fail( type && strlen( type ), FALSE );
+			ndf->private->type = type;
+		}
+	}
+
 	g_free( start_group );
 
 	return( ret );
@@ -487,10 +530,7 @@ check_key_file( NadpDesktopFile *ndf )
 gchar *
 nadp_desktop_file_get_file_type( const NadpDesktopFile *ndf )
 {
-	static const gchar *thisfn = "nadp_desktop_file_get_file_type";
 	gchar *type;
-	gboolean has_key;
-	GError *error;
 
 	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), NULL );
 
@@ -498,22 +538,7 @@ nadp_desktop_file_get_file_type( const NadpDesktopFile *ndf )
 
 	if( !ndf->private->dispose_has_run ){
 
-		error = NULL;
-
-		has_key = g_key_file_has_key( ndf->private->key_file, NADP_GROUP_DESKTOP, NADP_KEY_TYPE, &error );
-		if( error ){
-			g_warning( "%s: %s", thisfn, error->message );
-			g_error_free( error );
-
-		} else if( has_key ){
-			type = g_key_file_get_string( ndf->private->key_file, NADP_GROUP_DESKTOP, NADP_KEY_TYPE, &error );
-			if( error ){
-				g_warning( "%s: %s", thisfn, error->message );
-				g_error_free( error );
-				g_free( type );
-				type = NULL;
-			}
-		}
+		type = g_strdup( ndf->private->type );
 	}
 
 	return( type );
