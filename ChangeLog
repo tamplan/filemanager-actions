@@ -1,3 +1,8 @@
+2011-11-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/io-xml/naxml-reader.c (schema_parse_schema_content):
+	Only search for identifier in <applyto> schema key.
+
 2011-11-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/io-desktop/nadp-desktop-file.c (check_key_file):

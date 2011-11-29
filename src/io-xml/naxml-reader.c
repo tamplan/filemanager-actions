@@ -557,12 +557,12 @@ iter_on_list_children( NAXMLReader *reader, xmlNode *list )
 		}
 	}
 
-	/* check that we have a not empty id
+	/* if we do not have any error, check that we have at least a not empty id
 	 */
 	if( code == IMPORTER_CODE_OK ){
 		if( !reader->private->item_id || !strlen( reader->private->item_id )){
 			na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_ITEM_ID_NOT_FOUND );
-			code = 	IMPORTER_CODE_NO_ITEM_ID;
+			code = IMPORTER_CODE_NO_ITEM_ID;
 		}
 	}
 
@@ -980,12 +980,13 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 		str->reader_found = TRUE;
 
 		/* set the item id the first time, check after
+		 * - until v 2.0 of the exported schemas, both <key> and <applyto>
+		 *   has the id of the item (because there was one fake schema for
+		 *   each item)
+		 * - starting with v 3, only <applyto> key has this id
 		 */
-		if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_KEY ) ||
-			!strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_APPLYTO )){
-
+		if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_APPLYTO )){
 			schema_check_for_id( reader, iter );
-
 			if( !reader->private->node_ok ){
 				continue;
 			}
@@ -994,9 +995,7 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 		/* search for the type of the item
 		 */
 		if( !strxcmp( iter->name, NAXML_KEY_SCHEMA_NODE_APPLYTO )){
-
 			schema_check_for_type( reader, iter );
-
 			if( !reader->private->node_ok ){
 				continue;
 			}
@@ -1007,7 +1006,7 @@ schema_parse_schema_content( NAXMLReader *reader, xmlNode *schema )
 }
 
 /*
- * check the id on 'key' and 'applyto' keys
+ * check the id on 'applyto' key
  */
 static void
 schema_check_for_id( NAXMLReader *reader, xmlNode *iter )
