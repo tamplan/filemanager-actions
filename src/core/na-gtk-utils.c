@@ -35,6 +35,11 @@
 #include <string.h>
 
 #include "na-gtk-utils.h"
+#include "na-settings.h"
+
+static void   int_list_to_position( GList *list, gint *x, gint *y, gint *width, gint *height );
+static GList *position_to_int_list( gint x, gint y, gint width, gint height );
+static void   free_int_list( GList *list );
 
 /*
  * na_gtk_utils_search_for_child_widget:
@@ -127,3 +132,145 @@ na_gtk_utils_dump_children( GtkContainer *container )
 	dump_children( thisfn, container, 0 );
 }
 #endif
+
+/**
+ * na_gtk_utils_restore_position_window:
+ * @toplevel: the #GtkWindow window.
+ * @wsp_name: the string which handles the window size and position in user preferences.
+ *
+ * Position the specified window on the screen.
+ *
+ * A window position is stored as a list of integers "x,y,width,height".
+ */
+void
+na_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_name )
+{
+	static const gchar *thisfn = "na_gtk_utils_restore_window_position";
+	GList *list;
+	gint x=0, y=0, width=0, height=0;
+	GdkDisplay *display;
+	GdkScreen *screen;
+	gint screen_width, screen_height;
+
+	g_return_if_fail( GTK_IS_WINDOW( toplevel ));
+	g_return_if_fail( wsp_name && strlen( wsp_name ));
+
+	g_debug( "%s: toplevel=%p (%s), wsp_name=%s",
+			thisfn, ( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ), wsp_name );
+
+	list = na_settings_get_uint_list( wsp_name, NULL, NULL );
+
+	if( list ){
+		int_list_to_position( list, &x, &y, &width, &height );
+		g_debug( "%s: wsp_name=%s, x=%d, y=%d, width=%d, height=%d", thisfn, wsp_name, x, y, width, height );
+		free_int_list( list );
+	}
+
+	x = MAX( 1, x );
+	y = MAX( 1, y );
+	width = MAX( 1, width );
+	height = MAX( 1, height );
+
+	display = gdk_display_get_default();
+	screen = gdk_display_get_screen( display, 0 );
+	screen_width = gdk_screen_get_width( screen );
+	screen_height = gdk_screen_get_height( screen );
+
+	/* very dirty hack based on the assumption that Gnome 2.x has a bottom
+	 * and a top panel bars, while Gnome 3.x only has one.
+	 * Don't know how to get usable height of screen, and don't bother today.
+	 */
+	screen_height -= DEFAULT_HEIGHT;
+#if ! GTK_CHECK_VERSION( 3, 0, 0 )
+	screen_height -= DEFAULT_HEIGHT;
+#endif
+
+	width = MIN( width, screen_width-x );
+	height = MIN( height, screen_height-y );
+
+	g_debug( "%s: wsp_name=%s, screen=(%d,%d), x=%d, y=%d, width=%d, height=%d",
+			thisfn, wsp_name, screen_width, screen_height, x, y, width, height );
+
+	gtk_window_move( toplevel, x, y );
+	gtk_window_resize( toplevel, width, height );
+}
+
+/**
+ * na_gtk_utils_save_window_position:
+ * @toplevel: the #GtkWindow window.
+ * @wsp_name: the string which handles the window size and position in user preferences.
+ *
+ * Save the size and position of the specified window.
+ */
+void
+na_gtk_utils_save_window_position( GtkWindow *toplevel, const gchar *wsp_name )
+{
+	static const gchar *thisfn = "na_gtk_utils_save_window_position";
+	gint x, y, width, height;
+	GList *list;
+
+	g_return_if_fail( GTK_IS_WINDOW( toplevel ));
+	g_return_if_fail( wsp_name && strlen( wsp_name ));
+
+	gtk_window_get_position( toplevel, &x, &y );
+	gtk_window_get_size( toplevel, &width, &height );
+	g_debug( "%s: wsp_name=%s, x=%d, y=%d, width=%d, height=%d", thisfn, wsp_name, x, y, width, height );
+
+	list = position_to_int_list( x, y, width, height );
+	na_settings_set_uint_list( wsp_name, list );
+	free_int_list( list );
+}
+
+/*
+ * extract the position of the window from the list of unsigned integers
+ */
+static void
+int_list_to_position( GList *list, gint *x, gint *y, gint *width, gint *height )
+{
+	GList *it;
+	int i;
+
+	g_assert( x );
+	g_assert( y );
+	g_assert( width );
+	g_assert( height );
+
+	for( it=list, i=0 ; it ; it=it->next, i+=1 ){
+		switch( i ){
+			case 0:
+				*x = GPOINTER_TO_UINT( it->data );
+				break;
+			case 1:
+				*y = GPOINTER_TO_UINT( it->data );
+				break;
+			case 2:
+				*width = GPOINTER_TO_UINT( it->data );
+				break;
+			case 3:
+				*height = GPOINTER_TO_UINT( it->data );
+				break;
+		}
+	}
+}
+
+static GList *
+position_to_int_list( gint x, gint y, gint width, gint height )
+{
+	GList *list = NULL;
+
+	list = g_list_append( list, GUINT_TO_POINTER( x ));
+	list = g_list_append( list, GUINT_TO_POINTER( y ));
+	list = g_list_append( list, GUINT_TO_POINTER( width ));
+	list = g_list_append( list, GUINT_TO_POINTER( height ));
+
+	return( list );
+}
+
+/*
+ * free the list of int
+ */
+static void
+free_int_list( GList *list )
+{
+	g_list_free( list );
+}

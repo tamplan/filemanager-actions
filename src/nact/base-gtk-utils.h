@@ -47,6 +47,8 @@ G_BEGIN_DECLS
 void       base_gtk_utils_restore_window_position( const BaseWindow *window, const gchar *wsp_name );
 void       base_gtk_utils_save_window_position   ( const BaseWindow *window, const gchar *wsp_name );
 
+/* widget status
+ */
 #define NACT_PROP_TOGGLE_EDITABLE			"nact-prop-toggle-editable"
 
 void       base_gtk_utils_set_editable( GObject *widget, gboolean editable );

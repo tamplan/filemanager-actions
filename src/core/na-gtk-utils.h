@@ -46,6 +46,15 @@ GtkWidget *na_gtk_utils_search_for_child_widget( GtkContainer *container, const 
 void       na_gtk_utils_dump_children          ( GtkContainer *container );
 #endif
 
+/* window size and position
+ */
+void       na_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_name );
+void       na_gtk_utils_save_window_position   ( GtkWindow *toplevel, const gchar *wsp_name );
+
+/* default height of a panel bar (dirty hack!)
+ */
+#define DEFAULT_HEIGHT		22
+
 G_END_DECLS
 
 #endif /* __CORE_API_NA_GTK_UTILS_H__ */

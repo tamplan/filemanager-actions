@@ -1,5 +1,16 @@
 2011-11-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-gtk-utils.c:
+	* src/core/na-gtk-utils.h
+	(na_gtk_utils_restore_position_window, na_gtk_utils_save_window_position):
+	New functions.
+
+	* src/nact/base-gtk-utils.c
+	(base_gtk_utils_restore_window_position, base_gtk_utils_save_window_position):
+	Updated accordingly.
+
+	* src/nact/base-gtk-utils.h: Fix a comment.
+
 	* src/core/na-importer-ask.c:
 	* src/core/na-importer-ask.h: Now derives from GObject.
 
