@@ -36,8 +36,8 @@
  * @include: core/na-importer-ask.h
  *
  * This class creates and manages a dialog. It is ran each time an
- * imported action as the same Id as an existing one, and the user
- * want to be ask to known what to do with it.
+ * imported action has the same Id as an existing one, and the user
+ * want to be asked to know what to do with it.
  */
 
 #include <gtk/gtk.h>
@@ -59,7 +59,7 @@ typedef struct _NAImporterAskPrivate        NAImporterAskPrivate;
 
 typedef struct {
 	/*< private >*/
-	GtkDialog             parent;
+	GObject               parent;
 	NAImporterAskPrivate *private;
 }
 	NAImporterAsk;
@@ -68,7 +68,7 @@ typedef struct _NAImporterAskClassPrivate   NAImporterAskClassPrivate;
 
 typedef struct {
 	/*< private >*/
-	GtkDialogClass             parent;
+	GObjectClass               parent;
 	NAImporterAskClassPrivate *private;
 }
 	NAImporterAskClass;

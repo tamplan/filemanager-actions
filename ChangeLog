@@ -1,3 +1,17 @@
+2011-11-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-importer-ask.c:
+	* src/core/na-importer-ask.h: Now derives from GObject.
+
+	* src/core/na-importer-ask.c (import_ask_new):
+	All one-time initialization is made here, being able to return NULL if failed.
+
+	* src/core/na-importer-ask.c (on_destroy_toplevel):
+	NAImporterAsk is now attached to its parent, and destroyed with it.
+
+	* src/nact/nact-assistant-import.c (assistant_apply):
+	Make the assistant the parent of NAImporterAsk (instead of main window).
+
 2011-11-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-object-item-factory.c:

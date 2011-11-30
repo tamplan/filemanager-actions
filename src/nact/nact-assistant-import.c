@@ -662,7 +662,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	memset( &importer_parms, '\0', sizeof( NAImporterParms ));
 
 	g_object_get( G_OBJECT( wnd ), BASE_PROP_PARENT, &main_window, NULL );
-	importer_parms.parent = base_window_get_gtk_toplevel( main_window );
+	importer_parms.parent = base_window_get_gtk_toplevel( BASE_WINDOW( wnd ));
 	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));
 	importer_parms.mode = get_import_mode( window );
 	importer_parms.check_fn = ( NAIImporterCheckFn ) check_for_existence;
