@@ -40,6 +40,7 @@
 #include "na-gtk-utils.h"
 #include "na-iprefs.h"
 #include "na-importer-ask.h"
+#include "na-settings.h"
 
 /* private class data
  */
@@ -302,6 +303,7 @@ na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existin
 		} while ( !on_dialog_response( dialog, code ));
 
 		mode = dialog->private->mode;
+		na_gtk_utils_save_window_position( dialog->private->toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
 
 		if( parms->parent ){
 			gtk_widget_hide( GTK_WIDGET( dialog->private->toplevel ));
@@ -366,6 +368,7 @@ init_dialog( NAImporterAsk *editor )
 	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), editor->private->parms->keep_choice );
 
+	na_gtk_utils_restore_window_position( editor->private->toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
 	gtk_widget_show_all( GTK_WIDGET( editor->private->toplevel ));
 }
 
