@@ -54,7 +54,7 @@
 # generate html and pdf NACT user's manuals, with gtk-doc which rather
 # targets the developer documentation (see docs/reference).
 
-if HAVE_GNOME_DOC_UTILS
+if ENABLE_MANUALS
 
 include $(top_srcdir)/gnome-doc-utils.make
 
@@ -195,6 +195,8 @@ $(MANUALS_HTML): %.html: %.xml
 # to <pkgdocdir>/html
 #
 # Note that we do honor here --htmldir autotools configuration option.
+
+if ENABLE_HTML_MANUALS
 install-html-manuals: all-html-manuals install-html-figs install-html-admon
 	for lc in C $(_DOC_REAL_LINGUAS); do \
 		if test "x$(htmldir)" = "x$(docdir)"; then \
@@ -209,6 +211,9 @@ install-html-manuals: all-html-manuals install-html-figs install-html-admon
 			fi; \
 		fi; \
 	done
+else
+install-html-manuals:
+endif
 
 # copied from gnome-doc-utils.make install-doc-figs target
 # modified to install the figures with html manuals
@@ -348,6 +353,8 @@ $(MANUALS_PDF): %.pdf: %.xml
 # in all case, we append the locale as a subdirectory level
 #
 # as pdf are monobloc documents, we do not create a per-document subdir
+
+if ENABLE_PDF_MANUALS
 install-pdf-manuals: all-pdf-manuals
 	if test "$(pdfdir)" = "$(docdir)"; then \
 		_instdir=$(DESTDIR)$(pkgdocdir)/pdf; \
@@ -360,6 +367,9 @@ install-pdf-manuals: all-pdf-manuals
 			cmd="$(INSTALL_DATA) \"$(srcdir)/$$lc/$(DOC_MODULE).pdf\" \"$$_instdir/$$lc/\""; echo $$cmd; (eval $$cmd); \
 		fi; \
 	done
+else
+install-pdf-manuals:
+endif
 
 uninstall-pdf-manuals:
 	if test "$(pdfdir)" = "$(docdir)"; then \

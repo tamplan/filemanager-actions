@@ -1,5 +1,13 @@
 2011-12-02 Pierre Wieser <pwieser@trychlos.org>
 
+	Do not build the documentation at all if not asked for.
+
+	* m4/na-enable-manuals.m4: new ENABLE_MANUALS conditional.
+
+	* docs/nact/Makefile.am:
+	Make use of new ENABLE_MANUALS conditional.
+	Also test for conditionals when installing.
+
 	* run-autogen.sh: Yet improve the build script.
 
 2011-12-01 Pierre Wieser <pwieser@trychlos.org>

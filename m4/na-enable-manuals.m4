@@ -51,6 +51,8 @@ AC_DEFUN([NA_ENABLE_MANUALS],[
 	
 	_CHECK_FOR_HTML_MANUALS
 	_CHECK_FOR_PDF_MANUALS
+
+	AM_CONDITIONAL([ENABLE_MANUALS], [test "${enable_html_manuals}" = "yes" -a  "${enable_pdf_manuals}" = "yes" ])
 ])
 
 AC_DEFUN([_AC_ARG_NA_ENABLE_HTML_MANUALS],[
