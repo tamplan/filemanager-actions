@@ -21,24 +21,23 @@ for d in $(find ${srcdir} -maxdepth 1 -type d -name 'nautilus-actions-*'); do
 	rm -fr $d
 done
 
-[ "${target}" = "normal" ] && 
-	conf_arg=" \
-		--disable-deprecated \
-		--disable-gtk-doc \
-		--disable-html-manuals \
-		--disable-pdf-manuals \
-"
+conf_args=""
+
+if [ "${target}" = "normal" ]; then
+	conf_args="${conf_args} --disable-deprecated"
+	conf_args="${conf_args} --disable-gtk-doc"
+	conf_args="${conf_args} --disable-html-manuals"
+	conf_args="${conf_args} --disable-pdf-manuals"
 
 # 'doc' mode: enable deprecated, manuals and gtk-doc
-[ "${target}" = "doc" ] &&
-	conf_arg=" \
-		--enable-deprecated \
-		--enable-gtk-doc \
-		--enable-gtk-doc-html \
-		--enable-gtk-doc-pdf \
-		--enable-html-manuals \
-		--enable-pdf-manuals \
-"
+elif [ "${target}" = "doc" ]; then
+	conf_args="${conf_args} --enable-deprecated"
+	conf_args="${conf_args} --enable-gtk-doc"
+	conf_args="${conf_args} --enable-gtk-doc-html"
+	conf_args="${conf_args} --enable-gtk-doc-pdf"
+	conf_args="${conf_args} --enable-html-manuals"
+	conf_args="${conf_args} --enable-pdf-manuals"
+fi
 
 # Build with Gtk+ 3 (actually a 2.97.x unstable version)
 # installed in ~/.local/jhbuild
@@ -79,14 +78,22 @@ heredir=\$(pwd)
 mkdir -p \${heredir}/_build
 cd \${heredir}/_build
 
-\${srcdir}/configure \
-		--prefix=\${heredir}/_install \
-		--sysconfdir=/etc \
-		--with-nautilus-extdir=\${heredir}/_install/lib/nautilus \
-		--disable-schemas-install \
-		--disable-scrollkeeper \
-		--enable-maintainer-mode \
-		\$* &&
+conf_cmd="\${srcdir}/configure"
+conf_args="${conf_args}"
+conf_args="\${conf_args} --prefix=\${heredir}/_install"
+conf_args="\${conf_args} --sysconfdir=/etc"
+conf_args="\${conf_args} --with-nautilus-extdir=\${heredir}/_install/lib/nautilus"
+conf_args="\${conf_args} --disable-schemas-install"
+conf_args="\${conf_args} --disable-scrollkeeper"
+conf_args="\${conf_args} --enable-maintainer-mode"
+conf_args="\${conf_args} \$*"
+
+tput bold
+echo "\${conf_cmd} \${conf_args}
+"
+tput sgr0
+
+\${conf_cmd} \${conf_args} &&
 make &&
 make install
 EOF
