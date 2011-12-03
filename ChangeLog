@@ -1,5 +1,7 @@
 2011-12-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* run-distcheck.sh: Make sure that the document wil be rebuilt.
+
 	* m4/na-enable-manuals.m4:
 	Fix the test as possible values are 'gdt', 'db2html' and 'no.
 

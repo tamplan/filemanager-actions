@@ -1,8 +1,14 @@
 #!/bin/sh
 
 srcdir=$(cd ${0%/*}; pwd)
+builddir="_build"
+
+rm -fr ${builddir}
+rm -fr _install
+find docs/nact -type f -name '*.html' -o -name '*.pdf' | xargs rm -f
+find docs/nact -type d -name 'stylesheet-images' -o -name 'admon' | xargs rm -fr
 
 target=doc ${srcdir}/run-autogen.sh &&
 	${srcdir}/tools/check-po.sh -nodummy &&
-	${srcdir}/tools/check-headers.sh -nodummy &&
-	make -C _build distcheck
+	${srcdir}/tools/check-headers.sh -nodummy -builddir=${builddir} &&
+	make -C ${builddir} distcheck
