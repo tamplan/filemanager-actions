@@ -151,9 +151,12 @@ xml_in_files = \
 
 xml_files = $(xml_in_files:.xml.in=.xml)
 
+# even auto-generated .xml files should go to srcdir
+# else xml processor will not be able to parse entities
 version_dir.xml: version.xml
 	rm -f version_dir.xml
 	cat version.xml | $(SED) 's?^\([[:alnum:]]\.[[:alnum:]]\).*?\1?' > version_dir.xml
+	if test "$(abs_srcdir)" != "$(abs_builddir)"; then cp version.xml version_dir.xml $(srcdir)/; fi
 
 CLEANFILES += \
 	$(DOC_MODULE).types							\

@@ -1,3 +1,7 @@
+2011-12-03 Pierre Wieser <pwieser@trychlos.org>
+
+	* docs/reference/Makefile.am: Fix when builddir not equal to srcdir.
+
 2011-12-02 Pierre Wieser <pwieser@trychlos.org>
 
 	Do not build the documentation at all if not asked for.
