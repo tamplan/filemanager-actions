@@ -1,5 +1,8 @@
 2011-12-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* m4/na-enable-manuals.m4:
+	Fix the test as possible values are 'gdt', 'db2html' and 'no.
+
 	* docs/reference/Makefile.am: Fix when builddir not equal to srcdir.
 
 2011-12-02 Pierre Wieser <pwieser@trychlos.org>
