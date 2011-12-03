@@ -101,13 +101,14 @@ function msg_help
    --[no]help                print this message, and exit [${opt_help_def}]
    --[no]version             print script version, and exit [${opt_version_def}]
    --[no]dummy               dummy execution [${opt_dummy_def}]
-   --[no]verbose             runs verbosely [${opt_verbose_def}]"
+   --[no]verbose             runs verbosely [${opt_verbose_def}]
+   --builddir=dir            build directory [${opt_builddir_def}]"
 }
 
 function msg_version
 {
-	pck_name=$(grep '^PACKAGE_NAME' Makefile 2>/dev/null | awk '{ print $3 }')
-	pck_version=$(grep '^PACKAGE_VERSION' Makefile 2>/dev/null | awk '{ print $3 }')
+	pck_name=$(grep '^PACKAGE_NAME' ${opt_builddir}/Makefile 2>/dev/null | awk '{ print $3 }')
+	pck_version=$(grep '^PACKAGE_VERSION' ${opt_builddir}/Makefile 2>/dev/null | awk '{ print $3 }')
 	echo "
  ${pck_name} v ${pck_version}
  Copyright (C) 2011 Pierre Wieser."
@@ -123,6 +124,12 @@ opt_version=
 opt_version_def="no"
 opt_verbose=
 opt_verbose_def="no"
+#
+thisdir=$(cd ${0%/*}; pwd)
+top_srcdir=${thisdir%/*}
+#
+opt_builddir=
+opt_builddir_def=${top_srcdir}
 
 # a first loop over command line arguments to detect verbose mode
 while :
@@ -166,10 +173,6 @@ done
 # reset now arguments so that they can be scanned again in main script
 set -- ${my_parms}
 
-# interpreting command-line arguments
-opt_potfile=
-opt_potfile_def="po/POTFILES.in"
-
 # loop over command line arguments
 pos=0
 while :
@@ -204,14 +207,18 @@ do
 		# these options take a mandatory argument
 		# since, we didn't find it in 'option', so it should be
 		# next word in the command line
-		#--p | -po | -pot | -potf | -potfi | -potfil | -potfile)
-		#	optarg=$1
-		#	shift
-		#	;;
+		--b | --bu | --bui | --buil | --build | --buildd | --builddi | --builddir)
+			optarg=$1
+			shift
+			;;
 	esac
 
 	# now process options and their argument
 	case ${option} in
+		--b | --bu | --bui | --buil | --build | --buildd | --builddi | --builddir)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_builddir to '${optarg}'"
+			opt_builddir="${optarg}"
+			;;
 		--d | --du | --dum | --dumm | --dummy)
 			[ "${opt_verbose}" = "yes" ] && msg "setting opt_dummy to 'yes'"
 			opt_dummy="yes"
@@ -273,6 +280,7 @@ opt_help=${opt_help:-${opt_help_def}}
 opt_dummy=${opt_dummy:-${opt_dummy_def}}
 opt_verbose=${opt_verbose:-${opt_verbose_def}}
 opt_version=${opt_version:-${opt_version_def}}
+opt_builddir=${opt_builddir:-${opt_builddir_def}}
 
 if [ "${opt_help}" = "yes" -o ${nbopt} -eq 0 ]; then
 	msg_help
@@ -286,9 +294,14 @@ if [ "${opt_version}" = "yes" ]; then
 	exit
 fi
 
-if [ "$(basename $(pwd))" != "nautilus-actions" ]; then
+if [ "${top_srcdir##*/}" != "nautilus-actions" ]; then
 	msgerr "current directory is $(pwd)"
 	msg "you should change to nautilus-actions/"
+	let errs+=1
+fi
+
+if [ ! -d ${opt_builddir} ]; then
+	msgerr "{opt_builddir}: directory not found"
 	let errs+=1
 fi
 
@@ -303,12 +316,12 @@ fi
 
 for f in $(git ls-files src | grep '\.h$' | grep -v '^src/test'); do
 	msg "checking for $f..." " "
-	tmpc=tools/check-header.c
+	tmpc=${top_srcdir}/tools/check-header.c
 	cat <<! >${tmpc}
 #include <${f}>
 int main( int argc, char **argv ){ return( 0 ); }
 !
-	make -C tools check-header 1>/dev/null 2>&1 && tools/check-header 1>/dev/null 2>&1
+	make -C ${opt_builddir}/tools check-header 1>/dev/null 2>&1 && ${opt_builddir}/tools/check-header 1>/dev/null 2>&1
 	[ $? -eq 0 ] && echo "OK" || { echo "NOT OK"; let errs+=1; }
 done
 
