@@ -1,3 +1,7 @@
+2011-12-04 Pierre Wieser <pwieser@trychlos.org>
+
+	* run-distcheck.sh: Fix cleanup before making distcheck.
+
 2011-12-03 Pierre Wieser <pwieser@trychlos.org>
 
 	* tools/check-headers.sh: Fix when builddir not equal to srcdir.

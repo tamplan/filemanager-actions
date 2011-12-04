@@ -5,8 +5,8 @@ builddir="_build"
 
 rm -fr ${builddir}
 rm -fr _install
-find docs/nact -type f -name '*.html' -o -name '*.pdf' | xargs rm -f
-find docs/nact -type d -name 'stylesheet-images' -o -name 'admon' | xargs rm -fr
+find ${srcdir}/docs/nact -type f -name '*.html' -o -name '*.pdf' | xargs rm -f
+find ${srcdir}/docs/nact \( -type d -o -type l \) -name 'stylesheet-images' -o -name 'admon' | xargs rm -fr
 
 target=doc ${srcdir}/run-autogen.sh &&
 	${srcdir}/tools/check-po.sh -nodummy &&
