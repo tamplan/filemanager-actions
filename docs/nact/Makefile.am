@@ -346,6 +346,10 @@ endif
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files
 # we so are sure that they exist and are up to date
 # (path is .po ->[msgfmt]-> .mo ->[xml2po]-> .xml)
+#
+# workaround against l10n bug #664768
+# pdflatex cannot generate some localized pdf
+
 $(MANUALS_PDF): %.pdf: %.xml
 	@if test "$(opt_verbose)" = ""; then echo "  PDF    $@"; fi; \
 	( \
@@ -362,6 +366,11 @@ $(MANUALS_PDF): %.pdf: %.xml
 		fi; \
 	 done; \
 	 cmd="dblatex $$fxml"; eval $$cmd; \
+	 if ! test -f $(DOC_MODULE).pdf; then \
+	 	tmpdir=`dblatex -d $$fxml 2>&1 | grep 'not removed' | awk '{ print $$1 }'`; \
+	 	cp $$tmpdir/$(DOC_MODULE).pdf . || :; \
+	 	rm -fr $$tmpdir; \
+	 fi; \
 	 find figures -type l | xargs rm -f; \
 	 rmdir figures 2>/dev/null || :; \
 	)

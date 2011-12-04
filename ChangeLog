@@ -1,5 +1,10 @@
 2011-12-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/nact/Makefile.am: Work-around against #664768.
+
+	When a bug is detected in dblatex, we re-run it in debug mode, so that
+	we may be able to get the .pdf from temp directory.
+
 	* docs/nact/Makefile.am: Fix User's Manual generation.
 
 	* docs/reference/nautilus-actions-docs.xml: API only changes on minor versions.
