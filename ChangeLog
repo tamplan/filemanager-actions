@@ -1,5 +1,7 @@
 2011-12-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/nact/Makefile.am: Fix User's Manual generation.
+
 	* docs/reference/nautilus-actions-docs.xml: API only changes on minor versions.
 
 	* run-autogen.sh: Do not automatically make && make install after configure.
