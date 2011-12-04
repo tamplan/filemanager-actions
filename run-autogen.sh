@@ -93,12 +93,12 @@ echo "\${conf_cmd} \${conf_args}
 "
 tput sgr0
 
-\${conf_cmd} \${conf_args} &&
-make &&
-make install
+\${conf_cmd} \${conf_args}
 EOF
 
 echo "Executing ${runconf}
 "
 chmod a+x ${runconf}
-exec ${runconf}
+${runconf} &&
+make -C _build &&
+make -C _build install

@@ -1,5 +1,7 @@
 2011-12-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* run-autogen.sh: Do not automatically make && make install after configure.
+
 	* run-distcheck.sh: Fix cleanup before making distcheck.
 
 2011-12-03 Pierre Wieser <pwieser@trychlos.org>
