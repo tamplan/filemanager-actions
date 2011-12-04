@@ -200,7 +200,7 @@ $(MANUALS_HTML): %.html: %.xml
 					cmd="$(mkinstalldirs) admon"; eval $$cmd; \
 					cmd="cp $(opt_verbose) $$admon_dir/*.png admon/"; eval $$cmd; \
 				else \
-					cmd="$(LN_S) -f ../C/admon)"; eval $$cmd; \
+					cmd="$(LN_S) -f ../C/admon"; eval $$cmd; \
 					if test "$(opt_verbose)" != ""; then echo $$cmd; fi; \
 				fi; \
 			fi; \
@@ -245,7 +245,7 @@ install-html-manuals: install-html-figs
 			fi; \
 			if test -h "$$d/$$lc/$$subdir"; then \
 				if test "$(opt_verbose)" = ""; then echo "  Installing $$_instdir/$$subdir ..."; fi; \
-				cmd="(cd \"$$_instdir/$$lc/nact\"; $(LN_S) -f ../../C/nact/$$subdir)"; eval $$cmd; \
+				cmd="(cd \"$$_instdir/$$lc/nact\" && $(LN_S) -f ../../C/nact/$$subdir)"; eval $$cmd; \
 				if test "$(opt_verbose)" != ""; then echo $$cmd; fi; \
 			fi; \
 		fi; \
