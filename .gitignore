@@ -22,4 +22,5 @@ ltmain.sh
 missing
 mkinstalldirs
 nautilus-actions-*.tar.gz
+run-configure.sh
 trash/

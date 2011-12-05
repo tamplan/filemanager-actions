@@ -10,6 +10,8 @@ xml/
 *.interfaces
 *.prerequisites
 *.signals
+*.stamp
 *.types
+version.xml
 version_dir.xml
 warnings*
