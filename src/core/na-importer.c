@@ -133,6 +133,15 @@ na_importer_free_result( NAImporterResult *result )
 	g_free( result );
 }
 
+/*
+ * Each NAIImporter interface may return some messages, specially if it is
+ * not able to import the provided URI. But as long we do not have yet asked
+ * to all available interfaces, we are not sure of whether this URI is
+ * eventually importable or not.
+ * We so let each interface push its messages in the list, but be ready to
+ * only keep the messages provided by the interface which has successfully
+ * imported the item.
+ */
 static guint
 import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, const gchar *uri, NAImporterResult **result )
 {
@@ -141,6 +150,7 @@ import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, c
 	NAIImporterImportFromUriParms provider_parms;
 	ImporterExistsStr exists_parms;
 	NAImporterAskUserParms ask_parms;
+	GSList *all_messages;
 
 	code = IMPORTER_CODE_NOT_WILLING_TO;
 
@@ -165,8 +175,19 @@ import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, c
 	provider_parms.ask_fn = ( NAIImporterAskUserFn ) ask_user_for_mode;
 	provider_parms.ask_fn_data = &ask_parms;
 
+	all_messages = NULL;
+
 	for( im = modules ; im && code == IMPORTER_CODE_NOT_WILLING_TO ; im = im->next ){
 		code = na_iimporter_import_from_uri( NA_IIMPORTER( im->data ), &provider_parms );
+
+		if( code == IMPORTER_CODE_NOT_WILLING_TO ){
+			all_messages = g_slist_concat( all_messages, provider_parms.messages );
+			provider_parms.messages = NULL;
+
+		} else {
+			na_core_utils_slist_free( all_messages );
+			all_messages = provider_parms.messages;
+		}
 	}
 
 	*result = g_new0( NAImporterResult, 1 );
@@ -174,7 +195,7 @@ import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, c
 	( *result )->mode = provider_parms.import_mode;
 	( *result )->exist = provider_parms.exist;
 	( *result )->imported = provider_parms.imported;
-	( *result )->messages = provider_parms.messages;
+	( *result )->messages = all_messages;
 
 	return( code );
 }

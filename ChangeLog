@@ -1,5 +1,8 @@
 2011-12-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-importer.c (import_from_uri): Only display error messages
+	of the interface which has eventually successfully imported the item.
+
 	* src/core/na-importer.c (import_from_uri):
 	Make sure of the population against which we check for existance.
 
