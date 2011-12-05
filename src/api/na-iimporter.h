@@ -189,6 +189,23 @@ typedef enum {
  * should be systematically regenerated as a unique id, regardless of the
  * asked import mode.
  *
+ * Standard N-A callers provide a function which checks for the existance
+ * of the newly imported item :
+ * <itemizedlist>
+ *   <listitem>
+ *     <para>
+ *       first among the current list of just imported items
+ *     </para>
+ *   </listitem>
+ *   <listitem>
+ *     <para>
+ *       and then amon the items currently visible in the main window.
+ *     </para>
+ *   </listitem>
+ * </itemizedlist>
+ * Items which may have been loaded by NAPivot at the start of the
+ * application, and deleted meanwhile, are just ignored.
+ *
  * Returns: the already existing #NAObjectItem with same id, or %NULL.
  *
  * Since: 2.30

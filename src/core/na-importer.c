@@ -182,8 +182,7 @@ import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, c
 /*
  * to see if an imported item already exists, we have to check
  * - the current list of just imported items
- * - the main window (if any), which contains the in-memory list of items
- * - the tree in pivot which contains the 'actual' items
+ * - the main window (if any), which contains the in-memory list of items.
  */
 static NAObjectItem *
 is_importing_already_exists( const NAObjectItem *importing, ImporterExistsStr *parms )
