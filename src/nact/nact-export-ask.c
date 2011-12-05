@@ -299,6 +299,10 @@ on_base_initialize_gtk_toplevel( NactExportAsk *editor, GtkDialog *toplevel )
 
 		nact_export_format_init_display( container,
 				NA_PIVOT( updater ), EXPORT_FORMAT_DISPLAY_ASK, !editor->private->preferences_locked );
+
+#if !GTK_CHECK_VERSION( 2,22,0 )
+		gtk_dialog_set_has_separator( toplevel, FALSE );
+#endif
 	}
 }
 

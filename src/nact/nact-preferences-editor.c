@@ -363,6 +363,10 @@ on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *tople
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "ProvidersTreeView" ));
 		nact_providers_list_create_model( listview );
+
+#if !GTK_CHECK_VERSION( 2,22,0 )
+		gtk_dialog_set_has_separator( toplevel, FALSE );
+#endif
 	}
 }
 

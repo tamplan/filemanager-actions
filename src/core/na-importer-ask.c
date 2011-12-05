@@ -240,6 +240,10 @@ import_ask_new( GtkWindow *parent )
 							"destroy", G_CALLBACK( on_destroy_toplevel ), dialog );
 					st_dialog = dialog;
 				}
+
+#if !GTK_CHECK_VERSION( 2,22,0 )
+				gtk_dialog_set_has_separator( GTK_DIALOG( toplevel ), FALSE );
+#endif
 			}
 		}
 		g_object_unref( builder );

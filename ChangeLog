@@ -1,5 +1,16 @@
 2011-12-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-importer-ask.c (import_ask_new):
+	* src/nact/nact-add-capability-dialog.c (on_base_initialize_gtk_toplevel):
+	* src/nact/nact-add-capability.ui:
+	* src/nact/nact-add-scheme-dialog.c (on_base_initialize_gtk_toplevel):
+	* src/nact/nact-add-scheme.ui:
+	* src/nact/nact-export-ask.c (on_base_initialize_gtk_toplevel):
+	* src/nact/nact-icon-chooser.c (on_base_initialize_gtk_toplevel):
+	* src/nact/nact-icon-chooser.ui:
+	* src/nact/nact-preferences-editor.c (on_base_initialize_gtk_toplevel):
+	Remove (deprecated since 2.22) 'has_separator' property from GtkDialog.
+
 	* src/io-xml/naxml-reader.c (naxml_reader_import_from_uri):
 	Display an synthetic error message if cannot handle the file.
 
