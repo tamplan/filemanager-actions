@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -60,6 +61,8 @@ typedef struct {
 	NAObjectAction  *action;
 }
 	NadpReaderData;
+
+#define ERR_NOT_DESKTOP		_( "The Desktop I/O Provider is not able to handle the URI" )
 
 static GList            *get_list_of_desktop_paths( NadpDesktopProvider *provider, GSList **mesages );
 static void              get_list_of_desktop_files( const NadpDesktopProvider *provider, GList **files, const gchar *dir, GSList **messages );
@@ -408,6 +411,10 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterI
 				parms->imported = NULL;
 			}
 		}
+	}
+
+	if( code == IMPORTER_CODE_NOT_WILLING_TO ){
+		na_core_utils_slist_add_message( &parms->messages, ERR_NOT_DESKTOP );
 	}
 
 	return( code );
