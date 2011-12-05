@@ -152,7 +152,7 @@ static RootNodeStr st_root_node_str[] = {
 #define ERR_NODE_UNKNOWN			_( "Unknown element %s found at line %d while waiting for %s." )
 /* i18n: do not translate keywords 'Action' nor 'Menu' */
 #define ERR_NODE_UNKNOWN_TYPE		_( "Unknown type %s found at line %d, while waiting for Action or Menu." )
-#define WARN_UNDEALT_NODE			_( "Node %s at line %d has not been dealt with." )
+#define ERR_NOT_IOXML				_( "The XML I/O Provider is not able to handle the URI" )
 
 static void          read_start_profile_attach_profile( NAXMLReader *reader, NAObjectProfile *profile );
 static gboolean      read_data_is_path_adhoc_for_object( NAXMLReader *reader, const NAIFactoryObject *object, xmlChar *text );
@@ -339,6 +339,10 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFrom
 
 	code = reader_parse_xmldoc( reader );
 
+	if( code == IMPORTER_CODE_NOT_WILLING_TO ){
+		na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NOT_IOXML );
+	}
+
 	if( code == IMPORTER_CODE_OK ){
 		g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms->imported ), IMPORTER_CODE_PROGRAM_ERROR );
 		code = manage_import_mode( reader );
@@ -364,7 +368,7 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFrom
  * and that the root node can be identified as a schema or a dump
  *
  * At import time, it is worthless to say that there is, e.g. a badly formed
- * xml file, as we even not sure that we are trying to import a .xml.
+ * xml file, as we are not even sure that we are trying to import a .xml.
  * So just keep ride of error messages here.
  */
 static guint

@@ -1,5 +1,13 @@
 2011-12-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/naxml-reader.c (naxml_reader_import_from_uri):
+	Display an synthetic error message if cannot handle the file.
+
+	* src/io-desktop/nadp-reader.c (nadp_reader_iimporter_import_from_uri):
+	Display an synthetic error message if cannot handle the file.
+
+	* po/POTFILES.in: Updated accordingly.
+
 	* src/core/na-importer.c (import_from_uri): Only display error messages
 	of the interface which has eventually successfully imported the item.
 
