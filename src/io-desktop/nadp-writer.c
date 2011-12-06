@@ -104,10 +104,11 @@ nadp_iio_provider_is_able_to_write( const NAIIOProvider *provider )
 	if( g_file_test( userdir, G_FILE_TEST_IS_DIR )){
 		able_to = na_core_utils_dir_is_writable_path( userdir );
 
-	} else if( g_mkdir_with_parents( userdir, 0700 )){
+	} else if( g_mkdir_with_parents( userdir, 0750 )){
 		g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));
 
 	} else {
+		na_core_utils_dir_list_perms( userdir, thisfn );
 		able_to = na_core_utils_dir_is_writable_path( userdir );
 	}
 
@@ -156,9 +157,11 @@ nadp_iio_provider_write_item( const NAIIOProvider *provider, const NAObjectItem 
 		dir_ok = TRUE;
 
 		if( !g_file_test( fulldir, G_FILE_TEST_IS_DIR )){
-			if( g_mkdir_with_parents( fulldir, 0700 )){
+			if( g_mkdir_with_parents( fulldir, 0750 )){
 				g_warning( "%s: %s: %s", thisfn, userdir, g_strerror( errno ));
 				dir_ok = FALSE;
+			} else {
+				na_core_utils_dir_list_perms( userdir, thisfn );
 			}
 		}
 		g_free( userdir );

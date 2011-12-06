@@ -422,7 +422,8 @@ settings_new( void )
 		g_free( dir );
 
 		dir = g_build_filename( g_get_home_dir(), ".config", PACKAGE, NULL );
-		g_mkdir_with_parents( dir, 750 );
+		g_mkdir_with_parents( dir, 0750 );
+		na_core_utils_dir_list_perms( dir, thisfn );
 		g_debug( "%s: reading user configuration", thisfn );
 		st_settings->private->user = key_file_new( dir );
 		g_free( dir );
