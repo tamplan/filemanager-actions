@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
 #include <api/na-core-utils.h>
@@ -54,6 +55,9 @@ extern gboolean iimporter_finalized;		/* defined in na-iimporter.c */
 static guint         import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, const gchar *uri, NAImporterResult **result );
 static NAObjectItem *is_importing_already_exists( const NAObjectItem *importing, ImporterExistsStr *parms );
 static guint         ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms );
+
+/* i18n: '%s' stands for the file URI */
+#define ERR_NOT_LOADABLE	_( "%s is not loadable (empty or too big or not a regular file)" )
 
 /*
  * na_importer_import_from_list:
@@ -177,12 +181,22 @@ import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, c
 
 	all_messages = NULL;
 
-	for( im = modules ; im && code == IMPORTER_CODE_NOT_WILLING_TO ; im = im->next ){
+	for( im = modules ;
+			im && ( code == IMPORTER_CODE_NOT_WILLING_TO || code == IMPORTER_CODE_NOT_LOADABLE ) ;
+			im = im->next ){
+
 		code = na_iimporter_import_from_uri( NA_IIMPORTER( im->data ), &provider_parms );
 
 		if( code == IMPORTER_CODE_NOT_WILLING_TO ){
 			all_messages = g_slist_concat( all_messages, provider_parms.messages );
 			provider_parms.messages = NULL;
+
+		} else if( code == IMPORTER_CODE_NOT_LOADABLE ){
+			na_core_utils_slist_free( all_messages );
+			all_messages = NULL;
+			na_core_utils_slist_free( provider_parms.messages );
+			provider_parms.messages = NULL;
+			na_core_utils_slist_add_message( &all_messages, ERR_NOT_LOADABLE, ( const gchar * ) uri );
 
 		} else {
 			na_core_utils_slist_free( all_messages );

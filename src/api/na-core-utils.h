@@ -91,6 +91,7 @@ void     na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar 
  */
 gboolean na_core_utils_file_delete       ( const gchar *path );
 gboolean na_core_utils_file_exists       ( const gchar *uri );
+gboolean na_core_utils_file_is_loadable  ( const gchar *uri );
 gchar   *na_core_utils_file_load_from_uri( const gchar *uri, gsize *length );
 
 /* miscellaneous

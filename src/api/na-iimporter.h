@@ -159,6 +159,10 @@ typedef enum {
  * @IMPORTER_CODE_NO_ITEM_TYPE:      item type not found.
  * @IMPORTER_CODE_UNKNOWN_ITEM_TYPE: unknown item type.
  * @IMPORTER_CODE_CANCELLED:         operation cancelled by the user.
+ * @IMPORTER_CODE_NOT_LOADABLE:      the file is considered as not loadable at all.
+ *                                   This is not a matter of which I/O provider has been tried,
+ *                                   but the file is empty, or too big, or eventually not a
+ *                                   regular file.
  *
  * Define the return status of an import operation.
  */
@@ -169,7 +173,8 @@ typedef enum {
 	IMPORTER_CODE_NO_ITEM_ID,
 	IMPORTER_CODE_NO_ITEM_TYPE,
 	IMPORTER_CODE_UNKNOWN_ITEM_TYPE,
-	IMPORTER_CODE_CANCELLED
+	IMPORTER_CODE_CANCELLED,
+	IMPORTER_CODE_NOT_LOADABLE
 }
 	NAIImporterImportStatus;
 

@@ -1,5 +1,21 @@
 2011-12-06 Pierre Wieser <pwieser@trychlos.org>
 
+	Fix a coredump when trying to import an empty file by DnD.
+	Extend the fix by checking the size and the type of the candidate.
+
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_file_is_loadable): New function.
+
+	* src/api/na-iimporter.h (IMPORTER_CODE_NOT_LOADABLE): New return code.
+
+	* src/core/na-importer.c (import_from_uri):
+	Do not try other modules one the first detects that a file is not loadable.
+
+	* src/io-desktop/nadp-desktop-file.c (nadp_desktop_file_new_from_uri):
+	* src/io-desktop/nadp-reader.c (nadp_reader_iimporter_import_from_uri):
+	* src/io-xml/naxml-reader.c (naxml_reader_import_from_uri):
+	Check whether the file is loadable before trying to import it.
+
 	* src/nact/nact-main-tab.h:
 	* src/nact/nact-main-window.h: Fix comments.
 

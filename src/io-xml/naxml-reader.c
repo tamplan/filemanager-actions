@@ -329,13 +329,17 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFrom
 
 	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 
-	reader = reader_new();
-	reader->private->importer = ( NAIImporter * ) instance;
-	reader->private->parms = parms;
-
 	parms->exist = FALSE;
 	parms->import_mode = IMPORTER_MODE_NO_IMPORT;
 	parms->imported = NULL;
+
+	if( !na_core_utils_file_is_loadable( parms->uri )){
+		return( IMPORTER_CODE_NOT_LOADABLE );
+	}
+
+	reader = reader_new();
+	reader->private->importer = ( NAIImporter * ) instance;
+	reader->private->parms = parms;
 
 	code = reader_parse_xmldoc( reader );
 

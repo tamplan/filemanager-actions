@@ -43,8 +43,15 @@
 
 #include "na-about.h"
 
+/* minimal and maximal size for loading the content of a file in memory
+ * used by na_core_utils_file_is_size_ok()
+ */
+#define SIZE_MIN		  1
+#define SIZE_MAX	1048576		/* 1 MB */
+
 static GSList  *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
 static gboolean info_dir_is_writable( GFile *file, const gchar *path );
+static gboolean file_is_loadable( GFile *file );
 
 /**
  * na_core_utils_boolean_from_string
@@ -1002,6 +1009,92 @@ na_core_utils_file_exists( const gchar *uri )
 }
 
 /**
+ * na_core_utils_file_is_loadable:
+ * @uri: the URI to be checked.
+ *
+ * Checks that the file is suitable to be loaded in memory, because
+ * it is not empty, and its size is reasonable (less than 1MB).
+ * Also checks that a file is a regular file (or a symlink to a
+ * regular file).
+ *
+ * Returns: whether the file is suitable to be loaded in memory.
+ *
+ * Since: 3.1
+ */
+gboolean
+na_core_utils_file_is_loadable( const gchar *uri )
+{
+	static const gchar *thisfn = "na_core_utils_file_is_loadable";
+	GFile *file;
+	gboolean isok;
+
+	g_debug( "%s: uri=%s", thisfn, uri );
+
+	isok = FALSE;
+	file = g_file_new_for_uri( uri );
+
+	isok = file_is_loadable( file );
+
+	g_object_unref( file );
+
+	return( isok );
+}
+
+static gboolean
+file_is_loadable( GFile *file )
+{
+	static const gchar *thisfn = "na_core_utils_file_is_loadable";
+	GError *error;
+	GFileInfo *info;
+	guint64 size;
+	GFileType type;
+	gboolean isok;
+	GFile *target_file;
+
+	error = NULL;
+	isok = FALSE;
+	info = g_file_query_info( file,
+			G_FILE_ATTRIBUTE_STANDARD_SIZE "," G_FILE_ATTRIBUTE_STANDARD_TYPE,
+			G_FILE_QUERY_INFO_NONE, NULL, &error );
+
+	if( !info ){
+		if( error ){
+			g_debug( "%s: %s", thisfn, error->message );
+			g_error_free( error );
+		}
+
+	} else {
+		size = g_file_info_get_attribute_uint64( info, G_FILE_ATTRIBUTE_STANDARD_SIZE );
+		g_debug( "%s: size=%lu", thisfn, ( unsigned long ) size );
+		isok = ( size >= SIZE_MIN && size <= SIZE_MAX );
+	}
+
+	if( isok ){
+		type = g_file_info_get_file_type( info );
+		g_debug( "%s: type=%u", thisfn, ( unsigned ) type );
+
+		if( type != G_FILE_TYPE_REGULAR ){
+			isok = FALSE;
+
+			if( type == G_FILE_TYPE_SYMBOLIC_LINK ){
+				const char *target = g_file_info_get_symlink_target( info );
+				if( target && strlen( target )){
+					target_file = g_file_resolve_relative_path( file, target );
+					if( target_file ){
+						isok = file_is_loadable( target_file );
+						g_object_unref( target_file );
+					}
+				}
+			}
+		}
+	}
+
+	g_object_unref( info );
+
+	return( isok );
+}
+
+/**
  * na_core_utils_file_load_from_uri:
  * @uri: the URI the file must be loaded from.
  * @length: a pointer to the length of the read content.
@@ -1017,16 +1110,30 @@ na_core_utils_file_exists( const gchar *uri )
 gchar *
 na_core_utils_file_load_from_uri( const gchar *uri, gsize *length )
 {
+	static const gchar *thisfn = "na_core_utils_file_load_from_uri";
 	gchar *data;
 	GFile *file;
+	GError *error;
+
+	g_debug( "%s: uri=%s, length=%p", thisfn, uri, ( void * ) length );
+
+	error = NULL;
+	data = NULL;
+	if( length ){
+		*length = 0;
+	}
 
 	file = g_file_new_for_uri( uri );
 
-	if( !g_file_load_contents( file, NULL, &data, length, NULL, NULL )){
+	if( !g_file_load_contents( file, NULL, &data, length, NULL, &error )){
 		g_free( data );
 		data = NULL;
 		if( length ){
 			*length = 0;
+		}
+		if( error ){
+			g_debug( "%s: %s", thisfn, error->message );
+			g_error_free( error );
 		}
 	}
 

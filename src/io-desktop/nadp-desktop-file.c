@@ -279,12 +279,18 @@ nadp_desktop_file_new_from_uri( const gchar *uri )
 	gsize length;
 
 	ndf = NULL;
+	data = NULL;
+	length = 0;
+
 	g_debug( "%s: uri=%s", thisfn, uri );
 	g_return_val_if_fail( uri && g_utf8_strlen( uri, -1 ), ndf );
 
 	data = na_core_utils_file_load_from_uri( uri, &length );
-	if( !length ){
-		g_debug( "%s: file is empty", thisfn );
+	g_debug( "%s: length=%lu", thisfn, ( unsigned long ) length );
+
+	/* normally, length and data should be both NULL or both not NULL
+	 */
+	if( !length || !data ){
 		return( NULL );
 	}
 

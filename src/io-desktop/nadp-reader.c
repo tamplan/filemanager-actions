@@ -368,6 +368,11 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterI
 	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 
+	if( !na_core_utils_file_is_loadable( parms->uri )){
+		code = IMPORTER_CODE_NOT_LOADABLE;
+		return( code );
+	}
+
 	code = IMPORTER_CODE_NOT_WILLING_TO;
 
 	ndf = nadp_desktop_file_new_from_uri( parms->uri );
