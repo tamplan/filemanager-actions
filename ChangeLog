@@ -1,5 +1,8 @@
 2011-12-06 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/na-gconf2key.sh.in:
+	Fix permissions when creating the configuration directory.
+
 	* src/core/na-settings.c (settings_new):
 	* src/io-desktop/nadp-writer.c
 	(nadp_iio_provider_is_able_to_write, nadp_iio_provider_write_item):

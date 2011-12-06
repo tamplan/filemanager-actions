@@ -186,9 +186,19 @@ done
 # reset now arguments so that they can be scanned again in main script
 set -- ${my_parms}
 
+# setting defaults
+if [ $(id -u) -eq 0 ]; then
+	opt_dir_def="/usr"
+	conf_dir="@sysconfdir@/xdg"
+	dir_mode="0755"
+else
+	opt_dir_def="${HOME}/.local"
+	conf_dir="${HOME}/.config"
+	dir_mode="0750"
+fi
+
 # interpreting command-line arguments
 opt_dir=
-[ $(id -u) -eq 0 ] && opt_dir_def="/usr" || opt_dir_def="${HOME}/.local"
 opt_dir_def="${opt_dir_def}/share/file-manager/actions"
 
 # default is to not force rewriting of already existing items
@@ -400,7 +410,7 @@ function create_first_level
 which gconftool-2 1>/dev/null 2>&1 || { msg "gconftool-2: not available"; exit 1; }
 
 # create the destination directory if it does not yet exist
-command "mkdir -p ${opt_dir} || exit 1"
+command "mkdir -m ${dir_mode} -p ${opt_dir} || exit 1"
 
 let nbitems=0
 
@@ -426,13 +436,12 @@ done
 msg "${nbitems} migrated items"
 
 # we are using this same script to migrate preferences to .conf files
-# mandatory preferences go to SYSCONFDIR/xdg/nautilus-actions.conf
-# while user preferences go to HOME/.config/nautilus-actions.conf
+# mandatory preferences go to SYSCONFDIR/xdg/nautilus-actions/nautilus-actions.conf
+# while user preferences go to HOME/.config/nautilus-actions/nautilus-actions.conf
 # Note also that the GConf I/O provider will be disabled for writings
 # after this migration
-[ $(id -u) -eq 0 ] && destdir=@sysconfdir@/xdg || destdir=${HOME}/.config
 destdir=${destdir}/@PACKAGE@
-command "mkdir -p ${destdir}"
+command "mkdir -m ${dir_mode} -p ${destdir}"
 destconf=${destdir}/@PACKAGE@.conf
 rm -f ${my_tmproot}.nact
 rm -f ${my_tmproot}.runtime
