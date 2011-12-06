@@ -1,5 +1,8 @@
 2011-12-06 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_dir_list_perms): New function.
+
 	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
 	Fix and improve error messages during drop operations.
 

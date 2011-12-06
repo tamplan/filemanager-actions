@@ -83,9 +83,10 @@ void     na_core_utils_selcount_get_ope_int( const gchar *selection_count, gchar
 
 /* directory management
  */
+void     na_core_utils_dir_list_perms      ( const gchar *path, const gchar *message );
 gboolean na_core_utils_dir_is_writable_path( const gchar *path );
-gboolean na_core_utils_dir_is_writable_uri( const gchar *uri );
-void     na_core_utils_dir_split_ext( const gchar *string, gchar **first, gchar **ext );
+gboolean na_core_utils_dir_is_writable_uri ( const gchar *uri );
+void     na_core_utils_dir_split_ext       ( const gchar *string, gchar **first, gchar **ext );
 
 /* file management
  */

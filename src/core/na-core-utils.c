@@ -809,6 +809,40 @@ na_core_utils_selcount_get_ope_int( const gchar *selcount, gchar **ope, gchar **
 }
 
 /**
+ * na_core_utils_dir_list_perms:
+ * @path: the path of the directory to be tested.
+ * @message: a message to be printed if not %NULL.
+ *
+ * Displays the permissions of the directory on debug output.
+ *
+ * Since: 3.1
+ */
+void
+na_core_utils_dir_list_perms( const gchar *path, const gchar *message )
+{
+	static const gchar *thisfn = "na_core_utils_dir_list_perms";
+	gchar *cmd;
+	gchar *out, *err;
+	GError *error;
+
+	error = NULL;
+	cmd = g_strdup_printf( "ls -ld %s", path );
+
+	if( !g_spawn_command_line_sync( cmd, &out, &err, NULL, &error )){
+		g_warning( "%s: %s", thisfn, error->message );
+		g_error_free( error );
+
+	} else {
+		g_debug( "%s: dir=%s, message=%s, out=%s", thisfn, path, message, out );
+		g_debug( "%s: dir=%s, message=%s, err=%s", thisfn, path, message, err );
+		g_free( out );
+		g_free( err );
+	}
+
+	g_free( cmd );
+}
+
+/**
  * na_core_utils_dir_is_writable_path:
  * @path: the path of the directory to be tested.
  *
