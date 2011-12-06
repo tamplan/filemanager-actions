@@ -1,3 +1,17 @@
+2011-12-06 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-main-tab.h:
+	* src/nact/nact-main-window.h: Fix comments.
+
+	* src/nact/nact-main-window.c: Fix typo.
+
+	* src/nact/nact-tree-model.c (nact_tree_model_new):
+	No more connect to base-window-initialize-gtk signal.
+	Initialize model without waiting for signal triggering.
+
+	* src/nact/nact-tree-view.c (instance_constructed):
+	No more connect to base-window-initialize-gtk signal.
+
 2011-12-05 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-importer-ask.c (import_ask_new):

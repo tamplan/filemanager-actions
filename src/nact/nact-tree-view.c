@@ -66,14 +66,17 @@ struct _NactTreeViewPrivate {
 	/* runtime data
 	 *
 	 * Rationale:
+	 *
 	 * In Gtk2, we used to nact_tree_view_new() from
 	 * nact_main_window:on_instance_constructed().
 	 * This let us connect to on-base-initialize-gtk signal before it was
 	 * emitted, and so initialize the treeview on the handler.
+	 *
 	 * With Gtk3, we have to wait until the Gtk hierarchy of NactMainWindow
 	 * be actually built in order to be able to access to the embedded
 	 * GtkTreeView. As a consequence, nact_tree_view_new() has to be delayed
 	 * until nact_main_window_on_initialize_gtk().
+	 *
 	 * And so we no more can rely on the on-base-initialize-gtk signal to
 	 * initialize the view. So force a call to the handler from
 	 * on_base_initialize_view() handler.
@@ -576,9 +579,6 @@ instance_constructed( GObject *object )
 
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: object=%p", thisfn, ( void * ) object );
-
-		base_window_signal_connect( self->private->window,
-				G_OBJECT( self->private->window ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk ));
 
 		base_window_signal_connect( self->private->window,
 				G_OBJECT( self->private->window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_view ));

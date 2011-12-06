@@ -336,17 +336,20 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 	model->private->mode = mode;
 	model->private->clipboard = nact_clipboard_new( window );
 
-	/* connect to some signal of interest
-	 */
-	base_window_signal_connect( window,
-			G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_initialize_model ));
-
 	g_object_set_data( G_OBJECT( window ), WINDOW_DATA_TREE_MODEL, model );
 
 	/* attach the model to the tree view
 	 */
 	gtk_tree_view_set_model( treeview, GTK_TREE_MODEL( model ));
 	g_object_unref( model );
+
+	/* This function used (Gtk2) to connect to base-runtime-init signal in
+	 * order to initialize the model.
+	 * With Gtk3, we are only called from NactMainWindow::on_base_runtime_init()
+	 * callback, so too late to connect to this signal. We so called directly
+	 * the function
+	 */
+	on_initialize_model( window, NULL );
 
 	return( model );
 }

@@ -44,6 +44,8 @@
  */
 
 /* signals
+ *
+ * TAB_UPDATABLE_SIGNAL_ITEM_UPDATED: see definition in nact-main-window.c
  */
 #define TAB_UPDATABLE_SIGNAL_ITEM_UPDATED				"nact-tab-updatable-item-updated"
 

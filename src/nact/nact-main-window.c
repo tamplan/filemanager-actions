@@ -203,7 +203,6 @@ static gboolean   on_base_is_willing_to_quit( const BaseWindow *window, gconstpo
 static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
 static gboolean   warn_modified( NactMainWindow *window );
 
-
 GType
 nact_main_window_get_type( void )
 {

@@ -49,70 +49,141 @@
  *
  * NactApplication    NactMainWindow    NactTreeView    NactTreeModel   NactMenubar
  *  |
- *  +- nact_main_window_new()
+ *  +-> nact_main_window_new()
  *  |   |
- *  |   +----- connect to base-init-gtk-toplevel
- *  |   |                 base-init-window
- *  |   |                 base-all-widgets-showed
- *  |   |                 pivot-items-changed
- *  |   |                 tab-item-updated
+ *  |   +-> NactMainWindow::instance_contructed()
+ *  |   |   |
+ *  |   |   +-> connect to base-init-gtk-toplevel  [window]
+ *  |   |   |              base-init-window        [window]
+ *  |   |   |              base-all-widgets-showed [window]
+ *  |   |   |              pivot-items-changed     [updater]
+ *  |   |   |              tab-item-updated        [window]
+ *  |   |   |
+ *  |   |   +-> nact_menubar_new()
+ *  |   |   |   |
+ *  |   |   |   +-> NactMenubar::nact_menubar_new()
+ *  |   |   |   |   |
+ *  |   |   |   |   +-> nact_sort_buttons_new()
+ *  |   |   |   |   +-> connect to base-init-window [window]
+ *  |   |   |   |   |
+ *  |   |   |   |  <-
+ *  |   |   |  <-
+ *  |   |   |
+ *  |   |   +-> nact_clipboard_new()
+ *  |   |   |
+ *  |   |  <-
+ *  |  <-
+ *  |
+ *  +-> base_application_run()
  *  |   |
- *  |   +----- nact_tree_view_new()
- *  |   |       |
- *  |   |       +-------------- connect to base-init-gtk-toplevel
- *  |   |                                  base-init-window
- *  |   |                                  base-all-widgets-showed
+ *  |   +-> base_window_init()
+ *  |   |   |
+ *  |   |   +-> setup builder
+ *  |   |   +-> load gtk toplevel
+ *  |   |   +-> emit signal base-initial-load-gtk-toplevel
+ *  |   |   |
+ *  |   |   |   X-> NactMainWindow::on_base_initialize_gtk_toplevel()
+ *  |   |   |       |
+ *  |   |   |       +-> nact_tree_view_new()
+ *  |   |   |       |   |
+ *  |   |   |       |   +-> NactTreeView::instance_contructed()
+ *  |   |   |       |   |   |
+ *  |   |   |       |   |   +- connect to base-init-window        [window]
+ *  |   |   |       |   |   |             base-all-widgets-showed [window]
+ *  |   |   |       |   |  <-
+ *  |   |   |       |  <-
+ *  |   |   |       |
+ *  |   |   |       +- connect to tree-selection-changed
+ *  |   |   |       |             tree-modified-status-changed
+ *  |   |   |       |
+ *  |   |   |       +- nact_iaction_tab_initial_load_toplevel()
+ *  |   |   |       +- nact_icommand_tab_initial_load_toplevel()
+ *  |   |   |       +- nact_ibasenames_tab_initial_load_toplevel()
+ *  |   |   |       +- nact_imimetypes_tab_initial_load_toplevel()
+ *  |   |   |       +- nact_ifolders_tab_initial_load_toplevel()
+ *  |   |   |       +- nact_ischemes_tab_initial_load_toplevel()
+ *  |   |   |       +- nact_icapabilities_tab_initial_load_toplevel()
+ *  |   |   |       +- nact_ienvironment_tab_initial_load_toplevel()
+ *  |   |   |       +- nact_iexecution_tab_initial_load_toplevel()
+ *  |   |   |       +- nact_iproperties_tab_initial_load_toplevel()
+ *  |   |   |       |
+ *  |   |   |       +- nact_main_statusbar_initialize_load_toplevel()
+ *  |   |  <-
  *  |   |
- *  |   +----- connect to tree-selection-changed
- *  |   |                 tree-modified-count-changed
- *  |   |
- *  |   +----- nact_menubar_new()
- *  |           |
- *  |           +---------------------------------------------------- connect to base-init-window
- *  |
- * emit 'base-init-gtk-toplevel'
- *  |
- *  +--------- init gtk toplevel in each tab
- *  |          init gtk toplevel in statusbar
- *  |
- *  +-------------------------- nact_tree_model_new()
- *  |                            |
- *  |                            +------------------- connect to base-init-window
- *  |                                                 attach the model to the view
- * emit 'base-init-window'
- *  |
- *  +--------- init runtime window in each tab
- *  |          init sort buttons
- *  |          connect to delete-event
- *  |
- *  +-------------------------- connect to treeview events
- *  |                           nact_tree_ieditable_initialize()
- *  |                            |
- *  |                            +-- register as iduplicable consumer
- *  |                                connect to iduplicable signals
- *  |
- *  +------------------------------------------------ connect to dnd events
- *  |
- *  +---------------------------------------------------------------- instanciate UI manager
- *  |                                                                 connect to tree signals
- * emit 'base-all-widgets-showed'
- *  |
- *  +--------- na_updater_load_items()
- *  |           |
- *  |           +-- check and set items modification/validity status
- *  |           |    +-> which generates lot of iduplicable events
- *  |           |
- *  |           +-- check and set items writability status
- *  |
- *  +--------- na_tree_view_fill()
- *  |           +-> which generates lot of selection-changed events
- *  |
- *  |          all widgets showed on all tab
- *  |          all widgets showed on sort buttons
- *  |
- *  +-------------------------- grab focus
- *  |                           allow notifications
- *  |                           select first row (if any)
+ *  |   +-> base_window_run()
+ *  |   |   |
+ *  |   |   +-> emit signal base-runtime-init
+ *  |   |   |
+ *  |   |   |   X-> NactMainWindow::on_base_initialize_base_window()
+ *  |   |   |       |
+ *  |   |   |       +- nact_iaction_tab_runtime_init_toplevel()
+ *  |   |   |       +- nact_icommand_tab_runtime_init_toplevel()
+ *  |   |   |       +- nact_ibasenames_tab_runtime_init_toplevel()
+ *  |   |   |       +- nact_imimetypes_tab_runtime_init_toplevel()
+ *  |   |   |       +- nact_ifolders_tab_runtime_init_toplevel()
+ *  |   |   |       +- nact_ischemes_tab_runtime_init_toplevel()
+ *  |   |   |       +- nact_icapabilities_tab_runtime_init_toplevel()
+ *  |   |   |       +- nact_ienvironment_tab_runtime_init_toplevel()
+ *  |   |   |       +- nact_iexecution_tab_runtime_init_toplevel()
+ *  |   |   |       +- nact_iproperties_tab_runtime_init_toplevel()
+ *  |   |   |       |
+ *  |   |   |       +- connect to delete-event
+ *  |   |   |       |             base-willing-to-quit
+ *  |   |   |      <-
+ *  |   |   |
+ *  |   |   |   X-> NactTreeView::on_base_initialize_gtk()
+ *  |   |   |       |             cf. nact-tree-view.c for why this is only called now
+ *  |   |   |       |
+ *  |   |   |       +-> nact_tree_model_new()
+ *  |   |   |       |   |
+ *  |   |   |       |   +-> NactTreeModel::nact_tree_model_new()
+ *  |   |   |       |   |   |
+ *  |   |   |       |   |   +- attach the model to the view
+ *  |   |   |       |   |   +- on_initialize_model()
+ *  |   |   |       |   |   |   |
+ *  |   |   |       |   |   |   +-> connect to dnd event
+ *  |   |   |       |   |   |   |
+ *  |   |   |       |   |   |  <-
+ *  |   |   |       |   |  <-
+ *  |   |   |       |  <-
+ *  |   |   |      <-
+ *  |   |   |
+ *  |   |   |   X-> NactTreeView::on_base_initialize_view()
+ *  |   |   |       |
+ *  |   |   |       +- connect to selection-changed [selection]
+ *  |   |   |       |
+ *  |   |   |       +- nact_tree_ieditable_initialize()
+ *  |   |   |       |
+ *  |   |   |      <-
+ *  |   |   |
+ *  |   |   |
+ *  |   |   +-> gtk_widget_show_all()
+ *  |   |   +-> emit signal base-all-widgets-showed
+ *  |   |   |
+ *  |   |   |   X-> NactMainWindow::on_base_all_widgets_showed()
+ *  |   |   |       |
+ *  |   |   |       +- nact_iaction_tab_all_widgets_showed()
+ *  |   |   |       +- nact_icommand_tab_all_widgets_showed()
+ *  |   |   |       +- nact_ibasenames_tab_all_widgets_showed()
+ *  |   |   |       +- nact_imimetypes_tab_all_widgets_showed()
+ *  |   |   |       +- nact_ifolders_tab_all_widgets_showed()
+ *  |   |   |       +- nact_ischemes_tab_all_widgets_showed()
+ *  |   |   |       +- nact_icapabilities_tab_all_widgets_showed()
+ *  |   |   |       +- nact_ienvironment_tab_all_widgets_showed()
+ *  |   |   |       +- nact_iexecution_tab_all_widgets_showed()
+ *  |   |   |       +- nact_iproperties_tab_all_widgets_showed()
+ *  |   |   |       |
+ *  |   |   |       +- load items from pivot
+ *  |   |   |
+ *  |   |   +-> BaseWindowClass:run()
+ *  |   |   |   |
+ *  |   |   |   +-> do_run()
+ *  |   |   |   |   |
+ *  |   |   |   |   +-> gtk_main()
+ *  |   |   |   |
+ *  |   |   |  <-
+ *  |   |  <-
+ *  |  <-
  *  |
  * [X] End of initialization process
  *
@@ -152,8 +223,8 @@
  *
  * MAIN_SIGNAL_ITEM_UPDATED
  *   The signal is sent on the BaseWindow after a data has been modified elsewhere
- *   that in a tab: either the label the label has been edited inline in the tree
- *   view, or a new i/o provider has been identified. The relevant NAObject has
+ *   that in a tab: either the label has been edited inline in the tree view,
+ *   or a new i/o provider has been identified. The relevant NAObject has
  *   been updated accordingly.
  *   Args:
  *   - an OR-ed list of modified flags, or 0 if not relevant
