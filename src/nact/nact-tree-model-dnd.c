@@ -852,11 +852,13 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	NAImporterParms parms;
 	GList *it;
 	guint count;
-	GString *str;
 	GSList *im;
 	GList *imported;
 	const gchar *selection_data_data;
 	NactTreeView *view;
+	GSList *messages;
+	gchar *dlg_message;
+	GtkWidget *dialog;
 
 	gchar *dest_str = gtk_tree_path_to_string( dest );
 	g_debug( "%s: model=%p, dest=%p (%s), selection_data=%p",
@@ -894,31 +896,18 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 
 	na_importer_import_from_list( NA_PIVOT( updater ), &parms );
 
-	/* analysing output results
-	 * - first line of first message is displayed in status bar
-	 * - simultaneously build the concatenation of all lines of messages
-	 * - simultaneously build the list of imported items
+	/* analysing output results, simultaneously building a concatenation
+	 * of all lines of messages, and the list of imported items
 	 */
-	count = 0;
-	str = g_string_new( "" );
 	imported = NULL;
+	messages = NULL;
 
 	for( it = parms.results ; it ; it = it->next ){
 		NAImporterResult *result = ( NAImporterResult * ) it->data;
 
-		if( result->messages ){
-			if( count == 0 ){
-				nact_main_statusbar_display_with_timeout(
-						main_window,
-						TREE_MODEL_STATUSBAR_CONTEXT,
-						result->messages->data );
-			}
-			count += 1;
-			for( im = result->messages ; im ; im = im->next ){
-				g_string_append_printf( str, "%s\n", ( const gchar * ) im->data );
-			}
+		for( im = result->messages ; im ; im = im->next ){
+			messages = g_slist_prepend( messages, im->data );
 		}
-
 		if( result->imported ){
 			imported = g_list_prepend( imported, result->imported );
 			na_updater_check_item_writability_status( updater, result->imported );
@@ -926,16 +915,27 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	}
 
 	/* if there is more than one message, display them in a dialog box
+	 * else in the status bar
 	 */
+	count = g_slist_length( messages );
+	g_debug( "%s: count=%d", thisfn, count );
+	if( count == 1 ){
+		nact_main_statusbar_display_with_timeout(
+				main_window, TREE_MODEL_STATUSBAR_CONTEXT, messages->data );
+	}
 	if( count > 1 ){
-		GtkMessageDialog *dialog = GTK_MESSAGE_DIALOG( gtk_message_dialog_new(
+		dlg_message = na_core_utils_slist_join_at_end( messages, "\n" );
+		g_debug( "%s: dlg_message='%s'", thisfn, dlg_message );
+		dialog = gtk_message_dialog_new(
 				parms.parent,
 				GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE,
-				"%s", _( "Some messages have occurred during drop operation." )));
-		gtk_message_dialog_format_secondary_markup( dialog, "%s", str->str );
+				"%s", _( "Some messages have occurred during drop operation." ));
+		gtk_message_dialog_format_secondary_markup( GTK_MESSAGE_DIALOG( dialog ), "%s", dlg_message );
+		gtk_dialog_run( GTK_DIALOG( dialog ));
+		gtk_widget_destroy( dialog );
+		g_free( dlg_message );
 	}
-
-	g_string_free( str, TRUE );
+	g_slist_free( messages );
 
 	/* insert newly imported items in the list view
 	 */

@@ -1,5 +1,8 @@
 2011-12-06 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
+	Fix and improve error messages during drop operations.
+
 	Fix a coredump when trying to import an empty file by DnD.
 	Extend the fix by checking the size and the type of the candidate.
 
