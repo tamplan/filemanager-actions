@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-12-02 10:50+0000\n"
-"PO-Revision-Date: 2011-12-02 16:44+0100\n"
+"POT-Creation-Date: 2011-12-08 11:25+0000\n"
+"PO-Revision-Date: 2011-12-08 22:01+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -796,18 +796,24 @@ msgstr "Uvoz je bil preklican zaradi zahteve uporabnika."
 msgid "(renumbered)"
 msgstr "(ponovno oštevilčeno)"
 
+#. i18n: '%s' stands for the file URI
+#: ../src/core/na-importer.c:60
+#, c-format
+msgid "%s is not loadable (empty or too big or not a regular file)"
+msgstr "%s ni mogoče naložiti (datoteka je prazna, prevelika ali pa ni običajna datoteka)"
+
 #. l10n: 'ImporterAskDialog' is the dialog name: do not translate
 #: ../src/core/na-importer-ask.c:228
 #, c-format
 msgid "Unable to load 'ImporterAskDialog' from %s"
 msgstr "Ni mogoče naložiti predmeta 'ImporterAskDialog' iz %s"
 
-#: ../src/core/na-importer-ask.c:338
+#: ../src/core/na-importer-ask.c:342
 #, c-format
 msgid "The action \"%s\" imported from \"%s\" has the same identifiant than the already existing \"%s\"."
 msgstr "Dejanje \"%s\" uvoženo iz \"%s\" ima enako določilo kot obstoječe dejanje \"%s\"."
 
-#: ../src/core/na-importer-ask.c:344
+#: ../src/core/na-importer-ask.c:348
 #, c-format
 msgid "The menu \"%s\" imported from \"%s\" has the same identifiant than the already existing \"%s\"."
 msgstr "Meni \"%s\" uvožen iz \"%s\" ima enako določilo kot obstoječi \"%s\"."
@@ -1379,6 +1385,10 @@ msgstr ""
 "- dejanja povleci in spusti v orodje nastavitev dejanj Nautilusa\n"
 "- ali a kopiranjem v mapo XDG_DATA_DIRS/file-manager/actions."
 
+#: ../src/io-desktop/nadp-reader.c:65
+msgid "The Desktop I/O Provider is not able to handle the URI"
+msgstr "S ponudnikom V/I namizja ni mogoče upravljati z naslovom URI."
+
 #: ../src/io-gconf/nagp-gconf-provider.c:248
 msgid "Nautilus-Actions GConf I/O Provider"
 msgstr "Ponudnik V/I GConf dejanj Nautilusa"
@@ -1414,9 +1424,8 @@ msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
 msgstr "Neznana vrsta %s je bila najdena v vrstici %d med čakanjem na Dejanje ali Meni."
 
 #: ../src/io-xml/naxml-reader.c:155
-#, c-format
-msgid "Node %s at line %d has not been dealt with."
-msgstr "Vozlišče %s v vrstici %d ni bilo obravnavano."
+msgid "The XML I/O Provider is not able to handle the URI"
+msgstr "S ponudnikom V/I XML ni mogoče upravljati z naslovom URI."
 
 #: ../src/io-xml/naxml-formats.c:48
 msgid "Export as a _full GConf schema file"
@@ -1729,7 +1738,7 @@ msgid "Item is local"
 msgstr "Predmet je krajeven"
 
 #. i18n: add a comment when a capability is already used by current item
-#: ../src/nact/nact-add-capability-dialog.c:489
+#: ../src/nact/nact-add-capability-dialog.c:493
 #, c-format
 msgid "%s (already inserted)"
 msgstr "%s (že vstavljeno)"
@@ -1870,13 +1879,13 @@ msgid "Configure items to be added to the Nautilus context menus"
 msgstr "Nastavi predmete za dodajanje v vsebinski meni Nautilusa"
 
 #. i18n: The action <label> is about to be exported
-#: ../src/nact/nact-export-ask.c:322
+#: ../src/nact/nact-export-ask.c:326
 #, c-format
 msgid "The action \"%s\" is about to be exported."
 msgstr "Dejanje \"%s\" je pripravljeno na izvoz."
 
 #. i18n: The menu <label> is about to be exported
-#: ../src/nact/nact-export-ask.c:325
+#: ../src/nact/nact-export-ask.c:329
 #, c-format
 msgid "The menu \"%s\" is about to be exported."
 msgstr "Meni \"%s\" je pripravljen na izvoz."
@@ -1912,7 +1921,7 @@ msgid "Choosing a working directory"
 msgstr "Izbiranje delovne mape"
 
 #: ../src/nact/nact-icommand-tab.c:653
-#: ../src/nact/nact-preferences-editor.c:646
+#: ../src/nact/nact-preferences-editor.c:650
 msgid "Ex.:"
 msgstr "Npr:"
 
@@ -1989,7 +1998,7 @@ msgstr "<b>Uredljive lastnosti dejanj</b>"
 msgid "Scheme filter"
 msgstr "Filter sheme"
 
-#: ../src/nact/nact-main-window.c:1209
+#: ../src/nact/nact-main-window.c:1208
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to reload a fresh one."
@@ -1997,28 +2006,28 @@ msgstr ""
 "Eno ali več dejanj v datotečnem sistemu je bilo spremenjenih.\n"
 "Delo je mogoče nadaljevati s trenutnim seznamom dejanj, ali pa ga osvežiti."
 
-#: ../src/nact/nact-main-window.c:1216
+#: ../src/nact/nact-main-window.c:1215
 msgid "Note that reloading a fresh list of actions requires that you give up with your current modifications."
 msgstr "S ponovnim nalaganjem svežega seznama dejanj, bodo vaše trenutne spremembe izgubljene."
 
-#: ../src/nact/nact-main-window.c:1222
+#: ../src/nact/nact-main-window.c:1221
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "Ali želite ponovno naložiti svež seznam dejanj?"
 
-#: ../src/nact/nact-main-window.c:1245
+#: ../src/nact/nact-main-window.c:1244
 msgid "Reloading a fresh list of actions requires that you give up with your current modifications."
 msgstr "S ponovnim nalaganjem svežega seznama dejanj, bodo trenutne spremembe izgubljene."
 
-#: ../src/nact/nact-main-window.c:1248
+#: ../src/nact/nact-main-window.c:1247
 msgid "Do you really want to do this ?"
 msgstr "Ali ste prepričani, da želite nadaljevati?"
 
-#: ../src/nact/nact-main-window.c:1365
+#: ../src/nact/nact-main-window.c:1364
 #, c-format
 msgid "Some items have been modified."
 msgstr "Nekateri predmeti so bili spremenjeni."
 
-#: ../src/nact/nact-main-window.c:1366
+#: ../src/nact/nact-main-window.c:1365
 msgid "Are you sure you want to quit without saving them ?"
 msgstr "Ali ste prepričani, da želite končati brez shranjevanja predmeta?"
 
@@ -2707,57 +2716,57 @@ msgstr "Profila ni mogoče spustiti tukaj, ker nadrejeni predmet ni zapisljiv"
 msgid "Unable to drop here as level zero is not writable"
 msgstr "Ni mogoče spustiti sem, ker raven nič ni zapisljiva"
 
-#: ../src/nact/nact-tree-model-dnd.c:934
+#: ../src/nact/nact-tree-model-dnd.c:932
 msgid "Some messages have occurred during drop operation."
 msgstr "Nekatera sporočila so se zgodila med dejanjem spusta."
 
 #. i18n: this is a class name and should not be translated
-#: ../src/nact/nact-tree-view.c:231
+#: ../src/nact/nact-tree-view.c:234
 msgid "BaseWindow"
 msgstr "OsnovnoOkno"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:233
+#: ../src/nact/nact-tree-view.c:236
 msgid "The BaseWindow parent"
 msgstr "Nadrejeno OsnovnoOkno"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:240
+#: ../src/nact/nact-tree-view.c:243
 msgid "Container"
 msgstr "Vsebnik"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:242
+#: ../src/nact/nact-tree-view.c:245
 msgid "A GtkContainer which contains the GtkTreeView widget"
 msgstr "Predmet GtkContainer, ki vsebuje gradnik GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:249
+#: ../src/nact/nact-tree-view.c:252
 msgid "Widget name"
 msgstr "Ime gradnika"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:251
+#: ../src/nact/nact-tree-view.c:254
 msgid "The name of GtkTreeView widget"
 msgstr "Ime gradnika GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:259
+#: ../src/nact/nact-tree-view.c:262
 msgid "Management mode"
 msgstr "Koda upravljanja"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:261
+#: ../src/nact/nact-tree-view.c:264
 msgid "Management mode of the tree view, selection or edition"
 msgstr "Koda upravljanja za pogled drevesa, izbire ali izdaje"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:271
+#: ../src/nact/nact-tree-view.c:274
 msgid "Allow notify"
 msgstr "Dovoli obveščanje"
 
 #. i18n: NactTreeView property loong description
-#: ../src/nact/nact-tree-view.c:273
+#: ../src/nact/nact-tree-view.c:276
 msgid "Whether notifications are allowed"
 msgstr "Ali so obvestila dovoljena"
 
@@ -4017,6 +4026,9 @@ msgstr "Napaka: ni mogoče dobiti posredniškega strežnika na napravi %s"
 #, c-format
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Napaka v klicu GetSelectedPaths: %s"
+
+#~ msgid "Node %s at line %d has not been dealt with."
+#~ msgstr "Vozlišče %s v vrstici %d ni bilo obravnavano."
 
 #~ msgid "Invalid XML root element %s found at line %d while waiting for %s."
 #~ msgstr ""
