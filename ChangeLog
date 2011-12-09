@@ -1,5 +1,9 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/naxml-writer.c
+	(write_data_schema_v2, write_data_dump):
+	String and uint lists have the GConf format (between square brackets).
+
 	* src/io-xml/naxml-reader.c (read_done_action_read_profiles):
 	Make sure we have at least one profile attached to the action.
 

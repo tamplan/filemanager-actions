@@ -115,6 +115,7 @@ static void            write_data_dump_element( NAXMLWriter *writer, const NADat
 static void            write_type_dump( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value );
 
 static xmlDocPtr       build_xml_doc( NAXMLWriter *writer );
+static gchar          *convert_to_gconf_slist( const gchar *str );
 static ExportFormatFn *find_export_format_fn( GQuark format );
 static gchar          *get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format );
 static void            output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg );
@@ -520,13 +521,23 @@ write_data_schema_v2( NAXMLWriter *writer, const NAObjectId *object, const NADat
 {
 	gchar *object_id;
 	gchar *value_str;
+	gchar *tmp;
 
 	value_str = na_boxed_get_string( NA_BOXED( boxed ));
 
 	/* boolean value must be lowercase
 	 */
 	if( def->type == NA_DATA_TYPE_BOOLEAN ){
-		gchar *tmp = g_ascii_strdown( value_str, -1 );
+		tmp = g_ascii_strdown( value_str, -1 );
+		g_free( value_str );
+		value_str = tmp;
+	}
+
+	/* string or uint list value must be converted to gconf format
+	 * comma-separated and enclosed within square brackets
+	 */
+	if( def->type == NA_DATA_TYPE_STRING_LIST || def->type == NA_DATA_TYPE_UINT_LIST ){
+		tmp = convert_to_gconf_slist( value_str );
 		g_free( value_str );
 		value_str = tmp;
 	}
@@ -622,13 +633,23 @@ write_data_dump( NAXMLWriter *writer, const NAObjectId *object, const NADataBoxe
 {
 	gchar *entry;
 	gchar *value_str;
+	gchar *tmp;
 
 	value_str = na_boxed_get_string( NA_BOXED( boxed ));
 
 	/* boolean value must be lowercase
 	 */
 	if( def->type == NA_DATA_TYPE_BOOLEAN ){
-		gchar *tmp = g_ascii_strdown( value_str, -1 );
+		tmp = g_ascii_strdown( value_str, -1 );
+		g_free( value_str );
+		value_str = tmp;
+	}
+
+	/* string or uint list value must be converted to gconf format
+	 * comma-separated and enclosed within square brackets
+	 */
+	if( def->type == NA_DATA_TYPE_STRING_LIST || def->type == NA_DATA_TYPE_UINT_LIST ){
+		tmp = convert_to_gconf_slist( value_str );
 		g_free( value_str );
 		value_str = tmp;
 	}
@@ -687,6 +708,34 @@ static void
 write_type_dump( NAXMLWriter *writer, const NAObjectItem *object, const NADataDef *def, const gchar *value )
 {
 	write_data_dump_element( writer, def, NULL, def->gconf_entry, value );
+}
+
+/*
+ * we have here a string list as "value; value;"
+ * we want "[value, value]"
+ */
+static gchar *
+convert_to_gconf_slist( const gchar *slist_str )
+{
+	GSList *values;
+	GSList *is;
+	gboolean first;
+	GString *str = g_string_new( "[" );
+
+	values = na_core_utils_slist_from_split( slist_str, ";" );
+	first = TRUE;
+
+	for( is = values ; is ; is = is->next ){
+		if( !first ){
+			str = g_string_append( str, "," );
+		}
+		str = g_string_append( str, ( const gchar * ) is->data );
+		first = FALSE;
+	}
+
+	str = g_string_append( str, "]" );
+
+	return( g_string_free( str, FALSE ));
 }
 
 static ExportFormatFn *
