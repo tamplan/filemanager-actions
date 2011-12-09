@@ -1,5 +1,7 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Post release bump version.
+
 	* NEWS:
 	* TODO: Update before release.
 
