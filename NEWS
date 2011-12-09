@@ -1,3 +1,75 @@
+Version 3.1.5
+=============
+
+	Release date 2011-12-09
+
+	Bug fixes:
+
+		- Fix test against nautilus_menu_provider_get_toolbar_items()
+		- Fix #660399 part reported by Gabor Karsay
+		  'Regarding' is replaced by 'regardless'
+		- Fix #660399 part reported by Christian Kirbach
+		  NACT user's manual fixes
+		- Fix #661498 reported by Christian Kirbach
+		  [doc] couple of spelling and grammar fixes
+		- NactAssistantImport: adapt to the new way gtk+3 builds the assistant
+		- NactAssistantExport: adapt to the new way gtk+3 builds the assistant
+		- NadpReader and NAXMLReader now return all messages to the caller
+		- NactExportAskUser: do not export if the operation is cancelled by the user
+		- NAXMLReader: only search for identifier in <applyto> schema key
+		- NAObjectItem: do not let an item with an empty label go to the UI
+		- NAImporterAsk: fix z-order
+		- Reference Manual: fix Makefile when builddir not equal to srcdir
+		- check-headers.sh: fix Makefile when builddir not equal to srcdir
+		- Manuals: fix the test for building even for not-default values
+		- Work-around against #664768 reported by Pierre Wieser
+		  pdflatex cannot generate some localized pdf
+		- GtkDialogs: remove (deprecated since 2.22) 'has_separator' property
+		- Fix coredump when trying to import an empty file by DnD
+		- Fix permissions when creating the configuration directory
+		- NAIContext: fix scheme test
+		- NAIContextFactory: fix mimetype and scheme default values
+		- NadpReader, NAXMLReader: make sure an action has at least one profile
+		- NAXMLWriter: output lists in GConf format
+		- Fix item deletion when not yet written to a backend
+
+	Other modifications:
+
+		- Remove set but unsused variables
+		- Get ride of deprecated GtkHBox and GtkVBox
+		- Add new function base_window_dump_children()
+		- Be able to run autogen.sh from another directory
+		- Bump copyright year in Reference Manual
+		- No more requires gtk-doc to build the distribution
+		- No more try to rebuild manuals when making distcheck
+		- gtk-doc and gnome-doc-utils are no more mandatory when building
+		  from the distributed sources
+		- Explicitely disable scrollkeeper when making distcheck
+		- Defaults now to build in _build and to install in _install
+		  (much more convenient when testing in several distributions)
+		- Only reference minor version in 'Since:' and 'Deprecated' comments
+		- XML reader: get ride of error message if the imported file is not an XML one
+		- NactAssistantExport: let the format selection be scrolled
+		- Try to limit window size to usable screen
+		- NadpDesktopFile: minimize warnings on import
+		- NactAssistantExport: remove useless 'name' entry field
+		- Use gtk_misc functions instead of direct xpad, xalign properties
+		- NAImporterAsk: now cancel on Esc key
+		- NadpReader, NAXMLReader: do not try to import not loadable files
+		- NadpReader, NAXMLReader: return a synthetic message if cannot handle the uri
+		- NAImporterAsk: keep window size and position between invocations
+		- na_core_utils_dir_list_perms(): new function
+		- Change import default mode and export default format to 'Ask'
+		- nact_match_list_insert_new_row: now defaults to 'match'
+
+	New and updated translations:
+
+		- cs (Marek Černocký)
+		- de (Mario Blättermann, Christian Kirbach)
+		- es (María Majadas, Daniel Mustieles, Juan Matías Olmos)
+		- sl (Matej Urbančič)
+		- zh_CN (YunQiang Su, Yinghua Wang)
+
 Version 3.1.4
 =============
 

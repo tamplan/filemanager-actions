@@ -1,5 +1,8 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS:
+	* TODO: Update before release.
+
 	* src/core/na-gconf-migration.c (na_gconf_migration_run):
 	Run verbosely.
 
