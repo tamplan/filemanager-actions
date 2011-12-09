@@ -1,20 +1,5 @@
 N-A BUGS
 ========
-- when error on writing, should let the item modified
-  2010-12-14: delete process improved, restoring not deleted items
-
-- 2011-05-20: if an action is selected on mimetype, scheme is not checked
-  (e.g. an action is displayed on sftp even is scheme is file)
-
-- 2011-06-10: when importing an action, ensure that there is at least
-  one default profile (an action without any profile is possible when
-  importing a xml file)
-
-- 2011-06-10: importing an action from a dump file creates two profiles instead of one
-  one with [profile-1] and the other with profile-1
-
-- 2011-06-10: string list imported from schemas are imported wih the square brackets []
-
 - 2011-11-15: an action with one profile - if the action has a property set to empty
   'folders=' and the profile does not have the property set, then set_defaults on the
   profile set the default property (here, 'folders=/') instead of taking the action
@@ -22,10 +7,27 @@ N-A BUGS
   This is ok as long as the action is also set  (...) there is one profile and the
   action's property was not the default
 
+- 2011-11-28 import assistant: intro label should be wrappable
+
+- 2011-11-28 import assistant: importer ask format; long descriptions
+  should be a long wrappable line
+
+- 2011-11-28 have a padding (6) on top of gtkfilechooser (import & export assistants)
+  not gtk3 : gtk2 only
+
+- 2011-11-28 already existing item when importing should keep the same size
+  between invocations
+  2011-11-30 this is ok on f14 f16 ubu10 and almost on ubu11
+  (ubu11): z-order is ok the first time, but comes back to the previous
+  behavior starting with the second time (maybe a theme problem ?)
+
+- 2011-12-06: after unsuccessfully tried to import via dnd:
+   Gtk-CRITICAL **: gtk_tree_view_scroll_to_cell: assertion `tree_view->priv->tree != NULL' failed
+
 Plan de test: NACT should be able to import all types of actions and menus,
 kindly fixing small errors.
-- from 1.4.1 (version 1.1): an action from GConf or as a schemas
-- from 1.12 (version 2.0), an action from GConf, or as one of the three possible export format.
+- for each and every released version, have an example of each available export format
+  with lists of items and at least two profiles if feature is available
 
 TODO
 ====
@@ -36,9 +38,6 @@ TODO
 - 2010-06-17: implement shortcut button in NactIPropertiesTab page
 
 - 2010-08-09: in v1.x until ??, %f used to be the basename!!
-
-- 2010-12-13: gtk-doc: Building HTML
-  warning: failed to load external entity "../xml/annotation-glossary.xml"
 
 - 2010-12-30: gtk-doc 1.15
   "Use of uninitialized value within %DeclarationTypes in lc at /usr/bin/gtkdoc-mkdb line 929"
@@ -58,16 +57,22 @@ TODO
   accept a default at compile time
   accept as a runtime user preference (may be mandatory)
 
-- 2011-03-11: importing two actions, deleting them before having saved them, and then
-  save the whole (because it is yet marked as modified - why ?)
-  -> save error, some items have not been deleted
-     the two items are restored, marked as not modified, are found actually written in the disk!!
-
 - 2011-06-08: when getting an elementary data, we should get the default value if it is not set
   to determine if a value is set, have a na_object_is_data_set (see na_object_item_deals_with_version)
   this should let us get ride of na_factory_object_set_defaults() function
 
 - 2011-06-08: get ride of NADataBoxed ?
+
+- 2011-11-29: exporter ask: add an option: do not import
+
+- 2011-11-29: exporter ask and importer ask, add a button cancel all
+
+- 2011-11-29: in IActionsList, be able to extend the selection just by dragging the mouse
+  as in GtkFileChooser when selecting several files
+
+- 2011-12-04: support pkgconfig
+
+- 2011-12-04: support GObject introspection
 
 N-A ENHANCEMENTS
 ================
@@ -130,6 +135,8 @@ N-A ENHANCEMENTS
 
 - 2011-05-20: should have an option to run in debug mode and dump whole configuration
   so that a user can click on a button, and then send a zipped log to the maintainer
+
+- 2011-12-05: convert NAObject to GNode ?
 
 OTHER ENHANCEMENTS
 ==================
