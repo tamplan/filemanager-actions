@@ -1,5 +1,7 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* tools/release-tarball.sh: Take _build builddir into account.
+
 	* configure.ac: Post release bump version.
 
 	* NEWS:

@@ -167,8 +167,11 @@ done
 set -- ${my_parms}
 
 # interpreting command-line arguments
-product="$(grep -e '^PACKAGE_TARNAME' Makefile 2>/dev/null | awk '{ print $3 }')"
-version="$(grep PACKAGE_VERSION Makefile 2>/dev/null | awk '{ print $3 }')"
+thisdir=$(cd ${0%/*}; pwd)
+rootdir=${thisdir%/*}
+builddir=${rootdir}/_build
+product="$(grep -e '^PACKAGE_TARNAME' ${builddir}/Makefile 2>/dev/null | awk '{ print $3 }')"
+version="$(grep PACKAGE_VERSION ${builddir}/Makefile 2>/dev/null | awk '{ print $3 }')"
 opt_tarname=
 opt_tarname_def="${product}-${version}.tar.gz"
 
@@ -308,8 +311,8 @@ if [ "${opt_version}" = "yes" ]; then
 	exit
 fi
 
-if [ ! -f "${opt_tarname}" ]; then
-	msgerr "${opt_tarname} not found, do you have 'make distcheck' ?"
+if [ ! -f "${builddir}/${opt_tarname}" ]; then
+	msgerr "${builddir}/${opt_tarname} not found, do you have 'make distcheck' ?"
 	let errs+=1
 fi
 
@@ -375,7 +378,7 @@ desthost="stormy.trychlos.org"
 msg "installing in ${lib_desthost}${destdir}"
 cmd="mkdir -p "${destdir}""
 [ "${local}" = "yes" ] && command "${cmd}" || command "ssh ${desthost} '${cmd}'"
-command "scp "${opt_tarname}" "${lib_desthost}${destdir}/""
+command "scp "${builddir}/${opt_tarname}" "${lib_desthost}${destdir}/""
 cmd="sha1sum ${destdir}/${opt_tarname} > ${destdir}/${opt_tarname}.sha1sum"
 [ "${local}" = "yes" ] && command "${cmd}" || command "ssh ${desthost} '${cmd}'"
 if [ "${opt_stable}" = "yes" ]; then
@@ -386,13 +389,13 @@ fi
 
 # installing on gnome.org
 msg "installing on gnome.org"
-command "scp "${opt_tarname}" pwieser@master.gnome.org:"
+command "scp "${builddir}/${opt_tarname}" pwieser@master.gnome.org:"
 command "ssh pwieser@master.gnome.org ftpadmin install --unattended ${opt_tarname}"
 
 # installing on kimsufi
 msg "installing on kimsufi"
 destdir="/home/www/${product}/tarballs"
-command "scp "${opt_tarname}" maintainer@kimsufi:${destdir}/"
+command "scp "${builddir}/${opt_tarname}" maintainer@kimsufi:${destdir}/"
 command "ssh maintainer@kimsufi 'sha1sum ${destdir}/${opt_tarname} > ${destdir}/${opt_tarname}.sha1sum'"
 if [ "${opt_stable}" = "yes" ]; then
 	msg "updating kimsufi:${destdir}/latest.tar.gz"
@@ -402,7 +405,7 @@ fi
 # tagging git
 msg "tagging git"
 tag="$(echo ${product}-${version} | tr '[:lower:]' '[:upper:]' | sed -e 's/-/_/g' -e 's/\./_/g')"
-msg="Releasing $(grep PACKAGE_NAME Makefile | awk '{ print $3 }') ${version}"
+msg="Releasing $(grep PACKAGE_NAME ${builddir}/Makefile | awk '{ print $3 }') ${version}"
 msg "git tag -s ${tag} -m ${msg}"
 command "git tag -s '${tag}' -m '${msg}'"
 command "git pull --rebase && git push && git push --tags"
