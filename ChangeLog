@@ -1,5 +1,10 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-gconf-migration.c (na_gconf_migration_run):
+	Run verbosely.
+
+	* src/utils/na-gconf2key.sh.in: Fix unset variable.
+
 	* src/nact/nact-match-list.c (insert_new_row):
 	New rows now default to be 'matched'.
 

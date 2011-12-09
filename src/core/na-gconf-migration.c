@@ -34,7 +34,7 @@
 
 #include "na-gconf-migration.h"
 
-#define MIGRATION_COMMAND				PKGLIBEXECDIR "/na-gconf2key.sh -delete -nodummy"
+#define MIGRATION_COMMAND				PKGLIBEXECDIR "/na-gconf2key.sh -delete -nodummy -verbose"
 
 /**
  * na_gconf_migration_run:

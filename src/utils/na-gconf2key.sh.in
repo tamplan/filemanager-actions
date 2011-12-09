@@ -440,7 +440,7 @@ msg "${nbitems} migrated items"
 # while user preferences go to HOME/.config/nautilus-actions/nautilus-actions.conf
 # Note also that the GConf I/O provider will be disabled for writings
 # after this migration
-destdir=${destdir}/@PACKAGE@
+destdir=${conf_dir}/@PACKAGE@
 command "mkdir -m ${dir_mode} -p ${destdir}"
 destconf=${destdir}/@PACKAGE@.conf
 rm -f ${my_tmproot}.nact
