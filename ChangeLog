@@ -1,5 +1,8 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-match-list.c (insert_new_row):
+	New rows now default to be 'matched'.
+
 	* src/core/na-updater.c (na_updater_delete_item):
 	Do not try to remove from the backend an item which has never been written.
 

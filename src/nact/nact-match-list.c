@@ -875,7 +875,7 @@ insert_new_row( MatchListStr *data )
 	gchar *label;
 
 	label = search_for_unique_label( gettext( filter_label ), data );
-	insert_new_row_data( data, label, FALSE, FALSE );
+	insert_new_row_data( data, label, TRUE, FALSE );
 	g_free( label );
 }
 
