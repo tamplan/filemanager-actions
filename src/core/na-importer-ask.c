@@ -290,7 +290,7 @@ na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existin
 	g_debug( "%s: importing=%p, existing=%p, parms=%p",
 			thisfn, ( void * ) importing, ( void * ) existing, ( void * ) parms );
 
-	mode = IMPORTER_MODE_NO_IMPORT;
+	mode = IMPORTER_MODE_ASK;
 	dialog = import_ask_new( parms->parent );
 
 	if( dialog ){

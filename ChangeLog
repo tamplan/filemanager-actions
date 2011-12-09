@@ -1,5 +1,9 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-importer-ask.c (na_importer_ask_user):
+	* src/core/na-settings.h:
+	Change import default mode and export default format to 'Ask'.
+
 	* src/io-xml/naxml-writer.c
 	(write_data_schema_v2, write_data_dump):
 	String and uint lists have the GConf format (between square brackets).
