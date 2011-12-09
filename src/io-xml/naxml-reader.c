@@ -827,8 +827,10 @@ read_done_item_set_localized_icon( NAXMLReader *reader, NAObjectItem *item )
 static void
 read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action )
 {
+	static const gchar *thisfn = "naxml_reader_read_done_action_read_profiles";
 	GSList *order, *ip;
 	gchar *profile_id;
+	NAObjectProfile *profile;
 
 	if( !na_object_get_items_count( reader->private->parms->imported )){
 
@@ -852,6 +854,14 @@ read_done_action_read_profiles( NAXMLReader *reader, NAObjectAction *action )
 				break;
 			}
 		}
+	}
+
+	/* make sure we have at least one profile attached to the action
+	 */
+	if( !na_object_get_items_count( action )){
+		g_warning( "%s: no profile found in .xml file", thisfn );
+		profile = na_object_profile_new_with_defaults();
+		na_object_attach_profile( action, profile );
 	}
 }
 
@@ -899,7 +909,7 @@ read_done_action_load_profile( NAXMLReader *reader, const gchar *profile_id )
 {
 	/*g_debug( "naxml_reader_read_done_action_load_profile: profile_id=%s", profile_id );*/
 
-	NAObjectProfile *profile = na_object_profile_new();
+	NAObjectProfile *profile = na_object_profile_new_with_defaults();
 
 	na_object_set_id( profile, profile_id );
 

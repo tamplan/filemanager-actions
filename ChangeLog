@@ -1,5 +1,8 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/naxml-reader.c (read_done_action_read_profiles):
+	Make sure we have at least one profile attached to the action.
+
 	* src/io-gconf/nagp-reader.c (read_done_action_read_profiles):
 	Make sure we have at least one profile attached to the action.
 
