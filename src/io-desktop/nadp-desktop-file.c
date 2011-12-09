@@ -622,6 +622,37 @@ nadp_desktop_file_get_profiles( const NadpDesktopFile *ndf )
 }
 
 /**
+ * nadp_desktop_file_has_profile:
+ * @ndf: the #NadpDesktopFile instance.
+ * @profile_id: the identifier of the profile.
+ *
+ * Returns: %TRUE if a group can be found in the .desktop file for this profile,
+ * %FALSE else.
+ *
+ * Since: 3.1
+ */
+gboolean
+nadp_desktop_file_has_profile( const NadpDesktopFile *ndf, const gchar *profile_id )
+{
+	gboolean has_profile;
+	gchar *group_name;
+
+	g_return_val_if_fail( NADP_IS_DESKTOP_FILE( ndf ), FALSE );
+	g_return_val_if_fail( profile_id && g_utf8_strlen( profile_id, -1 ), FALSE );
+
+	has_profile = FALSE;
+
+	if( !ndf->private->dispose_has_run ){
+
+		group_name = g_strdup_printf( "%s %s", NADP_GROUP_PROFILE, profile_id );
+		has_profile = g_key_file_has_group( ndf->private->key_file, group_name );
+		g_free( group_name );
+	}
+
+	return( has_profile );
+}
+
+/**
  * nadp_desktop_file_remove_key:
  * @ndf: this #NadpDesktopFile instance.
  * @group: the group.

@@ -1,5 +1,17 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h (nadp_desktop_file_has_profile):
+	New function.
+
+	* src/io-desktop/nadp-reader.c
+	(item_from_desktop_path):
+	Replace the warning with an error message to be returned to the caller.
+	(read_done_action_read_profiles):
+	Attach at least a default profile to the action.
+	(read_done_action_load_profile):
+	Define a default profile if not found in .desktop file.
+
 	* src/core/na-icontext-factory.c: Fix mimetypes and schemes default values.
 
 	* src/core/na-icontext.c (is_compatible_scheme): Fix scheme test.

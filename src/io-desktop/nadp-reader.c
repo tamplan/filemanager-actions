@@ -273,7 +273,7 @@ item_from_desktop_path( const NadpDesktopProvider *provider, DesktopPath *dps, G
 static NAIFactoryObject *
 item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *ndf, GSList **messages )
 {
-	static const gchar *thisfn = "nadp_reader_item_from_desktop_file";
+	/*static const gchar *thisfn = "nadp_reader_item_from_desktop_file";*/
 	NAIFactoryObject *item;
 	gchar *type;
 	NadpReaderData *reader_data;
@@ -289,7 +289,8 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 		item = NA_IFACTORY_OBJECT( na_object_menu_new());
 
 	} else {
-		g_warning( "%s: unknown type=%s", thisfn, type );
+		/* i18n: 'type' is the nature of the item: Action or Menu */
+		na_core_utils_slist_add_message( messages, _( "unknown type: %s" ), type );
 	}
 
 	if( item ){
@@ -640,17 +641,22 @@ read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *it
 }
 
 /*
- * read and attach profiles in the specified order
- * profiles which may exist in .desktop files, but are not referenced
- * in the 'Profiles' string list are just ignored
+ * Read and attach profiles in the specified order
+ * - profiles which may exist in .desktop files, but are not referenced
+ *   in the 'Profiles' string list are just ignored
+ * - profiles which may be referenced in the action string list, but are not
+ *   found in the .desktop file are recreated with default values (plus a warning)
+ * - ensure that there is at least one profile attached to the action
  */
 static void
 read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, NadpReaderData *reader_data, GSList **messages )
 {
+	static const gchar *thisfn = "nadp_reader_read_done_action_read_profiles";
 	GSList *order;
 	GSList *ip;
 	gchar *profile_id;
 	NAObjectId *found;
+	NAObjectProfile *profile;
 
 	reader_data->action = action;
 	order = na_object_get_items_slist( action );
@@ -664,21 +670,34 @@ read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectActi
 	}
 
 	na_core_utils_slist_free( order );
+
+	if( !na_object_get_items_count( action )){
+		g_warning( "%s: no profile found in .desktop file", thisfn );
+		profile = na_object_profile_new_with_defaults();
+		na_object_attach_profile( action, profile );
+	}
 }
 
 static void
 read_done_action_load_profile( const NAIFactoryProvider *provider, NadpReaderData *reader_data, const gchar *profile_id, GSList **messages )
 {
+	static const gchar *thisfn = "nadp_reader_read_done_action_load_profile";
 	NAObjectProfile *profile;
 
-	g_debug( "nadp_reader_read_done_action_load_profile: loading profile=%s", profile_id );
+	g_debug( "%s: loading profile=%s", thisfn, profile_id );
 
-	profile = na_object_profile_new();
+	profile = na_object_profile_new_with_defaults();
 	na_object_set_id( profile, profile_id );
 
-	na_ifactory_provider_read_item(
-			NA_IFACTORY_PROVIDER( provider ),
-			reader_data,
-			NA_IFACTORY_OBJECT( profile ),
-			messages );
+	if( nadp_desktop_file_has_profile( reader_data->ndf, profile_id )){
+		na_ifactory_provider_read_item(
+				NA_IFACTORY_PROVIDER( provider ),
+				reader_data,
+				NA_IFACTORY_OBJECT( profile ),
+				messages );
+
+	} else {
+		g_warning( "%s: profile '%s' not found in .desktop file", thisfn, profile_id );
+		na_object_attach_profile( reader_data->action, profile );
+	}
 }
