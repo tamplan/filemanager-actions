@@ -593,19 +593,25 @@ guint
 na_updater_delete_item( const NAUpdater *updater, const NAObjectItem *item, GSList **messages )
 {
 	guint ret;
+	NAIOProvider *provider;
 
-	ret = NA_IIO_PROVIDER_CODE_PROGRAM_ERROR;
+	g_return_val_if_fail( NA_IS_UPDATER( updater ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( messages, NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
-	g_return_val_if_fail( NA_IS_UPDATER( updater ), ret );
-	g_return_val_if_fail( NA_IS_OBJECT_ITEM( item ), ret );
-	g_return_val_if_fail( messages, ret );
+	ret = NA_IIO_PROVIDER_CODE_OK;
 
 	if( !updater->private->dispose_has_run ){
 
-		NAIOProvider *provider = na_object_get_provider( item );
-		g_return_val_if_fail( provider, ret );
+		provider = na_object_get_provider( item );
 
-		ret = na_io_provider_delete_item( provider, item, messages );
+		/* provider may be NULL if the item has been deleted from the UI
+		 * without having been ever saved
+		 */
+		if( provider ){
+			g_return_val_if_fail( NA_IS_IO_PROVIDER( provider ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
+			ret = na_io_provider_delete_item( provider, item, messages );
+		}
 	}
 
 	return( ret );

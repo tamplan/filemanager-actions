@@ -53,7 +53,7 @@ static guint     st_event_autosave         = 0;
 static gchar *st_save_error       = N_( "Save error" );
 static gchar *st_save_warning     = N_( "Some items may not have been saved" );
 static gchar *st_level_zero_write = N_( "Unable to rewrite the level-zero items list" );
-static gchar *st_delete_error     = N_( "Some items have not be deleted" );
+static gchar *st_delete_error     = N_( "Some items have not been deleted" );
 
 static gboolean save_item( BaseWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **messages );
 static void     install_autosave( NactMenubar *bar );
@@ -296,6 +296,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 			base_window_display_error_dlg( window, gettext( st_save_error ), msg );
 			g_free( msg );
 			na_core_utils_slist_free( messages );
+			messages = NULL;
 		}
 
 	} else {
@@ -315,6 +316,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 		base_window_display_error_dlg( window, gettext( st_save_error ), msg );
 		g_free( msg );
 		na_core_utils_slist_free( messages );
+		messages = NULL;
 
 	} else {
 		na_object_free_items( items );
@@ -327,7 +329,6 @@ nact_menubar_file_save_items( BaseWindow *window )
 	 * recursively each and every modified item
 	 */
 	new_pivot = NULL;
-	messages = NULL;
 
 	for( it = items ; it ; it = it->next ){
 		save_item( window, bar->private->updater, NA_OBJECT_ITEM( it->data ), &messages );
@@ -342,6 +343,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 		base_window_display_error_dlg( window, gettext( st_save_warning ), msg );
 		g_free( msg );
 		na_core_utils_slist_free( messages );
+		messages = NULL;
 	}
 
 	na_pivot_set_new_items( NA_PIVOT( bar->private->updater ), g_list_reverse( new_pivot ));

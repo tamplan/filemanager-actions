@@ -1,5 +1,16 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-updater.c (na_updater_delete_item):
+	Do not try to remove from the backend an item which has never been written.
+
+	* src/nact/nact-menubar-file.c:
+	Fix typo in translatable message.
+	(nact_menubar_file_save_items): Reinitialize messages pointer.
+
+	* src/nact/nact-tree-ieditable.c (add_to_deleted_rec):
+	Only count as deleted items which were read from the backend.
+	Compute level zero status.
+
 	* src/core/na-importer-ask.c (na_importer_ask_user):
 	* src/core/na-settings.h:
 	Change import default mode and export default format to 'Ask'.
