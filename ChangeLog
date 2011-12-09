@@ -1,5 +1,8 @@
 2011-12-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-gconf/nagp-reader.c (read_done_action_read_profiles):
+	Make sure we have at least one profile attached to the action.
+
 	* src/io-desktop/nadp-desktop-file.c:
 	* src/io-desktop/nadp-desktop-file.h (nadp_desktop_file_has_profile):
 	New function.

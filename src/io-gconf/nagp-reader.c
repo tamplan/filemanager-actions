@@ -279,12 +279,14 @@ read_done_item_is_writable( const NAIFactoryProvider *provider, NAObjectItem *it
 static void
 read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectAction *action, ReaderData *data, GSList **messages )
 {
+	static const gchar *thisfn = "nagp_reader_read_done_action_read_profiles";
 	GSList *order;
 	GSList *list_profiles;
 	GSList *ip;
 	gchar *profile_id;
 	gchar *profile_path;
 	NAObjectId *found;
+	NAObjectProfile *profile;
 
 	data->parent = NA_OBJECT_ITEM( action );
 	order = na_object_get_items_slist( action );
@@ -316,6 +318,14 @@ read_done_action_read_profiles( const NAIFactoryProvider *provider, NAObjectActi
 			read_done_action_load_profile( provider, data, ( const gchar * ) ip->data, messages );
 		}
 		g_free( profile_id );
+	}
+
+	/* make sure we have at least one profile
+	 */
+	if( !na_object_get_items_count( action )){
+		g_warning( "%s: no profile found in GConf backend", thisfn );
+		profile = na_object_profile_new_with_defaults();
+		na_object_attach_profile( action, profile );
 	}
 }
 
