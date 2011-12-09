@@ -115,7 +115,7 @@ NADataDef data_def_conditions [] = {
 					"This obviously only applies when there is a selection.\n" \
 					"Defaults to '*/*'." ),
 				NA_DATA_TYPE_STRING_LIST,
-				"*/*",
+				"*",
 				FALSE,
 				TRUE,
 				TRUE,
@@ -284,7 +284,7 @@ NADataDef data_def_conditions [] = {
 					"or when targeting the special 'x-nautilus-desktop' scheme.\n" \
 					"Defaults to 'file'." ),
 				NA_DATA_TYPE_STRING_LIST,
-				"file",
+				"*",
 				FALSE,
 				TRUE,
 				TRUE,
