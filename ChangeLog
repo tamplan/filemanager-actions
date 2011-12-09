@@ -1,3 +1,7 @@
+2011-12-09 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-icontext.c (is_compatible_scheme): Fix scheme test.
+
 2011-12-06 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/utils/na-gconf2key.sh.in:

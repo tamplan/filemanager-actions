@@ -1008,6 +1008,7 @@ is_candidate_for_schemes( const NAIContext *object, guint target, GList *files )
 		na_core_utils_slist_free( schemes );
 	}
 
+	g_debug( "%s: ok=%s", thisfn, ok ? "True":"False" );
 	return( ok );
 }
 
@@ -1018,7 +1019,7 @@ is_compatible_scheme( const gchar *pattern, const gchar *scheme )
 
 	compatible = FALSE;
 
-	if( strcmp( pattern, "*" )){
+	if( strcmp( pattern, "*" ) == 0 ){
 		compatible = TRUE;
 	} else {
 		compatible = ( strcmp( pattern, scheme ) == 0 );
