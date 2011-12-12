@@ -1,30 +1,61 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-requires gtk+ 2.20 -->
-  <!-- interface-naming-policy toplevel-contextual -->
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="stock">gtk-go-down</property>
-  </object>
-  <object class="GtkImage" id="image">
-    <property name="visible">True</property>
-    <property name="xalign">0</property>
-    <property name="stock">gtk-go-up</property>
-  </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="stock">gtk-missing-image</property>
-  </object>
+  <requires lib="gtk+" version="2.20"/>
   <object class="GtkDialog" id="PreferencesDialog">
+    <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Nautilus-Actions Preferences</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox4">
+      <object class="GtkBox" id="dialog-vbox4">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="dialog-action_area4">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="CancelButton">
+                <property name="label">gtk-cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="OKButton">
+                <property name="label">gtk-ok</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkNotebook" id="PreferencesNotebook">
             <property name="visible">True</property>
@@ -32,22 +63,24 @@
             <child>
               <object class="GtkVBox" id="vbox33">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkFrame" id="frame3">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment3">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkVBox" id="vbox30">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="GtkRadioButton" id="OrderAlphaAscButton">
@@ -56,11 +89,14 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">Menus and actions will be displayed in the ascending alphabetical order of their label, both in the Nautilus context menu and in the NACT user interface.</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
                                 <property name="active">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -71,11 +107,14 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">Menus and actions will be displayed in the descending alphabetical order of their label, both in the Nautilus context menu and in the NACT user interface.</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                                 <property name="group">OrderAlphaAscButton</property>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -86,11 +125,14 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">Display order of menus and actions, both in the Nautilus context menu and in the NACT user interface, must be manually adjusted.</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                                 <property name="group">OrderAlphaAscButton</property>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">2</property>
                               </packing>
                             </child>
@@ -101,6 +143,7 @@
                     <child type="label">
                       <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Items ordering&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -109,24 +152,27 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame1">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment1">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkVBox" id="vbox17">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="GtkCheckButton" id="CreateRootMenuButton">
@@ -135,10 +181,13 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">When this option is checked, menus and actions will actually be displayed as sub-items of a root 'Nautilus-Actions' menu in the Nautilus context menu.</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -150,10 +199,13 @@
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">When this option is checked, an 'About Nautilus-Actions' item will be added to the root Nautilus-Actions menu in the Nautilus context menu.
 Note that this item will be displayed only if a unique menu is defined in the Nautilus context menu (e.g. when having checked the root 'Nautilus-Actions' menu option above).</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -164,6 +216,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                     <child type="label">
                       <object class="GtkLabel" id="label41">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Nautilus menu layout&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -172,6 +225,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -180,6 +234,7 @@ Note that this item will be displayed only if a unique menu is defined in the Na
             <child type="tab">
               <object class="GtkLabel" id="label39">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">This tab lets you choose how the actions are ordered in the displayed list as well as in the Nautilus context menu. You may also choose here how actions will be displayed in the Nautilus context menu.</property>
                 <property name="label" translatable="yes">_Runtime preferences</property>
                 <property name="use_underline">True</property>
@@ -191,25 +246,28 @@ Note that this item will be displayed only if a unique menu is defined in the Na
             <child>
               <object class="GtkVBox" id="vbox700">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkFrame" id="frame710">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment710">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkVBox" id="vbox711">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkTable" id="table711">
                                 <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="tooltip_text" translatable="yes">Specify here the command to run and keep opened a terminal.
 This command should include a 'COMMAND' keyword, which will be substituted at runtime with the action path and parameters.</property>
                                 <property name="n_rows">2</property>
@@ -219,28 +277,32 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                 <child>
                                   <object class="GtkLabel" id="label711">
                                     <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="xalign">1</property>
                                     <property name="label" translatable="yes">_Command pattern :</property>
                                     <property name="use_underline">True</property>
                                   </object>
                                   <packing>
                                     <property name="x_options">GTK_FILL</property>
+                                    <property name="y_options">GTK_FILL</property>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="TerminalPrefixEntry">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="invisible_char">&#x25CF;</property>
+                                    <property name="invisible_char">●</property>
                                   </object>
                                   <packing>
                                     <property name="left_attach">1</property>
                                     <property name="right_attach">2</property>
+                                    <property name="y_options">GTK_FILL</property>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="TerminalPrefixExample">
                                     <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="xalign">0</property>
                                     <property name="use_markup">True</property>
                                   </object>
@@ -249,6 +311,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                     <property name="right_attach">2</property>
                                     <property name="top_attach">1</property>
                                     <property name="bottom_attach">2</property>
+                                    <property name="y_options">GTK_FILL</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -256,6 +319,8 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                 </child>
                               </object>
                               <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -266,6 +331,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                     <child type="label">
                       <object class="GtkLabel" id="label710">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Execution in a terminal&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -274,59 +340,62 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame720">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment720">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkVBox" id="vbox721">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkTable" id="table721">
                                 <property name="visible">True</property>
-                                <property name="n_rows">2</property>
+                                <property name="can_focus">False</property>
                                 <property name="n_columns">2</property>
                                 <property name="column_spacing">4</property>
                                 <property name="row_spacing">4</property>
                                 <child>
                                   <object class="GtkLabel" id="label721">
                                     <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="xalign">1</property>
                                     <property name="label" translatable="yes">Running _desktop environment :</property>
                                     <property name="use_underline">True</property>
                                   </object>
                                   <packing>
                                     <property name="x_options">GTK_FILL</property>
+                                    <property name="y_options">GTK_FILL</property>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkComboBox" id="DesktopComboBox">
                                     <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                   </object>
                                   <packing>
                                     <property name="left_attach">1</property>
                                     <property name="right_attach">2</property>
+                                    <property name="y_options">GTK_FILL</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -340,6 +409,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                     <child type="label">
                       <object class="GtkLabel" id="label720">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Desktop environment&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -348,6 +418,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -362,6 +433,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
             <child type="tab">
               <object class="GtkLabel" id="label700">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">This tab lets you specify parameters needed for. some execution modes.</property>
                 <property name="label" translatable="yes">Runtime E_xecution</property>
                 <property name="use_underline">True</property>
@@ -374,38 +446,43 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
             <child>
               <object class="GtkVBox" id="vbox34">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkFrame" id="frame2">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment2">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkVBox" id="vbox25">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
+                            <property name="can_focus">False</property>
                             <child>
                               <object class="GtkLabel" id="label45">
                                 <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="ypad">6</property>
                                 <property name="label" translatable="yes">What to do when pasting or duplicating an item in the tree ?</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkVBox" id="vbox27">
                                 <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkCheckButton" id="RelabelMenuButton">
                                     <property name="label" translatable="yes">Relabel _menus</property>
@@ -413,10 +490,13 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="tooltip_text" translatable="yes">When a menu is copied/pasted, or duplicated, the new menu will be relabelled as 'Copy of ...'.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">0</property>
                                   </packing>
                                 </child>
@@ -427,10 +507,13 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="tooltip_text" translatable="yes">When an action is copied/pasted, or duplicated, the new action will be relabelled as 'Copy of ...'.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
@@ -441,15 +524,20 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="tooltip_text" translatable="yes">When a profile is copied/pasted, or duplicated, the new profile will be relabelled as 'Copy of ...'.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -460,6 +548,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                     <child type="label">
                       <object class="GtkLabel" id="label42">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Relabeling items&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -468,24 +557,27 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame6">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment6">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkVBox" id="vbox43">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkCheckButton" id="EscCloseButton">
                                 <property name="label" translatable="yes">Esc key _quits the assistant</property>
@@ -493,10 +585,13 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">When this option is checked, the 'Escape' key will let you quit the current assistant. Else, quitting the assistant is only possible by hitting the 'Cancel' button.</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -507,10 +602,13 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">This option is only relevant when the 'Escape' key lets the user quit the assistant. When checked, the user will be prompted for a confirmation in order to help prevent erroneous hits of the Esc key.</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -524,6 +622,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                     <child type="label">
                       <object class="GtkLabel" id="label16">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Assistants&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -532,24 +631,27 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkFrame" id="frame8">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment8">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
-                          <object class="GtkVBox" id="vbox3">
+                          <object class="GtkVBox" id="AutoSaveVBox">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkCheckButton" id="AutoSaveCheckButton">
                                 <property name="label" translatable="yes">Automatically _saves pending modifications</property>
@@ -557,25 +659,31 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="tooltip_text" translatable="yes">When this option is checked, pending modification will be periodically and automatically saved.</property>
+                                <property name="use_action_appearance">False</property>
                                 <property name="use_underline">True</property>
                                 <property name="draw_indicator">True</property>
                               </object>
                               <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkHBox" id="hbox2">
                                 <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <child>
                                   <object class="GtkLabel" id="AutoSaveLabel1">
                                     <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="xalign">1</property>
                                     <property name="xpad">4</property>
                                     <property name="label" translatable="yes">Periodicity :</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
+                                    <property name="fill">True</property>
                                     <property name="position">0</property>
                                   </packing>
                                 </child>
@@ -583,7 +691,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                   <object class="GtkSpinButton" id="AutoSavePeriodicitySpinButton">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="invisible_char">&#x25CF;</property>
+                                    <property name="invisible_char">●</property>
                                     <property name="width_chars">5</property>
                                     <property name="snap_to_ticks">True</property>
                                     <property name="numeric">True</property>
@@ -591,22 +699,28 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
+                                    <property name="fill">True</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="AutoSaveLabel2">
                                     <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                     <property name="xalign">0</property>
                                     <property name="xpad">4</property>
                                     <property name="label" translatable="yes">minutes</property>
                                   </object>
                                   <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
                               <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -617,6 +731,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                     <child type="label">
                       <object class="GtkLabel" id="label4">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Auto-save&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -625,6 +740,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">True</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -636,6 +752,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
             <child type="tab">
               <object class="GtkLabel" id="label40">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">This tab allows the user to choose custom preferences for the Nautilus-Actions Configuration Tool user interface.</property>
                 <property name="label" translatable="yes">_UI Preferences</property>
                 <property name="use_underline">True</property>
@@ -648,38 +765,43 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
             <child>
               <object class="GtkVBox" id="vbox35">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkFrame" id="frame4">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment4">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkVBox" id="vbox13">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
+                            <property name="can_focus">False</property>
                             <child>
                               <object class="GtkLabel" id="label8">
                                 <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="xalign">0</property>
                                 <property name="ypad">10</property>
                                 <property name="label" translatable="yes">What to do when an item, action or menu, selected to be imported, has the same identifier that a currently existing one ?</property>
                                 <property name="wrap">True</property>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkVBox" id="vbox32">
                                 <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkRadioButton" id="PrefsNoImportButton">
@@ -690,11 +812,14 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                     <property name="tooltip_text" translatable="yes">This used to be the historical behavior.
 The selected item, action or menu, will not be imported and will be marked as "NOT OK" in the Summary page.
 The currently existing item will not be modified.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="use_underline">True</property>
                                     <property name="active">True</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">0</property>
                                   </packing>
                                 </child>
@@ -706,11 +831,14 @@ The currently existing item will not be modified.</property>
                                     <property name="receives_default">False</property>
                                     <property name="tooltip_text" translatable="yes">The selected item, action or menu, will be imported with a slightly modified label indicating the renumbering.
 The currently existing item will not be modified.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsNoImportButton</property>
                                   </object>
                                   <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
@@ -722,11 +850,14 @@ The currently existing item will not be modified.</property>
                                     <property name="receives_default">False</property>
                                     <property name="tooltip_text" translatable="yes">The selected item, action or menu, will silently override the currently existing one which has the same identifier.
 Be warned: this mode may be dangerous. You will not be prompted another time.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsNoImportButton</property>
                                   </object>
                                   <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">2</property>
                                   </packing>
                                 </child>
@@ -737,16 +868,21 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="tooltip_text" translatable="yes">You will be asked each time a selected item has an already existing identifier.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="use_underline">True</property>
                                     <property name="draw_indicator">True</property>
                                     <property name="group">PrefsNoImportButton</property>
                                   </object>
                                   <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
                                     <property name="position">3</property>
                                   </packing>
                                 </child>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -757,6 +893,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                     <child type="label">
                       <object class="GtkLabel" id="label44">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Import mode&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -765,6 +902,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -776,6 +914,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child type="tab">
               <object class="GtkLabel" id="label48">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">This tab lets you decide on the default behavior of import operations.</property>
                 <property name="label" translatable="yes">_Import</property>
                 <property name="use_underline">True</property>
@@ -788,30 +927,33 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox41">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkFrame" id="frame5">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment5">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkVBox" id="vbox15">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
+                            <property name="can_focus">False</property>
                             <child>
                               <object class="GtkVBox" id="PreferencesExportFormatVBox">
                                 <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -822,6 +964,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                     <child type="label">
                       <object class="GtkLabel" id="label49">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Export format&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -830,6 +973,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -841,6 +985,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child type="tab">
               <object class="GtkLabel" id="label51">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">This tab lets you decide on the default behavior of export operations.</property>
                 <property name="label" translatable="yes">_Export</property>
                 <property name="use_underline">True</property>
@@ -853,16 +998,18 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <child>
               <object class="GtkVBox" id="vbox44">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkFrame" id="frame13">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment13">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="top_padding">8</property>
                         <property name="bottom_padding">8</property>
                         <property name="left_padding">10</property>
@@ -870,13 +1017,12 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
                         <child>
                           <object class="GtkHBox" id="hbox10">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkScrolledWindow" id="scrolledwindow13">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="hscrollbar_policy">automatic</property>
-                                <property name="vscrollbar_policy">automatic</property>
                                 <property name="shadow_type">in</property>
                                 <child>
                                   <object class="GtkTreeView" id="SchemesTreeView">
@@ -892,13 +1038,15 @@ You can add a new scheme by clicking on the '+' button.</property>
                                 </child>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkVBox" id="vbox29">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
+                                <property name="can_focus">False</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkButton" id="AddSchemeButton">
@@ -907,9 +1055,11 @@ You can add a new scheme by clicking on the '+' button.</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
                                     <property name="tooltip_text" translatable="yes">Click to add a new default scheme.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <child>
                                       <object class="GtkImage" id="image16">
                                         <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
                                         <property name="stock">gtk-add</property>
                                       </object>
                                     </child>
@@ -927,9 +1077,11 @@ You can add a new scheme by clicking on the '+' button.</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
                                     <property name="tooltip_text" translatable="yes">Click to remove the selected default scheme.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <child>
                                       <object class="GtkImage" id="image17">
                                         <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
                                         <property name="stock">gtk-remove</property>
                                       </object>
                                     </child>
@@ -943,6 +1095,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
+                                <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -953,6 +1106,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                     <child type="label">
                       <object class="GtkLabel" id="label55">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Default schemes&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -960,6 +1114,8 @@ You can add a new scheme by clicking on the '+' button.</property>
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -971,6 +1127,7 @@ You can add a new scheme by clicking on the '+' button.</property>
             <child type="tab">
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">This tab lets you decide which schemes are proposed by default when editing advanced conditions for an item.</property>
                 <property name="label" translatable="yes">_Schemes</property>
                 <property name="use_underline">True</property>
@@ -983,16 +1140,18 @@ You can add a new scheme by clicking on the '+' button.</property>
             <child>
               <object class="GtkVBox" id="vbox1">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkFrame" id="frame7">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="border_width">6</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">in</property>
                     <child>
                       <object class="GtkAlignment" id="alignment7">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="top_padding">8</property>
                         <property name="bottom_padding">8</property>
                         <property name="left_padding">10</property>
@@ -1000,13 +1159,12 @@ You can add a new scheme by clicking on the '+' button.</property>
                         <child>
                           <object class="GtkHBox" id="hbox1">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkScrolledWindow" id="scrolledwindow7">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="hscrollbar_policy">automatic</property>
-                                <property name="vscrollbar_policy">automatic</property>
                                 <property name="shadow_type">in</property>
                                 <child>
                                   <object class="GtkTreeView" id="ProvidersTreeView">
@@ -1020,13 +1178,15 @@ You can add a new scheme by clicking on the '+' button.</property>
                                 </child>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
                             <child>
                               <object class="GtkVBox" id="vbox2">
                                 <property name="visible">True</property>
-                                <property name="orientation">vertical</property>
+                                <property name="can_focus">False</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkButton" id="ProviderButtonUp">
@@ -1036,6 +1196,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
                                     <property name="tooltip_text" translatable="yes">Move up the selected I/O provider in the order of priority when trying to write a new item.</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="image">image</property>
                                     <property name="use_underline">True</property>
                                   </object>
@@ -1052,6 +1213,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                                     <property name="sensitive">False</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="image">image3</property>
                                     <property name="use_underline">True</property>
                                   </object>
@@ -1064,6 +1226,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
+                                <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -1074,6 +1237,7 @@ You can add a new scheme by clicking on the '+' button.</property>
                     <child type="label">
                       <object class="GtkLabel" id="label3">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="xpad">5</property>
                         <property name="label" translatable="yes">&lt;b&gt;Activation and priority&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
@@ -1081,6 +1245,8 @@ You can add a new scheme by clicking on the '+' button.</property>
                     </child>
                   </object>
                   <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -1092,6 +1258,7 @@ You can add a new scheme by clicking on the '+' button.</property>
             <child type="tab">
               <object class="GtkLabel" id="label43">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">This tab lets you decide whether the I/O providers are enabled or not, and in which order they will be tried when writing a new item.</property>
                 <property name="label" translatable="yes">I/O _Providers</property>
                 <property name="use_underline">True</property>
@@ -1103,46 +1270,9 @@ You can add a new scheme by clicking on the '+' button.</property>
             </child>
           </object>
           <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area4">
-            <property name="visible">True</property>
-            <property name="layout_style">end</property>
-            <child>
-              <object class="GtkButton" id="CancelButton">
-                <property name="label">gtk-cancel</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="OKButton">
-                <property name="label">gtk-ok</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
             <property name="expand">False</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
@@ -1151,6 +1281,22 @@ You can add a new scheme by clicking on the '+' button.</property>
       <action-widget response="0">CancelButton</action-widget>
       <action-widget response="0">OKButton</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkImage" id="image">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="xalign">0</property>
+    <property name="stock">gtk-go-up</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-missing-image</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-go-down</property>
   </object>
   <object class="GtkSizeGroup" id="RuntimeExecutionLabel">
     <widgets>

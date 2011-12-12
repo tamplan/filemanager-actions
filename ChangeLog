@@ -1,5 +1,8 @@
 2011-12-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-preferences.ui:
+	Fix vertical expand in runtime execution tab and auto-save frame.
+
 	* src/nact/nact-assistant-export.ui:
 	* src/nact/nautilus-actions-config-tool.ui:
 	* src/nact/nact-export-format.c (draw_in_vbox): Make assistant labels wrappable.
