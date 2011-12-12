@@ -1,5 +1,9 @@
 2011-12-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.ui:
+	* src/nact/nautilus-actions-config-tool.ui:
+	* src/nact/nact-export-format.c (draw_in_vbox): Make assistant labels wrappable.
+
 	* src/io-desktop/nadp-formats.c:
 	* src/io-xml/naxml-formats.c: Review the description of the export formats.
 

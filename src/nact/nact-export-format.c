@@ -199,7 +199,7 @@ draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gi
 			label = na_export_format_get_label( format );
 			markup = g_markup_printf_escaped( "%s", label );
 			gtk_button_set_label( GTK_BUTTON( button ), label );
-			g_object_set( G_OBJECT( button ), "use_underline", TRUE, NULL );
+			gtk_button_set_use_underline( GTK_BUTTON( button ), TRUE );
 			break;
 
 		/* this work fine, but it appears that this is not consistant with import assistant */
@@ -225,6 +225,8 @@ draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gi
 			gtk_misc_set_padding( GTK_MISC( desc_label ), size, ypad );
 			gtk_misc_get_alignment( GTK_MISC( desc_label ), NULL, &yalign );
 			gtk_misc_set_alignment( GTK_MISC( desc_label ), 0, yalign );
+			gtk_label_set_line_wrap( desc_label, TRUE );
+			gtk_label_set_line_wrap_mode( desc_label, PANGO_WRAP_WORD );
 
 #if GTK_CHECK_VERSION( 3, 2, 0 )
 			gtk_grid_attach( GTK_GRID( container_mode ), GTK_WIDGET( desc_label ), 0, 1, 1, 1 );

@@ -2679,6 +2679,7 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
       <object class="GtkLabel" id="label3">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
+        <property name="wrap">True</property>
       </object>
       <packing>
         <property name="page_type">intro</property>
@@ -2720,6 +2721,7 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
                 <property name="ypad">10</property>
                 <property name="label" translatable="yes">&lt;b&gt;What should I do when importing an item whose ID already exists ?&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
+                <property name="wrap">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2757,6 +2759,7 @@ There may be multiple reasons for why an item cannot be edited. See your User's 
                             <property name="label" translatable="yes">This used to be the historical behavior.
 The selected file will be marked as "NOT OK" in the Summary page.
 The existing item will not be modified.</property>
+                            <property name="wrap">True</property>
                           </object>
                           <packing>
                             <property name="padding">4</property>
@@ -2930,6 +2933,7 @@ Be warned: this mode may be dangerous. You will not be prompted another time.</p
             <property name="visible">True</property>
             <property name="xalign">0</property>
             <property name="xpad">20</property>
+            <property name="wrap">True</property>
           </object>
           <packing>
             <property name="position">0</property>

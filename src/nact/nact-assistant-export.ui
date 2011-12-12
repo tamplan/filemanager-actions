@@ -13,6 +13,7 @@
       <object class="GtkLabel" id="label20">
         <property name="visible">True</property>
         <property name="label" translatable="yes">This assistant will guide you through the process of exporting actions.</property>
+        <property name="wrap">True</property>
       </object>
       <packing>
         <property name="page_type">intro</property>
@@ -67,11 +68,10 @@
         <child>
           <object class="GtkLabel" id="label2">
             <property name="visible">True</property>
-            <property name="label" translatable="yes">Please select one or more actions
-to be exported.
+            <property name="label" translatable="yes">Please select one or more actions to be exported.
 
-You may use Ctrl and Shift keys
-to extend a selection.</property>
+You may use Ctrl and Shift keys to extend the selection.</property>
+            <property name="wrap">True</property>
           </object>
           <packing>
             <property name="position">1</property>
@@ -120,6 +120,7 @@ to extend a selection.</property>
                 <property name="ypad">10</property>
                 <property name="label" translatable="yes">&lt;b&gt;Which format should I use when exporting these items ?&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
+                <property name="wrap">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -184,6 +185,7 @@ to extend a selection.</property>
             <property name="xalign">0</property>
             <property name="xpad">20</property>
             <property name="use_markup">True</property>
+            <property name="wrap">True</property>
           </object>
           <packing>
             <property name="position">0</property>
@@ -266,6 +268,7 @@ to extend a selection.</property>
                     <property name="xalign">0</property>
                     <property name="xpad">6</property>
                     <property name="label" translatable="yes">Which format should I choose to export it ?</property>
+                    <property name="wrap">True</property>
                   </object>
                   <packing>
                     <property name="position">1</property>

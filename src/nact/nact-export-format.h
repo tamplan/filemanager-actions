@@ -35,6 +35,11 @@
  * SECTION: nact_export_format
  * @short_description: Displays the list of available export formats.
  * @include: nact/nact-export-format.h
+ *
+ * Export formats are defined by their respective I/O providers
+ * (see e.g. src/io-xml/naxml-formats.c or src/io-desktop/nadp-formats.c).
+ * Each export format must have at least a (short) label, and should have
+ * a full description.
  */
 
 #include <gtk/gtk.h>
@@ -45,24 +50,26 @@
 G_BEGIN_DECLS
 
 enum {
-	/* ask for export format dialog box
-	 * only display the 'ask_label' short export format label
-	 * do not display the full description
-	 * do not propose the 'Ask me' choice
+	/* At export time, when the user has required to be asked for the
+	 * exact format of each exported item (NactExportAsk dialog):
+	 * - display the (short) label of the format
+	 * - do not display the full description (but set the tooltip)
+	 * - do not propose the 'Ask me' choice
 	 */
 	EXPORT_FORMAT_DISPLAY_ASK = 1,
 
-	/* export assistant
-	 * display the assistant short label in bold
-	 * display the full description
-	 * propose the 'Ask me' choice
+	/* When running the export assistant, display the available export
+	 * formats to let the user pick one of them (NactAssistantExport):
+	 * - display the (short) label
+	 * - display the full description (and set the tooltip)
+	 * - propose the 'Ask me' choice
 	 */
 	EXPORT_FORMAT_DISPLAY_ASSISTANT,
 
-	/* preferences editor
-	 * display the assistant short label
-	 * do not display the full description
-	 * propose the 'Ask me' choice
+	/* When tuning the user's preferences (NactPreferencesEditor):
+	 * - display the (short) label
+	 * - do not display the full description (but set the tooltip)
+	 * - propose the 'Ask me' choice
 	 */
 	EXPORT_FORMAT_DISPLAY_PREFERENCES,
 };
