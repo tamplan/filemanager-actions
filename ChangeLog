@@ -1,5 +1,8 @@
 2011-12-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-formats.c:
+	* src/io-xml/naxml-formats.c: Review the description of the export formats.
+
 	* configure.ac:
 	* src/core/na-gtk-utils.c:
 	* src/core/na-importer-ask.ui:

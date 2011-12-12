@@ -45,7 +45,12 @@ NAIExporterFormat nadp_formats[] = {
 	 */
 	{ NADP_FORMAT_DESKTOP_V1,
 			N_( "Export as a ._desktop file" ),
-			N_( "This format let you easily share your actions with others, including other desktop environments.\n" \
+			N_( "This format has been introduced with v 3.0 serie, " \
+				"and should be your newly preferred format when exporting items.\n" \
+				"It let you easily share your actions with the whole world, " \
+				"including with users of other desktop environments, " \
+				"as long as their own application implements the DES-EMA specification " \
+				"which describes this format.\n" \
 				"The exported .desktop file may later be imported via :\n" \
 				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \

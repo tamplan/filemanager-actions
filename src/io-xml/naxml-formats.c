@@ -58,9 +58,9 @@ NAIExporterFormat naxml_formats[] = {
 	{ NAXML_FORMAT_GCONF_SCHEMA_V2,
 			N_( "Export as a _light GConf schema (v2) file" ),
 			N_( "This format has been introduced in v 1.11 serie.\n" \
-				"This is the lightest schema still compatible with GConf command-line tools,\n" \
-				"while keeping backward compatibility with older Nautilus-Actions Configuration " \
-				"Tool versions.\n"
+				"This is the lightest schema still compatible with GConf command-line tools, " \
+				"while keeping backward compatibility with the Nautilus-Actions Configuration " \
+				"Tool oldest versions.\n"
 				"The exported schema file may later be imported via :\n" \
 				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
@@ -71,14 +71,13 @@ NAIExporterFormat naxml_formats[] = {
 	 */
 	{ NAXML_FORMAT_GCONF_ENTRY,
 			N_( "Export as a GConf _dump file" ),
-			N_( "This format has been introduced in v 1.11 serie, " \
-				"and should be the preferred format for newly exported items.\n" \
-				"It is not backward compatible with previous Nautilus-Actions " \
-				"Configuration Tool versions,\n" \
-				"though it may still be imported via standard GConf command-line tools.\n" \
+			N_( "This format has been introduced in v 1.11 serie.\n" \
+				"Tough not backward compatible with Nautilus-Actions " \
+				"Configuration Tool versions previous to 1.11, " \
+				"it may still be imported via standard GConf command-line tools.\n" \
 				"The exported dump file may later be imported via :\n" \
-				"- Import assistant of a compatible Nautilus-Actions Configuration Tool,\n" \
-				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
+				"- Import assistant of the Nautilus-Actions Configuration Tool (1.11 and above),\n" \
+				"- drag-n-drop into the Nautilus-Actions Configuration Tool (1.11 and above),\n" \
 				"- or via the gconftool-2 --load command-line tool." ) },
 
 	{ NULL }
