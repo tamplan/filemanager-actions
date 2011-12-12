@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-requires gtk+ 2.20 -->
   <object class="GtkDialog" id="ImporterAskDialog">
     <property name="can_focus">False</property>
     <property name="border_width">5</property>

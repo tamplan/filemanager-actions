@@ -1,5 +1,22 @@
 2011-12-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac:
+	* src/core/na-gtk-utils.c:
+	* src/core/na-importer-ask.ui:
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-capability.ui:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-add-scheme.ui:
+	* src/nact/nact-assistant-export.ui:
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-icon-chooser.ui:
+	* src/nact/nact-main-tab.c:
+	* src/nact/nact-menubar.c:
+	* src/nact/nact-preferences.ui:
+	* src/nact/nact-schemes-list.c:
+	* src/nact/nact-tree-model-dnd.c:
+	* src/nact/nautilus-actions-config-tool.ui: Now requires Gtk 2.20.
+
 	* tools/release-tarball.sh: Automatically installs manuals on the website
 	when releasing a new stable version.
 

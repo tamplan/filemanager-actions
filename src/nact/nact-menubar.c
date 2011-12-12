@@ -184,20 +184,6 @@ static const GtkToggleActionEntry toolbar_entries[] = {
 				G_CALLBACK( nact_menubar_view_on_toolbar_help ), FALSE },
 };
 
-/* GtkActivatable
- * gtk_action_get_tooltip() is only available starting with Gtk 2.16
- * until this is a required level, we must have some code to do the
- * same thing
- */
-#undef NA_HAS_GTK_ACTIVATABLE
-#if GTK_CHECK_VERSION( 2,16,0 )
-	#define NA_HAS_GTK_ACTIVATABLE
-#endif
-
-#ifndef NA_HAS_GTK_ACTIVATABLE
-#define MENUBAR_PROP_ITEM_ACTION			"menubar-item-action"
-#endif
-
 #define MENUBAR_PROP_STATUS_CONTEXT			"menubar-status-context"
 #define MENUBAR_PROP_MAIN_STATUS_CONTEXT	"menubar-main-status-context"
 
@@ -539,16 +525,11 @@ on_ui_manager_proxy_connect( GtkUIManager *ui_manager, GtkAction *action, GtkWid
 			( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 	if( GTK_IS_MENU_ITEM( proxy )){
-
 		base_window_signal_connect( window,
 				G_OBJECT( proxy ), "select", G_CALLBACK( on_menu_item_selected ));
 
 		base_window_signal_connect( window,
 				G_OBJECT( proxy ), "deselect", G_CALLBACK( on_menu_item_deselected ));
-
-#ifndef NA_HAS_GTK_ACTIVATABLE
-		g_object_set_data( G_OBJECT( proxy ), MENUBAR_PROP_ITEM_ACTION, action );
-#endif
 	}
 }
 
@@ -560,33 +541,22 @@ static void
 on_menu_item_selected( GtkMenuItem *proxy, BaseWindow *window )
 {
 	GtkAction *action;
-	gchar *tooltip;
+	const gchar *tooltip;
 
 	/*g_debug( "nact_menubar_on_menu_item_selected: proxy=%p (%s), window=%p (%s)",
 			( void * ) proxy, G_OBJECT_TYPE_NAME( proxy ),
 			( void * ) window, G_OBJECT_TYPE_NAME( window ));*/
 
 	tooltip = NULL;
-
-#ifdef NA_HAS_GTK_ACTIVATABLE
 	action = gtk_activatable_get_related_action( GTK_ACTIVATABLE( proxy ));
-	if( action ){
-		tooltip = ( gchar * ) gtk_action_get_tooltip( action );
-	}
-#else
-	action = GTK_ACTION( g_object_get_data( G_OBJECT( proxy ), MENUBAR_PROP_ITEM_ACTION ));
-	if( action ){
-		g_object_get( G_OBJECT( action ), "tooltip", &tooltip, NULL );
-	}
-#endif
 
-	if( tooltip ){
-		nact_main_statusbar_display_status( NACT_MAIN_WINDOW( window ), MENUBAR_PROP_STATUS_CONTEXT, tooltip );
-	}
+	if( action ){
+		tooltip = gtk_action_get_tooltip( action );
 
-#ifndef NA_HAS_GTK_ACTIVATABLE
-	g_free( tooltip );
-#endif
+		if( tooltip ){
+			nact_main_statusbar_display_status( NACT_MAIN_WINDOW( window ), MENUBAR_PROP_STATUS_CONTEXT, tooltip );
+		}
+	}
 }
 
 static void

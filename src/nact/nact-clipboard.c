@@ -347,17 +347,9 @@ nact_clipboard_dnd_get_data( NactClipboard *clipboard, gboolean *copy_data )
 
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->dnd, NACT_CLIPBOARD_NACT_ATOM );
 		if( selection ){
-
-/* gtk_selection_data_get_data() appears with Gtk+ 2.14.0 release on 2008-09-04
- * see http://git.gnome.org/browse/gtk+/commit/?id=9eae7a1d2e7457d67ba00bb8c35775c1523fa186
- */
-#if GTK_CHECK_VERSION( 2, 14, 0 )
 			data = ( NactClipboardDndData * ) gtk_selection_data_get_data( selection );
-#else
-			data = ( NactClipboardDndData * ) selection->data;
-#endif
-			if( data->target == NACT_XCHANGE_FORMAT_NACT ){
 
+			if( data->target == NACT_XCHANGE_FORMAT_NACT ){
 				for( it = data->rows ; it ; it = it->next ){
 					rows = g_list_append( rows,
 							gtk_tree_row_reference_copy(( GtkTreeRowReference * ) it->data ));
@@ -430,11 +422,7 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 		g_debug( "%s: selection=%p", thisfn, ( void * ) selection );
 
 		if( selection ){
-#if GTK_CHECK_VERSION( 2, 14, 0 )
 			data = ( NactClipboardDndData * ) gtk_selection_data_get_data( selection );
-#else
-			data = ( NactClipboardDndData * ) selection->data;
-#endif
 			g_debug( "%s: data=%p (NactClipboardDndData)", thisfn, ( void * ) data );
 
 			if( data->target == NACT_XCHANGE_FORMAT_XDS ){
@@ -469,11 +457,7 @@ get_from_dnd_clipboard_callback( GtkClipboard *clipboard, GtkSelectionData *sele
 	static const gchar *thisfn = "nact_clipboard_get_from_dnd_clipboard_callback";
 	GdkAtom selection_data_target;
 
-#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_target = gtk_selection_data_get_target( selection_data );
-#else
-	selection_data_target = selection_data->target;
-#endif
 
 	g_debug( "%s: clipboard=%p, selection_data=%p, target=%s, info=%d, data=%p",
 			thisfn, ( void * ) clipboard,
@@ -732,11 +716,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 		selection = gtk_clipboard_wait_for_contents( clipboard->private->primary, NACT_CLIPBOARD_NACT_ATOM );
 
 		if( selection ){
-#if GTK_CHECK_VERSION( 2, 14, 0 )
 			user_data = ( PrimaryData * ) gtk_selection_data_get_data( selection );
-#else
-			user_data = ( PrimaryData * ) selection->data;
-#endif
 			g_debug( "%s: retrieving PrimaryData=%p", thisfn, ( void * ) user_data );
 
 			if( user_data ){
@@ -798,11 +778,7 @@ get_from_primary_clipboard_callback( GtkClipboard *gtk_clipboard, GtkSelectionDa
 	gchar *buffer;
 	GdkAtom selection_data_target;
 
-#if GTK_CHECK_VERSION( 2, 14, 0 )
 	selection_data_target = gtk_selection_data_get_target( selection_data );
-#else
-	selection_data_target = selection_data->target;
-#endif
 
 	g_debug( "%s: gtk_clipboard=%p, selection_data=%p, target=%s, info=%d, clipboard=%p",
 			thisfn, ( void * ) gtk_clipboard,

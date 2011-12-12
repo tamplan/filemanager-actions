@@ -430,26 +430,10 @@ nact_schemes_list_show_all( BaseWindow *window )
 	data = get_schemes_list_data( listview );
 
 	button = get_add_button( window );
-#if GTK_CHECK_VERSION( 2, 18, 0 )
 	gtk_widget_set_visible( GTK_WIDGET( button ), data->mode == SCHEMES_LIST_FOR_PREFERENCES );
-#else
-	if( data->mode == SCHEMES_LIST_FOR_PREFERENCES ){
-		gtk_widget_show( GTK_WIDGET( button ));
-	} else {
-		gtk_widget_hide( GTK_WIDGET( button ));
-	}
-#endif
 
 	button = get_remove_button( window );
-#if GTK_CHECK_VERSION( 2, 18, 0 )
 	gtk_widget_set_visible( GTK_WIDGET( button ), data->mode == SCHEMES_LIST_FOR_PREFERENCES );
-#else
-	if( data->mode == SCHEMES_LIST_FOR_PREFERENCES ){
-		gtk_widget_show( GTK_WIDGET( button ));
-	} else {
-		gtk_widget_hide( GTK_WIDGET( button ));
-	}
-#endif
 
 	init_view_select_first_row( data );
 }

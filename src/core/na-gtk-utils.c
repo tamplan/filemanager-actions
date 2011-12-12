@@ -61,11 +61,7 @@ na_gtk_utils_search_for_child_widget( GtkContainer *container, const gchar *name
 
 		if( GTK_IS_WIDGET( ic->data )){
 			child = GTK_WIDGET( ic->data );
-#if GTK_CHECK_VERSION( 2, 20, 0 )
 			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
-#else
-			child_name = gtk_widget_get_name( child );
-#endif
 			if( child_name && strlen( child_name )){
 				/*g_debug( "%s: child=%s", thisfn, child_name );*/
 
@@ -104,11 +100,7 @@ dump_children( const gchar *thisfn, GtkContainer *container, int level )
 
 		if( GTK_IS_WIDGET( ic->data )){
 			child = GTK_WIDGET( ic->data );
-#if GTK_CHECK_VERSION( 2, 20, 0 )
 			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
-#else
-			child_name = gtk_widget_get_name( child );
-#endif
 			g_debug( "%s: %s%s\t%p %s",
 					thisfn, prefix->str, G_OBJECT_TYPE_NAME( child ), ( void * ) child, child_name );
 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-requires gtk+ 2.20 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkListStore" id="liststore1"/>
   <object class="GtkAssistant" id="ExportAssistant">

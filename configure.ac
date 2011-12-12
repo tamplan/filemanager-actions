@@ -121,18 +121,14 @@ NA_CHECK_FOR_GCONF
 # nautilus itself (e.g. 2.24.2) instead of the library version info
 # (1.1.0) ; for the usual final user, this is very analog to requiring
 # a whole gnome version
-#
-# GLib >= 2.16: GVFS/GIO
-# Gtk  >= 2.12: GtkBuilder
-#
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 if test "${PKG_CONFIG}" = "no"; then
 	AC_MSG_ERROR([You need to install pkg-config])
 fi
 
-glib_required=2.16.0
-gtk_required=2.12.0
-
+# Oldest supported distribution: Ubuntu 10 LTS (Gnome 2.30): april 2013
+glib_required=2.24.0
+gtk_required=2.20.0
 NA_CHECK_FOR_GTK
 
 dnl aclocal complains if the comma is not just after the square bracket
