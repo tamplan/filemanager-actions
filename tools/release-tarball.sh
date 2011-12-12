@@ -400,13 +400,15 @@ command "ssh maintainer@kimsufi 'sha1sum ${destdir}/${opt_tarname} > ${destdir}/
 if [ "${opt_stable}" = "yes" ]; then
 	msg "updating kimsufi:${destdir}/latest.tar.gz"
 	command "ssh maintainer@kimsufi 'cd ${destdir}; rm -f latest.tar.gz; ln -s ${opt_tarname} latest.tar.gz; ls -l latest.tar.gz ${opt_tarname}*'"
+	msg "installing manuals on kimsufi"
+	command "ssh maintainer@kimsufi 'tools/kimsufi-install-manuals.sh -nodummy'"
 fi
 
 # tagging git
 msg "tagging git"
 tag="$(echo ${product}-${version} | tr '[:lower:]' '[:upper:]' | sed -e 's/-/_/g' -e 's/\./_/g')"
 msg="Releasing $(grep PACKAGE_NAME ${builddir}/Makefile | awk '{ print $3 }') ${version}"
-msg "git tag -s ${tag} -m ${msg}"
+msg "git tag -s '${tag}' -m '${msg}'"
 command "git tag -s '${tag}' -m '${msg}'"
 command "git pull --rebase && git push && git push --tags"
 
