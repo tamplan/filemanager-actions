@@ -745,9 +745,11 @@ na_core_utils_gstring_joinv
 na_core_utils_selcount_get_ope_int
 na_core_utils_dir_is_writable_path
 na_core_utils_dir_is_writable_uri
+na_core_utils_dir_list_perms
 na_core_utils_dir_split_ext
 na_core_utils_file_delete
 na_core_utils_file_exists
+na_core_utils_file_is_loadable
 na_core_utils_file_load_from_uri
 na_core_utils_print_version
 </SECTION>
