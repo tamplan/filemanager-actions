@@ -164,9 +164,6 @@ You may use Ctrl and Shift keys to extend the selection.</property>
         <child>
           <placeholder/>
         </child>
-        <child>
-          <placeholder/>
-        </child>
       </object>
       <packing>
         <property name="title" translatable="yes">Selecting the export format</property>
