@@ -80,7 +80,7 @@ struct _NactAssistantImportPrivate {
 	GList       *results;
 };
 
-static const gchar        *st_xmlui_filename = PKGDATADIR "/nautilus-actions-config-tool.ui";
+static const gchar        *st_xmlui_filename = PKGDATADIR "/nact-assistant-import.ui";
 static const gchar        *st_toplevel_name  = "ImportAssistant";
 static const gchar        *st_wsp_name       = NA_IPREFS_IMPORT_ASSISTANT_WSP;
 

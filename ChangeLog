@@ -1,5 +1,13 @@
 2011-12-13 Pierre Wieser <pwieser@trychlos.org>
 
+	Have a distinct interface definition for import assistant.
+
+	* src/nact/nact-assistant-import.ui: New file.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nautilus-actions-config-tool.ui: Updated accordingly.
+
 	* src/nact/nautilus-actions-config-tool.ui:
 	* src/nact/nact-assistant-export.ui: Add a padding to GtkFileChoosers.
 

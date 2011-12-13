@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.20"/>
+  <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkAssistant" id="ImportAssistant">
+    <property name="border_width">12</property>
+    <property name="title" translatable="yes">Importing actions</property>
+    <property name="modal">True</property>
+    <property name="type_hint">dialog</property>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label3">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">This assistant will guide you through the process of importing items, actions or menus.</property>
+        <property name="wrap">True</property>
+      </object>
+      <packing>
+        <property name="page_type">intro</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox34">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkFileChooserWidget" id="ImportFileChooser">
+            <property name="visible">True</property>
+            <property name="use_preview_label">False</property>
+            <property name="preview_widget_active">False</property>
+            <property name="local_only">False</property>
+            <property name="select_multiple">True</property>
+          </object>
+          <packing>
+            <property name="padding">10</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="title" translatable="yes">Selecting what files to import</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox35">
+        <property name="visible">True</property>
+        <property name="border_width">10</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkVBox" id="vbox20">
+            <property name="visible">True</property>
+            <property name="spacing">10</property>
+            <child>
+              <object class="GtkLabel" id="label38">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="ypad">10</property>
+                <property name="label" translatable="yes">&lt;b&gt;What should I do when importing an item whose ID already exists ?&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolledwindow7">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <object class="GtkViewport" id="viewport1">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkVBox" id="vbox21">
+                        <property name="visible">True</property>
+                        <property name="spacing">10</property>
+                        <child>
+                          <object class="GtkVBox" id="vbox22">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkRadioButton" id="NoImportButton">
+                                <property name="label" translatable="yes">Do _not import the item whose ID already exists</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="hbox18">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkLabel" id="NoImportLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="xpad">16</property>
+                                    <property name="label" translatable="yes">This used to be the historical behavior.
+The selected file will be marked as "NOT OK" in the Summary page.
+The existing item will not be modified.</property>
+                                    <property name="wrap">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="padding">4</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkVBox" id="vbox23">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkRadioButton" id="RenumberButton">
+                                <property name="label" translatable="yes">A_llocate a new identifier for the imported item</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_indicator">True</property>
+                                <property name="group">NoImportButton</property>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="hbox6">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkLabel" id="RenumberLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="xpad">16</property>
+                                    <property name="label" translatable="yes">The selected file will be imported with a slightly modified label indicating the renumbering.
+The existing item will not be modified.</property>
+                                    <property name="wrap">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="padding">4</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkVBox" id="vbox24">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkRadioButton" id="OverrideButton">
+                                <property name="label" translatable="yes">_Override the existing item</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_indicator">True</property>
+                                <property name="group">NoImportButton</property>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="hbox7">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkLabel" id="OverrideLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="xpad">16</property>
+                                    <property name="label" translatable="yes">The item found in the selected file will silently override the current one which has the same identifier.
+Be warned: this mode may be dangerous. You will not be prompted another time.</property>
+                                    <property name="wrap">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="padding">4</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkVBox" id="vbox36">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkRadioButton" id="AskButton">
+                                <property name="label" translatable="yes">_Ask me</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="use_underline">True</property>
+                                <property name="draw_indicator">True</property>
+                                <property name="group">NoImportButton</property>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkHBox" id="hbox8">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkLabel" id="AskLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="xpad">16</property>
+                                    <property name="label" translatable="yes">You will be asked each time an imported ID already exists.</property>
+                                    <property name="wrap">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="padding">4</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="title" translatable="yes">Managing duplicates</property>
+      </packing>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox12">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkLabel" id="AssistantImportConfirmLabel">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
+            <property name="xpad">20</property>
+            <property name="wrap">True</property>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+      <packing>
+        <property name="page_type">confirm</property>
+        <property name="title" translatable="yes">Summary</property>
+      </packing>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <object class="GtkVBox" id="vbox13">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolledwindow6">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <child>
+              <object class="GtkTextView" id="AssistantImportSummaryTextView">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+      <packing>
+        <property name="page_type">summary</property>
+        <property name="title" translatable="yes">Import is done</property>
+      </packing>
+    </child>
+  </object>
+</interface>

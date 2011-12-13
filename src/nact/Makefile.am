@@ -166,6 +166,7 @@ pkgdata_DATA = \
 	nact-add-capability.ui								\
 	nact-add-scheme.ui									\
 	nact-assistant-export.ui							\
+	nact-assistant-import.ui							\
 	nact-icon-chooser.ui								\
 	nact-preferences.ui									\
 	nautilus-actions-config-tool.ui						\
