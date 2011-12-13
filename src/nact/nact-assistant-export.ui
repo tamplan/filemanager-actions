@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <!-- interface-requires gtk+ 2.20 -->
+  <requires lib="gtk+" version="2.20"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkListStore" id="liststore1"/>
   <object class="GtkAssistant" id="ExportAssistant">
@@ -9,6 +9,9 @@
     <property name="title" translatable="yes">Exporting actions</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkLabel" id="label20">
         <property name="visible">True</property>
@@ -25,7 +28,6 @@
         <child>
           <object class="GtkVBox" id="vbox16">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel" id="ActionsListLabel">
                 <property name="visible">True</property>
@@ -83,7 +85,7 @@ You may use Ctrl and Shift keys to extend the selection.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkHBox" id="hbox2">
+      <object class="GtkVBox" id="vbox5">
         <property name="visible">True</property>
         <child>
           <object class="GtkFileChooserWidget" id="ExportFolderChooser">
@@ -94,6 +96,7 @@ You may use Ctrl and Shift keys to extend the selection.</property>
             <property name="local_only">False</property>
           </object>
           <packing>
+            <property name="padding">10</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -106,12 +109,10 @@ You may use Ctrl and Shift keys to extend the selection.</property>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <property name="border_width">10</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkVBox" id="vbox2">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">10</property>
             <child>
               <object class="GtkLabel" id="label1">
@@ -136,11 +137,9 @@ You may use Ctrl and Shift keys to extend the selection.</property>
                 <child>
                   <object class="GtkViewport" id="viewport1">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <child>
                       <object class="GtkVBox" id="AssistantExportFormatVBox">
                         <property name="visible">True</property>
-                        <property name="orientation">vertical</property>
                         <property name="spacing">10</property>
                         <child>
                           <placeholder/>
@@ -151,8 +150,6 @@ You may use Ctrl and Shift keys to extend the selection.</property>
                 </child>
               </object>
               <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -175,7 +172,6 @@ You may use Ctrl and Shift keys to extend the selection.</property>
     <child>
       <object class="GtkVBox" id="vbox3">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="AssistantExportConfirmLabel">
             <property name="visible">True</property>
@@ -200,7 +196,6 @@ You may use Ctrl and Shift keys to extend the selection.</property>
     <child>
       <object class="GtkVBox" id="vbox4">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <child>
           <object class="GtkScrolledWindow" id="scrolledwindow2">
             <property name="visible">True</property>
@@ -236,17 +231,14 @@ You may use Ctrl and Shift keys to extend the selection.</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkVBox" id="vbox37">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkVBox" id="vbox39">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkLabel" id="ExportAskLabel1">
@@ -280,7 +272,6 @@ You may use Ctrl and Shift keys to extend the selection.</property>
             <child>
               <object class="GtkVBox" id="ExportFormatAskVBox">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -302,7 +293,6 @@ You may use Ctrl and Shift keys to extend the selection.</property>
             <child>
               <object class="GtkVBox" id="vbox40">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkCheckButton" id="AskKeepChoiceButton">
                     <property name="label" translatable="yes">Re_member my choice in future export operations</property>

@@ -1,5 +1,8 @@
 2011-12-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nautilus-actions-config-tool.ui:
+	* src/nact/nact-assistant-export.ui: Add a padding to GtkFileChoosers.
+
 	* src/nact/nautilus-actions-config-tool.ui: Let a page be scrolled.
 
 	* src/nact/nact-assistant-export.ui: Remove useless placeholder.
