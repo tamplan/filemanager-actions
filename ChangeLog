@@ -1,5 +1,7 @@
 2011-12-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/reference/Makefile.am: Fix (one more time) the build.
+
 	* docs/reference/nautilus-actions-sections.txt: Add new functions.
 
 	Have a distinct interface definition for import assistant.

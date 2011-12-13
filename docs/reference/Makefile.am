@@ -51,11 +51,12 @@ core_headers = $(patsubst $(top_srcdir)/src/core/%,%,$(shell \ls -1 $(top_srcdir
 #written_xmls = $(shell \ls -1 *.xml | $(EGREP) -v "$(written_xmls_regexp)")
 
 # content_files must include auto created ones because content_files is
-# a prerequisite of sgml-build-stamp target; we so are sure that these
-# files are actually generated (version_dir.xml)
-# as a consequence, auto created files are automatically included in the
-# tarball
-content_files = $(shell \ls -1 *.xml) $(auto_created_files)
+# a prerequisite of html-build-stamp and pdf-build-stamp targets;
+# we so are sure that these will be actually generated (version.xml, version_dir.xml)
+# as a consequence, auto created files are automatically included in the tarball
+content_files = \
+	$(patsubst $(abs_srcdir)/%,%,$(shell \ls -1 $(abs_srcdir)/*.xml)) \
+	$(auto_created_files)
 
 if !HAVE_GCONF
 ignore_headers = na-gconf-monitor.h
@@ -151,12 +152,8 @@ xml_in_files = \
 
 xml_files = $(xml_in_files:.xml.in=.xml)
 
-# even auto-generated .xml files should go to srcdir
-# else xml processor will not be able to parse entities
 version_dir.xml: version.xml
-	rm -f version_dir.xml
 	cat version.xml | $(SED) 's?^\([[:alnum:]]\.[[:alnum:]]\).*?\1?' > version_dir.xml
-	if test "$(abs_srcdir)" != "$(abs_builddir)"; then cp version.xml version_dir.xml $(srcdir)/; fi
 
 CLEANFILES += \
 	$(DOC_MODULE).types							\
