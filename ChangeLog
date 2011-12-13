@@ -4,6 +4,7 @@
 
 	* src/nact/nact-assistant-import.ui: New file.
 
+	* po/POTFILES.in:
 	* src/nact/Makefile.am:
 	* src/nact/nact-assistant-import.c:
 	* src/nact/nautilus-actions-config-tool.ui: Updated accordingly.

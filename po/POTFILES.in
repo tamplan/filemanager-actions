@@ -35,6 +35,7 @@ src/nact/nact-add-capability-dialog.c
 src/nact/nact-assistant-export.c
 [type: gettext/glade] src/nact/nact-assistant-export.ui
 src/nact/nact-assistant-import.c
+[type: gettext/glade] src/nact/nact-assistant-import.ui
 src/nact/nact.desktop.in
 src/nact/nact-export-ask.c
 src/nact/nact-export-format.c
