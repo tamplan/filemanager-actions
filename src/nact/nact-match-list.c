@@ -303,7 +303,7 @@ nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
  * @tab_name: a string constant which identifies this page.
  * @count_selected: count of selected items in the #NactIActionsList list view.
  *
- * Called at instance_dispose time.
+ * Called each time the selection changes in the Actions tree view.
  *
  * Basically we are using here a rather common scheme:
  * - object has a GSList of strings, each of one being a filter description,

@@ -1,5 +1,8 @@
 2011-12-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-match-list.c (nact_match_list_on_selection_changed):
+	Fix typo in the comment.
+
 	* src/nact/nact-export-format.c (draw_in_vbox): Increment spacing.
 
 2011-12-13 Pierre Wieser <pwieser@trychlos.org>
