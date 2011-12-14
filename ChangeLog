@@ -1,3 +1,7 @@
+2011-12-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-export-format.c (draw_in_vbox): Increment spacing.
+
 2011-12-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* docs/reference/Makefile.am: Fix (one more time) the build.

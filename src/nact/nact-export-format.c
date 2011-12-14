@@ -218,7 +218,7 @@ draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gi
 		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
 			gtk_widget_style_get( GTK_WIDGET( button ), "indicator-size", &size, NULL );
 			gtk_widget_style_get( GTK_WIDGET( button ), "indicator-spacing", &spacing, NULL );
-			size += 2*spacing;
+			size += 3*spacing;
 
 			desc_label = GTK_LABEL( gtk_label_new( description ));
 			gtk_misc_get_padding( GTK_MISC( desc_label ), NULL, &ypad );
