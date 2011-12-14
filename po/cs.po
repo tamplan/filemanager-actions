@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-11-27 19:58+0000\n"
-"PO-Revision-Date: 2011-12-01 13:01+0100\n"
+"POT-Creation-Date: 2011-12-13 21:14+0000\n"
+"PO-Revision-Date: 2011-12-14 10:30+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1075,7 +1075,22 @@ msgstr "Import byl na uživatelovu žádost zrušen."
 msgid "(renumbered)"
 msgstr "(přečíslováno)"
 
-#: ../src/core/na-importer-ask.c:295
+#. i18n: '%s' stands for the file URI
+#: ../src/core/na-importer.c:60
+#, c-format
+msgid "%s is not loadable (empty or too big or not a regular file)"
+msgstr ""
+"%s není možné načíst (prázdný nebo příliš velký soubor nebo nejde o běžný "
+"soubor)"
+
+#. l10n: 'ImporterAskDialog' is the dialog name: do not translate
+#: ../src/core/na-importer-ask.c:228
+#, c-format
+#| msgid "Unable to load %s dialog definition."
+msgid "Unable to load 'ImporterAskDialog' from %s"
+msgstr "Nelze načíst „ImporterAskDialog“ z %s."
+
+#: ../src/core/na-importer-ask.c:342
 #, c-format
 msgid ""
 "The action \"%s\" imported from \"%s\" has the same identifiant than the "
@@ -1084,7 +1099,7 @@ msgstr ""
 "Akce „%s“ naimportovaná z „%s“ má stejný identifikátor, jaký již existuje "
 "„%s“."
 
-#: ../src/core/na-importer-ask.c:301
+#: ../src/core/na-importer-ask.c:348
 #, c-format
 msgid ""
 "The menu \"%s\" imported from \"%s\" has the same identifiant than the "
@@ -1329,6 +1344,10 @@ msgstr ""
 "Popisek položky nabídky, která se objeví v kontextové nabídce správce "
 "souborů za předpokladu, že výběr vyhovuje výskytu nastavené podmínky.\n"
 "Rovněž se použije jako výchozí popis akce na liště nástrojů."
+
+#: ../src/core/na-object-item-factory.c:92
+msgid "Empty label"
+msgstr "Prázdný popisek"
 
 #: ../src/core/na-object-item-factory.c:111
 msgid "Tooltip of the context menu item"
@@ -1719,19 +1738,36 @@ msgstr "_Exportovat jako soubor ._desktop"
 
 #: ../src/io-desktop/nadp-formats.c:48
 msgid ""
-"This format let you easily share your actions with others, including other "
-"desktop environments.\n"
+"This format has been introduced with v 3.0 serie, and should be your newly "
+"preferred format when exporting items.\n"
+"It let you easily share your actions with the whole world, including with "
+"users of other desktop environments, as long as their own application "
+"implements the DES-EMA specification which describes this format.\n"
 "The exported .desktop file may later be imported via :\n"
 "- Import assistant of the Nautilus-Actions Configuration Tool,\n"
 "- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
 "- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory."
 msgstr ""
-"Tento formát vám umožní jednoduše sdílet své akce s ostatními, a to i pro "
-"jiná pracovní prostředí.\n"
-"Exportovaný soubor může být později importován pomocí:\n"
+"Tento formát byl zaveden v sérii 3.0 a měl by být nově upřednostňován jako "
+"formát při exportu položek.\n"
+"Tento formát vám umožní jednoduše sdílet své akce s ostatními, a to i s "
+"uživateli jiných pracovních prostředí, pokud jejich aplikace implementují "
+"specifikaci DES-EMA, která tento formát popisuje.\n"
+"Exportovaný soubor .desktop může být později importován pomocí:\n"
 "- průvodce importem v Nástroji nastavení Akce-Nautilus\n"
 "- přetažení do Nástroje nastavení Akce-Nautilus\n"
-"- nástrojem příkazového řádku gconftool-2 --import-schema-file"
+"- zkopírování do složky XDG_DATA_DIRS/file-manager/actions"
+
+#: ../src/io-desktop/nadp-reader.c:65
+msgid "The Desktop I/O Provider is not able to handle the URI"
+msgstr ""
+"Zprostředkovatel V/V pro pracovní plochu není schopen obsloužit adresu URI"
+
+#. i18n: 'type' is the nature of the item: Action or Menu
+#: ../src/io-desktop/nadp-reader.c:293
+#, c-format
+msgid "unknown type: %s"
+msgstr "neznámý typ: %s"
 
 #: ../src/io-gconf/nagp-gconf-provider.c:248
 msgid "Nautilus-Actions GConf I/O Provider"
@@ -1769,9 +1805,9 @@ msgstr ""
 "Neznámý typ %s nalezen na řádku %d, zatímco byla očekávána akce nebo nabídka."
 
 #: ../src/io-xml/naxml-reader.c:155
-#, c-format
-msgid "Node %s at line %d has not been dealt with."
-msgstr "Uzel %s na řádku %d nebyl zpracováván."
+#| msgid "The I/O provider is not willing to do that."
+msgid "The XML I/O Provider is not able to handle the URI"
+msgstr "Zprostředkovatel V/V pro XML není schopen obsloužit adresu URI"
 
 #: ../src/io-xml/naxml-formats.c:48
 msgid "Export as a _full GConf schema file"
@@ -1796,11 +1832,21 @@ msgid "Export as a _light GConf schema (v2) file"
 msgstr "Exportovat jako soubor od_lehčeného schématu GConf (v2)"
 
 #: ../src/io-xml/naxml-formats.c:60
+#| msgid ""
+#| "This format has been introduced in v 1.11 serie.\n"
+#| "This is the lightest schema still compatible with GConf command-line "
+#| "tools,\n"
+#| "while keeping backward compatibility with older Nautilus-Actions "
+#| "Configuration Tool versions.\n"
+#| "The exported schema file may later be imported via :\n"
+#| "- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+#| "- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+#| "- or via the gconftool-2 --import-schema-file command-line tool."
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
-"This is the lightest schema still compatible with GConf command-line tools,\n"
-"while keeping backward compatibility with older Nautilus-Actions "
-"Configuration Tool versions.\n"
+"This is the lightest schema still compatible with GConf command-line tools, "
+"while keeping backward compatibility with the Nautilus-Actions Configuration "
+"Tool oldest versions.\n"
 "The exported schema file may later be imported via :\n"
 "- Import assistant of the Nautilus-Actions Configuration Tool,\n"
 "- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
@@ -1808,9 +1854,8 @@ msgid ""
 msgstr ""
 "Tento formát byl zaveden v sérii 1.11.\n"
 "Jedná se o odlehčený styl schématu kompatibilní s nástrojem příkazové řádky "
-"GConf,\n"
-"který přitom zachovává zpětnou kompatibilitu se staršími verzemi Nástroje "
-"nastavení Akce-Nautilus.\n"
+"GConf, který přitom zachovává zpětnou kompatibilitu se staršími verzemi "
+"Nástroje nastavení Akce-Nautilus.\n"
 "Exportovaný soubor může být později importován pomocí:\n"
 "- průvodce importem v Nástroji nastavení Akce-Nautilus\n"
 "- přetažení do Nástroje nastavení Akce-Nautilus\n"
@@ -1821,23 +1866,32 @@ msgid "Export as a GConf _dump file"
 msgstr "_Exportovat jako soubor vstupu GConf"
 
 #: ../src/io-xml/naxml-formats.c:74
+#| msgid ""
+#| "This format has been introduced in v 1.11 serie, and should be the "
+#| "preferred format for newly exported items.\n"
+#| "It is not backward compatible with previous Nautilus-Actions "
+#| "Configuration Tool versions,\n"
+#| "though it may still be imported via standard GConf command-line tools.\n"
+#| "The exported dump file may later be imported via :\n"
+#| "- Import assistant of a compatible Nautilus-Actions Configuration Tool,\n"
+#| "- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+#| "- or via the gconftool-2 --load command-line tool."
 msgid ""
-"This format has been introduced in v 1.11 serie, and should be the preferred "
-"format for newly exported items.\n"
-"It is not backward compatible with previous Nautilus-Actions Configuration "
-"Tool versions,\n"
-"though it may still be imported via standard GConf command-line tools.\n"
+"This format has been introduced in v 1.11 serie.\n"
+"Tough not backward compatible with Nautilus-Actions Configuration Tool "
+"versions previous to 1.11, it may still be imported via standard GConf "
+"command-line tools.\n"
 "The exported dump file may later be imported via :\n"
-"- Import assistant of a compatible Nautilus-Actions Configuration Tool,\n"
-"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool (1.11 and "
+"above),\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool (1.11 and "
+"above),\n"
 "- or via the gconftool-2 --load command-line tool."
 msgstr ""
-"Tento formát byl zaveden v sérii 1.11 a měl by být upřednostňován u nově "
-"exportovaných položek.\n"
+"Tento formát byl zaveden v sérii 1.11.\n"
 "Není zpětně kompatibilní s předchozími verzemi Nástroje nastavení Akce-"
-"Nautilus,\n"
-"přesto však může být importován pomocí standardních nástrojů GConf pro "
-"příkazový řádek.\n"
+"Nautilus, přesto však může být importován pomocí standardních nástrojů GConf "
+"pro příkazový řádek.\n"
 "Exportovaný soubor může být později importován pomocí:\n"
 "- průvodce importem v Nástroji nastavení Akce-Nautilus\n"
 "- přetažení do Nástroje nastavení Akce-Nautilus\n"
@@ -2099,7 +2153,7 @@ msgid "Item is local"
 msgstr "Položka je místní"
 
 #. i18n: add a comment when a capability is already used by current item
-#: ../src/nact/nact-add-capability-dialog.c:489
+#: ../src/nact/nact-add-capability-dialog.c:493
 #, c-format
 msgid "%s (already inserted)"
 msgstr "%s (již vložen)"
@@ -2120,29 +2174,29 @@ msgstr "<b>Schéma</b>"
 msgid "Adding a new scheme"
 msgstr "Přidávání nového schématu"
 
-#: ../src/nact/nact-assistant-export.c:600
+#: ../src/nact/nact-assistant-export.c:601
 msgid "About to export selected items:"
 msgstr "Budou exportovány vybrané položky:"
 
-#: ../src/nact/nact-assistant-export.c:612
+#: ../src/nact/nact-assistant-export.c:613
 msgid "Into the destination folder:"
 msgstr "Do cílové složky:"
 
-#: ../src/nact/nact-assistant-export.c:675
+#: ../src/nact/nact-assistant-export.c:676
 msgid "Export canceled due to user action."
 msgstr "Export na základě uživatelovy akce zrušen."
 
 #. i18n: result of the export assistant
-#: ../src/nact/nact-assistant-export.c:707
+#: ../src/nact/nact-assistant-export.c:708
 msgid "Selected actions have been proceeded :"
 msgstr "Vybrané akce byly zpracovány:"
 
 #. i18n: action as been successfully exported to <filename>
-#: ../src/nact/nact-assistant-export.c:726
+#: ../src/nact/nact-assistant-export.c:727
 msgid "Successfully exported as"
 msgstr "Úspěšně exportováno jako"
 
-#: ../src/nact/nact-assistant-export.c:749
+#: ../src/nact/nact-assistant-export.c:750
 msgid "You may not have write permissions on selected folder."
 msgstr "Možná nemáte oprávnění k zápisu do vybrané složky."
 
@@ -2167,45 +2221,46 @@ msgid "Exporting an action"
 msgstr "Export akce"
 
 #: ../src/nact/nact-assistant-export.ui.h:6
+#| msgid ""
+#| "Please select one or more actions\n"
+#| "to be exported.\n"
+#| "\n"
+#| "You may use Ctrl and Shift keys\n"
+#| "to extend a selection."
 msgid ""
-"Please select one or more actions\n"
-"to be exported.\n"
+"Please select one or more actions to be exported.\n"
 "\n"
-"You may use Ctrl and Shift keys\n"
-"to extend a selection."
+"You may use Ctrl and Shift keys to extend the selection."
 msgstr ""
-"Vyberte prosím jednu nebo více akcí,\n"
-"které se mají exportovat.\n"
+"Vyberte prosím jednu nebo více akcí, které se mají exportovat.\n"
 "\n"
-"Můžete použít klávesy Ctrl a Shift\n"
-"k přidávání do výběru."
+"Můžete použít klávesy Ctrl a Shift k přidávání do výběru."
 
-#: ../src/nact/nact-assistant-export.ui.h:11
+#: ../src/nact/nact-assistant-export.ui.h:9
 msgid "Re_member my choice in future export operations"
 msgstr "Zapa_matovat si moji volbu i pro budoucí exporty"
 
-#: ../src/nact/nact-assistant-export.ui.h:12
+#: ../src/nact/nact-assistant-export.ui.h:10
 msgid "Selecting the export format"
 msgstr "Výběr formátu exportu"
 
-#: ../src/nact/nact-assistant-export.ui.h:13
+#: ../src/nact/nact-assistant-export.ui.h:11
 msgid "Selecting the exported actions"
 msgstr "Výběr exportovaných akcí"
 
-#: ../src/nact/nact-assistant-export.ui.h:14
+#: ../src/nact/nact-assistant-export.ui.h:12
 msgid "Selecting the target folder"
 msgstr "Výběr cílové složky"
 
-#: ../src/nact/nact-assistant-export.ui.h:15
-#: ../src/nact/nautilus-actions-config-tool.ui.h:133
+#: ../src/nact/nact-assistant-export.ui.h:13
 msgid "Summary"
 msgstr "Souhrnný přehled"
 
-#: ../src/nact/nact-assistant-export.ui.h:16
+#: ../src/nact/nact-assistant-export.ui.h:14
 msgid "This assistant will guide you through the process of exporting actions."
 msgstr "Tento průvodce vás provede procesem exportu akcí."
 
-#: ../src/nact/nact-assistant-export.ui.h:17
+#: ../src/nact/nact-assistant-export.ui.h:15
 msgid "Which format should I choose to export it ?"
 msgstr "Který formát by se měl zvolit pro export tohoto?"
 
@@ -2241,19 +2296,18 @@ msgstr ""
 "Přidat položky, které budou přidány do kontextové nabídky aplikace Nautilus"
 
 #. i18n: The action <label> is about to be exported
-#: ../src/nact/nact-export-ask.c:313
+#: ../src/nact/nact-export-ask.c:326
 #, c-format
 msgid "The action \"%s\" is about to be exported."
 msgstr "Má být exportována akce „%s“."
 
 #. i18n: The menu <label> is about to be exported
-#: ../src/nact/nact-export-ask.c:316
+#: ../src/nact/nact-export-ask.c:329
 #, c-format
 msgid "The menu \"%s\" is about to be exported."
 msgstr "Má být exportována nabídka „%s“."
 
 #: ../src/nact/nact-export-format.c:66 ../src/nact/nact-preferences.ui.h:64
-#: ../src/nact/nautilus-actions-config-tool.ui.h:227
 msgid "_Ask me"
 msgstr "Dotáz_at se"
 
@@ -2286,7 +2340,7 @@ msgid "Choosing a working directory"
 msgstr "Výběr pracovní složky"
 
 #: ../src/nact/nact-icommand-tab.c:653
-#: ../src/nact/nact-preferences-editor.c:646
+#: ../src/nact/nact-preferences-editor.c:650
 msgid "Ex.:"
 msgstr "Např.:"
 
@@ -2336,7 +2390,7 @@ msgstr "Filtr typu MIME"
 
 #. i18n: label of the push button when there is not yet any shortcut
 #: ../src/nact/nact-iproperties-tab.c:54
-#: ../src/nact/nautilus-actions-config-tool.ui.h:121
+#: ../src/nact/nautilus-actions-config-tool.ui.h:115
 msgid "None"
 msgstr "Žádná"
 
@@ -2349,7 +2403,7 @@ msgid "<b>Menu editable properties</b>"
 msgstr "<b>Upravitelné vlastnosti nabídky</b>"
 
 #: ../src/nact/nact-iproperties-tab.c:268
-#: ../src/nact/nautilus-actions-config-tool.ui.h:225
+#: ../src/nact/nautilus-actions-config-tool.ui.h:208
 msgid "_Action"
 msgstr "_Akce"
 
@@ -2362,7 +2416,7 @@ msgstr "<b>Upravitelné vlastnosti akce</b>"
 msgid "Scheme filter"
 msgstr "Filtr schématu"
 
-#: ../src/nact/nact-main-window.c:1209
+#: ../src/nact/nact-main-window.c:1208
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
@@ -2372,7 +2426,7 @@ msgstr ""
 "Můžete buď pokračovat v práci se svým současným seznamem akcí nebo můžete "
 "znovu načíst aktuální seznam."
 
-#: ../src/nact/nact-main-window.c:1216
+#: ../src/nact/nact-main-window.c:1215
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
@@ -2380,11 +2434,11 @@ msgstr ""
 "Upozorňujeme, že znovu načtení aktuálního seznamu akcí předpokládá, že se "
 "vzdáte svých současných změn."
 
-#: ../src/nact/nact-main-window.c:1222
+#: ../src/nact/nact-main-window.c:1221
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "Chcete znovu načíst aktuální seznam akcí?"
 
-#: ../src/nact/nact-main-window.c:1245
+#: ../src/nact/nact-main-window.c:1244
 msgid ""
 "Reloading a fresh list of actions requires that you give up with your "
 "current modifications."
@@ -2392,16 +2446,16 @@ msgstr ""
 "Znovu načtení aktuálního seznamu akcí předpokládá, že se vzdáte svých "
 "současných změn."
 
-#: ../src/nact/nact-main-window.c:1248
+#: ../src/nact/nact-main-window.c:1247
 msgid "Do you really want to do this ?"
 msgstr "Skutečně to chcete?"
 
-#: ../src/nact/nact-main-window.c:1365
+#: ../src/nact/nact-main-window.c:1364
 #, c-format
 msgid "Some items have been modified."
 msgstr "Některé položky byly změněny."
 
-#: ../src/nact/nact-main-window.c:1366
+#: ../src/nact/nact-main-window.c:1365
 msgid "Are you sure you want to quit without saving them ?"
 msgstr "Opravdu chcete skončit bez jejich uložení?"
 
@@ -2662,7 +2716,7 @@ msgstr "Zobrazit lištu nástrojů Nástroje"
 msgid "Display the Help toolbar"
 msgstr "Zobrazit lištu nástrojů Nápověda"
 
-#: ../src/nact/nact-menubar.c:658
+#: ../src/nact/nact-menubar.c:628
 #, c-format
 msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
 msgstr "Nyní je načteno %d nabídek, %d akcí, %d profilů"
@@ -2690,14 +2744,15 @@ msgid "Unable to rewrite the level-zero items list"
 msgstr "Nelze znovu zapsat seznam položek nulté úrovně"
 
 #: ../src/nact/nact-menubar-file.c:56
-msgid "Some items have not be deleted"
-msgstr "Některé položky nemohly být smazány"
+#| msgid "Some items have not be deleted"
+msgid "Some items have not been deleted"
+msgstr "Některé položky nebyly smazány"
 
 #: ../src/nact/nact-menubar-file.c:195
 msgid "New profile"
 msgstr "Nový profil"
 
-#: ../src/nact/nact-menubar-file.c:483
+#: ../src/nact/nact-menubar-file.c:485
 msgid "Automatically saving pending modifications..."
 msgstr "Automatické ukládání nevyřízených změn…"
 
@@ -3101,7 +3156,7 @@ msgid "_Runtime preferences"
 msgstr "Předvolby _běhu"
 
 #: ../src/nact/nact-preferences.ui.h:75
-#: ../src/nact/nautilus-actions-config-tool.ui.h:248
+#: ../src/nact/nautilus-actions-config-tool.ui.h:229
 msgid "_Schemes"
 msgstr "_Schémata"
 
@@ -3181,11 +3236,11 @@ msgid "%s (already used)"
 msgstr "%s (již použito)"
 
 #. i18n notes : scheme name set for a new entry in the scheme list
-#: ../src/nact/nact-schemes-list.c:720
+#: ../src/nact/nact-schemes-list.c:704
 msgid "new-scheme"
 msgstr "nové-schéma"
 
-#: ../src/nact/nact-schemes-list.c:721
+#: ../src/nact/nact-schemes-list.c:705
 msgid "New scheme description"
 msgstr "Popis nového schématu"
 
@@ -3205,59 +3260,57 @@ msgstr "Zde nelze odstranit, protože do rodiče nelze zapisovat"
 msgid "Unable to drop here as level zero is not writable"
 msgstr "Zde nelze odstranit, protože do této úrovně nelze zapisovat"
 
-#: ../src/nact/nact-tree-model-dnd.c:934
+#: ../src/nact/nact-tree-model-dnd.c:904
 msgid "Some messages have occurred during drop operation."
 msgstr "Během operace odstraňování byly zaznamenány nějaké zprávy."
 
 #. i18n: this is a class name and should not be translated
-#: ../src/nact/nact-tree-view.c:231
+#: ../src/nact/nact-tree-view.c:234
 msgid "BaseWindow"
 msgstr "Rodič BaseWindow"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:233
+#: ../src/nact/nact-tree-view.c:236
 msgid "The BaseWindow parent"
 msgstr "Rodič BaseWindow"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:240
-#| msgid "_Maintainer"
+#: ../src/nact/nact-tree-view.c:243
 msgid "Container"
 msgstr "Kontejner"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:242
-#| msgid "The name of GtkTreeView widget"
+#: ../src/nact/nact-tree-view.c:245
 msgid "A GtkContainer which contains the GtkTreeView widget"
 msgstr "GtkContainer, který obsahuje widget GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:249
+#: ../src/nact/nact-tree-view.c:252
 msgid "Widget name"
 msgstr "Název Widgetu"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:251
+#: ../src/nact/nact-tree-view.c:254
 msgid "The name of GtkTreeView widget"
 msgstr "Název widgetu GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:259
+#: ../src/nact/nact-tree-view.c:262
 msgid "Management mode"
 msgstr "Režim správy"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:261
+#: ../src/nact/nact-tree-view.c:264
 msgid "Management mode of the tree view, selection or edition"
 msgstr "Režim správy stromového zobrazení, výběru nebo úpravy"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:271
+#: ../src/nact/nact-tree-view.c:274
 msgid "Allow notify"
 msgstr "Povolit oznamování"
 
 #. i18n: NactTreeView property loong description
-#: ../src/nact/nact-tree-view.c:273
+#: ../src/nact/nact-tree-view.c:276
 msgid "Whether notifications are allowed"
 msgstr "Zda je povoleno oznamování"
 
@@ -3456,52 +3509,42 @@ msgid "<b>Startup mode</b>"
 msgstr "<b>Režim spuštění</b>"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:68
-msgid ""
-"<b>What should I do when importing an item whose ID already exists ?</b>"
-msgstr ""
-"<b>Co by se mělo dělat, když se importuje položka, jejíž ID již existuje?</b>"
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:69
 msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
 msgstr "<span size=\"larger\"><b>Legenda k parametrům</b></span>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:70
-msgid "A_llocate a new identifier for the imported item"
-msgstr "A_lokovat nový identifikátor pro importovanou položku"
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:71
+#: ../src/nact/nautilus-actions-config-tool.ui.h:69
 msgid "Appears if the _binary is running :"
 msgstr "Zobrazí se, pokud běží _binární soubor:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:72
+#: ../src/nact/nautilus-actions-config-tool.ui.h:70
 msgid "Appears if the command outputs \"_true\" :"
 msgstr "Zobrazí se, poku_d je výstupem příkazu „true“:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:73
+#: ../src/nact/nautilus-actions-config-tool.ui.h:71
 msgid "Appears if the file is e_xecutable :"
 msgstr "Zobrazí se, pokud je soubor sp_ustitelný:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:74
+#: ../src/nact/nautilus-actions-config-tool.ui.h:72
 msgid "Appears if the name is _registered on D-Bus :"
 msgstr "Zobrazí se, pokud je název _registrován na D-Bus:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:75
+#: ../src/nact/nautilus-actions-config-tool.ui.h:73
 msgid "B_rowse..."
 msgstr "Pr_ocházet…"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:76
+#: ../src/nact/nautilus-actions-config-tool.ui.h:74
 msgid "Bro_wse..."
 msgstr "_Procházet…"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:77
+#: ../src/nact/nautilus-actions-config-tool.ui.h:75
 msgid "Brow_se..."
 msgstr "Procháze_t…"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:78
+#: ../src/nact/nautilus-actions-config-tool.ui.h:76
 msgid "Ca_pabilities"
 msgstr "Scho_pnosti"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:79
+#: ../src/nact/nautilus-actions-config-tool.ui.h:77
 msgid ""
 "Check the box to enable this item.\n"
 "If unchecked, then the item will never appear in the file manager context "
@@ -3511,100 +3554,96 @@ msgstr ""
 "Pokud zaškrtnuto není, položka se nikdy neobjeví v kontextové nabídce nebo "
 "panelu nástrojů správce souborů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:81
+#: ../src/nact/nautilus-actions-config-tool.ui.h:79
 msgid "Click to add a new basename filter."
 msgstr "Kliknutím přidáte nový filtr základních názvů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:82
+#: ../src/nact/nautilus-actions-config-tool.ui.h:80
 msgid "Click to add a new capability filter."
 msgstr "Kliknutím přidáte nový filtr schopností."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:83
+#: ../src/nact/nautilus-actions-config-tool.ui.h:81
 msgid "Click to add a new folder filter."
 msgstr "Kliknutím přidáte nový filtr složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:84
+#: ../src/nact/nautilus-actions-config-tool.ui.h:82
 msgid "Click to add a new mimetype filter."
 msgstr "Kliknutím přidáte nový filtr typů MIME."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:85
+#: ../src/nact/nautilus-actions-config-tool.ui.h:83
 msgid "Click to add a new scheme filter."
 msgstr "Kliknutím přidáte nový filtr schémat."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:86
+#: ../src/nact/nautilus-actions-config-tool.ui.h:84
 msgid "Click to browse the filesystem in order to select a new folder filter."
 msgstr ""
 "Klikněte, abyste mohli procházet souborový systém kvůli výběru nového filtru "
 "složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:87
+#: ../src/nact/nautilus-actions-config-tool.ui.h:85
 msgid "Click to define the above basename filters as case sensitive."
 msgstr ""
 "Kliknutím určíte, že předchozí filtr základních názvů má rozlišovat velikost "
 "písmen."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:88
+#: ../src/nact/nautilus-actions-config-tool.ui.h:86
 msgid "Click to remove the current basename filter."
 msgstr "Kliknutím odstraníte aktuální filtr základních názvů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:89
+#: ../src/nact/nautilus-actions-config-tool.ui.h:87
 msgid "Click to remove the current capability."
 msgstr "Kliknutím odstraníte aktuální schopnost."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:90
+#: ../src/nact/nautilus-actions-config-tool.ui.h:88
 msgid "Click to remove the current folder filter."
 msgstr "Kliknutím odstraníte aktuální filtr složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:91
+#: ../src/nact/nautilus-actions-config-tool.ui.h:89
 msgid "Click to remove the current mimetype filter."
 msgstr "Kliknutím odstraníte aktuální filtr typů MIME."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:92
+#: ../src/nact/nautilus-actions-config-tool.ui.h:90
 msgid "Click to remove the current scheme filter."
 msgstr "Kliknutím odstraníte aktuální filtr schémat."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:93
+#: ../src/nact/nautilus-actions-config-tool.ui.h:91
 msgid "Click to select a new scheme filter among default schemes."
 msgstr ""
 "Klikněte, abyste mohli vybrat nový filtr schémat mezi výchozími schématy."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:94
+#: ../src/nact/nautilus-actions-config-tool.ui.h:92
 msgid "De_faults..."
 msgstr "Vých_ozí…"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:95
+#: ../src/nact/nautilus-actions-config-tool.ui.h:93
 msgid "Display item in _location context menu"
 msgstr "Zobrazit položku v kontextové nabídce mís_t"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:96
+#: ../src/nact/nautilus-actions-config-tool.ui.h:94
 msgid "Display item in _selection context menu"
 msgstr "Zobrazit položku v kontextové nabídce vý_běru"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:97
+#: ../src/nact/nautilus-actions-config-tool.ui.h:95
 msgid "Display item in the _toolbar"
 msgstr "Zobrazit položku v panelu nás_trojů"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:98
-msgid "Do _not import the item whose ID already exists"
-msgstr "_Neimportovat položku, jejíž ID již existuje"
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:99
+#: ../src/nact/nautilus-actions-config-tool.ui.h:96
 msgid "Do not sort the list, letting you manually reorder the items."
 msgstr "Seznam neřadit, umožnit vám uspořádat položky ručně."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:100
+#: ../src/nact/nautilus-actions-config-tool.ui.h:97
 msgid "E_nabled"
 msgstr "Povole_ná"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:101
+#: ../src/nact/nautilus-actions-config-tool.ui.h:98
 msgid "E_xecution"
 msgstr "P_rovádění"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:102
+#: ../src/nact/nautilus-actions-config-tool.ui.h:99
 msgid "End of session"
 msgstr "Konec sezení"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:103
+#: ../src/nact/nautilus-actions-config-tool.ui.h:100
 msgid ""
 "Enter here a free text which may be used (e.g. in a Web service or in a "
 "search tool) to describe your item."
@@ -3612,7 +3651,7 @@ msgstr ""
 "Zde zadejte libovolný text, který může být použit (např. u webové služby "
 "nebo ve vyhledávacím nástroji) k popisu vaší položky."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:104
+#: ../src/nact/nautilus-actions-config-tool.ui.h:101
 msgid ""
 "Enter here the keyboard touch combination you suggest as a shortcut to your "
 "action.\n"
@@ -3622,7 +3661,7 @@ msgstr ""
 "zkratku pro svou akci.\n"
 "Poznámka: toto zatím není implementováno v aplikaci Akce-Nautilus."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:106
+#: ../src/nact/nautilus-actions-config-tool.ui.h:103
 msgid ""
 "Enter here the user the command should be ran as.\n"
 "The user may be defined by his numeric UID or his login name.\n"
@@ -3633,100 +3672,84 @@ msgstr ""
 "jménem.\n"
 "Pokud ponecháte pole prázdné, bude příkaz běžet pod aktuálním uživatelem."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:109
+#: ../src/nact/nautilus-actions-config-tool.ui.h:106
 msgid "Execute as _user :"
 msgstr "Provést jako už_ivatel:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:110
+#: ../src/nact/nautilus-actions-config-tool.ui.h:107
 msgid "I/O provider :"
 msgstr "Zprostředkovatel V/V:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:111
+#: ../src/nact/nautilus-actions-config-tool.ui.h:108
 msgid "Id. :"
 msgstr "ID:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:112
-msgid "Import is done"
-msgstr "Import je dokončen"
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:113
-msgid "Importing actions"
-msgstr "Import akcí"
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:114
+#: ../src/nact/nautilus-actions-config-tool.ui.h:109
 msgid "In a _terminal"
 msgstr "V _terminálu"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:115
+#: ../src/nact/nautilus-actions-config-tool.ui.h:110
 msgid "Item may appear depending of the desktop environment."
 msgstr "Položka se může zobrazovat v závislosti na pracovním prostředí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:116
+#: ../src/nact/nautilus-actions-config-tool.ui.h:111
 msgid "Items _list :"
 msgstr "Seznam po_ložek:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:117
+#: ../src/nact/nautilus-actions-config-tool.ui.h:112
 msgid "Just a label to remind you why you have created this profile."
 msgstr ""
 "Prostě popisek, který vám bude připomínat, proč jste tento profil vytvořili."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:118
+#: ../src/nact/nautilus-actions-config-tool.ui.h:113
 msgid "Le_gend"
 msgstr "Le_genda"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:119
-msgid "Managing duplicates"
-msgstr "Řešení duplicit"
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:120
+#: ../src/nact/nautilus-actions-config-tool.ui.h:114
 msgid "Match _case"
 msgstr "S_hoda velikosti písmen"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:122
+#: ../src/nact/nautilus-actions-config-tool.ui.h:116
 msgid "Note: this is not yet implemented in Nautilus-Actions."
 msgstr "Poznámka: toto zatím není implementováno v aplikaci Akce-Nautilus."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:123
+#: ../src/nact/nautilus-actions-config-tool.ui.h:117
 msgid "Note: this is not yet implemented in Nautilus-Actions.\n"
 msgstr "Poznámka: toto zatím není implementováno v aplikaci Akce-Nautilus.\n"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:125
+#: ../src/nact/nautilus-actions-config-tool.ui.h:119
 msgid "P_arameters :"
 msgstr "Parametr_y:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:126
+#: ../src/nact/nautilus-actions-config-tool.ui.h:120
 msgid "P_roperties"
 msgstr "_Vlastnosti"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:127
+#: ../src/nact/nautilus-actions-config-tool.ui.h:121
 msgid "Read-only item"
 msgstr "Položka jen pro čtení"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:128
-msgid "Selecting what files to import"
-msgstr "Výběr souborů pro import"
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:129
+#: ../src/nact/nautilus-actions-config-tool.ui.h:122
 msgid "Sort the list in ascending alphabetical order."
 msgstr "Seřadit seznam podle abecedy ve vzestupném pořadí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:130
+#: ../src/nact/nautilus-actions-config-tool.ui.h:123
 msgid "Sort the list in descending alphabetical order."
 msgstr "Seřadit seznam podle abecedy v sestupném pořadí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:131
+#: ../src/nact/nautilus-actions-config-tool.ui.h:124
 msgid "Startup Window Manager _class :"
 msgstr "Třída spouštěného správ_ce oken:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:132
+#: ../src/nact/nautilus-actions-config-tool.ui.h:125
 msgid "Suggested _shortcut :"
 msgstr "Doporučená klávesová zkra_tka:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:134
+#: ../src/nact/nautilus-actions-config-tool.ui.h:126
 msgid "T_oolbar label :"
 msgstr "Popisek panelu nástr_ojů:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:135
+#: ../src/nact/nautilus-actions-config-tool.ui.h:127
 msgid ""
 "The command will be run in a terminal.\n"
 "The terminal will be closed at the end of the execution; standard error and "
@@ -3738,17 +3761,17 @@ msgstr ""
 "proudy budou zobrazeny.\n"
 "Přijatelné náhradní řešení je běh ve standardním terminálu."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:138
+#: ../src/nact/nautilus-actions-config-tool.ui.h:130
 msgid "The command will be started as a standard graphical user interface."
 msgstr "Příkaz bude spuštěn ve standardním grafickém uživatelském rozhraní."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:139
+#: ../src/nact/nautilus-actions-config-tool.ui.h:131
 msgid ""
 "The command will be started in the preferred terminal of the graphical "
 "environment."
 msgstr "Příkaz bude spuštěn v upřednostňovaném terminálu grafického prostředí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:140
+#: ../src/nact/nautilus-actions-config-tool.ui.h:132
 msgid ""
 "The current item will appear if each element of the selection matches all "
 "capabilities of the 'Must match all of' column, while not matching any "
@@ -3758,7 +3781,7 @@ msgstr ""
 "schopnostem ve sloupci „Musí odpovídat všemu z“ a přitom neodpovídá žádné ze "
 "schopností ve sloupci „Nesmí odpovídat ničemu z“."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:141
+#: ../src/nact/nautilus-actions-config-tool.ui.h:133
 msgid ""
 "The current item will appear if the basename of each element of the "
 "selection matches one filter of the 'Must match one of' column, while not "
@@ -3768,7 +3791,7 @@ msgstr ""
 "odpovídají něčemu ve sloupci „Musí odpovídat něčemu z“ a přitom neodpovídají "
 "ničemu ve sloupci „Nesmí odpovídat ničemu z“."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:142
+#: ../src/nact/nautilus-actions-config-tool.ui.h:134
 msgid ""
 "The current item will appear if the location of each element of the "
 "selection is one or inside one of the paths of the 'Must match one of' "
@@ -3779,7 +3802,7 @@ msgstr ""
 "odpovídají něčemu ve sloupci „Musí odpovídat něčemu z“ a přitom neodpovídají "
 "ničemu ve sloupci „Nesmí odpovídat ničemu z“."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:143
+#: ../src/nact/nautilus-actions-config-tool.ui.h:135
 msgid ""
 "The current item will appear if the mimetype of each element of the "
 "selection matches one filter of the 'Must match one of' column, while not "
@@ -3789,7 +3812,7 @@ msgstr ""
 "odpovídají něčemu ve sloupci „Musí odpovídat něčemu z“ a přitom neodpovídají "
 "ničemu ve sloupci „Nesmí odpovídat ničemu z“."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:144
+#: ../src/nact/nautilus-actions-config-tool.ui.h:136
 msgid ""
 "The current item will appear if the scheme of each element of the selection "
 "matches one of the 'Must match one of' column, while not matching any of the "
@@ -3799,41 +3822,31 @@ msgstr ""
 "odpovídají něčemu ve sloupci „Musí odpovídat něčemu z“ a přitom neodpovídají "
 "ničemu ve sloupci „Nesmí odpovídat ničemu z“."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:145
+#: ../src/nact/nautilus-actions-config-tool.ui.h:137
 msgid "The default working directory the command should be started in."
 msgstr "Výchozí pracovní složka, ve které by měl být příkaz spuštěn."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:146
+#: ../src/nact/nautilus-actions-config-tool.ui.h:138
 msgid "The icon displayed in the file manager user interface."
 msgstr "Ikona zobrazená v uživatelském rozhraní správce souborů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:147
-msgid ""
-"The item found in the selected file will silently override the current one "
-"which has the same identifier.\n"
-"Be warned: this mode may be dangerous. You will not be prompted another time."
-msgstr ""
-"Položka nalezená ve vybraném souboru v tichosti přepíše aktuální položku, "
-"která má ten stejný identifikátor.\n"
-"Varování: tento režim může být nebezpečný. Podruhé už nebudete dotazováni."
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:149
+#: ../src/nact/nautilus-actions-config-tool.ui.h:139
 msgid "The label displayed in the file manager toolbar."
 msgstr "Popisek zobrazený v panelu nástrojů správce souborů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:150
+#: ../src/nact/nautilus-actions-config-tool.ui.h:140
 msgid "The label of the item in the file manager context menus."
 msgstr "Popisek položky v kontextové nabídce správce souborů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:151
+#: ../src/nact/nautilus-actions-config-tool.ui.h:141
 msgid "The name of a themed icon or the filename of an image."
 msgstr "Název ikony motivu nebo název souboru s obrázkem."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:152
+#: ../src/nact/nautilus-actions-config-tool.ui.h:142
 msgid "The parameters of the command."
 msgstr "Parametry příkazu."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:153
+#: ../src/nact/nautilus-actions-config-tool.ui.h:143
 msgid ""
 "The path of the command.\n"
 "If this is not an absolute path, then the PATH environment variable at "
@@ -3843,34 +3856,18 @@ msgstr ""
 "Pokud nejde o absolutní cestu, vezme se při spouštění v úvahu proměnná "
 "prostředí PATH."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:155
-msgid ""
-"The selected file will be imported with a slightly modified label indicating "
-"the renumbering.\n"
-"The existing item will not be modified."
-msgstr ""
-"Vybraný soubor bude naimportován s mírně změněným popiskem naznačujícím "
-"přečíslování.\n"
-"Stávající položka nebude změněna."
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:157
+#: ../src/nact/nautilus-actions-config-tool.ui.h:145
 msgid "The tooltip displayed in the file manager user interface."
 msgstr "Místní nápověda zobrazená v uživatelském rozhraní správce souborů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:158
+#: ../src/nact/nautilus-actions-config-tool.ui.h:146
 msgid ""
 "This advanced tab lets you precisely define how your command will be "
 "executed."
 msgstr ""
 "Tato pokročilá karta vám umožňuje přesně definovat, jak se má příkaz provést."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:159
-msgid ""
-"This assistant will guide you through the process of importing items, "
-"actions or menus."
-msgstr "Průvodce vás provede procesem importování položek, akcí a nabídek."
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:160
+#: ../src/nact/nautilus-actions-config-tool.ui.h:147
 msgid ""
 "This box is checked if the item cannot be edited.\n"
 "There may be multiple reasons for why an item cannot be edited. See your "
@@ -3880,7 +3877,7 @@ msgstr ""
 "Důvodů, proč ji nelze upravovat může být celá řada. Viz vaše Uživatelská "
 "příručka."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:162
+#: ../src/nact/nautilus-actions-config-tool.ui.h:149
 msgid ""
 "This is an advanced condition based on a runtime result.\n"
 "Enter here a command which is able to display the exact \"true\" string on "
@@ -3892,7 +3889,7 @@ msgstr ""
 "svém standardním výstupu.\n"
 "To lze použít například k testování komplexních podmínek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:165
+#: ../src/nact/nautilus-actions-config-tool.ui.h:152
 msgid ""
 "This is an advanced condition based on the count of the current selection.\n"
 "If the current selection does not match this condition, then the item will "
@@ -3902,7 +3899,7 @@ msgstr ""
 "Pokud aktuální výběr nesplňuje tuto podmínku, pak položka nebude zobrazena v "
 "kontextové nabídce nebo panelu nástrojů správce souborů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:167
+#: ../src/nact/nautilus-actions-config-tool.ui.h:154
 msgid ""
 "This is an advanced condition based on the presence of a particular service "
 "on the D-Bus system.\n"
@@ -3914,7 +3911,7 @@ msgstr ""
 "To lze využít například pro otestování, že požadovaná služba je momentálně "
 "dostupná."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:169
+#: ../src/nact/nautilus-actions-config-tool.ui.h:156
 msgid ""
 "This is an advanced condition based on the presence of a running binary.\n"
 "Note that only the basename of the binary is checked, not its dirname nor "
@@ -3927,7 +3924,7 @@ msgstr ""
 "složka ani parametry se nekontrolují.\n"
 "To lze použít například pro otestování výskytu požadovaných démonů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:172
+#: ../src/nact/nautilus-actions-config-tool.ui.h:159
 msgid ""
 "This is an advanced condition based on the presence of an executable file on "
 "the file system.\n"
@@ -3937,7 +3934,7 @@ msgstr ""
 "souborovém systému.\n"
 "To lze použít například pro testování na výskyt požadovaného balíčku."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:174
+#: ../src/nact/nautilus-actions-config-tool.ui.h:161
 msgid ""
 "This is an advanced condition based on the running desktop environment.\n"
 "First choose on the left if the item depends of a particular desktop "
@@ -3947,7 +3944,7 @@ msgstr ""
 "Nejprve vlevo zvolte, zda položka závisí na konkrétním pracovním prostředí, "
 "a po té vpravo odpovídající pracovní prostředí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:176
+#: ../src/nact/nautilus-actions-config-tool.ui.h:163
 msgid ""
 "This list lets you determine for which basenames the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -3961,7 +3958,7 @@ msgstr ""
 "Základní názvy mohou být negované, aby určovaly, pro které základní názvy se "
 "vaše položka objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:179
+#: ../src/nact/nautilus-actions-config-tool.ui.h:166
 msgid ""
 "This list lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -3976,7 +3973,7 @@ msgstr ""
 "Typy MIME mohou být negované, aby určovaly, pro které typy se vaše položka "
 "objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:182
+#: ../src/nact/nautilus-actions-config-tool.ui.h:169
 msgid ""
 "This list lets you determine where (in which folders) the currently selected "
 "files must be found in order for the item to be displayed in the Nautilus "
@@ -3991,7 +3988,7 @@ msgstr ""
 "Filtry složek mohou být negované, aby určovaly, pro které složky se vaše "
 "položka objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:185
+#: ../src/nact/nautilus-actions-config-tool.ui.h:172
 msgid ""
 "This list lets you determine which capabilities the currently selected files "
 "must satisfy in order for the item to be displayed in the Nautilus context "
@@ -4004,7 +4001,7 @@ msgstr ""
 "Schopnosti mohou být negované, aby určovaly, pro které schopnosti se vaše "
 "položka objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:187
+#: ../src/nact/nautilus-actions-config-tool.ui.h:174
 msgid ""
 "This list lets you determine which schemes the currently selected files must "
 "satisfy in order for the item to be displayed in the Nautilus context menu.\n"
@@ -4016,7 +4013,7 @@ msgstr ""
 "Filtry mohou být negované, aby určovaly, pro která schémata se vaše položka "
 "objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:189
+#: ../src/nact/nautilus-actions-config-tool.ui.h:176
 msgid ""
 "This option makes use of a special feature of the file manager, which would "
 "allow a terminal to be ran inside of it.\n"
@@ -4026,7 +4023,7 @@ msgstr ""
 "umožňuje běh terminálu uvnitř správce souborů.\n"
 "Přijatelné náhradní řešení je běh ve standardním terminálu."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:191
+#: ../src/nact/nautilus-actions-config-tool.ui.h:178
 msgid ""
 "This tab lets you choose the command to be executed, along with its "
 "parameters.\n"
@@ -4038,7 +4035,7 @@ msgstr ""
 "Definováním více profilů můžete mít několik příkazů, z nichž se každý "
 "použije za jiných podmínek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:193
+#: ../src/nact/nautilus-actions-config-tool.ui.h:180
 msgid ""
 "This tab lets you determine for which basenames the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -4050,7 +4047,7 @@ msgstr ""
 "Základní názvy mohou být negované, aby určovaly, pro které základní názvy se "
 "vaše položka objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:195
+#: ../src/nact/nautilus-actions-config-tool.ui.h:182
 msgid ""
 "This tab lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
@@ -4065,7 +4062,7 @@ msgstr ""
 "Typy MIME mohou být negované, aby určovaly, pro které typy se vaše položka "
 "objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:198
+#: ../src/nact/nautilus-actions-config-tool.ui.h:185
 msgid ""
 "This tab lets you determine some advanced conditions the currently selected "
 "files must satisfy in order for the item to be displayed in the file manager "
@@ -4075,14 +4072,14 @@ msgstr ""
 "vybrané soubory splňovat, aby se položka zobrazila v kontextové nabídce "
 "správce souborů."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:199
+#: ../src/nact/nautilus-actions-config-tool.ui.h:186
 msgid ""
 "This tab lets you determine the main characteristics of the currently "
 "selected item."
 msgstr ""
 "Tato karta vám umožňuje určit hlavní charakteristiky právě vybrané položky."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:200
+#: ../src/nact/nautilus-actions-config-tool.ui.h:187
 msgid ""
 "This tab lets you determine where (in which folders) the currently selected "
 "files must be found in order for the item to be displayed in the Nautilus "
@@ -4095,7 +4092,7 @@ msgstr ""
 "Filtry složek mohou být negované, aby určovaly, pro které složky se vaše "
 "položka objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:202
+#: ../src/nact/nautilus-actions-config-tool.ui.h:189
 msgid ""
 "This tab lets you determine which capabilities the currently selected files "
 "must satisfy in order for the item to be displayed in the Nautilus context "
@@ -4108,7 +4105,7 @@ msgstr ""
 "Filtry mohou být negované, aby určovaly, pro které schopnosti se vaše "
 "položka objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:204
+#: ../src/nact/nautilus-actions-config-tool.ui.h:191
 msgid ""
 "This tab lets you determine which schemes the currently selected files must "
 "satisfy in order for the item to be displayed in the Nautilus context menu.\n"
@@ -4120,7 +4117,7 @@ msgstr ""
 "Filtry mohou být negované, aby určovaly, pro která schémata se vaše položka "
 "objevovat nesmí."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:206
+#: ../src/nact/nautilus-actions-config-tool.ui.h:193
 msgid ""
 "This tab lets you edit some miscellaneous properties, and access some non-"
 "modifiable information."
@@ -4128,26 +4125,15 @@ msgstr ""
 "Tato karta vám umožňuje upravit některé z různorodých vlastností a podívat "
 "se na některé neměnitelné informace."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:207
-msgid ""
-"This used to be the historical behavior.\n"
-"The selected file will be marked as \"NOT OK\" in the Summary page.\n"
-"The existing item will not be modified."
-msgstr ""
-"Toto se používá, pokud je požadováno historické chování.\n"
-"Vybraný soubor bude označen jako „NENÍ OK“ na stránce se souhrným "
-"přehledem.\n"
-"Stávající položka nebude změněna."
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:210
+#: ../src/nact/nautilus-actions-config-tool.ui.h:194
 msgid "Toolti_p :"
 msgstr "Místní _nápověda:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:211
+#: ../src/nact/nautilus-actions-config-tool.ui.h:195
 msgid "Use s_ame label for icon in the toolbar"
 msgstr "Použít stejný popisek pro ikonu v p_anelu nástrojů"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:212
+#: ../src/nact/nautilus-actions-config-tool.ui.h:196
 msgid ""
 "When checked, it is known that the run command will send a \"remove\" "
 "message to the desktop environment.\n"
@@ -4160,7 +4146,7 @@ msgstr ""
 "oznamovacího protokolu spouštění).\n"
 "Má význam jen v případě, že je zvolen režim provádění Normální."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:215
+#: ../src/nact/nautilus-actions-config-tool.ui.h:199
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "context menu when the selection is empty.\n"
@@ -4172,7 +4158,7 @@ msgstr ""
 "V takovém případě budou definované podmínky použity pro právě zobrazenou "
 "složku."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:217
+#: ../src/nact/nautilus-actions-config-tool.ui.h:201
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "context menu, with a non-empty selection."
@@ -4180,7 +4166,7 @@ msgstr ""
 "Když je zaškrtnuto, položka bude kandidátem na zobrazení v kontextové "
 "nabídce správce souborů za předpokladu, že výběr není prázdný."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:218
+#: ../src/nact/nautilus-actions-config-tool.ui.h:202
 msgid ""
 "When checked, the item will be candidate to be displayed in the file manager "
 "toolbar.\n"
@@ -4192,7 +4178,7 @@ msgstr ""
 "V takovém případě budou definované podmínky použity pro aktuální složku a "
 "nezávisí na možném aktuálním výběru."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:220
+#: ../src/nact/nautilus-actions-config-tool.ui.h:204
 msgid ""
 "When checked, the label displayed in the toolbar will be the same that the "
 "one displayed in the context menus."
@@ -4200,7 +4186,7 @@ msgstr ""
 "Když je zaškrtnuto, bude popisek zobrazený v panelu nástrojů tentýž, který "
 "je zobrazený v kontextových nabídkách."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:221
+#: ../src/nact/nautilus-actions-config-tool.ui.h:205
 msgid ""
 "When specified, this should be the name of a WM class of at least one window "
 "of the run command.\n"
@@ -4213,139 +4199,131 @@ msgstr ""
 "oznamovacího protokolu spouštění).\n"
 "Má význam jen v případě, že je zvolen režim provádění Normální."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:224
-msgid "You will be asked each time an imported ID already exists."
-msgstr "Budete dotázání pokaždé, když bude importované ID již existovat."
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:226
+#: ../src/nact/nautilus-actions-config-tool.ui.h:209
 msgid "_Always appears"
 msgstr "Zobrazí se vžd_y"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:228
+#: ../src/nact/nautilus-actions-config-tool.ui.h:210
 msgid "_Basenames"
 msgstr "_Základní názvy"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:229
+#: ../src/nact/nautilus-actions-config-tool.ui.h:211
 msgid "_Browse..."
 msgstr "_Procházet…"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:230
+#: ../src/nact/nautilus-actions-config-tool.ui.h:212
 msgid "_Command"
 msgstr "Pří_kaz"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:231
+#: ../src/nact/nautilus-actions-config-tool.ui.h:213
 msgid "_Context label :"
 msgstr "Konte_xtový popisek:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:232
+#: ../src/nact/nautilus-actions-config-tool.ui.h:214
 msgid "_Count :"
 msgstr "P_očet:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:233
+#: ../src/nact/nautilus-actions-config-tool.ui.h:215
 msgid "_Description :"
 msgstr "P_opis:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:234
+#: ../src/nact/nautilus-actions-config-tool.ui.h:216
 msgid "_Display output"
 msgstr "Zo_brazit výstup"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:235
+#: ../src/nact/nautilus-actions-config-tool.ui.h:217
 msgid "_Embedded"
 msgstr "Vložen_o"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:236
+#: ../src/nact/nautilus-actions-config-tool.ui.h:218
 msgid "_Environment"
 msgstr "Prostř_edí"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:237
+#: ../src/nact/nautilus-actions-config-tool.ui.h:219
 msgid "_Folders"
 msgstr "S_ložky"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:238
+#: ../src/nact/nautilus-actions-config-tool.ui.h:220
 msgid "_Icon :"
 msgstr "_Ikona:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:239
+#: ../src/nact/nautilus-actions-config-tool.ui.h:221
 msgid "_Label :"
 msgstr "Pop_isek:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:240
+#: ../src/nact/nautilus-actions-config-tool.ui.h:222
 msgid "_Mimetypes"
 msgstr "Typy _MIME"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:241
+#: ../src/nact/nautilus-actions-config-tool.ui.h:223
 msgid "_Never appears in selected environments"
 msgstr "_Nikdy se nezobrazí ve vybraných prostředích"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:242
+#: ../src/nact/nautilus-actions-config-tool.ui.h:224
 msgid "_Normal"
 msgstr "_Normální"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:243
+#: ../src/nact/nautilus-actions-config-tool.ui.h:225
 msgid "_Only appears in selected environments"
 msgstr "Zobrazí se _jen ve vybraných prostředích"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:244
-msgid "_Override the existing item"
-msgstr "_Přepsat existující položku"
-
-#: ../src/nact/nautilus-actions-config-tool.ui.h:245
+#: ../src/nact/nautilus-actions-config-tool.ui.h:226
 msgid "_Path :"
 msgstr "Ces_ta:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:246
+#: ../src/nact/nautilus-actions-config-tool.ui.h:227
 msgid "_Quit without saving"
 msgstr "U_končit bez uložení"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:247
+#: ../src/nact/nautilus-actions-config-tool.ui.h:228
 msgid "_Save and quit"
 msgstr "_Uložit a ukončit"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:249
+#: ../src/nact/nautilus-actions-config-tool.ui.h:230
 msgid "_Startup notify"
 msgstr "Oznámení sp_uštění"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:250
+#: ../src/nact/nautilus-actions-config-tool.ui.h:231
 msgid "_Working directory :"
 msgstr "Pra_covní složka:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:251
+#: ../src/nact/nautilus-actions-config-tool.ui.h:232
 msgid "a percent sign."
 msgstr "znak procenta."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:252
+#: ../src/nact/nautilus-actions-config-tool.ui.h:233
 msgid "count of selected item(s)."
 msgstr "počet vybraných položek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:253
+#: ../src/nact/nautilus-actions-config-tool.ui.h:234
 msgid "hostname of the (first) selected URI."
 msgstr "název počítače (první) vybrané adresy URI."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:254
+#: ../src/nact/nautilus-actions-config-tool.ui.h:235
 msgid "no-op operator which forces a plural form of execution."
 msgstr ""
 "operátor no-op (žádná operace), který vynutí několikanásobnou formu spuštění."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:255
+#: ../src/nact/nautilus-actions-config-tool.ui.h:236
 msgid "no-op operator which forces a singular form of execution."
 msgstr ""
 "operátor no-op (žádná operace), který vynutí jednotlivou formu spuštění."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:256
+#: ../src/nact/nautilus-actions-config-tool.ui.h:237
 msgid "port number of the (first) selected URI."
 msgstr "číslo portu (první) vybrané adresy URI."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:257
+#: ../src/nact/nautilus-actions-config-tool.ui.h:238
 msgid "scheme of the (first) selected URI."
 msgstr "schéma (první) vybrané adresy URI."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:258
+#: ../src/nact/nautilus-actions-config-tool.ui.h:239
 msgid "space-separated list of the URIs of the selected file(s)/folder(s)."
 msgstr ""
 "mezerami oddělovaný seznam adres URI vybraného souboru/složky či souborů/"
 "složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:259
+#: ../src/nact/nautilus-actions-config-tool.ui.h:240
 msgid ""
 "space-separated list of the base directories of the selected file(s)/folder"
 "(s)."
@@ -4353,38 +4331,38 @@ msgstr ""
 "mezerami oddělovaný seznam základních složek vybraného souboru/složky či "
 "souborů/složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:260
+#: ../src/nact/nautilus-actions-config-tool.ui.h:241
 msgid ""
 "space-separated list of the basenames of the selected file(s)/folder(s)."
 msgstr ""
 "mezerami oddělovaný seznam základních názvů vybraného souboru/složky či "
 "souborů/složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:261
+#: ../src/nact/nautilus-actions-config-tool.ui.h:242
 msgid "space-separated list of the basenames without the extension."
 msgstr "mezerami oddělovaný seznam základních názvů bez přípony."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:262
+#: ../src/nact/nautilus-actions-config-tool.ui.h:243
 msgid ""
 "space-separated list of the extensions of the selected file(s)/folder(s)."
 msgstr ""
 "mezerami oddělovaný seznam přípon vybraného souboru/složky či souborů/složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:263
+#: ../src/nact/nautilus-actions-config-tool.ui.h:244
 msgid ""
 "space-separated list of the filenames of the selected file(s)/folder(s)."
 msgstr ""
 "mezerami oddělovaný seznam názvů soborů vybraného souboru/složky či souborů/"
 "složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:264
+#: ../src/nact/nautilus-actions-config-tool.ui.h:245
 msgid ""
 "space-separated list of the mimetypes of the selected file(s)/folder(s)."
 msgstr ""
 "mezerami oddělovaný seznam typů MIME vybraného souboru/složky či souborů/"
 "složek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:265
+#: ../src/nact/nautilus-actions-config-tool.ui.h:246
 msgid "username of the (first) selected URI."
 msgstr "jméno uživatele (první) vybrané adresy URI."
 
