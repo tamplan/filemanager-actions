@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-12-13 21:14+0000\n"
-"PO-Revision-Date: 2011-12-14 10:30+0100\n"
+"POT-Creation-Date: 2011-12-14 23:04+0000\n"
+"PO-Revision-Date: 2011-12-18 20:23+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1086,7 +1086,6 @@ msgstr ""
 #. l10n: 'ImporterAskDialog' is the dialog name: do not translate
 #: ../src/core/na-importer-ask.c:228
 #, c-format
-#| msgid "Unable to load %s dialog definition."
 msgid "Unable to load 'ImporterAskDialog' from %s"
 msgstr "Nelze načíst „ImporterAskDialog“ z %s."
 
@@ -1805,7 +1804,6 @@ msgstr ""
 "Neznámý typ %s nalezen na řádku %d, zatímco byla očekávána akce nebo nabídka."
 
 #: ../src/io-xml/naxml-reader.c:155
-#| msgid "The I/O provider is not willing to do that."
 msgid "The XML I/O Provider is not able to handle the URI"
 msgstr "Zprostředkovatel V/V pro XML není schopen obsloužit adresu URI"
 
@@ -1832,16 +1830,6 @@ msgid "Export as a _light GConf schema (v2) file"
 msgstr "Exportovat jako soubor od_lehčeného schématu GConf (v2)"
 
 #: ../src/io-xml/naxml-formats.c:60
-#| msgid ""
-#| "This format has been introduced in v 1.11 serie.\n"
-#| "This is the lightest schema still compatible with GConf command-line "
-#| "tools,\n"
-#| "while keeping backward compatibility with older Nautilus-Actions "
-#| "Configuration Tool versions.\n"
-#| "The exported schema file may later be imported via :\n"
-#| "- Import assistant of the Nautilus-Actions Configuration Tool,\n"
-#| "- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
-#| "- or via the gconftool-2 --import-schema-file command-line tool."
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "This is the lightest schema still compatible with GConf command-line tools, "
@@ -1866,16 +1854,6 @@ msgid "Export as a GConf _dump file"
 msgstr "_Exportovat jako soubor vstupu GConf"
 
 #: ../src/io-xml/naxml-formats.c:74
-#| msgid ""
-#| "This format has been introduced in v 1.11 serie, and should be the "
-#| "preferred format for newly exported items.\n"
-#| "It is not backward compatible with previous Nautilus-Actions "
-#| "Configuration Tool versions,\n"
-#| "though it may still be imported via standard GConf command-line tools.\n"
-#| "The exported dump file may later be imported via :\n"
-#| "- Import assistant of a compatible Nautilus-Actions Configuration Tool,\n"
-#| "- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
-#| "- or via the gconftool-2 --load command-line tool."
 msgid ""
 "This format has been introduced in v 1.11 serie.\n"
 "Tough not backward compatible with Nautilus-Actions Configuration Tool "
@@ -2221,12 +2199,6 @@ msgid "Exporting an action"
 msgstr "Export akce"
 
 #: ../src/nact/nact-assistant-export.ui.h:6
-#| msgid ""
-#| "Please select one or more actions\n"
-#| "to be exported.\n"
-#| "\n"
-#| "You may use Ctrl and Shift keys\n"
-#| "to extend a selection."
 msgid ""
 "Please select one or more actions to be exported.\n"
 "\n"
@@ -2253,6 +2225,7 @@ msgid "Selecting the target folder"
 msgstr "Výběr cílové složky"
 
 #: ../src/nact/nact-assistant-export.ui.h:13
+#: ../src/nact/nact-assistant-import.ui.h:8
 msgid "Summary"
 msgstr "Souhrnný přehled"
 
@@ -2290,6 +2263,90 @@ msgstr "ID: %s\t%s"
 msgid "Not imported"
 msgstr "Import neproběhl"
 
+#: ../src/nact/nact-assistant-import.ui.h:1
+msgid ""
+"<b>What should I do when importing an item whose ID already exists ?</b>"
+msgstr ""
+"<b>Co by se mělo provést, když se importuje položka, jejíž ID již existuje?</"
+"b>"
+
+#: ../src/nact/nact-assistant-import.ui.h:2
+msgid "A_llocate a new identifier for the imported item"
+msgstr "Přidě_lit importované položce nový identifikátor"
+
+#: ../src/nact/nact-assistant-import.ui.h:3
+msgid "Do _not import the item whose ID already exists"
+msgstr "_Neimportovat položku, jejíž ID již existuje"
+
+#: ../src/nact/nact-assistant-import.ui.h:4
+msgid "Import is done"
+msgstr "Import je dokončen"
+
+#: ../src/nact/nact-assistant-import.ui.h:5
+msgid "Importing actions"
+msgstr "Import akcí"
+
+#: ../src/nact/nact-assistant-import.ui.h:6
+msgid "Managing duplicates"
+msgstr "Správa duplicit"
+
+#: ../src/nact/nact-assistant-import.ui.h:7
+msgid "Selecting what files to import"
+msgstr "Výběr, které soubory se budou importovat"
+
+#: ../src/nact/nact-assistant-import.ui.h:9
+msgid ""
+"The item found in the selected file will silently override the current one "
+"which has the same identifier.\n"
+"Be warned: this mode may be dangerous. You will not be prompted another time."
+msgstr ""
+"Položka nalezená ve vybraném souboru v tichosti přepíše stávající aktuální "
+"položku, která má ten stejný identifikátor.\n"
+"Varování: tento režim může být nebezpečný. Podruhé už nebudete dotazováni."
+
+#: ../src/nact/nact-assistant-import.ui.h:11
+msgid ""
+"The selected file will be imported with a slightly modified label indicating "
+"the renumbering.\n"
+"The existing item will not be modified."
+msgstr ""
+"Vybraný soubor bude naimportován s mírně změněným popiskem naznačujícím "
+"přečíslování.\n"
+"Stávající položka nebude změněna."
+
+#: ../src/nact/nact-assistant-import.ui.h:13
+msgid ""
+"This assistant will guide you through the process of importing items, "
+"actions or menus."
+msgstr ""
+"Tento průvodce vás provede procesem importu položek, akcí nebo nabídek."
+
+#: ../src/nact/nact-assistant-import.ui.h:14
+msgid ""
+"This used to be the historical behavior.\n"
+"The selected file will be marked as \"NOT OK\" in the Summary page.\n"
+"The existing item will not be modified."
+msgstr ""
+"Toto se používá, pokud je požadováno historické chování.\n"
+"Vybraný soubor bude označen jako „NENÍ OK“ na stránce se souhrnným "
+"přehledem.\n"
+"Stávající položka nebude změněna."
+
+#: ../src/nact/nact-assistant-import.ui.h:17
+msgid "You will be asked each time an imported ID already exists."
+msgstr ""
+"Budete dotázání pokaždé, když bude identifikátor vybrané položky již "
+"existovat."
+
+#: ../src/nact/nact-assistant-import.ui.h:18
+#: ../src/nact/nact-export-format.c:66 ../src/nact/nact-preferences.ui.h:64
+msgid "_Ask me"
+msgstr "Dotáz_at se"
+
+#: ../src/nact/nact-assistant-import.ui.h:19
+msgid "_Override the existing item"
+msgstr "Přepsat existující p_oložku"
+
 #: ../src/nact/nact.desktop.in.h:1
 msgid "Configure items to be added to the Nautilus context menus"
 msgstr ""
@@ -2306,10 +2363,6 @@ msgstr "Má být exportována akce „%s“."
 #, c-format
 msgid "The menu \"%s\" is about to be exported."
 msgstr "Má být exportována nabídka „%s“."
-
-#: ../src/nact/nact-export-format.c:66 ../src/nact/nact-preferences.ui.h:64
-msgid "_Ask me"
-msgstr "Dotáz_at se"
 
 #: ../src/nact/nact-export-format.c:67
 msgid ""
@@ -2744,7 +2797,6 @@ msgid "Unable to rewrite the level-zero items list"
 msgstr "Nelze znovu zapsat seznam položek nulté úrovně"
 
 #: ../src/nact/nact-menubar-file.c:56
-#| msgid "Some items have not be deleted"
 msgid "Some items have not been deleted"
 msgstr "Některé položky nebyly smazány"
 
