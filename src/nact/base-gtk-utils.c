@@ -321,10 +321,10 @@ base_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button )
 }
 
 /**
- * nact_utils_get_pixbuf:
+ * base_gtk_utils_get_pixbuf:
  * @name: the name of the file or an icon.
- * widget: the widget on which the imagecshould be rendered.
- * size: the desired size.
+ * @widget: the widget on which the image should be rendered.
+ * @size: the desired size.
  *
  * Returns a pixbuf for the given widget.
  */
@@ -394,10 +394,10 @@ base_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
 }
 
 /**
- * nact_utils_render:
+ * base_gtk_utils_render:
  * @name: the name of the file or an icon, or %NULL.
- * widget: the widget on which the image should be rendered.
- * size: the desired size.
+ * @widget: the widget on which the image should be rendered.
+ * @size: the desired size.
  *
  * Displays the (maybe themed) image on the given widget.
  */

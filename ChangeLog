@@ -1,3 +1,8 @@
+2011-12-19 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-gtk-utils.c
+	(base_gtk_utils_get_pixbuf, base_gtk_utils_render): Fix typos in a comment.
+
 2011-12-14 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-match-list.c (nact_match_list_on_selection_changed):
