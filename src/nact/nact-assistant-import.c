@@ -363,9 +363,9 @@ on_base_initialize_gtk( NactAssistantImport *dialog )
 		container = find_widget_from_page( page, "p4-l4-vbox1" );
 		g_object_set( G_OBJECT( container ), "border-width", width, NULL );
 #endif
-	}
 
-	create_duplicates_treeview_model( dialog );
+		create_duplicates_treeview_model( dialog );
+	}
 }
 
 static void
@@ -377,10 +377,9 @@ create_duplicates_treeview_model( NactAssistantImport *dialog )
 	GtkTreeSelection *selection;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( dialog ));
+	g_return_if_fail( !dialog->private->dispose_has_run );
 
-	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
-	}
+	g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
 	dialog->private->duplicates_listview = get_duplicates_treeview_from_assistant_import( dialog );
 	g_return_if_fail( GTK_IS_TREE_VIEW( dialog->private->duplicates_listview ));
@@ -604,7 +603,6 @@ populate_duplicates_treeview( NactAssistantImport *window )
 	GtkTreeIter iter;
 	guint i;
 	gchar *image_file;
-
 	gint width, height;
 	GdkPixbuf *pixbuf;
 
