@@ -160,9 +160,12 @@ nautilus_actions_config_tool_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 
-pkgdata_DATA = \
+actions_files = \
 	nautilus-actions-config-tool.actions				\
 	nautilus-actions-maintainer.actions					\
+	$(NULL)
+
+ui_files = \
 	nact-add-capability.ui								\
 	nact-add-scheme.ui									\
 	nact-assistant-export.ui							\
@@ -170,8 +173,21 @@ pkgdata_DATA = \
 	nact-icon-chooser.ui								\
 	nact-preferences.ui									\
 	nautilus-actions-config-tool.ui						\
+	$(NULL)
+
+images_files = \
+	import-mode-ask.png									\
+	import-mode-no-import.png							\
+	import-mode-override.png							\
+	import-mode-renumber.png							\
 	locked.png											\
 	transparent.png										\
+	$(NULL)
+
+pkgdata_DATA = \
+	$(actions_files)									\
+	$(ui_files)											\
+	$(images_files)										\
 	$(NULL)
 
 @INTLTOOL_DESKTOP_RULE@

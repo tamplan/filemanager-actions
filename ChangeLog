@@ -1,5 +1,14 @@
 2011-12-19 Pierre Wieser <pwieser@trychlos.org>
 
+	Review import assistant.
+	- File selection: enable to forward if at least one loadable file.
+	- Import mode: replace the radio button group with a list view.
+	- Confirm and Summary pages: fully review the layout.
+
+	* src/nact/Makefile.am:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-assistant-import.ui: Updated accordingly.
+
 	* src/nact/base-gtk-utils.c
 	(base_gtk_utils_get_pixbuf, base_gtk_utils_render): Fix typos in a comment.
 
