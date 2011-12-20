@@ -127,11 +127,11 @@ static const GtkActionEntry entries[] = {
 
 		{ "ImportItem" , GTK_STOCK_CONVERT, N_( "_Import assistant..." ), "",
 				/* i18n: tooltip displayed in the status bar when selecting the Import item */
-				N_( "Import one or more actions from external (XML) files into your configuration" ),
+				N_( "Import one or more actions from external files into your configuration" ),
 				G_CALLBACK( nact_menubar_tools_on_import ) },
 		{ "ExportItem", NULL, N_( "E_xport assistant..." ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the Export item */
-				N_( "Export one or more actions from your configuration to external XML files" ),
+				N_( "Export one or more actions from your configuration to external files" ),
 				G_CALLBACK( nact_menubar_tools_on_export ) },
 
 		{ "DumpSelectionItem", NULL, N_( "_Dump the selection" ), NULL,

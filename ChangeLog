@@ -1,5 +1,7 @@
 2011-12-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar.c: Do not talk about XML files on import/export.
+
 	* src/nact/nact-assistant-import.c
 	(prepare_confirm, prepare_importdone):
 	Force immediate redraw with Gtk2.
