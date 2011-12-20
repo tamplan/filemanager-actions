@@ -1,3 +1,13 @@
+2011-12-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-assistant-import.c
+	(prepare_confirm, prepare_importdone):
+	Force immediate redraw with Gtk2.
+	(prepare_importdone): Color the URI depending of the status.
+
+	* src/nact/nact-assistant-import.ui:
+	Display the import mode in only one GtkLabel.
+
 2011-12-19 Pierre Wieser <pwieser@trychlos.org>
 
 	Review import assistant.

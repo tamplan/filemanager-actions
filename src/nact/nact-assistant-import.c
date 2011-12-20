@@ -344,24 +344,24 @@ on_base_initialize_gtk( NactAssistantImport *dialog )
 		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
 #if !GTK_CHECK_VERSION( 3,0,0 )
-		guint width = 10;
+		guint padder = 8;
 		GtkAssistant *assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( dialog )));
 		/* selecting files */
 		GtkWidget *page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FILES_SELECTION );
-		GtkWidget *container = find_widget_from_page( page, "ImportFileChooser" );
-		g_object_set( G_OBJECT( container ), "border-width", width, NULL );
+		GtkWidget *container = find_widget_from_page( page, "p1-l2-alignment1" );
+		g_object_set( G_OBJECT( container ), "top_padding", padder, NULL );
 		/* managing duplicates */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
-		container = find_widget_from_page( page, "p2-l2-vbox1" );
-		g_object_set( G_OBJECT( container ), "border-width", width, NULL );
+		container = find_widget_from_page( page, "p2-l2-alignment1" );
+		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
 		/* summary */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_CONFIRM );
-		container = find_widget_from_page( page, "p3-l4-vbox1" );
-		g_object_set( G_OBJECT( container ), "border-width", width, NULL );
+		container = find_widget_from_page( page, "p3-l2-alignment1" );
+		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
 		/* import is done */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DONE );
-		container = find_widget_from_page( page, "p4-l4-vbox1" );
-		g_object_set( G_OBJECT( container ), "border-width", width, NULL );
+		container = find_widget_from_page( page, "p4-l2-alignment1" );
+		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
 #endif
 
 		create_duplicates_treeview_model( dialog );
@@ -739,6 +739,16 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
+#if !GTK_CHECK_VERSION( 3,0,0 )
+	/* Note that, at least, in Gtk 2.20 (Ubuntu 10) and 2.22 (Fedora 14), GtkLabel
+	 * queues its resize (when the text is being set), but the actual resize does
+	 * not happen immediately - We have to wait until Gtk 3.0, most probably due
+	 * to the new width-for-height and height-for-width features...
+	 */
+	GtkWidget *vbox = find_widget_from_page( page, "p3-ConfirmVBox" );
+	gtk_container_set_resize_mode( GTK_CONTAINER( vbox ), GTK_RESIZE_IMMEDIATE );
+#endif
+
 	/* adding list of uris to import
 	 */
 	text = NULL;
@@ -764,13 +774,11 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	 */
 	label = find_widget_from_page( page, "p3-ConfirmImportMode" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
-	gtk_label_set_text( GTK_LABEL( label ), gettext( st_import_modes[window->private->index_mode].label ));
-
-	/* adding import mode tooltip
-	 */
-	label = find_widget_from_page( page, "p3-ConfirmImportTooltip" );
-	g_return_if_fail( GTK_IS_LABEL( label ));
-	gtk_label_set_text( GTK_LABEL( label ), gettext( st_import_modes[window->private->index_mode].tooltip ));
+	text = g_markup_printf_escaped( "%s\n\n<span style=\"italic\">%s</span>",
+			gettext( st_import_modes[window->private->index_mode].label ),
+			gettext( st_import_modes[window->private->index_mode].tooltip ));
+	gtk_label_set_markup( GTK_LABEL( label ), text );
+	g_free( text );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
@@ -859,6 +867,8 @@ check_for_existence( const NAObjectItem *item, NactMainWindow *window )
 /*
  * summary page is a vbox inside of a scrolled window
  * each line in this vbox is a GtkLabel
+ * Starting with 3.1.6, uri is displayed in red if an error has occured, or
+ * in blue.
  */
 static void
 prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page )
@@ -871,6 +881,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	GSList *im;
 	NAImporterResult *result;
 	gchar *text, *id, *item_label, *text2, *tmp;
+	const gchar *color;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -878,6 +889,15 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	width = 15;
 	vbox = find_widget_from_page( page, "p4-SummaryVBox" );
 	g_return_if_fail( GTK_IS_BOX( vbox ));
+
+#if !GTK_CHECK_VERSION( 3,0,0 )
+	/* Note that, at least, in Gtk 2.20 (Ubuntu 10) and 2.22 (Fedora 14), GtkLabel
+	 * queues its resize (when the text is being set), but the actual resize does
+	 * not happen immediately - We have to wait until Gtk 3.0, most probably due
+	 * to the new width-for-height and height-for-width features...
+	 */
+	gtk_container_set_resize_mode( GTK_CONTAINER( vbox ), GTK_RESIZE_IMMEDIATE );
+#endif
 
 	/* for each uri
 	 * 	- display the uri
@@ -890,13 +910,17 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		/* display the uri
 		 */
 #if GTK_CHECK_VERSION( 3,0,0 )
-		file_vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 5 );
+		file_vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 4 );
 #else
-		file_vbox = gtk_vbox_new( FALSE, 5 );
+		file_vbox = gtk_vbox_new( FALSE, 4 );
 #endif
 		gtk_box_pack_start( GTK_BOX( vbox ), file_vbox, FALSE, FALSE, 0 );
 
-		file_uri = gtk_label_new( result->uri );
+		color = result->imported ? "blue" : "red";
+		text = g_markup_printf_escaped( "<span foreground=\"%s\">%s</span>", color, result->uri );
+		file_uri = gtk_label_new( NULL );
+		gtk_label_set_markup( GTK_LABEL( file_uri ), text );
+		g_free( text );
 		g_object_set( G_OBJECT( file_uri ), "xalign", 0, NULL );
 		g_object_set( G_OBJECT( file_uri ), "xpad", width, NULL );
 		gtk_box_pack_start( GTK_BOX( file_vbox ), file_uri, FALSE, FALSE, 0 );
@@ -941,8 +965,6 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	g_object_set( G_OBJECT( window ), BASE_PROP_WARN_ON_ESCAPE, FALSE, NULL );
 	na_iprefs_set_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, window->private->mode );
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
-	/* gtk_widget_show_all( page ) is ok with Gtk 3, but not with Gtk 2 */
-	/* gtk_widget_show_all( vbox ) is not better with Gtk 2 */
 	gtk_widget_show_all( page );
 }
 
@@ -989,7 +1011,7 @@ get_duplicates_treeview_from_page( GtkWidget *page )
 {
 	GtkWidget *listview;
 
-	listview = find_widget_from_page( page, "AskTreeView" );
+	listview = find_widget_from_page( page, "p2-AskTreeView" );
 
 	g_return_val_if_fail( GTK_IS_TREE_VIEW( listview ), NULL );
 
