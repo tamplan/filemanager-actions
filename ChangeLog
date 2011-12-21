@@ -1,3 +1,30 @@
+2011-12-21 Pierre Wieser <pwieser@trychlos.org>
+
+	NAIExporter interface upgrade.
+
+	* src/api/na-iexporter.h:
+	Define a new NAIExporterFormatExt structure, which embeds a GdkPixbuf.
+
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h (na_export_format_new):
+	Updated to new NAIExporterFormatExt structure.
+
+	* src/core/na-exporter.c (na_exporter_get_formats):
+	Take into account the new NAIExporter interface version.
+
+	* src/io-desktop/nadp-desktop-provider.c: Updated to new NAIExporter
+	interface version.
+
+	* src/io-desktop/nadp-formats.c
+	(nadp_formats_get_formats, nadp_formats_free_formats): New functions.
+
+	* src/io-xml/naxml-formats.c: Updated to the new NAIExporter interface
+	version.
+
+	* src/io-xml/naxml-formats.c:
+	* src/io-xml/naxml-formats.h
+	(naxml_formats_get_formats, naxml_formats_free_formats): New functions.
+
 2011-12-20 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-menubar.c: Do not talk about XML files on import/export.

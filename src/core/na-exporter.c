@@ -40,9 +40,10 @@
 extern gboolean iexporter_initialized;
 extern gboolean iexporter_finalized;
 
-static const NAIExporterFormat *exporter_get_formats( const NAIExporter *exporter );
-static gchar                   *exporter_get_name( const NAIExporter *exporter );
-static NAIExporter             *find_exporter_for_format( const NAPivot *pivot, GQuark format );
+static GList       *exporter_get_formats( const NAIExporter *exporter );
+static void         exporter_free_formats( const NAIExporter *exporter, GList * str_list );
+static gchar       *exporter_get_name( const NAIExporter *exporter );
+static NAIExporter *find_exporter_for_format( const NAPivot *pivot, GQuark format );
 
 /*
  * na_exporter_get_formats:
@@ -59,7 +60,7 @@ na_exporter_get_formats( const NAPivot *pivot )
 {
 	GList *iexporters, *imod;
 	GList *formats;
-	const NAIExporterFormat *str;
+	GList *str_list, *is;
 	NAExportFormat *format;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
@@ -69,15 +70,16 @@ na_exporter_get_formats( const NAPivot *pivot )
 	if( iexporter_initialized && !iexporter_finalized ){
 
 		iexporters = na_pivot_get_providers( pivot, NA_IEXPORTER_TYPE );
+
 		for( imod = iexporters ; imod ; imod = imod->next ){
+			str_list = exporter_get_formats( NA_IEXPORTER( imod->data ));
 
-			str = exporter_get_formats( NA_IEXPORTER( imod->data ));
-			while( str->format ){
-
-				format = na_export_format_new( str, NA_IEXPORTER( imod->data ));
+			for( is = str_list ; is ; is = is->next ){
+				format = na_export_format_new(( NAIExporterFormatExt * ) is->data );
 				formats = g_list_prepend( formats, format );
-				str++;
 			}
+
+			exporter_free_formats( NA_IEXPORTER( imod->data ), str_list );
 		}
 
 		na_pivot_free_providers( iexporters );
@@ -89,7 +91,7 @@ na_exporter_get_formats( const NAPivot *pivot )
 /*
  * na_exporter_free_formats:
  * @formats: a list of available export formats, as returned by
- *  #na_exporter_get_formats().
+ *  na_exporter_get_formats().
  *
  * Release the @formats #GList.
  */
@@ -244,18 +246,72 @@ na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar
 	return( export_uri );
 }
 
-static const NAIExporterFormat *
+/*
+ * Returns a GList of NAIExporterFormatExt structures which describes
+ * the export formats provided by the exporter
+ * If the provider only implements the v1 interface, we dynamically
+ * allocate a new structure and convert the v1 to the v2.
+ */
+static GList *
 exporter_get_formats( const NAIExporter *exporter )
 {
-	const NAIExporterFormat *str;
+	GList *str_list;
+	guint version;
 
-	str = NULL;
+	str_list = NULL;
 
-	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
-		str = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
+	version = 1;
+	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
+		version = NA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
 	}
 
-	return( str );
+	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
+		if( version == 1 ){
+#ifndef NA_DISABLE_DEPRECATED
+			( const NAIExporterFormat * ) strv1 = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
+			while( strv1->format ){
+				NAIExporterFormatExt *strv2 = g_new0( NAIExporterFormatExt, 1 );
+				strv2->version = 1;
+				strv2->provider = exporter;
+				strv2->format = strv1->format;
+				strv2->label = strv1->label;
+				strv2->description = strv1->description;
+				strv2->pixbuf = NULL;
+				str_list = g_list_prepend( str_list, strv2 );
+				strv1++;
+			}
+#else
+			;
+#endif
+		} else {
+			str_list = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
+		}
+	}
+
+	return( str_list );
+}
+
+/*
+ * Free the list returned by exporter_get_formats() for this provider
+ */
+static void
+exporter_free_formats( const NAIExporter *exporter, GList *str_list )
+{
+	guint version;
+
+	version = 1;
+	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
+		version = NA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
+	}
+
+	if( version == 1 ){
+		g_list_foreach( str_list, ( GFunc ) g_free, NULL );
+		g_list_free( str_list );
+
+	} else {
+		g_return_if_fail( !NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats );
+		NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats( exporter, str_list );
+	}
 }
 
 static gchar *

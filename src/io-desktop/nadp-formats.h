@@ -33,10 +33,15 @@
 
 #include <glib.h>
 
+#include <api/na-iexporter.h>
+
 G_BEGIN_DECLS
 
 #define NADP_FORMAT_DESKTOP_V1			"Desktop1"
 
+GList *nadp_formats_get_formats ( const NAIExporter *exporter );
+void   nadp_formats_free_formats( GList *formats );
+
 G_END_DECLS
 
-#endif /* __NAXML_FORMATS_H__ */
+#endif /* __NADP_FORMATS_H__ */

@@ -34,7 +34,7 @@
 /**
  * SECTION: iexporter
  * @title: NAIExporter
- * @short_description: The Export Interface v 1
+ * @short_description: The Export Interface v 2
  * @include: nautilus-actions/na-iexporter.h
  *
  * The #NAIExporter interface exports items to the outside world.
@@ -58,6 +58,11 @@
  *        <row>
  *          <entry>since 2.30</entry>
  *          <entry>1</entry>
+ *          <entry></entry>
+ *        </row>
+ *        <row>
+ *          <entry>since 3.2</entry>
+ *          <entry>2</entry>
  *          <entry>current version</entry>
  *        </row>
  *      </tbody>
@@ -66,6 +71,7 @@
  * </refsect2>
  */
 
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include "na-object-item.h"
 
 G_BEGIN_DECLS
@@ -80,6 +86,7 @@ typedef struct _NAIExporterInterfacePrivate    NAIExporterInterfacePrivate;
 typedef struct _NAIExporterFileParms           NAIExporterFileParms;
 typedef struct _NAIExporterBufferParms         NAIExporterBufferParms;
 
+#ifndef NA_DISABLE_DEPRECATED
 /**
  * NAIExporterFormat:
  * @format:      format identifier (ascii).
@@ -93,21 +100,86 @@ typedef struct _NAIExporterBufferParms         NAIExporterBufferParms;
  *
  * When listing available export formats, the instance returns a #GList
  * of these structures.
+ *
+ * Deprecated: 3.2
  */
 typedef struct {
-	gchar *format;
-	gchar *label;
-	gchar *description;
+	gchar     *format;
+	gchar     *label;
+	gchar     *description;
 }
 	NAIExporterFormat;
+#endif
+
+/**
+ * NAIExporterFormatExt:
+ * @version:     the version of this #NAIExporterFormatExt structure (2).
+ * @provider:    the #NAIExporter provider for this format.
+ * @format:      format identifier (ascii, allocated by the Nautilus-Actions team).
+ * @label:       short label to be displayed in dialog (UTF-8 localized)
+ * @description: full description of the format (UTF-8 localized);
+ *               mainly used as a tooltip.
+ * @pixbuf:      an image to be associated with this export format;
+ *               this pixbuf is supposed to be rendered with GTK_ICON_SIZE_DIALOG size.
+ *
+ * This structure describes a supported output format.
+ * It must be provided by each #NAIExporter implementation
+ * (see e.g. <filename>src/io-xml/naxml-formats.c</filename>).
+ *
+ * When listing available export formats, the instance returns a #GList
+ * of these structures.
+ *
+ * <refsect2>
+ *  <title>Versions historic</title>
+ *  <table>
+ *    <title>Historic of the versions of the #NAIExporteeFormat structure</title>
+ *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
+ *      <colspec colname="na-version" />
+ *      <colspec colname="api-version" />
+ *      <colspec colname="current" />
+ *      <thead>
+ *        <row>
+ *          <entry>&prodname; version</entry>
+ *          <entry>#NAIExporterFormat structure version</entry>
+ *          <entry></entry>
+ *        </row>
+ *      </thead>
+ *      <tbody>
+ *        <row>
+ *          <entry>since 2.30</entry>
+ *          <entry>1</entry>
+ *          <entry></entry>
+ *        </row>
+ *        <row>
+ *          <entry>since 3.2</entry>
+ *          <entry>2</entry>
+ *          <entry>current version</entry>
+ *        </row>
+ *      </tbody>
+ *    </tgroup>
+ *  </table>
+ * </refsect2>
+ *
+ * Since: 3.2
+ */
+typedef struct {
+	guint        version;
+	NAIExporter *provider;
+	gchar       *format;
+	gchar       *label;
+	gchar       *description;
+	GdkPixbuf   *pixbuf;
+}
+	NAIExporterFormatExt;
 
 /**
  * NAIExporterInterface:
- * @get_version: returns the version of this interface the plugin implements.
- * @get_name:    returns the public plugin name.
- * @get_formats: returns the list of supported formats.
- * @to_file:     exports an item to a file.
- * @to_buffer:   exports an item to a buffer.
+ * @get_version:  returns the version of this interface the plugin implements.
+ * @get_name:     returns the public plugin name.
+ * @get_formats:  returns the list of supported formats.
+ * @free_formats: free a list of formats
+ * @to_file:      exports an item to a file.
+ * @to_buffer:    exports an item to a buffer.
  *
  * This defines the interface that a #NAIExporter should implement.
  */
@@ -127,7 +199,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint                     ( *get_version )( const NAIExporter *instance );
+	guint   ( *get_version )( const NAIExporter *instance );
 
 	/**
 	 * get_name:
@@ -138,28 +210,69 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gchar *                   ( *get_name )   ( const NAIExporter *instance );
+	gchar * ( *get_name )   ( const NAIExporter *instance );
 
 	/**
 	 * get_formats:
 	 * @instance: this #NAIExporter instance.
-	 *
-	 * The returned list is owned by the @instance. It must not be
-	 * released by the caller.
 	 *
 	 * To avoid any collision, the format id is allocated by the
 	 * Nautilus-Actions maintainer team. If you wish develop a new
 	 * export format, and so need a new format id, please contact the
 	 * maintainers (see #nautilus-actions.doap).
 	 *
-	 * Returns: a list of #NAIExporterFormat structures which describe the
-	 * formats supported by @instance.
+	 * Returns:
+	 * <itemizedlist>
+	 *   <listitem>
+	 *     <formalpara>
+	 *       <title>
+	 *         Interface v1:
+	 *       </title>
+	 *       <para>
+	 *         a null-terminated list of #NAIExporterFormat structures
+	 *         which describes the formats supported by this #NAIExporter
+	 *         provider.
+	 *       </para>
+	 *       <para>
+	 *         The returned list is owned by the #NAIExporter provider,
+	 *         and should not be freed nor released by the caller.
+	 *       </para>
+	 *   </listitem>
+	 *   <listitem>
+	 *     <formalpara>
+	 *       <title>
+	 *         Interface v2:
+	 *       </title>
+	 *       <para>
+	 *         a #GList of #NAIExporterFormatExt structures
+	 *         which describes the formats supported by this #NAIExporter
+	 *         provider.
+	 *       </para>
+	 *       <para>
+	 *         The caller should then invoke the free_formats() method
+	 *         in order the provider be able to release the resources
+	 *         allocated to the list.
+	 *       </para>
+	 *   </listitem>
+	 * </itemizedlist>
 	 *
 	 * Defaults to %NULL (no format at all).
 	 *
 	 * Since: 2.30
 	 */
-	const NAIExporterFormat * ( *get_formats )( const NAIExporter *instance );
+	void *  ( *get_formats )( const NAIExporter *instance );
+
+	/**
+	 * free_formats:
+	 * @instance: this #NAIExporter instance.
+	 * @formats: a null-terminated list of #NAIExporterFormatExt structures,
+	 *  as returned by get_formats() method.
+	 *
+	 * Free the resources allocated to the @formats list.
+	 *
+	 * Since: 3.2
+	 */
+	void    ( *free_formats )( const NAIExporter *instance, GList *formats );
 
 	/**
 	 * to_file:
@@ -173,7 +286,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint                     ( *to_file )    ( const NAIExporter *instance, NAIExporterFileParms *parms );
+	guint   ( *to_file )    ( const NAIExporter *instance, NAIExporterFileParms *parms );
 
 	/**
 	 * to_buffer:
@@ -188,7 +301,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	guint                     ( *to_buffer )  ( const NAIExporter *instance, NAIExporterBufferParms *parms );
+	guint   ( *to_buffer )  ( const NAIExporter *instance, NAIExporterBufferParms *parms );
 }
 	NAIExporterInterface;
 

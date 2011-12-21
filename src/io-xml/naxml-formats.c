@@ -33,12 +33,20 @@
 #endif
 
 #include <glib/gi18n.h>
-
-#include <api/na-iexporter.h>
+#include <gtk/gtk.h>
+#include <libintl.h>
 
 #include "naxml-formats.h"
 
-NAIExporterFormat naxml_formats[] = {
+typedef struct {
+	gchar *format;
+	gchar *label;
+	gchar *description;
+	gchar *image;
+}
+	NaxmlExportFormat;
+
+static NaxmlExportFormat naxml_formats[] = {
 
 	/* GCONF_SCHEMA_V1: a schema with owner, short and long descriptions;
 	 * each action has its own schema addressed by the id
@@ -50,7 +58,8 @@ NAIExporterFormat naxml_formats[] = {
 				"The exported schema file may later be imported via :\n" \
 				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
-				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
+				"- or via the gconftool-2 --import-schema-file command-line tool." ),
+			NULL },
 
 	/* GCONF_SCHEMA_V2: the lightest schema still compatible with gconftool-2 --install-schema-file
 	 * (no owner, no short nor long descriptions) - introduced in v 1.11
@@ -64,7 +73,8 @@ NAIExporterFormat naxml_formats[] = {
 				"The exported schema file may later be imported via :\n" \
 				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
-				"- or via the gconftool-2 --import-schema-file command-line tool." ) },
+				"- or via the gconftool-2 --import-schema-file command-line tool." ),
+			NULL },
 
 	/* GCONF_ENTRY: not a schema, but a dump of the GConf entry
 	 * introduced in v 1.11
@@ -78,7 +88,77 @@ NAIExporterFormat naxml_formats[] = {
 				"The exported dump file may later be imported via :\n" \
 				"- Import assistant of the Nautilus-Actions Configuration Tool (1.11 and above),\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool (1.11 and above),\n" \
-				"- or via the gconftool-2 --load command-line tool." ) },
+				"- or via the gconftool-2 --load command-line tool." ),
+			NULL },
 
 	{ NULL }
 };
+
+/**
+ * naxml_formats_get_formats:
+ * @exporter: this #NAIExporter provider.
+ *
+ * Returns: a #GList of the #NAIExporterFormatExt supported export formats.
+ *
+ * This list should be naxml_formats_free_formats() by the caller.
+ *
+ * Since: 3.2
+ */
+GList *
+naxml_formats_get_formats( const NAIExporter* exporter )
+{
+	GList *str_list;
+	NAIExporterFormatExt *str;
+	guint i;
+	gint width, height;
+
+	str_list = NULL;
+
+	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
+		width = height = 48;
+	}
+
+	for( i = 0 ; naxml_formats[i].format ; ++i ){
+		str = g_new0( NAIExporterFormatExt, 1 );
+		str->version = 2;
+		str->provider = NA_IEXPORTER( exporter );
+		str->format = g_strdup( naxml_formats[i].format );
+		str->label = g_strdup( gettext( naxml_formats[i].label ));
+		str->description = g_strdup( gettext( naxml_formats[i].description ));
+		if( naxml_formats[i].image ){
+			str->pixbuf = gdk_pixbuf_new_from_file_at_size( naxml_formats[i].image, width, height, NULL );
+		}
+		str_list = g_list_prepend( str_list, str );
+	}
+
+	return( str_list );
+}
+
+/**
+ * naxml_formats_free_formats:
+ * @formats: a #GList to be freed.
+ *
+ * Returns: a #GList of the #NAIExporterFormatExt supported export formats.
+ *
+ * This list should be naxml_format_free_formats() by the caller.
+ *
+ * Since: 3.2
+ */
+void
+naxml_formats_free_formats( GList *formats )
+{
+	GList *is;
+	NAIExporterFormatExt *str;
+
+	for( is = formats ; is ; is = is->next ){
+		str = ( NAIExporterFormatExt * ) is->data;
+		g_free( str->format );
+		g_free( str->label );
+		g_free( str->description );
+		if( str->pixbuf ){
+			g_object_unref( str->pixbuf );
+		}
+	}
+
+	g_list_free( formats );
+}

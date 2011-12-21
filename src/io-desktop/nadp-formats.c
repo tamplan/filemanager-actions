@@ -33,12 +33,22 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
+#include <libintl.h>
 
 #include <api/na-iexporter.h>
 
 #include "nadp-formats.h"
 
-NAIExporterFormat nadp_formats[] = {
+typedef struct {
+	gchar *format;
+	gchar *label;
+	gchar *description;
+	gchar *image;
+}
+	NadpExportFormat;
+
+static NadpExportFormat nadp_formats[] = {
 
 	/* DESKTOP_V1: the initial desktop format as described in
 	 * http://www.nautilus-actions.org/?q=node/377
@@ -54,7 +64,77 @@ NAIExporterFormat nadp_formats[] = {
 				"The exported .desktop file may later be imported via :\n" \
 				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
-				"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory." ) },
+				"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory." ),
+			NULL },
 
 	{ NULL }
 };
+
+/**
+ * nadp_formats_get_formats:
+ * @exporter: this #NAIExporter provider.
+ *
+ * Returns: a #GList of the #NAIExporterFormatExt supported export formats.
+ *
+ * This list should be nadp_formats_free_formats() by the caller.
+ *
+ * Since: 3.2
+ */
+GList *
+nadp_formats_get_formats( const NAIExporter* exporter )
+{
+	GList *str_list;
+	NAIExporterFormatExt *str;
+	guint i;
+	gint width, height;
+
+	str_list = NULL;
+
+	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
+		width = height = 48;
+	}
+
+	for( i = 0 ; nadp_formats[i].format ; ++i ){
+		str = g_new0( NAIExporterFormatExt, 1 );
+		str->version = 2;
+		str->provider = NA_IEXPORTER( exporter );
+		str->format = g_strdup( nadp_formats[i].format );
+		str->label = g_strdup( gettext( nadp_formats[i].label ));
+		str->description = g_strdup( gettext( nadp_formats[i].description ));
+		if( nadp_formats[i].image ){
+			str->pixbuf = gdk_pixbuf_new_from_file_at_size( nadp_formats[i].image, width, height, NULL );
+		}
+		str_list = g_list_prepend( str_list, str );
+	}
+
+	return( str_list );
+}
+
+/**
+ * nadp_formats_free_formats:
+ * @formats: a #GList to be freed.
+ *
+ * Returns: a #GList of the #NAIExporterFormatExt supported export formats.
+ *
+ * This list should be nadp_format_free_formats() by the caller.
+ *
+ * Since: 3.2
+ */
+void
+nadp_formats_free_formats( GList *formats )
+{
+	GList *is;
+	NAIExporterFormatExt *str;
+
+	for( is = formats ; is ; is = is->next ){
+		str = ( NAIExporterFormatExt * ) is->data;
+		g_free( str->format );
+		g_free( str->label );
+		g_free( str->description );
+		if( str->pixbuf ){
+			g_object_unref( str->pixbuf );
+		}
+	}
+
+	g_list_free( formats );
+}

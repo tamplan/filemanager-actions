@@ -37,6 +37,7 @@
 #include <api/na-iimporter.h>
 
 #include "naxml-provider.h"
+#include "naxml-formats.h"
 #include "naxml-reader.h"
 #include "naxml-writer.h"
 
@@ -52,26 +53,25 @@ struct _NAXMLProviderPrivate {
 	gboolean dispose_has_run;
 };
 
-extern NAIExporterFormat naxml_formats[];
-
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 
-static void                     class_init( NAXMLProviderClass *klass );
-static void                     instance_init( GTypeInstance *instance, gpointer klass );
-static void                     instance_dispose( GObject *object );
-static void                     instance_finalize( GObject *object );
+static void   class_init( NAXMLProviderClass *klass );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *object );
+static void   instance_finalize( GObject *object );
 
-static void                     iimporter_iface_init( NAIImporterInterface *iface );
-static guint                    iimporter_get_version( const NAIImporter *importer );
+static void   iimporter_iface_init( NAIImporterInterface *iface );
+static guint  iimporter_get_version( const NAIImporter *importer );
 
-static void                     iexporter_iface_init( NAIExporterInterface *iface );
-static guint                    iexporter_get_version( const NAIExporter *exporter );
-static gchar                   *iexporter_get_name( const NAIExporter *exporter );
-static const NAIExporterFormat *iexporter_get_formats( const NAIExporter *exporter );
+static void   iexporter_iface_init( NAIExporterInterface *iface );
+static guint  iexporter_get_version( const NAIExporter *exporter );
+static gchar *iexporter_get_name( const NAIExporter *exporter );
+static void  *iexporter_get_formats( const NAIExporter *exporter );
+static void   iexporter_free_formats( const NAIExporter *exporter, GList *format_list );
 
-static void                     ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
-static guint                    ifactory_provider_get_version( const NAIFactoryProvider *factory );
+static void   ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
+static guint  ifactory_provider_get_version( const NAIFactoryProvider *factory );
 
 GType
 naxml_provider_get_type( void )
@@ -230,6 +230,7 @@ iexporter_iface_init( NAIExporterInterface *iface )
 	iface->get_version = iexporter_get_version;
 	iface->get_name = iexporter_get_name;
 	iface->get_formats = iexporter_get_formats;
+	iface->free_formats = iexporter_free_formats;
 	iface->to_file = naxml_writer_export_to_file;
 	iface->to_buffer = naxml_writer_export_to_buffer;
 }
@@ -237,7 +238,7 @@ iexporter_iface_init( NAIExporterInterface *iface )
 static guint
 iexporter_get_version( const NAIExporter *exporter )
 {
-	return( 1 );
+	return( 2 );
 }
 
 static gchar *
@@ -246,10 +247,16 @@ iexporter_get_name( const NAIExporter *exporter )
 	return( g_strdup( "NAXML Exporter" ));
 }
 
-static const NAIExporterFormat *
+static void *
 iexporter_get_formats( const NAIExporter *exporter )
 {
-	return( naxml_formats );
+	return(( void * ) naxml_formats_get_formats( exporter ));
+}
+
+static void
+iexporter_free_formats( const NAIExporter *exporter, GList *format_list )
+{
+	naxml_formats_free_formats( format_list );
 }
 
 static void

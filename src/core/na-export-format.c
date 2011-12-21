@@ -32,7 +32,7 @@
 #include <config.h>
 #endif
 
-#include <libintl.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "na-export-format.h"
 
@@ -45,10 +45,13 @@ struct _NAExportFormatClassPrivate {
 /* private instance data
  */
 struct _NAExportFormatPrivate {
-	gboolean           dispose_has_run;
-	GQuark             id;
-	NAIExporterFormat *str;
-	NAIExporter       *exporter;
+	gboolean     dispose_has_run;
+	GQuark       id;
+	gchar       *format;
+	gchar       *label;
+	gchar       *description;
+	GdkPixbuf   *pixbuf;
+	NAIExporter *provider;
 };
 
 static GObjectClass *st_parent_class = NULL;
@@ -146,6 +149,11 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
+		if( self->private->pixbuf ){
+			g_object_unref( self->private->pixbuf );
+			self->private->pixbuf = NULL;
+		}
+
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( object );
@@ -164,6 +172,9 @@ instance_finalize( GObject *object )
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	self = NA_EXPORT_FORMAT( object );
 
+	g_free( self->private->format );
+	g_free( self->private->label );
+	g_free( self->private->description );
 	g_free( self->private );
 
 	/* chain call to parent class */
@@ -174,21 +185,23 @@ instance_finalize( GObject *object )
 
 /*
  * na_export_format_new:
- * @exporter_format: a #NAIExporterFormat which describes an export format.
- * @exporter: the #NAIExporter which provides this export format.
+ * @exporter_format: a #NAIExporterFormatExt which describes an export format.
  *
  * Returns: a newly allocated #NAExportFormat object.
  */
 NAExportFormat *
-na_export_format_new( const NAIExporterFormat *exporter_format, const NAIExporter *exporter )
+na_export_format_new( const NAIExporterFormatExt *exporter_format )
 {
 	NAExportFormat *format;
 
 	format = g_object_new( NA_EXPORT_FORMAT_TYPE, NULL );
 
 	format->private->id = g_quark_from_string( exporter_format->format );
-	format->private->str = ( NAIExporterFormat * ) exporter_format;
-	format->private->exporter = ( NAIExporter * ) exporter;
+	format->private->format = g_strdup( exporter_format->format );
+	format->private->label = g_strdup( exporter_format->label );
+	format->private->description = g_strdup( exporter_format->description );
+	format->private->pixbuf = exporter_format->pixbuf ? g_object_ref( exporter_format->pixbuf ) : NULL;
+	format->private->provider = exporter_format->provider;
 
 	return( format );
 }
@@ -234,7 +247,7 @@ na_export_format_get_id( const NAExportFormat *format )
 
 	if( !format->private->dispose_has_run ){
 
-		id = g_strdup( format->private->str->format );
+		id = g_strdup( format->private->format );
 	}
 
 	return( id );
@@ -258,7 +271,7 @@ na_export_format_get_label( const NAExportFormat *format )
 
 	if( !format->private->dispose_has_run ){
 
-		label = g_strdup( gettext( format->private->str->label ));
+		label = g_strdup( format->private->label );
 	}
 
 	return( label );
@@ -282,7 +295,7 @@ na_export_format_get_description( const NAExportFormat *format )
 
 	if( !format->private->dispose_has_run ){
 
-		description = g_strdup( gettext( format->private->str->description ));
+		description = g_strdup( format->private->description );
 	}
 
 	return( description );
@@ -308,7 +321,7 @@ na_export_format_get_exporter( const NAExportFormat *format )
 
 	if( !format->private->dispose_has_run ){
 
-		exporter = format->private->exporter;
+		exporter = format->private->provider;
 	}
 
 	return( exporter );

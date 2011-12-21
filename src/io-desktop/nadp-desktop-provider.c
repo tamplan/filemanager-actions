@@ -39,6 +39,7 @@
 #include <api/na-ifactory-provider.h>
 
 #include "nadp-desktop-provider.h"
+#include "nadp-formats.h"
 #include "nadp-keys.h"
 #include "nadp-monitor.h"
 #include "nadp-reader.h"
@@ -50,34 +51,33 @@ struct _NadpDesktopProviderClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-extern NAIExporterFormat nadp_formats[];
-
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 static guint         st_burst_timeout = 100;		/* burst timeout in msec */
 
-static void                     class_init( NadpDesktopProviderClass *klass );
-static void                     instance_init( GTypeInstance *instance, gpointer klass );
-static void                     instance_dispose( GObject *object );
-static void                     instance_finalize( GObject *object );
+static void   class_init( NadpDesktopProviderClass *klass );
+static void   instance_init( GTypeInstance *instance, gpointer klass );
+static void   instance_dispose( GObject *object );
+static void   instance_finalize( GObject *object );
 
-static void                     iio_provider_iface_init( NAIIOProviderInterface *iface );
-static gchar                   *iio_provider_get_id( const NAIIOProvider *provider );
-static gchar                   *iio_provider_get_name( const NAIIOProvider *provider );
-static guint                    iio_provider_get_version( const NAIIOProvider *provider );
+static void   iio_provider_iface_init( NAIIOProviderInterface *iface );
+static gchar *iio_provider_get_id( const NAIIOProvider *provider );
+static gchar *iio_provider_get_name( const NAIIOProvider *provider );
+static guint  iio_provider_get_version( const NAIIOProvider *provider );
 
-static void                     ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
-static guint                    ifactory_provider_get_version( const NAIFactoryProvider *reader );
+static void   ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
+static guint  ifactory_provider_get_version( const NAIFactoryProvider *reader );
 
-static void                     iimporter_iface_init( NAIImporterInterface *iface );
-static guint                    iimporter_get_version( const NAIImporter *importer );
+static void   iimporter_iface_init( NAIImporterInterface *iface );
+static guint  iimporter_get_version( const NAIImporter *importer );
 
-static void                     iexporter_iface_init( NAIExporterInterface *iface );
-static guint                    iexporter_get_version( const NAIExporter *exporter );
-static gchar                   *iexporter_get_name( const NAIExporter *exporter );
-static const NAIExporterFormat *iexporter_get_formats( const NAIExporter *exporter );
+static void   iexporter_iface_init( NAIExporterInterface *iface );
+static guint  iexporter_get_version( const NAIExporter *exporter );
+static gchar *iexporter_get_name( const NAIExporter *exporter );
+static void  *iexporter_get_formats( const NAIExporter *exporter );
+static void   iexporter_free_formats( const NAIExporter *exporter, GList *format_list );
 
-static void                     on_monitor_timeout( NadpDesktopProvider *provider );
+static void   on_monitor_timeout( NadpDesktopProvider *provider );
 
 GType
 nadp_desktop_provider_get_type( void )
@@ -309,6 +309,7 @@ iexporter_iface_init( NAIExporterInterface *iface )
 	iface->get_version = iexporter_get_version;
 	iface->get_name = iexporter_get_name;
 	iface->get_formats = iexporter_get_formats;
+	iface->free_formats = iexporter_free_formats;
 	iface->to_file = nadp_writer_iexporter_export_to_file;
 	iface->to_buffer = nadp_writer_iexporter_export_to_buffer;
 }
@@ -316,7 +317,7 @@ iexporter_iface_init( NAIExporterInterface *iface )
 static guint
 iexporter_get_version( const NAIExporter *exporter )
 {
-	return( 1 );
+	return( 2 );
 }
 
 static gchar *
@@ -325,10 +326,16 @@ iexporter_get_name( const NAIExporter *exporter )
 	return( g_strdup( "NA Desktop Exporter" ));
 }
 
-static const NAIExporterFormat *
+static void *
 iexporter_get_formats( const NAIExporter *exporter )
 {
-	return( nadp_formats );
+	return(( void * ) nadp_formats_get_formats( exporter ));
+}
+
+static void
+iexporter_free_formats( const NAIExporter *exporter, GList *format_list )
+{
+	nadp_formats_free_formats( format_list );
 }
 
 /**
