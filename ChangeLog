@@ -1,5 +1,7 @@
 2011-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-assistant.c (do_run): Destroy the assistant when quitting.
+
 	* src/core/na-export-format.c:
 	* src/core/na-export-format.h
 	(na_export_format_get_exporter): Renamed as na_export_format_get_provider().

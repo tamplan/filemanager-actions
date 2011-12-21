@@ -345,6 +345,7 @@ do_run( BaseWindow *window, GtkWindow *toplevel )
 				( void * ) window, G_OBJECT_TYPE_NAME( window ),
 				( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ));
 		gtk_main();
+		gtk_widget_destroy( GTK_WIDGET( toplevel ));
 		code = BASE_EXIT_CODE_OK;
 	}
 
