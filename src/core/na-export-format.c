@@ -302,7 +302,7 @@ na_export_format_get_description( const NAExportFormat *format )
 }
 
 /*
- * na_export_format_get_exporter:
+ * na_export_format_get_provider:
  * @format: this #NAExportFormat object.
  *
  * Returns: a pointer to the #NAIExporter which provides this format.
@@ -311,7 +311,7 @@ na_export_format_get_description( const NAExportFormat *format )
  * by the caller.
  */
 NAIExporter *
-na_export_format_get_exporter( const NAExportFormat *format )
+na_export_format_get_provider( const NAExportFormat *format )
 {
 	NAIExporter *exporter;
 
@@ -325,4 +325,30 @@ na_export_format_get_exporter( const NAExportFormat *format )
 	}
 
 	return( exporter );
+}
+
+/*
+ * na_export_format_get_pixbuf:
+ * @format: this #NAExportFormat object.
+ *
+ * Returns: a new reference to the #GdkPixbuf image associated with this format,
+ * or %NULL.
+ */
+GdkPixbuf *
+na_export_format_get_pixbuf( const NAExportFormat *format )
+{
+	GdkPixbuf *pixbuf;
+
+	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), NULL );
+
+	pixbuf = NULL;
+
+	if( !format->private->dispose_has_run ){
+
+		if( format->private->pixbuf ){
+			pixbuf = g_object_ref( format->private->pixbuf );
+		}
+	}
+
+	return( pixbuf );
 }

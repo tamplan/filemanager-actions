@@ -1,3 +1,14 @@
+2011-12-22 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h
+	(na_export_format_get_exporter): Renamed as na_export_format_get_provider().
+	(na_export_format_get_pixbuf): New function.
+
+	* src/core/na-exporter.c
+	(exporter_free_formats): Fix the test.
+	(find_exporter_for_format): Updated accordingly.
+
 2011-12-21 Pierre Wieser <pwieser@trychlos.org>
 
 	NAIExporter interface upgrade.

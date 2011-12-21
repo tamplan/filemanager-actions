@@ -309,7 +309,7 @@ exporter_free_formats( const NAIExporter *exporter, GList *str_list )
 		g_list_free( str_list );
 
 	} else {
-		g_return_if_fail( !NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats );
+		g_return_if_fail( NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats );
 		NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats( exporter, str_list );
 	}
 }
@@ -340,7 +340,7 @@ find_exporter_for_format( const NAPivot *pivot, GQuark format )
 	for( ifmt = formats ; ifmt && !exporter ; ifmt = ifmt->next ){
 
 		if( na_export_format_get_quark( NA_EXPORT_FORMAT( ifmt->data )) == format ){
-			exporter = na_export_format_get_exporter( NA_EXPORT_FORMAT( ifmt->data ));
+			exporter = na_export_format_get_provider( NA_EXPORT_FORMAT( ifmt->data ));
 		}
 	}
 
