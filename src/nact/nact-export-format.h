@@ -36,6 +36,11 @@
  * @short_description: Displays the list of available export formats.
  * @include: nact/nact-export-format.h
  *
+ * This class manages the available export formats, providing functions
+ * to display them, and select one of them.
+ * Depending on the current display mode, it also features a special
+ * 'Ask me' mode.
+ *
  * Export formats are defined by their respective I/O providers
  * (see e.g. src/io-xml/naxml-formats.c or src/io-desktop/nadp-formats.c).
  * Each export format must have at least a (short) label, and should have
@@ -75,15 +80,15 @@ enum {
 };
 
 void            nact_export_format_init_display(
-						GtkWidget *container_vbox,
+						GtkWidget *container_parent,
 						const NAPivot *pivot, guint mode, gboolean sensitive );
 
 void            nact_export_format_select      (
-						const GtkWidget *container_vbox,
+						const GtkWidget *container_parent,
 						gboolean editable, GQuark format );
 
 NAExportFormat *nact_export_format_get_selected(
-						const GtkWidget *container_vbox );
+						const GtkWidget *container_parent );
 
 G_END_DECLS
 

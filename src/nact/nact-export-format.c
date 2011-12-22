@@ -34,16 +34,30 @@
 
 #include <glib/gi18n.h>
 
+#include <api/na-core-utils.h>
+
 #include <core/na-exporter.h>
 #include <core/na-export-format.h>
 
 #include "nact-export-format.h"
 #include "base-gtk-utils.h"
 
+/* column ordering in the export format treeview
+ */
+enum {
+	IMAGE_COLUMN = 0,
+	LABEL_COLUMN,
+	TOOLTIP_COLUMN,
+	FORMAT_COLUMN,
+	OBJECT_COLUMN,
+	N_COLUMN
+};
+
 /*
  * As of Gtk 3.2.0, GtkHBox and GtkVBox are deprecated. It is adviced
  * to replace them with a GtkGrid.
- * In this dialog box, we have a glade-defined VBox, said 'container_vbox',
+ * In this dialog box, we have a glade-defined VBox, said 'container_vbox'
+ * (which may be a GtkVBox or a GtkTreeView),
  * in which we dynamically embed the radio buttons as a hierarchy of
  * VBoxes and HBoxes.
  * While it is still possible to keep the glade-defined VBoxes, we will
@@ -63,70 +77,94 @@ typedef struct {
 #define EXPORT_FORMAT_PROP_CONTAINER_SENSITIVE	"nact-export-format-prop-container-sensitive"
 #define EXPORT_FORMAT_PROP_VBOX_DATA			"nact-export-format-prop-vbox-data"
 
-#define ASKME_LABEL						N_( "_Ask me" )
-#define ASKME_DESCRIPTION				N_( "You will be asked for the format to choose each time an item is about to be exported." )
+#define ASKME_LABEL				N_( "_Ask me" )
+#define ASKME_DESCRIPTION		N_( "You will be asked for the format to choose each time an item is about to be exported." )
 
-static const NAIExporterFormat st_ask_str = { "Ask", ASKME_LABEL, ASKME_DESCRIPTION };
+static const NAIExporterFormatExt st_ask_str =
+		{ 2, NULL, IPREFS_EXPORT_FORMAT_ASK_ID, ASKME_LABEL, ASKME_DESCRIPTION, NULL };
 
-static void draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gint id );
-static void format_weak_notify( VBoxData *vbox_data, GObject *vbox );
-static void select_default_iter( GtkWidget *widget, void *quark_ptr );
-static void export_format_on_toggled( GtkToggleButton *toggle_button, VBoxData *vbox_data );
-static void get_selected_iter( GtkWidget *widget, NAExportFormat **format );
+static void     create_radio_button_group( GtkWidget *container_parent, GList *formats, guint mode );
+static void     draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gint id );
+static void     format_weak_notify( VBoxData *vbox_data, GObject *vbox );
+static void     create_treeview_model( GtkTreeView *listview );
+static void     populate_treeview( GtkTreeView *listview, GList *formats, guint mode );
+static void     add_treeview_item( GtkTreeView *listview, GtkTreeModel *model, const NAExportFormat *format );
+static void     select_default_iter( GtkWidget *widget, void *quark_ptr );
+static gboolean iter_on_model_for_select( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeView *listview );
+static void     on_export_format_toggled( GtkToggleButton *toggle_button, VBoxData *vbox_data );
+static void     get_selected_iter( GtkWidget *widget, NAExportFormat **format );
+static gboolean have_ask_option( guint mode );
+static void     on_unrealize_container_parent( GtkWidget *container, gpointer user_data );
 
 /**
  * nact_export_format_init_display:
- * @container_vbox: the #GtkVBox container in which the display must be drawn.
+ * @container_parent: the #GtkContainer container in which the display must be drawn;
+ *  may be a GtkVBox (in a GtkDialog) or a GtkTreeView (in a GtkAssistant).
  * @pivot: the #NAPivot instance.
  * @mode: the type of the display.
- * @sensitive: whether the whole radio button group is sensitive.
+ * @sensitive: whether the whole radio button group is sensitive
+ *  (if not, this is most probably because this preference happens to be
+ *   mandatory).
  *
- * Displays the available export formats in the VBox.
+ * Displays the available export formats:
+ * - if @container_parent is a GtkVBox, then we create a RadioButton group
+ * - if @container_parent is a GtkTreeView, then we create the corresponding GtkTreeModel
+ *   and immediately populate the list view
  *
  * Should only be called once per dialog box instance (e.g. on initial load
  * of the GtkWindow).
  */
 void
-nact_export_format_init_display( GtkWidget *container_vbox, const NAPivot *pivot, guint mode, gboolean sensitive )
+nact_export_format_init_display( GtkWidget *container_parent, const NAPivot *pivot, guint mode, gboolean sensitive )
 {
 	static const gchar *thisfn = "nact_export_format_init_display";
-	GList *formats, *ifmt;
-	NAExportFormat *format;
+	GList *formats;
 
-	g_debug( "%s: container_vbox=%p, pivot=%p, mode=%u, sensitive=%s",
-			thisfn, ( void * ) container_vbox, ( void * ) pivot, mode,
+	g_debug( "%s: container_parent=%p, pivot=%p, mode=%u, sensitive=%s",
+			thisfn, ( void * ) container_parent, ( void * ) pivot, mode,
 			sensitive ? "True":"False" );
 
 	formats = na_exporter_get_formats( pivot );
 
-	for( ifmt = formats ; ifmt ; ifmt = ifmt->next ){
-		draw_in_vbox( container_vbox, NA_EXPORT_FORMAT( ifmt->data ), mode, -1 );
+	if( GTK_IS_BOX( container_parent )){
+		create_radio_button_group( container_parent, formats, mode );
+
+	} else if( GTK_IS_TREE_VIEW( container_parent )){
+		create_treeview_model( GTK_TREE_VIEW( container_parent ));
+		populate_treeview( GTK_TREE_VIEW( container_parent ), formats, mode );
 	}
 
 	na_exporter_free_formats( formats );
 
-	switch( mode ){
+	g_object_set_data( G_OBJECT( container_parent ), EXPORT_FORMAT_PROP_CONTAINER_FORMAT, GUINT_TO_POINTER( 0 ));
+	g_object_set_data( G_OBJECT( container_parent ), EXPORT_FORMAT_PROP_CONTAINER_SENSITIVE, GUINT_TO_POINTER( sensitive ));
 
-		/* this is the mode to be used when we are about to export an item
-		 * and the user preference is 'Ask me'; obviously, we don't propose
-		 * here to ask him another time :)
-		 */
-		case EXPORT_FORMAT_DISPLAY_ASK:
-			break;
+	g_signal_connect(
+			G_OBJECT( container_parent ),
+			"unrealize",
+			G_CALLBACK( on_unrealize_container_parent ),
+			NULL );
+}
 
-		case EXPORT_FORMAT_DISPLAY_PREFERENCES:
-		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
-			format = na_export_format_new( &st_ask_str, NULL );
-			draw_in_vbox( container_vbox, format, mode, IPREFS_EXPORT_FORMAT_ASK );
-			g_object_unref( format );
-			break;
+static void
+create_radio_button_group( GtkWidget *container_parent, GList *formats, guint mode )
+{
+	GList *ifmt;
+	NAExportFormat *format;
 
-		default:
-			g_warning( "%s: mode=%d: unknown mode", thisfn, mode );
+	/* draw the formats as a group of radio buttons
+	 */
+	for( ifmt = formats ; ifmt ; ifmt = ifmt->next ){
+		draw_in_vbox( container_parent, NA_EXPORT_FORMAT( ifmt->data ), mode, -1 );
 	}
 
-	g_object_set_data( G_OBJECT( container_vbox ), EXPORT_FORMAT_PROP_CONTAINER_FORMAT, GUINT_TO_POINTER( 0 ));
-	g_object_set_data( G_OBJECT( container_vbox ), EXPORT_FORMAT_PROP_CONTAINER_SENSITIVE, GUINT_TO_POINTER( sensitive ));
+	/* eventually add the 'Ask me' mode
+	 */
+	if( have_ask_option( mode )){
+		format = na_export_format_new( &st_ask_str );
+		draw_in_vbox( container_parent, format, mode, IPREFS_EXPORT_FORMAT_ASK );
+		g_object_unref( format );
+	}
 }
 
 /*
@@ -254,6 +292,10 @@ draw_in_vbox( GtkWidget *container, const NAExportFormat *format, guint mode, gi
 	g_free( description );
 }
 
+/*
+ * release the data structure attached to each individual 'mode' container
+ * when destroying the window
+ */
 static void
 format_weak_notify( VBoxData *vbox_data, GObject *vbox )
 {
@@ -268,9 +310,102 @@ format_weak_notify( VBoxData *vbox_data, GObject *vbox )
 	g_free( vbox_data );
 }
 
+static void
+create_treeview_model( GtkTreeView *listview )
+{
+	static const gchar *thisfn = "nact_export_format_create_treeview_model";
+	GtkListStore *model;
+	GtkTreeViewColumn *column;
+	GtkTreeSelection *selection;
+
+	g_debug( "%s: listview=%p", thisfn, ( void * ) listview );
+
+	model = gtk_list_store_new( N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT, G_TYPE_OBJECT );
+	gtk_tree_view_set_model( listview, GTK_TREE_MODEL( model ));
+	g_object_unref( model );
+
+	/* create visible columns on the tree view
+	 */
+	column = gtk_tree_view_column_new_with_attributes(
+			"image",
+			gtk_cell_renderer_pixbuf_new(),
+			"pixbuf", IMAGE_COLUMN,
+			NULL );
+	gtk_tree_view_append_column( listview, column );
+
+	column = gtk_tree_view_column_new_with_attributes(
+			"label",
+			gtk_cell_renderer_text_new(),
+			"text", LABEL_COLUMN,
+			NULL );
+	gtk_tree_view_append_column( listview, column );
+
+	g_object_set( G_OBJECT( listview ), "tooltip-column", TOOLTIP_COLUMN, NULL );
+
+	selection = gtk_tree_view_get_selection( listview );
+	gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
+}
+
+static void
+populate_treeview( GtkTreeView *listview, GList *formats, guint mode )
+{
+	static const gchar *thisfn = "nact_export_format_populate_treeview";
+	GtkTreeModel *model;
+	NAExportFormat *format;
+	GList *ifm;
+
+	g_debug( "%s: listview=%p", thisfn, ( void * ) listview );
+
+	model = gtk_tree_view_get_model( listview );
+
+	for( ifm = formats ; ifm ; ifm = ifm->next ){
+		format = NA_EXPORT_FORMAT( ifm->data );
+		add_treeview_item( listview, model, format );
+	}
+
+	/* eventually add the 'Ask me' mode
+	 */
+	if( have_ask_option( mode )){
+		format = na_export_format_new( &st_ask_str );
+		add_treeview_item( listview, model, format );
+		g_object_unref( format );
+	}
+}
+
+static void
+add_treeview_item( GtkTreeView *listview, GtkTreeModel *model, const NAExportFormat *format )
+{
+	GtkTreeIter iter;
+	gchar *label, *label2, *description;
+	GQuark format_id;
+	GdkPixbuf *pixbuf;
+
+	format_id = na_export_format_get_quark( format );
+	label = na_export_format_get_label( format );
+	label2 = na_core_utils_str_remove_char( label, "_" );
+	description = na_export_format_get_description( format );
+	pixbuf = na_export_format_get_pixbuf( format );
+	gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
+	gtk_list_store_set(
+			GTK_LIST_STORE( model ),
+			&iter,
+			IMAGE_COLUMN, pixbuf,
+			LABEL_COLUMN, label2,
+			TOOLTIP_COLUMN, description,
+			FORMAT_COLUMN, format_id,
+			OBJECT_COLUMN, format,
+			-1 );
+	if( pixbuf ){
+		g_object_unref( pixbuf );
+	}
+	g_free( label );
+	g_free( label2 );
+	g_free( description );
+}
+
 /**
  * nact_export_format_select:
- * @container_vbox: the #GtkVBox in which the display has been drawn.
+ * @container_parent: the #GtkVBox in which the display has been drawn.
  * @editable: whether the whole radio button group is activatable.
  * @format: the #GQuark which must be used as a default value.
  *
@@ -282,21 +417,34 @@ format_weak_notify( VBoxData *vbox_data, GObject *vbox )
  * created in nact_export_format_init_display(). We are iterating on these
  * vbox to setup the initially active radio button.
  *
- * Starting with Gtk 3.2.0, the 'container_vbox' no more contains GtkVBoxes,
+ * Starting with Gtk 3.2.0, the 'container_parent' no more contains GtkVBoxes,
  * but a grid (one column, n rows) whose each row contains itself one grid
  * for each mode.
  */
 void
-nact_export_format_select( const GtkWidget *container_vbox, gboolean editable, GQuark format )
+nact_export_format_select( const GtkWidget *container_parent, gboolean editable, GQuark format )
 {
-	g_object_set_data( G_OBJECT( container_vbox ), EXPORT_FORMAT_PROP_CONTAINER_EDITABLE, GUINT_TO_POINTER( editable ));
-	g_object_set_data( G_OBJECT( container_vbox ), EXPORT_FORMAT_PROP_CONTAINER_FORMAT, GUINT_TO_POINTER( format ));
+	GtkTreeModel *model;
 
-	gtk_container_foreach( GTK_CONTAINER( container_vbox ), ( GtkCallback ) select_default_iter, GUINT_TO_POINTER( format ));
+	g_object_set_data( G_OBJECT( container_parent ), EXPORT_FORMAT_PROP_CONTAINER_EDITABLE, GUINT_TO_POINTER( editable ));
+	g_object_set_data( G_OBJECT( container_parent ), EXPORT_FORMAT_PROP_CONTAINER_FORMAT, GUINT_TO_POINTER( format ));
+
+	if( GTK_IS_BOX( container_parent )){
+		gtk_container_foreach( GTK_CONTAINER( container_parent ),
+				( GtkCallback ) select_default_iter, GUINT_TO_POINTER( format ));
+
+	} else if( GTK_IS_TREE_VIEW( container_parent )){
+		model = gtk_tree_view_get_model( GTK_TREE_VIEW( container_parent ));
+		gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) iter_on_model_for_select, ( gpointer ) container_parent );
+	}
 }
 
 /*
  * container_mode is a GtkVBox, or a GtkGrid starting with Gtk 3.2
+ *
+ * iterating through each radio button of the group:
+ * - connecting to 'toggled' signal
+ * - activating the button which holds our default value
  */
 static void
 select_default_iter( GtkWidget *container_mode, void *quark_ptr )
@@ -318,7 +466,7 @@ select_default_iter( GtkWidget *container_mode, void *quark_ptr )
 	sensitive = ( gboolean ) GPOINTER_TO_UINT(
 			g_object_get_data( G_OBJECT( vbox_data->container_vbox ), EXPORT_FORMAT_PROP_CONTAINER_SENSITIVE ));
 
-	vbox_data->handler = g_signal_connect( G_OBJECT( vbox_data->button ), "toggled", G_CALLBACK( export_format_on_toggled ), vbox_data );
+	vbox_data->handler = g_signal_connect( G_OBJECT( vbox_data->button ), "toggled", G_CALLBACK( on_export_format_toggled ), vbox_data );
 
 	button = NULL;
 	format_quark = ( GQuark ) GPOINTER_TO_UINT( quark_ptr );
@@ -329,12 +477,37 @@ select_default_iter( GtkWidget *container_mode, void *quark_ptr )
 
 	if( button ){
 		base_gtk_utils_radio_set_initial_state( button,
-				G_CALLBACK( export_format_on_toggled ), vbox_data, editable, sensitive );
+				G_CALLBACK( on_export_format_toggled ), vbox_data, editable, sensitive );
 	}
 }
 
+/*
+ * walks through the rows of the model until the function returns %TRUE
+ */
+static gboolean
+iter_on_model_for_select( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeView *listview )
+{
+	gboolean stop;
+	GQuark format;
+	GtkTreeSelection *selection;
+	GQuark format_quark;
+
+	stop = FALSE;
+	format_quark = ( GQuark ) GPOINTER_TO_UINT(
+			g_object_get_data( G_OBJECT( listview ), EXPORT_FORMAT_PROP_CONTAINER_FORMAT ));
+	gtk_tree_model_get( model, iter, FORMAT_COLUMN, &format, -1 );
+
+	if( format == format_quark ){
+		selection = gtk_tree_view_get_selection( listview );
+		gtk_tree_selection_select_iter( selection, iter );
+		stop = TRUE;
+	}
+
+	return( stop );
+}
+
 static void
-export_format_on_toggled( GtkToggleButton *toggle_button, VBoxData *vbox_data )
+on_export_format_toggled( GtkToggleButton *toggle_button, VBoxData *vbox_data )
 {
 	gboolean editable, active;
 	GQuark format;
@@ -355,7 +528,7 @@ export_format_on_toggled( GtkToggleButton *toggle_button, VBoxData *vbox_data )
 
 /**
  * nact_export_format_get_selected:
- * @container_vbox: the #GtkVBox in which the display has been drawn.
+ * @container_parent: the #GtkVBox in which the display has been drawn.
  *
  * Returns: the currently selected value, as a #NAExportFormat object.
  *
@@ -363,12 +536,30 @@ export_format_on_toggled( GtkToggleButton *toggle_button, VBoxData *vbox_data )
  * should not be released by the caller.
  */
 NAExportFormat *
-nact_export_format_get_selected( const GtkWidget *container_vbox )
+nact_export_format_get_selected( const GtkWidget *container_parent )
 {
 	NAExportFormat *format;
+	GtkTreeSelection *selection;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GList *rows;
 
 	format = NULL;
-	gtk_container_foreach( GTK_CONTAINER( container_vbox ), ( GtkCallback ) get_selected_iter, &format );
+
+	if( GTK_IS_BOX( container_parent )){
+		gtk_container_foreach( GTK_CONTAINER( container_parent ), ( GtkCallback ) get_selected_iter, &format );
+
+	} else if( GTK_IS_TREE_VIEW( container_parent )){
+		selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( container_parent ));
+		rows = gtk_tree_selection_get_selected_rows( selection, &model );
+		g_return_val_if_fail( g_list_length( rows ) == 1, NULL );
+		gtk_tree_model_get_iter( model, &iter, ( GtkTreePath * ) rows->data );
+		gtk_tree_model_get( model, &iter, OBJECT_COLUMN, &format, -1 );
+		g_object_unref( format );
+		g_list_foreach( rows, ( GFunc ) gtk_tree_path_free, NULL );
+		g_list_free( rows );
+	}
+
 	g_debug( "nact_export_format_get_selected: format=%p", ( void * ) format );
 
 	return( format );
@@ -388,4 +579,43 @@ get_selected_iter( GtkWidget *container_mode, NAExportFormat **format )
 			*format = vbox_data->format;
 		}
 	}
+}
+
+static gboolean
+have_ask_option( guint mode )
+{
+	static const gchar *thisfn = "nact_export_format_have_ask_option";
+	gboolean have_ask;
+
+	have_ask = FALSE;
+
+	switch( mode ){
+		/* this is the mode to be used when we are about to export an item
+		 * and the user preference is 'Ask me'; obviously, we don't propose
+		 * here to ask him another time :)
+		 */
+		case EXPORT_FORMAT_DISPLAY_ASK:
+			break;
+
+		case EXPORT_FORMAT_DISPLAY_PREFERENCES:
+		case EXPORT_FORMAT_DISPLAY_ASSISTANT:
+			have_ask = TRUE;
+			break;
+
+		default:
+			g_warning( "%s: mode=%d: unknown mode", thisfn, mode );
+	}
+
+	return( have_ask );
+}
+
+/*
+ * unrealize signal is seen after finalization of the assistant
+ */
+static void
+on_unrealize_container_parent( GtkWidget *container, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_export_format_on_unrealize_container_parent";
+
+	g_debug( "%s: container=%p (%s)", thisfn, ( void * ) container, G_OBJECT_TYPE_NAME( container));
 }

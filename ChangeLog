@@ -1,5 +1,8 @@
 2011-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-export-format.c:
+	* src/nact/nact-export-format.h: Refactor to display in a GtkTreeView.
+
 	* src/nact/base-assistant.c (do_run): Destroy the assistant when quitting.
 
 	* src/core/na-export-format.c:
