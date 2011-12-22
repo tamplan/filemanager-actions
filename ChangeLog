@@ -1,5 +1,8 @@
 2011-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-export.ui: Whole refactoring.
+
 	* src/nact/nact-export-format.c:
 	* src/nact/nact-export-format.h: Refactor to display in a GtkTreeView.
 

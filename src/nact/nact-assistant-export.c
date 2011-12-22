@@ -104,26 +104,23 @@ static BaseAssistantClass *st_parent_class   = NULL;
 static GType           register_type( void );
 static void            class_init( NactAssistantExportClass *klass );
 static void            instance_init( GTypeInstance *instance, gpointer klass );
-static void            instance_dispose( GObject *application );
-static void            instance_finalize( GObject *application );
+static void            instance_constructed( GObject *instance );
+static void            instance_dispose( GObject *instance );
+static void            instance_finalize( GObject *instance );
 
-static void            on_base_initialize_gtk_toplevel( NactAssistantExport *dialog, GtkAssistant *toplevel, gpointer user_data );
-static void            on_base_initialize_base_window( NactAssistantExport *dialog, gpointer user_data );
-static void            on_base_all_widgets_showed( NactAssistantExport *dialog, gpointer user_data );
+static void            on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *toplevel, gpointer user_data );
+static void            on_items_tree_view_realized( GtkWidget *tree_view, NactAssistantExport *window );
+static void            on_folder_chooser_realized( GtkWidget *tree_view, NactAssistantExport *window );
+static void            on_format_tree_view_realized( GtkWidget *tree_view, NactAssistantExport *window );
 
-static void            assist_runtime_init_intro( NactAssistantExport *window, GtkAssistant *assistant );
+static void            on_base_initialize_base_window( NactAssistantExport *window, gpointer user_data );
+static void            on_base_all_widgets_showed( NactAssistantExport *window, gpointer user_data );
 
-static void            assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *assistant );
-static void            on_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data );
-static void            assist_initial_load_target_folder( NactAssistantExport *window, GtkAssistant *assistant );
-static void            assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *assistant );
-static GtkFileChooser *get_folder_chooser( NactAssistantExport *window );
-static void            on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data );
+static void            on_items_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data );
+static void            on_folder_chooser_selection_changed( GtkFileChooser *chooser, NactAssistantExport *window );
 
-static void            assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant );
-static void            assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant );
-static NAExportFormat *get_export_format( NactAssistantExport *window );
-static GtkWidget      *get_box_container( NactAssistantExport *window );
+static NAExportFormat *get_selected_export_format( NactAssistantExport *window );
+static GtkWidget      *get_export_format_treeview( NactAssistantExport *window );
 
 static void            assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 static void            assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
@@ -180,6 +177,7 @@ class_init( NactAssistantExportClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
@@ -206,15 +204,44 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactAssistantExportPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+}
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
+static void
+instance_constructed( GObject *window )
+{
+	static const gchar *thisfn = "nact_assistant_export_instance_constructed";
+	NactAssistantExport *self;
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed ));
+	self = NACT_ASSISTANT_EXPORT( window );
+
+	if( !self->private->dispose_has_run ){
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_INITIALIZE_GTK,
+				G_CALLBACK( on_base_initialize_gtk_toplevel ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_INITIALIZE_WINDOW,
+				G_CALLBACK( on_base_initialize_base_window ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
+				G_CALLBACK( on_base_all_widgets_showed ));
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( window );
+		}
+	}
 }
 
 static void
@@ -297,147 +324,125 @@ nact_assistant_export_run( BaseWindow *main_window )
 }
 
 static void
-on_base_initialize_gtk_toplevel( NactAssistantExport *dialog, GtkAssistant *assistant, gpointer user_data )
+on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *assistant, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_on_base_initialize_gtk_toplevel";
 	GtkWidget *page;
+	GtkWidget *widget;
 	gboolean are_locked, mandatory;
-
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( dialog ));
-
-	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p, assistant=%p, user_data=%p",
-				thisfn, ( void * ) dialog, ( void * ) assistant, ( void * ) user_data );
-
-		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
-		dialog->private->items_view =
-				nact_tree_view_new( BASE_WINDOW( dialog ),
-						GTK_CONTAINER( page ), "ActionsList", TREE_MODE_SELECTION );
-
-		are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
-		dialog->private->preferences_locked = are_locked && mandatory;
-
-		assist_initial_load_target_folder( dialog, assistant );
-		assist_initial_load_format( dialog, assistant );
-	}
-}
-
-static void
-on_base_initialize_base_window( NactAssistantExport *dialog, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_assistant_export_on_base_initialize_base_window";
-	GtkAssistant *assistant;
-
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( dialog ));
-
-	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
-
-		base_window_signal_connect( BASE_WINDOW( dialog ),
-				G_OBJECT( dialog ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
-
-		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( dialog )));
-
-		assist_runtime_init_intro( dialog, assistant );
-		assist_runtime_init_actions_list( dialog, assistant );
-		assist_runtime_init_target_folder( dialog, assistant );
-		assist_runtime_init_format( dialog, assistant );
-	}
-}
-
-static void
-on_base_all_widgets_showed( NactAssistantExport *dialog, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_assistant_export_on_base_all_widgets_showed";
-	NactMainWindow *main_window;
-	NactTreeView *main_items_view;
-	GList *items;
-
-	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( dialog ));
-
-	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
-
-		/* setup the data here so that we are sure all companion objects
-		 * have connected their signal handlers
-		 */
-		main_window = NACT_MAIN_WINDOW( base_window_get_parent( BASE_WINDOW( dialog )));
-		main_items_view = nact_main_window_get_items_view( main_window );
-		items = nact_tree_view_get_items( main_items_view );
-		nact_tree_view_fill( dialog->private->items_view, items );
-	}
-}
-
-static void
-assist_runtime_init_intro( NactAssistantExport *window, GtkAssistant *assistant )
-{
-	static const gchar *thisfn = "nact_assistant_export_runtime_init_intro";
-	GtkWidget *content;
-
-	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) window, ( void * ) assistant );
-
-	content = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_INTRO );
-	gtk_assistant_set_page_complete( assistant, content, TRUE );
-}
-
-static void
-assist_runtime_init_actions_list( NactAssistantExport *window, GtkAssistant *assistant )
-{
-	GtkWidget *content;
-
-	content = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
-	gtk_assistant_set_page_complete( assistant, content, FALSE );
-}
-
-static void
-on_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_assistant_export_on_tree_view_selection_changed";
-	GtkAssistant *assistant;
-	gint pos;
-	gboolean enabled;
-	GtkWidget *content;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 
-	g_debug( "%s: window=%p, selected_items=%p (count=%d), user_data=%p",
-			thisfn, ( void * ) window,
-			( void * ) selected_items, g_list_length( selected_items ), ( void * ) user_data );
+	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p, assistant=%p, user_data=%p",
+				thisfn, ( void * ) window, ( void * ) assistant, ( void * ) user_data );
 
-	if( window->private->selected_items ){
-		window->private->selected_items = na_object_free_items( window->private->selected_items );
-	}
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
+		widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "ActionsList" );
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( widget ),
+				"realize",
+				G_CALLBACK( on_items_tree_view_realized ));
 
-	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
-	pos = gtk_assistant_get_current_page( assistant );
+		window->private->items_view =
+				nact_tree_view_new( BASE_WINDOW( window ),
+						GTK_CONTAINER( page ), "ActionsList", TREE_MODE_SELECTION );
 
-	if( pos == ASSIST_PAGE_ACTIONS_SELECTION ){
-		enabled = ( g_list_length( selected_items ) > 0 );
-		window->private->selected_items = na_object_copyref_items( selected_items );
-		content = gtk_assistant_get_nth_page( assistant, pos );
-		gtk_assistant_set_page_complete( assistant, content, enabled );
-		gtk_assistant_update_buttons_state( assistant );
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FOLDER_SELECTION );
+		widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p2-ExportFolderChooser" );
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( widget ),
+				"realize",
+				G_CALLBACK( on_folder_chooser_realized ));
+
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
+		widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" );
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( widget ),
+				"realize",
+				G_CALLBACK( on_format_tree_view_realized ));
+
+		are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
+		window->private->preferences_locked = are_locked && mandatory;
+
+#if !GTK_CHECK_VERSION( 3,0,0 )
+		guint padder = 8;
+		/* selecting items */
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
+		GtkWidget *container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p1-l2-alignment1" );
+		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
+		/* selecting target folder */
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FOLDER_SELECTION );
+		container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p2-l2-alignment1" );
+		g_object_set( G_OBJECT( container ), "top_padding", padder, NULL );
+		/* choosing export format */
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
+		container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p3-l2-alignment1" );
+		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
+		/* summary */
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_CONFIRM );
+		container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-l2-alignment1" );
+		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
+		/* import is done */
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DONE );
+		container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p5-l2-alignment1" );
+		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
+#endif
 	}
 }
 
 static void
-assist_initial_load_target_folder( NactAssistantExport *window, GtkAssistant *assistant )
+on_items_tree_view_realized( GtkWidget *tree_view, NactAssistantExport *window )
 {
-	GtkFileChooser *chooser = get_folder_chooser( window );
+	static const gchar *thisfn = "nact_assistant_export_on_items_tree_view_realized";
+	GtkAssistant *assistant;
+	GtkWidget *page;
+	NactMainWindow *main_window;
+	NactTreeView *main_items_view;
+	GList *items;
+	GtkTreePath *path;
+
+	g_debug( "%s: tree_view=%p, window=%p", thisfn, ( void * ) tree_view, ( void * ) window );
+
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
+	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
+
+	/* fill up the tree view
+	 */
+	main_window = NACT_MAIN_WINDOW( base_window_get_parent( BASE_WINDOW( window )));
+	main_items_view = nact_main_window_get_items_view( main_window );
+	items = nact_tree_view_get_items( main_items_view );
+	nact_tree_view_fill( window->private->items_view, items );
+
+	/* connect to the 'selection-changed' signal emitted by NactTreeView
+	 */
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( window ),
+			TREE_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_items_tree_view_selection_changed ));
+
+	/* select the first row
+	 */
+	path = gtk_tree_path_new_from_string( "0" );
+	nact_tree_view_select_row_at_path( window->private->items_view, path );
+	gtk_tree_path_free( path );
+}
+
+static void
+on_folder_chooser_realized( GtkWidget *chooser, NactAssistantExport *window )
+{
+	static const gchar *thisfn = "nact_assistant_export_on_folder_chooser_realized";
+	gchar *uri;
+
+	g_debug( "%s: chooser=%p, window=%p", thisfn, ( void * ) chooser, ( void * ) window );
+
 	gtk_file_chooser_set_action( GTK_FILE_CHOOSER( chooser ), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER );
 	gtk_file_chooser_set_create_folders( GTK_FILE_CHOOSER( chooser ), TRUE );
 	gtk_file_chooser_set_select_multiple( GTK_FILE_CHOOSER( chooser ), FALSE );
-}
-
-static void
-assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *assistant )
-{
-	GtkFileChooser *chooser;
-	gchar *uri;
-	GtkWidget *content;
-
-	chooser = get_folder_chooser( window );
-	gtk_file_chooser_unselect_all( chooser );
 
 	uri = na_settings_get_string( NA_IPREFS_EXPORT_ASSISTANT_URI, NULL, NULL );
 	if( uri && strlen( uri )){
@@ -445,117 +450,180 @@ assist_runtime_init_target_folder( NactAssistantExport *window, GtkAssistant *as
 	}
 	g_free( uri );
 
-	base_window_signal_connect( BASE_WINDOW( window ),
-			G_OBJECT( chooser ), "selection-changed", G_CALLBACK( on_folder_selection_changed ));
-
-	content = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FOLDER_SELECTION );
-	gtk_assistant_set_page_complete( assistant, content, FALSE );
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( chooser ),
+			"selection-changed",
+			G_CALLBACK( on_folder_chooser_selection_changed ));
 }
 
-static GtkFileChooser *
-get_folder_chooser( NactAssistantExport *window )
+static void
+on_format_tree_view_realized( GtkWidget *tree_view, NactAssistantExport *window )
 {
-	GtkAssistant *assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
-	GtkWidget *page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FOLDER_SELECTION );
-	return( GTK_FILE_CHOOSER( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "ExportFolderChooser" )));
+	static const gchar *thisfn = "nact_assistant_export_on_format_tree_view_realized";
+	NactApplication *application;
+	NAUpdater *updater;
+	GtkAssistant *assistant;
+	GtkWidget *page;
+	GQuark format;
+	gboolean mandatory;
+
+	g_debug( "%s: tree_view=%p, window=%p", thisfn, ( void * ) tree_view, ( void * ) window );
+
+#ifdef NA_MAINTAINER_MODE
+	na_gtk_utils_dump_children( GTK_CONTAINER( tree_view ));
+#endif
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+
+	nact_export_format_init_display( tree_view,
+			NA_PIVOT( updater ), EXPORT_FORMAT_DISPLAY_ASSISTANT, !window->private->preferences_locked );
+
+	format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, &mandatory );
+
+	nact_export_format_select( tree_view, !mandatory, format );
+
+	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
+	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
+	gtk_assistant_set_page_complete( assistant, page, TRUE );
+}
+
+static void
+on_base_initialize_base_window( NactAssistantExport *window, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_assistant_export_on_base_initialize_base_window";
+	GtkAssistant *assistant;
+	GtkWidget *page;
+
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+
+	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+
+		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
+
+		/* intro page is always true
+		 */
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_INTRO );
+		gtk_assistant_set_page_complete( assistant, page, TRUE );
+	}
+}
+
+static void
+on_base_all_widgets_showed( NactAssistantExport *window, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_assistant_export_on_base_all_widgets_showed";
+	GtkAssistant *assistant;
+	GtkWidget *page;
+
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+
+	if( !window->private->dispose_has_run ){
+		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+
+		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
+
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
+		gtk_widget_show_all( page );
+
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FOLDER_SELECTION );
+		gtk_widget_show_all( page );
+
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
+		gtk_widget_show_all( page );
+	}
+}
+
+static void
+on_items_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data )
+{
+	static const gchar *thisfn = "nact_assistant_export_on_items_tree_view_selection_changed";
+	GtkAssistant *assistant;
+	GtkWidget *page;
+	gboolean enabled;
+
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
+
+	if( !window->private->dispose_has_run ){
+
+		g_debug( "%s: window=%p, selected_items=%p (count=%d), user_data=%p",
+			thisfn, ( void * ) window,
+			( void * ) selected_items, g_list_length( selected_items ), ( void * ) user_data );
+
+		if( window->private->selected_items ){
+			window->private->selected_items = na_object_free_items( window->private->selected_items );
+		}
+
+		enabled = ( g_list_length( selected_items ) > 0 );
+		window->private->selected_items = na_object_copyref_items( selected_items );
+
+		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
+		gtk_assistant_set_page_complete( assistant, page, enabled );
+	}
 }
 
 /*
  * we check the selected uri for writability
  * this is always subject to become invalid before actually writing
  * but this is better than nothing, doesn't ?
+ *
+ * NB: if the GtkFileChooser widget automatically opens on another mode that
+ * 'file system' (e.g. search or recently used), it may be because of
+ * ~/.config/gtk-2.0/gtkfilechooser.ini file -> to be checked
+ * (maybe removed)
  */
 static void
-on_folder_selection_changed( GtkFileChooser *chooser, gpointer user_data )
+on_folder_chooser_selection_changed( GtkFileChooser *chooser, NactAssistantExport *window )
 {
-	static const gchar *thisfn = "nact_assistant_export_on_folder_selection_changed";
+	static const gchar *thisfn = "nact_assistant_export_on_folder_chooser_selection_changed";
 	GtkAssistant *assistant;
-	gint pos;
+	GtkWidget *page;
 	gchar *uri;
 	gboolean enabled;
-	NactAssistantExport *assist;
-	GtkWidget *content;
 
-	g_debug( "%s: chooser=%p, user_data=%p", thisfn, ( void * ) chooser, ( void * ) user_data );
-	g_assert( NACT_IS_ASSISTANT_EXPORT( user_data ));
-	assist = NACT_ASSISTANT_EXPORT( user_data );
+	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 
-	assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( assist )));
-	pos = gtk_assistant_get_current_page( assistant );
-	if( pos == ASSIST_PAGE_FOLDER_SELECTION ){
+	if( !window->private->dispose_has_run ){
+		g_debug( "%s: chooser=%p, window=%p", thisfn, ( void * ) chooser, ( void * ) window );
 
 		uri = gtk_file_chooser_get_current_folder_uri( chooser );
 		g_debug( "%s: uri=%s", thisfn, uri );
 		enabled = ( uri && strlen( uri ) && na_core_utils_dir_is_writable_uri( uri ));
 
 		if( enabled ){
-			g_free( assist->private->uri );
-			assist->private->uri = g_strdup( uri );
+			g_free( window->private->uri );
+			window->private->uri = g_strdup( uri );
 			na_settings_set_string( NA_IPREFS_EXPORT_ASSISTANT_URI, uri );
 		}
 
 		g_free( uri );
 
-		content = gtk_assistant_get_nth_page( assistant, pos );
-		gtk_assistant_set_page_complete( assistant, content, enabled );
-		gtk_assistant_update_buttons_state( assistant );
+		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FOLDER_SELECTION );
+		gtk_assistant_set_page_complete( assistant, page, enabled );
 	}
-
-	g_debug( "%s: quitting", thisfn );
-}
-
-static void
-assist_initial_load_format( NactAssistantExport *window, GtkAssistant *assistant )
-{
-	NactApplication *application;
-	NAUpdater *updater;
-	GtkWidget *container;
-
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	container = get_box_container( window );
-
-	nact_export_format_init_display( container,
-			NA_PIVOT( updater ), EXPORT_FORMAT_DISPLAY_ASSISTANT, !window->private->preferences_locked );
-}
-
-static void
-assist_runtime_init_format( NactAssistantExport *window, GtkAssistant *assistant )
-{
-	GtkWidget *container;
-	GtkWidget *page;
-	GQuark format;
-	gboolean mandatory;
-
-	format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, &mandatory );
-	container = get_box_container( window );
-#ifdef NA_MAINTAINER_MODE
-	na_gtk_utils_dump_children( GTK_CONTAINER( container ));
-#endif
-	nact_export_format_select( container, !mandatory, format );
-
-	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
-	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
 
 static NAExportFormat *
-get_export_format( NactAssistantExport *window )
+get_selected_export_format( NactAssistantExport *window )
 {
 	GtkWidget *container;
 	NAExportFormat *format;
 
-	container = get_box_container( window );
+	container = get_export_format_treeview( window );
 	format = nact_export_format_get_selected( container );
 
 	return( format );
 }
 
 static GtkWidget *
-get_box_container( NactAssistantExport *window )
+get_export_format_treeview( NactAssistantExport *window )
 {
 	GtkAssistant *assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
 	GtkWidget *page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
-	return( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "AssistantExportFormatVBox" ));
+	return( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" ));
 }
 
 static void
@@ -585,50 +653,76 @@ static void
 assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
 {
 	static const gchar *thisfn = "nact_assistant_export_prepare_confirm";
-	GString *text;
+	gchar *text, *tmp;
 	gchar *label_item;
-	gchar *label11, *label12;
-	gchar *label21, *label22;
-	GList *it;
+	gchar *format_label, *format_label2;
+	gchar *format_description, *format_description2;
+	GtkWidget *label;
 	NAExportFormat *format;
-	GtkLabel *confirm_label;
+	GList *it;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
-	/* i18n: this is the title of the confirm page of the export assistant */
-	text = g_string_new( "" );
-	g_string_printf( text, "<b>%s</b>\n\n", _( "About to export selected items:" ));
+#if !GTK_CHECK_VERSION( 3,0,0 )
+	/* Note that, at least, in Gtk 2.20 (Ubuntu 10) and 2.22 (Fedora 14), GtkLabel
+	 * queues its resize (when the text is being set), but the actual resize does
+	 * not happen immediately - We have to wait until Gtk 3.0, most probably due
+	 * to the new width-for-height and height-for-width features...
+	 */
+	GtkWidget *vbox = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmVBox" );
+	gtk_container_set_resize_mode( GTK_CONTAINER( vbox ), GTK_RESIZE_IMMEDIATE );
+#endif
 
+	/* display the items to be exported
+	 */
+	text = NULL;
 	for( it = window->private->selected_items ; it ; it = it->next ){
 		label_item = na_object_get_label( it->data );
-		g_string_append_printf( text, "\t%s\n", label_item );
+		if( text ){
+			tmp = g_strdup_printf( "%s\n%s", text, label_item );
+			g_free( text );
+			text = tmp;
+		} else {
+			text = g_strdup( label_item );
+		}
 		g_free( label_item );
 	}
+	label = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmItemsList" );
+	g_return_if_fail( GTK_IS_LABEL( label ));
+	gtk_label_set_text( GTK_LABEL( label ), text );
+	g_free( text );
 
+	/* display the target folder
+	 */
 	g_assert( window->private->uri && strlen( window->private->uri ));
+	label = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmTargetFolder" );
+	g_return_if_fail( GTK_IS_LABEL( label ));
+	gtk_label_set_text( GTK_LABEL( label ), window->private->uri );
 
-	/* i18n: all exported actions go to one destination folder */
-	g_string_append_printf( text,
-			"\n<b>%s</b>\n\n\t%s\n", _( "Into the destination folder:" ), window->private->uri );
+	/* display the export format and its description
+	 */
+	format = get_selected_export_format( window );
 
-	label11 = NULL;
-	label21 = NULL;
-	format = get_export_format( window );
-	label11 = na_export_format_get_label( format );
-	label21 = na_export_format_get_description( format );
+	format_label = na_export_format_get_label( format );
+	format_label2 = na_core_utils_str_remove_char( format_label, "_" );
+	text = g_strdup_printf( "%s:", format_label2 );
+	label = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmExportFormat" );
+	g_return_if_fail( GTK_IS_LABEL( label ));
+	gtk_label_set_text( GTK_LABEL( label ), text );
+	g_free( format_label );
+	g_free( format_label2 );
+	g_free( text );
+
+	format_description = na_export_format_get_description( format );
+	format_description2 = na_core_utils_str_remove_char( format_description, "_" );
+	label = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmExportTooltip" );
+	g_return_if_fail( GTK_IS_LABEL( label ));
+	gtk_label_set_text( GTK_LABEL( label ), format_description2 );
+	g_free( format_description );
+	g_free( format_description2 );
+
 	na_iprefs_set_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( format ));
-	label12 = na_core_utils_str_remove_char( label11, "_" );
-	label22 = na_core_utils_str_add_prefix( "\t", label21 );
-	g_string_append_printf( text, "\n<b>%s</b>\n\n%s", label12, label22 );
-	g_free( label22 );
-	g_free( label21 );
-	g_free( label12 );
-	g_free( label11 );
-
-	confirm_label = GTK_LABEL( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "AssistantExportConfirmLabel" ));
-	gtk_label_set_markup( confirm_label, text->str );
-	g_string_free( text, TRUE );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
@@ -689,86 +783,109 @@ static void
 assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page )
 {
 	static const gchar *thisfn = "nact_assistant_export_prepare_exportdone";
+	gint errors;
+	guint width;
+	GtkWidget *vbox;
+	GtkWidget *item_vbox;
+	const gchar *color;
+	gchar *item_label;
 	gchar *text, *tmp;
+	GtkWidget *label;
+	GSList *is;
 	GList *ir;
 	ExportStruct *str;
-	gchar *label;
-	GSList *is;
-	gint errors;
-	GtkTextView *summary_textview;
-	GtkTextBuffer *summary_buffer;
-	GtkTextTag *title_tag;
-	GtkTextIter start, end;
-	gint title_len;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
 
-	/* i18n: result of the export assistant */
-	text = g_strdup( _( "Selected actions have been proceeded :" ));
-	title_len = g_utf8_strlen( text, -1 );
-	tmp = g_strdup_printf( "%s\n\n", text );
-	g_free( text );
-	text = tmp;
-
 	errors = 0;
+	width = 15;
+	vbox = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p5-SummaryVBox" );
+	g_return_if_fail( GTK_IS_BOX( vbox ));
 
+#if !GTK_CHECK_VERSION( 3,0,0 )
+	/* Note that, at least, in Gtk 2.20 (Ubuntu 10) and 2.22 (Fedora 14), GtkLabel
+	 * queues its resize (when the text is being set), but the actual resize does
+	 * not happen immediately - We have to wait until Gtk 3.0, most probably due
+	 * to the new width-for-height and height-for-width features...
+	 */
+	gtk_container_set_resize_mode( GTK_CONTAINER( vbox ), GTK_RESIZE_IMMEDIATE );
+#endif
+
+	/* for each item:
+	 * - display the item label
+	 * - display the export filename
+	 */
 	for( ir = window->private->results ; ir ; ir = ir->next ){
+
+#if GTK_CHECK_VERSION( 3,0,0 )
+		item_vbox = gtk_box_new( GTK_ORIENTATION_VERTICAL, 4 );
+#else
+		item_vbox = gtk_vbox_new( FALSE, 4 );
+#endif
+		gtk_box_pack_start( GTK_BOX( vbox ), item_vbox, FALSE, FALSE, 0 );
+
+		/* display the item label
+		 */
 		str = ( ExportStruct * ) ir->data;
-
-		label = na_object_get_label( str->item );
-		tmp = g_strdup_printf( "%s\t%s\n", text, label );
+		color = str->fname ? "blue" : "red";
+		item_label = na_object_get_label( str->item );
+		text = g_markup_printf_escaped( "<span foreground=\"%s\">%s</span>", color, item_label );
+		label = gtk_label_new( NULL );
+		gtk_label_set_markup( GTK_LABEL( label ), text );
+		g_free( item_label );
 		g_free( text );
-		text = tmp;
-		g_free( label );
+		g_object_set( G_OBJECT( label ), "xalign", 0, NULL );
+		g_object_set( G_OBJECT( label ), "xpad", width, NULL );
+		gtk_box_pack_start( GTK_BOX( item_vbox ), label, FALSE, FALSE, 0 );
 
+		/* display the process log
+		 */
+		text = NULL;
 		if( str->fname ){
 			/* i18n: action as been successfully exported to <filename> */
-			tmp = g_strdup_printf( "%s\t\t%s\n\t\t%s\n", text, _( "Successfully exported as" ), str->fname );
-			g_free( text );
-			text = tmp;
+			text = g_strdup_printf( "%s %s", _( "Successfully exported as" ), str->fname );
 
 		} else if( str->format != IPREFS_EXPORT_NO_EXPORT ){
 			errors += 1;
 		}
 
-		/* add messages */
+		/* add messages if any
+		 */
 		for( is = str->msg ; is ; is = is->next ){
-			tmp = g_strdup_printf( "%s\t\t%s\n", text, ( gchar * ) is->data );
-			g_free( text );
-			text = tmp;
+			if( text ){
+				tmp = g_strdup_printf( "%s\n%s", text, ( gchar * ) is->data );
+				g_free( text );
+				text = tmp;
+			} else {
+				text = g_strdup(( gchar * ) is->data );
+			}
 		}
 
-		/* add a blank line between two actions */
-		tmp = g_strdup_printf( "%s\n", text );
+		label = gtk_label_new( text );
 		g_free( text );
-		text = tmp;
+		gtk_label_set_line_wrap( GTK_LABEL( label ), TRUE );
+		gtk_label_set_line_wrap_mode( GTK_LABEL( label ), PANGO_WRAP_WORD );
+		g_object_set( G_OBJECT( label ), "xalign", 0, NULL );
+		g_object_set( G_OBJECT( label ), "xpad", 2*width, NULL );
+		gtk_box_pack_start( GTK_BOX( item_vbox ), label, FALSE, FALSE, 0 );
 	}
 
 	if( errors ){
-		text = g_strdup_printf( "%s%s", text,
+		text = g_strdup_printf( "%s",
 				_( "You may not have write permissions on selected folder." ));
+		label = gtk_label_new( text );
 		g_free( text );
-		text = tmp;
+		gtk_label_set_line_wrap( GTK_LABEL( label ), TRUE );
+		gtk_label_set_line_wrap_mode( GTK_LABEL( label ), PANGO_WRAP_WORD );
+		g_object_set( G_OBJECT( label ), "xalign", 0, NULL );
+		g_object_set( G_OBJECT( label ), "xpad", width, NULL );
+		gtk_box_pack_start( GTK_BOX( item_vbox ), label, FALSE, FALSE, 0 );
 	}
-
-	summary_textview = GTK_TEXT_VIEW( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "AssistantExportSummaryTextView" ));
-	summary_buffer = gtk_text_view_get_buffer( summary_textview );
-	gtk_text_buffer_set_text( summary_buffer, text, -1 );
-	g_free( text );
-
-	title_tag = gtk_text_buffer_create_tag( summary_buffer, "title",
-			"weight", PANGO_WEIGHT_BOLD,
-			NULL );
-
-	gtk_text_buffer_get_iter_at_offset( summary_buffer, &start, 0 );
-	gtk_text_buffer_get_iter_at_offset( summary_buffer, &end, title_len );
-	gtk_text_buffer_apply_tag( summary_buffer, title_tag, &start, &end );
-
-	g_object_unref( title_tag );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	g_object_set( G_OBJECT( window ), BASE_PROP_WARN_ON_ESCAPE, FALSE, NULL );
+	gtk_widget_show_all( page );
 }
 
 static void
