@@ -249,6 +249,10 @@ instance_dispose( GObject *window )
 {
 	static const gchar *thisfn = "nact_assistant_export_instance_dispose";
 	NactAssistantExport *self;
+	GtkAssistant *assistant;
+	GtkWidget *page;
+	guint pos;
+	GtkWidget *pane;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 
@@ -264,6 +268,12 @@ instance_dispose( GObject *window )
 		if( self->private->selected_items ){
 			self->private->selected_items = na_object_free_items( self->private->selected_items );
 		}
+
+		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
+		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
+		pane = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p1-HPaned" );
+		pos = gtk_paned_get_position( GTK_PANED( pane ));
+		na_settings_set_uint( NA_IPREFS_EXPORT_ASSISTANT_PANED, pos );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -495,6 +505,8 @@ on_base_initialize_base_window( NactAssistantExport *window, gpointer user_data 
 	static const gchar *thisfn = "nact_assistant_export_on_base_initialize_base_window";
 	GtkAssistant *assistant;
 	GtkWidget *page;
+	guint pos;
+	GtkWidget *pane;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 
@@ -507,6 +519,15 @@ on_base_initialize_base_window( NactAssistantExport *window, gpointer user_data 
 		 */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_INTRO );
 		gtk_assistant_set_page_complete( assistant, page, TRUE );
+
+		/* set the slider position
+		 */
+		pos = na_settings_get_uint( NA_IPREFS_EXPORT_ASSISTANT_PANED, NULL, NULL );
+		if( pos ){
+			page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
+			pane = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p1-HPaned" );
+			gtk_paned_set_position( GTK_PANED( pane ), pos );
+		}
 	}
 }
 

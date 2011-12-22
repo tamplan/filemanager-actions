@@ -1,5 +1,14 @@
 2011-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-settings.c:
+	* src/core/na-settings.h: New "export-assistant-paned-width" preference.
+
+	* src/nact/nact-assistant-export.c
+	(instance_dispose, on_base_initialize_base_window):
+	Keep the position of the horizontal pane as a user preference.
+
+	* src/nact/nact-assistant-export.ui: Give a more kind name to the pane.
+
 	* src/nact/nact-assistant-export.c:
 	* src/nact/nact-assistant-export.ui: Whole refactoring.
 

@@ -92,6 +92,7 @@ G_BEGIN_DECLS
 #define NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE	"export-ask-user-keep-last-choice"
 #define NA_IPREFS_EXPORT_ASSISTANT_WSP				"export-assistant-wsp"
 #define NA_IPREFS_EXPORT_ASSISTANT_URI				"export-assistant-lfu"
+#define NA_IPREFS_EXPORT_ASSISTANT_PANED			"export-assistant-paned-width"
 #define NA_IPREFS_EXPORT_PREFERRED_FORMAT			"export-preferred-format"
 #define NA_IPREFS_FOLDER_CHOOSER_WSP				"folder-chooser-wsp"
 #define NA_IPREFS_FOLDER_CHOOSER_URI				"folder-chooser-lfu"

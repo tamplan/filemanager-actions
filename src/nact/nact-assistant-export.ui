@@ -23,7 +23,7 @@
           <object class="GtkAlignment" id="p1-l2-alignment1">
             <property name="visible">True</property>
             <child>
-              <object class="GtkHPaned" id="p1-l3-hpaned1">
+              <object class="GtkHPaned" id="p1-HPaned">
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkVBox" id="p1-l4-vbox1">
