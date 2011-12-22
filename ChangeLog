@@ -1,5 +1,7 @@
 2011-12-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-export-format.c: Remove superfluous gdk-pixbuf.h include.
+
 	* src/core/na-settings.c:
 	* src/core/na-settings.h: New "export-assistant-paned-width" preference.
 

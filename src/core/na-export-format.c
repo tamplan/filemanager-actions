@@ -32,8 +32,6 @@
 #include <config.h>
 #endif
 
-#include <gdk-pixbuf/gdk-pixbuf.h>
-
 #include "na-export-format.h"
 
 /* private class data
