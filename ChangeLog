@@ -11,6 +11,11 @@
 	* src/nact/nact-application.c:
 	* src/nact/nact-application.h (nact_application_new): Have an empty constructor.
 
+2011-12-23 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-gtk-utils.c:
+	* src/core/na-gtk-utils.h (na_gtk_utils_find_widget_by_type): New function.
+
 2011-12-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-export-format.c: Remove superfluous gdk-pixbuf.h include.
