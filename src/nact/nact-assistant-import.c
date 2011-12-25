@@ -458,7 +458,7 @@ runtime_init_file_selector( NactAssistantImport *window, GtkAssistant *assistant
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FILES_SELECTION );
 	g_return_if_fail( GTK_IS_CONTAINER( page ));
 
-	chooser = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "ImportFileChooser" );
+	chooser = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "ImportFileChooser" );
 	g_return_if_fail( GTK_IS_FILE_CHOOSER( chooser ));
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p, chooser=%p",
@@ -987,7 +987,7 @@ find_widget_from_page( GtkWidget *page, const gchar *name )
 
 	g_return_val_if_fail( GTK_IS_CONTAINER( page ), NULL );
 
-	widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), name );
+	widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), name );
 
 	return( widget );
 }

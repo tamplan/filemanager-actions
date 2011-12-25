@@ -703,7 +703,7 @@ on_base_initialize_gtk( BaseWindow *window, GtkWindow *toplevel, gpointer user_d
 		nact_tree_model_new( window, treeview, items_view->private->mode );
 
 		/* associates the ItemsView to the label */
-		label = na_gtk_utils_search_for_child_widget( items_view->private->parent, "ActionsListLabel" );
+		label = na_gtk_utils_find_widget_by_name( items_view->private->parent, "ActionsListLabel" );
 		gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( treeview ));
 
 		/* create visible columns on the tree view
@@ -1293,7 +1293,7 @@ get_selected_items( NactTreeView *view )
 static GtkWidget *
 get_tree_view( NactTreeView *items_view )
 {
-	return( na_gtk_utils_search_for_child_widget( items_view->private->parent, items_view->private->widget_name ));
+	return( na_gtk_utils_find_widget_by_name( items_view->private->parent, items_view->private->widget_name ));
 }
 
 static void

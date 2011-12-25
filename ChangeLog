@@ -11,6 +11,19 @@
 	* src/nact/nact-application.c:
 	* src/nact/nact-application.h (nact_application_new): Have an empty constructor.
 
+2011-12-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-gtk-utils.c:
+	* src/core/na-gtk-utils.h
+	(na_gtk_utils_search_for_child_widget): Renamed as na_gtk_utils_find_widget_by_name().
+
+	* src/core/na-importer-ask.c:
+	* src/nact/base-window.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-tree-view.c: Updated accordingly.
+
 2011-12-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-gtk-utils.c:

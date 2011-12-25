@@ -73,14 +73,14 @@ na_gtk_utils_find_widget_by_type( GtkContainer *container, GType type )
 }
 
 /*
- * na_gtk_utils_search_for_child_widget:
+ * na_gtk_utils_find_widget_by_name:
  * @container: a #GtkContainer, usually the #GtkWindow toplevel.
  * @name: the name of the searched widget.
  *
  * Returns: the searched widget.
  */
 GtkWidget *
-na_gtk_utils_search_for_child_widget( GtkContainer *container, const gchar *name )
+na_gtk_utils_find_widget_by_name( GtkContainer *container, const gchar *name )
 {
 	GList *children = gtk_container_get_children( container );
 	GList *ic;
@@ -101,7 +101,7 @@ na_gtk_utils_search_for_child_widget( GtkContainer *container, const gchar *name
 					break;
 
 				} else if( GTK_IS_CONTAINER( child )){
-					found = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( child ), name );
+					found = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( child ), name );
 				}
 			}
 		}

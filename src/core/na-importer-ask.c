@@ -349,27 +349,27 @@ init_dialog( NAImporterAsk *editor )
 				imported_label, editor->private->parms->uri, existing_label );
 	}
 
-	widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "ImporterAskLabel" );
+	widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "ImporterAskLabel" );
 	gtk_label_set_text( GTK_LABEL( widget ), label );
 	g_free( label );
 
 	switch( editor->private->mode ){
 		case IMPORTER_MODE_RENUMBER:
-			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
+			button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
 			break;
 
 		case IMPORTER_MODE_OVERRIDE:
-			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
+			button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
 			break;
 
 		case IMPORTER_MODE_NO_IMPORT:
 		default:
-			button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskNoImportButton" );
+			button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskNoImportButton" );
 			break;
 	}
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
 
-	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
+	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), editor->private->parms->keep_choice );
 
 	na_gtk_utils_restore_window_position( editor->private->toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
@@ -385,12 +385,12 @@ get_selected_mode( NAImporterAsk *editor )
 
 	import_mode = IMPORTER_MODE_NO_IMPORT;
 
-	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
+	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
 		import_mode = IMPORTER_MODE_RENUMBER;
 
 	} else {
-		button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
+		button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
 		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
 			import_mode = IMPORTER_MODE_OVERRIDE;
 		}
@@ -399,7 +399,7 @@ get_selected_mode( NAImporterAsk *editor )
 	editor->private->mode = import_mode;
 	na_iprefs_set_import_mode( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, editor->private->mode );
 
-	button = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
+	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
 	na_settings_set_boolean( NA_IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, keep );
 }

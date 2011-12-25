@@ -1093,7 +1093,7 @@ base_window_get_widget( const BaseWindow *window, const gchar *name )
 
 	if( !window->private->dispose_has_run ){
 
-		widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( window->private->gtk_toplevel ), name );
+		widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( window->private->gtk_toplevel ), name );
 	}
 
 	return( widget );

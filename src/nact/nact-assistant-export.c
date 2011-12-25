@@ -271,7 +271,7 @@ instance_dispose( GObject *window )
 
 		assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
-		pane = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p1-HPaned" );
+		pane = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p1-HPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		na_settings_set_uint( NA_IPREFS_EXPORT_ASSISTANT_PANED, pos );
 
@@ -348,7 +348,7 @@ on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *assi
 				thisfn, ( void * ) window, ( void * ) assistant, ( void * ) user_data );
 
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
-		widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "ActionsList" );
+		widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "ActionsList" );
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
 				G_OBJECT( widget ),
@@ -360,7 +360,7 @@ on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *assi
 						GTK_CONTAINER( page ), "ActionsList", TREE_MODE_SELECTION );
 
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FOLDER_SELECTION );
-		widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p2-ExportFolderChooser" );
+		widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p2-ExportFolderChooser" );
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
 				G_OBJECT( widget ),
@@ -368,7 +368,7 @@ on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *assi
 				G_CALLBACK( on_folder_chooser_realized ));
 
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
-		widget = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" );
+		widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" );
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
 				G_OBJECT( widget ),
@@ -382,23 +382,23 @@ on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *assi
 		guint padder = 8;
 		/* selecting items */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
-		GtkWidget *container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p1-l2-alignment1" );
+		GtkWidget *container = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p1-l2-alignment1" );
 		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
 		/* selecting target folder */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FOLDER_SELECTION );
-		container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p2-l2-alignment1" );
+		container = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p2-l2-alignment1" );
 		g_object_set( G_OBJECT( container ), "top_padding", padder, NULL );
 		/* choosing export format */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
-		container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p3-l2-alignment1" );
+		container = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p3-l2-alignment1" );
 		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
 		/* summary */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_CONFIRM );
-		container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-l2-alignment1" );
+		container = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-l2-alignment1" );
 		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
 		/* import is done */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DONE );
-		container = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p5-l2-alignment1" );
+		container = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p5-l2-alignment1" );
 		g_object_set( G_OBJECT( container ), "border_width", padder, NULL );
 #endif
 	}
@@ -525,7 +525,7 @@ on_base_initialize_base_window( NactAssistantExport *window, gpointer user_data 
 		pos = na_settings_get_uint( NA_IPREFS_EXPORT_ASSISTANT_PANED, NULL, NULL );
 		if( pos ){
 			page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_ACTIONS_SELECTION );
-			pane = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p1-HPaned" );
+			pane = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p1-HPaned" );
 			gtk_paned_set_position( GTK_PANED( pane ), pos );
 		}
 	}
@@ -644,7 +644,7 @@ get_export_format_treeview( NactAssistantExport *window )
 {
 	GtkAssistant *assistant = GTK_ASSISTANT( base_window_get_gtk_toplevel( BASE_WINDOW( window )));
 	GtkWidget *page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
-	return( na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" ));
+	return( na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" ));
 }
 
 static void
@@ -691,7 +691,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	 * not happen immediately - We have to wait until Gtk 3.0, most probably due
 	 * to the new width-for-height and height-for-width features...
 	 */
-	GtkWidget *vbox = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmVBox" );
+	GtkWidget *vbox = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmVBox" );
 	gtk_container_set_resize_mode( GTK_CONTAINER( vbox ), GTK_RESIZE_IMMEDIATE );
 #endif
 
@@ -709,7 +709,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 		}
 		g_free( label_item );
 	}
-	label = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmItemsList" );
+	label = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmItemsList" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
 	gtk_label_set_text( GTK_LABEL( label ), text );
 	g_free( text );
@@ -717,7 +717,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	/* display the target folder
 	 */
 	g_assert( window->private->uri && strlen( window->private->uri ));
-	label = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmTargetFolder" );
+	label = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmTargetFolder" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
 	gtk_label_set_text( GTK_LABEL( label ), window->private->uri );
 
@@ -728,7 +728,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	format_label = na_export_format_get_label( format );
 	format_label2 = na_core_utils_str_remove_char( format_label, "_" );
 	text = g_strdup_printf( "%s:", format_label2 );
-	label = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmExportFormat" );
+	label = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmExportFormat" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
 	gtk_label_set_text( GTK_LABEL( label ), text );
 	g_free( format_label );
@@ -737,7 +737,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 
 	format_description = na_export_format_get_description( format );
 	format_description2 = na_core_utils_str_remove_char( format_description, "_" );
-	label = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p4-ConfirmExportTooltip" );
+	label = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p4-ConfirmExportTooltip" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
 	gtk_label_set_text( GTK_LABEL( label ), format_description2 );
 	g_free( format_description );
@@ -821,7 +821,7 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 
 	errors = 0;
 	width = 15;
-	vbox = na_gtk_utils_search_for_child_widget( GTK_CONTAINER( page ), "p5-SummaryVBox" );
+	vbox = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p5-SummaryVBox" );
 	g_return_if_fail( GTK_IS_BOX( vbox ));
 
 #if !GTK_CHECK_VERSION( 3,0,0 )
