@@ -13,6 +13,15 @@
 
 2011-12-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/export-dump.png:
+	* src/io-xml/export-schemas-v1.png:
+	* src/io-xml/export-schemas-v2.png: New files.
+
+	* src/io-xml/naxml-formats.c (naxml_formats_get_formats): Define icons for
+	XML export formats.
+
+	* src/io-xml/Makefile.am: Updated accordingly.
+	 
 	* src/core/na-import-mode.c:
 	* src/core/na-import-mode.h:
 	* src/core/na-ioption.c:

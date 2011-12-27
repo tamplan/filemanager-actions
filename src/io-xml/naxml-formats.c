@@ -59,7 +59,7 @@ static NaxmlExportFormat naxml_formats[] = {
 				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ),
-			NULL },
+			"export-schemas-v1.png" },
 
 	/* GCONF_SCHEMA_V2: the lightest schema still compatible with gconftool-2 --install-schema-file
 	 * (no owner, no short nor long descriptions) - introduced in v 1.11
@@ -74,7 +74,7 @@ static NaxmlExportFormat naxml_formats[] = {
 				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
 				"- or via the gconftool-2 --import-schema-file command-line tool." ),
-			NULL },
+			"export-schemas-v2.png" },
 
 	/* GCONF_ENTRY: not a schema, but a dump of the GConf entry
 	 * introduced in v 1.11
@@ -89,7 +89,7 @@ static NaxmlExportFormat naxml_formats[] = {
 				"- Import assistant of the Nautilus-Actions Configuration Tool (1.11 and above),\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool (1.11 and above),\n" \
 				"- or via the gconftool-2 --load command-line tool." ),
-			NULL },
+			"export-dump.png" },
 
 	{ NULL }
 };
@@ -111,6 +111,7 @@ naxml_formats_get_formats( const NAIExporter* exporter )
 	NAIExporterFormatExt *str;
 	guint i;
 	gint width, height;
+	gchar *fname;
 
 	str_list = NULL;
 
@@ -126,7 +127,9 @@ naxml_formats_get_formats( const NAIExporter* exporter )
 		str->label = g_strdup( gettext( naxml_formats[i].label ));
 		str->description = g_strdup( gettext( naxml_formats[i].description ));
 		if( naxml_formats[i].image ){
-			str->pixbuf = gdk_pixbuf_new_from_file_at_size( naxml_formats[i].image, width, height, NULL );
+			fname = g_strdup_printf( "%s/%s", PKGDATADIR, naxml_formats[i].image );
+			str->pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
+			g_free( fname );
 		}
 		str_list = g_list_prepend( str_list, str );
 	}

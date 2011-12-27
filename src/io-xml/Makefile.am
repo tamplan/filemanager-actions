@@ -33,6 +33,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_XML}\"			\
+	-DPKGDATADIR=\"$(pkgdatadir)\"						\
 	$(NULL)
 
 libna_io_xml_la_SOURCES = \
@@ -58,4 +59,18 @@ libna_io_xml_la_LDFLAGS = \
 	-module 											\
 	-no-undefined										\
 	-avoid-version										\
+	$(NULL)
+
+images_files = \
+	export-dump.png										\
+	export-schemas-v1.png								\
+	export-schemas-v2.png								\
+	$(NULL)
+
+pkgdata_DATA = \
+	$(images_files)										\
+	$(NULL)
+
+EXTRA_DIST = \
+	$(pkgdata_DATA)										\
 	$(NULL)
