@@ -54,9 +54,24 @@ void       na_gtk_utils_dump_children          ( GtkContainer *container );
 void       na_gtk_utils_restore_window_position( GtkWindow *toplevel, const gchar *wsp_name );
 void       na_gtk_utils_save_window_position   ( GtkWindow *toplevel, const gchar *wsp_name );
 
+/* widget status
+ */
+void       na_gtk_utils_set_editable( GObject *widget, gboolean editable );
+
+void       na_gtk_utils_radio_set_initial_state  ( GtkRadioButton *button,
+				GCallback toggled_handler, void *user_data,
+				gboolean editable, gboolean sensitive );
+
+void       na_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback toggled_handler );
+
 /* default height of a panel bar (dirty hack!)
  */
 #define DEFAULT_HEIGHT		22
+
+#define NA_TOGGLE_DATA_EDITABLE			"na-toggle-data-editable"
+#define NA_TOGGLE_DATA_BUTTON			"na-toggle-data-button"
+#define NA_TOGGLE_DATA_HANDLER			"na-toggle-data-handler"
+#define NA_TOGGLE_DATA_USER_DATA		"na-toggle-data-user-data"
 
 G_END_DECLS
 

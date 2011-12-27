@@ -37,6 +37,7 @@
 #include <api/na-object-api.h>
 
 #include <core/na-exporter.h>
+#include <core/na-gtk-utils.h>
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
@@ -355,7 +356,7 @@ keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor )
 {
 	gboolean editable;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
 
 	if( editable ){
 		editor->private->keep_last_choice = gtk_toggle_button_get_active( button );

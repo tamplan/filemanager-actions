@@ -11,6 +11,27 @@
 	* src/nact/nact-application.c:
 	* src/nact/nact-application.h (nact_application_new): Have an empty constructor.
 
+2011-12-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-import-mode.c:
+	* src/core/na-import-mode.h:
+	* src/core/na-ioption.c:
+	* src/core/na-ioption.h:
+	* src/core/na-ioptions-list.c:
+	* src/core/na-ioptions-list.h: New files.
+
+	* src/core/Makefile.am: Updated accordingly.
+
+	* src/core/na-gtk-utils.c:
+	* src/core/na-gtk-utils.h:
+	* src/nact/base-gtk-utils.c:
+	* src/nact/base-gtk-utils.h (base_gtk_utils_set_editable,
+	base_gtk_utils_radio_set_initial_state,
+	base_gtk_utils_radio_reset_initial_state): Move functions to na-gtk-utils.
+
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-preferences-editor.c: Updated accordingly.
+
 2011-12-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-gtk-utils.c:

@@ -39,10 +39,6 @@
 
 #include "base-gtk-utils.h"
 
-#define NACT_PROP_TOGGLE_BUTTON				"nact-prop-toggle-button"
-#define NACT_PROP_TOGGLE_HANDLER			"nact-prop-toggle-handler"
-#define NACT_PROP_TOGGLE_USER_DATA			"nact-prop-toggle-user-data"
-
 #define DEFAULT_WIDTH		22
 
 /**
@@ -103,58 +99,7 @@ base_gtk_utils_save_window_position( const BaseWindow *window, const gchar *wsp_
 void
 base_gtk_utils_set_editable( GObject *widget, gboolean editable )
 {
-	GList *renderers, *irender;
-
-/* GtkComboBoxEntry is deprecated from Gtk+3
- * see. http://git.gnome.org/browse/gtk+/commit/?id=9612c648176378bf237ad0e1a8c6c995b0ca7c61
- * while 'has_entry' property exists since 2.24
- */
-#if GTK_CHECK_VERSION( 2, 24, 0 )
-	if( GTK_IS_COMBO_BOX( widget ) && gtk_combo_box_get_has_entry( GTK_COMBO_BOX( widget ))){
-#else
-	if( GTK_IS_COMBO_BOX_ENTRY( widget )){
-#endif
-		/* idem as GtkEntry */
-		gtk_editable_set_editable( GTK_EDITABLE( gtk_bin_get_child( GTK_BIN( widget ))), editable );
-		g_object_set( G_OBJECT( gtk_bin_get_child( GTK_BIN( widget ))), "can-focus", editable, NULL );
-		/* disable the listbox button itself */
-		gtk_combo_box_set_button_sensitivity( GTK_COMBO_BOX( widget ), editable ? GTK_SENSITIVITY_ON : GTK_SENSITIVITY_OFF );
-
-	} else if( GTK_IS_COMBO_BOX( widget )){
-		/* disable the listbox button itself */
-		gtk_combo_box_set_button_sensitivity( GTK_COMBO_BOX( widget ), editable ? GTK_SENSITIVITY_ON : GTK_SENSITIVITY_OFF );
-
-	} else if( GTK_IS_ENTRY( widget )){
-		gtk_editable_set_editable( GTK_EDITABLE( widget ), editable );
-		/* removing the frame leads to a disturbing modification of the
-		 * height of the control */
-		/*g_object_set( G_OBJECT( widget ), "has-frame", editable, NULL );*/
-		/* this prevents the caret to be displayed when we click in the entry */
-		g_object_set( G_OBJECT( widget ), "can-focus", editable, NULL );
-
-	} else if( GTK_IS_TEXT_VIEW( widget )){
-		g_object_set( G_OBJECT( widget ), "can-focus", editable, NULL );
-		gtk_text_view_set_editable( GTK_TEXT_VIEW( widget ), editable );
-
-	} else if( GTK_IS_TOGGLE_BUTTON( widget )){
-		/* transforms to a quasi standard GtkButton */
-		/*g_object_set( G_OBJECT( widget ), "draw-indicator", editable, NULL );*/
-		/* this at least prevent the keyboard focus to go to the button
-		 * (which is better than nothing) */
-		g_object_set( G_OBJECT( widget ), "can-focus", editable, NULL );
-
-	} else if( GTK_IS_TREE_VIEW_COLUMN( widget )){
-		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( GTK_TREE_VIEW_COLUMN( widget )));
-		for( irender = renderers ; irender ; irender = irender->next ){
-			if( GTK_IS_CELL_RENDERER_TEXT( irender->data )){
-				g_object_set( G_OBJECT( irender->data ), "editable", editable, "editable-set", TRUE, NULL );
-			}
-		}
-		g_list_free( renderers );
-
-	} else if( GTK_IS_BUTTON( widget )){
-		gtk_widget_set_sensitive( GTK_WIDGET( widget ), editable );
-	}
+	na_gtk_utils_set_editable( widget, editable );
 }
 
 /**
@@ -184,23 +129,7 @@ void
 base_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 		GCallback handler, void *user_data, gboolean editable, gboolean sensitive )
 {
-	GSList *group, *ig;
-	GtkRadioButton *other;
-
-	group = gtk_radio_button_get_group( button );
-
-	for( ig = group ; ig ; ig = ig->next ){
-		other = GTK_RADIO_BUTTON( ig->data );
-		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_BUTTON, button );
-		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_HANDLER, handler );
-		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_USER_DATA, user_data );
-		g_object_set_data( G_OBJECT( other ), NACT_PROP_TOGGLE_EDITABLE, GUINT_TO_POINTER( editable ));
-		base_gtk_utils_set_editable( G_OBJECT( other ), editable );
-		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( other ), FALSE );
-		gtk_widget_set_sensitive( GTK_WIDGET( other ), sensitive );
-	}
-
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
+	na_gtk_utils_radio_set_initial_state( button, handler, user_data, editable, sensitive );
 }
 
 /**
@@ -217,33 +146,7 @@ base_gtk_utils_radio_set_initial_state( GtkRadioButton *button,
 void
 base_gtk_utils_radio_reset_initial_state( GtkRadioButton *button, GCallback handler )
 {
-	GtkToggleButton *initial_button;
-	GCallback initial_handler;
-	gboolean active;
-	gboolean editable;
-	gpointer user_data;
-
-	active = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_EDITABLE ));
-
-	if( active && !editable ){
-		initial_button = GTK_TOGGLE_BUTTON( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_BUTTON ));
-		initial_handler = G_CALLBACK( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_HANDLER ));
-		user_data = g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_USER_DATA );
-
-		if( handler ){
-			g_signal_handlers_block_by_func(( gpointer ) button, handler, user_data );
-		}
-		g_signal_handlers_block_by_func(( gpointer ) initial_button, initial_handler, user_data );
-
-		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), FALSE );
-		gtk_toggle_button_set_active( initial_button, TRUE );
-
-		g_signal_handlers_unblock_by_func(( gpointer ) initial_button, initial_handler, user_data );
-		if( handler ){
-			g_signal_handlers_unblock_by_func(( gpointer ) button, handler, user_data );
-		}
-	}
+	na_gtk_utils_radio_reset_initial_state( button, handler );
 }
 
 /**
@@ -279,9 +182,9 @@ base_gtk_utils_toggle_set_initial_state( BaseWindow *window,
 	if( button ){
 		base_window_signal_connect( window, G_OBJECT( button ), "toggled", handler );
 
-		g_object_set_data( G_OBJECT( button ), NACT_PROP_TOGGLE_HANDLER, handler );
-		g_object_set_data( G_OBJECT( button ), NACT_PROP_TOGGLE_USER_DATA, window );
-		g_object_set_data( G_OBJECT( button ), NACT_PROP_TOGGLE_EDITABLE, GUINT_TO_POINTER( editable ));
+		g_object_set_data( G_OBJECT( button ), NA_TOGGLE_DATA_HANDLER, handler );
+		g_object_set_data( G_OBJECT( button ), NA_TOGGLE_DATA_USER_DATA, window );
+		g_object_set_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE, GUINT_TO_POINTER( editable ));
 
 		base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 		gtk_widget_set_sensitive( GTK_WIDGET( button ), sensitive );
@@ -307,12 +210,12 @@ base_gtk_utils_toggle_reset_initial_state( GtkToggleButton *button )
 	gpointer user_data;
 	gboolean active;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_EDITABLE ));
 
 	if( !editable ){
 		active = gtk_toggle_button_get_active( button );
-		handler = G_CALLBACK( g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_HANDLER ));
-		user_data = g_object_get_data( G_OBJECT( button ), NACT_PROP_TOGGLE_USER_DATA );
+		handler = G_CALLBACK( g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_HANDLER ));
+		user_data = g_object_get_data( G_OBJECT( button ), NA_TOGGLE_DATA_USER_DATA );
 
 		g_signal_handlers_block_by_func(( gpointer ) button, handler, user_data );
 		gtk_toggle_button_set_active( button, !active );

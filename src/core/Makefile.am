@@ -79,12 +79,18 @@ libna_core_la_SOURCES = \
 	na-ifactory-provider.c								\
 	na-iimporter.c										\
 	na-iio-provider.c									\
-	na-io-provider.c									\
-	na-io-provider.h									\
+	na-import-mode.c									\
+	na-import-mode.h									\
 	na-importer.c										\
 	na-importer.h										\
 	na-importer-ask.c									\
 	na-importer-ask.h									\
+	na-io-provider.c									\
+	na-io-provider.h									\
+	na-ioption.c										\
+	na-ioption.h										\
+	na-ioptions-list.c									\
+	na-ioptions-list.h									\
 	na-iprefs.c											\
 	na-iprefs.h											\
 	na-module.c											\

@@ -49,8 +49,6 @@ void       base_gtk_utils_save_window_position   ( const BaseWindow *window, con
 
 /* widget status
  */
-#define NACT_PROP_TOGGLE_EDITABLE			"nact-prop-toggle-editable"
-
 void       base_gtk_utils_set_editable( GObject *widget, gboolean editable );
 
 void       base_gtk_utils_radio_set_initial_state  ( GtkRadioButton *button,
