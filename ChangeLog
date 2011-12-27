@@ -13,6 +13,13 @@
 
 2011-12-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/export-desktop.png: New file.
+
+	* src/io-desktop/nadp-formats.c (nadp_formats_get_formats): Define an icon
+	for desktop export format.
+
+	* src/io-desktop/Makefile.am: Updated accordingly.
+
 	* src/io-xml/export-dump.png:
 	* src/io-xml/export-schemas-v1.png:
 	* src/io-xml/export-schemas-v2.png: New files.

@@ -65,7 +65,7 @@ static NadpExportFormat nadp_formats[] = {
 				"- Import assistant of the Nautilus-Actions Configuration Tool,\n" \
 				"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n" \
 				"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory." ),
-			NULL },
+			"export-desktop.png" },
 
 	{ NULL }
 };
@@ -87,6 +87,7 @@ nadp_formats_get_formats( const NAIExporter* exporter )
 	NAIExporterFormatExt *str;
 	guint i;
 	gint width, height;
+	gchar *fname;
 
 	str_list = NULL;
 
@@ -102,7 +103,9 @@ nadp_formats_get_formats( const NAIExporter* exporter )
 		str->label = g_strdup( gettext( nadp_formats[i].label ));
 		str->description = g_strdup( gettext( nadp_formats[i].description ));
 		if( nadp_formats[i].image ){
-			str->pixbuf = gdk_pixbuf_new_from_file_at_size( nadp_formats[i].image, width, height, NULL );
+			fname = g_strdup_printf( "%s/%s", PKGDATADIR, nadp_formats[i].image );
+			str->pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
+			g_free( fname );
 		}
 		str_list = g_list_prepend( str_list, str );
 	}

@@ -33,6 +33,7 @@ AM_CPPFLAGS += \
 	-I $(top_srcdir)/src								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_DESKTOP}\"		\
+	-DPKGDATADIR=\"$(pkgdatadir)\"						\
 	$(NULL)
 
 libna_io_desktop_la_SOURCES = \
@@ -66,4 +67,16 @@ libna_io_desktop_la_LDFLAGS = \
 	-module 											\
 	-no-undefined										\
 	-avoid-version										\
+	$(NULL)
+
+images_files = \
+	export-desktop.png									\
+	$(NULL)
+
+pkgdata_DATA = \
+	$(images_files)										\
+	$(NULL)
+
+EXTRA_DIST = \
+	$(pkgdata_DATA)										\
 	$(NULL)
