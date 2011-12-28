@@ -55,20 +55,12 @@ struct _NactApplicationPrivate {
 	NAUpdater *updater;
 };
 
-/* private instance properties
- */
-enum {
-	NACT_APPLICATION_PROP_UPDATER_ID = 1
-};
-
-#define NACT_APPLICATION_PROP_UPDATER	"nact-application-prop-updater"
+static const gchar *st_application_name	= N_( "Nautilus-Actions Configuration Tool" );
+static const gchar *st_description		= N_( "A user interface to edit your own contextual actions" );
+static const gchar *st_unique_name		= "org.gnome.nautilus-actions.ConfigurationTool";
 
 static gboolean     st_non_unique_opt = FALSE;
 static gboolean     st_version_opt    = FALSE;
-
-static const gchar *st_application_name = N_( "Nautilus-Actions Configuration Tool" );
-static const gchar *st_description      = N_( "A user interface to edit your own contextual actions" );
-static const gchar *st_unique_app_name  = "org.nautilus-actions.ConfigurationTool";
 
 static GOptionEntry st_option_entries[] = {
 	{ "non-unique", 'n', 0, G_OPTION_ARG_NONE, &st_non_unique_opt,
@@ -83,11 +75,8 @@ static BaseApplicationClass *st_parent_class = NULL;
 static GType    register_type( void );
 static void     class_init( NactApplicationClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
-
 static gboolean appli_manage_options( const BaseApplication *application, int *code );
 static GObject *appli_main_window_new( const BaseApplication *application, int *code );
 
@@ -133,7 +122,6 @@ class_init( NactApplicationClass *klass )
 {
 	static const gchar *thisfn = "nact_application_class_init";
 	GObjectClass *object_class;
-	GParamSpec *spec;
 	BaseApplicationClass *appli_class;
 
 	g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
@@ -143,15 +131,6 @@ class_init( NactApplicationClass *klass )
 	object_class = G_OBJECT_CLASS( klass );
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
-	object_class->get_property = instance_get_property;
-	object_class->set_property = instance_set_property;
-
-	spec = g_param_spec_pointer(
-			NACT_APPLICATION_PROP_UPDATER,
-			NACT_APPLICATION_PROP_UPDATER,
-			"NAUpdater object pointer",
-			G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE );
-	g_object_class_install_property( object_class, NACT_APPLICATION_PROP_UPDATER_ID, spec );
 
 	klass->private = g_new0( NactApplicationClassPrivate, 1 );
 
@@ -176,50 +155,6 @@ instance_init( GTypeInstance *application, gpointer klass )
 	self->private = g_new0( NactApplicationPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-}
-
-static void
-instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
-{
-	NactApplication *self;
-
-	g_assert( NACT_IS_APPLICATION( object ));
-	self = NACT_APPLICATION( object );
-
-	if( !self->private->dispose_has_run ){
-
-		switch( property_id ){
-			case NACT_APPLICATION_PROP_UPDATER_ID:
-				g_value_set_pointer( value, self->private->updater );
-				break;
-
-			default:
-				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-				break;
-		}
-	}
-}
-
-static void
-instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
-{
-	NactApplication *self;
-
-	g_assert( NACT_IS_APPLICATION( object ));
-	self = NACT_APPLICATION( object );
-
-	if( !self->private->dispose_has_run ){
-
-		switch( property_id ){
-			case NACT_APPLICATION_PROP_UPDATER_ID:
-				self->private->updater = g_value_get_pointer( value );
-				break;
-
-			default:
-				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
-				break;
-		}
-	}
 }
 
 static void
@@ -270,31 +205,24 @@ instance_finalize( GObject *application )
 }
 
 /**
- * Returns a newly allocated NactApplication object.
+ * nact_application_new:
  *
- * @argc: count of command-line arguments.
- *
- * @argv: command-line arguments.
+ * Returns: a newly allocated NactApplication object.
  */
 NactApplication *
-nact_application_new_with_args( int argc, char **argv )
+nact_application_new( void )
 {
 	NactApplication *application;
-	gchar *icon_name;
 
-	icon_name = na_about_get_icon_name();
+	application = g_object_new( NACT_APPLICATION_TYPE, NULL );
 
-	application = g_object_new( NACT_APPLICATION_TYPE,
-			BASE_PROP_ARGC,             argc,
-			BASE_PROP_ARGV,             argv,
+	g_object_set( G_OBJECT( application ),
 			BASE_PROP_OPTIONS,          st_option_entries,
 			BASE_PROP_APPLICATION_NAME, gettext( st_application_name ),
 			BASE_PROP_DESCRIPTION,      gettext( st_description ),
-			BASE_PROP_ICON_NAME,        icon_name,
-			BASE_PROP_UNIQUE_APP_NAME,  st_unique_app_name,
+			BASE_PROP_ICON_NAME,        na_about_get_icon_name(),
+			BASE_PROP_UNIQUE_NAME,      st_unique_name,
 			NULL );
-
-	g_free( icon_name );
 
 	return( application );
 }
@@ -314,12 +242,18 @@ appli_manage_options( const BaseApplication *application, int *code )
 
 	ret = TRUE;
 
+	/* display the program version ?
+	 * if yes, then stops here
+	 */
 	if( st_version_opt ){
 		na_core_utils_print_version();
 		ret = FALSE;
 	}
+
+	/* run the application as non-unique ?
+	 */
 	if( ret && st_non_unique_opt ){
-		g_object_set( G_OBJECT( application ), BASE_PROP_UNIQUE_APP_NAME, "", NULL );
+		g_object_set( G_OBJECT( application ), BASE_PROP_UNIQUE_NAME, "", NULL );
 	}
 
 	/* call parent class */

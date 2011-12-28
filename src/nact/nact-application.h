@@ -37,6 +37,13 @@
  * @include: nact/nact-application.h
  *
  * This is the main class for nautilus-actions-config-tool program.
+ *
+ * The #NactApplication object is instanciated in main() function.
+ *
+ * Properties are explicitely set in main() before calling base_application_run().
+ *
+ * The #NactApplication object is later g_object_unref() in main() after
+ * base_application_run() has returned.
  */
 
 #include <core/na-updater.h>
@@ -45,14 +52,14 @@
 
 G_BEGIN_DECLS
 
-#define NACT_APPLICATION_TYPE                ( nact_application_get_type())
-#define NACT_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_APPLICATION_TYPE, NactApplication ))
-#define NACT_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_APPLICATION_TYPE, NactApplicationClass ))
-#define NACT_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_APPLICATION_TYPE ))
-#define NACT_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_APPLICATION_TYPE ))
-#define NACT_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_APPLICATION_TYPE, NactApplicationClass ))
+#define NACT_APPLICATION_TYPE           ( nact_application_get_type())
+#define NACT_APPLICATION( o )           ( G_TYPE_CHECK_INSTANCE_CAST( o, NACT_APPLICATION_TYPE, NactApplication ))
+#define NACT_APPLICATION_CLASS( k )     ( G_TYPE_CHECK_CLASS_CAST( k, NACT_APPLICATION_TYPE, NactApplicationClass ))
+#define NACT_IS_APPLICATION( o )        ( G_TYPE_CHECK_INSTANCE_TYPE( o, NACT_APPLICATION_TYPE ))
+#define NACT_IS_APPLICATION_CLASS( k )  ( G_TYPE_CHECK_CLASS_TYPE(( k ), NACT_APPLICATION_TYPE ))
+#define NACT_APPLICATION_GET_CLASS( o ) ( G_TYPE_INSTANCE_GET_CLASS(( o ), NACT_APPLICATION_TYPE, NactApplicationClass ))
 
-typedef struct _NactApplicationPrivate       NactApplicationPrivate;
+typedef struct _NactApplicationPrivate      NactApplicationPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -61,7 +68,7 @@ typedef struct {
 }
 	NactApplication;
 
-typedef struct _NactApplicationClassPrivate  NactApplicationClassPrivate;
+typedef struct _NactApplicationClassPrivate NactApplicationClassPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -70,9 +77,9 @@ typedef struct {
 }
 	NactApplicationClass;
 
-GType            nact_application_get_type( void );
+GType            nact_application_get_type   ( void );
 
-NactApplication *nact_application_new_with_args( int argc, char **argv );
+NactApplication *nact_application_new        ( void );
 
 NAUpdater       *nact_application_get_updater( const NactApplication *application );
 

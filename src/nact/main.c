@@ -65,8 +65,17 @@ main( int argc, char *argv[] )
 	 */
 	na_gconf_migration_run();
 
-	appli = nact_application_new_with_args( argc, argv );
+	/* create and run the application
+	 */
+	appli = nact_application_new();
+
+	g_object_set( G_OBJECT( appli ),
+			BASE_PROP_ARGC, argc,
+			BASE_PROP_ARGV, argv,
+			NULL );
+
 	ret = base_application_run( BASE_APPLICATION( appli ));
+
 	g_object_unref( appli );
 
 	return( ret );

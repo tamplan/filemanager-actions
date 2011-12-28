@@ -1,3 +1,16 @@
+2011-12-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-application.c (class_init): Property labels are not translatable.
+
+	* src/nact/base-application.h: Review comments.
+
+	* src/nact/main.c (main): Set command-line arguments here.
+
+	* src/nact/nact-application.c (class_init): Remove "updater" property.
+
+	* src/nact/nact-application.c:
+	* src/nact/nact-application.h (nact_application_new): Have an empty constructor.
+
 2011-12-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-export-format.c: Remove superfluous gdk-pixbuf.h include.

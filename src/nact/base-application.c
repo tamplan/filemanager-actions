@@ -82,7 +82,7 @@ enum {
 	BASE_PROP_APPLICATION_NAME_ID,
 	BASE_PROP_DESCRIPTION_ID,
 	BASE_PROP_ICON_NAME_ID,
-	BASE_PROP_UNIQUE_APP_NAME_ID,
+	BASE_PROP_UNIQUE_NAME_ID,
 
 	BASE_PROP_N_PROPERTIES
 };
@@ -166,55 +166,55 @@ class_init( BaseApplicationClass *klass )
 	g_object_class_install_property( object_class, BASE_PROP_ARGC_ID,
 			g_param_spec_int(
 					BASE_PROP_ARGC,
-					_( "Arguments count" ),
-					_( "The count of command-line arguments" ),
+					"Arguments count",
+					"The count of command-line arguments",
 					0, 65535, 0,
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_ARGV_ID,
 			g_param_spec_boxed(
 					BASE_PROP_ARGV,
-					_( "Arguments" ),
-					_( "The array of command-line arguments" ),
+					"Arguments",
+					"The array of command-line arguments",
 					G_TYPE_STRV,
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_OPTIONS_ID,
 			g_param_spec_pointer(
 					BASE_PROP_OPTIONS,
-					_( "Option entries" ),
-					_( "The array of command-line option definitions" ),
+					"Option entries",
+					"The array of command-line option definitions",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_APPLICATION_NAME_ID,
 			g_param_spec_string(
 					BASE_PROP_APPLICATION_NAME,
-					_( "Application name" ),
-					_( "The name of the application" ),
+					"Application name",
+					"The name of the application",
 					"",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_DESCRIPTION_ID,
 			g_param_spec_string(
 					BASE_PROP_DESCRIPTION,
-					_( "Description" ),
-					_( "A short description to be displayed in the first line of --help output" ),
+					"Description",
+					"A short description to be displayed in the first line of --help output",
 					"",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_ICON_NAME_ID,
 			g_param_spec_string(
 					BASE_PROP_ICON_NAME,
-					_( "Icon name" ),
-					_( "The name of the icon of the application" ),
+					"Icon name",
+					"The name of the icon of the application",
 					"",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
-	g_object_class_install_property( object_class, BASE_PROP_UNIQUE_APP_NAME_ID,
+	g_object_class_install_property( object_class, BASE_PROP_UNIQUE_NAME_ID,
 			g_param_spec_string(
-					BASE_PROP_UNIQUE_APP_NAME,
-					_( "UniqueApp name" ),
-					_( "The Unique name of the application" ),
+					BASE_PROP_UNIQUE_NAME,
+					"UniqueApp name",
+					"The Unique name of the application",
 					"",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
@@ -277,7 +277,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_string( value, self->private->icon_name );
 				break;
 
-			case BASE_PROP_UNIQUE_APP_NAME_ID:
+			case BASE_PROP_UNIQUE_NAME_ID:
 				g_value_set_string( value, self->private->unique_app_name );
 				break;
 
@@ -329,7 +329,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 				self->private->icon_name = g_value_dup_string( value );
 				break;
 
-			case BASE_PROP_UNIQUE_APP_NAME_ID:
+			case BASE_PROP_UNIQUE_NAME_ID:
 				g_free( self->private->unique_app_name );
 				self->private->unique_app_name = g_value_dup_string( value );
 				break;

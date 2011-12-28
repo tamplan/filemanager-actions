@@ -55,7 +55,11 @@
  *         MyApplication *appli;
  *         int code;
  *
- *         appli = my_application_new_with_args( argc, argv );
+ *         appli = my_application_new();
+ *         g_object_set( G_OBJECT( appli ),
+ *             BASE_PROP_ARGC, argc,
+ *             BASE_PROP_ARGV, argv,
+ *             NULL );
  *         code = base_appliction_run( BASE_APPLICATION( appli ));
  *         g_object_unref( appli );
  *
@@ -69,14 +73,14 @@
 
 G_BEGIN_DECLS
 
-#define BASE_APPLICATION_TYPE                ( base_application_get_type())
-#define BASE_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_APPLICATION_TYPE, BaseApplication ))
-#define BASE_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_APPLICATION_TYPE, BaseApplicationClass ))
-#define BASE_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_APPLICATION_TYPE ))
-#define BASE_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_APPLICATION_TYPE ))
-#define BASE_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_APPLICATION_TYPE, BaseApplicationClass ))
+#define BASE_APPLICATION_TYPE           ( base_application_get_type())
+#define BASE_APPLICATION( o )           ( G_TYPE_CHECK_INSTANCE_CAST( o, BASE_APPLICATION_TYPE, BaseApplication ))
+#define BASE_APPLICATION_CLASS( k )     ( G_TYPE_CHECK_CLASS_CAST( k, BASE_APPLICATION_TYPE, BaseApplicationClass ))
+#define BASE_IS_APPLICATION( o )        ( G_TYPE_CHECK_INSTANCE_TYPE( o, BASE_APPLICATION_TYPE ))
+#define BASE_IS_APPLICATION_CLASS( k )  ( G_TYPE_CHECK_CLASS_TYPE(( k ), BASE_APPLICATION_TYPE ))
+#define BASE_APPLICATION_GET_CLASS( o ) ( G_TYPE_INSTANCE_GET_CLASS(( o ), BASE_APPLICATION_TYPE, BaseApplicationClass ))
 
-typedef struct _BaseApplicationPrivate       BaseApplicationPrivate;
+typedef struct _BaseApplicationPrivate      BaseApplicationPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -85,7 +89,7 @@ typedef struct {
 }
 	BaseApplication;
 
-typedef struct _BaseApplicationClassPrivate  BaseApplicationClassPrivate;
+typedef struct _BaseApplicationClassPrivate BaseApplicationClassPrivate;
 
 /**
  * BaseApplicationClass:
@@ -140,7 +144,9 @@ typedef struct {
 
 /**
  * Properties defined by the BaseApplication class.
- * They should be provided at object instantiation time.
+ * They may be provided at object instantiation time, either in the derived-
+ * application constructor, or in the main() function, but in all cases
+ * before calling base_application_run().
  *
  * @BASE_PROP_ARGC:             count of arguments in command-line.
  * @BASE_PROP_ARGV:             array of command-line arguments.
@@ -148,7 +154,7 @@ typedef struct {
  * @BASE_PROP_APPLICATION_NAME: application name.
  * @BASE_PROP_DESCRIPTION:      short description.
  * @BASE_PROP_ICON_NAME:        icon name.
- * @BASE_PROP_UNIQUE_APP_NAME:  unique name of the application (if apply)
+ * @BASE_PROP_UNIQUE_NAME:      unique name of the application (if not empty)
  */
 #define BASE_PROP_ARGC						"base-application-argc"
 #define BASE_PROP_ARGV						"base-application-argv"
@@ -156,7 +162,7 @@ typedef struct {
 #define BASE_PROP_APPLICATION_NAME			"base-application-name"
 #define BASE_PROP_DESCRIPTION				"base-application-description"
 #define BASE_PROP_ICON_NAME					"base-application-icon-name"
-#define BASE_PROP_UNIQUE_APP_NAME			"base-application-unique-app-name"
+#define BASE_PROP_UNIQUE_NAME				"base-application-unique-name"
 
 typedef enum {
 	BASE_EXIT_CODE_START_FAIL = -1,
