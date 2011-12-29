@@ -184,7 +184,10 @@ instance_finalize( GObject *object )
 	g_return_if_fail( NA_IS_IMPORT_MODE( object ));
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
+
 	self = NA_IMPORT_MODE( object );
+
+	g_free( self->private );
 
 	/* chain call to parent class */
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){

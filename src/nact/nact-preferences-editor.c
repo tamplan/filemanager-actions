@@ -401,8 +401,6 @@ static void
 on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *toplevel )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_gtk_toplevel";
-	NactApplication *application;
-	NAUpdater *updater;
 	GtkWidget *container;
 	GtkTreeView *listview;
 
@@ -410,9 +408,6 @@ on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *tople
 
 	if( !editor->private->dispose_has_run ){
 		g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
-
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-		updater = nact_application_get_updater( application );
 
 		desktop_create_model( editor );
 
