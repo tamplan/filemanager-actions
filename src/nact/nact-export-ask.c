@@ -37,7 +37,9 @@
 #include <api/na-object-api.h>
 
 #include <core/na-exporter.h>
+#include <core/na-export-format.h>
 #include <core/na-gtk-utils.h>
+#include <core/na-ioptions-list.h>
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
@@ -72,10 +74,12 @@ static BaseDialogClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactExportAskClass *klass );
+static void     ioptions_list_iface_init( NAIOptionsListInterface *iface );
+static GList   *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
+static void     ioptions_list_free_formats( const NAIOptionsList *instance, GList *formats );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
-
 static void     on_base_initialize_gtk_toplevel( NactExportAsk *editor, GtkDialog *toplevel );
 static void     on_base_initialize_base_window( NactExportAsk *editor );
 static void     keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor );
@@ -113,9 +117,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo ioptions_list_iface_info = {
+		( GInterfaceInitFunc ) ioptions_list_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( BASE_DIALOG_TYPE, "NactExportAsk", &info, 0 );
+
+	g_type_add_interface_static( type, NA_IOPTIONS_LIST_TYPE, &ioptions_list_iface_info );
 
 	return( type );
 }
@@ -135,6 +147,41 @@ class_init( NactExportAskClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NactExportAskClassPrivate, 1 );
+}
+
+static void
+ioptions_list_iface_init( NAIOptionsListInterface *iface )
+{
+	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_options = ioptions_list_get_formats;
+	iface->free_options = ioptions_list_free_formats;
+}
+
+static GList *
+ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container )
+{
+	NactExportAsk *window;
+	NactApplication *application;
+	NAUpdater *updater;
+	GList *formats;
+
+	g_return_val_if_fail( NACT_IS_EXPORT_ASK( instance ), NULL );
+	window = NACT_EXPORT_ASK( instance );
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	formats = na_exporter_get_formats( NA_PIVOT( updater ));
+
+	return( formats );
+}
+
+static void
+ioptions_list_free_formats( const NAIOptionsList *instance, GList *formats )
+{
+	na_exporter_free_formats( formats );
 }
 
 static void
@@ -285,8 +332,6 @@ static void
 on_base_initialize_gtk_toplevel( NactExportAsk *editor, GtkDialog *toplevel )
 {
 	static const gchar *thisfn = "nact_export_ask_on_base_initialize_gtk_toplevel";
-	NactApplication *application;
-	NAUpdater *updater;
 	GtkWidget *container;
 
 	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
@@ -294,12 +339,8 @@ on_base_initialize_gtk_toplevel( NactExportAsk *editor, GtkDialog *toplevel )
 	if( !editor->private->dispose_has_run ){
 		g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
 
-		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( editor )));
-		updater = nact_application_get_updater( application );
 		container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-
-		nact_export_format_init_display( container,
-				NA_PIVOT( updater ), EXPORT_FORMAT_DISPLAY_ASK, !editor->private->preferences_locked );
+		na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( editor ), container, FALSE );
 
 #if !GTK_CHECK_VERSION( 2,22,0 )
 		gtk_dialog_set_has_separator( toplevel, FALSE );
@@ -311,7 +352,6 @@ static void
 on_base_initialize_base_window( NactExportAsk *editor )
 {
 	static const gchar *thisfn = "nact_export_ask_on_base_initialize_base_window";
-	GtkWidget *container;
 	gchar *item_label, *label;
 	GtkWidget *widget;
 
@@ -335,8 +375,13 @@ on_base_initialize_base_window( NactExportAsk *editor )
 		g_free( label );
 		g_free( item_label );
 
-		container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-		nact_export_format_select( container, !editor->private->format_mandatory, editor->private->format );
+		widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+		na_ioptions_list_set_editable(
+				NA_IOPTIONS_LIST( editor ), widget,
+				!editor->private->format_mandatory && !editor->private->preferences_locked );
+		na_ioptions_list_set_default(
+				NA_IOPTIONS_LIST( editor ), widget,
+				g_quark_to_string( editor->private->format ));
 
 		base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 				"AskKeepChoiceButton", G_CALLBACK( keep_choice_on_toggled ),
@@ -395,13 +440,15 @@ on_ok_clicked( GtkButton *button, NactExportAsk *editor )
 static GQuark
 get_export_format( NactExportAsk *editor )
 {
-	GtkWidget *container;
-	NAExportFormat *format;
+	GtkWidget *widget;
+	NAIOption *format;
 	GQuark format_quark;
 
-	container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
-	format = nact_export_format_get_selected( container );
-	format_quark = na_export_format_get_quark( format );
+	widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
+	format = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), widget );
+	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), 0 );
+
+	format_quark = na_export_format_get_quark( NA_EXPORT_FORMAT( format ));
 
 	if( !editor->private->keep_last_choice_mandatory ){
 		na_settings_set_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, editor->private->keep_last_choice );

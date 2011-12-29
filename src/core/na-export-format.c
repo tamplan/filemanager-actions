@@ -33,6 +33,7 @@
 #endif
 
 #include "na-export-format.h"
+#include "na-ioption.h"
 
 /* private class data
  */
@@ -54,11 +55,16 @@ struct _NAExportFormatPrivate {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType  register_type( void );
-static void   class_init( NAExportFormatClass *klass );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *object );
-static void   instance_finalize( GObject *object );
+static GType      register_type( void );
+static void       class_init( NAExportFormatClass *klass );
+static void       ioption_iface_init( NAIOptionInterface *iface );
+static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_dispose( GObject *object );
+static void       instance_finalize( GObject *object );
+static gchar     *ioption_get_id( const NAIOption *option );
+static gchar     *ioption_get_label( const NAIOption *option );
+static gchar     *ioption_get_description( const NAIOption *option );
+static GdkPixbuf *ioption_get_pixbuf( const NAIOption *option );
 
 GType
 na_export_format_get_type( void )
@@ -90,9 +96,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo ioption_iface_info = {
+		( GInterfaceInitFunc ) ioption_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NAExportFormat", &info, 0 );
+
+	g_type_add_interface_static( type, NA_IOPTION_TYPE, &ioption_iface_info );
 
 	return( type );
 }
@@ -112,6 +126,119 @@ class_init( NAExportFormatClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NAExportFormatClassPrivate, 1 );
+}
+
+static void
+ioption_iface_init( NAIOptionInterface *iface )
+{
+	static const gchar *thisfn = "na_export_format_ioption_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_id = ioption_get_id;
+	iface->get_label = ioption_get_label;
+	iface->get_description = ioption_get_description;
+	iface->get_pixbuf = ioption_get_pixbuf;
+}
+
+/*
+ * ioption_get_id:
+ * @option: this #NAIOption instance.
+ *
+ * Returns: the ASCII id of the @option, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+static gchar *
+ioption_get_id( const NAIOption *option )
+{
+	gchar *id;
+	NAExportFormat *format;
+
+	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( option ), NULL );
+	format = NA_EXPORT_FORMAT( option );
+	id = NULL;
+
+	if( !format->private->dispose_has_run ){
+
+		id = g_strdup( format->private->format );
+	}
+
+	return( id );
+}
+
+/*
+ * ioption_get_label:
+ * @option: this #NAIOption instance.
+ *
+ * Returns: the label associated to @option, as a newly allocated string
+ * which should be g_free() by the caller.
+ */
+static gchar *
+ioption_get_label( const NAIOption *option )
+{
+	gchar *label;
+	NAExportFormat *format;
+
+	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( option ), NULL );
+	format = NA_EXPORT_FORMAT( option );
+	label = NULL;
+
+	if( !format->private->dispose_has_run ){
+
+		label = g_strdup( format->private->label );
+	}
+
+	return( label );
+}
+
+/*
+ * ioption_get_description:
+ * @option: this #NAIOption instance.
+ *
+ * Returns: the description associated to @option, as a newly allocated string
+ * which should be g_free() by the caller.
+ */
+static gchar *
+ioption_get_description( const NAIOption *option )
+{
+	gchar *description;
+	NAExportFormat *format;
+
+	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( option ), NULL );
+	format = NA_EXPORT_FORMAT( option );
+	description = NULL;
+
+	if( !format->private->dispose_has_run ){
+
+		description = g_strdup( format->private->description );
+	}
+
+	return( description );
+}
+
+/*
+ * ioption_get_pixbuf:
+ * @option: this #NAIOption instance.
+ *
+ * Returns: a new reference to the pixbuf associated to @option;
+ * which should later be g_object_unref() by the caller.
+ */
+static GdkPixbuf *
+ioption_get_pixbuf( const NAIOption *option )
+{
+	GdkPixbuf *pixbuf;
+	NAExportFormat *format;
+
+	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( option ), NULL );
+	format = NA_EXPORT_FORMAT( option );
+	pixbuf = NULL;
+
+	if( !format->private->dispose_has_run ){
+
+		pixbuf = format->private->pixbuf ? g_object_ref( format->private->pixbuf ) : NULL;
+	}
+
+	return( pixbuf );
 }
 
 static void
@@ -148,6 +275,11 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		if( self->private->pixbuf ){
+			g_debug( "%s: pixbuf=%p (%s) ref_count=%d",
+					thisfn,
+					( void * ) self->private->pixbuf,
+					G_OBJECT_TYPE_NAME( self->private->pixbuf ),
+					G_OBJECT( self->private->pixbuf )->ref_count );
 			g_object_unref( self->private->pixbuf );
 			self->private->pixbuf = NULL;
 		}
@@ -228,78 +360,6 @@ na_export_format_get_quark( const NAExportFormat *format )
 }
 
 /*
- * na_export_format_get_id:
- * @format: this #NAExportFormat object.
- *
- * Returns: the ASCII id of the format, as a newly allocated string which
- * should be g_free() by the caller.
- */
-gchar *
-na_export_format_get_id( const NAExportFormat *format )
-{
-	gchar *id;
-
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), NULL );
-
-	id = NULL;
-
-	if( !format->private->dispose_has_run ){
-
-		id = g_strdup( format->private->format );
-	}
-
-	return( id );
-}
-
-/*
- * na_export_format_get_label:
- * @format: this #NAExportFormat object.
- *
- * Returns: the UTF-8 localizable label of the format, as a newly
- * allocated string which should be g_free() by the caller.
- */
-gchar *
-na_export_format_get_label( const NAExportFormat *format )
-{
-	gchar *label;
-
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), NULL );
-
-	label = NULL;
-
-	if( !format->private->dispose_has_run ){
-
-		label = g_strdup( format->private->label );
-	}
-
-	return( label );
-}
-
-/*
- * na_export_format_get_description:
- * @format: this #NAExportFormat object.
- *
- * Returns: the UTF-8 localizable description of the format, as a newly
- * allocated string which should be g_free() by the caller.
- */
-gchar *
-na_export_format_get_description( const NAExportFormat *format )
-{
-	gchar *description;
-
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), NULL );
-
-	description = NULL;
-
-	if( !format->private->dispose_has_run ){
-
-		description = g_strdup( format->private->description );
-	}
-
-	return( description );
-}
-
-/*
  * na_export_format_get_provider:
  * @format: this #NAExportFormat object.
  *
@@ -323,30 +383,4 @@ na_export_format_get_provider( const NAExportFormat *format )
 	}
 
 	return( exporter );
-}
-
-/*
- * na_export_format_get_pixbuf:
- * @format: this #NAExportFormat object.
- *
- * Returns: a new reference to the #GdkPixbuf image associated with this format,
- * or %NULL.
- */
-GdkPixbuf *
-na_export_format_get_pixbuf( const NAExportFormat *format )
-{
-	GdkPixbuf *pixbuf;
-
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), NULL );
-
-	pixbuf = NULL;
-
-	if( !format->private->dispose_has_run ){
-
-		if( format->private->pixbuf ){
-			pixbuf = g_object_ref( format->private->pixbuf );
-		}
-	}
-
-	return( pixbuf );
 }

@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <string.h>
+
 #include <api/na-core-utils.h>
 
 #include "na-gtk-utils.h"
@@ -53,52 +55,53 @@ enum {
 	N_COLUMN
 };
 
-#define IOPTIONS_LIST_DATA_CONTAINER		"ioptions-list-data-container"
+/* data associated to the container of the instance
+ */
 #define IOPTIONS_LIST_DATA_EDITABLE			"ioptions-list-data-editable"
 #define IOPTIONS_LIST_DATA_INITIALIZED		"ioptions-list-data-initialized"
 #define IOPTIONS_LIST_DATA_OPTION			"ioptions-list-data-option"
-#define IOPTIONS_LIST_DATA_PARENT			"ioptions-list-data-parent"
+#define IOPTIONS_LIST_DATA_OPTION_ID		"ioptions-list-data-option-id"
 #define IOPTIONS_LIST_DATA_SENSITIVE		"ioptions-list-data-sensitive"
-#define IOPTIONS_LIST_DATA_WITH_ASK			"ioptions-list-data-with-ask"
 
 static gboolean st_ioptions_list_iface_initialized = FALSE;
 static gboolean st_ioptions_list_iface_finalized   = FALSE;
 
-static GType      register_type( void );
-static void       interface_base_init( NAIOptionsListInterface *iface );
-static void       interface_base_finalize( NAIOptionsListInterface *iface );
-static guint      ioptions_list_get_version( const NAIOptionsList *instance );
-static void       ioptions_list_free_options( const NAIOptionsList *instance, GList *options );
-static void       ioptions_list_free_ask_option( const NAIOptionsList *instance, NAIOption *option );
-static GList     *options_list_get_options( const NAIOptionsList *instance );
-static void       options_list_free_options( const NAIOptionsList *instance, GList *options );
-static NAIOption *options_list_get_ask_option( const NAIOptionsList *instance );
-static void       options_list_free_ask_option( const NAIOptionsList *instance, NAIOption *ask_option );
-static NAIOption *options_list_get_container_option( GtkWidget *container );
-static void       options_list_set_container_option( GtkWidget *container, const NAIOption *option );
-static GtkWidget *options_list_get_container_parent( NAIOptionsList *instance );
-static void       options_list_set_container_parent( NAIOptionsList *instance, GtkWidget *parent );
-static gboolean   options_list_get_editable( NAIOptionsList *instance );
-static void       options_list_set_editable( NAIOptionsList *instance, gboolean editable );
-static gboolean   options_list_get_initialized( NAIOptionsList *instance );
-static void       options_list_set_initialized( NAIOptionsList *instance, gboolean initialized );
-static NAIOption *options_list_get_option( NAIOptionsList *instance );
-static void       options_list_set_option( NAIOptionsList *instance, NAIOption *option );
-static gboolean   options_list_get_sensitive( NAIOptionsList *instance );
-static void       options_list_set_sensitive( NAIOptionsList *instance, gboolean sensitive );
-static gboolean   options_list_get_with_ask( NAIOptionsList *instance );
-static void       options_list_set_with_ask( NAIOptionsList *instance, gboolean with_ask );
-static void       check_for_initialized_instance( NAIOptionsList *instance );
-static void       on_instance_finalized( gpointer user_data, GObject *instance );
-static void       radio_button_create_group( NAIOptionsList *instance );
-static void       radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option );
-static void       radio_button_weak_notify( NAIOption *option, GObject *vbox );
-static void       tree_view_create_model( NAIOptionsList *instance );
-static void       tree_view_populate( NAIOptionsList *instance );
-static void       tree_view_add_item( GtkTreeView *listview, GtkTreeModel *model, const NAIOption *option );
-static void       tree_view_weak_notify( GtkTreeModel *model, GObject *tree_view );
-static void       radio_button_select_iter( GtkWidget *container_option, NAIOptionsList *instance );
-static gboolean   tree_view_select_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, NAIOptionsList *instance );
+static GType        register_type( void );
+static void         interface_base_init( NAIOptionsListInterface *iface );
+static void         interface_base_finalize( NAIOptionsListInterface *iface );
+static guint        ioptions_list_get_version( const NAIOptionsList *instance );
+static void         ioptions_list_free_options( const NAIOptionsList *instance, GList *options );
+static void         ioptions_list_free_ask_option( const NAIOptionsList *instance, NAIOption *option );
+static GList       *options_list_get_options( const NAIOptionsList *instance, GtkWidget *container_parent );
+static void         options_list_free_options( const NAIOptionsList *instance, GList *options );
+static NAIOption   *options_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container_parent );
+static void         options_list_free_ask_option( const NAIOptionsList *instance, NAIOption *ask_option );
+static gboolean     get_options_list_editable( GtkWidget *container_parent );
+static void         set_options_list_editable( GtkWidget *container_parent, gboolean editable );
+static gboolean     get_options_list_container_initialized( GtkWidget *container_parent );
+static void         set_options_list_container_initialized( GtkWidget *container_parent, gboolean initialized );
+static gboolean     get_options_list_instance_initialized( const NAIOptionsList *instance );
+static void         set_options_list_instance_initialized( const NAIOptionsList *instance, gboolean initialized );
+static NAIOption   *get_options_list_option( GtkWidget *container );
+static void         set_options_list_option( GtkWidget *container, NAIOption *option );
+static const gchar *get_options_list_option_id( GtkWidget *container );
+static void         set_options_list_option_id( GtkWidget *container, const gchar *id );
+static gboolean     get_options_list_sensitive( GtkWidget *container_parent );
+static void         set_options_list_sensitive( GtkWidget *container_parent, gboolean sensitive );
+static void         check_for_initializations( const NAIOptionsList *instance, GtkWidget *container_parent );
+static void         on_parent_container_finalized( gpointer user_data, GObject *container );
+static void         on_instance_finalized( gpointer user_data, GObject *instance );
+static void         radio_button_create_group( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask );
+static void         radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option );
+static void         radio_button_weak_notify( NAIOption *option, GObject *vbox );
+static void         tree_view_create_model( const NAIOptionsList *instance, GtkWidget *container_parent );
+static void         tree_view_populate( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask );
+static void         tree_view_add_item( GtkTreeView *listview, GtkTreeModel *model, const NAIOption *option );
+static void         tree_view_weak_notify( GtkTreeModel *model, GObject *tree_view );
+static void         radio_button_select_iter( GtkWidget *container_option, GtkWidget *container_parent );
+static gboolean     tree_view_select_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkWidget *container_parent );
+static void         radio_button_get_selected_iter( GtkWidget *container_option, GtkWidget *container_parent );
+static void         tree_view_get_selected( const NAIOptionsList *instance, GtkWidget *container_parent );
 
 /**
  * na_ioptions_list_get_type:
@@ -220,14 +223,14 @@ ioptions_list_free_ask_option( const NAIOptionsList *instance, NAIOption *ask_op
  * or the default provided by the interface
  */
 static GList *
-options_list_get_options( const NAIOptionsList *instance )
+options_list_get_options( const NAIOptionsList *instance, GtkWidget *container_parent )
 {
 	GList *options;
 
 	options = NULL;
 
 	if( NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_options ){
-		options = NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_options( instance );
+		options = NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_options( instance, container_parent );
 	}
 
 	return( options );
@@ -242,14 +245,14 @@ options_list_free_options( const NAIOptionsList *instance, GList *options )
 }
 
 static NAIOption *
-options_list_get_ask_option( const NAIOptionsList *instance )
+options_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container_parent )
 {
 	NAIOption *option;
 
 	option = NULL;
 
 	if( NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_ask_option ){
-		option = NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_ask_option( instance );
+		option = NA_IOPTIONS_LIST_GET_INTERFACE( instance )->get_ask_option( instance, container_parent );
 	}
 
 	return( option );
@@ -264,67 +267,50 @@ options_list_free_ask_option( const NAIOptionsList *instance, NAIOption *ask_opt
 }
 
 /*
- * get/set properties
+ * get/set pseudo-properties
+ * pseudo properties are set:
+ * - against the instance: whether it has been initialized
+ * - against the parent container: editable, sensitive, default and current options
+ * - against each option container when drawing inside of a VBox: the corresponding option
  */
-/* the option associated to this 'option' container
- */
-static NAIOption *
-options_list_get_container_option( GtkWidget *container )
-{
-	NAIOption *option;
-
-	option = ( NAIOption * ) g_object_get_data( G_OBJECT( container ), IOPTIONS_LIST_DATA_CONTAINER );
-
-	return( option );
-}
-
-static void
-options_list_set_container_option( GtkWidget *container, const NAIOption *option )
-{
-	g_object_set_data( G_OBJECT( container ), IOPTIONS_LIST_DATA_CONTAINER, ( gpointer ) option );
-}
-
-/* the global parent container, i.e. a GtkVBox or a GtkTreeView
- *
- * the container parent is provided when calling na_ioptions_list_display_init()
- * function; storing it as a data of the instance just let us to know it without
- * having to require it in subsequent function calls
- */
-static GtkWidget *
-options_list_get_container_parent( NAIOptionsList *instance )
-{
-	GtkWidget *parent;
-
-	parent = ( GtkWidget * ) g_object_get_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_PARENT );
-
-	return( parent );
-}
-
-static void
-options_list_set_container_parent( NAIOptionsList *instance, GtkWidget *parent )
-{
-	g_object_set_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_PARENT, parent );
-}
-
 /* whether the selectable user's preference is editable
- *
  * most of the time, a user's preference is not editable if it is set as mandatory,
  * or if the whole user's preference are not writable
  */
 static gboolean
-options_list_get_editable( NAIOptionsList *instance )
+get_options_list_editable( GtkWidget *container_parent )
 {
 	gboolean editable;
 
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_EDITABLE ));
+	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( container_parent ), IOPTIONS_LIST_DATA_EDITABLE ));
 
 	return( editable );
 }
 
 static void
-options_list_set_editable( NAIOptionsList *instance, gboolean editable )
+set_options_list_editable( GtkWidget *container_parent, gboolean editable )
 {
-	g_object_set_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_EDITABLE, GUINT_TO_POINTER( editable ));
+	g_object_set_data( G_OBJECT( container_parent ), IOPTIONS_LIST_DATA_EDITABLE, GUINT_TO_POINTER( editable ));
+}
+
+/* whether the container has been initialized
+ *
+ * initializing the container so that its pseudo-properties are valid
+ */
+static gboolean
+get_options_list_container_initialized( GtkWidget *container_parent )
+{
+	gboolean initialized;
+
+	initialized = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( container_parent ), IOPTIONS_LIST_DATA_INITIALIZED ));
+
+	return( initialized );
+}
+
+static void
+set_options_list_container_initialized( GtkWidget *container_parent, gboolean initialized )
+{
+	g_object_set_data( G_OBJECT( container_parent ), IOPTIONS_LIST_DATA_INITIALIZED, GUINT_TO_POINTER( initialized ));
 }
 
 /* whether the instance has been initialized
@@ -334,7 +320,7 @@ options_list_set_editable( NAIOptionsList *instance, gboolean editable )
  * finalized
  */
 static gboolean
-options_list_get_initialized( NAIOptionsList *instance )
+get_options_list_instance_initialized( const NAIOptionsList *instance )
 {
 	gboolean initialized;
 
@@ -344,27 +330,47 @@ options_list_get_initialized( NAIOptionsList *instance )
 }
 
 static void
-options_list_set_initialized( NAIOptionsList *instance, gboolean initialized )
+set_options_list_instance_initialized( const NAIOptionsList *instance, gboolean initialized )
 {
 	g_object_set_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_INITIALIZED, GUINT_TO_POINTER( initialized ));
 }
 
-/* the current option
+/* the parent container: the current option
+ * the option container: the option attached to this container (VBox only)
  */
 static NAIOption *
-options_list_get_option( NAIOptionsList *instance )
+get_options_list_option( GtkWidget *container )
 {
-	NAIOption *option;
-
-	option = ( NAIOption * ) g_object_get_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_OPTION );
-
-	return( option );
+	return(( NAIOption * ) g_object_get_data( G_OBJECT( container ), IOPTIONS_LIST_DATA_OPTION ));
 }
 
 static void
-options_list_set_option( NAIOptionsList *instance, NAIOption *option )
+set_options_list_option( GtkWidget *container, NAIOption *option )
 {
-	g_object_set_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_OPTION, option );
+	g_object_set_data( G_OBJECT( container ), IOPTIONS_LIST_DATA_OPTION, option );
+}
+
+/* the string identifier of the option (stored as a GQuark)
+ * it is set in two places:
+ * - at the option container level, in order to identify the option (gtk initialization)
+ * - at the parent container level, when setting the default option (display initialization)
+ */
+static const gchar *
+get_options_list_option_id( GtkWidget *container )
+{
+	GQuark quark;
+	const gchar *id;
+
+	quark = GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( container ), IOPTIONS_LIST_DATA_OPTION_ID ));
+	id = g_quark_to_string( quark );
+
+	return( id );
+}
+
+static void
+set_options_list_option_id( GtkWidget *container, const gchar *id )
+{
+	g_object_set_data( G_OBJECT( container ), IOPTIONS_LIST_DATA_OPTION_ID, GUINT_TO_POINTER( g_quark_from_string( id )));
 }
 
 /* whether the selectable user's preference is sensitive
@@ -373,59 +379,65 @@ options_list_set_option( NAIOptionsList *instance, NAIOption *option )
  * the considered case
  */
 static gboolean
-options_list_get_sensitive( NAIOptionsList *instance )
+get_options_list_sensitive( GtkWidget *container_parent )
 {
 	gboolean sensitive;
 
-	sensitive = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_SENSITIVE ));
+	sensitive = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( container_parent ), IOPTIONS_LIST_DATA_SENSITIVE ));
 
 	return( sensitive );
 }
 
 static void
-options_list_set_sensitive( NAIOptionsList *instance, gboolean sensitive )
+set_options_list_sensitive( GtkWidget *container_parent, gboolean sensitive )
 {
-	g_object_set_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_SENSITIVE, GUINT_TO_POINTER( sensitive ));
-}
-
-/* whether the options list must include an 'Ask me' option
- */
-static gboolean
-options_list_get_with_ask( NAIOptionsList *instance )
-{
-	gboolean with_ask;
-
-	with_ask = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_WITH_ASK ));
-
-	return( with_ask );
-}
-
-static void
-options_list_set_with_ask( NAIOptionsList *instance, gboolean with_ask )
-{
-	g_object_set_data( G_OBJECT( instance ), IOPTIONS_LIST_DATA_WITH_ASK, GUINT_TO_POINTER( with_ask ));
+	g_object_set_data( G_OBJECT( container_parent ), IOPTIONS_LIST_DATA_SENSITIVE, GUINT_TO_POINTER( sensitive ));
 }
 
 /*
- * na_ioptions_list_instance_init:
- * @instance: the object which implements this #NAIOptionsList interface.
+ * check_for_initializations:
+ * @instance: the interface implementation.
+ * @container: the #Gtkwidget which embeds our list of values.
  *
- * Initialize all #NAIOptionsList-relative properties of the implementation
- * object at instanciation time.
+ * Setup both instance and container initialization levels.
+ *
+ * Having these levels explicitely initialized not only let us setup weak
+ * references on the objects, but also assert that pseudo-properties have
+ * valid values.
  */
 static void
-check_for_initialized_instance( NAIOptionsList *instance )
+check_for_initializations( const NAIOptionsList *instance, GtkWidget *container_parent )
 {
-	static const gchar *thisfn = "na_ioptions_list_check_for_initialized_instance";
+	static const gchar *thisfn = "na_ioptions_list_check_for_initializations";
 
-	if( !options_list_get_initialized( instance )){
+	if( !get_options_list_instance_initialized( instance )){
 
 		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
 		g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 
-		options_list_set_initialized( instance, TRUE );
+		set_options_list_instance_initialized( instance, TRUE );
 	}
+
+	if( !get_options_list_container_initialized( container_parent )){
+
+		g_debug( "%s: container_parent=%p", thisfn, ( void * ) container_parent );
+
+		set_options_list_editable( container_parent, TRUE );
+		set_options_list_sensitive( container_parent, TRUE );
+
+		g_object_weak_ref( G_OBJECT( container_parent ), ( GWeakNotify ) on_parent_container_finalized, NULL );
+
+		set_options_list_container_initialized( container_parent, TRUE );
+	}
+}
+
+static void
+on_parent_container_finalized( gpointer user_data, GObject *container )
+{
+	static const gchar *thisfn = "na_ioptions_list_on_parent_container_finalized";
+
+	g_debug( "%s: user_data=%p, container=%p", thisfn, ( void * ) user_data, ( void * ) container );
 }
 
 static void
@@ -437,81 +449,64 @@ on_instance_finalized( gpointer user_data, GObject *instance )
 }
 
 /*
- * na_ioptions_list_display_init:
+ * na_ioptions_list_gtk_init:
  * @instance: the object which implements this #NAIOptionsList interface.
- * @parent: the #GtkWidget container_parent is which we are goint to setup the items
- *  list. @parent may be a #GtkVBox or a #GtkTreeView.
+ * @container_parent: the #GtkWidget parent container in which we are going to setup the
+ *  list of values. @container_parent may be a #GtkVBox or a #GtkTreeView.
  * @with_ask: whether we should also display an 'Ask me' option.
- * @editable: whether the selectable user's preference is editable;
- *  Most of time, a user's preference is not editable if it is set as mandatory,
- *  or if the whole user's preferences are not writable.
- * @sensitive: whether the radio button group is to be sensitive;
- *  a widget should not be sensitive if the selectable option is not relevant
- *  in the considered case.
  *
  * Initialize the gtk objects which will be used to display the selection.
  */
 void
-na_ioptions_list_display_init( NAIOptionsList *instance,
-		GtkWidget *parent, gboolean with_ask, gboolean editable, gboolean sensitive )
+na_ioptions_list_gtk_init( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
 {
-	static const gchar *thisfn = "na_ioptions_list_display_init";
+	static const gchar *thisfn = "na_ioptions_list_gtk_init";
 
 	g_return_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized );
+	check_for_initializations( instance, container_parent );
 
-	check_for_initialized_instance( instance );
-
-	g_debug( "%s: instance=%p (%s), parent=%p (%s), with_ask=%s, editable=%s, sensitive=%s",
+	g_debug( "%s: instance=%p (%s), container_parent=%p (%s), with_ask=%s",
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-			( void * ) parent, G_OBJECT_TYPE_NAME( parent ),
-			with_ask ? "True":"False",
-			editable ? "True":"False",
-			sensitive ? "True":"False" );
+			( void * ) container_parent, G_OBJECT_TYPE_NAME( container_parent ),
+			with_ask ? "True":"False" );
 
-	options_list_set_container_parent( instance, parent );
-	options_list_set_with_ask( instance, with_ask );
-	options_list_set_editable( instance, editable );
-	options_list_set_sensitive( instance, sensitive );
+	if( GTK_IS_BOX( container_parent )){
+		radio_button_create_group( instance, container_parent, with_ask );
 
-	if( GTK_IS_BOX( parent )){
-		radio_button_create_group( instance );
-
-	} else if( GTK_IS_TREE_VIEW( parent )){
-		tree_view_create_model( instance );
-		tree_view_populate( instance );
+	} else if( GTK_IS_TREE_VIEW( container_parent )){
+		tree_view_create_model( instance, container_parent );
+		tree_view_populate( instance, container_parent, with_ask );
 
 	} else {
-		g_warning( "%s: unknown parent type: %s", thisfn, G_OBJECT_TYPE_NAME( parent ));
+		g_warning( "%s: unknown container_parent type: %s", thisfn, G_OBJECT_TYPE_NAME( container_parent ));
 	}
 }
 
 static void
-radio_button_create_group( NAIOptionsList *instance )
+radio_button_create_group( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
 {
-	static const gchar *thisfn = "na_ioptions_list_create_radio_button_group";
+	static const gchar *thisfn = "na_ioptions_list_radio_button_create_group";
 	GList *options, *iopt;
 	NAIOption *option;
-	GtkWidget *parent;
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-	parent = options_list_get_container_parent( instance );
-	options = options_list_get_options( instance );
+	options = options_list_get_options( instance, container_parent );
 
 	/* draw the formats as a group of radio buttons
 	 */
 	for( iopt = options ; iopt ; iopt = iopt->next ){
-		radio_button_draw_vbox( parent, NA_IOPTION( iopt->data ));
+		radio_button_draw_vbox( container_parent, NA_IOPTION( iopt->data ));
 	}
 
 	options_list_free_options( instance, options );
 
 	/* eventually add the 'Ask me' mode
 	 */
-	if( options_list_get_with_ask( instance )){
-		option = options_list_get_ask_option( instance );
-		radio_button_draw_vbox( parent, option );
+	if( with_ask ){
+		option = options_list_get_ask_option( instance, container_parent );
+		radio_button_draw_vbox( container_parent, option );
 		options_list_free_ask_option( instance, option );
 	}
 }
@@ -557,12 +552,14 @@ radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option )
 	g_free( description );
 
 	/* first line/child is the radio button
+	 * first button of the group does not have the property set
 	 */
 	button = GTK_RADIO_BUTTON( gtk_radio_button_new( NULL ));
-	if( !first_button ){
+	if( first_button ){
+		g_object_set( G_OBJECT( button ), "group", first_button, NULL );
+	} else {
 		first_button = button;
 	}
-	g_object_set( G_OBJECT( button ), "group", first_button, NULL );
 
 #if GTK_CHECK_VERSION( 3, 2, 0 )
 	gtk_grid_attach( GTK_GRID( container_option ), GTK_WIDGET( button ), 0, 0, 1, 1 );
@@ -575,53 +572,37 @@ radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option )
 	g_free( label );
 	gtk_button_set_use_underline( GTK_BUTTON( button ), TRUE );
 
-#if 0
-	vbox_data = g_new0( VBoxData, 1 );
-	g_debug( "%s: container_option=%p, allocating VBoxData at %p",
-			thisfn, ( void * ) container_option, ( void * ) vbox_data );
-
-	vbox_data->container_parent_vbox = container_parent;
-	vbox_data->button = button;
-	vbox_data->format = g_object_ref(( gpointer ) format );
-
-	g_object_set_data( G_OBJECT( container_option ), EXPORT_FORMAT_PROP_VBOX_DATA, vbox_data );
-	g_object_weak_ref( G_OBJECT( container_option ), ( GWeakNotify ) format_weak_notify, ( gpointer ) vbox_data );
-#endif
-
-	options_list_set_container_option( container_option, option );
+	set_options_list_option( container_option, g_object_ref(( gpointer ) option ));
 	g_object_weak_ref( G_OBJECT( container_option ), ( GWeakNotify ) radio_button_weak_notify, ( gpointer ) option );
 }
 
 /*
- * release the data structure attached to each individual 'option' container
+ * release the resources attached to each individual 'option' container
  * when destroying the window
  */
 static void
 radio_button_weak_notify( NAIOption *option, GObject *vbox )
 {
-	static const gchar *thisfn = "na_iptions_list_radio_button_weak_notify";
+	static const gchar *thisfn = "na_ioptions_list_radio_button_weak_notify";
 
 	g_debug( "%s: option=%p, vbox=%p", thisfn, ( void * ) option, ( void * ) vbox );
 
-	na_ioption_free_option( option );
+	g_object_unref( option );
 }
 
 static void
-tree_view_create_model( NAIOptionsList *instance )
+tree_view_create_model( const NAIOptionsList *instance, GtkWidget *container_parent )
 {
 	static const gchar *thisfn = "na_ioptions_list_tree_view_create_model";
-	GtkWidget *parent;
 	GtkListStore *model;
 	GtkTreeViewColumn *column;
 	GtkTreeSelection *selection;
 
-	parent = options_list_get_container_parent( instance );
-	g_return_if_fail( GTK_IS_TREE_VIEW( parent ));
-
-	g_debug( "%s: instance=%p, parent=%p", thisfn, ( void * ) instance, ( void * ) parent );
+	g_return_if_fail( GTK_IS_TREE_VIEW( container_parent ));
+	g_debug( "%s: instance=%p, container_parent=%p", thisfn, ( void * ) instance, ( void * ) container_parent );
 
 	model = gtk_list_store_new( N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_OBJECT );
-	gtk_tree_view_set_model( GTK_TREE_VIEW( parent ), GTK_TREE_MODEL( model ));
+	gtk_tree_view_set_model( GTK_TREE_VIEW( container_parent ), GTK_TREE_MODEL( model ));
 	g_object_unref( model );
 
 	/* create visible columns on the tree view
@@ -631,50 +612,47 @@ tree_view_create_model( NAIOptionsList *instance )
 			gtk_cell_renderer_pixbuf_new(),
 			"pixbuf", IMAGE_COLUMN,
 			NULL );
-	gtk_tree_view_append_column( GTK_TREE_VIEW( parent ), column );
+	gtk_tree_view_append_column( GTK_TREE_VIEW( container_parent ), column );
 
 	column = gtk_tree_view_column_new_with_attributes(
 			"label",
 			gtk_cell_renderer_text_new(),
 			"text", LABEL_COLUMN,
 			NULL );
-	gtk_tree_view_append_column( GTK_TREE_VIEW( parent ), column );
+	gtk_tree_view_append_column( GTK_TREE_VIEW( container_parent ), column );
 
-	g_object_set( G_OBJECT( parent ), "tooltip-column", TOOLTIP_COLUMN, NULL );
+	g_object_set( G_OBJECT( container_parent ), "tooltip-column", TOOLTIP_COLUMN, NULL );
 
-	selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( parent ));
+	selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( container_parent ));
 	gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 
-	g_object_weak_ref( G_OBJECT( parent ), ( GWeakNotify ) tree_view_weak_notify, ( gpointer ) model );
+	g_object_weak_ref( G_OBJECT( container_parent ), ( GWeakNotify ) tree_view_weak_notify, ( gpointer ) model );
 }
 
 static void
-tree_view_populate( NAIOptionsList *instance )
+tree_view_populate( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
 {
 	static const gchar *thisfn = "nact_export_format_tree_view_populate";
-	GtkWidget *parent;
 	GtkTreeModel *model;
 	NAIOption *option;
 	GList *options, *iopt;
 
-	parent = options_list_get_container_parent( instance );
-	g_return_if_fail( GTK_IS_TREE_VIEW( parent ));
+	g_return_if_fail( GTK_IS_TREE_VIEW( container_parent ));
+	g_debug( "%s: instance=%p, container_parent=%p", thisfn, ( void * ) instance, ( void * ) container_parent );
 
-	g_debug( "%s: instance=%p, parent=%p", thisfn, ( void * ) instance, ( void * ) parent );
-
-	model = gtk_tree_view_get_model( GTK_TREE_VIEW( parent ));
-	options = options_list_get_options( instance );
+	model = gtk_tree_view_get_model( GTK_TREE_VIEW( container_parent ));
+	options = options_list_get_options( instance, container_parent );
 
 	for( iopt = options ; iopt ; iopt = iopt->next ){
 		option = NA_IOPTION( iopt->data );
-		tree_view_add_item( GTK_TREE_VIEW( parent ), model, option );
+		tree_view_add_item( GTK_TREE_VIEW( container_parent ), model, option );
 	}
 
 	/* eventually add the 'Ask me' mode
 	 */
-	if( options_list_get_with_ask( instance )){
-		option = options_list_get_ask_option( instance );
-		tree_view_add_item( GTK_TREE_VIEW( parent ), model, option );
+	if( with_ask ){
+		option = options_list_get_ask_option( instance, container_parent );
+		tree_view_add_item( GTK_TREE_VIEW( container_parent ), model, option );
 		options_list_free_ask_option( instance, option );
 	}
 }
@@ -717,46 +695,49 @@ tree_view_weak_notify( GtkTreeModel *model, GObject *tree_view )
 	static const gchar *thisfn = "na_iptions_list_tree_view_weak_notify";
 
 	g_debug( "%s: model=%p, tree_view=%p", thisfn, ( void * ) model, ( void * ) tree_view );
-
-	gtk_list_store_clear( GTK_LIST_STORE( model ));
 }
 
 /*
  * na_ioptions_list_set_default:
  * @instance: the object which implements this #NAIOptionsList interface.
- * @default_option: the #NAIOption to be set as the default.
+ * @container_parent: the #GtkWidget which embeds our list of values.
+ * @default_id: the string identifier of the #NAIOption to be set as the default.
  *
  * Set the default, either of the radio button group or of the tree view.
  */
 void
-na_ioptions_list_set_default( NAIOptionsList *instance, NAIOption *default_option )
+na_ioptions_list_set_default(
+		const NAIOptionsList *instance, GtkWidget *container_parent, const gchar *default_id )
 {
 	static const gchar *thisfn = "na_ioptions_list_set_default";
-	GtkWidget *parent;
 	GtkTreeModel *model;
 
-	if( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized ){
-		g_debug( "%s: instance=%p (%s), default_option=%p (%s)",
-				thisfn,
-				( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
-				( void * ) default_option, G_OBJECT_TYPE_NAME( default_option ));
+	g_return_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized );
+	check_for_initializations( instance, container_parent );
 
-		parent = options_list_get_container_parent( instance );
-		g_return_if_fail( GTK_IS_WIDGET( parent ));
+	g_debug( "%s: instance=%p (%s), container_parent=%p (%s), default_id=%s",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) container_parent, G_OBJECT_TYPE_NAME( container_parent ),
+			default_id );
 
-		options_list_set_option( instance, default_option );
+	set_options_list_option_id( container_parent, default_id );
 
-		if( GTK_IS_BOX( parent )){
-			gtk_container_foreach( GTK_CONTAINER( parent ),
-					( GtkCallback ) radio_button_select_iter, instance );
+	if( GTK_IS_BOX( container_parent )){
+		gtk_container_foreach(
+				GTK_CONTAINER( container_parent ),
+				( GtkCallback ) radio_button_select_iter,
+				container_parent );
 
-		} else if( GTK_IS_TREE_VIEW( parent )){
-			model = gtk_tree_view_get_model( GTK_TREE_VIEW( parent ));
-			gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) tree_view_select_iter, instance );
+	} else if( GTK_IS_TREE_VIEW( container_parent )){
+		model = gtk_tree_view_get_model( GTK_TREE_VIEW( container_parent ));
+		gtk_tree_model_foreach(
+				model,
+				( GtkTreeModelForeachFunc ) tree_view_select_iter,
+				container_parent );
 
-		} else {
-			g_warning( "%s: unknown parent type: %s", thisfn, G_OBJECT_TYPE_NAME( parent ));
-		}
+	} else {
+		g_warning( "%s: unknown container_parent type: %s", thisfn, G_OBJECT_TYPE_NAME( container_parent ));
 	}
 }
 
@@ -768,51 +749,193 @@ na_ioptions_list_set_default( NAIOptionsList *instance, NAIOption *default_optio
  * - activating the button which holds our default value
  */
 static void
-radio_button_select_iter( GtkWidget *container_option, NAIOptionsList *instance )
+radio_button_select_iter( GtkWidget *container_option, GtkWidget *container_parent )
 {
+	const gchar *default_id;
 	NAIOption *option;
-	NAIOption *default_option;
 	GtkWidget *button;
 	gboolean editable, sensitive;
+	gchar *option_id;
 
 	button = NULL;
-	default_option = options_list_get_option( instance );
-	option = options_list_get_container_option( container_option );
+	default_id = get_options_list_option_id( container_parent );
+	option = get_options_list_option( container_option );
+	option_id = na_ioption_get_id( option );
 
-	if( option == default_option ){
+	if( !strcmp( default_id, option_id )){
 		button = na_gtk_utils_find_widget_by_type( GTK_CONTAINER( container_option ), GTK_TYPE_RADIO_BUTTON );
 		g_return_if_fail( GTK_IS_RADIO_BUTTON( button ));
-		editable = options_list_get_editable( instance );
-		sensitive = options_list_get_sensitive( instance );
-		na_gtk_utils_radio_set_initial_state( GTK_RADIO_BUTTON( button ),
-				NULL, NULL, editable, sensitive );
+		editable = get_options_list_editable( container_parent );
+		sensitive = get_options_list_sensitive( container_parent );
+		na_gtk_utils_radio_set_initial_state( GTK_RADIO_BUTTON( button ), NULL, NULL, editable, sensitive );
 	}
+
+	g_free( option_id );
 }
 
 /*
  * walks through the rows of the liststore until the function returns %TRUE
  */
 static gboolean
-tree_view_select_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, NAIOptionsList *instance )
+tree_view_select_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkWidget *container_parent )
 {
 	gboolean stop;
 	GtkTreeView *tree_view;
-	NAIOption *default_option, *option;
+	NAIOption *option;
+	const gchar *default_id;
+	gchar *option_id;
 	GtkTreeSelection *selection;
 
 	stop = FALSE;
-	tree_view = ( GtkTreeView * ) options_list_get_container_parent( instance );
+	tree_view = ( GtkTreeView * ) container_parent;
 	g_return_val_if_fail( GTK_IS_TREE_VIEW( tree_view ), TRUE );
-	default_option = options_list_get_option( instance );
+	default_id = get_options_list_option_id( container_parent );
 
 	gtk_tree_model_get( model, iter, OBJECT_COLUMN, &option, -1 );
 	g_object_unref( option );
+	option_id = na_ioption_get_id( option );
 
-	if( option == default_option ){
+	if( !strcmp( default_id, option_id )){
 		selection = gtk_tree_view_get_selection( tree_view );
 		gtk_tree_selection_select_iter( selection, iter );
 		stop = TRUE;
 	}
 
+	g_free( option_id );
+
 	return( stop );
+}
+
+/*
+ * na_ioptions_list_set_editable:
+ * @instance: the object which implements this #NAIOptionsList interface.
+ * @container_parent: the #GtkWidget which embeds our list of values.
+ * @editable: whether the selectable user's preference is editable;
+ *  Most of time, a user's preference is not editable if it is set as mandatory,
+ *  or if the whole user's preferences are not writable.
+ *
+ * Set the @editable pseudo-property on the @instance #NAIOptionsList instance.
+ */
+void
+na_ioptions_list_set_editable( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean editable )
+{
+	static const gchar *thisfn = "na_ioptions_list_set_editable";
+
+	g_return_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized );
+	check_for_initializations( instance, container_parent );
+
+	g_debug( "%s: instance=%p (%s), container_parent=%p (%s), editable=%s",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) container_parent, G_OBJECT_TYPE_NAME( container_parent ),
+			editable ? "True":"False" );
+
+	set_options_list_editable( container_parent, editable );
+}
+
+/*
+ * na_ioptions_list_set_sensitive:
+ * @instance: the object which implements this #NAIOptionsList interface.
+ * @container_parent: the #GtkWidget which embeds our list of values.
+ * @sensitive: whether the radio button group is to be sensitive;
+ *  a widget should not be sensitive if the selectable option is not relevant
+ *  in the considered case.
+ *
+ * Set the @sensitive pseudo-property on the @instance #NAIOptionsList instance.
+ */
+void
+na_ioptions_list_set_sensitive( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean sensitive )
+{
+	static const gchar *thisfn = "na_ioptions_list_set_sensitive";
+
+	g_return_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized );
+	check_for_initializations( instance, container_parent );
+
+	g_debug( "%s: instance=%p (%s), container_parent=%p (%s), sensitive=%s",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) container_parent, G_OBJECT_TYPE_NAME( container_parent ),
+			sensitive ? "True":"False" );
+
+	set_options_list_sensitive( container_parent, sensitive );
+}
+
+/*
+ * na_ioptions_list_get_selected:
+ * @instance: the object which implements this #NAIOptionsList interface.
+ * @container_parent: the #GtkWidget which embeds our list of values.
+ *
+ * Returns: the currently selected #NAIOption.
+ */
+NAIOption *
+na_ioptions_list_get_selected( const NAIOptionsList *instance, GtkWidget *container_parent )
+{
+	static const gchar *thisfn = "na_ioptions_list_get_selected";
+	NAIOption *option;
+
+	option = NULL;
+
+	g_return_val_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized, NULL );
+	check_for_initializations( instance, container_parent );
+
+	g_debug( "%s: instance=%p (%s), container_parent=%p (%s)",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) container_parent, G_OBJECT_TYPE_NAME( container_parent ));
+
+	if( GTK_IS_BOX( container_parent )){
+		gtk_container_foreach( GTK_CONTAINER( container_parent ),
+				( GtkCallback ) radio_button_get_selected_iter, container_parent );
+		option = get_options_list_option( container_parent );
+
+	} else if( GTK_IS_TREE_VIEW( container_parent )){
+		tree_view_get_selected( instance, container_parent );
+		option = get_options_list_option( container_parent );
+
+	} else {
+		g_warning( "%s: unknown container_parent type: %s", thisfn, G_OBJECT_TYPE_NAME( container_parent ));
+	}
+
+	return( option );
+}
+
+/*
+ * container_mode is a GtkVBox, or a GtkGrid starting with Gtk 3.2
+ */
+static void
+radio_button_get_selected_iter( GtkWidget *container_option, GtkWidget *container_parent )
+{
+	GtkWidget *button;
+	NAIOption *option;
+
+	button = na_gtk_utils_find_widget_by_type( GTK_CONTAINER( container_option ), GTK_TYPE_RADIO_BUTTON );
+	g_return_if_fail( GTK_IS_RADIO_BUTTON( button ));
+
+	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
+		option = get_options_list_option( container_option );
+		set_options_list_option( container_parent, option );
+	}
+}
+
+static void
+tree_view_get_selected( const NAIOptionsList *instance, GtkWidget *container_parent )
+{
+	GtkTreeSelection *selection;
+	GList *rows;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	NAIOption *option;
+
+	selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( container_parent ));
+	rows = gtk_tree_selection_get_selected_rows( selection, &model );
+	g_return_if_fail( g_list_length( rows ) == 1 );
+
+	gtk_tree_model_get_iter( model, &iter, ( GtkTreePath * ) rows->data );
+	gtk_tree_model_get( model, &iter, OBJECT_COLUMN, &option, -1 );
+	g_object_unref( option );
+
+	g_list_foreach( rows, ( GFunc ) gtk_tree_path_free, NULL );
+	g_list_free( rows );
+
+	set_options_list_option( container_parent, option );
 }

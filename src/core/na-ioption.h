@@ -85,8 +85,9 @@ typedef struct _NAIOptionManageImportModeParms NAIOptionManageImportModeParms;
  * NAIOptionInterface:
  * @get_version:     returns the version of this interface that the
  *                   instance implements.
- * @get_description: returns the description of the option.
+ * @get_id:          returns the string identifier of the option.
  * @get_label:       returns the label of the option.
+ * @get_description: returns the description of the option.
  * @get_pixbuf:      returns the image associated to the option.
  *
  * This defines the interface that a #NAIOption implementation should provide.
@@ -115,15 +116,15 @@ typedef struct {
 	guint       ( *get_version )    ( const NAIOption *instance );
 
 	/*
-	 * get_description:
+	 * get_id:
 	 * @instance: the #NAIOption instance of the implementation.
 	 *
-	 * Returns: the description of the option, as a newly allocated string
+	 * Returns: the string identifier of the option, as a newly allocated string
 	 * which should be g_free() by the caller.
 	 *
 	 * Since: 3.2
 	 */
-	gchar *     ( *get_description )( const NAIOption *instance );
+	gchar *     ( *get_id )         ( const NAIOption *instance );
 
 	/*
 	 * get_label:
@@ -135,6 +136,17 @@ typedef struct {
 	 * Since: 3.2
 	 */
 	gchar *     ( *get_label )      ( const NAIOption *instance );
+
+	/*
+	 * get_description:
+	 * @instance: the #NAIOption instance of the implementation.
+	 *
+	 * Returns: the description of the option, as a newly allocated string
+	 * which should be g_free() by the caller.
+	 *
+	 * Since: 3.2
+	 */
+	gchar *     ( *get_description )( const NAIOption *instance );
 
 	/*
 	 * get_pixbuf:
@@ -153,11 +165,10 @@ typedef struct {
 
 GType      na_ioption_get_type( void );
 
-gchar     *na_ioption_get_description( const NAIOption *option );
+gchar     *na_ioption_get_id         ( const NAIOption *option );
 gchar     *na_ioption_get_label      ( const NAIOption *option );
+gchar     *na_ioption_get_description( const NAIOption *option );
 GdkPixbuf *na_ioption_get_pixbuf     ( const NAIOption *option );
-
-void       na_ioption_free_option    ( NAIOption *option );
 
 G_END_DECLS
 

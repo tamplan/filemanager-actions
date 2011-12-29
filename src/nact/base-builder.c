@@ -55,8 +55,8 @@ static GType    register_type( void );
 static void     class_init( BaseBuilderClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
+static void     free_built_object( GObject *object, gpointer user_data );
 static void     instance_finalize( GObject *application );
-
 static gboolean already_loaded( BaseBuilder *builder, const gchar *filename );
 
 GType
@@ -136,6 +136,7 @@ instance_dispose( GObject *instance )
 {
 	static const gchar *thisfn = "base_builder_instance_dispose";
 	BaseBuilder *self;
+	GSList *objects;
 
 	g_return_if_fail( BASE_IS_BUILDER( instance ));
 
@@ -145,11 +146,32 @@ instance_dispose( GObject *instance )
 
 		g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
+		objects = gtk_builder_get_objects( GTK_BUILDER( instance ));
+		g_slist_foreach( objects, ( GFunc ) free_built_object, NULL );
+		g_slist_free( objects );
+
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
 			G_OBJECT_CLASS( st_parent_class )->dispose( instance );
+		}
+	}
+}
+
+static void
+free_built_object( GObject *object, gpointer user_data )
+{
+	static const gchar *thisfn = "base_builder_free_built_object";
+
+	if( GTK_IS_WIDGET( object )){
+		if( gtk_widget_is_toplevel( GTK_WIDGET( object ))){
+
+			g_debug( "%s: object=%p (%s) %s", thisfn,
+					( void * ) object, G_OBJECT_TYPE_NAME( object ),
+					gtk_buildable_get_name( GTK_BUILDABLE( object )));
+
+			gtk_widget_destroy( GTK_WIDGET( object ));
 		}
 	}
 }

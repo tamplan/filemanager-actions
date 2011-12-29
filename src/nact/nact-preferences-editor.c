@@ -38,7 +38,10 @@
 #include <api/na-iimporter.h>
 
 #include <core/na-desktop-environment.h>
+#include <core/na-exporter.h>
+#include <core/na-export-format.h>
 #include <core/na-gtk-utils.h>
+#include <core/na-ioptions-list.h>
 #include <core/na-iprefs.h>
 #include <core/na-tokens.h>
 
@@ -121,51 +124,54 @@ static const gchar       *st_wsp_name       = NA_IPREFS_PREFERENCES_WSP;
 static GObjectClass      *st_parent_class   = NULL;
 static guint              st_last_tab       = 0;
 
-static GType    register_type( void );
-static void     class_init( NactPreferencesEditorClass *klass );
-static void     instance_init( GTypeInstance *instance, gpointer klass );
-static void     instance_dispose( GObject *dialog );
-static void     instance_finalize( GObject *dialog );
-
-static void     on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *toplevel );
-static void     on_base_initialize_base_window( NactPreferencesEditor *editor );
-static void     on_base_all_widgets_showed( NactPreferencesEditor *editor );
-static void     order_mode_setup( NactPreferencesEditor *editor );
-static void     order_mode_on_alpha_asc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void     order_mode_on_alpha_desc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void     order_mode_on_manual_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void     order_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *togglebutton, GCallback cb, guint order_mode );
-static void     root_menu_setup( NactPreferencesEditor *editor );
-static void     root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     about_item_setup( NactPreferencesEditor *editor );
-static void     about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     terminal_pattern_setup( NactPreferencesEditor *editor );
-static void     terminal_pattern_on_changed( GtkEntry *entry, NactPreferencesEditor *editor );
-static void     desktop_create_model( NactPreferencesEditor *editor );
-static void     desktop_setup( NactPreferencesEditor *editor );
-static void     desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor );
-static void     relabel_menu_setup( NactPreferencesEditor *editor );
-static void     relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     relabel_action_setup( NactPreferencesEditor *editor );
-static void     relabel_action_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     relabel_profile_setup( NactPreferencesEditor *editor );
-static void     relabel_profile_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     esc_quit_setup( NactPreferencesEditor *editor );
-static void     esc_quit_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     esc_confirm_setup( NactPreferencesEditor *editor );
-static void     esc_confirm_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     auto_save_setup( NactPreferencesEditor *editor );
-static void     auto_save_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
-static void     auto_save_period_on_change_value( GtkSpinButton *spinbutton, NactPreferencesEditor *editor );
-static void     import_mode_setup( NactPreferencesEditor *editor );
-static void     import_mode_on_ask_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void     import_mode_on_override_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void     import_mode_on_renumber_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void     import_mode_on_noimport_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void     import_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *togglebutton, GCallback cb, guint import_mode );
-static void     on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
-static void     on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
-static void     on_dialog_ok( BaseDialog *dialog );
+static GType      register_type( void );
+static void       class_init( NactPreferencesEditorClass *klass );
+static void       ioptions_list_iface_init( NAIOptionsListInterface *iface );
+static GList     *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
+static void       ioptions_list_free_formats( const NAIOptionsList *instance, GList *formats );
+static NAIOption *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
+static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_dispose( GObject *dialog );
+static void       instance_finalize( GObject *dialog );
+static void       on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *toplevel );
+static void       on_base_initialize_base_window( NactPreferencesEditor *editor );
+static void       on_base_all_widgets_showed( NactPreferencesEditor *editor );
+static void       order_mode_setup( NactPreferencesEditor *editor );
+static void       order_mode_on_alpha_asc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
+static void       order_mode_on_alpha_desc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
+static void       order_mode_on_manual_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
+static void       order_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *togglebutton, GCallback cb, guint order_mode );
+static void       root_menu_setup( NactPreferencesEditor *editor );
+static void       root_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void       about_item_setup( NactPreferencesEditor *editor );
+static void       about_item_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void       terminal_pattern_setup( NactPreferencesEditor *editor );
+static void       terminal_pattern_on_changed( GtkEntry *entry, NactPreferencesEditor *editor );
+static void       desktop_create_model( NactPreferencesEditor *editor );
+static void       desktop_setup( NactPreferencesEditor *editor );
+static void       desktop_on_changed( GtkComboBox *combo, NactPreferencesEditor *editor );
+static void       relabel_menu_setup( NactPreferencesEditor *editor );
+static void       relabel_menu_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void       relabel_action_setup( NactPreferencesEditor *editor );
+static void       relabel_action_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void       relabel_profile_setup( NactPreferencesEditor *editor );
+static void       relabel_profile_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void       esc_quit_setup( NactPreferencesEditor *editor );
+static void       esc_quit_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void       esc_confirm_setup( NactPreferencesEditor *editor );
+static void       esc_confirm_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void       auto_save_setup( NactPreferencesEditor *editor );
+static void       auto_save_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
+static void       auto_save_period_on_change_value( GtkSpinButton *spinbutton, NactPreferencesEditor *editor );
+static void       import_mode_setup( NactPreferencesEditor *editor );
+static void       import_mode_on_ask_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
+static void       import_mode_on_override_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
+static void       import_mode_on_renumber_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
+static void       import_mode_on_noimport_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
+static void       import_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *togglebutton, GCallback cb, guint import_mode );
+static void       on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
+static void       on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
+static void       on_dialog_ok( BaseDialog *dialog );
 
 GType
 nact_preferences_editor_get_type( void )
@@ -197,9 +203,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo ioptions_list_iface_info = {
+		( GInterfaceInitFunc ) ioptions_list_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( BASE_DIALOG_TYPE, "NactPreferencesEditor", &info, 0 );
+
+	g_type_add_interface_static( type, NA_IOPTIONS_LIST_TYPE, &ioptions_list_iface_info );
 
 	return( type );
 }
@@ -223,6 +237,48 @@ class_init( NactPreferencesEditorClass *klass )
 
 	dialog_class = BASE_DIALOG_CLASS( klass );
 	dialog_class->ok = on_dialog_ok;
+}
+
+static void
+ioptions_list_iface_init( NAIOptionsListInterface *iface )
+{
+	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_options = ioptions_list_get_formats;
+	iface->free_options = ioptions_list_free_formats;
+	iface->get_ask_option = ioptions_list_get_ask_option;
+}
+
+static GList *
+ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container )
+{
+	NactPreferencesEditor *window;
+	NactApplication *application;
+	NAUpdater *updater;
+	GList *formats;
+
+	g_return_val_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ), NULL );
+	window = NACT_PREFERENCES_EDITOR( instance );
+
+	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
+	updater = nact_application_get_updater( application );
+	formats = na_exporter_get_formats( NA_PIVOT( updater ));
+
+	return( formats );
+}
+
+static void
+ioptions_list_free_formats( const NAIOptionsList *instance, GList *formats )
+{
+	na_exporter_free_formats( formats );
+}
+
+static NAIOption *
+ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container )
+{
+	return( nact_export_format_get_ask_option());
 }
 
 static void
@@ -316,10 +372,16 @@ nact_preferences_editor_run( BaseWindow *parent )
 	g_debug( "%s: parent=%p (%s)", thisfn, ( void * ) parent, G_OBJECT_TYPE_NAME( parent ));
 
 	editor = g_object_new( NACT_PREFERENCES_EDITOR_TYPE,
-					BASE_PROP_PARENT,         parent,
-					BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
-					BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
-					BASE_PROP_WSP_NAME,       st_wsp_name,
+					BASE_PROP_PARENT,          parent,
+					BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
+					/*
+					 * having our own builder let us, e.g., set a weak reference on
+					 * pixbufs allocated by plugins - but this way we are losing
+					 * mutualization of gtk initializations...
+					 */
+					/*BASE_PROP_HAS_OWN_BUILDER, TRUE,*/
+					BASE_PROP_TOPLEVEL_NAME,   st_toplevel_name,
+					BASE_PROP_WSP_NAME,        st_wsp_name,
 					NULL );
 
 	are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
@@ -355,9 +417,7 @@ on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *tople
 		desktop_create_model( editor );
 
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-		nact_export_format_init_display(
-				container, NA_PIVOT( updater ),
-				EXPORT_FORMAT_DISPLAY_PREFERENCES, !editor->private->preferences_locked );
+		na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( editor ), container, TRUE );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( editor ), "SchemesTreeView" ));
 		nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_PREFERENCES );
@@ -375,8 +435,8 @@ static void
 on_base_initialize_base_window( NactPreferencesEditor *editor )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_base_window";
-	GtkWidget *container;
 	GQuark export_format;
+	GtkWidget *container;
 	GtkTreeView *listview;
 	GtkWidget *ok_button;
 
@@ -411,9 +471,14 @@ on_base_initialize_base_window( NactPreferencesEditor *editor )
 
 		/* fifth tab: export format
 		 */
-		export_format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, &editor->private->export_format_mandatory );
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-		nact_export_format_select( container, !editor->private->export_format_mandatory, export_format );
+		export_format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, &editor->private->export_format_mandatory );
+		na_ioptions_list_set_editable(
+				NA_IOPTIONS_LIST( editor ), container,
+				!editor->private->export_format_mandatory && !editor->private->preferences_locked );
+		na_ioptions_list_set_default(
+				NA_IOPTIONS_LIST( editor ), container,
+				g_quark_to_string( export_format ));
 
 		/* sixth tab: default schemes
 		 */
@@ -1090,8 +1155,8 @@ static void
 on_dialog_ok( BaseDialog *dialog )
 {
 	NactPreferencesEditor *editor;
+	NAIOption *export_format;
 	GtkWidget *container;
-	NAExportFormat *export_format;
 
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
 
@@ -1154,8 +1219,9 @@ on_dialog_ok( BaseDialog *dialog )
 		 */
 		if( !editor->private->export_format_mandatory ){
 			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-			export_format = nact_export_format_get_selected( container );
-			na_iprefs_set_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( export_format ));
+			export_format = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), container );
+			g_return_if_fail( NA_IS_EXPORT_FORMAT( export_format ));
+			na_iprefs_set_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( NA_EXPORT_FORMAT( export_format )));
 		}
 
 		/* sixth tab: list of default schemes

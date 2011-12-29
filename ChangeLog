@@ -28,7 +28,7 @@
 	XML export formats.
 
 	* src/io-xml/Makefile.am: Updated accordingly.
-	 
+
 	* src/core/na-import-mode.c:
 	* src/core/na-import-mode.h:
 	* src/core/na-ioption.c:

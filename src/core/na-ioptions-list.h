@@ -68,9 +68,24 @@
  * -derived object, which itself should implement the #NAIOption companion
  * interface.
  *
- * More, the instance which would want to implement this #NAIOptionsList
- * interface should also implement one of #NAIOptionsRadioButton or
- * #NAIOptionsTreeView interfaces.
+ * Note that the instance which implements this interface is able to provide
+ * several list of values. This is the reason why each list of values is
+ * identified by its container inside of the window's instance.
+ *
+ * Instance initialization
+ *
+ * Rather that having to call a na_ioptions_list_instance_init() on each
+ * instance implementation, we prefer to check when entering in each public
+ * method for an 'initialized' flag both at the instance level and at the
+ * container level.
+ *
+ * Alternative may have be to have the na_ioptions_list_instance_init()
+ * initialization interface method, which itself connect to #BaseWindow
+ * signals. But this would not prevent of initializing for both managed
+ * containers...
+ *
+ * Initialization mainly consists of defining weak references both on
+ * instance and on containers levels.
  *
  * <refsect2>
  *  <title>Versions historic</title>
@@ -119,6 +134,10 @@ typedef struct _NAIOptionsListManageImportModeParms NAIOptionsListManageImportMo
  * NAIOptionsListInterface:
  * @get_version:     returns the version of this interface that the
  *                   instance implements.
+ * @get_options:     returns the list of #NAIOption.
+ * @free_options:    releases the list of #NAIOption.
+ * @get_ask_option:  returns the 'Ask me' #NAIOption.
+ * @free_ask_option: releases the 'Ask me' #NAIOption.
  *
  * This defines the interface that a #NAIOptionsList implementation should provide.
  */
@@ -148,6 +167,7 @@ typedef struct {
 	/*
 	 * get_options:
 	 * @instance: the #NAIOptionsList instance of the implementation.
+	 * @container: the #GtkWidget which embeds the list of values.
 	 *
 	 * This method may be called at more or less early stage of the build
 	 * of the display, either rather early when displaying a radio button
@@ -157,7 +177,7 @@ typedef struct {
 	 *
 	 * Since: 3.2
 	 */
-	GList *     ( *get_options ) ( const NAIOptionsList *instance );
+	GList *     ( *get_options ) ( const NAIOptionsList *instance, GtkWidget *container );
 
 	/*
 	 * free_options:
@@ -178,6 +198,7 @@ typedef struct {
 	/*
 	 * get_ask_option:
 	 * @instance: the #NAIOptionsList instance of the implementation.
+	 * @container: the #GtkWidget which embeds the list of values.
 	 *
 	 * Ask the implementation to provide a #NAIOption which defines the
 	 * 'Ask me' option.
@@ -186,7 +207,7 @@ typedef struct {
 	 *
 	 * Since: 3.2
 	 */
-	NAIOption * ( *get_ask_option ) ( const NAIOptionsList *instance );
+	NAIOption * ( *get_ask_option ) ( const NAIOptionsList *instance, GtkWidget *container );
 
 	/*
 	 * free_ask_option:
@@ -205,10 +226,15 @@ typedef struct {
 }
 	NAIOptionsListInterface;
 
-GType na_ioptions_list_get_type( void );
+GType      na_ioptions_list_get_type( void );
 
-void  na_ioptions_list_display_init( NAIOptionsList *instance, GtkWidget *parent, gboolean with_ask, gboolean editable, gboolean sensitive );
-void  na_ioptions_list_set_default ( NAIOptionsList *instance, NAIOption *default_option );
+void       na_ioptions_list_gtk_init     ( const NAIOptionsList *instance, GtkWidget *container, gboolean with_ask );
+
+void       na_ioptions_list_set_default  ( const NAIOptionsList *instance, GtkWidget *container, const gchar *default_id );
+void       na_ioptions_list_set_editable ( const NAIOptionsList *instance, GtkWidget *container, gboolean editable );
+void       na_ioptions_list_set_sensitive( const NAIOptionsList *instance, GtkWidget *container, gboolean sensitive );
+
+NAIOption *na_ioptions_list_get_selected ( const NAIOptionsList *instance, GtkWidget *container );
 
 G_END_DECLS
 

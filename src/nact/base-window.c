@@ -649,7 +649,7 @@ base_window_init( BaseWindow *window )
 /*
  * setup the builder of the window as a new one, or use the global one
  *
- * A dialog may have its own builder ,sharing the common UI XML definition file
+ * A dialog may have its own builder, sharing the common UI XML definition file
  * or a dialog may have its own UI XML definition file, sharing the common builder
  * or a dialog may have both its UI XML definition file with its own builder
  */

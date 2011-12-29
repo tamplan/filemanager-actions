@@ -94,6 +94,10 @@ static NaxmlExportFormat naxml_formats[] = {
 	{ NULL }
 };
 
+#if 0
+static void on_pixbuf_finalized( const NAIExporter* exporter, GObject *pixbuf );
+#endif
+
 /**
  * naxml_formats_get_formats:
  * @exporter: this #NAIExporter provider.
@@ -107,6 +111,9 @@ static NaxmlExportFormat naxml_formats[] = {
 GList *
 naxml_formats_get_formats( const NAIExporter* exporter )
 {
+#if 0
+	static const gchar *thisfn = "naxml_formats_get_formats";
+#endif
 	GList *str_list;
 	NAIExporterFormatExt *str;
 	guint i;
@@ -130,6 +137,17 @@ naxml_formats_get_formats( const NAIExporter* exporter )
 			fname = g_strdup_printf( "%s/%s", PKGDATADIR, naxml_formats[i].image );
 			str->pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
 			g_free( fname );
+#if 0
+			/* do not set weak reference on a graphical object provided by a plugin
+			 * if the windows does not have its own builder, it may happens that the
+			 * graphical object be finalized when destroying toplevels at common
+			 * builder finalization time, and so after the plugins have been shutdown
+			 */
+			if( str->pixbuf ){
+				g_debug( "%s: allocating pixbuf at %p", thisfn, str->pixbuf );
+				g_object_weak_ref( G_OBJECT( str->pixbuf ), ( GWeakNotify ) on_pixbuf_finalized, ( gpointer ) exporter );
+			}
+#endif
 		}
 		str_list = g_list_prepend( str_list, str );
 	}
@@ -137,13 +155,19 @@ naxml_formats_get_formats( const NAIExporter* exporter )
 	return( str_list );
 }
 
+#if 0
+static void
+on_pixbuf_finalized( const NAIExporter* exporter, GObject *pixbuf )
+{
+	g_debug( "naxml_formats_on_pixbuf_finalized: exporter=%p, pixbuf=%p", ( void * ) exporter, ( void * ) pixbuf );
+}
+#endif
+
 /**
  * naxml_formats_free_formats:
  * @formats: a #GList to be freed.
  *
- * Returns: a #GList of the #NAIExporterFormatExt supported export formats.
- *
- * This list should be naxml_format_free_formats() by the caller.
+ * Releases the list of managed formats.
  *
  * Since: 3.2
  */
@@ -161,6 +185,7 @@ naxml_formats_free_formats( GList *formats )
 		if( str->pixbuf ){
 			g_object_unref( str->pixbuf );
 		}
+		g_free( str );
 	}
 
 	g_list_free( formats );

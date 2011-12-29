@@ -194,27 +194,27 @@ option_set_initialized( NAIOption *instance, gboolean initialized )
 }
 
 /*
- * na_ioption_get_description:
- * @format: this #NAExportFormat object.
+ * na_ioption_get_id:
+ * @option: this #NAIOption instance.
  *
- * Returns: the UTF-8 localizable description of the format, as a newly
+ * Returns: the string identifier of the format, as a newly
  * allocated string which should be g_free() by the caller.
  */
 gchar *
-na_ioption_get_description( const NAIOption *option )
+na_ioption_get_id( const NAIOption *option )
 {
-	gchar *description;
+	gchar *id;
 
 	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
 
 	check_for_initialized_instance( NA_IOPTION( option ));
-	description = NULL;
+	id = NULL;
 
-	if( NA_IOPTION_GET_INTERFACE( option )->get_description ){
-		description = NA_IOPTION_GET_INTERFACE( option )->get_description( option );
+	if( NA_IOPTION_GET_INTERFACE( option )->get_id ){
+		id = NA_IOPTION_GET_INTERFACE( option )->get_id( option );
 	}
 
-	return( description );
+	return( id );
 }
 
 /*
@@ -242,6 +242,30 @@ na_ioption_get_label( const NAIOption *option )
 }
 
 /*
+ * na_ioption_get_description:
+ * @format: this #NAExportFormat object.
+ *
+ * Returns: the UTF-8 localizable description of the format, as a newly
+ * allocated string which should be g_free() by the caller.
+ */
+gchar *
+na_ioption_get_description( const NAIOption *option )
+{
+	gchar *description;
+
+	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
+
+	check_for_initialized_instance( NA_IOPTION( option ));
+	description = NULL;
+
+	if( NA_IOPTION_GET_INTERFACE( option )->get_description ){
+		description = NA_IOPTION_GET_INTERFACE( option )->get_description( option );
+	}
+
+	return( description );
+}
+
+/*
  * na_ioption_get_pixbuf:
  * @option: this #NAIOption instance.
  *
@@ -265,6 +289,7 @@ na_ioption_get_pixbuf( const NAIOption *option )
 	return( pixbuf );
 }
 
+#if 0
 /*
  * na_ioption_free_option:
  * @option: this #NAIOption instance.
@@ -275,4 +300,7 @@ void
 na_ioption_free_option( NAIOption *option )
 {
 	g_return_if_fail( NA_IS_IOPTION( option ));
+
+	g_object_unref( option );
 }
+#endif

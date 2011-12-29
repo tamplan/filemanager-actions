@@ -98,6 +98,10 @@ na_exporter_get_formats( const NAPivot *pivot )
 void
 na_exporter_free_formats( GList *formats )
 {
+	static const gchar *thisfn = "na_exporter_free_formats";
+
+	g_debug( "%s: formats=%p (count=%d)", thisfn, ( void * ) formats, g_list_length( formats ));
+
 	g_list_foreach( formats, ( GFunc ) g_object_unref, NULL );
 	g_list_free( formats );
 }

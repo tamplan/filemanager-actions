@@ -44,6 +44,7 @@
 
 #include <core/na-exporter.h>
 #include <core/na-export-format.h>
+#include <core/na-ioption.h>
 
 #include "console-utils.h"
 
@@ -138,7 +139,7 @@ main( int argc, char** argv )
 
 	for( it = formats_list ; it && !format_found ; it = it->next ){
 		NAExportFormat *export = NA_EXPORT_FORMAT( it->data );
-		gchar *export_id = na_export_format_get_id( export );
+		gchar *export_id = na_ioption_get_id( NA_IOPTION( export ));
 		format_found = !strcmp( export_id, format );
 		g_free( export_id );
 	}

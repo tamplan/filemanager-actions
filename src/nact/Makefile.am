@@ -176,6 +176,7 @@ ui_files = \
 	$(NULL)
 
 images_files = \
+	export-format-ask.png								\
 	import-mode-ask.png									\
 	import-mode-no-import.png							\
 	import-mode-override.png							\

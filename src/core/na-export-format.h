@@ -71,12 +71,8 @@ GType           na_export_format_get_type( void );
 
 NAExportFormat *na_export_format_new( const NAIExporterFormatExt *exporter_format );
 
-GQuark          na_export_format_get_quark      ( const NAExportFormat *format );
-gchar          *na_export_format_get_id         ( const NAExportFormat *format );
-gchar          *na_export_format_get_label      ( const NAExportFormat *format );
-gchar          *na_export_format_get_description( const NAExportFormat *format );
-NAIExporter    *na_export_format_get_provider   ( const NAExportFormat *format );
-GdkPixbuf      *na_export_format_get_pixbuf     ( const NAExportFormat *format );
+GQuark          na_export_format_get_quark   ( const NAExportFormat *format );
+NAIExporter    *na_export_format_get_provider( const NAExportFormat *format );
 
 G_END_DECLS
 
