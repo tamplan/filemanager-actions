@@ -76,7 +76,7 @@ static GType    register_type( void );
 static void     class_init( NactExportAskClass *klass );
 static void     ioptions_list_iface_init( NAIOptionsListInterface *iface );
 static GList   *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
-static void     ioptions_list_free_formats( const NAIOptionsList *instance, GList *formats );
+static void     ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
@@ -179,7 +179,7 @@ ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container 
 }
 
 static void
-ioptions_list_free_formats( const NAIOptionsList *instance, GList *formats )
+ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats )
 {
 	na_exporter_free_formats( formats );
 }

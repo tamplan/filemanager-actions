@@ -139,11 +139,11 @@ G_BEGIN_DECLS
  */
 typedef void ( *NASettingsKeyCallback )( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, void *user_data );
 
-void        na_settings_register_key_callback( const gchar *key, GCallback callback, gpointer user_data );
+void      na_settings_register_key_callback( const gchar *key, GCallback callback, gpointer user_data );
 
 /* signal sent when the value of a key changes
  */
-#define SETTINGS_SIGNAL_KEY_CHANGED				"settings-key-changed"
+#define SETTINGS_SIGNAL_KEY_CHANGED					"settings-key-changed"
 
 void      na_settings_free                 ( void );
 

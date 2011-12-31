@@ -36,11 +36,65 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-iimporter.h>
 #include <api/na-object-api.h>
 
 #include "na-iprefs.h"
+#include "na-import-mode.h"
 #include "na-importer.h"
 #include "na-importer-ask.h"
+
+typedef struct {
+	guint  id;
+	gchar *mode;
+	gchar *label;
+	gchar *description;
+	gchar *image;
+}
+	NAImportModeStr;
+
+#define IMPORT_MODE_NOIMPORT_STR			"NoImport"
+#define IMPORT_MODE_RENUMBER_STR			"Renumber"
+#define IMPORT_MODE_OVERRIDE_STR			"Override"
+#define IMPORT_MODE_ASK_STR					"Ask"
+
+static NAImportModeStr st_import_modes[] = {
+
+	{ IMPORTER_MODE_NO_IMPORT,
+			IMPORT_MODE_NOIMPORT_STR,
+			N_( "Do _not import the item" ),
+			N_( "This used to be the historical behavior.\n" \
+				"The selected file will be marked as \"NOT OK\" in the Summary page.\n" \
+				"The existing item will not be modified." ),
+			"import-mode-no-import.png" },
+
+	{ IMPORTER_MODE_RENUMBER,
+			IMPORT_MODE_RENUMBER_STR,
+			N_( "Import the item, _allocating it a new identifier" ),
+			N_( "The selected file will be imported with a slightly modified label " \
+				"indicating the renumbering.\n" \
+				"The existing item will not be modified." ),
+			"import-mode-renumber.png" },
+
+	{ IMPORTER_MODE_OVERRIDE,
+			IMPORT_MODE_OVERRIDE_STR,
+			N_( "_Override the existing item" ),
+			N_( "The item found in the selected file will silently override the " \
+				"current one which has the same identifier.\n" \
+				"Be warned: this mode may be dangerous. You will not be prompted another time." ),
+			"import-mode-override.png" },
+
+	{ 0 }
+};
+
+static NAImportModeStr st_import_ask_mode = {
+
+	IMPORTER_MODE_ASK,
+			IMPORT_MODE_ASK_STR,
+			N_( "_Ask me" ),
+			N_( "You will be asked each time an imported ID already exists." ),
+			"import-mode-no-import.png"
+};
 
 typedef struct {
 	GList             *just_imported;
@@ -269,4 +323,100 @@ ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, 
 	}
 
 	return( mode );
+}
+
+/*
+ * na_importer_get_modes:
+ *
+ * Returns: the list of available import modes.
+ * This list should later be released by calling na_importer_free_modes();
+ */
+GList *
+na_importer_get_modes( void )
+{
+	GList *modes;
+	NAImportMode *mode;
+	guint i;
+	gint width, height;
+	gchar *fname;
+	GdkPixbuf *pixbuf;
+
+	modes = NULL;
+	pixbuf = NULL;
+
+	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
+		width = height = 48;
+	}
+
+	for( i = 0 ; st_import_modes[i].id ; ++i ){
+		mode = na_import_mode_new( st_import_modes[i].id );
+		if( st_import_modes[i].image ){
+			fname = g_strdup_printf( "%s/%s", PKGDATADIR, st_import_modes[i].image );
+			pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
+			g_free( fname );
+		}
+		g_object_set( G_OBJECT( mode ),
+				NA_IMPORT_PROP_MODE,        st_import_modes[i].mode,
+				NA_IMPORT_PROP_LABEL,       gettext( st_import_modes[i].label ),
+				NA_IMPORT_PROP_DESCRIPTION, gettext( st_import_modes[i].description ),
+				NA_IMPORT_PROP_IMAGE,       pixbuf,
+				NULL );
+		if( pixbuf ){
+			g_object_unref( pixbuf );
+		}
+		modes = g_list_prepend( modes, mode );
+	}
+
+	return( modes );
+}
+
+void
+na_importer_free_modes( GList *modes )
+{
+	g_list_foreach( modes, ( GFunc ) g_object_unref, NULL );
+	g_list_free( modes );
+}
+
+/*
+ * na_importer_get_ask_mode:
+ *
+ * Returns: a #NAImportMode object which describes the 'Ask me' option.
+ */
+NAIOption *
+na_importer_get_ask_mode( void )
+{
+	NAImportMode *mode;
+	gint width, height;
+	gchar *fname;
+	GdkPixbuf *pixbuf;
+
+	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
+		width = height = 48;
+	}
+
+	mode = na_import_mode_new( st_import_ask_mode.id );
+	pixbuf = NULL;
+
+	if( st_import_ask_mode.image ){
+		fname = g_strdup_printf( "%s/%s", PKGDATADIR, st_import_ask_mode.image );
+		pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
+		g_free( fname );
+	}
+	g_object_set( G_OBJECT( mode ),
+		NA_IMPORT_PROP_MODE,        st_import_ask_mode.mode,
+		NA_IMPORT_PROP_LABEL,       gettext( st_import_ask_mode.label ),
+		NA_IMPORT_PROP_DESCRIPTION, gettext( st_import_ask_mode.description ),
+		NA_IMPORT_PROP_IMAGE,       pixbuf,
+		NULL );
+	if( pixbuf ){
+		g_object_unref( pixbuf );
+	}
+
+	return( NA_IOPTION( mode ));
+}
+
+void
+na_importer_free_ask_mode( NAIOption *mode )
+{
+	g_object_unref( mode );
 }

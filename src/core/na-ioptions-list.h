@@ -79,7 +79,7 @@
  * method for an 'initialized' flag both at the instance level and at the
  * container level.
  *
- * Alternative may have be to have the na_ioptions_list_instance_init()
+ * Alternative might be be to have the na_ioptions_list_instance_init()
  * initialization interface method, which itself connect to #BaseWindow
  * signals. But this would not prevent of initializing for both managed
  * containers...
@@ -182,6 +182,7 @@ typedef struct {
 	/*
 	 * free_options:
 	 * @instance: the #NAIOptionsList instance of the implementation.
+	 * @container: the #GtkWidget which embeds the list of values.
 	 * @options: a #GList of #NAIoption objects as returned by get_options() method.
 	 *
 	 * Release the resources allocated to the @options list.
@@ -193,7 +194,7 @@ typedef struct {
 	 *
 	 * Since: 3.2
 	 */
-	void        ( *free_options )( const NAIOptionsList *instance, GList *options );
+	void        ( *free_options )( const NAIOptionsList *instance, GtkWidget *container, GList *options );
 
 	/*
 	 * get_ask_option:
@@ -212,6 +213,7 @@ typedef struct {
 	/*
 	 * free_ask_option:
 	 * @instance: the #NAIOptionsList instance of the implementation.
+	 * @container: the #GtkWidget which embeds the list of values.
 	 * @ask_option: the #NAIoption to be released.
 	 *
 	 * Release the resources allocated to the @ask_option instance.
@@ -222,7 +224,7 @@ typedef struct {
 	 *
 	 * Since: 3.2
 	 */
-	void        ( *free_ask_option )( const NAIOptionsList *instance, NAIOption *ask_option );
+	void        ( *free_ask_option )( const NAIOptionsList *instance, GtkWidget *container, NAIOption *ask_option );
 }
 	NAIOptionsListInterface;
 

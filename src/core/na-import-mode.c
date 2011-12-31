@@ -32,6 +32,8 @@
 #include <config.h>
 #endif
 
+#include <gdk-pixbuf/gdk-pixbuf.h>
+
 #include "na-import-mode.h"
 #include "na-ioption.h"
 
@@ -44,18 +46,44 @@ struct _NAImportModeClassPrivate {
 /* private instance data
  */
 struct _NAImportModePrivate {
-	gboolean     dispose_has_run;
+	gboolean   dispose_has_run;
+
+	/* properties
+	 */
+	guint      id;
+	gchar     *mode;
+	gchar     *label;
+	gchar     *description;
+	GdkPixbuf *image;
+};
+
+/* properties
+ */
+enum {
+	MAIN_PROP_0 = 0,
+
+	NA_IMPORT_PROP_MODE_ID,
+	NA_IMPORT_PROP_LABEL_ID,
+	NA_IMPORT_PROP_DESCRIPTION_ID,
+	NA_IMPORT_PROP_IMAGE_ID,
+
+	NA_IMPORT_PROP_N_PROPERTIES
 };
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType  register_type( void );
-static void   class_init( NAImportModeClass *klass );
-static void   ioption_iface_init( NAIOptionInterface *iface );
-static guint  ioption_get_version( const NAIOption *instance );
-static void   instance_init( GTypeInstance *instance, gpointer klass );
-static void   instance_dispose( GObject *object );
-static void   instance_finalize( GObject *object );
+static GType      register_type( void );
+static void       class_init( NAImportModeClass *klass );
+static void       ioption_iface_init( NAIOptionInterface *iface );
+static gchar     *ioption_get_id( const NAIOption *option );
+static gchar     *ioption_get_label( const NAIOption *option );
+static gchar     *ioption_get_description( const NAIOption *option );
+static GdkPixbuf *ioption_get_pixbuf( const NAIOption *option );
+static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void       instance_dispose( GObject *object );
+static void       instance_finalize( GObject *object );
 
 GType
 na_import_mode_get_type( void )
@@ -113,10 +141,44 @@ class_init( NAImportModeClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->set_property = instance_set_property;
+	object_class->get_property = instance_get_property;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NAImportModeClassPrivate, 1 );
+
+	g_object_class_install_property( object_class, NA_IMPORT_PROP_MODE_ID,
+			g_param_spec_string(
+					NA_IMPORT_PROP_MODE,
+					"Import mode",
+					"The string identifier of the import mode, stored in user's preferences",
+					"",
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, NA_IMPORT_PROP_LABEL_ID,
+			g_param_spec_string(
+					NA_IMPORT_PROP_LABEL,
+					"Import label",
+					"The label associated to the import mode",
+					"",
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, NA_IMPORT_PROP_DESCRIPTION_ID,
+			g_param_spec_string(
+					NA_IMPORT_PROP_DESCRIPTION,
+					"Import mode description",
+					"The description associated to the import mode",
+					"",
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, NA_IMPORT_PROP_IMAGE_ID,
+			g_param_spec_object(
+					NA_IMPORT_PROP_IMAGE,
+					"Import mode image",
+					"The image associated to the import mode, as a GdkPixbuf",
+					G_TYPE_OBJECT,
+					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 }
 
 static void
@@ -126,13 +188,110 @@ ioption_iface_init( NAIOptionInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_version = ioption_get_version;
+	iface->get_id = ioption_get_id;
+	iface->get_label = ioption_get_label;
+	iface->get_description = ioption_get_description;
+	iface->get_pixbuf = ioption_get_pixbuf;
 }
 
-static guint
-ioption_get_version( const NAIOption *instance )
+/*
+ * ioption_get_id:
+ * @option: this #NAIOption instance.
+ *
+ * Returns: the ASCII id of the @option, as a newly allocated string which
+ * should be g_free() by the caller.
+ */
+static gchar *
+ioption_get_id( const NAIOption *option )
 {
-	return( 1 );
+	gchar *id;
+	NAImportMode *mode;
+
+	g_return_val_if_fail( NA_IS_IMPORT_MODE( option ), NULL );
+	mode = NA_IMPORT_MODE( option );
+	id = NULL;
+
+	if( !mode->private->dispose_has_run ){
+
+		id = g_strdup( mode->private->mode );
+	}
+
+	return( id );
+}
+
+/*
+ * ioption_get_label:
+ * @option: this #NAIOption instance.
+ *
+ * Returns: the label associated to @option, as a newly allocated string
+ * which should be g_free() by the caller.
+ */
+static gchar *
+ioption_get_label( const NAIOption *option )
+{
+	gchar *label;
+	NAImportMode *mode;
+
+	g_return_val_if_fail( NA_IS_IMPORT_MODE( option ), NULL );
+	mode = NA_IMPORT_MODE( option );
+	label = NULL;
+
+	if( !mode->private->dispose_has_run ){
+
+		label = g_strdup( mode->private->label );
+	}
+
+	return( label );
+}
+
+/*
+ * ioption_get_description:
+ * @option: this #NAIOption instance.
+ *
+ * Returns: the description associated to @option, as a newly allocated string
+ * which should be g_free() by the caller.
+ */
+static gchar *
+ioption_get_description( const NAIOption *option )
+{
+	gchar *description;
+	NAImportMode *mode;
+
+	g_return_val_if_fail( NA_IS_IMPORT_MODE( option ), NULL );
+	mode = NA_IMPORT_MODE( option );
+	description = NULL;
+
+	if( !mode->private->dispose_has_run ){
+
+		description = g_strdup( mode->private->description );
+	}
+
+	return( description );
+}
+
+/*
+ * ioption_get_pixbuf:
+ * @option: this #NAIOption instance.
+ *
+ * Returns: a new reference to the pixbuf associated to @option;
+ * which should later be g_object_unref() by the caller.
+ */
+static GdkPixbuf *
+ioption_get_pixbuf( const NAIOption *option )
+{
+	GdkPixbuf *pixbuf;
+	NAImportMode *mode;
+
+	g_return_val_if_fail( NA_IS_IMPORT_MODE( option ), NULL );
+	mode = NA_IMPORT_MODE( option );
+	pixbuf = NULL;
+
+	if( !mode->private->dispose_has_run ){
+
+		pixbuf = mode->private->image ? g_object_ref( mode->private->image ) : NULL;
+	}
+
+	return( pixbuf );
 }
 
 static void
@@ -150,6 +309,80 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NAImportModePrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
+}
+
+static void
+instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
+{
+	NAImportMode *self;
+
+	g_return_if_fail( NA_IS_IMPORT_MODE( object ));
+	self = NA_IMPORT_MODE( object );
+
+	if( !self->private->dispose_has_run ){
+
+		switch( property_id ){
+			case NA_IMPORT_PROP_MODE_ID:
+				g_value_set_string( value, self->private->mode );
+				break;
+
+			case NA_IMPORT_PROP_LABEL_ID:
+				g_value_set_string( value, self->private->label );
+				break;
+
+			case NA_IMPORT_PROP_DESCRIPTION_ID:
+				g_value_set_string( value, self->private->description );
+				break;
+
+			case NA_IMPORT_PROP_IMAGE_ID:
+				g_value_set_object( value, self->private->image );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
+	}
+}
+
+static void
+instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
+{
+	NAImportMode *self;
+
+	g_return_if_fail( NA_IS_IMPORT_MODE( object ));
+	self = NA_IMPORT_MODE( object );
+
+	if( !self->private->dispose_has_run ){
+
+		switch( property_id ){
+			case NA_IMPORT_PROP_MODE_ID:
+				g_free( self->private->mode );
+				self->private->mode = g_value_dup_string( value );
+				break;
+
+			case NA_IMPORT_PROP_LABEL_ID:
+				g_free( self->private->label );
+				self->private->label = g_value_dup_string( value );
+				break;
+
+			case NA_IMPORT_PROP_DESCRIPTION_ID:
+				g_free( self->private->description );
+				self->private->description = g_value_dup_string( value );
+				break;
+
+			case NA_IMPORT_PROP_IMAGE_ID:
+				if( self->private->image ){
+					g_object_unref( self->private->image );
+				}
+				self->private->image = g_value_get_object( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
+	}
 }
 
 static void
@@ -193,4 +426,16 @@ instance_finalize( GObject *object )
 	if( G_OBJECT_CLASS( st_parent_class )->finalize ){
 		G_OBJECT_CLASS( st_parent_class )->finalize( object );
 	}
+}
+
+NAImportMode *
+na_import_mode_new( guint mode_id )
+{
+	NAImportMode *mode;
+
+	mode = g_object_new( NA_IMPORT_MODE_TYPE, NULL );
+
+	mode->private->id = mode_id;
+
+	return( mode );
 }

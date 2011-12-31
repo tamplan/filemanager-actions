@@ -45,7 +45,8 @@
 #include <api/na-iimporter.h>
 #include <api/na-object-item.h>
 
-#include <core/na-pivot.h>
+#include "na-ioption.h"
+#include "na-pivot.h"
 
 G_BEGIN_DECLS
 
@@ -70,9 +71,15 @@ typedef struct {
 }
 	NAImporterResult;
 
-guint na_importer_import_from_list( const NAPivot *pivot, NAImporterParms *parms );
+guint      na_importer_import_from_list( const NAPivot *pivot, NAImporterParms *parms );
 
-void  na_importer_free_result( NAImporterResult *result );
+void       na_importer_free_result     ( NAImporterResult *result );
+
+GList     *na_importer_get_modes       ( void );
+void       na_importer_free_modes      ( GList *modes );
+
+NAIOption *na_importer_get_ask_mode    ( void );
+void       na_importer_free_ask_mode   ( NAIOption *option );
 
 G_END_DECLS
 

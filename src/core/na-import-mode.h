@@ -51,7 +51,7 @@ G_BEGIN_DECLS
 #define NA_IS_IMPORT_MODE_CLASS( c )  ( G_TYPE_CHECK_CLASS_TYPE(( c ), NA_IMPORT_MODE_TYPE ))
 #define NA_IMPORT_MODE_GET_CLASS( o ) ( G_TYPE_INSTANCE_GET_CLASS(( o ), NA_IMPORT_MODE_TYPE, NAImportModeClass ))
 
-typedef struct _NAImportModePrivate        NAImportModePrivate;
+typedef struct _NAImportModePrivate      NAImportModePrivate;
 
 typedef struct {
 	GObject              parent;
@@ -59,7 +59,7 @@ typedef struct {
 }
 	NAImportMode;
 
-typedef struct _NAImportModeClassPrivate   NAImportModeClassPrivate;
+typedef struct _NAImportModeClassPrivate NAImportModeClassPrivate;
 
 typedef struct {
 	GObjectClass              parent;
@@ -68,6 +68,16 @@ typedef struct {
 	NAImportModeClass;
 
 GType         na_import_mode_get_type( void );
+
+/* NAImportMode properties
+ *
+ */
+#define NA_IMPORT_PROP_MODE				"na-import-mode-prop-mode"
+#define NA_IMPORT_PROP_LABEL			"na-import-mode-prop-label"
+#define NA_IMPORT_PROP_DESCRIPTION		"na-import-mode-prop-description"
+#define NA_IMPORT_PROP_IMAGE			"na-import-mode-prop-image"
+
+NAImportMode *na_import_mode_new     ( guint mode_id );
 
 G_END_DECLS
 

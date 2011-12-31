@@ -1,3 +1,24 @@
+2011-12-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-import-mode.c:
+	* src/core/na-import-mode.h: Implement NAImportMode object class.
+
+	* src/core/na-importer.c:
+	* src/core/na-importer.h
+	(na_importer_get_modes,	na_importer_get_ask_mode): New functions.
+
+	* src/core/na-ioptions-list.c:
+	* src/core/na-ioptions-list.h (free_options, free_ask_option):
+	Add 'container_parent' as an argument of the methods.
+
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-export-ask.c: Updated accordingly.
+
+	* src/nact/nact-preferences-editor.c:
+	Implement NAIOptionsList itnerface for Import mode tab.
+
+	* src/nact/nact-preferences.ui: Updated accordingly.
+
 2011-12-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-import-mode.c (instance_finalize): Free private structure.

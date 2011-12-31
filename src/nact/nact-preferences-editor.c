@@ -41,6 +41,8 @@
 #include <core/na-exporter.h>
 #include <core/na-export-format.h>
 #include <core/na-gtk-utils.h>
+#include <core/na-import-mode.h>
+#include <core/na-importer.h>
 #include <core/na-ioptions-list.h>
 #include <core/na-iprefs.h>
 #include <core/na-tokens.h>
@@ -127,8 +129,8 @@ static guint              st_last_tab       = 0;
 static GType      register_type( void );
 static void       class_init( NactPreferencesEditorClass *klass );
 static void       ioptions_list_iface_init( NAIOptionsListInterface *iface );
-static GList     *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
-static void       ioptions_list_free_formats( const NAIOptionsList *instance, GList *formats );
+static GList     *ioptions_list_get_options( const NAIOptionsList *instance, GtkWidget *container );
+static void       ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container, GList *options );
 static NAIOption *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_dispose( GObject *dialog );
@@ -163,12 +165,6 @@ static void       esc_confirm_on_toggled( GtkToggleButton *button, NactPreferenc
 static void       auto_save_setup( NactPreferencesEditor *editor );
 static void       auto_save_on_toggled( GtkToggleButton *button, NactPreferencesEditor *editor );
 static void       auto_save_period_on_change_value( GtkSpinButton *spinbutton, NactPreferencesEditor *editor );
-static void       import_mode_setup( NactPreferencesEditor *editor );
-static void       import_mode_on_ask_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void       import_mode_on_override_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void       import_mode_on_renumber_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void       import_mode_on_noimport_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
-static void       import_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *togglebutton, GCallback cb, guint import_mode );
 static void       on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void       on_ok_clicked( GtkButton *button, NactPreferencesEditor *editor );
 static void       on_dialog_ok( BaseDialog *dialog );
@@ -246,39 +242,88 @@ ioptions_list_iface_init( NAIOptionsListInterface *iface )
 
 	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
 
-	iface->get_options = ioptions_list_get_formats;
-	iface->free_options = ioptions_list_free_formats;
+	iface->get_options = ioptions_list_get_options;
+	iface->free_options = ioptions_list_free_options;
 	iface->get_ask_option = ioptions_list_get_ask_option;
 }
 
+/*
+ * ioptions_list_get_options, ioptions_list_free_options:
+ * manages import mode options or export format options depending of the
+ * current container
+ */
 static GList *
-ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container )
+ioptions_list_get_options( const NAIOptionsList *instance, GtkWidget *container )
 {
-	NactPreferencesEditor *window;
+	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_get_options";
+	GList *options;
 	NactApplication *application;
 	NAUpdater *updater;
-	GList *formats;
 
 	g_return_val_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ), NULL );
-	window = NACT_PREFERENCES_EDITOR( instance );
 
-	application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-	updater = nact_application_get_updater( application );
-	formats = na_exporter_get_formats( NA_PIVOT( updater ));
+	options = NULL;
 
-	return( formats );
+	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( instance )));
+		updater = nact_application_get_updater( application );
+		options = na_exporter_get_formats( NA_PIVOT( updater ));
+
+	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
+		options = na_importer_get_modes();
+
+	} else {
+		g_warning( "%s: container=%p (%s): unmanaged container",
+				thisfn,
+				( void * ) container, G_OBJECT_TYPE_NAME( container ));
+	}
+
+	return( options );
 }
 
 static void
-ioptions_list_free_formats( const NAIOptionsList *instance, GList *formats )
+ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container, GList *options )
 {
-	na_exporter_free_formats( formats );
+	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_free_options";
+
+	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ));
+
+	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
+		na_exporter_free_formats( options );
+
+	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
+		na_importer_free_modes( options );
+
+	} else {
+		g_warning( "%s: container=%p (%s): unmanaged container",
+				thisfn,
+				( void * ) container, G_OBJECT_TYPE_NAME( container ));
+	}
 }
 
 static NAIOption *
 ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container )
 {
-	return( nact_export_format_get_ask_option());
+	static const gchar *thisfn = "nact_preferences_editor_ioptions_list_get_ask_option";
+	NAIOption *option;
+
+	g_return_val_if_fail( NACT_IS_PREFERENCES_EDITOR( instance ), NULL );
+
+	option = NULL;
+
+	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
+		option = nact_export_format_get_ask_option();
+
+	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
+		option = na_importer_get_ask_mode();
+
+	} else {
+		g_warning( "%s: container=%p (%s): unmanaged container",
+				thisfn,
+				( void * ) container, G_OBJECT_TYPE_NAME( container ));
+	}
+
+	return( option );
 }
 
 static void
@@ -295,14 +340,23 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactPreferencesEditorPrivate, 1 );
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_GTK,
+			G_CALLBACK( on_base_initialize_gtk_toplevel ));
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_base_window ));
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed));
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_ALL_WIDGETS_SHOWED,
+			G_CALLBACK( on_base_all_widgets_showed));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -411,6 +465,9 @@ on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *tople
 
 		desktop_create_model( editor );
 
+		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
+		na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( editor ), container, TRUE );
+
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
 		na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( editor ), container, TRUE );
 
@@ -430,10 +487,11 @@ static void
 on_base_initialize_base_window( NactPreferencesEditor *editor )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_base_window";
-	GQuark export_format;
 	GtkWidget *container;
 	GtkTreeView *listview;
 	GtkWidget *ok_button;
+	gchar *export_format;
+	gchar *import_mode;
 
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
 
@@ -462,18 +520,27 @@ on_base_initialize_base_window( NactPreferencesEditor *editor )
 
 		/* fourth tab: import mode
 		 */
-		import_mode_setup( editor );
+		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
+		import_mode = na_settings_get_string( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL, &editor->private->import_mode_mandatory );
+		na_ioptions_list_set_editable(
+				NA_IOPTIONS_LIST( editor ), container,
+				!editor->private->import_mode_mandatory && !editor->private->preferences_locked );
+		na_ioptions_list_set_default(
+				NA_IOPTIONS_LIST( editor ), container,
+				import_mode );
+		g_free( import_mode );
 
 		/* fifth tab: export format
 		 */
 		container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-		export_format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, &editor->private->export_format_mandatory );
+		export_format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, &editor->private->export_format_mandatory );
 		na_ioptions_list_set_editable(
 				NA_IOPTIONS_LIST( editor ), container,
 				!editor->private->export_format_mandatory && !editor->private->preferences_locked );
 		na_ioptions_list_set_default(
 				NA_IOPTIONS_LIST( editor ), container,
-				g_quark_to_string( export_format ));
+				export_format );
+		g_free( export_format );
 
 		/* sixth tab: default schemes
 		 */
@@ -1038,100 +1105,6 @@ auto_save_period_on_change_value( GtkSpinButton *spinbutton, NactPreferencesEdit
 	editor->private->auto_save_period = gtk_spin_button_get_value_as_int( spinbutton );
 }
 
-/*
- * preferred import mode
- */
-static void
-import_mode_setup( NactPreferencesEditor *editor )
-{
-	gboolean editable;
-	GtkWidget *ask_button, *override_button, *renumber_button, *noimport_button;
-	GtkWidget *active_button;
-	GCallback active_handler;
-
-	editor->private->import_mode = na_iprefs_get_import_mode(
-			NA_IPREFS_IMPORT_PREFERRED_MODE, &editor->private->import_mode_mandatory );
-	editable = !editor->private->preferences_locked && !editor->private->import_mode_mandatory;
-
-	ask_button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsAskButton" );
-	base_window_signal_connect( BASE_WINDOW( editor ), G_OBJECT( ask_button ), "toggled", G_CALLBACK( import_mode_on_ask_toggled ));
-
-	override_button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsOverrideButton" );
-	base_window_signal_connect( BASE_WINDOW( editor ), G_OBJECT( override_button ), "toggled", G_CALLBACK( import_mode_on_override_toggled ));
-
-	renumber_button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsRenumberButton" );
-	base_window_signal_connect( BASE_WINDOW( editor ), G_OBJECT( renumber_button ), "toggled", G_CALLBACK( import_mode_on_renumber_toggled ));
-
-	noimport_button = base_window_get_widget( BASE_WINDOW( editor ), "PrefsNoImportButton" );
-	base_window_signal_connect( BASE_WINDOW( editor ), G_OBJECT( noimport_button ), "toggled", G_CALLBACK( import_mode_on_noimport_toggled ));
-
-	switch( editor->private->import_mode ){
-		case IMPORTER_MODE_ASK:
-			active_button = ask_button;
-			active_handler = G_CALLBACK( import_mode_on_ask_toggled );
-			break;
-		case IMPORTER_MODE_OVERRIDE:
-			active_button = override_button;
-			active_handler = G_CALLBACK( import_mode_on_override_toggled );
-			break;
-		case IMPORTER_MODE_RENUMBER:
-			active_button = renumber_button;
-			active_handler = G_CALLBACK( import_mode_on_renumber_toggled );
-			break;
-		case IMPORTER_MODE_NO_IMPORT:
-		default:
-			active_button = noimport_button;
-			active_handler = G_CALLBACK( import_mode_on_noimport_toggled );
-			break;
-	}
-
-	base_gtk_utils_radio_set_initial_state(
-			GTK_RADIO_BUTTON( active_button ),
-			active_handler, editor, editable, !editor->private->preferences_locked );
-}
-
-static void
-import_mode_on_ask_toggled( GtkToggleButton *toggle_button, NactPreferencesEditor *editor )
-{
-	import_mode_on_toggled( editor, toggle_button, G_CALLBACK( import_mode_on_ask_toggled ), IMPORTER_MODE_ASK );
-}
-
-static void
-import_mode_on_override_toggled( GtkToggleButton *toggle_button, NactPreferencesEditor *editor )
-{
-	import_mode_on_toggled( editor, toggle_button, G_CALLBACK( import_mode_on_override_toggled ), IMPORTER_MODE_OVERRIDE );
-}
-
-static void
-import_mode_on_renumber_toggled( GtkToggleButton *toggle_button, NactPreferencesEditor *editor )
-{
-	import_mode_on_toggled( editor, toggle_button, G_CALLBACK( import_mode_on_renumber_toggled ), IMPORTER_MODE_RENUMBER );
-}
-
-static void
-import_mode_on_noimport_toggled( GtkToggleButton *toggle_button, NactPreferencesEditor *editor )
-{
-	import_mode_on_toggled( editor, toggle_button, G_CALLBACK( import_mode_on_noimport_toggled ), IMPORTER_MODE_NO_IMPORT );
-}
-
-static void
-import_mode_on_toggled( NactPreferencesEditor *editor, GtkToggleButton *toggle_button, GCallback cb, guint import_mode )
-{
-	gboolean editable;
-	gboolean active;
-
-	editable = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( toggle_button ), NA_TOGGLE_DATA_EDITABLE ));
-
-	if( editable ){
-		active = gtk_toggle_button_get_active( toggle_button );
-		if( active ){
-			editor->private->import_mode = import_mode;
-		}
-	} else {
-		base_gtk_utils_radio_reset_initial_state( GTK_RADIO_BUTTON( toggle_button ), cb );
-	}
-}
-
 static void
 on_cancel_clicked( GtkButton *button, NactPreferencesEditor *editor )
 {
@@ -1150,8 +1123,10 @@ static void
 on_dialog_ok( BaseDialog *dialog )
 {
 	NactPreferencesEditor *editor;
-	NAIOption *export_format;
 	GtkWidget *container;
+	NAIOption *option;
+	gchar *import_mode;
+	gchar *export_format;
 
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
 
@@ -1207,16 +1182,24 @@ on_dialog_ok( BaseDialog *dialog )
 		/* fourth tab: import mode
 		 */
 		if( !editor->private->import_mode_mandatory ){
-			na_iprefs_set_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, editor->private->import_mode );
+			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesImportModeVBox" );
+			option = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), container );
+			g_return_if_fail( NA_IS_IMPORT_MODE( option ));
+			import_mode = na_ioption_get_id( option );
+			na_settings_set_string( NA_IPREFS_IMPORT_PREFERRED_MODE, import_mode );
+			g_free( import_mode );
 		}
 
 		/* fifth tab: export format
 		 */
 		if( !editor->private->export_format_mandatory ){
 			container = base_window_get_widget( BASE_WINDOW( editor ), "PreferencesExportFormatVBox" );
-			export_format = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), container );
-			g_return_if_fail( NA_IS_EXPORT_FORMAT( export_format ));
-			na_iprefs_set_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( NA_EXPORT_FORMAT( export_format )));
+			option = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), container );
+			g_debug( "nact_preferences_editor_on_dialog_ok: option=%p", ( void * ) option );
+			g_return_if_fail( NA_IS_EXPORT_FORMAT( option ));
+			export_format = na_ioption_get_id( option );
+			na_settings_set_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, export_format );
+			g_free( export_format );
 		}
 
 		/* sixth tab: list of default schemes
