@@ -1,3 +1,8 @@
+2011-12-31 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-importer.c:
+	* src/core/na-importer.h (na_importer_free_ask_mode): Removed function.
+
 2011-12-30 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-import-mode.c:

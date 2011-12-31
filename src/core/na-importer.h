@@ -79,7 +79,6 @@ GList     *na_importer_get_modes       ( void );
 void       na_importer_free_modes      ( GList *modes );
 
 NAIOption *na_importer_get_ask_mode    ( void );
-void       na_importer_free_ask_mode   ( NAIOption *option );
 
 G_END_DECLS
 

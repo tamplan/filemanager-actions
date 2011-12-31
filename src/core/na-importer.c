@@ -414,9 +414,3 @@ na_importer_get_ask_mode( void )
 
 	return( NA_IOPTION( mode ));
 }
-
-void
-na_importer_free_ask_mode( NAIOption *mode )
-{
-	g_object_unref( mode );
-}
