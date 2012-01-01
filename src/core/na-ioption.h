@@ -161,9 +161,7 @@ typedef struct {
 }
 	NAIOptionInterface;
 
-#define NA_IOPTION_PROP_OPTION
-
-GType      na_ioption_get_type( void );
+GType      na_ioption_get_type       ( void );
 
 gchar     *na_ioption_get_id         ( const NAIOption *option );
 gchar     *na_ioption_get_label      ( const NAIOption *option );

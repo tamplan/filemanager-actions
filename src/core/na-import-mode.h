@@ -79,6 +79,8 @@ GType         na_import_mode_get_type( void );
 
 NAImportMode *na_import_mode_new     ( guint mode_id );
 
+guint         na_import_mode_get_id  ( const NAImportMode *mode );
+
 G_END_DECLS
 
 #endif /* __CORE_NA_IMPORT_MODE_H__ */

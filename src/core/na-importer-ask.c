@@ -38,8 +38,10 @@
 #include <api/na-object-api.h>
 
 #include "na-gtk-utils.h"
-#include "na-iprefs.h"
+#include "na-import-mode.h"
+#include "na-importer.h"
 #include "na-importer-ask.h"
+#include "na-ioptions-list.h"
 #include "na-settings.h"
 
 /* private class data
@@ -63,18 +65,20 @@ static GObjectClass  *st_parent_class = NULL;
 static NAImporterAsk *st_dialog       = NULL;
 static const gchar   *st_uixml        = PKGDATADIR "/na-importer-ask.ui";
 
-static GType      register_type( void );
-static void       class_init( NAImporterAskClass *klass );
-static void       instance_init( GTypeInstance *instance, gpointer klass );
-static void       instance_dispose( GObject *dialog );
-static void       instance_finalize( GObject *dialog );
-
+static GType          register_type( void );
+static void           class_init( NAImporterAskClass *klass );
+static void           ioptions_list_iface_init( NAIOptionsListInterface *iface );
+static GList         *ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container );
+static void           ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes );
+static void           instance_init( GTypeInstance *instance, gpointer klass );
+static void           instance_dispose( GObject *dialog );
+static void           instance_finalize( GObject *dialog );
 static NAImporterAsk *import_ask_new( GtkWindow *parent );
-
-static void       init_dialog( NAImporterAsk *editor );
-static void       get_selected_mode( NAImporterAsk *editor );
-static gboolean   on_destroy_toplevel( GtkWindow *toplevel, GdkEvent *event, NAImporterAsk *dialog );
-static gboolean   on_dialog_response( NAImporterAsk *editor, gint code );
+static void           initialize_gtk( NAImporterAsk *dialog, GtkWindow *toplevel );
+static void           initialize_window( NAImporterAsk *dialog, GtkWindow *toplevel );
+static void           get_selected_mode( NAImporterAsk *editor );
+static void           on_destroy_toplevel( GtkWindow *toplevel, NAImporterAsk *dialog );
+static gboolean       on_dialog_response( NAImporterAsk *editor, gint code );
 
 GType
 na_importer_ask_get_type( void )
@@ -106,9 +110,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo ioptions_list_iface_info = {
+		( GInterfaceInitFunc ) ioptions_list_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NAImporterAsk", &info, 0 );
+
+	g_type_add_interface_static( type, NA_IOPTIONS_LIST_TYPE, &ioptions_list_iface_info );
 
 	return( type );
 }
@@ -128,6 +140,37 @@ class_init( NAImporterAskClass *klass )
 	object_class->finalize = instance_finalize;
 
 	klass->private = g_new0( NAImporterAskClassPrivate, 1 );
+}
+
+static void
+ioptions_list_iface_init( NAIOptionsListInterface *iface )
+{
+	static const gchar *thisfn = "nact_assistant_import_ioptions_list_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_options = ioptions_list_get_modes;
+	iface->free_options = ioptions_list_free_modes;
+}
+
+static GList *
+ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
+{
+	GList *modes;
+
+	g_return_val_if_fail( NA_IS_IMPORTER_ASK( instance ), NULL );
+
+	modes = na_importer_get_modes();
+
+	return( modes );
+}
+
+static void
+ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes )
+{
+	g_return_if_fail( NA_IS_IMPORTER_ASK( instance ));
+
+	na_importer_free_modes( modes );
 }
 
 static void
@@ -237,9 +280,13 @@ import_ask_new( GtkWindow *parent )
 					gtk_window_set_destroy_with_parent( dialog->private->toplevel, TRUE );
 					g_signal_connect(
 							G_OBJECT( dialog->private->toplevel ),
-							"destroy", G_CALLBACK( on_destroy_toplevel ), dialog );
+							"destroy",
+							G_CALLBACK( on_destroy_toplevel ),
+							dialog );
 					st_dialog = dialog;
 				}
+
+				initialize_gtk( dialog, toplevel );
 
 #if !GTK_CHECK_VERSION( 2,22,0 )
 				gtk_dialog_set_has_separator( GTK_DIALOG( toplevel ), FALSE );
@@ -298,9 +345,8 @@ na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existin
 		dialog->private->importing = ( NAObjectItem * ) importing;
 		dialog->private->existing = ( NAObjectItem * ) existing;
 		dialog->private->parms = parms;
-		dialog->private->mode = na_iprefs_get_import_mode( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL );
 
-		init_dialog( dialog );
+		initialize_window( dialog, dialog->private->toplevel );
 
 		do {
 			code = gtk_dialog_run( GTK_DIALOG( dialog->private->toplevel ));
@@ -319,19 +365,33 @@ na_importer_ask_user( const NAObjectItem *importing, const NAObjectItem *existin
 
 	return( mode );
 }
+static void
+initialize_gtk( NAImporterAsk *dialog, GtkWindow *toplevel )
+{
+	static const gchar *thisfn = "na_importer_ask_initialize_gtk";
+	GtkWidget *container;
+
+	g_return_if_fail( NA_IS_IMPORTER_ASK( dialog ));
+
+	g_debug( "%s: dialog=%p, toplevel=%p", thisfn, ( void * ) dialog, ( void * ) toplevel );
+
+	container = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
+	na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( dialog ), container, FALSE );
+}
 
 static void
-init_dialog( NAImporterAsk *editor )
+initialize_window( NAImporterAsk *editor, GtkWindow *toplevel )
 {
-	static const gchar *thisfn = "na_importer_ask_init_dialog";
+	static const gchar *thisfn = "na_importer_ask_initialize_window";
 	gchar *imported_label, *existing_label;
 	gchar *label;
 	GtkWidget *widget;
 	GtkWidget *button;
+	gchar *mode_id;
 
 	g_return_if_fail( NA_IS_IMPORTER_ASK( editor ));
 
-	g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
+	g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
 
 	imported_label = na_object_get_label( editor->private->importing );
 	existing_label = na_object_get_label( editor->private->existing );
@@ -349,55 +409,39 @@ init_dialog( NAImporterAsk *editor )
 				imported_label, editor->private->parms->uri, existing_label );
 	}
 
-	widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "ImporterAskLabel" );
+	widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "ImporterAskLabel" );
 	gtk_label_set_text( GTK_LABEL( widget ), label );
 	g_free( label );
 
-	switch( editor->private->mode ){
-		case IMPORTER_MODE_RENUMBER:
-			button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
-			break;
+	widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskModeVBox" );
+	mode_id = na_settings_get_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
+	na_ioptions_list_set_default( NA_IOPTIONS_LIST( editor ), widget, mode_id );
+	g_free( mode_id );
 
-		case IMPORTER_MODE_OVERRIDE:
-			button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
-			break;
-
-		case IMPORTER_MODE_NO_IMPORT:
-		default:
-			button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskNoImportButton" );
-			break;
-	}
-	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), TRUE );
-
-	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
+	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( toplevel ), "AskKeepChoiceButton" );
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( button ), editor->private->parms->keep_choice );
 
-	na_gtk_utils_restore_window_position( editor->private->toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
-	gtk_widget_show_all( GTK_WIDGET( editor->private->toplevel ));
+	na_gtk_utils_restore_window_position( toplevel, NA_IPREFS_IMPORT_ASK_USER_WSP );
+	gtk_widget_show_all( GTK_WIDGET( toplevel ));
 }
 
 static void
 get_selected_mode( NAImporterAsk *editor )
 {
-	guint import_mode;
+	GtkWidget *widget;
+	NAIOption *mode;
+	gchar *mode_id;
 	GtkWidget *button;
 	gboolean keep;
 
-	import_mode = IMPORTER_MODE_NO_IMPORT;
+	widget = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskModeVBox" );
+	mode = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), widget );
 
-	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskRenumberButton" );
-	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-		import_mode = IMPORTER_MODE_RENUMBER;
+	mode_id = na_ioption_get_id( mode );
+	na_settings_set_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, mode_id );
+	g_free( mode_id );
 
-	} else {
-		button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskOverrideButton" );
-		if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-			import_mode = IMPORTER_MODE_OVERRIDE;
-		}
-	}
-
-	editor->private->mode = import_mode;
-	na_iprefs_set_import_mode( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, editor->private->mode );
+	editor->private->mode = na_import_mode_get_id( NA_IMPORT_MODE( mode ));
 
 	button = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( editor->private->toplevel ), "AskKeepChoiceButton" );
 	keep = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ));
@@ -409,25 +453,22 @@ get_selected_mode( NAImporterAsk *editor )
  * with a parent window; it has been defined with 'destroy_with_parent'
  * and so we have yet to unref the NAImporterAsk object itself
  */
-static gboolean
-on_destroy_toplevel( GtkWindow *toplevel, GdkEvent *event, NAImporterAsk *dialog )
+static void
+on_destroy_toplevel( GtkWindow *toplevel, NAImporterAsk *dialog )
 {
 	static const gchar *thisfn = "na_importer_ask_on_destroy_toplevel";
 
-	g_debug( "%s: toplevel=%p, event=%p, dialog=%p",
-			thisfn, ( void * ) toplevel, ( void * ) event, ( void * ) dialog );
+	g_debug( "%s: toplevel=%p, dialog=%p",
+			thisfn, ( void * ) toplevel, ( void * ) dialog );
 
-	g_return_val_if_fail( NA_IS_IMPORTER_ASK( dialog ), FALSE );
+	g_return_if_fail( NA_IS_IMPORTER_ASK( dialog ));
+	g_return_if_fail( toplevel == dialog->private->toplevel );
 
 	if( !dialog->private->dispose_has_run ){
-		if( toplevel == dialog->private->toplevel ){
-			dialog->private->toplevel = NULL;
-		}
+
+		dialog->private->toplevel = NULL;
 		g_object_unref( dialog );
 	}
-
-	/* let the event be propagated */
-	return( FALSE );
 }
 
 static gboolean

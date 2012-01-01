@@ -173,11 +173,10 @@ class_init( NAImportModeClass *klass )
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, NA_IMPORT_PROP_IMAGE_ID,
-			g_param_spec_object(
+			g_param_spec_pointer(
 					NA_IMPORT_PROP_IMAGE,
 					"Import mode image",
 					"The image associated to the import mode, as a GdkPixbuf",
-					G_TYPE_OBJECT,
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 }
 
@@ -335,7 +334,7 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				break;
 
 			case NA_IMPORT_PROP_IMAGE_ID:
-				g_value_set_object( value, self->private->image );
+				g_value_set_pointer( value, self->private->image );
 				break;
 
 			default:
@@ -372,10 +371,7 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 				break;
 
 			case NA_IMPORT_PROP_IMAGE_ID:
-				if( self->private->image ){
-					g_object_unref( self->private->image );
-				}
-				self->private->image = g_value_get_object( value );
+				self->private->image = g_value_get_pointer( value );
 				break;
 
 			default:
@@ -428,6 +424,14 @@ instance_finalize( GObject *object )
 	}
 }
 
+/*
+ * na_import_mode_new:
+ * @mode_id: the internal identifier of the import mode.
+ *
+ * Returns: a newly allocated #NAImportMode object.
+ *
+ * Since: 3.2
+ */
 NAImportMode *
 na_import_mode_new( guint mode_id )
 {
@@ -438,4 +442,29 @@ na_import_mode_new( guint mode_id )
 	mode->private->id = mode_id;
 
 	return( mode );
+}
+
+/*
+ * na_import_mode_get_id:
+ * @mode: a #NAImportMode object.
+ *
+ * Returns: the internal identifier of the import mode.
+ *
+ * Since: 3.2
+ */
+guint
+na_import_mode_get_id( const NAImportMode *mode )
+{
+	guint id;
+
+	g_return_val_if_fail( NA_IS_IMPORT_MODE( mode ), 0 );
+
+	id = 0;
+
+	if( !mode->private->dispose_has_run ){
+
+		id = mode->private->id;
+	}
+
+	return( id );
 }

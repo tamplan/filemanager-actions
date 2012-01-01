@@ -661,7 +661,7 @@ tree_view_create_model( const NAIOptionsList *instance, GtkWidget *container_par
 static void
 tree_view_populate( const NAIOptionsList *instance, GtkWidget *container_parent, gboolean with_ask )
 {
-	static const gchar *thisfn = "nact_export_format_tree_view_populate";
+	static const gchar *thisfn = "na_ioptions_list_tree_view_populate";
 	GtkTreeModel *model;
 	NAIOption *option;
 	GList *options, *iopt;

@@ -93,7 +93,7 @@ static NAImportModeStr st_import_ask_mode = {
 			IMPORT_MODE_ASK_STR,
 			N_( "_Ask me" ),
 			N_( "You will be asked each time an imported ID already exists." ),
-			"import-mode-no-import.png"
+			"import-mode-ask.png"
 };
 
 typedef struct {
@@ -109,6 +109,7 @@ extern gboolean iimporter_finalized;		/* defined in na-iimporter.c */
 static guint         import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, const gchar *uri, NAImporterResult **result );
 static NAObjectItem *is_importing_already_exists( const NAObjectItem *importing, ImporterExistsStr *parms );
 static guint         ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms );
+static NAIOption    *get_mode_from_struct( const NAImportModeStr *str );
 
 /* i18n: '%s' stands for the file URI */
 #define ERR_NOT_LOADABLE	_( "%s is not loadable (empty or too big or not a regular file)" )
@@ -334,45 +335,66 @@ ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, 
 GList *
 na_importer_get_modes( void )
 {
+	static const gchar *thisfn = "na_importer_get_modes";
 	GList *modes;
-	NAImportMode *mode;
+	NAIOption *mode;
 	guint i;
-	gint width, height;
-	gchar *fname;
-	GdkPixbuf *pixbuf;
+
+	g_debug( "%s", thisfn );
 
 	modes = NULL;
-	pixbuf = NULL;
-
-	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
-		width = height = 48;
-	}
 
 	for( i = 0 ; st_import_modes[i].id ; ++i ){
-		mode = na_import_mode_new( st_import_modes[i].id );
-		if( st_import_modes[i].image ){
-			fname = g_strdup_printf( "%s/%s", PKGDATADIR, st_import_modes[i].image );
-			pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
-			g_free( fname );
-		}
-		g_object_set( G_OBJECT( mode ),
-				NA_IMPORT_PROP_MODE,        st_import_modes[i].mode,
-				NA_IMPORT_PROP_LABEL,       gettext( st_import_modes[i].label ),
-				NA_IMPORT_PROP_DESCRIPTION, gettext( st_import_modes[i].description ),
-				NA_IMPORT_PROP_IMAGE,       pixbuf,
-				NULL );
-		if( pixbuf ){
-			g_object_unref( pixbuf );
-		}
+		mode = get_mode_from_struct( st_import_modes+i );
 		modes = g_list_prepend( modes, mode );
 	}
 
 	return( modes );
 }
 
+static NAIOption *
+get_mode_from_struct( const NAImportModeStr *str )
+{
+	NAImportMode *mode;
+	gint width, height;
+	gchar *fname;
+	GdkPixbuf *pixbuf;
+
+	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
+		width = height = 48;
+	}
+
+	mode = na_import_mode_new( str->id );
+	pixbuf = NULL;
+
+	if( str->image && g_utf8_strlen( str->image, -1 )){
+		fname = g_strdup_printf( "%s/%s", PKGDATADIR, str->image );
+		pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
+		g_free( fname );
+	}
+	g_object_set( G_OBJECT( mode ),
+		NA_IMPORT_PROP_MODE,        str->mode,
+		NA_IMPORT_PROP_LABEL,       gettext( str->label ),
+		NA_IMPORT_PROP_DESCRIPTION, gettext( str->description ),
+		NA_IMPORT_PROP_IMAGE,       pixbuf,
+		NULL );
+
+	return( NA_IOPTION( mode ));
+}
+
+/*
+ * na_importer_free_modes:
+ * @modes: a #GList of #NAImportMode items, as returned by na_importer_get_modes().
+ *
+ * Releases the resources allocated to the @modes list.
+ */
 void
 na_importer_free_modes( GList *modes )
 {
+	static const gchar *thisfn = "na_importer_free_modes";
+
+	g_debug( "%s: modes=%p", thisfn, ( void * ) modes );
+
 	g_list_foreach( modes, ( GFunc ) g_object_unref, NULL );
 	g_list_free( modes );
 }
@@ -385,32 +407,9 @@ na_importer_free_modes( GList *modes )
 NAIOption *
 na_importer_get_ask_mode( void )
 {
-	NAImportMode *mode;
-	gint width, height;
-	gchar *fname;
-	GdkPixbuf *pixbuf;
+	static const gchar *thisfn = "na_importer_get_ask_mode";
 
-	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
-		width = height = 48;
-	}
+	g_debug( "%s", thisfn );
 
-	mode = na_import_mode_new( st_import_ask_mode.id );
-	pixbuf = NULL;
-
-	if( st_import_ask_mode.image ){
-		fname = g_strdup_printf( "%s/%s", PKGDATADIR, st_import_ask_mode.image );
-		pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
-		g_free( fname );
-	}
-	g_object_set( G_OBJECT( mode ),
-		NA_IMPORT_PROP_MODE,        st_import_ask_mode.mode,
-		NA_IMPORT_PROP_LABEL,       gettext( st_import_ask_mode.label ),
-		NA_IMPORT_PROP_DESCRIPTION, gettext( st_import_ask_mode.description ),
-		NA_IMPORT_PROP_IMAGE,       pixbuf,
-		NULL );
-	if( pixbuf ){
-		g_object_unref( pixbuf );
-	}
-
-	return( NA_IOPTION( mode ));
+	return( get_mode_from_struct( &st_import_ask_mode ));
 }

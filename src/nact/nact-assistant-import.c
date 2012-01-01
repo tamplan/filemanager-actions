@@ -39,9 +39,11 @@
 #include <api/na-object-api.h>
 #include <api/na-core-utils.h>
 
+#include <core/na-import-mode.h>
 #include <core/na-importer.h>
-#include <core/na-iprefs.h>
+#include <core/na-ioptions-list.h>
 #include <core/na-gtk-utils.h>
+#include <core/na-settings.h>
 
 #include "nact-application.h"
 #include "nact-assistant-import.h"
@@ -77,47 +79,6 @@ enum {
 	N_COLUMN
 };
 
-/* import modes
- */
-typedef struct {
-	guint  mode;
-	gchar *label;
-	gchar *tooltip;
-	gchar *image;
-}
-	ImportModeDefs;
-
-static ImportModeDefs st_import_modes[] = {
-		{ IMPORTER_MODE_NO_IMPORT,
-				N_( "Do not import the item whose ID already exists" ),
-				N_( "This used to be the historical behavior.\n" \
-					"The selected file will be marked as \"NOT OK\" in the Summary page.\n" \
-					"The existing item will not be modified." ),
-				"import-mode-no-import.png"
-		},
-		{ IMPORTER_MODE_RENUMBER,
-				N_( "Allocate a new identifier for the imported item" ),
-				N_( "The selected file will be imported with a slightly " \
-					"modified label indicating the renumbering.\n" \
-					"The existing item will not be modified." ),
-				"import-mode-renumber.png"
-		},
-		{ IMPORTER_MODE_OVERRIDE,
-				N_( "Override the existing item" ),
-				N_( "The item found in the selected file will silently " \
-					"override the current one which has the same identifier.\n" \
-					"Be warned: this mode may be dangerous. " \
-					"You will not be prompted another time." ),
-				"import-mode-override.png"
-		},
-		{ IMPORTER_MODE_ASK,
-				N_( "Ask me" ),
-				N_( "You will be asked each time an imported ID already exists." ),
-				"import-mode-ask.png"
-		},
-		{ 0 }
-};
-
 /* private class data
  */
 struct _NactAssistantImportClassPrivate {
@@ -130,8 +91,7 @@ struct _NactAssistantImportPrivate {
 	gboolean     dispose_has_run;
 	GtkWidget   *file_chooser;
 	GtkTreeView *duplicates_listview;
-	guint        mode;
-	guint        index_mode;
+	NAIOption   *mode;
 	GList       *results;
 };
 
@@ -143,6 +103,10 @@ static BaseAssistantClass *st_parent_class   = NULL;
 
 static GType         register_type( void );
 static void          class_init( NactAssistantImportClass *klass );
+static void          ioptions_list_iface_init( NAIOptionsListInterface *iface );
+static GList        *ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container );
+static void          ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes );
+static NAIOption    *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
 static void          instance_init( GTypeInstance *instance, gpointer klass );
 static void          instance_dispose( GObject *application );
 static void          instance_finalize( GObject *application );
@@ -155,11 +119,6 @@ static void          runtime_init_file_selector( NactAssistantImport *window, Gt
 static void          on_file_selection_changed( GtkFileChooser *chooser, gpointer user_data );
 static gboolean      has_loadable_files( GSList *uris );
 static void          runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant );
-static void          clear_duplicates_treeview( NactAssistantImport *window );
-static void          populate_duplicates_treeview( NactAssistantImport *window );
-static void          on_duplicates_selection_changed( GtkTreeSelection *selection, NactAssistantImport *window );
-static void          select_import_mode( NactAssistantImport *window );
-static gboolean      iter_on_model_for_select( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, NactAssistantImport *window );
 
 static void          assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 static void          prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget *page );
@@ -202,9 +161,17 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo ioptions_list_iface_info = {
+		( GInterfaceInitFunc ) ioptions_list_iface_init,
+		NULL,
+		NULL
+	};
+
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( BASE_ASSISTANT_TYPE, "NactAssistantImport", &info, 0 );
+
+	g_type_add_interface_static( type, NA_IOPTIONS_LIST_TYPE, &ioptions_list_iface_info );
 
 	return( type );
 }
@@ -232,6 +199,42 @@ class_init( NactAssistantImportClass *klass )
 }
 
 static void
+ioptions_list_iface_init( NAIOptionsListInterface *iface )
+{
+	static const gchar *thisfn = "nact_assistant_import_ioptions_list_iface_init";
+
+	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+
+	iface->get_options = ioptions_list_get_modes;
+	iface->free_options = ioptions_list_free_modes;
+	iface->get_ask_option = ioptions_list_get_ask_option;
+}
+
+static GList *
+ioptions_list_get_modes( const NAIOptionsList *instance, GtkWidget *container )
+{
+	GList *modes;
+
+	g_return_val_if_fail( NACT_IS_ASSISTANT_IMPORT( instance ), NULL );
+
+	modes = na_importer_get_modes();
+
+	return( modes );
+}
+
+static void
+ioptions_list_free_modes( const NAIOptionsList *instance, GtkWidget *container, GList *modes )
+{
+	na_importer_free_modes( modes );
+}
+
+static NAIOption *
+ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container )
+{
+	return( na_importer_get_ask_mode());
+}
+
+static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_assistant_import_instance_init";
@@ -248,11 +251,17 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->results = NULL;
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk ));
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_GTK,
+			G_CALLBACK( on_base_initialize_gtk ));
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_base_window ));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -271,8 +280,6 @@ instance_dispose( GObject *window )
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		self->private->dispose_has_run = TRUE;
-
-		clear_duplicates_treeview( self );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -372,9 +379,6 @@ static void
 create_duplicates_treeview_model( NactAssistantImport *dialog )
 {
 	static const gchar *thisfn = "nact_assistant_import_create_duplicates_treeview_model";
-	GtkListStore *model;
-	GtkTreeViewColumn *column;
-	GtkTreeSelection *selection;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_IMPORT( dialog ));
 	g_return_if_fail( !dialog->private->dispose_has_run );
@@ -384,30 +388,7 @@ create_duplicates_treeview_model( NactAssistantImport *dialog )
 	dialog->private->duplicates_listview = get_duplicates_treeview_from_assistant_import( dialog );
 	g_return_if_fail( GTK_IS_TREE_VIEW( dialog->private->duplicates_listview ));
 
-	model = gtk_list_store_new( N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT, G_TYPE_UINT );
-	gtk_tree_view_set_model( dialog->private->duplicates_listview, GTK_TREE_MODEL( model ));
-	g_object_unref( model );
-
-	/* create visible columns on the tree view
-	 */
-	column = gtk_tree_view_column_new_with_attributes(
-			"image",
-			gtk_cell_renderer_pixbuf_new(),
-			"pixbuf", IMAGE_COLUMN,
-			NULL );
-	gtk_tree_view_append_column( dialog->private->duplicates_listview, column );
-
-	column = gtk_tree_view_column_new_with_attributes(
-			"label",
-			gtk_cell_renderer_text_new(),
-			"text", LABEL_COLUMN,
-			NULL );
-	gtk_tree_view_append_column( dialog->private->duplicates_listview, column );
-
-	g_object_set( G_OBJECT( dialog->private->duplicates_listview ), "tooltip-column", TOOLTIP_COLUMN, NULL );
-
-	selection = gtk_tree_view_get_selection( dialog->private->duplicates_listview );
-	gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
+	na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( dialog ), GTK_WIDGET( dialog->private->duplicates_listview ), TRUE );
 }
 
 static void
@@ -552,155 +533,26 @@ static void
 runtime_init_duplicates( NactAssistantImport *window, GtkAssistant *assistant )
 {
 	static const gchar *thisfn = "nact_assistant_import_runtime_init_duplicates";
-	guint mode;
-	GtkTreeSelection *selection;
+	gchar *import_mode;
 	GtkWidget *page;
+	gboolean mandatory;
 
 	g_return_if_fail( GTK_IS_TREE_VIEW( window->private->duplicates_listview ));
 
 	g_debug( "%s: window=%p, assistant=%p",
 			thisfn, ( void * ) window, ( void * ) assistant );
 
-	clear_duplicates_treeview( window );
-	populate_duplicates_treeview( window );
-
-	mode = na_iprefs_get_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL );
-	window->private->mode = mode;
-	select_import_mode( window );
-
-	/* monitors the selection */
-	selection = gtk_tree_view_get_selection( window->private->duplicates_listview );
-	base_window_signal_connect( BASE_WINDOW( window ),
-			G_OBJECT( selection ), "changed", G_CALLBACK( on_duplicates_selection_changed ));
+	import_mode = na_settings_get_string( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL, &mandatory );
+	na_ioptions_list_set_editable(
+			NA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ),
+			!mandatory );
+	na_ioptions_list_set_default(
+			NA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ),
+			import_mode );
+	g_free( import_mode );
 
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_DUPLICATES );
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
-}
-
-static void
-clear_duplicates_treeview( NactAssistantImport *window )
-{
-	static const gchar *thisfn = "nact_assistant_import_clear_duplicates_treeview";
-	GtkTreeModel *model;
-	GtkTreeSelection *selection;
-
-	g_return_if_fail( GTK_IS_TREE_VIEW( window->private->duplicates_listview ));
-
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	selection = gtk_tree_view_get_selection( window->private->duplicates_listview );
-	gtk_tree_selection_unselect_all( selection );
-
-	model = gtk_tree_view_get_model( window->private->duplicates_listview );
-	gtk_list_store_clear( GTK_LIST_STORE( model ));
-}
-
-static void
-populate_duplicates_treeview( NactAssistantImport *window )
-{
-	static const gchar *thisfn = "nact_assistant_import_populate_duplicates_treeview";
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	guint i;
-	gchar *image_file;
-	gint width, height;
-	GdkPixbuf *pixbuf;
-
-	g_return_if_fail( GTK_IS_TREE_VIEW( window->private->duplicates_listview ));
-
-	g_debug( "%s: window=%p", thisfn, ( void * ) window );
-
-	model = gtk_tree_view_get_model( window->private->duplicates_listview );
-
-	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
-		width = height = 48;
-	}
-
-	for( i=0 ; st_import_modes[i].mode ; ++i ){
-		image_file = g_strdup_printf( "%s/%s", PKGDATADIR, st_import_modes[i].image );
-		pixbuf = gdk_pixbuf_new_from_file_at_size( image_file, width, height, NULL );
-		gtk_list_store_append( GTK_LIST_STORE( model ), &iter );
-		gtk_list_store_set(
-				GTK_LIST_STORE( model ),
-				&iter,
-				IMAGE_COLUMN, pixbuf,
-				LABEL_COLUMN, st_import_modes[i].label,
-				TOOLTIP_COLUMN, st_import_modes[i].tooltip,
-				MODE_COLUMN, st_import_modes[i].mode,
-				INDEX_COLUMN, i,
-				-1 );
-		g_object_unref( pixbuf );
-		g_free( image_file );
-	}
-}
-
-/*
- * handles the "changed" signal emitted on the GtkTreeSelection
- */
-static void
-on_duplicates_selection_changed( GtkTreeSelection *selection, NactAssistantImport *window )
-{
-	static const gchar *thisfn = "nact_assistant_import_on_duplicates_selection_changed";
-	GList *selected_rows;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	guint mode;
-	guint index_mode;
-
-	g_return_if_fail( GTK_IS_TREE_VIEW( window->private->duplicates_listview ));
-
-	g_debug( "%s: selection=%p, window=%p", thisfn, ( void * ) selection, ( void * ) window );
-
-	selected_rows = gtk_tree_selection_get_selected_rows( selection, &model );
-
-	if( g_list_length( selected_rows ) == 1 ){
-		model = gtk_tree_view_get_model( window->private->duplicates_listview );
-		gtk_tree_model_get_iter( model, &iter, ( GtkTreePath * ) selected_rows->data );
-		gtk_tree_model_get( model, &iter, MODE_COLUMN, &mode, INDEX_COLUMN, &index_mode, -1 );
-		window->private->mode = mode;
-		window->private->index_mode = index_mode;
-	}
-
-	g_list_foreach( selected_rows, ( GFunc ) gtk_tree_path_free, NULL );
-	g_list_free( selected_rows );
-}
-
-/*
- * initial selection of the default import mode
- */
-static void
-select_import_mode( NactAssistantImport *window )
-{
-	GtkTreeModel *model;
-
-	g_return_if_fail( GTK_IS_TREE_VIEW( window->private->duplicates_listview ));
-
-	model = gtk_tree_view_get_model( window->private->duplicates_listview );
-	gtk_tree_model_foreach( model, ( GtkTreeModelForeachFunc ) iter_on_model_for_select, window );
-}
-
-/*
- * walks through the rows of the model until the function returns %TRUE
- */
-static gboolean
-iter_on_model_for_select( GtkTreeModel *model,
-		GtkTreePath *path, GtkTreeIter *iter, NactAssistantImport *window )
-{
-	gboolean stop;
-	guint mode;
-	guint index;
-	GtkTreeSelection *selection;
-
-	stop = FALSE;
-	gtk_tree_model_get( model, iter, MODE_COLUMN, &mode, INDEX_COLUMN, &index, -1 );
-	if( mode == window->private->mode ){
-		window->private->index_mode = index;
-		selection = gtk_tree_view_get_selection( window->private->duplicates_listview );
-		gtk_tree_selection_select_iter( selection, iter );
-		stop = TRUE;
-	}
-
-	return( stop );
 }
 
 static void
@@ -735,6 +587,7 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	gchar *text, *tmp;
 	GSList *uris, *is;
 	GtkWidget *label;
+	gchar *mode_label, *label2, *mode_description;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -774,11 +627,18 @@ prepare_confirm( NactAssistantImport *window, GtkAssistant *assistant, GtkWidget
 	 */
 	label = find_widget_from_page( page, "p3-ConfirmImportMode" );
 	g_return_if_fail( GTK_IS_LABEL( label ));
-	text = g_markup_printf_escaped( "%s\n\n<span style=\"italic\">%s</span>",
-			gettext( st_import_modes[window->private->index_mode].label ),
-			gettext( st_import_modes[window->private->index_mode].tooltip ));
+	window->private->mode = na_ioptions_list_get_selected(
+			NA_IOPTIONS_LIST( window ), GTK_WIDGET( window->private->duplicates_listview ));
+	g_return_if_fail( NA_IS_IMPORT_MODE( window->private->mode ));
+	mode_label = na_ioption_get_label( window->private->mode );
+	label2 = na_core_utils_str_remove_char( mode_label, "_" );
+	mode_description = na_ioption_get_description( window->private->mode );
+	text = g_markup_printf_escaped( "%s\n\n<span style=\"italic\">%s</span>", label2, mode_description );
 	gtk_label_set_markup( GTK_LABEL( label ), text );
 	g_free( text );
+	g_free( mode_description );
+	g_free( mode_label );
+	g_free( label2 );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
@@ -811,7 +671,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	g_object_get( G_OBJECT( wnd ), BASE_PROP_PARENT, &main_window, NULL );
 	importer_parms.parent = base_window_get_gtk_toplevel( BASE_WINDOW( wnd ));
 	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));
-	importer_parms.mode = window->private->mode;
+	importer_parms.mode = na_import_mode_get_id( NA_IMPORT_MODE( window->private->mode ));
 	importer_parms.check_fn = ( NAIImporterCheckFn ) check_for_existence;
 	importer_parms.check_fn_data = main_window;
 	application = NACT_APPLICATION( base_window_get_application( main_window ));
@@ -882,6 +742,7 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	NAImporterResult *result;
 	gchar *text, *id, *item_label, *text2, *tmp;
 	const gchar *color;
+	gchar *mode_id;
 
 	g_debug( "%s: window=%p, assistant=%p, page=%p",
 			thisfn, ( void * ) window, ( void * ) assistant, ( void * ) page );
@@ -962,8 +823,11 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 		gtk_box_pack_start( GTK_BOX( file_vbox ), file_report, FALSE, FALSE, 0 );
 	}
 
+	mode_id = na_ioption_get_id( window->private->mode );
+	na_settings_set_string( NA_IPREFS_IMPORT_PREFERRED_MODE, mode_id );
+	g_free( mode_id );
+
 	g_object_set( G_OBJECT( window ), BASE_PROP_WARN_ON_ESCAPE, FALSE, NULL );
-	na_iprefs_set_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, window->private->mode );
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 	gtk_widget_show_all( page );
 }

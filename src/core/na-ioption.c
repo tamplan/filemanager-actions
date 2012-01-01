@@ -288,19 +288,3 @@ na_ioption_get_pixbuf( const NAIOption *option )
 
 	return( pixbuf );
 }
-
-#if 0
-/*
- * na_ioption_free_option:
- * @option: this #NAIOption instance.
- *
- * Release the resources associated to the @option.
- */
-void
-na_ioption_free_option( NAIOption *option )
-{
-	g_return_if_fail( NA_IS_IOPTION( option ));
-
-	g_object_unref( option );
-}
-#endif
