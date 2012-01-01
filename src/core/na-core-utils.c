@@ -49,7 +49,9 @@
 #define SIZE_MIN		  1
 #define SIZE_MAX	1048576		/* 1 MB */
 
+#ifdef NA_ENABLE_DEPRECATED
 static GSList  *text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value );
+#endif
 static gboolean info_dir_is_writable( GFile *file, const gchar *path );
 static gboolean file_is_loadable( GFile *file );
 
@@ -70,6 +72,7 @@ na_core_utils_boolean_from_string( const gchar *string )
 	return( g_ascii_strcasecmp( string, "true" ) == 0 || atoi( string ) != 0 );
 }
 
+#ifdef NA_ENABLE_DEPRECATED
 /**
  * na_core_utils_str_add_prefix:
  * @prefix: the prefix to be prepended.
@@ -80,6 +83,7 @@ na_core_utils_boolean_from_string( const gchar *string )
  * Returns: a new string which should be g_free() by the caller.
  *
  * Since: 2.30
+ * Deprecated: 3.2
  */
 gchar *
 na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str )
@@ -98,6 +102,32 @@ na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str )
 
 	return( g_string_free( result, FALSE ));
 }
+
+/*
+ * split a text buffer in lines
+ */
+static GSList *
+text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value )
+{
+	GSList *strlist = NULL;
+	gchar **tokens;
+	gchar *tmp;
+	gchar *source = g_strdup( text );
+
+	tmp = g_strstrip( source );
+	if( !strlen( tmp ) && default_value ){
+		strlist = g_slist_append( strlist, g_strdup( default_value ));
+
+	} else {
+		tokens = g_strsplit( source, separator, -1 );
+		strlist = na_core_utils_slist_from_array(( const gchar ** ) tokens );
+		g_strfreev( tokens );
+	}
+
+	g_free( source );
+	return( strlist );
+}
+#endif
 
 /**
  * na_core_utils_str_collate:
@@ -743,31 +773,6 @@ na_core_utils_gstring_joinv( const gchar *start, const gchar *separator, gchar *
 	}
 
 	return( g_string_free( tmp_string, FALSE ));
-}
-
-/*
- * split a text buffer in lines
- */
-static GSList *
-text_to_string_list( const gchar *text, const gchar *separator, const gchar *default_value )
-{
-	GSList *strlist = NULL;
-	gchar **tokens;
-	gchar *tmp;
-	gchar *source = g_strdup( text );
-
-	tmp = g_strstrip( source );
-	if( !strlen( tmp ) && default_value ){
-		strlist = g_slist_append( strlist, g_strdup( default_value ));
-
-	} else {
-		tokens = g_strsplit( source, separator, -1 );
-		strlist = na_core_utils_slist_from_array(( const gchar ** ) tokens );
-		g_strfreev( tokens );
-	}
-
-	g_free( source );
-	return( strlist );
 }
 
 /***
