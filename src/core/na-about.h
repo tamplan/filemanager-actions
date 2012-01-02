@@ -43,11 +43,11 @@
 
 G_BEGIN_DECLS
 
-void   na_about_display( GtkWindow *parent );
+void         na_about_display( GtkWindow *parent );
 
-gchar *na_about_get_application_name( void );
-gchar *na_about_get_icon_name( void );
-gchar *na_about_get_copyright( gboolean console );
+gchar       *na_about_get_application_name( void );
+const gchar *na_about_get_icon_name( void );
+gchar       *na_about_get_copyright( gboolean console );
 
 G_END_DECLS
 

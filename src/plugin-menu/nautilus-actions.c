@@ -871,7 +871,6 @@ create_root_menu( NautilusActions *plugin, GList *menu )
 	static const gchar *thisfn = "nautilus_actions_create_root_menu";
 	GList *nautilus_menu;
 	NautilusMenuItem *root_item;
-	gchar *icon;
 
 	g_debug( "%s: plugin=%p, menu=%p (%d items)",
 			thisfn, ( void * ) plugin, ( void * ) menu, g_list_length( menu ));
@@ -880,16 +879,15 @@ create_root_menu( NautilusActions *plugin, GList *menu )
 		return( NULL );
 	}
 
-	icon = na_about_get_icon_name();
-	root_item = nautilus_menu_item_new( "NautilusActionsExtensions",
-				/* i18n: label of an automagic root submenu */
-				_( "Nautilus-Actions actions" ),
-				/* i18n: tooltip of an automagic root submenu */
-				_( "A submenu which embeds the currently available Nautilus-Actions actions and menus" ),
-				icon );
+	root_item = nautilus_menu_item_new(
+			"NautilusActionsExtensions",
+			/* i18n: label of an automagic root submenu */
+			_( "Nautilus-Actions actions" ),
+			/* i18n: tooltip of an automagic root submenu */
+			_( "A submenu which embeds the currently available Nautilus-Actions actions and menus" ),
+			na_about_get_icon_name());
 	attach_submenu_to_item( root_item, menu );
 	nautilus_menu = g_list_append( NULL, root_item );
-	g_free( icon );
 
 	return( nautilus_menu );
 }
@@ -907,7 +905,6 @@ add_about_item( NautilusActions *plugin, GList *menu )
 	NautilusMenuItem *root_item;
 	NautilusMenuItem *about_item;
 	NautilusMenu *first;
-	gchar *icon;
 
 	g_debug( "%s: plugin=%p, menu=%p (%d items)",
 			thisfn, ( void * ) plugin, ( void * ) menu, g_list_length( menu ));
@@ -929,23 +926,21 @@ add_about_item( NautilusActions *plugin, GList *menu )
 	}
 
 	if( have_root_menu ){
-		icon = na_about_get_icon_name();
+		about_item = nautilus_menu_item_new(
+				"AboutNautilusActions",
+				_( "About Nautilus-Actions" ),
+				_( "Display some informations about Nautilus-Actions" ),
+				na_about_get_icon_name());
 
-		about_item = nautilus_menu_item_new( "AboutNautilusActions",
-					_( "About Nautilus-Actions" ),
-					_( "Display some informations about Nautilus-Actions" ),
-					icon );
-
-		g_signal_connect_data( about_item,
-					"activate",
-					G_CALLBACK( execute_about ),
-					plugin,
-					NULL,
-					0 );
+		g_signal_connect_data(
+				about_item,
+				"activate",
+				G_CALLBACK( execute_about ),
+				plugin,
+				NULL,
+				0 );
 
 		nautilus_menu_append_item( first, about_item );
-
-		g_free( icon );
 	}
 
 	return( nautilus_menu );

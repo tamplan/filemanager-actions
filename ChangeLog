@@ -1,5 +1,10 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-about.c:
+	* src/core/na-about.h (na_about_get_icon_name): Returns a const string.
+
+	* src/plugin-menu/nautilus-actions.c: Updated accordingly.
+
 	* Allmost all files: Bump copyright year.
 
 	* ChangeLog-2011: New file.

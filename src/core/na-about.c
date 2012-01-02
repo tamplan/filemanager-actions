@@ -46,7 +46,7 @@
 void
 na_about_display( GtkWindow *toplevel )
 {
-	gchar *application_name, *icon_name, *copyright;
+	gchar *application_name, *copyright;
 	int i;
 	GString *license_i18n;
 
@@ -84,7 +84,6 @@ na_about_display( GtkWindow *toplevel )
 	};
 
 	application_name = na_about_get_application_name();
-	icon_name = na_about_get_icon_name();
 	copyright = na_about_get_copyright( FALSE );
 
 	i = 0;
@@ -103,7 +102,7 @@ na_about_display( GtkWindow *toplevel )
 			"copyright", copyright,
 			"documenters", documenters,
 			"license", license_i18n->str,
-			"logo-icon-name", icon_name,
+			"logo-icon-name", na_about_get_icon_name(),
 			"program-name", application_name,
 			"translator-credits", _( "The GNOME Translation Project <gnome-i18n@gnome.org>" ),
 			"version", PACKAGE_VERSION,
@@ -114,7 +113,6 @@ na_about_display( GtkWindow *toplevel )
 	g_free( application_name );
 	g_string_free( license_i18n, TRUE );
 	g_free( copyright );
-	g_free( icon_name );
 }
 
 /*
@@ -133,13 +131,16 @@ na_about_get_application_name( void )
 /*
  * na_about_get_icon_name:
  *
- * Returns: the name of the default icon for the application, as a newly
- * allocated string which should be g_free() by the caller.
+ * Returns: the name of the default icon for the application.
+ *
+ * This name is owned by the package, and should not be released by the caller.
+ *
+ * cf. Makefile: PACKAGE = nautilus-actions
  */
-gchar *
+const gchar *
 na_about_get_icon_name( void )
 {
-	return( g_strdup( PACKAGE ));
+	return( PACKAGE );
 }
 
 /*
