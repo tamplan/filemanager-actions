@@ -4,6 +4,7 @@
   <copyright>
     <year>2010</year>
     <year>2011</year>
+    <year>2012</year>
     <holder>Pierre Wieser</holder>
   </copyright>
 
@@ -73,6 +74,16 @@
     <revision>
       <revnumber>&appnamex; User's Manual v 3.1</revnumber>
       <date>May 2011</date>
+      <revdescription>
+        <para role="author">
+          Pierre Wieser
+          <email>pwieser@trychlos.org</email>
+        </para>
+      </revdescription>
+    </revision>
+    <revision>
+      <revnumber>&appnamex; User's Manual v 3.2</revnumber>
+      <date>January 2012</date>
       <revdescription>
         <para role="author">
           Pierre Wieser

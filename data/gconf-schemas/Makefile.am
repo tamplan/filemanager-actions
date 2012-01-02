@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2005 The GNOME Foundation
 # Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
-# Copyright (C) 2009, 2010, 2011 Pierre Wieser and others (see AUTHORS)
+# Copyright (C) 2009, 2010, 2011, 2012 Pierre Wieser and others (see AUTHORS)
 #
 # This Program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as

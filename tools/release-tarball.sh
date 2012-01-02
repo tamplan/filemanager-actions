@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2005 The GNOME Foundation
 # Copyright (C) 2006, 2007, 2008 Frederic Ruaudel and others (see AUTHORS)
-# Copyright (C) 2009, 2010, 2011 Pierre Wieser and others (see AUTHORS)
+# Copyright (C) 2009, 2010, 2011, 2012 Pierre Wieser and others (see AUTHORS)
 #
 # This Program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -110,7 +110,7 @@ msg_version()
 	pck_version=$(grep '^PACKAGE_VERSION' Makefile 2>/dev/null | awk '{ print $3 }')
 	echo "
  ${pck_name} v ${pck_version}
- Copyright (C) 2010, 2011 Pierre Wieser."
+ Copyright (C) 2010, 2011, 2012 Pierre Wieser."
 }
 
 # initialize common command-line options

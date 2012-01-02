@@ -1,5 +1,7 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* Allmost all files: Bump copyright year.
+
 	* ChangeLog-2011: New file.
 
 	* src/core/na-exporter.c (exporter_get_formats): Fix variable declaration.
