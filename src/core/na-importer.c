@@ -115,7 +115,7 @@ static NAIOption    *get_mode_from_struct( const NAImportModeStr *str );
 #define ERR_NOT_LOADABLE	_( "%s is not loadable (empty or too big or not a regular file)" )
 
 /*
- * na_importer_import_from_list:
+ * na_importer_import_from_uris:
  * @pivot: the #NAPivot pivot for this application.
  * @parms: a #NAImporterParms structure.
  *
@@ -141,22 +141,23 @@ static NAIOption    *get_mode_from_struct( const NAImportModeStr *str );
  * - keep my choice                   -> import-keep-choice
  * - last chosen import mode          -> import-ask-user-last-mode
  *
- * Returns: the last import operation code.
+ * Returns: the count of successfully imported items
+ * (was the last import operation code up to 3.2).
  *
  * Since: 2.30
  */
 guint
-na_importer_import_from_list( const NAPivot *pivot, NAImporterParms *parms )
+na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 {
-	static const gchar *thisfn = "na_importer_import_from_list";
+	static const gchar *thisfn = "na_importer_import_from_uris";
 	GList *modules;
 	GSList *iuri;
 	NAImporterResult *result;
-	guint code;
+	guint count;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), IMPORTER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), 0 );
 
-	code = IMPORTER_CODE_NOT_WILLING_TO;
+	count = 0;
 	parms->results = NULL;
 
 	if( iimporter_initialized && !iimporter_finalized ){
@@ -166,15 +167,18 @@ na_importer_import_from_list( const NAPivot *pivot, NAImporterParms *parms )
 		modules = na_pivot_get_providers( pivot, NA_IIMPORTER_TYPE );
 
 		for( iuri = parms->uris ; iuri ; iuri = iuri->next ){
-			code = import_from_uri( pivot, modules, parms, ( const gchar * ) iuri->data, &result );
+			import_from_uri( pivot, modules, parms, ( const gchar * ) iuri->data, &result );
 			parms->results = g_list_prepend( parms->results, result );
+			if( result->imported ){
+				count += 1;
+			}
 		}
 
 		na_pivot_free_providers( modules );
 		parms->results = g_list_reverse( parms->results );
 	}
 
-	return( code );
+	return( count );
 }
 
 /*

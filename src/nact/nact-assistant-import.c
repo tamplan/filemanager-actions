@@ -677,7 +677,7 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	application = NACT_APPLICATION( base_window_get_application( main_window ));
 	updater = nact_application_get_updater( application );
 
-	na_importer_import_from_list( NA_PIVOT( updater ), &importer_parms );
+	na_importer_import_from_uris( NA_PIVOT( updater ), &importer_parms );
 
 	for( it = importer_parms.results ; it ; it = it->next ){
 		result = ( NAImporterResult * ) it->data;

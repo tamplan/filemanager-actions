@@ -53,7 +53,7 @@ G_BEGIN_DECLS
 typedef struct {
 	GtkWindow         *parent;			/* the parent window, if any */
 	GSList            *uris;			/* the list of uris of the files to be imported */
-	guint              mode;			/* asked import mode */
+	guint              mode;			/* asked (preferred) import mode */
 	NAIImporterCheckFn check_fn;		/* a function to check the existence of the imported id */
 	void              *check_fn_data;	/* data function */
 	GList             *results;			/* a #GList of newly allocated NAImporterResult structures,
@@ -64,14 +64,14 @@ typedef struct {
 
 typedef struct {
 	gchar             *uri;				/* the imported uri */
-	guint              mode;			/* the actual import mode in effect for this import */
+	guint              mode;			/* the actual mode in effect for this import */
 	gboolean           exist;			/* whether the imported Id already existed */
 	NAObjectItem      *imported;		/* eventually imported NAObjectItem-derived object, or %NULL */
 	GSList            *messages;		/* a #GSList list of localized strings */
 }
 	NAImporterResult;
 
-guint      na_importer_import_from_list( const NAPivot *pivot, NAImporterParms *parms );
+guint      na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms );
 
 void       na_importer_free_result     ( NAImporterResult *result );
 

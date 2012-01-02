@@ -1,5 +1,14 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-importer.c:
+	* src/core/na-importer.h (na_importer_import_from_list):
+	Renamed as na_importer_import_from_uris.
+	Now returns the count of succesffully imported items.
+
+	* src/nact/nact-assistant-import.c (assistant_apply):
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
+	* src/test/test-reader.c (main): Updated accordingly.
+
 	* src/api/na-iimporter.h: Update documentation.
 
 	* m4/na-maintainer-mode.m4: Reverse the sens of deprecation test.

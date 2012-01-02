@@ -866,7 +866,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	parms.check_fn_data = main_window;
 	parms.results = NULL;
 
-	na_importer_import_from_list( NA_PIVOT( updater ), &parms );
+	na_importer_import_from_uris( NA_PIVOT( updater ), &parms );
 
 	/* analysing output results, simultaneously building a concatenation
 	 * of all lines of messages, and the list of imported items

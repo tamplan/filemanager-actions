@@ -82,9 +82,9 @@ main( int argc, char **argv )
 	parms.check_fn = NULL;
 	parms.check_fn_data = NULL;
 
-	guint code = na_importer_import_from_list( pivot, &parms );
+	guint count = na_importer_import_from_uris( pivot, &parms );
 
-	g_print( "%s: return code from import is %u.\n", g_get_prgname(), code );
+	g_print( "%s: na_importer_import_from_uris() returns count=%u.\n", g_get_prgname(), count );
 
 	result = parms.results->data;
 	if( result->imported ){
