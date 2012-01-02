@@ -1,5 +1,7 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-importer.c (na_importer_import_from_list): Fix typo.
+
 	* src/core/na-about.c:
 	* src/core/na-about.h (na_about_get_icon_name): Returns a const string.
 

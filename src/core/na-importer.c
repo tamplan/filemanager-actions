@@ -122,7 +122,7 @@ static NAIOption    *get_mode_from_struct( const NAImportModeStr *str );
  * Imports a list of URIs.
  *
  * For each URI to import, we search through the available #NAIImporter
- * providers until the first which respond something different from
+ * providers until the first which returns with something different from
  * "not_willing_to" code.
  *
  * #parms.uris contains a list of URIs to import.
@@ -135,7 +135,7 @@ static NAIOption    *get_mode_from_struct( const NAImportModeStr *str );
  *
  * If asked mode is 'ask', then ask the user at least the first time;
  * the 'keep my choice' is active or not, depending of the last time used,
- * then the 'keep my chose' is kept for other times.
+ * then the 'keep my choice' is kept for other times.
  * So preferences are:
  * - asked import mode (may be 'ask') -> import-mode
  * - keep my choice                   -> import-keep-choice
