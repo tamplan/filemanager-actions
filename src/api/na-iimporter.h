@@ -39,6 +39,10 @@
  *
  * The #NAIImporter interface imports items from the outside world.
  *
+ * Internal Nautilus-Actions code should never directly call a
+ * #NAIImporter interface method, but rather should call the
+ * corresponding na_importer_xxx() function.
+ *
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>

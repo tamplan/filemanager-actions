@@ -1,5 +1,7 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iimporter.h: Update documentation.
+
 	* m4/na-maintainer-mode.m4: Reverse the sens of deprecation test.
 
 	* configure.ac:
