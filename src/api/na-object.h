@@ -165,7 +165,7 @@ void      na_object_object_dump      ( const NAObject *object );
 void      na_object_object_dump_norec( const NAObject *object );
 void      na_object_object_dump_tree ( GList *tree );
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 GList    *na_object_get_hierarchy( const NAObject *object );
 void      na_object_free_hierarchy( GList *hierarchy );
 #endif

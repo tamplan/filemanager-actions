@@ -86,7 +86,7 @@ typedef struct _NAIExporterInterfacePrivate    NAIExporterInterfacePrivate;
 typedef struct _NAIExporterFileParms           NAIExporterFileParms;
 typedef struct _NAIExporterBufferParms         NAIExporterBufferParms;
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 /**
  * NAIExporterFormat:
  * @format:      format identifier (ascii).

@@ -111,7 +111,7 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
 AM_GLIB_GNU_GETTEXT
 
 # Enable deprecated functions ?
-NA_ENABLE_DEPRECATED
+NA_CHECK_FOR_DEPRECATED
 
 # Have and want GConf support ?
 NA_CHECK_FOR_GCONF

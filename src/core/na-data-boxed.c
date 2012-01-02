@@ -378,7 +378,7 @@ na_data_boxed_get_param_spec( const NADataDef *def )
 	return( spec );
 }
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 /**
  * na_data_boxed_are_equal:
  * @a: the first #NADataBoxed object.
@@ -397,7 +397,7 @@ na_data_boxed_are_equal( const NADataBoxed *a, const NADataBoxed *b )
 
 	return( na_boxed_are_equal( NA_BOXED( a ), NA_BOXED( b )));
 }
-#endif /* NA_DISABLE_DEPRECATED */
+#endif /* NA_ENABLE_DEPRECATED */
 
 /**
  * na_data_boxed_is_default:
@@ -454,7 +454,7 @@ na_data_boxed_is_valid( const NADataBoxed *boxed )
 	return( is_valid );
 }
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 /**
  * na_data_boxed_dump:
  * @boxed: this #NADataBoxed object.
@@ -584,7 +584,7 @@ na_data_boxed_set_from_void( NADataBoxed *boxed, const void *value )
 {
 	na_boxed_set_from_void( NA_BOXED( boxed ), value );
 }
-#endif /* NA_DISABLE_DEPRECATED */
+#endif /* NA_ENABLE_DEPRECATED */
 
 static GParamSpec *
 bool_spec( const NADataDef *def )

@@ -35,7 +35,7 @@
 #include <api/na-gconf-monitor.h>
 
 #ifdef HAVE_GCONF
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 
 /* private class data
  */
@@ -308,5 +308,5 @@ release_monitor( NAGConfMonitor *monitor )
 	}
 }
 
-#endif /* NA_DISABLE_DEPRECATED */
+#endif /* NA_ENABLE_DEPRECATED */
 #endif /* HAVE_GCONF */

@@ -53,7 +53,7 @@ struct _NagpGConfProviderClassPrivate {
 static GType         st_module_type = 0;
 static GObjectClass *st_parent_class = NULL;
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 static gint          st_burst_timeout = 100;		/* burst timeout in msec */
 #endif
 
@@ -70,7 +70,7 @@ static guint    iio_provider_get_version( const NAIIOProvider *provider );
 static void     ifactory_provider_iface_init( NAIFactoryProviderInterface *iface );
 static guint    ifactory_provider_get_version( const NAIFactoryProvider *provider );
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 static GList   *install_monitors( NagpGConfProvider *provider );
 static void     config_path_changed_cb( GConfClient *client, guint cnxn_id, GConfEntry *entry, NagpGConfProvider *provider );
 static gboolean config_path_changed_trigger_interface( NagpGConfProvider *provider );
@@ -157,7 +157,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private->gconf = gconf_client_get_default();
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 	self->private->monitors = install_monitors( self );
 #endif
 }
@@ -178,7 +178,7 @@ instance_dispose( GObject *object )
 
 		self->private->dispose_has_run = TRUE;
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 		/* release the GConf monitoring */
 		na_gconf_monitor_release_monitors( self->private->monitors );
 #endif
@@ -226,7 +226,7 @@ iio_provider_iface_init( NAIIOProviderInterface *iface )
 	iface->read_items = nagp_iio_provider_read_items;
 	iface->is_willing_to_write = nagp_iio_provider_is_willing_to_write;
 	iface->is_able_to_write = nagp_iio_provider_is_able_to_write;
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 	iface->write_item = nagp_iio_provider_write_item;
 	iface->delete_item = nagp_iio_provider_delete_item;
 #else
@@ -265,7 +265,7 @@ ifactory_provider_iface_init( NAIFactoryProviderInterface *iface )
 	iface->read_start = nagp_reader_read_start;
 	iface->read_data = nagp_reader_read_data;
 	iface->read_done = nagp_reader_read_done;
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 	iface->write_start = nagp_writer_write_start;
 	iface->write_data = nagp_writer_write_data;
 	iface->write_done = nagp_writer_write_done;
@@ -282,7 +282,7 @@ ifactory_provider_get_version( const NAIFactoryProvider *provider )
 	return( 1 );
 }
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 static GList *
 install_monitors( NagpGConfProvider *provider )
 {
@@ -412,4 +412,4 @@ time_val_diff( const GTimeVal *recent, const GTimeVal *old )
 	microsec += recent->tv_usec  - old->tv_usec;
 	return( microsec );
 }
-#endif /* NA_DISABLE_DEPRECATED */
+#endif /* NA_ENABLE_DEPRECATED */

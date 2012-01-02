@@ -71,7 +71,7 @@ endif
 #	--rebuild-sections
 SCAN_OPTIONS = \
 	--rebuild-types								\
-	--deprecated-guards=NA_DISABLE_DEPRECATED	\
+	--deprecated-guards=NA_ENABLE_DEPRECATED	\
 	$(NULL)
 
 # The directory containing the source code. Relative to $(srcdir)

@@ -1,5 +1,28 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* m4/na-maintainer-mode.m4: Reverse the sens of deprecation test.
+
+	* configure.ac:
+	* docs/reference/Makefile.am:
+	* src/api/na-core-utils.h:
+	* src/api/na-data-boxed.h:
+	* src/api/na-gconf-monitor.h:
+	* src/api/na-gconf-utils.h:
+	* src/api/na-iduplicable.h:
+	* src/api/na-iexporter.h:
+	* src/api/na-object-api.h:
+	* src/api/na-object.h:
+	* src/core/na-core-utils.c:
+	* src/core/na-data-boxed.c:
+	* src/core/na-exporter.c:
+	* src/core/na-gconf-monitor.c:
+	* src/core/na-gconf-utils.c:
+	* src/core/na-iduplicable.c:
+	* src/core/na-object.c:
+	* src/io-gconf/nagp-gconf-provider.c:
+	* src/io-gconf/nagp-writer.c:
+	* src/io-gconf/nagp-writer.h: Updated accordingly.
+
 	* src/core/na-importer.c (na_importer_import_from_list): Fix typo.
 
 	* src/core/na-about.c:

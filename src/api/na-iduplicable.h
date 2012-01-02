@@ -205,7 +205,7 @@ void           na_iduplicable_set_origin  ( NAIDuplicable *object, const NAIDupl
 
 void           na_iduplicable_register_consumer( GObject *consumer );
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 void           na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified );
 #endif
 

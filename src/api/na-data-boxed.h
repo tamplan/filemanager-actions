@@ -96,7 +96,7 @@ gboolean         na_data_boxed_is_valid       ( const NADataBoxed *boxed );
 
 /* These functions are deprecated starting with 3.1.0
  */
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 gboolean         na_data_boxed_are_equal      ( const NADataBoxed *a, const NADataBoxed *b );
 void             na_data_boxed_dump           ( const NADataBoxed *boxed );
 gchar           *na_data_boxed_get_as_string  ( const NADataBoxed *boxed );
@@ -106,7 +106,7 @@ void             na_data_boxed_set_from_boxed ( NADataBoxed *boxed, const NAData
 void             na_data_boxed_set_from_string( NADataBoxed *boxed, const gchar *value );
 void             na_data_boxed_set_from_value ( NADataBoxed *boxed, const GValue *value );
 void             na_data_boxed_set_from_void  ( NADataBoxed *boxed, const void *value );
-#endif /* NA_DISABLE_DEPRECATED */
+#endif /* NA_ENABLE_DEPRECATED */
 
 G_END_DECLS
 

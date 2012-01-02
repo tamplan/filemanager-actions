@@ -664,7 +664,7 @@ na_object_object_unref( NAObject *object )
 	}
 }
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 /*
  * build the class hierarchy
  * returns a list of GObjectClass, which starts with NAObject,
@@ -732,7 +732,7 @@ na_object_free_hierarchy( GList *hierarchy )
 {
 	g_list_free( hierarchy );
 }
-#endif /* NA_DISABLE_DEPRECATED */
+#endif /* NA_ENABLE_DEPRECATED */
 
 /**
  * na_object_object_debug_invalid:

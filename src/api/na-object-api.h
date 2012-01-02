@@ -213,7 +213,7 @@ G_BEGIN_DECLS
 #define na_object_set_selection_count( obj, cond )      na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_SELECTION_COUNT, ( const void * )( cond ))
 #define na_object_set_capabilities( obj, cap )          na_ifactory_object_set_from_void( NA_IFACTORY_OBJECT( obj ), NAFO_DATA_CAPABILITITES, ( const void * )( cap ))
 
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 #define na_object_set_modified( obj, modified )         na_iduplicable_set_modified( NA_IDUPLICABLE( obj ), ( modified ))
 #endif
 

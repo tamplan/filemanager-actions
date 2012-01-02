@@ -45,7 +45,7 @@ AC_DEFUN([NA_IS_MAINTAINER_MODE],[
 	AM_CONDITIONAL([NA_MAINTAINER_MODE], [test "${USE_MAINTAINER_MODE}" = "yes"])
 ])
 
-AC_DEFUN([NA_ENABLE_DEPRECATED],[
+AC_DEFUN([NA_CHECK_FOR_DEPRECATED],[
 	AC_ARG_ENABLE(
 		[deprecated],
 		AC_HELP_STRING(
@@ -59,9 +59,8 @@ AC_DEFUN([NA_ENABLE_DEPRECATED],[
 	AC_MSG_CHECKING([whether deprecated symbols should be enabled])
 	AC_MSG_RESULT([${enable_deprecated}])
 
-	if test "${enable_deprecated}" = "no"; then
-		AC_DEFINE([NA_DISABLE_DEPRECATED],[1],[Define to 1 if deprecated functions should be disabled])
-		AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} ${NA_DISABLE_DEPRECATED}"])
+	if test "${enable_deprecated}" = "yes"; then
+		AC_DEFINE([NA_ENABLE_DEPRECATED],[1],[Define to 1 if deprecated functions should be enabled])
 	fi
 
 	AM_CONDITIONAL([ENABLE_DEPRECATED], [test "${enable_deprecated}" = "yes"])

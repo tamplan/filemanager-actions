@@ -45,7 +45,7 @@ gboolean nagp_iio_provider_is_able_to_write   ( const NAIIOProvider *provider );
 
 /* Writing into GConf is deprecated since 3.1.0
  */
-#ifndef NA_DISABLE_DEPRECATED
+#ifdef NA_ENABLE_DEPRECATED
 guint    nagp_iio_provider_write_item         ( const NAIIOProvider *provider,
 													const NAObjectItem *item, GSList **message );
 
@@ -65,7 +65,7 @@ guint    nagp_writer_write_data ( const NAIFactoryProvider *provider, void *writ
 guint    nagp_writer_write_done ( const NAIFactoryProvider *writer, void *writer_data,
 									const NAIFactoryObject *object,
 									GSList **messages  );
-#endif /* NA_DISABLE_DEPRECATED */
+#endif /* NA_ENABLE_DEPRECATED */
 
 G_END_DECLS
 
