@@ -1,5 +1,7 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-exporter.c (exporter_get_formats): Fix variable declaration.
+
 	* src/api/na-core-utils.h:
 	* src/core/na-core-utils.c (na_core_utils_str_add_prefix):
 	Fix function deprecation.

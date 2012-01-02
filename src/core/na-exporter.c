@@ -272,11 +272,12 @@ exporter_get_formats( const NAIExporter *exporter )
 	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
 		if( version == 1 ){
 #ifndef NA_DISABLE_DEPRECATED
-			( const NAIExporterFormat * ) strv1 = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
+			const NAIExporterFormat * strv1;
+			strv1 = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
 			while( strv1->format ){
 				NAIExporterFormatExt *strv2 = g_new0( NAIExporterFormatExt, 1 );
 				strv2->version = 1;
-				strv2->provider = exporter;
+				strv2->provider = ( NAIExporter * ) exporter;
 				strv2->format = strv1->format;
 				strv2->label = strv1->label;
 				strv2->description = strv1->description;
