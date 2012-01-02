@@ -1,5 +1,9 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/na-gconf2key.sh.in:
+	Introduces new '--admin' option for packagers and system administrators.
+	Default for GConf to be only readable.
+
 	* src/api/na-iimporter.h:
 	* src/core/na-iimporter.c: Introduces version 2 of interface,
 	deprecating NAIImporterCheckFn and NAIImporterAskUserFn definitions.

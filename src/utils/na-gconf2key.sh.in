@@ -98,8 +98,9 @@ function msg_help
  Users items and preferences are automatically migrated when Nautilus-Actions
  menu plugin is loaded by Nautilus file-manager, or when one of the utilities
  is run by the user.
- A system administrator should nonetheless run himself this script in order
- to migrate mandatory items and preferences he may have previsouly set.
+ A system administrator should nonetheless run himself this script with '--admin'
+ option in order to migrate mandatory items and preferences he or a predecessor
+ may have previously set.
 
  Usage: ${my_cmd} [options]
    --[no]help                print this message, and exit [${opt_help_def}]
@@ -108,7 +109,8 @@ function msg_help
    --[no]verbose             runs verbosely [${opt_verbose_def}]
    --dir=/dirname            directory where the migrated objects must be stored [${opt_dir_def}]
    --[no]force               force the rewriting of an already existing item [${opt_force_def}]
-   --[no]delete              delete the item after the migration [${opt_delete_def}]"
+   --[no]delete              delete the item after the migration [${opt_delete_def}]
+   --[no]admin               only execute administration tasks [${opt_admin_def}]"
 }
 
 function msg_version
@@ -187,6 +189,7 @@ done
 set -- ${my_parms}
 
 # setting defaults
+# at this time, we consider that root only want run admin tasks
 if [ $(id -u) -eq 0 ]; then
 	opt_dir_def="/usr"
 	conf_dir="@sysconfdir@/xdg"
@@ -210,12 +213,18 @@ opt_force_def="no"
 opt_delete=
 opt_delete_def="no"
 
+# default is to run for standard user
+opt_admin=
+opt_admin_def="no"
+
 # path of the branch which contains the configurations
 na_package="/apps/@PACKAGE@"
 na_configurations="${na_package}/configurations"
 na_preferences="${na_package}/preferences"
 na_mandatory="${na_package}/mandatory"
 na_providers="${na_package}/io-providers"
+
+# read an item from GConf, printing as .desktop on stdout
 na_print_program="@bindir@/nautilus-actions-print"
 
 # loop over command line arguments
@@ -260,6 +269,10 @@ do
 
 	# now process options and their argument
 	case ${option} in
+		--a | --ad | --adm | --admi | --admin)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_admin to 'yes'"
+			opt_admin="yes"
+			;;
 		--de | --del | --dele | --delet | --delete)
 			[ "${opt_verbose}" = "yes" ] && msg "setting opt_delete to 'yes'"
 			opt_delete="yes"
@@ -279,6 +292,10 @@ do
 		--h | --he | --hel | --help)
 			[ "${opt_verbose}" = "yes" ] && msg "setting opt_help to 'yes'"
 			opt_help="yes"
+			;;
+		--noa | --noad | --noadm | --noadmi | --noadmin)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_admin to 'no'"
+			opt_admin="no"
 			;;
 		--node | --nodel | --nodele | --nodelet | --nodelete)
 			[ "${opt_verbose}" = "yes" ] && msg "setting opt_delete to 'no'"
@@ -345,6 +362,7 @@ opt_version=${opt_version:-${opt_version_def}}
 opt_dir=${opt_dir:-${opt_dir_def}}
 opt_delete=${opt_delete:-${opt_delete_def}}
 opt_force=${opt_force:-${opt_force_def}}
+opt_admin=${opt_admin:-${opt_admin_def}}
 
 if [ "${opt_help}" = "yes" -o ${nbopt} -eq 0 ]; then
 	msg_help
@@ -356,6 +374,13 @@ if [ "${opt_version}" = "yes" ]; then
 	msg_version
 	echo ""
 	exit
+fi
+
+# only root may run with '--admin' option
+# but root may also run with standard option for his own needs
+if [ "${opt_admin}" = "yes" -a $(id -u) -ne 0 ]; then
+	msgerr "only root may run with '--admin' option"
+	let errs+=1
 fi
 
 if [ ${errs} -gt 0 ]; then
@@ -413,27 +438,45 @@ which gconftool-2 1>/dev/null 2>&1 || { msg "gconftool-2: not available"; exit 1
 command "mkdir -m ${dir_mode} -p ${opt_dir} || exit 1"
 
 let nbitems=0
+let new=0
+let ignored=0
+let duplicates=0
 
 # list objects in configurations/ subdir
 # each object, action or menu, is then exported in .a .desktop format
 # to be written to its .desktop file
-for dir in $(gconftool-2 --all-dirs ${na_configurations}); do
-	id=${dir##*/}
-	let nbitems+=1
-	[ "${opt_verbose}" = "yes" ] && msg "item=${id}"
-	if [ -e ${opt_dir}/${id}.desktop -a "${opt_force}" = "no" ]; then
-		msgwarn "${opt_dir}/${id}.desktop already exists"
-		i=0
-		while [ -e ${opt_dir}/${id}-${i}.desktop ]; do
-			let i+=1
-		done
-		command "${na_print_program} --id ${id} | grep -v 'nautilus-actions-print' > ${opt_dir}/${id}-${i}.desktop"
-	else
-		command "${na_print_program} --id ${id} | grep -v 'nautilus-actions-print' > ${opt_dir}/${id}.desktop"
-	fi
-done
-
-msg "${nbitems} migrated items"
+if [ "${opt_admin}" = "no" ]; then
+	for dir in $(gconftool-2 --all-dirs ${na_configurations}); do
+		id=${dir##*/}
+		let nbitems+=1
+		[ "${opt_verbose}" = "yes" ] && msg "item=${id}"
+		if [ ! -e ${opt_dir}/${id}.desktop -o "${opt_force}" = "yes" ]; then
+			command "${na_print_program} --id ${id} | grep -v 'nautilus-actions-print' > ${opt_dir}/${id}.desktop"
+			let new+=1
+		else
+			# the item has most probably already been migrated
+			# if there is no sensible modification, just ignore it
+			# else create a copy with a new id
+			msgwarn "${opt_dir}/${id}.desktop already exists"
+			tmpfile=$(mktemp)
+			command "${na_print_program} --id ${id} | grep -v 'nautilus-actions-print' > ${tmpfile}"
+			diff -qB ${tmpfile} ${opt_dir}/${id}.desktop 1>/dev/null 2>&1
+			if [ $? -eq 0 ]; then
+				msg "${opt_dir}/${id}.desktop has no modification, just ignoring it"
+				let ignored+=1
+				command "rm -f ${tmpfile}"
+			else
+				i=0
+				while [ -e ${opt_dir}/${id}-${i}.desktop ]; do
+					let i+=1
+				done
+				command "mv ${tmpfile} ${opt_dir}/${id}-${i}.desktop"
+				let duplicates+=1
+			fi
+		fi
+	done
+	msg "${nbitems} items read from GConf: new=${new}, ignored=${ignored}, duplicates=${duplicates}"
+fi
 
 # we are using this same script to migrate preferences to .conf files
 # mandatory preferences go to SYSCONFDIR/xdg/nautilus-actions/nautilus-actions.conf
@@ -447,225 +490,238 @@ rm -f ${my_tmproot}.nact
 rm -f ${my_tmproot}.runtime
 rm -f ${my_tmproot}.io-provider_*
 
-gconftool-2 --all-entries ${na_preferences} | while read key x value; do
-	case ${key} in
-		add-capability-dialog)
-			add_pref "nact" "capability-add-capability-wsp" list "${value}"
-			;;
-		add-scheme-dialog)
-			add_pref "nact" "scheme-add-scheme-wsp" list "${value}"
-			;;
-		assistant-esc-confirm)
-			add_pref "nact" "${key}" str "${value}"
-			;;
-		assistant-esc-quit)
-			add_pref "nact" "${key}" str "${value}"
-			;;
-		auto-save-on)
-			add_pref "nact" "main-save-auto" str "${value}"
-			;;
-		auto-save-period)
-			add_pref "nact" "main-save-period" str "${value}"
-			;;
-		export-assistant)
-			add_pref "nact" "export-assistant-wsp" list "${value}"
-			;;
-		export-ask-user)
-			add_pref "nact" "export-ask-user-wsp" list "${value}"
-			;;
-		export-ask-user-last-format)
-			add_pref "nact" "${key}" str "${value}"
-			;;
-		export-folder-uri)
-			add_pref "nact" "export-assistant-lfu" str "${value}"
-			;;
-		export-format)
-			add_pref "nact" "export-preferred-format" str "${value}"
-			;;
-		icommand-command-chooser)
-			add_pref "nact" "command-command-chooser-wsp" list "${value}"
-			;;
-		icommand-folder-uri)
-			add_pref "nact" "command-command-chooser-lfu" list "${value}"
-			;;
-		icommand-legend-dialog)
-			add_pref "nact" "command-legend-wsp" list "${value}"
-			;;
-		icommand-working-dir-dialog)
-			add_pref "nact" "command-working-dir-chooser-wsp" list "${value}"
-			;;
-		icommand-working-dir-uri)
-			add_pref "nact" "command-working-dir-chooser-lfu" str "${value}"
-			;;
-		icons-chooser)
-			add_pref "nact" "item-icon-chooser-wsp" list "${value}"
-			;;
-		icons-path)
-			add_pref "nact" "item-icon-chooser-last-file-uri" str "${value}"
-			;;
-		ienvironment-show-if-running-dialog)
-			add_pref "nact" "environment-show-if-running-wsp" list "${value}"
-			;;
-		ienvironment-show-if-running-uri)
-			add_pref "nact" "environment-show-if-running-lfu" str "${value}"
-			;;
-		ienvironment-try-exec-dialog)
-			add_pref "nact" "environment-try-exec-wsp" list "${value}"
-			;;
-		ienvironment-try-exec-uri)
-			add_pref "nact" "environment-try-exec-lfu" str "${value}"
-			;;
-		ifolders-chooser)
-			add_pref "nact" "folder-chooser-wsp" list "${value}"
-			;;
-		ifolders-path)
-			add_pref "nact" "folder-chooser-lfu" str "file://${value}"
-			;;
-		import-ask-user)
-			add_pref "nact" "import-ask-user-wsp" list "${value}"
-			;;
-		import-ask-user-last-mode)
-			add_pref "nact" "${key}" str "${value}"
-			;;
-		import-assistant)
-			add_pref "nact" "import-assistant-wsp" list "${value}"
-			;;
-		import-folder-uri)
-			add_pref "nact" "import-assistant-lfu" str "${value}"
-			;;
-		import-keep-choice)
-			add_pref "nact" "import-ask-user-keep-last-choice" list "${value}"
-			;;
-		import-mode)
-			add_pref "nact" "import-preferred-mode" str "${value}"
-			;;
-		io-providers-order)
-			add_pref "nact" "io-providers-write-order" list "${value}"
-			;;
-		iprefs-add-about-item)
-			add_pref "runtime" "items-add-about-item" str "${value}"
-			;;
-		iprefs-alphabetical-order)
-			add_pref "runtime" "items-list-order-mode" str "${value}"
-			;;
-		iprefs-create-root-menu)
-			add_pref "runtime" "items-create-root-menu" str "${value}"
-			;;
-		iprefs-level-zero)
-			# for now, keep the level zero order as a runtime preference
-			# in nautilus-actions.conf
-			#create_first_level "${value}"
-			add_pref "runtime" "items-level-zero-order" list "${value}"
-			;;
-		iprefs-relabel-actions)
-			add_pref "nact" "relabel-when-duplicate-action" str "${value}"
-			;;
-		iprefs-relabel-menus)
-			add_pref "nact" "relabel-when-duplicate-menu" str "${value}"
-			;;
-		iprefs-relabel-profiles)
-			add_pref "nact" "relabel-when-duplicate-profile" str "${value}"
-			;;
-		main-edit-toolbar)
-			add_pref "nact" "main-toolbar-edit-display" str "${value}"
-			;;
-		main-file-toolbar)
-			add_pref "nact" "main-toolbar-file-display" str "${value}"
-			;;
-		main-help-toolbar)
-			add_pref "nact" "main-toolbar-help-display" str "${value}"
-			;;
-		main-tools-toolbar)
-			add_pref "nact" "main-toolbar-tools-display" str "${value}"
-			;;
-		main-paned)
-			add_pref "nact" "main-paned-width" str "${value}"
-			;;
-		main-window)
-			add_pref "nact" "main-window-wsp" list "${value}"
-			;;
-		preferences-editor)
-			add_pref "nact" "preferences-wsp" list "${value}"
-			;;
-		schemes)
-			add_pref "nact" "scheme-default-list" list "${value}"
-			;;
-	esac
-done
+if [ "${opt_admin}" = "no" ]; then
+	gconftool-2 --all-entries ${na_preferences} | while read key x value; do
+		case ${key} in
+			add-capability-dialog)
+				add_pref "nact" "capability-add-capability-wsp" list "${value}"
+				;;
+			add-scheme-dialog)
+				add_pref "nact" "scheme-add-scheme-wsp" list "${value}"
+				;;
+			assistant-esc-confirm)
+				add_pref "nact" "${key}" str "${value}"
+				;;
+			assistant-esc-quit)
+				add_pref "nact" "${key}" str "${value}"
+				;;
+			auto-save-on)
+				add_pref "nact" "main-save-auto" str "${value}"
+				;;
+			auto-save-period)
+				add_pref "nact" "main-save-period" str "${value}"
+				;;
+			export-assistant)
+				add_pref "nact" "export-assistant-wsp" list "${value}"
+				;;
+			export-ask-user)
+				add_pref "nact" "export-ask-user-wsp" list "${value}"
+				;;
+			export-ask-user-last-format)
+				add_pref "nact" "${key}" str "${value}"
+				;;
+			export-folder-uri)
+				add_pref "nact" "export-assistant-lfu" str "${value}"
+				;;
+			export-format)
+				add_pref "nact" "export-preferred-format" str "${value}"
+				;;
+			icommand-command-chooser)
+				add_pref "nact" "command-command-chooser-wsp" list "${value}"
+				;;
+			icommand-folder-uri)
+				add_pref "nact" "command-command-chooser-lfu" list "${value}"
+				;;
+			icommand-legend-dialog)
+				add_pref "nact" "command-legend-wsp" list "${value}"
+				;;
+			icommand-working-dir-dialog)
+				add_pref "nact" "command-working-dir-chooser-wsp" list "${value}"
+				;;
+			icommand-working-dir-uri)
+				add_pref "nact" "command-working-dir-chooser-lfu" str "${value}"
+				;;
+			icons-chooser)
+				add_pref "nact" "item-icon-chooser-wsp" list "${value}"
+				;;
+			icons-path)
+				add_pref "nact" "item-icon-chooser-last-file-uri" str "${value}"
+				;;
+			ienvironment-show-if-running-dialog)
+				add_pref "nact" "environment-show-if-running-wsp" list "${value}"
+				;;
+			ienvironment-show-if-running-uri)
+				add_pref "nact" "environment-show-if-running-lfu" str "${value}"
+				;;
+			ienvironment-try-exec-dialog)
+				add_pref "nact" "environment-try-exec-wsp" list "${value}"
+				;;
+			ienvironment-try-exec-uri)
+				add_pref "nact" "environment-try-exec-lfu" str "${value}"
+				;;
+			ifolders-chooser)
+				add_pref "nact" "folder-chooser-wsp" list "${value}"
+				;;
+			ifolders-path)
+				add_pref "nact" "folder-chooser-lfu" str "file://${value}"
+				;;
+			import-ask-user)
+				add_pref "nact" "import-ask-user-wsp" list "${value}"
+				;;
+			import-ask-user-last-mode)
+				add_pref "nact" "${key}" str "${value}"
+				;;
+			import-assistant)
+				add_pref "nact" "import-assistant-wsp" list "${value}"
+				;;
+			import-folder-uri)
+				add_pref "nact" "import-assistant-lfu" str "${value}"
+				;;
+			import-keep-choice)
+				add_pref "nact" "import-ask-user-keep-last-choice" list "${value}"
+				;;
+			import-mode)
+				add_pref "nact" "import-preferred-mode" str "${value}"
+				;;
+			io-providers-order)
+				add_pref "nact" "io-providers-write-order" list "${value}"
+				;;
+			iprefs-add-about-item)
+				add_pref "runtime" "items-add-about-item" str "${value}"
+				;;
+			iprefs-alphabetical-order)
+				add_pref "runtime" "items-list-order-mode" str "${value}"
+				;;
+			iprefs-create-root-menu)
+				add_pref "runtime" "items-create-root-menu" str "${value}"
+				;;
+			iprefs-level-zero)
+				# for now, keep the level zero order as a runtime preference
+				# in nautilus-actions.conf
+				#create_first_level "${value}"
+				add_pref "runtime" "items-level-zero-order" list "${value}"
+				;;
+			iprefs-relabel-actions)
+				add_pref "nact" "relabel-when-duplicate-action" str "${value}"
+				;;
+			iprefs-relabel-menus)
+				add_pref "nact" "relabel-when-duplicate-menu" str "${value}"
+				;;
+			iprefs-relabel-profiles)
+				add_pref "nact" "relabel-when-duplicate-profile" str "${value}"
+				;;
+			main-edit-toolbar)
+				add_pref "nact" "main-toolbar-edit-display" str "${value}"
+				;;
+			main-file-toolbar)
+				add_pref "nact" "main-toolbar-file-display" str "${value}"
+				;;
+			main-help-toolbar)
+				add_pref "nact" "main-toolbar-help-display" str "${value}"
+				;;
+			main-tools-toolbar)
+				add_pref "nact" "main-toolbar-tools-display" str "${value}"
+				;;
+			main-paned)
+				add_pref "nact" "main-paned-width" str "${value}"
+				;;
+			main-window)
+				add_pref "nact" "main-window-wsp" list "${value}"
+				;;
+			preferences-editor)
+				add_pref "nact" "preferences-wsp" list "${value}"
+				;;
+			schemes)
+				add_pref "nact" "scheme-default-list" list "${value}"
+				;;
+		esac
+	done
+fi
 
 # migrate mandatory keys
 # /apps/nautilus-actions/mandatory/all/locked -> [runtime]
 # /apps/nautilus-actions/mandatory/<provider_id>/locked -> [io-provider <provider_id>]
-if [ $(id -u) -eq 0 ]; then
+if [ "${opt_admin}" = "yes" ]; then
 	for dir in $(gconftool-2 --all-dirs ${na_mandatory}); do
 		bdir=${dir##*/}
 		if [ "${bdir}" != "na-gconf" ]; then
 			value=$(gconftool-2 --get ${dir}/locked 2>/dev/null)
 			if [ "${value}" != "" ]; then
+				# 'all/locked' means 'all preferences are read-only'
 				if [ "${bdir}" = "all" ]; then
 					add_pref "runtime" "preferences-locked" str "${value}"
-					add_pref "runtime" "io-providers-locked" str "${value}"
+				# '<provider_id>/locked' means that the i/o provider is read-only
 				elif [ "${value}" = "true" ]; then
-					add_pref_provider "io-provider ${bdir}" "readable" "false"
 					add_pref_provider "io-provider ${bdir}" "writable" "false"
 				fi
 			fi
 		fi
 	done
-	# as a security - while we are root -, we force the GConf i/o provider to be locked
-	cat <<! >${my_tmproot}.io-provider_na-gconf
-# Starting with 3.1.0, GConf as I/O provider is deprecated
-writable = false
-!
 fi
 
 # migrate io-providers keys
-# fully disabling (not reconducting its keys)
-for dir in $(gconftool-2 --all-dirs ${na_providers}); do
-	bdir=${dir##*/}
-	if [ "${bdir}" != "na-gconf" ]; then
-		gconftool-2 --all-entries ${dir} | while read key x value; do
-			case ${key} in
-				read-at-startup)
-					add_pref_provider "io-provider ${bdir}" "readable" "${value}"
-					;;
-				writable)
-					add_pref_provider "io-provider ${bdir}" "${key}" "${value}"
-					;;
-			esac
-		done
-	fi
-done
+# locking GConf (not reconducting its keys), but setting it as read-only
+if [ "${opt_admin}" = "no" ]; then
+	for dir in $(gconftool-2 --all-dirs ${na_providers}); do
+		bdir=${dir##*/}
+		if [ "${bdir}" != "na-gconf" ]; then
+			gconftool-2 --all-entries ${dir} | while read key x value; do
+				case ${key} in
+					read-at-startup)
+						add_pref_provider "io-provider ${bdir}" "readable" "${value}"
+						;;
+					writable)
+						add_pref_provider "io-provider ${bdir}" "${key}" "${value}"
+						;;
+				esac
+			done
+		fi
+	done
+fi
 
-nbprefs=$(cat ${my_tmproot}.nact ${my_tmproot}.runtime ${my_tmproot}.io-provider_* 2>/dev/null | wc -l)
+# whether we are running admin tasks or not, we force the GConf i/o provider
+# to be locked
+cat <<! >${my_tmproot}.io-provider_na-gconf
+# Starting with 3.1.0, GConf as I/O provider is deprecated
+readable=true
+writable = false
+!
 
-if [ ${nbprefs} -gt 0 ]; then
-	rm -f ${destconf}
-	if [ -s ${my_tmproot}.nact ]; then
-		cat <<! >>${destconf}
+let nbprefs=0
+
+if [ -e ${destconf} ]; then
+	msg "${destconf} already exists: do not replace it"
+else
+	nbprefs=$(cat ${my_tmproot}.nact ${my_tmproot}.runtime ${my_tmproot}.io-provider_* 2>/dev/null | wc -l)
+
+	if [ ${nbprefs} -gt 0 ]; then
+		rm -f ${destconf}
+		if [ -s ${my_tmproot}.nact ]; then
+			cat <<! >>${destconf}
 
 [nact]
 $(sort < ${my_tmproot}.nact 2>/dev/null)
 !
-	fi
-	if [ -s ${my_tmproot}.runtime ]; then
-		cat <<! >>${destconf}
+		fi
+		if [ -s ${my_tmproot}.runtime ]; then
+			cat <<! >>${destconf}
 
 [runtime]
 $(sort < ${my_tmproot}.runtime 2>/dev/null)
 !
-	fi
-	for f in $(ls -1 ${my_tmproot}.io-provider_* 2>/dev/null); do
-		group="$(echo ${f} | sed -e "s,^${my_tmproot}\.,," -e 's/_/ /g')"
-		cat <<! >>${destconf}
+		fi
+		for f in $(ls -1 ${my_tmproot}.io-provider_* 2>/dev/null); do
+			group="$(echo ${f} | sed -e "s,^${my_tmproot}\.,," -e 's/_/ /g')"
+			cat <<! >>${destconf}
 
 [${group}]
 $(sort < ${f})
 !
-	done
-fi
+		done
+	fi
 
-msg "${nbprefs} migrated preferences"
+	msg "${nbprefs} migrated preferences"
+fi
 
 #if [ -s ${my_tmproot}.zero ]; then
 #	cat <<! >${opt_dir}/level-zero.directory
@@ -682,7 +738,7 @@ let count=${nbitems}+${nbprefs}
 
 # at the end, we delete all package branch from GConf
 if [ "${opt_delete}" = "yes" -a ${count} -gt 0 ]; then
-	if [ $(id -u) -eq 0 ]; then
+	if [ "${opt_admin}" = "yes" ]; then
 		# rather a bad hack to find where mandatory keys are stored by GConf
 		# na-delete-xmltree directly removes our branch from the XML tree!
 		xml=$(find /etc -name gconf.xml.mandatory)/%gconf-tree.xml
