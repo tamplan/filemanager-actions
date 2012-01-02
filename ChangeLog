@@ -1,5 +1,7 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iexporter.h: Update documentation.
+
 	* src/core/na-importer.c:
 	* src/core/na-importer.h (na_importer_import_from_list):
 	Renamed as na_importer_import_from_uris.

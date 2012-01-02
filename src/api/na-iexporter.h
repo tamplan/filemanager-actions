@@ -47,23 +47,27 @@
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
  *      <colspec colname="current" />
+ *      <colspec colname="deprecated" />
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
  *          <entry>#NAIExporter interface version</entry>
  *          <entry></entry>
+ *          <entry></entry>
  *        </row>
  *      </thead>
  *      <tbody>
  *        <row>
- *          <entry>since 2.30</entry>
+ *          <entry>from 2.30 to 3.1.5</entry>
  *          <entry>1</entry>
  *          <entry></entry>
+ *          <entry>deprecated</entry>
  *        </row>
  *        <row>
  *          <entry>since 3.2</entry>
  *          <entry>2</entry>
  *          <entry>current version</entry>
+ *          <entry></entry>
  *        </row>
  *      </tbody>
  *    </tgroup>
