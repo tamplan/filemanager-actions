@@ -173,7 +173,6 @@ static gchar        *build_root_node_list( void );
 static gchar        *get_value_from_child_node( xmlNode *node, const gchar *child );
 static gchar        *get_value_from_child_child_node( xmlNode *node, const gchar *first, const gchar *second );
 static gboolean      is_profile_path( NAXMLReader *reader, xmlChar *text );
-static guint         manage_import_mode( NAXMLReader *reader );
 static void          reset_node_data( NAXMLReader *reader );
 static xmlNode      *search_for_child_node( xmlNode *node, const gchar *key );
 static int           strxcmp( const xmlChar *a, const char *b );
@@ -314,9 +313,12 @@ reader_new( void )
  *
  * Returns: the import operation code.
  *
- * If we not found at least a well-formed XML document with a known root node,
+ * If we do not found at least a well-formed XML document with a known root node,
  *  then we do not return any error message at all, but just the 'unwilling to'
  *  code.
+ *
+ * Starting with N-A 3.2, we only honor the version 2 of #NAIImporter interface,
+ * thus no more checking here against possible duplicate identifiers.
  */
 guint
 naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFromUriParms *parms )
@@ -329,8 +331,6 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFrom
 
 	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 
-	parms->exist = FALSE;
-	parms->import_mode = IMPORTER_MODE_NO_IMPORT;
 	parms->imported = NULL;
 
 	if( !na_core_utils_file_is_loadable( parms->uri )){
@@ -345,11 +345,6 @@ naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFrom
 
 	if( code == IMPORTER_CODE_NOT_WILLING_TO ){
 		na_core_utils_slist_add_message( &reader->private->parms->messages, ERR_NOT_IOXML );
-	}
-
-	if( code == IMPORTER_CODE_OK ){
-		g_return_val_if_fail( NA_IS_OBJECT_ITEM( parms->imported ), IMPORTER_CODE_PROGRAM_ERROR );
-		code = manage_import_mode( reader );
 	}
 
 	g_object_unref( reader );
@@ -1391,30 +1386,6 @@ is_profile_path( NAXMLReader *reader, xmlChar *text )
 	na_core_utils_slist_free( path_slist );
 
 	return( is_profile );
-}
-
-static guint
-manage_import_mode( NAXMLReader *reader )
-{
-	NAIImporterManageImportModeParms parms;
-	guint code;
-
-	parms.version = 1;
-	parms.imported = reader->private->parms->imported;
-	parms.check_fn = reader->private->parms->check_fn;
-	parms.check_fn_data = reader->private->parms->check_fn_data;
-	parms.ask_fn = reader->private->parms->ask_fn;
-	parms.ask_fn_data = reader->private->parms->ask_fn_data;
-	parms.asked_mode = reader->private->parms->asked_mode;
-	parms.messages = reader->private->parms->messages;
-
-	code = na_iimporter_manage_import_mode( &parms );
-
-	reader->private->parms->exist = parms.exist;
-	reader->private->parms->import_mode = parms.import_mode;
-	reader->private->parms->messages = parms.messages;
-
-	return( code );
 }
 
 /*

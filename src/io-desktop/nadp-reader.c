@@ -355,6 +355,9 @@ free_desktop_paths( GList *paths )
  * GLib does not have any primitive to load a key file from an uri.
  * So we have to load the file into memory, and then try to load the key
  * file from the memory data.
+ *
+ * Starting with N-A 3.2, we only honor the version 2 of #NAIImporter interface,
+ * thus no more checking here against possible duplicate identifiers.
  */
 guint
 nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterImportFromUriParms *parms )
@@ -362,7 +365,6 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterI
 	static const gchar *thisfn = "nadp_reader_iimporter_import_from_uri";
 	guint code;
 	NadpDesktopFile *ndf;
-	NAIImporterManageImportModeParms manage_parms;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
@@ -378,8 +380,6 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterI
 
 	ndf = nadp_desktop_file_new_from_uri( parms->uri );
 	if( ndf ){
-		parms->exist = FALSE;
-		parms->import_mode = IMPORTER_MODE_NO_IMPORT;
 		parms->imported = ( NAObjectItem * ) item_from_desktop_file(
 				( const NadpDesktopProvider * ) NADP_DESKTOP_PROVIDER( instance ),
 				ndf, &parms->messages );
@@ -394,28 +394,7 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterI
 			g_object_weak_unref( G_OBJECT( parms->imported ), ( GWeakNotify ) desktop_weak_notify, ndf );
 			g_object_unref( ndf );
 
-			manage_parms.version = 1;
-			manage_parms.imported = parms->imported;
-			manage_parms.check_fn = parms->check_fn;
-			manage_parms.check_fn_data = parms->check_fn_data;
-			manage_parms.ask_fn = parms->ask_fn;
-			manage_parms.ask_fn_data = parms->ask_fn_data;
-			manage_parms.asked_mode = parms->asked_mode;
-			manage_parms.messages = parms->messages;
-
-			code = na_iimporter_manage_import_mode( &manage_parms );
-
-			parms->exist = manage_parms.exist;
-			parms->import_mode = manage_parms.import_mode;
-			parms->messages = manage_parms.messages;
-		}
-
-		if( code != IMPORTER_CODE_OK ){
-			if( parms->imported ){
-				g_debug( "%s: unreffing imported item %p as na_iimporter_manage_import_mode didn't return IMPORTER_CODE_OK", thisfn, parms->imported );
-				g_object_unref( parms->imported );
-				parms->imported = NULL;
-			}
+			code = IMPORTER_CODE_OK;
 		}
 	}
 

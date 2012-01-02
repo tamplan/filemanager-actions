@@ -65,6 +65,7 @@ int
 main( int argc, char **argv )
 {
 	NAImporterParms parms;
+	GList *import_results;
 	NAImporterResult *result;
 
 	g_type_init();
@@ -76,17 +77,15 @@ main( int argc, char **argv )
 	na_pivot_set_loadable( pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
 	na_pivot_load_items( pivot );
 
-	parms.parent = NULL;
 	parms.uris = g_slist_prepend( NULL, uri );
-	parms.mode = IMPORTER_MODE_ASK;
 	parms.check_fn = NULL;
 	parms.check_fn_data = NULL;
+	parms.preferred_mode = IMPORTER_MODE_ASK;
+	parms.parent_toplevel = NULL;
 
-	guint count = na_importer_import_from_uris( pivot, &parms );
+	import_results = na_importer_import_from_uris( pivot, &parms );
 
-	g_print( "%s: na_importer_import_from_uris() returns count=%u.\n", g_get_prgname(), count );
-
-	result = parms.results->data;
+	result = import_results->data;
 	if( result->imported ){
 		na_object_dump( result->imported );
 		g_object_unref( result->imported );

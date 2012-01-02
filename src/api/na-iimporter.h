@@ -39,6 +39,16 @@
  *
  * The #NAIImporter interface imports items from the outside world.
  *
+ * &prodname; version 3.2 introduces the version 2 of this interface,
+ * which greatly simplify it. The I/O provider which implements the
+ * #NAIIMporter interface is no more required to check for existence
+ * of the imported items, but this check is pushed back to the caller
+ * responsability.
+ *
+ * Rationale is that only the caller is able to check against a valid
+ * repository in its current import context, while the #NAIImporter
+ * provider should only be responsible to import an item in memory.
+ *
  * Internal Nautilus-Actions code should never directly call a
  * #NAIImporter interface method, but rather should call the
  * corresponding na_importer_xxx() function.
@@ -51,18 +61,27 @@
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
  *      <colspec colname="current" />
+ *      <colspec colname="deprecated" />
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
  *          <entry>#NAIImporter interface version</entry>
  *          <entry></entry>
+ *          <entry></entry>
  *        </row>
  *      </thead>
  *      <tbody>
  *        <row>
- *          <entry>since 2.30</entry>
+ *          <entry>from 2.30 up to 3.1.5</entry>
  *          <entry>1</entry>
+ *          <entry></entry>
+ *          <entry>deprecated</entry>
+ *        </row>
+ *        <row>
+ *          <entry>since 3.2</entry>
+ *          <entry>2</entry>
  *          <entry>current version</entry>
+ *          <entry></entry>
  *        </row>
  *      </tbody>
  *    </tgroup>
@@ -82,7 +101,10 @@ G_BEGIN_DECLS
 typedef struct _NAIImporter                      NAIImporter;
 typedef struct _NAIImporterInterfacePrivate      NAIImporterInterfacePrivate;
 typedef struct _NAIImporterImportFromUriParms    NAIImporterImportFromUriParms;
+
+#ifdef NA_ENABLE_DEPRECATED
 typedef struct _NAIImporterManageImportModeParms NAIImporterManageImportModeParms;
+#endif
 
 /**
  * NAIImporterInterface:
@@ -133,13 +155,10 @@ typedef struct {
 
 /**
  * NAIImporterImportMode:
- * @IMPORTER_MODE_NO_IMPORT: a "do not import anything" mode.
- * @IMPORTER_MODE_RENUMBER:  reallocate a new id when the imported one
- *                           already exists.
- * @IMPORTER_MODE_OVERRIDE:  override the existing id with the imported
- *                           one.
- * @IMPORTER_MODE_ASK:       ask the user for what to do with this particular
- *                           item.
+ * @IMPORTER_MODE_NO_IMPORT: a "do not import" mode.
+ * @IMPORTER_MODE_RENUMBER:  reallocate a new id when the imported one already exists.
+ * @IMPORTER_MODE_OVERRIDE:  override the existing id with the imported one.
+ * @IMPORTER_MODE_ASK:       ask the user for what to do with this particular item.
  *
  * Define the mode of an import operation.
  */
@@ -157,8 +176,7 @@ typedef enum {
  * @IMPORTER_CODE_PROGRAM_ERROR:     a program error has been detected.
  *                                   You should open a bug in
  *                                   <ulink url="https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions">Bugzilla</ulink>.
- * @IMPORTER_CODE_NOT_WILLING_TO:    the plugin is not willing to import
- *                                   anything.
+ * @IMPORTER_CODE_NOT_WILLING_TO:    the plugin is not willing to import the uri.
  * @IMPORTER_CODE_NO_ITEM_ID:        item id not found.
  * @IMPORTER_CODE_NO_ITEM_TYPE:      item type not found.
  * @IMPORTER_CODE_UNKNOWN_ITEM_TYPE: unknown item type.
@@ -182,6 +200,7 @@ typedef enum {
 }
 	NAIImporterImportStatus;
 
+#ifdef NA_ENABLE_DEPRECATED
 /**
  * NAIImporterCheckFn:
  * @imported: the currently imported #NAObjectItem -derived object.
@@ -218,6 +237,7 @@ typedef enum {
  * Returns: the already existing #NAObjectItem with same id, or %NULL.
  *
  * Since: 2.30
+ * Deprecated: 3.2
  */
 typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
 
@@ -239,12 +259,13 @@ typedef NAObjectItem * ( *NAIImporterCheckFn )( const NAObjectItem *, void * );
  * %IMPORTER_MODE_ASK.
  *
  * Since: 2.30
+ * Deprecated: 3.2
  */
 typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectItem *, void * );
 
 /**
- * NAIImporterImportFromUriParms:
- * @version:       the version of this structure, currently equals to 1.
+ * NAIImporterImportFromUriParmsv1:
+ * @version:       the version of this structure.
  *                 input;
  *                 since version 1 of the structure.
  * @uri:           uri of the file to be imported.
@@ -283,8 +304,9 @@ typedef guint ( *NAIImporterAskUserFn )( const NAObjectItem *, const NAObjectIte
  * to be passed and received through a single structure.
  *
  * Since: 2.30
+ * Deprecated: 3.2
  */
-struct _NAIImporterImportFromUriParms {
+struct _NAIImporterImportFromUriParmsv1 {
 	guint                version;
 	gchar               *uri;
 	guint                asked_mode;
@@ -298,6 +320,37 @@ struct _NAIImporterImportFromUriParms {
 	GSList              *messages;
 };
 
+#endif /* NA_ENABLE_DEPRECATED */
+
+/**
+ * NAIImporterImportFromUriParms:
+ * @version:       the version of this structure, currently equals to 2.
+ *                 input;
+ *                 since version 1 of the structure.
+ * @uri:           uri of the file to be imported.
+ *                 input;
+ *                 since version 1 of the structure.
+ * @imported:      the imported #NAObjectItem -derived object, or %NULL.
+ *                 output;
+ *                 since version 1 of the structure.
+ * @messages:      a #GSList list of localized strings;
+ *                 the provider may append messages to this list, but shouldn't reinitialize it
+ *                 input/output;
+ *                 since version 1 of the structure.
+ *
+ * This structure allows all used parameters when importing from an URI
+ * to be passed and received through a single structure.
+ *
+ * Since: 2.30
+ */
+struct _NAIImporterImportFromUriParms {
+	guint                version;
+	const gchar         *uri;
+	NAObjectItem        *imported;
+	GSList              *messages;
+};
+
+#ifdef NA_ENABLE_DEPRECATED
 /**
  * NAIImporterManageImportModeParms:
  * @version:       the version of this structure, currently equals to 1.
@@ -332,6 +385,7 @@ struct _NAIImporterImportFromUriParms {
  * to be passed and received through a single structure.
  *
  * Since: 2.30
+ * Deprecated: 3.2
  */
 struct _NAIImporterManageImportModeParms {
 	guint                version;
@@ -345,12 +399,15 @@ struct _NAIImporterManageImportModeParms {
 	guint                import_mode;
 	GSList              *messages;
 };
+#endif /* NA_ENABLE_DEPRECATED */
 
 GType na_iimporter_get_type( void );
 
 guint na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFromUriParms *parms );
 
+#ifdef NA_ENABLE_DEPRECATED
 guint na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms );
+#endif
 
 G_END_DECLS
 

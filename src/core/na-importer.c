@@ -96,20 +96,15 @@ static NAImportModeStr st_import_ask_mode = {
 			"import-mode-ask.png"
 };
 
-typedef struct {
-	GList             *just_imported;
-	NAIImporterCheckFn check_fn;
-	void              *check_fn_data;
-}
-	ImporterExistsStr;
-
 extern gboolean iimporter_initialized;		/* defined in na-iimporter.c */
 extern gboolean iimporter_finalized;		/* defined in na-iimporter.c */
 
-static guint         import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, const gchar *uri, NAImporterResult **result );
-static NAObjectItem *is_importing_already_exists( const NAObjectItem *importing, ImporterExistsStr *parms );
-static guint         ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms );
-static NAIOption    *get_mode_from_struct( const NAImportModeStr *str );
+static NAImporterResult *import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri );
+static void              manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserParms *ask_parms, NAImporterResult *result );
+static NAObjectItem     *is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterResult *result );
+static void              renumber_label_item( NAObjectItem *item );
+static guint             ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms );
+static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
 
 /* i18n: '%s' stands for the file URI */
 #define ERR_NOT_LOADABLE	_( "%s is not loadable (empty or too big or not a regular file)" )
@@ -130,55 +125,69 @@ static NAIOption    *get_mode_from_struct( const NAImportModeStr *str );
  * Each import operation will have its corresponding newly allocated
  * #NAImporterResult structure which will contain:
  * - the imported URI
+ * - the #NAIImporter provider if one has been found, or %NULL
  * - a #NAObjectItem item if import was successful, or %NULL
  * - a list of error messages, or %NULL.
  *
- * If asked mode is 'ask', then ask the user at least the first time;
- * the 'keep my choice' is active or not, depending of the last time used,
- * then the 'keep my choice' is kept for other times.
- * So preferences are:
- * - asked import mode (may be 'ask') -> import-mode
- * - keep my choice                   -> import-keep-choice
- * - last chosen import mode          -> import-ask-user-last-mode
- *
- * Returns: the count of successfully imported items
+ * Returns: a #GList of #NAImporterResult structures
  * (was the last import operation code up to 3.2).
  *
  * Since: 2.30
  */
-guint
+GList *
 na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 {
 	static const gchar *thisfn = "na_importer_import_from_uris";
+	GList *results, *ires;
 	GList *modules;
-	GSList *iuri;
-	NAImporterResult *result;
-	guint count;
+	GSList *uri;
+	NAImporterResult *import_result;
+	NAImporterAskUserParms ask_parms;
 
-	g_return_val_if_fail( NA_IS_PIVOT( pivot ), 0 );
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
+	g_return_val_if_fail( parms != NULL, NULL );
 
-	count = 0;
-	parms->results = NULL;
+	results = NULL;
 
 	if( iimporter_initialized && !iimporter_finalized ){
 
 		g_debug( "%s: pivot=%p, parms=%p", thisfn, ( void * ) pivot, ( void * ) parms );
 
+		/* first phase: just try to import the uris into memory
+		 */
 		modules = na_pivot_get_providers( pivot, NA_IIMPORTER_TYPE );
 
-		for( iuri = parms->uris ; iuri ; iuri = iuri->next ){
-			import_from_uri( pivot, modules, parms, ( const gchar * ) iuri->data, &result );
-			parms->results = g_list_prepend( parms->results, result );
-			if( result->imported ){
-				count += 1;
-			}
+		for( uri = parms->uris ; uri ; uri = uri->next ){
+			import_result = import_from_uri( pivot, modules, ( const gchar * ) uri->data );
+			results = g_list_prepend( results, import_result );
 		}
 
 		na_pivot_free_providers( modules );
-		parms->results = g_list_reverse( parms->results );
+
+		results = g_list_reverse( results );
+
+		memset( &ask_parms, '\0', sizeof( NAImporterAskUserParms ));
+		ask_parms.parent = parms->parent_toplevel;
+		ask_parms.count = 0;
+		ask_parms.keep_choice = FALSE;
+		ask_parms.pivot = pivot;
+
+		/* second phase: check for their pre-existence
+		 */
+		for( ires = results ; ires ; ires = ires->next ){
+			import_result = ( NAImporterResult * ) ires->data;
+
+			if( import_result->imported ){
+				g_return_val_if_fail( NA_IS_OBJECT_ITEM( import_result->imported ), NULL );
+				g_return_val_if_fail( NA_IS_IIMPORTER( import_result->importer ), NULL );
+
+				ask_parms.uri = import_result->uri;
+				manage_import_mode( parms, results, &ask_parms, import_result );
+			}
+		}
 	}
 
-	return( count );
+	return( results );
 }
 
 /*
@@ -197,48 +206,33 @@ na_importer_free_result( NAImporterResult *result )
 }
 
 /*
- * Each NAIImporter interface may return some messages, specially if it is
- * not able to import the provided URI. But as long we do not have yet asked
- * to all available interfaces, we are not sure of whether this URI is
- * eventually importable or not.
+ * Each NAIImporter interface may return some messages, specially if it
+ * recognized but is not able to import the provided URI. But as long
+ * we do not have yet asked to all available interfaces, we are not sure
+ * of whether this URI is eventually importable or not.
+ *
  * We so let each interface push its messages in the list, but be ready to
  * only keep the messages provided by the interface which has successfully
  * imported the item.
  */
-static guint
-import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, const gchar *uri, NAImporterResult **result )
+static NAImporterResult *
+import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
 {
-	guint code;
-	GList *im;
+	NAImporterResult *result;
 	NAIImporterImportFromUriParms provider_parms;
-	ImporterExistsStr exists_parms;
-	NAImporterAskUserParms ask_parms;
+	GList *im;
+	guint code;
 	GSList *all_messages;
+	NAIImporter *provider;
 
+	result = NULL;
+	all_messages = NULL;
+	provider = NULL;
 	code = IMPORTER_CODE_NOT_WILLING_TO;
 
-	memset( &exists_parms, '\0', sizeof( ImporterExistsStr ));
-	exists_parms.just_imported = parms->results;
-	exists_parms.check_fn = parms->check_fn;
-	exists_parms.check_fn_data = parms->check_fn_data;
-
-	memset( &ask_parms, '\0', sizeof( NAImporterAskUserParms ));
-	ask_parms.parent = parms->parent;
-	ask_parms.uri = ( gchar * ) uri;
-	ask_parms.count = g_list_length( parms->results );
-	ask_parms.keep_choice = na_settings_get_boolean( NA_IPREFS_IMPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, NULL );
-	ask_parms.pivot = pivot;
-
 	memset( &provider_parms, '\0', sizeof( NAIImporterImportFromUriParms ));
-	provider_parms.version = 1;
-	provider_parms.uri = ( gchar * ) uri;
-	provider_parms.asked_mode = parms->mode;
-	provider_parms.check_fn = ( NAIImporterCheckFn ) is_importing_already_exists;
-	provider_parms.check_fn_data = &exists_parms;
-	provider_parms.ask_fn = ( NAIImporterAskUserFn ) ask_user_for_mode;
-	provider_parms.ask_fn_data = &ask_parms;
-
-	all_messages = NULL;
+	provider_parms.version = 2;
+	provider_parms.uri = uri;
 
 	for( im = modules ;
 			im && ( code == IMPORTER_CODE_NOT_WILLING_TO || code == IMPORTER_CODE_NOT_LOADABLE ) ;
@@ -260,44 +254,136 @@ import_from_uri( const NAPivot *pivot, GList *modules, NAImporterParms *parms, c
 		} else {
 			na_core_utils_slist_free( all_messages );
 			all_messages = provider_parms.messages;
+			provider = NA_IIMPORTER( im->data );
 		}
 	}
 
-	*result = g_new0( NAImporterResult, 1 );
-	( *result )->uri = g_strdup( uri );
-	( *result )->mode = provider_parms.import_mode;
-	( *result )->exist = provider_parms.exist;
-	( *result )->imported = provider_parms.imported;
-	( *result )->messages = all_messages;
+	result = g_new0( NAImporterResult, 1 );
+	result->uri = g_strdup( uri );
+	result->imported = provider_parms.imported;
+	result->importer = provider;
+	result->messages = all_messages;
 
-	return( code );
+	return( result );
 }
 
 /*
- * to see if an imported item already exists, we have to check
- * - the current list of just imported items
- * - the main window (if any), which contains the in-memory list of items.
+ * check for existence of the imported item
+ * ask for the user if needed
+ */
+static void
+manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserParms *ask_parms, NAImporterResult *result )
+{
+	static const gchar *thisfn = "na_importer_manage_import_mode";
+	NAObjectItem *exists;
+	guint mode;
+	gchar *id;
+
+	exists = NULL;
+	result->exist = FALSE;
+	result->mode = parms->preferred_mode;
+	mode = 0;
+
+	/* if no check function is provided, then we systematically allocate
+	 * a new identifier to the imported item
+	 */
+	if( !parms->check_fn ){
+		renumber_label_item( result->imported );
+		na_core_utils_slist_add_message(
+				&result->messages,
+				"%s",
+				_( "Item was renumbered because the caller did not provide any check function." ));
+		result->mode = IMPORTER_MODE_RENUMBER;
+
+	} else {
+		exists = is_importing_already_exists( parms, results, result );
+	}
+
+	g_debug( "%s: exists=%p", thisfn, exists );
+
+	if( exists ){
+		result->exist = TRUE;
+
+		if( parms->preferred_mode == IMPORTER_MODE_ASK ){
+			mode = ask_user_for_mode( result->imported, exists, ask_parms );
+
+		} else {
+			mode = parms->preferred_mode;
+		}
+	}
+
+	/* mode is only set if asked mode was "ask me" and an ask function was provided
+	 * or if asked mode was not "ask me"
+	 */
+	if( mode ){
+		result->mode = mode;
+
+		switch( mode ){
+			case IMPORTER_MODE_RENUMBER:
+				renumber_label_item( result->imported );
+				if( parms->preferred_mode == IMPORTER_MODE_ASK ){
+					na_core_utils_slist_add_message(
+							&result->messages,
+							"%s",
+							_( "Item was renumbered due to user request." ));
+				}
+				break;
+
+			case IMPORTER_MODE_OVERRIDE:
+				if( parms->preferred_mode == IMPORTER_MODE_ASK ){
+					na_core_utils_slist_add_message(
+							&result->messages,
+							"%s",
+							_( "Existing item was overriden due to user request." ));
+				}
+				break;
+
+			case IMPORTER_MODE_NO_IMPORT:
+			default:
+				id = na_object_get_id( result->imported );
+				na_core_utils_slist_add_message(
+						&result->messages,
+						_( "Item %s already exists." ),
+						id );
+				if( parms->preferred_mode == IMPORTER_MODE_ASK ){
+					na_core_utils_slist_add_message(
+							&result->messages,
+							"%s",
+							_( "Import was canceled due to user request." ));
+				}
+				g_free( id );
+		}
+	}
+}
+
+/*
+ * First check here for duplicates inside of imported population,
+ * then delegates to the caller-provided check function the rest of work...
  */
 static NAObjectItem *
-is_importing_already_exists( const NAObjectItem *importing, ImporterExistsStr *parms )
+is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterResult *result )
 {
 	static const gchar *thisfn = "na_importer_is_importing_already_exists";
 	NAObjectItem *exists;
 	GList *ip;
 
 	exists = NULL;
-	gchar *importing_id = na_object_get_id( importing );
-	g_debug( "%s: importing=%p, id=%s", thisfn, ( void * ) importing, importing_id );
+
+	gchar *importing_id = na_object_get_id( result->imported );
+	g_debug( "%s: importing=%p, id=%s", thisfn, ( void * ) result->imported, importing_id );
 
 	/* is the importing item already in the current importation list ?
+	 * (only tries previous items of the list)
 	 */
-	for( ip = parms->just_imported ; ip && !exists ; ip = ip->next ){
-		NAImporterResult *result = ( NAImporterResult * ) ip->data;
+	for( ip = results ; ip && !exists && ip->data != result ; ip = ip->next ){
+		NAImporterResult *try_result = ( NAImporterResult * ) ip->data;
 
-		if( result->imported ){
-			gchar *id = na_object_get_id( result->imported );
+		if( try_result->imported ){
+			g_return_val_if_fail( NA_IS_OBJECT_ITEM( try_result->imported ), NULL );
+
+			gchar *id = na_object_get_id( try_result->imported );
 			if( !strcmp( importing_id, id )){
-				exists = NA_OBJECT_ITEM( result->imported );
+				exists = NA_OBJECT_ITEM( try_result->imported );
 			}
 			g_free( id );
 		}
@@ -309,10 +395,31 @@ is_importing_already_exists( const NAObjectItem *importing, ImporterExistsStr *p
 	 * then check the existence via provided function and data
 	 */
 	if( !exists ){
-		exists = parms->check_fn( importing, parms->check_fn_data );
+		exists = parms->check_fn( result->imported, parms->check_fn_data );
 	}
 
 	return( exists );
+}
+
+/*
+ * renumber the item, and set a new label
+ */
+static void
+renumber_label_item( NAObjectItem *item )
+{
+	gchar *label, *tmp;
+
+	na_object_set_new_id( item, NULL );
+
+	label = na_object_get_label( item );
+
+	/* i18n: the action has been renumbered during import operation */
+	tmp = g_strdup_printf( "%s %s", label, _( "(renumbered)" ));
+
+	na_object_set_label( item, tmp );
+
+	g_free( tmp );
+	g_free( label );
 }
 
 static guint

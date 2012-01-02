@@ -1,5 +1,22 @@
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iimporter.h:
+	* src/core/na-iimporter.c: Introduces version 2 of interface,
+	deprecating NAIImporterCheckFn and NAIImporterAskUserFn definitions.
+
+	* src/core/na-importer.c:
+	* src/core/na-importer.h (na_importer_import_from_uris):
+	Updated to new NAIImporter v2 interface, moving check and ask code here.
+
+	* src/io-desktop/nadp-desktop-provider.c (iimporter_get_version):
+	* src/io-desktop/nadp-reader.c (nadp_reader_iimporter_import_from_uri):
+	* src/io-xml/naxml-provider.c (iimporter_get_version):
+	* src/io-xml/naxml-reader.c (naxml_reader_import_from_uri):
+	* src/nact/nact-assistant-import.c (assistant_apply):
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list):
+	* src/test/test-reader.c (main):
+	Updated to new NAIImporter v2 interface.
+
 	* src/api/na-iexporter.h: Update documentation.
 
 	* src/core/na-importer.c:

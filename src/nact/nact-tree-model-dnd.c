@@ -826,10 +826,10 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	NAUpdater *updater;
 	NactMainWindow *main_window;
 	NAImporterParms parms;
-	GList *it;
+	GList *import_results, *it;
 	guint count;
 	GSList *im;
-	GList *imported;
+	GList *imported, *overriden;
 	const gchar *selection_data_data;
 	NactTreeView *view;
 	GSList *messages;
@@ -857,32 +857,36 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	selection_data_data = ( const gchar * ) gtk_selection_data_get_data( selection_data );
 	g_debug( "%s", selection_data_data );
 
-	parms.parent = base_window_get_gtk_toplevel( BASE_WINDOW( main_window ));
+	memset( &parms, '\0', sizeof( NAImporterParms ));
 	parms.uris = g_slist_reverse( na_core_utils_slist_from_split( selection_data_data, "\r\n" ));
-
-	parms.mode = na_iprefs_get_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL );
-
-	parms.check_fn = ( NAIImporterCheckFn ) is_dropped_already_exists;
+	parms.check_fn = ( NAImporterCheckFn ) is_dropped_already_exists;
 	parms.check_fn_data = main_window;
-	parms.results = NULL;
+	parms.preferred_mode = na_iprefs_get_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL );
+	parms.parent_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( main_window ));
 
-	na_importer_import_from_uris( NA_PIVOT( updater ), &parms );
+	import_results = na_importer_import_from_uris( NA_PIVOT( updater ), &parms );
 
 	/* analysing output results, simultaneously building a concatenation
 	 * of all lines of messages, and the list of imported items
 	 */
 	imported = NULL;
+	overriden = NULL;
 	messages = NULL;
 
-	for( it = parms.results ; it ; it = it->next ){
+	for( it = import_results ; it ; it = it->next ){
 		NAImporterResult *result = ( NAImporterResult * ) it->data;
 
 		for( im = result->messages ; im ; im = im->next ){
 			messages = g_slist_prepend( messages, im->data );
 		}
 		if( result->imported ){
-			imported = g_list_prepend( imported, result->imported );
-			na_updater_check_item_writability_status( updater, result->imported );
+			if( !result->exist || result->mode == IMPORTER_MODE_RENUMBER ){
+				imported = g_list_prepend( imported, result->imported );
+				na_updater_check_item_writability_status( updater, result->imported );
+
+			} else if( result->mode == IMPORTER_MODE_OVERRIDE ){
+				overriden = g_list_prepend( overriden, result->imported );
+			}
 		}
 	}
 
@@ -899,7 +903,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		dlg_message = na_core_utils_slist_join_at_end( messages, "\n" );
 		g_debug( "%s: dlg_message='%s'", thisfn, dlg_message );
 		dialog = gtk_message_dialog_new(
-				parms.parent,
+				parms.parent_toplevel,
 				GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_CLOSE,
 				"%s", _( "Some messages have occurred during drop operation." ));
 		gtk_message_dialog_format_secondary_markup( GTK_MESSAGE_DIALOG( dialog ), "%s", dlg_message );
@@ -919,12 +923,13 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 
 	drop_done = TRUE;
 	na_object_free_items( imported );
+	na_object_free_items( overriden );
 	na_core_utils_slist_free( parms.uris );
 
-	for( it = parms.results ; it ; it = it->next ){
+	for( it = import_results ; it ; it = it->next ){
 		na_importer_free_result( it->data );
 	}
-	g_list_free( parms.results );
+	g_list_free( import_results );
 
 	return( drop_done );
 }

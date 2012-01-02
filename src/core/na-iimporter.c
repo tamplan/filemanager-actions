@@ -47,13 +47,14 @@ struct _NAIImporterInterfacePrivate {
 gboolean iimporter_initialized = FALSE;
 gboolean iimporter_finalized   = FALSE;
 
-static GType  register_type( void );
-static void   interface_base_init( NAIImporterInterface *klass );
-static void   interface_base_finalize( NAIImporterInterface *klass );
+static GType register_type( void );
+static void  interface_base_init( NAIImporterInterface *klass );
+static void  interface_base_finalize( NAIImporterInterface *klass );
+static guint iimporter_get_version( const NAIImporter *instance );
 
-static guint  iimporter_get_version( const NAIImporter *instance );
-
-static void   renumber_label_item( NAIImporterManageImportModeParms *parms );
+#ifdef NA_ENABLE_DEPRECATED
+static void  renumber_label_item( NAIImporterManageImportModeParms *parms );
+#endif
 
 /**
  * na_iimporter_get_type:
@@ -179,6 +180,7 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
 	return( code );
 }
 
+#ifdef NA_ENABLE_DEPRECATED
 /**
  * na_iimporter_manage_import_mode:
  * @parms: a NAIImporterManageImportModeParms struct.
@@ -312,3 +314,4 @@ renumber_label_item( NAIImporterManageImportModeParms *parms )
 	g_free( tmp );
 	g_free( label );
 }
+#endif /* NA_ENABLE_DEPRECATED */

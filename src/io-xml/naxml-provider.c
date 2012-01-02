@@ -217,7 +217,7 @@ iimporter_iface_init( NAIImporterInterface *iface )
 static guint
 iimporter_get_version( const NAIImporter *importer )
 {
-	return( 1 );
+	return( 2 );
 }
 
 static void

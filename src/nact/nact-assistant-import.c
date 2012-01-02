@@ -653,8 +653,8 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	NactAssistantImport *window;
 	NAImporterParms importer_parms;
 	BaseWindow *main_window;
-	GList *it;
-	GList *imported_items;
+	GList *import_results, *it;
+	GList *insertable_items, *overriden_items;
 	NAImporterResult *result;
 	NactApplication *application;
 	NAUpdater *updater;
@@ -665,29 +665,38 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	window = NACT_ASSISTANT_IMPORT( wnd );
 
-	imported_items = NULL;
-	memset( &importer_parms, '\0', sizeof( NAImporterParms ));
-
-	g_object_get( G_OBJECT( wnd ), BASE_PROP_PARENT, &main_window, NULL );
-	importer_parms.parent = base_window_get_gtk_toplevel( BASE_WINDOW( wnd ));
-	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));
-	importer_parms.mode = na_import_mode_get_id( NA_IMPORT_MODE( window->private->mode ));
-	importer_parms.check_fn = ( NAIImporterCheckFn ) check_for_existence;
-	importer_parms.check_fn_data = main_window;
 	application = NACT_APPLICATION( base_window_get_application( main_window ));
 	updater = nact_application_get_updater( application );
 
-	na_importer_import_from_uris( NA_PIVOT( updater ), &importer_parms );
+	g_object_get( G_OBJECT( wnd ), BASE_PROP_PARENT, &main_window, NULL );
 
-	for( it = importer_parms.results ; it ; it = it->next ){
+	memset( &importer_parms, '\0', sizeof( NAImporterParms ));
+	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));
+	importer_parms.check_fn = ( NAImporterCheckFn ) check_for_existence;
+	importer_parms.check_fn_data = main_window;
+	importer_parms.preferred_mode = na_import_mode_get_id( NA_IMPORT_MODE( window->private->mode ));
+	importer_parms.parent_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( wnd ));
+
+	import_results = na_importer_import_from_uris( NA_PIVOT( updater ), &importer_parms );
+
+	insertable_items = NULL;
+	overriden_items = NULL;
+
+	for( it = import_results ; it ; it = it->next ){
 		result = ( NAImporterResult * ) it->data;
 		if( result->imported ){
-			imported_items = g_list_prepend( imported_items, result->imported );
+
+			if( !result->exist || result->mode == IMPORTER_MODE_RENUMBER ){
+				insertable_items = g_list_prepend( insertable_items, result->imported );
+
+			} else if( result->mode == IMPORTER_MODE_OVERRIDE ){
+				overriden_items = g_list_prepend( overriden_items, result->imported );
+			}
 		}
 	}
 
 	na_core_utils_slist_free( importer_parms.uris );
-	window->private->results = importer_parms.results;
+	window->private->results = import_results;
 
 	/* then insert the list
 	 * assuring that actions will be inserted in the same order as uris
@@ -696,11 +705,15 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 	 * on the inserted objects; the pointers so remain valid even after
 	 * having released the imported_items list
 	 */
-	if( imported_items ){
-		imported_items = g_list_reverse( imported_items );
+	if( insertable_items ){
+		insertable_items = g_list_reverse( insertable_items );
 		items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
-		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), imported_items, NULL );
-		na_object_free_items( imported_items );
+		nact_tree_ieditable_insert_items( NACT_TREE_IEDITABLE( items_view ), insertable_items, NULL );
+		na_object_free_items( insertable_items );
+	}
+
+	if( overriden_items ){
+		na_object_free_items( overriden_items );
 	}
 }
 
