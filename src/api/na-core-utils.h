@@ -48,7 +48,7 @@ gboolean na_core_utils_boolean_from_string( const gchar *string );
 
 /* string manipulation
  */
-#ifdef NA_ENABLE_DEPRECATED
+#ifndef NA_DISABLE_DEPRECATED
 gchar   *na_core_utils_str_add_prefix( const gchar *prefix, const gchar *str );
 #endif
 int      na_core_utils_str_collate( const gchar *str1, const gchar *str2 );
