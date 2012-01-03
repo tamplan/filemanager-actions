@@ -1,5 +1,7 @@
 2012-01-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext.c: Review NAIContext interface.
+
 	* src/test/test-iface-iface.c:
 	* src/test/test-iface.c: Do some more tests on the interfaces.
 

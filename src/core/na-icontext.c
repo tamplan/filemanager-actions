@@ -56,12 +56,11 @@ struct _NAIContextInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-static gboolean     st_initialized     = FALSE;
-static gboolean     st_finalized       = FALSE;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType        register_type( void );
-static void         interface_base_init( NAIContextInterface *klass );
-static void         interface_base_finalize( NAIContextInterface *klass );
+static void         interface_init( NAIContextInterface *klass );
+static void         interface_finalize( NAIContextInterface *klass );
 
 static gboolean     v_is_candidate( NAIContext *object, guint target, GList *selection );
 
@@ -119,8 +118,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIContextInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_init,
+		( GBaseFinalizeFunc ) interface_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -139,30 +138,30 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIContextInterface *klass )
+interface_init( NAIContextInterface *klass )
 {
-	static const gchar *thisfn = "na_icontext_interface_base_init";
+	static const gchar *thisfn = "na_icontext_interface_init";
 
-	if( !st_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
 		klass->private = g_new0( NAIContextInterfacePrivate, 1 );
-
-		st_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIContextInterface *klass )
+interface_finalize( NAIContextInterface *klass )
 {
-	static const gchar *thisfn = "na_icontext_interface_base_finalize";
+	static const gchar *thisfn = "na_icontext_interface_finalize";
 
-	if( st_initialized && !st_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		st_finalized = TRUE;
 
 		g_free( klass->private );
 	}
