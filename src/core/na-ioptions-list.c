@@ -64,12 +64,12 @@ enum {
 #define IOPTIONS_LIST_DATA_OPTION_ID		"ioptions-list-data-option-id"
 #define IOPTIONS_LIST_DATA_SENSITIVE		"ioptions-list-data-sensitive"
 
-static gboolean st_ioptions_list_iface_initialized = FALSE;
-static gboolean st_ioptions_list_iface_finalized   = FALSE;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType        register_type( void );
-static void         interface_base_init( NAIOptionsListInterface *iface );
-static void         interface_base_finalize( NAIOptionsListInterface *iface );
+static void         interface_init( NAIOptionsListInterface *iface );
+static void         interface_finalize( NAIOptionsListInterface *iface );
+
 static guint        ioptions_list_get_version( const NAIOptionsList *instance );
 static void         ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container_parent, GList *options );
 static void         ioptions_list_free_ask_option( const NAIOptionsList *instance, GtkWidget *container_parent, NAIOption *option );
@@ -136,8 +136,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIOptionsListInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_init,
+		( GBaseFinalizeFunc ) interface_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -156,11 +156,11 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIOptionsListInterface *iface )
+interface_init( NAIOptionsListInterface *iface )
 {
-	static const gchar *thisfn = "na_ioptions_list_interface_base_init";
+	static const gchar *thisfn = "na_ioptions_list_interface_init";
 
-	if( !st_ioptions_list_iface_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: iface=%p (%s)", thisfn, ( void * ) iface, G_OBJECT_CLASS_NAME( iface ));
 
@@ -171,21 +171,21 @@ interface_base_init( NAIOptionsListInterface *iface )
 		iface->free_options = ioptions_list_free_options;
 		iface->get_ask_option = NULL;
 		iface->free_ask_option = ioptions_list_free_ask_option;
-
-		st_ioptions_list_iface_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIOptionsListInterface *iface )
+interface_finalize( NAIOptionsListInterface *iface )
 {
-	static const gchar *thisfn = "na_ioptions_list_interface_base_finalize";
+	static const gchar *thisfn = "na_ioptions_list_interface_finalize";
 
-	if( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-		st_ioptions_list_iface_finalized = TRUE;
 
 		g_free( iface->private );
 	}
@@ -485,7 +485,8 @@ na_ioptions_list_gtk_init( const NAIOptionsList *instance, GtkWidget *container_
 {
 	static const gchar *thisfn = "na_ioptions_list_gtk_init";
 
-	g_return_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized );
+	g_return_if_fail( NA_IS_IOPTIONS_LIST( instance ));
+
 	check_for_initializations( instance, container_parent );
 
 	g_debug( "%s: instance=%p (%s), container_parent=%p (%s), with_ask=%s",
@@ -747,7 +748,8 @@ na_ioptions_list_set_default(
 	static const gchar *thisfn = "na_ioptions_list_set_default";
 	GtkTreeModel *model;
 
-	g_return_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized );
+	g_return_if_fail( NA_IS_IOPTIONS_LIST( instance ));
+
 	check_for_initializations( instance, container_parent );
 
 	g_debug( "%s: instance=%p (%s), container_parent=%p (%s), default_id=%s",
@@ -858,7 +860,8 @@ na_ioptions_list_set_editable( const NAIOptionsList *instance, GtkWidget *contai
 {
 	static const gchar *thisfn = "na_ioptions_list_set_editable";
 
-	g_return_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized );
+	g_return_if_fail( NA_IS_IOPTIONS_LIST( instance ));
+
 	check_for_initializations( instance, container_parent );
 
 	g_debug( "%s: instance=%p (%s), container_parent=%p (%s), editable=%s",
@@ -885,7 +888,8 @@ na_ioptions_list_set_sensitive( const NAIOptionsList *instance, GtkWidget *conta
 {
 	static const gchar *thisfn = "na_ioptions_list_set_sensitive";
 
-	g_return_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized );
+	g_return_if_fail( NA_IS_IOPTIONS_LIST( instance ));
+
 	check_for_initializations( instance, container_parent );
 
 	g_debug( "%s: instance=%p (%s), container_parent=%p (%s), sensitive=%s",
@@ -910,15 +914,16 @@ na_ioptions_list_get_selected( const NAIOptionsList *instance, GtkWidget *contai
 	static const gchar *thisfn = "na_ioptions_list_get_selected";
 	NAIOption *option;
 
-	option = NULL;
+	g_return_val_if_fail( NA_IS_IOPTIONS_LIST( instance ), NULL );
 
-	g_return_val_if_fail( st_ioptions_list_iface_initialized && !st_ioptions_list_iface_finalized, NULL );
 	check_for_initializations( instance, container_parent );
 
 	g_debug( "%s: instance=%p (%s), container_parent=%p (%s)",
 			thisfn,
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
 			( void * ) container_parent, G_OBJECT_TYPE_NAME( container_parent ));
+
+	option = NULL;
 
 	if( GTK_IS_BOX( container_parent )){
 		gtk_container_foreach( GTK_CONTAINER( container_parent ),
