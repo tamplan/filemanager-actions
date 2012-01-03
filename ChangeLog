@@ -1,5 +1,8 @@
 2012-01-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-exporter.c:
+	* src/core/na-iexporter.c: Review NAIExporter interface.
+
 	* src/core/na-iduplicable.c: Review NAIDuplicable interface.
 
 	* src/core/na-icontext.c: Review NAIContext interface.

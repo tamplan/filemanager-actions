@@ -40,12 +40,11 @@ struct _NAIExporterInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-gboolean iexporter_initialized = FALSE;
-gboolean iexporter_finalized   = FALSE;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_base_init( NAIExporterInterface *klass );
-static void  interface_base_finalize( NAIExporterInterface *klass );
+static void  interface_init( NAIExporterInterface *klass );
+static void  interface_finalize( NAIExporterInterface *klass );
 
 static guint iexporter_get_version( const NAIExporter *instance );
 
@@ -79,8 +78,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIExporterInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_init,
+		( GBaseFinalizeFunc ) interface_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -99,11 +98,11 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIExporterInterface *klass )
+interface_init( NAIExporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iexporter_interface_base_init";
+	static const gchar *thisfn = "na_iexporter_interface_init";
 
-	if( !iexporter_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
@@ -114,21 +113,21 @@ interface_base_init( NAIExporterInterface *klass )
 		klass->get_formats = NULL;
 		klass->to_file = NULL;
 		klass->to_buffer = NULL;
-
-		iexporter_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIExporterInterface *klass )
+interface_finalize( NAIExporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iexporter_interface_base_finalize";
+	static const gchar *thisfn = "na_iexporter_interface_finalize";
 
-	if( iexporter_initialized && !iexporter_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		iexporter_finalized = TRUE;
 
 		g_free( klass->private );
 	}

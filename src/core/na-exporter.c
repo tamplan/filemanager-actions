@@ -37,9 +37,6 @@
 #include "na-exporter.h"
 #include "na-export-format.h"
 
-extern gboolean iexporter_initialized;
-extern gboolean iexporter_finalized;
-
 static GList       *exporter_get_formats( const NAIExporter *exporter );
 static void         exporter_free_formats( const NAIExporter *exporter, GList * str_list );
 static gchar       *exporter_get_name( const NAIExporter *exporter );
@@ -66,24 +63,20 @@ na_exporter_get_formats( const NAPivot *pivot )
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	formats = NULL;
+	iexporters = na_pivot_get_providers( pivot, NA_IEXPORTER_TYPE );
 
-	if( iexporter_initialized && !iexporter_finalized ){
+	for( imod = iexporters ; imod ; imod = imod->next ){
+		str_list = exporter_get_formats( NA_IEXPORTER( imod->data ));
 
-		iexporters = na_pivot_get_providers( pivot, NA_IEXPORTER_TYPE );
-
-		for( imod = iexporters ; imod ; imod = imod->next ){
-			str_list = exporter_get_formats( NA_IEXPORTER( imod->data ));
-
-			for( is = str_list ; is ; is = is->next ){
-				format = na_export_format_new(( NAIExporterFormatExt * ) is->data );
-				formats = g_list_prepend( formats, format );
-			}
-
-			exporter_free_formats( NA_IEXPORTER( imod->data ), str_list );
+		for( is = str_list ; is ; is = is->next ){
+			format = na_export_format_new(( NAIExporterFormatExt * ) is->data );
+			formats = g_list_prepend( formats, format );
 		}
 
-		na_pivot_free_providers( iexporters );
+		exporter_free_formats( NA_IEXPORTER( imod->data ), str_list );
 	}
+
+	na_pivot_free_providers( iexporters );
 
 	return( formats );
 }
@@ -134,44 +127,41 @@ na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark fo
 
 	buffer = NULL;
 
-	if( iexporter_initialized && !iexporter_finalized ){
+	g_debug( "%s: pivot=%p, item=%p (%s), format=%u (%s), messages=%p",
+			thisfn,
+			( void * ) pivot,
+			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			( guint ) format, g_quark_to_string( format ),
+			( void * ) messages );
 
-		g_debug( "%s: pivot=%p, item=%p (%s), format=%u (%s), messages=%p",
-				thisfn,
-				( void * ) pivot,
-				( void * ) item, G_OBJECT_TYPE_NAME( item ),
-				( guint ) format, g_quark_to_string( format ),
-				( void * ) messages );
+	exporter = find_exporter_for_format( pivot, format );
+	g_debug( "%s: exporter=%p (%s)", thisfn, ( void * ) exporter, G_OBJECT_TYPE_NAME( exporter ));
 
-		exporter = find_exporter_for_format( pivot, format );
-		g_debug( "%s: exporter=%p (%s)", thisfn, ( void * ) exporter, G_OBJECT_TYPE_NAME( exporter ));
+	if( exporter ){
+		parms.version = 1;
+		parms.exported = ( NAObjectItem * ) item;
+		parms.format = format;
+		parms.buffer = NULL;
+		parms.messages = messages ? *messages : NULL;
 
-		if( exporter ){
-			parms.version = 1;
-			parms.exported = ( NAObjectItem * ) item;
-			parms.format = format;
-			parms.buffer = NULL;
-			parms.messages = messages ? *messages : NULL;
+		if( NA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer ){
+			NA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer( exporter, &parms );
 
-			if( NA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer ){
-				NA_IEXPORTER_GET_INTERFACE( exporter )->to_buffer( exporter, &parms );
-
-				if( parms.buffer ){
-					buffer = parms.buffer;
-				}
-
-			} else {
-				name = exporter_get_name( exporter );
-				msg = g_strdup_printf( _( "NAIExporter %s doesn't implement 'to_buffer' interface." ), name );
-				*messages = g_slist_append( *messages, msg );
-				g_free( name );
+			if( parms.buffer ){
+				buffer = parms.buffer;
 			}
 
 		} else {
-			msg = g_strdup_printf(
-					_( "No NAIExporter implementation found for %s format." ), g_quark_to_string( format ));
+			name = exporter_get_name( exporter );
+			msg = g_strdup_printf( _( "NAIExporter %s doesn't implement 'to_buffer' interface." ), name );
 			*messages = g_slist_append( *messages, msg );
+			g_free( name );
 		}
+
+	} else {
+		msg = g_strdup_printf(
+				_( "No NAIExporter implementation found for %s format." ), g_quark_to_string( format ));
+		*messages = g_slist_append( *messages, msg );
 	}
 
 	return( buffer );
@@ -206,45 +196,42 @@ na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar
 
 	export_uri = NULL;
 
-	if( iexporter_initialized && !iexporter_finalized ){
+	g_debug( "%s: pivot=%p, item=%p (%s), folder_uri=%s, format=%u (%s), messages=%p",
+			thisfn,
+			( void * ) pivot,
+			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			folder_uri,
+			( guint ) format, g_quark_to_string( format ),
+			( void * ) messages );
 
-		g_debug( "%s: pivot=%p, item=%p (%s), folder_uri=%s, format=%u (%s), messages=%p",
-				thisfn,
-				( void * ) pivot,
-				( void * ) item, G_OBJECT_TYPE_NAME( item ),
-				folder_uri,
-				( guint ) format, g_quark_to_string( format ),
-				( void * ) messages );
+	exporter = find_exporter_for_format( pivot, format );
 
-		exporter = find_exporter_for_format( pivot, format );
+	if( exporter ){
+		parms.version = 1;
+		parms.exported = ( NAObjectItem * ) item;
+		parms.folder = ( gchar * ) folder_uri;
+		parms.format = format;
+		parms.basename = NULL;
+		parms.messages = messages ? *messages : NULL;
 
-		if( exporter ){
-			parms.version = 1;
-			parms.exported = ( NAObjectItem * ) item;
-			parms.folder = ( gchar * ) folder_uri;
-			parms.format = format;
-			parms.basename = NULL;
-			parms.messages = messages ? *messages : NULL;
+		if( NA_IEXPORTER_GET_INTERFACE( exporter )->to_file ){
+			NA_IEXPORTER_GET_INTERFACE( exporter )->to_file( exporter, &parms );
 
-			if( NA_IEXPORTER_GET_INTERFACE( exporter )->to_file ){
-				NA_IEXPORTER_GET_INTERFACE( exporter )->to_file( exporter, &parms );
-
-				if( parms.basename ){
-					export_uri = g_strdup_printf( "%s%s%s", folder_uri, G_DIR_SEPARATOR_S, parms.basename );
-				}
-
-			} else {
-				name = exporter_get_name( exporter );
-				msg = g_strdup_printf( _( "NAIExporter %s doesn't implement 'to_file' interface." ), name );
-				*messages = g_slist_append( *messages, msg );
-				g_free( name );
+			if( parms.basename ){
+				export_uri = g_strdup_printf( "%s%s%s", folder_uri, G_DIR_SEPARATOR_S, parms.basename );
 			}
 
 		} else {
-			msg = g_strdup_printf(
-					_( "No NAIExporter implementation found for %s format." ), g_quark_to_string( format ));
+			name = exporter_get_name( exporter );
+			msg = g_strdup_printf( _( "NAIExporter %s doesn't implement 'to_file' interface." ), name );
 			*messages = g_slist_append( *messages, msg );
+			g_free( name );
 		}
+
+	} else {
+		msg = g_strdup_printf(
+				_( "No NAIExporter implementation found for %s format." ), g_quark_to_string( format ));
+		*messages = g_slist_append( *messages, msg );
 	}
 
 	return( export_uri );
