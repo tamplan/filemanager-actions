@@ -62,13 +62,12 @@ enum {
 };
 
 static NAIDuplicableInterface *st_interface = NULL;
-static gboolean                st_initialized = FALSE;
-static gboolean                st_finalized = FALSE ;
+static guint                   st_initializations = 0;
 static gint                    st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType          register_type( void );
-static void           interface_base_init( NAIDuplicableInterface *klass );
-static void           interface_base_finalize( NAIDuplicableInterface *klass );
+static void           interface_init( NAIDuplicableInterface *klass );
+static void           interface_finalize( NAIDuplicableInterface *klass );
 
 static void           v_copy( NAIDuplicable *target, const NAIDuplicable *source );
 static gboolean       v_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
@@ -101,8 +100,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIDuplicableInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_init,
+		( GBaseFinalizeFunc ) interface_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -121,11 +120,11 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIDuplicableInterface *klass )
+interface_init( NAIDuplicableInterface *klass )
 {
-	static const gchar *thisfn = "na_iduplicable_interface_base_init";
+	static const gchar *thisfn = "na_iduplicable_interface_init";
 
-	if( !st_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
@@ -202,21 +201,21 @@ interface_base_init( NAIDuplicableInterface *klass )
 				G_TYPE_POINTER, G_TYPE_BOOLEAN );
 
 		st_interface = klass;
-
-		st_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIDuplicableInterface *klass )
+interface_finalize( NAIDuplicableInterface *klass )
 {
-	static const gchar *thisfn = "na_iduplicable_interface_base_finalize";
+	static const gchar *thisfn = "na_iduplicable_interface_finalize";
 
-	if( !st_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		st_finalized = TRUE;
 
 		release_signal_consumers( klass->private->consumers );
 
@@ -239,12 +238,9 @@ na_iduplicable_dispose( const NAIDuplicable *object )
 
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
-	if( st_initialized && !st_finalized ){
-
-		str = get_duplicable_str( object );
-		g_free( str );
-		g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE, NULL );
-	}
+	str = get_duplicable_str( object );
+	g_free( str );
+	g_object_set_data( G_OBJECT( object ), NA_IDUPLICABLE_DATA_DUPLICABLE, NULL );
 }
 
 /**
@@ -269,14 +265,11 @@ na_iduplicable_dump( const NAIDuplicable *object )
 
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
-	if( st_initialized && !st_finalized ){
+	str = get_duplicable_str( object );
 
-		str = get_duplicable_str( object );
-
-		g_debug( "| %s:   origin=%p", thisfn, ( void * ) str->origin );
-		g_debug( "| %s: modified=%s", thisfn, str->modified ? "True" : "False" );
-		g_debug( "| %s:    valid=%s", thisfn, str->valid ? "True" : "False" );
-	}
+	g_debug( "| %s:   origin=%p", thisfn, ( void * ) str->origin );
+	g_debug( "| %s: modified=%s", thisfn, str->modified ? "True" : "False" );
+	g_debug( "| %s:    valid=%s", thisfn, str->valid ? "True" : "False" );
 }
 
 /**
@@ -311,25 +304,20 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
 
 	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
 
-	dup = NULL;
+	g_debug( "%s: object=%p (%s)",
+			thisfn,
+			( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	if( st_initialized && !st_finalized ){
+	dup = g_object_new( G_OBJECT_TYPE( object ), NULL );
 
-		g_debug( "%s: object=%p (%s)",
-				thisfn,
-				( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	v_copy( dup, object );
 
-		dup = g_object_new( G_OBJECT_TYPE( object ), NULL );
+	dup_str = get_duplicable_str( dup );
+	obj_str = get_duplicable_str( object );
 
-		v_copy( dup, object );
-
-		dup_str = get_duplicable_str( dup );
-		obj_str = get_duplicable_str( object );
-
-		dup_str->origin = ( NAIDuplicable * ) object;
-		dup_str->modified = obj_str->modified;
-		dup_str->valid = obj_str->valid;
-	}
+	dup_str->origin = ( NAIDuplicable * ) object;
+	dup_str->modified = obj_str->modified;
+	dup_str->valid = obj_str->valid;
 
 	return( dup );
 }
@@ -364,36 +352,34 @@ na_iduplicable_check_status( const NAIDuplicable *object )
 
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
-	if( st_initialized && !st_finalized ){
-		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-		str = get_duplicable_str( object );
+	str = get_duplicable_str( object );
 
-		was_modified = str->modified;
-		was_valid = str->valid;
+	was_modified = str->modified;
+	was_valid = str->valid;
 
-		if( str->origin ){
-			g_debug( "%s: vs. origin=%p (%s)", thisfn, ( void * ) str->origin, G_OBJECT_TYPE_NAME( str->origin ));
-			g_return_if_fail( NA_IS_IDUPLICABLE( str->origin ));
-			str->modified = !v_are_equal( str->origin, object );
+	if( str->origin ){
+		g_debug( "%s: vs. origin=%p (%s)", thisfn, ( void * ) str->origin, G_OBJECT_TYPE_NAME( str->origin ));
+		g_return_if_fail( NA_IS_IDUPLICABLE( str->origin ));
+		str->modified = !v_are_equal( str->origin, object );
 
-		} else {
-			str->modified = TRUE;
-		}
+	} else {
+		str->modified = TRUE;
+	}
 
-		if( was_modified != str->modified ){
-			g_debug( "%s: %p (%s) status changed to modified=%s",
-					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ), str->modified ? "True":"False" );
-			g_signal_emit_by_name( G_OBJECT( object ), IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, object, str->modified );
-		}
+	if( was_modified != str->modified ){
+		g_debug( "%s: %p (%s) status changed to modified=%s",
+				thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ), str->modified ? "True":"False" );
+		g_signal_emit_by_name( G_OBJECT( object ), IDUPLICABLE_SIGNAL_MODIFIED_CHANGED, object, str->modified );
+	}
 
-		str->valid = v_is_valid( object );
+	str->valid = v_is_valid( object );
 
-		if( was_valid != str->valid ){
-			g_debug( "%s: %p (%s) status changed to valid=%s",
-					thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ), str->valid ? "True":"False" );
-			g_signal_emit_by_name( G_OBJECT( object ), IDUPLICABLE_SIGNAL_VALID_CHANGED, object, str->valid );
-		}
+	if( was_valid != str->valid ){
+		g_debug( "%s: %p (%s) status changed to valid=%s",
+				thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ), str->valid ? "True":"False" );
+		g_signal_emit_by_name( G_OBJECT( object ), IDUPLICABLE_SIGNAL_VALID_CHANGED, object, str->valid );
 	}
 }
 
@@ -415,13 +401,8 @@ na_iduplicable_get_origin( const NAIDuplicable *object )
 
 	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), NULL );
 
-	origin = NULL;
-
-	if( st_initialized && !st_finalized ){
-
-		str = get_duplicable_str( object );
-		origin = str->origin;
-	}
+	str = get_duplicable_str( object );
+	origin = str->origin;
 
 	return( origin );
 }
@@ -445,13 +426,8 @@ na_iduplicable_is_valid( const NAIDuplicable *object )
 
 	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), FALSE );
 
-	is_valid = FALSE;
-
-	if( st_initialized && !st_finalized ){
-
-		str = get_duplicable_str( object );
-		is_valid = str->valid;
-	}
+	str = get_duplicable_str( object );
+	is_valid = str->valid;
 
 	return( is_valid );
 }
@@ -476,13 +452,8 @@ na_iduplicable_is_modified( const NAIDuplicable *object )
 
 	g_return_val_if_fail( NA_IS_IDUPLICABLE( object ), FALSE );
 
-	is_modified = FALSE;
-
-	if( st_initialized && !st_finalized ){
-
-		str = get_duplicable_str( object );
-		is_modified = str->modified;
-	}
+	str = get_duplicable_str( object );
+	is_modified = str->modified;
 
 	return( is_modified );
 }
@@ -504,11 +475,8 @@ na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 	g_return_if_fail( NA_IS_IDUPLICABLE( origin ) || !origin );
 
-	if( st_initialized && !st_finalized ){
-
-		str = get_duplicable_str( object );
-		str->origin = ( NAIDuplicable * ) origin;
-	}
+	str = get_duplicable_str( object );
+	str->origin = ( NAIDuplicable * ) origin;
 }
 
 #ifdef NA_ENABLE_DEPRECATED
@@ -529,11 +497,8 @@ na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )
 
 	g_return_if_fail( NA_IS_IDUPLICABLE( object ));
 
-	if( st_initialized && !st_finalized ){
-
-		str = get_duplicable_str( object );
-		str->modified = modified;
-	}
+	str = get_duplicable_str( object );
+	str->modified = modified;
 }
 #endif /* NA_ENABLE_DEPRECATED */
 
@@ -579,12 +544,9 @@ na_iduplicable_register_consumer( GObject *consumer )
 {
 	g_return_if_fail( st_interface );
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "na_iduplicable_register_consumer: consumer=%p", ( void * ) consumer );
 
-		g_debug( "na_iduplicable_register_consumer: consumer=%p", ( void * ) consumer );
-
-		st_interface->private->consumers = g_list_prepend( st_interface->private->consumers, consumer );
-	}
+	st_interface->private->consumers = g_list_prepend( st_interface->private->consumers, consumer );
 }
 
 static void
@@ -609,14 +571,12 @@ propagate_signal_to_consumers( NAIDuplicable *instance, const gchar *signal, GOb
 	static const gchar *thisfn = "na_iduplicable_propagate_signals_to_consumers";
 	GList *ic;
 
-	g_return_if_fail( st_interface );
+	g_return_if_fail( NA_IS_IDUPLICABLE( instance ));
 
-	if( st_initialized && !st_finalized ){
-		g_debug( "%s: instance=%p, signal=%s", thisfn, ( void * ) instance, signal );
+	g_debug( "%s: instance=%p, signal=%s", thisfn, ( void * ) instance, signal );
 
-		for( ic = st_interface->private->consumers ; ic ; ic = ic->next ){
-			g_signal_emit_by_name( ic->data, signal, object, new_status );
-		}
+	for( ic = st_interface->private->consumers ; ic ; ic = ic->next ){
+		g_signal_emit_by_name( ic->data, signal, object, new_status );
 	}
 }
 
