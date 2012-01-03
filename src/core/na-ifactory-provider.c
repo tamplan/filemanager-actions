@@ -44,12 +44,11 @@ struct _NAIFactoryProviderInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-gboolean ifactory_provider_initialized = FALSE;
-gboolean ifactory_provider_finalized   = FALSE;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_base_init( NAIFactoryProviderInterface *klass );
-static void  interface_base_finalize( NAIFactoryProviderInterface *klass );
+static void  interface_init( NAIFactoryProviderInterface *klass );
+static void  interface_finalize( NAIFactoryProviderInterface *klass );
 
 static guint ifactory_provider_get_version( const NAIFactoryProvider *instance );
 
@@ -85,8 +84,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIFactoryProviderInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_init,
+		( GBaseFinalizeFunc ) interface_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -105,11 +104,11 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIFactoryProviderInterface *klass )
+interface_init( NAIFactoryProviderInterface *klass )
 {
-	static const gchar *thisfn = "na_ifactory_provider_interface_base_init";
+	static const gchar *thisfn = "na_ifactory_provider_interface_init";
 
-	if( !ifactory_provider_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
@@ -122,21 +121,21 @@ interface_base_init( NAIFactoryProviderInterface *klass )
 		klass->write_start = NULL;
 		klass->write_data = NULL;
 		klass->write_done = NULL;
-
-		ifactory_provider_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIFactoryProviderInterface *klass )
+interface_finalize( NAIFactoryProviderInterface *klass )
 {
-	static const gchar *thisfn = "na_ifactory_provider_interface_base_finalize";
+	static const gchar *thisfn = "na_ifactory_provider_interface_finalize";
 
-	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		ifactory_provider_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -192,12 +191,9 @@ na_ifactory_provider_read_item( const NAIFactoryProvider *reader, void *reader_d
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
-
-		v_factory_provider_read_start( reader, reader_data, object, messages );
-		na_factory_object_read_item( object, reader, reader_data, messages );
-		v_factory_provider_read_done( reader, reader_data, object, messages );
-	}
+	v_factory_provider_read_start( reader, reader_data, object, messages );
+	na_factory_object_read_item( object, reader, reader_data, messages );
+	v_factory_provider_read_done( reader, reader_data, object, messages );
 }
 
 /**
@@ -224,22 +220,17 @@ na_ifactory_provider_write_item( const NAIFactoryProvider *writer, void *writer_
 	g_return_val_if_fail( NA_IS_IFACTORY_PROVIDER( writer ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NA_IIO_PROVIDER_CODE_PROGRAM_ERROR );
 
-	code = NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
+	g_debug( "%s: writer=%p, writer_data=%p, object=%p (%s)",
+			thisfn, ( void * ) writer, ( void * ) writer_data, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
+	code = v_factory_provider_write_start( writer, writer_data, object, messages );
 
-		g_debug( "%s: writer=%p, writer_data=%p, object=%p (%s)",
-				thisfn, ( void * ) writer, ( void * ) writer_data, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	if( code == NA_IIO_PROVIDER_CODE_OK ){
+		code = na_factory_object_write_item( object, writer, writer_data, messages );
+	}
 
-		code = v_factory_provider_write_start( writer, writer_data, object, messages );
-
-		if( code == NA_IIO_PROVIDER_CODE_OK ){
-			code = na_factory_object_write_item( object, writer, writer_data, messages );
-		}
-
-		if( code == NA_IIO_PROVIDER_CODE_OK ){
-			code = v_factory_provider_write_done( writer, writer_data, object, messages );
-		}
+	if( code == NA_IIO_PROVIDER_CODE_OK ){
+		code = v_factory_provider_write_done( writer, writer_data, object, messages );
 	}
 
 	return( code );

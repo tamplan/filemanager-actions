@@ -36,9 +36,6 @@
 
 #include "na-factory-provider.h"
 
-extern gboolean ifactory_provider_initialized;		/* defined in na-ifactory-provider.c */
-extern gboolean ifactory_provider_finalized;
-
 /*
  * na_factory_provider_read_data:
  * @reader: the instance which implements this #NAIFactoryProvider interface.
@@ -64,12 +61,8 @@ na_factory_provider_read_data( const NAIFactoryProvider *reader, void *reader_da
 
 	boxed = NULL;
 
-	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
-
-		if( NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data ){
-
-			boxed = NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data( reader, reader_data, object, def, messages );
-		}
+	if( NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data ){
+		boxed = NA_IFACTORY_PROVIDER_GET_INTERFACE( reader )->read_data( reader, reader_data, object, def, messages );
 	}
 
 	return( boxed );
@@ -98,12 +91,8 @@ na_factory_provider_write_data( const NAIFactoryProvider *writer, void *writer_d
 
 	code = NA_IIO_PROVIDER_CODE_NOT_WILLING_TO_RUN;
 
-	if( ifactory_provider_initialized && !ifactory_provider_finalized ){
-
-		if( NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data ){
-
-			code = NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data( writer, writer_data, object, boxed, messages );
-		}
+	if( NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data ){
+		code = NA_IFACTORY_PROVIDER_GET_INTERFACE( writer )->write_data( writer, writer_data, object, boxed, messages );
 	}
 
 	return( code );
