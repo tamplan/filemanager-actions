@@ -1,5 +1,8 @@
 2012-01-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-factory-object.c:
+	* src/core/na-ifactory-object.c: Review NAIFactoryObject interface.
+
 	* src/core/na-exporter.c:
 	* src/core/na-iexporter.c: Review NAIExporter interface.
 

@@ -123,17 +123,14 @@ na_factory_object_define_properties( GObjectClass *class, const NADataGroup *gro
 {
 	static const gchar *thisfn = "na_factory_object_define_properties";
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	g_return_if_fail( G_IS_OBJECT_CLASS( class ));
 
-		g_debug( "%s: class=%p (%s)",
-				thisfn, ( void * ) class, G_OBJECT_CLASS_NAME( class ));
+	g_debug( "%s: class=%p (%s)",
+			thisfn, ( void * ) class, G_OBJECT_CLASS_NAME( class ));
 
-		g_return_if_fail( G_IS_OBJECT_CLASS( class ));
-
-		/* define class properties
-		 */
-		iter_on_data_defs( groups, DATA_DEF_ITER_SET_PROPERTIES, ( NADataDefIterFunc ) define_class_properties_iter, class );
-	}
+	/* define class properties
+	 */
+	iter_on_data_defs( groups, DATA_DEF_ITER_SET_PROPERTIES, ( NADataDefIterFunc ) define_class_properties_iter, class );
 }
 
 static gboolean
@@ -175,23 +172,20 @@ na_factory_object_get_data_def( const NAIFactoryObject *object, const gchar *nam
 
 	def = NULL;
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	NADataGroup *groups = v_get_groups( object );
+	while( groups->group ){
 
-		NADataGroup *groups = v_get_groups( object );
-		while( groups->group ){
+		NADataDef *def = groups->def;
+		if( def ){
+			while( def->name ){
 
-			NADataDef *def = groups->def;
-			if( def ){
-				while( def->name ){
-
-					if( !strcmp( def->name, name )){
-						return( def );
-					}
-					def++;
+				if( !strcmp( def->name, name )){
+					return( def );
 				}
+				def++;
 			}
-			groups++;
 		}
+		groups++;
 	}
 
 	return( def );
@@ -210,12 +204,7 @@ na_factory_object_get_data_groups( const NAIFactoryObject *object )
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
-	groups = NULL;
-
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
-
-		groups = v_get_groups( object );
-	}
+	groups = v_get_groups( object );
 
 	return( groups );
 }
@@ -238,15 +227,12 @@ na_factory_object_iter_on_boxed( const NAIFactoryObject *object, NAFactoryObject
 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
+	/*g_debug( "list=%p (count=%u)", ( void * ) list, g_list_length( list ));*/
+	stop = FALSE;
 
-		list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
-		/*g_debug( "list=%p (count=%u)", ( void * ) list, g_list_length( list ));*/
-		stop = FALSE;
-
-		for( ibox = list ; ibox && !stop ; ibox = ibox->next ){
-			stop = ( *pfn )( object, NA_DATA_BOXED( ibox->data ), user_data );
-		}
+	for( ibox = list ; ibox && !stop ; ibox = ibox->next ){
+		stop = ( *pfn )( object, NA_DATA_BOXED( ibox->data ), user_data );
 	}
 }
 
@@ -269,14 +255,11 @@ na_factory_object_get_default( NAIFactoryObject *object, const gchar *name )
 
 	value = NULL;
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
-
-		def = na_factory_object_get_data_def( object, name );
-		if( def ){
-			value = g_strdup( def->default_value );
-		}
+	def = na_factory_object_get_data_def( object, name );
+	if( def ){
+		value = g_strdup( def->default_value );
 	}
 
 	return( value );
@@ -297,22 +280,19 @@ na_factory_object_set_defaults( NAIFactoryObject *object )
 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	groups = v_get_groups( object );
+	if( !groups ){
+		g_warning( "%s: no NADataGroup found for %s", thisfn, G_OBJECT_TYPE_NAME( object ));
 
-		groups = v_get_groups( object );
-		if( !groups ){
-			g_warning( "%s: no NADataGroup found for %s", thisfn, G_OBJECT_TYPE_NAME( object ));
+	} else {
+		iter_data = g_new0( NafoDefaultIter, 1 );
+		iter_data->object = object;
 
-		} else {
-			iter_data = g_new0( NafoDefaultIter, 1 );
-			iter_data->object = object;
+		iter_on_data_defs( groups, DATA_DEF_ITER_SET_DEFAULTS, ( NADataDefIterFunc ) set_defaults_iter, iter_data );
 
-			iter_on_data_defs( groups, DATA_DEF_ITER_SET_DEFAULTS, ( NADataDefIterFunc ) set_defaults_iter, iter_data );
-
-			g_free( iter_data );
-		}
+		g_free( iter_data );
 	}
 }
 
@@ -352,20 +332,17 @@ na_factory_object_move_boxed( NAIFactoryObject *target, const NAIFactoryObject *
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( target ));
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( source ));
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	GList *src_list = g_object_get_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA );
 
-		GList *src_list = g_object_get_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA );
+	if( g_list_find( src_list, boxed )){
+		src_list = g_list_remove( src_list, boxed );
+		g_object_set_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA, src_list );
 
-		if( g_list_find( src_list, boxed )){
-			src_list = g_list_remove( src_list, boxed );
-			g_object_set_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA, src_list );
+		attach_boxed_to_object( target, boxed );
 
-			attach_boxed_to_object( target, boxed );
-
-			const NADataDef *src_def = na_data_boxed_get_data_def( boxed );
-			NADataDef *tgt_def = na_factory_object_get_data_def( target, src_def->name );
-			na_data_boxed_set_data_def( boxed, tgt_def );
-		}
+		const NADataDef *src_def = na_data_boxed_get_data_def( boxed );
+		NADataDef *tgt_def = na_factory_object_get_data_def( target, src_def->name );
+		na_data_boxed_set_data_def( boxed, tgt_def );
 	}
 }
 
@@ -597,29 +574,26 @@ na_factory_object_read_item( NAIFactoryObject *object, const NAIFactoryProvider 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( object ));
 	g_return_if_fail( NA_IS_IFACTORY_PROVIDER( reader ));
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	NADataGroup *groups = v_get_groups( object );
 
-		NADataGroup *groups = v_get_groups( object );
+	if( groups ){
+		v_read_start( object, reader, reader_data, messages );
 
-		if( groups ){
-			v_read_start( object, reader, reader_data, messages );
+		NafoReadIter *iter = g_new0( NafoReadIter, 1 );
+		iter->object = object;
+		iter->reader = ( NAIFactoryProvider * ) reader;
+		iter->reader_data = reader_data;
+		iter->messages = messages;
 
-			NafoReadIter *iter = g_new0( NafoReadIter, 1 );
-			iter->object = object;
-			iter->reader = ( NAIFactoryProvider * ) reader;
-			iter->reader_data = reader_data;
-			iter->messages = messages;
+		iter_on_data_defs( groups, DATA_DEF_ITER_READ_ITEM, ( NADataDefIterFunc ) read_data_iter, iter );
 
-			iter_on_data_defs( groups, DATA_DEF_ITER_READ_ITEM, ( NADataDefIterFunc ) read_data_iter, iter );
+		g_free( iter );
 
-			g_free( iter );
+		v_read_done( object, reader, reader_data, messages );
 
-			v_read_done( object, reader, reader_data, messages );
-
-		} else {
-			g_warning( "%s: class %s doesn't return any NADataGroup structure",
-					thisfn, G_OBJECT_TYPE_NAME( object ));
-		}
+	} else {
+		g_warning( "%s: class %s doesn't return any NADataGroup structure",
+				thisfn, G_OBJECT_TYPE_NAME( object ));
 	}
 }
 

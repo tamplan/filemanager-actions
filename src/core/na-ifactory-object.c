@@ -44,12 +44,11 @@ struct _NAIFactoryObjectInterfacePrivate {
 	void *empty;					/* so that gcc -pedantic is happy */
 };
 
-gboolean ifactory_object_initialized = FALSE;
-gboolean ifactory_object_finalized   = FALSE;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_base_init( NAIFactoryObjectInterface *klass );
-static void  interface_base_finalize( NAIFactoryObjectInterface *klass );
+static void  interface_init( NAIFactoryObjectInterface *klass );
+static void  interface_finalize( NAIFactoryObjectInterface *klass );
 
 static guint ifactory_object_get_version( const NAIFactoryObject *instance );
 
@@ -76,8 +75,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIFactoryObjectInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_init,
+		( GBaseFinalizeFunc ) interface_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -96,11 +95,11 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIFactoryObjectInterface *klass )
+interface_init( NAIFactoryObjectInterface *klass )
 {
-	static const gchar *thisfn = "na_ifactory_object_interface_base_init";
+	static const gchar *thisfn = "na_ifactory_object_interface_init";
 
-	if( !ifactory_object_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
@@ -115,21 +114,21 @@ interface_base_init( NAIFactoryObjectInterface *klass )
 		klass->read_done = NULL;
 		klass->write_start = NULL;
 		klass->write_done = NULL;
-
-		ifactory_object_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIFactoryObjectInterface *klass )
+interface_finalize( NAIFactoryObjectInterface *klass )
 {
-	static const gchar *thisfn = "na_ifactory_object_interface_base_finalize";
+	static const gchar *thisfn = "na_ifactory_object_interface_finalize";
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		ifactory_object_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -161,18 +160,15 @@ na_ifactory_object_get_data_boxed( const NAIFactoryObject *object, const gchar *
 
 	g_return_val_if_fail( NA_IS_IFACTORY_OBJECT( object ), NULL );
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
+	list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
+	/*g_debug( "list=%p (count=%u)", ( void * ) list, g_list_length( list ));*/
 
-		list = g_object_get_data( G_OBJECT( object ), NA_IFACTORY_OBJECT_PROP_DATA );
-		/*g_debug( "list=%p (count=%u)", ( void * ) list, g_list_length( list ));*/
+	for( ip = list ; ip ; ip = ip->next ){
+		NADataBoxed *boxed = NA_DATA_BOXED( ip->data );
+		const NADataDef *def = na_data_boxed_get_data_def( boxed );
 
-		for( ip = list ; ip ; ip = ip->next ){
-			NADataBoxed *boxed = NA_DATA_BOXED( ip->data );
-			const NADataDef *def = na_data_boxed_get_data_def( boxed );
-
-			if( !strcmp( def->name, name )){
-				return( boxed );
-			}
+		if( !strcmp( def->name, name )){
+			return( boxed );
 		}
 	}
 
@@ -199,11 +195,8 @@ na_ifactory_object_get_data_groups( const NAIFactoryObject *object )
 
 	groups = NULL;
 
-	if( ifactory_object_initialized && !ifactory_object_finalized ){
-
-		if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
-			groups = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object );
-		}
+	if( NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups ){
+		groups = NA_IFACTORY_OBJECT_GET_INTERFACE( object )->get_groups( object );
 	}
 
 	return( groups );
