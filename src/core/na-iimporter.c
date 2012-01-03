@@ -44,12 +44,11 @@ struct _NAIImporterInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-gboolean iimporter_initialized = FALSE;
-gboolean iimporter_finalized   = FALSE;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_base_init( NAIImporterInterface *klass );
-static void  interface_base_finalize( NAIImporterInterface *klass );
+static void  interface_init( NAIImporterInterface *klass );
+static void  interface_finalize( NAIImporterInterface *klass );
 static guint iimporter_get_version( const NAIImporter *instance );
 
 #ifdef NA_ENABLE_DEPRECATED
@@ -86,8 +85,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIImporterInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_init,
+		( GBaseFinalizeFunc ) interface_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -106,11 +105,11 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIImporterInterface *klass )
+interface_init( NAIImporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iimporter_interface_base_init";
+	static const gchar *thisfn = "na_iimporter_interface_init";
 
-	if( !iimporter_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
@@ -118,21 +117,21 @@ interface_base_init( NAIImporterInterface *klass )
 
 		klass->get_version = iimporter_get_version;
 		klass->import_from_uri = NULL;
-
-		iimporter_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIImporterInterface *klass )
+interface_finalize( NAIImporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iimporter_interface_base_finalize";
+	static const gchar *thisfn = "na_iimporter_interface_finalize";
 
-	if( iimporter_initialized && !iimporter_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		iimporter_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -167,14 +166,11 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
 
 	code = IMPORTER_CODE_NOT_WILLING_TO;
 
-	if( iimporter_initialized && !iimporter_finalized ){
+	g_debug( "%s: importer=%p (%s), parms=%p", thisfn,
+			( void * ) importer, G_OBJECT_TYPE_NAME( importer), ( void * ) parms );
 
-		g_debug( "%s: importer=%p (%s), parms=%p", thisfn,
-				( void * ) importer, G_OBJECT_TYPE_NAME( importer), ( void * ) parms );
-
-		if( NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri ){
-			code = NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri( importer, parms );
-		}
+	if( NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri ){
+		code = NA_IIMPORTER_GET_INTERFACE( importer )->import_from_uri( importer, parms );
 	}
 
 	return( code );

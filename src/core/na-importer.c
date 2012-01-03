@@ -96,9 +96,6 @@ static NAImportModeStr st_import_ask_mode = {
 			"import-mode-ask.png"
 };
 
-extern gboolean iimporter_initialized;		/* defined in na-iimporter.c */
-extern gboolean iimporter_finalized;		/* defined in na-iimporter.c */
-
 static NAImporterResult *import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri );
 static void              manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserParms *ask_parms, NAImporterResult *result );
 static NAObjectItem     *is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterResult *result );
@@ -149,41 +146,38 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 
 	results = NULL;
 
-	if( iimporter_initialized && !iimporter_finalized ){
+	g_debug( "%s: pivot=%p, parms=%p", thisfn, ( void * ) pivot, ( void * ) parms );
 
-		g_debug( "%s: pivot=%p, parms=%p", thisfn, ( void * ) pivot, ( void * ) parms );
+	/* first phase: just try to import the uris into memory
+	 */
+	modules = na_pivot_get_providers( pivot, NA_IIMPORTER_TYPE );
 
-		/* first phase: just try to import the uris into memory
-		 */
-		modules = na_pivot_get_providers( pivot, NA_IIMPORTER_TYPE );
+	for( uri = parms->uris ; uri ; uri = uri->next ){
+		import_result = import_from_uri( pivot, modules, ( const gchar * ) uri->data );
+		results = g_list_prepend( results, import_result );
+	}
 
-		for( uri = parms->uris ; uri ; uri = uri->next ){
-			import_result = import_from_uri( pivot, modules, ( const gchar * ) uri->data );
-			results = g_list_prepend( results, import_result );
-		}
+	na_pivot_free_providers( modules );
 
-		na_pivot_free_providers( modules );
+	results = g_list_reverse( results );
 
-		results = g_list_reverse( results );
+	memset( &ask_parms, '\0', sizeof( NAImporterAskUserParms ));
+	ask_parms.parent = parms->parent_toplevel;
+	ask_parms.count = 0;
+	ask_parms.keep_choice = FALSE;
+	ask_parms.pivot = pivot;
 
-		memset( &ask_parms, '\0', sizeof( NAImporterAskUserParms ));
-		ask_parms.parent = parms->parent_toplevel;
-		ask_parms.count = 0;
-		ask_parms.keep_choice = FALSE;
-		ask_parms.pivot = pivot;
+	/* second phase: check for their pre-existence
+	 */
+	for( ires = results ; ires ; ires = ires->next ){
+		import_result = ( NAImporterResult * ) ires->data;
 
-		/* second phase: check for their pre-existence
-		 */
-		for( ires = results ; ires ; ires = ires->next ){
-			import_result = ( NAImporterResult * ) ires->data;
+		if( import_result->imported ){
+			g_return_val_if_fail( NA_IS_OBJECT_ITEM( import_result->imported ), NULL );
+			g_return_val_if_fail( NA_IS_IIMPORTER( import_result->importer ), NULL );
 
-			if( import_result->imported ){
-				g_return_val_if_fail( NA_IS_OBJECT_ITEM( import_result->imported ), NULL );
-				g_return_val_if_fail( NA_IS_IIMPORTER( import_result->importer ), NULL );
-
-				ask_parms.uri = import_result->uri;
-				manage_import_mode( parms, results, &ask_parms, import_result );
-			}
+			ask_parms.uri = import_result->uri;
+			manage_import_mode( parms, results, &ask_parms, import_result );
 		}
 	}
 

@@ -1,5 +1,8 @@
 2012-01-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-iimporter.c:
+	* src/core/na-importer.c: Review NAIImporterInterface.
+
 	* src/core/na-factory-provider.c:
 	* src/core/na-ifactory-provider.c: Review NAIFactoryProvider interface.
 
