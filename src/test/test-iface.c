@@ -71,6 +71,12 @@ main( int argc, char **argv )
 	g_debug( "calling test_iface_fnb on another Base object -------------------" );
 	test_iface_fnb( TEST_IFACE( base2 ));
 
+	g_debug( "unreffing TestDerived ------------------------------------" );
+	g_object_unref( derived );
+
+	g_debug( "unreffing TestBase ------------------------------------" );
+	g_object_unref( base );
+
 	g_debug( "end -----------------------------------------------------" );
 
 	return( 0 );

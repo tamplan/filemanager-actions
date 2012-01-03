@@ -1,5 +1,8 @@
 2012-01-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/test/test-iface-iface.c:
+	* src/test/test-iface.c: Do some more tests on the interfaces.
+
 	* src/utils/na-gconf2key.sh.in: Force GConf I/O provider to be read-only.
 
 	* src/utils/console-utils.h: Remove superfluous 'glib-object.h' include.

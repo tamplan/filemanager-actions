@@ -94,8 +94,10 @@ interface_base_init( TestIFaceInterface *klass )
 	static const gchar *thisfn = "test_iface_iface_interface_base_init";
 	static gboolean initialized = FALSE;
 
+	g_debug( "%s: klass=%p, initialized=%s",
+			thisfn, ( void * ) klass, initialized ? "True":"False" );
+
 	if( !initialized ){
-		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( TestIFaceInterfacePrivate, 1 );
 
@@ -109,10 +111,12 @@ interface_base_finalize( TestIFaceInterface *klass )
 	static const gchar *thisfn = "test_iface_iface_interface_base_finalize";
 	static gboolean finalized = FALSE ;
 
-	if( !finalized ){
-		finalized = TRUE;
+	g_debug( "%s: klass=%p, finalized=%s",
+			thisfn, ( void * ) klass, finalized ? "True":"False" );
 
-		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+	if( !finalized ){
+
+		finalized = TRUE;
 
 		g_free( klass->private );
 	}
