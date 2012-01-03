@@ -26,6 +26,11 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
+NA_UTILS_LDADD = \
+	$(top_builddir)/src/core/libna-core.la						\
+	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NULL)
+
 bin_PROGRAMS = \
 	nautilus-actions-new										\
 	nautilus-actions-print										\
@@ -51,8 +56,7 @@ nautilus_actions_new_SOURCES = \
 	$(NULL)
 
 nautilus_actions_new_LDADD = \
-	$(top_builddir)/src/core/libna-core.la						\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
 nautilus_actions_print_SOURCES = \
@@ -62,8 +66,7 @@ nautilus_actions_print_SOURCES = \
 	$(NULL)
 
 nautilus_actions_print_LDADD = \
-	$(top_builddir)/src/core/libna-core.la						\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
 BUILT_SOURCES = \
@@ -80,8 +83,7 @@ nautilus_actions_run_SOURCES = \
 	$(NULL)
 
 nautilus_actions_run_LDADD = \
-	$(top_builddir)/src/core/libna-core.la						\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
 na_print_schemas_SOURCES = \
@@ -91,8 +93,7 @@ na_print_schemas_SOURCES = \
 	$(NULL)
 
 na_print_schemas_LDADD = \
-	$(top_builddir)/src/core/libna-core.la						\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
 EXTRA_DIST = \
@@ -117,8 +118,7 @@ na_delete_xmltree_SOURCES = \
 	$(NULL)
 
 na_delete_xmltree_LDADD = \
-	$(top_builddir)/src/core/libna-core.la						\
-	$(NAUTILUS_ACTIONS_LIBS)									\
+	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
 pkglibexec_SCRIPTS = \

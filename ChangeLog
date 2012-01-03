@@ -1,3 +1,7 @@
+2012-01-03 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/utils/Makefile.am: Factorize library declarations.
+
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/utils/na-gconf2key.sh.in:
