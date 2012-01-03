@@ -679,7 +679,7 @@ if [ "${opt_admin}" = "no" ]; then
 	done
 fi
 
-# whether we are running admin tasks or not, we force the GConf i/o provider
+# whether we are running admin tasks or not, we try ti force the GConf i/o provider
 # to be locked
 cat <<! >${my_tmproot}.io-provider_na-gconf
 # Starting with 3.1.0, GConf as I/O provider is deprecated
@@ -690,7 +690,8 @@ writable = false
 let nbprefs=0
 
 if [ -e ${destconf} ]; then
-	msg "${destconf} already exists: do not replace it"
+	msg "${destconf} already exists: do not replace it, update the N-A configuration file instead"
+	command "@pkglibexecdir@/na-set-conf --group 'io-provider na-gconf' --key writable --type bool --value false"
 else
 	nbprefs=$(cat ${my_tmproot}.nact ${my_tmproot}.runtime ${my_tmproot}.io-provider_* 2>/dev/null | wc -l)
 
