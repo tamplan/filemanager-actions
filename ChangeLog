@@ -1,5 +1,7 @@
 2012-01-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-ioption.c: Review NAIOption interface.
+
 	* src/core/na-iio-provider.c: Review NAIIOProvider interface.
 
 	* src/core/na-iimporter.c:

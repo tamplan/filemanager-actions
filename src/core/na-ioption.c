@@ -40,14 +40,14 @@ struct _NAIOptionInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+static guint st_initializations = 0;	/* interface initialization count */
+
 #define IOPTION_DATA_INITIALIZED		"ioption-data-initialized"
 
-static gboolean st_ioption_iface_initialized = FALSE;
-static gboolean st_ioption_iface_finalized   = FALSE;
-
 static GType    register_type( void );
-static void     interface_base_init( NAIOptionInterface *iface );
-static void     interface_base_finalize( NAIOptionInterface *iface );
+static void     interface_init( NAIOptionInterface *iface );
+static void     interface_finalize( NAIOptionInterface *iface );
+
 static guint    ioption_get_version( const NAIOption *instance );
 static void     check_for_initialized_instance( NAIOption *instance );
 static void     on_instance_finalized( gpointer user_data, GObject *instance );
@@ -84,8 +84,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIOptionInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_init,
+		( GBaseFinalizeFunc ) interface_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -104,32 +104,32 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIOptionInterface *iface )
+interface_init( NAIOptionInterface *iface )
 {
-	static const gchar *thisfn = "na_ioption_interface_base_init";
+	static const gchar *thisfn = "na_ioption_interface_init";
 
-	if( !st_ioption_iface_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: iface=%p (%s)", thisfn, ( void * ) iface, G_OBJECT_CLASS_NAME( iface ));
 
 		iface->private = g_new0( NAIOptionInterfacePrivate, 1 );
 
 		iface->get_version = ioption_get_version;
-
-		st_ioption_iface_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIOptionInterface *iface )
+interface_finalize( NAIOptionInterface *iface )
 {
-	static const gchar *thisfn = "na_ioption_interface_base_finalize";
+	static const gchar *thisfn = "na_ioption_interface_finalize";
 
-	if( st_ioption_iface_initialized && !st_ioption_iface_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
-
-		st_ioption_iface_finalized = TRUE;
 
 		g_free( iface->private );
 	}
