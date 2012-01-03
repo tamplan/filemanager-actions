@@ -157,7 +157,9 @@ GList    *na_settings_get_uint_list        ( const gchar *key, gboolean *found, 
 gboolean  na_settings_set_boolean          ( const gchar *key, gboolean value );
 gboolean  na_settings_set_boolean_ex       ( const gchar *group, const gchar *key, gboolean value );
 gboolean  na_settings_set_string           ( const gchar *key, const gchar *value );
+gboolean  na_settings_set_string_ex        ( const gchar *group, const gchar *key, const gchar *value );
 gboolean  na_settings_set_string_list      ( const gchar *key, const GSList *value );
+gboolean  na_settings_set_int_ex           ( const gchar *group, const gchar *key, int value );
 gboolean  na_settings_set_uint             ( const gchar *key, guint value );
 gboolean  na_settings_set_uint_list        ( const gchar *key, const GList *value );
 

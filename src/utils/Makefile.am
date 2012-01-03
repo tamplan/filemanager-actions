@@ -39,6 +39,7 @@ bin_PROGRAMS = \
 
 pkglibexec_PROGRAMS = \
 	na-print-schemas											\
+	na-set-conf													\
 	$(NULL)
 
 AM_CPPFLAGS += \
@@ -93,6 +94,16 @@ na_print_schemas_SOURCES = \
 	$(NULL)
 
 na_print_schemas_LDADD = \
+	$(NA_UTILS_LDADD)											\
+	$(NULL)
+
+na_set_conf_SOURCES = \
+	na-set-conf.c												\
+	console-utils.c												\
+	console-utils.h												\
+	$(NULL)
+
+na_set_conf_LDADD = \
 	$(NA_UTILS_LDADD)											\
 	$(NULL)
 

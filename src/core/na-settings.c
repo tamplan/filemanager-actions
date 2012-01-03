@@ -780,6 +780,24 @@ na_settings_set_string( const gchar *key, const gchar *value )
 }
 
 /**
+ * na_settings_set_string_ex:
+ * @group: the group in the keyed file;
+ * @key: the key whose value is to be returned.
+ * @value: the string to be written.
+ *
+ * This function writes @value as a user preference.
+ *
+ * Returns: %TRUE is the writing has been successful, %FALSE else.
+ *
+ * Since: 3.2
+ */
+gboolean
+na_settings_set_string_ex( const gchar *group, const gchar *key, const gchar *value )
+{
+	return( set_key_value( group, key, value ));
+}
+
+/**
  * na_settings_set_string_list:
  * @key: the key whose value is to be returned.
  * @value: the list of strings to be written.
@@ -806,6 +824,31 @@ na_settings_set_string_list( const gchar *key, const GSList *value )
 	}
 	ok = set_key_value( NULL, key, string->str );
 	g_string_free( string, TRUE );
+
+	return( ok );
+}
+
+/**
+ * na_settings_set_int_ex:
+ * @group: the group in the keyed file;
+ * @key: the key whose value is to be returned.
+ * @value: the unsigned integer to be written.
+ *
+ * This function writes @value as a user preference.
+ *
+ * Returns: %TRUE is the writing has been successful, %FALSE else.
+ *
+ * Since: 3.2
+ */
+gboolean
+na_settings_set_int_ex( const gchar *group, const gchar *key, int value )
+{
+	gchar *string;
+	gboolean ok;
+
+	string = g_strdup_printf( "%d", value );
+	ok = set_key_value( group, key, string );
+	g_free( string );
 
 	return( ok );
 }

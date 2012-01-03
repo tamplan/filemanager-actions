@@ -1,5 +1,13 @@
 2012-01-03 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/utils/na-set-conf.c: New program.
+
+	* src/core/na-settings.c:
+	* src/core/na-settings.h
+	(na_settings_set_string_ex,	na_settings_set_int_ex): New functions.
+
+	* src/utils/Makefile.am: Updated accordingly.
+
 	* src/utils/Makefile.am: Factorize library declarations.
 
 2012-01-02 Pierre Wieser <pwieser@trychlos.org>
