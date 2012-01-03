@@ -49,13 +49,12 @@ enum {
 	LAST_SIGNAL
 };
 
-static gboolean st_initialized            = FALSE;
-static gboolean st_finalized              = FALSE;
-static gint     st_signals[ LAST_SIGNAL ] = { 0 };
+static guint st_initializations = 0;	/* interface initialization count */
+static gint  st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType    register_type( void );
-static void     interface_base_init( NAIIOProviderInterface *klass );
-static void     interface_base_finalize( NAIIOProviderInterface *klass );
+static void     interface_init( NAIIOProviderInterface *klass );
+static void     interface_finalize( NAIIOProviderInterface *klass );
 
 static gboolean do_is_willing_to_write( const NAIIOProvider *instance );
 static gboolean do_is_able_to_write( const NAIIOProvider *instance );
@@ -90,8 +89,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIIOProviderInterface ),
-		( GBaseInitFunc ) interface_base_init,
-		( GBaseFinalizeFunc ) interface_base_finalize,
+		( GBaseInitFunc ) interface_init,
+		( GBaseFinalizeFunc ) interface_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -110,11 +109,11 @@ register_type( void )
 }
 
 static void
-interface_base_init( NAIIOProviderInterface *klass )
+interface_init( NAIIOProviderInterface *klass )
 {
-	static const gchar *thisfn = "na_iio_provider_interface_base_init";
+	static const gchar *thisfn = "na_iio_provider_interface_init";
 
-	if( !st_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass%p (%s)", thisfn, ( void * ) klass, G_OBJECT_CLASS_NAME( klass ));
 
@@ -151,21 +150,21 @@ interface_base_init( NAIIOProviderInterface *klass )
 					g_cclosure_marshal_VOID__VOID,
 					G_TYPE_NONE,
 					0 );
-
-		st_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
-interface_base_finalize( NAIIOProviderInterface *klass )
+interface_finalize( NAIIOProviderInterface *klass )
 {
-	static const gchar *thisfn = "na_iio_provider_interface_base_finalize";
+	static const gchar *thisfn = "na_iio_provider_interface_finalize";
 
-	if( st_initialized && !st_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		st_finalized = TRUE;
 
 		g_free( klass->private );
 	}
