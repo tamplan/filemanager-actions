@@ -1,5 +1,7 @@
 2012-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-icommand-tab.c: Review NactICommandTab interface.
+
 	* src/nact/nact-icapabilities-tab.c: Review NactICapabilitiesTab interface.
 
 	* src/nact/nact-ibasenames-tab.c: Review NactIBasenamesTab interface.
