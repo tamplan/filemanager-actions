@@ -48,8 +48,7 @@ struct _NactIMimetypesTabInterfacePrivate {
 
 #define ITAB_NAME						"mimetypes"
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized = FALSE;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType   register_type( void );
 static void    interface_base_init( NactIMimetypesTabInterface *klass );
@@ -104,14 +103,14 @@ interface_base_init( NactIMimetypesTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_imimetypes_tab_interface_base_init";
 
-	if( !st_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIMimetypesTabInterfacePrivate, 1 );
-
-		st_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
@@ -119,11 +118,11 @@ interface_base_finalize( NactIMimetypesTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_imimetypes_tab_interface_base_finalize";
 
-	if( st_initialized && !st_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		st_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -143,25 +142,22 @@ nact_imimetypes_tab_initial_load_toplevel( NactIMimetypesTab *instance )
 
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	list = base_window_get_widget( BASE_WINDOW( instance ), "MimetypesTreeView" );
+	add = base_window_get_widget( BASE_WINDOW( instance ), "AddMimetypeButton" );
+	remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveMimetypeButton" );
 
-		list = base_window_get_widget( BASE_WINDOW( instance ), "MimetypesTreeView" );
-		add = base_window_get_widget( BASE_WINDOW( instance ), "AddMimetypeButton" );
-		remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveMimetypeButton" );
-
-		nact_match_list_create_model(
-				BASE_WINDOW( instance ),
-				ITAB_NAME,
-				TAB_MIMETYPES,
-				list, add, remove,
-				( pget_filters ) get_mimetypes,
-				( pset_filters ) set_mimetypes,
-				NULL,
-				MATCH_LIST_MUST_MATCH_ONE_OF,
-				_( "Mimetype filter" ), TRUE );
-	}
+	nact_match_list_create_model(
+			BASE_WINDOW( instance ),
+			ITAB_NAME,
+			TAB_MIMETYPES,
+			list, add, remove,
+			( pget_filters ) get_mimetypes,
+			( pset_filters ) set_mimetypes,
+			NULL,
+			MATCH_LIST_MUST_MATCH_ONE_OF,
+			_( "Mimetype filter" ), TRUE );
 }
 
 /**
@@ -178,15 +174,15 @@ nact_imimetypes_tab_runtime_init_toplevel( NactIMimetypesTab *instance )
 
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			MAIN_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_main_selection_changed ));
 
-		base_window_signal_connect( BASE_WINDOW( instance ),
-				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
-
-		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
-	}
+	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 void
@@ -196,10 +192,7 @@ nact_imimetypes_tab_all_widgets_showed( NactIMimetypesTab *instance )
 
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	}
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 }
 
 /**
@@ -215,12 +208,9 @@ nact_imimetypes_tab_dispose( NactIMimetypesTab *instance )
 
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
-		nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
-	}
+	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 static void

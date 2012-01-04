@@ -1,5 +1,7 @@
 2012-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-imimetypes-tab.c: Review NactIMimetypesTab interface.
+
 	* src/nact/nact-ifolders-tab.c: Review NactIFoldersTab interface.
 
 	* src/nact/nact-iexecution-tab.c: Review NactIExecutionTab interface.
