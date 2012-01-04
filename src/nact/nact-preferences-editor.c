@@ -48,7 +48,6 @@
 #include <core/na-tokens.h>
 
 #include "nact-application.h"
-#include "nact-export-format.h"
 #include "base-gtk-utils.h"
 #include "nact-schemes-list.h"
 #include "nact-providers-list.h"
@@ -312,7 +311,7 @@ ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *contain
 	option = NULL;
 
 	if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesExportFormatVBox" )){
-		option = nact_export_format_get_ask_option();
+		option = na_exporter_get_ask_option();
 
 	} else if( container == base_window_get_widget( BASE_WINDOW( instance ), "PreferencesImportModeVBox" )){
 		option = na_importer_get_ask_mode();

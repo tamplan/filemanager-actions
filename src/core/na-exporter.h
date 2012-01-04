@@ -38,15 +38,24 @@
 
 #include <api/na-object-api.h>
 
+#include "na-ioption.h"
 #include "na-pivot.h"
 
 G_BEGIN_DECLS
 
-GList *na_exporter_get_formats ( const NAPivot *pivot );
-void   na_exporter_free_formats( GList *formats );
+typedef enum {
+	EXPORTER_FORMAT_NO_EXPORT = 1,
+	EXPORTER_FORMAT_ASK,
+}
+	NAExporterExportFormat;
 
-gchar *na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark format, GSList **messages );
-gchar *na_exporter_to_file  ( const NAPivot *pivot, const NAObjectItem *item, const gchar *folder_uri, GQuark format, GSList **messages );
+GList     *na_exporter_get_formats   ( const NAPivot *pivot );
+void       na_exporter_free_formats  ( GList *formats );
+
+NAIOption *na_exporter_get_ask_option( void );
+
+gchar     *na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark format, GSList **messages );
+gchar     *na_exporter_to_file  ( const NAPivot *pivot, const NAObjectItem *item, const gchar *folder_uri, GQuark format, GSList **messages );
 
 G_END_DECLS
 

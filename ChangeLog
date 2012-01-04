@@ -1,5 +1,18 @@
 2012-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	Move 'Ask' export format to NAExporter.
+
+	* src/core/Makefile.am:
+	* src/nact/Makefile.am: Move export-format-ask.png to src/core.
+
+	* nact-export-format.c:
+	* nact-export-format.h: Removed files.
+
+	* po/POTFILES.in:
+	* src/nact/nact-assistant-export.c (ioptions_list_get_ask_option):
+	* src/nact/nact-preferences-editor.c (ioptions_list_get_ask_option):
+	Updated accordingly.
+
 	* src/api/na-iimporter.h: Deprecate NAIImporterImportMode enum.
 
 	* src/core/na-importer.h: Define new NAImporterImportMode enum here.

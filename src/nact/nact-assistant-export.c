@@ -48,7 +48,6 @@
 #include "nact-main-window.h"
 #include "nact-assistant-export.h"
 #include "nact-export-ask.h"
-#include "nact-export-format.h"
 #include "nact-tree-view.h"
 
 /* Export Assistant
@@ -234,7 +233,7 @@ ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container
 static NAIOption *
 ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container )
 {
-	return( nact_export_format_get_ask_option());
+	return( na_exporter_get_ask_option());
 }
 
 static void

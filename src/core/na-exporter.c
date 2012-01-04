@@ -37,10 +37,28 @@
 #include "na-exporter.h"
 #include "na-export-format.h"
 
+typedef struct {
+	const gchar *format;				/* export format saved in user's preferences */
+	const gchar *label;					/* short label */
+	const gchar *description;			/* full description */
+	const gchar *image;					/* associated image */
+}
+	NAExporterFormatStr;
+
+static NAExporterFormatStr st_format_ask = {
+
+		"Ask",
+		N_( "_Ask me" ),
+		N_( "You will be asked for the format to choose each time an item " \
+			"is about to be exported." ),
+		"export-format-ask.png"
+};
+
 static GList       *exporter_get_formats( const NAIExporter *exporter );
 static void         exporter_free_formats( const NAIExporter *exporter, GList * str_list );
 static gchar       *exporter_get_name( const NAIExporter *exporter );
 static NAIExporter *find_exporter_for_format( const NAPivot *pivot, GQuark format );
+static void         on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
 
 /*
  * na_exporter_get_formats:
@@ -82,6 +100,75 @@ na_exporter_get_formats( const NAPivot *pivot )
 }
 
 /*
+ * Returns a GList of NAIExporterFormatExt structures which describes
+ * the export formats provided by the exporter
+ * If the provider only implements the v1 interface, we dynamically
+ * allocate a new structure and convert the v1 to the v2.
+ */
+static GList *
+exporter_get_formats( const NAIExporter *exporter )
+{
+	GList *str_list;
+	guint version;
+
+	str_list = NULL;
+
+	version = 1;
+	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
+		version = NA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
+	}
+
+	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
+		if( version == 1 ){
+#ifdef NA_ENABLE_DEPRECATED
+			const NAIExporterFormat * strv1;
+			strv1 = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
+			while( strv1->format ){
+				NAIExporterFormatExt *strv2 = g_new0( NAIExporterFormatExt, 1 );
+				strv2->version = 1;
+				strv2->provider = ( NAIExporter * ) exporter;
+				strv2->format = strv1->format;
+				strv2->label = strv1->label;
+				strv2->description = strv1->description;
+				strv2->pixbuf = NULL;
+				str_list = g_list_prepend( str_list, strv2 );
+				strv1++;
+			}
+#else
+			;
+#endif
+		} else {
+			str_list = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
+		}
+	}
+
+	return( str_list );
+}
+
+/*
+ * Free the list returned by exporter_get_formats() for this provider
+ */
+static void
+exporter_free_formats( const NAIExporter *exporter, GList *str_list )
+{
+	guint version;
+
+	version = 1;
+	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
+		version = NA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
+	}
+
+	if( version == 1 ){
+		g_list_foreach( str_list, ( GFunc ) g_free, NULL );
+		g_list_free( str_list );
+
+	} else {
+		g_return_if_fail( NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats );
+		NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats( exporter, str_list );
+	}
+}
+
+/*
  * na_exporter_free_formats:
  * @formats: a list of available export formats, as returned by
  *  na_exporter_get_formats().
@@ -97,6 +184,61 @@ na_exporter_free_formats( GList *formats )
 
 	g_list_foreach( formats, ( GFunc ) g_object_unref, NULL );
 	g_list_free( formats );
+}
+
+/*
+ * na_exporter_get_ask_option:
+ *
+ * Returns the 'Ask me' option.
+ *
+ * Since: 3.2
+ */
+NAIOption *
+na_exporter_get_ask_option( void )
+{
+	static const gchar *thisfn = "na_exporter_get_ask_option";
+	NAIExporterFormatExt *str;
+	gint width, height;
+	gchar *fname;
+	NAExportFormat *format;
+
+	if( !gtk_icon_size_lookup( GTK_ICON_SIZE_DIALOG, &width, &height )){
+		width = height = 48;
+	}
+
+	str = g_new0( NAIExporterFormatExt, 1 );
+	str->version = 2;
+	str->provider = NULL;
+	str->format = g_strdup( st_format_ask.format );
+	str->label = g_strdup( gettext( st_format_ask.label ));
+	str->description = g_strdup( gettext( st_format_ask.description ));
+	if( st_format_ask.image ){
+		fname = g_strdup_printf( "%s/%s", PKGDATADIR, st_format_ask.image );
+		str->pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
+		g_free( fname );
+		if( str->pixbuf ){
+			g_debug( "%s: allocating pixbuf at %p", thisfn, str->pixbuf );
+			g_object_weak_ref( G_OBJECT( str->pixbuf ), ( GWeakNotify ) on_pixbuf_finalized, NULL );
+		}
+	}
+
+	format = na_export_format_new( str );
+
+	if( str->pixbuf ){
+		g_object_unref( str->pixbuf );
+	}
+	g_free( str->description );
+	g_free( str->label );
+	g_free( str->format );
+	g_free( str );
+
+	return( NA_IOPTION( format ));
+}
+
+static void
+on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
+{
+	g_debug( "na_exporter_on_pixbuf_finalized: pixbuf=%p", ( void * ) pixbuf );
 }
 
 /*
@@ -235,75 +377,6 @@ na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar
 	}
 
 	return( export_uri );
-}
-
-/*
- * Returns a GList of NAIExporterFormatExt structures which describes
- * the export formats provided by the exporter
- * If the provider only implements the v1 interface, we dynamically
- * allocate a new structure and convert the v1 to the v2.
- */
-static GList *
-exporter_get_formats( const NAIExporter *exporter )
-{
-	GList *str_list;
-	guint version;
-
-	str_list = NULL;
-
-	version = 1;
-	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
-		version = NA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
-	}
-
-	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
-		if( version == 1 ){
-#ifdef NA_ENABLE_DEPRECATED
-			const NAIExporterFormat * strv1;
-			strv1 = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
-			while( strv1->format ){
-				NAIExporterFormatExt *strv2 = g_new0( NAIExporterFormatExt, 1 );
-				strv2->version = 1;
-				strv2->provider = ( NAIExporter * ) exporter;
-				strv2->format = strv1->format;
-				strv2->label = strv1->label;
-				strv2->description = strv1->description;
-				strv2->pixbuf = NULL;
-				str_list = g_list_prepend( str_list, strv2 );
-				strv1++;
-			}
-#else
-			;
-#endif
-		} else {
-			str_list = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
-		}
-	}
-
-	return( str_list );
-}
-
-/*
- * Free the list returned by exporter_get_formats() for this provider
- */
-static void
-exporter_free_formats( const NAIExporter *exporter, GList *str_list )
-{
-	guint version;
-
-	version = 1;
-	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_version ){
-		version = NA_IEXPORTER_GET_INTERFACE( exporter )->get_version( exporter );
-	}
-
-	if( version == 1 ){
-		g_list_foreach( str_list, ( GFunc ) g_free, NULL );
-		g_list_free( str_list );
-
-	} else {
-		g_return_if_fail( NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats );
-		NA_IEXPORTER_GET_INTERFACE( exporter )->free_formats( exporter, str_list );
-	}
 }
 
 static gchar *

@@ -139,6 +139,7 @@ libna_core_la_LDFLAGS = \
 
 pkgdata_DATA = \
 	na-importer-ask.ui									\
+	export-format-ask.png								\
 	$(NULL)
 
 CLEANFILES = \

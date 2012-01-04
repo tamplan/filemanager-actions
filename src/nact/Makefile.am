@@ -86,8 +86,6 @@ nautilus_actions_config_tool_SOURCES = \
 	nact-confirm-logout.h								\
 	nact-export-ask.c									\
 	nact-export-ask.h									\
-	nact-export-format.c								\
-	nact-export-format.h								\
 	nact-iaction-tab.c									\
 	nact-iaction-tab.h									\
 	nact-ibasenames-tab.c								\
@@ -176,7 +174,6 @@ ui_files = \
 	$(NULL)
 
 images_files = \
-	export-format-ask.png								\
 	import-mode-ask.png									\
 	import-mode-no-import.png							\
 	import-mode-override.png							\
