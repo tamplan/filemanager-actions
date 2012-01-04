@@ -49,8 +49,7 @@ struct _NactIBasenamesTabInterfacePrivate {
 
 #define ITAB_NAME						"basenames"
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized = FALSE;
+static guint    st_initializations = 0;	/* interface initialization count */
 static gboolean st_on_selection_change = FALSE;
 
 static GType   register_type( void );
@@ -107,14 +106,14 @@ interface_base_init( NactIBasenamesTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_ibasenames_tab_interface_base_init";
 
-	if( !st_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIBasenamesTabInterfacePrivate, 1 );
-
-		st_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
@@ -122,11 +121,11 @@ interface_base_finalize( NactIBasenamesTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_ibasenames_tab_interface_base_finalize";
 
-	if( st_initialized && !st_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		st_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -146,25 +145,22 @@ nact_ibasenames_tab_initial_load_toplevel( NactIBasenamesTab *instance )
 
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	list = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesTreeView" );
+	add = base_window_get_widget( BASE_WINDOW( instance ), "AddBasenameButton" );
+	remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveBasenameButton" );
 
-		list = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesTreeView" );
-		add = base_window_get_widget( BASE_WINDOW( instance ), "AddBasenameButton" );
-		remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveBasenameButton" );
-
-		nact_match_list_create_model(
-				BASE_WINDOW( instance ),
-				ITAB_NAME,
-				TAB_BASENAMES,
-				list, add, remove,
-				( pget_filters ) get_basenames,
-				( pset_filters ) set_basenames,
-				NULL,
-				MATCH_LIST_MUST_MATCH_ONE_OF,
-				_( "Basename filter" ), TRUE );
-	}
+	nact_match_list_create_model(
+			BASE_WINDOW( instance ),
+			ITAB_NAME,
+			TAB_BASENAMES,
+			list, add, remove,
+			( pget_filters ) get_basenames,
+			( pset_filters ) set_basenames,
+			NULL,
+			MATCH_LIST_MUST_MATCH_ONE_OF,
+			_( "Basename filter" ), TRUE );
 }
 
 /**
@@ -182,22 +178,22 @@ nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance )
 
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			MAIN_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_main_selection_changed ));
 
-		base_window_signal_connect( BASE_WINDOW( instance ),
-				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
+	button = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesMatchcaseButton" );
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( button ),
+			"toggled",
+			G_CALLBACK( on_matchcase_toggled ));
 
-		button = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesMatchcaseButton" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( button ),
-				"toggled",
-				G_CALLBACK( on_matchcase_toggled ));
-
-		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
-	}
+	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 void
@@ -207,10 +203,7 @@ nact_ibasenames_tab_all_widgets_showed( NactIBasenamesTab *instance )
 
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	}
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 }
 
 /**
@@ -226,12 +219,9 @@ nact_ibasenames_tab_dispose( NactIBasenamesTab *instance )
 
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
-		nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
-	}
+	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 static void
@@ -243,25 +233,22 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer u
 	GtkToggleButton *matchcase_button;
 	gboolean matchcase;
 
-	if( st_initialized && !st_finalized ){
+	count_selected = g_list_length( selected_items );
 
-		count_selected = g_list_length( selected_items );
+	g_object_get( G_OBJECT( window ),
+			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+			NULL );
 
-		g_object_get( G_OBJECT( window ),
-				MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
-				NULL );
+	st_on_selection_change = TRUE;
 
-		st_on_selection_change = TRUE;
+	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
 
-		nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
+	matchcase_button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, "BasenamesMatchcaseButton" ));
+	matchcase = context ? na_object_get_matchcase( context ) : FALSE;
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
+	base_gtk_utils_set_editable( G_OBJECT( matchcase_button ), editable );
 
-		matchcase_button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, "BasenamesMatchcaseButton" ));
-		matchcase = context ? na_object_get_matchcase( context ) : FALSE;
-		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
-		base_gtk_utils_set_editable( G_OBJECT( matchcase_button ), editable );
-
-		st_on_selection_change = FALSE;
-	}
+	st_on_selection_change = FALSE;
 }
 
 static void
