@@ -38,6 +38,8 @@
  * @include: utils/console-utils.h
  */
 
+#include <glib.h>
+
 G_BEGIN_DECLS
 
 gchar *console_cmdline_get_description( void );
