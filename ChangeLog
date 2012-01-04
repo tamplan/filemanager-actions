@@ -1,5 +1,7 @@
 2012-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-ieditable.c: Review NactTreeIEditable interface.
+
 	* src/nact/nact-ischemes-tab.c: Review NactISchemesTab interface.
 
 	* src/nact/nact-iproperties-tab.c: Review NactIPropertiesTab interface.
