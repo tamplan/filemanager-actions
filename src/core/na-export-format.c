@@ -57,7 +57,7 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType      register_type( void );
 static void       class_init( NAExportFormatClass *klass );
-static void       ioption_iface_init( NAIOptionInterface *iface );
+static void       ioption_iface_init( NAIOptionInterface *iface, void *user_data );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_dispose( GObject *object );
 static void       instance_finalize( GObject *object );
@@ -129,11 +129,11 @@ class_init( NAExportFormatClass *klass )
 }
 
 static void
-ioption_iface_init( NAIOptionInterface *iface )
+ioption_iface_init( NAIOptionInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_export_format_ioption_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->get_id = ioption_get_id;
 	iface->get_label = ioption_get_label;

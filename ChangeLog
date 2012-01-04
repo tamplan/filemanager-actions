@@ -1,5 +1,32 @@
 2012-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	Review interface initialization in implementations.
+
+	* src/core/na-export-format.c (ioption_iface_init):
+	* src/core/na-import-mode.c (ioption_iface_init):
+	* src/core/na-importer-ask.c (ioptions_list_iface_init):
+	* src/core/na-object-action.c
+	(ifactory_object_iface_init, icontext_iface_init):
+	* src/core/na-object-menu.c
+	(ifactory_object_iface_init, icontext_iface_init):
+	* src/core/na-object-profile.c
+	(ifactory_object_iface_init, icontext_iface_init):
+	* src/core/na-object.c (iduplicable_iface_init):
+	* src/nact/nact-assistant-export.c (ioptions_list_iface_init):
+	* src/nact/nact-assistant-import.c (ioptions_list_iface_init):
+	* src/nact/nact-export-ask.c (ioptions_list_iface_init):
+	* src/nact/nact-main-window.c
+	(iaction_tab_iface_init, icommand_tab_iface_init,
+	ibasenames_tab_iface_init, imimetypes_tab_iface_init,
+	ifolders_tab_iface_init, ischemes_tab_iface_init,
+	icapabilities_tab_iface_init, ienvironment_tab_iface_init,
+	iexecution_tab_iface_init, iproperties_tab_iface_init):
+	* src/nact/nact-preferences-editor.c (ioptions_list_iface_init):
+	* src/nact/nact-tree-model.c
+	(imulti_drag_source_init, idrag_dest_init):
+	* src/nact/nact-tree-view.c (tree_ieditable_iface_init):
+	* src/test/test-iface-base.c (iface_iface_init): Add user_data parameter.
+
 	* src/nact/nact-tree-ieditable.c: Review NactTreeIEditable interface.
 
 	* src/nact/nact-ischemes-tab.c: Review NactISchemesTab interface.

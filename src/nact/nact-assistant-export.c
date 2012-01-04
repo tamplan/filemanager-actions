@@ -103,29 +103,29 @@ static const gchar        *st_wsp_name       = NA_IPREFS_EXPORT_ASSISTANT_WSP;
 
 static BaseAssistantClass *st_parent_class   = NULL;
 
-static GType           register_type( void );
-static void            class_init( NactAssistantExportClass *klass );
-static void            ioptions_list_iface_init( NAIOptionsListInterface *iface );
-static GList          *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
-static void            ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats );
-static NAIOption      *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
-static void            instance_init( GTypeInstance *instance, gpointer klass );
-static void            instance_constructed( GObject *instance );
-static void            instance_dispose( GObject *instance );
-static void            instance_finalize( GObject *instance );
-static void            on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *toplevel, gpointer user_data );
-static void            items_tree_view_initialize_gtk( NactAssistantExport *window, GtkAssistant *toplevel );
-static void            folder_chooser_initialize_gtk( NactAssistantExport *window );
-static void            format_tree_view_initialize_gtk( NactAssistantExport *window );
-static void            on_base_initialize_base_window( NactAssistantExport *window, gpointer user_data );
-static void            on_base_all_widgets_showed( NactAssistantExport *window, gpointer user_data );
-static void            on_items_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data );
-static void            on_folder_chooser_selection_changed( GtkFileChooser *chooser, NactAssistantExport *window );
-static void            assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
-static void            assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
-static void            assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
-static void            assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
-static void            free_results( GList *list );
+static GType      register_type( void );
+static void       class_init( NactAssistantExportClass *klass );
+static void       ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data );
+static GList     *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
+static void       ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats );
+static NAIOption *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
+static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_constructed( GObject *instance );
+static void       instance_dispose( GObject *instance );
+static void       instance_finalize( GObject *instance );
+static void       on_base_initialize_gtk_toplevel( NactAssistantExport *window, GtkAssistant *toplevel, gpointer user_data );
+static void       items_tree_view_initialize_gtk( NactAssistantExport *window, GtkAssistant *toplevel );
+static void       folder_chooser_initialize_gtk( NactAssistantExport *window );
+static void       format_tree_view_initialize_gtk( NactAssistantExport *window );
+static void       on_base_initialize_base_window( NactAssistantExport *window, gpointer user_data );
+static void       on_base_all_widgets_showed( NactAssistantExport *window, gpointer user_data );
+static void       on_items_tree_view_selection_changed( NactAssistantExport *window, GList *selected_items, gpointer user_data );
+static void       on_folder_chooser_selection_changed( GtkFileChooser *chooser, NactAssistantExport *window );
+static void       assistant_prepare( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
+static void       assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
+static void       assistant_apply( BaseAssistant *window, GtkAssistant *assistant );
+static void       assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant, GtkWidget *page );
+static void       free_results( GList *list );
 
 GType
 nact_assistant_export_get_type( void )
@@ -196,11 +196,11 @@ class_init( NactAssistantExportClass *klass )
 }
 
 static void
-ioptions_list_iface_init( NAIOptionsListInterface *iface )
+ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->get_options = ioptions_list_get_formats;
 	iface->free_options = ioptions_list_free_formats;

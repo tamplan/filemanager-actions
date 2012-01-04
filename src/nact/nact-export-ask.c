@@ -74,7 +74,7 @@ static BaseDialogClass *st_parent_class   = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactExportAskClass *klass );
-static void     ioptions_list_iface_init( NAIOptionsListInterface *iface );
+static void     ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data );
 static GList   *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
 static void     ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
@@ -150,11 +150,11 @@ class_init( NactExportAskClass *klass )
 }
 
 static void
-ioptions_list_iface_init( NAIOptionsListInterface *iface )
+ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->get_options = ioptions_list_get_formats;
 	iface->free_options = ioptions_list_free_formats;

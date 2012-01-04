@@ -161,16 +161,16 @@ static gint             st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType      register_type( void );
 static void       class_init( NactMainWindowClass *klass );
-static void       iaction_tab_iface_init( NactIActionTabInterface *iface );
-static void       icommand_tab_iface_init( NactICommandTabInterface *iface );
-static void       ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface );
-static void       imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface );
-static void       ifolders_tab_iface_init( NactIFoldersTabInterface *iface );
-static void       ischemes_tab_iface_init( NactISchemesTabInterface *iface );
-static void       icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface );
-static void       ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface );
-static void       iexecution_tab_iface_init( NactIExecutionTabInterface *iface );
-static void       iproperties_tab_iface_init( NactIPropertiesTabInterface *iface );
+static void       iaction_tab_iface_init( NactIActionTabInterface *iface, void *user_data );
+static void       icommand_tab_iface_init( NactICommandTabInterface *iface, void *user_data );
+static void       ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface, void *user_data );
+static void       imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface, void *user_data );
+static void       ifolders_tab_iface_init( NactIFoldersTabInterface *iface, void *user_data );
+static void       ischemes_tab_iface_init( NactISchemesTabInterface *iface, void *user_data );
+static void       icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface, void *user_data );
+static void       ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface, void *user_data );
+static void       iexecution_tab_iface_init( NactIExecutionTabInterface *iface, void *user_data );
+static void       iproperties_tab_iface_init( NactIPropertiesTabInterface *iface, void *user_data );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -454,83 +454,83 @@ class_init( NactMainWindowClass *klass )
 }
 
 static void
-iaction_tab_iface_init( NactIActionTabInterface *iface )
+iaction_tab_iface_init( NactIActionTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_iaction_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
-icommand_tab_iface_init( NactICommandTabInterface *iface )
+icommand_tab_iface_init( NactICommandTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_icommand_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
-ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface )
+ibasenames_tab_iface_init( NactIBasenamesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_ibasenames_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
-imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface )
+imimetypes_tab_iface_init( NactIMimetypesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_imimetypes_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
-ifolders_tab_iface_init( NactIFoldersTabInterface *iface )
+ifolders_tab_iface_init( NactIFoldersTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_ifolders_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
-ischemes_tab_iface_init( NactISchemesTabInterface *iface )
+ischemes_tab_iface_init( NactISchemesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_ischemes_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
-icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface )
+icapabilities_tab_iface_init( NactICapabilitiesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_icapabilities_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
-ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface )
+ienvironment_tab_iface_init( NactIEnvironmentTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_ienvironment_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
-iexecution_tab_iface_init( NactIExecutionTabInterface *iface )
+iexecution_tab_iface_init( NactIExecutionTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_iexecution_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
-iproperties_tab_iface_init( NactIPropertiesTabInterface *iface )
+iproperties_tab_iface_init( NactIPropertiesTabInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_iproperties_tab_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void

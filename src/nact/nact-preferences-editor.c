@@ -128,7 +128,7 @@ static guint              st_last_tab       = 0;
 
 static GType      register_type( void );
 static void       class_init( NactPreferencesEditorClass *klass );
-static void       ioptions_list_iface_init( NAIOptionsListInterface *iface );
+static void       ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data );
 static GList     *ioptions_list_get_options( const NAIOptionsList *instance, GtkWidget *container );
 static void       ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container, GList *options );
 static NAIOption *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
@@ -236,11 +236,11 @@ class_init( NactPreferencesEditorClass *klass )
 }
 
 static void
-ioptions_list_iface_init( NAIOptionsListInterface *iface )
+ioptions_list_iface_init( NAIOptionsListInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_assistant_export_ioptions_list_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->get_options = ioptions_list_get_options;
 	iface->free_options = ioptions_list_free_options;

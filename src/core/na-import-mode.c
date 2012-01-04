@@ -74,7 +74,7 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType      register_type( void );
 static void       class_init( NAImportModeClass *klass );
-static void       ioption_iface_init( NAIOptionInterface *iface );
+static void       ioption_iface_init( NAIOptionInterface *iface, void *user_data );
 static gchar     *ioption_get_id( const NAIOption *option );
 static gchar     *ioption_get_label( const NAIOption *option );
 static gchar     *ioption_get_description( const NAIOption *option );
@@ -181,11 +181,11 @@ class_init( NAImportModeClass *klass )
 }
 
 static void
-ioption_iface_init( NAIOptionInterface *iface )
+ioption_iface_init( NAIOptionInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_import_mode_ioption_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->get_id = ioption_get_id;
 	iface->get_label = ioption_get_label;

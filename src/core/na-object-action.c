@@ -76,14 +76,14 @@ static void         object_dump( const NAObject *object );
 static gboolean     object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean     object_is_valid( const NAObject *object );
 
-static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface );
+static void         ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data );
 static guint        ifactory_object_get_version( const NAIFactoryObject *instance );
 static NADataGroup *ifactory_object_get_groups( const NAIFactoryObject *instance );
 static void         ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages );
 static guint        ifactory_object_write_start( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 static guint        ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider *writer, void *writer_data, GSList **messages );
 
-static void         icontext_iface_init( NAIContextInterface *iface );
+static void         icontext_iface_init( NAIContextInterface *iface, void *user_data );
 static gboolean     icontext_is_candidate( NAIContext *object, guint target, GList *selection );
 
 static NAObjectProfile *read_done_convert_v1_to_v2( NAIFactoryObject *instance );
@@ -351,11 +351,11 @@ object_is_valid( const NAObject *object )
 }
 
 static void
-ifactory_object_iface_init( NAIFactoryObjectInterface *iface )
+ifactory_object_iface_init( NAIFactoryObjectInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_object_action_ifactory_object_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->get_version = ifactory_object_get_version;
 	iface->get_groups = ifactory_object_get_groups;
@@ -437,11 +437,11 @@ ifactory_object_write_done( NAIFactoryObject *instance, const NAIFactoryProvider
 }
 
 static void
-icontext_iface_init( NAIContextInterface *iface )
+icontext_iface_init( NAIContextInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_object_action_icontext_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->is_candidate = icontext_is_candidate;
 }

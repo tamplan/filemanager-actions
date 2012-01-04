@@ -55,7 +55,7 @@ static void  instance_init( GTypeInstance *instance, gpointer klass );
 static void  instance_dispose( GObject *object );
 static void  instance_finalize( GObject *object );
 
-static void  iface_iface_init( TestIFaceInterface *iface );
+static void  iface_iface_init( TestIFaceInterface *iface, void *user_data );
 static void  iface_fna( TestIFace *object );
 static void  iface_fnb( TestIFace *object );
 
@@ -182,11 +182,11 @@ test_base_new( void )
 }
 
 static void
-iface_iface_init( TestIFaceInterface *iface )
+iface_iface_init( TestIFaceInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "test_iface_base_iface_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->fna = iface_fna;
 	iface->fnb = iface_fnb;

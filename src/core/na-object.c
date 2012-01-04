@@ -58,7 +58,7 @@ static void     instance_finalize( GObject *object );
 
 static void     object_dump( const NAObject *object );
 
-static void     iduplicable_iface_init( NAIDuplicableInterface *iface );
+static void     iduplicable_iface_init( NAIDuplicableInterface *iface, void *user_data );
 static void     iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
 static gboolean iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
 static gboolean iduplicable_is_valid( const NAIDuplicable *object );
@@ -217,11 +217,11 @@ object_dump( const NAObject *object )
 }
 
 static void
-iduplicable_iface_init( NAIDuplicableInterface *iface )
+iduplicable_iface_init( NAIDuplicableInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "na_object_iduplicable_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->copy = iduplicable_copy;
 	iface->are_equal = iduplicable_are_equal;

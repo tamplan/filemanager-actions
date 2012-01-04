@@ -133,7 +133,7 @@ static GObjectClass *st_parent_class           = NULL;
 
 static GType      register_type( void );
 static void       class_init( NactTreeViewClass *klass );
-static void       tree_ieditable_iface_init( NactTreeIEditableInterface *iface );
+static void       tree_ieditable_iface_init( NactTreeIEditableInterface *iface, void *user_data );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
@@ -465,11 +465,11 @@ class_init( NactTreeViewClass *klass )
 }
 
 static void
-tree_ieditable_iface_init( NactTreeIEditableInterface *iface )
+tree_ieditable_iface_init( NactTreeIEditableInterface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_main_window_tree_ieditable_iface_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void

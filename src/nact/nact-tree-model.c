@@ -104,8 +104,8 @@ static GtkTreeModelFilterClass *st_parent_class = NULL;
 
 static GType    register_type( void );
 static void     class_init( NactTreeModelClass *klass );
-static void     imulti_drag_source_init( EggTreeMultiDragSourceIface *iface );
-static void     idrag_dest_init( GtkTreeDragDestIface *iface );
+static void     imulti_drag_source_init( EggTreeMultiDragSourceIface *iface, void *user_data );
+static void     idrag_dest_init( GtkTreeDragDestIface *iface, void *user_data );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *model );
 static void     instance_finalize( GObject *model );
@@ -203,11 +203,11 @@ class_init( NactTreeModelClass *klass )
 }
 
 static void
-imulti_drag_source_init( EggTreeMultiDragSourceIface *iface )
+imulti_drag_source_init( EggTreeMultiDragSourceIface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_tree_model_imulti_drag_source_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->row_draggable = nact_tree_model_dnd_imulti_drag_source_row_draggable;
 	iface->drag_data_get = nact_tree_model_dnd_imulti_drag_source_drag_data_get;
@@ -218,11 +218,11 @@ imulti_drag_source_init( EggTreeMultiDragSourceIface *iface )
 }
 
 static void
-idrag_dest_init( GtkTreeDragDestIface *iface )
+idrag_dest_init( GtkTreeDragDestIface *iface, void *user_data )
 {
 	static const gchar *thisfn = "nact_tree_model_idrag_dest_init";
 
-	g_debug( "%s: iface=%p", thisfn, ( void * ) iface );
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 
 	iface->drag_data_received = nact_tree_model_dnd_idrag_dest_drag_data_received;
 	iface->row_drop_possible = nact_tree_model_dnd_idrag_dest_row_drop_possible;
