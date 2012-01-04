@@ -39,29 +39,23 @@
 #include <api/na-iimporter.h>
 #include <api/na-object-api.h>
 
-#include "na-iprefs.h"
 #include "na-import-mode.h"
 #include "na-importer.h"
 #include "na-importer-ask.h"
 
 typedef struct {
-	guint  id;
-	gchar *mode;
-	gchar *label;
-	gchar *description;
-	gchar *image;
+	guint        id;				/* the import mode used in switch statement in the code */
+	const gchar *mode;				/* the import mode saved in user's preferences */
+	const gchar *label;				/* short label */
+	const gchar *description;		/* full description */
+	gchar       *image;				/* associated image */
 }
 	NAImportModeStr;
-
-#define IMPORT_MODE_NOIMPORT_STR			"NoImport"
-#define IMPORT_MODE_RENUMBER_STR			"Renumber"
-#define IMPORT_MODE_OVERRIDE_STR			"Override"
-#define IMPORT_MODE_ASK_STR					"Ask"
 
 static NAImportModeStr st_import_modes[] = {
 
 	{ IMPORTER_MODE_NO_IMPORT,
-			IMPORT_MODE_NOIMPORT_STR,
+			"NoImport",
 			N_( "Do _not import the item" ),
 			N_( "This used to be the historical behavior.\n" \
 				"The selected file will be marked as \"NOT OK\" in the Summary page.\n" \
@@ -69,7 +63,7 @@ static NAImportModeStr st_import_modes[] = {
 			"import-mode-no-import.png" },
 
 	{ IMPORTER_MODE_RENUMBER,
-			IMPORT_MODE_RENUMBER_STR,
+			"Renumber",
 			N_( "Import the item, _allocating it a new identifier" ),
 			N_( "The selected file will be imported with a slightly modified label " \
 				"indicating the renumbering.\n" \
@@ -77,7 +71,7 @@ static NAImportModeStr st_import_modes[] = {
 			"import-mode-renumber.png" },
 
 	{ IMPORTER_MODE_OVERRIDE,
-			IMPORT_MODE_OVERRIDE_STR,
+			"Override",
 			N_( "_Override the existing item" ),
 			N_( "The item found in the selected file will silently override the " \
 				"current one which has the same identifier.\n" \
@@ -90,7 +84,7 @@ static NAImportModeStr st_import_modes[] = {
 static NAImportModeStr st_import_ask_mode = {
 
 	IMPORTER_MODE_ASK,
-			IMPORT_MODE_ASK_STR,
+			"Ask",
 			N_( "_Ask me" ),
 			N_( "You will be asked each time an imported ID already exists." ),
 			"import-mode-ask.png"
@@ -101,6 +95,7 @@ static void              manage_import_mode( NAImporterParms *parms, GList *resu
 static NAObjectItem     *is_importing_already_exists( NAImporterParms *parms, GList *results, NAImporterResult *result );
 static void              renumber_label_item( NAObjectItem *item );
 static guint             ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms );
+static guint             get_id_from_string( const gchar *str );
 static NAIOption        *get_mode_from_struct( const NAImportModeStr *str );
 
 /* i18n: '%s' stands for the file URI */
@@ -140,6 +135,7 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 	GSList *uri;
 	NAImporterResult *import_result;
 	NAImporterAskUserParms ask_parms;
+	gchar *mode_str;
 
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 	g_return_val_if_fail( parms != NULL, NULL );
@@ -166,6 +162,14 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 	ask_parms.count = 0;
 	ask_parms.keep_choice = FALSE;
 	ask_parms.pivot = pivot;
+
+	/* set the default import mode
+	 */
+	if( !parms->preferred_mode ){
+		mode_str = na_settings_get_string( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL, NULL );
+		parms->preferred_mode = get_id_from_string( mode_str );
+		g_free( mode_str );
+	}
 
 	/* second phase: check for their pre-existence
 	 */
@@ -420,15 +424,40 @@ static guint
 ask_user_for_mode( const NAObjectItem *importing, const NAObjectItem *existing, NAImporterAskUserParms *parms )
 {
 	guint mode;
+	gchar *mode_str;
 
 	if( parms->count == 0 || !parms->keep_choice ){
 		mode = na_importer_ask_user( importing, existing, parms );
 
 	} else {
-		mode = na_iprefs_get_import_mode( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL );
+		mode_str = na_settings_get_string( NA_IPREFS_IMPORT_ASK_USER_LAST_MODE, NULL, NULL );
+		mode = get_id_from_string( mode_str );
+		g_free( mode_str );
 	}
 
 	return( mode );
+}
+
+static guint
+get_id_from_string( const gchar *str )
+{
+	int i;
+
+	/* search in standard import modes
+	 */
+	for( i = 0 ; st_import_modes[i].id ; ++i ){
+		if( !strcmp( st_import_modes[i].mode, str )){
+			return( st_import_modes[i].id );
+		}
+	}
+
+	/* else, is it ask option ?
+	 */
+	if( !strcmp( st_import_ask_mode.mode, str )){
+		return( st_import_ask_mode.id );
+	}
+
+	return( 0 );
 }
 
 /*

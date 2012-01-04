@@ -153,6 +153,7 @@ typedef struct {
 }
 	NAIImporterInterface;
 
+#ifdef NA_ENABLE_DEPRECATED
 /**
  * NAIImporterImportMode:
  * @IMPORTER_MODE_NO_IMPORT: a "do not import" mode.
@@ -161,6 +162,8 @@ typedef struct {
  * @IMPORTER_MODE_ASK:       ask the user for what to do with this particular item.
  *
  * Define the mode of an import operation.
+ *
+ * Deprecated: 3.2
  */
 typedef enum {
 	IMPORTER_MODE_NO_IMPORT = 1,
@@ -169,6 +172,7 @@ typedef enum {
 	IMPORTER_MODE_ASK
 }
 	NAIImporterImportMode;
+#endif
 
 /**
  * NAIImporterImportStatus:

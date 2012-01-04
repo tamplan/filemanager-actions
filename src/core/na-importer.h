@@ -66,6 +66,32 @@
 
 G_BEGIN_DECLS
 
+#ifndef NA_ENABLE_DEPRECATED
+/*
+ * NAImporterImportMode:
+ * @IMPORTER_MODE_NO_IMPORT: a "do not import" mode.
+ * @IMPORTER_MODE_RENUMBER:  reallocate a new id when the imported one already exists.
+ * @IMPORTER_MODE_OVERRIDE:  override the existing id with the imported one.
+ * @IMPORTER_MODE_ASK:       ask the user for what to do with this particular item.
+ *
+ * Define the mode of an import operation.
+ *
+ * Since: 3.2
+ *
+ * This same enum used to be defined as NAIImporterImportMode in api/na-iimporter.h
+ * header. The enum has been deprecated there in N-A 3.2 when the NAIImporter v2
+ * interface was defined. It has so been moved here with the NAImporterImportMode
+ * name.
+ */
+typedef enum {
+	IMPORTER_MODE_NO_IMPORT = 1,
+	IMPORTER_MODE_RENUMBER,
+	IMPORTER_MODE_OVERRIDE,
+	IMPORTER_MODE_ASK
+}
+	NAImporterImportMode;
+#endif
+
 /*
  * NAImporterCheckFn:
  * @imported: the currently imported #NAObjectItem -derived object.
@@ -95,20 +121,24 @@ typedef struct {
 	GSList             *uris;				/* the list of uris to import */
 	NAImporterCheckFn   check_fn;			/* the check_for_duplicate function */
 	void               *check_fn_data;		/* data to be passed to the check_fn function */
-	guint               preferred_mode;		/* preferred import mode */
+	guint               preferred_mode;		/* preferred import mode, defaults to NA_IPREFS_IMPORT_PREFERRED_MODE */
 	GtkWindow          *parent_toplevel;	/* parent toplevel */
 }
 	NAImporterParms;
 
 typedef struct {
-		/* phase 1: import into memory */
-	gchar             *uri;					/* the imported uri */
-	NAObjectItem      *imported;			/* the imported NAObjectItem-derived object, or %NULL */
-	NAIImporter       *importer;			/* the importer module, or %NULL */
-		/* phase 2: check for pre-existence */
-	gboolean           exist;				/* whether the imported Id already existed */
-	guint              mode;				/* the actual mode in effect for this import */
-	GSList            *messages;			/* a #GSList list of localized strings */
+
+	/* phase 1: import into memory from i/o provider
+	 */
+	gchar        *uri;					/* the imported uri */
+	NAObjectItem *imported;				/* the imported NAObjectItem-derived object, or %NULL */
+	NAIImporter  *importer;				/* the importer module, or %NULL */
+
+	/* phase 2: check for pre-existence
+	 */
+	gboolean      exist;				/* whether the imported Id already existed */
+	guint         mode;					/* the actual mode in effect for this import */
+	GSList       *messages;				/* a #GSList list of localized strings */
 }
 	NAImporterResult;
 

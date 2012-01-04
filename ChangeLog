@@ -1,5 +1,15 @@
 2012-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iimporter.h: Deprecate NAIImporterImportMode enum.
+
+	* src/core/na-importer.h: Define new NAImporterImportMode enum here.
+
+	* src/core/na-importer.c (ask_user_for_mode):
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h:
+	* src/nact/nact-tree-model-dnd.c:
+	Get ride of na_iprefs_get_import_mode() function.
+
 	Review interface initialization in implementations.
 
 	* src/core/na-export-format.c (ioption_iface_init):

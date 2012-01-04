@@ -39,7 +39,6 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
-#include <core/na-iprefs.h>
 #include <core/na-gnome-vfs-uri.h>
 #include <core/na-importer.h>
 
@@ -861,7 +860,7 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 	parms.uris = g_slist_reverse( na_core_utils_slist_from_split( selection_data_data, "\r\n" ));
 	parms.check_fn = ( NAImporterCheckFn ) is_dropped_already_exists;
 	parms.check_fn_data = main_window;
-	parms.preferred_mode = na_iprefs_get_import_mode( NA_IPREFS_IMPORT_PREFERRED_MODE, NULL );
+	parms.preferred_mode = 0;
 	parms.parent_toplevel = base_window_get_gtk_toplevel( BASE_WINDOW( main_window ));
 
 	import_results = na_importer_import_from_uris( NA_PIVOT( updater ), &parms );

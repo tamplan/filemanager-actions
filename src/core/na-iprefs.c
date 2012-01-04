@@ -35,8 +35,8 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
-#include <api/na-iimporter.h>
 
+#include "na-importer.h"
 #include "na-iprefs.h"
 #include "na-settings.h"
 
@@ -78,31 +78,6 @@ static EnumMap st_order_mode[] = {
 
 static const gchar *enum_map_string_from_id( const EnumMap *map, guint id );
 static guint        enum_map_id_from_string( const EnumMap *map, const gchar *str );
-
-/*
- * na_iprefs_get_import_mode:
- * @pref: name of the import key to be read.
- * @mandatory: if not %NULL, a pointer to a boolean which will receive the
- *  mandatory property.
- *
- * This preference defines what to do when an imported item has the same
- * identifier that an already existing one. Default value is defined in
- * core/na-settings.h.
- *
- * Returns: the import mode currently set.
- */
-guint
-na_iprefs_get_import_mode( const gchar *pref, gboolean *mandatory )
-{
-	gchar *import_mode_str;
-	guint import_mode;
-
-	import_mode_str = na_settings_get_string( pref, NULL, mandatory );
-	import_mode = enum_map_id_from_string( st_import_mode, import_mode_str );
-	g_free( import_mode_str );
-
-	return( import_mode );
-}
 
 /*
  * na_iprefs_set_import_mode:
