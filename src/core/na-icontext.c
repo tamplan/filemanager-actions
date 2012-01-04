@@ -59,8 +59,8 @@ struct _NAIContextInterfacePrivate {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType        register_type( void );
-static void         interface_init( NAIContextInterface *klass );
-static void         interface_finalize( NAIContextInterface *klass );
+static void         interface_base_init( NAIContextInterface *klass );
+static void         interface_base_finalize( NAIContextInterface *klass );
 
 static gboolean     v_is_candidate( NAIContext *object, guint target, GList *selection );
 
@@ -118,8 +118,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIContextInterface ),
-		( GBaseInitFunc ) interface_init,
-		( GBaseFinalizeFunc ) interface_finalize,
+		( GBaseInitFunc ) interface_base_init,
+		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -138,9 +138,9 @@ register_type( void )
 }
 
 static void
-interface_init( NAIContextInterface *klass )
+interface_base_init( NAIContextInterface *klass )
 {
-	static const gchar *thisfn = "na_icontext_interface_init";
+	static const gchar *thisfn = "na_icontext_interface_base_init";
 
 	if( !st_initializations ){
 
@@ -153,9 +153,9 @@ interface_init( NAIContextInterface *klass )
 }
 
 static void
-interface_finalize( NAIContextInterface *klass )
+interface_base_finalize( NAIContextInterface *klass )
 {
-	static const gchar *thisfn = "na_icontext_interface_finalize";
+	static const gchar *thisfn = "na_icontext_interface_base_finalize";
 
 	st_initializations -= 1;
 

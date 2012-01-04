@@ -66,8 +66,8 @@ static guint                   st_initializations = 0;
 static gint                    st_signals[ LAST_SIGNAL ] = { 0 };
 
 static GType          register_type( void );
-static void           interface_init( NAIDuplicableInterface *klass );
-static void           interface_finalize( NAIDuplicableInterface *klass );
+static void           interface_base_init( NAIDuplicableInterface *klass );
+static void           interface_base_finalize( NAIDuplicableInterface *klass );
 
 static void           v_copy( NAIDuplicable *target, const NAIDuplicable *source );
 static gboolean       v_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
@@ -100,8 +100,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIDuplicableInterface ),
-		( GBaseInitFunc ) interface_init,
-		( GBaseFinalizeFunc ) interface_finalize,
+		( GBaseInitFunc ) interface_base_init,
+		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -120,9 +120,9 @@ register_type( void )
 }
 
 static void
-interface_init( NAIDuplicableInterface *klass )
+interface_base_init( NAIDuplicableInterface *klass )
 {
-	static const gchar *thisfn = "na_iduplicable_interface_init";
+	static const gchar *thisfn = "na_iduplicable_interface_base_init";
 
 	if( !st_initializations ){
 
@@ -207,9 +207,9 @@ interface_init( NAIDuplicableInterface *klass )
 }
 
 static void
-interface_finalize( NAIDuplicableInterface *klass )
+interface_base_finalize( NAIDuplicableInterface *klass )
 {
-	static const gchar *thisfn = "na_iduplicable_interface_finalize";
+	static const gchar *thisfn = "na_iduplicable_interface_base_finalize";
 
 	st_initializations -= 1;
 

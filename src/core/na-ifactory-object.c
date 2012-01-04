@@ -47,8 +47,8 @@ struct _NAIFactoryObjectInterfacePrivate {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_init( NAIFactoryObjectInterface *klass );
-static void  interface_finalize( NAIFactoryObjectInterface *klass );
+static void  interface_base_init( NAIFactoryObjectInterface *klass );
+static void  interface_base_finalize( NAIFactoryObjectInterface *klass );
 
 static guint ifactory_object_get_version( const NAIFactoryObject *instance );
 
@@ -75,8 +75,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIFactoryObjectInterface ),
-		( GBaseInitFunc ) interface_init,
-		( GBaseFinalizeFunc ) interface_finalize,
+		( GBaseInitFunc ) interface_base_init,
+		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -95,9 +95,9 @@ register_type( void )
 }
 
 static void
-interface_init( NAIFactoryObjectInterface *klass )
+interface_base_init( NAIFactoryObjectInterface *klass )
 {
-	static const gchar *thisfn = "na_ifactory_object_interface_init";
+	static const gchar *thisfn = "na_ifactory_object_interface_base_init";
 
 	if( !st_initializations ){
 
@@ -120,9 +120,9 @@ interface_init( NAIFactoryObjectInterface *klass )
 }
 
 static void
-interface_finalize( NAIFactoryObjectInterface *klass )
+interface_base_finalize( NAIFactoryObjectInterface *klass )
 {
-	static const gchar *thisfn = "na_ifactory_object_interface_finalize";
+	static const gchar *thisfn = "na_ifactory_object_interface_base_finalize";
 
 	st_initializations -= 1;
 

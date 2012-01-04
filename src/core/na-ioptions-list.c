@@ -67,8 +67,8 @@ enum {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType        register_type( void );
-static void         interface_init( NAIOptionsListInterface *iface );
-static void         interface_finalize( NAIOptionsListInterface *iface );
+static void         interface_base_init( NAIOptionsListInterface *iface );
+static void         interface_base_finalize( NAIOptionsListInterface *iface );
 
 static guint        ioptions_list_get_version( const NAIOptionsList *instance );
 static void         ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container_parent, GList *options );
@@ -136,8 +136,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIOptionsListInterface ),
-		( GBaseInitFunc ) interface_init,
-		( GBaseFinalizeFunc ) interface_finalize,
+		( GBaseInitFunc ) interface_base_init,
+		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -156,9 +156,9 @@ register_type( void )
 }
 
 static void
-interface_init( NAIOptionsListInterface *iface )
+interface_base_init( NAIOptionsListInterface *iface )
 {
-	static const gchar *thisfn = "na_ioptions_list_interface_init";
+	static const gchar *thisfn = "na_ioptions_list_interface_base_init";
 
 	if( !st_initializations ){
 
@@ -177,9 +177,9 @@ interface_init( NAIOptionsListInterface *iface )
 }
 
 static void
-interface_finalize( NAIOptionsListInterface *iface )
+interface_base_finalize( NAIOptionsListInterface *iface )
 {
-	static const gchar *thisfn = "na_ioptions_list_interface_finalize";
+	static const gchar *thisfn = "na_ioptions_list_interface_base_finalize";
 
 	st_initializations -= 1;
 

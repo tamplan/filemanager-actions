@@ -45,8 +45,8 @@ static guint st_initializations = 0;	/* interface initialization count */
 #define IOPTION_DATA_INITIALIZED		"ioption-data-initialized"
 
 static GType    register_type( void );
-static void     interface_init( NAIOptionInterface *iface );
-static void     interface_finalize( NAIOptionInterface *iface );
+static void     interface_base_init( NAIOptionInterface *iface );
+static void     interface_base_finalize( NAIOptionInterface *iface );
 
 static guint    ioption_get_version( const NAIOption *instance );
 static void     check_for_initialized_instance( NAIOption *instance );
@@ -84,8 +84,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIOptionInterface ),
-		( GBaseInitFunc ) interface_init,
-		( GBaseFinalizeFunc ) interface_finalize,
+		( GBaseInitFunc ) interface_base_init,
+		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -104,9 +104,9 @@ register_type( void )
 }
 
 static void
-interface_init( NAIOptionInterface *iface )
+interface_base_init( NAIOptionInterface *iface )
 {
-	static const gchar *thisfn = "na_ioption_interface_init";
+	static const gchar *thisfn = "na_ioption_interface_base_init";
 
 	if( !st_initializations ){
 
@@ -121,9 +121,9 @@ interface_init( NAIOptionInterface *iface )
 }
 
 static void
-interface_finalize( NAIOptionInterface *iface )
+interface_base_finalize( NAIOptionInterface *iface )
 {
-	static const gchar *thisfn = "na_ioption_interface_finalize";
+	static const gchar *thisfn = "na_ioption_interface_base_finalize";
 
 	st_initializations -= 1;
 

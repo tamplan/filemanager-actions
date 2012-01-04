@@ -43,8 +43,8 @@ struct _NAIExporterInterfacePrivate {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_init( NAIExporterInterface *klass );
-static void  interface_finalize( NAIExporterInterface *klass );
+static void  interface_base_init( NAIExporterInterface *klass );
+static void  interface_base_finalize( NAIExporterInterface *klass );
 
 static guint iexporter_get_version( const NAIExporter *instance );
 
@@ -78,8 +78,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIExporterInterface ),
-		( GBaseInitFunc ) interface_init,
-		( GBaseFinalizeFunc ) interface_finalize,
+		( GBaseInitFunc ) interface_base_init,
+		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -98,9 +98,9 @@ register_type( void )
 }
 
 static void
-interface_init( NAIExporterInterface *klass )
+interface_base_init( NAIExporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iexporter_interface_init";
+	static const gchar *thisfn = "na_iexporter_interface_base_init";
 
 	if( !st_initializations ){
 
@@ -119,9 +119,9 @@ interface_init( NAIExporterInterface *klass )
 }
 
 static void
-interface_finalize( NAIExporterInterface *klass )
+interface_base_finalize( NAIExporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iexporter_interface_finalize";
+	static const gchar *thisfn = "na_iexporter_interface_base_finalize";
 
 	st_initializations -= 1;
 

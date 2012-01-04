@@ -47,8 +47,8 @@ struct _NAIImporterInterfacePrivate {
 static guint st_initializations = 0;	/* interface initialization count */
 
 static GType register_type( void );
-static void  interface_init( NAIImporterInterface *klass );
-static void  interface_finalize( NAIImporterInterface *klass );
+static void  interface_base_init( NAIImporterInterface *klass );
+static void  interface_base_finalize( NAIImporterInterface *klass );
 static guint iimporter_get_version( const NAIImporter *instance );
 
 #ifdef NA_ENABLE_DEPRECATED
@@ -85,8 +85,8 @@ register_type( void )
 
 	static const GTypeInfo info = {
 		sizeof( NAIImporterInterface ),
-		( GBaseInitFunc ) interface_init,
-		( GBaseFinalizeFunc ) interface_finalize,
+		( GBaseInitFunc ) interface_base_init,
+		( GBaseFinalizeFunc ) interface_base_finalize,
 		NULL,
 		NULL,
 		NULL,
@@ -105,9 +105,9 @@ register_type( void )
 }
 
 static void
-interface_init( NAIImporterInterface *klass )
+interface_base_init( NAIImporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iimporter_interface_init";
+	static const gchar *thisfn = "na_iimporter_interface_base_init";
 
 	if( !st_initializations ){
 
@@ -123,9 +123,9 @@ interface_init( NAIImporterInterface *klass )
 }
 
 static void
-interface_finalize( NAIImporterInterface *klass )
+interface_base_finalize( NAIImporterInterface *klass )
 {
-	static const gchar *thisfn = "na_iimporter_interface_finalize";
+	static const gchar *thisfn = "na_iimporter_interface_base_finalize";
 
 	st_initializations -= 1;
 

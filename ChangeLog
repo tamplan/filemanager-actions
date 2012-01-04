@@ -1,5 +1,19 @@
 2012-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	Come back on core interfaces.
+
+	* src/core/na-icontext.c:
+	* src/core/na-iduplicable.c:
+	* src/core/na-iexporter.c:
+	* src/core/na-ifactory-object.c:
+	* src/core/na-ifactory-provider.c:
+	* src/core/na-iimporter.c:
+	* src/core/na-iio-provider.c:
+	* src/core/na-ioption.c:
+	* src/core/na-ioptions-list.c
+	(interface_init): Renamed back as interface_base_init().
+	(interface_finalize): Renamed back as interface_base_finalize().
+
 	* src/utils/console-utils.h: Re-include 'glib.h' header.
 
 2012-01-03 Pierre Wieser <pwieser@trychlos.org>
