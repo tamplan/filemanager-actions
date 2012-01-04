@@ -1,5 +1,7 @@
 2012-01-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-iaction-tab.c: Review NactIActionTab interface.
+
 	Come back on core interfaces.
 
 	* src/core/na-icontext.c:
