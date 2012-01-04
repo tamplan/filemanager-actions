@@ -46,8 +46,7 @@ struct _NactIExecutionTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized = FALSE;
+static guint    st_initializations = 0;	/* interface initialization count */
 static gboolean st_on_selection_change = FALSE;
 
 static GType    register_type( void );
@@ -109,13 +108,14 @@ interface_base_init( NactIExecutionTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_iexecution_tab_interface_base_init";
 
-	if( !st_initialized ){
+	if( !st_initializations ){
+
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIExecutionTabInterfacePrivate, 1 );
-
-		st_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
@@ -123,10 +123,11 @@ interface_base_finalize( NactIExecutionTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_iexecution_tab_interface_base_finalize";
 
-	if( st_initialized && !st_finalized ){
-		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+	st_initializations -= 1;
 
-		st_finalized = TRUE;
+	if( !st_initializations ){
+
+		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		g_free( klass->private );
 	}
@@ -145,9 +146,7 @@ nact_iexecution_tab_initial_load_toplevel( NactIExecutionTab *instance )
 
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	}
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 }
 
 /**
@@ -164,33 +163,55 @@ nact_iexecution_tab_runtime_init_toplevel( NactIExecutionTab *instance )
 
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		base_window_signal_connect( BASE_WINDOW( instance ),
-				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			MAIN_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_main_selection_changed ));
 
-		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
-				"ExecutionModeNormal", "toggled", G_CALLBACK( on_normal_mode_toggled ));
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( instance ),
+			"ExecutionModeNormal",
+			"toggled",
+			G_CALLBACK( on_normal_mode_toggled ));
 
-		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
-				"ExecutionModeTerminal", "toggled", G_CALLBACK( on_terminal_mode_toggled ));
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( instance ),
+			"ExecutionModeTerminal",
+			"toggled",
+			G_CALLBACK( on_terminal_mode_toggled ));
 
-		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
-				"ExecutionModeEmbedded", "toggled", G_CALLBACK( on_embedded_mode_toggled ));
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( instance ),
+			"ExecutionModeEmbedded",
+			"toggled",
+			G_CALLBACK( on_embedded_mode_toggled ));
 
-		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
-				"ExecutionModeDisplayOutput", "toggled", G_CALLBACK( on_display_mode_toggled ));
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( instance ),
+			"ExecutionModeDisplayOutput",
+			"toggled",
+			G_CALLBACK( on_display_mode_toggled ));
 
-		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
-				"StartupNotifyButton", "toggled", G_CALLBACK( on_startup_notify_toggled ));
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( instance ),
+			"StartupNotifyButton",
+			"toggled",
+			G_CALLBACK( on_startup_notify_toggled ));
 
-		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
-				"StartupWMClassEntry", "changed", G_CALLBACK( on_startup_class_changed ));
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( instance ),
+			"StartupWMClassEntry",
+			"changed",
+			G_CALLBACK( on_startup_class_changed ));
 
-		base_window_signal_connect_by_name( BASE_WINDOW( instance ),
-				"ExecuteAsEntry", "changed", G_CALLBACK( on_execute_as_changed ));
-	}
+	base_window_signal_connect_by_name(
+			BASE_WINDOW( instance ),
+			"ExecuteAsEntry",
+			"changed",
+			G_CALLBACK( on_execute_as_changed ));
 }
 
 void
@@ -200,9 +221,7 @@ nact_iexecution_tab_all_widgets_showed( NactIExecutionTab *instance )
 
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	}
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 }
 
 /**
@@ -218,9 +237,7 @@ nact_iexecution_tab_dispose( NactIExecutionTab *instance )
 
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	}
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 }
 
 static void
@@ -239,80 +256,80 @@ on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, g
 
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
-		g_debug( "%s: instance=%p, selected_items=%p (count=%d)",
-				thisfn, ( void * ) instance, ( void * ) selected_items, g_list_length( selected_items ));
+	g_debug( "%s: instance=%p (%s), selected_items=%p (count=%d)",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) selected_items, g_list_length( selected_items ));
 
-		g_object_get(
-				G_OBJECT( instance ),
-				MAIN_PROP_PROFILE, &profile,
-				MAIN_PROP_EDITABLE, &editable,
-				NULL );
+	g_object_get(
+			G_OBJECT( instance ),
+			MAIN_PROP_PROFILE, &profile,
+			MAIN_PROP_EDITABLE, &editable,
+			NULL );
 
-		enable_tab = ( profile != NULL );
-		nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
+	enable_tab = ( profile != NULL );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
 
-		st_on_selection_change = TRUE;
+	st_on_selection_change = TRUE;
 
-		normal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeNormal" );
-		terminal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeTerminal" );
-		embedded_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeEmbedded" );
-		display_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeDisplayOutput" );
+	normal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeNormal" );
+	terminal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeTerminal" );
+	embedded_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeEmbedded" );
+	display_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeDisplayOutput" );
 
-		mode = profile ? na_object_get_execution_mode( profile ) : g_strdup( "Normal" );
-		gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( normal_toggle ), profile == NULL );
+	mode = profile ? na_object_get_execution_mode( profile ) : g_strdup( "Normal" );
+	gtk_toggle_button_set_inconsistent( GTK_TOGGLE_BUTTON( normal_toggle ), profile == NULL );
 
-		if( !strcmp( mode, "Normal" )){
-			base_gtk_utils_radio_set_initial_state(
-					GTK_RADIO_BUTTON( normal_toggle ),
-					G_CALLBACK( on_normal_mode_toggled ), instance, editable, ( profile != NULL ));
+	if( !strcmp( mode, "Normal" )){
+		base_gtk_utils_radio_set_initial_state(
+				GTK_RADIO_BUTTON( normal_toggle ),
+				G_CALLBACK( on_normal_mode_toggled ), instance, editable, ( profile != NULL ));
 
-		} else if( !strcmp( mode, "Terminal" )){
-			base_gtk_utils_radio_set_initial_state(
-					GTK_RADIO_BUTTON( terminal_toggle ),
-					G_CALLBACK( on_terminal_mode_toggled ), instance, editable, ( profile != NULL ));
+	} else if( !strcmp( mode, "Terminal" )){
+		base_gtk_utils_radio_set_initial_state(
+				GTK_RADIO_BUTTON( terminal_toggle ),
+				G_CALLBACK( on_terminal_mode_toggled ), instance, editable, ( profile != NULL ));
 
-		} else if( !strcmp( mode, "Embedded" )){
-			base_gtk_utils_radio_set_initial_state(
-					GTK_RADIO_BUTTON( embedded_toggle ),
-					G_CALLBACK( on_embedded_mode_toggled ), instance, editable, ( profile != NULL ));
+	} else if( !strcmp( mode, "Embedded" )){
+		base_gtk_utils_radio_set_initial_state(
+				GTK_RADIO_BUTTON( embedded_toggle ),
+				G_CALLBACK( on_embedded_mode_toggled ), instance, editable, ( profile != NULL ));
 
-		} else if( !strcmp( mode, "DisplayOutput" )){
-			base_gtk_utils_radio_set_initial_state(
-					GTK_RADIO_BUTTON( display_toggle ),
-					G_CALLBACK( on_display_mode_toggled ), instance, editable, ( profile != NULL ));
+	} else if( !strcmp( mode, "DisplayOutput" )){
+		base_gtk_utils_radio_set_initial_state(
+				GTK_RADIO_BUTTON( display_toggle ),
+				G_CALLBACK( on_display_mode_toggled ), instance, editable, ( profile != NULL ));
 
-		} else {
-			g_warning( "%s: unable to setup execution mode '%s'", thisfn, mode );
-		}
-
-		g_free( mode );
-
-		frame = base_window_get_widget( BASE_WINDOW( instance ), "StartupModeFrame" );
-		gtk_widget_set_sensitive( frame, FALSE );
-
-		notify = profile ? na_object_get_startup_notify( profile ) : FALSE;
-		notify_check = base_window_get_widget( BASE_WINDOW( instance ), "StartupNotifyButton" );
-		base_gtk_utils_set_editable( G_OBJECT( notify_check ), editable );
-		gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( notify_check ), notify );
-
-		class = profile ? na_object_get_startup_class( profile ) : g_strdup( "" );
-		entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
-		gtk_entry_set_text( GTK_ENTRY( entry ), class );
-		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
-		g_free( class );
-
-		frame = base_window_get_widget( BASE_WINDOW( instance ), "UserFrame" );
-		gtk_widget_set_sensitive( frame, FALSE );
-
-		user = profile ? na_object_get_execute_as( profile ) : g_strdup( "" );
-		entry = base_window_get_widget( BASE_WINDOW( instance ), "ExecuteAsEntry" );
-		gtk_entry_set_text( GTK_ENTRY( entry ), user );
-		base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
-		g_free( user );
-
-		st_on_selection_change = FALSE;
+	} else {
+		g_warning( "%s: unable to setup execution mode '%s'", thisfn, mode );
 	}
+
+	g_free( mode );
+
+	frame = base_window_get_widget( BASE_WINDOW( instance ), "StartupModeFrame" );
+	gtk_widget_set_sensitive( frame, FALSE );
+
+	notify = profile ? na_object_get_startup_notify( profile ) : FALSE;
+	notify_check = base_window_get_widget( BASE_WINDOW( instance ), "StartupNotifyButton" );
+	base_gtk_utils_set_editable( G_OBJECT( notify_check ), editable );
+	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( notify_check ), notify );
+
+	class = profile ? na_object_get_startup_class( profile ) : g_strdup( "" );
+	entry = base_window_get_widget( BASE_WINDOW( instance ), "StartupWMClassEntry" );
+	gtk_entry_set_text( GTK_ENTRY( entry ), class );
+	base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+	g_free( class );
+
+	frame = base_window_get_widget( BASE_WINDOW( instance ), "UserFrame" );
+	gtk_widget_set_sensitive( frame, FALSE );
+
+	user = profile ? na_object_get_execute_as( profile ) : g_strdup( "" );
+	entry = base_window_get_widget( BASE_WINDOW( instance ), "ExecuteAsEntry" );
+	gtk_entry_set_text( GTK_ENTRY( entry ), user );
+	base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
+	g_free( user );
+
+	st_on_selection_change = FALSE;
 }
 
 static void
