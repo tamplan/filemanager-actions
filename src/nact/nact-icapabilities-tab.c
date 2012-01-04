@@ -50,8 +50,7 @@ struct _NactICapabilitiesTabInterfacePrivate {
 
 #define ITAB_NAME						"capabilities"
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized = FALSE;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType   register_type( void );
 static void    interface_base_init( NactICapabilitiesTabInterface *klass );
@@ -107,14 +106,14 @@ interface_base_init( NactICapabilitiesTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_icapabilities_tab_interface_base_init";
 
-	if( !st_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactICapabilitiesTabInterfacePrivate, 1 );
-
-		st_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
@@ -122,11 +121,11 @@ interface_base_finalize( NactICapabilitiesTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_icapabilities_tab_interface_base_finalize";
 
-	if( st_initialized && !st_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		st_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -140,23 +139,20 @@ nact_icapabilities_tab_initial_load_toplevel( NactICapabilitiesTab *instance )
 
 	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	list = base_window_get_widget( BASE_WINDOW( instance ), "CapabilitiesTreeView" );
+	add = base_window_get_widget( BASE_WINDOW( instance ), "AddCapabilityButton" );
+	remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveCapabilityButton" );
 
-		list = base_window_get_widget( BASE_WINDOW( instance ), "CapabilitiesTreeView" );
-		add = base_window_get_widget( BASE_WINDOW( instance ), "AddCapabilityButton" );
-		remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveCapabilityButton" );
-
-		nact_match_list_create_model( BASE_WINDOW( instance ),
-				ITAB_NAME, TAB_CAPABILITIES,
-				list, add, remove,
-				( pget_filters ) get_capabilities,
-				( pset_filters ) set_capabilities,
-				( pon_add_cb ) on_add_clicked,
-				MATCH_LIST_MUST_MATCH_ALL_OF,
-				_( "Capability filter" ), FALSE );
-	}
+	nact_match_list_create_model( BASE_WINDOW( instance ),
+			ITAB_NAME, TAB_CAPABILITIES,
+			list, add, remove,
+			( pget_filters ) get_capabilities,
+			( pset_filters ) set_capabilities,
+			( pon_add_cb ) on_add_clicked,
+			MATCH_LIST_MUST_MATCH_ALL_OF,
+			_( "Capability filter" ), FALSE );
 }
 
 void
@@ -166,15 +162,12 @@ nact_icapabilities_tab_runtime_init_toplevel( NactICapabilitiesTab *instance )
 
 	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 
-		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
-
-		base_window_signal_connect( BASE_WINDOW( instance ),
-				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
-	}
+	base_window_signal_connect( BASE_WINDOW( instance ),
+			G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
 }
 
 void
@@ -184,10 +177,7 @@ nact_icapabilities_tab_all_widgets_showed( NactICapabilitiesTab *instance )
 
 	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	}
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 }
 
 void
@@ -197,12 +187,9 @@ nact_icapabilities_tab_dispose( NactICapabilitiesTab *instance )
 
 	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
-		nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
-	}
+	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 static void
