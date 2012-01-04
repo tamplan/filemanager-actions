@@ -55,8 +55,7 @@ struct _NactIFoldersTabInterfacePrivate {
 
 #define ITAB_NAME						"folders"
 
-static gboolean st_initialized = FALSE;
-static gboolean st_finalized = FALSE;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType   register_type( void );
 static void    interface_base_init( NactIFoldersTabInterface *klass );
@@ -112,14 +111,14 @@ interface_base_init( NactIFoldersTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_ifolders_tab_interface_base_init";
 
-	if( !st_initialized ){
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
 
 		klass->private = g_new0( NactIFoldersTabInterfacePrivate, 1 );
-
-		st_initialized = TRUE;
 	}
+
+	st_initializations += 1;
 }
 
 static void
@@ -127,11 +126,11 @@ interface_base_finalize( NactIFoldersTabInterface *klass )
 {
 	static const gchar *thisfn = "nact_ifolders_tab_interface_base_finalize";
 
-	if( st_initialized && !st_finalized ){
+	st_initializations -= 1;
+
+	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
-
-		st_finalized = TRUE;
 
 		g_free( klass->private );
 	}
@@ -145,25 +144,22 @@ nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance )
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	list = base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" );
+	add = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" );
+	remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton" );
 
-		list = base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" );
-		add = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" );
-		remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton" );
-
-		nact_match_list_create_model(
-				BASE_WINDOW( instance ),
-				ITAB_NAME,
-				TAB_FOLDERS,
-				list, add, remove,
-				( pget_filters ) get_folders,
-				( pset_filters ) set_folders,
-				NULL,
-				MATCH_LIST_MUST_MATCH_ONE_OF,
-				_( "Folder filter" ), TRUE );
-	}
+	nact_match_list_create_model(
+			BASE_WINDOW( instance ),
+			ITAB_NAME,
+			TAB_FOLDERS,
+			list, add, remove,
+			( pget_filters ) get_folders,
+			( pset_filters ) set_folders,
+			NULL,
+			MATCH_LIST_MUST_MATCH_ONE_OF,
+			_( "Folder filter" ), TRUE );
 }
 
 void
@@ -174,22 +170,22 @@ nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance )
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			MAIN_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_main_selection_changed ));
 
-		base_window_signal_connect( BASE_WINDOW( instance ),
-				G_OBJECT( instance ), MAIN_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_main_selection_changed ));
+	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 
-		nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
-
-		button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
-		base_window_signal_connect(
-				BASE_WINDOW( instance ),
-				G_OBJECT( button ),
-				"clicked",
-				G_CALLBACK( on_browse_folder_clicked ));
-	}
+	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( button ),
+			"clicked",
+			G_CALLBACK( on_browse_folder_clicked ));
 }
 
 void
@@ -199,10 +195,7 @@ nact_ifolders_tab_all_widgets_showed( NactIFoldersTab *instance )
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
-
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-	}
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 }
 
 void
@@ -212,12 +205,9 @@ nact_ifolders_tab_dispose( NactIFoldersTab *instance )
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
-	if( st_initialized && !st_finalized ){
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
-
-		nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
-	}
+	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 static void
