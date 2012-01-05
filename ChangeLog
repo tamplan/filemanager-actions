@@ -1,5 +1,8 @@
 2012-01-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-importer.c (manage_import_mode):
+	Release the duplicated object which has been cancelled by the user.
+
 	* src/core/na-icontext-factory.c:
 	* src/core/na-iduplicable.c:
 	* src/core/na-object-action-factory.c:

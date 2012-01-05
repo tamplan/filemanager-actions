@@ -350,6 +350,8 @@ manage_import_mode( NAImporterParms *parms, GList *results, NAImporterAskUserPar
 							_( "Import was canceled due to user request." ));
 				}
 				g_free( id );
+				g_object_unref( result->imported );
+				result->imported = NULL;
 		}
 	}
 }
