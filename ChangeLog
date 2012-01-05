@@ -1,5 +1,21 @@
 2012-01-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-export-format.h: Remove IPREFS_EXPORT_ definitions from here.
+
+	* src/core/na-exporter.c:
+	* src/core/na-exporter.h (na_exporter_get_export_format): New function.
+
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h
+	(na_iprefs_get_export_format, na_iprefs_set_export_format): Removed functions.
+
+	* src/nact/nact-assistant-export.c
+	(on_base_initialize_base_window, assist_prepare_confirm, assist_prepare_exportdone):
+	* src/nact/nact-clipboard.c (export_row_object):
+	* src/nact/nact-export-ask.c (nact_export_ask_user, get_export_format):
+	* src/nact/nact-export-ask.h:
+	Updated accordingly.
+	
 	* src/core/na-iprefs.c:
 	* src/core/na-iprefs.h (na_iprefs_set_import_mode): Removed function.
 

@@ -42,7 +42,6 @@
 #include <core/na-export-format.h>
 #include <core/na-gtk-utils.h>
 #include <core/na-ioptions-list.h>
-#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-main-window.h"
@@ -505,7 +504,7 @@ on_base_initialize_base_window( NactAssistantExport *window, gpointer user_data 
 	GtkWidget *page;
 	guint pos;
 	GtkWidget *pane;
-	GQuark format;
+	gchar *format;
 	gboolean mandatory;
 	GtkWidget *tree_view;
 
@@ -534,12 +533,13 @@ on_base_initialize_base_window( NactAssistantExport *window, gpointer user_data 
 		 */
 		page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
 		tree_view = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" );
-		format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, &mandatory );
+		format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, &mandatory );
 		na_ioptions_list_set_editable(
 				NA_IOPTIONS_LIST( window ), tree_view,
 				!mandatory && !window->private->preferences_locked );
 		na_ioptions_list_set_default(
-				NA_IOPTIONS_LIST( window ), tree_view, g_quark_to_string( format ));
+				NA_IOPTIONS_LIST( window ), tree_view, format );
+		g_free( format );
 	}
 }
 
@@ -695,6 +695,7 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	gchar *label_item;
 	gchar *format_label, *format_label2;
 	gchar *format_description, *format_description2;
+	gchar *format_id;
 	GtkWidget *label;
 	NAIOption *format;
 	GList *it;
@@ -765,7 +766,9 @@ assist_prepare_confirm( NactAssistantExport *window, GtkAssistant *assistant, Gt
 	g_free( format_description );
 	g_free( format_description2 );
 
-	na_iprefs_set_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, na_export_format_get_quark( NA_EXPORT_FORMAT( format )));
+	format_id = na_ioption_get_id( format );
+	na_settings_set_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, format_id );
+	g_free( format_id );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
 }
@@ -803,18 +806,17 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		window->private->results = g_list_append( window->private->results, str );
 
 		str->item = NA_OBJECT_ITEM( na_object_get_origin( NA_IDUPLICABLE( ia->data )));
+		str->format = na_exporter_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
 
-		str->format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
-
-		if( str->format == IPREFS_EXPORT_FORMAT_ASK ){
+		if( str->format == EXPORTER_FORMAT_ASK ){
 			str->format = nact_export_ask_user( BASE_WINDOW( wnd ), str->item, first );
 
-			if( str->format == IPREFS_EXPORT_NO_EXPORT ){
+			if( str->format == EXPORTER_FORMAT_NO_EXPORT ){
 				str->msg = g_slist_append( NULL, g_strdup( _( "Export canceled due to user action." )));
 			}
 		}
 
-		if( str->format != IPREFS_EXPORT_NO_EXPORT ){
+		if( str->format != EXPORTER_FORMAT_NO_EXPORT ){
 			str->fname = na_exporter_to_file( NA_PIVOT( updater ), str->item, window->private->uri, str->format, &str->msg );
 		}
 
@@ -889,7 +891,7 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 			/* i18n: action as been successfully exported to <filename> */
 			text = g_strdup_printf( "%s %s", _( "Successfully exported as" ), str->fname );
 
-		} else if( str->format != IPREFS_EXPORT_NO_EXPORT ){
+		} else if( str->format != EXPORTER_FORMAT_NO_EXPORT ){
 			errors += 1;
 		}
 

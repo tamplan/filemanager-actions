@@ -56,9 +56,6 @@ guint    na_iprefs_get_order_mode         ( gboolean *mandatory );
 guint    na_iprefs_get_order_mode_by_label( const gchar *label );
 void     na_iprefs_set_order_mode         ( guint mode );
 
-GQuark   na_iprefs_get_export_format      ( const gchar *pref, gboolean *mandatory );
-void     na_iprefs_set_export_format      ( const gchar *pref, GQuark format );
-
 GSList  *na_iprefs_get_io_providers       ( void );
 
 gboolean na_iprefs_write_level_zero       ( const GList *items, GSList **messages );

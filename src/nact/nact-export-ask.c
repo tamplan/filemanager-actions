@@ -43,7 +43,6 @@
 #include <core/na-iprefs.h>
 
 #include "nact-application.h"
-#include "nact-export-format.h"
 #include "nact-export-ask.h"
 #include "base-gtk-utils.h"
 
@@ -199,11 +198,17 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactExportAskPrivate, 1 );
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_GTK,
+			G_CALLBACK( on_base_initialize_gtk_toplevel ));
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_base_window ));
 
 	self->private->dispose_has_run = FALSE;
 }
@@ -279,15 +284,14 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 	gboolean are_locked, mandatory;
 	gboolean keep, keep_mandatory;
 	int code;
+	GQuark format;
 
-	GQuark format = g_quark_from_static_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
-
-	g_return_val_if_fail( BASE_IS_WINDOW( parent ), format );
+	g_return_val_if_fail( BASE_IS_WINDOW( parent ), EXPORTER_FORMAT_NO_EXPORT );
 
 	g_debug( "%s: parent=%p, item=%p (%s), first=%s",
 			thisfn, ( void * ) parent, ( void * ) item, G_OBJECT_TYPE_NAME( item ), first ? "True":"False" );
 
-	format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, &mandatory );
+	format = na_exporter_get_export_format( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, &mandatory );
 	keep = na_settings_get_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, &keep_mandatory );
 
 	if( first || !keep ){
@@ -318,7 +322,7 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 			case GTK_RESPONSE_CANCEL:
 			/* base_dialog::do_run only returns OK or CANCEL */
 			default:
-				format = IPREFS_EXPORT_NO_EXPORT;
+				format = EXPORTER_FORMAT_NO_EXPORT;
 				break;
 		}
 
@@ -388,11 +392,17 @@ on_base_initialize_base_window( NactExportAsk *editor )
 				editor->private->keep_last_choice,
 				!editor->private->keep_last_choice_mandatory, !editor->private->preferences_locked );
 
-		base_window_signal_connect_by_name( BASE_WINDOW( editor ),
-				"CancelButton", "clicked", G_CALLBACK( on_cancel_clicked ));
+		base_window_signal_connect_by_name(
+				BASE_WINDOW( editor ),
+				"CancelButton",
+				"clicked",
+				G_CALLBACK( on_cancel_clicked ));
 
-		base_window_signal_connect_by_name( BASE_WINDOW( editor ),
-				"OKButton", "clicked", G_CALLBACK( on_ok_clicked ));
+		base_window_signal_connect_by_name(
+				BASE_WINDOW( editor ),
+				"OKButton",
+				"clicked",
+				G_CALLBACK( on_ok_clicked ));
 	}
 }
 
@@ -442,19 +452,19 @@ get_export_format( NactExportAsk *editor )
 {
 	GtkWidget *widget;
 	NAIOption *format;
-	GQuark format_quark;
+	gchar *format_id;
 
 	widget = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
 	format = na_ioptions_list_get_selected( NA_IOPTIONS_LIST( editor ), widget );
 	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), 0 );
 
-	format_quark = na_export_format_get_quark( NA_EXPORT_FORMAT( format ));
-
 	if( !editor->private->keep_last_choice_mandatory ){
 		na_settings_set_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, editor->private->keep_last_choice );
 	}
 
-	na_iprefs_set_export_format( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_quark );
+	format_id = na_ioption_get_id( format );
+	na_settings_set_string( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_id );
+	g_free( format_id );
 
-	return( format_quark );
+	return( na_export_format_get_quark( NA_EXPORT_FORMAT( format )));
 }

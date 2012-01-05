@@ -33,9 +33,14 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
+#include <string.h>
 
 #include "na-exporter.h"
 #include "na-export-format.h"
+#include "na-settings.h"
+
+#define	Ask			"Ask"
 
 typedef struct {
 	const gchar *format;				/* export format saved in user's preferences */
@@ -47,7 +52,7 @@ typedef struct {
 
 static NAExporterFormatStr st_format_ask = {
 
-		"Ask",
+		Ask,
 		N_( "_Ask me" ),
 		N_( "You will be asked for the format to choose each time an item " \
 			"is about to be exported." ),
@@ -59,6 +64,7 @@ static void         exporter_free_formats( const NAIExporter *exporter, GList * 
 static gchar       *exporter_get_name( const NAIExporter *exporter );
 static NAIExporter *find_exporter_for_format( const NAPivot *pivot, GQuark format );
 static void         on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
+static GQuark       id_from_string( const gchar *format_str );
 
 /*
  * na_exporter_get_formats:
@@ -245,7 +251,7 @@ on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
  * na_exporter_to_buffer:
  * @pivot: the #NAPivot pivot for the running application.
  * @item: a #NAObjectItem-derived object.
- * @format: the #GQuark target format.
+ * @format: the target format identifier.
  * @messages: a pointer to a #GSList list of strings; the provider
  *  may append messages to this list, but shouldn't reinitialize it.
  *
@@ -255,7 +261,8 @@ on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
  * be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark format, GSList **messages )
+na_exporter_to_buffer( const NAPivot *pivot,
+		const NAObjectItem *item, GQuark format, GSList **messages )
 {
 	static const gchar *thisfn = "na_exporter_to_buffer";
 	gchar *buffer;
@@ -269,11 +276,11 @@ na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark fo
 
 	buffer = NULL;
 
-	g_debug( "%s: pivot=%p, item=%p (%s), format=%u (%s), messages=%p",
+	g_debug( "%s: pivot=%p, item=%p (%s), format=%u, messages=%p",
 			thisfn,
 			( void * ) pivot,
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
-			( guint ) format, g_quark_to_string( format ),
+			( guint ) format,
 			( void * ) messages );
 
 	exporter = find_exporter_for_format( pivot, format );
@@ -314,7 +321,7 @@ na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark fo
  * @pivot: the #NAPivot pivot for the running application.
  * @item: a #NAObjectItem-derived object.
  * @folder_uri: the URI of the target folder.
- * @format: the #GQuark target format.
+ * @format: the target format identifier.
  * @messages: a pointer to a #GSList list of strings; the provider
  *  may append messages to this list, but shouldn't reinitialize it.
  *
@@ -324,7 +331,8 @@ na_exporter_to_buffer( const NAPivot *pivot, const NAObjectItem *item, GQuark fo
  * should be g_free() by the caller, or %NULL if an error has been detected.
  */
 gchar *
-na_exporter_to_file( const NAPivot *pivot, const NAObjectItem *item, const gchar *folder_uri, GQuark format, GSList **messages )
+na_exporter_to_file( const NAPivot *pivot,
+		const NAObjectItem *item, const gchar *folder_uri, GQuark format, GSList **messages )
 {
 	static const gchar *thisfn = "na_exporter_to_file";
 	gchar *export_uri;
@@ -412,4 +420,53 @@ find_exporter_for_format( const NAPivot *pivot, GQuark format )
 	na_exporter_free_formats( formats );
 
 	return( exporter );
+}
+
+/*
+ * na_exporter_get_export_format:
+ * @pref: the name of the preference to be read.
+ * @mandatory: if not %NULL, a pointer to a boolean which will receive the
+ *  mandatory property.
+ *
+ * Returns: the export format currently set in user's preference..
+ *
+ * The returned integer is either:
+ * - the corresponding enum value in the case of "NoImport" or "Ask";
+ * - the #GQuark of the string for other export formats.
+ */
+GQuark
+na_exporter_get_export_format( const gchar *pref, gboolean *mandatory )
+{
+	gchar *format_str;
+	GQuark format_id;
+
+	g_return_val_if_fail( pref && strlen( pref ), ( GQuark ) EXPORTER_FORMAT_NO_EXPORT );
+
+	format_str = na_settings_get_string( pref, NULL, mandatory );
+	g_return_val_if_fail( format_str && strlen( format_str ), ( GQuark ) EXPORTER_FORMAT_NO_EXPORT );
+
+	format_id = id_from_string( format_str );
+	g_free( format_str );
+
+	return( format_id );
+}
+
+/*
+ * na_exporter_id_from_string:
+ * @format_str: the string which defines the export format in user's preferences.
+ *
+ * Returns: the integer which identifies the export format.
+ *
+ * The returned integer is either:
+ * - the corresponding enum value in the case of "NoImport" or "Ask";
+ * - the #GQuark of the string for other export formats.
+ */
+static GQuark
+id_from_string( const gchar *format_str )
+{
+	if( !strcmp( format_str, Ask )){
+		return(( GQuark ) EXPORTER_FORMAT_ASK );
+	}
+
+	return( g_quark_from_string( format_str ));
 }

@@ -38,7 +38,12 @@
  *
  * This class is derived from BaseDialog.
  * It is ran each time an action is to be exported, and the user want
- * to be ask to choose the export format.
+ * to be asked to choose the export format.
+ *
+ * Only actually available export formats, as provided by i/o providers,
+ * are proposed here:
+ * - the 'Ask' option is obviously not proposed here
+ * - a 'NoImport' capability is provided by clicking on Cancel button.
  */
 
 #include <api/na-object-item.h>

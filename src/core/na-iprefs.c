@@ -119,47 +119,6 @@ na_iprefs_set_order_mode( guint mode )
 	na_settings_set_string( NA_IPREFS_ITEMS_LIST_ORDER_MODE, order_str );
 }
 
-/**
- * na_iprefs_get_export_format:
- * @name: name of the export format key to be read
- * @mandatory: if not %NULL, a pointer to a boolean which will receive the
- *  mandatory property.
- *
- * Used to default to export as a GConfEntry.
- * Starting with 3.1.0, defaults to Desktop1 (see. core/na-settings.h)
- *
- * Returns: the export format currently set as a #GQuark.
- */
-GQuark
-na_iprefs_get_export_format( const gchar *name, gboolean *mandatory )
-{
-	GQuark export_format;
-	gchar *format_str;
-
-	export_format = g_quark_from_static_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
-
-	format_str = na_settings_get_string( name, NULL, mandatory );
-
-	if( format_str ){
-		export_format = g_quark_from_string( format_str );
-		g_free( format_str );
-	}
-
-	return( export_format );
-}
-
-/**
- * na_iprefs_set_export_format:
- * @format: the new value to be written.
- *
- * Writes the preferred export format' to the preference system.
- */
-void
-na_iprefs_set_export_format( const gchar *name, GQuark format )
-{
-	na_settings_set_string( name, g_quark_to_string( format ));
-}
-
 /*
  * na_iprefs_get_io_providers:
  * @pivot: the #NAPivot application object.

@@ -39,7 +39,6 @@
 
 #include <core/na-exporter.h>
 #include <core/na-export-format.h>
-#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-export-ask.h"
@@ -594,13 +593,13 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	if( index == -1 ){
 
 		*exported = g_list_prepend( *exported, ( gpointer ) action );
-		format = na_iprefs_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
+		format = na_exporter_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
 
-		if( format == IPREFS_EXPORT_FORMAT_ASK ){
+		if( format == EXPORTER_FORMAT_ASK ){
 			format = nact_export_ask_user( clipboard->private->window, NA_OBJECT_ITEM( action ), first );
 		}
 
-		if( format != IPREFS_EXPORT_NO_EXPORT ){
+		if( format != EXPORTER_FORMAT_NO_EXPORT ){
 			if( dest_folder ){
 				fname = na_exporter_to_file( NA_PIVOT( updater ), NA_OBJECT_ITEM( action), dest_folder, format, &msgs );
 				g_free( fname );

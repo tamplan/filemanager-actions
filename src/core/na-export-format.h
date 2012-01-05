@@ -63,10 +63,6 @@ typedef struct {
 }
 	NAExportFormatClass;
 
-#define IPREFS_EXPORT_FORMAT_ASK_ID		"Ask"
-#define IPREFS_EXPORT_FORMAT_ASK		g_quark_from_static_string( IPREFS_EXPORT_FORMAT_ASK_ID )
-#define IPREFS_EXPORT_NO_EXPORT			1
-
 GType           na_export_format_get_type( void );
 
 NAExportFormat *na_export_format_new( const NAIExporterFormatExt *exporter_format );
