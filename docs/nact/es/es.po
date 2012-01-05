@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-01-01 18:19+0000\n"
-"PO-Revision-Date: 2012-01-03 17:53+0100\n"
+"POT-Creation-Date: 2012-01-03 22:36+0000\n"
+"PO-Revision-Date: 2012-01-05 12:57+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -343,11 +343,17 @@ msgstr "2010"
 msgid "2011"
 msgstr "2011"
 
-#: C/nautilus-actions-config-tool.xml:7(holder)
+#: C/nautilus-actions-config-tool.xml:7(year)
+#, fuzzy
+#| msgid "2010"
+msgid "2012"
+msgstr "2010"
+
+#: C/nautilus-actions-config-tool.xml:8(holder)
 msgid "Pierre Wieser"
 msgstr "Pierre Wieser"
 
-#: C/nautilus-actions-config-tool.xml:11(para)
+#: C/nautilus-actions-config-tool.xml:12(para)
 #: C/nautilus-actions-config-tool.xml:75(para)
 msgid ""
 "<productname>Nautilus-Actions</productname> is a <productname>Nautilus</"
@@ -362,7 +368,7 @@ msgstr ""
 "archivos. Estas acciones se puede organizar en menús y submenús, y se puede "
 "exportar y compartir con otros entornos de escritorio."
 
-#: C/nautilus-actions-config-tool.xml:17(para)
+#: C/nautilus-actions-config-tool.xml:18(para)
 msgid ""
 "This manual describes the <application>Nautilus-Actions Configuration Tool</"
 "application> user interface, and explains how you may configure your menus "
@@ -374,42 +380,60 @@ msgstr ""
 "configurar sus menús y sus acciones, haciendo que se muestren y se apliquen "
 "dependiendo de condiciones específicas."
 
-#: C/nautilus-actions-config-tool.xml:24(releaseinfo)
+#: C/nautilus-actions-config-tool.xml:25(releaseinfo)
+#, fuzzy
+#| msgid ""
+#| "This manual describes version 3.1 of Nautilus-Actions Configuration Tool."
 msgid ""
-"This manual describes version 3.1 of Nautilus-Actions Configuration Tool."
+"This manual describes version 3.2 of Nautilus-Actions Configuration Tool."
 msgstr ""
 "Este manual describe la versión 3.1 de la Herramienta de configuración de "
 "Acciones de Nautilus."
 
-#: C/nautilus-actions-config-tool.xml:29(publishername)
+#: C/nautilus-actions-config-tool.xml:30(publishername)
 msgid "GNOME Documentation Project"
 msgstr "Proyecto de documentación de GNOME"
 
-#: C/nautilus-actions-config-tool.xml:34(firstname)
+#: C/nautilus-actions-config-tool.xml:35(firstname)
 msgid "Pierre"
 msgstr "Pierre"
 
-#: C/nautilus-actions-config-tool.xml:35(surname)
+#: C/nautilus-actions-config-tool.xml:36(surname)
 msgid "Wieser"
 msgstr "Wieser"
 
-#: C/nautilus-actions-config-tool.xml:36(email)
+#: C/nautilus-actions-config-tool.xml:37(email)
 msgid "pwieser@trychlos.org"
 msgstr "pwieser@trychlos.org"
 
-#: C/nautilus-actions-config-tool.xml:74(revnumber)
+#: C/nautilus-actions-config-tool.xml:75(revnumber)
 msgid "Nautilus-Actions Configuration Tool User's Manual v 3.1"
 msgstr ""
 "Manual del usuario de la herramienta de configuración de Acciones de "
 "Nautilus v3.1"
 
-#: C/nautilus-actions-config-tool.xml:75(date)
+#: C/nautilus-actions-config-tool.xml:76(date)
 msgid "May 2011"
 msgstr "Mayo de 2011"
 
-#: C/nautilus-actions-config-tool.xml:77(para)
+#: C/nautilus-actions-config-tool.xml:78(para)
+#: C/nautilus-actions-config-tool.xml:88(para)
 msgid "Pierre Wieser <email>pwieser@trychlos.org</email>"
 msgstr "Pierre Wieser <email>pwieser@trychlos.org</email>"
+
+#: C/nautilus-actions-config-tool.xml:85(revnumber)
+#, fuzzy
+#| msgid "Nautilus-Actions Configuration Tool User's Manual v 3.1"
+msgid "Nautilus-Actions Configuration Tool User's Manual v 3.2"
+msgstr ""
+"Manual del usuario de la herramienta de configuración de Acciones de "
+"Nautilus v3.1"
+
+#: C/nautilus-actions-config-tool.xml:86(date)
+#, fuzzy
+#| msgid "May 2011"
+msgid "January 2012"
+msgstr "Mayo de 2011"
 
 #: C/nautilus-actions-config-tool.xml:7(para)
 msgid ""
@@ -1536,6 +1560,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:66(para)
 msgid "Defining a new basename-based condition involves two steps."
 msgstr ""
+"Definir una condición nueva basada en el nombre base nueva implica dos pasos."
 
 #: C/nautilus-actions-config-tool.xml:71(para)
 #: C/nautilus-actions-config-tool.xml:203(para)
@@ -1543,7 +1568,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:489(para)
 #: C/nautilus-actions-config-tool.xml:630(para)
 msgid "Define the new condition filter."
-msgstr ""
+msgstr "Defina el filtro de la nueva condición."
 
 #: C/nautilus-actions-config-tool.xml:76(para)
 #: C/nautilus-actions-config-tool.xml:208(para)
@@ -1553,17 +1578,24 @@ msgid ""
 "Press <keycap>Insert</keycap> or click on <guibutton><inlinegraphic fileref="
 "\"figures/add.png\"/></guibutton> button to insert a new condition filter"
 msgstr ""
+"Pulse <keycap>Insertar</keycap> o pulse sobre el botón "
+"<guibutton><inlinegraphic fileref=\"figures/add.png\"/></guibutton> para "
+"insertar un filtro de condición nuevo"
 
 #: C/nautilus-actions-config-tool.xml:83(para)
 msgid ""
 "Edit the newly inserted condition filter to the basename you want match."
 msgstr ""
+"Edite el filtro de la condición para que coincida con el nombre base que "
+"quiere."
 
 #: C/nautilus-actions-config-tool.xml:87(para)
 msgid ""
 "A basename-based condition may use « <literal>*</literal> » or « <literal>?</"
 "literal> » wildcard characters."
 msgstr ""
+"Una condición basada en el nombre base podrá usar los caracteres comodín "
+"«<literal>*</literal>» o «<literal>?</literal>»."
 
 #: C/nautilus-actions-config-tool.xml:96(para)
 #: C/nautilus-actions-config-tool.xml:252(para)
@@ -1573,6 +1605,8 @@ msgid ""
 "Indicates whether this a « must match one of » or a « must not match any "
 "of » condition."
 msgstr ""
+"Indica si esta es una condición del tipo «debe cumplir al menos una» o «no "
+"debe cumplir ninguna»."
 
 #: C/nautilus-actions-config-tool.xml:100(para)
 #: C/nautilus-actions-config-tool.xml:255(para)
@@ -1583,12 +1617,18 @@ msgid ""
 "match any of</guilabel> radio button in the same row to set the "
 "corresponding condition."
 msgstr ""
+"Pulse sobre el botón de radio <guilabel>Debe cumplir al menos una</guilabel> "
+"o <guilabel>No debe cumplir ninguna</guilabel> en la misma línea para "
+"establecer la condición correspondiente."
 
 #: C/nautilus-actions-config-tool.xml:107(para)
 msgid ""
 "Depending of your target operating system, make sure that the "
 "<guilabel>Match case</guilabel> checkbox is activated (or not)."
 msgstr ""
+"Dependiendo del sistema operativo objetivo, asegúrese de que la casilla de "
+"verificación <guilabel>Coincidir con capitalización</guilabel> está activada "
+"(o no)."
 
 #: C/nautilus-actions-config-tool.xml:113(para)
 msgid ""
@@ -1596,10 +1636,15 @@ msgid ""
 "that <filename>/my/file</filename> filename is considered distinct from "
 "<filename>/My/File</filename> one."
 msgstr ""
+"Cuando se activa, todos los filtros se consideran sensibles a la "
+"capitalización, lo que significa que el nombre de archivo <filename>/"
+"mi_archivo</filename> se considera distinto a <filename>/Mi_Archivo</"
+"filename>."
 
 #: C/nautilus-actions-config-tool.xml:118(para)
 msgid "This is the default behavior on Unix-like systems."
 msgstr ""
+"Este es el comportamiento predeterminado en los sistemas similares a Unix."
 
 #: C/nautilus-actions-config-tool.xml:123(para)
 msgid ""
@@ -1607,12 +1652,18 @@ msgid ""
 "that <filename>/my/file</filename> and <filename>/My/File</filename> "
 "filenames are considered the same name."
 msgstr ""
+"Cuando se desactiva, los filtros se consideran no sensibles a la "
+"capitalización, lo que significa que los nombres de archivo <filename>/"
+"mi_archivo</filename> y <filename>/Mi_Archivo</filename> se consideran el "
+"mismo nombre."
 
 #: C/nautilus-actions-config-tool.xml:129(para)
 msgid ""
 "This is most probably what you want if you target some sort of "
 "<productname>Windows</productname> system."
 msgstr ""
+"Esto es muy probablemente lo que quiere si su objetivo es alguna clase de "
+"sistema <productname>Windows</productname>."
 
 #: C/nautilus-actions-config-tool.xml:135(para)
 msgid ""
@@ -1620,6 +1671,9 @@ msgid ""
 "and pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
 "fileref=\"figures/remove.png\"/></guibutton> button)."
 msgstr ""
+"Borrar una condición basada en el nombre base definida es tan simple como "
+"seleccionarla y pulsar <keycap>Supr</keycap> (o pulsar sobre el botón "
+"<guibutton><inlinegraphic fileref=\"figures/remove.png\"/></guibutton>)."
 
 #: C/nautilus-actions-config-tool.xml:141(para)
 msgid ""
@@ -1628,6 +1682,11 @@ msgid ""
 "« <literal>*</literal> » condition, this just means that basename-based "
 "conditions are not considered as relevant for the action."
 msgstr ""
+"De manera predeterminada, la condición basada en el nombre base es sólo una "
+"condición «<literal>debe cumplir al menos una *</literal>». Como todos los "
+"nombres base siempre cumplen esta condición, esto sólo significa que las "
+"condiciones basadas en nombre base no se consideran relevantes para la "
+"acción."
 
 #: C/nautilus-actions-config-tool.xml:151(title)
 #: C/nautilus-actions-config-tool.xml:163(title)
@@ -1642,20 +1701,29 @@ msgid ""
 "simultaneously decide that none of the selected item(s) can have some other "
 "sort of mimetype."
 msgstr ""
+"Puede decidir si su acción aparecerá dependiendo de los tipos MIME de los "
+"elementos actualmente seleccionados en el gestor de archivos: puede definir "
+"que cada elemento de la selección deba cumplir algún tipo MIME; y puede "
+"simultáneamente decidir que ninguno de los elementos seleccionados deba "
+"cumplir algún otro tipo MIME."
 
 #: C/nautilus-actions-config-tool.xml:158(para)
 msgid ""
 "Click on the <guilabel>Mimetypes</guilabel> tab to show the page which will "
 "permit you to configure your mimetype-based conditions."
 msgstr ""
+"Pulse sobre la pestaña <guilabel>Tipos MIME</guilabel> para mostrar la "
+"página que le permite configurar sus condiciones basadas en tipos MIME."
 
 #: C/nautilus-actions-config-tool.xml:170(phrase)
 msgid "Shows the tab which lets you define mimetype-based conditions."
 msgstr ""
+"Muestra la pestaña que le permite definir sus condiciones basadas en tipos "
+"MIME."
 
 #: C/nautilus-actions-config-tool.xml:173(para)
 msgid "The mimetype-based conditions tab"
-msgstr ""
+msgstr "La pestaña de condiciones basadas en tipos MIME"
 
 #: C/nautilus-actions-config-tool.xml:178(para)
 msgid ""
@@ -1667,6 +1735,14 @@ msgid ""
 "patterns, and must not match any of the defined « must not match any of » "
 "patterns."
 msgstr ""
+"En realidad, las condiciones basadas en tipos MIME se construyen como una "
+"lista con dos tipos de condiciones: «debe cumplir al menos una» y «no debe "
+"cumplir ninguna». Para que su acción sea un candidato tomando en cuenta "
+"estas condiciones basadas en nombres base, todas las condiciones listadas "
+"deben ser válidas para cada uno de los elementos seleccionados: el tipo MIME "
+"de cada elemento debe cumplir al menos una de las condiciones del tipo «debe "
+"cumplir al menos una» y no debe cumplir ninguna del tipo «no debe cumplir "
+"ninguna»."
 
 #: C/nautilus-actions-config-tool.xml:191(para)
 msgid ""
@@ -1676,6 +1752,12 @@ msgid ""
 "checked against the mimetype of the current location, which happens to be "
 "the well known « inode/directory » mimetype."
 msgstr ""
+"Cuando el objetivo sea el menú contextual de la selección, sus condiciones "
+"basadas en tipos MIME se compararán con los elementos actualmente "
+"seleccionados. Cuando el objetivo sea el menú contextual del lugar actual o "
+"la barra de herramientas, sus condiciones basadas en tipos MIME se "
+"compararán con el tipo MIME del lugar actual, que resulta ser el conocido "
+"tipo MIME « inode/directory »."
 
 #: C/nautilus-actions-config-tool.xml:198(para)
 msgid "Defining a new mimetype-based condition involves two steps."
