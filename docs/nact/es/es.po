@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-01-03 22:36+0000\n"
-"PO-Revision-Date: 2012-01-05 12:57+0100\n"
+"POT-Creation-Date: 2012-01-05 12:02+0000\n"
+"PO-Revision-Date: 2012-01-05 19:01+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -344,10 +344,8 @@ msgid "2011"
 msgstr "2011"
 
 #: C/nautilus-actions-config-tool.xml:7(year)
-#, fuzzy
-#| msgid "2010"
 msgid "2012"
-msgstr "2010"
+msgstr "2012"
 
 #: C/nautilus-actions-config-tool.xml:8(holder)
 msgid "Pierre Wieser"
@@ -381,14 +379,11 @@ msgstr ""
 "dependiendo de condiciones específicas."
 
 #: C/nautilus-actions-config-tool.xml:25(releaseinfo)
-#, fuzzy
-#| msgid ""
-#| "This manual describes version 3.1 of Nautilus-Actions Configuration Tool."
 msgid ""
 "This manual describes version 3.2 of Nautilus-Actions Configuration Tool."
 msgstr ""
-"Este manual describe la versión 3.1 de la Herramienta de configuración de "
-"Acciones de Nautilus."
+"Este manual describe la versión 3.2 de la herramienta de configuración de "
+"acciones de Nautilus."
 
 #: C/nautilus-actions-config-tool.xml:30(publishername)
 msgid "GNOME Documentation Project"
@@ -409,7 +404,7 @@ msgstr "pwieser@trychlos.org"
 #: C/nautilus-actions-config-tool.xml:75(revnumber)
 msgid "Nautilus-Actions Configuration Tool User's Manual v 3.1"
 msgstr ""
-"Manual del usuario de la herramienta de configuración de Acciones de "
+"Manual del usuario de la herramienta de configuración de acciones de "
 "Nautilus v3.1"
 
 #: C/nautilus-actions-config-tool.xml:76(date)
@@ -422,18 +417,14 @@ msgid "Pierre Wieser <email>pwieser@trychlos.org</email>"
 msgstr "Pierre Wieser <email>pwieser@trychlos.org</email>"
 
 #: C/nautilus-actions-config-tool.xml:85(revnumber)
-#, fuzzy
-#| msgid "Nautilus-Actions Configuration Tool User's Manual v 3.1"
 msgid "Nautilus-Actions Configuration Tool User's Manual v 3.2"
 msgstr ""
 "Manual del usuario de la herramienta de configuración de Acciones de "
-"Nautilus v3.1"
+"Nautilus v3.2"
 
 #: C/nautilus-actions-config-tool.xml:86(date)
-#, fuzzy
-#| msgid "May 2011"
 msgid "January 2012"
-msgstr "Mayo de 2011"
+msgstr "Enero de 2012"
 
 #: C/nautilus-actions-config-tool.xml:7(para)
 msgid ""
@@ -1761,22 +1752,27 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:198(para)
 msgid "Defining a new mimetype-based condition involves two steps."
-msgstr ""
+msgstr "Definir una condición basada en tipo MIME implica dos pasos."
 
 #: C/nautilus-actions-config-tool.xml:215(para)
 msgid ""
 "Edit the newly inserted condition filter to the mimetype you want match."
 msgstr ""
+"Edite el filtro de la condición para que coincida con el tipo MIME que "
+"quiere."
 
 #: C/nautilus-actions-config-tool.xml:218(para)
 msgid ""
 "A mimetype must be defined as a <literal>group/subgroup</literal> expression."
 msgstr ""
+"Debe definir un tipo MIME como una expresión <literal>grupo/subgrupo</"
+"literal>."
 
 #: C/nautilus-actions-config-tool.xml:223(para)
 msgid ""
 "The « <literal>*</literal> » wildcard is supported only in some situations:"
 msgstr ""
+"El comodín «<literal>*</literal>» se soporta sólo en algunas situaciones:"
 
 #: C/nautilus-actions-config-tool.xml:228(para)
 msgid ""
@@ -1784,17 +1780,22 @@ msgid ""
 "convenient shortcut, the « <literal>*</literal> » literal is also accepted "
 "for this same purpose."
 msgstr ""
+"La expresión «<literal>*/*</literal>» coincide con todos los tipos MIME. "
+"Como atajo conveniente, el carácter «<literal>*</literal>» también es válido "
+"para el mismo propósito."
 
 #: C/nautilus-actions-config-tool.xml:235(para)
 msgid ""
 "A <literal>group/*</literal> string matches all subgroups of <literal>group</"
 "literal> mimetype."
 msgstr ""
+"Una cadena <literal>grupo/*</literal> coincide con todos los subgrupos del "
+"tipo MIME <literal>grupo</literal>."
 
 #: C/nautilus-actions-config-tool.xml:241(para)
 msgid ""
 "The <literal>*/subgroup</literal> string is not accepted as a valid wildcard."
-msgstr ""
+msgstr "La cadena <literal>*/subgrupo</literal> no es válida como comodín."
 
 #: C/nautilus-actions-config-tool.xml:262(para)
 msgid ""
@@ -1802,6 +1803,9 @@ msgid ""
 "and pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
 "fileref=\"figures/remove.png\"/></guibutton> button)."
 msgstr ""
+"Borrar una condición basada en tipo MIME definida es tan simple como "
+"seleccionarla y pulsar <keycap>Supr</keycap> (o pulsar sobre el botón "
+"<guibutton><inlinegraphic fileref=\"figures/remove.png\"/></guibutton>)."
 
 #: C/nautilus-actions-config-tool.xml:268(para)
 msgid ""
@@ -1810,34 +1814,41 @@ msgid ""
 "« <literal>*/*</literal> », this just means that mimetypes are not "
 "considered as relevant for the action."
 msgstr ""
+"De manera predeterminada, la condición basada en tipo MIME es sólo una "
+"condición «<literal>debe coincidir con uno de */*</literal>». Como todos los "
+"nombres base siempre cumplen esta condición, esto sólo significa que las "
+"condiciones basadas en tipos MIME no se consideran relevantes para la acción."
 
 #: C/nautilus-actions-config-tool.xml:276(title)
 msgid "Example of usual mimetypes"
 msgstr "Ejemplo de tipos MIME habituales"
 
 #: C/nautilus-actions-config-tool.xml:279(term)
+#, fuzzy
 msgid "all/all"
-msgstr ""
+msgstr "todos/todos"
 
 #: C/nautilus-actions-config-tool.xml:283(para)
 msgid "Matches all items."
-msgstr ""
+msgstr "Coincide con todos los elementos."
 
 #: C/nautilus-actions-config-tool.xml:289(term)
+#, fuzzy
 msgid "all/allfiles"
-msgstr ""
+msgstr "todos/todos los archivos"
 
 #: C/nautilus-actions-config-tool.xml:293(para)
 msgid "Matches all regular files."
-msgstr ""
+msgstr "Coincide con todos los archivos regulares."
 
 #: C/nautilus-actions-config-tool.xml:299(term)
+#, fuzzy
 msgid "inode/directory"
-msgstr ""
+msgstr "inodo/carpeta"
 
 #: C/nautilus-actions-config-tool.xml:303(para)
 msgid "Matches only directories."
-msgstr ""
+msgstr "Coincide sólo con carpetas."
 
 #: C/nautilus-actions-config-tool.xml:313(title)
 #: C/nautilus-actions-config-tool.xml:332(title)
@@ -1852,6 +1863,11 @@ msgid ""
 "another; and you may simultaneously decide that none of the selected item(s) "
 "can be located in some other hierarchy."
 msgstr ""
+"Puede decidir si su acción aparecerá dependiendo de la carpeta en la que se "
+"encuentran los elementos actualmente seleccionados en el gestor de archivos: "
+"puede definir que cada elemento de la selección deba estar en una jerarquía "
+"u otra; y puede simultáneamente decidir que ninguno de los elementos "
+"seleccionados deba estar en alguna otra jerarquía."
 
 #: C/nautilus-actions-config-tool.xml:322(para)
 msgid ""
@@ -1859,20 +1875,26 @@ msgid ""
 "hierarchy in which the currently examined item should (or should not) stay: "
 "this is a pattern on the dirname of the element."
 msgstr ""
+"Una condición basada en carpetas se debe ser entender como la especificación "
+"de la jerarquía en la que el elemento actualmente examinado debería (o no) "
+"estar: Esto es un patrón en la ruta del elemento."
 
 #: C/nautilus-actions-config-tool.xml:327(para)
 msgid ""
 "Click on the <guilabel>Folders</guilabel> tab to show the page which will "
 "permit you to configure your folder-based conditions."
 msgstr ""
+"Pulse sobre la pestaña <guilabel>Carpetas</guilabel> para mostrar la página "
+"que le permite configurar sus condiciones basadas en carpetas."
 
 #: C/nautilus-actions-config-tool.xml:339(phrase)
 msgid "Shows the tab which lets you define folder-based conditions."
 msgstr ""
+"Muestra la pestaña que le permite definir condiciones basadas en carpetas."
 
 #: C/nautilus-actions-config-tool.xml:342(para)
 msgid "The folder-based conditions tab"
-msgstr ""
+msgstr "La pestaña de condiciones basadas en carpetas."
 
 #: C/nautilus-actions-config-tool.xml:347(para)
 msgid ""
