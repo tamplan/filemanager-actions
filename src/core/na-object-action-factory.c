@@ -38,7 +38,12 @@
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
 
-extern NADataDef data_def_id[];				/* defined in na-object-id-factory.c */
+/*
+ * As of 3.2 non copyables data are:
+ * - n/a
+ */
+
+extern NADataDef data_def_id [];			/* defined in na-object-id-factory.c */
 extern NADataDef data_def_item [];			/* defined in na-object-item-factory.c */
 extern NADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
 
@@ -227,7 +232,7 @@ static NADataDef data_def_action [] = {
 
 /* all these data are pre-profiles data
  * these are obsoleted since 1.9 (which was a non-official version)
- * readable but non writable, no default
+ * readable but non writable, no default, not copyable
  */
 NADataDef data_def_action_v1 [] = {
 

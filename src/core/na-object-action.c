@@ -378,8 +378,8 @@ ifactory_object_get_groups( const NAIFactoryObject *instance )
 
 /*
  * at this time, we don't yet have read the profiles as this will be
- * triggered by ifactory_provider_read_done - we so just be able to deal with
- * action-specific properties (not check for profiles consistency)
+ * triggered by ifactory_provider_read_done - we so just are able to deal with
+ * action-specific properties (not to check for profiles consistency)
  */
 static void
 ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider *reader, void *reader_data, GSList **messages )

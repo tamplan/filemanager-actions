@@ -36,6 +36,11 @@
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
 
+/*
+ * As of 3.2 non copyables data are:
+ * - the parent pointer
+ */
+
 NADataDef data_def_id [] = {
 
 	/* this data is marked non readable / non writable as it has to be read

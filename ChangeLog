@@ -1,5 +1,13 @@
 2012-01-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-icontext-factory.c:
+	* src/core/na-iduplicable.c:
+	* src/core/na-object-action-factory.c:
+	* src/core/na-object-action.c:
+	* src/core/na-object-id-factory.c:
+	* src/core/na-object-item-factory.c:
+	* src/core/na-object-menu-factory.c: Add/fix comments.
+
 	* src/core/na-export-format.h: Remove IPREFS_EXPORT_ definitions from here.
 
 	* src/core/na-exporter.c:

@@ -485,7 +485,7 @@ na_iduplicable_set_origin( NAIDuplicable *object, const NAIDuplicable *origin )
  * @object: the #NAIDuplicable object whose modification status is to be set.
  * @modified: the new modification status #NAIDuplicable.
  *
- * Sets the new modified of a duplicated #NAIDuplicable.
+ * Sets the new modification status of a duplicated #NAIDuplicable.
  *
  * Since: 2.30
  * Deprecated: 3.1

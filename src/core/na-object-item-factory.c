@@ -38,6 +38,15 @@
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
 
+/*
+ * As of 3.2 non copyables data are:
+ * - the type
+ * - non localized icon name
+ * - subitems pointers list and string list
+ * - read-only status
+ * - provider and provider data
+ */
+
 NADataDef data_def_item [] = {
 
 	/* this data is marked as non readable as it has to be read specifically
@@ -320,7 +329,7 @@ NADataDef data_def_item [] = {
 				NA_DATA_TYPE_BOOLEAN,
 				"false",
 				FALSE,
-				TRUE,
+				FALSE,
 				FALSE,
 				FALSE,
 				FALSE,
@@ -344,7 +353,7 @@ NADataDef data_def_item [] = {
 				NA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,
-				TRUE,
+				FALSE,
 				FALSE,
 				FALSE,
 				FALSE,

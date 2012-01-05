@@ -38,6 +38,11 @@
 #include <api/na-data-def.h>
 #include <api/na-data-types.h>
 
+/*
+ * As of 3.2 non copyables data are:
+ * - multiple flag
+ */
+
 NADataDef data_def_conditions [] = {
 
 	{ NAFO_DATA_BASENAMES,

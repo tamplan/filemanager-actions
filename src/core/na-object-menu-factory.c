@@ -40,6 +40,11 @@ extern NADataDef data_def_id [];			/* defined in na-object-id-factory.c */
 extern NADataDef data_def_item [];			/* defined in na-object-item-factory.c */
 extern NADataDef data_def_conditions [];	/* defined in na-icontext-factory.c */
 
+/*
+ * As of 3.2 non copyables data are:
+ * - n/a
+ */
+
 static NADataDef data_def_menu [] = {
 	{ NULL },
 };
