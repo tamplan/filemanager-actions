@@ -1,3 +1,8 @@
+2012-01-05 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-iprefs.c:
+	* src/core/na-iprefs.h (na_iprefs_set_import_mode): Removed function.
+
 2012-01-04 Pierre Wieser <pwieser@trychlos.org>
 
 	Move 'Ask' export format to NAExporter.

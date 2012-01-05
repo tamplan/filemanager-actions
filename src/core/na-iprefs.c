@@ -46,22 +46,6 @@ typedef struct {
 }
 	EnumMap;
 
-/* import mode: what to do when the imported id already exists ?
- * enum is defined in api/na-iimporter.h
- */
-#define IMPORT_MODE_NOIMPORT_STR			"NoImport"
-#define IMPORT_MODE_RENUMBER_STR			"Renumber"
-#define IMPORT_MODE_OVERRIDE_STR			"Override"
-#define IMPORT_MODE_ASK_STR					"Ask"
-
-static EnumMap st_import_mode[] = {
-	{ IMPORTER_MODE_NO_IMPORT, IMPORT_MODE_NOIMPORT_STR },
-	{ IMPORTER_MODE_RENUMBER,  IMPORT_MODE_RENUMBER_STR },
-	{ IMPORTER_MODE_OVERRIDE,  IMPORT_MODE_OVERRIDE_STR },
-	{ IMPORTER_MODE_ASK,       IMPORT_MODE_ASK_STR },
-	{ 0 }
-};
-
 /* sort mode of the items in the file manager context menu
  * enum is defined in core/na-iprefs.h
  */
@@ -78,22 +62,6 @@ static EnumMap st_order_mode[] = {
 
 static const gchar *enum_map_string_from_id( const EnumMap *map, guint id );
 static guint        enum_map_id_from_string( const EnumMap *map, const gchar *str );
-
-/*
- * na_iprefs_set_import_mode:
- * @pref: name of the import key to be written.
- * @mode: the new value to be written.
- *
- * Writes the current status of 'import mode' to the preferences system.
- */
-void
-na_iprefs_set_import_mode( const gchar *pref, guint mode )
-{
-	const gchar *import_str;
-
-	import_str = enum_map_string_from_id( st_import_mode, mode );
-	na_settings_set_string( pref, import_str );
-}
 
 /*
  * na_iprefs_get_order_mode:

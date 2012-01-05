@@ -52,8 +52,6 @@ enum {
 	IPREFS_ORDER_MANUAL
 };
 
-void     na_iprefs_set_import_mode        ( const gchar *pref, guint mode );
-
 guint    na_iprefs_get_order_mode         ( gboolean *mandatory );
 guint    na_iprefs_get_order_mode_by_label( const gchar *label );
 void     na_iprefs_set_order_mode         ( guint mode );
