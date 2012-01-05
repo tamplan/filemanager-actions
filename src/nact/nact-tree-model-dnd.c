@@ -920,6 +920,16 @@ drop_uri_list( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selec
 		nact_tree_ieditable_insert_at_path( NACT_TREE_IEDITABLE( view ), imported, dest );
 	}
 
+	/* override items if needed
+	 * they may safely be released after having updated the store
+	 */
+	if( overriden ){
+		na_object_dump_tree( overriden );
+		view = nact_main_window_get_items_view( main_window );
+		nact_tree_ieditable_set_items( NACT_TREE_IEDITABLE( view ), overriden );
+		na_object_free_items( overriden );
+	}
+
 	drop_done = TRUE;
 	na_object_free_items( imported );
 	na_object_free_items( overriden );

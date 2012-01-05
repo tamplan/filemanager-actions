@@ -90,6 +90,8 @@ void     nact_tree_ieditable_insert_items  ( NactTreeIEditable *instance, GList 
 void     nact_tree_ieditable_insert_at_path( NactTreeIEditable *instance, GList *items, GtkTreePath *path );
 void     nact_tree_ieditable_insert_into   ( NactTreeIEditable *instance, GList *items );
 
+void     nact_tree_ieditable_set_items     ( NactTreeIEditable *instance, GList *items );
+
 void     nact_tree_ieditable_dump_modified         ( const NactTreeIEditable *instance );
 gboolean nact_tree_ieditable_is_level_zero_modified( const NactTreeIEditable *instance );
 

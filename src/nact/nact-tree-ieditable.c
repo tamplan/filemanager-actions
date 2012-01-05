@@ -35,6 +35,7 @@
 #include <api/na-core-utils.h>
 #include <api/na-object-api.h>
 
+#include <core/na-factory-object.h>
 #include <core/na-updater.h>
 
 #include "base-keysyms.h"
@@ -42,6 +43,7 @@
 #include "nact-main-window.h"
 #include "nact-tree-ieditable.h"
 #include "nact-tree-model.h"
+#include "nact-tree-view.h"
 
 /* private interface data
  */
@@ -125,6 +127,8 @@ register_type( void )
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactTreeIEditable", &info, 0 );
+
+	g_type_interface_add_prerequisite( type, NACT_TREE_VIEW_TYPE );
 
 	return( type );
 }
@@ -930,6 +934,82 @@ increment_counters( NactTreeIEditable *view, IEditableData *ied, GList *items )
 
 	na_object_count_items( items, &menus, &actions, &profiles );
 	g_signal_emit_by_name( G_OBJECT( ied->window ), TREE_SIGNAL_COUNT_CHANGED, FALSE, menus, actions, profiles );
+}
+
+/*
+ * nact_tree_ieditable_set_items:
+ * @instance: this #NactTreeIEditable *instance.
+ * @items: a #GList of items to be set in the tree view.
+ *
+ * The provided list of @items will override the items already in the list
+ * which have the same identifier. But:
+ * - menus keep their children
+ * - entering actions fully override existing ones.
+ *
+ * Items which would not been found are just ignored.
+ * Items which are not of the same type are ignored.
+ *
+ * This feature is typically used when importing an item whose identifier
+ * already exists, and the user have chosen to override existing item.
+ * So we should be almost sure that each item actually exists in the view.
+ */
+void
+nact_tree_ieditable_set_items( NactTreeIEditable *instance, GList *items )
+{
+	static const gchar *thisfn = "nact_tree_ieditable_set_items";
+	IEditableData *ied;
+	GList *it;
+	NAObjectItem *new_item, *old_item;
+	gchar *id;
+	GtkTreePath *path, *insert_path;
+
+	g_return_if_fail( NACT_IS_TREE_IEDITABLE( instance ));
+
+	g_debug( "%s: instance=%p, items=%p (count=%d)",
+		thisfn, ( void * ) instance, ( void * ) items, g_list_length( items ));
+
+	ied = get_instance_data( instance );
+
+	for( it = items ; it ; it = it->next ){
+		new_item = NA_OBJECT_ITEM( it->data );
+
+		id = na_object_get_id( new_item );
+		old_item = nact_tree_view_get_item_by_id( NACT_TREE_VIEW( instance ), id );
+
+		if( !old_item ){
+			g_warning( "%s: id=%s: item not found - ignored", thisfn, id );
+
+		} else if( G_OBJECT_TYPE( old_item ) != G_OBJECT_TYPE( new_item )){
+			g_warning( "%s: id=%s: old is a %s while new is a %s - ignored", thisfn, id,
+					G_OBJECT_TYPE_NAME( old_item ), G_OBJECT_TYPE_NAME( new_item ));
+
+		} else if( NA_IS_OBJECT_MENU( old_item )){
+			/* hopefully, na_factory_object_copy only copy valuable properties
+			 * keeping dynamic variables as parent pointer, provider and provider
+			 * data, read-only status - notably children are not impacted by this
+			 * copy
+			 */
+			na_factory_object_copy( NA_IFACTORY_OBJECT( old_item ), NA_IFACTORY_OBJECT( new_item ));
+
+		} else if( NA_IS_OBJECT_ACTION( old_item )){
+			/* na_factory_object is not a deep copy, which is fine for the menu
+			 * but not for the action - it appears more easier to just substitute
+			 * the old item with the new one
+			 *
+			 * only children of the old item are its own profiles, which are to be
+			 * replaced with the profiles provided by the new item
+			 */
+			path = nact_tree_model_delete( ied->model, NA_OBJECT( old_item ));
+			insert_path = nact_tree_model_insert_before( ied->model, NA_OBJECT( new_item ), path );
+			gtk_tree_path_free( path );
+			gtk_tree_path_free( insert_path );
+
+		} else {
+			g_warning( "%s: should not come here!", thisfn );
+		}
+
+		g_free( id );
+	}
 }
 
 /**

@@ -1,5 +1,11 @@
 2012-01-05 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-ieditable.c:
+	* src/nact/nact-tree-ieditable.h (nact_tree_ieditable_set_items): New function.
+
+	* src/nact/nact-assistant-import.c (assistant_apply):
+	* src/nact/nact-tree-model-dnd.c (drop_uri_list): Updated accordingly.
+
 	* src/core/na-importer.c (manage_import_mode):
 	Release the duplicated object which has been cancelled by the user.
 

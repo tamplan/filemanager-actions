@@ -93,6 +93,7 @@ struct _NactAssistantImportPrivate {
 	GtkTreeView *duplicates_listview;
 	NAIOption   *mode;
 	GList       *results;
+	GList       *overriden;
 };
 
 static const gchar        *st_xmlui_filename = PKGDATADIR "/nact-assistant-import.ui";
@@ -664,11 +665,9 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 
 	g_debug( "%s: window=%p, assistant=%p", thisfn, ( void * ) wnd, ( void * ) assistant );
 	window = NACT_ASSISTANT_IMPORT( wnd );
-
+	g_object_get( G_OBJECT( window ), BASE_PROP_PARENT, &main_window, NULL );
 	application = NACT_APPLICATION( base_window_get_application( main_window ));
 	updater = nact_application_get_updater( application );
-
-	g_object_get( G_OBJECT( wnd ), BASE_PROP_PARENT, &main_window, NULL );
 
 	memset( &importer_parms, '\0', sizeof( NAImporterParms ));
 	importer_parms.uris = gtk_file_chooser_get_uris( GTK_FILE_CHOOSER( window->private->file_chooser ));
@@ -712,8 +711,13 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		na_object_free_items( insertable_items );
 	}
 
+	/* contrarily, the tree store may or not take a new reference on overriding
+	 * items, so do not release it here
+	 */
 	if( overriden_items ){
-		na_object_free_items( overriden_items );
+		items_view = nact_main_window_get_items_view( NACT_MAIN_WINDOW( main_window ));
+		nact_tree_ieditable_set_items( NACT_TREE_IEDITABLE( items_view ), overriden_items );
+		window->private->overriden = overriden_items;
 	}
 }
 
@@ -839,6 +843,12 @@ prepare_importdone( NactAssistantImport *window, GtkAssistant *assistant, GtkWid
 	mode_id = na_ioption_get_id( window->private->mode );
 	na_settings_set_string( NA_IPREFS_IMPORT_PREFERRED_MODE, mode_id );
 	g_free( mode_id );
+
+	/* release here our reference on overriding items
+	 */
+	if( window->private->overriden ){
+		na_object_free_items( window->private->overriden );
+	}
 
 	g_object_set( G_OBJECT( window ), BASE_PROP_WARN_ON_ESCAPE, FALSE, NULL );
 	gtk_assistant_set_page_complete( assistant, page, TRUE );
