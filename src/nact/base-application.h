@@ -56,17 +56,46 @@
  *         int code;
  *
  *         appli = my_application_new();
- *         g_object_set( G_OBJECT( appli ),
- *             BASE_PROP_ARGC, argc,
- *             BASE_PROP_ARGV, argv,
- *             NULL );
- *         code = base_appliction_run( BASE_APPLICATION( appli ));
+ *         code = base_appliction_run( BASE_APPLICATION( appli ), argc, argv );
  *         g_object_unref( appli );
  *
  *         return( code );
  *     }
  *   </programlisting>
  * </example>
+ *
+ * main                 BaseApplication      NactApplication
+ * ===================  ===================  ===================
+ * appli = nact_application_new()
+ *                                           appli = g_object_new()
+ *                                           set properties
+ *                                             application name
+ *                                             icon name
+ *                                             description
+ *                                             command-line definitions
+ *                                             unique name (if apply)
+ * ret = base_application_run( appli, argc, argv )
+ *                      init i18n
+ *                      init application name
+ *                      init gtk with command-line options
+ *                      manage command-line options
+ *                      init unique manager
+ *                      init session manager
+ *                      init icon name
+ *                      init common builder
+ *                      foreach window to display
+ *                        create window
+ *                        create gtk toplevel
+ *                        unique watch toplevel
+ *                        run the window
+ *                      ret = last window return code
+ * g_object_unref( appli )
+ * return( ret )
+ *
+ * At any time, a function may preset the exit code of the application just by
+ * setting the @BASE_PROP_CODE property. Unless it also asks to quit immediately
+ * by returning %FALSE, another function may always set another exit code after
+ * that.
  */
 
 #include "base-builder.h"
@@ -107,10 +136,6 @@ typedef struct {
 	/**
 	 * manage_options:
 	 * @appli: this #BaseApplication -derived instance.
-	 * @code:  a pointer to an integer that the derived application may
-	 *         set as the exit code of the program if it chooses to stop
-	 *         the execution; the code set here will be ignored if execution
-	 *         is allowed to continue.
 	 *
 	 * This is invoked by the BaseApplication base class, after arguments
 	 * in the command-line have been processed by gtk_init_with_args()
@@ -121,9 +146,12 @@ typedef struct {
 	 * the derived class should call the parent class method in order to
 	 * let it manage its own options.
 	 *
+	 * The derived class may set the exit code of the application by
+	 * setting the @BASE_PROP_CODE property of @appli.
+	 *
 	 * Returns: %TRUE to continue execution, %FALSE to stop it.
 	 */
-	gboolean  ( *manage_options ) ( const BaseApplication *appli, int *code );
+	gboolean  ( *manage_options ) ( const BaseApplication *appli );
 
 	/**
 	 * main_window_new:
@@ -155,6 +183,7 @@ typedef struct {
  * @BASE_PROP_DESCRIPTION:      short description.
  * @BASE_PROP_ICON_NAME:        icon name.
  * @BASE_PROP_UNIQUE_NAME:      unique name of the application (if not empty)
+ * @BASE_PROP_CODE:             return code of the application
  */
 #define BASE_PROP_ARGC						"base-application-argc"
 #define BASE_PROP_ARGV						"base-application-argv"
@@ -163,12 +192,14 @@ typedef struct {
 #define BASE_PROP_DESCRIPTION				"base-application-description"
 #define BASE_PROP_ICON_NAME					"base-application-icon-name"
 #define BASE_PROP_UNIQUE_NAME				"base-application-unique-name"
+#define BASE_PROP_CODE						"base-application-code"
 
 typedef enum {
 	BASE_EXIT_CODE_START_FAIL = -1,
 	BASE_EXIT_CODE_OK = 0,
-	BASE_EXIT_CODE_ARGS,
-	BASE_EXIT_CODE_UNIQUE_APP,
+	BASE_EXIT_CODE_NO_APPLICATION_NAME,		/* no application name has been set by the derived class */
+	BASE_EXIT_CODE_ARGS,					/* unable to interpret command-line options */
+	BASE_EXIT_CODE_UNIQUE_APP,				/* another instance is already running */
 	BASE_EXIT_CODE_MAIN_WINDOW,
 	BASE_EXIT_CODE_INIT_FAIL,
 	BASE_EXIT_CODE_PROGRAM,
@@ -182,7 +213,7 @@ typedef enum {
 
 GType        base_application_get_type( void );
 
-int          base_application_run( BaseApplication *application );
+int          base_application_run( BaseApplication *application, int argc, GStrv argv );
 
 gchar       *base_application_get_application_name( const BaseApplication *application );
 BaseBuilder *base_application_get_builder         ( const BaseApplication *application );

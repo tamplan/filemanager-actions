@@ -1,3 +1,13 @@
+2012-01-06 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-application.c:
+	* src/nact/base-application.h (base_application_run):
+	Take argc, argv as function arguments.
+	Define 'code' as a property.
+
+	* src/nact/main.c b/src/nact/main.c (main):
+	* src/nact/nact-application.c (appli_manage_options): Updated accordingly.
+
 2012-01-05 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-tree-ieditable.c:

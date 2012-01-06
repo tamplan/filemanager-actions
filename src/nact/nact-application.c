@@ -77,7 +77,7 @@ static void     class_init( NactApplicationClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
-static gboolean appli_manage_options( const BaseApplication *application, int *code );
+static gboolean appli_manage_options( const BaseApplication *application );
 static GObject *appli_main_window_new( const BaseApplication *application, int *code );
 
 GType
@@ -231,14 +231,14 @@ nact_application_new( void )
  * overriden to manage command-line options
  */
 static gboolean
-appli_manage_options( const BaseApplication *application, int *code )
+appli_manage_options( const BaseApplication *application )
 {
 	static const gchar *thisfn = "nact_application_appli_manage_options";
 	gboolean ret;
 
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), FALSE );
 
-	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
 	ret = TRUE;
 
@@ -258,7 +258,7 @@ appli_manage_options( const BaseApplication *application, int *code )
 
 	/* call parent class */
 	if( ret && BASE_APPLICATION_CLASS( st_parent_class )->manage_options ){
-		ret = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application, code );
+		ret = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application );
 	}
 
 	return( ret );
