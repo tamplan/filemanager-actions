@@ -147,13 +147,10 @@ AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
 # check for gtk-doc
-# - starting with N-A 3.1.5, gtk-doc is no more required when one want compile
-#   the tarball distribution (i.e. without regenerating reference manuals)
-# - starting with gtk-doc 1.15, multiple source dirs are directly handled
-#   by gtk-doc.make
+# - starting with gtk-doc 1.16, is able to handle srcdir != builddir
 # - API documentation should not be built (would be incomplete) when deprecated
 #   symbols are not enabled
-GTK_DOC_CHECK([1.15],[--flavour no-tmpl])
+GTK_DOC_CHECK([1.16],[--flavour no-tmpl])
 if test "${enable_gtk_doc}" = "yes" -a "${enable_deprecated}" = "no"; then
 	AC_MSG_WARN([API documentation will be incomplete as deprecated symbols are disabled])
 fi

@@ -1,5 +1,7 @@
 2012-01-06 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Now requires gtk-doc >= 1.16.
+
 	* src/nact/base-application.c:
 	* src/nact/base-application.h (base_application_run):
 	Take argc, argv as function arguments.
