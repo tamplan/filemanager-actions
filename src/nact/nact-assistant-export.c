@@ -257,13 +257,19 @@ static void
 instance_constructed( GObject *window )
 {
 	static const gchar *thisfn = "nact_assistant_export_instance_constructed";
-	NactAssistantExport *self;
+	NactAssistantExportPrivate *priv;
 
 	g_return_if_fail( NACT_IS_ASSISTANT_EXPORT( window ));
 
-	self = NACT_ASSISTANT_EXPORT( window );
+	priv = NACT_ASSISTANT_EXPORT( window )->private;
 
-	if( !self->private->dispose_has_run ){
+	if( !priv->dispose_has_run ){
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( window );
+		}
+
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		base_window_signal_connect(
@@ -283,11 +289,6 @@ instance_constructed( GObject *window )
 				G_OBJECT( window ),
 				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
 				G_CALLBACK( on_base_all_widgets_showed ));
-
-		/* chain up to the parent class */
-		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
-			G_OBJECT_CLASS( st_parent_class )->constructed( window );
-		}
 	}
 }
 
