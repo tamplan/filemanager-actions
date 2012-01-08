@@ -1,5 +1,9 @@
 2012-01-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-view.c (nact_tree_view_get_type):
+	Register the interface after the type so that the interface is able to
+	require the type.
+
 	A program to test a class which implements an interface, this same
 	interface itself requiring the class...
 

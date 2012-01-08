@@ -170,8 +170,15 @@ nact_tree_view_get_type( void )
 {
 	static GType type = 0;
 
+	static const GInterfaceInfo tree_ieditable_iface_info = {
+		( GInterfaceInitFunc ) tree_ieditable_iface_init,
+		NULL,
+		NULL
+	};
+
 	if( !type ){
 		type = register_type();
+		g_type_add_interface_static( type, NACT_TREE_IEDITABLE_TYPE, &tree_ieditable_iface_info );
 	}
 
 	return( type );
@@ -195,17 +202,9 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
-	static const GInterfaceInfo tree_ieditable_iface_info = {
-		( GInterfaceInitFunc ) tree_ieditable_iface_init,
-		NULL,
-		NULL
-	};
-
 	g_debug( "%s", thisfn );
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NactTreeView", &info, 0 );
-
-	g_type_add_interface_static( type, NACT_TREE_IEDITABLE_TYPE, &tree_ieditable_iface_info );
 
 	return( type );
 }
