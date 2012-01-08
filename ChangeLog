@@ -1,3 +1,10 @@
+2012-01-08 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-iunique.c:
+	* src/nact/base-iunique.h: New BaseIUnique interface.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
 2012-01-06 Pierre Wieser <pwieser@trychlos.org>
 
 	* configure.ac: Now requires gtk-doc >= 1.16.
