@@ -164,59 +164,6 @@ on_instance_finalized( gpointer user_data, BaseIUnique *instance )
 	}
 }
 
-#if 0
-/*
- * Relying on libunique to detect another instance already running.
- *
- * A replacement is available with GLib 2.28 in GApplication, but only
- * GLib 2.30 (Fedora 16) provides a "non-unique" property.
- */
-static gboolean
-init_unique_app( BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_init_unique_app";
-	gboolean ret;
-	BaseApplicationPrivate *priv;
-	gboolean is_first;
-	gchar *msg;
-
-	g_debug( "%s: application=%p", thisfn, ( void * ) application );
-
-	ret = TRUE;
-	priv = application->private;
-
-	if( priv->unique_app_name && strlen( priv->unique_app_name )){
-
-			handle = unique_app_new( unique_app_name, NULL );
-			is_first = !unique_app_is_running( handle );
-
-			if( !is_first ){
-				unique_app_send_message( handle, UNIQUE_ACTIVATE, NULL );
-				/* i18n: application name */
-				msg = g_strdup_printf(
-						_( "Another instance of %s is already running.\n"
-							"Please switch back to it." ),
-						priv->application_name );
-				base_window_display_error_dlg( NULL, _( "The application is not unique" ), msg );
-				g_free( msg );
-				ret = FALSE;
-				priv->code = BASE_EXIT_CODE_UNIQUE_APP;
-			/* default from libunique is actually to activate the first window
-			 * so we rely on the default..
-			 */
-			} else {
-				g_signal_connect(
-						priv->unique_app_handle,
-						"message-received",
-						G_CALLBACK( on_unique_message_received ),
-						application );
-			}
-	}
-
-	return( ret );
-}
-#endif
-
 /*
  * Relying on libunique to detect if another instance is already running.
  *
@@ -224,9 +171,9 @@ init_unique_app( BaseApplication *application )
  * GLib 2.30 (Fedora 16) provides a "non-unique" capability.
  */
 gboolean
-base_iunique_init_name( BaseIUnique *instance, const gchar *unique_app_name )
+base_iunique_init_with_name( BaseIUnique *instance, const gchar *unique_app_name )
 {
-	static const gchar *thisfn = "base_iunique_init_name";
+	static const gchar *thisfn = "base_iunique_init_with_name";
 	gboolean ret;
 	gboolean is_first;
 	gchar *msg;

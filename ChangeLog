@@ -1,5 +1,8 @@
 2012-01-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-iunique.c:
+	* src/nact/base-iunique.h (base_iunique_init_with_name):
+	Function renamed from base_iunique_init_name().
 	* src/nact/base-builder.c:
 	* src/nact/base-builder.h: Fix comments.
 

@@ -68,11 +68,9 @@ typedef struct {
 }
 	BaseIUniqueInterface;
 
-GType    base_iunique_get_type    ( void );
+GType    base_iunique_get_type      ( void );
 
-gboolean base_iunique_init_name   ( BaseIUnique *instance, const gchar *unique_app_name );
-
-void     base_iunique_watch_window( BaseIUnique *instance, GtkWindow *toplevel );
+gboolean base_iunique_init_with_name( BaseIUnique *instance, const gchar *unique_app_name );
 
 G_END_DECLS
 
