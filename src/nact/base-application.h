@@ -64,8 +64,8 @@
  *   </programlisting>
  * </example>
  *
- * main                 BaseApplication      NactApplication
- * ===================  ===================  ===================
+ * main                 BaseApplication      NactApplication      BaseWindow           NactWindow
+ * ===================  ===================  ===================  ===================  ===================
  * appli = nact_application_new()
  *                                           appli = g_object_new()
  *                                           set properties
@@ -79,37 +79,49 @@
  *                      init application name
  *                      init gtk with command-line options
  *                      manage command-line options
+ *                                           manage specific command-line options
+ *                                           calling parent class if ok to continue
+ *                                           setting application code else
  *                      init unique manager
+ *                        unique app name must have been set at this time
+ *                        application name should have been set at this time
  *                      init session manager
  *                      init icon name
- *                      init common builder
- *                      foreach window to display
- *                        create window
- *                        create gtk toplevel
- *                        unique watch toplevel
- *                        run the window
- *                      ret = last window return code
+ *                      create window(s)
+ *                                           foreach window to create
+ *                                             create BaseWindow-derived window
+ *                                                                on class init
+ *                                                                  init common builder
+ *                                                                on constructed
+ *                                                                  load and init gtk toplevel
+ *                                                                  init window
+ *                                                                  show gtk toplevel
+ *                                                                  run window
+ *                                                                                     [...]
+ *                      run the main loop
+ *                        must be explicitely quitted by application main window
+ *                        after having set the application return code
  * g_object_unref( appli )
  * return( ret )
  *
  * At any time, a function may preset the exit code of the application just by
- * setting the @BASE_PROP_CODE property. Unless it also asks to quit immediately
- * by returning %FALSE, another function may always set another exit code after
- * that.
+ * setting the @BASE_PROP_CODE property. Note that unless it also asks to quit
+ * immediately by returning %FALSE, another function may always set another exit
+ * code after that.
  */
 
-#include "base-builder.h"
+#include "glib-object.h"
 
 G_BEGIN_DECLS
 
-#define BASE_APPLICATION_TYPE           ( base_application_get_type())
-#define BASE_APPLICATION( o )           ( G_TYPE_CHECK_INSTANCE_CAST( o, BASE_APPLICATION_TYPE, BaseApplication ))
-#define BASE_APPLICATION_CLASS( k )     ( G_TYPE_CHECK_CLASS_CAST( k, BASE_APPLICATION_TYPE, BaseApplicationClass ))
-#define BASE_IS_APPLICATION( o )        ( G_TYPE_CHECK_INSTANCE_TYPE( o, BASE_APPLICATION_TYPE ))
-#define BASE_IS_APPLICATION_CLASS( k )  ( G_TYPE_CHECK_CLASS_TYPE(( k ), BASE_APPLICATION_TYPE ))
-#define BASE_APPLICATION_GET_CLASS( o ) ( G_TYPE_INSTANCE_GET_CLASS(( o ), BASE_APPLICATION_TYPE, BaseApplicationClass ))
+#define BASE_APPLICATION_TYPE                ( base_application_get_type())
+#define BASE_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_APPLICATION_TYPE, BaseApplication ))
+#define BASE_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_APPLICATION_TYPE, BaseApplicationClass ))
+#define BASE_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_APPLICATION_TYPE ))
+#define BASE_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_APPLICATION_TYPE ))
+#define BASE_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_APPLICATION_TYPE, BaseApplicationClass ))
 
-typedef struct _BaseApplicationPrivate      BaseApplicationPrivate;
+typedef struct _BaseApplicationPrivate       BaseApplicationPrivate;
 
 typedef struct {
 	/*< private >*/
@@ -118,7 +130,7 @@ typedef struct {
 }
 	BaseApplication;
 
-typedef struct _BaseApplicationClassPrivate BaseApplicationClassPrivate;
+typedef struct _BaseApplicationClassPrivate  BaseApplicationClassPrivate;
 
 /**
  * BaseApplicationClass:
@@ -143,30 +155,55 @@ typedef struct {
 	 *
 	 * This let the derived class an opportunity to manage command-line
 	 * arguments. Unless it decides to stop the execution of the program,
-	 * the derived class should call the parent class method in order to
-	 * let it manage its own options.
+	 * the derived class should call the parent class method (would it be
+	 * defined) in order to let it manage its own options.
 	 *
 	 * The derived class may set the exit code of the application by
 	 * setting the @BASE_PROP_CODE property of @appli.
 	 *
 	 * Returns: %TRUE to continue execution, %FALSE to stop it.
 	 */
-	gboolean  ( *manage_options ) ( const BaseApplication *appli );
+	gboolean  ( *manage_options ) ( BaseApplication *appli );
 
 	/**
-	 * main_window_new:
+	 * init_application:
 	 * @appli: this #BaseApplication -derived instance.
 	 *
 	 * This is invoked by the BaseApplication base class to let the derived
-	 * class do its own initializations and create its main window.
+	 * class do its own initializations.
+	 *
+	 * Versus initializations which occur at instanciation time, this method
+	 * let the application terminate its initializatin process, after command-line
+	 * arguments have been managed, and before creating any window.
+	 *
+	 * Unless it decides to stop the execution of the program,
+	 * the derived class should call the parent class method (would it be
+	 * defined) in order to let it manage its own options.
+	 *
+	 * The derived class may set the exit code of the application by
+	 * setting the @BASE_PROP_CODE property of @appli.
+	 *
+	 * Returns: %TRUE to continue execution, %FALSE to stop it.
+	 */
+	gboolean ( *init_application )( BaseApplication *appli );
+
+	/**
+	 * create_windows:
+	 * @appli: this #BaseApplication -derived instance.
+	 *
+	 * This is invoked by the BaseApplication base class to let the derived
+	 * class create its startup windows. This may include a spash window,
+	 * a main window, some secondary or toolbox windows, and so on.
 	 *
 	 * This is a pure virtual method. Only the most derived class
-	 * main_window_new() method is invoked.
+	 * create_windows() method is invoked.
 	 *
-	 * Returns: the main window of the application, as a #BaseWindow
-	 * -derived object. It may or may not have already been initialized.
+	 * The derived class may set the exit code of the application by
+	 * setting the @BASE_PROP_CODE property of @appli.
+	 *
+	 * Returns: %TRUE to continue execution, %FALSE to stop it.
 	 */
-	GObject * ( *main_window_new )( const BaseApplication *appli, int *code );
+	gboolean ( *create_windows )( BaseApplication *appli );
 }
 	BaseApplicationClass;
 
@@ -185,14 +222,14 @@ typedef struct {
  * @BASE_PROP_UNIQUE_NAME:      unique name of the application (if not empty)
  * @BASE_PROP_CODE:             return code of the application
  */
-#define BASE_PROP_ARGC						"base-application-argc"
-#define BASE_PROP_ARGV						"base-application-argv"
-#define BASE_PROP_OPTIONS					"base-application-options"
-#define BASE_PROP_APPLICATION_NAME			"base-application-name"
-#define BASE_PROP_DESCRIPTION				"base-application-description"
-#define BASE_PROP_ICON_NAME					"base-application-icon-name"
-#define BASE_PROP_UNIQUE_NAME				"base-application-unique-name"
-#define BASE_PROP_CODE						"base-application-code"
+#define BASE_PROP_ARGC						"base-prop-application-argc"
+#define BASE_PROP_ARGV						"base-prop-application-argv"
+#define BASE_PROP_OPTIONS					"base-prop-application-options"
+#define BASE_PROP_APPLICATION_NAME			"base-prop-application-name"
+#define BASE_PROP_DESCRIPTION				"base-prop-application-description"
+#define BASE_PROP_ICON_NAME					"base-prop-application-icon-name"
+#define BASE_PROP_UNIQUE_NAME				"base-prop-application-unique-name"
+#define BASE_PROP_CODE						"base-prop-application-code"
 
 typedef enum {
 	BASE_EXIT_CODE_START_FAIL = -1,
@@ -200,7 +237,7 @@ typedef enum {
 	BASE_EXIT_CODE_NO_APPLICATION_NAME,		/* no application name has been set by the derived class */
 	BASE_EXIT_CODE_ARGS,					/* unable to interpret command-line options */
 	BASE_EXIT_CODE_UNIQUE_APP,				/* another instance is already running */
-	BASE_EXIT_CODE_MAIN_WINDOW,
+	BASE_EXIT_CODE_WINDOW,					/* unable to create a startup window */
 	BASE_EXIT_CODE_INIT_FAIL,
 	BASE_EXIT_CODE_PROGRAM,
 	/*
@@ -211,12 +248,11 @@ typedef enum {
 }
 	BaseExitCode;
 
-GType        base_application_get_type( void );
+GType  base_application_get_type            ( void );
 
-int          base_application_run( BaseApplication *application, int argc, GStrv argv );
+int    base_application_run                 ( BaseApplication *application, int argc, GStrv argv );
 
-gchar       *base_application_get_application_name( const BaseApplication *application );
-BaseBuilder *base_application_get_builder         ( const BaseApplication *application );
+gchar *base_application_get_application_name( const BaseApplication *application );
 
 G_END_DECLS
 

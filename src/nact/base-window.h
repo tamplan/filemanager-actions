@@ -37,40 +37,23 @@
  * @short_description: the BaseWindow base window class definition
  * @include: base-window.h
  *
- * This is a base class which encapsulates a Gtk+ windows.
- * It works together with the BaseApplication class to run a Gtk+
- * application.
+ * This is a base class which manages a Gtk+ toplevel.
  *
- * Note that two properties of #BaseApplication may be overriden on a
- * per-#BaseWindow basis. These are :
- *
- * - the #GtkBuilder UI manager
- *   the application has one global UI manager, but each window may
- *   have its own, provided that it is willing to reallocate a new
- *   one each time the window is opened.
+ * One global UI manager is allocated at #BaseWindow class level.
+ * Each window may have its own, provided that it is willing to
+ * reinstanciate a new builder each time the window is opened.
  *
  *   Cf. http://bugzilla.gnome.org/show_bug.cgi?id=589746 against
  *   Gtk+ 2.16 : a GtkFileChooserWidget embedded in a GtkAssistant is
  *   not displayed when run more than once. As a work-around, reload
- *   the XML ui each time we run an assistant !
+ *   the XML ui in a new builder each time we run an assistant !
  *
- * - the filename which handled the window XML definition
- *   the application provides with one global default file, but each
- *   window may decide to provide its own.
- *
- *   Cf. http://bugzilla.gnome.org/show_bug.cgi?id=579345 against
- *   GtkBuilder : duplicate ids are no more allowed in a file. But we
- *   require this ability to have the same widget definition
- *   (ActionsList) in main window and export assistant.
- *   As a work-around, we have XML definition of export assistant in
- *   its own file.
- *   Another work-around could have be to let the IActionsList
- *   interface asks from the actual widget name to its implementor...
- *
- * Note also that having its own builder implies loading in it the required
- * XML file which holds the needed UI definition, and so even it this
+ * Note that having its own builder implies loading in it the required
+ * XML file which holds the needed UI definition, and so even if this
  * same XML file has already been load in the common builder.
  */
+
+#include <gtk/gtk.h>
 
 #include "base-application.h"
 
@@ -192,13 +175,19 @@ typedef struct {
 /**
  * Properties defined by the BaseWindow class.
  * They should be provided at object instanciation time.
+ *
+ * Either PARENT or APPLICATION must be provided at instanciation time.
+ * Instanciation time also requires:
+ * - XMLUI_FILENAME
+ * - TOPLEVEL_NAME
+ * - HAS_OWN_BUILDER
  */
-#define BASE_PROP_PARENT						"base-window-parent"
-#define BASE_PROP_APPLICATION					"base-window-application"
-#define BASE_PROP_XMLUI_FILENAME				"base-window-xmlui-filename"
-#define BASE_PROP_HAS_OWN_BUILDER				"base-window-has-own-builder"
-#define BASE_PROP_TOPLEVEL_NAME					"base-window-toplevel-name"
-#define BASE_PROP_WSP_NAME						"base-window-wsp-name"
+#define BASE_PROP_PARENT						"base-prop-window-parent"
+#define BASE_PROP_APPLICATION					"base-prop-window-application"
+#define BASE_PROP_XMLUI_FILENAME				"base-prop-window-xmlui-filename"
+#define BASE_PROP_HAS_OWN_BUILDER				"base-prop-window-has-own-builder"
+#define BASE_PROP_TOPLEVEL_NAME					"base-prop-window-toplevel-name"
+#define BASE_PROP_WSP_NAME						"base-prop-window-wsp-name"
 
 /**
  * Signals defined by the BaseWindow class.
@@ -216,10 +205,10 @@ typedef struct {
  * as a signal handler or as a virtual method if it is a class derived from
  * BaseWindow.
  */
-#define BASE_SIGNAL_INITIALIZE_GTK				"base-window-initialize-gtk"
-#define BASE_SIGNAL_INITIALIZE_WINDOW			"base-window-initialize-window"
-#define BASE_SIGNAL_ALL_WIDGETS_SHOWED			"base-window-all-widgets-showed"
-#define BASE_SIGNAL_WILLING_TO_QUIT				"base-window-willing-to-quit"
+#define BASE_SIGNAL_INITIALIZE_GTK				"base-signal-window-initialize-gtk"
+#define BASE_SIGNAL_INITIALIZE_WINDOW			"base-signal-window-initialize-window"
+#define BASE_SIGNAL_ALL_WIDGETS_SHOWED			"base-signal-window-all-widgets-showed"
+#define BASE_SIGNAL_WILLING_TO_QUIT				"base-signal-window-willing-to-quit"
 
 GType            base_window_get_type( void );
 

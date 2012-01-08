@@ -77,8 +77,10 @@ static void     class_init( NactApplicationClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
-static gboolean appli_manage_options( const BaseApplication *application );
-static GObject *appli_main_window_new( const BaseApplication *application, int *code );
+
+static gboolean appli_manage_options( BaseApplication *application );
+static gboolean appli_init_application( BaseApplication *application );
+static gboolean appli_create_windows( BaseApplication *application );
 
 GType
 nact_application_get_type( void )
@@ -136,7 +138,8 @@ class_init( NactApplicationClass *klass )
 
 	appli_class = BASE_APPLICATION_CLASS( klass );
 	appli_class->manage_options = appli_manage_options;
-	appli_class->main_window_new = appli_main_window_new;
+	appli_class->init_application = appli_init_application;
+	appli_class->create_windows = appli_create_windows;
 }
 
 static void
@@ -231,7 +234,7 @@ nact_application_new( void )
  * overriden to manage command-line options
  */
 static gboolean
-appli_manage_options( const BaseApplication *application )
+appli_manage_options( BaseApplication *application )
 {
 	static const gchar *thisfn = "nact_application_appli_manage_options";
 	gboolean ret;
@@ -265,27 +268,62 @@ appli_manage_options( const BaseApplication *application )
 }
 
 /*
- * create the main window
+ * initialize the application
  */
-static GObject *
-appli_main_window_new( const BaseApplication *application, int *code )
+static gboolean
+appli_init_application( BaseApplication *application )
 {
-	static const gchar *thisfn = "nact_application_appli_main_window_new";
-	NactApplication *appli;
-	NactMainWindow *main_window;
+	static const gchar *thisfn = "nact_application_appli_init_application";
+	gboolean ret;
+	NactApplicationPrivate *priv;
 
-	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
+	g_return_val_if_fail( NACT_IS_APPLICATION( application ), FALSE );
 
-	g_debug( "%s: application=%p, code=%p (%d)", thisfn, ( void * ) application, ( void * ) code, *code );
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	appli = NACT_APPLICATION( application );
+	ret = TRUE;
+	priv = NACT_APPLICATION( application )->private;
 
-	appli->private->updater = na_updater_new();
-	na_pivot_set_loadable( NA_PIVOT( appli->private->updater ), PIVOT_LOAD_ALL );
+	/* create the NAPivot object (loading the plugins and so on)
+	 * after having dealt with command-line arguments
+	 */
+	priv->updater = na_updater_new();
+	na_pivot_set_loadable( NA_PIVOT( priv->updater ), PIVOT_LOAD_ALL );
 
-	main_window = nact_main_window_new( appli );
+	/* call parent class */
+	if( ret && BASE_APPLICATION_CLASS( st_parent_class )->manage_options ){
+		ret = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application );
+	}
 
-	return( G_OBJECT( main_window ));
+	return( ret );
+}
+
+/*
+ * create application startup windows
+ */
+static gboolean
+appli_create_windows( BaseApplication *application )
+{
+	static const gchar *thisfn = "nact_application_appli_create_windows";
+	gboolean ret;
+	NactMainWindow *window;
+
+	g_return_val_if_fail( NACT_IS_APPLICATION( application ), FALSE );
+
+	g_debug( "%s: application=%p", thisfn, ( void * ) application );
+
+	/* creating main window
+	 */
+	window = nact_main_window_new( NACT_APPLICATION( application ));
+	if( window ){
+		g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
+		ret = TRUE;
+	} else {
+		ret = FALSE;
+		g_object_set( G_OBJECT( application ), BASE_PROP_CODE, BASE_EXIT_CODE_WINDOW, NULL );
+	}
+
+	return( ret );
 }
 
 /**

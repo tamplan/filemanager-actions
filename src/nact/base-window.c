@@ -39,6 +39,7 @@
 #include <core/na-gtk-utils.h>
 
 #include "base-application.h"
+#include "base-builder.h"
 #include "base-window.h"
 #include "base-gtk-utils.h"
 #include "base-marshal.h"
@@ -46,7 +47,7 @@
 /* private class data
  */
 struct _BaseWindowClassPrivate {
-	void *empty;						/* so that gcc -pedantic is happy */
+	BaseBuilder     *builder;			/* common builder */
 };
 
 /* private instance data
@@ -120,6 +121,8 @@ static void     instance_finalize( GObject *window );
 
 /* initialization process
  */
+static void     setup_parent_vs_application( BaseWindow *window );
+static void     init_gtk_toplevel( BaseWindow *window );
 static gboolean setup_builder( const BaseWindow *window );
 static gboolean load_gtk_toplevel( const BaseWindow *window );
 static gboolean is_gtk_toplevel_initialized( const BaseWindow *window, GtkWindow *gtk_toplevel );
@@ -195,27 +198,13 @@ class_init( BaseWindowClass *klass )
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
-	g_object_class_install_property( object_class, BASE_PROP_PARENT_ID,
-			g_param_spec_pointer(
-					BASE_PROP_PARENT,
-					_( "Parent BaseWindow" ),
-					_( "A pointer (not a reference) to the BaseWindow parent of this BaseWindow" ),
-					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
-
-	g_object_class_install_property( object_class, BASE_PROP_APPLICATION_ID,
-			g_param_spec_pointer(
-					BASE_PROP_APPLICATION,
-					_( "BaseApplication" ),
-					_( "A pointer (not a reference) to the BaseApplication instance" ),
-					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
-
 	g_object_class_install_property( object_class, BASE_PROP_XMLUI_FILENAME_ID,
 			g_param_spec_string(
 					BASE_PROP_XMLUI_FILENAME,
 					_( "XML UI filename" ),
 					_( "The filename which contains the XML UI definition" ),
 					"",
-					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_HAS_OWN_BUILDER_ID,
 			g_param_spec_boolean(
@@ -223,7 +212,7 @@ class_init( BaseWindowClass *klass )
 					_( "Has its own GtkBuilder" ),
 					_( "Whether this BaseWindow reallocates a new GtkBuilder each time it is opened" ),
 					FALSE,
-					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_TOPLEVEL_NAME_ID,
 			g_param_spec_string(
@@ -231,7 +220,21 @@ class_init( BaseWindowClass *klass )
 					_( "Toplevel name" ),
 					_( "The internal GtkBuildable name of the toplevel window" ),
 					"",
-					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, BASE_PROP_APPLICATION_ID,
+			g_param_spec_pointer(
+					BASE_PROP_APPLICATION,
+					_( "BaseApplication" ),
+					_( "A pointer (not a reference) to the BaseApplication instance" ),
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, BASE_PROP_PARENT_ID,
+			g_param_spec_pointer(
+					BASE_PROP_PARENT,
+					_( "Parent BaseWindow" ),
+					_( "A pointer (not a reference) to the BaseWindow parent of this BaseWindow" ),
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, BASE_PROP_WSP_NAME_ID,
 			g_param_spec_string(
@@ -242,6 +245,8 @@ class_init( BaseWindowClass *klass )
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	klass->private = g_new0( BaseWindowClassPrivate, 1 );
+
+	klass->private->builder = base_builder_new();
 
 	klass->initialize_gtk_toplevel = do_initialize_gtk_toplevel;
 	klass->initialize_base_window = do_initialize_base_window;
@@ -464,24 +469,65 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 	}
 }
 
+/*
+ * it is time here to initialize the Gtk toplevel if this has not already
+ * been done - We do this early in the build process, and this may trigger
+ * some error conditions (mainly if the toplevel name is not found in the
+ * xml ui filename)
+ */
 static void
 instance_constructed( GObject *window )
 {
 	static const gchar *thisfn = "base_window_instance_constructed";
 	BaseWindow *self;
+	BaseWindowPrivate *priv;
 
 	g_return_if_fail( BASE_IS_WINDOW( window ));
 
 	self = BASE_WINDOW( window );
+	priv = self->private;
 
-	if( !self->private->dispose_has_run ){
-		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
-
-		g_debug( "%s: application=%p", thisfn, ( void * ) self->private->application );
+	if( !priv->dispose_has_run ){
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
 			G_OBJECT_CLASS( st_parent_class )->constructed( window );
+		}
+
+		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
+		setup_parent_vs_application( self );
+		init_gtk_toplevel( self );
+		base_window_run( self );
+
+	}
+}
+
+static void
+setup_parent_vs_application( BaseWindow *window )
+{
+	if( !window->private->application ){
+		g_return_if_fail( window->private->parent );
+		g_return_if_fail( BASE_IS_WINDOW( window->private->parent ));
+
+		window->private->application = window->private->parent->private->application;
+	}
+
+	g_return_if_fail( BASE_IS_APPLICATION( window->private->application ));
+}
+
+static void
+init_gtk_toplevel( BaseWindow *window )
+{
+	if( setup_builder( window ) &
+		load_gtk_toplevel( window )){
+
+		g_return_if_fail( GTK_IS_WINDOW( window->private->gtk_toplevel ));
+
+		if( !is_gtk_toplevel_initialized( window, window->private->gtk_toplevel )){
+
+			g_signal_emit_by_name( window, BASE_SIGNAL_INITIALIZE_GTK, window->private->gtk_toplevel );
+			set_gtk_toplevel_initialized( window, window->private->gtk_toplevel, TRUE );
 		}
 	}
 }
@@ -669,8 +715,7 @@ setup_builder( const BaseWindow *window )
 	if( window->private->has_own_builder ){
 		window->private->builder = base_builder_new();
 	} else {
-		g_return_val_if_fail( BASE_IS_APPLICATION( window->private->application ), FALSE );
-		window->private->builder = base_application_get_builder( window->private->application );
+		window->private->builder = BASE_WINDOW_GET_CLASS( window )->private->builder;
 	}
 
 	/* load the XML definition from the UI file

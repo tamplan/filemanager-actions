@@ -1,5 +1,17 @@
 2012-01-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.c:
+	* src/nact/base-application.h
+	(base_application_get_builder): Removed function.
+	Implements BaseIUnique interface.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h:
+	Have a common builder at class level.
+	Gtk toplevel and BaseWindow are initialized when instance is constructed.
+
+	* src/nact/nact-application.c: Updated accordingly.
+
 	* src/nact/base-iunique.c:
 	* src/nact/base-iunique.h (base_iunique_init_with_name):
 	Function renamed from base_iunique_init_name().
