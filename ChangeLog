@@ -3,6 +3,7 @@
 	Rather call parent_class::instance_constructed() method before executing
 	the derived class one.
 
+	* src/core/na-pivot.c (instance_constructed):
 	* src/nact/nact-assistant-export.c (instance_constructed):
 	* src/nact/nact-main-window.c (instance_constructed):
 	* src/nact/nact-tree-view.c (instance_constructed):

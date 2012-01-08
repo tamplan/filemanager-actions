@@ -228,26 +228,27 @@ static void
 instance_constructed( GObject *object )
 {
 	static const gchar *thisfn = "na_pivot_instance_constructed";
-	NAPivot *self;
+	NAPivotPrivate *priv;
 
 	g_return_if_fail( NA_IS_PIVOT( object ));
-	self = NA_PIVOT( object );
 
-	if( !self->private->dispose_has_run ){
+	priv = NA_PIVOT( object )->private;
 
-		g_debug( "%s: object=%p", thisfn, ( void * ) object );
-
-		self->private->modules = na_module_load_modules();
-
-		/* force class initialization and io-factory registration
-		 */
-		g_object_unref( na_object_action_new_with_profile());
-		g_object_unref( na_object_menu_new());
+	if( !priv->dispose_has_run ){
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
 			G_OBJECT_CLASS( st_parent_class )->constructed( object );
 		}
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+		priv->modules = na_module_load_modules();
+
+		/* force class initialization and io-factory registration
+		 */
+		g_object_unref( na_object_action_new_with_profile());
+		g_object_unref( na_object_menu_new());
 	}
 }
 
