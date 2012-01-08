@@ -194,20 +194,23 @@ static void
 instance_constructed( GObject *object )
 {
 	static const gchar *thisfn = "na_io_provider_instance_constructed";
-	NAIOProvider *self;
+	NAIOProviderPrivate *priv;
 
 	g_return_if_fail( NA_IS_IO_PROVIDER( object ));
 
-	self = NA_IO_PROVIDER( object );
+	priv = NA_IO_PROVIDER( object )->private;
 
-	if( !self->private->dispose_has_run ){
-
-		g_debug( "%s: object=%p, id=%s", thisfn, ( void * ) object, self->private->id );
+	if( !priv->dispose_has_run ){
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
 			G_OBJECT_CLASS( st_parent_class )->constructed( object );
 		}
+
+		g_debug( "%s: object=%p (%s), id=%s",
+				thisfn,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ),
+				priv->id );
 	}
 }
 
