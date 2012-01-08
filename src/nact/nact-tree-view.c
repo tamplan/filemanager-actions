@@ -572,26 +572,34 @@ static void
 instance_constructed( GObject *object )
 {
 	static const gchar *thisfn = "nact_tree_view_instance_constructed";
-	NactTreeView *self;
+	NactTreeViewPrivate *priv;
 
 	g_return_if_fail( NACT_IS_TREE_VIEW( object ));
-	self = NACT_TREE_VIEW( object );
 
-	if( !self->private->dispose_has_run ){
-		g_debug( "%s: object=%p", thisfn, ( void * ) object );
+	priv = NACT_TREE_VIEW( object )->private;
 
-		base_window_signal_connect( self->private->window,
-				G_OBJECT( self->private->window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_view ));
-
-		base_window_signal_connect( self->private->window,
-				G_OBJECT( self->private->window ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed ));
-
-		g_object_set_data( G_OBJECT( self->private->window ), WINDOW_DATA_TREE_VIEW, self );
+	if( !priv->dispose_has_run ){
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
 			G_OBJECT_CLASS( st_parent_class )->constructed( object );
 		}
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+		base_window_signal_connect(
+				priv->window,
+				G_OBJECT( priv->window ),
+				BASE_SIGNAL_INITIALIZE_WINDOW,
+				G_CALLBACK( on_base_initialize_view ));
+
+		base_window_signal_connect(
+				priv->window,
+				G_OBJECT( priv->window ),
+				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
+				G_CALLBACK( on_base_all_widgets_showed ));
+
+		g_object_set_data( G_OBJECT( priv->window ), WINDOW_DATA_TREE_VIEW, object );
 	}
 }
 

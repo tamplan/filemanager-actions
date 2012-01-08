@@ -3,6 +3,7 @@
 	Rather call parent_class::instance_constructed() method before executing
 	the derived class one.
 
+	* src/nact/nact-tree-view.c (instance_constructed):
 	* src/plugin-menu/nautilus-actions.c (instance_constructed):
 	Call parent class on the beginning of the function.
 
