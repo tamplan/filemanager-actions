@@ -1,5 +1,8 @@
 2012-01-08 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-builder.c:
+	* src/nact/base-builder.h: Fix comments.
+
 	* src/nact/nact-tree-view.c (nact_tree_view_get_type):
 	Register the interface after the type so that the interface is able to
 	require the type.

@@ -39,8 +39,9 @@
  * This class is derived from GtkBuilder class. It adds to it a list
  * of already loaded files to be sure to not load them twice.
  *
- * #Basebuilder class is embedded as a convenience object in
- * #BaseApplication and, possibly, in #BaseWindow instances.
+ * A common #Basebuilder object is instanciated at #BaseWindow class level.
+ * Each #Basewindow -derived object may later use this common #BaseBuilder
+ * object, or allocate its own.
  */
 
 #include <gtk/gtk.h>
@@ -72,11 +73,11 @@ typedef struct {
 }
 	BaseBuilderClass;
 
-GType        base_builder_get_type( void );
+GType        base_builder_get_type            ( void );
 
-BaseBuilder *base_builder_new( void );
+BaseBuilder *base_builder_new                 ( void );
 
-gboolean     base_builder_add_from_file( BaseBuilder *builder, const gchar *filename, GError **error );
+gboolean     base_builder_add_from_file       ( BaseBuilder *builder, const gchar *filename, GError **error );
 
 GtkWindow   *base_builder_get_toplevel_by_name( const BaseBuilder *builder, const gchar *name );
 

@@ -217,12 +217,12 @@ base_builder_new( void )
  * base_builder_add_from_file:
  * @builder: this #BaseBuilder object.
  * @filename: the filename to load.
- * @error: a #GError whilch will be allocated if an error occurs.
+ * @error: a #GError which will be allocated if an error occurs.
  *
  * Loads the file into the GtkBuilder, taking care of not loading it
  * twice.
  *
- * Returns: %TRUE if filename has been successfully loaded, or were
+ * Returns: %TRUE if filename has been successfully loaded, or was
  * already loaded, %FALSE else.
  */
 gboolean
@@ -272,10 +272,10 @@ already_loaded( BaseBuilder *builder, const gchar *filename )
  * @builder: this #BaseBuilder object.
  * @name: the name of the searched toplevel window.
  *
- * This function provides a pointer to the toplevel dialog associated
- * with the specified #BaseWindow.
+ * This function provides a pointer to the toplevel window associated
+ * with the specified @name.
  *
- * Returns: a pointer to the named dialog, or NULL.
+ * Returns: a pointer to the named window, or %NULL.
  * This pointer is owned by GtkBuilder instance, and must not be
  * g_free() nor g_object_unref() by the caller.
  */
