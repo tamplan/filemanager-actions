@@ -34,6 +34,7 @@ if NA_MAINTAINER_MODE
 noinst_PROGRAMS = \
 	test-reader											\
 	test-iface											\
+	test-iface2											\
 	test-parse-uris										\
 	test-virtuals										\
 	test-virtuals-without-test							\
@@ -68,6 +69,14 @@ test_iface_SOURCES = \
 	$(NULL)
 
 test_iface_LDADD = \
+	$(NAUTILUS_ACTIONS_LIBS)							\
+	$(NULL)
+
+test_iface2_SOURCES = \
+	test-iface2.c										\
+	$(NULL)
+
+test_iface2_LDADD = \
 	$(NAUTILUS_ACTIONS_LIBS)							\
 	$(NULL)
 

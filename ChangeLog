@@ -1,5 +1,12 @@
 2012-01-08 Pierre Wieser <pwieser@trychlos.org>
 
+	A program to test a class which implements an interface, this same
+	interface itself requiring the class...
+
+	* src/test/test-iface2.c: New interface test program.
+
+	* src/test/Makefile.am: Updated accordingly.
+
 	Rather call parent_class::instance_constructed() method before executing
 	the derived class one.
 
