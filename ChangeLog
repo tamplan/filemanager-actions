@@ -1,5 +1,11 @@
 2012-01-08 Pierre Wieser <pwieser@trychlos.org>
 
+	Rather call parent_class::instance_constructed() method before executing
+	the derived class one.
+
+	* src/plugin-menu/nautilus-actions.c (instance_constructed):
+	Call parent class on the beginning of the function.
+
 	* src/nact/base-iunique.c:
 	* src/nact/base-iunique.h: New BaseIUnique interface.
 

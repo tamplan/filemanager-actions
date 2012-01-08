@@ -201,48 +201,65 @@ static void
 instance_constructed( GObject *object )
 {
 	static const gchar *thisfn = "nautilus_actions_instance_constructed";
-	NautilusActions *self;
+	NautilusActionsPrivate *priv;
 
 	g_return_if_fail( NAUTILUS_IS_ACTIONS( object ));
 
-	self = NAUTILUS_ACTIONS( object );
+	priv = NAUTILUS_ACTIONS( object )->private;
 
-	if( !self->private->dispose_has_run ){
-		g_debug( "%s: object=%p", thisfn, ( void * ) object );
-
-		self->private->pivot = na_pivot_new();
-
-		/* setup NAPivot properties before loading items
-		 */
-		na_pivot_set_loadable( self->private->pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
-		na_pivot_load_items( self->private->pivot );
-
-		/* register against NAPivot to be notified of items changes
-		 */
-		self->private->items_changed_handler =
-				g_signal_connect( self->private->pivot,
-						PIVOT_SIGNAL_ITEMS_CHANGED, G_CALLBACK( on_pivot_items_changed_handler ), self );
-
-		/* register against NASettings to be notified of changes on
-		 *  our runtime preferences
-		 * because we only monitor here four runtime keys, we prefer the
-		 * callback way that the signal one
-		 */
-		na_settings_register_key_callback(
-				NA_IPREFS_IO_PROVIDERS_READ_STATUS, G_CALLBACK( on_settings_key_changed_handler ), self );
-		na_settings_register_key_callback(
-				NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, G_CALLBACK( on_settings_key_changed_handler ), self );
-		na_settings_register_key_callback(
-				NA_IPREFS_ITEMS_CREATE_ROOT_MENU, G_CALLBACK( on_settings_key_changed_handler ), self );
-		na_settings_register_key_callback(
-				NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER, G_CALLBACK( on_settings_key_changed_handler ), self );
-		na_settings_register_key_callback(
-				NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_key_changed_handler ), self );
+	if( !priv->dispose_has_run ){
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
 			G_OBJECT_CLASS( st_parent_class )->constructed( object );
 		}
+
+		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+
+		priv->pivot = na_pivot_new();
+
+		/* setup NAPivot properties before loading items
+		 */
+		na_pivot_set_loadable( priv->pivot, !PIVOT_LOAD_DISABLED & !PIVOT_LOAD_INVALID );
+		na_pivot_load_items( priv->pivot );
+
+		/* register against NAPivot to be notified of items changes
+		 */
+		priv->items_changed_handler =
+				g_signal_connect( priv->pivot,
+						PIVOT_SIGNAL_ITEMS_CHANGED,
+						G_CALLBACK( on_pivot_items_changed_handler ),
+						object );
+
+		/* register against NASettings to be notified of changes on
+		 *  our runtime preferences
+		 * because we only monitor here a few runtime keys, we prefer the
+		 * callback way that the signal one
+		 */
+		na_settings_register_key_callback(
+				NA_IPREFS_IO_PROVIDERS_READ_STATUS,
+				G_CALLBACK( on_settings_key_changed_handler ),
+				object );
+
+		na_settings_register_key_callback(
+				NA_IPREFS_ITEMS_ADD_ABOUT_ITEM,
+				G_CALLBACK( on_settings_key_changed_handler ),
+				object );
+
+		na_settings_register_key_callback(
+				NA_IPREFS_ITEMS_CREATE_ROOT_MENU,
+				G_CALLBACK( on_settings_key_changed_handler ),
+				object );
+
+		na_settings_register_key_callback(
+				NA_IPREFS_ITEMS_LEVEL_ZERO_ORDER,
+				G_CALLBACK( on_settings_key_changed_handler ),
+				object );
+
+		na_settings_register_key_callback(
+				NA_IPREFS_ITEMS_LIST_ORDER_MODE,
+				G_CALLBACK( on_settings_key_changed_handler ),
+				object );
 	}
 }
 
