@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-01-05 12:02+0000\n"
-"PO-Revision-Date: 2012-01-05 19:01+0100\n"
+"POT-Creation-Date: 2012-01-07 21:10+0000\n"
+"PO-Revision-Date: 2012-01-08 18:48+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1252,7 +1252,7 @@ msgid ""
 "Click on <guibutton>Browse</guibutton> to search for an image in the "
 "filesystem."
 msgstr ""
-"Pulse sobre <guibutton>Examinar</guibutton> para buscar una imagen en el "
+"Pulse en <guibutton>Examinar</guibutton> para buscar una imagen en el "
 "sistema de archivos."
 
 #: C/nautilus-actions-config-tool.xml:557(title)
@@ -1320,7 +1320,7 @@ msgid ""
 "Click on <guibutton>Browse</guibutton> to select the executable file on the "
 "filesystem."
 msgstr ""
-"Pulse sobre <guibutton>Examinar</guibutton> para seleccionar un archivo "
+"Pulse en <guibutton>Examinar</guibutton> para seleccionar un archivo "
 "ejecutable en el sistema de archivos."
 
 #: C/nautilus-actions-config-tool.xml:616(para)
@@ -1569,9 +1569,9 @@ msgid ""
 "Press <keycap>Insert</keycap> or click on <guibutton><inlinegraphic fileref="
 "\"figures/add.png\"/></guibutton> button to insert a new condition filter"
 msgstr ""
-"Pulse <keycap>Insertar</keycap> o pulse sobre el botón "
-"<guibutton><inlinegraphic fileref=\"figures/add.png\"/></guibutton> para "
-"insertar un filtro de condición nuevo"
+"Pulse <keycap>Insertar</keycap> o pulse el botón <guibutton><inlinegraphic "
+"fileref=\"figures/add.png\"/></guibutton> para insertar un filtro de "
+"condición nuevo"
 
 #: C/nautilus-actions-config-tool.xml:83(para)
 msgid ""
@@ -1608,8 +1608,8 @@ msgid ""
 "match any of</guilabel> radio button in the same row to set the "
 "corresponding condition."
 msgstr ""
-"Pulse sobre el botón de radio <guilabel>Debe cumplir al menos una</guilabel> "
-"o <guilabel>No debe cumplir ninguna</guilabel> en la misma línea para "
+"Pulse el botón de radio <guilabel>Debe cumplir al menos una</guilabel> o "
+"<guilabel>No debe cumplir ninguna</guilabel> en la misma línea para "
 "establecer la condición correspondiente."
 
 #: C/nautilus-actions-config-tool.xml:107(para)
@@ -1729,7 +1729,7 @@ msgstr ""
 "En realidad, las condiciones basadas en tipos MIME se construyen como una "
 "lista con dos tipos de condiciones: «debe cumplir al menos una» y «no debe "
 "cumplir ninguna». Para que su acción sea un candidato tomando en cuenta "
-"estas condiciones basadas en nombres base, todas las condiciones listadas "
+"estas condiciones basadas en tipos MIME, todas las condiciones listadas "
 "deben ser válidas para cada uno de los elementos seleccionados: el tipo MIME "
 "de cada elemento debe cumplir al menos una de las condiciones del tipo «debe "
 "cumplir al menos una» y no debe cumplir ninguna del tipo «no debe cumplir "
@@ -1905,6 +1905,13 @@ msgid ""
 "located in one of the defined « must match one of » folders, and must not "
 "match any of the defined « must not match any of » folders."
 msgstr ""
+"En realidad, las condiciones basadas en carpetas se construyen como una "
+"lista con dos tipos de condiciones: «debe cumplir al menos una» y «no debe "
+"cumplir ninguna». Para que su acción sea un candidato tomando en cuenta "
+"estas condiciones basadas en carpetas, todas las condiciones listadas deben "
+"ser válidas para cada uno de los elementos seleccionados: cada elemento debe "
+"estar colocado en una de las carpetas del tipo «debe cumplir al menos una» "
+"definidas y no debe estar en ninguna del tipo «no debe cumplir ninguna»."
 
 #: C/nautilus-actions-config-tool.xml:360(para)
 msgid ""
@@ -1913,26 +1920,36 @@ msgid ""
 "targeting the location context menu or the toolbar, your folder-based "
 "conditions will be checked against the current location."
 msgstr ""
+"Cuando el objetivo sea el menú contextual de la selección, sus condiciones "
+"basadas en carpetas se compararán con el nombre de la ruta de cada elemento "
+"seleccionado. Cuando el objetivo sea el menú contextual del lugar actual o "
+"la barra de herramientas, sus condiciones basadas en carpetas se compararán "
+"con el lugar actual."
 
 #: C/nautilus-actions-config-tool.xml:368(para)
 msgid "Defining a new folder-based condition involves two steps."
-msgstr ""
+msgstr "Definir una condición nueva basada en carpetas implica dos pasos."
 
 #: C/nautilus-actions-config-tool.xml:385(para)
 msgid "Edit the newly inserted condition filter to the folder you want match."
 msgstr ""
+"Edite el filtro de la condición para que coincida con la carpeta que quiere."
 
 #: C/nautilus-actions-config-tool.xml:389(para)
 msgid ""
 "The « <literal>*</literal> » and « <literal>?</literal> » characters are "
 "accepted as wildcards at any level of the defined folder filter."
 msgstr ""
+"Los caracteres « <literal>*</literal> » y « <literal>?</literal> » son "
+"válidos como comodines en cualquier nivel del filtro de carpeta definido."
 
 #: C/nautilus-actions-config-tool.xml:397(para)
 msgid ""
 "Or click on <guibutton>Browse</guibutton> to select a folder on the file "
 "system."
 msgstr ""
+"O pulse en <guibutton>Buscar</guibutton> para seleccionar una carpeta en el "
+"sistema de archivos."
 
 #: C/nautilus-actions-config-tool.xml:416(para)
 msgid ""
@@ -1940,6 +1957,9 @@ msgid ""
 "pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
 "fileref=\"figures/remove.png\"/></guibutton> button)."
 msgstr ""
+"Borrar una condición basada en carpetas definida es tan simple como "
+"seleccionarla y pulsar <keycap>Supr</keycap> (o pulsar sobre el botón "
+"<guibutton><inlinegraphic fileref=\"figures/remove.png\"/></guibutton>)."
 
 #: C/nautilus-actions-config-tool.xml:422(para)
 msgid ""
@@ -1947,12 +1967,18 @@ msgid ""
 "of /</literal> » condition. As <literal>/</literal> is always the top of an "
 "Unix-like file system, then all selected items always match this condition."
 msgstr ""
+"De manera predeterminada, la condición basada en carpetas es sólo una "
+"condición «<literal>debe coincidir con uno de /</literal>». Como <literal>/</"
+"literal> siempre es la raíz de un sistema de archivos tipo Unix, todos los "
+"elementos seleccionados siempre cumplen esta condición."
 
 #: C/nautilus-actions-config-tool.xml:429(para)
 msgid ""
 "If you target a <productname>Windows</productname> system, then this default "
 "value may not be what you actually want."
 msgstr ""
+"Si su objetivo es un sistema <productname>Windows</productname>, es posible "
+"que no quiera usar este valor predeterminado."
 
 #: C/nautilus-actions-config-tool.xml:437(title)
 msgid "Scheme-base-conditions"
@@ -1966,12 +1992,19 @@ msgid ""
 "simultaneously decide that none of the selected item(s) may have some other "
 "scheme."
 msgstr ""
+"Puede decidir si su acción aparecerá dependiendo de los esquemas de los URI "
+"de los elementos actualmente seleccionados en el gestor de archivos: puede "
+"definir que cada elemento de la selección deba tener algún esquema; y puede "
+"simultáneamente decidir que ninguno de los elementos seleccionados deba "
+"tener algún otro esquema."
 
 #: C/nautilus-actions-config-tool.xml:445(para)
 msgid ""
 "Click on the <guilabel>Schemes</guilabel> tab to show the page which will "
 "permit you to configure your scheme-based conditions."
 msgstr ""
+"Pulse sobre la pestaña <guilabel>Esquemas</guilabel> para mostrar la página "
+"que le permite configurar sus condiciones basadas en esquemas."
 
 #: C/nautilus-actions-config-tool.xml:450(title)
 msgid "Scheme-based conditions"
@@ -1980,10 +2013,12 @@ msgstr "Condiciones basadas en esquemas"
 #: C/nautilus-actions-config-tool.xml:457(phrase)
 msgid "Shows the tab which lets you define scheme-based conditions."
 msgstr ""
+"Muestra la pestaña que le permite definir sus condiciones basadas en "
+"esquemas."
 
 #: C/nautilus-actions-config-tool.xml:460(para)
 msgid "The scheme-based conditions tab"
-msgstr ""
+msgstr "La pestaña de condiciones basadas en esquemas"
 
 #: C/nautilus-actions-config-tool.xml:465(para)
 msgid ""
@@ -1995,6 +2030,13 @@ msgid ""
 "patterns, and must not match any of the defined « must not match any of » "
 "patterns."
 msgstr ""
+"En realidad, las condiciones basadas en esquemas se construyen como una "
+"lista con dos tipos de condiciones: «debe cumplir al menos una» y «no debe "
+"cumplir ninguna». Para que su acción sea un candidato tomando en cuenta "
+"estas condiciones basadas en esquemas, todas las condiciones listadas deben "
+"ser válidas para cada uno de los elementos seleccionados: el esquema de cada "
+"elemento debe cumplir al menos una de las condiciones del tipo «debe cumplir "
+"al menos una» y no debe cumplir ninguna del tipo «no debe cumplir ninguna»."
 
 #: C/nautilus-actions-config-tool.xml:478(para)
 msgid ""
@@ -2003,20 +2045,29 @@ msgid ""
 "context menu or the toolbar, your scheme-based conditions will be checked "
 "against the scheme of the current location."
 msgstr ""
+"Cuando el objetivo sea el menú contextual de la selección, sus condiciones "
+"basadas en esquemas se compararán con los elementos actualmente "
+"seleccionados. Cuando el objetivo sea el menú contextual del lugar o la "
+"barra de herramientas, sus condiciones basadas en esquemas se compararán con "
+"el esquema del lugar actual."
 
 #: C/nautilus-actions-config-tool.xml:484(para)
 msgid "Defining a new scheme-based condition involves two steps."
-msgstr ""
+msgstr "Definir una condición nueva basada en esquemas implica dos pasos."
 
 #: C/nautilus-actions-config-tool.xml:501(para)
 msgid "Edit the newly inserted condition filter to the scheme you want match."
 msgstr ""
+"Edite el nuevo filtro de condición insertado para que coincida con el "
+"esquema que quiere."
 
 #: C/nautilus-actions-config-tool.xml:505(para)
 msgid ""
 "Scheme-based conditions only accept « <literal>*</literal> » wildcard, which "
 "stands for « any scheme »."
 msgstr ""
+"Las condiciones basadas en esquemas sólo aceptan el comodín «<literal>*</"
+"literal>», que significa «cualquier esquema»."
 
 #: C/nautilus-actions-config-tool.xml:512(para)
 msgid ""
@@ -2024,11 +2075,16 @@ msgid ""
 "predefined in <menuchoice><guimenu>Edit</guimenu><guimenuitem>Preferences</"
 "guimenuitem></menuchoice>."
 msgstr ""
+"O pulse en <guibutton>Común</guibutton> para seleccionar un esquema entre "
+"aquellos predefinidos en <menuchoice><guimenu>Editar</"
+"guimenu><guimenuitem>Preferencias</guimenuitem></menuchoice>."
 
+# Yo creo que si bien la traducción textual sería «predeterminados predefinidos», caemos en una repetición perfectamente omitible.
+# Nicolás.
 #: C/nautilus-actions-config-tool.xml:522(title)
 #: C/nautilus-actions-config-tool.xml:532(para)
 msgid "Selecting a scheme among predefined defaults"
-msgstr ""
+msgstr "Seleccionar un esquema entre los predeterminados"
 
 #: C/nautilus-actions-config-tool.xml:529(phrase)
 msgid "Show the list of predefined schemes."
@@ -4687,7 +4743,9 @@ msgstr ""
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/nautilus-actions-config-tool.xml:0(None)
 msgid "translator-credits"
-msgstr "Jorge González <jorgegonz@svn.gnome.org>, 2010, 2011"
+msgstr ""
+"Jorge González <jorgegonz@svn.gnome.org>, 2010, 2011\n"
+"Nicolás Satragno <nsatragno@gmail.com>, 2012"
 
 #~ msgid "August 2010"
 #~ msgstr "Agosto de 2010"
