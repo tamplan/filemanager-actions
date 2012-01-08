@@ -638,47 +638,63 @@ static void
 instance_constructed( GObject *window )
 {
 	static const gchar *thisfn = "nact_main_window_instance_constructed";
-	NactMainWindow *self;
+	NactMainWindowPrivate *priv;
 	NactApplication *application;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	self = NACT_MAIN_WINDOW( window );
+	priv = NACT_MAIN_WINDOW( window )->private;
 
-	if( !self->private->dispose_has_run ){
+	if( !priv->dispose_has_run ){
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( window );
+		}
+
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 		/* first connect to BaseWindow signals
 		 * so that convenience objects instanciated later will have this same signal
 		 * triggered after the one of NactMainWindow
 		 */
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_INITIALIZE_GTK,
+				G_CALLBACK( on_base_initialize_gtk_toplevel ));
 
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_INITIALIZE_WINDOW,
+				G_CALLBACK( on_base_initialize_base_window ));
 
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
+				G_CALLBACK( on_base_all_widgets_showed ));
 
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
-		self->private->updater = nact_application_get_updater( application );
+		priv->updater = nact_application_get_updater( application );
 
-		self->private->pivot_handler_id = base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( self->private->updater ), PIVOT_SIGNAL_ITEMS_CHANGED, G_CALLBACK( on_pivot_items_changed ));
+		priv->pivot_handler_id = base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( priv->updater ),
+				PIVOT_SIGNAL_ITEMS_CHANGED,
+				G_CALLBACK( on_pivot_items_changed ));
 
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_updatable_item_updated ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
+				G_CALLBACK( on_tab_updatable_item_updated ));
 
 		/* create the menubar and other convenience objects
 		 */
-		self->private->menubar = nact_menubar_new( BASE_WINDOW( window ));
-		self->private->clipboard = nact_clipboard_new( BASE_WINDOW( window ));
-
-		/* chain up to the parent class */
-		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
-			G_OBJECT_CLASS( st_parent_class )->constructed( window );
-		}
+		priv->menubar = nact_menubar_new( BASE_WINDOW( window ));
+		priv->clipboard = nact_clipboard_new( BASE_WINDOW( window ));
 	}
 }
 
