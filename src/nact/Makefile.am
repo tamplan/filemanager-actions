@@ -58,6 +58,8 @@ nautilus_actions_config_tool_SOURCES = \
 	base-dialog.h										\
 	base-gtk-utils.c									\
 	base-gtk-utils.h									\
+	base-isession.c										\
+	base-isession.h										\
 	base-iunique.c										\
 	base-iunique.h										\
 	base-keysyms.h										\

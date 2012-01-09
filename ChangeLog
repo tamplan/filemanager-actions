@@ -1,5 +1,11 @@
 2012-01-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-isession.c:
+	* src/nact/base-isession.h: New BaseISession interface.
+
+	* src/nact/Makefile.am:
+	* src/nact/base-application.c (init_session_manager): Updated accordingly.
+
 	* src/nact/base-application.h: Update comments.
 
 	* src/nact/base-window.c:

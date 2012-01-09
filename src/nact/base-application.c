@@ -36,8 +36,8 @@
 #include <string.h>
 
 #include "base-application.h"
+#include "base-isession.h"
 #include "base-iunique.h"
-#include "egg-sm-client.h"
 
 /* private class data
  */
@@ -60,12 +60,6 @@ struct _BaseApplicationPrivate {
 	gchar        *icon_name;
 	gchar        *unique_app_name;
 	int           code;
-
-	/* internals
-	 */
-	EggSMClient  *sm_client;
-	gulong        sm_client_quit_handler_id;
-	gulong        sm_client_quit_requested_handler_id;
 };
 
 /* instance properties
@@ -89,6 +83,7 @@ static GObjectClass *st_parent_class = NULL;
 
 static GType          register_type( void );
 static void           class_init( BaseApplicationClass *klass );
+static void           isession_iface_init( BaseISessionInterface *iface, void *user_data );
 static void           iunique_iface_init( BaseIUniqueInterface *iface, void *user_data );
 static const gchar   *iunique_get_application_name( const BaseIUnique *instance );
 static void           instance_init( GTypeInstance *instance, gpointer klass );
@@ -103,19 +98,30 @@ static gboolean       init_gtk( BaseApplication *application );
 static gboolean       v_manage_options( BaseApplication *application );
 static gboolean       init_unique_manager( BaseApplication *application );
 static gboolean       init_session_manager( BaseApplication *application );
-static void           session_manager_client_quit_cb( EggSMClient *client, BaseApplication *application );
-static void           session_manager_client_quit_requested_cb( EggSMClient *client, BaseApplication *application );
 static gboolean       init_icon_name( BaseApplication *application );
 static gboolean       v_init_application( BaseApplication *application );
 static gboolean       v_create_windows( BaseApplication *application );
 
+/*
+ * the BaseISessionInterface interface is registered here because
+ * the interface requires its implementation to be of BaseApplication
+ * type. So we have to first register the type class before trying to
+ * register the type interface.
+ */
 GType
 base_application_get_type( void )
 {
 	static GType application_type = 0;
 
+	static const GInterfaceInfo isession_iface_info = {
+		( GInterfaceInitFunc ) isession_iface_init,
+		NULL,
+		NULL
+	};
+
 	if( !application_type ){
 		application_type = register_type();
+		g_type_add_interface_static( application_type, BASE_ISESSION_TYPE, &isession_iface_info );
 	}
 
 	return( application_type );
@@ -240,6 +246,14 @@ class_init( BaseApplicationClass *klass )
 	klass->manage_options = NULL;
 	klass->init_application = NULL;
 	klass->create_windows = NULL;
+}
+
+static void
+isession_iface_init( BaseISessionInterface *iface, void *user_data )
+{
+	static const gchar *thisfn = "base_application_isession_iface_init";
+
+	g_debug( "%s: iface=%p, user_data=%p", thisfn, ( void * ) iface, ( void * ) user_data );
 }
 
 static void
@@ -401,20 +415,6 @@ instance_dispose( GObject *application )
 		g_debug( "%s: application=%p (%s)", thisfn, ( void * ) application, G_OBJECT_TYPE_NAME( application ));
 
 		self->private->dispose_has_run = TRUE;
-
-		if( self->private->sm_client_quit_handler_id &&
-			g_signal_handler_is_connected( self->private->sm_client, self->private->sm_client_quit_handler_id )){
-				g_signal_handler_disconnect( self->private->sm_client, self->private->sm_client_quit_handler_id  );
-		}
-
-		if( self->private->sm_client_quit_requested_handler_id &&
-			g_signal_handler_is_connected( self->private->sm_client, self->private->sm_client_quit_requested_handler_id )){
-				g_signal_handler_disconnect( self->private->sm_client, self->private->sm_client_quit_requested_handler_id  );
-		}
-
-		if( self->private->sm_client ){
-			g_object_unref( self->private->sm_client );
-		}
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -661,84 +661,12 @@ static gboolean
 init_session_manager( BaseApplication *application )
 {
 	static const gchar *thisfn = "base_application_init_session_manager";
-	BaseApplicationPrivate *priv;
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
-	priv = application->private;
-
-	egg_sm_client_set_mode( EGG_SM_CLIENT_MODE_NO_RESTART );
-	priv->sm_client = egg_sm_client_get();
-	egg_sm_client_startup();
-	g_debug( "%s: sm_client=%p", thisfn, ( void * ) priv->sm_client );
-
-	priv->sm_client_quit_handler_id =
-			g_signal_connect(
-					priv->sm_client,
-					"quit-requested",
-					G_CALLBACK( session_manager_client_quit_requested_cb ),
-					application );
-
-	priv->sm_client_quit_requested_handler_id =
-			g_signal_connect(
-					priv->sm_client,
-					"quit",
-					G_CALLBACK( session_manager_client_quit_cb ),
-					application );
+	base_isession_init( BASE_ISESSION( application ));
 
 	return( TRUE );
-}
-
-/*
- * cleanly terminate the main window when exiting the session
- */
-static void
-session_manager_client_quit_cb( EggSMClient *client, BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_session_manager_client_quit_cb";
-
-	g_return_if_fail( BASE_IS_APPLICATION( application ));
-
-	if( !application->private->dispose_has_run ){
-
-		g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
-
-#if 0
-		if( application->private->main_window ){
-
-				g_return_if_fail( BASE_IS_WINDOW( application->private->main_window ));
-				g_object_unref( application->private->main_window );
-				application->private->main_window = NULL;
-		}
-#endif
-	}
-}
-
-/*
- * the session manager advertises us that the session is about to exit
- */
-static void
-session_manager_client_quit_requested_cb( EggSMClient *client, BaseApplication *application )
-{
-	static const gchar *thisfn = "base_application_session_manager_client_quit_requested_cb";
-	gboolean willing_to = TRUE;
-
-	g_return_if_fail( BASE_IS_APPLICATION( application ));
-
-	if( !application->private->dispose_has_run ){
-
-		g_debug( "%s: client=%p, application=%p", thisfn, ( void * ) client, ( void * ) application );
-
-#if 0
-		if( application->private->main_window ){
-
-				g_return_if_fail( BASE_IS_WINDOW( application->private->main_window ));
-				willing_to = base_window_is_willing_to_quit( application->private->main_window );
-		}
-#endif
-	}
-
-	egg_sm_client_will_quit( client, willing_to );
 }
 
 /*
