@@ -1,3 +1,8 @@
+2012-01-09 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-application.c (base_application_run):
+	Add a debug message before entering the main loop.
+
 2012-01-08 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-application.c:

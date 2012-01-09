@@ -501,6 +501,7 @@ base_application_run( BaseApplication *application, int argc, GStrv argv )
 			v_init_application( application ) &&
 			v_create_windows( application )){
 
+			g_debug( "%s: entering gtk_main", thisfn );
 			gtk_main();
 		}
 	}
