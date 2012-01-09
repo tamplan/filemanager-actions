@@ -1,5 +1,7 @@
 2012-01-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-application.h: Review comments.
+
 	* src/nact/nact-application.c (appli_create_windows): Fix return value.
 
 	* src/nact/base-application.h: Fix comments.
