@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-01-07 21:10+0000\n"
-"PO-Revision-Date: 2012-01-08 18:48+0100\n"
+"POT-Creation-Date: 2012-01-08 17:54+0000\n"
+"PO-Revision-Date: 2012-01-09 17:40+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1053,8 +1053,8 @@ msgid ""
 "The « read-only » icon <inlinegraphic fileref=\"figures/read-only.png\"/> is "
 "displayed in the right of the statusbar when appropriate."
 msgstr ""
-"El icono de «sólo lectura» <inlinegraphic fileref=\"figures/read-only.png\"/"
-"> se mostrará a la derecha de la barra de estado cuando sea apropiado."
+"El icono de «sólo lectura» <inlinegraphic fileref=\"figures/read-only.png\"/> "
+"se mostrará a la derecha de la barra de estado cuando sea apropiado."
 
 #: C/nautilus-actions-config-tool.xml:411(title)
 msgid "Creating your first action"
@@ -1157,8 +1157,8 @@ msgid ""
 "bar."
 msgstr ""
 "Como otro recordatorio de que hay algunas modificaciones pendientes, un "
-"asterisco (« <literal>*</literal> ») precede al nombre de la aplicación en "
-"la barra de título."
+"asterisco (« <literal>*</literal> ») precede al nombre de la aplicación en la "
+"barra de título."
 
 #: C/nautilus-actions-config-tool.xml:493(title)
 msgid "Qualifying your new action"
@@ -1414,8 +1414,8 @@ msgstr "Zenity"
 
 #: C/nautilus-actions-config-tool.xml:691(phrase)
 msgid ""
-"Shows the result of the execution of your first action. This is "
-"<placeholder-1/> dialog box, displaying the URI of the selected item."
+"Shows the result of the execution of your first action. This is <placeholder-"
+"1/> dialog box, displaying the URI of the selected item."
 msgstr ""
 "Muestra el resultado de la ejecución de su primera acción. Este es el cuadro "
 "de diálogo <placeholder-1/>, mostrando el URI del elemento seleccionado."
@@ -1507,8 +1507,8 @@ msgstr "La pestaña de condiciones basadas en nombres base"
 #: C/nautilus-actions-config-tool.xml:47(para)
 msgid ""
 "In fact, basename-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these basename-based conditions, each element of the "
+"of » and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these basename-based conditions, each element of the "
 "selection must be valid for all the listed conditions: the basename of each "
 "element must match at least one of the defined « must match one of » "
 "patterns, and must not match any of the defined « must not match any of » "
@@ -1593,8 +1593,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:405(para)
 #: C/nautilus-actions-config-tool.xml:549(para)
 msgid ""
-"Indicates whether this a « must match one of » or a « must not match any "
-"of » condition."
+"Indicates whether this a « must match one of » or a « must not match any of » "
+"condition."
 msgstr ""
 "Indica si esta es una condición del tipo «debe cumplir al menos una» o «no "
 "debe cumplir ninguna»."
@@ -1719,8 +1719,8 @@ msgstr "La pestaña de condiciones basadas en tipos MIME"
 #: C/nautilus-actions-config-tool.xml:178(para)
 msgid ""
 "In fact, mimetype-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these mimetype-based conditions, each element of the "
+"of » and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these mimetype-based conditions, each element of the "
 "selection must be valid for all the listed conditions: the mimetype of each "
 "element must match at least one of the defined « must match one of » "
 "patterns, and must not match any of the defined « must not match any of » "
@@ -1780,9 +1780,9 @@ msgid ""
 "convenient shortcut, the « <literal>*</literal> » literal is also accepted "
 "for this same purpose."
 msgstr ""
-"La expresión «<literal>*/*</literal>» coincide con todos los tipos MIME. "
-"Como atajo conveniente, el carácter «<literal>*</literal>» también es válido "
-"para el mismo propósito."
+"La expresión «<literal>*/*</literal>» coincide con todos los tipos MIME. Como "
+"atajo conveniente, el carácter «<literal>*</literal>» también es válido para "
+"el mismo propósito."
 
 #: C/nautilus-actions-config-tool.xml:235(para)
 msgid ""
@@ -1811,8 +1811,8 @@ msgstr ""
 msgid ""
 "By default, the mimetype-based condition is just one « <literal>must match "
 "one of */*</literal> » condition. As all mimetypes always match the "
-"« <literal>*/*</literal> », this just means that mimetypes are not "
-"considered as relevant for the action."
+"« <literal>*/*</literal> », this just means that mimetypes are not considered "
+"as relevant for the action."
 msgstr ""
 "De manera predeterminada, la condición basada en tipo MIME es sólo una "
 "condición «<literal>debe coincidir con uno de */*</literal>». Como todos los "
@@ -1898,9 +1898,9 @@ msgstr "La pestaña de condiciones basadas en carpetas."
 
 #: C/nautilus-actions-config-tool.xml:347(para)
 msgid ""
-"In fact, folder-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these folder-based conditions, each element of the "
+"In fact, folder-based conditions are built as a list of « must match one of » "
+"and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these folder-based conditions, each element of the "
 "selection must be valid for all the listed conditions: each element must be "
 "located in one of the defined « must match one of » folders, and must not "
 "match any of the defined « must not match any of » folders."
@@ -1940,8 +1940,8 @@ msgid ""
 "The « <literal>*</literal> » and « <literal>?</literal> » characters are "
 "accepted as wildcards at any level of the defined folder filter."
 msgstr ""
-"Los caracteres « <literal>*</literal> » y « <literal>?</literal> » son "
-"válidos como comodines en cualquier nivel del filtro de carpeta definido."
+"Los caracteres « <literal>*</literal> » y « <literal>?</literal> » son válidos "
+"como comodines en cualquier nivel del filtro de carpeta definido."
 
 #: C/nautilus-actions-config-tool.xml:397(para)
 msgid ""
@@ -2022,9 +2022,9 @@ msgstr "La pestaña de condiciones basadas en esquemas"
 
 #: C/nautilus-actions-config-tool.xml:465(para)
 msgid ""
-"In fact, scheme-based conditions are built as a list of « must match one "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these scheme-based conditions, each element of the "
+"In fact, scheme-based conditions are built as a list of « must match one of » "
+"and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these scheme-based conditions, each element of the "
 "selection must be valid for all the listed conditions: the scheme of each "
 "element must match at least one of the defined « must match one of » "
 "patterns, and must not match any of the defined « must not match any of » "
@@ -2095,12 +2095,16 @@ msgid ""
 "A new scheme may only be selected here if it is not already defined as a "
 "scheme filter."
 msgstr ""
+"Podrá seleccionar aquí un esquema nuevo únicamente si no está definido ya "
+"como un filtro de esquema."
 
 #: C/nautilus-actions-config-tool.xml:541(para)
 msgid ""
 "To select a new scheme, click <guibutton>OK</guibutton>, or double-click on "
 "the desired row."
 msgstr ""
+"Para seleccionar un esquema nuevo, pulse <guibutton>Aceptar</guibutton>, o "
+"haga una doble pulsación en la fila deseada."
 
 #: C/nautilus-actions-config-tool.xml:559(para)
 msgid ""
@@ -2108,6 +2112,9 @@ msgid ""
 "pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
 "fileref=\"figures/remove.png\"/></guibutton> button)."
 msgstr ""
+"Borrar una condición basada en esquemas definida es tan simple como "
+"seleccionarla y pulsar <keycap>Supr</keycap> (o pulsar sobre el botón "
+"<guibutton><inlinegraphic fileref=\"figures/remove.png\"/></guibutton>)."
 
 #: C/nautilus-actions-config-tool.xml:565(para)
 msgid ""
@@ -2115,52 +2122,73 @@ msgid ""
 "of *</literal> » condition, which means that schemes are not relevant for "
 "this action."
 msgstr ""
+"De manera predeterminada, la condición basada en esquemas es sólo una "
+"condición «<literal>debe cumplir uno de *</literal>», lo que significa que "
+"los esquemas no son relevantes para esta acción."
 
 #: C/nautilus-actions-config-tool.xml:573(title)
 #: C/nautilus-actions-config-tool.xml:591(title)
 msgid "Capability-based conditions"
-msgstr ""
+msgstr "Condiciones basadas en capacidades"
 
 #: C/nautilus-actions-config-tool.xml:574(para)
 msgid "Capabilities are some properties that a file may exhibit to the user."
 msgstr ""
+"Las capacidades son algunas propiedades que un archivo puede mostrarle al "
+"usuario."
 
 #: C/nautilus-actions-config-tool.xml:577(para)
 msgid ""
 "But except for the <literal>Local</literal> capability, all others depend on "
 "the user who executes the command."
 msgstr ""
+"Pero, exceptuando la capacidad <literal>Local</literal>, todas las demás "
+"dependen del usuario que ejecuta el comando."
 
 #: C/nautilus-actions-config-tool.xml:581(para)
 msgid ""
 "You may so decide that your action will appear, or not, depending on the "
 "capabilities of the selected item(s) <abbrev>vs.</abbrev> the current user."
 msgstr ""
+"Puede decidir entonces si su acción aparecerá, o no, dependiendo de las "
+"capacidades de los elementos seleccionados por el usuario actual."
 
 #: C/nautilus-actions-config-tool.xml:586(para)
 msgid ""
 "Click on the <guilabel>Capabilities</guilabel> tab to show the page which "
 "will permit you to configure your capability-based conditions."
 msgstr ""
+"Pulse en la pestaña <guilabel>Capacidades</guilabel> para mostrar la página "
+"que le permite configurar sus condiciones basadas en capacidades."
 
 #: C/nautilus-actions-config-tool.xml:598(phrase)
 msgid "Shows the tab which lets you define capability-based conditions."
 msgstr ""
+"Muestra la pestaña que le permite definir sus condiciones basadas en "
+"capacidades."
 
 #: C/nautilus-actions-config-tool.xml:601(para)
 msgid "The capability-based conditions tab"
-msgstr ""
+msgstr "La pestaña de condiciones basadas en capacidades"
 
 #: C/nautilus-actions-config-tool.xml:606(para)
 msgid ""
 "In fact, capability-based conditions are built as a list of « must match all "
-"of » and « must not match any of » patterns. In order for your action to be "
-"a candidate regarding these capability-based conditions, each element of the "
+"of » and « must not match any of » patterns. In order for your action to be a "
+"candidate regarding these capability-based conditions, each element of the "
 "selection must be valid for all the listed conditions: the capability of "
 "each element must match each of the defined « must match all of » "
-"capabilities, and must not match any of the defined « must not match any "
-"of » ones."
+"capabilities, and must not match any of the defined « must not match any of » "
+"ones."
 msgstr ""
+"En realidad, las condiciones basadas en capacidades se construyen como una "
+"lista con dos tipos de condiciones: «debe cumplir al menos una» y «no debe "
+"cumplir ninguna». Para que su acción sea un candidato tomando en cuenta "
+"estas condiciones basadas en capacidades, todas las condiciones listadas "
+"deben ser válidas para cada uno de los elementos seleccionados: la capacidad "
+"de cada elemento debe cumplir al menos una de las capacidades del tipo «debe "
+"cumplir al menos una» y no debe cumplir ninguna del tipo «no debe cumplir "
+"ninguna»."
 
 #: C/nautilus-actions-config-tool.xml:619(para)
 msgid ""
@@ -2169,19 +2197,27 @@ msgid ""
 "location context menu or the toolbar, your capability-based conditions will "
 "be checked against those of of the current location."
 msgstr ""
+"Cuando el objetivo sea el menú contextual de la selección, sus condiciones "
+"basadas en capacidades se compararán con los elementos actualmente "
+"seleccionados. Cuando el objetivo sea el menú contextual del lugar o la "
+"barra de herramientas, sus condiciones basadas en capacidades se compararán "
+"con aquellas del lugar actual."
 
 #: C/nautilus-actions-config-tool.xml:625(para)
 msgid "Defining a new capability-based condition involves two steps."
-msgstr ""
+msgstr "Definir una condición basada en capacidades nueva implica dos pasos."
 
 #: C/nautilus-actions-config-tool.xml:635(para)
 msgid "Press <keycap>Insert</keycap> to insert a new condition filter"
 msgstr ""
+"Pulse <keycap>Insertar</keycap> para insertar un filtro de condición nuevo"
 
 #: C/nautilus-actions-config-tool.xml:640(para)
 msgid ""
 "Edit the newly inserted condition filter to the capability you want match."
 msgstr ""
+"Edite el nuevo filtro de condición insertado para que coincida con la "
+"capacidad que quiere."
 
 #: C/nautilus-actions-config-tool.xml:645(para)
 msgid ""
@@ -2189,36 +2225,45 @@ msgid ""
 "guibutton> to open the <guilabel>Adding a new capability</guilabel> dialog "
 "box."
 msgstr ""
+"O pulse en <guibutton><inlinegraphic fileref=\"figures/add.png\"/></"
+"guibutton> para abrir el cuadro de diálogo <guilabel>Añadir una capacidad "
+"nueva</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:652(title)
 msgid "Managed capabilities"
-msgstr ""
+msgstr "Capacidades gestionadas"
 
 #: C/nautilus-actions-config-tool.xml:659(phrase)
 msgid "Shows the list of managed capabilities."
-msgstr ""
+msgstr "Muestra la lista de capacidades gestionadas."
 
 #: C/nautilus-actions-config-tool.xml:662(para)
 msgid "The list of managed capabilities"
-msgstr ""
+msgstr "La lista de capacidades gestionadas"
 
 #: C/nautilus-actions-config-tool.xml:667(para)
 msgid ""
 "A new capability may only be selected here if it is not already defined as a "
 "capability filter."
 msgstr ""
+"Podrá seleccionar aquí una capacidad nueva únicamente si no está definida ya "
+"como un filtro de esquema."
 
 #: C/nautilus-actions-config-tool.xml:671(para)
 msgid ""
 "To select a new capability, click <guibutton>OK</guibutton>, or double-click "
 "on the desired row."
 msgstr ""
+"Para seleccionar una capacidad nueva, pulse <guibutton>Aceptar</guibutton>, "
+"o haga una doble pulsación en la fila deseada."
 
 #: C/nautilus-actions-config-tool.xml:679(para)
 msgid ""
-"Indicates whether this a « must match all of » or a « must not match any "
-"of » condition."
+"Indicates whether this a « must match all of » or a « must not match any of » "
+"condition."
 msgstr ""
+"Indica si esta es una condición «debe cumplir todas de» o «no debe cumplir "
+"ninguna de»."
 
 #: C/nautilus-actions-config-tool.xml:683(para)
 msgid ""
@@ -2226,6 +2271,9 @@ msgid ""
 "match any of</guilabel> radio button in the same row to set the "
 "corresponding condition."
 msgstr ""
+"Pulse el botón de radio <guilabel>Debe cumplir todas de</guilabel> o "
+"<guilabel>No debe cumplir ninguna de</guilabel> en la misma línea para "
+"establecer la condición correspondiente."
 
 #: C/nautilus-actions-config-tool.xml:690(para)
 msgid ""
@@ -2233,6 +2281,9 @@ msgid ""
 "and pressing <keycap>Del</keycap> (or clicking on <guibutton><inlinegraphic "
 "fileref=\"figures/remove.png\"/></guibutton> button)."
 msgstr ""
+"Borrar una condición basada en capacidades definida es tan simple como "
+"seleccionarla y pulsar <keycap>Supr</keycap> (o pulsar sobre el botón "
+"<guibutton><inlinegraphic fileref=\"figures/remove.png\"/></guibutton>)."
 
 #: C/nautilus-actions-config-tool.xml:696(para)
 msgid ""
@@ -2354,8 +2405,8 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:791(para)
 msgid ""
-"The selection count defaults to « <literal>Count &gt; (strictly greater "
-"than) 0</literal> », which means that the action will be a candidate to be "
+"The selection count defaults to « <literal>Count &gt; (strictly greater than) "
+"0</literal> », which means that the action will be a candidate to be "
 "displayed as soon as at least one item is selected in the file manager."
 msgstr ""
 
@@ -2874,8 +2925,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:95(para)
 msgid ""
 "In the particular case of the <literal>%d</literal> parameter, the "
-"« <guilabel>first</guilabel> » selected item is not very important because "
-"it is very likely that all selected items are located in the same base "
+"« <guilabel>first</guilabel> » selected item is not very important because it "
+"is very likely that all selected items are located in the same base "
 "directory."
 msgstr ""
 
@@ -3782,8 +3833,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:34(para)
 msgid ""
 "Note that selecting any row means also selecting children of this row. These "
-"children are said « implicitely selected »: they will be part of next "
-"edition operations, but are not considered when verifying if selection is "
+"children are said « implicitely selected »: they will be part of next edition "
+"operations, but are not considered when verifying if selection is "
 "homogeneous. Also, they cannot be explicitely selected (nor unselected)."
 msgstr ""
 
