@@ -1,5 +1,24 @@
 2012-01-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-window.c:
+	* src/nact/base-window.h
+	(BASE_SIGNAL_ALL_WIDGETS_SHOWED): signal renamed as BASE_SIGNAL_SHOW_WIDGETS.
+	(instance_constructed): Gtk toplevel initialization is moved here.
+	(base_window_init): only deals with runtime initialization and widgets display.
+	(do_initialize_base_window): set transient for parent here.
+
+	* src/nact/nact-add-capability-dialog.c (instance_init):
+	* src/nact/nact-add-scheme-dialog.c (instance_init):
+	* src/nact/nact-assistant-export.c (instance_constructed):
+	* src/nact/nact-icon-chooser.c (instance_init):
+	* src/nact/nact-preferences-editor.c (instance_init):
+	* src/nact/nact-tree-view.c (instance_constructed): Updated accordingly.
+
+	* src/nact/nact-main-window.c
+	(instance_init): Connect to BaseWindow signals before running
+	instance_constructed().
+	(nact_main_window_new): Call base_window_init().
+
 	* src/nact/nact-application.h: Review comments.
 
 	* src/nact/nact-application.c (appli_create_windows): Fix return value.

@@ -538,6 +538,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 {
 	static const gchar *thisfn = "nact_main_window_instance_init";
 	NactMainWindow *self;
+	NactMainWindowPrivate *priv;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( instance ));
 
@@ -545,17 +546,38 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self = NACT_MAIN_WINDOW( instance );
-
 	self->private = g_new0( NactMainWindowPrivate, 1 );
-
-	self->private->dispose_has_run = FALSE;
+	priv = self->private;
+	priv->dispose_has_run = FALSE;
 
 	/* initialize timeout parameters when blocking 'pivot-items-changed' handler
 	 */
-	self->private->pivot_timeout.timeout = st_burst_timeout;
-	self->private->pivot_timeout.handler = ( NATimeoutFunc ) on_block_items_changed_timeout;
-	self->private->pivot_timeout.user_data = self;
-	self->private->pivot_timeout.source_id = 0;
+	priv->pivot_timeout.timeout = st_burst_timeout;
+	priv->pivot_timeout.handler = ( NATimeoutFunc ) on_block_items_changed_timeout;
+	priv->pivot_timeout.user_data = self;
+	priv->pivot_timeout.source_id = 0;
+
+	/* last connect to BaseWindow signals
+	 * so that convenience objects instanciated later will have this same signal
+	 * triggered after the one of NactMainWindow
+	 */
+	base_window_signal_connect(
+			BASE_WINDOW( self ),
+			G_OBJECT( self ),
+			BASE_SIGNAL_INITIALIZE_GTK,
+			G_CALLBACK( on_base_initialize_gtk_toplevel ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( self ),
+			G_OBJECT( self ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_base_window ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( self ),
+			G_OBJECT( self ),
+			BASE_SIGNAL_SHOW_WIDGETS,
+			G_CALLBACK( on_base_all_widgets_showed ));
 }
 
 static void
@@ -654,28 +676,9 @@ instance_constructed( GObject *window )
 
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-		/* first connect to BaseWindow signals
-		 * so that convenience objects instanciated later will have this same signal
-		 * triggered after the one of NactMainWindow
+		/* monitor the items stored on the disk for modifications
+		 * outside of this application
 		 */
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				BASE_SIGNAL_INITIALIZE_GTK,
-				G_CALLBACK( on_base_initialize_gtk_toplevel ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				BASE_SIGNAL_INITIALIZE_WINDOW,
-				G_CALLBACK( on_base_initialize_base_window ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
-				G_CALLBACK( on_base_all_widgets_showed ));
-
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		priv->updater = nact_application_get_updater( application );
 
@@ -685,6 +688,8 @@ instance_constructed( GObject *window )
 				PIVOT_SIGNAL_ITEMS_CHANGED,
 				G_CALLBACK( on_pivot_items_changed ));
 
+		/* monitor the updates which originates from each property tab
+		 */
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
 				G_OBJECT( window ),
@@ -781,6 +786,11 @@ nact_main_window_new( const NactApplication *application )
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
 			BASE_PROP_WSP_NAME,       st_wsp_name,
 			NULL );
+
+	if( !base_window_init( BASE_WINDOW( window ))){
+		g_object_unref( window );
+		window = NULL;
+	}
 
 	return( window );
 }

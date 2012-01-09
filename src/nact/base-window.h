@@ -98,15 +98,25 @@ typedef struct {
 	 * @window: this #BaseWindow instance.
 	 * @toplevel: the GtkWindow being initialized.
 	 *
-	 * Invoked when the toplevel GtkWindow is allocated for the firt time
-	 * by the GtkBuilder, after all connected handlers have themselves run.
+	 * This virtual method is invoked after the toplevel GtkWindow has been
+	 * allocated and built for the firt time by the GtkBuilder, after all
+	 * connected signal handlers have themselves run.
 	 *
 	 * The derived class should invoke the virtual method of its parent class
 	 * at the end of its processing.
 	 *
-	 * The BaseWindow base class implementation of this method, which is
-	 * so called last, set this GtkWindow toplevel window transient for
-	 * its parent window.
+	 * The BaseWindow class ensures that each created instance has its Gtk
+	 * toplevel - if it has been successfully loaded - initialized when
+	 * returning from instanciation.
+	 * The instance has nonetheless still to check if the Gtk toplevel has
+	 * actually been built, and to initialize and show it before anything
+	 * useful may occur (see base_window_init()).
+	 *
+	 * Note that initialization process may fall if the XML UI definition cannot
+	 * be loaded in memory, or if the required Gtk toplevel cannot be found.
+	 * Derived class has so to make sure that a Gtk toplevel actually exists
+	 * before continuing. Calling base_window_init() on the instance may
+	 * do this check.
 	 */
 	void     ( *initialize_gtk_toplevel )( BaseWindow *window, GtkWindow *toplevel );
 
@@ -114,15 +124,16 @@ typedef struct {
 	 * initialize_base_window:
 	 * @window: this #BaseWindow instance.
 	 *
-	 * Invoked after the GtkWindow toplevel has been initialized, before
-	 * actually displaying the widget, and after all connected handlers
+	 * This virtual method is invoked as the first phase of base_window_init(),
+	 * after having checked for the presence of a GtkWindow toplevel, before
+	 * actually displaying the widget, and after all connected signal handlers
 	 * have themselves run.
 	 *
 	 * The derived class should invoke the virtual method of its parent class
 	 * at the end of its processing.
 	 *
 	 * The BaseWindow base class implementation of this method, which is
-	 * so called last, reset last size and position of the window.
+	 * so called last, just does nothing.
 	 */
 	void     ( *initialize_base_window ) ( BaseWindow *window );
 
@@ -130,11 +141,14 @@ typedef struct {
 	 * all_widgets_showed:
 	 * @window: this #BaseWindow instance.
 	 *
-	 * Invoked at the end of initialization process, after all connected
-	 * handlers have themselves run.
+	 * This virtual method is invoked at the end of initialization process,
+	 * after all connected signal handlers have themselves run.
 	 *
 	 * The derived class should invoke the virtual method of its parent class
 	 * at the end of its processing.
+	 *
+	 * The BaseWindow base class implementation of this method, which is
+	 * so called last, will call gtk_widget_show_all() on the Gtk toplevel.
 	 */
 	void     ( *all_widgets_showed )     ( BaseWindow *window );
 
@@ -207,7 +221,7 @@ typedef struct {
  */
 #define BASE_SIGNAL_INITIALIZE_GTK				"base-signal-window-initialize-gtk"
 #define BASE_SIGNAL_INITIALIZE_WINDOW			"base-signal-window-initialize-window"
-#define BASE_SIGNAL_ALL_WIDGETS_SHOWED			"base-signal-window-all-widgets-showed"
+#define BASE_SIGNAL_SHOW_WIDGETS				"base-signal-window-show-widgets"
 #define BASE_SIGNAL_WILLING_TO_QUIT				"base-signal-window-willing-to-quit"
 
 GType            base_window_get_type( void );

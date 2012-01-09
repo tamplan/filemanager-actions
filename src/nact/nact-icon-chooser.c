@@ -207,7 +207,7 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			G_OBJECT( self ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
 
 	base_window_signal_connect( BASE_WINDOW( self ),
-			G_OBJECT( self ), BASE_SIGNAL_ALL_WIDGETS_SHOWED, G_CALLBACK( on_base_all_widgets_showed));
+			G_OBJECT( self ), BASE_SIGNAL_SHOW_WIDGETS, G_CALLBACK( on_base_all_widgets_showed));
 
 	self->private->dispose_has_run = FALSE;
 }

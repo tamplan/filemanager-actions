@@ -287,7 +287,7 @@ instance_constructed( GObject *window )
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
 				G_OBJECT( window ),
-				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
+				BASE_SIGNAL_SHOW_WIDGETS,
 				G_CALLBACK( on_base_all_widgets_showed ));
 	}
 }

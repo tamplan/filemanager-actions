@@ -595,7 +595,7 @@ instance_constructed( GObject *object )
 		base_window_signal_connect(
 				priv->window,
 				G_OBJECT( priv->window ),
-				BASE_SIGNAL_ALL_WIDGETS_SHOWED,
+				BASE_SIGNAL_SHOW_WIDGETS,
 				G_CALLBACK( on_base_all_widgets_showed ));
 
 		g_object_set_data( G_OBJECT( priv->window ), WINDOW_DATA_TREE_VIEW, object );
@@ -680,8 +680,10 @@ nact_tree_view_new( BaseWindow *window, GtkContainer *parent, const gchar *treev
 			TREE_PROP_MODE,        mode,
 			NULL );
 
-#ifdef NA_MAINTAINER_MODE
+#if 0
+# ifdef NA_MAINTAINER_MODE
 	na_gtk_utils_dump_children( parent );
+# endif
 #endif
 
 	return( view );
