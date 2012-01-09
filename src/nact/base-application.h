@@ -67,6 +67,7 @@
  * main                 BaseApplication      NactApplication      BaseWindow           NactWindow
  * ===================  ===================  ===================  ===================  ===================
  * appli = nact_application_new()
+ * --------------------+--------------------+--------------------+--------------------+-------------------
  *                                           appli = g_object_new()
  *                                           set properties
  *                                             application name
@@ -74,35 +75,46 @@
  *                                             description
  *                                             command-line definitions
  *                                             unique name (if apply)
+ * --------------------+--------------------+--------------------+--------------------+-------------------
  * ret = base_application_run( appli, argc, argv )
+ * --------------------+--------------------+--------------------+--------------------+-------------------
  *                      init i18n
  *                      init application name
  *                      init gtk with command-line options
  *                      manage command-line options
+ * --------------------+--------------------+--------------------+--------------------+-------------------
  *                                           manage specific command-line options
  *                                           calling parent class if ok to continue
  *                                           setting application code else
+ * --------------------+--------------------+--------------------+--------------------+-------------------
  *                      init unique manager
  *                        unique app name must have been set at this time
  *                        application name should have been set at this time
  *                      init session manager
  *                      init icon name
  *                      create window(s)
+ * --------------------+--------------------+--------------------+--------------------+-------------------
  *                                           foreach window to create
  *                                             create BaseWindow-derived window
+ * --------------------+--------------------+--------------------+--------------------+-------------------
  *                                                                on class init
  *                                                                  init common builder
+ * --------------------+--------------------+--------------------+--------------------+-------------------
  *                                                                on constructed
  *                                                                  load and init gtk toplevel
- *                                                                  init window
- *                                                                  show gtk toplevel
- *                                                                  run window
- *                                                                                     [...]
- *                      run the main loop
- *                        must be explicitely quitted by application main window
- *                        after having set the application return code
+ * --------------------+--------------------+--------------------+--------------------+-------------------
+ *                                                                                     init window
+ * --------------------+--------------------+--------------------+--------------------+-------------------
+ *                      enter the main loop
+ *                        leaving to the main window the
+ *                        responsability to gtk_main_quit()
+ *                        after having set the application
+ *                        exit code.
+ * --------------------+--------------------+--------------------+--------------------+-------------------
  * g_object_unref( appli )
  * return( ret )
+ * ===================  ===================  ===================  ===================  ===================
+ * main                 BaseApplication      NactApplication      BaseWindow           NactWindow
  *
  * At any time, a function may preset the exit code of the application just by
  * setting the @BASE_PROP_CODE property. Note that unless it also asks to quit
@@ -192,8 +204,12 @@ typedef struct {
 	 * @appli: this #BaseApplication -derived instance.
 	 *
 	 * This is invoked by the BaseApplication base class to let the derived
-	 * class create its startup windows. This may include a spash window,
+	 * class create its startup windows. This may include a splash window,
 	 * a main window, some secondary or toolbox windows, and so on.
+	 *
+	 * Each created window should initialize and show itself at this time
+	 * by calling base_window_init(). base_window_init() will return
+	 * %FALSE if the Gtk toplevel cannot have been initialized.
 	 *
 	 * This is a pure virtual method. Only the most derived class
 	 * create_windows() method is invoked.
@@ -202,6 +218,13 @@ typedef struct {
 	 * setting the @BASE_PROP_CODE property of @appli.
 	 *
 	 * Returns: %TRUE to continue execution, %FALSE to stop it.
+	 *
+	 * Only if this method returns %TRUE, the #BaseApplication class will
+	 * enter in main loop, and stay in it until gtk_main_quit() is called.
+	 *
+	 * It is usually the responsability of main application window of calling
+	 * gtk_main_quit() when it is closed, either as a menu action or if the
+	 * user destroys it.
 	 */
 	gboolean ( *create_windows )( BaseApplication *appli );
 }
