@@ -1,5 +1,12 @@
 2012-01-09 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-application.h: Update comments.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h (base_window_init) now holds all the build process.
+
+	* src/nact/nact-main-window.c (instance_dispose): Quit the main loop.
+
 	* src/nact/base-window.c:
 	* src/nact/base-window.h
 	(BASE_SIGNAL_ALL_WIDGETS_SHOWED): signal renamed as BASE_SIGNAL_SHOW_WIDGETS.

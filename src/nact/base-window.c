@@ -112,7 +112,6 @@ enum {
 static GObjectClass *st_parent_class           = NULL;
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 static gboolean      st_debug_signal_connect   = FALSE;
-static BaseWindow   *st_first_window           = NULL;
 
 static GType    register_type( void );
 static void     class_init( BaseWindowClass *klass );
@@ -125,12 +124,11 @@ static void     instance_finalize( GObject *window );
 
 /* initialization process
  */
-static gboolean init_gtk_toplevel( BaseWindow *window );
-
 static gboolean base_window_init2( BaseWindow *window );
 static gboolean setup_builder( const BaseWindow *window );
 static gboolean load_gtk_toplevel( const BaseWindow *window );
 
+static gboolean init_gtk_toplevel( BaseWindow *window );
 static gboolean is_gtk_toplevel_initialized( const BaseWindow *window, GtkWindow *gtk_toplevel );
 static void     set_gtk_toplevel_initialized( const BaseWindow *window, GtkWindow *gtk_toplevel, gboolean init );
 static void     on_initialize_gtk_toplevel_class_handler( BaseWindow *window, GtkWindow *toplevel );
@@ -142,8 +140,8 @@ static void     on_initialize_base_window_class_handler( BaseWindow *window );
 static void     do_initialize_base_window( BaseWindow *window );
 static void     on_show_widgets_class_handler( BaseWindow *window );
 static void     do_show_widgets( BaseWindow *window );
+
 static gboolean do_run( BaseWindow *window, GtkWindow *toplevel );
-static gboolean is_main_window( BaseWindow *window );
 static gboolean on_delete_event( GtkWidget *widget, GdkEvent *event, BaseWindow *window );
 static gboolean on_is_willing_to_quit_class_handler( BaseWindow *window );
 
@@ -376,13 +374,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self = BASE_WINDOW( instance );
 
-	/* at a first glance, we may suppose that this first window is the main one
-	 * if this is not the case, we would have to write some more code
-	 */
-	if( !st_first_window ){
-		st_first_window = self;
-	}
-
 	self->private = g_new0( BaseWindowPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
@@ -514,90 +505,7 @@ instance_constructed( GObject *window )
 		}
 
 		g_return_if_fail( BASE_IS_APPLICATION( priv->application ));
-
-		/* allocate a dedicated BaseBuilder or use the common one
-		 */
-		g_debug( "%s: has_own_builder=%s", thisfn, priv->has_own_builder ? "True":"False" );
-
-		if( priv->has_own_builder ){
-			priv->builder = base_builder_new();
-		} else {
-			priv->builder = BASE_WINDOW_GET_CLASS( window )->private->builder;
-		}
-
-		g_return_if_fail( BASE_IS_BUILDER( priv->builder ));
-
-		/* having a builder, we load in it the XML UI definition file
-		 * (if it has not been already done), and ask it to build (or retrieve)
-		 * the toplevel Gtk window => this may trigger an error
-		 */
-		init_gtk_toplevel( self );
 	}
-}
-
-static gboolean
-init_gtk_toplevel( BaseWindow *window )
-{
-	static const gchar *thisfn = "base_window_init_gtk_toplevel";
-	BaseWindowPrivate *priv;
-	gboolean ret;
-	GError *error;
-	gchar *msg;
-
-	ret = FALSE;
-	priv = window->private;
-	priv->gtk_toplevel = NULL;
-	error = NULL;
-
-	/* load the XML definition from the UI file
-	 * if this has not been already done
-	 */
-	g_debug( "%s: xmlui_filename=%s", thisfn, priv->xmlui_filename );
-
-	if( priv->xmlui_filename &&
-		g_utf8_strlen( priv->xmlui_filename, -1 ) &&
-		!base_builder_add_from_file( priv->builder, priv->xmlui_filename, &error )){
-
-			msg = g_strdup_printf(
-					_( "Unable to load %s UI XML definition: %s" ),
-					priv->xmlui_filename, error->message );
-			base_window_display_error_dlg( NULL, thisfn, msg );
-			g_free( msg );
-			g_error_free( error );
-
-	/* then build (or retrieve) the toplevel widget
-	 */
-	} else if( priv->toplevel_name && strlen( priv->toplevel_name )){
-
-		priv->gtk_toplevel = base_builder_get_toplevel_by_name(
-					priv->builder, priv->toplevel_name );
-
-		if( !priv->gtk_toplevel ){
-			msg = g_strdup_printf(
-					_( "Unable to load %s dialog definition." ),
-					priv->toplevel_name );
-			base_window_display_error_dlg( NULL, msg, NULL );
-			g_free( msg );
-
-		/* eventually initialize the toplevel Gtk window
-		 */
-		} else {
-			g_return_val_if_fail( GTK_IS_WINDOW( priv->gtk_toplevel ), FALSE );
-
-			if( !is_gtk_toplevel_initialized( window, priv->gtk_toplevel )){
-
-				g_signal_emit_by_name(
-						window,
-						BASE_SIGNAL_INITIALIZE_GTK,
-						priv->gtk_toplevel );
-
-				set_gtk_toplevel_initialized( window, priv->gtk_toplevel, TRUE );
-				ret = TRUE;
-			}
-		}
-	}
-
-	return( ret );
 }
 
 static void
@@ -633,12 +541,15 @@ instance_dispose( GObject *window )
 		}
 		g_list_free( self->private->signals );
 
+#if 0
 		if( is_main_window( BASE_WINDOW( window ))){
 			g_debug( "%s: quitting main window", thisfn );
 			gtk_main_quit ();
 			gtk_widget_destroy( GTK_WIDGET( self->private->gtk_toplevel ));
 
-		} else if( GTK_IS_ASSISTANT( self->private->gtk_toplevel )){
+		} else
+#endif
+			if( GTK_IS_ASSISTANT( self->private->gtk_toplevel )){
 			g_debug( "%s: quitting assistant", thisfn );
 			gtk_main_quit();
 			if( is_gtk_toplevel_initialized( self, self->private->gtk_toplevel )){
@@ -946,28 +857,43 @@ base_window_run( BaseWindow *window )
  * base_window_init:
  * @window: this #BaseWindow object.
  *
- * Initialize the window at runtime, and show it.
+ * Initialize the Gtk toplevel if needed, initialize the window at runtime,
+ * and show it.
  *
- * Returns: %TRUE if the window has been initialized and all widgets showed,
- * %FALSE else.
- *
- * Note that this function also returns %FALSE if the Gtk toplevel itself
- * has not been successfully initialized. So it is safe to call base_window_init()
- * after instanciation of a new #BaseWindow just to check if the Gtk toplevel
- * has not trigerred an error.
+ * Returns: %TRUE if the window has been successfully loaded and initialized
+ * and all widgets showed, %FALSE else.
  */
 gboolean
 base_window_init( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_window_init";
+	BaseWindowPrivate *priv;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
 
-	if( !window->private->dispose_has_run ){
+	priv = window->private;
+
+	if( !priv->dispose_has_run ){
 
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-		if( !window->private->gtk_toplevel ){
+		/* allocate a dedicated BaseBuilder or use the common one
+		 */
+		g_debug( "%s: has_own_builder=%s", thisfn, priv->has_own_builder ? "True":"False" );
+
+		if( priv->has_own_builder ){
+			priv->builder = base_builder_new();
+		} else {
+			priv->builder = BASE_WINDOW_GET_CLASS( window )->private->builder;
+		}
+
+		g_return_val_if_fail( BASE_IS_BUILDER( priv->builder ), FALSE );
+
+		/* having a builder, we load in it the XML UI definition file
+		 * (if it has not been already done), and ask it to build (or retrieve)
+		 * the toplevel Gtk window => this may trigger an error
+		 */
+		if( !init_gtk_toplevel( window )){
 			return( FALSE );
 		}
 
@@ -979,6 +905,71 @@ base_window_init( BaseWindow *window )
 	}
 
 	return( TRUE );
+}
+
+static gboolean
+init_gtk_toplevel( BaseWindow *window )
+{
+	static const gchar *thisfn = "base_window_init_gtk_toplevel";
+	BaseWindowPrivate *priv;
+	gboolean ret;
+	GError *error;
+	gchar *msg;
+
+	ret = FALSE;
+	priv = window->private;
+	priv->gtk_toplevel = NULL;
+	error = NULL;
+
+	/* load the XML definition from the UI file
+	 * if this has not been already done
+	 */
+	g_debug( "%s: xmlui_filename=%s", thisfn, priv->xmlui_filename );
+
+	if( priv->xmlui_filename &&
+		g_utf8_strlen( priv->xmlui_filename, -1 ) &&
+		!base_builder_add_from_file( priv->builder, priv->xmlui_filename, &error )){
+
+			msg = g_strdup_printf(
+					_( "Unable to load %s UI XML definition: %s" ),
+					priv->xmlui_filename, error->message );
+			base_window_display_error_dlg( NULL, thisfn, msg );
+			g_free( msg );
+			g_error_free( error );
+
+	/* then build (or retrieve) the toplevel widget
+	 */
+	} else if( priv->toplevel_name && strlen( priv->toplevel_name )){
+
+		priv->gtk_toplevel = base_builder_get_toplevel_by_name(
+					priv->builder, priv->toplevel_name );
+
+		if( !priv->gtk_toplevel ){
+			msg = g_strdup_printf(
+					_( "Unable to load %s dialog definition." ),
+					priv->toplevel_name );
+			base_window_display_error_dlg( NULL, msg, NULL );
+			g_free( msg );
+
+		/* eventually initialize the toplevel Gtk window
+		 */
+		} else {
+			g_return_val_if_fail( GTK_IS_WINDOW( priv->gtk_toplevel ), FALSE );
+
+			if( !is_gtk_toplevel_initialized( window, priv->gtk_toplevel )){
+
+				g_signal_emit_by_name(
+						window,
+						BASE_SIGNAL_INITIALIZE_GTK,
+						priv->gtk_toplevel );
+
+				set_gtk_toplevel_initialized( window, priv->gtk_toplevel, TRUE );
+				ret = TRUE;
+			}
+		}
+	}
+
+	return( ret );
 }
 
 /*
@@ -1065,7 +1056,9 @@ do_show_widgets( BaseWindow *window )
 static int
 do_run( BaseWindow *window, GtkWindow *toplevel )
 {
+#if 0
 	static const gchar *thisfn = "base_window_do_run";
+#endif
 	int code;
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), BASE_EXIT_CODE_PROGRAM );
@@ -1074,6 +1067,8 @@ do_run( BaseWindow *window, GtkWindow *toplevel )
 	code = BASE_EXIT_CODE_INIT_FAIL;
 
 	if( !window->private->dispose_has_run ){
+		g_signal_connect( G_OBJECT( toplevel ), "delete-event", G_CALLBACK( on_delete_event ), window );
+#if 0
 		if( is_main_window( window )){
 			g_signal_connect( G_OBJECT( toplevel ), "delete-event", G_CALLBACK( on_delete_event ), window );
 			g_debug( "%s: window=%p (%s), toplevel=%p (%s), starting gtk_main",
@@ -1083,24 +1078,10 @@ do_run( BaseWindow *window, GtkWindow *toplevel )
 			gtk_main();
 			code = BASE_EXIT_CODE_OK;
 		}
+#endif
 	}
 
 	return( code );
-}
-
-static gboolean
-is_main_window( BaseWindow *window )
-{
-	gboolean is_main = FALSE;
-
-	g_return_val_if_fail( BASE_IS_WINDOW( window ), FALSE );
-
-	if( !window->private->dispose_has_run ){
-
-		is_main = ( window == st_first_window );
-	}
-
-	return( is_main );
 }
 
 /*

@@ -51,6 +51,10 @@
  * Note that having its own builder implies loading in it the required
  * XML file which holds the needed UI definition, and so even if this
  * same XML file has already been load in the common builder.
+ *
+ * The common #BaseBuilder is never g_object_unref(), so the
+ * embedded Gtk toplevels are only destroyed when quitting the
+ * program.
  */
 
 #include <gtk/gtk.h>

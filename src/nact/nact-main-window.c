@@ -720,6 +720,8 @@ instance_dispose( GObject *window )
 
 		self->private->dispose_has_run = TRUE;
 
+		gtk_main_quit();
+
 		g_object_unref( self->private->clipboard );
 		g_object_unref( self->private->menubar );
 
