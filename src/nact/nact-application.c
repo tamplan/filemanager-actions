@@ -312,14 +312,17 @@ appli_create_windows( BaseApplication *application )
 
 	g_debug( "%s: application=%p", thisfn, ( void * ) application );
 
+	ret = FALSE;
+
 	/* creating main window
 	 */
 	window = nact_main_window_new( NACT_APPLICATION( application ));
+
 	if( window ){
 		g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), FALSE );
 		ret = TRUE;
+
 	} else {
-		ret = FALSE;
 		g_object_set( G_OBJECT( application ), BASE_PROP_CODE, BASE_EXIT_CODE_WINDOW, NULL );
 	}
 
