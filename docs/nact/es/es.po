@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-01-08 17:54+0000\n"
-"PO-Revision-Date: 2012-01-09 17:40+0100\n"
+"POT-Creation-Date: 2012-01-09 16:41+0000\n"
+"PO-Revision-Date: 2012-01-10 16:36+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2290,10 +2290,13 @@ msgid ""
 "By default, the capability-based condition list is empty. This means that "
 "capabilities are not relevant for this action."
 msgstr ""
+"De manera predeterminada, la lista de condiciones basadas en capacidades "
+"está vacía. Esto significa que las capacidades no son relevantes para esta "
+"acción."
 
 #: C/nautilus-actions-config-tool.xml:703(title)
 msgid "Selection count condition"
-msgstr ""
+msgstr "Condición de cantidad de selección"
 
 #: C/nautilus-actions-config-tool.xml:704(para)
 msgid ""
@@ -2301,16 +2304,21 @@ msgid ""
 "the file manager has some precise count, or some precise relation with a "
 "given count."
 msgstr ""
+"Puede definir que su acción aparezca únicamente si la selección actual en el "
+"gestor de archivos tiene una cantidad precisa, o alguna relación precisa con "
+"una cantidad dada."
 
 #: C/nautilus-actions-config-tool.xml:710(title)
 msgid "A selection count use case"
-msgstr ""
+msgstr "Un caso de uso de cantidad de selección"
 
 #: C/nautilus-actions-config-tool.xml:711(para)
 msgid ""
 "If your action consists in displaying the differences between two files, you "
 "may define here « <literal>Count = (equal to) 2</literal> »."
 msgstr ""
+"Si su acción consiste en mostrar las diferencias entre dos archivos, puede "
+"definir aquí «<literal>Cantidad = (igual a) 2</literal>»."
 
 #: C/nautilus-actions-config-tool.xml:717(para)
 #: C/nautilus-actions-config-tool.xml:824(para)
@@ -2319,10 +2327,12 @@ msgid ""
 "Click on the <guilabel>Environment</guilabel> tab to show the page which "
 "will permit you to configure your environment-based conditions."
 msgstr ""
+"Pulse en la pestaña <guilabel>Entorno</guilabel> para mostrar la página que "
+"le permite configurar sus condiciones basadas en el entorno."
 
 #: C/nautilus-actions-config-tool.xml:722(title)
 msgid "Environment-based conditions"
-msgstr ""
+msgstr "Condiciones basadas en el entorno"
 
 #: C/nautilus-actions-config-tool.xml:729(phrase)
 msgid ""
@@ -2330,21 +2340,26 @@ msgid ""
 "include the selection count configuration, the desktop selection, along with "
 "the runtime filters."
 msgstr ""
+"Muestra la pestaña que le permite definir sus condiciones basadas en el "
+"entorno. Esto incluye la configuración de cantidad de selección, la "
+"selección de escritorios y los filtros de tiempo de ejecución."
 
 #: C/nautilus-actions-config-tool.xml:736(para)
 msgid "The environment-based conditions tab"
-msgstr ""
+msgstr "La pestaña de condiciones basadas en el entorno"
 
 #: C/nautilus-actions-config-tool.xml:741(para)
 msgid ""
 "The selection count condition is defined in the <guilabel>Appears if "
 "selection contains</guilabel> frame."
 msgstr ""
+"La condición de cantidad de selección se define en el cuadro "
+"<guilabel>Aparece si la selección contiene</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:746(title)
 #: C/nautilus-actions-config-tool.xml:758(para)
 msgid "Selection count condition frame"
-msgstr ""
+msgstr "Cuadro de condición de cantidad de selección"
 
 #: C/nautilus-actions-config-tool.xml:754(guilabel)
 msgid "Appears if selection contains"
@@ -2355,7 +2370,7 @@ msgstr "Aparece si la selección contiene"
 #: C/nautilus-actions-config-tool.xml:908(phrase)
 #: C/nautilus-actions-config-tool.xml:270(phrase)
 msgid "Focus on the <placeholder-1/> frame."
-msgstr ""
+msgstr "De el foco al cuadro <placeholder-1/>."
 
 #: C/nautilus-actions-config-tool.xml:763(para)
 msgid ""
@@ -2364,16 +2379,23 @@ msgid ""
 "targeting the location context menu or the toolbar, the count condition will "
 "be checked against zero because there is no selected item in this case."
 msgstr ""
+"Cuando el objetivo sea el menú contextual de la selección, la condición de "
+"cantidad definida aquí se comparará con la cantidad de elementos actualmente "
+"seleccionados. Cuando el objetivo sea el menú contextual del lugar o la "
+"barra de herramientas, la condición de cantidad se comparará con cero porque "
+"no hay elementos seleccionados en este caso."
 
 #: C/nautilus-actions-config-tool.xml:770(para)
 msgid "To define a selection count condition:"
-msgstr ""
+msgstr "Para definir una condición de cantidad de selección:"
 
 #: C/nautilus-actions-config-tool.xml:775(para)
 msgid ""
 "Select in the <guilabel>Count</guilabel> drop-down list the operator you "
 "want apply to the selection count:"
 msgstr ""
+"Seleccione en la lista desplegable <guilabel>Cantidad</guilabel> el operador "
+"que le quiere aplicar a la cantidad de selección:"
 
 #: C/nautilus-actions-config-tool.xml:780(literal)
 msgid "&lt;"
@@ -2401,7 +2423,7 @@ msgstr "(estrictamente mayor que)"
 
 #: C/nautilus-actions-config-tool.xml:786(para)
 msgid "Enter the reference count you wish."
-msgstr ""
+msgstr "Introduzca la cantidad de referencia que quiera."
 
 #: C/nautilus-actions-config-tool.xml:791(para)
 msgid ""
@@ -2409,12 +2431,16 @@ msgid ""
 "0</literal> », which means that the action will be a candidate to be "
 "displayed as soon as at least one item is selected in the file manager."
 msgstr ""
+"El valor predeterminado para la cantidad de selección es « <literal>Cantidad "
+"&gt; (estrictamente mayor que) 0</literal> », lo que significa que la acción "
+"será un candidato a ser mostrada tan pronto como se seleccione al menos un "
+"elemento en el gestor de archivos."
 
 #: C/nautilus-actions-config-tool.xml:800(title)
 #: C/nautilus-actions-config-tool.xml:52(title)
 #: C/nautilus-actions-config-tool.xml:62(para)
 msgid "Desktop selection"
-msgstr ""
+msgstr "Selección de escritorios"
 
 #: C/nautilus-actions-config-tool.xml:801(para)
 msgid "You may define that your action:"
@@ -2441,43 +2467,41 @@ msgid ""
 "The desktop selection is defined in the <guilabel>Desktop environment</"
 "guilabel> frame."
 msgstr ""
+"La selección de escritorios se define en el cuadro <guilabel>Entorno de "
+"escritorio</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:833(title)
 #: C/nautilus-actions-config-tool.xml:845(para)
 msgid "Desktop selection frame"
-msgstr ""
+msgstr "Cuadro de selección de escritorios"
 
 #: C/nautilus-actions-config-tool.xml:841(guilabel)
 msgid "Desktop environment"
 msgstr "Entorno de escritorio"
 
 #: C/nautilus-actions-config-tool.xml:850(para)
-#, fuzzy
 msgid "To define the desktop environment condition:"
-msgstr "Defina la condición del escritorio:"
+msgstr "Para definir la condición del entorno de escritorio:"
 
 #: C/nautilus-actions-config-tool.xml:855(para)
 msgid "First select the type of filter:"
 msgstr "Primero seleccione el tipo de filtro:"
 
 #: C/nautilus-actions-config-tool.xml:859(member)
-#, fuzzy
-#| msgid "or will only appear in some given desktop environments,"
 msgid ""
 "should your action always appear, regardless of the desktop environment ?"
-msgstr "o aparecerá sólo en algunos entornos de escritorio,"
+msgstr ""
+"¿quiere que su acción aparezca siempre, sin importar el entorno de "
+"escritorio?"
 
 #: C/nautilus-actions-config-tool.xml:861(member)
-#, fuzzy
-#| msgid "or will only appear in some given desktop environments,"
 msgid "should your action only appear in some desktop environment(s) ?"
-msgstr "o aparecerá sólo en algunos entornos de escritorio,"
+msgstr "¿quiere que su acción aparezca sólo en algún entorno  de escritorio?"
 
 #: C/nautilus-actions-config-tool.xml:863(member)
-#, fuzzy
-#| msgid "or will not appear in some given desktop environments."
 msgid "should your action never appear in some desktop environment(s) ?"
-msgstr "o no aparecerá en algunos entornos de escritorio."
+msgstr ""
+"¿quiere que su acción no aparezca nunca en algún entorno de escritorio?"
 
 #: C/nautilus-actions-config-tool.xml:868(para)
 msgid ""
