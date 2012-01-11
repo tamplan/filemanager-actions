@@ -81,26 +81,26 @@ enum {
 
 static GObjectClass *st_parent_class = NULL;
 
-static GType          register_type( void );
-static void           class_init( BaseApplicationClass *klass );
-static void           isession_iface_init( BaseISessionInterface *iface, void *user_data );
-static void           iunique_iface_init( BaseIUniqueInterface *iface, void *user_data );
-static const gchar   *iunique_get_application_name( const BaseIUnique *instance );
-static void           instance_init( GTypeInstance *instance, gpointer klass );
-static void           instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
-static void           instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void           instance_dispose( GObject *application );
-static void           instance_finalize( GObject *application );
+static GType        register_type( void );
+static void         class_init( BaseApplicationClass *klass );
+static void         isession_iface_init( BaseISessionInterface *iface, void *user_data );
+static void         iunique_iface_init( BaseIUniqueInterface *iface, void *user_data );
+static const gchar *iunique_get_application_name( const BaseIUnique *instance );
+static void         instance_init( GTypeInstance *instance, gpointer klass );
+static void         instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void         instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void         instance_dispose( GObject *application );
+static void         instance_finalize( GObject *application );
 
-static gboolean       init_i18n( BaseApplication *application );
-static gboolean       init_application_name( BaseApplication *application );
-static gboolean       init_gtk( BaseApplication *application );
-static gboolean       v_manage_options( BaseApplication *application );
-static gboolean       init_unique_manager( BaseApplication *application );
-static gboolean       init_session_manager( BaseApplication *application );
-static gboolean       init_icon_name( BaseApplication *application );
-static gboolean       v_init_application( BaseApplication *application );
-static gboolean       v_create_windows( BaseApplication *application );
+static gboolean     init_i18n( BaseApplication *application );
+static gboolean     init_application_name( BaseApplication *application );
+static gboolean     init_gtk( BaseApplication *application );
+static gboolean     v_manage_options( BaseApplication *application );
+static gboolean     init_unique_manager( BaseApplication *application );
+static gboolean     init_session_manager( BaseApplication *application );
+static gboolean     init_icon_name( BaseApplication *application );
+static gboolean     v_init_application( BaseApplication *application );
+static gboolean     v_create_windows( BaseApplication *application );
 
 /*
  * the BaseISessionInterface interface is registered here because
@@ -113,15 +113,8 @@ base_application_get_type( void )
 {
 	static GType application_type = 0;
 
-	static const GInterfaceInfo isession_iface_info = {
-		( GInterfaceInitFunc ) isession_iface_init,
-		NULL,
-		NULL
-	};
-
 	if( !application_type ){
 		application_type = register_type();
-		g_type_add_interface_static( application_type, BASE_ISESSION_TYPE, &isession_iface_info );
 	}
 
 	return( application_type );
@@ -145,6 +138,12 @@ register_type( void )
 		( GInstanceInitFunc ) instance_init
 	};
 
+	static const GInterfaceInfo isession_iface_info = {
+		( GInterfaceInitFunc ) isession_iface_init,
+		NULL,
+		NULL
+	};
+
 	static const GInterfaceInfo iunique_iface_info = {
 		( GInterfaceInitFunc ) iunique_iface_init,
 		NULL,
@@ -157,7 +156,9 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_OBJECT, "BaseApplication", &info, 0 );
 
-	g_type_add_interface_static( type, BASE_IUNIQUE_TYPE, &iunique_iface_info );
+	g_type_add_interface_static( type, BASE_TYPE_ISESSION, &isession_iface_info );
+
+	g_type_add_interface_static( type, BASE_TYPE_IUNIQUE, &iunique_iface_info );
 
 	return( type );
 }
@@ -450,7 +451,7 @@ instance_finalize( GObject *application )
 }
 
 /**
- * base_application_run:
+ * base_application_run_with_args:
  * @application: this #BaseApplication -derived instance.
  *
  * Starts and runs the application.
@@ -465,15 +466,12 @@ instance_finalize( GObject *application )
  * seldomly needed to override this in a derived class.
  */
 int
-base_application_run( BaseApplication *application, int argc, GStrv argv )
+base_application_run_with_args( BaseApplication *application, int argc, GStrv argv )
 {
-	static const gchar *thisfn = "base_application_run";
+	static const gchar *thisfn = "base_application_run_with_args";
 	BaseApplicationPrivate *priv;
-#if 0
-	GtkWindow *gtk_toplevel;
-#endif
 
-	g_return_val_if_fail( BASE_IS_APPLICATION( application ), BASE_EXIT_CODE_START_FAIL );
+	g_return_val_if_fail( BASE_IS_APPLICATION( application ), BASE_EXIT_CODE_PROGRAM );
 
 	priv = application->private;
 
@@ -486,9 +484,6 @@ base_application_run( BaseApplication *application, int argc, GStrv argv )
 
 		priv->argc = argc;
 		priv->argv = g_strdupv( argv );
-#if 0
-		priv->main_window = NULL;
-#endif
 		priv->code = BASE_EXIT_CODE_OK;
 
 		if( init_i18n( application ) &&
@@ -560,7 +555,7 @@ init_application_name( BaseApplication *application )
 		g_set_application_name( name );
 
 	} else {
-		application->private->code = BASE_EXIT_CODE_NO_APPLICATION_NAME;
+		application->private->code = BASE_EXIT_CODE_APPLICATION_NAME;
 		ret = FALSE;
 	}
 	g_free( name );
@@ -750,4 +745,23 @@ base_application_get_application_name( const BaseApplication *application )
 	}
 
 	return( name );
+}
+
+/**
+ * base_application_is_willing_to_quit:
+ * @application: this #BaseApplication instance.
+ *
+ * Returns: %TRUE if the application is willing to quit, %FALSE else.
+ *
+ * This function is typically called from the derived application, when
+ * the user has required the termination, in order to let it handle
+ * unsaved modifications.
+ */
+gboolean
+base_application_is_willing_to_quit( const BaseApplication *application )
+{
+	g_return_val_if_fail( BASE_IS_APPLICATION( application ), TRUE );
+	g_return_val_if_fail( BASE_IS_ISESSION( application ), TRUE );
+
+	return( base_isession_is_willing_to_quit( BASE_ISESSION( application )));
 }

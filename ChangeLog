@@ -1,3 +1,43 @@
+2012-01-11 Pierre Wieser <pwieser@trychlos.org>
+
+	* BASE_SIGNAL_QUIT_REQUESTED, BASE_SIGNAL_QUIT: New signals, defined in
+	BaseISession interface.
+
+	* src/nact/nact-marshal.def: New file.
+
+	* src/nact/Makefile.am: Updated accordingly.
+
+	* src/nact/base-application.c
+	* src/nact/base-application.h
+	(register_type): As BaseISession now only requires G_TYPE_OBJECT, then 
+	declare the implementation in register_type().
+	(base_application_run): Renamed as base_application_run_with_args().
+	BASE_EXIT_CODE_START_FAIL exit code replaced with BASE_EXIT_CODE_PROGRAM.
+	(base_application_is_willing_to_quit): New function, moved from BaseWindow.
+	BASE_APPLICATION_TYPE macro renamed as BASE_TYPE_APPLICATION.
+
+	* src/nact/base-assistant.c (do_run):
+	* src/nact/base-dialog.c (do_run):
+	* src/nact/nact-application.c (register_type):
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-menubar-maintainer.c:
+	* src/nact/nact-tree-view.c: Updated accordingly.
+
+	* src/nact/base-isession.c:
+	* src/nact/base-isession.h:
+	Define ISessionData pseudo-properties.
+	Implement BASE_SIGNAL_QUIT_REQUESTED and BASE_SIGNAL_QUIT class handlers.
+
+	* src/nact/base-iunique.c:
+	* src/nact/base-iunique.h:
+	Define IUniqueData pseudo-properties.
+
+	* src/nact/base-window.c:
+	* src/nact/base-window.h:
+	Define BaseGtkData pseudo-properties.
+	Remove BASE_SIGNAL_WILLING_TO_QUIT definition and handlers.
+	(base_window_is_willing_to_quit): Removed function.
+
 2012-01-09 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/base-isession.c:

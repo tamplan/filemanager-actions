@@ -56,7 +56,7 @@
  *         int code;
  *
  *         appli = my_application_new();
- *         code = base_appliction_run( BASE_APPLICATION( appli ), argc, argv );
+ *         code = base_appliction_run_with_args( BASE_APPLICATION( appli ), argc, argv );
  *         g_object_unref( appli );
  *
  *         return( code );
@@ -76,7 +76,7 @@
  *                                             command-line definitions
  *                                             unique name (if apply)
  * --------------------+--------------------+--------------------+--------------------+-------------------
- * ret = base_application_run( appli, argc, argv )
+ * ret = base_application_run_with_args( appli, argc, argv )
  * --------------------+--------------------+--------------------+--------------------+-------------------
  *                      init i18n
  *                      init application name
@@ -127,12 +127,12 @@
 
 G_BEGIN_DECLS
 
-#define BASE_APPLICATION_TYPE                ( base_application_get_type())
-#define BASE_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_APPLICATION_TYPE, BaseApplication ))
-#define BASE_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_APPLICATION_TYPE, BaseApplicationClass ))
-#define BASE_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_APPLICATION_TYPE ))
-#define BASE_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_APPLICATION_TYPE ))
-#define BASE_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_APPLICATION_TYPE, BaseApplicationClass ))
+#define BASE_TYPE_APPLICATION                ( base_application_get_type())
+#define BASE_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_TYPE_APPLICATION, BaseApplication ))
+#define BASE_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_TYPE_APPLICATION, BaseApplicationClass ))
+#define BASE_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_TYPE_APPLICATION ))
+#define BASE_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_TYPE_APPLICATION ))
+#define BASE_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_TYPE_APPLICATION, BaseApplicationClass ))
 
 typedef struct _BaseApplicationPrivate       BaseApplicationPrivate;
 
@@ -235,7 +235,7 @@ typedef struct {
  * Properties defined by the BaseApplication class.
  * They may be provided at object instantiation time, either in the derived-
  * application constructor, or in the main() function, but in all cases
- * before calling base_application_run().
+ * before calling base_application_run_with_args().
  *
  * @BASE_PROP_ARGC:             count of arguments in command-line.
  * @BASE_PROP_ARGV:             array of command-line arguments.
@@ -255,28 +255,43 @@ typedef struct {
 #define BASE_PROP_UNIQUE_NAME				"base-prop-application-unique-name"
 #define BASE_PROP_CODE						"base-prop-application-code"
 
+/**
+ * BaseExitCode:
+ *
+ * The code returned by the application.
+ *
+ * The BaseApplication -derived class may define its own codes, starting
+ * them with @BASE_EXIT_CODE_USER_APP.
+ *
+ * @BASE_EXIT_CODE_PROGRAM = -1:         this is a program error code.
+ * @BASE_EXIT_CODE_OK = 0:               the program has successfully run, and returns zero.
+ * @BASE_EXIT_CODE_APPLICATION_NAME = 1: no application name has been set by the derived class
+ * @BASE_EXIT_CODE_ARGS = 2:             unable to interpret command-line options
+ * @BASE_EXIT_CODE_UNIQUE_APP = 3:       another instance is already running
+ * @BASE_EXIT_CODE_INIT_WINDOW = 4:      unable to create a startup window
+ *
+ * @BASE_EXIT_CODE_USER_APP = 32:        BaseApplication -derived class may use program return codes
+ *                                       starting with this value
+ */
 typedef enum {
-	BASE_EXIT_CODE_START_FAIL = -1,
+	BASE_EXIT_CODE_PROGRAM = -1,
 	BASE_EXIT_CODE_OK = 0,
-	BASE_EXIT_CODE_NO_APPLICATION_NAME,		/* no application name has been set by the derived class */
-	BASE_EXIT_CODE_ARGS,					/* unable to interpret command-line options */
-	BASE_EXIT_CODE_UNIQUE_APP,				/* another instance is already running */
-	BASE_EXIT_CODE_WINDOW,					/* unable to create a startup window */
-	BASE_EXIT_CODE_INIT_FAIL,
-	BASE_EXIT_CODE_PROGRAM,
-	/*
-	 * BaseApplication -derived class may use program return codes
-	 * starting with this value
-	 */
+	BASE_EXIT_CODE_APPLICATION_NAME,
+	BASE_EXIT_CODE_ARGS,
+	BASE_EXIT_CODE_UNIQUE_APP,
+	BASE_EXIT_CODE_INIT_WINDOW,
+
 	BASE_EXIT_CODE_USER_APP = 32
 }
 	BaseExitCode;
 
-GType  base_application_get_type            ( void );
+GType    base_application_get_type            ( void );
 
-int    base_application_run                 ( BaseApplication *application, int argc, GStrv argv );
+int      base_application_run_with_args       ( BaseApplication *application, int argc, GStrv argv );
 
-gchar *base_application_get_application_name( const BaseApplication *application );
+gchar   *base_application_get_application_name( const BaseApplication *application );
+
+gboolean base_application_is_willing_to_quit  ( const BaseApplication *application );
 
 G_END_DECLS
 

@@ -37,17 +37,17 @@
  * @include: nact/base-iunique.h
  *
  * This interface implements the features to make an application
- * unique, i.e. cjheck that we run only one instance of it.
+ * unique, i.e. check that we run only one instance of it.
  */
 
-#include <gtk/gtk.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define BASE_IUNIQUE_TYPE                      ( base_iunique_get_type())
-#define BASE_IUNIQUE( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_IUNIQUE_TYPE, BaseIUnique ))
-#define BASE_IS_IUNIQUE( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_IUNIQUE_TYPE ))
-#define BASE_IUNIQUE_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), BASE_IUNIQUE_TYPE, BaseIUniqueInterface ))
+#define BASE_TYPE_IUNIQUE                      ( base_iunique_get_type())
+#define BASE_IUNIQUE( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, BASE_TYPE_IUNIQUE, BaseIUnique ))
+#define BASE_IS_IUNIQUE( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, BASE_TYPE_IUNIQUE ))
+#define BASE_IUNIQUE_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), BASE_TYPE_IUNIQUE, BaseIUniqueInterface ))
 
 typedef struct _BaseIUnique                    BaseIUnique;
 typedef struct _BaseIUniqueInterfacePrivate    BaseIUniqueInterfacePrivate;

@@ -45,19 +45,24 @@ struct _BaseIUniqueInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-/* BaseIUnique properties, set as data association against the GObject instance
+/* pseudo-properties, set against the instance
  */
-#define BASE_PROP_HANDLE				"base-prop-iunique-handle"
-#define BASE_PROP_INITIALIZED			"base-prop-iunique-initialized"
+typedef struct {
+	gchar     *unique_app_name;
+	UniqueApp *handle;
+}
+	IUniqueData;
+
+#define BASE_PROP_IUNIQUE_DATA			"base-prop-iunique-data"
 
 static guint st_initializations = 0;	/* interface initialisation count */
 
-static GType register_type( void );
-static void  interface_base_init( BaseIUniqueInterface *klass );
-static void  interface_base_finalize( BaseIUniqueInterface *klass );
+static GType        register_type( void );
+static void         interface_base_init( BaseIUniqueInterface *klass );
+static void         interface_base_finalize( BaseIUniqueInterface *klass );
 
-static void  instance_init( BaseIUnique *instance );
-static void  on_instance_finalized( gpointer user_data, BaseIUnique *instance );
+static IUniqueData *get_iunique_data( BaseIUnique *instance );
+static void         on_instance_finalized( gpointer user_data, BaseIUnique *instance );
 
 #if 0
 static UniqueResponse on_unique_message_received( UniqueApp *app, UniqueCommand command, UniqueMessageData *message, guint time, gpointer user_data );
@@ -134,34 +139,40 @@ interface_base_finalize( BaseIUniqueInterface *klass )
 	}
 }
 
-static void
-instance_init( BaseIUnique *instance )
+static IUniqueData *
+get_iunique_data( BaseIUnique *instance )
 {
-	static const gchar *thisfn = "base_iunique_instance_init";
+	IUniqueData *data;
 
-	if( ! ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( instance ), BASE_PROP_INITIALIZED ))){
+	data = ( IUniqueData * ) g_object_get_data( G_OBJECT( instance ), BASE_PROP_IUNIQUE_DATA );
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	if( !data ){
+		data = g_new0( IUniqueData, 1 );
+		g_object_set_data( G_OBJECT( instance ), BASE_PROP_IUNIQUE_DATA, data );
 
 		g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
-
-		g_object_set_data( G_OBJECT( instance ), BASE_PROP_INITIALIZED, GUINT_TO_POINTER( TRUE ));
 	}
+
+	return( data );
 }
 
 static void
 on_instance_finalized( gpointer user_data, BaseIUnique *instance )
 {
 	static const gchar *thisfn = "base_iunique_on_instance_finalized";
+	IUniqueData *data;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 
-	UniqueApp *handle = ( UniqueApp * ) g_object_get_data( G_OBJECT( instance ), BASE_PROP_HANDLE );
+	data = get_iunique_data( instance );
 
-	if( handle ){
-		g_return_if_fail( UNIQUE_IS_APP( handle ));
-		g_object_unref( handle );
+	if( data->handle ){
+		g_return_if_fail( UNIQUE_IS_APP( data->handle ));
+		g_object_unref( data->handle );
 	}
+
+	g_free( data->unique_app_name );
+	g_free( data );
 }
 
 /*
@@ -174,26 +185,25 @@ gboolean
 base_iunique_init_with_name( BaseIUnique *instance, const gchar *unique_app_name )
 {
 	static const gchar *thisfn = "base_iunique_init_with_name";
+	IUniqueData *data;
 	gboolean ret;
 	gboolean is_first;
 	gchar *msg;
-	UniqueApp *handle;
 
 	g_return_val_if_fail( BASE_IS_IUNIQUE( instance ), FALSE );
-
-	instance_init( instance );
 
 	g_debug( "%s: instance=%p, unique_app_name=%s", thisfn, ( void * ) instance, unique_app_name );
 
 	ret = TRUE;
+	data = get_iunique_data( instance );
 
 	if( unique_app_name && strlen( unique_app_name )){
 
-			handle = unique_app_new( unique_app_name, NULL );
-			is_first = !unique_app_is_running( handle );
+			data->handle = unique_app_new( unique_app_name, NULL );
+			is_first = !unique_app_is_running( data->handle );
 
 			if( !is_first ){
-				unique_app_send_message( handle, UNIQUE_ACTIVATE, NULL );
+				unique_app_send_message( data->handle, UNIQUE_ACTIVATE, NULL );
 				/* i18n: application name */
 				msg = g_strdup_printf(
 						_( "Another instance of %s is already running.\n"
@@ -208,13 +218,13 @@ base_iunique_init_with_name( BaseIUnique *instance, const gchar *unique_app_name
 			 */
 			} else {
 				g_signal_connect(
-						handle,
+						data->handle,
 						"message-received",
 						G_CALLBACK( on_unique_message_received ),
 						instance );
 #endif
 			} else {
-				g_object_set_data( G_OBJECT( instance ), BASE_PROP_HANDLE, handle );
+				data->unique_app_name = g_strdup( unique_app_name );
 			}
 	}
 

@@ -41,7 +41,7 @@
 #include <core/na-iprefs.h>
 #include <core/na-pivot.h>
 
-#include "base-marshal.h"
+#include "base-isession.h"
 #include "nact-iaction-tab.h"
 #include "nact-icommand-tab.h"
 #include "nact-ibasenames-tab.h"
@@ -55,6 +55,7 @@
 #include "nact-main-tab.h"
 #include "nact-main-statusbar.h"
 #include "nact-main-window.h"
+#include "nact-marshal.h"
 #include "nact-menubar.h"
 #include "nact-tree-view.h"
 #include "nact-confirm-logout.h"
@@ -884,7 +885,7 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 		/* is willing to quit ?
 		 */
 		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), BASE_SIGNAL_WILLING_TO_QUIT, G_CALLBACK( on_base_is_willing_to_quit ));
+				G_OBJECT( window ), BASE_SIGNAL_QUIT_REQUESTED, G_CALLBACK( on_base_is_willing_to_quit ));
 	}
 }
 

@@ -337,7 +337,7 @@ do_run( BaseWindow *window, GtkWindow *toplevel )
 	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), BASE_EXIT_CODE_PROGRAM );
 	g_return_val_if_fail( GTK_IS_ASSISTANT( toplevel ), BASE_EXIT_CODE_PROGRAM );
 
-	code = BASE_EXIT_CODE_INIT_FAIL;
+	code = BASE_EXIT_CODE_INIT_WINDOW;
 
 	if( !BASE_ASSISTANT( window )->private->dispose_has_run ){
 		g_debug( "%s: window=%p (%s), toplevel=%p (%s), starting gtk_main",

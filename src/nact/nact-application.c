@@ -114,7 +114,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_APPLICATION_TYPE, "NactApplication", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_APPLICATION, "NactApplication", &info, 0 );
 
 	return( type );
 }
@@ -323,7 +323,7 @@ appli_create_windows( BaseApplication *application )
 		ret = TRUE;
 
 	} else {
-		g_object_set( G_OBJECT( application ), BASE_PROP_CODE, BASE_EXIT_CODE_WINDOW, NULL );
+		g_object_set( G_OBJECT( application ), BASE_PROP_CODE, BASE_EXIT_CODE_INIT_WINDOW, NULL );
 	}
 
 	return( ret );

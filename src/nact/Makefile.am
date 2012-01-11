@@ -45,6 +45,8 @@ AM_CPPFLAGS += \
 BUILT_SOURCES = \
 	base-marshal.c										\
 	base-marshal.h										\
+	nact-marshal.c										\
+	nact-marshal.h										\
 	$(NULL)
 
 nautilus_actions_config_tool_SOURCES = \
@@ -151,10 +153,17 @@ nautilus_actions_config_tool_SOURCES = \
 	$(NULL)
 
 base-marshal.h: base-marshal.def $(GLIB_GENMARSHAL)
-	$(GLIB_GENMARSHAL) $< --header --prefix=nact_cclosure_marshal > $@
+	$(GLIB_GENMARSHAL) $< --header --prefix=base_cclosure_marshal > $@
 
 base-marshal.c: base-marshal.def $(GLIB_GENMARSHAL)
 	echo "#include \"base-marshal.h\"" > $@ && \
+	$(GLIB_GENMARSHAL) $< --body --prefix=base_cclosure_marshal >> $@
+
+nact-marshal.h: nact-marshal.def $(GLIB_GENMARSHAL)
+	$(GLIB_GENMARSHAL) $< --header --prefix=nact_cclosure_marshal > $@
+
+nact-marshal.c: nact-marshal.def $(GLIB_GENMARSHAL)
+	echo "#include \"nact-marshal.h\"" > $@ && \
 	$(GLIB_GENMARSHAL) $< --body --prefix=nact_cclosure_marshal >> $@
 
 nautilus_actions_config_tool_LDADD = \
@@ -211,4 +220,5 @@ EXTRA_DIST = \
 	$(applications_in_files)							\
 	$(pkgdata_DATA)										\
 	base-marshal.def									\
+	nact-marshal.def									\
 	$(NULL)

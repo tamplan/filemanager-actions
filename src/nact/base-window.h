@@ -171,22 +171,6 @@ typedef struct {
 	 * Returns: the exit code of the program if it is the main window.
 	 */
 	int      ( *run )                    ( BaseWindow *window, GtkWindow *toplevel );
-
-	/**
-	 * is_willing_to_quit:
-	 * @window: this #BaseWindow instance.
-	 *
-	 * Invoked (e.g. by the session manager) when the application
-	 * has been asked for to terminate itself.
-	 *
-	 * Unless the derived class is not willing to quit, it should call
-	 * its parent class method, in order to give it a chance to also
-	 * refuse the termination of the application.
-	 *
-	 * The derived method should return %TRUE if it is willing to quit,
-	 * %FALSE else.
-	 */
-	gboolean ( *is_willing_to_quit )     ( const BaseWindow *window );
 }
 	BaseWindowClass;
 
@@ -194,8 +178,8 @@ typedef struct {
  * Properties defined by the BaseWindow class.
  * They should be provided at object instanciation time.
  *
- * Either PARENT or APPLICATION must be provided at instanciation time.
- * Instanciation time also requires:
+ * Instanciation time requires:
+ * - either PARENT or APPLICATION
  * - XMLUI_FILENAME
  * - TOPLEVEL_NAME
  * - HAS_OWN_BUILDER
@@ -226,7 +210,6 @@ typedef struct {
 #define BASE_SIGNAL_INITIALIZE_GTK				"base-signal-window-initialize-gtk"
 #define BASE_SIGNAL_INITIALIZE_WINDOW			"base-signal-window-initialize-window"
 #define BASE_SIGNAL_SHOW_WIDGETS				"base-signal-window-show-widgets"
-#define BASE_SIGNAL_WILLING_TO_QUIT				"base-signal-window-willing-to-quit"
 
 GType            base_window_get_type( void );
 
@@ -242,8 +225,6 @@ BaseWindow      *base_window_get_parent              ( const BaseWindow *window 
 GtkWindow       *base_window_get_gtk_toplevel        ( const BaseWindow *window );
 GtkWindow       *base_window_get_gtk_toplevel_by_name( const BaseWindow *window, const gchar *name );
 GtkWidget       *base_window_get_widget              ( const BaseWindow *window, const gchar *name );
-
-gboolean         base_window_is_willing_to_quit      ( const BaseWindow *window );
 
 void             base_window_display_error_dlg       ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );
 gboolean         base_window_display_yesno_dlg       ( const BaseWindow *parent, const gchar *primary, const gchar *secondary );

@@ -36,18 +36,19 @@
  * @short_description: #BaseISession interface definition.
  * @include: nact/base-isession.h
  *
- * This interface implements the features to make an application
- * unique, i.e. cjheck that we run only one instance of it.
+ * This interface implements the features needed to monitor the end of the
+ * session, thus letting the application react if some modifications need
+ * to be saved before allowing to quit.
  */
 
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-#define BASE_ISESSION_TYPE                      ( base_isession_get_type())
-#define BASE_ISESSION( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_ISESSION_TYPE, BaseISession ))
-#define BASE_IS_ISESSION( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_ISESSION_TYPE ))
-#define BASE_ISESSION_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), BASE_ISESSION_TYPE, BaseISessionInterface ))
+#define BASE_TYPE_ISESSION                      ( base_isession_get_type())
+#define BASE_ISESSION( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, BASE_TYPE_ISESSION, BaseISession ))
+#define BASE_IS_ISESSION( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, BASE_TYPE_ISESSION ))
+#define BASE_ISESSION_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), BASE_TYPE_ISESSION, BaseISessionInterface ))
 
 typedef struct _BaseISession                    BaseISession;
 typedef struct _BaseISessionInterfacePrivate    BaseISessionInterfacePrivate;
@@ -59,9 +60,17 @@ typedef struct {
 }
 	BaseISessionInterface;
 
-GType    base_isession_get_type( void );
+/**
+ * Signals defined by the BaseISession interface
+ */
+#define BASE_SIGNAL_QUIT_REQUESTED			"base-signal-isession-quit-requested"
+#define BASE_SIGNAL_QUIT					"base-signal-isession-quit"
 
-void     base_isession_init    ( BaseISession *instance );
+GType    base_isession_get_type          ( void );
+
+void     base_isession_init              ( BaseISession *instance );
+
+gboolean base_isession_is_willing_to_quit( const BaseISession *instance );
 
 G_END_DECLS
 

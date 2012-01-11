@@ -123,6 +123,7 @@ nact_menubar_maintainer_on_dump_clipboard( GtkAction *action, BaseWindow *window
 void
 nact_menubar_maintainer_on_test_function( GtkAction *action, BaseWindow *window )
 {
-	gboolean is_willing = base_window_is_willing_to_quit( BASE_WINDOW( window ));
+	BaseApplication *application = base_window_get_application( window );
+	gboolean is_willing = base_application_is_willing_to_quit( application );
 	g_debug( "nact_menubar_maintainer_on_test_function: willing_to=%s", is_willing ? "True":"False" );
 }

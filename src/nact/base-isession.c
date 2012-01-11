@@ -32,8 +32,8 @@
 #include <config.h>
 #endif
 
-#include "base-application.h"
 #include "base-isession.h"
+#include "base-marshal.h"
 #include "egg-sm-client.h"
 
 /* private interface data
@@ -42,30 +42,39 @@ struct _BaseISessionInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-/* private properties, set against the instance
+/* pseudo-properties, set against the instance
  */
 typedef struct {
 	EggSMClient *sm_client;
 	gulong       sm_client_quit_handler_id;
 	gulong       sm_client_quit_requested_handler_id;
 }
-	ISessionStr;
+	ISessionData;
 
-/* Above ISessionStr struct is set as a BaseISession pseudo-property
- * of the instance.
+#define BASE_PROP_ISESSION_DATA			"base-prop-isession-data"
+
+/* signals defined by the BaseISession interface
  */
-#define BASE_PROP_ISESSION				"base-prop-isession"
+enum {
+	QUIT_REQUESTED,
+	QUIT,
+	LAST_SIGNAL
+};
 
 static guint st_initializations = 0;	/* interface initialisation count */
+static gint  st_signals[ LAST_SIGNAL ] = { 0 };
 
-static GType        register_type( void );
-static void         interface_base_init( BaseISessionInterface *klass );
-static void         interface_base_finalize( BaseISessionInterface *klass );
+static GType         register_type( void );
+static void          interface_base_init( BaseISessionInterface *klass );
+static void          interface_base_finalize( BaseISessionInterface *klass );
 
-static void         on_instance_finalized( gpointer user_data, BaseISession *instance );
-static void         client_quit_requested_cb( EggSMClient *client, BaseISession *instance );
-static void         client_quit_cb( EggSMClient *client, BaseISession *instance );
-static ISessionStr *get_isession_str( BaseISession *instance );
+static ISessionData *get_isession_data( BaseISession *instance );
+static void          on_instance_finalized( gpointer user_data, BaseISession *instance );
+static void          client_quit_requested_cb( EggSMClient *client, BaseISession *instance );
+static gboolean      on_quit_requested_class_handler( BaseISession *instance, void *user_data );
+static gboolean      signal_accumulator_false_handled( GSignalInvocationHint *hint, GValue *return_accu, const GValue *handler_return, gpointer dummy);
+static void          client_quit_cb( EggSMClient *client, BaseISession *instance );
+static void          on_quit_class_handler( BaseISession *instance, void *user_data );
 
 GType
 base_isession_get_type( void )
@@ -101,7 +110,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "BaseISession", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, BASE_APPLICATION_TYPE );
+	g_type_interface_add_prerequisite( type, G_TYPE_OBJECT );
 
 	return( type );
 }
@@ -114,6 +123,64 @@ interface_base_init( BaseISessionInterface *klass )
 	if( !st_initializations ){
 
 		g_debug( "%s: klass=%p", thisfn, ( void * ) klass );
+
+		/**
+		 * base-signal-isession-quit-requested:
+		 *
+		 * The signal is emitted when the session is about to terminate,
+		 * to determine if all implementations are actually willing to quit.
+		 *
+		 * If the implementation is not willing to quit, then the user handler
+		 * should return %FALSE to stop the signal emission.
+		 *
+		 * Returning %TRUE will let the signal be emitted to other connected
+		 * handlers, eventually authorizing the application to terminate.
+		 *
+		 * Notes about GLib signals.
+		 *
+		 * If the signal is defined as G_SIGNAL_RUN_CLEANUP, then the object
+		 * handler does not participate to the return value of the signal
+		 * (accumulator is not called). More this object handler is triggered
+		 * unconditionnally, event if a user handler has returned %FALSE to
+		 * stop the emission.
+		 *
+		 * Contrarily, if the signal is defined as G_SIGNAL_RUN_LAST, then the
+		 * object handler returned value is taken into account by the accumulator,
+		 * and can participate to the return value for the signal. If a user
+		 * handler returns FALSE to stop the emission, then the object handler
+		 * will not be triggered.
+		 */
+		st_signals[ QUIT_REQUESTED ] =
+			g_signal_new_class_handler(
+					BASE_SIGNAL_QUIT_REQUESTED,
+					G_TYPE_FROM_CLASS( klass ),
+					G_SIGNAL_RUN_LAST,
+					G_CALLBACK( on_quit_requested_class_handler ),
+					( GSignalAccumulator ) signal_accumulator_false_handled,
+					NULL,
+					base_cclosure_marshal_BOOLEAN__VOID,
+					G_TYPE_BOOLEAN,
+					0 );
+
+		/**
+		 * base-signal-isession-quit:
+		 *
+		 * The signal is emitted when the session is about to terminate,
+		 * and no application has refused to abort then end of session
+		 * (all have accepted the end). It is time for the application
+		 * to terminate cleanly.
+		 */
+		st_signals[ QUIT ] =
+			g_signal_new_class_handler(
+					BASE_SIGNAL_QUIT,
+					G_TYPE_FROM_CLASS( klass ),
+					G_SIGNAL_RUN_LAST,
+					G_CALLBACK( on_quit_class_handler ),
+					NULL,
+					NULL,
+					g_cclosure_marshal_VOID__VOID,
+					G_TYPE_NONE,
+					0 );
 
 		klass->private = g_new0( BaseISessionInterfacePrivate, 1 );
 	}
@@ -136,97 +203,179 @@ interface_base_finalize( BaseISessionInterface *klass )
 	}
 }
 
-void
-base_isession_init( BaseISession *instance )
+static ISessionData *
+get_isession_data( BaseISession *instance )
 {
-	static const gchar *thisfn = "base_isession_init";
-	ISessionStr *str;
+	ISessionData *data;
 
-	g_return_if_fail( BASE_IS_ISESSION( instance ));
+	data = ( ISessionData * ) g_object_get_data( G_OBJECT( instance ), BASE_PROP_ISESSION_DATA );
 
-	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	if( !data ){
+		data = g_new0( ISessionData, 1 );
+		g_object_set_data( G_OBJECT( instance ), BASE_PROP_ISESSION_DATA, data );
 
-	str = get_isession_str( instance );
+		g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
+	}
 
-	/* set a weak reference to be advertised when the instance is finalized
-	 */
-	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
-
-	/* initialize the session manager
-	 */
-	egg_sm_client_set_mode( EGG_SM_CLIENT_MODE_NO_RESTART );
-	str->sm_client = egg_sm_client_get();
-	egg_sm_client_startup();
-	g_debug( "%s: sm_client=%p", thisfn, ( void * ) str->sm_client );
-
-	str->sm_client_quit_handler_id =
-			g_signal_connect(
-					str->sm_client,
-					"quit-requested",
-					G_CALLBACK( client_quit_requested_cb ),
-					instance );
-
-	str->sm_client_quit_requested_handler_id =
-			g_signal_connect(
-					str->sm_client,
-					"quit",
-					G_CALLBACK( client_quit_cb ),
-					instance );
+	return( data );
 }
 
 static void
 on_instance_finalized( gpointer user_data, BaseISession *instance )
 {
 	static const gchar *thisfn = "base_isession_on_instance_finalized";
-	ISessionStr *str;
+	ISessionData *data;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 
-	str = get_isession_str( instance );
+	data = get_isession_data( instance );
 
-	if( str->sm_client_quit_handler_id &&
-		g_signal_handler_is_connected( str->sm_client, str->sm_client_quit_handler_id )){
-			g_signal_handler_disconnect( str->sm_client, str->sm_client_quit_handler_id  );
+	if( data->sm_client_quit_handler_id &&
+		g_signal_handler_is_connected( data->sm_client, data->sm_client_quit_handler_id )){
+			g_signal_handler_disconnect( data->sm_client, data->sm_client_quit_handler_id  );
 	}
 
-	if( str->sm_client_quit_requested_handler_id &&
-		g_signal_handler_is_connected( str->sm_client, str->sm_client_quit_requested_handler_id )){
-			g_signal_handler_disconnect( str->sm_client, str->sm_client_quit_requested_handler_id  );
+	if( data->sm_client_quit_requested_handler_id &&
+		g_signal_handler_is_connected( data->sm_client, data->sm_client_quit_requested_handler_id )){
+			g_signal_handler_disconnect( data->sm_client, data->sm_client_quit_requested_handler_id  );
 	}
 
-	if( str->sm_client ){
-		g_object_unref( str->sm_client );
+	if( data->sm_client ){
+		g_object_unref( data->sm_client );
 	}
 
-	g_free( str );
+	g_free( data );
+}
+
+void
+base_isession_init( BaseISession *instance )
+{
+	static const gchar *thisfn = "base_isession_init";
+	ISessionData *data;
+
+	g_return_if_fail( BASE_IS_ISESSION( instance ));
+
+	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+
+	data = get_isession_data( instance );
+
+	/* initialize the session manager
+	 */
+	egg_sm_client_set_mode( EGG_SM_CLIENT_MODE_NO_RESTART );
+	data->sm_client = egg_sm_client_get();
+	egg_sm_client_startup();
+	g_debug( "%s: sm_client=%p", thisfn, ( void * ) data->sm_client );
+
+	data->sm_client_quit_handler_id =
+			g_signal_connect(
+					data->sm_client,
+					"quit-requested",
+					G_CALLBACK( client_quit_requested_cb ),
+					instance );
+
+	data->sm_client_quit_requested_handler_id =
+			g_signal_connect(
+					data->sm_client,
+					"quit",
+					G_CALLBACK( client_quit_cb ),
+					instance );
+}
+
+/*
+ * base_isession_is_willing_to_quit:
+ * @instance: this #BaseISession instance.
+ *
+ * Returns: %TRUE if the implementation is willing to quit, %FALSE else.
+ *
+ * From the session management strict point of view, this function may be
+ * just static and reserved for the own internal use of the interface.
+ * We make it public because it is also useful for the application itself,
+ * and we are so able to reuse both the signal and its handler mechanisms.
+ */
+gboolean
+base_isession_is_willing_to_quit( const BaseISession *instance )
+{
+	static const gchar *thisfn = "base_isession_is_willing_to_quit";
+	GValue instance_params = {0};
+	GValue return_value = {0};
+
+	g_return_val_if_fail( BASE_IS_ISESSION( instance ), TRUE );
+
+	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+
+	g_value_init( &instance_params, G_TYPE_FROM_INSTANCE( instance ));
+	g_value_set_instance( &instance_params, ( gpointer ) instance );
+
+	g_value_init( &return_value, G_TYPE_BOOLEAN );
+	g_value_set_boolean( &return_value, TRUE );
+
+	g_signal_emitv( &instance_params, st_signals[ QUIT_REQUESTED ], 0, &return_value );
+
+	return( g_value_get_boolean( &return_value ));
 }
 
 /*
  * the session manager advertises us that the session is about to exit
+ *
+ * Returns: %TRUE if the application is willing to quit, %FALSE else.
+ *
+ * This function is called when the session manager detects the end of
+ * session and thus asks its clients if they are willing to quit.
  */
 static void
 client_quit_requested_cb( EggSMClient *client, BaseISession *instance )
 {
-	static const gchar *thisfn = "base_isession_client_quit_requested_cb";
-	gboolean willing_to = TRUE;
+	gboolean willing_to;
 
-	g_return_if_fail( BASE_IS_ISESSION( instance ));
-
-	g_debug( "%s: client=%p, instance=%p", thisfn, ( void * ) client, ( void * ) instance );
-
-#if 0
-		if( application->private->main_window ){
-
-				g_return_if_fail( BASE_IS_WINDOW( application->private->main_window ));
-				willing_to = base_window_is_willing_to_quit( application->private->main_window );
-		}
-#endif
+	willing_to = base_isession_is_willing_to_quit( instance );
 
 	egg_sm_client_will_quit( client, willing_to );
 }
 
 /*
- * cleanly terminate the main window when exiting the session
+ * Handler of BASE_SIGNAL_QUIT_REQUESTED message
+ *
+ * Application should handle this signal in order to trap application
+ * termination, returning %FALSE if it is not willing to quit.
+ */
+static gboolean
+on_quit_requested_class_handler( BaseISession *instance, void *user_data )
+{
+	static const gchar *thisfn = "base_isession_on_quit_requested_class_handler";
+
+	g_return_val_if_fail( BASE_IS_ISESSION( instance ), TRUE );
+
+	g_debug( "%s: instance=%p (%s), user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data );
+
+	return( TRUE );
+}
+
+/*
+ * the first handler which returns FALSE stops the emission
+ * this is used on BASE_SIGNAL_QUIT_REQUESTED signal
+ */
+static gboolean
+signal_accumulator_false_handled(
+		GSignalInvocationHint *hint, GValue *return_accu, const GValue *handler_return, gpointer dummy)
+{
+	static const gchar *thisfn = "base_isession_signal_accumulator_false_handled";
+	gboolean continue_emission;
+	gboolean willing_to_quit;
+
+	willing_to_quit = g_value_get_boolean( handler_return );
+	g_value_set_boolean( return_accu, willing_to_quit );
+	continue_emission = willing_to_quit;
+
+	g_debug( "%s: willing_to handler returns %s", thisfn, willing_to_quit ? "True":"False" );
+	return( continue_emission );
+}
+
+/*
+ * cleanly terminate the application when exiting the session
+ * -> triggers the implementation
  */
 static void
 client_quit_cb( EggSMClient *client, BaseISession *instance )
@@ -237,27 +386,18 @@ client_quit_cb( EggSMClient *client, BaseISession *instance )
 
 	g_debug( "%s: client=%p, instance=%p", thisfn, ( void * ) client, ( void * ) instance );
 
-#if 0
-		if( application->private->main_window ){
-
-				g_return_if_fail( BASE_IS_WINDOW( application->private->main_window ));
-				g_object_unref( application->private->main_window );
-				application->private->main_window = NULL;
-		}
-#endif
+	g_signal_emit_by_name( G_OBJECT( instance ), BASE_SIGNAL_QUIT, NULL );
 }
 
-static ISessionStr *
-get_isession_str( BaseISession *instance )
+static void
+on_quit_class_handler( BaseISession *instance, void *user_data )
 {
-	ISessionStr *str;
+	static const gchar *thisfn = "base_isession_on_quit_class_handler";
 
-	str = ( ISessionStr * ) g_object_get_data( G_OBJECT( instance ), BASE_PROP_ISESSION );
+	g_return_if_fail( BASE_IS_ISESSION( instance ));
 
-	if( !str ){
-		str = g_new0( ISessionStr, 1 );
-		g_object_set_data( G_OBJECT( instance ), BASE_PROP_ISESSION, str );
-	}
-
-	return( str );
+	g_debug( "%s: instance=%p (%s), user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data );
 }
