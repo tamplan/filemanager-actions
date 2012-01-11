@@ -1,5 +1,8 @@
 2012-01-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-window.c:
+	* src/nact/base-window.h (all_widgets_showed): Renamed as show_widgets().
+
 	* src/nact/base-dialog.c:
 	* src/nact/base-dialog.h:
 	BASE_DIALOG_TYPE GType macro is renamed as BASE_TYPE_DIALOG.

@@ -142,7 +142,7 @@ typedef struct {
 	void ( *initialize_base_window ) ( BaseWindow *window );
 
 	/**
-	 * all_widgets_showed:
+	 * show_widgets:
 	 * @window: this #BaseWindow instance.
 	 *
 	 * This virtual method is invoked at the end of initialization process,
@@ -154,7 +154,7 @@ typedef struct {
 	 * The BaseWindow base class implementation of this method, which is
 	 * so called last, will call gtk_widget_show_all() on the Gtk toplevel.
 	 */
-	void ( *all_widgets_showed )     ( BaseWindow *window );
+	void ( *show_widgets )           ( BaseWindow *window );
 
 	/**
 	 * run:

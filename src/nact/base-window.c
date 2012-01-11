@@ -249,7 +249,7 @@ class_init( BaseWindowClass *klass )
 
 	klass->initialize_gtk_toplevel = do_initialize_gtk_toplevel;
 	klass->initialize_base_window = do_initialize_base_window;
-	klass->all_widgets_showed = do_show_widgets;
+	klass->show_widgets = do_show_widgets;
 	klass->run = NULL;
 
 	/**
@@ -860,8 +860,8 @@ on_show_widgets_class_handler( BaseWindow *window )
 	if( !window->private->dispose_has_run ){
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
-		if( BASE_WINDOW_GET_CLASS( window )->all_widgets_showed ){
-			BASE_WINDOW_GET_CLASS( window )->all_widgets_showed( window );
+		if( BASE_WINDOW_GET_CLASS( window )->show_widgets ){
+			BASE_WINDOW_GET_CLASS( window )->show_widgets( window );
 		}
 	}
 }
