@@ -1,5 +1,8 @@
 2012-01-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c (on_base_initialize_base_window):
+	Connect to the application object.
+
 	* src/nact/base-window.c:
 	* src/nact/base-window.h (all_widgets_showed): Renamed as show_widgets().
 

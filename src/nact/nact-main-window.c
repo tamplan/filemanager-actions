@@ -853,6 +853,7 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_base_initialize_base_window";
 	guint pos;
 	GtkWidget *pane;
+	NactApplication *application;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -886,9 +887,10 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 
 		/* is willing to quit ?
 		 */
+		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
-				G_OBJECT( window ),
+				G_OBJECT( application ),
 				BASE_SIGNAL_QUIT_REQUESTED,
 				G_CALLBACK( on_base_is_willing_to_quit ));
 	}
