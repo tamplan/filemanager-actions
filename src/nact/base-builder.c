@@ -208,7 +208,7 @@ base_builder_new( void )
 {
 	BaseBuilder *builder;
 
-	builder = g_object_new( BASE_BUILDER_TYPE, NULL );
+	builder = g_object_new( BASE_TYPE_BUILDER, NULL );
 
 	return( builder );
 }

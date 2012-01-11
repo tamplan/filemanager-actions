@@ -1,5 +1,9 @@
 2012-01-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-builder.c:
+	* src/nact/base-builder.h:
+	BASE_BUILDER_TYPE is renamed as BASE_TYPE_BUILDER.
+
 	* BASE_SIGNAL_QUIT_REQUESTED, BASE_SIGNAL_QUIT: New signals, defined in
 	BaseISession interface.
 

@@ -36,8 +36,11 @@
  * @short_description: #BaseBuilder class definition.
  * @include: nact/base-builder.h
  *
- * This class is derived from GtkBuilder class. It adds to it a list
- * of already loaded files to be sure to not load them twice.
+ * This class is derived from GtkBuilder class. It adds to it two
+ * features:
+ *
+ * - do not load twice the .xml files;
+ * - destroy Gtk toplevels at dispose time.
  *
  * A common #Basebuilder object is instanciated at #BaseWindow class level.
  * Each #Basewindow -derived object may later use this common #BaseBuilder
@@ -48,12 +51,12 @@
 
 G_BEGIN_DECLS
 
-#define BASE_BUILDER_TYPE                ( base_builder_get_type())
-#define BASE_BUILDER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_BUILDER_TYPE, BaseBuilder ))
-#define BASE_BUILDER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_BUILDER_TYPE, BaseBuilderClass ))
-#define BASE_IS_BUILDER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_BUILDER_TYPE ))
-#define BASE_IS_BUILDER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_BUILDER_TYPE ))
-#define BASE_BUILDER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_BUILDER_TYPE, BaseBuilderClass ))
+#define BASE_TYPE_BUILDER                ( base_builder_get_type())
+#define BASE_BUILDER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_TYPE_BUILDER, BaseBuilder ))
+#define BASE_BUILDER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_TYPE_BUILDER, BaseBuilderClass ))
+#define BASE_IS_BUILDER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_TYPE_BUILDER ))
+#define BASE_IS_BUILDER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_TYPE_BUILDER ))
+#define BASE_BUILDER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_TYPE_BUILDER, BaseBuilderClass ))
 
 typedef struct _BaseBuilderPrivate       BaseBuilderPrivate;
 
