@@ -63,12 +63,12 @@
 
 G_BEGIN_DECLS
 
-#define BASE_WINDOW_TYPE                ( base_window_get_type())
-#define BASE_WINDOW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_WINDOW_TYPE, BaseWindow ))
-#define BASE_WINDOW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_WINDOW_TYPE, BaseWindowClass ))
-#define BASE_IS_WINDOW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_WINDOW_TYPE ))
-#define BASE_IS_WINDOW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_WINDOW_TYPE ))
-#define BASE_WINDOW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_WINDOW_TYPE, BaseWindowClass ))
+#define BASE_TYPE_WINDOW                ( base_window_get_type())
+#define BASE_WINDOW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_TYPE_WINDOW, BaseWindow ))
+#define BASE_WINDOW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_TYPE_WINDOW, BaseWindowClass ))
+#define BASE_IS_WINDOW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_TYPE_WINDOW ))
+#define BASE_IS_WINDOW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_TYPE_WINDOW ))
+#define BASE_WINDOW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_TYPE_WINDOW, BaseWindowClass ))
 
 typedef struct _BaseWindowPrivate       BaseWindowPrivate;
 
@@ -122,7 +122,7 @@ typedef struct {
 	 * before continuing. Calling base_window_init() on the instance may
 	 * do this check.
 	 */
-	void     ( *initialize_gtk_toplevel )( BaseWindow *window, GtkWindow *toplevel );
+	void ( *initialize_gtk_toplevel )( BaseWindow *window, GtkWindow *toplevel );
 
 	/**
 	 * initialize_base_window:
@@ -139,7 +139,7 @@ typedef struct {
 	 * The BaseWindow base class implementation of this method, which is
 	 * so called last, just does nothing.
 	 */
-	void     ( *initialize_base_window ) ( BaseWindow *window );
+	void ( *initialize_base_window ) ( BaseWindow *window );
 
 	/**
 	 * all_widgets_showed:
@@ -154,23 +154,22 @@ typedef struct {
 	 * The BaseWindow base class implementation of this method, which is
 	 * so called last, will call gtk_widget_show_all() on the Gtk toplevel.
 	 */
-	void     ( *all_widgets_showed )     ( BaseWindow *window );
+	void ( *all_widgets_showed )     ( BaseWindow *window );
 
 	/**
 	 * run:
 	 * @window: this #BaseWindow instance.
 	 * @dialog: the toplevel #GtkWindow.
 	 *
-	 * Invoked when it is time to run the main loop for the toplevel.
+	 * Invoked when it is time to run the main loop for the toplevel if
+	 * the derived class does not rely on the global main loop.
 	 *
-	 * The #BaseWindow class makes sure that the #GtkWindow toplevel and
-	 * the #BaseWindow window have both been initialized.
+	 * The #BaseWindow -derived instance should implement this method if
+	 * it wants do something special.
 	 *
-	 * The #BaseWindow class defaults to do nothing.
-	 *
-	 * Returns: the exit code of the program if it is the main window.
+	 * Returns: the exit code as set by the derived class.
 	 */
-	int      ( *run )                    ( BaseWindow *window, GtkWindow *toplevel );
+	int  ( *run )                    ( BaseWindow *window );
 }
 	BaseWindowClass;
 
@@ -206,6 +205,9 @@ typedef struct {
  * This way, each class is free to choose to implement the action, either
  * as a signal handler or as a virtual method if it is a class derived from
  * BaseWindow.
+ *
+ * See each signal description for detailed informations on exactly
+ * when the signal is emitted.
  */
 #define BASE_SIGNAL_INITIALIZE_GTK				"base-signal-window-initialize-gtk"
 #define BASE_SIGNAL_INITIALIZE_WINDOW			"base-signal-window-initialize-window"

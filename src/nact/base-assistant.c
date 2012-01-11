@@ -83,7 +83,7 @@ static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
 static void     on_initialize_base_window( BaseAssistant *window );
-static int      do_run( BaseWindow *window, GtkWindow *toplevel );
+static int      do_run( BaseWindow *window );
 static gboolean on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseAssistant *assistant );
 
 static void     on_prepare( GtkAssistant *assistant, GtkWidget *page, BaseAssistant *window );
@@ -129,7 +129,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_WINDOW_TYPE, "BaseAssistant", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_WINDOW, "BaseAssistant", &info, 0 );
 
 	return( type );
 }
@@ -267,6 +267,8 @@ instance_dispose( GObject *window )
 	if( !self->private->dispose_has_run ){
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window  ));
 
+		gtk_main_quit();
+
 		self->private->dispose_has_run = TRUE;
 
 		/* chain up to the parent class */
@@ -329,21 +331,19 @@ on_initialize_base_window( BaseAssistant *window )
 }
 
 static int
-do_run( BaseWindow *window, GtkWindow *toplevel )
+do_run( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_assistant_do_run";
 	int code;
 
 	g_return_val_if_fail( BASE_IS_ASSISTANT( window ), BASE_EXIT_CODE_PROGRAM );
-	g_return_val_if_fail( GTK_IS_ASSISTANT( toplevel ), BASE_EXIT_CODE_PROGRAM );
 
 	code = BASE_EXIT_CODE_INIT_WINDOW;
 
 	if( !BASE_ASSISTANT( window )->private->dispose_has_run ){
-		g_debug( "%s: window=%p (%s), toplevel=%p (%s), starting gtk_main",
+		g_debug( "%s: window=%p (%s), starting gtk_main",
 				thisfn,
-				( void * ) window, G_OBJECT_TYPE_NAME( window ),
-				( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ));
+				( void * ) window, G_OBJECT_TYPE_NAME( window ));
 		gtk_main();
 		code = BASE_EXIT_CODE_OK;
 	}

@@ -54,7 +54,7 @@ static void     instance_init( GTypeInstance *instance, gpointer klass );
 static void     instance_dispose( GObject *application );
 static void     instance_finalize( GObject *application );
 
-static int      do_run( BaseWindow *window, GtkWindow *toplevel );
+static int      do_run( BaseWindow *window );
 static gboolean terminate_dialog( BaseDialog *window, GtkDialog *toplevel, int *code );
 static void     dialog_cancel( BaseDialog *window );
 static void     dialog_ok( BaseDialog *window );
@@ -91,7 +91,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_WINDOW_TYPE, "BaseDialog", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_WINDOW, "BaseDialog", &info, 0 );
 
 	return( type );
 }
@@ -182,21 +182,21 @@ instance_finalize( GObject *window )
  * returns the response ID of the dialog box
  */
 static int
-do_run( BaseWindow *window, GtkWindow *toplevel )
+do_run( BaseWindow *window )
 {
 	static const gchar *thisfn = "base_dialog_do_run";
 	int code;
+	GtkWindow *toplevel;
 
 	g_return_val_if_fail( BASE_IS_DIALOG( window ), BASE_EXIT_CODE_PROGRAM );
-	g_return_val_if_fail( GTK_IS_DIALOG( toplevel ), BASE_EXIT_CODE_PROGRAM );
 
 	code = BASE_EXIT_CODE_INIT_WINDOW;
 
 	if( !BASE_DIALOG( window )->private->dispose_has_run ){
-		g_debug( "%s: window=%p (%s), toplevel=%p (%s), starting gtk_dialog_run",
+		g_debug( "%s: window=%p (%s), starting gtk_dialog_run",
 				thisfn,
-				( void * ) window, G_OBJECT_TYPE_NAME( window ),
-				( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ));
+				( void * ) window, G_OBJECT_TYPE_NAME( window ));
+		toplevel = base_window_get_gtk_toplevel( window );
 		do {
 			code = gtk_dialog_run( GTK_DIALOG( toplevel ));
 		}

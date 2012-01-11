@@ -296,7 +296,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_WINDOW_TYPE, "NactMainWindow", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_WINDOW, "NactMainWindow", &info, 0 );
 
 	g_type_add_interface_static( type, NACT_IACTION_TAB_TYPE, &iaction_tab_iface_info );
 
@@ -878,14 +878,19 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 
 		/* terminate the application by clicking the top right [X] button
 		 */
-		base_window_signal_connect( BASE_WINDOW( window ),
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
 				G_OBJECT( base_window_get_gtk_toplevel( BASE_WINDOW( window ))),
-				"delete-event", G_CALLBACK( on_delete_event ));
+				"delete-event",
+				G_CALLBACK( on_delete_event ));
 
 		/* is willing to quit ?
 		 */
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), BASE_SIGNAL_QUIT_REQUESTED, G_CALLBACK( on_base_is_willing_to_quit ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_QUIT_REQUESTED,
+				G_CALLBACK( on_base_is_willing_to_quit ));
 	}
 }
 

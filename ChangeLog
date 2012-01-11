@@ -1,5 +1,23 @@
 2012-01-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-dialog.c:
+	* src/nact/base-dialog.h:
+	BASE_WINDOW_TYPE is renamed as BASE_TYPE_WINDOW.
+	Review whole initialization process.
+
+	* src/nact/base-assistant.c (register_type):
+	* src/nact/nact-iaction-tab.c (register_type):
+	* src/nact/nact-ibasenames-tab.c (register_type):
+	* src/nact/nact-icapabilities-tab.c (register_type):
+	* src/nact/nact-icommand-tab.c (register_type):
+	* src/nact/nact-ienvironment-tab.c (register_type):
+	* src/nact/nact-iexecution-tab.c (register_type):
+	* src/nact/nact-ifolders-tab.c (register_type):
+	* src/nact/nact-imimetypes-tab.c (register_type):
+	* src/nact/nact-iproperties-tab.c (register_type):
+	* src/nact/nact-ischemes-tab.c (register_type):
+	* src/nact/nact-main-window.c (register_type): Updated accordingly.
+
 	* src/nact/base-builder.c:
 	* src/nact/base-builder.h:
 	BASE_BUILDER_TYPE is renamed as BASE_TYPE_BUILDER.

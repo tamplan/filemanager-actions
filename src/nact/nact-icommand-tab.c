@@ -125,7 +125,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactICommandTab", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, BASE_WINDOW_TYPE );
+	g_type_interface_add_prerequisite( type, BASE_TYPE_WINDOW );
 
 	return( type );
 }
