@@ -38,25 +38,18 @@
  *
  * This class is derived from BaseWindow class, and serves as a base
  * class for all Nautilus-Actions assistants.
- *
- * Note: as a work-around to #589745 (Apply message in GtkAssistant),
- * we may trigger "on_assistant_apply" function from the
- * "on_prepare_message" handler.
- * The provided patch has been applied on 2009-08-07, and released in
- * Gtk+ 2.17.7. So, this work-around will can be safely removed when
- * minimal Gtk+ version will be 2.18 or later.
  */
 
 #include "base-window.h"
 
 G_BEGIN_DECLS
 
-#define BASE_ASSISTANT_TYPE                ( base_assistant_get_type())
-#define BASE_ASSISTANT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_ASSISTANT_TYPE, BaseAssistant ))
-#define BASE_ASSISTANT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_ASSISTANT_TYPE, BaseAssistantClass ))
-#define BASE_IS_ASSISTANT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_ASSISTANT_TYPE ))
-#define BASE_IS_ASSISTANT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_ASSISTANT_TYPE ))
-#define BASE_ASSISTANT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_ASSISTANT_TYPE, BaseAssistantClass ))
+#define BASE_TYPE_ASSISTANT                ( base_assistant_get_type())
+#define BASE_ASSISTANT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_TYPE_ASSISTANT, BaseAssistant ))
+#define BASE_ASSISTANT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_TYPE_ASSISTANT, BaseAssistantClass ))
+#define BASE_IS_ASSISTANT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_TYPE_ASSISTANT ))
+#define BASE_IS_ASSISTANT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_TYPE_ASSISTANT ))
+#define BASE_ASSISTANT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_TYPE_ASSISTANT, BaseAssistantClass ))
 
 typedef struct _BaseAssistantPrivate       BaseAssistantPrivate;
 
@@ -97,9 +90,6 @@ typedef struct {
 	 * @assistant: the #GtkAssistant toplevel.
 	 *
 	 * Invoked when the Gtk+ runtime is preparing a page.
-	 *
-	 * The #BaseAssistant class makes sure that the apply() method has
-	 * been triggered before preparing the 'Summary' page.
 	 */
 	void ( *prepare )( BaseAssistant *window, GtkAssistant *assistant, GtkWidget *page );
 }
