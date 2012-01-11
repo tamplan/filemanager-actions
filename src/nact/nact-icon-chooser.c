@@ -159,7 +159,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_DIALOG_TYPE, "NactIconChooser", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_DIALOG, "NactIconChooser", &info, 0 );
 
 	return( type );
 }

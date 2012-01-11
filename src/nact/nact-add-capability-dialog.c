@@ -139,7 +139,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_DIALOG_TYPE, "NactAddCapabilityDialog", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_DIALOG, "NactAddCapabilityDialog", &info, 0 );
 
 	return( type );
 }

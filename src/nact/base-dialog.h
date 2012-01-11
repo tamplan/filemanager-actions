@@ -45,12 +45,12 @@
 
 G_BEGIN_DECLS
 
-#define BASE_DIALOG_TYPE                ( base_dialog_get_type())
-#define BASE_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_DIALOG_TYPE, BaseDialog ))
-#define BASE_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_DIALOG_TYPE, BaseDialogClass ))
-#define BASE_IS_DIALOG( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_DIALOG_TYPE ))
-#define BASE_IS_DIALOG_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_DIALOG_TYPE ))
-#define BASE_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_DIALOG_TYPE, BaseDialogClass ))
+#define BASE_TYPE_DIALOG                ( base_dialog_get_type())
+#define BASE_DIALOG( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, BASE_TYPE_DIALOG, BaseDialog ))
+#define BASE_DIALOG_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, BASE_TYPE_DIALOG, BaseDialogClass ))
+#define BASE_IS_DIALOG( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, BASE_TYPE_DIALOG ))
+#define BASE_IS_DIALOG_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), BASE_TYPE_DIALOG ))
+#define BASE_DIALOG_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), BASE_TYPE_DIALOG, BaseDialogClass ))
 
 typedef struct _BaseDialogPrivate       BaseDialogPrivate;
 

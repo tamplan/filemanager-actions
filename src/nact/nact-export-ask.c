@@ -124,7 +124,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( BASE_DIALOG_TYPE, "NactExportAsk", &info, 0 );
+	type = g_type_register_static( BASE_TYPE_DIALOG, "NactExportAsk", &info, 0 );
 
 	g_type_add_interface_static( type, NA_IOPTIONS_LIST_TYPE, &ioptions_list_iface_info );
 

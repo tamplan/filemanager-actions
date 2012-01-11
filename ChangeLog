@@ -1,5 +1,16 @@
 2012-01-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-dialog.c:
+	* src/nact/base-dialog.h:
+	BASE_DIALOG_TYPE GType macro is renamed as BASE_TYPE_DIALOG.
+
+	* src/nact/nact-add-capability-dialog.c (register_type):
+	* src/nact/nact-add-scheme-dialog.c (register_type):
+	* src/nact/nact-confirm-logout.c (register_type):
+	* src/nact/nact-export-ask.c (register_type):
+	* src/nact/nact-icon-chooser.c (register_type):
+	* src/nact/nact-preferences-editor.c (register_type): Updated accordingly.
+
 	* src/nact/base-assistant.c:
 	* src/nact/base-assistant.h:
 	BASE_ASSISTANT_TYPE GType macro is renamed as BASE_TYPE_ASSISTANT.

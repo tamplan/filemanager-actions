@@ -193,10 +193,13 @@ do_run( BaseWindow *window )
 	code = BASE_EXIT_CODE_INIT_WINDOW;
 
 	if( !BASE_DIALOG( window )->private->dispose_has_run ){
+
 		g_debug( "%s: window=%p (%s), starting gtk_dialog_run",
 				thisfn,
 				( void * ) window, G_OBJECT_TYPE_NAME( window ));
+
 		toplevel = base_window_get_gtk_toplevel( window );
+
 		do {
 			code = gtk_dialog_run( GTK_DIALOG( toplevel ));
 		}
