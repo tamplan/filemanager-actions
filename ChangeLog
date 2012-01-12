@@ -1,3 +1,8 @@
+2012-01-12 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-main-window.c (class_init):
+	Make property labels translatable.
+
 2012-01-11 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-window.c (on_base_initialize_base_window):

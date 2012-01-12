@@ -341,36 +341,38 @@ class_init( NactMainWindowClass *klass )
 	g_object_class_install_property( object_class, MAIN_PROP_ITEM_ID,
 			g_param_spec_pointer(
 					MAIN_PROP_ITEM,
-					"Current NAObjectItem",
-					"A pointer to the currently edited NAObjectItem, an action or a menu",
+					_( "Current NAObjectItem" ),
+					_( "A pointer to the currently edited NAObjectItem, an action or a menu" ),
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_PROFILE_ID,
 			g_param_spec_pointer(
 					MAIN_PROP_PROFILE,
-					"Current NAObjectProfile",
-					"A pointer to the currently edited NAObjectProfile",
+					_( "Current NAObjectProfile" ),
+					_( "A pointer to the currently edited NAObjectProfile" ),
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_CONTEXT_ID,
 			g_param_spec_pointer(
 					MAIN_PROP_CONTEXT,
-					"Current NAIContext",
-					"A pointer to the currently edited NAIContext",
+					_( "Current NAIContext" ),
+					_( "A pointer to the currently edited NAIContext" ),
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_EDITABLE_ID,
 			g_param_spec_boolean(
 					MAIN_PROP_EDITABLE,
-					"Editable item ?",
-					"Whether the item will be able to be updated against its I/O provider", FALSE,
+					_( "Editable item ?" ),
+					_( "Whether the item will be able to be updated against its I/O provider" ),
+					FALSE,
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, MAIN_PROP_REASON_ID,
 			g_param_spec_int(
 					MAIN_PROP_REASON,
-					"No edition reason",
-					"Why is this item not editable", 0, 255, 0,
+					_( "No edition reason" ),
+					_( "Why is this item not editable" ),
+					0, 255, 0,
 					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	klass->private = g_new0( NactMainWindowClassPrivate, 1 );
