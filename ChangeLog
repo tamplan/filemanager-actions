@@ -1,5 +1,12 @@
 2012-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-preferences-editor.c:
+	* src/nact/nact-preferences-editor.h:
+	* src/nact/nact-preferences.ui:
+	Rename NACT_PREFERENCES_EDITOR_TYPE GType macro to NACT_TYPE_PREFERENCES_EDITOR.
+	Set "Relying on runtime detection" as default in "Runtime execution" tab.
+	Display the detected desktop identifier.
+
 	* src/nact/nact-ienvironment-tab.c
 	(dispose_selection_count_combobox): Check that we have a GtkComboBox.
 	(dispose_desktop_listview): Check that we have a GtkTreeView.

@@ -44,12 +44,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_PREFERENCES_EDITOR_TYPE                ( nact_preferences_editor_get_type())
-#define NACT_PREFERENCES_EDITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_PREFERENCES_EDITOR_TYPE, NactPreferencesEditor ))
-#define NACT_PREFERENCES_EDITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_PREFERENCES_EDITOR_TYPE, NactPreferencesEditorClass ))
-#define NACT_IS_PREFERENCES_EDITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_PREFERENCES_EDITOR_TYPE ))
-#define NACT_IS_PREFERENCES_EDITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_PREFERENCES_EDITOR_TYPE ))
-#define NACT_PREFERENCES_EDITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_PREFERENCES_EDITOR_TYPE, NactPreferencesEditorClass ))
+#define NACT_TYPE_PREFERENCES_EDITOR                ( nact_preferences_editor_get_type())
+#define NACT_PREFERENCES_EDITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_PREFERENCES_EDITOR, NactPreferencesEditor ))
+#define NACT_PREFERENCES_EDITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_PREFERENCES_EDITOR, NactPreferencesEditorClass ))
+#define NACT_IS_PREFERENCES_EDITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_PREFERENCES_EDITOR ))
+#define NACT_IS_PREFERENCES_EDITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_PREFERENCES_EDITOR ))
+#define NACT_PREFERENCES_EDITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_PREFERENCES_EDITOR, NactPreferencesEditorClass ))
 
 typedef struct _NactPreferencesEditorPrivate        NactPreferencesEditorPrivate;
 
@@ -71,7 +71,7 @@ typedef struct {
 
 GType nact_preferences_editor_get_type( void );
 
-void  nact_preferences_editor_run( BaseWindow *parent );
+void  nact_preferences_editor_run     ( BaseWindow *parent );
 
 G_END_DECLS
 

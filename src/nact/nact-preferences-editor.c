@@ -115,7 +115,7 @@ enum {
 };
 
 /* i18n: the user is not willing to identify his current desktop environment,
- *       and prefers rely onthe runtime detection */
+ *       and prefers rely on the runtime detection */
 static const NADesktopEnv st_no_desktop     = { "None", N_( "Rely on runtime detection" ) };
 
 static const gchar       *st_xmlui_filename = PKGDATADIR "/nact-preferences.ui";
@@ -134,8 +134,8 @@ static NAIOption *ioptions_list_get_ask_option( const NAIOptionsList *instance, 
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_dispose( GObject *dialog );
 static void       instance_finalize( GObject *dialog );
-static void       on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *toplevel );
-static void       on_base_initialize_base_window( NactPreferencesEditor *editor );
+static void       on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel );
+static void       on_base_initialize_window( NactPreferencesEditor *editor );
 static void       on_base_all_widgets_showed( NactPreferencesEditor *editor );
 static void       order_mode_setup( NactPreferencesEditor *editor );
 static void       order_mode_on_alpha_asc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
@@ -343,13 +343,13 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			BASE_WINDOW( instance ),
 			G_OBJECT( instance ),
 			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk_toplevel ));
+			G_CALLBACK( on_base_initialize_gtk ));
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
 			G_OBJECT( instance ),
 			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_base_window ));
+			G_CALLBACK( on_base_initialize_window ));
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -424,7 +424,7 @@ nact_preferences_editor_run( BaseWindow *parent )
 
 	g_debug( "%s: parent=%p (%s)", thisfn, ( void * ) parent, G_OBJECT_TYPE_NAME( parent ));
 
-	editor = g_object_new( NACT_PREFERENCES_EDITOR_TYPE,
+	editor = g_object_new( NACT_TYPE_PREFERENCES_EDITOR,
 					BASE_PROP_PARENT,          parent,
 					BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,
 					/*
@@ -451,9 +451,9 @@ nact_preferences_editor_run( BaseWindow *parent )
 }
 
 static void
-on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *toplevel )
+on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel )
 {
-	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_gtk_toplevel";
+	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_gtk";
 	GtkWidget *container;
 	GtkTreeView *listview;
 
@@ -483,9 +483,9 @@ on_base_initialize_gtk_toplevel( NactPreferencesEditor *editor, GtkDialog *tople
 }
 
 static void
-on_base_initialize_base_window( NactPreferencesEditor *editor )
+on_base_initialize_window( NactPreferencesEditor *editor )
 {
-	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_base_window";
+	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_window";
 	GtkWidget *container;
 	GtkTreeView *listview;
 	GtkWidget *ok_button;
@@ -814,14 +814,18 @@ desktop_create_model( NactPreferencesEditor *editor )
 	gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( combo ), text_cell, "text", 0, NULL );
 	gtk_cell_renderer_set_visible( GTK_CELL_RENDERER( text_cell ), TRUE );
 
+	/* insert the "rely on runtime detection item"
+	 * this item must be inserted first (see desktop_setup())
+	 */
 	gtk_list_store_append( model, &row );
 	gtk_list_store_set( model, &row,
 			DESKTOP_ID_COLUMN, st_no_desktop.id,
 			DESKTOP_LABEL_COLUMN, gettext( st_no_desktop.label ),
 			-1 );
 
+	/* insert list of known desktops
+	 */
 	desktops = na_desktop_environment_get_known_list();
-
 	for( i = 0 ; desktops[i].id ; ++i ){
 		gtk_list_store_append( model, &row );
 		gtk_list_store_set( model, &row,
@@ -838,11 +842,11 @@ desktop_setup( NactPreferencesEditor *editor )
 	const NADesktopEnv *desktops;
 	guint i;
 	gint found;
+	GtkWidget *widget;
+	const gchar *desktop;
 
-	editor->private->desktop = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
-
-	combo = base_window_get_widget( BASE_WINDOW( editor ), "DesktopComboBox" );
 	found = -1;
+	editor->private->desktop = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
 
 	if( editor->private->desktop && strlen( editor->private->desktop )){
 		desktops = na_desktop_environment_get_known_list();
@@ -853,10 +857,26 @@ desktop_setup( NactPreferencesEditor *editor )
 		}
 	}
 
+	/* if the user has not selected a "preferred" desktop,
+	 * we suppose he relies on runtime detection
+	 */
+	if( found == -1 ){
+		found = 0;
+	}
+
+	combo = base_window_get_widget( BASE_WINDOW( editor ), "DesktopComboBox" );
 	gtk_combo_box_set_active( GTK_COMBO_BOX( combo ), found );
 
-	base_window_signal_connect( BASE_WINDOW( editor ),
-			G_OBJECT( combo ), "changed", G_CALLBACK( desktop_on_changed ));
+	base_window_signal_connect(
+			BASE_WINDOW( editor ),
+			G_OBJECT( combo ), "changed",
+			G_CALLBACK( desktop_on_changed ));
+
+	/* set the currently detected desktop
+	 */
+	widget = base_window_get_widget( BASE_WINDOW( editor ), "DesktopLabel" );
+	desktop = na_desktop_environment_detect_running_desktop();
+	gtk_label_set_text( GTK_LABEL( widget ), desktop );
 }
 
 static void

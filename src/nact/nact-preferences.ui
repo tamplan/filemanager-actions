@@ -10,7 +10,6 @@
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox4">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <object class="GtkNotebook" id="PreferencesNotebook">
@@ -280,6 +279,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                             <child>
                               <object class="GtkTable" id="table721">
                                 <property name="visible">True</property>
+                                <property name="n_rows">2</property>
                                 <property name="n_columns">2</property>
                                 <property name="column_spacing">4</property>
                                 <property name="row_spacing">4</property>
@@ -290,10 +290,6 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                     <property name="label" translatable="yes">Running _desktop environment :</property>
                                     <property name="use_underline">True</property>
                                   </object>
-                                  <packing>
-                                    <property name="x_options">GTK_FILL</property>
-                                    <property name="y_options">GTK_FILL</property>
-                                  </packing>
                                 </child>
                                 <child>
                                   <object class="GtkComboBox" id="DesktopComboBox">
@@ -302,7 +298,30 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                                   <packing>
                                     <property name="left_attach">1</property>
                                     <property name="right_attach">2</property>
-                                    <property name="y_options">GTK_FILL</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="label6">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">&lt;i&gt;Currently detected :&lt;/i&gt;</property>
+                                    <property name="use_markup">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="DesktopLabel">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
                                   </packing>
                                 </child>
                               </object>
@@ -638,7 +657,6 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                         <child>
                           <object class="GtkVBox" id="vbox13">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel" id="label8">
                                 <property name="visible">True</property>
@@ -656,7 +674,6 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                               <object class="GtkVBox" id="PreferencesImportModeVBox">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                                 <child>
                                   <placeholder/>
@@ -718,7 +735,6 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                         <child>
                           <object class="GtkVBox" id="vbox15">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkLabel" id="label5">
                                 <property name="visible">True</property>
@@ -736,7 +752,6 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
                               <object class="GtkVBox" id="PreferencesExportFormatVBox">
                                 <property name="visible">True</property>
                                 <property name="border_width">6</property>
-                                <property name="orientation">vertical</property>
                                 <property name="homogeneous">True</property>
                                 <child>
                                   <placeholder/>
@@ -1092,8 +1107,8 @@ You can add a new scheme by clicking on the '+' button.</property>
   </object>
   <object class="GtkSizeGroup" id="RuntimeExecutionLabel">
     <widgets>
-      <widget name="label721"/>
       <widget name="label711"/>
+      <widget name="label721"/>
     </widgets>
   </object>
 </interface>
