@@ -1,5 +1,9 @@
 2012-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-ienvironment-tab.c
+	(dispose_selection_count_combobox): Check that we have a GtkComboBox.
+	(dispose_desktop_listview): Check that we have a GtkTreeView.
+
 	* src/nact/nact-icommand-tab.c
 	(legend_dialog_hide): Check that legend_dialog is a GtkWindow.
 

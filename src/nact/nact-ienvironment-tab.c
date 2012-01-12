@@ -913,12 +913,14 @@ set_selection_count_selection( NactIEnvironmentTab *instance, const gchar *ope, 
 static void
 dispose_selection_count_combobox( NactIEnvironmentTab *instance )
 {
-	GtkComboBox *combo;
+	GtkWidget *combo;
 	GtkTreeModel *model;
 
-	combo = GTK_COMBO_BOX( base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountSigneCombobox" ));
-	model = gtk_combo_box_get_model( combo );
-	gtk_list_store_clear( GTK_LIST_STORE( model ));
+	combo = base_window_get_widget( BASE_WINDOW( instance ), "SelectionCountSigneCombobox" );
+	if( GTK_IS_COMBO_BOX( combo )){
+		model = gtk_combo_box_get_model( GTK_COMBO_BOX( combo ));
+		gtk_list_store_clear( GTK_LIST_STORE( model ));
+	}
 }
 
 static void
@@ -1018,15 +1020,17 @@ setup_desktop_listview( NactIEnvironmentTab *instance, GSList *show )
 static void
 dispose_desktop_listview( NactIEnvironmentTab *instance )
 {
-	GtkTreeView *listview;
+	GtkWidget *listview;
 	GtkTreeModel *model;
 	GtkTreeSelection *selection;
 
-	listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" ));
-	model = gtk_tree_view_get_model( listview );
-	selection = gtk_tree_view_get_selection( listview );
-	gtk_tree_selection_unselect_all( selection );
-	gtk_list_store_clear( GTK_LIST_STORE( model ));
+	listview = base_window_get_widget( BASE_WINDOW( instance ), "EnvironmentsDesktopTreeView" );
+	if( GTK_IS_TREE_VIEW( listview )){
+		model = gtk_tree_view_get_model( GTK_TREE_VIEW( listview ));
+		selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( listview ));
+		gtk_tree_selection_unselect_all( selection );
+		gtk_list_store_clear( GTK_LIST_STORE( model ));
+	}
 }
 
 static IEnvironData *
@@ -1047,7 +1051,7 @@ get_ienviron_data( NactIEnvironmentTab *instance )
 static void
 on_instance_finalized( gpointer user_data, NactIEnvironmentTab *instance )
 {
-	static const gchar *thisfn = "nact_iaction_tab_on_instance_finalized";
+	static const gchar *thisfn = "nact_ienvironment_tab_on_instance_finalized";
 	IEnvironData *data;
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
