@@ -60,11 +60,12 @@ na_desktop_environment_get_known_list( void )
 
 
 /*
+ * na_desktop_environment_detect_running_desktop:
+ *
  * Have asked on xdg-list how to identify the currently running desktop environment
  * (see http://standards.freedesktop.org/menu-spec/latest/apb.html)
  * For now, just reproduce the xdg-open algorythm from xdg-utils 1.0
  */
-
 const gchar *
 na_desktop_environment_detect_running_desktop( void )
 {

@@ -1,5 +1,8 @@
 2012-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-desktop-environment.c:
+	* src/core/na-desktop-environment.h: Fix comments.
+
 	General review of notebook interfaces:
 	- connect to BaseWindow signals instead of calling public functions
 	- define GObject standard GType macro names

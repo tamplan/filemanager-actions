@@ -68,7 +68,7 @@ typedef struct {
 }
 	NADesktopEnv;
 
-const NADesktopEnv *na_desktop_environment_get_known_list( void );
+const NADesktopEnv *na_desktop_environment_get_known_list        ( void );
 
 const gchar        *na_desktop_environment_detect_running_desktop( void );
 
