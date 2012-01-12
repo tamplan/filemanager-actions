@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-01-10 15:39+0000\n"
-"PO-Revision-Date: 2012-01-10 16:40+0100\n"
+"POT-Creation-Date: 2012-01-11 15:19+0000\n"
+"PO-Revision-Date: 2012-01-12 16:35+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2104,7 +2104,7 @@ msgid ""
 "the desired row."
 msgstr ""
 "Para seleccionar un esquema nuevo, pulse <guibutton>Aceptar</guibutton>, o "
-"haga una doble pulsación en la fila deseada."
+"haga una doble pulsación en la fila que quiere."
 
 #: C/nautilus-actions-config-tool.xml:559(para)
 msgid ""
@@ -2255,7 +2255,7 @@ msgid ""
 "on the desired row."
 msgstr ""
 "Para seleccionar una capacidad nueva, pulse <guibutton>Aceptar</guibutton>, "
-"o haga una doble pulsación en la fila deseada."
+"o haga una doble pulsación en la fila que quiere."
 
 #: C/nautilus-actions-config-tool.xml:679(para)
 msgid ""
@@ -2335,10 +2335,6 @@ msgid "Environment-based conditions"
 msgstr "Condiciones basadas en el entorno"
 
 #: C/nautilus-actions-config-tool.xml:729(phrase)
-#| msgid ""
-#| "Shows the tab which lets you define environment-based conditions. This "
-#| "include the selection count configuration, the desktop selection, along "
-#| "with the runtime filters."
 msgid ""
 "Shows the tab which lets you define environment-based conditions. This "
 "includes the selection count configuration, the desktop selection, along "
@@ -2512,6 +2508,8 @@ msgid ""
 "If your action should not always appear, then select the relevant desktop "
 "environment(s) in the listbox in the right side."
 msgstr ""
+"Si no quiere que su acción aparezca siempre, seleccione el entorno de "
+"escritorio relevante en la lista desplegable del lado derecho."
 
 #: C/nautilus-actions-config-tool.xml:875(para)
 msgid ""
@@ -2519,10 +2517,13 @@ msgid ""
 "appear</literal> », which means that the action will be a candidate to be "
 "displayed regardless of the current desktop environment."
 msgstr ""
+"De manera predeterminada, la condición objetivo del entorno de escritorio es "
+"«<literal>Aparecer siempre</literal>», lo que significa que la acción será "
+"candidata para mostrarse sin importar el entorno de escritorio actual."
 
 #: C/nautilus-actions-config-tool.xml:884(title)
 msgid "Executable found condition"
-msgstr ""
+msgstr "Condición de ejecutable encontrado"
 
 #: C/nautilus-actions-config-tool.xml:885(para)
 msgid ""
@@ -2531,17 +2532,23 @@ msgid ""
 "a specific file, known or at least supposed to be provided by the package, "
 "must be present on the file system, and executable."
 msgstr ""
+"Puede definir que su acción aparezca sólo si hay instalado algún paquete "
+"requerido en su sistema. Esto se verifica aquí mediante la especificación de "
+"un archivo particular, que sepa o suponga que el paquete proporciona, que "
+"debe estar presente en el sistema de archivos y ser ejecutable."
 
 #: C/nautilus-actions-config-tool.xml:896(para)
 msgid ""
 "The executable found condition is defined in the <guilabel>Execution "
 "environment</guilabel> frame."
 msgstr ""
+"La condición de ejecutable encontrado se define en el cuadro "
+"<guilabel>Entorno de ejecución</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:901(title)
 #: C/nautilus-actions-config-tool.xml:913(para)
 msgid "Execution environment frame"
-msgstr ""
+msgstr "Cuadro de entorno de ejecución"
 
 #: C/nautilus-actions-config-tool.xml:909(guilabel)
 msgid "Execution environment"
@@ -2553,6 +2560,10 @@ msgid ""
 "<guilabel>Appears if the file is executable</guilabel> entry box, or click "
 "on <guibutton>Browse</guibutton> to select a file on the file system."
 msgstr ""
+"Para definir el archivo relevante, introduzca su nombre de archivo completo "
+"en el cuadro de entrada <guilabel>Aparece si el archivo es ejecutable</"
+"guilabel>, o pulse en <guibutton>Examinar</guibutton> para seleccionar un "
+"archivo en el sistema de archivos."
 
 #: C/nautilus-actions-config-tool.xml:924(para)
 #: C/nautilus-actions-config-tool.xml:953(para)
@@ -2568,16 +2579,21 @@ msgid ""
 "will be dynamically substituted at runtime with values which will depend on "
 "currently selected item(s)."
 msgstr ""
+"Puede empotrar parámetros en el nombre de archivo buscado. Estos parámetros "
+"se reemplazarán dinámicamente en tiempo de ejecución con valores que "
+"dependerán de los elementos seleccionados actualmente."
 
 #: C/nautilus-actions-config-tool.xml:938(title)
 msgid "D-Bus registration condition"
-msgstr ""
+msgstr "Condición de registro D-Bus"
 
 #: C/nautilus-actions-config-tool.xml:939(para)
 msgid ""
 "You may define that your action will only appear if some given name is "
 "registered on the D-Bus system at runtime."
 msgstr ""
+"Puede definir que su acción aparezca sólo si algún nombre dado está "
+"registrado en el sistema D-Bus en tiempo de ejecución."
 
 #: C/nautilus-actions-config-tool.xml:943(para)
 #: C/nautilus-actions-config-tool.xml:973(para)
@@ -2587,12 +2603,17 @@ msgid ""
 "will permit you to configure your environment-based conditions, and focus on "
 "<guilabel>Execution environment</guilabel> frame."
 msgstr ""
+"Pulse en la pestaña <guilabel>Entorno</guilabel> para mostrar la página que "
+"le permite configurar sus condiciones basadas en el entorno, y enfoque el "
+"cuadro <guilabel>Entorno de ejecución</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:948(para)
 msgid ""
 "To define the relevant name, enter it in the <guilabel>Appears if the name "
 "is registered on D-Bus</guilabel> entry box."
 msgstr ""
+"Para definir un nombre relevante, introdúzcalo en el cuadro de entrada "
+"<guilabel>Aparece si el nombre está registrado en D-Bus</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:958(para)
 #: C/nautilus-actions-config-tool.xml:1030(para)
@@ -2601,29 +2622,44 @@ msgid ""
 "dynamically substituted at runtime with values which will depend on "
 "currently selected item(s)."
 msgstr ""
+"Puede empotrar parámetros en el nombre buscado. Se reemplazarán estos "
+"parámetros dinámicamente en tiempo de ejecución con valores que dependerán "
+"de los elementos seleccionados actualmente."
 
 #: C/nautilus-actions-config-tool.xml:967(title)
 msgid "Customized condition"
 msgstr "Condición personalizada"
 
+# ¿Deberíamos traducir true?
+# Me gustaría saber qué espera el programa como «verdadero». Lo voy a dejar como está en la GUI: «cierto».
+# Nicolás-
 #: C/nautilus-actions-config-tool.xml:968(para)
 msgid ""
 "You may define that your action will only appear if some given command "
 "outputs a <literal>true</literal> string on its standard output."
 msgstr ""
+"Puede definir que su acción sólo aparezca si un comando dado devuelve una "
+"cadena <literal>true</literal> en su salida estándar."
 
+# No sé si guión es la mejor traducción de «script», es la que aparece en mi libro de JavaScript :)
+# Nicolás.
 #: C/nautilus-actions-config-tool.xml:978(para)
 msgid ""
 "This lets you define your own customized condition filter, by writing a "
 "small script which outputs, or not, the <literal>true</literal> string on "
 "stdout when it is ran."
 msgstr ""
+"Esto le permite definir su propio filtro de condición personalizado, "
+"mediante la escritura de un pequeño guión que devuelve, o no, la cadena "
+"<literal>true</literal> en la salida estándar cuando se ejecuta."
 
 #: C/nautilus-actions-config-tool.xml:983(para)
 msgid ""
 "To define the command, enter it in the <guilabel>Appears if the command "
 "outputs \"true\"</guilabel> entry box."
 msgstr ""
+"Para definir el comando, introdúzcalo en el cuadro de entrada "
+"<guilabel>Aparece si el comando devuelve «true»</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:993(para)
 msgid ""
@@ -2631,16 +2667,22 @@ msgid ""
 "parameters will be dynamically substituted at runtime with values which will "
 "depend on currently selected item(s)."
 msgstr ""
+"Puede empotrar parámetros en el nombre de archivo ejecutado o en sus "
+"opciones. Estos parámetros se reemplazarán dinámicamente en tiempo de "
+"ejecución con valores que dependerán de los elementos seleccionados "
+"actualmente."
 
 #: C/nautilus-actions-config-tool.xml:1002(title)
 msgid "Running process condition"
-msgstr ""
+msgstr "Condición de procesos en ejecución"
 
 #: C/nautilus-actions-config-tool.xml:1003(para)
 msgid ""
 "You may define that your action will only appear if some given binary is "
 "currently running."
 msgstr ""
+"Puede definir que su acción aparezca únicamente si algún binario dado está "
+"en ejecución actualmente."
 
 #: C/nautilus-actions-config-tool.xml:1012(para)
 msgid ""
@@ -2648,6 +2690,10 @@ msgid ""
 "is running</guilabel> entry box, or click on <guibutton>Browse</guibutton> "
 "to select a file on the file system."
 msgstr ""
+"Para definir el binario, introduzca su nombre en el cuadro de entrada "
+"<guilabel>Aparece si el binario está en ejecución</guilabel>, o pulse en "
+"<guibutton>Examinar</guibutton> para seleccionar un archivo en el sistema de "
+"archivos."
 
 #: C/nautilus-actions-config-tool.xml:1019(para)
 msgid ""
