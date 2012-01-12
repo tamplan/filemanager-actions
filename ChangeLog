@@ -1,5 +1,33 @@
 2012-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	General review of notebook interfaces:
+	- connect to BaseWindow signals instead of calling public functions
+	- define GObject standard GType macro names
+	- host private data in only one structure attached to the instance.
+
+	* src/nact/nact-iaction-tab.c:
+	* src/nact/nact-iaction-tab.h:
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-ibasenames-tab.h:
+	* src/nact/nact-icapabilities-tab.c:
+	* src/nact/nact-icapabilities-tab.h:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-icommand-tab.h:
+	* src/nact/nact-ienvironment-tab.c:
+	* src/nact/nact-ienvironment-tab.h:
+	* src/nact/nact-iexecution-tab.c:
+	* src/nact/nact-iexecution-tab.h:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-ifolders-tab.h:
+	* src/nact/nact-imimetypes-tab.c:
+	* src/nact/nact-imimetypes-tab.h:
+	* src/nact/nact-iproperties-tab.c:
+	* src/nact/nact-iproperties-tab.h:
+	* src/nact/nact-ischemes-tab.c:
+	* src/nact/nact-ischemes-tab.h:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h: Updated accordingly.
+
 	* src/nact/nact-main-window.c (class_init):
 	Make property labels translatable.
 

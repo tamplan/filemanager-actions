@@ -44,10 +44,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IFOLDERS_TAB_TYPE                      ( nact_ifolders_tab_get_type())
-#define NACT_IFOLDERS_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IFOLDERS_TAB_TYPE, NactIFoldersTab ))
-#define NACT_IS_IFOLDERS_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IFOLDERS_TAB_TYPE ))
-#define NACT_IFOLDERS_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IFOLDERS_TAB_TYPE, NactIFoldersTabInterface ))
+#define NACT_TYPE_IFOLDERS_TAB                      ( nact_ifolders_tab_get_type())
+#define NACT_IFOLDERS_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IFOLDERS_TAB, NactIFoldersTab ))
+#define NACT_IS_IFOLDERS_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IFOLDERS_TAB ))
+#define NACT_IFOLDERS_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IFOLDERS_TAB, NactIFoldersTabInterface ))
 
 typedef struct _NactIFoldersTab                     NactIFoldersTab;
 typedef struct _NactIFoldersTabInterfacePrivate     NactIFoldersTabInterfacePrivate;
@@ -59,12 +59,9 @@ typedef struct {
 }
 	NactIFoldersTabInterface;
 
-GType    nact_ifolders_tab_get_type( void );
+GType nact_ifolders_tab_get_type( void );
 
-void     nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance );
-void     nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance );
-void     nact_ifolders_tab_all_widgets_showed   ( NactIFoldersTab *instance );
-void     nact_ifolders_tab_dispose              ( NactIFoldersTab *instance );
+void  nact_ifolders_tab_init    ( NactIFoldersTab *instance );
 
 G_END_DECLS
 

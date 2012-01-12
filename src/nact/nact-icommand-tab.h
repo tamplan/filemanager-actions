@@ -44,10 +44,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ICOMMAND_TAB_TYPE                      ( nact_icommand_tab_get_type())
-#define NACT_ICOMMAND_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICOMMAND_TAB_TYPE, NactICommandTab ))
-#define NACT_IS_ICOMMAND_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICOMMAND_TAB_TYPE ))
-#define NACT_ICOMMAND_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICOMMAND_TAB_TYPE, NactICommandTabInterface ))
+#define NACT_TYPE_ICOMMAND_TAB                      ( nact_icommand_tab_get_type())
+#define NACT_ICOMMAND_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_ICOMMAND_TAB, NactICommandTab ))
+#define NACT_IS_ICOMMAND_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_ICOMMAND_TAB ))
+#define NACT_ICOMMAND_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_ICOMMAND_TAB, NactICommandTabInterface ))
 
 typedef struct _NactICommandTab                     NactICommandTab;
 typedef struct _NactICommandTabInterfacePrivate     NactICommandTabInterfacePrivate;
@@ -59,12 +59,9 @@ typedef struct {
 }
 	NactICommandTabInterface;
 
-GType    nact_icommand_tab_get_type( void );
+GType nact_icommand_tab_get_type( void );
 
-void     nact_icommand_tab_initial_load_toplevel( NactICommandTab *instance );
-void     nact_icommand_tab_runtime_init_toplevel( NactICommandTab *instance );
-void     nact_icommand_tab_all_widgets_showed   ( NactICommandTab *instance );
-void     nact_icommand_tab_dispose              ( NactICommandTab *instance );
+void  nact_icommand_tab_init    ( NactICommandTab *instance );
 
 G_END_DECLS
 

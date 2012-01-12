@@ -53,23 +53,36 @@ struct _NactIPropertiesTabInterfacePrivate {
 /* i18n: label of the push button when there is not yet any shortcut */
 #define NO_SHORTCUT						N_( "None" )
 
-static guint    st_initializations = 0;	/* interface initialization count */
-static gboolean st_on_selection_change = FALSE;
+/* data set against the instance
+ */
+typedef struct {
+	gboolean on_selection_change;
+}
+	IPropertiesData;
 
-static GType      register_type( void );
-static void       interface_base_init( NactIPropertiesTabInterface *klass );
-static void       interface_base_finalize( NactIPropertiesTabInterface *klass );
+#define IPROPERTIES_TAB_PROP_DATA		"nact-iproperties-tab-data"
 
-static void       on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, gpointer user_data );
-static void       on_main_item_updated( NactIPropertiesTab *instance, NAObjectItem *item, guint data, gpointer user_data );
+static guint st_initializations = 0;	/* interface initialization count */
 
-static GtkButton *get_enabled_button( NactIPropertiesTab *instance );
-static void       on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
-static void       on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
-static void       on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance );
-static void       on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance );
+static GType            register_type( void );
+static void             interface_base_init( NactIPropertiesTabInterface *klass );
+static void             interface_base_finalize( NactIPropertiesTabInterface *klass );
 
-static void       display_provider_name( NactIPropertiesTab *instance, NAObjectItem *item );
+static void             on_base_initialize_window( NactIPropertiesTab *instance, gpointer user_data );
+
+static void             on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, gpointer user_data );
+static void             on_main_item_updated( NactIPropertiesTab *instance, NAObjectItem *item, guint data, gpointer user_data );
+
+static GtkButton       *get_enabled_button( NactIPropertiesTab *instance );
+static void             on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
+static void             on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance );
+static void             on_description_changed( GtkTextBuffer *buffer, NactIPropertiesTab *instance );
+static void             on_shortcut_clicked( GtkButton *button, NactIPropertiesTab *instance );
+
+static void             display_provider_name( NactIPropertiesTab *instance, NAObjectItem *item );
+
+static IPropertiesData *get_iproperties_data( NactIPropertiesTab *instance );
+static void             on_instance_finalized( gpointer user_data, NactIPropertiesTab *instance );
 
 GType
 nact_iproperties_tab_get_type( void )
@@ -140,27 +153,51 @@ interface_base_finalize( NactIPropertiesTabInterface *klass )
 	}
 }
 
+/**
+ * nact_iproperties_tab_init:
+ * @instance: this #NactIPropertiesTab instance.
+ *
+ * Initialize the interface
+ * Connect to #BaseWindow signals
+ */
 void
-nact_iproperties_tab_initial_load_toplevel( NactIPropertiesTab *instance )
+nact_iproperties_tab_init( NactIPropertiesTab *instance )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_initial_load_toplevel";
+	static const gchar *thisfn = "nact_iproperties_tab_init";
+	IPropertiesData *data;
 
 	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s)",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_window ));
+
+	data = get_iproperties_data( instance );
+	data->on_selection_change = FALSE;
+
+	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 }
 
-void
-nact_iproperties_tab_runtime_init_toplevel( NactIPropertiesTab *instance )
+static void
+on_base_initialize_window( NactIPropertiesTab *instance, void *user_data )
 {
-	static const gchar *thisfn = "nact_iproperties_tab_runtime_init_toplevel";
+	static const gchar *thisfn = "nact_iproperties_tab_on_base_initialize_window";
 	GtkButton *enabled_button;
 	GtkWidget *label_widget;
 	GtkTextBuffer *buffer;
 
 	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data );
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -202,26 +239,6 @@ nact_iproperties_tab_runtime_init_toplevel( NactIPropertiesTab *instance )
 			G_CALLBACK( on_readonly_toggled ));
 }
 
-void
-nact_iproperties_tab_all_widgets_showed( NactIPropertiesTab *instance )
-{
-	static const gchar *thisfn = "nact_iproperties_tab_all_widgets_showed";
-
-	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-}
-
-void
-nact_iproperties_tab_dispose( NactIPropertiesTab *instance )
-{
-	static const gchar *thisfn = "nact_iproperties_tab_dispose";
-
-	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-}
-
 static void
 on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, gpointer user_data )
 {
@@ -238,6 +255,7 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 	GtkToggleButton *readonly_button;
 	GtkTextBuffer *buffer;
 	gchar *label, *shortcut;
+	IPropertiesData *data;
 
 	g_return_if_fail( BASE_IS_WINDOW( instance ));
 	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( instance ));
@@ -254,10 +272,11 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 
 	g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
 
+	data = get_iproperties_data( instance );
 	enable_tab = ( count_selected == 1 );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES, enable_tab );
 
-	st_on_selection_change = TRUE;
+	data->on_selection_change = TRUE;
 
 	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( instance ), "MainNotebook" ));
 	page = gtk_notebook_get_nth_page( notebook, TAB_ACTION );
@@ -311,7 +330,7 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 
 	display_provider_name( instance, item );
 
-	st_on_selection_change = FALSE;
+	data->on_selection_change = FALSE;
 }
 
 static void
@@ -339,10 +358,13 @@ on_enabled_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 	NAObjectItem *item;
 	gboolean enabled;
 	gboolean editable;
+	IPropertiesData *data;
 
-	if( !st_on_selection_change ){
+	data = get_iproperties_data( instance );
+
+	if( !data->on_selection_change ){
 		g_debug( "%s: button=%p, instance=%p, on_selection_change=%s",
-				thisfn, ( void * ) button, ( void * ) instance, st_on_selection_change ? "True":"False" );
+				thisfn, ( void * ) button, ( void * ) instance, data->on_selection_change ? "True":"False" );
 
 		g_object_get(
 				G_OBJECT( instance ),
@@ -386,10 +408,13 @@ on_readonly_toggled( GtkToggleButton *button, NactIPropertiesTab *instance )
 {
 	static const gchar *thisfn = "nact_iproperties_tab_on_readonly_toggled";
 	gboolean active;
+	IPropertiesData *data;
 
-	if( !st_on_selection_change ){
+	data = get_iproperties_data( instance );
+
+	if( !data->on_selection_change ){
 		g_debug( "%s: button=%p, instance=%p, on_selection_change=%s",
-				thisfn, ( void * ) button, ( void * ) instance, st_on_selection_change ? "True":"False" );
+				thisfn, ( void * ) button, ( void * ) instance, data->on_selection_change ? "True":"False" );
 
 		active = gtk_toggle_button_get_active( button );
 
@@ -502,4 +527,32 @@ display_provider_name( NactIPropertiesTab *instance, NAObjectItem *item )
 	gtk_label_set_text( GTK_LABEL( label_widget ), label );
 	g_free( label );
 	gtk_widget_set_sensitive( label_widget, item != NULL );
+}
+
+static IPropertiesData *
+get_iproperties_data( NactIPropertiesTab *instance )
+{
+	IPropertiesData *data;
+
+	data = ( IPropertiesData * ) g_object_get_data( G_OBJECT( instance ), IPROPERTIES_TAB_PROP_DATA );
+
+	if( !data ){
+		data = g_new0( IPropertiesData, 1 );
+		g_object_set_data( G_OBJECT( instance ), IPROPERTIES_TAB_PROP_DATA, data );
+	}
+
+	return( data );
+}
+
+static void
+on_instance_finalized( gpointer user_data, NactIPropertiesTab *instance )
+{
+	static const gchar *thisfn = "nact_iproperties_tab_on_instance_finalized";
+	IPropertiesData *data;
+
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+
+	data = get_iproperties_data( instance );
+
+	g_free( data );
 }

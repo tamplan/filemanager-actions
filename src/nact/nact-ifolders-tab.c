@@ -53,6 +53,8 @@ struct _NactIFoldersTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+/* the identifier of this notebook page in the Match dialog
+ */
 #define ITAB_NAME						"folders"
 
 static guint st_initializations = 0;	/* interface initialization count */
@@ -61,11 +63,16 @@ static GType   register_type( void );
 static void    interface_base_init( NactIFoldersTabInterface *klass );
 static void    interface_base_finalize( NactIFoldersTabInterface *klass );
 
+static void    on_base_initialize_gtk( NactIFoldersTab *instance, GtkWindow *toplevel, gpointer user_data );
+static void    on_base_initialize_window( NactIFoldersTab *instance, gpointer user_data );
+
 static void    on_main_selection_changed( NactIFoldersTab *instance, GList *selected_items, gpointer user_data );
 
 static void    on_browse_folder_clicked( GtkButton *button, BaseWindow *window );
 static GSList *get_folders( void *context );
 static void    set_folders( void *context, GSList *filters );
+
+static void    on_instance_finalized( gpointer user_data, NactIFoldersTab *instance );
 
 GType
 nact_ifolders_tab_get_type( void )
@@ -136,15 +143,52 @@ interface_base_finalize( NactIFoldersTabInterface *klass )
 	}
 }
 
+/**
+ * nact_ifolders_tab_init:
+ * @instance: this #NactIFoldersTab instance.
+ *
+ * Initialize the interface
+ * Connect to #BaseWindow signals
+ */
 void
-nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance )
+nact_ifolders_tab_init( NactIFoldersTab *instance )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_initial_load_toplevel";
+	static const gchar *thisfn = "nact_ifolders_tab_init";
+
+	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
+
+	g_debug( "%s: instance=%p (%s)",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_GTK,
+			G_CALLBACK( on_base_initialize_gtk ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_window ));
+
+	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
+}
+
+static void
+on_base_initialize_gtk( NactIFoldersTab *instance, GtkWindow *toplevel, void *user_data )
+{
+	static const gchar *thisfn = "nact_ifolders_tab_on_base_initialize_gtk";
 	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), toplevel=%p, user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) toplevel,
+			( void * ) user_data );
 
 	list = base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" );
 	add = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" );
@@ -162,15 +206,18 @@ nact_ifolders_tab_initial_load_toplevel( NactIFoldersTab *instance )
 			_( "Folder filter" ), TRUE );
 }
 
-void
-nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance )
+static void
+on_base_initialize_window( NactIFoldersTab *instance, void *user_data )
 {
-	static const gchar *thisfn = "nact_ifolders_tab_runtime_init_toplevel";
+	static const gchar *thisfn = "nact_ifolders_tab_on_base_initialize_window";
 	GtkWidget *button;
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data );
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -186,28 +233,6 @@ nact_ifolders_tab_runtime_init_toplevel( NactIFoldersTab *instance )
 			G_OBJECT( button ),
 			"clicked",
 			G_CALLBACK( on_browse_folder_clicked ));
-}
-
-void
-nact_ifolders_tab_all_widgets_showed( NactIFoldersTab *instance )
-{
-	static const gchar *thisfn = "nact_ifolders_tab_all_widgets_showed";
-
-	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-}
-
-void
-nact_ifolders_tab_dispose( NactIFoldersTab *instance )
-{
-	static const gchar *thisfn = "nact_ifolders_tab_dispose";
-
-	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-
-	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 static void
@@ -308,4 +333,14 @@ static void
 set_folders( void *context, GSList *filters )
 {
 	na_object_set_folders( context, filters );
+}
+
+static void
+on_instance_finalized( gpointer user_data, NactIFoldersTab *instance )
+{
+	static const gchar *thisfn = "nact_ifolders_tab_on_instance_finalized";
+
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+
+	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }

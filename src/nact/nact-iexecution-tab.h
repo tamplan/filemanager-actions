@@ -44,10 +44,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IEXECUTION_TAB_TYPE                      ( nact_iexecution_tab_get_type())
-#define NACT_IEXECUTION_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IEXECUTION_TAB_TYPE, NactIExecutionTab ))
-#define NACT_IS_IEXECUTION_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IEXECUTION_TAB_TYPE ))
-#define NACT_IEXECUTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IEXECUTION_TAB_TYPE, NactIExecutionTabInterface ))
+#define NACT_TYPE_IEXECUTION_TAB                      ( nact_iexecution_tab_get_type())
+#define NACT_IEXECUTION_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IEXECUTION_TAB, NactIExecutionTab ))
+#define NACT_IS_IEXECUTION_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IEXECUTION_TAB ))
+#define NACT_IEXECUTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IEXECUTION_TAB, NactIExecutionTabInterface ))
 
 typedef struct _NactIExecutionTab                     NactIExecutionTab;
 typedef struct _NactIExecutionTabInterfacePrivate     NactIExecutionTabInterfacePrivate;
@@ -61,10 +61,7 @@ typedef struct {
 
 GType nact_iexecution_tab_get_type( void );
 
-void  nact_iexecution_tab_initial_load_toplevel( NactIExecutionTab *instance );
-void  nact_iexecution_tab_runtime_init_toplevel( NactIExecutionTab *instance );
-void  nact_iexecution_tab_all_widgets_showed   ( NactIExecutionTab *instance );
-void  nact_iexecution_tab_dispose              ( NactIExecutionTab *instance );
+void  nact_iexecution_tab_init    ( NactIExecutionTab *instance );
 
 G_END_DECLS
 

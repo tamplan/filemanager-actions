@@ -44,10 +44,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ICAPABILITIES_TAB_TYPE                      ( nact_icapabilities_tab_get_type())
-#define NACT_ICAPABILITIES_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICAPABILITIES_TAB_TYPE, NactICapabilitiesTab ))
-#define NACT_IS_ICAPABILITIES_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICAPABILITIES_TAB_TYPE ))
-#define NACT_ICAPABILITIES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ICAPABILITIES_TAB_TYPE, NactICapabilitiesTabInterface ))
+#define NACT_TYPE_ICAPABILITIES_TAB                      ( nact_icapabilities_tab_get_type())
+#define NACT_ICAPABILITIES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_ICAPABILITIES_TAB, NactICapabilitiesTab ))
+#define NACT_IS_ICAPABILITIES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_ICAPABILITIES_TAB ))
+#define NACT_ICAPABILITIES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_ICAPABILITIES_TAB, NactICapabilitiesTabInterface ))
 
 typedef struct _NactICapabilitiesTab                     NactICapabilitiesTab;
 typedef struct _NactICapabilitiesTabInterfacePrivate     NactICapabilitiesTabInterfacePrivate;
@@ -59,12 +59,9 @@ typedef struct {
 }
 	NactICapabilitiesTabInterface;
 
-GType   nact_icapabilities_tab_get_type( void );
+GType nact_icapabilities_tab_get_type( void );
 
-void    nact_icapabilities_tab_initial_load_toplevel( NactICapabilitiesTab *instance );
-void    nact_icapabilities_tab_runtime_init_toplevel( NactICapabilitiesTab *instance );
-void    nact_icapabilities_tab_all_widgets_showed   ( NactICapabilitiesTab *instance );
-void    nact_icapabilities_tab_dispose              ( NactICapabilitiesTab *instance );
+void  nact_icapabilities_tab_init    ( NactICapabilitiesTab *instance );
 
 G_END_DECLS
 

@@ -179,9 +179,9 @@ static void       instance_constructed( GObject *application );
 static void       instance_dispose( GObject *application );
 static void       instance_finalize( GObject *application );
 
-static void       on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data );
-static void       on_base_initialize_base_window( NactMainWindow *window, gpointer user_data );
-static void       on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data );
+static void       on_base_initialize_gtk( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data );
+static void       on_base_initialize_window( NactMainWindow *window, gpointer user_data );
+static void       on_base_show_widgets( NactMainWindow *window, gpointer user_data );
 
 static void       on_block_items_changed_timeout( NactMainWindow *window );
 static void       on_tree_view_modified_status_changed( NactMainWindow *window, gboolean is_modified, gpointer user_data );
@@ -298,25 +298,25 @@ register_type( void )
 
 	type = g_type_register_static( BASE_TYPE_WINDOW, "NactMainWindow", &info, 0 );
 
-	g_type_add_interface_static( type, NACT_IACTION_TAB_TYPE, &iaction_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_IACTION_TAB, &iaction_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_ICOMMAND_TAB_TYPE, &icommand_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_ICOMMAND_TAB, &icommand_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_IBASENAMES_TAB_TYPE, &ibasenames_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_IBASENAMES_TAB, &ibasenames_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_IMIMETYPES_TAB_TYPE, &imimetypes_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_IMIMETYPES_TAB, &imimetypes_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_IFOLDERS_TAB_TYPE, &ifolders_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_IFOLDERS_TAB, &ifolders_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_ISCHEMES_TAB_TYPE, &ischemes_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_ISCHEMES_TAB, &ischemes_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_ICAPABILITIES_TAB_TYPE, &icapabilities_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_ICAPABILITIES_TAB, &icapabilities_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_IENVIRONMENT_TAB_TYPE, &ienvironment_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_IENVIRONMENT_TAB, &ienvironment_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_IEXECUTION_TAB_TYPE, &iexecution_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_IEXECUTION_TAB, &iexecution_tab_iface_info );
 
-	g_type_add_interface_static( type, NACT_IPROPERTIES_TAB_TYPE, &iproperties_tab_iface_info );
+	g_type_add_interface_static( type, NACT_TYPE_IPROPERTIES_TAB, &iproperties_tab_iface_info );
 
 	return( type );
 }
@@ -559,28 +559,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	priv->pivot_timeout.handler = ( NATimeoutFunc ) on_block_items_changed_timeout;
 	priv->pivot_timeout.user_data = self;
 	priv->pivot_timeout.source_id = 0;
-
-	/* last connect to BaseWindow signals
-	 * so that convenience objects instanciated later will have this same signal
-	 * triggered after the one of NactMainWindow
-	 */
-	base_window_signal_connect(
-			BASE_WINDOW( self ),
-			G_OBJECT( self ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk_toplevel ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( self ),
-			G_OBJECT( self ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_base_window ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( self ),
-			G_OBJECT( self ),
-			BASE_SIGNAL_SHOW_WIDGETS,
-			G_CALLBACK( on_base_all_widgets_showed ));
 }
 
 static void
@@ -679,6 +657,28 @@ instance_constructed( GObject *window )
 
 		g_debug( "%s: window=%p (%s)", thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
+		/* connect to BaseWindow signals
+		 * so that convenience objects instanciated later will have this same signal
+		 * triggered after the one of NactMainWindow
+		 */
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_INITIALIZE_GTK,
+				G_CALLBACK( on_base_initialize_gtk ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_INITIALIZE_WINDOW,
+				G_CALLBACK( on_base_initialize_window ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				BASE_SIGNAL_SHOW_WIDGETS,
+				G_CALLBACK( on_base_show_widgets ));
+
 		/* monitor the items stored on the disk for modifications
 		 * outside of this application
 		 */
@@ -703,6 +703,19 @@ instance_constructed( GObject *window )
 		 */
 		priv->menubar = nact_menubar_new( BASE_WINDOW( window ));
 		priv->clipboard = nact_clipboard_new( BASE_WINDOW( window ));
+
+		/* initialize the notebook interfaces
+		 */
+		nact_iaction_tab_init( NACT_IACTION_TAB( window ));
+		nact_icommand_tab_init( NACT_ICOMMAND_TAB( window ));
+		nact_ibasenames_tab_init( NACT_IBASENAMES_TAB( window ));
+		nact_imimetypes_tab_init( NACT_IMIMETYPES_TAB( window ));
+		nact_ifolders_tab_init( NACT_IFOLDERS_TAB( window ));
+		nact_ischemes_tab_init( NACT_ISCHEMES_TAB( window ));
+		nact_icapabilities_tab_init( NACT_ICAPABILITIES_TAB( window ));
+		nact_ienvironment_tab_init( NACT_IENVIRONMENT_TAB( window ));
+		nact_iexecution_tab_init( NACT_IEXECUTION_TAB( window ));
+		nact_iproperties_tab_init( NACT_IPROPERTIES_TAB( window ));
 	}
 }
 
@@ -731,17 +744,6 @@ instance_dispose( GObject *window )
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		na_settings_set_uint( NA_IPREFS_MAIN_PANED, pos );
-
-		nact_iaction_tab_dispose( NACT_IACTION_TAB( window ));
-		nact_icommand_tab_dispose( NACT_ICOMMAND_TAB( window ));
-		nact_ibasenames_tab_dispose( NACT_IBASENAMES_TAB( window ));
-		nact_imimetypes_tab_dispose( NACT_IMIMETYPES_TAB( window ));
-		nact_ifolders_tab_dispose( NACT_IFOLDERS_TAB( window ));
-		nact_ischemes_tab_dispose( NACT_ISCHEMES_TAB( window ));
-		nact_icapabilities_tab_dispose( NACT_ICAPABILITIES_TAB( window ));
-		nact_ienvironment_tab_dispose( NACT_IENVIRONMENT_TAB( window ));
-		nact_iexecution_tab_dispose( NACT_IEXECUTION_TAB( window ));
-		nact_iproperties_tab_dispose( NACT_IPROPERTIES_TAB( window ));
 
 		/* unref items view at last as gtk_tree_model_store_clear() will
 		 * finalize all objects, thus invaliditing all our references
@@ -785,7 +787,7 @@ nact_main_window_new( const NactApplication *application )
 
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
-	window = g_object_new( NACT_MAIN_WINDOW_TYPE,
+	window = g_object_new( NACT_TYPE_MAIN_WINDOW,
 			BASE_PROP_APPLICATION,    application,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
@@ -807,9 +809,9 @@ nact_main_window_new( const NactApplication *application )
  * is the same than quitting the application
  */
 static void
-on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data )
+on_base_initialize_gtk( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_on_base_initialize_gtk_toplevel";
+	static const gchar *thisfn = "nact_main_window_on_base_initialize_gtk";
 	GtkWidget *tree_parent;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
@@ -823,36 +825,31 @@ on_base_initialize_gtk_toplevel( NactMainWindow *window, GtkWindow *toplevel, gp
 		tree_parent = base_window_get_widget( BASE_WINDOW( window ), "MainVBox" );
 		g_debug( "%s: tree_parent=%p (%s)", thisfn, ( void * ) tree_parent, G_OBJECT_TYPE_NAME( tree_parent ));
 		window->private->items_view = nact_tree_view_new(
-				BASE_WINDOW( window ), GTK_CONTAINER( tree_parent ),
-				"ActionsList", TREE_MODE_EDITION );
+				BASE_WINDOW( window ),
+				GTK_CONTAINER( tree_parent ),
+				"ActionsList",
+				TREE_MODE_EDITION );
 
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				TREE_SIGNAL_SELECTION_CHANGED,
+				G_CALLBACK( on_tree_view_selection_changed ));
 
-		base_window_signal_connect( BASE_WINDOW( window ),
-				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_STATUS_CHANGED, G_CALLBACK( on_tree_view_modified_status_changed ));
-
-		/* then initialize notebook
-		 */
-		nact_iaction_tab_initial_load_toplevel( NACT_IACTION_TAB( window ));
-		nact_icommand_tab_initial_load_toplevel( NACT_ICOMMAND_TAB( window ));
-		nact_ibasenames_tab_initial_load_toplevel( NACT_IBASENAMES_TAB( window ));
-		nact_imimetypes_tab_initial_load_toplevel( NACT_IMIMETYPES_TAB( window ));
-		nact_ifolders_tab_initial_load_toplevel( NACT_IFOLDERS_TAB( window ));
-		nact_ischemes_tab_initial_load_toplevel( NACT_ISCHEMES_TAB( window ));
-		nact_icapabilities_tab_initial_load_toplevel( NACT_ICAPABILITIES_TAB( window ));
-		nact_ienvironment_tab_initial_load_toplevel( NACT_IENVIRONMENT_TAB( window ));
-		nact_iexecution_tab_initial_load_toplevel( NACT_IEXECUTION_TAB( window ));
-		nact_iproperties_tab_initial_load_toplevel( NACT_IPROPERTIES_TAB( window ));
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				TREE_SIGNAL_MODIFIED_STATUS_CHANGED,
+				G_CALLBACK( on_tree_view_modified_status_changed ));
 
 		nact_main_statusbar_initialize_gtk_toplevel( window );
 	}
 }
 
 static void
-on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
+on_base_initialize_window( NactMainWindow *window, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_on_base_initialize_base_window";
+	static const gchar *thisfn = "nact_main_window_on_base_initialize_window";
 	guint pos;
 	GtkWidget *pane;
 	NactApplication *application;
@@ -867,17 +864,6 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 			pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 			gtk_paned_set_position( GTK_PANED( pane ), pos );
 		}
-
-		nact_iaction_tab_runtime_init_toplevel( NACT_IACTION_TAB( window ));
-		nact_icommand_tab_runtime_init_toplevel( NACT_ICOMMAND_TAB( window ));
-		nact_ibasenames_tab_runtime_init_toplevel( NACT_IBASENAMES_TAB( window ));
-		nact_imimetypes_tab_runtime_init_toplevel( NACT_IMIMETYPES_TAB( window ));
-		nact_ifolders_tab_runtime_init_toplevel( NACT_IFOLDERS_TAB( window ));
-		nact_ischemes_tab_runtime_init_toplevel( NACT_ISCHEMES_TAB( window ));
-		nact_icapabilities_tab_runtime_init_toplevel( NACT_ICAPABILITIES_TAB( window ));
-		nact_ienvironment_tab_runtime_init_toplevel( NACT_IENVIRONMENT_TAB( window ));
-		nact_iexecution_tab_runtime_init_toplevel( NACT_IEXECUTION_TAB( window ));
-		nact_iproperties_tab_runtime_init_toplevel( NACT_IPROPERTIES_TAB( window ));
 
 		/* terminate the application by clicking the top right [X] button
 		 */
@@ -899,34 +885,17 @@ on_base_initialize_base_window( NactMainWindow *window, gpointer user_data )
 }
 
 static void
-on_base_all_widgets_showed( NactMainWindow *window, gpointer user_data )
+on_base_show_widgets( NactMainWindow *window, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_main_window_on_base_all_widgets_showed";
+	static const gchar *thisfn = "nact_main_window_on_base_show_widgets";
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IACTION_TAB( window ));
-	g_return_if_fail( NACT_IS_ICOMMAND_TAB( window ));
-	g_return_if_fail( NACT_IS_IBASENAMES_TAB( window ));
-	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( window ));
-	g_return_if_fail( NACT_IS_IFOLDERS_TAB( window ));
-	g_return_if_fail( NACT_IS_ISCHEMES_TAB( window ));
-	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( window ));
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( window ));
 	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( window ));
 
 	if( !window->private->dispose_has_run ){
-		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 
-		nact_iaction_tab_all_widgets_showed( NACT_IACTION_TAB( window ));
-		nact_icommand_tab_all_widgets_showed( NACT_ICOMMAND_TAB( window ));
-		nact_ibasenames_tab_all_widgets_showed( NACT_IBASENAMES_TAB( window ));
-		nact_imimetypes_tab_all_widgets_showed( NACT_IMIMETYPES_TAB( window ));
-		nact_ifolders_tab_all_widgets_showed( NACT_IFOLDERS_TAB( window ));
-		nact_ischemes_tab_all_widgets_showed( NACT_ISCHEMES_TAB( window ));
-		nact_icapabilities_tab_all_widgets_showed( NACT_ICAPABILITIES_TAB( window ));
-		nact_ienvironment_tab_all_widgets_showed( NACT_IENVIRONMENT_TAB( window ));
-		nact_iexecution_tab_all_widgets_showed( NACT_IEXECUTION_TAB( window ));
-		nact_iproperties_tab_all_widgets_showed( NACT_IPROPERTIES_TAB( window ));
+		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
 
 		load_or_reload_items( window );
 	}

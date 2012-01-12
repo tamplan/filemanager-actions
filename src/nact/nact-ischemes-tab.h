@@ -44,10 +44,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ISCHEMES_TAB_TYPE                      ( nact_ischemes_tab_get_type())
-#define NACT_ISCHEMES_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ISCHEMES_TAB_TYPE, NactISchemesTab ))
-#define NACT_IS_ISCHEMES_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ISCHEMES_TAB_TYPE ))
-#define NACT_ISCHEMES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_ISCHEMES_TAB_TYPE, NactISchemesTabInterface ))
+#define NACT_TYPE_ISCHEMES_TAB                      ( nact_ischemes_tab_get_type())
+#define NACT_ISCHEMES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_ISCHEMES_TAB, NactISchemesTab ))
+#define NACT_IS_ISCHEMES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_ISCHEMES_TAB ))
+#define NACT_ISCHEMES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_ISCHEMES_TAB, NactISchemesTabInterface ))
 
 typedef struct _NactISchemesTab                     NactISchemesTab;
 typedef struct _NactISchemesTabInterfacePrivate     NactISchemesTabInterfacePrivate;
@@ -59,12 +59,9 @@ typedef struct {
 }
 	NactISchemesTabInterface;
 
-GType   nact_ischemes_tab_get_type( void );
+GType nact_ischemes_tab_get_type( void );
 
-void    nact_ischemes_tab_initial_load_toplevel( NactISchemesTab *instance );
-void    nact_ischemes_tab_runtime_init_toplevel( NactISchemesTab *instance );
-void    nact_ischemes_tab_all_widgets_showed   ( NactISchemesTab *instance );
-void    nact_ischemes_tab_dispose              ( NactISchemesTab *instance );
+void  nact_ischemes_tab_init    ( NactISchemesTab *instance );
 
 G_END_DECLS
 

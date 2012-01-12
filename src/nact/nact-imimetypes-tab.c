@@ -46,6 +46,8 @@ struct _NactIMimetypesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+/* the identifier of this notebook page in the Match dialog
+ */
 #define ITAB_NAME						"mimetypes"
 
 static guint st_initializations = 0;	/* interface initialization count */
@@ -54,10 +56,15 @@ static GType   register_type( void );
 static void    interface_base_init( NactIMimetypesTabInterface *klass );
 static void    interface_base_finalize( NactIMimetypesTabInterface *klass );
 
+static void    on_base_initialize_gtk( NactIMimetypesTab *instance, GtkWindow *toplevel, gpointer user_data );
+static void    on_base_initialize_window( NactIMimetypesTab *instance, gpointer user_data );
+
 static void    on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
 
 static GSList *get_mimetypes( void *context );
 static void    set_mimetypes( void *context, GSList *filters );
+
+static void    on_instance_finalized( gpointer user_data, NactIMimetypesTab *instance );
 
 GType
 nact_imimetypes_tab_get_type( void )
@@ -128,21 +135,58 @@ interface_base_finalize( NactIMimetypesTabInterface *klass )
 	}
 }
 
-/**
- * nact_imimetypes_tab_initial_load:
+/*
+ * nact_imimetypes_tab_init:
+ * @instance: this #NactIMimetypesTab instance.
+ *
+ * Initialize the interface
+ * Connect to #BaseWindow signals
+ */
+void
+nact_imimetypes_tab_init( NactIMimetypesTab *instance )
+{
+	static const gchar *thisfn = "nact_imimetypes_tab_init";
+
+	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
+
+	g_debug( "%s: instance=%p (%s)",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_GTK,
+			G_CALLBACK( on_base_initialize_gtk ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_window ));
+
+	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
+}
+
+/*
+ * on_base_initialize_gtk:
  * @window: this #NactIMimetypesTab instance.
  *
  * Initializes the tab widget at initial load.
  */
-void
-nact_imimetypes_tab_initial_load_toplevel( NactIMimetypesTab *instance )
+static void
+on_base_initialize_gtk( NactIMimetypesTab *instance, GtkWindow *toplevel, void *user_data )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_initial_load_toplevel";
+	static const gchar *thisfn = "nact_imimetypes_tab_on_base_initialize_gtk";
 	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), toplevel=%p, user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) toplevel,
+			( void * ) user_data );
 
 	list = base_window_get_widget( BASE_WINDOW( instance ), "MimetypesTreeView" );
 	add = base_window_get_widget( BASE_WINDOW( instance ), "AddMimetypeButton" );
@@ -160,21 +204,24 @@ nact_imimetypes_tab_initial_load_toplevel( NactIMimetypesTab *instance )
 			_( "Mimetype filter" ), TRUE );
 }
 
-/**
- * nact_imimetypes_tab_runtime_init:
+/*
+ * on_base_initialize_window:
  * @window: this #NactIMimetypesTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
  * Connect signals and setup runtime values.
  */
-void
-nact_imimetypes_tab_runtime_init_toplevel( NactIMimetypesTab *instance )
+static void
+on_base_initialize_window( NactIMimetypesTab *instance, void *user_data )
 {
-	static const gchar *thisfn = "nact_imimetypes_tab_runtime_init_toplevel";
+	static const gchar *thisfn = "nact_imimetypes_tab_on_base_initialize_window";
 
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data );
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -183,34 +230,6 @@ nact_imimetypes_tab_runtime_init_toplevel( NactIMimetypesTab *instance )
 			G_CALLBACK( on_main_selection_changed ));
 
 	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
-}
-
-void
-nact_imimetypes_tab_all_widgets_showed( NactIMimetypesTab *instance )
-{
-	static const gchar *thisfn = "nact_imimetypes_tab_all_widgets_showed";
-
-	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-}
-
-/**
- * nact_imimetypes_tab_dispose:
- * @window: this #NactIMimetypesTab instance.
- *
- * Called at instance_dispose time.
- */
-void
-nact_imimetypes_tab_dispose( NactIMimetypesTab *instance )
-{
-	static const gchar *thisfn = "nact_imimetypes_tab_dispose";
-
-	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-
-	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 static void
@@ -229,4 +248,14 @@ static void
 set_mimetypes( void *context, GSList *filters )
 {
 	na_object_set_mimetypes( context, filters );
+}
+
+static void
+on_instance_finalized( gpointer user_data, NactIMimetypesTab *instance )
+{
+	static const gchar *thisfn = "nact_imimetypes_tab_on_instance_finalized";
+
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+
+	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }

@@ -46,23 +46,36 @@ struct _NactIExecutionTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
-static guint    st_initializations = 0;	/* interface initialization count */
-static gboolean st_on_selection_change = FALSE;
+/* data set against the instance
+ */
+typedef struct {
+	gboolean on_selection_change;
+}
+	IExecutionData;
 
-static GType    register_type( void );
-static void     interface_base_init( NactIExecutionTabInterface *klass );
-static void     interface_base_finalize( NactIExecutionTabInterface *klass );
+#define IEXECUTION_TAB_PROP_DATA		"nact-iexecution-tab-data"
 
-static void     on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, gpointer user_data );
+static guint st_initializations = 0;	/* interface initialization count */
 
-static void     on_normal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void     on_terminal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void     on_embedded_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void     on_display_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void     execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *togglebutton, GCallback cb, const gchar *mode );
-static void     on_startup_notify_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
-static void     on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance );
-static void     on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance );
+static GType           register_type( void );
+static void            interface_base_init( NactIExecutionTabInterface *klass );
+static void            interface_base_finalize( NactIExecutionTabInterface *klass );
+
+static void            on_base_initialize_window( NactIExecutionTab *instance, gpointer user_data );
+
+static void            on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, gpointer user_data );
+
+static void            on_normal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void            on_terminal_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void            on_embedded_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void            on_display_mode_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void            execution_mode_toggle( NactIExecutionTab *instance, GtkToggleButton *togglebutton, GCallback cb, const gchar *mode );
+static void            on_startup_notify_toggled( GtkToggleButton *togglebutton, NactIExecutionTab *instance );
+static void            on_startup_class_changed( GtkEntry *entry, NactIExecutionTab *instance );
+static void            on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance );
+
+static IExecutionData *get_iexecution_data( NactIExecutionTab *instance );
+static void            on_instance_finalized( gpointer user_data, NactIExecutionTab *instance );
 
 GType
 nact_iexecution_tab_get_type( void )
@@ -134,36 +147,54 @@ interface_base_finalize( NactIExecutionTabInterface *klass )
 }
 
 /**
- * nact_iexecution_tab_initial_load:
- * @window: this #NactIExecutionTab instance.
+ * nact_iexecution_tab_init:
+ * @instance: this #NactIExecutionTab instance.
  *
- * Initializes the tab widget at initial load.
+ * Initialize the interface
+ * Connect to #BaseWindow signals
  */
 void
-nact_iexecution_tab_initial_load_toplevel( NactIExecutionTab *instance )
+nact_iexecution_tab_init( NactIExecutionTab *instance )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_initial_load_toplevel";
+	static const gchar *thisfn = "nact_iexecution_tab_init";
+	IExecutionData *data;
 
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s)",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_window ));
+
+	data = get_iexecution_data( instance );
+	data->on_selection_change = FALSE;
+
+	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 }
 
-/**
- * nact_iexecution_tab_runtime_init:
+/*
+ * on_base_initialize_window:
  * @window: this #NactIExecutionTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
  * Connect signals and setup runtime values.
  */
-void
-nact_iexecution_tab_runtime_init_toplevel( NactIExecutionTab *instance )
+static void
+on_base_initialize_window( NactIExecutionTab *instance, void *user_data )
 {
-	static const gchar *thisfn = "nact_iexecution_tab_runtime_init_toplevel";
+	static const gchar *thisfn = "nact_iexecution_tab_on_base_initialize_window";
 
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data );
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -214,32 +245,6 @@ nact_iexecution_tab_runtime_init_toplevel( NactIExecutionTab *instance )
 			G_CALLBACK( on_execute_as_changed ));
 }
 
-void
-nact_iexecution_tab_all_widgets_showed( NactIExecutionTab *instance )
-{
-	static const gchar *thisfn = "nact_iexecution_tab_all_widgets_showed";
-
-	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-}
-
-/**
- * nact_iexecution_tab_dispose:
- * @window: this #NactIExecutionTab instance.
- *
- * Called at instance_dispose time.
- */
-void
-nact_iexecution_tab_dispose( NactIExecutionTab *instance )
-{
-	static const gchar *thisfn = "nact_iexecution_tab_dispose";
-
-	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-}
-
 static void
 on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, gpointer user_data )
 {
@@ -253,6 +258,7 @@ on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, g
 	GtkWidget *notify_check, *frame;
 	gchar *class, *user;
 	GtkWidget *entry;
+	IExecutionData *data;
 
 	g_return_if_fail( NACT_IS_IEXECUTION_TAB( instance ));
 
@@ -267,10 +273,11 @@ on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, g
 			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
+	data = get_iexecution_data( instance );
 	enable_tab = ( profile != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
 
-	st_on_selection_change = TRUE;
+	data->on_selection_change = TRUE;
 
 	normal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeNormal" );
 	terminal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeTerminal" );
@@ -329,7 +336,7 @@ on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, g
 	base_gtk_utils_set_editable( G_OBJECT( entry ), editable );
 	g_free( user );
 
-	st_on_selection_change = FALSE;
+	data->on_selection_change = FALSE;
 }
 
 static void
@@ -455,4 +462,32 @@ on_execute_as_changed( GtkEntry *entry, NactIExecutionTab *instance )
 		na_object_set_execute_as( profile, text );
 		g_signal_emit_by_name( G_OBJECT( instance ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, profile, 0 );
 	}
+}
+
+static IExecutionData *
+get_iexecution_data( NactIExecutionTab *instance )
+{
+	IExecutionData *data;
+
+	data = ( IExecutionData * ) g_object_get_data( G_OBJECT( instance ), IEXECUTION_TAB_PROP_DATA );
+
+	if( !data ){
+		data = g_new0( IExecutionData, 1 );
+		g_object_set_data( G_OBJECT( instance ), IEXECUTION_TAB_PROP_DATA, data );
+	}
+
+	return( data );
+}
+
+static void
+on_instance_finalized( gpointer user_data, NactIExecutionTab *instance )
+{
+	static const gchar *thisfn = "nact_iexecution_tab_on_instance_finalized";
+	IExecutionData *data;
+
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+
+	data = get_iexecution_data( instance );
+
+	g_free( data );
 }

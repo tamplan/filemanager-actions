@@ -47,10 +47,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IACTION_TAB_TYPE                      ( nact_iaction_tab_get_type())
-#define NACT_IACTION_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IACTION_TAB_TYPE, NactIActionTab ))
-#define NACT_IS_IACTION_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IACTION_TAB_TYPE ))
-#define NACT_IACTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IACTION_TAB_TYPE, NactIActionTabInterface ))
+#define NACT_TYPE_IACTION_TAB                      ( nact_iaction_tab_get_type())
+#define NACT_IACTION_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IACTION_TAB, NactIActionTab ))
+#define NACT_IS_IACTION_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IACTION_TAB ))
+#define NACT_IACTION_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IACTION_TAB, NactIActionTabInterface ))
 
 typedef struct _NactIActionTab                     NactIActionTab;
 typedef struct _NactIActionTabInterfacePrivate     NactIActionTabInterfacePrivate;
@@ -62,14 +62,11 @@ typedef struct {
 }
 	NactIActionTabInterface;
 
-GType    nact_iaction_tab_get_type( void );
+GType    nact_iaction_tab_get_type ( void );
 
-void     nact_iaction_tab_initial_load_toplevel( NactIActionTab *instance );
-void     nact_iaction_tab_runtime_init_toplevel( NactIActionTab *instance );
-void     nact_iaction_tab_all_widgets_showed   ( NactIActionTab *instance );
-void     nact_iaction_tab_dispose              ( NactIActionTab *instance );
+void     nact_iaction_tab_init     ( NactIActionTab *instance );
 
-gboolean nact_iaction_tab_has_label            ( NactIActionTab *instance );
+gboolean nact_iaction_tab_has_label( NactIActionTab *instance );
 
 G_END_DECLS
 

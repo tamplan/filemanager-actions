@@ -48,10 +48,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IENVIRONMENT_TAB_TYPE                      ( nact_ienvironment_tab_get_type())
-#define NACT_IENVIRONMENT_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IENVIRONMENT_TAB_TYPE, NactIEnvironmentTab ))
-#define NACT_IS_IENVIRONMENT_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IENVIRONMENT_TAB_TYPE ))
-#define NACT_IENVIRONMENT_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IENVIRONMENT_TAB_TYPE, NactIEnvironmentTabInterface ))
+#define NACT_TYPE_IENVIRONMENT_TAB                      ( nact_ienvironment_tab_get_type())
+#define NACT_IENVIRONMENT_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IENVIRONMENT_TAB, NactIEnvironmentTab ))
+#define NACT_IS_IENVIRONMENT_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IENVIRONMENT_TAB ))
+#define NACT_IENVIRONMENT_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IENVIRONMENT_TAB, NactIEnvironmentTabInterface ))
 
 typedef struct _NactIEnvironmentTab                     NactIEnvironmentTab;
 typedef struct _NactIEnvironmentTabInterfacePrivate     NactIEnvironmentTabInterfacePrivate;
@@ -65,10 +65,7 @@ typedef struct {
 
 GType nact_ienvironment_tab_get_type( void );
 
-void  nact_ienvironment_tab_initial_load_toplevel( NactIEnvironmentTab *instance );
-void  nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance );
-void  nact_ienvironment_tab_all_widgets_showed   ( NactIEnvironmentTab *instance );
-void  nact_ienvironment_tab_dispose              ( NactIEnvironmentTab *instance );
+void  nact_ienvironment_tab_init    ( NactIEnvironmentTab *instance );
 
 G_END_DECLS
 

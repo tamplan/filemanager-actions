@@ -84,38 +84,52 @@ enum {
 	N_COLUMN
 };
 
-static guint    st_initializations = 0;		/* interface initialization count */
-static gboolean st_on_selection_change = FALSE;
+/* Pseudo-property, set against the instance
+ */
+typedef struct {
+	gboolean on_selection_change;
+}
+	IEnvironData;
 
-static GType    register_type( void );
-static void     interface_base_init( NactIEnvironmentTabInterface *klass );
-static void     interface_base_finalize( NactIEnvironmentTabInterface *klass );
+#define IENVIRON_TAB_PROP_DATA				"nact-ienviron-tab-data"
 
-static void     on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items, gpointer user_data );
+static guint st_initializations = 0;		/* interface initialization count */
 
-static void     on_selcount_ope_changed( GtkComboBox *combo, NactIEnvironmentTab *instance );
-static void     on_selcount_int_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
-static void     on_selection_count_changed( NactIEnvironmentTab *instance );
-static void     on_show_always_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
-static void     on_only_show_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
-static void     on_do_not_show_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
-static void     on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window );
-static void     on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
-static void     on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance );
-static void     on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
-static void     on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
-static void     on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
-static void     on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance );
+static GType         register_type( void );
+static void          interface_base_init( NactIEnvironmentTabInterface *klass );
+static void          interface_base_finalize( NactIEnvironmentTabInterface *klass );
 
-static void     init_selection_count_combobox( NactIEnvironmentTab *instance );
-static gchar   *get_selection_count_selection( NactIEnvironmentTab *instance );
-static void     set_selection_count_selection( NactIEnvironmentTab *instance, const gchar *ope, const gchar *uint );
-static void     dispose_selection_count_combobox( NactIEnvironmentTab *instance );
+static void          on_base_initialize_gtk( NactIEnvironmentTab *instance, GtkWindow *toplevel, gpointer user_data );
+static void          on_base_initialize_window( NactIEnvironmentTab *instance, gpointer user_data );
 
-static void     init_desktop_listview( NactIEnvironmentTab *instance );
-static void     raz_desktop_listview( NactIEnvironmentTab *instance );
-static void     setup_desktop_listview( NactIEnvironmentTab *instance, GSList *show );
-static void     dispose_desktop_listview( NactIEnvironmentTab *instance );
+static void          on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items, gpointer user_data );
+
+static void          on_selcount_ope_changed( GtkComboBox *combo, NactIEnvironmentTab *instance );
+static void          on_selcount_int_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
+static void          on_selection_count_changed( NactIEnvironmentTab *instance );
+static void          on_show_always_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
+static void          on_only_show_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
+static void          on_do_not_show_toggled( GtkToggleButton *togglebutton, NactIEnvironmentTab *instance );
+static void          on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *window );
+static void          on_try_exec_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
+static void          on_try_exec_browse( GtkButton *button, NactIEnvironmentTab *instance );
+static void          on_show_if_registered_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
+static void          on_show_if_true_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
+static void          on_show_if_running_changed( GtkEntry *entry, NactIEnvironmentTab *instance );
+static void          on_show_if_running_browse( GtkButton *button, NactIEnvironmentTab *instance );
+
+static void          init_selection_count_combobox( NactIEnvironmentTab *instance );
+static gchar        *get_selection_count_selection( NactIEnvironmentTab *instance );
+static void          set_selection_count_selection( NactIEnvironmentTab *instance, const gchar *ope, const gchar *uint );
+static void          dispose_selection_count_combobox( NactIEnvironmentTab *instance );
+
+static void          init_desktop_listview( NactIEnvironmentTab *instance );
+static void          raz_desktop_listview( NactIEnvironmentTab *instance );
+static void          setup_desktop_listview( NactIEnvironmentTab *instance, GSList *show );
+static void          dispose_desktop_listview( NactIEnvironmentTab *instance );
+
+static IEnvironData *get_ienviron_data( NactIEnvironmentTab *instance );
+static void          on_instance_finalized( gpointer user_data, NactIEnvironmentTab *instance );
 
 GType
 nact_ienvironment_tab_get_type( void )
@@ -187,35 +201,76 @@ interface_base_finalize( NactIEnvironmentTabInterface *klass )
 }
 
 /**
- * nact_ienvironment_tab_initial_load:
+ * nact_ienvironment_tab_init:
+ * @instance: this #NactIEnvironmentTab instance.
+ *
+ * Initialize the interface
+ * Connect to #BaseWindow signals
+ */
+void
+nact_ienvironment_tab_init( NactIEnvironmentTab *instance )
+{
+	static const gchar *thisfn = "nact_ienvironment_tab_init";
+	IEnvironData *data;
+
+	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
+
+	g_debug( "%s: instance=%p (%s)",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_GTK,
+			G_CALLBACK( on_base_initialize_gtk ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_window ));
+
+	data = get_ienviron_data( instance );
+	data->on_selection_change = FALSE;
+
+	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
+}
+
+/*
+ * on_base_initialize_gtk:
  * @window: this #NactIEnvironmentTab instance.
  *
  * Initializes the tab widget at initial load.
  */
-void
-nact_ienvironment_tab_initial_load_toplevel( NactIEnvironmentTab *instance )
+static void
+on_base_initialize_gtk( NactIEnvironmentTab *instance, GtkWindow *toplevel, void *user_data )
 {
-	static const gchar *thisfn = "nact_ienvironment_tab_initial_load_toplevel";
+	static const gchar *thisfn = "nact_ienvironment_tab_on_base_initialize_gtk";
 
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), toplevel=%p, user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) toplevel,
+			( void * ) user_data );
 
 	init_selection_count_combobox( instance );
 	init_desktop_listview( instance );
 }
 
-/**
- * nact_ienvironment_tab_runtime_init:
+/*
+ * on_base_initialize_window:
  * @window: this #NactIEnvironmentTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
  * Connect signals and setup runtime values.
  */
-void
-nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
+static void
+on_base_initialize_window( NactIEnvironmentTab *instance, void *user_data )
 {
-	static const gchar *thisfn = "nact_ienvironment_tab_runtime_init_toplevel";
+	static const gchar *thisfn = "nact_ienvironment_tab_on_base_initialize_window";
 	GtkTreeView *listview;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -226,7 +281,10 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data );
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -326,37 +384,6 @@ nact_ienvironment_tab_runtime_init_toplevel( NactIEnvironmentTab *instance )
 			G_CALLBACK( on_show_if_running_browse ));
 }
 
-void
-nact_ienvironment_tab_all_widgets_showed( NactIEnvironmentTab *instance )
-{
-	static const gchar *thisfn = "nact_ienvironment_tab_all_widgets_showed";
-
-	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-}
-
-/**
- * nact_ienvironment_tab_dispose:
- * @window: this #NactIEnvironmentTab instance.
- *
- * Called at instance_dispose time.
- */
-void
-nact_ienvironment_tab_dispose( NactIEnvironmentTab *instance )
-{
-	static const gchar *thisfn = "nact_ienvironment_tab_dispose";
-
-	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-
-	st_on_selection_change = TRUE;
-
-	dispose_selection_count_combobox( instance );
-	dispose_desktop_listview( instance );
-}
-
 static void
 on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items, gpointer user_data )
 {
@@ -373,6 +400,7 @@ on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items,
 	GtkWidget *browse_button;
 	GSList *desktops;
 	gchar *text;
+	IEnvironData *data;
 
 	g_return_if_fail( NACT_IS_IENVIRONMENT_TAB( instance ));
 
@@ -385,10 +413,11 @@ on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items,
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
+	data = get_ienviron_data( instance );
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT, enable_tab );
 
-	st_on_selection_change = TRUE;
+	data->on_selection_change = TRUE;
 
 	/* selection count
 	 */
@@ -479,7 +508,7 @@ on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items,
 	browse_button = base_window_get_widget( BASE_WINDOW( instance ), "ShowIfRunningButton" );
 	base_gtk_utils_set_editable( G_OBJECT( browse_button ), editable );
 
-	st_on_selection_change = FALSE;
+	data->on_selection_change = FALSE;
 
 	path = gtk_tree_path_new_first();
 	if( path ){
@@ -506,8 +535,11 @@ on_selection_count_changed( NactIEnvironmentTab *instance )
 {
 	NAIContext *context;
 	gchar *selcount;
+	IEnvironData *data;
 
-	if( !st_on_selection_change ){
+	data = get_ienviron_data( instance );
+
+	if( !data->on_selection_change ){
 		g_object_get( G_OBJECT( instance ), MAIN_PROP_CONTEXT, &context, NULL );
 
 		if( context ){
@@ -668,10 +700,13 @@ on_desktop_toggled( GtkCellRendererToggle *renderer, gchar *path, BaseWindow *wi
 	gboolean state;
 	gchar *desktop;
 	GtkWidget *show_button;
+	IEnvironData *data;
 
 	g_debug( "%s: renderer=%p, path=%s, window=%p", thisfn, ( void * ) renderer, path, ( void * ) window );
 
-	if( !st_on_selection_change ){
+	data = get_ienviron_data( NACT_IENVIRONMENT_TAB( window ));
+
+	if( !data->on_selection_change ){
 		g_object_get( G_OBJECT( window ),
 				MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
 				NULL );
@@ -992,4 +1027,35 @@ dispose_desktop_listview( NactIEnvironmentTab *instance )
 	selection = gtk_tree_view_get_selection( listview );
 	gtk_tree_selection_unselect_all( selection );
 	gtk_list_store_clear( GTK_LIST_STORE( model ));
+}
+
+static IEnvironData *
+get_ienviron_data( NactIEnvironmentTab *instance )
+{
+	IEnvironData *data;
+
+	data = ( IEnvironData * ) g_object_get_data( G_OBJECT( instance ), IENVIRON_TAB_PROP_DATA );
+
+	if( !data ){
+		data = g_new0( IEnvironData, 1 );
+		g_object_set_data( G_OBJECT( instance ), IENVIRON_TAB_PROP_DATA, data );
+	}
+
+	return( data );
+}
+
+static void
+on_instance_finalized( gpointer user_data, NactIEnvironmentTab *instance )
+{
+	static const gchar *thisfn = "nact_iaction_tab_on_instance_finalized";
+	IEnvironData *data;
+
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+
+	data = get_ienviron_data( instance );
+	data->on_selection_change = TRUE;
+	dispose_selection_count_combobox( instance );
+	dispose_desktop_listview( instance );
+
+	g_free( data );
 }

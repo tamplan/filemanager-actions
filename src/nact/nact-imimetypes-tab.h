@@ -44,10 +44,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IMIMETYPES_TAB_TYPE                      ( nact_imimetypes_tab_get_type())
-#define NACT_IMIMETYPES_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IMIMETYPES_TAB_TYPE, NactIMimetypesTab ))
-#define NACT_IS_IMIMETYPES_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IMIMETYPES_TAB_TYPE ))
-#define NACT_IMIMETYPES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IMIMETYPES_TAB_TYPE, NactIMimetypesTabInterface ))
+#define NACT_TYPE_IMIMETYPES_TAB                      ( nact_imimetypes_tab_get_type())
+#define NACT_IMIMETYPES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IMIMETYPES_TAB, NactIMimetypesTab ))
+#define NACT_IS_IMIMETYPES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IMIMETYPES_TAB ))
+#define NACT_IMIMETYPES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IMIMETYPES_TAB, NactIMimetypesTabInterface ))
 
 typedef struct _NactIMimetypesTab                     NactIMimetypesTab;
 typedef struct _NactIMimetypesTabInterfacePrivate     NactIMimetypesTabInterfacePrivate;
@@ -61,10 +61,7 @@ typedef struct {
 
 GType nact_imimetypes_tab_get_type( void );
 
-void  nact_imimetypes_tab_initial_load_toplevel( NactIMimetypesTab *instance );
-void  nact_imimetypes_tab_runtime_init_toplevel( NactIMimetypesTab *instance );
-void  nact_imimetypes_tab_all_widgets_showed   ( NactIMimetypesTab *instance );
-void  nact_imimetypes_tab_dispose              ( NactIMimetypesTab *instance );
+void  nact_imimetypes_tab_init    ( NactIMimetypesTab *instance );
 
 G_END_DECLS
 

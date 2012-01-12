@@ -47,20 +47,36 @@ struct _NactIBasenamesTabInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+/* the identifier of this notebook page in the Match dialog
+ */
 #define ITAB_NAME						"basenames"
 
+/* data set against the instance
+ */
+typedef struct {
+	gboolean on_selection_change;
+}
+	IBasenamesData;
+
+#define IBASENAMES_TAB_PROP_DATA		"nact-ibasenames-tab-data"
+
 static guint    st_initializations = 0;	/* interface initialization count */
-static gboolean st_on_selection_change = FALSE;
 
-static GType   register_type( void );
-static void    interface_base_init( NactIBasenamesTabInterface *klass );
-static void    interface_base_finalize( NactIBasenamesTabInterface *klass );
+static GType           register_type( void );
+static void            interface_base_init( NactIBasenamesTabInterface *klass );
+static void            interface_base_finalize( NactIBasenamesTabInterface *klass );
 
-static void    on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
+static void            on_base_initialize_gtk( NactIBasenamesTab *instance, GtkWindow *toplevel, gpointer user_data );
+static void            on_base_initialize_window( NactIBasenamesTab *instance, gpointer user_data );
 
-static void    on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window );
-static GSList *get_basenames( void *context );
-static void    set_basenames( void *context, GSList *filters );
+static void            on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
+
+static void            on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window );
+static GSList         *get_basenames( void *context );
+static void            set_basenames( void *context, GSList *filters );
+
+static IBasenamesData *get_ibasenames_data( NactIBasenamesTab *instance );
+static void            on_instance_finalized( gpointer user_data, NactIBasenamesTab *instance );
 
 GType
 nact_ibasenames_tab_get_type( void )
@@ -131,21 +147,62 @@ interface_base_finalize( NactIBasenamesTabInterface *klass )
 	}
 }
 
-/**
- * nact_ibasenames_tab_initial_load:
+/*
+ * nact_ibasenames_tab_init:
+ * @instance: this #NactIBasenamesTab instance.
+ *
+ * Initialize the interface
+ * Connect to #BaseWindow signals
+ */
+void
+nact_ibasenames_tab_init( NactIBasenamesTab *instance )
+{
+	static const gchar *thisfn = "nact_ibasenames_tab_init";
+	IBasenamesData *data;
+
+	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
+
+	g_debug( "%s: instance=%p (%s)",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_GTK,
+			G_CALLBACK( on_base_initialize_gtk ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_window ));
+
+	data = get_ibasenames_data( instance );
+	data->on_selection_change = FALSE;
+
+	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
+}
+
+/*
+ * on_base_initialize_gtk:
  * @window: this #NactIBasenamesTab instance.
  *
  * Initializes the tab widget at initial load.
  */
-void
-nact_ibasenames_tab_initial_load_toplevel( NactIBasenamesTab *instance )
+static void
+on_base_initialize_gtk( NactIBasenamesTab *instance, GtkWindow *toplevel, void *user_data )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_initial_load_toplevel";
+	static const gchar *thisfn = "nact_ibasenames_tab_on_base_initialize_gtk";
 	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), toplevel=%p, user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) toplevel,
+			( void * ) user_data );
 
 	list = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesTreeView" );
 	add = base_window_get_widget( BASE_WINDOW( instance ), "AddBasenameButton" );
@@ -163,22 +220,25 @@ nact_ibasenames_tab_initial_load_toplevel( NactIBasenamesTab *instance )
 			_( "Basename filter" ), TRUE );
 }
 
-/**
- * nact_ibasenames_tab_runtime_init:
+/*
+ * on_base_initialize_window:
  * @window: this #NactIBasenamesTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
  * Connect signals and setup runtime values.
  */
-void
-nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance )
+static void
+on_base_initialize_window( NactIBasenamesTab *instance, void *user_data )
 {
-	static const gchar *thisfn = "nact_ibasenames_tab_runtime_init_toplevel";
+	static const gchar *thisfn = "nact_ibasenames_tab_on_base_initialize_window";
 	GtkWidget *button;
 
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
 
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
+	g_debug( "%s: instance=%p (%s), user_data=%p",
+			thisfn,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
+			( void * ) user_data );
 
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -196,34 +256,6 @@ nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance )
 	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
-void
-nact_ibasenames_tab_all_widgets_showed( NactIBasenamesTab *instance )
-{
-	static const gchar *thisfn = "nact_ibasenames_tab_all_widgets_showed";
-
-	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-}
-
-/**
- * nact_ibasenames_tab_dispose:
- * @window: this #NactIBasenamesTab instance.
- *
- * Called at instance_dispose time.
- */
-void
-nact_ibasenames_tab_dispose( NactIBasenamesTab *instance )
-{
-	static const gchar *thisfn = "nact_ibasenames_tab_dispose";
-
-	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
-
-	g_debug( "%s: instance=%p (%s)", thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
-
-	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
-}
-
 static void
 on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
 {
@@ -232,6 +264,7 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer u
 	gboolean editable;
 	GtkToggleButton *matchcase_button;
 	gboolean matchcase;
+	IBasenamesData *data;
 
 	count_selected = g_list_length( selected_items );
 
@@ -239,7 +272,9 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer u
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
-	st_on_selection_change = TRUE;
+	data = get_ibasenames_data( NACT_IBASENAMES_TAB( window ));
+
+	data->on_selection_change = TRUE;
 
 	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
 
@@ -248,7 +283,7 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer u
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
 	base_gtk_utils_set_editable( G_OBJECT( matchcase_button ), editable );
 
-	st_on_selection_change = FALSE;
+	data->on_selection_change = FALSE;
 }
 
 static void
@@ -257,8 +292,11 @@ on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window )
 	NAIContext *context;
 	gboolean editable;
 	gboolean matchcase;
+	IBasenamesData *data;
 
-	if( !st_on_selection_change ){
+	data = get_ibasenames_data( NACT_IBASENAMES_TAB( window ));
+
+	if( !data->on_selection_change ){
 		g_object_get( G_OBJECT( window ),
 				MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
 				NULL );
@@ -289,4 +327,34 @@ static void
 set_basenames( void *context, GSList *filters )
 {
 	na_object_set_basenames( context, filters );
+}
+
+static IBasenamesData *
+get_ibasenames_data( NactIBasenamesTab *instance )
+{
+	IBasenamesData *data;
+
+	data = ( IBasenamesData * ) g_object_get_data( G_OBJECT( instance ), IBASENAMES_TAB_PROP_DATA );
+
+	if( !data ){
+		data = g_new0( IBasenamesData, 1 );
+		g_object_set_data( G_OBJECT( instance ), IBASENAMES_TAB_PROP_DATA, data );
+	}
+
+	return( data );
+}
+
+static void
+on_instance_finalized( gpointer user_data, NactIBasenamesTab *instance )
+{
+	static const gchar *thisfn = "nact_ibasenames_tab_on_instance_finalized";
+	IBasenamesData *data;
+
+	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
+
+	data = get_ibasenames_data( instance );
+
+	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
+
+	g_free( data );
 }

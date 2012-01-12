@@ -44,10 +44,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IBASENAMES_TAB_TYPE                      ( nact_ibasenames_tab_get_type())
-#define NACT_IBASENAMES_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IBASENAMES_TAB_TYPE, NactIBasenamesTab ))
-#define NACT_IS_IBASENAMES_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IBASENAMES_TAB_TYPE ))
-#define NACT_IBASENAMES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IBASENAMES_TAB_TYPE, NactIBasenamesTabInterface ))
+#define NACT_TYPE_IBASENAMES_TAB                      ( nact_ibasenames_tab_get_type())
+#define NACT_IBASENAMES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IBASENAMES_TAB, NactIBasenamesTab ))
+#define NACT_IS_IBASENAMES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IBASENAMES_TAB ))
+#define NACT_IBASENAMES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IBASENAMES_TAB, NactIBasenamesTabInterface ))
 
 typedef struct _NactIBasenamesTab                     NactIBasenamesTab;
 typedef struct _NactIBasenamesTabInterfacePrivate     NactIBasenamesTabInterfacePrivate;
@@ -61,10 +61,7 @@ typedef struct {
 
 GType nact_ibasenames_tab_get_type( void );
 
-void  nact_ibasenames_tab_initial_load_toplevel( NactIBasenamesTab *instance );
-void  nact_ibasenames_tab_runtime_init_toplevel( NactIBasenamesTab *instance );
-void  nact_ibasenames_tab_all_widgets_showed   ( NactIBasenamesTab *instance );
-void  nact_ibasenames_tab_dispose              ( NactIBasenamesTab *instance );
+void  nact_ibasenames_tab_init    ( NactIBasenamesTab *instance );
 
 G_END_DECLS
 

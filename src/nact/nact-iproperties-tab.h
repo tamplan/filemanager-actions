@@ -46,10 +46,10 @@
 
 G_BEGIN_DECLS
 
-#define NACT_IPROPERTIES_TAB_TYPE                      ( nact_iproperties_tab_get_type())
-#define NACT_IPROPERTIES_TAB( object )                 ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_IPROPERTIES_TAB_TYPE, NactIPropertiesTab ))
-#define NACT_IS_IPROPERTIES_TAB( object )              ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_IPROPERTIES_TAB_TYPE ))
-#define NACT_IPROPERTIES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_IPROPERTIES_TAB_TYPE, NactIPropertiesTabInterface ))
+#define NACT_TYPE_IPROPERTIES_TAB                      ( nact_iproperties_tab_get_type())
+#define NACT_IPROPERTIES_TAB( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NACT_TYPE_IPROPERTIES_TAB, NactIPropertiesTab ))
+#define NACT_IS_IPROPERTIES_TAB( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NACT_TYPE_IPROPERTIES_TAB ))
+#define NACT_IPROPERTIES_TAB_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NACT_TYPE_IPROPERTIES_TAB, NactIPropertiesTabInterface ))
 
 typedef struct _NactIPropertiesTab                     NactIPropertiesTab;
 typedef struct _NactIPropertiesTabInterfacePrivate     NactIPropertiesTabInterfacePrivate;
@@ -61,12 +61,9 @@ typedef struct {
 }
 	NactIPropertiesTabInterface;
 
-GType    nact_iproperties_tab_get_type( void );
+GType nact_iproperties_tab_get_type( void );
 
-void     nact_iproperties_tab_initial_load_toplevel( NactIPropertiesTab *instance );
-void     nact_iproperties_tab_runtime_init_toplevel( NactIPropertiesTab *instance );
-void     nact_iproperties_tab_all_widgets_showed   ( NactIPropertiesTab *instance );
-void     nact_iproperties_tab_dispose              ( NactIPropertiesTab *instance );
+void  nact_iproperties_tab_init    ( NactIPropertiesTab *instance );
 
 G_END_DECLS
 
