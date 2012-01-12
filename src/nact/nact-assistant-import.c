@@ -172,7 +172,7 @@ register_type( void )
 
 	type = g_type_register_static( BASE_TYPE_ASSISTANT, "NactAssistantImport", &info, 0 );
 
-	g_type_add_interface_static( type, NA_IOPTIONS_LIST_TYPE, &ioptions_list_iface_info );
+	g_type_add_interface_static( type, NA_TYPE_IOPTIONS_LIST, &ioptions_list_iface_info );
 
 	return( type );
 }

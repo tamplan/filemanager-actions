@@ -1,5 +1,13 @@
 2012-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-ioptions-list.h:
+	Rename NA_IOPTIONS_LIST_TYPE GType macro to NA_TYPE_IOPTIONS_LIST.
+
+	* src/core/na-importer-ask.c (register_type):
+	* src/nact/nact-assistant-export.c (register_type):
+	* src/nact/nact-assistant-import.c (register_type):
+	* src/nact/nact-preferences-editor.c (register_type): Updated accordingly.
+
 	* src/nact/nact-preferences-editor.c:
 	* src/nact/nact-preferences-editor.h:
 	* src/nact/nact-preferences.ui:

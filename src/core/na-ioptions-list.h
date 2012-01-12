@@ -120,10 +120,10 @@
 
 G_BEGIN_DECLS
 
-#define NA_IOPTIONS_LIST_TYPE               ( na_ioptions_list_get_type())
-#define NA_IOPTIONS_LIST( i )               ( G_TYPE_CHECK_INSTANCE_CAST( i, NA_IOPTIONS_LIST_TYPE, NAIOptionsList ))
-#define NA_IS_IOPTIONS_LIST( i )            ( G_TYPE_CHECK_INSTANCE_TYPE( i, NA_IOPTIONS_LIST_TYPE ))
-#define NA_IOPTIONS_LIST_GET_INTERFACE( i ) ( G_TYPE_INSTANCE_GET_INTERFACE(( i ), NA_IOPTIONS_LIST_TYPE, NAIOptionsListInterface ))
+#define NA_TYPE_IOPTIONS_LIST                      ( na_ioptions_list_get_type())
+#define NA_IOPTIONS_LIST( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( i, NA_TYPE_IOPTIONS_LIST, NAIOptionsList ))
+#define NA_IS_IOPTIONS_LIST( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( i, NA_TYPE_IOPTIONS_LIST ))
+#define NA_IOPTIONS_LIST_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IOPTIONS_LIST, NAIOptionsListInterface ))
 
 typedef struct _NAIOptionsList                      NAIOptionsList;
 typedef struct _NAIOptionsListInterfacePrivate      NAIOptionsListInterfacePrivate;
