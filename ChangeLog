@@ -1,5 +1,8 @@
 2012-01-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-icommand-tab.c
+	(legend_dialog_hide): Check that legend_dialog is a GtkWindow.
+
 	* src/core/na-desktop-environment.c:
 	* src/core/na-desktop-environment.h: Fix comments.
 

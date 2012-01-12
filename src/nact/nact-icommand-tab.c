@@ -445,12 +445,14 @@ legend_dialog_hide( NactICommandTab *instance )
 	GtkButton *legend_button;
 	gboolean is_visible;
 
+	is_visible = FALSE;
 	legend_dialog = get_legend_dialog( instance );
-	is_visible = ( gboolean ) GPOINTER_TO_INT(
-			g_object_get_data( G_OBJECT( legend_dialog ), ICOMMAND_TAB_LEGEND_VISIBLE ));
+	if( GTK_IS_WINDOW( legend_dialog )){
+		is_visible = ( gboolean ) GPOINTER_TO_INT(
+				g_object_get_data( G_OBJECT( legend_dialog ), ICOMMAND_TAB_LEGEND_VISIBLE ));
+	}
 
 	if( is_visible ){
-		g_return_if_fail( GTK_IS_WINDOW( legend_dialog ));
 		base_gtk_utils_save_window_position( BASE_WINDOW( instance ), NA_IPREFS_COMMAND_LEGEND_WSP );
 		gtk_widget_hide( GTK_WIDGET( legend_dialog ));
 
@@ -674,6 +676,8 @@ get_icommand_data( NactICommandTab *instance )
 
 	if( !data ){
 		data = g_new0( ICommandData, 1 );
+		/* g_object_set_data_full() would be called after the weak ref function
+		 */
 		g_object_set_data( G_OBJECT( instance ), ICOMMAND_TAB_PROP_DATA, data );
 	}
 
