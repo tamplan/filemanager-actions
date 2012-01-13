@@ -40,19 +40,24 @@ struct _NAIOptionInterfacePrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
 };
 
+/* data set against the instance
+ */
+typedef struct {
+	gboolean initialized;
+}
+	IOptionData;
+
+#define IOPTION_PROP_DATA				"na-prop-ioption-data"
+
 static guint st_initializations = 0;	/* interface initialization count */
 
-#define IOPTION_DATA_INITIALIZED		"ioption-data-initialized"
+static GType        register_type( void );
+static void         interface_base_init( NAIOptionInterface *iface );
+static void         interface_base_finalize( NAIOptionInterface *iface );
 
-static GType    register_type( void );
-static void     interface_base_init( NAIOptionInterface *iface );
-static void     interface_base_finalize( NAIOptionInterface *iface );
-
-static guint    ioption_get_version( const NAIOption *instance );
-static void     check_for_initialized_instance( NAIOption *instance );
-static void     on_instance_finalized( gpointer user_data, GObject *instance );
-static gboolean option_get_initialized( NAIOption *instance );
-static void     option_set_initialized( NAIOption *instance, gboolean initialized );
+static guint        ioption_get_version( const NAIOption *instance );
+static IOptionData *get_ioption_data( NAIOption *instance );
+static void         on_instance_finalized( gpointer user_data, NAIOption *instance );
 
 /**
  * na_ioption_get_type:
@@ -141,56 +146,34 @@ ioption_get_version( const NAIOption *instance )
 	return( 1 );
 }
 
-/*
- * na_ioption_instance_init:
- * @instance: the object which implements this #NAIOptionsList interface.
- *
- * Initialize all #NAIOptionsList-relative properties of the implementation
- * object at instanciation time.
- */
-static void
-check_for_initialized_instance( NAIOption *instance )
+static IOptionData *
+get_ioption_data( NAIOption *instance )
 {
-	static const gchar *thisfn = "na_ioption_check_for_initialized_instance";
+	IOptionData *data;
 
-	if( !option_get_initialized( instance )){
+	data = ( IOptionData * ) g_object_get_data( G_OBJECT( instance ), IOPTION_PROP_DATA );
 
-		g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
+	if( !data ){
+		data = g_new0( IOptionData, 1 );
+		g_object_set_data( G_OBJECT( instance ), IOPTION_PROP_DATA, data );
 
 		g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
-
-		option_set_initialized( instance, TRUE );
 	}
+
+	return( data );
 }
 
 static void
-on_instance_finalized( gpointer user_data, GObject *instance )
+on_instance_finalized( gpointer user_data, NAIOption *instance )
 {
 	static const gchar *thisfn = "na_ioption_on_instance_finalized";
+	IOptionData *data;
 
 	g_debug( "%s: user_data=%p, instance=%p", thisfn, ( void * ) user_data, ( void * ) instance );
-}
 
-/* whether the instance has been initialized
- *
- * initializing the instance let us register a 'weak notify' signal on the instance
- * we will so be able to free any allocated resources when the instance will be
- * finalized
- */
-static gboolean
-option_get_initialized( NAIOption *instance )
-{
-	gboolean initialized;
+	data = get_ioption_data( instance );
 
-	initialized = ( gboolean ) GPOINTER_TO_UINT( g_object_get_data( G_OBJECT( instance ), IOPTION_DATA_INITIALIZED ));
-
-	return( initialized );
-}
-
-static void
-option_set_initialized( NAIOption *instance, gboolean initialized )
-{
-	g_object_set_data( G_OBJECT( instance ), IOPTION_DATA_INITIALIZED, GUINT_TO_POINTER( initialized ));
+	g_free( data );
 }
 
 /*
@@ -207,7 +190,7 @@ na_ioption_get_id( const NAIOption *option )
 
 	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
 
-	check_for_initialized_instance( NA_IOPTION( option ));
+	get_ioption_data( NA_IOPTION( option ));
 	id = NULL;
 
 	if( NA_IOPTION_GET_INTERFACE( option )->get_id ){
@@ -231,7 +214,7 @@ na_ioption_get_label( const NAIOption *option )
 
 	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
 
-	check_for_initialized_instance( NA_IOPTION( option ));
+	get_ioption_data( NA_IOPTION( option ));
 	label = NULL;
 
 	if( NA_IOPTION_GET_INTERFACE( option )->get_label ){
@@ -255,7 +238,7 @@ na_ioption_get_description( const NAIOption *option )
 
 	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
 
-	check_for_initialized_instance( NA_IOPTION( option ));
+	get_ioption_data( NA_IOPTION( option ));
 	description = NULL;
 
 	if( NA_IOPTION_GET_INTERFACE( option )->get_description ){
@@ -279,7 +262,7 @@ na_ioption_get_pixbuf( const NAIOption *option )
 
 	g_return_val_if_fail( NA_IS_IOPTION( option ), NULL );
 
-	check_for_initialized_instance( NA_IOPTION( option ));
+	get_ioption_data( NA_IOPTION( option ));
 	pixbuf = NULL;
 
 	if( NA_IOPTION_GET_INTERFACE( option )->get_pixbuf ){

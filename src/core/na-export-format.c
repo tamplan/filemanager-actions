@@ -106,7 +106,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NAExportFormat", &info, 0 );
 
-	g_type_add_interface_static( type, NA_IOPTION_TYPE, &ioption_iface_info );
+	g_type_add_interface_static( type, NA_TYPE_IOPTION, &ioption_iface_info );
 
 	return( type );
 }
