@@ -45,12 +45,12 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_ITEM_TYPE                ( na_object_item_get_type())
-#define NA_OBJECT_ITEM( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ITEM_TYPE, NAObjectItem ))
-#define NA_OBJECT_ITEM_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ITEM_TYPE, NAObjectItemClass ))
-#define NA_IS_OBJECT_ITEM( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ITEM_TYPE ))
-#define NA_IS_OBJECT_ITEM_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ITEM_TYPE ))
-#define NA_OBJECT_ITEM_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ITEM_TYPE, NAObjectItemClass ))
+#define NA_TYPE_OBJECT_ITEM                ( na_object_item_get_type())
+#define NA_OBJECT_ITEM( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_OBJECT_ITEM, NAObjectItem ))
+#define NA_OBJECT_ITEM_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_OBJECT_ITEM, NAObjectItemClass ))
+#define NA_IS_OBJECT_ITEM( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_OBJECT_ITEM ))
+#define NA_IS_OBJECT_ITEM_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_OBJECT_ITEM ))
+#define NA_OBJECT_ITEM_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_OBJECT_ITEM, NAObjectItemClass ))
 
 typedef struct _NAObjectItemPrivate        NAObjectItemPrivate;
 

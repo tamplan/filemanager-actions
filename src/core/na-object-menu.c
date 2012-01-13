@@ -126,11 +126,11 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_OBJECT_ITEM_TYPE, "NAObjectMenu", &info, 0 );
+	type = g_type_register_static( NA_TYPE_OBJECT_ITEM, "NAObjectMenu", &info, 0 );
 
-	g_type_add_interface_static( type, NA_ICONTEXT_TYPE, &icontext_iface_info );
+	g_type_add_interface_static( type, NA_TYPE_ICONTEXT, &icontext_iface_info );
 
-	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
+	g_type_add_interface_static( type, NA_TYPE_IFACTORY_OBJECT, &ifactory_object_iface_info );
 
 	return( type );
 }
@@ -354,7 +354,7 @@ na_object_menu_new( void )
 {
 	NAObjectMenu *menu;
 
-	menu = g_object_new( NA_OBJECT_MENU_TYPE, NULL );
+	menu = g_object_new( NA_TYPE_OBJECT_MENU, NULL );
 
 	return( menu );
 }

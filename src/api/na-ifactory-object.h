@@ -83,10 +83,10 @@
 
 G_BEGIN_DECLS
 
-#define NA_IFACTORY_OBJECT_TYPE                      ( na_ifactory_object_get_type())
-#define NA_IFACTORY_OBJECT( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IFACTORY_OBJECT_TYPE, NAIFactoryObject ))
-#define NA_IS_IFACTORY_OBJECT( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IFACTORY_OBJECT_TYPE ))
-#define NA_IFACTORY_OBJECT_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IFACTORY_OBJECT_TYPE, NAIFactoryObjectInterface ))
+#define NA_TYPE_IFACTORY_OBJECT                      ( na_ifactory_object_get_type())
+#define NA_IFACTORY_OBJECT( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IFACTORY_OBJECT, NAIFactoryObject ))
+#define NA_IS_IFACTORY_OBJECT( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IFACTORY_OBJECT ))
+#define NA_IFACTORY_OBJECT_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IFACTORY_OBJECT, NAIFactoryObjectInterface ))
 
 typedef struct _NAIFactoryObject                     NAIFactoryObject;
 typedef struct _NAIFactoryObjectInterfacePrivate     NAIFactoryObjectInterfacePrivate;

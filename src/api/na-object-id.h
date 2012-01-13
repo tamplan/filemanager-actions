@@ -46,12 +46,12 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_ID_TYPE                ( na_object_id_get_type())
-#define NA_OBJECT_ID( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ID_TYPE, NAObjectId ))
-#define NA_OBJECT_ID_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ID_TYPE, NAObjectIdClass ))
-#define NA_IS_OBJECT_ID( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ID_TYPE ))
-#define NA_IS_OBJECT_ID_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ID_TYPE ))
-#define NA_OBJECT_ID_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ID_TYPE, NAObjectIdClass ))
+#define NA_TYPE_OBJECT_ID                ( na_object_id_get_type())
+#define NA_OBJECT_ID( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_OBJECT_ID, NAObjectId ))
+#define NA_OBJECT_ID_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_OBJECT_ID, NAObjectIdClass ))
+#define NA_IS_OBJECT_ID( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_OBJECT_ID ))
+#define NA_IS_OBJECT_ID_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_OBJECT_ID ))
+#define NA_OBJECT_ID_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_OBJECT_ID, NAObjectIdClass ))
 
 typedef struct _NAObjectIdPrivate        NAObjectIdPrivate;
 

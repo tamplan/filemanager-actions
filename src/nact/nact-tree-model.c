@@ -315,7 +315,7 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 	g_debug( "%s: window=%p, treeview=%p, mode=%u", thisfn, ( void * ) window, ( void * ) treeview, mode );
 
 	ts_model = gtk_tree_store_new(
-			TREE_N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, NA_OBJECT_TYPE );
+			TREE_N_COLUMN, GDK_TYPE_PIXBUF, G_TYPE_STRING, NA_TYPE_OBJECT );
 
 	/* create the filter model
 	 */

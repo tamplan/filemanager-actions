@@ -756,7 +756,7 @@ io_providers_list_add_from_plugins( const NAPivot *pivot, GList *objects_list )
 	NAIIOProvider *provider_module;
 
 	merged = objects_list;
-	modules_list = na_pivot_get_providers( pivot, NA_IIO_PROVIDER_TYPE );
+	modules_list = na_pivot_get_providers( pivot, NA_TYPE_IIO_PROVIDER );
 
 	for( im = modules_list ; im ; im = im->next ){
 

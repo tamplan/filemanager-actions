@@ -58,12 +58,12 @@
 
 G_BEGIN_DECLS
 
-#define NA_OBJECT_ACTION_TYPE                ( na_object_action_get_type())
-#define NA_OBJECT_ACTION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_OBJECT_ACTION_TYPE, NAObjectAction ))
-#define NA_OBJECT_ACTION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_OBJECT_ACTION_TYPE, NAObjectActionClass ))
-#define NA_IS_OBJECT_ACTION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_OBJECT_ACTION_TYPE ))
-#define NA_IS_OBJECT_ACTION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_OBJECT_ACTION_TYPE ))
-#define NA_OBJECT_ACTION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_OBJECT_ACTION_TYPE, NAObjectActionClass ))
+#define NA_TYPE_OBJECT_ACTION                ( na_object_action_get_type())
+#define NA_OBJECT_ACTION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_OBJECT_ACTION, NAObjectAction ))
+#define NA_OBJECT_ACTION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_OBJECT_ACTION, NAObjectActionClass ))
+#define NA_IS_OBJECT_ACTION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_OBJECT_ACTION ))
+#define NA_IS_OBJECT_ACTION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_OBJECT_ACTION ))
+#define NA_OBJECT_ACTION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_OBJECT_ACTION, NAObjectActionClass ))
 
 typedef struct _NAObjectActionPrivate        NAObjectActionPrivate;
 

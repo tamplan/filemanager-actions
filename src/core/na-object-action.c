@@ -139,11 +139,11 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_OBJECT_ITEM_TYPE, "NAObjectAction", &info, 0 );
+	type = g_type_register_static( NA_TYPE_OBJECT_ITEM, "NAObjectAction", &info, 0 );
 
-	g_type_add_interface_static( type, NA_ICONTEXT_TYPE, &icontext_iface_info );
+	g_type_add_interface_static( type, NA_TYPE_ICONTEXT, &icontext_iface_info );
 
-	g_type_add_interface_static( type, NA_IFACTORY_OBJECT_TYPE, &ifactory_object_iface_info );
+	g_type_add_interface_static( type, NA_TYPE_IFACTORY_OBJECT, &ifactory_object_iface_info );
 
 	return( type );
 }
@@ -609,7 +609,7 @@ na_object_action_new( void )
 {
 	NAObjectAction *action;
 
-	action = g_object_new( NA_OBJECT_ACTION_TYPE, NULL );
+	action = g_object_new( NA_TYPE_OBJECT_ACTION, NULL );
 
 	return( action );
 }

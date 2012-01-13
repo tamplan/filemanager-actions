@@ -146,7 +146,7 @@ na_importer_import_from_uris( const NAPivot *pivot, NAImporterParms *parms )
 
 	/* first phase: just try to import the uris into memory
 	 */
-	modules = na_pivot_get_providers( pivot, NA_IIMPORTER_TYPE );
+	modules = na_pivot_get_providers( pivot, NA_TYPE_IIMPORTER );
 
 	for( uri = parms->uris ; uri ; uri = uri->next ){
 		import_result = import_from_uri( pivot, modules, ( const gchar * ) uri->data );

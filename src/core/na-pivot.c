@@ -427,7 +427,7 @@ na_pivot_dump( const NAPivot *pivot )
  * na_pivot_get_providers:
  * @pivot: this #NAPivot instance.
  * @type: the type of searched interface.
- * For now, we only have NA_IIO_PROVIDER_TYPE interfaces.
+ * For now, we only have NA_TYPE_IIO_PROVIDER interfaces.
  *
  * Returns: a newly allocated list of providers of the required interface.
  *

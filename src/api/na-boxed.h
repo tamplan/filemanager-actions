@@ -47,12 +47,12 @@
 
 G_BEGIN_DECLS
 
-#define NA_BOXED_TYPE                ( na_boxed_get_type())
-#define NA_BOXED( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_BOXED_TYPE, NABoxed ))
-#define NA_BOXED_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_BOXED_TYPE, NABoxedClass ))
-#define NA_IS_BOXED( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_BOXED_TYPE ))
-#define NA_IS_BOXED_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_BOXED_TYPE ))
-#define NA_BOXED_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_BOXED_TYPE, NABoxedClass ))
+#define NA_TYPE_BOXED                ( na_boxed_get_type())
+#define NA_BOXED( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_BOXED, NABoxed ))
+#define NA_BOXED_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_BOXED, NABoxedClass ))
+#define NA_IS_BOXED( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_BOXED ))
+#define NA_IS_BOXED_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_BOXED ))
+#define NA_BOXED_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_BOXED, NABoxedClass ))
 
 typedef struct _NABoxedPrivate       NABoxedPrivate;
 

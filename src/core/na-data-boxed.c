@@ -175,7 +175,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_BOXED_TYPE, "NADataBoxed", &info, 0 );
+	type = g_type_register_static( NA_TYPE_BOXED, "NADataBoxed", &info, 0 );
 
 	return( type );
 }
@@ -291,7 +291,7 @@ na_data_boxed_new( const NADataDef *def )
 
 	g_return_val_if_fail( def != NULL, NULL );
 
-	boxed = g_object_new( NA_DATA_BOXED_TYPE, NULL );
+	boxed = g_object_new( NA_TYPE_DATA_BOXED, NULL );
 	na_boxed_set_type( NA_BOXED( boxed ), def->type );
 	boxed->private->data_def = def;
 	boxed->private->boxed_def = get_data_boxed_def( def->type );

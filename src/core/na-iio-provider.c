@@ -142,7 +142,7 @@ interface_base_init( NAIIOProviderInterface *klass )
 		 */
 		st_signals[ ITEM_CHANGED ] = g_signal_new(
 					IO_PROVIDER_SIGNAL_ITEM_CHANGED,
-					NA_IIO_PROVIDER_TYPE,
+					NA_TYPE_IIO_PROVIDER,
 					G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 					0,									/* class offset */
 					NULL,								/* accumulator */

@@ -191,7 +191,7 @@ G_BEGIN_DECLS
  *
  *         st_module_type = g_type_module_register_type( plugin, G_TYPE_OBJECT, "NadpDesktopProvider", &amp;info, 0 );
  *
- *         g_type_module_add_interface( plugin, st_module_type, NA_IIO_PROVIDER_TYPE, &amp;iio_provider_iface_info );
+ *         g_type_module_add_interface( plugin, st_module_type, NA_TYPE_IIO_PROVIDER, &amp;iio_provider_iface_info );
  *
  *         return( TRUE );
  *     }

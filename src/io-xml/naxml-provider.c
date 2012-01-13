@@ -118,11 +118,11 @@ naxml_provider_register_type( GTypeModule *module )
 
 	st_module_type = g_type_module_register_type( module, G_TYPE_OBJECT, "NAXMLProvider", &info, 0 );
 
-	g_type_module_add_interface( module, st_module_type, NA_IIMPORTER_TYPE, &iimporter_iface_info );
+	g_type_module_add_interface( module, st_module_type, NA_TYPE_IIMPORTER, &iimporter_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_IEXPORTER_TYPE, &iexporter_iface_info );
+	g_type_module_add_interface( module, st_module_type, NA_TYPE_IEXPORTER, &iexporter_iface_info );
 
-	g_type_module_add_interface( module, st_module_type, NA_IFACTORY_PROVIDER_TYPE, &ifactory_provider_iface_info );
+	g_type_module_add_interface( module, st_module_type, NA_TYPE_IFACTORY_PROVIDER, &ifactory_provider_iface_info );
 }
 
 static void

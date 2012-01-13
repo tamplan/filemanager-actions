@@ -80,10 +80,10 @@
 
 G_BEGIN_DECLS
 
-#define NA_IEXPORTER_TYPE                      ( na_iexporter_get_type())
-#define NA_IEXPORTER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_IEXPORTER_TYPE, NAIExporter ))
-#define NA_IS_IEXPORTER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_IEXPORTER_TYPE ))
-#define NA_IEXPORTER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_IEXPORTER_TYPE, NAIExporterInterface ))
+#define NA_TYPE_IEXPORTER                      ( na_iexporter_get_type())
+#define NA_IEXPORTER( instance )               ( G_TYPE_CHECK_INSTANCE_CAST( instance, NA_TYPE_IEXPORTER, NAIExporter ))
+#define NA_IS_IEXPORTER( instance )            ( G_TYPE_CHECK_INSTANCE_TYPE( instance, NA_TYPE_IEXPORTER ))
+#define NA_IEXPORTER_GET_INTERFACE( instance ) ( G_TYPE_INSTANCE_GET_INTERFACE(( instance ), NA_TYPE_IEXPORTER, NAIExporterInterface ))
 
 typedef struct _NAIExporter                    NAIExporter;
 typedef struct _NAIExporterInterfacePrivate    NAIExporterInterfacePrivate;

@@ -419,7 +419,7 @@ boxed_new( const BoxedDef *def )
 {
 	NABoxed *boxed;
 
-	boxed = g_object_new( NA_BOXED_TYPE, NULL );
+	boxed = g_object_new( NA_TYPE_BOXED, NULL );
 	boxed->private->def = def;
 
 	return( boxed );

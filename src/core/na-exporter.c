@@ -86,7 +86,7 @@ na_exporter_get_formats( const NAPivot *pivot )
 	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	formats = NULL;
-	iexporters = na_pivot_get_providers( pivot, NA_IEXPORTER_TYPE );
+	iexporters = na_pivot_get_providers( pivot, NA_TYPE_IEXPORTER );
 
 	for( imod = iexporters ; imod ; imod = imod->next ){
 		str_list = exporter_get_formats( NA_IEXPORTER( imod->data ));

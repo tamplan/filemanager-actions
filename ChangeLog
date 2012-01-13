@@ -1,5 +1,70 @@
 2012-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-boxed.h:
+	* src/core/na-boxed.c:
+	NA_BOXED_TYPE GType macro renamed as NA_TYPE_BOXED.
+
+	* src/api/na-data-boxed.h:
+	* src/core/na-data-boxed.c:
+	NA_DATA_BOXED_TYPE GType macro renamed as NA_TYPE_DATA_BOXED.
+
+	* src/api/na-icontext.h:
+	NA_ICONTEXT_TYPE GType macro renamed as NA_TYPE_ICONTEXT.
+
+	* src/api/na-iduplicable.h:
+	NA_IDUPLICABLE_TYPE GType macro renamed as NA_TYPE_IDUPLICABLE.
+
+	* src/api/na-iexporter.h:
+	* src/core/na-exporter.c:
+	NA_IEXPORTER_TYPE GType macro renamed as NA_TYPE_IEXPORTER.
+
+	* src/api/na-ifactory-object.h:
+	NA_IFACTORY_OBJECT_TYPE GType macro renamed as NA_TYPE_IFACTORY_OBJECT.
+
+	* src/api/na-ifactory-provider.h:
+	NA_IFACTORY_PROVIDER_TYPE GType macro renamed as NA_TYPE_IFACTORY_PROVIDER.
+
+	* src/api/na-iimporter.h:
+	* src/core/na-importer.c:
+	NA_IIMPORTER_TYPE GType macro renamed as NA_TYPE_IIMPORTER.
+
+	* src/api/na-iio-provider.h:
+	* src/core/na-iio-provider.c:
+	* src/core/na-io-provider.c:
+	NA_IIO_PROVIDER_TYPE GType macro renamed as NA_TYPE_IIO_PROVIDER.
+
+	* src/api/na-object-action.h:
+	* src/core/na-object-action.c:
+	NA_OBJECT_ACTION_TYPE GType macro renamed as NA_TYPE_OBJECT_ACTION.
+
+	* src/api/na-object-id.h:
+	* src/core/na-object-id.c:
+	NA_OBJECT_ID_TYPE GType macro renamed as NA_TYPE_OBJECT_ID.
+
+	* src/api/na-object-item.h:
+	* src/core/na-object-item.c:
+	NA_OBJECT_ITEM_TYPE GType macro renamed as NA_TYPE_OBJECT_ITEM.
+
+	* src/api/na-object-menu.h:
+	* src/core/na-object-menu.c:
+	NA_OBJECT_MENU_TYPE GType macro renamed as NA_TYPE_OBJECT_MENU.
+
+	* src/api/na-object-profile.h:
+	* src/core/na-object-profile.c:
+	NA_OBJECT_PROFILE_TYPE GType macro renamed as NA_TYPE_OBJECT_PROFILE.
+
+	* src/api/na-object.h:
+	* src/core/na-object.c:
+	NA_OBJECT_TYPE GType macro renamed as NA_TYPE_OBJECT.
+
+	* src/core/na-pivot.c:
+	* src/api/na-extension.h:
+	* src/io-desktop/nadp-desktop-provider.c:
+	* src/io-gconf/nagp-gconf-provider.c:
+	* src/io-xml/naxml-provider.c:
+	* src/nact/nact-tree-model.c:
+	* src/test/test-module-plugin.c: Updated accordingly.
+
 	Get ride of GQuark as internal identifier of export format.
 
 	* src/api/na-iexporter.h:

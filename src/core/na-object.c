@@ -110,7 +110,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_OBJECT, "NAObject", &info, 0 );
 
-	g_type_add_interface_static( type, NA_IDUPLICABLE_TYPE, &iduplicable_iface_info );
+	g_type_add_interface_static( type, NA_TYPE_IDUPLICABLE, &iduplicable_iface_info );
 
 	return( type );
 }
@@ -679,7 +679,7 @@ build_class_hierarchy( const NAObject *object )
 	hierarchy = NULL;
 	class = G_OBJECT_GET_CLASS( object );
 
-	while( G_OBJECT_CLASS_TYPE( class ) != NA_OBJECT_TYPE ){
+	while( G_OBJECT_CLASS_TYPE( class ) != NA_TYPE_OBJECT ){
 
 		hierarchy = g_list_prepend( hierarchy, class );
 		class = g_type_class_peek_parent( class );

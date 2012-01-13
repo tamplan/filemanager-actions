@@ -57,12 +57,12 @@
 
 G_BEGIN_DECLS
 
-#define NA_DATA_BOXED_TYPE                ( na_data_boxed_get_type())
-#define NA_DATA_BOXED( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_DATA_BOXED_TYPE, NADataBoxed ))
-#define NA_DATA_BOXED_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_DATA_BOXED_TYPE, NADataBoxedClass ))
-#define NA_IS_DATA_BOXED( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_DATA_BOXED_TYPE ))
-#define NA_IS_DATA_BOXED_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_DATA_BOXED_TYPE ))
-#define NA_DATA_BOXED_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_DATA_BOXED_TYPE, NADataBoxedClass ))
+#define NA_TYPE_DATA_BOXED                ( na_data_boxed_get_type())
+#define NA_DATA_BOXED( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_DATA_BOXED, NADataBoxed ))
+#define NA_DATA_BOXED_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_DATA_BOXED, NADataBoxedClass ))
+#define NA_IS_DATA_BOXED( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_DATA_BOXED ))
+#define NA_IS_DATA_BOXED_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_DATA_BOXED ))
+#define NA_DATA_BOXED_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_DATA_BOXED, NADataBoxedClass ))
 
 typedef struct _NADataBoxedPrivate        NADataBoxedPrivate;
 

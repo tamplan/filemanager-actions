@@ -111,7 +111,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_OBJECT_ID_TYPE, "NAObjectItem", &info, 0 );
+	type = g_type_register_static( NA_TYPE_OBJECT_ID, "NAObjectItem", &info, 0 );
 
 	return( type );
 }
