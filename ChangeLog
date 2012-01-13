@@ -1,5 +1,7 @@
 2012-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-ioptions-list.h: Fix GType macros.
+
 	* src/core/na-settings.c:
 	* src/core/na-settings.h: Move default values out of the header.
 
