@@ -131,10 +131,6 @@ G_BEGIN_DECLS
 #define NA_IPREFS_IO_PROVIDER_READABLE				"readable"
 #define NA_IPREFS_IO_PROVIDER_WRITABLE				"writable"
 
-#define NA_IPREFS_DEFAULT_EXPORT_FORMAT				"Ask"
-#define NA_IPREFS_DEFAULT_IMPORT_MODE				"Ask"
-#define NA_IPREFS_DEFAULT_LIST_ORDER_MODE			"AscendingOrder"
-
 /* pre-registration of a callback
  */
 typedef void ( *NASettingsKeyCallback )( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, void *user_data );
