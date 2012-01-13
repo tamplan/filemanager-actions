@@ -35,9 +35,9 @@
 
 G_BEGIN_DECLS
 
-GSList *nadp_xdg_dirs_get_data_dirs( void );
+GSList *nadp_xdg_dirs_get_data_dirs       ( void );
 
-gchar  *nadp_xdg_dirs_get_user_data_dir( void );
+gchar  *nadp_xdg_dirs_get_user_data_dir   ( void );
 
 GSList *nadp_xdg_dirs_get_system_data_dirs( void );
 

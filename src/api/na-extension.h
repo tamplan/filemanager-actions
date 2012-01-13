@@ -253,10 +253,10 @@ guint    na_extension_get_version( void );
  *     {
  *          static GType types_list [1+NADP_TYPES_COUNT];
  *
- *          &lcomment; NADP_DESKTOP_PROVIDER_TYPE has been previously
+ *          &lcomment; NADP_TYPE_DESKTOP_PROVIDER has been previously
  *           * registered in na_extension_startup function
  *           &rcomment;
- *          types_list[0] = NADP_DESKTOP_PROVIDER_TYPE;
+ *          types_list[0] = NADP_TYPE_DESKTOP_PROVIDER;
  *
  *          types_list[NADP_TYPES_COUNT] = 0;
  *          *types = types_list;

@@ -91,7 +91,7 @@ na_extension_list_types( const GType **types )
 
 	g_debug( "%s: types=%p", thisfn, ( void * ) types );
 
-	types_list[0] = NADP_DESKTOP_PROVIDER_TYPE;
+	types_list[0] = NADP_TYPE_DESKTOP_PROVIDER;
 
 	types_list[NADP_TYPES_COUNT] = 0;
 	*types = types_list;

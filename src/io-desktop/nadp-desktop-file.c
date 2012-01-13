@@ -203,7 +203,7 @@ nadp_desktop_file_new( void )
 {
 	NadpDesktopFile *ndf;
 
-	ndf = g_object_new( NADP_DESKTOP_FILE_TYPE, NULL );
+	ndf = g_object_new( NADP_TYPE_DESKTOP_FILE, NULL );
 
 	return( ndf );
 }
@@ -402,7 +402,7 @@ ndf_new( const gchar *uri )
 {
 	NadpDesktopFile *ndf;
 
-	ndf = g_object_new( NADP_DESKTOP_FILE_TYPE, NULL );
+	ndf = g_object_new( NADP_TYPE_DESKTOP_FILE, NULL );
 
 	ndf->private->id = uri2id( uri );
 	ndf->private->uri = g_strdup( uri );

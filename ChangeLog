@@ -1,5 +1,20 @@
 2012-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-desktop-file.c:
+	* src/io-desktop/nadp-desktop-file.h:
+	NADP_DESKTOP_FILE_TYPE GType macro renamed as NADP_TYPE_DESKTOP_FILE.
+
+	* src/io-desktop/nadp-desktop-provider.h:
+	* src/api/na-extension.h:
+	* src/io-desktop/nadp-module.c:
+	NADP_DESKTOP_PROVIDER_TYPE GType macro renamed as NADP_TYPE_DESKTOP_PROVIDER.
+
+	* src/io-desktop/nadp-monitor.c:
+	* src/io-desktop/nadp-monitor.h:
+	NADP_MONITOR_TYPE GType macro renamed as NADP_TYPE_MONITOR.
+
+	* src/io-desktop/nadp-xdg-dirs.h: Fix documentation.
+
 	* src/core/na-import-mode.c:
 	* src/core/na-import-mode.h:
 	NA_IMPORT_MODE_TYPE GType macro renamed as NA_TYPE_IMPORT_MODE.

@@ -51,12 +51,12 @@
 
 G_BEGIN_DECLS
 
-#define NADP_MONITOR_TYPE                ( nadp_monitor_get_type())
-#define NADP_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NADP_MONITOR_TYPE, NadpMonitor ))
-#define NADP_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NADP_MONITOR_TYPE, NadpMonitorClass ))
-#define NADP_IS_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NADP_MONITOR_TYPE ))
-#define NADP_IS_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NADP_MONITOR_TYPE ))
-#define NADP_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NADP_MONITOR_TYPE, NadpMonitorClass ))
+#define NADP_TYPE_MONITOR                ( nadp_monitor_get_type())
+#define NADP_MONITOR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NADP_TYPE_MONITOR, NadpMonitor ))
+#define NADP_MONITOR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NADP_TYPE_MONITOR, NadpMonitorClass ))
+#define NADP_IS_MONITOR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NADP_TYPE_MONITOR ))
+#define NADP_IS_MONITOR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NADP_TYPE_MONITOR ))
+#define NADP_MONITOR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NADP_TYPE_MONITOR, NadpMonitorClass ))
 
 typedef struct _NadpMonitorPrivate       NadpMonitorPrivate;
 

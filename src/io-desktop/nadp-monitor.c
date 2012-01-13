@@ -209,7 +209,7 @@ nadp_monitor_new( const NadpDesktopProvider *provider, const gchar *path )
 	GFileMonitorFlags flags;
 	GError *error;
 
-	monitor = g_object_new( NADP_MONITOR_TYPE, NULL );
+	monitor = g_object_new( NADP_TYPE_MONITOR, NULL );
 
 	monitor->private->provider = NADP_DESKTOP_PROVIDER( provider );
 	monitor->private->name = g_strdup( path );
