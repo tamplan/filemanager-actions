@@ -1,3 +1,7 @@
+2012-01-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-exporter.c (na_exporter_get_export_format): Fix comment.
+
 2012-01-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-ioptions-list.h:

@@ -428,7 +428,11 @@ find_exporter_for_format( const NAPivot *pivot, GQuark format )
  * @mandatory: if not %NULL, a pointer to a boolean which will receive the
  *  mandatory property.
  *
- * Returns: the export format currently set in user's preference..
+ * Returns: the export format currently set in user's preference.
+ *
+ * This may be:
+ * - either the preferred export format,
+ * - or the last chosen export format in NactExportAsk dialog box.
  *
  * The returned integer is either:
  * - the corresponding enum value in the case of "NoImport" or "Ask";
