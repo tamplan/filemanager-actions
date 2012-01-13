@@ -1,5 +1,32 @@
 2012-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	Get ride of GQuark as internal identifier of export format.
+
+	* src/api/na-iexporter.h:
+	Deprecate _NAIExporterFileParmsv1 and _NAIExporterBufferParmsv1 struct.
+
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h:
+	(na_export_format_get_quark): Removed function.
+	NA_EXPORT_FORMAT_TYPE GType macro renamed as NA_TYPE_EXPORT_FORMAT.
+
+	* src/core/na-exporter.c:
+	* src/core/na-exporter.h
+	(na_exporter_find_for_format): New function.
+	(na_exporter_get_export_format): Removed function.
+
+	* src/io-desktop/nadp-writer.c
+	(nadp_writer_iexporter_export_to_buffer,
+	nadp_writer_iexporter_export_to_file):
+	* src/io-xml/naxml-writer.c
+	(naxml_writer_export_to_buffer, naxml_writer_export_to_file):
+	* src/nact/nact-assistant-export.c (assistant_apply):
+	* src/nact/nact-clipboard.c (export_row_object):
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-export-ask.h(nact_export_ask_user):
+	* src/utils/nautilus-actions-new.c (output_to_desktop):
+	* src/utils/nautilus-actions-print.c (main): Updated accordingly.
+
 	* src/core/na-ioptions-list.c: Fix comments.
 
 	* src/core/na-ioption.c (get_ioption_data):

@@ -40,8 +40,6 @@
 #include "na-export-format.h"
 #include "na-settings.h"
 
-#define	Ask			"Ask"
-
 typedef struct {
 	const gchar *format;				/* export format saved in user's preferences */
 	const gchar *label;					/* short label */
@@ -52,19 +50,20 @@ typedef struct {
 
 static NAExporterFormatStr st_format_ask = {
 
-		Ask,
+		EXPORTER_FORMAT_ASK,
 		N_( "_Ask me" ),
 		N_( "You will be asked for the format to choose each time an item " \
 			"is about to be exported." ),
 		"export-format-ask.png"
 };
 
-static GList       *exporter_get_formats( const NAIExporter *exporter );
-static void         exporter_free_formats( const NAIExporter *exporter, GList * str_list );
-static gchar       *exporter_get_name( const NAIExporter *exporter );
-static NAIExporter *find_exporter_for_format( const NAPivot *pivot, GQuark format );
-static void         on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
-static GQuark       id_from_string( const gchar *format_str );
+/* i18n: NAIExporter is an interface name, do not even try to translate */
+#define NO_IMPLEMENTATION_MSG			N_( "No NAIExporter implementation found for '%s' format." )
+
+static GList *exporter_get_formats( const NAIExporter *exporter );
+static void   exporter_free_formats( const NAIExporter *exporter, GList * str_list );
+static gchar *exporter_get_name( const NAIExporter *exporter );
+static void   on_pixbuf_finalized( gpointer user_data, GObject *pixbuf );
 
 /*
  * na_exporter_get_formats:
@@ -262,7 +261,7 @@ on_pixbuf_finalized( gpointer user_data /* ==NULL */, GObject *pixbuf )
  */
 gchar *
 na_exporter_to_buffer( const NAPivot *pivot,
-		const NAObjectItem *item, GQuark format, GSList **messages )
+		const NAObjectItem *item, const gchar *format, GSList **messages )
 {
 	static const gchar *thisfn = "na_exporter_to_buffer";
 	gchar *buffer;
@@ -276,20 +275,20 @@ na_exporter_to_buffer( const NAPivot *pivot,
 
 	buffer = NULL;
 
-	g_debug( "%s: pivot=%p, item=%p (%s), format=%u, messages=%p",
+	g_debug( "%s: pivot=%p, item=%p (%s), format=%s, messages=%p",
 			thisfn,
 			( void * ) pivot,
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
-			( guint ) format,
+			format,
 			( void * ) messages );
 
-	exporter = find_exporter_for_format( pivot, format );
+	exporter = na_exporter_find_for_format( pivot, format );
 	g_debug( "%s: exporter=%p (%s)", thisfn, ( void * ) exporter, G_OBJECT_TYPE_NAME( exporter ));
 
 	if( exporter ){
-		parms.version = 1;
+		parms.version = 2;
 		parms.exported = ( NAObjectItem * ) item;
-		parms.format = format;
+		parms.format = g_strdup( format );
 		parms.buffer = NULL;
 		parms.messages = messages ? *messages : NULL;
 
@@ -302,14 +301,16 @@ na_exporter_to_buffer( const NAPivot *pivot,
 
 		} else {
 			name = exporter_get_name( exporter );
-			msg = g_strdup_printf( _( "NAIExporter %s doesn't implement 'to_buffer' interface." ), name );
+			/* i18n: NAIExporter is an interface name, do not even try to translate */
+			msg = g_strdup_printf( _( "%s NAIExporter doesn't implement 'to_buffer' interface." ), name );
 			*messages = g_slist_append( *messages, msg );
 			g_free( name );
 		}
 
+		g_free( parms.format );
+
 	} else {
-		msg = g_strdup_printf(
-				_( "No NAIExporter implementation found for %s format." ), g_quark_to_string( format ));
+		msg = g_strdup_printf( NO_IMPLEMENTATION_MSG, format );
 		*messages = g_slist_append( *messages, msg );
 	}
 
@@ -332,7 +333,7 @@ na_exporter_to_buffer( const NAPivot *pivot,
  */
 gchar *
 na_exporter_to_file( const NAPivot *pivot,
-		const NAObjectItem *item, const gchar *folder_uri, GQuark format, GSList **messages )
+		const NAObjectItem *item, const gchar *folder_uri, const gchar *format, GSList **messages )
 {
 	static const gchar *thisfn = "na_exporter_to_file";
 	gchar *export_uri;
@@ -346,21 +347,21 @@ na_exporter_to_file( const NAPivot *pivot,
 
 	export_uri = NULL;
 
-	g_debug( "%s: pivot=%p, item=%p (%s), folder_uri=%s, format=%u (%s), messages=%p",
+	g_debug( "%s: pivot=%p, item=%p (%s), folder_uri=%s, format=%s, messages=%p",
 			thisfn,
 			( void * ) pivot,
 			( void * ) item, G_OBJECT_TYPE_NAME( item ),
 			folder_uri,
-			( guint ) format, g_quark_to_string( format ),
+			format,
 			( void * ) messages );
 
-	exporter = find_exporter_for_format( pivot, format );
+	exporter = na_exporter_find_for_format( pivot, format );
 
 	if( exporter ){
-		parms.version = 1;
+		parms.version = 2;
 		parms.exported = ( NAObjectItem * ) item;
 		parms.folder = ( gchar * ) folder_uri;
-		parms.format = format;
+		parms.format = g_strdup( format );
 		parms.basename = NULL;
 		parms.messages = messages ? *messages : NULL;
 
@@ -373,14 +374,16 @@ na_exporter_to_file( const NAPivot *pivot,
 
 		} else {
 			name = exporter_get_name( exporter );
-			msg = g_strdup_printf( _( "NAIExporter %s doesn't implement 'to_file' interface." ), name );
+			/* i18n: NAIExporter is an interface name, do not even try to translate */
+			msg = g_strdup_printf( _( "%s NAIExporter doesn't implement 'to_file' interface." ), name );
 			*messages = g_slist_append( *messages, msg );
 			g_free( name );
 		}
 
+		g_free( parms.format );
+
 	} else {
-		msg = g_strdup_printf(
-				_( "No NAIExporter implementation found for %s format." ), g_quark_to_string( format ));
+		msg = g_strdup_printf( NO_IMPLEMENTATION_MSG, format );
 		*messages = g_slist_append( *messages, msg );
 	}
 
@@ -401,76 +404,39 @@ exporter_get_name( const NAIExporter *exporter )
 	return( name );
 }
 
-static NAIExporter *
-find_exporter_for_format( const NAPivot *pivot, GQuark format )
+/**
+ * na_exporter_find_for_format:
+ * @pivot: the #NAPivot instance.
+ * @format: the string identifier of the searched format.
+ *
+ * Returns: the #NAIExporter instance which provides the @format export
+ * format. The returned instance is owned by @pivot, and should not be
+ * released by the caller.
+ */
+NAIExporter *
+na_exporter_find_for_format( const NAPivot *pivot, const gchar *format )
 {
 	NAIExporter *exporter;
 	GList *formats, *ifmt;
+	gchar *id;
+	NAExportFormat *export_format;
+
+	g_return_val_if_fail( NA_IS_PIVOT( pivot ), NULL );
 
 	exporter = NULL;
 	formats = na_exporter_get_formats( pivot );
 
 	for( ifmt = formats ; ifmt && !exporter ; ifmt = ifmt->next ){
 
-		if( na_export_format_get_quark( NA_EXPORT_FORMAT( ifmt->data )) == format ){
+		export_format = NA_EXPORT_FORMAT( ifmt->data );
+		id = na_ioption_get_id( NA_IOPTION( export_format ));
+		if( !strcmp( id, format )){
 			exporter = na_export_format_get_provider( NA_EXPORT_FORMAT( ifmt->data ));
 		}
+		g_free( id );
 	}
 
 	na_exporter_free_formats( formats );
 
 	return( exporter );
-}
-
-/*
- * na_exporter_get_export_format:
- * @pref: the name of the preference to be read.
- * @mandatory: if not %NULL, a pointer to a boolean which will receive the
- *  mandatory property.
- *
- * Returns: the export format currently set in user's preference.
- *
- * This may be:
- * - either the preferred export format,
- * - or the last chosen export format in NactExportAsk dialog box.
- *
- * The returned integer is either:
- * - the corresponding enum value in the case of "NoImport" or "Ask";
- * - the #GQuark of the string for other export formats.
- */
-GQuark
-na_exporter_get_export_format( const gchar *pref, gboolean *mandatory )
-{
-	gchar *format_str;
-	GQuark format_id;
-
-	g_return_val_if_fail( pref && strlen( pref ), ( GQuark ) EXPORTER_FORMAT_NO_EXPORT );
-
-	format_str = na_settings_get_string( pref, NULL, mandatory );
-	g_return_val_if_fail( format_str && strlen( format_str ), ( GQuark ) EXPORTER_FORMAT_NO_EXPORT );
-
-	format_id = id_from_string( format_str );
-	g_free( format_str );
-
-	return( format_id );
-}
-
-/*
- * na_exporter_id_from_string:
- * @format_str: the string which defines the export format in user's preferences.
- *
- * Returns: the integer which identifies the export format.
- *
- * The returned integer is either:
- * - the corresponding enum value in the case of "NoImport" or "Ask";
- * - the #GQuark of the string for other export formats.
- */
-static GQuark
-id_from_string( const gchar *format_str )
-{
-	if( !strcmp( format_str, Ask )){
-		return(( GQuark ) EXPORTER_FORMAT_ASK );
-	}
-
-	return( g_quark_from_string( format_str ));
 }

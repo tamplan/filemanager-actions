@@ -36,6 +36,7 @@
  * @include: core/na-exporter.h
  */
 
+#include <api/na-iexporter.h>
 #include <api/na-object-api.h>
 
 #include "na-ioption.h"
@@ -43,41 +44,26 @@
 
 G_BEGIN_DECLS
 
-/*
- * NAExporterExportFormat:
- * @EXPORTER_FORMAT_NO_EXPORT:
- * @EXPORTER_FORMAT_ASK:
- *
- * This enum defines some special export formats, which are typically used
- * in switch statements. Standard export formats, as provided by I/O providers,
- * are just #GQuark of their format identifier string.
- *
- * When the user chooses to not export an item, this value is not written in
- * user's preferences.
- */
-typedef enum {
-	EXPORTER_FORMAT_NO_EXPORT = 1,
-	EXPORTER_FORMAT_ASK,
-}
-	NAExporterExportFormat;
+#define EXPORTER_FORMAT_ASK				"Ask"
+#define EXPORTER_FORMAT_NOEXPORT		"NoExport"
 
-GList     *na_exporter_get_formats      ( const NAPivot *pivot );
-void       na_exporter_free_formats     ( GList *formats );
+GList       *na_exporter_get_formats    ( const NAPivot *pivot );
+void         na_exporter_free_formats   ( GList *formats );
+NAIOption   *na_exporter_get_ask_option ( void );
 
-NAIOption *na_exporter_get_ask_option   ( void );
-
-gchar     *na_exporter_to_buffer        ( const NAPivot *pivot,
+gchar       *na_exporter_to_buffer      ( const NAPivot *pivot,
                                           const NAObjectItem *item,
-                                          GQuark format,
+                                          const gchar *format,
                                           GSList **messages );
 
-gchar     *na_exporter_to_file          ( const NAPivot *pivot,
+gchar       *na_exporter_to_file        ( const NAPivot *pivot,
                                           const NAObjectItem *item,
                                           const gchar *folder_uri,
-                                          GQuark format,
+                                          const gchar *format,
                                           GSList **messages );
 
-GQuark     na_exporter_get_export_format( const gchar *pref, gboolean *mandatory );
+NAIExporter *na_exporter_find_for_format( const NAPivot *pivot,
+		                                  const gchar *format );
 
 G_END_DECLS
 

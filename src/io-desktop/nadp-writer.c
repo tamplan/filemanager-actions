@@ -71,7 +71,11 @@ static void            desktop_weak_notify( NadpDesktopFile *ndf, GObject *item 
 static void            write_start_write_type( NadpDesktopFile *ndp, NAObjectItem *item );
 static void            write_done_write_subitems_list( NadpDesktopFile *ndp, NAObjectItem *item );
 
-static ExportFormatFn *find_export_format_fn( GQuark format );
+static ExportFormatFn *find_export_format_fn( const gchar *format );
+
+#ifdef NA_ENABLE_DEPRECATED
+static ExportFormatFn *find_export_format_fn_from_quark( GQuark format );
+#endif
 
 /*
  * This is implementation of NAIIOProvider::is_willing_to_write method
@@ -367,7 +371,16 @@ nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporter
 	}
 
 	if( code == NA_IEXPORTER_CODE_OK ){
+
+#ifdef NA_ENABLE_DEPRECATED
+		if( parms->version == 1 ){
+			fmt = find_export_format_fn_from_quark(( NAIExporterBufferParmsv1 * ) parms->format );
+		} else {
+			fmt = find_export_format_fn( parms->format );
+		}
+#else
 		fmt = find_export_format_fn( parms->format );
+#endif
 
 		if( !fmt ){
 			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
@@ -418,7 +431,16 @@ nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFi
 	}
 
 	if( code == NA_IEXPORTER_CODE_OK ){
+
+#ifdef NA_ENABLE_DEPRECATED
+		if( parms->version == 1 ){
+			fmt = find_export_format_fn_from_quark(( NAIExporterFileParmsv1 * ) parms->format );
+		} else {
+			fmt = find_export_format_fn( parms->format );
+		}
+#else
 		fmt = find_export_format_fn( parms->format );
+#endif
 
 		if( !fmt ){
 			code = NA_IEXPORTER_CODE_INVALID_FORMAT;
@@ -614,7 +636,27 @@ write_done_write_subitems_list( NadpDesktopFile *ndp, NAObjectItem *item )
 }
 
 static ExportFormatFn *
-find_export_format_fn( GQuark format )
+find_export_format_fn( const gchar *format )
+{
+	ExportFormatFn *found;
+	ExportFormatFn *i;
+
+	found = NULL;
+	i = st_export_format_fn;
+
+	while( i->format && !found ){
+		if( !strcmp( i->format, format )){
+			found = i;
+		}
+		i++;
+	}
+
+	return( found );
+}
+
+#ifdef NA_ENABLE_DEPRECATED
+static ExportFormatFn *
+find_export_format_fn_from_quark( GQuark format )
 {
 	ExportFormatFn *found;
 	ExportFormatFn *i;
@@ -631,3 +673,4 @@ find_export_format_fn( GQuark format )
 
 	return( found );
 }
+#endif

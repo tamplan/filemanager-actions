@@ -79,7 +79,7 @@ typedef struct {
 
 GType  nact_export_ask_get_type( void );
 
-GQuark nact_export_ask_user    ( BaseWindow *window, NAObjectItem *item, gboolean first );
+gchar *nact_export_ask_user    ( BaseWindow *window, NAObjectItem *item, gboolean first );
 
 G_END_DECLS
 

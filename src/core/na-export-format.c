@@ -45,7 +45,6 @@ struct _NAExportFormatClassPrivate {
  */
 struct _NAExportFormatPrivate {
 	gboolean     dispose_has_run;
-	GQuark       id;
 	gchar       *format;
 	gchar       *label;
 	gchar       *description;
@@ -324,9 +323,8 @@ na_export_format_new( const NAIExporterFormatExt *exporter_format )
 {
 	NAExportFormat *format;
 
-	format = g_object_new( NA_EXPORT_FORMAT_TYPE, NULL );
+	format = g_object_new( NA_TYPE_EXPORT_FORMAT, NULL );
 
-	format->private->id = g_quark_from_string( exporter_format->format );
 	format->private->format = g_strdup( exporter_format->format );
 	format->private->label = g_strdup( exporter_format->label );
 	format->private->description = g_strdup( exporter_format->description );
@@ -334,29 +332,6 @@ na_export_format_new( const NAIExporterFormatExt *exporter_format )
 	format->private->provider = exporter_format->provider;
 
 	return( format );
-}
-
-/*
- * na_export_format_get_quark:
- * @format: this #NAExportFormat object.
- *
- * Returns: the #GQuark associated with this format.
- */
-GQuark
-na_export_format_get_quark( const NAExportFormat *format )
-{
-	GQuark id;
-
-	g_return_val_if_fail( NA_IS_EXPORT_FORMAT( format ), 0 );
-
-	id = 0;
-
-	if( !format->private->dispose_has_run ){
-
-		id = format->private->id;
-	}
-
-	return( id );
 }
 
 /*

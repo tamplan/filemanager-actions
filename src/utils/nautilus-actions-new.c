@@ -586,6 +586,7 @@ output_to_desktop( NAObjectAction *action, GSList **msgs )
 		code = ( ret == NA_IIO_PROVIDER_CODE_OK );
 
 	} else {
+		/* i18n: 'na-desktop' is a plugin identifier - do not translate */
 		*msgs = g_slist_append( *msgs, _( "Error: unable to find 'na-desktop' i/o provider." ));
 		code = FALSE;
 	}
@@ -600,12 +601,10 @@ output_to_stdout( const NAObjectAction *action, GSList **msgs )
 {
 	gboolean ret;
 	NAUpdater *updater;
-	GQuark format;
 	gchar *buffer;
 
 	updater = na_updater_new();
-	format = g_quark_from_string( "Desktop1" );
-	buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), format, msgs );
+	buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), "Desktop1", msgs );
 	ret = ( buffer != NULL );
 
 	if( buffer ){
@@ -624,6 +623,7 @@ output_to_stdout( const NAObjectAction *action, GSList **msgs )
 static void
 exit_with_usage( void )
 {
+	/* i18: '--help' is a command-line option - do not translate */
 	g_printerr( _( "Try %s --help for usage.\n" ), g_get_prgname());
 	exit( EXIT_FAILURE );
 }

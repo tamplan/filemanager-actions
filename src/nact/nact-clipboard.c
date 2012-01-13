@@ -561,7 +561,7 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	gint index;
 	GString *data;
 	gchar *buffer;
-	GQuark format;
+	gchar *format;
 	gchar *fname;
 	GSList *msgs;
 
@@ -593,13 +593,16 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 	if( index == -1 ){
 
 		*exported = g_list_prepend( *exported, ( gpointer ) action );
-		format = na_exporter_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
+		format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, NULL );
+		g_return_val_if_fail( format && strlen( format ), NULL );
 
-		if( format == EXPORTER_FORMAT_ASK ){
+		if( !strcmp( format, EXPORTER_FORMAT_ASK )){
+			g_free( format );
 			format = nact_export_ask_user( clipboard->private->window, NA_OBJECT_ITEM( action ), first );
+			g_return_val_if_fail( format && strlen( format ), NULL );
 		}
 
-		if( format != EXPORTER_FORMAT_NO_EXPORT ){
+		if( strcmp( format, EXPORTER_FORMAT_NOEXPORT ) != 0 ){
 			if( dest_folder ){
 				fname = na_exporter_to_file( NA_PIVOT( updater ), NA_OBJECT_ITEM( action), dest_folder, format, &msgs );
 				g_free( fname );
@@ -612,6 +615,8 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 				}
 			}
 		}
+
+		g_free( format );
 	}
 
 	return( g_string_free( data, FALSE ));

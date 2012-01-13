@@ -88,8 +88,7 @@ main( int argc, char** argv )
 	gchar *help;
 	gint errors;
 	NAObjectItem *item;
-	GList *formats_list, *it;
-	gboolean format_found;
+	NAIExporter *exporter;
 
 	g_type_init();
 	setlocale( LC_ALL, "" );
@@ -134,19 +133,8 @@ main( int argc, char** argv )
 		format = "Desktop1";
 	}
 
-	formats_list = na_exporter_get_formats( pivot );
-	format_found = FALSE;
-
-	for( it = formats_list ; it && !format_found ; it = it->next ){
-		NAExportFormat *export = NA_EXPORT_FORMAT( it->data );
-		gchar *export_id = na_ioption_get_id( NA_IOPTION( export ));
-		format_found = !strcmp( export_id, format );
-		g_free( export_id );
-	}
-
-	na_exporter_free_formats( formats_list );
-
-	if( !format_found ){
+	exporter = na_exporter_find_for_format( pivot, format );
+	if( !exporter ){
 		/* i18n: %s stands for the id of the export format, and is not translatable */
 		g_printerr( _( "Error: %s: unknown export format.\n" ), format );
 		errors += 1;
@@ -227,9 +215,8 @@ export_item( const NAObjectItem *item, const gchar *format )
 {
 	GSList *messages = NULL;
 	GSList *it;
-	GQuark q_format = g_quark_from_string( format );
 
-	gchar *buffer = na_exporter_to_buffer( pivot, item, q_format, &messages );
+	gchar *buffer = na_exporter_to_buffer( pivot, item, format, &messages );
 
 	for( it = messages ; it ; it = it->next ){
 		g_printerr( "%s\n", ( const gchar * ) it->data );

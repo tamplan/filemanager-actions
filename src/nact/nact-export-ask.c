@@ -59,7 +59,7 @@ struct _NactExportAskPrivate {
 	BaseWindow   *parent;
 	gboolean      preferences_locked;
 	NAObjectItem *item;
-	GQuark        format;
+	gchar        *format;
 	gboolean      format_mandatory;
 	gboolean      keep_last_choice;
 	gboolean      keep_last_choice_mandatory;
@@ -84,7 +84,7 @@ static void     on_base_initialize_window( NactExportAsk *editor );
 static void     keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor );
 static void     on_cancel_clicked( GtkButton *button, NactExportAsk *editor );
 static void     on_ok_clicked( GtkButton *button, NactExportAsk *editor );
-static GQuark   get_export_format( NactExportAsk *editor );
+static gchar   *get_export_format( NactExportAsk *editor );
 
 GType
 nact_export_ask_get_type( void )
@@ -247,6 +247,8 @@ instance_finalize( GObject *dialog )
 
 	self = NACT_EXPORT_ASK( dialog );
 
+	g_free( self->private->format );
+
 	g_free( self->private );
 
 	/* chain call to parent class */
@@ -269,14 +271,14 @@ instance_finalize( GObject *dialog )
  * when the set export format is 'Ask me'. Each exported file runs this
  * dialog, unless the user selects the 'keep same choice' box.
  *
- * Returns: the mode chosen by the user as a #GQuark which identifies
- * the export mode.
+ * Returns: the export format chosen by the user as a newly allocated
+ * string which should be g_free() by the caller.
  * The function defaults to returning NA_IPREFS_DEFAULT_EXPORT_FORMAT.
  *
  * When the user selects 'Keep same choice without asking me', this choice
  * becomes his new preferred export format.
  */
-GQuark
+gchar *
 nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 {
 	static const gchar *thisfn = "nact_export_ask_user";
@@ -284,14 +286,17 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 	gboolean are_locked, mandatory;
 	gboolean keep, keep_mandatory;
 	int code;
-	GQuark format;
+	gchar *format;
 
-	g_return_val_if_fail( BASE_IS_WINDOW( parent ), EXPORTER_FORMAT_NO_EXPORT );
+	g_return_val_if_fail( BASE_IS_WINDOW( parent ), NULL );
 
 	g_debug( "%s: parent=%p, item=%p (%s), first=%s",
-			thisfn, ( void * ) parent, ( void * ) item, G_OBJECT_TYPE_NAME( item ), first ? "True":"False" );
+			thisfn,
+			( void * ) parent,
+			( void * ) item, G_OBJECT_TYPE_NAME( item ),
+			first ? "True":"False" );
 
-	format = na_exporter_get_export_format( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, &mandatory );
+	format = na_settings_get_string( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, NULL, &mandatory );
 	keep = na_settings_get_boolean( NA_IPREFS_EXPORT_ASK_USER_KEEP_LAST_CHOICE, NULL, &keep_mandatory );
 
 	if( first || !keep ){
@@ -302,7 +307,7 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 				BASE_PROP_WSP_NAME,       st_wsp_name,
 				NULL );
 
-		editor->private->format = format;
+		editor->private->format = g_strdup( format );
 		editor->private->format_mandatory = mandatory;
 		editor->private->keep_last_choice = keep;
 		editor->private->keep_last_choice_mandatory = keep_mandatory;
@@ -315,13 +320,15 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 		code = base_window_run( BASE_WINDOW( editor ));
 		switch( code ){
 			case GTK_RESPONSE_OK:
+				g_free( format );
 				format = get_export_format( editor );
 				break;
 
 			case GTK_RESPONSE_CANCEL:
 			/* base_dialog::do_run only returns OK or CANCEL */
 			default:
-				format = EXPORTER_FORMAT_NO_EXPORT;
+				g_free( format );
+				format = g_strdup( EXPORTER_FORMAT_NOEXPORT );
 				break;
 		}
 
@@ -387,7 +394,7 @@ on_base_initialize_window( NactExportAsk *editor )
 				!priv->format_mandatory && !priv->preferences_locked );
 		na_ioptions_list_set_default(
 				NA_IOPTIONS_LIST( editor ), widget,
-				g_quark_to_string( priv->format ));
+				priv->format );
 
 		base_gtk_utils_toggle_set_initial_state( BASE_WINDOW( editor ),
 				"AskKeepChoiceButton", G_CALLBACK( keep_choice_on_toggled ),
@@ -449,7 +456,7 @@ on_ok_clicked( GtkButton *button, NactExportAsk *editor )
  * let the user go back in ask dialog box the next time he will have some
  * files to export
  */
-static GQuark
+static gchar *
 get_export_format( NactExportAsk *editor )
 {
 	GtkWidget *widget;
@@ -466,7 +473,6 @@ get_export_format( NactExportAsk *editor )
 
 	format_id = na_ioption_get_id( format );
 	na_settings_set_string( NA_IPREFS_EXPORT_ASK_USER_LAST_FORMAT, format_id );
-	g_free( format_id );
 
-	return( na_export_format_get_quark( NA_EXPORT_FORMAT( format )));
+	return( format_id );
 }

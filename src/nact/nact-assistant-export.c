@@ -91,7 +91,7 @@ typedef struct {
 	NAObjectItem *item;
 	GSList       *msg;
 	gchar        *fname;
-	GQuark        format;
+	gchar        *format;
 }
 	ExportStruct;
 
@@ -807,20 +807,24 @@ assistant_apply( BaseAssistant *wnd, GtkAssistant *assistant )
 		window->private->results = g_list_append( window->private->results, str );
 
 		str->item = NA_OBJECT_ITEM( na_object_get_origin( NA_IDUPLICABLE( ia->data )));
-		str->format = na_exporter_get_export_format( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL );
+		str->format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, NULL );
+		g_return_if_fail( str->format && strlen( str->format ));
 
-		if( str->format == EXPORTER_FORMAT_ASK ){
+		if( !strcmp( str->format, EXPORTER_FORMAT_ASK )){
+			g_free( str->format );
 			str->format = nact_export_ask_user( BASE_WINDOW( wnd ), str->item, first );
+			g_return_if_fail( str->format && strlen( str->format ));
 
-			if( str->format == EXPORTER_FORMAT_NO_EXPORT ){
+			if( !str->format || !strcmp( str->format, EXPORTER_FORMAT_NOEXPORT )){
 				str->msg = g_slist_append( NULL, g_strdup( _( "Export canceled due to user action." )));
 			}
 		}
 
-		if( str->format != EXPORTER_FORMAT_NO_EXPORT ){
+		if( strcmp( str->format, EXPORTER_FORMAT_NOEXPORT ) != 0 ){
 			str->fname = na_exporter_to_file( NA_PIVOT( updater ), str->item, window->private->uri, str->format, &str->msg );
 		}
 
+		g_free( str->format );
 		first = FALSE;
 	}
 }
@@ -892,7 +896,7 @@ assist_prepare_exportdone( NactAssistantExport *window, GtkAssistant *assistant,
 			/* i18n: action as been successfully exported to <filename> */
 			text = g_strdup_printf( "%s %s", _( "Successfully exported as" ), str->fname );
 
-		} else if( str->format != EXPORTER_FORMAT_NO_EXPORT ){
+		} else if( strcmp( str->format, EXPORTER_FORMAT_NOEXPORT ) != 0 ){
 			errors += 1;
 		}
 

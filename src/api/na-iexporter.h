@@ -330,6 +330,7 @@ typedef enum {
 }
 	NAIExporterExportStatus;
 
+#ifdef NA_ENABLE_DEPRECATED
 /**
  * NAIExporterFileParms:
  * @version:  version of this structure (input, since v 1)
@@ -344,8 +345,10 @@ typedef enum {
  *
  * The structure that the plugin receives as a parameter of
  * #NAIExporterInterface.to_file () interface method.
+ *
+ * Deprecated: 3.2
  */
-struct _NAIExporterFileParms {
+struct _NAIExporterFileParmsv1 {
 	guint         version;
 	NAObjectItem *exported;
 	gchar        *folder;
@@ -353,6 +356,8 @@ struct _NAIExporterFileParms {
 	gchar        *basename;
 	GSList       *messages;
 };
+
+typedef struct _NAIExporterFileParmsv1         NAIExporterFileParmsv1;
 
 /**
  * NAIExporterBufferParms:
@@ -367,11 +372,66 @@ struct _NAIExporterFileParms {
  *
  * The structure that the plugin receives as a parameter of
  * #NAIExporterInterface.to_buffer () interface method.
+ *
+ * Deprecated: 3.2
+ */
+struct _NAIExporterBufferParmsv1 {
+	guint         version;
+	NAObjectItem *exported;
+	GQuark        format;
+	gchar        *buffer;
+	GSList       *messages;
+};
+
+typedef struct _NAIExporterBufferParmsv1       NAIExporterBufferParmsv1;
+#endif
+
+/**
+ * NAIExporterFileParms:
+ * @version:  version of this structure (input, since v 1, currently equal to 2)
+ * @exported: exported NAObjectItem-derived object (input, since v 1)
+ * @folder:   URI of the target folder (input, since v 1)
+ * @format:   export format string identifier (input, since v 2)
+ * @basename: basename of the exported file (output, since v 1)
+ * @messages: a #GSList list of localized strings;
+ *            the provider may append messages to this list,
+ *            but shouldn't reinitialize it
+ *            (input/output, since v 1).
+ *
+ * The structure that the plugin receives as a parameter of
+ * #NAIExporterInterface.to_file () interface method.
+ *
+ * Since: 3.2
+ */
+struct _NAIExporterFileParms {
+	guint         version;
+	NAObjectItem *exported;
+	gchar        *folder;
+	gchar        *format;
+	gchar        *basename;
+	GSList       *messages;
+};
+
+/**
+ * NAIExporterBufferParms:
+ * @version:  version of this structure (input, since v 1, currently equal to 2)
+ * @exported: exported NAObjectItem-derived object (input, since v 1)
+ * @format:   export format string identifier (input, since v 2)
+ * @buffer:   buffer which contains the exported object (output, since v 1)
+ * @messages: a #GSList list of localized strings;
+ *            the provider may append messages to this list,
+ *            but shouldn't reinitialize it
+ *            (input/output, since v 1).
+ *
+ * The structure that the plugin receives as a parameter of
+ * #NAIExporterInterface.to_buffer () interface method.
+ *
+ * Since: 3.2
  */
 struct _NAIExporterBufferParms {
 	guint         version;
 	NAObjectItem *exported;
-	GQuark        format;
+	gchar        *format;
 	gchar        *buffer;
 	GSList       *messages;
 };

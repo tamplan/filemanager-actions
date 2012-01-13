@@ -116,8 +116,13 @@ static void            write_type_dump( NAXMLWriter *writer, const NAObjectItem 
 
 static xmlDocPtr       build_xml_doc( NAXMLWriter *writer );
 static gchar          *convert_to_gconf_slist( const gchar *str );
-static ExportFormatFn *find_export_format_fn( GQuark format );
-static gchar          *get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format );
+static ExportFormatFn *find_export_format_fn( const gchar *format );
+
+#ifdef NA_ENABLE_DEPRECATED
+static ExportFormatFn *find_export_format_fn_from_quark( GQuark format );
+#endif
+
+static gchar          *get_output_fname( const NAObjectItem *item, const gchar *folder, const gchar *format );
 static void            output_xml_to_file( const gchar *xml, const gchar *filename, GSList **msg );
 static guint           writer_to_buffer( NAXMLWriter *writer );
 
@@ -288,7 +293,15 @@ naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferPar
 		writer->private->provider = ( NAIExporter * ) instance;
 		writer->private->exported = parms->exported;
 		writer->private->messages = parms->messages;
+#ifdef NA_ENABLE_DEPRECATED
+		if( parms->version == 1 ){
+			writer->private->fn_str = find_export_format_fn_from_quark(( NAIExporterBufferParmsv1 * ) parms->format );
+		} else {
+			writer->private->fn_str = find_export_format_fn( parms->format );
+		}
+#else
 		writer->private->fn_str = find_export_format_fn( parms->format );
+#endif
 		writer->private->buffer = NULL;
 
 		if( !writer->private->fn_str ){
@@ -322,6 +335,7 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *
 	NAXMLWriter *writer;
 	gchar *filename;
 	guint code;
+	const gchar *format2;
 
 	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
 
@@ -337,7 +351,18 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *
 		writer->private->provider = ( NAIExporter * ) instance;
 		writer->private->exported = parms->exported;
 		writer->private->messages = parms->messages;
+#ifdef NA_ENABLE_DEPRECATED
+		if( parms->version == 1 ){
+			writer->private->fn_str = find_export_format_fn_from_quark(( NAIExporterFileParmsv1 * ) parms->format );
+			format2 = g_quark_to_string(( NAIExporterFileParmsv1 * ) parms->format );
+		} else {
+			writer->private->fn_str = find_export_format_fn( parms->format );
+			format2 = parms->format;
+		}
+#else
 		writer->private->fn_str = find_export_format_fn( parms->format );
+		format2 = parms->format;
+#endif
 		writer->private->buffer = NULL;
 
 		if( !writer->private->fn_str ){
@@ -347,7 +372,7 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *
 			code = writer_to_buffer( writer );
 
 			if( code == NA_IEXPORTER_CODE_OK ){
-				filename = get_output_fname( parms->exported, parms->folder, parms->format );
+				filename = get_output_fname( parms->exported, parms->folder, format2 );
 
 				if( filename ){
 					parms->basename = g_path_get_basename( filename );
@@ -739,7 +764,27 @@ convert_to_gconf_slist( const gchar *slist_str )
 }
 
 static ExportFormatFn *
-find_export_format_fn( GQuark format )
+find_export_format_fn( const gchar *format )
+{
+	ExportFormatFn *found;
+	ExportFormatFn *i;
+
+	found = NULL;
+	i = st_export_format_fn;
+
+	while( i->format && !found ){
+		if( !strcmp( i->format, format )){
+			found = i;
+		}
+		i++;
+	}
+
+	return( found );
+}
+
+#ifdef NA_ENABLE_DEPRECATED
+static ExportFormatFn *
+find_export_format_fn_from_quark( GQuark format )
 {
 	ExportFormatFn *found;
 	ExportFormatFn *i;
@@ -756,6 +801,7 @@ find_export_format_fn( GQuark format )
 
 	return( found );
 }
+#endif
 
 /*
  * get_output_fname:
@@ -775,7 +821,7 @@ find_export_format_fn( GQuark format )
  * between our test of inexistance and the actual write.
  */
 static gchar *
-get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format )
+get_output_fname( const NAObjectItem *item, const gchar *folder, const gchar *format )
 {
 	static const gchar *thisfn = "naxml_writer_get_output_fname";
 	gchar *item_id;
@@ -790,20 +836,20 @@ get_output_fname( const NAObjectItem *item, const gchar *folder, GQuark format )
 
 	item_id = na_object_get_id( item );
 
-	if( format == g_quark_from_string( NAXML_FORMAT_GCONF_SCHEMA_V1 )){
+	if( !strcmp( format, NAXML_FORMAT_GCONF_SCHEMA_V1 )){
 		canonical_fname = g_strdup_printf( "config_%s", item_id );
 		canonical_ext = g_strdup( "schemas" );
 
-	} else if( format == g_quark_from_string( NAXML_FORMAT_GCONF_SCHEMA_V2 )){
+	} else if( !strcmp( format, NAXML_FORMAT_GCONF_SCHEMA_V2 )){
 		canonical_fname = g_strdup_printf( "config-%s", item_id );
 		canonical_ext = g_strdup( "schema" );
 
-	} else if( format == g_quark_from_string( NAXML_FORMAT_GCONF_ENTRY )){
+	} else if( !strcmp( format, NAXML_FORMAT_GCONF_ENTRY )){
 		canonical_fname = g_strdup_printf( "%s-%s", NA_IS_OBJECT_ACTION( item ) ? "action" : "menu", item_id );
 		canonical_ext = g_strdup( "xml" );
 
 	} else {
-		g_warning( "%s: unknown format: %s", thisfn, g_quark_to_string( format ));
+		g_warning( "%s: unknown format: %s", thisfn, format );
 	}
 
 	g_free( item_id );
