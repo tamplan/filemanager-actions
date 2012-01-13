@@ -165,12 +165,12 @@ unload_plugin( GModule *module )
  * in the same process).
  */
 
-#define NA_MODULE_TYPE                  ( na_module_get_type())
-#define NA_MODULE( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_MODULE_TYPE, NAModule ))
-#define NA_MODULE_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_MODULE_TYPE, NAModuleClass ))
-#define NA_IS_MODULE( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_MODULE_TYPE ))
-#define NA_IS_MODULE_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_MODULE_TYPE ))
-#define NA_MODULE_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_MODULE_TYPE, NAModuleClass ))
+#define NA_TYPE_MODULE                  ( na_module_get_type())
+#define NA_MODULE( object )             ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_MODULE, NAModule ))
+#define NA_MODULE_CLASS( klass )        ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_MODULE, NAModuleClass ))
+#define NA_IS_MODULE( object )          ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_MODULE ))
+#define NA_IS_MODULE_CLASS( klass )     ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_MODULE ))
+#define NA_MODULE_GET_CLASS( object )   ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_MODULE, NAModuleClass ))
 
 typedef struct _NAModulePrivate         NAModulePrivate;
 typedef struct _NAModuleClassPrivate    NAModuleClassPrivate;
@@ -384,7 +384,7 @@ load_plugin( void )
 
 	if( g_module_supported()){
 
-		module = g_object_new( NA_MODULE_TYPE, NULL );
+		module = g_object_new( NA_TYPE_MODULE, NULL );
 		g_debug( "test_module_load_plugin: module=%p", ( void * ) module );
 
 		if( !g_type_module_use( G_TYPE_MODULE( module ))){

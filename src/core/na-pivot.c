@@ -186,7 +186,7 @@ class_init( NAPivotClass *klass )
 	 */
 	st_signals[ ITEMS_CHANGED ] = g_signal_new(
 				PIVOT_SIGNAL_ITEMS_CHANGED,
-				NA_PIVOT_TYPE,
+				NA_TYPE_PIVOT,
 				G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 				0,									/* class offset */
 				NULL,								/* accumulator */
@@ -392,7 +392,7 @@ na_pivot_new( void )
 
 	g_debug( "%s", thisfn );
 
-	pivot = g_object_new( NA_PIVOT_TYPE, NULL );
+	pivot = g_object_new( NA_TYPE_PIVOT, NULL );
 
 	return( pivot );
 }

@@ -260,7 +260,7 @@ na_tokens_new_for_example( void )
 	GSList *is;
 	gboolean first;
 
-	tokens = g_object_new( NA_TOKENS_TYPE, NULL );
+	tokens = g_object_new( NA_TYPE_TOKENS, NULL );
 	first = TRUE;
 	tokens->private->count = 2;
 
@@ -316,7 +316,7 @@ na_tokens_new_from_selection( GList *selection )
 	g_debug( "%s: selection=%p (count=%d)", thisfn, ( void * ) selection, g_list_length( selection ));
 
 	first = TRUE;
-	tokens = g_object_new( NA_TOKENS_TYPE, NULL );
+	tokens = g_object_new( NA_TYPE_TOKENS, NULL );
 
 	tokens->private->count = g_list_length( selection );
 

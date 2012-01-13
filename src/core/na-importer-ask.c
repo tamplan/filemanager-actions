@@ -253,7 +253,7 @@ import_ask_new( GtkWindow *parent )
 		dialog = st_dialog;
 
 	} else {
-		dialog = g_object_new( NA_IMPORTER_ASK_TYPE, NULL );
+		dialog = g_object_new( NA_TYPE_IMPORTER_ASK, NULL );
 
 		builder = gtk_builder_new();
 		error = NULL;

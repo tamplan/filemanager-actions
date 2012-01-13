@@ -282,7 +282,7 @@ module_new( const gchar *fname )
 {
 	NAModule *module;
 
-	module = g_object_new( NA_MODULE_TYPE, NULL );
+	module = g_object_new( NA_TYPE_MODULE, NULL );
 	module->private->path = g_strdup( fname );
 
 	if( !g_type_module_use( G_TYPE_MODULE( module )) || !is_a_na_plugin( module )){

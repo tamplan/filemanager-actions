@@ -788,7 +788,7 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 	GFile *location;
 	NAGnomeVFSURI *vfs;
 
-	NASelectedInfo *info = g_object_new( NA_SELECTED_INFO_TYPE, NULL );
+	NASelectedInfo *info = g_object_new( NA_TYPE_SELECTED_INFO, NULL );
 
 	info->private->uri = g_strdup( uri );
 	if( mimetype ){

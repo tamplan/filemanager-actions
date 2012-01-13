@@ -98,7 +98,7 @@ register_type( void )
 
 	g_debug( "%s", thisfn );
 
-	type = g_type_register_static( NA_PIVOT_TYPE, "NAUpdater", &info, 0 );
+	type = g_type_register_static( NA_TYPE_PIVOT, "NAUpdater", &info, 0 );
 
 	return( type );
 }
@@ -194,7 +194,7 @@ na_updater_new( void )
 
 	g_debug( "%s", thisfn );
 
-	updater = g_object_new( NA_UPDATER_TYPE, NULL );
+	updater = g_object_new( NA_TYPE_UPDATER, NULL );
 
 	updater->private->are_preferences_locked = are_preferences_locked( updater );
 	updater->private->is_level_zero_writable = is_level_zero_writable( updater );

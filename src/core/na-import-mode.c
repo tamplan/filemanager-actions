@@ -437,7 +437,7 @@ na_import_mode_new( guint mode_id )
 {
 	NAImportMode *mode;
 
-	mode = g_object_new( NA_IMPORT_MODE_TYPE, NULL );
+	mode = g_object_new( NA_TYPE_IMPORT_MODE, NULL );
 
 	mode->private->id = mode_id;
 

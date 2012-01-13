@@ -44,14 +44,14 @@
 
 G_BEGIN_DECLS
 
-#define NA_IMPORT_MODE_TYPE           ( na_import_mode_get_type())
-#define NA_IMPORT_MODE( o )           ( G_TYPE_CHECK_INSTANCE_CAST( o, NA_IMPORT_MODE_TYPE, NAImportMode ))
-#define NA_IMPORT_MODE_CLASS( c )     ( G_TYPE_CHECK_CLASS_CAST( c, NA_IMPORT_MODE_TYPE, NAImportModeClass ))
-#define NA_IS_IMPORT_MODE( o )        ( G_TYPE_CHECK_INSTANCE_TYPE( o, NA_IMPORT_MODE_TYPE ))
-#define NA_IS_IMPORT_MODE_CLASS( c )  ( G_TYPE_CHECK_CLASS_TYPE(( c ), NA_IMPORT_MODE_TYPE ))
-#define NA_IMPORT_MODE_GET_CLASS( o ) ( G_TYPE_INSTANCE_GET_CLASS(( o ), NA_IMPORT_MODE_TYPE, NAImportModeClass ))
+#define NA_TYPE_IMPORT_MODE                ( na_import_mode_get_type())
+#define NA_IMPORT_MODE( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_IMPORT_MODE, NAImportMode ))
+#define NA_IMPORT_MODE_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_IMPORT_MODE, NAImportModeClass ))
+#define NA_IS_IMPORT_MODE( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_IMPORT_MODE ))
+#define NA_IS_IMPORT_MODE_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_IMPORT_MODE ))
+#define NA_IMPORT_MODE_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_IMPORT_MODE, NAImportModeClass ))
 
-typedef struct _NAImportModePrivate      NAImportModePrivate;
+typedef struct _NAImportModePrivate        NAImportModePrivate;
 
 typedef struct {
 	GObject              parent;
@@ -59,7 +59,7 @@ typedef struct {
 }
 	NAImportMode;
 
-typedef struct _NAImportModeClassPrivate NAImportModeClassPrivate;
+typedef struct _NAImportModeClassPrivate   NAImportModeClassPrivate;
 
 typedef struct {
 	GObjectClass              parent;

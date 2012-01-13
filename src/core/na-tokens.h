@@ -84,12 +84,12 @@
 
 G_BEGIN_DECLS
 
-#define NA_TOKENS_TYPE                ( na_tokens_get_type())
-#define NA_TOKENS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TOKENS_TYPE, NATokens ))
-#define NA_TOKENS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TOKENS_TYPE, NATokensClass ))
-#define NA_IS_TOKENS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TOKENS_TYPE ))
-#define NA_IS_TOKENS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TOKENS_TYPE ))
-#define NA_TOKENS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TOKENS_TYPE, NATokensClass ))
+#define NA_TYPE_TOKENS                ( na_tokens_get_type())
+#define NA_TOKENS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NA_TYPE_TOKENS, NATokens ))
+#define NA_TOKENS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NA_TYPE_TOKENS, NATokensClass ))
+#define NA_IS_TOKENS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NA_TYPE_TOKENS ))
+#define NA_IS_TOKENS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NA_TYPE_TOKENS ))
+#define NA_TOKENS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NA_TYPE_TOKENS, NATokensClass ))
 
 typedef struct _NATokensPrivate       NATokensPrivate;
 

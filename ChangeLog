@@ -1,5 +1,34 @@
 2012-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-import-mode.c:
+	* src/core/na-import-mode.h:
+	NA_IMPORT_MODE_TYPE GType macro renamed as NA_TYPE_IMPORT_MODE.
+
+	* src/core/na-importer-ask.c:
+	* src/core/na-importer-ask.h:
+	NA_IMPORTER_ASK_TYPE GType macro renamed as NA_TYPE_IMPORTER_ASK.
+
+	* src/core/na-module.c:
+	* src/core/na-module.h:
+	* src/test/test-module.c:
+	NA_MODULE_TYPE GType macro renamed as NA_TYPE_MODULE.
+
+	* src/core/na-pivot.c:
+	* src/core/na-pivot.h:
+	NA_PIVOT_TYPE GType macro renamed as NA_TYPE_PIVOT.
+
+	* src/core/na-selected-info.c:
+	* src/core/na-selected-info.h:
+	NA_SELECTED_INFO_TYPE GType macro renamed as NA_TYPE_SELECTED_INFO.
+
+	* src/core/na-tokens.c:
+	* src/core/na-tokens.h:
+	NA_TOKENS_TYPE GType macro renamed as NA_TYPE_TOKENS.
+
+	* src/core/na-updater.c:
+	* src/core/na-updater.h:
+	NA_UPDATER_TYPE GType macro renamed as NA_TYPE_UPDATER.
+
 	* src/api/na-boxed.h:
 	* src/core/na-boxed.c:
 	NA_BOXED_TYPE GType macro renamed as NA_TYPE_BOXED.
