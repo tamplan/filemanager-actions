@@ -1,5 +1,9 @@
 2012-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/naxml-provider.h:
+	* src/io-xml/naxml-module.c:
+	NAXML_PROVIDER_TYPE GType macro renamed as NAXML_TYPE_PROVIDER.
+
 	* src/io-desktop/nadp-desktop-file.c:
 	* src/io-desktop/nadp-desktop-file.h:
 	NADP_DESKTOP_FILE_TYPE GType macro renamed as NADP_TYPE_DESKTOP_FILE.

@@ -91,7 +91,7 @@ na_extension_list_types( const GType **types )
 
 	g_debug( "%s: types=%p", thisfn, ( void * ) types );
 
-	types_list[0] = NAXML_PROVIDER_TYPE;
+	types_list[0] = NAXML_TYPE_PROVIDER;
 
 	types_list[NAXML_TYPES_COUNT] = 0;
 	*types = types_list;
