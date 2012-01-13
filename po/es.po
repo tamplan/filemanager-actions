@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-01-06 07:32+0000\n"
-"PO-Revision-Date: 2012-01-06 20:42+0100\n"
+"POT-Creation-Date: 2012-01-12 23:23+0000\n"
+"PO-Revision-Date: 2012-01-13 10:15+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -160,8 +160,8 @@ msgstr ""
 "El último modo de importación elegido en el asistente de importación. Los "
 "valores posibles son: «NoImport» (no importar) para no importar una acción "
 "cuyo UUID ya existe; «Renumber» (reenumerar) para reservar un UUID nuevo si "
-"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir "
-"la acción existente con la importada; «Ask» (preguntar) para preguntar al "
+"el UUID importado ya existe; «Override» (sobreescribir) para sobreescribir la "
+"acción existente con la importada; «Ask» (preguntar) para preguntar al "
 "usuario cada vez."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:24
@@ -566,10 +566,6 @@ msgstr "Acciones de Nautilus"
 
 #: ../src/core/na-about.c:162
 #, c-format
-#| msgid ""
-#| "Copyright %s 2005 The GNOME Foundation\n"
-#| "Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
-#| "Copyright %s 2009, 2010, 2011 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
@@ -728,8 +724,8 @@ msgid ""
 msgstr ""
 "Establecer a cierto si la selección puede tener archivos, a falso en el caso "
 "contrario.\n"
-"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones "
-"válidas son:\n"
+"Este ajuste esta relacionado con el ajuste «isdir». Las combinaciones válidas "
+"son:\n"
 "isfile='true' e isdir='false': la selección sólo puede contener archivos\n"
 "isfile='false' e isdir='true': la selección sólo pude contener carpetas\n"
 "isfile='true' e isdir='true': la selección contiene tanto archivos como "
@@ -968,8 +964,8 @@ msgid ""
 msgstr ""
 "Note que, cuando se especifica, sólo se comprueban los estados de presencia "
 "y ejecutabilidad del archivo especificado.\n"
-"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán "
-"durante la ejecución.\n"
+"Los parámetros pueden aparecer en el valor «TryExec» y se sustituirán durante "
+"la ejecución.\n"
 "Lo predeterminado es satisfactorio."
 
 #: ../src/core/na-icontext-factory.c:432
@@ -1163,7 +1159,6 @@ msgstr ""
 "El elemento existente no se modificará."
 
 #: ../src/core/na-importer.c:75
-#| msgid "Override the existing item"
 msgid "_Override the existing item"
 msgstr "_Sobreescribir el elemento existente"
 
@@ -1233,39 +1228,39 @@ msgstr ""
 "Por favor, rellene un informe de error https://bugzilla.gnome.org/enter_bug."
 "cgi?product=nautilus-actions."
 
-#: ../src/core/na-io-provider.c:1298
+#: ../src/core/na-io-provider.c:1301
 msgid "Unavailable I/O provider."
 msgstr "Proveedor de E/S no disponible"
 
-#: ../src/core/na-io-provider.c:1302
+#: ../src/core/na-io-provider.c:1305
 msgid "I/O provider implementation lacks of required API."
 msgstr "La implementación del proveedor de E/S carece de la API requerida."
 
-#: ../src/core/na-io-provider.c:1306
+#: ../src/core/na-io-provider.c:1309
 msgid "I/O provider is not willing to write."
 msgstr "El proveedor de E/S no quiere escribir."
 
-#: ../src/core/na-io-provider.c:1310
+#: ../src/core/na-io-provider.c:1313
 msgid "I/O provider announces itself as unable to write."
 msgstr "El proveedor de E/S notifica que no puede escribir."
 
-#: ../src/core/na-io-provider.c:1314
+#: ../src/core/na-io-provider.c:1317
 msgid "I/O provider has been locked down by an administrator."
 msgstr "Un administrador ha bloqueado el proveedor de E/S."
 
-#: ../src/core/na-io-provider.c:1318
+#: ../src/core/na-io-provider.c:1321
 msgid "I/O provider has been locked down by the user."
 msgstr "El usuario ha bloqueado el proveedor de E/S."
 
-#: ../src/core/na-io-provider.c:1322
+#: ../src/core/na-io-provider.c:1325
 msgid "Item is read-only."
 msgstr "El elemento es de sólo lectura."
 
-#: ../src/core/na-io-provider.c:1326
+#: ../src/core/na-io-provider.c:1329
 msgid "No writable I/O provider found."
 msgstr "No se encontró un proveedor de E/S escribible."
 
-#: ../src/core/na-io-provider.c:1331
+#: ../src/core/na-io-provider.c:1334
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
@@ -1274,11 +1269,11 @@ msgstr ""
 "Por alguna razón desconocida (%d) no se puede escribir el elemento.\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1354
+#: ../src/core/na-io-provider.c:1357
 msgid "OK."
 msgstr "Aceptar."
 
-#: ../src/core/na-io-provider.c:1358
+#: ../src/core/na-io-provider.c:1361
 #, c-format
 msgid ""
 "Program flow error.\n"
@@ -1287,23 +1282,23 @@ msgstr ""
 "Error en el flujo del programa.\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1362
+#: ../src/core/na-io-provider.c:1365
 msgid "The I/O provider is not willing to do that."
 msgstr "El proveedor de E/S no hacer eso."
 
-#: ../src/core/na-io-provider.c:1366
+#: ../src/core/na-io-provider.c:1369
 msgid "Write error in I/O provider."
 msgstr "Error de escritura en el proveedor de E/S."
 
-#: ../src/core/na-io-provider.c:1370
+#: ../src/core/na-io-provider.c:1373
 msgid "Unable to delete GConf schemas."
 msgstr "No se pudieron borrar los esquemas de GConf."
 
-#: ../src/core/na-io-provider.c:1374
+#: ../src/core/na-io-provider.c:1377
 msgid "Unable to delete configuration."
 msgstr "No se pudo eliminar la configuración."
 
-#: ../src/core/na-io-provider.c:1378
+#: ../src/core/na-io-provider.c:1381
 #, c-format
 msgid ""
 "Unknown return code (%d).\n"
@@ -2002,107 +1997,164 @@ msgstr ""
 "- con la herramienta de la línea de comandos gconftool-2 --import-schema-"
 "file."
 
-#: ../src/nact/base-application.c:614
-#| msgid "The count of command-line arguments"
+#: ../src/nact/base-application.c:185
+msgid "Arguments count"
+msgstr "Conteo de parámetros"
+
+#: ../src/nact/base-application.c:186
+#, fuzzy
+#| msgid "The array of command-line arguments"
+msgid "The count of command-line arguments"
+msgstr "El «array» de parámetros en la línea de comandos"
+
+#: ../src/nact/base-application.c:193
+msgid "Arguments"
+msgstr "Parámetros"
+
+#: ../src/nact/base-application.c:194
+msgid "The array of command-line arguments"
+msgstr "El «array» de parámetros en la línea de comandos"
+
+#: ../src/nact/base-application.c:201
+msgid "Option entries"
+msgstr "Opciones de entrada"
+
+#: ../src/nact/base-application.c:202
+msgid "The array of command-line option definitions"
+msgstr ""
+"Las definiciones de las opciones de la línea de comandos para el «array»"
+
+#: ../src/nact/base-application.c:208
+msgid "Application name"
+msgstr "Nombre de la aplicación"
+
+#: ../src/nact/base-application.c:209
+msgid "The name of the application"
+msgstr "El nombre de la aplicación"
+
+#: ../src/nact/base-application.c:216 ../src/nact/nact-schemes-list.c:170
+msgid "Description"
+msgstr "Descripción:"
+
+#: ../src/nact/base-application.c:217
+msgid "A short description to be displayed in the first line of --help output"
+msgstr ""
+"Una descripción corta para mostrar en la primera línea de la salida «--help»"
+
+#: ../src/nact/base-application.c:224
+msgid "Icon name"
+msgstr "Nombre del icono"
+
+#: ../src/nact/base-application.c:225
+msgid "The name of the icon of the application"
+msgstr "El nombre del icono de la aplicación"
+
+# UniqueApp, ¿es un nombre o se traduce?
+#: ../src/nact/base-application.c:232
+msgid "UniqueApp name"
+msgstr "Nombre de UniqueApp"
+
+#: ../src/nact/base-application.c:233
+msgid "The Unique name of the application"
+msgstr "El nombre único de la aplicación"
+
+#: ../src/nact/base-application.c:240
+#| msgid "Run command:"
+msgid "Return code"
+msgstr "Código de retorno"
+
+#: ../src/nact/base-application.c:241
+#| msgid "The name of the application"
+msgid "The return code of the application"
+msgstr "El código de retorno de la aplicación"
+
+#: ../src/nact/base-application.c:604
 msgid "Unable to interpret command-line arguments"
 msgstr "No se pudieron interpretar los argumentos de la línea de comandos"
 
-#: ../src/nact/base-application.c:668
-#, c-format
-msgid ""
-"Another instance of %s is already running.\n"
-"Please switch back to it."
-msgstr ""
-"Ya se está ejecutando otra instancia de %s.\\n\n"
-"Vuelva a ella."
-
-#: ../src/nact/base-application.c:671
-msgid "The application is not unique"
-msgstr "Esta aplicación no es única"
-
-#: ../src/nact/base-assistant.c:157
+#: ../src/nact/base-assistant.c:152
 msgid "Quit on Escape"
 msgstr "Salir al pulsar «Escape»"
 
-#: ../src/nact/base-assistant.c:158
+#: ../src/nact/base-assistant.c:153
 msgid "Should the assistant 'Quit' when the user hits Escape ?"
 msgstr "¿Debería el asistente «Salir» al pulsar «Escape» el usuario?"
 
-#: ../src/nact/base-assistant.c:165
+#: ../src/nact/base-assistant.c:160
 msgid "Warn on Escape"
 msgstr "Advertir al pulsar «Escape»"
 
-#: ../src/nact/base-assistant.c:166
+#: ../src/nact/base-assistant.c:161
 msgid ""
 "Should the user be asked to confirm when exiting the assistant via Escape ?"
 msgstr ""
 "Indica si se debe preguntar al usuario confirmación al salir del asistente, "
 "pulsando la tecla Esc"
 
-#: ../src/nact/base-assistant.c:475
+#: ../src/nact/base-assistant.c:461
 msgid "Are you sure you want to quit this assistant ?"
 msgstr "¿Está seguro de que quiere salir de este asistente?"
 
-#: ../src/nact/base-window.c:201
-msgid "Parent BaseWindow"
-msgstr "BaseWindow padre"
-
-#: ../src/nact/base-window.c:202
-msgid "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
-msgstr ""
-"Un puntero (no una referencia) al padre de la BaseWindow de esta BaseWindow"
-
-#: ../src/nact/base-window.c:208
-msgid "BaseApplication"
-msgstr "BaseApplication"
-
-#: ../src/nact/base-window.c:209
-msgid "A pointer (not a reference) to the BaseApplication instance"
-msgstr "Un puntero (no una referencia) a la instancia de BaseApplication"
-
-#: ../src/nact/base-window.c:215
+#: ../src/nact/base-window.c:203
 msgid "XML UI filename"
 msgstr "Nombre del archivo XML de la IU"
 
-#: ../src/nact/base-window.c:216
+#: ../src/nact/base-window.c:204
 msgid "The filename which contains the XML UI definition"
 msgstr "El archivo que contiene la definición XML de la IU."
 
-#: ../src/nact/base-window.c:223
+#: ../src/nact/base-window.c:211
 msgid "Has its own GtkBuilder"
 msgstr "Tiene su propio GtkBuilder"
 
-#: ../src/nact/base-window.c:224
+#: ../src/nact/base-window.c:212
 msgid ""
 "Whether this BaseWindow reallocates a new GtkBuilder each time it is opened"
 msgstr "Indica si BaseWindow reasigna un nuevo GtkBuilder cada vez que se abre"
 
-#: ../src/nact/base-window.c:231
+#: ../src/nact/base-window.c:219
 msgid "Toplevel name"
 msgstr "Nombre de Toplevel"
 
-#: ../src/nact/base-window.c:232
+#: ../src/nact/base-window.c:220
 msgid "The internal GtkBuildable name of the toplevel window"
 msgstr ""
 "El identificador interno de GtkBuildable de la ventana de nivel superior"
 
-#: ../src/nact/base-window.c:239
+#: ../src/nact/base-window.c:227
+msgid "BaseApplication"
+msgstr "BaseApplication"
+
+#: ../src/nact/base-window.c:228
+msgid "A pointer (not a reference) to the BaseApplication instance"
+msgstr "Un puntero (no una referencia) a la instancia de BaseApplication"
+
+#: ../src/nact/base-window.c:234
+msgid "Parent BaseWindow"
+msgstr "BaseWindow padre"
+
+#: ../src/nact/base-window.c:235
+msgid "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
+msgstr ""
+"Un puntero (no una referencia) al padre de la BaseWindow de esta BaseWindow"
+
+#: ../src/nact/base-window.c:241
 msgid "WSP name"
 msgstr "Nombre WSP"
 
-#: ../src/nact/base-window.c:240
+#: ../src/nact/base-window.c:242
 msgid ""
 "The string which handles the window size and position in user preferences"
 msgstr ""
 "La cadena que maneja el tamaño y posición de la ventana en las preferencias "
 "del usuario"
 
-#: ../src/nact/base-window.c:683
+#: ../src/nact/base-window.c:711
 #, c-format
 msgid "Unable to load %s UI XML definition: %s"
 msgstr "No se pudo cargar la definición XML del IU de %s: %s"
 
-#: ../src/nact/base-window.c:708
+#: ../src/nact/base-window.c:726
 #, c-format
 msgid "Unable to load %s dialog definition."
 msgstr "No se pudo cargar la definición del diálogo %s."
@@ -2229,16 +2281,16 @@ msgstr "<b>Esquema</b>"
 msgid "Adding a new scheme"
 msgstr "Añadiendo un esquema nuevo"
 
-#: ../src/nact/nact-assistant-export.c:815
+#: ../src/nact/nact-assistant-export.c:816
 msgid "Export canceled due to user action."
 msgstr "Se canceló la exportación debido a una acción del usuario"
 
 #. i18n: action as been successfully exported to <filename>
-#: ../src/nact/nact-assistant-export.c:892
+#: ../src/nact/nact-assistant-export.c:893
 msgid "Successfully exported as"
 msgstr "Exportado exitosamente como"
 
-#: ../src/nact/nact-assistant-export.c:921
+#: ../src/nact/nact-assistant-export.c:922
 msgid "You may not have write permissions on selected folder."
 msgstr "Puede que no tenga permisos de escritura en la carpeta seleccionada."
 
@@ -2390,27 +2442,27 @@ msgstr "La acción «%s» está a punto de ser exportada."
 msgid "The menu \"%s\" is about to be exported."
 msgstr "El menú «%s» está a punto de ser exportado."
 
-#: ../src/nact/nact-iaction-tab.c:573
+#: ../src/nact/nact-iaction-tab.c:625
 msgid "Caution: a label is mandatory for the action or the menu."
 msgstr "Precaución: la etiqueta es obligatoria para la acción o el menú."
 
-#: ../src/nact/nact-ibasenames-tab.c:163
+#: ../src/nact/nact-ibasenames-tab.c:220
 msgid "Basename filter"
 msgstr "Filtro de nombre base"
 
-#: ../src/nact/nact-icapabilities-tab.c:155
+#: ../src/nact/nact-icapabilities-tab.c:197
 msgid "Capability filter"
 msgstr "Filtro de capacidades"
 
-#: ../src/nact/nact-icommand-tab.c:541
+#: ../src/nact/nact-icommand-tab.c:556
 msgid "Choosing a command"
 msgstr "Eligiendo un comando"
 
-#: ../src/nact/nact-icommand-tab.c:578
+#: ../src/nact/nact-icommand-tab.c:596
 msgid "Choosing a working directory"
 msgstr "Elegir una carpeta de trabajo"
 
-#: ../src/nact/nact-icommand-tab.c:637
+#: ../src/nact/nact-icommand-tab.c:658
 #: ../src/nact/nact-preferences-editor.c:777
 msgid "Ex.:"
 msgstr "Ex.:"
@@ -2439,23 +2491,23 @@ msgstr "(igual a)"
 msgid "(strictly greater than)"
 msgstr "(estrictamente más actual que)"
 
-#: ../src/nact/nact-ienvironment-tab.c:733
-#: ../src/nact/nact-ienvironment-tab.c:791
+#: ../src/nact/nact-ienvironment-tab.c:768
+#: ../src/nact/nact-ienvironment-tab.c:826
 msgid "Choosing an executable"
 msgstr "Eligiendo un ejecutable"
 
-#: ../src/nact/nact-ifolders-tab.c:162
+#: ../src/nact/nact-ifolders-tab.c:206
 msgid "Folder filter"
 msgstr "Filtro de carpeta"
 
 #. i18n: title of the FileChoose dialog when selecting an URI which
 #. * will be compare to Nautilus 'current_folder'
 #.
-#: ../src/nact/nact-ifolders-tab.c:242 ../src/nact/nact-ifolders-tab.c:270
+#: ../src/nact/nact-ifolders-tab.c:267 ../src/nact/nact-ifolders-tab.c:295
 msgid "Select a folder"
 msgstr "Seleccionar una carpeta"
 
-#: ../src/nact/nact-imimetypes-tab.c:160
+#: ../src/nact/nact-imimetypes-tab.c:204
 msgid "Mimetype filter"
 msgstr "Filtro del tipo MIME"
 
@@ -2465,29 +2517,69 @@ msgstr "Filtro del tipo MIME"
 msgid "None"
 msgstr "Ninguno"
 
-#: ../src/nact/nact-iproperties-tab.c:268
+#: ../src/nact/nact-iproperties-tab.c:287
 msgid "Me_nu"
 msgstr "Me_nú"
 
-#: ../src/nact/nact-iproperties-tab.c:269
+#: ../src/nact/nact-iproperties-tab.c:288
 msgid "<b>Menu editable properties</b>"
 msgstr "<b>Propiedades editables del menú</b>"
 
-#: ../src/nact/nact-iproperties-tab.c:271
+#: ../src/nact/nact-iproperties-tab.c:290
 #: ../src/nact/nautilus-actions-config-tool.ui.h:208
 msgid "_Action"
 msgstr "_Acción"
 
-#: ../src/nact/nact-iproperties-tab.c:272
+#: ../src/nact/nact-iproperties-tab.c:291
 #: ../src/nact/nautilus-actions-config-tool.ui.h:52
 msgid "<b>Action editable properties</b>"
 msgstr "<b>Propiedades editables de la acción</b>"
 
-#: ../src/nact/nact-ischemes-tab.c:158
+#: ../src/nact/nact-ischemes-tab.c:202
 msgid "Scheme filter"
 msgstr "Filtro de esquema"
 
-#: ../src/nact/nact-main-window.c:1208
+#: ../src/nact/nact-main-window.c:344
+msgid "Current NAObjectItem"
+msgstr "NAObjectItem actual"
+
+#: ../src/nact/nact-main-window.c:345
+msgid "A pointer to the currently edited NAObjectItem, an action or a menu"
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:351
+msgid "Current NAObjectProfile"
+msgstr "NAObjectProfile actual"
+
+#: ../src/nact/nact-main-window.c:352
+msgid "A pointer to the currently edited NAObjectProfile"
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:358
+msgid "Current NAIContext"
+msgstr "NAIContext actual"
+
+#: ../src/nact/nact-main-window.c:359
+msgid "A pointer to the currently edited NAIContext"
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:365
+msgid "Editable item ?"
+msgstr "¿Elemento editable?"
+
+#: ../src/nact/nact-main-window.c:366
+msgid "Whether the item will be able to be updated against its I/O provider"
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:373
+msgid "No edition reason"
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:374
+msgid "Why is this item not editable"
+msgstr ""
+
+#: ../src/nact/nact-main-window.c:1215
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
@@ -2497,7 +2589,7 @@ msgstr ""
 "Puede continuar trabajando con su lista actual de acciones o puede querer "
 "recargar una lista actualizada."
 
-#: ../src/nact/nact-main-window.c:1215
+#: ../src/nact/nact-main-window.c:1222
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
@@ -2505,11 +2597,11 @@ msgstr ""
 "Note que recargar una lista actualizada de acciones requiere que abandone "
 "sus modificaciones actuales."
 
-#: ../src/nact/nact-main-window.c:1221
+#: ../src/nact/nact-main-window.c:1228
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "¿Quiere recargar una lista actual de acciones?"
 
-#: ../src/nact/nact-main-window.c:1244
+#: ../src/nact/nact-main-window.c:1251
 msgid ""
 "Reloading a fresh list of actions requires that you give up with your "
 "current modifications."
@@ -2517,16 +2609,16 @@ msgstr ""
 "Recargar una lista actualizada de acciones requiere que abandone sus "
 "modificaciones actuales."
 
-#: ../src/nact/nact-main-window.c:1247
+#: ../src/nact/nact-main-window.c:1254
 msgid "Do you really want to do this ?"
 msgstr "¿Está seguro de que quiere hacerlo?"
 
-#: ../src/nact/nact-main-window.c:1364
+#: ../src/nact/nact-main-window.c:1371
 #, c-format
 msgid "Some items have been modified."
 msgstr "Se han modificado algunos elementos."
 
-#: ../src/nact/nact-main-window.c:1365
+#: ../src/nact/nact-main-window.c:1372
 msgid "Are you sure you want to quit without saving them ?"
 msgstr "¿Está seguro de que quiere salir sin guardarlos?"
 
@@ -2880,27 +2972,31 @@ msgid "<b>Relabeling items</b>"
 msgstr "<b>Re-etiquetando los elementos</b>"
 
 #: ../src/nact/nact-preferences.ui.h:12
+msgid "<i>Currently detected :</i>"
+msgstr ""
+
+#: ../src/nact/nact-preferences.ui.h:13
 msgid "Add an 'A_bout Nautilus-Actions' item in the Nautilus context menus"
 msgstr "Añadir un elemento «Acerca _de» en los menús contextuales de Nautilus"
 
-#: ../src/nact/nact-preferences.ui.h:13
+#: ../src/nact/nact-preferences.ui.h:14
 msgid "Ask for a _confirmation when quitting the assistant on Esc key"
 msgstr "Preguntar _confirmación al salir del asistente con la tecla Esc"
 
-#: ../src/nact/nact-preferences.ui.h:14
+#: ../src/nact/nact-preferences.ui.h:15
 msgid "Automatically _saves pending modifications"
 msgstr "Automáticamente _guarda las modificaciones pendientes"
 
 # "Default"  Buscar otra traducción.
-#: ../src/nact/nact-preferences.ui.h:15
+#: ../src/nact/nact-preferences.ui.h:16
 msgid "Click to add a new default scheme."
 msgstr "Pulsar para añadir un esquema nuevo predeterminado."
 
-#: ../src/nact/nact-preferences.ui.h:16
+#: ../src/nact/nact-preferences.ui.h:17
 msgid "Click to remove the selected default scheme."
 msgstr "Pulsar para quitar el esquema predeterminado seleccionado."
 
-#: ../src/nact/nact-preferences.ui.h:17
+#: ../src/nact/nact-preferences.ui.h:18
 msgid ""
 "Define here, for available I/O providers, if you want them to be read at "
 "startup, to be writable, and the order in which they will be tested when "
@@ -2910,7 +3006,7 @@ msgstr ""
 "al inicio, que sean escribibles y en qué orden se probarán al intentar "
 "escribir un menú o acción nueva."
 
-#: ../src/nact/nact-preferences.ui.h:18
+#: ../src/nact/nact-preferences.ui.h:19
 msgid ""
 "Display order of menus and actions, both in the Nautilus context menu and in "
 "the NACT user interface, must be manually adjusted."
@@ -2919,15 +3015,15 @@ msgstr ""
 "de Nautilus como en la interfaz de usuario NACT, se deberán hacer los "
 "ajustes manualmente."
 
-#: ../src/nact/nact-preferences.ui.h:19
+#: ../src/nact/nact-preferences.ui.h:20
 msgid "Esc key _quits the assistant"
 msgstr "La tecla Esc _sale del asistente"
 
-#: ../src/nact/nact-preferences.ui.h:20
+#: ../src/nact/nact-preferences.ui.h:21
 msgid "I/O _Providers"
 msgstr "_Proveedores de E/S"
 
-#: ../src/nact/nact-preferences.ui.h:21
+#: ../src/nact/nact-preferences.ui.h:22
 msgid ""
 "Menus and actions will be displayed in the ascending alphabetical order of "
 "their label, both in the Nautilus context menu and in the NACT user "
@@ -2937,7 +3033,7 @@ msgstr ""
 "alfabético ascendente; tanto en el menú contextual de Nautilus como en la "
 "interfaz de usuario NACT."
 
-#: ../src/nact/nact-preferences.ui.h:22
+#: ../src/nact/nact-preferences.ui.h:23
 msgid ""
 "Menus and actions will be displayed in the descending alphabetical order of "
 "their label, both in the Nautilus context menu and in the NACT user "
@@ -2947,7 +3043,7 @@ msgstr ""
 "alfabético descendente; tanto en el menú contextual de Nautilus como en la "
 "interfaz de usuario NACT."
 
-#: ../src/nact/nact-preferences.ui.h:23
+#: ../src/nact/nact-preferences.ui.h:24
 msgid ""
 "Move up the selected I/O provider in the order of priority when trying to "
 "write a new item."
@@ -2955,35 +3051,35 @@ msgstr ""
 "Mover el proveedor de E/S seleccionado por orden de prioridad cuando trata "
 "de escribir un nuevo elemento."
 
-#: ../src/nact/nact-preferences.ui.h:24
+#: ../src/nact/nact-preferences.ui.h:25
 msgid "Nautilus-Actions Preferences"
 msgstr "Preferencias de las acciones de Nautilus"
 
-#: ../src/nact/nact-preferences.ui.h:25
+#: ../src/nact/nact-preferences.ui.h:26
 msgid "Periodicity :"
 msgstr "Periodicidad:"
 
-#: ../src/nact/nact-preferences.ui.h:26
+#: ../src/nact/nact-preferences.ui.h:27
 msgid "Relabel _actions"
 msgstr "Re-etiquetar _acciones"
 
-#: ../src/nact/nact-preferences.ui.h:27
+#: ../src/nact/nact-preferences.ui.h:28
 msgid "Relabel _menus"
 msgstr "Re-etiquetar _menús"
 
-#: ../src/nact/nact-preferences.ui.h:28
+#: ../src/nact/nact-preferences.ui.h:29
 msgid "Relabel _profiles"
 msgstr "Re-etiquetar p_erfiles"
 
-#: ../src/nact/nact-preferences.ui.h:29
+#: ../src/nact/nact-preferences.ui.h:30
 msgid "Running _desktop environment :"
 msgstr "_Ejecutando entorno de escritorio:"
 
-#: ../src/nact/nact-preferences.ui.h:30
+#: ../src/nact/nact-preferences.ui.h:31
 msgid "Runtime E_xecution"
 msgstr "Modo de _ejecución"
 
-#: ../src/nact/nact-preferences.ui.h:31
+#: ../src/nact/nact-preferences.ui.h:32
 msgid ""
 "Specify here the command to run and keep opened a terminal.\n"
 "This command should include a 'COMMAND' keyword, which will be substituted "
@@ -2993,7 +3089,7 @@ msgstr ""
 "Este comando debe incluir una palabra clave «COMMAND», que se sustituirá al "
 "ejecutarse por la ruta de la acción y sus parámetros."
 
-#: ../src/nact/nact-preferences.ui.h:33
+#: ../src/nact/nact-preferences.ui.h:34
 msgid ""
 "This option is only relevant when the 'Escape' key lets the user quit the "
 "assistant. When checked, the user will be prompted for a confirmation in "
@@ -3003,7 +3099,7 @@ msgstr ""
 "salga del asistente. Cuando la opción está activada, se le avisará pidiendo "
 "confirmación para prevenir pulsaciones por error de la tecla «Esc»."
 
-#: ../src/nact/nact-preferences.ui.h:34
+#: ../src/nact/nact-preferences.ui.h:35
 msgid ""
 "This tab allows the user to choose custom preferences for the Nautilus-"
 "Actions Configuration Tool user interface."
@@ -3011,7 +3107,7 @@ msgstr ""
 "Esta pestaña permite que el usuario elija preferencias personalizadas para "
 "la interfaz de la Herramienta de configuración de las acciones de Nautilus."
 
-#: ../src/nact/nact-preferences.ui.h:35
+#: ../src/nact/nact-preferences.ui.h:36
 msgid ""
 "This tab lets you choose how the actions are ordered in the displayed list "
 "as well as in the Nautilus context menu. You may also choose here how "
@@ -3021,19 +3117,19 @@ msgstr ""
 "para mostrar, lo mismo que en el menú contextual de Nautilus. También puede "
 "elegir cómo se mostrarán las acciones en el menú contextual de Nautilus."
 
-#: ../src/nact/nact-preferences.ui.h:36
+#: ../src/nact/nact-preferences.ui.h:37
 msgid "This tab lets you decide on the default behavior of export operations."
 msgstr ""
 "Esta pestaña le permite decidir el comportamiento predeterminado de las "
 "operaciones de exportación."
 
-#: ../src/nact/nact-preferences.ui.h:37
+#: ../src/nact/nact-preferences.ui.h:38
 msgid "This tab lets you decide on the default behavior of import operations."
 msgstr ""
 "Esta pestaña le permite decidir el comportamiento predeterminado de las "
 "operaciones de importación."
 
-#: ../src/nact/nact-preferences.ui.h:38
+#: ../src/nact/nact-preferences.ui.h:39
 msgid ""
 "This tab lets you decide whether the I/O providers are enabled or not, and "
 "in which order they will be tried when writing a new item."
@@ -3041,7 +3137,7 @@ msgstr ""
 "Esta pestaña le permite decidir si los proveedores de E/S están activados o "
 "no, y en qué orden se probarán al escribir un elemento nuevo."
 
-#: ../src/nact/nact-preferences.ui.h:39
+#: ../src/nact/nact-preferences.ui.h:40
 msgid ""
 "This tab lets you decide which schemes are proposed by default when editing "
 "advanced conditions for an item."
@@ -3049,18 +3145,17 @@ msgstr ""
 "Esta pestaña le permite decidir qué esquemas se proponen como "
 "predeterminados al editar las condiciones avanzadas de un elemento."
 
-#: ../src/nact/nact-preferences.ui.h:40
+#: ../src/nact/nact-preferences.ui.h:41
 msgid "This tab lets you specify parameters needed for. some execution modes."
 msgstr ""
 "Esta pestaña le permite especificar parámetros necesarios para algunos modos "
 "de ejecución."
 
-#: ../src/nact/nact-preferences.ui.h:41
-#| msgid "Preferred export format"
+#: ../src/nact/nact-preferences.ui.h:42
 msgid "What is your preferred export format ?"
 msgstr "¿Cuál es su formato de exportación preferido?"
 
-#: ../src/nact/nact-preferences.ui.h:42
+#: ../src/nact/nact-preferences.ui.h:43
 msgid ""
 "What to do when an item, action or menu, selected to be imported, has the "
 "same identifier that a currently existing one ?"
@@ -3068,11 +3163,11 @@ msgstr ""
 "¿Qué hacer cuando un elemento, acción o menú, seleccionado para importarse, "
 "tiene el mismo identificador que uno ya existente?"
 
-#: ../src/nact/nact-preferences.ui.h:43
+#: ../src/nact/nact-preferences.ui.h:44
 msgid "What to do when pasting or duplicating an item in the tree ?"
 msgstr "¿Qué hacer al pegar o duplicar un elemento en el árbol?"
 
-#: ../src/nact/nact-preferences.ui.h:44
+#: ../src/nact/nact-preferences.ui.h:45
 msgid ""
 "When a menu is copied/pasted, or duplicated, the new menu will be relabelled "
 "as 'Copy of ...'."
@@ -3080,7 +3175,7 @@ msgstr ""
 "Cuando un menú se copia/pega o se duplica, el nuevo menú se reetiquetará "
 "como «Copia de…»."
 
-#: ../src/nact/nact-preferences.ui.h:45
+#: ../src/nact/nact-preferences.ui.h:46
 msgid ""
 "When a profile is copied/pasted, or duplicated, the new profile will be "
 "relabelled as 'Copy of ...'."
@@ -3088,7 +3183,7 @@ msgstr ""
 "Cuando un perfil se copia/pega o se duplica, el nuevo perfil será renombrado "
 "como «Copia de...»."
 
-#: ../src/nact/nact-preferences.ui.h:46
+#: ../src/nact/nact-preferences.ui.h:47
 msgid ""
 "When an action is copied/pasted, or duplicated, the new action will be "
 "relabelled as 'Copy of ...'."
@@ -3096,7 +3191,7 @@ msgstr ""
 "Cuando una acción es copiada/pegada, o duplicada, la nueva acción será "
 "renombrada como \"Copia de ...\"."
 
-#: ../src/nact/nact-preferences.ui.h:47
+#: ../src/nact/nact-preferences.ui.h:48
 msgid ""
 "When this option is checked, an 'About Nautilus-Actions' item will be added "
 "to the root Nautilus-Actions menu in the Nautilus context menu.\n"
@@ -3111,16 +3206,16 @@ msgstr ""
 "el menú contextual (ej.: cuando se ha marcado la opción del menú principal "
 "«Acciones de Nautilus» descrita arriba)."
 
-#: ../src/nact/nact-preferences.ui.h:49
+#: ../src/nact/nact-preferences.ui.h:50
 msgid ""
 "When this option is checked, menus and actions will actually be displayed as "
 "sub-items of a root 'Nautilus-Actions' menu in the Nautilus context menu."
 msgstr ""
 "Cuando esta opción está marcada, los menús y las acciones se mostrarán como "
-"subelementos del menú raíz de «Acciones de Nautilus» en el menú contextual "
-"de Nautilus."
+"subelementos del menú raíz de «Acciones de Nautilus» en el menú contextual de "
+"Nautilus."
 
-#: ../src/nact/nact-preferences.ui.h:50
+#: ../src/nact/nact-preferences.ui.h:51
 msgid ""
 "When this option is checked, pending modification will be periodically and "
 "automatically saved."
@@ -3128,7 +3223,7 @@ msgstr ""
 "Cuando esta opción está marcada, las modificaciones pendientes se guardarán "
 "periódica y automáticamente."
 
-#: ../src/nact/nact-preferences.ui.h:51
+#: ../src/nact/nact-preferences.ui.h:52
 msgid ""
 "When this option is checked, the 'Escape' key will let you quit the current "
 "assistant. Else, quitting the assistant is only possible by hitting the "
@@ -3138,7 +3233,7 @@ msgstr ""
 "asistente. De lo contrario, solo será posible salir del asistente pulsando "
 "«Cancelar»."
 
-#: ../src/nact/nact-preferences.ui.h:52
+#: ../src/nact/nact-preferences.ui.h:53
 msgid ""
 "You may define here any number of schemes. They will be proposed as default "
 "schemes when defining conditions for an action.\n"
@@ -3152,61 +3247,61 @@ msgstr ""
 "predeterminada.\n"
 "Puede añadir un esquema nuevo pulsando la tecla «+»."
 
-#: ../src/nact/nact-preferences.ui.h:55
+#: ../src/nact/nact-preferences.ui.h:56
 msgid "_Ascending alphabetical order"
 msgstr "Orden alfabético _ascendente"
 
-#: ../src/nact/nact-preferences.ui.h:56
+#: ../src/nact/nact-preferences.ui.h:57
 msgid "_Command pattern :"
 msgstr "Patrón del _comando:"
 
-#: ../src/nact/nact-preferences.ui.h:57
+#: ../src/nact/nact-preferences.ui.h:58
 msgid "_Create a root 'Nautilus-Actions' menu"
 msgstr "_Crear un menú raíz «Acciones de Nautilus»"
 
-#: ../src/nact/nact-preferences.ui.h:58
+#: ../src/nact/nact-preferences.ui.h:59
 msgid "_Descending alphabetical order"
 msgstr "Orden alfabético _descendente"
 
-#: ../src/nact/nact-preferences.ui.h:59
+#: ../src/nact/nact-preferences.ui.h:60
 msgid "_Down"
 msgstr "_Abajo"
 
-#: ../src/nact/nact-preferences.ui.h:60
+#: ../src/nact/nact-preferences.ui.h:61
 msgid "_Export"
 msgstr "_Exportar"
 
-#: ../src/nact/nact-preferences.ui.h:61
+#: ../src/nact/nact-preferences.ui.h:62
 msgid "_Import"
 msgstr "_Importar"
 
-#: ../src/nact/nact-preferences.ui.h:62
+#: ../src/nact/nact-preferences.ui.h:63
 msgid "_Manual order"
 msgstr "_Orden manual:"
 
-#: ../src/nact/nact-preferences.ui.h:63
+#: ../src/nact/nact-preferences.ui.h:64
 msgid "_Runtime preferences"
 msgstr "Preferencias de _ejecución"
 
-#: ../src/nact/nact-preferences.ui.h:64
+#: ../src/nact/nact-preferences.ui.h:65
 #: ../src/nact/nautilus-actions-config-tool.ui.h:229
 msgid "_Schemes"
 msgstr "_Esquemas"
 
-#: ../src/nact/nact-preferences.ui.h:65
+#: ../src/nact/nact-preferences.ui.h:66
 msgid "_UI Preferences"
 msgstr "Preferencias de la _IU"
 
-#: ../src/nact/nact-preferences.ui.h:66
+#: ../src/nact/nact-preferences.ui.h:67
 msgid "_Up"
 msgstr "A_rriba"
 
-#: ../src/nact/nact-preferences.ui.h:67
+#: ../src/nact/nact-preferences.ui.h:68
 msgid "minutes"
 msgstr "minutos"
 
 #. i18n: the user is not willing to identify his current desktop environment,
-#. *       and prefers rely onthe runtime detection
+#. *       and prefers rely on the runtime detection
 #: ../src/nact/nact-preferences-editor.c:119
 msgid "Rely on runtime detection"
 msgstr "Confiar en la detección al ejecutar"
@@ -3236,10 +3331,6 @@ msgstr "proveedor de E/S no disponible"
 #: ../src/nact/nact-schemes-list.c:158
 msgid "Keyword"
 msgstr "Palabra clave"
-
-#: ../src/nact/nact-schemes-list.c:170
-msgid "Description"
-msgstr "Descripción:"
 
 #. i18n notes : description of 'file' scheme
 #: ../src/nact/nact-schemes-list.c:286
@@ -3302,52 +3393,52 @@ msgid "Some messages have occurred during drop operation."
 msgstr "Sucedieron algunos mensajes durante la operación de soltado."
 
 #. i18n: this is a class name and should not be translated
-#: ../src/nact/nact-tree-view.c:234
+#: ../src/nact/nact-tree-view.c:233
 msgid "BaseWindow"
 msgstr "BaseWindow"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:236
+#: ../src/nact/nact-tree-view.c:235
 msgid "The BaseWindow parent"
 msgstr "La BaseWindow padre"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:243
+#: ../src/nact/nact-tree-view.c:242
 msgid "Container"
 msgstr "Contenedor"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:245
+#: ../src/nact/nact-tree-view.c:244
 msgid "A GtkContainer which contains the GtkTreeView widget"
 msgstr "Un GtkContainer que contiene el widget GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:252
+#: ../src/nact/nact-tree-view.c:251
 msgid "Widget name"
 msgstr "Nombre del widget"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:254
+#: ../src/nact/nact-tree-view.c:253
 msgid "The name of GtkTreeView widget"
 msgstr "El nombre del widget GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:262
+#: ../src/nact/nact-tree-view.c:261
 msgid "Management mode"
 msgstr "Modo de administración"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:264
+#: ../src/nact/nact-tree-view.c:263
 msgid "Management mode of the tree view, selection or edition"
 msgstr "Modo de administración de la vista de árbol, selección o edición"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:274
+#: ../src/nact/nact-tree-view.c:273
 msgid "Allow notify"
 msgstr "Permitir notificaciones"
 
 #. i18n: NactTreeView property loong description
-#: ../src/nact/nact-tree-view.c:276
+#: ../src/nact/nact-tree-view.c:275
 msgid "Whether notifications are allowed"
 msgstr "Indica si se permiten las notificaciones"
 
@@ -4428,12 +4519,12 @@ msgid "username of the (first) selected URI."
 msgstr "usuario del primer URI seleccionado."
 
 #. i18n: label of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:885
+#: ../src/plugin-menu/nautilus-actions.c:902
 msgid "Nautilus-Actions actions"
 msgstr "Acciones de las Acciones de Nautilus"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:887
+#: ../src/plugin-menu/nautilus-actions.c:904
 msgid ""
 "A submenu which embeds the currently available Nautilus-Actions actions and "
 "menus"
@@ -4441,11 +4532,11 @@ msgstr ""
 "Un submenú que contiene las acciones y los menús disponibles actualmente de "
 "Acciones de Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:931
+#: ../src/plugin-menu/nautilus-actions.c:948
 msgid "About Nautilus-Actions"
 msgstr "Acerca de las Acciones de Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:932
+#: ../src/plugin-menu/nautilus-actions.c:949
 msgid "Display some informations about Nautilus-Actions"
 msgstr "Mostrar información acerca de Acciones de Nautilus"
 
@@ -4756,6 +4847,16 @@ msgstr "Error: no se pudo obtener un proxy en el servicio %s"
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Error en la llamada a GetSelectedPaths: %s"
 
+#~ msgid ""
+#~ "Another instance of %s is already running.\n"
+#~ "Please switch back to it."
+#~ msgstr ""
+#~ "Ya se está ejecutando otra instancia de %s.\\n\n"
+#~ "Vuelva a ella."
+
+#~ msgid "The application is not unique"
+#~ msgstr "Esta aplicación no es única"
+
 #~ msgid "Do _not import the action"
 #~ msgstr "_No importar la acción"
 
@@ -4764,47 +4865,6 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 
 #~ msgid "_Override the existing action"
 #~ msgstr "_Sobreescribir la acción existente"
-
-#~ msgid "Arguments count"
-#~ msgstr "Conteo de parámetros"
-
-#~ msgid "Arguments"
-#~ msgstr "Parámetros"
-
-#~ msgid "The array of command-line arguments"
-#~ msgstr "El «array» de parámetros en la línea de comandos"
-
-#~ msgid "Option entries"
-#~ msgstr "Opciones de entrada"
-
-#~ msgid "The array of command-line option definitions"
-#~ msgstr ""
-#~ "Las definiciones de las opciones de la línea de comandos para el «array»"
-
-#~ msgid "Application name"
-#~ msgstr "Nombre de la aplicación"
-
-#~ msgid "The name of the application"
-#~ msgstr "El nombre de la aplicación"
-
-#~ msgid ""
-#~ "A short description to be displayed in the first line of --help output"
-#~ msgstr ""
-#~ "Una descripción corta para mostrar en la primera línea de la salida «--"
-#~ "help»"
-
-#~ msgid "Icon name"
-#~ msgstr "Nombre del icono"
-
-#~ msgid "The name of the icon of the application"
-#~ msgstr "El nombre del icono de la aplicación"
-
-# UniqueApp, ¿es un nombre o se traduce?
-#~ msgid "UniqueApp name"
-#~ msgstr "Nombre de UniqueApp"
-
-#~ msgid "The Unique name of the application"
-#~ msgstr "El nombre único de la aplicación"
 
 #~| msgid "Do _not import the item whose ID already exists"
 #~ msgid "Do not import the item whose ID already exists"
@@ -5520,8 +5580,7 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 
 #~ msgid "Value '%s' already set: new value ignored at line %d."
 #~ msgstr ""
-#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea "
-#~ "%d."
+#~ "El valor «%s» ya está establecido: se ignora el valor nuevo en la línea %d."
 
 #~ msgid "Action label not found."
 #~ msgstr "No se encontró la etiqueta de acción."
@@ -5658,20 +5717,20 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ msgid ""
 #~ "This config file is more recent than this version of Nautilus-actions can "
 #~ "support. Please upgrade Nautilus-actions to the latest version if you "
-#~ "want to be able to import it (File version: %s (max supported version : "
-#~ "%s))"
+#~ "want to be able to import it (File version: %s (max supported version : %"
+#~ "s))"
 #~ msgstr ""
 #~ "Este archivo de configuración es más reciente de lo que esta versión de "
 #~ "Nautilus-actions soporta. Si quiere importarlo actualice Nautilus-actions "
-#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: "
-#~ "%s))"
+#~ "a la última versión. (Versión del archivo: %s (máxima versión soportada: %"
+#~ "s))"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
-#~ "%s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
+#~ "s)%s"
 #~ msgid_plural ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing keys: "
-#~ "%s)%s"
+#~ "This XML file is not a valid Nautilus-actions config file (missing keys: %"
+#~ "s)%s"
 #~ msgstr[0] ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)%s"
@@ -5680,15 +5739,15 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "actions (faltan las claves: %s)%s"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (missing key: "
-#~ "%s)"
+#~ "This XML file is not a valid Nautilus-actions config file (missing key: %"
+#~ "s)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (falta la clave: %s)"
 
 #~ msgid ""
-#~ "This XML file is not a valid Nautilus-actions config file (root node is <"
-#~ "%s> instead of <%s>)"
+#~ "This XML file is not a valid Nautilus-actions config file (root node is <%"
+#~ "s> instead of <%s>)"
 #~ msgstr ""
 #~ "Este archivo XML no es un archivo válido de configuración de Nautilus-"
 #~ "actions (el nodo raíz es <%s> en vez de <%s>)"
@@ -5885,8 +5944,8 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "common choice. You can add a new scheme by clicking on the '+' button."
 #~ msgstr ""
 #~ "Seleccione la clase de archivos donde quiere que su acción aparezca. Si "
-#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la "
-#~ "opción más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
+#~ "no sabe qué elegir, intente seleccionando tan sólo «file» que es la opción "
+#~ "más común. Puede añadir un esquema nuevo pulsando en el botón «+»."
 
 #~ msgid "This software is licensed under the GNU Genaral Public License (GPL)"
 #~ msgstr ""
