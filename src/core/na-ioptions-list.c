@@ -56,6 +56,11 @@ enum {
 };
 
 /* data associated to the container of the instance
+ *
+ * Note that data may be set against the instance itself (has it been
+ * initialized ?), at the container level or at the option level. It
+ * is not really worth to have a dedicated structure (because we should
+ * actually have three!).
  */
 #define IOPTIONS_LIST_DATA_EDITABLE			"ioptions-list-data-editable"
 #define IOPTIONS_LIST_DATA_FIRST_BUTTON		"ioptions-list-data-first-button"
