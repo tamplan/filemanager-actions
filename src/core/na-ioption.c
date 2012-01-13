@@ -41,6 +41,8 @@ struct _NAIOptionInterfacePrivate {
 };
 
 /* data set against the instance
+ *
+ * Initialization here mainly means setting the weak ref against the instance.
  */
 typedef struct {
 	gboolean initialized;
@@ -158,6 +160,8 @@ get_ioption_data( NAIOption *instance )
 		g_object_set_data( G_OBJECT( instance ), IOPTION_PROP_DATA, data );
 
 		g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
+
+		data->initialized = TRUE;
 	}
 
 	return( data );

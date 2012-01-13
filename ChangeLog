@@ -1,5 +1,8 @@
 2012-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-ioption.c (get_ioption_data):
+	Set the initialization flag after the weak ref on the instance.
+
 	* src/core/na-ioption.h:
 	* src/core/na-import-mode.c:
 	* src/core/na-export-format.c:
