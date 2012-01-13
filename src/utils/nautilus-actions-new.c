@@ -604,7 +604,7 @@ output_to_stdout( const NAObjectAction *action, GSList **msgs )
 	gchar *buffer;
 
 	updater = na_updater_new();
-	format = g_quark_from_string( NA_IPREFS_DEFAULT_EXPORT_FORMAT );
+	format = g_quark_from_string( "Desktop1" );
 	buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), format, msgs );
 	ret = ( buffer != NULL );
 

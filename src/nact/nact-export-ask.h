@@ -52,12 +52,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_EXPORT_ASK_TYPE                ( nact_export_ask_get_type())
-#define NACT_EXPORT_ASK( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_EXPORT_ASK_TYPE, NactExportAsk ))
-#define NACT_EXPORT_ASK_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_EXPORT_ASK_TYPE, NactExportAskClass ))
-#define NACT_IS_EXPORT_ASK( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_EXPORT_ASK_TYPE ))
-#define NACT_IS_EXPORT_ASK_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_EXPORT_ASK_TYPE ))
-#define NACT_EXPORT_ASK_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_EXPORT_ASK_TYPE, NactExportAskClass ))
+#define NACT_TYPE_EXPORT_ASK                ( nact_export_ask_get_type())
+#define NACT_EXPORT_ASK( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_EXPORT_ASK, NactExportAsk ))
+#define NACT_EXPORT_ASK_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_EXPORT_ASK, NactExportAskClass ))
+#define NACT_IS_EXPORT_ASK( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_EXPORT_ASK ))
+#define NACT_IS_EXPORT_ASK_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_EXPORT_ASK ))
+#define NACT_EXPORT_ASK_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_EXPORT_ASK, NactExportAskClass ))
 
 typedef struct _NactExportAskPrivate        NactExportAskPrivate;
 
@@ -79,7 +79,7 @@ typedef struct {
 
 GType  nact_export_ask_get_type( void );
 
-GQuark nact_export_ask_user( BaseWindow *window, NAObjectItem *item, gboolean first );
+GQuark nact_export_ask_user    ( BaseWindow *window, NAObjectItem *item, gboolean first );
 
 G_END_DECLS
 

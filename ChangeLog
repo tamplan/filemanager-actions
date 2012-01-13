@@ -1,5 +1,13 @@
 2012-01-13 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-assistant-export.ui: Rename widget to ExportAskLabel.
+
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-export-ask.h:
+	Rename NACT_EXPORT_ASK_TYPE GType macro to NACT_TYPE_EXPORT_ASK.
+
+	* src/utils/nautilus-actions-new.c (output_to_stdout): Set default value.
+
 	* src/core/na-ioptions-list.h: Fix GType macros.
 
 	* src/core/na-settings.c:
