@@ -201,7 +201,7 @@ nact_confirm_logout_run( NactMainWindow *parent )
 
 	g_debug( "%s: parent=%p", thisfn, ( void * ) parent );
 
-	dialog = g_object_new( NACT_CONFIRM_LOGOUT_TYPE,
+	dialog = g_object_new( NACT_TYPE_CONFIRM_LOGOUT,
 			BASE_PROP_PARENT,        parent,
 			BASE_PROP_TOPLEVEL_NAME, st_toplevel_name,
 			BASE_PROP_WSP_NAME,      st_wsp_name,

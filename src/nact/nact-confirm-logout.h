@@ -45,12 +45,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_CONFIRM_LOGOUT_TYPE                ( nact_confirm_logout_get_type())
-#define NACT_CONFIRM_LOGOUT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_CONFIRM_LOGOUT_TYPE, NactConfirmLogout ))
-#define NACT_CONFIRM_LOGOUT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_CONFIRM_LOGOUT_TYPE, NactConfirmLogoutClass ))
-#define NACT_IS_CONFIRM_LOGOUT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_CONFIRM_LOGOUT_TYPE ))
-#define NACT_IS_CONFIRM_LOGOUT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_CONFIRM_LOGOUT_TYPE ))
-#define NACT_CONFIRM_LOGOUT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_CONFIRM_LOGOUT_TYPE, NactConfirmLogoutClass ))
+#define NACT_TYPE_CONFIRM_LOGOUT                ( nact_confirm_logout_get_type())
+#define NACT_CONFIRM_LOGOUT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_CONFIRM_LOGOUT, NactConfirmLogout ))
+#define NACT_CONFIRM_LOGOUT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_CONFIRM_LOGOUT, NactConfirmLogoutClass ))
+#define NACT_IS_CONFIRM_LOGOUT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_CONFIRM_LOGOUT ))
+#define NACT_IS_CONFIRM_LOGOUT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_CONFIRM_LOGOUT ))
+#define NACT_CONFIRM_LOGOUT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_CONFIRM_LOGOUT, NactConfirmLogoutClass ))
 
 typedef struct _NactConfirmLogoutPrivate        NactConfirmLogoutPrivate;
 

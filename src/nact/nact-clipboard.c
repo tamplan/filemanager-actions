@@ -264,7 +264,7 @@ nact_clipboard_new( BaseWindow *window )
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
-	clipboard = g_object_new( NACT_CLIPBOARD_TYPE, NULL );
+	clipboard = g_object_new( NACT_TYPE_CLIPBOARD, NULL );
 
 	clipboard->private->window = window;
 

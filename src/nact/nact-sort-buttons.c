@@ -218,7 +218,7 @@ nact_sort_buttons_new( BaseWindow *window )
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
-	obj = g_object_new( NACT_SORT_BUTTONS_TYPE, NULL );
+	obj = g_object_new( NACT_TYPE_SORT_BUTTONS, NULL );
 
 	base_window_signal_connect( window,
 			G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_buttons ));

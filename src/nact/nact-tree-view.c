@@ -673,7 +673,7 @@ nact_tree_view_new( BaseWindow *window, GtkContainer *parent, const gchar *treev
 {
 	NactTreeView *view;
 
-	view = g_object_new( NACT_TREE_VIEW_TYPE,
+	view = g_object_new( NACT_TYPE_TREE_VIEW,
 			TREE_PROP_WINDOW,      window,
 			TREE_PROP_PARENT,      parent,
 			TREE_PROP_WIDGET_NAME, treeview_name,

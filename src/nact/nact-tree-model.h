@@ -51,12 +51,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TREE_MODEL_TYPE                ( nact_tree_model_get_type())
-#define NACT_TREE_MODEL( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), NACT_TREE_MODEL_TYPE, NactTreeModel ))
-#define NACT_TREE_MODEL_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), NACT_TREE_MODEL_TYPE, NactTreeModelClass ))
-#define NACT_IS_TREE_MODEL( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NACT_TREE_MODEL_TYPE ))
-#define NACT_IS_TREE_MODEL_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TREE_MODEL_TYPE ))
-#define NACT_TREE_MODEL_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TREE_MODEL_TYPE, NactTreeModelClass ))
+#define NACT_TYPE_TREE_MODEL                ( nact_tree_model_get_type())
+#define NACT_TREE_MODEL( object )           ( G_TYPE_CHECK_INSTANCE_CAST(( object ), NACT_TYPE_TREE_MODEL, NactTreeModel ))
+#define NACT_TREE_MODEL_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST(( klass ), NACT_TYPE_TREE_MODEL, NactTreeModelClass ))
+#define NACT_IS_TREE_MODEL( object )        ( G_TYPE_CHECK_INSTANCE_TYPE(( object ), NACT_TYPE_TREE_MODEL ))
+#define NACT_IS_TREE_MODEL_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_TREE_MODEL ))
+#define NACT_TREE_MODEL_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_TREE_MODEL, NactTreeModelClass ))
 
 typedef struct _NactTreeModelPrivate        NactTreeModelPrivate;
 

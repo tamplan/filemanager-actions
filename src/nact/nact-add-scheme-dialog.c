@@ -240,7 +240,7 @@ nact_add_scheme_dialog_run( BaseWindow *parent, GSList *schemes )
 
 	g_return_val_if_fail( BASE_IS_WINDOW( parent ), NULL );
 
-	dialog = g_object_new( NACT_ADD_SCHEME_DIALOG_TYPE,
+	dialog = g_object_new( NACT_TYPE_ADD_SCHEME_DIALOG,
 			BASE_PROP_PARENT,         parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,

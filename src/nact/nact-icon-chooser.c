@@ -286,7 +286,7 @@ nact_icon_chooser_choose_icon( BaseWindow *parent, const gchar *icon_name )
 
 	g_debug( "%s: parent=%p, icon_name=%s", thisfn, ( void * ) parent, icon_name );
 
-	editor = g_object_new( NACT_ICON_CHOOSER_TYPE,
+	editor = g_object_new( NACT_TYPE_ICON_CHOOSER,
 			BASE_PROP_PARENT,         parent,
 			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
 			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,

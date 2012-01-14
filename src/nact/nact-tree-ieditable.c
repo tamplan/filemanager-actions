@@ -128,7 +128,7 @@ register_type( void )
 
 	type = g_type_register_static( G_TYPE_INTERFACE, "NactTreeIEditable", &info, 0 );
 
-	g_type_interface_add_prerequisite( type, NACT_TREE_VIEW_TYPE );
+	g_type_interface_add_prerequisite( type, NACT_TYPE_TREE_VIEW );
 
 	return( type );
 }

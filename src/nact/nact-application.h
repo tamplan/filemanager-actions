@@ -53,12 +53,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_APPLICATION_TYPE                ( nact_application_get_type())
-#define NACT_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_APPLICATION_TYPE, NactApplication ))
-#define NACT_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_APPLICATION_TYPE, NactApplicationClass ))
-#define NACT_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_APPLICATION_TYPE ))
-#define NACT_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_APPLICATION_TYPE ))
-#define NACT_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_APPLICATION_TYPE, NactApplicationClass ))
+#define NACT_TYPE_APPLICATION                ( nact_application_get_type())
+#define NACT_APPLICATION( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_APPLICATION, NactApplication ))
+#define NACT_APPLICATION_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_APPLICATION, NactApplicationClass ))
+#define NACT_IS_APPLICATION( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_APPLICATION ))
+#define NACT_IS_APPLICATION_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_APPLICATION ))
+#define NACT_APPLICATION_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_APPLICATION, NactApplicationClass ))
 
 typedef struct _NactApplicationPrivate       NactApplicationPrivate;
 

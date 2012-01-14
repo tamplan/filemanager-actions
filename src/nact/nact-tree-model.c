@@ -319,7 +319,7 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 
 	/* create the filter model
 	 */
-	model = g_object_new( NACT_TREE_MODEL_TYPE, "child-model", ts_model, NULL );
+	model = g_object_new( NACT_TYPE_TREE_MODEL, "child-model", ts_model, NULL );
 
 	gtk_tree_model_filter_set_visible_func(
 			GTK_TREE_MODEL_FILTER( model ), ( GtkTreeModelFilterVisibleFunc ) filter_visible, model, NULL );

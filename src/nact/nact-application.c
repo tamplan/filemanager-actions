@@ -217,7 +217,7 @@ nact_application_new( void )
 {
 	NactApplication *application;
 
-	application = g_object_new( NACT_APPLICATION_TYPE, NULL );
+	application = g_object_new( NACT_TYPE_APPLICATION, NULL );
 
 	g_object_set( G_OBJECT( application ),
 			BASE_PROP_OPTIONS,          st_option_entries,

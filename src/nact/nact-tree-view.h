@@ -46,12 +46,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_TREE_VIEW_TYPE                ( nact_tree_view_get_type())
-#define NACT_TREE_VIEW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TREE_VIEW_TYPE, NactTreeView ))
-#define NACT_TREE_VIEW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TREE_VIEW_TYPE, NactTreeViewClass ))
-#define NACT_IS_TREE_VIEW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TREE_VIEW_TYPE ))
-#define NACT_IS_TREE_VIEW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TREE_VIEW_TYPE ))
-#define NACT_TREE_VIEW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TREE_VIEW_TYPE, NactTreeViewClass ))
+#define NACT_TYPE_TREE_VIEW                ( nact_tree_view_get_type())
+#define NACT_TREE_VIEW( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_TREE_VIEW, NactTreeView ))
+#define NACT_TREE_VIEW_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_TREE_VIEW, NactTreeViewClass ))
+#define NACT_IS_TREE_VIEW( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_TREE_VIEW ))
+#define NACT_IS_TREE_VIEW_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_TREE_VIEW ))
+#define NACT_TREE_VIEW_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_TREE_VIEW, NactTreeViewClass ))
 
 typedef struct _NactTreeViewPrivate        NactTreeViewPrivate;
 

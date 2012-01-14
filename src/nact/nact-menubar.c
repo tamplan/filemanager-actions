@@ -285,7 +285,7 @@ class_init( NactMenubarClass *klass )
 	 */
 	st_signals[ UPDATE_SENSITIVITIES ] = g_signal_new(
 			MENUBAR_SIGNAL_UPDATE_SENSITIVITIES,
-			NACT_MENUBAR_TYPE,
+			NACT_TYPE_MENUBAR,
 			G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
 			0,					/* no default handler */
 			NULL,
@@ -385,7 +385,7 @@ nact_menubar_new( BaseWindow *window )
 
 	g_return_val_if_fail( BASE_IS_WINDOW( window ), NULL );
 
-	bar = g_object_new( NACT_MENUBAR_TYPE, NULL );
+	bar = g_object_new( NACT_TYPE_MENUBAR, NULL );
 
 	bar->private->window = window;
 	bar->private->sort_buttons = nact_sort_buttons_new( window );

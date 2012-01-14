@@ -328,7 +328,7 @@ nact_assistant_import_run( BaseWindow *main_window )
 	esc_quit = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_QUIT, NULL, NULL );
 	esc_confirm = na_settings_get_boolean( NA_IPREFS_ASSISTANT_ESC_CONFIRM, NULL, NULL );
 
-	assistant = g_object_new( NACT_ASSISTANT_IMPORT_TYPE,
+	assistant = g_object_new( NACT_TYPE_ASSISTANT_IMPORT,
 			BASE_PROP_PARENT,          main_window,
 			BASE_PROP_HAS_OWN_BUILDER, TRUE,
 			BASE_PROP_XMLUI_FILENAME,  st_xmlui_filename,

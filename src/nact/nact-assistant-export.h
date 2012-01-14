@@ -66,12 +66,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ASSISTANT_EXPORT_TYPE                ( nact_assistant_export_get_type())
-#define NACT_ASSISTANT_EXPORT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ASSISTANT_EXPORT_TYPE, NactAssistantExport ))
-#define NACT_ASSISTANT_EXPORT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ASSISTANT_EXPORT_TYPE, NactAssistantExportClass ))
-#define NACT_IS_ASSISTANT_EXPORT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ASSISTANT_EXPORT_TYPE ))
-#define NACT_IS_ASSISTANT_EXPORT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ASSISTANT_EXPORT_TYPE ))
-#define NACT_ASSISTANT_EXPORT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ASSISTANT_EXPORT_TYPE, NactAssistantExportClass ))
+#define NACT_TYPE_ASSISTANT_EXPORT                ( nact_assistant_export_get_type())
+#define NACT_ASSISTANT_EXPORT( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_ASSISTANT_EXPORT, NactAssistantExport ))
+#define NACT_ASSISTANT_EXPORT_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_ASSISTANT_EXPORT, NactAssistantExportClass ))
+#define NACT_IS_ASSISTANT_EXPORT( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_ASSISTANT_EXPORT ))
+#define NACT_IS_ASSISTANT_EXPORT_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_ASSISTANT_EXPORT ))
+#define NACT_ASSISTANT_EXPORT_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_ASSISTANT_EXPORT, NactAssistantExportClass ))
 
 typedef struct _NactAssistantExportPrivate        NactAssistantExportPrivate;
 

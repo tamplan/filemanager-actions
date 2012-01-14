@@ -43,12 +43,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_ICON_CHOOSER_TYPE                ( nact_icon_chooser_get_type())
-#define NACT_ICON_CHOOSER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_ICON_CHOOSER_TYPE, NactIconChooser ))
-#define NACT_ICON_CHOOSER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_ICON_CHOOSER_TYPE, NactIconChooserClass ))
-#define NACT_IS_ICON_CHOOSER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_ICON_CHOOSER_TYPE ))
-#define NACT_IS_ICON_CHOOSER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_ICON_CHOOSER_TYPE ))
-#define NACT_ICON_CHOOSER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_ICON_CHOOSER_TYPE, NactIconChooserClass ))
+#define NACT_TYPE_ICON_CHOOSER                ( nact_icon_chooser_get_type())
+#define NACT_ICON_CHOOSER( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_ICON_CHOOSER, NactIconChooser ))
+#define NACT_ICON_CHOOSER_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_ICON_CHOOSER, NactIconChooserClass ))
+#define NACT_IS_ICON_CHOOSER( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_ICON_CHOOSER ))
+#define NACT_IS_ICON_CHOOSER_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_ICON_CHOOSER ))
+#define NACT_ICON_CHOOSER_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_ICON_CHOOSER, NactIconChooserClass ))
 
 typedef struct _NactIconChooserPrivate        NactIconChooserPrivate;
 

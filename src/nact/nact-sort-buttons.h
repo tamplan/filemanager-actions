@@ -53,12 +53,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_SORT_BUTTONS_TYPE                ( nact_sort_buttons_get_type())
-#define NACT_SORT_BUTTONS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_SORT_BUTTONS_TYPE, NactSortButtons ))
-#define NACT_SORT_BUTTONS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_SORT_BUTTONS_TYPE, NactSortButtonsClass ))
-#define NACT_IS_SORT_BUTTONS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_SORT_BUTTONS_TYPE ))
-#define NACT_IS_SORT_BUTTONS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_SORT_BUTTONS_TYPE ))
-#define NACT_SORT_BUTTONS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_SORT_BUTTONS_TYPE, NactSortButtonsClass ))
+#define NACT_TYPE_SORT_BUTTONS                ( nact_sort_buttons_get_type())
+#define NACT_SORT_BUTTONS( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_SORT_BUTTONS, NactSortButtons ))
+#define NACT_SORT_BUTTONS_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_SORT_BUTTONS, NactSortButtonsClass ))
+#define NACT_IS_SORT_BUTTONS( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_SORT_BUTTONS ))
+#define NACT_IS_SORT_BUTTONS_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_SORT_BUTTONS ))
+#define NACT_SORT_BUTTONS_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_SORT_BUTTONS, NactSortButtonsClass ))
 
 typedef struct _NactSortButtonsPrivate        NactSortButtonsPrivate;
 

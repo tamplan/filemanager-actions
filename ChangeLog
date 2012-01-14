@@ -1,3 +1,58 @@
+2012-01-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-capability-dialog.h:
+	NACT_ADD_CAPABILITY_DIALOG_TYPE GType macro renamed as
+	NACT_TYPE_ADD_CAPABILITY_DIALOG.
+
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-add-scheme-dialog.h:
+	NACT_ADD_SCHEME_DIALOG_TYPE GType macro renamed as
+	NACT_TYPE_ADD_SCHEME_DIALOG.
+
+	* src/nact/nact-application.c:
+	* src/nact/nact-application.h:
+	NACT_APPLICATION_TYPE GType macro renamed as NACT_TYPE_APPLICATION.
+
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-export.h:
+	NACT_ASSISTANT_EXPORT_TYPE GType macro renamed as
+	NACT_TYPE_ASSISTANT_EXPORT.
+
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-assistant-import.h:
+	NACT_ASSISTANT_IMPORT_TYPE GType macro renamed as
+	NACT_TYPE_ASSISTANT_IMPORT.
+
+	* src/nact/nact-clipboard.c:
+	* src/nact/nact-clipboard.h:
+	NACT_CLIPBOARD_TYPE GType macro renamed as NACT_TYPE_CLIPBOARD.
+
+	* src/nact/nact-confirm-logout.c:
+	* src/nact/nact-confirm-logout.h:
+	NACT_CONFIRM_LOGOUT_TYPE GType macro renamed as NACT_TYPE_CONFIRM_LOGOUT.
+
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-icon-chooser.h:
+	NACT_ICON_CHOOSER_TYPE GType macro renamed as NACT_TYPE_ICON_CHOOSER.
+
+	* src/nact/nact-menubar.c:
+	* src/nact/nact-menubar.h:
+	NACT_MENUBAR_TYPE GType macro renamed as NACT_TYPE_MENUBAR.
+
+	* src/nact/nact-sort-buttons.c:
+	* src/nact/nact-sort-buttons.h:
+	NACT_SORT_BUTTONS_TYPE GType macro renamed as NACT_TYPE_SORT_BUTTONS.
+
+	* src/nact/nact-tree-model.c:
+	* src/nact/nact-tree-model.h:
+	* src/nact/nact-tree-ieditable.c:
+	NACT_TREE_MODEL_TYPE GType macro renamed as NACT_TYPE_TREE_MODEL.
+
+	* src/nact/nact-tree-view.c:
+	* src/nact/nact-tree-view.h:
+	NACT_TREE_VIEW_TYPE GType macro renamed as NACT_TYPE_TREE_VIEW.
+
 2012-01-13 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/io-xml/naxml-provider.h:

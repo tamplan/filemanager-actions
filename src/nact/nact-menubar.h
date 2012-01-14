@@ -63,12 +63,12 @@
 
 G_BEGIN_DECLS
 
-#define NACT_MENUBAR_TYPE                ( nact_menubar_get_type())
-#define NACT_MENUBAR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_MENUBAR_TYPE, NactMenubar ))
-#define NACT_MENUBAR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_MENUBAR_TYPE, NactMenubarClass ))
-#define NACT_IS_MENUBAR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_MENUBAR_TYPE ))
-#define NACT_IS_MENUBAR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_MENUBAR_TYPE ))
-#define NACT_MENUBAR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_MENUBAR_TYPE, NactMenubarClass ))
+#define NACT_TYPE_MENUBAR                ( nact_menubar_get_type())
+#define NACT_MENUBAR( object )           ( G_TYPE_CHECK_INSTANCE_CAST( object, NACT_TYPE_MENUBAR, NactMenubar ))
+#define NACT_MENUBAR_CLASS( klass )      ( G_TYPE_CHECK_CLASS_CAST( klass, NACT_TYPE_MENUBAR, NactMenubarClass ))
+#define NACT_IS_MENUBAR( object )        ( G_TYPE_CHECK_INSTANCE_TYPE( object, NACT_TYPE_MENUBAR ))
+#define NACT_IS_MENUBAR_CLASS( klass )   ( G_TYPE_CHECK_CLASS_TYPE(( klass ), NACT_TYPE_MENUBAR ))
+#define NACT_MENUBAR_GET_CLASS( object ) ( G_TYPE_INSTANCE_GET_CLASS(( object ), NACT_TYPE_MENUBAR, NactMenubarClass ))
 
 typedef struct _NactMenubarPrivate       NactMenubarPrivate;
 
