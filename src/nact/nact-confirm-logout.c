@@ -62,10 +62,11 @@ static BaseDialogClass *st_parent_class   = NULL;
 static GType    register_type( void );
 static void     class_init( NactConfirmLogoutClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_constructed( GObject *dialog );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static void     on_base_initialize_base_window( NactConfirmLogout *editor );
+static void     on_base_initialize_window( NactConfirmLogout *editor, gpointer user_data );
 static void     on_quit_without_saving_clicked( GtkButton *button, NactConfirmLogout *editor );
 static void     on_cancel_clicked( GtkButton *button, NactConfirmLogout *editor );
 static void     on_save_and_quit_clicked( GtkButton *button, NactConfirmLogout *editor );
@@ -119,6 +120,7 @@ class_init( NactConfirmLogoutClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
@@ -138,10 +140,34 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactConfirmLogoutPrivate, 1 );
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
-
 	self->private->dispose_has_run = FALSE;
+}
+
+static void
+instance_constructed( GObject *dialog )
+{
+	static const gchar *thisfn = "nact_confirm_logout_instance_constructed";
+	NactConfirmLogoutPrivate *priv;
+
+	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( dialog ));
+
+	priv = NACT_CONFIRM_LOGOUT( dialog )->private;
+
+	if( !priv->dispose_has_run ){
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( dialog );
+		}
+
+		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( dialog ),
+				BASE_SIGNAL_INITIALIZE_WINDOW,
+				G_CALLBACK( on_base_initialize_window ));
+	}
 }
 
 static void
@@ -217,23 +243,33 @@ nact_confirm_logout_run( NactMainWindow *parent )
 }
 
 static void
-on_base_initialize_base_window( NactConfirmLogout *dialog )
+on_base_initialize_window( NactConfirmLogout *dialog, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_confirm_logout_on_base_initialize_base_window";
+	static const gchar *thisfn = "nact_confirm_logout_on_base_initialize_window";
 
 	g_return_if_fail( NACT_IS_CONFIRM_LOGOUT( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
 
-		base_window_signal_connect_by_name( BASE_WINDOW( dialog ),
-				"QuitNoSaveButton", "clicked", G_CALLBACK( on_quit_without_saving_clicked ));
+		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 
-		base_window_signal_connect_by_name( BASE_WINDOW( dialog ),
-				"CancelQuitButton", "clicked", G_CALLBACK( on_cancel_clicked ));
+		base_window_signal_connect_by_name(
+				BASE_WINDOW( dialog ),
+				"QuitNoSaveButton",
+				"clicked",
+				G_CALLBACK( on_quit_without_saving_clicked ));
 
-		base_window_signal_connect_by_name( BASE_WINDOW( dialog ),
-				"SaveQuitButton", "clicked", G_CALLBACK( on_save_and_quit_clicked ));
+		base_window_signal_connect_by_name(
+				BASE_WINDOW( dialog ),
+				"CancelQuitButton",
+				"clicked",
+				G_CALLBACK( on_cancel_clicked ));
+
+		base_window_signal_connect_by_name(
+				BASE_WINDOW( dialog ),
+				"SaveQuitButton",
+				"clicked",
+				G_CALLBACK( on_save_and_quit_clicked ));
 	}
 }
 

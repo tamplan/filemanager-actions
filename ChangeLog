@@ -1,5 +1,13 @@
 2012-01-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-confirm-logout.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-preferences-editor.c:
+	Connect to base signals from instance_contructed().
+
 	* src/nact/base-isession.c (client_quit_requested_cb): Add debug trace.
 
 	* src/nact/nact-main-window.c

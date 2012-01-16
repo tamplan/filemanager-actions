@@ -77,10 +77,12 @@ static void     ioptions_list_iface_init( NAIOptionsListInterface *iface, void *
 static GList   *ioptions_list_get_formats( const NAIOptionsList *instance, GtkWidget *container );
 static void     ioptions_list_free_formats( const NAIOptionsList *instance, GtkWidget *container, GList *formats );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_constructed( GObject *dialog );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
-static void     on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel );
-static void     on_base_initialize_window( NactExportAsk *editor );
+
+static void     on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel, gpointer user_data );
+static void     on_base_initialize_window( NactExportAsk *editor, gpointer user_data );
 static void     keep_choice_on_toggled( GtkToggleButton *button, NactExportAsk *editor );
 static void     on_cancel_clicked( GtkButton *button, NactExportAsk *editor );
 static void     on_ok_clicked( GtkButton *button, NactExportAsk *editor );
@@ -142,6 +144,7 @@ class_init( NactExportAskClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
@@ -198,19 +201,40 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactExportAskPrivate, 1 );
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ));
-
 	self->private->dispose_has_run = FALSE;
+}
+
+static void
+instance_constructed( GObject *dialog )
+{
+	static const gchar *thisfn = "nact_export_ask_instance_constructed";
+	NactExportAskPrivate *priv;
+
+	g_return_if_fail( NACT_IS_EXPORT_ASK( dialog ));
+
+	priv = NACT_EXPORT_ASK( dialog )->private;
+
+	if( !priv->dispose_has_run ){
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( dialog );
+		}
+
+		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( dialog ),
+				BASE_SIGNAL_INITIALIZE_GTK,
+				G_CALLBACK( on_base_initialize_gtk ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( dialog ),
+				BASE_SIGNAL_INITIALIZE_WINDOW,
+				G_CALLBACK( on_base_initialize_window ));
+	}
 }
 
 static void
@@ -339,7 +363,7 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 }
 
 static void
-on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel )
+on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_export_ask_on_base_initialize_gtk";
 	GtkWidget *container;
@@ -347,7 +371,9 @@ on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel )
 	g_return_if_fail( NACT_IS_EXPORT_ASK( editor ));
 
 	if( !editor->private->dispose_has_run ){
-		g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
+
+		g_debug( "%s: dialog=%p, toplevel=%p, user_data=%p",
+				thisfn, ( void * ) editor, ( void * ) toplevel, ( void * ) user_data );
 
 		container = base_window_get_widget( BASE_WINDOW( editor ), "ExportFormatAskVBox" );
 		na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( editor ), container, FALSE );
@@ -359,7 +385,7 @@ on_base_initialize_gtk( NactExportAsk *editor, GtkDialog *toplevel )
 }
 
 static void
-on_base_initialize_window( NactExportAsk *editor )
+on_base_initialize_window( NactExportAsk *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_export_ask_on_base_initialize_window";
 	gchar *item_label, *label;
@@ -371,7 +397,8 @@ on_base_initialize_window( NactExportAsk *editor )
 	priv = editor->private;
 
 	if( !priv->dispose_has_run ){
-		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
+
+		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
 		item_label = na_object_get_label( priv->item );
 

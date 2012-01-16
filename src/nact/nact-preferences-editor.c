@@ -132,11 +132,13 @@ static GList     *ioptions_list_get_options( const NAIOptionsList *instance, Gtk
 static void       ioptions_list_free_options( const NAIOptionsList *instance, GtkWidget *container, GList *options );
 static NAIOption *ioptions_list_get_ask_option( const NAIOptionsList *instance, GtkWidget *container );
 static void       instance_init( GTypeInstance *instance, gpointer klass );
+static void       instance_constructed( GObject *dialog );
 static void       instance_dispose( GObject *dialog );
 static void       instance_finalize( GObject *dialog );
-static void       on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel );
-static void       on_base_initialize_window( NactPreferencesEditor *editor );
-static void       on_base_all_widgets_showed( NactPreferencesEditor *editor );
+
+static void       on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel, gpointer user_data );
+static void       on_base_initialize_window( NactPreferencesEditor *editor, gpointer user_data );
+static void       on_base_show_widgets( NactPreferencesEditor *editor, gpointer user_data );
 static void       order_mode_setup( NactPreferencesEditor *editor );
 static void       order_mode_on_alpha_asc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
 static void       order_mode_on_alpha_desc_toggled( GtkToggleButton *togglebutton, NactPreferencesEditor *editor );
@@ -225,6 +227,7 @@ class_init( NactPreferencesEditorClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
@@ -355,9 +358,48 @@ instance_init( GTypeInstance *instance, gpointer klass )
 			BASE_WINDOW( instance ),
 			G_OBJECT( instance ),
 			BASE_SIGNAL_SHOW_WIDGETS,
-			G_CALLBACK( on_base_all_widgets_showed));
+			G_CALLBACK( on_base_show_widgets));
 
 	self->private->dispose_has_run = FALSE;
+}
+
+static void
+instance_constructed( GObject *dialog )
+{
+	static const gchar *thisfn = "nact_preferences_editor_instance_constructed";
+	NactPreferencesEditorPrivate *priv;
+
+	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( dialog ));
+
+	priv = NACT_PREFERENCES_EDITOR( dialog )->private;
+
+	if( !priv->dispose_has_run ){
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( dialog );
+		}
+
+		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( dialog ),
+				BASE_SIGNAL_INITIALIZE_GTK,
+				G_CALLBACK( on_base_initialize_gtk ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( dialog ),
+				BASE_SIGNAL_INITIALIZE_WINDOW,
+				G_CALLBACK( on_base_initialize_window ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( dialog ),
+				BASE_SIGNAL_SHOW_WIDGETS,
+				G_CALLBACK( on_base_show_widgets ));
+	}
 }
 
 static void
@@ -451,7 +493,7 @@ nact_preferences_editor_run( BaseWindow *parent )
 }
 
 static void
-on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel )
+on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_gtk";
 	GtkWidget *container;
@@ -460,7 +502,9 @@ on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel )
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
 
 	if( !editor->private->dispose_has_run ){
-		g_debug( "%s: editor=%p, toplevel=%p", thisfn, ( void * ) editor, ( void * ) toplevel );
+
+		g_debug( "%s: dialog=%p, toplevel=%p, user_data=%p",
+				thisfn, ( void * ) editor, ( void * ) toplevel, ( void * ) user_data );
 
 		desktop_create_model( editor );
 
@@ -483,7 +527,7 @@ on_base_initialize_gtk( NactPreferencesEditor *editor, GtkDialog *toplevel )
 }
 
 static void
-on_base_initialize_window( NactPreferencesEditor *editor )
+on_base_initialize_window( NactPreferencesEditor *editor, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_preferences_editor_on_base_initialize_window";
 	GtkWidget *container;
@@ -495,7 +539,8 @@ on_base_initialize_window( NactPreferencesEditor *editor )
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
 
 	if( !editor->private->dispose_has_run ){
-		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
+
+		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
 		/* first tab: runtime preferences
 		 */
@@ -564,15 +609,16 @@ on_base_initialize_window( NactPreferencesEditor *editor )
 }
 
 static void
-on_base_all_widgets_showed( NactPreferencesEditor *editor )
+on_base_show_widgets( NactPreferencesEditor *editor, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_preferences_editor_on_all_widgets_showed";
+	static const gchar *thisfn = "nact_preferences_editor_on_base_show_widgets";
 	GtkNotebook *notebook;
 
 	g_return_if_fail( NACT_IS_PREFERENCES_EDITOR( editor ));
 
 	if( !editor->private->dispose_has_run ){
-		g_debug( "%s: editor=%p", thisfn, ( void * ) editor );
+
+		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) editor, ( void * ) user_data );
 
 		notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( editor ), "PreferencesNotebook" ));
 		gtk_notebook_set_current_page( notebook, st_last_tab );

@@ -64,12 +64,13 @@ static GObjectClass *st_parent_class   = NULL;
 static GType    register_type( void );
 static void     class_init( NactAddSchemeDialogClass *klass );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_constructed( GObject *dialog );
 static void     instance_dispose( GObject *dialog );
 static void     instance_finalize( GObject *dialog );
 
-static void     on_base_initialize_gtk_toplevel( NactAddSchemeDialog *editor, GtkDialog *toplevel );
-static void     on_base_initialize_base_window( NactAddSchemeDialog *editor );
-static void     on_base_all_widgets_showed( NactAddSchemeDialog *editor );
+static void     on_base_initialize_gtk( NactAddSchemeDialog *editor, GtkDialog *toplevel, gpointer user_data );
+static void     on_base_initialize_window( NactAddSchemeDialog *editor, gpointer user_data );
+static void     on_base_show_widgets( NactAddSchemeDialog *editor, gpointer user_data );
 static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactAddSchemeDialog *dialog );
 static void     on_cancel_clicked( GtkButton *button, NactAddSchemeDialog *editor );
 static void     on_ok_clicked( GtkButton *button, NactAddSchemeDialog *editor );
@@ -127,6 +128,7 @@ class_init( NactAddSchemeDialogClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
 
@@ -150,17 +152,47 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactAddSchemeDialogPrivate, 1 );
 
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_GTK, G_CALLBACK( on_base_initialize_gtk_toplevel ));
-
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_base_window ));
-
-	base_window_signal_connect( BASE_WINDOW( instance ),
-			G_OBJECT( instance ), BASE_SIGNAL_SHOW_WIDGETS, G_CALLBACK( on_base_all_widgets_showed));
-
 	self->private->dispose_has_run = FALSE;
 	self->private->scheme = NULL;
+}
+
+static void
+instance_constructed( GObject *dialog )
+{
+	static const gchar *thisfn = "nact_add_scheme_dialog_instance_constructed";
+	NactAddSchemeDialogPrivate *priv;
+
+	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
+
+	priv = NACT_ADD_SCHEME_DIALOG( dialog )->private;
+
+	if( !priv->dispose_has_run ){
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( dialog );
+		}
+
+		g_debug( "%s: dialog=%p (%s)", thisfn, ( void * ) dialog, G_OBJECT_TYPE_NAME( dialog ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( dialog ),
+				BASE_SIGNAL_INITIALIZE_GTK,
+				G_CALLBACK( on_base_initialize_gtk ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( dialog ),
+				BASE_SIGNAL_INITIALIZE_WINDOW,
+				G_CALLBACK( on_base_initialize_window ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( dialog ),
+				G_OBJECT( dialog ),
+				BASE_SIGNAL_SHOW_WIDGETS,
+				G_CALLBACK( on_base_show_widgets ));
+	}
 }
 
 static void
@@ -260,15 +292,17 @@ nact_add_scheme_dialog_run( BaseWindow *parent, GSList *schemes )
 }
 
 static void
-on_base_initialize_gtk_toplevel( NactAddSchemeDialog *dialog, GtkDialog *toplevel )
+on_base_initialize_gtk( NactAddSchemeDialog *dialog, GtkDialog *toplevel, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_on_base_initialize_gtk_toplevel";
+	static const gchar *thisfn = "nact_add_scheme_dialog_on_base_initialize_gtk";
 	GtkTreeView *listview;
 
 	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p, toplevel=%p", thisfn, ( void * ) dialog, ( void * ) toplevel );
+
+		g_debug( "%s: dialog=%p, toplevel=%p, user_data=%p",
+				thisfn, ( void * ) dialog, ( void * ) toplevel, ( void * ) user_data );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( dialog ), "SchemesTreeView" ));
 		nact_schemes_list_create_model( listview, SCHEMES_LIST_FOR_ADD_FROM_DEFAULTS );
@@ -280,15 +314,16 @@ on_base_initialize_gtk_toplevel( NactAddSchemeDialog *dialog, GtkDialog *topleve
 }
 
 static void
-on_base_initialize_base_window( NactAddSchemeDialog *dialog )
+on_base_initialize_window( NactAddSchemeDialog *dialog, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_on_base_initialize_base_window";
+	static const gchar *thisfn = "nact_add_scheme_dialog_on_base_initialize_window";
 	GtkTreeView *listview;
 
 	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
+
+		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 
 		listview = GTK_TREE_VIEW( base_window_get_widget( BASE_WINDOW( dialog ), "SchemesTreeView" ));
 		nact_schemes_list_init_view( listview, BASE_WINDOW( dialog ), ( pf_new_selection_cb ) on_selection_changed, ( void * ) dialog );
@@ -319,14 +354,15 @@ on_base_initialize_base_window( NactAddSchemeDialog *dialog )
 }
 
 static void
-on_base_all_widgets_showed( NactAddSchemeDialog *dialog )
+on_base_show_widgets( NactAddSchemeDialog *dialog, gpointer user_data )
 {
-	static const gchar *thisfn = "nact_add_scheme_dialog_on_base_all_widgets_showed";
+	static const gchar *thisfn = "nact_add_scheme_dialog_on_base_show_widgets";
 
 	g_return_if_fail( NACT_IS_ADD_SCHEME_DIALOG( dialog ));
 
 	if( !dialog->private->dispose_has_run ){
-		g_debug( "%s: dialog=%p", thisfn, ( void * ) dialog );
+
+		g_debug( "%s: dialog=%p, user_data=%p", thisfn, ( void * ) dialog, ( void * ) user_data );
 
 		nact_schemes_list_show_all( BASE_WINDOW( dialog ));
 	}
