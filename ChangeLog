@@ -3,6 +3,8 @@
 	* docs/nact/C/nact-conditions.xml: Embeds literal values between
 	<literal>..</literal> tags.
 
+	* src/nact/nact-clipboard.c (nact_clipboard_dnd_drag_end): Fix micro leak.
+
 	* src/nact/base-window.c (init_gtk_toplevel):
 	Also returns TRUE if Gtk toplevel was already initialized.
 

@@ -411,6 +411,7 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 	static const gchar *thisfn = "nact_clipboard_dnd_drag_end";
 	GtkSelectionData *selection;
 	NactClipboardDndData *data;
+	gchar *buffer;
 
 	g_debug( "%s: clipboard=%p", thisfn, ( void * ) clipboard );
 	g_return_if_fail( NACT_IS_CLIPBOARD( clipboard ));
@@ -426,7 +427,8 @@ nact_clipboard_dnd_drag_end( NactClipboard *clipboard )
 
 			if( data->target == NACT_XCHANGE_FORMAT_XDS ){
 				g_debug( "%s: folder=%s", thisfn, data->folder );
-				export_rows( clipboard, data->rows, data->folder );
+				buffer = export_rows( clipboard, data->rows, data->folder );
+				g_free( buffer );
 			}
 
 			gtk_selection_data_free( selection );
@@ -479,9 +481,14 @@ clear_dnd_clipboard_callback( GtkClipboard *clipboard, NactClipboardDndData *dat
 	g_free( data );
 }
 
+/*
+ * returns a buffer which contains all exported items if dest_folder is null
+ * else export items as files to target directory, returning an empty string
+ */
 static gchar *
 export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 {
+	static const gchar *thisfn = "nact_clipboard_export_rows";
 	GString *data;
 	GtkTreeModel *model;
 	GList *exported, *irow;
@@ -490,6 +497,9 @@ export_rows( NactClipboard *clipboard, GList *rows, const gchar *dest_folder )
 	NAObject *object;
 	gchar *buffer;
 	gboolean first;
+
+	g_debug( "%s: clipboard=%p, rows=%p (count=%d), dest_folder=%s",
+			thisfn, ( void * ) clipboard, ( void * ) rows, g_list_length( rows ), dest_folder );
 
 	first = TRUE;
 	buffer = NULL;
@@ -548,16 +558,21 @@ export_objects( NactClipboard *clipboard, GList *objects )
 }
 
 /*
- * export to a buffer if dest_folder is null
- * else export to a new file in the target directory
+ * export to a buffer if dest_folder is null, and returns this buffer
+ * else export to a new file in the target directory (returning an empty string)
+ *
+ * exported maintains a list of exported items, so that the same item is not
+ * exported twice
  */
 static gchar *
 export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest_folder, GList **exported, gboolean first )
 {
+	static const gchar *thisfn = "nact_clipboard_export_row_object";
 	GList *subitems, *isub;
 	NactApplication *application;
 	NAUpdater *updater;
-	NAObjectAction *action;
+	NAObjectItem *item;
+	gchar *item_label;
 	gint index;
 	GString *data;
 	gchar *buffer;
@@ -567,6 +582,8 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 
 	data = g_string_new( "" );
 
+	/* if we have a menu, first export the subitems
+	 */
 	if( NA_IS_OBJECT_MENU( object )){
 		subitems = na_object_get_items( object );
 
@@ -580,35 +597,42 @@ export_row_object( NactClipboard *clipboard, NAObject *object, const gchar *dest
 		}
 	}
 
+	/* only export NAObjectItem type
+	 * here, object may be a menu, an action or a profile
+	 */
 	msgs = NULL;
-	action = ( NAObjectAction * ) object;
+	item = ( NAObjectItem * ) object;
 	if( NA_IS_OBJECT_PROFILE( object )){
-		action = NA_OBJECT_ACTION( na_object_get_parent( object ));
+		item = NA_OBJECT_ITEM( na_object_get_parent( object ));
 	}
 
 	application = NACT_APPLICATION( base_window_get_application( clipboard->private->window ));
 	updater = nact_application_get_updater( application );
 
-	index = g_list_index( *exported, ( gconstpointer ) action );
+	index = g_list_index( *exported, ( gconstpointer ) item );
 	if( index == -1 ){
 
-		*exported = g_list_prepend( *exported, ( gpointer ) action );
+		item_label = na_object_get_label( item );
+		g_debug( "%s: exporting %s", thisfn, item_label );
+		g_free( item_label );
+
+		*exported = g_list_prepend( *exported, ( gpointer ) item );
 		format = na_settings_get_string( NA_IPREFS_EXPORT_PREFERRED_FORMAT, NULL, NULL );
 		g_return_val_if_fail( format && strlen( format ), NULL );
 
 		if( !strcmp( format, EXPORTER_FORMAT_ASK )){
 			g_free( format );
-			format = nact_export_ask_user( clipboard->private->window, NA_OBJECT_ITEM( action ), first );
+			format = nact_export_ask_user( clipboard->private->window, item, first );
 			g_return_val_if_fail( format && strlen( format ), NULL );
 		}
 
 		if( strcmp( format, EXPORTER_FORMAT_NOEXPORT ) != 0 ){
 			if( dest_folder ){
-				fname = na_exporter_to_file( NA_PIVOT( updater ), NA_OBJECT_ITEM( action), dest_folder, format, &msgs );
+				fname = na_exporter_to_file( NA_PIVOT( updater ), item, dest_folder, format, &msgs );
 				g_free( fname );
 
 			} else {
-				buffer = na_exporter_to_buffer( NA_PIVOT( updater ), NA_OBJECT_ITEM( action ), format, &msgs );
+				buffer = na_exporter_to_buffer( NA_PIVOT( updater ), item, format, &msgs );
 				if( buffer && strlen( buffer )){
 					data = g_string_append( data, buffer );
 					g_free( buffer );
