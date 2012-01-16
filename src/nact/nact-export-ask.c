@@ -316,8 +316,8 @@ nact_export_ask_user( BaseWindow *parent, NAObjectItem *item, gboolean first )
 
 		are_locked = na_settings_get_boolean( NA_IPREFS_ADMIN_PREFERENCES_LOCKED, NULL, &mandatory );
 		editor->private->preferences_locked = are_locked && mandatory;
-
 		code = base_window_run( BASE_WINDOW( editor ));
+
 		switch( code ){
 			case GTK_RESPONSE_OK:
 				g_free( format );
