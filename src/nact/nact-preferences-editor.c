@@ -843,7 +843,8 @@ desktop_setup( NactPreferencesEditor *editor )
 	guint i;
 	gint found;
 	GtkWidget *widget;
-	const gchar *desktop;
+	const gchar *desktop_id;
+	const gchar *desktop_label;
 
 	found = -1;
 	editor->private->desktop = na_settings_get_string( NA_IPREFS_DESKTOP_ENVIRONMENT, NULL, &editor->private->desktop_mandatory );
@@ -875,8 +876,9 @@ desktop_setup( NactPreferencesEditor *editor )
 	/* set the currently detected desktop
 	 */
 	widget = base_window_get_widget( BASE_WINDOW( editor ), "DesktopLabel" );
-	desktop = na_desktop_environment_detect_running_desktop();
-	gtk_label_set_text( GTK_LABEL( widget ), desktop );
+	desktop_id = na_desktop_environment_detect_running_desktop();
+	desktop_label = na_desktop_environment_get_label( desktop_id );
+	gtk_label_set_text( GTK_LABEL( widget ), desktop_label );
 }
 
 static void

@@ -58,7 +58,6 @@ na_desktop_environment_get_known_list( void )
 	return(( const NADesktopEnv * ) st_desktops );
 }
 
-
 /*
  * na_desktop_environment_detect_running_desktop:
  *
@@ -75,6 +74,16 @@ na_desktop_environment_detect_running_desktop( void )
 	gint exit_status;
 	GError *error;
 	gboolean ok;
+	int i;
+
+	value = g_getenv( "XDG_CURRENT_DESKTOP" );
+	if( value && strlen( value )){
+		for( i = 0 ; st_desktops[i].id ; ++i ){
+			if( !strcmp( st_desktops[i].id, value )){
+				return( st_desktops[i].id );
+			}
+		}
+	}
 
 	value = g_getenv( "KDE_FULL_SESSION" );
 	if( value && !strcmp( value, "true" )){
@@ -124,8 +133,38 @@ na_desktop_environment_detect_running_desktop( void )
 		g_error_free( error );
 	}
 
-	/* do not know how to identify ROX or LXDE (Hong Jen Yee <pcman.tw (at) gmail.com>)
-	 * environments; so other desktops are just identified as 'Old' (legacy systems)
+	/* do not know how to identify ROX
+	 * this one and other desktops are just identified as 'Old' (legacy systems)
 	 */
 	return( DESKTOP_OLD );
+}
+
+/*
+ * na_desktop_environment_get_label:
+ * @id: desktop identifier.
+ *
+ * Returns: the label of the desktop environment.
+ *
+ * Defaults to returning the provided identifier if it is not found in
+ * our internal reference.
+ *
+ * Since: 3.2
+ */
+const gchar *
+na_desktop_environment_get_label( const gchar *id )
+{
+	static const gchar *thisfn = "na_desktop_environment_get_label";
+	int i;
+
+	g_return_val_if_fail( id && strlen( id ), NULL );
+
+	for( i = 0 ; st_desktops[i].id ; ++ i ){
+		if( !strcmp( st_desktops[i].id, id )){
+			return( st_desktops[i].label );
+		}
+	}
+
+	g_warning( "%s: unknwon desktop identifier: %s", thisfn, id );
+
+	return( id );
 }

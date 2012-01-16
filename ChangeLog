@@ -3,6 +3,14 @@
 	* docs/nact/C/nact-conditions.xml: Embeds literal values between
 	<literal>..</literal> tags.
 
+	* src/core/na-desktop-environment.c
+	* src/core/na-desktop-environment.h
+	(na_desktop_environment_detect_running_desktop): Fix LXDE detection.
+	(na_desktop_environment_get_label): New function.
+
+	* src/nact/nact-preferences-editor.c
+	(desktop_setup): Display the desktop label instead of its id.
+
 	* tools/check-po.sh: Do not match binary files.
 
 	* src/io-desktop/nadp-writer.c (nadp_writer_iexporter_export_to_buffer):

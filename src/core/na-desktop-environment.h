@@ -72,6 +72,8 @@ const NADesktopEnv *na_desktop_environment_get_known_list        ( void );
 
 const gchar        *na_desktop_environment_detect_running_desktop( void );
 
+const gchar        *na_desktop_environment_get_label             ( const gchar *id );
+
 G_END_DECLS
 
 #endif /* __CORE_API_NA_DESKTOP_ENVIRONMENT_H__ */
