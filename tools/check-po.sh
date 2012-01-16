@@ -343,7 +343,7 @@ nbfiles=0
 nberrs=0
 let nbpass+=1
 msg "pass ${nbpass}/${totpass}: checking that all translatable files are in ${opt_potfile}..."
-for f in $(git grep '_(' src | cut -d: -f1 | sort -u); do
+for f in $(git grep -I '_(' src | cut -d: -f1 | sort -u); do
 	if [ "$(grep -x ${f} ${opt_potfile})" != "${f}" ]; then
 		msg "	${f} should be added to ${opt_potfile}"
 		let nberrs+=1

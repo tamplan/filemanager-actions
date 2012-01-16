@@ -3,6 +3,8 @@
 	* docs/nact/C/nact-conditions.xml: Embeds literal values between
 	<literal>..</literal> tags.
 
+	* tools/check-po.sh: Do not match binary files.
+
 	* src/io-desktop/nadp-writer.c (nadp_writer_iexporter_export_to_buffer):
 	* src/io-xml/naxml-writer.c (naxml_writer_export_to_buffer):
 	Fix find_export_format_fn_from_quark() calls.
