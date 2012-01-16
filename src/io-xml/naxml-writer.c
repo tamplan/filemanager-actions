@@ -295,7 +295,7 @@ naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferPar
 		writer->private->messages = parms->messages;
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			writer->private->fn_str = find_export_format_fn_from_quark(( NAIExporterBufferParmsv1 * ) parms->format );
+			writer->private->fn_str = find_export_format_fn_from_quark((( NAIExporterBufferParmsv1 * ) parms )->format );
 		} else {
 			writer->private->fn_str = find_export_format_fn( parms->format );
 		}
@@ -353,8 +353,8 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *
 		writer->private->messages = parms->messages;
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			writer->private->fn_str = find_export_format_fn_from_quark(( NAIExporterFileParmsv1 * ) parms->format );
-			format2 = g_quark_to_string(( NAIExporterFileParmsv1 * ) parms->format );
+			writer->private->fn_str = find_export_format_fn_from_quark((( NAIExporterFileParmsv1 * ) parms )->format );
+			format2 = g_quark_to_string((( NAIExporterFileParmsv1 * ) parms )->format );
 		} else {
 			writer->private->fn_str = find_export_format_fn( parms->format );
 			format2 = parms->format;

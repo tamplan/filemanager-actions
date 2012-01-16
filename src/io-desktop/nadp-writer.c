@@ -374,7 +374,7 @@ nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporter
 
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			fmt = find_export_format_fn_from_quark(( NAIExporterBufferParmsv1 * ) parms->format );
+			fmt = find_export_format_fn_from_quark((( NAIExporterBufferParmsv1 * ) parms )->format );
 		} else {
 			fmt = find_export_format_fn( parms->format );
 		}
@@ -434,7 +434,7 @@ nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFi
 
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			fmt = find_export_format_fn_from_quark(( NAIExporterFileParmsv1 * ) parms->format );
+			fmt = find_export_format_fn_from_quark((( NAIExporterFileParmsv1 * ) parms )->format );
 		} else {
 			fmt = find_export_format_fn( parms->format );
 		}
