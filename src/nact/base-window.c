@@ -743,8 +743,9 @@ init_gtk_toplevel( BaseWindow *window )
 						priv->gtk_toplevel );
 
 				data->initialized = TRUE;
-				ret = TRUE;
 			}
+
+			ret = TRUE;
 		}
 	}
 
@@ -907,6 +908,7 @@ base_window_run( BaseWindow *window )
 	if( !window->private->dispose_has_run ){
 
 		if( !base_window_init( window )){
+			g_debug( "%s: base_window_init() returns False", thisfn );
 			code = BASE_EXIT_CODE_INIT_WINDOW;
 
 		} else {

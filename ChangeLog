@@ -3,6 +3,9 @@
 	* docs/nact/C/nact-conditions.xml: Embeds literal values between
 	<literal>..</literal> tags.
 
+	* src/nact/base-window.c (init_gtk_toplevel):
+	Also returns TRUE if Gtk toplevel was already initialized.
+
 	* src/core/na-factory-object.c (na_factory_object_copy):
 	Removes target copyable data before copying source copyable data.
 
