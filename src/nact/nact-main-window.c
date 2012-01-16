@@ -200,7 +200,7 @@ static gboolean   confirm_for_giveup_from_menu( const NactMainWindow *window );
 static void       load_or_reload_items( NactMainWindow *window );
 
 /* application termination */
-static gboolean   on_base_is_willing_to_quit( const BaseWindow *window, gconstpointer user_data );
+static gboolean   on_base_quit_requested( NactApplication *application, NactMainWindow *window );
 static gboolean   on_delete_event( GtkWidget *toplevel, GdkEvent *event, NactMainWindow *window );
 static gboolean   warn_modified( NactMainWindow *window );
 
@@ -874,13 +874,14 @@ on_base_initialize_window( NactMainWindow *window, gpointer user_data )
 				G_CALLBACK( on_delete_event ));
 
 		/* is willing to quit ?
+		 * connect to the signal of the BaseISession interface
 		 */
 		application = NACT_APPLICATION( base_window_get_application( BASE_WINDOW( window )));
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
 				G_OBJECT( application ),
 				BASE_SIGNAL_QUIT_REQUESTED,
-				G_CALLBACK( on_base_is_willing_to_quit ));
+				G_CALLBACK( on_base_quit_requested ));
 	}
 }
 
@@ -1315,20 +1316,21 @@ nact_main_window_quit( NactMainWindow *window )
  * this will also stop the emission of the signal (i.e. the first FALSE wins)
  */
 static gboolean
-on_base_is_willing_to_quit( const BaseWindow *window, gconstpointer user_data )
+on_base_quit_requested( NactApplication *application, NactMainWindow *window )
 {
-	static const gchar *thisfn = "nact_main_window_on_base_is_willing_to_quit";
+	static const gchar *thisfn = "nact_main_window_on_base_quit_requested";
 	gboolean willing_to;
 
 	g_return_val_if_fail( NACT_IS_MAIN_WINDOW( window ), TRUE );
 
 	willing_to = TRUE;
 
-	if( !NACT_MAIN_WINDOW( window )->private->dispose_has_run ){
-		g_debug( "%s (virtual): window=%p", thisfn, ( void * ) window );
+	if( !window->private->dispose_has_run ){
 
-		if( NACT_MAIN_WINDOW( window )->private->is_tree_modified ){
-			willing_to = nact_confirm_logout_run( NACT_MAIN_WINDOW( window ));
+		g_debug( "%s: application=%p, window=%p", thisfn, ( void * ) application, ( void * ) window );
+
+		if( window->private->is_tree_modified ){
+			willing_to = nact_confirm_logout_run( window );
 		}
 	}
 

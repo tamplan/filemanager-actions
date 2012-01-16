@@ -325,7 +325,13 @@ base_isession_is_willing_to_quit( const BaseISession *instance )
 static void
 client_quit_requested_cb( EggSMClient *client, BaseISession *instance )
 {
+	static const gchar *thisfn = "base_isession_client_quit_requested_cb";
 	gboolean willing_to;
+
+	g_debug( "%s: client=%p, instance=%p (%s)",
+			thisfn,
+			( void * ) client,
+			( void * ) instance, G_OBJECT_TYPE_NAME( instance ));
 
 	willing_to = base_isession_is_willing_to_quit( instance );
 

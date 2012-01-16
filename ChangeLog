@@ -1,5 +1,10 @@
 2012-01-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-isession.c (client_quit_requested_cb): Add debug trace.
+
+	* src/nact/nact-main-window.c
+	(on_base_initialize_window): Connect to quit-requested signal.
+
 	* src/nact/nact-application.c
 	(appli_init_application): Fix parent class method call.
 
