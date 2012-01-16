@@ -3,6 +3,8 @@
 	* docs/nact/C/nact-conditions.xml: Embeds literal values between
 	<literal>..</literal> tags.
 
+	* src/nact/nact-icommand-tab.c (parse_parameters): Uses internal data.
+
 	* src/core/na-desktop-environment.c
 	* src/core/na-desktop-environment.h
 	(na_desktop_environment_detect_running_desktop): Fix LXDE detection.

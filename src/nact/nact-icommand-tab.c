@@ -70,8 +70,7 @@ typedef struct {
 
 #define ICOMMAND_TAB_PROP_DATA				"nact-icommand-tab-data"
 
-static guint     st_initializations = 0;	/* interface initialization count */
-static NATokens *st_tokens = NULL;
+static guint st_initializations = 0;	/* interface initialization count */
 
 static GType         register_type( void );
 static void          interface_base_init( NactICommandTabInterface *klass );
@@ -628,9 +627,11 @@ parse_parameters( NactICommandTab *instance )
 	const gchar *command = gtk_entry_get_text( GTK_ENTRY( get_path_entry( instance )));
 	const gchar *param_template = gtk_entry_get_text( GTK_ENTRY( get_parameters_entry( instance )));
 	gchar *exec, *returned;
+	ICommandData *data;
 
+	data = get_icommand_data( instance );
 	exec = g_strdup_printf( "%s %s", command, param_template );
-	returned = na_tokens_parse_for_display( st_tokens, exec, FALSE );
+	returned = na_tokens_parse_for_display( data->tokens, exec, FALSE );
 	g_free( exec );
 
 	return( returned );
