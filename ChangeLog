@@ -1,7 +1,10 @@
 2012-01-16 Pierre Wieser <pwieser@trychlos.org>
 
-	* docs/nact/C/nact-conditions.xml: Embeds literal values between
-	<literal>..</literal> tags.
+	* docs/reference/nautilus-actions-sections.txt:
+	Report here the new GType macro names.
+
+	* docs/nact/C/nact-conditions.xml:
+	Embeds literal values between <literal>..</literal> tags.
 
 	* src/nact/nact-tree-model-dnd.c: Fix comments.
 
