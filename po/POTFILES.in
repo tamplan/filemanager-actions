@@ -25,6 +25,7 @@ src/io-xml/naxml-reader.c
 src/io-xml/naxml-formats.c
 src/nact/base-application.c
 src/nact/base-assistant.c
+src/nact/base-iunique.c
 src/nact/base-window.c
 src/nact/egg-desktop-file.c
 src/nact/egg-sm-client.c
@@ -65,6 +66,7 @@ src/test/test-reader.c
 src/utils/console-utils.c
 src/utils/na-delete-xmltree.c
 src/utils/na-print-schemas.c
+src/utils/na-set-conf.c
 src/utils/nautilus-actions-new.c
 src/utils/nautilus-actions-print.c
 src/utils/nautilus-actions-run.c
