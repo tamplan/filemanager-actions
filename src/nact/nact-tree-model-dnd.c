@@ -60,14 +60,19 @@
  *
  * as soon as mouse has quitted the selected area
  *   call once egg_tree_multi_dnd_stop_drag_check( treeview )
- *   call once nact_tree_model_imulti_drag_source_row_draggable: drag_source=0x92a0d70, path_list=0x9373c90
+ *   call once nact_tree_model_dnd_imulti_drag_source_row_draggable: drag_source=0x92a0d70, path_list=0x9373c90
+ *   call once nact_tree_model_dnd_on_drag_begin
+ *     nact_clipboard_dnd_clear()
  *   call once nact_clipboard_on_drag_begin( treeview, context, main_window )
  *
  * when we drop (e.g. in Nautilus)
  *   call once egg_tree_multi_dnd_on_drag_data_get( treeview, context, selection_data, info=0, time )
- *   call once nact_tree_model_imulti_drag_source_drag_data_get( drag_source, context, selection_data, path_list, atom=XdndDirectSave0 )
- *   call once nact_tree_model_idrag_dest_drag_data_received
- *   call once nact_clipboard_on_drag_end( treeview, context, main_window )
+ *   call once nact_tree_model_dnd_imulti_drag_source_drag_data_get( drag_source, context, selection_data, path_list, atom=XdndDirectSave0 )
+ *     nact_clipboard_dnd_set()
+ *   call once nact_tree_model_dnd_on_drag_end
+ *     nact_clipboard_dnd_drag_end
+ *       nact_clipboard_get_from_dnd_clipboard_callback
+ *     nact_clipboard_dnd_clear
  *
  * when we drop in Nautilus-Actions
  *   call once egg_tree_multi_dnd_on_drag_data_get( treeview, context, selection_data, info=0, time )
@@ -297,9 +302,9 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 #endif
 
 	atom_name = gdk_atom_name( selection_data_target );
-	g_debug( "%s: drag_source=%p, context=%p, action=%d, selection_data=%p, rows=%p, atom=%s",
+	g_debug( "%s: drag_source=%p, context=%p, suggested action=%d, selection_data=%p, rows=%p (count=%d), atom=%s",
 			thisfn, ( void * ) drag_source, ( void * ) context, ( int ) context_suggested_action,
-			( void * ) selection_data, ( void * ) rows,
+			( void * ) selection_data, ( void * ) rows, g_list_length( rows ),
 			atom_name );
 	g_free( atom_name );
 
