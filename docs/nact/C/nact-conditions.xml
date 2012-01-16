@@ -277,7 +277,7 @@
       <variablelist>
         <varlistentry>
           <term>
-            all/all
+            <literal>all/all</literal>
           </term>
           <listitem>
             <para>
@@ -287,7 +287,7 @@
         </varlistentry>
         <varlistentry>
           <term>
-            all/allfiles
+            <literal>all/allfiles</literal>
           </term>
           <listitem>
             <para>
@@ -297,7 +297,7 @@
         </varlistentry>
         <varlistentry>
           <term>
-            inode/directory
+            <literal>inode/directory</literal>
           </term>
           <listitem>
             <para>
@@ -982,7 +982,7 @@
     </para>
     <para>
       To define the command, enter it in the
-      <guilabel>Appears if the command outputs "true"</guilabel>
+      <guilabel>Appears if the command outputs "<literal>true</literal>"</guilabel>
       entry box.
     </para>
     <para>
