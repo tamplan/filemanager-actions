@@ -357,7 +357,10 @@ void
 na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
 {
 	static const gchar *thisfn = "na_factory_object_copy";
+	GList *dest_list, *idest, *inext;
 	GList *src_list, *isrc;
+	NADataBoxed *boxed;
+	const NADataDef *def;
 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( target ));
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( source ));
@@ -367,20 +370,34 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 			( void * ) target, G_OBJECT_TYPE_NAME( target ),
 			( void * ) source, G_OBJECT_TYPE_NAME( source ));
 
+	/* first remove copyable data from target
+	 */
+	idest = dest_list = g_object_get_data( G_OBJECT( target ), NA_IFACTORY_OBJECT_PROP_DATA );
+	while( idest ){
+		boxed = NA_DATA_BOXED( idest->data );
+		inext = idest->next;
+		def = na_data_boxed_get_data_def( boxed );
+		if( def->copyable ){
+			dest_list = g_list_remove_link( dest_list, idest );
+			g_object_unref( idest->data );
+		}
+		idest = inext;
+	}
+	g_object_set_data( G_OBJECT( target ), NA_IFACTORY_OBJECT_PROP_DATA, dest_list );
+
+	/* only then copy copyable data from source
+	 */
 	src_list = g_object_get_data( G_OBJECT( source ), NA_IFACTORY_OBJECT_PROP_DATA );
-
 	for( isrc = src_list ; isrc ; isrc = isrc->next ){
-
-		NADataBoxed *src_boxed = NA_DATA_BOXED( isrc->data );
-		const NADataDef *def = na_data_boxed_get_data_def( src_boxed );
-
+		boxed = NA_DATA_BOXED( isrc->data );
+		def = na_data_boxed_get_data_def( boxed );
 		if( def->copyable ){
 			NADataBoxed *tgt_boxed = na_ifactory_object_get_data_boxed( target, def->name );
 			if( !tgt_boxed ){
 				tgt_boxed = na_data_boxed_new( def );
 				attach_boxed_to_object( target, tgt_boxed );
 			}
-			na_boxed_set_from_boxed( NA_BOXED( tgt_boxed ), NA_BOXED( src_boxed ));
+			na_boxed_set_from_boxed( NA_BOXED( tgt_boxed ), NA_BOXED( boxed ));
 		}
 	}
 
