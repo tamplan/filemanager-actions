@@ -41,7 +41,7 @@
  *
  * &prodname; version 3.2 introduces the version 2 of this interface,
  * which greatly simplify it. The I/O provider which implements the
- * #NAIIMporter interface is no more required to check for existence
+ * #NAIImporter interface is no more required to check for existence
  * of the imported items, but this check is pushed back to the caller
  * responsability.
  *
