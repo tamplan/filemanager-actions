@@ -1,5 +1,8 @@
 2012-01-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-application.c
+	(appli_init_application): Fix parent class method call.
+
 	* docs/nact/C/nact-conditions.xml: Embeds literal values between
 	<literal>..</literal> tags.
 

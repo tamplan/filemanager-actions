@@ -291,8 +291,8 @@ appli_init_application( BaseApplication *application )
 	na_pivot_set_loadable( NA_PIVOT( priv->updater ), PIVOT_LOAD_ALL );
 
 	/* call parent class */
-	if( ret && BASE_APPLICATION_CLASS( st_parent_class )->manage_options ){
-		ret = BASE_APPLICATION_CLASS( st_parent_class )->manage_options( application );
+	if( ret && BASE_APPLICATION_CLASS( st_parent_class )->init_application ){
+		ret = BASE_APPLICATION_CLASS( st_parent_class )->init_application( application );
 	}
 
 	return( ret );
