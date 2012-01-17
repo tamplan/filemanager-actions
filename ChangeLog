@@ -1,5 +1,16 @@
 2012-01-17 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-pivot.c:
+	* src/core/na-settings.h:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-icommand-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-main-toolbar.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-menubar-edit.c:
+	* src/nact/nact-providers-list.c:
+	* src/nact/nact-schemes-list.c: Remove useless <core/na-iprefs.h> include.
+
 	Move public na_iprefs_get_io_providers() function to static one.
 
 	* src/core/na-iprefs.c:

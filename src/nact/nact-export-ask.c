@@ -40,7 +40,6 @@
 #include <core/na-export-format.h>
 #include <core/na-gtk-utils.h>
 #include <core/na-ioptions-list.h>
-#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-export-ask.h"

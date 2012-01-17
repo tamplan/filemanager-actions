@@ -32,8 +32,6 @@
 #include <config.h>
 #endif
 
-#include <core/na-iprefs.h>
-
 #include "nact-application.h"
 #include "nact-main-toolbar.h"
 

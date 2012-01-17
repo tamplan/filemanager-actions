@@ -159,8 +159,6 @@ gboolean  na_settings_set_int_ex           ( const gchar *group, const gchar *ke
 gboolean  na_settings_set_uint             ( const gchar *key, guint value );
 gboolean  na_settings_set_uint_list        ( const gchar *key, const GList *value );
 
-/* na_iprefs_get_io_providers()
- */
 GSList   *na_settings_get_groups           ( void );
 
 G_END_DECLS

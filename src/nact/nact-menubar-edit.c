@@ -37,7 +37,6 @@
 #include <api/na-core-utils.h>
 
 #include <core/na-io-provider.h>
-#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-main-tab.h"

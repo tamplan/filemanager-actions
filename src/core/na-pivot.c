@@ -38,7 +38,6 @@
 #include <api/na-timeout.h>
 
 #include "na-io-provider.h"
-#include "na-iprefs.h"
 #include "na-module.h"
 #include "na-pivot.h"
 

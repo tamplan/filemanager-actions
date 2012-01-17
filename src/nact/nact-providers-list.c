@@ -39,7 +39,6 @@
 #include <api/na-object-api.h>
 
 #include <core/na-io-provider.h>
-#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "base-gtk-utils.h"

@@ -38,7 +38,6 @@
 #include <api/na-object-api.h>
 #include <api/na-timeout.h>
 
-#include <core/na-iprefs.h>
 #include <core/na-pivot.h>
 
 #include "base-isession.h"
