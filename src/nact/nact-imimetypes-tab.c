@@ -178,7 +178,6 @@ static void
 on_base_initialize_gtk( NactIMimetypesTab *instance, GtkWindow *toplevel, void *user_data )
 {
 	static const gchar *thisfn = "nact_imimetypes_tab_on_base_initialize_gtk";
-	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_IMIMETYPES_TAB( instance ));
 
@@ -188,20 +187,20 @@ on_base_initialize_gtk( NactIMimetypesTab *instance, GtkWindow *toplevel, void *
 			( void * ) toplevel,
 			( void * ) user_data );
 
-	list = base_window_get_widget( BASE_WINDOW( instance ), "MimetypesTreeView" );
-	add = base_window_get_widget( BASE_WINDOW( instance ), "AddMimetypeButton" );
-	remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveMimetypeButton" );
-
-	nact_match_list_create_model(
+	nact_match_list_init_with_args(
 			BASE_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_MIMETYPES,
-			list, add, remove,
+			base_window_get_widget( BASE_WINDOW( instance ), "MimetypesTreeView" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "AddMimetypeButton" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "RemoveMimetypeButton" ),
 			( pget_filters ) get_mimetypes,
 			( pset_filters ) set_mimetypes,
 			NULL,
+			NULL,
 			MATCH_LIST_MUST_MATCH_ONE_OF,
-			_( "Mimetype filter" ), TRUE );
+			_( "Mimetype filter" ),
+			TRUE );
 }
 
 /*
@@ -228,14 +227,12 @@ on_base_initialize_window( NactIMimetypesTab *instance, void *user_data )
 			G_OBJECT( instance ),
 			MAIN_SIGNAL_SELECTION_CHANGED,
 			G_CALLBACK( on_main_selection_changed ));
-
-	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 static void
 on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
 {
-	nact_match_list_on_selection_changed( window, ITAB_NAME, g_list_length( selected_items ));
+	/* nothing to do here */
 }
 
 static GSList *
@@ -256,6 +253,4 @@ on_instance_finalized( gpointer user_data, NactIMimetypesTab *instance )
 	static const gchar *thisfn = "nact_imimetypes_tab_on_instance_finalized";
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
-
-	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }

@@ -58,6 +58,31 @@ typedef struct {
 }
 	ColumnHeaderStruct;
 
+/* internal data set against the instance,
+ * addressed with the tab name
+ */
+typedef struct {
+	BaseWindow      *window;
+	gchar           *tab_name;
+	guint            tab_id;
+	GtkTreeView     *listview;
+	GtkWidget       *addbutton;
+	GtkWidget       *removebutton;
+	pget_filters     pget;
+	pset_filters     pset;
+	pon_add_cb       pon_add;
+	pon_remove_cb    pon_remove;
+	guint            match_header;
+	gchar           *item_header;
+	gboolean         editable_filter;
+	/* dynamic data */
+	gboolean         on_selection_change;
+	gboolean         editable_item;
+	guint            sort_column;
+	guint            sort_order;
+}
+	MatchListData;
+
 /* i18n: label of the header of the column which let the user select a positive filter
  */
 static ColumnHeaderStruct st_match_headers[] = {
@@ -66,37 +91,42 @@ static ColumnHeaderStruct st_match_headers[] = {
 	{ 0 }
 };
 
-static gboolean st_on_selection_change = FALSE;
+static void         initialize_pseudo_iface( MatchListData *data );
+static void         create_tree_model( MatchListData *data );
+static void         on_base_initialize_window( BaseWindow *window, MatchListData *data );
+static void         on_main_selection_changed( BaseWindow *window, GList *selected_items, MatchListData *data );
 
-static void         on_add_filter_clicked( GtkButton *button, MatchListStr *data );
-static void         on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
-static void         on_filter_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, MatchListStr *data );
-static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListStr *data );
-static void         on_must_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
-static void         on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, MatchListStr *data );
-static void         on_must_not_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data );
-static void         on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, MatchListStr *data );
-static void         on_remove_filter_clicked( GtkButton *button, MatchListStr *data );
-static void         on_selection_changed( GtkTreeSelection *selection, MatchListStr *data );
+static void         on_add_filter_clicked( GtkButton *button, MatchListData *data );
+static void         on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data );
+static void         on_filter_edited( GtkCellRendererText *renderer, const gchar *path, const gchar *text, MatchListData *data );
+static gboolean     on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListData *data );
+static void         on_must_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data );
+static void         on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, MatchListData *data );
+static void         on_must_not_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data );
+static void         on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path, MatchListData *data );
+static void         on_remove_filter_clicked( GtkButton *button, MatchListData *data );
+static void         on_selection_changed( GtkTreeSelection *selection, MatchListData *data );
 
-static void         add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix );
-static guint        count_filters( const gchar *filter, MatchListStr *data );
-static void         delete_current_row( MatchListStr *data );
+static void         add_filter( MatchListData *data, const gchar *filter, const gchar *prefix );
+static guint        count_filters( const gchar *filter, MatchListData *data );
+static void         delete_current_row( MatchListData *data );
 static void         delete_row_at_path( GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *path );
-static void         dump_current_rows( MatchListStr *data );
-static void         edit_inline( MatchListStr *data );
-static gchar       *get_filter_from_path( const gchar *path_str, MatchListStr *data );
+static void         dump_current_rows( MatchListData *data );
+static void         edit_inline( MatchListData *data );
+static gchar       *get_filter_from_path( const gchar *path_str, MatchListData *data );
 static const gchar *get_must_match_header( guint id );
 static gboolean     get_rows_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList **filters );
-static void         insert_new_row( MatchListStr *data );
-static void         insert_new_row_data( MatchListStr *data, const gchar *filter, gboolean match, gboolean no_match );
+static void         insert_new_row( MatchListData *data );
+static void         insert_new_row_data( MatchListData *data, const gchar *filter, gboolean match, gboolean no_match );
 static void         iter_for_setup( gchar *filter, GtkTreeModel *model );
-static gchar       *search_for_unique_label( const gchar *propal, MatchListStr *data );
-static void         set_match_status( const gchar *path_str, gboolean must_match, gboolean must_not_match, MatchListStr *data );
-static void         sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint colid );
+static gchar       *search_for_unique_label( const gchar *propal, MatchListData *data );
+static void         set_match_status( const gchar *path_str, gboolean must_match, gboolean must_not_match, MatchListData *data );
+static void         sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListData *data, guint colid );
+
+static void         on_instance_finalized( MatchListData *data, BaseWindow *window );
 
 /**
- * nact_match_list_create_model:
+ * nact_match_list_init_with_args:
  * @window: the #BaseWindow window which contains the view.
  * @tab_name: a string constant which identifies this page.
  * @tab_id: our id for this page.
@@ -106,27 +136,42 @@ static void         sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchList
  * @pget: a pointer to the function to get the list of filters.
  * @pset: a pointer to the function to set the list of filters.
  * @pon_add: an optional pointer to a function which handles the Add button.
+ * @pon_remove: an optional pointer to a function which handles the Remove button.
  * @item_header: the title of the item header.
  *
- * Creates the tree model.
+ * Initialize this pseudo-interface, and creates the tree model.
+ *
+ * This function can only be called when (and so should be called immediately
+ * after) the Gtk toplevel has been first initialized. This is because we need
+ * here pointers to GtkTreeView and GtkButton widgets.
  */
 void
-nact_match_list_create_model( BaseWindow *window,
-		const gchar *tab_name, guint tab_id,
-		GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
-		pget_filters pget, pset_filters pset, pon_add_cb pon_add,
-		guint match_header,
-		const gchar *item_header,
-		gboolean editable_filter )
+nact_match_list_init_with_args( BaseWindow *window, const gchar *tab_name,
+				guint tab_id,
+				GtkWidget *listview,
+				GtkWidget *addbutton,
+				GtkWidget *removebutton,
+				pget_filters pget,
+				pset_filters pset,
+				pon_add_cb pon_add,
+				pon_remove_cb pon_remove,
+				guint match_header,
+				const gchar *item_header,
+				gboolean editable_filter )
 {
-	MatchListStr *data;
-	GtkListStore *model;
-	GtkCellRenderer *text_cell, *radio_cell;
-	GtkTreeViewColumn *column;
-	GtkTreeSelection *selection;
+	static const gchar *thisfn = "nact_match_list_init_with_args";
+	MatchListData *data;
 
-	data = g_new0( MatchListStr, 1 );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
+
+	g_debug( "%s: window=%p, tab_name=%s", thisfn, ( void * ) window, tab_name );
+
+	data = g_new0( MatchListData, 1 );
+
+	/* parameters
+	 */
 	data->window = window;
+	data->tab_name = g_strdup( tab_name );
 	data->tab_id = tab_id;
 	data->listview = GTK_TREE_VIEW( listview );
 	data->addbutton = addbutton;
@@ -134,13 +179,51 @@ nact_match_list_create_model( BaseWindow *window,
 	data->pget = pget;
 	data->pset = pset;
 	data->pon_add = pon_add;
+	data->pon_remove = pon_remove;
 	data->match_header = match_header;
 	data->item_header = g_strdup( item_header );
 	data->editable_filter = editable_filter;
+
+	/* dynamic data
+	 */
+	data->on_selection_change = FALSE;
 	data->editable_item = FALSE;
 	data->sort_column = 0;
 	data->sort_order = 0;
+
 	g_object_set_data( G_OBJECT( window ), tab_name, data );
+
+	initialize_pseudo_iface( data );
+	create_tree_model( data );
+}
+
+static void
+initialize_pseudo_iface( MatchListData *data )
+{
+	base_window_signal_connect_with_data(
+			data->window,
+			G_OBJECT( data->window ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_window ),
+			data );
+
+	base_window_signal_connect_with_data(
+			data->window,
+			G_OBJECT( data->window ),
+			MAIN_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_main_selection_changed ),
+			data );
+
+	g_object_weak_ref( G_OBJECT( data->window ), ( GWeakNotify ) on_instance_finalized, data );
+}
+
+static void
+create_tree_model( MatchListData *data )
+{
+	GtkListStore *model;
+	GtkCellRenderer *text_cell, *radio_cell;
+	GtkTreeViewColumn *column;
+	GtkTreeSelection *selection;
 
 	model = gtk_list_store_new( N_COLUMN, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN );
 	gtk_tree_view_set_model( data->listview, GTK_TREE_MODEL( model ));
@@ -157,7 +240,7 @@ nact_match_list_create_model( BaseWindow *window,
 	radio_cell = gtk_cell_renderer_toggle_new();
 	gtk_cell_renderer_toggle_set_radio( GTK_CELL_RENDERER_TOGGLE( radio_cell ), TRUE );
 	column = gtk_tree_view_column_new_with_attributes(
-			get_must_match_header( match_header ),
+			get_must_match_header( data->match_header ),
 			radio_cell,
 			"active", MUST_MATCH_COLUMN,
 			NULL );
@@ -185,23 +268,17 @@ nact_match_list_create_model( BaseWindow *window,
 	gtk_tree_selection_set_mode( selection, GTK_SELECTION_BROWSE );
 }
 
-/**
- * nact_match_list_init_view:
- * @window: the #BaseWindow window which contains the view.
- * @tab_name: a string constant which identifies this page.
- *
- * Initializes the tab widget at each time the widget will be displayed.
+/*
+ *  Initializes the tab widget at each time the widget will be displayed.
  * Connect signals.
  */
-void
-nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
+static void
+on_base_initialize_window( BaseWindow *window, MatchListData *data )
 {
-	MatchListStr *data;
 	GtkTreeViewColumn *column;
 	GList *renderers;
 	GtkTreeModel *model;
 
-	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
 	g_return_if_fail( data != NULL );
 
 	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
@@ -267,12 +344,20 @@ nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
 				data );
 	}
 
-	base_window_signal_connect_with_data(
-			window,
-			G_OBJECT( data->removebutton ),
-			"clicked",
-			G_CALLBACK( on_remove_filter_clicked ),
-			data );
+	if( data->pon_remove ){
+		base_window_signal_connect(
+				window,
+				G_OBJECT( data->removebutton ),
+				"clicked",
+				G_CALLBACK( data->pon_remove ));
+	} else {
+		base_window_signal_connect_with_data(
+				window,
+				G_OBJECT( data->removebutton ),
+				"clicked",
+				G_CALLBACK( on_remove_filter_clicked ),
+				data );
+	}
 
 	base_window_signal_connect_with_data(
 			window,
@@ -297,12 +382,7 @@ nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
 	sort_on_column( column, data, ITEM_COLUMN );
 }
 
-/**
- * nact_match_list_on_selection_changed:
- * @window: the #BaseWindow window which contains the view.
- * @tab_name: a string constant which identifies this page.
- * @count_selected: count of selected items in the #NactIActionsList list view.
- *
+/*
  * Called each time the selection changes in the Actions tree view.
  *
  * Basically we are using here a rather common scheme:
@@ -313,11 +393,10 @@ nact_match_list_init_view( BaseWindow *window, const gchar *tab_name )
  *   for the same basename filter
  * - update the object with a summary of the listbox contents
  */
-void
-nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name, guint count_selected )
+static void
+on_main_selection_changed( BaseWindow *window, GList *selected_items, MatchListData *data )
 {
-	static const gchar *thisfn = "nact_match_list_on_selection_changed";
-	MatchListStr *data;
+	static const gchar *thisfn = "nact_match_list_on_main_selection_changed";
 	NAIContext *context;
 	gboolean enable_tab;
 	GSList *filters;
@@ -326,9 +405,7 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	GtkTreeViewColumn *column;
 	GtkTreePath *path;
 
-	g_debug( "%s: window=%p, tab=%s, count_selected=%d", thisfn, ( void * ) window, tab_name, count_selected );
-
-	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
+	g_return_if_fail( BASE_IS_WINDOW( window ));
 	g_return_if_fail( data != NULL );
 
 	g_object_get( G_OBJECT( window ),
@@ -338,7 +415,7 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( data->window ), data->tab_id, enable_tab );
 
-	st_on_selection_change = TRUE;
+	data->on_selection_change = TRUE;
 
 	filters = context ? ( *data->pget )( context ) : NULL;
 	g_debug( "%s: filters=%p (count=%d)", thisfn, ( void * ) filters, filters ? g_slist_length( filters ) : -1 );
@@ -360,7 +437,7 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 	base_gtk_utils_set_editable( G_OBJECT( data->removebutton ), data->editable_item );
 	gtk_widget_set_sensitive( data->removebutton, FALSE );
 
-	st_on_selection_change = FALSE;
+	data->on_selection_change = FALSE;
 
 	path = gtk_tree_path_new_first();
 	if( path ){
@@ -383,9 +460,9 @@ nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
 void
 nact_match_list_insert_row( BaseWindow *window, const gchar *tab_name, const gchar *filter, gboolean match, gboolean not_match )
 {
-	MatchListStr *data;
+	MatchListData *data;
 
-	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
+	data = ( MatchListData * ) g_object_get_data( G_OBJECT( window ), tab_name );
 	g_return_if_fail( data != NULL );
 
 	insert_new_row_data( data, filter, match, not_match );
@@ -403,10 +480,10 @@ GSList *
 nact_match_list_get_rows( BaseWindow *window, const gchar *tab_name )
 {
 	GSList *filters;
-	MatchListStr *data;
+	MatchListData *data;
 	GtkTreeModel *model;
 
-	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
+	data = ( MatchListData * ) g_object_get_data( G_OBJECT( window ), tab_name );
 	g_return_val_if_fail( data != NULL, NULL );
 
 	model = gtk_tree_view_get_model( data->listview );
@@ -416,48 +493,24 @@ nact_match_list_get_rows( BaseWindow *window, const gchar *tab_name )
 	return( filters );
 }
 
-/**
- * nact_match_list_dispose:
- * @window: the #BaseWindow window which contains the view.
- * @tab_name: a string constant which identifies this page.
- *
- * Called at instance_dispose time.
+/* callback function called when the user clicks on "Add" button
+ * and no application callback has been provided by the caller
+ * at initialization time
  */
-void
-nact_match_list_dispose( BaseWindow *window, const gchar *tab_name )
-{
-	MatchListStr *data;
-	GtkTreeModel *model;
-	GtkTreeSelection *selection;
-
-	data = ( MatchListStr * ) g_object_get_data( G_OBJECT( window ), tab_name );
-	g_return_if_fail( data != NULL );
-
-	model = gtk_tree_view_get_model( data->listview );
-	selection = gtk_tree_view_get_selection( data->listview );
-	gtk_tree_selection_unselect_all( selection );
-	gtk_list_store_clear( GTK_LIST_STORE( model ));
-
-	g_free( data->item_header );
-
-	g_free( data );
-	g_object_set_data( G_OBJECT( window ), tab_name, NULL );
-}
-
 static void
-on_add_filter_clicked( GtkButton *button, MatchListStr *data )
+on_add_filter_clicked( GtkButton *button, MatchListData *data )
 {
 	insert_new_row( data );
 }
 
 static void
-on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data )
+on_filter_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data )
 {
 	sort_on_column( treeviewcolumn, data, ITEM_COLUMN );
 }
 
 static void
-on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, MatchListStr *data )
+on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gchar *text, MatchListData *data )
 {
 	static const gchar *thisfn = "nact_match_list_on_filter_edited";
 	GtkTreeModel *model;
@@ -534,7 +587,7 @@ on_filter_edited( GtkCellRendererText *renderer, const gchar *path_str, const gc
 }
 
 static gboolean
-on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListStr *data )
+on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListData *data )
 {
 	gboolean stop;
 
@@ -565,7 +618,7 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, MatchListStr *data 
 }
 
 static void
-on_must_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data )
+on_must_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data )
 {
 	sort_on_column( treeviewcolumn, data, MUST_MATCH_COLUMN );
 }
@@ -579,7 +632,7 @@ on_must_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data )
  * filters list
  */
 static void
-on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, MatchListStr *data )
+on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, MatchListData *data )
 {
 	/*static const gchar *thisfn = "nact_match_list_on_must_match_toggled";*/
 	gchar *filter;
@@ -625,13 +678,13 @@ on_must_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, Ma
 }
 
 static void
-on_must_not_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data )
+on_must_not_match_clicked( GtkTreeViewColumn *treeviewcolumn, MatchListData *data )
 {
 	sort_on_column( treeviewcolumn, data, MUST_NOT_MATCH_COLUMN );
 }
 
 static void
-on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, MatchListStr *data )
+on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str, MatchListData *data )
 {
 	/*static const gchar *thisfn = "nact_match_list_on_must_not_match_toggled";*/
 	gchar *filter;
@@ -676,20 +729,20 @@ on_must_not_match_toggled( GtkCellRendererToggle *cell_renderer, gchar *path_str
 }
 
 static void
-on_remove_filter_clicked( GtkButton *button, MatchListStr *data )
+on_remove_filter_clicked( GtkButton *button, MatchListData *data )
 {
 	delete_current_row( data );
 }
 
 static void
-on_selection_changed( GtkTreeSelection *selection, MatchListStr *data )
+on_selection_changed( GtkTreeSelection *selection, MatchListData *data )
 {
 	gtk_widget_set_sensitive( data->removebutton,
 			data->editable_item && gtk_tree_selection_count_selected_rows( selection ) > 0 );
 }
 
 static void
-add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix )
+add_filter( MatchListData *data, const gchar *filter, const gchar *prefix )
 {
 	NAIContext *context;
 	GSList *filters;
@@ -709,7 +762,7 @@ add_filter( MatchListStr *data, const gchar *filter, const gchar *prefix )
 }
 
 static guint
-count_filters( const gchar *filter, MatchListStr *data )
+count_filters( const gchar *filter, MatchListData *data )
 {
 	guint count;
 	GtkTreeModel *model;
@@ -725,7 +778,7 @@ count_filters( const gchar *filter, MatchListStr *data )
 }
 
 static void
-delete_current_row( MatchListStr *data )
+delete_current_row( MatchListData *data )
 {
 	GtkTreeSelection *selection;
 	GtkTreeModel *model;
@@ -787,7 +840,7 @@ delete_row_at_path( GtkTreeView *treeview, GtkTreeModel *model, GtkTreePath *pat
 }
 
 static void
-dump_current_rows( MatchListStr *data )
+dump_current_rows( MatchListData *data )
 {
 #ifdef NA_MAINTAINER_MODE
 	GtkTreeModel *model;
@@ -802,7 +855,7 @@ dump_current_rows( MatchListStr *data )
 }
 
 static void
-edit_inline( MatchListStr *data )
+edit_inline( MatchListData *data )
 {
 	GtkTreeSelection *selection;
 	GList *rows;
@@ -823,7 +876,7 @@ edit_inline( MatchListStr *data )
 }
 
 static gchar *
-get_filter_from_path( const gchar *path_str, MatchListStr *data )
+get_filter_from_path( const gchar *path_str, MatchListData *data )
 {
 	gchar *filter;
 	GtkTreeModel *model;
@@ -868,7 +921,7 @@ get_rows_iter( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter* iter, GSList
 }
 
 static void
-insert_new_row( MatchListStr *data )
+insert_new_row( MatchListData *data )
 {
 	/* i18n notes : new filter for a new row in a match/no match list */
 	static const gchar *filter_label = N_( "new-filter" );
@@ -880,7 +933,7 @@ insert_new_row( MatchListStr *data )
 }
 
 static void
-insert_new_row_data( MatchListStr *data, const gchar *filter, gboolean match, gboolean not_match )
+insert_new_row_data( MatchListData *data, const gchar *filter, gboolean match, gboolean not_match )
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -946,7 +999,7 @@ iter_for_setup( gchar *filter_orig, GtkTreeModel *model )
 }
 
 static gchar *
-search_for_unique_label( const gchar *propal, MatchListStr *data )
+search_for_unique_label( const gchar *propal, MatchListData *data )
 {
 	gchar *label;
 	guint count;
@@ -963,7 +1016,7 @@ search_for_unique_label( const gchar *propal, MatchListStr *data )
 }
 
 static void
-set_match_status( const gchar *path_str, gboolean must_match, gboolean must_not_match, MatchListStr *data )
+set_match_status( const gchar *path_str, gboolean must_match, gboolean must_not_match, MatchListData *data )
 {
 	GtkTreeModel *model;
 	GtkTreePath *path;
@@ -981,7 +1034,7 @@ set_match_status( const gchar *path_str, gboolean must_match, gboolean must_not_
 }
 
 static void
-sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint new_col_id )
+sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListData *data, guint new_col_id )
 {
 	guint prev_col_id;
 	guint prev_order, new_order;
@@ -1008,4 +1061,31 @@ sort_on_column( GtkTreeViewColumn *treeviewcolumn, MatchListStr *data, guint new
 
 	model = gtk_tree_view_get_model( data->listview );
 	gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), new_col_id, new_order );
+}
+
+static void
+on_instance_finalized( MatchListData *data, BaseWindow *window )
+{
+	static const gchar *thisfn = "nact_match_list_on_instance_finalized";
+	GtkTreeModel *model;
+	GtkTreeSelection *selection;
+
+	g_return_if_fail( data != NULL );
+
+	g_debug( "%s: window=%p, user_data=%p, tab_name=%s",
+			thisfn,
+			( void * ) window,
+			( void * ) data, data->tab_name );
+
+	g_object_set_data( G_OBJECT( window ), data->tab_name, NULL );
+
+	model = gtk_tree_view_get_model( data->listview );
+	selection = gtk_tree_view_get_selection( data->listview );
+	gtk_tree_selection_unselect_all( selection );
+	gtk_list_store_clear( GTK_LIST_STORE( model ));
+
+	g_free( data->tab_name );
+	g_free( data->item_header );
+
+	g_free( data );
 }

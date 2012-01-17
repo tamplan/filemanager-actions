@@ -173,7 +173,6 @@ static void
 on_base_initialize_gtk( NactICapabilitiesTab *instance, GtkWindow *toplevel, void *user_data )
 {
 	static const gchar *thisfn = "nact_icapabilities_tab_on_base_initialize_gtk";
-	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_ICAPABILITIES_TAB( instance ));
 
@@ -183,18 +182,20 @@ on_base_initialize_gtk( NactICapabilitiesTab *instance, GtkWindow *toplevel, voi
 			( void * ) toplevel,
 			( void * ) user_data );
 
-	list = base_window_get_widget( BASE_WINDOW( instance ), "CapabilitiesTreeView" );
-	add = base_window_get_widget( BASE_WINDOW( instance ), "AddCapabilityButton" );
-	remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveCapabilityButton" );
-
-	nact_match_list_create_model( BASE_WINDOW( instance ),
-			ITAB_NAME, TAB_CAPABILITIES,
-			list, add, remove,
+	nact_match_list_init_with_args(
+			BASE_WINDOW( instance ),
+			ITAB_NAME,
+			TAB_CAPABILITIES,
+			base_window_get_widget( BASE_WINDOW( instance ), "CapabilitiesTreeView" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "AddCapabilityButton" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "RemoveCapabilityButton" ),
 			( pget_filters ) get_capabilities,
 			( pset_filters ) set_capabilities,
 			( pon_add_cb ) on_add_clicked,
+			NULL,
 			MATCH_LIST_MUST_MATCH_ALL_OF,
-			_( "Capability filter" ), FALSE );
+			_( "Capability filter" ),
+			FALSE );
 }
 
 static void
@@ -209,8 +210,6 @@ on_base_initialize_window( NactICapabilitiesTab *instance, void *user_data )
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
 			( void * ) user_data );
 
-	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
-
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
 			G_OBJECT( instance ),
@@ -221,7 +220,7 @@ on_base_initialize_window( NactICapabilitiesTab *instance, void *user_data )
 static void
 on_main_selection_changed( NactICapabilitiesTab *instance, GList *selected_items, gpointer user_data )
 {
-	nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, g_list_length( selected_items ));
+	/* nothing to do here */
 }
 
 static void
@@ -264,6 +263,4 @@ on_instance_finalized( gpointer user_data, NactICapabilitiesTab *instance )
 	static const gchar *thisfn = "nact_icapabilities_tab_on_instance_finalized";
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
-
-	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }

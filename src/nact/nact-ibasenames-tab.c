@@ -194,7 +194,6 @@ static void
 on_base_initialize_gtk( NactIBasenamesTab *instance, GtkWindow *toplevel, void *user_data )
 {
 	static const gchar *thisfn = "nact_ibasenames_tab_on_base_initialize_gtk";
-	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_IBASENAMES_TAB( instance ));
 
@@ -204,20 +203,20 @@ on_base_initialize_gtk( NactIBasenamesTab *instance, GtkWindow *toplevel, void *
 			( void * ) toplevel,
 			( void * ) user_data );
 
-	list = base_window_get_widget( BASE_WINDOW( instance ), "BasenamesTreeView" );
-	add = base_window_get_widget( BASE_WINDOW( instance ), "AddBasenameButton" );
-	remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveBasenameButton" );
-
-	nact_match_list_create_model(
+	nact_match_list_init_with_args(
 			BASE_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_BASENAMES,
-			list, add, remove,
+			base_window_get_widget( BASE_WINDOW( instance ), "BasenamesTreeView" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "AddBasenameButton" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "RemoveBasenameButton" ),
 			( pget_filters ) get_basenames,
 			( pset_filters ) set_basenames,
 			NULL,
+			NULL,
 			MATCH_LIST_MUST_MATCH_ONE_OF,
-			_( "Basename filter" ), TRUE );
+			_( "Basename filter" ),
+			TRUE );
 }
 
 /*
@@ -252,21 +251,16 @@ on_base_initialize_window( NactIBasenamesTab *instance, void *user_data )
 			G_OBJECT( button ),
 			"toggled",
 			G_CALLBACK( on_matchcase_toggled ));
-
-	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
 }
 
 static void
 on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
 {
-	guint count_selected;
 	NAIContext *context;
 	gboolean editable;
 	GtkToggleButton *matchcase_button;
 	gboolean matchcase;
 	IBasenamesData *data;
-
-	count_selected = g_list_length( selected_items );
 
 	g_object_get( G_OBJECT( window ),
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
@@ -275,8 +269,6 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer u
 	data = get_ibasenames_data( NACT_IBASENAMES_TAB( window ));
 
 	data->on_selection_change = TRUE;
-
-	nact_match_list_on_selection_changed( window, ITAB_NAME, count_selected );
 
 	matchcase_button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, "BasenamesMatchcaseButton" ));
 	matchcase = context ? na_object_get_matchcase( context ) : FALSE;
@@ -353,8 +345,6 @@ on_instance_finalized( gpointer user_data, NactIBasenamesTab *instance )
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
 
 	data = get_ibasenames_data( instance );
-
-	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 
 	g_free( data );
 }

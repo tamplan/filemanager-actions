@@ -176,7 +176,6 @@ static void
 on_base_initialize_gtk( NactISchemesTab *instance, GtkWindow *toplevel, void *user_data )
 {
 	static const gchar *thisfn = "nact_ischemes_tab_on_base_initialize_gtk";
-	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_ISCHEMES_TAB( instance ));
 
@@ -186,20 +185,20 @@ on_base_initialize_gtk( NactISchemesTab *instance, GtkWindow *toplevel, void *us
 			( void * ) toplevel,
 			( void * ) user_data );
 
-	list = base_window_get_widget( BASE_WINDOW( instance ), "SchemesTreeView" );
-	add = base_window_get_widget( BASE_WINDOW( instance ), "AddSchemeButton" );
-	remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveSchemeButton" );
-
-	nact_match_list_create_model(
+	nact_match_list_init_with_args(
 			BASE_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_SCHEMES,
-			list, add, remove,
+			base_window_get_widget( BASE_WINDOW( instance ), "SchemesTreeView" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "AddSchemeButton" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "RemoveSchemeButton" ),
 			( pget_filters ) get_schemes,
 			( pset_filters ) set_schemes,
 			NULL,
+			NULL,
 			MATCH_LIST_MUST_MATCH_ONE_OF,
-			_( "Scheme filter" ), TRUE );
+			_( "Scheme filter" ),
+			TRUE );
 }
 
 static void
@@ -221,8 +220,6 @@ on_base_initialize_window( NactISchemesTab *instance, void *user_data )
 			MAIN_SIGNAL_SELECTION_CHANGED,
 			G_CALLBACK( on_main_selection_changed ));
 
-	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
-
 	button = base_window_get_widget( BASE_WINDOW( instance ), "AddFromDefaultButton" );
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -237,8 +234,6 @@ on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer u
 	NAIContext *context;
 	gboolean editable;
 	GtkWidget *button;
-
-	nact_match_list_on_selection_changed( window, ITAB_NAME, g_list_length( selected_items ));
 
 	g_object_get( G_OBJECT( window ),
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
@@ -286,6 +281,4 @@ on_instance_finalized( gpointer user_data, NactISchemesTab *instance )
 	static const gchar *thisfn = "nact_ischemes_tab_on_instance_finalized";
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
-
-	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }

@@ -51,7 +51,6 @@
 
 /* notebook tabs
  */
-
 enum {
 	TAB_ACTION = 0,
 	TAB_COMMAND,
@@ -65,8 +64,8 @@ enum {
 	TAB_PROPERTIES
 };
 
-void        nact_main_tab_enable_page    ( NactMainWindow *window, gint page, gboolean enabled );
-gboolean    nact_main_tab_is_page_enabled( NactMainWindow *window, gint page );
+void     nact_main_tab_enable_page    ( NactMainWindow *window, gint page, gboolean enabled );
+gboolean nact_main_tab_is_page_enabled( NactMainWindow *window, gint page );
 
 G_END_DECLS
 

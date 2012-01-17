@@ -178,7 +178,6 @@ static void
 on_base_initialize_gtk( NactIFoldersTab *instance, GtkWindow *toplevel, void *user_data )
 {
 	static const gchar *thisfn = "nact_ifolders_tab_on_base_initialize_gtk";
-	GtkWidget *list, *add, *remove;
 
 	g_return_if_fail( NACT_IS_IFOLDERS_TAB( instance ));
 
@@ -188,20 +187,20 @@ on_base_initialize_gtk( NactIFoldersTab *instance, GtkWindow *toplevel, void *us
 			( void * ) toplevel,
 			( void * ) user_data );
 
-	list = base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" );
-	add = base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" );
-	remove = base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton" );
-
-	nact_match_list_create_model(
+	nact_match_list_init_with_args(
 			BASE_WINDOW( instance ),
 			ITAB_NAME,
 			TAB_FOLDERS,
-			list, add, remove,
+			base_window_get_widget( BASE_WINDOW( instance ), "FoldersTreeView" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "AddFolderButton" ),
+			base_window_get_widget( BASE_WINDOW( instance ), "RemoveFolderButton" ),
 			( pget_filters ) get_folders,
 			( pset_filters ) set_folders,
 			NULL,
+			NULL,
 			MATCH_LIST_MUST_MATCH_ONE_OF,
-			_( "Folder filter" ), TRUE );
+			_( "Folder filter" ),
+			TRUE );
 }
 
 static void
@@ -223,8 +222,6 @@ on_base_initialize_window( NactIFoldersTab *instance, void *user_data )
 			MAIN_SIGNAL_SELECTION_CHANGED,
 			G_CALLBACK( on_main_selection_changed ));
 
-	nact_match_list_init_view( BASE_WINDOW( instance ), ITAB_NAME );
-
 	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
@@ -236,13 +233,9 @@ on_base_initialize_window( NactIFoldersTab *instance, void *user_data )
 static void
 on_main_selection_changed( NactIFoldersTab *instance, GList *selected_items, gpointer user_data )
 {
-	guint count_selected;
 	NAIContext *context;
 	gboolean editable;
 	GtkWidget *button;
-
-	count_selected = g_list_length( selected_items );
-	nact_match_list_on_selection_changed( BASE_WINDOW( instance ), ITAB_NAME, count_selected );
 
 	g_object_get( G_OBJECT( instance ),
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
@@ -339,6 +332,4 @@ on_instance_finalized( gpointer user_data, NactIFoldersTab *instance )
 	static const gchar *thisfn = "nact_ifolders_tab_on_instance_finalized";
 
 	g_debug( "%s: instance=%p, user_data=%p", thisfn, ( void * ) instance, ( void * ) user_data );
-
-	nact_match_list_dispose( BASE_WINDOW( instance ), ITAB_NAME );
 }

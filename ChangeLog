@@ -1,5 +1,21 @@
 2012-01-17 Pierre Wieser <pwieser@trychlos.org>
 
+	nact_match_list functions connect to base signals (and acts as a
+	pseudo-interface).
+
+	* src/nact/nact-match-list.c:
+	* src/nact/nact-match-list.h
+	(nact_match_list_create_model): Renamed as nact_match_list_init_with_args().
+	(nact_match_list_init_view, nact_match_list_on_selection_changed,
+	nact_match_list_dispose): Removed functions.
+
+	* src/nact/nact-ibasenames-tab.c:
+	* src/nact/nact-icapabilities-tab.c:
+	* src/nact/nact-ifolders-tab.c:
+	* src/nact/nact-imimetypes-tab.c:
+	* src/nact/nact-ischemes-tab.c:
+	* src/nact/nact-main-tab.h: Updated accordingly.
+
 	* src/core/na-pivot.c:
 	* src/core/na-settings.h:
 	* src/nact/nact-export-ask.c:

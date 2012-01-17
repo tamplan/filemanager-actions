@@ -35,59 +35,51 @@
  * SECTION: nact_match_list
  * @short_description: Implementation of a list match/does not match.
  * @include: nact/nact-match-list.h
+ *
+ * In an ideal world, this would be a base interface for NactISchemesTab,
+ * etc. interfaces.
+ * In GObject world however, one cannot derived an interface, nor an interface
+ * can implement another interface. The GObject solution would be for NactISchemesTab
+ * to requires NactIMatchList, and for NactMainWindow to implement this same
+ * NactIMatchList interface. This is not very practical as NactMainWindow is
+ * already some big bunch of code...
+ *
+ * So we stay with just a piece of helper functions...
  */
 
 #include "base-window.h"
 
 G_BEGIN_DECLS
 
-typedef GSList * ( *pget_filters )( void * );
-typedef void     ( *pset_filters )( void *, GSList * );
-typedef void     ( *pon_add_cb )  ( void *, BaseWindow * );
+typedef GSList * ( *pget_filters ) ( void * );
+typedef void     ( *pset_filters ) ( void *, GSList * );
+typedef void     ( *pon_add_cb )   ( void *, BaseWindow * );
+typedef void     ( *pon_remove_cb )( void *, BaseWindow * );
 
 enum {
 	MATCH_LIST_MUST_MATCH_ONE_OF = 1,
 	MATCH_LIST_MUST_MATCH_ALL_OF,
 };
 
-typedef struct {
-	BaseWindow      *window;
-	guint            tab_id;
-	GtkTreeView     *listview;
-	GtkWidget       *addbutton;
-	GtkWidget       *removebutton;
-	pget_filters     pget;
-	pset_filters     pset;
-	pon_add_cb       pon_add;
-	guint            match_header;
-	gchar           *item_header;
-	gboolean         editable_filter;
-	/* dynamic data */
-	gboolean         editable_item;
-	guint            sort_column;
-	guint            sort_order;
-}
-	MatchListStr;
+void    nact_match_list_init_with_args( BaseWindow *window, const gchar *tab_name,
+						guint         tab_id,
+						GtkWidget    *listview,
+						GtkWidget    *addbutton,
+						GtkWidget    *removebutton,
+						pget_filters  pget,
+						pset_filters  pset,
+						pon_add_cb    pon_add,
+						pon_remove_cb pon_remove,
+						guint         match_header,
+						const gchar  *item_header,
+						gboolean      editable_filter );
 
-void    nact_match_list_create_model        ( BaseWindow *window, const gchar *tab_name,
-			guint tab_id,
-			GtkWidget *listview, GtkWidget *addbutton, GtkWidget *removebutton,
-			pget_filters pget, pset_filters pset, pon_add_cb pon_add,
-			guint match_header,
-			const gchar *item_header,
-			gboolean editable_filter );
+void    nact_match_list_insert_row    ( BaseWindow *window, const gchar *tab_name,
+						const gchar  *filter,
+						gboolean      match,
+						gboolean      not_match );
 
-void    nact_match_list_init_view           ( BaseWindow *window, const gchar *tab_name );
-
-void    nact_match_list_on_selection_changed( BaseWindow *window, const gchar *tab_name,
-			guint count );
-
-void    nact_match_list_insert_row          ( BaseWindow *window, const gchar *tab_name,
-			const gchar *filter, gboolean match, gboolean not_match );
-
-GSList *nact_match_list_get_rows            ( BaseWindow *window, const gchar *tab_name );
-
-void    nact_match_list_dispose             ( BaseWindow *window, const gchar *tab_name );
+GSList *nact_match_list_get_rows      ( BaseWindow *window, const gchar *tab_name );
 
 G_END_DECLS
 
