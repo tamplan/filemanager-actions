@@ -152,7 +152,7 @@ main( int argc, char** argv )
 		type = TYPE_BOOL;
 	} else {
 		/* i18n: 'str', 'int' and 'bool' are literal values: do not translate */
-		msgerr = g_strdup_printf( _( "Error: unknown type: %s. Use 'str', 'int' or bool'.\n" ), st_type );
+		msgerr = g_strdup_printf( _( "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n" ), st_type );
 		g_printerr( "%s", msgerr );
 		g_free( msgerr );
 		errors += 1;
