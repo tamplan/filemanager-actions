@@ -120,57 +120,6 @@ na_iprefs_set_order_mode( guint mode )
 }
 
 /*
- * na_iprefs_get_io_providers:
- * @pivot: the #NAPivot application object.
- *
- * Searches in preferences system for all mentions of an i/o provider.
- * This does not mean in any way that the i/o provider is active,
- * available or so, but just that is mentioned here.
- *
- * I/o provider identifiers returned in the list are not supposed
- * to be unique, nor sorted.
- *
- * Returns: a list of i/o provider identifiers found in preferences
- * system; this list should be na_core_utils_slist_free() by the caller.
- *
- * Since: 3.1
- */
-GSList *
-na_iprefs_get_io_providers( void )
-{
-	GSList *providers;
-	GSList *write_order, *groups;
-	GSList *it;
-	const gchar *name;
-	gchar *group_prefix;
-	guint prefix_len;
-
-	providers = NULL;
-
-	write_order = na_settings_get_string_list( NA_IPREFS_IO_PROVIDERS_WRITE_ORDER, NULL, NULL );
-	for( it = write_order ; it ; it = it->next ){
-		name = ( const gchar * ) it->data;
-		providers = g_slist_prepend( providers, g_strdup( name ));
-	}
-	na_core_utils_slist_free( write_order );
-
-	groups = na_settings_get_groups();
-
-	group_prefix = g_strdup_printf( "%s ", NA_IPREFS_IO_PROVIDER_GROUP );
-	prefix_len = strlen( group_prefix );
-	for( it = groups ; it ; it = it->next ){
-		name = ( const gchar * ) it->data;
-		if( g_str_has_prefix( name, group_prefix )){
-			providers = g_slist_prepend( providers, g_strdup( name+prefix_len ));
-		}
-	}
-	g_free( group_prefix );
-	na_core_utils_slist_free( groups );
-
-	return( providers );
-}
-
-/*
  * na_iprefs_write_level_zero:
  * @items: the #GList of items whose first level is to be written.
  * @messages: a pointer to a #GSList in which we will add happening
