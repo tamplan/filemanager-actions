@@ -352,6 +352,7 @@ na_factory_object_move_boxed( NAIFactoryObject *target, const NAIFactoryObject *
  * @source: the source #NAIFactoryObject instance.
  *
  * Copies one instance to another.
+ * Takes care of not overriding provider data.
  */
 void
 na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source )
@@ -361,6 +362,7 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 	GList *src_list, *isrc;
 	NADataBoxed *boxed;
 	const NADataDef *def;
+	void *provider, *provider_data;
 
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( target ));
 	g_return_if_fail( NA_IS_IFACTORY_OBJECT( source ));
@@ -372,6 +374,9 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 
 	/* first remove copyable data from target
 	 */
+	provider = na_object_get_provider( target );
+	provider_data = na_object_get_provider_data( target );
+
 	idest = dest_list = g_object_get_data( G_OBJECT( target ), NA_IFACTORY_OBJECT_PROP_DATA );
 	while( idest ){
 		boxed = NA_DATA_BOXED( idest->data );
@@ -400,6 +405,9 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 			na_boxed_set_from_boxed( NA_BOXED( tgt_boxed ), NA_BOXED( boxed ));
 		}
 	}
+
+	na_object_set_provider( target, provider );
+	na_object_set_provider_data( target, provider_data );
 
 	v_copy( target, source );
 }

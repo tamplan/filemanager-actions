@@ -44,7 +44,6 @@
  * - non localized icon name
  * - subitems pointers list and string list
  * - read-only status
- * - provider and provider data
  */
 
 NADataDef data_def_item [] = {
@@ -353,7 +352,7 @@ NADataDef data_def_item [] = {
 				NA_DATA_TYPE_POINTER,
 				NULL,
 				FALSE,
-				FALSE,
+				TRUE,
 				FALSE,
 				FALSE,
 				FALSE,
