@@ -1,3 +1,8 @@
+2012-01-18 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-desktop-environment.c
+	(na_desktop_environment_detect_running_desktop): Detect XFCE desktop.
+
 2012-01-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-object-item-factory.c: Reset provider as copyable.

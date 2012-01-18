@@ -90,9 +90,21 @@ na_desktop_environment_detect_running_desktop( void )
 		return( DESKTOP_KDE );
 	}
 
+	/* GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+	 */
 	value = g_getenv( "GNOME_DESKTOP_SESSION_ID" );
 	if( value && strlen( value )){
 		return( DESKTOP_GNOME );
+	}
+
+	value = g_getenv( "DESKTOP_SESSION" );
+	if( value ){
+		if( !strcmp( value, "gnome" )){
+			return( DESKTOP_GNOME );
+		}
+		if( !strcmp( value, "xfce" )){
+			return( DESKTOP_XFCE );
+		}
 	}
 
 	output_str = NULL;

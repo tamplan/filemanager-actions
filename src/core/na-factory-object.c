@@ -37,10 +37,11 @@
 #include <string.h>
 
 #include <api/na-core-utils.h>
+#include <api/na-data-boxed.h>
 #include <api/na-data-types.h>
 #include <api/na-iio-provider.h>
 #include <api/na-ifactory-provider.h>
-#include <api/na-data-boxed.h>
+#include <api/na-object-api.h>
 
 #include "na-factory-object.h"
 #include "na-factory-provider.h"
