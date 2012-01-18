@@ -982,7 +982,7 @@
     </para>
     <para>
       To define the command, enter it in the
-      <guilabel>Appears if the command outputs "<literal>true</literal>"</guilabel>
+      <guilabel>Appears if the command outputs "true"</guilabel>
       entry box.
     </para>
     <para>
