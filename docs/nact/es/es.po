@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-01-11 15:19+0000\n"
-"PO-Revision-Date: 2012-01-12 16:35+0100\n"
+"POT-Creation-Date: 2012-01-17 21:54+0000\n"
+"PO-Revision-Date: 2012-01-18 17:42+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1823,28 +1823,25 @@ msgstr ""
 msgid "Example of usual mimetypes"
 msgstr "Ejemplo de tipos MIME habituales"
 
-#: C/nautilus-actions-config-tool.xml:279(term)
-#, fuzzy
+#: C/nautilus-actions-config-tool.xml:280(literal)
 msgid "all/all"
-msgstr "todos/todos"
+msgstr "all/all"
 
 #: C/nautilus-actions-config-tool.xml:283(para)
 msgid "Matches all items."
 msgstr "Coincide con todos los elementos."
 
-#: C/nautilus-actions-config-tool.xml:289(term)
-#, fuzzy
+#: C/nautilus-actions-config-tool.xml:290(literal)
 msgid "all/allfiles"
-msgstr "todos/todos los archivos"
+msgstr "all/allfiles"
 
 #: C/nautilus-actions-config-tool.xml:293(para)
 msgid "Matches all regular files."
 msgstr "Coincide con todos los archivos regulares."
 
-#: C/nautilus-actions-config-tool.xml:299(term)
-#, fuzzy
+#: C/nautilus-actions-config-tool.xml:300(literal)
 msgid "inode/directory"
-msgstr "inodo/carpeta"
+msgstr "inode/directory"
 
 #: C/nautilus-actions-config-tool.xml:303(para)
 msgid "Matches only directories."
@@ -2656,10 +2653,10 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:983(para)
 msgid ""
 "To define the command, enter it in the <guilabel>Appears if the command "
-"outputs \"true\"</guilabel> entry box."
+"outputs \"<literal>true</literal>\"</guilabel> entry box."
 msgstr ""
 "Para definir el comando, introdúzcalo en el cuadro de entrada "
-"<guilabel>Aparece si el comando devuelve «true»</guilabel>."
+"<guilabel>Aparece si el comando devuelve «<literal>true</literal>»</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:993(para)
 msgid ""
@@ -2700,20 +2697,23 @@ msgid ""
 "Even if you enter here the full filename of a binary, only its basename will "
 "be searched for in the processes list at runtime."
 msgstr ""
+"Incluso si introduce aquí el nombre de archivo completo de un binario, sólo "
+"se buscará su nombre base en la lista de procesos en tiempo de ejecución."
 
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid "Locating the action"
-msgstr ""
+msgstr "Encontrar la acción"
 
 #: C/nautilus-actions-config-tool.xml:4(title)
 #: C/nautilus-actions-config-tool.xml:14(para)
 msgid "Target configuration"
-msgstr ""
+msgstr "Configuración del objetivo"
 
 #: C/nautilus-actions-config-tool.xml:11(phrase)
 msgid ""
 "Shows the three fields which let you configure the target of your action."
 msgstr ""
+"Muestra los tres campos que le permiten configurar el objetivo de su acción."
 
 #: C/nautilus-actions-config-tool.xml:19(para)
 msgid ""
@@ -2721,16 +2721,21 @@ msgid ""
 "different places, depending on what you will request here, and if some item "
 "is currently selected (or not)."
 msgstr ""
+"El gestor de archivos <productname>Nautilus</productname> podrá mostrar su "
+"acción en diferentes lugares, dependiendo de lo que elija aquí y de si algún "
+"elemento está actualmente seleccionado (o no)."
 
 #: C/nautilus-actions-config-tool.xml:24(para)
 msgid ""
 "Click on the <guilabel>Action</guilabel> tab to show the page which will "
 "permit you to configure the locations your action targets."
 msgstr ""
+"Pulse en la pestaña <guilabel>Acción</guilabel> para mostrar la página que "
+"le permite configurar los lugares objetivo de su acción."
 
 #: C/nautilus-actions-config-tool.xml:31(title)
 msgid "Targeting the selection context menu"
-msgstr ""
+msgstr "El objetivo es el menú contextual de la selección"
 
 #: C/nautilus-actions-config-tool.xml:32(para)
 msgid ""
@@ -2742,6 +2747,14 @@ msgid ""
 "conditions defined in your candidate action must be met by each item "
 "currently selected in the <productname>Nautilus</productname> file manager."
 msgstr ""
+"Cuando <guilabel>Mostrar elemento en el menú contextual de la selección</"
+"guilabel> está marcada, entonces su acción será candidata a aparecer en el "
+"menú contextual de <productname>Nautilus</productname> tan pronto como al "
+"menos un elemento se seleccione en el gestor de archivos. Su acción, "
+"entonces, se referirá a los elementos actualmente seleccionados. Para que se "
+"muestre, todos los elementos seleccionados en el gestor de archivos "
+"<productname>Nautilus</productname> deberán cumplir todas las condiciones "
+"definidas en su acción candidata."
 
 #: C/nautilus-actions-config-tool.xml:43(para)
 msgid ""
@@ -2750,14 +2763,18 @@ msgid ""
 "displayed in <productname>Nautilus</productname>' <guimenu>Edit</guimenu> "
 "menu."
 msgstr ""
+"Cuando el objetivo de una acción es el menú contextual de la selección, y "
+"aparece efectivamente en el menú contextual de <productname>Nautilus</"
+"productname>, entonces también aparece en el menú <guimenu>Editar</guimenu> "
+"de <productname>Nautilus</productname>."
 
 #: C/nautilus-actions-config-tool.xml:49(para)
 msgid "This target is checked by default."
-msgstr ""
+msgstr "Este objetivo está marcado de manera predeterminada."
 
 #: C/nautilus-actions-config-tool.xml:55(title)
 msgid "Targeting the location context menu"
-msgstr ""
+msgstr "El objetivo es el menú contextual del lugar"
 
 #: C/nautilus-actions-config-tool.xml:56(para)
 msgid ""
@@ -2769,6 +2786,14 @@ msgid ""
 "your candidate action must be met by the location currently displayed in the "
 "<productname>Nautilus</productname> file manager."
 msgstr ""
+"Cuando active la casilla de verificación <guilabel>Mostrar elemento en el "
+"menú contextual del lugar</guilabel>, entonces su acción será candidata a "
+"aparecer en el menú contextual de <productname>Nautilus</productname> cuando "
+"la selección del gestor de archivos está vacía. Entonces, su acción se "
+"referirá al lugar mostrado actualmente. Para que su acción se muestre, el "
+"lugar mostrado actualmente en el gestor de archivos <productname>Nautilus</"
+"productname> debe cumplir todas las condiciones definidas en su acción "
+"candidata."
 
 #: C/nautilus-actions-config-tool.xml:67(para)
 msgid ""
@@ -2777,10 +2802,14 @@ msgid ""
 "displayed in <productname>Nautilus</productname>' <guimenu>File</guimenu> "
 "menu."
 msgstr ""
+"Cuando el objetivo de una acción es el menú contextual del lugar, y aparece "
+"efectivamente en el menú contextual de <productname>Nautilus</productname>, "
+"entonces también aparece en el menú <guimenu>Archivo</guimenu> de "
+"<productname>Nautilus</productname>."
 
 #: C/nautilus-actions-config-tool.xml:76(title)
 msgid "Targeting the toolbar"
-msgstr ""
+msgstr "El objetivo es la barra de herramientas"
 
 #: C/nautilus-actions-config-tool.xml:77(para)
 msgid ""
@@ -2788,6 +2817,9 @@ msgid ""
 "then your action will be a candidate to be displayed in "
 "<productname>Nautilus</productname>' toolbar."
 msgstr ""
+"Cuando active la casilla de verificación <guilabel>Mostrar elemento en la "
+"barra de tareas</guilabel>, su acción será candidata a aparecer en la barra "
+"de herramientas de <productname>Nautilus</productname>."
 
 #: C/nautilus-actions-config-tool.xml:82(para)
 msgid ""
@@ -2796,6 +2828,10 @@ msgid ""
 "currently selected (or not). In order to be displayed, all the conditions "
 "defined in your candidate action must so be met by the current location."
 msgstr ""
+"Las acciones mostradas en la barra de herramientas sólo se refieren al lugar "
+"actual del gestor de archivos, no con los posibles elementos seleccionados. "
+"Para que su acción aparezca, el lugar actual debe cumplir todas las "
+"condiciones definidas en su acción candidata."
 
 #: C/nautilus-actions-config-tool.xml:92(title)
 msgid "Notes"
@@ -2803,7 +2839,7 @@ msgstr "Notas"
 
 #: C/nautilus-actions-config-tool.xml:95(title)
 msgid "If your action is to be displayed in a context menu"
-msgstr ""
+msgstr "Si su acción se mostrará en un menú contextual"
 
 #: C/nautilus-actions-config-tool.xml:96(para)
 msgid ""
@@ -2812,21 +2848,25 @@ msgid ""
 "<guimenu>File</guimenu> or <guimenu>Edit</guimenu> menus, it will be "
 "displayed as"
 msgstr ""
+"Tanto si es el menú contextual de la selección o el menú contextual del "
+"lugar, y ambos en los menús contextuales de <productname>Nautilus</"
+"productname> y en los menús <guimenu>Archivo</guimenu> o <guimenu>Editar</"
+"guimenu>, se mostrará como"
 
 #: C/nautilus-actions-config-tool.xml:105(para)
 msgid "the <guilabel>Context label</guilabel> as a label,"
-msgstr ""
+msgstr "la <guilabel>Etiqueta de contexto</guilabel> como una etiqueta,"
 
 #: C/nautilus-actions-config-tool.xml:110(para)
 #: C/nautilus-actions-config-tool.xml:149(para)
 msgid "the <guilabel>Icon</guilabel>,"
-msgstr ""
+msgstr "el <guilabel>Icono</guilabel>,"
 
 #: C/nautilus-actions-config-tool.xml:115(para)
 #: C/nautilus-actions-config-tool.xml:154(para)
 msgid ""
 "these two properties being associated with the <guilabel>Tooltip</guilabel>."
-msgstr ""
+msgstr "estas dos propiedades están asociadas al <guilabel>Consejo</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:122(para)
 msgid ""
@@ -3088,7 +3128,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:192(term)
 msgid "Display output"
-msgstr ""
+msgstr "Mostrar salida"
 
 #: C/nautilus-actions-config-tool.xml:196(para)
 msgid ""
@@ -3110,7 +3150,7 @@ msgstr "Notificación de inicio"
 #: C/nautilus-actions-config-tool.xml:214(title)
 #: C/nautilus-actions-config-tool.xml:224(para)
 msgid "Configuration of the startup modes"
-msgstr ""
+msgstr "Configuración de los modos de inicio"
 
 #: C/nautilus-actions-config-tool.xml:221(phrase)
 msgid "Focus on the Startup mode frame."
@@ -3146,12 +3186,12 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:261(title)
 msgid "Owner of the execution"
-msgstr ""
+msgstr "Propietario de la ejecución"
 
 #: C/nautilus-actions-config-tool.xml:263(title)
 #: C/nautilus-actions-config-tool.xml:273(para)
 msgid "Configuration of the owner of the run"
-msgstr ""
+msgstr "Configuración del propietario de la ejecución"
 
 #: C/nautilus-actions-config-tool.xml:270(guilabel)
 msgid "Execute as"
@@ -3170,10 +3210,9 @@ msgid ""
 msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:289(title)
-#, fuzzy
 #| msgid "Multiple selection"
 msgid "Multiple executions"
-msgstr "Selección múltiple"
+msgstr "Ejecuciones múltiples"
 
 #: C/nautilus-actions-config-tool.xml:290(para)
 msgid ""
@@ -3261,7 +3300,7 @@ msgstr "Descripción"
 
 #: C/nautilus-actions-config-tool.xml:366(entry)
 msgid "Repetition"
-msgstr ""
+msgstr "Repetición"
 
 #: C/nautilus-actions-config-tool.xml:371(literal)
 msgid "%b"
@@ -3288,7 +3327,7 @@ msgstr "%B"
 
 #: C/nautilus-actions-config-tool.xml:379(entry)
 msgid "space-separated list of basenames"
-msgstr ""
+msgstr "lista de los nombres base separados por un espacio"
 
 #: C/nautilus-actions-config-tool.xml:382(entry)
 #: C/nautilus-actions-config-tool.xml:403(entry)
@@ -3349,6 +3388,7 @@ msgstr "%F"
 #: C/nautilus-actions-config-tool.xml:414(entry)
 msgid "space-separated list of selected filenames"
 msgstr ""
+"lista de los nombres de archivo seleccionados, separados por un espacio"
 
 #: C/nautilus-actions-config-tool.xml:420(literal)
 msgid "%h"
@@ -3428,7 +3468,7 @@ msgstr "%U"
 
 #: C/nautilus-actions-config-tool.xml:484(entry)
 msgid "space-separated list of selected URIs"
-msgstr ""
+msgstr "lista de URI separados por un espacio"
 
 #: C/nautilus-actions-config-tool.xml:490(literal)
 msgid "%w"
@@ -3436,7 +3476,7 @@ msgstr "%w"
 
 #: C/nautilus-actions-config-tool.xml:491(entry)
 msgid "(first) basename without the extension"
-msgstr ""
+msgstr "(primer) nombre base sin la extensión"
 
 #: C/nautilus-actions-config-tool.xml:497(literal)
 msgid "%W"
@@ -3444,7 +3484,7 @@ msgstr "%W"
 
 #: C/nautilus-actions-config-tool.xml:498(entry)
 msgid "space-separated list of basenames without their extension"
-msgstr ""
+msgstr "lista de los nombres base sin extensión, separados por un espacio"
 
 #: C/nautilus-actions-config-tool.xml:504(literal)
 msgid "%x"
@@ -3460,7 +3500,7 @@ msgstr "%X"
 
 #: C/nautilus-actions-config-tool.xml:512(entry)
 msgid "space-separated list of extensions"
-msgstr ""
+msgstr "lista de extensiones separadas por un espacio"
 
 #: C/nautilus-actions-config-tool.xml:518(literal)
 msgid "%%"
@@ -3472,7 +3512,7 @@ msgstr "%"
 
 #: C/nautilus-actions-config-tool.xml:519(entry)
 msgid "the « <placeholder-1/> » character"
-msgstr ""
+msgstr "el carácter «<placeholder-1/>»"
 
 #: C/nautilus-actions-config-tool.xml:528(title)
 msgid "Usage of singular <abbrev>vs.</abbrev> plural forms"
@@ -3492,7 +3532,7 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:539(para)
 #: C/nautilus-actions-config-tool.xml:572(para)
 msgid "then the following commands will be successively run:"
-msgstr ""
+msgstr "se ejecutarán sucesivamente los siguientes comandos:"
 
 #: C/nautilus-actions-config-tool.xml:544(command)
 msgid "echo pierre"
@@ -3518,7 +3558,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:556(para)
 msgid "then the following command will be run:"
-msgstr ""
+msgstr "se ejecutará el siguiente comando:"
 
 #: C/nautilus-actions-config-tool.xml:561(command)
 msgid "echo pierre paul jacques"
@@ -3562,7 +3602,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:592(para)
 msgid "then the following commands will be run:"
-msgstr ""
+msgstr "se ejecutarán los siguientes comandos:"
 
 #: C/nautilus-actions-config-tool.xml:597(command)
 msgid "echo pierre paul jacques pierre"
@@ -3777,7 +3817,7 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:8(para)
 msgid "You may decide to:"
-msgstr ""
+msgstr "Debe decidir si:"
 
 #: C/nautilus-actions-config-tool.xml:13(para)
 msgid ""
@@ -3853,6 +3893,8 @@ msgid ""
 "Click on <guibutton><inlinegraphic fileref=\"figures/sort-manual.png\"/></"
 "guibutton> button."
 msgstr ""
+"Pulse en el botón <guibutton><inlinegraphic fileref=\"figures/sort-manual.png"
+"\"/></guibutton>."
 
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid "Editing"
@@ -3866,13 +3908,12 @@ msgstr ""
 
 #: C/nautilus-actions-config-tool.xml:8(title)
 msgid "Cut/Delete"
-msgstr ""
+msgstr "Cortar/Eliminar"
 
 #: C/nautilus-actions-config-tool.xml:9(para)
-#, fuzzy
 #| msgid "Delete the current selection."
 msgid "Deletion applies to current selection."
-msgstr "Eliminar la selección actual."
+msgstr "Se elimina la selección actual."
 
 #: C/nautilus-actions-config-tool.xml:12(para)
 msgid ""
@@ -3923,6 +3964,10 @@ msgid ""
 "keycombo></shortcut><guimenu>File</guimenu><guisubmenu>Save</guisubmenu></"
 "menuchoice>."
 msgstr ""
+"Para guardar su modificaciones, elija "
+"<menuchoice><shortcut><keycombo><keycap>Ctrl</keycap><keycap>S</keycap></"
+"keycombo></shortcut><guimenu>Archivo</guimenu><guisubmenu>Guardar</"
+"guisubmenu></menuchoice>."
 
 #: C/nautilus-actions-config-tool.xml:16(para)
 msgid ""
@@ -3969,6 +4014,7 @@ msgstr "Preferencias de ejecución"
 #: C/nautilus-actions-config-tool.xml:22(phrase)
 msgid "Shows the tab which lets you define runtime preferences."
 msgstr ""
+"Muestra la pestaña que le permite definir sus preferencias de ejecución."
 
 #: C/nautilus-actions-config-tool.xml:33(title)
 #: C/nautilus-actions-config-tool.xml:35(title)
@@ -3979,10 +4025,12 @@ msgstr "Preferencias de tiempo de ejecución"
 #: C/nautilus-actions-config-tool.xml:42(phrase)
 msgid "Shows the tab which lets you define runtime execution preferences."
 msgstr ""
+"Muestra la pestaña que le permite definir sus preferencias de tiempo de "
+"ejecución."
 
 #: C/nautilus-actions-config-tool.xml:59(phrase)
 msgid "Let the user explicitely configure the current desktop."
-msgstr ""
+msgstr "Permitir al usuario configurar explícitamente el escritorio actual."
 
 #: C/nautilus-actions-config-tool.xml:70(title)
 msgid "User interface preferences"
@@ -3995,7 +4043,7 @@ msgstr "Preferencias de la IU"
 
 #: C/nautilus-actions-config-tool.xml:79(phrase)
 msgid "Shows the tab which lets you define UI preferences."
-msgstr ""
+msgstr "Muestra la pestaña que le permite definir sus preferencias de la IU."
 
 #: C/nautilus-actions-config-tool.xml:90(title)
 #: C/nautilus-actions-config-tool.xml:92(title)
@@ -4006,6 +4054,7 @@ msgstr "Preferencias de importación"
 #: C/nautilus-actions-config-tool.xml:99(phrase)
 msgid "Shows the tab which lets you define import preferences."
 msgstr ""
+"Muestra la pestaña que le permite definir sus preferencias de importación."
 
 #: C/nautilus-actions-config-tool.xml:112(title)
 #: C/nautilus-actions-config-tool.xml:114(title)
@@ -4016,6 +4065,7 @@ msgstr "Preferencias de exportación"
 #: C/nautilus-actions-config-tool.xml:121(phrase)
 msgid "Shows the tab which lets you define export preferences."
 msgstr ""
+"Muestra la pestaña que le permite definir sus preferencias de exportación."
 
 #: C/nautilus-actions-config-tool.xml:134(title)
 #: C/nautilus-actions-config-tool.xml:136(title)
@@ -4141,6 +4191,8 @@ msgstr ""
 #: C/nautilus-actions-config-tool.xml:196(title)
 msgid "About <application>Nautilus-Actions Configuration Tool</application>"
 msgstr ""
+"Acerca de la <application>Herramienta de configuración de acciones de "
+"Nautilus</application>"
 
 #: C/nautilus-actions-config-tool.xml:197(para)
 msgid ""
@@ -4214,6 +4266,13 @@ msgid ""
 "work, while not being considered responsible for modifications made by "
 "others."
 msgstr ""
+"El propósito de esta Licencia es permitir que un manual, libro de texto, u "
+"otro documento escrito sea «libre» en el sentido de libertad: asegurar a todo "
+"el mundo la libertad efectiva de copiarlo y redistribuirlo, con o sin "
+"modificaciones, de manera comercial o no. En segundo término, esta Licencia "
+"proporciona al autor y al editor una manera de obtener reconocimiento por su "
+"trabajo, sin que se le considere responsable de las modificaciones "
+"realizadas por otros."
 
 #: C/nautilus-actions-config-tool.xml:24(simpara)
 msgid ""
@@ -4222,6 +4281,10 @@ msgid ""
 "GNU General Public License, which is a copyleft license designed for free "
 "software."
 msgstr ""
+" Esta Licencia es de tipo «copyleft», lo que significa que los trabajos "
+"derivados del documento deben a su vez ser libres en el mismo sentido. "
+"Complementa la Licencia Pública General de GNU, que es una licencia tipo "
+"copyleft diseñada para el software libre."
 
 #: C/nautilus-actions-config-tool.xml:30(simpara)
 msgid ""
@@ -4256,6 +4319,16 @@ msgid ""
 "“you”. You accept the license if you copy, modify or distribute the work in "
 "a way requiring permission under copyright law."
 msgstr ""
+"Esta Licencia se aplica a cualquier manual u otro trabajo, en cualquier "
+"soporte, que contenga una nota del propietario de los derechos de autor que "
+"indique que puede ser distribuido bajo los términos de esta Licencia. Tal "
+"nota garantiza en cualquier lugar del mundo, sin pago de derechos y sin "
+"límite de tiempo, el uso de dicho trabajo según las condiciones aquí "
+"estipuladas. En adelante la palabra Documento se referirá a cualquiera de "
+"dichos manuales o trabajos. Cualquier persona es un licenciatario y será "
+"referido como Usted. Usted acepta la licencia si copia. modifica o "
+"distribuye el trabajo de cualquier modo que requiera permiso según la ley de "
+"propiedad intelectual."
 
 #: C/nautilus-actions-config-tool.xml:53(simpara)
 msgid ""
@@ -4263,9 +4336,9 @@ msgid ""
 "or a portion of it, either copied verbatim, or with modifications and/or "
 "translated into another language."
 msgstr ""
-"Una <quote>Versión Modificada</quote> del Documento significa cualquier "
-"trabajo que contenga el Documento o una porción del mismo, ya sea una copia "
-"literal o con modificaciones y/o traducciones a otro idioma."
+"Una «Versión Modificada» del Documento significa cualquier trabajo que "
+"contenga el Documento o una porción del mismo, ya sea una copia literal o "
+"con modificaciones y/o traducciones a otro idioma."
 
 #: C/nautilus-actions-config-tool.xml:58(simpara)
 msgid ""
@@ -4279,6 +4352,14 @@ msgid ""
 "matters, or of legal, commercial, philosophical, ethical or political "
 "position regarding them."
 msgstr ""
+"Una «Sección Secundaria» es un apéndice con título o una sección preliminar "
+"del Documento que trata exclusivamente de la relación entre los autores o "
+"editores y el tema general del Documento (o temas relacionados) pero que no "
+"contiene nada que entre directamente en dicho tema general (por ejemplo, si "
+"el Documento es en parte un texto de matemáticas, una Sección Secundaria "
+"puede no explicar nada de matemáticas). La relación puede ser una conexión "
+"histórica con el tema o temas relacionados, o una opinión legal, comercial, "
+"filosófica, ética o política acerca de ellos."
 
 #: C/nautilus-actions-config-tool.xml:69(simpara)
 msgid ""
@@ -4289,6 +4370,12 @@ msgid ""
 "Invariant. The Document may contain zero Invariant Sections. If the Document "
 "does not identify any Invariant Sections then there are none."
 msgstr ""
+"Las «Secciones Invariantes» son ciertas Secciones Secundarias cuyos títulos "
+"son designados como Secciones Invariantes en la nota que indica que el "
+"documento es liberado bajo esta Licencia. Si una sección no entra en la "
+"definición de Secundaria, no puede designarse como Invariante. El documento "
+"puede no tener Secciones Invariantes. Si el Documento no identifica las "
+"Secciones Invariantes, es que no las tiene."
 
 #: C/nautilus-actions-config-tool.xml:78(simpara)
 msgid ""
@@ -4297,6 +4384,11 @@ msgid ""
 "Document is released under this License. A Front-Cover Text may be at most 5 "
 "words, and a Back-Cover Text may be at most 25 words."
 msgstr ""
+"Los «Textos de Cubierta» son ciertos pasajes cortos de texto que se listan "
+"como Textos de Cubierta Delantera o Textos de Cubierta Trasera en la nota "
+"que indica que el documento se libera bajo esta Licencia. Un Texto de "
+"Cubierta Delantera puede tener como mucho 5 palabras, y uno de Cubierta "
+"Trasera puede tener hasta 25 palabras."
 
 #: C/nautilus-actions-config-tool.xml:84(simpara)
 msgid ""
@@ -4313,6 +4405,18 @@ msgid ""
 "substantial amount of text. A copy that is not “Transparent” is called "
 "“Opaque”."
 msgstr ""
+" Una copia «Transparente» del «Documento», significa una copia para lectura en "
+"máquina, representada en un formato cuya especificación está disponible al "
+"público en general, cuyo contenido puede ser visto y editados directamente "
+"con editores de texto genéricos o (para imágenes compuestas por píxeles) con "
+"programas genéricos de manipulación de imágenes o (para dibujos) con algún "
+"editor de dibujos ampliamente disponible, y que sea adecuado como entrada "
+"para formateadores de texto o para su traducción automática a formatos "
+"adecuados para formateadores de texto. Una copia hecha en un formato "
+"definido como Transparente, pero cuyo marcaje o ausencia de él haya sido "
+"diseñado para impedir o dificultar modificaciones posteriores por parte de "
+"los lectores no es Transparente. Una copia que no es «Transparente» se "
+"denomina «Opaca»."
 
 #: C/nautilus-actions-config-tool.xml:98(simpara)
 msgid ""
@@ -4326,6 +4430,15 @@ msgid ""
 "machine-generated HTML, PostScript or PDF produced by some word processors "
 "for output purposes only."
 msgstr ""
+"Como ejemplos de formatos adecuados para copias Transparentes están ASCII "
+"puro sin marcado, formato de entrada de Texinfo, formato de entrada de "
+"LaTeX, SGML o XML usando una DTD disponible públicamente, y HTML, PostScript "
+"o PDF simples, que sigan los estándares y diseños para que los modifiquen "
+"personas.Los formatos Opacos incluyen formatos propietarios que pueden ser "
+"leídos y editados únicamente en procesadores de textos propietarios, SGML o "
+"XML para los cuáles las DTD y/o herramientas de procesamiento no estén "
+"ampliamente disponibles, y HTML, PostScript o PDF generados por algunos "
+"procesadores de textos sólo como salida."
 
 #: C/nautilus-actions-config-tool.xml:109(simpara)
 msgid ""
@@ -4336,12 +4449,20 @@ msgid ""
 "appearance of the work’s title, preceding the beginning of the body of the "
 "text."
 msgstr ""
+" La «Portada» significa, en un libro impreso, la página de título, más las "
+"páginas siguientes que sean necesarias para mantener legiblemente el "
+"material que esta Licencia requiere en la portada. Para trabajos en formatos "
+"que no tienen página de portada como tal, «Portada» significa el texto "
+"cercano a la aparición más prominente del título del trabajo,precediendo el "
+"comienzo del cuerpo del texto."
 
 #: C/nautilus-actions-config-tool.xml:117(simpara)
 msgid ""
 "The “publisher” means any person or entity that distributes copies of the "
 "Document to the public."
 msgstr ""
+"El «Editor» se refiere a cualquier persona o entidad que distribuya copias "
+"del Documento a el público."
 
 #: C/nautilus-actions-config-tool.xml:121(simpara)
 msgid ""
@@ -4353,6 +4474,13 @@ msgid ""
 "when you modify the Document means that it remains a section “Entitled XYZ” "
 "according to this definition."
 msgstr ""
+"Una sección Titulada XYZ significa una parte del Documento cuyo título es "
+"precisamente XYZ o contiene XYZ entre paréntesis, a continuación de texto "
+"que traduce XYZ a otro idioma (aquí XYZ se refiere a nombres de sección "
+"específicos mencionados más abajo, como Agradecimientos, Dedicatorias , "
+"Aprobaciones o Historia). Conservar el Título de tal sección cuando se "
+"modifica el Documento significa que permanece una sección Titulada XYZ según "
+"esta definición."
 
 #: C/nautilus-actions-config-tool.xml:132(simpara)
 msgid ""
@@ -4363,10 +4491,16 @@ msgid ""
 "Disclaimers may have is void and has no effect on the meaning of this "
 "License."
 msgstr ""
+"El Documento puede incluir Limitaciones de Garantía cercanas a la nota donde "
+"se declara que al Documento se le aplica esta Licencia. Se considera que "
+"estas Limitaciones de Garantía están incluidas, por referencia, en la "
+"Licencia, pero sólo en cuanto a limitaciones de garantía: cualquier otra "
+"implicación que estas Limitaciones de Garantía puedan tener es nula y no "
+"tiene efecto en el significado de esta Licencia."
 
 #: C/nautilus-actions-config-tool.xml:140(bridgehead)
 msgid "2. VERBATIM COPYING"
-msgstr "2. COPIA VERBATIM"
+msgstr "2. COPIA LITERAL"
 
 #: C/nautilus-actions-config-tool.xml:143(simpara)
 msgid ""
@@ -4380,6 +4514,15 @@ msgid ""
 "distribute a large enough number of copies you must also follow the "
 "conditions in section 3."
 msgstr ""
+"Usted puede copiar y distribuir el Documento en cualquier soporte, sea en "
+"forma comercial o no, siempre y cuando esta Licencia, las notas de copyright "
+"y la nota que indica que esta Licencia se aplica al Documento se reproduzcan "
+"en todas las copias y que usted no añada ninguna otra condición a las "
+"expuestas en esta Licencia. Usted no puede usar medidas técnicas para "
+"obstruir o controlar la lectura o copia posterior de las copias que usted "
+"haga o distribuya. Sin embargo, usted puede aceptar compensación a cambio de "
+"las copias. Si distribuye un número suficientemente grande de copias también "
+"deberá seguir las condiciones de la sección 3."
 
 #: C/nautilus-actions-config-tool.xml:154(simpara)
 msgid ""
@@ -4407,6 +4550,17 @@ msgid ""
 "title of the Document and satisfy these conditions, can be treated as "
 "verbatim copying in other respects."
 msgstr ""
+"Si publica copias impresas del Documento (o copias en soportes que tengan "
+"normalmente cubiertas impresas) que sobrepasen las 100, y la nota de "
+"licencia del Documento exige Textos de Cubierta, debe incluir las copias con "
+"cubiertas que lleven en forma clara y legible todos esos Textos de Cubierta: "
+"Textos de Cubierta Delantera en la cubierta delantera y Textos de Cubierta "
+"Trasera en la cubierta trasera. Ambas cubiertas deben identificarlo a Usted "
+"clara y legiblemente como editor de tales copias. La cubierta debe mostrar "
+"el título completo con todas las palabras igualmente prominentes y visibles. "
+"Además puede añadir otro material en las cubiertas. Las copias con cambios "
+"limitados a las cubiertas, siempre que conserven el título del Documento y "
+"satisfagan estas condiciones, pueden considerarse como copias literales."
 
 #: C/nautilus-actions-config-tool.xml:174(simpara)
 msgid ""
@@ -4432,6 +4586,17 @@ msgid ""
 "time you distribute an Opaque copy (directly or through your agents or "
 "retailers) of that edition to the public."
 msgstr ""
+" Si Usted publica o distribuye copias Opacas del Documento cuya cantidad "
+"exceda las 100, debe incluir una copia Transparente, que pueda ser leída por "
+"una máquina, con cada copia Opaca, o bien mostrar, en cada copia Opaca, una "
+"dirección de red donde cualquier usuario de la misma tenga acceso por medio "
+"de protocolos públicos y estandarizados a una copia Transparente del "
+"Documento completa, sin material adicional. Si usted hace uso de la última "
+"opción, deberá tomar las medidas necesarias, cuando comience la distribución "
+"de las copias Opacas en cantidad, para asegurar que esta copia Transparente "
+"permanecerá accesible en el sitio establecido por lo menos un año después de "
+"la última vez que distribuya una copia Opaca de esa edición al público "
+"(directamente o a través de sus agentes o distribuidores)."
 
 #: C/nautilus-actions-config-tool.xml:192(simpara)
 msgid ""
@@ -4439,6 +4604,10 @@ msgid ""
 "Document well before redistributing any large number of copies, to give them "
 "a chance to provide you with an updated version of the Document."
 msgstr ""
+"Se solicita, aunque no es requisito, que se ponga en contacto con los "
+"autores del Documento antes de redistribuir gran número de copias, para "
+"darles la oportunidad de que le proporcionen una versión actualizada del "
+"Documento."
 
 #: C/nautilus-actions-config-tool.xml:197(bridgehead)
 msgid "4. MODIFICATIONS"
@@ -4453,6 +4622,12 @@ msgid ""
 "Modified Version to whoever possesses a copy of it. In addition, you must do "
 "these things in the Modified Version:"
 msgstr ""
+"Puede copiar y distribuir una Versión Modificada del Documento bajo las "
+"condiciones de las secciones 2 y 3 anteriores, siempre que usted libere la "
+"Versión Modificada bajo esta misma Licencia, con la Versión Modificada "
+"haciendo el rol del Documento, por lo tanto dando licencia de distribución y "
+"modificación de la Versión Modificada a quienquiera posea una copia de la "
+"misma. Además, debe hacer lo siguiente en la Versión Modificada:"
 
 #: C/nautilus-actions-config-tool.xml:210(simpara)
 msgid ""
@@ -4462,6 +4637,11 @@ msgid ""
 "same title as a previous version if the original publisher of that version "
 "gives permission."
 msgstr ""
+"Usar en la Portada (y en las cubiertas, si hay alguna un título distinto al "
+"del Documento y de sus versiones anteriores (que deberían, si hay alguna, "
+"estar listadas en la sección de Historia del Documento). Puede usar el mismo "
+"título de versiones anteriores al original siempre y cuando quien las "
+"publicó originalmente otorgue permiso."
 
 #: C/nautilus-actions-config-tool.xml:219(simpara)
 msgid ""
@@ -4471,16 +4651,23 @@ msgid ""
 "its principal authors, if it has fewer than five), unless they release you "
 "from this requirement."
 msgstr ""
+"Listar en la Portada, como autores, una o más personas o entidades "
+"responsables de la autoría de las modificaciones de la Versión Modificada, "
+"junto con por lo menos cinco de los autores principales del Documento (todos "
+"sus autores principales, si hay menos de cinco), a menos que le eximan de "
+"tal requisito."
 
 #: C/nautilus-actions-config-tool.xml:228(simpara)
 msgid ""
 "State on the Title page the name of the publisher of the Modified Version, "
 "as the publisher."
 msgstr ""
+"Mostrar en la Portada el nombre del editor de la Versión Modificada como el "
+"editor."
 
 #: C/nautilus-actions-config-tool.xml:234(simpara)
 msgid "Preserve all the copyright notices of the Document."
-msgstr ""
+msgstr "Conservar todas las notas de copyright del Documento."
 
 #: C/nautilus-actions-config-tool.xml:239(simpara)
 msgid ""
@@ -4496,12 +4683,19 @@ msgid ""
 "the public permission to use the Modified Version under the terms of this "
 "License, in the form shown in the Addendum below."
 msgstr ""
+"Incluir, inmediatamente después de las notas de copyright una nota de "
+"licencia dando el permiso para usar la Versión Modificada bajo los términos "
+"de esta Licencia, como se muestra en el Apéndice [Apéndice] al final de este "
+"documento."
 
 #: C/nautilus-actions-config-tool.xml:252(simpara)
 msgid ""
 "Preserve in that license notice the full lists of Invariant Sections and "
 "required Cover Texts given in the Document’s license notice."
 msgstr ""
+"Conservar en esa nota de licencia el listado completo de las Secciones "
+"Invariantes y de los Textos de Cubierta que sean requeridos en la nota de "
+"Licencia del Documento original."
 
 #: C/nautilus-actions-config-tool.xml:259(simpara)
 msgid "Include an unaltered copy of this License."
@@ -4516,6 +4710,13 @@ msgid ""
 "publisher of the Document as given on its Title Page, then add an item "
 "describing the Modified Version as stated in the previous sentence."
 msgstr ""
+"Conservar la sección Titulada «Historia», conservar su Título y añadirle un "
+"elemento que declare al menos el título, el año, los nuevos autores y el "
+"editor de la Versión Modificada, tal como figuran en la Portada. Si no hay "
+"una sección Titulada Historia en el Documento, crear una estableciendo el "
+"título, el año, los autores y el editor del Documento, tal como figuran en "
+"su Portada, añadiendo además un elemento describiendo la Versión Modificada, "
+"como se estableció en la oración anterior."
 
 #: C/nautilus-actions-config-tool.xml:275(simpara)
 msgid ""
@@ -4526,6 +4727,13 @@ msgid ""
 "a work that was published at least four years before the Document itself, or "
 "if the original publisher of the version it refers to gives permission."
 msgstr ""
+"Conservar la dirección en red, si la hay, dada en el Documento para el "
+"acceso público a una copia Transparente del mismo, así como las otras "
+"direcciones de red dadas en el Documento para versiones anteriores en las "
+"que estuviese basado. Pueden ubicarse en la sección «Historia». Se puede "
+"omitir la ubicación en red de un trabajo que haya sido publicado por lo "
+"menos cuatro años antes que el Documento mismo, o si el editor original de "
+"dicha versión da permiso."
 
 #: C/nautilus-actions-config-tool.xml:286(simpara)
 msgid ""
@@ -4533,6 +4741,9 @@ msgid ""
 "Title of the section, and preserve in the section all the substance and tone "
 "of each of the contributor acknowledgements and/or dedications given therein."
 msgstr ""
+"En cualquier sección Titulada Agradecimientos o Dedicatorias, Conservar el "
+"Título de la sección y conservar en ella toda la sustancia y el tono de los "
+"agradecimientos y/o dedicatorias incluidas por cada contribuyente."
 
 #: C/nautilus-actions-config-tool.xml:294(simpara)
 msgid ""
@@ -4540,22 +4751,29 @@ msgid ""
 "and in their titles. Section numbers or the equivalent are not considered "
 "part of the section titles."
 msgstr ""
+"Conservar todas las Secciones Invariantes del Documento, sin alterar su "
+"texto ni sus títulos. Números de sección o el equivalente no son "
+"considerados parte de los títulos de la sección."
 
 #: C/nautilus-actions-config-tool.xml:301(simpara)
 msgid ""
 "Delete any section Entitled “Endorsements”. Such a section may not be "
 "included in the Modified Version."
 msgstr ""
+"Borrar cualquier sección titulada «Aprobaciones». Tales secciones no pueden "
+"estar incluidas en las Versiones Modificadas."
 
 #: C/nautilus-actions-config-tool.xml:307(simpara)
 msgid ""
 "Do not retitle any existing section to be Entitled “Endorsements” or to "
 "conflict in title with any Invariant Section."
 msgstr ""
+"No cambiar el título de ninguna sección existente a «Aprobaciones» ni a uno "
+"que entre en conflicto con el de alguna Sección Invariante."
 
 #: C/nautilus-actions-config-tool.xml:314(simpara)
 msgid "Preserve any Warranty Disclaimers."
-msgstr ""
+msgstr "Conservar todas las Limitaciones de Garantía."
 
 #: C/nautilus-actions-config-tool.xml:319(simpara)
 msgid ""
@@ -4566,6 +4784,12 @@ msgid ""
 "the Modified Version’s license notice. These titles must be distinct from "
 "any other section titles."
 msgstr ""
+"Si la Versión Modificada incluye secciones o apéndices nuevos que califiquen "
+"como Secciones Secundarias y contienen material no copiado del Documento, "
+"puede opcionalmente designar algunas o todas esas secciones como "
+"invariantes. Para hacerlo, añada sus títulos a la lista de Secciones "
+"Invariantes en la nota de licencia de la Versión Modificada. Tales títulos "
+"deben ser distintos de cualquier otro título de sección."
 
 #: C/nautilus-actions-config-tool.xml:327(simpara)
 msgid ""
@@ -4574,6 +4798,10 @@ msgid ""
 "statements of peer review or that the text has been approved by an "
 "organization as the authoritative definition of a standard."
 msgstr ""
+"Puede añadir una sección titulada «Aprobaciones», siempre que contenga "
+"únicamente aprobaciones de su Versión Modificada por otras fuentes --por "
+"ejemplo, observaciones de peritos o que el texto ha sido aprobado por una "
+"organización como la definición oficial de un estándar."
 
 #: C/nautilus-actions-config-tool.xml:334(simpara)
 msgid ""
@@ -4587,6 +4815,14 @@ msgid ""
 "old one, on explicit permission from the previous publisher that added the "
 "old one."
 msgstr ""
+"Puede añadir un pasaje de hasta cinco palabras como Texto de Cubierta "
+"Delantera y un pasaje de hasta 25 palabras como Texto de Cubierta Trasera en "
+"la Versión Modificada. Una entidad solo puede añadir (o hacer que se añada) "
+"un pasaje al Texto de Cubierta Delantera y uno al de Cubierta Trasera. Si el "
+"Documento ya incluye un textos de cubiertas añadidos previamente por usted o "
+"por la misma entidad que usted representa, usted no puede añadir otro; pero "
+"puede reemplazar el anterior, con permiso explícito del editor que agregó el "
+"texto anterior."
 
 #: C/nautilus-actions-config-tool.xml:345(simpara)
 msgid ""
@@ -4594,6 +4830,9 @@ msgid ""
 "permission to use their names for publicity for or to assert or imply "
 "endorsement of any Modified Version."
 msgstr ""
+"Con esta Licencia ni los autores ni los editores del Documento dan permiso "
+"para usar sus nombres para publicidad ni para asegurar o implicar aprobación "
+"de cualquier Versión Modificada."
 
 #: C/nautilus-actions-config-tool.xml:350(bridgehead)
 msgid "5. COMBINING DOCUMENTS"
@@ -4608,6 +4847,12 @@ msgid ""
 "Sections of your combined work in its license notice, and that you preserve "
 "all their Warranty Disclaimers."
 msgstr ""
+"Usted puede combinar el Documento con otros documentos liberados bajo esta "
+"Licencia, bajo los términos definidos en la sección 4 anterior para "
+"versiones modificadas, siempre que incluya en la combinación todas las "
+"Secciones Invariantes de todos los documentos originales, sin modificar, "
+"listadas todas como Secciones Invariantes del trabajo combinado en su nota "
+"de licencia. Así mismo debe incluir la Limitación de Garantía."
 
 #: C/nautilus-actions-config-tool.xml:361(simpara)
 msgid ""
@@ -4620,6 +4865,14 @@ msgid ""
 "titles in the list of Invariant Sections in the license notice of the "
 "combined work."
 msgstr ""
+"El trabajo combinado necesita contener solamente una copia de esta Licencia, "
+"y puede reemplazar varias Secciones Invariantes idénticas por una sola "
+"copia. Si hay varias Secciones Invariantes con el mismo nombre pero con "
+"contenidos diferentes, haga el título de cada una de estas secciones único "
+"añadiéndole al final del mismo, entre paréntesis, el nombre del autor o "
+"editor original de esa sección, si es conocido, o si no, un número único. "
+"Haga el mismo ajuste a los títulos de sección en la lista de Secciones "
+"Invariantes de la nota de licencia del trabajo combinado."
 
 #: C/nautilus-actions-config-tool.xml:371(simpara)
 msgid ""
@@ -4628,6 +4881,11 @@ msgid ""
 "combine any sections Entitled “Acknowledgements”, and any sections Entitled "
 "“Dedications”. You must delete all sections Entitled “Endorsements”."
 msgstr ""
+"En la combinación, debe combinar cualquier sección titulada «Historia» de los "
+"distintos documentos originales, formando una sección titulada «Historia»; de "
+"la misma forma, combine cualquier sección titulada «Reconocimientos» y "
+"cualquier sección titulada «Dedicatorias». Debe borrar todas las secciones "
+"tituladas «Aprobaciones»."
 
 #: C/nautilus-actions-config-tool.xml:379(bridgehead)
 msgid "6. COLLECTIONS OF DOCUMENTS"
@@ -4641,6 +4899,11 @@ msgid ""
 "collection, provided that you follow the rules of this License for verbatim "
 "copying of each of the documents in all other respects."
 msgstr ""
+"Puede hacer una colección que conste del Documento y de otros documentos "
+"liberados bajo esta Licencia, y reemplazar las copias individuales de esta "
+"Licencia en todos los documentos por una sola copia que esté incluida en la "
+"colección, siempre que siga las reglas de esta Licencia para cada copia "
+"literal de cada uno de los documentos en cualquiera de los demás aspectos."
 
 #: C/nautilus-actions-config-tool.xml:389(simpara)
 msgid ""
@@ -4649,6 +4912,10 @@ msgid ""
 "into the extracted document, and follow this License in all other respects "
 "regarding verbatim copying of that document."
 msgstr ""
+"Puede extraer un solo documento de una de tales colecciones y distribuirlo "
+"individualmente bajo esta Licencia, siempre que inserte una copia de esta "
+"Licencia en el documento extraído, y siga esta Licencia en todos los demás "
+"aspectos relativos a la copia literal de dicho documento."
 
 #: C/nautilus-actions-config-tool.xml:395(bridgehead)
 msgid "7. AGGREGATION WITH INDEPENDENT WORKS"
@@ -4665,6 +4932,14 @@ msgid ""
 "other works in the aggregate which are not themselves derivative works of "
 "the Document."
 msgstr ""
+"Una recopilación que conste del Documento o sus derivados y de otros "
+"documentos o trabajos separados e independientes, en cualquier soporte de "
+"almacenamiento o distribución, se denomina un agregado si el copyright "
+"resultante de la compilación no se usa para limitar los derechos de los "
+"usuarios de la misma más allá de lo que los de los trabajos individuales "
+"permiten. Cuando el Documento se incluye en un agregado, esta Licencia no se "
+"aplica a otros trabajos del agregado que no sean en sí mismos derivados del "
+"Documento."
 
 #: C/nautilus-actions-config-tool.xml:408(simpara)
 msgid ""
@@ -4675,6 +4950,13 @@ msgid ""
 "the Document is in electronic form. Otherwise they must appear on printed "
 "covers that bracket the whole aggregate."
 msgstr ""
+"Si el requisito de la sección 3 sobre el Texto de Cubierta es aplicable a "
+"estas copias del Documento y el Documento es menor que la mitad del agregado "
+"entero, los Textos de Cubierta del Documento pueden colocarse en cubiertas "
+"que enmarquen solamente el Documento dentro del agregado, o el equivalente "
+"electrónico de las cubiertas si el documento está en forma electrónica. En "
+"caso contrario deben aparecer en cubiertas impresas enmarcando todo el "
+"agregado."
 
 #: C/nautilus-actions-config-tool.xml:416(bridgehead)
 msgid "8. TRANSLATION"
@@ -4694,6 +4976,18 @@ msgid ""
 "the translation and the original version of this License or a notice or "
 "disclaimer, the original version will prevail."
 msgstr ""
+"La Traducción es considerada como un tipo de modificación, por lo que usted "
+"puede distribuir traducciones del Documento bajo los términos de la sección "
+"4. El reemplazo las Secciones Invariantes con traducciones requiere permiso "
+"especial de los dueños de derecho de autor, pero usted puede añadir "
+"traducciones de algunas o todas las Secciones Invariantes a las versiones "
+"originales de las mismas. Puede incluir una traducción de esta Licencia, de "
+"todas las notas de licencia del documento, así como de las Limitaciones de "
+"Garantía, siempre que incluya también la versión en Inglés de esta Licencia "
+"y las versiones originales de las notas de licencia y Limitaciones de "
+"Garantía. En caso de desacuerdo entre la traducción y la versión original en "
+"Inglés de esta Licencia, la nota de licencia o la limitación de garantía, la "
+"versión original en Inglés prevalecerá."
 
 #: C/nautilus-actions-config-tool.xml:432(simpara)
 msgid ""
@@ -4701,6 +4995,9 @@ msgid ""
 "or “History”, the requirement (section 4) to Preserve its Title (section 1) "
 "will typically require changing the actual title."
 msgstr ""
+"Si una sección del Documento está Titulada Agradecimientos, Dedicatorias o "
+"Historia el requisito (sección 4) de Conservar su Título (Sección 1) "
+"requerirá, típicamente, cambiar su título."
 
 #: C/nautilus-actions-config-tool.xml:438(bridgehead)
 msgid "9. TERMINATION"
@@ -4713,6 +5010,11 @@ msgid ""
 "modify, sublicense, or distribute it is void, and will automatically "
 "terminate your rights under this License."
 msgstr ""
+"Usted no puede copiar, modificar, sublicenciar o distribuir el Documento "
+"salvo por lo permitido expresamente bajo esta Licencia. Cualquier intento en "
+"otra manera de copia, modificación, sublicenciamiento, o distribución de él "
+"es nulo, y dará por terminados automáticamente sus derechos bajo esa "
+"Licencia."
 
 #: C/nautilus-actions-config-tool.xml:447(simpara)
 msgid ""
@@ -4722,6 +5024,12 @@ msgid ""
 "and (b) permanently, if the copyright holder fails to notify you of the "
 "violation by some reasonable means prior to 60 days after the cessation."
 msgstr ""
+"Sin embargo, si usted cesa toda violación a esta Licencia, entonces su "
+"licencia proveniente de un titular de copyright queda restaurada (a) "
+"provisionalmente, a menos y hasta que el titular del copyright explicita y "
+"finalmente termine su licencia, y (b) permanentemente, si el titular del "
+"copyright falla en notificarle de la violación por algún medio razonable en "
+"un tiempo menor a 60 días después del cese."
 
 #: C/nautilus-actions-config-tool.xml:455(simpara)
 msgid ""
@@ -4731,6 +5039,12 @@ msgid ""
 "violation of this License (for any work) from that copyright holder, and you "
 "cure the violation prior to 30 days after your receipt of the notice."
 msgstr ""
+"Además, su licencia proveniente de un titular del copyright particular queda "
+"restaurada permanentemente si el titular del copyright lo notifica de la "
+"violación por algún método razonable, es la primera vez que usted ha "
+"recibido aviso de la violación de esta Licencia (para cualquier trabajo) de "
+"ese titular del copyright, y usted remedia la violación en un tiempo menor a "
+"30 días después de recibir dicho aviso."
 
 #: C/nautilus-actions-config-tool.xml:462(simpara)
 msgid ""
@@ -4740,6 +5054,11 @@ msgid ""
 "receipt of a copy of some or all of the same material does not give you any "
 "rights to use it."
 msgstr ""
+"La terminación de sus derechos bajo ésta sección no termina la licencia de "
+"terceros que hayan recibido copias o derechos de usted bajo ésta Licencia. "
+"Si sus derechos han sido terminados y no restaurados permanentemente, "
+"recibir una copia de alguna parte o el total del mismo material no le da "
+"ningún derecho de usarlo."
 
 #: C/nautilus-actions-config-tool.xml:469(bridgehead)
 msgid "10. FUTURE REVISIONS OF THIS LICENSE"
@@ -4753,6 +5072,12 @@ msgid ""
 "address new problems or concerns. See <ulink url=\"http://www.gnu.org/"
 "copyleft/\">Copyleft</ulink>."
 msgstr ""
+"La Free Software Foundation puede publicar versiones nuevas y revisadas de "
+"la Licencia de Documentación Libre GNU de vez en cuando. Dichas versiones "
+"nuevas serán similares en espíritu a la presente versión, pero pueden "
+"diferir en detalles para solucionar nuevos problemas o preocupaciones. "
+"Consulte <ulink type=\"http\" url=\"http://www.gnu.org/copyleft\">Copyleft</"
+"ulink>."
 
 #: C/nautilus-actions-config-tool.xml:479(simpara)
 msgid ""
@@ -4767,10 +5092,21 @@ msgid ""
 "this License can be used, that proxy’s public statement of acceptance of a "
 "version permanently authorizes you to choose that version for the Document."
 msgstr ""
+"Cada versión de la Licencia tiene un número de versión que la distingue. Si "
+"el Documento especifica que se aplica una versión numerada en particular de "
+"esta licencia o cualquier versión posterior, usted tiene la opción de seguir "
+"los términos y condiciones de la versión especificada o cualquiera posterior "
+"que haya sido publicada (no como borrador) por la Free Software Foundation. "
+"Si el Documento no especifica un número de versión de esta Licencia, puede "
+"escoger cualquier versión que haya sido publicada (no como borrador) por la "
+"Free Software Foundation. Si el Documento especifica que un apoderado puede "
+"decidir qué versión futura de esta Licencia puede ser utilizada, esa frase "
+"de aceptación del apoderado de una versión le autoriza permanentemente a "
+"escoger esa versión para el Documento."
 
 #: C/nautilus-actions-config-tool.xml:492(bridgehead)
 msgid "11. RELICENSING"
-msgstr ""
+msgstr "11. RE-LICENCIAMIENTO"
 
 #: C/nautilus-actions-config-tool.xml:495(simpara)
 msgid ""
@@ -4781,6 +5117,13 @@ msgid ""
 "Collaboration” (or “MMC”) contained in the site means any set of "
 "copyrightable works thus published on the MMC site."
 msgstr ""
+"Un \"Sitio de Colaboración Masiva Multiautor\" (o \"Sitio CMM\") significa "
+"cualquier servidor World Wide Web que publique trabajos que puedan ser "
+"sujetos a copyright y que también provea medios prominentes para que "
+"cualquiera pueda editar esos trabajos. Una Wiki pública que cualquiera puede "
+"editar es un ejemplo de tal servidor. Una \"Colaboración Masiva Multiautor"
+"\" (o \"CMM\") contenida en el sitio significa cualquier colección de "
+"trabajos que puedan ser sujetos a copyright publicados en el sitio de CMM."
 
 #: C/nautilus-actions-config-tool.xml:504(simpara)
 msgid ""
@@ -4789,12 +5132,19 @@ msgid ""
 "a principal place of business in San Francisco, California, as well as "
 "future copyleft versions of that license published by that same organization."
 msgstr ""
+"«CC-BY-SA» significa la licencia Creative Commons de Atribución Compartir-"
+"Igual 3.0 (Reconocimiento-Compartir bajo la misma licencia 3.0 de Creative "
+"Commons) publicada por Creative Commons Corporation, una corporación sin "
+"fines de lucro con base en San Francisco, California, así como versiones "
+"futuras copyleft de esa licencia publicada por esa misma organización."
 
 #: C/nautilus-actions-config-tool.xml:511(simpara)
 msgid ""
 "“Incorporate” means to publish or republish a Document, in whole or in part, "
 "as part of another Document."
 msgstr ""
+"«Incorporar» significa publicar o re-publicar un Documento, como un todo o "
+"parcialmente, como parte de otro Documento."
 
 #: C/nautilus-actions-config-tool.xml:515(simpara)
 msgid ""
@@ -4804,6 +5154,12 @@ msgid ""
 "the MMC, (1) had no cover texts or invariant sections, and (2) were thus "
 "incorporated prior to November 1, 2008."
 msgstr ""
+"Un sitio CMM es «elegible para re-licenciamiento» si se licencia bajo esta "
+"Licencia, y si todos los trabajos que fueron publicados originalmente bajo "
+"esta Licencia en algún otro lugar diferente a esta CMM, y subsecuentemente "
+"incorporado como un todo o parcialmente a la CMM, (1)no tenía textos de "
+"cubierta o secciones invariantes, y (2) fueron incorporados previo a "
+"Noviembre 1, 2008."
 
 #: C/nautilus-actions-config-tool.xml:522(simpara)
 msgid ""
@@ -4811,10 +5167,13 @@ msgid ""
 "CC-BY-SA on the same site at any time before August 1, 2009, provided the "
 "MMC is eligible for relicensing."
 msgstr ""
+"El operador de un Sitio CMM puede volver a publicar una CMM contenida en el "
+"sitio bajo CC-BY-SA en el mismo sitio en cualquier momento antes de Agosto "
+"1, 2009, siempre que la CMM sea elegible para re-licenciamiento."
 
 #: C/nautilus-actions-config-tool.xml:527(bridgehead)
 msgid "ADDENDUM: How to use this License for your documents"
-msgstr ""
+msgstr "APÉNDICE: Cómo usar esta Licencia en sus documentos"
 
 #: C/nautilus-actions-config-tool.xml:530(simpara)
 msgid ""
@@ -4837,25 +5196,37 @@ msgid ""
 "Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included in\n"
 "the section entitled “GNU Free Documentation License”."
 msgstr ""
+"Copyright  ©  2012, Equipo de traducción de GNOME al español. \n"
+"\n"
+"Se concede permiso para copiar, distribuir y/o modificar este documento bajo\n"
+"los términos de la Licencia de Documentación Libre de GNU, Versión 1.3 o cualquier otra versión\n"
+"posterior publicada por la Free Software Foundation; sin Secciones Invariantes ni\n"
+"Textos de Cubierta Delantera ni Textos de Cubierta Trasera. Una copia de la licencia\n"
+"está incluida en la sección titulada «GNU Free Documentation License»."
 
 #: C/nautilus-actions-config-tool.xml:542(simpara)
 msgid ""
 "If you have Invariant Sections, Front-Cover Texts and Back-Cover Texts, "
 "replace the “with… Texts.” line with this:"
 msgstr ""
+"Si tiene Secciones Invariantes, Textos de Cubierta Delantera y Textos de "
+"Cubierta Trasera, reemplace la frase «con... Textos» por esto:"
 
 #: C/nautilus-actions-config-tool.xml:546(screen)
 #, no-wrap
 msgid ""
 "with the Invariant Sections being LIST THEIR TITLES, with the Front-Cover Texts\n"
 "being LIST, and with the Back-Cover Texts being LIST."
-msgstr ""
+msgstr "siendo las Secciones Invariantes LISTE SUS TÍTULOS, siendo los Textos de Cubierta Delantera (LISTAR), y siendo sus Textos de Cubierta Trasera (LISTAR)."
 
 #: C/nautilus-actions-config-tool.xml:548(simpara)
 msgid ""
 "If you have Invariant Sections without Cover Texts, or some other "
 "combination of the three, merge those two alternatives to suit the situation."
 msgstr ""
+"Si tiene Secciones Invariantes sin Textos de Cubierta o cualquier otra "
+"combinación de los tres, mezcle ambas alternativas para adaptarse a la "
+"situación."
 
 #: C/nautilus-actions-config-tool.xml:553(simpara)
 msgid ""
@@ -4864,13 +5235,18 @@ msgid ""
 "license, such as the GNU General Public License, to permit their use in free "
 "software."
 msgstr ""
+"Si su documento contiene ejemplos de código de programa no triviales, "
+"recomendamos liberar estos ejemplos en paralelo bajo la licencia de software "
+"libre que usted elija, como la Licencia Pública General de GNU (GNU General "
+"Public License), para permitir su uso en software libre."
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/nautilus-actions-config-tool.xml:0(None)
 msgid "translator-credits"
 msgstr ""
 "Jorge González <jorgegonz@svn.gnome.org>, 2010, 2011\n"
-"Nicolás Satragno <nsatragno@gmail.com>, 2012"
+"Nicolás Satragno <nsatragno@gmail.com>, 2012\n"
+"Daniel Mustieles <daniel.mustieles@gmail.com>, 2011-2012"
 
 #~ msgid "August 2010"
 #~ msgstr "Agosto de 2010"
