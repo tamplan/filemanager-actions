@@ -99,7 +99,7 @@ core_libdir = $(top_builddir)/src/core/.libs
 
 AM_LDFLAGS += \
 	$(NAUTILUS_ACTIONS_LIBS)					\
-	$(core_libdir)/libna-core.so				\
+	-L$(core_libdir) -lna-core					\
 	$(NULL)
 
 # Need this to be able to set ourselves GTKDOC_RUN

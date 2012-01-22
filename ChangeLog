@@ -1,3 +1,9 @@
+2012-01-22 Pierre Wieser <pwieser@trychlos.org>
+
+	* docs/reference/Makefile.am: Reference the na-core library.
+
+	Fix part of #668181 reported by Vincent Untz.
+
 2012-01-18 Pierre Wieser <pwieser@trychlos.org>
 
 	* docs/nact/C/nact-conditions.xml: Does not embed a <literal> tag inside
