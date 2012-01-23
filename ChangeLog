@@ -1,3 +1,7 @@
+2012-01-23 Pierre Wieser <pwieser@trychlos.org>
+
+	* run-autogen.sh: Deletes the rest part of an aborded build.
+
 2012-01-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* docs/reference/Makefile.am: Reference the na-core library.

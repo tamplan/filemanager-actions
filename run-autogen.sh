@@ -16,7 +16,7 @@ srcdir=$(cd ${0%/*}; pwd)
 # a nautilus-actions-x.y may remain after an aborted make distcheck
 # such a directory breaks gnome-autogen.sh generation
 # so clean it here
-for d in $(find ${srcdir} -maxdepth 1 -type d -name 'nautilus-actions-*'); do
+for d in $(find ${srcdir} -maxdepth 2 -type d -name 'nautilus-actions-*'); do
 	chmod -R u+w $d
 	rm -fr $d
 done
