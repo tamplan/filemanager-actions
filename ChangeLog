@@ -1,5 +1,7 @@
 2012-01-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* Makefile.am: Also distributes ChangeLog-2011.
+
 	* configure.ac: Bump version number due to API changes.
 
 	* Makefile.am: Build Reference Manual when make distcheck.
