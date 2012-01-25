@@ -51,8 +51,8 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-as-needed					\
 	--disable-scrollkeeper				\
 	--disable-schemas-install			\
-	--disable-deprecated				\
-	--disable-gtk-doc					\
+	--enable-deprecated					\
+	--enable-gtk-doc					\
 	--disable-html-manuals				\
 	--disable-pdf-manuals				\
 	$(NULL)

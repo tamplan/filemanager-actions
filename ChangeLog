@@ -1,5 +1,17 @@
 2012-01-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* Makefile.am: Build Reference Manual when make distcheck.
+
+	* docs/reference/Makefile.am: Always enable gtk-doc.make inclusion.
+
+	Fix last part of #668181.
+	Rationale is: gtk-doc shamelessly refuses to dist manuals if GTK_DOC is
+	not enabled, i.e. if the manuals have not just been built. Getting rid of
+	this behavior would be possible (just overriding dist-hook target), but
+	same issue arises when installing from a distribution: as GTK_DOC is not
+	enabled, then install target just aborts :(.
+	So it is easier to just enable GTK_DOC when making distcheck.
+
 	* src/api/na-iexporter.h: Fix typo.
 
 	* m4/na-enable-manuals.m4: Remove ENABLE_MANUALS conditional.

@@ -30,8 +30,6 @@
 # Nautilus-Actions Reference Manual
 #
 
-if ENABLE_GTK_DOC
-
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make
 
@@ -153,7 +151,8 @@ xml_in_files = \
 xml_files = $(xml_in_files:.xml.in=.xml)
 
 version_dir.xml: version.xml
-	cat version.xml | $(SED) 's?^\([[:alnum:]]\.[[:alnum:]]\).*?\1?' > version_dir.xml
+	rm -f $@
+	cat $< | $(SED) 's?^\([[:alnum:]]\.[[:alnum:]]\).*?\1?' > $@
 
 CLEANFILES += \
 	$(DOC_MODULE).types							\
@@ -164,4 +163,5 @@ install-data-local: install-data-local-hook
 
 install-data-local-hook:
 
-endif
+.PHONY: \
+	install-data-local-hook
