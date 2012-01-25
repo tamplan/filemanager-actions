@@ -1,10 +1,16 @@
 2012-01-25 Pierre Wieser <pwieser@trychlos.org>
 
-	* run-distcheck.sh: Deletes the rest part of an aborded build.
+	* m4/na-enable-manuals.m4: Remove ENABLE_MANUALS conditional.
+
+	* docs/nact/Makefile.am: Another rewriting.
+	Install and distribute manuals even if not just built.
+	Fix part of #668181.
+
+	* run-distcheck.sh: Deletes the remaining part of an aborded build.
 
 2012-01-23 Pierre Wieser <pwieser@trychlos.org>
 
-	* run-autogen.sh: Deletes the rest part of an aborded build.
+	* run-autogen.sh: Deletes the remaining part of an aborded build.
 
 2012-01-22 Pierre Wieser <pwieser@trychlos.org>
 
