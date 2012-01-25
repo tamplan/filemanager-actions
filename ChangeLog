@@ -1,5 +1,7 @@
 2012-01-25 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iexporter.h: Fix typo.
+
 	* m4/na-enable-manuals.m4: Remove ENABLE_MANUALS conditional.
 
 	* docs/nact/Makefile.am: Another rewriting.

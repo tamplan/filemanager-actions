@@ -136,7 +136,7 @@ typedef struct {
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIExporteeFormat structure</title>
+ *    <title>Historic of the versions of the #NAIExporterFormat structure</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
