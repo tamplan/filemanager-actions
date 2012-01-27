@@ -131,12 +131,15 @@ glib_required=2.24.0
 gtk_required=2.20.0
 NA_CHECK_FOR_GTK
 
+# GDBus comes in GIO with 2.26
+# so uses GDBus if present, or fallback into dbus-glib-1
+NA_CHECK_MODULE([GLIB],   [glib-2.0 >= ${glib_required}])
+NA_CHECK_MODULE([GMODULE],[gmodule-2.0 >= ${glib_required}])
+NA_CHECK_FOR_GDBUS
+
 dnl aclocal complains if the comma is not just after the square bracket
-NA_CHECK_MODULE([DBUS],              [dbus-glib-1])
 NA_CHECK_MODULE([GCONF],             [gconf-2.0 >= 2.8.0])
 NA_CHECK_MODULE([GIO_UNIX],          [gio-unix-2.0])
-NA_CHECK_MODULE([GMODULE],           [gmodule-2.0 >= ${glib_required}])
-NA_CHECK_MODULE([GLIB],              [glib-2.0 >= ${glib_required}])
 NA_CHECK_MODULE([GTOP],              [libgtop-2.0 >= 2.23.1])
 NA_CHECK_MODULE([LIBXML],            [libxml-2.0 >= 2.6])
 NA_CHECK_MODULE([SM],                [sm >= 1.0])
@@ -178,7 +181,7 @@ NA_IS_MAINTAINER_MODE
 AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
 
 # Check for menu update function
-AC_CHECK_LIB(nautilus-extension, nautilus_menu_item_new)
+AC_CHECK_LIB([nautilus-extension],[nautilus_menu_item_new])
 AC_CHECK_FUNCS([nautilus_menu_provider_emit_items_updated_signal])
 # starting with 2.91.90, Nautilus no more allows extensions to add toolbar items
 AC_CHECK_FUNCS([nautilus_menu_provider_get_toolbar_items])
