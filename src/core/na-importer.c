@@ -217,7 +217,7 @@ static NAImporterResult *
 import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
 {
 	NAImporterResult *result;
-	NAIImporterImportFromUriParms provider_parms;
+	NAIImporterImportFromUriParmsv2 provider_parms;
 	GList *im;
 	guint code;
 	GSList *all_messages;
@@ -228,8 +228,9 @@ import_from_uri( const NAPivot *pivot, GList *modules, const gchar *uri )
 	provider = NULL;
 	code = IMPORTER_CODE_NOT_WILLING_TO;
 
-	memset( &provider_parms, '\0', sizeof( NAIImporterImportFromUriParms ));
+	memset( &provider_parms, '\0', sizeof( NAIImporterImportFromUriParmsv2 ));
 	provider_parms.version = 2;
+	provider_parms.content = 1;
 	provider_parms.uri = uri;
 
 	for( im = modules ;

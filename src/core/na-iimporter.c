@@ -146,10 +146,14 @@ iimporter_get_version( const NAIImporter *instance )
 /**
  * na_iimporter_import_from_uri:
  * @importer: this #NAIImporter instance.
- * @parms: a #NAIImporterImportFromUriParms structure.
+ * @parms: a #NAIImporterImportFromUriParmsv2 structure.
  *
  * Tries to import a #NAObjectItem from the URI specified in @parms, returning
  * the result in <structfield>@parms->imported</structfield>.
+ *
+ * Note that, starting with &prodname; 3.2, the @parms argument is no more a
+ * #NAIImporterImportFromUriParms pointer, but a #NAIImporterImportFromUriParmsv2
+ * one.
  *
  * Returns: the return code of the operation.
  *
@@ -157,12 +161,13 @@ iimporter_get_version( const NAIImporter *instance )
  */
 
 guint
-na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFromUriParms *parms )
+na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFromUriParmsv2 *parms )
 {
 	static const gchar *thisfn = "na_iimporter_import_from_uri";
 	guint code;
 
 	g_return_val_if_fail( NA_IS_IIMPORTER( importer ), IMPORTER_CODE_PROGRAM_ERROR );
+	g_return_val_if_fail( parms && parms->version == 2, IMPORTER_CODE_PROGRAM_ERROR );
 
 	code = IMPORTER_CODE_NOT_WILLING_TO;
 
@@ -179,7 +184,7 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
 #ifdef NA_ENABLE_DEPRECATED
 /**
  * na_iimporter_manage_import_mode:
- * @parms: a NAIImporterManageImportModeParms struct.
+ * @parms: a #NAIImporterManageImportModeParms struct.
  *
  * Returns: the #NAIImporterImportStatus status of the operation:
  *
@@ -208,6 +213,7 @@ na_iimporter_import_from_uri( const NAIImporter *importer, NAIImporterImportFrom
  * </itemizedlist>
  *
  * Since: 2.30
+ * Deprecated: 3.2
  */
 guint
 na_iimporter_manage_import_mode( NAIImporterManageImportModeParms *parms )

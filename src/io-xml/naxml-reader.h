@@ -78,7 +78,7 @@ typedef struct {
 
 GType        naxml_reader_get_type( void );
 
-guint        naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFromUriParms *parms );
+guint        naxml_reader_import_from_uri( const NAIImporter *instance, void *parms_ptr );
 
 void         naxml_reader_read_start( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, GSList **messages  );
 NADataBoxed *naxml_reader_read_data ( const NAIFactoryProvider *provider, void *reader_data, const NAIFactoryObject *object, const NADataDef *def, GSList **messages );

@@ -360,16 +360,19 @@ free_desktop_paths( GList *paths )
  * thus no more checking here against possible duplicate identifiers.
  */
 guint
-nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, NAIImporterImportFromUriParms *parms )
+nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, void *parms_ptr )
 {
 	static const gchar *thisfn = "nadp_reader_iimporter_import_from_uri";
 	guint code;
+	NAIImporterImportFromUriParmsv2 *parms;
 	NadpDesktopFile *ndf;
 
-	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
+	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, parms_ptr );
 
 	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 	g_return_val_if_fail( NADP_IS_DESKTOP_PROVIDER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
+
+	parms = ( NAIImporterImportFromUriParmsv2 * ) parms_ptr;
 
 	if( !na_core_utils_file_is_loadable( parms->uri )){
 		code = IMPORTER_CODE_NOT_LOADABLE;

@@ -11,7 +11,7 @@ na_extension_shutdown
 </SECTION>
 
 # ---------------------------------------------------------------------
-# NAIIOProvider — The I/O Provider Interface v 1
+# NAIIOProvider — The I/O Provider Interface
 
 <SECTION>
 <FILE>iio-provider</FILE>
@@ -30,12 +30,10 @@ na_iio_provider_get_type
 
 <SUBSECTION Private>
 NAIIOProviderInterfacePrivate
-IIO_PROVIDER_SIGNAL_ITEM_CHANGED
-NAIIOProvider::notify-pivot
 </SECTION>
 
 # ---------------------------------------------------------------------
-# NAIImporter — The Import Interface v 1
+# NAIImporter — The Import Interface
 
 <SECTION>
 <FILE>iimporter</FILE>
@@ -47,10 +45,10 @@ NAIImporter
 NAIImporterInterface
 NAIImporterImportMode
 NAIImporterImportStatus
-NAIImporterCheckFn
 NAIImporterAskUserFn
+NAIImporterCheckFn
 NAIImporterImportFromUriParms
-NAIImporterImportFromUriParmsv1
+NAIImporterImportFromUriParmsv2
 NAIImporterManageImportModeParms
 na_iimporter_import_from_uri
 na_iimporter_manage_import_mode
@@ -63,7 +61,7 @@ NAIImporterInterfacePrivate
 </SECTION>
 
 # ---------------------------------------------------------------------
-# NAIExporter — The Export Interface v 1
+# NAIExporter — The Export Interface
 
 <SECTION>
 <FILE>iexporter</FILE>
@@ -75,11 +73,11 @@ NAIExporter
 NAIExporterInterface
 NAIExporterExportStatus
 NAIExporterFormat
-NAIExporterFormatExt
+NAIExporterFormatv2
 NAIExporterFileParms
-NAIExporterFileParmsv1
+NAIExporterFileParmsv2
 NAIExporterBufferParms
-NAIExporterBufferParmsv1
+NAIExporterBufferParmsv2
 
 <SUBSECTION Standard>
 na_iexporter_get_type

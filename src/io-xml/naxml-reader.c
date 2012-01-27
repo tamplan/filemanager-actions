@@ -74,25 +74,25 @@ typedef struct {
  * to import. We thus have one NAXMLReader object per import operation.
  */
 struct _NAXMLReaderPrivate {
-	gboolean                       dispose_has_run;
+	gboolean                         dispose_has_run;
 
 	/* data provided by the caller
 	 */
-	NAIImporter                   *importer;
-	NAIImporterImportFromUriParms *parms;
+	NAIImporter                     *importer;
+	NAIImporterImportFromUriParmsv2 *parms;
 
 	/* data dynamically set during the import operation
 	 */
-	gboolean                       type_found;
-	GList                         *nodes;
-	GList                         *dealt;
-	RootNodeStr                   *root_node_str;
-	gchar                         *item_id;
+	gboolean                         type_found;
+	GList                           *nodes;
+	GList                           *dealt;
+	RootNodeStr                     *root_node_str;
+	gchar                           *item_id;
 
 	/* following values are reset and reused while iterating on each
 	 * element nodes of the imported item (cf. reset_node_data())
 	 */
-	gboolean                       node_ok;
+	gboolean                         node_ok;
 };
 
 extern NAXMLKeyStr naxml_schema_key_schema_str[];
@@ -307,7 +307,7 @@ reader_new( void )
 /**
  * naxml_reader_import_uri:
  * @instance: the #NAIImporter provider.
- * @parms: a #NAIImporterUriParms structure.
+ * @parms: a #NAIImporterImportFromUriParmsv2 structure.
  *
  * Imports an item.
  *
@@ -321,16 +321,18 @@ reader_new( void )
  * thus no more checking here against possible duplicate identifiers.
  */
 guint
-naxml_reader_import_from_uri( const NAIImporter *instance, NAIImporterImportFromUriParms *parms )
+naxml_reader_import_from_uri( const NAIImporter *instance, void *parms_ptr )
 {
 	static const gchar *thisfn = "naxml_reader_import_from_uri";
 	NAXMLReader *reader;
+	NAIImporterImportFromUriParmsv2* parms;
 	guint code;
 
-	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, ( void * ) parms );
+	g_debug( "%s: instance=%p, parms=%p", thisfn, ( void * ) instance, parms_ptr );
 
 	g_return_val_if_fail( NA_IS_IIMPORTER( instance ), IMPORTER_CODE_PROGRAM_ERROR );
 
+	parms = ( NAIImporterImportFromUriParmsv2 * ) parms_ptr;
 	parms->imported = NULL;
 
 	if( !na_core_utils_file_is_loadable( parms->uri )){

@@ -1,5 +1,16 @@
 2012-01-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/reference/nautilus-actions-sections.txt: Update sections.
+
+	* src/api/na-iimporter.h:
+	* src/core/na-iimporter.c: Update interface description.
+
+	* src/io-desktop/nadp-reader.c:
+	* src/io-desktop/nadp-reader.h (nadp_reader_iimporter_import_from_uri):
+	* src/io-xml/naxml-reader.c:
+	* src/io-xml/naxml-reader.h (naxml_reader_import_from_uri):
+	Updated accordingly.
+
 	* src/api/na-iio-provider.h: better distinguish own internal comments.
 
 	* docs/reference/nautilus-actions-overrides.txt:
