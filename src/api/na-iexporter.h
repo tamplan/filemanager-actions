@@ -159,7 +159,7 @@ typedef struct _NAIExporterInterfacePrivate    NAIExporterInterfacePrivate;
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
- * NAIExporterFormatv1:
+ * NAIExporterFormat:
  * @format:      format identifier (ascii).
  * @label:       short label to be displayed in dialog (UTF-8 localized)
  * @description: full description of the format (UTF-8 localized);
