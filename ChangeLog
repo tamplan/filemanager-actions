@@ -1,3 +1,21 @@
+2012-01-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-iio-provider.h: Update interface description, including the
+	list of currently allocated I/O provider identifiers.
+
+	* src/core/na-iio-provider.c:
+	(interface_base_init): Update signal description.
+	(na_iio_provider_item_changed): Update function description.
+
+	* docs/io-provider-id: Deleted file.
+
+	* docs/Makefile.am: Updated accordingly.
+
+	* docs/reference/nautilus-actions-docs.xml:
+	Define new nact entity.
+	Update the link to online Reference Manual.
+	Bump copyright year.
+
 2012-01-25 Pierre Wieser <pwieser@trychlos.org>
 
 	* Makefile.am: Also distributes ChangeLog-2011.

@@ -6,6 +6,7 @@
   <!ENTITY version SYSTEM "version.xml">
   <!ENTITY prodname "<productname>Nautilus-Actions</productname>">
   <!ENTITY nautilus "<productname>Nautilus</productname>">
+  <!ENTITY nact     "<productname>Nautilus-Actions Configuration Tool</productname>">
   <!ENTITY lcomment "/*">
   <!ENTITY rcomment "*/">
 ]>
@@ -20,14 +21,15 @@
   <bookinfo>
     <title>&prodname; Reference Manual</title>
     <releaseinfo>
-      For Nautilus-Actions &version;
+      For &prodname; &version;
       <!-- linebreak -->
       The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="http://www.nautilus-actions.org/docs/reference/">http://www.nautilus-actions.org/docs/reference</ulink>.
+      <ulink role="online-location" url="http://www.nautilus-actions.org/manuals/reference/html/">http://www.nautilus-actions.org/manuals/reference/html</ulink>.
     </releaseinfo>
     <copyright>
       <year>2010</year>
       <year>2011</year>
+      <year>2012</year>
 	  <holder>Pierre Wieser</holder>
     </copyright>
   </bookinfo>

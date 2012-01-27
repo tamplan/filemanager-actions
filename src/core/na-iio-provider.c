@@ -128,17 +128,18 @@ interface_base_init( NAIIOProviderInterface *klass )
 		klass->delete_item = NULL;
 		klass->duplicate_data = NULL;
 
-		/*
-		 * NAIOProvider::io-provider-item-changed:
+		/**
+		 * NAIIOProvider::io-provider-item-changed:
 		 * @provider: the #NAIIOProvider which has called the
 		 *  na_iio_provider_item_changed() function.
+		 *
+		 * This signal is registered without any default handler.
 		 *
 		 * This signal is not meant to be directly sent by a plugin.
 		 * Instead, the plugin should call the na_iio_provider_item_changed()
 		 * function.
 		 *
-		 * The signal is registered without any default handler.
-		 * Typically, only the NAPivot object is connected to it.
+		 * See also na_iio_provider_item_changed().
 		 */
 		st_signals[ ITEM_CHANGED ] = g_signal_new(
 					IO_PROVIDER_SIGNAL_ITEM_CHANGED,
@@ -186,20 +187,24 @@ do_is_able_to_write( const NAIIOProvider *instance )
  * na_iio_provider_item_changed:
  * @instance: the calling #NAIIOProvider.
  *
- * Informs Nautilus-Actions that this #NAIIOProvider @instance has
- * detected a modification in one of its items (menu or action).
+ * Informs &prodname; that this #NAIIOProvider @instance has
+ * detected a modification in (at least) one of its items (menu
+ * or action).
  *
  * This function may be triggered for each and every
- * #NAObjectItem -derived modified objects, and should, at least, be
+ * #NAObjectItem -derived modified object, and should, at least, be
  * triggered once for a coherent set of updates.
  *
- * When receiving this signal, the currently running program may ask for
- * reload the current list of items, menus and actions; it may also choose
- * to ask the user if he is willing to reload such a current list.
+ * When receiving this signal, the currently running program may just
+ * want to immediately reload the current list of items, menus and actions
+ * (this is for example what &nautilus; plugin does); it may also choose
+ * to ask the user if he is willing to reload such a current list (and
+ * this is the way &nact; has chosen to deal with this message).
  *
- * Note that NAPivot pivot is typically the only object connected to this
- * signal. It acts so as a filtering proxy, re-emitting its own 'items-changed'
- * signal for a whole set of detected underlying modifications.
+ * Note that application NAPivot/NAUpdater pivot is typically the only
+ * object connected to this signal. It acts so as a filtering proxy,
+ * re-emitting its own 'items-changed' signal for a whole set of detected
+ * underlying modifications.
  *
  * Since: 2.30
  */
