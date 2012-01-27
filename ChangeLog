@@ -1,5 +1,7 @@
 2012-01-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/reference/nautilus-actions-docs.xml: Fix typo.
+
 	* src/api/na-iio-provider.h: Update interface description, including the
 	list of currently allocated I/O provider identifiers.
 

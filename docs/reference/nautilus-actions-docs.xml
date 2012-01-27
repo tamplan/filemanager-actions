@@ -13,7 +13,7 @@
 <!--
  I miss several things here:
  - I would like to insert line breaks somewhere (e.g. inside of releaseinfo)
- - I would like to get ride of the extra space which comes with 'version.xml'
+ - I would like to get rid of the extra space which comes with 'version.xml'
    and in general with all included entities
    (see e.g. na-getting.xml)
 -->
