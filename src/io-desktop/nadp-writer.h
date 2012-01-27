@@ -44,8 +44,8 @@ guint    nadp_iio_provider_write_item          ( const NAIIOProvider *provider, 
 guint    nadp_iio_provider_delete_item         ( const NAIIOProvider *provider, const NAObjectItem *item, GSList **messages );
 guint    nadp_iio_provider_duplicate_data      ( const NAIIOProvider *provider, NAObjectItem *dest, const NAObjectItem *source, GSList **messages );
 
-guint    nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParms *parms );
-guint    nadp_writer_iexporter_export_to_file  ( const NAIExporter *instance, NAIExporterFileParms *parms );
+guint    nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParmsv2 *parms );
+guint    nadp_writer_iexporter_export_to_file  ( const NAIExporter *instance, NAIExporterFileParmsv2 *parms );
 
 guint    nadp_writer_ifactory_provider_write_start(
 				const NAIFactoryProvider *provider, void *writer_data, const NAIFactoryObject *object,

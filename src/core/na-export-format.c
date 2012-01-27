@@ -314,12 +314,12 @@ instance_finalize( GObject *object )
 
 /*
  * na_export_format_new:
- * @exporter_format: a #NAIExporterFormatExt which describes an export format.
+ * @exporter_format: a #NAIExporterFormatv2 which describes an export format.
  *
  * Returns: a newly allocated #NAExportFormat object.
  */
 NAExportFormat *
-na_export_format_new( const NAIExporterFormatExt *exporter_format )
+na_export_format_new( const NAIExporterFormatv2 *exporter_format )
 {
 	NAExportFormat *format;
 

@@ -78,7 +78,7 @@ static void on_pixbuf_finalized( const NAIExporter* exporter, GObject *pixbuf );
  * nadp_formats_get_formats:
  * @exporter: this #NAIExporter provider.
  *
- * Returns: a #GList of the #NAIExporterFormatExt supported export formats.
+ * Returns: a #GList of the #NAIExporterFormatv2 supported export formats.
  *
  * This list should be nadp_formats_free_formats() by the caller.
  *
@@ -91,7 +91,7 @@ nadp_formats_get_formats( const NAIExporter* exporter )
 	static const gchar *thisfn = "nadp_formats_get_formats";
 #endif
 	GList *str_list;
-	NAIExporterFormatExt *str;
+	NAIExporterFormatv2 *str;
 	guint i;
 	gint width, height;
 	gchar *fname;
@@ -103,7 +103,7 @@ nadp_formats_get_formats( const NAIExporter* exporter )
 	}
 
 	for( i = 0 ; nadp_formats[i].format ; ++i ){
-		str = g_new0( NAIExporterFormatExt, 1 );
+		str = g_new0( NAIExporterFormatv2, 1 );
 		str->version = 2;
 		str->provider = NA_IEXPORTER( exporter );
 		str->format = g_strdup( nadp_formats[i].format );
@@ -143,7 +143,7 @@ on_pixbuf_finalized( const NAIExporter* exporter, GObject *pixbuf )
  * nadp_formats_free_formats:
  * @formats: a #GList to be freed.
  *
- * Returns: a #GList of the #NAIExporterFormatExt supported export formats.
+ * Returns: a #GList of the #NAIExporterFormatv2 supported export formats.
  *
  * This list should be nadp_format_free_formats() by the caller.
  *
@@ -153,10 +153,10 @@ void
 nadp_formats_free_formats( GList *formats )
 {
 	GList *is;
-	NAIExporterFormatExt *str;
+	NAIExporterFormatv2 *str;
 
 	for( is = formats ; is ; is = is->next ){
-		str = ( NAIExporterFormatExt * ) is->data;
+		str = ( NAIExporterFormatv2 * ) is->data;
 		g_free( str->format );
 		g_free( str->label );
 		g_free( str->description );

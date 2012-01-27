@@ -268,12 +268,12 @@ instance_finalize( GObject *object )
 /**
  * naxml_writer_export_to_buffer:
  * @instance: this #NAIExporter instance.
- * @parms: a #NAIExporterBufferParms structure.
+ * @parms: a #NAIExporterBufferParmsv2 structure.
  *
  * Export the specified 'item' to a newly allocated buffer.
  */
 guint
-naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParms *parms )
+naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParmsv2 *parms )
 {
 	static const gchar *thisfn = "naxml_writer_export_to_buffer";
 	NAXMLWriter *writer;
@@ -295,7 +295,7 @@ naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferPar
 		writer->private->messages = parms->messages;
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			writer->private->fn_str = find_export_format_fn_from_quark((( NAIExporterBufferParmsv1 * ) parms )->format );
+			writer->private->fn_str = find_export_format_fn_from_quark((( NAIExporterBufferParms * ) parms )->format );
 		} else {
 			writer->private->fn_str = find_export_format_fn( parms->format );
 		}
@@ -324,12 +324,12 @@ naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferPar
 /**
  * naxml_writer_export_to_file:
  * @instance: this #NAIExporter instance.
- * @parms: a #NAIExporterFileParms structure.
+ * @parms: a #NAIExporterFileParmsv2 structure.
  *
  * Export the specified 'item' to a newly created file.
  */
 guint
-naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *parms )
+naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParmsv2 *parms )
 {
 	static const gchar *thisfn = "naxml_writer_export_to_file";
 	NAXMLWriter *writer;
@@ -353,8 +353,8 @@ naxml_writer_export_to_file( const NAIExporter *instance, NAIExporterFileParms *
 		writer->private->messages = parms->messages;
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			writer->private->fn_str = find_export_format_fn_from_quark((( NAIExporterFileParmsv1 * ) parms )->format );
-			format2 = g_quark_to_string((( NAIExporterFileParmsv1 * ) parms )->format );
+			writer->private->fn_str = find_export_format_fn_from_quark((( NAIExporterFileParms * ) parms )->format );
+			format2 = g_quark_to_string((( NAIExporterFileParms * ) parms )->format );
 		} else {
 			writer->private->fn_str = find_export_format_fn( parms->format );
 			format2 = parms->format;

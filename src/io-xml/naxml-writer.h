@@ -72,8 +72,8 @@ typedef struct {
 
 GType  naxml_writer_get_type( void );
 
-guint  naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParms *parms );
-guint  naxml_writer_export_to_file  ( const NAIExporter *instance, NAIExporterFileParms *parms );
+guint  naxml_writer_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParmsv2 *parms );
+guint  naxml_writer_export_to_file  ( const NAIExporter *instance, NAIExporterFileParmsv2 *parms );
 
 guint  naxml_writer_write_start( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, GSList **messages  );
 guint  naxml_writer_write_data ( const NAIFactoryProvider *writer, void *writer_data, const NAIFactoryObject *object, const NADataBoxed *boxed, GSList **messages );

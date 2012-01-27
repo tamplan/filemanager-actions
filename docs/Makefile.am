@@ -34,6 +34,5 @@ SUBDIRS = \
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
 
 dist_pkgdoc_DATA = \
-	export-format-id					\
 	objects-hierarchy.odg				\
 	$(NULL)

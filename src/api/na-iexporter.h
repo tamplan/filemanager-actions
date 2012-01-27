@@ -34,10 +34,79 @@
 /**
  * SECTION: iexporter
  * @title: NAIExporter
- * @short_description: The Export Interface v 2
+ * @short_description: The Export Interface
  * @include: nautilus-actions/na-iexporter.h
  *
- * The #NAIExporter interface exports items to the outside world.
+ * The #NAIExporter interface exports items to the outside world. Each
+ * implementation may provide one or more formats.
+ *
+ * <refsect2>
+ *  <title>Export format identifier</title>
+ *  <para>
+ *   For its own internal needs, &prodname; requires that each export
+ *   format have its own identifier, as an ASCII string.
+ *  </para>
+ *  <para>
+ *   In order to avoid any collision, this export format identifier is
+ *   allocated by the &prodname; maintainers team. If you wish provide
+ *   yourself a new export format, and so need a new export format identifier,
+ *   please contact the maintainers (see nautilus-actions.doap at the
+ *   root of the source tree).
+ *  </para>
+ *  <para>
+ *   Below is a list of currently allocated export format identifiers.
+ *   This list has been last updated on 2010, July 28th.
+ *  </para>
+ *  <table>
+ *   <title>Currently allocated export format identifiers</title>
+ *    <tgroup rowsep="1" colsep="1" cols="4">
+ *      <colspec colname="id" />
+ *      <colspec colname="label" />
+ *      <colspec colname="holder" />
+ *      <colspec colname="allocated" align="center" />
+ *      <thead>
+ *        <row>
+ *          <entry>Identifier</entry>
+ *          <entry>Name</entry>
+ *          <entry>Holder</entry>
+ *          <entry>Allocated on</entry>
+ *        </row>
+ *      </thead>
+ *      <tbody>
+ *        <row>
+ *          <entry><literal>Ask</literal></entry>
+ *          <entry>Reserved for &prodname; internal needs</entry>
+ *          <entry>&prodname;</entry>
+ *          <entry>2010-02-15</entry>
+ *        </row>
+ *        <row>
+ *          <entry><literal>Desktop1</literal></entry>
+ *          <entry>NA Desktop module</entry>
+ *          <entry>&prodname;</entry>
+ *          <entry>2010-07-28</entry>
+ *        </row>
+ *        <row>
+ *          <entry><literal>GConfSchemaV1</literal></entry>
+ *          <entry>NA XML module</entry>
+ *          <entry>&prodname;</entry>
+ *          <entry>2010-02-15</entry>
+ *        </row>
+ *        <row>
+ *          <entry><literal>GConfSchemaV2</literal></entry>
+ *          <entry>NA XML module</entry>
+ *          <entry>&prodname;</entry>
+ *          <entry>2010-02-15</entry>
+ *        </row>
+ *        <row>
+ *          <entry><literal>GConfEntry</literal></entry>
+ *          <entry>NA XML module</entry>
+ *          <entry>&prodname;</entry>
+ *          <entry>2010-02-15</entry>
+ *        </row>
+ *      </tbody>
+ *    </tgroup>
+ *  </table>
+ * </refsect2>
  *
  * <refsect2>
  *  <title>Versions historic</title>
@@ -87,8 +156,6 @@ G_BEGIN_DECLS
 
 typedef struct _NAIExporter                    NAIExporter;
 typedef struct _NAIExporterInterfacePrivate    NAIExporterInterfacePrivate;
-typedef struct _NAIExporterFileParms           NAIExporterFileParms;
-typedef struct _NAIExporterBufferParms         NAIExporterBufferParms;
 
 #ifdef NA_ENABLE_DEPRECATED
 /**
@@ -113,30 +180,99 @@ typedef struct {
 	gchar     *description;
 }
 	NAIExporterFormat;
-#endif
 
 /**
- * NAIExporterFormatExt:
- * @version:     the version of this #NAIExporterFormatExt structure (2).
- * @provider:    the #NAIExporter provider for this format.
- * @format:      format identifier (ascii, allocated by the Nautilus-Actions team).
- * @label:       short label to be displayed in dialog (UTF-8 localized)
+ * NAIExporterFileParms:
+ * @version:  [in] version of this structure;
+ *                 since structure version 1.
+ * @exported: [in] exported NAObjectItem-derived object;
+ *                 since structure version 1.
+ * @folder:   [in] URI of the target folder;
+ *                 since structure version 1.
+ * @format:   [in] export format as a GQuark;
+ *                 since structure version 1.
+ * @basename: [out] basename of the exported file;
+ *                 since structure version 1.
+ * @messages: [in/out] a #GSList list of localized strings;
+ *                 the provider may append messages to this list,
+ *                 but shouldn't reinitialize it;
+ *                 since structure version 1.
+ *
+ * The structure that the implementation receives as a parameter of
+ * #NAIExporterInterface.to_file () interface method.
+ *
+ * Deprecated: 3.2
+ */
+typedef struct {
+	guint         version;
+	NAObjectItem *exported;
+	gchar        *folder;
+	GQuark        format;
+	gchar        *basename;
+	GSList       *messages;
+}
+	NAIExporterFileParms;
+
+/**
+ * NAIExporterBufferParms:
+ * @version:  [in] version of this structure;
+ *                 since structure version 1.
+ * @exported: [in] exported NAObjectItem-derived object;
+ *                 since structure version 1.
+ * @format:   [in] export format as a GQuark;
+ *                 since structure version 1.
+ * @buffer:   [out] buffer which contains the exported object;
+ *                 since structure version 1.
+ * @messages: [in/out] a #GSList list of localized strings;
+ *                 the provider may append messages to this list,
+ *                 but shouldn't reinitialize it;
+ *                 since structure version 1.
+ *
+ * The structure that the plugin receives as a parameter of
+ * #NAIExporterInterface.to_buffer () interface method.
+ *
+ * Deprecated: 3.2
+ */
+typedef struct {
+	guint         version;
+	NAObjectItem *exported;
+	GQuark        format;
+	gchar        *buffer;
+	GSList       *messages;
+}
+	NAIExporterBufferParms;
+
+#endif /* NA_ENABLE_DEPRECATED */
+
+/**
+ * NAIExporterFormatv2:
+ * @version:     the version of this #NAIExporterFormatv2 structure;
+ *               equals to 2;
+ *               since structure version 1.
+ * @provider:    the #NAIExporter provider for this format;
+ *               since structure version 2.
+ * @format:      format identifier (ascii, allocated by the Nautilus-Actions team);
+ *               since structure version 2.
+ * @label:       short label to be displayed in dialog (UTF-8 localized);
+ *               since structure version 2.
  * @description: full description of the format (UTF-8 localized);
- *               mainly used as a tooltip.
+ *               mainly used as a tooltip;
+ *               since structure version 2.
  * @pixbuf:      an image to be associated with this export format;
- *               this pixbuf is supposed to be rendered with GTK_ICON_SIZE_DIALOG size.
+ *               this pixbuf is supposed to be rendered with GTK_ICON_SIZE_DIALOG size;
+ *               since structure version 2.
  *
  * This structure describes a supported output format.
  * It must be provided by each #NAIExporter implementation
  * (see e.g. <filename>src/io-xml/naxml-formats.c</filename>).
  *
- * When listing available export formats, the instance returns a #GList
+ * When listing available export formats, the @provider must return a #GList
  * of these structures.
  *
  * <refsect2>
  *  <title>Versions historic</title>
  *  <table>
- *    <title>Historic of the versions of the #NAIExporterFormat structure</title>
+ *    <title>Historic of the versions of the #NAIExporterFormatv2 structure</title>
  *    <tgroup rowsep="1" colsep="1" align="center" cols="3">
  *      <colspec colname="na-version" />
  *      <colspec colname="api-version" />
@@ -144,7 +280,7 @@ typedef struct {
  *      <thead>
  *        <row>
  *          <entry>&prodname; version</entry>
- *          <entry>#NAIExporterFormat structure version</entry>
+ *          <entry>#NAIExporterFormatv2 structure version</entry>
  *          <entry></entry>
  *        </row>
  *      </thead>
@@ -174,16 +310,87 @@ typedef struct {
 	gchar       *description;
 	GdkPixbuf   *pixbuf;
 }
-	NAIExporterFormatExt;
+	NAIExporterFormatv2;
+
+/**
+ * NAIExporterFileParmsv2:
+ * @version:  [in] version of this structure;
+ *                 equals to 2;
+ *                 since structure version 1.
+ * @content:  [in] version of the content of this structure;
+ *                 equals to 1;
+ *                 since structure version 2.
+ * @exported: [in] exported NAObjectItem-derived object;
+ *                 since structure version 1.
+ * @folder:   [in] URI of the target folder;
+ *                 since structure version 1.
+ * @format:   [in] export format string identifier;
+ *                 since structure version 1.
+ * @basename: [out] basename of the exported file;
+ *                 since structure version 1.
+ * @messages: [in/out] a #GSList list of localized strings;
+ *                 the provider may append messages to this list,
+ *                 but shouldn't reinitialize it;
+ *                 since structure version 1.
+ *
+ * The structure that the plugin receives as a parameter of
+ * #NAIExporterInterface.to_file () interface method.
+ *
+ * Since: 3.2
+ */
+typedef struct {
+	guint         version;
+	guint         content;
+	NAObjectItem *exported;
+	gchar        *folder;
+	gchar        *format;
+	gchar        *basename;
+	GSList       *messages;
+}
+	NAIExporterFileParmsv2;
+
+/**
+ * NAIExporterBufferParmsv2:
+ * @version:  [in] version of this structure;
+ *                 equals to 2;
+ *                 since structure version 1.
+ * @content:  [in] version of the content of this structure;
+ *                 equals to 1;
+ *                 since structure version 2.
+ * @exported: [in] exported NAObjectItem-derived object;
+ *                 since structure version 1.
+ * @format:   [in] export format string identifier;
+ *                 since structure version 2.
+ * @buffer:   [out] buffer which contains the exported object;
+ *                 since structure version 1.
+ * @messages: [in/out] a #GSList list of localized strings;
+ *                 the provider may append messages to this list,
+ *                 but shouldn't reinitialize it;
+ *                 since structure version 1.
+ *
+ * The structure that the plugin receives as a parameter of
+ * #NAIExporterInterface.to_buffer () interface method.
+ *
+ * Since: 3.2
+ */
+typedef struct {
+	guint         version;
+	guint         content;
+	NAObjectItem *exported;
+	gchar        *format;
+	gchar        *buffer;
+	GSList       *messages;
+}
+	NAIExporterBufferParmsv2;
 
 /**
  * NAIExporterInterface:
- * @get_version:  returns the version of this interface the plugin implements.
- * @get_name:     returns the public plugin name.
- * @get_formats:  returns the list of supported formats.
- * @free_formats: free a list of formats
- * @to_file:      exports an item to a file.
- * @to_buffer:    exports an item to a buffer.
+ * @get_version:  [should] returns the version of this interface the plugin implements.
+ * @get_name:     [should] returns the public plugin name.
+ * @get_formats:  [should] returns the list of supported formats.
+ * @free_formats: [should] free a list of formats
+ * @to_file:      [should] exports an item to a file.
+ * @to_buffer:    [should] exports an item to a buffer.
  *
  * This defines the interface that a #NAIExporter should implement.
  */
@@ -195,9 +402,17 @@ typedef struct {
 	/*< public >*/
 	/**
 	 * get_version:
-	 * @instance: this #NAIExporter instance.
+	 * @instance: this NAIExporter instance.
 	 *
-	 * Returns: the version of this interface supported by the I/O provider.
+	 * Nautilus-Actions calls this method each time it needs to know
+	 * which version of this interface the plugin implements.
+	 *
+	 * If this method is not implemented by the plugin,
+	 * Nautilus-Actions considers that the plugin only implements
+	 * the version 1 of the NAIImporter interface.
+	 *
+	 * Return value: if implemented, this method must return the version
+	 * number of this interface the I/O provider is supporting.
 	 *
 	 * Defaults to 1.
 	 *
@@ -207,10 +422,13 @@ typedef struct {
 
 	/**
 	 * get_name:
-	 * @instance: this #NAIExporter instance.
+	 * @instance: this NAIExporter instance.
 	 *
-	 * Returns: the name to be displayed for this instance, as a
-	 * newly allocated string which should be g_free() by the caller.
+	 * Return value: if implemented, the method should return the name to be
+	 * displayed, as a newly allocated string which will be g_free() by the
+	 * caller.
+	 *
+	 * Defaults to a NULL string.
 	 *
 	 * Since: 2.30
 	 */
@@ -218,49 +436,34 @@ typedef struct {
 
 	/**
 	 * get_formats:
-	 * @instance: this #NAIExporter instance.
+	 * @instance: this NAIExporter instance.
 	 *
-	 * To avoid any collision, the format id is allocated by the
-	 * Nautilus-Actions maintainer team. If you wish develop a new
-	 * export format, and so need a new format id, please contact the
-	 * maintainers (see #nautilus-actions.doap).
+	 * For its own internal needs, Nautilus-Actions requires each export
+	 * format has its own unique identifier (in fact, just a small ASCII
+	 * string).
 	 *
-	 * Returns:
-	 * <itemizedlist>
-	 *   <listitem>
-	 *     <formalpara>
-	 *       <title>
-	 *         Interface v1:
-	 *       </title>
-	 *       <para>
-	 *         a null-terminated list of #NAIExporterFormat structures
-	 *         which describes the formats supported by this #NAIExporter
-	 *         provider.
-	 *       </para>
-	 *       <para>
-	 *         The returned list is owned by the #NAIExporter provider,
-	 *         and should not be freed nor released by the caller.
-	 *       </para>
-	 *   </listitem>
-	 *   <listitem>
-	 *     <formalpara>
-	 *       <title>
-	 *         Interface v2:
-	 *       </title>
-	 *       <para>
-	 *         a #GList of #NAIExporterFormatExt structures
-	 *         which describes the formats supported by this #NAIExporter
-	 *         provider.
-	 *       </para>
-	 *       <para>
-	 *         The caller should then invoke the free_formats() method
-	 *         in order the provider be able to release the resources
-	 *         allocated to the list.
-	 *       </para>
-	 *   </listitem>
-	 * </itemizedlist>
+	 * To avoid any collision, the format identifier is allocated by the
+	 * Nautilus-Actions maintainers team. If you wish develop a new export
+	 * format, and so need a new format identifier, please contact the
+	 * maintainers (see nautilus-actions.doap).
 	 *
-	 * Defaults to %NULL (no format at all).
+	 * Return value:
+	 * - Interface v1:
+	 *   a null-terminated list of NAIExporterFormat structures
+	 *   which describes the formats supported by this NAIExporter
+	 *   provider.
+	 *   The returned list is owned by the NAIExporter provider,
+	 *   and should not be freed nor released by the caller.
+	 *
+	 * - Interface v2:
+	 *   a GList of NAIExporterFormatv2 structures
+	 *   which describes the formats supported by this NAIExporter
+	 *   provider.
+	 *   The caller should then invoke the free_formats() method
+	 *   in order the provider be able to release the resources
+	 *   allocated to the list.
+	 *
+	 * Defaults to NULL (no format at all).
 	 *
 	 * Since: 2.30
 	 */
@@ -268,9 +471,9 @@ typedef struct {
 
 	/**
 	 * free_formats:
-	 * @instance: this #NAIExporter instance.
-	 * @formats: a null-terminated list of #NAIExporterFormatExt structures,
-	 *  as returned by get_formats() method.
+	 * @instance: this NAIExporter instance.
+	 * @formats: a null-terminated list of NAIExporterFormatv2 structures,
+	 *  as returned by get_formats() method above.
 	 *
 	 * Free the resources allocated to the @formats list.
 	 *
@@ -280,32 +483,32 @@ typedef struct {
 
 	/**
 	 * to_file:
-	 * @instance: this #NAIExporter instance.
-	 * @parms: a #NAIExporterFileParms structure.
+	 * @instance: this NAIExporter instance.
+	 * @parms: a NAIExporterFileParmsv2 structure.
 	 *
 	 * Exports the specified 'exported' to the target 'folder' in the required
 	 * 'format'.
 	 *
-	 * Returns: the #NAIExporterExportStatus status of the operation.
+	 * Return value: the NAIExporterExportStatus status of the operation.
 	 *
 	 * Since: 2.30
 	 */
-	guint   ( *to_file )    ( const NAIExporter *instance, NAIExporterFileParms *parms );
+	guint   ( *to_file )    ( const NAIExporter *instance, NAIExporterFileParmsv2 *parms );
 
 	/**
 	 * to_buffer:
-	 * @instance: this #NAIExporter instance.
-	 * @parms: a #NAIExporterFileParms structure.
+	 * @instance: this NAIExporter instance.
+	 * @parms: a NAIExporterFileParmsv2 structure.
 	 *
 	 * Exports the specified 'exported' to a newly allocated 'buffer' in
-	 * the required 'format'. The allocated 'buffer' should be g_free()
+	 * the required 'format'. The allocated 'buffer' will be g_free()
 	 * by the caller.
 	 *
-	 * Returns: the #NAIExporterExportStatus status of the operation.
+	 * Return value: the NAIExporterExportStatus status of the operation.
 	 *
 	 * Since: 2.30
 	 */
-	guint   ( *to_buffer )  ( const NAIExporter *instance, NAIExporterBufferParms *parms );
+	guint   ( *to_buffer )  ( const NAIExporter *instance, NAIExporterBufferParmsv2 *parms );
 }
 	NAIExporterInterface;
 
@@ -329,112 +532,6 @@ typedef enum {
 	NA_IEXPORTER_CODE_ERROR,
 }
 	NAIExporterExportStatus;
-
-#ifdef NA_ENABLE_DEPRECATED
-/**
- * NAIExporterFileParms:
- * @version:  version of this structure (input, since v 1)
- * @exported: exported NAObjectItem-derived object (input, since v 1)
- * @folder:   URI of the target folder (input, since v 1)
- * @format:   export format as a GQuark (input, since v 1)
- * @basename: basename of the exported file (output, since v 1)
- * @messages: a #GSList list of localized strings;
- *            the provider may append messages to this list,
- *            but shouldn't reinitialize it
- *            (input/output, since v 1).
- *
- * The structure that the plugin receives as a parameter of
- * #NAIExporterInterface.to_file () interface method.
- *
- * Deprecated: 3.2
- */
-struct _NAIExporterFileParmsv1 {
-	guint         version;
-	NAObjectItem *exported;
-	gchar        *folder;
-	GQuark        format;
-	gchar        *basename;
-	GSList       *messages;
-};
-
-typedef struct _NAIExporterFileParmsv1         NAIExporterFileParmsv1;
-
-/**
- * NAIExporterBufferParms:
- * @version:  version of this structure (input, since v 1)
- * @exported: exported NAObjectItem-derived object (input, since v 1)
- * @format:   export format as a GQuark (input, since v 1)
- * @buffer:   buffer which contains the exported object (output, since v 1)
- * @messages: a #GSList list of localized strings;
- *            the provider may append messages to this list,
- *            but shouldn't reinitialize it
- *            (input/output, since v 1).
- *
- * The structure that the plugin receives as a parameter of
- * #NAIExporterInterface.to_buffer () interface method.
- *
- * Deprecated: 3.2
- */
-struct _NAIExporterBufferParmsv1 {
-	guint         version;
-	NAObjectItem *exported;
-	GQuark        format;
-	gchar        *buffer;
-	GSList       *messages;
-};
-
-typedef struct _NAIExporterBufferParmsv1       NAIExporterBufferParmsv1;
-#endif
-
-/**
- * NAIExporterFileParms:
- * @version:  version of this structure (input, since v 1, currently equal to 2)
- * @exported: exported NAObjectItem-derived object (input, since v 1)
- * @folder:   URI of the target folder (input, since v 1)
- * @format:   export format string identifier (input, since v 2)
- * @basename: basename of the exported file (output, since v 1)
- * @messages: a #GSList list of localized strings;
- *            the provider may append messages to this list,
- *            but shouldn't reinitialize it
- *            (input/output, since v 1).
- *
- * The structure that the plugin receives as a parameter of
- * #NAIExporterInterface.to_file () interface method.
- *
- * Since: 3.2
- */
-struct _NAIExporterFileParms {
-	guint         version;
-	NAObjectItem *exported;
-	gchar        *folder;
-	gchar        *format;
-	gchar        *basename;
-	GSList       *messages;
-};
-
-/**
- * NAIExporterBufferParms:
- * @version:  version of this structure (input, since v 1, currently equal to 2)
- * @exported: exported NAObjectItem-derived object (input, since v 1)
- * @format:   export format string identifier (input, since v 2)
- * @buffer:   buffer which contains the exported object (output, since v 1)
- * @messages: a #GSList list of localized strings;
- *            the provider may append messages to this list,
- *            but shouldn't reinitialize it
- *            (input/output, since v 1).
- *
- * The structure that the plugin receives as a parameter of
- * #NAIExporterInterface.to_buffer () interface method.
- *
- * Since: 3.2
- */
-struct _NAIExporterBufferParms {
-	guint         version;
-	NAObjectItem *exported;
-	gchar        *format;
-	gchar        *buffer;
-	GSList       *messages;
-};
 
 GType na_iexporter_get_type( void );
 

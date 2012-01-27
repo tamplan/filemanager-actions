@@ -348,12 +348,12 @@ nadp_iio_provider_duplicate_data( const NAIIOProvider *provider, NAObjectItem *d
 /**
  * nadp_writer_iexporter_export_to_buffer:
  * @instance: this #NAIExporter instance.
- * @parms: a #NAIExporterBufferParms structure.
+ * @parms: a #NAIExporterBufferParmsv2 structure.
  *
  * Export the specified 'item' to a newly allocated buffer.
  */
 guint
-nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParms *parms )
+nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporterBufferParmsv2 *parms )
 {
 	static const gchar *thisfn = "nadp_writer_iexporter_export_to_buffer";
 	guint code, write_code;
@@ -374,7 +374,7 @@ nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporter
 
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			fmt = find_export_format_fn_from_quark((( NAIExporterBufferParmsv1 * ) parms )->format );
+			fmt = find_export_format_fn_from_quark((( NAIExporterBufferParms * ) parms )->format );
 		} else {
 			fmt = find_export_format_fn( parms->format );
 		}
@@ -408,12 +408,12 @@ nadp_writer_iexporter_export_to_buffer( const NAIExporter *instance, NAIExporter
 /**
  * nadp_writer_iexporter_export_to_file:
  * @instance: this #NAIExporter instance.
- * @parms: a #NAIExporterFileParms structure.
+ * @parms: a #NAIExporterFileParmsv2 structure.
  *
  * Export the specified 'item' to a newly created file.
  */
 guint
-nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFileParms *parms )
+nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFileParmsv2 *parms )
 {
 	static const gchar *thisfn = "nadp_writer_iexporter_export_to_file";
 	guint code, write_code;
@@ -434,7 +434,7 @@ nadp_writer_iexporter_export_to_file( const NAIExporter *instance, NAIExporterFi
 
 #ifdef NA_ENABLE_DEPRECATED
 		if( parms->version == 1 ){
-			fmt = find_export_format_fn_from_quark((( NAIExporterFileParmsv1 * ) parms )->format );
+			fmt = find_export_format_fn_from_quark((( NAIExporterFileParms * ) parms )->format );
 		} else {
 			fmt = find_export_format_fn( parms->format );
 		}

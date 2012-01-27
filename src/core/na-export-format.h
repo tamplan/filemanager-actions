@@ -65,7 +65,7 @@ typedef struct {
 
 GType           na_export_format_get_type    ( void );
 
-NAExportFormat *na_export_format_new         ( const NAIExporterFormatExt *exporter_format );
+NAExportFormat *na_export_format_new         ( const NAIExporterFormatv2 *exporter_format );
 
 NAIExporter    *na_export_format_get_provider( const NAExportFormat *format );
 

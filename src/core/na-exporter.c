@@ -92,7 +92,7 @@ na_exporter_get_formats( const NAPivot *pivot )
 		str_list = exporter_get_formats( NA_IEXPORTER( imod->data ));
 
 		for( is = str_list ; is ; is = is->next ){
-			format = na_export_format_new(( NAIExporterFormatExt * ) is->data );
+			format = na_export_format_new(( NAIExporterFormatv2 * ) is->data );
 			formats = g_list_prepend( formats, format );
 		}
 
@@ -105,7 +105,7 @@ na_exporter_get_formats( const NAPivot *pivot )
 }
 
 /*
- * Returns a GList of NAIExporterFormatExt structures which describes
+ * Returns a GList of NAIExporterFormatv2 structures which describes
  * the export formats provided by the exporter
  * If the provider only implements the v1 interface, we dynamically
  * allocate a new structure and convert the v1 to the v2.
@@ -126,11 +126,11 @@ exporter_get_formats( const NAIExporter *exporter )
 	if( NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats ){
 		if( version == 1 ){
 #ifdef NA_ENABLE_DEPRECATED
-			const NAIExporterFormat * strv1;
+			const NAIExporterFormat *strv1;
 			strv1 = NA_IEXPORTER_GET_INTERFACE( exporter )->get_formats( exporter );
 			while( strv1->format ){
-				NAIExporterFormatExt *strv2 = g_new0( NAIExporterFormatExt, 1 );
-				strv2->version = 1;
+				NAIExporterFormatv2 *strv2 = g_new0( NAIExporterFormatv2, 1 );
+				strv2->version = 2;
 				strv2->provider = ( NAIExporter * ) exporter;
 				strv2->format = strv1->format;
 				strv2->label = strv1->label;
@@ -202,7 +202,7 @@ NAIOption *
 na_exporter_get_ask_option( void )
 {
 	static const gchar *thisfn = "na_exporter_get_ask_option";
-	NAIExporterFormatExt *str;
+	NAIExporterFormatv2 *str;
 	gint width, height;
 	gchar *fname;
 	NAExportFormat *format;
@@ -211,7 +211,7 @@ na_exporter_get_ask_option( void )
 		width = height = 48;
 	}
 
-	str = g_new0( NAIExporterFormatExt, 1 );
+	str = g_new0( NAIExporterFormatv2, 1 );
 	str->version = 2;
 	str->provider = NULL;
 	str->format = g_strdup( st_format_ask.format );
@@ -265,7 +265,7 @@ na_exporter_to_buffer( const NAPivot *pivot,
 {
 	static const gchar *thisfn = "na_exporter_to_buffer";
 	gchar *buffer;
-	NAIExporterBufferParms parms;
+	NAIExporterBufferParmsv2 parms;
 	NAIExporter *exporter;
 	gchar *name;
 	gchar *msg;
@@ -337,7 +337,7 @@ na_exporter_to_file( const NAPivot *pivot,
 {
 	static const gchar *thisfn = "na_exporter_to_file";
 	gchar *export_uri;
-	NAIExporterFileParms parms;
+	NAIExporterFileParmsv2 parms;
 	NAIExporter *exporter;
 	gchar *msg;
 	gchar *name;
