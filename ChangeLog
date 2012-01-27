@@ -1,5 +1,8 @@
 2012-01-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/reference/nautilus-actions-overrides.txt:
+	(NAIImporterCheckFn, NAIImporterAskUserFn): Mark the typedefs as deprecated.
+
 	* docs/reference/nautilus-actions-docs.xml: Fix typo.
 
 	* src/api/na-iio-provider.h: Update interface description, including the

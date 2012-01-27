@@ -3,6 +3,7 @@
 
 <FUNCTION>
 <NAME>NAIImporterCheckFn</NAME>
+<DEPRECATED/>
 <RETURNS>NAObjectItem *</RETURNS>
  const NAObjectItem *imported
  void *fn_data 
@@ -10,6 +11,7 @@
 
 <FUNCTION>
 <NAME>NAIImporterAskUserFn</NAME>
+<DEPRECATED/>
 <RETURNS>guint</RETURNS>
  const NAObjectItem *imported
  const NAObjectItem *existing
