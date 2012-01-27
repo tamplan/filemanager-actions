@@ -425,8 +425,8 @@ typedef struct {
 }
 	NAIIOProviderInterface;
 
-/* Adding a new status here should imply also adding a new tooltip
- * in na_io_provider_get_readonly_tooltip().
+/* -- adding a new status here should imply also adding a new tooltip
+ * -- in na_io_provider_get_readonly_tooltip().
  */
 /**
  * NAIIOProviderWritabilityStatus:
@@ -464,8 +464,8 @@ typedef enum {
 }
 	NAIIOProviderWritabilityStatus;
 
-/* Adding a new code here should imply also adding a new label
- * in #na_io_provider_get_return_code_label().
+/* -- adding a new code here should imply also adding a new label
+ * -- in #na_io_provider_get_return_code_label().
  */
 /**
  * NAIIOProviderOperationStatus:
@@ -493,7 +493,7 @@ typedef enum {
 
 GType na_iio_provider_get_type    ( void );
 
-/* To be called by the I/O provider when an item has changed
+/* -- to be called by the I/O provider when an item has changed
  */
 void  na_iio_provider_item_changed( const NAIIOProvider *instance );
 

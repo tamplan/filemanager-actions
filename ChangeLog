@@ -1,5 +1,7 @@
 2012-01-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iio-provider.h: better distinguish own internal comments.
+
 	* docs/reference/nautilus-actions-overrides.txt:
 	(NAIImporterCheckFn, NAIImporterAskUserFn): Mark the typedefs as deprecated.
 
