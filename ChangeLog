@@ -1,5 +1,7 @@
 2012-01-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-core-utils.c (na_core_utils_str_subst): Fix description.
+
 	* src/api/na-iexporter.h: Fix NAIExporterFormat description.
 
 	* src/api/na-iexporter.h: Update interface description, including the

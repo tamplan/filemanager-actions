@@ -295,11 +295,11 @@ na_core_utils_str_split_first_word( const gchar *string, gchar **first, gchar **
  * @key: the key string to be substituted.
  * @subst: the string which will replace @key.
  *
- * Returns: a copy of @pattern where the first occurrence of @key has been
+ * Returns:
+ * a copy of @pattern where the first occurrence of @key has been
  * substituted with @subst, as a newly allocated string which should be
- * g_free() by the caller.
- *
- * Returns: a copy of @pattern if @key is not found in @pattern.
+ * g_free() by the caller,
+ * or a copy of @pattern if @key is not found in @pattern.
  */
 gchar *
 na_core_utils_str_subst( const gchar *pattern, const gchar *key, const gchar *subst )
