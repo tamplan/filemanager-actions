@@ -26,12 +26,15 @@
 
     <para>
       On UNIX, &prodname; uses the standard GNU build system,
-      using <application>autoconf</application> for package
+      using <ulink url="http://www.gnu.org/software/autoconf/">
+      <application>autoconf</application></ulink> for package
       configuration and resolving portability issues,
-      <application>automake</application> for building makefiles
+      <ulink url="http://www.gnu.org/software/automake/">
+      <application>automake</application></ulink> for building makefiles
       that comply with the GNU Coding Standards, and
-      <application>libtool</application> for building shared
-      libraries on multiple platforms.  The normal sequence for
+      <ulink url="http://www.gnu.org/software/libtool/">
+      <application>libtool</application></ulink> for building shared
+      libraries on multiple platforms. The normal sequence for
       compiling and installing the &prodname; package is thus:
 
       <literallayout>
@@ -45,7 +48,8 @@
       The standard options provided by <application>GNU
       autoconf</application> may be passed to the
       <command>configure</command> script.  Please see the
-      <application>autoconf</application> documentation or run
+      <ulink url="http://www.gnu.org/software/autoconf/manual/index.html">
+      <application>autoconf</application> documentation</ulink> or run
       <command>./configure --help</command> for information about
       the standard options.
     </para>
@@ -57,7 +61,7 @@
     <para>
       Before you can compile the &prodname; package, you need to have
       various other tools and libraries installed on your
-      system. The two tools needed during the build process (as
+      system. The two main tools needed during the build process (as
       differentiated from the tools used in when creating &prodname;
       mentioned above such as <application>autoconf</application>)
       are <command>pkg-config</command> and GNU make.
