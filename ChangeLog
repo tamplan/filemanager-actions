@@ -1,5 +1,16 @@
 2012-01-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* m4/na-check-for-gdbus.m4: New file.
+
+	* configure.ac: Updated accordingly.
+
+	* src/api/na-dbus.h:
+	* src/plugin-tracker/na-tracker-dbus.xml:
+	* src/utils/nautilus-actions-run.c:
+	Tracker DBus interface is renamed as
+	org.nautilus_actions.DBus.Tracker.Properties1 and versioned according to
+	http://0pointer.de/blog/projects/versioning-dbus.html
+
 	* m4/na-default-io-provider.m4: Talk about items, not just actions.
 
 	* docs/reference/na-compiling.xml: Slightly improve documentation.

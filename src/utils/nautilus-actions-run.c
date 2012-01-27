@@ -284,7 +284,7 @@ targets_from_selection( void )
 	proxy = dbus_g_proxy_new_for_name( connection,
 			NAUTILUS_ACTIONS_DBUS_SERVICE,
 			NAUTILUS_ACTIONS_DBUS_TRACKER_PATH,
-			NAUTILUS_ACTIONS_DBUS_TRACKER_INTERFACE );
+			NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
 
 	if( !proxy ){
 		g_printerr( _( "Error: unable to get a proxy on %s service" ), NAUTILUS_ACTIONS_DBUS_SERVICE );

@@ -43,14 +43,14 @@
  *
  * <note>
  *   <para>
- *    To be really clear, &prodname; relies on &nautilus; being
- *    run at the startup of the session, in order to be able to register
- *    its own D-Bus services via the <emphasis>tracker</emphasis> plugin.
+ *    To be really clear, &prodname; relies on &nautilus; in order
+ *    to be able to register its own D-Bus services via the
+ *    <emphasis>tracker</emphasis> plugin.
  *   </para>
  *   <para>
- *    If &nautilus; is not run at the startup of the session, or the
- *    <emphasis>tracker</emphasis> plugin is not loaded at &nautilus; startup,
- *    then these D-Bus services will not be available.
+ *    If &nautilus; does not run, or the <emphasis>tracker</emphasis>
+ *    plugin is not loaded at &nautilus; startup, then these D-Bus
+ *    services will not be available.
  *   </para>
  * </note>
  */
@@ -62,7 +62,8 @@ G_BEGIN_DECLS
 /**
  * NAUTILUS_ACTIONS_DBUS_SERVICE:
  *
- * This is the name that &prodname; reserves on D-Bus session bus.
+ * This is the &laquo;&nbsp;well-known&nbsp;&raquo; name that
+ * &prodname; reserves on D-Bus session bus.
  */
 #define NAUTILUS_ACTIONS_DBUS_SERVICE            "org.nautilus-actions.DBus"
 
@@ -125,12 +126,12 @@ G_BEGIN_DECLS
 #define NAUTILUS_ACTIONS_DBUS_TRACKER_PATH       "/org/nautilus_actions/DBus/Tracker"
 
 /**
- * NAUTILUS_ACTIONS_DBUS_TRACKER_INTERFACE:
+ * NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE:
  *
  * An interface defined on the <emphasis>tracker</emphasis> object,
  * identified by its %NAUTILUS_ACTIONS_DBUS_TRACKER_PATH D-Bus path.
  */
-#define NAUTILUS_ACTIONS_DBUS_TRACKER_INTERFACE  "org.nautilus_actions.DBus.Tracker.Status"
+#define NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE  	"org.nautilus_actions.DBus.Tracker.Properties1"
 
 G_END_DECLS
 
