@@ -1,5 +1,23 @@
 2012-01-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iexporter.h: Update interface description, including the
+	list of currently allocated export format identifiers.
+
+	* docs/export-format-id: Removed file.
+
+	* docs/Makefile.am: Updated accordingly.
+
+	* src/core/na-export-format.c:
+	* src/core/na-export-format.h (na_export_format_new):
+	* src/core/na-exporter.c:
+	* src/io-desktop/nadp-formats.c:
+	* src/io-desktop/nadp-writer.c:
+	* src/io-desktop/nadp-writer.h:
+	* src/io-xml/naxml-formats.c:
+	* src/io-xml/naxml-writer.c:
+	* src/io-xml/naxml-writer.h:
+	Rename NAIExporterFormatExt structure as NAIExporterFormatv2.
+
 	* docs/reference/nautilus-actions-sections.txt: Update sections.
 
 	* src/api/na-iimporter.h:
