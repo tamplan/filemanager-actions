@@ -1,5 +1,7 @@
 2012-01-27 Pierre Wieser <pwieser@trychlos.org>
 
+	* m4/na-default-io-provider.m4: Talk about items, not just actions.
+
 	* docs/reference/na-compiling.xml: Slightly improve documentation.
 
 	* src/core/na-core-utils.c (na_core_utils_str_subst): Fix description.

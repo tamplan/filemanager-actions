@@ -52,7 +52,7 @@ AC_DEFUN([_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER],[
 ])
 
 AC_DEFUN([_CHECK_FOR_DEFAULT_IO_PROVIDER],[
-	AC_MSG_CHECKING([for default I/O provider on new actions])
+	AC_MSG_CHECKING([for default I/O provider on new items])
 	AC_MSG_RESULT([${with_default_io_provider}])
 	if test "x${with_default_io_provider}" != "xna-gconf"; then
 		if test "x${with_default_io_provider}" != "xna-desktop"; then
