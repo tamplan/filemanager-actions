@@ -1,5 +1,8 @@
 2012-01-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-factory-object.c (na_factory_object_copy):
+	Only copies non-null provider and provider data items.
+
 	* src/plugin-tracker/na-tracker-dbus.xml:
 	Renamed as src/plugin-tracker/na-tracker-dbus-glib.xml.
 

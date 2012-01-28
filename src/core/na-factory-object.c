@@ -407,8 +407,12 @@ na_factory_object_copy( NAIFactoryObject *target, const NAIFactoryObject *source
 		}
 	}
 
-	na_object_set_provider( target, provider );
-	na_object_set_provider_data( target, provider_data );
+	if( provider ){
+		na_object_set_provider( target, provider );
+		if( provider_data ){
+			na_object_set_provider_data( target, provider_data );
+		}
+	}
 
 	v_copy( target, source );
 }
@@ -848,7 +852,7 @@ na_factory_object_set_from_void( NAIFactoryObject *object, const gchar *name, co
 	} else {
 		NADataDef *def = na_factory_object_get_data_def( object, name );
 		if( !def ){
-			g_warning( "%s: unknown NADataDef %s", thisfn, name );
+			g_warning( "%s: unknown NADataDef %s for %s", thisfn, name, G_OBJECT_TYPE_NAME( object ));
 
 		} else {
 			boxed = na_data_boxed_new( def );
