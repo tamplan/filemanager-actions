@@ -270,6 +270,9 @@ typedef struct {
 	 * name of the I/O provider, as a newly allocated string which will be
 	 * g_free() by the caller.
 	 *
+	 * This may be the name of the module itself, but this also may be a
+	 * special name the modules gives to this interface.
+	 *
 	 * Defaults to an empty string.
 	 *
 	 * Since: 2.30

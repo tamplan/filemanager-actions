@@ -428,6 +428,9 @@ typedef struct {
 	 * displayed, as a newly allocated string which will be g_free() by the
 	 * caller.
 	 *
+	 * This may be the name of the module itself, but this also may be a
+	 * special name the modules gives to this interface.
+	 *
 	 * Defaults to a NULL string.
 	 *
 	 * Since: 2.30

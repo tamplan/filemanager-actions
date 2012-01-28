@@ -1,5 +1,8 @@
 2012-01-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/api/na-iexporter.h:
+	* src/api/na-iio-provider.h: Improve interface comments.
+
 	* src/core/na-factory-object.c (na_factory_object_copy):
 	Only copies non-null provider and provider data items.
 
