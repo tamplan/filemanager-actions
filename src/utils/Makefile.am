@@ -70,17 +70,37 @@ nautilus_actions_print_LDADD = \
 	$(NA_UTILS_LDADD)											\
 	$(NULL)
 
-BUILT_SOURCES = \
+BUILT_SOURCES =
+
+if HAVE_GDBUS
+BUILT_SOURCES += \
+	nautilus-actions-run-bindings.c								\
+	nautilus-actions-run-bindings.h								\
+	$(NULL)
+
+nautilus-actions-run-bindings.c nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-gdbus.xml
+	gdbus-codegen \
+		--interface-prefix org.nautilus_actions.DBus.Tracker.	\
+		--generate-c-code nautilus-actions-run-bindings			\
+		--c-namespace NA_Tracker								\
+		--c-generate-object-manager								\
+		$<
+endif
+
+if HAVE_DBUS_GLIB
+BUILT_SOURCES += \
 	nautilus-actions-run-bindings.h								\
 	$(NULL)
 
 nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-dbus.xml
 	dbus-binding-tool --mode=glib-client $< > $@
+endif
 
 nautilus_actions_run_SOURCES = \
 	nautilus-actions-run.c										\
 	console-utils.c												\
 	console-utils.h												\
+	$(BUILT_SOURCES)											\
 	$(NULL)
 
 nautilus_actions_run_LDADD = \

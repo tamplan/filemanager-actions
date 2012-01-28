@@ -32,8 +32,14 @@
 #include <config.h>
 #endif
 
-#include <dbus/dbus-glib.h>
+#ifdef HAVE_GDBUS
+#include <gio/gio.h>
+#include "na-tracker-gdbus.h"
+#else
+# ifdef HAVE_DBUS_GLIB
 #include <dbus/dbus-glib-bindings.h>
+# endif
+#endif
 
 #include <libnautilus-extension/nautilus-extension-types.h>
 #include <libnautilus-extension/nautilus-file-info.h>
@@ -42,7 +48,10 @@
 #include <api/na-dbus.h>
 
 #include "na-tracker.h"
-#include "na-tracker-dbus.h"
+
+#ifdef HAVE_DBUS_GLIB
+#include "na-tracker-dbus-glib.h"
+#endif
 
 /* private class data
  */
@@ -53,22 +62,36 @@ struct _NATrackerClassPrivate {
 /* private instance data
  */
 struct _NATrackerPrivate {
-	gboolean       dispose_has_run;
-	NATrackerDBus *tracker;
+	gboolean                  dispose_has_run;
+#ifdef HAVE_GDBUS
+	guint                     owner_id;	/* the identifier returns by g_bus_own_name */
+	GDBusObjectManagerServer *server;
+#endif
+	GList                    *selected;
 };
 
 static GObjectClass *st_parent_class = NULL;
 static GType         st_module_type = 0;
 
-static void           class_init( NATrackerClass *klass );
-static void           instance_init( GTypeInstance *instance, gpointer klass );
-static NATrackerDBus *initialize_dbus_connection( void );
-static void           instance_dispose( GObject *object );
-static void           instance_finalize( GObject *object );
+static void    class_init( NATrackerClass *klass );
+static void    instance_init( GTypeInstance *instance, gpointer klass );
+static void    initialize_dbus_connection( NATracker *tracker );
+#ifdef HAVE_GDBUS
+static void    on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *tracker );
+static void    on_name_acquired( GDBusConnection *connection, const gchar *name, NATracker *tracker );
+static void    on_name_lost( GDBusConnection *connection, const gchar *name, NATracker *tracker );
+static gboolean on_properties1_get_selected_paths( NATrackerProperties1 *tracker_properties, GDBusMethodInvocation *invocation, NATracker *tracker );
+#endif
+static void    instance_dispose( GObject *object );
+static void    instance_finalize( GObject *object );
 
-static void           menu_provider_iface_init( NautilusMenuProviderIface *iface );
-static GList         *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder );
-static GList         *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
+static void    menu_provider_iface_init( NautilusMenuProviderIface *iface );
+static GList  *menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder );
+static GList  *menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files );
+
+static void    set_uris( NATracker *tracker, GList *files );
+static gchar **get_selected_paths( NATracker *tracker );
+static GList  *free_selected( GList *selected );
 
 GType
 na_tracker_get_type( void )
@@ -138,18 +161,34 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NATrackerPrivate, 1 );
 	self->private->dispose_has_run = FALSE;
-	self->private->tracker = initialize_dbus_connection();
+
+	initialize_dbus_connection( self );
 }
 
 /*
- * initialize the DBus connection at class init time
+ * initialize the DBus connection at instanciation time
  * & instantiate the object which will do effective tracking
  */
-static NATrackerDBus *
-initialize_dbus_connection( void )
+static void
+initialize_dbus_connection( NATracker *tracker )
 {
+#ifdef HAVE_GDBUS
+	NATrackerPrivate *priv = tracker->private;
+
+	priv->owner_id = g_bus_own_name(
+			G_BUS_TYPE_SESSION,
+			NAUTILUS_ACTIONS_DBUS_SERVICE,
+			G_BUS_NAME_OWNER_FLAGS_REPLACE,
+			( GBusAcquiredCallback ) on_bus_acquired,
+			( GBusNameAcquiredCallback ) on_name_acquired,
+			( GBusNameLostCallback ) on_name_lost,
+			tracker,
+			NULL );
+
+#else /* HAVE_GDBUS */
+
+# ifdef HAVE_DBUS_GLIB
 	static const gchar *thisfn = "na_tracker_initialize_dbus_connection";
-	NATrackerDBus *tracker;
 	DBusGConnection *connection;
 	GError *error;
 	DBusGProxy *proxy;
@@ -157,13 +196,12 @@ initialize_dbus_connection( void )
 
 	/* get a connection on session DBus
 	 */
-	tracker = NULL;
 	error = NULL;
 	connection = dbus_g_bus_get( DBUS_BUS_SESSION, &error );
 	if( !connection ){
 		g_warning( "%s: unable to get a connection on session DBus: %s", thisfn, error->message );
 		g_error_free( error );
-		return( NULL );
+		return;
 	}
 	g_debug( "%s: connection is ok", thisfn );
 
@@ -174,7 +212,7 @@ initialize_dbus_connection( void )
 	if( !proxy ){
 		g_warning( "%s: unable to get a proxy for the connection", thisfn );
 		dbus_g_connection_unref( connection );
-		return( NULL );
+		return;
 	}
 	g_debug( "%s: proxy is ok", thisfn );
 
@@ -187,43 +225,132 @@ initialize_dbus_connection( void )
 				thisfn, NAUTILUS_ACTIONS_DBUS_SERVICE, error->message );
 		g_error_free( error );
 		dbus_g_connection_unref( connection );
-		return( NULL );
+		return;
 	}
 	g_debug( "%s: well known name registration is ok", thisfn );
 
 	if( request_name_ret != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER ){
 		g_warning("%s: got result code %u from requesting name (not the primary owner of the name)", thisfn, request_name_ret );
 		dbus_g_connection_unref( connection );
-		return( NULL );
+		return;
 	}
 	g_debug( "%s: primary owner check is ok", thisfn );
 
 	/* allocate the tracking object and register it
 	 * instantiation takes care of installing introspection infos
 	 */
-	tracker = g_object_new( NA_TRACKER_DBUS_TYPE, NULL );
+	dbus_g_object_type_install_info( NA_TYPE_TRACKER, &dbus_glib_na_tracker_dbus_object_info );
 	dbus_g_connection_register_g_object( connection, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH, G_OBJECT( tracker ));
 
 	g_debug( "%s: registering tracker path is ok", thisfn );
-	return( tracker );
+# endif /* HAVE_DBUS_GLIB */
+#endif
 }
+
+#ifdef HAVE_GDBUS
+static void
+on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *tracker )
+{
+	static const gchar *thisfn = "na_tracker_on_bus_acquired";
+	NATrackerObjectSkeleton *tracker_object;
+	NATrackerProperties1 *tracker_properties1;
+
+	/*NATrackerDBus *tracker_object;*/
+
+	g_debug( "%s: connection=%p, name=%s, tracker=%p",
+			thisfn,
+			( void * ) connection,
+			name,
+			( void * ) tracker );
+
+	/* create a new org.freedesktop.DBus.ObjectManager rooted at
+	 *  /org/nautilus_actions/DBus/Tracker
+	 */
+	tracker->private->server = g_dbus_object_manager_server_new( NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
+
+	/* create a new D-Bus object at the path
+	 *  /org/nautilus_actions/DBus/Tracker
+	 *  (which must be same or below than that of object manager server)
+	 */
+	tracker_object = na_tracker_object_skeleton_new( NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
+
+	/* make a newly created object export the interface
+	 *  org.nautilus_actions.DBus.Tracker.Properties1
+	 *  and attach it to the D-Bus object, which takes its own reference on it
+	 */
+	tracker_properties1 = na_tracker_properties1_skeleton_new();
+	na_tracker_object_skeleton_set_properties1( tracker_object, tracker_properties1 );
+	g_object_unref( tracker_properties1 );
+
+	/* handle GetSelectedPaths method invocation on the .Properties1 interface
+	 */
+	g_signal_connect(
+			tracker_properties1,
+			"handle-get-selected-paths",
+			G_CALLBACK( on_properties1_get_selected_paths ),
+			tracker );
+
+	/* last export the DBus object on the object manager server
+	 * (which takes its own reference on it)
+	 */
+	g_dbus_object_manager_server_export( tracker->private->server, G_DBUS_OBJECT_SKELETON( tracker_object ));
+	g_object_unref( tracker_object );
+
+	/* and connect the object manager server to the D-Bus session
+	 */
+	g_dbus_object_manager_server_set_connection( tracker->private->server, connection );
+}
+
+static void
+on_name_acquired( GDBusConnection *connection, const gchar *name, NATracker *tracker )
+{
+	static const gchar *thisfn = "na_tracker_on_name_acquired";
+
+	g_debug( "%s: connection=%p, name=%s, tracker=%p",
+			thisfn,
+			( void * ) connection,
+			name,
+			( void * ) tracker );
+}
+
+static void
+on_name_lost( GDBusConnection *connection, const gchar *name, NATracker *tracker )
+{
+	static const gchar *thisfn = "na_tracker_on_name_lost";
+
+	g_debug( "%s: connection=%p, name=%s, tracker=%p",
+			thisfn,
+			( void * ) connection,
+			name,
+			( void * ) tracker );
+}
+#endif /* HAVE_GDBUS */
 
 static void
 instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "na_tracker_instance_dispose";
-	NATracker *self;
+	NATrackerPrivate *priv;
 
 	g_debug( "%s: object=%p", thisfn, ( void * ) object );
 	g_return_if_fail( NA_IS_TRACKER( object ));
-	self = NA_TRACKER( object );
 
-	if( !self->private->dispose_has_run ){
+	priv = NA_TRACKER( object )->private;
 
-		self->private->dispose_has_run = TRUE;
+	if( !priv->dispose_has_run ){
 
-		g_object_unref( self->private->tracker );
-		self->private->tracker = NULL;
+		priv->dispose_has_run = TRUE;
+
+#ifdef HAVE_GDBUS
+		if( priv->owner_id ){
+			g_bus_unown_name( priv->owner_id );
+		}
+		if( priv->server ){
+			g_object_unref( priv->server );
+		}
+#endif
+
+		priv->selected = free_selected( priv->selected );
 
 		/* chain up to the parent class */
 		if( G_OBJECT_CLASS( st_parent_class )->dispose ){
@@ -259,31 +386,32 @@ menu_provider_iface_init( NautilusMenuProviderIface *iface )
 
 	iface->get_background_items = menu_provider_get_background_items;
 	iface->get_file_items = menu_provider_get_file_items;
-
-#ifdef HAVE_NAUTILUS_MENU_PROVIDER_GET_TOOLBAR_ITEMS
-	iface->get_toolbar_items = NULL;
-#endif
 }
 
 static GList *
 menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *folder )
 {
 	static const gchar *thisfn = "na_tracker_menu_provider_get_background_items";
-	NATracker *self;
+	NATracker *tracker;
 	gchar *uri;
 	GList *selected;
 
-	uri = nautilus_file_info_get_uri( folder );
-	g_debug( "%s: provider=%p, window=%p, folder=%s", thisfn, ( void * ) provider, ( void * ) window, uri );
-	g_free( uri );
-
 	g_return_val_if_fail( NA_IS_TRACKER( provider ), NULL );
-	self = NA_TRACKER( provider );
 
-	if( !self->private->dispose_has_run && self->private->tracker ){
+	tracker = NA_TRACKER( provider );
+
+	if( !tracker->private->dispose_has_run ){
+
+		uri = nautilus_file_info_get_uri( folder );
+		g_debug( "%s: provider=%p, window=%p, folder=%s",
+				thisfn,
+				( void * ) provider,
+				( void * ) window,
+				uri );
+		g_free( uri );
 
 		selected = g_list_prepend( NULL, folder );
-		na_tracker_dbus_set_uris( self->private->tracker, selected );
+		set_uris( tracker, selected );
 		g_list_free( selected );
 	}
 
@@ -300,18 +428,146 @@ static GList *
 menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window, GList *files )
 {
 	static const gchar *thisfn = "na_tracker_menu_provider_get_file_items";
-	NATracker *self;
-
-	g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
-			thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
+	NATracker *tracker;
 
 	g_return_val_if_fail( NA_IS_TRACKER( provider ), NULL );
-	self = NA_TRACKER( provider );
 
-	if( !self->private->dispose_has_run && self->private->tracker ){
+	tracker = NA_TRACKER( provider );
 
-		na_tracker_dbus_set_uris( self->private->tracker, files );
+	if( !tracker->private->dispose_has_run ){
+
+		g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
+				thisfn,
+				( void * ) provider,
+				( void * ) window,
+				( void * ) files, g_list_length( files ));
+
+		set_uris( tracker, files );
 	}
+
+	return( NULL );
+}
+
+/*
+ * set_uris:
+ * @tracker: this #NATracker instance.
+ * @files: the list of currently selected items.
+ *
+ * Maintains our own list of uris.
+ */
+static void
+set_uris( NATracker *tracker, GList *files )
+{
+	NATrackerPrivate *priv;
+
+	priv = tracker->private;
+
+	priv->selected = free_selected( tracker->private->selected );
+	priv->selected = nautilus_file_info_list_copy( files );
+}
+
+#ifdef HAVE_GDBUS
+/*
+ * Returns: %TRUE if the method has been handled.
+ */
+static gboolean
+on_properties1_get_selected_paths( NATrackerProperties1 *tracker_properties, GDBusMethodInvocation *invocation, NATracker *tracker )
+{
+	gchar **paths;
+
+	g_return_val_if_fail( NA_IS_TRACKER( tracker ), FALSE );
+
+	paths = get_selected_paths( tracker );
+
+	na_tracker_properties1_complete_get_selected_paths(
+			tracker_properties,
+			invocation,
+			( const gchar * const * ) paths );
+
+	return( TRUE );
+}
+#endif
+
+#ifdef HAVE_DBUS_GLIB
+/**
+ * na_tracker_get_selected_paths:
+ * @tracker: this #NATracker object.
+ * @paths: the location in which copy the strings to be sent.
+ * @error: the location of a GError.
+ *
+ * Sends on session D-Bus the list of currently selected items, as two
+ * strings for each item :
+ * - the uri
+ * - the mimetype as returned by NautilusFileInfo.
+ *
+ * This is required as some particular items are only known by Nautilus
+ * (e.g. computer), and standard GLib functions are not able to retrieve
+ * their mimetype.
+ *
+ * Exported as GetSelectedPaths method on Tracker.Properties1 interface.
+ *
+ * Returns: %TRUE if the method has been handled.
+ */
+gboolean
+na_tracker_get_selected_paths( NATracker *tracker, char ***paths, GError **error )
+{
+	g_return_val_if_fail( NA_IS_TRACKER( tracker ), FALSE );
+
+	*error = NULL;
+	*paths = get_selected_paths( tracker );
+
+	return( TRUE );
+}
+#endif
+
+/*
+ * get_selected_paths:
+ * @tracker: this #NATracker object.
+ *
+ * Sends on session D-Bus the list of currently selected items, as two
+ * strings for each item :
+ * - the uri
+ * - the mimetype as returned by NautilusFileInfo.
+ *
+ * This is required as some particular items are only known by Nautilus
+ * (e.g. computer), and standard GLib functions are not able to retrieve
+ * their mimetype.
+ *
+ * Exported as GetSelectedPaths method on Tracker.Properties1 interface.
+ */
+static gchar **
+get_selected_paths( NATracker *tracker )
+{
+	static const gchar *thisfn = "na_tracker_get_selected_paths";
+	NATrackerPrivate *priv;
+	gchar **paths;
+	GList *it;
+	int count;
+	gchar **iter;
+
+	paths = NULL;
+	priv = tracker->private;
+
+	g_debug( "%s: tracker=%p", thisfn, ( void * ) tracker );
+
+	count = 2 * g_list_length( priv->selected );
+	paths = ( char ** ) g_new0( gchar *, 1+count );
+	iter = paths;
+
+	for( it = priv->selected ; it ; it = it->next ){
+		*iter = nautilus_file_info_get_uri(( NautilusFileInfo * ) it->data );
+		iter++;
+		*iter = nautilus_file_info_get_mime_type(( NautilusFileInfo * ) it->data );
+		iter++;
+	}
+
+	return( paths );
+}
+
+static GList *
+free_selected( GList *selected )
+{
+	nautilus_file_info_list_free( selected );
 
 	return( NULL );
 }

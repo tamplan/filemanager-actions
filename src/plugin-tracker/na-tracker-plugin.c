@@ -80,7 +80,7 @@ nautilus_module_list_types( const GType **types, int *num_types )
 
 	g_debug( "%s: types=%p, num_types=%p", thisfn, ( void * ) types, ( void * ) num_types );
 
-	type_list[0] = NA_TRACKER_TYPE;
+	type_list[0] = NA_TYPE_TRACKER;
 	*types = type_list;
 	*num_types = 1;
 }

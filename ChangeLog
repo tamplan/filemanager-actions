@@ -1,5 +1,26 @@
 2012-01-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-tracker/na-tracker-gdbus.xml: New file.
+
+	* src/plugin-tracker/Makefile.am: Generate code for GDBus.
+
+	* src/plugin-tracker/na-tracker-dbus.c:
+	* src/plugin-tracker/na-tracker-dbus.h: Removed files.
+
+	* src/plugin-tracker/na-tracker-dbus.xml: Updated accordingly.
+
+	* src/plugin-tracker/na-tracker.c:
+	* src/plugin-tracker/na-tracker.h:
+	Implement GDBus server high-level API.
+	Rename GType macro name.
+
+	* src/plugin-tracker/na-tracker-plugin.c
+	(nautilus_module_list_types): Updated to new GType macro name.
+
+	* src/utils/Makefile.am: Generate code for GDBus.
+
+	* src/utils/nautilus-actions-run.c: Implement GDBus client high-level API.
+
 	* m4/na-check-for-gdbus.m4: Requires GIO 2.30 (GDBusObjectManagerServer).
 
 	* docs/reference/nautilus-actions-sections.txt: Update reference manual.

@@ -250,7 +250,7 @@ get_action( const gchar *id )
 }
 
 /*
- * the DBus.Tracker.Status interface returns a list of strings
+ * the DBus.Tracker.Properties1 interface returns a list of strings
  * where each selected item brings up both its URI and its Nautilus
  * mime type.
  *
@@ -261,17 +261,69 @@ targets_from_selection( void )
 {
 	static const gchar *thisfn = "nautilus_actions_run_targets_from_selection";
 	GList *selection;
-	DBusGConnection *connection;
-	DBusGProxy *proxy;
 	GError *error;
 	gchar **paths;
 
+	g_debug( "%s", thisfn );
+
+	selection = NULL;
 	error = NULL;
-	proxy = NULL;
 	paths = NULL;
 
-	connection = dbus_g_bus_get( DBUS_BUS_SESSION, &error );
+#ifdef HAVE_GDBUS
+	GDBusObjectManager *manager;
+	gchar *name_owner;
+	GDBusObject *object;
+	GDBusInterface *iface;
 
+	manager = na_tracker_object_manager_client_new_for_bus_sync(
+			G_BUS_TYPE_SESSION,
+			G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_NONE,
+			NAUTILUS_ACTIONS_DBUS_SERVICE,
+			NAUTILUS_ACTIONS_DBUS_TRACKER_PATH,
+			NULL,
+			&error );
+
+	if( !manager ){
+		g_printerr( "%s: unable to allocate an ObjectManagerClient: %s", thisfn, error->message );
+		g_error_free( error );
+		return( NULL );
+	}
+
+	name_owner = g_dbus_object_manager_client_get_name_owner( G_DBUS_OBJECT_MANAGER_CLIENT( manager ));
+	g_debug( "%s: name_owner=%s", thisfn, name_owner );
+	g_free( name_owner );
+
+	object = g_dbus_object_manager_get_object( manager, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
+	if( !object ){
+		g_printerr( "%s: unable to get object at %s path", thisfn, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
+		g_object_unref( manager );
+		return( NULL );
+	}
+
+	iface = g_dbus_object_get_interface( object, NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
+	if( !iface ){
+		g_printerr( "%s: unable to get %s interface", thisfn, NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
+		g_object_unref( object );
+		g_object_unref( manager );
+		return( NULL );
+	}
+
+	/* note that @iface is really a GDBusProxy instance
+	 * and additionally also a NATrackerProperties1 instance
+	 */
+	na_tracker_properties1_call_get_selected_paths_sync(
+			NA_TRACKER_PROPERTIES1( iface ),
+			&paths,
+			NULL,
+			&error );
+
+#else
+# ifdef HAVE_DBUS_GLIB
+	DBusGConnection *connection;
+	DBusGProxy *proxy = NULL;
+
+	connection = dbus_g_bus_get( DBUS_BUS_SESSION, &error );
 	if( !connection ){
 		if( error ){
 			g_printerr( _( "Error: unable to get a connection to session DBus: %s" ), error->message );
@@ -305,12 +357,14 @@ targets_from_selection( void )
 	}
 	g_debug( "%s: function call is ok", thisfn );
 
+	/* TODO: unref proxy */
+	dbus_g_connection_unref( connection );
+# endif
+#endif
+
 	selection = get_selection_from_strv(( const gchar ** ) paths, TRUE );
 
 	g_strfreev( paths );
-
-	/* TODO: unref proxy */
-	dbus_g_connection_unref( connection );
 
 	return( selection );
 }

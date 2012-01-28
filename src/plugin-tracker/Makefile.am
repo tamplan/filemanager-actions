@@ -37,19 +37,38 @@ nautilus_extensiondir = $(NAUTILUS_EXTENSIONS_DIR)
 
 nautilus_extension_LTLIBRARIES = libnautilus-actions-tracker.la
 
-BUILT_SOURCES = \
-	na-tracker-dbus-glue.h										\
+BUILT_SOURCES =
+
+if HAVE_GDBUS
+BUILT_SOURCES += \
+	na-tracker-gdbus.c											\
+	na-tracker-gdbus.h											\
 	$(NULL)
 
-na-tracker-dbus-glue.h: na-tracker-dbus.xml
+na-tracker-gdbus.c na-tracker-gdbus.h: na-tracker-gdbus.xml
+	gdbus-codegen \
+		--interface-prefix org.nautilus_actions.DBus.Tracker.	\
+		--generate-c-code na-tracker-gdbus						\
+		--c-namespace NA_Tracker								\
+		--c-generate-object-manager								\
+		--generate-docbook na-tracker-gdbus-docs				\
+		$<
+endif
+
+if HAVE_DBUS_GLIB
+BUILT_SOURCES += \
+	na-tracker-dbus-glib.h										\
+	$(NULL)
+
+na-tracker-dbus-glib.h: na-tracker-dbus.xml
 	dbus-binding-tool --mode=glib-server --prefix=na_tracker_dbus $< > $@
+endif
 
 libnautilus_actions_tracker_la_SOURCES = \
 	na-tracker.c												\
 	na-tracker.h												\
-	na-tracker-dbus.c											\
-	na-tracker-dbus.h											\
 	na-tracker-plugin.c											\
+	$(BUILT_SOURCES)											\
 	$(NULL)
 
 libnautilus_actions_tracker_la_LIBADD = \
@@ -65,6 +84,7 @@ libnautilus_actions_tracker_la_LDFLAGS = \
 
 EXTRA_DIST = \
 	na-tracker-dbus.xml											\
+	na-tracker-gdbus.xml										\
 	$(NULL)
 
 CLEANFILES = \
