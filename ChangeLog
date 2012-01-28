@@ -1,5 +1,7 @@
 2012-01-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* m4/na-check-for-gdbus.m4: Requires GIO 2.30 (GDBusObjectManagerServer).
+
 	* docs/reference/nautilus-actions-sections.txt: Update reference manual.
 
 2012-01-27 Pierre Wieser <pwieser@trychlos.org>

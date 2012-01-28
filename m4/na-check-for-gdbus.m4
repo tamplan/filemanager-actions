@@ -35,13 +35,14 @@ dnl   HAVE_DBUS_GLIB if glib < 2.26 and we have dbus-glib-1
 dnl   HAVE_GDBUS for glib 2.26 and above
 dnl
 dnl pwi 2012-01-27 this M4sh will become useless as soon as we
-dnl                start requiring glib >= 2.26
+dnl                start requiring glib >= 2.30
+dnl                required by GDBusObjectManagerServer
 
 AC_DEFUN([NA_CHECK_FOR_GDBUS],[
 	_na_have_gdbus="no"
 	_na_have_dbus_glib="no"
 	
-	PKG_CHECK_MODULES([GIO],[gio-2.0 >= 2.26],[
+	PKG_CHECK_MODULES([GDBUS],[gio-2.0 >= 2.30],[
 		_na_have_gdbus="yes"
 		],[
 		PKG_CHECK_MODULES([DBUS_GLIB],[dbus-glib-1],[
