@@ -92,7 +92,7 @@ BUILT_SOURCES += \
 	nautilus-actions-run-bindings.h								\
 	$(NULL)
 
-nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-dbus.xml
+nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-dbus-glib.xml
 	dbus-binding-tool --mode=glib-client $< > $@
 endif
 

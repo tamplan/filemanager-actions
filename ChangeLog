@@ -1,5 +1,11 @@
 2012-01-28 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-tracker/na-tracker-dbus.xml:
+	Renamed as src/plugin-tracker/na-tracker-dbus-glib.xml.
+
+	* src/plugin-tracker/Makefile.am:
+	* src/utils/Makefile.am: Updated accordingly.
+
 	* src/plugin-tracker/na-tracker-gdbus.xml: New file.
 
 	* src/plugin-tracker/Makefile.am: Generate code for GDBus.

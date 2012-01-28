@@ -60,7 +60,7 @@ BUILT_SOURCES += \
 	na-tracker-dbus-glib.h										\
 	$(NULL)
 
-na-tracker-dbus-glib.h: na-tracker-dbus.xml
+na-tracker-dbus-glib.h: na-tracker-dbus-glib.xml
 	dbus-binding-tool --mode=glib-server --prefix=na_tracker_dbus $< > $@
 endif
 
@@ -83,7 +83,7 @@ libnautilus_actions_tracker_la_LDFLAGS = \
 	$(NULL)
 
 EXTRA_DIST = \
-	na-tracker-dbus.xml											\
+	na-tracker-dbus-glib.xml									\
 	na-tracker-gdbus.xml										\
 	$(NULL)
 
