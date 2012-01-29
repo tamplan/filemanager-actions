@@ -398,6 +398,9 @@ save_item( BaseWindow *window, NAUpdater *updater, NAObjectItem *item, GSList **
 			if( provider_after != provider_before ){
 				g_signal_emit_by_name( window, MAIN_SIGNAL_ITEM_UPDATED, item, MAIN_DATA_PROVIDER );
 			}
+
+		} else {
+			g_warning( "%s: unable to write item: save_ret=%d", thisfn, save_ret );
 		}
 	}
 

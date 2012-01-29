@@ -1,5 +1,10 @@
 2012-01-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-io-provider.c (na_io_provider_write_item):
+	Reset the NAIOProvider after having wrote the item.
+
+	* src/nact/nact-menubar-file.c (save_item): Warns if an error occurs.
+
 	* src/core/na-icontext.c (is_candidate_for_show_if_registered):
 	Consider having either GDBus or DBus-GLib.
 

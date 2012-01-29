@@ -1250,6 +1250,10 @@ na_io_provider_write_item( const NAIOProvider *provider, const NAObjectItem *ite
 
 	ret = NA_IIO_PROVIDER_GET_INTERFACE( provider->private->provider )->write_item( provider->private->provider, item, messages );
 
+	if( ret == NA_IIO_PROVIDER_CODE_OK ){
+		na_object_set_provider( item, provider );
+	}
+
 	return( ret );
 }
 
