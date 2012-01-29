@@ -1,5 +1,8 @@
 2012-01-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-preferences-editor.c (instance_init):
+	Remove signal connections already done in instance_contructed().
+
 	* src/core/na-io-provider.c (na_io_provider_write_item):
 	Reset the NAIOProvider after having wrote the item.
 

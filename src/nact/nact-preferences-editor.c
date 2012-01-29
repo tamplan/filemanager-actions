@@ -342,24 +342,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 
 	self->private = g_new0( NactPreferencesEditorPrivate, 1 );
 
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_GTK,
-			G_CALLBACK( on_base_initialize_gtk ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_INITIALIZE_WINDOW,
-			G_CALLBACK( on_base_initialize_window ));
-
-	base_window_signal_connect(
-			BASE_WINDOW( instance ),
-			G_OBJECT( instance ),
-			BASE_SIGNAL_SHOW_WIDGETS,
-			G_CALLBACK( on_base_show_widgets));
-
 	self->private->dispose_has_run = FALSE;
 }
 
