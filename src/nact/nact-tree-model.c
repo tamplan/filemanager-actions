@@ -320,6 +320,7 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 	/* create the filter model
 	 */
 	model = g_object_new( NACT_TYPE_TREE_MODEL, "child-model", ts_model, NULL );
+	g_object_unref( ts_model );
 
 	gtk_tree_model_filter_set_visible_func(
 			GTK_TREE_MODEL_FILTER( model ), ( GtkTreeModelFilterVisibleFunc ) filter_visible, model, NULL );
@@ -400,13 +401,22 @@ on_initialize_model( BaseWindow *window, gpointer user_data )
 			/*base_window_signal_connect( window,
 					G_OBJECT( model->private->treeview ), "drag-drop", G_CALLBACK( on_drag_drop ));*/
 
-			base_window_signal_connect( window,
-					G_OBJECT( model->private->treeview ), "drag-end", G_CALLBACK( nact_tree_model_dnd_on_drag_end ));
+			base_window_signal_connect(
+					window,
+					G_OBJECT( model->private->treeview ),
+					"drag-end",
+					G_CALLBACK( nact_tree_model_dnd_on_drag_end ));
 
-			na_settings_register_key_callback( NA_IPREFS_ITEMS_LIST_ORDER_MODE, G_CALLBACK( on_settings_order_mode_changed ), model );
+			na_settings_register_key_callback(
+					NA_IPREFS_ITEMS_LIST_ORDER_MODE,
+					G_CALLBACK( on_settings_order_mode_changed ),
+					model );
 
-			base_window_signal_connect( window,
-					G_OBJECT( window ), TAB_UPDATABLE_SIGNAL_ITEM_UPDATED, G_CALLBACK( on_tab_updatable_item_updated ));
+			base_window_signal_connect(
+					window,
+					G_OBJECT( window ),
+					TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
+					G_CALLBACK( on_tab_updatable_item_updated ));
 		}
 	}
 }
@@ -443,12 +453,11 @@ static void
 on_tab_updatable_item_updated( BaseWindow *window, NAIContext *context, guint data, gpointer user_data )
 {
 	static const gchar *thisfn = "nact_tree_model_on_tab_updatable_item_updated";
-	NactTreeModel *model;
 	GtkTreePath *path;
 	GtkTreeStore *store;
 	GtkTreeIter iter;
 
-	model = NACT_TREE_MODEL( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_MODEL ));
+	WINDOW_MODEL_VOID( window );
 
 	if( !model->private->dispose_has_run ){
 		g_debug( "%s: window=%p, context=%p (%s), data=%u, user_data=%p",

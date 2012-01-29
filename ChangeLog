@@ -1,5 +1,9 @@
 2012-01-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-model.c (nact_tree_model_new): Unref filter model.
+
+	* src/nact/nact-tree-view.c (instance_dispose): Debug NactTreeModel ref count.
+
 	* src/nact/nact-preferences-editor.c (instance_init):
 	Remove signal connections already done in instance_contructed().
 

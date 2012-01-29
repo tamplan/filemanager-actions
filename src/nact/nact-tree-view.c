@@ -54,14 +54,15 @@ struct _NactTreeViewClassPrivate {
 /* private instance data
  */
 struct _NactTreeViewPrivate {
-	gboolean      dispose_has_run;
+	gboolean       dispose_has_run;
 
 	/* properties set at instanciation time
 	 */
-	BaseWindow   *window;
-	GtkContainer *parent;
-	gchar        *widget_name;
-	guint         mode;
+	BaseWindow    *window;
+	GtkContainer  *parent;
+	gchar         *widget_name;
+	guint          mode;
+	gboolean       notify_allowed;
 
 	/* runtime data
 	 *
@@ -81,9 +82,8 @@ struct _NactTreeViewPrivate {
 	 * initialize the view. So force a call to the handler from
 	 * on_base_initialize_view() handler.
 	 */
-	GtkTreeView  *tree_view;
-	gboolean      notify_allowed;
-	gboolean      gtk_initialized;
+	GtkTreeView   *tree_view;
+	gboolean       gtk_initialized;
 };
 
 /* instance properties
@@ -623,6 +623,9 @@ instance_dispose( GObject *object )
 		ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 		gtk_tree_store_clear( ts_model );
 		g_debug( "%s: tree store cleared", thisfn );
+
+		g_debug( "%s: nact_tree_model_ref_count=%d", thisfn, G_OBJECT( model )->ref_count );
+		g_object_unref( model );
 
 		if( self->private->mode == TREE_MODE_EDITION ){
 			nact_tree_ieditable_terminate( NACT_TREE_IEDITABLE( self ));
