@@ -52,9 +52,13 @@ AC_DEFUN([NA_CHECK_FOR_GDBUS],[
 
 	if test "${_na_have_gdbus}" = "yes"; then
 		AC_DEFINE_UNQUOTED([HAVE_GDBUS],[1],[Whether GDbus is available])
+		NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${GDBUS_CFLAGS}"
+		NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${GDBUS_LIBS}"
 	fi
 	if test "${_na_have_dbus_glib}" = "yes"; then
 		AC_DEFINE_UNQUOTED([HAVE_DBUS_GLIB],[1],[Whether Dbus-GLib is available])
+		NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${DBUS_GLIB_CFLAGS}"
+		NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${DBUS_GLIB_LIBS}"
 	fi
 	
 	AM_CONDITIONAL([HAVE_GDBUS],[test "${_na_have_gdbus}" = "yes"])

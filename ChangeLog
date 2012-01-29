@@ -1,3 +1,7 @@
+2012-01-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* m4/na-check-for-gdbus.m4: Setup CFLAGS and LIBS flags.
+
 2012-01-28 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/api/na-iexporter.h:
