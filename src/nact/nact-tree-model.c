@@ -300,6 +300,11 @@ instance_finalize( GObject *object )
  *
  * The returned reference is owned by the #GtkTreeView, which will automatically
  * take care of g_object_unref() its tree model when destroying its widget.
+ *
+ * Called from NactTreeView::initialize_gtk() method
+ *   [..]
+ *     which happens to be eventually called from NactMainWindow::on_initialize_gtk()
+ *     signal handler.
  */
 NactTreeModel *
 nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mode )

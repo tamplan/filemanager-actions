@@ -65,25 +65,8 @@ struct _NactTreeViewPrivate {
 	gboolean       notify_allowed;
 
 	/* runtime data
-	 *
-	 * Rationale:
-	 *
-	 * In Gtk2, we used to nact_tree_view_new() from
-	 * nact_main_window:on_instance_constructed().
-	 * This let us connect to on-base-initialize-gtk signal before it was
-	 * emitted, and so initialize the treeview on the handler.
-	 *
-	 * With Gtk3, we have to wait until the Gtk hierarchy of NactMainWindow
-	 * be actually built in order to be able to access to the embedded
-	 * GtkTreeView. As a consequence, nact_tree_view_new() has to be delayed
-	 * until nact_main_window_on_initialize_gtk().
-	 *
-	 * And so we no more can rely on the on-base-initialize-gtk signal to
-	 * initialize the view. So force a call to the handler from
-	 * on_base_initialize_view() handler.
 	 */
 	GtkTreeView   *tree_view;
-	gboolean       gtk_initialized;
 };
 
 /* instance properties
@@ -141,7 +124,7 @@ static void       instance_constructed( GObject *object );
 static void       instance_dispose( GObject *application );
 static void       instance_finalize( GObject *application );
 
-static void       on_base_initialize_gtk( BaseWindow *window, GtkWindow *toplevel, gpointer user_data );
+static void       initialize_gtk( NactTreeView *view );
 static void       on_base_initialize_view( BaseWindow *window, gpointer user_data );
 static void       on_base_all_widgets_showed( BaseWindow *window, gpointer user_data );
 static gboolean   on_button_press_event( GtkWidget *widget, GdkEventButton *event, BaseWindow *window );
@@ -487,7 +470,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 	self->private = g_new0( NactTreeViewPrivate, 1 );
 
 	self->private->dispose_has_run = FALSE;
-	self->private->gtk_initialized = FALSE;
 }
 
 static void
@@ -599,6 +581,8 @@ instance_constructed( GObject *object )
 				G_CALLBACK( on_base_all_widgets_showed ));
 
 		g_object_set_data( G_OBJECT( priv->window ), WINDOW_DATA_TREE_VIEW, object );
+
+		initialize_gtk( NACT_TREE_VIEW( object ));
 	}
 }
 
@@ -623,9 +607,6 @@ instance_dispose( GObject *object )
 		ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
 		gtk_tree_store_clear( ts_model );
 		g_debug( "%s: tree store cleared", thisfn );
-
-		g_debug( "%s: nact_tree_model_ref_count=%d", thisfn, G_OBJECT( model )->ref_count );
-		g_object_unref( model );
 
 		if( self->private->mode == TREE_MODE_EDITION ){
 			nact_tree_ieditable_terminate( NACT_TREE_IEDITABLE( self ));
@@ -670,6 +651,9 @@ instance_finalize( GObject *instance )
  * Returns: a newly allocated NactTreeView object, which will be owned
  * by the caller. It is useless to unref it as it will automatically
  * auto-destroys itself at @window finalization.
+ *
+ * This function is called from NactMainWindow::on_base_initialize_gtk()
+ * signal handler, thus only once during the application life.
  */
 NactTreeView *
 nact_tree_view_new( BaseWindow *window, GtkContainer *parent, const gchar *treeview_name, NactTreeMode mode )
@@ -692,11 +676,15 @@ nact_tree_view_new( BaseWindow *window, GtkContainer *parent, const gchar *treev
 	return( view );
 }
 
+/*
+ * called from instance_constructed()
+ *   from nact_tree_view_new()
+ *     from NactMainWindow::on_base_initialize_gtk() signal handler
+ */
 static void
-on_base_initialize_gtk( BaseWindow *window, GtkWindow *toplevel, gpointer user_data )
+initialize_gtk( NactTreeView *items_view )
 {
-	static const gchar *thisfn = "nact_tree_view_on_base_initialize_gtk";
-	NactTreeView *items_view;
+	static const gchar *thisfn = "nact_tree_view_initialize_gtk";
 	GtkTreeView *treeview;
 	GtkWidget *label;
 	GtkTreeViewColumn *column;
@@ -704,56 +692,48 @@ on_base_initialize_gtk( BaseWindow *window, GtkWindow *toplevel, gpointer user_d
 	GtkTreeSelection *selection;
 	GList *renderers;
 
-	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
+	g_debug( "%s: items_view=%p", thisfn, ( void * ) items_view );
 
-	if( !items_view->private->dispose_has_run ){
-		g_debug( "%s: window=%p (%s), toplevel=%p (%s), user_data=%p",
-				thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ),
-				( void * ) toplevel, G_OBJECT_TYPE_NAME( toplevel ), ( void * ) user_data );
+	treeview = GTK_TREE_VIEW( get_tree_view( items_view ));
+	nact_tree_model_new( items_view->private->window, treeview, items_view->private->mode );
 
-		treeview = GTK_TREE_VIEW( get_tree_view( items_view ));
-		nact_tree_model_new( window, treeview, items_view->private->mode );
+	/* associates the ItemsView to the label */
+	label = na_gtk_utils_find_widget_by_name( items_view->private->parent, "ActionsListLabel" );
+	gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( treeview ));
 
-		/* associates the ItemsView to the label */
-		label = na_gtk_utils_find_widget_by_name( items_view->private->parent, "ActionsListLabel" );
-		gtk_label_set_mnemonic_widget( GTK_LABEL( label ), GTK_WIDGET( treeview ));
+	/* create visible columns on the tree view
+	 */
+	column = gtk_tree_view_column_new_with_attributes(
+			"icon",
+			gtk_cell_renderer_pixbuf_new(),
+			"pixbuf", TREE_COLUMN_ICON,
+			NULL );
+	gtk_tree_view_append_column( treeview, column );
 
-		/* create visible columns on the tree view
-		 */
-		column = gtk_tree_view_column_new_with_attributes(
-				"icon",
-				gtk_cell_renderer_pixbuf_new(),
-				"pixbuf", TREE_COLUMN_ICON,
-				NULL );
-		gtk_tree_view_append_column( treeview, column );
+	renderer = gtk_cell_renderer_text_new();
+	column = gtk_tree_view_column_new_with_attributes(
+			"label",
+			renderer,
+			"text", TREE_COLUMN_LABEL,
+			NULL );
+	gtk_tree_view_column_set_sort_column_id( column, TREE_COLUMN_LABEL );
+	gtk_tree_view_append_column( treeview, column );
 
-		renderer = gtk_cell_renderer_text_new();
-		column = gtk_tree_view_column_new_with_attributes(
-				"label",
-				renderer,
-				"text", TREE_COLUMN_LABEL,
-				NULL );
-		gtk_tree_view_column_set_sort_column_id( column, TREE_COLUMN_LABEL );
-		gtk_tree_view_append_column( treeview, column );
+	/* allow multiple selection
+	 */
+	selection = gtk_tree_view_get_selection( treeview );
+	gtk_tree_selection_set_mode( selection, GTK_SELECTION_MULTIPLE );
 
-		/* allow multiple selection
-		 */
-		selection = gtk_tree_view_get_selection( treeview );
-		gtk_tree_selection_set_mode( selection, GTK_SELECTION_MULTIPLE );
+	/* misc properties
+	 */
+	gtk_tree_view_set_enable_tree_lines( treeview, TRUE );
 
-		/* misc properties
-		 */
-		gtk_tree_view_set_enable_tree_lines( treeview, TRUE );
-
-		if( items_view->private->mode == TREE_MODE_EDITION ){
-			column = gtk_tree_view_get_column( treeview, TREE_COLUMN_LABEL );
-			renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
-			renderer = GTK_CELL_RENDERER( renderers->data );
-			gtk_tree_view_column_set_cell_data_func(
-					column, renderer, ( GtkTreeCellDataFunc ) display_label, items_view, NULL );
-		}
-
-		items_view->private->gtk_initialized = TRUE;
+	if( items_view->private->mode == TREE_MODE_EDITION ){
+		column = gtk_tree_view_get_column( treeview, TREE_COLUMN_LABEL );
+		renderers = gtk_cell_layout_get_cells( GTK_CELL_LAYOUT( column ));
+		renderer = GTK_CELL_RENDERER( renderers->data );
+		gtk_tree_view_column_set_cell_data_func(
+				column, renderer, ( GtkTreeCellDataFunc ) display_label, items_view, NULL );
 	}
 }
 
@@ -767,26 +747,31 @@ on_base_initialize_view( BaseWindow *window, gpointer user_data )
 
 	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
 
-	if( !items_view->private->gtk_initialized ){
-		on_base_initialize_gtk( window, base_window_get_gtk_toplevel( window ), NULL );
-	}
-
 	if( !items_view->private->dispose_has_run ){
+
 		g_debug( "%s: window=%p (%s), user_data=%p",
-				thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ), ( void * ) user_data );
+				thisfn,
+				( void * ) window, G_OBJECT_TYPE_NAME( window ),
+				( void * ) user_data );
 
 		treeview = GTK_TREE_VIEW( get_tree_view( items_view ));
 		items_view->private->tree_view = treeview;
 
 		/* monitors the selection */
 		selection = gtk_tree_view_get_selection( treeview );
-		base_window_signal_connect( window,
-				G_OBJECT( selection ), "changed", G_CALLBACK( on_selection_changed ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( selection ),
+				"changed",
+				G_CALLBACK( on_selection_changed ));
 
 		/* delay all other signal connections until the widget be realized
 		 */
-		base_window_signal_connect( window,
-				G_OBJECT( treeview ), "realize", G_CALLBACK( on_tree_view_realized ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( treeview ),
+				"realize",
+				G_CALLBACK( on_tree_view_realized ));
 
 		if( items_view->private->mode == TREE_MODE_EDITION ){
 			nact_tree_ieditable_initialize( NACT_TREE_IEDITABLE( items_view ), treeview, window );
@@ -918,19 +903,31 @@ on_tree_view_realized( GtkWidget *treeview, BaseWindow *window )
 	g_debug( "nact_tree_view_on_tree_view_realized" );
 
 	/* expand/collapse with the keyboard */
-	base_window_signal_connect( window,
-			G_OBJECT( treeview ), "key-press-event", G_CALLBACK( on_key_pressed_event ));
+	base_window_signal_connect(
+			window,
+			G_OBJECT( treeview ),
+			"key-press-event",
+			G_CALLBACK( on_key_pressed_event ));
 
 	/* monitors whether the focus is on the view */
-	base_window_signal_connect( window,
-			G_OBJECT( treeview ), "focus-in-event", G_CALLBACK( on_focus_in ));
+	base_window_signal_connect(
+			window,
+			G_OBJECT( treeview ),
+			"focus-in-event",
+			G_CALLBACK( on_focus_in ));
 
-	base_window_signal_connect( window,
-			G_OBJECT( treeview ), "focus-out-event", G_CALLBACK( on_focus_out ));
+	base_window_signal_connect(
+			window,
+			G_OBJECT( treeview ),
+			"focus-out-event",
+			G_CALLBACK( on_focus_out ));
 
 	/* monitors mouse events */
-	base_window_signal_connect( window,
-			G_OBJECT( treeview ), "button-press-event", G_CALLBACK( on_button_press_event ));
+	base_window_signal_connect(
+			window,
+			G_OBJECT( treeview ),
+			"button-press-event",
+			G_CALLBACK( on_button_press_event ));
 
 	/* force the treeview to have the focus at start
 	 * and select the first row if it exists
@@ -1305,7 +1302,9 @@ get_selected_items( NactTreeView *view )
 static GtkWidget *
 get_tree_view( NactTreeView *items_view )
 {
-	return( na_gtk_utils_find_widget_by_name( items_view->private->parent, items_view->private->widget_name ));
+	return( na_gtk_utils_find_widget_by_name(
+			items_view->private->parent,
+			items_view->private->widget_name ));
 }
 
 static void

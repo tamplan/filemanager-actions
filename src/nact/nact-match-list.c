@@ -1067,8 +1067,6 @@ static void
 on_instance_finalized( MatchListData *data, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_match_list_on_instance_finalized";
-	GtkTreeModel *model;
-	GtkTreeSelection *selection;
 
 	g_return_if_fail( data != NULL );
 
@@ -1079,10 +1077,16 @@ on_instance_finalized( MatchListData *data, BaseWindow *window )
 
 	g_object_set_data( G_OBJECT( window ), data->tab_name, NULL );
 
-	model = gtk_tree_view_get_model( data->listview );
-	selection = gtk_tree_view_get_selection( data->listview );
+	/* This function is called when the NactMainWindow is about to be finalized.
+	 * At this time, the NactTreeModel has already been finalized.
+	 * It is so too late to try to clear it...
+	 */
+#if 0
+	GtkTreeModel *model = gtk_tree_view_get_model( data->listview );
+	GtkTreeSelection *selection = gtk_tree_view_get_selection( data->listview );
 	gtk_tree_selection_unselect_all( selection );
 	gtk_list_store_clear( GTK_LIST_STORE( model ));
+#endif
 
 	g_free( data->tab_name );
 	g_free( data->item_header );

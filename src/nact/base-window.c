@@ -63,6 +63,7 @@ struct _BaseWindowPrivate {
 	gboolean         has_own_builder;
 	gchar           *toplevel_name;
 	gchar           *wsp_name;
+	gboolean         destroy_on_dispose;
 
 	/* internals
 	 */
@@ -83,6 +84,7 @@ enum {
 	BASE_PROP_HAS_OWN_BUILDER_ID,
 	BASE_PROP_TOPLEVEL_NAME_ID,
 	BASE_PROP_WSP_NAME_ID,
+	BASE_PROP_DESTROY_ON_DISPOSE_ID,
 
 	BASE_PROP_N_PROPERTIES
 };
@@ -243,6 +245,14 @@ class_init( BaseWindowClass *klass )
 					"",
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
+	g_object_class_install_property( object_class, BASE_PROP_DESTROY_ON_DISPOSE_ID,
+			g_param_spec_boolean(
+					BASE_PROP_DESTROY_ON_DISPOSE,
+					_( "Destroy the Gtk toplevel" ),
+					_( "Whether the embedded Gtk Toplevel should be destroyed at dispose time" ),
+					FALSE,
+					G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
 	klass->private = g_new0( BaseWindowClassPrivate, 1 );
 
 	klass->private->builder = base_builder_new();
@@ -393,6 +403,10 @@ instance_get_property( GObject *object, guint property_id, GValue *value, GParam
 				g_value_set_string( value, self->private->wsp_name );
 				break;
 
+			case BASE_PROP_DESTROY_ON_DISPOSE_ID:
+				g_value_set_boolean( value, self->private->destroy_on_dispose );
+				break;
+
 			default:
 				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
 				break;
@@ -436,6 +450,10 @@ instance_set_property( GObject *object, guint property_id, const GValue *value, 
 			case BASE_PROP_WSP_NAME_ID:
 				g_free( self->private->wsp_name );
 				self->private->wsp_name = g_value_dup_string( value );
+				break;
+
+			case BASE_PROP_DESTROY_ON_DISPOSE_ID:
+				self->private->destroy_on_dispose = g_value_get_boolean( value );
 				break;
 
 			default:
@@ -519,6 +537,12 @@ instance_dispose( GObject *window )
 			g_free( str );
 		}
 		g_list_free( priv->signals );
+
+		/* at least the main window should have this property set
+		 */
+		if( priv->destroy_on_dispose ){
+			gtk_widget_destroy( GTK_WIDGET( priv->gtk_toplevel ));
+		}
 
 #if 0
 		if( is_main_window( BASE_WINDOW( window ))){

@@ -787,10 +787,11 @@ nact_main_window_new( const NactApplication *application )
 	g_return_val_if_fail( NACT_IS_APPLICATION( application ), NULL );
 
 	window = g_object_new( NACT_TYPE_MAIN_WINDOW,
-			BASE_PROP_APPLICATION,    application,
-			BASE_PROP_XMLUI_FILENAME, st_xmlui_filename,
-			BASE_PROP_TOPLEVEL_NAME,  st_toplevel_name,
-			BASE_PROP_WSP_NAME,       st_wsp_name,
+			BASE_PROP_APPLICATION,        application,
+			BASE_PROP_XMLUI_FILENAME,     st_xmlui_filename,
+			BASE_PROP_TOPLEVEL_NAME,      st_toplevel_name,
+			BASE_PROP_WSP_NAME,           st_wsp_name,
+			BASE_PROP_DESTROY_ON_DISPOSE, TRUE,
 			NULL );
 
 	if( !base_window_init( BASE_WINDOW( window ))){

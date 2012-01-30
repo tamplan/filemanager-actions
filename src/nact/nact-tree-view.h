@@ -38,6 +38,14 @@
  * @include: nact-tree-view.h
  *
  * This is a convenience class to manage a read-only items tree view.
+ *
+ * The NactTreeView encapsulates the GtkTreeView which displays the items
+ * list on the left of the main pane.
+ *
+ * It is instanciated from NactMainWindow::on_initialize_gtk().
+ *
+ * A pointer to this NactTreeView is attached to the NactMainWindow at
+ * construction time.
  */
 
 #include <api/na-object-item.h>

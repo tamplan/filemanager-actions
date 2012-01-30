@@ -189,6 +189,7 @@ typedef struct {
 #define BASE_PROP_HAS_OWN_BUILDER				"base-prop-window-has-own-builder"
 #define BASE_PROP_TOPLEVEL_NAME					"base-prop-window-toplevel-name"
 #define BASE_PROP_WSP_NAME						"base-prop-window-wsp-name"
+#define BASE_PROP_DESTROY_ON_DISPOSE			"base-prop-window-destroy-on-dispose"
 
 /**
  * Signals defined by the BaseWindow class.
