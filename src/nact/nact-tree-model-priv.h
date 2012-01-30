@@ -62,15 +62,6 @@ struct _NactTreeModelPrivate {
 	gboolean       drag_drop;			/* defined for on_drag_motion handler */
 };
 
-/* the NactTreeModel is attached to the BaseWindow which embeds the NactTreeView
- */
-#define WINDOW_DATA_TREE_MODEL			"window-data-tree-model"
-
-#define WINDOW_MODEL_VOID( window ) \
-	g_return_if_fail( BASE_IS_WINDOW( window )); \
-	NactTreeModel *model = ( NactTreeModel * ) g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_MODEL ); \
-	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
-
 #define TREE_MODEL_STATUSBAR_CONTEXT	"nact-tree-model-statusbar-context"
 
 gboolean       nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, GtkTreePath *dest, GtkSelectionData  *selection_data );

@@ -126,7 +126,7 @@ enum {
 
 /**
  * The NactTreeView is attached to the parent BaseWindow via a GObject data.
- * Only NactTreeIEditable interface should use it.
+ * Only NactTreeView itself and NactTreeIEditable interface should use it.
  */
 #define WINDOW_DATA_TREE_VIEW					"window-data-tree-view"
 

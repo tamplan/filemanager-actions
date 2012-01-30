@@ -107,7 +107,7 @@ static GtkTargetEntry dnd_source_formats[] = {
  * - of course, the same special XdndNautilusAction format for internal move/copy
  * - a list of uris, to be imported
  * - a XML buffer, to be imported
- * - a plain text, which we are goint to try to import as a XML description
+ * - a plain text, which we are going to try to import as a XML description
  */
 GtkTargetEntry tree_model_dnd_dest_formats[] = {
 	{ "XdndNautilusActions", 0, NACT_XCHANGE_FORMAT_NACT },
@@ -140,8 +140,9 @@ static guint         target_atom_to_id( GdkAtom atom );
  * @dest:
  * @selection_data:
  *
- * Called when a drop from the outside occurs in the treeview;
- * this may be an import action, or a move/copy inside of the tree.
+ * Called when a drop occurs in the treeview;
+ * this may be an import action from the outside world, or a move/copy
+ * inside of the tree.
  *
  * Returns: %TRUE if the specified rows were successfully inserted at
  * the given dest, %FALSE else.
@@ -161,6 +162,7 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 {
 	static const gchar *thisfn = "nact_tree_model_dnd_idrag_dest_drag_data_received";
 	gboolean result = FALSE;
+	NactTreeModel *model;
 	gchar *atom_name;
 	guint info;
 	gchar *path_str;
@@ -170,49 +172,59 @@ nact_tree_model_dnd_idrag_dest_drag_data_received( GtkTreeDragDest *drag_dest, G
 	gint selection_data_format;
 	gint selection_data_length;
 
-	g_debug( "%s: drag_dest=%p, dest=%p, selection_data=%p", thisfn, ( void * ) drag_dest, ( void * ) dest, ( void * ) selection_data );
-	g_return_val_if_fail( NACT_IS_TREE_MODEL( drag_dest ), FALSE );
+	g_return_val_if_fail( NACT_IS_TREE_MODEL( drag_dest ), result );
 
-	selection_data_selection = gtk_selection_data_get_selection( selection_data );
-	atom_name = gdk_atom_name( selection_data_selection );
-	g_debug( "%s: selection=%s", thisfn, atom_name );
-	g_free( atom_name );
+	model = NACT_TREE_MODEL( drag_dest );
 
-	selection_data_target = gtk_selection_data_get_target( selection_data );
-	atom_name = gdk_atom_name( selection_data_target );
-	g_debug( "%s: target=%s", thisfn, atom_name );
-	g_free( atom_name );
+	if( !model->private->dispose_has_run ){
 
-	selection_data_type = gtk_selection_data_get_data_type( selection_data );
-	atom_name = gdk_atom_name( selection_data_type );
-	g_debug( "%s: type=%s", thisfn, atom_name );
-	g_free( atom_name );
+		g_debug( "%s: drag_dest=%p (ref_count=%d), dest=%p, selection_data=%p",
+				thisfn,
+				( void * ) drag_dest, G_OBJECT( drag_dest )->ref_count,
+				( void * ) dest,
+				( void * ) selection_data );
 
-	selection_data_format = gtk_selection_data_get_format( selection_data );
-	selection_data_length = gtk_selection_data_get_length( selection_data );
-	g_debug( "%s: format=%d, length=%d", thisfn, selection_data_format, selection_data_length );
+		selection_data_selection = gtk_selection_data_get_selection( selection_data );
+		atom_name = gdk_atom_name( selection_data_selection );
+		g_debug( "%s: selection=%s", thisfn, atom_name );
+		g_free( atom_name );
 
-	info = target_atom_to_id( selection_data_type );
-	g_debug( "%s: info=%u", thisfn, info );
+		selection_data_target = gtk_selection_data_get_target( selection_data );
+		atom_name = gdk_atom_name( selection_data_target );
+		g_debug( "%s: target=%s", thisfn, atom_name );
+		g_free( atom_name );
 
-	path_str = gtk_tree_path_to_string( dest );
-	g_debug( "%s: dest_path=%s", thisfn, path_str );
-	g_free( path_str );
+		selection_data_type = gtk_selection_data_get_data_type( selection_data );
+		atom_name = gdk_atom_name( selection_data_type );
+		g_debug( "%s: type=%s", thisfn, atom_name );
+		g_free( atom_name );
 
-	switch( info ){
-		case NACT_XCHANGE_FORMAT_NACT:
-			result = drop_inside( NACT_TREE_MODEL( drag_dest ), dest, selection_data );
-			break;
+		selection_data_format = gtk_selection_data_get_format( selection_data );
+		selection_data_length = gtk_selection_data_get_length( selection_data );
+		g_debug( "%s: format=%d, length=%d", thisfn, selection_data_format, selection_data_length );
 
-		/* drop some actions from outside
-		 * most probably from the file manager as a list of uris
-		 */
-		case NACT_XCHANGE_FORMAT_URI_LIST:
-			result = drop_uri_list( NACT_TREE_MODEL( drag_dest ), dest, selection_data );
-			break;
+		info = target_atom_to_id( selection_data_type );
+		g_debug( "%s: info=%u", thisfn, info );
 
-		default:
-			break;
+		path_str = gtk_tree_path_to_string( dest );
+		g_debug( "%s: dest_path=%s", thisfn, path_str );
+		g_free( path_str );
+
+		switch( info ){
+			case NACT_XCHANGE_FORMAT_NACT:
+				result = drop_inside( model, dest, selection_data );
+				break;
+
+			/* drop some actions from outside
+			 * most probably from the file manager as a list of uris
+			 */
+			case NACT_XCHANGE_FORMAT_URI_LIST:
+				result = drop_uri_list( model, dest, selection_data );
+				break;
+
+			default:
+				break;
+		}
 	}
 
 	return( result );
@@ -302,9 +314,13 @@ nact_tree_model_dnd_imulti_drag_source_drag_data_get( EggTreeMultiDragSource *dr
 #endif
 
 	atom_name = gdk_atom_name( selection_data_target );
-	g_debug( "%s: drag_source=%p, context=%p, suggested action=%d, selection_data=%p, rows=%p (count=%d), atom=%s",
-			thisfn, ( void * ) drag_source, ( void * ) context, ( int ) context_suggested_action,
-			( void * ) selection_data, ( void * ) rows, g_list_length( rows ),
+	g_debug( "%s: drag_source=%p (ref_count=%d), context=%p, suggested action=%d, selection_data=%p, rows=%p (count=%d), atom=%s",
+			thisfn,
+			( void * ) drag_source, G_OBJECT( drag_source )->ref_count,
+			( void * ) context,
+			( int ) context_suggested_action,
+			( void * ) selection_data,
+			( void * ) rows, g_list_length( rows ),
 			atom_name );
 	g_free( atom_name );
 
@@ -421,8 +437,10 @@ nact_tree_model_dnd_imulti_drag_source_row_draggable( EggTreeMultiDragSource *dr
 	NAObject *object;
 	GList *it;
 
-	g_debug( "%s: drag_source=%p, rows=%p (%d items)",
-			thisfn, ( void * ) drag_source, ( void * ) rows, g_list_length( rows ));
+	g_debug( "%s: drag_source=%p (ref_count=%d), rows=%p (%d items)",
+			thisfn,
+			( void * ) drag_source, G_OBJECT( drag_source )->ref_count,
+			( void * ) rows, g_list_length( rows ));
 
 	g_return_val_if_fail( NACT_IS_TREE_MODEL( drag_source ), FALSE );
 	model = NACT_TREE_MODEL( drag_source );
@@ -466,13 +484,18 @@ nact_tree_model_dnd_on_drag_begin( GtkWidget *widget, GdkDragContext *context, B
 	NactTreeModel *model;
 	GdkWindow *context_source_window;
 
-	g_debug( "%s: widget=%p, context=%p, window=%p",
-			thisfn, ( void * ) widget, ( void * ) context, ( void * ) window );
-
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
+	g_return_if_fail( GTK_IS_TREE_VIEW( widget ));
+	model = ( NactTreeModel * ) gtk_tree_view_get_model( GTK_TREE_VIEW( widget ));
 	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
 
 	if( !model->private->dispose_has_run ){
+
+		g_debug( "%s: widget=%p, context=%p, window=%p, model=%p (ref_count=%d)",
+				thisfn,
+				( void * ) widget,
+				( void * ) context,
+				( void * ) window,
+				( void * ) model, G_OBJECT( model )->ref_count );
 
 		model->private->drag_highlight = FALSE;
 		model->private->drag_drop = FALSE;
@@ -504,13 +527,18 @@ nact_tree_model_dnd_on_drag_end( GtkWidget *widget, GdkDragContext *context, Bas
 	NactTreeModel *model;
 	GdkWindow *context_source_window;
 
-	g_debug( "%s: widget=%p, context=%p, window=%p",
-			thisfn, ( void * ) widget, ( void * ) context, ( void * ) window );
-
-	model = NACT_TREE_MODEL( gtk_tree_view_get_model( GTK_TREE_VIEW( widget )));
+	g_return_if_fail( GTK_IS_TREE_VIEW( widget ));
+	model = ( NactTreeModel * ) gtk_tree_view_get_model( GTK_TREE_VIEW( widget ));
 	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
 
 	if( !model->private->dispose_has_run ){
+
+		g_debug( "%s: widget=%p, context=%p, window=%p, model=%p (ref_count=%d)",
+				thisfn,
+				( void * ) widget,
+				( void * ) context,
+				( void * ) window,
+				( void * ) model, G_OBJECT( model )->ref_count );
 
 		nact_clipboard_dnd_drag_end( model->private->clipboard );
 		nact_clipboard_dnd_clear( model->private->clipboard );

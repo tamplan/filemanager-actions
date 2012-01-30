@@ -591,8 +591,6 @@ instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "nact_tree_view_instance_dispose";
 	NactTreeView *self;
-	NactTreeModel *model;
-	GtkTreeStore *ts_model;
 
 	g_return_if_fail( NACT_IS_TREE_VIEW( object ));
 
@@ -602,11 +600,6 @@ instance_dispose( GObject *object )
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
-
-		model = NACT_TREE_MODEL( gtk_tree_view_get_model( self->private->tree_view ));
-		ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( model )));
-		gtk_tree_store_clear( ts_model );
-		g_debug( "%s: tree store cleared", thisfn );
 
 		if( self->private->mode == TREE_MODE_EDITION ){
 			nact_tree_ieditable_terminate( NACT_TREE_IEDITABLE( self ));
@@ -686,6 +679,7 @@ initialize_gtk( NactTreeView *items_view )
 {
 	static const gchar *thisfn = "nact_tree_view_initialize_gtk";
 	GtkTreeView *treeview;
+	NactTreeModel *model;
 	GtkWidget *label;
 	GtkTreeViewColumn *column;
 	GtkCellRenderer *renderer;
@@ -695,7 +689,10 @@ initialize_gtk( NactTreeView *items_view )
 	g_debug( "%s: items_view=%p", thisfn, ( void * ) items_view );
 
 	treeview = GTK_TREE_VIEW( get_tree_view( items_view ));
-	nact_tree_model_new( items_view->private->window, treeview, items_view->private->mode );
+	model = nact_tree_model_new( items_view->private->window, treeview, items_view->private->mode );
+	gtk_tree_view_set_model( treeview, GTK_TREE_MODEL( model ));
+	g_object_unref( model );
+	g_debug( "%s: nact_tree_model_ref_count=%d", thisfn, G_OBJECT( model )->ref_count );
 
 	/* associates the ItemsView to the label */
 	label = na_gtk_utils_find_widget_by_name( items_view->private->parent, "ActionsListLabel" );
@@ -962,6 +959,7 @@ nact_tree_view_fill( NactTreeView *view, GList *items )
 		view->private->notify_allowed = FALSE;
 		model = NACT_TREE_MODEL( gtk_tree_view_get_model( view->private->tree_view ));
 		nact_tree_model_fill( model, items );
+		g_debug( "%s: nact_tree_model_ref_count=%d", thisfn, G_OBJECT( model )->ref_count );
 
 		view->private->notify_allowed = TRUE;
 		na_object_count_items( items, &nb_menus, &nb_actions, &nb_profiles );

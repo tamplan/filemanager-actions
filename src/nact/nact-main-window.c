@@ -174,9 +174,9 @@ static void       iproperties_tab_iface_init( NactIPropertiesTabInterface *iface
 static void       instance_init( GTypeInstance *instance, gpointer klass );
 static void       instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
 static void       instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
-static void       instance_constructed( GObject *application );
-static void       instance_dispose( GObject *application );
-static void       instance_finalize( GObject *application );
+static void       instance_constructed( GObject *window );
+static void       instance_dispose( GObject *window );
+static void       instance_finalize( GObject *window );
 
 static void       on_base_initialize_gtk( NactMainWindow *window, GtkWindow *toplevel, gpointer user_data );
 static void       on_base_initialize_window( NactMainWindow *window, gpointer user_data );

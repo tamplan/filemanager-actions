@@ -32,6 +32,7 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
 #include <string.h>
 
 #include <api/na-object-api.h>
@@ -49,6 +50,21 @@
  */
 struct _NactTreeModelClassPrivate {
 	void *empty;						/* so that gcc -pedantic is happy */
+};
+
+/* instance properties
+ */
+#define TREE_PROP_TREEVIEW				"tree-prop-treeview"
+#define TREE_PROP_MODE					"tree-prop-mode"
+
+enum {
+	TREE_PROP_0,
+
+	TREE_PROP_WINDOW_ID,
+	TREE_PROP_TREEVIEW_ID,
+	TREE_PROP_MODE_ID,
+
+	TREE_PROP_N_PROPERTIES
 };
 
 /* iter on tree store
@@ -107,12 +123,14 @@ static void     class_init( NactTreeModelClass *klass );
 static void     imulti_drag_source_init( EggTreeMultiDragSourceIface *iface, void *user_data );
 static void     idrag_dest_init( GtkTreeDragDestIface *iface, void *user_data );
 static void     instance_init( GTypeInstance *instance, gpointer klass );
+static void     instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec );
+static void     instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec );
+static void     instance_constructed( GObject *model );
 static void     instance_dispose( GObject *model );
 static void     instance_finalize( GObject *model );
 
-static void     on_initialize_model( BaseWindow *window, gpointer user_data );
 static void     on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpointer new_value, gboolean mandatory, NactTreeModel *model );
-static void     on_tab_updatable_item_updated( BaseWindow *window, NAIContext *context, guint data, gpointer user_data );
+static void     on_tab_updatable_item_updated( BaseWindow *window, NAIContext *context, guint data, NactTreeModel *model );
 
 static void     append_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *parent, GtkTreeIter *iter, const NAObject *object );
 static void     display_item( GtkTreeStore *model, GtkTreeView *treeview, GtkTreeIter *iter, const NAObject *object );
@@ -196,8 +214,33 @@ class_init( NactTreeModelClass *klass )
 	st_parent_class = g_type_class_peek_parent( klass );
 
 	object_class = G_OBJECT_CLASS( klass );
+	object_class->get_property = instance_get_property;
+	object_class->set_property = instance_set_property;
+	object_class->constructed = instance_constructed;
 	object_class->dispose = instance_dispose;
 	object_class->finalize = instance_finalize;
+
+	g_object_class_install_property( object_class, TREE_PROP_WINDOW_ID,
+			g_param_spec_pointer(
+					TREE_PROP_WINDOW,
+					_( "Parent BaseWindow" ),
+					_( "A pointer (not a reference) to the BaseWindow parent of thE embedding treeview" ),
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, TREE_PROP_TREEVIEW_ID,
+			g_param_spec_pointer(
+					TREE_PROP_TREEVIEW,
+					_( "Embedding GtkTreeView" ),
+					_( "The GtkTreeView which relies on this NactTreeModel" ),
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
+
+	g_object_class_install_property( object_class, TREE_PROP_MODE_ID,
+			g_param_spec_uint(
+					TREE_PROP_MODE,
+					_( "Edition mode" ),
+					_( "Edition vs. Selection mode" ),
+					0, TREE_MODE_N_MODES, 0,
+					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	klass->private = g_new0( NactTreeModelClassPrivate, 1 );
 }
@@ -247,10 +290,149 @@ instance_init( GTypeInstance *instance, gpointer klass )
 }
 
 static void
+instance_get_property( GObject *object, guint property_id, GValue *value, GParamSpec *spec )
+{
+	NactTreeModel *self;
+
+	g_return_if_fail( NACT_IS_TREE_MODEL( object ));
+	self = NACT_TREE_MODEL( object );
+
+	if( !self->private->dispose_has_run ){
+
+		switch( property_id ){
+			case TREE_PROP_WINDOW_ID:
+				g_value_set_pointer( value, self->private->window );
+				break;
+
+			case TREE_PROP_TREEVIEW_ID:
+				g_value_set_pointer( value, self->private->treeview );
+				break;
+
+			case TREE_PROP_MODE_ID:
+				g_value_set_uint( value, self->private->mode );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
+	}
+}
+
+static void
+instance_set_property( GObject *object, guint property_id, const GValue *value, GParamSpec *spec )
+{
+	NactTreeModel *self;
+
+	g_return_if_fail( NACT_IS_TREE_MODEL( object ));
+	self = NACT_TREE_MODEL( object );
+
+	if( !self->private->dispose_has_run ){
+
+		switch( property_id ){
+			case TREE_PROP_WINDOW_ID:
+				self->private->window = g_value_get_pointer( value );
+				break;
+
+			case TREE_PROP_TREEVIEW_ID:
+				self->private->treeview = g_value_get_pointer( value );
+				break;
+
+			case TREE_PROP_MODE_ID:
+				self->private->mode = g_value_get_uint( value );
+				break;
+
+			default:
+				G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, spec );
+				break;
+		}
+	}
+}
+
+/*
+ * Initializes the tree model.
+ *
+ * We use drag and drop:
+ * - inside of treeview, for duplicating items, or moving items between menus
+ * - from treeview to the outside world (e.g. Nautilus) to export actions
+ * - from outside world (e.g. Nautilus) to import actions
+ */
+static void
+instance_constructed( GObject *model )
+{
+	static const gchar *thisfn = "nact_tree_model_instance_constructed";
+	NactTreeModelPrivate *priv;
+
+	g_return_if_fail( NACT_IS_TREE_MODEL( model ));
+
+	priv = NACT_TREE_MODEL( model )->private;
+
+	if( !priv->dispose_has_run ){
+
+		/* chain up to the parent class */
+		if( G_OBJECT_CLASS( st_parent_class )->constructed ){
+			G_OBJECT_CLASS( st_parent_class )->constructed( model );
+		}
+
+		g_debug( "%s: model=%p (%s)", thisfn, ( void * ) model, G_OBJECT_TYPE_NAME( model ));
+
+		priv->clipboard = nact_clipboard_new( priv->window );
+
+		if( priv->mode == TREE_MODE_EDITION ){
+
+			egg_tree_multi_drag_add_drag_support(
+					EGG_TREE_MULTI_DRAG_SOURCE( model ),
+					priv->treeview );
+
+			gtk_tree_view_enable_model_drag_dest(
+					priv->treeview,
+					tree_model_dnd_dest_formats,
+					tree_model_dnd_dest_formats_count,
+					nact_tree_model_dnd_imulti_drag_source_get_drag_actions( EGG_TREE_MULTI_DRAG_SOURCE( model )));
+
+			base_window_signal_connect(
+					priv->window,
+					G_OBJECT( priv->treeview ),
+					"drag-begin",
+					G_CALLBACK( nact_tree_model_dnd_on_drag_begin ));
+
+			/* connect: implies that we have to do all hard stuff
+			 * connect_after: no more triggers drag-drop signal
+			 */
+			/*base_window_signal_connect_after( window,
+					G_OBJECT( model->private->treeview ), "drag-motion", G_CALLBACK( on_drag_motion ));*/
+
+			/*base_window_signal_connect( window,
+					G_OBJECT( model->private->treeview ), "drag-drop", G_CALLBACK( on_drag_drop ));*/
+
+			base_window_signal_connect(
+					priv->window,
+					G_OBJECT( priv->treeview ),
+					"drag-end",
+					G_CALLBACK( nact_tree_model_dnd_on_drag_end ));
+
+			na_settings_register_key_callback(
+					NA_IPREFS_ITEMS_LIST_ORDER_MODE,
+					G_CALLBACK( on_settings_order_mode_changed ),
+					model );
+
+			base_window_signal_connect_with_data(
+					priv->window,
+					G_OBJECT( priv->window ),
+					TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
+					G_CALLBACK( on_tab_updatable_item_updated ),
+					model );
+		}
+
+	}
+}
+
+static void
 instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "nact_tree_model_instance_dispose";
 	NactTreeModel *self;
+	GtkTreeStore *ts_model;
 
 	g_return_if_fail( NACT_IS_TREE_MODEL( object ));
 
@@ -260,6 +442,10 @@ instance_dispose( GObject *object )
 		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
+
+		ts_model = GTK_TREE_STORE( gtk_tree_model_filter_get_model( GTK_TREE_MODEL_FILTER( self )));
+		gtk_tree_store_clear( ts_model );
+		g_debug( "%s: tree store cleared", thisfn );
 
 		g_object_unref( self->private->clipboard );
 
@@ -324,7 +510,12 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 
 	/* create the filter model
 	 */
-	model = g_object_new( NACT_TYPE_TREE_MODEL, "child-model", ts_model, NULL );
+	model = g_object_new( NACT_TYPE_TREE_MODEL,
+			"child-model",      ts_model,
+			TREE_PROP_WINDOW,   window,
+			TREE_PROP_TREEVIEW, treeview,
+			TREE_PROP_MODE,     mode,
+			NULL );
 	g_object_unref( ts_model );
 
 	gtk_tree_model_filter_set_visible_func(
@@ -335,95 +526,7 @@ nact_tree_model_new( BaseWindow *window, GtkTreeView *treeview, NactTreeMode mod
 	order_mode = na_iprefs_get_order_mode( NULL );
 	display_order_change( model, order_mode );
 
-	/* setup instanciation time data
-	 */
-	model->private->window = window;
-	model->private->treeview = treeview;
-	model->private->mode = mode;
-	model->private->clipboard = nact_clipboard_new( window );
-
-	g_object_set_data( G_OBJECT( window ), WINDOW_DATA_TREE_MODEL, model );
-
-	/* attach the model to the tree view
-	 */
-	gtk_tree_view_set_model( treeview, GTK_TREE_MODEL( model ));
-	g_object_unref( model );
-
-	/* This function used (Gtk2) to connect to base-runtime-init signal in
-	 * order to initialize the model.
-	 * With Gtk3, we are only called from NactMainWindow::on_base_runtime_init()
-	 * callback, so too late to connect to this signal. We so called directly
-	 * the function
-	 */
-	on_initialize_model( window, NULL );
-
 	return( model );
-}
-
-/*
- * on_initialize_model:
- * @window: the #BaseWindow which embeds the tree view.
- * @user_data: not used (this same @window).
- *
- * Initializes the tree model.
- *
- * We use drag and drop:
- * - inside of treeview, for duplicating items, or moving items between menus
- * - from treeview to the outside world (e.g. Nautilus) to export actions
- * - from outside world (e.g. Nautilus) to import actions
- */
-static void
-on_initialize_model( BaseWindow *window, gpointer user_data )
-{
-	static const gchar *thisfn = "nact_tree_model_on_initialize_model";
-
-	WINDOW_MODEL_VOID( window );
-
-	g_debug( "%s: window=%p (%s), user_data=%p, model=%p (%s)",
-			thisfn, ( void * ) window, G_OBJECT_TYPE_NAME( window ),
-			( void * ) user_data, ( void * ) model, G_OBJECT_TYPE_NAME( model ));
-
-	if( !model->private->dispose_has_run ){
-
-		if( model->private->mode == TREE_MODE_EDITION ){
-
-			egg_tree_multi_drag_add_drag_support(
-					EGG_TREE_MULTI_DRAG_SOURCE( model ), model->private->treeview );
-
-			gtk_tree_view_enable_model_drag_dest( model->private->treeview,
-				tree_model_dnd_dest_formats, tree_model_dnd_dest_formats_count,
-				nact_tree_model_dnd_imulti_drag_source_get_drag_actions( EGG_TREE_MULTI_DRAG_SOURCE( model )));
-
-			base_window_signal_connect( window,
-					G_OBJECT( model->private->treeview ), "drag-begin", G_CALLBACK( nact_tree_model_dnd_on_drag_begin ));
-
-			/* connect: implies that we have to do all hard stuff
-			 * connect_after: no more triggers drag-drop signal
-			 */
-			/*base_window_signal_connect_after( window,
-					G_OBJECT( model->private->treeview ), "drag-motion", G_CALLBACK( on_drag_motion ));*/
-
-			/*base_window_signal_connect( window,
-					G_OBJECT( model->private->treeview ), "drag-drop", G_CALLBACK( on_drag_drop ));*/
-
-			base_window_signal_connect(
-					window,
-					G_OBJECT( model->private->treeview ),
-					"drag-end",
-					G_CALLBACK( nact_tree_model_dnd_on_drag_end ));
-
-			na_settings_register_key_callback(
-					NA_IPREFS_ITEMS_LIST_ORDER_MODE,
-					G_CALLBACK( on_settings_order_mode_changed ),
-					model );
-
-			base_window_signal_connect(
-					window,
-					G_OBJECT( window ),
-					TAB_UPDATABLE_SIGNAL_ITEM_UPDATED,
-					G_CALLBACK( on_tab_updatable_item_updated ));
-		}
-	}
 }
 
 /*
@@ -455,19 +558,21 @@ on_settings_order_mode_changed( const gchar *group, const gchar *key, gconstpoin
  * if force_display is true, then refresh the display of the view
  */
 static void
-on_tab_updatable_item_updated( BaseWindow *window, NAIContext *context, guint data, gpointer user_data )
+on_tab_updatable_item_updated( BaseWindow *window, NAIContext *context, guint data, NactTreeModel *model )
 {
 	static const gchar *thisfn = "nact_tree_model_on_tab_updatable_item_updated";
 	GtkTreePath *path;
 	GtkTreeStore *store;
 	GtkTreeIter iter;
 
-	WINDOW_MODEL_VOID( window );
-
 	if( !model->private->dispose_has_run ){
-		g_debug( "%s: window=%p, context=%p (%s), data=%u, user_data=%p",
-				thisfn, ( void * ) window, ( void * ) context, G_OBJECT_TYPE_NAME( context ),
-				data, ( void * ) user_data );
+
+		g_debug( "%s: window=%p, context=%p (%s), data=%u, model=%p",
+				thisfn,
+				( void * ) window,
+				( void * ) context, G_OBJECT_TYPE_NAME( context ),
+				data,
+				( void * ) model );
 
 		if( data & ( MAIN_DATA_LABEL | MAIN_DATA_ICON )){
 			path = nact_tree_model_object_to_path( model, ( NAObject * ) context );

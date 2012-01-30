@@ -1,5 +1,19 @@
 2012-01-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-model.c: Define window, treeview and mode properties.
+	(instance_constructed): Initialize DnD interface.
+	(instance_dispose): Clear the GtkTreeStore.
+
+	* po/POTFILES.in: Updated accordingly.
+
+	* src/nact/nact-main-window.c: Instanciate a window, not an application.
+
+	* src/nact/nact-tree-model-dnd.c: Debug NactTreeModel reference count.
+
+	* src/nact/nact-tree-model-priv.h: Get rid of WINDOW_DATA_TREE_MODEL data.
+
+	* src/nact/nact-tree-view.c (instance_dispose): No more clear the store.
+
 	* src/core/na-data-boxed.c (instance_init, instance_finalize):
 	* src/core/na-object-id.c (instance_dispose):
 	* src/core/na-object.c (instance_init, instance_dispose,

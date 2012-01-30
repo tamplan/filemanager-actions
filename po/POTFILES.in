@@ -58,6 +58,7 @@ src/nact/nact-menubar-file.c
 src/nact/nact-preferences-editor.c
 src/nact/nact-providers-list.c
 src/nact/nact-schemes-list.c
+src/nact/nact-tree-model.c
 src/nact/nact-tree-model-dnd.c
 src/nact/nact-tree-view.c
 [type: gettext/glade] src/nact/nautilus-actions-config-tool.ui
