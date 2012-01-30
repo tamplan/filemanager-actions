@@ -285,7 +285,7 @@ targets_from_selection( void )
 			&error );
 
 	if( !manager ){
-		g_printerr( "%s: unable to allocate an ObjectManagerClient: %s", thisfn, error->message );
+		g_printerr( "%s: unable to allocate an ObjectManagerClient: %s\n", thisfn, error->message );
 		g_error_free( error );
 		return( NULL );
 	}
@@ -294,16 +294,16 @@ targets_from_selection( void )
 	g_debug( "%s: name_owner=%s", thisfn, name_owner );
 	g_free( name_owner );
 
-	object = g_dbus_object_manager_get_object( manager, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
+	object = g_dbus_object_manager_get_object( manager, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH "/0" );
 	if( !object ){
-		g_printerr( "%s: unable to get object at %s path", thisfn, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
+		g_printerr( "%s: unable to get object at %s path\n", thisfn, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH "/0" );
 		g_object_unref( manager );
 		return( NULL );
 	}
 
 	iface = g_dbus_object_get_interface( object, NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
 	if( !iface ){
-		g_printerr( "%s: unable to get %s interface", thisfn, NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
+		g_printerr( "%s: unable to get %s interface\n", thisfn, NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
 		g_object_unref( object );
 		g_object_unref( manager );
 		return( NULL );
@@ -335,7 +335,7 @@ targets_from_selection( void )
 
 	proxy = dbus_g_proxy_new_for_name( connection,
 			NAUTILUS_ACTIONS_DBUS_SERVICE,
-			NAUTILUS_ACTIONS_DBUS_TRACKER_PATH,
+			NAUTILUS_ACTIONS_DBUS_TRACKER_PATH "/0",
 			NAUTILUS_ACTIONS_DBUS_TRACKER_IFACE );
 
 	if( !proxy ){

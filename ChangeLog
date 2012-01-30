@@ -1,5 +1,10 @@
 2012-01-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-tracker/na-tracker.c:
+	* src/utils/nautilus-actions-run.c:
+	* tools/dbus-introspect.sh: Instanciate an object below the rooted
+	manager.
+
 	* docs/reference/nautilus-actions-docs.xml: Add new symbols for 3.2.
 
 	* src/nact/nact-tree-model.c: Define window, treeview and mode properties.

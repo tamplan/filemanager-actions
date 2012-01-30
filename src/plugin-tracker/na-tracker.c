@@ -65,7 +65,7 @@ struct _NATrackerPrivate {
 	gboolean                  dispose_has_run;
 #ifdef HAVE_GDBUS
 	guint                     owner_id;	/* the identifier returns by g_bus_own_name */
-	GDBusObjectManagerServer *server;
+	GDBusObjectManagerServer *manager;
 #endif
 	GList                    *selected;
 };
@@ -240,7 +240,7 @@ initialize_dbus_connection( NATracker *tracker )
 	 * instantiation takes care of installing introspection infos
 	 */
 	dbus_g_object_type_install_info( NA_TYPE_TRACKER, &dbus_glib_na_tracker_dbus_object_info );
-	dbus_g_connection_register_g_object( connection, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH, G_OBJECT( tracker ));
+	dbus_g_connection_register_g_object( connection, NAUTILUS_ACTIONS_DBUS_TRACKER_PATH "/0", G_OBJECT( tracker ));
 
 	g_debug( "%s: registering tracker path is ok", thisfn );
 # endif /* HAVE_DBUS_GLIB */
@@ -266,13 +266,13 @@ on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *trac
 	/* create a new org.freedesktop.DBus.ObjectManager rooted at
 	 *  /org/nautilus_actions/DBus/Tracker
 	 */
-	tracker->private->server = g_dbus_object_manager_server_new( NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
+	tracker->private->manager = g_dbus_object_manager_server_new( NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
 
 	/* create a new D-Bus object at the path
 	 *  /org/nautilus_actions/DBus/Tracker
 	 *  (which must be same or below than that of object manager server)
 	 */
-	tracker_object = na_tracker_object_skeleton_new( NAUTILUS_ACTIONS_DBUS_TRACKER_PATH );
+	tracker_object = na_tracker_object_skeleton_new( NAUTILUS_ACTIONS_DBUS_TRACKER_PATH "/0" );
 
 	/* make a newly created object export the interface
 	 *  org.nautilus_actions.DBus.Tracker.Properties1
@@ -290,15 +290,16 @@ on_bus_acquired( GDBusConnection *connection, const gchar *name, NATracker *trac
 			G_CALLBACK( on_properties1_get_selected_paths ),
 			tracker );
 
-	/* last export the DBus object on the object manager server
+	/* and export the DBus object on the object manager server
 	 * (which takes its own reference on it)
 	 */
-	g_dbus_object_manager_server_export( tracker->private->server, G_DBUS_OBJECT_SKELETON( tracker_object ));
+	g_dbus_object_manager_server_export( tracker->private->manager, G_DBUS_OBJECT_SKELETON( tracker_object ));
 	g_object_unref( tracker_object );
 
 	/* and connect the object manager server to the D-Bus session
+	 * exporting all attached objects
 	 */
-	g_dbus_object_manager_server_set_connection( tracker->private->server, connection );
+	g_dbus_object_manager_server_set_connection( tracker->private->manager, connection );
 }
 
 static void
@@ -345,8 +346,8 @@ instance_dispose( GObject *object )
 		if( priv->owner_id ){
 			g_bus_unown_name( priv->owner_id );
 		}
-		if( priv->server ){
-			g_object_unref( priv->server );
+		if( priv->manager ){
+			g_object_unref( priv->manager );
 		}
 #endif
 
