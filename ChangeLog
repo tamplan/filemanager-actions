@@ -1,5 +1,7 @@
 2012-01-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/reference/nautilus-actions-docs.xml: Add new symbols for 3.2.
+
 	* src/nact/nact-tree-model.c: Define window, treeview and mode properties.
 	(instance_constructed): Initialize DnD interface.
 	(instance_dispose): Clear the GtkTreeStore.
