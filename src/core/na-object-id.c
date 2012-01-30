@@ -134,7 +134,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_object_id_instance_dispose";
 	NAObjectId *self;
 	NAObjectItem *parent;
 
@@ -147,11 +146,8 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		parent = na_object_get_parent( object );
-		g_debug( "%s: parent=%p (%s)",
-				thisfn, ( void * ) parent, parent ? G_OBJECT_TYPE_NAME( parent ) : "n/a" );
 		if( parent ){
 			na_object_remove_item( parent, object );
-			na_object_set_parent( object, NULL );
 		}
 
 		self->private->dispose_has_run = TRUE;

@@ -1,5 +1,10 @@
 2012-01-30 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-data-boxed.c (instance_init, instance_finalize):
+	* src/core/na-object-id.c (instance_dispose):
+	* src/core/na-object.c (instance_init, instance_dispose,
+	instance_finalize): Remove some too verbose debug messages.
+
 	* src/nact/base-window.c:
 	* src/nact/base-window.h: Define a new BASE_PROP_DESTROY_ON_DISPOSE property.
 	When set, the underlying Gtk toplevel is destroyed when the BaseWindow is

@@ -142,15 +142,11 @@ class_init( NAObjectClass *klass )
 static void
 instance_init( GTypeInstance *instance, gpointer klass )
 {
-	static const gchar *thisfn = "na_object_instance_init";
 	NAObject *self;
 
 	g_return_if_fail( NA_IS_OBJECT( instance ));
 
 	self = NA_OBJECT( instance );
-
-	g_debug( "%s: instance=%p (%s), klass=%p",
-			thisfn, ( void * ) instance, G_OBJECT_TYPE_NAME( instance ), ( void * ) klass );
 
 	self->private = g_new0( NAObjectPrivate, 1 );
 }
@@ -158,7 +154,6 @@ instance_init( GTypeInstance *instance, gpointer klass )
 static void
 instance_dispose( GObject *object )
 {
-	static const gchar *thisfn = "na_object_instance_dispose";
 	NAObject *self;
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
@@ -166,7 +161,6 @@ instance_dispose( GObject *object )
 	self = NA_OBJECT( object );
 
 	if( !self->private->dispose_has_run ){
-		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 		self->private->dispose_has_run = TRUE;
 
@@ -182,14 +176,11 @@ instance_dispose( GObject *object )
 static void
 instance_finalize( GObject *object )
 {
-	static const gchar *thisfn = "na_object_instance_finalize";
 	NAObject *self;
 
 	g_return_if_fail( NA_IS_OBJECT( object ));
 
 	self = NA_OBJECT( object );
-
-	g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
 	g_free( self->private );
 
