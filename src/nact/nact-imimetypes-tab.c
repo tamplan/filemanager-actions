@@ -165,6 +165,8 @@ nact_imimetypes_tab_init( NactIMimetypesTab *instance )
 			BASE_SIGNAL_INITIALIZE_WINDOW,
 			G_CALLBACK( on_base_initialize_window ));
 
+	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_MIMETYPES );
+
 	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 }
 

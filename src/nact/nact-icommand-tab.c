@@ -196,6 +196,8 @@ nact_icommand_tab_init( NactICommandTab *instance )
 			BASE_SIGNAL_INITIALIZE_WINDOW,
 			G_CALLBACK( on_base_initialize_window ));
 
+	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_COMMAND );
+
 	data = get_icommand_data( instance );
 	data->on_selection_change = FALSE;
 	data->tokens = NULL;

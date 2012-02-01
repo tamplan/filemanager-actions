@@ -197,6 +197,8 @@ nact_iaction_tab_init( NactIActionTab *instance )
 			BASE_SIGNAL_INITIALIZE_WINDOW,
 			G_CALLBACK( on_base_initialize_window ));
 
+	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_ACTION );
+
 	data = get_iaction_data( instance );
 	data->on_selection_change = FALSE;
 

@@ -231,6 +231,8 @@ nact_ienvironment_tab_init( NactIEnvironmentTab *instance )
 			BASE_SIGNAL_INITIALIZE_WINDOW,
 			G_CALLBACK( on_base_initialize_window ));
 
+	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT );
+
 	data = get_ienviron_data( instance );
 	data->on_selection_change = FALSE;
 

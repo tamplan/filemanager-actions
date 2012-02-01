@@ -64,6 +64,7 @@ enum {
 	TAB_PROPERTIES
 };
 
+void     nact_main_tab_init           ( NactMainWindow *window, gint page );
 void     nact_main_tab_enable_page    ( NactMainWindow *window, gint page, gboolean enabled );
 gboolean nact_main_tab_is_page_enabled( NactMainWindow *window, gint page );
 

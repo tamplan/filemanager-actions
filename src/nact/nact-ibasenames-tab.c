@@ -178,6 +178,8 @@ nact_ibasenames_tab_init( NactIBasenamesTab *instance )
 			BASE_SIGNAL_INITIALIZE_WINDOW,
 			G_CALLBACK( on_base_initialize_window ));
 
+	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES );
+
 	data = get_ibasenames_data( instance );
 	data->on_selection_change = FALSE;
 

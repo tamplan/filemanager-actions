@@ -36,6 +36,33 @@
 
 #include "nact-main-tab.h"
 
+static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactMainWindow *window );
+static void     open_popup( NactMainWindow *window, GdkEventButton *event );
+
+/**
+ * nact_main_tab_init:
+ * @window: the #NactMainWindow.
+ * @num_page: the page number, starting from zero.
+ *
+ * Common initialization of each page of the notebook.
+ */
+void
+nact_main_tab_init( NactMainWindow *window, gint num_page )
+{
+	GtkNotebook *notebook;
+	GtkWidget *page, *label;
+
+	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
+	page = gtk_notebook_get_nth_page( notebook, num_page );
+	label = gtk_notebook_get_tab_label( notebook, page );
+
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( label ),
+			"button-press-event",
+			G_CALLBACK( on_button_press_event ));
+}
+
 /**
  * nact_main_tab_enable_page:
  * @window: the #NactMainWindow.
@@ -80,4 +107,36 @@ nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
 	g_debug( "nact_main_tab_is_page_enabled: num_page=%d, is_sensitive=%s", num_page, is_sensitive ? "True":"False" );
 
 	return( is_sensitive );
+}
+
+static gboolean
+on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactMainWindow *window )
+{
+	gboolean stop = FALSE;
+
+	/* single click on right button */
+	if( event->type == GDK_BUTTON_PRESS && event->button == 3 ){
+		open_popup( window, event );
+		stop = TRUE;
+	}
+
+	return( stop );
+}
+
+static void
+open_popup( NactMainWindow *window, GdkEventButton *event )
+{
+#if 0
+	NactTreeView *items_view;
+	GtkTreePath *path;
+
+	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
+
+	if( gtk_tree_view_get_path_at_pos( items_view->private->tree_view, event->x, event->y, &path, NULL, NULL, NULL )){
+		nact_tree_view_select_row_at_path( items_view, path );
+		gtk_tree_path_free( path );
+	}
+
+	g_signal_emit_by_name( window, TREE_SIGNAL_CONTEXT_MENU, event );
+#endif
 }

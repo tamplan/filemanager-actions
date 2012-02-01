@@ -1,5 +1,19 @@
 2012-02-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-tab.c:
+	* src/nact/nact-main-tab.h (nact_main_tab_init): New function.
+
+	* src/nact/nact-iaction-tab.c (nact_iaction_tab_init):
+	* src/nact/nact-ibasenames-tab.c (nact_ibasenames_tab_init):
+	* src/nact/nact-icapabilities-tab.c (nact_icapabilities_tab_init):
+	* src/nact/nact-icommand-tab.c (nact_icommand_tab_init):
+	* src/nact/nact-ienvironment-tab.c (nact_ienvironment_tab_init):
+	* src/nact/nact-iexecution-tab.c (nact_iexecution_tab_init):
+	* src/nact/nact-ifolders-tab.c (nact_ifolders_tab_init):
+	* src/nact/nact-imimetypes-tab.c (nact_imimetypes_tab_init):
+	* src/nact/nact-iproperties-tab.c (nact_iproperties_tab_init):
+	* src/nact/nact-ischemes-tab.c (nact_ischemes_tab_init): Updated accordingly.
+
 	* src/nact/nact-main-window.c
 	(instance_dispose): Saves the current tabs position.
 	(on_base_initialize_gtk): Restaures and set the tabs position.

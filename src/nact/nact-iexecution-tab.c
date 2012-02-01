@@ -171,6 +171,8 @@ nact_iexecution_tab_init( NactIExecutionTab *instance )
 			BASE_SIGNAL_INITIALIZE_WINDOW,
 			G_CALLBACK( on_base_initialize_window ));
 
+	nact_main_tab_init( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION );
+
 	data = get_iexecution_data( instance );
 	data->on_selection_change = FALSE;
 
