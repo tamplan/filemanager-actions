@@ -90,7 +90,7 @@ static void      instance_finalize( GObject *object );
 static void      child_watch_fn( GPid pid, gint status, ChildStr *child_str );
 static void      display_output( const gchar *command, int fd_stdout, int fd_stderr );
 static gchar    *display_output_get_content( int fd );
-static void      execute_action_command( gchar *command, const NAObjectProfile *profile );
+static void      execute_action_command( gchar *command, const NAObjectProfile *profile, const NATokens *tokens );
 static gchar    *get_command_execution_display_output( const gchar *command );
 static gchar    *get_command_execution_embedded( const gchar *command );
 static gchar    *get_command_execution_normal( const gchar *command );
@@ -395,13 +395,13 @@ na_tokens_execute_action( const NATokens *tokens, const NAObjectProfile *profile
 	if( singular ){
 		for( i = 0 ; i < tokens->private->count ; ++i ){
 			command = parse_singular( tokens, exec, i, FALSE, TRUE );
-			execute_action_command( command, profile );
+			execute_action_command( command, profile, tokens );
 			g_free( command );
 		}
 
 	} else {
 		command = parse_singular( tokens, exec, 0, FALSE, TRUE );
-		execute_action_command( command, profile );
+		execute_action_command( command, profile, tokens );
 		g_free( command );
 	}
 
@@ -490,14 +490,14 @@ display_output_get_content( int fd )
  * - DisplayOutput: execute in a shell
  */
 static void
-execute_action_command( gchar *command, const NAObjectProfile *profile )
+execute_action_command( gchar *command, const NAObjectProfile *profile, const NATokens *tokens )
 {
 	static const gchar *thisfn = "nautilus_actions_execute_action_command";
 	GError *error;
 	gchar *execution_mode, *run_command;
 	gchar **argv;
 	gint argc;
-	gchar *wdir;
+	gchar *wdir, *wdir_nq;
 	GPid child_pid;
 	ChildStr *child_str;
 
@@ -535,17 +535,19 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 
 		} else {
 			wdir = na_object_get_working_dir( profile );
-			g_debug( "%s: run_command=%s, wdir=%s", thisfn, run_command, wdir );
+			wdir_nq = parse_singular( tokens, wdir, 0, FALSE, FALSE );
+			g_debug( "%s: run_command=%s, wdir=%s", thisfn, run_command, wdir_nq );
 
 			/* it appears that at least mplayer does not support g_spawn_async_with_pipes
-			 * (at least when notrun in '-quiet' mode) while, e.g., totem and vlc rightly
+			 * (at least when not run in '-quiet' mode) while, e.g., totem and vlc rightly
 			 * support this function
 			 * So only use g_spawn_async_with_pipes when we really need to get back
 			 * the content of output and error streams
 			 * See https://bugzilla.gnome.org/show_bug.cgi?id=644289.
 			 */
 			if( child_str->is_output_displayed ){
-				g_spawn_async_with_pipes( wdir,
+				g_spawn_async_with_pipes(
+						wdir_nq,
 						argv,
 						NULL,
 						G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD,
@@ -558,7 +560,8 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 						&error );
 
 			} else {
-				g_spawn_async( wdir,
+				g_spawn_async(
+						wdir_nq,
 						argv,
 						NULL,
 						G_SPAWN_SEARCH_PATH | G_SPAWN_DO_NOT_REAP_CHILD,
@@ -578,6 +581,7 @@ execute_action_command( gchar *command, const NAObjectProfile *profile )
 			}
 
 			g_free( wdir );
+			g_free( wdir_nq );
 			g_strfreev( argv );
 		}
 
@@ -719,6 +723,8 @@ is_singular_exec( const NATokens *tokens, const gchar *exec )
  * @i: the number of the iteration in a multiple selection, starting with zero.
  * @utf8: whether the @input string is UTF-8 encoded, or a standard ASCII
  *  string.
+ * @quoted: whether the filenames have to be quoted (should be %TRUE when
+ *  about to execute a command).
  *
  * A command is said of 'singular form' when its first parameter is not
  * of plural form. In the case of a multiple selection, singular form

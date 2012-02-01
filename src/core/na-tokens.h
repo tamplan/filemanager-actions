@@ -109,7 +109,7 @@ typedef struct {
 }
 	NATokensClass;
 
-GType     na_tokens_get_type( void );
+GType     na_tokens_get_type            ( void );
 
 NATokens *na_tokens_new_for_example     ( void );
 NATokens *na_tokens_new_from_selection  ( GList *selection );

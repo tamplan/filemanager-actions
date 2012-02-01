@@ -1,5 +1,7 @@
 2012-02-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-tokens.c (execute_action_command): Parse working dir.
+
 	* src/api/na-iduplicable.h:
 	* src/core/na-iduplicable.c (copy, na_iduplicable_duplicate):
 	* src/api/na-object-api.h (na_object_duplicate):
