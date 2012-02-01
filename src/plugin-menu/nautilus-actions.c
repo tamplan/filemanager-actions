@@ -85,15 +85,15 @@ static GList            *menu_provider_get_file_items( NautilusMenuProvider *pro
 static GList            *menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *window, NautilusFileInfo *current_folder );
 #endif
 
-static GList            *get_menus_items( NautilusActions *plugin, guint target, GList *selection );
-static GList            *expand_tokens( GList *tree, NATokens *tokens );
-static NAObjectItem     *expand_tokens_item( NAObjectItem *item, NATokens *tokens );
+static GList            *build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection );
+static GList            *build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *tokens );
+static NAObjectItem     *expand_tokens_item( const NAObjectItem *item, NATokens *tokens );
 static void              expand_tokens_context( NAIContext *context, NATokens *tokens );
-static GList            *build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files, NATokens *tokens );
-static NAObjectProfile  *get_candidate_profile( NautilusActions *plugin, NAObjectAction *action, guint target, GList *files );
+static NAObjectProfile  *get_candidate_profile( NAObjectAction *action, guint target, GList *files );
 static NautilusMenuItem *create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, NATokens *tokens );
 static NautilusMenuItem *create_item_from_menu( NAObjectMenu *menu, GList *subitems, guint target );
-static NautilusMenuItem *create_menu_item( NAObjectItem *item, guint target );
+static NautilusMenuItem *create_menu_item( const NAObjectItem *item, guint target );
+static void              weak_notify_menu_item( void *user_data /* =NULL */, NautilusMenuItem *item );
 static void              attach_submenu_to_item( NautilusMenuItem *item, GList *subitems );
 static void              weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item );
 
@@ -356,10 +356,17 @@ menu_provider_get_background_items( NautilusMenuProvider *provider, GtkWidget *w
 		if( selected ){
 			uri = nautilus_file_info_get_uri( current_folder );
 			g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
-					thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
+					thisfn,
+					( void * ) provider,
+					( void * ) window,
+					( void * ) current_folder, uri );
 			g_free( uri );
 
-			nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_LOCATION, selected );
+			nautilus_menus_list = build_nautilus_menu(
+					NAUTILUS_ACTIONS( provider ),
+					ITEM_TARGET_LOCATION,
+					selected );
+
 			na_selected_info_free_list( selected );
 		}
 	}
@@ -402,9 +409,16 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 
 		if( selected ){
 			g_debug( "%s: provider=%p, window=%p, files=%p, count=%d",
-					thisfn, ( void * ) provider, ( void * ) window, ( void * ) files, g_list_length( files ));
+					thisfn,
+					( void * ) provider,
+					( void * ) window,
+					( void * ) files, g_list_length( files ));
 
-			nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_SELECTION, selected );
+			nautilus_menus_list = build_nautilus_menu(
+					NAUTILUS_ACTIONS( provider ),
+					ITEM_TARGET_SELECTION,
+					selected );
+
 			na_selected_info_free_list( selected );
 		}
 	}
@@ -437,10 +451,17 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 		if( selected ){
 			uri = nautilus_file_info_get_uri( current_folder );
 			g_debug( "%s: provider=%p, window=%p, current_folder=%p (%s)",
-					thisfn, ( void * ) provider, ( void * ) window, ( void * ) current_folder, uri );
+					thisfn,
+					( void * ) provider,
+					( void * ) window,
+					( void * ) current_folder, uri );
 			g_free( uri );
 
-			nautilus_menus_list = get_menus_items( NAUTILUS_ACTIONS( provider ), ITEM_TARGET_TOOLBAR, selected );
+			nautilus_menus_list = build_nautilus_menu(
+					NAUTILUS_ACTIONS( provider ),
+					ITEM_TARGET_TOOLBAR,
+					selected );
+
 			na_selected_info_free_list( selected );
 		}
 	}
@@ -449,75 +470,151 @@ menu_provider_get_toolbar_items( NautilusMenuProvider *provider, GtkWidget *wind
 }
 #endif
 
+/*
+ * build_nautilus_menu:
+ * @target: whether the menu targets a location (a folder) or a selection
+ *  (the list of currently selected items in the file manager)
+ * @selection: a list of NASelectedInfo, with:
+ *  - only one item if a location
+ *  - one item by selected file manager item, if a selection.
+ *  Note: a NASelectedInfo is just a sort of NautilusFileInfo, with
+ *  some added APIs.
+ *
+ * Build the Nautilus menu as a list of NautilusMenuItem items
+ *
+ * Returns: the Nautilus menu
+ */
 static GList *
-get_menus_items( NautilusActions *plugin, guint target, GList *selection )
+build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection )
 {
-	GList *menus_list;
+	GList *nautilus_menu;
 	NATokens *tokens;
-	GList *pivot_tree, *copy_tree;
+	GList *tree;
 	gboolean items_add_about_item;
 	gboolean items_create_root_menu;
 
 	g_return_val_if_fail( NA_IS_PIVOT( plugin->private->pivot ), NULL );
 
 	tokens = na_tokens_new_from_selection( selection );
-	pivot_tree = na_pivot_get_items( plugin->private->pivot );
-	copy_tree = expand_tokens( pivot_tree, tokens );
 
-	menus_list = build_nautilus_menus( plugin, copy_tree, target, selection, tokens );
+	tree = na_pivot_get_items( plugin->private->pivot );
 
-	na_object_free_items( copy_tree );
+	nautilus_menu = build_nautilus_menu_rec( tree, target, selection, tokens );
+
+	/* the NATokens object has been attached (and reffed) by each found
+	 * candidate profile, so it will be actually finalized only on actual
+	 * NautilusMenu finalization itself
+	 */
 	g_object_unref( tokens );
 
 	if( target != ITEM_TARGET_TOOLBAR ){
 
 		items_create_root_menu = na_settings_get_boolean( NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
 		if( items_create_root_menu ){
-			menus_list = create_root_menu( plugin, menus_list );
+			nautilus_menu = create_root_menu( plugin, nautilus_menu );
 		}
 
 		items_add_about_item = na_settings_get_boolean( NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
 		if( items_add_about_item ){
-			menus_list = add_about_item( plugin, menus_list );
+			nautilus_menu = add_about_item( plugin, nautilus_menu );
 		}
 	}
 
-	return( menus_list );
+	return( nautilus_menu );
+}
+
+static GList *
+build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *tokens )
+{
+	static const gchar *thisfn = "nautilus_actions_build_nautilus_menu_rec";
+	GList *nautilus_menu;
+	GList *it;
+	GList *subitems;
+	NAObjectItem *item;
+	GList *submenu;
+	NAObjectProfile *profile;
+	NautilusMenuItem *menu_item;
+
+	nautilus_menu = NULL;
+
+	for( it = tree ; it ; it = it->next ){
+
+		g_return_val_if_fail( NA_IS_OBJECT_ITEM( it->data ), NULL );
+
+		if( !na_icontext_is_candidate( NA_ICONTEXT( it->data ), target, selection )){
+			continue;
+		}
+
+		item = expand_tokens_item( NA_OBJECT_ITEM( it->data ), tokens );
+
+		/* but we have to re-check for validity as a label may become
+		 * dynamically empty - thus the NAObjectItem invalid :(
+		 */
+		if( !na_object_is_valid( item )){
+			continue;
+		}
+
+		/* recursively build sub-menus
+		 * the 'submenu' menu of nautilusMenuItem's is attached to the returned
+		 * 'item'
+		 */
+		if( NA_IS_OBJECT_MENU( item )){
+
+			subitems = na_object_get_items( item );
+			g_debug( "%s: menu has %d items", thisfn, g_list_length( subitems ));
+
+			submenu = build_nautilus_menu_rec( subitems, target, selection, tokens );
+			g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));
+
+			if( submenu ){
+				if( target == ITEM_TARGET_TOOLBAR ){
+					nautilus_menu = g_list_concat( nautilus_menu, submenu );
+
+				} else {
+					menu_item = create_item_from_menu( NA_OBJECT_MENU( item ), submenu, target );
+					nautilus_menu = g_list_append( nautilus_menu, menu_item );
+				}
+			}
+			continue;
+		}
+
+		g_return_val_if_fail( NA_IS_OBJECT_ACTION( item ), NULL );
+
+		/* if we have an action, searches for a candidate profile
+		 */
+		profile = get_candidate_profile( NA_OBJECT_ACTION( item ), target, selection );
+		if( profile ){
+			menu_item = create_item_from_profile( profile, target, selection, tokens );
+			nautilus_menu = g_list_append( nautilus_menu, menu_item );
+		}
+	}
+
+	return( nautilus_menu );
 }
 
 /*
- * create a copy of the tree where almost all fields which may embed
- * parameters have been expanded
- * here, 'almost' should be read as:
- * - all displayable fields, or fields which may have an impact on the display
- *   (e.g. label, tooltip, icon name)
- * - all fields which we do not need later
+ * expand_tokens_item:
+ * @item: a NAObjectItem read from the NAPivot.
+ * @tokens: the NATokens object which holds current selection data
+ *  (uris, basenames, mimetypes, etc.)
  *
- * we keep until the last item activation the Exec key, whose first parameter
- * actualy determines the form (singular or plural) of the execution..
+ * Updates the @item, replacing parameters with the corresponding token.
+ *
+ * This function is not recursive, but works for the plain item:
+ * - the menu (itself)
+ * - the action and its profiles
+ *
+ * Returns: a duplicated object which has to be g_object_unref() by the caller.
  */
-static GList *
-expand_tokens( GList *pivot_tree, NATokens *tokens )
-{
-	GList *tree, *it;
-
-	tree = NULL;
-
-	for( it = pivot_tree ; it ; it = it->next ){
-		NAObjectItem *item = NA_OBJECT_ITEM( na_object_duplicate( it->data ));
-		tree = g_list_prepend( tree, expand_tokens_item( item, tokens ));
-	}
-
-	return( g_list_reverse( tree ));
-}
-
 static NAObjectItem *
-expand_tokens_item( NAObjectItem *item, NATokens *tokens )
+expand_tokens_item( const NAObjectItem *src, NATokens *tokens )
 {
 	gchar *old, *new;
 	GSList *subitems_slist, *its, *new_slist;
-	GList *subitems, *it, *new_list;
-	NAObjectItem *expanded_item;
+	GList *subitems, *it;
+	NAObjectItem *item;
+
+	item = NA_OBJECT_ITEM( na_object_duplicate( src, DUPLICATE_OBJECT ));
 
 	/* label, tooltip and icon name
 	 * plus the toolbar label if this is an action
@@ -571,22 +668,11 @@ expand_tokens_item( NAObjectItem *item, NATokens *tokens )
 	na_core_utils_slist_free( subitems_slist );
 	na_core_utils_slist_free( new_slist );
 
-	/* last, deal with subitems
+	/* last, deal with profiles of an action
 	 */
-	subitems = na_object_get_items( item );
+	if( NA_IS_OBJECT_ACTION( item )){
 
-	if( NA_IS_OBJECT_MENU( item )){
-		new_list = NULL;
-
-		for( it = subitems ; it ; it = it->next ){
-			expanded_item = expand_tokens_item( NA_OBJECT_ITEM( it->data ), tokens );
-			new_list = g_list_prepend( new_list, expanded_item );
-		}
-
-		na_object_set_items( item, g_list_reverse( new_list ));
-
-	} else {
-		g_return_val_if_fail( NA_IS_OBJECT_ACTION( item ), NULL );
+		subitems = na_object_get_items( item );
 
 		for( it = subitems ; it ; it = it->next ){
 
@@ -639,100 +725,10 @@ expand_tokens_context( NAIContext *context, NATokens *tokens )
 }
 
 /*
- * @plugin: this #NautilusActions module instance.
- * @tree: a copy of the #NAPivot tree, where all fields - but
- *  displayable parameters expanded
- * @target: whether we target location or context menu, or toolbar.
- * @files: the current selection in the file-manager, as a #GList of #NASelectedInfo items
- * @tokens: a #NATokens object which embeds all possible values, regarding the
- *  current selection, for all parameters
- *
- * When building a menu for the toolbar, do not use menus hierarchy
- *
- * As menus, actions and profiles may embed parameters in their data,
- * all the hierarchy must be recursively re-parsed, and should be
- * re-checked for validity !
- */
-static GList *
-build_nautilus_menus( NautilusActions *plugin, GList *tree, guint target, GList *files, NATokens *tokens )
-{
-	static const gchar *thisfn = "nautilus_actions_build_nautilus_menus";
-	GList *menus_list = NULL;
-	GList *subitems, *submenu;
-	GList *it;
-	NAObjectProfile *profile;
-	NautilusMenuItem *item;
-
-	g_debug( "%s: plugin=%p, tree=%p, target=%d, files=%p (count=%d)",
-			thisfn, ( void * ) plugin, ( void * ) tree, target,
-			( void * ) files, g_list_length( files ));
-
-	for( it = tree ; it ; it = it->next ){
-
-		g_return_val_if_fail( NA_IS_OBJECT_ITEM( it->data ), NULL );
-
-#ifdef NA_MAINTAINER_MODE
-		/* check this here as a security though NAPivot should only have
-		 * loaded valid and enabled items
-		 */
-		if( !na_object_is_enabled( it->data )){
-			gchar *label = na_object_get_label( it->data );
-			g_warning( "%s: '%s' item: enabled=%s, valid=%s", thisfn, label,
-					na_object_is_enabled( it->data ) ? "True":"False",
-					na_object_is_valid( it->data ) ? "True":"False" );
-			g_free( label );
-			continue;
-		}
-#endif
-
-		/* but we have to re-check for validity as a label may become
-		 * dynamically empty - thus the NAObjectItem invalid :(
-		 */
-		if( !na_object_is_valid( it->data )){
-			continue;
-		}
-
-		if( !na_icontext_is_candidate( NA_ICONTEXT( it->data ), target, files )){
-			continue;
-		}
-
-		/* recursively build sub-menus
-		 */
-		if( NA_IS_OBJECT_MENU( it->data )){
-			subitems = na_object_get_items( it->data );
-			g_debug( "%s: menu has %d items", thisfn, g_list_length( subitems ));
-			submenu = build_nautilus_menus( plugin, subitems, target, files, tokens );
-			g_debug( "%s: submenu has %d items", thisfn, g_list_length( submenu ));
-
-			if( submenu ){
-				if( target == ITEM_TARGET_TOOLBAR ){
-					menus_list = g_list_concat( menus_list, submenu );
-
-				} else {
-					item = create_item_from_menu( NA_OBJECT_MENU( it->data ), submenu, target );
-					menus_list = g_list_append( menus_list, item );
-				}
-			}
-			continue;
-		}
-
-		g_return_val_if_fail( NA_IS_OBJECT_ACTION( it->data ), NULL );
-
-		profile = get_candidate_profile( plugin, NA_OBJECT_ACTION( it->data ), target, files );
-		if( profile ){
-			item = create_item_from_profile( profile, target, files, tokens );
-			menus_list = g_list_append( menus_list, item );
-		}
-	}
-
-	return( menus_list );
-}
-
-/*
  * could also be a NAObjectAction method - but this is not used elsewhere
  */
 static NAObjectProfile *
-get_candidate_profile( NautilusActions *plugin, NAObjectAction *action, guint target, GList *files )
+get_candidate_profile( NAObjectAction *action, guint target, GList *files )
 {
 	static const gchar *thisfn = "nautilus_actions_get_candidate_profile";
 	NAObjectProfile *candidate = NULL;
@@ -768,19 +764,18 @@ create_item_from_profile( NAObjectProfile *profile, guint target, GList *files, 
 	NAObjectProfile *duplicate;
 
 	action = NA_OBJECT_ACTION( na_object_get_parent( profile ));
-	duplicate = NA_OBJECT_PROFILE( na_object_duplicate( profile ));
+	duplicate = NA_OBJECT_PROFILE( na_object_duplicate( profile, DUPLICATE_ONLY ));
 	na_object_set_parent( duplicate, NULL );
 
 	item = create_menu_item( NA_OBJECT_ITEM( action ), target );
 
-	/* attach a weak ref on the Nautilus menu item: our profile will be
-	 * unreffed in weak notify function
-	 */
 	g_signal_connect( item,
 				"activate",
 				G_CALLBACK( execute_action ),
 				duplicate );
 
+	/* unref the duplicated profile on menu item finalization
+	 */
 	g_object_weak_ref( G_OBJECT( item ), ( GWeakNotify ) weak_notify_profile, duplicate );
 
 	g_object_set_data_full( G_OBJECT( item ),
@@ -805,7 +800,8 @@ weak_notify_profile( NAObjectProfile *profile, NautilusMenuItem *item )
 
 /*
  * note that each appended NautilusMenuItem is ref-ed by the NautilusMenu
- * we can so safely release our own ref on subitems after this function
+ * we can so safely release our own ref on subitems after having attached
+ * the submenu
  */
 static NautilusMenuItem *
 create_item_from_menu( NAObjectMenu *menu, GList *subitems, guint target )
@@ -816,14 +812,21 @@ create_item_from_menu( NAObjectMenu *menu, GList *subitems, guint target )
 	item = create_menu_item( NA_OBJECT_ITEM( menu ), target );
 
 	attach_submenu_to_item( item, subitems );
+
 	nautilus_menu_item_list_free( subitems );
 
 	/*g_debug( "%s: returning item=%p", thisfn, ( void * ) item );*/
 	return( item );
 }
 
+/*
+ * Creates a NautilusMenuItem
+ *
+ * We attach a weak notify function to the created item in order to be able
+ * to check for instanciation/finalization cycles
+ */
 static NautilusMenuItem *
-create_menu_item( NAObjectItem *item, guint target )
+create_menu_item( const NAObjectItem *item, guint target )
 {
 	NautilusMenuItem *menu_item;
 	gchar *id, *name, *label, *tooltip, *icon;
@@ -836,6 +839,8 @@ create_menu_item( NAObjectItem *item, guint target )
 
 	menu_item = nautilus_menu_item_new( name, label, tooltip, icon );
 
+	g_object_weak_ref( G_OBJECT( menu_item ), ( GWeakNotify ) weak_notify_menu_item, NULL );
+
 	g_free( icon );
  	g_free( tooltip );
  	g_free( label );
@@ -843,6 +848,15 @@ create_menu_item( NAObjectItem *item, guint target )
  	g_free( id );
 
 	return( menu_item );
+}
+
+/*
+ * called _after_ the NautilusMenuItem has been finalized
+ */
+static void
+weak_notify_menu_item( void *user_data /* =NULL */, NautilusMenuItem *item )
+{
+	g_debug( "nautilus_actions_weak_notify_menu_item: item=%p", ( void * ) item );
 }
 
 static void

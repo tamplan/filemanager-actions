@@ -1,5 +1,7 @@
 2012-02-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-menu/nautilus-actions.c: Only expands candidate items.
+
 	* src/core/na-tokens.c (execute_action_command): Parse working dir.
 
 	* src/api/na-iduplicable.h:
