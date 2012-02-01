@@ -60,6 +60,14 @@ static EnumMap st_order_mode[] = {
 	{ 0 }
 };
 
+static EnumMap st_tabs_pos[] = {
+	{ GTK_POS_LEFT,   "Left" },
+	{ GTK_POS_RIGHT,  "Right" },
+	{ GTK_POS_TOP,    "Top" },
+	{ GTK_POS_BOTTOM, "Bottom" },
+	{ 0 }
+};
+
 static const gchar *enum_map_string_from_id( const EnumMap *map, guint id );
 static guint        enum_map_id_from_string( const EnumMap *map, const gchar *str );
 
@@ -117,6 +125,41 @@ na_iprefs_set_order_mode( guint mode )
 
 	order_str = enum_map_string_from_id( st_order_mode, mode );
 	na_settings_set_string( NA_IPREFS_ITEMS_LIST_ORDER_MODE, order_str );
+}
+
+/*
+ * na_iprefs_get_tabs_pos:
+ * @mandatory: if not %NULL, a pointer to a boolean which will receive the
+ *  mandatory property.
+ *
+ * Returns: the tabs position of the main window.
+ */
+guint
+na_iprefs_get_tabs_pos( gboolean *mandatory )
+{
+	gchar *tabs_pos_str;
+	guint tabs_pos;
+
+	tabs_pos_str = na_settings_get_string( NA_IPREFS_MAIN_TABS_POS, NULL, mandatory );
+	tabs_pos = enum_map_id_from_string( st_tabs_pos, tabs_pos_str );
+	g_free( tabs_pos_str );
+
+	return( tabs_pos );
+}
+
+/*
+ * na_iprefs_set_tabs_pos:
+ * @position: the new value to be written.
+ *
+ * Writes the current status of 'tabs position' to the preference system.
+ */
+void
+na_iprefs_set_tabs_pos( guint position )
+{
+	const gchar *tabs_pos_str;
+
+	tabs_pos_str = enum_map_string_from_id( st_tabs_pos, position );
+	na_settings_set_string( NA_IPREFS_MAIN_TABS_POS, tabs_pos_str );
 }
 
 /*
