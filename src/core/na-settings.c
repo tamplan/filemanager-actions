@@ -172,6 +172,7 @@ static const KeyDef st_def_keys[] = {
 	{ NA_IPREFS_MAIN_PANED,                       GROUP_NACT,    NA_DATA_TYPE_UINT,        "200" },
 	{ NA_IPREFS_MAIN_SAVE_AUTO,                   GROUP_NACT,    NA_DATA_TYPE_BOOLEAN,     "false" },
 	{ NA_IPREFS_MAIN_SAVE_PERIOD,                 GROUP_NACT,    NA_DATA_TYPE_UINT,        "5" },
+	{ NA_IPREFS_MAIN_TABS_POS,                    GROUP_NACT,    NA_DATA_TYPE_STRING,      "Top" },
 	{ NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY,        GROUP_NACT,    NA_DATA_TYPE_BOOLEAN,     "true" },
 	{ NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY,        GROUP_NACT,    NA_DATA_TYPE_BOOLEAN,     "true" },
 	{ NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY,        GROUP_NACT,    NA_DATA_TYPE_BOOLEAN,     "true" },

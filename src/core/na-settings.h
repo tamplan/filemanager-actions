@@ -113,6 +113,7 @@ G_BEGIN_DECLS
 #define NA_IPREFS_MAIN_PANED						"main-paned-width"
 #define NA_IPREFS_MAIN_SAVE_AUTO					"main-save-auto"
 #define NA_IPREFS_MAIN_SAVE_PERIOD					"main-save-period"
+#define NA_IPREFS_MAIN_TABS_POS						"main-tabs-pos"
 #define NA_IPREFS_MAIN_TOOLBAR_EDIT_DISPLAY			"main-toolbar-edit-display"
 #define NA_IPREFS_MAIN_TOOLBAR_FILE_DISPLAY			"main-toolbar-file-display"
 #define NA_IPREFS_MAIN_TOOLBAR_HELP_DISPLAY			"main-toolbar-help-display"

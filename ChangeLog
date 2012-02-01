@@ -1,5 +1,8 @@
 2012-02-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-settings.c:
+	* src/core/na-settings.h: Define new "main-tabs-pos" user preference.
+
 	* src/core/na-importer-ask.c (on_destroy_toplevel): Reset static variable.
 
 	* src/io-desktop/nadp-reader.c
