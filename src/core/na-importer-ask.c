@@ -469,6 +469,8 @@ on_destroy_toplevel( GtkWindow *toplevel, NAImporterAsk *dialog )
 		dialog->private->toplevel = NULL;
 		g_object_unref( dialog );
 	}
+
+	st_dialog = NULL;
 }
 
 static gboolean
