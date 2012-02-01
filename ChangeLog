@@ -1,5 +1,10 @@
 2012-02-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/nadp-reader.c
+	(item_from_desktop_file): Fix a small memory leak.
+	(nadp_reader_iimporter_import_from_uri): Reset writability status in the
+	case where import source is read-only.
+
 	* src/plugin-menu/nautilus-actions.c: Only expands candidate items.
 
 	* src/core/na-tokens.c (execute_action_command): Parse working dir.

@@ -309,6 +309,8 @@ item_from_desktop_file( const NadpDesktopProvider *provider, NadpDesktopFile *nd
 		g_free( reader_data );
 	}
 
+	g_free( type );
+
 	return( item );
 }
 
@@ -396,6 +398,10 @@ nadp_reader_iimporter_import_from_uri( const NAIImporter *instance, void *parms_
 			na_object_set_provider_data( parms->imported, NULL );
 			g_object_weak_unref( G_OBJECT( parms->imported ), ( GWeakNotify ) desktop_weak_notify, ndf );
 			g_object_unref( ndf );
+
+			/* also remove the 'writable' status'
+			 */
+			na_object_set_readonly( parms->imported, FALSE );
 
 			code = IMPORTER_CODE_OK;
 		}
