@@ -38,6 +38,7 @@
 #include <api/na-object-api.h>
 #include <api/na-timeout.h>
 
+#include <core/na-iprefs.h>
 #include <core/na-pivot.h>
 
 #include "base-isession.h"
@@ -725,6 +726,7 @@ instance_dispose( GObject *window )
 	NactMainWindow *self;
 	GtkWidget *pane;
 	gint pos;
+	GtkNotebook *notebook;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -743,6 +745,10 @@ instance_dispose( GObject *window )
 		pane = base_window_get_widget( BASE_WINDOW( window ), "MainPaned" );
 		pos = gtk_paned_get_position( GTK_PANED( pane ));
 		na_settings_set_uint( NA_IPREFS_MAIN_PANED, pos );
+
+		notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
+		pos = gtk_notebook_get_tab_pos( notebook );
+		na_iprefs_set_tabs_pos( pos );
 
 		/* unref items view at last as gtk_tree_model_store_clear() will
 		 * finalize all objects, thus invaliditing all our references
@@ -853,11 +859,16 @@ on_base_initialize_window( NactMainWindow *window, gpointer user_data )
 	guint pos;
 	GtkWidget *pane;
 	NactApplication *application;
+	GtkNotebook *notebook;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
-		g_debug( "%s: window=%p, user_data=%p", thisfn, ( void * ) window, ( void * ) user_data );
+
+		g_debug( "%s: window=%p, user_data=%p",
+				thisfn,
+				( void * ) window,
+				( void * ) user_data );
 
 		pos = na_settings_get_uint( NA_IPREFS_MAIN_PANED, NULL, NULL );
 		if( pos ){
@@ -882,6 +893,12 @@ on_base_initialize_window( NactMainWindow *window, gpointer user_data )
 				G_OBJECT( application ),
 				BASE_SIGNAL_QUIT_REQUESTED,
 				G_CALLBACK( on_base_quit_requested ));
+
+		/* restore the notebook tabs position
+		 */
+		pos = na_iprefs_get_tabs_pos( NULL );
+		notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
+		gtk_notebook_set_tab_pos( notebook, pos );
 	}
 }
 
