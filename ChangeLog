@@ -1,5 +1,16 @@
 2012-02-01 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-main-window.h: New MAIN_SIGNAL_CONTEXT_MENU signal.
+
+	* src/nact/nact-marshal.def: New closure definition.
+
+	* src/nact/nact-tree-view.c:
+	* src/nact/nact-tree-view.h: Removed TREE_SIGNAL_CONTEXT_MENU signal.
+
+	* src/nact/nautilus-actions-config-tool.actions:
+	* src/nact/nact-menubar.c: Updated accordingly.
+
 	* src/nact/nact-main-tab.c:
 	* src/nact/nact-main-tab.h (nact_main_tab_init): New function.
 

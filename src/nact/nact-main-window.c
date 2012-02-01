@@ -149,6 +149,7 @@ enum {
 	MAIN_ITEM_UPDATED,
 	TAB_ITEM_UPDATED,
 	SELECTION_CHANGED,
+	CONTEXT_MENU,
 	LAST_SIGNAL
 };
 
@@ -454,6 +455,32 @@ class_init( NactMainWindowClass *klass )
 			G_TYPE_NONE,
 			1,
 			G_TYPE_POINTER );
+
+	/**
+	 * NactMainWindow::main-signal-open-popup
+	 *
+	 * This signal is emitted on the BaseWindow parent when the user right
+	 * clicks somewhere (on an active zone).
+	 *
+	 * Signal args:
+	 * - the GdkEvent
+	 * - the popup name to be opened.
+	 *
+	 * Handler prototype:
+	 * void ( *handler )( BaseWindow *window, GdkEvent *event, const gchar *popup_name, gpointer user_data );
+	 */
+	st_signals[ CONTEXT_MENU ] = g_signal_new(
+			MAIN_SIGNAL_CONTEXT_MENU,
+			G_TYPE_OBJECT,
+			G_SIGNAL_RUN_LAST,
+			0,
+			NULL,
+			NULL,
+			nact_cclosure_marshal_VOID__POINTER_STRING,
+			G_TYPE_NONE,
+			2,
+			G_TYPE_POINTER,
+			G_TYPE_STRING);
 }
 
 static void

@@ -36,6 +36,7 @@
 
 #include "nact-main-tab.h"
 
+static void     on_tab_initialize_window( NactMainWindow *window, gpointer p_page );
 static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactMainWindow *window );
 static void     open_popup( NactMainWindow *window, GdkEventButton *event );
 
@@ -49,18 +50,12 @@ static void     open_popup( NactMainWindow *window, GdkEventButton *event );
 void
 nact_main_tab_init( NactMainWindow *window, gint num_page )
 {
-	GtkNotebook *notebook;
-	GtkWidget *page, *label;
-
-	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
-	page = gtk_notebook_get_nth_page( notebook, num_page );
-	label = gtk_notebook_get_tab_label( notebook, page );
-
-	base_window_signal_connect(
+	base_window_signal_connect_with_data(
 			BASE_WINDOW( window ),
-			G_OBJECT( label ),
-			"button-press-event",
-			G_CALLBACK( on_button_press_event ));
+			G_OBJECT( window ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_tab_initialize_window ),
+			GUINT_TO_POINTER( num_page ));
 }
 
 /**
@@ -109,6 +104,25 @@ nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
 	return( is_sensitive );
 }
 
+static void
+on_tab_initialize_window( NactMainWindow *window, gpointer p_page )
+{
+	GtkNotebook *notebook;
+	GtkWidget *page, *label;
+	guint num_page;
+
+	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
+	num_page = GPOINTER_TO_UINT( p_page );
+	page = gtk_notebook_get_nth_page( notebook, num_page );
+	label = gtk_notebook_get_tab_label( notebook, page );
+
+	base_window_signal_connect(
+			BASE_WINDOW( window ),
+			G_OBJECT( label ),
+			"button-press-event",
+			G_CALLBACK( on_button_press_event ));
+}
+
 static gboolean
 on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactMainWindow *window )
 {
@@ -137,6 +151,6 @@ open_popup( NactMainWindow *window, GdkEventButton *event )
 		gtk_tree_path_free( path );
 	}
 
-	g_signal_emit_by_name( window, TREE_SIGNAL_CONTEXT_MENU, event );
+	g_signal_emit_by_name( window, MAIN_SIGNAL_CONTEXT_MENU, event, "popup" );
 #endif
 }

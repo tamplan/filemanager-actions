@@ -98,7 +98,6 @@ typedef struct {
 /**
  * Signals emitted by the NactTreeView instance.
  */
-#define TREE_SIGNAL_CONTEXT_MENU				"tree-signal-open-popup"
 #define TREE_SIGNAL_COUNT_CHANGED				"tree-signal-count-changed"
 #define TREE_SIGNAL_FOCUS_IN					"tree-signal-focus-in"
 #define TREE_SIGNAL_FOCUS_OUT					"tree-signal-focus-out"

@@ -211,7 +211,7 @@ static void     on_ui_manager_proxy_connect( GtkUIManager *ui_manager, GtkAction
 static void     on_menu_item_selected( GtkMenuItem *proxy, BaseWindow *window );
 static void     on_menu_item_deselected( GtkMenuItem *proxy, BaseWindow *window );
 
-static void     on_tree_view_open_context_menu( BaseWindow *window, GdkEventButton *event, gpointer user_data );
+static void     on_open_context_menu( BaseWindow *window, GdkEventButton *event, const gchar *popup, gpointer user_data );
 static void     on_popup_selection_done( GtkMenuShell *menushell, BaseWindow *window );
 static void     on_tree_view_count_changed( BaseWindow *window, gboolean reset, gint menus, gint actions, gint profiles );
 static void     on_tree_view_focus_in( BaseWindow *window, gpointer user_data );
@@ -428,9 +428,11 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 		bar->private->ui_manager = gtk_ui_manager_new();
 		g_debug( "%s: ui_manager=%p", thisfn, ( void * ) bar->private->ui_manager );
 
-		base_window_signal_connect( window,
+		base_window_signal_connect(
+				window,
 				G_OBJECT( bar->private->ui_manager ),
-				"connect-proxy", G_CALLBACK( on_ui_manager_proxy_connect ));
+				"connect-proxy",
+				G_CALLBACK( on_ui_manager_proxy_connect ));
 
 		bar->private->action_group = gtk_action_group_new( "MenubarActions" );
 		g_debug( "%s: action_group=%p", thisfn, ( void * ) bar->private->action_group );
@@ -482,26 +484,47 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 		/* connect to all signal which may have an influence on the menu
 		 * items sensitivity
 		 */
-		base_window_signal_connect( window,
-				G_OBJECT( window ), TREE_SIGNAL_CONTEXT_MENU, G_CALLBACK( on_tree_view_open_context_menu ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( window ),
+				MAIN_SIGNAL_CONTEXT_MENU,
+				G_CALLBACK( on_open_context_menu ));
 
-		base_window_signal_connect( window,
-				G_OBJECT( window ), TREE_SIGNAL_COUNT_CHANGED, G_CALLBACK( on_tree_view_count_changed ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( window ),
+				TREE_SIGNAL_COUNT_CHANGED,
+				G_CALLBACK( on_tree_view_count_changed ));
 
-		base_window_signal_connect( window,
-				G_OBJECT( window ), TREE_SIGNAL_FOCUS_IN, G_CALLBACK( on_tree_view_focus_in ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( window ),
+				TREE_SIGNAL_FOCUS_IN,
+				G_CALLBACK( on_tree_view_focus_in ));
 
-		base_window_signal_connect( window,
-				G_OBJECT( window ), TREE_SIGNAL_FOCUS_OUT, G_CALLBACK( on_tree_view_focus_out ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( window ),
+				TREE_SIGNAL_FOCUS_OUT,
+				G_CALLBACK( on_tree_view_focus_out ));
 
-		base_window_signal_connect( window,
-				G_OBJECT( window ), TREE_SIGNAL_MODIFIED_STATUS_CHANGED, G_CALLBACK( on_tree_view_modified_status_changed ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( window ),
+				TREE_SIGNAL_MODIFIED_STATUS_CHANGED,
+				G_CALLBACK( on_tree_view_modified_status_changed ));
 
-		base_window_signal_connect( window,
-				G_OBJECT( window ), TREE_SIGNAL_SELECTION_CHANGED, G_CALLBACK( on_tree_view_selection_changed ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( window ),
+				TREE_SIGNAL_SELECTION_CHANGED,
+				G_CALLBACK( on_tree_view_selection_changed ));
 
-		base_window_signal_connect( window,
-				G_OBJECT( bar ), MENUBAR_SIGNAL_UPDATE_SENSITIVITIES, G_CALLBACK( on_update_sensitivities ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( bar ),
+				MENUBAR_SIGNAL_UPDATE_SENSITIVITIES,
+				G_CALLBACK( on_update_sensitivities ));
 
 		nact_menubar_file_initialize( bar );
 		nact_main_toolbar_init( window, bar->private->action_group );
@@ -569,17 +592,23 @@ on_menu_item_deselected( GtkMenuItem *proxy, BaseWindow *window )
  * Opens a popup menu.
  */
 static void
-on_tree_view_open_context_menu( BaseWindow *window, GdkEventButton *event, gpointer user_data )
+on_open_context_menu( BaseWindow *window, GdkEventButton *event, const gchar *popup, gpointer user_data )
 {
 	GtkWidget *menu;
 
 	BAR_WINDOW_VOID( window );
 
-	menu = gtk_ui_manager_get_widget( bar->private->ui_manager, "/ui/Popup" );
-	bar->private->popup_handler =
-			g_signal_connect( menu, "selection-done", G_CALLBACK( on_popup_selection_done ), window );
+	menu = gtk_ui_manager_get_widget( bar->private->ui_manager, popup );
+	if( menu ){
+		bar->private->popup_handler =
+				g_signal_connect(
+						menu,
+						"selection-done",
+						G_CALLBACK( on_popup_selection_done ),
+						window );
 
-	gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, event->button, event->time );
+		gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, event->button, event->time );
+	}
 }
 
 static void

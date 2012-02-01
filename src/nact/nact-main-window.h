@@ -232,9 +232,11 @@
  *   - IActionTab and ICommandTab should update their label widgets
  *   - IPropertiesTab updates its provider label
  *
+ * MAIN_SIGNAL_CONTEXT_MENU
+ *   Opens the specified context menu.
+ *
  * TREE_SIGNAL_FOCUS_IN
  * TREE_SIGNAL_FOCUS_OUT
- * TREE_SIGNAL_CONTEXT_MENU
  * TREE_SIGNAL_COUNT_CHANGED
  * TREE_SIGNAL_LEVEL_ZERO_CHANGED
  * TREE_SIGNAL_MODIFIED_STATUS_CHANGED
@@ -280,6 +282,7 @@ typedef struct {
  */
 #define MAIN_SIGNAL_ITEM_UPDATED			"main-item-updated"
 #define MAIN_SIGNAL_SELECTION_CHANGED		"main-selection-changed"
+#define MAIN_SIGNAL_CONTEXT_MENU			"main-signal-open-popup"
 
 /**
  * The data which, when modified, should be redisplayed asap.

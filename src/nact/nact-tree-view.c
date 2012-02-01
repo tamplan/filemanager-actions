@@ -40,6 +40,7 @@
 
 #include "base-keysyms.h"
 #include "nact-application.h"
+#include "nact-main-window.h"
 #include "nact-marshal.h"
 #include "nact-tree-view.h"
 #include "nact-tree-model.h"
@@ -86,7 +87,6 @@ enum {
 /* signals
  */
 enum {
-	CONTEXT_MENU,
 	COUNT_CHANGED,
 	FOCUS_IN,
 	FOCUS_OUT,
@@ -258,30 +258,6 @@ class_init( NactTreeViewClass *klass )
 					_( "Whether notifications are allowed" ),
 					FALSE,
 					G_PARAM_CONSTRUCT | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
-
-	/**
-	 * NactTreeView::tree-signal-open-popup
-	 *
-	 * This signal is emitted on the BaseWindow parent when the user right
-	 * clicks on the tree view.
-	 *
-	 * Signal args:
-	 * - the GdkEvent.
-	 *
-	 * Handler prototype:
-	 * void ( *handler )( BaseWindow *window, GdkEvent *event, gpointer user_data );
-	 */
-	st_signals[ CONTEXT_MENU ] = g_signal_new(
-			TREE_SIGNAL_CONTEXT_MENU,
-			G_TYPE_OBJECT,
-			G_SIGNAL_RUN_LAST,
-			0,
-			NULL,
-			NULL,
-			g_cclosure_marshal_VOID__POINTER,
-			G_TYPE_NONE,
-			1,
-			G_TYPE_POINTER );
 
 	/**
 	 * NactTreeView::tree-signal-count-changed:
@@ -1435,7 +1411,7 @@ open_popup( BaseWindow *window, GdkEventButton *event )
 		gtk_tree_path_free( path );
 	}
 
-	g_signal_emit_by_name( window, TREE_SIGNAL_CONTEXT_MENU, event );
+	g_signal_emit_by_name( window, MAIN_SIGNAL_CONTEXT_MENU, event, "/ui/TreeContext" );
 }
 
 /*

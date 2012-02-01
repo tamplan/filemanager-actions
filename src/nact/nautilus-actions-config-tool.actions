@@ -44,7 +44,7 @@
         </menu>
     </menubar>
 
-    <popup name="Popup">
+    <popup name="TreeContext">
             <menuitem action="NewMenuItem" />
             <menuitem action="NewActionItem" />
             <menuitem action="NewProfileItem" />
