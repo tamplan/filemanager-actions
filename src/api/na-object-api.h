@@ -54,7 +54,7 @@ G_BEGIN_DECLS
 
 /* NAIDuplicable
  */
-#define na_object_duplicate( obj )                      na_iduplicable_duplicate( NA_IDUPLICABLE( obj ))
+#define na_object_duplicate( obj, mode )                na_iduplicable_duplicate( NA_IDUPLICABLE( obj ), mode )
 #define na_object_check_status( obj )                   na_object_object_check_status_rec( NA_OBJECT( obj ))
 
 #define na_object_get_origin( obj )                     na_iduplicable_get_origin( NA_IDUPLICABLE( obj ))

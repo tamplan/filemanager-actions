@@ -69,7 +69,7 @@ static GType          register_type( void );
 static void           interface_base_init( NAIDuplicableInterface *klass );
 static void           interface_base_finalize( NAIDuplicableInterface *klass );
 
-static void           v_copy( NAIDuplicable *target, const NAIDuplicable *source );
+static void           v_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode );
 static gboolean       v_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
 static gboolean       v_is_valid( const NAIDuplicable *object );
 
@@ -275,28 +275,18 @@ na_iduplicable_dump( const NAIDuplicable *object )
 /**
  * na_iduplicable_duplicate:
  * @object: the #NAIDuplicable object to be duplicated.
+ * @mode: the %DuplicableMode duplication mode.
  *
  * Exactly duplicates a #NAIDuplicable -implemented object, including
  * modification and validity status which are copied from @object to
  * the duplicated one.
- *
- * Though this function is not recursive by itself, it is widely supposed
- * everywhere in the program that recursivity is provided but #NAObject
- * implementation.
- *
- * <important>
- *   <para>
- *     na_object_duplicate() (aka na_iduplicable_duplicate())
- *     is definitively recursive
- *   </para>
- * </important>
  *
  * Returns: a new #NAIDuplicable.
  *
  * Since: 2.30
  */
 NAIDuplicable *
-na_iduplicable_duplicate( const NAIDuplicable *object )
+na_iduplicable_duplicate( const NAIDuplicable *object, guint mode )
 {
 	static const gchar *thisfn = "na_iduplicable_duplicate";
 	NAIDuplicable *dup;
@@ -310,7 +300,7 @@ na_iduplicable_duplicate( const NAIDuplicable *object )
 
 	dup = g_object_new( G_OBJECT_TYPE( object ), NULL );
 
-	v_copy( dup, object );
+	v_copy( dup, object, mode );
 
 	dup_str = get_duplicable_str( dup );
 	obj_str = get_duplicable_str( object );
@@ -503,10 +493,10 @@ na_iduplicable_set_modified( NAIDuplicable *object, gboolean modified )
 #endif /* NA_ENABLE_DEPRECATED */
 
 static void
-v_copy( NAIDuplicable *target, const NAIDuplicable *source )
+v_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode )
 {
 	if( NA_IDUPLICABLE_GET_INTERFACE( target )->copy ){
-		NA_IDUPLICABLE_GET_INTERFACE( target )->copy( target, source );
+		NA_IDUPLICABLE_GET_INTERFACE( target )->copy( target, source, mode );
 	}
 }
 

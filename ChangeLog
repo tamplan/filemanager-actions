@@ -1,3 +1,19 @@
+2012-02-01 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-iduplicable.h:
+	* src/core/na-iduplicable.c (copy, na_iduplicable_duplicate):
+	* src/api/na-object-api.h (na_object_duplicate):
+	* src/api/na-object.h (copy):
+	* src/core/na-object.c (iduplicable_copy):
+	* src/core/na-object-item.c (object_copy, copy_children): Add a 'mode' argument.
+
+	* src/nact/nact-clipboard.c
+	(nact_clipboard_primary_set, nact_clipboard_primary_get):
+	* src/nact/nact-menubar-edit.c (nact_menubar_edit_on_duplicate):
+	* src/nact/nact-menubar-file.c (nact_menubar_file_save_items):
+	* src/nact/nact-tree-model-dnd.c (drop_inside):
+	* src/nact/nact-tree-model.c (nact_tree_model_fill): Updated accordingly.
+
 2012-01-30 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/plugin-tracker/na-tracker.c:

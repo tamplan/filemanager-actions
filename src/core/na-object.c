@@ -59,13 +59,13 @@ static void     instance_finalize( GObject *object );
 static void     object_dump( const NAObject *object );
 
 static void     iduplicable_iface_init( NAIDuplicableInterface *iface, void *user_data );
-static void     iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source );
+static void     iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode );
 static gboolean iduplicable_are_equal( const NAIDuplicable *a, const NAIDuplicable *b );
 static gboolean iduplicable_is_valid( const NAIDuplicable *object );
 
 static void     check_status_down_rec( const NAObject *object );
 static void     check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was_valid );
-static void     v_copy( NAObject *target, const NAObject *source, gboolean recursive );
+static void     v_copy( NAObject *target, const NAObject *source, guint mode );
 static gboolean v_are_equal( const NAObject *a, const NAObject *b );
 static gboolean v_is_valid( const NAObject *a );
 static void     dump_tree( GList *tree, gint level );
@@ -224,7 +224,7 @@ iduplicable_iface_init( NAIDuplicableInterface *iface, void *user_data )
  * it recursively copies @source to @target
  */
 static void
-iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
+iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source, guint mode )
 {
 	static const gchar *thisfn = "na_object_iduplicable_copy";
 	NAObject *dest, *src;
@@ -238,8 +238,11 @@ iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
 	if( !dest->private->dispose_has_run &&
 		!src->private->dispose_has_run ){
 
-		g_debug( "%s: target=%p (%s), source=%p (%s)",
-				thisfn, ( void * ) dest, G_OBJECT_TYPE_NAME( dest ), ( void * ) src, G_OBJECT_TYPE_NAME( src ));
+		g_debug( "%s: target=%p (%s), source=%p (%s), mode=%d",
+				thisfn,
+				( void * ) dest, G_OBJECT_TYPE_NAME( dest ),
+				( void * ) src, G_OBJECT_TYPE_NAME( src ),
+				mode );
 
 		if( NA_IS_IFACTORY_OBJECT( target )){
 			na_factory_object_copy( NA_IFACTORY_OBJECT( target ), NA_IFACTORY_OBJECT( source ));
@@ -249,7 +252,7 @@ iduplicable_copy( NAIDuplicable *target, const NAIDuplicable *source )
 			na_icontext_copy( NA_ICONTEXT( target ), NA_ICONTEXT( source ));
 		}
 
-		v_copy( dest, src, TRUE );
+		v_copy( dest, src, mode );
 	}
 }
 
@@ -431,10 +434,10 @@ check_status_up_rec( const NAObject *object, gboolean was_modified, gboolean was
 }
 
 static void
-v_copy( NAObject *target, const NAObject *source, gboolean recursive )
+v_copy( NAObject *target, const NAObject *source, guint mode )
 {
 	if( NA_OBJECT_GET_CLASS( target )->copy ){
-		NA_OBJECT_GET_CLASS( target )->copy( target, source, recursive );
+		NA_OBJECT_GET_CLASS( target )->copy( target, source, mode );
 	}
 }
 

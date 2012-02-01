@@ -670,7 +670,7 @@ nact_tree_model_fill( NactTreeModel *model, GList *items )
 		gtk_tree_store_clear( ts_model );
 
 		for( it = items ; it ; it = it->next ){
-			duplicate = ( NAObject * ) na_object_duplicate( it->data );
+			duplicate = ( NAObject * ) na_object_duplicate( it->data, DUPLICATE_REC );
 			na_object_check_status( duplicate );
 			fill_tree_store( ts_model, model->private->treeview, duplicate, NULL );
 			na_object_unref( duplicate );

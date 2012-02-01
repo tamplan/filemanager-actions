@@ -332,7 +332,7 @@ nact_menubar_file_save_items( BaseWindow *window )
 
 	for( it = items ; it ; it = it->next ){
 		save_item( window, bar->private->updater, NA_OBJECT_ITEM( it->data ), &messages );
-		duplicate = NA_OBJECT_ITEM( na_object_duplicate( it->data ));
+		duplicate = NA_OBJECT_ITEM( na_object_duplicate( it->data, DUPLICATE_REC ));
 		na_object_reset_origin( it->data, duplicate );
 		na_object_check_status( it->data );
 		new_pivot = g_list_prepend( new_pivot, duplicate );

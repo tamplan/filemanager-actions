@@ -98,8 +98,8 @@ typedef struct {
 	/**
 	 * copy:
 	 * @target: the NAObject-derived object which will receive data.
-	 * @source: the NAObject-derived object which will provide data.
-	 * @recursive: whether children should be recursively copied.
+	 * @source: the NAObject-derived object which provides data.
+	 * @mode: the copy mode.
 	 *
 	 * Copies data and properties from @source to @target.
 	 *
@@ -108,7 +108,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void     ( *copy )     ( NAObject *target, const NAObject *source, gboolean recursive );
+	void     ( *copy )     ( NAObject *target, const NAObject *source, guint mode );
 
 	/**
 	 * are_equal:

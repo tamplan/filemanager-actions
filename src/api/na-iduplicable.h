@@ -132,7 +132,8 @@ typedef struct {
 	/**
 	 * copy:
 	 * @target: the #NAIDuplicable target of the copy.
-	 * @source: the #NAIDuplicable source of the copy
+	 * @source: the #NAIDuplicable source of the copy.
+	 * @mode: the duplication mode.
 	 *
 	 * Copies data from @source to @ŧarget, so that @target becomes an
 	 * exact copy of @source.
@@ -144,7 +145,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	void     ( *copy )     ( NAIDuplicable *target, const NAIDuplicable *source );
+	void     ( *copy )      ( NAIDuplicable *target, const NAIDuplicable *source, guint mode );
 
 	/**
 	 * are_equal:
@@ -166,7 +167,7 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean ( *are_equal )( const NAIDuplicable *a, const NAIDuplicable *b );
+	gboolean ( *are_equal ) ( const NAIDuplicable *a, const NAIDuplicable *b );
 
 	/**
 	 * is_valid:
@@ -183,25 +184,39 @@ typedef struct {
 	 *
 	 * Since: 2.30
 	 */
-	gboolean ( *is_valid )   ( const NAIDuplicable *object );
+	gboolean ( *is_valid )  ( const NAIDuplicable *object );
 }
 	NAIDuplicableInterface;
 
 #define IDUPLICABLE_SIGNAL_MODIFIED_CHANGED		"iduplicable-modified-changed"
 #define IDUPLICABLE_SIGNAL_VALID_CHANGED		"iduplicable-valid-changed"
 
-GType          na_iduplicable_get_type( void );
+/**
+ * DuplicateMode:
+ * @DUPLICATE_ONLY:   only duplicates the provided object.
+ * @DUPLICATE_OBJECT: only duplicate a menu
+ *                    (a menu with some subitems is duplicated to an empty menu)
+ * @DUPLICATE_REC:    recursively duplicates all the provided hierarchy.
+ */
+typedef enum {
+	DUPLICATE_ONLY = 1,
+	DUPLICATE_OBJECT,
+	DUPLICATE_REC
+}
+	DuplicableMode;
 
-void           na_iduplicable_dispose     ( const NAIDuplicable *object );
-void           na_iduplicable_dump        ( const NAIDuplicable *object );
-NAIDuplicable *na_iduplicable_duplicate   ( const NAIDuplicable *object );
-void           na_iduplicable_check_status( const NAIDuplicable *object );
+GType          na_iduplicable_get_type         ( void );
 
-NAIDuplicable *na_iduplicable_get_origin  ( const NAIDuplicable *object );
-gboolean       na_iduplicable_is_valid    ( const NAIDuplicable *object );
-gboolean       na_iduplicable_is_modified ( const NAIDuplicable *object );
+void           na_iduplicable_dispose          ( const NAIDuplicable *object );
+void           na_iduplicable_dump             ( const NAIDuplicable *object );
+NAIDuplicable *na_iduplicable_duplicate        ( const NAIDuplicable *object, guint mode );
+void           na_iduplicable_check_status     ( const NAIDuplicable *object );
 
-void           na_iduplicable_set_origin  ( NAIDuplicable *object, const NAIDuplicable *origin );
+NAIDuplicable *na_iduplicable_get_origin       ( const NAIDuplicable *object );
+gboolean       na_iduplicable_is_valid         ( const NAIDuplicable *object );
+gboolean       na_iduplicable_is_modified      ( const NAIDuplicable *object );
+
+void           na_iduplicable_set_origin       ( NAIDuplicable *object, const NAIDuplicable *origin );
 
 void           na_iduplicable_register_consumer( GObject *consumer );
 

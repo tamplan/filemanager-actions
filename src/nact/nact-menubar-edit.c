@@ -406,7 +406,7 @@ nact_menubar_edit_on_duplicate( GtkAction *gtk_action, BaseWindow *window )
 	items = na_object_copyref_items( bar->private->selected_items );
 
 	for( it = items ; it ; it = it->next ){
-		obj = NA_OBJECT( na_object_duplicate( it->data ));
+		obj = NA_OBJECT( na_object_duplicate( it->data, DUPLICATE_REC ));
 		action = NULL;
 
 		/* duplicating a profile

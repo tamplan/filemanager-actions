@@ -699,7 +699,7 @@ nact_clipboard_primary_set( NactClipboard *clipboard, GList *items, gint mode )
 
 		for( it = items ; it ; it = it->next ){
 			user_data->items =
-					g_list_prepend( user_data->items, na_object_duplicate( it->data ));
+					g_list_prepend( user_data->items, na_object_duplicate( it->data, DUPLICATE_REC ));
 		}
 		user_data->items = g_list_reverse( user_data->items );
 
@@ -749,7 +749,7 @@ nact_clipboard_primary_get( NactClipboard *clipboard, gboolean *relabel )
 
 			if( user_data ){
 				for( it = user_data->items ; it ; it = it->next ){
-					obj = NA_OBJECT( na_object_duplicate( it->data ));
+					obj = NA_OBJECT( na_object_duplicate( it->data, DUPLICATE_REC ));
 					na_object_set_origin( obj, NULL );
 					items = g_list_prepend( items, obj );
 				}

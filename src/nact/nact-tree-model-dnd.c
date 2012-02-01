@@ -614,7 +614,7 @@ drop_inside( NactTreeModel *model, GtkTreePath *dest, GtkSelectionData  *selecti
 				g_object_unref( current );
 
 				if( copy_data ){
-					inserted = ( NAObject * ) na_object_duplicate( current );
+					inserted = ( NAObject * ) na_object_duplicate( current, DUPLICATE_REC );
 					na_object_set_origin( inserted, NULL );
 					na_object_check_status( inserted );
 					relabel = na_updater_should_pasted_be_relabeled( updater, inserted );

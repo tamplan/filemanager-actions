@@ -69,7 +69,7 @@ static void     instance_dispose( GObject *object );
 static void     instance_finalize( GObject *object );
 
 static void     object_dump( const NAObject *object );
-static void     object_copy( NAObject*target, const NAObject *source, gboolean recursive );
+static void     object_copy( NAObject*target, const NAObject *source, guint mode );
 static gboolean object_are_equal( const NAObject *a, const NAObject *b );
 static gboolean object_is_valid( const NAObject *object );
 
@@ -77,7 +77,7 @@ static gchar   *object_id_new_id( const NAObjectId *item, const NAObjectId *new_
 
 static void     count_items_rec( GList *items, gint *menus, gint *actions, gint *profiles, gboolean recurse );
 static GSList  *get_children_slist( const NAObjectItem *item );
-static void     copy_children( NAObjectItem *target, const NAObjectItem *source );
+static void     copy_children( NAObjectItem *target, const NAObjectItem *source, guint mode );
 
 GType
 na_object_item_get_type( void )
@@ -225,7 +225,7 @@ object_dump( const NAObject *object )
 }
 
 static void
-object_copy( NAObject *target, const NAObject *source, gboolean recursive )
+object_copy( NAObject *target, const NAObject *source, guint mode )
 {
 	static const gchar *thisfn = "na_object_item_object_copy";
 	void *provider;
@@ -239,8 +239,10 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 
 	if( !dest->private->dispose_has_run && !src->private->dispose_has_run ){
 
-		if( recursive ){
-			copy_children( dest, src );
+		if( mode == DUPLICATE_REC ||
+			( mode == DUPLICATE_OBJECT && G_OBJECT_TYPE( source ) == NA_TYPE_OBJECT_ACTION )){
+
+				copy_children( dest, src, mode );
 		}
 
 		provider = na_object_get_provider( source );
@@ -262,7 +264,7 @@ object_copy( NAObject *target, const NAObject *source, gboolean recursive )
 
 		/* chain up to the parent class */
 		if( NA_OBJECT_CLASS( st_parent_class )->copy ){
-			NA_OBJECT_CLASS( st_parent_class )->copy( target, source, recursive );
+			NA_OBJECT_CLASS( st_parent_class )->copy( target, source, mode );
 		}
 	}
 }
@@ -825,8 +827,12 @@ get_children_slist( const NAObjectItem *item )
 	return( g_slist_reverse( slist ));
 }
 
+/*
+ * only copy children if mode is 'full recursive'
+ * or mode is 'duplicate object' and this is an action with profiles
+ */
 static void
-copy_children( NAObjectItem *target, const NAObjectItem *source )
+copy_children( NAObjectItem *target, const NAObjectItem *source, guint mode )
 {
 	static const gchar *thisfn = "na_object_item_copy_children";
 	GList *tgt_children, *src_children, *ic;
@@ -835,14 +841,15 @@ copy_children( NAObjectItem *target, const NAObjectItem *source )
 	tgt_children = na_object_get_items( target );
 	if( tgt_children ){
 		g_warning( "%s: target_children=%p (count=%d)",
-				thisfn, ( void * ) tgt_children, g_list_length( tgt_children ));
+				thisfn,
+				( void * ) tgt_children, g_list_length( tgt_children ));
 		g_return_if_fail( tgt_children == NULL );
 	}
 
 	src_children = na_object_get_items( source );
 	for( ic = src_children ; ic ; ic = ic->next ){
 
-		dup = ( NAObject * ) na_object_duplicate( ic->data );
+		dup = ( NAObject * ) na_object_duplicate( ic->data, mode );
 		na_object_set_parent( dup, target );
 		tgt_children = g_list_prepend( tgt_children, dup );
 	}
