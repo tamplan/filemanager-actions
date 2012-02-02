@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-02-01 19:39+0000\n"
-"PO-Revision-Date: 2012-02-02 12:36+0100\n"
+"POT-Creation-Date: 2012-02-02 11:36+0000\n"
+"PO-Revision-Date: 2012-02-02 12:37+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2651,7 +2651,6 @@ msgstr ""
 "<literal>true</literal> en la salida estándar cuando se ejecuta."
 
 #: C/nautilus-actions-config-tool.xml:983(para)
-#, fuzzy
 #| msgid ""
 #| "To define the command, enter it in the <guilabel>Appears if the command "
 #| "outputs \"<literal>true</literal>\"</guilabel> entry box."
@@ -2660,7 +2659,7 @@ msgid ""
 "outputs \"true\"</guilabel> entry box."
 msgstr ""
 "Para definir el comando, introdúzcalo en el cuadro de entrada "
-"<guilabel>Aparece si el comando devuelve «<literal>true</literal>»</guilabel>."
+"<guilabel>Aparece si el comando devuelve «true»</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:993(para)
 msgid ""
@@ -3667,9 +3666,13 @@ msgid "echo jacques"
 msgstr "echo juan"
 
 #: C/nautilus-actions-config-tool.xml:548(para)
+#| msgid ""
+#| "This is because <literal>%b</literal> marks a <emphasis>singular</"
+#| "emphasis> parameter. The command is the run once for each of the selected "
+#| "items."
 msgid ""
 "This is because <literal>%b</literal> marks a <emphasis>singular</emphasis> "
-"parameter. The command is the run once for each of the selected items."
+"parameter. The command is then run once for each of the selected items."
 msgstr ""
 "Esto es así porque <literal>%b</literal> marca un parámetro "
 "<emphasis>singular</emphasis>. El comando se ejecuta entonces una vez por "
@@ -3677,7 +3680,8 @@ msgstr ""
 
 #
 #: C/nautilus-actions-config-tool.xml:553(title)
-msgid "Contrarily, if we have requester <command>echo %B</command>,"
+#| msgid "Contrarily, if we have requester <command>echo %B</command>,"
+msgid "Contrarily, if we have requested <command>echo %B</command>,"
 msgstr "Contrariamente, si se ha solicitado <command>echo %B</command>,"
 
 #: C/nautilus-actions-config-tool.xml:556(para)
@@ -3689,8 +3693,12 @@ msgid "echo pierre paul jacques"
 msgstr "echo pedro pablo juan"
 
 #: C/nautilus-actions-config-tool.xml:563(para)
+#| msgid ""
+#| "This is because <literal>%B</literal> marks a a <emphasis>plural</"
+#| "emphasis> parameter. The command is then run only once, with the list of "
+#| "selected items as arguments."
 msgid ""
-"This is because <literal>%B</literal> marks a a <emphasis>plural</emphasis> "
+"This is because <literal>%B</literal> marks a <emphasis>plural</emphasis> "
 "parameter. The command is then run only once, with the list of selected "
 "items as arguments."
 msgstr ""
