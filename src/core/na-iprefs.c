@@ -61,10 +61,10 @@ static EnumMap st_order_mode[] = {
 };
 
 static EnumMap st_tabs_pos[] = {
-	{ GTK_POS_LEFT,   "Left" },
-	{ GTK_POS_RIGHT,  "Right" },
-	{ GTK_POS_TOP,    "Top" },
-	{ GTK_POS_BOTTOM, "Bottom" },
+	{ 1+GTK_POS_LEFT,   "Left" },
+	{ 1+GTK_POS_RIGHT,  "Right" },
+	{ 1+GTK_POS_TOP,    "Top" },
+	{ 1+GTK_POS_BOTTOM, "Bottom" },
 	{ 0 }
 };
 
@@ -144,7 +144,7 @@ na_iprefs_get_tabs_pos( gboolean *mandatory )
 	tabs_pos = enum_map_id_from_string( st_tabs_pos, tabs_pos_str );
 	g_free( tabs_pos_str );
 
-	return( tabs_pos );
+	return( tabs_pos-1 );
 }
 
 /*
@@ -158,7 +158,7 @@ na_iprefs_set_tabs_pos( guint position )
 {
 	const gchar *tabs_pos_str;
 
-	tabs_pos_str = enum_map_string_from_id( st_tabs_pos, position );
+	tabs_pos_str = enum_map_string_from_id( st_tabs_pos, 1+position );
 	na_settings_set_string( NA_IPREFS_MAIN_TABS_POS, tabs_pos_str );
 }
 

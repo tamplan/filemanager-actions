@@ -36,9 +36,7 @@
 
 #include "nact-main-tab.h"
 
-static void     on_tab_initialize_window( NactMainWindow *window, gpointer p_page );
-static gboolean on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactMainWindow *window );
-static void     open_popup( NactMainWindow *window, GdkEventButton *event );
+static void on_tab_initialize_window( NactMainWindow *window, gpointer p_page );
 
 /**
  * nact_main_tab_init:
@@ -104,53 +102,27 @@ nact_main_tab_is_page_enabled( NactMainWindow *window, gint num_page )
 	return( is_sensitive );
 }
 
+/*
+ * a commoon initialization for each page of the notebook
+ * (provided that the page has itself called nact_main_tab_init()
+ * *before* the BASE_SIGNAL_INITIALIZE_WINDOW has been emitted)
+ */
 static void
 on_tab_initialize_window( NactMainWindow *window, gpointer p_page )
 {
 	GtkNotebook *notebook;
-	GtkWidget *page, *label;
+	GtkWidget *page;
+	const gchar *text;
 	guint num_page;
 
 	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
 	num_page = GPOINTER_TO_UINT( p_page );
 	page = gtk_notebook_get_nth_page( notebook, num_page );
-	label = gtk_notebook_get_tab_label( notebook, page );
 
-	base_window_signal_connect(
-			BASE_WINDOW( window ),
-			G_OBJECT( label ),
-			"button-press-event",
-			G_CALLBACK( on_button_press_event ));
-}
-
-static gboolean
-on_button_press_event( GtkWidget *widget, GdkEventButton *event, NactMainWindow *window )
-{
-	gboolean stop = FALSE;
-
-	/* single click on right button */
-	if( event->type == GDK_BUTTON_PRESS && event->button == 3 ){
-		open_popup( window, event );
-		stop = TRUE;
-	}
-
-	return( stop );
-}
-
-static void
-open_popup( NactMainWindow *window, GdkEventButton *event )
-{
-#if 0
-	NactTreeView *items_view;
-	GtkTreePath *path;
-
-	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
-
-	if( gtk_tree_view_get_path_at_pos( items_view->private->tree_view, event->x, event->y, &path, NULL, NULL, NULL )){
-		nact_tree_view_select_row_at_path( items_view, path );
-		gtk_tree_path_free( path );
-	}
-
-	g_signal_emit_by_name( window, MAIN_SIGNAL_CONTEXT_MENU, event, "popup" );
-#endif
+	/* popup menu is enabled in NactMainWindow::on_base_initialize_window()
+	 * but the displayed labels default to be those of the tab, i.e. embed
+	 * an underscore as an accelerator - so get ride of this
+	 */
+	text = gtk_notebook_get_tab_label_text( notebook, page );
+	gtk_notebook_set_menu_label_text( notebook, page, text );
 }

@@ -35,6 +35,7 @@
 #include <glib/gi18n.h>
 
 #include <core/na-io-provider.h>
+#include <core/na-iprefs.h>
 
 #include "nact-application.h"
 #include "nact-main-statusbar.h"
@@ -56,13 +57,14 @@ struct _NactMenubarClassPrivate {
 
 static const GtkActionEntry entries[] = {
 
-		{ "FileMenu", NULL, N_( "_File" ) },
-		{ "EditMenu", NULL, N_( "_Edit" ) },
-		{ "ViewMenu", NULL, N_( "_View" ) },
-		{ "ViewToolbarMenu", NULL, N_( "_Toolbars" ) },
-		{ "ToolsMenu", NULL, N_( "_Tools" ) },
-		{ "MaintainerMenu", NULL, N_( "_Maintainer" ) },
-		{ "HelpMenu", NULL, N_( "_Help" ) },
+		{ "FileMenu",          NULL, N_( "_File" ) },
+		{ "EditMenu",          NULL, N_( "_Edit" ) },
+		{ "ViewMenu",          NULL, N_( "_View" ) },
+		{ "ViewToolbarMenu",   NULL, N_( "_Toolbars" ) },
+		{ "ToolsMenu",         NULL, N_( "_Tools" ) },
+		{ "MaintainerMenu",    NULL, N_( "_Maintainer" ) },
+		{ "HelpMenu",          NULL, N_( "_Help" ) },
+		{ "NotebookLabelMenu", NULL, N_( "Notebook _tabs" ) },
 
 		{ "NewMenuItem", NULL, N_( "New _menu" ), NULL,
 				/* i18n: tooltip displayed in the status bar when selecting the 'New menu' item */
@@ -182,6 +184,26 @@ static const GtkToggleActionEntry toolbar_entries[] = {
 				/* i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item */
 				N_( "Display the Help toolbar" ),
 				G_CALLBACK( nact_menubar_view_on_toolbar_help ), FALSE },
+};
+
+static const GtkRadioActionEntry tabs_pos_entries[] = {
+
+		{ "TabsPosLeftItem", NULL, N_( "On the _left" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the left' item */
+				N_( "Display the notebook tabs on the left side" ),
+				GTK_POS_LEFT },
+		{ "TabsPosRightItem", NULL, N_( "On the _right" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the right' item */
+				N_( "Display the notebook tabs on the right side" ),
+				GTK_POS_RIGHT },
+		{ "TabsPosTopItem", NULL, N_( "On the _top" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the top' item */
+				N_( "Display the notebook tabs on the top side" ),
+				GTK_POS_TOP },
+		{ "TabsPosBottomItem", NULL, N_( "On the _bottom" ), NULL,
+				/* i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the bottom' item */
+				N_( "Display the notebook tabs on the bottom side" ),
+				GTK_POS_BOTTOM },
 };
 
 #define MENUBAR_PROP_STATUS_CONTEXT			"menubar-status-context"
@@ -331,6 +353,7 @@ instance_dispose( GObject *object )
 		self->private->dispose_has_run = TRUE;
 
 		g_object_unref( self->private->action_group );
+		g_object_unref( self->private->notebook_group );
 		g_object_unref( self->private->ui_manager );
 		g_object_unref( self->private->sort_buttons );
 
@@ -409,12 +432,16 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 	GtkWindow *toplevel;
 	gboolean has_maintainer_menu;
 	NactApplication *application;
+	guint tabs_pos;
 
 	BAR_WINDOW_VOID( window );
 
 	if( !bar->private->dispose_has_run ){
-		g_debug( "%s: window=%p (%s), user_data=%p", thisfn,
-				( void * ) window, G_OBJECT_TYPE_NAME( window ), ( void * ) user_data );
+
+		g_debug( "%s: window=%p (%s), user_data=%p",
+				thisfn,
+				( void * ) window, G_OBJECT_TYPE_NAME( window ),
+				( void * ) user_data );
 
 		/* create the menubar:
 		 * - create action group, and insert list of actions in it
@@ -434,9 +461,15 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 				"connect-proxy",
 				G_CALLBACK( on_ui_manager_proxy_connect ));
 
+		tabs_pos = na_iprefs_get_tabs_pos( NULL );
+		bar->private->notebook_group = gtk_action_group_new( "NotebookActions" );
+		g_debug( "%s: notebook_group=%p", thisfn, ( void * ) bar->private->notebook_group );
+		gtk_action_group_set_translation_domain( bar->private-> notebook_group, GETTEXT_PACKAGE );
+		gtk_action_group_add_radio_actions( bar->private->notebook_group, tabs_pos_entries, G_N_ELEMENTS( tabs_pos_entries ), tabs_pos, G_CALLBACK( nact_menubar_view_on_tabs_pos_changed ), window );
+		gtk_ui_manager_insert_action_group( bar->private->ui_manager, bar->private->notebook_group, 0 );
+
 		bar->private->action_group = gtk_action_group_new( "MenubarActions" );
 		g_debug( "%s: action_group=%p", thisfn, ( void * ) bar->private->action_group );
-
 		gtk_action_group_set_translation_domain( bar->private->action_group, GETTEXT_PACKAGE );
 		gtk_action_group_add_actions( bar->private->action_group, entries, G_N_ELEMENTS( entries ), window );
 		gtk_action_group_add_toggle_actions( bar->private->action_group, toolbar_entries, G_N_ELEMENTS( toolbar_entries ), window );

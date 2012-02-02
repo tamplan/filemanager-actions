@@ -846,6 +846,7 @@ on_base_initialize_gtk( NactMainWindow *window, GtkWindow *toplevel, gpointer us
 {
 	static const gchar *thisfn = "nact_main_window_on_base_initialize_gtk";
 	GtkWidget *tree_parent;
+	GtkNotebook *notebook;
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
@@ -876,6 +877,11 @@ on_base_initialize_gtk( NactMainWindow *window, GtkWindow *toplevel, gpointer us
 				G_CALLBACK( on_tree_view_modified_status_changed ));
 
 		nact_main_statusbar_initialize_gtk_toplevel( window );
+
+		/* enable popup menu on  the notebook
+		 */
+		notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
+		gtk_notebook_popup_enable( notebook );
 	}
 }
 

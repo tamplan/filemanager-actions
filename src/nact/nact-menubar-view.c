@@ -153,3 +153,24 @@ on_view_toolbar_activated( GtkToggleAction *action, BaseWindow *window, int tool
 
 	nact_main_toolbar_activate( NACT_MAIN_WINDOW( window ), toolbar_id, bar->private->ui_manager, is_active );
 }
+
+/*
+ * When activating one of the GtkRadioAction which handles the position
+ * of the notebook tabs
+ * @action: the first GtkRadioAction of the group
+ * @current: the activated GtkRadioAction
+ *
+ * This function is triggered once each time we are activating an item of
+ * the menu, after having set the "current_value" to the new value. All
+ * GtkRadioButtons items share the same "current_value".
+ */
+void
+nact_menubar_view_on_tabs_pos_changed( GtkRadioAction *action, GtkRadioAction *current, BaseWindow *window )
+{
+	GtkNotebook *notebook;
+	guint new_pos;
+
+	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( window ), "MainNotebook" ));
+	new_pos = gtk_radio_action_get_current_value( action );
+	gtk_notebook_set_tab_pos( notebook, new_pos );
+}

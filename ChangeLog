@@ -1,3 +1,24 @@
+2012-02-02 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-iprefs.c: Fix enumeration maps as it only works for data
+	greater than zero.
+
+	* src/nact/nact-main-tab.c: No more try to open a popup menu on the
+	notebook as the standard GtkNotebook already has its own popup.
+
+	* src/nact/nact-main-window.c (on_base_initialize_gtk):
+	Enable the standard GtkNotebook context menu.
+
+	* src/nact/nact-menubar-priv.h:
+	* src/nact/nact-menubar.c:
+	Define a new notebook action group.
+	Define new radio action entries.
+
+	* src/nact/nact-menubar-view.c (nact_menubar_view_on_tabs_pos_changed):
+	New function.
+
+	* src/nact/nautilus-actions-config-tool.actions: Define menu actions.
+
 2012-02-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-window.c:
