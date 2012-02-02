@@ -224,7 +224,7 @@ class_init( NactTreeModelClass *klass )
 			g_param_spec_pointer(
 					TREE_PROP_WINDOW,
 					_( "Parent BaseWindow" ),
-					_( "A pointer (not a reference) to the BaseWindow parent of thE embedding treeview" ),
+					_( "A pointer (not a reference) to the BaseWindow parent of the embedding treeview" ),
 					G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE ));
 
 	g_object_class_install_property( object_class, TREE_PROP_TREEVIEW_ID,
