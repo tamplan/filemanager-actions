@@ -26,14 +26,19 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
+provider_id = na-xml
+
 pkglib_LTLIBRARIES = libna-io-xml.la
+
+provider_datadir = $(pkgdatadir)/$(provider_id)
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_IO_XML}\"			\
-	-DPKGDATADIR=\"$(pkgdatadir)\"						\
+	-DPROVIDER_ID=\"$(provider_id)\"					\
+	-DPROVIDER_DATADIR=\"$(provider_datadir)\"			\
 	$(NULL)
 
 libna_io_xml_la_SOURCES = \
@@ -67,10 +72,13 @@ images_files = \
 	export-schemas-v2.png								\
 	$(NULL)
 
-pkgdata_DATA = \
+provider_data_DATA = \
 	$(images_files)										\
 	$(NULL)
 
 EXTRA_DIST = \
-	$(pkgdata_DATA)										\
+	$(provider_data_DATA)								\
 	$(NULL)
+
+uninstall-local:
+	rmdir $(provider_datadir)

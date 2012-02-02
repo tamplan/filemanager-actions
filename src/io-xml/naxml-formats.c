@@ -134,7 +134,7 @@ naxml_formats_get_formats( const NAIExporter* exporter )
 		str->label = g_strdup( gettext( naxml_formats[i].label ));
 		str->description = g_strdup( gettext( naxml_formats[i].description ));
 		if( naxml_formats[i].image ){
-			fname = g_strdup_printf( "%s/%s", PKGDATADIR, naxml_formats[i].image );
+			fname = g_strdup_printf( "%s/%s", PROVIDER_DATADIR, naxml_formats[i].image );
 			str->pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
 			g_free( fname );
 #if 0

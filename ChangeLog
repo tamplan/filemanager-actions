@@ -1,5 +1,9 @@
 2012-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-xml/Makefile.am:
+	* src/io-xml/naxml-formats.c: Data files are installed in a private
+	subdirectory.
+
 	* src/io-desktop/Makefile.am:
 	* src/io-desktop/nadp-formats.c: Datafiles are installed in a private
 	subdirectory.
