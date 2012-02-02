@@ -1,5 +1,11 @@
 2012-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar.c (on_open_context_menu): Manages if event is
+	NULL.
+
+	* src/nact/nact-tree-view.c: Manages to open the context menu with
+	keyboard.
+
 	* src/core/na-iprefs.c: Fix enumeration maps as it only works for data
 	greater than zero.
 

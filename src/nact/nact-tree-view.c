@@ -131,6 +131,7 @@ static gboolean   on_button_press_event( GtkWidget *widget, GdkEventButton *even
 static gboolean   on_focus_in( GtkWidget *widget, GdkEventFocus *event, BaseWindow *window );
 static gboolean   on_focus_out( GtkWidget *widget, GdkEventFocus *event, BaseWindow *window );
 static gboolean   on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window );
+static gboolean   on_popup_menu( GtkWidget *widget, BaseWindow *window );
 static void       on_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
 static void       on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items );
 static void       on_tree_view_realized( GtkWidget *treeview, BaseWindow *window );
@@ -142,7 +143,7 @@ static GtkWidget *get_tree_view( NactTreeView *items_view );
 static void       iter_on_selection( NactTreeView *view, FnIterOnSelection fn_iter, gpointer user_data );
 static void       navigate_to_child( NactTreeView *view );
 static void       navigate_to_parent( NactTreeView *view );
-static void       open_popup( BaseWindow *window, GdkEventButton *event );
+static void       do_open_popup( BaseWindow *window, GdkEventButton *event );
 static void       select_row_at_path_by_string( NactTreeView *view, const gchar *path );
 static void       toggle_collapse( NactTreeView *view );
 static gboolean   toggle_collapse_iter( NactTreeView *view, GtkTreeModel *model, GtkTreeIter *iter, NAObject *object, gpointer user_data );
@@ -773,7 +774,7 @@ on_button_press_event( GtkWidget *widget, GdkEventButton *event, BaseWindow *win
 
 	/* single click on right button */
 	if( event->type == GDK_BUTTON_PRESS && event->button == 3 ){
-		open_popup( window, event );
+		do_open_popup( window, event );
 		stop = TRUE;
 	}
 
@@ -833,6 +834,15 @@ on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window 
 	return( stop );
 }
 
+/*
+ * triggered by the "popup-menu" signal, itself triggered by the keybindings
+ */
+static gboolean
+on_popup_menu( GtkWidget *widget, BaseWindow *window )
+{
+	do_open_popup( window, NULL );
+	return( TRUE );
+}
 /*
  * handles the "changed" signal emitted on the GtkTreeSelection
  */
@@ -901,6 +911,12 @@ on_tree_view_realized( GtkWidget *treeview, BaseWindow *window )
 			G_OBJECT( treeview ),
 			"button-press-event",
 			G_CALLBACK( on_button_press_event ));
+
+	base_window_signal_connect(
+			window,
+			G_OBJECT( treeview ),
+			"popup-menu",
+			G_CALLBACK( on_popup_menu ));
 
 	/* force the treeview to have the focus at start
 	 * and select the first row if it exists
@@ -1399,16 +1415,18 @@ navigate_to_parent( NactTreeView *view )
 }
 
 static void
-open_popup( BaseWindow *window, GdkEventButton *event )
+do_open_popup( BaseWindow *window, GdkEventButton *event )
 {
 	NactTreeView *items_view;
 	GtkTreePath *path;
 
-	items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
+	if( event ){
+		items_view = NACT_TREE_VIEW( g_object_get_data( G_OBJECT( window ), WINDOW_DATA_TREE_VIEW ));
 
-	if( gtk_tree_view_get_path_at_pos( items_view->private->tree_view, event->x, event->y, &path, NULL, NULL, NULL )){
-		nact_tree_view_select_row_at_path( items_view, path );
-		gtk_tree_path_free( path );
+		if( gtk_tree_view_get_path_at_pos( items_view->private->tree_view, event->x, event->y, &path, NULL, NULL, NULL )){
+			nact_tree_view_select_row_at_path( items_view, path );
+			gtk_tree_path_free( path );
+		}
 	}
 
 	g_signal_emit_by_name( window, MAIN_SIGNAL_CONTEXT_MENU, event, "/ui/TreeContext" );

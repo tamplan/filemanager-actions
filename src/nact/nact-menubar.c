@@ -627,6 +627,7 @@ on_menu_item_deselected( GtkMenuItem *proxy, BaseWindow *window )
 static void
 on_open_context_menu( BaseWindow *window, GdkEventButton *event, const gchar *popup, gpointer user_data )
 {
+	static const gchar *thisfn = "nact_menubar_on_open_context_menu";
 	GtkWidget *menu;
 
 	BAR_WINDOW_VOID( window );
@@ -639,8 +640,13 @@ on_open_context_menu( BaseWindow *window, GdkEventButton *event, const gchar *po
 						"selection-done",
 						G_CALLBACK( on_popup_selection_done ),
 						window );
-
-		gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, event->button, event->time );
+		if( event ){
+			gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, event->button, event->time );
+		} else {
+			gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time ());
+		}
+	} else {
+		g_warning( "%s: menu not found: %s", thisfn, popup );
 	}
 }
 
