@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-01-29 11:59+0000\n"
-"PO-Revision-Date: 2012-02-01 17:32+0100\n"
+"POT-Creation-Date: 2012-02-01 19:39+0000\n"
+"PO-Revision-Date: 2012-02-02 12:36+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -539,7 +539,7 @@ msgstr "Nautilus"
 
 #: C/nautilus-actions-config-tool.xml:0(productname)
 msgid "Nautilus-Actions"
-msgstr "Nautilus-Actions"
+msgstr "Acciones de Nautilus"
 
 #: C/nautilus-actions-config-tool.xml:74(title)
 msgid "Introduction"
@@ -3358,10 +3358,12 @@ msgid ""
 "When the selection is empty or contains only one element, and from this "
 "topic point of view, these two forms are exactly equivalent."
 msgstr ""
+"Cuando la selección está vacía o contiene sólo un elemento, y desde el punto "
+"de vista de este tema, estas dos formas son exactamente equivalentes."
 
 #: C/nautilus-actions-config-tool.xml:328(para)
 msgid "When the selection contains more than one item:"
-msgstr ""
+msgstr "Cuando la selección contiene más de un elemento:"
 
 #: C/nautilus-actions-config-tool.xml:333(para)
 msgid ""
@@ -3370,6 +3372,10 @@ msgid ""
 "is only able to deal with one item at a time, and thus that it has to be ran "
 "one time for each selected item;"
 msgstr ""
+"si el primer parámetro relevante es de forma singular, entonces, "
+"<productname>Acciones de Nautilus</productname> considerará que el comando "
+"sólo puede manejar un elemento a la vez, y por lo tanto que tiene que "
+"ejecutarse una vez por cada elemento seleccionado;"
 
 #: C/nautilus-actions-config-tool.xml:341(para)
 msgid ""
@@ -3378,6 +3384,10 @@ msgid ""
 "command is able to deal with a list of items, and thus the command will be "
 "executed only once;"
 msgstr ""
+"contrariamente, si el primer parámetro relevante encontrado es de forma "
+"plural, entonces <productname>Acciones de Nautilus</productname> considerará "
+"que el comando puede manejar una lista de elementos, y por lo tanto se "
+"ejecutará sólo una vez;"
 
 #: C/nautilus-actions-config-tool.xml:348(para)
 msgid ""
@@ -3385,11 +3395,15 @@ msgid ""
 "productname> defaults to consider that the command should be executed only "
 "once."
 msgstr ""
+"si todos los parámetros encontrados son irrelevantes, entonces "
+"<productname>Acciones de Nautilus</productname> considerará de manera "
+"predeterminada que el comando se ejecute sólo una vez."
 
 #: C/nautilus-actions-config-tool.xml:355(title)
 msgid ""
 "Characterization of the parameters <abbrev>vs.</abbrev> multiple execution"
 msgstr ""
+"Caracterización de los parámetros <abbrev>vs.</abbrev> ejecución múltiple"
 
 #: C/nautilus-actions-config-tool.xml:364(entry)
 msgid "Parameter"
@@ -3447,7 +3461,7 @@ msgstr "%c"
 
 #: C/nautilus-actions-config-tool.xml:386(entry)
 msgid "count of selected items"
-msgstr ""
+msgstr "conteo de elementos seleccionados"
 
 #: C/nautilus-actions-config-tool.xml:388(entry)
 #: C/nautilus-actions-config-tool.xml:423(entry)
@@ -3473,6 +3487,7 @@ msgstr "%D"
 #: C/nautilus-actions-config-tool.xml:400(entry)
 msgid "space-separated list of base directory of each selected items"
 msgstr ""
+"lista separada por espacios de carpetas base de cada elemento seleccionado"
 
 #: C/nautilus-actions-config-tool.xml:406(literal)
 msgid "%f"
@@ -3514,6 +3529,7 @@ msgstr "%M"
 #: C/nautilus-actions-config-tool.xml:435(entry)
 msgid "space-separated list of the mimetypes of the selected items"
 msgstr ""
+"lista separada por espacios de tipos MIME de cada elemento seleccionado"
 
 #: C/nautilus-actions-config-tool.xml:441(literal)
 msgid "%n"
@@ -3529,7 +3545,7 @@ msgstr "%o"
 
 #: C/nautilus-actions-config-tool.xml:449(entry)
 msgid "no-op operator which forces a singular form of execution"
-msgstr ""
+msgstr "operador de no operación que fuerza una forma de ejecución singular"
 
 #: C/nautilus-actions-config-tool.xml:455(literal)
 msgid "%O"
@@ -3537,7 +3553,7 @@ msgstr "%O"
 
 #: C/nautilus-actions-config-tool.xml:456(entry)
 msgid "no-op operator which forces a plural form of execution"
-msgstr ""
+msgstr "operador de no operación que fuerza una forma de ejecución plural"
 
 #: C/nautilus-actions-config-tool.xml:462(literal)
 msgid "%p"
@@ -3617,7 +3633,7 @@ msgstr "el carácter «<placeholder-1/>»"
 
 #: C/nautilus-actions-config-tool.xml:528(title)
 msgid "Usage of singular <abbrev>vs.</abbrev> plural forms"
-msgstr ""
+msgstr "Uso de la forma singular <abbrev>vs.</abbrev> la forma plural"
 
 #: C/nautilus-actions-config-tool.xml:529(para)
 msgid ""
@@ -3625,10 +3641,13 @@ msgid ""
 "selection contains the three files <filename>pierre</filename>, "
 "<filename>paul</filename> and <filename>jacques</filename>."
 msgstr ""
+"Se supone que la carpeta actual es <filename>/datos</filename>, y que la "
+"selección actual contiene tres archivos <filename>pedro</filename>. "
+"<filename>pablo</filename>, y <filename>juan</filename>."
 
 #: C/nautilus-actions-config-tool.xml:536(title)
 msgid "If we have requested <command>echo %b</command>,"
-msgstr ""
+msgstr "Si se ha solicitado <command>echo %b</command>,"
 
 #: C/nautilus-actions-config-tool.xml:539(para)
 #: C/nautilus-actions-config-tool.xml:572(para)
@@ -3652,10 +3671,14 @@ msgid ""
 "This is because <literal>%b</literal> marks a <emphasis>singular</emphasis> "
 "parameter. The command is the run once for each of the selected items."
 msgstr ""
+"Esto es así porque <literal>%b</literal> marca un parámetro "
+"<emphasis>singular</emphasis>. El comando se ejecuta entonces una vez por "
+"cada uno de los elementos seleccionados."
 
+#
 #: C/nautilus-actions-config-tool.xml:553(title)
 msgid "Contrarily, if we have requester <command>echo %B</command>,"
-msgstr ""
+msgstr "Contrariamente, si se ha solicitado <command>echo %B</command>,"
 
 #: C/nautilus-actions-config-tool.xml:556(para)
 msgid "then the following command will be run:"
@@ -3671,10 +3694,13 @@ msgid ""
 "parameter. The command is then run only once, with the list of selected "
 "items as arguments."
 msgstr ""
+"Esto es así porque <literal>%B</literal> marca un parámetro "
+"<emphasis>plural</emphasis>. El comando se ejecuta entonces sólo una vez, "
+"con la lista de los elementos seleccionados como argumentos."
 
 #: C/nautilus-actions-config-tool.xml:569(title)
 msgid "If we have requested <command>echo %b %B</command>,"
-msgstr ""
+msgstr "Si se ha solicitado <command>echo %b %B</command>,"
 
 #: C/nautilus-actions-config-tool.xml:577(command)
 msgid "echo pierre pierre paul jacques"
@@ -3696,6 +3722,11 @@ msgid ""
 "the corresponding item. The second parameter is computed and added as "
 "arguments to the executed command."
 msgstr ""
+"Esto es así porque el primer parámetro <emphasis>relevante</emphasis> es "
+"<literal>%b</literal>, y por lo tanto el comando se ejecuta una vez por cada "
+"elemento seleccionado, remplazando en cada ocurrencia el parámetro <literal>%"
+"b</literal> con el elemento correspondiente. El segundo parámetro se calcula "
+"y añade como argumento al comando ejecutado."
 
 #: C/nautilus-actions-config-tool.xml:589(title)
 msgid "And if we have requested <literal>echo %B %b</literal>,"
