@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-01 19:09+0000\n"
-"PO-Revision-Date: 2012-02-02 12:08+0100\n"
+"POT-Creation-Date: 2012-02-02 11:12+0000\n"
+"PO-Revision-Date: 2012-02-02 12:19+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -3399,9 +3399,10 @@ msgstr "Descripción de esquema nueva"
 
 #: ../src/nact/nact-tree-model.c:227
 #| msgid ""
-#| "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
+#| "A pointer (not a reference) to the BaseWindow parent of thE embedding "
+#| "treeview"
 msgid ""
-"A pointer (not a reference) to the BaseWindow parent of thE embedding "
+"A pointer (not a reference) to the BaseWindow parent of the embedding "
 "treeview"
 msgstr ""
 "Un puntero (no una referencia) al padre de la BaseWindow del treeview "
@@ -3416,12 +3417,10 @@ msgid "The GtkTreeView which relies on this NactTreeModel"
 msgstr "El GtkTreeView que se basa en este NactTreeModel"
 
 #: ../src/nact/nact-tree-model.c:240
-#| msgid "Execution mode"
 msgid "Edition mode"
 msgstr "Modo de edición"
 
 #: ../src/nact/nact-tree-model.c:241
-#| msgid "Execution mode"
 msgid "Edition vs. Selection mode"
 msgstr "Modo de edición frente a modo de selección"
 
