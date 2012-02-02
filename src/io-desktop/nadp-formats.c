@@ -110,7 +110,7 @@ nadp_formats_get_formats( const NAIExporter* exporter )
 		str->label = g_strdup( gettext( nadp_formats[i].label ));
 		str->description = g_strdup( gettext( nadp_formats[i].description ));
 		if( nadp_formats[i].image ){
-			fname = g_strdup_printf( "%s/%s", PKGDATADIR, nadp_formats[i].image );
+			fname = g_strdup_printf( "%s/%s", PROVIDER_DATADIR, nadp_formats[i].image );
 			str->pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
 			g_free( fname );
 #if 0

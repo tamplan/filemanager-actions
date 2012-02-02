@@ -251,7 +251,7 @@ iio_provider_get_version( const NAIIOProvider *provider )
 static gchar *
 iio_provider_get_id( const NAIIOProvider *provider )
 {
-	return( g_strdup( "na-desktop" ));
+	return( g_strdup( PROVIDER_ID ));
 }
 
 static gchar *

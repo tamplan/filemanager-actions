@@ -1,5 +1,9 @@
 2012-02-02 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/Makefile.am:
+	* src/io-desktop/nadp-formats.c: Datafiles are installed in a private
+	subdirectory.
+
 	* src/nact/nact-menubar.c (on_open_context_menu): Manages if event is
 	NULL.
 
