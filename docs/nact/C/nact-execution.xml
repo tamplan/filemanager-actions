@@ -547,11 +547,11 @@
         </simplelist>
         <para>
           This is because <literal>%b</literal> marks a <emphasis>singular</emphasis>
-          parameter. The command is the run once for each of the selected items.
+          parameter. The command is then run once for each of the selected items.
         </para>
         <formalpara>
           <title>
-            Contrarily, if we have requester <command>echo %B</command>,
+            Contrarily, if we have requested <command>echo %B</command>,
           </title>
           <para>
             then the following command will be run:
@@ -561,7 +561,7 @@
           <member><command>echo pierre paul jacques</command></member>
         </simplelist>
         <para>
-          This is because <literal>%B</literal> marks a a <emphasis>plural</emphasis>
+          This is because <literal>%B</literal> marks a <emphasis>plural</emphasis>
           parameter. The command is then run only once, with the list of selected
           items as arguments.
         </para>
