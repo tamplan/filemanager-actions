@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-02 11:12+0000\n"
-"PO-Revision-Date: 2012-02-02 12:19+0100\n"
+"POT-Creation-Date: 2012-02-02 21:43+0000\n"
+"PO-Revision-Date: 2012-02-03 10:26+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2466,27 +2466,27 @@ msgstr "La acción «%s» está a punto de ser exportada."
 msgid "The menu \"%s\" is about to be exported."
 msgstr "El menú «%s» está a punto de ser exportado."
 
-#: ../src/nact/nact-iaction-tab.c:625
+#: ../src/nact/nact-iaction-tab.c:627
 msgid "Caution: a label is mandatory for the action or the menu."
 msgstr "Precaución: la etiqueta es obligatoria para la acción o el menú."
 
-#: ../src/nact/nact-ibasenames-tab.c:218
+#: ../src/nact/nact-ibasenames-tab.c:220
 msgid "Basename filter"
 msgstr "Filtro de nombre base"
 
-#: ../src/nact/nact-icapabilities-tab.c:197
+#: ../src/nact/nact-icapabilities-tab.c:199
 msgid "Capability filter"
 msgstr "Filtro de capacidades"
 
-#: ../src/nact/nact-icommand-tab.c:554
+#: ../src/nact/nact-icommand-tab.c:556
 msgid "Choosing a command"
 msgstr "Eligiendo un comando"
 
-#: ../src/nact/nact-icommand-tab.c:594
+#: ../src/nact/nact-icommand-tab.c:596
 msgid "Choosing a working directory"
 msgstr "Elegir una carpeta de trabajo"
 
-#: ../src/nact/nact-icommand-tab.c:658
+#: ../src/nact/nact-icommand-tab.c:660
 #: ../src/nact/nact-preferences-editor.c:805
 msgid "Ex.:"
 msgstr "Ex.:"
@@ -2515,23 +2515,23 @@ msgstr "(igual a)"
 msgid "(strictly greater than)"
 msgstr "(estrictamente más actual que)"
 
-#: ../src/nact/nact-ienvironment-tab.c:768
-#: ../src/nact/nact-ienvironment-tab.c:826
+#: ../src/nact/nact-ienvironment-tab.c:770
+#: ../src/nact/nact-ienvironment-tab.c:828
 msgid "Choosing an executable"
 msgstr "Eligiendo un ejecutable"
 
-#: ../src/nact/nact-ifolders-tab.c:202
+#: ../src/nact/nact-ifolders-tab.c:204
 msgid "Folder filter"
 msgstr "Filtro de carpeta"
 
 #. i18n: title of the FileChoose dialog when selecting an URI which
 #. * will be compare to Nautilus 'current_folder'
 #.
-#: ../src/nact/nact-ifolders-tab.c:258 ../src/nact/nact-ifolders-tab.c:286
+#: ../src/nact/nact-ifolders-tab.c:260 ../src/nact/nact-ifolders-tab.c:288
 msgid "Select a folder"
 msgstr "Seleccionar una carpeta"
 
-#: ../src/nact/nact-imimetypes-tab.c:202
+#: ../src/nact/nact-imimetypes-tab.c:204
 msgid "Mimetype filter"
 msgstr "Filtro del tipo MIME"
 
@@ -2541,70 +2541,70 @@ msgstr "Filtro del tipo MIME"
 msgid "None"
 msgstr "Ninguno"
 
-#: ../src/nact/nact-iproperties-tab.c:287
+#: ../src/nact/nact-iproperties-tab.c:289
 msgid "Me_nu"
 msgstr "Me_nú"
 
-#: ../src/nact/nact-iproperties-tab.c:288
+#: ../src/nact/nact-iproperties-tab.c:290
 msgid "<b>Menu editable properties</b>"
 msgstr "<b>Propiedades editables del menú</b>"
 
-#: ../src/nact/nact-iproperties-tab.c:290
+#: ../src/nact/nact-iproperties-tab.c:292
 #: ../src/nact/nautilus-actions-config-tool.ui.h:208
 msgid "_Action"
 msgstr "_Acción"
 
-#: ../src/nact/nact-iproperties-tab.c:291
+#: ../src/nact/nact-iproperties-tab.c:293
 #: ../src/nact/nautilus-actions-config-tool.ui.h:52
 msgid "<b>Action editable properties</b>"
 msgstr "<b>Propiedades editables de la acción</b>"
 
-#: ../src/nact/nact-ischemes-tab.c:200
+#: ../src/nact/nact-ischemes-tab.c:202
 msgid "Scheme filter"
 msgstr "Filtro de esquema"
 
-#: ../src/nact/nact-main-window.c:343
+#: ../src/nact/nact-main-window.c:345
 msgid "Current NAObjectItem"
 msgstr "NAObjectItem actual"
 
-#: ../src/nact/nact-main-window.c:344
+#: ../src/nact/nact-main-window.c:346
 msgid "A pointer to the currently edited NAObjectItem, an action or a menu"
 msgstr "Un puntero al NAObjectItem editado actualmente, una acción o un menú"
 
-#: ../src/nact/nact-main-window.c:350
+#: ../src/nact/nact-main-window.c:352
 msgid "Current NAObjectProfile"
 msgstr "NAObjectProfile actual"
 
-#: ../src/nact/nact-main-window.c:351
+#: ../src/nact/nact-main-window.c:353
 msgid "A pointer to the currently edited NAObjectProfile"
 msgstr "Un puntero al NAObjectProfile editado actualmente"
 
-#: ../src/nact/nact-main-window.c:357
+#: ../src/nact/nact-main-window.c:359
 msgid "Current NAIContext"
 msgstr "NAIContext actual"
 
-#: ../src/nact/nact-main-window.c:358
+#: ../src/nact/nact-main-window.c:360
 msgid "A pointer to the currently edited NAIContext"
 msgstr "Un puntero al NAIContext editado actualmente"
 
-#: ../src/nact/nact-main-window.c:364
+#: ../src/nact/nact-main-window.c:366
 msgid "Editable item ?"
 msgstr "¿Elemento editable?"
 
-#: ../src/nact/nact-main-window.c:365
+#: ../src/nact/nact-main-window.c:367
 msgid "Whether the item will be able to be updated against its I/O provider"
 msgstr ""
 "Indica si el elemento se podrá actualizar en contra de su proveedor de E/S"
 
-#: ../src/nact/nact-main-window.c:372
+#: ../src/nact/nact-main-window.c:374
 msgid "No edition reason"
 msgstr "Razón de que no sea editable"
 
-#: ../src/nact/nact-main-window.c:373
+#: ../src/nact/nact-main-window.c:375
 msgid "Why is this item not editable"
 msgstr "Por qué este elemento no es editable"
 
-#: ../src/nact/nact-main-window.c:1216
+#: ../src/nact/nact-main-window.c:1266
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
@@ -2614,7 +2614,7 @@ msgstr ""
 "Puede continuar trabajando con su lista actual de acciones o puede querer "
 "recargar una lista actualizada."
 
-#: ../src/nact/nact-main-window.c:1223
+#: ../src/nact/nact-main-window.c:1273
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
@@ -2622,11 +2622,11 @@ msgstr ""
 "Note que recargar una lista actualizada de acciones requiere que abandone "
 "sus modificaciones actuales."
 
-#: ../src/nact/nact-main-window.c:1229
+#: ../src/nact/nact-main-window.c:1279
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "¿Quiere recargar una lista actual de acciones?"
 
-#: ../src/nact/nact-main-window.c:1252
+#: ../src/nact/nact-main-window.c:1302
 msgid ""
 "Reloading a fresh list of actions requires that you give up with your "
 "current modifications."
@@ -2634,16 +2634,16 @@ msgstr ""
 "Recargar una lista actualizada de acciones requiere que abandone sus "
 "modificaciones actuales."
 
-#: ../src/nact/nact-main-window.c:1255
+#: ../src/nact/nact-main-window.c:1305
 msgid "Do you really want to do this ?"
 msgstr "¿Está seguro de que quiere hacerlo?"
 
-#: ../src/nact/nact-main-window.c:1373
+#: ../src/nact/nact-main-window.c:1423
 #, c-format
 msgid "Some items have been modified."
 msgstr "Se han modificado algunos elementos."
 
-#: ../src/nact/nact-main-window.c:1374
+#: ../src/nact/nact-main-window.c:1424
 msgid "Are you sure you want to quit without saving them ?"
 msgstr "¿Está seguro de que quiere salir sin guardarlos?"
 
@@ -2674,63 +2674,67 @@ msgstr ""
 msgid "new-filter"
 msgstr "filtro-nuevo"
 
-#: ../src/nact/nact-menubar.c:59 ../src/nact/nact-menubar.c:169
+#: ../src/nact/nact-menubar.c:60 ../src/nact/nact-menubar.c:171
 msgid "_File"
 msgstr "_Archivo"
 
-#: ../src/nact/nact-menubar.c:60 ../src/nact/nact-menubar.c:173
+#: ../src/nact/nact-menubar.c:61 ../src/nact/nact-menubar.c:175
 msgid "_Edit"
 msgstr "_Editar"
 
-#: ../src/nact/nact-menubar.c:61
+#: ../src/nact/nact-menubar.c:62
 msgid "_View"
 msgstr "_Ver"
 
-#: ../src/nact/nact-menubar.c:62
+#: ../src/nact/nact-menubar.c:63
 msgid "_Toolbars"
 msgstr "Barras de _herramientas"
 
-#: ../src/nact/nact-menubar.c:63 ../src/nact/nact-menubar.c:177
+#: ../src/nact/nact-menubar.c:64 ../src/nact/nact-menubar.c:179
 msgid "_Tools"
 msgstr "_Herramientas"
 
-#: ../src/nact/nact-menubar.c:64
+#: ../src/nact/nact-menubar.c:65
 msgid "_Maintainer"
 msgstr "_Mantenedor"
 
-#: ../src/nact/nact-menubar.c:65 ../src/nact/nact-menubar.c:181
+#: ../src/nact/nact-menubar.c:66 ../src/nact/nact-menubar.c:183
 msgid "_Help"
 msgstr "Ay_uda"
 
 #: ../src/nact/nact-menubar.c:67
+msgid "Notebook _tabs"
+msgstr "Pestañas del cuaderno de notas"
+
+#: ../src/nact/nact-menubar.c:69
 msgid "New _menu"
 msgstr "_Menú nuevo"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
-#: ../src/nact/nact-menubar.c:69
+#: ../src/nact/nact-menubar.c:71
 msgid "Insert a new menu at the current position"
 msgstr "Insertar un menú nuevo en la posición actual"
 
-#: ../src/nact/nact-menubar.c:71
+#: ../src/nact/nact-menubar.c:73
 msgid "_New action"
 msgstr "Acción _nueva"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New action' item
-#: ../src/nact/nact-menubar.c:73
+#: ../src/nact/nact-menubar.c:75
 msgid "Define a new action"
 msgstr "Definir una acción nueva"
 
-#: ../src/nact/nact-menubar.c:75
+#: ../src/nact/nact-menubar.c:77
 msgid "New _profile"
 msgstr "_Perfil nuevo"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
-#: ../src/nact/nact-menubar.c:77
+#: ../src/nact/nact-menubar.c:79
 msgid "Define a new profile attached to the current action"
 msgstr "Definir un perfil nuevo acoplado con la acción actual"
 
 #. i18n: tooltip displayed in the status bar when selecting 'Save' item
-#: ../src/nact/nact-menubar.c:81
+#: ../src/nact/nact-menubar.c:83
 msgid ""
 "Record all the modified actions. Invalid actions will be silently ignored"
 msgstr ""
@@ -2738,57 +2742,57 @@ msgstr ""
 "silenciosamente."
 
 #. i18n: tooltip displayed in the status bar when selecting 'Quit' item
-#: ../src/nact/nact-menubar.c:85
+#: ../src/nact/nact-menubar.c:87
 msgid "Quit the application"
 msgstr "Salir de la aplicación"
 
 #. i18n: tooltip displayed in the status bar when selecting the Cut item
-#: ../src/nact/nact-menubar.c:89
+#: ../src/nact/nact-menubar.c:91
 msgid "Cut the selected item(s) to the clipboard"
 msgstr "Cortar los elementos seleccionados al portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the Copy item
-#: ../src/nact/nact-menubar.c:93
+#: ../src/nact/nact-menubar.c:95
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "Copiar los elementos seleccionados al portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the Paste item
-#: ../src/nact/nact-menubar.c:97
+#: ../src/nact/nact-menubar.c:99
 msgid "Insert the content of the clipboard just before the current position"
 msgstr ""
 "Insertar el contenido del portapepeles justo después de la posición actual"
 
-#: ../src/nact/nact-menubar.c:99
+#: ../src/nact/nact-menubar.c:101
 msgid "Paste _into"
 msgstr "Pegar _en"
 
 #. i18n: tooltip displayed in the status bar when selecting the Paste Into item
-#: ../src/nact/nact-menubar.c:101
+#: ../src/nact/nact-menubar.c:103
 msgid "Insert the content of the clipboard as first child of the current item"
 msgstr ""
 "Insertar el contenido del portapapeles como el primer hijo del elemento "
 "actual"
 
-#: ../src/nact/nact-menubar.c:103
+#: ../src/nact/nact-menubar.c:105
 msgid "D_uplicate"
 msgstr "D_uplicar"
 
 #. i18n: tooltip displayed in the status bar when selecting the Duplicate item
-#: ../src/nact/nact-menubar.c:105
+#: ../src/nact/nact-menubar.c:107
 msgid "Duplicate the selected item(s)"
 msgstr "Duplicar los elementos seleccionados"
 
 #. i18n: tooltip displayed in the status bar when selecting the Delete item
-#: ../src/nact/nact-menubar.c:109
+#: ../src/nact/nact-menubar.c:111
 msgid "Delete the selected item(s)"
 msgstr "Eliminar los elementos seleccionados"
 
-#: ../src/nact/nact-menubar.c:111
+#: ../src/nact/nact-menubar.c:113
 msgid "_Reload the items"
 msgstr "_Actualizar los elementos"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
-#: ../src/nact/nact-menubar.c:113
+#: ../src/nact/nact-menubar.c:115
 msgid ""
 "Cancel your current modifications and reload the initial list of menus and "
 "actions"
@@ -2797,117 +2801,153 @@ msgstr ""
 "acciones"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
-#: ../src/nact/nact-menubar.c:117
+#: ../src/nact/nact-menubar.c:119
 msgid "Edit your preferences"
 msgstr "Editar sus preferencias"
 
-#: ../src/nact/nact-menubar.c:119
+#: ../src/nact/nact-menubar.c:121
 msgid "_Expand all"
 msgstr "_Expandir todo"
 
 #. i18n: tooltip displayed in the status bar when selecting the Expand all item
-#: ../src/nact/nact-menubar.c:121
+#: ../src/nact/nact-menubar.c:123
 msgid "Entirely expand the items hierarchy"
 msgstr "Expandir completamente la jerarquía de los elementos"
 
-#: ../src/nact/nact-menubar.c:123
+#: ../src/nact/nact-menubar.c:125
 msgid "_Collapse all"
 msgstr "_Contraer todo"
 
 #. i18n: tooltip displayed in the status bar when selecting the Collapse all item
-#: ../src/nact/nact-menubar.c:125
+#: ../src/nact/nact-menubar.c:127
 msgid "Entirely collapse the items hierarchy"
 msgstr "Contraer completamente la jerarquía de elementos"
 
-#: ../src/nact/nact-menubar.c:128
+#: ../src/nact/nact-menubar.c:130
 msgid "_Import assistant..."
 msgstr "Asistente de _importación…"
 
 #. i18n: tooltip displayed in the status bar when selecting the Import item
-#: ../src/nact/nact-menubar.c:130
+#: ../src/nact/nact-menubar.c:132
 msgid "Import one or more actions from external files into your configuration"
 msgstr "Importar una o más acciones de archivos externos en su configuración"
 
-#: ../src/nact/nact-menubar.c:132
+#: ../src/nact/nact-menubar.c:134
 msgid "E_xport assistant..."
 msgstr "Asistente de e_xportación…"
 
 #. i18n: tooltip displayed in the status bar when selecting the Export item
-#: ../src/nact/nact-menubar.c:134
+#: ../src/nact/nact-menubar.c:136
 msgid "Export one or more actions from your configuration to external files"
 msgstr "Exportar una o más acciones de su configuración a archivos externos"
 
-#: ../src/nact/nact-menubar.c:137
+#: ../src/nact/nact-menubar.c:139
 msgid "_Dump the selection"
 msgstr "_Volcar la selección"
 
 #. i18n: tooltip displayed in the status bar when selecting the Dump selection item
-#: ../src/nact/nact-menubar.c:139
+#: ../src/nact/nact-menubar.c:141
 msgid "Recursively dump selected items"
 msgstr "Volcar recursivamente los elementos seleccionados"
 
-#: ../src/nact/nact-menubar.c:141
+#: ../src/nact/nact-menubar.c:143
 msgid "_Brief tree store dump"
 msgstr "Volcar _brevemente el árbol del almacén"
 
 #. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
-#: ../src/nact/nact-menubar.c:143
+#: ../src/nact/nact-menubar.c:145
 msgid "Briefly dump the tree store"
 msgstr "Volcar brevemente el árbol del almacén"
 
-#: ../src/nact/nact-menubar.c:145
+#: ../src/nact/nact-menubar.c:147
 msgid "_List modified items"
 msgstr "_Listar elementos modificados"
 
 #. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
-#: ../src/nact/nact-menubar.c:147
+#: ../src/nact/nact-menubar.c:149
 msgid "List the modified items"
 msgstr "Listar los elementos modificados"
 
-#: ../src/nact/nact-menubar.c:149
+#: ../src/nact/nact-menubar.c:151
 msgid "_Dump the clipboard"
 msgstr "_Volcar el portapapeles"
 
 #. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
-#: ../src/nact/nact-menubar.c:151
+#: ../src/nact/nact-menubar.c:153
 msgid "Dump the content of the clipboard object"
 msgstr "Volcar el contenido del objeto del portapapeles"
 
-#: ../src/nact/nact-menubar.c:157
+#: ../src/nact/nact-menubar.c:159
 msgid "Contents"
 msgstr "Contenido"
 
 #. i18n: tooltip displayed in the status bar when selecting the Help item
-#: ../src/nact/nact-menubar.c:159
+#: ../src/nact/nact-menubar.c:161
 msgid "Display help about this program"
 msgstr "Mostrar ayuda acerca de este programa"
 
 #. i18n: tooltip displayed in the status bar when selecting the About item
-#: ../src/nact/nact-menubar.c:163
+#: ../src/nact/nact-menubar.c:165
 msgid "Display informations about this program"
 msgstr "Mostrar información acerca de este programa"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
-#: ../src/nact/nact-menubar.c:171
+#: ../src/nact/nact-menubar.c:173
 msgid "Display the File toolbar"
 msgstr "Mostrar la barra de herramientas de Archivo"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
-#: ../src/nact/nact-menubar.c:175
+#: ../src/nact/nact-menubar.c:177
 msgid "Display the Edit toolbar"
 msgstr "Mostrar la barra de herramientas de Editar"
 
 #. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
-#: ../src/nact/nact-menubar.c:179
+#: ../src/nact/nact-menubar.c:181
 msgid "Display the Tools toolbar"
 msgstr "Mostrar la barra de herramientas de Herramientas"
 
 #. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
-#: ../src/nact/nact-menubar.c:183
+#: ../src/nact/nact-menubar.c:185
 msgid "Display the Help toolbar"
 msgstr "Mostrar la barra de herramientas de Ayuda"
 
-#: ../src/nact/nact-menubar.c:628
+#: ../src/nact/nact-menubar.c:191
+msgid "On the _left"
+msgstr "A la _izquierda"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the left' item
+#: ../src/nact/nact-menubar.c:193
+msgid "Display the notebook tabs on the left side"
+msgstr "Mostrar las pestañas del cuaderno de notas a la izquierda"
+
+#: ../src/nact/nact-menubar.c:195
+msgid "On the _right"
+msgstr "A la _derecha"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the right' item
+#: ../src/nact/nact-menubar.c:197
+msgid "Display the notebook tabs on the right side"
+msgstr "Mostrar las pestañas del cuaderno de notas a la derecha"
+
+#: ../src/nact/nact-menubar.c:199
+msgid "On the _top"
+msgstr "A_rriba"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the top' item
+#: ../src/nact/nact-menubar.c:201
+msgid "Display the notebook tabs on the top side"
+msgstr "Mostrar las pestañas del cuaderno de notas en la parte de arriba"
+
+#: ../src/nact/nact-menubar.c:203
+msgid "On the _bottom"
+msgstr "_abajo"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the bottom' item
+#: ../src/nact/nact-menubar.c:205
+msgid "Display the notebook tabs on the bottom side"
+msgstr "Mostrar las pestañas del cuaderno de notas en la parte de abajo"
+
+#: ../src/nact/nact-menubar.c:696
 #, c-format
 msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
 msgstr "actualmente hay %d menú(s), %d acción(es), %d perfil(es) cargados"
@@ -3398,9 +3438,6 @@ msgid "New scheme description"
 msgstr "Descripción de esquema nueva"
 
 #: ../src/nact/nact-tree-model.c:227
-#| msgid ""
-#| "A pointer (not a reference) to the BaseWindow parent of thE embedding "
-#| "treeview"
 msgid ""
 "A pointer (not a reference) to the BaseWindow parent of the embedding "
 "treeview"
@@ -3445,52 +3482,52 @@ msgid "Some messages have occurred during drop operation."
 msgstr "Sucedieron algunos mensajes durante la operación de soltado."
 
 #. i18n: this is a class name and should not be translated
-#: ../src/nact/nact-tree-view.c:216
+#: ../src/nact/nact-tree-view.c:217
 msgid "BaseWindow"
 msgstr "BaseWindow"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:218
+#: ../src/nact/nact-tree-view.c:219
 msgid "The BaseWindow parent"
 msgstr "La BaseWindow padre"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:225
+#: ../src/nact/nact-tree-view.c:226
 msgid "Container"
 msgstr "Contenedor"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:227
+#: ../src/nact/nact-tree-view.c:228
 msgid "A GtkContainer which contains the GtkTreeView widget"
 msgstr "Un GtkContainer que contiene el widget GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:234
+#: ../src/nact/nact-tree-view.c:235
 msgid "Widget name"
 msgstr "Nombre del widget"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:236
+#: ../src/nact/nact-tree-view.c:237
 msgid "The name of GtkTreeView widget"
 msgstr "El nombre del widget GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:244
+#: ../src/nact/nact-tree-view.c:245
 msgid "Management mode"
 msgstr "Modo de administración"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:246
+#: ../src/nact/nact-tree-view.c:247
 msgid "Management mode of the tree view, selection or edition"
 msgstr "Modo de administración de la vista de árbol, selección o edición"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:256
+#: ../src/nact/nact-tree-view.c:257
 msgid "Allow notify"
 msgstr "Permitir notificaciones"
 
 #. i18n: NactTreeView property loong description
-#: ../src/nact/nact-tree-view.c:258
+#: ../src/nact/nact-tree-view.c:259
 msgid "Whether notifications are allowed"
 msgstr "Indica si se permiten las notificaciones"
 
