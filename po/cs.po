@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-02 11:07+0000\n"
-"PO-Revision-Date: 2012-02-03 15:13+0100\n"
+"POT-Creation-Date: 2012-02-03 14:16+0000\n"
+"PO-Revision-Date: 2012-02-03 15:18+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -2383,27 +2383,27 @@ msgstr "Má být exportována akce „%s“."
 msgid "The menu \"%s\" is about to be exported."
 msgstr "Má být exportována nabídka „%s“."
 
-#: ../src/nact/nact-iaction-tab.c:625
+#: ../src/nact/nact-iaction-tab.c:627
 msgid "Caution: a label is mandatory for the action or the menu."
 msgstr "Upozornění: popisek je pro akci nebo nabídku povinný."
 
-#: ../src/nact/nact-ibasenames-tab.c:218
+#: ../src/nact/nact-ibasenames-tab.c:220
 msgid "Basename filter"
 msgstr "Filtr základního názvu"
 
-#: ../src/nact/nact-icapabilities-tab.c:197
+#: ../src/nact/nact-icapabilities-tab.c:199
 msgid "Capability filter"
 msgstr "Filtr schopností"
 
-#: ../src/nact/nact-icommand-tab.c:554
+#: ../src/nact/nact-icommand-tab.c:556
 msgid "Choosing a command"
 msgstr "Výběr příkazu"
 
-#: ../src/nact/nact-icommand-tab.c:594
+#: ../src/nact/nact-icommand-tab.c:596
 msgid "Choosing a working directory"
 msgstr "Výběr pracovní složky"
 
-#: ../src/nact/nact-icommand-tab.c:658
+#: ../src/nact/nact-icommand-tab.c:660
 #: ../src/nact/nact-preferences-editor.c:805
 msgid "Ex.:"
 msgstr "Např.:"
@@ -2432,23 +2432,23 @@ msgstr "(rovno)"
 msgid "(strictly greater than)"
 msgstr "(právě větší než)"
 
-#: ../src/nact/nact-ienvironment-tab.c:768
-#: ../src/nact/nact-ienvironment-tab.c:826
+#: ../src/nact/nact-ienvironment-tab.c:770
+#: ../src/nact/nact-ienvironment-tab.c:828
 msgid "Choosing an executable"
 msgstr "Výběr spustitelného programu"
 
-#: ../src/nact/nact-ifolders-tab.c:202
+#: ../src/nact/nact-ifolders-tab.c:204
 msgid "Folder filter"
 msgstr "Filtr složky"
 
 #. i18n: title of the FileChoose dialog when selecting an URI which
 #. * will be compare to Nautilus 'current_folder'
 #.
-#: ../src/nact/nact-ifolders-tab.c:258 ../src/nact/nact-ifolders-tab.c:286
+#: ../src/nact/nact-ifolders-tab.c:260 ../src/nact/nact-ifolders-tab.c:288
 msgid "Select a folder"
 msgstr "Výběr složky"
 
-#: ../src/nact/nact-imimetypes-tab.c:202
+#: ../src/nact/nact-imimetypes-tab.c:204
 msgid "Mimetype filter"
 msgstr "Filtr typu MIME"
 
@@ -2458,69 +2458,69 @@ msgstr "Filtr typu MIME"
 msgid "None"
 msgstr "Žádná"
 
-#: ../src/nact/nact-iproperties-tab.c:287
+#: ../src/nact/nact-iproperties-tab.c:289
 msgid "Me_nu"
 msgstr "_Nabídka"
 
-#: ../src/nact/nact-iproperties-tab.c:288
+#: ../src/nact/nact-iproperties-tab.c:290
 msgid "<b>Menu editable properties</b>"
 msgstr "<b>Upravitelné vlastnosti nabídky</b>"
 
-#: ../src/nact/nact-iproperties-tab.c:290
+#: ../src/nact/nact-iproperties-tab.c:292
 #: ../src/nact/nautilus-actions-config-tool.ui.h:208
 msgid "_Action"
 msgstr "_Akce"
 
-#: ../src/nact/nact-iproperties-tab.c:291
+#: ../src/nact/nact-iproperties-tab.c:293
 #: ../src/nact/nautilus-actions-config-tool.ui.h:52
 msgid "<b>Action editable properties</b>"
 msgstr "<b>Upravitelné vlastnosti akce</b>"
 
-#: ../src/nact/nact-ischemes-tab.c:200
+#: ../src/nact/nact-ischemes-tab.c:202
 msgid "Scheme filter"
 msgstr "Filtr schématu"
 
-#: ../src/nact/nact-main-window.c:343
+#: ../src/nact/nact-main-window.c:345
 msgid "Current NAObjectItem"
 msgstr "Aktuální NAObjectItem"
 
-#: ../src/nact/nact-main-window.c:344
+#: ../src/nact/nact-main-window.c:346
 msgid "A pointer to the currently edited NAObjectItem, an action or a menu"
 msgstr "Ukazatel na právě upravovaný objekt NAObjectItem, akci nebo nabídku"
 
-#: ../src/nact/nact-main-window.c:350
+#: ../src/nact/nact-main-window.c:352
 msgid "Current NAObjectProfile"
 msgstr "Aktuální NAObjectProfile"
 
-#: ../src/nact/nact-main-window.c:351
+#: ../src/nact/nact-main-window.c:353
 msgid "A pointer to the currently edited NAObjectProfile"
 msgstr "Ukazatel na právě upravovaný objekt NAObjectProfile"
 
-#: ../src/nact/nact-main-window.c:357
+#: ../src/nact/nact-main-window.c:359
 msgid "Current NAIContext"
 msgstr "Aktuální NAIContext"
 
-#: ../src/nact/nact-main-window.c:358
+#: ../src/nact/nact-main-window.c:360
 msgid "A pointer to the currently edited NAIContext"
 msgstr "Ukazatel na právě upravovaný objekt NAIContext"
 
-#: ../src/nact/nact-main-window.c:364
+#: ../src/nact/nact-main-window.c:366
 msgid "Editable item ?"
 msgstr "Upravitelná položka?"
 
-#: ../src/nact/nact-main-window.c:365
+#: ../src/nact/nact-main-window.c:367
 msgid "Whether the item will be able to be updated against its I/O provider"
 msgstr "Zda bude možné položku aktualizovat přes jejího V/V poskytovatele"
 
-#: ../src/nact/nact-main-window.c:372
+#: ../src/nact/nact-main-window.c:374
 msgid "No edition reason"
 msgstr "Důvod, proč nejde upravit"
 
-#: ../src/nact/nact-main-window.c:373
+#: ../src/nact/nact-main-window.c:375
 msgid "Why is this item not editable"
 msgstr "Proč není tato položka upravitelná"
 
-#: ../src/nact/nact-main-window.c:1216
+#: ../src/nact/nact-main-window.c:1266
 msgid ""
 "One or more actions have been modified in the filesystem.\n"
 "You could keep to work with your current list of actions, or you may want to "
@@ -2530,7 +2530,7 @@ msgstr ""
 "Můžete buď pokračovat v práci se svým současným seznamem akcí nebo můžete "
 "znovu načíst aktuální seznam."
 
-#: ../src/nact/nact-main-window.c:1223
+#: ../src/nact/nact-main-window.c:1273
 msgid ""
 "Note that reloading a fresh list of actions requires that you give up with "
 "your current modifications."
@@ -2538,11 +2538,11 @@ msgstr ""
 "Upozorňujeme, že znovu načtení aktuálního seznamu akcí předpokládá, že se "
 "vzdáte svých současných změn."
 
-#: ../src/nact/nact-main-window.c:1229
+#: ../src/nact/nact-main-window.c:1279
 msgid "Do you want to reload a fresh list of actions ?"
 msgstr "Chcete znovu načíst aktuální seznam akcí?"
 
-#: ../src/nact/nact-main-window.c:1252
+#: ../src/nact/nact-main-window.c:1302
 msgid ""
 "Reloading a fresh list of actions requires that you give up with your "
 "current modifications."
@@ -2550,16 +2550,16 @@ msgstr ""
 "Znovu načtení aktuálního seznamu akcí předpokládá, že se vzdáte svých "
 "současných změn."
 
-#: ../src/nact/nact-main-window.c:1255
+#: ../src/nact/nact-main-window.c:1305
 msgid "Do you really want to do this ?"
 msgstr "Skutečně to chcete?"
 
-#: ../src/nact/nact-main-window.c:1373
+#: ../src/nact/nact-main-window.c:1423
 #, c-format
 msgid "Some items have been modified."
 msgstr "Některé položky byly změněny."
 
-#: ../src/nact/nact-main-window.c:1374
+#: ../src/nact/nact-main-window.c:1424
 msgid "Are you sure you want to quit without saving them ?"
 msgstr "Opravdu chcete skončit bez jejich uložení?"
 
@@ -2590,234 +2590,274 @@ msgstr ""
 msgid "new-filter"
 msgstr "nový-filtr"
 
-#: ../src/nact/nact-menubar.c:59 ../src/nact/nact-menubar.c:169
+#: ../src/nact/nact-menubar.c:60 ../src/nact/nact-menubar.c:171
 msgid "_File"
 msgstr "_Soubor"
 
-#: ../src/nact/nact-menubar.c:60 ../src/nact/nact-menubar.c:173
+#: ../src/nact/nact-menubar.c:61 ../src/nact/nact-menubar.c:175
 msgid "_Edit"
 msgstr "_Upravit"
 
-#: ../src/nact/nact-menubar.c:61
+#: ../src/nact/nact-menubar.c:62
 msgid "_View"
 msgstr "_Zobrazit"
 
-#: ../src/nact/nact-menubar.c:62
+#: ../src/nact/nact-menubar.c:63
 msgid "_Toolbars"
 msgstr "Lišty nás_trojů"
 
-#: ../src/nact/nact-menubar.c:63 ../src/nact/nact-menubar.c:177
+#: ../src/nact/nact-menubar.c:64 ../src/nact/nact-menubar.c:179
 msgid "_Tools"
 msgstr "Nás_troje"
 
-#: ../src/nact/nact-menubar.c:64
+#: ../src/nact/nact-menubar.c:65
 msgid "_Maintainer"
 msgstr "_Správce"
 
-#: ../src/nact/nact-menubar.c:65 ../src/nact/nact-menubar.c:181
+#: ../src/nact/nact-menubar.c:66 ../src/nact/nact-menubar.c:183
 msgid "_Help"
 msgstr "_Nápověda"
 
 #: ../src/nact/nact-menubar.c:67
+msgid "Notebook _tabs"
+msgstr "Kar_ty sešitu"
+
+#: ../src/nact/nact-menubar.c:69
 msgid "New _menu"
 msgstr "Nová na_bídka"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
-#: ../src/nact/nact-menubar.c:69
+#: ../src/nact/nact-menubar.c:71
 msgid "Insert a new menu at the current position"
 msgstr "Vložit na současné místo novou nabídku"
 
-#: ../src/nact/nact-menubar.c:71
+#: ../src/nact/nact-menubar.c:73
 msgid "_New action"
 msgstr "_Nová akce"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New action' item
-#: ../src/nact/nact-menubar.c:73
+#: ../src/nact/nact-menubar.c:75
 msgid "Define a new action"
 msgstr "Definovat novou akci"
 
-#: ../src/nact/nact-menubar.c:75
+#: ../src/nact/nact-menubar.c:77
 msgid "New _profile"
 msgstr "Nový _profil"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
-#: ../src/nact/nact-menubar.c:77
+#: ../src/nact/nact-menubar.c:79
 msgid "Define a new profile attached to the current action"
 msgstr "Definovat nový profil připojený k současné akci"
 
 #. i18n: tooltip displayed in the status bar when selecting 'Save' item
-#: ../src/nact/nact-menubar.c:81
+#: ../src/nact/nact-menubar.c:83
 msgid ""
 "Record all the modified actions. Invalid actions will be silently ignored"
 msgstr ""
 "Zaznamenat všechny změněné akce. Neplatné akce budou v tichosti ignorovány"
 
 #. i18n: tooltip displayed in the status bar when selecting 'Quit' item
-#: ../src/nact/nact-menubar.c:85
+#: ../src/nact/nact-menubar.c:87
 msgid "Quit the application"
 msgstr "Ukončit aplikaci"
 
 #. i18n: tooltip displayed in the status bar when selecting the Cut item
-#: ../src/nact/nact-menubar.c:89
+#: ../src/nact/nact-menubar.c:91
 msgid "Cut the selected item(s) to the clipboard"
 msgstr "Vyjmout vybranou položku či položky do schránky"
 
 #. i18n: tooltip displayed in the status bar when selecting the Copy item
-#: ../src/nact/nact-menubar.c:93
+#: ../src/nact/nact-menubar.c:95
 msgid "Copy the selected item(s) to the clipboard"
 msgstr "Kopírovat vybranou položku či položky do schránky"
 
 #. i18n: tooltip displayed in the status bar when selecting the Paste item
-#: ../src/nact/nact-menubar.c:97
+#: ../src/nact/nact-menubar.c:99
 msgid "Insert the content of the clipboard just before the current position"
 msgstr "Vložit obsah schránky těsně před současnou pozici"
 
-#: ../src/nact/nact-menubar.c:99
+#: ../src/nact/nact-menubar.c:101
 msgid "Paste _into"
 msgstr "Vložit _do"
 
 #. i18n: tooltip displayed in the status bar when selecting the Paste Into item
-#: ../src/nact/nact-menubar.c:101
+#: ../src/nact/nact-menubar.c:103
 msgid "Insert the content of the clipboard as first child of the current item"
 msgstr "Vložit obsah schránky jako prvního potomka současné položky"
 
-#: ../src/nact/nact-menubar.c:103
+#: ../src/nact/nact-menubar.c:105
 msgid "D_uplicate"
 msgstr "Vytvořit _kopii"
 
 #. i18n: tooltip displayed in the status bar when selecting the Duplicate item
-#: ../src/nact/nact-menubar.c:105
+#: ../src/nact/nact-menubar.c:107
 msgid "Duplicate the selected item(s)"
 msgstr "Vytvořit kopii vybrané položky či položek"
 
 #. i18n: tooltip displayed in the status bar when selecting the Delete item
-#: ../src/nact/nact-menubar.c:109
+#: ../src/nact/nact-menubar.c:111
 msgid "Delete the selected item(s)"
 msgstr "Smazat vybranou položku či položky"
 
-#: ../src/nact/nact-menubar.c:111
+#: ../src/nact/nact-menubar.c:113
 msgid "_Reload the items"
 msgstr "_Znovu načíst položky"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
-#: ../src/nact/nact-menubar.c:113
+#: ../src/nact/nact-menubar.c:115
 msgid ""
 "Cancel your current modifications and reload the initial list of menus and "
 "actions"
 msgstr "Zrušit své současné změny a znovu načíst původní seznam nabídek a akcí"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
-#: ../src/nact/nact-menubar.c:117
+#: ../src/nact/nact-menubar.c:119
 msgid "Edit your preferences"
 msgstr "Upravit své předvolby"
 
-#: ../src/nact/nact-menubar.c:119
+#: ../src/nact/nact-menubar.c:121
 msgid "_Expand all"
 msgstr "_Rozbalit vše"
 
 #. i18n: tooltip displayed in the status bar when selecting the Expand all item
-#: ../src/nact/nact-menubar.c:121
+#: ../src/nact/nact-menubar.c:123
 msgid "Entirely expand the items hierarchy"
 msgstr "Úplně rozbalit hierarchii položek"
 
-#: ../src/nact/nact-menubar.c:123
+#: ../src/nact/nact-menubar.c:125
 msgid "_Collapse all"
 msgstr "_Sbalit vše"
 
 #. i18n: tooltip displayed in the status bar when selecting the Collapse all item
-#: ../src/nact/nact-menubar.c:125
+#: ../src/nact/nact-menubar.c:127
 msgid "Entirely collapse the items hierarchy"
 msgstr "Úplně sbalit hierarchii položek"
 
-#: ../src/nact/nact-menubar.c:128
+#: ../src/nact/nact-menubar.c:130
 msgid "_Import assistant..."
 msgstr "Průvodce _importem…"
 
 #. i18n: tooltip displayed in the status bar when selecting the Import item
-#: ../src/nact/nact-menubar.c:130
+#: ../src/nact/nact-menubar.c:132
 msgid "Import one or more actions from external files into your configuration"
 msgstr "Import jedné nebo více akcí z externích souborů do vašeho nastavení"
 
-#: ../src/nact/nact-menubar.c:132
+#: ../src/nact/nact-menubar.c:134
 msgid "E_xport assistant..."
 msgstr "Průvodce e_xportem…"
 
 #. i18n: tooltip displayed in the status bar when selecting the Export item
-#: ../src/nact/nact-menubar.c:134
+#: ../src/nact/nact-menubar.c:136
 msgid "Export one or more actions from your configuration to external files"
 msgstr "Export jedné nebo více akcí z vašeho nastavení do externích souborů"
 
-#: ../src/nact/nact-menubar.c:137
+#: ../src/nact/nact-menubar.c:139
 msgid "_Dump the selection"
 msgstr "_Výpis výběru"
 
 #. i18n: tooltip displayed in the status bar when selecting the Dump selection item
-#: ../src/nact/nact-menubar.c:139
+#: ../src/nact/nact-menubar.c:141
 msgid "Recursively dump selected items"
 msgstr "Vypsat vybrané položky včetně podřízených"
 
-#: ../src/nact/nact-menubar.c:141
+#: ../src/nact/nact-menubar.c:143
 msgid "_Brief tree store dump"
 msgstr "Stručný výpis s_tromu úložiště"
 
 #. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
-#: ../src/nact/nact-menubar.c:143
+#: ../src/nact/nact-menubar.c:145
 msgid "Briefly dump the tree store"
 msgstr "Vypsat stručný strom úložiště"
 
-#: ../src/nact/nact-menubar.c:145
+#: ../src/nact/nact-menubar.c:147
 msgid "_List modified items"
 msgstr "_Seznam změněných položek"
 
 #. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
-#: ../src/nact/nact-menubar.c:147
+#: ../src/nact/nact-menubar.c:149
 msgid "List the modified items"
 msgstr "Vypsat seznam změněných položek"
 
-#: ../src/nact/nact-menubar.c:149
+#: ../src/nact/nact-menubar.c:151
 msgid "_Dump the clipboard"
 msgstr "_Výpis schránky"
 
 #. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
-#: ../src/nact/nact-menubar.c:151
+#: ../src/nact/nact-menubar.c:153
 msgid "Dump the content of the clipboard object"
 msgstr "Vypsat obsah objektu schránky"
 
-#: ../src/nact/nact-menubar.c:157
+#: ../src/nact/nact-menubar.c:159
 msgid "Contents"
 msgstr "Obsah"
 
 #. i18n: tooltip displayed in the status bar when selecting the Help item
-#: ../src/nact/nact-menubar.c:159
+#: ../src/nact/nact-menubar.c:161
 msgid "Display help about this program"
 msgstr "Zobrazit nápovědu k tomuto programu"
 
 #. i18n: tooltip displayed in the status bar when selecting the About item
-#: ../src/nact/nact-menubar.c:163
+#: ../src/nact/nact-menubar.c:165
 msgid "Display informations about this program"
 msgstr "Zobrazit informace o tomto programu"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
-#: ../src/nact/nact-menubar.c:171
+#: ../src/nact/nact-menubar.c:173
 msgid "Display the File toolbar"
 msgstr "Zobrazit lištu nástrojů Soubor"
 
 #. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
-#: ../src/nact/nact-menubar.c:175
+#: ../src/nact/nact-menubar.c:177
 msgid "Display the Edit toolbar"
 msgstr "Zobrazit lištu nástrojů Upravit"
 
 #. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
-#: ../src/nact/nact-menubar.c:179
+#: ../src/nact/nact-menubar.c:181
 msgid "Display the Tools toolbar"
 msgstr "Zobrazit lištu nástrojů Nástroje"
 
 #. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
-#: ../src/nact/nact-menubar.c:183
+#: ../src/nact/nact-menubar.c:185
 msgid "Display the Help toolbar"
 msgstr "Zobrazit lištu nástrojů Nápověda"
 
-#: ../src/nact/nact-menubar.c:628
+#: ../src/nact/nact-menubar.c:191
+msgid "On the _left"
+msgstr "Nalevo"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the left' item
+#: ../src/nact/nact-menubar.c:193
+msgid "Display the notebook tabs on the left side"
+msgstr "Zobrazovat karty sešitu na levé straně"
+
+#: ../src/nact/nact-menubar.c:195
+msgid "On the _right"
+msgstr "Napravo"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the right' item
+#: ../src/nact/nact-menubar.c:197
+msgid "Display the notebook tabs on the right side"
+msgstr "Zobrazovat karty sešitu na pravé straně"
+
+#: ../src/nact/nact-menubar.c:199
+msgid "On the _top"
+msgstr "Nahoře"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the top' item
+#: ../src/nact/nact-menubar.c:201
+msgid "Display the notebook tabs on the top side"
+msgstr "Zobrazovat karty sešitu na horní straně"
+
+#: ../src/nact/nact-menubar.c:203
+msgid "On the _bottom"
+msgstr "Dole"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the bottom' item
+#: ../src/nact/nact-menubar.c:205
+msgid "Display the notebook tabs on the bottom side"
+msgstr "Zobrazovat karty sešitu na spodní straně"
+
+#: ../src/nact/nact-menubar.c:696
 #, c-format
 msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
 msgstr "Nyní je načteno %d nabídek, %d akcí, %d profilů"
@@ -3301,8 +3341,6 @@ msgid "New scheme description"
 msgstr "Popis nového schématu"
 
 #: ../src/nact/nact-tree-model.c:227
-#| msgid ""
-#| "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
 msgid ""
 "A pointer (not a reference) to the BaseWindow parent of the embedding "
 "treeview"
@@ -3319,12 +3357,10 @@ msgid "The GtkTreeView which relies on this NactTreeModel"
 msgstr "Zobrazení GtkTreeView který závisí na tomto modelu NactTreeModel"
 
 #: ../src/nact/nact-tree-model.c:240
-#| msgid "Execution mode"
 msgid "Edition mode"
 msgstr "Režim provádění"
 
 #: ../src/nact/nact-tree-model.c:241
-#| msgid "Execution mode"
 msgid "Edition vs. Selection mode"
 msgstr "Režim úprav či režim výběru"
 
@@ -3349,52 +3385,52 @@ msgid "Some messages have occurred during drop operation."
 msgstr "Během operace odstraňování byly zaznamenány nějaké zprávy."
 
 #. i18n: this is a class name and should not be translated
-#: ../src/nact/nact-tree-view.c:216
+#: ../src/nact/nact-tree-view.c:217
 msgid "BaseWindow"
 msgstr "Rodič BaseWindow"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:218
+#: ../src/nact/nact-tree-view.c:219
 msgid "The BaseWindow parent"
 msgstr "Rodič BaseWindow"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:225
+#: ../src/nact/nact-tree-view.c:226
 msgid "Container"
 msgstr "Kontejner"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:227
+#: ../src/nact/nact-tree-view.c:228
 msgid "A GtkContainer which contains the GtkTreeView widget"
 msgstr "GtkContainer, který obsahuje widget GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:234
+#: ../src/nact/nact-tree-view.c:235
 msgid "Widget name"
 msgstr "Název Widgetu"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:236
+#: ../src/nact/nact-tree-view.c:237
 msgid "The name of GtkTreeView widget"
 msgstr "Název widgetu GtkTreeView"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:244
+#: ../src/nact/nact-tree-view.c:245
 msgid "Management mode"
 msgstr "Režim správy"
 
 #. i18n: NactTreeView property long description
-#: ../src/nact/nact-tree-view.c:246
+#: ../src/nact/nact-tree-view.c:247
 msgid "Management mode of the tree view, selection or edition"
 msgstr "Režim správy stromového zobrazení, výběru nebo úpravy"
 
 #. i18n: NactTreeView property short description
-#: ../src/nact/nact-tree-view.c:256
+#: ../src/nact/nact-tree-view.c:257
 msgid "Allow notify"
 msgstr "Povolit oznamování"
 
 #. i18n: NactTreeView property loong description
-#: ../src/nact/nact-tree-view.c:258
+#: ../src/nact/nact-tree-view.c:259
 msgid "Whether notifications are allowed"
 msgstr "Zda je povoleno oznamování"
 
@@ -4628,19 +4664,16 @@ msgid "The value to be set"
 msgstr "Hodnota, která se má nastavit"
 
 #: ../src/utils/na-set-conf.c:76
-#| msgid "Output the version number, and exit gracefully [no]"
 msgid "Output the version number and exit gracefully"
 msgstr "Vypsat číslo verze a elegantně skončit"
 
 #: ../src/utils/na-set-conf.c:134
 #, c-format
-#| msgid "Error: uri is mandatory.\n"
 msgid "Error: a group is mandatory.\n"
 msgstr "Chyba: skupina je povinná.\n"
 
 #: ../src/utils/na-set-conf.c:139
 #, c-format
-#| msgid "Error: a XPath is mandatory.\n"
 msgid "Error: a key is mandatory.\n"
 msgstr "Chyba: klíč je povinný.\n"
 
@@ -4659,7 +4692,6 @@ msgstr ""
 
 #: ../src/utils/na-set-conf.c:162
 #, c-format
-#| msgid "Error: a XPath is mandatory.\n"
 msgid "Error: a value is mandatory.\n"
 msgstr "Chyba: hodnota je povinná.\n"
 
