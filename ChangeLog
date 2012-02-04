@@ -1,5 +1,8 @@
 2012-02-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-icommand-tab.c (on_base_initialize_gtk):
+	Dynamically converts GtkTable to GtkGrid.
+
 	* src/nact/base-gtk-utils.c:
 	* src/nact/base-gtk-utils.h (base_gtk_utils_table_to_grid): New function.
 

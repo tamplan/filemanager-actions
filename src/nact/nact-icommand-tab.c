@@ -75,6 +75,7 @@ static GType         register_type( void );
 static void          interface_base_init( NactICommandTabInterface *klass );
 static void          interface_base_finalize( NactICommandTabInterface *klass );
 
+static void          on_base_initialize_gtk( NactICommandTab *instance, GtkWindow *toplevel, gpointer user_data );
 static void          on_base_initialize_window( NactICommandTab *instance, gpointer user_data );
 
 static void          on_tree_view_content_changed( NactICommandTab *instance, NAObject *object, gpointer user_data );
@@ -193,6 +194,12 @@ nact_icommand_tab_init( NactICommandTab *instance )
 	base_window_signal_connect(
 			BASE_WINDOW( instance ),
 			G_OBJECT( instance ),
+			BASE_SIGNAL_INITIALIZE_GTK,
+			G_CALLBACK( on_base_initialize_gtk ));
+
+	base_window_signal_connect(
+			BASE_WINDOW( instance ),
+			G_OBJECT( instance ),
 			BASE_SIGNAL_INITIALIZE_WINDOW,
 			G_CALLBACK( on_base_initialize_window ));
 
@@ -205,8 +212,16 @@ nact_icommand_tab_init( NactICommandTab *instance )
 	g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 }
 
-/**
- * nact_icommand_tab_runtime_init:
+static void
+on_base_initialize_gtk( NactICommandTab *instance, GtkWindow *toplevel, gpointer user_data )
+{
+#if GTK_CHECK_VERSION( 3,0,0 )
+	base_gtk_utils_table_to_grid( BASE_WINDOW( instance ), "table220" );
+#endif
+}
+
+/*
+ * on_base_initialize_window:
  * @window: this #NactICommandTab instance.
  *
  * Initializes the tab widget at each time the widget will be displayed.
