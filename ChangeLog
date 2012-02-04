@@ -1,5 +1,12 @@
 2012-02-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-window.c (on_initialize_gtk_toplevel_class_handler):
+	Always dump Gtk hierarchy in maintainer mode.
+
+	* src/nact/nact-assistant-export.c (format_tree_view_initialize_gtk):
+	* src/nact/nact-main-window.c (on_base_initialize_gtk):
+	* src/nact/nact-tree-view.c (nact_tree_view_new): Updated accordingly.
+
 	* src/nact/nact-icommand-tab.c (on_base_initialize_gtk):
 	Dynamically converts GtkTable to GtkGrid.
 

@@ -488,10 +488,6 @@ format_tree_view_initialize_gtk( NactAssistantExport *window )
 	page = gtk_assistant_get_nth_page( assistant, ASSIST_PAGE_FORMAT_SELECTION );
 	tree_view = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( page ), "p3-ExportFormatTreeView" );
 
-#ifdef NA_MAINTAINER_MODE
-	na_gtk_utils_dump_children( GTK_CONTAINER( tree_view ));
-#endif
-
 	na_ioptions_list_gtk_init( NA_IOPTIONS_LIST( window ), tree_view, TRUE );
 
 	gtk_assistant_set_page_complete( assistant, page, TRUE );

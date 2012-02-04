@@ -637,12 +637,6 @@ nact_tree_view_new( BaseWindow *window, GtkContainer *parent, const gchar *treev
 			TREE_PROP_MODE,        mode,
 			NULL );
 
-#if 0
-# ifdef NA_MAINTAINER_MODE
-	na_gtk_utils_dump_children( parent );
-# endif
-#endif
-
 	return( view );
 }
 

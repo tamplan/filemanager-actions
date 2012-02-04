@@ -851,8 +851,12 @@ on_base_initialize_gtk( NactMainWindow *window, GtkWindow *toplevel, gpointer us
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
 	if( !window->private->dispose_has_run ){
+
 		g_debug( "%s: window=%p, toplevel=%p, user_data=%p",
-				thisfn, ( void * ) window, ( void * ) toplevel, ( void * ) user_data );
+				thisfn,
+				( void * ) window,
+				( void * ) toplevel,
+				( void * ) user_data );
 
 		/* create the tree view which will create itself its own tree model
 		 */
