@@ -41,6 +41,20 @@
 
 #define DEFAULT_WIDTH		22
 
+typedef struct {
+	GtkWidget *table;
+	guint      rows;
+	guint      ir;
+	guint      columns;
+	guint      ic;
+	GtkWidget *grid;
+}
+	TableToGridData;
+
+#if GTK_CHECK_VERSION( 3,0,0 )
+static void table_to_grid_foreach_cb( GtkWidget *widget, TableToGridData *ttg );
+#endif
+
 /**
  * base_gtk_utils_position_window:
  * @window: this #BaseWindow-derived window.
@@ -503,3 +517,67 @@ base_gtk_utils_select_dir( BaseWindow *window,
 
 	gtk_widget_destroy( dialog );
 }
+
+/*
+ * base_gtk_utils_table_to_grid:
+ * @window: the #BaseWindow container.
+ * @table_name: the name of the #GtkTable to be replaced.
+ *
+ * Dynamically replaces a GtkTable with a GtkGrid, doing its best in order
+ * to preserve order and name of all children.
+ *
+ * The caller has to take care of calling this function for Gtk 3.x, only
+ * replacing valuable GtkTables.
+ *
+ * This function should be called from on_base_initialize_gtk().
+ */
+void
+base_gtk_utils_table_to_grid( BaseWindow *window, const gchar *table_name )
+{
+#if GTK_CHECK_VERSION( 3,0,0 )
+	static const gchar *thisfn = "base_gtk_utils_table_to_grid";
+	TableToGridData ttg;
+	GtkWidget *parent;
+
+	memset( &ttg, '\0', sizeof( TableToGridData ));
+
+	ttg.table = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( base_window_get_gtk_toplevel( window )), table_name );
+	g_return_if_fail( ttg.table );
+	g_return_if_fail( GTK_IS_TABLE( ttg.table ));
+	g_debug( "%s: table=%p (%s)", thisfn, ( void * ) ttg.table, gtk_buildable_get_name( GTK_BUILDABLE( ttg.table )));
+
+	parent = gtk_widget_get_parent( ttg.table );
+	na_gtk_utils_dump_children( GTK_CONTAINER( parent ));
+
+	gtk_table_get_size( GTK_TABLE( ttg.table ), &ttg.rows, &ttg.columns );
+
+	ttg.grid = gtk_grid_new();
+
+	gtk_container_foreach( GTK_CONTAINER( ttg.table ), ( GtkCallback ) table_to_grid_foreach_cb, &ttg );
+	/*gtk_widget_unparent( ttg.table );*/
+
+	if( GTK_IS_ALIGNMENT( parent )){
+		gtk_container_remove( GTK_CONTAINER( parent ), ttg.table );
+		gtk_container_add( GTK_CONTAINER( parent ), ttg.grid );
+	} else {
+		g_warning( "%s: untreated parent of class %s", thisfn, G_OBJECT_TYPE_NAME( parent ));
+	}
+
+	na_gtk_utils_dump_children( GTK_CONTAINER( parent ));
+#endif
+}
+
+#if GTK_CHECK_VERSION( 3,0,0 )
+static void
+table_to_grid_foreach_cb( GtkWidget *widget, TableToGridData *ttg )
+{
+	static const gchar *thisfn = "base_gtk_utils_table_to_grid_foreach_cb";
+	guint left, top;
+
+	g_debug( "%s: widget=%p (%s)", thisfn, ( void * ) widget, gtk_buildable_get_name( GTK_BUILDABLE( widget )));
+
+	gtk_container_child_get( GTK_CONTAINER( ttg->table ), widget, "left-attach", &left, "top-attach", &top, NULL );
+	gtk_widget_unparent( widget );
+	gtk_grid_attach( GTK_GRID( ttg->grid ), widget, left, top, 1, 1 );
+}
+#endif

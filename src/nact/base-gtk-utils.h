@@ -83,6 +83,10 @@ void       base_gtk_utils_select_dir( BaseWindow *window,
 				const gchar *title, const gchar *wsp_name,
 				GtkWidget *entry, const gchar *entry_name );
 
+/* try to dynamically convert a GtkTable to a GtkGrid
+ */
+void       base_gtk_utils_table_to_grid( BaseWindow *window, const gchar *table_name );
+
 G_END_DECLS
 
 #endif /* __BASE_GTK_UTILS_H__ */
