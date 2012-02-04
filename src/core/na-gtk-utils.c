@@ -91,16 +91,12 @@ na_gtk_utils_find_widget_by_name( GtkContainer *container, const gchar *name )
 		if( GTK_IS_WIDGET( ic->data )){
 			child = GTK_WIDGET( ic->data );
 			child_name = gtk_buildable_get_name( GTK_BUILDABLE( child ));
-			if( child_name && strlen( child_name )){
-				/*g_debug( "%s: child=%s", thisfn, child_name );*/
-
-				if( !g_ascii_strcasecmp( name, child_name )){
-					found = child;
-					break;
-
-				} else if( GTK_IS_CONTAINER( child )){
-					found = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( child ), name );
-				}
+			if( child_name && strlen( child_name ) && !g_ascii_strcasecmp( name, child_name )){
+				found = child;
+				break;
+			}
+			if( GTK_IS_CONTAINER( child )){
+				found = na_gtk_utils_find_widget_by_name( GTK_CONTAINER( child ), name );
 			}
 		}
 	}

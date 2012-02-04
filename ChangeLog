@@ -1,3 +1,8 @@
+2012-02-04 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-gtk-utils.c (na_gtk_utils_find_widget_by_name):
+	Also search inside of unnamed widgets.
+
 2012-02-02 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/io-xml/Makefile.am:
