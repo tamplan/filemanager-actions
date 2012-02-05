@@ -1,7 +1,7 @@
 <sect2 id="usage-profile">
   <title>Using profiles to extend your action</title>
   <para>
-    There is some situations where you will want a given action behave
+    There are some situations where you will want a given action behave
     slightly differently depending on the currently selected items or
     the current runtime environment.
   </para>
@@ -15,8 +15,8 @@
       location your file manager currently points to.
     </para>
     <para>
-      But what if you want select a directory in your file manager,
-      and directly opens your terminal in this directory ? If you
+      But what if you want to select a directory in your file manager,
+      and directly open your terminal in this directory ? If you
       keep based on the current file manager location, your
       terminal will open in the parent of the targeted directory.
     </para>
@@ -44,7 +44,7 @@
     A new profile is created in your action.
   </para>
   <para>
-    You can now define the conditions which are to be met in order
+    You can now define the conditions which must be met in order
     this profile be selected, and the command which will be executed.
   </para>
   
