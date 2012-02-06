@@ -547,7 +547,10 @@ base_gtk_utils_table_to_grid( BaseWindow *window, const gchar *table_name )
 	g_debug( "%s: table=%p (%s)", thisfn, ( void * ) ttg.table, gtk_buildable_get_name( GTK_BUILDABLE( ttg.table )));
 
 	parent = gtk_widget_get_parent( ttg.table );
+
+#ifdef NA_MAINTAINER_MODE
 	na_gtk_utils_dump_children( GTK_CONTAINER( parent ));
+#endif
 
 	gtk_table_get_size( GTK_TABLE( ttg.table ), &ttg.rows, &ttg.columns );
 
@@ -563,7 +566,9 @@ base_gtk_utils_table_to_grid( BaseWindow *window, const gchar *table_name )
 		g_warning( "%s: untreated parent of class %s", thisfn, G_OBJECT_TYPE_NAME( parent ));
 	}
 
+#ifdef NA_MAINTAINER_MODE
 	na_gtk_utils_dump_children( GTK_CONTAINER( parent ));
+#endif
 #endif
 }
 
