@@ -1,5 +1,7 @@
 2012-02-06 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-view.c (display_label): Simplify the code.
+
 	* src/nact/base-gtk-utils.c (base_gtk_utils_table_to_grid):
 	Only tries to dump children in maintainer mode.
 
