@@ -631,7 +631,7 @@ na_object_action_new_with_profile( void )
 
 	action = na_object_action_new();
 	profile = na_object_profile_new();
-	na_object_action_attach_profile( action, profile );
+	na_object_attach_profile( action, profile );
 
 	return( action );
 }
@@ -659,7 +659,7 @@ na_object_action_new_with_defaults( void )
 	na_factory_object_set_defaults( NA_IFACTORY_OBJECT( action ));
 
 	profile = na_object_profile_new_with_defaults();
-	na_object_action_attach_profile( action, profile );
+	na_object_attach_profile( action, profile );
 
 	return( action );
 }

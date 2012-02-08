@@ -1,3 +1,9 @@
+2012-02-08 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-object-action.c
+	(na_object_action_new_with_profile, na_object_action_new_with_defaults):
+	Rather use the macro na_object_attach_profile().
+
 2012-02-06 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-tree-view.c (display_label): Simplify the code.
