@@ -180,7 +180,6 @@ nact_menubar_file_on_new_profile( GtkAction *gtk_action, BaseWindow *window )
 	NAObjectAction *action;
 	NAObjectProfile *profile;
 	NactTreeView *items_view;
-	gchar *name;
 	GList *items;
 
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
@@ -192,13 +191,10 @@ nact_menubar_file_on_new_profile( GtkAction *gtk_action, BaseWindow *window )
 			NULL );
 
 	profile = na_object_profile_new_with_defaults();
+	na_object_attach_profile( action, profile );
+
 	na_object_set_label( profile, _( "New profile" ));
-
-	name = na_object_action_get_new_profile_name( action );
-	na_object_set_id( profile, name );
-	g_free( name );
-
-	/*na_object_attach_profile( action, profile );*/
+	na_object_set_new_id( profile, action );
 
 	na_object_check_status( profile );
 
