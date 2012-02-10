@@ -11,8 +11,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-02-05 11:39+0000\n"
-"PO-Revision-Date: 2012-02-07 13:04+0100\n"
+"POT-Creation-Date: 2012-02-07 12:05+0000\n"
+"PO-Revision-Date: 2012-02-10 14:01+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -1336,6 +1336,8 @@ msgid ""
 "Enter <userinput>--info --text='%c selected item(s): %U'</userinput> in the "
 "<guilabel>Parameters</guilabel> entry box."
 msgstr ""
+"Introduzca <userinput>--info --text='%c elementos seleccionados: %U'</"
+"userinput> en el cuadro de entrada <guilabel>Parámetros</guilabel>."
 
 #: C/nautilus-actions-config-tool.xml:628(para)
 msgid ""
@@ -3108,6 +3110,9 @@ msgid ""
 "productname> allows you to configure how exactly your command will be "
 "executed."
 msgstr ""
+"Además de configurar las condiciones que la selección debe cumplir para que "
+"su acción se muestre, <productname>Acciones de Nautilus</productname> le "
+"permite configurar la manera exacta en la que su comando se ejecutará."
 
 #: C/nautilus-actions-config-tool.xml:111(para)
 msgid ""
@@ -4210,6 +4215,8 @@ msgid ""
 "All your pending modifications will be saved. New items will be created by "
 "the first available writable I/O provider."
 msgstr ""
+"Se guardarán todas sus modificaciones pendientes. El primer proveedor de E/S "
+"disponible creará los elementos nuevos."
 
 #: C/nautilus-actions-config-tool.xml:20(para)
 msgid ""
@@ -4226,11 +4233,11 @@ msgstr "Exportar sus acciones"
 
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid "Importing actions"
-msgstr "Acciones de importación"
+msgstr "Importar acciones"
 
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid "Setting your own preferences"
-msgstr ""
+msgstr "Establecer sus propias preferencias"
 
 #: C/nautilus-actions-config-tool.xml:3(para)
 msgid ""
@@ -4311,21 +4318,22 @@ msgstr "Preferencias de esquemas"
 
 #: C/nautilus-actions-config-tool.xml:143(phrase)
 msgid "Shows the tab which lets you define schemes preferences."
-msgstr ""
+msgstr "Muestra la pestaña que le permite definir preferencias de esquemas."
 
 #: C/nautilus-actions-config-tool.xml:156(title)
 #: C/nautilus-actions-config-tool.xml:158(title)
 #: C/nautilus-actions-config-tool.xml:168(para)
 msgid "I/O providers preferences"
-msgstr ""
+msgstr "Preferencias de proveedores de E/S"
 
 #: C/nautilus-actions-config-tool.xml:165(phrase)
 msgid "Shows the tab which lets you define I/O providers preferences."
 msgstr ""
+"Muestra la pestaña que le permite definir preferencias de proveedores de E/S."
 
 #: C/nautilus-actions-config-tool.xml:171(title)
 msgid "Miscellaneous informations"
-msgstr ""
+msgstr "Información variada"
 
 #: C/nautilus-actions-config-tool.xml:1(para)
 msgid ""
@@ -4337,6 +4345,14 @@ msgid ""
 "lacks a command to be executed to be considered valid by "
 "<application>Nautilus-Actions Configuration Tool</application>"
 msgstr ""
+"La acción nueva también se muestra en color rojo en la lista de elementos. "
+"El color rojo indica que el elemento no es válido, lo que significa que el "
+"elemento no puede ser candidato a mostrarse en el menú contextual de "
+"<productname>Nautilus</productname> porque parte de su información falta o "
+"es errónea. Aquí, a pesar de que la acción nueva tiene valores "
+"predeterminados adecuados, carece de un comando a ejecutarse como para que "
+"la <application>Herramienta de configuración de las Acciones de Nautilus</"
+"application> la considere válida."
 
 #: C/nautilus-actions-config-tool.xml:182(title)
 msgid "Known Bugs and Limitations"
@@ -4353,6 +4369,10 @@ msgid ""
 "bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED\" type=\"http"
 "\">Bugzilla summary page</ulink>."
 msgstr ""
+"Los errores conocidos están disponibles en la <ulink url=\"https://bugzilla."
+"gnome.org/buglist.cgi?product=nautilus-actions&amp;"
+"bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;"
+"bug_status=REOPENED\" type=\"http\">página resumen de Bugzilla</ulink>."
 
 #: C/nautilus-actions-config-tool.xml:7(para)
 msgid ""
@@ -4361,12 +4381,18 @@ msgid ""
 "\"https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions\" type="
 "\"http\">Bugzilla web site</ulink>."
 msgstr ""
+"Si encuentra algún error nuevo en <productname>Nautilus-Actions</"
+"productname>, informe de él visitando el <ulink url=\"https://bugzilla.gnome."
+"org/enter_bug.cgi?product=nautilus-actions\" type=\"http\">sitio web de "
+"Bugzilla</ulink> con su navegador favorito."
 
 #: C/nautilus-actions-config-tool.xml:14(title)
 msgid ""
 "<ulink url=\"https://bugzilla.gnome.org/show_bug.cgi?id=616532\" type=\"http"
 "\">#616532</ulink> Directory selection"
 msgstr ""
+"<ulink url=\"https://bugzilla.gnome.org/show_bug.cgi?id=616532\" type=\"http"
+"\">#616532</ulink> Selección de carpetas"
 
 #: C/nautilus-actions-config-tool.xml:15(para)
 msgid ""
@@ -4376,6 +4402,11 @@ msgid ""
 "have to go to the directory a level up and select the directory you want to "
 "export to there."
 msgstr ""
+"Cuando examina la carpeta a la que quiere exportar en el asistente de "
+"exportación de la <application>Herramienta de configuración de las Acciones "
+"de Nautilus</application>, no la puede seleccionar como la carpeta a la que "
+"exportar. En vez de eso, debe ir a la carpeta superior y seleccionar la "
+"carpeta desde allí."
 
 #: C/nautilus-actions-config-tool.xml:25(title)
 msgid "Known limitations"
@@ -4387,12 +4418,18 @@ msgid ""
 "Actions Configuration Tool</application> but is not yet honored by "
 "<productname>Nautilus</productname> plugin."
 msgstr ""
+"En la versión 3.0, se puede configurar el modo de ejecución en la "
+"<application>Herramienta de configuración de las Acciones de Nautilus</"
+"application>, pero todavía no tiene efecto en el complemento de "
+"<productname>Nautilus</productname>."
 
 #: C/nautilus-actions-config-tool.xml:34(para)
 msgid ""
 "This concern working directory, execution mode, startup notification and "
 "execution's owner parameters."
 msgstr ""
+"Esto afecta a la carpeta de trabajo, modo de ejecución, notificación de "
+"inicio y los parámetros del propietario de ejecución."
 
 #: C/nautilus-actions-config-tool.xml:40(title)
 msgid "Suggested shortcut"
@@ -4406,6 +4443,12 @@ msgid ""
 "Tool</application>, and is not honored by <productname>Nautilus</"
 "productname> plugin."
 msgstr ""
+"En la versión 3.0, el atajo de teclado sugerido, como se describe en la "
+"<ulink url=\"http://www.nautilus-actions.org/?q=node/377\" type=\"http"
+"\">especificación DES-EMA </ulink> no se puede configurar en la "
+"<application>Herramienta de configuración de las Acciones de Nautilus</"
+"application>, y no tiene efecto en el complemento de <productname>Nautilus</"
+"productname>."
 
 #: C/nautilus-actions-config-tool.xml:48(title)
 msgid "Menu separator"
@@ -4417,12 +4460,19 @@ msgid ""
 "<application>Nautilus-Actions Configuration Tool</application>, and are not "
 "honored by <productname>Nautilus</productname> plugin."
 msgstr ""
+"En la versión 3.0, los separadores de menú no se pueden configurar en la "
+"<application>Herramienta de configuración de las Acciones de Nautilus</"
+"application>. y no tienen efecto en el complemento de <productname>Nautilus</"
+"productname>."
 
 #: C/nautilus-actions-config-tool.xml:54(para)
 msgid ""
 "One has to note that, for now, <productname>Nautilus</productname> file "
 "manager does not allow its plugins to define separators in the context menu."
 msgstr ""
+"Uno tiene que notar que, por ahora, el gestor de archivos "
+"<productname>Nautilus</productname> no le permite a sus complementos definir "
+"separadores en el menú contextual."
 
 #: C/nautilus-actions-config-tool.xml:196(title)
 msgid "About <application>Nautilus-Actions Configuration Tool</application>"
@@ -4438,6 +4488,11 @@ msgid ""
 "improved and is currently maintained by Pierre Wieser "
 "(<email>pwieser@trychlos.org</email>)."
 msgstr ""
+"Frederic Ruaudel (<email>grumz@grumz.net</email>) y Rodrigo Moya "
+"(<email>rodrigo@gnome-db.org</email>) escribieron la primera versión de "
+"<productname>Acciones de Nautilus</productname>. Se ha mejorado ampliamente "
+"y actualmente es Pierre Wieser (<email>pwieser@trychlos.org</email>) quien "
+"lo mantiene."
 
 #: C/nautilus-actions-config-tool.xml:204(para)
 msgid ""
@@ -4445,6 +4500,9 @@ msgid ""
 "email>) and DragonArtz (<ulink url=\"http://www.dragonartz.net/\" type=\"http"
 "\">http://www.dragonartz.net</ulink>)."
 msgstr ""
+"Las ilustraciones son cortesía de Ulisse Perusin (<email>uli.peru@gmail.com</"
+"email>) y DragonArtz (<ulink url=\"http://www.dragonartz.net/\" type=\"http"
+"\">http://www.dragonartz.net</ulink>)."
 
 #: C/nautilus-actions-config-tool.xml:210(para)
 msgid ""
@@ -4452,6 +4510,10 @@ msgid ""
 "please visit the <ulink url=\"http://www.nautilus-actions.org/\" type=\"http"
 "\"/><productname>Nautilus-Actions</productname> website."
 msgstr ""
+"Para obtener más información acerca de <productname>Acciones de Nautilus</"
+"productname>, visite la página web de <ulink url=\"http://www.nautilus-"
+"actions.org/\" type=\"http\"/><productname>Acciones de Nautilus</"
+"productname>."
 
 #: C/nautilus-actions-config-tool.xml:215(para)
 msgid ""
@@ -4463,6 +4525,14 @@ msgid ""
 "enhancement in <ulink url=\"https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions\" type=\"http\">Bugzilla website</ulink>."
 msgstr ""
+"Para informar de un error o hacer una sugerencia acerca de "
+"<productname>Acciones de Nautilus</productname>, la <application>Herramienta "
+"de configuración de acciones de Nautilus</application> o este manual, siga "
+"los enlaces de la <ulink url=\"ghelp:user-guide#feedback\" type=\"help"
+"\">página de comentarios de GNOME</ulink>, o tal vez prefiera abrir un error "
+"o pedir una mejora directamente en el <ulink url=\"https://bugzilla.gnome."
+"org/enter_bug.cgi?product=nautilus-actions\" type=\"http\">sitio web de "
+"Bugzilla</ulink>."
 
 #: C/nautilus-actions-config-tool.xml:2(title)
 msgid "GNU Free Documentation License"
