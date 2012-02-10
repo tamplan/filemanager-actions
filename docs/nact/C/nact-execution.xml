@@ -103,7 +103,7 @@
   <sect3 id="usage-execution-how">
     <title>How should the action be executed ?</title>
     <para>
-      Apart from configuring the conditions, the selection must met in
+      Apart from configuring the conditions, the selection must be met in
       order your action be displayed in file manager menus, &prodname;
       allows you to configure how exactly your command will be
       executed.
