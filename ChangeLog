@@ -1,5 +1,9 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar-maintainer.c
+	(nact_menubar_maintainer_on_dump_selection): Incrementing the objects
+	ref_count on dump is useless.
+
 	* src/nact/nact-menubar-edit.c (nact_menubar_edit_on_copy): Incrementing
 	the objects ref before copying is useless.
 

@@ -60,13 +60,9 @@ nact_menubar_maintainer_on_update_sensitivities( const NactMenubar *bar )
 void
 nact_menubar_maintainer_on_dump_selection( GtkAction *action, BaseWindow *window )
 {
-	GList *items;
-
 	BAR_WINDOW_VOID( window );
 
-	items = na_object_copyref_items( bar->private->selected_items );
-	na_object_dump_tree( items );
-	na_object_free_items( items );
+	na_object_dump_tree( bar->private->selected_items );
 }
 
 /**
