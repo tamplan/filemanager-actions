@@ -640,7 +640,7 @@ na_io_provider_load_items( const NAPivot *pivot, guint loadable_set, GSList **me
 			thisfn, ( void * ) pivot, loadable_set, ( void * ) messages );
 
 	/* get the global flat items list, as a merge of the list provided
-	 * each available and readable i/o provider
+	 * by each available and readable i/o provider
 	 */
 	flat = load_items_get_merged_list( pivot, loadable_set, messages );
 
@@ -1146,6 +1146,7 @@ load_items_hierarchy_build( GList **tree, GSList *level_zero, gboolean list_if_e
 			}
 		}
 	}
+
 	/* if level-zero list is empty,
 	 * we consider that all items are at the same level
 	 */

@@ -1,5 +1,7 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-io-provider.c (na_io_provider_load_items): Fix comment.
+
 	* src/nact/nact-main-window.h:
 	* src/nact/nact-main-window.c
 	(on_base_initialize_window, on_tree_view_selection_changed):
