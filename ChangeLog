@@ -1,5 +1,17 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar.c (instance_dispose,
+	on_tree_view_selection_changed): Keeping a recursive ref on the current
+	selection is definitively a bad idea;; only keep a copy of the list.
+
+	The bad idea is actually:
+	- keep a recursive ref on the current selection,
+	- does someting in the UI, e.g. insert a new item in the selection,
+	- then select the newly inserted item,
+	  > thus recursively unreffing the kept previous selection
+	  > so unreffing the inserted item which unfortunately was not previously
+	    counted -> so ref_count miss.
+
 	* src/nact/nact-menubar-maintainer.c
 	(nact_menubar_maintainer_on_dump_selection): Incrementing the objects
 	ref_count on dump is useless.

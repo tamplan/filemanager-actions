@@ -358,7 +358,7 @@ instance_dispose( GObject *object )
 		g_object_unref( self->private->sort_buttons );
 
 		if( self->private->selected_items ){
-			self->private->selected_items = na_object_free_items( self->private->selected_items );
+			g_list_free( self->private->selected_items );
 		}
 
 		/* chain up to the parent class */
@@ -782,9 +782,9 @@ on_tree_view_selection_changed( BaseWindow *window, GList *selected, gpointer us
 	/* take a ref of the list of selected items
 	 */
 	if( bar->private->selected_items ){
-		bar->private->selected_items = na_object_free_items( bar->private->selected_items );
+		g_list_free( bar->private->selected_items );
 	}
-	bar->private->selected_items = na_object_copyref_items( selected );
+	bar->private->selected_items = g_list_copy( selected );
 
 	/* check if the parent of the first selected item is writable
 	 * (File: New menu/New action)
