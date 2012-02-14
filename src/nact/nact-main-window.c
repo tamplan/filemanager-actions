@@ -868,18 +868,6 @@ on_base_initialize_gtk( NactMainWindow *window, GtkWindow *toplevel, gpointer us
 				"ActionsList",
 				TREE_MODE_EDITION );
 
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				TREE_SIGNAL_SELECTION_CHANGED,
-				G_CALLBACK( on_tree_view_selection_changed ));
-
-		base_window_signal_connect(
-				BASE_WINDOW( window ),
-				G_OBJECT( window ),
-				TREE_SIGNAL_MODIFIED_STATUS_CHANGED,
-				G_CALLBACK( on_tree_view_modified_status_changed ));
-
 		nact_main_statusbar_initialize_gtk_toplevel( window );
 
 		/* enable popup menu on  the notebook
@@ -930,6 +918,20 @@ on_base_initialize_window( NactMainWindow *window, gpointer user_data )
 				G_OBJECT( application ),
 				BASE_SIGNAL_QUIT_REQUESTED,
 				G_CALLBACK( on_base_quit_requested ));
+
+		/* connect to treeview signals
+		 */
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				TREE_SIGNAL_SELECTION_CHANGED,
+				G_CALLBACK( on_tree_view_selection_changed ));
+
+		base_window_signal_connect(
+				BASE_WINDOW( window ),
+				G_OBJECT( window ),
+				TREE_SIGNAL_MODIFIED_STATUS_CHANGED,
+				G_CALLBACK( on_tree_view_modified_status_changed ));
 
 		/* restore the notebook tabs position
 		 */

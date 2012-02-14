@@ -1,5 +1,11 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c
+	(on_base_initialize_gtk, on_base_initialize_window): Move connections to
+	the signals when initializing window; this is not a big difference as the
+	main window is the only window of its class, but does the right thing in
+	the right place.
+
 	* src/core/na-object-item.c
 	(na_object_item_copyref_items, na_object_item_free_items):
 	Improve debug messages.
