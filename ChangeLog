@@ -1,5 +1,8 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nautilus-actions-config-tool.ui: Remove halign property only
+	avaliable since Gtk 3.0.
+
 	* src/nact/base-gtk-utils.c (base_gtk_utils_table_to_grid):
 	Improve table to grid conversion, adding spacing and expand properties.
 

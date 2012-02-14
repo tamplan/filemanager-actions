@@ -1541,7 +1541,6 @@ If this is not an absolute path, then the PATH environment variable at execution
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
-                                            <property name="halign">end</property>
                                             <property name="use_action_appearance">False</property>
                                             <property name="image">ImagePathBrowse</property>
                                             <property name="use_underline">True</property>
@@ -1575,7 +1574,6 @@ If this is not an absolute path, then the PATH environment variable at execution
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
-                                            <property name="halign">end</property>
                                             <property name="use_action_appearance">False</property>
                                             <property name="image">ImageParametersLegend</property>
                                             <property name="use_underline">True</property>
@@ -1626,7 +1624,6 @@ If this is not an absolute path, then the PATH environment variable at execution
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
-                                            <property name="halign">end</property>
                                             <property name="use_action_appearance">False</property>
                                             <property name="image">ImageWorkingDirectoryBrowse</property>
                                             <property name="use_underline">True</property>
