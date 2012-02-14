@@ -538,6 +538,7 @@ base_gtk_utils_table_to_grid( BaseWindow *window, const gchar *table_name )
 	static const gchar *thisfn = "base_gtk_utils_table_to_grid";
 	TableToGridData ttg;
 	GtkWidget *parent;
+	guint col_spacing, row_spacing;
 
 	memset( &ttg, '\0', sizeof( TableToGridData ));
 
@@ -553,8 +554,12 @@ base_gtk_utils_table_to_grid( BaseWindow *window, const gchar *table_name )
 #endif
 
 	gtk_table_get_size( GTK_TABLE( ttg.table ), &ttg.rows, &ttg.columns );
+	col_spacing = gtk_table_get_default_col_spacing( GTK_TABLE( ttg.table ));
+	row_spacing = gtk_table_get_default_row_spacing( GTK_TABLE( ttg.table ));
 
 	ttg.grid = gtk_grid_new();
+	gtk_grid_set_column_spacing( GTK_GRID( ttg.grid ), col_spacing );
+	gtk_grid_set_row_spacing( GTK_GRID( ttg.grid ), row_spacing );
 
 	gtk_container_foreach( GTK_CONTAINER( ttg.table ), ( GtkCallback ) table_to_grid_foreach_cb, &ttg );
 	/*gtk_widget_unparent( ttg.table );*/
@@ -577,12 +582,16 @@ static void
 table_to_grid_foreach_cb( GtkWidget *widget, TableToGridData *ttg )
 {
 	static const gchar *thisfn = "base_gtk_utils_table_to_grid_foreach_cb";
-	guint left, top;
+	guint left, top, x_options;
 
 	g_debug( "%s: widget=%p (%s)", thisfn, ( void * ) widget, gtk_buildable_get_name( GTK_BUILDABLE( widget )));
 
-	gtk_container_child_get( GTK_CONTAINER( ttg->table ), widget, "left-attach", &left, "top-attach", &top, NULL );
+	gtk_container_child_get( GTK_CONTAINER( ttg->table ), widget,
+			"left-attach", &left, "top-attach", &top, "x-options", &x_options, NULL );
+
 	gtk_widget_unparent( widget );
+
 	gtk_grid_attach( GTK_GRID( ttg->grid ), widget, left, top, 1, 1 );
+	gtk_widget_set_hexpand( widget, x_options & GTK_EXPAND );
 }
 #endif
