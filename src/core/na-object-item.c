@@ -719,8 +719,16 @@ count_items_rec( GList *items, gint *menus, gint *actions, gint *profiles, gbool
 GList *
 na_object_item_copyref_items( GList *items )
 {
-	GList *copy = g_list_copy( items );
-	g_list_foreach( copy, ( GFunc ) na_object_object_ref, NULL );
+	GList *copy = NULL;
+
+	if( items ){
+		copy = g_list_copy( items );
+		g_list_foreach( copy, ( GFunc ) na_object_object_ref, NULL );
+		g_debug( "na_object_item_copyref_items: list at %p contains %s at %p (ref_count=%d)",
+				( void * ) copy,
+				G_OBJECT_TYPE_NAME( copy->data ), ( void * ) copy->data, G_OBJECT( copy->data )->ref_count );
+	}
+
 	return( copy );
 }
 
@@ -737,8 +745,13 @@ na_object_item_copyref_items( GList *items )
 GList *
 na_object_item_free_items( GList *items )
 {
-	g_list_foreach( items, ( GFunc ) na_object_object_unref, NULL );
-	g_list_free( items );
+	if( items ){
+		g_debug( "na_object_item_free_items: freeing list at %p which contains %s at %p (ref_count=%d)",
+				( void * ) items,
+				G_OBJECT_TYPE_NAME( items->data ), ( void * ) items->data, G_OBJECT( items->data )->ref_count );
+		g_list_foreach( items, ( GFunc ) na_object_object_unref, NULL );
+		g_list_free( items );
+	}
 	return( NULL );
 }
 

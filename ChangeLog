@@ -1,3 +1,9 @@
+2012-02-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-object-item.c
+	(na_object_item_copyref_items, na_object_item_free_items):
+	Improve debug messages.
+
 2012-02-08 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-menubar-file.c (nact_menubar_file_on_new_profile):
