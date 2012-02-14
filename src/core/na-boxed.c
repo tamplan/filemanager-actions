@@ -1203,6 +1203,7 @@ string_list_from_void( NABoxed *boxed, const void *value )
 			boxed->private->u.string_list = g_slist_prepend( boxed->private->u.string_list, g_strdup(( const gchar * ) it->data ));
 		}
 	}
+	boxed->private->u.string_list = g_slist_reverse( boxed->private->u.string_list );
 }
 
 static gconstpointer

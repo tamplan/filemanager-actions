@@ -1,5 +1,8 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-boxed.c (string_list_from_void): Keep the source and the
+	target string lists in the same order.
+
 	* src/core/na-io-provider.c (na_io_provider_load_items): Fix comment.
 
 	* src/nact/nact-main-window.h:
