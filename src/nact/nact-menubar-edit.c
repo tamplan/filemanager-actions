@@ -251,7 +251,6 @@ void
 nact_menubar_edit_on_copy( GtkAction *gtk_action, BaseWindow *window )
 {
 	static const gchar *thisfn = "nact_menubar_edit_on_copy";
-	GList *items;
 	NactClipboard *clipboard;
 
 	BAR_WINDOW_VOID( window );
@@ -260,11 +259,9 @@ nact_menubar_edit_on_copy( GtkAction *gtk_action, BaseWindow *window )
 	g_return_if_fail( GTK_IS_ACTION( gtk_action ));
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
 
-	items = na_object_copyref_items( bar->private->selected_items );
 	clipboard = nact_main_window_get_clipboard( NACT_MAIN_WINDOW( window ));
-	nact_clipboard_primary_set( clipboard, items, CLIPBOARD_MODE_COPY );
+	nact_clipboard_primary_set( clipboard, bar->private->selected_items, CLIPBOARD_MODE_COPY );
 	update_clipboard_counters( window );
-	na_object_free_items( items );
 
 	g_signal_emit_by_name( bar, MENUBAR_SIGNAL_UPDATE_SENSITIVITIES );
 }

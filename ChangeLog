@@ -1,5 +1,8 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar-edit.c (nact_menubar_edit_on_copy): Incrementing
+	the objects ref before copying is useless.
+
 	* src/nact/nact-main-window.c
 	(on_base_initialize_gtk, on_base_initialize_window): Move connections to
 	the signals when initializing window; this is not a big difference as the
