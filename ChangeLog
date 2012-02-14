@@ -1,5 +1,8 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar-edit.c (get_deletables):
+	Check if action is writable when deleting a profile.
+
 	* src/core/na-object-action.c (ifactory_object_read_done):
 	* src/core/na-object-menu.c (ifactory_object_read_done):
 	* src/core/na-object-profile.c (ifactory_object_read_done):

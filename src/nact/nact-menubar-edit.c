@@ -488,11 +488,18 @@ get_deletables( NAUpdater *updater, GList *selected, GSList **non_deletables )
 	GList *subitems;
 	GSList *sub_deletables;
 	guint reason;
+	NAObjectItem *item;
 
 	to_delete = NULL;
 	for( it = selected ; it ; it = it->next ){
 
-		if( !na_object_is_finally_writable( it->data, &reason )){
+		if( NA_IS_OBJECT_PROFILE( it->data )){
+			item = na_object_get_parent( it->data );
+		} else {
+			item = NA_OBJECT_ITEM( it->data );
+		}
+
+		if( !na_object_is_finally_writable( item, &reason )){
 			*non_deletables = g_slist_prepend(
 					*non_deletables, add_non_deletable_msg( NA_OBJECT_ITEM( it->data ), reason ));
 			continue;
