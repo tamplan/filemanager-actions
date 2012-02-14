@@ -389,8 +389,6 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 
 	g_debug( "na_object_action_ifactory_object_read_done: instance=%p", ( void * ) instance );
 
-	na_factory_object_dump( instance );
-
 	na_object_item_deals_with_version( NA_OBJECT_ITEM( instance ));
 
 	/* should attach a new profile if we detect a pre-v2 action

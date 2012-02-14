@@ -350,8 +350,6 @@ ifactory_object_read_done( NAIFactoryObject *instance, const NAIFactoryProvider 
 
 	g_debug( "%s: instance=%p", thisfn, ( void * ) instance );
 
-	na_factory_object_dump( instance );
-
 	/* converts pre-v3 data
 	 */
 	action = NA_OBJECT_ACTION( na_object_get_parent( instance ));
