@@ -1,5 +1,7 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-tree-view.c (get_selected_items): Improve debug message.
+
 	* src/nact/nact-menubar.c (instance_dispose,
 	on_tree_view_selection_changed): Keeping a recursive ref on the current
 	selection is definitively a bad idea;; only keep a copy of the list.

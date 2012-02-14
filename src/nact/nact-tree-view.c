@@ -1268,9 +1268,11 @@ get_selected_items( NactTreeView *view )
 		path = ( GtkTreePath * ) it->data;
 		gtk_tree_model_get_iter( model, &iter, path );
 		gtk_tree_model_get( model, &iter, TREE_COLUMN_NAOBJECT, &object, -1 );
-		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
 		items = g_list_prepend( items, na_object_ref( object ));
 		g_object_unref( object );
+		g_debug( "%s: object=%p (%s) ref_count=%d",
+				thisfn,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ), G_OBJECT( object )->ref_count );
 	}
 
 	g_list_foreach( listrows, ( GFunc ) gtk_tree_path_free, NULL );
