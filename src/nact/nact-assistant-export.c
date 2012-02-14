@@ -570,7 +570,7 @@ on_base_all_widgets_showed( NactAssistantExport *window, gpointer user_data )
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
 				G_OBJECT( window ),
-				TREE_SIGNAL_SELECTION_CHANGED,
+				MAIN_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_items_tree_view_selection_changed ));
 
 		/* select the first row

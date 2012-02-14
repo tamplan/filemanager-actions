@@ -103,7 +103,6 @@ typedef struct {
 #define TREE_SIGNAL_FOCUS_OUT					"tree-signal-focus-out"
 #define TREE_SIGNAL_LEVEL_ZERO_CHANGED			"tree-signal-level-zero-changed"
 #define TREE_SIGNAL_MODIFIED_STATUS_CHANGED		"tree-signal-modified-status-changed"
-#define TREE_SIGNAL_SELECTION_CHANGED			"tree-signal-selection-changed"
 
 typedef enum {
 	TREE_MODE_EDITION = 0,

@@ -133,7 +133,6 @@ static gboolean   on_focus_out( GtkWidget *widget, GdkEventFocus *event, BaseWin
 static gboolean   on_key_pressed_event( GtkWidget *widget, GdkEventKey *event, BaseWindow *window );
 static gboolean   on_popup_menu( GtkWidget *widget, BaseWindow *window );
 static void       on_selection_changed( GtkTreeSelection *selection, BaseWindow *window );
-static void       on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items );
 static void       on_tree_view_realized( GtkWidget *treeview, BaseWindow *window );
 static void       clear_selection( NactTreeView *view );
 static void       display_label( GtkTreeViewColumn *column, GtkCellRenderer *cell, GtkTreeModel *model, GtkTreeIter *iter, NactTreeView *view );
@@ -395,30 +394,6 @@ class_init( NactTreeViewClass *klass )
 			G_TYPE_NONE,
 			1,
 			G_TYPE_BOOLEAN );
-
-	/**
-	 * NactTreeView::tree-signal-selection-changed:
-	 *
-	 * This signal is emitted on the BaseWindow parent each time the selection
-	 * has changed in the treeview.
-	 *
-	 * Signal args:
-	 * - a #GList of currently selected #NAObjectItems.
-	 *
-	 * Handler prototype:
-	 * void ( *handler )( BaseWindow *window, GList *selected, gpointer user_data );
-	 */
-	st_signals[ SELECTION_CHANGED ] = g_signal_new_class_handler(
-			TREE_SIGNAL_SELECTION_CHANGED,
-			G_TYPE_OBJECT,
-			G_SIGNAL_RUN_CLEANUP,
-			G_CALLBACK( on_selection_changed_cleanup_handler ),
-			NULL,
-			NULL,
-			g_cclosure_marshal_VOID__POINTER,
-			G_TYPE_NONE,
-			1,
-			G_TYPE_POINTER );
 
 	klass->private = g_new0( NactTreeViewClassPrivate, 1 );
 }
@@ -854,24 +829,9 @@ on_selection_changed( GtkTreeSelection *selection, BaseWindow *window )
 			g_debug( "%s: selection=%p, window=%p", thisfn, ( void * ) selection, ( void * ) window );
 
 			selected_items = get_selected_items( items_view );
-			g_signal_emit_by_name( window, TREE_SIGNAL_SELECTION_CHANGED, selected_items );
+			g_signal_emit_by_name( window, MAIN_SIGNAL_SELECTION_CHANGED, selected_items );
 		}
 	}
-}
-
-/*
- * cleanup handler for our TREE_SIGNAL_SELECTION_CHANGED signal
- */
-static void
-on_selection_changed_cleanup_handler( BaseWindow *window, GList *selected_items )
-{
-	static const gchar *thisfn = "nact_tree_view_on_selection_changed_cleanup_handler";
-
-	g_debug( "%s: window=%p, selected_items=%p (count=%u)",
-			thisfn, ( void * ) window,
-			( void * ) selected_items, g_list_length( selected_items ));
-
-	na_object_free_items( selected_items );
 }
 
 static void
@@ -1167,7 +1127,7 @@ nact_tree_view_select_row_at_path( NactTreeView *view, GtkTreePath *path )
 
 		if( !something ){
 			if( view->private->notify_allowed ){
-				g_signal_emit_by_name( view->private->window, TREE_SIGNAL_SELECTION_CHANGED, NULL );
+				g_signal_emit_by_name( view->private->window, MAIN_SIGNAL_SELECTION_CHANGED, NULL );
 			}
 		}
 	}

@@ -1,5 +1,16 @@
 2012-02-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.h:
+	* src/nact/nact-main-window.c
+	(on_base_initialize_window, on_tree_view_selection_changed):
+	* src/nact/nact-assistant-export.c (on_base_all_widgets_showed):
+	* src/nact/nact-menubar.c (on_base_initialize_window):
+	* src/nact/nact-tree-view.c (class_init, on_selection_changed):
+	* src/nact/nact-tree-view.h:
+	Get rid of TREE_SIGNAL_SELECTION_CHANGED signal, only using
+	MAIN_SIGNAL_SELECTION_CHANGED one, based on the assertion that the
+	NactMainWindow will be the first triggered handler.
+
 	* src/nact/nact-tree-view.c (get_selected_items): Improve debug message.
 
 	* src/nact/nact-menubar.c (instance_dispose,

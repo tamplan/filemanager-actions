@@ -924,7 +924,7 @@ on_base_initialize_window( NactMainWindow *window, gpointer user_data )
 		base_window_signal_connect(
 				BASE_WINDOW( window ),
 				G_OBJECT( window ),
-				TREE_SIGNAL_SELECTION_CHANGED,
+				MAIN_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tree_view_selection_changed ));
 
 		base_window_signal_connect(
@@ -947,8 +947,6 @@ on_base_show_widgets( NactMainWindow *window, gpointer user_data )
 	static const gchar *thisfn = "nact_main_window_on_base_show_widgets";
 
 	g_return_if_fail( NACT_IS_MAIN_WINDOW( window ));
-	g_return_if_fail( NACT_IS_IEXECUTION_TAB( window ));
-	g_return_if_fail( NACT_IS_IPROPERTIES_TAB( window ));
 
 	if( !window->private->dispose_has_run ){
 
@@ -1104,9 +1102,6 @@ on_tree_view_selection_changed( NactMainWindow *window, GList *selected_items, g
 		}
 
 		setup_dialog_title( window );
-
-		g_signal_emit_by_name( G_OBJECT( window ),
-				MAIN_SIGNAL_SELECTION_CHANGED, na_object_copyref_items( selected_items ));
 	}
 }
 

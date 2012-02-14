@@ -550,7 +550,7 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 		base_window_signal_connect(
 				window,
 				G_OBJECT( window ),
-				TREE_SIGNAL_SELECTION_CHANGED,
+				MAIN_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tree_view_selection_changed ));
 
 		base_window_signal_connect(
