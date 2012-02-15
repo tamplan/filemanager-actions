@@ -1,5 +1,8 @@
 2012-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar-priv.h:
+	* src/nact/nact-menubar.c (instance_dispose): Disconnect signal handler.
+
 	* src/nact/base-window.c (instance_dispose): Improve debug message.
 
 	* src/nact/nact-menubar-edit.c

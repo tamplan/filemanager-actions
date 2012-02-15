@@ -54,6 +54,7 @@ struct _NactMenubarPrivate {
 	/* set at instanciation time
 	 */
 	BaseWindow      *window;
+	gulong			 update_sensitivities_handler_id;
 
 	/* set at initialization time
 	 */

@@ -341,24 +341,31 @@ static void
 instance_dispose( GObject *object )
 {
 	static const gchar *thisfn = "nact_menubar_instance_dispose";
-	NactMenubar *self;
+	NactMenubarPrivate *priv;
 
 	g_return_if_fail( NACT_IS_MENUBAR( object ));
 
-	self = NACT_MENUBAR( object );
+	priv = NACT_MENUBAR( object )->private;
 
-	if( !self->private->dispose_has_run ){
-		g_debug( "%s: object=%p (%s)", thisfn, ( void * ) object, G_OBJECT_TYPE_NAME( object ));
+	if( !priv->dispose_has_run ){
 
-		self->private->dispose_has_run = TRUE;
+		g_debug( "%s: object=%p (%s)",
+				thisfn,
+				( void * ) object, G_OBJECT_TYPE_NAME( object ));
 
-		g_object_unref( self->private->action_group );
-		g_object_unref( self->private->notebook_group );
-		g_object_unref( self->private->ui_manager );
-		g_object_unref( self->private->sort_buttons );
+		priv->dispose_has_run = TRUE;
 
-		if( self->private->selected_items ){
-			g_list_free( self->private->selected_items );
+		base_window_signal_disconnect(
+				priv->window,
+				priv->update_sensitivities_handler_id );
+
+		g_object_unref( priv->action_group );
+		g_object_unref( priv->notebook_group );
+		g_object_unref( priv->ui_manager );
+		g_object_unref( priv->sort_buttons );
+
+		if( priv->selected_items ){
+			g_list_free( priv->selected_items );
 		}
 
 		/* chain up to the parent class */
@@ -556,11 +563,12 @@ on_base_initialize_window( BaseWindow *window, gpointer user_data )
 				MAIN_SIGNAL_SELECTION_CHANGED,
 				G_CALLBACK( on_tree_view_selection_changed ));
 
-		base_window_signal_connect(
-				window,
-				G_OBJECT( bar ),
-				MENUBAR_SIGNAL_UPDATE_SENSITIVITIES,
-				G_CALLBACK( on_update_sensitivities ));
+		bar->private->update_sensitivities_handler_id =
+				base_window_signal_connect(
+						window,
+						G_OBJECT( bar ),
+						MENUBAR_SIGNAL_UPDATE_SENSITIVITIES,
+						G_CALLBACK( on_update_sensitivities ));
 
 		nact_menubar_file_initialize( bar );
 		nact_main_toolbar_init( window, bar->private->action_group );
