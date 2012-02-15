@@ -1,5 +1,8 @@
 2012-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-window.c (setup_current_selection):
+	Setup the context of the current profile if any.
+
 	* src/nact/nact-menubar-priv.h:
 	* src/nact/nact-menubar.c (instance_dispose): Disconnect signal handler.
 

@@ -1162,6 +1162,7 @@ setup_current_selection( NactMainWindow *window, NAObjectId *selected_row )
 
 	if( NA_IS_OBJECT_PROFILE( selected_row )){
 		window->private->current_profile = NA_OBJECT_PROFILE( selected_row );
+		window->private->current_context = NA_ICONTEXT( selected_row );
 		window->private->current_item = NA_OBJECT_ITEM( na_object_get_parent( selected_row ));
 
 	} else {
