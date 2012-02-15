@@ -1,5 +1,9 @@
 2012-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar-edit.c
+	(nact_menubar_edit_on_update_sensitivities): Do not evaluate writability
+	if an action is not selected.
+
 	* src/nact/nact-menubar.c
 	(nact_menubar_new, on_ui_manager_proxy_connect): Review code layout.
 

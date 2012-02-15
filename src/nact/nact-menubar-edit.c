@@ -137,7 +137,9 @@ nact_menubar_edit_on_update_sensitivities( const NactMenubar *bar )
 		if( paste_into_enabled ){
 			selected_action = NA_OBJECT( bar->private->selected_items->data );
 			paste_into_enabled &= NA_IS_OBJECT_ACTION( selected_action );
-			paste_into_enabled &= na_object_is_finally_writable( selected_action, NULL );
+			if( paste_into_enabled ){
+				paste_into_enabled &= na_object_is_finally_writable( selected_action, NULL );
+			}
 		}
 	} else {
 		paste_into_enabled &= bar->private->has_writable_providers;
