@@ -1,5 +1,6 @@
 2012-02-15 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-icapabilities-tab.c (on_main_selection_changed):
 	* src/nact/nact-ibasenames-tab.c (on_main_selection_changed):
 	Enable the tab if a context is available.
 

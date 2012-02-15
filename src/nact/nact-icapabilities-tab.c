@@ -222,7 +222,16 @@ on_base_initialize_window( NactICapabilitiesTab *instance, void *user_data )
 static void
 on_main_selection_changed( NactICapabilitiesTab *instance, GList *selected_items, gpointer user_data )
 {
-	/* nothing to do here */
+	NAIContext *context;
+	gboolean editable;
+	gboolean enable_tab;
+
+	g_object_get( G_OBJECT( instance ),
+			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+			NULL );
+
+	enable_tab = ( context != NULL );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_CAPABILITIES, enable_tab );
 }
 
 static void
