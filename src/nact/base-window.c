@@ -526,6 +526,7 @@ instance_dispose( GObject *window )
 		 */
 		for( is = priv->signals ; is ; is = is->next ){
 			RecordedSignal *str = ( RecordedSignal * ) is->data;
+			g_debug( "%s: str=%p instance=%p", thisfn, ( void * ) str, ( void * ) str->instance );
 			if( G_IS_OBJECT( str->instance )){
 				if( g_signal_handler_is_connected( str->instance, str->handler_id )){
 					g_signal_handler_disconnect( str->instance, str->handler_id );
