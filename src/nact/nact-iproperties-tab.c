@@ -274,10 +274,10 @@ on_main_selection_changed( NactIPropertiesTab *instance, GList *selected_items, 
 
 	g_return_if_fail( !item || NA_IS_OBJECT_ITEM( item ));
 
-	data = get_iproperties_data( instance );
 	enable_tab = ( count_selected == 1 );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_PROPERTIES, enable_tab );
 
+	data = get_iproperties_data( instance );
 	data->on_selection_change = TRUE;
 
 	notebook = GTK_NOTEBOOK( base_window_get_widget( BASE_WINDOW( instance ), "MainNotebook" ));
