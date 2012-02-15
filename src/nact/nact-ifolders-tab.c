@@ -237,11 +237,15 @@ on_main_selection_changed( NactIFoldersTab *instance, GList *selected_items, gpo
 {
 	NAIContext *context;
 	gboolean editable;
+	gboolean enable_tab;
 	GtkWidget *button;
 
 	g_object_get( G_OBJECT( instance ),
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
 			NULL );
+
+	enable_tab = ( context != NULL );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_FOLDERS, enable_tab );
 
 	button = base_window_get_widget( BASE_WINDOW( instance ), "FolderBrowseButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
