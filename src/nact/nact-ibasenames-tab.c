@@ -69,7 +69,7 @@ static void            interface_base_finalize( NactIBasenamesTabInterface *klas
 static void            on_base_initialize_gtk( NactIBasenamesTab *instance, GtkWindow *toplevel, gpointer user_data );
 static void            on_base_initialize_window( NactIBasenamesTab *instance, gpointer user_data );
 
-static void            on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
+static void            on_main_selection_changed( NactIBasenamesTab *instance, GList *selected_items, gpointer user_data );
 
 static void            on_matchcase_toggled( GtkToggleButton *button, BaseWindow *window );
 static GSList         *get_basenames( void *context );
@@ -256,23 +256,26 @@ on_base_initialize_window( NactIBasenamesTab *instance, void *user_data )
 }
 
 static void
-on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
+on_main_selection_changed( NactIBasenamesTab *instance, GList *selected_items, gpointer user_data )
 {
 	NAIContext *context;
 	gboolean editable;
+	gboolean enable_tab;
 	GtkToggleButton *matchcase_button;
 	gboolean matchcase;
 	IBasenamesData *data;
 
-	g_object_get( G_OBJECT( window ),
+	g_object_get( G_OBJECT( instance ),
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
-	data = get_ibasenames_data( NACT_IBASENAMES_TAB( window ));
+	enable_tab = ( context != NULL );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_BASENAMES, enable_tab );
 
+	data = get_ibasenames_data( NACT_IBASENAMES_TAB( instance ));
 	data->on_selection_change = TRUE;
 
-	matchcase_button = GTK_TOGGLE_BUTTON( base_window_get_widget( window, "BasenamesMatchcaseButton" ));
+	matchcase_button = GTK_TOGGLE_BUTTON( base_window_get_widget( BASE_WINDOW( instance ), "BasenamesMatchcaseButton" ));
 	matchcase = context ? na_object_get_matchcase( context ) : FALSE;
 	gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( matchcase_button ), matchcase );
 	base_gtk_utils_set_editable( G_OBJECT( matchcase_button ), editable );
