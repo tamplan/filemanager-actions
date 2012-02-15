@@ -275,10 +275,10 @@ on_main_selection_changed( NactIExecutionTab *instance, GList *selected_items, g
 			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
-	data = get_iexecution_data( instance );
 	enable_tab = ( profile != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_EXECUTION, enable_tab );
 
+	data = get_iexecution_data( instance );
 	data->on_selection_change = TRUE;
 
 	normal_toggle = base_window_get_widget( BASE_WINDOW( instance ), "ExecutionModeNormal" );
