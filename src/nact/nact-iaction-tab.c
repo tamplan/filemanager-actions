@@ -416,10 +416,10 @@ on_main_selection_changed( NactIActionTab *instance, GList *selected_items, gpoi
 			( void * ) instance, G_OBJECT_TYPE_NAME( instance ),
 			( void * ) selected_items, count_selected );
 
-	data = get_iaction_data( instance );
 	enable_tab = ( count_selected == 1 );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ACTION, enable_tab );
 
+	data = get_iaction_data( instance );
 	data->on_selection_change = TRUE;
 
 	g_object_get(
