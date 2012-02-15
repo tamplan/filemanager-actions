@@ -413,8 +413,11 @@ nact_menubar_new( BaseWindow *window )
 	bar->private->window = window;
 	bar->private->sort_buttons = nact_sort_buttons_new( window );
 
-	base_window_signal_connect( window,
-			G_OBJECT( window ), BASE_SIGNAL_INITIALIZE_WINDOW, G_CALLBACK( on_base_initialize_window ));
+	base_window_signal_connect(
+			window,
+			G_OBJECT( window ),
+			BASE_SIGNAL_INITIALIZE_WINDOW,
+			G_CALLBACK( on_base_initialize_window ));
 
 	g_object_set_data( G_OBJECT( window ), WINDOW_DATA_MENUBAR, bar );
 
@@ -581,11 +584,18 @@ on_ui_manager_proxy_connect( GtkUIManager *ui_manager, GtkAction *action, GtkWid
 			( void * ) window, G_OBJECT_TYPE_NAME( window ));
 
 	if( GTK_IS_MENU_ITEM( proxy )){
-		base_window_signal_connect( window,
-				G_OBJECT( proxy ), "select", G_CALLBACK( on_menu_item_selected ));
 
-		base_window_signal_connect( window,
-				G_OBJECT( proxy ), "deselect", G_CALLBACK( on_menu_item_deselected ));
+		base_window_signal_connect(
+				window,
+				G_OBJECT( proxy ),
+				"select",
+				G_CALLBACK( on_menu_item_selected ));
+
+		base_window_signal_connect(
+				window,
+				G_OBJECT( proxy ),
+				"deselect",
+				G_CALLBACK( on_menu_item_deselected ));
 	}
 }
 
