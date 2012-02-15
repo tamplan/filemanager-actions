@@ -62,7 +62,7 @@ static void    interface_base_finalize( NactISchemesTabInterface *klass );
 static void    on_base_initialize_gtk( NactISchemesTab *instance, GtkWindow *toplevel, gpointer user_data );
 static void    on_base_initialize_window( NactISchemesTab *instance, gpointer user_data );
 
-static void    on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
+static void    on_main_selection_changed( NactISchemesTab *instance, GList *selected_items, gpointer user_data );
 
 static void    on_add_from_defaults( GtkButton *button, BaseWindow *window );
 static GSList *get_schemes( void *context );
@@ -231,17 +231,21 @@ on_base_initialize_window( NactISchemesTab *instance, void *user_data )
 }
 
 static void
-on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
+on_main_selection_changed( NactISchemesTab *instance, GList *selected_items, gpointer user_data )
 {
 	NAIContext *context;
 	gboolean editable;
+	gboolean enable_tab;
 	GtkWidget *button;
 
-	g_object_get( G_OBJECT( window ),
+	g_object_get( G_OBJECT( instance ),
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
-	button = base_window_get_widget( window, "AddFromDefaultButton" );
+	enable_tab = ( context != NULL );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_SCHEMES, enable_tab );
+
+	button = base_window_get_widget( BASE_WINDOW( instance ), "AddFromDefaultButton" );
 	base_gtk_utils_set_editable( G_OBJECT( button ), editable );
 }
 
