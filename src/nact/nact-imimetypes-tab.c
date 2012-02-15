@@ -59,7 +59,7 @@ static void    interface_base_finalize( NactIMimetypesTabInterface *klass );
 static void    on_base_initialize_gtk( NactIMimetypesTab *instance, GtkWindow *toplevel, gpointer user_data );
 static void    on_base_initialize_window( NactIMimetypesTab *instance, gpointer user_data );
 
-static void    on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data );
+static void    on_main_selection_changed( NactIMimetypesTab *instance, GList *selected_items, gpointer user_data );
 
 static GSList *get_mimetypes( void *context );
 static void    set_mimetypes( void *context, GSList *filters );
@@ -232,9 +232,18 @@ on_base_initialize_window( NactIMimetypesTab *instance, void *user_data )
 }
 
 static void
-on_main_selection_changed( BaseWindow *window, GList *selected_items, gpointer user_data )
+on_main_selection_changed( NactIMimetypesTab *instance, GList *selected_items, gpointer user_data )
 {
-	/* nothing to do here */
+	NAIContext *context;
+	gboolean editable;
+	gboolean enable_tab;
+
+	g_object_get( G_OBJECT( instance ),
+			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
+			NULL );
+
+	enable_tab = ( context != NULL );
+	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_MIMETYPES, enable_tab );
 }
 
 static GSList *
