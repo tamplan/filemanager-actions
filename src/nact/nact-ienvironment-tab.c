@@ -415,10 +415,10 @@ on_main_selection_changed( NactIEnvironmentTab *instance, GList *selected_items,
 			MAIN_PROP_CONTEXT, &context, MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
-	data = get_ienviron_data( instance );
 	enable_tab = ( context != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_ENVIRONMENT, enable_tab );
 
+	data = get_ienviron_data( instance );
 	data->on_selection_change = TRUE;
 
 	/* selection count

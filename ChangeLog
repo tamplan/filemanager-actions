@@ -4,6 +4,7 @@
 	* src/nact/nact-ibasenames-tab.c (on_main_selection_changed):
 	Enable the tab if a context is available.
 
+	* src/nact/nact-ienvironment-tab.c (on_main_selection_changed):
 	* src/nact/nact-icommand-tab.c (on_main_selection_changed):
 	* src/nact/nact-iaction-tab.c (on_main_selection_changed):
 	Slightly review the code layout.
