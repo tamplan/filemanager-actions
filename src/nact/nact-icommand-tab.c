@@ -363,10 +363,10 @@ on_main_selection_changed( NactICommandTab *instance, GList *selected_items, gpo
 			MAIN_PROP_EDITABLE, &editable,
 			NULL );
 
-	data = get_icommand_data( instance );
 	enable_tab = ( profile != NULL );
 	nact_main_tab_enable_page( NACT_MAIN_WINDOW( instance ), TAB_COMMAND, enable_tab );
 
+	data = get_icommand_data( instance );
 	data->on_selection_change = TRUE;
 
 	label_entry = get_label_entry( instance );
