@@ -88,15 +88,11 @@ typedef struct {
 }
 	NactMenubarClass;
 
-GType        nact_menubar_get_type( void );
+GType        nact_menubar_get_type  ( void );
 
 NactMenubar *nact_menubar_new       ( BaseWindow *window );
 
 void         nact_menubar_save_items( BaseWindow *window );
-
-/* *** */
-gboolean nact_menubar_is_level_zero_order_changed( const BaseWindow *window );
-/* *** */
 
 G_END_DECLS
 

@@ -1,5 +1,8 @@
 2012-02-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-menubar.h (nact_menubar_is_level_zero_order_changed):
+	Remove unexisting function.
+
 	* src/io-desktop/Makefile.am:
 	* src/io-xml/Makefile.am: Do not override uninstall rules.
 
