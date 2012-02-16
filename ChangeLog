@@ -1,5 +1,8 @@
 2012-02-16 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/io-desktop/Makefile.am:
+	* src/io-xml/Makefile.am: Do not override uninstall rules.
+
 	* src/plugin-tracker/Makefile.am: Always build and distribute all flavors
 	of D-Bus sources.
 

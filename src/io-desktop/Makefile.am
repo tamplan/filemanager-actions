@@ -85,6 +85,3 @@ provider_data_DATA = \
 EXTRA_DIST = \
 	$(provider_data_DATA)								\
 	$(NULL)
-
-uninstall-local:
-	rmdir $(provider_datadir)
