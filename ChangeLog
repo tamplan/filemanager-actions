@@ -1,3 +1,8 @@
+2012-02-16 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/plugin-tracker/Makefile.am: Always build and distribute all flavors
+	of D-Bus sources.
+
 2012-02-15 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-ischemes-tab.c (on_main_selection_changed):

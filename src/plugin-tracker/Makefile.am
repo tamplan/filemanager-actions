@@ -44,6 +44,7 @@ BUILT_SOURCES += \
 	na-tracker-gdbus.c											\
 	na-tracker-gdbus.h											\
 	$(NULL)
+endif
 
 na-tracker-gdbus.c na-tracker-gdbus.h: na-tracker-gdbus.xml
 	gdbus-codegen \
@@ -53,16 +54,15 @@ na-tracker-gdbus.c na-tracker-gdbus.h: na-tracker-gdbus.xml
 		--c-generate-object-manager								\
 		--generate-docbook na-tracker-gdbus-docs				\
 		$<
-endif
 
 if HAVE_DBUS_GLIB
 BUILT_SOURCES += \
 	na-tracker-dbus-glib.h										\
 	$(NULL)
+endif
 
 na-tracker-dbus-glib.h: na-tracker-dbus-glib.xml
 	dbus-binding-tool --mode=glib-server --prefix=na_tracker_dbus $< > $@
-endif
 
 libnautilus_actions_tracker_la_SOURCES = \
 	na-tracker.c												\
