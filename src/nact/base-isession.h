@@ -39,6 +39,8 @@
  * This interface implements the features needed to monitor the end of the
  * session, thus letting the application react if some modifications need
  * to be saved before allowing to quit.
+ *
+ * This interface is implemented by the BaseApplication class.
  */
 
 #include <gtk/gtk.h>

@@ -213,7 +213,6 @@ get_isession_data( BaseISession *instance )
 	if( !data ){
 		data = g_new0( ISessionData, 1 );
 		g_object_set_data( G_OBJECT( instance ), BASE_PROP_ISESSION_DATA, data );
-
 		g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 	}
 

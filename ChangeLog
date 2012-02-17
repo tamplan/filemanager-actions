@@ -1,3 +1,11 @@
+2012-02-17 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-ioption.c (get_ioption_data):
+	* src/nact/base-isession.c (get_isession_data):
+	* src/nact/base-isession.h:
+	* src/nact/base-iunique.c (get_iunique_data):
+	* src/nact/base-iunique.h: Minor cosmetic changes.
+
 2012-02-16 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-menubar.h (nact_menubar_is_level_zero_order_changed):

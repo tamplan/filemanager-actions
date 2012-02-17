@@ -158,7 +158,6 @@ get_ioption_data( NAIOption *instance )
 	if( !data ){
 		data = g_new0( IOptionData, 1 );
 		g_object_set_data( G_OBJECT( instance ), IOPTION_PROP_DATA, data );
-
 		g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 
 		data->initialized = TRUE;

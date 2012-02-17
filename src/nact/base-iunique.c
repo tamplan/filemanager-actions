@@ -149,7 +149,6 @@ get_iunique_data( BaseIUnique *instance )
 	if( !data ){
 		data = g_new0( IUniqueData, 1 );
 		g_object_set_data( G_OBJECT( instance ), BASE_PROP_IUNIQUE_DATA, data );
-
 		g_object_weak_ref( G_OBJECT( instance ), ( GWeakNotify ) on_instance_finalized, NULL );
 	}
 

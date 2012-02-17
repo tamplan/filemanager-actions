@@ -38,6 +38,8 @@
  *
  * This interface implements the features to make an application
  * unique, i.e. check that we run only one instance of it.
+ *
+ * This interface is implemented by the BaseApplication class.
  */
 
 #include <glib-object.h>
