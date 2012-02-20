@@ -11,12 +11,12 @@
 #    current working directory
 
 target=${target:-normal}
-srcdir=$(cd ${0%/*}; pwd)
+top_srcdir=$(cd ${0%/*}; pwd)
 
 # a nautilus-actions-x.y may remain after an aborted make distcheck
 # such a directory breaks gnome-autogen.sh generation
 # so clean it here
-for d in $(find ${srcdir} -maxdepth 2 -type d -name 'nautilus-actions-*'); do
+for d in $(find ${top_srcdir} -maxdepth 2 -type d -name 'nautilus-actions-*'); do
 	chmod -R u+w $d
 	rm -fr $d
 done
@@ -59,18 +59,18 @@ fi
 #			--disable-schemas-install \
 #			$*
 
-NOCONFIGURE=1 ${srcdir}/autogen.sh
+NOCONFIGURE=1 ${top_srcdir}/autogen.sh
 
-runconf=${srcdir}/run-configure.sh
+runconf=${top_srcdir}/run-configure.sh
 echo "
 Generating ${runconf}"
 
 cat <<EOF >${runconf}
 #!/bin/sh
 
-# srcdir here is the root of the source directory
+# top_srcdir here is the root of the source directory
 target=\${target:-normal}
-srcdir=\$(cd \${0%/*}; pwd)
+top_srcdir=\$(cd \${0%/*}; pwd)
 
 # heredir is the root of the _build/_install directories
 heredir=\$(pwd)
@@ -78,7 +78,7 @@ heredir=\$(pwd)
 mkdir -p \${heredir}/_build
 cd \${heredir}/_build
 
-conf_cmd="\${srcdir}/configure"
+conf_cmd="\${top_srcdir}/configure"
 conf_args="${conf_args}"
 conf_args="\${conf_args} --prefix=\${heredir}/_install"
 conf_args="\${conf_args} --sysconfdir=/etc"

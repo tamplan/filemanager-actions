@@ -1,3 +1,8 @@
+2012-02-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* run-autogen.sh:
+	* run-distcheck.sh: Replace srcdir with top_srcdir.
+
 2012-02-17 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-ioption.c (get_ioption_data):
