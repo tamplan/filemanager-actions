@@ -1,5 +1,7 @@
 2012-02-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* docs/reference/nautilus-actions-sections.txt: Add undocumented enum.
+
 	* docs/reference/Makefile.am: Remove useless rules.
 
 	* run-autogen.sh:

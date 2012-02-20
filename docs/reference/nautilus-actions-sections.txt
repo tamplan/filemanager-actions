@@ -498,6 +498,7 @@ na_iduplicable_is_modified
 na_iduplicable_set_origin
 na_iduplicable_set_modified
 na_iduplicable_register_consumer
+DuplicableMode
 
 <SUBSECTION Standard>
 na_iduplicable_get_type
