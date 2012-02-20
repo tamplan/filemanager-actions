@@ -139,11 +139,6 @@ HTML_IMAGES = \
 FIXXREF_OPTIONS = \
 	$(NULL)
 
-MAINTAINERCLEANFILES = \
-	*~											\
-	Makefile.in									\
-	$(NULL)
-
 xml_in_files = \
 	version.xml.in								\
 	$(NULL)
@@ -153,11 +148,6 @@ xml_files = $(xml_in_files:.xml.in=.xml)
 version_dir.xml: version.xml
 	rm -f $@
 	cat $< | $(SED) 's?^\([[:alnum:]]\.[[:alnum:]]\).*?\1?' > $@
-
-CLEANFILES += \
-	$(DOC_MODULE).types							\
-	version_dir.xml								\
-	$(NULL)
 
 install-data-local: install-data-local-hook
 
