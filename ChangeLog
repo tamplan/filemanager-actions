@@ -1,5 +1,8 @@
 2012-02-20 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-tracker/Makefile.am:
+	* src/utils/Makefile.am: Do not distribute D-Bus auxiliary files.
+
 	* docs/reference/nautilus-actions-sections.txt: Add undocumented enum.
 
 	* docs/reference/Makefile.am: Remove useless rules.

@@ -96,11 +96,14 @@ nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-dbu
 	dbus-binding-tool --mode=glib-client $< > $@
 endif
 
+nodist_nautilus_actions_run_SOURCES = \
+	$(BUILT_SOURCES)											\
+	$(NULL)
+
 nautilus_actions_run_SOURCES = \
 	nautilus-actions-run.c										\
 	console-utils.c												\
 	console-utils.h												\
-	$(BUILT_SOURCES)											\
 	$(NULL)
 
 nautilus_actions_run_LDADD = \
