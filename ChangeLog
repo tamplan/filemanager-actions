@@ -1,5 +1,7 @@
 2012-02-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* configure.ac: Check for ICE library (fix #670434).
+
 	* src/core/na-gtk-utils.c:
 	* src/core/na-gtk-utils.h (na_gtk_utils_find_widget_by_type): Remove no
 	more used function.

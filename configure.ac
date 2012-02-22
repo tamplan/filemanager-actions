@@ -143,6 +143,7 @@ NA_CHECK_MODULE([GIO_UNIX],          [gio-unix-2.0])
 NA_CHECK_MODULE([GTOP],              [libgtop-2.0 >= 2.23.1])
 NA_CHECK_MODULE([LIBXML],            [libxml-2.0 >= 2.6])
 NA_CHECK_MODULE([SM],                [sm >= 1.0])
+NA_CHECK_MODULE([ICE],               [ice])
 NA_CHECK_MODULE([UUID],              [uuid])
 NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.16])
 
