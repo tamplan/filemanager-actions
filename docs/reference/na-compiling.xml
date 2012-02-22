@@ -120,8 +120,9 @@
       </listitem>
       <listitem>
         <para>
-          <ulink url="http://www.x.org/">libSM</ulink>
-          is used as a session management library, in order to be sure the session
+          <ulink url="http://www.x.org/">libSM</ulink> and
+          <ulink url="http://www.x.org/">libICE</ulink>
+          are used as a session management libraries, in order to be sure the session
           will not terminate without at least proposing the user to save his
           modifications.
         </para>
