@@ -42,35 +42,6 @@ static GList *position_to_int_list( gint x, gint y, gint width, gint height );
 static void   free_int_list( GList *list );
 
 /*
- * na_gtk_utils_find_widget_by_type:
- * @container: a #GtkContainer, usually the #GtkWindow toplevel.
- * @type: the searched #GType.
- *
- * Returns: the first child widget which is of @type type.
- */
-GtkWidget *
-na_gtk_utils_find_widget_by_type( GtkContainer *container, GType type )
-{
-	GList *children = gtk_container_get_children( container );
-	GList *ic;
-	GtkWidget *found = NULL;
-
-	for( ic = children ; ic && !found ; ic = ic->next ){
-
-		if( GTK_IS_WIDGET( ic->data )){
-			if( G_OBJECT_TYPE( ic->data ) == type ){
-				found = GTK_WIDGET( ic->data );
-			} else if( GTK_IS_CONTAINER( ic->data )){
-				found = na_gtk_utils_find_widget_by_type( GTK_CONTAINER( ic->data ), type );
-			}
-		}
-	}
-
-	g_list_free( children );
-	return( found );
-}
-
-/*
  * na_gtk_utils_find_widget_by_name:
  * @container: a #GtkContainer, usually the #GtkWindow toplevel.
  * @name: the name of the searched widget.

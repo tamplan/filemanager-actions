@@ -43,7 +43,6 @@ G_BEGIN_DECLS
 /* widget hierarchy
  */
 GtkWidget *na_gtk_utils_find_widget_by_name( GtkContainer *container, const gchar *name );
-GtkWidget *na_gtk_utils_find_widget_by_type( GtkContainer *container, GType type );
 
 #ifdef NA_MAINTAINER_MODE
 void       na_gtk_utils_dump_children          ( GtkContainer *container );

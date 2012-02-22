@@ -1,5 +1,9 @@
 2012-02-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-gtk-utils.c:
+	* src/core/na-gtk-utils.h (na_gtk_utils_find_widget_by_type): Remove no
+	more used function.
+
 	* src/core/na-ioptions-list.c (radio_button_create_group): Directly pack
 	radio buttons inside of the GtkVBox parent container.
 
