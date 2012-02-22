@@ -90,7 +90,7 @@ enum {
 	THEME_ICON_N_COLUMN
 };
 
-static const gchar     *st_xmlui_filename = PKGDATADIR "/nact-icon-chooser.ui";
+static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-icon-chooser.ui";
 static const gchar     *st_toplevel_name  = "IconChooserDialog";
 static const gchar     *st_wsp_name       = NA_IPREFS_ICON_CHOOSER_WSP;
 

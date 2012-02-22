@@ -44,7 +44,7 @@ typedef struct {
 }
 	StatusbarTimeoutDisplayStruct;
 
-#define LOCKED_IMAGE					PKGDATADIR "/locked.png"
+#define LOCKED_IMAGE					PKGUIDIR "/locked.png"
 
 static GtkStatusbar *get_statusbar( const NactMainWindow *window );
 static gboolean      display_timeout( StatusbarTimeoutDisplayStruct *stds );

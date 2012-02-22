@@ -304,7 +304,7 @@ base_gtk_utils_get_pixbuf( const gchar *name, GtkWidget *widget, GtkIconSize siz
 
 	if( !pixbuf ){
 		g_debug( "%s: null pixbuf, loading transparent image", thisfn );
-		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", width, height, NULL );
+		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGUIDIR "/transparent.png", width, height, NULL );
 	}
 
 	return( pixbuf );
@@ -335,7 +335,7 @@ base_gtk_utils_render( const gchar *name, GtkImage *widget, GtkIconSize size )
 			width = DEFAULT_WIDTH;
 			height = DEFAULT_HEIGHT;
 		}
-		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGDATADIR "/transparent.png", width, height, NULL );
+		pixbuf = gdk_pixbuf_new_from_file_at_size( PKGUIDIR "/transparent.png", width, height, NULL );
 	}
 
 	if( pixbuf ){

@@ -1,5 +1,21 @@
 2012-02-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/Makefile.am:
+	* src/nact/Makefile.am: Store UI elements in a dedicated dir.
+
+	* src/core/na-importer-ask.c:
+	* src/nact/base-gtk-utils.c:
+	* src/nact/nact-add-capability-dialog.c:
+	* src/nact/nact-add-scheme-dialog.c:
+	* src/nact/nact-assistant-export.c:
+	* src/nact/nact-assistant-import.c:
+	* src/nact/nact-export-ask.c:
+	* src/nact/nact-icon-chooser.c:
+	* src/nact/nact-main-statusbar.c:
+	* src/nact/nact-main-window.c:
+	* src/nact/nact-menubar.c:
+	* src/nact/nact-preferences-editor.c: Updated accordingly.
+
 	* src/core/Makefile.am: Store import mode images in dedicated dir.
 
 	* src/core/na-importer.c (get_mode_from_struct):

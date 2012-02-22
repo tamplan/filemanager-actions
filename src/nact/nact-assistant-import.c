@@ -96,7 +96,7 @@ struct _NactAssistantImportPrivate {
 	GList       *overriden;
 };
 
-static const gchar        *st_xmlui_filename = PKGDATADIR "/nact-assistant-import.ui";
+static const gchar        *st_xmlui_filename = PKGUIDIR "/nact-assistant-import.ui";
 static const gchar        *st_toplevel_name  = "ImportAssistant";
 static const gchar        *st_wsp_name       = NA_IPREFS_IMPORT_ASSISTANT_WSP;
 

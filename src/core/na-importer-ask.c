@@ -63,7 +63,7 @@ struct _NAImporterAskPrivate {
 
 static GObjectClass  *st_parent_class = NULL;
 static NAImporterAsk *st_dialog       = NULL;
-static const gchar   *st_uixml        = PKGDATADIR "/na-importer-ask.ui";
+static const gchar   *st_uixml        = PKGUIDIR "/na-importer-ask.ui";
 
 static GType          register_type( void );
 static void           class_init( NAImporterAskClass *klass );

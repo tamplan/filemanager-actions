@@ -32,17 +32,19 @@ exportformat_datadir = $(pkgdatadir)/export-format
 
 importmode_datadir = $(pkgdatadir)/import-mode
 
+ui_datadir = $(pkgdatadir)/ui
+
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
-	-DPKGDATADIR=\"$(pkgdatadir)\"						\
 	-DPKGLIBDIR=\""$(pkglibdir)"\"						\
 	-DPKGLIBEXECDIR=\""$(pkglibexecdir)"\"				\
 	-DSYSCONFDIR=\"$(sysconfdir)\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_CORE}\"				\
 	-DPKGEXPORTFORMATDIR=\"$(exportformat_datadir)\"	\
-	-DPKGIMPORTMODEDIR=\"$(importmode_datadir)\"	\
+	-DPKGIMPORTMODEDIR=\"$(importmode_datadir)\"		\
+	-DPKGUIDIR=\"$(ui_datadir)\"						\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
@@ -143,7 +145,7 @@ libna_core_la_LDFLAGS = \
 	-fPIC												\
 	$(NULL)
 
-pkgdata_DATA = \
+ui_data_DATA = \
 	na-importer-ask.ui									\
 	$(NULL)
 
@@ -163,7 +165,7 @@ CLEANFILES = \
 	$(NULL)
 
 EXTRA_DIST = \
-	$(pkgdata_DATA)										\
+	$(ui_data_DATA)										\
 	$(exportformat_data_DATA)							\
 	$(importmode_data_DATA)								\
 	na-marshal.def										\

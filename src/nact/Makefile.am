@@ -30,14 +30,16 @@ bin_PROGRAMS = \
 	nautilus-actions-config-tool						\
 	$(NULL)
 
+ui_datadir = $(pkgdatadir)/ui
+
 egg_platform_defines = -DEGG_SM_CLIENT_BACKEND_XSMP
 
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"			\
-	-DPKGDATADIR=\"$(pkgdatadir)\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_NACT}\"				\
+	-DPKGUIDIR=\"$(ui_datadir)\"						\
 	$(egg_platform_defines)								\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
@@ -191,7 +193,7 @@ images_files = \
 	transparent.png										\
 	$(NULL)
 
-pkgdata_DATA = \
+ui_data_DATA = \
 	$(actions_files)									\
 	$(ui_files)											\
 	$(images_files)										\
@@ -214,7 +216,7 @@ CLEANFILES = \
 
 EXTRA_DIST = \
 	$(applications_in_files)							\
-	$(pkgdata_DATA)										\
+	$(ui_data_DATA)										\
 	base-marshal.def									\
 	nact-marshal.def									\
 	$(NULL)

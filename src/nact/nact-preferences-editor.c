@@ -118,7 +118,7 @@ enum {
  *       and prefers rely on the runtime detection */
 static const NADesktopEnv st_no_desktop     = { "None", N_( "Rely on runtime detection" ) };
 
-static const gchar       *st_xmlui_filename = PKGDATADIR "/nact-preferences.ui";
+static const gchar       *st_xmlui_filename = PKGUIDIR "/nact-preferences.ui";
 static const gchar       *st_toplevel_name  = "PreferencesDialog";
 static const gchar       *st_wsp_name       = NA_IPREFS_PREFERENCES_WSP;
 

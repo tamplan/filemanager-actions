@@ -153,7 +153,7 @@ enum {
 	LAST_SIGNAL
 };
 
-static const gchar     *st_xmlui_filename         = PKGDATADIR "/nautilus-actions-config-tool.ui";
+static const gchar     *st_xmlui_filename         = PKGUIDIR "/nautilus-actions-config-tool.ui";
 static const gchar     *st_toplevel_name          = "MainWindow";
 static const gchar     *st_wsp_name               = NA_IPREFS_MAIN_WINDOW_WSP;
 

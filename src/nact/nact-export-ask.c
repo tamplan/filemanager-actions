@@ -64,7 +64,7 @@ struct _NactExportAskPrivate {
 	gboolean      keep_last_choice_mandatory;
 };
 
-static const gchar     *st_xmlui_filename = PKGDATADIR "/nact-assistant-export.ui";
+static const gchar     *st_xmlui_filename = PKGUIDIR "/nact-assistant-export.ui";
 static const gchar     *st_toplevel_name  = "ExportAskDialog";
 static const gchar     *st_wsp_name       = NA_IPREFS_EXPORT_ASK_USER_WSP;
 

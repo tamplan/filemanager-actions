@@ -216,8 +216,8 @@ enum {
 	LAST_SIGNAL
 };
 
-static const gchar  *st_ui_menubar_actions     = PKGDATADIR "/nautilus-actions-config-tool.actions";
-static const gchar  *st_ui_maintainer_actions  = PKGDATADIR "/nautilus-actions-maintainer.actions";
+static const gchar  *st_ui_menubar_actions     = PKGUIDIR "/nautilus-actions-config-tool.actions";
+static const gchar  *st_ui_maintainer_actions  = PKGUIDIR "/nautilus-actions-maintainer.actions";
 
 static gint          st_signals[ LAST_SIGNAL ] = { 0 };
 static GObjectClass *st_parent_class           = NULL;

@@ -95,7 +95,7 @@ typedef struct {
 }
 	ExportStruct;
 
-static const gchar        *st_xmlui_filename = PKGDATADIR "/nact-assistant-export.ui";
+static const gchar        *st_xmlui_filename = PKGUIDIR "/nact-assistant-export.ui";
 static const gchar        *st_toplevel_name  = "ExportAssistant";
 static const gchar        *st_wsp_name       = NA_IPREFS_EXPORT_ASSISTANT_WSP;
 

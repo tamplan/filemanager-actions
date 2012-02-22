@@ -80,7 +80,7 @@ static CapabilityTextStruct st_caps[] = {
 		{ NULL },
 };
 
-static const gchar  *st_xmlui_filename = PKGDATADIR "/nact-add-capability.ui";
+static const gchar  *st_xmlui_filename = PKGUIDIR "/nact-add-capability.ui";
 static const gchar  *st_toplevel_name  = "AddCapabilityDialog";
 static const gchar  *st_wsp_name       = NA_IPREFS_CAPABILITY_ADD_CAPABILITY_WSP;
 
