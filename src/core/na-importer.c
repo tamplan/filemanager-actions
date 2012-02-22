@@ -505,7 +505,7 @@ get_mode_from_struct( const NAImportModeStr *str )
 	pixbuf = NULL;
 
 	if( str->image && g_utf8_strlen( str->image, -1 )){
-		fname = g_strdup_printf( "%s/%s", PKGDATADIR, str->image );
+		fname = g_strdup_printf( "%s/%s", PKGIMPORTMODEDIR, str->image );
 		pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
 		g_free( fname );
 	}

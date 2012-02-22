@@ -187,10 +187,6 @@ ui_files = \
 	$(NULL)
 
 images_files = \
-	import-mode-ask.png									\
-	import-mode-no-import.png							\
-	import-mode-override.png							\
-	import-mode-renumber.png							\
 	locked.png											\
 	transparent.png										\
 	$(NULL)

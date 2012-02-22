@@ -1,5 +1,10 @@
 2012-02-22 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/Makefile.am: Store import mode images in dedicated dir.
+
+	* src/core/na-importer.c (get_mode_from_struct):
+	* src/nact/Makefile.am: Updated accordingly.
+
 	* src/core/Makefile.am: Store export-format image in dedicated dir.
 
 	* src/core/na-exporter.c (na_exporter_get_ask_option): Updated
