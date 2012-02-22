@@ -28,6 +28,8 @@
 
 pkglib_LTLIBRARIES = libna-core.la
 
+exportformat_datadir = $(pkgdatadir)/export-format
+
 AM_CPPFLAGS += \
 	-I $(top_srcdir)									\
 	-I $(top_srcdir)/src								\
@@ -37,6 +39,7 @@ AM_CPPFLAGS += \
 	-DPKGLIBEXECDIR=\""$(pkglibexecdir)"\"				\
 	-DSYSCONFDIR=\"$(sysconfdir)\"						\
 	-DG_LOG_DOMAIN=\"${NA_LOGDOMAIN_CORE}\"				\
+	-DPKGEXPORTFORMATDIR=\"$(exportformat_datadir)\"	\
 	$(NAUTILUS_ACTIONS_CFLAGS)							\
 	$(NULL)
 
@@ -139,6 +142,9 @@ libna_core_la_LDFLAGS = \
 
 pkgdata_DATA = \
 	na-importer-ask.ui									\
+	$(NULL)
+
+exportformat_data_DATA = \
 	export-format-ask.png								\
 	$(NULL)
 
@@ -148,5 +154,6 @@ CLEANFILES = \
 
 EXTRA_DIST = \
 	$(pkgdata_DATA)										\
+	$(exportformat_data_DATA)							\
 	na-marshal.def										\
 	$(NULL)

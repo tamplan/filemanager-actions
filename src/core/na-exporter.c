@@ -218,7 +218,7 @@ na_exporter_get_ask_option( void )
 	str->label = g_strdup( gettext( st_format_ask.label ));
 	str->description = g_strdup( gettext( st_format_ask.description ));
 	if( st_format_ask.image ){
-		fname = g_strdup_printf( "%s/%s", PKGDATADIR, st_format_ask.image );
+		fname = g_strdup_printf( "%s/%s", PKGEXPORTFORMATDIR, st_format_ask.image );
 		str->pixbuf = gdk_pixbuf_new_from_file_at_size( fname, width, height, NULL );
 		g_free( fname );
 		if( str->pixbuf ){
