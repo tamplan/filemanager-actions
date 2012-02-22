@@ -546,19 +546,10 @@ radio_button_create_group( const NAIOptionsList *instance, GtkWidget *container_
 
 /*
  * @container_parent_parent used to be a glade-defined GtkVBox in which we dynamically
- * add for each mode:
+ * add a radio button and its label for each mode:
  *  +- vbox
  *  |   +- radio button + label
- *  |   +- hbox
- *  |   |   +- description (assistant mode only)
- *
- *  Starting with Gtk 3.2, container_parent is a GtkGrid attached to the
- *  glade-defined GtkVBox. For each mode, we are defining:
- *  +- grid
- *  |   +- radio button
- *  |   +- description (assistant mode only)
- *
- *  id=-1 but for the 'Ask me' mode
+ *  |   +- radio button + label
  */
 static void
 radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option )
@@ -566,26 +557,12 @@ radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option )
 #if 0
 	static const gchar *thisfn = "na_ioptions_list_radio_button_draw_vbox";
 #endif
-	GtkWidget *container_option;
 	gchar *description;
 	GtkWidget *button;
 	GtkWidget *first;
 	gchar *label;
 
-#if GTK_CHECK_VERSION( 3,2,0 )
-	/* create a grid container_parent which will embed two lines */
-	container_option = gtk_grid_new();
-#else
-	/* create a vbox which will embed two children */
-	container_option = gtk_vbox_new( FALSE, 0 );
-#endif
-	gtk_box_pack_start( GTK_BOX( container_parent ), container_option, FALSE, TRUE, 0 );
-	description = na_ioption_get_description( option );
-	g_object_set( G_OBJECT( container_option ), "tooltip-text", description, NULL );
-	g_free( description );
-
-	/* first line/child is the radio button
-	 * first button of the group does not have the property set
+	/* first button of the group does not have the property set
 	 */
 	label = na_ioption_get_label( option );
 	first = get_options_list_first_button( container_parent );
@@ -598,14 +575,14 @@ radio_button_draw_vbox( GtkWidget *container_parent, const NAIOption *option )
 	g_free( label );
 	gtk_button_set_use_underline( GTK_BUTTON( button ), TRUE );
 
-#if GTK_CHECK_VERSION( 3, 2, 0 )
-	gtk_grid_attach( GTK_GRID( container_option ), GTK_WIDGET( button ), 0, 0, 1, 1 );
-#else
-	gtk_box_pack_start( GTK_BOX( container_option ), button, FALSE, TRUE, 0 );
-#endif
+	description = na_ioption_get_description( option );
+	g_object_set( G_OBJECT( button ), "tooltip-text", description, NULL );
+	g_free( description );
 
-	set_options_list_option( container_option, g_object_ref(( gpointer ) option ));
-	g_object_weak_ref( G_OBJECT( container_option ), ( GWeakNotify ) radio_button_weak_notify, ( gpointer ) option );
+	gtk_box_pack_start( GTK_BOX( container_parent ), button, FALSE, TRUE, 0 );
+
+	set_options_list_option( button, g_object_ref(( gpointer ) option ));
+	g_object_weak_ref( G_OBJECT( button ), ( GWeakNotify ) radio_button_weak_notify, ( gpointer ) option );
 }
 
 /*
@@ -784,29 +761,23 @@ na_ioptions_list_set_default(
 }
 
 /*
- * container_mode is a GtkVBox, or a GtkGrid starting with Gtk 3.2
- *
  * iterating through each radio button of the group:
  * - connecting to 'toggled' signal
  * - activating the button which holds our default value
  */
 static void
-radio_button_select_iter( GtkWidget *container_option, GtkWidget *container_parent )
+radio_button_select_iter( GtkWidget *button, GtkWidget *container_parent )
 {
 	const gchar *default_id;
 	NAIOption *option;
-	GtkWidget *button;
 	gboolean editable, sensitive;
 	gchar *option_id;
 
-	button = NULL;
 	default_id = get_options_list_option_id( container_parent );
-	option = get_options_list_option( container_option );
+	option = get_options_list_option( button );
 	option_id = na_ioption_get_id( option );
 
 	if( !strcmp( default_id, option_id )){
-		button = na_gtk_utils_find_widget_by_type( GTK_CONTAINER( container_option ), GTK_TYPE_RADIO_BUTTON );
-		g_return_if_fail( GTK_IS_RADIO_BUTTON( button ));
 		editable = get_options_list_editable( container_parent );
 		sensitive = get_options_list_sensitive( container_parent );
 		na_gtk_utils_radio_set_initial_state( GTK_RADIO_BUTTON( button ), NULL, NULL, editable, sensitive );
@@ -946,20 +917,13 @@ na_ioptions_list_get_selected( const NAIOptionsList *instance, GtkWidget *contai
 	return( option );
 }
 
-/*
- * container_mode is a GtkVBox, or a GtkGrid starting with Gtk 3.2
- */
 static void
-radio_button_get_selected_iter( GtkWidget *container_option, GtkWidget *container_parent )
+radio_button_get_selected_iter( GtkWidget *button, GtkWidget *container_parent )
 {
-	GtkWidget *button;
 	NAIOption *option;
 
-	button = na_gtk_utils_find_widget_by_type( GTK_CONTAINER( container_option ), GTK_TYPE_RADIO_BUTTON );
-	g_return_if_fail( GTK_IS_RADIO_BUTTON( button ));
-
 	if( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( button ))){
-		option = get_options_list_option( container_option );
+		option = get_options_list_option( button );
 		set_options_list_option( container_parent, option );
 		g_debug( "na_ioptions_list_radio_button_get_selected_iter: container_parent=%p, active button=%p",
 				( void * ) container_parent, ( void * ) button );
