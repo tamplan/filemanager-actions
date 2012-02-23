@@ -1,3 +1,7 @@
+2012-02-23 Pierre Wieser <pwieser@trychlos.org>
+
+	* run-autogen.sh: Pass arguments ro run-configure.sh
+
 2012-02-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/Makefile.am:

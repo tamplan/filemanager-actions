@@ -86,6 +86,7 @@ conf_args="\${conf_args} --with-nautilus-extdir=\${heredir}/_install/lib/nautilu
 conf_args="\${conf_args} --disable-schemas-install"
 conf_args="\${conf_args} --disable-scrollkeeper"
 conf_args="\${conf_args} --enable-maintainer-mode"
+conf_args="\${conf_args} $*"
 conf_args="\${conf_args} \$*"
 
 tput bold
