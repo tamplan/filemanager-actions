@@ -1,3 +1,89 @@
+Version 3.2.0
+=============
+
+	Release date 2012-02-
+
+	Bug fixes:
+
+		- Make labels wrappable in import/export assistants
+		- Fix vertical expand in Preferences dialog
+		- Fix the build of the Reference Manual
+		- Destroy the assistants toplevels when quitting
+		- Force GConf I/O provider to be read-only after the migration
+		- Release the object whose importation has been cancelled
+		- Fix return value of NactApplication::appli_create_windows()
+		- Fix micro leak in nact_clipboard_dnd_drag_end()
+		- Partially fix #667429 reported by Daniel Mustieles
+		  Are this strings translatable? (nact-doc)
+		- Fix #668181 reported by Vincent Untz
+		  User documentation and gtk-doc documentation not installed by default
+		- Fix #670434 reported by Vincent Untz
+		  Should check for ice pkgconfig in configure
+		- Partially fix #622909 reported by André Klapper
+		  Migrate from dbus-glib to glib's GDBus
+		- Fix na_factory_object_copy(), not trying to copy null data
+		- Fix main window destroy process
+		- Fix NATokens::execute_action_command() parsing working dir for parameters
+		- Fix src/plugin-menu/nautilus-actions.c only expanding candidate items
+		- Fix NadpReader, resetting the writability status if import source is read-only
+		- Fix NAImporterAsk, resetting dialog pointer when parent exits
+		- NactMenubar: no more keep a recursive ref on the selection
+		- NABoxed::string_list_from_void(): keep string lists in the same order
+		- Check if action is writable when deleting a profile
+		- Enable basenames, capabilities, folders, mimetypes and schemes tabs
+		  if a context is available
+
+	API modifications:
+
+		- Bump NAIExporter interface to version 2
+		- Bump NAIImporter interface to version 2
+
+	Other modifications:
+
+		- Bump minimal required Gtk+ version to 2.20 (Ubuntu 10 LTS)
+		- Review the description of the export formats
+		- Let import/export assistants pages be scrollable
+		- Let the export format be selected in a treeview
+		- Let the import mode be selected in a treeview
+		- Review NactApplication startup
+		- Bump copyright year in all source files
+		- src/utils/na-gconf2key.sh.in: defines new '--admin' option
+		- Requires gtk-doc 1.16 to build Reference Manual
+		- base_window_init() now holds all the build process
+		- Set "Relying on runtime detection" as default in "Runtime execution" tab
+		- Get rid of GQuark as internal identifier of export format
+		- NactMatchList connects to base signals (and acts as a pseudo-interface)
+		- na_desktop_environment_detect_running_desktop(): detect XFCE desktop
+		- Let the notebook tabs position be modified by the user
+		- NactTreeView: open the context menu with keybindings
+
+	New interfaces:
+
+		- NAIOptions, NAIOptionsList
+		- BaseIUnique, BaseISession
+		- Tracker DBus interface is renamed as org.nautilus_actions.DBus.Tracker.Properties1
+
+	New functions:
+
+		- na_core_utils_dir_list_perms(), na_core_utils_file_is_loadable()
+		- na_export_format_get_pixbuf()
+		- na_importer_import_from_list() renamed as na_importer_import_from_uris()
+		- na_gtk_utils_search_for_child_widget() renamed as na_gtk_utils_find_widget_by_name()
+		- nact_export_format_get_ask_option() renamed as na_exporter_get_ask_option()
+		- na_exporter_get_export_format()
+		- nact_tree_ieditable_set_items()
+		- na_desktop_environment_get_label()
+		- base_gtk_utils_table_to_grid()
+
+	New and updated translations:
+
+		- cz (Marek Černocký)
+		- de (Mario Blättermann, Christian Kirbach)
+		- es (Daniel Mustieles, Nicolás Satragno)
+		- ja (Jiro Matsuzawa)
+		- nb (Kjartan Maraas)
+		- sl (Matej Urbančič)
+
 Version 3.1.5
 =============
 
@@ -1167,7 +1253,7 @@ Version 1.11.2
         Gnome 3.0 requirements are met :
         - migrated from libglade to GtkBuilder
         - migrated from GnomeVFS to GVFS
-        - gets ride of old dependancies
+        - gets rid of old dependancies
 
         - adds a dependancy on libunique 1.0
         - requires now Gtk+ 2.12, Glib 2.16

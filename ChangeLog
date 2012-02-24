@@ -1,3 +1,7 @@
+2012-02-24 Pierre Wieser <pwieser@trychlos.org>
+
+	* NEWS: Update before releasing.
+
 2012-02-23 Pierre Wieser <pwieser@trychlos.org>
 
 	* run-autogen.sh: Pass arguments ro run-configure.sh
