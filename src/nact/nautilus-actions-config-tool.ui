@@ -1638,18 +1638,37 @@ If this is not an absolute path, then the PATH environment variable at execution
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkAlignment" id="alignment22">
+                                          <object class="GtkExpander" id="expander22">
                                             <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="yalign">0</property>
-                                            <property name="yscale">0</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="expanded">True</property>
+                                            <property name="use_underline">True</property>
                                             <child>
-                                              <object class="GtkLabel" id="CommandExampleLabel">
+                                              <object class="GtkAlignment" id="alignment22">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
-                                                <property name="xalign">0</property>
-                                                <property name="use_markup">True</property>
-                                                <property name="wrap">True</property>
+                                                <property name="yalign">0</property>
+                                                <property name="yscale">0</property>
+                                                <child>
+                                                  <object class="GtkLabel" id="CommandExampleLabel">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="xalign">0</property>
+                                                    <property name="use_markup">True</property>
+                                                    <property name="wrap">True</property>
+                                                  </object>
+                                                </child>
+                                              </object>
+                                            </child>
+                                            <child type="label">
+                                              <object class="GtkLabel" id="label1">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="label" translatable="yes">Example</property>
+                                                <attributes>
+                                                  <attribute name="style" value="PANGO_STYLE_ITALIC"/>
+                                                  <attribute name="scale" value="0.8"/>
+                                                </attributes>
                                               </object>
                                             </child>
                                           </object>

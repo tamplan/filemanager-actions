@@ -672,7 +672,7 @@ update_example_label( NactICommandTab *instance, NAObjectProfile *profile )
 		 */
 		/* i18n: command-line example: Ex.: /bin/ls file1.txt file2.txt */
 		newlabel = g_markup_printf_escaped(
-				"<i><b><span size=\"small\">%s %s</span></b></i>", _( "Ex.:" ), parameters );
+				"<i><b><span size=\"small\">%s</span></b></i>", parameters );
 
 		g_free( parameters );
 

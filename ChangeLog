@@ -1,3 +1,13 @@
+2012-02-27 Pierre Wieser <pwieser@trychlos.org>
+
+	Let the example label be expandable.
+
+	* src/nact/nact-icommand-tab.c: No more insert the 'Ex:' prefix.
+
+	* src/nact/nautilus-actions-config-tool.ui: Insert a GtkExpander parent.
+
+	* configure.ac: Post release version bump.
+
 2012-02-24 Pierre Wieser <pwieser@trychlos.org>
 
 	* NEWS: Update before releasing.
