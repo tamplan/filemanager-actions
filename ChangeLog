@@ -1,3 +1,10 @@
+2012-02-29 Pierre Wieser <pwieser@trychlos.org>
+
+	* All Makefile.am:
+	* All private na-*.m4: Update the license notice according to
+	http://www.gnu.org/licenses/gpl-howto.html.
+	
+
 2012-02-27 Pierre Wieser <pwieser@trychlos.org>
 
 	Let the example label be expandable.
@@ -6,15 +13,19 @@
 
 	* src/nact/nautilus-actions-config-tool.ui: Insert a GtkExpander parent.
 
-	* configure.ac: Post release version bump.
+	* configure.ac: Post release version bump to 3.2.2.
+
+	Due to a command mismatch, git repository has been erroneously tagged
+	with a 3.2.1 version number. This version number is wrong and, due to
+	this tagging error, will never be released.
 
 2012-02-24 Pierre Wieser <pwieser@trychlos.org>
 
-	* NEWS: Update before releasing.
+	* NEWS: Update before releasing 3.2.0.
 
 2012-02-23 Pierre Wieser <pwieser@trychlos.org>
 
-	* run-autogen.sh: Pass arguments ro run-configure.sh
+	* run-autogen.sh: Pass arguments ro run-configure.sh.
 
 2012-02-22 Pierre Wieser <pwieser@trychlos.org>
 
