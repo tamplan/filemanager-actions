@@ -1,5 +1,8 @@
 2012-02-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* run-distcheck.sh: Exec desktop-file-validate program against
+	nact.desktop (see #671043).
+
 	* src/nact/nact.desktop.in: Remove deprecated keys and values.
 
 	Fix #671043 reported by Vincent Untz - Invalid desktop file.
