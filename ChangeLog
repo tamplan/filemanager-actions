@@ -1,8 +1,11 @@
 2012-02-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* All source files:
 	* All Makefile.am:
 	* All private na-*.m4: Update the license notice according to
 	http://www.gnu.org/licenses/gpl-howto.html.
+
+	Fix #671044 reported by Vincent Untz - Incorrect FSF address.
 	
 
 2012-02-27 Pierre Wieser <pwieser@trychlos.org>
