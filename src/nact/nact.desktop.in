@@ -1,10 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Encoding=UTF-8
 _Name=Nautilus-Actions Configuration Tool
 _Comment=Configure items to be added to the Nautilus context menus
 Exec=nautilus-actions-config-tool
 Icon=nautilus-actions
-Categories=Application;FileManager;DesktopSettings;Settings;AdvancedSettings;
+Categories=System;FileTools;FileManager;
 StartupNotify=true

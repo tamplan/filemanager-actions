@@ -1,5 +1,9 @@
 2012-02-29 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact.desktop.in: Remove deprecated keys and values.
+
+	Fix #671043 reported by Vincent Untz - Invalid desktop file.
+
 	* All source files:
 	* All Makefile.am:
 	* All private na-*.m4: Update the license notice according to
