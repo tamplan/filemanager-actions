@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-24 11:44+0000\n"
-"PO-Revision-Date: 2012-02-28 20:38+0100\n"
+"POT-Creation-Date: 2012-02-28 22:53+0000\n"
+"PO-Revision-Date: 2012-02-29 14:46+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenščina <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -287,7 +287,7 @@ msgstr "Ali je celotna nastavitev zaklenjena"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:67
 msgid "The whole configuration must be understood here as the global set and order of menus and actions. When this configuration is locked, then the user is no more able to modify nor create or delete any menu or action. All items are read-only. As the order of items is also locked, the level zero itself cannot be modified, and the user is unable to reorder the items."
-msgstr "Celotno nastavitev je treba razumeti kot splošno nastavljene in urejene menije in dejanja. Ko je ta nastavitev zaklenjena uporabnik ne more spremeniti, ustvariti ali izbrisati kateregaikoli menija ali dejanja. Vsi predmeti so le za branje. Ker je vrstni red predmetov zaklenjen, ravni nič ni mogoče spremeniti, zato uporabnik ne more ponovno urediti predmetov."
+msgstr "Celotno nastavitev je treba razumeti kot splošno nastavljene in urejene menije in dejanja. Ko je ta nastavitev zaklenjena uporabnik ne more spremeniti, ustvariti ali izbrisati kateregakoli menija ali dejanja. Vsi predmeti so le za branje. Ker je vrstni red predmetov zaklenjen, ravni nič ni mogoče spremeniti, zato uporabnik ne more ponovno urediti predmetov."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:68
 msgid "Whether the GConf I/O provider is locked"
@@ -316,21 +316,21 @@ msgstr "Vsakič boste pred izvažanjem predmeta boste vprašani za vrsto zapisa.
 
 #. i18n: NAIExporter is an interface name, do not even try to translate
 #: ../src/core/na-exporter.c:61
-#, fuzzy, c-format
+#, c-format
 msgid "No NAIExporter implementation found for '%s' format."
-msgstr "Za zapis %s ni mogoče najti izvedbe NAIEXporter."
+msgstr "Vgradnje predmeta NAIExporter za zapis '%s' ni mogoče najti."
 
 #. i18n: NAIExporter is an interface name, do not even try to translate
 #: ../src/core/na-exporter.c:305
-#, fuzzy, c-format
+#, c-format
 msgid "%s NAIExporter doesn't implement 'to_buffer' interface."
-msgstr "NAIExporter %s ne podpira vmesnika 'to_buffer'."
+msgstr "Predmet %s NAIExporter ni skladen z možnostjo vmesnika 'to_buffer'."
 
 #. i18n: NAIExporter is an interface name, do not even try to translate
 #: ../src/core/na-exporter.c:378
-#, fuzzy, c-format
+#, c-format
 msgid "%s NAIExporter doesn't implement 'to_file' interface."
-msgstr "NAIExporter %s ne podpira vmesnika 'to_file'."
+msgstr "Predmet %s NAIExporter ni skladen z možnostjo vmesnika 'to_file'."
 
 #: ../src/core/na-about.c:71
 msgid "Nautilus-Actions Configuration Tool is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
@@ -1701,11 +1701,11 @@ msgstr "Niz, ki upravlja velikost in položaj okna v možnostih uporabnika"
 
 #: ../src/nact/base-window.c:251
 msgid "Destroy the Gtk toplevel"
-msgstr ""
+msgstr "Uniči vrhnjo raven GTK"
 
 #: ../src/nact/base-window.c:252
 msgid "Whether the embedded Gtk Toplevel should be destroyed at dispose time"
-msgstr ""
+msgstr "Ali naj bo vrhnja raven GTK uničena v času nedejavnosti"
 
 #: ../src/nact/base-window.c:736
 #, c-format
@@ -2011,11 +2011,6 @@ msgstr "Izbiranje ukaza"
 msgid "Choosing a working directory"
 msgstr "Izbiranje delovne mape"
 
-#: ../src/nact/nact-icommand-tab.c:675
-#: ../src/nact/nact-preferences-editor.c:805
-msgid "Ex.:"
-msgstr "Npr:"
-
 #: ../src/nact/nact-icon-chooser.ui.h:1
 msgid "Icon Chooser"
 msgstr "Izbirnik ikon"
@@ -2063,7 +2058,7 @@ msgstr "Filter vrst mime"
 
 #. i18n: label of the push button when there is not yet any shortcut
 #: ../src/nact/nact-iproperties-tab.c:54
-#: ../src/nact/nautilus-actions-config-tool.ui.h:235
+#: ../src/nact/nautilus-actions-config-tool.ui.h:236
 msgid "None"
 msgstr "Brez"
 
@@ -2081,7 +2076,7 @@ msgid "_Action"
 msgstr "_Dejanje"
 
 #: ../src/nact/nact-iproperties-tab.c:293
-#: ../src/nact/nautilus-actions-config-tool.ui.h:238
+#: ../src/nact/nautilus-actions-config-tool.ui.h:239
 msgid "<b>Action editable properties</b>"
 msgstr "<b>Uredljive lastnosti dejanj</b>"
 
@@ -2095,7 +2090,7 @@ msgstr "Trenutna vrednost NAObjectItem"
 
 #: ../src/nact/nact-main-window.c:346
 msgid "A pointer to the currently edited NAObjectItem, an action or a menu"
-msgstr ""
+msgstr "Kazalnik na trenutno urejanj predmet NAObjectItem; dejanje ali meni"
 
 #: ../src/nact/nact-main-window.c:352
 msgid "Current NAObjectProfile"
@@ -2103,7 +2098,7 @@ msgstr "Trenutna vrednost NAObjectProfile"
 
 #: ../src/nact/nact-main-window.c:353
 msgid "A pointer to the currently edited NAObjectProfile"
-msgstr ""
+msgstr "Kazalnik na trenutno urejanj predmet NAObjectProfile"
 
 #: ../src/nact/nact-main-window.c:359
 msgid "Current NAIContext"
@@ -2111,7 +2106,7 @@ msgstr "Trenutna vrednost NAIContext"
 
 #: ../src/nact/nact-main-window.c:360
 msgid "A pointer to the currently edited NAIContext"
-msgstr ""
+msgstr "Kazalnik na trenutno urejanj predmet NAIContext."
 
 #: ../src/nact/nact-main-window.c:366
 msgid "Editable item ?"
@@ -2119,12 +2114,11 @@ msgstr "Ali je predmet uredljiv?"
 
 #: ../src/nact/nact-main-window.c:367
 msgid "Whether the item will be able to be updated against its I/O provider"
-msgstr ""
+msgstr "Ali se predmet lahko posodobi preko V/I ponudnika."
 
 #: ../src/nact/nact-main-window.c:374
-#, fuzzy
 msgid "No edition reason"
-msgstr "Ni določenega razloga"
+msgstr "Ni urejevalnega razloga"
 
 #: ../src/nact/nact-main-window.c:375
 msgid "Why is this item not editable"
@@ -2223,9 +2217,8 @@ msgid "_Help"
 msgstr "Pomo_č"
 
 #: ../src/nact/nact-menubar.c:67
-#, fuzzy
 msgid "Notebook _tabs"
-msgstr "Zavihki beležke"
+msgstr "Zavihki _beležke"
 
 #: ../src/nact/nact-menubar.c:69
 msgid "New _menu"
@@ -2584,7 +2577,7 @@ msgid "<i>Currently detected :</i>"
 msgstr "<i>Trenutno zaznano :</i>"
 
 #: ../src/nact/nact-preferences.ui.h:23
-#: ../src/nact/nautilus-actions-config-tool.ui.h:209
+#: ../src/nact/nautilus-actions-config-tool.ui.h:210
 msgid "<b>Desktop environment</b>"
 msgstr "<b>Namizno okolje</b>"
 
@@ -2735,7 +2728,7 @@ msgid "This tab lets you decide which schemes are proposed by default when editi
 msgstr "Ta zavihek omogoča odločitev katere sheme so privzete pri urejanju naprednih pogojev za predmet."
 
 #: ../src/nact/nact-preferences.ui.h:61
-#: ../src/nact/nautilus-actions-config-tool.ui.h:189
+#: ../src/nact/nautilus-actions-config-tool.ui.h:190
 msgid "_Schemes"
 msgstr "_Sheme"
 
@@ -2772,6 +2765,10 @@ msgstr "_Ponudniki V/I"
 #: ../src/nact/nact-preferences-editor.c:119
 msgid "Rely on runtime detection"
 msgstr "Zanesti se na zaznavanje izvajanja"
+
+#: ../src/nact/nact-preferences-editor.c:805
+msgid "Ex.:"
+msgstr "Npr:"
 
 #: ../src/nact/nact-providers-list.c:138
 msgid "Readable"
@@ -2849,17 +2846,15 @@ msgstr "Vgrajevanje GtkTreeView"
 
 #: ../src/nact/nact-tree-model.c:234
 msgid "The GtkTreeView which relies on this NactTreeModel"
-msgstr ""
+msgstr "Predmet GtkTreeView, ki je odvisen od predmeta NactTreeModel"
 
 #: ../src/nact/nact-tree-model.c:240
-#, fuzzy
 msgid "Edition mode"
-msgstr "Premešani način"
+msgstr "Urejevalni način"
 
 #: ../src/nact/nact-tree-model.c:241
-#, fuzzy
 msgid "Edition vs. Selection mode"
-msgstr "Izbor začetnega načina in videza"
+msgstr "Urejevalni in Izbirni način"
 
 #: ../src/nact/nact-tree-model-dnd.c:121
 msgid "Unable to drop a profile here"
@@ -2919,7 +2914,7 @@ msgstr "Koda upravljanja"
 #. i18n: NactTreeView property long description
 #: ../src/nact/nact-tree-view.c:246
 msgid "Management mode of the tree view, selection or edition"
-msgstr "Koda upravljanja za pogled drevesa, izbire ali izdaje"
+msgstr "Način upravljanja za pogled drevesa, izbiranja ali urejanja"
 
 #. i18n: NactTreeView property short description
 #: ../src/nact/nact-tree-view.c:256
@@ -3298,10 +3293,14 @@ msgid "B_rowse..."
 msgstr "_Prebrskaj ..."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:110
+msgid "Example"
+msgstr "Primer"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:111
 msgid "<b>Command</b>"
 msgstr "<b>Ukaz</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:111
+#: ../src/nact/nautilus-actions-config-tool.ui.h:112
 msgid ""
 "This tab lets you choose the command to be executed, along with its parameters.\n"
 "Defining several profiles lets you have several commands, each applying with a different set of conditions."
@@ -3309,31 +3308,31 @@ msgstr ""
 "Ta zavihek vam omogoča določitev ukaza za izvedbo skupaj z njegovimi parametri.\n"
 "Določevanje več profilov vam omogoča več ukazov, vsak je uveljavljen z drugim nizom pogojev."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:113
+#: ../src/nact/nautilus-actions-config-tool.ui.h:114
 msgid "_Command"
 msgstr "_Ukaz"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:114
+#: ../src/nact/nautilus-actions-config-tool.ui.h:115
 msgid "_Normal"
 msgstr "_Običajno"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:115
+#: ../src/nact/nautilus-actions-config-tool.ui.h:116
 msgid "The command will be started as a standard graphical user interface."
 msgstr "Ukaz bo bil zagnan kot običajni uporabniški grafični vmesnik."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:116
+#: ../src/nact/nautilus-actions-config-tool.ui.h:117
 msgid "In a _terminal"
 msgstr "V _terminalu"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:117
+#: ../src/nact/nautilus-actions-config-tool.ui.h:118
 msgid "The command will be started in the preferred terminal of the graphical environment."
 msgstr "Ukaz bo zagnan v prednostnem terminalu grafičnega okolja."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:118
+#: ../src/nact/nautilus-actions-config-tool.ui.h:119
 msgid "_Embedded"
 msgstr "_Vstavljeno"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:119
+#: ../src/nact/nautilus-actions-config-tool.ui.h:120
 msgid ""
 "This option makes use of a special feature of the file manager, which would allow a terminal to be ran inside of it.\n"
 "An acceptable fallback is running in the standard terminal."
@@ -3341,11 +3340,11 @@ msgstr ""
 "Uporabi posebno zmožnost upravljalnika datotek, ki terminalu omogoča poganjanje znotraj samega sebe.\n"
 "Sprejemljiva povratna možnost je poganjanje v običajnem terminalu."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:121
+#: ../src/nact/nautilus-actions-config-tool.ui.h:122
 msgid "_Display output"
 msgstr "_Prikaži izhod"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:122
+#: ../src/nact/nautilus-actions-config-tool.ui.h:123
 msgid ""
 "The command will be run in a terminal.\n"
 "The terminal will be closed at the end of the execution; standard error and output streams will be displayed.\n"
@@ -3355,19 +3354,19 @@ msgstr ""
 "Terminal bo bil po koncu izvajanja zaprt. Prikazani bodo običajni pretoki napak in izhoda.\n"
 "Sprejemljiva povratna rešitev je zagon v običajnem terminalu."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:125
+#: ../src/nact/nautilus-actions-config-tool.ui.h:126
 msgid "<b>Execution mode</b>"
 msgstr "<b>Način izvajanja</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:126
+#: ../src/nact/nautilus-actions-config-tool.ui.h:127
 msgid "Note: this is not yet implemented in Nautilus-Actions.\n"
 msgstr "Opomba: to še ni podprto v Dejanjih Nautilusa.\n"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:128
+#: ../src/nact/nautilus-actions-config-tool.ui.h:129
 msgid "_Startup notify"
 msgstr "_Obvestilo ob zagonu"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:129
+#: ../src/nact/nautilus-actions-config-tool.ui.h:130
 msgid ""
 "When checked, it is known that the run command will send a \"remove\" message to the desktop environment.\n"
 "See the Startup Notification Protocol Specification for more details.\n"
@@ -3377,11 +3376,11 @@ msgstr ""
 "Za več podrobnosti si oglejte določitev protokola zagonskega obvestila.\n"
 "Pomembno le, ko je način izvajanja izbran na Običajno."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:132
+#: ../src/nact/nautilus-actions-config-tool.ui.h:133
 msgid "Startup Window Manager _class :"
 msgstr "Zagonski _razred upravljalnika oken:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:133
+#: ../src/nact/nautilus-actions-config-tool.ui.h:134
 msgid ""
 "When specified, this should be the name of a WM class of at least one window of the run command.\n"
 "See the Startup Notification Protocol Specification for more details.\n"
@@ -3391,19 +3390,19 @@ msgstr ""
 "Za več podrobnosti si oglejte določitev protokola zagonskega obvestila.\n"
 "Pomembno le, ko je način izvajanja izbran na Običajno."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:136
+#: ../src/nact/nautilus-actions-config-tool.ui.h:137
 msgid "<b>Startup mode</b>"
 msgstr "<b>Način zagona</b> "
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:137
+#: ../src/nact/nautilus-actions-config-tool.ui.h:138
 msgid "Note: this is not yet implemented in Nautilus-Actions."
 msgstr "Opomba: to še ni podprto v Dejanjih Nautilusa."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:138
+#: ../src/nact/nautilus-actions-config-tool.ui.h:139
 msgid "Execute as _user :"
 msgstr "Izvedi kot _uporabnik:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:139
+#: ../src/nact/nautilus-actions-config-tool.ui.h:140
 msgid ""
 "Enter here the user the command should be ran as.\n"
 "The user may be defined by his numeric UID or his login name.\n"
@@ -3413,23 +3412,23 @@ msgstr ""
 "Uporabnik je lahko določen s številčnim UID ali prijavnim imenom.\n"
 "V primeru da želite ukaz zagnati kot trenutni uporabnik, pustite polje prazno."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:142
+#: ../src/nact/nautilus-actions-config-tool.ui.h:143
 msgid "<b>Execute as user</b>"
 msgstr "<b>Izvedi kot uporabnik</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:143
+#: ../src/nact/nautilus-actions-config-tool.ui.h:144
 msgid "This advanced tab lets you precisely define how your command will be executed."
 msgstr "Zavihek napredno vam omogoča natančno določitev kako bo vaš ukaz izveden."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:144
+#: ../src/nact/nautilus-actions-config-tool.ui.h:145
 msgid "E_xecution"
 msgstr "I_zvajanje"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:145
+#: ../src/nact/nautilus-actions-config-tool.ui.h:146
 msgid "The current item will appear if the basename of each element of the selection matches one filter of the 'Must match one of' column, while not matching any of the filters of the 'Must not match any of' column."
 msgstr "Trenutni predmet se bo pojavil če se osnovno ime vsakega elementa izbire ujema s stolpcem 'Mora se ujemati z enim od' medtem ko se ne ujema z nobenim stolpcem 'Ne sme se ujemati z nobenim od'. "
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:146
+#: ../src/nact/nautilus-actions-config-tool.ui.h:147
 msgid ""
 "This list lets you determine for which basenames the currently selected item will be displayed in the Nautilus context menu.\n"
 "Basenames may use '*' and '?' wildcards.\n"
@@ -3439,27 +3438,27 @@ msgstr ""
 "Osnovna imena lahko uporabijo nadomestne znake '*' in '?'.\n"
 "Osnovna imena je mogoče negirati za določitev za katera osnovna imena se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:149
+#: ../src/nact/nautilus-actions-config-tool.ui.h:150
 msgid "Click to add a new basename filter."
 msgstr "Kliknite za dodajanje novega filtra osnovnih imen."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:150
+#: ../src/nact/nautilus-actions-config-tool.ui.h:151
 msgid "Click to remove the current basename filter."
 msgstr "Kliknite za odstranitev trenutnega filtra osnovnih imen."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:151
+#: ../src/nact/nautilus-actions-config-tool.ui.h:152
 msgid "Match _case"
 msgstr "Upoštevaj _velikost črk"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:152
+#: ../src/nact/nautilus-actions-config-tool.ui.h:153
 msgid "Click to define the above basename filters as case sensitive."
 msgstr "Kliknite za določilo zgornjih filtrov osnovnih imen kot občutljivih na velikost črk."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:153
+#: ../src/nact/nautilus-actions-config-tool.ui.h:154
 msgid "<b>Basenames conditions</b>"
 msgstr "<b>Pogoji osnovnih imen</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:154
+#: ../src/nact/nautilus-actions-config-tool.ui.h:155
 msgid ""
 "This tab lets you determine for which basenames the currently selected item will be displayed in the Nautilus context menu.\n"
 "Basenames may be negated to specify for which basenames your item must not appear."
@@ -3467,15 +3466,15 @@ msgstr ""
 "Ta zavihek vam omogoča določitev za katera osnovna imena bo trenutno izbran predmet v vsebinskem meniju Nautilusa.\n"
 "Osnovna imena je mogoče negirati za določitev za katera osnovna imena se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:156
+#: ../src/nact/nautilus-actions-config-tool.ui.h:157
 msgid "_Basenames"
 msgstr "_Osnovna imena"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:157
+#: ../src/nact/nautilus-actions-config-tool.ui.h:158
 msgid "The current item will appear if the mimetype of each element of the selection matches one filter of the 'Must match one of' column, while not matching any of the filters of the 'Must not match any of' column."
 msgstr "Trenutni predmet se bo pojavil če se vrsta mime vsakega elementa izbire ujema s stolpcem 'Mora se ujemati z enim od' medtem ko se ne ujema z nobenim stolpcem 'Ne sme se ujemati z nobenim od'. "
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:158
+#: ../src/nact/nautilus-actions-config-tool.ui.h:159
 msgid ""
 "This list lets you determine for which mimetypes the currently selected item will be displayed in the Nautilus context menu.\n"
 "Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
@@ -3485,19 +3484,19 @@ msgstr ""
 "Vrste mime je mogoče določiti kot '*', '/*', 'skupina/*' ali 'skupina/podskupina'.\n"
 "Vrste mime je mogoče negirati za navedbo za katere vrste predmetov se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:161
+#: ../src/nact/nautilus-actions-config-tool.ui.h:162
 msgid "Click to add a new mimetype filter."
 msgstr "Kliknite za dodajanje novega filtra vrst mime."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:162
+#: ../src/nact/nautilus-actions-config-tool.ui.h:163
 msgid "Click to remove the current mimetype filter."
 msgstr "Kliknite za odstranitev trenutnega filtra vrst mime."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:163
+#: ../src/nact/nautilus-actions-config-tool.ui.h:164
 msgid "<b>Mimetypes conditions</b>"
 msgstr "<b>Pogoji vrst mime</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:164
+#: ../src/nact/nautilus-actions-config-tool.ui.h:165
 msgid ""
 "This tab lets you determine for which mimetypes the currently selected item will be displayed in the Nautilus context menu.\n"
 "Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
@@ -3507,15 +3506,15 @@ msgstr ""
 "Vrste mime je mogoče določiti kot '*', '/*', 'skupina/*' ali 'skupina/podskupina'.\n"
 "Vrste mime je mogoče negirati za navedbo za katere vrste predmetov se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:167
+#: ../src/nact/nautilus-actions-config-tool.ui.h:168
 msgid "_Mimetypes"
 msgstr "_Vrste mime"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:168
+#: ../src/nact/nautilus-actions-config-tool.ui.h:169
 msgid "The current item will appear if the location of each element of the selection is one or inside one of the paths of the 'Must match one of' column, while not being one or inside one of the 'Must not match any of' column."
 msgstr "Trenutni predmet se bo pojavil če se mesto vsakega elementa izbire ujema s stolpcem 'Mora se ujemati z enim od' medtem ko se ne ujema z nobenim stolpcem 'Ne sme se ujemati z nobenim od'. "
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:169
+#: ../src/nact/nautilus-actions-config-tool.ui.h:170
 msgid ""
 "This list lets you determine where (in which folders) the currently selected files must be found in order for the item to be displayed in the Nautilus context menu.\n"
 "Folders may use '*' or '?' wildcards.\n"
@@ -3525,23 +3524,23 @@ msgstr ""
 "Mape lahko uporabijo nadomestna znaka '*' ali '?'.\n"
 "Filtre map je mogoče negirati za navedbo za katere mape se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:172
+#: ../src/nact/nautilus-actions-config-tool.ui.h:173
 msgid "Click to add a new folder filter."
 msgstr "Kliknite za dodajanje novega filtra map."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:173
+#: ../src/nact/nautilus-actions-config-tool.ui.h:174
 msgid "Click to browse the filesystem in order to select a new folder filter."
 msgstr "Kliknite za brskanje po datotečnem sistemu za izbiro filtra nove mape."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:174
+#: ../src/nact/nautilus-actions-config-tool.ui.h:175
 msgid "Click to remove the current folder filter."
 msgstr "Kliknite za odstranitev trenutnega filtra map."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:175
+#: ../src/nact/nautilus-actions-config-tool.ui.h:176
 msgid "<b>Folders conditions</b>"
 msgstr "<b>Pogoji map</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:176
+#: ../src/nact/nautilus-actions-config-tool.ui.h:177
 msgid ""
 "This tab lets you determine where (in which folders) the currently selected files must be found in order for the item to be displayed in the Nautilus context menu.\n"
 "Folder filters may be negated to specify for which folders your item must not appear."
@@ -3549,15 +3548,15 @@ msgstr ""
 "Ta zavihek vam omogoča določitev kje (v katerih mapah) je treba najti trenutno izbrane datoteke zato, da je predmet prikazan v vsebinskem meniju Nautilusa.\n"
 "Filtre map je mogoče negirati, da določijo v katerih mapah se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:178
+#: ../src/nact/nautilus-actions-config-tool.ui.h:179
 msgid "_Folders"
 msgstr "_Mape"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:179
+#: ../src/nact/nautilus-actions-config-tool.ui.h:180
 msgid "The current item will appear if the scheme of each element of the selection matches one of the 'Must match one of' column, while not matching any of the 'Must not match any of' column."
 msgstr "Trenutni predmet se bo pojavil če se shema vsakega elementa izbire ujema s stolpcem 'Mora se ujemati z enim od' medtem ko se ne ujema z nobenim stolpcem 'Ne sme se ujemati z nobenim od'. "
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:180
+#: ../src/nact/nautilus-actions-config-tool.ui.h:181
 msgid ""
 "This list lets you determine which schemes the currently selected files must satisfy in order for the item to be displayed in the Nautilus context menu.\n"
 "Filters may be negated to specify for which schemes your item must not appear."
@@ -3565,27 +3564,27 @@ msgstr ""
 "Ta zavihek vam omogoča določitev katerim shemam morajo trenutno izbrane datoteke zadostiti, da so prikazane v vsebinskem meniju Nautilusa.\n"
 "Filtre je mogoče negirati za navedbo za katere sheme se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:182
+#: ../src/nact/nautilus-actions-config-tool.ui.h:183
 msgid "Click to add a new scheme filter."
 msgstr "Kliknite za dodajanje novega filtra shem."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:183
+#: ../src/nact/nautilus-actions-config-tool.ui.h:184
 msgid "De_faults..."
 msgstr " _Privzeto ..."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:184
+#: ../src/nact/nautilus-actions-config-tool.ui.h:185
 msgid "Click to select a new scheme filter among default schemes."
 msgstr "Kliknite za izbiro novega filtra shem med privzetimi shemami."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:185
+#: ../src/nact/nautilus-actions-config-tool.ui.h:186
 msgid "Click to remove the current scheme filter."
 msgstr "Kliknite za odstranitev trenutnega filtra shem."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:186
+#: ../src/nact/nautilus-actions-config-tool.ui.h:187
 msgid "<b>Schemes conditions</b>"
 msgstr "<b>Pogoji sheme</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:187
+#: ../src/nact/nautilus-actions-config-tool.ui.h:188
 msgid ""
 "This tab lets you determine which schemes the currently selected files must satisfy in order for the item to be displayed in the Nautilus context menu.\n"
 "Filters may be negated to specify for which schemes your item must not appear."
@@ -3593,11 +3592,11 @@ msgstr ""
 "Ta zavihek vam omogoča določitev katerim shemam morajo trenutno izbrane datoteke zadostiti, da so prikazane v vsebinskem meniju Nautilusa.\n"
 "Filtre je mogoče negirati za navedbo shem za katere se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:190
+#: ../src/nact/nautilus-actions-config-tool.ui.h:191
 msgid "The current item will appear if each element of the selection matches all capabilities of the 'Must match all of' column, while not matching any capability of the 'Must not match any of' column."
 msgstr "Trenutni predmet se bo pojavil če vsak element izbire ujema z vsemi zmožnostmi 'Mora se ujemati z enim od' medtem ko se ne ujema z nobenim stolpcem 'Ne sme se ujemati z nobenim od'. "
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:191
+#: ../src/nact/nautilus-actions-config-tool.ui.h:192
 msgid ""
 "This list lets you determine which capabilities the currently selected files must satisfy in order for the item to be displayed in the Nautilus context menu.\n"
 "Capabilities may be negated to specify for which capabilities your item must not appear."
@@ -3605,19 +3604,19 @@ msgstr ""
 "Ta zavihek vam omogoča določitev katerim zmožnostim morajo trenutno izbrane datoteke zadostiti, da so prikazane v vsebinskem meniju Nautilusa.\n"
 "Filtre je mogoče negirati za navedbo za katere zmožnosti se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:193
+#: ../src/nact/nautilus-actions-config-tool.ui.h:194
 msgid "Click to add a new capability filter."
 msgstr "Kliknite za dodajanje novega filtra zmožnosti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:194
+#: ../src/nact/nautilus-actions-config-tool.ui.h:195
 msgid "Click to remove the current capability."
 msgstr "Kliknite za odstranitev trenutne zmožnosti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:195
+#: ../src/nact/nautilus-actions-config-tool.ui.h:196
 msgid "<b>Capabilities conditions</b>"
 msgstr "<b>Pogoji zmožnosti</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:196
+#: ../src/nact/nautilus-actions-config-tool.ui.h:197
 msgid ""
 "This tab lets you determine which capabilities the currently selected files must satisfy in order for the item to be displayed in the Nautilus context menu.\n"
 "Filters may be negated to specify for which capabilities your item must not appear."
@@ -3625,11 +3624,11 @@ msgstr ""
 "Ta zavihek vam omogoča določitev katerim zmožnostim morajo trenutno izbrane datoteke zadostiti, da so prikazane v vsebinskem meniju Nautilusa.\n"
 "Filtre je mogoče negirati za navedbo za katere zmožnosti se vaš predmet ne sme pojaviti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:198
+#: ../src/nact/nautilus-actions-config-tool.ui.h:199
 msgid "Ca_pabilities"
 msgstr "Zm_ožnosti"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:199
+#: ../src/nact/nautilus-actions-config-tool.ui.h:200
 msgid ""
 "This is an advanced condition based on the count of the current selection.\n"
 "If the current selection does not match this condition, then the item will not be displayed in the file manager context menus or toolbar."
@@ -3637,15 +3636,15 @@ msgstr ""
 "To je napreden pogoj osnovan na številu trenutne izbire.\n"
 "V primeru, da se trenutna izbira ne ujema s tem pogojem, predmet ne bo bil prikazan v vsebinskih menijih upravljalnika datotek ali orodni vrstici."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:201
+#: ../src/nact/nautilus-actions-config-tool.ui.h:202
 msgid "_Count :"
 msgstr "_Število:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:202
+#: ../src/nact/nautilus-actions-config-tool.ui.h:203
 msgid "<b>Appears if selection contains</b>"
 msgstr "<b>Pojavi se, če izbor vsebuje</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:203
+#: ../src/nact/nautilus-actions-config-tool.ui.h:204
 msgid ""
 "This is an advanced condition based on the running desktop environment.\n"
 "First choose on the left if the item depends of a particular desktop environment, then select on the right the adequate desktop environment."
@@ -3653,27 +3652,27 @@ msgstr ""
 "To je napreden pogoj osnovan na delujočem namiznem okolju.\n"
 "Najprej na levi izberite, če je predmet odvisen od določenega namiznega okolja in nato na desni izberite primerno namizno okolje."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:205
+#: ../src/nact/nautilus-actions-config-tool.ui.h:206
 msgid "Item may appear depending of the desktop environment."
 msgstr "Premet se morda pojavi glede na namizno okolje."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:206
+#: ../src/nact/nautilus-actions-config-tool.ui.h:207
 msgid "_Always appears"
 msgstr "Vedno se _pojavi"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:207
+#: ../src/nact/nautilus-actions-config-tool.ui.h:208
 msgid "_Only appears in selected environments"
 msgstr "_Pojavi se le v izbranih okoljih"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:208
+#: ../src/nact/nautilus-actions-config-tool.ui.h:209
 msgid "_Never appears in selected environments"
 msgstr "_Nikoli se ne pojavi v izbranih okoljih"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:210
+#: ../src/nact/nautilus-actions-config-tool.ui.h:211
 msgid "Appears if the file is e_xecutable :"
 msgstr "Pojavi se, če je datoteka i_zvedljiva:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:211
+#: ../src/nact/nautilus-actions-config-tool.ui.h:212
 msgid ""
 "This is an advanced condition based on the presence of an executable file on the file system.\n"
 "This may be used for example to test for a prerequisite package."
@@ -3681,15 +3680,15 @@ msgstr ""
 "To je napreden pogoj osnovan na prisotnosti izvedljive datoteke na datotečnem sistemu.\n"
 "To lahko uporabite na primer za preizkus predzahtevanega paketa."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:213
+#: ../src/nact/nautilus-actions-config-tool.ui.h:214
 msgid "Bro_wse..."
 msgstr "P_rebrskaj ..."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:214
+#: ../src/nact/nautilus-actions-config-tool.ui.h:215
 msgid "Appears if the name is _registered on D-Bus :"
 msgstr "Pojavi se, če je ime _vpisano na D-Bus:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:215
+#: ../src/nact/nautilus-actions-config-tool.ui.h:216
 msgid ""
 "This is an advanced condition based on the presence of a particular service on the D-Bus system.\n"
 "This may be used for example for testing that a prerequisite service is currently available."
@@ -3697,11 +3696,11 @@ msgstr ""
 "To je napreden pogoj zasnovan na prisotnosti določene storitve na sistemu D-Bus.\n"
 "Pogoj je mogoče uporabiti na primer za preizkus, ali je zahtevana storitev trenutno na voljo."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:217
+#: ../src/nact/nautilus-actions-config-tool.ui.h:218
 msgid "Appears if the command outputs \"_true\" :"
 msgstr "Pojavi se, če je izhod ukaza \"_prav\":"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:218
+#: ../src/nact/nautilus-actions-config-tool.ui.h:219
 msgid ""
 "This is an advanced condition based on a runtime result.\n"
 "Enter here a command which is able to display the exact \"true\" string on its standard output.\n"
@@ -3711,11 +3710,11 @@ msgstr ""
 "Vnesite ukaz, ki lahko prikaže natančen niz \"prav\" na svojem standardnem izhodu.\n"
 "To lahko uporabite na primer za preizkus zapletenega pogoja."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:221
+#: ../src/nact/nautilus-actions-config-tool.ui.h:222
 msgid "Appears if the _binary is running :"
 msgstr "Se pojavi, če _binarna datoteke teče:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:222
+#: ../src/nact/nautilus-actions-config-tool.ui.h:223
 msgid ""
 "This is an advanced condition based on the presence of a running binary.\n"
 "Note that only the basename of the binary is checked, not its dirname nor its parameters.\n"
@@ -3725,35 +3724,35 @@ msgstr ""
 "Preverjeno je le osnovno ime binarne datoteke, ne ime mape ali njeni parametri.\n"
 "To lahko uporabite na primer za preizkus prisotnosti predzahtevanega ozadnjega programa."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:225
+#: ../src/nact/nautilus-actions-config-tool.ui.h:226
 msgid "Brow_se..."
 msgstr "Prebr_skaj ..."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:226
+#: ../src/nact/nautilus-actions-config-tool.ui.h:227
 msgid "<b>Execution environment</b>"
 msgstr "<b>Okolje izvajanja</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:227
+#: ../src/nact/nautilus-actions-config-tool.ui.h:228
 msgid "This tab lets you determine some advanced conditions the currently selected files must satisfy in order for the item to be displayed in the file manager context menu."
 msgstr "Ta zavihek vam omogoča določitev nekaterih naprednih pogojev, ki jim morajo trenutno izbrane datoteke zadostiti, da so prikazane v vsebinskem meniju upravljalnika datotek."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:228
+#: ../src/nact/nautilus-actions-config-tool.ui.h:229
 msgid "_Environment"
 msgstr "_Okolje"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:229
+#: ../src/nact/nautilus-actions-config-tool.ui.h:230
 msgid "_Description :"
 msgstr "_Opis:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:230
+#: ../src/nact/nautilus-actions-config-tool.ui.h:231
 msgid "Enter here a free text which may be used (e.g. in a Web service or in a search tool) to describe your item."
 msgstr "Sem vnesite prosto besedilo, ki ga lahko uporabite (na spletni storitvi ali v iskalnemu orodju) za opis vašega predmeta."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:231
+#: ../src/nact/nautilus-actions-config-tool.ui.h:232
 msgid "E_nabled"
 msgstr "O_mogočeno"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:232
+#: ../src/nact/nautilus-actions-config-tool.ui.h:233
 msgid ""
 "Check the box to enable this item.\n"
 "If unchecked, then the item will never appear in the file manager context menus or toolbar."
@@ -3761,11 +3760,11 @@ msgstr ""
 "Izberite polje za omogočitev tega predmeta.\n"
 "V primeru, da je polje ni izbrano, se ne bo nikoli pojavilo v Nautilusovih vsebinskih menijh ali orodni vrstici."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:234
+#: ../src/nact/nautilus-actions-config-tool.ui.h:235
 msgid "Suggested _shortcut :"
 msgstr "Predlagana _bližnjica:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:236
+#: ../src/nact/nautilus-actions-config-tool.ui.h:237
 msgid ""
 "Enter here the keyboard touch combination you suggest as a shortcut to your action.\n"
 "Note: this is not yet implemented in Nautilus-Actions."
@@ -3773,19 +3772,19 @@ msgstr ""
 "Sem vnesite kombinacijo tipk, ki jo predlagate kot bližnjico do svojega dejanja.\n"
 "Opomba: to še ni podprto v Nautilusovih dejanjih."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:239
+#: ../src/nact/nautilus-actions-config-tool.ui.h:240
 msgid "Id. :"
 msgstr "Id. :"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:240
+#: ../src/nact/nautilus-actions-config-tool.ui.h:241
 msgid "I/O provider :"
 msgstr "Ponudnik V/I:"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:241
+#: ../src/nact/nautilus-actions-config-tool.ui.h:242
 msgid "Read-only item"
 msgstr "Predmet je le za branje"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:242
+#: ../src/nact/nautilus-actions-config-tool.ui.h:243
 msgid ""
 "This box is checked if the item cannot be edited.\n"
 "There may be multiple reasons for why an item cannot be edited. See your User's Manual."
@@ -3793,15 +3792,15 @@ msgstr ""
 "To polje je izbrano, če predmeta ni mogoče urejati.\n"
 "Obstaja lahko več vzrokov zakaj predmeta ni mogoče urejati. Oglejte si uporabniški priročnik."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:244
+#: ../src/nact/nautilus-actions-config-tool.ui.h:245
 msgid "<b>Read-only properties</b>"
 msgstr "<b>Lastnosti le za branje</b>"
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:245
+#: ../src/nact/nautilus-actions-config-tool.ui.h:246
 msgid "This tab lets you edit some miscellaneous properties, and access some non-modifiable information."
 msgstr "Ta zavihek vam omogoča urejanje raznih lastnosti in dostop do nekaterih ne-spremenljivih podrobnosti."
 
-#: ../src/nact/nautilus-actions-config-tool.ui.h:246
+#: ../src/nact/nautilus-actions-config-tool.ui.h:247
 msgid "P_roperties"
 msgstr "L_astnosti"
 
@@ -3975,7 +3974,7 @@ msgstr "Vrednost za posodobitev"
 #. i18n: 'str', 'int' and 'bool' are literal values: do not translate
 #: ../src/utils/na-set-conf.c:67
 msgid "The type of the value to be set, may be 'str', 'int' or 'bool'"
-msgstr ""
+msgstr "Vrsta vrednosti za nastavitev je lahko 'str', 'int' ali 'bool'."
 
 #: ../src/utils/na-set-conf.c:69
 msgid "The value to be set"
@@ -3986,30 +3985,30 @@ msgid "Output the version number and exit gracefully"
 msgstr "Izpiši številko različice in končaj"
 
 #: ../src/utils/na-set-conf.c:134
-#, fuzzy, c-format
+#, c-format
 msgid "Error: a group is mandatory.\n"
-msgstr "Napaka: uri je obvezen.\n"
+msgstr "Napaka: podatek skupine je obvezen.\n"
 
 #: ../src/utils/na-set-conf.c:139
-#, fuzzy, c-format
+#, c-format
 msgid "Error: a key is mandatory.\n"
-msgstr "Napaka: uri je obvezen.\n"
+msgstr "Napaka: podatek ključa je obvezen.\n"
 
 #: ../src/utils/na-set-conf.c:144
 #, c-format
 msgid "Error: a type is mandatory for setting/updating a value.\n"
-msgstr ""
+msgstr "Napaka: podatek vrste je obvezen za nastavljanje ali posodabljanje vrednosti.\n"
 
 #. i18n: 'str', 'int' and 'bool' are literal values: do not translate
 #: ../src/utils/na-set-conf.c:155
 #, c-format
 msgid "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n"
-msgstr ""
+msgstr "Napaka: neznana vrsta: %s. Uporabite parameter 'str', 'int' ali 'bool'.\n"
 
 #: ../src/utils/na-set-conf.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "Error: a value is mandatory.\n"
-msgstr "Napaka: uri je obvezen.\n"
+msgstr "Napaka: podatek vrednosti je obvezen.\n"
 
 #: ../src/utils/nautilus-actions-new.c:134
 msgid "Set it if the item should be disabled at creation"
