@@ -74,6 +74,7 @@ static void            instance_dispose( GObject *object );
 static void            instance_finalize( GObject *object );
 
 static void            dump( const NASelectedInfo *nsi );
+static const char     *dump_file_type( GFileType type );
 static NASelectedInfo *new_from_nautilus_file_info( NautilusFileInfo *item );
 static NASelectedInfo *new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg );
 static void            query_file_attributes( NASelectedInfo *info, GFile *location, gchar **errmsg );
@@ -703,11 +704,34 @@ dump( const NASelectedInfo *nsi )
 	g_debug( "%s:           username=%s", thisfn, nsi->private->username );
 	g_debug( "%s:             scheme=%s", thisfn, nsi->private->scheme );
 	g_debug( "%s:               port=%d", thisfn, nsi->private->port );
+	g_debug( "%s: attributes_are_set=%s", thisfn, nsi->private->attributes_are_set ? "True":"False" );
+	g_debug( "%s:          file_type=%s", thisfn, dump_file_type( nsi->private->file_type ));
 	g_debug( "%s:           can_read=%s", thisfn, nsi->private->can_read ? "True":"False" );
 	g_debug( "%s:          can_write=%s", thisfn, nsi->private->can_write ? "True":"False" );
 	g_debug( "%s:        can_execute=%s", thisfn, nsi->private->can_execute ? "True":"False" );
 	g_debug( "%s:              owner=%s", thisfn, nsi->private->owner );
-	g_debug( "%s: attributes_are_set=%s", thisfn, nsi->private->attributes_are_set ? "True":"False" );
+}
+
+static const char *
+dump_file_type( GFileType type )
+{
+	switch( type ){
+		case G_FILE_TYPE_REGULAR:
+			return( "regular" );
+		case G_FILE_TYPE_DIRECTORY:
+			return( "directory" );
+		case G_FILE_TYPE_SYMBOLIC_LINK:
+			return( "symbolic link" );
+		case G_FILE_TYPE_SPECIAL:
+			return( "special (socket, fifo, blockdev, chardev)" );
+		case G_FILE_TYPE_SHORTCUT:
+			return( "shortcut" );
+		case G_FILE_TYPE_MOUNTABLE:
+			return( "mountable" );
+		default:
+			break;
+	}
+	return( "unknown" );
 }
 
 static NASelectedInfo *
@@ -715,7 +739,6 @@ new_from_nautilus_file_info( NautilusFileInfo *item )
 {
 	gchar *uri = nautilus_file_info_get_uri( item );
 	gchar *mimetype = nautilus_file_info_get_mime_type( item );
-	g_debug( "new_from_nautilus_file_info: uri=%s, mimetype=%s", uri, mimetype );
 	NASelectedInfo *info = new_from_uri( uri, mimetype, NULL );
 	g_free( mimetype );
 	g_free( uri );
@@ -772,7 +795,6 @@ new_from_nautilus_file_info( NautilusFileInfo *item )
  * be properly represented within a URI.
  *
  * pwi 2011-01-04:
- *
  * It results from the above excerpt that:
  * - as double quotes are not valid character in URI, they have to be
  *   escaped as %22, and so Nautilus does
@@ -806,7 +828,7 @@ new_from_uri( const gchar *uri, const gchar *mimetype, gchar **errmsg )
 	vfs = g_new0( NAGnomeVFSURI, 1 );
 	na_gnome_vfs_uri_parse( vfs, uri );
 	if( !info->private->filename ){
-		g_debug( "new_from_uri: uri='%s', filename=NULL, setting it to '%s'", uri, vfs->path );
+		g_debug( "na_selected_info_new_from_uri: uri='%s', filename=NULL, setting it to '%s'", uri, vfs->path );
 		info->private->filename = g_strdup( vfs->path );
 	}
 
@@ -846,8 +868,7 @@ query_file_attributes( NASelectedInfo *nsi, GFile *location, gchar **errmsg )
 		if( errmsg ){
 			*errmsg = g_strdup_printf( _( "Error when querying informations for %s URI: %s" ), nsi->private->uri, error->message );
 		} else {
-			g_warning( "%s: URI='%s'", thisfn, nsi->private->uri );
-			g_warning( "%s: g_file_query_info: %s", thisfn, error->message );
+			g_warning( "%s: uri=%s, g_file_query_info: %s", thisfn, nsi->private->uri, error->message );
 		}
 		g_error_free( error );
 		return;

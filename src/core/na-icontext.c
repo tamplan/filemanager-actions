@@ -1038,8 +1038,8 @@ is_compatible_scheme( const gchar *pattern, const gchar *scheme )
 }
 
 /*
- * assumuing here the same sort of optimization than for schemes
- * i.e. we assume that all selected items are must probably located
+ * assuming here the same sort of optimization than for schemes
+ * i.e. we assume that all selected items are most probably located
  * in the same dirname
  * so we take care of only checking _distinct_ dirnames against folder
  * conditions
@@ -1060,7 +1060,7 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 				gchar *dirname = na_selected_info_get_dirname( NA_SELECTED_INFO( it->data ));
 
 				if( na_core_utils_slist_count( distincts, dirname ) == 0 ){
-					g_debug( "%s: distinct dirname=%s", thisfn, dirname );
+					g_debug( "%s: examining new distinct selected dirname=%s", thisfn, dirname );
 
 					GSList *id;
 					gchar *dirname_utf8, *pattern_utf8;
@@ -1070,33 +1070,21 @@ is_candidate_for_folders( const NAIContext *object, guint target, GList *files )
 
 					distincts = g_slist_prepend( distincts, g_strdup( dirname ));
 					dirname_utf8 = g_filename_to_utf8( dirname, -1, NULL, NULL, NULL );
-					match = FALSE;
 
 					for( id = folders ; id && ok ; id = id->next ){
 						pattern = ( const gchar * ) id->data;
+						g_debug( "%s: examining new condition pattern=%s", thisfn, pattern );
 						positive = is_positive_assertion( pattern );
 						pattern_utf8 = g_filename_to_utf8( positive ? pattern : pattern+1, -1, NULL, NULL, NULL );
 						has_pattern = ( g_strstr_len( pattern_utf8, -1, "*" ) != NULL );
 
-						if( !positive || !match ){
-							if(( has_pattern && g_pattern_match_simple( pattern_utf8, dirname_utf8 )) || g_str_has_prefix( dirname_utf8, pattern_utf8 )){
-								g_debug( "%s: condition=%s, positive=%s: matched",
-										thisfn, pattern, positive ? "True":"False" );
-								if( positive ){
-									match = TRUE;
-								} else {
-									ok = FALSE;
-								}
-							/*} else {
-								g_debug( "%s: condition=%s, positive=%s: not matched",
-										thisfn, pattern_utf8, positive ? "True":"False" );*/
-							}
-						}
+						match = ( has_pattern && g_pattern_match_simple( pattern_utf8, dirname_utf8 )) ||
+								g_str_has_prefix( dirname_utf8, pattern_utf8 );
+
+						ok &= ( match && positive ) || ( !match && !positive );
 
 						g_free( pattern_utf8 );
 					}
-
-					ok &= match;
 
 					g_free( dirname_utf8 );
 				}

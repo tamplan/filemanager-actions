@@ -1,3 +1,13 @@
+2012-03-04 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-icontext.c (is_candidate_for_folders): Improve code
+	readability.
+
+	* src/core/na-selected-info.c (dump): Dump file type.
+
+	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu_rec): Improve
+	debug messages.
+
 2012-03-01 Pierre Wieser <pwieser@trychlos.org>
 
 	* tools/release-tarball.sh:

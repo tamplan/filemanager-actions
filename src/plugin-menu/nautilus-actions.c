@@ -395,15 +395,6 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 			return(( GList * ) NULL );
 		}
 
-#ifdef NA_MAINTAINER_MODE
-		GList *im;
-		for( im = files ; im ; im = im->next ){
-			gchar *uri = nautilus_file_info_get_uri( NAUTILUS_FILE_INFO( im->data ));
-			g_debug( "%s: uri=%s", thisfn, uri );
-			g_free( uri );
-		}
-#endif
-
 		selected = na_selected_info_get_list_from_list(( GList * ) files );
 
 		if( selected ){
@@ -412,6 +403,17 @@ menu_provider_get_file_items( NautilusMenuProvider *provider, GtkWidget *window,
 					( void * ) provider,
 					( void * ) window,
 					( void * ) files, g_list_length( files ));
+
+#ifdef NA_MAINTAINER_MODE
+			GList *im;
+			for( im = files ; im ; im = im->next ){
+				gchar *uri = nautilus_file_info_get_uri( NAUTILUS_FILE_INFO( im->data ));
+				gchar *mimetype = nautilus_file_info_get_mime_type( NAUTILUS_FILE_INFO( im->data ));
+				g_debug( "%s: uri='%s', mimetype='%s'", thisfn, uri, mimetype );
+				g_free( mimetype );
+				g_free( uri );
+			}
+#endif
 
 			nautilus_menus_list = build_nautilus_menu(
 					NAUTILUS_ACTIONS( provider ),
@@ -533,14 +535,19 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 	GList *submenu;
 	NAObjectProfile *profile;
 	NautilusMenuItem *menu_item;
+	gchar *label;
 
 	nautilus_menu = NULL;
 
 	for( it = tree ; it ; it = it->next ){
 
 		g_return_val_if_fail( NA_IS_OBJECT_ITEM( it->data ), NULL );
+		label = na_object_get_label( it->data );
+		g_debug( "%s: examining %s", thisfn, label );
 
 		if( !na_icontext_is_candidate( NA_ICONTEXT( it->data ), target, selection )){
+			g_debug( "%s: is not candidate (NAIContext): %s", thisfn, label );
+			g_free( label );
 			continue;
 		}
 
@@ -550,6 +557,9 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 		 * dynamically empty - thus the NAObjectItem invalid :(
 		 */
 		if( !na_object_is_valid( item )){
+			g_debug( "%s: item %s becomes invalid after expand_tokens_item", thisfn, label );
+			g_object_unref( item );
+			g_free( label );
 			continue;
 		}
 
@@ -574,6 +584,8 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 					nautilus_menu = g_list_append( nautilus_menu, menu_item );
 				}
 			}
+			g_object_unref( item );
+			g_free( label );
 			continue;
 		}
 
@@ -585,7 +597,13 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 		if( profile ){
 			menu_item = create_item_from_profile( profile, target, selection, tokens );
 			nautilus_menu = g_list_append( nautilus_menu, menu_item );
+
+		} else {
+			g_debug( "%s: %s does not have any valid candidate profile", thisfn, label );
 		}
+
+		g_object_unref( item );
+		g_free( label );
 	}
 
 	return( nautilus_menu );
