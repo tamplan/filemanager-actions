@@ -206,13 +206,6 @@ initialize_pseudo_iface( MatchListData *data )
 			G_CALLBACK( on_base_initialize_window ),
 			data );
 
-	base_window_signal_connect_with_data(
-			data->window,
-			G_OBJECT( data->window ),
-			MAIN_SIGNAL_SELECTION_CHANGED,
-			G_CALLBACK( on_main_selection_changed ),
-			data );
-
 	g_object_weak_ref( G_OBJECT( data->window ), ( GWeakNotify ) on_instance_finalized, data );
 }
 
@@ -379,6 +372,13 @@ on_base_initialize_window( BaseWindow *window, MatchListData *data )
 
 	column = gtk_tree_view_get_column( data->listview, ITEM_COLUMN );
 	sort_on_column( column, data, ITEM_COLUMN );
+
+	base_window_signal_connect_with_data(
+			window,
+			G_OBJECT( window ),
+			MAIN_SIGNAL_SELECTION_CHANGED,
+			G_CALLBACK( on_main_selection_changed ),
+			data );
 }
 
 /*

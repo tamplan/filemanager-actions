@@ -1,5 +1,9 @@
 2012-03-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-match-list.c (initialize_pseudo_iface): Fix bad display of
+	the current selection (selection-changed callback has to be connected from
+	window initialization code).
+
 	* src/core/na-icontext.c (is_candidate_for_folders): Improve code
 	readability.
 
