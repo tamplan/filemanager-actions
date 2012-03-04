@@ -1,3 +1,30 @@
+Version 3.2.2
+=============
+
+	Release date 2012-03-04
+
+	Bug fixes:
+
+		- Fix #671043 reported by Vincent Untz - Invalid desktop file.
+		- Fix #671044 reported by Vincent Untz - Incorrect FSF address.
+		- Fix #671083 reporteed by Pierre Wieser - Release tool takes bad package version.
+		- Fix wrong display in tabs vs. the current selection in tree view.
+
+	UI enhancements:
+
+		- let the example label be expandable.
+
+	Other modifications:
+
+		- Bump FDL to 1.3 among all documentation.
+		- Validate desktop file when making distcheck.
+
+	New and updated translations:
+
+		- es (Daniel Mustieles)
+		- fr (Bruno Brouard)
+		- sl (Matej Urbančič, Andrej Žnidaršič)
+
 Version 3.2.0
 =============
 

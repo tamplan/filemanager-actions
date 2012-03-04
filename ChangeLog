@@ -1,5 +1,7 @@
 2012-03-04 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Update before releasing.
+
 	* src/nact/nact-match-list.c (initialize_pseudo_iface): Fix bad display of
 	the current selection (selection-changed callback has to be connected from
 	window initialization code).
