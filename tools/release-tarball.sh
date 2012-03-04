@@ -105,11 +105,38 @@ msg_help()
 
 msg_version()
 {
-	pck_name=$(grep '^PACKAGE_NAME' Makefile 2>/dev/null | awk '{ print $3 }')
-	pck_version=$(grep '^PACKAGE_VERSION' Makefile 2>/dev/null | awk '{ print $3 }')
+	pck_name="$(grep AC_INIT configure.ac | sed -e 's?,.*$??' -e 's?^.*\[\(.*\)\]?\1?')"
+	pck_version=$(grep AC_INIT configure.ac | cut -d, -f2 | sed 's?^.*\[\(.*\)\]?\1?')
 	echo "
  ${pck_name} v ${pck_version}
  Copyright (C) 2010, 2011, 2012 Pierre Wieser."
+}
+
+# returns version number from a tarball
+# (E): 1. tarball
+# (stdout): version number
+#
+get_version()
+{
+	typeset _f="${1}"
+	typeset _base="${_f##*/}"
+	typeset _version=$(echo ${_base} | sed "s?^.*-\(.*\)\.${sufix}?\1?")
+	echo "${_version}"
+}
+
+# is the given tarball is named as a stable version ?
+# yes if even (0, 2, 4, ...), no if odd
+# (E): tarball
+# (stdout) yes/no
+#
+is_stable()
+{
+	typeset _version="$(get_version ${1})"
+	typeset _minor=$(echo ${_version} | cut -d. -f2)
+	typeset -i _rest=${_minor}%2
+	typeset _stable
+	[ ${_rest} -eq 0 ] && _stable="yes" || _stable="no"
+	echo "${_stable}"
 }
 
 # initialize common command-line options
@@ -166,18 +193,21 @@ done
 set -- ${my_parms}
 
 # interpreting command-line arguments
+# pck_name:  Nautilus-Actions
+# product:   nautilus-actions
+# version:   most recent found in builddir
 thisdir=$(cd ${0%/*}; pwd)
 rootdir=${thisdir%/*}
-builddir=${rootdir}/_build
-product="$(grep -e '^PACKAGE_TARNAME' ${builddir}/Makefile 2>/dev/null | awk '{ print $3 }')"
-version="$(grep PACKAGE_VERSION ${builddir}/Makefile 2>/dev/null | awk '{ print $3 }')"
+builddir="${rootdir}/_build"
+sufix="tar.gz"
+pck_name="$(grep AC_INIT configure.ac | sed -e 's?,.*$??' -e 's?^.*\[\(.*\)\]?\1?')"
+product=$(echo ${pck_name} | tr '[:upper:]' '[:lower:]')
 opt_tarname=
-opt_tarname_def="${product}-${version}.tar.gz"
-
+f="$(\ls -1 ${builddir}/${product}-*.${sufix} 2>/dev/null | head -1)"
+opt_tarname_def="$(echo ${f##*/})"
+version="$(get_version ${opt_tarname_def})"
 opt_stable=
-minor=$(echo ${version} | cut -d. -f2)
-let rest=${minor}%2
-[ ${rest} -eq 0 ] && opt_stable_def="yes" || opt_stable_def="no"
+opt_stable_def="$(is_stable ${opt_tarname_def})"
 
 # loop over command line arguments
 pos=0
@@ -295,6 +325,11 @@ opt_dummy=${opt_dummy:-${opt_dummy_def}}
 opt_verbose=${opt_verbose:-${opt_verbose_def}}
 opt_version=${opt_version:-${opt_version_def}}
 
+# if one forces the tarball without also forcing the 'stable' option
+# then reconsider the default associated to the forced tarball
+if [ ! -z ${opt_tarname} -a -z ${opt_stable} ]; then
+	opt_stable="$(is_stable ${opt_tarname})"
+fi
 opt_tarname=${opt_tarname:-${opt_tarname_def}}
 opt_stable=${opt_stable:-${opt_stable_def}}
 
@@ -322,6 +357,8 @@ if [ ${errs} -gt 0 ]; then
 fi
 
 # returns the last return code which happens to be the eval one
+# (E): 1. command to be executed/evaluated/displayed
+# (return): return code of the command
 #
 command()
 {
@@ -366,6 +403,9 @@ done
 [ "$key" = "y" ] && echo "Yes" || echo "No"
 [ "$key" != "y" ] && exit
 
+# recomputing version of the released tarball
+version="$(get_version ${opt_tarname})"
+
 # are we local ?
 destdir="/net/data/tarballs/${product}"
 desthost="stormy.trychlos.org"
@@ -405,8 +445,8 @@ fi
 
 # tagging git
 msg "tagging git"
-tag="$(echo ${product}-${version} | tr '[:lower:]' '[:upper:]' | sed -e 's/-/_/g' -e 's/\./_/g')"
-msg="Releasing $(grep PACKAGE_NAME ${builddir}/Makefile | awk '{ print $3 }') ${version}"
+tag="$(echo ${product}-${version} | tr '[:lower:]' '[:upper:]' | sed 's?[-\.]?_?g')"
+msg="Releasing ${pck_name} ${version}"
 msg "git tag -s '${tag}' -m '${msg}'"
 command "git tag -s '${tag}' -m '${msg}'"
 command "git pull --rebase && git push && git push --tags"

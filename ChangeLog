@@ -1,3 +1,12 @@
+2012-03-01 Pierre Wieser <pwieser@trychlos.org>
+
+	* tools/release-tarball.sh:
+	Make sure help and copyright messages display the current version.
+	Make sure the tag set in git is consistent with the released tarball.
+
+	Fix #671083 reported by Pierre Wieser - Release tool takes bad package
+	version.
+
 2012-02-29 Pierre Wieser <pwieser@trychlos.org>
 
 	* run-distcheck.sh: Exec desktop-file-validate program against
