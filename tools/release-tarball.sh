@@ -133,7 +133,12 @@ is_stable()
 {
 	typeset _version="$(get_version ${1})"
 	typeset _minor=$(echo ${_version} | cut -d. -f2)
-	typeset -i _rest=${_minor}%2
+	typeset -i _rest
+	if [ -z "${_minor}" ]; then
+		_rest=0
+	else
+		_rest=${_minor}%2
+	fi
 	typeset _stable
 	[ ${_rest} -eq 0 ] && _stable="yes" || _stable="no"
 	echo "${_stable}"

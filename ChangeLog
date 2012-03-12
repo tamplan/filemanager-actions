@@ -1,5 +1,7 @@
 2012-03-12 Pierre Wieser <pwieser@trychlos.org>
 
+	* tools/release-tarball.sh: Fix stable attribute computing.
+
 	* configure.ac: Post release version bump.
 
 2012-03-04 Pierre Wieser <pwieser@trychlos.org>
