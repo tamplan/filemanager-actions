@@ -27,7 +27,7 @@
 
 AC_PREREQ([2.53])
 
-AC_INIT([Nautilus-Actions],[3.2.2],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
+AC_INIT([Nautilus-Actions],[3.2.3],[maintainer@nautilus-actions.org],,[http://www.nautilus-actions.org])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CANONICAL_TARGET
