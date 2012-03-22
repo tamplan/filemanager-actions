@@ -1,3 +1,11 @@
+2012-03-22 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-io-provider.c (io_providers_list_set_module):
+	* src/core/na-updater.c (na_updater_new):
+	* src/nact/nact-menubar-file.c (nact_menubar_file_on_update_sensitivities):
+	* src/nact/nact-menubar.c (on_base_initialize_window):
+	Improve debug messages.
+
 2012-03-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* tools/release-tarball.sh: Fix stable attribute computing.
