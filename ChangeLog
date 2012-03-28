@@ -1,3 +1,11 @@
+2012-03-28 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/api/na-core-utils.h:
+	* src/core/na-core-utils.c (na_core_utils_file_list_perms): New function.
+
+	* src/core/na-settings.c:
+	* src/core/na-updater.c (na_updater_new): Improve debug messages.
+
 2012-03-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-io-provider.c (io_providers_list_set_module):
