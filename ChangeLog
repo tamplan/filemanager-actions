@@ -14,6 +14,10 @@
 	* src/nact/nact-menubar.c (on_base_initialize_window):
 	Improve debug messages.
 
+2012-03-20 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nautilus-actions-config-tool.ui: Fix tooltip typo.
+
 2012-03-12 Pierre Wieser <pwieser@trychlos.org>
 
 	* tools/release-tarball.sh: Fix stable attribute computing.
