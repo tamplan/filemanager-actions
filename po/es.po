@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-29 21:48+0000\n"
-"PO-Revision-Date: 2012-03-02 13:59+0100\n"
+"POT-Creation-Date: 2012-04-02 17:56+0000\n"
+"PO-Revision-Date: 2012-04-04 09:57+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -569,10 +569,6 @@ msgstr "Acciones de Nautilus"
 
 #: ../src/core/na-about.c:161
 #, c-format
-#| msgid ""
-#| "Copyright %s 2005 The GNOME Foundation\n"
-#| "Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
-#| "Copyright %s 2009, 2010, 2011, 2012 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
@@ -1237,39 +1233,39 @@ msgstr ""
 "Por favor, rellene un informe de error https://bugzilla.gnome.org/enter_bug."
 "cgi?product=nautilus-actions."
 
-#: ../src/core/na-io-provider.c:1356
+#: ../src/core/na-io-provider.c:1372
 msgid "Unavailable I/O provider."
 msgstr "Proveedor de E/S no disponible"
 
-#: ../src/core/na-io-provider.c:1360
+#: ../src/core/na-io-provider.c:1376
 msgid "I/O provider implementation lacks of required API."
 msgstr "La implementación del proveedor de E/S carece de la API requerida."
 
-#: ../src/core/na-io-provider.c:1364
+#: ../src/core/na-io-provider.c:1380
 msgid "I/O provider is not willing to write."
 msgstr "El proveedor de E/S no quiere escribir."
 
-#: ../src/core/na-io-provider.c:1368
+#: ../src/core/na-io-provider.c:1384
 msgid "I/O provider announces itself as unable to write."
 msgstr "El proveedor de E/S notifica que no puede escribir."
 
-#: ../src/core/na-io-provider.c:1372
+#: ../src/core/na-io-provider.c:1388
 msgid "I/O provider has been locked down by an administrator."
 msgstr "Un administrador ha bloqueado el proveedor de E/S."
 
-#: ../src/core/na-io-provider.c:1376
+#: ../src/core/na-io-provider.c:1392
 msgid "I/O provider has been locked down by the user."
 msgstr "El usuario ha bloqueado el proveedor de E/S."
 
-#: ../src/core/na-io-provider.c:1380
+#: ../src/core/na-io-provider.c:1396
 msgid "Item is read-only."
 msgstr "El elemento es de sólo lectura."
 
-#: ../src/core/na-io-provider.c:1384
+#: ../src/core/na-io-provider.c:1400
 msgid "No writable I/O provider found."
 msgstr "No se encontró un proveedor de E/S escribible."
 
-#: ../src/core/na-io-provider.c:1389
+#: ../src/core/na-io-provider.c:1405
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
@@ -1278,11 +1274,11 @@ msgstr ""
 "Por alguna razón desconocida (%d) no se puede escribir el elemento.\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1412
+#: ../src/core/na-io-provider.c:1428
 msgid "OK."
 msgstr "Aceptar."
 
-#: ../src/core/na-io-provider.c:1416
+#: ../src/core/na-io-provider.c:1432
 #, c-format
 msgid ""
 "Program flow error.\n"
@@ -1291,23 +1287,23 @@ msgstr ""
 "Error en el flujo del programa.\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1420
+#: ../src/core/na-io-provider.c:1436
 msgid "The I/O provider is not willing to do that."
 msgstr "El proveedor de E/S no hacer eso."
 
-#: ../src/core/na-io-provider.c:1424
+#: ../src/core/na-io-provider.c:1440
 msgid "Write error in I/O provider."
 msgstr "Error de escritura en el proveedor de E/S."
 
-#: ../src/core/na-io-provider.c:1428
+#: ../src/core/na-io-provider.c:1444
 msgid "Unable to delete GConf schemas."
 msgstr "No se pudieron borrar los esquemas de GConf."
 
-#: ../src/core/na-io-provider.c:1432
+#: ../src/core/na-io-provider.c:1448
 msgid "Unable to delete configuration."
 msgstr "No se pudo eliminar la configuración."
 
-#: ../src/core/na-io-provider.c:1436
+#: ../src/core/na-io-provider.c:1452
 #, c-format
 msgid ""
 "Unknown return code (%d).\n"
@@ -1797,7 +1793,7 @@ msgstr ""
 "Lo predeterminado es estar vacío: el comando se ejecutará como el usuario "
 "actual."
 
-#: ../src/core/na-selected-info.c:847
+#: ../src/core/na-selected-info.c:869
 #, c-format
 msgid "Error when querying informations for %s URI: %s"
 msgstr "Error al preguntar información para el URI %s: %s"
@@ -2655,7 +2651,7 @@ msgid "Must match all of"
 msgstr "Debe coincidir con todas"
 
 #. i18n: label of the header of a column which let the user select a negative filter
-#: ../src/nact/nact-match-list.c:252
+#: ../src/nact/nact-match-list.c:245
 msgid "Must not match any of"
 msgstr "No debe coincidir con ninguna de"
 
@@ -2946,7 +2942,7 @@ msgstr "_abajo"
 msgid "Display the notebook tabs on the bottom side"
 msgstr "Mostrar las pestañas del cuaderno de notas en la parte de abajo"
 
-#: ../src/nact/nact-menubar.c:713
+#: ../src/nact/nact-menubar.c:718
 #, c-format
 msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
 msgstr "actualmente hay %d menú(s), %d acción(es), %d perfil(es) cargados"
@@ -2980,11 +2976,11 @@ msgstr "No se pudo escribir la lista de elementos de nivel cero"
 msgid "Some items have not been deleted"
 msgstr "Algunos elementos no se han eliminado"
 
-#: ../src/nact/nact-menubar-file.c:195
+#: ../src/nact/nact-menubar-file.c:201
 msgid "New profile"
 msgstr "Perfil nuevo"
 
-#: ../src/nact/nact-menubar-file.c:483
+#: ../src/nact/nact-menubar-file.c:489
 msgid "Automatically saving pending modifications..."
 msgstr "Guardado automático de modificaciones pendientes…"
 
@@ -4176,10 +4172,16 @@ msgstr ""
 "de»."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:159
+#| msgid ""
+#| "This list lets you determine for which mimetypes the currently selected "
+#| "item will be displayed in the Nautilus context menu.\n"
+#| "Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
+#| "Mimetypes may be negated to specify for which type of objects your item "
+#| "must not appear."
 msgid ""
 "This list lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
-"Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
+"Mimetypes may be specified as '*', '*/*', 'group/*' or 'group/subgroup'.\n"
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
@@ -4615,12 +4617,12 @@ msgid "P_roperties"
 msgstr "_Propiedades"
 
 #. i18n: label of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:915
+#: ../src/plugin-menu/nautilus-actions.c:933
 msgid "Nautilus-Actions actions"
 msgstr "Acciones de las Acciones de Nautilus"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:917
+#: ../src/plugin-menu/nautilus-actions.c:935
 msgid ""
 "A submenu which embeds the currently available Nautilus-Actions actions and "
 "menus"
@@ -4628,11 +4630,11 @@ msgstr ""
 "Un submenú que contiene las acciones y los menús disponibles actualmente de "
 "Acciones de Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:961
+#: ../src/plugin-menu/nautilus-actions.c:979
 msgid "About Nautilus-Actions"
 msgstr "Acerca de las Acciones de Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:962
+#: ../src/plugin-menu/nautilus-actions.c:980
 msgid "Display some informations about Nautilus-Actions"
 msgstr "Mostrar información acerca de Acciones de Nautilus"
 
