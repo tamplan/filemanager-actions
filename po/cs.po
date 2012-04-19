@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-29 21:48+0000\n"
-"PO-Revision-Date: 2012-03-25 21:14+0200\n"
+"POT-Creation-Date: 2012-04-02 17:56+0000\n"
+"PO-Revision-Date: 2012-04-19 07:00+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -546,10 +546,6 @@ msgstr "Akce-Nautilus"
 
 #: ../src/core/na-about.c:161
 #, c-format
-#| msgid ""
-#| "Copyright %s 2005 The GNOME Foundation\n"
-#| "Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
-#| "Copyright %s 2009, 2010, 2011, 2012 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
@@ -1197,39 +1193,39 @@ msgstr ""
 "Buďte tak laskavi a vyplňte chybové hlášení na https://bugzilla.gnome.org/"
 "enter_bug.cgi?product=nautilus-actions."
 
-#: ../src/core/na-io-provider.c:1356
+#: ../src/core/na-io-provider.c:1372
 msgid "Unavailable I/O provider."
 msgstr "Nedostupný zprostředkovatel V/V."
 
-#: ../src/core/na-io-provider.c:1360
+#: ../src/core/na-io-provider.c:1376
 msgid "I/O provider implementation lacks of required API."
 msgstr "Implementace zprostředkovatele V/V postrádá požadované API."
 
-#: ../src/core/na-io-provider.c:1364
+#: ../src/core/na-io-provider.c:1380
 msgid "I/O provider is not willing to write."
 msgstr "Zprostředkovatel V/V nedovoluje zápis."
 
-#: ../src/core/na-io-provider.c:1368
+#: ../src/core/na-io-provider.c:1384
 msgid "I/O provider announces itself as unable to write."
 msgstr "Zprostředkovatel V/V o sobě uvedl, že neumožňuje zápis."
 
-#: ../src/core/na-io-provider.c:1372
+#: ../src/core/na-io-provider.c:1388
 msgid "I/O provider has been locked down by an administrator."
 msgstr "Zprostředkovatel V/V byl uzamčen správcem."
 
-#: ../src/core/na-io-provider.c:1376
+#: ../src/core/na-io-provider.c:1392
 msgid "I/O provider has been locked down by the user."
 msgstr "Zprostředkovatel V/V byl uzamčen uživatelem."
 
-#: ../src/core/na-io-provider.c:1380
+#: ../src/core/na-io-provider.c:1396
 msgid "Item is read-only."
 msgstr "Položka je pouze ke čtení"
 
-#: ../src/core/na-io-provider.c:1384
+#: ../src/core/na-io-provider.c:1400
 msgid "No writable I/O provider found."
 msgstr "Nebyl nalezen žádný zprostředkovatel zapisovatelného V/V."
 
-#: ../src/core/na-io-provider.c:1389
+#: ../src/core/na-io-provider.c:1405
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
@@ -1238,11 +1234,11 @@ msgstr ""
 "Položka není z neznámého důvodu zapisovatelná (%d).\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1412
+#: ../src/core/na-io-provider.c:1428
 msgid "OK."
 msgstr "OK."
 
-#: ../src/core/na-io-provider.c:1416
+#: ../src/core/na-io-provider.c:1432
 #, c-format
 msgid ""
 "Program flow error.\n"
@@ -1251,23 +1247,23 @@ msgstr ""
 "Chyba běhu programu.\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1420
+#: ../src/core/na-io-provider.c:1436
 msgid "The I/O provider is not willing to do that."
 msgstr "Zprostředkovatel V/V toto neumožňuje."
 
-#: ../src/core/na-io-provider.c:1424
+#: ../src/core/na-io-provider.c:1440
 msgid "Write error in I/O provider."
 msgstr "Chyba zápisu ve zprostředkovateli V/V."
 
-#: ../src/core/na-io-provider.c:1428
+#: ../src/core/na-io-provider.c:1444
 msgid "Unable to delete GConf schemas."
 msgstr "Nelze smazat schémata GConf."
 
-#: ../src/core/na-io-provider.c:1432
+#: ../src/core/na-io-provider.c:1448
 msgid "Unable to delete configuration."
 msgstr "Nelze smazat nastavení."
 
-#: ../src/core/na-io-provider.c:1436
+#: ../src/core/na-io-provider.c:1452
 #, c-format
 msgid ""
 "Unknown return code (%d).\n"
@@ -1740,7 +1736,7 @@ msgstr ""
 "ignorován.\n"
 "Výchozí je prázdný: tj. příkaz bude spuštěn pod aktuálním uživatelem."
 
-#: ../src/core/na-selected-info.c:847
+#: ../src/core/na-selected-info.c:869
 #, c-format
 msgid "Error when querying informations for %s URI: %s"
 msgstr "Chyba při dotazování na informace pro adresu URI %s: %s"
@@ -2571,7 +2567,7 @@ msgid "Must match all of"
 msgstr "Musí se shodovat se všemi z"
 
 #. i18n: label of the header of a column which let the user select a negative filter
-#: ../src/nact/nact-match-list.c:252
+#: ../src/nact/nact-match-list.c:245
 msgid "Must not match any of"
 msgstr "Nesmí se schodovat se žádnou z"
 
@@ -2856,7 +2852,7 @@ msgstr "Dole"
 msgid "Display the notebook tabs on the bottom side"
 msgstr "Zobrazovat karty sešitu na spodní straně"
 
-#: ../src/nact/nact-menubar.c:713
+#: ../src/nact/nact-menubar.c:718
 #, c-format
 msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
 msgstr "Nyní je načteno %d nabídek, %d akcí, %d profilů"
@@ -2887,11 +2883,11 @@ msgstr "Nelze znovu zapsat seznam položek nulté úrovně"
 msgid "Some items have not been deleted"
 msgstr "Některé položky nebyly smazány"
 
-#: ../src/nact/nact-menubar-file.c:195
+#: ../src/nact/nact-menubar-file.c:201
 msgid "New profile"
 msgstr "Nový profil"
 
-#: ../src/nact/nact-menubar-file.c:483
+#: ../src/nact/nact-menubar-file.c:489
 msgid "Automatically saving pending modifications..."
 msgstr "Automatické ukládání nevyřízených změn…"
 
@@ -4072,13 +4068,13 @@ msgstr ""
 msgid ""
 "This list lets you determine for which mimetypes the currently selected item "
 "will be displayed in the Nautilus context menu.\n"
-"Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
+"Mimetypes may be specified as '*', '*/*', 'group/*' or 'group/subgroup'.\n"
 "Mimetypes may be negated to specify for which type of objects your item must "
 "not appear."
 msgstr ""
 "Tento seznam vám umožňuje určit, pro které typy MIME se právě vybraná "
 "položka zobrazí v kontextové nabídce aplikace Nautilus.\n"
-"Typy MIME mohou být určeny pomocí „*“, „/*“, „skupina/*“ nebo „skupina/"
+"Typy MIME mohou být určeny pomocí „*“, „*/*“, „skupina/*“ nebo „skupina/"
 "podskupina“.\n"
 "Typy MIME mohou být negované, aby určovaly, pro které typy se vaše položka "
 "objevovat nesmí."
@@ -4494,12 +4490,12 @@ msgid "P_roperties"
 msgstr "_Vlastnosti"
 
 #. i18n: label of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:915
+#: ../src/plugin-menu/nautilus-actions.c:933
 msgid "Nautilus-Actions actions"
 msgstr "Akce aplikace Akce-Nautilus"
 
 #. i18n: tooltip of an automagic root submenu
-#: ../src/plugin-menu/nautilus-actions.c:917
+#: ../src/plugin-menu/nautilus-actions.c:935
 msgid ""
 "A submenu which embeds the currently available Nautilus-Actions actions and "
 "menus"
@@ -4507,11 +4503,11 @@ msgstr ""
 "Podnabídka, která vkládá aktuálně dostupné akce a nabídky aplikace Akce-"
 "Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:961
+#: ../src/plugin-menu/nautilus-actions.c:979
 msgid "About Nautilus-Actions"
 msgstr "O aplikaci Akce-Nautilus"
 
-#: ../src/plugin-menu/nautilus-actions.c:962
+#: ../src/plugin-menu/nautilus-actions.c:980
 msgid "Display some informations about Nautilus-Actions"
 msgstr "Zobrazit informace o aplikaci Akce-Nautilus"
 
