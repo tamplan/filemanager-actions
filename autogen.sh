@@ -21,3 +21,10 @@ which gnome-autogen.sh || {
 }
 
 USE_GNOME2_MACROS=1 . gnome-autogen.sh
+
+# pwi 2012-10-12
+# starting with NA 3.2.3, we let the GNOME-DOC-PREPARE do its stuff, but
+# get rid of the gnome-doc-utils.make standard file, as we are using our
+# own hacked version
+# (see full rationale in docs/nact/gnome-doc-utils-na.make)
+rm -f gnome-doc-utils.make

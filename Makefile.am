@@ -41,7 +41,8 @@ SUBDIRS = \
 #   which is prefixed with a make variable, instead of hardcoded as returned
 #   by pkg-config
 # - do not try to install schemas when making distcheck
-# - do not rebuild manuals
+# - do not rebuild NACT manuals
+# - gtk-doc requires to be enabled when making dist
 # - GNOME_DOC_DEFINES tries to disable scrollkeeper, but the set is
 #   overriden but this one
 DISTCHECK_CONFIGURE_FLAGS = \
@@ -57,8 +58,6 @@ DISTCHECK_CONFIGURE_FLAGS = \
 	$(NULL)
 
 EXTRA_DIST = \
-	gnome-doc-utils.make				\
-	gtk-doc.make						\
 	intltool-extract.in					\
 	intltool-merge.in					\
 	intltool-update.in					\
@@ -68,14 +67,6 @@ DISTCLEANFILES = \
 	intltool-extract					\
 	intltool-merge						\
 	intltool-update						\
-	$(NULL)
-
-# Though the Gnome doc says to add these files to DISTCLEANFILES, the
-# Automake manual states that distclean target should not remove any
-# distributed files (but leave a clean distribution)  
-MAINTAINERCLEANFILES = \
-	gnome-doc-utils.make				\
-	gtk-doc.make						\
 	$(NULL)
 
 pkgdocdir = $(datarootdir)/doc/@PACKAGE@-@VERSION@
