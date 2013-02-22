@@ -1,7 +1,7 @@
 # Brazilian Portuguese translation of nautilus-actions.
 # Copyright (C) 2005 The GNOME Foundation
 # Copyright (C) 2006-2008 Frederic Ruaudel and others (see AUTHORS)
-# Copyright (C) 2009-2012 Pierre Wieser and others (see AUTHORS)
+# Copyright (C) 2009-2013 Pierre Wieser and others (see AUTHORS)
 # This file is distributed under the same license as the nautilus-actions package.
 # Licio Fernando <liciofernando@gmail.com>, 2005
 # Raphael Higino <in memoriam>, 2006.
@@ -554,11 +554,11 @@ msgstr "Ações do Nautilus"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009-2012 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009-2013 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
 "Copyright %s 2005 A Fundação GNOME\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009-2012 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009-2013 Pierre Wieser <pwieser@trychlos.org>"
 
 #: ../src/core/na-desktop-environment.c:39
 msgid "GNOME desktop"
