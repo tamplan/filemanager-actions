@@ -1,0 +1,4832 @@
+# Serbian translation for nautilus-actions.
+# Copyright (C) 2013 nautilus-actions's COPYRIGHT HOLDER
+# This file is distributed under the same license as the nautilus-actions package.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: nautilus-actions master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product"
+"=nautilus-actions&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2013-02-16 18:06+0000\n"
+"PO-Revision-Date: 2013-03-07 10:19+0200\n"
+"Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
+"Language-Team: Serbian <gnom@prevod.org>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : "
+"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Project-Style: gnome\n"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:1
+msgid "Ask for a confirmation when quitting by Esc"
+msgstr "Тражи потврду приликом изласка на Излаз"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:2
+msgid ""
+"If TRUE, a confirmation will be requested when quitting an assistant by "
+"hitting the Esc key."
+msgstr ""
+"Ако је изабрано, биће затражена потврда приликом затварања помоћника "
+"притиском на тастер Излаз."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:3
+msgid "Whether the Esc key should close the assistants"
+msgstr "Да ли тастер Излаз треба да затвори помоћнике"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:4
+msgid "If TRUE, assistant may be closed by hitting the Esc key."
+msgstr "Ако је изабрано, помоћник може бити закључан притиском на тастер Излаз."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:5
+msgid "Whether the auto-save feature should be activated"
+msgstr "Да ли је покренута функција самочувања"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:6
+msgid ""
+"If TRUE, the pending modifications will be periodically and automatically "
+"saved."
+msgstr "Ако је изабрано, измене на чекању биће повремено и самостално сачуване."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:7
+msgid "Periodicity of the auto-save"
+msgstr "Периодичност самочувања"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:8
+msgid "Defines the periodicity in minutes of the automatic save."
+msgstr "Одређује период самочувања у минутима."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:9
+msgid "Position and size of the export assistant window"
+msgstr "Положај и величина прозора помоћника извоза"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:10
+msgid ""
+"Position and size of the export assistant window ; default is set by the "
+"window manager."
+msgstr ""
+"Положај и величина прозора помоћника извоза ; основно подешава управник "
+"прозора."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:11
+msgid "Last selected folder"
+msgstr "Последња изабрана фасцикла"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:12
+msgid ""
+"Last folder selected when choosing a folder where to export the actions."
+msgstr "Последња фасцикла изабрана приликом бирања фасцикле за извоз радњи."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:13
+msgid "Preferred export format"
+msgstr "Жељени извозни запис"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:14
+msgid ""
+"This is the preferred export format, used as a default when exporting items, "
+"or dropping them outside of the application. Possible values are: - "
+"\"GConfSchemaV1\": this used to be the historical export format. The "
+"exported file may later be imported via Import assistant of the Nautilus-"
+"Actions Configuration Tool, or via the gconftool-2 --import-schema-file "
+"command-line tool. - \"GConfSchemaV2\": a lighter while still compatible "
+"schema. The exported file may later be imported via Import assistant of the "
+"Nautilus-Actions Configuration Tool, or via the gconftool-2 --import-schema-"
+"file command-line tool. - \"GConfEntry\": this should be the preferred "
+"format for newly exported actions. The exported file may later be imported "
+"via Import assistant of the Nautilus-Actions Configuration Tool, or via the "
+"gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
+"runtime for the format he wishes use."
+msgstr ""
+"Ово је жељени извозни запис, коришћен као основни приликом извоза ставки, "
+"или њиховог извлачења ван програма. Могуће вредности су: — „GConfSchemaV1“ "
+"што представља историјски извозни запис. Извезена датотека касније може бити "
+"увезена Помоћником увоза алата подешавања Наутилусових радњи, или путем "
+"алата линије наредби „gconftool-2 --import-schema-file“. — „GConfSchemaV2“ "
+"лакша а још увек сагласна шема. Извезена датотека касније може бити увезена "
+"путем Помоћника увоза алата подешавања Наутилусових радњи, или путем алата "
+"линије наредби „gconftool-2 --import-schema-file“. — „GConfEntry“ што би "
+"требало да буде жељени запис за ново извезене радње. Извезена датотека "
+"касније може бити увезена путем Помоћника увоза алата подешавања "
+"Наутилусових радњи, или путем алата линије наредби „gconftool-2 --load“. — "
+"„Ask“ ће питати корисника у време извршавања за запис који жели да користи."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:15
+msgid "Position and size of the command chooser window"
+msgstr "Положај и величина прозора за избор наредбе"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:16
+msgid ""
+"Position and size of the command chooser window in the Command tab ; default "
+"is set by the window manager."
+msgstr ""
+"Положај и величина прозора за избор наредбе у језичку наредбе ; задато "
+"поставља управник прозора."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:17
+msgid "Last folder selected when browsing for a command in the Command tab."
+msgstr "Последња фасцикла изабрана приликом тражења наредбе у језичку наредби."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:18
+msgid "Position and size of the Legend dialog"
+msgstr "Положај и величина прозрчета легенде"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:19
+msgid ""
+"Position and size of the Legend dialog ; default is set by the UI manager."
+msgstr ""
+"Положај и величина прозорчета легенде ; основно подешава управник "
+"корисничког сучеља."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:20
+msgid "Position and size of the URI chooser window"
+msgstr "Положај и величина прозора за избор путање"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:21
+msgid ""
+"Position and size of the URI chooser window in the Folders tab ; default is "
+"set by the window manager."
+msgstr ""
+"Положај и величина прозора за избор путање у језичку фасцикли ; задато "
+"поставља управник прозора."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:22
+msgid "Last folder selected when browsing for an URI in the Folders tab."
+msgstr "Последња фасцикла изабрана приликом тражења путање у језичку фасцикли."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:23
+msgid "Position and size of the interaction dialog at import time"
+msgstr "Положај и величина прозорчета међудејства у време увоза"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:24
+msgid ""
+"Position and size of the interaction dialog at import time ; default is set "
+"by the window manager."
+msgstr ""
+"Положај и величина прозорчета међудејства у време извоза ; основно подешава "
+"управник прозора."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:25
+msgid "Last import mode chosen by the user"
+msgstr "Последњи режим увоза који је изабрао корисник"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
+msgid ""
+"Last import mode chosen by the user when he is asked for in import mode. "
+"Possible values are: - \"NoImport\": do not import an action whose UUID "
+"already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
+"already exists, - \"Override\": override the existing action with the "
+"imported one."
+msgstr ""
+"Последњи режим увоза који је корисник изабрао када је упитан за режим увоза. "
+"Могуће вредности су: — „NoImport“ што неће увести радњу чији ЈУИД већ "
+"постоји, — „Renumber“ додељује нови ЈУИД ако увезени ЈУИД већ постоји, — "
+"„Override“ замењује постојећу радњу оном увезеном."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:27
+msgid "Position and size of the import assistant window"
+msgstr "Положај и величина прозора помоћника увоза"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:28
+msgid ""
+"Position and size of the import assistant window ; default is set by the "
+"window manager."
+msgstr ""
+"Положај и величина прозора помоћника увоза ; основно подешава управник "
+"прозора."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:29
+msgid ""
+"Last folder selected when choosing a folder from where import new actions."
+msgstr ""
+"Последња фасцикла изабрана приликом бирања фасцикле за увоз нових радњи."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:30
+msgid "Keep last chosen import mode"
+msgstr "Задржава последњи изабрани режим увоза"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:31
+msgid "Whether the import system should reuse the last chosen import mode."
+msgstr ""
+"Да ли увозни систем треба поново да користи последњи изабрани режим увоза."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:32
+msgid "Import mode"
+msgstr "Режим увоза"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:33
+msgid ""
+"Last import mode chosen in the Import assistant. Possible values are : - "
+"\"NoImport\": do not import an action whose UUID already exists, - \"Renumber"
+"\": allocate a new UUID if the imported UUID already exists, - \"Override\": "
+"override the existing action with the imported one, - \"Ask\": ask the user "
+"each time."
+msgstr ""
+"Последњи режим увоза изабран у Помоћнику увоза. Могуће вредности су : — "
+"„NoImport“ што неће увести радњу чији ЈУИД већ постоји, — „Renumber“ "
+"додељује нови ЈУИД ако увезени ЈУИД већ постоји, — „Override“ замењује "
+"постојећу радњу оном увезеном, — „Ask“ питаће корисника сваки пут."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:34
+msgid "I/O providers Write priority"
+msgstr "Предност писања У/И достављача"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:35
+msgid ""
+"The order in which I/O providers are tested when we need to write a new item "
+"down to a storage subsystem."
+msgstr ""
+"Редослед по коме се У/И достављачи испробавају када треба да запишемо нову "
+"ставку у складишни подсистем."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:36
+msgid "Add an 'About' item in the Nautilus context menu"
+msgstr "Додаје ставку „О програму“ у Наутилусовом приручном изборнику"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:37
+msgid ""
+"If TRUE, and if the user has defined a single root menu for its actions, "
+"then an 'About Nautilus-Actions' will be displayed at end of the first "
+"submenu."
+msgstr ""
+"Ако је изабрано, и ако је корисник одредио јединствени корени изборник за "
+"своје радње, тада ће „О Наутилусовим радњама“ бити приказано на крају првог "
+"подизборника."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:38
+msgid "Sort mode"
+msgstr "Режим ређања"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:39
+msgid ""
+"This preference indicates the preferred sort mode. Possible values are : - "
+"\"AscendingOrder\": the actions are maintained in ascending alphabetical "
+"order (historical behavior). - \"DescendingOrder\": the actions are "
+"maintained in descending alphabetical order. - \"ManualOrder\": user is free "
+"to reorder them via Nautilus-Actions configuration tool."
+msgstr ""
+"Ова поставка указује на жељени режим ређања. Могуће вредности су : — "
+"„AscendingOrder“ одржава радње у растућем азбучном поретку (историјско "
+"понашање). — „DescendingOrder“ одржава радње опадајућем азбучном поретку. — "
+"„ManualOrder“ даје слободу кориснику да их поређа користећи алат подешавања "
+"Наутилусових радњи."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:40
+msgid "Define a 'Nautilus-Actions actions' root menu"
+msgstr "Одређује корени изборник „Радње Наутилусових радњи“"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:41
+msgid ""
+"If TRUE, then a 'Nautilus-Actions actions' item will be defined in the "
+"Nautilus context menu, and will be the root menu of all available actions."
+msgstr ""
+"Ако је изабрано, тада ће ставка „Радње Наутилусових радњи“ бити одређена у "
+"Наутилусовом приручном изборнику, и биће корени изборник свих доступних "
+"радњи."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:42
+msgid "List of items at first level of the hierarchy"
+msgstr "Списак ставки на првом нивоу хијерархије"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:43
+msgid ""
+"UUID of the items at the first level of the hierarchy. If this key is not "
+"found or empty, then all found items are considered as a flat list."
+msgstr ""
+"ЈУИД ставки на првом нивоу хијерархије. Ако се не пронађе овај кључ или је "
+"празан, тада се све пронађене ставке сматрају за неуређени списак."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:44
+msgid "Whether actions should be relabeled when pasted or duplicated"
+msgstr ""
+"Да ли треба поново исписати натписе радњи приликом убацивања или удвајања"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:45
+msgid "Whether actions should be relabeled when pasted or duplicated."
+msgstr ""
+"Да ли треба поново исписати натписе радњи приликом убацивања или удвајања."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:46
+msgid "Whether menus should be relabeled when pasted or duplicated"
+msgstr ""
+"Да ли треба поново исписати натписе изборника приликом убацивања или "
+"удвајања"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:47
+msgid "Whether menus should be relabeled when pasted or duplicated."
+msgstr ""
+"Да ли треба поново исписати натписе изборника приликом убацивања или "
+"удвајања."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:48
+msgid "Whether profiles should be relabeled when pasted or duplicated"
+msgstr ""
+"Да ли треба поново исписати натписе профила приликом убацивања или удвајања"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:49
+msgid "Whether profiles should be relabeled when pasted or duplicated."
+msgstr ""
+"Да ли треба поново исписати натписе профила приликом убацивања или удвајања."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:50
+msgid "Display Edit toolbar"
+msgstr "Приказује траку алата уређивања"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:51
+msgid "Whether to display or not the Edit toolbar in the main window."
+msgstr "Да ли ће трака алата уређивања бити приказана у главном прозору."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:52
+msgid "Display File toolbar"
+msgstr "Приказује траку алата датотеке"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:53
+msgid "Whether to display or not the File toolbar in the main window."
+msgstr "Да ли ће трака алата датотеке бити приказана у главном прозору."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:54
+msgid "Display Help toolbar"
+msgstr "Приказује траку алата помоћи"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:55
+msgid "Whether to display or not the Help toolbar in the main window."
+msgstr "Да ли ће трака алата помоћи бити приказана у главном прозору."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:56
+msgid "Main pane position"
+msgstr "Положај главног окна"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:57
+msgid "Width of the main window pane ; default is set by the UI manager."
+msgstr ""
+"Ширина главног окна прозора ; основно подешава управник корисничког сучеља."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:58
+msgid "Display Tools toolbar"
+msgstr "Приказује траку алата алата"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:59
+msgid "Whether to display or not the Tools toolbar in the main window."
+msgstr "Да ли ће трака алата алата бити приказана у главном прозору."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:60
+msgid "Position and size of the main window"
+msgstr "Положај и величина главног прозора"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:61
+msgid ""
+"Position and size of the main window ; default is set by the window manager."
+msgstr "Положај и величина главног прозора ; основно подешава управник прозора."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:62
+msgid "Position and size of the preferences dialog"
+msgstr "Положај и величина прозрчета поставки"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:63
+msgid ""
+"Position and size of the preferences dialog ; default is set by the window "
+"manager."
+msgstr ""
+"Положај и величина прозорчета поставки ; основно подешава управник прозора."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:64
+msgid "List of default schemes"
+msgstr "Списак основних шема"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
+msgid ""
+"The list of schemes proposed by default on each new profile. A default "
+"default list is harcoded in nautilus-actions-config-tool, which may be "
+"updated by the user."
+msgstr ""
+"Списак шема које су предложене по основи на сваком новом профилу. Основни "
+"списак је уграђен у алат подешавања наутилусових радњи, који корисник може "
+"да догради."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:66
+msgid "Whether the whole configuration is locked"
+msgstr "Да ли су закључана читава подешавања"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:67
+msgid ""
+"The whole configuration must be understood here as the global set and order "
+"of menus and actions. When this configuration is locked, then the user is no "
+"more able to modify nor create or delete any menu or action. All items are "
+"read-only. As the order of items is also locked, the level zero itself "
+"cannot be modified, and the user is unable to reorder the items."
+msgstr ""
+"Читаво подешавање мора бити схваћено овде као општи скуп и поредак изборника "
+"и радњи. Када је ово подешавање закључано, тада корисник није више у стању "
+"да измени нити да направи или измени ниједан изборник или радњу. Све ставке "
+"су само за читање. Како је и редослед ставки такође закључан, ни сам нулти "
+"ниво не може бити измењен, а корисник није у могућности да измени редослед "
+"ставки."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:68
+msgid "Whether the GConf I/O provider is locked"
+msgstr "Да ли је закључан У/И достављач Гконфа"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:69
+msgid ""
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, read from GConf to being modified in NACT."
+msgstr ""
+"Када је изабрано (највероватније као обавезан кључ), ово спречава све "
+"ставке, изборнике и радње, да читају из Гконфа који је измењен у АПНР-у."
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:70
+msgid "Whether the Desktop I/O provider is locked"
+msgstr "Да ли је закључан У/И достављач радне површи"
+
+#: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:71
+msgid ""
+"When set to true (most probably as a mandatory key), this prevents all "
+"items, menus and actions, read from .desktop files to being modified in NACT."
+msgstr ""
+"Када је изабрано (највероватније као обавезан кључ), ово спречава све "
+"ставке, изборнике и радње, да читају из датотека радне површи које су "
+"измењене у АПНР-у."
+
+#: ../src/core/na-exporter.c:53 ../src/core/na-importer.c:87
+msgid "_Ask me"
+msgstr "_Питај ме"
+
+#: ../src/core/na-exporter.c:54
+msgid ""
+"You will be asked for the format to choose each time an item is about to be "
+"exported."
+msgstr "Бићете упитани за запис сваки пут када нека ставка буде била извезена."
+
+#. i18n: NAIExporter is an interface name, do not even try to translate
+#: ../src/core/na-exporter.c:60
+#, c-format
+msgid "No NAIExporter implementation found for '%s' format."
+msgstr "Нисам нашао примену НАИИзвозника за запис „%s“."
+
+#. i18n: NAIExporter is an interface name, do not even try to translate
+#: ../src/core/na-exporter.c:304
+#, c-format
+msgid "%s NAIExporter doesn't implement 'to_buffer' interface."
+msgstr "%s НАИИзвозник не примењује сучеље „to_buffer“."
+
+#. i18n: NAIExporter is an interface name, do not even try to translate
+#: ../src/core/na-exporter.c:377
+#, c-format
+msgid "%s NAIExporter doesn't implement 'to_file' interface."
+msgstr "%s НАИИзвозник не примењује сучеље „to_file“."
+
+#: ../src/core/na-about.c:70
+msgid ""
+"Nautilus-Actions Configuration Tool is free software; you can redistribute "
+"it and/or modify it under the terms of the GNU General Public License as "
+"published by the Free Software Foundation; either version 2 of the License, "
+"or (at your option) any later version."
+msgstr ""
+"Алат подешавања Наутилусових радњи је слободан софтвер; можете га "
+"расподељивати и/или мењати под условима Гнуове опште јавне дозволе како је "
+"објављује Задужбина слободног софтвера; било издања 2 те дозволе, или (према "
+"вашем нахођењу) било којег новијег издања."
+
+#: ../src/core/na-about.c:74
+msgid ""
+"Nautilus-Actions Configuration Tool is distributed in the hope that it will "
+"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
+"Public License for more details."
+msgstr ""
+"Алат подешавања Наутилусових радњи се расподељује у нади да ће бити од "
+"користи, али БЕЗ ИКАКВИХ ГАРАНЦИЈА; чак и без примењене гаранције ТРЖИШНЕ "
+"ВРЕДНОСТИ или ПРИЛАГОЂЕНОСТИ ОДРЕЂЕНОЈ НАМЕНИ. Погледајте Гнуову општу јавну "
+"лиценцу за више детаља."
+
+#: ../src/core/na-about.c:78
+msgid ""
+"You should have received a copy of the GNU General Public License along with "
+"Nautilus-Actions Configuration Tool ; if not, write to the Free Software "
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, "
+"USA."
+msgstr ""
+"Требали сте да примите примерак Гнуове опште јавне лиценце уз Алат "
+"подешавања Наутилусових радњи; ако нисте, пишите Задужбини слободног "
+"софтвера на следећу адресу: „Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301, USA“."
+
+#. i10n: "Nautilus actions" here is not a typo; this does not refer to the
+#. * Nautilus-Actions product, but to the actions which are to be added to Nautilus
+#: ../src/core/na-about.c:100
+msgid "A graphical interface to create and edit your Nautilus actions."
+msgstr "Графичко сучеље за стварање и уређивање ваших Наутилусових радњи."
+
+#: ../src/core/na-about.c:106
+msgid "The GNOME Translation Project <gnome-i18n@gnome.org>"
+msgstr "Пројекат превођења Гнома <gnome-i18n@gnome.org>"
+
+#. i18n: title of the About dialog box, when seen from Nautilus file manager
+#: ../src/core/na-about.c:127
+msgid "Nautilus-Actions"
+msgstr "Наутилусове радње"
+
+#: ../src/core/na-about.c:161
+#, c-format
+msgid ""
+"Copyright %s 2005 The GNOME Foundation\n"
+"Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
+"Copyright %s 2009-2012 Pierre Wieser <pwieser@trychlos.org>"
+msgstr ""
+"Ауторска права %s 2005 Гномова Задужбина\n"
+"Ауторска права %s 2006-2008 Фредерик Риодел <grumz@grumz.net>\n"
+"Ауторска права %s 2009-2012 Пјер Вјезер <pwieser@trychlos.org>"
+
+#: ../src/core/na-desktop-environment.c:39
+msgid "GNOME desktop"
+msgstr "Гном окружење"
+
+#: ../src/core/na-desktop-environment.c:40
+msgid "KDE desktop"
+msgstr "КДЕ окружење"
+
+#: ../src/core/na-desktop-environment.c:41
+msgid "LXDE desktop"
+msgstr "ЛИксДЕ окружење"
+
+#: ../src/core/na-desktop-environment.c:42
+msgid "ROX desktop"
+msgstr "РОКС окружење"
+
+#: ../src/core/na-desktop-environment.c:43
+msgid "XFCE desktop"
+msgstr "Иксфце окружење"
+
+#: ../src/core/na-desktop-environment.c:44
+msgid "Legacy systems"
+msgstr "Наслеђени системи"
+
+#: ../src/core/na-icontext-factory.c:51
+msgid "List of patterns to be matched against the selected file(s)/folder(s)"
+msgstr "Списак шаблона који ће бити поређени са изабраном датотеком/фасциклом"
+
+#. i18n: wildcard characters '*' and '?' should be considered as literals,
+#. *  and not be translated
+#: ../src/core/na-icontext-factory.c:54
+msgid ""
+"A list of strings with joker '*' or '?' to be matched against the name(s) of "
+"the selected file(s)/folder(s). Each selected item must match at least one "
+"of the filename patterns for the action or the menu be candidate to "
+"display.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*'."
+msgstr ""
+"Списак ниски са џокером „*“ или „?“ који ће бити поређен са називом изабране "
+"датотеке/фасцикле. Свака изабрана ставка мора да одговара барем једном од "
+"шаблона назива датотека за радњу или изборник који је кандидат за приказ.\n"
+"Ово се наравно примењује једино када постоји избор.\n"
+"Подразумева се „*“."
+
+#. i18n: wildcard characters '*' and '?' should be considered as literalls,
+#. *  and not be translated
+#: ../src/core/na-icontext-factory.c:75
+msgid ""
+"A pattern to be matched against basenames of selected file(s)/folder(s). May "
+"include wildcards (* or ?). You must set one option for each pattern you need"
+msgstr ""
+"Шаблон који ће бити поређен са називима основе изабране датотеке/фасцикле. "
+"Може да садржи џокере (* или ?). Морате да подесите једну могућност за сваки "
+"шаблон који вам треба"
+
+#. i18n: the "<EXPR>" is just an abbreviation for "an expression",
+#. *  so is tranlatable
+#. i18n: "<EXPR>" is just an abbreviation for "an expression", so is tranlatable
+#: ../src/core/na-icontext-factory.c:80 ../src/core/na-icontext-factory.c:139
+#: ../src/core/na-icontext-factory.c:358
+msgid "<EXPR>"
+msgstr "<ИЗРАЗ>"
+
+#: ../src/core/na-icontext-factory.c:86
+msgid "Whether the specified basenames are case sensitive (default)"
+msgstr "Да ли су наведени основни називи осетљиви на величину слова (основно)"
+
+#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:88
+msgid ""
+"Must be set to 'true' if the filename patterns are case sensitive, to "
+"'false' otherwise. E.g., if you need to match a filename in a case-sensitive "
+"manner, set this key to 'true'. If you also want, for example '*.jpg' to "
+"match 'photo.JPG', then set 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
+msgstr ""
+"Мора бити постављено на „true“ (изабрано) ако су шаблони назива датотека "
+"осетљиви на величину слова, у супротном на „false“ (поништено). Нпр., ако "
+"треба да поредите назив датотеке на начин осетљив на величину слова, "
+"поставите овај кључ на „true“ (изабрано). Ако такође желите, на пример "
+"„*.jpg“ да поклапа „photo.JPG“, онда поставите „false“ (поништено).\n"
+"Ово се наравно примењује само када постоји избор.\n"
+"Подразумева се „true“ (изабрано)."
+
+#: ../src/core/na-icontext-factory.c:114
+msgid ""
+"List of patterns to be matched against the mimetypes of the selected file(s)/"
+"folder(s)"
+msgstr ""
+"Списак шаблона који ће бити поређени са миме врстама изабране "
+"датотеке/фасцикле"
+
+#. i18n: wildcard character '*' is taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:116
+msgid ""
+"A list of strings with joker '*' to be matched against the mimetypes of the "
+"selected file(s)/folder(s). Each selected item must match at least one of "
+"the mimetype patterns for the action to appear.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to '*/*'."
+msgstr ""
+"Списак ниски са џокером „*“ који ће бити поређен са миме врстама изабране "
+"датотеке/фасцикле. Свака изабрана ставка мора да одговара барем једном од "
+"шаблона миме врсте за радњу да би се појавила.\n"
+"Ово се наравно примењује само када постоји избор.\n"
+"Подразумева се „*/*“."
+
+#. i18n: wildcard character '*' is taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:135
+msgid ""
+"A pattern to be matched against mimetypes of selected file(s)/folder(s). May "
+"include the asterisk wildcard '*'. You must set one option for each pattern "
+"you need"
+msgstr ""
+"Шаблон који ће бити поређен са миме врстама изабране датотеке/фасцикле. Може "
+"да садржи џокер звездице „*“. Морате да подесите једну могућност за сваки "
+"шаблон који вам треба"
+
+#: ../src/core/na-icontext-factory.c:179
+msgid "Whether the profile applies to files (deprecated option, see mimetype)"
+msgstr ""
+"Да ли се профили примењују на датотеке (застарело, погледајте миме врсту)"
+
+#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:181
+msgid ""
+"Set to 'true' if the selection can have files, to 'false' otherwise.\n"
+"This setting is tied in with the 'isdir' setting. The valid combinations "
+"are: \n"
+"isfile='true' and isdir='false': the selection may hold only files\n"
+"isfile='false' and isdir='true': the selection may hold only folders\n"
+"isfile='true' and isdir='true': the selection may hold both files and "
+"folders\n"
+"isfile='false' and isdir='false': this is an invalid combination (your "
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'true'."
+msgstr ""
+"Подесите на „true“ (изабрано) ако избор може да има датотеке, у супротном на "
+"„false“ (поништено).\n"
+"Ово подешавање је привезано са подешавањем „isdir“. Исправне комбинације су: "
+"isfile='true' и isdir='false': избор може да садржи само датотеке\n"
+"isfile='false' и isdir='true': избор може да садржи само фасцикле\n"
+"isfile='true' и isdir='true': избор може да садржи и датотеке и фасцикле\n"
+"isfile='false' и isdir='false': ово је погрешна комбинација (ваше подешавање "
+"се никада неће појавити).\n"
+"Ово се наравно примењује само када постоји избор.\n"
+"Подразумева се „true“."
+
+#: ../src/core/na-icontext-factory.c:210
+msgid ""
+"Whether the profile applies to folders (deprecated option, see mimetype)"
+msgstr ""
+"Да ли се профили примењују на фасцикле (застарело, погледајте миме врсту)"
+
+#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:212
+msgid ""
+"Set to 'true' if the selection can have folders, to 'false' otherwise.\n"
+"This setting is tied in with the 'isfile' setting. The valid combinations "
+"are: \n"
+"isfile='true' and isdir='false': the selection may hold only files\n"
+"isfile='false' and isdir='true': the selection may hold only folders\n"
+"isfile='true' and isdir='true': the selection may hold both files and "
+"folders\n"
+"isfile='false' and isdir='false': this is an invalid combination (your "
+"configuration will never appear).\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
+msgstr ""
+"Подесите на „true“ (изабрано) ако избор може да има фасцикле, у супротном на "
+"„false“ (поништено).\n"
+"Ово подешавање је привезано са подешавањем „isfile“. Исправне комбинације "
+"су: isfile='true' и isdir='false': избор може да садржи само датотеке\n"
+"isfile='false' и isdir='true': избор може да садржи само фасцикле\n"
+"isfile='true' и isdir='true': избор може да садржи и датотеке и фасцикле\n"
+"isfile='false' и isdir='false': ово је погрешна комбинација (ваше подешавање "
+"се никада неће појавити).\n"
+"Ово се наравно примењује само када постоји избор.\n"
+"Подразумева се „false“."
+
+#: ../src/core/na-icontext-factory.c:244
+msgid ""
+"Whether the selection may be multiple (deprecated option, see selection "
+"count)"
+msgstr ""
+"Да ли избор може бити вишеструк (застарела могућност, погледајте број "
+"избора)"
+
+#. i18n: 'true' and 'false' values are taken literally, and should not be translated
+#: ../src/core/na-icontext-factory.c:246
+msgid ""
+"If you need more than one files or folders to be selected, set this key to "
+"'true'. If you want just one file or folder, set it to 'false'.\n"
+"This obviously only applies when there is a selection.\n"
+"Defaults to 'false'."
+msgstr ""
+"Ако треба да изаберете више од једне датотеке или фасцикле, поставите овај "
+"кључ на „true“ (изабрано). Ако вам треба само једна датотека или фасцикла, "
+"поставите га на „false“ (поништено).\n"
+"Ово се наравно примењује само када постоји избор.\n"
+"Подразумева се „false“."
+
+#: ../src/core/na-icontext-factory.c:270
+msgid ""
+"List of schemes to be matched against those of selected file(s)/folder(s)"
+msgstr "Списак шема које ће бити поређене са изабраном датотеком/фасциклом"
+
+#. too long string for iso c: 510 (max=509)
+#. i18n: schemes (sftp, ssh, ftp, file, etc.) are standard keywords which define
+#. *  the access protocol to an object, they should not be translated
+#: ../src/core/na-icontext-factory.c:274
+msgid ""
+"Defines the list of valid schemes to be matched against the selected items. "
+"The scheme is the protocol used to access the files. The keyword to use is "
+"the one used in the URI by the file manager.\n"
+"Examples of valid URI include:\n"
+"- file:///tmp/foo.txt\n"
+"- sftp:///root@test.example.net/tmp/foo.txt\n"
+"The most common schemes are:\n"
+"'file': local files\n"
+"'sftp': files accessed via SSH\n"
+"'ftp': files accessed via FTP\n"
+"'smb': files accessed via Samba (Windows share)\n"
+"'dav': files accessed via WebDAV.\n"
+"All schemes used by your favorite file manager may be used here.\n"
+"This obviously only applies when there is a selection, or when targeting the "
+"special 'x-nautilus-desktop' scheme.\n"
+"Defaults to 'file'."
+msgstr ""
+"Одредите списак исправних шема које ће бити упоређене са изабраним ставкама. "
+"Шема је протокол коришћен за приступ датотекама. Кључна реч за коришћење је "
+"она коју користи управник датотека у путањи.\n"
+"У примере исправних путања спадају:\n"
+"— file:///tmp/foo.txt\n"
+"— sftp:///root@test.example.net/tmp/foo.txt\n"
+"Најчешће шеме су:\n"
+"„file“: месне датотеке\n"
+"„sftp“: датотеке којима се приступа путем безбедне шкољке (SSH)\n"
+"„ftp“: датотеке којима се приступа путем протокола преноса датотека (FTP)\n"
+"„smb“: датотеке којима се приступа путем Самбе (Виндоуз дељење)\n"
+"„dav“: датотеке којима се приступа путем ВебДАВ-а.\n"
+"Све шеме које користи ваш омиљени управник датотека могу бити коришћене "
+"овде.\n"
+"Ово се наравно примењује само када постоји избор, или када се односи на "
+"посебну „x-nautilus-desktop“ шему.\n"
+"Подразумева се „file“."
+
+#: ../src/core/na-icontext-factory.c:303
+msgid ""
+"A valid GIO scheme where the selected file(s)/folder(s) should be located. "
+"You must set one option for each scheme you need"
+msgstr ""
+"Исправна ГУИ шема где изабрана датотека/фасцикла треба бити пронађена. "
+"Морате да подесите једну могућност за сваку шему која вам треба"
+
+#. i18n: "<STRING>" is just an abbreviation for "a string", so is tranlatable
+#: ../src/core/na-icontext-factory.c:306
+#: ../src/core/na-object-action-factory.c:175
+#: ../src/core/na-object-item-factory.c:112
+#: ../src/core/na-object-item-factory.c:136
+#: ../src/core/na-object-profile-factory.c:182
+#: ../src/utils/na-delete-xmltree.c:68 ../src/utils/na-delete-xmltree.c:70
+#: ../src/utils/na-set-conf.c:61 ../src/utils/na-set-conf.c:63
+#: ../src/utils/na-set-conf.c:66 ../src/utils/na-set-conf.c:68
+#: ../src/utils/nautilus-actions-print.c:60
+#: ../src/utils/nautilus-actions-print.c:63
+#: ../src/utils/nautilus-actions-run.c:59
+msgid "<STRING>"
+msgstr "<НИСКА>"
+
+#: ../src/core/na-icontext-factory.c:312
+msgid "List of folders"
+msgstr "Списак фасцикли"
+
+#: ../src/core/na-icontext-factory.c:313
+msgid ""
+"Defines the list of valid paths to be matched against the current folder.\n"
+" All folders 'under' the specified path are considered valid.\n"
+"Defaults to '/'."
+msgstr ""
+"Одређује списак исправних путања које ће бити поређене са текућом фасциклом.\n"
+" Све фасцикле „под“ наведеном путањом се сматрају исправним.\n"
+"Подразумева се „/“."
+
+#: ../src/core/na-icontext-factory.c:329
+msgid ""
+"The path of a (parent) directory for which the item will be displayed. You "
+"must set one option for each folder you need"
+msgstr ""
+"Путања (полазног) директоријума за који ће ставка бити приказана. Морате да "
+"поставите једну могућност за сваку фасциклу која вам треба"
+
+#. i18n: "<PATH>" is just an abbreviation for "a folder path", so is tranlatable
+#. i18n: "<PATH>" is the path to a binary, so may be tranlatable
+#: ../src/core/na-icontext-factory.c:332 ../src/core/na-icontext-factory.c:433
+#: ../src/core/na-icontext-factory.c:486
+#: ../src/core/na-object-profile-factory.c:117
+msgid "<PATH>"
+msgstr "<ПУТАЊА>"
+
+#: ../src/core/na-icontext-factory.c:338
+msgid "Operator of the selection count relation"
+msgstr "Извршилац односа броја избора"
+
+#: ../src/core/na-icontext-factory.c:339
+msgid ""
+"Whether this profile may be selected depending of the count of the "
+"selection.\n"
+"This is a string of the form \"{'<'|'='|'>'} number\".\n"
+"Examples of valid strings are: \"=0\", \"> 1\", \"< 10\".\n"
+"Defaults to \">0\"."
+msgstr ""
+"Да ли овај профил може бити изабран у зависности од броја избора.\n"
+"Ово је ниска у облику „{'<'|'='|'>'} број“.\n"
+"Примери исправних ниски су: „=0“, „> 1“, „< 10“.\n"
+"Подразумева се „>0“."
+
+#: ../src/core/na-icontext-factory.c:356
+msgid "Selection count relation [>0]"
+msgstr "Однос броја избора [>0]"
+
+#: ../src/core/na-icontext-factory.c:364
+msgid "Only show in environment"
+msgstr "Прикажи само у окружењу"
+
+#: ../src/core/na-icontext-factory.c:365
+msgid "Defaults to all."
+msgstr "Подразумева се све."
+
+#: ../src/core/na-icontext-factory.c:379
+msgid ""
+"The name of an only desktop environment where the item must be displayed. "
+"You must set one option for each environment you want"
+msgstr ""
+"Назив само неког окружења радне површи у коме ставка мора бити приказана. "
+"Морате да подесите једну могућност за свако окружење које желите"
+
+#. i18n: "<DESKTOP>" is just a placeholder for "a desktop name", so is tranlatable
+#: ../src/core/na-icontext-factory.c:382 ../src/core/na-icontext-factory.c:406
+msgid "<DESKTOP>"
+msgstr "<РАДНА ПОВРШ>"
+
+#: ../src/core/na-icontext-factory.c:388
+msgid "Not show in environment"
+msgstr "Не приказуј у окружењу"
+
+#: ../src/core/na-icontext-factory.c:389
+msgid "Defaults to none."
+msgstr "Подразумева се ништа."
+
+#: ../src/core/na-icontext-factory.c:403
+msgid ""
+"The name of a desktop environment where the item must not be displayed. You "
+"must set one option for each environment you want"
+msgstr ""
+"Назив окружења радне површи у коме ставка не сме бити приказана. Морате да "
+"подесите једну могућност за свако окружење које желите"
+
+#: ../src/core/na-icontext-factory.c:412
+msgid "Try exec"
+msgstr "Испробај извршивост"
+
+#. i18n: TryExec is a keyword of the specification, it is not translatable
+#: ../src/core/na-icontext-factory.c:414
+msgid ""
+"Note that, when specified, only the presence and the executability status of "
+"the specified file are checked.\n"
+"Parameters may appear in 'TryExec' value, and will be substituted at "
+"runtime.\n"
+"Defaults to successful."
+msgstr ""
+"Знајте да, када је наведено, само стања присуства и извршивости наведене "
+"датотеке се проверавају.\n"
+"Параметри могу да се појаве у вредности „TryExec“, и биће замењени у време "
+"покретања.\n"
+"Подразумева се успешно."
+
+#: ../src/core/na-icontext-factory.c:431
+msgid "the path to a file whose executability is to be checked"
+msgstr "путања до датотеке чија извршивост ће бити проверена"
+
+#: ../src/core/na-icontext-factory.c:439
+msgid "Show if registered"
+msgstr "Прикажи ако је забележена"
+
+#. i18n: ShowIfRegistered is a keyword of the specification, it is not translatable
+#: ../src/core/na-icontext-factory.c:441
+msgid ""
+"The well-known name of a DBus service.\n"
+"The item will be candidate if the named service is registered on session "
+"DBus at runtime.\n"
+"Parameters may appear in 'ShowIfRegistered' value, and will be substituted "
+"at runtime.\n"
+"Defaults to successful."
+msgstr ""
+"Добро знани назив услуге Д-сабирнице.\n"
+"Ставка ће бити кандидат ако је именована услуга забележена на Д-сабирници "
+"сесије у време покретања.\n"
+"Параметри могу да се појаве у вредности „ShowIfRegistered“, и биће замењени "
+"у време покретања.\n"
+"Подразумева се успешно."
+
+#: ../src/core/na-icontext-factory.c:458
+msgid "The name of a service which must be registered on session DBus"
+msgstr "Назив услуге која мора бити забележена на Д-сабирници сесије"
+
+#: ../src/core/na-icontext-factory.c:459 ../src/core/na-icontext-factory.c:512
+#: ../src/core/na-icontext-factory.c:545
+msgid "<NAME>"
+msgstr "<НАЗИВ>"
+
+#: ../src/core/na-icontext-factory.c:465
+msgid "Show if True"
+msgstr "Покажи ако је изабрано"
+
+#. i18n: ShowIfTrue is a keyword of the specification, it is not translatable
+#: ../src/core/na-icontext-factory.c:467
+msgid ""
+"A command which, when executed, should output a string on stdout.\n"
+"The item will be candidate if the outputed string is equal to \"true\".\n"
+"Parameters may appear in 'ShowIfTrue' value, and will be substituted at "
+"runtime.\n"
+"Defaults to successful."
+msgstr ""
+"Наредба која, када је извршена, треба да да излазну ниску на стандардном "
+"излазу.\n"
+"Ставка ће бити кандидат ако је излазна ниска једнака са „true“.\n"
+"Параметри могу да се појаве у вредности „ShowIfTrue“, и биће замењени у "
+"време покретања.\n"
+"Подразумева се успешно."
+
+#. i18n: 'true' is to be taken as a literal, must not be translated
+#: ../src/core/na-icontext-factory.c:485
+msgid "The path to a command which will display the 'true' string"
+msgstr "Путања до наредбе која ће приказати ниску „true“"
+
+#: ../src/core/na-icontext-factory.c:492
+msgid "Show if running"
+msgstr "Покажи ако је покренут"
+
+#. i18n: ShowIfRunning is a keyword of the specification, it is not translatable
+#: ../src/core/na-icontext-factory.c:494
+msgid ""
+"The name of a process.\n"
+"The item will be candidate if the process name is found in memory at "
+"runtime.\n"
+"Parameters may appear in 'ShowIfRunning' value, and will be substituted at "
+"runtime.\n"
+"Defaults to successful."
+msgstr ""
+"Назив процеса.\n"
+"Ставка ће бити кандидат ако је назив процеса пронађен у меморији у време "
+"покретања.\n"
+"Параметри могу да се појаве у вредности „ShowIfRunning“, и биће замењени у "
+"време покретања.\n"
+"Подразумева се успешно."
+
+#: ../src/core/na-icontext-factory.c:511
+msgid "The name of a binary which must be running"
+msgstr "Назив извршног који мора бити покренут"
+
+#: ../src/core/na-icontext-factory.c:518
+msgid "Capabilities"
+msgstr "Могућности"
+
+#. i18n: 'Owner', 'Readable', 'Writable', 'Executable' and 'Local' are all keywords
+#. *  of the specification; they are not translatable
+#: ../src/core/na-icontext-factory.c:521
+msgid ""
+"A list of capabilities each item of the selection must satisfy in order for "
+"the item to be candidate.\n"
+"Capabilities may be negated.\n"
+"Capabilities have to be chosen between following predefined ones:\n"
+"- 'Owner': current user is the owner of selected items\n"
+"- 'Readable': selected items are readable by user (probably more usefull "
+"when negated)\n"
+"- 'Writable': selected items are writable by user\n"
+"- 'Executable': selected items are executable by user\n"
+"- 'Local': selected items are local.\n"
+"Defaults to empty list."
+msgstr ""
+"Списак могућности које свака ставка избора мора да задовољи да би ставка "
+"била кандидат.\n"
+"Могућности могу бити негиране.\n"
+"Могућности морају бити изабране међу следећим предодређеним:\n"
+"— „Owner“: текући корисник је власник изабраних ставки\n"
+"— „Readable“: корисник може да чита изабране ставке (вероватно корисније "
+"када је негирано)\n"
+"— „Writable“: корисник може да пише у изабраним ставкама\n"
+"— „Executable“: корисник може да извршава изабране ставке\n"
+"— „Local“: изабране ставке су месне.\n"
+"Подразумева се празан списак."
+
+#: ../src/core/na-icontext-factory.c:543
+msgid ""
+"The name of a capability the selection must meet. May be 'Owner', "
+"'Readable', 'Writable', 'Executable' or 'Local'"
+msgstr ""
+"Назив могућности које избор мора да задовољи. Може бити „Owner“ (власник), "
+"„Readable“ (читљиво), „Writable“ (уписиво), „Executable“ (извршно) или "
+"„Local“ (месно)"
+
+#: ../src/core/na-iimporter.c:239 ../src/core/na-importer.c:293
+msgid ""
+"Item was renumbered because the caller did not provide any check function."
+msgstr ""
+"Ставци је промењен број зато што позивар није проследио никакву функцију "
+"провере."
+
+#: ../src/core/na-iimporter.c:254
+msgid ""
+"Item was renumbered because the caller did not provide any ask user function."
+msgstr ""
+"Ставци је промењен број зато што позивар није проследио никакву функцију "
+"питања корисника."
+
+#: ../src/core/na-iimporter.c:273 ../src/core/na-importer.c:326
+msgid "Item was renumbered due to user request."
+msgstr "Ставци је промењен број на захтев корисника."
+
+#: ../src/core/na-iimporter.c:279 ../src/core/na-importer.c:335
+msgid "Existing item was overriden due to user request."
+msgstr "Постојећа ставка је преписана на захтев корисника."
+
+#: ../src/core/na-iimporter.c:286 ../src/core/na-importer.c:344
+#, c-format
+msgid "Item %s already exists."
+msgstr "Ставка „%s“ већ постоји."
+
+#: ../src/core/na-iimporter.c:288 ../src/core/na-importer.c:350
+msgid "Import was canceled due to user request."
+msgstr "Увоз је отказан на захтев корисника."
+
+#. i18n: the action has been renumbered during import operation
+#: ../src/core/na-iimporter.c:311 ../src/core/na-importer.c:417
+msgid "(renumbered)"
+msgstr "(промењен број)"
+
+#: ../src/core/na-importer.c:58
+msgid "Do _not import the item"
+msgstr "Не _увози ставку"
+
+#: ../src/core/na-importer.c:59
+msgid ""
+"This used to be the historical behavior.\n"
+"The selected file will be marked as \"NOT OK\" in the Summary page.\n"
+"The existing item will not be modified."
+msgstr ""
+"Ово је обично историјско понашање.\n"
+"Изабрана датотека ће бити означена\n"
+"као „НИЈЕ У РЕДУ“ на страници сажетка.\n"
+"Постојећа ставка неће бити измењена."
+
+#: ../src/core/na-importer.c:66
+msgid "Import the item, _allocating it a new identifier"
+msgstr "Увези ставку, _додељујући јој нови одредник"
+
+#: ../src/core/na-importer.c:67
+msgid ""
+"The selected file will be imported with a slightly modified label indicating "
+"the renumbering.\n"
+"The existing item will not be modified."
+msgstr ""
+"Изабрана ставка ће бити увезена са незнатно\n"
+"измењеним натписом који означава промену броја.\n"
+"Постојећа ставка неће бити измењена."
+
+#: ../src/core/na-importer.c:74
+msgid "_Override the existing item"
+msgstr "_Препиши постојећу ставку"
+
+#: ../src/core/na-importer.c:75
+msgid ""
+"The item found in the selected file will silently override the current one "
+"which has the same identifier.\n"
+"Be warned: this mode may be dangerous. You will not be prompted another time."
+msgstr ""
+"Ставка пронађена у изабраној датотеци ће неприметно\n"
+" преписати текућу која има исти одредник.\n"
+"Али пазите: овај режим може бити опасан.\n"
+"Нећете бити упитани по други пут."
+
+#: ../src/core/na-importer.c:88
+msgid "You will be asked each time an imported ID already exists."
+msgstr "Бићете упитани сваки пут када увезени ИБ већ буде постојао."
+
+#. i18n: '%s' stands for the file URI
+#: ../src/core/na-importer.c:101
+#, c-format
+msgid "%s is not loadable (empty or too big or not a regular file)"
+msgstr "„%s“ се не може учитати (празна или превелика или нередовна датотека)"
+
+#. l10n: 'ImporterAskDialog' is the dialog name: do not translate
+#: ../src/core/na-importer-ask.c:270
+#, c-format
+msgid "Unable to load 'ImporterAskDialog' from %s"
+msgstr "Не могу да учитам „ImporterAskDialog“ из „%s“"
+
+#: ../src/core/na-importer-ask.c:401
+#, c-format
+msgid ""
+"The action \"%s\" imported from \"%s\" has the same identifiant than the "
+"already existing \"%s\"."
+msgstr "Радња „%s“ увезена из „%s“ има исти одредник као већ постојећа „%s“."
+
+#: ../src/core/na-importer-ask.c:407
+#, c-format
+msgid ""
+"The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+"already existing \"%s\"."
+msgstr "Изборник „%s“ увезен из „%s“ има исти одредник као већ постојећи „%s“."
+
+#: ../src/core/na-importer-ask.ui.h:1
+msgid "Already existing item"
+msgstr "Већ постојећа ставка"
+
+#: ../src/core/na-importer-ask.ui.h:2
+msgid "What should I do with this ?"
+msgstr "Шта треба да урадим с овим ?"
+
+#: ../src/core/na-importer-ask.ui.h:3
+msgid "Re_member my choice in future import operations"
+msgstr "_Запамти мој избор у будућим радњама увоза"
+
+#: ../src/core/na-io-provider.c:69
+msgid ""
+"Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
+"org/enter_bug.cgi?product=nautilus-actions."
+msgstr ""
+"Будите љубазни и попуните извештај о грешци на "
+"„https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions“."
+
+#: ../src/core/na-io-provider.c:1372
+msgid "Unavailable I/O provider."
+msgstr "Недоступан У/И достављач."
+
+#: ../src/core/na-io-provider.c:1376
+msgid "I/O provider implementation lacks of required API."
+msgstr "Примени У/И достављача недостаје потребан АПИ."
+
+#: ../src/core/na-io-provider.c:1380
+msgid "I/O provider is not willing to write."
+msgstr "У/И достављач није радан да пише."
+
+#: ../src/core/na-io-provider.c:1384
+msgid "I/O provider announces itself as unable to write."
+msgstr "У/И достављач објављује да није у могућности да пише."
+
+#: ../src/core/na-io-provider.c:1388
+msgid "I/O provider has been locked down by an administrator."
+msgstr "У/И достављача је закључао администратор."
+
+#: ../src/core/na-io-provider.c:1392
+msgid "I/O provider has been locked down by the user."
+msgstr "У/И достављача је закључао корисник."
+
+#: ../src/core/na-io-provider.c:1396
+msgid "Item is read-only."
+msgstr "Ставка је само за читање."
+
+#: ../src/core/na-io-provider.c:1400
+msgid "No writable I/O provider found."
+msgstr "Нисам пронашао уписивог У/И достављача."
+
+#: ../src/core/na-io-provider.c:1405
+#, c-format
+msgid ""
+"Item is not writable for an unknown reason (%d).\n"
+"%s"
+msgstr ""
+"Ставка није уписива из непознатог разлога (%d).\n"
+"%s"
+
+#: ../src/core/na-io-provider.c:1428
+msgid "OK."
+msgstr "У реду."
+
+#: ../src/core/na-io-provider.c:1432
+#, c-format
+msgid ""
+"Program flow error.\n"
+"%s"
+msgstr ""
+"Грешка притока програма.\n"
+"%s"
+
+#: ../src/core/na-io-provider.c:1436
+msgid "The I/O provider is not willing to do that."
+msgstr "У/И достављач није радан да то уради."
+
+#: ../src/core/na-io-provider.c:1440
+msgid "Write error in I/O provider."
+msgstr "Грешка писања у У/И достављачу."
+
+#: ../src/core/na-io-provider.c:1444
+msgid "Unable to delete GConf schemas."
+msgstr "Не могу да обришем шеме Гконфа."
+
+#: ../src/core/na-io-provider.c:1448
+msgid "Unable to delete configuration."
+msgstr "Не могу да обришем подешавање."
+
+#: ../src/core/na-io-provider.c:1452
+#, c-format
+msgid ""
+"Unknown return code (%d).\n"
+"%s"
+msgstr ""
+"Непознат повратни код (%d).\n"
+"%s"
+
+#. i18n: default label for a new action
+#: ../src/core/na-object-action.c:59
+msgid "New Nautilus action"
+msgstr "Нова Наутилусова радња"
+
+#: ../src/core/na-object-action.c:492
+msgid "Profile automatically created from pre-v2 action"
+msgstr "Профил је самостално направљен из „pre-v2“ радње"
+
+#: ../src/core/na-object-action-factory.c:80
+msgid "Targets the selection context menu"
+msgstr "Циља на приручни изборник избора"
+
+#: ../src/core/na-object-action-factory.c:81
+msgid ""
+"Whether the action targets the selection file manager context menus.\n"
+"This used to be the historical behavior.\n"
+"Note that menus are always potential candidate to the display in selection "
+"context menus provided that they contain at least one action.\n"
+"Defaults to TRUE."
+msgstr ""
+"Да ли радња циља на приручни изборник управника датотека избора.\n"
+"Ово је обично историјско понашање.\n"
+"Знајте да су изборници увек могући кандидати за приказ у приручним "
+"изборницима избора с могућношћу да садрже барем једну радњу.\n"
+"Подразумева се изабрано."
+
+#: ../src/core/na-object-action-factory.c:99
+msgid "Targets the selection context menu [true]"
+msgstr "Циља на приручни изборник избора [true]"
+
+#: ../src/core/na-object-action-factory.c:106
+msgid "Targets the location context menu"
+msgstr "Циља на приручни изборник места"
+
+#: ../src/core/na-object-action-factory.c:107
+msgid ""
+"Whether the action targets the file manager context menus when there is no "
+"selection, thus applying to current location.\n"
+"Note that menus are always potential candidate to the display in selection "
+"context menus provided that they contain at least one action.\n"
+"Defaults to FALSE"
+msgstr ""
+"Да ли радња циља на приручни изборник управника датотека када не постоји "
+"избор, тако да примењује на текуће место.\n"
+"Знајте да су изборници увек могући кандидати за приказ у приручним "
+"изборницима избора с могућношћу да садрже барем једну радњу.\n"
+"Подразумева се поништено"
+
+#: ../src/core/na-object-action-factory.c:125
+msgid "Targets the location context menu [false]"
+msgstr "Циља на приручни изборник места [false]"
+
+#: ../src/core/na-object-action-factory.c:132
+msgid "Targets the toolbar"
+msgstr "Циља на траку алата"
+
+#: ../src/core/na-object-action-factory.c:133
+msgid ""
+"Whether the action is candidate to be displayed in file manager toolbar.\n"
+"This only applies to current location.\n"
+"Note that menus are never displayed in the toolbar.\n"
+"Defaults to FALSE."
+msgstr ""
+"Да ли је радња кандидат за приказивање у траци алата управника датотека.\n"
+"Ово се примењује једино на текуће место.\n"
+"Знајте да се изборници никада не приказују у траци алата.\n"
+"Подразумева се поништено."
+
+#: ../src/core/na-object-action-factory.c:150
+msgid "Targets the toolbar [false]"
+msgstr "Циља на траку алата [false]"
+
+#: ../src/core/na-object-action-factory.c:157
+msgid "Label of the toolbar item"
+msgstr "Натпис ставке траке алта"
+
+#: ../src/core/na-object-action-factory.c:158
+msgid ""
+"The label displayed besides of the icon in the file manager toolbar.\n"
+"Note that actual display may depend of your own Desktop Environment "
+"preferences.\n"
+"Defaults to label of the context menu when not set or empty."
+msgstr ""
+"Натпис приказан уз иконицу у траци алата управника датотека.\n"
+"Знајте да стварни приказ може да зависи од ваших личних поставки окружења "
+"радне површи.\n"
+"Подразумевају се натписи приручног изборника када није подешен или је "
+"празан."
+
+#. i18n: copied items have a label as 'Copy of original label'
+#: ../src/core/na-object-id.c:329
+#, c-format
+msgid "Copy of %s"
+msgstr "Примерак од „%s“"
+
+#: ../src/core/na-object-item-factory.c:65
+msgid "Type of the item"
+msgstr "Врста ставке"
+
+#: ../src/core/na-object-item-factory.c:66
+msgid ""
+"Defines if the item is an action or a menu. Possible values are :\n"
+"- 'Action',\n"
+"- 'Menu'.\n"
+"The value is case sensitive and must not be localized."
+msgstr ""
+"Одређује да ли је ставка радња или изборник. Могуће вредности су :\n"
+"— „Action“ (радња),\n"
+"— „Menu“ (изборник).\n"
+"Вредности су осетљиве на величину слова и не смеју бити преведене."
+
+#: ../src/core/na-object-item-factory.c:94
+msgid "Label of the context menu item (mandatory)"
+msgstr "Натпис ставке приручног изборника (обавезно)"
+
+#: ../src/core/na-object-item-factory.c:95
+msgid ""
+"The label of the menu item that will appear in the file manager context menu "
+"when the selection matches the appearance condition settings.\n"
+"It is also used as a default for the toolbar label of an action."
+msgstr ""
+"Натпис ставке изборника који ће се појавити у приручном изборнику управника "
+"датотека када избор одговара подешавањима услова изгледа.\n"
+"Такође се користи као основно за натпис траке алата неке радње."
+
+#: ../src/core/na-object-item-factory.c:99
+msgid "Empty label"
+msgstr "Празан натпис"
+
+#: ../src/core/na-object-item-factory.c:118
+msgid "Tooltip of the context menu item"
+msgstr "Облачић ставке приручног изборника"
+
+#: ../src/core/na-object-item-factory.c:119
+msgid ""
+"The tooltip of the menu item that will appear in the file manager statusbar "
+"when the user points to the file manager context menu item with his/her "
+"mouse."
+msgstr ""
+"Облачић ставке изборника који ће се појавити у траци стања управника "
+"датотека када корисник принесе миша на ставку приручног изборника управника "
+"датотека."
+
+#: ../src/core/na-object-item-factory.c:142
+msgid "Icon of the context menu item"
+msgstr "Иконица ставке приручног изборника"
+
+#: ../src/core/na-object-item-factory.c:143
+msgid ""
+"The icon of the menu item that will appear next to the label in the file "
+"manager context menu when the selection matches the appearance conditions "
+"settings.\n"
+"May be the localized name of a themed icon, or a full path to any "
+"appropriate image."
+msgstr ""
+"Иконица ставке изборника која ће се појавити поред натписа у приручном "
+"изборнику управника датотека када избор одговара подешавањима услова "
+"изгледа.\n"
+"Може бити преведени назив темске иконице, или пуна путања до неке "
+"одговарајуће слике."
+
+#: ../src/core/na-object-item-factory.c:161
+msgid "<PATH|NAME>"
+msgstr "<ПУТАЊА|НАЗИВ>"
+
+#: ../src/core/na-object-item-factory.c:191
+msgid "Description relative to the item"
+msgstr "Опис који се односи на ставку"
+
+#: ../src/core/na-object-item-factory.c:192
+msgid ""
+"Some text which explains the goal of the menu or the action.\n"
+"May be used, e.g. when displaying available items on a web site."
+msgstr ""
+"Неки текст који објашњава циљ изборника или радње.\n"
+"Може бити коришћен, нпр. када се приказују доступне ставке на веб сајту."
+
+#: ../src/core/na-object-item-factory.c:214
+msgid "Suggested shortcut"
+msgstr "Предложена пречица"
+
+#: ../src/core/na-object-item-factory.c:215
+msgid ""
+"A shortcut suggested for the action or the menu.\n"
+"Please note that this might be only a suggestion as the shortcut may be "
+"already reserved for another use. Implementation should not override an "
+"already existing shortcut to define this one.\n"
+"The format may look like \"<Control>a\" or \"<Shift><Alt>F1\".\n"
+"Defaults to empty."
+msgstr ""
+"Пречица предложена за радњу или изборник.\n"
+"Знајте да ово може да буде само предлог јер пречица може већ да буде "
+"резервисана за другу употребу. Примена не треба да преписује већ постојећу "
+"пречицу зарад одређивања ове.\n"
+"Запис може да изгледа као „<Control>a“ или „<Shift><Alt>F1“.\n"
+"Подразумева се празно."
+
+#: ../src/core/na-object-item-factory.c:268
+msgid "List of subitem ids"
+msgstr "Списак иб-ова подставке"
+
+#: ../src/core/na-object-item-factory.c:269
+msgid ""
+"Ordered list of the IDs of the subitems. This may be actions or menus if the "
+"item is a menu, or profiles if the item is an action.\n"
+"If this list doesn't exist or is empty for an action or a menu, subitems are "
+"attached in the order of the read operations."
+msgstr ""
+"Уређени списак ИБ-ова подставки. То могу бити радње или изборници ако је "
+"ставка изборник, или профили ако је ставка радња.\n"
+"Ако овај списак не постоји или је празан за радњу или изборник, подставке се "
+"прилажу у циљу операција читања."
+
+#: ../src/core/na-object-item-factory.c:293
+msgid "Whether the action or the menu is enabled"
+msgstr "Да ли је укључена радња или изборник"
+
+#: ../src/core/na-object-item-factory.c:294
+msgid ""
+"If the or the menu action is disabled, it will never appear in the file "
+"manager context menu.\n"
+"Defaults to TRUE."
+msgstr ""
+"Ако је искључена радња изборника, никада се више неће појавити у приручном "
+"изборнику управника датотека.\n"
+"Подразумева се изабрано."
+
+#: ../src/core/na-object-item-factory.c:310
+msgid "Whether the action or the menu is enabled [enabled]"
+msgstr "Да ли је укључена радња или изборник [enabled]"
+
+#: ../src/core/na-object-item-factory.c:409
+msgid "Version of the format"
+msgstr "Издање записа"
+
+#: ../src/core/na-object-item-factory.c:410
+msgid ""
+"The version of the configuration format that will be used to manage backward "
+"compatibility."
+msgstr ""
+"Издање записа подешавања које ће бити коришћено за управљање уназадном "
+"могућношћу."
+
+#. i18n: default label for a new menu
+#: ../src/core/na-object-menu.c:57
+msgid "New Nautilus menu"
+msgstr "Нови Наутилусов изборник"
+
+#. i18n: label for the default profile
+#: ../src/core/na-object-profile.c:768
+msgid "Default profile"
+msgstr "Основни профил"
+
+#: ../src/core/na-object-profile-factory.c:49
+msgid "Name of the profile"
+msgstr "Назив профила"
+
+#: ../src/core/na-object-profile-factory.c:50
+msgid ""
+"May be used as a description for the function of the profile.\n"
+"If not set, it defaults to an auto-generated name."
+msgstr ""
+"Може бити коришћено као опис за функцију профила.\n"
+"Ако није постављено, подразумева се самостворени назив."
+
+#: ../src/core/na-object-profile-factory.c:100
+msgid "Path of the command"
+msgstr "Путања наредбе"
+
+#: ../src/core/na-object-profile-factory.c:101
+msgid ""
+"The path of the command to be executed when the user select the menu item in "
+"the file manager context menu or in the toolbar."
+msgstr ""
+"Путања наредбе која ће бити извршена када корисник изабере ставку изборника "
+"у приручном изборнику управника датотека или са траке алата."
+
+#: ../src/core/na-object-profile-factory.c:127
+msgid "Parameters of the command"
+msgstr "Параметри наредбе"
+
+#. too long string for iso c: (max=509)
+#: ../src/core/na-object-profile-factory.c:129
+msgid ""
+"The parameters of the command to be executed when the user selects the menu "
+"item in the file manager context menu or in the toolbar.\n"
+"The parameters may contain some special tokens which are replaced by the "
+"informations provided by the file manager before starting the command:\n"
+"- up to version 2.0:\n"
+"  %d: base folder of the selected file(s)\n"
+"  %f: the name of the selected file or the first one if several are "
+"selected\n"
+"  %h: hostname of the URI\n"
+"  %m: space-separated list of the basenames of the selected file(s)/folder"
+"(s)\n"
+"  %M: space-separated list of the selected file(s)/folder(s), with their "
+"full paths\n"
+"  %p: port number of the first URI\n"
+"  %R: space-separated list of selected URIs\n"
+"  %s: scheme of the URI\n"
+"  %u: URI\n"
+"  %U: username of the URI\n"
+"  %%: a percent sign.\n"
+"- starting from version 3:\n"
+"  %b: (first) basename\n"
+"  %B: space-separated list of the basenames of the selected file(s)/folder"
+"(s)\n"
+"  %c: count the selected file(s)/folder(s)\n"
+"  %d: (first) base directory\n"
+"  %D: space-separated list of base directories of the selected file(s)/folder"
+"(s)\n"
+"  %f: (first) filename\n"
+"  %F: space-separated list of the filenames of the selected file(s)/folder"
+"(s)\n"
+"  %h: hostname of the (first) URI\n"
+"  %m: (first) mimetype\n"
+"  %M: space-separated list of the mimetypes of the selected file(s)/folder"
+"(s)\n"
+"  %n: username of the (first) URI\n"
+"  %o: no-op operator which forces the singular form of execution (since "
+"3.0.2)\n"
+"  %O: no-op operator which forces the plural form of execution (since "
+"3.0.2)\n"
+"  %p: port number of the (first) URI\n"
+"  %s: scheme of the (first) URI\n"
+"  %u: (first) URI\n"
+"  %U: space-separated list of the URIs of the selected file(s)/folder(s)\n"
+"  %w: (first) basename without the extension\n"
+"  %W: space-separated list of basenames without the extension\n"
+"  %x: (first) extension\n"
+"  %X: space-separated list of the extensions of the selected file(s)/folder"
+"(s)\n"
+"  %%: a percent sign."
+msgstr ""
+"Параметри наредбе која ће бити извршена када корисник изабере ставку "
+"изборника у приручном изборнику управника датотека или са траке алата.\n"
+"Параметри могу да садрже неке посебне модуле који се замењују подацима које "
+"доставља управник датотека пре покретања наредбе:\n"
+"— до издања 2.0:\n"
+"  %d: основна фасцикла изабране(их) датотеке(а)\n"
+"  %f: назив изабране датотеке или прве ако их је изабрано више\n"
+"  %h: назив домаћина путање\n"
+"  %m: размаком раздвојени списак назива основе изабране датотеке/фасцикле\n"
+"  %M: размаком раздвојени списак изабране датотеке/фасцикле, са њиховим "
+"пуним путањама\n"
+"  %p: број прикључника прве путање\n"
+"  %R: размаком раздвојени списак изабраних путања\n"
+"  %s: ђема путање\n"
+"  %u: путања\n"
+"  %U: корисничко име путање\n"
+"  %%: знак процената.\n"
+"— почевши од издања 3:\n"
+"  %b: (први) назив основе\n"
+"  %B: размаком раздвојени списак назива основе изабране датотеке/фасцикле\n"
+"  %c: броји изабрану(е) датотеку(е)/фасциклу(е)\n"
+"  %d: (први) основни директоријум\n"
+"  %D: размаком раздвојени списак основних директоријума изабране "
+"датотеке/фасцикле\n"
+"  %f: (први) назив датотеке\n"
+"  %F: размаком раздвојени списак назива датотека изабране датотеке/фасцикле\n"
+"  %h: назив домаћина (прве) путање\n"
+"  %m: (прва) миме врста\n"
+"  %M: размаком раздвојени списак миме врста изабране датотеке/фасцикле\n"
+"  %n: корисничко име (прве) путање\n"
+"  %o: „no-op“ оператор који приморава један облик извршавања (све до 3.0.2)\n"
+"  %O: „no-op“ оператор који приморава више облика извршавања (све до 3.0.2)\n"
+"  %p: број прикључника (прве) путање\n"
+"  %s: шема (прве) путање\n"
+"  %u: (прва) путања\n"
+"  %U: размаком раздвојени списак путања изабране датотеке/фасцикле\n"
+"  %w: (први) назив основе без проширења\n"
+"  %W: размаком раздвојени списак назива основе изабране датотеке/фасцикле\n"
+"  %x: (прво) проширење\n"
+"  %X: размаком раздвојени списак проширења изабране датотеке/фасцикле\n"
+"  %%: знак процената."
+
+#: ../src/core/na-object-profile-factory.c:188
+msgid "Working directory"
+msgstr "Радни директоријум"
+
+#: ../src/core/na-object-profile-factory.c:189
+#, c-format
+msgid ""
+"The working directory the command will be started in.\n"
+"Defaults to \"%d\"."
+msgstr ""
+"Радни директоријум у коме ће бити покренута наредба.\n"
+"Подразумева се „%d“."
+
+#: ../src/core/na-object-profile-factory.c:211
+msgid "Execution mode"
+msgstr "Режим извршавања"
+
+#. i18n: 'Normal', 'Terminal', 'Embedded' and 'DisplayOutput' are non-translatable keywords
+#: ../src/core/na-object-profile-factory.c:213
+msgid ""
+"Execution mode of the program.\n"
+"This may be chosen between following values:\n"
+"- Normal: starts as a standard graphical user interface\n"
+"- Terminal: starts the preferred terminal of the graphical environment, and "
+"runs the command in it\n"
+"- Embedded: makes use of a special feature of the file manager which allows "
+"a terminal to be ran inside of it; an acceptable fallback is Terminal\n"
+"- DisplayOutput: the ran terminal may be closed at end of the command, but "
+"standard streams (stdout, stderr) should be collected and displayed; an "
+"acceptable fallback is Terminal.\n"
+"Defaults to \"Normal\"."
+msgstr ""
+"Режим извршавања програма.\n"
+"Могу бити изабране следеће вредности:\n"
+"— Normal: покреће се као уобичајено графичко корисничко сучеље\n"
+"— Terminal: покреће жељени терминал графичког окружења, и покреће наредбу у "
+"њему\n"
+"— Embedded: користи посебну функцију управника датотека која омогућава да "
+"терминал буде покренут у њему; прихватљива резерва је терминал\n"
+"— DisplayOutput: покренути терминал може бити затворен на крају наредбе, али "
+"уобичајени токови (стандардни излаз, стандардна грешка) требају бити "
+"прикупљени и приказани; прихватљива резерва је терминал.\n"
+"Подразумева се „Normal“."
+
+#: ../src/core/na-object-profile-factory.c:244
+msgid "Startup notify"
+msgstr "Обавештење покретања"
+
+#: ../src/core/na-object-profile-factory.c:245
+msgid ""
+"Only relevant when ExecutionMode=Normal.\n"
+"Defaults to FALSE."
+msgstr ""
+"Једино значајно када је „ExecutionMode=Normal“.\n"
+"Подразумева се поништено."
+
+#: ../src/core/na-object-profile-factory.c:267
+msgid "Startup WM Class"
+msgstr "Покретање разреда управника прозора"
+
+#: ../src/core/na-object-profile-factory.c:268
+msgid ""
+"Only relevant when ExecutionMode=Normal.\n"
+"Defaults to empty."
+msgstr ""
+"Једино значајно када је „ExecutionMode=Normal“.\n"
+"Подразумева се празно."
+
+#: ../src/core/na-object-profile-factory.c:290
+msgid "Execute as user"
+msgstr "Изврши као корисник"
+
+#: ../src/core/na-object-profile-factory.c:291
+msgid ""
+"The user the command must be ran as. The user may be identified by its "
+"numeric UID or by its login.\n"
+"The profile is ignored if defined with a non-existing UID or login.\n"
+"Defaults to empty: the command will be executed as the current user."
+msgstr ""
+"Корисник у чије име наредба мора бити покренута. Корисник може бити "
+"препознат према бројевном ЈИБ-у или према пријави.\n"
+"Профил се занемарује ако је одређен непостојећим ЈИБ-ом или пријавом.\n"
+"Подразумева се празно: наредба ће бити извршена за текућег корисника."
+
+#: ../src/core/na-selected-info.c:869
+#, c-format
+msgid "Error when querying informations for %s URI: %s"
+msgstr "Грешка приликом пропитивања података за путању „%s“: %s"
+
+#: ../src/core/na-tokens.c:250
+msgid "file:///path/to/file1.mid"
+msgstr "датотека:///путања/до/датотеке1.mid"
+
+#: ../src/core/na-tokens.c:251
+msgid "file:///path/to/file2.jpeg"
+msgstr "датотека:///путања/до/датотеке2.mid"
+
+#: ../src/core/na-tokens.c:252
+msgid "audio/x-midi"
+msgstr "звук/x-midi"
+
+#: ../src/core/na-tokens.c:253
+msgid "image/jpeg"
+msgstr "слика/jpeg"
+
+#: ../src/core/na-tokens.c:255
+msgid "test.example.net"
+msgstr "проба.пример.net"
+
+#: ../src/core/na-tokens.c:256
+msgid "user"
+msgstr "корисник"
+
+#: ../src/core/na-tokens.c:431
+msgid "Output of the run command"
+msgstr "Излаз покренуте наредбе"
+
+#: ../src/core/na-tokens.c:439
+msgid "Run command:"
+msgstr "Покрени наредбу:"
+
+#: ../src/core/na-tokens.c:440
+msgid "Standard output:"
+msgstr "Стандардни излаз:"
+
+#: ../src/core/na-tokens.c:441
+msgid "Standard error:"
+msgstr "Стандардна грешка:"
+
+#: ../src/io-desktop/nadp-desktop-provider.c:259
+msgid "Nautilus-Actions Desktop I/O Provider"
+msgstr "У/И достављач радне површи Наутилусових радњи"
+
+#: ../src/io-desktop/nadp-formats.c:56
+msgid "Export as a ._desktop file"
+msgstr "Извези као „._desktop“ датотеку"
+
+#: ../src/io-desktop/nadp-formats.c:57
+msgid ""
+"This format has been introduced with v 3.0 serie, and should be your newly "
+"preferred format when exporting items.\n"
+"It let you easily share your actions with the whole world, including with "
+"users of other desktop environments, as long as their own application "
+"implements the DES-EMA specification which describes this format.\n"
+"The exported .desktop file may later be imported via :\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+"- or by copying it into a XDG_DATA_DIRS/file-manager/actions directory."
+msgstr ""
+"Овај запис је уведен серијом 3.0, и треба да буде ваш нови жељени запис "
+"приликом извоза ставки.\n"
+"Пустиће вас да лако делите ваше радње са читавим светом, укључујући и са "
+"корисницима других окружења радне површи, све док њихови програми примењују "
+"„DES-EMA“ одредбу која описује овај запис.\n"
+"Извезена „.desktop“ датотека може касније бити увезена :\n"
+"— помоћником увоза алата подешавања Наутилусових радњи,\n"
+"— превлачењем и убацивањем у алат подешавања Наутилусових радњи,\n"
+"— или умножавањем у директоријум „XDG_DATA_DIRS/file-manager/actions“."
+
+#: ../src/io-desktop/nadp-reader.c:64
+msgid "The Desktop I/O Provider is not able to handle the URI"
+msgstr "У/И достављач радне површи не може да ради са путањом"
+
+#. i18n: 'type' is the nature of the item: Action or Menu
+#: ../src/io-desktop/nadp-reader.c:292
+#, c-format
+msgid "unknown type: %s"
+msgstr "непозната врста: %s"
+
+#: ../src/io-gconf/nagp-gconf-provider.c:247
+msgid "Nautilus-Actions GConf I/O Provider"
+msgstr "У/И достављач Гконфа Наутилусових радњи"
+
+#: ../src/io-xml/naxml-reader.c:147
+msgid "Item ID not found."
+msgstr "Нисам пронашао ИБ ставке."
+
+#: ../src/io-xml/naxml-reader.c:148
+#, c-format
+msgid "Unwaited key path %s while importing a menu."
+msgstr "Неочекивана путања кључа „%s“ приликом увоза изборника."
+
+#: ../src/io-xml/naxml-reader.c:149
+#, c-format
+msgid "Element %s at line %d already found, ignored."
+msgstr "Већ сам пронашао елемент „%s“ у %d. реду, занемарујем."
+
+#: ../src/io-xml/naxml-reader.c:150
+#, c-format
+msgid "Invalid item ID: waited for %s, found %s at line %d."
+msgstr "Неисправан ИБ ставке: очекивах %s, а пронађох %s у %d. реду."
+
+#: ../src/io-xml/naxml-reader.c:151
+#, c-format
+msgid "Unknown element %s found at line %d while waiting for %s."
+msgstr "Пронађох непознат елемент „%s“ у %d. реду док сам очекивао „%s“."
+
+#. i18n: do not translate keywords 'Action' nor 'Menu'
+#: ../src/io-xml/naxml-reader.c:153
+#, c-format
+msgid "Unknown type %s found at line %d, while waiting for Action or Menu."
+msgstr ""
+"Пронађох непознату врсту „%s“ у %d. реду, док сам очекивао радњу или "
+"изборник."
+
+#: ../src/io-xml/naxml-reader.c:154
+msgid "The XML I/O Provider is not able to handle the URI"
+msgstr "У/И достављач ИксМЛ-а не може да ради са путањом"
+
+#: ../src/io-xml/naxml-formats.c:55
+msgid "Export as a _full GConf schema file"
+msgstr "Извези као _пуну датотеку шеме Гконфа"
+
+#: ../src/io-xml/naxml-formats.c:56
+msgid ""
+"This used to be the historical export format.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+"Уобичајено је да је ово историјски извозни запис.\n"
+"Извезена датотека шеме касније може бити увезена :\n"
+"— помоћником увоза алата подешавања Наутилусових радњи,\n"
+"— превлачењем и убацивањем у алат подешавања Наутилусових радњи,\n"
+"— или путем алата линије наредби „gconftool-2 --import-schema-file“."
+
+#: ../src/io-xml/naxml-formats.c:67
+msgid "Export as a _light GConf schema (v2) file"
+msgstr "Извези као _лаку датотеку шеме Гконфа (в2)"
+
+#: ../src/io-xml/naxml-formats.c:68
+msgid ""
+"This format has been introduced in v 1.11 serie.\n"
+"This is the lightest schema still compatible with GConf command-line tools, "
+"while keeping backward compatibility with the Nautilus-Actions Configuration "
+"Tool oldest versions.\n"
+"The exported schema file may later be imported via :\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool,\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool,\n"
+"- or via the gconftool-2 --import-schema-file command-line tool."
+msgstr ""
+"Овај запис је увезен у серији в 1.11.\n"
+"Ово је најлакша шема још увек сагласна са алатима линије наредби Гконфа, док "
+"задржава сагласност са старијим издањима алата подешавања Наутилусових "
+"радњи.\n"
+"Извезена датотека шеме касније може бити увезена :\n"
+"— помоћником увоза алата подешавања Наутилусових радњи,\n"
+"— превлачењем и убацивањем у алат подешавања Наутилусових радњи,\n"
+"— или путем алата линије наредби „gconftool-2 --import-schema-file“."
+
+#: ../src/io-xml/naxml-formats.c:82
+msgid "Export as a GConf _dump file"
+msgstr "Извези као _лажну датотеку Гконфа"
+
+#: ../src/io-xml/naxml-formats.c:83
+msgid ""
+"This format has been introduced in v 1.11 serie.\n"
+"Tough not backward compatible with Nautilus-Actions Configuration Tool "
+"versions previous to 1.11, it may still be imported via standard GConf "
+"command-line tools.\n"
+"The exported dump file may later be imported via :\n"
+"- Import assistant of the Nautilus-Actions Configuration Tool (1.11 and "
+"above),\n"
+"- drag-n-drop into the Nautilus-Actions Configuration Tool (1.11 and "
+"above),\n"
+"- or via the gconftool-2 --load command-line tool."
+msgstr ""
+"Овај запис је уведен у серији в 1.11.\n"
+"Иако није сагласан са издањима алата подешавања Наутилусових радњи пре 1.11, "
+"још увек може бити увезен путем уобичајених алата линије наредби Гконфа.\n"
+"Извезена привидна датотека може касније бити увезена :\n"
+"— помоћником увоза алата подешавања Наутилусових радњи (1.11 и виших),\n"
+"— превлачењем и убацивањем у алат подешавања Наутилусових радњи (1.11 и "
+"виших),\n"
+"— или путем алата линије наредби „gconftool-2 --load“."
+
+#: ../src/nact/base-application.c:184
+msgid "Arguments count"
+msgstr "Број аргумената"
+
+#: ../src/nact/base-application.c:185
+msgid "The count of command-line arguments"
+msgstr "Број аргумената линије наредби"
+
+#: ../src/nact/base-application.c:192
+msgid "Arguments"
+msgstr "Аргументи"
+
+#: ../src/nact/base-application.c:193
+msgid "The array of command-line arguments"
+msgstr "Низ аргумената линије наредби"
+
+#: ../src/nact/base-application.c:200
+msgid "Option entries"
+msgstr "Уноси могућности"
+
+#: ../src/nact/base-application.c:201
+msgid "The array of command-line option definitions"
+msgstr "Низ одредница могућности линије наредби"
+
+#: ../src/nact/base-application.c:207
+msgid "Application name"
+msgstr "Назив програма"
+
+#: ../src/nact/base-application.c:208
+msgid "The name of the application"
+msgstr "Назив програма"
+
+#: ../src/nact/base-application.c:215 ../src/nact/nact-schemes-list.c:167
+msgid "Description"
+msgstr "Опис"
+
+#: ../src/nact/base-application.c:216
+msgid "A short description to be displayed in the first line of --help output"
+msgstr "Кратак опис за приказивање у првом реду излаза „--help“"
+
+#: ../src/nact/base-application.c:223
+msgid "Icon name"
+msgstr "Назив иконице"
+
+#: ../src/nact/base-application.c:224
+msgid "The name of the icon of the application"
+msgstr "Назив иконице програма"
+
+#: ../src/nact/base-application.c:231
+msgid "UniqueApp name"
+msgstr "Јединствени назив програма"
+
+#: ../src/nact/base-application.c:232
+msgid "The Unique name of the application"
+msgstr "Јединствени назив програма"
+
+#: ../src/nact/base-application.c:239
+msgid "Return code"
+msgstr "Повратни код"
+
+#: ../src/nact/base-application.c:240
+msgid "The return code of the application"
+msgstr "Повратни код програма"
+
+#: ../src/nact/base-application.c:603
+msgid "Unable to interpret command-line arguments"
+msgstr "Не могу да разумем аргументе линије наредби"
+
+#: ../src/nact/base-assistant.c:151
+msgid "Quit on Escape"
+msgstr "Прекини на Излаз"
+
+#: ../src/nact/base-assistant.c:152
+msgid "Should the assistant 'Quit' when the user hits Escape ?"
+msgstr "Треба ли помоћник да „Прекине“ када корисник притисне Излаз ?"
+
+#: ../src/nact/base-assistant.c:159
+msgid "Warn on Escape"
+msgstr "Упозори на Излаз"
+
+#: ../src/nact/base-assistant.c:160
+msgid ""
+"Should the user be asked to confirm when exiting the assistant via Escape ?"
+msgstr ""
+"Треба ли питати корисника да потврди када излази из помоћника путем Излаз ?"
+
+#: ../src/nact/base-assistant.c:460
+msgid "Are you sure you want to quit this assistant ?"
+msgstr "Да ли сте сигурни да желите да затворите помоћника ?"
+
+#: ../src/nact/base-iunique.c:207
+#, c-format
+msgid ""
+"Another instance of %s is already running.\n"
+"Please switch back to it."
+msgstr ""
+"Већ је покренут други примерак „%s“.\n"
+"Пребаците се на њега."
+
+#: ../src/nact/base-iunique.c:210
+msgid "The application is not unique"
+msgstr "Програм није јединствен"
+
+#: ../src/nact/base-window.c:204
+msgid "XML UI filename"
+msgstr "Назив датотеке ИксМЛ корисничког сучеља"
+
+#: ../src/nact/base-window.c:205
+msgid "The filename which contains the XML UI definition"
+msgstr "Назив датотеке који садржи одредницу ИксМЛ корисничког сучеља"
+
+#: ../src/nact/base-window.c:212
+msgid "Has its own GtkBuilder"
+msgstr "Има ли сопственог Гтк градитеља"
+
+#: ../src/nact/base-window.c:213
+msgid ""
+"Whether this BaseWindow reallocates a new GtkBuilder each time it is opened"
+msgstr ""
+"Да ли овај Основни прозор прерасподељује новог Гтк градитеља сваког пута "
+"када је отворен"
+
+#: ../src/nact/base-window.c:220
+msgid "Toplevel name"
+msgstr "Назив највишег нивоа"
+
+#: ../src/nact/base-window.c:221
+msgid "The internal GtkBuildable name of the toplevel window"
+msgstr "Унутрашњи Гтк изградљив назив прозора највишег нивоа"
+
+#: ../src/nact/base-window.c:228
+msgid "BaseApplication"
+msgstr "Основни програм"
+
+#: ../src/nact/base-window.c:229
+msgid "A pointer (not a reference) to the BaseApplication instance"
+msgstr "Показивач (не упута) на примерак основног програма"
+
+#: ../src/nact/base-window.c:235 ../src/nact/nact-tree-model.c:225
+msgid "Parent BaseWindow"
+msgstr "Родитељски основни прозор"
+
+#: ../src/nact/base-window.c:236
+msgid "A pointer (not a reference) to the BaseWindow parent of this BaseWindow"
+msgstr "Показивач (не упута) на родитеља основног прозора тог основног прозора"
+
+#: ../src/nact/base-window.c:242
+msgid "WSP name"
+msgstr "Назив ВПП"
+
+#: ../src/nact/base-window.c:243
+msgid ""
+"The string which handles the window size and position in user preferences"
+msgstr ""
+"Ниска која управља величином и положајем прозора у корисничким поставкама"
+
+#: ../src/nact/base-window.c:250
+msgid "Destroy the Gtk toplevel"
+msgstr "Уништава највиши ниво Гтк-а"
+
+#: ../src/nact/base-window.c:251
+msgid "Whether the embedded Gtk Toplevel should be destroyed at dispose time"
+msgstr ""
+"Да ли угнежђени највиши ниво Гтк-а треба бити уништен у време одбацивања"
+
+#: ../src/nact/base-window.c:735
+#, c-format
+msgid "Unable to load %s UI XML definition: %s"
+msgstr "Не могу да учитам %s КС ИксМЛ одредницу: %s"
+
+#: ../src/nact/base-window.c:750
+#, c-format
+msgid "Unable to load %s dialog definition."
+msgstr "Не могу да учитам одредницу „%s“ прозорчета."
+
+#: ../src/nact/egg-desktop-file.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr "Датотека није исправна „.desktop“ датотека"
+
+#: ../src/nact/egg-desktop-file.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr "Непозната датотека радне површи издање „%s“"
+
+#: ../src/nact/egg-desktop-file.c:957
+#, c-format
+msgid "Starting %s"
+msgstr "Покрећем „%s“"
+
+#: ../src/nact/egg-desktop-file.c:1098
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr "Програм не прихвата документе из линије наредби"
+
+#: ../src/nact/egg-desktop-file.c:1166
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr "Непозната опција покретања: %d"
+
+#: ../src/nact/egg-desktop-file.c:1365
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr "Не могу да проследим адресе докумената на „Type=Link“ улаз радне површи"
+
+#: ../src/nact/egg-desktop-file.c:1386
+#, c-format
+msgid "Not a launchable item"
+msgstr "Није ставка за покретање"
+
+#: ../src/nact/egg-sm-client.c:239
+msgid "Disable connection to session manager"
+msgstr "Искључује везу са управником сесије"
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "Specify file containing saved configuration"
+msgstr "Наводи датотеку која садржи сачувана подешавања"
+
+#: ../src/nact/egg-sm-client.c:242
+msgid "FILE"
+msgstr "ДАТОТЕКА"
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "Specify session management ID"
+msgstr "Наводи ИБ управника сесије"
+
+#: ../src/nact/egg-sm-client.c:245
+msgid "ID"
+msgstr "ИБ"
+
+#: ../src/nact/egg-sm-client.c:267
+msgid "Session management options:"
+msgstr "Могућности управљања сесијом:"
+
+#: ../src/nact/egg-sm-client.c:268
+msgid "Show session management options"
+msgstr "Приказује могућности управљања сесијом"
+
+#: ../src/nact/nact-application.c:57 ../src/nact/nact.desktop.in.h:1
+msgid "Nautilus-Actions Configuration Tool"
+msgstr "Алат подешавања Наутилусових радњи"
+
+#: ../src/nact/nact-application.c:58
+msgid "A user interface to edit your own contextual actions"
+msgstr "Корисничко сучеље за уређивање ваших сопствених приручних радњи"
+
+#: ../src/nact/nact-application.c:66
+msgid "Set it to run multiple instances of the program [unique]"
+msgstr "Поставите ово да покрећете више примерака програма [unique]"
+
+#: ../src/nact/nact-application.c:68
+msgid "Output the version number, and exit gracefully [no]"
+msgstr "Исписује број издања, и излази лепо [no]"
+
+#: ../src/nact/nact-add-capability-dialog.c:74
+msgid "User is the owner of the item"
+msgstr "Корисник је власник ставке"
+
+#: ../src/nact/nact-add-capability-dialog.c:75
+msgid "Item is readable by the user"
+msgstr "Корисник може да чита ставку"
+
+#: ../src/nact/nact-add-capability-dialog.c:76
+msgid "Item is writable by the user"
+msgstr "Корисник може да пише у ставку"
+
+#: ../src/nact/nact-add-capability-dialog.c:77
+msgid "Item is executable by the user"
+msgstr "Корисник може да изврши ставку"
+
+#: ../src/nact/nact-add-capability-dialog.c:78
+msgid "Item is local"
+msgstr "Ставка је месна"
+
+#. i18n: add a comment when a capability is already used by current item
+#: ../src/nact/nact-add-capability-dialog.c:528
+#, c-format
+msgid "%s (already inserted)"
+msgstr "%s (већ је уметнуто)"
+
+#: ../src/nact/nact-add-capability.ui.h:1
+msgid "Adding a new capability"
+msgstr "Додајем нову могућност"
+
+#: ../src/nact/nact-add-capability.ui.h:2
+msgid "<b>Managed capabilities</b>"
+msgstr "<b>Управљане могућности</b>"
+
+#: ../src/nact/nact-add-scheme.ui.h:1
+msgid "Adding a new scheme"
+msgstr "Додајем нову шему"
+
+#: ../src/nact/nact-add-scheme.ui.h:2
+msgid "<b>Scheme</b>"
+msgstr "<b>Шема</b>"
+
+#: ../src/nact/nact-assistant-export.c:814
+msgid "Export canceled due to user action."
+msgstr "Извоз је отказан корисниковом радњом."
+
+#. i18n: action as been successfully exported to <filename>
+#: ../src/nact/nact-assistant-export.c:892
+msgid "Successfully exported as"
+msgstr "Успешно сам извезао као"
+
+#: ../src/nact/nact-assistant-export.c:921
+msgid "You may not have write permissions on selected folder."
+msgstr "Можда немате овлашћења за писање у изабраној фасцикли."
+
+#: ../src/nact/nact-assistant-export.ui.h:1
+msgid "Exporting actions"
+msgstr "Извоз радњи"
+
+#: ../src/nact/nact-assistant-export.ui.h:2
+msgid "This assistant will guide you through the process of exporting actions."
+msgstr "Овај помоћник ће вас водити кроз поступак извоза радњи."
+
+#: ../src/nact/nact-assistant-export.ui.h:3
+msgid "Actions _list :"
+msgstr "Списак _радњи :"
+
+#: ../src/nact/nact-assistant-export.ui.h:4
+msgid ""
+"Please select one or more actions to be exported.\n"
+"\n"
+"You may use Ctrl and Shift keys to extend the selection."
+msgstr ""
+"Изаберите једну или неколико радњи за извоз.\n"
+"\n"
+"Можете да користите тастере Ктрл и Шифт да проширите избор."
+
+#: ../src/nact/nact-assistant-export.ui.h:7
+msgid "Selecting the exported actions"
+msgstr "Бирам извезене радње"
+
+#: ../src/nact/nact-assistant-export.ui.h:8
+msgid "Selecting the target folder"
+msgstr "Бирам циљну фасциклу"
+
+#: ../src/nact/nact-assistant-export.ui.h:9
+msgid "Which format should I use when exporting these items ?"
+msgstr "Који формат да користим када извозим ове ставке ?"
+
+#: ../src/nact/nact-assistant-export.ui.h:10
+msgid "Selecting the export format"
+msgstr "Бирам запис извоза"
+
+#: ../src/nact/nact-assistant-export.ui.h:11
+msgid "About to export selected items:"
+msgstr "О извозу изабраних ставки:"
+
+#: ../src/nact/nact-assistant-export.ui.h:12
+msgid "Into the destination folder:"
+msgstr "У одредишну фасциклу:"
+
+#: ../src/nact/nact-assistant-export.ui.h:13
+#: ../src/nact/nact-assistant-import.ui.h:8
+msgid "Summary"
+msgstr "Сажетак"
+
+#: ../src/nact/nact-assistant-export.ui.h:14
+msgid "Selected items have been proceeded:"
+msgstr "Изабране ставке су обрађене:"
+
+#: ../src/nact/nact-assistant-export.ui.h:15
+msgid "Export is done"
+msgstr "Извоз је обављен"
+
+#: ../src/nact/nact-assistant-export.ui.h:16
+msgid "Exporting an action"
+msgstr "Извозим радњу"
+
+#: ../src/nact/nact-assistant-export.ui.h:17
+msgid "Which format should I choose to export it ?"
+msgstr "Који запис треба да изаберем за извоз ?"
+
+#: ../src/nact/nact-assistant-export.ui.h:18
+msgid "Re_member my choice in future export operations"
+msgstr "_Запамти мој избор у будућим радњама извоза"
+
+#. i18n: indicate that the file has been successfully imported
+#: ../src/nact/nact-assistant-import.c:809
+msgid "Import OK"
+msgstr "Увоз је успео"
+
+#. i18n: this is the globally unique identifier and the label of the newly imported action
+#: ../src/nact/nact-assistant-import.c:813
+#, c-format
+msgid "Id.: %s\t%s"
+msgstr "Иб.: %s\t%s"
+
+#. i18n: indicate that the file was not imported
+#: ../src/nact/nact-assistant-import.c:823
+msgid "Not imported"
+msgstr "Није увезена"
+
+#: ../src/nact/nact-assistant-import.ui.h:1
+msgid "Importing actions"
+msgstr "Увоз радњи"
+
+#: ../src/nact/nact-assistant-import.ui.h:2
+msgid ""
+"This assistant will guide you through the process of importing items, "
+"actions or menus."
+msgstr ""
+"Овај помоћник ће вас водити кроз поступак увоза ставки, радњи или изборника."
+
+#: ../src/nact/nact-assistant-import.ui.h:3
+msgid "Selecting files to import"
+msgstr "Избор датотека за увоз"
+
+#: ../src/nact/nact-assistant-import.ui.h:4
+msgid "What should I do when importing an item whose ID already exists ?"
+msgstr "Шта треба да урадим приликом увоза ставке чији ИБ већ постоји ?"
+
+#: ../src/nact/nact-assistant-import.ui.h:5
+msgid "Managing duplicates"
+msgstr "Управљање двојницима"
+
+#: ../src/nact/nact-assistant-import.ui.h:6
+msgid "About to import selected files:"
+msgstr "Спремам се да увезем изабране датотеке:"
+
+#: ../src/nact/nact-assistant-import.ui.h:7
+msgid "When importing an item whose ID already exists:"
+msgstr "Приликом увоза ставке чији ИБ већ постоји:"
+
+#: ../src/nact/nact-assistant-import.ui.h:9
+msgid "Selected files have been proceeded:"
+msgstr "Изабране датотеке су обрађене:"
+
+#: ../src/nact/nact-assistant-import.ui.h:10
+msgid "Import is done"
+msgstr "Увоз је обављен"
+
+#: ../src/nact/nact.desktop.in.h:2
+msgid "Configure items to be added to the Nautilus context menus"
+msgstr "Подесите ставке које ће бити додате у приручне изборнике Наутилуса"
+
+#. i18n: The action <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:405
+#, c-format
+msgid "The action \"%s\" is about to be exported."
+msgstr "Радња „%s“ ће бити извезена."
+
+#. i18n: The menu <label> is about to be exported
+#: ../src/nact/nact-export-ask.c:408
+#, c-format
+msgid "The menu \"%s\" is about to be exported."
+msgstr "Изборник „%s“ ће бити извезен."
+
+#: ../src/nact/nact-iaction-tab.c:626
+msgid "Caution: a label is mandatory for the action or the menu."
+msgstr "Пажња: натпис је обавезан за радњу или за изборник."
+
+#: ../src/nact/nact-ibasenames-tab.c:219
+msgid "Basename filter"
+msgstr "Пропусник назива основе"
+
+#: ../src/nact/nact-icapabilities-tab.c:198
+msgid "Capability filter"
+msgstr "Пропусник могућности"
+
+#: ../src/nact/nact-icommand-tab.c:570
+msgid "Choosing a command"
+msgstr "Бирам наредбу"
+
+#: ../src/nact/nact-icommand-tab.c:610
+msgid "Choosing a working directory"
+msgstr "Бирам радни директоријум"
+
+#: ../src/nact/nact-icon-chooser.ui.h:1
+msgid "Icon Chooser"
+msgstr "Бирач иконица"
+
+#: ../src/nact/nact-icon-chooser.ui.h:2
+msgid "_Themed icons"
+msgstr "_Темске иконице"
+
+#: ../src/nact/nact-icon-chooser.ui.h:3
+msgid "Icons by _path"
+msgstr "Иконице по _путањи"
+
+#: ../src/nact/nact-ienvironment-tab.c:71
+msgid "(strictly lesser than)"
+msgstr "(изричито мање од)"
+
+#: ../src/nact/nact-ienvironment-tab.c:72
+msgid "(equal to)"
+msgstr "(једнако са)"
+
+#: ../src/nact/nact-ienvironment-tab.c:73
+msgid "(strictly greater than)"
+msgstr "(изричито веће од)"
+
+#: ../src/nact/nact-ienvironment-tab.c:769
+#: ../src/nact/nact-ienvironment-tab.c:827
+msgid "Choosing an executable"
+msgstr "Бирам извршни"
+
+#: ../src/nact/nact-ifolders-tab.c:203
+msgid "Folder filter"
+msgstr "Пропусник фасцикле"
+
+#. i18n: title of the FileChoose dialog when selecting an URI which
+#. * will be compare to Nautilus 'current_folder'
+#.
+#: ../src/nact/nact-ifolders-tab.c:263 ../src/nact/nact-ifolders-tab.c:291
+msgid "Select a folder"
+msgstr "Изаберите фасциклу"
+
+#: ../src/nact/nact-imimetypes-tab.c:203
+msgid "Mimetype filter"
+msgstr "Пропусник миме врсте"
+
+#. i18n: label of the push button when there is not yet any shortcut
+#: ../src/nact/nact-iproperties-tab.c:53
+#: ../src/nact/nautilus-actions-config-tool.ui.h:236
+msgid "None"
+msgstr "Ништа"
+
+#: ../src/nact/nact-iproperties-tab.c:288
+msgid "Me_nu"
+msgstr "Избор_ник"
+
+#: ../src/nact/nact-iproperties-tab.c:289
+msgid "<b>Menu editable properties</b>"
+msgstr "<b>Уредљива својства изборника</b>"
+
+#: ../src/nact/nact-iproperties-tab.c:291
+#: ../src/nact/nautilus-actions-config-tool.ui.h:97
+msgid "_Action"
+msgstr "_Радња"
+
+#: ../src/nact/nact-iproperties-tab.c:292
+#: ../src/nact/nautilus-actions-config-tool.ui.h:239
+msgid "<b>Action editable properties</b>"
+msgstr "<b>Уредљива својства радње</b>"
+
+#: ../src/nact/nact-ischemes-tab.c:201
+msgid "Scheme filter"
+msgstr "Пропусник шеме"
+
+#: ../src/nact/nact-main-window.c:344
+msgid "Current NAObjectItem"
+msgstr "Тренутна ставка предмета НР"
+
+#: ../src/nact/nact-main-window.c:345
+msgid "A pointer to the currently edited NAObjectItem, an action or a menu"
+msgstr "Показивач на тренутно уређену ставку предмета НР, радње или изборника"
+
+#: ../src/nact/nact-main-window.c:351
+msgid "Current NAObjectProfile"
+msgstr "Тренутни профил предмета НР"
+
+#: ../src/nact/nact-main-window.c:352
+msgid "A pointer to the currently edited NAObjectProfile"
+msgstr "Показивач на тренутно уређени профил предмета НР"
+
+#: ../src/nact/nact-main-window.c:358
+msgid "Current NAIContext"
+msgstr "Тренутни НРИ контекст"
+
+#: ../src/nact/nact-main-window.c:359
+msgid "A pointer to the currently edited NAIContext"
+msgstr "Показивач на тренутно уређени НРИ контест"
+
+#: ../src/nact/nact-main-window.c:365
+msgid "Editable item ?"
+msgstr "Ставка за уређивање ?"
+
+#: ../src/nact/nact-main-window.c:366
+msgid "Whether the item will be able to be updated against its I/O provider"
+msgstr ""
+"Да ли ће ставка бити у могућности да буде дограђена наспрам њеног У/И "
+"достављача"
+
+#: ../src/nact/nact-main-window.c:373
+msgid "No edition reason"
+msgstr "Нема разлога уређивања"
+
+#: ../src/nact/nact-main-window.c:374
+msgid "Why is this item not editable"
+msgstr "Зашто ова ставка не може да се уређује"
+
+#: ../src/nact/nact-main-window.c:1267
+msgid ""
+"One or more actions have been modified in the filesystem.\n"
+"You could keep to work with your current list of actions, or you may want to "
+"reload a fresh one."
+msgstr ""
+"Једна или неколико радњи је измењено у систему датотека.\n"
+"Треба да наставите да радите са вашим тренутним списком радњи, или ћете "
+"желети да поново учитате један свеж."
+
+#: ../src/nact/nact-main-window.c:1274
+msgid ""
+"Note that reloading a fresh list of actions requires that you give up with "
+"your current modifications."
+msgstr ""
+"Знајте да поновно учитавање свежег списка радњи захтева да одустанете од "
+"ваших тренутних измена."
+
+#: ../src/nact/nact-main-window.c:1280
+msgid "Do you want to reload a fresh list of actions ?"
+msgstr "Да ли желите да поново учитате свеж списак радњи ?"
+
+#: ../src/nact/nact-main-window.c:1303
+msgid ""
+"Reloading a fresh list of actions requires that you give up with your "
+"current modifications."
+msgstr ""
+"Поновно учитавање свежег списка радњи захтева да одустанете од ваших "
+"тренутних измена."
+
+#: ../src/nact/nact-main-window.c:1306
+msgid "Do you really want to do this ?"
+msgstr "Да ли заиста желите да урадите ово ?"
+
+#: ../src/nact/nact-main-window.c:1424
+#, c-format
+msgid "Some items have been modified."
+msgstr "Неке ставке су измењене."
+
+#: ../src/nact/nact-main-window.c:1425
+msgid "Are you sure you want to quit without saving them ?"
+msgstr "Да ли сте сигурни да желите да изађете без чувања ?"
+
+#: ../src/nact/nact-match-list.c:88
+msgid "Must match one of"
+msgstr "Мора да одговара једном"
+
+#: ../src/nact/nact-match-list.c:89
+msgid "Must match all of"
+msgstr "Мора да одговара свим"
+
+#. i18n: label of the header of a column which let the user select a negative filter
+#: ../src/nact/nact-match-list.c:245
+msgid "Must not match any of"
+msgstr "Не мора да одговара ни једном"
+
+#: ../src/nact/nact-match-list.c:548
+#, c-format
+msgid ""
+"'%s' filter already exists in the list.\n"
+"Please provide another one."
+msgstr ""
+"„%s“ пропусник већ постоји на списку.\n"
+"Обезбедите неки други."
+
+#. i18n notes : new filter for a new row in a match/no match list
+#: ../src/nact/nact-match-list.c:926
+msgid "new-filter"
+msgstr "нови-пропусник"
+
+#: ../src/nact/nact-menubar.c:59 ../src/nact/nact-menubar.c:170
+msgid "_File"
+msgstr "_Датотека"
+
+#: ../src/nact/nact-menubar.c:60 ../src/nact/nact-menubar.c:174
+msgid "_Edit"
+msgstr "_Уређивање"
+
+#: ../src/nact/nact-menubar.c:61
+msgid "_View"
+msgstr "_Преглед"
+
+#: ../src/nact/nact-menubar.c:62
+msgid "_Toolbars"
+msgstr "_Траке алата"
+
+#: ../src/nact/nact-menubar.c:63 ../src/nact/nact-menubar.c:178
+msgid "_Tools"
+msgstr "_Алати"
+
+#: ../src/nact/nact-menubar.c:64
+msgid "_Maintainer"
+msgstr "_Одржавалац"
+
+#: ../src/nact/nact-menubar.c:65 ../src/nact/nact-menubar.c:182
+msgid "_Help"
+msgstr "По_моћ"
+
+#: ../src/nact/nact-menubar.c:66
+msgid "Notebook _tabs"
+msgstr "Језичци _бележнице"
+
+#: ../src/nact/nact-menubar.c:68
+msgid "New _menu"
+msgstr "Нови _изборник"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New menu' item
+#: ../src/nact/nact-menubar.c:70
+msgid "Insert a new menu at the current position"
+msgstr "Уметните нови изборник на текући положај"
+
+#: ../src/nact/nact-menubar.c:72
+msgid "_New action"
+msgstr "Нова _радња"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New action' item
+#: ../src/nact/nact-menubar.c:74
+msgid "Define a new action"
+msgstr "Одредите нову радњу"
+
+#: ../src/nact/nact-menubar.c:76
+msgid "New _profile"
+msgstr "Нови _профил"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'New profile' item
+#: ../src/nact/nact-menubar.c:78
+msgid "Define a new profile attached to the current action"
+msgstr "Одредите нови профил приложен уз тренутну радњу"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Save' item
+#: ../src/nact/nact-menubar.c:82
+msgid ""
+"Record all the modified actions. Invalid actions will be silently ignored"
+msgstr ""
+"Сачувајте све измењене радње. Неисправне радње ће бити неприметно занемарене"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Quit' item
+#: ../src/nact/nact-menubar.c:86
+msgid "Quit the application"
+msgstr "Изађите из програма"
+
+#. i18n: tooltip displayed in the status bar when selecting the Cut item
+#: ../src/nact/nact-menubar.c:90
+msgid "Cut the selected item(s) to the clipboard"
+msgstr "Исеците изабрану ставку у оставу"
+
+#. i18n: tooltip displayed in the status bar when selecting the Copy item
+#: ../src/nact/nact-menubar.c:94
+msgid "Copy the selected item(s) to the clipboard"
+msgstr "Умножите изабрану ставку у оставу"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste item
+#: ../src/nact/nact-menubar.c:98
+msgid "Insert the content of the clipboard just before the current position"
+msgstr "Уметните садржај оставе одмах након текућег положаја"
+
+#: ../src/nact/nact-menubar.c:100
+msgid "Paste _into"
+msgstr "Убаци _у"
+
+#. i18n: tooltip displayed in the status bar when selecting the Paste Into item
+#: ../src/nact/nact-menubar.c:102
+msgid "Insert the content of the clipboard as first child of the current item"
+msgstr "Уметните садржај оставе као први пород текуће ставке"
+
+#: ../src/nact/nact-menubar.c:104
+msgid "D_uplicate"
+msgstr "_Удвостручи"
+
+#. i18n: tooltip displayed in the status bar when selecting the Duplicate item
+#: ../src/nact/nact-menubar.c:106
+msgid "Duplicate the selected item(s)"
+msgstr "Удвостручите изабрану ставку"
+
+#. i18n: tooltip displayed in the status bar when selecting the Delete item
+#: ../src/nact/nact-menubar.c:110
+msgid "Delete the selected item(s)"
+msgstr "Обришите изабрану ставку"
+
+#: ../src/nact/nact-menubar.c:112
+msgid "_Reload the items"
+msgstr "_Поново учитај ставке"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Reload' item
+#: ../src/nact/nact-menubar.c:114
+msgid ""
+"Cancel your current modifications and reload the initial list of menus and "
+"actions"
+msgstr ""
+"Откажите ваше тренутне измене и поново учитајте почетни списак изборника и "
+"радњи"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Preferences' item
+#: ../src/nact/nact-menubar.c:118
+msgid "Edit your preferences"
+msgstr "Уредите ваше поставке"
+
+#: ../src/nact/nact-menubar.c:120
+msgid "_Expand all"
+msgstr "_Рашири све"
+
+#. i18n: tooltip displayed in the status bar when selecting the Expand all item
+#: ../src/nact/nact-menubar.c:122
+msgid "Entirely expand the items hierarchy"
+msgstr "Потпуно раширите хијерархију ставки"
+
+#: ../src/nact/nact-menubar.c:124
+msgid "_Collapse all"
+msgstr "_Скупи све"
+
+#. i18n: tooltip displayed in the status bar when selecting the Collapse all item
+#: ../src/nact/nact-menubar.c:126
+msgid "Entirely collapse the items hierarchy"
+msgstr "Потпуно скупите хијерархију ставки"
+
+#: ../src/nact/nact-menubar.c:129
+msgid "_Import assistant..."
+msgstr "Помоћник _увоза..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Import item
+#: ../src/nact/nact-menubar.c:131
+msgid "Import one or more actions from external files into your configuration"
+msgstr "Увезите једну или више радњи из спољних датотека у ваша подешавања"
+
+#: ../src/nact/nact-menubar.c:133
+msgid "E_xport assistant..."
+msgstr "Помоћник _извоза..."
+
+#. i18n: tooltip displayed in the status bar when selecting the Export item
+#: ../src/nact/nact-menubar.c:135
+msgid "Export one or more actions from your configuration to external files"
+msgstr "Извезите једну или више радњи из ваших подешавања у спољну датотеку"
+
+#: ../src/nact/nact-menubar.c:138
+msgid "_Dump the selection"
+msgstr "_Избаци избор"
+
+#. i18n: tooltip displayed in the status bar when selecting the Dump selection item
+#: ../src/nact/nact-menubar.c:140
+msgid "Recursively dump selected items"
+msgstr "Дубински избаците изабране ставке"
+
+#: ../src/nact/nact-menubar.c:142
+msgid "_Brief tree store dump"
+msgstr "_Кратко избацивање складишта стабла"
+
+#. i18n: tooltip displayed in the status bar when selecting the BriefTreeStoreDump item
+#: ../src/nact/nact-menubar.c:144
+msgid "Briefly dump the tree store"
+msgstr "На кратко избаците складиште стабла"
+
+#: ../src/nact/nact-menubar.c:146
+msgid "_List modified items"
+msgstr "_Наведи измењене ставке"
+
+#. i18n: tooltip displayed in the status bar when selecting the ListModifiedItems item
+#: ../src/nact/nact-menubar.c:148
+msgid "List the modified items"
+msgstr "Наведите измењене ставке"
+
+#: ../src/nact/nact-menubar.c:150
+msgid "_Dump the clipboard"
+msgstr "_Избаци оставу"
+
+#. i18n: tooltip displayed in the status bar when selecting the DumpClipboard item
+#: ../src/nact/nact-menubar.c:152
+msgid "Dump the content of the clipboard object"
+msgstr "Избаците садржај предмета оставе"
+
+#: ../src/nact/nact-menubar.c:158
+msgid "Contents"
+msgstr "Сaдржај"
+
+#. i18n: tooltip displayed in the status bar when selecting the Help item
+#: ../src/nact/nact-menubar.c:160
+msgid "Display help about this program"
+msgstr "Прикажите помоћ за овај програм"
+
+#. i18n: tooltip displayed in the status bar when selecting the About item
+#: ../src/nact/nact-menubar.c:164
+msgid "Display informations about this program"
+msgstr "Прикажите податке о програму"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View File toolbar' item
+#: ../src/nact/nact-menubar.c:172
+msgid "Display the File toolbar"
+msgstr "Прикажите траку алата датотеке"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'View Edit toolbar' item
+#: ../src/nact/nact-menubar.c:176
+msgid "Display the Edit toolbar"
+msgstr "Прикажите траку алата уређивања"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
+#: ../src/nact/nact-menubar.c:180
+msgid "Display the Tools toolbar"
+msgstr "Прикажите траку алата алата"
+
+#. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
+#: ../src/nact/nact-menubar.c:184
+msgid "Display the Help toolbar"
+msgstr "Прикажите траку алата помоћи"
+
+#: ../src/nact/nact-menubar.c:190
+msgid "On the _left"
+msgstr "Ле_во"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the left' item
+#: ../src/nact/nact-menubar.c:192
+msgid "Display the notebook tabs on the left side"
+msgstr "Прикажите језичке бележнице са леве стране"
+
+#: ../src/nact/nact-menubar.c:194
+msgid "On the _right"
+msgstr "Де_сно"
+
+#. i18n: tooltip displayed in the status bar when selecting the 'Set tabs position on the right' item
+#: ../src/nact/nact-menubar.c:196
+msgid "Display the notebook tabs on the right side"
+msgstr "Прикажите језичке бележнице са десне стране"
+
+#: ../src/nact/nact-menubar.c:198
+msgid "On the _top"
+msgstr "Го_ре"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the top' item
+#: ../src/nact/nact-menubar.c:200
+msgid "Display the notebook tabs on the top side"
+msgstr "Прикажите језичке бележнице на горњој страни"
+
+#: ../src/nact/nact-menubar.c:202
+msgid "On the _bottom"
+msgstr "До_ле"
+
+#. i18n: tooltip displayed in the status bar when selecting 'Set tabs position on the bottom' item
+#: ../src/nact/nact-menubar.c:204
+msgid "Display the notebook tabs on the bottom side"
+msgstr "Прикажите језичке бележнице на доњој страни"
+
+#: ../src/nact/nact-menubar.c:718
+#, c-format
+msgid " %d menu(s), %d action(s), %d profile(s) are currently loaded"
+msgstr "Тренутно је учитано: изборника — %d; радњи — %d; профила — %d"
+
+#: ../src/nact/nact-menubar-edit.c:222
+msgid "Not all items have been cut as following ones are not modifiable:"
+msgstr "Нису све ставке исечене зато што се следеће не могу мењати:"
+
+#: ../src/nact/nact-menubar-edit.c:470
+msgid "Not all items have been deleted as following ones are not modifiable:"
+msgstr "Нису све ставке обрисане зато што се следеће не могу мењати:"
+
+#: ../src/nact/nact-menubar-file.c:52
+msgid "Save error"
+msgstr "Грешка чувања"
+
+#: ../src/nact/nact-menubar-file.c:53
+msgid "Some items may not have been saved"
+msgstr "Неке ставке не могу бити сачуване"
+
+#: ../src/nact/nact-menubar-file.c:54
+msgid "Unable to rewrite the level-zero items list"
+msgstr "Не могу поново да испишем списак ставки нултог нивоа"
+
+#: ../src/nact/nact-menubar-file.c:55
+msgid "Some items have not been deleted"
+msgstr "Неке ставке нису обрисане"
+
+#: ../src/nact/nact-menubar-file.c:201
+msgid "New profile"
+msgstr "Нови профил"
+
+#: ../src/nact/nact-menubar-file.c:489
+msgid "Automatically saving pending modifications..."
+msgstr "Сам чувам измене на чекању..."
+
+#: ../src/nact/nact-preferences.ui.h:1
+msgid "Nautilus-Actions Preferences"
+msgstr "Поставке Наутилусових радњи"
+
+#: ../src/nact/nact-preferences.ui.h:2
+msgid "_Ascending alphabetical order"
+msgstr "_Растући азбучни редослед"
+
+#: ../src/nact/nact-preferences.ui.h:3
+msgid ""
+"Menus and actions will be displayed in the ascending alphabetical order of "
+"their label, both in the Nautilus context menu and in the NACT user "
+"interface."
+msgstr ""
+"Изборници и радње биће приказани растућим азбучним редом њихових натписа, у "
+"Наутилусовом приручном изборнику и у корисничком сучељу АПНР-а."
+
+#: ../src/nact/nact-preferences.ui.h:4
+msgid "_Descending alphabetical order"
+msgstr "_Опадајући азбучни редослед"
+
+#: ../src/nact/nact-preferences.ui.h:5
+msgid ""
+"Menus and actions will be displayed in the descending alphabetical order of "
+"their label, both in the Nautilus context menu and in the NACT user "
+"interface."
+msgstr ""
+"Изборници и радње биће приказани опадајућим азбучним редом њихових натписа, "
+"у Наутилусовом приручном изборнику и у корисничком сучељу АПНР-а."
+
+#: ../src/nact/nact-preferences.ui.h:6
+msgid "_Manual order"
+msgstr "_Ручни редослед"
+
+#: ../src/nact/nact-preferences.ui.h:7
+msgid ""
+"Display order of menus and actions, both in the Nautilus context menu and in "
+"the NACT user interface, must be manually adjusted."
+msgstr ""
+"Редослед приказивања изборника и радњи, у Наутилусовом приручном изборнику и "
+"у корисничком сучељу АПНР-а, мора бити ручно дотеран."
+
+#: ../src/nact/nact-preferences.ui.h:8
+msgid "<b>Items ordering</b>"
+msgstr "<b>Ређање ставки</b>"
+
+#: ../src/nact/nact-preferences.ui.h:9
+msgid "_Create a root 'Nautilus-Actions' menu"
+msgstr "_Направи корени изборник „Наутилусових радњи“"
+
+#: ../src/nact/nact-preferences.ui.h:10
+msgid ""
+"When this option is checked, menus and actions will actually be displayed as "
+"sub-items of a root 'Nautilus-Actions' menu in the Nautilus context menu."
+msgstr ""
+"Када је изабрана ова могућност, изборници и радње ће заправо бити приказани "
+"као подставке кореног изборника „Наутилусових радњи“ у Наутилусовом "
+"приручном изборнику."
+
+#: ../src/nact/nact-preferences.ui.h:11
+msgid "Add an 'A_bout Nautilus-Actions' item in the Nautilus context menus"
+msgstr ""
+"Додај ставку „О Наутилусовим _радњама“ у Наутилусовом приручном изборнику"
+
+#: ../src/nact/nact-preferences.ui.h:12
+msgid ""
+"When this option is checked, an 'About Nautilus-Actions' item will be added "
+"to the root Nautilus-Actions menu in the Nautilus context menu.\n"
+"Note that this item will be displayed only if a unique menu is defined in "
+"the Nautilus context menu (e.g. when having checked the root 'Nautilus-"
+"Actions' menu option above)."
+msgstr ""
+"Када је изабрана ова могућност, ставка „О Наутилусовим радњама“ ће бити "
+"додата кореном изборнику Наутилусових радњи у Наутилусовом приручном "
+"изборнику.\n"
+"Знајте да ће ова ставка бити приказана само ако је јединствени изборник "
+"одређен у Наутилусовом приручном изборнику (тј. када сте горе изабрали "
+"могућност кореног изборника „Наутилусових радњи)."
+
+#: ../src/nact/nact-preferences.ui.h:14
+msgid "<b>Nautilus menu layout</b>"
+msgstr "<b>Распоред Наутилусовог изборника</b>"
+
+#: ../src/nact/nact-preferences.ui.h:15
+msgid ""
+"This tab lets you choose how the actions are ordered in the displayed list "
+"as well as in the Nautilus context menu. You may also choose here how "
+"actions will be displayed in the Nautilus context menu."
+msgstr ""
+"Овај језичак вам допушта да изаберете како ће радње бити поређане у "
+"приказаном списку као и у Наутилусовом приручном изборнику. Можете такође да "
+"изаберете како ће радње бити приказане у Наутилусовом приручном изборнику."
+
+#: ../src/nact/nact-preferences.ui.h:16
+msgid "_Runtime preferences"
+msgstr "_Поставке времена покретања"
+
+#: ../src/nact/nact-preferences.ui.h:17
+msgid ""
+"Specify here the command to run and keep opened a terminal.\n"
+"This command should include a 'COMMAND' keyword, which will be substituted "
+"at runtime with the action path and parameters."
+msgstr ""
+"Овде наведите наредбу за покретање и држање отвореног терминала.\n"
+"Та наредба треба да садржи кључну реч „COMMAND“, која ће у време покретања "
+"бити замењена путањом радње и параметрима."
+
+#: ../src/nact/nact-preferences.ui.h:19
+msgid "_Command pattern :"
+msgstr "_Шаблон наредбе :"
+
+#: ../src/nact/nact-preferences.ui.h:20
+msgid "<b>Execution in a terminal</b>"
+msgstr "<b>Извршавање у терминалу</b>"
+
+#: ../src/nact/nact-preferences.ui.h:21
+msgid "Running _desktop environment :"
+msgstr "Покренуто окружење _радње површи :"
+
+#: ../src/nact/nact-preferences.ui.h:22
+msgid "<i>Currently detected :</i>"
+msgstr "<i>Тренутно откривено :</i>"
+
+#: ../src/nact/nact-preferences.ui.h:23
+#: ../src/nact/nautilus-actions-config-tool.ui.h:210
+msgid "<b>Desktop environment</b>"
+msgstr "<b>Окружење радне површи</b>"
+
+#: ../src/nact/nact-preferences.ui.h:24
+msgid "This tab lets you specify parameters needed for. some execution modes."
+msgstr ""
+"Овај језичак вам допушта да наведете параметре потребне за неке режиме "
+"извршавања."
+
+#: ../src/nact/nact-preferences.ui.h:25
+msgid "Runtime E_xecution"
+msgstr "Извршавање _времена покретања"
+
+#: ../src/nact/nact-preferences.ui.h:26
+msgid "What to do when pasting or duplicating an item in the tree ?"
+msgstr "Шта да урадим када убацим или удвостручим ставку у стаблу ?"
+
+#: ../src/nact/nact-preferences.ui.h:27
+msgid "Relabel _menus"
+msgstr "Обнови натписе _изборника"
+
+#: ../src/nact/nact-preferences.ui.h:28
+msgid ""
+"When a menu is copied/pasted, or duplicated, the new menu will be relabelled "
+"as 'Copy of ...'."
+msgstr ""
+"Када је изборник умножен/убачен, или удвостручен, биће обновљен натпис новог "
+"изборника као „Умножак од ...“."
+
+#: ../src/nact/nact-preferences.ui.h:29
+msgid "Relabel _actions"
+msgstr "Обнови натписе _радњи"
+
+#: ../src/nact/nact-preferences.ui.h:30
+msgid ""
+"When an action is copied/pasted, or duplicated, the new action will be "
+"relabelled as 'Copy of ...'."
+msgstr ""
+"Када је радња умножена/убачена, или удвостручена, биће обновљен натпис нове "
+"радње као „Умножак од ...“."
+
+#: ../src/nact/nact-preferences.ui.h:31
+msgid "Relabel _profiles"
+msgstr "Обнови натписе _профила"
+
+#: ../src/nact/nact-preferences.ui.h:32
+msgid ""
+"When a profile is copied/pasted, or duplicated, the new profile will be "
+"relabelled as 'Copy of ...'."
+msgstr ""
+"Када је профил умножен/убачен, или удвостручен, биће обновљен натпис новог "
+"профила као „Умножак од ...“."
+
+#: ../src/nact/nact-preferences.ui.h:33
+msgid "<b>Relabeling items</b>"
+msgstr "<b>Обнављање натписа ставки</b>"
+
+#: ../src/nact/nact-preferences.ui.h:34
+msgid "Esc key _quits the assistant"
+msgstr "Тастер Излаз _затвара помоћника"
+
+#: ../src/nact/nact-preferences.ui.h:35
+msgid ""
+"When this option is checked, the 'Escape' key will let you quit the current "
+"assistant. Else, quitting the assistant is only possible by hitting the "
+"'Cancel' button."
+msgstr ""
+"Када је ова могућност изабрана, тастер „Излаз“ ће вам допустити да затворите "
+"текућег помоћника. У супротном, затварање помоћника је једино могуће "
+"притиском на дугме „Одустани“."
+
+#: ../src/nact/nact-preferences.ui.h:36
+msgid "Ask for a _confirmation when quitting the assistant on Esc key"
+msgstr "Тражи _потврду приликом затварања помоћника тастером Излаз"
+
+#: ../src/nact/nact-preferences.ui.h:37
+msgid ""
+"This option is only relevant when the 'Escape' key lets the user quit the "
+"assistant. When checked, the user will be prompted for a confirmation in "
+"order to help prevent erroneous hits of the Esc key."
+msgstr ""
+"Ова могућност је једино значајна када тастер „Излаз“ допушта кориснику да "
+"затвори помоћника. Када је изабрана, корисник ће бити упитан за потврду да "
+"би помогао у спречавању погрешно притиснутог тастера Излаз."
+
+#: ../src/nact/nact-preferences.ui.h:38
+msgid "<b>Assistants</b>"
+msgstr "<b>Помоћници</b>"
+
+#: ../src/nact/nact-preferences.ui.h:39
+msgid "Automatically _saves pending modifications"
+msgstr "Сам _сачувај измене на чекању"
+
+#: ../src/nact/nact-preferences.ui.h:40
+msgid ""
+"When this option is checked, pending modification will be periodically and "
+"automatically saved."
+msgstr ""
+"Када је ова могућност изабрана, измена на чекању биће повремено и самостално "
+"сачувана."
+
+#: ../src/nact/nact-preferences.ui.h:41
+msgid "Periodicity :"
+msgstr "Повременост :"
+
+#: ../src/nact/nact-preferences.ui.h:42
+msgid "minutes"
+msgstr "минута"
+
+#: ../src/nact/nact-preferences.ui.h:43
+msgid "<b>Auto-save</b>"
+msgstr "<b>Самостално чување</b>"
+
+#: ../src/nact/nact-preferences.ui.h:44
+msgid ""
+"This tab allows the user to choose custom preferences for the Nautilus-"
+"Actions Configuration Tool user interface."
+msgstr ""
+"Овај језичак допушта кориснику да изабере произвољне поставке за корисничко "
+"сучеље алата подешавања Наутилусових радњи."
+
+#: ../src/nact/nact-preferences.ui.h:45
+msgid "_UI Preferences"
+msgstr "_Поставке КС-а"
+
+#: ../src/nact/nact-preferences.ui.h:46
+msgid ""
+"What to do when an item, action or menu, selected to be imported, has the "
+"same identifier that a currently existing one ?"
+msgstr ""
+"Шта да радим када ставка, радња или изборник, изабрана за увоз, има исти "
+"одредник као тренутно постојећа ?"
+
+#: ../src/nact/nact-preferences.ui.h:47
+msgid "<b>Import mode</b>"
+msgstr "<b>Режим увоза</b>"
+
+#: ../src/nact/nact-preferences.ui.h:48
+msgid "This tab lets you decide on the default behavior of import operations."
+msgstr "Овај језичак вам допушта да одлучите о основном понашању радњи увоза."
+
+#: ../src/nact/nact-preferences.ui.h:49
+msgid "_Import"
+msgstr "_Увоз"
+
+#: ../src/nact/nact-preferences.ui.h:50
+msgid "What is your preferred export format ?"
+msgstr "Који је ваш жељени извозни запис ?"
+
+#: ../src/nact/nact-preferences.ui.h:51
+msgid "<b>Export format</b>"
+msgstr "<b>Извозни запис</b>"
+
+#: ../src/nact/nact-preferences.ui.h:52
+msgid "This tab lets you decide on the default behavior of export operations."
+msgstr "Овај језичак вам допушта да одлучите о основном понашању радњи извоза."
+
+#: ../src/nact/nact-preferences.ui.h:53
+msgid "_Export"
+msgstr "_Извоз"
+
+#: ../src/nact/nact-preferences.ui.h:54
+msgid ""
+"You may define here any number of schemes. They will be proposed as default "
+"schemes when defining conditions for an action.\n"
+"If the list becomes empty, NACT will automatically refill in with this "
+"default list.\n"
+"You can add a new scheme by clicking on the '+' button."
+msgstr ""
+"Овде можете да одредите било који број шема. Биће предложене\n"
+"као основне шеме приликом одређивања услова за радњу.\n"
+"Ако списак постане празан, АПНР ће га сам\n"
+"попунити овим основним списком.\n"
+"Можете да додате нову шему кликом на дугме „+“."
+
+#: ../src/nact/nact-preferences.ui.h:57
+msgid "Click to add a new default scheme."
+msgstr "Кликните да додате нову основну шему."
+
+#: ../src/nact/nact-preferences.ui.h:58
+msgid "Click to remove the selected default scheme."
+msgstr "Кликните да уклоните изабрану основну шему."
+
+#: ../src/nact/nact-preferences.ui.h:59
+msgid "<b>Default schemes</b>"
+msgstr "<b>Основне шеме</b>"
+
+#: ../src/nact/nact-preferences.ui.h:60
+msgid ""
+"This tab lets you decide which schemes are proposed by default when editing "
+"advanced conditions for an item."
+msgstr ""
+"Овај језичак вам допушта да одлучите које шеме су предложене по основи "
+"приликом уређивања напредних услова за ставку."
+
+#: ../src/nact/nact-preferences.ui.h:61
+#: ../src/nact/nautilus-actions-config-tool.ui.h:190
+msgid "_Schemes"
+msgstr "_Шеме"
+
+#: ../src/nact/nact-preferences.ui.h:62
+msgid ""
+"Define here, for available I/O providers, if you want them to be read at "
+"startup, to be writable, and the order in which they will be tested when "
+"trying to write a new menu or action."
+msgstr ""
+"Овде одредите, за доступне У/И достављаче, ако желите да буду прочитани при "
+"покретању, да буду уписиви, и редослед по коме ће бити испробани када "
+"покушате да упишете нови изборник или радњу."
+
+#: ../src/nact/nact-preferences.ui.h:63
+msgid "_Up"
+msgstr "_Горе"
+
+#: ../src/nact/nact-preferences.ui.h:64
+msgid ""
+"Move up the selected I/O provider in the order of priority when trying to "
+"write a new item."
+msgstr ""
+"Преместите горе изабраног У/И достављача према предности када покушавате да "
+"упишете нову ставку."
+
+#: ../src/nact/nact-preferences.ui.h:65
+msgid "_Down"
+msgstr "_Доле"
+
+#: ../src/nact/nact-preferences.ui.h:66
+msgid "<b>Activation and priority</b>"
+msgstr "<b>Покретање и предност</b>"
+
+#: ../src/nact/nact-preferences.ui.h:67
+msgid ""
+"This tab lets you decide whether the I/O providers are enabled or not, and "
+"in which order they will be tried when writing a new item."
+msgstr ""
+"Овај језичак вам допушта да одлучите да ли су У/И достављачи укључени или "
+"нису, и по ком реду ће бити испробани приликом писања нове ставке."
+
+#: ../src/nact/nact-preferences.ui.h:68
+msgid "I/O _Providers"
+msgstr "У/И _достављачи"
+
+#. i18n: the user is not willing to identify his current desktop environment,
+#. *       and prefers rely on the runtime detection
+#: ../src/nact/nact-preferences-editor.c:118
+msgid "Rely on runtime detection"
+msgstr "Ослони се на откривање у време покретања"
+
+#: ../src/nact/nact-preferences-editor.c:804
+msgid "Ex.:"
+msgstr "Пример:"
+
+#: ../src/nact/nact-providers-list.c:137
+msgid "Readable"
+msgstr "Читљиво"
+
+#: ../src/nact/nact-providers-list.c:151
+msgid "Writable"
+msgstr "Уписиво"
+
+#: ../src/nact/nact-providers-list.c:165
+msgid "I/O Provider"
+msgstr "У/И достављачи"
+
+#. i18n: default name when the I/O providers doesn't provide one
+#: ../src/nact/nact-providers-list.c:261
+msgid "no name"
+msgstr "без имена"
+
+#. i18n: name displayed when the corresponding I/O provider is unavailable at runtime
+#: ../src/nact/nact-providers-list.c:265
+msgid "unavailable I/O provider"
+msgstr "недоступан У/И достављач"
+
+#: ../src/nact/nact-schemes-list.c:155
+msgid "Keyword"
+msgstr "Кључна реч"
+
+#. i18n notes : description of 'file' scheme
+#: ../src/nact/nact-schemes-list.c:283
+msgid "Local files"
+msgstr "Месне датотеке"
+
+#. i18n notes : description of 'sftp' scheme
+#: ../src/nact/nact-schemes-list.c:285
+msgid "SSH files"
+msgstr "Датотеке безбедне шкољке"
+
+#. i18n notes : description of 'smb' scheme
+#: ../src/nact/nact-schemes-list.c:287
+msgid "Windows files"
+msgstr "Датотеке Виндоуза"
+
+#. i18n notes : description of 'ftp' scheme
+#: ../src/nact/nact-schemes-list.c:289
+msgid "FTP files"
+msgstr "Датотеке ФТП-а"
+
+#. i18n notes : description of 'dav' scheme
+#: ../src/nact/nact-schemes-list.c:291
+msgid "WebDAV files"
+msgstr "Датотеке ВебДАВ-а"
+
+#. i18n: add a comment when a scheme is already used by current item
+#: ../src/nact/nact-schemes-list.c:400
+#, c-format
+msgid "%s (already used)"
+msgstr "%s (већ се користи)"
+
+#. i18n notes : scheme name set for a new entry in the scheme list
+#: ../src/nact/nact-schemes-list.c:701
+msgid "new-scheme"
+msgstr "нова шема"
+
+#: ../src/nact/nact-schemes-list.c:702
+msgid "New scheme description"
+msgstr "Опис нове шеме"
+
+#: ../src/nact/nact-tree-model.c:226
+msgid ""
+"A pointer (not a reference) to the BaseWindow parent of the embedding "
+"treeview"
+msgstr ""
+"Показивач (не упута) на родитеља основног прозора прегледа стаблом "
+"угнежђивања"
+
+#: ../src/nact/nact-tree-model.c:232
+msgid "Embedding GtkTreeView"
+msgstr "Гтк преглед стаблом угнежђивања"
+
+#: ../src/nact/nact-tree-model.c:233
+msgid "The GtkTreeView which relies on this NactTreeModel"
+msgstr "Преглед стаблом Гтк-а који се заснива на овом моделу стабла Апнр-а"
+
+#: ../src/nact/nact-tree-model.c:239
+msgid "Edition mode"
+msgstr "Режим уређивања"
+
+#: ../src/nact/nact-tree-model.c:240
+msgid "Edition vs. Selection mode"
+msgstr "Уређивање наспрам режима избора"
+
+#: ../src/nact/nact-tree-model-dnd.c:120
+msgid "Unable to drop a profile here"
+msgstr "Не могу овде да убацим профил"
+
+#: ../src/nact/nact-tree-model-dnd.c:121
+msgid "Unable to drop an action or a menu here"
+msgstr "Не могу овде да убацим радњу или изборник"
+
+#: ../src/nact/nact-tree-model-dnd.c:122
+msgid "Unable to drop here as parent is not writable"
+msgstr "Не могу да убацим овде јер родитељ није уписив"
+
+#: ../src/nact/nact-tree-model-dnd.c:123
+msgid "Unable to drop here as level zero is not writable"
+msgstr "Не могу да убацим овде јер нулти ниво није уписив"
+
+#: ../src/nact/nact-tree-model-dnd.c:939
+msgid "Some messages have occurred during drop operation."
+msgstr "Појавиле су се неке поруке за време радње убацивања."
+
+#. i18n: this is a class name and should not be translated
+#: ../src/nact/nact-tree-view.c:215
+msgid "BaseWindow"
+msgstr "Основни прозор"
+
+#. i18n: NactTreeView property long description
+#: ../src/nact/nact-tree-view.c:217
+msgid "The BaseWindow parent"
+msgstr "Родитељ основног прозора"
+
+#. i18n: NactTreeView property short description
+#: ../src/nact/nact-tree-view.c:224
+msgid "Container"
+msgstr "Садржалац"
+
+#. i18n: NactTreeView property long description
+#: ../src/nact/nact-tree-view.c:226
+msgid "A GtkContainer which contains the GtkTreeView widget"
+msgstr "Гтк садржалац који садржи елемент Гтк прегледа стаблом"
+
+#. i18n: NactTreeView property short description
+#: ../src/nact/nact-tree-view.c:233
+msgid "Widget name"
+msgstr "Назив елемента"
+
+#. i18n: NactTreeView property long description
+#: ../src/nact/nact-tree-view.c:235
+msgid "The name of GtkTreeView widget"
+msgstr "Назив елемента Гтк прегледа стаблом"
+
+#. i18n: NactTreeView property short description
+#: ../src/nact/nact-tree-view.c:243
+msgid "Management mode"
+msgstr "Режим управљања"
+
+#. i18n: NactTreeView property long description
+#: ../src/nact/nact-tree-view.c:245
+msgid "Management mode of the tree view, selection or edition"
+msgstr "Режим управљања прегледа стаблом, избора или уређивања"
+
+#. i18n: NactTreeView property short description
+#: ../src/nact/nact-tree-view.c:255
+msgid "Allow notify"
+msgstr "Допусти обавештења"
+
+#. i18n: NactTreeView property loong description
+#: ../src/nact/nact-tree-view.c:257
+msgid "Whether notifications are allowed"
+msgstr "Да ли су допуштена обавештења"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:1
+msgid "End of session"
+msgstr "Крај сесије"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:2
+msgid "_Save and quit"
+msgstr "_Сачувај и изађи"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:3
+msgid "_Quit without saving"
+msgstr "_Изађи без чувања"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:4
+msgid "<span size=\"larger\"><b>Parameter Legend</b></span>"
+msgstr "<span size=\"larger\"><b>Легенда параметра</b></span>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:6
+#, no-c-format
+msgid "<b>%b</b> :"
+msgstr "<b>%b</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:8
+#, no-c-format
+msgid "<b>%B</b> :"
+msgstr "<b>%B</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:10
+#, no-c-format
+msgid "<b>%c</b> :"
+msgstr "<b>%c</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:12
+#, no-c-format
+msgid "<b>%d</b> :"
+msgstr "<b>%d</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:14
+#, no-c-format
+msgid "<b>%D</b> :"
+msgstr "<b>%D</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:16
+#, no-c-format
+msgid "<b>%p</b> :"
+msgstr "<b>%p</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:18
+#, no-c-format
+msgid "<b>%s</b> :"
+msgstr "<b>%s</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:20
+#, no-c-format
+msgid "<b>%u</b> :"
+msgstr "<b>%u</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:22
+#, no-c-format
+msgid "<b>%U</b> :"
+msgstr "<b>%U</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:24
+#, no-c-format
+msgid "<b>%%</b> :"
+msgstr "<b>%%</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:25
+msgid "(first) basename."
+msgstr "(први) основни назив."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:26
+msgid ""
+"space-separated list of the basenames of the selected file(s)/folder(s)."
+msgstr "размаком раздвојени списак назива основе изабране датотеке/фасцикле."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:27
+msgid "count of selected item(s)."
+msgstr "број изабране ставке."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:28
+msgid "(first) base directory."
+msgstr "(први) основни директоријум."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:29
+msgid ""
+"space-separated list of the base directories of the selected file(s)/folder"
+"(s)."
+msgstr ""
+"размаком раздвојени списак основних директоријума изабране "
+"датотеке/фасцикле."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:30
+msgid "port number of the (first) selected URI."
+msgstr "број прикључника (прве) изабране путање."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:31
+msgid "scheme of the (first) selected URI."
+msgstr "шема (прве) изабране путање."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:32
+msgid "(first) URI."
+msgstr "(прва) путања."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:33
+msgid "space-separated list of the URIs of the selected file(s)/folder(s)."
+msgstr "размаком раздвојени списак основних путања изабране датотеке/фасцикле."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:34
+msgid "a percent sign."
+msgstr "знак процената."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:36
+#, no-c-format
+msgid "<b>%f</b> :"
+msgstr "<b>%f</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:37
+msgid "(first) filename."
+msgstr "(први) назив датотеке."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:39
+#, no-c-format
+msgid "<b>%F</b> :"
+msgstr "<b>%F</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:40
+msgid ""
+"space-separated list of the filenames of the selected file(s)/folder(s)."
+msgstr "размаком раздвојени списак назива датотека изабране датотеке/фасцикле."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:42
+#, no-c-format
+msgid "<b>%h</b> :"
+msgstr "<b>%h</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:43
+msgid "hostname of the (first) selected URI."
+msgstr "назив домаћина (прве) изабране путање."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:45
+#, no-c-format
+msgid "<b>%n</b> :"
+msgstr "<b>%n</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:46
+msgid "username of the (first) selected URI."
+msgstr "корисничко име (прве) изабране путање."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:47
+msgid "(first) basename without the extension."
+msgstr "(први) основни назив без проширења."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:48
+msgid "space-separated list of the basenames without the extension."
+msgstr "размаком раздвојени списак основних назива без проширења."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:49
+msgid "(first) extension."
+msgstr "(прво) проширење."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:50
+msgid ""
+"space-separated list of the extensions of the selected file(s)/folder(s)."
+msgstr "размаком раздвојени списак проширења изабране датотеке/фасцикле."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:52
+#, no-c-format
+msgid "<b>%w</b> :"
+msgstr "<b>%w</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:54
+#, no-c-format
+msgid "<b>%W</b> :"
+msgstr "<b>%W</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:56
+#, no-c-format
+msgid "<b>%x</b> :"
+msgstr "<b>%x</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:58
+#, no-c-format
+msgid "<b>%X</b> :"
+msgstr "<b>%X</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:60
+#, no-c-format
+msgid "<b>%m</b> :"
+msgstr "<b>%m</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:62
+#, no-c-format
+msgid "<b>%M</b> :"
+msgstr "<b>%M</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:63
+msgid "(first) mimetype."
+msgstr "(прва) миме врста."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:64
+msgid ""
+"space-separated list of the mimetypes of the selected file(s)/folder(s)."
+msgstr "размаком раздвојени списак миме врста изабране датотеке/фасцикле."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:66
+#, no-c-format
+msgid "<b>%o</b> :"
+msgstr "<b>%o</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:68
+#, no-c-format
+msgid "<b>%O</b> :"
+msgstr "<b>%O</b> :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:69
+msgid "no-op operator which forces a singular form of execution."
+msgstr "„no-op“ оператор који приморава један облик извршавања."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:70
+msgid "no-op operator which forces a plural form of execution."
+msgstr "„no-op“ оператор који приморава више облика извршавања."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:71
+msgid "Items _list :"
+msgstr "Списак _ставки :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:72
+msgid "Sort the list in descending alphabetical order."
+msgstr "Поређајте списак опадајућим азбучним редом."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:73
+msgid "Do not sort the list, letting you manually reorder the items."
+msgstr "Ручно преуредите ставке."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:74
+msgid "Sort the list in ascending alphabetical order."
+msgstr "Поређајте списак растућим азбучним редом."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:75
+msgid "Display item in _selection context menu"
+msgstr "Прикажи ставку у приручном изборнику _избора"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:76
+msgid ""
+"When checked, the item will be candidate to be displayed in the file manager "
+"context menu, with a non-empty selection."
+msgstr ""
+"Када је изабрано, ставка ће бити кандидат за приказивање у приручном "
+"изборнику управника датотека, са не-празним избором."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:77
+msgid "The label of the item in the file manager context menus."
+msgstr "Натпис ставке у приручним изборницима управника датотека."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:78
+msgid "_Context label :"
+msgstr "_Натпис састава :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:79
+msgid "Display item in _location context menu"
+msgstr "Прикажи ставку у приручном изборнику _места"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:80
+msgid ""
+"When checked, the item will be candidate to be displayed in the file manager "
+"context menu when the selection is empty.\n"
+"In this case, the defined conditions will be applied to the current "
+"displayed folder."
+msgstr ""
+"Када је изабрано, ставка ће бити кандидат за приказивање у приручном "
+"изборнику управника датотека када је избор празан.\n"
+"У том случају, одређени услови ће бити примењени на тренутно приказану "
+"фасциклу."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:82
+msgid "Display item in the _toolbar"
+msgstr "Прикажи ставку на _траци алата"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:83
+msgid ""
+"When checked, the item will be candidate to be displayed in the file manager "
+"toolbar.\n"
+"In this case, the defined conditions will be applied to the current folder, "
+"and do not depend of the possible current selection."
+msgstr ""
+"Када је изабрано, ставка ће бити кандидат за приказивање на траци алата "
+"управника датотека.\n"
+"У том случају, одређени услови ће бити примењени на текућу фасциклу, и не "
+"зависе од могућег тренутног избора."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:85
+msgid "Use s_ame label for icon in the toolbar"
+msgstr "Користи _исти натпис за иконицу на траци алата"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:86
+msgid ""
+"When checked, the label displayed in the toolbar will be the same that the "
+"one displayed in the context menus."
+msgstr ""
+"Када је изабрано, натпис приказан на траци алата ће бити исти као онај "
+"приказан у приручним изборницима."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:87
+msgid "The label displayed in the file manager toolbar."
+msgstr "Натпис приказан на траци алата управника датотека."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:88
+msgid "T_oolbar label :"
+msgstr "Натпис _траке алата :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:89
+msgid "Toolti_p :"
+msgstr "_Облачић :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:90
+msgid "_Icon :"
+msgstr "_Иконица :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:91
+msgid "The tooltip displayed in the file manager user interface."
+msgstr "Облачић приказан у корисничком сучељу управника датотека."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:92
+msgid "The icon displayed in the file manager user interface."
+msgstr "Иконица приказана у корисничком сучељу управника датотека."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:93
+msgid "The name of a themed icon or the filename of an image."
+msgstr "Назив темске иконице или назив датотеке слике."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:94
+msgid "_Browse..."
+msgstr "_Разгледај..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:95
+msgid "<b>Nautilus Item</b>"
+msgstr "<b>Ставка Наутислуса</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:96
+msgid ""
+"This tab lets you determine the main characteristics of the currently "
+"selected item."
+msgstr ""
+"Овај језичак вам допушта да одредите главне карактеристике тренутно изабране "
+"ставке."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:98
+msgid "Just a label to remind you why you have created this profile."
+msgstr "Једноставан натпис да вас подсети зашто сте направили овај профил."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:99
+msgid "_Label :"
+msgstr "_Натпис :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:100
+msgid "<b>Profile</b>"
+msgstr "<b>Профил</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:101
+msgid "_Path :"
+msgstr "_Путања :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:102
+msgid "P_arameters :"
+msgstr "П_араметри :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:103
+msgid ""
+"The path of the command.\n"
+"If this is not an absolute path, then the PATH environment variable at "
+"execution time will be considered."
+msgstr ""
+"Путања наредбе.\n"
+"Ако ово није апсолутна путања, тада ће променљива\n"
+"окружења ПУТАЊЕ у време извршавања бити узета у обзир."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:105
+msgid "The parameters of the command."
+msgstr "Параметри наредбе."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:106
+msgid "Le_gend"
+msgstr "Ле_генда"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:107
+msgid "_Working directory :"
+msgstr "_Радни директоријум :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:108
+msgid "The default working directory the command should be started in."
+msgstr "Основни радни директоријум у коме наредба треба бити покренута."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:109
+msgid "B_rowse..."
+msgstr "_Разгледај..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:110
+msgid "Example"
+msgstr "Пример"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:111
+msgid "<b>Command</b>"
+msgstr "<b>Наредба</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:112
+msgid ""
+"This tab lets you choose the command to be executed, along with its "
+"parameters.\n"
+"Defining several profiles lets you have several commands, each applying with "
+"a different set of conditions."
+msgstr ""
+"Овај језичак вам допушта да изаберете наредбу за извршење, уз њене "
+"параметре.\n"
+"Одређивање неколико профила вам допушта да имате неколико наредби, свака "
+"примењена са различитим скупом услова."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:114
+msgid "_Command"
+msgstr "_Наредба"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:115
+msgid "_Normal"
+msgstr "_Обичан"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:116
+msgid "The command will be started as a standard graphical user interface."
+msgstr "Наредба ће бити покренута као уобичајено графичко корисничко сучеље."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:117
+msgid "In a _terminal"
+msgstr "У _терминалу"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:118
+msgid ""
+"The command will be started in the preferred terminal of the graphical "
+"environment."
+msgstr "Наредба ће бити покренута у жељеном терминалу графичког окружења."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:119
+msgid "_Embedded"
+msgstr "_Угнеждена"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:120
+msgid ""
+"This option makes use of a special feature of the file manager, which would "
+"allow a terminal to be ran inside of it.\n"
+"An acceptable fallback is running in the standard terminal."
+msgstr ""
+"Ова могућност користи посебну функцију управника датотека, који ће омогућити "
+"терминалу да буде покренут у њему.\n"
+"Прихватљива замена је покретање у уобичајеном терминалу."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:122
+msgid "_Display output"
+msgstr "_Прикажи излаз"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:123
+msgid ""
+"The command will be run in a terminal.\n"
+"The terminal will be closed at the end of the execution; standard error and "
+"output streams will be displayed.\n"
+"An acceptable fallback is running in the standard terminal."
+msgstr ""
+"Наредба ће бити покренута у терминалу.\n"
+"Терминал ће бити затворен на крају извршења; стандардна грешка и токови "
+"излаза ће бити приказани.\n"
+"Прихватљива замена је покретање у уобичајеном терминалу."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:126
+msgid "<b>Execution mode</b>"
+msgstr "<b>Режим извршавања</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:127
+msgid "Note: this is not yet implemented in Nautilus-Actions.\n"
+msgstr "Напомена: ово још увек није примењено у Наутилусовим радњама.\n"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:129
+msgid "_Startup notify"
+msgstr "_Обавештење покретања"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:130
+msgid ""
+"When checked, it is known that the run command will send a \"remove\" "
+"message to the desktop environment.\n"
+"See the Startup Notification Protocol Specification for more details.\n"
+"Only relevant when chosen execution mode is Normal."
+msgstr ""
+"Када је изабрано, познато је да ће покренута наредба послати поруку "
+"„уклањања“ окружењу радне површи.\n"
+"За више појединости погледајте одредницу протокола обавештења покретања.\n"
+"Важи једино када је изабрани режим извршавања обичан."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:133
+msgid "Startup Window Manager _class :"
+msgstr "Разред управника прозора _покретања :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:134
+msgid ""
+"When specified, this should be the name of a WM class of at least one window "
+"of the run command.\n"
+"See the Startup Notification Protocol Specification for more details.\n"
+"Only relevant when chosen execution mode is Normal."
+msgstr ""
+"Када је наведено, ово треба да буде назив разреда управника прозора барем "
+"једног прозора покренуте наредбе.\n"
+"За више појединости погледајте одредницу протокола обавештења покретања.\n"
+"Важи једино када је изабрани режим извршавања обичан."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:137
+msgid "<b>Startup mode</b>"
+msgstr "<b>Режим покретања</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:138
+msgid "Note: this is not yet implemented in Nautilus-Actions."
+msgstr "Напомена: ово још увек није примењено у Наутилусовим радњама."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:139
+msgid "Execute as _user :"
+msgstr "Изврши као _корисник :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:140
+msgid ""
+"Enter here the user the command should be ran as.\n"
+"The user may be defined by his numeric UID or his login name.\n"
+"Leave the field empty to run the command as the current user."
+msgstr ""
+"Овде унесите корисника по коме наредба треба да буде покренута.\n"
+"Корисник може бити одређен бројем ЈИБ-а или именом за пријављивање.\n"
+"Оставите поље празним да покренете наредбу као текући корисник."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:143
+msgid "<b>Execute as user</b>"
+msgstr "<b>Изврши као корисник</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:144
+msgid ""
+"This advanced tab lets you precisely define how your command will be "
+"executed."
+msgstr ""
+"Овај напредни језичак вам допушта да тачно одредите како ће ваша наредба "
+"бити извршена."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:145
+msgid "E_xecution"
+msgstr "_Извршавање"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:146
+msgid ""
+"The current item will appear if the basename of each element of the "
+"selection matches one filter of the 'Must match one of' column, while not "
+"matching any of the filters of the 'Must not match any of' column."
+msgstr ""
+"Текућа ставка ће се појавити ако основни назив сваког елемента избора "
+"одговара једном пропуснику колоне „Мора да одговара једном“, док не одговара "
+"ни једном пропуснику колоне „Не мора да одговара ни једном“."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:147
+msgid ""
+"This list lets you determine for which basenames the currently selected item "
+"will be displayed in the Nautilus context menu.\n"
+"Basenames may use '*' and '?' wildcards.\n"
+"Basenames may be negated to specify for which basenames your item must not "
+"appear."
+msgstr ""
+"Овај списак вам допушта да одредите за које основне називе тренутно изабрана "
+"ставка ће бити приказана у Наутилусовом приручном изборнику.\n"
+"Основни називи могу да користе џокере „*“ и „?“.\n"
+"Основни називи могу бити негирани да одреде за које основне називе ваша "
+"ставка не сме да се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:150
+msgid "Click to add a new basename filter."
+msgstr "Кликните да додате нови пропусник основног назива."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:151
+msgid "Click to remove the current basename filter."
+msgstr "Кликните да уклоните текући пропусник основног назива."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:152
+msgid "Match _case"
+msgstr "Упореди величину _слова"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:153
+msgid "Click to define the above basename filters as case sensitive."
+msgstr "Кликните да одредите да горњи основни назив разликује величину слова."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:154
+msgid "<b>Basenames conditions</b>"
+msgstr "<b>Услови основних назива</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:155
+msgid ""
+"This tab lets you determine for which basenames the currently selected item "
+"will be displayed in the Nautilus context menu.\n"
+"Basenames may be negated to specify for which basenames your item must not "
+"appear."
+msgstr ""
+"Овај језичак вам допушта да одредите за које основне називе тренутно "
+"изабрана ставка ће бити приказана у Наутилусовом приручном изборнику.\n"
+"Основни називи могу бити негирани да одреде за које основне називе ваша "
+"ставка не сме да се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:157
+msgid "_Basenames"
+msgstr "_Основни називи"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:158
+msgid ""
+"The current item will appear if the mimetype of each element of the "
+"selection matches one filter of the 'Must match one of' column, while not "
+"matching any of the filters of the 'Must not match any of' column."
+msgstr ""
+"Текућа ставка ће се појавити ако миме врста сваког елемента избора одговара "
+"једном пропуснику колоне „Мора да одговара једном“, док не одговара ни "
+"једном пропуснику колоне „Не мора да одговара ни једном“."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:159
+msgid ""
+"This list lets you determine for which mimetypes the currently selected item "
+"will be displayed in the Nautilus context menu.\n"
+"Mimetypes may be specified as '*', '*/*', 'group/*' or 'group/subgroup'.\n"
+"Mimetypes may be negated to specify for which type of objects your item must "
+"not appear."
+msgstr ""
+"Овај списак вам допушта да одредите за које ће миме врсте тренутно изабрана "
+"ставка бити приказана у Наутилусовом приручном изборнику.\n"
+"Миме врсте могу бити наведене као„*“, „*/*“, „group/“ или „group/subgroup“.\n"
+"Миме врсте могу бити негиране да одреде за које миме врсте ваша ставка не "
+"сме да се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:162
+msgid "Click to add a new mimetype filter."
+msgstr "Кликните да додате нови пропусник миме врсте."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:163
+msgid "Click to remove the current mimetype filter."
+msgstr "Кликните да уклоните текући пропусник миме врсте."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:164
+msgid "<b>Mimetypes conditions</b>"
+msgstr "<b>Услови миме врста</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:165
+msgid ""
+"This tab lets you determine for which mimetypes the currently selected item "
+"will be displayed in the Nautilus context menu.\n"
+"Mimetypes may be specified as '*', '/*', 'group/*' or 'group/subgroup'.\n"
+"Mimetypes may be negated to specify for which type of objects your item must "
+"not appear."
+msgstr ""
+"Овај језичак вам допушта да одредите за које ће миме врсте тренутно изабрана "
+"ставка бити приказана у Наутилусовом приручном изборнику.\n"
+"Миме врсте могу бити наведене као„*“, „/*“, „group/“ или „group/subgroup“.\n"
+"Миме врсте могу бити негиране да одреде за које миме врсте ваша ставка не "
+"сме да се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:168
+msgid "_Mimetypes"
+msgstr "_Миме врсте"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:169
+msgid ""
+"The current item will appear if the location of each element of the "
+"selection is one or inside one of the paths of the 'Must match one of' "
+"column, while not being one or inside one of the 'Must not match any of' "
+"column."
+msgstr ""
+"Текућа ставка ће се појавити ако место сваког елемента избора је једна или у "
+"једној од путања колоне „Мора да одговара једном“, док не одговара ни "
+"једном пропуснику колоне „Не мора да одговара ни једном“."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:170
+msgid ""
+"This list lets you determine where (in which folders) the currently selected "
+"files must be found in order for the item to be displayed in the Nautilus "
+"context menu.\n"
+"Folders may use '*' or '?' wildcards.\n"
+"Folder filters may be negated to specify for which folders your item must "
+"not appear."
+msgstr ""
+"Овај списак вам допушта да одредите где (у којим фасциклама) тренутно "
+"изабране фасцикле морају бити пронађене да би ставка била приказана у "
+"Наутилусовом приручном изборнику.\n"
+"Фасцикле могу да користе џокере „*“ или „?“.\n"
+"Пропусници фасцикли могу бити негирани да одреде за које фасцикле ваша "
+"ставка не сме да се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:173
+msgid "Click to add a new folder filter."
+msgstr "Кликните да додате нови пропусник фасцикле."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:174
+msgid "Click to browse the filesystem in order to select a new folder filter."
+msgstr ""
+"Кликните да разгледате систем датотека да бисте изабрали нови пропусник "
+"фасцикле."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:175
+msgid "Click to remove the current folder filter."
+msgstr "Кликните да уклоните текући пропусник фасцикле."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:176
+msgid "<b>Folders conditions</b>"
+msgstr "<b>Услови фасцикле</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:177
+msgid ""
+"This tab lets you determine where (in which folders) the currently selected "
+"files must be found in order for the item to be displayed in the Nautilus "
+"context menu.\n"
+"Folder filters may be negated to specify for which folders your item must "
+"not appear."
+msgstr ""
+"Овај језичак вам допушта да одредите где (у којим фасциклама) тренутно "
+"изабране фасцикле морају бити пронађене да би ставка била приказана у "
+"Наутилусовом приручном изборнику.\n"
+"Пропусници фасцикли могу бити негирани да одреде за које фасцикле ваша "
+"ставка не сме да се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:179
+msgid "_Folders"
+msgstr "_Фасцикле"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:180
+msgid ""
+"The current item will appear if the scheme of each element of the selection "
+"matches one of the 'Must match one of' column, while not matching any of the "
+"'Must not match any of' column."
+msgstr ""
+"Текућа ставка ће се појавити ако шема сваког елемента избора одговара једној "
+"од колона „Мора да одговара једном“, док не одговара ни једној од колона "
+"„Не мора да одговара ни једном“."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:181
+msgid ""
+"This list lets you determine which schemes the currently selected files must "
+"satisfy in order for the item to be displayed in the Nautilus context menu.\n"
+"Filters may be negated to specify for which schemes your item must not "
+"appear."
+msgstr ""
+"Овај списак вам допушта да одредите које шеме тренутно изабране фасцикле "
+"морају да задовоље да би ставка била приказана у Наутилусовом приручном "
+"изборнику.\n"
+"Пропусници могу бити негирани да одреде за које шеме ваша ставка не сме да "
+"се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:183
+msgid "Click to add a new scheme filter."
+msgstr "Кликните да додате нови пропусник шеме."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:184
+msgid "De_faults..."
+msgstr "_Основно..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:185
+msgid "Click to select a new scheme filter among default schemes."
+msgstr "Кликните да изаберете нови пропусник шеме поред основних шема."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:186
+msgid "Click to remove the current scheme filter."
+msgstr "Кликните да уклоните текући пропусник шеме."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:187
+msgid "<b>Schemes conditions</b>"
+msgstr "<b>Услови шема</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:188
+msgid ""
+"This tab lets you determine which schemes the currently selected files must "
+"satisfy in order for the item to be displayed in the Nautilus context menu.\n"
+"Filters may be negated to specify for which schemes your item must not "
+"appear."
+msgstr ""
+"Овај језичак вам допушта да одредите које шеме тренутно изабране фасцикле "
+"морају да задовоље да би ставка била приказана у Наутилусовом приручном "
+"изборнику.\n"
+"Пропусници могу бити негирани да одреде за које шеме ваша ставка не сме да "
+"се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:191
+msgid ""
+"The current item will appear if each element of the selection matches all "
+"capabilities of the 'Must match all of' column, while not matching any "
+"capability of the 'Must not match any of' column."
+msgstr ""
+"Текућа ставка ће се појавити ако сваки елемент избора одговара свим "
+"могућностима колоне „Мора да одговара свим“, док не одговара ни једној "
+"могућности колоне „Не мора да одговара ни једном“."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:192
+msgid ""
+"This list lets you determine which capabilities the currently selected files "
+"must satisfy in order for the item to be displayed in the Nautilus context "
+"menu.\n"
+"Capabilities may be negated to specify for which capabilities your item must "
+"not appear."
+msgstr ""
+"Овај списак вам допушта да одредите које могућности тренутно изабране "
+"фасцикле морају да задовоље да би ставка била приказана у Наутилусовом "
+"приручном изборнику.\n"
+"Могућности могу бити негиране да одреде за које могућности ваша ставка не "
+"сме да се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:194
+msgid "Click to add a new capability filter."
+msgstr "Кликните да додате нови пропусник могућности."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:195
+msgid "Click to remove the current capability."
+msgstr "Кликните да уклоните текућу могућност."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:196
+msgid "<b>Capabilities conditions</b>"
+msgstr "<b>Услови могућности</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:197
+msgid ""
+"This tab lets you determine which capabilities the currently selected files "
+"must satisfy in order for the item to be displayed in the Nautilus context "
+"menu.\n"
+"Filters may be negated to specify for which capabilities your item must not "
+"appear."
+msgstr ""
+"Овај језичак вам допушта да одредите које могућности тренутно изабране "
+"фасцикле морају да задовоље да би ставка била приказана у Наутилусовом "
+"приручном изборнику.\n"
+"Пропусници могу бити негирани да одреде за које могућности ваша ставка не "
+"сме да се појави."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:199
+msgid "Ca_pabilities"
+msgstr "Мо_гућности"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:200
+msgid ""
+"This is an advanced condition based on the count of the current selection.\n"
+"If the current selection does not match this condition, then the item will "
+"not be displayed in the file manager context menus or toolbar."
+msgstr ""
+"Ово је напредан услов заснован на броју тренутног избора.\n"
+"Ако тренутни избор не одговара овом услову, онда ставка неће бити приказана "
+"у приручним изборницима управника датотека или на траци алата."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:202
+msgid "_Count :"
+msgstr "_Број :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:203
+msgid "<b>Appears if selection contains</b>"
+msgstr "<b>Приказује се ако избор садржи</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:204
+msgid ""
+"This is an advanced condition based on the running desktop environment.\n"
+"First choose on the left if the item depends of a particular desktop "
+"environment, then select on the right the adequate desktop environment."
+msgstr ""
+"Ово је напредан услов заснован на покренутом окружењу радне површи.\n"
+"Прво изаберите на левој страни да ли ставка зависи од нарочитог окружења "
+"радне површи, затим изаберите на десној страни одговарајуће окружење радне "
+"површи."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:206
+msgid "Item may appear depending of the desktop environment."
+msgstr "Ставка може да се појави у зависности од окружења радне површи."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:207
+msgid "_Always appears"
+msgstr "_Увек се појављује"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:208
+msgid "_Only appears in selected environments"
+msgstr "_Појављује се само у изабраним окружењима"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:209
+msgid "_Never appears in selected environments"
+msgstr "_Никада се не појављује у изабраним окружењима"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:211
+msgid "Appears if the file is e_xecutable :"
+msgstr "Појављује се ако је датотека _извршна :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:212
+msgid ""
+"This is an advanced condition based on the presence of an executable file on "
+"the file system.\n"
+"This may be used for example to test for a prerequisite package."
+msgstr ""
+"Ово је напредан услов заснован на присуству извршне датотеке на систему "
+"датотека.\n"
+"Ово може бити коришћено на пример за испробавањем неопходних пакета."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:214
+msgid "Bro_wse..."
+msgstr "Разг_ледај..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:215
+msgid "Appears if the name is _registered on D-Bus :"
+msgstr "Појављује се ако је назив _забележен на Д-сабирници :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:216
+msgid ""
+"This is an advanced condition based on the presence of a particular service "
+"on the D-Bus system.\n"
+"This may be used for example for testing that a prerequisite service is "
+"currently available."
+msgstr ""
+"Ово је напредан услов заснован на присуству нарочите услуге на систему "
+"Д-сабирнице.\n"
+"Ово може бити коришћено на пример за испробавање да је услуга предуслова "
+"тренутно доступна."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:218
+msgid "Appears if the command outputs \"_true\" :"
+msgstr "Појављује се ако наредба исписује „_true“ (изабрано) :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:219
+msgid ""
+"This is an advanced condition based on a runtime result.\n"
+"Enter here a command which is able to display the exact \"true\" string on "
+"its standard output.\n"
+"This may be used for example for testing a complex condition."
+msgstr ""
+"Ово је напредан услов заснован на резултатима времена покретања.\n"
+"Унесите овде наредбу која је у стању да прикаже тачну ниску „“ (изабрано) на "
+"свом стандардном излазу.\n"
+"Ово може бити коришћено на пример за испробавање сложеног услова."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:222
+msgid "Appears if the _binary is running :"
+msgstr "Појављује се ако је покренут _извршни :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:223
+msgid ""
+"This is an advanced condition based on the presence of a running binary.\n"
+"Note that only the basename of the binary is checked, not its dirname nor "
+"its parameters.\n"
+"This may be used for example for testing the presence of a prerequisite "
+"daemon."
+msgstr ""
+"Ово је напредан услов заснован на присуству покренутог извршног.\n"
+"Знајте да је само основни назив извршног изабран, а не његов назив "
+"директоријума нити његови параметри.\n"
+"Ово може бити коришћено на пример за испробавање присуства услужника "
+"предуслова."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:226
+msgid "Brow_se..."
+msgstr "_Разгледај..."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:227
+msgid "<b>Execution environment</b>"
+msgstr "<b>Окружење извршавања</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:228
+msgid ""
+"This tab lets you determine some advanced conditions the currently selected "
+"files must satisfy in order for the item to be displayed in the file manager "
+"context menu."
+msgstr ""
+"Овај језичак вам допушта да одредите неке напредне услове које тренутно "
+"изабране датотеке морају да задовоље да би ставка била приказана у приручном "
+"изборнику управника датотека."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:229
+msgid "_Environment"
+msgstr "_Окружење"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:230
+msgid "_Description :"
+msgstr "_Опис :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:231
+msgid ""
+"Enter here a free text which may be used (e.g. in a Web service or in a "
+"search tool) to describe your item."
+msgstr ""
+"Овде унесите слободан текст који може бити коришћен (нпр. у Веб услузи или у "
+"алату претраге) да опише вашу ставку."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:232
+msgid "E_nabled"
+msgstr "_Укључено"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:233
+msgid ""
+"Check the box to enable this item.\n"
+"If unchecked, then the item will never appear in the file manager context "
+"menus or toolbar."
+msgstr ""
+"Означите квадратић да укључите ову ставку.\n"
+"Ако није изабрано, тада се ставка никада неће појавити у приручном изборнику "
+"управника датотека или на траци алата."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:235
+msgid "Suggested _shortcut :"
+msgstr "Предложена _пречица :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:237
+msgid ""
+"Enter here the keyboard touch combination you suggest as a shortcut to your "
+"action.\n"
+"Note: this is not yet implemented in Nautilus-Actions."
+msgstr ""
+"Овде унесите комбинацију са тастатуре коју предлажете као пречицу за вашу "
+"радњу.\n"
+"Напомена: ово још није примењено у Наутилусовим радњама."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:240
+msgid "Id. :"
+msgstr "Иб. :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:241
+msgid "I/O provider :"
+msgstr "У/И достављач :"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:242
+msgid "Read-only item"
+msgstr "Ставка само за читање"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:243
+msgid ""
+"This box is checked if the item cannot be edited.\n"
+"There may be multiple reasons for why an item cannot be edited. See your "
+"User's Manual."
+msgstr ""
+"Овај квадратић је означен ако ставка не може бити уређивана.\n"
+"Може постојати више разлога због чега нека ставка не може бити уређивана. "
+"Погледајте ваше корисничко упутство."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:245
+msgid "<b>Read-only properties</b>"
+msgstr "<b>Својства само за читање</b>"
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:246
+msgid ""
+"This tab lets you edit some miscellaneous properties, and access some non-"
+"modifiable information."
+msgstr ""
+"Овај језичак вам допушта да уредите нека разноврсна својства, и да "
+"приступите неким неизменљивим подацима."
+
+#: ../src/nact/nautilus-actions-config-tool.ui.h:247
+msgid "P_roperties"
+msgstr "_Својства"
+
+#. i18n: label of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:933
+msgid "Nautilus-Actions actions"
+msgstr "Радње Наутилусових радњи"
+
+#. i18n: tooltip of an automagic root submenu
+#: ../src/plugin-menu/nautilus-actions.c:935
+msgid ""
+"A submenu which embeds the currently available Nautilus-Actions actions and "
+"menus"
+msgstr ""
+"Подизборник који уграђује тренутно доступне радње и изборнике Наутилусових "
+"радњи"
+
+#: ../src/plugin-menu/nautilus-actions.c:979
+msgid "About Nautilus-Actions"
+msgstr "О Наутилусовим радњама"
+
+#: ../src/plugin-menu/nautilus-actions.c:980
+msgid "Display some informations about Nautilus-Actions"
+msgstr "Прикажите неке податке о Наутилусовим радњама"
+
+#: ../src/test/test-reader.c:48
+msgid "The URI of the file to be imported"
+msgstr "Путања датотеке која ће бити увезена"
+
+#: ../src/test/test-reader.c:48 ../src/utils/nautilus-actions-run.c:61
+msgid "<URI>"
+msgstr "<Путања>"
+
+#: ../src/test/test-reader.c:55 ../src/utils/na-delete-xmltree.c:77
+#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:155
+#: ../src/utils/nautilus-actions-print.c:70
+#: ../src/utils/nautilus-actions-run.c:68
+msgid "Output the version number"
+msgstr "Исписује број издања"
+
+#: ../src/test/test-reader.c:106
+msgid "Import a file."
+msgstr "Увезите датотеку."
+
+#: ../src/test/test-reader.c:120
+msgid ""
+"Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
+"mail to <maintainer@nautilus-actions.org>.\n"
+msgstr "Извештаји о грешкама су добродошли на „http://bugzilla.gnome.org“, или ако "
+"вам више одговара да пошаљете пошту на <maintainer@nautilus-actions.org>.\n"
+
+#: ../src/test/test-reader.c:128 ../src/utils/na-delete-xmltree.c:180
+#: ../src/utils/na-print-schemas.c:188 ../src/utils/na-set-conf.c:205
+#: ../src/utils/nautilus-actions-new.c:382
+#: ../src/utils/nautilus-actions-print.c:180
+#: ../src/utils/nautilus-actions-run.c:207
+msgid "Miscellaneous options"
+msgstr "Остале могућности"
+
+#: ../src/test/test-reader.c:149 ../src/utils/na-delete-xmltree.c:110
+#: ../src/utils/na-print-schemas.c:109 ../src/utils/na-set-conf.c:117
+#: ../src/utils/nautilus-actions-new.c:202
+#: ../src/utils/nautilus-actions-print.c:107
+#: ../src/utils/nautilus-actions-run.c:116
+#, c-format
+msgid "Syntax error: %s\n"
+msgstr "Грешка синтаксе: %s\n"
+
+#: ../src/test/test-reader.c:164
+#, c-format
+msgid "Error: uri is mandatory.\n"
+msgstr "Грешка: путања је обавезна.\n"
+
+#. i18: '--help' is a command-line option - do not translate
+#: ../src/test/test-reader.c:176 ../src/utils/na-delete-xmltree.c:194
+#: ../src/utils/na-print-schemas.c:301 ../src/utils/na-set-conf.c:219
+#: ../src/utils/nautilus-actions-new.c:626
+#: ../src/utils/nautilus-actions-print.c:237
+#: ../src/utils/nautilus-actions-run.c:481
+#, c-format
+msgid "Try %s --help for usage.\n"
+msgstr "Упишите „%s --help“ за коришћење.\n"
+
+#: ../src/utils/console-utils.c:53
+msgid ""
+"Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=nautilus-actions,\n"
+"or you may prefer to mail to <maintainer@nautilus-actions.org>.\n"
+msgstr ""
+"Извештаји о грешкама су добродошли на "
+"„https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions“,\n"
+"или ако вам више одговара да пошаљете пошту на <maintainer@nautilus-"
+"actions.org>.\n"
+
+#: ../src/utils/na-delete-xmltree.c:68
+msgid "The XPath to the tree to be deleted"
+msgstr "Икс путања до стабла које ће бити обрисано"
+
+#: ../src/utils/na-delete-xmltree.c:70
+msgid "The filename of the XML backend"
+msgstr "Назив датотеке ИксМЛ позадинца"
+
+#: ../src/utils/na-delete-xmltree.c:125
+#, c-format
+msgid "Error: a XPath is mandatory.\n"
+msgstr "Грешка: Икс путања је обавезна.\n"
+
+#: ../src/utils/na-delete-xmltree.c:130
+#, c-format
+msgid "Error: a XML filename is mandatory.\n"
+msgstr "Грешка: ИксМЛ назив датотеке је обавезан.\n"
+
+#: ../src/utils/na-delete-xmltree.c:161
+msgid "Delete a XPath from a XML document."
+msgstr "Обришите Икс путању из ИксМЛ документа."
+
+#: ../src/utils/na-delete-xmltree.c:210
+#, c-format
+msgid "Error: unable to parse file '%s'\n"
+msgstr "Грешка: не могу да обрадим датотеку „%s“\n"
+
+#: ../src/utils/na-delete-xmltree.c:217
+#, c-format
+msgid "Error: unable to create new XPath context\n"
+msgstr "Грешка: не могу да направим нови садржај Икс путање\n"
+
+#: ../src/utils/na-delete-xmltree.c:225
+#, c-format
+msgid "Error: unable to evaluate XPath expression '%s'\n"
+msgstr "Грешка: не могу да проценим израз Икс путање „%s“\n"
+
+#: ../src/utils/na-print-schemas.c:62
+msgid "Output the schema on stdout"
+msgstr "Исписује шему на стандардном излазу"
+
+#: ../src/utils/na-print-schemas.c:67
+msgid "Output the action schemas [default]"
+msgstr "Исписује шеме радње [основно]"
+
+#: ../src/utils/na-print-schemas.c:68
+msgid "Output the menu schemas"
+msgstr "Исписује шеме изборника"
+
+#: ../src/utils/na-print-schemas.c:159
+msgid "Output the Nautilus-Actions GConf schemas on stdout."
+msgstr "Исписује Гконф шеме Наутилусових радњи на стандардном излазу."
+
+#: ../src/utils/na-print-schemas.c:163
+msgid ""
+"As of version 3.1.0, GConf as an I/O provider is deprecated.\n"
+"This program is no more maintained."
+msgstr ""
+"Како је издања 3.1.0, Гконф као У/И достављач је застарео.\n"
+"Овај програм се више не одржава."
+
+#: ../src/utils/na-print-schemas.c:182
+msgid "Type options"
+msgstr "Могућности куцања"
+
+#: ../src/utils/na-set-conf.c:50
+msgid "Set a key=value pair in a key file."
+msgstr "Поставља пар кључ=вредност у датотеци кључа."
+
+#: ../src/utils/na-set-conf.c:61
+msgid "The group to be updated"
+msgstr "Група која ће бити дограђена"
+
+#: ../src/utils/na-set-conf.c:63
+msgid "The key to be updated"
+msgstr "Кључ који ће бити дограђен"
+
+#. i18n: 'str', 'int' and 'bool' are literal values: do not translate
+#: ../src/utils/na-set-conf.c:66
+msgid "The type of the value to be set, may be 'str', 'int' or 'bool'"
+msgstr "Врста вредности за подешавање, може бити „str“, „int“ или „bool“"
+
+#: ../src/utils/na-set-conf.c:68
+msgid "The value to be set"
+msgstr "Вредност за подешавање"
+
+#: ../src/utils/na-set-conf.c:75
+msgid "Output the version number and exit gracefully"
+msgstr "Исписује број издања и излази лепо"
+
+#: ../src/utils/na-set-conf.c:133
+#, c-format
+msgid "Error: a group is mandatory.\n"
+msgstr "Грешка: група је обавезна.\n"
+
+#: ../src/utils/na-set-conf.c:138
+#, c-format
+msgid "Error: a key is mandatory.\n"
+msgstr "Грешка: кључ је обавезан.\n"
+
+#: ../src/utils/na-set-conf.c:143
+#, c-format
+msgid "Error: a type is mandatory for setting/updating a value.\n"
+msgstr "Грешка: врста је обавезна за подешавање/доградњу вредности.\n"
+
+#. i18n: 'str', 'int' and 'bool' are literal values: do not translate
+#: ../src/utils/na-set-conf.c:154
+#, c-format
+msgid "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n"
+msgstr "Грешка: непозната врста: %s. Употребите „str“, „int“ или „bool“.\n"
+
+#: ../src/utils/na-set-conf.c:161
+#, c-format
+msgid "Error: a value is mandatory.\n"
+msgstr "Грешка: вредност је обавезна.\n"
+
+#: ../src/utils/nautilus-actions-new.c:133
+msgid "Set it if the item should be disabled at creation"
+msgstr "Подешава га ако ставка треба да буде искључена приликом стварања"
+
+#: ../src/utils/nautilus-actions-new.c:135
+msgid "Set it if the item doesn't target the selection context menu"
+msgstr "Подешава га ако ставка не циља на приручни изборник избора"
+
+#: ../src/utils/nautilus-actions-new.c:137
+msgid "Set it if the item doesn't target the location context menu"
+msgstr "Подешава га ако ставка не циља на приручни изборник места"
+
+#: ../src/utils/nautilus-actions-new.c:139
+msgid "Set it if the item doesn't target the toolbar"
+msgstr "Подешава га ако ставка не циља на траку алата"
+
+#: ../src/utils/nautilus-actions-new.c:141
+msgid "Set it if the basename patterns are case insensitive"
+msgstr "Подешава га ако шаблони основног назива не разликују величину слова"
+
+#: ../src/utils/nautilus-actions-new.c:147
+msgid "Output the new item content on stdout (default)"
+msgstr "Исписује садржај нове ставке на стандардном излазу (основно)"
+
+#: ../src/utils/nautilus-actions-new.c:148
+msgid "Create the new item as a .desktop file"
+msgstr "Ствара нову ставку као датотеку радне површи"
+
+#: ../src/utils/nautilus-actions-new.c:159
+#, c-format
+msgid "Error: '%s' and '%s' options cannot both be specified\n"
+msgstr "Грешка: не могу бити наведене обе „%s“ и „%s“ могућности\n"
+
+#: ../src/utils/nautilus-actions-new.c:160
+#, c-format
+msgid "'%s' option is deprecated, see %s\n"
+msgstr "„%s“ могућност је застарела, погледајте „%s“\n"
+
+#: ../src/utils/nautilus-actions-new.c:215
+#, c-format
+msgid "Error: an action label is mandatory.\n"
+msgstr "Грешка: натпис радње је обавезан.\n"
+
+#: ../src/utils/nautilus-actions-new.c:261
+#, c-format
+msgid "Error: only one output option may be specified.\n"
+msgstr "Грешка: само једна излазна могућност може бити наведена.\n"
+
+#: ../src/utils/nautilus-actions-new.c:347
+msgid "Define a new action."
+msgstr "Одређује нову радњу."
+
+#: ../src/utils/nautilus-actions-new.c:350
+msgid ""
+"The created action defaults to be written to stdout.\n"
+"It can also be written to an output folder, in a file later suitable for an "
+"import in NACT.\n"
+"Or you may choose to directly write the action into your Nautilus-Actions "
+"configuration."
+msgstr ""
+"Направљена радња подразумева да буде записана у стандардни излаз.\n"
+"Такође може бити записана у излазну фасциклу, у датотеку подесну касније за "
+"увоз у АПНР.\n"
+"Или ви можете да изаберете да непосредно запишете радњу у ваша подешавања "
+"Наутилусових радњи."
+
+#: ../src/utils/nautilus-actions-new.c:376
+msgid "Output of the program"
+msgstr "Излаз програма"
+
+#: ../src/utils/nautilus-actions-new.c:376
+msgid "Choose where the program creates the action"
+msgstr "Изаберите где ће програм да створи радњу"
+
+#. i18n: 'na-desktop' is a plugin identifier - do not translate
+#: ../src/utils/nautilus-actions-new.c:589
+msgid "Error: unable to find 'na-desktop' i/o provider."
+msgstr "Грека: не могу да пронађем „na-desktop“ у/и достављача."
+
+#. i18n: nautilus-actions-print program summary
+#: ../src/utils/nautilus-actions-print.c:55
+msgid "Print a menu or an action to stdout."
+msgstr "Исписује изборник или радњу на стандардни излаз."
+
+#: ../src/utils/nautilus-actions-print.c:60
+msgid "The identifiant of the menu or the action to be printed"
+msgstr "Одредник изборника или радње за штампање"
+
+#. i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable
+#: ../src/utils/nautilus-actions-print.c:63
+msgid "An export format [Desktop1]"
+msgstr "Извозни запис [Desktop1]"
+
+#: ../src/utils/nautilus-actions-print.c:122
+#, c-format
+msgid "Error: a menu or action id is mandatory.\n"
+msgstr "Грешка: обавезан је изборник или радња.\n"
+
+#. i18n: %s stands for the id of the export format, and is not translatable
+#: ../src/utils/nautilus-actions-print.c:138
+#, c-format
+msgid "Error: %s: unknown export format.\n"
+msgstr "Грешка: %s: непознат извозни запис.\n"
+
+#: ../src/utils/nautilus-actions-print.c:203
+#, c-format
+msgid "Error: item '%s' doesn't exist.\n"
+msgstr "Грешка: ставка „%s“ не постоји.\n"
+
+#: ../src/utils/nautilus-actions-run.c:59
+msgid "The internal identifier of the action to be launched"
+msgstr "Унутрашњи одредник радње за покретање"
+
+#: ../src/utils/nautilus-actions-run.c:61
+msgid ""
+"A target, file or folder, for the action. More than one options may be "
+"specified"
+msgstr ""
+"Мета, датотека или фасцикла, за радњу. Може бити наведено више од једне "
+"могућности"
+
+#: ../src/utils/nautilus-actions-run.c:131
+#, c-format
+msgid "Error: action id is mandatory.\n"
+msgstr "Грешка: иб радње је обавезан.\n"
+
+#: ../src/utils/nautilus-actions-run.c:156
+#, c-format
+msgid "No current selection. Nothing to do. Exiting.\n"
+msgstr "Нема тренутног избора. Немам шта да радим. Излазим.\n"
+
+#: ../src/utils/nautilus-actions-run.c:161
+#, c-format
+msgid "Action %s is not a valid candidate. Exiting.\n"
+msgstr "Радња „%s“ није исправан кандидат. Излазим.\n"
+
+#: ../src/utils/nautilus-actions-run.c:167
+#, c-format
+msgid "No valid profile is candidate to execution. Exiting.\n"
+msgstr "Ниједан исправан профил није кандидат за извршавање. Излазим.\n"
+
+#: ../src/utils/nautilus-actions-run.c:188
+msgid "Execute an action on the specified target."
+msgstr "Извршава радњу на наведеној мети."
+
+#: ../src/utils/nautilus-actions-run.c:233
+#, c-format
+msgid "Error: action '%s' doesn't exist.\n"
+msgstr "Грешка: радња „%s“ не постоји.\n"
+
+#: ../src/utils/nautilus-actions-run.c:237
+#, c-format
+msgid "Error: action '%s' is disabled.\n"
+msgstr "Грешка: радња „%s“ је искључена.\n"
+
+#: ../src/utils/nautilus-actions-run.c:242
+#, c-format
+msgid "Error: action '%s' is not valid.\n"
+msgstr "Грешка: радња „%s“ није исправна.\n"
+
+#: ../src/utils/nautilus-actions-run.c:328
+#, c-format
+msgid "Error: unable to get a connection to session DBus: %s"
+msgstr "Грешка: не могу да добавим везу до сесије Д-сабирнице: %s"
+
+#: ../src/utils/nautilus-actions-run.c:341
+#, c-format
+msgid "Error: unable to get a proxy on %s service"
+msgstr "Грешка: не могу да добавим посредника на услузи „%s“"
+
+#: ../src/utils/nautilus-actions-run.c:351
+#, c-format
+msgid "Error on GetSelectedPaths call: %s"
+msgstr "Грешка на позиву „Добави изабране путање“: %s"
