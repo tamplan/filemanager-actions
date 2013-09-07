@@ -1,5 +1,7 @@
 2013-09-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-gtk-utils.c: Remove useless blank lines.
+
 	* src/nact/base-application.c (g_type_init):
 	* src/test/test-iface.c (g_type_init):
 	* src/test/test-iface2.c (g_type_init):
