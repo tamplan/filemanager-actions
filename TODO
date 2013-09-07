@@ -1,3 +1,11 @@
+TODO
+====
+
+- have all TODOs go to gnome bugzilla
+- update the supported environments
+- review the packaging rules
+ (with or without gtk2, with or without gconf, ith or without doc, with which doc tool)
+
 N-A BUGS
 ========
 - 2011-11-15: an action with one profile - if the action has a property set to empty
@@ -24,10 +32,64 @@ N-A BUGS
 - 2011-12-06: after unsuccessfully tried to import via dnd:
    Gtk-CRITICAL **: gtk_tree_view_scroll_to_cell: assertion `tree_view->priv->tree != NULL' failed
 
+- 2011-12-22 export assistant
+  when exporting a menu, only desktop format is available ?
+
 Plan de test: NACT should be able to import all types of actions and menus,
 kindly fixing small errors.
 - for each and every released version, have an example of each available export format
   with lists of items and at least two profiles if feature is available
+
+- 2011-12-22 export assistant
+  the items list should it be presented as a flat list ? or as an expanded one ?
+
+- 2012-01-12 environment tab
+  in the list of desktop checkboxes, the item which is not grayed is that which
+  would be selected if the list would be active -> but should be grayed
+  vubuntu10: exhibits the bug
+  fedora14, fedora16, vubuntu11: ok
+
+- 2012-01-16: (LXDE) unable to drag and drop to PcmanFM
+  na_core_utils_dir_is_writable_uri( "/tmp" ): is_writable=False
+  and desktop hangs
+
+- 2012-01-29: na-icontext.c:is_candidate_for_show_if_registered()
+  implement GDBus
+
+- 2012-01-29: NactTreeModel is not released at end when dnd
+
+- 2012-02-14: opening the menubar triggers the on_tree_view_focus_out, thus disabling
+  the edit items (this is not the desired behavior when we access a menu)
+  Fedora14: OK
+  Fedora16: bug exhibits
+  Ubuntu10: OK
+  Ubuntu11: bug exhibits
+  This may have something to do with the way we manage the GtkActions
+  Also see glade source.
+
+Plan de test: NACT should be able to import all types of actions and menus,
+kindly fixing small errors.
+- for each and every released version, have an example of each available export format
+  with lists of items and at least two profiles if feature is available
+
+- 20120625: unable to build NA-3.2.2 on Ubuntu 8 LTS
+	not even find GTK 2/3 libraries
+
+- 20120625: ubuntu 12 requires libtool (+ autotools-dev libltdl-dev)
+- 20120625: ubuntu 12 requires intltool (+ autoconf automake gettext libencode-locale-perl libfile-listing-perl
+  libfont-afm-perl libgettextpo0 libhtml-form-perl libhtml-format-perl
+  libhtml-parser-perl libhtml-tagset-perl libhtml-tree-perl
+  libhttp-cookies-perl libhttp-daemon-perl libhttp-date-perl
+  libhttp-message-perl libhttp-negotiate-perl libio-socket-inet6-perl
+  libio-socket-ssl-perl liblwp-mediatypes-perl liblwp-protocol-https-perl
+  libmailtools-perl libnet-http-perl libnet-ssleay-perl libsocket6-perl
+  libtimedate-perl libunistring0 liburi-perl libwww-perl
+  libwww-robotrules-perl libxml-parser-perl m4 patch)
+
+- 20121019: the last commit - to disable xml2po usage - has introduced a regression:
+  target are evaluated even if not built (and so there is an error if we do not know
+  any prerequisites)
+  reproduce by building from an empty tree with --disable-manuals
 
 TODO
 ====
@@ -73,6 +135,53 @@ TODO
 - 2011-12-04: support pkgconfig
 
 - 2011-12-04: support GObject introspection
+
+- 2011-12-10: document supported distributions
+
+- 2011-12-12: have an option to display two rows in nact when we have an
+  action with only one profile (see #666093)
+
+- 2011-12-28 when in maintainer mode, disable all compiler optimizations
+
+- 2012-01-01 when keeping an hidden window, do not save/restore its position
+  each time, just keep its current position
+
+- 2012-01-02: when importing items via dnd, the messages do not specify to
+  which item they relate - but should!
+
+- 2012-01-05 libunique is deprecated (mail E. Bassi gtk-app-devel dec. 2011)
+  GApplication may replace the feature since 2.30 (fedora 16 level)
+
+- 2012-01-28: when gio >= 2.30, remove dbus-glib
+
+- 2012-01-31: add a field on NADataDef to point when a data may embed some
+  parameters and should be expanded in nautilus-actions plugin
+
+- 2012-02-01: have all tabs of the main window scrollable
+
+- 2012-02-06: should be able to install even if docs are not present
+
+- 2012-02-09: review (one more time) the check_status calls
+  before trying to insert an item, we check it and its children (or should so
+  because the status of an object is not dependant of those of its parent)
+  so the nact_tree_view_insert_items() functions family should only need to
+  na_object_check_status_up()
+
+- 2012-02-14: review update sensitivities to take advantage (?) of GtkAction
+
+- 2012-02-14: a tree view status changed signal has not sense, rather define an
+  object status changed
+
+- 2012-03-01: About nact: add documented by
+
+- 2012-10-10: when checking for utilities in configure.ac, check for all
+  and only then display the result (so that we have all missing packages
+  in one time)
+
+- 2012-10-11: should not block if GCONF devel library is not installed when
+  --enable-gconf is auto
+
+- 2013- 9- 2: shouldn't check and require GConf if --disable-gconf
 
 N-A ENHANCEMENTS
 ================
@@ -138,6 +247,13 @@ N-A ENHANCEMENTS
 
 - 2011-12-05: convert NAObject to GNode ?
 
+- 2011-12-26: display/edit mandatory preferences ?
+
+- 2012-01-02 when a window does not have yet a wsp, then default to position it
+  against its parent
+
+- 2012-01-02 have a libexec binary which just print the tree of items
+
 OTHER ENHANCEMENTS
 ==================
 - GOptions request enhancement so that the help for an option could be
@@ -147,6 +263,8 @@ OTHER ENHANCEMENTS
   (F5 ?)
 
 - Nautilus: implement menu separator for plugins
+
+- 2012-06-04: review GnomeGoals https://live.gnome.org/GnomeGoals/
 
 OTHER BUGS
 ==========
@@ -183,6 +301,34 @@ OTHER BUGS
 
 - 2011-02-23: also it seems that Nautilus 2.30.1 free our menus (probably because 
   it is an item of its own menu), but not recursively the items of this menu.
+
+- 2011-12-19: pcleantmp.sh doesn't handle filename with spaces
+
+- 2012-01-23: docbook-utils-0.6.14
+  db2html begins by emptying the target directory, even if it also
+  contains the source file
+
+- 2012-01-25: gnome-doc-utils: install target does not check if translations
+  exist (e.g. sl/.xml) before trying to install, so aborts
+  -> install should build translations before installing
+  (the same way we compile programs before installing them)
+
+- 2012-10-12: migrate from gnome-doc-utils to yelp
+  see https://live.gnome.org/GnomeGoals/NewDocumentationInfrastructure
+
+- 2012-10-15:
+  MSGFMT is called four times at once
+  while XML2PO is called once for each linguas
+  we should rather have MSGFMT called besides of XML2PO
+
+- 2012-10-15: install sshd and ssh keys on vubuntu8/10/11/12
+
+- 2012-10-15; open all bugs in Bugzilla
+
+- 2012-10-15: check the status of the Fedora bug which was opened about
+  erroneous url - add a bug on help non being installed (not even packaged)
+
+- 2012-10-17: it appears that de.xml doesn't validate
 
 NOTES
 =====
