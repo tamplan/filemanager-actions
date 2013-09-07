@@ -1,3 +1,21 @@
+2013-09-07 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/base-application.c (g_type_init):
+	* src/test/test-iface.c (g_type_init):
+	* src/test/test-iface2.c (g_type_init):
+	* src/test/test-module.c (g_type_init):
+	* src/test/test-parse-uris.c (g_type_init):
+	* src/test/test-reader.c (g_type_init):
+	* src/test/test-virtuals-without-test.c (g_type_init):
+	* src/test/test-virtuals.c (g_type_init):
+	* src/utils/na-delete-xmltree.c (g_type_init):
+	* src/utils/na-print-schemas.c (g_type_init):
+	* src/utils/na-set-conf.c (g_type_init):
+	* src/utils/nautilus-actions-new.c (g_type_init):
+	* src/utils/nautilus-actions-print.c (g_type_init):
+	* src/utils/nautilus-actions-run.c (g_type_init):
+	Obsoletes g_type_init() starting with glib 2.36.
+
 2013-02-22 Pierre Wieser <pwieser@trychlos.org>
 
 	* Allmost all files: Bump copyright year.
