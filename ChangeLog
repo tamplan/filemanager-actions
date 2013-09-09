@@ -1,5 +1,8 @@
 2013-09-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/egg-sm-client-xsmp.c: Obsoletes gdk_threads_enter(), 
+	gdk_threads_leave() starting with gdk 3.6.
+
 	* src/nact/base-gtk-utils.c: Remove useless blank lines.
 
 	* src/nact/base-application.c (g_type_init):
