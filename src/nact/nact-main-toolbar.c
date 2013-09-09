@@ -61,10 +61,12 @@ static int toolbar_pos[] = {
 };
 
 static void          init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id );
+#if !GTK_CHECK_VERSION( 3,4,0 )
 static void          reorder_toolbars( GtkWidget *hbox, int toolbar_id, GtkWidget *handle );
 static void          on_handle_finalize( gpointer data, GObject *handle );
 static void          on_attach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
 static void          on_detach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
+#endif
 static ToolbarProps *get_toolbar_properties( int toolbar_id );
 
 /**
@@ -116,10 +118,16 @@ init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id )
  * @is_active: whether this toolbar is activated or not.
  *
  * Activate or desactivate the toolbar.
+ *
+ * pwi 2013-09-07
+ * GtkHandleBox has been deprecated starting with Gtk 3.4 and there is
+ * no replacement (see https://developer.gnome.org/gtk3/stable/GtkHandleBox.html).
+ * So exit floating toolbars :(
  */
 void
 nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager *ui_manager, gboolean is_active )
 {
+#if !GTK_CHECK_VERSION( 3,4,0 )
 	static const gchar *thisfn = "nact_main_toolbar_activate";
 	ToolbarProps *props;
 	GtkWidget *toolbar, *hbox, *handle;
@@ -159,8 +167,10 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 	}
 
 	na_settings_set_boolean( props->prefs_key, is_active );
+#endif
 }
 
+#if !GTK_CHECK_VERSION( 3,4,0 )
 /*
  * reposition the newly activated toolbar in handle
  * so that the relative positions of toolbars are respected in hbox
@@ -221,6 +231,7 @@ on_detach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *wi
 
 	gtk_toolbar_set_show_arrow( toolbar, FALSE );
 }
+#endif
 
 static ToolbarProps *
 get_toolbar_properties( int toolbar_id )

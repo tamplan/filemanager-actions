@@ -1,5 +1,8 @@
 2013-09-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-toolbar.c (nact_main_toolbar_activate):
+	Obsoletes GtkHandleBox starting with Gtk 3.4 - No replacement.
+
 	* src/nact/base-gtk-utils.c (base_gtk_utils_table_to_grid):
 	Obsoletes GtkTable starting with Gtk 3.4.
 
