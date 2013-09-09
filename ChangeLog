@@ -1,5 +1,8 @@
 2013-09-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/base-gtk-utils.c (base_gtk_utils_table_to_grid):
+	Obsoletes GtkTable starting with Gtk 3.4.
+
 	* src/nact/egg-sm-client-xsmp.c: Obsoletes gdk_threads_enter(), 
 	gdk_threads_leave() starting with gdk 3.6.
 
