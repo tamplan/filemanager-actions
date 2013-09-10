@@ -1,3 +1,9 @@
+2013-09-10 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu_rec):
+	Iterates through subitems of the source menu as they have not been
+	duplucated yet (reported by Christopher Compagnon).
+
 2013-09-07 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/nact/nact-main-toolbar.c (nact_main_toolbar_activate):

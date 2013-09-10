@@ -567,9 +567,9 @@ build_nautilus_menu_rec( GList *tree, guint target, GList *selection, NATokens *
 		 * the 'submenu' menu of nautilusMenuItem's is attached to the returned
 		 * 'item'
 		 */
-		if( NA_IS_OBJECT_MENU( item )){
+		if( NA_IS_OBJECT_MENU( it->data )){
 
-			subitems = na_object_get_items( item );
+			subitems = na_object_get_items( NA_OBJECT( it->data ));
 			g_debug( "%s: menu has %d items", thisfn, g_list_length( subitems ));
 
 			submenu = build_nautilus_menu_rec( subitems, target, selection, tokens );
