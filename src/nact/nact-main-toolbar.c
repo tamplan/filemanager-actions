@@ -61,8 +61,8 @@ static int toolbar_pos[] = {
 };
 
 static void          init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id );
-#if !GTK_CHECK_VERSION( 3,4,0 )
 static void          reorder_toolbars( GtkWidget *hbox, int toolbar_id, GtkWidget *handle );
+#if !GTK_CHECK_VERSION( 3,4,0 )
 static void          on_handle_finalize( gpointer data, GObject *handle );
 static void          on_attach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
 static void          on_detach_toolbar( GtkHandleBox *handle, GtkToolbar *toolbar, NactMainWindow *window );
@@ -127,11 +127,9 @@ init_toolbar( BaseWindow *window, GtkActionGroup *group, int toolbar_id )
 void
 nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager *ui_manager, gboolean is_active )
 {
-#if !GTK_CHECK_VERSION( 3,4,0 )
 	static const gchar *thisfn = "nact_main_toolbar_activate";
 	ToolbarProps *props;
-	GtkWidget *toolbar, *hbox, *handle;
-	gulong attach_id, detach_id;
+	GtkWidget *toolbar, *hbox;
 
 	props = get_toolbar_properties( toolbar_id );
 	if( !props ){
@@ -141,6 +139,19 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 	toolbar = gtk_ui_manager_get_widget( ui_manager, props->ui_path );
 	g_debug( "%s: toolbar=%p, path=%s, ref_count=%d", thisfn, ( void * ) toolbar, props->ui_path, G_OBJECT( toolbar )->ref_count );
 	hbox = base_window_get_widget( BASE_WINDOW( window ), "ToolbarHBox" );
+
+#if GTK_CHECK_VERSION( 3,4,0 )
+	if( is_active ){
+		gtk_container_add( GTK_CONTAINER( hbox ), toolbar );
+		reorder_toolbars( hbox, toolbar_id, toolbar );
+		gtk_widget_show_all( toolbar );
+
+	} else {
+		gtk_container_remove( GTK_CONTAINER( hbox ), toolbar );
+	}
+#else
+	GtkWidget *handle;
+	gulong attach_id, detach_id;
 
 	if( is_active ){
 		handle = gtk_handle_box_new();
@@ -165,13 +176,17 @@ nact_main_toolbar_activate( NactMainWindow *window, int toolbar_id, GtkUIManager
 		gtk_container_remove( GTK_CONTAINER( handle ), toolbar );
 		gtk_container_remove( GTK_CONTAINER( hbox ), handle );
 	}
+#endif
 
 	na_settings_set_boolean( props->prefs_key, is_active );
-#endif
 }
 
-#if !GTK_CHECK_VERSION( 3,4,0 )
 /*
+ * @hbox: the GtkHBox container
+ * @toolbar_id: toolbar identifier
+ * @handle: hbox child, which used to be a GtkHandleBox (for moveable
+ *  toolbars), and becomes the GtkToolbar itself starting with Gtk 3.4
+ *
  * reposition the newly activated toolbar in handle
  * so that the relative positions of toolbars are respected in hbox
  */
@@ -206,6 +221,7 @@ reorder_toolbars( GtkWidget *hbox, int toolbar_id, GtkWidget *handle )
 	gtk_box_reorder_child( GTK_BOX( hbox ), handle, pos );
 }
 
+#if !GTK_CHECK_VERSION( 3,4,0 )
 static void
 on_handle_finalize( gpointer data, GObject *handle )
 {

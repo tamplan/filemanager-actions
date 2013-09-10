@@ -1,5 +1,9 @@
 2013-09-10 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/nact/nact-main-toolbar.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Reintroduce fixed toolbars starting with Gtk 3.4.
+
 	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu_rec):
 	Iterates through subitems of the source menu as they have not been
 	duplucated yet (reported by Christopher Compagnon).
