@@ -1,5 +1,8 @@
 2013-09-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu):
+	Do not try to create a root Nautilus-Actions menu if it will be empty.
+
 	* src/core/na-io-provider.c (na_io_provider_get_io_providers_list):
 	- Fix so that the first listed I/O provider has most probability to be
 	writable.
