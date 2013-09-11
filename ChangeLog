@@ -1,5 +1,13 @@
 2013-09-11 Pierre Wieser <pwieser@trychlos.org>
 
+	Only allow the 'About Nautilus-Actions...' item inside of the
+	Nautilus-Actions root menu.
+
+	* src/nact/nact-preferences-editor.c (about_item_set_sensitive): New function.
+
+	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu):
+	Only insert the 'About...' item inside of the root Nautilus-Actions menu.
+
 	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu_rec):
 	Improve debug message.
 

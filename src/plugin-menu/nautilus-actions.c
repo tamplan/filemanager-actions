@@ -513,11 +513,11 @@ build_nautilus_menu( NautilusActions *plugin, guint target, GList *selection )
 		items_create_root_menu = na_settings_get_boolean( NA_IPREFS_ITEMS_CREATE_ROOT_MENU, NULL, NULL );
 		if( items_create_root_menu ){
 			nautilus_menu = create_root_menu( plugin, nautilus_menu );
-		}
 
-		items_add_about_item = na_settings_get_boolean( NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
-		if( items_add_about_item ){
-			nautilus_menu = add_about_item( plugin, nautilus_menu );
+			items_add_about_item = na_settings_get_boolean( NA_IPREFS_ITEMS_ADD_ABOUT_ITEM, NULL, NULL );
+			if( items_add_about_item ){
+				nautilus_menu = add_about_item( plugin, nautilus_menu );
+			}
 		}
 	}
 
