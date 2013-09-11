@@ -1,5 +1,8 @@
 2013-09-11 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu_rec):
+	Improve debug message.
+
 	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu):
 	Do not try to create a root Nautilus-Actions menu if it will be empty.
 
