@@ -135,7 +135,11 @@ DOC_FIGURES = \
 	stock-icon-about.png 
 
 #DOC_LINGUAS = $(patsubst $(srcdir)/%,%,$(shell find $(srcdir) -mindepth 1 -maxdepth 1 -type d | $(GREP) -v $(srcdir)/C))
-DOC_LINGUAS = "de es fr sl"
+DOC_LINGUAS = \
+	de \
+	es \
+	fr \
+	sl
 
 if ENABLE_MANUALS
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files

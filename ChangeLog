@@ -1,3 +1,7 @@
+2013-09-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* docs/nact/Makefile.am: Fix the DOC_LINGUAS variable.
+
 2013-09-11 Pierre Wieser <pwieser@trychlos.org>
 
 	* src/core/na-gtk-utils.c (na_gtk_utils_restore_window_position):
