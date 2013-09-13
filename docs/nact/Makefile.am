@@ -78,7 +78,7 @@ DOC_ENTITIES = \
 	nact-where.xml \
 	nautilus-actions-config-tool.xml
 
-DOC_INCLUDES =
+#DOC_INCLUDES =
 
 #DOC_FIGURES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/figures/*.png))
 DOC_FIGURES = \
