@@ -59,7 +59,6 @@ DOC_MODULE = nautilus-actions-config-tool
 DOC_ENTITIES = \
 	appendix-gnu-fdl-1.3.xml \
 	articleinfo.xml \
-	figures \
 	legalnotice.xml \
 	nact-bugs.xml \
 	nact-conditions.xml \
