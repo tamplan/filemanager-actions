@@ -55,16 +55,88 @@ include $(srcdir)/gnome-doc-utils-na.make
 
 DOC_MODULE = nautilus-actions-config-tool
 
-DOC_ENTITIES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/*.xml | $(GREP) -v $(DOC_MODULE)))
-#DOC_ENTITIES = "appendix-gnu-fdl-1.3.xml articleinfo.xml ... nact-where.xml"
+#DOC_ENTITIES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/*.xml | $(GREP) -v $(DOC_MODULE)))
+DOC_ENTITIES = \
+	appendix-gnu-fdl-1.3.xml \
+	articleinfo.xml \
+	figures \
+	legalnotice.xml \
+	nact-bugs.xml \
+	nact-conditions.xml \
+	nact-edit.xml \
+	nact-execution.xml \
+	nact-export.xml \
+	nact-import.xml \
+	nact-menus.xml \
+	nact-misc.xml \
+	nact-prefs.xml \
+	nact-profiles.xml \
+	nact-properties.xml \
+	nact-save.xml \
+	nact-sorting.xml \
+	nact-starting.xml \
+	nact-where.xml \
+	nautilus-actions-config-tool.xml
 
 DOC_INCLUDES =
 
-DOC_FIGURES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/figures/*.png))
-#DOC_FIGURES = "figures/add.png figures/nact-action-tab.png ... figures/stock-icon-about.png"
+#DOC_FIGURES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/figures/*.png))
+DOC_FIGURES = \
+	add.png \
+	nact-action-tab.png \
+	nact-basenames-tab.png \
+	nact-capabilities-tab.png \
+	nact-command-tab.png \
+	nact-desktop-environment-frame.png \
+	nact-environment-tab.png \
+	nact-exec-mode-frame.png \
+	nact-execute-as-frame.png \
+	nact-execution-environment-frame.png \
+	nact-execution-tab.png \
+	nact-export-done.png \
+	nact-export-format.png \
+	nact-export-home.png \
+	nact-export-items.png \
+	nact-export-summary.png \
+	nact-export-target.png \
+	nact-folders-tab.png \
+	nact-import-done.png \
+	nact-import-files.png \
+	nact-import-home.png \
+	nact-import-mode.png \
+	nact-import-resultat.png \
+	nact-import-summary.png \
+	nact-legend.png \
+	nact-main-empty.png \
+	nact-mimetypes-tab.png \
+	nact-new-capability.png \
+	nact-new-scheme.png \
+	nact-preferences-desktop.png \
+	nact-preferences-execution.png \
+	nact-preferences-export.png \
+	nact-preferences-import.png \
+	nact-preferences-io-providers.png \
+	nact-preferences-runtime.png \
+	nact-preferences-schemes.png \
+	nact-preferences-ui.png \
+	nact-properties-tab.png \
+	nact-schemes-tab.png \
+	nact-selection-count-frame.png \
+	nact-startup-mode-frame.png \
+	nact-target-location.png \
+	nact-working-directory-frame.png \
+	read-only.png \
+	remove.png \
+	sort-asc.png \
+	sort-buttons-frame.png \
+	sort-desc.png \
+	sort-manual.png \
+	start-context-menu-nautilus.png \
+	start-zenity-result.png \
+	stock-icon-about.png 
 
-DOC_LINGUAS = $(patsubst $(srcdir)/%,%,$(shell find $(srcdir) -mindepth 1 -maxdepth 1 -type d | $(GREP) -v $(srcdir)/C))
-#DOC_LINGUAS = "de es fr sl"
+#DOC_LINGUAS = $(patsubst $(srcdir)/%,%,$(shell find $(srcdir) -mindepth 1 -maxdepth 1 -type d | $(GREP) -v $(srcdir)/C))
+DOC_LINGUAS = "de es fr sl"
 
 if ENABLE_MANUALS
 # _DOC_LC_DOCS is the list of the translated (not C) DOC_MODULE.xml files
