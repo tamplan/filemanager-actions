@@ -1,5 +1,8 @@
 2013-09-14 Pierre Wieser <pwieser@trychlos.org>
 
+	* src/core/na-settings.h: Fix configuration filename in the class
+	description.
+
 	* src/core/na-gtk-utils.c (na_gtk_utils_restore_window_position):
 	Provides a default size and position for main window.
 

@@ -42,8 +42,8 @@
  * - a per-user configuration.
  *
  * The configuration is implemented as keyed files:
- * - global configuration is sysconfdir/xdg/nautilus-actions.conf
- * - per-user configuration is HOME/.config/nautilus-actions.conf
+ * - global configuration is sysconfdir/xdg/nautilus-actions/nautilus-actions.conf
+ * - per-user configuration is HOME/.config/nautilus-actions/nautilus-actions.conf
  *
  * Each setting may so have its own read-only attribute, whether it
  * has been read from the global configuration or from the
