@@ -1,3 +1,65 @@
+Version 3.2.3
+=============
+
+	Release date 2013-09-23
+
+	Bug fixes:
+
+		- Fix #667429 reported by Daniel Mustieles
+		  Are this strings translatable? (nact-doc)
+		- Fix #671987 reported by Jacek Kominek
+		  Cannot manipulate actions through NACT
+		- Fix #672269 reported by Robert Waters
+		  Add check for xml2po (gnome-doc-utils) in configure
+		- Fix #679122 reported by Kamil
+		  Desktop is "/" on Ubuntu precise 12.04
+		- Fix #679329 reported by Jacek Kominek
+		  Output redirection
+		- Fix #690783 reported by entropy
+		  "Display item in selection context menu" is not working
+		- Fix #697182 reported by cellstorm at operamail dot com
+		  Cannot create an action from the interface
+		- Fix stable attribute computing when releasing
+		- Fix menu use in the file manager context menu
+		  (reported by Christopher Compagnon)
+		- Fix na_io_provider_get_io_providers_list() so that write
+		  order is better respected
+		- Fix a broken tag in French help translation (by Piotr Drąg)
+		- Manuallly indicated figures, languages and doc files in Makefile
+		  (by Daniel Mustieles)
+
+	UI enhancements:
+
+		- Fix tooltip typo
+		- Try to target ideal size and position the first time we open
+		  the main window
+
+	Other modifications:
+
+		- Improve debug messages
+		- Obsoletes g_type_init() starting with GLib 2.36
+		- Obsoletes GDK threads starting with Gtk+ 3.6
+		- Obsoletes GtkTable starting with Gtk+ 3.4
+		- Obsoletes GtkHandleBox starting with Gtk+ 3.4, replacing
+		  moveable toolbars with fixed ones
+		- Do not try to create a Nautilus-Actions root menu if it will
+		  be empty
+		- Only allow the 'About Nautilus-Actions...' item inside of the
+		  root Nautilus-Actions menu
+
+	New and updated translations:
+
+		- ca (Gil Forcada)
+		- cs (Marek Černocký)
+		- da (Joe Hansen, Kenneth Nielsen)
+		- de (Christian Kirbach, Daniel Winzen)
+		- el (Dimitris Spingos)
+		- es (Daniel Mustieles, Nicolás Satragno)
+		- fr (Bruno Brouard)
+		- pt_BR (Rafael Ferreira)
+		- sl (Matej Urbančič)
+		- sr (Мирослав Николић)
+
 Version 3.2.2
 =============
 
@@ -7,7 +69,7 @@ Version 3.2.2
 
 		- Fix #671043 reported by Vincent Untz - Invalid desktop file.
 		- Fix #671044 reported by Vincent Untz - Incorrect FSF address.
-		- Fix #671083 reporteed by Pierre Wieser - Release tool takes bad package version.
+		- Fix #671083 reported by Pierre Wieser - Release tool takes bad package version.
 		- Fix wrong display in tabs vs. the current selection in tree view.
 
 	UI enhancements:
