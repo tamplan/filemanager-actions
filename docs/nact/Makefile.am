@@ -32,15 +32,15 @@
 # Tool (NACT) Users's Manual as DocBook XML documents, suitable for Yelp,
 # the Gnome help system.
 #
+# At install time, it installs these .xml help files
+# in <datadir>/gnome/help/nautilus-actions-config-tool/<lang>.
+# Missing tranlated images are replaced with symlinks to
+# ../../C/figures/<image.png>.
+#
 # --enable-html-manuals (resp. --enable-pdf-manuals) are configure options
 # which produce HTML (resp. PDF) formats. These options are always enabled
 # when making distcheck, so that all output formats for all known locales
 # are always included in the distributed tarball.
-#
-# At install time, gnome-doc-utils installs these help files
-# in <datadir>/gnome/help/nautilus-actions-config-tool/<lang>.
-# Missing tranlated images are replaced with symlinks to
-# ../../C/figures/<image.png>.
 #
 # Do not confuse gnome-doc-utils which targets the help documentation
 # of the Gnome (i.e. gui) applications, and that we are using here to
@@ -52,87 +52,88 @@
 # http://mail.gnome.org/archives/gnome-i18n/2010-August/msg00229.html).
 
 include $(srcdir)/gnome-doc-utils-na.make
+#include $(top_srcdir)/gnome-doc-utils.make
 
 DOC_MODULE = nautilus-actions-config-tool
 
 #DOC_ENTITIES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/*.xml | $(GREP) -v $(DOC_MODULE)))
 DOC_ENTITIES = \
-	appendix-gnu-fdl-1.3.xml \
-	articleinfo.xml \
-	legalnotice.xml \
-	nact-bugs.xml \
-	nact-conditions.xml \
-	nact-edit.xml \
-	nact-execution.xml \
-	nact-export.xml \
-	nact-import.xml \
-	nact-menus.xml \
-	nact-misc.xml \
-	nact-prefs.xml \
-	nact-profiles.xml \
-	nact-properties.xml \
-	nact-save.xml \
-	nact-sorting.xml \
-	nact-starting.xml \
-	nact-where.xml \
+	appendix-gnu-fdl-1.3.xml						\
+	articleinfo.xml									\
+	legalnotice.xml									\
+	nact-bugs.xml									\
+	nact-conditions.xml								\
+	nact-edit.xml									\
+	nact-execution.xml								\
+	nact-export.xml									\
+	nact-import.xml									\
+	nact-menus.xml									\
+	nact-misc.xml									\
+	nact-prefs.xml									\
+	nact-profiles.xml								\
+	nact-properties.xml								\
+	nact-save.xml									\
+	nact-sorting.xml								\
+	nact-starting.xml								\
+	nact-where.xml									\
 	nautilus-actions-config-tool.xml
 
 #DOC_INCLUDES =
 
 #DOC_FIGURES = $(patsubst $(srcdir)/C/%,%,$(shell \ls -1 $(srcdir)/C/figures/*.png))
 DOC_FIGURES = \
-	add.png \
-	nact-action-tab.png \
-	nact-basenames-tab.png \
-	nact-capabilities-tab.png \
-	nact-command-tab.png \
-	nact-desktop-environment-frame.png \
-	nact-environment-tab.png \
-	nact-exec-mode-frame.png \
-	nact-execute-as-frame.png \
-	nact-execution-environment-frame.png \
-	nact-execution-tab.png \
-	nact-export-done.png \
-	nact-export-format.png \
-	nact-export-home.png \
-	nact-export-items.png \
-	nact-export-summary.png \
-	nact-export-target.png \
-	nact-folders-tab.png \
-	nact-import-done.png \
-	nact-import-files.png \
-	nact-import-home.png \
-	nact-import-mode.png \
-	nact-import-resultat.png \
-	nact-import-summary.png \
-	nact-legend.png \
-	nact-main-empty.png \
-	nact-mimetypes-tab.png \
-	nact-new-capability.png \
-	nact-new-scheme.png \
-	nact-preferences-desktop.png \
-	nact-preferences-execution.png \
-	nact-preferences-export.png \
-	nact-preferences-import.png \
-	nact-preferences-io-providers.png \
-	nact-preferences-runtime.png \
-	nact-preferences-schemes.png \
-	nact-preferences-ui.png \
-	nact-properties-tab.png \
-	nact-schemes-tab.png \
-	nact-selection-count-frame.png \
-	nact-startup-mode-frame.png \
-	nact-target-location.png \
-	nact-working-directory-frame.png \
-	read-only.png \
-	remove.png \
-	sort-asc.png \
-	sort-buttons-frame.png \
-	sort-desc.png \
-	sort-manual.png \
-	start-context-menu-nautilus.png \
-	start-zenity-result.png \
-	stock-icon-about.png 
+	figures/add.png									\
+	figures/nact-action-tab.png						\
+	figures/nact-basenames-tab.png					\
+	figures/nact-capabilities-tab.png				\
+	figures/nact-command-tab.png					\
+	figures/nact-desktop-environment-frame.png		\
+	figures/nact-environment-tab.png				\
+	figures/nact-exec-mode-frame.png				\
+	figures/nact-execute-as-frame.png				\
+	figures/nact-execution-environment-frame.png	\
+	figures/nact-execution-tab.png					\
+	figures/nact-export-done.png					\
+	figures/nact-export-format.png					\
+	figures/nact-export-home.png					\
+	figures/nact-export-items.png					\
+	figures/nact-export-summary.png					\
+	figures/nact-export-target.png					\
+	figures/nact-folders-tab.png					\
+	figures/nact-import-done.png					\
+	figures/nact-import-files.png					\
+	figures/nact-import-home.png					\
+	figures/nact-import-mode.png					\
+	figures/nact-import-resultat.png				\
+	figures/nact-import-summary.png					\
+	figures/nact-legend.png							\
+	figures/nact-main-empty.png						\
+	figures/nact-mimetypes-tab.png					\
+	figures/nact-new-capability.png					\
+	figures/nact-new-scheme.png						\
+	figures/nact-preferences-desktop.png			\
+	figures/nact-preferences-execution.png			\
+	figures/nact-preferences-export.png				\
+	figures/nact-preferences-import.png				\
+	figures/nact-preferences-io-providers.png		\
+	figures/nact-preferences-runtime.png			\
+	figures/nact-preferences-schemes.png			\
+	figures/nact-preferences-ui.png					\
+	figures/nact-properties-tab.png					\
+	figures/nact-schemes-tab.png					\
+	figures/nact-selection-count-frame.png			\
+	figures/nact-startup-mode-frame.png				\
+	figures/nact-target-location.png				\
+	figures/nact-working-directory-frame.png		\
+	figures/read-only.png							\
+	figures/remove.png								\
+	figures/sort-asc.png							\
+	figures/sort-buttons-frame.png					\
+	figures/sort-desc.png							\
+	figures/sort-manual.png							\
+	figures/start-context-menu-nautilus.png			\
+	figures/start-zenity-result.png					\
+	figures/stock-icon-about.png
 
 #DOC_LINGUAS = $(patsubst $(srcdir)/%,%,$(shell find $(srcdir) -mindepth 1 -maxdepth 1 -type d | $(GREP) -v $(srcdir)/C))
 DOC_LINGUAS = \
@@ -186,7 +187,7 @@ dist-manuals-hook: dist-html-manuals-hook dist-pdf-manuals-hook
 # so that all rules apply
 install-C-xml:
 if ENABLE_MANUALS
-	@if test ! -f C/$(DOC_MODULE).xml; then \
+	@if ! test -f C/$(DOC_MODULE).xml; then \
 		echo "Installing C xml source files in $(abs_builddir)"; \
 		$(MKDIR_P) C; cp -v $(srcdir)/C/*.xml C/; \
 	fi
@@ -266,7 +267,7 @@ endif
 
 $(MANUALS_HTML): %.html: %.xml
 	@ftarget=$@; \
-	if test "$(opt_verbose)" = ""; then echo "  HTML   $$ftarget"; fi; \
+	if test "$(opt_verbose)" = ""; then echo "  HTML   $$ftarget building..."; fi; \
 	lc=$${ftarget%/*}; \
 	if test "x$(WITH_DB2HTML)" = "xyes"; then $(call exec_db2html,$$lc); fi; \
 	if test "x$(WITH_GDT)" = "xyes"; then $(call exec_g_d_t,$$lc); fi; \
@@ -377,7 +378,7 @@ install_html_figs = \
 	if test "$(opt_verbose)" = ""; then echo "    $(2)/nact/figures"; fi; \
 	figdir="$(3)/figures"; \
 	if ! test -d "$$figdir"; then $(MKDIR_P) "$$figdir"; fi; \
-	for fig in $(patsubst C/%,%,$(_DOC_C_FIGURES)); do \
+	for fig in $(DOC_FIGURES); do \
 		figsrc=$(srcdir)/$(2)/$$fig; \
 		if test -f $${figsrc} -a ! -h $${figsrc}; then \
 			cmd="$(INSTALL_DATA) $${figsrc} $${figdir}/"; \
@@ -460,16 +461,14 @@ endif
 
 $(MANUALS_PDF): %.pdf: %.xml
 	@ftarget=$@; \
-	if test "$(opt_verbose)" = ""; then echo "  PDF    $$ftarget"; fi; \
+	if test "$(opt_verbose)" = ""; then echo "  PDF    $$ftarget building..."; fi; \
 	lc=$${ftarget%/*}; \
-	list='$(patsubst C/%,%,$(_DOC_C_FIGURES))'; \
+	list='$(DOC_FIGURES)'; \
 	(cd $$lc; \
 	 $(MKDIR_P) figures; \
 	 for fig in $$list; do \
 		if test -f "$(srcdir)/$$lc/$$fig"; then d=$$lc; else d="C"; fi; \
-		if ! test -f $$fig; then \
-			cmd="(cd figures && $(LN_S) -f $(srcdir)/$$d/$$fig)"; eval $$cmd; \
-		fi; \
+		cmd="(cd figures && $(LN_S) -f $(srcdir)/$$d/$$fig)"; eval $$cmd; \
 	 done; \
 	 cmd="dblatex $(DOC_MODULE).xml"; eval $$cmd >/dev/null; \
 	 if ! test -f $(DOC_MODULE).pdf; then \
@@ -478,10 +477,14 @@ $(MANUALS_PDF): %.pdf: %.xml
 		cp $$tmpdir/$(DOC_MODULE).pdf . || :; \
 		rm -fr $$tmpdir; \
 	 fi; \
-	 find figures -type l | xargs rm -f; \
-	 rmdir figures 2>/dev/null || :; \
 	); \
-	if test "$(opt_verbose)" = ""; then echo "  PDF    $$ftarget done"; fi
+	if test "$(opt_verbose)" = ""; then \
+		if test -f $$lc/$(DOC_MODULE).pdf; then \
+			echo "  PDF    $$ftarget done"; \
+		else \
+			echo "  PDF    unable to build $$ftarget"; \
+		fi; \
+	fi
 
 # if --pdfdir has not been specified, then we default to PKGDOCDIR/pdf
 # in all case, we append the locale as a subdirectory level
@@ -555,6 +558,12 @@ dist-omf-hook:
 clean-local: remove-C-xml
 	rm -f *~
 	rm -f *.stamp
+	for lc in C $(DOC_LINGUAS); do \
+	  (cd $$lc; \
+	   find figures -type l | xargs rm -f; \
+	   rmdir figures 2>/dev/null || :; \
+	  ); \
+	done
 
 distclean-local: distclean-html distclean-pdf
 
