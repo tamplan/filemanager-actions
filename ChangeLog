@@ -1,5 +1,7 @@
 2013-09-24 Pierre Wieser <pwieser@trychlos.org>
 
+	* NEWS: Updating NEWS before releasing.
+
 	* docs/nact/Makefile.am: Fix the DOC_FIGURES variable,
 	prefixing all images with 'figures/' directory name.
 
