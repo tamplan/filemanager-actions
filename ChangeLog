@@ -1,5 +1,7 @@
 2013-09-26 Pierre Wieser <pwieser@trychlos.org>
 
+	* Makefile.am: Add ChangeLog-2012 to the distribution.
+
 	* configure.ac: Post release version bump.
 
 2013-09-24 Pierre Wieser <pwieser@trychlos.org>
