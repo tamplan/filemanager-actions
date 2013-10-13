@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: nautilus-actions master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product"
 "=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-02-16 18:06+0000\n"
-"PO-Revision-Date: 2013-03-07 10:19+0200\n"
+"POT-Creation-Date: 2013-09-13 08:39+0000\n"
+"PO-Revision-Date: 2013-10-13 21:28+0200\n"
 "Last-Translator: Miroslav Nikolić <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "Language: sr\n"
@@ -37,7 +37,8 @@ msgstr "Da li taster Izlaz treba da zatvori pomoćnike"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:4
 msgid "If TRUE, assistant may be closed by hitting the Esc key."
-msgstr "Ako je izabrano, pomoćnik može biti zaključan pritiskom na taster Izlaz."
+msgstr ""
+"Ako je izabrano, pomoćnik može biti zaključan pritiskom na taster Izlaz."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:5
 msgid "Whether the auto-save feature should be activated"
@@ -47,7 +48,8 @@ msgstr "Da li je pokrenuta funkcija samočuvanja"
 msgid ""
 "If TRUE, the pending modifications will be periodically and automatically "
 "saved."
-msgstr "Ako je izabrano, izmene na čekanju biće povremeno i samostalno sačuvane."
+msgstr ""
+"Ako je izabrano, izmene na čekanju biće povremeno i samostalno sačuvane."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:7
 msgid "Periodicity of the auto-save"
@@ -309,8 +311,7 @@ msgstr ""
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:46
 msgid "Whether menus should be relabeled when pasted or duplicated"
 msgstr ""
-"Da li treba ponovo ispisati natpise izbornika prilikom ubacivanja ili "
-"udvajanja"
+"Da li treba ponovo ispisati natpise izbornika prilikom ubacivanja ili udvajanja"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:47
 msgid "Whether menus should be relabeled when pasted or duplicated."
@@ -376,7 +377,8 @@ msgstr "Položaj i veličina glavnog prozora"
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:61
 msgid ""
 "Position and size of the main window ; default is set by the window manager."
-msgstr "Položaj i veličina glavnog prozora ; osnovno podešava upravnik prozora."
+msgstr ""
+"Položaj i veličina glavnog prozora ; osnovno podešava upravnik prozora."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:62
 msgid "Position and size of the preferences dialog"
@@ -528,14 +530,18 @@ msgstr "Nautilusove radnje"
 
 #: ../src/core/na-about.c:161
 #, c-format
+#| msgid ""
+#| "Copyright %s 2005 The GNOME Foundation\n"
+#| "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
+#| "Copyright %s 2009-2012 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009-2012 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009-2013 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
 "Autorska prava %s 2005 Gnomova Zadužbina\n"
 "Autorska prava %s 2006-2008 Frederik Riodel <grumz@grumz.net>\n"
-"Autorska prava %s 2009-2012 Pjer Vjezer <pwieser@trychlos.org>"
+"Autorska prava %s 2009-2013 Pjer Vjezer <pwieser@trychlos.org>"
 
 #: ../src/core/na-desktop-environment.c:39
 msgid "GNOME desktop"
@@ -618,8 +624,8 @@ msgstr ""
 "Mora biti postavljeno na „true“ (izabrano) ako su šabloni naziva datoteka "
 "osetljivi na veličinu slova, u suprotnom na „false“ (poništeno). Npr., ako "
 "treba da poredite naziv datoteke na način osetljiv na veličinu slova, "
-"postavite ovaj ključ na „true“ (izabrano). Ako takođe želite, na primer "
-"„*.jpg“ da poklapa „photo.JPG“, onda postavite „false“ (poništeno).\n"
+"postavite ovaj ključ na „true“ (izabrano). Ako takođe želite, na primer „*."
+"jpg“ da poklapa „photo.JPG“, onda postavite „false“ (poništeno).\n"
 "Ovo se naravno primenjuje samo kada postoji izbor.\n"
 "Podrazumeva se „true“ (izabrano)."
 
@@ -628,8 +634,8 @@ msgid ""
 "List of patterns to be matched against the mimetypes of the selected file(s)/"
 "folder(s)"
 msgstr ""
-"Spisak šablona koji će biti poređeni sa mime vrstama izabrane "
-"datoteke/fascikle"
+"Spisak šablona koji će biti poređeni sa mime vrstama izabrane datoteke/"
+"fascikle"
 
 #. i18n: wildcard character '*' is taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:116
@@ -725,8 +731,7 @@ msgid ""
 "Whether the selection may be multiple (deprecated option, see selection "
 "count)"
 msgstr ""
-"Da li izbor može biti višestruk (zastarela mogućnost, pogledajte broj "
-"izbora)"
+"Da li izbor može biti višestruk (zastarela mogućnost, pogledajte broj izbora)"
 
 #. i18n: 'true' and 'false' values are taken literally, and should not be translated
 #: ../src/core/na-icontext-factory.c:246
@@ -820,7 +825,8 @@ msgid ""
 " All folders 'under' the specified path are considered valid.\n"
 "Defaults to '/'."
 msgstr ""
-"Određuje spisak ispravnih putanja koje će biti poređene sa tekućom fasciklom.\n"
+"Određuje spisak ispravnih putanja koje će biti poređene sa tekućom "
+"fasciklom.\n"
 " Sve fascikle „pod“ navedenom putanjom se smatraju ispravnim.\n"
 "Podrazumeva se „/“."
 
@@ -1169,42 +1175,42 @@ msgid ""
 "Please, be kind enough to fill out a bug report on https://bugzilla.gnome."
 "org/enter_bug.cgi?product=nautilus-actions."
 msgstr ""
-"Budite ljubazni i popunite izveštaj o grešci na "
-"„https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions“."
+"Budite ljubazni i popunite izveštaj o grešci na „https://bugzilla.gnome.org/"
+"enter_bug.cgi?product=nautilus-actions“."
 
-#: ../src/core/na-io-provider.c:1372
+#: ../src/core/na-io-provider.c:1364
 msgid "Unavailable I/O provider."
 msgstr "Nedostupan U/I dostavljač."
 
-#: ../src/core/na-io-provider.c:1376
+#: ../src/core/na-io-provider.c:1368
 msgid "I/O provider implementation lacks of required API."
 msgstr "Primeni U/I dostavljača nedostaje potreban API."
 
-#: ../src/core/na-io-provider.c:1380
+#: ../src/core/na-io-provider.c:1372
 msgid "I/O provider is not willing to write."
 msgstr "U/I dostavljač nije radan da piše."
 
-#: ../src/core/na-io-provider.c:1384
+#: ../src/core/na-io-provider.c:1376
 msgid "I/O provider announces itself as unable to write."
 msgstr "U/I dostavljač objavljuje da nije u mogućnosti da piše."
 
-#: ../src/core/na-io-provider.c:1388
+#: ../src/core/na-io-provider.c:1380
 msgid "I/O provider has been locked down by an administrator."
 msgstr "U/I dostavljača je zaključao administrator."
 
-#: ../src/core/na-io-provider.c:1392
+#: ../src/core/na-io-provider.c:1384
 msgid "I/O provider has been locked down by the user."
 msgstr "U/I dostavljača je zaključao korisnik."
 
-#: ../src/core/na-io-provider.c:1396
+#: ../src/core/na-io-provider.c:1388
 msgid "Item is read-only."
 msgstr "Stavka je samo za čitanje."
 
-#: ../src/core/na-io-provider.c:1400
+#: ../src/core/na-io-provider.c:1392
 msgid "No writable I/O provider found."
 msgstr "Nisam pronašao upisivog U/I dostavljača."
 
-#: ../src/core/na-io-provider.c:1405
+#: ../src/core/na-io-provider.c:1397
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
@@ -1213,11 +1219,11 @@ msgstr ""
 "Stavka nije upisiva iz nepoznatog razloga (%d).\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1428
+#: ../src/core/na-io-provider.c:1420
 msgid "OK."
 msgstr "U redu."
 
-#: ../src/core/na-io-provider.c:1432
+#: ../src/core/na-io-provider.c:1424
 #, c-format
 msgid ""
 "Program flow error.\n"
@@ -1226,23 +1232,23 @@ msgstr ""
 "Greška pritoka programa.\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1436
+#: ../src/core/na-io-provider.c:1428
 msgid "The I/O provider is not willing to do that."
 msgstr "U/I dostavljač nije radan da to uradi."
 
-#: ../src/core/na-io-provider.c:1440
+#: ../src/core/na-io-provider.c:1432
 msgid "Write error in I/O provider."
 msgstr "Greška pisanja u U/I dostavljaču."
 
-#: ../src/core/na-io-provider.c:1444
+#: ../src/core/na-io-provider.c:1436
 msgid "Unable to delete GConf schemas."
 msgstr "Ne mogu da obrišem šeme Gkonfa."
 
-#: ../src/core/na-io-provider.c:1448
+#: ../src/core/na-io-provider.c:1440
 msgid "Unable to delete configuration."
 msgstr "Ne mogu da obrišem podešavanje."
 
-#: ../src/core/na-io-provider.c:1452
+#: ../src/core/na-io-provider.c:1444
 #, c-format
 msgid ""
 "Unknown return code (%d).\n"
@@ -1338,8 +1344,7 @@ msgstr ""
 "Natpis prikazan uz ikonicu u traci alata upravnika datoteka.\n"
 "Znajte da stvarni prikaz može da zavisi od vaših ličnih postavki okruženja "
 "radne površi.\n"
-"Podrazumevaju se natpisi priručnog izbornika kada nije podešen ili je "
-"prazan."
+"Podrazumevaju se natpisi priručnog izbornika kada nije podešen ili je prazan."
 
 #. i18n: copied items have a label as 'Copy of original label'
 #: ../src/core/na-object-id.c:329
@@ -1608,8 +1613,8 @@ msgstr ""
 "  %B: razmakom razdvojeni spisak naziva osnove izabrane datoteke/fascikle\n"
 "  %c: broji izabranu(e) datoteku(e)/fasciklu(e)\n"
 "  %d: (prvi) osnovni direktorijum\n"
-"  %D: razmakom razdvojeni spisak osnovnih direktorijuma izabrane "
-"datoteke/fascikle\n"
+"  %D: razmakom razdvojeni spisak osnovnih direktorijuma izabrane datoteke/"
+"fascikle\n"
 "  %f: (prvi) naziv datoteke\n"
 "  %F: razmakom razdvojeni spisak naziva datoteka izabrane datoteke/fascikle\n"
 "  %h: naziv domaćina (prve) putanje\n"
@@ -1905,71 +1910,71 @@ msgstr ""
 "viših),\n"
 "— ili putem alata linije naredbi „gconftool-2 --load“."
 
-#: ../src/nact/base-application.c:184
+#: ../src/nact/base-application.c:186
 msgid "Arguments count"
 msgstr "Broj argumenata"
 
-#: ../src/nact/base-application.c:185
+#: ../src/nact/base-application.c:187
 msgid "The count of command-line arguments"
 msgstr "Broj argumenata linije naredbi"
 
-#: ../src/nact/base-application.c:192
+#: ../src/nact/base-application.c:194
 msgid "Arguments"
 msgstr "Argumenti"
 
-#: ../src/nact/base-application.c:193
+#: ../src/nact/base-application.c:195
 msgid "The array of command-line arguments"
 msgstr "Niz argumenata linije naredbi"
 
-#: ../src/nact/base-application.c:200
+#: ../src/nact/base-application.c:202
 msgid "Option entries"
 msgstr "Unosi mogućnosti"
 
-#: ../src/nact/base-application.c:201
+#: ../src/nact/base-application.c:203
 msgid "The array of command-line option definitions"
 msgstr "Niz odrednica mogućnosti linije naredbi"
 
-#: ../src/nact/base-application.c:207
+#: ../src/nact/base-application.c:209
 msgid "Application name"
 msgstr "Naziv programa"
 
-#: ../src/nact/base-application.c:208
+#: ../src/nact/base-application.c:210
 msgid "The name of the application"
 msgstr "Naziv programa"
 
-#: ../src/nact/base-application.c:215 ../src/nact/nact-schemes-list.c:167
+#: ../src/nact/base-application.c:217 ../src/nact/nact-schemes-list.c:167
 msgid "Description"
 msgstr "Opis"
 
-#: ../src/nact/base-application.c:216
+#: ../src/nact/base-application.c:218
 msgid "A short description to be displayed in the first line of --help output"
 msgstr "Kratak opis za prikazivanje u prvom redu izlaza „--help“"
 
-#: ../src/nact/base-application.c:223
+#: ../src/nact/base-application.c:225
 msgid "Icon name"
 msgstr "Naziv ikonice"
 
-#: ../src/nact/base-application.c:224
+#: ../src/nact/base-application.c:226
 msgid "The name of the icon of the application"
 msgstr "Naziv ikonice programa"
 
-#: ../src/nact/base-application.c:231
+#: ../src/nact/base-application.c:233
 msgid "UniqueApp name"
 msgstr "Jedinstveni naziv programa"
 
-#: ../src/nact/base-application.c:232
+#: ../src/nact/base-application.c:234
 msgid "The Unique name of the application"
 msgstr "Jedinstveni naziv programa"
 
-#: ../src/nact/base-application.c:239
+#: ../src/nact/base-application.c:241
 msgid "Return code"
 msgstr "Povratni kod"
 
-#: ../src/nact/base-application.c:240
+#: ../src/nact/base-application.c:242
 msgid "The return code of the application"
 msgstr "Povratni kod programa"
 
-#: ../src/nact/base-application.c:603
+#: ../src/nact/base-application.c:605
 msgid "Unable to interpret command-line arguments"
 msgstr "Ne mogu da razumem argumente linije naredbi"
 
@@ -2108,7 +2113,8 @@ msgstr "Nepoznata opcija pokretanja: %d"
 #: ../src/nact/egg-desktop-file.c:1365
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Ne mogu da prosledim adrese dokumenata na „Type=Link“ ulaz radne površi"
+msgstr ""
+"Ne mogu da prosledim adrese dokumenata na „Type=Link“ ulaz radne površi"
 
 #: ../src/nact/egg-desktop-file.c:1386
 #, c-format
@@ -3239,7 +3245,7 @@ msgstr "U/I _dostavljači"
 msgid "Rely on runtime detection"
 msgstr "Osloni se na otkrivanje u vreme pokretanja"
 
-#: ../src/nact/nact-preferences-editor.c:804
+#: ../src/nact/nact-preferences-editor.c:819
 msgid "Ex.:"
 msgstr "Primer:"
 
@@ -3491,8 +3497,7 @@ msgid ""
 "space-separated list of the base directories of the selected file(s)/folder"
 "(s)."
 msgstr ""
-"razmakom razdvojeni spisak osnovnih direktorijuma izabrane "
-"datoteke/fascikle."
+"razmakom razdvojeni spisak osnovnih direktorijuma izabrane datoteke/fascikle."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:30
 msgid "port number of the (first) selected URI."
@@ -4071,8 +4076,8 @@ msgid ""
 "column."
 msgstr ""
 "Tekuća stavka će se pojaviti ako mesto svakog elementa izbora je jedna ili u "
-"jednoj od putanja kolone „Mora da odgovara jednom“, dok ne odgovara ni "
-"jednom propusniku kolone „Ne mora da odgovara ni jednom“."
+"jednoj od putanja kolone „Mora da odgovara jednom“, dok ne odgovara ni jednom "
+"propusniku kolone „Ne mora da odgovara ni jednom“."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:170
 msgid ""
@@ -4133,8 +4138,8 @@ msgid ""
 "'Must not match any of' column."
 msgstr ""
 "Tekuća stavka će se pojaviti ako šema svakog elementa izbora odgovara jednoj "
-"od kolona „Mora da odgovara jednom“, dok ne odgovara ni jednoj od kolona "
-"„Ne mora da odgovara ni jednom“."
+"od kolona „Mora da odgovara jednom“, dok ne odgovara ni jednoj od kolona „Ne "
+"mora da odgovara ni jednom“."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:181
 msgid ""
@@ -4310,8 +4315,8 @@ msgid ""
 "This may be used for example for testing that a prerequisite service is "
 "currently available."
 msgstr ""
-"Ovo je napredan uslov zasnovan na prisustvu naročite usluge na sistemu "
-"D-sabirnice.\n"
+"Ovo je napredan uslov zasnovan na prisustvu naročite usluge na sistemu D-"
+"sabirnice.\n"
 "Ovo može biti korišćeno na primer za isprobavanje da je usluga preduslova "
 "trenutno dostupna."
 
@@ -4486,45 +4491,46 @@ msgstr "<Putanja>"
 msgid "Output the version number"
 msgstr "Ispisuje broj izdanja"
 
-#: ../src/test/test-reader.c:106
+#: ../src/test/test-reader.c:108
 msgid "Import a file."
 msgstr "Uvezite datoteku."
 
-#: ../src/test/test-reader.c:120
+#: ../src/test/test-reader.c:122
 msgid ""
 "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
 "mail to <maintainer@nautilus-actions.org>.\n"
-msgstr "Izveštaji o greškama su dobrodošli na „http://bugzilla.gnome.org“, ili ako "
+msgstr ""
+"Izveštaji o greškama su dobrodošli na „http://bugzilla.gnome.org“, ili ako "
 "vam više odgovara da pošaljete poštu na <maintainer@nautilus-actions.org>.\n"
 
-#: ../src/test/test-reader.c:128 ../src/utils/na-delete-xmltree.c:180
-#: ../src/utils/na-print-schemas.c:188 ../src/utils/na-set-conf.c:205
-#: ../src/utils/nautilus-actions-new.c:382
-#: ../src/utils/nautilus-actions-print.c:180
-#: ../src/utils/nautilus-actions-run.c:207
+#: ../src/test/test-reader.c:130 ../src/utils/na-delete-xmltree.c:183
+#: ../src/utils/na-print-schemas.c:191 ../src/utils/na-set-conf.c:208
+#: ../src/utils/nautilus-actions-new.c:385
+#: ../src/utils/nautilus-actions-print.c:183
+#: ../src/utils/nautilus-actions-run.c:210
 msgid "Miscellaneous options"
 msgstr "Ostale mogućnosti"
 
-#: ../src/test/test-reader.c:149 ../src/utils/na-delete-xmltree.c:110
-#: ../src/utils/na-print-schemas.c:109 ../src/utils/na-set-conf.c:117
-#: ../src/utils/nautilus-actions-new.c:202
-#: ../src/utils/nautilus-actions-print.c:107
-#: ../src/utils/nautilus-actions-run.c:116
+#: ../src/test/test-reader.c:151 ../src/utils/na-delete-xmltree.c:113
+#: ../src/utils/na-print-schemas.c:112 ../src/utils/na-set-conf.c:120
+#: ../src/utils/nautilus-actions-new.c:205
+#: ../src/utils/nautilus-actions-print.c:110
+#: ../src/utils/nautilus-actions-run.c:119
 #, c-format
 msgid "Syntax error: %s\n"
 msgstr "Greška sintakse: %s\n"
 
-#: ../src/test/test-reader.c:164
+#: ../src/test/test-reader.c:166
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Greška: putanja je obavezna.\n"
 
 #. i18: '--help' is a command-line option - do not translate
-#: ../src/test/test-reader.c:176 ../src/utils/na-delete-xmltree.c:194
-#: ../src/utils/na-print-schemas.c:301 ../src/utils/na-set-conf.c:219
-#: ../src/utils/nautilus-actions-new.c:626
-#: ../src/utils/nautilus-actions-print.c:237
-#: ../src/utils/nautilus-actions-run.c:481
+#: ../src/test/test-reader.c:178 ../src/utils/na-delete-xmltree.c:197
+#: ../src/utils/na-print-schemas.c:304 ../src/utils/na-set-conf.c:222
+#: ../src/utils/nautilus-actions-new.c:629
+#: ../src/utils/nautilus-actions-print.c:240
+#: ../src/utils/nautilus-actions-run.c:484
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Upišite „%s --help“ za korišćenje.\n"
@@ -4535,10 +4541,10 @@ msgid ""
 "product=nautilus-actions,\n"
 "or you may prefer to mail to <maintainer@nautilus-actions.org>.\n"
 msgstr ""
-"Izveštaji o greškama su dobrodošli na "
-"„https://bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions“,\n"
-"ili ako vam više odgovara da pošaljete poštu na <maintainer@nautilus-"
-"actions.org>.\n"
+"Izveštaji o greškama su dobrodošli na „https://bugzilla.gnome.org/enter_bug."
+"cgi?product=nautilus-actions“,\n"
+"ili ako vam više odgovara da pošaljete poštu na <maintainer@nautilus-actions."
+"org>.\n"
 
 #: ../src/utils/na-delete-xmltree.c:68
 msgid "The XPath to the tree to be deleted"
@@ -4548,31 +4554,31 @@ msgstr "Iks putanja do stabla koje će biti obrisano"
 msgid "The filename of the XML backend"
 msgstr "Naziv datoteke IksML pozadinca"
 
-#: ../src/utils/na-delete-xmltree.c:125
+#: ../src/utils/na-delete-xmltree.c:128
 #, c-format
 msgid "Error: a XPath is mandatory.\n"
 msgstr "Greška: Iks putanja je obavezna.\n"
 
-#: ../src/utils/na-delete-xmltree.c:130
+#: ../src/utils/na-delete-xmltree.c:133
 #, c-format
 msgid "Error: a XML filename is mandatory.\n"
 msgstr "Greška: IksML naziv datoteke je obavezan.\n"
 
-#: ../src/utils/na-delete-xmltree.c:161
+#: ../src/utils/na-delete-xmltree.c:164
 msgid "Delete a XPath from a XML document."
 msgstr "Obrišite Iks putanju iz IksML dokumenta."
 
-#: ../src/utils/na-delete-xmltree.c:210
+#: ../src/utils/na-delete-xmltree.c:213
 #, c-format
 msgid "Error: unable to parse file '%s'\n"
 msgstr "Greška: ne mogu da obradim datoteku „%s“\n"
 
-#: ../src/utils/na-delete-xmltree.c:217
+#: ../src/utils/na-delete-xmltree.c:220
 #, c-format
 msgid "Error: unable to create new XPath context\n"
 msgstr "Greška: ne mogu da napravim novi sadržaj Iks putanje\n"
 
-#: ../src/utils/na-delete-xmltree.c:225
+#: ../src/utils/na-delete-xmltree.c:228
 #, c-format
 msgid "Error: unable to evaluate XPath expression '%s'\n"
 msgstr "Greška: ne mogu da procenim izraz Iks putanje „%s“\n"
@@ -4589,11 +4595,11 @@ msgstr "Ispisuje šeme radnje [osnovno]"
 msgid "Output the menu schemas"
 msgstr "Ispisuje šeme izbornika"
 
-#: ../src/utils/na-print-schemas.c:159
+#: ../src/utils/na-print-schemas.c:162
 msgid "Output the Nautilus-Actions GConf schemas on stdout."
 msgstr "Ispisuje Gkonf šeme Nautilusovih radnji na standardnom izlazu."
 
-#: ../src/utils/na-print-schemas.c:163
+#: ../src/utils/na-print-schemas.c:166
 msgid ""
 "As of version 3.1.0, GConf as an I/O provider is deprecated.\n"
 "This program is no more maintained."
@@ -4601,7 +4607,7 @@ msgstr ""
 "Kako je izdanja 3.1.0, Gkonf kao U/I dostavljač je zastareo.\n"
 "Ovaj program se više ne održava."
 
-#: ../src/utils/na-print-schemas.c:182
+#: ../src/utils/na-print-schemas.c:185
 msgid "Type options"
 msgstr "Mogućnosti kucanja"
 
@@ -4630,28 +4636,28 @@ msgstr "Vrednost za podešavanje"
 msgid "Output the version number and exit gracefully"
 msgstr "Ispisuje broj izdanja i izlazi lepo"
 
-#: ../src/utils/na-set-conf.c:133
+#: ../src/utils/na-set-conf.c:136
 #, c-format
 msgid "Error: a group is mandatory.\n"
 msgstr "Greška: grupa je obavezna.\n"
 
-#: ../src/utils/na-set-conf.c:138
+#: ../src/utils/na-set-conf.c:141
 #, c-format
 msgid "Error: a key is mandatory.\n"
 msgstr "Greška: ključ je obavezan.\n"
 
-#: ../src/utils/na-set-conf.c:143
+#: ../src/utils/na-set-conf.c:146
 #, c-format
 msgid "Error: a type is mandatory for setting/updating a value.\n"
 msgstr "Greška: vrsta je obavezna za podešavanje/dogradnju vrednosti.\n"
 
 #. i18n: 'str', 'int' and 'bool' are literal values: do not translate
-#: ../src/utils/na-set-conf.c:154
+#: ../src/utils/na-set-conf.c:157
 #, c-format
 msgid "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n"
 msgstr "Greška: nepoznata vrsta: %s. Upotrebite „str“, „int“ ili „bool“.\n"
 
-#: ../src/utils/na-set-conf.c:161
+#: ../src/utils/na-set-conf.c:164
 #, c-format
 msgid "Error: a value is mandatory.\n"
 msgstr "Greška: vrednost je obavezna.\n"
@@ -4694,21 +4700,21 @@ msgstr "Greška: ne mogu biti navedene obe „%s“ i „%s“ mogućnosti\n"
 msgid "'%s' option is deprecated, see %s\n"
 msgstr "„%s“ mogućnost je zastarela, pogledajte „%s“\n"
 
-#: ../src/utils/nautilus-actions-new.c:215
+#: ../src/utils/nautilus-actions-new.c:218
 #, c-format
 msgid "Error: an action label is mandatory.\n"
 msgstr "Greška: natpis radnje je obavezan.\n"
 
-#: ../src/utils/nautilus-actions-new.c:261
+#: ../src/utils/nautilus-actions-new.c:264
 #, c-format
 msgid "Error: only one output option may be specified.\n"
 msgstr "Greška: samo jedna izlazna mogućnost može biti navedena.\n"
 
-#: ../src/utils/nautilus-actions-new.c:347
+#: ../src/utils/nautilus-actions-new.c:350
 msgid "Define a new action."
 msgstr "Određuje novu radnju."
 
-#: ../src/utils/nautilus-actions-new.c:350
+#: ../src/utils/nautilus-actions-new.c:353
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -4722,16 +4728,16 @@ msgstr ""
 "Ili vi možete da izaberete da neposredno zapišete radnju u vaša podešavanja "
 "Nautilusovih radnji."
 
-#: ../src/utils/nautilus-actions-new.c:376
+#: ../src/utils/nautilus-actions-new.c:379
 msgid "Output of the program"
 msgstr "Izlaz programa"
 
-#: ../src/utils/nautilus-actions-new.c:376
+#: ../src/utils/nautilus-actions-new.c:379
 msgid "Choose where the program creates the action"
 msgstr "Izaberite gde će program da stvori radnju"
 
 #. i18n: 'na-desktop' is a plugin identifier - do not translate
-#: ../src/utils/nautilus-actions-new.c:589
+#: ../src/utils/nautilus-actions-new.c:592
 msgid "Error: unable to find 'na-desktop' i/o provider."
 msgstr "Greka: ne mogu da pronađem „na-desktop“ u/i dostavljača."
 
@@ -4749,18 +4755,18 @@ msgstr "Odrednik izbornika ili radnje za štampanje"
 msgid "An export format [Desktop1]"
 msgstr "Izvozni zapis [Desktop1]"
 
-#: ../src/utils/nautilus-actions-print.c:122
+#: ../src/utils/nautilus-actions-print.c:125
 #, c-format
 msgid "Error: a menu or action id is mandatory.\n"
 msgstr "Greška: obavezan je izbornik ili radnja.\n"
 
 #. i18n: %s stands for the id of the export format, and is not translatable
-#: ../src/utils/nautilus-actions-print.c:138
+#: ../src/utils/nautilus-actions-print.c:141
 #, c-format
 msgid "Error: %s: unknown export format.\n"
 msgstr "Greška: %s: nepoznat izvozni zapis.\n"
 
-#: ../src/utils/nautilus-actions-print.c:203
+#: ../src/utils/nautilus-actions-print.c:206
 #, c-format
 msgid "Error: item '%s' doesn't exist.\n"
 msgstr "Greška: stavka „%s“ ne postoji.\n"
@@ -4777,56 +4783,56 @@ msgstr ""
 "Meta, datoteka ili fascikla, za radnju. Može biti navedeno više od jedne "
 "mogućnosti"
 
-#: ../src/utils/nautilus-actions-run.c:131
+#: ../src/utils/nautilus-actions-run.c:134
 #, c-format
 msgid "Error: action id is mandatory.\n"
 msgstr "Greška: ib radnje je obavezan.\n"
 
-#: ../src/utils/nautilus-actions-run.c:156
+#: ../src/utils/nautilus-actions-run.c:159
 #, c-format
 msgid "No current selection. Nothing to do. Exiting.\n"
 msgstr "Nema trenutnog izbora. Nemam šta da radim. Izlazim.\n"
 
-#: ../src/utils/nautilus-actions-run.c:161
+#: ../src/utils/nautilus-actions-run.c:164
 #, c-format
 msgid "Action %s is not a valid candidate. Exiting.\n"
 msgstr "Radnja „%s“ nije ispravan kandidat. Izlazim.\n"
 
-#: ../src/utils/nautilus-actions-run.c:167
+#: ../src/utils/nautilus-actions-run.c:170
 #, c-format
 msgid "No valid profile is candidate to execution. Exiting.\n"
 msgstr "Nijedan ispravan profil nije kandidat za izvršavanje. Izlazim.\n"
 
-#: ../src/utils/nautilus-actions-run.c:188
+#: ../src/utils/nautilus-actions-run.c:191
 msgid "Execute an action on the specified target."
 msgstr "Izvršava radnju na navedenoj meti."
 
-#: ../src/utils/nautilus-actions-run.c:233
+#: ../src/utils/nautilus-actions-run.c:236
 #, c-format
 msgid "Error: action '%s' doesn't exist.\n"
 msgstr "Greška: radnja „%s“ ne postoji.\n"
 
-#: ../src/utils/nautilus-actions-run.c:237
+#: ../src/utils/nautilus-actions-run.c:240
 #, c-format
 msgid "Error: action '%s' is disabled.\n"
 msgstr "Greška: radnja „%s“ je isključena.\n"
 
-#: ../src/utils/nautilus-actions-run.c:242
+#: ../src/utils/nautilus-actions-run.c:245
 #, c-format
 msgid "Error: action '%s' is not valid.\n"
 msgstr "Greška: radnja „%s“ nije ispravna.\n"
 
-#: ../src/utils/nautilus-actions-run.c:328
+#: ../src/utils/nautilus-actions-run.c:331
 #, c-format
 msgid "Error: unable to get a connection to session DBus: %s"
 msgstr "Greška: ne mogu da dobavim vezu do sesije D-sabirnice: %s"
 
-#: ../src/utils/nautilus-actions-run.c:341
+#: ../src/utils/nautilus-actions-run.c:344
 #, c-format
 msgid "Error: unable to get a proxy on %s service"
 msgstr "Greška: ne mogu da dobavim posrednika na usluzi „%s“"
 
-#: ../src/utils/nautilus-actions-run.c:351
+#: ../src/utils/nautilus-actions-run.c:354
 #, c-format
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Greška na pozivu „Dobavi izabrane putanje“: %s"
