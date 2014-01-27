@@ -572,11 +572,11 @@ msgstr "Acciones de Nautilus"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009-2013 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009-2014 Pierre Wieser <pwieser@trychlos.org>"
 msgstr ""
 "Copyright %s 2005 La Fundación GNOME\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
-"Copyright %s 2009-2013 Pierre Wieser <pwieser@trychlos.org>"
+"Copyright %s 2009-2014 Pierre Wieser <pwieser@trychlos.org>"
 
 #: ../src/core/na-desktop-environment.c:39
 msgid "GNOME desktop"
