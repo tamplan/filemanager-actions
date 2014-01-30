@@ -8,6 +8,9 @@
 	* tools/check-po.sh:
 	* tools/check-headers.sh: Move to maintainer/.
 
+	* configure.ac:
+	* Makefile.am: Updated accordingly.
+
 2014-01-27 Pierre Wieser <pwieser@trychlos.org>
 
 	* docs/nact/C/articleinfo.xml:

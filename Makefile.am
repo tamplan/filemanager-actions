@@ -34,7 +34,7 @@ SUBDIRS = \
 	po									\
 	data								\
 	docs								\
-	tools								\
+	maintainer							\
 	$(NULL)
 
 # - nautilus-extdir is a foo directory so that make distcheck has a vpath

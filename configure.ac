@@ -64,8 +64,8 @@ AC_CONFIG_FILES([
 	src/nact/Makefile
 	src/test/Makefile
 	src/utils/Makefile
-	tools/Makefile
 	po/Makefile.in
+	maintainer/Makefile
 ])
 
 AC_CONFIG_MACRO_DIR([m4])
