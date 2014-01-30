@@ -49,6 +49,28 @@ NA_COMPILER_WARNINGS([],[-ansi -Wno-overlength-strings -Wformat=2])
 NA_COMPILER_LINK_AS_NEEDED
 AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} ${WARN_CFLAGS}"])
 
+# other traditional tools
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+# Gnome stuff
+GNOME_COMMON_INIT
+NA_MAINTAINER_CHECK_MODE
+
+# libtool
+AM_PROG_LIBTOOL
+
+# localization
+# note that this same version is also required by autogen.sh
+IT_PROG_INTLTOOL([0.35.5])
+GETTEXT_PACKAGE=${PACKAGE}
+AC_SUBST([GETTEXT_PACKAGE])
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
+AM_GLIB_GNU_GETTEXT
+
+# a counter of fatal warnings emitted
+let fma_fatal_count=0
+
 ###
 
 AC_CONFIG_FILES([
@@ -83,38 +105,11 @@ AC_CONFIG_FILES([
 	maintainer/Makefile
 ])
 
-# pwi 2009-05-15 disabled as GNOME_COMMON_INIT takes care of that
-#AC_SUBST(ACLOCAL_AMFLAGS, "$ACLOCAL_FLAGS")
-
-# don't agree with maintainer mode use
-# see http://www.gnu.org/software/automake/manual/automake.html#index-AM_005fMAINTAINER_005fMODE-1001
-# but gnome-autogen.sh forces its usage and gnome_common_init requires it
-AM_MAINTAINER_MODE
-
-# other traditional tools
-AC_PROG_INSTALL
-AC_PROG_MAKE_SET
-
-# Gnome stuff
-GNOME_COMMON_INIT
-GNOME_MAINTAINER_MODE_DEFINES
-
 # GLib marshaling
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
-# libtool
-AM_PROG_LIBTOOL
-
-# localization
-# note that this same version is also required by autogen.sh
-IT_PROG_INTLTOOL([0.35.5])
-GETTEXT_PACKAGE=${PACKAGE}
-AC_SUBST([GETTEXT_PACKAGE])
-AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
-AM_GLIB_GNU_GETTEXT
-
 # Enable deprecated functions ?
-NA_CHECK_FOR_DEPRECATED
+NA_MAINTAINER_CHECK_FOR_DEPRECATED
 
 # Have and want GConf support ?
 NA_CHECK_FOR_GCONF
@@ -181,7 +176,7 @@ NA_SET_DEFAULT_IO_PROVIDER([na-desktop])
 NA_NAUTILUS_EXTDIR
 
 # define NA_MAINTAINER_MODE variable
-NA_IS_MAINTAINER_MODE
+NA_MAINTAINER_CHECK_MODE
 AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
 
 # Check for menu update function
