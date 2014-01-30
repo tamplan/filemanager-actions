@@ -1,0 +1,9 @@
+maintainer
+-----------
+This directory contains some development tools which are expected to be
+used only by the maintainer.
+These tools are not distributed in the tarball, and are only present in
+git (that I use here as some sort of backup repository).
+
+P. Wieser, Jan. 2014
+!
