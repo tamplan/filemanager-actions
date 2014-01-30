@@ -2,6 +2,8 @@
 
 	* maintainer/README: New file.
 
+	* run-autogen.sh: Move to maintainer/.
+
 2014-01-27 Pierre Wieser <pwieser@trychlos.org>
 
 	* docs/nact/C/articleinfo.xml:
