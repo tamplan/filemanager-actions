@@ -71,6 +71,15 @@ AM_GLIB_GNU_GETTEXT
 # a counter of fatal warnings emitted
 let fma_fatal_count=0
 
+# we are using pkgconfig for all development libraries we need
+AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+if test "${PKG_CONFIG}" = "no"; then
+	AC_MSG_ERROR([You need to install pkg-config])
+fi
+
+# Have and want GConf support ?
+NA_CHECK_FOR_GCONF
+
 ###
 
 AC_CONFIG_FILES([
@@ -110,19 +119,6 @@ AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
 # Enable deprecated functions ?
 NA_MAINTAINER_CHECK_FOR_DEPRECATED
-
-# Have and want GConf support ?
-NA_CHECK_FOR_GCONF
-
-# note that requiring through pkg-config the version number of the
-# nautilus-extension library actually returns the version number of
-# nautilus itself (e.g. 2.24.2) instead of the library version info
-# (1.1.0) ; for the usual final user, this is very analog to requiring
-# a whole gnome version
-AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
-if test "${PKG_CONFIG}" = "no"; then
-	AC_MSG_ERROR([You need to install pkg-config])
-fi
 
 # Oldest supported distribution: Ubuntu 10 LTS (Gnome 2.30): april 2013
 glib_required=2.24.0
