@@ -70,6 +70,7 @@ AC_DEFUN([_NA_CHECK_MODULE_MSG],[
 	if test "$1" = "no"; then
 		AC_MSG_RESULT([warning: $2])
 	else
-		AC_MSG_ERROR([$2])
+		AC_MSG_WARN([$2])
+		let na_fatal_count+=1
 	fi
 ])
