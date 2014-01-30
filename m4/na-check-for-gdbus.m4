@@ -50,11 +50,15 @@ AC_DEFUN([NA_CHECK_FOR_GDBUS],[
 	])
 
 	if test "${_na_have_gdbus}" = "yes"; then
+		msg_gdbus="with GDBus"
+		msg_gdbus_version=$(pkg-config --modversion gio-2.0)
 		AC_DEFINE_UNQUOTED([HAVE_GDBUS],[1],[Whether GDbus is available])
 		NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${GDBUS_CFLAGS}"
 		NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${GDBUS_LIBS}"
 	fi
 	if test "${_na_have_dbus_glib}" = "yes"; then
+		msg_gdbus="with DBus-GLib"
+		msg_gdbus_version=$(pkg-config --modversion dbus-glib-1)
 		AC_DEFINE_UNQUOTED([HAVE_DBUS_GLIB],[1],[Whether Dbus-GLib is available])
 		NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${DBUS_GLIB_CFLAGS}"
 		NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${DBUS_GLIB_LIBS}"
