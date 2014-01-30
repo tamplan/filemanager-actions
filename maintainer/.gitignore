@@ -1,0 +1,4 @@
+check-header
+check-header.c
+Makefile
+Makefile.in
