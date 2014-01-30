@@ -4,7 +4,8 @@
 
 	* run-autogen.sh:
 	* run-distcheck.sh:
-	* tools/check-po.sh: Move to maintainer/.
+	* tools/check-po.sh:
+	* tools/check-headers.sh Move to maintainer/.
 
 2014-01-27 Pierre Wieser <pwieser@trychlos.org>
 
