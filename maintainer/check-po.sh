@@ -104,11 +104,12 @@ function msg_help
 
 function msg_version
 {
-	pck_name=$(grep '^PACKAGE_NAME' Makefile 2>/dev/null | awk '{ print $3 }')
-	pck_version=$(grep '^PACKAGE_VERSION' Makefile 2>/dev/null | awk '{ print $3 }')
+	makefile="${top_srcdir}/_build/Makefile"
+	pck_name=$(grep '^PACKAGE_NAME' ${makefile} 2>/dev/null | awk '{ print $3 }')
+	pck_version=$(grep '^PACKAGE_VERSION' ${makefile} 2>/dev/null | awk '{ print $3 }')
 	echo "
  ${pck_name} v ${pck_version}
- Copyright (C) 2010, 2011, 2012 Pierre Wieser."
+ Copyright (C) 2010, 2011, 2012, 2013 Pierre Wieser."
 }
 
 # initialize common command-line options
@@ -278,6 +279,16 @@ opt_version=${opt_version:-${opt_version_def}}
 
 opt_potfile=${opt_potfile:-${opt_potfile_def}}
 
+# check that we are running from the top of srcdir
+maintainer_dir=$(cd ${0%/*}; pwd)
+top_srcdir="${maintainer_dir%/*}"
+if [ ! -f "${top_srcdir}/configure.ac" ]; then
+	msgerr "this script is only meant to be run by the maintainer,"
+	msgerr "and current working directory should be the top source directory."
+	let errs+=1
+	exit
+fi
+
 if [ "${opt_help}" = "yes" -o ${nbopt} -eq 0 ]; then
 	msg_help
 	echo ""
@@ -314,8 +325,10 @@ let nbpass+=1
 msg "pass ${nbpass}/${totpass}: checking that all .ui are in ${opt_potfile}..."
 for f in $(git ls-files *.ui); do
 	if [ "$(grep -xe "\[type:\s*gettext/glade]\s*${f}" ${opt_potfile})" = "" ]; then
-		msg "	${f} should be added to ${opt_potfile}"
+		msg "  ${f} should be added to ${opt_potfile}"
 		let nberrs+=1
+	elif [ "${opt_verbose}" = "yes" ]; then
+		msg "  ${f}: OK"
 	fi
 	let nbfiles+=1
 done
@@ -329,8 +342,10 @@ let nbpass+=1
 msg "pass ${nbpass}/${totpass}: checking that all .ui from ${opt_potfile} actually exist..."
 for f in $(grep -e '\.ui$' ${opt_potfile} | sed 's,\[type:\s*gettext/glade]\s*,,'); do
 	if [ ! -r ${f} ]; then
-		msg "	${f} should be removed from ${opt_potfile}"
+		msg "  ${f} should be removed from ${opt_potfile}"
 		let nberrs+=1
+	elif [ "${opt_verbose}" = "yes" ]; then
+		msg "  ${f}: OK"
 	fi
 	let nbfiles+=1
 done
@@ -344,8 +359,10 @@ let nbpass+=1
 msg "pass ${nbpass}/${totpass}: checking that all translatable files are in ${opt_potfile}..."
 for f in $(git grep -I '_(' src | cut -d: -f1 | sort -u); do
 	if [ "$(grep -x ${f} ${opt_potfile})" != "${f}" ]; then
-		msg "	${f} should be added to ${opt_potfile}"
+		msg "  ${f} should be added to ${opt_potfile}"
 		let nberrs+=1
+	elif [ "${opt_verbose}" = "yes" ]; then
+		msg "  ${f}: OK"
 	fi
 	let nbfiles+=1
 done
@@ -360,8 +377,10 @@ msg "pass ${nbpass}/${totpass}: checking that all files in ${opt_potfile} actual
 for f in $(grep -E '^src/' ${opt_potfile} | grep -vE '\.ui$' | grep -vE '\.in$'); do
 	grep '_(' ${f} 1>/dev/null 2>&1
 	if [ $? -ne 0 ]; then
-		msg "	${f} should be removed from ${opt_potfile}"
+		msg "  ${f} should be removed from ${opt_potfile}"
 		let nberrs+=1
+	elif [ "${opt_verbose}" = "yes" ]; then
+		msg "  ${f}: OK"
 	fi
 	let nbfiles+=1
 done
@@ -376,8 +395,10 @@ msg "pass ${nbpass}/${totpass}: checking that all files have a good reason to in
 for f in $(git grep '#include <glib/gi18n.h>' src | cut -d: -f1 | sort -u); do
 	grep '_(' ${f} 1>/dev/null 2>&1
 	if [ $? -ne 0 ]; then
-		msg "	${f} should not include <glib/gi18n.h>"
+		msg "  ${f} should not include <glib/gi18n.h>"
 		let nberrs+=1
+	elif [ "${opt_verbose}" = "yes" ]; then
+		msg "  ${f}: OK"
 	fi
 	let nbfiles+=1
 done
