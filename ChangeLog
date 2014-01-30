@@ -1,11 +1,12 @@
 2014-01-30 Pierre Wieser <pwieser@trychlos.org>
 
-	* maintainer/README: New file.
+	* maintainer/README:
+	* maintainer/Makefile.am: New files.
 
 	* run-autogen.sh:
 	* run-distcheck.sh:
 	* tools/check-po.sh:
-	* tools/check-headers.sh Move to maintainer/.
+	* tools/check-headers.sh: Move to maintainer/.
 
 2014-01-27 Pierre Wieser <pwieser@trychlos.org>
 
