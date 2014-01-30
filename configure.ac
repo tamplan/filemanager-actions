@@ -33,8 +33,23 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
 
-AC_CONFIG_SRCDIR([src/plugin-menu/nautilus-module.c])
+AC_CONFIG_SRCDIR([src/nact/main.c])
 AC_CONFIG_HEADERS([src/config.h])
+
+AC_CONFIG_MACRO_DIR([m4])
+
+# check for compiler characteristics and options
+AC_PROG_CC
+AC_PROG_GCC_TRADITIONAL
+AC_STDC_HEADERS
+AM_DISABLE_STATIC
+
+# define specific compilation options
+NA_COMPILER_WARNINGS([],[-ansi -Wno-overlength-strings -Wformat=2])
+NA_COMPILER_LINK_AS_NEEDED
+AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} ${WARN_CFLAGS}"])
+
+###
 
 AC_CONFIG_FILES([
 	Makefile
@@ -68,8 +83,6 @@ AC_CONFIG_FILES([
 	maintainer/Makefile
 ])
 
-AC_CONFIG_MACRO_DIR([m4])
-
 # pwi 2009-05-15 disabled as GNOME_COMMON_INIT takes care of that
 #AC_SUBST(ACLOCAL_AMFLAGS, "$ACLOCAL_FLAGS")
 
@@ -78,12 +91,6 @@ AC_CONFIG_MACRO_DIR([m4])
 # but gnome-autogen.sh forces its usage and gnome_common_init requires it
 AM_MAINTAINER_MODE
 
-# check for compiler characteristics and options
-AC_PROG_CC
-AC_PROG_GCC_TRADITIONAL
-AC_STDC_HEADERS
-AM_DISABLE_STATIC
-
 # other traditional tools
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
@@ -91,9 +98,6 @@ AC_PROG_MAKE_SET
 # Gnome stuff
 GNOME_COMMON_INIT
 GNOME_MAINTAINER_MODE_DEFINES
-NA_LINK_AS_NEEDED
-NA_GNOME_COMPILE_WARNINGS([],[-ansi -Wno-overlength-strings -Wformat=2])
-AC_SUBST([AM_CFLAGS],["${AM_CFLAGS} ${WARN_CFLAGS}"])
 
 # GLib marshaling
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
