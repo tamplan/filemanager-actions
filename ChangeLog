@@ -2,7 +2,8 @@
 
 	* maintainer/README: New file.
 
-	* run-autogen.sh: Move to maintainer/.
+	* run-autogen.sh:
+	* run-distcheck.sh: Move to maintainer/.
 
 2014-01-27 Pierre Wieser <pwieser@trychlos.org>
 
