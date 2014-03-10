@@ -2389,7 +2389,7 @@ msgstr "Εμφανίζεται αν η επιλογή περιέχει"
 #: C/nautilus-actions-config-tool.xml:987(phrase)
 #: C/nautilus-actions-config-tool.xml:287(phrase)
 msgid "Focus on the <placeholder-1/> frame."
-msgstr "Εστίαση στο πλαίσιο <placeholder-1>."
+msgstr "Εστίαση στο πλαίσιο <placeholder-1/>."
 
 #: C/nautilus-actions-config-tool.xml:832(para)
 msgid ""
