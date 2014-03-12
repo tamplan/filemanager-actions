@@ -5,21 +5,21 @@
 # Jorge González <jorgegonz@svn.gnome.org>, 2010, 2011.
 # Maria Majadas <alixis82@gmail.com>, 2011.
 # Juan Matías Olmos <colonizare@yahoo.com.ar>, 2011.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012.
 # Nicolás Satragno <nsatragno@gmail.com>, 2012.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.help.master\n"
-"POT-Creation-Date: 2012-10-10 19:32+0000\n"
-"PO-Revision-Date: 2012-10-13 12:49-0300\n"
-"Last-Translator: Nicolás Satragno <nsatragno@gmail.com>\n"
-"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
+"POT-Creation-Date: 2014-03-11 23:08+0000\n"
+"PO-Revision-Date: 2014-03-12 10:35+0100\n"
+"Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
+"Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: Gtranslator 2.91.5\n"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
@@ -348,11 +348,19 @@ msgstr "2011"
 msgid "2012"
 msgstr "2012"
 
-#: C/nautilus-actions-config-tool.xml:8(holder)
+#: C/nautilus-actions-config-tool.xml:8(year)
+msgid "2013"
+msgstr "2013"
+
+#: C/nautilus-actions-config-tool.xml:9(year)
+msgid "2014"
+msgstr "2014"
+
+#: C/nautilus-actions-config-tool.xml:10(holder)
 msgid "Pierre Wieser"
 msgstr "Pierre Wieser"
 
-#: C/nautilus-actions-config-tool.xml:12(para)
+#: C/nautilus-actions-config-tool.xml:14(para)
 #: C/nautilus-actions-config-tool.xml:75(para)
 msgid ""
 "<productname>Nautilus-Actions</productname> is a <productname>Nautilus</"
@@ -367,7 +375,7 @@ msgstr ""
 "archivos. Estas acciones se puede organizar en menús y submenús, y se puede "
 "exportar y compartir con otros entornos de escritorio."
 
-#: C/nautilus-actions-config-tool.xml:18(para)
+#: C/nautilus-actions-config-tool.xml:20(para)
 msgid ""
 "This manual describes the <application>Nautilus-Actions Configuration Tool</"
 "application> user interface, and explains how you may configure your menus "
@@ -379,51 +387,51 @@ msgstr ""
 "configurar sus menús y sus acciones, haciendo que se muestren y se apliquen "
 "dependiendo de condiciones específicas."
 
-#: C/nautilus-actions-config-tool.xml:25(releaseinfo)
+#: C/nautilus-actions-config-tool.xml:27(releaseinfo)
 msgid ""
 "This manual describes version 3.2 of Nautilus-Actions Configuration Tool."
 msgstr ""
 "Este manual describe la versión 3.2 de la herramienta de configuración de "
 "acciones de Nautilus."
 
-#: C/nautilus-actions-config-tool.xml:30(publishername)
+#: C/nautilus-actions-config-tool.xml:32(publishername)
 msgid "GNOME Documentation Project"
 msgstr "Proyecto de documentación de GNOME"
 
-#: C/nautilus-actions-config-tool.xml:35(firstname)
+#: C/nautilus-actions-config-tool.xml:37(firstname)
 msgid "Pierre"
 msgstr "Pierre"
 
-#: C/nautilus-actions-config-tool.xml:36(surname)
+#: C/nautilus-actions-config-tool.xml:38(surname)
 msgid "Wieser"
 msgstr "Wieser"
 
-#: C/nautilus-actions-config-tool.xml:37(email)
+#: C/nautilus-actions-config-tool.xml:39(email)
 msgid "pwieser@trychlos.org"
 msgstr "pwieser@trychlos.org"
 
-#: C/nautilus-actions-config-tool.xml:75(revnumber)
+#: C/nautilus-actions-config-tool.xml:77(revnumber)
 msgid "Nautilus-Actions Configuration Tool User's Manual v 3.1"
 msgstr ""
 "Manual del usuario de la herramienta de configuración de acciones de "
 "Nautilus v3.1"
 
-#: C/nautilus-actions-config-tool.xml:76(date)
+#: C/nautilus-actions-config-tool.xml:78(date)
 msgid "May 2011"
 msgstr "Mayo de 2011"
 
-#: C/nautilus-actions-config-tool.xml:78(para)
-#: C/nautilus-actions-config-tool.xml:88(para)
+#: C/nautilus-actions-config-tool.xml:80(para)
+#: C/nautilus-actions-config-tool.xml:90(para)
 msgid "Pierre Wieser <email>pwieser@trychlos.org</email>"
 msgstr "Pierre Wieser <email>pwieser@trychlos.org</email>"
 
-#: C/nautilus-actions-config-tool.xml:85(revnumber)
+#: C/nautilus-actions-config-tool.xml:87(revnumber)
 msgid "Nautilus-Actions Configuration Tool User's Manual v 3.2"
 msgstr ""
 "Manual del usuario de la herramienta de configuración de Acciones de "
 "Nautilus v3.2"
 
-#: C/nautilus-actions-config-tool.xml:86(date)
+#: C/nautilus-actions-config-tool.xml:88(date)
 msgid "January 2012"
 msgstr "Enero de 2012"
 
