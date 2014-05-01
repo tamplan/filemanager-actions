@@ -69,7 +69,7 @@ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
 AM_GLIB_GNU_GETTEXT
 
 # a counter of fatal warnings emitted
-let fma_fatal_count=0
+let na_fatal_count=0
 
 # we are using pkgconfig for all development libraries we need
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
@@ -79,6 +79,58 @@ fi
 
 # Have and want GConf support ?
 NA_CHECK_FOR_GCONF
+
+# Oldest supported distribution as of Apr. 2013: Ubuntu 10 LTS (Gnome 2.30)
+glib_required=2.24.0
+gtk_required=2.20.0
+NA_CHECK_FOR_GTK
+NA_CHECK_MODULE([GLIB],    [glib-2.0 >= ${glib_required}])
+NA_CHECK_MODULE([GMODULE], [gmodule-2.0 >= ${glib_required}])
+
+# GDBus comes in GIO with 2.26
+# so uses GDBus if present, or fallback into dbus-glib-1
+NA_CHECK_FOR_GDBUS
+
+# other required libraries
+dnl aclocal complains if the comma is not just after the square bracket
+NA_CHECK_MODULE([GIO_UNIX],[gio-unix-2.0])
+NA_CHECK_MODULE([GTOP],    [libgtop-2.0 >= 2.23.1])
+NA_CHECK_MODULE([LIBXML],  [libxml-2.0 >= 2.6])
+NA_CHECK_MODULE([SM],      [sm >= 1.0])
+NA_CHECK_MODULE([ICE],     [ice])
+NA_CHECK_MODULE([UUID],    [uuid])
+
+# GLib marshaling
+AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal, no)
+if test "${GLIB_GENMARSHAL}" = "no"; then
+	AC_MSG_WARN([glib2-devel installed, but glib-genmarshal not found])
+	let na_fatal_count+=1
+fi
+
+##
+## Nautilus file-manager
+##
+NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.16])
+#
+# when working in a test environment, nautilus extensions are typically
+# installed in a non-standard location ; lets specify this location here
+NA_NAUTILUS_EXTDIR
+#
+# Check for menu update function
+AC_CHECK_LIB([nautilus-extension],[nautilus_menu_item_new])
+AC_CHECK_FUNCS([nautilus_menu_provider_emit_items_updated_signal])
+#
+# starting with 2.91.90, Nautilus no more allows extensions to add toolbar items
+AC_CHECK_FUNCS([nautilus_menu_provider_get_toolbar_items])
+
+AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
+AC_SUBST([NAUTILUS_ACTIONS_LIBS])
+
+# defines a log domain for each component
+NA_LOG_DOMAINS
+
+# add --with-default-io-provider option
+NA_SET_DEFAULT_IO_PROVIDER([io-desktop])
 
 ###
 
@@ -114,35 +166,8 @@ AC_CONFIG_FILES([
 	maintainer/Makefile
 ])
 
-# GLib marshaling
-AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
-
 # Enable deprecated functions ?
 NA_MAINTAINER_CHECK_FOR_DEPRECATED
-
-# Oldest supported distribution: Ubuntu 10 LTS (Gnome 2.30): april 2013
-glib_required=2.24.0
-gtk_required=2.20.0
-NA_CHECK_FOR_GTK
-
-# GDBus comes in GIO with 2.26
-# so uses GDBus if present, or fallback into dbus-glib-1
-NA_CHECK_MODULE([GLIB],   [glib-2.0 >= ${glib_required}])
-NA_CHECK_MODULE([GMODULE],[gmodule-2.0 >= ${glib_required}])
-NA_CHECK_FOR_GDBUS
-
-dnl aclocal complains if the comma is not just after the square bracket
-NA_CHECK_MODULE([GCONF],             [gconf-2.0 >= 2.8.0])
-NA_CHECK_MODULE([GIO_UNIX],          [gio-unix-2.0])
-NA_CHECK_MODULE([GTOP],              [libgtop-2.0 >= 2.23.1])
-NA_CHECK_MODULE([LIBXML],            [libxml-2.0 >= 2.6])
-NA_CHECK_MODULE([SM],                [sm >= 1.0])
-NA_CHECK_MODULE([ICE],               [ice])
-NA_CHECK_MODULE([UUID],              [uuid])
-NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.16])
-
-AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
-AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
 # check for gtk-doc
 # - starting with gtk-doc 1.16, is able to handle srcdir != builddir
@@ -158,28 +183,12 @@ fi
 #   compile the tarball distribution (i.e. without regenerating users's manuals)
 GNOME_DOC_INIT(,,[gdu_cv_have_gdu=no])
 
-# defines log domains when in maintainer mode
-NA_LOG_DOMAINS
-
 # add --enable-html-manuals and --enable-pdf-manuals configure options
 NA_ENABLE_MANUALS
-
-# add --with-default-io-provider option
-NA_SET_DEFAULT_IO_PROVIDER([na-desktop])
-
-# when working in a test environment, nautilus extensions are typically
-# installed in a non-standard location ; lets specify this location here
-NA_NAUTILUS_EXTDIR
 
 # define NA_MAINTAINER_MODE variable
 NA_MAINTAINER_CHECK_MODE
 AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
-
-# Check for menu update function
-AC_CHECK_LIB([nautilus-extension],[nautilus_menu_item_new])
-AC_CHECK_FUNCS([nautilus_menu_provider_emit_items_updated_signal])
-# starting with 2.91.90, Nautilus no more allows extensions to add toolbar items
-AC_CHECK_FUNCS([nautilus_menu_provider_get_toolbar_items])
 
 # display and keep configuration informations
 config_options="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g'`" 

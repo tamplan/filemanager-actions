@@ -25,18 +25,18 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 1 creation
+# serial 2 remove the input parameter
 
 dnl --with-default-io-provider=gconf|desktop
 dnl   Defines the default I/O Provider when creating a new action
-dnl   Default to 'desktop'
+dnl   Default to 'na-desktop'
 dnl
-dnl usage:  NA_SET_DEFAULT_IO_PROVIDER([default_io_provider])
+dnl configure.ac usage:  NA_SET_DEFAULT_IO_PROVIDER
 dnl
 dnl ac_define NA_DEFAULT_IO_PROVIDER variable
 
 AC_DEFUN([NA_SET_DEFAULT_IO_PROVIDER],[
-	_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER([$1])
+	_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER([na-desktop])
 	_CHECK_FOR_DEFAULT_IO_PROVIDER
 ])
 
@@ -44,17 +44,17 @@ AC_DEFUN([_AC_ARG_NA_WITH_DEFAULT_IO_PROVIDER],[
 	AC_ARG_WITH(
 		[default-io-provider],
 		AS_HELP_STRING(
-			[--with-default-io-provider@<:@=na-gconf|na-desktop@:>@],
+			[--with-default-io-provider<provider>],
 			[define default I/O provider  @<:@$1@:>@]),
-			[with_default_io_provider=$withval],
-			[with_default_io_provider="$1"])
+		[with_default_io_provider=$withval],
+		[with_default_io_provider="$1"])
 ])
 
 AC_DEFUN([_CHECK_FOR_DEFAULT_IO_PROVIDER],[
 	AC_MSG_CHECKING([for default I/O provider on new items])
 	AC_MSG_RESULT([${with_default_io_provider}])
-	if test "x${with_default_io_provider}" != "xna-gconf"; then
-		if test "x${with_default_io_provider}" != "xna-desktop"; then
+	if test "${with_default_io_provider}" != "na-gconf"; then
+		if test "${with_default_io_provider}" != "na-desktop"; then
 			AC_MSG_ERROR([a default I/O provider must be specified, must be 'na-gconf' or 'na-desktop'])
 		fi
 	fi
