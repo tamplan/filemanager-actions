@@ -100,7 +100,8 @@ function msg_help
    --[no]help                print this message, and exit [${opt_help_def}]
    --[no]version             print script version, and exit [${opt_version_def}]
    --[no]dummy               dummy execution [${opt_dummy_def}]
-   --[no]verbose             runs verbosely [${opt_verbose_def}]"
+   --[no]verbose             runs verbosely [${opt_verbose_def}]
+   --builddir=<builddir>     build directory [${opt_builddir_def}]"
 }
 
 function msg_version
@@ -123,6 +124,18 @@ opt_version=
 opt_version_def="no"
 opt_verbose=
 opt_verbose_def="no"
+
+# check that we are running from the top of srcdir
+maintainer_dir=$(cd ${0%/*}; pwd)
+top_srcdir="${maintainer_dir%/*}"
+if [ ! -f "${top_srcdir}/configure.ac" ]; then
+	msgerr "this script is only meant to be run by the maintainer,"
+	msgerr "and current working directory should be the top source directory."
+	let errs+=1
+	exit
+fi
+opt_builddir=
+opt_builddir_def="${top_srcdir}/_build"
 
 # a first loop over command line arguments to detect verbose mode
 while :
@@ -200,14 +213,18 @@ do
 		# these options take a mandatory argument
 		# since, we didn't find it in 'option', so it should be
 		# next word in the command line
-		#--b | --bu | --bui | --buil | --build | --buildd | --builddi | --builddir)
-		#	optarg=$1
-		#	shift
-		#	;;
+		--b | --bu | --bui | --buil | --build | --buildd | --builddi | --builddir)
+			optarg="$1"
+			shift
+			;;
 	esac
 
 	# now process options and their argument
 	case ${option} in
+		--b | --bu | --bui | --buil | --build | --buildd | --builddi | --builddir)
+			[ "${opt_verbose}" = "yes" ] && msg "setting opt_builddir to '${optarg}'"
+			opt_builddir="${optarg}"
+			;;
 		--d | --du | --dum | --dumm | --dummy)
 			[ "${opt_verbose}" = "yes" ] && msg "setting opt_dummy to 'yes'"
 			opt_dummy="yes"
@@ -269,17 +286,7 @@ opt_help=${opt_help:-${opt_help_def}}
 opt_dummy=${opt_dummy:-${opt_dummy_def}}
 opt_verbose=${opt_verbose:-${opt_verbose_def}}
 opt_version=${opt_version:-${opt_version_def}}
-
-# check that we are running from the top of srcdir
-maintainer_dir=$(cd ${0%/*}; pwd)
-top_srcdir="${maintainer_dir%/*}"
-if [ ! -f "${top_srcdir}/configure.ac" ]; then
-	msgerr "this script is only meant to be run by the maintainer,"
-	msgerr "and current working directory should be the top source directory."
-	let errs+=1
-	exit
-fi
-builddir="${top_srcdir}/_build"
+opt_builddir=${opt_builddir:-${opt_builddir_def}}
 
 if [ "${opt_help}" = "yes" -o ${nbopt} -eq 0 ]; then
 	msg_help
@@ -315,8 +322,8 @@ for f in $(git ls-files src | grep '\.h$' | grep -v '^src/test'); do
 #include <${f}>
 int main( int argc, char **argv ){ return( 0 ); }
 !
-	make -C ${builddir}/maintainer check-header 1>/dev/null 2>&1 &&
-		${builddir}/maintainer/check-header 1>/dev/null 2>&1
+	make -C "${opt_builddir}/${maintainer_dir##*/}" check-header 1>/dev/null 2>&1 &&
+		"${opt_builddir}/${maintainer_dir##*/}/check-header" 1>/dev/null 2>&1
 	[ $? -eq 0 ] && echo "OK" || { echo "NOT OK"; let errs+=1; }
 done
 

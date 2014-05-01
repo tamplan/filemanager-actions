@@ -52,6 +52,6 @@ find ${top_srcdir}/docs/nact \( -type d -o -type l \) -name 'stylesheet-images' 
 
 ${maintainer_dir}/run-autogen.sh --enable-deprecated --enable-gtk-doc --enable-html-manuals &&
 	${maintainer_dir}/check-po.sh -nodummy &&
-	${maintainer_dir}/check-headers.sh -nodummy -builddir=${builddir} &&
+	${maintainer_dir}/check-headers.sh -nodummy -builddir="${builddir}" &&
 	desktop-file-validate ${installdir}/share/applications/nact.desktop &&
 	make -C ${builddir} distcheck
