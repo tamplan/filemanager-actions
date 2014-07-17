@@ -414,19 +414,36 @@ settings_new( void )
 	static const gchar *thisfn = "na_settings_new";
 	gchar *dir;
 	GList *content;
+	const gchar * const *array;
+	gchar **iter;
 
 	if( !st_settings ){
+		content = NULL;
 		st_settings = g_object_new( NA_SETTINGS_TYPE, NULL );
 
+		/* iterate through system config dirs until having found a
+		 * config file */
 		g_debug( "%s: reading mandatory configuration", thisfn );
-		dir = g_build_filename( SYSCONFDIR, "xdg", PACKAGE, NULL );
-		st_settings->private->mandatory = key_file_new( dir );
-		g_free( dir );
-		st_settings->private->mandatory->mandatory = TRUE;
-		content = content_load_keys( NULL, st_settings->private->mandatory );
+		array = g_get_system_config_dirs();
+		iter = ( gchar ** ) array;
+		while( *iter ){
+			if( st_settings->private->mandatory ){
+				release_key_file( st_settings->private->mandatory );
+			}
+			g_debug( "iter=%s", *iter );
+			dir = g_build_filename( *iter, PACKAGE, NULL );
+			st_settings->private->mandatory = key_file_new( dir );
+			g_free( dir );
+			st_settings->private->mandatory->mandatory = TRUE;
+			content = content_load_keys( NULL, st_settings->private->mandatory );
+			if( content ){
+				break;
+			}
+			iter++;
+		}
 
 		g_debug( "%s: reading user configuration", thisfn );
-		dir = g_build_filename( g_get_home_dir(), ".config", PACKAGE, NULL );
+		dir = g_build_filename( g_get_user_config_dir(), PACKAGE, NULL );
 		g_mkdir_with_parents( dir, 0750 );
 		st_settings->private->user = key_file_new( dir );
 		g_free( dir );
