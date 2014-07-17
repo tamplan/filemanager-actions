@@ -71,6 +71,7 @@ static gboolean   notoolbar        = FALSE;
 static gchar     *label_toolbar    = "";
 static gchar     *command          = "";
 static gchar     *parameters       = "";
+static gchar     *workingdir       = "";
 static gchar    **basenames_array  = NULL;
 static gboolean   matchcase        = FALSE;
 static gboolean   nocase           = FALSE;
@@ -108,6 +109,7 @@ static const ArgFromDataDef st_arg_from_data_def[] = {
 		{ action_data_groups,  NA_FACTORY_OBJECT_ACTION_GROUP,     NAFO_DATA_TOOLBAR_LABEL,      &label_toolbar },
 		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PATH,               &command },
 		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_PARAMETERS,         &parameters },
+		{ profile_data_groups, NA_FACTORY_OBJECT_PROFILE_GROUP,    NAFO_DATA_WORKING_DIR,        &workingdir },
 		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_BASENAMES,          &basenames_array },
 		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MATCHCASE,          &matchcase },
 		{ profile_data_groups, NA_FACTORY_OBJECT_CONDITIONS_GROUP, NAFO_DATA_MIMETYPES,          &mimetypes_array },
@@ -434,6 +436,7 @@ get_action_from_cmdline( void )
 
 	na_object_set_path( profile, command );
 	na_object_set_parameters( profile, parameters );
+	na_object_set_working_dir( profile, workingdir );
 
 	i = 0;
 	basenames = NULL;
