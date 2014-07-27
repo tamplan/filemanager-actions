@@ -82,7 +82,7 @@ Possible values are:
 - "GConfSchemaV1": this used to be the historical export format. The exported file may later be imported via Import assistant of the Nautilus-Actions Configuration Tool, or via the gconftool-2 --import-schema-file command-line tool.
 - "GConfSchemaV2": a lighter while still compatible schema. The exported file may later be imported via Import assistant of the Nautilus-Actions Configuration Tool, or via the gconftool-2 --import-schema-file command-line tool.
 - "GConfEntry": this should be the preferred format for newly exported actions. The exported file may later be imported via Import assistant of the Nautilus-Actions Configuration Tool, or via the gconftool-2 --load command-line tool.
-- "Ask": the user will be asked at runtime for the format he wishes use.</long>
+- "Ask": the user will be asked at runtime for the format he wishes to use.</long>
       </locale>
       <default>/tmp</default>
     </schema>
@@ -163,7 +163,7 @@ Possible values are:
       <type>string</type>
       <locale name="C">
         <short>Last import mode chosen by the user</short>
-        <long>Last import mode chosen by the user when he is asked for in import mode. Possible values are:
+        <long>Last import mode chosen by the user when he was asked for an import mode. Possible values are:
 - "NoImport": do not import an action whose UUID already exists,
 - "Renumber": allocate a new UUID if the imported UUID already exists,
 - "Override": override the existing action with the imported one.</long>
@@ -400,7 +400,7 @@ Possible values are:
       <locale name="C">
         <short>List of default schemes</short>
         <long>The list of schemes proposed by default on each new profile.
-A default default list is harcoded in nautilus-actions-config-tool, which may be updated by the user.</long>
+A default default list is hardcoded in nautilus-actions-config-tool, which may be updated by the user.</long>
       </locale>
       <default>[]</default>
     </schema>

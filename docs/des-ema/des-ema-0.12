@@ -62,7 +62,7 @@ This specification relies on the common syntax as defined in <a href="http://sta
 Please note that, in all tables below, <?php code( "Req=YES" ); ?> just means that the value is required to define a valid action (resp. menu, resp. profile). A management UI is free to handle invalid actions (resp. menus, resp. profiles), and in fact that might even be needed in order to be able to fix invalid items, and make them valid...
 </p>
 
-<h4>Desktop file identifiant</h4>
+<h4>Desktop file identifier</h4>
 
 <p>
 In the rest of this specification, when a desktop file needs to be identified, we are using the basename of the file, without the extension, calling this a <i>desktop_file_id</i>.
@@ -298,7 +298,7 @@ Another choice might also be:
 Profile is identified by its <i>profile_id</i>, as an ASCII string.
 </p>
 <p>
-Each profile defined in the "<?php code( "Profiles" ); ?>" key, whether statically by its <i>profile_id</i> identifiant, or as the result of an evaluated command, must be defined in a <?php code( "[X-Action-Profile <i>profile_id</i>]" ); ?> group.
+Each profile defined in the "<?php code( "Profiles" ); ?>" key, whether statically by its <i>profile_id</i> identifier, or as the result of an evaluated command, must be defined in a <?php code( "[X-Action-Profile <i>profile_id</i>]" ); ?> group.
 </p>
 <p>
 When several profiles are defined for an action, only the first valid profile whose conditions are met at runtime is selected to be made available in the context menu.

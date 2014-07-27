@@ -361,7 +361,7 @@ This command should include a 'COMMAND' keyword, which will be substituted at ru
             <child type="tab">
               <object class="GtkLabel" id="label700">
                 <property name="visible">True</property>
-                <property name="tooltip_text" translatable="yes">This tab lets you specify parameters needed for. some execution modes.</property>
+                <property name="tooltip_text" translatable="yes">This tab lets you specify parameters needed for some execution modes.</property>
                 <property name="label" translatable="yes">Runtime E_xecution</property>
                 <property name="use_underline">True</property>
               </object>

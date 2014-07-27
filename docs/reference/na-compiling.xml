@@ -131,7 +131,7 @@
         <para>
           <ulink url="ftp://ftp.kernel.org/pub/linux/utils/util-linux-ng">libUUID</ulink>
           is the universally unique ID library used to automatically generate a
-          unique identifiant at item creation.
+          unique identifier at item creation.
         </para>
       </listitem>
       <listitem>
@@ -223,7 +223,7 @@
       </para>
       <para>
         This defaults to &quot;na-desktop&quot; which is the internal
-        identifiant of the I/O provider which manages
+        identifier of the I/O provider which manages
         <filename>.desktop</filename> files.
       </para>
     </formalpara>

@@ -977,7 +977,7 @@ add_about_item( NautilusActions *plugin, GList *menu )
 		about_item = nautilus_menu_item_new(
 				"AboutNautilusActions",
 				_( "About Nautilus-Actions" ),
-				_( "Display some informations about Nautilus-Actions" ),
+				_( "Display some information about Nautilus-Actions" ),
 				na_about_get_icon_name());
 
 		g_signal_connect_data(
