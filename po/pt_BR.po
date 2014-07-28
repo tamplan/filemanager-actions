@@ -8,14 +8,15 @@
 # Og Maciel <ogmaciel@ubuntu.com>, 2007, 2009.
 # Daniel S. Koda <danielskoda@gmail.com>, 2010.
 # Djavan Fagundes <djavan@comum.org>, 2010.
-# Rafael Ferreira <rafael.f.f1@gmail.com>, 2013.
+# Rafael Ferreira <rafael.f.f1@gmail.com>, 2013, 2014.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-01-29 15:57+0000\n"
-"PO-Revision-Date: 2013-02-13 09:58-0300\n"
+"POT-Creation-Date: 2014-07-27 22:06+0000\n"
+"PO-Revision-Date: 2014-07-28 01:12-0300\n"
 "Last-Translator: Rafael Ferreira <rafael.f.f1@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.5\n"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:1
 msgid "Ask for a confirmation when quitting by Esc"
@@ -105,7 +106,7 @@ msgid ""
 "format for newly exported actions. The exported file may later be imported "
 "via Import assistant of the Nautilus-Actions Configuration Tool, or via the "
 "gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
-"runtime for the format he wishes use."
+"runtime for the format he wishes to use."
 msgstr ""
 "Este é o formato de exportação preferido, utilizado como padrão quando "
 "exportando itens ou despejando-os para fora do aplicativo. Valores possíveis "
@@ -186,7 +187,7 @@ msgstr "Último modo de importação escolhido pelo usuário"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
 msgid ""
-"Last import mode chosen by the user when he is asked for in import mode. "
+"Last import mode chosen by the user when he was asked for an import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
 "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
 "already exists, - \"Override\": override the existing action with the "
@@ -411,7 +412,7 @@ msgstr "Lista de esquemas padrões"
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
 msgid ""
 "The list of schemes proposed by default on each new profile. A default "
-"default list is harcoded in nautilus-actions-config-tool, which may be "
+"default list is hardcoded in nautilus-actions-config-tool, which may be "
 "updated by the user."
 msgstr ""
 "A lista de esquemas proposta por padrão em cada novo perfil. Uma lista "
@@ -870,6 +871,7 @@ msgstr ""
 #: ../src/core/na-icontext-factory.c:332 ../src/core/na-icontext-factory.c:433
 #: ../src/core/na-icontext-factory.c:486
 #: ../src/core/na-object-profile-factory.c:117
+#: ../src/core/na-object-profile-factory.c:205
 msgid "<PATH>"
 msgstr "<PATH>"
 
@@ -1172,19 +1174,19 @@ msgstr "Não foi possível carregar \"ImporterAskDialog\" de %s"
 #: ../src/core/na-importer-ask.c:401
 #, c-format
 msgid ""
-"The action \"%s\" imported from \"%s\" has the same identifiant than the "
+"The action \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr ""
-"A ação \"%s\" importada de \"%s\" possui a mesma identificação que a já "
+"A ação \"%s\" importada de \"%s\" possui o mesmo identificador do já "
 "existente \"%s\"."
 
 #: ../src/core/na-importer-ask.c:407
 #, c-format
 msgid ""
-"The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+"The menu \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr ""
-"O menu \"%s\" importado de \"%s\" possui a mesma identificação que a já "
+"O menu \"%s\" importado de \"%s\" possui o mesmo identificador do já "
 "existente \"%s\"."
 
 #: ../src/core/na-importer-ask.ui.h:1
@@ -1207,39 +1209,39 @@ msgstr ""
 "Por favor, faça a gentileza de preencher um relatório de erro em https://"
 "bugzilla.gnome.org/enter_bug.cgi?product=nautilus-actions."
 
-#: ../src/core/na-io-provider.c:1372
+#: ../src/core/na-io-provider.c:1364
 msgid "Unavailable I/O provider."
 msgstr "Provedor de E/S não disponível"
 
-#: ../src/core/na-io-provider.c:1376
+#: ../src/core/na-io-provider.c:1368
 msgid "I/O provider implementation lacks of required API."
 msgstr "Falta uma API necessária para implementação de provedor de E/S."
 
-#: ../src/core/na-io-provider.c:1380
+#: ../src/core/na-io-provider.c:1372
 msgid "I/O provider is not willing to write."
 msgstr "Provedor de E/S não está disposto a escrever."
 
-#: ../src/core/na-io-provider.c:1384
+#: ../src/core/na-io-provider.c:1376
 msgid "I/O provider announces itself as unable to write."
 msgstr "Provedor de E/S não está disposto a escrever."
 
-#: ../src/core/na-io-provider.c:1388
+#: ../src/core/na-io-provider.c:1380
 msgid "I/O provider has been locked down by an administrator."
 msgstr "Provedor de E/S foi bloqueado por um administrador."
 
-#: ../src/core/na-io-provider.c:1392
+#: ../src/core/na-io-provider.c:1384
 msgid "I/O provider has been locked down by the user."
 msgstr "Provedor de E/S foi bloqueado pelo usuário."
 
-#: ../src/core/na-io-provider.c:1396
+#: ../src/core/na-io-provider.c:1388
 msgid "Item is read-only."
 msgstr "Item é apenas leitura"
 
-#: ../src/core/na-io-provider.c:1400
+#: ../src/core/na-io-provider.c:1392
 msgid "No writable I/O provider found."
 msgstr "Nenhum provedor de E/S gravável encontrado."
 
-#: ../src/core/na-io-provider.c:1405
+#: ../src/core/na-io-provider.c:1397
 #, c-format
 msgid ""
 "Item is not writable for an unknown reason (%d).\n"
@@ -1248,11 +1250,11 @@ msgstr ""
 "O item não é gravável por um motivo desconhecido (%d).\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1428
+#: ../src/core/na-io-provider.c:1420
 msgid "OK."
 msgstr "OK."
 
-#: ../src/core/na-io-provider.c:1432
+#: ../src/core/na-io-provider.c:1424
 #, c-format
 msgid ""
 "Program flow error.\n"
@@ -1261,23 +1263,23 @@ msgstr ""
 "Erro de fluxo do programa.\n"
 "%s"
 
-#: ../src/core/na-io-provider.c:1436
+#: ../src/core/na-io-provider.c:1428
 msgid "The I/O provider is not willing to do that."
 msgstr "O provedor de E/S não está disposto a fazer isto."
 
-#: ../src/core/na-io-provider.c:1440
+#: ../src/core/na-io-provider.c:1432
 msgid "Write error in I/O provider."
 msgstr "Erro de escrita no provedor de E/S."
 
-#: ../src/core/na-io-provider.c:1444
+#: ../src/core/na-io-provider.c:1436
 msgid "Unable to delete GConf schemas."
 msgstr "Não foi possível excluir esquemas do GConf."
 
-#: ../src/core/na-io-provider.c:1448
+#: ../src/core/na-io-provider.c:1440
 msgid "Unable to delete configuration."
 msgstr "Não foi possível excluir configuração."
 
-#: ../src/core/na-io-provider.c:1452
+#: ../src/core/na-io-provider.c:1444
 #, c-format
 msgid ""
 "Unknown return code (%d).\n"
@@ -1961,72 +1963,72 @@ msgstr ""
 "Nautilus (1.11 e posteriores),\n"
 "- ou via a ferramenta da linha de comando gconftool-2 --load."
 
-#: ../src/nact/base-application.c:184
+#: ../src/nact/base-application.c:186
 msgid "Arguments count"
 msgstr "Contagem de argumentos"
 
-#: ../src/nact/base-application.c:185
+#: ../src/nact/base-application.c:187
 msgid "The count of command-line arguments"
 msgstr "A contagem de argumentos de linha de comando"
 
-#: ../src/nact/base-application.c:192
+#: ../src/nact/base-application.c:194
 msgid "Arguments"
 msgstr "Argumentos"
 
-#: ../src/nact/base-application.c:193
+#: ../src/nact/base-application.c:195
 msgid "The array of command-line arguments"
 msgstr "O vetor de argumentos de linha de comando"
 
-#: ../src/nact/base-application.c:200
+#: ../src/nact/base-application.c:202
 msgid "Option entries"
 msgstr "Entradas da opção"
 
-#: ../src/nact/base-application.c:201
+#: ../src/nact/base-application.c:203
 msgid "The array of command-line option definitions"
 msgstr "O vetor das definições da opção de linha de comando"
 
-#: ../src/nact/base-application.c:207
+#: ../src/nact/base-application.c:209
 msgid "Application name"
 msgstr "Nome do aplicativo"
 
-#: ../src/nact/base-application.c:208
+#: ../src/nact/base-application.c:210
 msgid "The name of the application"
 msgstr "O nome do aplicativo"
 
-#: ../src/nact/base-application.c:215 ../src/nact/nact-schemes-list.c:167
+#: ../src/nact/base-application.c:217 ../src/nact/nact-schemes-list.c:167
 msgid "Description"
 msgstr "Descrição"
 
-#: ../src/nact/base-application.c:216
+#: ../src/nact/base-application.c:218
 msgid "A short description to be displayed in the first line of --help output"
 msgstr ""
 "Uma descrição curta para ser exibida na primeira linha da saída de --help"
 
-#: ../src/nact/base-application.c:223
+#: ../src/nact/base-application.c:225
 msgid "Icon name"
 msgstr "Nome do ícone"
 
-#: ../src/nact/base-application.c:224
+#: ../src/nact/base-application.c:226
 msgid "The name of the icon of the application"
 msgstr "O nome do ícone do aplicativo"
 
-#: ../src/nact/base-application.c:231
+#: ../src/nact/base-application.c:233
 msgid "UniqueApp name"
 msgstr "Nome do UniqueApp"
 
-#: ../src/nact/base-application.c:232
+#: ../src/nact/base-application.c:234
 msgid "The Unique name of the application"
 msgstr "O nome único do aplicativo"
 
-#: ../src/nact/base-application.c:239
+#: ../src/nact/base-application.c:241
 msgid "Return code"
 msgstr "Código de retorno"
 
-#: ../src/nact/base-application.c:240
+#: ../src/nact/base-application.c:242
 msgid "The return code of the application"
 msgstr "O código de erro do aplicativo"
 
-#: ../src/nact/base-application.c:603
+#: ../src/nact/base-application.c:605
 msgid "Unable to interpret command-line arguments"
 msgstr "Não foi possível interpretar os argumentos de linha de comando"
 
@@ -3066,7 +3068,7 @@ msgid "<b>Desktop environment</b>"
 msgstr "<b>Ambiente de trabalho</b>"
 
 #: ../src/nact/nact-preferences.ui.h:24
-msgid "This tab lets you specify parameters needed for. some execution modes."
+msgid "This tab lets you specify parameters needed for some execution modes."
 msgstr ""
 "Essa aba permite que você especifique parâmetros necessários para alguns "
 "modos de execução."
@@ -3315,7 +3317,7 @@ msgstr "_Provedores de E/S"
 msgid "Rely on runtime detection"
 msgstr "Depender da detecção em tempo de execução"
 
-#: ../src/nact/nact-preferences-editor.c:804
+#: ../src/nact/nact-preferences-editor.c:819
 msgid "Ex.:"
 msgstr "Ex.:"
 
@@ -4571,7 +4573,7 @@ msgid "About Nautilus-Actions"
 msgstr "Sobre Ações do Nautilus"
 
 #: ../src/plugin-menu/nautilus-actions.c:980
-msgid "Display some informations about Nautilus-Actions"
+msgid "Display some information about Nautilus-Actions"
 msgstr "Exibe algumas informações sobre Ações do Nautilus"
 
 #: ../src/test/test-reader.c:48
@@ -4583,17 +4585,17 @@ msgid "<URI>"
 msgstr "<URI>"
 
 #: ../src/test/test-reader.c:55 ../src/utils/na-delete-xmltree.c:77
-#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:155
+#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:157
 #: ../src/utils/nautilus-actions-print.c:70
 #: ../src/utils/nautilus-actions-run.c:68
 msgid "Output the version number"
 msgstr "Retorna o número da versão"
 
-#: ../src/test/test-reader.c:106
+#: ../src/test/test-reader.c:108
 msgid "Import a file."
 msgstr "Importa um arquivo."
 
-#: ../src/test/test-reader.c:120
+#: ../src/test/test-reader.c:122
 msgid ""
 "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer to "
 "mail to <maintainer@nautilus-actions.org>.\n"
@@ -4601,34 +4603,34 @@ msgstr ""
 "Relatórios de erros são bem-vindos em http://bugzilla.gnome.org, ou você "
 "pode preferir enviar um e-mail para <maintainer@nautilus-actions.org>.\n"
 
-#: ../src/test/test-reader.c:128 ../src/utils/na-delete-xmltree.c:180
-#: ../src/utils/na-print-schemas.c:188 ../src/utils/na-set-conf.c:205
-#: ../src/utils/nautilus-actions-new.c:382
-#: ../src/utils/nautilus-actions-print.c:180
-#: ../src/utils/nautilus-actions-run.c:207
+#: ../src/test/test-reader.c:130 ../src/utils/na-delete-xmltree.c:183
+#: ../src/utils/na-print-schemas.c:191 ../src/utils/na-set-conf.c:208
+#: ../src/utils/nautilus-actions-new.c:387
+#: ../src/utils/nautilus-actions-print.c:183
+#: ../src/utils/nautilus-actions-run.c:210
 msgid "Miscellaneous options"
 msgstr "Opções diversas"
 
-#: ../src/test/test-reader.c:149 ../src/utils/na-delete-xmltree.c:110
-#: ../src/utils/na-print-schemas.c:109 ../src/utils/na-set-conf.c:117
-#: ../src/utils/nautilus-actions-new.c:202
-#: ../src/utils/nautilus-actions-print.c:107
-#: ../src/utils/nautilus-actions-run.c:116
+#: ../src/test/test-reader.c:151 ../src/utils/na-delete-xmltree.c:113
+#: ../src/utils/na-print-schemas.c:112 ../src/utils/na-set-conf.c:120
+#: ../src/utils/nautilus-actions-new.c:207
+#: ../src/utils/nautilus-actions-print.c:110
+#: ../src/utils/nautilus-actions-run.c:119
 #, c-format
 msgid "Syntax error: %s\n"
 msgstr "Erro de sintaxe: %s\n"
 
-#: ../src/test/test-reader.c:164
+#: ../src/test/test-reader.c:166
 #, c-format
 msgid "Error: uri is mandatory.\n"
 msgstr "Erro: uri é obrigatório.\n"
 
 #. i18: '--help' is a command-line option - do not translate
-#: ../src/test/test-reader.c:176 ../src/utils/na-delete-xmltree.c:194
-#: ../src/utils/na-print-schemas.c:301 ../src/utils/na-set-conf.c:219
-#: ../src/utils/nautilus-actions-new.c:626
-#: ../src/utils/nautilus-actions-print.c:237
-#: ../src/utils/nautilus-actions-run.c:481
+#: ../src/test/test-reader.c:178 ../src/utils/na-delete-xmltree.c:197
+#: ../src/utils/na-print-schemas.c:304 ../src/utils/na-set-conf.c:222
+#: ../src/utils/nautilus-actions-new.c:632
+#: ../src/utils/nautilus-actions-print.c:240
+#: ../src/utils/nautilus-actions-run.c:484
 #, c-format
 msgid "Try %s --help for usage.\n"
 msgstr "Tente %s --help para utilização.\n"
@@ -4652,31 +4654,31 @@ msgstr "O XPath da árvore do arquivo a ser excluído"
 msgid "The filename of the XML backend"
 msgstr "O nome do arquivo do backend XML"
 
-#: ../src/utils/na-delete-xmltree.c:125
+#: ../src/utils/na-delete-xmltree.c:128
 #, c-format
 msgid "Error: a XPath is mandatory.\n"
 msgstr "Erro: um XPath é obrigatório.\n"
 
-#: ../src/utils/na-delete-xmltree.c:130
+#: ../src/utils/na-delete-xmltree.c:133
 #, c-format
 msgid "Error: a XML filename is mandatory.\n"
 msgstr "Erro: um nome de arquivo XML é obrigatório.\n"
 
-#: ../src/utils/na-delete-xmltree.c:161
+#: ../src/utils/na-delete-xmltree.c:164
 msgid "Delete a XPath from a XML document."
 msgstr "Exclua um XPath de um documento XML."
 
-#: ../src/utils/na-delete-xmltree.c:210
+#: ../src/utils/na-delete-xmltree.c:213
 #, c-format
 msgid "Error: unable to parse file '%s'\n"
 msgstr "Erro: não foi possível analisar o arquivo \"%s\"\n"
 
-#: ../src/utils/na-delete-xmltree.c:217
+#: ../src/utils/na-delete-xmltree.c:220
 #, c-format
 msgid "Error: unable to create new XPath context\n"
 msgstr "Erro: não foi possível criar novo contexto de XPath\n"
 
-#: ../src/utils/na-delete-xmltree.c:225
+#: ../src/utils/na-delete-xmltree.c:228
 #, c-format
 msgid "Error: unable to evaluate XPath expression '%s'\n"
 msgstr "Erro: não foi possível avaliar expressão de XPath \"%s\"\n"
@@ -4693,11 +4695,11 @@ msgstr "Retorna os esquemas da ação [padrão]"
 msgid "Output the menu schemas"
 msgstr "Retorna os esquemas do menu"
 
-#: ../src/utils/na-print-schemas.c:159
+#: ../src/utils/na-print-schemas.c:162
 msgid "Output the Nautilus-Actions GConf schemas on stdout."
 msgstr "Imprime os esquemas de GConf do Ações do Nautilus na saída padrão."
 
-#: ../src/utils/na-print-schemas.c:163
+#: ../src/utils/na-print-schemas.c:166
 msgid ""
 "As of version 3.1.0, GConf as an I/O provider is deprecated.\n"
 "This program is no more maintained."
@@ -4705,7 +4707,7 @@ msgstr ""
 "A partir da versão 3.1.0, GConf como provedor de E/S está obsoleto.\n"
 "Esse programa não tem mais manutenção."
 
-#: ../src/utils/na-print-schemas.c:182
+#: ../src/utils/na-print-schemas.c:185
 msgid "Type options"
 msgstr "Opções de tipo"
 
@@ -4735,87 +4737,87 @@ msgstr "O valor para ser definido"
 msgid "Output the version number and exit gracefully"
 msgstr "Retorna o número da versão e sai graciosamente"
 
-#: ../src/utils/na-set-conf.c:133
+#: ../src/utils/na-set-conf.c:136
 #, c-format
 msgid "Error: a group is mandatory.\n"
 msgstr "Erro: um grupo é obrigatório.\n"
 
-#: ../src/utils/na-set-conf.c:138
+#: ../src/utils/na-set-conf.c:141
 #, c-format
 msgid "Error: a key is mandatory.\n"
 msgstr "Erro: uma chave é obrigatório.\n"
 
-#: ../src/utils/na-set-conf.c:143
+#: ../src/utils/na-set-conf.c:146
 #, c-format
 msgid "Error: a type is mandatory for setting/updating a value.\n"
 msgstr "Erro: um tipo é obrigatório para definir/atualizar um valor.\n"
 
 #. i18n: 'str', 'int' and 'bool' are literal values: do not translate
-#: ../src/utils/na-set-conf.c:154
+#: ../src/utils/na-set-conf.c:157
 #, c-format
 msgid "Error: unknown type: %s. Use 'str', 'int' or 'bool'.\n"
 msgstr "Erro: tipo desconhecido: %s. Use \"str\", \"int\" ou \"bool\".\n"
 
-#: ../src/utils/na-set-conf.c:161
+#: ../src/utils/na-set-conf.c:164
 #, c-format
 msgid "Error: a value is mandatory.\n"
 msgstr "Erro: um valor é obrigatório.\n"
 
-#: ../src/utils/nautilus-actions-new.c:133
+#: ../src/utils/nautilus-actions-new.c:135
 msgid "Set it if the item should be disabled at creation"
 msgstr "Define se o item deve ser desabilitado em sua criação"
 
-#: ../src/utils/nautilus-actions-new.c:135
+#: ../src/utils/nautilus-actions-new.c:137
 msgid "Set it if the item doesn't target the selection context menu"
 msgstr "Defina-o se o item não direciona-se para a seleção do menu de contexto"
 
-#: ../src/utils/nautilus-actions-new.c:137
+#: ../src/utils/nautilus-actions-new.c:139
 msgid "Set it if the item doesn't target the location context menu"
 msgstr ""
 "Defina-o se o item não direciona-se para a localização do menu de contexto"
 
-#: ../src/utils/nautilus-actions-new.c:139
+#: ../src/utils/nautilus-actions-new.c:141
 msgid "Set it if the item doesn't target the toolbar"
 msgstr "Define se o item não direciona-se para a barra de ferramentas"
 
-#: ../src/utils/nautilus-actions-new.c:141
+#: ../src/utils/nautilus-actions-new.c:143
 msgid "Set it if the basename patterns are case insensitive"
 msgstr ""
 "Define se os padrões do nome de base não diferenciam maiúsculas de minúsculas"
 
-#: ../src/utils/nautilus-actions-new.c:147
+#: ../src/utils/nautilus-actions-new.c:149
 msgid "Output the new item content on stdout (default)"
 msgstr "Retorna o conteúdo do novo item para a saída padrão (padrão)"
 
-#: ../src/utils/nautilus-actions-new.c:148
+#: ../src/utils/nautilus-actions-new.c:150
 msgid "Create the new item as a .desktop file"
 msgstr "Criar o novo item como um arquivo .desktop"
 
-#: ../src/utils/nautilus-actions-new.c:159
+#: ../src/utils/nautilus-actions-new.c:161
 #, c-format
 msgid "Error: '%s' and '%s' options cannot both be specified\n"
 msgstr "Erro: opções \"%s\" e \"%s\" não podem ser especificadas juntas.\n"
 
-#: ../src/utils/nautilus-actions-new.c:160
+#: ../src/utils/nautilus-actions-new.c:162
 #, c-format
 msgid "'%s' option is deprecated, see %s\n"
 msgstr "\"%s\" é uma opção obsoleta, veja %s\n"
 
-#: ../src/utils/nautilus-actions-new.c:215
+#: ../src/utils/nautilus-actions-new.c:220
 #, c-format
 msgid "Error: an action label is mandatory.\n"
 msgstr "Erro: uma etiqueta de ação é obrigatória.\n"
 
-#: ../src/utils/nautilus-actions-new.c:261
+#: ../src/utils/nautilus-actions-new.c:266
 #, c-format
 msgid "Error: only one output option may be specified.\n"
 msgstr "Erro: apenas uma opção de saída deve ser especificada.\n"
 
-#: ../src/utils/nautilus-actions-new.c:347
+#: ../src/utils/nautilus-actions-new.c:352
 msgid "Define a new action."
 msgstr "Define uma nova ação."
 
-#: ../src/utils/nautilus-actions-new.c:350
+#: ../src/utils/nautilus-actions-new.c:355
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -4829,16 +4831,16 @@ msgstr ""
 "Ou você pode escolher escrever diretamente a ação na sua configuração de "
 "Ações do Nautilus"
 
-#: ../src/utils/nautilus-actions-new.c:376
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Output of the program"
 msgstr "Saída do programa"
 
-#: ../src/utils/nautilus-actions-new.c:376
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Choose where the program creates the action"
 msgstr "Escolha onde o programa criará a ação"
 
 #. i18n: 'na-desktop' is a plugin identifier - do not translate
-#: ../src/utils/nautilus-actions-new.c:589
+#: ../src/utils/nautilus-actions-new.c:595
 msgid "Error: unable to find 'na-desktop' i/o provider."
 msgstr "Erro: não foi possível localizar o provedor de e/s de \"na-desktop\"."
 
@@ -4848,26 +4850,26 @@ msgid "Print a menu or an action to stdout."
 msgstr "Imprime um menu ou uma ação para a saída padrão."
 
 #: ../src/utils/nautilus-actions-print.c:60
-msgid "The identifiant of the menu or the action to be printed"
-msgstr "O identificador do menu ou da ação a ser exibida"
+msgid "The identifier of the menu or the action to be printed"
+msgstr "O identificador do menu ou da ação a ser exibido"
 
 #. i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable
 #: ../src/utils/nautilus-actions-print.c:63
 msgid "An export format [Desktop1]"
 msgstr "Um formato de exportação [Desktop1]"
 
-#: ../src/utils/nautilus-actions-print.c:122
+#: ../src/utils/nautilus-actions-print.c:125
 #, c-format
 msgid "Error: a menu or action id is mandatory.\n"
 msgstr "Erro: um id de ação ou menu é obrigatório.\n"
 
 #. i18n: %s stands for the id of the export format, and is not translatable
-#: ../src/utils/nautilus-actions-print.c:138
+#: ../src/utils/nautilus-actions-print.c:141
 #, c-format
 msgid "Error: %s: unknown export format.\n"
 msgstr "Erro: %s: formato de exportação desconhecido.\n"
 
-#: ../src/utils/nautilus-actions-print.c:203
+#: ../src/utils/nautilus-actions-print.c:206
 #, c-format
 msgid "Error: item '%s' doesn't exist.\n"
 msgstr "Erro: item \"%s\" não existe.\n"
@@ -4884,56 +4886,56 @@ msgstr ""
 "Um destino, arquivo ou pasta, para a ação. Mais de uma opção deve ser "
 "especificada"
 
-#: ../src/utils/nautilus-actions-run.c:131
+#: ../src/utils/nautilus-actions-run.c:134
 #, c-format
 msgid "Error: action id is mandatory.\n"
 msgstr "Erro: id de uma ação é obrigatória.\n"
 
-#: ../src/utils/nautilus-actions-run.c:156
+#: ../src/utils/nautilus-actions-run.c:159
 #, c-format
 msgid "No current selection. Nothing to do. Exiting.\n"
 msgstr "Sem seleção atual. Nada a fazer. Saindo.\n"
 
-#: ../src/utils/nautilus-actions-run.c:161
+#: ../src/utils/nautilus-actions-run.c:164
 #, c-format
 msgid "Action %s is not a valid candidate. Exiting.\n"
 msgstr "Ação %s não é uma candidata válida. Saindo.\n"
 
-#: ../src/utils/nautilus-actions-run.c:167
+#: ../src/utils/nautilus-actions-run.c:170
 #, c-format
 msgid "No valid profile is candidate to execution. Exiting.\n"
 msgstr "Nenhum perfil válido para execução. Saindo.\n"
 
-#: ../src/utils/nautilus-actions-run.c:188
+#: ../src/utils/nautilus-actions-run.c:191
 msgid "Execute an action on the specified target."
 msgstr "Executa uma ação no destino especificado."
 
-#: ../src/utils/nautilus-actions-run.c:233
+#: ../src/utils/nautilus-actions-run.c:236
 #, c-format
 msgid "Error: action '%s' doesn't exist.\n"
 msgstr "Erro: ação \"%s\" não existe.\n"
 
-#: ../src/utils/nautilus-actions-run.c:237
+#: ../src/utils/nautilus-actions-run.c:240
 #, c-format
 msgid "Error: action '%s' is disabled.\n"
 msgstr "Erro: ação \"%s\" está desabilitada.\n"
 
-#: ../src/utils/nautilus-actions-run.c:242
+#: ../src/utils/nautilus-actions-run.c:245
 #, c-format
 msgid "Error: action '%s' is not valid.\n"
 msgstr "Erro: ação \"%s\" não é válida.\n"
 
-#: ../src/utils/nautilus-actions-run.c:328
+#: ../src/utils/nautilus-actions-run.c:331
 #, c-format
 msgid "Error: unable to get a connection to session DBus: %s"
 msgstr "Erro: não foi possível obter uma conexão com o DBus da sessão: %s"
 
-#: ../src/utils/nautilus-actions-run.c:341
+#: ../src/utils/nautilus-actions-run.c:344
 #, c-format
 msgid "Error: unable to get a proxy on %s service"
 msgstr "Erro: não foi possível obter um proxy no serviço %s"
 
-#: ../src/utils/nautilus-actions-run.c:351
+#: ../src/utils/nautilus-actions-run.c:354
 #, c-format
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Erro na chamada GetSelectedPaths: %s"
