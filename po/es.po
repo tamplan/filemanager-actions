@@ -8,23 +8,23 @@
 # Javier Mazorra Rodríguez <mazi.debian@gmail.com>, 2011.
 # Jesse Avilés <jesseaviles@gmail.com>, 2011.
 # Maria Majadas <alixis82@gmail.com>, 2011.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2011, 2012, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-15 11:07+0000\n"
-"PO-Revision-Date: 2012-04-04 09:57+0200\n"
+"POT-Creation-Date: 2014-07-28 10:02+0000\n"
+"PO-Revision-Date: 2014-07-28 18:05+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
-"Language-Team: Español <gnome-es-list@gnome.org>\n"
+"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:1
 msgid "Ask for a confirmation when quitting by Esc"
@@ -93,6 +93,20 @@ msgid "Preferred export format"
 msgstr "Formato preferido de exportación"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:14
+#| msgid ""
+#| "This is the preferred export format, used as a default when exporting "
+#| "items, or dropping them outside of the application. Possible values are: "
+#| "- \"GConfSchemaV1\": this used to be the historical export format. The "
+#| "exported file may later be imported via Import assistant of the Nautilus-"
+#| "Actions Configuration Tool, or via the gconftool-2 --import-schema-file "
+#| "command-line tool. - \"GConfSchemaV2\": a lighter while still compatible "
+#| "schema. The exported file may later be imported via Import assistant of "
+#| "the Nautilus-Actions Configuration Tool, or via the gconftool-2 --import-"
+#| "schema-file command-line tool. - \"GConfEntry\": this should be the "
+#| "preferred format for newly exported actions. The exported file may later "
+#| "be imported via Import assistant of the Nautilus-Actions Configuration "
+#| "Tool, or via the gconftool-2 --load command-line tool. - \"Ask\": the "
+#| "user will be asked at runtime for the format he wishes use."
 msgid ""
 "This is the preferred export format, used as a default when exporting items, "
 "or dropping them outside of the application. Possible values are: - "
@@ -106,7 +120,7 @@ msgid ""
 "format for newly exported actions. The exported file may later be imported "
 "via Import assistant of the Nautilus-Actions Configuration Tool, or via the "
 "gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
-"runtime for the format he wishes use."
+"runtime for the format he wishes to use."
 msgstr ""
 "Este es el formato preferido de exportación, usado como predeterminado al "
 "exportar elementos o soltarlos fuera de la aplicación. Los valores posibles "
@@ -186,8 +200,14 @@ msgid "Last import mode chosen by the user"
 msgstr "Último modo de importación elegido por el usuario"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
+#| msgid ""
+#| "Last import mode chosen by the user when he is asked for in import mode. "
+#| "Possible values are: - \"NoImport\": do not import an action whose UUID "
+#| "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
+#| "already exists, - \"Override\": override the existing action with the "
+#| "imported one."
 msgid ""
-"Last import mode chosen by the user when he is asked for in import mode. "
+"Last import mode chosen by the user when he was asked for an import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
 "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
 "already exists, - \"Override\": override the existing action with the "
@@ -195,7 +215,7 @@ msgid ""
 msgstr ""
 "El último modo de importación que eligió el usuario al preguntarle el modo "
 "de importación. Los valores posibles son: «NoImport» (no importar) para no "
-"importar una acción cuyo UUID ya existe; «Renumber» (reenumerar) para "
+"importar una acción cuyo UUID ya existe; «Renumber» (renumerar) para "
 "reservar un UUID nuevo si el UUID importado ya existe; "
 "«Override» (sobrescribir) para sobrescribir la acción existente con la "
 "importada."
@@ -244,8 +264,8 @@ msgstr ""
 "El último modo de importación elegido en el asistente de importación. Los "
 "valores posibles son: «NoImport» (no importar) para no importar una acción "
 "cuyo UUID ya existe; «Renumber» (reenumerar) para reservar un UUID nuevo si "
-"el UUID importado ya existe; «Override» (sobrescribir) para sobrescribir "
-"la acción existente con la importada; «Ask» (preguntar) para preguntar al "
+"el UUID importado ya existe; «Override» (sobrescribir) para sobrescribir la "
+"acción existente con la importada; «Ask» (preguntar) para preguntar al "
 "usuario cada vez."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:34
@@ -430,15 +450,18 @@ msgid "List of default schemes"
 msgstr "Lista de esquemas predeterminados"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
+#| msgid ""
+#| "The list of schemes proposed by default on each new profile. A default "
+#| "default list is harcoded in nautilus-actions-config-tool, which may be "
+#| "updated by the user."
 msgid ""
 "The list of schemes proposed by default on each new profile. A default "
-"default list is harcoded in nautilus-actions-config-tool, which may be "
+"default list is hardcoded in nautilus-actions-config-tool, which may be "
 "updated by the user."
 msgstr ""
 "La lista de esquemas propuesta de forma predeterminada para cada perfil "
 "nuevo. Existe una lista predeterminada grabada en la herramienta de "
-"configuración de las Acciones de Nautilus (nautilus-actions-config-tool), "
-"que el usuario puede actualizar."
+"configuración de las Acciones de Nautilus, que el usuario puede actualizar."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:66
 msgid "Whether the whole configuration is locked"
@@ -893,6 +916,7 @@ msgstr ""
 #: ../src/core/na-icontext-factory.c:332 ../src/core/na-icontext-factory.c:433
 #: ../src/core/na-icontext-factory.c:486
 #: ../src/core/na-object-profile-factory.c:117
+#: ../src/core/na-object-profile-factory.c:205
 msgid "<PATH>"
 msgstr "<RUTA>"
 
@@ -1198,20 +1222,26 @@ msgstr "No se pudo cargar el «ImporterAskDialog» desde %s"
 
 #: ../src/core/na-importer-ask.c:401
 #, c-format
+#| msgid ""
+#| "The action \"%s\" imported from \"%s\" has the same identifiant than the "
+#| "already existing \"%s\"."
 msgid ""
-"The action \"%s\" imported from \"%s\" has the same identifiant than the "
+"The action \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr ""
-"La acción importada «%s» de «%s» tiene el mismo identificador que la ya "
+"La acción «%s» importada de «%s» tiene el mismo identificador que la ya "
 "existente «%s»."
 
 #: ../src/core/na-importer-ask.c:407
 #, c-format
+#| msgid ""
+#| "The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+#| "already existing \"%s\"."
 msgid ""
-"The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+"The menu \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr ""
-"El menú importado «%s» de «%s» tiene el mismo identificador que la ya "
+"El menú «%s» importado de «%s» tiene el mismo identificador que el ya "
 "existente «%s»."
 
 #: ../src/core/na-importer-ask.ui.h:1
@@ -3117,7 +3147,9 @@ msgid "<b>Desktop environment</b>"
 msgstr "<b>Entorno de escritorio</b>"
 
 #: ../src/nact/nact-preferences.ui.h:24
-msgid "This tab lets you specify parameters needed for. some execution modes."
+#| msgid ""
+#| "This tab lets you specify parameters needed for. some execution modes."
+msgid "This tab lets you specify parameters needed for some execution modes."
 msgstr ""
 "Esta pestaña le permite especificar parámetros necesarios para algunos modos "
 "de ejecución."
@@ -4630,7 +4662,8 @@ msgid "About Nautilus-Actions"
 msgstr "Acerca de las Acciones de Nautilus"
 
 #: ../src/plugin-menu/nautilus-actions.c:980
-msgid "Display some informations about Nautilus-Actions"
+#| msgid "Display some informations about Nautilus-Actions"
+msgid "Display some information about Nautilus-Actions"
 msgstr "Mostrar información acerca de Acciones de Nautilus"
 
 #: ../src/test/test-reader.c:48
@@ -4642,7 +4675,7 @@ msgid "<URI>"
 msgstr "<URI>"
 
 #: ../src/test/test-reader.c:55 ../src/utils/na-delete-xmltree.c:77
-#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:155
+#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:157
 #: ../src/utils/nautilus-actions-print.c:70
 #: ../src/utils/nautilus-actions-run.c:68
 msgid "Output the version number"
@@ -4662,7 +4695,7 @@ msgstr ""
 
 #: ../src/test/test-reader.c:130 ../src/utils/na-delete-xmltree.c:183
 #: ../src/utils/na-print-schemas.c:191 ../src/utils/na-set-conf.c:208
-#: ../src/utils/nautilus-actions-new.c:385
+#: ../src/utils/nautilus-actions-new.c:387
 #: ../src/utils/nautilus-actions-print.c:183
 #: ../src/utils/nautilus-actions-run.c:210
 msgid "Miscellaneous options"
@@ -4670,7 +4703,7 @@ msgstr "Opciones misceláneas"
 
 #: ../src/test/test-reader.c:151 ../src/utils/na-delete-xmltree.c:113
 #: ../src/utils/na-print-schemas.c:112 ../src/utils/na-set-conf.c:120
-#: ../src/utils/nautilus-actions-new.c:205
+#: ../src/utils/nautilus-actions-new.c:207
 #: ../src/utils/nautilus-actions-print.c:110
 #: ../src/utils/nautilus-actions-run.c:119
 #, c-format
@@ -4680,12 +4713,12 @@ msgstr "Error de sintaxis: %s\n"
 #: ../src/test/test-reader.c:166
 #, c-format
 msgid "Error: uri is mandatory.\n"
-msgstr "Error: es obligatorio un URL.\n"
+msgstr "Error: es obligatorio un URI.\n"
 
 #. i18: '--help' is a command-line option - do not translate
 #: ../src/test/test-reader.c:178 ../src/utils/na-delete-xmltree.c:197
 #: ../src/utils/na-print-schemas.c:304 ../src/utils/na-set-conf.c:222
-#: ../src/utils/nautilus-actions-new.c:629
+#: ../src/utils/nautilus-actions-new.c:632
 #: ../src/utils/nautilus-actions-print.c:240
 #: ../src/utils/nautilus-actions-run.c:484
 #, c-format
@@ -4818,62 +4851,62 @@ msgstr "Error: tipo desconocido: %s. Use «str», «int» o «bool».\n"
 msgid "Error: a value is mandatory.\n"
 msgstr "Error: es obligatorio un valor.\n"
 
-#: ../src/utils/nautilus-actions-new.c:133
+#: ../src/utils/nautilus-actions-new.c:135
 msgid "Set it if the item should be disabled at creation"
 msgstr "Establece si el elemento debería estar desactivado al crearlo"
 
-#: ../src/utils/nautilus-actions-new.c:135
+#: ../src/utils/nautilus-actions-new.c:137
 msgid "Set it if the item doesn't target the selection context menu"
 msgstr ""
 "Establece si el objetivo del elemento no es el menú contextual de selección"
 
-#: ../src/utils/nautilus-actions-new.c:137
+#: ../src/utils/nautilus-actions-new.c:139
 msgid "Set it if the item doesn't target the location context menu"
 msgstr ""
 "Establece si el objetivo del elemento no es el menú contextual de ubicación"
 
-#: ../src/utils/nautilus-actions-new.c:139
+#: ../src/utils/nautilus-actions-new.c:141
 msgid "Set it if the item doesn't target the toolbar"
 msgstr "Establece si el objetivo del elemento no es la barra de herramientas"
 
-#: ../src/utils/nautilus-actions-new.c:141
+#: ../src/utils/nautilus-actions-new.c:143
 msgid "Set it if the basename patterns are case insensitive"
 msgstr ""
 "Establece si los patrones de nombre base son sensibles a capitalización"
 
-#: ../src/utils/nautilus-actions-new.c:147
+#: ../src/utils/nautilus-actions-new.c:149
 msgid "Output the new item content on stdout (default)"
 msgstr "Mostrar la salida del elemento nuevo en stdout (predeterminado)"
 
-#: ../src/utils/nautilus-actions-new.c:148
+#: ../src/utils/nautilus-actions-new.c:150
 msgid "Create the new item as a .desktop file"
 msgstr "Crear el elemento nuevo como un archivo .desktop"
 
-#: ../src/utils/nautilus-actions-new.c:159
+#: ../src/utils/nautilus-actions-new.c:161
 #, c-format
 msgid "Error: '%s' and '%s' options cannot both be specified\n"
 msgstr "Error: no se pueden especificar a la vez las opciones «%s» y «%s»\n"
 
-#: ../src/utils/nautilus-actions-new.c:160
+#: ../src/utils/nautilus-actions-new.c:162
 #, c-format
 msgid "'%s' option is deprecated, see %s\n"
 msgstr "La opción «%s» está obsoleta, consulte %s\n"
 
-#: ../src/utils/nautilus-actions-new.c:218
+#: ../src/utils/nautilus-actions-new.c:220
 #, c-format
 msgid "Error: an action label is mandatory.\n"
 msgstr "Error: es obligatoria una etiqueta de acción.\n"
 
-#: ../src/utils/nautilus-actions-new.c:264
+#: ../src/utils/nautilus-actions-new.c:266
 #, c-format
 msgid "Error: only one output option may be specified.\n"
 msgstr "Error: sólo se puede especificar una opción de salida.\n"
 
-#: ../src/utils/nautilus-actions-new.c:350
+#: ../src/utils/nautilus-actions-new.c:352
 msgid "Define a new action."
 msgstr "Definir una acción nueva."
 
-#: ../src/utils/nautilus-actions-new.c:353
+#: ../src/utils/nautilus-actions-new.c:355
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -4887,16 +4920,16 @@ msgstr ""
 "O puede elegir directamente escribir la acción en su configuración de "
 "Nautilus Actions."
 
-#: ../src/utils/nautilus-actions-new.c:379
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Output of the program"
 msgstr "Salida del programa"
 
-#: ../src/utils/nautilus-actions-new.c:379
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Choose where the program creates the action"
 msgstr "Elegir qué programa crea la acción"
 
 #. i18n: 'na-desktop' is a plugin identifier - do not translate
-#: ../src/utils/nautilus-actions-new.c:592
+#: ../src/utils/nautilus-actions-new.c:595
 msgid "Error: unable to find 'na-desktop' i/o provider."
 msgstr "Error: no se pudo encontrar el proveedor de E/S «na-desktop»."
 
@@ -4906,8 +4939,9 @@ msgid "Print a menu or an action to stdout."
 msgstr "Imprimir un menú o acción en stdout."
 
 #: ../src/utils/nautilus-actions-print.c:60
-msgid "The identifiant of the menu or the action to be printed"
-msgstr "El identificador del menú o acción que imprimir"
+#| msgid "The identifiant of the menu or the action to be printed"
+msgid "The identifier of the menu or the action to be printed"
+msgstr "El identificador del menú o la acción que imprimir"
 
 #. i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable
 #: ../src/utils/nautilus-actions-print.c:63
@@ -5032,8 +5066,8 @@ msgstr "Error en la llamada a GetSelectedPaths: %s"
 #~ "Be warned: this mode may be dangerous. You will not be prompted another "
 #~ "time."
 #~ msgstr ""
-#~ "El elemento, acción o menú seleccionado, sobrescribirá silenciosamente "
-#~ "el elemento actual que tiene el mismo identificador.\n"
+#~ "El elemento, acción o menú seleccionado, sobrescribirá silenciosamente el "
+#~ "elemento actual que tiene el mismo identificador.\n"
 #~ "Está advertido: este modo puede ser peligroso. No se le volverá a avisar "
 #~ "otra vez."
 
