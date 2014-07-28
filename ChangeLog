@@ -1,3 +1,27 @@
+2014-07-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* data/gconf-schemas/nautilus-actions-prefs.schemas.in:
+	* docs/des-ema/des-ema-0.12:
+	* docs/des-ema/des-ema-0.13:
+	* docs/des-ema/des-ema-0.14:
+	* docs/des-ema/des-ema-0.15:
+	* docs/reference/na-compiling.xml:
+	* src/core/na-importer-ask.c:
+	* src/nact/nact-preferences.ui:
+	* src/plugin-menu/nautilus-actions.c:
+	* src/utils/nautilus-actions-print.c: Fix various typos and grammar 
+	issues (Fix #727525 reported by Anders Jonsson).
+
+2014-07-17 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-settings.c: Be more compliant with XDG specifications
+	(Fix #730994 reported by Mauricio C Antunes, and with his advices).
+	
+	* src/core/na-object-profile-factory.c:
+	* src/utils/nautilus-actions-new.c: Add an option for actions 
+	working directories 
+	(Fix #730382 - patch provided by Mauricio C Antunes). 
+
 2014-01-30 Pierre Wieser <pwieser@trychlos.org>
 
 	* m4/na-check-for-gdbus.m4: Improve GDBus selection messages m4 macro.
