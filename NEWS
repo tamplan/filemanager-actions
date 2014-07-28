@@ -1,3 +1,29 @@
+Version 3.2.4
+=============
+
+	Release date 2014-07-xx
+
+	Bug fixes:
+
+		- Fix #727525 reported by Anders Jonsson
+		  Various typos and grammar issues
+		- Fix #730994 reported by Mauricio C Antunes
+		  Be more compliant with XDG specifications
+		- Fix #730382 reported by Mauricio C Antunes
+		  nautilus-actions-new: add an option for actions working 
+		  directories
+
+	Other modifications:
+
+		- Move maintainer dedicated tools to new maintainer/ subdirectory
+
+	New and updated translations:
+
+		- el (Piotr Drąg, Dimitris Spingos)
+		- es (Daniel Mustieles)
+		- sr (Мирослав Николић)
+		- sv (Josef northa)
+
 Version 3.2.3
 =============
 
