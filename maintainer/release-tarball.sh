@@ -412,7 +412,7 @@ done
 version="$(get_version ${opt_tarname})"
 
 # are we local ?
-destdir="/net/data/tarballs/${product}"
+destdir="/net/data/free/tarballs/${product}"
 desthost="stormy.trychlos.org"
 [ "$(ls ${destdir} 2>/dev/null)" = "" ] && local="no" || local="yes"
 [ "${local}" = "yes" ] && lib_desthost="" || lib_desthost="${desthost}:"
@@ -452,7 +452,7 @@ fi
 msg "tagging git"
 tag="$(echo ${product}-${version} | tr '[:lower:]' '[:upper:]' | sed 's?[-\.]?_?g')"
 msg="Releasing ${pck_name} ${version}"
-msg "git tag -s '${tag}' -m '${msg}'"
+msg "git tag -s '${tag}' -m '${msg}' (unlock with GPG passphrase)"
 command "git tag -s '${tag}' -m '${msg}'"
 command "git pull --rebase && git push && git push --tags"
 

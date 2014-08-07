@@ -1,5 +1,8 @@
 2014-08-07 Pierre Wieser <pwieser@trychlos.org>
 
+	* maintainer/release-tarball.sh:
+	- Fix new destination directory on stormy tarballs repository
+	- Move from tools/ subdirectory. 
 	* configure.ac: Post-release version bump.
 	
 2014-07-27 Pierre Wieser <pwieser@trychlos.org>
