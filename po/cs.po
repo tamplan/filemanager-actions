@@ -176,13 +176,6 @@ msgid "Last import mode chosen by the user"
 msgstr "Poslední režim importu vybraný uživatelem"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
-#, fuzzy
-#| msgid ""
-#| "Last import mode chosen by the user when he is asked for in import mode. "
-#| "Possible values are: - \"NoImport\": do not import an action whose UUID "
-#| "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
-#| "already exists, - \"Override\": override the existing action with the "
-#| "imported one."
 msgid ""
 "Last import mode chosen by the user when he was asked for an import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
