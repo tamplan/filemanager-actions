@@ -275,7 +275,7 @@ msgstr ""
 "„AscendingOrder“: akce jsou udržované seřazené vzestupně podle abecedy "
 "(historické chování). - „DescendingOrder“: akce jsou udržované seřazené "
 "sestupně podle abecedy. - „ManualOrder“: uživatel může volně určovat pořadí "
-"pomocí nástroje pro nastavené Akce-Nautilus."
+"pomocí nástroje pro nastavení Akce-Nautilus."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:40
 msgid "Define a 'Nautilus-Actions actions' root menu"
