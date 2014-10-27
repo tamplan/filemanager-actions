@@ -1,14 +1,14 @@
 # Serbian translation for nautilus-actions.
 # Copyright (C) 2013 nautilus-actions's COPYRIGHT HOLDER
 # This file is distributed under the same license as the nautilus-actions package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013—2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product"
 "=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-09-13 08:39+0000\n"
-"PO-Revision-Date: 2013-10-13 21:28+0200\n"
+"POT-Creation-Date: 2014-09-29 15:23+0000\n"
+"PO-Revision-Date: 2014-10-27 06:06+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "Language: sr\n"
@@ -85,6 +85,20 @@ msgid "Preferred export format"
 msgstr "Жељени извозни запис"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:14
+#| msgid ""
+#| "This is the preferred export format, used as a default when exporting "
+#| "items, or dropping them outside of the application. Possible values are: "
+#| "- \"GConfSchemaV1\": this used to be the historical export format. The "
+#| "exported file may later be imported via Import assistant of the Nautilus-"
+#| "Actions Configuration Tool, or via the gconftool-2 --import-schema-file "
+#| "command-line tool. - \"GConfSchemaV2\": a lighter while still compatible "
+#| "schema. The exported file may later be imported via Import assistant of "
+#| "the Nautilus-Actions Configuration Tool, or via the gconftool-2 --import-"
+#| "schema-file command-line tool. - \"GConfEntry\": this should be the "
+#| "preferred format for newly exported actions. The exported file may later "
+#| "be imported via Import assistant of the Nautilus-Actions Configuration "
+#| "Tool, or via the gconftool-2 --load command-line tool. - \"Ask\": the "
+#| "user will be asked at runtime for the format he wishes use."
 msgid ""
 "This is the preferred export format, used as a default when exporting items, "
 "or dropping them outside of the application. Possible values are: - "
@@ -98,7 +112,7 @@ msgid ""
 "format for newly exported actions. The exported file may later be imported "
 "via Import assistant of the Nautilus-Actions Configuration Tool, or via the "
 "gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
-"runtime for the format he wishes use."
+"runtime for the format he wishes to use."
 msgstr ""
 "Ово је жељени извозни запис, коришћен као основни приликом извоза ставки, "
 "или њиховог извлачења ван програма. Могуће вредности су: — „GConfSchemaV1“ "
@@ -173,8 +187,14 @@ msgid "Last import mode chosen by the user"
 msgstr "Последњи режим увоза који је изабрао корисник"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
+#| msgid ""
+#| "Last import mode chosen by the user when he is asked for in import mode. "
+#| "Possible values are: - \"NoImport\": do not import an action whose UUID "
+#| "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
+#| "already exists, - \"Override\": override the existing action with the "
+#| "imported one."
 msgid ""
-"Last import mode chosen by the user when he is asked for in import mode. "
+"Last import mode chosen by the user when he was asked for an import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
 "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
 "already exists, - \"Override\": override the existing action with the "
@@ -364,11 +384,11 @@ msgstr ""
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:58
 msgid "Display Tools toolbar"
-msgstr "Приказује траку алата алата"
+msgstr "Приказује траку алата"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:59
 msgid "Whether to display or not the Tools toolbar in the main window."
-msgstr "Да ли ће трака алата алата бити приказана у главном прозору."
+msgstr "Да ли ће трака алата бити приказана у главном прозору."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:60
 msgid "Position and size of the main window"
@@ -396,9 +416,13 @@ msgid "List of default schemes"
 msgstr "Списак основних шема"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
+#| msgid ""
+#| "The list of schemes proposed by default on each new profile. A default "
+#| "default list is harcoded in nautilus-actions-config-tool, which may be "
+#| "updated by the user."
 msgid ""
 "The list of schemes proposed by default on each new profile. A default "
-"default list is harcoded in nautilus-actions-config-tool, which may be "
+"default list is hardcoded in nautilus-actions-config-tool, which may be "
 "updated by the user."
 msgstr ""
 "Списак шема које су предложене по основи на сваком новом профилу. Основни "
@@ -498,8 +522,8 @@ msgid ""
 msgstr ""
 "Алат подешавања Наутилусових радњи се расподељује у нади да ће бити од "
 "користи, али БЕЗ ИКАКВИХ ГАРАНЦИЈА; чак и без примењене гаранције ТРЖИШНЕ "
-"ВРЕДНОСТИ или ПРИЛАГОЂЕНОСТИ ОДРЕЂЕНОЈ НАМЕНИ. Погледајте Гнуову општу јавну "
-"лиценцу за више детаља."
+"ВРЕДНОСТИ или ПРИЛАГОЂЕНОСТИ ОДРЕЂЕНОЈ НАМЕНИ.  Погледајте Гнуову општу "
+"јавну лиценцу за више детаља."
 
 #: ../src/core/na-about.c:78
 msgid ""
@@ -530,10 +554,6 @@ msgstr "Наутилусове радње"
 
 #: ../src/core/na-about.c:161
 #, c-format
-#| msgid ""
-#| "Copyright %s 2005 The GNOME Foundation\n"
-#| "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
-#| "Copyright %s 2009-2012 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
@@ -843,6 +863,7 @@ msgstr ""
 #: ../src/core/na-icontext-factory.c:332 ../src/core/na-icontext-factory.c:433
 #: ../src/core/na-icontext-factory.c:486
 #: ../src/core/na-object-profile-factory.c:117
+#: ../src/core/na-object-profile-factory.c:205
 msgid "<PATH>"
 msgstr "<ПУТАЊА>"
 
@@ -1146,15 +1167,21 @@ msgstr "Не могу да учитам „ImporterAskDialog“ из „%s“"
 
 #: ../src/core/na-importer-ask.c:401
 #, c-format
+#| msgid ""
+#| "The action \"%s\" imported from \"%s\" has the same identifiant than the "
+#| "already existing \"%s\"."
 msgid ""
-"The action \"%s\" imported from \"%s\" has the same identifiant than the "
+"The action \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr "Радња „%s“ увезена из „%s“ има исти одредник као већ постојећа „%s“."
 
 #: ../src/core/na-importer-ask.c:407
 #, c-format
+#| msgid ""
+#| "The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+#| "already existing \"%s\"."
 msgid ""
-"The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+"The menu \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr "Изборник „%s“ увезен из „%s“ има исти одредник као већ постојећи „%s“."
 
@@ -1550,8 +1577,8 @@ msgid ""
 "  %f: the name of the selected file or the first one if several are "
 "selected\n"
 "  %h: hostname of the URI\n"
-"  %m: space-separated list of the basenames of the selected file(s)/folder"
-"(s)\n"
+"  %m: space-separated list of the basenames of the selected file(s)/"
+"folder(s)\n"
 "  %M: space-separated list of the selected file(s)/folder(s), with their "
 "full paths\n"
 "  %p: port number of the first URI\n"
@@ -1562,19 +1589,19 @@ msgid ""
 "  %%: a percent sign.\n"
 "- starting from version 3:\n"
 "  %b: (first) basename\n"
-"  %B: space-separated list of the basenames of the selected file(s)/folder"
-"(s)\n"
+"  %B: space-separated list of the basenames of the selected file(s)/"
+"folder(s)\n"
 "  %c: count the selected file(s)/folder(s)\n"
 "  %d: (first) base directory\n"
-"  %D: space-separated list of base directories of the selected file(s)/folder"
-"(s)\n"
+"  %D: space-separated list of base directories of the selected file(s)/"
+"folder(s)\n"
 "  %f: (first) filename\n"
-"  %F: space-separated list of the filenames of the selected file(s)/folder"
-"(s)\n"
+"  %F: space-separated list of the filenames of the selected file(s)/"
+"folder(s)\n"
 "  %h: hostname of the (first) URI\n"
 "  %m: (first) mimetype\n"
-"  %M: space-separated list of the mimetypes of the selected file(s)/folder"
-"(s)\n"
+"  %M: space-separated list of the mimetypes of the selected file(s)/"
+"folder(s)\n"
 "  %n: username of the (first) URI\n"
 "  %o: no-op operator which forces the singular form of execution (since "
 "3.0.2)\n"
@@ -1587,8 +1614,8 @@ msgid ""
 "  %w: (first) basename without the extension\n"
 "  %W: space-separated list of basenames without the extension\n"
 "  %x: (first) extension\n"
-"  %X: space-separated list of the extensions of the selected file(s)/folder"
-"(s)\n"
+"  %X: space-separated list of the extensions of the selected file(s)/"
+"folder(s)\n"
 "  %%: a percent sign."
 msgstr ""
 "Параметри наредбе која ће бити извршена када корисник изабере ставку "
@@ -2792,7 +2819,7 @@ msgstr "Прикажите траку алата уређивања"
 #. i18n: tooltip displayed in the status bar when selecting 'View Tools toolbar' item
 #: ../src/nact/nact-menubar.c:180
 msgid "Display the Tools toolbar"
-msgstr "Прикажите траку алата алата"
+msgstr "Прикажите траку алата"
 
 #. i18n: tooltip displayed in the status bar when selecting 'View Help toolbar' item
 #: ../src/nact/nact-menubar.c:184
@@ -3001,7 +3028,9 @@ msgid "<b>Desktop environment</b>"
 msgstr "<b>Окружење радне површи</b>"
 
 #: ../src/nact/nact-preferences.ui.h:24
-msgid "This tab lets you specify parameters needed for. some execution modes."
+#| msgid ""
+#| "This tab lets you specify parameters needed for. some execution modes."
+msgid "This tab lets you specify parameters needed for some execution modes."
 msgstr ""
 "Овај језичак вам допушта да наведете параметре потребне за неке режиме "
 "извршавања."
@@ -3494,8 +3523,8 @@ msgstr "(први) основни директоријум."
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:29
 msgid ""
-"space-separated list of the base directories of the selected file(s)/folder"
-"(s)."
+"space-separated list of the base directories of the selected file(s)/"
+"folder(s)."
 msgstr ""
 "размаком раздвојени списак основних директоријума изабране датотеке/фасцикле."
 
@@ -4473,7 +4502,8 @@ msgid "About Nautilus-Actions"
 msgstr "О Наутилусовим радњама"
 
 #: ../src/plugin-menu/nautilus-actions.c:980
-msgid "Display some informations about Nautilus-Actions"
+#| msgid "Display some informations about Nautilus-Actions"
+msgid "Display some information about Nautilus-Actions"
 msgstr "Прикажите неке податке о Наутилусовим радњама"
 
 #: ../src/test/test-reader.c:48
@@ -4485,7 +4515,7 @@ msgid "<URI>"
 msgstr "<Путања>"
 
 #: ../src/test/test-reader.c:55 ../src/utils/na-delete-xmltree.c:77
-#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:155
+#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:157
 #: ../src/utils/nautilus-actions-print.c:70
 #: ../src/utils/nautilus-actions-run.c:68
 msgid "Output the version number"
@@ -4505,7 +4535,7 @@ msgstr ""
 
 #: ../src/test/test-reader.c:130 ../src/utils/na-delete-xmltree.c:183
 #: ../src/utils/na-print-schemas.c:191 ../src/utils/na-set-conf.c:208
-#: ../src/utils/nautilus-actions-new.c:385
+#: ../src/utils/nautilus-actions-new.c:387
 #: ../src/utils/nautilus-actions-print.c:183
 #: ../src/utils/nautilus-actions-run.c:210
 msgid "Miscellaneous options"
@@ -4513,7 +4543,7 @@ msgstr "Остале могућности"
 
 #: ../src/test/test-reader.c:151 ../src/utils/na-delete-xmltree.c:113
 #: ../src/utils/na-print-schemas.c:112 ../src/utils/na-set-conf.c:120
-#: ../src/utils/nautilus-actions-new.c:205
+#: ../src/utils/nautilus-actions-new.c:207
 #: ../src/utils/nautilus-actions-print.c:110
 #: ../src/utils/nautilus-actions-run.c:119
 #, c-format
@@ -4528,7 +4558,7 @@ msgstr "Грешка: путања је обавезна.\n"
 #. i18: '--help' is a command-line option - do not translate
 #: ../src/test/test-reader.c:178 ../src/utils/na-delete-xmltree.c:197
 #: ../src/utils/na-print-schemas.c:304 ../src/utils/na-set-conf.c:222
-#: ../src/utils/nautilus-actions-new.c:629
+#: ../src/utils/nautilus-actions-new.c:632
 #: ../src/utils/nautilus-actions-print.c:240
 #: ../src/utils/nautilus-actions-run.c:484
 #, c-format
@@ -4662,59 +4692,59 @@ msgstr "Грешка: непозната врста: %s. Употребите �
 msgid "Error: a value is mandatory.\n"
 msgstr "Грешка: вредност је обавезна.\n"
 
-#: ../src/utils/nautilus-actions-new.c:133
+#: ../src/utils/nautilus-actions-new.c:135
 msgid "Set it if the item should be disabled at creation"
 msgstr "Подешава га ако ставка треба да буде искључена приликом стварања"
 
-#: ../src/utils/nautilus-actions-new.c:135
+#: ../src/utils/nautilus-actions-new.c:137
 msgid "Set it if the item doesn't target the selection context menu"
 msgstr "Подешава га ако ставка не циља на приручни изборник избора"
 
-#: ../src/utils/nautilus-actions-new.c:137
+#: ../src/utils/nautilus-actions-new.c:139
 msgid "Set it if the item doesn't target the location context menu"
 msgstr "Подешава га ако ставка не циља на приручни изборник места"
 
-#: ../src/utils/nautilus-actions-new.c:139
+#: ../src/utils/nautilus-actions-new.c:141
 msgid "Set it if the item doesn't target the toolbar"
 msgstr "Подешава га ако ставка не циља на траку алата"
 
-#: ../src/utils/nautilus-actions-new.c:141
+#: ../src/utils/nautilus-actions-new.c:143
 msgid "Set it if the basename patterns are case insensitive"
 msgstr "Подешава га ако шаблони основног назива не разликују величину слова"
 
-#: ../src/utils/nautilus-actions-new.c:147
+#: ../src/utils/nautilus-actions-new.c:149
 msgid "Output the new item content on stdout (default)"
 msgstr "Исписује садржај нове ставке на стандардном излазу (основно)"
 
-#: ../src/utils/nautilus-actions-new.c:148
+#: ../src/utils/nautilus-actions-new.c:150
 msgid "Create the new item as a .desktop file"
 msgstr "Ствара нову ставку као датотеку радне површи"
 
-#: ../src/utils/nautilus-actions-new.c:159
+#: ../src/utils/nautilus-actions-new.c:161
 #, c-format
 msgid "Error: '%s' and '%s' options cannot both be specified\n"
 msgstr "Грешка: не могу бити наведене обе „%s“ и „%s“ могућности\n"
 
-#: ../src/utils/nautilus-actions-new.c:160
+#: ../src/utils/nautilus-actions-new.c:162
 #, c-format
 msgid "'%s' option is deprecated, see %s\n"
 msgstr "„%s“ могућност је застарела, погледајте „%s“\n"
 
-#: ../src/utils/nautilus-actions-new.c:218
+#: ../src/utils/nautilus-actions-new.c:220
 #, c-format
 msgid "Error: an action label is mandatory.\n"
 msgstr "Грешка: натпис радње је обавезан.\n"
 
-#: ../src/utils/nautilus-actions-new.c:264
+#: ../src/utils/nautilus-actions-new.c:266
 #, c-format
 msgid "Error: only one output option may be specified.\n"
 msgstr "Грешка: само једна излазна могућност може бити наведена.\n"
 
-#: ../src/utils/nautilus-actions-new.c:350
+#: ../src/utils/nautilus-actions-new.c:352
 msgid "Define a new action."
 msgstr "Одређује нову радњу."
 
-#: ../src/utils/nautilus-actions-new.c:353
+#: ../src/utils/nautilus-actions-new.c:355
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -4728,16 +4758,16 @@ msgstr ""
 "Или ви можете да изаберете да непосредно запишете радњу у ваша подешавања "
 "Наутилусових радњи."
 
-#: ../src/utils/nautilus-actions-new.c:379
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Output of the program"
 msgstr "Излаз програма"
 
-#: ../src/utils/nautilus-actions-new.c:379
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Choose where the program creates the action"
 msgstr "Изаберите где ће програм да створи радњу"
 
 #. i18n: 'na-desktop' is a plugin identifier - do not translate
-#: ../src/utils/nautilus-actions-new.c:592
+#: ../src/utils/nautilus-actions-new.c:595
 msgid "Error: unable to find 'na-desktop' i/o provider."
 msgstr "Грека: не могу да пронађем „na-desktop“ у/и достављача."
 
@@ -4747,7 +4777,8 @@ msgid "Print a menu or an action to stdout."
 msgstr "Исписује изборник или радњу на стандардни излаз."
 
 #: ../src/utils/nautilus-actions-print.c:60
-msgid "The identifiant of the menu or the action to be printed"
+#| msgid "The identifiant of the menu or the action to be printed"
+msgid "The identifier of the menu or the action to be printed"
 msgstr "Одредник изборника или радње за штампање"
 
 #. i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable
