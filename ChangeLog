@@ -1,5 +1,7 @@
 2015-02-24 Pierre Wieser <pwieser@trychlos.org>
 
+	Start with File-Manager Actions.
+	
 	* ChangeLog-2014: copied from ChangeLog, which is reset.
 
 	* INSTALL: update from autoconf tools.
