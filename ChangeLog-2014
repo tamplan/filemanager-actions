@@ -1,0 +1,158 @@
+2014-08-07 Pierre Wieser <pwieser@trychlos.org>
+
+	* maintainer/release-tarball.sh:
+	- Fix new destination directory on stormy tarballs repository
+	- Move from tools/ subdirectory. 
+	* configure.ac: Post-release version bump.
+	
+2014-07-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* data/gconf-schemas/nautilus-actions-prefs.schemas.in:
+	* docs/des-ema/des-ema-0.12:
+	* docs/des-ema/des-ema-0.13:
+	* docs/des-ema/des-ema-0.14:
+	* docs/des-ema/des-ema-0.15:
+	* docs/reference/na-compiling.xml:
+	* src/core/na-importer-ask.c:
+	* src/nact/nact-preferences.ui:
+	* src/plugin-menu/nautilus-actions.c:
+	* src/utils/nautilus-actions-print.c: Fix various typos and grammar 
+	issues (Fix #727525 reported by Anders Jonsson).
+
+2014-07-17 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-settings.c: Be more compliant with XDG specifications
+	(Fix #730994 reported by Mauricio C Antunes, and with his advices).
+	
+	* src/core/na-object-profile-factory.c:
+	* src/utils/nautilus-actions-new.c: Add an option for actions 
+	working directories 
+	(Fix #730382 - patch provided by Mauricio C Antunes). 
+
+2014-01-30 Pierre Wieser <pwieser@trychlos.org>
+
+	* m4/na-check-for-gdbus.m4: Improve GDBus selection messages m4 macro.
+
+	* m4/na-check-for-gtk.m4:
+	* m4/na-check-module.m4: Review m4 macro behavior, not exiting in
+	case of an error, but letting all tests go up to the end.
+
+	* m4/na-check-for-gconf.m4: Review m4 GConf check macro behavior.
+
+	* m4/na-maintainer-mode.m4: Renamed to m4/na-maintainer.m4.
+	* m4/na-maintainer.m4: Macros are renamed as NA_MAINTAINER_xxxx.
+
+	* m4/na-compiler-flags.m4: Renamed to m4/na-compiler.m4.
+	* m4/na-compiler.m4: Macros are renamed as NA_COMPILER_xxxx.
+
+	* maintainer/README:
+	* maintainer/Makefile.am:
+	* maintainer/.gitignore: New files.
+
+	* run-autogen.sh:
+	* run-distcheck.sh:
+	* tools/check-po.sh:
+	* tools/check-headers.sh: Move to maintainer/.
+
+	* configure.ac:
+	* Makefile.am: Updated accordingly.
+
+2014-01-27 Pierre Wieser <pwieser@trychlos.org>
+
+	* docs/nact/C/articleinfo.xml:
+	* All source files: Bump copyright year.
+
+2013-09-26 Pierre Wieser <pwieser@trychlos.org>
+
+	* Makefile.am: Add ChangeLog-2012 to the distribution.
+
+	* configure.ac: Post release version bump.
+
+2013-09-24 Pierre Wieser <pwieser@trychlos.org>
+
+	* NEWS: Updating NEWS before releasing.
+
+	* docs/nact/Makefile.am: Fix the DOC_FIGURES variable,
+	prefixing all images with 'figures/' directory name.
+
+2013-09-14 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-settings.h: Fix configuration filename in the class
+	description.
+
+	* src/core/na-gtk-utils.c (na_gtk_utils_restore_window_position):
+	Provides a default size and position for main window.
+
+2013-09-13 Pierre Wieser <pwieser@trychlos.org>
+
+	* docs/nact/Makefile.am: Fix the DOC_LINGUAS variable.
+
+2013-09-11 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/core/na-gtk-utils.c (na_gtk_utils_restore_window_position):
+	Bad hack to try immediately target ideal size and position the first time
+	we open the main window.
+
+	Only allow the 'About Nautilus-Actions...' item inside of the
+	Nautilus-Actions root menu.
+
+	* src/nact/nact-preferences-editor.c (about_item_set_sensitive): New function.
+
+	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu):
+	Only insert the 'About...' item inside of the root Nautilus-Actions menu.
+
+	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu_rec):
+	Improve debug message.
+
+	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu):
+	Do not try to create a root Nautilus-Actions menu if it will be empty.
+
+	* src/core/na-io-provider.c (na_io_provider_get_io_providers_list):
+	- Fix so that the first listed I/O provider has most probability to be
+	writable.
+	- Do not reread preferences for write order.
+
+2013-09-10 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-main-toolbar.c:
+	* src/nact/nautilus-actions-config-tool.ui:
+	Reintroduce fixed toolbars starting with Gtk 3.4.
+
+	* src/plugin-menu/nautilus-actions.c (build_nautilus_menu_rec):
+	Iterates through subitems of the source menu as they have not been
+	duplucated yet (reported by Christopher Compagnon).
+
+2013-09-07 Pierre Wieser <pwieser@trychlos.org>
+
+	* src/nact/nact-main-toolbar.c (nact_main_toolbar_activate):
+	Obsoletes GtkHandleBox starting with Gtk 3.4 - No replacement.
+
+	* src/nact/base-gtk-utils.c (base_gtk_utils_table_to_grid):
+	Obsoletes GtkTable starting with Gtk 3.4.
+
+	* src/nact/egg-sm-client-xsmp.c: Obsoletes gdk_threads_enter(), 
+	gdk_threads_leave() starting with gdk 3.6.
+
+	* src/nact/base-gtk-utils.c: Remove useless blank lines.
+
+	* src/nact/base-application.c (g_type_init):
+	* src/test/test-iface.c (g_type_init):
+	* src/test/test-iface2.c (g_type_init):
+	* src/test/test-module.c (g_type_init):
+	* src/test/test-parse-uris.c (g_type_init):
+	* src/test/test-reader.c (g_type_init):
+	* src/test/test-virtuals-without-test.c (g_type_init):
+	* src/test/test-virtuals.c (g_type_init):
+	* src/utils/na-delete-xmltree.c (g_type_init):
+	* src/utils/na-print-schemas.c (g_type_init):
+	* src/utils/na-set-conf.c (g_type_init):
+	* src/utils/nautilus-actions-new.c (g_type_init):
+	* src/utils/nautilus-actions-print.c (g_type_init):
+	* src/utils/nautilus-actions-run.c (g_type_init):
+	Obsoletes g_type_init() starting with glib 2.36.
+
+2013-02-22 Pierre Wieser <pwieser@trychlos.org>
+
+	* Allmost all files: Bump copyright year.
+
+	* ChangeLog-2012: New file.
