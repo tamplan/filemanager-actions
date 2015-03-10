@@ -1,23 +1,24 @@
 # Swedish translation of nautilus-actions
-# Copyright © 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
+# Copyright © 2006-2011, 2014, 2015 Free Software Foundation, Inc.
 # Daniel Nylander <po@danielnylander.se>, 2006, 2007, 2008, 2009, 2010, 2011.
 # Josef Andersson <josef.andersson@fripost.org>, 2014.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-02-26 11:02+0000\n"
-"PO-Revision-Date: 2014-04-07 20:00+0100\n"
-"Last-Translator: Josef Andersson <josef.andersson@fripost.org>\n"
+"POT-Creation-Date: 2015-02-27 11:28+0000\n"
+"PO-Revision-Date: 2015-03-08 13:08+0100\n"
+"Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.7.3\n"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:1
 msgid "Ask for a confirmation when quitting by Esc"
@@ -97,7 +98,7 @@ msgid ""
 "format for newly exported actions. The exported file may later be imported "
 "via Import assistant of the Nautilus-Actions Configuration Tool, or via the "
 "gconftool-2 --load command-line tool. - \"Ask\": the user will be asked at "
-"runtime for the format he wishes use."
+"runtime for the format he wishes to use."
 msgstr ""
 "Det är det exportformat som föredras och används som standard när objekt "
 "exporteras, eller släpps utanför programmet. Möjliga värden är: -  "
@@ -174,7 +175,7 @@ msgstr "Användarens senast valda importläge"
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:26
 msgid ""
-"Last import mode chosen by the user when he is asked for in import mode. "
+"Last import mode chosen by the user when he was asked for an import mode. "
 "Possible values are: - \"NoImport\": do not import an action whose UUID "
 "already exists, - \"Renumber\": allocate a new UUID if the imported UUID "
 "already exists, - \"Override\": override the existing action with the "
@@ -389,12 +390,12 @@ msgstr "Lista över standardscheman"
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:65
 msgid ""
 "The list of schemes proposed by default on each new profile. A default "
-"default list is harcoded in nautilus-actions-config-tool, which may be "
+"default list is hardcoded in nautilus-actions-config-tool, which may be "
 "updated by the user."
 msgstr ""
 "Listan över de standardscheman som föreslås för varje ny profil. En "
 "standardlista som kan uppdateras av användaren är hårdkodad i nautilus-"
-"actions-config-tool, "
+"actions-config-tool."
 
 #: ../data/gconf-schemas/nautilus-actions-prefs.schemas.in.h:66
 msgid "Whether the whole configuration is locked"
@@ -520,10 +521,6 @@ msgstr "Nautilus-Actions"
 
 #: ../src/core/na-about.c:161
 #, c-format
-#| msgid ""
-#| "Copyright %s 2005 The GNOME Foundation\n"
-#| "Copyright %s 2006, 2007, 2008 Frederic Ruaudel <grumz@grumz.net>\n"
-#| "Copyright %s 2009, 2010, 2011 Pierre Wieser <pwieser@trychlos.org>"
 msgid ""
 "Copyright %s 2005 The GNOME Foundation\n"
 "Copyright %s 2006-2008 Frederic Ruaudel <grumz@grumz.net>\n"
@@ -542,7 +539,6 @@ msgid "KDE desktop"
 msgstr "KDE-skrivbord"
 
 #: ../src/core/na-desktop-environment.c:41
-#| msgid "KDE desktop"
 msgid "LXDE desktop"
 msgstr "LXDE-skrivbord"
 
@@ -831,6 +827,7 @@ msgstr ""
 #: ../src/core/na-icontext-factory.c:332 ../src/core/na-icontext-factory.c:433
 #: ../src/core/na-icontext-factory.c:486
 #: ../src/core/na-object-profile-factory.c:117
+#: ../src/core/na-object-profile-factory.c:205
 msgid "<PATH>"
 msgstr "<SÖKVÄG>"
 
@@ -942,7 +939,6 @@ msgstr "Namnet på en tjänst som måste registreras på DBus-sessionen"
 
 #: ../src/core/na-icontext-factory.c:459 ../src/core/na-icontext-factory.c:512
 #: ../src/core/na-icontext-factory.c:545
-#| msgid "<PATH|NAME>"
 msgid "<NAME>"
 msgstr "<NAMN>"
 
@@ -1132,7 +1128,7 @@ msgstr "Kunde inte läsa 'ImporterAskDialog' från %s"
 #: ../src/core/na-importer-ask.c:401
 #, c-format
 msgid ""
-"The action \"%s\" imported from \"%s\" has the same identifiant than the "
+"The action \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr ""
 "Åtgärden \"%s\" importerad från  \"%s\" har samma identifierare som "
@@ -1141,7 +1137,7 @@ msgstr ""
 #: ../src/core/na-importer-ask.c:407
 #, c-format
 msgid ""
-"The menu \"%s\" imported from \"%s\" has the same identifiant than the "
+"The menu \"%s\" imported from \"%s\" has the same identifier than the "
 "already existing \"%s\"."
 msgstr ""
 "Menyn \"%s\" importerad från \"%s\" har samma identifierare som befintliga "
@@ -1742,12 +1738,10 @@ msgid "user"
 msgstr "användare"
 
 #: ../src/core/na-tokens.c:431
-#| msgid "Path of the command"
 msgid "Output of the run command"
 msgstr "Körkommandots utskrift"
 
 #: ../src/core/na-tokens.c:439
-#| msgid "Choosing a command"
 msgid "Run command:"
 msgstr "Körkommando:"
 
@@ -1756,7 +1750,6 @@ msgid "Standard output:"
 msgstr "Standard ut:"
 
 #: ../src/core/na-tokens.c:441
-#| msgid "Syntax error: %s\n"
 msgid "Standard error:"
 msgstr "Standard fel:"
 
@@ -1936,12 +1929,10 @@ msgid "Application name"
 msgstr "Programnamn"
 
 #: ../src/nact/base-application.c:210
-#| msgid "Quit the application"
 msgid "The name of the application"
 msgstr "Namn på programmet"
 
 #: ../src/nact/base-application.c:217 ../src/nact/nact-schemes-list.c:167
-#| msgid "_Description :"
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -1952,7 +1943,6 @@ msgstr ""
 "utskriften"
 
 #: ../src/nact/base-application.c:225
-#| msgid "no name"
 msgid "Icon name"
 msgstr "Ikonnamn"
 
@@ -1965,7 +1955,6 @@ msgid "UniqueApp name"
 msgstr "UniqueApp-namn"
 
 #: ../src/nact/base-application.c:234
-#| msgid "Quit the application"
 msgid "The Unique name of the application"
 msgstr "Programmets unika namn"
 
@@ -1974,7 +1963,6 @@ msgid "Return code"
 msgstr "Returkod"
 
 #: ../src/nact/base-application.c:242
-#| msgid "Quit the application"
 msgid "The return code of the application"
 msgstr "Programmets returkod"
 
@@ -2036,7 +2024,6 @@ msgstr ""
 "Huruvida detta BaseWindow allokerar om en ny GtkBuilder var gång det öppnas"
 
 #: ../src/nact/base-window.c:220
-#| msgid "no name"
 msgid "Toplevel name"
 msgstr "Toppnivånamn"
 
@@ -2045,7 +2032,6 @@ msgid "The internal GtkBuildable name of the toplevel window"
 msgstr "Det interna GtkBuildable-namnet för det främsta fönstret"
 
 #: ../src/nact/base-window.c:228
-#| msgid "Quit the application"
 msgid "BaseApplication"
 msgstr "BaseApplication"
 
@@ -2063,7 +2049,6 @@ msgstr ""
 "En pekare (ej en referens) till BaseWindow-föräldrarna för detta BaseWindow"
 
 #: ../src/nact/base-window.c:242
-#| msgid "no name"
 msgid "WSP name"
 msgstr "WSP-namn"
 
@@ -2088,7 +2073,6 @@ msgstr "Kunde inte läsa in %s-XML-definition för gränssnitt: %s"
 
 #: ../src/nact/base-window.c:750
 #, c-format
-#| msgid "Unable to load %s XML definition."
 msgid "Unable to load %s dialog definition."
 msgstr "Kunde inte läsa in %s-dialogdefinitionen."
 
@@ -2255,7 +2239,6 @@ msgid "Selecting the exported actions"
 msgstr "Väljer de exporterade åtgärderna"
 
 #: ../src/nact/nact-assistant-export.ui.h:8
-#| msgid "Select a folder"
 msgid "Selecting the target folder"
 msgstr "Väljer målmapp"
 
@@ -2308,7 +2291,6 @@ msgstr "Import Ok"
 #. i18n: this is the globally unique identifier and the label of the newly imported action
 #: ../src/nact/nact-assistant-import.c:813
 #, c-format
-#| msgid "UUID: %s\t%s"
 msgid "Id.: %s\t%s"
 msgstr "Id.: %s\t%s"
 
@@ -2330,7 +2312,6 @@ msgstr ""
 "menyer."
 
 #: ../src/nact/nact-assistant-import.ui.h:3
-#| msgid "File to Import:"
 msgid "Selecting files to import"
 msgstr "Väljer filer att importera"
 
@@ -2592,7 +2573,7 @@ msgstr "_Visa"
 
 #: ../src/nact/nact-menubar.c:62
 msgid "_Toolbars"
-msgstr "Verk_tygsrader"
+msgstr "Verk_tygsfält"
 
 #: ../src/nact/nact-menubar.c:63 ../src/nact/nact-menubar.c:178
 msgid "_Tools"
@@ -2730,9 +2711,6 @@ msgstr "_Importguide..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Import item
 #: ../src/nact/nact-menubar.c:131
-#| msgid ""
-#| "Import one or more actions from external (XML) files into your "
-#| "configuration"
 msgid "Import one or more actions from external files into your configuration"
 msgstr ""
 "Importera en eller flera åtgärder från externa filer till din konfiguration"
@@ -2743,8 +2721,6 @@ msgstr "E_xportguide..."
 
 #. i18n: tooltip displayed in the status bar when selecting the Export item
 #: ../src/nact/nact-menubar.c:135
-#| msgid ""
-#| "Export one or more actions from your configuration to external XML files"
 msgid "Export one or more actions from your configuration to external files"
 msgstr ""
 "Exportera en eller flera åtgärder från din konfiguration till externa filer"
@@ -2997,7 +2973,6 @@ msgstr ""
 "att ersättas med åtgärdssökvägen och parametrar."
 
 #: ../src/nact/nact-preferences.ui.h:19
-#| msgid "_Command"
 msgid "_Command pattern :"
 msgstr "K_ommandomönster:"
 
@@ -3019,7 +2994,7 @@ msgid "<b>Desktop environment</b>"
 msgstr "<b>Skrivbordsmiljö</b>"
 
 #: ../src/nact/nact-preferences.ui.h:24
-msgid "This tab lets you specify parameters needed for. some execution modes."
+msgid "This tab lets you specify parameters needed for some execution modes."
 msgstr ""
 "Denna flik låter dig specificera parametrar som behövs för några körlägen."
 
@@ -3198,7 +3173,6 @@ msgid "Click to remove the selected default scheme."
 msgstr "Klicka för att ta bort markerat standardschema."
 
 #: ../src/nact/nact-preferences.ui.h:59
-#| msgid "<b>Nautilus Item</b>"
 msgid "<b>Default schemes</b>"
 msgstr "<b>Standardscheman</b>"
 
@@ -3350,12 +3324,10 @@ msgid "The GtkTreeView which relies on this NactTreeModel"
 msgstr "Gtkträdvyn viken lutar på dennna NactTreeModel"
 
 #: ../src/nact/nact-tree-model.c:239
-#| msgid "Execution mode"
 msgid "Edition mode"
 msgstr "Utgåveläge"
 
 #: ../src/nact/nact-tree-model.c:240
-#| msgid "Execution mode"
 msgid "Edition vs. Selection mode"
 msgstr "Utgåva vs. markeringsläge"
 
@@ -4487,7 +4459,7 @@ msgid "About Nautilus-Actions"
 msgstr "Om Nautilus-Actions"
 
 #: ../src/plugin-menu/nautilus-actions.c:980
-msgid "Display some informations about Nautilus-Actions"
+msgid "Display some information about Nautilus-Actions"
 msgstr "Visa information om Nautilus-Actions"
 
 #: ../src/test/test-reader.c:48
@@ -4499,7 +4471,7 @@ msgid "<URI>"
 msgstr "<URI>"
 
 #: ../src/test/test-reader.c:55 ../src/utils/na-delete-xmltree.c:77
-#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:155
+#: ../src/utils/na-print-schemas.c:73 ../src/utils/nautilus-actions-new.c:157
 #: ../src/utils/nautilus-actions-print.c:70
 #: ../src/utils/nautilus-actions-run.c:68
 msgid "Output the version number"
@@ -4519,7 +4491,7 @@ msgstr ""
 
 #: ../src/test/test-reader.c:130 ../src/utils/na-delete-xmltree.c:183
 #: ../src/utils/na-print-schemas.c:191 ../src/utils/na-set-conf.c:208
-#: ../src/utils/nautilus-actions-new.c:385
+#: ../src/utils/nautilus-actions-new.c:387
 #: ../src/utils/nautilus-actions-print.c:183
 #: ../src/utils/nautilus-actions-run.c:210
 msgid "Miscellaneous options"
@@ -4527,7 +4499,7 @@ msgstr "Diverse alternativ"
 
 #: ../src/test/test-reader.c:151 ../src/utils/na-delete-xmltree.c:113
 #: ../src/utils/na-print-schemas.c:112 ../src/utils/na-set-conf.c:120
-#: ../src/utils/nautilus-actions-new.c:205
+#: ../src/utils/nautilus-actions-new.c:207
 #: ../src/utils/nautilus-actions-print.c:110
 #: ../src/utils/nautilus-actions-run.c:119
 #, c-format
@@ -4542,7 +4514,7 @@ msgstr "Fel: uri är obligatorisk.\n"
 #. i18: '--help' is a command-line option - do not translate
 #: ../src/test/test-reader.c:178 ../src/utils/na-delete-xmltree.c:197
 #: ../src/utils/na-print-schemas.c:304 ../src/utils/na-set-conf.c:222
-#: ../src/utils/nautilus-actions-new.c:629
+#: ../src/utils/nautilus-actions-new.c:632
 #: ../src/utils/nautilus-actions-print.c:240
 #: ../src/utils/nautilus-actions-run.c:484
 #, c-format
@@ -4550,9 +4522,6 @@ msgid "Try %s --help for usage.\n"
 msgstr "Prova %s --help för användningsinformation.\n"
 
 #: ../src/utils/console-utils.c:53
-#| msgid ""
-#| "Bug reports are welcomed at http://bugzilla.gnome.org, or you may prefer "
-#| "to mail to <maintainer@nautilus-actions.org>.\n"
 msgid ""
 "Bug reports are welcomed at https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions,\n"
@@ -4573,13 +4542,11 @@ msgstr "Ett XML-backend-filnamn"
 
 #: ../src/utils/na-delete-xmltree.c:128
 #, c-format
-#| msgid "Error: uri is mandatory.\n"
 msgid "Error: a XPath is mandatory.\n"
 msgstr "Fel: en XPath är obligatorisk.\n"
 
 #: ../src/utils/na-delete-xmltree.c:133
 #, c-format
-#| msgid "Error: an action label is mandatory.\n"
 msgid "Error: a XML filename is mandatory.\n"
 msgstr "Fel: ett XML-filnamn är obligatoriskt.\n"
 
@@ -4589,19 +4556,16 @@ msgstr "Ta bort en XPath från ett XML-dokument."
 
 #: ../src/utils/na-delete-xmltree.c:213
 #, c-format
-#| msgid "Error: unable to create %s dir: %s"
 msgid "Error: unable to parse file '%s'\n"
 msgstr "Fel: kunde inte läsa fil '%s'\n"
 
 #: ../src/utils/na-delete-xmltree.c:220
 #, c-format
-#| msgid "Error: unable to create %s dir: %s"
 msgid "Error: unable to create new XPath context\n"
 msgstr "Fel: kunde inte skapa ny XPath-kontext\n"
 
 #: ../src/utils/na-delete-xmltree.c:228
 #, c-format
-#| msgid "Error: unable to create %s dir: %s"
 msgid "Error: unable to evaluate XPath expression '%s'\n"
 msgstr "Fel: kunde inte utvärdera XPathuttryck '%s'\n"
 
@@ -4610,12 +4574,10 @@ msgid "Output the schema on stdout"
 msgstr "Skriv ut schemat på standard ut"
 
 #: ../src/utils/na-print-schemas.c:67
-#| msgid "Output the schema on stdout"
 msgid "Output the action schemas [default]"
 msgstr "Skriv ut åtgärdsscheman [standard]"
 
 #: ../src/utils/na-print-schemas.c:68
-#| msgid "Output the schema on stdout"
 msgid "Output the menu schemas"
 msgstr "Skriv ut menyscheman"
 
@@ -4657,19 +4619,16 @@ msgid "The value to be set"
 msgstr "Värdet som ska anges"
 
 #: ../src/utils/na-set-conf.c:75
-#| msgid "Output the version number"
 msgid "Output the version number and exit gracefully"
 msgstr "Skriv ut versionsnumret och avsluta mjukt"
 
 #: ../src/utils/na-set-conf.c:136
 #, c-format
-#| msgid "Error: uri is mandatory.\n"
 msgid "Error: a group is mandatory.\n"
 msgstr "Fel: en grupp är obligatorisk.\n"
 
 #: ../src/utils/na-set-conf.c:141
 #, c-format
-#| msgid "Error: uri is mandatory.\n"
 msgid "Error: a key is mandatory.\n"
 msgstr "Fel: en nyckel är obligatorisk.\n"
 
@@ -4686,66 +4645,62 @@ msgstr "Fel: okänd typ: %s. Använd 'str', 'int' eller 'bool'.\n"
 
 #: ../src/utils/na-set-conf.c:164
 #, c-format
-#| msgid "Error: uri is mandatory.\n"
 msgid "Error: a value is mandatory.\n"
 msgstr "Fel: ett värde är obligatoriskt.\n"
 
-#: ../src/utils/nautilus-actions-new.c:133
+#: ../src/utils/nautilus-actions-new.c:135
 msgid "Set it if the item should be disabled at creation"
 msgstr "Vald om objektet ska vara inaktivt när det skapas"
 
-#: ../src/utils/nautilus-actions-new.c:135
+#: ../src/utils/nautilus-actions-new.c:137
 msgid "Set it if the item doesn't target the selection context menu"
 msgstr "Vald om objektets mål inte är markeringssnabbvalsmenyn"
 
-#: ../src/utils/nautilus-actions-new.c:137
+#: ../src/utils/nautilus-actions-new.c:139
 msgid "Set it if the item doesn't target the location context menu"
 msgstr "Vald om objektets mål inte är platssnabbvalsmenyn"
 
-#: ../src/utils/nautilus-actions-new.c:139
+#: ../src/utils/nautilus-actions-new.c:141
 msgid "Set it if the item doesn't target the toolbar"
 msgstr "Vald om objektets målplats är verktygsfältet"
 
-#: ../src/utils/nautilus-actions-new.c:141
+#: ../src/utils/nautilus-actions-new.c:143
 msgid "Set it if the basename patterns are case insensitive"
 msgstr "Vald om basnamnmönstret inte är skiftlägeskänsligt"
 
-#: ../src/utils/nautilus-actions-new.c:147
-#| msgid "Output the schema on stdout"
+#: ../src/utils/nautilus-actions-new.c:149
 msgid "Output the new item content on stdout (default)"
 msgstr "Skriv ut objektinnehållet på standard ut  (standard)"
 
-#: ../src/utils/nautilus-actions-new.c:148
+#: ../src/utils/nautilus-actions-new.c:150
 msgid "Create the new item as a .desktop file"
 msgstr "Skapa det nya objektet som en .desktop-fil"
 
-#: ../src/utils/nautilus-actions-new.c:159
+#: ../src/utils/nautilus-actions-new.c:161
 #, c-format
-#| msgid "Error: '%s' and '%s' options cannot both be specified.\n"
 msgid "Error: '%s' and '%s' options cannot both be specified\n"
 msgstr "Fel: alternativen '%s' och '%s' kan inte båda anges\n"
 
-#: ../src/utils/nautilus-actions-new.c:160
+#: ../src/utils/nautilus-actions-new.c:162
 #, c-format
 msgid "'%s' option is deprecated, see %s\n"
 msgstr "'%s'-alternativet är föråldrat, se %s\n"
 
-#: ../src/utils/nautilus-actions-new.c:218
+#: ../src/utils/nautilus-actions-new.c:220
 #, c-format
 msgid "Error: an action label is mandatory.\n"
 msgstr "Fel: en åtgärdsetikett är obligatorisk.\n"
 
-#: ../src/utils/nautilus-actions-new.c:264
+#: ../src/utils/nautilus-actions-new.c:266
 #, c-format
 msgid "Error: only one output option may be specified.\n"
 msgstr "Fel: endast ett utskriftsalternativ kan anges.\n"
 
-#: ../src/utils/nautilus-actions-new.c:350
-#| msgid "Define a new action"
+#: ../src/utils/nautilus-actions-new.c:352
 msgid "Define a new action."
 msgstr "Definiera en ny åtgärd."
 
-#: ../src/utils/nautilus-actions-new.c:353
+#: ../src/utils/nautilus-actions-new.c:355
 msgid ""
 "The created action defaults to be written to stdout.\n"
 "It can also be written to an output folder, in a file later suitable for an "
@@ -4758,17 +4713,16 @@ msgstr ""
 "Du kan också välja att direkt skriva åtgärden i din konfiguration för "
 "Nautilus-Actions."
 
-#: ../src/utils/nautilus-actions-new.c:379
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Output of the program"
 msgstr "Programmets utskrift"
 
-#: ../src/utils/nautilus-actions-new.c:379
+#: ../src/utils/nautilus-actions-new.c:381
 msgid "Choose where the program creates the action"
 msgstr "Välj var programmet skapar åtgärden"
 
 #. i18n: 'na-desktop' is a plugin identifier - do not translate
-#: ../src/utils/nautilus-actions-new.c:592
-#| msgid "Error: unable to get a proxy on %s service"
+#: ../src/utils/nautilus-actions-new.c:595
 msgid "Error: unable to find 'na-desktop' i/o provider."
 msgstr "Fel: kunde inte hitta i/o-tillhandahållare för 'na-desktop'."
 
@@ -4778,7 +4732,7 @@ msgid "Print a menu or an action to stdout."
 msgstr "Skriv ut en meny eller en åtgärd till standard ut."
 
 #: ../src/utils/nautilus-actions-print.c:60
-msgid "The identifiant of the menu or the action to be printed"
+msgid "The identifier of the menu or the action to be printed"
 msgstr "Identifierare för meny eller åtgärd som ska skrivas ut"
 
 #. i18n: 'Desktop1' here is the internal identifier of an export format; it is not translatable
@@ -4788,7 +4742,6 @@ msgstr "Ett exportformat [Desktop1]"
 
 #: ../src/utils/nautilus-actions-print.c:125
 #, c-format
-#| msgid "Error: action id is mandatory.\n"
 msgid "Error: a menu or action id is mandatory.\n"
 msgstr "Fel:  en meny eller åtgärds-id är obligatorisk.\n"
 
@@ -4800,7 +4753,6 @@ msgstr "Fel: %s: okänt exportformat.\n"
 
 #: ../src/utils/nautilus-actions-print.c:206
 #, c-format
-#| msgid "Error: action '%s' doesn't exist.\n"
 msgid "Error: item '%s' doesn't exist.\n"
 msgstr "Fel: Objekt '%s' finns inte.\n"
 
@@ -4867,5 +4819,3 @@ msgstr "Fel: kunde inte gå en proxy på %s-tjänsten"
 #, c-format
 msgid "Error on GetSelectedPaths call: %s"
 msgstr "Fel vid GetSelectedPaths-anrop: %s"
-
-
