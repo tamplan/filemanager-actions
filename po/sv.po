@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: nautilus-actions\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=nautilus-actions&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-27 11:28+0000\n"
+"POT-Creation-Date: 2015-03-10 12:51+0000\n"
 "PO-Revision-Date: 2015-03-08 13:08+0100\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -1669,7 +1669,7 @@ msgstr ""
 
 #: ../src/core/na-object-profile-factory.c:244
 msgid "Startup notify"
-msgstr "Startnotifiering"
+msgstr "Startavisering"
 
 #: ../src/core/na-object-profile-factory.c:245
 msgid ""
@@ -3886,7 +3886,7 @@ msgstr "Observera: detta är ännu inte implementerat i Nautilus-Actions.\n"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:129
 msgid "_Startup notify"
-msgstr "Upp_startsnotifiering"
+msgstr "Upp_startsavisering"
 
 #: ../src/nact/nautilus-actions-config-tool.ui.h:130
 msgid ""
