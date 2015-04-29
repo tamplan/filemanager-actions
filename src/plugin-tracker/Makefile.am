@@ -38,7 +38,6 @@ nautilus_extension_LTLIBRARIES = libnautilus-actions-tracker.la
 
 BUILT_SOURCES =
 
-if HAVE_GDBUS
 BUILT_SOURCES += \
 	na-tracker-gdbus.c											\
 	na-tracker-gdbus.h											\
@@ -55,16 +54,6 @@ na-tracker-gdbus.c na-tracker-gdbus.h: na-tracker-gdbus.xml
 
 DISTCLEANFILES = \
 	na-tracker-gdbus-docs-org.nautilus_actions.DBus.Tracker.Properties1.xml
-endif
-
-if HAVE_DBUS_GLIB
-BUILT_SOURCES += \
-	na-tracker-dbus-glib.h										\
-	$(NULL)
-
-na-tracker-dbus-glib.h: na-tracker-dbus-glib.xml
-	dbus-binding-tool --mode=glib-server --prefix=na_tracker_dbus $< > $@
-endif
 
 nodist_libnautilus_actions_tracker_la_SOURCES = \
 	$(BUILT_SOURCES)											\

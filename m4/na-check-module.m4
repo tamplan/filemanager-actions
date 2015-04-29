@@ -25,18 +25,21 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 1 creation
+# serial 2 remove Gtk2 vs. Gtk3 check
 
-dnl usage:  NA_CHECK_MODULE(var,condition[,error])
+dnl usage:  NA_CHECK_MODULE(var,module[,[version],[error]])
 dnl
-dnl this macro checks that gtk+-2.0 and gtk+-3.0 libraries are not mixed
+dnl if 'error' = 'no', then only displays on information message, making
+dnl the lack of library non fatal.
 dnl
-dnl if 'error' != 'no', then displays an error message if condition is
-dnl not met.
 # translit($1, 'a-z', 'A-Z'),
 
 AC_DEFUN([NA_CHECK_MODULE],[
-	PKG_CHECK_MODULES([$1],[$2],[have_$1="yes"],[have_$1="no"])
+	_cond="$2"
+	if test "$3" != ""; then
+		_cond="$2 >= $3"
+	fi
+	PKG_CHECK_MODULES([$1],[${_cond}],[have_$1="yes"],[have_$1="no"])
 
 	#echo "have_gtk2=$have_gtk2 have_gtk3=$have_gtk3"
 	#echo "$1_CFLAGS='${$1_CFLAGS}'"
@@ -45,32 +48,25 @@ AC_DEFUN([NA_CHECK_MODULE],[
 	#echo "against Gtk3: $(echo ${$1_LIBS} | grep -E 'gtk-@<:@^-@:>@+-3\.0')"
 
 	if test "${have_$1}" = "yes"; then
-		if test "${have_gtk3}" = "yes"; then
-			if echo ${$1_LIBS} | grep -qE 'gtk-@<:@^-@:>@+-2\.0'; then
-				_NA_CHECK_MODULE_MSG([$3],[$1: compiling with Gtk+-3 but adresses Gtk+-2 libraries])
-				have_$1="no"
-			fi
-		elif test "${have_gtk2}" = "yes"; then
-			if echo ${$1_LIBS} | grep -qE 'gtk-@<:@^-@:>@+-3.0'; then
-				_NA_CHECK_MODULE_MSG([$3],[$1: compiling with Gtk+-2 but adresses Gtk+-3 libraries])
-				have_$1="no"
-			fi
-		fi
-	else
-		_NA_CHECK_MODULE_MSG([$3],[$1: condition $2 not satisfied])
-	fi
-
-	if test "${have_$1}" = "yes"; then
+		$1_msg_version=$(pkg-config --modversion $2)
 		NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${$1_CFLAGS}"
 		NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${$1_LIBS}"
+	else
+		_NA_CHECK_MODULE_MSG([$4],[$1: condition ${_cond} not satisfied])
 	fi
 ])
+
+dnl what to do when the searched for library is missing: it is a fatal
+dnl error, or no ?
 
 AC_DEFUN([_NA_CHECK_MODULE_MSG],[
 	if test "$1" = "no"; then
 		AC_MSG_RESULT([warning: $2])
 	else
-		AC_MSG_WARN([$2])
 		let na_fatal_count+=1
+		AC_MSG_WARN([$2 (fatal_count=${na_fatal_count})])
+		if test "${na_fatal_list}" != ""; then na_fatal_list="${na_fatal_list}
+"; fi
+		na_fatal_list="${na_fatal_list}$2"
 	fi
 ])

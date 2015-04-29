@@ -3,10 +3,25 @@ Version 3.4
 
 	Release date
 
-	The work on this version started on february 2015. At this date,
-	we target to support:
-	- Debian 7.0 Wheezy, published on 2013-05-04
-	- Unbuntu 12.04 LTS The Precise Pangolin, published on 2012-04-26. 
+	Libraries supported versions:
+
+		The work on this version started on february 2015. At this date,
+		we target to support:
+		- Debian 7.0 Wheezy, published on 2013-05-04
+		- Unbuntu 12.04 LTS The Precise Pangolin, published on 2012-04-16.
+
+	What's new here:
+
+		GConf is more and more deprecated.
+		GConf support, which provides the GConf I/O Provider, is no more
+		automatically built, but defaults to be disabled. It must be
+		explicitely enabled from configure in order the GConf I/O Provider
+		to be built.
+
+		As we target now Gtk+ 3.4, support for Gtk+2 is removed.
+
+		As we target now GLib 2.32, support for legacy compatibility
+		layers is removed: dbus-glib-1, libICE, libSM.
 
 Version 3.2.4
 =============

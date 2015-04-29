@@ -25,84 +25,69 @@
 #   Pierre Wieser <pwieser@trychlos.org>
 #   ... and many others (see AUTHORS)
 
-# serial 2 review the macro behavior
+# serial 3 GConf is deprecated, and thus disabled by default
 
 dnl let the user choose whether to compile with GConf enabled
 dnl --enable-gconf
 dnl
-dnl defaults to automatically enable GConf if it is present on the
-dnl compiling system, or disable it if it is absent
-dnl if --enable-gconf is specified, then GConf subsystem must be present
+dnl defaults to disabling GConf, only searching for a GConf subsystem
+dnl when the '--enable-gconf' option is specified.
 dnl
 dnl Please note that, from the packager point of view, we should have
 dnl both GConf2 and GConf2-devel package, in order to be able to build
 dnl and distribute the 'na-gconf' I/O provider
+dnl
+dnl Define the HAVE_GCONF conditional
 
 AC_DEFUN([NA_CHECK_FOR_GCONF],[
-	AC_REQUIRE([_AC_NA_ARG_GCONF])dnl
-	AC_REQUIRE([_AC_NA_CHECK_GCONF])dnl
+	AC_REQUIRE([_AC_NA_GCONF_ARG])dnl
+	AC_REQUIRE([_AC_NA_GCONF_CHECK])dnl
 ])
 
-AC_DEFUN([_AC_NA_ARG_GCONF],[
+AC_DEFUN([_AC_NA_GCONF_ARG],[
 	AC_ARG_ENABLE(
 		[gconf],
 		AC_HELP_STRING(
 			[--enable-gconf],
-			[whether to enable GConf subsystem @<:@auto@:>@]),
+			[whether to enable GConf subsystem @<:@no@:>@]),
 		[enable_gconf=$enableval],
-		[enable_gconf="auto"])
+		[enable_gconf="no"])
 ])
 
-AC_DEFUN([_AC_NA_CHECK_GCONF],[
-	AC_MSG_CHECKING([whether GConf is enabled])
+AC_DEFUN([_AC_NA_GCONF_CHECK],[
+	AC_MSG_CHECKING([whether GConf is required])
 	AC_MSG_RESULT([${enable_gconf}])
 	compile_with_gconf="no"
 
-	dnl if --enable-gconf is not specified, then we make the choice
-	dnl based on the presence of GConf subsystem (and development
-	dnl libraries)
-	if test "${enable_gconf}" = "auto"; then
-		AC_PATH_PROG([have_gconf],[gconftool-2],[yes],[no])
-		if test "${have_gconf}" = "yes"; then
-			compile_with_gconf="yes"
-		fi
+	dnl as of 3.4, GConf is disabled if --enable-gconf is not specified
+	if test "${enable_gconf}" = "yes"; then
+		AC_PATH_PROG([have_gconftool],[gconftool-2],[yes],[no])
 
-	dnl if --enable-gconf is set to yes, then check that the subsystem
-	dnl is installed
-	else
-		if test "${enable_gconf}" = "yes"; then
-			AC_PATH_PROG([have_gconf],[gconftool-2],[yes],[no])
-			if test "${have_gconf}" = "no"; then
-				AC_MSG_WARN([GConf2 subsystem is missing])
-				let na_fatal_count+=1
+		dnl this is not fatal to not have GConf (even if required)
+		dnl just the GConf I/O provider will not be built
+		if test "${have_gconftool}" != "yes"; then
+			AC_MSG_WARN([GConf2 subsystem (gconftool-2) is missing])
+
+		dnl if want to compile with GConf, then check that we have the
+		dnl development libraries
+		else
+			PKG_CHECK_MODULES([GCONF],
+					[gconf-2.0 >= 2.8.0],[have_gconf_devel="yes"],[have_gconf_devel="no"])
+			if test "${have_gconf_devel}" = "no"; then
+				AC_MSG_WARN([GConf2 development libraries are missing. Please install GConf2-devel package])
+
 			else
 				compile_with_gconf="yes"
 			fi
 		fi
 	fi
 
-	dnl if want to compile with GConf, then check that we have the
-	dnl development libraries
-
 	if test "${compile_with_gconf}" = "yes"; then
-		PKG_CHECK_MODULES([GCONF],
-			[gconf-2.0 >= 2.8.0],[have_gconf_devel="yes"],[have_gconf_devel="no"])
-		if test "${have_gconf_devel}" = "no"; then
-			if test "${enable_gconf}" != "auto"; then
-				AC_MSG_WARN([GConf2 development libraries are missing. Please install GConf2-devel package])
-				let na_fatal_count+=1
-			fi
-			compile_with_gconf="no"
-		else
-			msg_gconf2_version=$(pkg-config --modversion gconf-2.0)
-		fi
-	fi
-
-	if test "${compile_with_gconf}" = "yes"; then
+		gconf_msg_version=$(pkg-config --modversion gconf-2.0)
 		AC_SUBST([AM_CPPFLAGS],["${AM_CPPFLAGS} -DHAVE_GCONF"])
 		NAUTILUS_ACTIONS_CFLAGS="${NAUTILUS_ACTIONS_CFLAGS} ${GCONF_CFLAGS}"
 		NAUTILUS_ACTIONS_LIBS="${NAUTILUS_ACTIONS_LIBS} ${GCONF_LIBS}"
-		AC_DEFINE_UNQUOTED([HAVE_GCONF],[1],[Whether we compile against the GConf library])
+		AC_DEFINE_UNQUOTED([HAVE_GCONF],[1],[Whether we compile against the GConf library (and build the GConf I/O Provider)])
 	fi
 
 	_NA_GCONF_SOURCE_2(["${compile_with_gconf}"])
@@ -170,5 +155,5 @@ AC_DEFUN([_NA_GCONF_SOURCE_2],
 		msg_schemas_install="enabled in ${GCONF_SCHEMA_FILE_DIR}"
 	fi
       
-  AM_CONDITIONAL([GCONF_SCHEMAS_INSTALL], [test "$enable_schemas_install" != no -a "$1" = "yes"])
+  AM_CONDITIONAL([GCONF_SCHEMAS_INSTALL], [test "$enable_schemas_install" != "no" -a "$1" = "yes"])
 ])

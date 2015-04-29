@@ -60,9 +60,23 @@ NA_MAINTAINER_CHECK_MODE
 # libtool
 AM_PROG_LIBTOOL
 
+# we are using pkgconfig for all development libraries we need
+AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+if test "${PKG_CONFIG}" = "no"; then
+	AC_MSG_ERROR([You need to install pkg-config])
+fi
+
+# Oldest supported distribution as of Feb. 2015: Ubuntu 12.04 LTS
+glib_required=2.32.1
+gtk_required=3.4.1
+intltool_required=0.50.2
+
+nautilus_required=3.4.1
+
 # localization
-# note that this same version is also required by autogen.sh
-IT_PROG_INTLTOOL([0.35.5])
+# note that this same intltool version is also required by autogen.sh
+# and thus set in maintainer/run-autogen.sh script
+IT_PROG_INTLTOOL([${intltool_required}])
 GETTEXT_PACKAGE=${PACKAGE}
 AC_SUBST([GETTEXT_PACKAGE])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["${GETTEXT_PACKAGE}"],[gettext package])
@@ -70,35 +84,7 @@ AM_GLIB_GNU_GETTEXT
 
 # a counter of fatal warnings emitted
 let na_fatal_count=0
-
-# we are using pkgconfig for all development libraries we need
-AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
-if test "${PKG_CONFIG}" = "no"; then
-	AC_MSG_ERROR([You need to install pkg-config])
-fi
-
-# Have and want GConf support ?
-NA_CHECK_FOR_GCONF
-
-# Oldest supported distribution as of Apr. 2013: Ubuntu 10 LTS (Gnome 2.30)
-glib_required=2.24.0
-gtk_required=2.20.0
-NA_CHECK_FOR_GTK
-NA_CHECK_MODULE([GLIB],    [glib-2.0 >= ${glib_required}])
-NA_CHECK_MODULE([GMODULE], [gmodule-2.0 >= ${glib_required}])
-
-# GDBus comes in GIO with 2.26
-# so uses GDBus if present, or fallback into dbus-glib-1
-NA_CHECK_FOR_GDBUS
-
-# other required libraries
-dnl aclocal complains if the comma is not just after the square bracket
-NA_CHECK_MODULE([GIO_UNIX],[gio-unix-2.0])
-NA_CHECK_MODULE([GTOP],    [libgtop-2.0 >= 2.23.1])
-NA_CHECK_MODULE([LIBXML],  [libxml-2.0 >= 2.6])
-NA_CHECK_MODULE([SM],      [sm >= 1.0])
-NA_CHECK_MODULE([ICE],     [ice])
-NA_CHECK_MODULE([UUID],    [uuid])
+na_fatal_list=""
 
 # GLib marshaling
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal, no)
@@ -106,28 +92,34 @@ if test "${GLIB_GENMARSHAL}" = "no"; then
 	AC_MSG_WARN([glib2-devel installed, but glib-genmarshal not found])
 	let na_fatal_count+=1
 fi
+# Have and want GConf support ?
+# As of 3.4 release, we are deprecating GConf, disabled it by default.
+# We only search for the libraries when explicitely required from 
+# configure. This is a first step deprecation; in a second step, we
+# will emit a warning.
+NA_CHECK_FOR_GCONF
 
-##
-## Nautilus file-manager
-##
-NA_CHECK_MODULE([NAUTILUS_EXTENSION],[libnautilus-extension >= 2.16])
-#
-# when working in a test environment, nautilus extensions are typically
-# installed in a non-standard location ; lets specify this location here
-NA_NAUTILUS_EXTDIR
-#
-# Check for menu update function
-AC_CHECK_LIB([nautilus-extension],[nautilus_menu_item_new])
-AC_CHECK_FUNCS([nautilus_menu_provider_emit_items_updated_signal])
-#
-# starting with 2.91.90, Nautilus no more allows extensions to add toolbar items
-AC_CHECK_FUNCS([nautilus_menu_provider_get_toolbar_items])
+# As of 3.4 release, remove Gtk+2 support, only allowing for Gtk+3
+dnl aclocal complains if the comma is not just after the square bracket
+NA_CHECK_MODULE([GTK3],    [gtk+-3.0],   [${gtk_required}])
+NA_CHECK_MODULE([GLIB],    [glib-2.0],   [${glib_required}])
+NA_CHECK_MODULE([GMODULE], [gmodule-2.0],[${glib_required}])
+NA_CHECK_MODULE([GIO_UNIX],[gio-unix-2.0])
+NA_CHECK_MODULE([GTOP],    [libgtop-2.0],[2.23.1])
+NA_CHECK_MODULE([LIBXML],  [libxml-2.0], [2.6])
+NA_CHECK_MODULE([UUID],    [uuid])
+
+# target a file manager (nautilus, nemo, ...)
+NA_TARGET_FILE_MANAGER
 
 AC_SUBST([NAUTILUS_ACTIONS_CFLAGS])
 AC_SUBST([NAUTILUS_ACTIONS_LIBS])
 
 # defines a log domain for each component
 NA_LOG_DOMAINS
+
+# print the debug output be printed to the console
+AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
 
 # add --with-default-io-provider option
 NA_SET_DEFAULT_IO_PROVIDER([io-desktop])
@@ -186,10 +178,6 @@ GNOME_DOC_INIT(,,[gdu_cv_have_gdu=no])
 # add --enable-html-manuals and --enable-pdf-manuals configure options
 NA_ENABLE_MANUALS
 
-# define NA_MAINTAINER_MODE variable
-NA_MAINTAINER_CHECK_MODE
-AC_DEFINE([NAUTILUS_ACTIONS_DEBUG],["NAUTILUS_ACTIONS_DEBUG"],[Debug environment variable])
-
 # display and keep configuration informations
 config_options="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g'`" 
 AC_DEFINE_UNQUOTED([NA_CONFIG_OPTIONS],["$0 ${config_options}"],["Configure options"])
@@ -197,25 +185,34 @@ AC_DEFINE_UNQUOTED([NA_CONFIG_OPTIONS],["$0 ${config_options}"],["Configure opti
 AC_OUTPUT
 
 msg_gtk_doc=`if test "x${enable_gtk_doc}" = "xno"; then echo "disabled"; else echo "enabled"; fi`
-msg_gtk_version=""
-if test "${have_gtk3}" = "yes"; then msg_gtk_version="Gtk+ 3.0"; 
-	elif  test "${have_gtk2}" = "yes"; then msg_gtk_version="Gtk+ 2.0"; fi
 $as_echo "
 	${PACKAGE_STRING} configuration summary:
 
 	Installation prefix             ${prefix}
 	Build system type               ${ac_cv_build}
-	Nautilus extensions directory   ${with_nautilus_extdir}
-	Gtk+ version                    ${msg_gtk_version}
+	Gtk+ version                    ${GTK3_msg_version}
+	GLib version                    ${GLIB_msg_version}
 	Default I/O provider            ${with_default_io_provider}
+	Targeted file-manager           ${enable_file_manager}"
+if test "${enable_file_manager}" = "nautilus"; then
+	$as_echo "	Nautilus extensions directory   ${with_nautilus_extdir}"
+fi
+$as_echo "	GConf enabled                   ${enable_gconf}"
+if test "${enable_gconf}" = "yes"; then
+	$as_echo "	GConf schemas installation      ${msg_schemas_install}"
+fi
+$as_echo "	Maintainer mode                 ${msg_maintainer_mode}
 	Enable deprecated functions     ${enable_deprecated}
-	GConf enabled                   ${enable_gconf}
-	GConf schemas installation      ${msg_schemas_install}
-	Maintainer mode                 ${msg_maintainer_mode}
 	API Reference generation        ${msg_gtk_doc}
 	HTML User's Manuals generation  ${msg_html_manuals}
 	PDF User's Manuals generation   ${msg_pdf_manuals}
 "
+if test ${na_fatal_count} -gt 0; then
+	$as_echo "${na_fatal_list}
+"
+	exit 1
+fi
+
 #	Preprocessor flags              ${AM_CPPFLAGS}
 #	Compiler flags                  ${AM_CFLAGS} ${NAUTILUS_ACTIONS_CFLAGS}
 #	Linker flags                    ${NAUTILUS_ACTIONS_LIBS}

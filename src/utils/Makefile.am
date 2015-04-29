@@ -71,7 +71,6 @@ nautilus_actions_print_LDADD = \
 
 BUILT_SOURCES =
 
-if HAVE_GDBUS
 BUILT_SOURCES += \
 	nautilus-actions-run-bindings.c								\
 	nautilus-actions-run-bindings.h								\
@@ -84,16 +83,6 @@ nautilus-actions-run-bindings.c nautilus-actions-run-bindings.h: $(top_srcdir)/s
 		--c-namespace NA_Tracker								\
 		--c-generate-object-manager								\
 		$<
-endif
-
-if HAVE_DBUS_GLIB
-BUILT_SOURCES += \
-	nautilus-actions-run-bindings.h								\
-	$(NULL)
-
-nautilus-actions-run-bindings.h: $(top_srcdir)/src/plugin-tracker/na-tracker-dbus-glib.xml
-	dbus-binding-tool --mode=glib-client $< > $@
-endif
 
 nodist_nautilus_actions_run_SOURCES = \
 	$(BUILT_SOURCES)											\

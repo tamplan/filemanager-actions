@@ -1,6 +1,25 @@
+2015-02-25 Pierre Wieser <pwieser@trychlos.org>
+
+	* maintainer/run-autogen.sh: defaults to enable nautilus.
+
+	* m4/na-check-module.m4: remove Gtk2 vs. Gtk3 checks.
+
+	* m4/na-check-for-gconf.m4: GConf defaults to be disabled.
+
+	* m4/na-check-for-gdbus.m4,
+	* m4/na-check-for-gtk.m4: removed files.
+
+	* m4/na-file-manager.m4: new file.
+
+	* src/plugin-tracker/Makefile.am,
+	* src/utils/Makefile.am: updated accordingly.
+
 2015-02-24 Pierre Wieser <pwieser@trychlos.org>
 
 	Start with File-Manager Actions.
+
+	* configure.ac:
+	- bump next release version.
 	
 	* ChangeLog-2014: copied from ChangeLog, which is reset.
 
